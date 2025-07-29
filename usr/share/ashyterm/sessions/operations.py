@@ -9,6 +9,7 @@ import os
 import threading
 import time
 from typing import Optional, Set, List, Tuple, Dict, Any, Union
+from pathlib import Path 
 from gi.repository import Gio
 
 from .models import SessionItem, SessionFolder
@@ -71,8 +72,8 @@ class OperationResult:
 
 class SessionOperations:
     """Enhanced CRUD and organizational operations for sessions and folders."""
-    
-    def __init__(self, session_store: Gio.ListStore, folder_store: Gio.ListStore):
+
+    def __init__(self, session_store: Gio.ListStore, folder_store: Gio.ListStore, settings_manager):
         """
         Initialize session operations with comprehensive functionality.
         
@@ -83,6 +84,7 @@ class SessionOperations:
         self.logger = get_logger('ashyterm.sessions.operations')
         self.session_store = session_store
         self.folder_store = folder_store
+        self.settings_manager = settings_manager
         self.platform_info = get_platform_info()
         
         # Thread safety
@@ -179,7 +181,7 @@ class SessionOperations:
                 self.session_store.append(session)
                 
                 # Save changes
-                if not self._save_changes(create_backup):
+                if not self._save_changes():
                     self._stats['operation_errors'] += 1
                     # Remove from store on save failure
                     self._remove_session_from_store(session)
@@ -314,7 +316,7 @@ class SessionOperations:
                     result.warnings.extend(validation_result.warnings)
                 
                 # Save changes
-                if not self._save_changes(create_backup):
+                if not self._save_changes():
                     self._stats['operation_errors'] += 1
                     return OperationResult(False, "Failed to save session data")
                 
@@ -472,7 +474,7 @@ class SessionOperations:
                 self.session_store.remove(position)
                 
                 # Save changes
-                if not self._save_changes(create_backup):
+                if not self._save_changes():
                     self._stats['operation_errors'] += 1
                     # Re-add on save failure
                     self.session_store.insert(position, removed_session)
@@ -602,7 +604,7 @@ class SessionOperations:
                 session.folder_path = target_folder_path
                 
                 # Save changes
-                if not self._save_changes(create_backup):
+                if not self._save_changes():
                     self._stats['operation_errors'] += 1
                     # Rollback changes
                     session.folder_path = original_folder
@@ -670,7 +672,7 @@ class SessionOperations:
                 self.folder_store.append(folder)
                 
                 # Save changes
-                if not self._save_changes(create_backup):
+                if not self._save_changes():
                     self._stats['operation_errors'] += 1
                     # Remove from store on save failure
                     self._remove_folder_from_store(folder)
@@ -750,7 +752,7 @@ class SessionOperations:
                     self._update_child_paths(old_path, updated_folder.path)
                 
                 # Save changes
-                if not self._save_changes(create_backup):
+                if not self._save_changes():
                     self._stats['operation_errors'] += 1
                     # Rollback changes
                     original_folder.name = old_name
@@ -826,7 +828,7 @@ class SessionOperations:
                 self.folder_store.remove(position)
                 
                 # Save changes
-                if not self._save_changes(create_backup):
+                if not self._save_changes():
                     self._stats['operation_errors'] += 1
                     # Re-add on save failure
                     self.folder_store.insert(position, removed_folder)
@@ -1126,10 +1128,26 @@ class SessionOperations:
             self.logger.error(f"Error removing folder from store: {e}")
             return False
     
-    def _save_changes(self, create_backup: bool = True) -> bool:
-        """Save changes to storage with optional backup."""
+    def _save_changes(self) -> bool:
+        """
+        Save changes to storage and trigger async backup if configured.
+        """
         try:
-            return save_sessions_and_folders(self.session_store, self.folder_store, create_backup)
+            # A operação de salvamento em si é síncrona e crítica
+            success = save_sessions_and_folders(self.session_store, self.folder_store)
+            
+            if success:
+                # Se o salvamento foi bem-sucedido, dispare o backup assíncrono se estiver ativado
+                if self.settings_manager.get("backup_on_change", True) and self.backup_manager:
+                    source_file = Path(self.storage_manager.sessions_file)
+                    if source_file.exists():
+                        self.backup_manager.create_backup_async(
+                            [source_file],
+                            BackupType.AUTOMATIC,
+                            "Automatic backup after change"
+                        )
+            
+            return success
         except Exception as e:
             self.logger.error(f"Failed to save changes: {e}")
             return False

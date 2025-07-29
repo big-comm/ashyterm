@@ -1040,10 +1040,8 @@ class SessionEditDialog(BaseDialog):
 
 
 class FolderEditDialog(BaseDialog):
-    """Enhanced dialog for creating and editing folders with validation."""
-    
     def __init__(self, parent_window, folder_store, folder_item: Optional[SessionFolder] = None,
-                 position: Optional[int] = None):
+                 position: Optional[int] = None, is_new: bool = False): 
         """
         Initialize folder edit dialog.
         
@@ -1053,7 +1051,7 @@ class FolderEditDialog(BaseDialog):
             folder_item: SessionFolder to edit (None for new)
             position: Position in store (None for new)
         """
-        self.is_new_item = (folder_item is None)
+        self.is_new_item = is_new
         title = "Add Folder" if self.is_new_item else "Edit Folder"
         
         super().__init__(
@@ -1065,8 +1063,8 @@ class FolderEditDialog(BaseDialog):
         
         # Folder management
         self.folder_store = folder_store
-        self.original_folder = folder_item
-        self.editing_folder = SessionFolder.from_dict(folder_item.to_dict()) if folder_item else SessionFolder(name="")
+        self.original_folder = folder_item if not self.is_new_item else None
+        self.editing_folder = SessionFolder.from_dict(folder_item.to_dict()) if not self.is_new_item else folder_item
         self.position = position
         self.old_path = folder_item.path if folder_item else None
         
@@ -1275,7 +1273,7 @@ class FolderEditDialog(BaseDialog):
             
             # Log folder event
             event_type = "created" if self.is_new_item else "modified"
-            log_session_event(f"folder_{event_type}", self.editing_folder.name)
+            log_session_event(f"folder_{event_type}", self.editing_folder.name, f"path: {self.editing_folder.path}")
             
             # Refresh parent if possible
             if hasattr(self.parent_window, 'refresh_tree'):
@@ -1734,6 +1732,15 @@ class PreferencesDialog(Adw.PreferencesWindow):
             auto_backup_row.set_active(self.settings_manager.get("auto_backup_enabled", True))
             auto_backup_row.connect("notify::active", lambda r, p: self._on_setting_changed("auto_backup_enabled", r.get_active()))
             backup_group.add(auto_backup_row)
+
+            # Backup on change
+            change_backup_row = Adw.SwitchRow(
+                title="Backup on Change",
+                subtitle="Create a backup every time sessions or folders are modified"
+            )
+            change_backup_row.set_active(self.settings_manager.get("backup_on_change", True))
+            change_backup_row.connect("notify::active", lambda r, p: self._on_setting_changed("backup_on_change", r.get_active()))
+            backup_group.add(change_backup_row)
             
             # Backup on exit
             exit_backup_row = Adw.SwitchRow(

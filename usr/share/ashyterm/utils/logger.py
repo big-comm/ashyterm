@@ -382,17 +382,19 @@ def log_terminal_event(event_type: str, terminal_name: str, details: str = ""):
     logger.info(message)
 
 
-def log_session_event(event_type: str, session_name: str, details: str = ""):
+def log_session_event(event_type: str, item_name: str, details: str = ""):
     """
-    Log session-related events.
+    Log session or folder-related events.
     
     Args:
-        event_type: Type of event (created, modified, deleted, etc.)
-        session_name: Name of the session
+        event_type: Type of event (created, folder_modified, etc.)
+        item_name: Name of the session or folder
         details: Additional details about the event
     """
     logger = get_logger('ashyterm.sessions')
-    message = f"Session '{session_name}' {event_type}"
+    # Determina o tipo de item a partir do tipo de evento
+    item_type = "Folder" if "folder" in event_type else "Session"
+    message = f"{item_type} '{item_name}' {event_type.replace('folder_', '')}"
     if details:
         message += f": {details}"
     logger.info(message)

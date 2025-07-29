@@ -100,7 +100,7 @@ class BackupManager:
         self.verify_backups = True
         
         # Thread safety
-        self._lock = threading.Lock()
+        self._lock = threading.RLock()
         
         # Metadata file
         self.metadata_file = self.backup_dir / "backup_index.json"
@@ -142,7 +142,26 @@ class BackupManager:
         except Exception as e:
             self.logger.error(f"Failed to save backup metadata: {e}")
             raise StorageWriteError(str(self.metadata_file), str(e))
-    
+
+    def create_backup_async(self, 
+                           source_files: List[Path],
+                           backup_type: BackupType = BackupType.MANUAL,
+                           description: str = "") -> None:
+        """
+        Create a backup asynchronously in a separate thread.
+        """
+        self.logger.debug(f"Scheduling async backup: {description}")
+        
+        def backup_task():
+            try:
+                self.create_backup(source_files, backup_type, description)
+            except Exception as e:
+                self.logger.error(f"Async backup task failed: {e}")
+
+        # Run the backup task in a daemon thread
+        thread = threading.Thread(target=backup_task, daemon=True)
+        thread.start()
+
     def _generate_backup_id(self, backup_type: BackupType) -> str:
         """Generate unique backup ID."""
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
@@ -479,34 +498,35 @@ class BackupManager:
     
     def _cleanup_old_backups(self):
         """Clean up old backups based on retention policy."""
-        try:
-            # Group backups by type
-            backups_by_type = {}
-            for backup_id, metadata in self.backup_metadata.items():
-                backup_type = metadata.backup_type
-                if backup_type not in backups_by_type:
-                    backups_by_type[backup_type] = []
-                backups_by_type[backup_type].append((backup_id, metadata))
-            
-            # Clean up each type separately
-            for backup_type, backups in backups_by_type.items():
-                # Sort by timestamp (newest first)
-                backups.sort(key=lambda x: x[1].timestamp, reverse=True)
+        with self._lock:
+            try:
+                # Group backups by type
+                backups_by_type = {}
+                for backup_id, metadata in self.backup_metadata.items():
+                    backup_type = metadata.backup_type
+                    if backup_type not in backups_by_type:
+                        backups_by_type[backup_type] = []
+                    backups_by_type[backup_type].append((backup_id, metadata))
                 
-                # Keep only the most recent backups
-                max_count = self.max_backups
-                if backup_type == BackupType.AUTOMATIC:
-                    max_count = min(5, self.max_backups)  # Keep fewer automatic backups
-                
-                if len(backups) > max_count:
-                    backups_to_delete = backups[max_count:]
+                # Clean up each type separately
+                for backup_type, backups in backups_by_type.items():
+                    # Sort by timestamp (newest first)
+                    backups.sort(key=lambda x: x[1].timestamp, reverse=True)
                     
-                    for backup_id, _ in backups_to_delete:
-                        self.logger.info(f"Cleaning up old backup: {backup_id}")
-                        self.delete_backup(backup_id)
-            
-        except Exception as e:
-            self.logger.error(f"Error during backup cleanup: {e}")
+                    # Keep only the most recent backups
+                    max_count = self.max_backups
+                    if backup_type == BackupType.AUTOMATIC:
+                        max_count = min(5, self.max_backups)  # Keep fewer automatic backups
+                    
+                    if len(backups) > max_count:
+                        backups_to_delete = backups[max_count:]
+                        
+                        for backup_id, _ in backups_to_delete:
+                            self.logger.info(f"Cleaning up old backup: {backup_id}")
+                            self.delete_backup(backup_id)
+                
+            except Exception as e:
+                self.logger.error(f"Error during backup cleanup: {e}")
     
     def export_backup(self, backup_id: str, export_path: Path) -> bool:
         """

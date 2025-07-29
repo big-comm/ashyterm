@@ -704,21 +704,20 @@ def load_sessions_and_folders() -> Tuple[List[Dict[str, Any]], List[Dict[str, An
 
 
 def save_sessions_and_folders(session_store: Optional[Gio.ListStore] = None, 
-                            folder_store: Optional[Gio.ListStore] = None,
-                            create_backup: bool = True) -> bool:
+                            folder_store: Optional[Gio.ListStore] = None) -> bool: # <<< Remova create_backup
     """
     Save sessions and folders to JSON file with enhanced safety.
     
     Args:
         session_store: Optional store with SessionItem objects
         folder_store: Optional store with SessionFolder objects
-        create_backup: Whether to create backup before saving
         
     Returns:
         True if saved successfully
     """
     storage_manager = get_storage_manager()
-    return storage_manager.save_sessions_and_folders_safe(session_store, folder_store, create_backup)
+    # A decisão de backup agora é feita em outro lugar, então passamos False aqui
+    return storage_manager.save_sessions_and_folders_safe(session_store, folder_store, create_backup=False)
 
 
 def load_sessions_to_store(session_store: Gio.ListStore) -> None:

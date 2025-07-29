@@ -56,7 +56,7 @@ class AppConstants:
     DEVELOPER_EMAIL = "contact@communitybig.org"
     
     # Legal and support
-    COPYRIGHT = "© 2024 BigCommunity"
+    COPYRIGHT = "© 2025 BigCommunity"
     LICENSE = "MIT"
     WEBSITE = "https://communitybig.org/"
     DOCUMENTATION_URL = "https://communitybig.org/ashyterm/docs"
@@ -294,6 +294,7 @@ class DefaultSettings:
             
             # Backup settings
             "auto_backup_enabled": False, # Disable bkp temporary
+            "backup_on_change": True,
             "backup_interval_hours": 24,
             "backup_retention_days": 30,
             "backup_on_exit": False,

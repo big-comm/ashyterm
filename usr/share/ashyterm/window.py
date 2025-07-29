@@ -62,9 +62,9 @@ class CommTerminalWindow(Adw.ApplicationWindow):
         self.folder_store = Gio.ListStore.new(SessionFolder)
         
         # Component managers
-        self.terminal_manager = None
-        self.tab_manager = None
-        self.session_tree = None
+        self.terminal_manager = TerminalManager(self.settings_manager)
+        self.tab_manager = TabManager(self.terminal_manager)
+        self.session_tree = SessionTreeView(self.session_store, self.folder_store, self.settings_manager)
         
         # Thread safety
         self._ui_lock = threading.Lock()
@@ -109,7 +109,7 @@ class CommTerminalWindow(Adw.ApplicationWindow):
             # Initialize component managers
             self.terminal_manager = TerminalManager(self.settings_manager)
             self.tab_manager = TabManager(self.terminal_manager)
-            self.session_tree = SessionTreeView(self.session_store, self.folder_store)
+            self.session_tree = SessionTreeView(self.session_store, self.folder_store, self.settings_manager)
             
             self.logger.debug("Component managers initialized")
             
@@ -859,7 +859,9 @@ class CommTerminalWindow(Adw.ApplicationWindow):
     def _on_add_folder_clicked(self, button) -> None:
         """Handle add folder button click."""
         try:
-            self._show_folder_edit_dialog(None, True)
+            # Crie uma nova instância de SessionFolder com um nome padrão
+            new_folder = SessionFolder(name="New Folder")
+            self._show_folder_edit_dialog(new_folder, True)
         except Exception as e:
             self.logger.error(f"Add folder button failed: {e}")
             self._show_error_dialog("Add Folder Error", f"Failed to add folder: {e}")
@@ -896,7 +898,7 @@ class CommTerminalWindow(Adw.ApplicationWindow):
     def _show_session_edit_dialog(self, session: SessionItem, is_new: bool) -> None:
         """Show session edit dialog."""
         try:
-            position = -1 if is_new else self.session_tree.operations._find_item_position(session)
+            position = -1 if is_new else self.session_tree._find_item_position(session)
             dialog = SessionEditDialog(self, session, self.session_store, position, self.folder_store)
             dialog.present()
         except Exception as e:
@@ -906,8 +908,9 @@ class CommTerminalWindow(Adw.ApplicationWindow):
     def _show_folder_edit_dialog(self, folder: Optional[SessionFolder], is_new: bool) -> None:
         """Show folder edit dialog."""
         try:
-            position = None if is_new else self.session_tree.operations._find_item_position(folder)
-            dialog = FolderEditDialog(self, self.folder_store, folder, position)
+            position = None if is_new else self.session_tree._find_item_position(folder)
+            # Passe o flag 'is_new' para o construtor do diálogo
+            dialog = FolderEditDialog(self, self.folder_store, folder, position, is_new=is_new)
             dialog.present()
         except Exception as e:
             self.logger.error(f"Folder edit dialog failed: {e}")
@@ -972,10 +975,18 @@ class CommTerminalWindow(Adw.ApplicationWindow):
         """Show delete confirmation dialog."""
         try:
             item_type = "Session" if is_session else "Folder"
+            
+            # Verifica se a pasta tem conteúdo antes de mostrar o diálogo de exclusão
+            if not is_session and self.session_tree.operations._folder_has_children(item.path):
+                body_text = (f"The folder \"{item.name}\" is not empty. "
+                            f"Are you sure you want to permanently delete it and all its contents?")
+            else:
+                body_text = f"Are you sure you want to delete \"{item.name}\"?"
+
             dialog = Adw.MessageDialog(
                 transient_for=self,
                 title=f"Delete {item_type}",
-                body=f"Are you sure you want to delete \"{item.name}\"?"
+                body=body_text
             )
             
             dialog.add_response("cancel", "Cancel")
@@ -985,15 +996,21 @@ class CommTerminalWindow(Adw.ApplicationWindow):
             def on_response(dlg, response_id):
                 try:
                     if response_id == "delete":
+                        result = None
                         if is_session:
-                            success = self.session_tree.operations.remove_session(item)
-                            if success:
+                            result = self.session_tree.operations.remove_session(item)
+                            if result.success:
                                 log_session_event("deleted", item.name)
                         else:
-                            success = self.session_tree.operations.remove_folder(item)
+                            # Se a pasta não estiver vazia, use force=True
+                            force_delete = self.session_tree.operations._folder_has_children(item.path)
+                            result = self.session_tree.operations.remove_folder(item, force=force_delete)
                         
-                        if success:
+                        if result and result.success:
                             self.session_tree.refresh_tree()
+                        elif result:
+                            self._show_error_dialog(f"Delete {item_type} Error", result.message)
+
                     dlg.close()
                 except Exception as e:
                     self.logger.error(f"Delete confirmation response failed: {e}")

@@ -133,7 +133,7 @@ class TreeViewRegistry:
 class SessionTreeView:
     """Enhanced tree view manager for sessions and folders in the sidebar."""
     
-    def __init__(self, session_store: Gio.ListStore, folder_store: Gio.ListStore):
+    def __init__(self, session_store: Gio.ListStore, folder_store: Gio.ListStore, settings_manager):
         """
         Initialize enhanced session tree view.
         
@@ -147,7 +147,7 @@ class SessionTreeView:
         self.platform_info = get_platform_info()
         
         # Core components
-        self.operations = SessionOperations(session_store, folder_store)
+        self.operations = SessionOperations(session_store, folder_store, settings_manager)
         self.registry = TreeViewRegistry()
         
         # Thread safety
