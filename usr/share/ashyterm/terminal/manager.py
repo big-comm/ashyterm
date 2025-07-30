@@ -132,7 +132,7 @@ class TerminalRegistry:
 class TerminalManager:
     """Enhanced terminal manager with comprehensive functionality."""
     
-    def __init__(self, settings_manager: SettingsManager):
+    def __init__(self, parent_window, settings_manager: SettingsManager):
         """
         Initialize terminal manager.
         
@@ -140,6 +140,7 @@ class TerminalManager:
             settings_manager: SettingsManager instance for applying settings
         """
         self.logger = get_logger('ashyterm.terminal.manager')
+        self.parent_window = parent_window
         self.settings_manager = settings_manager
         self.platform_info = get_platform_info()
         self.environment_manager = get_environment_manager()
@@ -387,7 +388,7 @@ class TerminalManager:
         try:
             right_click = Gtk.GestureClick()
             right_click.set_button(Gdk.BUTTON_SECONDARY)
-            right_click.connect("pressed", self._on_terminal_right_click, terminal)
+            right_click.connect("released", self._on_terminal_right_click, terminal)
             terminal.add_controller(right_click)
             
             self.logger.debug("Terminal context menu configured")
@@ -399,7 +400,7 @@ class TerminalManager:
         """Handle right-click on terminal for context menu."""
         try:
             # Create and show context menu
-            menu = create_terminal_menu(None, terminal)
+            menu = create_terminal_menu(self.parent_window, terminal)
             setup_context_menu(terminal, menu, x, y)
             
             # Ensure terminal has focus
@@ -447,7 +448,7 @@ class TerminalManager:
             self.registry.update_terminal_status(terminal_id, 'unfocused')
         except Exception as e:
             self.logger.error(f"Terminal focus out handling failed: {e}")
-    
+
     def _on_terminal_child_exited(self, terminal: Vte.Terminal, child_status: int,
                                  identifier: Union[str, SessionItem], terminal_id: int) -> None:
         """
@@ -466,43 +467,42 @@ class TerminalManager:
             # Update registry
             self.registry.update_terminal_status(terminal_id, f'exited_{child_status}')
             
-            # Feed exit message to terminal if still alive
-            try:
-                if (terminal.get_realized() and 
-                    hasattr(terminal, 'feed') and 
-                    (not hasattr(terminal, 'is_closed') or not terminal.is_closed())):
-                    
-                    message = f"\r\n[Process in '{terminal_name}' terminated (status: {child_status})]\r\n"
-                    terminal.feed(message.encode('utf-8'))
-            except (GLib.Error, AttributeError) as e:
-                self.logger.debug(f"Could not feed exit message to '{terminal_name}': {e}")
-            
             # Log terminal event
             log_terminal_event("exited", terminal_name, f"status {child_status}")
-            
-            # Auto-close tab if process exited normally
+
+            # Handle the exit based on the status code
             if child_status == 0:
+                # Normal exit: schedule the tab to auto-close silently
                 def close_tab_delayed():
                     try:
                         if self.on_terminal_should_close:
-                            should_close = self.on_terminal_should_close(terminal, child_status, identifier)
-                            if should_close:
-                                self.logger.debug(f"Auto-closing tab for terminal '{terminal_name}' (ID: {terminal_id})")
-                                return False
+                            # This callback will trigger the actual tab closing in the window
+                            self.on_terminal_should_close(terminal, child_status, identifier)
                     except Exception as e:
                         self.logger.error(f"Auto-close callback failed for terminal {terminal_id}: {e}")
-                    return False
+                    return False  # Do not repeat
                 
-                # Wait 1 second before auto-closing
-                GLib.timeout_add(1000, close_tab_delayed)
-            
-            # Call external callback if set
+                # Use a very short delay to allow any final output to render before closing
+                GLib.timeout_add(100, close_tab_delayed)
+            else:
+                # Abnormal exit: feed exit message to the terminal so the user can see it
+                try:
+                    if (terminal.get_realized() and
+                        hasattr(terminal, 'feed') and
+                        (not hasattr(terminal, 'is_closed') or not terminal.is_closed())):
+                        
+                        message = f"\r\n[Process in '{terminal_name}' terminated unexpectedly (status: {child_status})]\r\n"
+                        terminal.feed(message.encode('utf-8'))
+                except (GLib.Error, AttributeError) as e:
+                    self.logger.debug(f"Could not feed exit message to '{terminal_name}': {e}")
+
+            # Call external callback for any exit status (for potential external logic)
             if self.on_terminal_child_exited:
                 self.on_terminal_child_exited(terminal, child_status, identifier)
                 
         except Exception as e:
             self.logger.error(f"Terminal child exit handling failed for ID {terminal_id}: {e}")
-    
+
     def _on_terminal_eof(self, terminal: Vte.Terminal, 
                         identifier: Union[str, SessionItem], 
                         terminal_id: int) -> None:

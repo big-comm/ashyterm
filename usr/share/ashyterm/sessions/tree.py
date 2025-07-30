@@ -133,7 +133,7 @@ class TreeViewRegistry:
 class SessionTreeView:
     """Enhanced tree view manager for sessions and folders in the sidebar."""
     
-    def __init__(self, session_store: Gio.ListStore, folder_store: Gio.ListStore, settings_manager):
+    def __init__(self, parent_window, session_store: Gio.ListStore, folder_store: Gio.ListStore, settings_manager):
         """
         Initialize enhanced session tree view.
         
@@ -142,6 +142,7 @@ class SessionTreeView:
             folder_store: Store containing SessionFolder objects
         """
         self.logger = get_logger('ashyterm.sessions.tree')
+        self.parent_window = parent_window
         self.session_store = session_store
         self.folder_store = folder_store
         self.platform_info = get_platform_info()
@@ -297,7 +298,7 @@ class SessionTreeView:
             # Right-click for context menu
             right_click = Gtk.GestureClick()
             right_click.set_button(Gdk.BUTTON_SECONDARY)
-            right_click.connect("pressed", self._on_right_click_safe)
+            right_click.connect("released", self._on_right_click_safe)
             tree_view.add_controller(right_click)
             
             # Left-click for focus tracking
@@ -697,7 +698,7 @@ class SessionTreeView:
                             
                             if menu_valid:
                                 menu = create_session_menu(
-                                    None, item, self.session_store,
+                                    self.parent_window, item, self.session_store,
                                     self._find_item_position(item),
                                     self.folder_store,
                                     bool(self._clipboard_item)
@@ -715,7 +716,7 @@ class SessionTreeView:
                             
                             if menu_valid:
                                 menu = create_folder_menu(
-                                    None, item, self.folder_store,
+                                    self.parent_window, item, self.folder_store,
                                     self._find_item_position(item),
                                     self.session_store,
                                     bool(self._clipboard_item)
@@ -724,7 +725,7 @@ class SessionTreeView:
                     # Right-click on empty space
                     self.current_session_context = None
                     self.current_folder_context = None
-                    menu = create_root_menu(None, bool(self._clipboard_item))
+                    menu = create_root_menu(self.parent_window, bool(self._clipboard_item)) 
                 
                 if menu:
                     setup_context_menu(self.tree_view, menu, x, y)

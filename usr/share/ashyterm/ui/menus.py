@@ -13,17 +13,8 @@ class SessionContextMenu(Gtk.PopoverMenu):
                  folder_store=None, clipboard_has_content=False):
         """
         Initialize session context menu.
-        
-        Args:
-            parent_window: Parent window reference
-            session_item: The SessionItem this menu applies to
-            session_store: Store containing sessions
-            position: Position of session in store
-            folder_store: Optional folder store for move operations
-            clipboard_has_content: Whether clipboard has content for paste
+        ...
         """
-        super().__init__()
-        
         menu = Gio.Menu()
         
         # Basic session operations
@@ -45,7 +36,9 @@ class SessionContextMenu(Gtk.PopoverMenu):
         # Destructive operation at the end
         menu.append_item(Gio.MenuItem.new("Delete", "win.delete-session"))
         
-        self.set_menu_model(menu)
+        # Initialize the menu by passing the model directly
+        super().__init__(menu_model=menu)
+        self.set_parent(parent_window) 
         self.set_has_arrow(False)
 
 
@@ -56,17 +49,8 @@ class FolderContextMenu(Gtk.PopoverMenu):
                  session_store=None, clipboard_has_content=False):
         """
         Initialize folder context menu.
-        
-        Args:
-            parent_window: Parent window reference
-            folder_item: The SessionFolder this menu applies to
-            folder_store: Store containing folders
-            position: Position of folder in store
-            session_store: Optional session store for operations
-            clipboard_has_content: Whether clipboard has content for paste
+        ...
         """
-        super().__init__()
-        
         menu = Gio.Menu()
         
         # Basic folder operations
@@ -86,7 +70,9 @@ class FolderContextMenu(Gtk.PopoverMenu):
         menu.append_section(None, Gio.Menu())
         menu.append_item(Gio.MenuItem.new("Delete", "win.delete-folder"))
         
-        self.set_menu_model(menu)
+        # Initialize the menu by passing the model directly
+        super().__init__(menu_model=menu)
+        self.set_parent(parent_window) 
         self.set_has_arrow(False)
 
 
@@ -96,13 +82,8 @@ class RootTreeViewContextMenu(Gtk.PopoverMenu):
     def __init__(self, parent_window, clipboard_has_content=False):
         """
         Initialize root context menu.
-        
-        Args:
-            parent_window: Parent window reference
-            clipboard_has_content: Whether clipboard has content for paste
+        ...
         """
-        super().__init__()
-        
         menu = Gio.Menu()
         
         # Add new items
@@ -114,7 +95,9 @@ class RootTreeViewContextMenu(Gtk.PopoverMenu):
             menu.append_section(None, Gio.Menu())
             menu.append_item(Gio.MenuItem.new("Paste to Root", "win.paste-item-root"))
         
-        self.set_menu_model(menu)
+        # Initialize the menu by passing the model directly
+        super().__init__(menu_model=menu)
+        self.set_parent(parent_window)
         self.set_has_arrow(False)
 
 
@@ -124,13 +107,8 @@ class TerminalContextMenu(Gtk.PopoverMenu):
     def __init__(self, parent_window, terminal):
         """
         Initialize terminal context menu.
-        
-        Args:
-            parent_window: Parent window reference
-            terminal: The terminal widget this menu applies to
+        ...
         """
-        super().__init__()
-        
         menu = Gio.Menu()
         
         # Standard terminal operations
@@ -138,7 +116,9 @@ class TerminalContextMenu(Gtk.PopoverMenu):
         menu.append_item(Gio.MenuItem.new("Paste", "win.paste"))
         menu.append_item(Gio.MenuItem.new("Select All", "win.select-all"))
         
-        self.set_menu_model(menu)
+        # Initialize the menu by passing the model directly
+        super().__init__(menu_model=menu)
+        self.set_parent(parent_window)
         self.set_has_arrow(False)
 
 
@@ -201,7 +181,6 @@ def setup_context_menu(widget: Gtk.Widget, menu: Gtk.PopoverMenu,
     
     # Setup and show menu
     menu.set_pointing_to(rect)
-    menu.set_parent(widget)
     menu.popup()
 
 

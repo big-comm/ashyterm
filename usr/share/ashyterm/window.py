@@ -62,9 +62,9 @@ class CommTerminalWindow(Adw.ApplicationWindow):
         self.folder_store = Gio.ListStore.new(SessionFolder)
         
         # Component managers
-        self.terminal_manager = TerminalManager(self.settings_manager)
+        self.terminal_manager = TerminalManager(self, self.settings_manager)
         self.tab_manager = TabManager(self.terminal_manager)
-        self.session_tree = SessionTreeView(self.session_store, self.folder_store, self.settings_manager)
+        self.session_tree = SessionTreeView(self, self.session_store, self.folder_store, self.settings_manager)
         
         # Thread safety
         self._ui_lock = threading.Lock()
@@ -88,7 +88,7 @@ class CommTerminalWindow(Adw.ApplicationWindow):
         
         # Initialize the window
         self._initialize_window()
-    
+
     def _initialize_window(self) -> None:
         """Initialize window components safely."""
         try:
@@ -107,9 +107,9 @@ class CommTerminalWindow(Adw.ApplicationWindow):
                 self.logger.warning(f"Security auditor initialization failed: {e}")
             
             # Initialize component managers
-            self.terminal_manager = TerminalManager(self.settings_manager)
+            self.terminal_manager = TerminalManager(self, self.settings_manager)
             self.tab_manager = TabManager(self.terminal_manager)
-            self.session_tree = SessionTreeView(self.session_store, self.folder_store, self.settings_manager)
+            self.session_tree = SessionTreeView(self, self.session_store, self.folder_store, self.settings_manager)
             
             self.logger.debug("Component managers initialized")
             
@@ -448,20 +448,24 @@ class CommTerminalWindow(Adw.ApplicationWindow):
             self.logger.debug(f"Sidebar focus changed: {has_focus}")
         except Exception as e:
             self.logger.error(f"Tree focus change handling failed: {e}")
-    
+
     def _on_terminal_should_close(self, terminal, child_status: int, identifier) -> bool:
         """Handle request to close terminal tab after process exit."""
         try:
-            page = self.tab_manager.get_page_for_terminal(terminal)
-            if page:
-                self.logger.debug(f"Auto-closing tab for terminal with status {child_status}")
-                
-                # Only auto-close for normal exits (status 0)
-                if child_status == 0:
-                    self.tab_manager.close_tab(page)
-                    return True
+            if child_status != 0:
+                return False
             
-            return False
+            page = self.tab_manager.get_page_for_terminal(terminal)
+            if not page:
+                return False
+
+            if self.tab_manager.get_tab_count() <= 1:
+                self.logger.info("Last terminal closed. Closing the application window.")
+                self.close()
+                return True
+
+            self.logger.debug(f"Auto-closing tab for terminal with status {child_status}")
+            return self.tab_manager.close_tab(page)
             
         except Exception as e:
             self.logger.error(f"Terminal close handling failed: {e}")

@@ -435,6 +435,7 @@ class TabManager:
         # Use timeout instead of idle_add for more predictable timing
         GLib.timeout_add(50, focus_terminal)
     
+
     def close_tab(self, page: Optional[Adw.TabPage] = None) -> bool:
         """
         Close a tab and clean up its terminal with enhanced safety.
@@ -457,13 +458,6 @@ class TabManager:
                 # Get tab info before closing - GTK4 compatibility
                 tab_id = getattr(page, 'tab_id', None)
                 terminal = self.registry.get_terminal_for_page(page)
-                
-                # If this is the last tab, create a new one first
-                if self.get_tab_count() <= 1:
-                    self.logger.debug("Closing last tab - creating new one first")
-                    new_page = self.create_local_tab("Local Terminal")
-                    if not new_page:
-                        self.logger.warning("Failed to create replacement tab")
                 
                 # Clean up terminal
                 if terminal:
@@ -613,7 +607,7 @@ class TabManager:
             except Exception as e:
                 self.logger.error(f"Focus terminal failed: {e}")
                 return False
-    
+
     def _on_tab_selected_changed(self, tab_view, param) -> None:
         """Handle tab selection change with enhanced focus management."""
         try:
@@ -633,17 +627,17 @@ class TabManager:
                             if terminal.get_realized():
                                 terminal.grab_focus()
                                 self._stats['focus_changes'] += 1
-                                return False
-                            else:
-                                return True  # Try again
                         except Exception as e:
                             self.logger.error(f"Focus selected terminal failed: {e}")
-                            return False
-                    
-                    # Cancel any previous timeout
+                        finally:
+                            # CRÍTICO: Limpa o ID após a execução para evitar a condição de corrida
+                            self._focus_timeout_id = None
+                        return False  # Remove da fila de eventos
+
+                    # Cancel any previous timeout that hasn't run yet
                     if self._focus_timeout_id is not None:
                         GLib.source_remove(self._focus_timeout_id)
-                        self._focus_timeout_id = None
+                        self._focus_timeout_id = None # Garante que está limpo
                     
                     self._focus_timeout_id = GLib.timeout_add(50, focus_selected_terminal)
             

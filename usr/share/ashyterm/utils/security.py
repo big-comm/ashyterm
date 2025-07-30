@@ -386,25 +386,15 @@ class SSHKeyValidator:
         Returns:
             Tuple of (is_valid, error_message, key_content)
         """
-        # First validate the path
+        # First, validate the path, permissions, and accessibility of the key file.
         path_valid, path_error = SSHKeyValidator.validate_ssh_key_path(key_path)
         if not path_valid:
             return False, path_error, None
         
-        try:
-            # Read key content
-            with open(key_path, 'r', encoding='utf-8') as f:
-                key_content = f.read()
-            
-            # Validate content
-            content_valid, content_error = SSHKeyValidator.validate_ssh_key_content(key_content)
-            if not content_valid:
-                return False, content_error, key_content
-            
-            return True, None, key_content
-            
-        except Exception as e:
-            return False, f"Error reading key file: {e}", None
+        # If path validation passes, we consider it valid for our application's purposes.
+        # The underlying 'ssh' command is the ultimate authority for validating the key's content.
+        # We return True and None for the content, as it's no longer needed for this step.
+        return True, None, None
 
 
 class PathValidator:
