@@ -171,8 +171,8 @@ class SessionTreeView:
         self._clipboard_timestamp = 0
         
         # Context tracking with enhanced validation
-        self.current_session_context: Optional[SessionItem] = None
-        self.current_folder_context: Optional[SessionFolder] = None
+        #self.current_session_context: Optional[SessionItem] = None
+        #self.current_folder_context: Optional[SessionFolder] = None
         self.current_context_position: int = -1
         
         # Security and validation
@@ -662,7 +662,7 @@ class SessionTreeView:
         except Exception as e:
             self._stats['ui_errors'] += 1
             self.logger.error(f"Left click handling failed: {e}")
-    
+
     def _on_right_click_safe(self, gesture, n_press, x, y) -> None:
         """Safe right-click handler for context menu."""
         with self._context_lock:
@@ -687,8 +687,8 @@ class SessionTreeView:
                         # Find the actual item
                         item = self._find_item_by_tree_iter_safe(tree_iter, model)
                         if isinstance(item, SessionItem):
-                            self.current_session_context = item
-                            self.current_folder_context = None
+                            self.parent_window.current_session_context = item
+                            self.parent_window.current_folder_context = None
                             
                             # Validate session for context menu
                             menu_valid = True
@@ -705,8 +705,8 @@ class SessionTreeView:
                                 )
                             
                         elif isinstance(item, SessionFolder):
-                            self.current_folder_context = item
-                            self.current_session_context = None
+                            self.parent_window.current_folder_context = item
+                            self.parent_window.current_session_context = None
                             
                             # Validate folder for context menu
                             menu_valid = True
@@ -722,9 +722,8 @@ class SessionTreeView:
                                     bool(self._clipboard_item)
                                 )
                 else:
-                    # Right-click on empty space
-                    self.current_session_context = None
-                    self.current_folder_context = None
+                    self.parent_window.current_session_context = None
+                    self.parent_window.current_folder_context = None
                     menu = create_root_menu(self.parent_window, bool(self._clipboard_item)) 
                 
                 if menu:
