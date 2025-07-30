@@ -330,7 +330,7 @@ class TerminalManager:
                 terminal.set_encoding('utf-8')
             
             # Apply current settings
-            self.settings_manager.apply_terminal_settings(terminal)
+            self.settings_manager.apply_terminal_settings(terminal, self.parent_window)
             
             # Set up context menu
             self._setup_context_menu(terminal)
@@ -613,7 +613,7 @@ class TerminalManager:
                 terminal = self.registry.get_terminal(terminal_id)
                 if terminal and terminal.get_realized():
                     try:
-                        self.settings_manager.apply_terminal_settings(terminal)
+                        self.settings_manager.apply_terminal_settings(terminal, self.parent_window)
                         updated_count += 1
                     except Exception as e:
                         self.logger.warning(f"Failed to update terminal ID {terminal_id}: {e}")

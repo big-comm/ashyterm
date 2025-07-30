@@ -17,7 +17,7 @@ import gi
 gi.require_version("Gtk", "4.0")
 gi.require_version("Adw", "1")
 
-from gi.repository import Gdk, Pango, GLib
+from gi.repository import Gtk, Gdk, Pango, GLib
 
 # VTE import with availability check
 try:
@@ -760,53 +760,55 @@ class SettingsManager:
         index = ColorSchemeMap.get_scheme_index(scheme_name)
         self.set("color_scheme", index)
     
-    def apply_terminal_settings(self, terminal) -> None:
+    def apply_terminal_settings(self, terminal, window) -> None:
         """
-        Apply current settings to a terminal widget with enhanced error handling.
+        Apply current settings to a terminal widget and its parent window.
         
         Args:
             terminal: Vte.Terminal widget to configure
+            window: The parent Adw.ApplicationWindow
         """
         if not CONFIG_VTE_AVAILABLE or not VTE_AVAILABLE:
             self.logger.warning("VTE not available, cannot apply terminal settings")
             return
         
         try:
-            # Get color scheme
+            transparency = self.get("transparency", 0)
+            
+            css_provider = Gtk.CssProvider()
+            style_context = window.get_style_context()
+
+            if hasattr(window, "_transparency_css_provider"):
+                style_context.remove_provider(window._transparency_css_provider)
+
+            if transparency > 0:
+                css = "window.background { background-color: transparent; }"
+                css_provider.load_from_data(css.encode('utf-8'))
+                style_context.add_provider(css_provider, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION)
+                window._transparency_css_provider = css_provider
+            else:
+                if hasattr(window, "_transparency_css_provider"):
+                    delattr(window, "_transparency_css_provider")
             color_scheme = self.get_color_scheme_data()
             
-            # Parse foreground and background colors
             fg_color = Gdk.RGBA()
             bg_color = Gdk.RGBA()
             cursor_color = Gdk.RGBA()
             
-            # Parse colors with fallbacks
-            if not fg_color.parse(color_scheme.get("foreground", "#FFFFFF")):
-                fg_color.parse("#FFFFFF")
-                self.logger.warning("Invalid foreground color, using white")
+            fg_color.parse(color_scheme.get("foreground", "#FFFFFF"))
+            bg_color.parse(color_scheme.get("background", "#000000"))
             
-            if not bg_color.parse(color_scheme.get("background", "#000000")):
-                bg_color.parse("#000000")
-                self.logger.warning("Invalid background color, using black")
+            bg_color.alpha = max(0.0, min(1.0, 1.0 - (transparency / 100.0)))
             
-            # Parse cursor color (fallback to foreground)
             cursor_color_str = color_scheme.get("cursor", color_scheme.get("foreground", "#FFFFFF"))
-            if not cursor_color.parse(cursor_color_str):
-                cursor_color.parse("#FFFFFF")
+            cursor_color.parse(cursor_color_str)
             
-            # Apply transparency
-            transparency = self.get("transparency", 0)
-            if transparency > 0:
-                bg_color.alpha = max(0.0, min(1.0, 1.0 - (transparency / 100.0)))
-            
-            # Parse palette colors
             palette = []
             palette_src = color_scheme.get("palette", [])
             
             for i, color_str in enumerate(palette_src):
                 color = Gdk.RGBA()
                 if not color.parse(color_str):
-                    # Use fallback color
                     fallback_colors = [
                         "#000000", "#800000", "#008000", "#808000",
                         "#000080", "#800080", "#008080", "#c0c0c0",
@@ -814,27 +816,18 @@ class SettingsManager:
                         "#0000ff", "#ff00ff", "#00ffff", "#ffffff"
                     ]
                     color.parse(fallback_colors[i % len(fallback_colors)])
-                    self.logger.warning(f"Invalid palette color {i}, using fallback")
-                
                 palette.append(color)
             
-            # Ensure we have exactly 16 colors
             while len(palette) < 16:
                 fallback_color = Gdk.RGBA()
                 fallback_color.parse("#000000")
                 palette.append(fallback_color)
             
-            # Apply colors to terminal
             terminal.set_colors(fg_color, bg_color, palette[:16])
             
-            # Set cursor color if supported
-            try:
-                if hasattr(terminal, 'set_color_cursor'):
-                    terminal.set_color_cursor(cursor_color)
-            except Exception as e:
-                self.logger.debug(f"Could not set cursor color: {e}")
+            if hasattr(terminal, 'set_color_cursor'):
+                terminal.set_color_cursor(cursor_color)
             
-            # Apply font
             font_string = self.get("font", "Monospace 10")
             try:
                 font_desc = Pango.FontDescription.from_string(font_string)
@@ -844,21 +837,14 @@ class SettingsManager:
                 fallback_font = Pango.FontDescription.from_string("Monospace 10")
                 terminal.set_font(fallback_font)
             
-            # Apply behavior settings
-            try:
-                terminal.set_scroll_on_output(self.get("scroll_on_output", True))
-                terminal.set_scroll_on_keystroke(self.get("scroll_on_keystroke", True))
-                terminal.set_mouse_autohide(self.get("mouse_autohide", True))
-                
-                # Cursor blink
-                blink_mode = Vte.CursorBlinkMode.ON if self.get("cursor_blink", True) else Vte.CursorBlinkMode.OFF
-                terminal.set_cursor_blink_mode(blink_mode)
-                
-                # Bell
-                terminal.set_audible_bell(self.get("bell_sound", False))
-                
-            except Exception as e:
-                self.logger.warning(f"Failed to apply some terminal behaviors: {e}")
+            terminal.set_scroll_on_output(self.get("scroll_on_output", True))
+            terminal.set_scroll_on_keystroke(self.get("scroll_on_keystroke", True))
+            terminal.set_mouse_autohide(self.get("mouse_autohide", True))
+            
+            blink_mode = Vte.CursorBlinkMode.ON if self.get("cursor_blink", True) else Vte.CursorBlinkMode.OFF
+            terminal.set_cursor_blink_mode(blink_mode)
+            
+            terminal.set_audible_bell(self.get("bell_sound", False))
             
             self.logger.debug("Terminal settings applied successfully")
             

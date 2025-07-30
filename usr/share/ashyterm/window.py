@@ -275,30 +275,30 @@ class CommTerminalWindow(Adw.ApplicationWindow):
         except Exception as e:
             self.logger.error(f"Header bar creation failed: {e}")
             raise UIError("header_bar", f"creation failed: {e}")
-    
+
     def _create_sidebar(self) -> Gtk.Box:
         """Create the sidebar with session tree."""
         try:
-            sidebar_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=0)
+            toolbar_view = Adw.ToolbarView()
             
-            # Session tree in scrolled window
             scrolled_window = Gtk.ScrolledWindow()
             scrolled_window.set_policy(Gtk.PolicyType.AUTOMATIC, Gtk.PolicyType.AUTOMATIC)
             scrolled_window.set_vexpand(True)
             scrolled_window.set_child(self.session_tree.get_widget())
-            sidebar_box.append(scrolled_window)
             
-            # Toolbar with action buttons
+            toolbar_view.set_content(scrolled_window)
+            
             toolbar = self._create_sidebar_toolbar()
-            sidebar_box.append(toolbar)
             
-            self.logger.debug("Sidebar created")
-            return sidebar_box
+            toolbar_view.add_bottom_bar(toolbar)
+            
+            self.logger.debug("Sidebar created using Adw.ToolbarView")
+            return toolbar_view
             
         except Exception as e:
             self.logger.error(f"Sidebar creation failed: {e}")
             raise UIError("sidebar", f"creation failed: {e}")
-    
+        
     def _create_sidebar_toolbar(self) -> Gtk.Box:
         """Create the sidebar toolbar with action buttons."""
         try:
@@ -341,7 +341,10 @@ class CommTerminalWindow(Adw.ApplicationWindow):
         try:
             content_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=0)
             content_box.append(self.tab_manager.get_tab_bar())
-            content_box.append(self.tab_manager.get_tab_view())
+            
+            tab_view = self.tab_manager.get_tab_view()
+            tab_view.add_css_class("transparent-tabview")
+            content_box.append(tab_view)
             
             self.logger.debug("Content area created")
             return content_box
