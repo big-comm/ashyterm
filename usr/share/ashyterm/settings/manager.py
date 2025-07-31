@@ -782,13 +782,20 @@ class SettingsManager:
                 style_context.remove_provider(window._transparency_css_provider)
 
             if transparency > 0:
-                css = "window.background { background-color: transparent; }"
+                css = """window.background { background-color: transparent; }
+            .ashy-sidebar { background-color: #2d2d2d; }
+            .sidebar-main { background-color: #2d2d2d; }
+            .ashy-toolbar { background-color: #2d2d2d; }
+            .ashy-sidebar-content { background-color: #2d2d2d; }"""
+                
                 css_provider.load_from_data(css.encode('utf-8'))
-                style_context.add_provider(css_provider, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION)
+                # Use PRIORITY_USER instead de PRIORITY_APPLICATION
+                style_context.add_provider(css_provider, Gtk.STYLE_PROVIDER_PRIORITY_USER)
                 window._transparency_css_provider = css_provider
             else:
                 if hasattr(window, "_transparency_css_provider"):
                     delattr(window, "_transparency_css_provider")
+            
             color_scheme = self.get_color_scheme_data()
             
             fg_color = Gdk.RGBA()

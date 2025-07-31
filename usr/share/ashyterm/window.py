@@ -289,8 +289,23 @@ class CommTerminalWindow(Adw.ApplicationWindow):
             toolbar_view.set_content(scrolled_window)
             
             toolbar = self._create_sidebar_toolbar()
-            
             toolbar_view.add_bottom_bar(toolbar)
+            
+            # Add CSS classes for identification
+            toolbar_view.add_css_class("ashy-sidebar")
+            toolbar_view.add_css_class("sidebar-main")
+            toolbar.add_css_class("ashy-toolbar")
+            scrolled_window.add_css_class("ashy-sidebar-content")
+            
+            # Force CSS directly to prevent transparency issues
+            sidebar_css_provider = Gtk.CssProvider()
+            sidebar_css = """.ashy-sidebar { background-color: #2d2d2d; }
+    .ashy-toolbar { background-color: #2d2d2d; }"""
+            sidebar_css_provider.load_from_data(sidebar_css.encode('utf-8'))
+            
+            # Apply CSS directly to widgets
+            toolbar_view.get_style_context().add_provider(sidebar_css_provider, Gtk.STYLE_PROVIDER_PRIORITY_USER)
+            toolbar.get_style_context().add_provider(sidebar_css_provider, Gtk.STYLE_PROVIDER_PRIORITY_USER)
             
             self.logger.debug("Sidebar created using Adw.ToolbarView")
             return toolbar_view
