@@ -12,7 +12,7 @@ reset="\e[0m"                # Reset text formatting
 # Print status messages - CHANGE 'PACKAGE_NAME' to your actual package name
 printMsg() {
     local message=$1
-    echo -e "${blueDark}[${lightBlue}PACKAGE_NAME${blueDark}]${reset} ${cyan}→${reset} ${white}${message}${reset}"
+    echo -e "${blueDark}[${lightBlue}comm-ashyterm${blueDark}]${reset} ${cyan}→${reset} ${white}${message}${reset}"
 }
 
 # Function executed before package installation
