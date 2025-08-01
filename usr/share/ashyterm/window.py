@@ -29,7 +29,7 @@ from .utils.exceptions import (
 from .utils.security import validate_session_data, create_security_auditor
 from .utils.backup import BackupType
 from .utils.platform import get_platform_info, is_windows
-
+from .utils.translation_utils import _
 
 class CommTerminalWindow(Adw.ApplicationWindow):
     """Main application window with enhanced functionality."""

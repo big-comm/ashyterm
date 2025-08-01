@@ -1,5 +1,8 @@
 """Sessions module for Ashy Terminal."""
 
+# Import translation utility
+from ..utils.translation_utils import _
+
 from .models import SessionItem, SessionFolder
 from .storage import (
     load_sessions_and_folders, save_sessions_and_folders,

@@ -10,6 +10,9 @@ gi.require_version("Adw", "1")
 
 from gi.repository import Gtk, Adw, Gio, GLib
 
+# Import translation utility
+from .utils.translation_utils import _
+
 from .settings.config import (
     APP_ID, APP_TITLE, APP_VERSION, DEVELOPER_NAME, DEVELOPER_TEAM, 
     COPYRIGHT, WEBSITE, ISSUE_URL
@@ -47,7 +50,7 @@ class CommTerminalApp(Adw.Application):
         
         # Initialize logging first
         self.logger = get_logger('ashyterm.app')
-        self.logger.info(f"Initializing {APP_TITLE} v{APP_VERSION}")
+        self.logger.info(_("Initializing {} v{}").format(APP_TITLE, APP_VERSION))
         
         # Core components
         self.settings_manager: Optional[SettingsManager] = None
@@ -58,7 +61,7 @@ class CommTerminalApp(Adw.Application):
         
         # Platform information
         self.platform_info = get_platform_info()
-        self.logger.info(f"Running on {self.platform_info.platform_type.value} platform")
+        self.logger.info(_("Running on {} platform").format(self.platform_info.platform_type.value))
         
         # Application state
         self._initialized = False
@@ -86,12 +89,12 @@ class CommTerminalApp(Adw.Application):
                 self._signal_count += 1
                 
                 if self._signal_count == 1:
-                    self.logger.info(f"Received signal {sig}, initiating graceful shutdown")
+                    self.logger.info(_("Received signal {}, initiating graceful shutdown").format(sig))
                     if not self._shutdown_in_progress:
                         self._shutdown_in_progress = True
                         GLib.idle_add(self.quit)
                 elif self._signal_count >= 2:
-                    self.logger.warning(f"Received signal {sig} {self._signal_count} times, forcing immediate exit")
+                    self.logger.warning(_("Received signal {} {} times, forcing immediate exit").format(sig, self._signal_count))
                     import os
                     os._exit(1)
             
@@ -102,7 +105,7 @@ class CommTerminalApp(Adw.Application):
                 signal.signal(signal.SIGBREAK, signal_handler)
                 
         except Exception as e:
-            self.logger.warning(f"Could not set up signal handlers: {e}")
+            self.logger.warning(_("Could not set up signal handlers: {}").format(e))
     
     def _initialize_subsystems(self) -> bool:
         """
@@ -112,25 +115,25 @@ class CommTerminalApp(Adw.Application):
             True if initialization successful
         """
         try:
-            self.logger.info("Initializing application subsystems")
+            self.logger.info(_("Initializing application subsystems"))
             
             self.settings_manager = SettingsManager()
-            self.logger.debug("Settings manager initialized")
+            self.logger.debug(_("Settings manager initialized"))
             
             if self.settings_manager.get("debug_mode", False):
                 enable_debug_mode()
-                self.logger.info("Debug mode enabled")
+                self.logger.info(_("Debug mode enabled"))
             
             if is_encryption_available():
                 try:
                     if not initialize_encryption():
-                        self.logger.info("Encryption available but not initialized (may require passphrase)")
+                        self.logger.info(_("Encryption available but not initialized (may require passphrase)"))
                     else:
-                        self.logger.info("Encryption system initialized")
+                        self.logger.info(_("Encryption system initialized"))
                 except Exception as e:
-                    self.logger.warning(f"Encryption initialization failed: {e}")
+                    self.logger.warning(_("Encryption initialization failed: {}").format(e))
             else:
-                self.logger.warning("Encryption not available - passwords will be stored as plain text")
+                self.logger.warning(_("Encryption not available - passwords will be stored as plain text"))
             
             try:
                 self.backup_manager = get_backup_manager()
@@ -139,45 +142,45 @@ class CommTerminalApp(Adw.Application):
                 auto_backup_enabled = self.settings_manager.get("auto_backup_enabled", False)
                 if auto_backup_enabled:
                     self.auto_backup_scheduler.enable()
-                    self.logger.info("Automatic backups enabled")
+                    self.logger.info(_("Automatic backups enabled"))
                 else:
                     self.auto_backup_scheduler.disable()
                 
-                self.logger.debug("Backup system initialized")
+                self.logger.debug(_("Backup system initialized"))
                 
             except Exception as e:
-                self.logger.error(f"Failed to initialize backup system: {e}")
+                self.logger.error(_("Failed to initialize backup system: {}").format(e))
                 self.backup_manager = None
                 self.auto_backup_scheduler = None
             
             try:
                 self.security_auditor = create_security_auditor()
-                self.logger.debug("Security auditor initialized")
+                self.logger.debug(_("Security auditor initialized"))
             except Exception as e:
-                self.logger.warning(f"Security auditor initialization failed: {e}")
+                self.logger.warning(_("Security auditor initialization failed: {}").format(e))
             
             from .settings.config import VTE_AVAILABLE
             if not VTE_AVAILABLE:
-                self.logger.critical("VTE library not available")
+                self.logger.critical(_("VTE library not available"))
                 raise VTENotAvailableError()
             
             self._initialized = True
-            self.logger.info("All subsystems initialized successfully")
+            self.logger.info(_("All subsystems initialized successfully"))
             return True
             
         except Exception as e:
-            self.logger.critical(f"Subsystem initialization failed: {e}")
-            handle_exception(e, "application initialization", "ashyterm.app", reraise=True)
+            self.logger.critical(_("Subsystem initialization failed: {}").format(e))
+            handle_exception(e, _("application initialization"), "ashyterm.app", reraise=True)
             return False
     
     def _on_startup(self, app) -> None:
         """Handle application startup."""
         try:
-            self.logger.info("Application startup initiated")
+            self.logger.info(_("Application startup initiated"))
             log_app_start()
             
             if not self._initialize_subsystems():
-                self.logger.critical("Failed to initialize application subsystems")
+                self.logger.critical(_("Failed to initialize application subsystems"))
                 self.quit()
                 return
             
@@ -186,10 +189,10 @@ class CommTerminalApp(Adw.Application):
             
             self._check_startup_backup()
             
-            self.logger.info("Application startup completed successfully")
+            self.logger.info(_("Application startup completed successfully"))
             
         except Exception as e:
-            self.logger.critical(f"Application startup failed: {e}")
+            self.logger.critical(_("Application startup failed: {}").format(e))
             self._show_startup_error(str(e))
             self.quit()
     
@@ -200,7 +203,7 @@ class CommTerminalApp(Adw.Application):
                 return
 
             if not self.settings_manager.get("auto_backup_enabled", False):
-                self.logger.debug("Automatic startup backup is disabled in settings.")
+                self.logger.debug(_("Automatic startup backup is disabled in settings."))
                 return
             
             from .settings.config import SESSIONS_FILE, SETTINGS_FILE
@@ -211,18 +214,18 @@ class CommTerminalApp(Adw.Application):
                     backup_files.append(Path(file_path))
             
             if backup_files and self.auto_backup_scheduler.should_backup():
-                self.logger.info("Performing startup backup asynchronously")
+                self.logger.info(_("Performing startup backup asynchronously"))
                 
                 self.backup_manager.create_backup_async(
                     backup_files,
                     BackupType.AUTOMATIC,
-                    "Automatic startup backup"
+                    _("Automatic startup backup")
                 )
                 
                 self.auto_backup_scheduler.last_backup_time = time.time()
                 
         except Exception as e:
-            self.logger.warning(f"Startup backup check failed: {e}")
+            self.logger.warning(_("Startup backup check failed: {}").format(e))
     
     def _setup_actions(self) -> None:
         """Set up application-level actions."""
@@ -242,10 +245,10 @@ class CommTerminalApp(Adw.Application):
                 action.connect("activate", callback)
                 self.add_action(action)
             
-            self.logger.debug("Application actions configured")
+            self.logger.debug(_("Application actions configured"))
             
         except Exception as e:
-            self.logger.error(f"Failed to setup actions: {e}")
+            self.logger.error(_("Failed to setup actions: {}").format(e))
     
     def _setup_keyboard_shortcuts(self) -> None:
         """Set up application-level keyboard shortcuts."""
@@ -259,10 +262,10 @@ class CommTerminalApp(Adw.Application):
             
             self._update_window_shortcuts()
             
-            self.logger.debug("Keyboard shortcuts configured")
+            self.logger.debug(_("Keyboard shortcuts configured"))
             
         except Exception as e:
-            self.logger.error(f"Failed to setup keyboard shortcuts: {e}")
+            self.logger.error(_("Failed to setup keyboard shortcuts: {}").format(e))
     
     def _update_window_shortcuts(self) -> None:
         """Update window-level keyboard shortcuts from settings."""
@@ -279,19 +282,19 @@ class CommTerminalApp(Adw.Application):
                 else:
                     self.set_accels_for_action(f"win.{action_name}", [])
             
-            self.logger.debug("Window shortcuts updated")
+            self.logger.debug(_("Window shortcuts updated"))
             
         except Exception as e:
-            self.logger.error(f"Failed to update window shortcuts: {e}")
+            self.logger.error(_("Failed to update window shortcuts: {}").format(e))
     
     def _on_activate(self, app) -> None:
         """Handle application activation."""
         try:
-            self.logger.debug("Application activation requested")
+            self.logger.debug(_("Application activation requested"))
             
             window = self.get_active_window()
             if not window:
-                self.logger.info("Creating main window")
+                self.logger.info(_("Creating main window"))
                 from .window import CommTerminalWindow
                 window = CommTerminalWindow(application=self, settings_manager=self.settings_manager)
                 self._main_window = window
@@ -300,15 +303,15 @@ class CommTerminalApp(Adw.Application):
             
             self._update_window_shortcuts()
             
-            self.logger.debug("Application activation completed")
+            self.logger.debug(_("Application activation completed"))
             
         except Exception as e:
-            self.logger.error(f"Application activation failed: {e}")
-            self._show_error_dialog("Activation Error", f"Failed to activate application: {e}")
+            self.logger.error(_("Application activation failed: {}").format(e))
+            self._show_error_dialog(_("Activation Error"), _("Failed to activate application: {}").format(e))
     
     def _on_quit_action(self, action, param) -> None:
         """Handle quit action."""
-        self.logger.info("Quit action triggered")
+        self.logger.info(_("Quit action triggered"))
         self.quit()
     
     def _on_preferences_action(self, action, param) -> None:
@@ -326,8 +329,8 @@ class CommTerminalApp(Adw.Application):
                 window.activate_action("preferences", None)
                 
         except Exception as e:
-            self.logger.error(f"Failed to open preferences: {e}")
-            self._show_error_dialog("Preferences Error", f"Failed to open preferences: {e}")
+            self.logger.error(_("Failed to open preferences: {}").format(e))
+            self._show_error_dialog(_("Preferences Error"), _("Failed to open preferences: {}").format(e))
     
     def _on_about_action(self, action, param) -> None:
         """Handle about action."""
@@ -344,25 +347,25 @@ class CommTerminalApp(Adw.Application):
                 license_type=Gtk.License.MIT_X11,
                 website=WEBSITE,
                 issue_url=ISSUE_URL,
-                comments="A modern terminal emulator with session management"
+                comments=_("A modern terminal emulator with session management")
             )
             
             if self.settings_manager and self.settings_manager.get("debug_mode", False):
-                debug_info = f"Platform: {self.platform_info.platform_type.value}\n"
-                debug_info += f"Architecture: {self.platform_info.architecture}\n"
-                debug_info += f"Shell: {self.platform_info.default_shell}"
+                debug_info = _("Platform: {}\n").format(self.platform_info.platform_type.value)
+                debug_info += _("Architecture: {}\n").format(self.platform_info.architecture)
+                debug_info += _("Shell: {}").format(self.platform_info.default_shell)
                 about_dialog.set_debug_info(debug_info)
             
             about_dialog.present()
             
         except Exception as e:
-            self.logger.error(f"Failed to show about dialog: {e}")
+            self.logger.error(_("Failed to show about dialog: {}").format(e))
     
     def _on_backup_now_action(self, action, param) -> None:
         """Handle manual backup action."""
         try:
             if not self.backup_manager:
-                self._show_error_dialog("Backup Error", "Backup system not available")
+                self._show_error_dialog(_("Backup Error"), _("Backup system not available"))
                 return
             
             from .settings.config import SESSIONS_FILE, SETTINGS_FILE
@@ -373,44 +376,44 @@ class CommTerminalApp(Adw.Application):
                     backup_files.append(Path(file_path))
             
             if not backup_files:
-                self._show_error_dialog("Backup Error", "No files to backup")
+                self._show_error_dialog(_("Backup Error"), _("No files to backup"))
                 return
             
             backup_id = self.backup_manager.create_backup(
                 backup_files,
                 BackupType.MANUAL,
-                "Manual backup from menu"
+                _("Manual backup from menu")
             )
             
             if backup_id:
-                self.logger.info(f"Manual backup created: {backup_id}")
-                self._show_info_dialog("Backup Complete", f"Backup created successfully: {backup_id}")
+                self.logger.info(_("Manual backup created: {}").format(backup_id))
+                self._show_info_dialog(_("Backup Complete"), _("Backup created successfully: {}").format(backup_id))
             else:
-                self._show_error_dialog("Backup Error", "Failed to create backup")
+                self._show_error_dialog(_("Backup Error"), _("Failed to create backup"))
                 
         except Exception as e:
-            self.logger.error(f"Manual backup failed: {e}")
-            self._show_error_dialog("Backup Error", f"Backup failed: {e}")
+            self.logger.error(_("Manual backup failed: {}").format(e))
+            self._show_error_dialog(_("Backup Error"), _("Backup failed: {}").format(e))
     
     def _on_restore_backup_action(self, action, param) -> None:
         """Handle restore backup action."""
         try:
             if not self.backup_manager:
-                self._show_error_dialog("Restore Error", "Backup system not available")
+                self._show_error_dialog(_("Restore Error"), _("Backup system not available"))
                 return
             
             backups = self.backup_manager.list_backups()
             if not backups:
-                self._show_info_dialog("No Backups", "No backups available to restore")
+                self._show_info_dialog(_("No Backups"), _("No backups available to restore"))
                 return
             
             backup_count = len(backups)
-            self._show_info_dialog("Backups Available", 
-                                 f"{backup_count} backup(s) available. Use preferences dialog for detailed restore options.")
+            self._show_info_dialog(_("Backups Available"), 
+                                 _("{} backup(s) available. Use preferences dialog for detailed restore options.").format(backup_count))
             
         except Exception as e:
-            self.logger.error(f"Restore backup action failed: {e}")
-            self._show_error_dialog("Restore Error", f"Failed to access backups: {e}")
+            self.logger.error(_("Restore backup action failed: {}").format(e))
+            self._show_error_dialog(_("Restore Error"), _("Failed to access backups: {}").format(e))
     
     def _on_toggle_debug_action(self, action, param) -> None:
         """Handle toggle debug mode action."""
@@ -425,16 +428,16 @@ class CommTerminalApp(Adw.Application):
             
             if new_debug:
                 enable_debug_mode()
-                self.logger.info("Debug mode enabled")
+                self.logger.info(_("Debug mode enabled"))
             else:
                 from .utils.logger import disable_debug_mode
                 disable_debug_mode()
-                self.logger.info("Debug mode disabled")
+                self.logger.info(_("Debug mode disabled"))
             
             self._setup_keyboard_shortcuts()
             
         except Exception as e:
-            self.logger.error(f"Failed to toggle debug mode: {e}")
+            self.logger.error(_("Failed to toggle debug mode: {}").format(e))
     
     def _on_show_logs_action(self, action, param) -> None:
         """Handle show logs action."""
@@ -443,14 +446,14 @@ class CommTerminalApp(Adw.Application):
             log_info = get_log_info()
             
             log_dir = log_info.get('log_dir', 'Unknown')
-            self._show_info_dialog("Log Information", f"Logs are stored in: {log_dir}")
+            self._show_info_dialog(_("Log Information"), _("Logs are stored in: {}").format(log_dir))
             
         except Exception as e:
-            self.logger.error(f"Failed to show log info: {e}")
+            self.logger.error(_("Failed to show log info: {}").format(e))
     
     def _on_shutdown(self, app) -> None:
         """Handle application shutdown."""
-        self.logger.info("Application shutdown initiated")
+        self.logger.info(_("Application shutdown initiated"))
         self._shutdown_gracefully()
     
     def _shutdown_gracefully(self) -> None:
@@ -459,28 +462,28 @@ class CommTerminalApp(Adw.Application):
             return
         
         self._shutting_down = True
-        self.logger.info("Performing graceful shutdown")
+        self.logger.info(_("Performing graceful shutdown"))
         
         try:
             self._perform_shutdown_backup()
             
             if self._main_window:
-                self.logger.debug("Cleaning up main window")
+                self.logger.debug(_("Cleaning up main window"))
                 self._main_window.destroy()
                 self._main_window = None
             
             if self.settings_manager:
-                self.logger.debug("Saving settings")
+                self.logger.debug(_("Saving settings"))
                 self.settings_manager.save_settings()
             
             if self.auto_backup_scheduler:
                 self.auto_backup_scheduler.disable()
             
             log_app_shutdown()
-            self.logger.info("Graceful shutdown completed")
+            self.logger.info(_("Graceful shutdown completed"))
             
         except Exception as e:
-            self.logger.error(f"Error during graceful shutdown: {e}")
+            self.logger.error(_("Error during graceful shutdown: {}").format(e))
         finally:
             # The application lifecycle handles the final exit.
             # No need to call self.quit() here as this is the shutdown handler.
@@ -504,28 +507,28 @@ class CommTerminalApp(Adw.Application):
                     backup_files.append(Path(file_path))
             
             if backup_files:
-                self.logger.info("Performing shutdown backup")
+                self.logger.info(_("Performing shutdown backup"))
                 self.backup_manager.create_backup_async(
                     backup_files,
                     BackupType.AUTOMATIC,
-                    "Automatic backup on exit"
+                    _("Automatic backup on exit")
                 )
                 
         except Exception as e:
-            self.logger.warning(f"Shutdown backup failed: {e}")
+            self.logger.warning(_("Shutdown backup failed: {}").format(e))
     
     def _cleanup_on_exit(self) -> None:
         """Cleanup function called on exit."""
         if not self._shutting_down:
-            self.logger.info("Emergency cleanup on exit")
+            self.logger.info(_("Emergency cleanup on exit"))
             self._shutdown_gracefully()
     
     def _show_startup_error(self, error_message: str) -> None:
         """Show startup error dialog."""
         try:
             dialog = Gtk.MessageDialog(
-                text="Startup Error",
-                secondary_text=f"Application failed to start: {error_message}"
+                text=_("Startup Error"),
+                secondary_text=_("Application failed to start: {}").format(error_message)
             )
             dialog.add_button("_OK", Gtk.ResponseType.OK)
             dialog.run()
@@ -545,7 +548,7 @@ class CommTerminalApp(Adw.Application):
             dialog.add_response("ok", "OK")
             dialog.present()
         except Exception as e:
-            self.logger.error(f"Failed to show error dialog: {e}")
+            self.logger.error(_("Failed to show error dialog: {}").format(e))
     
     def _show_info_dialog(self, title: str, message: str) -> None:
         """Show info dialog to user."""
@@ -559,7 +562,7 @@ class CommTerminalApp(Adw.Application):
             dialog.add_response("ok", "OK")
             dialog.present()
         except Exception as e:
-            self.logger.error(f"Failed to show info dialog: {e}")
+            self.logger.error(_("Failed to show info dialog: {}").format(e))
     
     def get_settings_manager(self) -> Optional[SettingsManager]:
         """Get the settings manager instance."""
@@ -570,7 +573,7 @@ class CommTerminalApp(Adw.Application):
         try:
             self._update_window_shortcuts()
         except Exception as e:
-            self.logger.error(f"Failed to refresh keyboard shortcuts: {e}")
+            self.logger.error(_("Failed to refresh keyboard shortcuts: {}").format(e))
     
     def do_window_added(self, window) -> None:
         """Handle window being added to application."""
@@ -578,7 +581,7 @@ class CommTerminalApp(Adw.Application):
         
         if hasattr(window, 'is_main_window') and window.is_main_window:
             self._main_window = window
-            self.logger.debug("Main window registered")
+            self.logger.debug(_("Main window registered"))
     
     def do_window_removed(self, window) -> None:
         """Handle window being removed from application."""
@@ -586,7 +589,7 @@ class CommTerminalApp(Adw.Application):
         
         if window == self._main_window:
             self._main_window = None
-            self.logger.debug("Main window unregistered")
+            self.logger.debug(_("Main window unregistered"))
     
     def get_main_window(self) -> Optional["CommTerminalWindow"]:
         """Get the main window instance."""
@@ -602,10 +605,10 @@ class CommTerminalApp(Adw.Application):
         try:
             from .window import CommTerminalWindow
             window = CommTerminalWindow(application=self, settings_manager=self.settings_manager)
-            self.logger.info("New window created")
+            self.logger.info(_("New window created"))
             return window
         except Exception as e:
-            self.logger.error(f"Failed to create new window: {e}")
+            self.logger.error(_("Failed to create new window: {}").format(e))
             raise
     
     def get_backup_manager(self):
@@ -631,17 +634,17 @@ def create_application() -> CommTerminalApp:
     logger = get_logger('ashyterm.app.factory')
     
     try:
-        logger.info("Creating application instance")
+        logger.info(_("Creating application instance"))
         
         Adw.init()
         
         app = CommTerminalApp()
         
-        logger.info("Application instance created successfully")
+        logger.info(_("Application instance created successfully"))
         return app
         
     except Exception as e:
-        logger.critical(f"Failed to create application: {e}")
+        logger.critical(_("Failed to create application: {}").format(e))
         raise
 
 
@@ -662,16 +665,16 @@ def run_application(app: CommTerminalApp, args: list = None) -> int:
         args = sys.argv
     
     try:
-        logger.info(f"Starting application with args: {args}")
+        logger.info(_("Starting application with args: {}").format(args))
         exit_code = app.run(args)
-        logger.info(f"Application exited with code: {exit_code}")
+        logger.info(_("Application exited with code: {}").format(exit_code))
         return exit_code
         
     except KeyboardInterrupt:
-        logger.info("Application interrupted by user")
+        logger.info(_("Application interrupted by user"))
         return 1
     except Exception as e:
-        logger.critical(f"Unhandled exception during application run: {e}")
+        logger.critical(_("Unhandled exception during application run: {}").format(e))
         import traceback
         traceback.print_exc()
         return 1
@@ -688,7 +691,7 @@ def main() -> int:
         app = create_application()
         return run_application(app)
     except Exception as e:
-        print(f"FATAL: Failed to start application: {e}")
+        print(_("FATAL: Failed to start application: {}").format(e))
         import traceback
         traceback.print_exc()
         return 1

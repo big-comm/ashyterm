@@ -48,6 +48,9 @@ import warnings
 from pathlib import Path
 from typing import Optional, Dict, Any, List
 
+# Import translation utility
+from .utils.translation_utils import _
+
 # Package metadata
 __version__ = "1.0.1"
 __version_info__ = (1, 0, 1)
@@ -56,7 +59,7 @@ __email__ = "contact@communitybig.org"
 __license__ = "MIT"
 __copyright__ = "© 2024 BigCommunity"
 __url__ = "https://communitybig.org/"
-__description__ = "A modern terminal emulator with session management"
+__description__ = _("A modern terminal emulator with session management")
 
 # API exports
 __all__ = [
@@ -123,9 +126,8 @@ def _check_python_version():
     current_version = sys.version_info[:2]
     
     if current_version < min_version:
-        error_msg = (
-            f"Python {min_version[0]}.{min_version[1]}+ required, "
-            f"got {current_version[0]}.{current_version[1]}"
+        error_msg = _("Python {0}.{1}+ required, got {2}.{3}").format(
+            min_version[0], min_version[1], current_version[0], current_version[1]
         )
         print(f"ERROR: {error_msg}")
         return False, error_msg
@@ -146,7 +148,7 @@ def _check_gtk_requirements():
             gi.require_version("Adw", "1")
             from gi.repository import Gtk, Adw
         except (ImportError, ValueError) as e:
-            error_msg = f"Required GTK4/Adwaita libraries not found: {e}"
+            error_msg = _("Required GTK4/Adwaita libraries not found: {}").format(e)
             return False, error_msg
         
         # Check VTE availability (optional but important)
@@ -157,8 +159,7 @@ def _check_gtk_requirements():
         except (ImportError, ValueError) as e:
             VTE_AVAILABLE = False
             warnings.warn(
-                f"VTE 3.91 not found: {e}. Terminal functionality will be limited. "
-                "Install gir1.2-vte-2.91 for full functionality.",
+                _("VTE 3.91 not found: {}. Terminal functionality will be limited. Install gir1.2-vte-2.91 for full functionality.").format(e),
                 ImportWarning,
                 stacklevel=2
             )
@@ -166,7 +167,7 @@ def _check_gtk_requirements():
         return True, None
         
     except ImportError as e:
-        error_msg = f"GTK/GI not available: {e}"
+        error_msg = _("GTK/GI not available: {}").format(e)
         return False, error_msg
 
 
@@ -189,7 +190,7 @@ def _check_utility_systems():
         
     except ImportError as e:
         UTILS_AVAILABLE = False
-        error_msg = f"Utility systems not available: {e}"
+        error_msg = _("Utility systems not available: {}").format(e)
         return False, error_msg
 
 
@@ -209,7 +210,7 @@ def _initialize_error_handling():
                 
                 logger = get_logger('ashyterm.global')
                 logger.critical(
-                    f"Uncaught exception: {exc_type.__name__}: {exc_value}",
+                    _("Uncaught exception: {}: {}").format(exc_type.__name__, exc_value),
                     exc_info=(exc_type, exc_value, exc_traceback)
                 )
             
@@ -219,7 +220,7 @@ def _initialize_error_handling():
         return False
         
     except Exception as e:
-        warnings.warn(f"Failed to initialize error handling: {e}", RuntimeWarning)
+        warnings.warn(_("Failed to initialize error handling: {}").format(e), RuntimeWarning)
         return False
 
 
@@ -345,8 +346,8 @@ def check_dependencies() -> Dict[str, Any]:
     
     # Check optional dependencies
     optional_deps = {
-        'cryptography': 'Password encryption',
-        'sshpass': 'Password-based SSH authentication'
+        'cryptography': _('Password encryption'),
+        'sshpass': _('Password-based SSH authentication')
     }
     
     for dep, description in optional_deps.items():
@@ -385,13 +386,13 @@ def get_requirements_status() -> str:
     deps = check_dependencies()
     
     if deps['all_satisfied'] and not deps['optional_missing']:
-        return "✓ All dependencies satisfied"
+        return _("✓ All dependencies satisfied")
     elif deps['all_satisfied']:
         optional_count = len(deps['optional_missing'])
-        return f"✓ Core dependencies satisfied ({optional_count} optional features unavailable)"
+        return _("✓ Core dependencies satisfied ({} optional features unavailable)").format(optional_count)
     else:
         critical_count = len(deps['critical_missing'])
-        return f"✗ {critical_count} critical dependencies missing"
+        return _("✗ {} critical dependencies missing").format(critical_count)
 
 
 class InitializationError(Exception):
@@ -424,7 +425,7 @@ def initialize_application(force: bool = False) -> bool:
     _logger = _setup_basic_logging()
     
     if _logger:
-        _logger.info(f"Initializing Ashy Terminal v{__version__}")
+        _logger.info(_("Initializing Ashy Terminal v{}").format(__version__))
     
     try:
         # Check critical dependencies
@@ -433,12 +434,12 @@ def initialize_application(force: bool = False) -> bool:
         if not deps['all_satisfied']:
             critical_errors = []
             for dep in deps['critical_missing']:
-                error = deps['details'][dep].get('error', f'{dep} not available')
+                error = deps['details'][dep].get('error', _('{} not available').format(dep))
                 critical_errors.append(error)
                 _initialization_errors.append(error)
             
             raise InitializationError(
-                f"Critical dependencies missing: {', '.join(deps['critical_missing'])}",
+                _("Critical dependencies missing: {}").format(', '.join(deps['critical_missing'])),
                 critical_errors
             )
         
@@ -452,46 +453,46 @@ def initialize_application(force: bool = False) -> bool:
                 # Set up enhanced logging
                 from .utils.logger import get_logger
                 _logger = get_logger('ashyterm.init')
-                _logger.info("Enhanced logging system initialized")
+                _logger.info(_("Enhanced logging system initialized"))
                 
                 # Initialize error handling
                 if _initialize_error_handling():
-                    _logger.debug("Enhanced error handling initialized")
+                    _logger.debug(_("Enhanced error handling initialized"))
                 
                 # Initialize platform detection
                 if PLATFORM_INFO:
-                    _logger.info(f"Platform detected: {PLATFORM_INFO.platform_type.value}")
+                    _logger.info(_("Platform detected: {}").format(PLATFORM_INFO.platform_type.value))
                 
                 # Initialize backup system
                 try:
                     from .utils.backup import get_backup_manager
                     backup_manager = get_backup_manager()
-                    _logger.debug("Backup system initialized")
+                    _logger.debug(_("Backup system initialized"))
                 except Exception as e:
-                    _logger.warning(f"Backup system initialization failed: {e}")
-                    _initialization_errors.append(f"Backup system: {e}")
+                    _logger.warning(_("Backup system initialization failed: {}").format(e))
+                    _initialization_errors.append(_("Backup system: {}").format(e))
                 
                 # Initialize security system
                 try:
                     from .utils.security import create_security_auditor
                     security_auditor = create_security_auditor()
-                    _logger.debug("Security system initialized")
+                    _logger.debug(_("Security system initialized"))
                 except Exception as e:
-                    _logger.warning(f"Security system initialization failed: {e}")
-                    _initialization_errors.append(f"Security system: {e}")
+                    _logger.warning(_("Security system initialization failed: {}").format(e))
+                    _initialization_errors.append(_("Security system: {}").format(e))
                 
                 # Initialize encryption if available
                 if CRYPTO_AVAILABLE:
                     try:
                         from .utils.crypto import get_secure_storage
                         secure_storage = get_secure_storage()
-                        _logger.info("Encryption system available")
+                        _logger.info(_("Encryption system available"))
                     except Exception as e:
-                        _logger.warning(f"Encryption system initialization failed: {e}")
-                        _initialization_errors.append(f"Encryption: {e}")
+                        _logger.warning(_("Encryption system initialization failed: {}").format(e))
+                        _initialization_errors.append(_("Encryption: {}").format(e))
                 
             except Exception as e:
-                error_msg = f"Enhanced systems initialization failed: {e}"
+                error_msg = _("Enhanced systems initialization failed: {}").format(e)
                 _initialization_errors.append(error_msg)
                 if _logger:
                     _logger.error(error_msg)
@@ -499,24 +500,24 @@ def initialize_application(force: bool = False) -> bool:
         
         # Log optional features status
         if _logger:
-            _logger.info(f"VTE available: {VTE_AVAILABLE}")
-            _logger.info(f"Utilities available: {UTILS_AVAILABLE}")
-            _logger.info(f"Cryptography available: {CRYPTO_AVAILABLE}")
+            _logger.info(_("VTE available: {}").format(VTE_AVAILABLE))
+            _logger.info(_("Utilities available: {}").format(UTILS_AVAILABLE))
+            _logger.info(_("Cryptography available: {}").format(CRYPTO_AVAILABLE))
             
             if deps['optional_missing']:
-                _logger.info(f"Optional features unavailable: {', '.join(deps['optional_missing'])}")
+                _logger.info(_("Optional features unavailable: {}").format(', '.join(deps['optional_missing'])))
         
         _initialized = True
         
         if _logger:
-            _logger.info("Ashy Terminal initialization completed successfully")
+            _logger.info(_("Ashy Terminal initialization completed successfully"))
         
         return True
         
     except InitializationError:
         raise  # Re-raise initialization errors
     except Exception as e:
-        error_msg = f"Unexpected initialization error: {e}"
+        error_msg = _("Unexpected initialization error: {}").format(e)
         _initialization_errors.append(error_msg)
         
         if _logger:
@@ -534,28 +535,28 @@ def cleanup_application() -> None:
             # Use enhanced logging if available
             from .utils.logger import get_logger, log_app_shutdown
             logger = get_logger('ashyterm.cleanup')
-            logger.info("Starting application cleanup")
+            logger.info(_("Starting application cleanup"))
             
             try:
                 # Clean up backup system
                 from .utils.backup import get_backup_manager
                 backup_manager = get_backup_manager()
                 # Backup manager cleanup is automatic
-                logger.debug("Backup system cleaned up")
+                logger.debug(_("Backup system cleaned up"))
             except Exception as e:
-                logger.warning(f"Backup cleanup failed: {e}")
+                logger.warning(_("Backup cleanup failed: {}").format(e))
             
             log_app_shutdown()
         elif _logger:
-            _logger.info("Application cleanup completed")
+            _logger.info(_("Application cleanup completed"))
         
         _initialized = False
         
     except Exception as e:
         if _logger:
-            _logger.error(f"Cleanup failed: {e}")
+            _logger.error(_("Cleanup failed: {}").format(e))
         else:
-            print(f"Cleanup failed: {e}")
+            print(_("Cleanup failed: {}").format(e))
 
 
 def is_initialized() -> bool:
@@ -586,16 +587,16 @@ def _auto_initialize():
         python_ok, python_error = _check_python_version()
         if not python_ok:
             print(f"CRITICAL: {python_error}")
-            print("Please upgrade Python to continue.")
+            print(_("Please upgrade Python to continue."))
             return
         
         gtk_ok, gtk_error = _check_gtk_requirements()
         if not gtk_ok:
             print(f"CRITICAL: {gtk_error}")
-            print("Please install required GTK4/Adwaita libraries:")
-            print("  Ubuntu/Debian: sudo apt install python3-gi gir1.2-gtk-4.0 gir1.2-adwaita-1")
-            print("  Fedora: sudo dnf install python3-gobject gtk4-devel libadwaita-devel")
-            print("  Arch: sudo pacman -S python-gobject gtk4 libadwaita")
+            print(_("Please install required GTK4/Adwaita libraries:"))
+            print(_("  Ubuntu/Debian: sudo apt install python3-gi gir1.2-gtk-4.0 gir1.2-adwaita-1"))
+            print(_("  Fedora: sudo dnf install python3-gobject gtk4-devel libadwaita-devel"))
+            print(_("  Arch: sudo pacman -S python-gobject gtk4 libadwaita"))
             return
         
         # Check utility systems (non-critical)
@@ -604,14 +605,13 @@ def _auto_initialize():
         # If we get here, basic requirements are met
         if not VTE_AVAILABLE:
             warnings.warn(
-                "VTE library not found. Terminal functionality will be limited. "
-                "Install gir1.2-vte-2.91 for full functionality.",
+                _("VTE library not found. Terminal functionality will be limited. Install gir1.2-vte-2.91 for full functionality."),
                 ImportWarning,
                 stacklevel=2
             )
         
     except Exception as e:
-        warnings.warn(f"Package initialization check failed: {e}", RuntimeWarning)
+        warnings.warn(_("Package initialization check failed: {}").format(e), RuntimeWarning)
 
 
 # Run automatic initialization
@@ -625,8 +625,8 @@ def main():
         from .main import main as app_main
         return app_main()
     except ImportError as e:
-        print(f"Error: Could not import main module: {e}")
-        print("Make sure all dependencies are installed.")
+        print(_("Error: Could not import main module: {}").format(e))
+        print(_("Make sure all dependencies are installed."))
         return 1
 
 

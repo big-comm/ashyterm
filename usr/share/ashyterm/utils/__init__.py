@@ -5,6 +5,9 @@ This package provides comprehensive utility systems for logging, security,
 platform compatibility, backup, encryption, and exception handling.
 """
 
+# Import translation utility
+from .translation_utils import _
+
 # Package metadata
 __version__ = "1.0.1"
 
@@ -81,7 +84,7 @@ def sanitize_name(name: str, max_length: int = 128) -> str:
         Sanitized name string
     """
     if not name:
-        return "unnamed"
+        return _("unnamed")
     
     # Remove forbidden characters
     forbidden_chars = '<>:"/\\|?*\0'
@@ -98,7 +101,7 @@ def sanitize_name(name: str, max_length: int = 128) -> str:
     
     # Ensure not empty
     if not sanitized:
-        sanitized = "unnamed"
+        sanitized = _("unnamed")
     
     # Limit length
     if len(sanitized) > max_length:

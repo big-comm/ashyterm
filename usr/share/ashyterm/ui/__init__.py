@@ -1,5 +1,8 @@
 """UI module for Ashy Terminal."""
 
+# Import translation utility
+from ..utils.translation_utils import _
+
 from .dialogs import SessionEditDialog, FolderEditDialog, PreferencesDialog
 from .menus import (
     SessionContextMenu, FolderContextMenu, RootTreeViewContextMenu,

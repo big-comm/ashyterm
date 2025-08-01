@@ -24,6 +24,9 @@ if __package__ is None:
     # Set the package name for relative imports
     __package__ = "ashyterm"
 
+# Import translation utility
+from .utils.translation_utils import _
+
 # Import new utility systems first
 # Initialize utilities availability flags
 UTILS_AVAILABLE = False
@@ -48,8 +51,8 @@ try:
     UTILS_AVAILABLE = True
 except ImportError as e:
     # Fallback logging if utility modules aren't available
-    print(f"Warning: Could not import utility modules: {e}")
-    print("Starting with basic functionality...")
+    print(_("Warning: Could not import utility modules: {}").format(e))
+    print(_("Starting with basic functionality..."))
     
     # Create fallback functions
     def get_logger(name=None):
@@ -57,10 +60,10 @@ except ImportError as e:
         return logging.getLogger(name or 'ashyterm')
     
     def log_app_start():
-        print("Application starting...")
+        print(_("Application starting..."))
     
     def log_app_shutdown():
-        print("Application shutting down...")
+        print(_("Application shutting down..."))
     
     def enable_debug_mode():
         import logging
@@ -80,7 +83,7 @@ except ImportError as e:
 def setup_signal_handlers():
     """Set up signal handlers for graceful shutdown."""
     def signal_handler(sig, frame):
-        print(f"\nReceived signal {sig}, shutting down gracefully...")
+        print(_("\nReceived signal {}, shutting down gracefully...").format(sig))
         log_app_shutdown()
         sys.exit(0)
     
@@ -91,7 +94,7 @@ def setup_signal_handlers():
         if is_windows():
             signal.signal(signal.SIGBREAK, signal_handler)
     except Exception as e:
-        print(f"Warning: Could not set up signal handlers: {e}")
+        print(_("Warning: Could not set up signal handlers: {}").format(e))
 
 
 def parse_command_line() -> argparse.Namespace:
@@ -103,8 +106,8 @@ def parse_command_line() -> argparse.Namespace:
     """
     parser = argparse.ArgumentParser(
         prog="ashyterm",
-        description="Ashy Terminal - A modern terminal emulator with session management",
-        epilog="For more information, visit: https://communitybig.org/"
+        description=_("Ashy Terminal - A modern terminal emulator with session management"),
+        epilog=_("For more information, visit: https://communitybig.org/")
     )
     
     # Version information
@@ -118,59 +121,59 @@ def parse_command_line() -> argparse.Namespace:
     parser.add_argument(
         '--debug', '-d',
         action='store_true',
-        help='Enable debug mode with verbose logging'
+        help=_('Enable debug mode with verbose logging')
     )
     
     parser.add_argument(
         '--log-level',
         choices=['DEBUG', 'INFO', 'WARNING', 'ERROR', 'CRITICAL'],
         default='INFO',
-        help='Set logging level (default: INFO)'
+        help=_('Set logging level (default: INFO)')
     )
     
     # Configuration options
     parser.add_argument(
         '--config-dir',
         type=str,
-        help='Specify custom configuration directory'
+        help=_('Specify custom configuration directory')
     )
     
     parser.add_argument(
         '--no-backup',
         action='store_true',
-        help='Disable automatic backup functionality'
+        help=_('Disable automatic backup functionality')
     )
     
     parser.add_argument(
         '--reset-config',
         action='store_true',
-        help='Reset configuration to defaults'
+        help=_('Reset configuration to defaults')
     )
     
     # Session options
     parser.add_argument(
         '--session', '-s',
         type=str,
-        help='Open specific session by name'
+        help=_('Open specific session by name')
     )
     
     parser.add_argument(
         '--local', '-l',
         action='store_true',
-        help='Open local terminal immediately'
+        help=_('Open local terminal immediately')
     )
     
     # Platform options
     parser.add_argument(
         '--platform-info',
         action='store_true',
-        help='Show platform information and exit'
+        help=_('Show platform information and exit')
     )
     
     parser.add_argument(
         '--check-deps',
         action='store_true',
-        help='Check dependencies and exit'
+        help=_('Check dependencies and exit')
     )
     
     return parser.parse_args()
@@ -193,44 +196,44 @@ def check_dependencies() -> bool:
             gi.require_version("Gtk", "4.0")
             gi.require_version("Adw", "1")
             from gi.repository import Gtk, Adw
-            logger.info("✓ GTK4/Adwaita available")
+            logger.info(_("✓ GTK4/Adwaita available"))
         except (ImportError, ValueError) as e:
-            logger.error(f"✗ GTK4/Adwaita not available: {e}")
+            logger.error(_("✗ GTK4/Adwaita not available: {}").format(e))
             dependencies_ok = False
         
         # Check VTE
         try:
             gi.require_version("Vte", "3.91")
             from gi.repository import Vte
-            logger.info("✓ VTE 3.91 available")
+            logger.info(_("✓ VTE 3.91 available"))
         except (ImportError, ValueError) as e:
-            logger.warning(f"⚠ VTE 3.91 not available: {e}")
-            logger.warning("Terminal functionality will be limited")
+            logger.warning(_("⚠ VTE 3.91 not available: {}").format(e))
+            logger.warning(_("Terminal functionality will be limited"))
         
         # Check cryptography (optional)
         if is_encryption_available():
-            logger.info("✓ Cryptography library available")
+            logger.info(_("✓ Cryptography library available"))
         else:
-            logger.warning("⚠ Cryptography library not available - passwords will be stored as plain text")
+            logger.warning(_("⚠ Cryptography library not available - passwords will be stored as plain text"))
         
         # Check platform-specific dependencies
         platform_info = get_platform_info()
-        logger.info(f"✓ Platform: {platform_info.platform_type.value}")
+        logger.info(_("✓ Platform: {}").format(platform_info.platform_type.value))
         
         if platform_info.has_command('ssh'):
-            logger.info("✓ SSH command available")
+            logger.info(_("✓ SSH command available"))
         else:
-            logger.warning("⚠ SSH command not found - SSH functionality will be limited")
+            logger.warning(_("⚠ SSH command not found - SSH functionality will be limited"))
         
         if platform_info.has_command('sshpass'):
-            logger.info("✓ sshpass available")
+            logger.info(_("✓ sshpass available"))
         else:
-            logger.info("ℹ sshpass not available - password SSH will require manual input")
+            logger.info(_("ℹ sshpass not available - password SSH will require manual input"))
         
         return dependencies_ok
         
     except Exception as e:
-        logger.error(f"Dependency check failed: {e}")
+        logger.error(_("Dependency check failed: {}").format(e))
         return False
 
 
@@ -243,52 +246,52 @@ def show_platform_info():
         platform_info = get_platform_info()
         log_info = get_log_info()
         
-        print("=== Ashy Terminal Platform Information ===")
+        print(_("=== Ashy Terminal Platform Information ==="))
         print()
         
-        print("Platform:")
-        print(f"  Type: {platform_info.platform_type.value}")
-        print(f"  System: {platform_info.system_name}")
-        print(f"  Release: {platform_info.platform_release}")
-        print(f"  Architecture: {platform_info.architecture}")
-        print(f"  64-bit: {platform_info.is_64bit}")
+        print(_("Platform:"))
+        print(_("  Type: {}").format(platform_info.platform_type.value))
+        print(_("  System: {}").format(platform_info.system_name))
+        print(_("  Release: {}").format(platform_info.platform_release))
+        print(_("  Architecture: {}").format(platform_info.architecture))
+        print(_("  64-bit: {}").format(platform_info.is_64bit))
         print()
         
-        print("Paths:")
-        print(f"  Home: {platform_info.home_dir}")
-        print(f"  Config: {platform_info.config_dir}")
-        print(f"  SSH: {platform_info.ssh_dir}")
-        print(f"  Cache: {platform_info.cache_dir}")
-        print(f"  Logs: {log_info.get('log_dir', 'Unknown')}")
+        print(_("Paths:"))
+        print(_("  Home: {}").format(platform_info.home_dir))
+        print(_("  Config: {}").format(platform_info.config_dir))
+        print(_("  SSH: {}").format(platform_info.ssh_dir))
+        print(_("  Cache: {}").format(platform_info.cache_dir))
+        print(_("  Logs: {}").format(log_info.get('log_dir', 'Unknown')))
         print()
         
-        print("Shell:")
-        print(f"  Default: {platform_info.default_shell}")
-        print(f"  Available: {[shell[1] for shell in platform_info.available_shells]}")
+        print(_("Shell:"))
+        print(_("  Default: {}").format(platform_info.default_shell))
+        print(_("  Available: {}").format([shell[1] for shell in platform_info.available_shells]))
         print()
         
-        print("Commands:")
+        print(_("Commands:"))
         important_commands = ['ssh', 'sshpass', 'git', 'vim', 'nano']
         for cmd in important_commands:
             status = "✓" if platform_info.has_command(cmd) else "✗"
-            path = platform_info.get_command_path(cmd) or "Not found"
+            path = platform_info.get_command_path(cmd) or _("Not found")
             print(f"  {cmd}: {status} {path}")
         print()
         
-        print("Encryption:")
-        print(f"  Available: {'✓' if is_encryption_available() else '✗'}")
-        print(f"  Initialized: {'✓' if is_encryption_available() else '✗'}")
+        print(_("Encryption:"))
+        print(_("  Available: {}").format('✓' if is_encryption_available() else '✗'))
+        print(_("  Initialized: {}").format('✓' if is_encryption_available() else '✗'))
         print()
         
     except Exception as e:
-        print(f"Error showing platform info: {e}")
+        print(_("Error showing platform info: {}").format(e))
 
 
 def reset_configuration():
     """Reset configuration to defaults."""
     try:
         logger = get_logger('ashyterm.main.reset')
-        logger.info("Resetting configuration to defaults")
+        logger.info(_("Resetting configuration to defaults"))
         
         config_dir = get_config_directory()
         
@@ -304,20 +307,20 @@ def reset_configuration():
                 backup_file = config_file.with_suffix(f"{config_file.suffix}.backup")
                 config_file.rename(backup_file)
                 backup_files.append(backup_file)
-                logger.info(f"Backed up {config_file} to {backup_file}")
+                logger.info(_("Backed up {} to {}").format(config_file, backup_file))
         
         if backup_files:
-            print(f"Configuration reset complete. Backup files created:")
+            print(_("Configuration reset complete. Backup files created:"))
             for backup_file in backup_files:
                 print(f"  {backup_file}")
         else:
-            print("No configuration files found to reset.")
+            print(_("No configuration files found to reset."))
         
         return True
         
     except Exception as e:
-        logger.error(f"Configuration reset failed: {e}")
-        print(f"Error resetting configuration: {e}")
+        logger.error(_("Configuration reset failed: {}").format(e))
+        print(_("Error resetting configuration: {}").format(e))
         return False
 
 
@@ -334,7 +337,7 @@ def main() -> int:
     except SystemExit as e:
         return e.code
     except Exception as e:
-        print(f"Error parsing command line: {e}")
+        print(_("Error parsing command line: {}").format(e))
         return 1
     
     # Set up basic logging
@@ -345,10 +348,10 @@ def main() -> int:
             set_console_level(LogLevel[args.log_level])
         
         logger = get_logger('ashyterm.main')
-        logger.info("Ashy Terminal starting up")
+        logger.info(_("Ashy Terminal starting up"))
         
     except Exception as e:
-        print(f"Error setting up logging: {e}")
+        print(_("Error setting up logging: {}").format(e))
         return 1
     
     # Set up signal handlers
@@ -369,66 +372,66 @@ def main() -> int:
             return 0 if success else 1
         
         # Check dependencies before starting GUI
-        logger.info("Checking system dependencies")
+        logger.info(_("Checking system dependencies"))
         if not check_dependencies():
-            logger.error("Critical dependencies missing")
-            print("Error: Required dependencies are missing. Use --check-deps for details.")
+            logger.error(_("Critical dependencies missing"))
+            print(_("Error: Required dependencies are missing. Use --check-deps for details."))
             return 1
         
         # Import and run the application
-        logger.info("Starting application")
+        logger.info(_("Starting application"))
         log_app_start()
         
         from .app import main as app_main
         exit_code = app_main()
         
-        logger.info(f"Application exited with code: {exit_code}")
+        logger.info(_("Application exited with code: {}").format(exit_code))
         log_app_shutdown()
         
         return exit_code
         
     except KeyboardInterrupt:
-        logger.info("Application interrupted by user")
+        logger.info(_("Application interrupted by user"))
         log_app_shutdown()
         return 0
         
     except VTENotAvailableError:
-        logger.critical("VTE library not available")
-        print("Error: VTE library is required but not available.")
-        print("Please install gir1.2-vte-2.91 package.")
+        logger.critical(_("VTE library not available"))
+        print(_("Error: VTE library is required but not available."))
+        print(_("Please install gir1.2-vte-2.91 package."))
         return 1
         
     except ConfigError as e:
-        logger.critical(f"Configuration error: {e.user_message}")
-        print(f"Configuration Error: {e.user_message}")
+        logger.critical(_("Configuration error: {}").format(e.user_message))
+        print(_("Configuration Error: {}").format(e.user_message))
         return 1
         
     except AshyTerminalError as e:
-        logger.critical(f"Application error: {e.user_message}")
-        print(f"Error: {e.user_message}")
+        logger.critical(_("Application error: {}").format(e.user_message))
+        print(_("Error: {}").format(e.user_message))
         if args.debug:
             import traceback
             traceback.print_exc()
         return 1
         
     except ImportError as e:
-        logger.critical(f"Import error: {e}")
-        print(f"Import Error: {e}")
-        print("Make sure all required dependencies are installed.")
+        logger.critical(_("Import error: {}").format(e))
+        print(_("Import Error: {}").format(e))
+        print(_("Make sure all required dependencies are installed."))
         if args.debug:
             import traceback
             traceback.print_exc()
         return 1
         
     except Exception as e:
-        logger.critical(f"Unhandled exception: {e}")
-        print(f"Unhandled Error: {e}")
+        logger.critical(_("Unhandled exception: {}").format(e))
+        print(_("Unhandled Error: {}").format(e))
         
         if args.debug:
             import traceback
             traceback.print_exc()
         else:
-            print("Use --debug for detailed error information.")
+            print(_("Use --debug for detailed error information."))
         
         return 1
 
@@ -445,7 +448,7 @@ def run_standalone():
         # Allow normal sys.exit() calls to pass through
         raise
     except Exception as e:
-        print(f"Fatal error: {e}")
+        print(_("Fatal error: {}").format(e))
         sys.exit(1)
 
 
