@@ -21,6 +21,7 @@ from .exceptions import (
     SSHKeyError, FilePermissionError, DirectoryPermissionError,
     ErrorSeverity
 )
+from .translation_utils import _
 
 
 class SecurityConfig:
@@ -76,7 +77,7 @@ class InputSanitizer:
             Sanitized filename
         """
         if not filename:
-            return "unnamed"
+            return _("unnamed")
         
         # Remove forbidden characters
         forbidden_chars = '<>:"/\\|?*\0'
@@ -93,7 +94,7 @@ class InputSanitizer:
         
         # Ensure not empty
         if not sanitized:
-            sanitized = "unnamed"
+            sanitized = _("unnamed")
         
         # Limit length
         if len(sanitized) > SecurityConfig.MAX_SESSION_NAME_LENGTH:
@@ -298,40 +299,40 @@ class SSHKeyValidator:
             Tuple of (is_valid, error_message)
         """
         if not key_path:
-            return False, "Key path is empty"
+            return False, _("Key path is empty")
         
         try:
             path = Path(key_path)
             
             # Check if file exists
             if not path.exists():
-                return False, f"Key file does not exist: {key_path}"
+                return False, _("Key file does not exist: {}").format(key_path)
             
             # Check if it's a file (not directory)
             if not path.is_file():
-                return False, f"Key path is not a file: {key_path}"
+                return False, _("Key path is not a file: {}").format(key_path)
             
             # Check file size
             file_size = path.stat().st_size
             if file_size > SecurityConfig.MAX_SSH_KEY_SIZE:
-                return False, f"Key file too large: {file_size} bytes"
+                return False, _("Key file too large: {} bytes").format(file_size)
             
             if file_size == 0:
-                return False, "Key file is empty"
+                return False, _("Key file is empty")
             
             # Check file permissions
             file_mode = path.stat().st_mode
             if file_mode & 0o077:  # Check if group/other have any permissions
-                return False, "Key file has insecure permissions (should be 600)"
+                return False, _("Key file has insecure permissions (should be 600)")
             
             # Check if file is readable
             if not os.access(path, os.R_OK):
-                return False, "Key file is not readable"
+                return False, _("Key file is not readable")
             
             return True, None
             
         except OSError as e:
-            return False, f"Error accessing key file: {e}"
+            return False, _("Error accessing key file: {}").format(e)
     
     @staticmethod
     def validate_ssh_key_content(key_content: str) -> Tuple[bool, Optional[str]]:
@@ -345,35 +346,35 @@ class SSHKeyValidator:
             Tuple of (is_valid, error_message)
         """
         if not key_content:
-            return False, "Key content is empty"
+            return False, _("Key content is empty")
         
         try:
             # Split key into parts
             parts = key_content.strip().split()
             
             if len(parts) < 2:
-                return False, "Invalid key format (missing parts)"
+                return False, _("Invalid key format (missing parts)")
             
             key_type = parts[0]
             key_data = parts[1]
             
             # Validate key type
             if key_type not in SecurityConfig.ALLOWED_SSH_KEY_TYPES:
-                return False, f"Unsupported key type: {key_type}"
+                return False, _("Unsupported key type: {}").format(key_type)
             
             # Validate key data (base64)
             import base64
             try:
                 decoded = base64.b64decode(key_data)
                 if len(decoded) < 32:  # Minimum reasonable key size
-                    return False, "Key data appears to be too short"
+                    return False, _("Key data appears to be too short")
             except Exception:
-                return False, "Invalid base64 encoding in key data"
+                return False, _("Invalid base64 encoding in key data")
             
             return True, None
             
         except Exception as e:
-            return False, f"Error validating key content: {e}"
+            return False, _("Error validating key content: {}").format(e)
     
     @staticmethod
     def read_and_validate_ssh_key(key_path: str) -> Tuple[bool, Optional[str], Optional[str]]:
@@ -460,23 +461,23 @@ class PathValidator:
             path = Path(file_path)
             
             if not path.exists():
-                return False, "File does not exist"
+                return False, _("File does not exist")
             
             file_stat = path.stat()
             current_permissions = file_stat.st_mode & 0o777
             
             if required_permissions is not None:
                 if current_permissions != required_permissions:
-                    return False, f"Incorrect permissions: {oct(current_permissions)} (expected {oct(required_permissions)})"
+                    return False, _("Incorrect permissions: {} (expected {})").format(oct(current_permissions), oct(required_permissions))
             
             # Check for overly permissive permissions
             if current_permissions & 0o077:  # Group or other have permissions
-                return False, "File has overly permissive permissions"
+                return False, _("File has overly permissive permissions")
             
             return True, None
             
         except OSError as e:
-            return False, f"Error checking file permissions: {e}"
+            return False, _("Error checking file permissions: {}").format(e)
 
 
 class SecurityAuditor:
@@ -504,8 +505,8 @@ class SecurityAuditor:
                 findings.append({
                     'severity': 'medium',
                     'type': 'invalid_hostname',
-                    'message': f"Invalid hostname format: {hostname}",
-                    'recommendation': 'Use a valid hostname or IP address'
+                    'message': _("Invalid hostname format: {}").format(hostname),
+                    'recommendation': _('Use a valid hostname or IP address')
                 })
             
             # Check if hostname resolves
@@ -515,8 +516,8 @@ class SecurityAuditor:
                     findings.append({
                         'severity': 'low',
                         'type': 'private_ip',
-                        'message': f"Connecting to private IP: {ip}",
-                        'recommendation': 'Ensure this is intentional'
+                        'message': _("Connecting to private IP: {}").format(ip),
+                        'recommendation': _('Ensure this is intentional')
                     })
         
         # Check authentication
@@ -530,15 +531,15 @@ class SecurityAuditor:
                 findings.append({
                     'severity': 'high',
                     'type': 'invalid_ssh_key',
-                    'message': f"SSH key validation failed: {error}",
-                    'recommendation': 'Fix SSH key configuration'
+                    'message': _("SSH key validation failed: {}").format(error),
+                    'recommendation': _('Fix SSH key configuration')
                 })
         elif auth_type == 'password':
             findings.append({
                 'severity': 'medium',
                 'type': 'password_auth',
-                'message': 'Using password authentication',
-                'recommendation': 'Consider using SSH key authentication for better security'
+                'message': _('Using password authentication'),
+                'recommendation': _('Consider using SSH key authentication for better security')
             })
         
         # Check username
@@ -547,8 +548,8 @@ class SecurityAuditor:
             findings.append({
                 'severity': 'medium',
                 'type': 'root_user',
-                'message': 'Connecting as root user',
-                'recommendation': 'Use a regular user account when possible'
+                'message': _('Connecting as root user'),
+                'recommendation': _('Use a regular user account when possible')
             })
         
         return findings
@@ -572,8 +573,8 @@ class SecurityAuditor:
                 findings.append({
                     'severity': 'high',
                     'type': 'file_not_found',
-                    'message': f"File does not exist: {file_path}",
-                    'recommendation': 'Verify file path'
+                    'message': _("File does not exist: {}").format(file_path),
+                    'recommendation': _('Verify file path')
                 })
                 return findings
             
@@ -584,7 +585,7 @@ class SecurityAuditor:
                     'severity': 'medium',
                     'type': 'insecure_permissions',
                     'message': error,
-                    'recommendation': 'Set secure file permissions (600 for files, 700 for directories)'
+                    'recommendation': _('Set secure file permissions (600 for files, 700 for directories)')
                 })
             
             # Check ownership (if on Unix)
@@ -596,16 +597,16 @@ class SecurityAuditor:
                     findings.append({
                         'severity': 'medium',
                         'type': 'different_owner',
-                        'message': f"File is owned by different user: {file_stat.st_uid}",
-                        'recommendation': 'Ensure file ownership is correct'
+                        'message': _("File is owned by different user: {}").format(file_stat.st_uid),
+                        'recommendation': _('Ensure file ownership is correct')
                     })
         
         except Exception as e:
             findings.append({
                 'severity': 'high',
                 'type': 'audit_error',
-                'message': f"Error auditing file: {e}",
-                'recommendation': 'Check file accessibility'
+                'message': _("Error auditing file: {}").format(e),
+                'recommendation': _('Check file accessibility')
             })
         
         return findings
@@ -629,8 +630,8 @@ class SecurityAuditor:
                 findings.append({
                     'severity': 'high',
                     'type': 'directory_not_found',
-                    'message': f"Directory does not exist: {dir_path}",
-                    'recommendation': 'Create directory with secure permissions'
+                    'message': _("Directory does not exist: {}").format(dir_path),
+                    'recommendation': _('Create directory with secure permissions')
                 })
                 return findings
             
@@ -638,8 +639,8 @@ class SecurityAuditor:
                 findings.append({
                     'severity': 'high',
                     'type': 'not_directory',
-                    'message': f"Path is not a directory: {dir_path}",
-                    'recommendation': 'Use a valid directory path'
+                    'message': _("Path is not a directory: {}").format(dir_path),
+                    'recommendation': _('Use a valid directory path')
                 })
                 return findings
             
@@ -651,16 +652,16 @@ class SecurityAuditor:
                 findings.append({
                     'severity': 'medium',
                     'type': 'insecure_directory_permissions',
-                    'message': f"Directory has overly permissive permissions: {oct(current_permissions)}",
-                    'recommendation': 'Set directory permissions to 700'
+                    'message': _("Directory has overly permissive permissions: {}").format(oct(current_permissions)),
+                    'recommendation': _('Set directory permissions to 700')
                 })
         
         except Exception as e:
             findings.append({
                 'severity': 'high',
                 'type': 'audit_error',
-                'message': f"Error auditing directory: {e}",
-                'recommendation': 'Check directory accessibility'
+                'message': _("Error auditing directory: {}").format(e),
+                'recommendation': _('Check directory accessibility')
             })
         
         return findings
@@ -688,11 +689,11 @@ def validate_ssh_hostname(hostname: str) -> None:
         HostnameValidationError: If hostname is invalid
     """
     if not hostname:
-        raise HostnameValidationError("", "Hostname cannot be empty")
+        raise HostnameValidationError("", _("Hostname cannot be empty"))
     
     sanitized = InputSanitizer.sanitize_hostname(hostname)
     if not HostnameValidator.is_valid_hostname(sanitized):
-        raise HostnameValidationError(hostname, "Invalid hostname format")
+        raise HostnameValidationError(hostname, _("Invalid hostname format"))
 
 
 def validate_ssh_key_file(key_path: str) -> None:
@@ -707,7 +708,7 @@ def validate_ssh_key_file(key_path: str) -> None:
     """
     is_valid, error, _ = SSHKeyValidator.read_and_validate_ssh_key(key_path)
     if not is_valid:
-        raise SSHKeyError(key_path, error or "Unknown validation error")
+        raise SSHKeyError(key_path, error or _("Unknown validation error"))
 
 
 def validate_file_path(file_path: str, base_path: Optional[str] = None) -> None:
@@ -722,7 +723,7 @@ def validate_file_path(file_path: str, base_path: Optional[str] = None) -> None:
         PathValidationError: If path is unsafe
     """
     if not PathValidator.is_safe_path(file_path, base_path):
-        raise PathValidationError(file_path, "Path contains unsafe elements")
+        raise PathValidationError(file_path, _("Path contains unsafe elements"))
 
 
 def ensure_secure_file_permissions(file_path: str) -> None:
@@ -740,7 +741,7 @@ def ensure_secure_file_permissions(file_path: str) -> None:
         if path.exists():
             path.chmod(SecurityConfig.SECURE_FILE_PERMISSIONS)
     except OSError as e:
-        raise FilePermissionError(file_path, "set secure permissions", details={'reason': str(e)})
+        raise FilePermissionError(file_path, _("set secure permissions"), details={'reason': str(e)})
 
 
 def ensure_secure_directory_permissions(dir_path: str) -> None:
@@ -758,7 +759,7 @@ def ensure_secure_directory_permissions(dir_path: str) -> None:
         if path.exists():
             path.chmod(SecurityConfig.SECURE_DIR_PERMISSIONS)
     except OSError as e:
-        raise DirectoryPermissionError(dir_path, "set secure permissions", details={'reason': str(e)})
+        raise DirectoryPermissionError(dir_path, _("set secure permissions"), details={'reason': str(e)})
 
 
 def create_security_auditor() -> SecurityAuditor:
@@ -782,24 +783,24 @@ def validate_session_data(session_data: Dict[str, Any]) -> Tuple[bool, List[str]
         # Validate session name
         name = session_data.get('name', '')
         if not name or not name.strip():
-            errors.append("Session name cannot be empty")
+            errors.append(_("Session name cannot be empty"))
         elif len(name) > SecurityConfig.MAX_SESSION_NAME_LENGTH:
-            errors.append(f"Session name too long (max {SecurityConfig.MAX_SESSION_NAME_LENGTH} characters)")
+            errors.append(_("Session name too long (max {} characters)").format(SecurityConfig.MAX_SESSION_NAME_LENGTH))
         
         # Validate hostname for non-local sessions
         host = session_data.get('host', '')
         if host:  # SSH session
             if not host.strip():
-                errors.append("Hostname cannot be empty for SSH sessions")
+                errors.append(_("Hostname cannot be empty for SSH sessions"))
             elif not HostnameValidator.is_valid_hostname(host.strip()):
-                errors.append(f"Invalid hostname format: {host}")
+                errors.append(_("Invalid hostname format: {}").format(host))
         
         # Validate username
         username = session_data.get('user', '')
         if host and not username:  # SSH session requires username
-            errors.append("Username is required for SSH sessions")
+            errors.append(_("Username is required for SSH sessions"))
         elif username and len(username) > SecurityConfig.MAX_USERNAME_LENGTH:
-            errors.append(f"Username too long (max {SecurityConfig.MAX_USERNAME_LENGTH} characters)")
+            errors.append(_("Username too long (max {} characters)").format(SecurityConfig.MAX_USERNAME_LENGTH))
         
         # Validate port
         port = session_data.get('port', 22)
@@ -807,9 +808,9 @@ def validate_session_data(session_data: Dict[str, Any]) -> Tuple[bool, List[str]
             try:
                 port_int = int(port)
                 if not (1 <= port_int <= 65535):
-                    errors.append("Port must be between 1 and 65535")
+                    errors.append(_("Port must be between 1 and 65535"))
             except (ValueError, TypeError):
-                errors.append("Port must be a valid number")
+                errors.append(_("Port must be a valid number"))
         
         # Validate authentication
         auth_type = session_data.get('auth_type', '')
@@ -818,35 +819,35 @@ def validate_session_data(session_data: Dict[str, Any]) -> Tuple[bool, List[str]
         if host:  # SSH session
             if auth_type == 'key':
                 if not auth_value:
-                    errors.append("SSH key file path is required for key authentication")
+                    errors.append(_("SSH key file path is required for key authentication"))
                 else:
                     # Validate SSH key file
                     is_key_valid, key_error = SSHKeyValidator.validate_ssh_key_path(auth_value)
                     if not is_key_valid:
-                        errors.append(f"SSH key validation failed: {key_error}")
+                        errors.append(_("SSH key validation failed: {}").format(key_error))
             elif auth_type == 'password':
                 # Password auth is valid but not recommended (handled by security audit)
                 pass
             elif auth_type not in ['key', 'password', '']:
-                errors.append(f"Invalid authentication type: {auth_type}")
+                errors.append(_("Invalid authentication type: {}").format(auth_type))
         
         # Validate folder path if specified
         folder_path = session_data.get('folder_path', '')
         if folder_path:
             if not PathValidator.is_safe_path(folder_path):
-                errors.append("Invalid or unsafe folder path")
+                errors.append(_("Invalid or unsafe folder path"))
         
         # Additional session-specific validations
         session_type = session_data.get('type', 'ssh')
         if session_type not in ['local', 'ssh']:
-            errors.append(f"Invalid session type: {session_type}")
+            errors.append(_("Invalid session type: {}").format(session_type))
         
         return len(errors) == 0, errors
         
     except Exception as e:
         logger = get_logger('ashyterm.security.validation')
         logger.error(f"Session validation error: {e}")
-        return False, [f"Validation error: {e}"]
+        return False, [_("Validation error: {}").format(e)]
 
 
 def validate_session_security(session_data: Dict[str, Any]) -> Tuple[bool, List[str], List[Dict[str, Any]]]:
@@ -877,11 +878,11 @@ def validate_session_security(session_data: Dict[str, Any]) -> Tuple[bool, List[
         if critical_findings:
             is_valid = False
             for finding in critical_findings:
-                validation_errors.append(f"Security: {finding['message']}")
+                validation_errors.append(_("Security: {}").format(finding['message']))
         
         return is_valid, validation_errors, security_findings
         
     except Exception as e:
         logger = get_logger('ashyterm.security.validation')
         logger.error(f"Comprehensive session validation error: {e}")
-        return False, [f"Security validation error: {e}"], []
+        return False, [_("Security validation error: {}").format(e)], []

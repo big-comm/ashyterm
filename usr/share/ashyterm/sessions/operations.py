@@ -29,6 +29,7 @@ from ..utils.security import (
 from ..utils.platform import normalize_path, get_platform_info
 from ..utils.backup import get_backup_manager, BackupType
 from ..utils import generate_unique_name
+from ..utils.translation_utils import _
 
 
 class OperationResult:
@@ -160,7 +161,7 @@ class SessionOperations:
                     self._stats['validation_failures'] += 1
                     return OperationResult(
                         False, 
-                        f"Session '{session.name}' already exists in the specified folder",
+                        _("Session '{name}' already exists in the specified folder").format(name=session.name),
                         metadata={'existing_session': duplicate_check}
                     )
                 
@@ -168,10 +169,10 @@ class SessionOperations:
                 original_name = session.name
                 session.name = sanitize_session_name(session.name)
                 
-                result = OperationResult(True, f"Session '{session.name}' added successfully", session)
+                result = OperationResult(True, _("Session '{name}' added successfully").format(name=session.name), session)
                 
                 if original_name != session.name:
-                    result.add_warning(f"Session name sanitized: '{original_name}' -> '{session.name}'")
+                    result.add_warning(_("Session name sanitized: '{original}' -> '{new}'").format(original=original_name, new=session.name))
                 
                 # Add validation warnings if any
                 if validation_result.warnings:
@@ -185,7 +186,7 @@ class SessionOperations:
                     self._stats['operation_errors'] += 1
                     # Remove from store on save failure
                     self._remove_session_from_store(session)
-                    return OperationResult(False, "Failed to save session data")
+                    return OperationResult(False, _("Failed to save session data"))
                 
                 # Update statistics and log
                 self._stats['sessions_added'] += 1
@@ -199,7 +200,7 @@ class SessionOperations:
                 self.logger.error(f"Failed to add session '{session.name}': {e}")
                 log_error_with_context(e, f"add session {session.name}", "ashyterm.sessions.operations")
                 
-                error_result = OperationResult(False, f"Failed to add session: {e}")
+                error_result = OperationResult(False, _("Failed to add session: {error}").format(error=str(e)))
                 error_result.metadata['exception'] = str(e)
                 return error_result
     
@@ -215,12 +216,12 @@ class SessionOperations:
             OperationResult with validation status
         """
         try:
-            result = OperationResult(True, "Validation passed")
+            result = OperationResult(True, _("Validation passed"))
             
             # Basic validation
             if not session.validate():
                 errors = session.get_validation_errors()
-                return OperationResult(False, f"Session validation failed: {', '.join(errors)}")
+                return OperationResult(False, _("Session validation failed: {errors}").format(errors=", ".join(errors)))
             
             # Security validation for SSH sessions
             if validate_security and session.is_ssh() and self.security_auditor:
@@ -229,7 +230,7 @@ class SessionOperations:
                     is_valid, validation_errors = validate_session_data(session_data)
                     
                     if not is_valid:
-                        return OperationResult(False, f"Security validation failed: {', '.join(validation_errors)}")
+                        return OperationResult(False, _("Security validation failed: {errors}").format(errors=", ".join(validation_errors)))
                     
                     # Perform security audit
                     findings = self.security_auditor.audit_ssh_session(session_data)
@@ -237,23 +238,23 @@ class SessionOperations:
                     # Add warnings for medium/high severity issues
                     for finding in findings:
                         if finding['severity'] in ['medium', 'high']:
-                            result.add_warning(f"Security: {finding['message']}")
+                            result.add_warning(_("Security: {message}").format(message=finding['message']))
                         elif finding['severity'] == 'critical':
-                            return OperationResult(False, f"Critical security issue: {finding['message']}")
+                            return OperationResult(False, _("Critical security issue: {message}").format(message=finding['message']))
                     
                 except Exception as e:
-                    result.add_warning(f"Security validation error: {e}")
+                    result.add_warning(_("Security validation error: {error}").format(error=str(e)))
             
             # Folder validation
             if session.folder_path:
                 if not self._folder_exists(session.folder_path):
-                    return OperationResult(False, f"Target folder '{session.folder_path}' does not exist")
+                    return OperationResult(False, _("Target folder '{folder}' does not exist").format(folder=session.folder_path))
             
             return result
             
         except Exception as e:
             self.logger.error(f"Session validation error: {e}")
-            return OperationResult(False, f"Validation error: {e}")
+            return OperationResult(False, _("Validation error: {error}").format(error=str(e)))
     
     def update_session(self, position: int, updated_session: SessionItem,
                       validate_security: bool = True, create_backup: bool = True) -> OperationResult:
@@ -272,11 +273,11 @@ class SessionOperations:
         with self._operation_lock:
             try:
                 if not (0 <= position < self.session_store.get_n_items()):
-                    return OperationResult(False, f"Invalid position: {position}")
+                    return OperationResult(False, _("Invalid position: {position}").format(position=position))
                 
                 original_session = self.session_store.get_item(position)
                 if not isinstance(original_session, SessionItem):
-                    return OperationResult(False, f"Item at position {position} is not a session")
+                    return OperationResult(False, _("Item at position {position} is not a session").format(position=position))
                 
                 original_name = original_session.name
                 self.logger.debug(f"Updating session: '{original_name}' -> '{updated_session.name}'")
@@ -296,7 +297,7 @@ class SessionOperations:
                         self._stats['validation_failures'] += 1
                         return OperationResult(
                             False,
-                            f"Session name '{updated_session.name}' already exists in the target folder"
+                            _("Session name '{name}' already exists in the target folder").format(name=updated_session.name)
                         )
                 
                 # Sanitize session name
@@ -310,7 +311,7 @@ class SessionOperations:
                 
                 # Add warnings
                 if original_updated_name != updated_session.name:
-                    result.add_warning(f"Session name sanitized: '{original_updated_name}' -> '{updated_session.name}'")
+                    result.add_warning(_("Session name sanitized: '{original}' -> '{new}'").format(original=original_updated_name, new=updated_session.name))
                 
                 if validation_result.warnings:
                     result.warnings.extend(validation_result.warnings)
@@ -318,14 +319,14 @@ class SessionOperations:
                 # Save changes
                 if not self._save_changes():
                     self._stats['operation_errors'] += 1
-                    return OperationResult(False, "Failed to save session data")
+                    return OperationResult(False, _("Failed to save session data"))
                 
                 # Update statistics and log
                 self._stats['sessions_updated'] += 1
                 log_session_event("updated", updated_session.name, f"from: {original_name}")
                 
                 self.logger.info(f"Session updated successfully: '{original_name}' -> '{updated_session.name}'")
-                result.message = f"Session '{updated_session.name}' updated successfully"
+                result.message = _("Session '{name}' updated successfully").format(name=updated_session.name)
                 result.item = original_session
                 
                 return result
@@ -335,7 +336,7 @@ class SessionOperations:
                 self.logger.error(f"Failed to update session at position {position}: {e}")
                 log_error_with_context(e, f"update session at {position}", "ashyterm.sessions.operations")
                 
-                error_result = OperationResult(False, f"Failed to update session: {e}")
+                error_result = OperationResult(False, _("Failed to update session: {error}").format(error=str(e)))
                 error_result.metadata['exception'] = str(e)
                 return error_result
     
@@ -353,12 +354,12 @@ class SessionOperations:
             OperationResult with validation status
         """
         try:
-            result = OperationResult(True, "Update validation passed")
+            result = OperationResult(True, _("Update validation passed"))
             
             # Basic validation of updated session
             if not updated.validate():
                 errors = updated.get_validation_errors()
-                return OperationResult(False, f"Updated session validation failed: {', '.join(errors)}")
+                return OperationResult(False, _("Updated session validation failed: {errors}").format(errors=", ".join(errors)))
             
             # Security validation for SSH sessions
             if validate_security and updated.is_ssh() and self.security_auditor:
@@ -367,37 +368,37 @@ class SessionOperations:
                     is_valid, validation_errors = validate_session_data(session_data)
                     
                     if not is_valid:
-                        return OperationResult(False, f"Security validation failed: {', '.join(validation_errors)}")
+                        return OperationResult(False, _("Security validation failed: {errors}").format(errors=", ".join(validation_errors)))
                     
                     # Compare security scores
                     original_score = original.get_security_score()
                     updated_score = updated.get_security_score()
                     
                     if updated_score < original_score - 10:  # Significant security degradation
-                        result.add_warning(f"Security score decreased: {original_score} -> {updated_score}")
+                        result.add_warning(_("Security score decreased: {original} -> {updated}").format(original=original_score, updated=updated_score))
                     
                     # Perform security audit
                     findings = self.security_auditor.audit_ssh_session(session_data)
                     
                     for finding in findings:
                         if finding['severity'] in ['medium', 'high']:
-                            result.add_warning(f"Security: {finding['message']}")
+                            result.add_warning(_("Security: {message}").format(message=finding['message']))
                         elif finding['severity'] == 'critical':
-                            return OperationResult(False, f"Critical security issue: {finding['message']}")
+                            return OperationResult(False, _("Critical security issue: {message}").format(message=finding['message']))
                     
                 except Exception as e:
-                    result.add_warning(f"Security validation error: {e}")
+                    result.add_warning(_("Security validation error: {error}").format(error=str(e)))
             
             # Folder validation
             if updated.folder_path != original.folder_path:
                 if updated.folder_path and not self._folder_exists(updated.folder_path):
-                    return OperationResult(False, f"Target folder '{updated.folder_path}' does not exist")
+                    return OperationResult(False, _("Target folder '{folder}' does not exist").format(folder=updated.folder_path))
             
             return result
             
         except Exception as e:
             self.logger.error(f"Update validation error: {e}")
-            return OperationResult(False, f"Update validation error: {e}")
+            return OperationResult(False, _("Update validation error: {error}").format(error=str(e)))
     
     def _update_session_properties(self, original: SessionItem, updated: SessionItem) -> OperationResult:
         """
@@ -435,7 +436,7 @@ class SessionOperations:
                 # Mark as used to update metadata
                 original.mark_used()
                 
-                return OperationResult(True, "Properties updated successfully")
+                return OperationResult(True, _("Properties updated successfully"))
                 
             except Exception as e:
                 # Rollback on error
@@ -446,7 +447,7 @@ class SessionOperations:
                 
         except Exception as e:
             self.logger.error(f"Property update failed: {e}")
-            return OperationResult(False, f"Property update failed: {e}")
+            return OperationResult(False, _("Property update failed: {error}").format(error=str(e)))
     
     def remove_session(self, session: SessionItem, create_backup: bool = True) -> OperationResult:
         """
@@ -467,7 +468,7 @@ class SessionOperations:
                 # Find and remove session
                 position = self._find_session_position(session)
                 if position == -1:
-                    return OperationResult(False, f"Session '{session_name}' not found in store")
+                    return OperationResult(False, _("Session '{name}' not found in store").format(name=session_name))
                 
                 # Remove from store
                 removed_session = self.session_store.get_item(position)
@@ -478,7 +479,7 @@ class SessionOperations:
                     self._stats['operation_errors'] += 1
                     # Re-add on save failure
                     self.session_store.insert(position, removed_session)
-                    return OperationResult(False, "Failed to save after session removal")
+                    return OperationResult(False, _("Failed to save after session removal"))
                 
                 # Update statistics and log
                 self._stats['sessions_removed'] += 1
@@ -486,7 +487,7 @@ class SessionOperations:
                 
                 self.logger.info(f"Session removed successfully: '{session_name}'")
                 
-                result = OperationResult(True, f"Session '{session_name}' removed successfully")
+                result = OperationResult(True, _("Session '{name}' removed successfully").format(name=session_name))
                 result.metadata['removed_position'] = position
                 return result
                 
@@ -495,7 +496,7 @@ class SessionOperations:
                 self.logger.error(f"Failed to remove session '{session.name}': {e}")
                 log_error_with_context(e, f"remove session {session.name}", "ashyterm.sessions.operations")
                 
-                error_result = OperationResult(False, f"Failed to remove session: {e}")
+                error_result = OperationResult(False, _("Failed to remove session: {error}").format(error=str(e)))
                 error_result.metadata['exception'] = str(e)
                 return error_result
     
@@ -526,19 +527,19 @@ class SessionOperations:
                     duplicate.name = sanitize_session_name(custom_name)
                 else:
                     existing_names = self._get_session_names_in_folder(session.folder_path)
-                    duplicate.name = generate_unique_name(f"Copy of {session.name}", existing_names)
+                    duplicate.name = generate_unique_name(_("Copy of {name}").format(name=session.name), existing_names)
                 
                 # Validate duplicate
                 if not duplicate.validate():
                     errors = duplicate.get_validation_errors()
                     self._stats['validation_failures'] += 1
-                    return OperationResult(False, f"Duplicate validation failed: {', '.join(errors)}")
+                    return OperationResult(False, _("Duplicate validation failed: {errors}").format(errors=", ".join(errors)))
                 
                 # Check for name conflicts
                 duplicate_check = self._check_session_duplicate(duplicate)
                 if duplicate_check:
                     self._stats['validation_failures'] += 1
-                    return OperationResult(False, f"Duplicate name '{duplicate.name}' already exists")
+                    return OperationResult(False, _("Duplicate name '{name}' already exists").format(name=duplicate.name))
                 
                 # Add duplicate
                 add_result = self.add_session(duplicate, validate_security=False, create_backup=create_backup)
@@ -551,7 +552,7 @@ class SessionOperations:
                 
                 self.logger.info(f"Session duplicated successfully: '{original_name}' -> '{duplicate.name}'")
                 
-                result = OperationResult(True, f"Session duplicated as '{duplicate.name}'", duplicate)
+                result = OperationResult(True, _("Session duplicated as '{name}'").format(name=duplicate.name), duplicate)
                 result.metadata['original_name'] = original_name
                 return result
                 
@@ -560,7 +561,7 @@ class SessionOperations:
                 self.logger.error(f"Failed to duplicate session '{session.name}': {e}")
                 log_error_with_context(e, f"duplicate session {session.name}", "ashyterm.sessions.operations")
                 
-                error_result = OperationResult(False, f"Failed to duplicate session: {e}")
+                error_result = OperationResult(False, _("Failed to duplicate session: {error}").format(error=str(e)))
                 error_result.metadata['exception'] = str(e)
                 return error_result
     
@@ -586,7 +587,7 @@ class SessionOperations:
                 
                 # Validate target folder exists (if not root)
                 if target_folder_path and not self._folder_exists(target_folder_path):
-                    return OperationResult(False, f"Target folder '{target_folder_path}' does not exist")
+                    return OperationResult(False, _("Target folder '{folder}' does not exist").format(folder=target_folder_path))
                 
                 # Check for name conflicts in target folder
                 existing_names = self._get_session_names_in_folder(target_folder_path)
@@ -595,10 +596,11 @@ class SessionOperations:
                     new_name = generate_unique_name(session.name, existing_names)
                     session.name = new_name
                     
-                    result = OperationResult(True, f"Session moved and renamed to '{new_name}'", session)
-                    result.add_warning(f"Session renamed to avoid conflict: '{session_name}' -> '{new_name}'")
+                    result = OperationResult(True, _("Session moved and renamed to '{name}'").format(name=new_name), session)
+                    result.add_warning(_("Session renamed to avoid conflict: '{original}' -> '{new}'").format(original=session_name, new=new_name))
                 else:
-                    result = OperationResult(True, f"Session moved to '{target_folder_path or 'root'}'", session)
+                    target_display = target_folder_path or _("root")
+                    result = OperationResult(True, _("Session moved to '{folder}'").format(folder=target_display), session)
                 
                 # Update folder path
                 session.folder_path = target_folder_path
@@ -609,13 +611,14 @@ class SessionOperations:
                     # Rollback changes
                     session.folder_path = original_folder
                     session.name = session_name
-                    return OperationResult(False, "Failed to save after moving session")
+                    return OperationResult(False, _("Failed to save after moving session"))
                 
                 # Update statistics and log
                 self._stats['sessions_moved'] += 1
                 log_session_event("moved", session.name, f"from: {original_folder}, to: {target_folder_path}")
                 
-                self.logger.info(f"Session moved successfully: '{session_name}' to '{target_folder_path or 'root'}'")
+                target_display = target_folder_path or _("root")
+                self.logger.info(f"Session moved successfully: '{session_name}' to '{target_display}'")
                 
                 result.metadata = {
                     'original_folder': original_folder,
@@ -630,7 +633,7 @@ class SessionOperations:
                 self.logger.error(f"Failed to move session '{session.name}': {e}")
                 log_error_with_context(e, f"move session {session.name}", "ashyterm.sessions.operations")
                 
-                error_result = OperationResult(False, f"Failed to move session: {e}")
+                error_result = OperationResult(False, _("Failed to move session: {error}").format(error=str(e)))
                 error_result.metadata['exception'] = str(e)
                 return error_result
     
@@ -653,12 +656,12 @@ class SessionOperations:
                 if not folder.validate():
                     errors = folder.get_validation_errors()
                     self._stats['validation_failures'] += 1
-                    return OperationResult(False, f"Folder validation failed: {', '.join(errors)}")
+                    return OperationResult(False, _("Folder validation failed: {errors}").format(errors=", ".join(errors)))
                 
                 # Check path conflicts
                 if self._folder_path_exists(folder.path):
                     self._stats['validation_failures'] += 1
-                    return OperationResult(False, f"Folder path '{folder.path}' already exists")
+                    return OperationResult(False, _("Folder path '{path}' already exists").format(path=folder.path))
                 
                 # Sanitize folder name
                 original_name = folder.name
@@ -676,7 +679,7 @@ class SessionOperations:
                     self._stats['operation_errors'] += 1
                     # Remove from store on save failure
                     self._remove_folder_from_store(folder)
-                    return OperationResult(False, "Failed to save folder data")
+                    return OperationResult(False, _("Failed to save folder data"))
                 
                 # Update statistics and log
                 self._stats['folders_added'] += 1
@@ -684,10 +687,10 @@ class SessionOperations:
                 
                 self.logger.info(f"Folder added successfully: '{folder.name}' (path: {folder.path})")
                 
-                result = OperationResult(True, f"Folder '{folder.name}' added successfully", folder)
+                result = OperationResult(True, _("Folder '{name}' added successfully").format(name=folder.name), folder)
                 
                 if original_name != folder.name:
-                    result.add_warning(f"Folder name sanitized: '{original_name}' -> '{folder.name}'")
+                    result.add_warning(_("Folder name sanitized: '{original}' -> '{new}'").format(original=original_name, new=folder.name))
                 
                 return result
                 
@@ -696,7 +699,7 @@ class SessionOperations:
                 self.logger.error(f"Failed to add folder '{folder.name}': {e}")
                 log_error_with_context(e, f"add folder {folder.name}", "ashyterm.sessions.operations")
                 
-                error_result = OperationResult(False, f"Failed to add folder: {e}")
+                error_result = OperationResult(False, _("Failed to add folder: {error}").format(error=str(e)))
                 error_result.metadata['exception'] = str(e)
                 return error_result
     
@@ -716,11 +719,11 @@ class SessionOperations:
         with self._operation_lock:
             try:
                 if not (0 <= position < self.folder_store.get_n_items()):
-                    return OperationResult(False, f"Invalid position: {position}")
+                    return OperationResult(False, _("Invalid position: {position}").format(position=position))
                 
                 original_folder = self.folder_store.get_item(position)
                 if not isinstance(original_folder, SessionFolder):
-                    return OperationResult(False, f"Item at position {position} is not a folder")
+                    return OperationResult(False, _("Item at position {position} is not a folder").format(position=position))
                 
                 old_path = original_folder.path
                 old_name = original_folder.name
@@ -731,12 +734,12 @@ class SessionOperations:
                 if not updated_folder.validate():
                     errors = updated_folder.get_validation_errors()
                     self._stats['validation_failures'] += 1
-                    return OperationResult(False, f"Updated folder validation failed: {', '.join(errors)}")
+                    return OperationResult(False, _("Updated folder validation failed: {errors}").format(errors=", ".join(errors)))
                 
                 # Check path conflicts (excluding current folder)
                 if updated_folder.path != old_path and self._folder_path_exists(updated_folder.path, exclude_folder=original_folder):
                     self._stats['validation_failures'] += 1
-                    return OperationResult(False, f"Folder path '{updated_folder.path}' already exists")
+                    return OperationResult(False, _("Folder path '{path}' already exists").format(path=updated_folder.path))
                 
                 # Sanitize folder name
                 original_updated_name = updated_folder.name
@@ -757,7 +760,7 @@ class SessionOperations:
                     # Rollback changes
                     original_folder.name = old_name
                     original_folder.path = old_path
-                    return OperationResult(False, "Failed to save folder data")
+                    return OperationResult(False, _("Failed to save folder data"))
                 
                 # Update statistics and log
                 self._stats['folders_updated'] += 1
@@ -765,10 +768,10 @@ class SessionOperations:
                 
                 self.logger.info(f"Folder updated successfully: '{old_name}' -> '{updated_folder.name}'")
                 
-                result = OperationResult(True, f"Folder '{updated_folder.name}' updated successfully", original_folder)
+                result = OperationResult(True, _("Folder '{name}' updated successfully").format(name=updated_folder.name), original_folder)
                 
                 if original_updated_name != updated_folder.name:
-                    result.add_warning(f"Folder name sanitized: '{original_updated_name}' -> '{updated_folder.name}'")
+                    result.add_warning(_("Folder name sanitized: '{original}' -> '{new}'").format(original=original_updated_name, new=updated_folder.name))
                 
                 if old_path != updated_folder.path:
                     result.metadata['path_updated'] = True
@@ -782,7 +785,7 @@ class SessionOperations:
                 self.logger.error(f"Failed to update folder at position {position}: {e}")
                 log_error_with_context(e, f"update folder at {position}", "ashyterm.sessions.operations")
                 
-                error_result = OperationResult(False, f"Failed to update folder: {e}")
+                error_result = OperationResult(False, _("Failed to update folder: {error}").format(error=str(e)))
                 error_result.metadata['exception'] = str(e)
                 return error_result
     
@@ -810,7 +813,7 @@ class SessionOperations:
                 if not force and self._folder_has_children(folder_path):
                     return OperationResult(
                         False,
-                        f"Cannot remove folder '{folder_name}' - it contains sessions or subfolders. Use force=True to remove anyway."
+                        _("Cannot remove folder '{name}' - it contains sessions or subfolders. Use force removal to delete anyway.").format(name=folder_name)
                     )
                 
                 # If force removal, handle children
@@ -821,7 +824,7 @@ class SessionOperations:
                 # Find and remove folder
                 position = self._find_folder_position(folder)
                 if position == -1:
-                    return OperationResult(False, f"Folder '{folder_name}' not found in store")
+                    return OperationResult(False, _("Folder '{name}' not found in store").format(name=folder_name))
                 
                 # Remove from store
                 removed_folder = self.folder_store.get_item(position)
@@ -835,7 +838,7 @@ class SessionOperations:
                     # Restore children if they were removed
                     if removed_children:
                         self._restore_folder_children(removed_children)
-                    return OperationResult(False, "Failed to save after folder removal")
+                    return OperationResult(False, _("Failed to save after folder removal"))
                 
                 # Update statistics and log
                 self._stats['folders_removed'] += 1
@@ -843,7 +846,7 @@ class SessionOperations:
                 
                 self.logger.info(f"Folder removed successfully: '{folder_name}' (children: {len(removed_children)})")
                 
-                result = OperationResult(True, f"Folder '{folder_name}' removed successfully")
+                result = OperationResult(True, _("Folder '{name}' removed successfully").format(name=folder_name))
                 result.metadata = {
                     'removed_position': position,
                     'children_removed': len(removed_children),
@@ -851,7 +854,7 @@ class SessionOperations:
                 }
                 
                 if removed_children:
-                    result.add_warning(f"Removed {len(removed_children)} child items")
+                    result.add_warning(_("Removed {count} child items").format(count=len(removed_children)))
                 
                 return result
                 
@@ -860,7 +863,7 @@ class SessionOperations:
                 self.logger.error(f"Failed to remove folder '{folder.name}': {e}")
                 log_error_with_context(e, f"remove folder {folder.name}", "ashyterm.sessions.operations")
                 
-                error_result = OperationResult(False, f"Failed to remove folder: {e}")
+                error_result = OperationResult(False, _("Failed to remove folder: {error}").format(error=str(e)))
                 error_result.metadata['exception'] = str(e)
                 return error_result
     

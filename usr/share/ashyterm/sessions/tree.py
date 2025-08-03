@@ -24,6 +24,7 @@ from ..utils.exceptions import (
 )
 from ..utils.security import validate_session_data, create_security_auditor
 from ..utils.platform import get_platform_info, is_windows
+from ..utils.translation_utils import _
 from ..ui.menus import (
     create_session_menu, create_folder_menu, create_root_menu, setup_context_menu
 )
@@ -225,7 +226,7 @@ class SessionTreeView:
             
             # Create column with icon and text
             column = Gtk.TreeViewColumn()
-            column.set_title("Sessions")
+            column.set_title(_("Sessions"))
             column.set_expand(True)
             
             # Icon renderer
@@ -270,7 +271,7 @@ class SessionTreeView:
             
         except Exception as e:
             self.logger.error(f"Tree view creation failed: {e}")
-            raise UIError("tree_view", f"creation failed: {e}")
+            raise UIError("tree_view", _("Tree view creation failed: {}").format(e))
     
     def _connect_tree_signals(self, tree_view: Gtk.TreeView) -> None:
         """Connect tree view signals with error handling."""
@@ -290,7 +291,7 @@ class SessionTreeView:
             
         except Exception as e:
             self.logger.error(f"Signal connection failed: {e}")
-            raise UIError("tree_signals", f"connection failed: {e}")
+            raise UIError("tree_signals", _("Signal connection failed: {}").format(e))
     
     def _setup_event_controllers(self, tree_view: Gtk.TreeView) -> None:
         """Set up event controllers for the tree view with comprehensive handling."""
@@ -326,7 +327,7 @@ class SessionTreeView:
             
         except Exception as e:
             self.logger.error(f"Event controller setup failed: {e}")
-            raise UIError("event_controllers", f"setup failed: {e}")
+            raise UIError("event_controllers", _("Event controller setup failed: {}").format(e))
     
     def get_widget(self) -> Gtk.TreeView:
         """Get the tree view widget."""

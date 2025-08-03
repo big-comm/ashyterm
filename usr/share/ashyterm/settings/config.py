@@ -47,8 +47,8 @@ class AppConstants:
     # Core application info
     APP_ID = "org.ashy.term"
     APP_TITLE = "Ashy Terminal"
-    APP_VERSION = "1.0.1"
-    APP_VERSION_TUPLE = (1, 0, 1)
+    APP_VERSION = "1.1.0"
+    APP_VERSION_TUPLE = (1, 1, 0)
     
     # Developer information
     DEVELOPER_NAME = "BigCommunity"

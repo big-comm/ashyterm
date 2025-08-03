@@ -33,6 +33,7 @@ from ..utils.platform import (
 )
 from ..utils.backup import get_backup_manager, BackupType
 from ..utils.crypto import is_encryption_available
+from ..utils.translation_utils import _
 from ..settings.config import SESSIONS_FILE
 
 
@@ -74,7 +75,7 @@ class SessionStorageManager:
             # Ensure config directory exists with secure permissions
             config_dir = get_config_directory()
             if not ensure_directory_exists(str(config_dir)):
-                raise ConfigError(f"Failed to create config directory: {config_dir}")
+                raise ConfigError(_("Failed to create config directory: {}").format(config_dir))
             
             ensure_secure_directory_permissions(str(config_dir))
             
@@ -121,7 +122,7 @@ class SessionStorageManager:
                 try:
                     validate_file_path(str(self.sessions_file))
                 except Exception as e:
-                    raise StorageReadError(str(self.sessions_file), f"File path validation failed: {e}")
+                    raise StorageReadError(str(self.sessions_file), _("File path validation failed: {}").format(e))
                 
                 # Check file permissions and size
                 file_stat = self.sessions_file.stat()
@@ -130,7 +131,7 @@ class SessionStorageManager:
                     return [], []
                 
                 if file_stat.st_size > 50 * 1024 * 1024:  # 50MB limit
-                    raise StorageReadError(str(self.sessions_file), "File too large (>50MB)")
+                    raise StorageReadError(str(self.sessions_file), _("File too large (>50MB)"))
                 
                 # Read and parse file
                 try:
@@ -144,14 +145,14 @@ class SessionStorageManager:
                     if recovered_data:
                         return recovered_data
                     
-                    raise StorageCorruptedError(str(self.sessions_file), f"Invalid JSON: {e}")
+                    raise StorageCorruptedError(str(self.sessions_file), _("Invalid JSON: {}").format(e))
                 
                 except UnicodeDecodeError as e:
-                    raise StorageReadError(str(self.sessions_file), f"Encoding error: {e}")
+                    raise StorageReadError(str(self.sessions_file), _("Encoding error: {}").format(e))
                 
                 # Validate data structure
                 if not isinstance(data, dict):
-                    raise StorageCorruptedError(str(self.sessions_file), "Root data is not a dictionary")
+                    raise StorageCorruptedError(str(self.sessions_file), _("Root data is not a dictionary"))
                 
                 sessions = data.get("sessions", [])
                 folders = data.get("folders", [])
@@ -194,7 +195,7 @@ class SessionStorageManager:
                 if recovered_data:
                     return recovered_data
                 
-                raise StorageReadError(str(self.sessions_file), f"Load failed: {e}")
+                raise StorageReadError(str(self.sessions_file), _("Load failed: {}").format(e))
     
     def _validate_sessions_data(self, sessions: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
         """
@@ -391,7 +392,7 @@ class SessionStorageManager:
                 
                 # Validate data before saving
                 if not self._validate_save_data(data_to_save):
-                    raise StorageWriteError(str(self.sessions_file), "Data validation failed")
+                    raise StorageWriteError(str(self.sessions_file), _("Data validation failed"))
                 
                 # Ensure directory exists
                 self.sessions_file.parent.mkdir(parents=True, exist_ok=True)
@@ -406,7 +407,7 @@ class SessionStorageManager:
                     
                     # Ensure file was written correctly
                     if not temp_file.exists() or temp_file.stat().st_size == 0:
-                        raise StorageWriteError(str(temp_file), "Temporary file was not written correctly")
+                        raise StorageWriteError(str(temp_file), _("Temporary file was not written correctly"))
                     
                     # Atomic move
                     if self.platform_info.is_windows():
@@ -423,7 +424,7 @@ class SessionStorageManager:
                     # Clean up temp file on error
                     if temp_file.exists():
                         temp_file.unlink()
-                    raise StorageWriteError(str(self.sessions_file), f"File write failed: {e}")
+                    raise StorageWriteError(str(self.sessions_file), _("File write failed: {}").format(e))
                 
                 # Verify file was saved correctly
                 if not self._verify_saved_file(data_to_save):
@@ -435,7 +436,7 @@ class SessionStorageManager:
                         except Exception as restore_error:
                             self.logger.error(f"Backup restore failed: {restore_error}")
                     
-                    raise StorageWriteError(str(self.sessions_file), "Save verification failed")
+                    raise StorageWriteError(str(self.sessions_file), _("Save verification failed"))
                 
                 # Update statistics
                 self._stats['saves'] += 1
@@ -459,7 +460,7 @@ class SessionStorageManager:
                 self._stats['save_errors'] += 1
                 self.logger.error(f"Unexpected error saving sessions/folders: {e}")
                 log_error_with_context(e, "save sessions and folders", "ashyterm.sessions.storage")
-                raise StorageWriteError(str(self.sessions_file), f"Save failed: {e}")
+                raise StorageWriteError(str(self.sessions_file), _("Save failed: {}").format(e))
     
     def _prepare_save_data(self, session_store: Optional[Gio.ListStore], 
                           folder_store: Optional[Gio.ListStore]) -> Dict[str, Any]:
@@ -704,7 +705,7 @@ def load_sessions_and_folders() -> Tuple[List[Dict[str, Any]], List[Dict[str, An
 
 
 def save_sessions_and_folders(session_store: Optional[Gio.ListStore] = None, 
-                            folder_store: Optional[Gio.ListStore] = None) -> bool: # <<< Remova create_backup
+                            folder_store: Optional[Gio.ListStore] = None) -> bool:
     """
     Save sessions and folders to JSON file with enhanced safety.
     

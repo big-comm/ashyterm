@@ -48,6 +48,7 @@ from ..utils.platform import (
 from ..utils.backup import get_backup_manager, BackupType
 from ..utils.crypto import is_encryption_available, get_secure_storage
 from ..utils import accelerator_to_label
+from ..utils.translation_utils import _
 
 
 class BaseDialog(Adw.Window):
@@ -132,7 +133,7 @@ class BaseDialog(Adw.Window):
                 full_body = f"{message}\n\n<small>{GLib.markup_escape_text(details)}</small>"
                 dialog.set_body(full_body)
             
-            dialog.add_response("ok", "OK")
+            dialog.add_response("ok", _("OK"))
             dialog.present()
             
             self.logger.warning(f"Error dialog shown: {title} - {message}")
@@ -159,8 +160,8 @@ class BaseDialog(Adw.Window):
                 body=message
             )
             
-            dialog.add_response("cancel", "Cancel")
-            dialog.add_response("confirm", "Continue")
+            dialog.add_response("cancel", _("Cancel"))
+            dialog.add_response("confirm", _("Continue"))
             dialog.set_response_appearance("confirm", Adw.ResponseAppearance.DESTRUCTIVE)
             
             def on_response(dlg, response_id):
@@ -188,7 +189,7 @@ class BaseDialog(Adw.Window):
         value = entry.get_text().strip()
         if not value:
             entry.add_css_class("error")
-            self._validation_errors.append(f"{field_name} is required")
+            self._validation_errors.append(_("{} is required").format(field_name))
             return False
         else:
             entry.remove_css_class("error")
@@ -219,7 +220,7 @@ class SessionEditDialog(BaseDialog):
             folder_store: Store containing folders
         """
         self.is_new_item = (position == -1)
-        title = "Add Session" if self.is_new_item else "Edit Session"
+        title = _("Add Session") if self.is_new_item else _("Edit Session")
         
         super().__init__(
             parent_window, 
@@ -309,23 +310,23 @@ class SessionEditDialog(BaseDialog):
             
         except Exception as e:
             self.logger.error(f"Failed to setup UI: {e}")
-            self._show_error_dialog("UI Error", "Failed to initialize dialog interface")
+            self._show_error_dialog(_("UI Error"), _("Failed to initialize dialog interface"))
             self.close()
     
     def _create_name_section(self, parent: Gtk.Box) -> None:
         """Create session name input section with validation."""
         try:
-            name_group = Adw.PreferencesGroup(title="Session Information")
+            name_group = Adw.PreferencesGroup(title=_("Session Information"))
             
             # Session name row
             name_row = Adw.ActionRow(
-                title="Session Name",
-                subtitle="A descriptive name for this session"
+                title=_("Session Name"),
+                subtitle=_("A descriptive name for this session")
             )
             
             self.name_entry = Gtk.Entry(
                 text=self.editing_session.name,
-                placeholder_text="Enter session name...",
+                placeholder_text=_("Enter session name..."),
                 hexpand=True
             )
             self.name_entry.connect("changed", self._on_name_changed)
@@ -343,18 +344,18 @@ class SessionEditDialog(BaseDialog):
     def _create_folder_section(self, parent: Gtk.Box) -> None:
         """Create folder selection section."""
         try:
-            folder_group = Adw.PreferencesGroup(title="Organization")
+            folder_group = Adw.PreferencesGroup(title=_("Organization"))
             
             # Folder selection row
             folder_row = Adw.ComboRow(
-                title="Folder",
-                subtitle="Choose a folder to organize this session"
+                title=_("Folder"),
+                subtitle=_("Choose a folder to organize this session")
             )
             
             # Build folder model
             folder_model = Gtk.StringList()
-            folder_model.append("Root")
-            self.folder_paths_map = {"Root": ""}
+            folder_model.append(_("Root"))
+            self.folder_paths_map = {_("Root"): ""}
             
             # Add folders sorted by path
             folders = []
@@ -394,15 +395,15 @@ class SessionEditDialog(BaseDialog):
     def _create_type_section(self, parent: Gtk.Box) -> None:
         """Create session type selection section."""
         try:
-            type_group = Adw.PreferencesGroup(title="Connection Type")
+            type_group = Adw.PreferencesGroup(title=_("Connection Type"))
             
             # Session type row
             type_row = Adw.ComboRow(
-                title="Session Type",
-                subtitle="Choose between local terminal or SSH connection"
+                title=_("Session Type"),
+                subtitle=_("Choose between local terminal or SSH connection")
             )
             
-            type_row.set_model(Gtk.StringList.new(["Local Terminal", "SSH Connection"]))
+            type_row.set_model(Gtk.StringList.new([_("Local Terminal"), _("SSH Connection")]))
             type_row.set_selected(0 if self.editing_session.is_local() else 1)
             type_row.connect("notify::selected", self._on_type_changed)
             
@@ -419,19 +420,19 @@ class SessionEditDialog(BaseDialog):
         try:
             # SSH configuration group
             ssh_group = Adw.PreferencesGroup(
-                title="SSH Configuration",
-                description="Configure connection details for SSH sessions"
+                title=_("SSH Configuration"),
+                description=_("Configure connection details for SSH sessions")
             )
             
             # Host row
             host_row = Adw.ActionRow(
-                title="Host",
-                subtitle="Hostname or IP address of the remote server"
+                title=_("Host"),
+                subtitle=_("Hostname or IP address of the remote server")
             )
             
             self.host_entry = Gtk.Entry(
                 text=self.editing_session.host,
-                placeholder_text="example.com or 192.168.1.100",
+                placeholder_text=_("example.com or 192.168.1.100"),
                 hexpand=True
             )
             self.host_entry.connect("changed", self._on_host_changed)
@@ -442,13 +443,13 @@ class SessionEditDialog(BaseDialog):
             
             # Username row
             user_row = Adw.ActionRow(
-                title="Username",
-                subtitle="Username for SSH authentication (optional)"
+                title=_("Username"),
+                subtitle=_("Username for SSH authentication (optional)")
             )
             
             self.user_entry = Gtk.Entry(
                 text=self.editing_session.user,
-                placeholder_text="username",
+                placeholder_text=_("username"),
                 hexpand=True
             )
             self.user_entry.connect("changed", self._on_user_changed)
@@ -459,11 +460,11 @@ class SessionEditDialog(BaseDialog):
             
             # Authentication type row
             auth_row = Adw.ComboRow(
-                title="Authentication",
-                subtitle="Choose authentication method"
+                title=_("Authentication"),
+                subtitle=_("Choose authentication method")
             )
             
-            auth_model = Gtk.StringList.new(["SSH Key", "Password"])
+            auth_model = Gtk.StringList.new([_("SSH Key"), _("Password")])
             auth_row.set_model(auth_model)
             auth_row.set_selected(0 if self.editing_session.uses_key_auth() else 1)
             auth_row.connect("notify::selected", self._on_auth_changed)
@@ -490,8 +491,8 @@ class SessionEditDialog(BaseDialog):
         try:
             # SSH key row
             key_row = Adw.ActionRow(
-                title="SSH Key Path",
-                subtitle="Path to private SSH key file"
+                title=_("SSH Key Path"),
+                subtitle=_("Path to private SSH key file")
             )
             
             # Key path entry with browse button
@@ -506,7 +507,7 @@ class SessionEditDialog(BaseDialog):
             self.key_path_entry.connect("changed", self._on_key_path_changed)
             
             self.browse_button = Gtk.Button(
-                label="Browse...",
+                label=_("Browse..."),
                 css_classes=["flat"]
             )
             self.browse_button.connect("clicked", self._on_browse_key_clicked)
@@ -529,8 +530,8 @@ class SessionEditDialog(BaseDialog):
         try:
             # Password row
             password_row = Adw.ActionRow(
-                title="Password",
-                subtitle="Password for SSH authentication"
+                title=_("Password"),
+                subtitle=_("Password for SSH authentication")
             )
             
             # Show encryption status
@@ -538,18 +539,18 @@ class SessionEditDialog(BaseDialog):
                 try:
                     storage = get_secure_storage()
                     if storage.is_initialized():
-                        password_row.set_subtitle("Password for SSH authentication (encrypted storage)")
+                        password_row.set_subtitle(_("Password for SSH authentication (encrypted storage)"))
                     else:
-                        password_row.set_subtitle("Password for SSH authentication (encryption available but not initialized)")
+                        password_row.set_subtitle(_("Password for SSH authentication (encryption available but not initialized)"))
                 except Exception:
-                    password_row.set_subtitle("Password for SSH authentication (encryption not available)")
+                    password_row.set_subtitle(_("Password for SSH authentication (encryption not available)"))
             else:
-                password_row.set_subtitle("Password for SSH authentication (stored as plain text)")
+                password_row.set_subtitle(_("Password for SSH authentication (stored as plain text)"))
             
             password_value = self.editing_session.auth_value if self.editing_session.uses_password_auth() else ""
             self.password_entry = Gtk.PasswordEntry(
                 text=password_value,
-                placeholder_text="Enter password...",
+                placeholder_text=_("Enter password..."),
                 show_peek_icon=True,
                 hexpand=True
             )
@@ -571,13 +572,13 @@ class SessionEditDialog(BaseDialog):
             action_bar = Gtk.ActionBar()
             
             # Cancel button
-            cancel_button = Gtk.Button(label="Cancel")
+            cancel_button = Gtk.Button(label=_("Cancel"))
             cancel_button.connect("clicked", self._on_cancel_clicked)
             action_bar.pack_start(cancel_button)
             
             # Test connection button (for SSH)
             self.test_button = Gtk.Button(
-                label="Test Connection",
+                label=_("Test Connection"),
                 css_classes=["flat"]
             )
             self.test_button.connect("clicked", self._on_test_connection_clicked)
@@ -585,7 +586,7 @@ class SessionEditDialog(BaseDialog):
             
             # Save button
             save_button = Gtk.Button(
-                label="Save",
+                label=_("Save"),
                 css_classes=["suggested-action"]
             )
             save_button.connect("clicked", self._on_save_clicked)
@@ -703,7 +704,7 @@ class SessionEditDialog(BaseDialog):
         """Handle browse SSH key button click."""
         try:
             file_dialog = Gtk.FileDialog(
-                title="Select SSH Key",
+                title=_("Select SSH Key"),
                 modal=True
             )
             
@@ -716,7 +717,7 @@ class SessionEditDialog(BaseDialog):
             
         except Exception as e:
             self.logger.error(f"Browse key dialog failed: {e}")
-            self._show_error_dialog("File Dialog Error", "Failed to open file browser")
+            self._show_error_dialog(_("File Dialog Error"), _("Failed to open file browser"))
     
     def _on_file_dialog_response(self, dialog, result) -> None:
         """Handle file dialog response."""
@@ -731,12 +732,12 @@ class SessionEditDialog(BaseDialog):
                         self.key_path_entry.set_text(path)
                         self.key_path_entry.remove_css_class("error")
                     except SSHKeyError as e:
-                        self._show_error_dialog("Invalid SSH Key", e.user_message)
+                        self._show_error_dialog(_("Invalid SSH Key"), e.user_message)
                         
         except GLib.Error as e:
             if not e.matches(Gio.io_error_quark(), Gio.IOErrorEnum.CANCELLED):
                 self.logger.error(f"File dialog error: {e.message}")
-                self._show_error_dialog("File Selection Error", f"Failed to select file: {e.message}")
+                self._show_error_dialog(_("File Selection Error"), _("Failed to select file: {}").format(e.message))
         except Exception as e:
             self.logger.error(f"File dialog response handling failed: {e}")
     
@@ -751,7 +752,7 @@ class SessionEditDialog(BaseDialog):
             
         except Exception as e:
             self.logger.error(f"Test connection failed: {e}")
-            self._show_error_dialog("Test Connection Error", "Failed to test SSH connection")
+            self._show_error_dialog(_("Test Connection Error"), _("Failed to test SSH connection"))
     
     def _show_test_connection_dialog(self) -> None:
         """Show SSH connection test dialog."""
@@ -770,30 +771,30 @@ class SessionEditDialog(BaseDialog):
             is_valid, errors = validate_session_data(test_session.to_dict())
             
             if not is_valid:
-                error_msg = "Connection test failed:\n" + "\n".join(errors)
-                self._show_error_dialog("Connection Test Failed", error_msg)
+                error_msg = _("Connection test failed:\n{}").format("\n".join(errors))
+                self._show_error_dialog(_("Connection Test Failed"), error_msg)
                 return
             
             # Show placeholder success dialog
             dialog = Adw.MessageDialog(
                 transient_for=self,
-                title="Connection Test",
-                body="SSH connection parameters appear valid.\n\nNote: Actual connection testing will be implemented in a future version."
+                title=_("Connection Test"),
+                body=_("SSH connection parameters appear valid.\n\nNote: Actual connection testing will be implemented in a future version.")
             )
-            dialog.add_response("ok", "OK")
+            dialog.add_response("ok", _("OK"))
             dialog.present()
             
         except Exception as e:
             self.logger.error(f"Connection test dialog failed: {e}")
-            self._show_error_dialog("Test Error", "Connection test failed")
+            self._show_error_dialog(_("Test Error"), _("Connection test failed"))
     
     def _on_cancel_clicked(self, button) -> None:
         """Handle cancel button click with unsaved changes warning."""
         try:
             if self._has_changes:
                 self._show_warning_dialog(
-                    "Unsaved Changes",
-                    "You have unsaved changes. Are you sure you want to cancel?",
+                    _("Unsaved Changes"),
+                    _("You have unsaved changes. Are you sure you want to cancel?"),
                     lambda: self.close()
                 )
             else:
@@ -829,11 +830,11 @@ class SessionEditDialog(BaseDialog):
                 
             except Exception as e:
                 self.logger.error(f"Failed to save session: {e}")
-                self._show_error_dialog("Save Error", f"Failed to save session: {e}")
+                self._show_error_dialog(_("Save Error"), _("Failed to save session: {}").format(e))
                 
         except Exception as e:
             self.logger.error(f"Save handling failed: {e}")
-            self._show_error_dialog("Save Error", "An unexpected error occurred while saving")
+            self._show_error_dialog(_("Save Error"), _("An unexpected error occurred while saving"))
     
     def _validate_and_save(self) -> bool:
         """Validate all input and save changes with comprehensive checks."""
@@ -859,7 +860,7 @@ class SessionEditDialog(BaseDialog):
             # Final validation of complete session
             if not self.editing_session.validate():
                 errors = self.editing_session.get_validation_errors()
-                self._show_error_dialog("Validation Error", "Session validation failed:\n" + "\n".join(errors))
+                self._show_error_dialog(_("Validation Error"), _("Session validation failed:\n{}").format("\n".join(errors)))
                 return False
             
             # Save changes
@@ -872,7 +873,7 @@ class SessionEditDialog(BaseDialog):
             
         except Exception as e:
             self.logger.error(f"Validation and save failed: {e}")
-            self._show_error_dialog("Validation Error", f"Failed to validate session: {e}")
+            self._show_error_dialog(_("Validation Error"), _("Failed to validate session: {}").format(e))
             return False
     
     def _validate_basic_fields(self) -> bool:
@@ -880,7 +881,7 @@ class SessionEditDialog(BaseDialog):
         valid = True
         
         # Session name
-        if not self._validate_required_field(self.name_entry, "Session name"):
+        if not self._validate_required_field(self.name_entry, _("Session name")):
             valid = False
         
         return valid
@@ -890,7 +891,7 @@ class SessionEditDialog(BaseDialog):
         valid = True
         
         # Host validation
-        if not self._validate_required_field(self.host_entry, "Host"):
+        if not self._validate_required_field(self.host_entry, _("Host")):
             valid = False
         else:
             hostname = self.host_entry.get_text().strip()
@@ -916,8 +917,8 @@ class SessionEditDialog(BaseDialog):
         
         # Show validation errors
         if not valid and self._validation_errors:
-            error_msg = "SSH configuration errors:\n" + "\n".join(self._validation_errors)
-            self._show_error_dialog("SSH Validation Error", error_msg)
+            error_msg = _("SSH configuration errors:\n{}").format("\n".join(self._validation_errors))
+            self._show_error_dialog(_("SSH Validation Error"), error_msg)
         
         return valid
     
@@ -942,20 +943,20 @@ class SessionEditDialog(BaseDialog):
             critical_findings = [f for f in findings if f['severity'] == 'critical']
             
             if critical_findings:
-                error_msg = "Critical security issues found:\n"
+                error_msg = _("Critical security issues found:\n")
                 for finding in critical_findings:
                     error_msg += f"• {finding['message']}\n"
                 
-                self._show_error_dialog("Security Validation Error", error_msg)
+                self._show_error_dialog(_("Security Validation Error"), error_msg)
                 return False
             
             # Warn about high severity issues
             high_findings = [f for f in findings if f['severity'] == 'high']
             if high_findings:
-                warning_msg = "Security warnings found:\n"
+                warning_msg = _("Security warnings found:\n")
                 for finding in high_findings:
                     warning_msg += f"• {finding['message']}\n"
-                warning_msg += "\nDo you want to continue anyway?"
+                warning_msg += _("\nDo you want to continue anyway?")
                 
                 # This would need to be handled asynchronously in a real implementation
                 self.logger.warning(f"High severity security findings for session: {warning_msg}")
@@ -1030,7 +1031,7 @@ class SessionEditDialog(BaseDialog):
                 backup_id = backup_manager.create_backup(
                     [self.config_paths.SESSIONS_FILE],
                     BackupType.AUTOMATIC,
-                    f"Session {'created' if self.is_new_item else 'modified'}: {self.editing_session.name}"
+                    _("Session {} {}").format("created" if self.is_new_item else "modified", self.editing_session.name)
                 )
                 if backup_id:
                     self.logger.debug(f"Created session backup: {backup_id}")
@@ -1052,7 +1053,7 @@ class FolderEditDialog(BaseDialog):
             position: Position in store (None for new)
         """
         self.is_new_item = is_new
-        title = "Add Folder" if self.is_new_item else "Edit Folder"
+        title = _("Add Folder") if self.is_new_item else _("Edit Folder")
         
         super().__init__(
             parent_window,
@@ -1096,7 +1097,7 @@ class FolderEditDialog(BaseDialog):
             )
             
             # Folder information group
-            folder_group = Adw.PreferencesGroup(title="Folder Information")
+            folder_group = Adw.PreferencesGroup(title=_("Folder Information"))
             
             # Folder name
             self._create_name_row(folder_group)
@@ -1124,20 +1125,20 @@ class FolderEditDialog(BaseDialog):
             
         except Exception as e:
             self.logger.error(f"Failed to setup UI: {e}")
-            self._show_error_dialog("UI Error", "Failed to initialize dialog interface")
+            self._show_error_dialog(_("UI Error"), _("Failed to initialize dialog interface"))
             self.close()
     
     def _create_name_row(self, parent: Adw.PreferencesGroup) -> None:
         """Create folder name input row."""
         try:
             name_row = Adw.ActionRow(
-                title="Folder Name",
-                subtitle="A descriptive name for organizing sessions"
+                title=_("Folder Name"),
+                subtitle=_("A descriptive name for organizing sessions")
             )
             
             self.name_entry = Gtk.Entry(
                 text=self.editing_folder.name,
-                placeholder_text="Enter folder name...",
+                placeholder_text=_("Enter folder name..."),
                 hexpand=True
             )
             self.name_entry.connect("changed", self._on_name_changed)
@@ -1154,14 +1155,14 @@ class FolderEditDialog(BaseDialog):
         """Create parent folder selection row."""
         try:
             parent_row = Adw.ComboRow(
-                title="Parent Folder",
-                subtitle="Choose a parent folder for organization"
+                title=_("Parent Folder"),
+                subtitle=_("Choose a parent folder for organization")
             )
             
             # Build parent folder model
             parent_model = Gtk.StringList()
-            parent_model.append("Root")
-            self.parent_paths_map = {"Root": ""}
+            parent_model.append(_("Root"))
+            self.parent_paths_map = {_("Root"): ""}
             
             # Add available parent folders (excluding self and descendants)
             available_parents = []
@@ -1209,13 +1210,13 @@ class FolderEditDialog(BaseDialog):
             action_bar = Gtk.ActionBar()
             
             # Cancel button
-            cancel_button = Gtk.Button(label="Cancel")
+            cancel_button = Gtk.Button(label=_("Cancel"))
             cancel_button.connect("clicked", self._on_cancel_clicked)
             action_bar.pack_start(cancel_button)
             
             # Save button
             save_button = Gtk.Button(
-                label="Save",
+                label=_("Save"),
                 css_classes=["suggested-action"]
             )
             save_button.connect("clicked", self._on_save_clicked)
@@ -1248,8 +1249,8 @@ class FolderEditDialog(BaseDialog):
         try:
             if self._has_changes:
                 self._show_warning_dialog(
-                    "Unsaved Changes",
-                    "You have unsaved changes. Are you sure you want to cancel?",
+                    _("Unsaved Changes"),
+                    _("You have unsaved changes. Are you sure you want to cancel?"),
                     lambda: self.close()
                 )
             else:
@@ -1284,7 +1285,7 @@ class FolderEditDialog(BaseDialog):
             
         except Exception as e:
             self.logger.error(f"Save handling failed: {e}")
-            self._show_error_dialog("Save Error", f"Failed to save folder: {e}")
+            self._show_error_dialog(_("Save Error"), _("Failed to save folder: {}").format(e))
     
     def _validate_and_save(self) -> bool:
         """Validate input and save changes."""
@@ -1292,7 +1293,7 @@ class FolderEditDialog(BaseDialog):
             self._clear_validation_errors()
             
             # Validate folder name
-            if not self._validate_required_field(self.name_entry, "Folder name"):
+            if not self._validate_required_field(self.name_entry, _("Folder name")):
                 return False
             
             name = self.name_entry.get_text().strip()
@@ -1313,7 +1314,7 @@ class FolderEditDialog(BaseDialog):
                 folder = self.folder_store.get_item(i)
                 if isinstance(folder, SessionFolder) and folder != self.original_folder:
                     if folder.path == new_path_str:
-                        self._show_error_dialog("Duplicate Folder", f"Folder path '{new_path_str}' already exists.")
+                        self._show_error_dialog(_("Duplicate Folder"), _("Folder path '{}' already exists.").format(new_path_str))
                         return False
             
             # Update folder
@@ -1324,7 +1325,7 @@ class FolderEditDialog(BaseDialog):
             # Validate folder
             if not self.editing_folder.validate():
                 errors = self.editing_folder.get_validation_errors()
-                self._show_error_dialog("Validation Error", "Folder validation failed:\n" + "\n".join(errors))
+                self._show_error_dialog(_("Validation Error"), _("Folder validation failed:\n{}").format("\n".join(errors)))
                 return False
             
             # Save changes
@@ -1346,7 +1347,7 @@ class FolderEditDialog(BaseDialog):
             
         except Exception as e:
             self.logger.error(f"Validation and save failed: {e}")
-            self._show_error_dialog("Validation Error", f"Failed to validate folder: {e}")
+            self._show_error_dialog(_("Validation Error"), _("Failed to validate folder: {}").format(e))
             return False
     
     def _create_save_backup(self) -> None:
@@ -1357,7 +1358,7 @@ class FolderEditDialog(BaseDialog):
                 backup_id = backup_manager.create_backup(
                     [self.config_paths.SESSIONS_FILE],
                     BackupType.AUTOMATIC,
-                    f"Folder {'created' if self.is_new_item else 'modified'}: {self.editing_folder.name}"
+                    _("Folder {} {}").format("created" if self.is_new_item else "modified", self.editing_folder.name)
                 )
                 if backup_id:
                     self.logger.debug(f"Created folder backup: {backup_id}")
@@ -1386,7 +1387,7 @@ class PreferencesDialog(Adw.PreferencesWindow):
             settings_manager: SettingsManager instance
         """
         super().__init__(
-            title="Preferences",
+            title=_("Preferences"),
             transient_for=parent_window,
             modal=True,
             hide_on_close=True,
@@ -1417,22 +1418,22 @@ class PreferencesDialog(Adw.PreferencesWindow):
         """Set up appearance preferences page."""
         try:
             appearance_page = Adw.PreferencesPage(
-                title="Appearance",
+                title=_("Appearance"),
                 icon_name="preferences-color-symbolic"
             )
             self.add(appearance_page)
             
             # Colors & Font group
             colors_group = Adw.PreferencesGroup(
-                title="Colors &amp; Font",
-                description="Customize terminal appearance and typography"
+                title=_("Colors & Font"),
+                description=_("Customize terminal appearance and typography")
             )
             appearance_page.add(colors_group)
             
             # Color scheme
             color_scheme_row = Adw.ComboRow(
-                title="Color Scheme",
-                subtitle="Select terminal color scheme"
+                title=_("Color Scheme"),
+                subtitle=_("Select terminal color scheme")
             )
             
             schemes = ColorSchemes.get_schemes()
@@ -1444,8 +1445,8 @@ class PreferencesDialog(Adw.PreferencesWindow):
             
             # Transparency
             transparency_row = Adw.ActionRow(
-                title="Background Transparency",
-                subtitle="Adjust terminal background transparency"
+                title=_("Background Transparency"),
+                subtitle=_("Adjust terminal background transparency")
             )
             
             self.transparency_scale = Gtk.Scale.new_with_range(Gtk.Orientation.HORIZONTAL, 0, 100, 1)
@@ -1461,8 +1462,8 @@ class PreferencesDialog(Adw.PreferencesWindow):
             
             # Font
             font_row = Adw.ActionRow(
-                title="Terminal Font",
-                subtitle="Select font family and size for terminal text"
+                title=_("Terminal Font"),
+                subtitle=_("Select font family and size for terminal text")
             )
             
             self.font_button = Gtk.FontButton(
@@ -1482,22 +1483,22 @@ class PreferencesDialog(Adw.PreferencesWindow):
         """Set up behavior preferences page."""
         try:
             behavior_page = Adw.PreferencesPage(
-                title="Behavior",
+                title=_("Behavior"),
                 icon_name="preferences-system-symbolic"
             )
             self.add(behavior_page)
             
             # Terminal behavior group
             terminal_group = Adw.PreferencesGroup(
-                title="Terminal Behavior",
-                description="Configure how terminals behave"
+                title=_("Terminal Behavior"),
+                description=_("Configure how terminals behave")
             )
             behavior_page.add(terminal_group)
             
             # Auto close tabs
             auto_close_row = Adw.SwitchRow(
-                title="Auto Close Tabs",
-                subtitle="Automatically close tabs when process exits normally"
+                title=_("Auto Close Tabs"),
+                subtitle=_("Automatically close tabs when process exits normally")
             )
             auto_close_row.set_active(self.settings_manager.get("auto_close_tab", True))
             auto_close_row.connect("notify::active", lambda r, p: self._on_setting_changed("auto_close_tab", r.get_active()))
@@ -1505,8 +1506,8 @@ class PreferencesDialog(Adw.PreferencesWindow):
             
             # Scroll on output
             scroll_output_row = Adw.SwitchRow(
-                title="Scroll on Output",
-                subtitle="Automatically scroll when new output appears"
+                title=_("Scroll on Output"),
+                subtitle=_("Automatically scroll when new output appears")
             )
             scroll_output_row.set_active(self.settings_manager.get("scroll_on_output", True))
             scroll_output_row.connect("notify::active", lambda r, p: self._on_setting_changed("scroll_on_output", r.get_active()))
@@ -1514,8 +1515,8 @@ class PreferencesDialog(Adw.PreferencesWindow):
             
             # Scroll on keystroke
             scroll_keystroke_row = Adw.SwitchRow(
-                title="Scroll on Keystroke",
-                subtitle="Automatically scroll when typing"
+                title=_("Scroll on Keystroke"),
+                subtitle=_("Automatically scroll when typing")
             )
             scroll_keystroke_row.set_active(self.settings_manager.get("scroll_on_keystroke", True))
             scroll_keystroke_row.connect("notify::active", lambda r, p: self._on_setting_changed("scroll_on_keystroke", r.get_active()))
@@ -1523,8 +1524,8 @@ class PreferencesDialog(Adw.PreferencesWindow):
             
             # Mouse autohide
             mouse_hide_row = Adw.SwitchRow(
-                title="Hide Mouse Cursor",
-                subtitle="Hide mouse cursor when typing"
+                title=_("Hide Mouse Cursor"),
+                subtitle=_("Hide mouse cursor when typing")
             )
             mouse_hide_row.set_active(self.settings_manager.get("mouse_autohide", True))
             mouse_hide_row.connect("notify::active", lambda r, p: self._on_setting_changed("mouse_autohide", r.get_active()))
@@ -1532,8 +1533,8 @@ class PreferencesDialog(Adw.PreferencesWindow):
             
             # Cursor blink
             cursor_blink_row = Adw.SwitchRow(
-                title="Cursor Blinking",
-                subtitle="Enable cursor blinking animation"
+                title=_("Cursor Blinking"),
+                subtitle=_("Enable cursor blinking animation")
             )
             cursor_blink_row.set_active(self.settings_manager.get("cursor_blink", True))
             cursor_blink_row.connect("notify::active", lambda r, p: self._on_setting_changed("cursor_blink", r.get_active()))
@@ -1541,15 +1542,15 @@ class PreferencesDialog(Adw.PreferencesWindow):
             
             # UI behavior group
             ui_group = Adw.PreferencesGroup(
-                title="Interface Behavior",
-                description="Configure application interface behavior"
+                title=_("Interface Behavior"),
+                description=_("Configure application interface behavior")
             )
             behavior_page.add(ui_group)
             
             # Confirm close
             confirm_close_row = Adw.SwitchRow(
-                title="Confirm Application Exit",
-                subtitle="Show confirmation dialog when closing the application"
+                title=_("Confirm Application Exit"),
+                subtitle=_("Show confirmation dialog when closing the application")
             )
             confirm_close_row.set_active(self.settings_manager.get("confirm_close", True))
             confirm_close_row.connect("notify::active", lambda r, p: self._on_setting_changed("confirm_close", r.get_active()))
@@ -1557,8 +1558,8 @@ class PreferencesDialog(Adw.PreferencesWindow):
             
             # Confirm delete
             confirm_delete_row = Adw.SwitchRow(
-                title="Confirm Deletion",
-                subtitle="Show confirmation dialog when deleting sessions or folders"
+                title=_("Confirm Deletion"),
+                subtitle=_("Show confirmation dialog when deleting sessions or folders")
             )
             confirm_delete_row.set_active(self.settings_manager.get("confirm_delete", True))
             confirm_delete_row.connect("notify::active", lambda r, p: self._on_setting_changed("confirm_delete", r.get_active()))
@@ -1571,39 +1572,39 @@ class PreferencesDialog(Adw.PreferencesWindow):
         """Set up keyboard shortcuts page."""
         try:
             shortcuts_page = Adw.PreferencesPage(
-                title="Shortcuts",
+                title=_("Shortcuts"),
                 icon_name="preferences-desktop-keyboard-shortcuts-symbolic"
             )
             self.add(shortcuts_page)
             
             # Terminal shortcuts group
             terminal_group = Adw.PreferencesGroup(
-                title="Terminal Actions",
-                description="Keyboard shortcuts for terminal operations"
+                title=_("Terminal Actions"),
+                description=_("Keyboard shortcuts for terminal operations")
             )
             shortcuts_page.add(terminal_group)
             
             # Application shortcuts group
             app_group = Adw.PreferencesGroup(
-                title="Application Actions",
-                description="Keyboard shortcuts for application operations"
+                title=_("Application Actions"),
+                description=_("Keyboard shortcuts for application operations")
             )
             shortcuts_page.add(app_group)
             
             # Define shortcut categories
             terminal_shortcuts = {
-                "new-local-tab": "New Tab",
-                "close-tab": "Close Tab", 
-                "copy": "Copy",
-                "paste": "Paste",
-                "select-all": "Select All"
+                "new-local-tab": _("New Tab"),
+                "close-tab": _("Close Tab"), 
+                "copy": _("Copy"),
+                "paste": _("Paste"),
+                "select-all": _("Select All")
             }
             
             app_shortcuts = {
-                "preferences": "Preferences",
-                "quit": "Quit Application",
-                "toggle-sidebar": "Toggle Sidebar",
-                "new-window": "New Window"
+                "preferences": _("Preferences"),
+                "quit": _("Quit Application"),
+                "toggle-sidebar": _("Toggle Sidebar"),
+                "new-window": _("New Window")
             }
             
             # Create shortcut rows
@@ -1620,7 +1621,7 @@ class PreferencesDialog(Adw.PreferencesWindow):
                 current_shortcut = self.settings_manager.get_shortcut(key)
                 
                 # Get display label
-                subtitle = current_shortcut if current_shortcut else "None"
+                subtitle = current_shortcut if current_shortcut else _("None")
                 try:
                     if current_shortcut:
                         subtitle = accelerator_to_label(current_shortcut)
@@ -1633,7 +1634,7 @@ class PreferencesDialog(Adw.PreferencesWindow):
                 )
                 
                 button = Gtk.Button(
-                    label="Edit",
+                    label=_("Edit"),
                     css_classes=["flat"]
                 )
                 button.connect("clicked", self._on_shortcut_edit_clicked, key, row)
@@ -1651,22 +1652,22 @@ class PreferencesDialog(Adw.PreferencesWindow):
         """Set up security preferences page."""
         try:
             security_page = Adw.PreferencesPage(
-                title="Security",
+                title=_("Security"),
                 icon_name="security-high-symbolic"
             )
             self.add(security_page)
             
             # Security settings group
             security_group = Adw.PreferencesGroup(
-                title="Security Settings",
-                description="Configure security and privacy options"
+                title=_("Security Settings"),
+                description=_("Configure security and privacy options")
             )
             security_page.add(security_group)
             
             # Security warnings
             warnings_row = Adw.SwitchRow(
-                title="Security Warnings",
-                subtitle="Show warnings for potential security issues"
+                title=_("Security Warnings"),
+                subtitle=_("Show warnings for potential security issues")
             )
             warnings_row.set_active(self.settings_manager.get("security_warnings", True))
             warnings_row.connect("notify::active", lambda r, p: self._on_setting_changed("security_warnings", r.get_active()))
@@ -1674,8 +1675,8 @@ class PreferencesDialog(Adw.PreferencesWindow):
             
             # Audit sessions
             audit_row = Adw.SwitchRow(
-                title="Audit Sessions",
-                subtitle="Automatically audit SSH sessions for security issues"
+                title=_("Audit Sessions"),
+                subtitle=_("Automatically audit SSH sessions for security issues")
             )
             audit_row.set_active(self.settings_manager.get("audit_sessions", True))
             audit_row.connect("notify::active", lambda r, p: self._on_setting_changed("audit_sessions", r.get_active()))
@@ -1683,25 +1684,25 @@ class PreferencesDialog(Adw.PreferencesWindow):
             
             # Encrypt passwords
             encrypt_row = Adw.SwitchRow(
-                title="Encrypt Passwords",
-                subtitle="Encrypt stored passwords (requires cryptography library)"
+                title=_("Encrypt Passwords"),
+                subtitle=_("Encrypt stored passwords (requires cryptography library)")
             )
             encrypt_row.set_active(self.settings_manager.get("encrypt_passwords", True))
             encrypt_row.set_sensitive(is_encryption_available())
             if not is_encryption_available():
-                encrypt_row.set_subtitle("Encrypt stored passwords (cryptography library not available)")
+                encrypt_row.set_subtitle(_("Encrypt stored passwords (cryptography library not available)"))
             encrypt_row.connect("notify::active", lambda r, p: self._on_setting_changed("encrypt_passwords", r.get_active()))
             security_group.add(encrypt_row)
             
             # Secure file permissions
             permissions_row = Adw.SwitchRow(
-                title="Secure File Permissions",
-                subtitle="Set restrictive permissions on configuration files"
+                title=_("Secure File Permissions"),
+                subtitle=_("Set restrictive permissions on configuration files")
             )
             permissions_row.set_active(self.settings_manager.get("secure_file_permissions", True))
             if is_windows():
                 permissions_row.set_sensitive(False)
-                permissions_row.set_subtitle("Secure file permissions (not available on Windows)")
+                permissions_row.set_subtitle(_("Secure file permissions (not available on Windows)"))
             permissions_row.connect("notify::active", lambda r, p: self._on_setting_changed("secure_file_permissions", r.get_active()))
             security_group.add(permissions_row)
             
@@ -1712,22 +1713,22 @@ class PreferencesDialog(Adw.PreferencesWindow):
         """Set up backup preferences page."""
         try:
             backup_page = Adw.PreferencesPage(
-                title="Backup",
+                title=_("Backup"),
                 icon_name="folder-download-symbolic"
             )
             self.add(backup_page)
             
             # Backup settings group
             backup_group = Adw.PreferencesGroup(
-                title="Backup Settings",
-                description="Configure automatic backup and recovery options"
+                title=_("Backup Settings"),
+                description=_("Configure automatic backup and recovery options")
             )
             backup_page.add(backup_group)
             
             # Auto backup enabled
             auto_backup_row = Adw.SwitchRow(
-                title="Automatic Backups",
-                subtitle="Automatically create backups of sessions and settings"
+                title=_("Automatic Backups"),
+                subtitle=_("Automatically create backups of sessions and settings")
             )
             auto_backup_row.set_active(self.settings_manager.get("auto_backup_enabled", True))
             auto_backup_row.connect("notify::active", lambda r, p: self._on_setting_changed("auto_backup_enabled", r.get_active()))
@@ -1735,8 +1736,8 @@ class PreferencesDialog(Adw.PreferencesWindow):
 
             # Backup on change
             change_backup_row = Adw.SwitchRow(
-                title="Backup on Change",
-                subtitle="Create a backup every time sessions or folders are modified"
+                title=_("Backup on Change"),
+                subtitle=_("Create a backup every time sessions or folders are modified")
             )
             change_backup_row.set_active(self.settings_manager.get("backup_on_change", True))
             change_backup_row.connect("notify::active", lambda r, p: self._on_setting_changed("backup_on_change", r.get_active()))
@@ -1744,8 +1745,8 @@ class PreferencesDialog(Adw.PreferencesWindow):
             
             # Backup on exit
             exit_backup_row = Adw.SwitchRow(
-                title="Backup on Exit",
-                subtitle="Create backup when application exits"
+                title=_("Backup on Exit"),
+                subtitle=_("Create backup when application exits")
             )
             exit_backup_row.set_active(self.settings_manager.get("backup_on_exit", False))
             exit_backup_row.connect("notify::active", lambda r, p: self._on_setting_changed("backup_on_exit", r.get_active()))
@@ -1753,8 +1754,8 @@ class PreferencesDialog(Adw.PreferencesWindow):
             
             # Backup interval
             interval_row = Adw.ActionRow(
-                title="Backup Interval",
-                subtitle="Hours between automatic backups"
+                title=_("Backup Interval"),
+                subtitle=_("Hours between automatic backups")
             )
             
             interval_spin = Gtk.SpinButton.new_with_range(1, 168, 1)  # 1 hour to 1 week
@@ -1767,8 +1768,8 @@ class PreferencesDialog(Adw.PreferencesWindow):
             
             # Retention days
             retention_row = Adw.ActionRow(
-                title="Retention Period",
-                subtitle="Days to keep old backups"
+                title=_("Retention Period"),
+                subtitle=_("Days to keep old backups")
             )
             
             retention_spin = Gtk.SpinButton.new_with_range(1, 365, 1)
@@ -1786,22 +1787,22 @@ class PreferencesDialog(Adw.PreferencesWindow):
         """Set up advanced preferences page."""
         try:
             advanced_page = Adw.PreferencesPage(
-                title="Advanced",
+                title=_("Advanced"),
                 icon_name="preferences-other-symbolic"
             )
             self.add(advanced_page)
             
             # Development group
             dev_group = Adw.PreferencesGroup(
-                title="Development &amp; Debugging",
-                description="Advanced options for development and troubleshooting"
+                title=_("Development & Debugging"),
+                description=_("Advanced options for development and troubleshooting")
             )
             advanced_page.add(dev_group)
             
             # Debug mode
             debug_row = Adw.SwitchRow(
-                title="Debug Mode",
-                subtitle="Enable verbose logging and debug features"
+                title=_("Debug Mode"),
+                subtitle=_("Enable verbose logging and debug features")
             )
             debug_row.set_active(self.settings_manager.get("debug_mode", False))
             debug_row.connect("notify::active", lambda r, p: self._on_setting_changed("debug_mode", r.get_active()))
@@ -1809,8 +1810,8 @@ class PreferencesDialog(Adw.PreferencesWindow):
             
             # Performance mode
             performance_row = Adw.SwitchRow(
-                title="Performance Mode",
-                subtitle="Optimize for performance over features"
+                title=_("Performance Mode"),
+                subtitle=_("Optimize for performance over features")
             )
             performance_row.set_active(self.settings_manager.get("performance_mode", False))
             performance_row.connect("notify::active", lambda r, p: self._on_setting_changed("performance_mode", r.get_active()))
@@ -1818,8 +1819,8 @@ class PreferencesDialog(Adw.PreferencesWindow):
             
             # Experimental features
             experimental_row = Adw.SwitchRow(
-                title="Experimental Features",
-                subtitle="Enable experimental and unstable features"
+                title=_("Experimental Features"),
+                subtitle=_("Enable experimental and unstable features")
             )
             experimental_row.set_active(self.settings_manager.get("experimental_features", False))
             experimental_row.connect("notify::active", lambda r, p: self._on_setting_changed("experimental_features", r.get_active()))
@@ -1827,19 +1828,19 @@ class PreferencesDialog(Adw.PreferencesWindow):
             
             # Reset group
             reset_group = Adw.PreferencesGroup(
-                title="Reset",
-                description="Reset application settings to defaults"
+                title=_("Reset"),
+                description=_("Reset application settings to defaults")
             )
             advanced_page.add(reset_group)
             
             # Reset button
             reset_row = Adw.ActionRow(
-                title="Reset All Settings",
-                subtitle="Restore all settings to their default values"
+                title=_("Reset All Settings"),
+                subtitle=_("Restore all settings to their default values")
             )
             
             reset_button = Gtk.Button(
-                label="Reset",
+                label=_("Reset"),
                 css_classes=["destructive-action"]
             )
             reset_button.connect("clicked", self._on_reset_settings_clicked)
@@ -1896,21 +1897,21 @@ class PreferencesDialog(Adw.PreferencesWindow):
         try:
             dialog = Adw.MessageDialog(
                 transient_for=self,
-                title=f"Edit Shortcut",
-                body=f"Press the new key combination for '{row.get_title()}' or Esc to cancel."
+                title=_("Edit Shortcut"),
+                body=_("Press the new key combination for '{}' or Esc to cancel.").format(row.get_title())
             )
             
             current_shortcut = self.settings_manager.get_shortcut(shortcut_key)
             
             # Display current shortcut
-            current_label = current_shortcut if current_shortcut else "None"
+            current_label = current_shortcut if current_shortcut else _("None")
             try:
                 if current_shortcut:
                     current_label = accelerator_to_label(current_shortcut)
             except Exception as e:
                 self.logger.debug(f"Error getting current accelerator label: {e}")
             
-            feedback_label = Gtk.Label(label=f"Current: {current_label}\nNew: (press keys)")
+            feedback_label = Gtk.Label(label=_("Current: {}\nNew: (press keys)").format(current_label))
             dialog.set_extra_child(feedback_label)
             
             # Set up key capture
@@ -1941,7 +1942,7 @@ class PreferencesDialog(Adw.PreferencesWindow):
                     except Exception as e:
                         self.logger.debug(f"Error getting new accelerator label: {e}")
                     
-                    feedback_label.set_label(f"Current: {current_label}\nNew: {label_text}")
+                    feedback_label.set_label(_("Current: {}\nNew: {}").format(current_label, label_text))
                     
                 except Exception as e:
                     self.logger.error(f"Error building accelerator name: {e}")
@@ -1953,9 +1954,9 @@ class PreferencesDialog(Adw.PreferencesWindow):
             dialog.add_controller(key_controller)
             
             # Add responses
-            dialog.add_response("cancel", "Cancel")
-            dialog.add_response("clear", "Clear")
-            dialog.add_response("save", "Set Shortcut")
+            dialog.add_response("cancel", _("Cancel"))
+            dialog.add_response("clear", _("Clear"))
+            dialog.add_response("save", _("Set Shortcut"))
             dialog.set_default_response("save")
             dialog.set_response_appearance("save", Adw.ResponseAppearance.SUGGESTED)
             dialog.set_response_appearance("clear", Adw.ResponseAppearance.DESTRUCTIVE)
@@ -1979,7 +1980,7 @@ class PreferencesDialog(Adw.PreferencesWindow):
                     elif response_id == "clear":
                         # Clear shortcut
                         self.settings_manager.set_shortcut(shortcut_key, "")
-                        row.set_subtitle("None")
+                        row.set_subtitle(_("None"))
                         self.emit("shortcut-changed")
                         
                 except Exception as e:
@@ -1998,12 +1999,12 @@ class PreferencesDialog(Adw.PreferencesWindow):
         try:
             dialog = Adw.MessageDialog(
                 transient_for=self,
-                title="Reset All Settings",
-                body="Are you sure you want to reset all settings to their default values? This action cannot be undone."
+                title=_("Reset All Settings"),
+                body=_("Are you sure you want to reset all settings to their default values? This action cannot be undone.")
             )
             
-            dialog.add_response("cancel", "Cancel")
-            dialog.add_response("reset", "Reset All Settings")
+            dialog.add_response("cancel", _("Cancel"))
+            dialog.add_response("reset", _("Reset All Settings"))
             dialog.set_response_appearance("reset", Adw.ResponseAppearance.DESTRUCTIVE)
             
             def on_response(dlg, response_id):
@@ -2014,10 +2015,10 @@ class PreferencesDialog(Adw.PreferencesWindow):
                         # Show success message
                         success_dialog = Adw.MessageDialog(
                             transient_for=self,
-                            title="Settings Reset",
-                            body="All settings have been reset to their default values. Please restart the application for all changes to take effect."
+                            title=_("Settings Reset"),
+                            body=_("All settings have been reset to their default values. Please restart the application for all changes to take effect.")
                         )
-                        success_dialog.add_response("ok", "OK")
+                        success_dialog.add_response("ok", _("OK"))
                         success_dialog.present()
                         
                         self.logger.info("All settings reset to defaults")
@@ -2026,10 +2027,10 @@ class PreferencesDialog(Adw.PreferencesWindow):
                         self.logger.error(f"Failed to reset settings: {e}")
                         error_dialog = Adw.MessageDialog(
                             transient_for=self,
-                            title="Reset Failed",
-                            body=f"Failed to reset settings: {e}"
+                            title=_("Reset Failed"),
+                            body=_("Failed to reset settings: {}").format(e)
                         )
-                        error_dialog.add_response("ok", "OK")
+                        error_dialog.add_response("ok", _("OK"))
                         error_dialog.present()
                 
                 dlg.close()

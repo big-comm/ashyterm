@@ -137,13 +137,13 @@ class CommTerminalWindow(Adw.ApplicationWindow):
                 result = self.tab_manager.create_initial_tab_if_empty()
                 if result is None:
                     self.logger.warning("Failed to create initial tab")
-                    self._show_error_dialog("Terminal Error", 
-                                          "Failed to create initial terminal. Check system configuration.")
+                    self._show_error_dialog(_("Terminal Error"), 
+                                          _("Failed to create initial terminal. Check system configuration."))
             return False  # Don't repeat
         except Exception as e:
             self.logger.error(f"Failed to create initial tab: {e}")
-            self._show_error_dialog("Initialization Error", 
-                                  f"Failed to initialize terminal: {e}")
+            self._show_error_dialog(_("Initialization Error"), 
+                                  _("Failed to initialize terminal: {error}").format(error=str(e)))
             return False
     
     def _setup_actions(self) -> None:
@@ -245,27 +245,27 @@ class CommTerminalWindow(Adw.ApplicationWindow):
             # Sidebar toggle button
             self.toggle_sidebar_button = Gtk.ToggleButton()
             self.toggle_sidebar_button.set_icon_name("view-reveal-symbolic")
-            self.toggle_sidebar_button.set_tooltip_text("Toggle Sidebar")
+            self.toggle_sidebar_button.set_tooltip_text(_("Toggle Sidebar"))
             self.toggle_sidebar_button.connect("toggled", self._on_toggle_sidebar)
             header_bar.pack_start(self.toggle_sidebar_button)
             
             # Security audit button (if security auditor available)
             if self.security_auditor:
                 audit_button = Gtk.Button.new_from_icon_name("security-high-symbolic")
-                audit_button.set_tooltip_text("Security Audit")
+                audit_button.set_tooltip_text(_("Security Audit"))
                 audit_button.set_action_name("win.audit-security")
                 header_bar.pack_start(audit_button)
             
             # Preferences button
             preferences_button = Gtk.Button.new_from_icon_name("preferences-system-symbolic")
-            preferences_button.set_tooltip_text("Preferences")
+            preferences_button.set_tooltip_text(_("Preferences"))
             preferences_button.set_action_name("win.preferences")
             header_bar.pack_end(preferences_button)
             
             # Main menu button
             menu_button = Gtk.MenuButton()
             menu_button.set_icon_name("open-menu-symbolic")
-            menu_button.set_tooltip_text("Main Menu")
+            menu_button.set_tooltip_text(_("Main Menu"))
             menu_button.set_menu_model(MainApplicationMenu.create_menu())
             header_bar.pack_end(menu_button)
             
@@ -322,25 +322,25 @@ class CommTerminalWindow(Adw.ApplicationWindow):
             
             # Add session button
             add_session_button = Gtk.Button.new_from_icon_name("list-add-symbolic")
-            add_session_button.set_tooltip_text("Add Session")
+            add_session_button.set_tooltip_text(_("Add Session"))
             add_session_button.connect("clicked", self._on_add_session_clicked)
             toolbar.append(add_session_button)
             
             # Add folder button
             add_folder_button = Gtk.Button.new_from_icon_name("folder-new-symbolic")
-            add_folder_button.set_tooltip_text("Add Folder")
+            add_folder_button.set_tooltip_text(_("Add Folder"))
             add_folder_button.connect("clicked", self._on_add_folder_clicked)
             toolbar.append(add_folder_button)
             
             # Edit button
             edit_button = Gtk.Button.new_from_icon_name("document-edit-symbolic")
-            edit_button.set_tooltip_text("Edit Selected")
+            edit_button.set_tooltip_text(_("Edit Selected"))
             edit_button.connect("clicked", self._on_edit_selected_clicked)
             toolbar.append(edit_button)
             
             # Remove button
             remove_button = Gtk.Button.new_from_icon_name("list-remove-symbolic")
-            remove_button.set_tooltip_text("Remove Selected")
+            remove_button.set_tooltip_text(_("Remove Selected"))
             remove_button.connect("clicked", self._on_remove_selected_clicked)
             toolbar.append(remove_button)
             
@@ -421,8 +421,8 @@ class CommTerminalWindow(Adw.ApplicationWindow):
             
         except Exception as e:
             self.logger.error(f"Failed to load initial data: {e}")
-            self._show_error_dialog("Data Loading Error", 
-                                  "Failed to load saved sessions and folders. Starting with empty configuration.")
+            self._show_error_dialog(_("Data Loading Error"), 
+                                  _("Failed to load saved sessions and folders. Starting with empty configuration."))
     
     def _update_sidebar_button_icon(self) -> None:
         """Update sidebar toggle button icon."""
@@ -547,8 +547,8 @@ class CommTerminalWindow(Adw.ApplicationWindow):
                     is_valid, errors = validate_session_data(session_data)
                     
                     if not is_valid:
-                        error_msg = "Session validation failed:\n" + "\n".join(errors)
-                        self._show_error_dialog("Session Validation Error", error_msg)
+                        error_msg = _("Session validation failed:\n{errors}").format(errors="\n".join(errors))
+                        self._show_error_dialog(_("Session Validation Error"), error_msg)
                         return
                     
                     # Perform security audit
@@ -572,15 +572,15 @@ class CommTerminalWindow(Adw.ApplicationWindow):
                 log_terminal_event("created", session.name, f"SSH to {session.get_connection_string()}")
             
             if result is None:
-                self._show_error_dialog("Terminal Creation Failed", 
-                                      "Could not create terminal for this session.")
+                self._show_error_dialog(_("Terminal Creation Failed"), 
+                                      _("Could not create terminal for this session."))
             
         except VTENotAvailableError:
-            self._show_error_dialog("VTE Not Available", 
-                                  "Cannot open session - VTE library not installed.")
+            self._show_error_dialog(_("VTE Not Available"), 
+                                  _("Cannot open session - VTE library not installed."))
         except Exception as e:
             self.logger.error(f"Session activation failed: {e}")
-            self._show_error_dialog("Session Error", f"Failed to activate session: {e}")
+            self._show_error_dialog(_("Session Error"), _("Failed to activate session: {error}").format(error=str(e)))
     
     def _on_terminal_child_exited(self, terminal, child_status: int, identifier) -> None:
         """Handle terminal child process exit."""
@@ -637,11 +637,11 @@ class CommTerminalWindow(Adw.ApplicationWindow):
             log_terminal_event("created", "Local Terminal", "new tab")
                 
         except VTENotAvailableError:
-            self._show_error_dialog("VTE Not Available", 
-                                  "Cannot create terminal - VTE library not installed.")
+            self._show_error_dialog(_("VTE Not Available"), 
+                                  _("Cannot create terminal - VTE library not installed."))
         except Exception as e:
             self.logger.error(f"New local tab creation failed: {e}")
-            self._show_error_dialog("Terminal Error", f"Failed to create new tab: {e}")
+            self._show_error_dialog(_("Terminal Error"), _("Failed to create new tab: {error}").format(error=str(e)))
         finally:
             # Reset flag after delay
             def reset_flag():
@@ -691,7 +691,7 @@ class CommTerminalWindow(Adw.ApplicationWindow):
                 self._show_session_edit_dialog(self.current_session_context, False)
         except Exception as e:
             self.logger.error(f"Edit session failed: {e}")
-            self._show_error_dialog("Edit Error", f"Failed to edit session: {e}")
+            self._show_error_dialog(_("Edit Error"), _("Failed to edit session: {error}").format(error=str(e)))
     
     def _on_duplicate_session(self, action, param) -> None:
         """Handle duplicate session action."""
@@ -703,7 +703,7 @@ class CommTerminalWindow(Adw.ApplicationWindow):
                     log_session_event("duplicated", self.current_session_context.name)
         except Exception as e:
             self.logger.error(f"Duplicate session failed: {e}")
-            self._show_error_dialog("Duplicate Error", f"Failed to duplicate session: {e}")
+            self._show_error_dialog(_("Duplicate Error"), _("Failed to duplicate session: {error}").format(error=str(e)))
     
     def _on_rename_session(self, action, param) -> None:
         """Handle rename session action."""
@@ -712,7 +712,7 @@ class CommTerminalWindow(Adw.ApplicationWindow):
                 self._show_rename_dialog(self.current_session_context, True)
         except Exception as e:
             self.logger.error(f"Rename session failed: {e}")
-            self._show_error_dialog("Rename Error", f"Failed to rename session: {e}")
+            self._show_error_dialog(_("Rename Error"), _("Failed to rename session: {error}").format(error=str(e)))
     
     def _on_move_session_to_folder(self, action, param) -> None:
         """Handle move session to folder action."""
@@ -721,7 +721,7 @@ class CommTerminalWindow(Adw.ApplicationWindow):
                 self._show_move_session_dialog(self.current_session_context)
         except Exception as e:
             self.logger.error(f"Move session failed: {e}")
-            self._show_error_dialog("Move Error", f"Failed to move session: {e}")
+            self._show_error_dialog(_("Move Error"), _("Failed to move session: {error}").format(error=str(e)))
     
     def _on_delete_session(self, action, param) -> None:
         """Handle delete session action."""
@@ -730,7 +730,7 @@ class CommTerminalWindow(Adw.ApplicationWindow):
                 self._show_delete_confirmation(self.current_session_context, True)
         except Exception as e:
             self.logger.error(f"Delete session failed: {e}")
-            self._show_error_dialog("Delete Error", f"Failed to delete session: {e}")
+            self._show_error_dialog(_("Delete Error"), _("Failed to delete session: {error}").format(error=str(e)))
     
     # Action handlers - Folder actions
     def _on_edit_folder(self, action, param) -> None:
@@ -740,7 +740,7 @@ class CommTerminalWindow(Adw.ApplicationWindow):
                 self._show_folder_edit_dialog(self.current_folder_context, False)
         except Exception as e:
             self.logger.error(f"Edit folder failed: {e}")
-            self._show_error_dialog("Edit Error", f"Failed to edit folder: {e}")
+            self._show_error_dialog(_("Edit Error"), _("Failed to edit folder: {error}").format(error=str(e)))
     
     def _on_rename_folder(self, action, param) -> None:
         """Handle rename folder action."""
@@ -749,17 +749,17 @@ class CommTerminalWindow(Adw.ApplicationWindow):
                 self._show_rename_dialog(self.current_folder_context, False)
         except Exception as e:
             self.logger.error(f"Rename folder failed: {e}")
-            self._show_error_dialog("Rename Error", f"Failed to rename folder: {e}")
+            self._show_error_dialog(_("Rename Error"), _("Failed to rename folder: {error}").format(error=str(e)))
     
     def _on_add_session_to_folder(self, action, param) -> None:
         """Handle add session to folder action."""
         try:
             if self.current_folder_context:
-                new_session = SessionItem(name="New Session", folder_path=self.current_folder_context.path)
+                new_session = SessionItem(name=_("New Session"), folder_path=self.current_folder_context.path)
                 self._show_session_edit_dialog(new_session, True)
         except Exception as e:
             self.logger.error(f"Add session to folder failed: {e}")
-            self._show_error_dialog("Add Error", f"Failed to add session to folder: {e}")
+            self._show_error_dialog(_("Add Error"), _("Failed to add session to folder: {error}").format(error=str(e)))
     
     def _on_delete_folder(self, action, param) -> None:
         """Handle delete folder action."""
@@ -768,7 +768,7 @@ class CommTerminalWindow(Adw.ApplicationWindow):
                 self._show_delete_confirmation(self.current_folder_context, False)
         except Exception as e:
             self.logger.error(f"Delete folder failed: {e}")
-            self._show_error_dialog("Delete Error", f"Failed to delete folder: {e}")
+            self._show_error_dialog(_("Delete Error"), _("Failed to delete folder: {error}").format(error=str(e)))
     
     # Action handlers - Clipboard actions
     def _on_cut_item(self, action, param) -> None:
@@ -832,13 +832,13 @@ class CommTerminalWindow(Adw.ApplicationWindow):
             
         except Exception as e:
             self.logger.error(f"Preferences dialog failed: {e}")
-            self._show_error_dialog("Preferences Error", f"Failed to open preferences: {e}")
+            self._show_error_dialog(_("Preferences Error"), _("Failed to open preferences: {error}").format(error=str(e)))
     
     def _on_audit_security(self, action, param) -> None:
         """Handle security audit action."""
         try:
             if not self.security_auditor:
-                self._show_error_dialog("Security Audit", "Security auditor not available")
+                self._show_error_dialog(_("Security Audit"), _("Security auditor not available"))
                 return
             
             # Audit all sessions
@@ -858,35 +858,35 @@ class CommTerminalWindow(Adw.ApplicationWindow):
             
             # Show summary
             if findings_count == 0:
-                message = f"Security audit completed. {sessions_audited} sessions audited. No significant issues found."
+                message = _("Security audit completed. {sessions} sessions audited. No significant issues found.").format(sessions=sessions_audited)
             else:
-                message = f"Security audit completed. {sessions_audited} sessions audited. {findings_count} issues found. Check logs for details."
+                message = _("Security audit completed. {sessions} sessions audited. {issues} issues found. Check logs for details.").format(sessions=sessions_audited, issues=findings_count)
             
-            self._show_info_dialog("Security Audit Complete", message)
+            self._show_info_dialog(_("Security Audit Complete"), message)
             
         except Exception as e:
             self.logger.error(f"Security audit failed: {e}")
-            self._show_error_dialog("Security Audit Error", f"Security audit failed: {e}")
+            self._show_error_dialog(_("Security Audit Error"), _("Security audit failed: {error}").format(error=str(e)))
     
     # Button handlers
     def _on_add_session_clicked(self, button) -> None:
         """Handle add session button click."""
         try:
-            new_session = SessionItem(name="New Session")
+            new_session = SessionItem(name=_("New Session"))
             self._show_session_edit_dialog(new_session, True)
         except Exception as e:
             self.logger.error(f"Add session button failed: {e}")
-            self._show_error_dialog("Add Session Error", f"Failed to add session: {e}")
+            self._show_error_dialog(_("Add Session Error"), _("Failed to add session: {error}").format(error=str(e)))
     
     def _on_add_folder_clicked(self, button) -> None:
         """Handle add folder button click."""
         try:
             # Crie uma nova instância de SessionFolder com um nome padrão
-            new_folder = SessionFolder(name="New Folder")
+            new_folder = SessionFolder(name=_("New Folder"))
             self._show_folder_edit_dialog(new_folder, True)
         except Exception as e:
             self.logger.error(f"Add folder button failed: {e}")
-            self._show_error_dialog("Add Folder Error", f"Failed to add folder: {e}")
+            self._show_error_dialog(_("Add Folder Error"), _("Failed to add folder: {error}").format(error=str(e)))
     
     def _on_edit_selected_clicked(self, button) -> None:
         """Handle edit selected button click."""
@@ -900,7 +900,7 @@ class CommTerminalWindow(Adw.ApplicationWindow):
                 self._show_folder_edit_dialog(selected_item, False)
         except Exception as e:
             self.logger.error(f"Edit selected button failed: {e}")
-            self._show_error_dialog("Edit Error", f"Failed to edit selected item: {e}")
+            self._show_error_dialog(_("Edit Error"), _("Failed to edit selected item: {error}").format(error=str(e)))
     
     def _on_remove_selected_clicked(self, button) -> None:
         """Handle remove selected button click."""
@@ -914,7 +914,7 @@ class CommTerminalWindow(Adw.ApplicationWindow):
                 self._show_delete_confirmation(selected_item, False)
         except Exception as e:
             self.logger.error(f"Remove selected button failed: {e}")
-            self._show_error_dialog("Remove Error", f"Failed to remove selected item: {e}")
+            self._show_error_dialog(_("Remove Error"), _("Failed to remove selected item: {error}").format(error=str(e)))
     
     # Helper methods for dialogs
     def _show_session_edit_dialog(self, session: SessionItem, is_new: bool) -> None:
@@ -941,17 +941,17 @@ class CommTerminalWindow(Adw.ApplicationWindow):
     def _show_rename_dialog(self, item: Union[SessionItem, SessionFolder], is_session: bool) -> None:
         """Show rename dialog."""
         try:
-            item_type = "Session" if is_session else "Folder"
+            item_type = _("Session") if is_session else _("Folder")
             dialog = Adw.MessageDialog(
                 transient_for=self,
-                title=f"Rename {item_type}",
-                body=f"Enter new name for \"{item.name}\":"
+                title=_("Rename {type}").format(type=item_type),
+                body=_("Enter new name for \"{name}\":").format(name=item.name)
             )
             
             entry = Gtk.Entry(text=item.name)
             dialog.set_extra_child(entry)
-            dialog.add_response("cancel", "Cancel")
-            dialog.add_response("rename", "Rename")
+            dialog.add_response("cancel", _("Cancel"))
+            dialog.add_response("rename", _("Rename"))
             dialog.set_default_response("rename")
             
             def on_response(dlg, response_id):
@@ -991,28 +991,27 @@ class CommTerminalWindow(Adw.ApplicationWindow):
     def _show_move_session_dialog(self, session: SessionItem) -> None:
         """Show move session to folder dialog."""
         # Implementation placeholder - would show folder selection dialog
-        self._show_info_dialog("Move Session", "Move session functionality will be implemented in folder selection dialog.")
+        self._show_info_dialog(_("Move Session"), _("Move session functionality will be implemented in folder selection dialog."))
     
     def _show_delete_confirmation(self, item: Union[SessionItem, SessionFolder], is_session: bool) -> None:
         """Show delete confirmation dialog."""
         try:
-            item_type = "Session" if is_session else "Folder"
+            item_type = _("Session") if is_session else _("Folder")
             
             # Verifica se a pasta tem conteúdo antes de mostrar o diálogo de exclusão
             if not is_session and self.session_tree.operations._folder_has_children(item.path):
-                body_text = (f"The folder \"{item.name}\" is not empty. "
-                            f"Are you sure you want to permanently delete it and all its contents?")
+                body_text = _("The folder \"{name}\" is not empty. Are you sure you want to permanently delete it and all its contents?").format(name=item.name)
             else:
-                body_text = f"Are you sure you want to delete \"{item.name}\"?"
+                body_text = _("Are you sure you want to delete \"{name}\"?").format(name=item.name)
 
             dialog = Adw.MessageDialog(
                 transient_for=self,
-                title=f"Delete {item_type}",
+                title=_("Delete {type}").format(type=item_type),
                 body=body_text
             )
             
-            dialog.add_response("cancel", "Cancel")
-            dialog.add_response("delete", "Delete")
+            dialog.add_response("cancel", _("Cancel"))
+            dialog.add_response("delete", _("Delete"))
             dialog.set_response_appearance("delete", Adw.ResponseAppearance.DESTRUCTIVE)
             
             def on_response(dlg, response_id):
@@ -1031,7 +1030,7 @@ class CommTerminalWindow(Adw.ApplicationWindow):
                         if result and result.success:
                             self.session_tree.refresh_tree()
                         elif result:
-                            self._show_error_dialog(f"Delete {item_type} Error", result.message)
+                            self._show_error_dialog(_("Delete {type} Error").format(type=item_type), result.message)
 
                     dlg.close()
                 except Exception as e:
@@ -1053,7 +1052,7 @@ class CommTerminalWindow(Adw.ApplicationWindow):
                 title=title,
                 body=message
             )
-            dialog.add_response("ok", "OK")
+            dialog.add_response("ok", _("OK"))
             dialog.present()
         except Exception as e:
             self.logger.error(f"Error dialog failed: {e}")
@@ -1068,7 +1067,7 @@ class CommTerminalWindow(Adw.ApplicationWindow):
                 title=title,
                 body=message
             )
-            dialog.add_response("ok", "OK")
+            dialog.add_response("ok", _("OK"))
             dialog.present()
         except Exception as e:
             self.logger.error(f"Info dialog failed: {e}")

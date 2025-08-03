@@ -19,6 +19,7 @@ from ..utils.crypto import (
     get_secure_storage
 )
 from ..utils.platform import normalize_path
+from ..utils.translation_utils import _
 
 
 class SessionItem(GObject.GObject):
@@ -85,7 +86,7 @@ class SessionItem(GObject.GObject):
         """Set session name with validation."""
         try:
             if not value or not value.strip():
-                raise SessionValidationError("", ["Session name cannot be empty"])
+                raise SessionValidationError("", [_("Session name cannot be empty")])
             
             # Sanitize the name
             sanitized = sanitize_session_name(value.strip())
@@ -111,7 +112,7 @@ class SessionItem(GObject.GObject):
         try:
             valid_types = ["local", "ssh"]
             if value not in valid_types:
-                raise SessionValidationError(self.name, [f"Invalid session type: {value}. Must be one of: {', '.join(valid_types)}"])
+                raise SessionValidationError(self.name, [_("Invalid session type: {type}. Must be one of: {valid_types}").format(type=value, valid_types=", ".join(valid_types))])
             
             self._session_type = value
             self._mark_modified()
@@ -135,7 +136,7 @@ class SessionItem(GObject.GObject):
                 
                 # Validate hostname format
                 if not HostnameValidator.is_valid_hostname(sanitized):
-                    raise SessionValidationError(self.name, [f"Invalid hostname format: {value}"])
+                    raise SessionValidationError(self.name, [_("Invalid hostname format: {hostname}").format(hostname=value)])
                 
                 if sanitized != value:
                     self.logger.debug(f"Hostname sanitized: '{value}' -> '{sanitized}'")
@@ -187,7 +188,7 @@ class SessionItem(GObject.GObject):
         try:
             valid_types = ["key", "password", ""]
             if value not in valid_types:
-                raise SessionValidationError(self.name, [f"Invalid auth type: {value}. Must be one of: {', '.join(valid_types)}"])
+                raise SessionValidationError(self.name, [_("Invalid authentication type: {type}. Must be one of: {valid_types}").format(type=value, valid_types=", ".join(valid_types))])
             
             self._auth_type = value
             self._mark_modified()
@@ -305,27 +306,27 @@ class SessionItem(GObject.GObject):
             
             # Basic validation
             if not self.name:
-                self._validation_errors.append("Session name is required")
+                self._validation_errors.append(_("Session name is required"))
             
             if not self.session_type:
-                self._validation_errors.append("Session type is required")
+                self._validation_errors.append(_("Session type is required"))
             
             # SSH-specific validation
             if self.is_ssh():
                 if not self.host:
-                    self._validation_errors.append("Host is required for SSH sessions")
+                    self._validation_errors.append(_("Host is required for SSH sessions"))
                 
                 if self.uses_key_auth() and self.auth_value:
                     # Validate SSH key
                     try:
                         is_valid, error = SSHKeyValidator.validate_ssh_key_path(self.auth_value)
                         if not is_valid:
-                            self._validation_errors.append(f"SSH key validation failed: {error}")
+                            self._validation_errors.append(_("SSH key validation failed: {error}").format(error=error))
                     except Exception as e:
-                        self._validation_errors.append(f"SSH key validation error: {e}")
+                        self._validation_errors.append(_("SSH key validation error: {error}").format(error=str(e)))
                 
                 if not self.auth_type:
-                    self._validation_errors.append("Authentication type is required for SSH sessions")
+                    self._validation_errors.append(_("Authentication type is required for SSH sessions"))
             
             self._validated = True
             
@@ -338,7 +339,7 @@ class SessionItem(GObject.GObject):
             
         except Exception as e:
             self.logger.error(f"Session validation error for '{self.name}': {e}")
-            self._validation_errors.append(f"Validation error: {e}")
+            self._validation_errors.append(_("Validation error: {error}").format(error=str(e)))
             return False
     
     def get_validation_errors(self) -> List[str]:
@@ -382,7 +383,7 @@ class SessionItem(GObject.GObject):
             else:
                 # Current format
                 session = cls(
-                    name=data.get("name", "Unnamed Session"),
+                    name=data.get("name", _("Unnamed Session")),
                     session_type=data.get("session_type", "local"),
                     host=data.get("host", ""),
                     user=data.get("user", ""),
@@ -415,7 +416,7 @@ class SessionItem(GObject.GObject):
         logger.info(f"Migrating legacy session: {data.get('name', 'Unknown')}")
         
         session = cls(
-            name=data.get("name", "Unnamed Session"),
+            name=data.get("name", _("Unnamed Session")),
             session_type=data.get("session_type", "local"),
             host=data.get("host", ""),
             user=data.get("user", ""),
@@ -507,7 +508,7 @@ class SessionItem(GObject.GObject):
     def get_connection_string(self) -> str:
         """Get SSH connection string for display purposes."""
         if self.is_local():
-            return "Local Terminal"
+            return _("Local Terminal")
         
         if self.user:
             return f"{self.user}@{self.host}"
@@ -579,7 +580,7 @@ class SessionFolder(GObject.GObject):
         try:
             if not value or not value.strip():
                 raise ValidationError(
-                    "Folder name cannot be empty", 
+                    _("Folder name cannot be empty"), 
                     category=ErrorCategory.VALIDATION, 
                     severity=ErrorSeverity.MEDIUM
                 )
@@ -665,16 +666,16 @@ class SessionFolder(GObject.GObject):
             self._validation_errors.clear()
             
             if not self.name:
-                self._validation_errors.append("Folder name is required")
+                self._validation_errors.append(_("Folder name is required"))
             
             # Check for invalid path characters
             if self.path and any(char in self.path for char in ['<', '>', ':', '"', '|', '?', '*']):
-                self._validation_errors.append("Path contains invalid characters")
+                self._validation_errors.append(_("Path contains invalid characters"))
             
             # Check parent-child relationship
             if self.parent_path and self.path:
                 if not self.path.startswith(self.parent_path + "/"):
-                    self._validation_errors.append("Path is not consistent with parent path")
+                    self._validation_errors.append(_("Path is not consistent with parent path"))
             
             self._validated = True
             
@@ -687,7 +688,7 @@ class SessionFolder(GObject.GObject):
             
         except Exception as e:
             self.logger.error(f"Folder validation error for '{self.name}': {e}")
-            self._validation_errors.append(f"Validation error: {e}")
+            self._validation_errors.append(_("Validation error: {error}").format(error=str(e)))
             return False
     
     def get_validation_errors(self) -> List[str]:
@@ -723,7 +724,7 @@ class SessionFolder(GObject.GObject):
             else:
                 # Current format
                 folder = cls(
-                    name=data.get("name", "Unnamed Folder"),
+                    name=data.get("name", _("Unnamed Folder")),
                     path=data.get("path", ""),
                     parent_path=data.get("parent_path", "")
                 )
@@ -748,7 +749,7 @@ class SessionFolder(GObject.GObject):
         logger.info(f"Migrating legacy folder: {data.get('name', 'Unknown')}")
         
         folder = cls(
-            name=data.get("name", "Unnamed Folder"),
+            name=data.get("name", _("Unnamed Folder")),
             path=data.get("path", ""),
             parent_path=data.get("parent_path", "")
         )

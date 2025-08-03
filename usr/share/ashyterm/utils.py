@@ -25,6 +25,7 @@ from .utils.platform import (
     get_platform_info, normalize_path, has_command, is_unix_like,
     get_ssh_directory
 )
+from .utils.translation_utils import _
 
 
 def generate_unique_name(base_name: str, existing_names: Set[str]) -> str:
@@ -168,7 +169,7 @@ def sanitize_filename(filename: str) -> str:
         logger.error(f"Error sanitizing filename '{filename}': {e}")
         # Fallback to basic sanitization
         if not filename:
-            return "unnamed"
+            return _("unnamed")
         
         invalid_chars = '<>:"/\\|?*'
         sanitized = filename
@@ -179,7 +180,7 @@ def sanitize_filename(filename: str) -> str:
         sanitized = sanitized.strip(' .')
         
         if not sanitized:
-            sanitized = "unnamed"
+            sanitized = _("unnamed")
         
         return sanitized
 
@@ -234,7 +235,7 @@ def accelerator_to_label(accel_string: str) -> str:
     logger = get_logger('ashyterm.utils')
     
     if not accel_string:
-        return "None"
+        return _("None")
     
     parsed = parse_accelerator_safely(accel_string)
     if parsed is None:
@@ -434,18 +435,18 @@ def validate_session_data(session_data: Dict[str, Any]) -> Tuple[bool, List[str]
         # Additional basic validation
         session_name = session_data.get('name', '')
         if not session_name or not session_name.strip():
-            errors.append("Session name cannot be empty")
+            errors.append(_("Session name cannot be empty"))
         
         session_type = session_data.get('session_type', '')
         if session_type not in ['local', 'ssh']:
-            errors.append(f"Invalid session type: {session_type}")
+            errors.append(_("Invalid session type: {}").format(session_type))
         
         if session_type == 'ssh':
             host = session_data.get('host', '')
             if not host or not host.strip():
-                errors.append("SSH host cannot be empty")
+                errors.append(_("SSH host cannot be empty"))
             elif not is_valid_hostname(host.strip()):
-                errors.append(f"Invalid hostname format: {host}")
+                errors.append(_("Invalid hostname format: {}").format(host))
         
         is_valid = len(errors) == 0
         
@@ -457,7 +458,7 @@ def validate_session_data(session_data: Dict[str, Any]) -> Tuple[bool, List[str]
         return is_valid, errors
         
     except Exception as e:
-        error_msg = f"Error during session validation: {e}"
+        error_msg = _("Error during session validation: {}").format(e)
         logger.error(error_msg)
         errors.append(error_msg)
         return False, errors
@@ -506,7 +507,7 @@ def get_system_info() -> Dict[str, Any]:
     except Exception as e:
         logger.error(f"Error collecting system information: {e}")
         return {
-            'platform': {'type': 'unknown'},
+            'platform': {'type': _('unknown')},
             'error': str(e)
         }
 
@@ -535,7 +536,7 @@ def setup_error_handling():
         # Set global exception handler
         sys.excepthook = handle_exception
         
-        logger.info("Global error handling configured")
+        logger.info(_("Global error handling configured"))
         
     except Exception as e:
         logger.error(f"Failed to setup error handling: {e}")
@@ -572,7 +573,7 @@ def create_safe_filename_from_session(session_name: str, session_type: str = "")
         
     except Exception as e:
         logger.error(f"Error creating safe filename from session '{session_name}': {e}")
-        return "unknown_session"
+        return _("unknown_session")
 
 
 # Legacy compatibility functions (deprecated but maintained for compatibility)
@@ -582,7 +583,7 @@ def generate_unique_name_legacy(base_name: str, existing_names: Set[str]) -> str
     Use generate_unique_name() instead.
     """
     logger = get_logger('ashyterm.utils')
-    logger.warning("Using deprecated generate_unique_name_legacy(). Use generate_unique_name() instead.")
+    logger.warning(_("Using deprecated generate_unique_name_legacy(). Use generate_unique_name() instead."))
     return generate_unique_name(base_name, existing_names)
 
 
@@ -597,16 +598,16 @@ def initialize_utils():
         
         # Log system information
         system_info = get_system_info()
-        logger.info(f"Utils module initialized on {system_info['platform']['type']} platform")
+        logger.info(_("Utils module initialized on {} platform").format(system_info['platform']['type']))
         
         # Check for required dependencies
         if not has_command('ssh'):
-            logger.warning("SSH command not found - SSH functionality will be limited")
+            logger.warning(_("SSH command not found - SSH functionality will be limited"))
         
         if not is_sshpass_available():
-            logger.info("sshpass not available - password SSH authentication will require manual input")
+            logger.info(_("sshpass not available - password SSH authentication will require manual input"))
         
-        logger.info("Utils module initialization completed")
+        logger.info(_("Utils module initialization completed"))
         
     except Exception as e:
         logger.error(f"Error during utils module initialization: {e}")
@@ -617,4 +618,4 @@ try:
     initialize_utils()
 except Exception as e:
     # Use basic print as logger might not be available yet
-    print(f"Warning: Utils module initialization failed: {e}")
+    print(_("Warning: Utils module initialization failed: {}").format(e))

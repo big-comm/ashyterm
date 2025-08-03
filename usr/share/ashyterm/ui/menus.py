@@ -5,6 +5,8 @@ gi.require_version("Adw", "1")
 from gi.repository import Gtk, Gio
 from typing import Optional
 
+from ..utils.translation_utils import _
+
 
 class SessionContextMenu(Gtk.PopoverMenu):
     """Context menu for session items in the tree view."""
@@ -18,23 +20,23 @@ class SessionContextMenu(Gtk.PopoverMenu):
         menu = Gio.Menu()
         
         # Basic session operations
-        menu.append_item(Gio.MenuItem.new("Edit", "win.edit-session"))
-        menu.append_item(Gio.MenuItem.new("Duplicate", "win.duplicate-session"))
-        menu.append_item(Gio.MenuItem.new("Rename", "win.rename-session"))
+        menu.append_item(Gio.MenuItem.new(_("Edit"), "win.edit-session"))
+        menu.append_item(Gio.MenuItem.new(_("Duplicate"), "win.duplicate-session"))
+        menu.append_item(Gio.MenuItem.new(_("Rename"), "win.rename-session"))
         
         # Clipboard operations
         menu.append_section(None, Gio.Menu())
-        menu.append_item(Gio.MenuItem.new("Cut", "win.cut-item"))
-        menu.append_item(Gio.MenuItem.new("Copy", "win.copy-item"))
+        menu.append_item(Gio.MenuItem.new(_("Cut"), "win.cut-item"))
+        menu.append_item(Gio.MenuItem.new(_("Copy"), "win.copy-item"))
         
         # Organization operations
         menu.append_section(None, Gio.Menu())
         
         if folder_store and folder_store.get_n_items() > 0:
-            menu.append_item(Gio.MenuItem.new("Move to Folder", "win.move-session-to-folder"))
+            menu.append_item(Gio.MenuItem.new(_("Move to Folder"), "win.move-session-to-folder"))
         
         # Destructive operation at the end
-        menu.append_item(Gio.MenuItem.new("Delete", "win.delete-session"))
+        menu.append_item(Gio.MenuItem.new(_("Delete"), "win.delete-session"))
         
         # Initialize the menu by passing the model directly
         super().__init__(menu_model=menu)
@@ -54,21 +56,21 @@ class FolderContextMenu(Gtk.PopoverMenu):
         menu = Gio.Menu()
         
         # Basic folder operations
-        menu.append_item(Gio.MenuItem.new("Edit", "win.edit-folder"))
-        menu.append_item(Gio.MenuItem.new("Add Session", "win.add-session-to-folder"))
-        menu.append_item(Gio.MenuItem.new("Rename", "win.rename-folder"))
+        menu.append_item(Gio.MenuItem.new(_("Edit"), "win.edit-folder"))
+        menu.append_item(Gio.MenuItem.new(_("Add Session"), "win.add-session-to-folder"))
+        menu.append_item(Gio.MenuItem.new(_("Rename"), "win.rename-folder"))
         
         # Clipboard operations
         menu.append_section(None, Gio.Menu())
-        menu.append_item(Gio.MenuItem.new("Cut", "win.cut-item"))
-        menu.append_item(Gio.MenuItem.new("Copy", "win.copy-item"))
+        menu.append_item(Gio.MenuItem.new(_("Cut"), "win.cut-item"))
+        menu.append_item(Gio.MenuItem.new(_("Copy"), "win.copy-item"))
         
         if clipboard_has_content:
-            menu.append_item(Gio.MenuItem.new("Paste", "win.paste-item"))
+            menu.append_item(Gio.MenuItem.new(_("Paste"), "win.paste-item"))
         
         # Destructive operation at the end
         menu.append_section(None, Gio.Menu())
-        menu.append_item(Gio.MenuItem.new("Delete", "win.delete-folder"))
+        menu.append_item(Gio.MenuItem.new(_("Delete"), "win.delete-folder"))
         
         # Initialize the menu by passing the model directly
         super().__init__(menu_model=menu)
@@ -87,13 +89,13 @@ class RootTreeViewContextMenu(Gtk.PopoverMenu):
         menu = Gio.Menu()
         
         # Add new items
-        menu.append_item(Gio.MenuItem.new("Add Session", "win.add-session-root"))
-        menu.append_item(Gio.MenuItem.new("Add Folder", "win.add-folder-root"))
+        menu.append_item(Gio.MenuItem.new(_("Add Session"), "win.add-session-root"))
+        menu.append_item(Gio.MenuItem.new(_("Add Folder"), "win.add-folder-root"))
         
         # Paste if available
         if clipboard_has_content:
             menu.append_section(None, Gio.Menu())
-            menu.append_item(Gio.MenuItem.new("Paste to Root", "win.paste-item-root"))
+            menu.append_item(Gio.MenuItem.new(_("Paste to Root"), "win.paste-item-root"))
         
         # Initialize the menu by passing the model directly
         super().__init__(menu_model=menu)
@@ -112,9 +114,9 @@ class TerminalContextMenu(Gtk.PopoverMenu):
         menu = Gio.Menu()
         
         # Standard terminal operations
-        menu.append_item(Gio.MenuItem.new("Copy", "win.copy"))
-        menu.append_item(Gio.MenuItem.new("Paste", "win.paste"))
-        menu.append_item(Gio.MenuItem.new("Select All", "win.select-all"))
+        menu.append_item(Gio.MenuItem.new(_("Copy"), "win.copy"))
+        menu.append_item(Gio.MenuItem.new(_("Paste"), "win.paste"))
+        menu.append_item(Gio.MenuItem.new(_("Select All"), "win.select-all"))
         
         # Initialize the menu by passing the model directly
         super().__init__(menu_model=menu)
@@ -137,27 +139,27 @@ class MainApplicationMenu:
         
         # File menu
         file_menu = Gio.Menu()
-        main_menu.append_submenu("File", file_menu)
+        main_menu.append_submenu(_("File"), file_menu)
         
-        file_menu.append("New Tab", "win.new-local-tab")
-        file_menu.append("Close Tab", "win.close-tab")
+        file_menu.append(_("New Tab"), "win.new-local-tab")
+        file_menu.append(_("Close Tab"), "win.close-tab")
         file_menu.append_section(None, Gio.Menu())
-        file_menu.append("Quit", "app.quit")
+        file_menu.append(_("Quit"), "app.quit")
         
         # Edit menu
         edit_menu = Gio.Menu()
-        main_menu.append_submenu("Edit", edit_menu)
+        main_menu.append_submenu(_("Edit"), edit_menu)
         
-        edit_menu.append("Copy", "win.copy")
-        edit_menu.append("Paste", "win.paste")
-        edit_menu.append("Select All", "win.select-all")
+        edit_menu.append(_("Copy"), "win.copy")
+        edit_menu.append(_("Paste"), "win.paste")
+        edit_menu.append(_("Select All"), "win.select-all")
         edit_menu.append_section(None, Gio.Menu())
-        edit_menu.append("Preferences", "win.preferences")
+        edit_menu.append(_("Preferences"), "win.preferences")
         
         # Help menu
         help_menu = Gio.Menu()
-        main_menu.append_submenu("Help", help_menu)
-        help_menu.append("About", "app.about")
+        main_menu.append_submenu(_("Help"), help_menu)
+        help_menu.append(_("About"), "app.about")
         
         return main_menu
 
