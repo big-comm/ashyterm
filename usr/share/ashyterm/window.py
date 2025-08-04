@@ -256,11 +256,11 @@ class CommTerminalWindow(Adw.ApplicationWindow):
                 audit_button.set_action_name("win.audit-security")
                 header_bar.pack_start(audit_button)
             
-            # Preferences button
-            preferences_button = Gtk.Button.new_from_icon_name("preferences-system-symbolic")
-            preferences_button.set_tooltip_text(_("Preferences"))
-            preferences_button.set_action_name("win.preferences")
-            header_bar.pack_end(preferences_button)
+            # Preferences button (now in main menu)
+            # preferences_button = Gtk.Button.new_from_icon_name("preferences-system-symbolic")
+            # preferences_button.set_tooltip_text(_("Preferences"))
+            # preferences_button.set_action_name("win.preferences")
+            # header_bar.pack_end(preferences_button)
             
             # Main menu button
             menu_button = Gtk.MenuButton()
