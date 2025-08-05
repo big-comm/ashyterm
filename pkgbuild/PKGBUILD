@@ -4,7 +4,16 @@
 pkgname=comm-ashyterm
 pkgdesc="A modern GTK4/Adwaita terminal emulator with advanced session management, SSH integration, and security features."
 # Uncomment and edit the following lines as needed
-depends=('python-gtkspellcheck')
+depends=(
+    'gtk4'
+    'libadwaita'
+    'python'
+    'python-cryptography'
+    'python-gobject'
+    'python-gtkspellcheck'
+    'sshpass'
+    'vte4'
+)
 #makedepends=('')
 #optdepends=('')
 #conflicts=('')
