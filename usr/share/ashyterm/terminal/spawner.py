@@ -353,6 +353,7 @@ class ProcessSpawner:
             # Build command using platform-aware builder
             cmd = self.command_builder.build_ssh_command(
                 hostname=session.host,
+                port=session.port if session.port != 22 else None,
                 username=session.user if session.user else None,
                 key_file=session.auth_value if session.uses_key_auth() else None,
                 options=ssh_options

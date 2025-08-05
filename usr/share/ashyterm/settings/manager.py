@@ -774,27 +774,38 @@ class SettingsManager:
         
         try:
             transparency = self.get("transparency", 0)
+            blur_intensity = self.get("terminal_blur", 0)
             
             css_provider = Gtk.CssProvider()
             style_context = window.get_style_context()
 
-            if hasattr(window, "_transparency_css_provider"):
-                style_context.remove_provider(window._transparency_css_provider)
+            if hasattr(window, "_effects_css_provider"):
+                style_context.remove_provider(window._effects_css_provider)
 
-            if transparency > 0:
-                css = """window.background { background-color: transparent; }
+            css = """window.background { background-color: transparent; }
             .ashy-sidebar { background-color: #2d2d2d; }
             .sidebar-main { background-color: #2d2d2d; }
             .ashy-toolbar { background-color: #2d2d2d; }
             .ashy-sidebar-content { background-color: #2d2d2d; }"""
-                
-                css_provider.load_from_data(css.encode('utf-8'))
-                # Use PRIORITY_USER instead de PRIORITY_APPLICATION
-                style_context.add_provider(css_provider, Gtk.STYLE_PROVIDER_PRIORITY_USER)
-                window._transparency_css_provider = css_provider
-            else:
-                if hasattr(window, "_transparency_css_provider"):
-                    delattr(window, "_transparency_css_provider")
+            
+            if blur_intensity > 0:
+                opacity = blur_intensity / 10.0  # 0.0 a 1.0
+                css += f"""
+                .transparent-tabview {{
+                    background-image: linear-gradient(45deg, 
+                        rgba(255,255,255,{opacity * 0.1}) 0%,
+                        rgba(0,0,0,{opacity * 0.2}) 50%,
+                        rgba(255,255,255,{opacity * 0.1}) 100%);
+                }}
+                tabview {{
+                    background-image: radial-gradient(circle,
+                        rgba(255,255,255,{opacity * 0.05}) 0%,
+                        rgba(0,0,0,{opacity * 0.15}) 100%);
+                }}"""
+            
+            css_provider.load_from_data(css.encode('utf-8'))
+            style_context.add_provider(css_provider, Gtk.STYLE_PROVIDER_PRIORITY_USER)
+            window._effects_css_provider = css_provider
             
             color_scheme = self.get_color_scheme_data()
             

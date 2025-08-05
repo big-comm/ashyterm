@@ -45,7 +45,7 @@ class AppConstants:
     """Application metadata and identification constants."""
     
     # Core application info
-    APP_ID = "org.ashy.term"
+    APP_ID = "org.communitybig.ashyterm"
     APP_TITLE = "Ashy Terminal"
     APP_VERSION = "1.1.0"
     APP_VERSION_TUPLE = (1, 1, 0)
@@ -262,6 +262,7 @@ class DefaultSettings:
             # Appearance settings
             "color_scheme": 0,  # Index in COLOR_SCHEME_MAP
             "transparency": 0,  # Percentage (0-100)
+            "terminal_blur": 0,  # Blur intensity (0-10px)
             "font": "Monospace 10",
             
             # UI behavior
@@ -285,6 +286,7 @@ class DefaultSettings:
             "auto_save_sessions": True,
             "session_backup": True,
             "max_recent_sessions": 10,
+            "default_ssh_port": 22,
             
             # Security settings
             "security_warnings": True,

@@ -137,29 +137,26 @@ class MainApplicationMenu:
         """
         main_menu = Gio.Menu()
         
-        # File menu
-        file_menu = Gio.Menu()
-        main_menu.append_submenu(_("File"), file_menu)
+        # Terminal actions section
+        main_menu.append(_("Nova Aba"), "win.new-local-tab")
+        main_menu.append(_("Fechar Aba"), "win.close-tab")
+        main_menu.append(_("Nova Janela"), "win.new-window")
         
-        file_menu.append(_("New Tab"), "win.new-local-tab")
-        file_menu.append(_("Close Tab"), "win.close-tab")
-        file_menu.append_section(None, Gio.Menu())
-        file_menu.append(_("Quit"), "app.quit")
+        # Edit actions section
+        main_menu.append_section(None, Gio.Menu())
+        main_menu.append(_("Copiar"), "win.copy")
+        main_menu.append(_("Colar"), "win.paste")
+        main_menu.append(_("Selecionar Tudo"), "win.select-all")
         
-        # Edit menu
-        edit_menu = Gio.Menu()
-        main_menu.append_submenu(_("Edit"), edit_menu)
+        # Settings and help section
+        main_menu.append_section(None, Gio.Menu())
+        main_menu.append(_("Preferências"), "win.preferences")
+        main_menu.append(_("Atalhos de Teclado"), "win.shortcuts")
         
-        edit_menu.append(_("Copy"), "win.copy")
-        edit_menu.append(_("Paste"), "win.paste")
-        edit_menu.append(_("Select All"), "win.select-all")
-        edit_menu.append_section(None, Gio.Menu())
-        edit_menu.append(_("Preferences"), "win.preferences")
-        
-        # Help menu
-        help_menu = Gio.Menu()
-        main_menu.append_submenu(_("Help"), help_menu)
-        help_menu.append(_("About"), "app.about")
+        # Application section
+        main_menu.append_section(None, Gio.Menu())
+        main_menu.append(_("Sobre"), "app.about")
+        main_menu.append(_("Sair"), "app.quit")
         
         return main_menu
 

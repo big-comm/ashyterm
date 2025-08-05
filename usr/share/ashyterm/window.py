@@ -182,6 +182,8 @@ class CommTerminalWindow(Adw.ApplicationWindow):
                 
                 # Preferences and utilities
                 ("preferences", self._on_preferences),
+                ("shortcuts", self._on_shortcuts),
+                ("new-window", self._on_new_window),
                 ("audit-security", self._on_audit_security),
             ]
             
@@ -256,18 +258,19 @@ class CommTerminalWindow(Adw.ApplicationWindow):
                 audit_button.set_action_name("win.audit-security")
                 header_bar.pack_start(audit_button)
             
-            # Preferences button (now in main menu)
-            # preferences_button = Gtk.Button.new_from_icon_name("preferences-system-symbolic")
-            # preferences_button.set_tooltip_text(_("Preferences"))
-            # preferences_button.set_action_name("win.preferences")
-            # header_bar.pack_end(preferences_button)
-            
             # Main menu button
             menu_button = Gtk.MenuButton()
             menu_button.set_icon_name("open-menu-symbolic")
             menu_button.set_tooltip_text(_("Main Menu"))
             menu_button.set_menu_model(MainApplicationMenu.create_menu())
             header_bar.pack_end(menu_button)
+            
+            # New tab button
+            new_tab_button = Gtk.Button.new_from_icon_name("tab-new-symbolic")
+            new_tab_button.set_tooltip_text(_("New Tab"))
+            new_tab_button.connect("clicked", self._on_new_tab_clicked)
+            new_tab_button.add_css_class("flat")
+            header_bar.pack_end(new_tab_button)
             
             self.logger.debug("Header bar created")
             return header_bar
@@ -825,6 +828,7 @@ class CommTerminalWindow(Adw.ApplicationWindow):
             # Connect signals for live updates
             dialog.connect("color-scheme-changed", lambda d, i: self.terminal_manager.update_all_terminals())
             dialog.connect("transparency-changed", lambda d, v: self.terminal_manager.update_all_terminals())
+            dialog.connect("blur-changed", lambda d, v: self.terminal_manager.update_all_terminals())
             dialog.connect("font-changed", lambda d, f: self.terminal_manager.update_all_terminals())
             dialog.connect("shortcut-changed", lambda d: self._update_keyboard_shortcuts())
             
@@ -833,6 +837,86 @@ class CommTerminalWindow(Adw.ApplicationWindow):
         except Exception as e:
             self.logger.error(f"Preferences dialog failed: {e}")
             self._show_error_dialog(_("Preferences Error"), _("Failed to open preferences: {error}").format(error=str(e)))
+    
+    def _on_shortcuts(self, action, param) -> None:
+        """Handle shortcuts action - show keyboard shortcuts window."""
+        try:
+            shortcuts_window = Gtk.ShortcutsWindow(
+                transient_for=self,
+                modal=True
+            )
+            
+            # Create shortcuts section
+            section = Gtk.ShortcutsSection(
+                title=_("Atalhos de Teclado"),
+                section_name="shortcuts"
+            )
+            
+            # Terminal shortcuts
+            terminal_group = Gtk.ShortcutsGroup(
+                title=_("Terminal")
+            )
+            
+            terminal_shortcuts = [
+                (_("Nova Aba"), "<Control>t"),
+                (_("Fechar Aba"), "<Control>w"),
+                (_("Nova Janela"), "<Control>n"),
+                (_("Copiar"), "<Control><Shift>c"),
+                (_("Colar"), "<Control><Shift>v"),
+                (_("Selecionar Tudo"), "<Control><Shift>a"),
+            ]
+            
+            for title, accel in terminal_shortcuts:
+                shortcut = Gtk.ShortcutsShortcut(
+                    title=title,
+                    accelerator=accel
+                )
+                terminal_group.add_child(shortcut)
+            
+            # Application shortcuts
+            app_group = Gtk.ShortcutsGroup(
+                title=_("Aplicação")
+            )
+            
+            app_shortcuts = [
+                (_("Preferências"), "<Control>comma"),
+                (_("Alternar Barra Lateral"), "F9"),
+                (_("Sair"), "<Control>q"),
+            ]
+            
+            for title, accel in app_shortcuts:
+                shortcut = Gtk.ShortcutsShortcut(
+                    title=title,
+                    accelerator=accel
+                )
+                app_group.add_child(shortcut)
+            
+            section.add_child(terminal_group)
+            section.add_child(app_group)
+            shortcuts_window.add_child(section)
+            
+            shortcuts_window.present()
+            
+        except Exception as e:
+            self.logger.error(f"Shortcuts window failed: {e}")
+            self._show_error_dialog(_("Atalhos de Teclado"), 
+                                _("Falha ao abrir janela de atalhos: {error}").format(error=str(e)))
+
+    def _on_new_window(self, action, param) -> None:
+        """Handle new window action."""
+        try:
+            # Get the application and create new window
+            app = self.get_application()
+            if app and hasattr(app, 'create_new_window'):
+                app.create_new_window()
+            else:
+                self._show_error_dialog(_("Nova Janela"), 
+                                    _("Não foi possível criar uma nova janela."))
+            
+        except Exception as e:
+            self.logger.error(f"New window creation failed: {e}")
+            self._show_error_dialog(_("Nova Janela"), 
+                                _("Falha ao criar nova janela: {error}").format(error=str(e)))
     
     def _on_audit_security(self, action, param) -> None:
         """Handle security audit action."""
@@ -877,6 +961,29 @@ class CommTerminalWindow(Adw.ApplicationWindow):
         except Exception as e:
             self.logger.error(f"Add session button failed: {e}")
             self._show_error_dialog(_("Add Session Error"), _("Failed to add session: {error}").format(error=str(e)))
+            
+    def _on_new_tab_clicked(self, button) -> None:
+        """Handle new tab button click in header."""
+        try:
+            if not VTE_AVAILABLE:
+                self._show_error_dialog(_("VTE Not Available"), 
+                                    _("Cannot create terminal - VTE library not installed."))
+                return
+            
+            # Use the same logic as new local tab action
+            result = self.tab_manager.create_local_tab()
+            if result is None:
+                self._show_error_dialog(_("Terminal Error"), 
+                                    _("Failed to create new tab."))
+                return
+            
+            log_terminal_event("created", "Local Terminal", "header button")
+            self.logger.debug("New tab created from header button")
+            
+        except Exception as e:
+            self.logger.error(f"New tab header button failed: {e}")
+            self._show_error_dialog(_("Terminal Error"), 
+                                _("Failed to create new tab: {error}").format(error=str(e)))
     
     def _on_add_folder_clicked(self, button) -> None:
         """Handle add folder button click."""

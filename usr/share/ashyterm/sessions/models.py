@@ -26,9 +26,9 @@ class SessionItem(GObject.GObject):
     """Enhanced session item with security, validation, and encryption features."""
     
     def __init__(self, name: str, session_type: str = "local",
-                 host: str = "", user: str = "",
-                 auth_type: str = "key", auth_value: str = "",
-                 folder_path: str = ""):
+             host: str = "", user: str = "",
+             auth_type: str = "key", auth_value: str = "",
+             folder_path: str = "", port: int = 22):
         """
         Initialize a session item with validation and security features.
         
@@ -53,6 +53,7 @@ class SessionItem(GObject.GObject):
         self._auth_type = ""
         self._auth_value = ""
         self._folder_path = ""
+        self._port = 22
         
         # Metadata
         self._created_at = time.time()
@@ -73,6 +74,8 @@ class SessionItem(GObject.GObject):
         self.auth_type = auth_type
         self.auth_value = auth_value
         self.folder_path = folder_path
+        self.port = port
+        
         
         self.logger.debug(f"Session item created: '{self.name}' (type: {self.session_type})")
     
@@ -278,6 +281,28 @@ class SessionItem(GObject.GObject):
         except Exception as e:
             self.logger.error(f"Folder path validation failed: {e}")
             raise
+        
+    @property
+    def port(self) -> int:
+        """Get SSH port."""
+        return self._port
+
+    @port.setter
+    def port(self, value: int) -> None:
+        """Set SSH port with validation."""
+        try:
+            port_val = int(value)
+            if not (1 <= port_val <= 65535):
+                raise SessionValidationError(self.name, [_("Port must be between 1 and 65535")])
+            
+            self._port = port_val
+            self._mark_modified()
+            
+        except ValueError:
+            raise SessionValidationError(self.name, [_("Port must be a valid number")])
+        except Exception as e:
+            self.logger.error(f"Port validation failed: {e}")
+            raise
     
     def _mark_modified(self) -> None:
         """Mark session as modified."""
@@ -357,6 +382,7 @@ class SessionItem(GObject.GObject):
                 "auth_type": self.auth_type,
                 "auth_value": self._auth_value,  # Store encrypted/raw value
                 "folder_path": self.folder_path,
+                "port": self.port,
                 # Metadata
                 "created_at": self._created_at,
                 "modified_at": self._modified_at,
@@ -389,7 +415,8 @@ class SessionItem(GObject.GObject):
                     user=data.get("user", ""),
                     auth_type=data.get("auth_type", "key"),
                     auth_value="",  # Set separately to avoid encryption during init
-                    folder_path=data.get("folder_path", "")
+                    folder_path=data.get("folder_path", ""),
+                    port=data.get("port", 22)
                 )
                 
                 # Set auth value separately to handle encryption properly
@@ -479,7 +506,7 @@ class SessionItem(GObject.GObject):
         """
         try:
             # Create string representation of core data
-            data_string = f"{self.name}|{self.session_type}|{self.host}|{self.user}|{self.auth_type}|{self.folder_path}"
+            data_string = f"{self.name}|{self.session_type}|{self.host}|{self.user}|{self.auth_type}|{self.folder_path}|{self.port}"
             
             # Calculate MD5 hash
             checksum = hashlib.md5(data_string.encode('utf-8')).hexdigest()

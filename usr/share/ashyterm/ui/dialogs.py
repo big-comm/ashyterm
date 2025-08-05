@@ -225,8 +225,8 @@ class SessionEditDialog(BaseDialog):
         super().__init__(
             parent_window, 
             title,
-            default_width=460,
-            default_height=620
+            default_width=860,
+            default_height=680
         )
         
         # Session management
@@ -245,6 +245,7 @@ class SessionEditDialog(BaseDialog):
         self.type_combo: Optional[Gtk.DropDown] = None
         self.host_entry: Optional[Gtk.Entry] = None
         self.user_entry: Optional[Gtk.Entry] = None
+        self.port_entry: Optional[Gtk.SpinButton] = None
         self.auth_combo: Optional[Gtk.DropDown] = None
         self.key_path_entry: Optional[Gtk.Entry] = None
         self.password_entry: Optional[Gtk.PasswordEntry] = None
@@ -457,7 +458,21 @@ class SessionEditDialog(BaseDialog):
             user_row.add_suffix(self.user_entry)
             user_row.set_activatable_widget(self.user_entry)
             ssh_group.add(user_row)
-            
+
+            # Port row
+            port_row = Adw.ActionRow(
+                title=_("Port"),
+                subtitle=_("SSH port number (default: 22)")
+            )
+
+            self.port_entry = Gtk.SpinButton.new_with_range(1, 65535, 1)
+            self.port_entry.set_value(self.editing_session.port)
+            self.port_entry.connect("value-changed", self._on_port_changed)
+
+            port_row.add_suffix(self.port_entry)
+            port_row.set_activatable_widget(self.port_entry)
+            ssh_group.add(port_row)
+
             # Authentication type row
             auth_row = Adw.ComboRow(
                 title=_("Authentication"),
@@ -642,6 +657,21 @@ class SessionEditDialog(BaseDialog):
             self._mark_changed()
         except Exception as e:
             self.logger.error(f"User change handling failed: {e}")
+            
+    def _on_port_changed(self, spin_button: Gtk.SpinButton) -> None:
+        """Handle port change with validation."""
+        try:
+            self._mark_changed()
+            
+            # Real-time port validation
+            port = int(spin_button.get_value())
+            if not (1 <= port <= 65535):
+                spin_button.add_css_class("error")
+            else:
+                spin_button.remove_css_class("error")
+                
+        except Exception as e:
+            self.logger.error(f"Port change handling failed: {e}")
     
     def _on_auth_changed(self, combo_row, param) -> None:
         """Handle authentication type change."""
@@ -994,6 +1024,7 @@ class SessionEditDialog(BaseDialog):
             if self.editing_session.is_ssh():
                 self.editing_session.host = self.host_entry.get_text().strip()
                 self.editing_session.user = self.user_entry.get_text().strip()
+                self.editing_session.port = int(self.port_entry.get_value())
                 self.editing_session.auth_type = "key" if self.auth_combo.get_selected() == 0 else "password"
                 self.editing_session.auth_value = self._get_auth_value()
             else:
@@ -1015,6 +1046,7 @@ class SessionEditDialog(BaseDialog):
             self.original_session.session_type = self.editing_session.session_type
             self.original_session.host = self.editing_session.host
             self.original_session.user = self.editing_session.user
+            self.original_session.port = self.editing_session.port
             self.original_session.auth_type = self.editing_session.auth_type
             self.original_session.auth_value = self.editing_session.auth_value
             self.original_session.folder_path = self.editing_session.folder_path
@@ -1373,6 +1405,7 @@ class PreferencesDialog(Adw.PreferencesWindow):
     __gsignals__ = {
         "color-scheme-changed": (GObject.SignalFlags.RUN_FIRST, None, (int,)),
         "transparency-changed": (GObject.SignalFlags.RUN_FIRST, None, (float,)),
+        "blur-changed": (GObject.SignalFlags.RUN_FIRST, None, (float,)),
         "font-changed": (GObject.SignalFlags.RUN_FIRST, None, (str,)),
         "shortcut-changed": (GObject.SignalFlags.RUN_FIRST, None, ()),
         "setting-changed": (GObject.SignalFlags.RUN_FIRST, None, (str, object)),
@@ -1459,7 +1492,29 @@ class PreferencesDialog(Adw.PreferencesWindow):
             transparency_row.add_suffix(self.transparency_scale)
             transparency_row.set_activatable_widget(self.transparency_scale)
             colors_group.add(transparency_row)
-            
+
+            # Terminal blur
+            blur_row = Adw.ActionRow(
+                title=_("Terminal Blur"),
+                subtitle=_("Apply blur effect to terminal background")
+            )
+
+            self.blur_scale = Gtk.Scale.new_with_range(Gtk.Orientation.HORIZONTAL, 0, 10, 0.5)
+            self.blur_scale.set_value(self.settings_manager.get("terminal_blur", 0))
+            self.blur_scale.set_draw_value(True)
+            self.blur_scale.set_value_pos(Gtk.PositionType.RIGHT)
+            self.blur_scale.set_hexpand(True)
+            self.blur_scale.connect("value-changed", self._on_blur_changed)
+
+            # Add marks for reference
+            self.blur_scale.add_mark(0, Gtk.PositionType.BOTTOM, _("Off"))
+            self.blur_scale.add_mark(5, Gtk.PositionType.BOTTOM, _("Medium"))
+            self.blur_scale.add_mark(10, Gtk.PositionType.BOTTOM, _("High"))
+
+            blur_row.add_suffix(self.blur_scale)
+            blur_row.set_activatable_widget(self.blur_scale)
+            colors_group.add(blur_row)
+
             # Font
             font_row = Adw.ActionRow(
                 title=_("Terminal Font"),
@@ -1872,6 +1927,16 @@ class PreferencesDialog(Adw.PreferencesWindow):
             self.logger.debug(f"Transparency changed to {value}")
         except Exception as e:
             self.logger.error(f"Transparency change failed: {e}")
+            
+    def _on_blur_changed(self, scale) -> None:
+        """Handle blur intensity change."""
+        try:
+            value = scale.get_value()
+            self.settings_manager.set("terminal_blur", value)
+            self.emit("blur-changed", value)
+            self.logger.debug(f"Terminal blur changed to {value}px")
+        except Exception as e:
+            self.logger.error(f"Blur change failed: {e}")
     
     def _on_font_changed(self, font_button) -> None:
         """Handle font change."""
