@@ -53,15 +53,15 @@ class AppConstants:
     # Developer information
     DEVELOPER_NAME = "BigCommunity"
     DEVELOPER_TEAM = ["BigCommunity Team"]
-    DEVELOPER_EMAIL = "contact@communitybig.org"
+    DEVELOPER_EMAIL = "leo4berbert@gmail.com"
     
     # Legal and support
     COPYRIGHT = "© 2025 BigCommunity"
     LICENSE = "MIT"
     WEBSITE = "https://communitybig.org/"
-    DOCUMENTATION_URL = "https://communitybig.org/ashyterm/docs"
-    ISSUE_URL = "https://github.com/big-comm/ashyterm/issues"
-    SUPPORT_URL = "https://communitybig.org/support"
+    DOCUMENTATION_URL = "https://forum.biglinux.com.br/t/biglinuxcommunity"
+    ISSUE_URL = "https://github.com/big-comm/comm-ashyterm/issues"
+    SUPPORT_URL = "https://t.me/BigLinuxCommunity"
     
     # Technical specifications
     MIN_GTK_VERSION = "4.0"
