@@ -379,50 +379,85 @@ msgstr "Klistra in till rot"
 msgid "Select All"
 msgstr "Välj alla"
 # 
-# File: usr/share/ashyterm/ui/menus.py, line: 142
-#: NEEDS WORK
-msgid "File"
-msgstr "Fil"
-# 
 # #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
 # 
-# File: usr/share/ashyterm/ui/menus.py, line: 144
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1596
+# File: usr/share/ashyterm/ui/menus.py, line: 141
+# File: usr/share/ashyterm/window.py, line: 861
 #: NEEDS WORK
-msgid "New Tab"
+msgid "Nova Aba"
 msgstr "Ny flik"
 # 
 # #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
 # 
-# File: usr/share/ashyterm/ui/menus.py, line: 145
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1597
+# File: usr/share/ashyterm/ui/menus.py, line: 142
+# File: usr/share/ashyterm/window.py, line: 862
 #: NEEDS WORK
-msgid "Close Tab"
+msgid "Fechar Aba"
 msgstr "Stäng flik"
-# 
-# File: usr/share/ashyterm/ui/menus.py, line: 147
-#: NEEDS WORK
-msgid "Quit"
-msgstr "Avsluta"
 # 
 # #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
 # 
-# File: usr/share/ashyterm/ui/menus.py, line: 157
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1390
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1604
+# File: usr/share/ashyterm/ui/menus.py, line: 143
+# File: usr/share/ashyterm/window.py, line: 863
+# File: usr/share/ashyterm/window.py, line: 913
+# File: usr/share/ashyterm/window.py, line: 918
 #: NEEDS WORK
-msgid "Preferences"
+msgid "Nova Janela"
+msgstr "Ny Fönster"
+# 
+# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
+# 
+# File: usr/share/ashyterm/ui/menus.py, line: 147
+# File: usr/share/ashyterm/window.py, line: 864
+#: NEEDS WORK
+msgid "Copiar"
+msgstr "Kopiera"
+# 
+# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
+# 
+# File: usr/share/ashyterm/ui/menus.py, line: 148
+# File: usr/share/ashyterm/window.py, line: 865
+#: NEEDS WORK
+msgid "Colar"
+msgstr "Colar"
+# 
+# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
+# 
+# File: usr/share/ashyterm/ui/menus.py, line: 149
+# File: usr/share/ashyterm/window.py, line: 866
+#: NEEDS WORK
+msgid "Selecionar Tudo"
+msgstr "Välj allt"
+# 
+# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
+# 
+# File: usr/share/ashyterm/ui/menus.py, line: 153
+# File: usr/share/ashyterm/window.py, line: 882
+#: NEEDS WORK
+msgid "Preferências"
 msgstr "Inställningar"
 # 
-# File: usr/share/ashyterm/ui/menus.py, line: 161
-#: NEEDS WORK
-msgid "Help"
-msgstr "Hjälp"
+# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
 # 
-# File: usr/share/ashyterm/ui/menus.py, line: 162
+# File: usr/share/ashyterm/ui/menus.py, line: 154
+# File: usr/share/ashyterm/window.py, line: 851
+# File: usr/share/ashyterm/window.py, line: 902
 #: NEEDS WORK
-msgid "About"
+msgid "Atalhos de Teclado"
+msgstr "Tangentbordsgenvägar"
+# 
+# File: usr/share/ashyterm/ui/menus.py, line: 158
+#: NEEDS WORK
+msgid "Sobre"
 msgstr "Om"
+# 
+# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
+# 
+# File: usr/share/ashyterm/ui/menus.py, line: 159
+# File: usr/share/ashyterm/window.py, line: 884
+#: NEEDS WORK
+msgid "Sair"
+msgstr "Avsluta"
 # 
 # #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
 # 
@@ -591,6 +626,16 @@ msgstr "Användarnamn för SSH-autentisering (valfritt)"
 #: NEEDS WORK
 msgid "username"
 msgstr "användarnamn"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 464
+#: NEEDS WORK
+msgid "Port"
+msgstr "Port"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 465
+#: NEEDS WORK
+msgid "SSH port number (default: 22)"
+msgstr "SSH-portnummer (standard: 22)"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 463
 #: NEEDS WORK
@@ -920,6 +965,15 @@ msgstr "Misslyckades med att validera mappen: {}"
 msgid "Folder {} {}"
 msgstr "Mapp {} {}"
 # 
+# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
+# 
+# File: usr/share/ashyterm/ui/menus.py, line: 157
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1390
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1604
+#: NEEDS WORK
+msgid "Preferences"
+msgstr "Inställningar"
+# 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1421
 #: NEEDS WORK
 msgid "Appearance"
@@ -954,6 +1008,31 @@ msgstr "Bakgrundstransparens"
 #: NEEDS WORK
 msgid "Adjust terminal background transparency"
 msgstr "Justera terminalens bakgrundstransparens"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1498
+#: NEEDS WORK
+msgid "Terminal Blur"
+msgstr "Terminalosdunkel"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1499
+#: NEEDS WORK
+msgid "Apply blur effect to terminal background"
+msgstr "Tillämpa suddighetseffekt på terminalbakgrund"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1510
+#: NEEDS WORK
+msgid "Off"
+msgstr "Avstängd"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1511
+#: NEEDS WORK
+msgid "Medium"
+msgstr "Medium"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1512
+#: NEEDS WORK
+msgid "High"
+msgstr "Hög"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1465
 #: NEEDS WORK
@@ -1084,6 +1163,22 @@ msgstr "Applikationsåtgärder"
 #: NEEDS WORK
 msgid "Keyboard shortcuts for application operations"
 msgstr "Tangentbordsgenvägar för applikationsoperationer"
+# 
+# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
+# 
+# File: usr/share/ashyterm/ui/menus.py, line: 144
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1596
+#: NEEDS WORK
+msgid "New Tab"
+msgstr "Ny flik"
+# 
+# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
+# 
+# File: usr/share/ashyterm/ui/menus.py, line: 145
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1597
+#: NEEDS WORK
+msgid "Close Tab"
+msgstr "Stäng flik"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1605
 #: NEEDS WORK
@@ -2777,6 +2872,38 @@ msgstr "Misslyckades med att ta bort mappen: {error}"
 msgid "Failed to open preferences: {error}"
 msgstr "Misslyckades med att öppna inställningar: {error}"
 # 
+# File: usr/share/ashyterm/window.py, line: 857
+#: NEEDS WORK
+msgid "Terminal"
+msgstr "Terminal"
+# 
+# File: usr/share/ashyterm/window.py, line: 878
+#: NEEDS WORK
+msgid "Aplicação"
+msgstr "Applikation"
+# 
+# File: usr/share/ashyterm/window.py, line: 883
+#: NEEDS WORK
+msgid "Alternar Barra Lateral"
+msgstr "Växla Sidofält"
+# 
+# File: usr/share/ashyterm/window.py, line: 903
+#: NEEDS WORK
+#, python-brace-format
+msgid "Falha ao abrir janela de atalhos: {error}"
+msgstr "Misslyckades med att öppna genvägsfönstret: {error}"
+# 
+# File: usr/share/ashyterm/window.py, line: 914
+#: NEEDS WORK
+msgid "Não foi possível criar uma nova janela."
+msgstr "Det gick inte att skapa ett nytt fönster."
+# 
+# File: usr/share/ashyterm/window.py, line: 919
+#: NEEDS WORK
+#, python-brace-format
+msgid "Falha ao criar nova janela: {error}"
+msgstr "Misslyckades med att skapa nytt fönster: {error}"
+# 
 # File: usr/share/ashyterm/window.py, line: 841
 #: NEEDS WORK
 msgid "Security auditor not available"
@@ -2827,6 +2954,11 @@ msgstr "Lägg till sessionsfel"
 #, python-brace-format
 msgid "Failed to add session: {error}"
 msgstr "Misslyckades med att lägga till session: {error}"
+# 
+# File: usr/share/ashyterm/window.py, line: 977
+#: NEEDS WORK
+msgid "Failed to create new tab."
+msgstr "Misslyckades med att skapa ny flik."
 # 
 # File: usr/share/ashyterm/window.py, line: 885
 #: NEEDS WORK

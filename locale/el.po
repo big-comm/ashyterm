@@ -379,53 +379,85 @@ msgstr "Επικόλληση στη Ρίζα"
 msgid "Select All"
 msgstr "Επιλογή Όλων"
 # 
-# File: usr/share/ashyterm/ui/menus.py, line: 142
-#: NEEDS WORK
-msgid "File"
-msgstr "Αρχείο"
-# 
 # #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
 # 
-# File: usr/share/ashyterm/ui/menus.py, line: 144
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1596
+# File: usr/share/ashyterm/ui/menus.py, line: 141
+# File: usr/share/ashyterm/window.py, line: 861
 #: NEEDS WORK
-msgid "New Tab"
+msgid "Nova Aba"
 msgstr "Νέα Καρτέλα"
 # 
 # #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
 # 
-# File: usr/share/ashyterm/ui/menus.py, line: 145
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1597
+# File: usr/share/ashyterm/ui/menus.py, line: 142
+# File: usr/share/ashyterm/window.py, line: 862
 #: NEEDS WORK
-msgid "Close Tab"
+msgid "Fechar Aba"
 msgstr "Κλείσιμο Καρτέλας"
 # 
+# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
+# 
+# File: usr/share/ashyterm/ui/menus.py, line: 143
+# File: usr/share/ashyterm/window.py, line: 863
+# File: usr/share/ashyterm/window.py, line: 913
+# File: usr/share/ashyterm/window.py, line: 918
+#: NEEDS WORK
+msgid "Nova Janela"
+msgstr "Νέα Παράθυρο"
+# 
+# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
+# 
 # File: usr/share/ashyterm/ui/menus.py, line: 147
+# File: usr/share/ashyterm/window.py, line: 864
 #: NEEDS WORK
-msgid "Quit"
-msgstr "Έξοδος"
+msgid "Copiar"
+msgstr "Αντιγραφή"
 # 
 # #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
 # 
+# File: usr/share/ashyterm/ui/menus.py, line: 148
+# File: usr/share/ashyterm/window.py, line: 865
+#: NEEDS WORK
+msgid "Colar"
+msgstr "Κολάρο"
+# 
 # #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
 # 
-# File: usr/share/ashyterm/ui/menus.py, line: 157
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1390
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1604
-# File: usr/share/ashyterm/window.py, line: 261
+# File: usr/share/ashyterm/ui/menus.py, line: 149
+# File: usr/share/ashyterm/window.py, line: 866
 #: NEEDS WORK
-msgid "Preferences"
+msgid "Selecionar Tudo"
+msgstr "Επιλογή Όλων"
+# 
+# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
+# 
+# File: usr/share/ashyterm/ui/menus.py, line: 153
+# File: usr/share/ashyterm/window.py, line: 882
+#: NEEDS WORK
+msgid "Preferências"
 msgstr "Προτιμήσεις"
 # 
-# File: usr/share/ashyterm/ui/menus.py, line: 161
-#: NEEDS WORK
-msgid "Help"
-msgstr "Βοήθεια"
+# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
 # 
-# File: usr/share/ashyterm/ui/menus.py, line: 162
+# File: usr/share/ashyterm/ui/menus.py, line: 154
+# File: usr/share/ashyterm/window.py, line: 851
+# File: usr/share/ashyterm/window.py, line: 902
 #: NEEDS WORK
-msgid "About"
+msgid "Atalhos de Teclado"
+msgstr "Συντομεύσεις Πληκτρολογίου"
+# 
+# File: usr/share/ashyterm/ui/menus.py, line: 158
+#: NEEDS WORK
+msgid "Sobre"
 msgstr "Σχετικά"
+# 
+# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
+# 
+# File: usr/share/ashyterm/ui/menus.py, line: 159
+# File: usr/share/ashyterm/window.py, line: 884
+#: NEEDS WORK
+msgid "Sair"
+msgstr "Έξοδος"
 # 
 # #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
 # 
@@ -594,6 +626,16 @@ msgstr "Όνομα χρήστη για την αυθεντικοποίηση SSH
 #: NEEDS WORK
 msgid "username"
 msgstr "όνομα χρήστη"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 464
+#: NEEDS WORK
+msgid "Port"
+msgstr "Θύρα"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 465
+#: NEEDS WORK
+msgid "SSH port number (default: 22)"
+msgstr "Αριθμός θύρας SSH (προεπιλογή: 22)"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 463
 #: NEEDS WORK
@@ -925,6 +967,18 @@ msgstr "Αποτυχία επικύρωσης φακέλου: {}"
 msgid "Folder {} {}"
 msgstr "Φάκελος {} {}"
 # 
+# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
+# 
+# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
+# 
+# File: usr/share/ashyterm/ui/menus.py, line: 157
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1390
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1604
+# File: usr/share/ashyterm/window.py, line: 261
+#: NEEDS WORK
+msgid "Preferences"
+msgstr "Προτιμήσεις"
+# 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1421
 #: NEEDS WORK
 msgid "Appearance"
@@ -959,6 +1013,31 @@ msgstr "Διαφάνεια Φόντου"
 #: NEEDS WORK
 msgid "Adjust terminal background transparency"
 msgstr "Ρυθμίστε τη διαφάνεια του φόντου του τερματικού"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1498
+#: NEEDS WORK
+msgid "Terminal Blur"
+msgstr "Θολότητα Τερματικού"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1499
+#: NEEDS WORK
+msgid "Apply blur effect to terminal background"
+msgstr "Εφαρμογή εφέ θολώματος στο φόντο του τερματικού"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1510
+#: NEEDS WORK
+msgid "Off"
+msgstr "Απενεργοποιημένο"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1511
+#: NEEDS WORK
+msgid "Medium"
+msgstr "Μεσαίο"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1512
+#: NEEDS WORK
+msgid "High"
+msgstr "Υψηλός"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1465
 #: NEEDS WORK
@@ -1089,6 +1168,22 @@ msgstr "Ενέργειες Εφαρμογής"
 #: NEEDS WORK
 msgid "Keyboard shortcuts for application operations"
 msgstr "Συντομεύσεις πληκτρολογίου για λειτουργίες εφαρμογής"
+# 
+# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
+# 
+# File: usr/share/ashyterm/ui/menus.py, line: 144
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1596
+#: NEEDS WORK
+msgid "New Tab"
+msgstr "Νέα Καρτέλα"
+# 
+# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
+# 
+# File: usr/share/ashyterm/ui/menus.py, line: 145
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1597
+#: NEEDS WORK
+msgid "Close Tab"
+msgstr "Κλείσιμο Καρτέλας"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1605
 #: NEEDS WORK
@@ -2786,6 +2881,38 @@ msgstr "Αποτυχία διαγραφής φακέλου: {error}"
 msgid "Failed to open preferences: {error}"
 msgstr "Αποτυχία ανοίγματος προτιμήσεων: {error}"
 # 
+# File: usr/share/ashyterm/window.py, line: 857
+#: NEEDS WORK
+msgid "Terminal"
+msgstr "Τερματικός"
+# 
+# File: usr/share/ashyterm/window.py, line: 878
+#: NEEDS WORK
+msgid "Aplicação"
+msgstr "Εφαρμογή"
+# 
+# File: usr/share/ashyterm/window.py, line: 883
+#: NEEDS WORK
+msgid "Alternar Barra Lateral"
+msgstr "Εναλλαγή Πλευρικής Γραμμής"
+# 
+# File: usr/share/ashyterm/window.py, line: 903
+#: NEEDS WORK
+#, python-brace-format
+msgid "Falha ao abrir janela de atalhos: {error}"
+msgstr "Αποτυχία κατά το άνοιγμα του παραθύρου συντομεύσεων: {error}"
+# 
+# File: usr/share/ashyterm/window.py, line: 914
+#: NEEDS WORK
+msgid "Não foi possível criar uma nova janela."
+msgstr "Δεν ήταν δυνατή η δημιουργία ενός νέου παραθύρου."
+# 
+# File: usr/share/ashyterm/window.py, line: 919
+#: NEEDS WORK
+#, python-brace-format
+msgid "Falha ao criar nova janela: {error}"
+msgstr "Αποτυχία δημιουργίας νέου παραθύρου: {error}"
+# 
 # File: usr/share/ashyterm/window.py, line: 841
 #: NEEDS WORK
 msgid "Security auditor not available"
@@ -2836,6 +2963,11 @@ msgstr "Σφάλμα Προσθήκης Συνεδρίας"
 #, python-brace-format
 msgid "Failed to add session: {error}"
 msgstr "Αποτυχία προσθήκης συνεδρίας: {error}"
+# 
+# File: usr/share/ashyterm/window.py, line: 977
+#: NEEDS WORK
+msgid "Failed to create new tab."
+msgstr "Αποτυχία δημιουργίας νέας καρτέλας."
 # 
 # File: usr/share/ashyterm/window.py, line: 885
 #: NEEDS WORK

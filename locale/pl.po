@@ -379,53 +379,85 @@ msgstr "Wklej do katalogu głównego"
 msgid "Select All"
 msgstr "Zaznacz wszystko"
 # 
-# File: usr/share/ashyterm/ui/menus.py, line: 142
-#: NEEDS WORK
-msgid "File"
-msgstr "Plik"
-# 
 # #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
 # 
-# File: usr/share/ashyterm/ui/menus.py, line: 144
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1596
+# File: usr/share/ashyterm/ui/menus.py, line: 141
+# File: usr/share/ashyterm/window.py, line: 861
 #: NEEDS WORK
-msgid "New Tab"
+msgid "Nova Aba"
 msgstr "Nowa karta"
 # 
 # #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
 # 
-# File: usr/share/ashyterm/ui/menus.py, line: 145
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1597
+# File: usr/share/ashyterm/ui/menus.py, line: 142
+# File: usr/share/ashyterm/window.py, line: 862
 #: NEEDS WORK
-msgid "Close Tab"
+msgid "Fechar Aba"
 msgstr "Zamknij kartę"
 # 
+# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
+# 
+# File: usr/share/ashyterm/ui/menus.py, line: 143
+# File: usr/share/ashyterm/window.py, line: 863
+# File: usr/share/ashyterm/window.py, line: 913
+# File: usr/share/ashyterm/window.py, line: 918
+#: NEEDS WORK
+msgid "Nova Janela"
+msgstr "Nowe Okno"
+# 
+# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
+# 
 # File: usr/share/ashyterm/ui/menus.py, line: 147
+# File: usr/share/ashyterm/window.py, line: 864
 #: NEEDS WORK
-msgid "Quit"
-msgstr "Zakończ"
+msgid "Copiar"
+msgstr "Kopiuj"
 # 
 # #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
 # 
+# File: usr/share/ashyterm/ui/menus.py, line: 148
+# File: usr/share/ashyterm/window.py, line: 865
+#: NEEDS WORK
+msgid "Colar"
+msgstr "Kolor"
+# 
 # #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
 # 
-# File: usr/share/ashyterm/ui/menus.py, line: 157
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1390
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1604
-# File: usr/share/ashyterm/window.py, line: 261
+# File: usr/share/ashyterm/ui/menus.py, line: 149
+# File: usr/share/ashyterm/window.py, line: 866
 #: NEEDS WORK
-msgid "Preferences"
+msgid "Selecionar Tudo"
+msgstr "Zaznacz wszystko"
+# 
+# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
+# 
+# File: usr/share/ashyterm/ui/menus.py, line: 153
+# File: usr/share/ashyterm/window.py, line: 882
+#: NEEDS WORK
+msgid "Preferências"
 msgstr "Preferencje"
 # 
-# File: usr/share/ashyterm/ui/menus.py, line: 161
-#: NEEDS WORK
-msgid "Help"
-msgstr "Pomoc"
+# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
 # 
-# File: usr/share/ashyterm/ui/menus.py, line: 162
+# File: usr/share/ashyterm/ui/menus.py, line: 154
+# File: usr/share/ashyterm/window.py, line: 851
+# File: usr/share/ashyterm/window.py, line: 902
 #: NEEDS WORK
-msgid "About"
+msgid "Atalhos de Teclado"
+msgstr "Skróty Klawiszowe"
+# 
+# File: usr/share/ashyterm/ui/menus.py, line: 158
+#: NEEDS WORK
+msgid "Sobre"
 msgstr "O programie"
+# 
+# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
+# 
+# File: usr/share/ashyterm/ui/menus.py, line: 159
+# File: usr/share/ashyterm/window.py, line: 884
+#: NEEDS WORK
+msgid "Sair"
+msgstr "Wyjdź"
 # 
 # #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
 # 
@@ -594,6 +626,16 @@ msgstr "Nazwa użytkownika do uwierzytelniania SSH (opcjonalnie)"
 #: NEEDS WORK
 msgid "username"
 msgstr "nazwa użytkownika"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 464
+#: NEEDS WORK
+msgid "Port"
+msgstr "Port"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 465
+#: NEEDS WORK
+msgid "SSH port number (default: 22)"
+msgstr "Numer portu SSH (domyślnie: 22)"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 463
 #: NEEDS WORK
@@ -923,6 +965,18 @@ msgstr "Nie udało się zweryfikować folderu: {}"
 msgid "Folder {} {}"
 msgstr "Folder {} {}"
 # 
+# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
+# 
+# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
+# 
+# File: usr/share/ashyterm/ui/menus.py, line: 157
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1390
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1604
+# File: usr/share/ashyterm/window.py, line: 261
+#: NEEDS WORK
+msgid "Preferences"
+msgstr "Preferencje"
+# 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1421
 #: NEEDS WORK
 msgid "Appearance"
@@ -957,6 +1011,31 @@ msgstr "Przezroczystość tła"
 #: NEEDS WORK
 msgid "Adjust terminal background transparency"
 msgstr "Dostosuj przezroczystość tła terminala"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1498
+#: NEEDS WORK
+msgid "Terminal Blur"
+msgstr "Rozmycie terminala"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1499
+#: NEEDS WORK
+msgid "Apply blur effect to terminal background"
+msgstr "Zastosuj efekt rozmycia tła terminala"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1510
+#: NEEDS WORK
+msgid "Off"
+msgstr "Wyłączone"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1511
+#: NEEDS WORK
+msgid "Medium"
+msgstr "Średni"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1512
+#: NEEDS WORK
+msgid "High"
+msgstr "Wysoki"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1465
 #: NEEDS WORK
@@ -1087,6 +1166,22 @@ msgstr "Akcje aplikacji"
 #: NEEDS WORK
 msgid "Keyboard shortcuts for application operations"
 msgstr "Skróty klawiszowe do operacji aplikacji"
+# 
+# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
+# 
+# File: usr/share/ashyterm/ui/menus.py, line: 144
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1596
+#: NEEDS WORK
+msgid "New Tab"
+msgstr "Nowa karta"
+# 
+# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
+# 
+# File: usr/share/ashyterm/ui/menus.py, line: 145
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1597
+#: NEEDS WORK
+msgid "Close Tab"
+msgstr "Zamknij kartę"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1605
 #: NEEDS WORK
@@ -2782,6 +2877,38 @@ msgstr "Nie udało się usunąć folderu: {error}"
 msgid "Failed to open preferences: {error}"
 msgstr "Nie udało się otworzyć preferencji: {error}"
 # 
+# File: usr/share/ashyterm/window.py, line: 857
+#: NEEDS WORK
+msgid "Terminal"
+msgstr "Terminal"
+# 
+# File: usr/share/ashyterm/window.py, line: 878
+#: NEEDS WORK
+msgid "Aplicação"
+msgstr "Aplikacja"
+# 
+# File: usr/share/ashyterm/window.py, line: 883
+#: NEEDS WORK
+msgid "Alternar Barra Lateral"
+msgstr "Przełącz Pasek Boczny"
+# 
+# File: usr/share/ashyterm/window.py, line: 903
+#: NEEDS WORK
+#, python-brace-format
+msgid "Falha ao abrir janela de atalhos: {error}"
+msgstr "Błąd podczas otwierania okna skrótów: {error}"
+# 
+# File: usr/share/ashyterm/window.py, line: 914
+#: NEEDS WORK
+msgid "Não foi possível criar uma nova janela."
+msgstr "Nie można utworzyć nowego okna."
+# 
+# File: usr/share/ashyterm/window.py, line: 919
+#: NEEDS WORK
+#, python-brace-format
+msgid "Falha ao criar nova janela: {error}"
+msgstr "Błąd podczas tworzenia nowego okna: {error}"
+# 
 # File: usr/share/ashyterm/window.py, line: 841
 #: NEEDS WORK
 msgid "Security auditor not available"
@@ -2832,6 +2959,11 @@ msgstr "Błąd dodawania sesji"
 #, python-brace-format
 msgid "Failed to add session: {error}"
 msgstr "Nie udało się dodać sesji: {error}"
+# 
+# File: usr/share/ashyterm/window.py, line: 977
+#: NEEDS WORK
+msgid "Failed to create new tab."
+msgstr "Nie udało się utworzyć nowej karty."
 # 
 # File: usr/share/ashyterm/window.py, line: 885
 #: NEEDS WORK
