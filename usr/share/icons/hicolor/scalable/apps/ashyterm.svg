@@ -1,20 +1,18 @@
-      
-<svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-  <!-- Fundo "Squircle" -->
-  <rect width="48" height="48" rx="10" fill="#3d3d3d"/>
+<svg width="128" height="128" viewBox="0 0 128 128" xmlns="http://www.w3.org/2000/svg">
+  <style>
+    .nerd { font-family: "JetBrainsMono Nerd Font", "FiraCode Nerd Font", monospace; }
+  </style>
 
-  <!-- Letra 'A' estilizada -->
-  <path d="M 14 36 L 24 12 L 34 36" 
-        stroke="#EAEAEA" 
-        stroke-width="3.5" 
-        stroke-linecap="round" 
-        stroke-linejoin="round"/>
+  <!-- Fundo -->
+  <rect width="128" height="128" rx="16" fill="#1e1e1e"/>
 
-  <!-- Barra do 'A' como um cursor na cor de destaque -->
-  <path d="M 19 28 L 29 28" 
-        stroke="#FF8F40" 
-        stroke-width="3.5" 
-        stroke-linecap="round"/>
+  <!-- Ícone de coruja -->
+  <text x="60" y="42" font-size="36" class="nerd" fill="#cccccc" text-anchor="middle">󰏒</text>
+
+  <!-- Texto "Ashy" -->
+  <text x="64" y="74" font-size="24" class="nerd" fill="#cccccc" text-anchor="middle">Ashy</text>
+
+  <!-- Prompt terminal -->
+  <text x="58" y="105" font-size="24" class="nerd" fill="#888888" text-anchor="middle"></text>
 </svg>
 
-    
