@@ -6,7 +6,7 @@
 import gettext
 
 # Configure the translation text domain for comm-ashyterm
-gettext.textdomain("ashyterm")
+gettext.textdomain("comm-ashyterm")
 
 # Export _ directly as the translation function
 _ = gettext.gettext
