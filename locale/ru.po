@@ -2604,6 +2604,21 @@ msgstr "Не удалось загрузить сохраненные сесси
 msgid "Window close request received"
 msgstr "Запрос на закрытие окна получен"
 # 
+# File: usr/share/ashyterm/window.py, line: 507
+#: NEEDS WORK
+msgid "Force closing - allowing window to close"
+msgstr "Принудительное закрытие - разрешение на закрытие окна"
+# 
+# File: usr/share/ashyterm/window.py, line: 515
+#: NEEDS WORK
+msgid "Showing SSH close confirmation dialog"
+msgstr "Показ диалогового окна подтверждения закрытия SSH"
+# 
+# File: usr/share/ashyterm/window.py, line: 520
+#: NEEDS WORK
+msgid "No SSH sessions, proceeding with normal close"
+msgstr "Нет SSH-сессий, продолжаем с обычным завершением."
+# 
 # File: usr/share/ashyterm/window.py, line: 511
 #: NEEDS WORK
 msgid "Window cleanup completed"
@@ -2614,25 +2629,20 @@ msgstr "Очистка окна завершена"
 msgid "Window close handling failed: {}"
 msgstr "Не удалось обработать закрытие окна: {}"
 # 
-# File: usr/share/ashyterm/window.py, line: 524
+# File: usr/share/ashyterm/window.py, line: 544
 #: NEEDS WORK
-#, python-brace-format
-msgid ""
-"This window has active SSH connections:\n"
-"\n"
-"{sessions}\n"
-"\n"
-"Closing will disconnect these sessions.\n"
-"\n"
-"Are you sure you want to close this window?"
-msgstr ""
-"Это окно имеет активные SSH-соединения:\n"
-"\n"
-"{sessions}\n"
-"\n"
-"Закрытие приведет к отключению этих сеансов.\n"
-"\n"
-"Вы уверены, что хотите закрыть это окно?"
+msgid "This window has active SSH connections:"
+msgstr "Это окно имеет активные SSH-соединения:"
+# 
+# File: usr/share/ashyterm/window.py, line: 545
+#: NEEDS WORK
+msgid "Closing will disconnect these sessions."
+msgstr "Закрытие отключит эти сеансы."
+# 
+# File: usr/share/ashyterm/window.py, line: 546
+#: NEEDS WORK
+msgid "Are you sure you want to close this window?"
+msgstr "Вы уверены, что хотите закрыть это окно?"
 # 
 # File: usr/share/ashyterm/window.py, line: 528
 # File: usr/share/ashyterm/window.py, line: 533
