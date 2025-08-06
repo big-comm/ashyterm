@@ -510,9 +510,10 @@ class SessionEditDialog(BaseDialog):
             key_box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=6)
             
             key_value = self.editing_session.auth_value if self.editing_session.uses_key_auth() else ""
+
             self.key_path_entry = Gtk.Entry(
                 text=key_value,
-                placeholder_text="/home/user/.ssh/id_rsa",
+                placeholder_text=f"{get_ssh_directory()}/id_rsa",
                 hexpand=True
             )
             self.key_path_entry.connect("changed", self._on_key_path_changed)
@@ -628,6 +629,12 @@ class SessionEditDialog(BaseDialog):
     def _on_type_changed(self, combo_row, param) -> None:
         """Handle session type change."""
         try:
+            # If changed to SSH and it's a new session, set default key path
+            if combo_row.get_selected() == 1:  # SSH selected
+                if self.is_new_item and self.auth_combo.get_selected() == 0:  # Key auth
+                    if not self.key_path_entry.get_text().strip():
+                        self.key_path_entry.set_text(f"{get_ssh_directory()}/id_rsa")
+            
             self._update_ssh_visibility()
             self._mark_changed()
         except Exception as e:
@@ -672,6 +679,12 @@ class SessionEditDialog(BaseDialog):
     def _on_auth_changed(self, combo_row, param) -> None:
         """Handle authentication type change."""
         try:
+            # If changed to key auth and field is empty, fill with default
+            if combo_row.get_selected() == 0:  # SSH Key selected
+                current_value = self.key_path_entry.get_text().strip()
+                if not current_value:
+                    self.key_path_entry.set_text(f"{get_ssh_directory()}/id_rsa")
+            
             self._update_auth_visibility()
             self._mark_changed()
         except Exception as e:

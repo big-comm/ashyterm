@@ -880,6 +880,8 @@ class TerminalManager:
             ssh_sessions = []
             terminal_ids = self.registry.get_all_terminal_ids()
             
+            self.logger.debug(f"Checking {len(terminal_ids)} terminals for active SSH sessions")
+            
             for terminal_id in terminal_ids:
                 terminal_info = self.registry.get_terminal_info(terminal_id)
                 
@@ -887,15 +889,45 @@ class TerminalManager:
                     process_id = terminal_info.get('process_id')
                     status = terminal_info.get('status', '')
                     
-                    if process_id and process_id > 0 and status not in ['exited', 'spawn_failed']:
+                    self.logger.debug(f"SSH terminal {terminal_id}: pid={process_id}, status={status}")
+                    
+                    # More comprehensive status check
+                    inactive_statuses = ['exited', 'spawn_failed', 'eof', 'exited_0', 'exited_1', 'exited_2']
+                    is_active = (process_id and process_id > 0 and 
+                            not any(status.startswith(inactive) for inactive in inactive_statuses))
+                    
+                    if is_active:
                         # Get session info from identifier
                         identifier = terminal_info.get('identifier')
-                        if hasattr(identifier, 'name') and hasattr(identifier, 'get_connection_string'):
-                            connection_string = identifier.get_connection_string()
-                            ssh_sessions.append(f"{identifier.name} ({connection_string})")
-                        else:
-                            ssh_sessions.append(str(identifier))
+                        self.logger.debug(f"Processing identifier: {type(identifier)} = {identifier}")
+                        
+                        try:
+                            if hasattr(identifier, 'name') and hasattr(identifier, 'get_connection_string'):
+                                connection_string = identifier.get_connection_string()
+                                session_name = f"{identifier.name} ({connection_string})"
+                                ssh_sessions.append(session_name)
+                                self.logger.debug(f"Added SSH session: {session_name}")
+                            elif hasattr(identifier, 'name'):
+                                # Has name but no connection string method
+                                ssh_sessions.append(identifier.name)
+                                self.logger.debug(f"Added SSH session (name only): {identifier.name}")
+                            elif isinstance(identifier, str):
+                                # String identifier
+                                ssh_sessions.append(identifier)
+                                self.logger.debug(f"Added SSH session (string): {identifier}")
+                            else:
+                                # Last resort
+                                session_name = str(identifier)
+                                ssh_sessions.append(session_name)
+                                self.logger.debug(f"Added SSH session (str fallback): {session_name}")
+                        except Exception as e:
+                            self.logger.error(f"Error processing SSH session identifier {identifier}: {e}")
+                            # Don't break the loop, just skip this one
+                            continue
+            
+            self.logger.info(f"Found {len(ssh_sessions)} active SSH sessions")
             return ssh_sessions
+            
         except Exception as e:
             self.logger.error(f"Failed to get SSH session names: {e}")
             return []

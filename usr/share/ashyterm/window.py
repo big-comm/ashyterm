@@ -74,6 +74,7 @@ class CommTerminalWindow(Adw.ApplicationWindow):
         self._creating_tab = False
         self._last_tab_creation = 0
         self._cleanup_performed = False
+        self._force_closing = False
         
         # Clipboard for copy/paste operations
         self._clipboard_item: Optional[Union[SessionItem, SessionFolder]] = None
@@ -501,12 +502,22 @@ class CommTerminalWindow(Adw.ApplicationWindow):
         try:
             self.logger.info(_("Window close request received"))
             
+            # If already force closing, allow it
+            if self._force_closing:
+                self.logger.info(_("Force closing - allowing window to close"))
+                return Gdk.EVENT_PROPAGATE
+            
             # Check for active SSH sessions in this window
-            if self.terminal_manager.has_active_ssh_sessions():
+            has_ssh = self.terminal_manager.has_active_ssh_sessions()
+            self.logger.debug(f"Has active SSH sessions: {has_ssh}")
+            
+            if has_ssh:
+                self.logger.info(_("Showing SSH close confirmation dialog"))
                 self._show_window_ssh_close_confirmation()
                 return Gdk.EVENT_STOP  # Prevent default close
             
             # No SSH sessions, allow normal close
+            self.logger.info(_("No SSH sessions, proceeding with normal close"))
             self._perform_cleanup()
             self.logger.info(_("Window cleanup completed"))
             return Gdk.EVENT_PROPAGATE
@@ -519,9 +530,28 @@ class CommTerminalWindow(Adw.ApplicationWindow):
         """Show confirmation dialog for closing window with active SSH sessions."""
         try:
             ssh_sessions = self.terminal_manager.get_active_ssh_session_names()
+            
+            if not ssh_sessions:
+                self.logger.warning("No SSH sessions found but confirmation was requested")
+                self._perform_cleanup()
+                self.close()
+                return
+            
             session_list = "\n".join([f"• {name}" for name in ssh_sessions])
             
-            body_text = _("This window has active SSH connections:\n\n{sessions}\n\nClosing will disconnect these sessions.\n\nAre you sure you want to close this window?").format(sessions=session_list)
+            try:
+                # Build the message in parts to avoid translation issues
+                part1 = _("This window has active SSH connections:")
+                part2 = _("Closing will disconnect these sessions.")
+                part3 = _("Are you sure you want to close this window?")
+                
+                body_text = f"{part1}\n\n{session_list}\n\n{part2}\n\n{part3}"
+                self.logger.debug(f"Final body text created successfully")
+            except Exception as e:
+                self.logger.error(f"Failed to format message: {e}")
+                # Fallback to English without translation
+                body_text = f"This window has active SSH connections:\n\n{session_list}\n\nClosing will disconnect these sessions.\n\nAre you sure you want to close this window?"
+                self.logger.info("Using fallback English message")
             
             dialog = Adw.MessageDialog(
                 transient_for=self,
@@ -538,6 +568,7 @@ class CommTerminalWindow(Adw.ApplicationWindow):
                 try:
                     if response_id == "close":
                         self.logger.info(_("User confirmed window close with active SSH sessions"))
+                        self._force_closing = True  # Set flag to avoid loop
                         self._perform_cleanup()
                         self.close()
                     else:
