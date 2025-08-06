@@ -757,6 +757,60 @@ class TabManager:
                 self.terminal_manager.select_all(terminal)
         except Exception as e:
             self.logger.error(f"Select all in current terminal failed: {e}")
+            
+    def zoom_in_current_terminal(self, step: float = 0.1) -> bool:
+        """
+        Zoom in current terminal.
+        
+        Args:
+            step: Zoom step increment
+            
+        Returns:
+            True if zoom was successful
+        """
+        try:
+            terminal = self.get_selected_terminal()
+            if terminal:
+                return self.terminal_manager.zoom_in(terminal, step)
+            return False
+        except Exception as e:
+            self.logger.error(f"Zoom in current terminal failed: {e}")
+            return False
+
+    def zoom_out_current_terminal(self, step: float = 0.1) -> bool:
+        """
+        Zoom out current terminal.
+        
+        Args:
+            step: Zoom step decrement
+            
+        Returns:
+            True if zoom was successful
+        """
+        try:
+            terminal = self.get_selected_terminal()
+            if terminal:
+                return self.terminal_manager.zoom_out(terminal, step)
+            return False
+        except Exception as e:
+            self.logger.error(f"Zoom out current terminal failed: {e}")
+            return False
+
+    def zoom_reset_current_terminal(self) -> bool:
+        """
+        Reset zoom in current terminal.
+        
+        Returns:
+            True if reset was successful
+        """
+        try:
+            terminal = self.get_selected_terminal()
+            if terminal:
+                return self.terminal_manager.zoom_reset(terminal)
+            return False
+        except Exception as e:
+            self.logger.error(f"Zoom reset current terminal failed: {e}")
+            return False
     
     def get_statistics(self) -> Dict[str, Any]:
         """

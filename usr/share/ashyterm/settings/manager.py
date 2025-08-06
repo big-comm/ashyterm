@@ -854,6 +854,14 @@ class SettingsManager:
                 self.logger.warning(f"Invalid font '{font_string}', using default: {e}")
                 fallback_font = Pango.FontDescription.from_string("Monospace 10")
                 terminal.set_font(fallback_font)
+
+            # Apply font scale (zoom)
+            font_scale = self.get("font_scale", 1.0)
+            try:
+                terminal.set_font_scale(font_scale)
+                self.logger.debug(f"Font scale applied: {font_scale:.1f}")
+            except Exception as e:
+                self.logger.warning(f"Failed to apply font scale {font_scale}: {e}")
             
             terminal.set_scroll_on_output(self.get("scroll_on_output", True))
             terminal.set_scroll_on_keystroke(self.get("scroll_on_keystroke", True))

@@ -2,10 +2,57 @@ import gi
 gi.require_version("Gtk", "4.0")
 gi.require_version("Adw", "1")
 
-from gi.repository import Gtk, Gio
+from gi.repository import Gtk, Gio, GLib
 from typing import Optional
 
 from ..utils.translation_utils import _
+
+class ZoomWidget(Gtk.Box):
+    """Custom zoom widget for menu - horizontal layout like GNOME Console."""
+    
+    def __init__(self, parent_window):
+        super().__init__(orientation=Gtk.Orientation.HORIZONTAL, spacing=6)
+        self.parent_window = parent_window
+        
+        # Add CSS class for styling
+        self.add_css_class("zoom-widget")
+        
+        # Zoom out button
+        zoom_out_btn = Gtk.Button(label="−")
+        zoom_out_btn.set_size_request(30, -1)
+        zoom_out_btn.add_css_class("flat")
+        zoom_out_btn.connect("clicked", self._on_zoom_out)
+        
+        # Zoom level label
+        self.zoom_label = Gtk.Label(label="100%")
+        self.zoom_label.set_size_request(50, -1)
+        self.zoom_label.set_halign(Gtk.Align.CENTER)
+        
+        # Zoom in button  
+        zoom_in_btn = Gtk.Button(label="+")
+        zoom_in_btn.set_size_request(30, -1)
+        zoom_in_btn.add_css_class("flat")
+        zoom_in_btn.connect("clicked", self._on_zoom_in)
+        
+        # Add to box
+        self.append(zoom_out_btn)
+        self.append(self.zoom_label)
+        self.append(zoom_in_btn)
+    
+    def _on_zoom_out(self, button):
+        """Handle zoom out button."""
+        if hasattr(self.parent_window, 'activate_action'):
+            self.parent_window.activate_action('zoom-out', None)
+    
+    def _on_zoom_in(self, button):
+        """Handle zoom in button."""
+        if hasattr(self.parent_window, 'activate_action'):
+            self.parent_window.activate_action('zoom-in', None)
+    
+    def update_zoom_level(self, scale: float):
+        """Update the zoom percentage display."""
+        percentage = int(scale * 100)
+        self.zoom_label.set_text(f"{percentage}%")
 
 
 class SessionContextMenu(Gtk.PopoverMenu):
@@ -128,7 +175,7 @@ class MainApplicationMenu:
     """Factory for creating the main application menu."""
     
     @staticmethod
-    def create_menu() -> Gio.Menu:
+    def create_menu(parent_window=None) -> Gio.Menu:
         """
         Create the main application menu structure.
         
@@ -138,25 +185,37 @@ class MainApplicationMenu:
         main_menu = Gio.Menu()
         
         # Terminal actions section
-        main_menu.append(_("Nova Aba"), "win.new-local-tab")
-        main_menu.append(_("Fechar Aba"), "win.close-tab")
-        main_menu.append(_("Nova Janela"), "win.new-window")
+        terminal_section = Gio.Menu()
+        terminal_section.append(_("New Tab"), "win.new-local-tab")
+        terminal_section.append(_("Close Tab"), "win.close-tab")
+        terminal_section.append(_("New Window"), "win.new-window")
+        main_menu.append_section(None, terminal_section)
         
-        # Edit actions section
-        main_menu.append_section(None, Gio.Menu())
-        main_menu.append(_("Copiar"), "win.copy")
-        main_menu.append(_("Colar"), "win.paste")
-        main_menu.append(_("Selecionar Tudo"), "win.select-all")
+        # Widget customizado como no GNOME Console
+        zoom_section = Gio.Menu()
+        zoom_section.append(_("Zoom Out (-)"), "win.zoom-out")
+        zoom_section.append(_("Reset Zoom (100%)"), "win.zoom-reset") 
+        zoom_section.append(_("Zoom In (+)"), "win.zoom-in")
+        main_menu.append_section(None, zoom_section)
+        
+        # Edit actions section  
+        edit_section = Gio.Menu()
+        edit_section.append(_("Copy"), "win.copy")
+        edit_section.append(_("Paste"), "win.paste")
+        edit_section.append(_("Select All"), "win.select-all")
+        main_menu.append_section(None, edit_section)
         
         # Settings and help section
-        main_menu.append_section(None, Gio.Menu())
-        main_menu.append(_("Preferências"), "win.preferences")
-        main_menu.append(_("Atalhos de Teclado"), "win.shortcuts")
+        settings_section = Gio.Menu()
+        settings_section.append(_("Preferences"), "win.preferences")
+        settings_section.append(_("Keyboard Shortcuts"), "win.shortcuts")
+        main_menu.append_section(None, settings_section)
         
         # Application section
-        main_menu.append_section(None, Gio.Menu())
-        main_menu.append(_("Sobre"), "app.about")
-        main_menu.append(_("Sair"), "app.quit")
+        app_section = Gio.Menu()
+        app_section.append(_("About"), "app.about")
+        app_section.append(_("Quit"), "app.quit")
+        main_menu.append_section(None, app_section)
         
         return main_menu
 

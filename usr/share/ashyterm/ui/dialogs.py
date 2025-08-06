@@ -39,7 +39,7 @@ from ..utils.exceptions import (
 from ..utils.security import (
     validate_ssh_hostname, validate_ssh_key_file, validate_file_path,
     SSHKeyValidator, HostnameValidator, InputSanitizer,
-    create_security_auditor, validate_session_data
+    validate_session_data
 )
 from ..utils.platform import (
     get_platform_info, get_ssh_directory, normalize_path,
@@ -87,12 +87,8 @@ class BaseDialog(Adw.Window):
         self.platform_info = get_platform_info()
         self.config_paths = get_config_paths()
         
-        # Security and validation
+        # Security auditor removed
         self.security_auditor = None
-        try:
-            self.security_auditor = create_security_auditor()
-        except Exception as e:
-            self.logger.debug(f"Security auditor not available: {e}")
         
         # Validation state
         self._validation_errors: List[str] = []
@@ -880,9 +876,7 @@ class SessionEditDialog(BaseDialog):
                 if not self._validate_ssh_fields():
                     return False
             
-            # Security validation
-            if not self._validate_security():
-                return False
+            # Security validation removed
             
             # Apply changes to session
             self._apply_changes_to_session()
@@ -951,51 +945,6 @@ class SessionEditDialog(BaseDialog):
             self._show_error_dialog(_("SSH Validation Error"), error_msg)
         
         return valid
-    
-    def _validate_security(self) -> bool:
-        """Perform security validation if auditor is available."""
-        if not self.security_auditor:
-            return True
-        
-        try:
-            # Create temporary session for security audit
-            temp_session = SessionItem(
-                name=self.name_entry.get_text().strip(),
-                session_type="local" if self.type_combo.get_selected() == 0 else "ssh",
-                host=self.host_entry.get_text().strip() if self.type_combo.get_selected() == 1 else "",
-                user=self.user_entry.get_text().strip() if self.type_combo.get_selected() == 1 else "",
-                auth_type="key" if self.auth_combo.get_selected() == 0 else "password" if self.type_combo.get_selected() == 1 else "",
-                auth_value=self._get_auth_value()
-            )
-            
-            # Perform security audit
-            findings = self.security_auditor.audit_ssh_session(temp_session.to_dict())
-            critical_findings = [f for f in findings if f['severity'] == 'critical']
-            
-            if critical_findings:
-                error_msg = _("Critical security issues found:\n")
-                for finding in critical_findings:
-                    error_msg += f"• {finding['message']}\n"
-                
-                self._show_error_dialog(_("Security Validation Error"), error_msg)
-                return False
-            
-            # Warn about high severity issues
-            high_findings = [f for f in findings if f['severity'] == 'high']
-            if high_findings:
-                warning_msg = _("Security warnings found:\n")
-                for finding in high_findings:
-                    warning_msg += f"• {finding['message']}\n"
-                warning_msg += _("\nDo you want to continue anyway?")
-                
-                # This would need to be handled asynchronously in a real implementation
-                self.logger.warning(f"High severity security findings for session: {warning_msg}")
-            
-            return True
-            
-        except Exception as e:
-            self.logger.warning(f"Security validation failed: {e}")
-            return True  # Don't block save if security check fails
     
     def _get_auth_value(self) -> str:
         """Get current authentication value."""
@@ -1441,7 +1390,6 @@ class PreferencesDialog(Adw.PreferencesWindow):
         self._setup_appearance_page()
         self._setup_behavior_page()
         self._setup_shortcuts_page()
-        self._setup_security_page()
         self._setup_backup_page()
         self._setup_advanced_page()
         
@@ -1656,7 +1604,7 @@ class PreferencesDialog(Adw.PreferencesWindow):
             }
             
             app_shortcuts = {
-                "preferences": _("Preferences"),
+                "preferences": _("Preferences"), 
                 "quit": _("Quit Application"),
                 "toggle-sidebar": _("Toggle Sidebar"),
                 "new-window": _("New Window")
@@ -1702,67 +1650,6 @@ class PreferencesDialog(Adw.PreferencesWindow):
                 
         except Exception as e:
             self.logger.error(f"Failed to create shortcut rows: {e}")
-    
-    def _setup_security_page(self) -> None:
-        """Set up security preferences page."""
-        try:
-            security_page = Adw.PreferencesPage(
-                title=_("Security"),
-                icon_name="security-high-symbolic"
-            )
-            self.add(security_page)
-            
-            # Security settings group
-            security_group = Adw.PreferencesGroup(
-                title=_("Security Settings"),
-                description=_("Configure security and privacy options")
-            )
-            security_page.add(security_group)
-            
-            # Security warnings
-            warnings_row = Adw.SwitchRow(
-                title=_("Security Warnings"),
-                subtitle=_("Show warnings for potential security issues")
-            )
-            warnings_row.set_active(self.settings_manager.get("security_warnings", True))
-            warnings_row.connect("notify::active", lambda r, p: self._on_setting_changed("security_warnings", r.get_active()))
-            security_group.add(warnings_row)
-            
-            # Audit sessions
-            audit_row = Adw.SwitchRow(
-                title=_("Audit Sessions"),
-                subtitle=_("Automatically audit SSH sessions for security issues")
-            )
-            audit_row.set_active(self.settings_manager.get("audit_sessions", True))
-            audit_row.connect("notify::active", lambda r, p: self._on_setting_changed("audit_sessions", r.get_active()))
-            security_group.add(audit_row)
-            
-            # Encrypt passwords
-            encrypt_row = Adw.SwitchRow(
-                title=_("Encrypt Passwords"),
-                subtitle=_("Encrypt stored passwords (requires cryptography library)")
-            )
-            encrypt_row.set_active(self.settings_manager.get("encrypt_passwords", True))
-            encrypt_row.set_sensitive(is_encryption_available())
-            if not is_encryption_available():
-                encrypt_row.set_subtitle(_("Encrypt stored passwords (cryptography library not available)"))
-            encrypt_row.connect("notify::active", lambda r, p: self._on_setting_changed("encrypt_passwords", r.get_active()))
-            security_group.add(encrypt_row)
-            
-            # Secure file permissions
-            permissions_row = Adw.SwitchRow(
-                title=_("Secure File Permissions"),
-                subtitle=_("Set restrictive permissions on configuration files")
-            )
-            permissions_row.set_active(self.settings_manager.get("secure_file_permissions", True))
-            if is_windows():
-                permissions_row.set_sensitive(False)
-                permissions_row.set_subtitle(_("Secure file permissions (not available on Windows)"))
-            permissions_row.connect("notify::active", lambda r, p: self._on_setting_changed("secure_file_permissions", r.get_active()))
-            security_group.add(permissions_row)
-            
-        except Exception as e:
-            self.logger.error(f"Failed to setup security page: {e}")
     
     def _setup_backup_page(self) -> None:
         """Set up backup preferences page."""

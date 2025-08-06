@@ -262,10 +262,10 @@ class CommTerminalApp(Adw.Application):
             
             self._update_window_shortcuts()
             
-            self.logger.debug(_("Keyboard shortcuts configured"))
+            self.logger.debug("Keyboard shortcuts configured")
             
         except Exception as e:
-            self.logger.error(_("Failed to setup keyboard shortcuts: {}").format(e))
+            self.logger.error(f"Failed to setup keyboard shortcuts: {e}")
     
     def _update_window_shortcuts(self) -> None:
         """Update window-level keyboard shortcuts from settings."""
@@ -273,7 +273,18 @@ class CommTerminalApp(Adw.Application):
             if not self.settings_manager:
                 return
             
-            shortcut_actions = ["new-local-tab", "close-tab", "copy", "paste"]
+            shortcut_actions = [
+                "new-local-tab",
+                "close-tab",
+                "copy",
+                "paste",
+                "select-all",
+                "toggle-sidebar",
+                "new-window",
+                "zoom-in",
+                "zoom-out",
+                "zoom-reset"
+            ]
             
             for action_name in shortcut_actions:
                 shortcut = self.settings_manager.get_shortcut(action_name)
@@ -282,10 +293,10 @@ class CommTerminalApp(Adw.Application):
                 else:
                     self.set_accels_for_action(f"win.{action_name}", [])
             
-            self.logger.debug(_("Window shortcuts updated"))
+            self.logger.debug("Window shortcuts updated")
             
         except Exception as e:
-            self.logger.error(_("Failed to update window shortcuts: {}").format(e))
+            self.logger.error(f"Failed to update window shortcuts: {e}")
     
     def _on_activate(self, app) -> None:
         """Handle application activation."""
@@ -310,9 +321,17 @@ class CommTerminalApp(Adw.Application):
             self._show_error_dialog(_("Activation Error"), _("Failed to activate application: {}").format(e))
     
     def _on_quit_action(self, action, param) -> None:
-        """Handle quit action."""
-        self.logger.info(_("Quit action triggered"))
-        self.quit()
+        """Handle quit action with SSH session confirmation."""
+        try:
+            # Check for active SSH sessions before quitting
+            if self._has_active_ssh_sessions():
+                self._show_ssh_close_confirmation()
+            else:
+                self.logger.info(_("Quit action triggered - no SSH sessions"))
+                self.quit()
+        except Exception as e:
+            self.logger.error(_("Quit action failed: {}").format(e))
+            self.quit()  # Force quit on error
     
     def _on_preferences_action(self, action, param) -> None:
         """Handle preferences action."""
@@ -339,7 +358,7 @@ class CommTerminalApp(Adw.Application):
                 transient_for=self.get_active_window(),
                 modal=True,
                 application_name=APP_TITLE,
-                application_icon=APP_ID,
+                application_icon="ashyterm",
                 developer_name=DEVELOPER_NAME,
                 version=APP_VERSION,
                 developers=DEVELOPER_TEAM,
@@ -450,6 +469,60 @@ class CommTerminalApp(Adw.Application):
             
         except Exception as e:
             self.logger.error(_("Failed to show log info: {}").format(e))
+            
+    def _has_active_ssh_sessions(self) -> bool:
+        """Check if there are active SSH sessions across all windows."""
+        try:
+            for window in self.get_windows():
+                if hasattr(window, 'get_terminal_manager'):
+                    terminal_manager = window.get_terminal_manager()
+                    if hasattr(terminal_manager, 'has_active_ssh_sessions'):
+                        if terminal_manager.has_active_ssh_sessions():
+                            return True
+            return False
+        except Exception as e:
+            self.logger.error(_("Failed to check SSH sessions: {}").format(e))
+            return False
+
+    def _show_ssh_close_confirmation(self) -> None:
+        """Show confirmation dialog for active SSH sessions."""
+        try:
+            active_window = self.get_active_window()
+            if not active_window:
+                # No active window, just quit
+                self.quit()
+                return
+            
+            dialog = Adw.MessageDialog(
+                transient_for=active_window,
+                title=_("Close Application"),
+                body=_("There are active SSH connections. Closing will disconnect all sessions.\n\nAre you sure you want to close the application?")
+            )
+            
+            dialog.add_response("cancel", _("Cancel"))
+            dialog.add_response("close", _("Close All"))
+            dialog.set_response_appearance("close", Adw.ResponseAppearance.DESTRUCTIVE)
+            dialog.set_default_response("cancel")
+            
+            def on_response(dlg, response_id):
+                try:
+                    if response_id == "close":
+                        self.logger.info(_("User confirmed quit with active SSH sessions"))
+                        self.quit()
+                    else:
+                        self.logger.debug(_("User cancelled quit"))
+                    dlg.close()
+                except Exception as e:
+                    self.logger.error(_("SSH close confirmation response failed: {}").format(e))
+                    dlg.close()
+            
+            dialog.connect("response", on_response)
+            dialog.present()
+            
+        except Exception as e:
+            self.logger.error(_("SSH close confirmation dialog failed: {}").format(e))
+            # Fallback to quit if dialog fails
+            self.quit()
     
     def _on_shutdown(self, app) -> None:
         """Handle application shutdown."""
@@ -605,8 +678,11 @@ class CommTerminalApp(Adw.Application):
         try:
             from .window import CommTerminalWindow
             window = CommTerminalWindow(application=self, settings_manager=self.settings_manager)
-            self.logger.info(_("New window created"))
+            self.add_window(window)
+            
+            self.logger.info(_("New window created successfully"))
             return window
+            
         except Exception as e:
             self.logger.error(_("Failed to create new window: {}").format(e))
             raise

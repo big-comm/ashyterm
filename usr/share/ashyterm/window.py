@@ -99,12 +99,8 @@ class CommTerminalWindow(Adw.ApplicationWindow):
                 self.logger.critical("VTE not available")
                 raise VTENotAvailableError()
             
-            # Initialize security auditor
-            try:
-                self.security_auditor = create_security_auditor()
-                self.logger.debug("Security auditor initialized")
-            except Exception as e:
-                self.logger.warning(f"Security auditor initialization failed: {e}")
+            # Security auditor removed
+            self.security_auditor = None
             
             # Initialize component managers
             self.terminal_manager = TerminalManager(self, self.settings_manager)
@@ -157,6 +153,11 @@ class CommTerminalWindow(Adw.ApplicationWindow):
                 ("paste", self._on_paste),
                 ("select-all", self._on_select_all),
                 
+                # Zoom actions
+                ("zoom-in", self._on_zoom_in),
+                ("zoom-out", self._on_zoom_out),
+                ("zoom-reset", self._on_zoom_reset),
+                
                 # Session actions
                 ("edit-session", self._on_edit_session),
                 ("duplicate-session", self._on_duplicate_session),
@@ -180,11 +181,13 @@ class CommTerminalWindow(Adw.ApplicationWindow):
                 ("add-session-root", self._on_add_session_root),
                 ("add-folder-root", self._on_add_folder_root),
                 
+                # Interface actions
+                ("toggle-sidebar", self._on_toggle_sidebar_action),
+                
                 # Preferences and utilities
                 ("preferences", self._on_preferences),
                 ("shortcuts", self._on_shortcuts),
                 ("new-window", self._on_new_window),
-                ("audit-security", self._on_audit_security),
             ]
             
             for action_name, callback in actions:
@@ -250,13 +253,6 @@ class CommTerminalWindow(Adw.ApplicationWindow):
             self.toggle_sidebar_button.set_tooltip_text(_("Toggle Sidebar"))
             self.toggle_sidebar_button.connect("toggled", self._on_toggle_sidebar)
             header_bar.pack_start(self.toggle_sidebar_button)
-            
-            # Security audit button (if security auditor available)
-            if self.security_auditor:
-                audit_button = Gtk.Button.new_from_icon_name("security-high-symbolic")
-                audit_button.set_tooltip_text(_("Security Audit"))
-                audit_button.set_action_name("win.audit-security")
-                header_bar.pack_start(audit_button)
             
             # Main menu button
             menu_button = Gtk.MenuButton()
@@ -501,19 +497,64 @@ class CommTerminalWindow(Adw.ApplicationWindow):
             self.logger.error(f"Terminal focus change handling failed: {e}")
     
     def _on_window_close_request(self, window) -> bool:
-        """Handle window close request."""
+        """Handle window close request with SSH session confirmation."""
         try:
-            self.logger.info("Window close request received")
+            self.logger.info(_("Window close request received"))
             
-            # Perform cleanup
+            # Check for active SSH sessions in this window
+            if self.terminal_manager.has_active_ssh_sessions():
+                self._show_window_ssh_close_confirmation()
+                return Gdk.EVENT_STOP  # Prevent default close
+            
+            # No SSH sessions, allow normal close
             self._perform_cleanup()
-            
-            self.logger.info("Window cleanup completed")
+            self.logger.info(_("Window cleanup completed"))
             return Gdk.EVENT_PROPAGATE
             
         except Exception as e:
-            self.logger.error(f"Window close handling failed: {e}")
+            self.logger.error(_("Window close handling failed: {}").format(e))
             return Gdk.EVENT_PROPAGATE
+        
+    def _show_window_ssh_close_confirmation(self) -> None:
+        """Show confirmation dialog for closing window with active SSH sessions."""
+        try:
+            ssh_sessions = self.terminal_manager.get_active_ssh_session_names()
+            session_list = "\n".join([f"• {name}" for name in ssh_sessions])
+            
+            body_text = _("This window has active SSH connections:\n\n{sessions}\n\nClosing will disconnect these sessions.\n\nAre you sure you want to close this window?").format(sessions=session_list)
+            
+            dialog = Adw.MessageDialog(
+                transient_for=self,
+                title=_("Close Window"),
+                body=body_text
+            )
+            
+            dialog.add_response("cancel", _("Cancel"))
+            dialog.add_response("close", _("Close Window"))
+            dialog.set_response_appearance("close", Adw.ResponseAppearance.DESTRUCTIVE)
+            dialog.set_default_response("cancel")
+            
+            def on_response(dlg, response_id):
+                try:
+                    if response_id == "close":
+                        self.logger.info(_("User confirmed window close with active SSH sessions"))
+                        self._perform_cleanup()
+                        self.close()
+                    else:
+                        self.logger.debug(_("User cancelled window close"))
+                    dlg.close()
+                except Exception as e:
+                    self.logger.error(_("Window SSH close confirmation response failed: {}").format(e))
+                    dlg.close()
+            
+            dialog.connect("response", on_response)
+            dialog.present()
+            
+        except Exception as e:
+            self.logger.error(_("Window SSH close confirmation dialog failed: {}").format(e))
+            # Fallback to normal close if dialog fails
+            self._perform_cleanup()
+            self.close()
     
     def _perform_cleanup(self) -> None:
         """Fast cleanup without hanging."""
@@ -543,28 +584,18 @@ class CommTerminalWindow(Adw.ApplicationWindow):
             if not VTE_AVAILABLE:
                 raise VTENotAvailableError()
             
-            # Validate session before activation
-            if self.security_auditor:
-                try:
-                    session_data = session.to_dict()
-                    is_valid, errors = validate_session_data(session_data)
+            # Basic session validation
+            try:
+                session_data = session.to_dict()
+                is_valid, errors = validate_session_data(session_data)
+                
+                if not is_valid:
+                    error_msg = _("Session validation failed:\n{errors}").format(errors="\n".join(errors))
+                    self._show_error_dialog(_("Session Validation Error"), error_msg)
+                    return
                     
-                    if not is_valid:
-                        error_msg = _("Session validation failed:\n{errors}").format(errors="\n".join(errors))
-                        self._show_error_dialog(_("Session Validation Error"), error_msg)
-                        return
-                    
-                    # Perform security audit
-                    findings = self.security_auditor.audit_ssh_session(session_data)
-                    high_severity_findings = [f for f in findings if f['severity'] in ['high', 'critical']]
-                    
-                    if high_severity_findings:
-                        self.logger.warning(f"High severity security findings for session {session.name}")
-                        for finding in high_severity_findings:
-                            self.logger.warning(f"Security: {finding['message']}")
-                    
-                except Exception as e:
-                    self.logger.warning(f"Session security validation failed: {e}")
+            except Exception as e:
+                self.logger.warning(f"Session validation failed: {e}")
             
             # Create new tab for session
             if session.is_local():
@@ -685,6 +716,33 @@ class CommTerminalWindow(Adw.ApplicationWindow):
             self.tab_manager.select_all_in_current_terminal()
         except Exception as e:
             self.logger.error(f"Select all operation failed: {e}")
+            
+    def _on_zoom_in(self, action, param) -> None:
+        """Handle zoom in action."""
+        try:
+            success = self.tab_manager.zoom_in_current_terminal()
+            if not success:
+                self.logger.debug("Zoom in failed - no terminal available")
+        except Exception as e:
+            self.logger.error(f"Zoom in action failed: {e}")
+
+    def _on_zoom_out(self, action, param) -> None:
+        """Handle zoom out action."""
+        try:
+            success = self.tab_manager.zoom_out_current_terminal()
+            if not success:
+                self.logger.debug("Zoom out failed - no terminal available")
+        except Exception as e:
+            self.logger.error(f"Zoom out action failed: {e}")
+
+    def _on_zoom_reset(self, action, param) -> None:
+        """Handle zoom reset action."""
+        try:
+            success = self.tab_manager.zoom_reset_current_terminal()
+            if not success:
+                self.logger.debug("Zoom reset failed - no terminal available")
+        except Exception as e:
+            self.logger.error(f"Zoom reset action failed: {e}")
     
     # Action handlers - Session actions
     def _on_edit_session(self, action, param) -> None:
@@ -848,7 +906,7 @@ class CommTerminalWindow(Adw.ApplicationWindow):
             
             # Create shortcuts section
             section = Gtk.ShortcutsSection(
-                title=_("Atalhos de Teclado"),
+                title=_("Keyboard Shortcuts"),
                 section_name="shortcuts"
             )
             
@@ -858,12 +916,12 @@ class CommTerminalWindow(Adw.ApplicationWindow):
             )
             
             terminal_shortcuts = [
-                (_("Nova Aba"), "<Control>t"),
-                (_("Fechar Aba"), "<Control>w"),
-                (_("Nova Janela"), "<Control>n"),
-                (_("Copiar"), "<Control><Shift>c"),
-                (_("Colar"), "<Control><Shift>v"),
-                (_("Selecionar Tudo"), "<Control><Shift>a"),
+                (_("New Tab"), "<Control>t"),
+                (_("Close Tab"), "<Control>w"),
+                (_("New Window"), "<Control>n"),
+                (_("Copy"), "<Control><Shift>c"),
+                (_("Paste"), "<Control><Shift>v"),
+                (_("Select All"), "<Control><Shift>a"),
             ]
             
             for title, accel in terminal_shortcuts:
@@ -871,36 +929,36 @@ class CommTerminalWindow(Adw.ApplicationWindow):
                     title=title,
                     accelerator=accel
                 )
-                terminal_group.add_child(shortcut)
-            
+                terminal_group.append(shortcut)
+
             # Application shortcuts
             app_group = Gtk.ShortcutsGroup(
-                title=_("Aplicação")
+                title=_("Application")
             )
-            
+
             app_shortcuts = [
-                (_("Preferências"), "<Control>comma"),
-                (_("Alternar Barra Lateral"), "F9"),
-                (_("Sair"), "<Control>q"),
+                (_("Preferences"), "<Control>comma"),
+                (_("Toggle Sidebar"), "<Control><Shift>h"),
+                (_("Quit"), "<Control>q"),
             ]
-            
+
             for title, accel in app_shortcuts:
                 shortcut = Gtk.ShortcutsShortcut(
                     title=title,
                     accelerator=accel
                 )
-                app_group.add_child(shortcut)
+                app_group.append(shortcut)
             
-            section.add_child(terminal_group)
-            section.add_child(app_group)
-            shortcuts_window.add_child(section)
+            section.append(terminal_group)
+            section.append(app_group)
+            shortcuts_window.add_section(section)
             
             shortcuts_window.present()
             
         except Exception as e:
             self.logger.error(f"Shortcuts window failed: {e}")
-            self._show_error_dialog(_("Atalhos de Teclado"), 
-                                _("Falha ao abrir janela de atalhos: {error}").format(error=str(e)))
+            self._show_error_dialog(_("Keyboard Shortcuts"), 
+                                _("Failed to open shortcuts window: {error}").format(error=str(e)))
 
     def _on_new_window(self, action, param) -> None:
         """Handle new window action."""
@@ -908,49 +966,36 @@ class CommTerminalWindow(Adw.ApplicationWindow):
             # Get the application and create new window
             app = self.get_application()
             if app and hasattr(app, 'create_new_window'):
-                app.create_new_window()
+                new_window = app.create_new_window()
+                if new_window:
+                    new_window.present()
+                else:
+                    self._show_error_dialog(_("Nova Janela"), 
+                                        _("Falha ao criar nova janela"))
             else:
                 self._show_error_dialog(_("Nova Janela"), 
-                                    _("Não foi possível criar uma nova janela."))
+                                    _("Não foi possível criar uma nova janela"))
             
         except Exception as e:
             self.logger.error(f"New window creation failed: {e}")
             self._show_error_dialog(_("Nova Janela"), 
                                 _("Falha ao criar nova janela: {error}").format(error=str(e)))
-    
-    def _on_audit_security(self, action, param) -> None:
-        """Handle security audit action."""
+            
+    def _on_toggle_sidebar_action(self, action, param) -> None:
+        """Handle toggle sidebar action via keyboard shortcut."""
         try:
-            if not self.security_auditor:
-                self._show_error_dialog(_("Security Audit"), _("Security auditor not available"))
-                return
+            self.logger.info("DEBUG: Toggle sidebar action called!")
             
-            # Audit all sessions
-            findings_count = 0
-            sessions_audited = 0
+            # Toggle the button state which will trigger the visibility change
+            current_state = self.toggle_sidebar_button.get_active()
+            self.logger.info(f"DEBUG: Current sidebar state: {current_state}")
             
-            for i in range(self.session_store.get_n_items()):
-                session = self.session_store.get_item(i)
-                if isinstance(session, SessionItem):
-                    sessions_audited += 1
-                    findings = self.security_auditor.audit_ssh_session(session.to_dict())
-                    
-                    for finding in findings:
-                        if finding['severity'] in ['medium', 'high', 'critical']:
-                            findings_count += 1
-                            self.logger.warning(f"Security audit - {session.name}: {finding['message']}")
+            self.toggle_sidebar_button.set_active(not current_state)
             
-            # Show summary
-            if findings_count == 0:
-                message = _("Security audit completed. {sessions} sessions audited. No significant issues found.").format(sessions=sessions_audited)
-            else:
-                message = _("Security audit completed. {sessions} sessions audited. {issues} issues found. Check logs for details.").format(sessions=sessions_audited, issues=findings_count)
-            
-            self._show_info_dialog(_("Security Audit Complete"), message)
+            self.logger.debug(f"Sidebar toggled via keyboard shortcut: {not current_state}")
             
         except Exception as e:
-            self.logger.error(f"Security audit failed: {e}")
-            self._show_error_dialog(_("Security Audit Error"), _("Security audit failed: {error}").format(error=str(e)))
+            self.logger.error(f"Toggle sidebar action failed: {e}")
     
     # Button handlers
     def _on_add_session_clicked(self, button) -> None:

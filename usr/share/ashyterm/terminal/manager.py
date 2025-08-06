@@ -23,7 +23,7 @@ from ..utils.exceptions import (
     TerminalError, TerminalCreationError, TerminalSpawnError, VTENotAvailableError,
     handle_exception, ErrorCategory, ErrorSeverity, AshyTerminalError
 )
-from ..utils.security import validate_session_data, create_security_auditor
+from ..utils.security import validate_session_data
 from ..utils.platform import get_platform_info, get_environment_manager
 
 
@@ -153,12 +153,8 @@ class TerminalManager:
         self._creation_lock = threading.Lock()
         self._cleanup_lock = threading.Lock()
         
-        # Security
+        # Security auditor removed
         self.security_auditor = None
-        try:
-            self.security_auditor = create_security_auditor()
-        except Exception as e:
-            self.logger.warning(f"Security auditor not available: {e}")
         
         # Callbacks for terminal events
         self.on_terminal_child_exited: Optional[Callable] = None
@@ -255,17 +251,7 @@ class TerminalManager:
                     error_msg = f"Session validation failed: {', '.join(errors)}"
                     raise TerminalCreationError(error_msg, "ssh")
                 
-                # Security audit if available
-                if self.security_auditor:
-                    try:
-                        findings = self.security_auditor.audit_ssh_session(session_data)
-                        critical_findings = [f for f in findings if f['severity'] == 'critical']
-                        if critical_findings:
-                            self.logger.warning(f"Critical security issues found for session '{session.name}'")
-                            for finding in critical_findings:
-                                self.logger.warning(f"Security: {finding['message']}")
-                    except Exception as e:
-                        self.logger.warning(f"Security audit failed for session '{session.name}': {e}")
+                # Security audit removed
                 
                 # Create base terminal
                 terminal = self._create_base_terminal()
@@ -717,6 +703,114 @@ class TerminalManager:
             
         except GLib.Error as e:
             self.logger.warning(f"Select all operation failed: {e.message}")
+            
+    def zoom_in(self, terminal: Vte.Terminal, step: float = 0.1) -> bool:
+        """
+        Increase terminal font scale.
+        
+        Args:
+            terminal: Terminal to zoom in
+            step: Zoom step increment (default: 0.1 = 10%)
+            
+        Returns:
+            True if zoom was successful
+        """
+        try:
+            current_scale = terminal.get_font_scale()
+            new_scale = min(current_scale + step, 3.0)  # Max 300%
+            terminal.set_font_scale(new_scale)
+            
+            # Update settings
+            self.settings_manager.set("font_scale", new_scale, save_immediately=False)
+            
+            self.logger.debug(f"Terminal zoomed in: {current_scale:.1f} -> {new_scale:.1f}")
+            return True
+            
+        except Exception as e:
+            self.logger.error(f"Zoom in failed: {e}")
+            return False
+
+    def zoom_out(self, terminal: Vte.Terminal, step: float = 0.1) -> bool:
+        """
+        Decrease terminal font scale.
+        
+        Args:
+            terminal: Terminal to zoom out
+            step: Zoom step decrement (default: 0.1 = 10%)
+            
+        Returns:
+            True if zoom was successful
+        """
+        try:
+            current_scale = terminal.get_font_scale()
+            new_scale = max(current_scale - step, 0.3)  # Min 30%
+            terminal.set_font_scale(new_scale)
+            
+            # Update settings
+            self.settings_manager.set("font_scale", new_scale, save_immediately=False)
+            
+            self.logger.debug(f"Terminal zoomed out: {current_scale:.1f} -> {new_scale:.1f}")
+            return True
+            
+        except Exception as e:
+            self.logger.error(f"Zoom out failed: {e}")
+            return False
+
+    def zoom_reset(self, terminal: Vte.Terminal) -> bool:
+        """
+        Reset terminal font scale to 100%.
+        
+        Args:
+            terminal: Terminal to reset zoom
+            
+        Returns:
+            True if reset was successful
+        """
+        try:
+            terminal.set_font_scale(1.0)
+            
+            # Update settings
+            self.settings_manager.set("font_scale", 1.0, save_immediately=False)
+            
+            self.logger.debug("Terminal zoom reset to 100%")
+            return True
+            
+        except Exception as e:
+            self.logger.error(f"Zoom reset failed: {e}")
+            return False
+
+    def apply_zoom_to_all_terminals(self, scale: float) -> int:
+        """
+        Apply zoom scale to all managed terminals.
+        
+        Args:
+            scale: Font scale to apply (1.0 = 100%)
+            
+        Returns:
+            Number of terminals updated
+        """
+        try:
+            terminal_ids = self.registry.get_all_terminal_ids()
+            updated_count = 0
+            
+            for terminal_id in terminal_ids:
+                terminal = self.registry.get_terminal(terminal_id)
+                if terminal and terminal.get_realized():
+                    try:
+                        terminal.set_font_scale(scale)
+                        updated_count += 1
+                    except Exception as e:
+                        self.logger.warning(f"Failed to apply zoom to terminal ID {terminal_id}: {e}")
+            
+            # Update settings
+            self.settings_manager.set("font_scale", scale, save_immediately=False)
+            
+            self.logger.info(f"Applied zoom {scale:.1f} to {updated_count} terminals")
+            return updated_count
+            
+        except Exception as e:
+            self.logger.error(f"Failed to apply zoom to all terminals: {e}")
+            return 0
     
     def get_statistics(self) -> Dict[str, Any]:
         """
@@ -758,3 +852,70 @@ class TerminalManager:
         except Exception as e:
             self.logger.error(f"Failed to get terminal info: {e}")
             return None
+        
+    def has_active_ssh_sessions(self) -> bool:
+        """Check if there are active SSH sessions in this terminal manager."""
+        try:
+            terminal_ids = self.registry.get_all_terminal_ids()
+            
+            for terminal_id in terminal_ids:
+                terminal_info = self.registry.get_terminal_info(terminal_id)
+                
+                if terminal_info and terminal_info.get('type') == 'ssh':
+                    # Use process_id from registry instead of calling get_child_pid
+                    process_id = terminal_info.get('process_id')
+                    status = terminal_info.get('status', '')
+                    
+                    if process_id and process_id > 0 and status not in ['exited', 'spawn_failed']:
+                        return True
+            
+            return False
+        except Exception as e:
+            self.logger.error(f"Failed to check SSH sessions: {e}")
+            return False
+
+    def get_active_ssh_session_names(self) -> list:
+        """Get list of active SSH session names."""
+        try:
+            ssh_sessions = []
+            terminal_ids = self.registry.get_all_terminal_ids()
+            
+            for terminal_id in terminal_ids:
+                terminal_info = self.registry.get_terminal_info(terminal_id)
+                
+                if terminal_info and terminal_info.get('type') == 'ssh':
+                    process_id = terminal_info.get('process_id')
+                    status = terminal_info.get('status', '')
+                    
+                    if process_id and process_id > 0 and status not in ['exited', 'spawn_failed']:
+                        # Get session info from identifier
+                        identifier = terminal_info.get('identifier')
+                        if hasattr(identifier, 'name') and hasattr(identifier, 'get_connection_string'):
+                            connection_string = identifier.get_connection_string()
+                            ssh_sessions.append(f"{identifier.name} ({connection_string})")
+                        else:
+                            ssh_sessions.append(str(identifier))
+            return ssh_sessions
+        except Exception as e:
+            self.logger.error(f"Failed to get SSH session names: {e}")
+            return []
+
+    def get_active_ssh_count(self) -> int:
+        """Get count of active SSH sessions."""
+        try:
+            count = 0
+            terminal_ids = self.registry.get_all_terminal_ids()
+            
+            for terminal_id in terminal_ids:
+                terminal_info = self.registry.get_terminal_info(terminal_id)
+                
+                if terminal_info and terminal_info.get('type') == 'ssh':
+                    process_id = terminal_info.get('process_id')
+                    status = terminal_info.get('status', '')
+                    
+                    if process_id and process_id > 0 and status not in ['exited', 'spawn_failed']:
+                        count += 1
+            return count
+        except Exception as e:
+            self.logger.error(f"Failed to count SSH sessions: {e}")
+            return 0

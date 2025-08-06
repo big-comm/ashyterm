@@ -280,6 +280,7 @@ class DefaultSettings:
             "mouse_autohide": True,
             "cursor_blink": True,
             "bell_sound": False,
+            "font_scale": 1.0, # Zoom level (1.0 = 100%)
             
             # Session management
             "restore_sessions": True,
@@ -318,7 +319,7 @@ class DefaultSettings:
                 "preferences": "<Control>comma",
                 "quit": "<Control>q",
                 "new-window": "<Control>n",
-                "toggle-sidebar": "F9",
+                "toggle-sidebar": "<Control><Shift>h",
                 "find": "<Control>f",
                 "zoom-in": "<Control>plus",
                 "zoom-out": "<Control>minus",
