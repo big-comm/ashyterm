@@ -262,7 +262,6 @@ class DefaultSettings:
             # Appearance settings
             "color_scheme": 0,  # Index in COLOR_SCHEME_MAP
             "transparency": 0,  # Percentage (0-100)
-            "terminal_blur": 0,  # Blur intensity (0-10px)
             "font": "Monospace 10",
             
             # UI behavior

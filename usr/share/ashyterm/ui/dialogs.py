@@ -1367,7 +1367,6 @@ class PreferencesDialog(Adw.PreferencesWindow):
     __gsignals__ = {
         "color-scheme-changed": (GObject.SignalFlags.RUN_FIRST, None, (int,)),
         "transparency-changed": (GObject.SignalFlags.RUN_FIRST, None, (float,)),
-        "blur-changed": (GObject.SignalFlags.RUN_FIRST, None, (float,)),
         "font-changed": (GObject.SignalFlags.RUN_FIRST, None, (str,)),
         "shortcut-changed": (GObject.SignalFlags.RUN_FIRST, None, ()),
         "setting-changed": (GObject.SignalFlags.RUN_FIRST, None, (str, object)),
@@ -1453,28 +1452,6 @@ class PreferencesDialog(Adw.PreferencesWindow):
             transparency_row.add_suffix(self.transparency_scale)
             transparency_row.set_activatable_widget(self.transparency_scale)
             colors_group.add(transparency_row)
-
-            # Terminal blur
-            blur_row = Adw.ActionRow(
-                title=_("Terminal Blur"),
-                subtitle=_("Apply blur effect to terminal background")
-            )
-
-            self.blur_scale = Gtk.Scale.new_with_range(Gtk.Orientation.HORIZONTAL, 0, 10, 0.5)
-            self.blur_scale.set_value(self.settings_manager.get("terminal_blur", 0))
-            self.blur_scale.set_draw_value(True)
-            self.blur_scale.set_value_pos(Gtk.PositionType.RIGHT)
-            self.blur_scale.set_hexpand(True)
-            self.blur_scale.connect("value-changed", self._on_blur_changed)
-
-            # Add marks for reference
-            self.blur_scale.add_mark(0, Gtk.PositionType.BOTTOM, _("Off"))
-            self.blur_scale.add_mark(5, Gtk.PositionType.BOTTOM, _("Medium"))
-            self.blur_scale.add_mark(10, Gtk.PositionType.BOTTOM, _("High"))
-
-            blur_row.add_suffix(self.blur_scale)
-            blur_row.set_activatable_widget(self.blur_scale)
-            colors_group.add(blur_row)
 
             # Font
             font_row = Adw.ActionRow(

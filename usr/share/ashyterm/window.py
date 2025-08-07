@@ -925,7 +925,6 @@ class CommTerminalWindow(Adw.ApplicationWindow):
             # Connect signals for live updates
             dialog.connect("color-scheme-changed", lambda d, i: self.terminal_manager.update_all_terminals())
             dialog.connect("transparency-changed", lambda d, v: self.terminal_manager.update_all_terminals())
-            dialog.connect("blur-changed", lambda d, v: self.terminal_manager.update_all_terminals())
             dialog.connect("font-changed", lambda d, f: self.terminal_manager.update_all_terminals())
             dialog.connect("shortcut-changed", lambda d: self._update_keyboard_shortcuts())
             
