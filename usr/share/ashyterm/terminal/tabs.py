@@ -9,7 +9,7 @@ gi.require_version("Gtk", "4.0")
 gi.require_version("Adw", "1")
 gi.require_version("Vte", "3.91")
 
-from gi.repository import Gtk, Adw, Gio, GLib
+from gi.repository import Gtk, Adw, Gio, GLib, Gdk
 from gi.repository import Vte
 
 from ..sessions.models import SessionItem
@@ -185,6 +185,9 @@ class TabRegistry:
 
 class TabManager:
     """Enhanced tab manager with comprehensive functionality and thread safety."""
+    
+    # Factor to reduce scroll sensitivity. 0.3 = 30% of the original speed.
+    SCROLL_SENSITIVITY_FACTOR = 0.3
     
     def __init__(self, terminal_manager: TerminalManager):
         """
@@ -363,18 +366,15 @@ class TabManager:
                                title: str, icon_name: str, tab_type: str) -> Optional[Adw.TabPage]:
         """
         Create a tab page for a terminal widget with comprehensive setup.
-        
-        Args:
-            terminal: Terminal widget
-            title: Tab title
-            icon_name: Icon name for the tab
-            tab_type: Type of tab ('local' or 'ssh')
-            
-        Returns:
-            Created TabPage or None if failed
         """
         try:
             self.logger.debug(f"Creating tab page for terminal: '{title}' (type: {tab_type})")
+            
+            # Adds scroll controller to decrease sensitivity
+            scroll_controller = Gtk.EventControllerScroll()
+            scroll_controller.set_flags(Gtk.EventControllerScrollFlags.VERTICAL)
+            scroll_controller.connect("scroll", self._on_terminal_scroll)
+            terminal.add_controller(scroll_controller)
             
             # Wrap terminal in scrolled window
             scrolled_window = Gtk.ScrolledWindow()
@@ -410,6 +410,44 @@ class TabManager:
         except Exception as e:
             self.logger.error(f"Tab page creation failed for '{title}': {e}")
             raise UIError("tab_creation", f"failed to create tab page: {e}")
+        
+    def _on_terminal_scroll(self, controller: Gtk.EventControllerScroll, dx: float, dy: float) -> bool:
+        """
+        Handles terminal scroll events to reduce sensitivity.
+        
+        Args:
+            controller: The scroll event controller.
+            dx: The horizontal scroll delta.
+            dy: The vertical scroll delta.
+            
+        Returns:
+            True to stop the event from propagating further.
+        """
+        try:
+            terminal = controller.get_widget()
+            scrolled_window = terminal.get_parent()
+
+            if not isinstance(scrolled_window, Gtk.ScrolledWindow):
+                return Gdk.EVENT_PROPAGATE
+
+            vadjustment = scrolled_window.get_vadjustment()
+            if vadjustment:
+                # Get the step increment (what one "unit" of scroll does)
+                step = vadjustment.get_step_increment()
+                
+                # Calculate the new roll amount with the sensitivity factor
+                scroll_amount = dy * step * self.SCROLL_SENSITIVITY_FACTOR
+                
+                # Apply the new scroll
+                new_value = vadjustment.get_value() + scroll_amount
+                vadjustment.set_value(new_value)
+                
+                # Prevents the original (very fast) scroll event from being processed
+                return Gdk.EVENT_STOP
+        except Exception as e:
+            self.logger.warning(f"Error handling custom scroll: {e}")
+
+        return Gdk.EVENT_PROPAGATE
     
     def _schedule_terminal_focus(self, terminal: Vte.Terminal, title: str) -> None:
         """
