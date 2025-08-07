@@ -1,3 +1,5 @@
+# window.py
+
 from typing import Optional, Union
 import os
 import threading
@@ -75,15 +77,7 @@ class CommTerminalWindow(Adw.ApplicationWindow):
         self._last_tab_creation = 0
         self._cleanup_performed = False
         self._force_closing = False
-        
-        # Clipboard for copy/paste operations
-        self._clipboard_item: Optional[Union[SessionItem, SessionFolder]] = None
-        self._clipboard_is_cut = False
-        
-        # Context tracking for menus
-        self.current_session_context: Optional[SessionItem] = None
-        self.current_folder_context: Optional[SessionFolder] = None
-        
+
         # Security auditor
         self.security_auditor = None
         
@@ -596,12 +590,6 @@ class CommTerminalWindow(Adw.ApplicationWindow):
         
         try:
             self.logger.debug("Fast window cleanup - no complex operations")
-            
-            # Just clear references - don't do complex cleanup
-            self.current_session_context = None
-            self.current_folder_context = None
-            self._clipboard_item = None
-            
             self.logger.debug("Fast cleanup completed")
             
         except Exception as e:
@@ -779,8 +767,10 @@ class CommTerminalWindow(Adw.ApplicationWindow):
     def _on_edit_session(self, action, param) -> None:
         """Handle edit session action."""
         try:
-            if self.current_session_context:
-                self._show_session_edit_dialog(self.current_session_context, False)
+            # --- CHANGED: Query the tree for the selected item ---
+            selected_item = self.session_tree.get_selected_item()
+            if isinstance(selected_item, SessionItem):
+                self._show_session_edit_dialog(selected_item, False)
         except Exception as e:
             self.logger.error(f"Edit session failed: {e}")
             self._show_error_dialog(_("Edit Error"), _("Failed to edit session: {error}").format(error=str(e)))
@@ -788,11 +778,13 @@ class CommTerminalWindow(Adw.ApplicationWindow):
     def _on_duplicate_session(self, action, param) -> None:
         """Handle duplicate session action."""
         try:
-            if self.current_session_context:
-                duplicated = self.session_tree.operations.duplicate_session(self.current_session_context)
+            # --- CHANGED: Query the tree for the selected item ---
+            selected_item = self.session_tree.get_selected_item()
+            if isinstance(selected_item, SessionItem):
+                duplicated = self.session_tree.operations.duplicate_session(selected_item)
                 if duplicated:
                     self.session_tree.refresh_tree()
-                    log_session_event("duplicated", self.current_session_context.name)
+                    log_session_event("duplicated", selected_item.name)
         except Exception as e:
             self.logger.error(f"Duplicate session failed: {e}")
             self._show_error_dialog(_("Duplicate Error"), _("Failed to duplicate session: {error}").format(error=str(e)))
@@ -800,8 +792,10 @@ class CommTerminalWindow(Adw.ApplicationWindow):
     def _on_rename_session(self, action, param) -> None:
         """Handle rename session action."""
         try:
-            if self.current_session_context:
-                self._show_rename_dialog(self.current_session_context, True)
+            # --- CHANGED: Query the tree for the selected item ---
+            selected_item = self.session_tree.get_selected_item()
+            if isinstance(selected_item, SessionItem):
+                self._show_rename_dialog(selected_item, True)
         except Exception as e:
             self.logger.error(f"Rename session failed: {e}")
             self._show_error_dialog(_("Rename Error"), _("Failed to rename session: {error}").format(error=str(e)))
@@ -809,8 +803,10 @@ class CommTerminalWindow(Adw.ApplicationWindow):
     def _on_move_session_to_folder(self, action, param) -> None:
         """Handle move session to folder action."""
         try:
-            if self.current_session_context:
-                self._show_move_session_dialog(self.current_session_context)
+            # --- CHANGED: Query the tree for the selected item ---
+            selected_item = self.session_tree.get_selected_item()
+            if isinstance(selected_item, SessionItem):
+                self._show_move_session_dialog(selected_item)
         except Exception as e:
             self.logger.error(f"Move session failed: {e}")
             self._show_error_dialog(_("Move Error"), _("Failed to move session: {error}").format(error=str(e)))
@@ -818,8 +814,10 @@ class CommTerminalWindow(Adw.ApplicationWindow):
     def _on_delete_session(self, action, param) -> None:
         """Handle delete session action."""
         try:
-            if self.current_session_context:
-                self._show_delete_confirmation(self.current_session_context, True)
+            # --- CHANGED: Query the tree for the selected item ---
+            selected_item = self.session_tree.get_selected_item()
+            if isinstance(selected_item, SessionItem):
+                self._show_delete_confirmation(selected_item, True)
         except Exception as e:
             self.logger.error(f"Delete session failed: {e}")
             self._show_error_dialog(_("Delete Error"), _("Failed to delete session: {error}").format(error=str(e)))
@@ -828,8 +826,10 @@ class CommTerminalWindow(Adw.ApplicationWindow):
     def _on_edit_folder(self, action, param) -> None:
         """Handle edit folder action."""
         try:
-            if self.current_folder_context:
-                self._show_folder_edit_dialog(self.current_folder_context, False)
+            # --- CHANGED: Query the tree for the selected item ---
+            selected_item = self.session_tree.get_selected_item()
+            if isinstance(selected_item, SessionFolder):
+                self._show_folder_edit_dialog(selected_item, False)
         except Exception as e:
             self.logger.error(f"Edit folder failed: {e}")
             self._show_error_dialog(_("Edit Error"), _("Failed to edit folder: {error}").format(error=str(e)))
@@ -837,8 +837,10 @@ class CommTerminalWindow(Adw.ApplicationWindow):
     def _on_rename_folder(self, action, param) -> None:
         """Handle rename folder action."""
         try:
-            if self.current_folder_context:
-                self._show_rename_dialog(self.current_folder_context, False)
+            # --- CHANGED: Query the tree for the selected item ---
+            selected_item = self.session_tree.get_selected_item()
+            if isinstance(selected_item, SessionFolder):
+                self._show_rename_dialog(selected_item, False)
         except Exception as e:
             self.logger.error(f"Rename folder failed: {e}")
             self._show_error_dialog(_("Rename Error"), _("Failed to rename folder: {error}").format(error=str(e)))
@@ -846,8 +848,10 @@ class CommTerminalWindow(Adw.ApplicationWindow):
     def _on_add_session_to_folder(self, action, param) -> None:
         """Handle add session to folder action."""
         try:
-            if self.current_folder_context:
-                new_session = SessionItem(name=_("New Session"), folder_path=self.current_folder_context.path)
+            # --- CHANGED: Query the tree for the selected item ---
+            selected_item = self.session_tree.get_selected_item()
+            if isinstance(selected_item, SessionFolder):
+                new_session = SessionItem(name=_("New Session"), folder_path=selected_item.path)
                 self._show_session_edit_dialog(new_session, True)
         except Exception as e:
             self.logger.error(f"Add session to folder failed: {e}")
@@ -856,8 +860,10 @@ class CommTerminalWindow(Adw.ApplicationWindow):
     def _on_delete_folder(self, action, param) -> None:
         """Handle delete folder action."""
         try:
-            if self.current_folder_context:
-                self._show_delete_confirmation(self.current_folder_context, False)
+            # --- CHANGED: Query the tree for the selected item ---
+            selected_item = self.session_tree.get_selected_item()
+            if isinstance(selected_item, SessionFolder):
+                self._show_delete_confirmation(selected_item, False)
         except Exception as e:
             self.logger.error(f"Delete folder failed: {e}")
             self._show_error_dialog(_("Delete Error"), _("Failed to delete folder: {error}").format(error=str(e)))
@@ -866,37 +872,39 @@ class CommTerminalWindow(Adw.ApplicationWindow):
     def _on_cut_item(self, action, param) -> None:
         """Handle cut item action."""
         try:
-            item = self.current_session_context or self.current_folder_context
-            if item:
-                self.session_tree.cut_item(item)
-                self._clipboard_item = item
-                self._clipboard_is_cut = True
+            # --- CHANGED: Logic moved to SessionTreeView ---
+            self.session_tree._cut_selected_item_safe()
         except Exception as e:
             self.logger.error(f"Cut item failed: {e}")
     
     def _on_copy_item(self, action, param) -> None:
         """Handle copy item action."""
         try:
-            item = self.current_session_context or self.current_folder_context
-            if item:
-                self.session_tree.copy_item(item)
-                self._clipboard_item = item
-                self._clipboard_is_cut = False
+            # --- CHANGED: Logic moved to SessionTreeView ---
+            self.session_tree._copy_selected_item_safe()
         except Exception as e:
             self.logger.error(f"Copy item failed: {e}")
     
     def _on_paste_item(self, action, param) -> None:
         """Handle paste item action."""
         try:
-            if self.current_folder_context:
-                self.session_tree.paste_item(self.current_folder_context.path)
+            # --- CHANGED: Logic moved to SessionTreeView ---
+            selected_item = self.session_tree.get_selected_item()
+            target_path = ""
+            if isinstance(selected_item, SessionFolder):
+                target_path = selected_item.path
+            elif isinstance(selected_item, SessionItem):
+                target_path = selected_item.folder_path
+            
+            self.session_tree._paste_item_safe(target_path)
         except Exception as e:
             self.logger.error(f"Paste item failed: {e}")
     
     def _on_paste_item_root(self, action, param) -> None:
         """Handle paste item to root action."""
         try:
-            self.session_tree.paste_item("")
+            # --- CHANGED: Logic moved to SessionTreeView ---
+            self.session_tree._paste_item_safe("")
         except Exception as e:
             self.logger.error(f"Paste item to root failed: {e}")
     
@@ -1076,10 +1084,8 @@ class CommTerminalWindow(Adw.ApplicationWindow):
         try:
             selected_item = self.session_tree.get_selected_item()
             if isinstance(selected_item, SessionItem):
-                self.current_session_context = selected_item
                 self._show_session_edit_dialog(selected_item, False)
             elif isinstance(selected_item, SessionFolder):
-                self.current_folder_context = selected_item
                 self._show_folder_edit_dialog(selected_item, False)
         except Exception as e:
             self.logger.error(f"Edit selected button failed: {e}")
@@ -1090,10 +1096,8 @@ class CommTerminalWindow(Adw.ApplicationWindow):
         try:
             selected_item = self.session_tree.get_selected_item()
             if isinstance(selected_item, SessionItem):
-                self.current_session_context = selected_item
                 self._show_delete_confirmation(selected_item, True)
             elif isinstance(selected_item, SessionFolder):
-                self.current_folder_context = selected_item
                 self._show_delete_confirmation(selected_item, False)
         except Exception as e:
             self.logger.error(f"Remove selected button failed: {e}")

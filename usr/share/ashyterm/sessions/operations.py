@@ -1133,27 +1133,52 @@ class SessionOperations:
     
     def _save_changes(self) -> bool:
         """
-        Save changes to storage and trigger async backup if configured.
+        Schedule an asynchronous save of sessions and folders to storage.
+        This operation does not block the UI thread.
         """
+        self.logger.debug("Scheduling asynchronous save for sessions and folders.")
+
+        # Data needs to be prepared in the main thread as Gtk stores are not thread-safe
         try:
-            # A operação de salvamento em si é síncrona e crítica
-            success = save_sessions_and_folders(self.session_store, self.folder_store)
-            
-            if success:
-                # Se o salvamento foi bem-sucedido, dispare o backup assíncrono se estiver ativado
-                if self.settings_manager.get("backup_on_change", True) and self.backup_manager:
-                    source_file = Path(self.storage_manager.sessions_file)
-                    if source_file.exists():
-                        self.backup_manager.create_backup_async(
-                            [source_file],
-                            BackupType.AUTOMATIC,
-                            "Automatic backup after change"
-                        )
-            
-            return success
+            sessions_to_save = [s.to_dict() for s in self.session_store]
+            folders_to_save = [f.to_dict() for f in self.folder_store]
         except Exception as e:
-            self.logger.error(f"Failed to save changes: {e}")
+            self.logger.error(f"Failed to prepare data for async save: {e}")
             return False
+
+        def save_task():
+            """The actual save operation to be run in a separate thread."""
+            try:
+                # The save_sessions_and_folders function now needs to accept raw data
+                success = self.storage_manager.save_sessions_and_folders_from_data(
+                    sessions_to_save, folders_to_save
+                )
+
+                if success:
+                    self.logger.debug("Async save successful. Triggering backup.")
+                    # If save was successful, trigger async backup if enabled
+                    if self.settings_manager.get("backup_on_change", True) and self.backup_manager:
+                        source_file = Path(self.storage_manager.sessions_file)
+                        if source_file.exists():
+                            self.backup_manager.create_backup_async(
+                                [source_file],
+                                BackupType.AUTOMATIC,
+                                "Automatic backup after change"
+                            )
+                else:
+                    self.logger.error("Asynchronous save operation failed.")
+
+            except Exception as e:
+                self.logger.error(f"Exception in async save task: {e}")
+                log_error_with_context(e, "async session save", "ashyterm.sessions.operations")
+
+        # Run the save task in a daemon thread so it doesn't block shutdown
+        thread = threading.Thread(target=save_task, daemon=True)
+        thread.start()
+
+        # Assume success for the UI thread, as the operation is now async.
+        # Error handling for async operations should be done via logging and possibly UI notifications.
+        return True
     
     # Public utility methods
     def get_sessions_in_folder(self, folder_path: str) -> List[SessionItem]:

@@ -363,72 +363,56 @@ class SessionStorageManager:
         except Exception as e:
             self.logger.error(f"Backup recovery failed: {e}")
             return None
-    
-    def save_sessions_and_folders_safe(self, session_store: Optional[Gio.ListStore] = None, 
-                                     folder_store: Optional[Gio.ListStore] = None,
-                                     create_backup: bool = True) -> bool:
-        """
-        Safely save sessions and folders with backup and validation.
         
-        Args:
-            session_store: Optional store with SessionItem objects
-            folder_store: Optional store with SessionFolder objects
-            create_backup: Whether to create backup before saving
-            
-        Returns:
-            True if saved successfully
+    def save_sessions_and_folders_from_data(self, sessions_data: List[Dict[str, Any]], 
+                                           folders_data: List[Dict[str, Any]]) -> bool:
+        """
+        Safely save sessions and folders from prepared dictionary data.
+        This method is thread-safe as it doesn't access Gtk stores.
         """
         with self._file_lock:
             try:
-                self.logger.debug("Saving sessions and folders to storage")
+                self.logger.debug("Saving sessions and folders from data.")
                 
-                # Prepare data
-                data_to_save = self._prepare_save_data(session_store, folder_store)
+                data_to_save = {
+                    "sessions": sessions_data,
+                    "folders": folders_data
+                }
                 
-                # Create backup before saving if requested and file exists
-                backup_id = None
-                if create_backup and self.sessions_file.exists() and self.backup_manager:
-                    backup_id = self._create_pre_save_backup()
+                # The pre-save backup is now synchronous and critical for recovery
+                backup_id = self._create_pre_save_backup()
+
+                # ... (rest of the save logic from the original save_sessions_and_folders_safe)
+                # This includes validation, atomic write, and verification.
                 
-                # Validate data before saving
                 if not self._validate_save_data(data_to_save):
                     raise StorageWriteError(str(self.sessions_file), _("Data validation failed"))
                 
-                # Ensure directory exists
                 self.sessions_file.parent.mkdir(parents=True, exist_ok=True)
                 ensure_secure_directory_permissions(str(self.sessions_file.parent))
                 
-                # Write to temporary file first (atomic operation)
                 temp_file = self.sessions_file.with_suffix('.tmp')
                 
                 try:
                     with open(temp_file, "w", encoding="utf-8") as f:
                         json.dump(data_to_save, f, indent=4, ensure_ascii=False)
                     
-                    # Ensure file was written correctly
                     if not temp_file.exists() or temp_file.stat().st_size == 0:
                         raise StorageWriteError(str(temp_file), _("Temporary file was not written correctly"))
                     
-                    # Atomic move
                     if self.platform_info.is_windows():
-                        # On Windows, remove target file first
                         if self.sessions_file.exists():
                             self.sessions_file.unlink()
                     
                     temp_file.rename(self.sessions_file)
-                    
-                    # Set secure permissions
                     ensure_secure_file_permissions(str(self.sessions_file))
                     
                 except Exception as e:
-                    # Clean up temp file on error
                     if temp_file.exists():
                         temp_file.unlink()
                     raise StorageWriteError(str(self.sessions_file), _("File write failed: {}").format(e))
                 
-                # Verify file was saved correctly
                 if not self._verify_saved_file(data_to_save):
-                    # Restore from backup if verification fails
                     if backup_id and self.backup_manager:
                         self.logger.error("Save verification failed, attempting restore from backup")
                         try:
@@ -438,12 +422,10 @@ class SessionStorageManager:
                     
                     raise StorageWriteError(str(self.sessions_file), _("Save verification failed"))
                 
-                # Update statistics
                 self._stats['saves'] += 1
                 if backup_id:
                     self._stats['backups_created'] += 1
                 
-                # Log successful save
                 sessions_count = len(data_to_save.get("sessions", []))
                 folders_count = len(data_to_save.get("folders", []))
                 
@@ -452,15 +434,35 @@ class SessionStorageManager:
                                 f"backup: {backup_id is not None}")
                 
                 return True
-                
+
             except (StorageWriteError, StorageError):
                 self._stats['save_errors'] += 1
                 raise
             except Exception as e:
                 self._stats['save_errors'] += 1
-                self.logger.error(f"Unexpected error saving sessions/folders: {e}")
-                log_error_with_context(e, "save sessions and folders", "ashyterm.sessions.storage")
+                self.logger.error(f"Unexpected error saving sessions/folders from data: {e}")
+                log_error_with_context(e, "save sessions and folders from data", "ashyterm.sessions.storage")
                 raise StorageWriteError(str(self.sessions_file), _("Save failed: {}").format(e))
+    
+    def save_sessions_and_folders_safe(self, session_store: Optional[Gio.ListStore] = None, 
+                                     folder_store: Optional[Gio.ListStore] = None,
+                                     create_backup: bool = True) -> bool:
+        """
+        Safely save sessions and folders with backup and validation.
+        This method is now a wrapper that prepares data and calls the thread-safe saver.
+        """
+        # This method is now primarily for synchronous calls if ever needed.
+        # The main logic is moved to save_sessions_and_folders_from_data.
+        try:
+            self.logger.debug("Preparing data for synchronous save.")
+            data_to_save = self._prepare_save_data(session_store, folder_store)
+            return self.save_sessions_and_folders_from_data(
+                data_to_save.get("sessions", []),
+                data_to_save.get("folders", [])
+            )
+        except Exception as e:
+            self.logger.error(f"Synchronous save failed: {e}")
+            return False
     
     def _prepare_save_data(self, session_store: Optional[Gio.ListStore], 
                           folder_store: Optional[Gio.ListStore]) -> Dict[str, Any]:
@@ -707,17 +709,11 @@ def load_sessions_and_folders() -> Tuple[List[Dict[str, Any]], List[Dict[str, An
 def save_sessions_and_folders(session_store: Optional[Gio.ListStore] = None, 
                             folder_store: Optional[Gio.ListStore] = None) -> bool:
     """
-    Save sessions and folders to JSON file with enhanced safety.
-    
-    Args:
-        session_store: Optional store with SessionItem objects
-        folder_store: Optional store with SessionFolder objects
-        
-    Returns:
-        True if saved successfully
+    Save sessions and folders to JSON file.
+    NOTE: This function is now synchronous and should be called from a background thread
+    if the UI should not be blocked. The logic is now inside SessionOperations._save_changes.
     """
     storage_manager = get_storage_manager()
-    # A decisão de backup agora é feita em outro lugar, então passamos False aqui
     return storage_manager.save_sessions_and_folders_safe(session_store, folder_store, create_backup=False)
 
 

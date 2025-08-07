@@ -530,85 +530,127 @@ class SettingsManager:
         except Exception as e:
             self.logger.warning(f"Failed to create initialization backup: {e}")
     
-    def save_settings(self, force: bool = False) -> bool:
+    def save_settings(self, force: bool = False) -> None:
         """
-        Save settings to file with backup and validation.
+        Schedule an asynchronous save of settings to file.
+        This operation does not block the UI thread.
         
         Args:
             force: Force save even if settings haven't changed
-            
-        Returns:
-            True if save was successful
         """
         with self._lock:
             if not self._dirty and not force:
-                self.logger.debug("Settings not dirty, skipping save")
-                return True
+                self.logger.debug("Settings not dirty, skipping async save.")
+                return
             
+            # Prepare data in the main thread
             try:
-                # Validate before saving
-                errors = self.validator.validate_settings_structure(self._settings)
-                if errors:
-                    self.logger.error(f"Cannot save invalid settings: {errors}")
-                    raise ConfigValidationError("settings", self._settings, "Validation failed: " + "; ".join(errors))
-                
-                # Create backup before saving
-                self._create_pre_save_backup()
-                
-                # Prepare data for saving
-                current_time = time.time()
-                
-                # Update metadata
-                if self._metadata:
-                    self._metadata.modified_at = current_time
-                    self._metadata.platform = self.platform_info.platform_type.value
-                else:
-                    self._metadata = SettingsMetadata(
-                        version=AppConstants.APP_VERSION,
-                        created_at=current_time,
-                        modified_at=current_time,
-                        platform=self.platform_info.platform_type.value
-                    )
-                
-                # Calculate checksum
-                settings_json = json.dumps(self._settings, sort_keys=True, separators=(',', ':'))
-                import hashlib
-                self._metadata.checksum = hashlib.md5(settings_json.encode('utf-8')).hexdigest()
-                
-                # Prepare data to save
-                save_data = {
-                    'metadata': asdict(self._metadata),
-                    'settings': self._settings
-                }
-                
-                # Ensure directory exists
-                self.settings_file.parent.mkdir(parents=True, exist_ok=True)
-                
-                # Write to temporary file first
-                temp_file = self.settings_file.with_suffix('.tmp')
-                with open(temp_file, 'w', encoding='utf-8') as f:
-                    json.dump(save_data, f, indent=2, ensure_ascii=False)
-                
-                # Atomic move to final location
-                temp_file.replace(self.settings_file)
-                
-                # Set secure permissions
+                settings_to_save = self._settings.copy()
+                self._dirty = False # Mark as not dirty immediately to prevent multiple saves
+            except Exception as e:
+                self.logger.error(f"Failed to prepare settings for async save: {e}")
+                return
+
+        def save_task():
+            """The actual save operation to be run in a separate thread."""
+            with self._lock: # Use the same lock to ensure thread safety
                 try:
-                    ensure_secure_file_permissions(str(self.settings_file))
+                    # Validate before saving
+                    errors = self.validator.validate_settings_structure(settings_to_save)
+                    if errors:
+                        self.logger.error(f"Cannot save invalid settings asynchronously: {errors}")
+                        # Re-mark as dirty so the user can fix and save again
+                        self._dirty = True
+                        return
+
+                    # Create backup before saving
+                    self._create_pre_save_backup()
+                    
+                    current_time = time.time()
+                    
+                    if self._metadata:
+                        self._metadata.modified_at = current_time
+                        self._metadata.platform = self.platform_info.platform_type.value
+                    else:
+                        self._metadata = SettingsMetadata(
+                            version=AppConstants.APP_VERSION,
+                            created_at=current_time,
+                            modified_at=current_time,
+                            platform=self.platform_info.platform_type.value
+                        )
+                    
+                    settings_json = json.dumps(settings_to_save, sort_keys=True, separators=(',', ':'))
+                    import hashlib
+                    self._metadata.checksum = hashlib.md5(settings_json.encode('utf-8')).hexdigest()
+                    
+                    save_data = {
+                        'metadata': asdict(self._metadata),
+                        'settings': settings_to_save
+                    }
+                    
+                    self.settings_file.parent.mkdir(parents=True, exist_ok=True)
+                    
+                    temp_file = self.settings_file.with_suffix('.tmp')
+                    with open(temp_file, 'w', encoding='utf-8') as f:
+                        json.dump(save_data, f, indent=2, ensure_ascii=False)
+                    
+                    temp_file.replace(self.settings_file)
+                    
+                    try:
+                        ensure_secure_file_permissions(str(self.settings_file))
+                    except Exception as e:
+                        self.logger.warning(f"Failed to set secure permissions: {e}")
+                    
+                    self._last_save_time = current_time
+                    
+                    self.logger.debug("Async settings save completed successfully")
+
                 except Exception as e:
-                    self.logger.warning(f"Failed to set secure permissions: {e}")
+                    self.logger.error(f"Async settings save task failed: {e}")
+                    log_error_with_context(e, "async settings saving", "ashyterm.settings")
+                    # Re-mark as dirty on failure
+                    self._dirty = True
+
+        # Run the save task in a daemon thread
+        thread = threading.Thread(target=save_task, daemon=True)
+        thread.start()
+
+    def set(self, key: str, value: Any, save_immediately: bool = True) -> None:
+        """
+        Set a setting value with validation and change notification.
+        
+        Args:
+            key: Setting key
+            value: Setting value
+            save_immediately: Whether to save immediately (now schedules an async save)
+        """
+        with self._lock:
+            try:
+                old_value = self.get(key)
+                self._validate_setting_value(key, value)
                 
-                # Update state
-                self._last_save_time = current_time
-                self._dirty = False
+                if '.' in key:
+                    keys = key.split('.')
+                    current = self._settings
+                    for k in keys[:-1]:
+                        if k not in current or not isinstance(current[k], dict):
+                            current[k] = {}
+                        current = current[k]
+                    current[keys[-1]] = value
+                else:
+                    self._settings[key] = value
                 
-                self.logger.debug("Settings saved successfully")
-                return True
+                self._dirty = True
+                self._notify_change_listeners(key, old_value, value)
+                
+                if save_immediately:
+                    self.save_settings() # This now schedules an async save
+                
+                self.logger.debug(f"Setting updated: {key} = {value}")
                 
             except Exception as e:
-                self.logger.error(f"Failed to save settings: {e}")
-                log_error_with_context(e, "settings saving", "ashyterm.settings")
-                raise StorageWriteError(str(self.settings_file), str(e))
+                self.logger.error(f"Failed to set setting '{key}': {e}")
+                raise ConfigValidationError(key, value, str(e))
     
     def _create_pre_save_backup(self):
         """Create backup before saving settings."""
@@ -816,7 +858,17 @@ class SettingsManager:
             fg_color.parse(color_scheme.get("foreground", "#FFFFFF"))
             bg_color.parse(color_scheme.get("background", "#000000"))
             
-            bg_color.alpha = max(0.0, min(1.0, 1.0 - (transparency / 100.0)))
+            # --- CHANGED: Non-linear transparency calculation ---
+            # Convert transparency percentage (0-100) to a normalized value (0.0-1.0)
+            transparency_normalized = transparency / 100.0
+            
+            # Apply a curve (power function) to make the transparency effect less aggressive
+            # at lower values. An exponent > 1.0 makes the slider feel more natural.
+            # 1.0 is linear, > 1.0 is curved. Let's start with 1.6 for a noticeable effect.
+            effective_transparency = transparency_normalized ** 1.6
+            
+            # Alpha is the inverse of transparency (1.0 = opaque, 0.0 = transparent)
+            bg_color.alpha = max(0.0, min(1.0, 1.0 - effective_transparency))
             
             cursor_color_str = color_scheme.get("cursor", color_scheme.get("foreground", "#FFFFFF"))
             cursor_color.parse(cursor_color_str)

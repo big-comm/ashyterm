@@ -1,9 +1,4 @@
-"""
-Enhanced tree view module for Ashy Terminal sessions and folders.
-
-This module provides robust tree view management with comprehensive error handling,
-security validation, focus management, and context menu functionality.
-"""
+# sessions/tree.py
 
 import threading
 import time
@@ -166,14 +161,15 @@ class SessionTreeView:
         self._focus_state = False
         self._expanded_paths: set = set()
         
+        # --- CHANGED: State variables moved here from CommTerminalWindow ---
         # Clipboard for cut/copy operations
         self._clipboard_item: Optional[Union[SessionItem, SessionFolder]] = None
         self._clipboard_is_cut = False
         self._clipboard_timestamp = 0
         
         # Context tracking with enhanced validation
-        #self.current_session_context: Optional[SessionItem] = None
-        #self.current_folder_context: Optional[SessionFolder] = None
+        self.current_session_context: Optional[SessionItem] = None
+        self.current_folder_context: Optional[SessionFolder] = None
         self.current_context_position: int = -1
         
         # Security and validation
@@ -597,6 +593,17 @@ class SessionTreeView:
                 item = self._find_item_by_tree_iter_safe(tree_iter, model)
                 self._current_selection = item
                 
+                # --- CHANGED: Set local context instead of parent window's ---
+                if isinstance(item, SessionItem):
+                    self.current_session_context = item
+                    self.current_folder_context = None
+                elif isinstance(item, SessionFolder):
+                    self.current_folder_context = item
+                    self.current_session_context = None
+                else:
+                    self.current_session_context = None
+                    self.current_folder_context = None
+
                 if item:
                     # Find registry entry and mark as accessed
                     item_id = self.registry.find_item_by_reference(item)
@@ -606,6 +613,8 @@ class SessionTreeView:
                             item_data.mark_accessed()
             else:
                 self._current_selection = None
+                self.current_session_context = None
+                self.current_folder_context = None
             
             if self.on_selection_changed:
                 self.on_selection_changed()
@@ -688,8 +697,9 @@ class SessionTreeView:
                         # Find the actual item
                         item = self._find_item_by_tree_iter_safe(tree_iter, model)
                         if isinstance(item, SessionItem):
-                            self.parent_window.current_session_context = item
-                            self.parent_window.current_folder_context = None
+                            # --- CHANGED: Set local context ---
+                            self.current_session_context = item
+                            self.current_folder_context = None
                             
                             # Validate session for context menu
                             menu_valid = True
@@ -702,12 +712,13 @@ class SessionTreeView:
                                     self.parent_window, item, self.session_store,
                                     self._find_item_position(item),
                                     self.folder_store,
-                                    bool(self._clipboard_item)
+                                    self.has_clipboard_content() # --- CHANGED: Use local state ---
                                 )
                             
                         elif isinstance(item, SessionFolder):
-                            self.parent_window.current_folder_context = item
-                            self.parent_window.current_session_context = None
+                            # --- CHANGED: Set local context ---
+                            self.current_folder_context = item
+                            self.current_session_context = None
                             
                             # Validate folder for context menu
                             menu_valid = True
@@ -720,12 +731,13 @@ class SessionTreeView:
                                     self.parent_window, item, self.folder_store,
                                     self._find_item_position(item),
                                     self.session_store,
-                                    bool(self._clipboard_item)
+                                    self.has_clipboard_content() # --- CHANGED: Use local state ---
                                 )
                 else:
-                    self.parent_window.current_session_context = None
-                    self.parent_window.current_folder_context = None
-                    menu = create_root_menu(self.parent_window, bool(self._clipboard_item)) 
+                    # --- CHANGED: Clear local context ---
+                    self.current_session_context = None
+                    self.current_folder_context = None
+                    menu = create_root_menu(self.parent_window, self.has_clipboard_content()) # --- CHANGED: Use local state ---
                 
                 if menu:
                     setup_context_menu(self.tree_view, menu, x, y)
@@ -755,7 +767,14 @@ class SessionTreeView:
                     self._cut_selected_item_safe()
                     return Gdk.EVENT_STOP
                 elif keyval == Gdk.KEY_v:  # Paste
-                    self._paste_item_safe("")
+                    # --- CHANGED: Determine paste target from local context ---
+                    target_path = ""
+                    selected_item = self.get_selected_item()
+                    if isinstance(selected_item, SessionFolder):
+                        target_path = selected_item.path
+                    elif isinstance(selected_item, SessionItem):
+                        target_path = selected_item.folder_path
+                    self._paste_item_safe(target_path)
                     return Gdk.EVENT_STOP
             
             return Gdk.EVENT_PROPAGATE
@@ -904,7 +923,7 @@ class SessionTreeView:
         except Exception as e:
             self.logger.error(f"Rename selected item failed: {e}")
     
-    # Clipboard operations with enhanced safety
+    # --- CHANGED: New clipboard methods added ---
     def cut_item(self, item: Union[SessionItem, SessionFolder]) -> bool:
         """
         Cut an item to clipboard with validation.
