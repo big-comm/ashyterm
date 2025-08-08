@@ -208,30 +208,28 @@ class CommTerminalWindow(Adw.ApplicationWindow):
             header_bar = self._create_header_bar()
             main_box.append(header_bar)
             
-            # Horizontal paned layout
-            paned = Gtk.Paned(orientation=Gtk.Orientation.HORIZONTAL)
-            paned.set_position(220)
-            paned.set_resize_start_child(False)
-            paned.set_shrink_start_child(False)
+            # Adw.Flap for animated sidebar
+            self.flap = Adw.Flap()
+            self.flap.set_transition_type(Adw.FlapTransitionType.SLIDE)
             
             # Sidebar
             self.sidebar_box = self._create_sidebar()
-            paned.set_start_child(self.sidebar_box)
+            self.flap.set_flap(self.sidebar_box)
             
             # Content area (tabs)
             content_box = self._create_content_area()
-            paned.set_end_child(content_box)
+            self.flap.set_content(content_box)
             
-            main_box.append(paned)
+            main_box.append(self.flap)
             self.set_content(main_box)
             
             # Set initial sidebar visibility
             initial_visible = self.settings_manager.get_sidebar_visible()
-            self.sidebar_box.set_visible(initial_visible)
+            self.flap.set_reveal_flap(initial_visible)
             self.toggle_sidebar_button.set_active(initial_visible)
             self._update_sidebar_button_icon()
             
-            self.logger.debug("UI setup completed")
+            self.logger.debug("UI setup completed with Adw.Flap")
             
         except Exception as e:
             self.logger.error(f"UI setup failed: {e}")
@@ -432,7 +430,7 @@ class CommTerminalWindow(Adw.ApplicationWindow):
         """Handle sidebar toggle button."""
         try:
             is_visible = button.get_active()
-            self.sidebar_box.set_visible(is_visible)
+            self.flap.set_reveal_flap(is_visible) # Controls the Flap animation
             self.settings_manager.set_sidebar_visible(is_visible)
             self._update_sidebar_button_icon()
             
