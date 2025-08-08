@@ -148,6 +148,11 @@ class CommTerminalWindow(Adw.ApplicationWindow):
                 ("paste", self._on_paste),
                 ("select-all", self._on_select_all),
                 
+                # Splitting actions
+                ("split-horizontal", self._on_split_horizontal),
+                ("split-vertical", self._on_split_vertical),
+                ("close-pane", self._on_close_pane),
+
                 # Zoom actions
                 ("zoom-in", self._on_zoom_in),
                 ("zoom-out", self._on_zoom_out),
@@ -462,23 +467,17 @@ class CommTerminalWindow(Adw.ApplicationWindow):
     def _on_terminal_should_close(self, terminal, child_status: int, identifier) -> bool:
         """Handle request to close terminal tab after process exit."""
         try:
+            # This callback is for auto-closing on normal exit (status 0)
             if child_status != 0:
-                return False
+                return False # Do not repeat idle call
             
-            page = self.tab_manager.get_page_for_terminal(terminal)
-            if not page:
-                return False
-
-            if self.tab_manager.get_tab_count() <= 1:
-                self.logger.info("Last terminal closed. Closing the application window.")
-                self.close()
-                return True
-
-            self.logger.debug(f"Auto-closing tab for terminal with status {child_status}")
-            return self.tab_manager.close_tab(page)
+            self.logger.debug(f"Auto-closing pane for terminal with status {child_status}")
+            # Delegate to close_pane, which handles both panes and the last tab correctly.
+            self.tab_manager.close_pane(terminal)
+            return False # Return False to unschedule the idle_add callback
             
         except Exception as e:
-            self.logger.error(f"Terminal close handling failed: {e}")
+            self.logger.error(f"Terminal auto-close handling failed: {e}")
             return False
     
     def _on_terminal_focus_changed(self, terminal, from_sidebar: bool) -> None:
@@ -701,13 +700,14 @@ class CommTerminalWindow(Adw.ApplicationWindow):
             GLib.timeout_add(200, reset_flag)
     
     def _on_close_tab(self, action, param) -> None:
-        """Handle close tab action."""
+        """Handle close tab/pane action."""
         try:
-            success = self.tab_manager.close_tab()
-            if success:
-                log_terminal_event("closed", "Tab", "user action")
+            # This action should close the currently focused pane.
+            focused_terminal = self.tab_manager.get_selected_terminal()
+            if focused_terminal:
+                self.tab_manager.close_pane(focused_terminal)
         except Exception as e:
-            self.logger.error(f"Tab close failed: {e}")
+            self.logger.error(f"Close tab/pane action failed: {e}")
     
     def _on_copy(self, action, param) -> None:
         """Handle copy action."""
@@ -733,6 +733,37 @@ class CommTerminalWindow(Adw.ApplicationWindow):
             self.tab_manager.select_all_in_current_terminal()
         except Exception as e:
             self.logger.error(f"Select all operation failed: {e}")
+            
+    # Action handlers - Splitting actions
+    def _on_split_horizontal(self, action, param) -> None:
+        """Handle horizontal split action."""
+        try:
+            focused_terminal = self.tab_manager.get_selected_terminal()
+            if focused_terminal:
+                self.tab_manager.split_horizontal(focused_terminal)
+        except Exception as e:
+            self.logger.error(f"Horizontal split failed: {e}")
+            self._show_error_dialog(_("Split Error"), str(e))
+
+    def _on_split_vertical(self, action, param) -> None:
+        """Handle vertical split action."""
+        try:
+            focused_terminal = self.tab_manager.get_selected_terminal()
+            if focused_terminal:
+                self.tab_manager.split_vertical(focused_terminal)
+        except Exception as e:
+            self.logger.error(f"Vertical split failed: {e}")
+            self._show_error_dialog(_("Split Error"), str(e))
+
+    def _on_close_pane(self, action, param) -> None:
+        """Handle close pane action."""
+        try:
+            focused_terminal = self.tab_manager.get_selected_terminal()
+            if focused_terminal:
+                self.tab_manager.close_pane(focused_terminal)
+        except Exception as e:
+            self.logger.error(f"Close pane failed: {e}")
+            self._show_error_dialog(_("Close Error"), str(e))
             
     def _on_zoom_in(self, action, param) -> None:
         """Handle zoom in action."""

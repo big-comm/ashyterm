@@ -161,9 +161,24 @@ class TerminalContextMenu(Gtk.PopoverMenu):
         menu = Gio.Menu()
         
         # Standard terminal operations
-        menu.append_item(Gio.MenuItem.new(_("Copy"), "win.copy"))
-        menu.append_item(Gio.MenuItem.new(_("Paste"), "win.paste"))
-        menu.append_item(Gio.MenuItem.new(_("Select All"), "win.select-all"))
+        menu.append(_("Copy"), "win.copy")
+        menu.append(_("Paste"), "win.paste")
+        menu.append(_("Select All"), "win.select-all")
+        
+        # Splitting options
+        split_section = Gio.Menu()
+        
+        # Create menu item for horizontal split with a more standard icon name
+        split_h_item = Gio.MenuItem.new(_("Split Horizontally"), "win.split-horizontal")
+        split_h_item.set_icon(Gio.ThemedIcon.new("view-split-horizontal-symbolic"))
+        split_section.append_item(split_h_item)
+        
+        # Create menu item for vertical split with a more standard icon name
+        split_v_item = Gio.MenuItem.new(_("Split Vertically"), "win.split-vertical")
+        split_v_item.set_icon(Gio.ThemedIcon.new("view-split-vertical-symbolic"))
+        split_section.append_item(split_v_item)
+        
+        menu.append_section(None, split_section)
         
         # Initialize the menu by passing the model directly
         super().__init__(menu_model=menu)

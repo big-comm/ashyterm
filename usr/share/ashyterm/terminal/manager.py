@@ -457,20 +457,11 @@ class TerminalManager:
             log_terminal_event("exited", terminal_name, f"status {child_status}")
 
             # Handle the exit based on the status code
-            if child_status == 0:
-                # Normal exit: schedule the tab to auto-close silently
-                def close_tab_delayed():
-                    try:
-                        if self.on_terminal_should_close:
-                            # This callback will trigger the actual tab closing in the window
-                            self.on_terminal_should_close(terminal, child_status, identifier)
-                    except Exception as e:
-                        self.logger.error(f"Auto-close callback failed for terminal {terminal_id}: {e}")
-                    return False  # Do not repeat
-                
-                # Use a very short delay to allow any final output to render before closing
-                GLib.timeout_add(100, close_tab_delayed)
-            else:
+            if child_status == 0 and self.on_terminal_should_close:
+                # On normal exit, schedule the pane/tab to be closed.
+                # Using GLib.idle_add to ensure it runs safely in the main GTK loop.
+                GLib.idle_add(self.on_terminal_should_close, terminal, child_status, identifier)
+            elif child_status != 0:
                 # Abnormal exit: feed exit message to the terminal so the user can see it
                 try:
                     if (terminal.get_realized() and

@@ -322,7 +322,10 @@ class DefaultSettings:
                 "find": "<Control>f",
                 "zoom-in": "<Control>plus",
                 "zoom-out": "<Control>minus",
-                "zoom-reset": "<Control>0"
+                "zoom-reset": "<Control>0",
+                "split-horizontal": "<Control><Shift>o",
+                "split-vertical": "<Control><Shift>e",
+                "close-pane": "<Control><Shift>w"
             }
         }
 

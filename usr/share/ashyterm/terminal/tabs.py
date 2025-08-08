@@ -601,6 +601,146 @@ class TabManager:
         except Exception as e:
             self.logger.error(f"Failed to get all terminals: {e}")
             return []
+        
+    def split_horizontal(self, focused_terminal: Vte.Terminal) -> None:
+        """Splits the focused terminal horizontally."""
+        self._split_terminal(focused_terminal, Gtk.Orientation.HORIZONTAL)
+
+    def split_vertical(self, focused_terminal: Vte.Terminal) -> None:
+        """Splits the focused terminal vertically."""
+        self._split_terminal(focused_terminal, Gtk.Orientation.VERTICAL)
+
+    def _split_terminal(self, focused_terminal: Vte.Terminal, orientation: Gtk.Orientation) -> None:
+        """Core logic for splitting a terminal pane."""
+        with self._creation_lock:
+            self.logger.debug(f"Splitting terminal (orientation: {orientation})")
+            
+            # 1. Create a new terminal
+            new_terminal = self.terminal_manager.create_local_terminal()
+            if not new_terminal:
+                raise UIError("split", "Failed to create a new terminal for the split.")
+            
+            new_scroller = Gtk.ScrolledWindow(child=new_terminal)
+            
+            # 2. Find the parent scroller and its container
+            parent_scroller = focused_terminal.get_parent()
+            if not isinstance(parent_scroller, Gtk.ScrolledWindow):
+                self.logger.error("Could not find parent ScrolledWindow for splitting.")
+                return
+            
+            container = parent_scroller.get_parent()
+            page = self.get_page_for_terminal(focused_terminal)
+
+            # 3. Create a new Gtk.Box to hold the splits
+            box = Gtk.Box(orientation=orientation, spacing=1)
+            box.set_homogeneous(True)
+
+            # 4. Replace the old scroller with the new box
+            if isinstance(container, Gtk.Box):
+                # This is a nested split. Replace the scroller with the new box.
+                container.remove(parent_scroller)
+                container.append(box)
+            elif page and isinstance(container, Adw.Bin):
+                # This is the first split. The container is the Adw.Bin inside the TabPage.
+                # We can set the child of this Bin.
+                container.set_child(box)
+            else:
+                self.logger.error(f"Cannot split inside an unknown container type: {type(container)}")
+                return
+
+            # 5. Add the original and new terminals to the box
+            box.append(parent_scroller)
+            box.append(new_scroller)
+            
+            # 6. Focus the new terminal
+            self._schedule_terminal_focus(new_terminal, "New Split")
+            log_terminal_event("split", "Terminal", "horizontal" if orientation == Gtk.Orientation.HORIZONTAL else "vertical")
+
+    def close_pane(self, focused_terminal: Vte.Terminal) -> None:
+        """Closes the currently focused terminal pane."""
+        with self._cleanup_lock:
+            def do_close():
+                page = self.get_page_for_terminal(focused_terminal)
+                if not page or not focused_terminal.get_parent():
+                    self.logger.debug("close_pane: Terminal or page no longer valid.")
+                    return
+
+                # If it's the last terminal in the tab, close the whole tab
+                if len(self.get_all_terminals_in_page(page)) <= 1:
+                    self.logger.debug("close_pane: Last terminal in tab, closing tab.")
+                    self.close_tab(page)
+                    return
+
+                # 1. Find the hierarchy: scroller -> box -> grandparent
+                scroller = focused_terminal.get_parent()
+                if not isinstance(scroller, Gtk.ScrolledWindow): return
+                
+                box = scroller.get_parent()
+                if not isinstance(box, Gtk.Box): return
+                
+                grandparent = box.get_parent()
+                if not grandparent: return
+
+                # 2. Remove the focused terminal and clean it up
+                self.terminal_manager.remove_terminal(focused_terminal)
+                log_terminal_event("pane_closed", "Terminal", "user action")
+
+                # 3. If the box has only one child left, simplify the hierarchy
+                # We need to get the children *before* removing the scroller
+                children = []
+                child = box.get_first_child()
+                while child:
+                    children.append(child)
+                    child = child.get_next_sibling()
+                
+                # Now remove the scroller from the box
+                box.remove(scroller)
+                
+                if len(children) == 2: # It had two children, now has one
+                    last_child = box.get_first_child() # Get the remaining child
+                    
+                    # Unparent the remaining child from the box
+                    box.remove(last_child)
+                    
+                    # Replace the box with its last remaining child in the grandparent
+                    if isinstance(grandparent, Gtk.Box):
+                        # This is complex: we need to replace `box` with `last_child`
+                        # A simple way is to remove the box and add the child.
+                        # This might not preserve order perfectly but is robust.
+                        grandparent.remove(box)
+                        grandparent.append(last_child)
+                    elif isinstance(grandparent, Adw.Bin):
+                        grandparent.set_child(last_child)
+                    
+                    self.logger.debug("Simplified widget hierarchy after pane close.")
+
+                # 4. Give focus to another terminal in the same tab
+                remaining_terminals = self.get_all_terminals_in_page(page)
+                if remaining_terminals:
+                    self.logger.debug(f"Focusing remaining terminal: {remaining_terminals[0]}")
+                    remaining_terminals[0].grab_focus()
+            
+            GLib.idle_add(do_close)
+
+    def get_all_terminals_in_page(self, page: Adw.TabPage) -> List[Vte.Terminal]:
+        """Recursively find all terminals within a tab page."""
+        terminals = []
+        root_widget = page.get_child()
+        
+        def find_terminals(widget):
+            if isinstance(widget, Vte.Terminal):
+                terminals.append(widget)
+            elif hasattr(widget, 'get_child') and widget.get_child():
+                find_terminals(widget.get_child())
+            elif isinstance(widget, Gtk.Box):
+                child = widget.get_first_child()
+                while child:
+                    find_terminals(child)
+                    child = child.get_next_sibling()
+
+        if root_widget:
+            find_terminals(root_widget)
+        return terminals
     
     def close_all_tabs(self) -> None:
         """Close all tabs quickly without complex cleanup."""
