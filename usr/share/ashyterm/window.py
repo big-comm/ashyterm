@@ -58,7 +58,8 @@ class CommTerminalWindow(Adw.ApplicationWindow):
         # Window configuration
         self.set_default_size(1200, 700)
         self.set_title(APP_TITLE)
-        
+        self.set_icon_name("ashyterm")
+
         # Data stores
         self.session_store = Gio.ListStore.new(SessionItem)
         self.folder_store = Gio.ListStore.new(SessionFolder)

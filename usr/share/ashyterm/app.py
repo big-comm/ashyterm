@@ -47,7 +47,8 @@ class CommTerminalApp(Adw.Application):
             application_id=APP_ID,
             flags=Gio.ApplicationFlags.FLAGS_NONE
         )
-        
+        # APP_ID
+        GLib.set_prgname(APP_ID)
         # Initialize logging first
         self.logger = get_logger('ashyterm.app')
         self.logger.info(_("Initializing {} v{}").format(APP_TITLE, APP_VERSION))
