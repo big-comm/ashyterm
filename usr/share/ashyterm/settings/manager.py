@@ -816,42 +816,41 @@ class SettingsManager:
         
         try:
             transparency = self.get("transparency", 0)
-            
-            css_provider = Gtk.CssProvider()
+
+            # Use a CssProvider for transparency, as Adw.ApplicationWindow doesn't have a simple API for it.
             style_context = window.get_style_context()
 
-            if hasattr(window, "_effects_css_provider"):
-                style_context.remove_provider(window._effects_css_provider)
+            # Manage a single CSS provider for this effect to avoid conflicts.
+            if hasattr(window, "_transparency_css_provider"):
+                style_context.remove_provider(window._transparency_css_provider)
 
-            css = """window.background { background-color: transparent; }
-            .ashy-sidebar { background-color: #2d2d2d; }
-            .sidebar-main { background-color: #2d2d2d; }
-            .ashy-toolbar { background-color: #2d2d2d; }
-            .ashy-sidebar-content { background-color: #2d2d2d; }"""
-            
-            css_provider.load_from_data(css.encode('utf-8'))
-            style_context.add_provider(css_provider, Gtk.STYLE_PROVIDER_PRIORITY_USER)
-            window._effects_css_provider = css_provider
-            
+            if transparency > 0:
+                css_provider = Gtk.CssProvider()
+                # This CSS makes the tab view background transparent, allowing the VTE
+                # widget's transparency to show through to the window background.
+                css = """
+                    .terminal-tab-view > .view { background-color: transparent; }
+                    .background { background: transparent; }
+                    
+                """
+                css_provider.load_from_data(css.encode("utf-8"))
+                style_context.add_provider(
+                    css_provider, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION
+                )
+                window._transparency_css_provider = css_provider
+
             color_scheme = self.get_color_scheme_data()
-            
+
             fg_color = Gdk.RGBA()
             bg_color = Gdk.RGBA()
             cursor_color = Gdk.RGBA()
-            
+
             fg_color.parse(color_scheme.get("foreground", "#FFFFFF"))
             bg_color.parse(color_scheme.get("background", "#000000"))
-            
+
             # --- CHANGED: Non-linear transparency calculation ---
-            # Convert transparency percentage (0-100) to a normalized value (0.0-1.0)
             transparency_normalized = transparency / 100.0
-            
-            # Apply a curve (power function) to make the transparency effect less aggressive
-            # at lower values. An exponent > 1.0 makes the slider feel more natural.
-            # 1.0 is linear, > 1.0 is curved. Let's start with 1.6 for a noticeable effect.
-            effective_transparency = transparency_normalized ** 1.6
-            
-            # Alpha is the inverse of transparency (1.0 = opaque, 0.0 = transparent)
+            effective_transparency = transparency_normalized**1.6
             bg_color.alpha = max(0.0, min(1.0, 1.0 - effective_transparency))
             
             cursor_color_str = color_scheme.get("cursor", color_scheme.get("foreground", "#FFFFFF"))

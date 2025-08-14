@@ -263,14 +263,12 @@ class DefaultSettings:
             "color_scheme": 0,  # Index in COLOR_SCHEME_MAP
             "transparency": 0,  # Percentage (0-100)
             "font": "Monospace 10",
-            
             # UI behavior
             "sidebar_visible": True,
             "auto_hide_sidebar": False,
             "show_toolbar": True,
             "confirm_close": True,
             "confirm_delete": True,
-            
             # Terminal behavior
             "auto_close_tab": True,
             "auto_close_delay": 1000,  # milliseconds
@@ -279,35 +277,34 @@ class DefaultSettings:
             "mouse_autohide": True,
             "cursor_blink": True,
             "bell_sound": False,
-            "font_scale": 1.0, # Zoom level (1.0 = 100%)
-            
+            "font_scale": 1.0,  # Zoom level (1.0 = 100%)
+            # OSC7 Directory Tracking
+            "osc7_enabled": True,
+            "osc7_show_hostname": False,
+            "osc7_tab_title_format": "{title} - {path}",  # Format string for tab titles
             # Session management
             "restore_sessions": True,
             "auto_save_sessions": True,
             "session_backup": True,
             "max_recent_sessions": 10,
             "default_ssh_port": 22,
-            
             # Security settings
             "security_warnings": True,
             "audit_sessions": True,
             "encrypt_passwords": True,
             "secure_file_permissions": True,
-            
             # Backup settings
-            "auto_backup_enabled": False, # Disable bkp temporary
+            "auto_backup_enabled": False,  # Disable bkp temporary
             "backup_on_change": True,
             "backup_interval_hours": 24,
             "backup_retention_days": 30,
             "backup_on_exit": False,
             "max_backup_count": 10,
-            
             # Advanced settings
             "debug_mode": False,
             "log_level": "INFO",
             "performance_mode": False,
             "experimental_features": False,
-            
             # Keyboard shortcuts - keys must match GAction names
             "shortcuts": {
                 "new-local-tab": "<Control>t",
@@ -325,8 +322,8 @@ class DefaultSettings:
                 "zoom-reset": "<Control>0",
                 "split-horizontal": "<Control><Shift>o",
                 "split-vertical": "<Control><Shift>e",
-                "close-pane": "<Control><Shift>w"
-            }
+                "close-pane": "<Control><Shift>w",
+            },
         }
 
 

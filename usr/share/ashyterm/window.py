@@ -274,10 +274,11 @@ class CommTerminalWindow(Adw.ApplicationWindow):
             self.logger.error(f"Header bar creation failed: {e}")
             raise UIError("header_bar", f"creation failed: {e}")
 
-    def _create_sidebar(self) -> Gtk.Box:
+    def _create_sidebar(self) -> Gtk.Widget:
         """Create the sidebar with session tree."""
         try:
             toolbar_view = Adw.ToolbarView()
+            toolbar_view.add_css_class("background")
             
             scrolled_window = Gtk.ScrolledWindow()
             scrolled_window.set_policy(Gtk.PolicyType.AUTOMATIC, Gtk.PolicyType.AUTOMATIC)
@@ -285,83 +286,56 @@ class CommTerminalWindow(Adw.ApplicationWindow):
             scrolled_window.set_child(self.session_tree.get_widget())
             
             toolbar_view.set_content(scrolled_window)
-            
-            toolbar = self._create_sidebar_toolbar()
-            toolbar_view.add_bottom_bar(toolbar)
-            
-            # Add CSS classes for identification
-            toolbar_view.add_css_class("ashy-sidebar")
-            toolbar_view.add_css_class("sidebar-main")
-            toolbar.add_css_class("ashy-toolbar")
-            scrolled_window.add_css_class("ashy-sidebar-content")
-            
-            # Force CSS directly to prevent transparency issues
-            sidebar_css_provider = Gtk.CssProvider()
-            sidebar_css = """.ashy-sidebar { background-color: #2d2d2d; }
-    .ashy-toolbar { background-color: #2d2d2d; }"""
-            sidebar_css_provider.load_from_data(sidebar_css.encode('utf-8'))
-            
-            # Apply CSS directly to widgets
-            toolbar_view.get_style_context().add_provider(sidebar_css_provider, Gtk.STYLE_PROVIDER_PRIORITY_USER)
-            toolbar.get_style_context().add_provider(sidebar_css_provider, Gtk.STYLE_PROVIDER_PRIORITY_USER)
-            
-            self.logger.debug("Sidebar created using Adw.ToolbarView")
-            return toolbar_view
-            
-        except Exception as e:
-            self.logger.error(f"Sidebar creation failed: {e}")
-            raise UIError("sidebar", f"creation failed: {e}")
-        
-    def _create_sidebar_toolbar(self) -> Gtk.Box:
-        """Create the sidebar toolbar with action buttons."""
-        try:
-            toolbar = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=6)
-            toolbar.add_css_class("toolbar")
-            
+
+            # Create and add the bottom toolbar using Gtk.ActionBar for proper styling
+            toolbar = Gtk.ActionBar()
+
             # Add session button
             add_session_button = Gtk.Button.new_from_icon_name("list-add-symbolic")
             add_session_button.set_tooltip_text(_("Add Session"))
             add_session_button.connect("clicked", self._on_add_session_clicked)
-            toolbar.append(add_session_button)
-            
+            toolbar.pack_start(add_session_button)
+
             # Add folder button
             add_folder_button = Gtk.Button.new_from_icon_name("folder-new-symbolic")
             add_folder_button.set_tooltip_text(_("Add Folder"))
             add_folder_button.connect("clicked", self._on_add_folder_clicked)
-            toolbar.append(add_folder_button)
-            
+            toolbar.pack_start(add_folder_button)
+
             # Edit button
             edit_button = Gtk.Button.new_from_icon_name("document-edit-symbolic")
             edit_button.set_tooltip_text(_("Edit Selected"))
             edit_button.connect("clicked", self._on_edit_selected_clicked)
-            toolbar.append(edit_button)
-            
+            toolbar.pack_start(edit_button)
+
             # Remove button
             remove_button = Gtk.Button.new_from_icon_name("list-remove-symbolic")
             remove_button.set_tooltip_text(_("Remove Selected"))
             remove_button.connect("clicked", self._on_remove_selected_clicked)
-            toolbar.append(remove_button)
-            
-            self.logger.debug("Sidebar toolbar created")
-            return toolbar
-            
+            toolbar.pack_start(remove_button)
+
+            toolbar_view.add_bottom_bar(toolbar)
+
+            self.logger.debug("Sidebar created using Adw.ToolbarView and Gtk.ActionBar")
+            return toolbar_view
+
         except Exception as e:
-            self.logger.error(f"Sidebar toolbar creation failed: {e}")
-            raise UIError("sidebar_toolbar", f"creation failed: {e}")
-    
+            self.logger.error(f"Sidebar creation failed: {e}")
+            raise UIError("sidebar", f"creation failed: {e}")
+
     def _create_content_area(self) -> Gtk.Box:
         """Create the content area with tab view."""
         try:
             content_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=0)
             content_box.append(self.tab_manager.get_tab_bar())
-            
+
             tab_view = self.tab_manager.get_tab_view()
-            tab_view.add_css_class("transparent-tabview")
+            tab_view.add_css_class("terminal-tab-view")
             content_box.append(tab_view)
-            
+
             self.logger.debug("Content area created")
             return content_box
-            
+
         except Exception as e:
             self.logger.error(f"Content area creation failed: {e}")
             raise UIError("content_area", f"creation failed: {e}")
@@ -371,116 +345,129 @@ class CommTerminalWindow(Adw.ApplicationWindow):
         try:
             # Session tree callbacks
             self.session_tree.on_session_activated = self._on_session_activated
-            self.session_tree.on_focus_changed = self._on_tree_focus_changed
-            
+
             # Terminal manager callbacks
-            self.terminal_manager.on_terminal_child_exited = self._on_terminal_child_exited
+            self.terminal_manager.on_terminal_child_exited = (
+                self._on_terminal_child_exited
+            )
             self.terminal_manager.on_terminal_eof = self._on_terminal_eof
-            self.terminal_manager.on_terminal_focus_changed = self._on_terminal_focus_changed
-            self.terminal_manager.on_terminal_should_close = self._on_terminal_should_close
-            
+            self.terminal_manager.on_terminal_focus_changed = (
+                self._on_terminal_focus_changed
+            )
+            self.terminal_manager.on_terminal_should_close = (
+                self._on_terminal_should_close
+            )
+            self.terminal_manager.on_terminal_directory_changed = (
+                self._on_terminal_directory_changed
+            )
+
             # Tab manager callbacks
             self.tab_manager.on_tab_selected = self._on_tab_selected
             self.tab_manager.on_tab_closed = self._on_tab_closed
-            
+            self.tab_manager.on_tab_count_changed = self._on_tab_count_changed
+
             self.logger.debug("Callbacks configured")
-            
+
         except Exception as e:
             self.logger.error(f"Callback setup failed: {e}")
-    
+
     def _setup_window_events(self) -> None:
         """Set up window-level event handlers."""
         try:
             self.connect("close-request", self._on_window_close_request)
-            
+
             # Set up keyboard handling for focus management
             key_controller = Gtk.EventControllerKey()
             key_controller.connect("key-pressed", self._on_window_key_pressed)
             self.add_controller(key_controller)
-            
+
             self.logger.debug("Window events configured")
-            
+
         except Exception as e:
             self.logger.error(f"Window event setup failed: {e}")
-    
+
     def _load_initial_data(self) -> None:
         """Load initial sessions and folders data."""
         try:
             self.logger.debug("Loading initial data")
-            
+
             load_sessions_to_store(self.session_store)
             load_folders_to_store(self.folder_store)
             self.session_tree.refresh_tree()
-            
+
             session_count = self.session_store.get_n_items()
             folder_count = self.folder_store.get_n_items()
-            
-            self.logger.info(f"Loaded {session_count} sessions and {folder_count} folders")
-            
+
+            self.logger.info(
+                f"Loaded {session_count} sessions and {folder_count} folders"
+            )
+
         except Exception as e:
             self.logger.error(f"Failed to load initial data: {e}")
-            self._show_error_dialog(_("Data Loading Error"), 
-                                  _("Failed to load saved sessions and folders. Starting with empty configuration."))
-    
+            self._show_error_dialog(
+                _("Data Loading Error"),
+                _(
+                    "Failed to load saved sessions and folders. Starting with empty configuration."
+                ),
+            )
+
     def _update_sidebar_button_icon(self) -> None:
         """Update sidebar toggle button icon."""
         try:
             is_visible = self.sidebar_box.get_visible()
-            icon_name = "view-reveal-symbolic" if is_visible else "view-conceal-symbolic"
+            icon_name = (
+                "view-reveal-symbolic" if is_visible else "view-conceal-symbolic"
+            )
             self.toggle_sidebar_button.set_icon_name(icon_name)
         except Exception as e:
             self.logger.error(f"Failed to update sidebar button icon: {e}")
-    
+
     # Event handlers
     def _on_toggle_sidebar(self, button: Gtk.ToggleButton) -> None:
         """Handle sidebar toggle button."""
         try:
             is_visible = button.get_active()
-            self.flap.set_reveal_flap(is_visible) # Controls the Flap animation
+            self.flap.set_reveal_flap(is_visible)  # Controls the Flap animation
             self.settings_manager.set_sidebar_visible(is_visible)
             self._update_sidebar_button_icon()
-            
+
             self.logger.debug(f"Sidebar visibility changed: {is_visible}")
-            
+
         except Exception as e:
             self.logger.error(f"Sidebar toggle failed: {e}")
-    
+
     def _on_window_key_pressed(self, controller, keyval, keycode, state) -> bool:
         """Handle window-level key presses for focus management."""
         try:
             # Block terminal input if sidebar has focus
             if self._sidebar_has_focus:
                 return Gdk.EVENT_PROPAGATE
-            
+
             return Gdk.EVENT_PROPAGATE
         except Exception as e:
             self.logger.error(f"Window key press handling failed: {e}")
             return Gdk.EVENT_PROPAGATE
-    
-    def _on_tree_focus_changed(self, has_focus: bool) -> None:
-        """Handle tree view focus change."""
-        try:
-            self._sidebar_has_focus = has_focus
-            self.logger.debug(f"Sidebar focus changed: {has_focus}")
-        except Exception as e:
-            self.logger.error(f"Tree focus change handling failed: {e}")
 
-    def _on_terminal_should_close(self, terminal, child_status: int, identifier) -> bool:
+    def _on_terminal_should_close(
+        self, terminal, child_status: int, identifier
+    ) -> bool:
         """Handle request to close terminal tab after process exit."""
         try:
             # This callback is for auto-closing on normal exit (status 0)
             if child_status != 0:
-                return False # Do not repeat idle call
-            
-            self.logger.debug(f"Auto-closing pane for terminal with status {child_status}")
+                return False  # Do not repeat idle call
+
+            self.logger.debug(
+                f"Auto-closing pane for terminal with status {child_status}"
+            )
             # Delegate to close_pane, which handles both panes and the last tab correctly.
             self.tab_manager.close_pane(terminal)
-            return False # Return False to unschedule the idle_add callback
-            
+            return False  # Return False to unschedule the idle_add callback
+
         except Exception as e:
             self.logger.error(f"Terminal auto-close handling failed: {e}")
             return False
-    
+
     def _on_terminal_focus_changed(self, terminal, from_sidebar: bool) -> None:
         """Handle terminal focus change."""
         try:
@@ -488,55 +475,111 @@ class CommTerminalWindow(Adw.ApplicationWindow):
                 self._sidebar_has_focus = False
         except Exception as e:
             self.logger.error(f"Terminal focus change handling failed: {e}")
-    
+
+    def _on_terminal_directory_changed(
+        self, terminal, new_title: str, osc7_info
+    ) -> None:
+        """Handle OSC7 directory change and update tab title and split pane titles."""
+        try:
+            # Find the tab page for this terminal
+            page = self.tab_manager.get_page_for_terminal(terminal)
+            if page:
+                # Update tab title
+                self.tab_manager.set_tab_title(page, new_title)
+
+                # Also update title in split panes if terminal is in a split
+                self.tab_manager.update_terminal_title_in_splits(terminal, new_title)
+
+                # If this is the only tab and the currently selected one, update window title
+                if (
+                    self.tab_manager.get_tab_count() == 1
+                    and self.tab_manager.get_selected_page() == page
+                ):
+                    self.set_title(f"{APP_TITLE} - {new_title}")
+
+                self.logger.debug(
+                    f"Updated tab and split titles to: '{new_title}' for directory: {osc7_info.path}"
+                )
+            else:
+                self.logger.warning(
+                    "Could not find tab page for terminal directory change"
+                )
+
+        except Exception as e:
+            self.logger.error(f"Terminal directory change handling failed: {e}")
+
+    def _on_tab_count_changed(self, tab_count: int, tab_bar_visible: bool) -> None:
+        """Handle tab count change and update window title accordingly."""
+        try:
+            if tab_count == 1:
+                # Single tab - show tab title in window title, hide tab bar
+                current_page = self.tab_manager.get_selected_page()
+                if current_page:
+                    tab_title = current_page.get_title()
+                    self.set_title(f"{APP_TITLE} - {tab_title}")
+                else:
+                    self.set_title(APP_TITLE)
+            else:
+                # Multiple tabs - show app title only, tab bar is visible
+                self.set_title(APP_TITLE)
+
+            self.logger.debug(
+                f"Window title updated for {tab_count} tabs (bar visible: {tab_bar_visible})"
+            )
+
+        except Exception as e:
+            self.logger.error(f"Tab count change handling failed: {e}")
+
     def _on_window_close_request(self, window) -> bool:
         """Handle window close request with SSH session confirmation."""
         try:
             self.logger.info(_("Window close request received"))
-            
+
             # If already force closing, allow it
             if self._force_closing:
                 self.logger.info(_("Force closing - allowing window to close"))
                 return Gdk.EVENT_PROPAGATE
-            
+
             # Check for active SSH sessions in this window
             has_ssh = self.terminal_manager.has_active_ssh_sessions()
             self.logger.debug(f"Has active SSH sessions: {has_ssh}")
-            
+
             if has_ssh:
                 self.logger.info(_("Showing SSH close confirmation dialog"))
                 self._show_window_ssh_close_confirmation()
                 return Gdk.EVENT_STOP  # Prevent default close
-            
+
             # No SSH sessions, allow normal close
             self.logger.info(_("No SSH sessions, proceeding with normal close"))
             self._perform_cleanup()
             self.logger.info(_("Window cleanup completed"))
             return Gdk.EVENT_PROPAGATE
-            
+
         except Exception as e:
             self.logger.error(_("Window close handling failed: {}").format(e))
             return Gdk.EVENT_PROPAGATE
-        
+
     def _show_window_ssh_close_confirmation(self) -> None:
         """Show confirmation dialog for closing window with active SSH sessions."""
         try:
             ssh_sessions = self.terminal_manager.get_active_ssh_session_names()
-            
+
             if not ssh_sessions:
-                self.logger.warning("No SSH sessions found but confirmation was requested")
+                self.logger.warning(
+                    "No SSH sessions found but confirmation was requested"
+                )
                 self._perform_cleanup()
                 self.close()
                 return
-            
+
             session_list = "\n".join([f"• {name}" for name in ssh_sessions])
-            
+
             try:
                 # Build the message in parts to avoid translation issues
                 part1 = _("This window has active SSH connections:")
                 part2 = _("Closing will disconnect these sessions.")
                 part3 = _("Are you sure you want to close this window?")
-                
+
                 body_text = f"{part1}\n\n{session_list}\n\n{part2}\n\n{part3}"
                 self.logger.debug(f"Final body text created successfully")
             except Exception as e:
@@ -544,22 +587,22 @@ class CommTerminalWindow(Adw.ApplicationWindow):
                 # Fallback to English without translation
                 body_text = f"This window has active SSH connections:\n\n{session_list}\n\nClosing will disconnect these sessions.\n\nAre you sure you want to close this window?"
                 self.logger.info("Using fallback English message")
-            
+
             dialog = Adw.MessageDialog(
-                transient_for=self,
-                title=_("Close Window"),
-                body=body_text
+                transient_for=self, title=_("Close Window"), body=body_text
             )
-            
+
             dialog.add_response("cancel", _("Cancel"))
             dialog.add_response("close", _("Close Window"))
             dialog.set_response_appearance("close", Adw.ResponseAppearance.DESTRUCTIVE)
             dialog.set_default_response("cancel")
-            
+
             def on_response(dlg, response_id):
                 try:
                     if response_id == "close":
-                        self.logger.info(_("User confirmed window close with active SSH sessions"))
+                        self.logger.info(
+                            _("User confirmed window close with active SSH sessions")
+                        )
                         self._force_closing = True  # Set flag to avoid loop
                         self._perform_cleanup()
                         self.close()
@@ -567,139 +610,172 @@ class CommTerminalWindow(Adw.ApplicationWindow):
                         self.logger.debug(_("User cancelled window close"))
                     dlg.close()
                 except Exception as e:
-                    self.logger.error(_("Window SSH close confirmation response failed: {}").format(e))
+                    self.logger.error(
+                        _("Window SSH close confirmation response failed: {}").format(e)
+                    )
                     dlg.close()
-            
+
             dialog.connect("response", on_response)
             dialog.present()
-            
+
         except Exception as e:
-            self.logger.error(_("Window SSH close confirmation dialog failed: {}").format(e))
+            self.logger.error(
+                _("Window SSH close confirmation dialog failed: {}").format(e)
+            )
             # Fallback to normal close if dialog fails
             self._perform_cleanup()
             self.close()
-    
+
     def _perform_cleanup(self) -> None:
         """Fast cleanup without hanging."""
         if self._cleanup_performed:
             return
-        
+
         self._cleanup_performed = True
-        
+
         try:
             self.logger.debug("Fast window cleanup - no complex operations")
             self.logger.debug("Fast cleanup completed")
-            
+
         except Exception as e:
             # Don't let cleanup errors prevent shutdown
             pass
-    
+
     # Session tree event handlers
     def _on_session_activated(self, session: SessionItem) -> None:
         """Handle session activation from tree."""
         try:
             if not VTE_AVAILABLE:
                 raise VTENotAvailableError()
-            
+
             # Basic session validation
             try:
                 session_data = session.to_dict()
                 is_valid, errors = validate_session_data(session_data)
-                
+
                 if not is_valid:
-                    error_msg = _("Session validation failed:\n{errors}").format(errors="\n".join(errors))
+                    error_msg = _("Session validation failed:\n{errors}").format(
+                        errors="\n".join(errors)
+                    )
                     self._show_error_dialog(_("Session Validation Error"), error_msg)
                     return
-                    
+
             except Exception as e:
                 self.logger.warning(f"Session validation failed: {e}")
-            
+
             # Create new tab for session
             if session.is_local():
                 result = self.tab_manager.create_local_tab(session.name)
                 log_terminal_event("created", session.name, "local terminal")
             else:
                 result = self.tab_manager.create_ssh_tab(session)
-                log_terminal_event("created", session.name, f"SSH to {session.get_connection_string()}")
-            
+                log_terminal_event(
+                    "created", session.name, f"SSH to {session.get_connection_string()}"
+                )
+
             if result is None:
-                self._show_error_dialog(_("Terminal Creation Failed"), 
-                                      _("Could not create terminal for this session."))
-            
+                self._show_error_dialog(
+                    _("Terminal Creation Failed"),
+                    _("Could not create terminal for this session."),
+                )
+
         except VTENotAvailableError:
-            self._show_error_dialog(_("VTE Not Available"), 
-                                  _("Cannot open session - VTE library not installed."))
+            self._show_error_dialog(
+                _("VTE Not Available"),
+                _("Cannot open session - VTE library not installed."),
+            )
         except Exception as e:
             self.logger.error(f"Session activation failed: {e}")
-            self._show_error_dialog(_("Session Error"), _("Failed to activate session: {error}").format(error=str(e)))
-    
-    def _on_terminal_child_exited(self, terminal, child_status: int, identifier) -> None:
+            self._show_error_dialog(
+                _("Session Error"),
+                _("Failed to activate session: {error}").format(error=str(e)),
+            )
+
+    def _on_terminal_child_exited(
+        self, terminal, child_status: int, identifier
+    ) -> None:
         """Handle terminal child process exit."""
         try:
-            terminal_name = identifier if isinstance(identifier, str) else getattr(identifier, 'name', 'Unknown')
+            terminal_name = (
+                identifier
+                if isinstance(identifier, str)
+                else getattr(identifier, "name", "Unknown")
+            )
             log_terminal_event("exited", terminal_name, f"status {child_status}")
         except Exception as e:
             self.logger.error(f"Terminal exit handling failed: {e}")
-    
+
     def _on_terminal_eof(self, terminal, identifier) -> None:
         """Handle terminal EOF."""
         try:
-            terminal_name = identifier if isinstance(identifier, str) else getattr(identifier, 'name', 'Unknown')
+            terminal_name = (
+                identifier
+                if isinstance(identifier, str)
+                else getattr(identifier, "name", "Unknown")
+            )
             log_terminal_event("eof", terminal_name)
         except Exception as e:
             self.logger.error(f"Terminal EOF handling failed: {e}")
-    
+
     def _on_tab_selected(self, page) -> None:
         """Handle tab selection change."""
         # Tab manager already handles focus
         pass
-    
+
     def _on_tab_closed(self, page, terminal) -> None:
         """Handle tab being closed."""
         # Cleanup already handled by tab manager
         pass
-    
+
     # Action handlers - Terminal actions
     def _on_new_local_tab(self, action, param) -> None:
         """Handle new local tab action with rate limiting."""
         if self._creating_tab:
             self.logger.debug("Tab creation already in progress, ignoring")
             return
-        
+
         # Rate limiting
         current_time = time.time()
         if current_time - self._last_tab_creation < 0.5:  # 500ms rate limit
             self.logger.debug("Tab creation rate limited")
             return
-        
+
         try:
             self._creating_tab = True
             self._last_tab_creation = current_time
-            
+
             if not VTE_AVAILABLE:
                 raise VTENotAvailableError()
-            
+
             result = self.tab_manager.create_local_tab()
             if result is None:
-                raise AshyTerminalError("Terminal creation failed", 
-                                      category=ErrorCategory.TERMINAL,
-                                      severity=ErrorSeverity.HIGH)
-            
+                raise AshyTerminalError(
+                    "Terminal creation failed",
+                    category=ErrorCategory.TERMINAL,
+                    severity=ErrorSeverity.HIGH,
+                )
+
             log_terminal_event("created", "Local Terminal", "new tab")
-                
+
         except VTENotAvailableError:
-            self._show_error_dialog(_("VTE Not Available"), 
-                                  _("Cannot create terminal - VTE library not installed."))
+            self._show_error_dialog(
+                _("VTE Not Available"),
+                _("Cannot create terminal - VTE library not installed."),
+            )
         except Exception as e:
             self.logger.error(f"New local tab creation failed: {e}")
-            self._show_error_dialog(_("Terminal Error"), _("Failed to create new tab: {error}").format(error=str(e)))
+            self._show_error_dialog(
+                _("Terminal Error"),
+                _("Failed to create new tab: {error}").format(error=str(e)),
+            )
         finally:
             # Reset flag after delay
             def reset_flag():
                 self._creating_tab = False
                 return False
+
             GLib.timeout_add(200, reset_flag)
-    
+
     def _on_close_tab(self, action, param) -> None:
         """Handle close tab/pane action."""
         try:
@@ -709,32 +785,36 @@ class CommTerminalWindow(Adw.ApplicationWindow):
                 self.tab_manager.close_pane(focused_terminal)
         except Exception as e:
             self.logger.error(f"Close tab/pane action failed: {e}")
-    
+
     def _on_copy(self, action, param) -> None:
         """Handle copy action."""
         try:
             success = self.tab_manager.copy_from_current_terminal()
             if not success:
-                self.logger.debug("Copy operation failed - no selection or terminal not available")
+                self.logger.debug(
+                    "Copy operation failed - no selection or terminal not available"
+                )
         except Exception as e:
             self.logger.error(f"Copy operation failed: {e}")
-    
+
     def _on_paste(self, action, param) -> None:
         """Handle paste action."""
         try:
             success = self.tab_manager.paste_to_current_terminal()
             if not success:
-                self.logger.debug("Paste operation failed - no clipboard content or terminal not available")
+                self.logger.debug(
+                    "Paste operation failed - no clipboard content or terminal not available"
+                )
         except Exception as e:
             self.logger.error(f"Paste operation failed: {e}")
-    
+
     def _on_select_all(self, action, param) -> None:
         """Handle select all action."""
         try:
             self.tab_manager.select_all_in_current_terminal()
         except Exception as e:
             self.logger.error(f"Select all operation failed: {e}")
-            
+
     # Action handlers - Splitting actions
     def _on_split_horizontal(self, action, param) -> None:
         """Handle horizontal split action."""
@@ -765,7 +845,7 @@ class CommTerminalWindow(Adw.ApplicationWindow):
         except Exception as e:
             self.logger.error(f"Close pane failed: {e}")
             self._show_error_dialog(_("Close Error"), str(e))
-            
+
     def _on_zoom_in(self, action, param) -> None:
         """Handle zoom in action."""
         try:
@@ -792,112 +872,138 @@ class CommTerminalWindow(Adw.ApplicationWindow):
                 self.logger.debug("Zoom reset failed - no terminal available")
         except Exception as e:
             self.logger.error(f"Zoom reset action failed: {e}")
-    
+
     # Action handlers - Session actions
     def _on_edit_session(self, action, param) -> None:
         """Handle edit session action."""
         try:
-            # --- CHANGED: Query the tree for the selected item ---
             selected_item = self.session_tree.get_selected_item()
             if isinstance(selected_item, SessionItem):
-                self._show_session_edit_dialog(selected_item, False)
+                found, position = self.session_store.find(selected_item)
+                if found:
+                    self._show_session_edit_dialog(selected_item, position)
         except Exception as e:
             self.logger.error(f"Edit session failed: {e}")
-            self._show_error_dialog(_("Edit Error"), _("Failed to edit session: {error}").format(error=str(e)))
-    
+            self._show_error_dialog(
+                _("Edit Error"),
+                _("Failed to edit session: {error}").format(error=str(e)),
+            )
+
     def _on_duplicate_session(self, action, param) -> None:
         """Handle duplicate session action."""
         try:
-            # --- CHANGED: Query the tree for the selected item ---
             selected_item = self.session_tree.get_selected_item()
             if isinstance(selected_item, SessionItem):
-                duplicated = self.session_tree.operations.duplicate_session(selected_item)
+                duplicated = self.session_tree.operations.duplicate_session(
+                    selected_item
+                )
                 if duplicated:
                     self.session_tree.refresh_tree()
                     log_session_event("duplicated", selected_item.name)
         except Exception as e:
             self.logger.error(f"Duplicate session failed: {e}")
-            self._show_error_dialog(_("Duplicate Error"), _("Failed to duplicate session: {error}").format(error=str(e)))
-    
+            self._show_error_dialog(
+                _("Duplicate Error"),
+                _("Failed to duplicate session: {error}").format(error=str(e)),
+            )
+
     def _on_rename_session(self, action, param) -> None:
         """Handle rename session action."""
         try:
-            # --- CHANGED: Query the tree for the selected item ---
             selected_item = self.session_tree.get_selected_item()
             if isinstance(selected_item, SessionItem):
                 self._show_rename_dialog(selected_item, True)
         except Exception as e:
             self.logger.error(f"Rename session failed: {e}")
-            self._show_error_dialog(_("Rename Error"), _("Failed to rename session: {error}").format(error=str(e)))
-    
+            self._show_error_dialog(
+                _("Rename Error"),
+                _("Failed to rename session: {error}").format(error=str(e)),
+            )
+
     def _on_move_session_to_folder(self, action, param) -> None:
         """Handle move session to folder action."""
         try:
-            # --- CHANGED: Query the tree for the selected item ---
             selected_item = self.session_tree.get_selected_item()
             if isinstance(selected_item, SessionItem):
                 self._show_move_session_dialog(selected_item)
         except Exception as e:
             self.logger.error(f"Move session failed: {e}")
-            self._show_error_dialog(_("Move Error"), _("Failed to move session: {error}").format(error=str(e)))
-    
+            self._show_error_dialog(
+                _("Move Error"),
+                _("Failed to move session: {error}").format(error=str(e)),
+            )
+
     def _on_delete_session(self, action, param) -> None:
         """Handle delete session action."""
         try:
-            # --- CHANGED: Query the tree for the selected item ---
             selected_item = self.session_tree.get_selected_item()
             if isinstance(selected_item, SessionItem):
                 self._show_delete_confirmation(selected_item, True)
         except Exception as e:
             self.logger.error(f"Delete session failed: {e}")
-            self._show_error_dialog(_("Delete Error"), _("Failed to delete session: {error}").format(error=str(e)))
-    
+            self._show_error_dialog(
+                _("Delete Error"),
+                _("Failed to delete session: {error}").format(error=str(e)),
+            )
+
     # Action handlers - Folder actions
     def _on_edit_folder(self, action, param) -> None:
         """Handle edit folder action."""
         try:
-            # --- CHANGED: Query the tree for the selected item ---
             selected_item = self.session_tree.get_selected_item()
             if isinstance(selected_item, SessionFolder):
-                self._show_folder_edit_dialog(selected_item, False)
+                found, position = self.folder_store.find(selected_item)
+                if found:
+                    self._show_folder_edit_dialog(selected_item, position)
         except Exception as e:
             self.logger.error(f"Edit folder failed: {e}")
-            self._show_error_dialog(_("Edit Error"), _("Failed to edit folder: {error}").format(error=str(e)))
-    
+            self._show_error_dialog(
+                _("Edit Error"),
+                _("Failed to edit folder: {error}").format(error=str(e)),
+            )
+
     def _on_rename_folder(self, action, param) -> None:
         """Handle rename folder action."""
         try:
-            # --- CHANGED: Query the tree for the selected item ---
             selected_item = self.session_tree.get_selected_item()
             if isinstance(selected_item, SessionFolder):
                 self._show_rename_dialog(selected_item, False)
         except Exception as e:
             self.logger.error(f"Rename folder failed: {e}")
-            self._show_error_dialog(_("Rename Error"), _("Failed to rename folder: {error}").format(error=str(e)))
-    
+            self._show_error_dialog(
+                _("Rename Error"),
+                _("Failed to rename folder: {error}").format(error=str(e)),
+            )
+
     def _on_add_session_to_folder(self, action, param) -> None:
         """Handle add session to folder action."""
         try:
-            # --- CHANGED: Query the tree for the selected item ---
             selected_item = self.session_tree.get_selected_item()
             if isinstance(selected_item, SessionFolder):
-                new_session = SessionItem(name=_("New Session"), folder_path=selected_item.path)
-                self._show_session_edit_dialog(new_session, True)
+                new_session = SessionItem(
+                    name=_("New Session"), folder_path=selected_item.path
+                )
+                self._show_session_edit_dialog(new_session, -1)
         except Exception as e:
             self.logger.error(f"Add session to folder failed: {e}")
-            self._show_error_dialog(_("Add Error"), _("Failed to add session to folder: {error}").format(error=str(e)))
-    
+            self._show_error_dialog(
+                _("Add Error"),
+                _("Failed to add session to folder: {error}").format(error=str(e)),
+            )
+
     def _on_delete_folder(self, action, param) -> None:
         """Handle delete folder action."""
         try:
-            # --- CHANGED: Query the tree for the selected item ---
             selected_item = self.session_tree.get_selected_item()
             if isinstance(selected_item, SessionFolder):
                 self._show_delete_confirmation(selected_item, False)
         except Exception as e:
             self.logger.error(f"Delete folder failed: {e}")
-            self._show_error_dialog(_("Delete Error"), _("Failed to delete folder: {error}").format(error=str(e)))
-    
+            self._show_error_dialog(
+                _("Delete Error"),
+                _("Failed to delete folder: {error}").format(error=str(e)),
+            )
+
     # Action handlers - Clipboard actions
     def _on_cut_item(self, action, param) -> None:
         """Handle cut item action."""
@@ -906,7 +1012,7 @@ class CommTerminalWindow(Adw.ApplicationWindow):
             self.session_tree._cut_selected_item_safe()
         except Exception as e:
             self.logger.error(f"Cut item failed: {e}")
-    
+
     def _on_copy_item(self, action, param) -> None:
         """Handle copy item action."""
         try:
@@ -914,7 +1020,7 @@ class CommTerminalWindow(Adw.ApplicationWindow):
             self.session_tree._copy_selected_item_safe()
         except Exception as e:
             self.logger.error(f"Copy item failed: {e}")
-    
+
     def _on_paste_item(self, action, param) -> None:
         """Handle paste item action."""
         try:
@@ -925,11 +1031,11 @@ class CommTerminalWindow(Adw.ApplicationWindow):
                 target_path = selected_item.path
             elif isinstance(selected_item, SessionItem):
                 target_path = selected_item.folder_path
-            
+
             self.session_tree._paste_item_safe(target_path)
         except Exception as e:
             self.logger.error(f"Paste item failed: {e}")
-    
+
     def _on_paste_item_root(self, action, param) -> None:
         """Handle paste item to root action."""
         try:
@@ -937,52 +1043,60 @@ class CommTerminalWindow(Adw.ApplicationWindow):
             self.session_tree._paste_item_safe("")
         except Exception as e:
             self.logger.error(f"Paste item to root failed: {e}")
-    
+
     # Action handlers - Root actions
     def _on_add_session_root(self, action, param) -> None:
         """Handle add session to root action."""
         self._on_add_session_clicked(None)
-    
+
     def _on_add_folder_root(self, action, param) -> None:
         """Handle add folder to root action."""
         self._on_add_folder_clicked(None)
-    
+
     def _on_preferences(self, action, param) -> None:
         """Handle preferences action."""
         try:
             dialog = PreferencesDialog(self, self.settings_manager)
-            
+
             # Connect signals for live updates
-            dialog.connect("color-scheme-changed", lambda d, i: self.terminal_manager.update_all_terminals())
-            dialog.connect("transparency-changed", lambda d, v: self.terminal_manager.update_all_terminals())
-            dialog.connect("font-changed", lambda d, f: self.terminal_manager.update_all_terminals())
-            dialog.connect("shortcut-changed", lambda d: self._update_keyboard_shortcuts())
-            
+            dialog.connect(
+                "color-scheme-changed",
+                lambda d, i: self.terminal_manager.update_all_terminals(),
+            )
+            dialog.connect(
+                "transparency-changed",
+                lambda d, v: self.terminal_manager.update_all_terminals(),
+            )
+            dialog.connect(
+                "font-changed",
+                lambda d, f: self.terminal_manager.update_all_terminals(),
+            )
+            dialog.connect(
+                "shortcut-changed", lambda d: self._update_keyboard_shortcuts()
+            )
+
             dialog.present()
-            
+
         except Exception as e:
             self.logger.error(f"Preferences dialog failed: {e}")
-            self._show_error_dialog(_("Preferences Error"), _("Failed to open preferences: {error}").format(error=str(e)))
-    
+            self._show_error_dialog(
+                _("Preferences Error"),
+                _("Failed to open preferences: {error}").format(error=str(e)),
+            )
+
     def _on_shortcuts(self, action, param) -> None:
         """Handle shortcuts action - show keyboard shortcuts window."""
         try:
-            shortcuts_window = Gtk.ShortcutsWindow(
-                transient_for=self,
-                modal=True
-            )
-            
+            shortcuts_window = Gtk.ShortcutsWindow(transient_for=self, modal=True)
+
             # Create shortcuts section
             section = Gtk.ShortcutsSection(
-                title=_("Keyboard Shortcuts"),
-                section_name="shortcuts"
+                title=_("Keyboard Shortcuts"), section_name="shortcuts"
             )
-            
+
             # Terminal shortcuts
-            terminal_group = Gtk.ShortcutsGroup(
-                title=_("Terminal")
-            )
-            
+            terminal_group = Gtk.ShortcutsGroup(title=_("Terminal"))
+
             terminal_shortcuts = [
                 (_("New Tab"), "<Control>t"),
                 (_("Close Tab"), "<Control>w"),
@@ -991,18 +1105,13 @@ class CommTerminalWindow(Adw.ApplicationWindow):
                 (_("Paste"), "<Control><Shift>v"),
                 (_("Select All"), "<Control><Shift>a"),
             ]
-            
+
             for title, accel in terminal_shortcuts:
-                shortcut = Gtk.ShortcutsShortcut(
-                    title=title,
-                    accelerator=accel
-                )
+                shortcut = Gtk.ShortcutsShortcut(title=title, accelerator=accel)
                 terminal_group.append(shortcut)
 
             # Application shortcuts
-            app_group = Gtk.ShortcutsGroup(
-                title=_("Application")
-            )
+            app_group = Gtk.ShortcutsGroup(title=_("Application"))
 
             app_shortcuts = [
                 (_("Preferences"), "<Control>comma"),
@@ -1011,115 +1120,133 @@ class CommTerminalWindow(Adw.ApplicationWindow):
             ]
 
             for title, accel in app_shortcuts:
-                shortcut = Gtk.ShortcutsShortcut(
-                    title=title,
-                    accelerator=accel
-                )
+                shortcut = Gtk.ShortcutsShortcut(title=title, accelerator=accel)
                 app_group.append(shortcut)
-            
+
             section.append(terminal_group)
             section.append(app_group)
             shortcuts_window.add_section(section)
-            
+
             shortcuts_window.present()
-            
+
         except Exception as e:
             self.logger.error(f"Shortcuts window failed: {e}")
-            self._show_error_dialog(_("Keyboard Shortcuts"), 
-                                _("Failed to open shortcuts window: {error}").format(error=str(e)))
+            self._show_error_dialog(
+                _("Keyboard Shortcuts"),
+                _("Failed to open shortcuts window: {error}").format(error=str(e)),
+            )
 
     def _on_new_window(self, action, param) -> None:
         """Handle new window action."""
         try:
             # Get the application and create new window
             app = self.get_application()
-            if app and hasattr(app, 'create_new_window'):
+            if app and hasattr(app, "create_new_window"):
                 new_window = app.create_new_window()
                 if new_window:
                     new_window.present()
                 else:
-                    self._show_error_dialog(_("Nova Janela"), 
-                                        _("Falha ao criar nova janela"))
+                    self._show_error_dialog(
+                        _("Nova Janela"), _("Falha ao criar nova janela")
+                    )
             else:
-                self._show_error_dialog(_("Nova Janela"), 
-                                    _("Não foi possível criar uma nova janela"))
-            
+                self._show_error_dialog(
+                    _("Nova Janela"), _("Não foi possível criar uma nova janela")
+                )
+
         except Exception as e:
             self.logger.error(f"New window creation failed: {e}")
-            self._show_error_dialog(_("Nova Janela"), 
-                                _("Falha ao criar nova janela: {error}").format(error=str(e)))
-            
+            self._show_error_dialog(
+                _("Nova Janela"),
+                _("Falha ao criar nova janela: {error}").format(error=str(e)),
+            )
+
     def _on_toggle_sidebar_action(self, action, param) -> None:
         """Handle toggle sidebar action via keyboard shortcut."""
         try:
             self.logger.info("DEBUG: Toggle sidebar action called!")
-            
+
             # Toggle the button state which will trigger the visibility change
             current_state = self.toggle_sidebar_button.get_active()
             self.logger.info(f"DEBUG: Current sidebar state: {current_state}")
-            
+
             self.toggle_sidebar_button.set_active(not current_state)
-            
-            self.logger.debug(f"Sidebar toggled via keyboard shortcut: {not current_state}")
-            
+
+            self.logger.debug(
+                f"Sidebar toggled via keyboard shortcut: {not current_state}"
+            )
+
         except Exception as e:
             self.logger.error(f"Toggle sidebar action failed: {e}")
-    
+
     # Button handlers
     def _on_add_session_clicked(self, button) -> None:
         """Handle add session button click."""
         try:
             new_session = SessionItem(name=_("New Session"))
-            self._show_session_edit_dialog(new_session, True)
+            self._show_session_edit_dialog(new_session, -1)
         except Exception as e:
             self.logger.error(f"Add session button failed: {e}")
-            self._show_error_dialog(_("Add Session Error"), _("Failed to add session: {error}").format(error=str(e)))
-            
+            self._show_error_dialog(
+                _("Add Session Error"),
+                _("Failed to add session: {error}").format(error=str(e)),
+            )
+
     def _on_new_tab_clicked(self, button) -> None:
         """Handle new tab button click in header."""
         try:
             if not VTE_AVAILABLE:
-                self._show_error_dialog(_("VTE Not Available"), 
-                                    _("Cannot create terminal - VTE library not installed."))
+                self._show_error_dialog(
+                    _("VTE Not Available"),
+                    _("Cannot create terminal - VTE library not installed."),
+                )
                 return
-            
+
             # Use the same logic as new local tab action
             result = self.tab_manager.create_local_tab()
             if result is None:
-                self._show_error_dialog(_("Terminal Error"), 
-                                    _("Failed to create new tab."))
+                self._show_error_dialog(
+                    _("Terminal Error"), _("Failed to create new tab.")
+                )
                 return
-            
+
             log_terminal_event("created", "Local Terminal", "header button")
             self.logger.debug("New tab created from header button")
-            
+
         except Exception as e:
             self.logger.error(f"New tab header button failed: {e}")
-            self._show_error_dialog(_("Terminal Error"), 
-                                _("Failed to create new tab: {error}").format(error=str(e)))
-    
+            self._show_error_dialog(
+                _("Terminal Error"),
+                _("Failed to create new tab: {error}").format(error=str(e)),
+            )
+
     def _on_add_folder_clicked(self, button) -> None:
         """Handle add folder button click."""
         try:
-            # Crie uma nova instância de SessionFolder com um nome padrão
             new_folder = SessionFolder(name=_("New Folder"))
-            self._show_folder_edit_dialog(new_folder, True)
+            self._show_folder_edit_dialog(new_folder, None)
         except Exception as e:
             self.logger.error(f"Add folder button failed: {e}")
-            self._show_error_dialog(_("Add Folder Error"), _("Failed to add folder: {error}").format(error=str(e)))
-    
+            self._show_error_dialog(
+                _("Add Folder Error"),
+                _("Failed to add folder: {error}").format(error=str(e)),
+            )
+
     def _on_edit_selected_clicked(self, button) -> None:
         """Handle edit selected button click."""
         try:
             selected_item = self.session_tree.get_selected_item()
             if isinstance(selected_item, SessionItem):
-                self._show_session_edit_dialog(selected_item, False)
+                self._on_edit_session(None, None)
             elif isinstance(selected_item, SessionFolder):
-                self._show_folder_edit_dialog(selected_item, False)
+                self._on_edit_folder(None, None)
         except Exception as e:
             self.logger.error(f"Edit selected button failed: {e}")
-            self._show_error_dialog(_("Edit Error"), _("Failed to edit selected item: {error}").format(error=str(e)))
-    
+            self._show_error_dialog(
+                _("Edit Error"),
+                _("Failed to edit selected item: {error}").format(error=str(e)),
+            )
+
     def _on_remove_selected_clicked(self, button) -> None:
         """Handle remove selected button click."""
         try:
@@ -1130,24 +1257,29 @@ class CommTerminalWindow(Adw.ApplicationWindow):
                 self._show_delete_confirmation(selected_item, False)
         except Exception as e:
             self.logger.error(f"Remove selected button failed: {e}")
-            self._show_error_dialog(_("Remove Error"), _("Failed to remove selected item: {error}").format(error=str(e)))
-    
+            self._show_error_dialog(
+                _("Remove Error"),
+                _("Failed to remove selected item: {error}").format(error=str(e)),
+            )
+
     # Helper methods for dialogs
-    def _show_session_edit_dialog(self, session: SessionItem, is_new: bool) -> None:
+    def _show_session_edit_dialog(self, session: SessionItem, position: int) -> None:
         """Show session edit dialog."""
         try:
-            position = -1 if is_new else self.session_tree._find_item_position(session)
-            dialog = SessionEditDialog(self, session, self.session_store, position, self.folder_store)
+            dialog = SessionEditDialog(
+                self, session, self.session_store, position, self.folder_store
+            )
             dialog.present()
         except Exception as e:
             self.logger.error(f"Session edit dialog failed: {e}")
             raise DialogError("session_edit", str(e))
-    
-    def _show_folder_edit_dialog(self, folder: Optional[SessionFolder], is_new: bool) -> None:
+
+    def _show_folder_edit_dialog(
+        self, folder: Optional[SessionFolder], position: Optional[int]
+    ) -> None:
         """Show folder edit dialog."""
         try:
-            position = None if is_new else self.session_tree._find_item_position(folder)
-            # Passe o flag 'is_new' para o construtor do diálogo
+            is_new = position is None
             dialog = FolderEditDialog(self, self.folder_store, folder, position, is_new=is_new)
             dialog.present()
         except Exception as e:

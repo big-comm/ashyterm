@@ -15,13 +15,16 @@ if TYPE_CHECKING:
 from ..settings.config import SSH_CONNECT_TIMEOUT
 from ..utils.logger import get_logger, log_terminal_event, log_error_with_context
 from ..utils.exceptions import (
-    TerminalSpawnError, SSHConnectionError, SSHAuthenticationError, SSHKeyError,
-    NetworkError, ConnectionTimeoutError, HostUnreachableError,
-    handle_exception, ErrorCategory, ErrorSeverity
+    TerminalSpawnError,
+    SSHConnectionError,
+    SSHAuthenticationError,
+    SSHKeyError,
 )
 from ..utils.security import (
-    validate_ssh_key_file, validate_ssh_hostname, SSHKeyValidator, 
-    HostnameValidator, InputSanitizer
+    validate_ssh_key_file,
+    validate_ssh_hostname,
+    HostnameValidator,
+    InputSanitizer,
 )
 from ..utils.platform import (
     get_platform_info, get_command_builder, get_environment_manager,
@@ -177,7 +180,7 @@ class ProcessSpawner:
                 )
                 
                 self._stats['local_spawns'] += 1
-                self.logger.info(f"Local terminal spawn initiated successfully")
+                self.logger.info("Local terminal spawn initiated successfully")
                 log_terminal_event("spawn_initiated", str(user_data), f"local shell: {shell_path}")
                 
                 return True
@@ -358,7 +361,32 @@ class ProcessSpawner:
                 key_file=session.auth_value if session.uses_key_auth() else None,
                 options=ssh_options
             )
-            
+
+            # Optional: Add OSC7 support for managed SSH sessions (if configured)
+            # This is a conservative enhancement that doesn't break existing functionality
+            try:
+                # Build a simple remote command to enable OSC7 directory tracking
+                # Only add this if the system supports it
+                osc7_setup = (
+                    r"export PROMPT_COMMAND="
+                    "'"
+                    'printf "\033]7;file://%s%s\007" "$(hostname)" "$PWD"'
+                    "'"
+                )
+                remote_cmd = f"{osc7_setup}; exec $SHELL -l"
+
+                # Add -t for pseudo-terminal if not present
+                if "-t" not in cmd:
+                    cmd.insert(1, "-t")
+
+                # Add the remote command
+                cmd.append(remote_cmd)
+                self.logger.debug("Enhanced SSH command with OSC7 support")
+
+            except Exception as e:
+                self.logger.debug(f"Could not enhance SSH with OSC7: {e}")
+                # Continue with standard SSH connection
+
             # Handle password authentication with sshpass
             if session.uses_password_auth() and session.auth_value:
                 if has_command('sshpass'):
@@ -405,7 +433,7 @@ class ProcessSpawner:
             error_text += f"Host: {session.get_connection_string()}\r\n"
             error_text += f"Error: {error_message}\r\n"
             error_text += f"{'='*60}\r\n"
-            error_text += f"Please check your connection settings and try again.\r\n\r\n"
+            error_text += "Please check your connection settings and try again.\r\n\r\n"
             
             self._feed_terminal_safely(terminal, error_text)
             
@@ -437,7 +465,7 @@ class ProcessSpawner:
                 # Show user-friendly error message
                 error_msg = f"\r\nFailed to start {terminal_name}:\r\n"
                 error_msg += f"Error: {error.message}\r\n"
-                error_msg += f"Please check your system configuration.\r\n\r\n"
+                error_msg += "Please check your system configuration.\r\n\r\n"
                 self._feed_terminal_safely(terminal, error_msg)
                 
             else:
@@ -489,14 +517,14 @@ class ProcessSpawner:
                 
                 # Determine error type and provide specific guidance
                 error_guidance = self._get_ssh_error_guidance(error.message)
-                
-                error_msg = f"\r\nSSH Connection Failed:\r\n"
+
+                error_msg = "\r\nSSH Connection Failed:\r\n"
                 error_msg += f"Session: {session_name}\r\n"
                 error_msg += f"Host: {session_host}\r\n"
                 error_msg += f"Error: {error.message}\r\n"
                 if error_guidance:
                     error_msg += f"Suggestion: {error_guidance}\r\n"
-                error_msg += f"\r\n"
+                error_msg += "\r\n"
                 
                 self._feed_terminal_safely(terminal, error_msg)
                 

@@ -292,10 +292,16 @@ class CommTerminalApp(Adw.Application):
             
             for action_name in shortcut_actions:
                 shortcut = self.settings_manager.get_shortcut(action_name)
-                if shortcut:
-                    self.set_accels_for_action(f"win.{action_name}", [shortcut])
-                else:
-                    self.set_accels_for_action(f"win.{action_name}", [])
+                accels = [shortcut] if shortcut else []
+
+                # --- CHANGE START: Add hardcoded alternative for zoom-in ---
+                if action_name == "zoom-in":
+                    # Add <Control>equal as a non-configurable alternative for zoom-in
+                    # This accommodates different keyboard layouts.
+                    accels.append("<Control>equal")
+                # --- CHANGE END ---
+
+                self.set_accels_for_action(f"win.{action_name}", accels)
             
             self.logger.debug("Window shortcuts updated")
             
