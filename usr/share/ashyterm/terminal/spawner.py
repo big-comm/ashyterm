@@ -1,3 +1,5 @@
+# terminal/spawner.py
+
 import os
 import signal
 import threading
@@ -6,6 +8,7 @@ from typing import Optional, Callable, Any, TYPE_CHECKING, Dict, List
 from pathlib import Path
 
 import gi
+
 gi.require_version("Vte", "3.91")
 from gi.repository import Vte, GLib
 
@@ -27,62 +30,68 @@ from ..utils.security import (
     InputSanitizer,
 )
 from ..utils.platform import (
-    get_platform_info, get_command_builder, get_environment_manager,
-    get_shell_detector, has_command, is_windows
+    get_platform_info,
+    get_command_builder,
+    get_environment_manager,
+    get_shell_detector,
+    has_command,
+    is_windows,
+    ShellType,
 )
 
 
 class ProcessTracker:
     """Track spawned processes for proper cleanup."""
-    
+
     def __init__(self):
-        self.logger = get_logger('ashyterm.spawner.tracker')
+        self.logger = get_logger("ashyterm.spawner.tracker")
         self._processes: Dict[int, Dict[str, Any]] = {}
         self._lock = threading.RLock()
-    
+
     def register_process(self, pid: int, process_info: Dict[str, Any]) -> None:
         """Register a spawned process."""
         with self._lock:
-            self._processes[pid] = {
-                **process_info,
-                'registered_at': time.time()
-            }
-            self.logger.debug(f"Process registered: PID={pid}, type={process_info.get('type', 'unknown')}")
-    
+            self._processes[pid] = {**process_info, "registered_at": time.time()}
+            self.logger.debug(
+                f"Process registered: PID={pid}, type={process_info.get('type', 'unknown')}"
+            )
+
     def unregister_process(self, pid: int) -> bool:
         """Unregister a process."""
         with self._lock:
             if pid in self._processes:
                 process_info = self._processes.pop(pid)
-                self.logger.debug(f"Process unregistered: PID={pid}, type={process_info.get('type', 'unknown')}")
+                self.logger.debug(
+                    f"Process unregistered: PID={pid}, type={process_info.get('type', 'unknown')}"
+                )
                 return True
             return False
-    
+
     def get_process_info(self, pid: int) -> Optional[Dict[str, Any]]:
         """Get process information."""
         with self._lock:
             return self._processes.get(pid, {}).copy()
-    
+
     def get_all_processes(self) -> Dict[int, Dict[str, Any]]:
         """Get all tracked processes."""
         with self._lock:
             return self._processes.copy()
-    
+
     def terminate_all(self) -> None:
         """Terminate all tracked processes."""
         with self._lock:
             processes_to_terminate = list(self._processes.keys())
-            
+
             for pid in processes_to_terminate:
                 try:
                     if is_windows():
                         os.kill(pid, signal.SIGTERM)
                     else:
                         os.kill(pid, signal.SIGTERM)
-                    
+
                     self.logger.debug(f"Sent SIGTERM to process {pid}")
                     time.sleep(0.1)  # Give process time to terminate gracefully
-                    
+
                     # Force kill if still running
                     try:
                         if is_windows():
@@ -92,7 +101,7 @@ class ProcessTracker:
                         self.logger.debug(f"Force killed process {pid}")
                     except (OSError, ProcessLookupError):
                         pass  # Process already terminated
-                        
+
                 except (OSError, ProcessLookupError):
                     pass  # Process already terminated
                 finally:
@@ -101,69 +110,85 @@ class ProcessTracker:
 
 class ProcessSpawner:
     """Enhanced process spawner with comprehensive security and error handling."""
-    
+
     def __init__(self):
-        self.logger = get_logger('ashyterm.spawner')
+        self.logger = get_logger("ashyterm.spawner")
         self.platform_info = get_platform_info()
         self.command_builder = get_command_builder()
         self.environment_manager = get_environment_manager()
         self.shell_detector = get_shell_detector()
-        
+
         # Process tracking
         self.process_tracker = ProcessTracker()
-        
+
         # Thread safety
         self._spawn_lock = threading.Lock()
-        
+
         # Statistics
         self._stats = {
-            'local_spawns': 0,
-            'ssh_spawns': 0,
-            'spawn_failures': 0,
-            'processes_terminated': 0
+            "local_spawns": 0,
+            "ssh_spawns": 0,
+            "spawn_failures": 0,
+            "processes_terminated": 0,
         }
-        
-        self.logger.info(f"Process spawner initialized on {self.platform_info.platform_type.value}")
-    
-    def spawn_local_terminal(self, terminal: Vte.Terminal, 
-                           callback: Optional[Callable] = None,
-                           user_data: Any = None) -> bool:
+
+        self.logger.info(
+            f"Process spawner initialized on {self.platform_info.platform_type.value}"
+        )
+
+    def spawn_local_terminal(
+        self,
+        terminal: Vte.Terminal,
+        callback: Optional[Callable] = None,
+        user_data: Any = None,
+    ) -> bool:
         """
         Spawn a local terminal session with enhanced platform support.
-        
+
         Args:
             terminal: Vte.Terminal widget
             callback: Optional callback function for spawn completion
             user_data: Optional user data for callback
-            
+
         Returns:
             True if spawn initiated successfully
         """
         with self._spawn_lock:
             try:
                 self.logger.debug("Starting local terminal spawn")
-                
+
                 # Get platform-appropriate shell
                 shell_path, shell_type = self.shell_detector.get_user_shell()
                 shell_args = self.shell_detector.get_shell_command_args(shell_type)
-                
+
                 # Build command
                 cmd = [shell_path] + shell_args
-                
+
                 # Get working directory
                 working_dir = str(self.platform_info.home_dir)
-                
+
                 # Get environment
                 env = self.environment_manager.get_terminal_environment()
+
+                # Add VTE_VERSION to enable shell integration (OSC7)
+                vte_version = (
+                    Vte.get_major_version() * 10000
+                    + Vte.get_minor_version() * 100
+                    + Vte.get_micro_version()
+                )
+                env["VTE_VERSION"] = str(vte_version)
+                self.logger.debug(f"Setting VTE_VERSION={env['VTE_VERSION']}")
+
                 env_list = [f"{k}={v}" for k, v in env.items()]
-                
+
                 self.logger.debug(f"Spawning local terminal: {cmd}")
-                self.logger.debug(f"Working directory: {working_dir}")
-                
+
                 # Validate command exists
                 if not Path(shell_path).exists():
-                    raise TerminalSpawnError(shell_path, f"Shell not found: {shell_path}")
-                
+                    raise TerminalSpawnError(
+                        shell_path, f"Shell not found: {shell_path}"
+                    )
+
                 # Spawn the process
                 terminal.spawn_async(
                     Vte.PtyFlags.DEFAULT,
@@ -173,67 +198,85 @@ class ProcessSpawner:
                     GLib.SpawnFlags.DEFAULT,
                     None,  # Child setup function
                     None,  # Child setup data
-                    -1,    # Timeout (-1 for no timeout)
+                    -1,  # Timeout (-1 for no timeout)
                     None,  # Cancellable
                     callback if callback else self._default_spawn_callback,
-                    (user_data if user_data else "Local Terminal",)
+                    (user_data if user_data else "Local Terminal",),
                 )
-                
-                self._stats['local_spawns'] += 1
+
+                self._stats["local_spawns"] += 1
                 self.logger.info("Local terminal spawn initiated successfully")
-                log_terminal_event("spawn_initiated", str(user_data), f"local shell: {shell_path}")
-                
+                log_terminal_event(
+                    "spawn_initiated", str(user_data), f"local shell: {shell_path}"
+                )
+
                 return True
-                
+
             except Exception as e:
-                self._stats['spawn_failures'] += 1
+                self._stats["spawn_failures"] += 1
                 self.logger.error(f"Local terminal spawn failed: {e}")
                 log_error_with_context(e, "local terminal spawn", "ashyterm.spawner")
-                
+
                 if isinstance(e, TerminalSpawnError):
                     raise
                 else:
                     raise TerminalSpawnError("local shell", str(e))
-    
-    def spawn_ssh_session(self, terminal: Vte.Terminal, session: "SessionItem",
-                         callback: Optional[Callable] = None,
-                         user_data: Any = None) -> bool:
+
+    def spawn_ssh_session(
+        self,
+        terminal: Vte.Terminal,
+        session: "SessionItem",
+        callback: Optional[Callable] = None,
+        user_data: Any = None,
+    ) -> bool:
         """
         Spawn an SSH terminal session with comprehensive security validation.
-        
+
         Args:
             terminal: Vte.Terminal widget
             session: SessionItem with SSH configuration
             callback: Optional callback function for spawn completion
             user_data: Optional user data for callback
-            
+
         Returns:
             True if spawn initiated successfully
         """
         with self._spawn_lock:
             if not session.is_ssh():
                 raise TerminalSpawnError("ssh", "Session is not configured for SSH")
-            
+
             try:
                 self.logger.debug(f"Starting SSH spawn for session: {session.name}")
-                
+
                 # Validate session configuration
                 self._validate_ssh_session(session)
-                
+
                 # Build SSH command with security considerations
                 ssh_cmd = self._build_ssh_command_secure(session, terminal)
-                
+
                 if not ssh_cmd:
                     raise TerminalSpawnError("ssh", "Failed to build SSH command")
-                
+
                 # Get working directory and environment
                 working_dir = str(self.platform_info.home_dir)
                 env = self.environment_manager.get_terminal_environment()
+
+                # Add VTE_VERSION to enable shell integration (OSC7)
+                vte_version = (
+                    Vte.get_major_version() * 10000
+                    + Vte.get_minor_version() * 100
+                    + Vte.get_micro_version()
+                )
+                env["VTE_VERSION"] = str(vte_version)
+                self.logger.debug(
+                    f"Setting VTE_VERSION={env['VTE_VERSION']} for SSH session"
+                )
+
                 env_list = [f"{k}={v}" for k, v in env.items()]
-                
+
                 self.logger.debug(f"SSH command: {' '.join(ssh_cmd)}")
                 self.logger.debug(f"Working directory: {working_dir}")
-                
+
                 # Spawn the SSH process
                 terminal.spawn_async(
                     Vte.PtyFlags.DEFAULT,
@@ -243,38 +286,52 @@ class ProcessSpawner:
                     GLib.SpawnFlags.DEFAULT,
                     None,  # Child setup function
                     None,  # Child setup data
-                    -1,    # Timeout
+                    -1,  # Timeout
                     None,  # Cancellable
                     callback if callback else self._ssh_spawn_callback,
-                    (user_data if user_data else session,)
+                    (user_data if user_data else session,),
                 )
-                
-                self._stats['ssh_spawns'] += 1
+
+                self._stats["ssh_spawns"] += 1
                 self.logger.info(f"SSH session spawn initiated for: {session.name}")
-                log_terminal_event("spawn_initiated", session.name, f"SSH to {session.get_connection_string()}")
-                
+                log_terminal_event(
+                    "spawn_initiated",
+                    session.name,
+                    f"SSH to {session.get_connection_string()}",
+                )
+
                 return True
-                
+
             except Exception as e:
-                self._stats['spawn_failures'] += 1
+                self._stats["spawn_failures"] += 1
                 self.logger.error(f"SSH session spawn failed for {session.name}: {e}")
-                log_error_with_context(e, f"SSH spawn for {session.name}", "ashyterm.spawner")
-                
+                log_error_with_context(
+                    e, f"SSH spawn for {session.name}", "ashyterm.spawner"
+                )
+
                 # Show error on terminal
                 self._show_ssh_error_on_terminal(terminal, session, str(e))
-                
-                if isinstance(e, (TerminalSpawnError, SSHConnectionError, SSHAuthenticationError, SSHKeyError)):
+
+                if isinstance(
+                    e,
+                    (
+                        TerminalSpawnError,
+                        SSHConnectionError,
+                        SSHAuthenticationError,
+                        SSHKeyError,
+                    ),
+                ):
                     raise
                 else:
                     raise TerminalSpawnError("ssh", str(e))
-    
+
     def _validate_ssh_session(self, session: "SessionItem") -> None:
         """
         Validate SSH session configuration with security checks.
-        
+
         Args:
             session: SessionItem to validate
-            
+
         Raises:
             Various SSH-related exceptions for different validation failures
         """
@@ -283,30 +340,34 @@ class ProcessSpawner:
             validate_ssh_hostname(session.host)
         except Exception as e:
             raise SSHConnectionError(session.host, f"Invalid hostname: {e}")
-        
+
         # Validate authentication configuration
         if session.uses_key_auth():
             if not session.auth_value:
                 raise SSHKeyError("", "SSH key path is empty")
-            
+
             try:
                 validate_ssh_key_file(session.auth_value)
             except Exception as e:
                 raise SSHKeyError(session.auth_value, str(e))
-        
+
         elif session.uses_password_auth():
             if not session.auth_value:
-                self.logger.warning(f"Password authentication configured but no password provided for {session.name}")
-        
+                self.logger.warning(
+                    f"Password authentication configured but no password provided for {session.name}"
+                )
+
         # Validate username
         if session.user:
             sanitized_user = InputSanitizer.sanitize_username(session.user)
             if sanitized_user != session.user:
-                self.logger.warning(f"Username sanitized for session {session.name}: '{session.user}' -> '{sanitized_user}'")
-        
+                self.logger.warning(
+                    f"Username sanitized for session {session.name}: '{session.user}' -> '{sanitized_user}'"
+                )
+
         # Check if hostname resolves (non-blocking)
         try:
-            ip = HostnameValidator.resolve_hostname(session.host, timeout=2.0)
+            ip = HostnameValidator.resolve_hostname(session.host, timeout=5.0)
             if ip:
                 self.logger.debug(f"Hostname {session.host} resolves to {ip}")
                 if HostnameValidator.is_private_ip(ip):
@@ -314,78 +375,85 @@ class ProcessSpawner:
             else:
                 self.logger.warning(f"Hostname {session.host} could not be resolved")
         except Exception as e:
-            self.logger.debug(f"Hostname resolution check failed for {session.host}: {e}")
-    
-    def _build_ssh_command_secure(self, session: "SessionItem", terminal: Vte.Terminal) -> Optional[List[str]]:
+            self.logger.debug(
+                f"Hostname resolution check failed for {session.host}: {e}"
+            )
+
+    def _build_ssh_command_secure(
+        self, session: "SessionItem", terminal: Vte.Terminal
+    ) -> Optional[List[str]]:
         """
         Build SSH command with security considerations and platform compatibility.
-        
+
         Args:
             session: SessionItem with SSH configuration
             terminal: Terminal widget for error messages
-            
+
         Returns:
             List of command arguments or None if invalid
         """
         try:
             # Check if SSH is available
-            if not has_command('ssh'):
-                raise SSHConnectionError(session.host, "SSH command not found on system")
-            
+            if not has_command("ssh"):
+                raise SSHConnectionError(
+                    session.host, "SSH command not found on system"
+                )
+
             # Use platform-aware command builder
             ssh_options = {
-                'ConnectTimeout': str(SSH_CONNECT_TIMEOUT),
-                'ServerAliveInterval': '30',
-                'ServerAliveCountMax': '3',
-                'StrictHostKeyChecking': 'ask',
-                'UserKnownHostsFile': str(self.platform_info.ssh_dir / 'known_hosts'),
-                'ControlMaster': 'auto',
-                'ControlPath': str(self.platform_info.cache_dir / 'ssh_control_%h_%p_%r'),
-                'ControlPersist': '600'
+                "ConnectTimeout": str(SSH_CONNECT_TIMEOUT),
+                "ServerAliveInterval": "30",
+                "ServerAliveCountMax": "3",
+                "StrictHostKeyChecking": "ask",
+                "UserKnownHostsFile": str(self.platform_info.ssh_dir / "known_hosts"),
+                "ControlMaster": "auto",
+                "ControlPath": str(
+                    self.platform_info.cache_dir / "ssh_control_%h_%p_%r"
+                ),
+                "ControlPersist": "600",
             }
-            
+
             # Platform-specific SSH options
             if self.platform_info.is_windows():
                 # Windows-specific SSH options
-                ssh_options['PreferredAuthentications'] = 'publickey,password'
+                ssh_options["PreferredAuthentications"] = "publickey,password"
             else:
                 # Unix-specific SSH options
-                ssh_options['Compression'] = 'yes'
-                ssh_options['TCPKeepAlive'] = 'yes'
-            
+                ssh_options["Compression"] = "yes"
+                ssh_options["TCPKeepAlive"] = "yes"
+
             # Build command using platform-aware builder
             cmd = self.command_builder.build_ssh_command(
                 hostname=session.host,
                 port=session.port if session.port != 22 else None,
                 username=session.user if session.user else None,
                 key_file=session.auth_value if session.uses_key_auth() else None,
-                options=ssh_options
+                options=ssh_options,
             )
 
-            # Optional: Add OSC7 support for managed SSH sessions (if configured)
-            # This is a conservative enhancement that doesn't break existing functionality
+            # --- INÍCIO DA MODIFICAÇÃO ---
+            # RESTAURADO: Injeta um comando remoto para configurar o PROMPT_COMMAND e emitir OSC7.
+            # Isso é robusto e funciona mesmo se o servidor não tiver o vte.sh.
             try:
-                # Build a simple remote command to enable OSC7 directory tracking
-                # Only add this if the system supports it
                 osc7_setup = (
                     r"export PROMPT_COMMAND="
                     "'"
-                    'printf "\033]7;file://%s%s\007" "$(hostname)" "$PWD"'
+                    r'printf "\033]7;file://%s%s\007" "$(hostname)" "$PWD";'
                     "'"
                 )
                 remote_cmd = f"{osc7_setup}; exec $SHELL -l"
 
-                # Add -t for pseudo-terminal if not present
                 if "-t" not in cmd:
                     cmd.insert(1, "-t")
 
-                # Add the remote command
                 cmd.append(remote_cmd)
-                self.logger.debug("Enhanced SSH command with OSC7 support")
+                self.logger.debug(
+                    "Enhanced SSH command with OSC7 support for remote directory tracking."
+                )
 
             except Exception as e:
                 self.logger.debug(f"Could not enhance SSH with OSC7: {e}")
-                # Continue with standard SSH connection
+            # --- FIM DA MODIFICAÇÃO ---
 
             # Handle password authentication with sshpass
             if session.uses_password_auth() and session.auth_value:

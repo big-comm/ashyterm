@@ -350,6 +350,9 @@ class TabManager:
             self.tab_view.connect("page-attached", self._on_page_attached)
             self.tab_view.connect("page-detached", self._on_page_detached)
 
+            # *** CRITICAL FIX: Intercept the close request to ensure proper cleanup. ***
+            self.tab_view.connect("close-page", self._on_close_page_request)
+
             # Configure tab bar
             self.tab_bar.set_view(self.tab_view)
 
@@ -363,6 +366,18 @@ class TabManager:
         except Exception as e:
             self.logger.error(f"Tab component setup failed: {e}")
             raise UIError("tab_setup", f"component configuration failed: {e}")
+
+    def _on_close_page_request(self, tab_view, page) -> bool:
+        """
+        Handles the 'close-page' signal from Adw.TabView.
+        This is the key to ensuring processes are terminated correctly.
+        """
+        self.logger.debug(f"Close request received for tab page: {page.get_title()}")
+        # Call our custom close_tab method which handles process termination
+        self.close_tab(page)
+        # Return True to prevent Adw.TabView from running its default handler.
+        # We will call close_page_finish ourselves inside close_tab.
+        return True
 
     def get_tab_view(self) -> Adw.TabView:
         """Get the TabView widget."""
@@ -606,15 +621,12 @@ class TabManager:
         # Use timeout instead of idle_add for more predictable timing
         GLib.timeout_add(50, focus_terminal)
 
+    # Em TabManager
     def close_tab(self, page: Optional[Adw.TabPage] = None) -> bool:
         """
-        Close a tab and clean up its terminal with enhanced safety.
-
-        Args:
-            page: TabPage to close (current tab if None)
-
-        Returns:
-            True if tab was closed successfully
+        Inicia o processo de fechamento de uma aba.
+        Este método agora APENAS inicia o encerramento do terminal.
+        A UI SÓ será removida quando o processo do terminal confirmar sua saída.
         """
         with self._cleanup_lock:
             try:
@@ -622,42 +634,30 @@ class TabManager:
                     page = self.tab_view.get_selected_page()
 
                 if not page:
-                    self.logger.debug("No page to close")
+                    self.logger.debug("Nenhuma página para fechar.")
                     return False
 
-                # Get tab info before closing - GTK4 compatibility
-                tab_id = getattr(page, "tab_id", None)
                 terminal = self.registry.get_terminal_for_page(page)
 
-                # Clean up terminal
                 if terminal:
-                    success = self.terminal_manager.remove_terminal(terminal)
-                    if success:
-                        self.logger.debug(f"Terminal cleaned up for tab ID: {tab_id}")
-
-                # Unregister from registry
-                self.registry.unregister_tab(page)
-
-                # Close the tab
-                self.tab_view.close_page(page)
-
-                # Update statistics
-                self._stats["tabs_closed"] += 1
-
-                # Update tab bar visibility
-                self._update_tab_bar_visibility()
-
-                # Call callback if set
-                if self.on_tab_closed:
-                    self.on_tab_closed(page, terminal)
-
-                self.logger.info(f"Tab closed successfully: ID={tab_id}")
-                log_terminal_event("tab_closed", f"Tab {tab_id}", "user action")
-
-                return True
+                    # A única responsabilidade deste método agora é pedir
+                    # ao TerminalManager para remover o terminal.
+                    # A guarda de proteção que adicionamos em remove_terminal
+                    # irá prevenir problemas com chamadas duplicadas.
+                    self.terminal_manager.remove_terminal(terminal)
+                    return True
+                else:
+                    # Se não há terminal, podemos fechar a aba imediatamente.
+                    self.logger.warning(
+                        f"Aba sem terminal associado. Fechando diretamente."
+                    )
+                    self.tab_view.close_page_finish(page, True)
+                    self.registry.unregister_tab(page)
+                    self._update_tab_bar_visibility()
+                    return True
 
             except Exception as e:
-                self.logger.error(f"Tab close failed: {e}")
+                self.logger.error(f"Falha ao iniciar o fechamento da aba: {e}")
                 handle_exception(e, "tab close", "ashyterm.tabs")
                 return False
 
@@ -857,7 +857,7 @@ class TabManager:
 
                 # If this is the last terminal in the tab, close the entire tab
                 if len(self.get_all_terminals_in_page(page)) <= 1:
-                    self.close_tab(page)
+                    self.tab_view.close_page(page)
                     return
 
                 # Find the terminal pane (could be in ScrolledWindow or TerminalPaneWithTitleBar)
@@ -1045,29 +1045,18 @@ class TabManager:
         return False
 
     def close_all_tabs(self) -> None:
-        """Close all tabs quickly without complex cleanup."""
+        """Close all tabs by correctly triggering the close-page signal for each."""
         try:
-            self.logger.info("Force closing all tabs")
-
-            # Cancel any timeouts immediately
-            if self._focus_timeout_id is not None:
-                GLib.source_remove(self._focus_timeout_id)
-                self._focus_timeout_id = None
-
-            # Force close without individual cleanup
-            tab_count = self.tab_view.get_n_pages()
-
-            # Close all pages at once - much faster
-            while self.tab_view.get_n_pages() > 0:
-                page = self.tab_view.get_nth_page(0)
-                if page:
-                    self.tab_view.close_page(page)
-
-            self.logger.info(f"Force closed {tab_count} tabs")
-
+            self.logger.info("Requesting to close all tabs.")
+            # Get a static list of pages to close, as the view will be modified during iteration.
+            pages_to_close = self.get_all_pages()
+            for page in pages_to_close:
+                # This correctly emits the 'close-page' signal, which our
+                # _on_close_page_request handler will catch and process.
+                self.tab_view.close_page(page)
+            self.logger.info(f"Close request sent for {len(pages_to_close)} tabs.")
         except Exception as e:
-            self.logger.error(f"Force close tabs failed: {e}")
-            # Don't let cleanup errors prevent shutdown
+            self.logger.error(f"Failed to request closing all tabs: {e}")
 
     def focus_terminal_in_current_tab(self) -> bool:
         """

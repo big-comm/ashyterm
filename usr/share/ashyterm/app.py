@@ -43,71 +43,29 @@ class CommTerminalApp(Adw.Application):
     
     def __init__(self):
         """Initialize the application with comprehensive setup."""
-        super().__init__(
-            application_id=APP_ID,
-            flags=Gio.ApplicationFlags.FLAGS_NONE
-        )
-        # APP_ID
+        super().__init__(application_id=APP_ID, flags=Gio.ApplicationFlags.FLAGS_NONE)
         GLib.set_prgname(APP_ID)
-        # Initialize logging first
         self.logger = get_logger('ashyterm.app')
         self.logger.info(_("Initializing {} v{}").format(APP_TITLE, APP_VERSION))
-        
-        # Core components
+
         self.settings_manager: Optional[SettingsManager] = None
         self._main_window: Optional["CommTerminalWindow"] = None
         self.backup_manager = None
         self.auto_backup_scheduler = None
         self.security_auditor = None
-        
-        # Platform information
+
         self.platform_info = get_platform_info()
         self.logger.info(_("Running on {} platform").format(self.platform_info.platform_type.value))
-        
-        # Application state
+
         self._initialized = False
         self._shutting_down = False
-        
-        # Connect application signals
+
         self.connect("startup", self._on_startup)
         self.connect("activate", self._on_activate)
         self.connect("shutdown", self._on_shutdown)
-        
-        # Set up signal handlers for graceful shutdown
-        self._setup_signal_handlers()
-        
-        # Register cleanup functions
+
         atexit.register(self._cleanup_on_exit)
-    
-    def _setup_signal_handlers(self) -> None:
-        """Set up system signal handlers for graceful shutdown."""
-        try:
-            # Track signal calls for forced exit
-            self._signal_count = 0
-            self._shutdown_in_progress = False
-            
-            def signal_handler(sig, frame):
-                self._signal_count += 1
-                
-                if self._signal_count == 1:
-                    self.logger.info(_("Received signal {}, initiating graceful shutdown").format(sig))
-                    if not self._shutdown_in_progress:
-                        self._shutdown_in_progress = True
-                        GLib.idle_add(self.quit)
-                elif self._signal_count >= 2:
-                    self.logger.warning(_("Received signal {} {} times, forcing immediate exit").format(sig, self._signal_count))
-                    import os
-                    os._exit(1)
-            
-            signal.signal(signal.SIGTERM, signal_handler)
-            signal.signal(signal.SIGINT, signal_handler)
-            
-            if is_windows():
-                signal.signal(signal.SIGBREAK, signal_handler)
-                
-        except Exception as e:
-            self.logger.warning(_("Could not set up signal handlers: {}").format(e))
-    
+
     def _initialize_subsystems(self) -> bool:
         """
         Initialize all application subsystems.
@@ -294,12 +252,8 @@ class CommTerminalApp(Adw.Application):
                 shortcut = self.settings_manager.get_shortcut(action_name)
                 accels = [shortcut] if shortcut else []
 
-                # --- CHANGE START: Add hardcoded alternative for zoom-in ---
                 if action_name == "zoom-in":
-                    # Add <Control>equal as a non-configurable alternative for zoom-in
-                    # This accommodates different keyboard layouts.
                     accels.append("<Control>equal")
-                # --- CHANGE END ---
 
                 self.set_accels_for_action(f"win.{action_name}", accels)
             
@@ -333,7 +287,6 @@ class CommTerminalApp(Adw.Application):
     def _on_quit_action(self, action, param) -> None:
         """Handle quit action with SSH session confirmation."""
         try:
-            # Check for active SSH sessions before quitting
             if self._has_active_ssh_sessions():
                 self._show_ssh_close_confirmation()
             else:
@@ -341,7 +294,7 @@ class CommTerminalApp(Adw.Application):
                 self.quit()
         except Exception as e:
             self.logger.error(_("Quit action failed: {}").format(e))
-            self.quit()  # Force quit on error
+            self.quit()
     
     def _on_preferences_action(self, action, param) -> None:
         """Handle preferences action."""
@@ -499,7 +452,6 @@ class CommTerminalApp(Adw.Application):
         try:
             active_window = self.get_active_window()
             if not active_window:
-                # No active window, just quit
                 self.quit()
                 return
             
@@ -531,7 +483,6 @@ class CommTerminalApp(Adw.Application):
             
         except Exception as e:
             self.logger.error(_("SSH close confirmation dialog failed: {}").format(e))
-            # Fallback to quit if dialog fails
             self.quit()
     
     def _on_shutdown(self, app) -> None:
@@ -567,10 +518,6 @@ class CommTerminalApp(Adw.Application):
             
         except Exception as e:
             self.logger.error(_("Error during graceful shutdown: {}").format(e))
-        finally:
-            # The application lifecycle handles the final exit.
-            # No need to call self.quit() here as this is the shutdown handler.
-            pass
     
     def _perform_shutdown_backup(self) -> None:
         """Perform backup on shutdown if configured."""
@@ -708,76 +655,3 @@ class CommTerminalApp(Adw.Application):
     def is_initialized(self) -> bool:
         """Check if application is fully initialized."""
         return self._initialized
-
-
-def create_application() -> CommTerminalApp:
-    """
-    Create and return a new CommTerminalApp instance.
-    
-    Returns:
-        Configured CommTerminalApp instance
-    """
-    logger = get_logger('ashyterm.app.factory')
-    
-    try:
-        logger.info(_("Creating application instance"))
-        
-        Adw.init()
-        
-        app = CommTerminalApp()
-        
-        logger.info(_("Application instance created successfully"))
-        return app
-        
-    except Exception as e:
-        logger.critical(_("Failed to create application: {}").format(e))
-        raise
-
-
-def run_application(app: CommTerminalApp, args: list = None) -> int:
-    """
-    Run the application with given arguments.
-    
-    Args:
-        app: CommTerminalApp instance to run
-        args: Command line arguments (default: sys.argv)
-        
-    Returns:
-        Exit code
-    """
-    logger = get_logger('ashyterm.app.runner')
-    
-    if args is None:
-        args = sys.argv
-    
-    try:
-        logger.info(_("Starting application with args: {}").format(args))
-        exit_code = app.run(args)
-        logger.info(_("Application exited with code: {}").format(exit_code))
-        return exit_code
-        
-    except KeyboardInterrupt:
-        logger.info(_("Application interrupted by user"))
-        return 1
-    except Exception as e:
-        logger.critical(_("Unhandled exception during application run: {}").format(e))
-        import traceback
-        traceback.print_exc()
-        return 1
-
-
-def main() -> int:
-    """
-    Main entry point for the application.
-    
-    Returns:
-        Exit code
-    """
-    try:
-        app = create_application()
-        return run_application(app)
-    except Exception as e:
-        print(_("FATAL: Failed to start application: {}").format(e))
-        import traceback
-        traceback.print_exc()
-        return 1

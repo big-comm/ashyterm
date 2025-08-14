@@ -87,10 +87,16 @@ class ThreadSafeLogger:
     def _setup_logger(self):
         """Set up the logger with handlers and formatters."""
         with self._lock:
-            # Prevent duplicate handlers
-            if self._logger.handlers:
+            # Guard against re-configuration using a custom attribute.
+            # This is more reliable than checking for existing handlers.
+            if getattr(self._logger, "_ashyterm_configured", False):
                 return
-            
+
+            # CRITICAL FIX: Disable propagation to the root logger.
+            # This prevents messages from being handled twice if the root logger
+            # also has handlers configured (which is a common cause of duplicate logs).
+            self._logger.propagate = False
+
             self._logger.setLevel(logging.DEBUG)
             
             # Console handler
@@ -145,7 +151,10 @@ class ThreadSafeLogger:
                 debug_file_handler.setFormatter(debug_formatter)
                 debug_file_handler.addFilter(lambda record: record.levelno == logging.DEBUG)
                 self._logger.addHandler(debug_file_handler)
-    
+
+            # Mark this logger as configured by our system.
+            self._logger._ashyterm_configured = True
+
     def debug(self, message: str, **kwargs):
         """Log debug message."""
         self._logger.debug(message, **kwargs)

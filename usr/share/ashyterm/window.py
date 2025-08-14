@@ -9,8 +9,9 @@ from pathlib import Path
 import gi
 gi.require_version("Gtk", "4.0")
 gi.require_version("Adw", "1")
+gi.require_version("Vte", "3.91")
 
-from gi.repository import Gtk, Adw, Gio, GLib, Gdk
+from gi.repository import Gtk, Adw, Gio, GLib, Gdk, Vte
 
 from .settings.manager import SettingsManager
 from .settings.config import APP_TITLE, VTE_AVAILABLE
@@ -97,12 +98,8 @@ class CommTerminalWindow(Adw.ApplicationWindow):
             
             # Security auditor removed
             self.security_auditor = None
-            
-            # Initialize component managers
-            self.terminal_manager = TerminalManager(self, self.settings_manager)
-            self.tab_manager = TabManager(self.terminal_manager)
-            self.session_tree = SessionTreeView(self, self.session_store, self.folder_store, self.settings_manager)
-            
+
+            # Component managers are already initialized in __init__
             self.logger.debug("Component managers initialized")
             
             # Set up the UI
@@ -449,24 +446,41 @@ class CommTerminalWindow(Adw.ApplicationWindow):
             return Gdk.EVENT_PROPAGATE
 
     def _on_terminal_should_close(
-        self, terminal, child_status: int, identifier
-    ) -> bool:
-        """Handle request to close terminal tab after process exit."""
+        self, terminal: Vte.Terminal, child_status: int, identifier: any
+    ) -> None:
+        """
+        This callback is the safe, final point for removing a tab's UI.
+        It's called by the TerminalManager AFTER the child process has exited.
+        """
         try:
-            # This callback is for auto-closing on normal exit (status 0)
-            if child_status != 0:
-                return False  # Do not repeat idle call
-
-            self.logger.debug(
-                f"Auto-closing pane for terminal with status {child_status}"
+            terminal_name = (
+                identifier
+                if isinstance(identifier, str)
+                else getattr(identifier, "name", "Unknown")
             )
-            # Delegate to close_pane, which handles both panes and the last tab correctly.
-            self.tab_manager.close_pane(terminal)
-            return False  # Return False to unschedule the idle_add callback
+            self.logger.info(
+                f"Received request to close UI for terminal '{terminal_name}' (exited with status {child_status})."
+            )
+
+            # 1. Find the tab page (Adw.TabPage) corresponding to the terminal
+            page = self.tab_manager.get_page_for_terminal(terminal)
+
+            if page:
+                # 2. NOW, and only now, do we finalize the closing of the tab's UI.
+                # This is the call that was removed from TabManager.close_tab
+                self.logger.debug(f"Finalizing close of tab page: {page.get_title()}")
+                self.tab_manager.tab_view.close_page_finish(page, True)
+
+                # 3. Perform final cleanup in the TabManager's registry and update tab bar visibility
+                self.tab_manager.registry.unregister_tab(page)
+                self.tab_manager._update_tab_bar_visibility()
+            else:
+                self.logger.warning(
+                    f"Could not find tab page for terminal '{terminal_name}' which has already exited."
+                )
 
         except Exception as e:
-            self.logger.error(f"Terminal auto-close handling failed: {e}")
-            return False
+            self.logger.error(f"Failed to handle terminal tab close: {e}")
 
     def _on_terminal_focus_changed(self, terminal, from_sidebar: bool) -> None:
         """Handle terminal focus change."""
@@ -497,9 +511,17 @@ class CommTerminalWindow(Adw.ApplicationWindow):
                 ):
                     self.set_title(f"{APP_TITLE} - {new_title}")
 
-                self.logger.debug(
-                    f"Updated tab and split titles to: '{new_title}' for directory: {osc7_info.path}"
-                )
+                # --- INÍCIO DA CORREÇÃO ---
+                # Add a check to ensure osc7_info is not None before accessing its attributes.
+                if osc7_info:
+                    self.logger.debug(
+                        f"Updated tab and split titles to: '{new_title}' for directory: {osc7_info.path}"
+                    )
+                else:
+                    self.logger.debug(
+                        f"Updated tab and split titles to: '{new_title}' (no directory info)"
+                    )
+                # --- FIM DA CORREÇÃO ---
             else:
                 self.logger.warning(
                     "Could not find tab page for terminal directory change"
@@ -627,19 +649,36 @@ class CommTerminalWindow(Adw.ApplicationWindow):
             self.close()
 
     def _perform_cleanup(self) -> None:
-        """Fast cleanup without hanging."""
+        """Executa uma limpeza abrangente de todos os terminais na janela."""
         if self._cleanup_performed:
             return
 
         self._cleanup_performed = True
+        self.logger.info(
+            "Executando limpeza da janela e terminando todos os terminais."
+        )
 
         try:
-            self.logger.debug("Fast window cleanup - no complex operations")
-            self.logger.debug("Fast cleanup completed")
+            all_terminals = self.tab_manager.get_all_terminals()
+            if not all_terminals:
+                self.logger.debug("Nenhum terminal para limpar.")
+                return
+
+            self.logger.debug(
+                f"Encontrados {len(all_terminals)} terminais para limpar."
+            )
+
+            # Inicia explicitamente a remoção de cada terminal.
+            # O fluxo assíncrono que configuramos cuidará do resto.
+            for terminal in all_terminals:
+                self.terminal_manager.remove_terminal(terminal)
+
+            self.logger.info(
+                "Pedidos de limpeza para todos os terminais foram enviados."
+            )
 
         except Exception as e:
-            # Don't let cleanup errors prevent shutdown
-            pass
+            self.logger.error(f"Ocorreu um erro durante a limpeza da janela: {e}")
 
     # Session tree event handlers
     def _on_session_activated(self, session: SessionItem) -> None:
