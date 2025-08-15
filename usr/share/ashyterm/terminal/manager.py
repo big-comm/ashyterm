@@ -1,13 +1,13 @@
-# terminal/manager.py
+# ashyterm/terminal/manager.py
 
 from typing import List, Optional, Union, Callable, Any, Dict
 import threading
 import time
 import weakref
-import socket
 import os
 import signal
 import subprocess
+from enum import Enum
 
 try:
     import psutil
@@ -42,6 +42,63 @@ from ..utils.platform import get_platform_info, get_environment_manager, is_wind
 from ..utils.osc7_tracker import get_osc7_tracker, OSC7Info
 
 
+class TerminalState(Enum):
+    """Terminal lifecycle states for proper management."""
+
+    INITIALIZING = "initializing"
+    RUNNING = "running"
+    FOCUSED = "focused"
+    UNFOCUSED = "unfocused"
+    EXITING = "exiting"
+    EXITED = "exited"
+    SPAWN_FAILED = "spawn_failed"
+
+
+class TerminalLifecycleManager:
+    """Manages terminal lifecycle with state tracking and proper cleanup."""
+
+    def __init__(self, registry, logger):
+        self.registry = registry
+        self.logger = logger
+        self._closing_terminals = set()
+        self._lock = threading.RLock()
+
+    def is_terminal_closing(self, terminal_id: int) -> bool:
+        """Check if a terminal is in the closing process."""
+        with self._lock:
+            return terminal_id in self._closing_terminals
+
+    def mark_terminal_closing(self, terminal_id: int) -> bool:
+        """Mark a terminal as closing. Returns False if already closing."""
+        with self._lock:
+            if terminal_id in self._closing_terminals:
+                return False
+            self._closing_terminals.add(terminal_id)
+            return True
+
+    def unmark_terminal_closing(self, terminal_id: int) -> None:
+        """Remove terminal from closing set."""
+        with self._lock:
+            self._closing_terminals.discard(terminal_id)
+
+    def transition_state(self, terminal_id: int, new_state: TerminalState) -> bool:
+        """Transition terminal to new state with validation."""
+        with self._lock:
+            terminal_info = self.registry.get_terminal_info(terminal_id)
+            if not terminal_info:
+                return False
+
+            current_state = terminal_info.get("status", "")
+
+            # Validate state transitions
+            if new_state == TerminalState.EXITED and current_state.startswith("exited"):
+                # Already exited, don't allow re-transition
+                return False
+
+            self.registry.update_terminal_status(terminal_id, new_state.value)
+            return True
+
+
 class ManualSSHTracker:
     """Tracks manually initiated SSH sessions and their targets."""
 
@@ -64,6 +121,14 @@ class ManualSSHTracker:
     def untrack(self, terminal_id: int):
         with self._lock:
             self._tracked_terminals.pop(terminal_id, None)
+
+    def get_ssh_target(self, terminal_id: int) -> Optional[str]:
+        """Get the SSH target for a terminal, or None if not in SSH session."""
+        with self._lock:
+            state = self._tracked_terminals.get(terminal_id)
+            if state and state.get("in_ssh"):
+                return state.get("ssh_target")
+            return None
 
     def check_process_tree(self, terminal_id: int):
         if not PSUTIL_AVAILABLE:
@@ -123,10 +188,6 @@ class ManualSSHTracker:
                 self.logger.debug(
                     f"Error checking process tree for terminal {terminal_id}: {e}"
                 )
-
-    def get_ssh_target(self, terminal_id: int) -> Optional[str]:
-        with self._lock:
-            return self._tracked_terminals.get(terminal_id, {}).get("ssh_target")
 
 
 class TerminalRegistry:
@@ -230,25 +291,25 @@ class TerminalManager:
 
         self.registry = TerminalRegistry()
         self.spawner = get_spawner()
+        self.lifecycle_manager = TerminalLifecycleManager(self.registry, self.logger)
 
         self.osc7_tracker = get_osc7_tracker(settings_manager)
-        # --- INÍCIO DA MODIFICAÇÃO ---
         self.manual_ssh_tracker = ManualSSHTracker(
             self.registry, self._on_manual_ssh_state_changed
         )
-        # --- FIM DA MODIFICAÇÃO ---
 
         self._creation_lock = threading.Lock()
         self._cleanup_lock = threading.Lock()
         self._pending_kill_timers: Dict[int, int] = {}
 
         self.security_auditor = None
+        self.tab_manager = None  # Will be set by CommTerminalWindow
 
-        self.on_terminal_child_exited: Optional[Callable] = None
-        self.on_terminal_eof: Optional[Callable] = None
         self.on_terminal_focus_changed: Optional[Callable] = None
-        self.on_terminal_should_close: Optional[Callable] = None
         self.on_terminal_directory_changed: Optional[Callable] = None
+        self.terminal_exit_handler: Optional[Callable] = (
+            None  # Handler for terminal exits
+        )
 
         self._stats = {
             "terminals_created": 0,
@@ -256,15 +317,21 @@ class TerminalManager:
             "terminals_closed": 0,
         }
 
-        # --- INÍCIO DA MODIFICAÇÃO ---
         self._process_check_timer_id = GLib.timeout_add_seconds(
             2, self._periodic_process_check
         )
-        # --- FIM DA MODIFICAÇÃO ---
 
         self.logger.info("Terminal manager initialized")
 
-    # --- INÍCIO DE NOVOS MÉTODOS ---
+    def set_tab_manager(self, tab_manager):
+        """Sets the TabManager instance to resolve circular dependency."""
+        self.tab_manager = tab_manager
+
+    def set_terminal_exit_handler(self, handler: Callable):
+        """Set the handler for terminal exit events."""
+        self.terminal_exit_handler = handler
+        self.logger.debug("Terminal exit handler set")
+
     def _periodic_process_check(self) -> bool:
         """Periodically check the process tree for all local terminals."""
         try:
@@ -273,7 +340,7 @@ class TerminalManager:
                 self.manual_ssh_tracker.check_process_tree(terminal_id)
         except Exception as e:
             self.logger.error(f"Periodic process check failed: {e}")
-        return True  # Keep the timer running
+        return True
 
     def _on_manual_ssh_state_changed(self, terminal: Vte.Terminal):
         """Callback from tracker when SSH state changes. Forces a title update."""
@@ -281,9 +348,7 @@ class TerminalManager:
             f"Manual SSH state changed for terminal {getattr(terminal, 'terminal_id', 'N/A')}, forcing title update."
         )
         self._update_title(terminal)
-        return False  # for GLib.idle_add
-
-    # --- FIM DE NOVOS MÉTODOS ---
+        return False
 
     def _on_directory_uri_changed(self, terminal: Vte.Terminal, param_spec):
         """Handles the notify::current-directory-uri signal from VTE."""
@@ -306,14 +371,11 @@ class TerminalManager:
                 hostname=hostname, path=path, display_path=display_path
             )
 
-            # --- INÍCIO DA MODIFICAÇÃO ---
             self._update_title(terminal, osc7_info)
-            # --- FIM DA MODIFICAÇÃO ---
 
         except Exception as e:
             self.logger.error(f"Directory URI change handling failed: {e}")
 
-    # --- INÍCIO DE NOVO MÉTODO UNIFICADO ---
     def _update_title(
         self, terminal: Vte.Terminal, osc7_info: Optional[OSC7Info] = None
     ):
@@ -326,9 +388,8 @@ class TerminalManager:
         if not terminal_info:
             return
 
-        new_title = "Terminal"  # Default
+        new_title = "Terminal"
 
-        # Case 1: Managed SSH Session (from sidebar)
         if terminal_info.get("type") == "ssh":
             session = terminal_info.get("identifier")
             if isinstance(session, SessionItem) and osc7_info:
@@ -336,31 +397,24 @@ class TerminalManager:
             elif isinstance(session, SessionItem):
                 new_title = session.name
 
-        # Case 2: Local Terminal
         elif terminal_info.get("type") == "local":
             ssh_target = self.manual_ssh_tracker.get_ssh_target(terminal_id)
 
-            # Sub-case 2a: Manual SSH is active
             if ssh_target:
                 if osc7_info:
                     new_title = f"{ssh_target}:{osc7_info.display_path}"
                 else:
-                    # We're in SSH but haven't received a remote path yet
                     new_title = ssh_target
-            # Sub-case 2b: Truly local
             elif osc7_info:
                 new_title = osc7_info.display_path
-            # Fallback to base title if no info
             else:
                 new_title = terminal_info.get("identifier", "Local")
 
         if self.on_terminal_directory_changed:
             self.on_terminal_directory_changed(terminal, new_title, osc7_info)
 
-    # --- FIM DE NOVO MÉTODO UNIFICADO ---
-
     def create_local_terminal(
-        self, title: str = "Local Terminal"
+        self, title: str = "Local Terminal", working_directory: Optional[str] = None
     ) -> Optional[Vte.Terminal]:
         with self._creation_lock:
             if not VTE_AVAILABLE:
@@ -511,19 +565,19 @@ class TerminalManager:
     ) -> None:
         try:
             terminal.connect(
-                "child-exited", self._on_terminal_child_exited, identifier, terminal_id
+                "child-exited", self._on_child_exited, identifier, terminal_id
             )
-            terminal.connect("eof", self._on_terminal_eof, identifier, terminal_id)
+            terminal.connect("eof", self._on_eof, identifier, terminal_id)
             terminal.connect(
                 "notify::current-directory-uri", self._on_directory_uri_changed
             )
 
-            # --- INÍCIO DA MODIFICAÇÃO ---
             terminal_name = (
                 identifier if isinstance(identifier, str) else identifier.name
             )
             self.manual_ssh_tracker.track(terminal_id, terminal)
-            # --- FIM DA MODIFICAÇÃO ---
+
+            self.osc7_tracker.track_terminal(terminal, terminal_name)
 
             focus_controller = Gtk.EventControllerFocus()
             focus_controller.connect(
@@ -602,78 +656,148 @@ class TerminalManager:
         except Exception as e:
             self.logger.error(f"Terminal focus out handling failed: {e}")
 
-    def _on_terminal_child_exited(
+    def _on_child_exited(
         self,
         terminal: Vte.Terminal,
         child_status: int,
         identifier: Union[str, SessionItem],
         terminal_id: int,
     ) -> None:
-        try:
-            terminal_name = (
-                identifier if isinstance(identifier, str) else identifier.name
+        """Handles both child-exited and eof signals with proper lifecycle management."""
+        # Check if already processing this terminal's exit
+        if not self.lifecycle_manager.mark_terminal_closing(terminal_id):
+            self.logger.debug(
+                f"Terminal {terminal_id} already being processed for exit"
             )
-            self.logger.info(
-                f"Processo filho do terminal '{terminal_name}' (ID: {terminal_id}) saiu com status: {child_status}"
+            return
+
+        try:
+            terminal_info = self.registry.get_terminal_info(terminal_id)
+            if not terminal_info:
+                self.lifecycle_manager.unmark_terminal_closing(terminal_id)
+                return
+
+            terminal_name = (
+                identifier.name if isinstance(identifier, SessionItem) else identifier
             )
 
+            # Transition to exited state
+            if not self.lifecycle_manager.transition_state(
+                terminal_id, TerminalState.EXITED
+            ):
+                self.logger.debug(f"Terminal {terminal_id} already in exited state")
+                self.lifecycle_manager.unmark_terminal_closing(terminal_id)
+                return
+
+            self.logger.info(
+                f"Terminal '{terminal_name}' (ID: {terminal_id}) process exited with status: {child_status}"
+            )
+            log_terminal_event("exited", terminal_name, f"status {child_status}")
+
+            # Cancel any pending SIGKILL timers
             if terminal_id in self._pending_kill_timers:
                 timeout_id = self._pending_kill_timers.pop(terminal_id)
                 GLib.source_remove(timeout_id)
-                self.logger.debug(
-                    f"Timer de SIGKILL cancelado para o terminal {terminal_id} pois o processo encerrou graciosamente."
-                )
+                self.logger.debug(f"SIGKILL timer cancelled for terminal {terminal_id}")
 
-            self.registry.update_terminal_status(terminal_id, f"exited_{child_status}")
-            log_terminal_event("exited", terminal_name, f"status {child_status}")
-
-            if child_status != 0:
-                try:
-                    if terminal.get_realized() and not (
-                        hasattr(terminal, "is_closed") and terminal.is_closed()
-                    ):
-                        message = f"\r\n[Processo em '{terminal_name}' encerrou inesperadamente (status: {child_status})]\r\n"
-                        terminal.feed(message.encode("utf-8"))
-                except GLib.Error as e:
-                    self.logger.debug(
-                        f"Não foi possível enviar mensagem de saída para '{terminal_name}': {e}"
-                    )
-
-            if self.on_terminal_should_close:
-                GLib.idle_add(
-                    self.on_terminal_should_close, terminal, child_status, identifier
-                )
-
-            self._cleanup_terminal_resources(terminal, terminal_id)
-
-            if self.on_terminal_child_exited:
-                self.on_terminal_child_exited(terminal, child_status, identifier)
-
-        except Exception as e:
-            self.logger.error(
-                f"Falha no tratamento da saída do processo filho para ID {terminal_id}: {e}"
+            # Schedule UI cleanup on main thread
+            GLib.idle_add(
+                self._cleanup_terminal_ui,
+                terminal,
+                terminal_id,
+                child_status,
+                identifier,
             )
 
-    def _on_terminal_eof(
+        except Exception as e:
+            self.logger.error(f"Terminal child exit handling failed: {e}")
+            self.lifecycle_manager.unmark_terminal_closing(terminal_id)
+
+    def _on_eof(
         self,
         terminal: Vte.Terminal,
         identifier: Union[str, SessionItem],
         terminal_id: int,
     ) -> None:
-        try:
-            terminal_name = (
-                identifier if isinstance(identifier, str) else identifier.name
-            )
-            self.logger.info(
-                f"Terminal '{terminal_name}' (ID: {terminal_id}) received EOF signal"
-            )
-            self.registry.update_terminal_status(terminal_id, "eof")
-            log_terminal_event("eof", terminal_name, "EOF signal received")
-            if self.on_terminal_eof:
-                self.on_terminal_eof(terminal, identifier)
-        except Exception as e:
-            self.logger.error(f"Terminal EOF handling failed for ID {terminal_id}: {e}")
+        """Handle EOF signal - treat as clean exit (status 0)."""
+        self._on_child_exited(terminal, 0, identifier, terminal_id)
 
+    def _cleanup_terminal_ui(
+        self, terminal: Vte.Terminal, terminal_id: int, child_status: int, identifier
+    ) -> bool:
+        """Clean up terminal UI - called on main thread."""
+        try:
+            # Call the terminal exit handler if set
+            if self.terminal_exit_handler:
+                self.logger.debug(
+                    f"Calling terminal exit handler for terminal {terminal_id}"
+                )
+                self.terminal_exit_handler(terminal, child_status, identifier)
+
+            # Always notify tab manager of process exit for proper UI handling
+            if self.tab_manager:
+                self.logger.debug(
+                    f"Notifying tab manager of terminal {terminal_id} exit"
+                )
+                self.tab_manager._on_terminal_process_exited(
+                    terminal, child_status, identifier
+                )
+            else:
+                self.logger.debug(
+                    f"No tab manager available, cleaning up directly for terminal {terminal_id}"
+                )
+                # Fallback cleanup if no tab manager
+                self._cleanup_terminal(terminal, terminal_id)
+
+        except Exception as e:
+            self.logger.error(f"Terminal UI cleanup failed: {e}")
+        finally:
+            self.lifecycle_manager.unmark_terminal_closing(terminal_id)
+
+        return False  # Don't repeat
+
+    def _cleanup_terminal(self, terminal: Vte.Terminal, terminal_id: int) -> None:
+        """Clean up terminal resources without affecting UI."""
+        with self._cleanup_lock:
+            if not self.registry.get_terminal_info(terminal_id):
+                return
+
+            terminal_info = self.registry.get_terminal_info(terminal_id)
+            identifier = terminal_info.get("identifier", "Unknown")
+            terminal_name = (
+                identifier
+                if isinstance(identifier, str)
+                else getattr(identifier, "name", "Unknown")
+            )
+
+            self.logger.info(
+                f"Cleaning up resources for terminal '{terminal_name}' (ID: {terminal_id})"
+            )
+
+            self.osc7_tracker.untrack_terminal(terminal)
+            self.manual_ssh_tracker.untrack(terminal_id)
+
+            success = self.registry.unregister_terminal(terminal_id)
+            if success:
+                self._stats["terminals_closed"] += 1
+                log_terminal_event(
+                    "removed", terminal_name, "terminal resources cleaned"
+                )
+
+            if terminal_id in self._pending_kill_timers:
+                timeout_id = self._pending_kill_timers.pop(terminal_id)
+                GLib.source_remove(timeout_id)
+
+    def close_terminal(self, terminal: Vte.Terminal) -> bool:
+        """Public method to close a terminal properly."""
+        terminal_id = getattr(terminal, "terminal_id", None)
+        if terminal_id is None:
+            return False
+
+        # Use remove_terminal for graceful shutdown
+        return self.remove_terminal(terminal)
+
+    # --- INÃCIO DA CORREÃ‡ÃƒO ---
     def _on_spawn_callback(
         self,
         terminal: Vte.Terminal,
@@ -705,51 +829,16 @@ class TerminalManager:
             self._pending_kill_timers.pop(terminal_id, None)
             os.kill(pid, 0)
             self.logger.warning(
-                f"Processo {pid} ('{terminal_name}') não saiu graciosamente. Enviando SIGKILL."
+                f"Process {pid} ('{terminal_name}') did not exit gracefully. Sending SIGKILL."
             )
             os.killpg(os.getpgid(pid), signal.SIGKILL)
         except ProcessLookupError:
             self.logger.debug(
-                f"Processo {pid} ('{terminal_name}') terminou antes do fallback de SIGKILL."
+                f"Process {pid} ('{terminal_name}') terminated before SIGKILL fallback."
             )
         except Exception as e:
-            self.logger.error(f"Erro durante a verificação final para o PID {pid}: {e}")
+            self.logger.error(f"Error during final check for PID {pid}: {e}")
         return False
-
-    def _cleanup_terminal_resources(
-        self, terminal: Vte.Terminal, terminal_id: int
-    ) -> None:
-        with self._cleanup_lock:
-            if not self.registry.get_terminal_info(terminal_id):
-                return
-
-            terminal_info = self.registry.get_terminal_info(terminal_id)
-            identifier = terminal_info.get("identifier", "Unknown")
-            terminal_name = (
-                identifier
-                if isinstance(identifier, str)
-                else getattr(identifier, "name", "Unknown")
-            )
-
-            self.logger.info(
-                f"Limpando recursos para o terminal '{terminal_name}' (ID: {terminal_id})"
-            )
-
-            self.osc7_tracker.untrack_terminal(terminal)
-            # --- INÍCIO DA MODIFICAÇÃO ---
-            self.manual_ssh_tracker.untrack(terminal_id)
-            # --- FIM DA MODIFICAÇÃO ---
-
-            success = self.registry.unregister_terminal(terminal_id)
-            if success:
-                self._stats["terminals_closed"] += 1
-                log_terminal_event(
-                    "removed", terminal_name, "recursos do terminal limpos"
-                )
-
-            if terminal_id in self._pending_kill_timers:
-                timeout_id = self._pending_kill_timers.pop(terminal_id)
-                GLib.source_remove(timeout_id)
 
     def _get_ssh_control_path(self, session: "SessionItem") -> str:
         user = session.user or os.getlogin()
@@ -773,7 +862,7 @@ class TerminalManager:
 
             pid = terminal_info.get("process_id")
             if not pid or pid == -1:
-                GLib.idle_add(self._cleanup_terminal_resources, terminal, terminal_id)
+                GLib.idle_add(self._cleanup_terminal, terminal, terminal_id)
                 return False
 
             terminal_name = (
@@ -784,7 +873,7 @@ class TerminalManager:
             terminal_type = terminal_info.get("type", "local")
 
             self.logger.info(
-                f"Iniciando encerramento para o terminal '{terminal_name}' (PID: {pid}, Tipo: {terminal_type})"
+                f"Initiating shutdown for terminal '{terminal_name}' (PID: {pid}, Type: {terminal_type})"
             )
 
             if terminal_type == "ssh":
@@ -800,11 +889,11 @@ class TerminalManager:
                     signal_name = "SIGHUP" if terminal_type == "local" else "SIGTERM"
                     os.killpg(os.getpgid(pid), signal_to_send)
                     self.logger.debug(
-                        f"{signal_name} enviado para o grupo de processos do PID {pid}."
+                        f"{signal_name} sent to process group of PID {pid}."
                     )
                 except (ProcessLookupError, PermissionError) as e:
                     self.logger.debug(
-                        f"Não foi possível enviar sinal para o PID {pid}, provavelmente já encerrou: {e}"
+                        f"Could not send signal to PID {pid}, likely already exited: {e}"
                     )
                     return True
             else:
@@ -812,7 +901,7 @@ class TerminalManager:
                     os.kill(pid, signal.SIGTERM)
                 except (ProcessLookupError, PermissionError) as e:
                     self.logger.debug(
-                        f"Não foi possível enviar SIGTERM para o PID {pid} no Windows: {e}"
+                        f"Could not send SIGTERM to PID {pid} on Windows: {e}"
                     )
                     return True
 
@@ -820,9 +909,7 @@ class TerminalManager:
                 5000, self._ensure_process_terminated, pid, terminal_name, terminal_id
             )
             self._pending_kill_timers[terminal_id] = timeout_id
-            self.logger.debug(
-                f"Fallback de SIGKILL agendado para o PID {pid} em 5 segundos."
-            )
+            self.logger.debug(f"SIGKILL fallback scheduled for PID {pid} in 5 seconds.")
 
             return True
 
@@ -832,22 +919,22 @@ class TerminalManager:
                 control_path = self._get_ssh_control_path(session)
                 command = ["ssh", "-O", "exit", "-S", control_path, session.host]
                 self.logger.debug(
-                    f"Executando comando de encerramento do mestre SSH: {' '.join(command)}"
+                    f"Executing SSH master shutdown command: {' '.join(command)}"
                 )
                 result = subprocess.run(
                     command, capture_output=True, text=True, timeout=5
                 )
                 if result.returncode == 0:
                     self.logger.info(
-                        f"Comando de encerramento do mestre SSH para {session.host} enviado com sucesso."
+                        f"SSH master shutdown command for {session.host} sent successfully."
                     )
                 else:
                     self.logger.debug(
-                        f"Comando de encerramento do mestre SSH falhou (pode ser normal): {result.stderr.strip()}"
+                        f"SSH master shutdown command failed (may be normal): {result.stderr.strip()}"
                     )
             except Exception as e:
                 self.logger.error(
-                    f"Erro ao tentar encerrar o mestre SSH para {session.host}: {e}"
+                    f"Error trying to shut down SSH master for {session.host}: {e}"
                 )
 
         thread = threading.Thread(target=shutdown_task, daemon=True)

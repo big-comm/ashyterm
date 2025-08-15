@@ -4,14 +4,13 @@ from typing import Optional, Union
 import os
 import threading
 import time
-from pathlib import Path
 
 import gi
 gi.require_version("Gtk", "4.0")
 gi.require_version("Adw", "1")
 gi.require_version("Vte", "3.91")
 
-from gi.repository import Gtk, Adw, Gio, GLib, Gdk, Vte
+from gi.repository import Gtk, Adw, Gio, GLib, Gdk
 
 from .settings.manager import SettingsManager
 from .settings.config import APP_TITLE, VTE_AVAILABLE
@@ -29,9 +28,8 @@ from .utils.exceptions import (
     AshyTerminalError, VTENotAvailableError, UIError, DialogError,
     handle_exception, ErrorCategory, ErrorSeverity
 )
-from .utils.security import validate_session_data, create_security_auditor
-from .utils.backup import BackupType
-from .utils.platform import get_platform_info, is_windows
+from .utils.security import validate_session_data
+from .utils.platform import get_platform_info
 from .utils.translation_utils import _
 
 class CommTerminalWindow(Adw.ApplicationWindow):
@@ -69,10 +67,13 @@ class CommTerminalWindow(Adw.ApplicationWindow):
         self.terminal_manager = TerminalManager(self, self.settings_manager)
         self.tab_manager = TabManager(self.terminal_manager)
         self.session_tree = SessionTreeView(self, self.session_store, self.folder_store, self.settings_manager)
-        
+
+        # Connect managers
+        self.terminal_manager.set_tab_manager(self.tab_manager)
+
         # Thread safety
         self._ui_lock = threading.Lock()
-        
+
         # Focus state management
         self._sidebar_has_focus = False
         self._creating_tab = False
@@ -82,7 +83,7 @@ class CommTerminalWindow(Adw.ApplicationWindow):
 
         # Security auditor
         self.security_auditor = None
-        
+
         # Initialize the window
         self._initialize_window()
 
@@ -90,34 +91,36 @@ class CommTerminalWindow(Adw.ApplicationWindow):
         """Initialize window components safely."""
         try:
             self.logger.debug("Starting window initialization")
-            
+
             # Check VTE availability first
             if not VTE_AVAILABLE:
                 self.logger.critical("VTE not available")
                 raise VTENotAvailableError()
-            
+
             # Security auditor removed
             self.security_auditor = None
 
             # Component managers are already initialized in __init__
             self.logger.debug("Component managers initialized")
-            
+
             # Set up the UI
             self._setup_actions()
             self._setup_ui()
             self._setup_callbacks()
             self._load_initial_data()
             self._setup_window_events()
-            
+
             # Create initial tab with delay to ensure UI is ready
             GLib.idle_add(self._create_initial_tab_safe)
-            
+
             self.logger.info("Main window initialization completed")
-            
+
         except Exception as e:
             self.logger.critical(f"Window initialization failed: {e}")
-            handle_exception(e, "window initialization", "ashyterm.window", reraise=True)
-    
+            handle_exception(
+                e, "window initialization", "ashyterm.window", reraise=True
+            )
+
     def _create_initial_tab_safe(self) -> bool:
         """Safely create initial tab with proper error handling."""
         try:
@@ -126,15 +129,21 @@ class CommTerminalWindow(Adw.ApplicationWindow):
                 result = self.tab_manager.create_initial_tab_if_empty()
                 if result is None:
                     self.logger.warning("Failed to create initial tab")
-                    self._show_error_dialog(_("Terminal Error"), 
-                                          _("Failed to create initial terminal. Check system configuration."))
+                    self._show_error_dialog(
+                        _("Terminal Error"),
+                        _(
+                            "Failed to create initial terminal. Check system configuration."
+                        ),
+                    )
             return False  # Don't repeat
         except Exception as e:
             self.logger.error(f"Failed to create initial tab: {e}")
-            self._show_error_dialog(_("Initialization Error"), 
-                                  _("Failed to initialize terminal: {error}").format(error=str(e)))
+            self._show_error_dialog(
+                _("Initialization Error"),
+                _("Failed to initialize terminal: {error}").format(error=str(e)),
+            )
             return False
-    
+
     def _setup_actions(self) -> None:
         """Set up window-level actions."""
         try:
@@ -145,128 +154,120 @@ class CommTerminalWindow(Adw.ApplicationWindow):
                 ("copy", self._on_copy),
                 ("paste", self._on_paste),
                 ("select-all", self._on_select_all),
-                
                 # Splitting actions
                 ("split-horizontal", self._on_split_horizontal),
                 ("split-vertical", self._on_split_vertical),
                 ("close-pane", self._on_close_pane),
-
                 # Zoom actions
                 ("zoom-in", self._on_zoom_in),
                 ("zoom-out", self._on_zoom_out),
                 ("zoom-reset", self._on_zoom_reset),
-                
                 # Session actions
                 ("edit-session", self._on_edit_session),
                 ("duplicate-session", self._on_duplicate_session),
                 ("rename-session", self._on_rename_session),
                 ("move-session-to-folder", self._on_move_session_to_folder),
                 ("delete-session", self._on_delete_session),
-                
                 # Folder actions
                 ("edit-folder", self._on_edit_folder),
                 ("rename-folder", self._on_rename_folder),
                 ("add-session-to-folder", self._on_add_session_to_folder),
                 ("delete-folder", self._on_delete_folder),
-                
                 # Clipboard actions
                 ("cut-item", self._on_cut_item),
                 ("copy-item", self._on_copy_item),
                 ("paste-item", self._on_paste_item),
                 ("paste-item-root", self._on_paste_item_root),
-                
                 # Root actions
                 ("add-session-root", self._on_add_session_root),
                 ("add-folder-root", self._on_add_folder_root),
-                
                 # Interface actions
                 ("toggle-sidebar", self._on_toggle_sidebar_action),
-                
                 # Preferences and utilities
                 ("preferences", self._on_preferences),
                 ("shortcuts", self._on_shortcuts),
                 ("new-window", self._on_new_window),
             ]
-            
+
             for action_name, callback in actions:
                 action = Gio.SimpleAction.new(action_name, None)
                 action.connect("activate", callback)
                 self.add_action(action)
-            
+
             self.logger.debug("Window actions configured")
-            
+
         except Exception as e:
             self.logger.error(f"Failed to setup actions: {e}")
             raise UIError("window", f"action setup failed: {e}")
-    
+
     def _setup_ui(self) -> None:
         """Set up the user interface."""
         try:
             self.logger.debug("Setting up UI components")
-            
+
             # Main vertical box
             main_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
-            
+
             # Header bar
             header_bar = self._create_header_bar()
             main_box.append(header_bar)
-            
+
             # Adw.Flap for animated sidebar
             self.flap = Adw.Flap()
             self.flap.set_transition_type(Adw.FlapTransitionType.SLIDE)
-            
+
             # Sidebar
             self.sidebar_box = self._create_sidebar()
             self.flap.set_flap(self.sidebar_box)
-            
+
             # Content area (tabs)
             content_box = self._create_content_area()
             self.flap.set_content(content_box)
-            
+
             main_box.append(self.flap)
             self.set_content(main_box)
-            
+
             # Set initial sidebar visibility
             initial_visible = self.settings_manager.get_sidebar_visible()
             self.flap.set_reveal_flap(initial_visible)
             self.toggle_sidebar_button.set_active(initial_visible)
             self._update_sidebar_button_icon()
-            
+
             self.logger.debug("UI setup completed with Adw.Flap")
-            
+
         except Exception as e:
             self.logger.error(f"UI setup failed: {e}")
             raise UIError("window", f"UI setup failed: {e}")
-    
+
     def _create_header_bar(self) -> Adw.HeaderBar:
         """Create the header bar with controls."""
         try:
-            header_bar = Adw.HeaderBar()
-            
+            self.header_bar = Adw.HeaderBar()
+
             # Sidebar toggle button
             self.toggle_sidebar_button = Gtk.ToggleButton()
             self.toggle_sidebar_button.set_icon_name("view-reveal-symbolic")
             self.toggle_sidebar_button.set_tooltip_text(_("Toggle Sidebar"))
             self.toggle_sidebar_button.connect("toggled", self._on_toggle_sidebar)
-            header_bar.pack_start(self.toggle_sidebar_button)
-            
+            self.header_bar.pack_start(self.toggle_sidebar_button)
+
             # Main menu button
             menu_button = Gtk.MenuButton()
             menu_button.set_icon_name("open-menu-symbolic")
             menu_button.set_tooltip_text(_("Main Menu"))
             menu_button.set_menu_model(MainApplicationMenu.create_menu())
-            header_bar.pack_end(menu_button)
-            
+            self.header_bar.pack_end(menu_button)
+
             # New tab button
             new_tab_button = Gtk.Button.new_from_icon_name("tab-new-symbolic")
             new_tab_button.set_tooltip_text(_("New Tab"))
             new_tab_button.connect("clicked", self._on_new_tab_clicked)
             new_tab_button.add_css_class("flat")
-            header_bar.pack_end(new_tab_button)
-            
+            self.header_bar.pack_end(new_tab_button)
+
             self.logger.debug("Header bar created")
-            return header_bar
-            
+            return self.header_bar
+
         except Exception as e:
             self.logger.error(f"Header bar creation failed: {e}")
             raise UIError("header_bar", f"creation failed: {e}")
@@ -276,12 +277,14 @@ class CommTerminalWindow(Adw.ApplicationWindow):
         try:
             toolbar_view = Adw.ToolbarView()
             toolbar_view.add_css_class("background")
-            
+
             scrolled_window = Gtk.ScrolledWindow()
-            scrolled_window.set_policy(Gtk.PolicyType.AUTOMATIC, Gtk.PolicyType.AUTOMATIC)
+            scrolled_window.set_policy(
+                Gtk.PolicyType.AUTOMATIC, Gtk.PolicyType.AUTOMATIC
+            )
             scrolled_window.set_vexpand(True)
             scrolled_window.set_child(self.session_tree.get_widget())
-            
+
             toolbar_view.set_content(scrolled_window)
 
             # Create and add the bottom toolbar using Gtk.ActionBar for proper styling
@@ -320,23 +323,86 @@ class CommTerminalWindow(Adw.ApplicationWindow):
             self.logger.error(f"Sidebar creation failed: {e}")
             raise UIError("sidebar", f"creation failed: {e}")
 
-    def _create_content_area(self) -> Gtk.Box:
-        """Create the content area with tab view."""
+    def _create_content_area(self) -> Gtk.Widget:
+        """Create the main content area with tabs."""
         try:
-            content_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=0)
-            content_box.append(self.tab_manager.get_tab_bar())
+            # Main content box - just contains the tab view, tab bar goes in header
+            self.content_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=0)
 
+            # Get tab components
+            self.tab_bar = self.tab_manager.get_tab_bar()
             tab_view = self.tab_manager.get_tab_view()
             tab_view.add_css_class("terminal-tab-view")
-            content_box.append(tab_view)
 
-            self.logger.debug("Content area created")
-            return content_box
+            # Configure tab bar for better spacing and put it in header bar as title widget
+            self.tab_bar.set_expand_tabs(True)  # Expand tabs to fill available space
+            self.tab_bar.set_autohide(False)  # Don't auto-hide when multiple tabs
+
+            # Put tab bar in header bar as title widget for better space utilization
+            self.header_bar.set_title_widget(self.tab_bar)
+
+            # Add only tab view to content area
+            self.content_box.append(tab_view)
+
+            # Connect to tab events with proper parameter handling
+            tab_view.connect("page-attached", self._on_tab_attached)
+            tab_view.connect("page-detached", self._on_tab_detached)
+
+            self.logger.debug("Content area created with tabs in header bar")
+            return self.content_box
 
         except Exception as e:
             self.logger.error(f"Content area creation failed: {e}")
             raise UIError("content_area", f"creation failed: {e}")
-    
+
+    def _on_tab_attached(self, tab_view, page, position):
+        """Handle tab attached event."""
+        try:
+            self._update_tab_layout()
+            # Update tab titles to show terminal counts
+            GLib.idle_add(self.tab_manager.update_all_tab_titles)
+        except Exception as e:
+            self.logger.error(f"Tab attached handling failed: {e}")
+
+    def _on_tab_detached(self, tab_view, page, position):
+        """Handle tab detached event."""
+        try:
+            self._update_tab_layout()
+            # Update remaining tab titles
+            GLib.idle_add(self.tab_manager.update_all_tab_titles)
+        except Exception as e:
+            self.logger.error(f"Tab detached handling failed: {e}")
+
+    def _update_tab_layout(self):
+        """Update tab layout based on tab count."""
+        try:
+            tab_count = self.tab_manager.get_tab_count()
+
+            if tab_count > 1:
+                # Multiple tabs - show in header bar with good spacing
+                self.tab_bar.set_expand_tabs(True)  # Fill available space
+                self.tab_bar.set_autohide(False)  # Always show
+                self.tab_bar.set_visible(True)
+
+                # Ensure it's in the header bar
+                if self.header_bar.get_title_widget() != self.tab_bar:
+                    self.header_bar.set_title_widget(self.tab_bar)
+            else:
+                # Single tab - hide tab bar and show window title
+                self.tab_bar.set_visible(False)
+                self.header_bar.set_title_widget(None)  # Show normal window title
+
+            self.logger.debug(
+                f"Tab layout updated for {tab_count} tabs, visible in header bar"
+            )
+
+        except Exception as e:
+            self.logger.error(f"Tab layout update failed: {e}")
+
+    def _on_tab_count_changed(self, tab_count=None, tab_bar_visible=None):
+        """Legacy method - delegates to _update_tab_layout."""
+        self._update_tab_layout()
+
     def _setup_callbacks(self) -> None:
         """Set up callbacks between components."""
         try:
@@ -344,24 +410,16 @@ class CommTerminalWindow(Adw.ApplicationWindow):
             self.session_tree.on_session_activated = self._on_session_activated
 
             # Terminal manager callbacks
-            self.terminal_manager.on_terminal_child_exited = (
-                self._on_terminal_child_exited
-            )
-            self.terminal_manager.on_terminal_eof = self._on_terminal_eof
             self.terminal_manager.on_terminal_focus_changed = (
                 self._on_terminal_focus_changed
-            )
-            self.terminal_manager.on_terminal_should_close = (
-                self._on_terminal_should_close
             )
             self.terminal_manager.on_terminal_directory_changed = (
                 self._on_terminal_directory_changed
             )
 
-            # Tab manager callbacks
+            # Tab manager callbacks - simplified
             self.tab_manager.on_tab_selected = self._on_tab_selected
-            self.tab_manager.on_tab_closed = self._on_tab_closed
-            self.tab_manager.on_tab_count_changed = self._on_tab_count_changed
+            self.tab_manager.on_quit_application = self._on_quit_application_requested
 
             self.logger.debug("Callbacks configured")
 
@@ -445,43 +503,6 @@ class CommTerminalWindow(Adw.ApplicationWindow):
             self.logger.error(f"Window key press handling failed: {e}")
             return Gdk.EVENT_PROPAGATE
 
-    def _on_terminal_should_close(
-        self, terminal: Vte.Terminal, child_status: int, identifier: any
-    ) -> None:
-        """
-        This callback is the safe, final point for removing a tab's UI.
-        It's called by the TerminalManager AFTER the child process has exited.
-        """
-        try:
-            terminal_name = (
-                identifier
-                if isinstance(identifier, str)
-                else getattr(identifier, "name", "Unknown")
-            )
-            self.logger.info(
-                f"Received request to close UI for terminal '{terminal_name}' (exited with status {child_status})."
-            )
-
-            # 1. Find the tab page (Adw.TabPage) corresponding to the terminal
-            page = self.tab_manager.get_page_for_terminal(terminal)
-
-            if page:
-                # 2. NOW, and only now, do we finalize the closing of the tab's UI.
-                # This is the call that was removed from TabManager.close_tab
-                self.logger.debug(f"Finalizing close of tab page: {page.get_title()}")
-                self.tab_manager.tab_view.close_page_finish(page, True)
-
-                # 3. Perform final cleanup in the TabManager's registry and update tab bar visibility
-                self.tab_manager.registry.unregister_tab(page)
-                self.tab_manager._update_tab_bar_visibility()
-            else:
-                self.logger.warning(
-                    f"Could not find tab page for terminal '{terminal_name}' which has already exited."
-                )
-
-        except Exception as e:
-            self.logger.error(f"Failed to handle terminal tab close: {e}")
-
     def _on_terminal_focus_changed(self, terminal, from_sidebar: bool) -> None:
         """Handle terminal focus change."""
         try:
@@ -495,62 +516,39 @@ class CommTerminalWindow(Adw.ApplicationWindow):
     ) -> None:
         """Handle OSC7 directory change and update tab title and split pane titles."""
         try:
-            # Find the tab page for this terminal
-            page = self.tab_manager.get_page_for_terminal(terminal)
-            if page:
-                # Update tab title
-                self.tab_manager.set_tab_title(page, new_title)
+            # Update title in splits/tabs
+            self.tab_manager.update_terminal_title_in_splits(terminal, new_title)
 
-                # Also update title in split panes if terminal is in a split
-                self.tab_manager.update_terminal_title_in_splits(terminal, new_title)
-
-                # If this is the only tab and the currently selected one, update window title
-                if (
-                    self.tab_manager.get_tab_count() == 1
-                    and self.tab_manager.get_selected_page() == page
-                ):
-                    self.set_title(f"{APP_TITLE} - {new_title}")
-
-                # --- INÍCIO DA CORREÇÃO ---
-                # Add a check to ensure osc7_info is not None before accessing its attributes.
-                if osc7_info:
-                    self.logger.debug(
-                        f"Updated tab and split titles to: '{new_title}' for directory: {osc7_info.path}"
-                    )
-                else:
-                    self.logger.debug(
-                        f"Updated tab and split titles to: '{new_title}' (no directory info)"
-                    )
-                # --- FIM DA CORREÇÃO ---
+            # Update window title
+            if self.tab_manager.get_tab_count() <= 1:
+                self.set_title(f"{APP_TITLE} - {new_title}")
             else:
-                self.logger.warning(
-                    "Could not find tab page for terminal directory change"
+                self.set_title(APP_TITLE)
+
+            if osc7_info:
+                self.logger.debug(
+                    f"Updated titles to: '{new_title}' for directory: {osc7_info.path}"
+                )
+            else:
+                self.logger.debug(
+                    f"Updated titles to: '{new_title}' (no directory info)"
                 )
 
         except Exception as e:
             self.logger.error(f"Terminal directory change handling failed: {e}")
 
-    def _on_tab_count_changed(self, tab_count: int, tab_bar_visible: bool) -> None:
-        """Handle tab count change and update window title accordingly."""
+    def _on_quit_application_requested(self) -> None:
+        """Handle quit application request from tab manager."""
         try:
-            if tab_count == 1:
-                # Single tab - show tab title in window title, hide tab bar
-                current_page = self.tab_manager.get_selected_page()
-                if current_page:
-                    tab_title = current_page.get_title()
-                    self.set_title(f"{APP_TITLE} - {tab_title}")
-                else:
-                    self.set_title(APP_TITLE)
+            self.logger.info("Quit application requested from tab manager")
+            # Use the application's quit method to ensure proper cleanup
+            if hasattr(self, "app") and self.app:
+                self.app.quit()
             else:
-                # Multiple tabs - show app title only, tab bar is visible
-                self.set_title(APP_TITLE)
-
-            self.logger.debug(
-                f"Window title updated for {tab_count} tabs (bar visible: {tab_bar_visible})"
-            )
-
+                # Fallback - destroy the window which should trigger app quit
+                self.destroy()
         except Exception as e:
-            self.logger.error(f"Tab count change handling failed: {e}")
+            self.logger.error(f"Application quit request failed: {e}")
 
     def _on_window_close_request(self, window) -> bool:
         """Handle window close request with SSH session confirmation."""
@@ -594,7 +592,7 @@ class CommTerminalWindow(Adw.ApplicationWindow):
                 self.close()
                 return
 
-            session_list = "\n".join([f"• {name}" for name in ssh_sessions])
+            session_list = "\n".join([f"â€¢ {name}" for name in ssh_sessions])
 
             try:
                 # Build the message in parts to avoid translation issues
@@ -603,7 +601,7 @@ class CommTerminalWindow(Adw.ApplicationWindow):
                 part3 = _("Are you sure you want to close this window?")
 
                 body_text = f"{part1}\n\n{session_list}\n\n{part2}\n\n{part3}"
-                self.logger.debug(f"Final body text created successfully")
+                self.logger.debug("Final body text created successfully")
             except Exception as e:
                 self.logger.error(f"Failed to format message: {e}")
                 # Fallback to English without translation
@@ -649,36 +647,34 @@ class CommTerminalWindow(Adw.ApplicationWindow):
             self.close()
 
     def _perform_cleanup(self) -> None:
-        """Executa uma limpeza abrangente de todos os terminais na janela."""
+        """Perform window cleanup with proper state tracking."""
         if self._cleanup_performed:
             return
 
         self._cleanup_performed = True
-        self.logger.info(
-            "Executando limpeza da janela e terminando todos os terminais."
-        )
+        self.logger.info("Performing window cleanup")
 
         try:
+            # Get all terminals
             all_terminals = self.tab_manager.get_all_terminals()
+
             if not all_terminals:
-                self.logger.debug("Nenhum terminal para limpar.")
+                self.logger.debug("No terminals to clean up")
                 return
 
-            self.logger.debug(
-                f"Encontrados {len(all_terminals)} terminais para limpar."
-            )
+            self.logger.debug(f"Closing {len(all_terminals)} terminals")
 
-            # Inicia explicitamente a remoção de cada terminal.
-            # O fluxo assíncrono que configuramos cuidará do resto.
+            # Close all terminals gracefully through the manager
             for terminal in all_terminals:
-                self.terminal_manager.remove_terminal(terminal)
+                try:
+                    self.terminal_manager.close_terminal(terminal)
+                except Exception as e:
+                    self.logger.error(f"Error closing terminal: {e}")
 
-            self.logger.info(
-                "Pedidos de limpeza para todos os terminais foram enviados."
-            )
+            self.logger.info("Window cleanup completed")
 
         except Exception as e:
-            self.logger.error(f"Ocorreu um erro durante a limpeza da janela: {e}")
+            self.logger.error(f"Window cleanup error: {e}")
 
     # Session tree event handlers
     def _on_session_activated(self, session: SessionItem) -> None:
@@ -730,40 +726,9 @@ class CommTerminalWindow(Adw.ApplicationWindow):
                 _("Failed to activate session: {error}").format(error=str(e)),
             )
 
-    def _on_terminal_child_exited(
-        self, terminal, child_status: int, identifier
-    ) -> None:
-        """Handle terminal child process exit."""
-        try:
-            terminal_name = (
-                identifier
-                if isinstance(identifier, str)
-                else getattr(identifier, "name", "Unknown")
-            )
-            log_terminal_event("exited", terminal_name, f"status {child_status}")
-        except Exception as e:
-            self.logger.error(f"Terminal exit handling failed: {e}")
-
-    def _on_terminal_eof(self, terminal, identifier) -> None:
-        """Handle terminal EOF."""
-        try:
-            terminal_name = (
-                identifier
-                if isinstance(identifier, str)
-                else getattr(identifier, "name", "Unknown")
-            )
-            log_terminal_event("eof", terminal_name)
-        except Exception as e:
-            self.logger.error(f"Terminal EOF handling failed: {e}")
-
     def _on_tab_selected(self, page) -> None:
         """Handle tab selection change."""
         # Tab manager already handles focus
-        pass
-
-    def _on_tab_closed(self, page, terminal) -> None:
-        """Handle tab being closed."""
-        # Cleanup already handled by tab manager
         pass
 
     # Action handlers - Terminal actions
@@ -816,14 +781,15 @@ class CommTerminalWindow(Adw.ApplicationWindow):
             GLib.timeout_add(200, reset_flag)
 
     def _on_close_tab(self, action, param) -> None:
-        """Handle close tab/pane action."""
+        """Handle close tab action."""
         try:
-            # This action should close the currently focused pane.
-            focused_terminal = self.tab_manager.get_selected_terminal()
-            if focused_terminal:
-                self.tab_manager.close_pane(focused_terminal)
+            # Get current page and close it properly
+            current_page = self.tab_manager.get_selected_page()
+            if current_page:
+                # This will trigger the proper Adwaita close flow
+                self.tab_manager.tab_view.close_page(current_page)
         except Exception as e:
-            self.logger.error(f"Close tab/pane action failed: {e}")
+            self.logger.error(f"Close tab action failed: {e}")
 
     def _on_copy(self, action, param) -> None:
         """Handle copy action."""
@@ -883,7 +849,6 @@ class CommTerminalWindow(Adw.ApplicationWindow):
                 self.tab_manager.close_pane(focused_terminal)
         except Exception as e:
             self.logger.error(f"Close pane failed: {e}")
-            self._show_error_dialog(_("Close Error"), str(e))
 
     def _on_zoom_in(self, action, param) -> None:
         """Handle zoom in action."""
@@ -1190,7 +1155,7 @@ class CommTerminalWindow(Adw.ApplicationWindow):
                     )
             else:
                 self._show_error_dialog(
-                    _("Nova Janela"), _("Não foi possível criar uma nova janela")
+                    _("Nova Janela"), _("NÃ£o foi possÃ­vel criar uma nova janela")
                 )
 
         except Exception as e:
@@ -1319,28 +1284,32 @@ class CommTerminalWindow(Adw.ApplicationWindow):
         """Show folder edit dialog."""
         try:
             is_new = position is None
-            dialog = FolderEditDialog(self, self.folder_store, folder, position, is_new=is_new)
+            dialog = FolderEditDialog(
+                self, self.folder_store, folder, position, is_new=is_new
+            )
             dialog.present()
         except Exception as e:
             self.logger.error(f"Folder edit dialog failed: {e}")
             raise DialogError("folder_edit", str(e))
-    
-    def _show_rename_dialog(self, item: Union[SessionItem, SessionFolder], is_session: bool) -> None:
+
+    def _show_rename_dialog(
+        self, item: Union[SessionItem, SessionFolder], is_session: bool
+    ) -> None:
         """Show rename dialog."""
         try:
             item_type = _("Session") if is_session else _("Folder")
             dialog = Adw.MessageDialog(
                 transient_for=self,
                 title=_("Rename {type}").format(type=item_type),
-                body=_("Enter new name for \"{name}\":").format(name=item.name)
+                body=_('Enter new name for "{name}":').format(name=item.name),
             )
-            
+
             entry = Gtk.Entry(text=item.name)
             dialog.set_extra_child(entry)
             dialog.add_response("cancel", _("Cancel"))
             dialog.add_response("rename", _("Rename"))
             dialog.set_default_response("rename")
-            
+
             def on_response(dlg, response_id):
                 try:
                     if response_id == "rename":
@@ -1348,44 +1317,57 @@ class CommTerminalWindow(Adw.ApplicationWindow):
                         if new_name and new_name != item.name:
                             old_name = item.name
                             item.name = new_name
-                            
+
                             if is_session:
                                 self.session_tree.operations._save_changes()
-                                log_session_event("renamed", f"{old_name} -> {new_name}")
+                                log_session_event(
+                                    "renamed", f"{old_name} -> {new_name}"
+                                )
                             else:
                                 # Handle folder path updates
                                 if isinstance(item, SessionFolder):
                                     old_path = item.path
                                     item.path = os.path.normpath(
-                                        f"{item.parent_path}/{new_name}" if item.parent_path else f"/{new_name}"
+                                        f"{item.parent_path}/{new_name}"
+                                        if item.parent_path
+                                        else f"/{new_name}"
                                     )
-                                    self.session_tree.operations._update_child_paths(old_path, item.path)
+                                    self.session_tree.operations._update_child_paths(
+                                        old_path, item.path
+                                    )
                                 self.session_tree.operations._save_changes()
-                            
+
                             self.session_tree.refresh_tree()
                     dlg.close()
                 except Exception as e:
                     self.logger.error(f"Rename dialog response failed: {e}")
                     dlg.close()
-            
+
             dialog.connect("response", on_response)
             dialog.present()
-            
+
         except Exception as e:
             self.logger.error(f"Rename dialog failed: {e}")
             raise DialogError("rename", str(e))
-    
+
     def _show_move_session_dialog(self, session: SessionItem) -> None:
         """Show move session to folder dialog."""
         # Implementation placeholder - would show folder selection dialog
-        self._show_info_dialog(_("Move Session"), _("Move session functionality will be implemented in folder selection dialog."))
-    
-    def _show_delete_confirmation(self, item: Union[SessionItem, SessionFolder], is_session: bool) -> None:
+        self._show_info_dialog(
+            _("Move Session"),
+            _(
+                "Move session functionality will be implemented in folder selection dialog."
+            ),
+        )
+
+    def _show_delete_confirmation(
+        self, item: Union[SessionItem, SessionFolder], is_session: bool
+    ) -> None:
         """Show delete confirmation dialog."""
         try:
             item_type = _("Session") if is_session else _("Folder")
-            
-            # Verifica se a pasta tem conteúdo antes de mostrar o diálogo de exclusão
+
+            # Verifica se a pasta tem conteÃºdo antes de mostrar o diÃ¡logo de exclusÃ£o
             if not is_session and self.session_tree.operations._folder_has_children(item.path):
                 body_text = _("The folder \"{name}\" is not empty. Are you sure you want to permanently delete it and all its contents?").format(name=item.name)
             else:
@@ -1410,7 +1392,7 @@ class CommTerminalWindow(Adw.ApplicationWindow):
                             if result.success:
                                 log_session_event("deleted", item.name)
                         else:
-                            # Se a pasta não estiver vazia, use force=True
+                            # Se a pasta nÃ£o estiver vazia, use force=True
                             force_delete = self.session_tree.operations._folder_has_children(item.path)
                             result = self.session_tree.operations.remove_folder(item, force=force_delete)
                         

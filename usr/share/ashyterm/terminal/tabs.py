@@ -1,6 +1,7 @@
-from typing import Optional, Callable, List, Dict, Any
+# ashyterm/terminal/tabs.py
+
+from typing import Optional, Callable, List
 import threading
-import time
 import weakref
 
 import gi
@@ -10,44 +11,30 @@ gi.require_version("Adw", "1")
 gi.require_version("Vte", "3.91")
 gi.require_version("Pango", "1.0")
 
-from gi.repository import Gtk, Adw, Gio, GLib, Gdk, Pango
+from gi.repository import Gtk, Adw, Gio, Gdk, GLib, Pango
 from gi.repository import Vte
 
 from ..sessions.models import SessionItem
 from .manager import TerminalManager
 
 # Import new utility systems
-from ..utils.logger import get_logger, log_terminal_event
-from ..utils.exceptions import UIError, TerminalError, handle_exception, ErrorSeverity
-from ..utils.platform import get_platform_info, is_windows
+from ..utils.logger import get_logger
 
 
 class TerminalPaneWithTitleBar(Gtk.Box):
     """A terminal pane with an integrated, Adwaita-native title bar."""
 
     def __init__(self, terminal: Vte.Terminal, title: str = "Terminal"):
-        """
-        Initialize terminal pane with title bar.
-
-        Args:
-            terminal: VTE terminal widget
-            title: Title to display in title bar
-        """
         super().__init__(orientation=Gtk.Orientation.VERTICAL, spacing=0)
-
         self.terminal = terminal
         self._title = title
-
-        # Create title bar using Adw.HeaderBar for proper styling
         self.title_bar = self._create_title_bar()
         self.append(self.title_bar)
 
-        # Handle terminal that might already be in a scrolled window
         current_parent = terminal.get_parent()
         if isinstance(current_parent, Gtk.ScrolledWindow):
             self.scrolled_window = current_parent
-            grandparent = current_parent.get_parent()
-            if grandparent:
+            if grandparent := current_parent.get_parent():
                 grandparent.set_child(None)
         else:
             self.scrolled_window = Gtk.ScrolledWindow()
@@ -55,1191 +42,782 @@ class TerminalPaneWithTitleBar(Gtk.Box):
                 Gtk.PolicyType.AUTOMATIC, Gtk.PolicyType.AUTOMATIC
             )
             if current_parent:
-                current_parent.remove(terminal) if hasattr(
-                    current_parent, "remove"
-                ) else current_parent.set_child(None)
+                current_parent.set_child(None)
 
         if terminal.get_parent() != self.scrolled_window:
             self.scrolled_window.set_child(terminal)
 
         self.scrolled_window.set_vexpand(True)
         self.scrolled_window.set_hexpand(True)
-
         self.append(self.scrolled_window)
-
         self.on_close_requested: Optional[Callable[[Vte.Terminal], None]] = None
 
     def _create_title_bar(self) -> Adw.HeaderBar:
-        """Create the title bar widget using Adw.HeaderBar."""
+        # Apply custom CSS for headerbar and its children
+        css = """
+        headerbar {
+            min-height: 0px;
+        }
+
+        tabbar {
+            margin: -8px;
+        }
+
+        .terminal-tab-view headerbar entry,
+        .terminal-tab-view headerbar spinbutton,
+        .terminal-tab-view headerbar button,
+
+        headerbar separator {
+            margin-top: -10px;
+            margin-bottom: -10px;
+        }
+        """
+        provider = Gtk.CssProvider()
+        provider.load_from_data(css.encode("utf-8"))
+        Gtk.StyleContext.add_provider_for_display(
+            Gdk.Display.get_default(),
+            provider,
+            Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION,
+        )
+
         title_bar = Adw.HeaderBar()
         title_bar.set_show_end_title_buttons(False)
         title_bar.set_show_start_title_buttons(False)
-
-        self.title_label = Gtk.Label(label=self._title)
-        self.title_label.set_ellipsize(Pango.EllipsizeMode.END)
-        self.title_label.set_xalign(0.0)
+        self.title_label = Gtk.Label(
+            label=self._title, ellipsize=Pango.EllipsizeMode.END, xalign=0.0
+        )
         title_bar.set_title_widget(self.title_label)
-
-        close_button = Gtk.Button()
-        # close_button.set_css_classes(["flat", "circular"])
-        close_button.set_icon_name("window-close-symbolic")
-        close_button.set_tooltip_text("Close Pane")
+        close_button = Gtk.Button(
+            icon_name="window-close-symbolic", tooltip_text="Close Pane"
+        )
         close_button.connect("clicked", self._on_close_clicked)
         title_bar.pack_end(close_button)
-
         return title_bar
 
     def _on_close_clicked(self, button) -> None:
-        """Handle close button click."""
         if self.on_close_requested:
             self.on_close_requested(self.terminal)
 
     def set_title(self, title: str) -> None:
-        """Update the title displayed in the title bar."""
         self._title = title
         if hasattr(self, "title_label"):
             self.title_label.set_text(title)
 
-    def get_title(self) -> str:
-        """Get the current title."""
-        return self._title
-
     def get_terminal(self) -> Vte.Terminal:
-        """Get the terminal widget."""
         return self.terminal
-
-    def get_scrolled_window(self) -> Gtk.ScrolledWindow:
-        """Get the scrolled window containing the terminal."""
-        return self.scrolled_window
-
-
-class TabRegistry:
-    """Registry for tracking tab-terminal relationships and metadata."""
-
-    def __init__(self):
-        self.logger = get_logger("ashyterm.tabs.registry")
-        self._tab_terminal_map: Dict[Adw.TabPage, weakref.ref] = {}
-        self._terminal_tab_map: Dict[int, weakref.ref] = {}  # terminal id -> tab ref
-        self._tab_metadata: Dict[int, Dict[str, Any]] = {}  # tab id -> metadata
-        self._lock = threading.RLock()
-        self._next_tab_id = 1
-
-    def register_tab(
-        self, page: Adw.TabPage, terminal: Vte.Terminal, tab_type: str, title: str
-    ) -> int:
-        """
-        Register a tab-terminal relationship.
-
-        Args:
-            page: Tab page
-            terminal: Terminal widget
-            tab_type: Type of tab ('local' or 'ssh')
-            title: Tab title
-
-        Returns:
-            Tab ID
-        """
-        with self._lock:
-            tab_id = self._next_tab_id
-            self._next_tab_id += 1
-
-            # Get terminal ID from terminal - GTK4 compatibility
-            terminal_id = getattr(terminal, "terminal_id", None)
-            if terminal_id is None:
-                terminal_id = id(terminal)  # Fallback to object id
-
-            # Store relationships with weak references
-            def cleanup_tab_ref(ref):
-                self._cleanup_tab_reference(tab_id)
-
-            def cleanup_terminal_ref(ref):
-                self._cleanup_terminal_reference(tab_id)
-
-            self._tab_terminal_map[page] = weakref.ref(terminal, cleanup_terminal_ref)
-            self._terminal_tab_map[terminal_id] = weakref.ref(page, cleanup_tab_ref)
-
-            # Store metadata
-            self._tab_metadata[tab_id] = {
-                "type": tab_type,
-                "title": title,
-                "terminal_id": terminal_id,
-                "page_id": id(page),
-                "created_at": time.time(),
-                "focus_count": 0,
-                "last_focused": None,
-            }
-
-            self.logger.debug(
-                f"Tab registered: ID={tab_id}, type={tab_type}, title='{title}'"
-            )
-            return tab_id
-
-    def get_terminal_for_page(self, page: Adw.TabPage) -> Optional[Vte.Terminal]:
-        """Get terminal for a tab page."""
-        with self._lock:
-            terminal_ref = self._tab_terminal_map.get(page)
-            if terminal_ref:
-                return terminal_ref()
-            return None
-
-    def get_page_for_terminal(self, terminal: Vte.Terminal) -> Optional[Adw.TabPage]:
-        """Get tab page for a terminal."""
-        with self._lock:
-            terminal_id = getattr(terminal, "terminal_id", None)
-            if terminal_id is None:
-                terminal_id = id(terminal)
-
-            page_ref = self._terminal_tab_map.get(terminal_id)
-            if page_ref:
-                return page_ref()
-            return None
-
-    def update_tab_focus(self, page: Adw.TabPage) -> None:
-        """Update tab focus statistics."""
-        with self._lock:
-            # Find tab by page
-            for tab_id, metadata in self._tab_metadata.items():
-                if metadata["page_id"] == id(page):
-                    metadata["focus_count"] += 1
-                    metadata["last_focused"] = time.time()
-                    break
-
-    def unregister_tab(self, page: Adw.TabPage) -> bool:
-        """Unregister a tab."""
-        with self._lock:
-            if page in self._tab_terminal_map:
-                # Find and remove metadata
-                page_id = id(page)
-                tab_id_to_remove = None
-
-                for tab_id, metadata in self._tab_metadata.items():
-                    if metadata["page_id"] == page_id:
-                        tab_id_to_remove = tab_id
-                        break
-
-                # Remove from maps
-                terminal_ref = self._tab_terminal_map.pop(page, None)
-                if terminal_ref:
-                    terminal = terminal_ref()
-                    if terminal:
-                        terminal_id = getattr(terminal, "terminal_id", None)
-                        if terminal_id is None:
-                            terminal_id = id(terminal)
-                        self._terminal_tab_map.pop(terminal_id, None)
-
-                # Remove metadata
-                if tab_id_to_remove is not None:
-                    self._tab_metadata.pop(tab_id_to_remove, None)
-                    self.logger.debug(f"Tab unregistered: ID={tab_id_to_remove}")
-
-                return True
-            return False
-
-    def _cleanup_tab_reference(self, tab_id: int) -> None:
-        """Clean up when tab page is garbage collected."""
-        with self._lock:
-            self._tab_metadata.pop(tab_id, None)
-            self.logger.debug(f"Tab reference cleaned up: ID={tab_id}")
-
-    def _cleanup_terminal_reference(self, tab_id: int) -> None:
-        """Clean up when terminal is garbage collected."""
-        with self._lock:
-            # Find and remove from terminal_tab_map
-            terminal_id_to_remove = None
-            if tab_id in self._tab_metadata:
-                terminal_id_to_remove = self._tab_metadata[tab_id].get("terminal_id")
-
-            if terminal_id_to_remove is not None:
-                self._terminal_tab_map.pop(terminal_id_to_remove, None)
-
-    def get_tab_count(self) -> int:
-        """Get number of registered tabs."""
-        with self._lock:
-            return len(self._tab_terminal_map)
-
-    def get_all_pages(self) -> List[Adw.TabPage]:
-        """Get list of all tab pages."""
-        with self._lock:
-            return list(self._tab_terminal_map.keys())
-
-    def get_statistics(self) -> Dict[str, Any]:
-        """Get tab statistics."""
-        with self._lock:
-            return {
-                "total_tabs": len(self._tab_metadata),
-                "active_tabs": len(self._tab_terminal_map),
-                "tab_types": {
-                    "local": sum(
-                        1 for m in self._tab_metadata.values() if m["type"] == "local"
-                    ),
-                    "ssh": sum(
-                        1 for m in self._tab_metadata.values() if m["type"] == "ssh"
-                    ),
-                },
-            }
 
 
 class TabManager:
-    """Enhanced tab manager with comprehensive functionality and thread safety."""
-
-    # Factor to reduce scroll sensitivity. 0.3 = 30% of the original speed.
     SCROLL_SENSITIVITY_FACTOR = 0.3
 
     def __init__(self, terminal_manager: TerminalManager):
-        """
-        Initialize tab manager.
-
-        Args:
-            terminal_manager: TerminalManager instance for creating terminals
-        """
         self.logger = get_logger("ashyterm.tabs.manager")
         self.terminal_manager = terminal_manager
-        self.platform_info = get_platform_info()
-
-        # UI components
         self.tab_view = Adw.TabView()
-        self.tab_bar = Adw.TabBar()
+        self.tab_bar = Adw.TabBar(view=self.tab_view)
+        # Ensure the tab_bar has the 'tabbar' style class for CSS targeting
+        self.tab_bar.get_style_context().add_class("tabbar")
 
-        # Tab management
-        self.registry = TabRegistry()
+        # Inject CSS for AdwTabBar (GTK4/Adwaita)
+        css = """
+        .tabbar {
+            margin: -8px;
+        }
+        """
+        provider = Gtk.CssProvider()
+        provider.load_from_data(css.encode("utf-8"))
+        Gtk.StyleContext.add_provider_for_display(
+            Gdk.Display.get_default(),
+            provider,
+            Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION,
+        )
 
-        # Thread safety
         self._creation_lock = threading.Lock()
         self._cleanup_lock = threading.Lock()
         self._focus_lock = threading.Lock()
+        self._closing_pages = set()
 
-        # Focus timeout tracking
-        self._focus_timeout_id: Optional[int] = None
-        self._last_focus_time = 0
+        # Track terminals being closed individually (split pane closes)
+        self._individual_pane_closes = set()
 
-        # Rate limiting
-        self._last_tab_creation = 0
-        self._tab_creation_cooldown = 0.3  # 300ms cooldown
-
-        # Callbacks
-        self.on_tab_selected: Optional[Callable] = None
-        self.on_tab_closed: Optional[Callable] = None
-        self.on_tab_count_changed: Optional[Callable] = (
-            None  # New callback for visibility management
-        )
-
-        # Statistics
-        self._stats = {
-            "tabs_created": 0,
-            "tabs_closed": 0,
-            "tabs_failed": 0,
-            "focus_changes": 0,
-        }
-
+        self._last_focused_terminal = None
+        self._focus_timeout_id = None
         self._setup_tab_components()
-        # REMOVED: self._setup_terminal_title_bar_css()
+
+        # Callback functions
+        self.on_tab_selected = None
+        self.on_tab_closed = None
+        self.on_quit_application = None
 
         self.logger.info("Tab manager initialized")
 
     def _setup_tab_components(self) -> None:
-        """Configure the tab view and bar components."""
-        try:
-            # Configure tab view
-            self.tab_view.set_vexpand(True)
-            self.tab_view.set_hexpand(True)
+        self.tab_view.set_vexpand(True)
+        self.tab_view.connect("close-page", self._on_close_page_request)
 
-            # Connect tab selection signal
-            self.tab_view.connect(
-                "notify::selected-page", self._on_tab_selected_changed
-            )
-            self.tab_view.connect("page-attached", self._on_page_attached)
-            self.tab_view.connect("page-detached", self._on_page_detached)
-
-            # *** CRITICAL FIX: Intercept the close request to ensure proper cleanup. ***
-            self.tab_view.connect("close-page", self._on_close_page_request)
-
-            # Configure tab bar
-            self.tab_bar.set_view(self.tab_view)
-
-            # Platform-specific configurations
-            if is_windows():
-                # Windows-specific tab configurations
-                pass
-
-            self.logger.debug("Tab components configured")
-
-        except Exception as e:
-            self.logger.error(f"Tab component setup failed: {e}")
-            raise UIError("tab_setup", f"component configuration failed: {e}")
-
-    def _on_close_page_request(self, tab_view, page) -> bool:
-        """
-        Handles the 'close-page' signal from Adw.TabView.
-        This is the key to ensuring processes are terminated correctly.
-        """
-        self.logger.debug(f"Close request received for tab page: {page.get_title()}")
-        # Call our custom close_tab method which handles process termination
-        self.close_tab(page)
-        # Return True to prevent Adw.TabView from running its default handler.
-        # We will call close_page_finish ourselves inside close_tab.
-        return True
+        # Register this tab manager with the terminal manager for exit events
+        self.terminal_manager.set_terminal_exit_handler(
+            self._on_terminal_process_exited
+        )
 
     def get_tab_view(self) -> Adw.TabView:
-        """Get the TabView widget."""
         return self.tab_view
 
     def get_tab_bar(self) -> Adw.TabBar:
-        """Get the TabBar widget."""
         return self.tab_bar
-
-    def create_local_tab(self, title: str = "Local") -> Optional[Adw.TabPage]:
-        """
-        Create a new Local tab with rate limiting and error handling.
-
-        Args:
-            title: Tab title
-
-        Returns:
-            TabPage if created successfully, None otherwise
-        """
-        with self._creation_lock:
-            try:
-                # Rate limiting
-                current_time = time.time()
-                if current_time - self._last_tab_creation < self._tab_creation_cooldown:
-                    self.logger.debug(f"Tab creation rate limited for '{title}'")
-                    return None
-
-                self._last_tab_creation = current_time
-
-                self.logger.debug(f"Creating local tab: '{title}'")
-
-                # Create terminal
-                terminal = self.terminal_manager.create_local_terminal(title)
-                if not terminal:
-                    self._stats["tabs_failed"] += 1
-                    raise TerminalError("Local creation failed", ErrorSeverity.HIGH)
-
-                # Create tab page
-                page = self._create_tab_for_terminal(terminal, title, "", "local")
-                if page:
-                    self._stats["tabs_created"] += 1
-                    log_terminal_event("tab_created", title, "local tab")
-                    self.logger.info(f"Local tab created successfully: '{title}'")
-
-                    # Update tab bar visibility
-                    self._update_tab_bar_visibility()
-
-                return page
-
-            except Exception as e:
-                self._stats["tabs_failed"] += 1
-                self.logger.error(f"Local tab creation failed for '{title}': {e}")
-                handle_exception(e, f"local tab creation for {title}", "ashyterm.tabs")
-                return None
-
-    def create_ssh_tab(self, session: SessionItem) -> Optional[Adw.TabPage]:
-        """
-        Create a new SSH terminal tab with validation and error handling.
-
-        Args:
-            session: SessionItem with SSH configuration
-
-        Returns:
-            TabPage if created successfully, None otherwise
-        """
-        with self._creation_lock:
-            try:
-                # Rate limiting
-                current_time = time.time()
-                if current_time - self._last_tab_creation < self._tab_creation_cooldown:
-                    self.logger.debug(
-                        f"SSH tab creation rate limited for session '{session.name}'"
-                    )
-                    return None
-
-                self._last_tab_creation = current_time
-
-                self.logger.debug(f"Creating SSH tab for session: '{session.name}'")
-
-                # Create SSH terminal
-                terminal = self.terminal_manager.create_ssh_terminal(session)
-                if not terminal:
-                    self._stats["tabs_failed"] += 1
-                    raise TerminalError(
-                        f"SSH terminal creation failed for session {session.name}",
-                        ErrorSeverity.HIGH,
-                    )
-
-                # Create tab page
-                page = self._create_tab_for_terminal(
-                    terminal, session.name, "network-server-symbolic", "ssh"
-                )
-
-                if page:
-                    self._stats["tabs_created"] += 1
-                    log_terminal_event(
-                        "ssh_tab_created",
-                        session.name,
-                        f"SSH to {session.get_connection_string()}",
-                    )
-                    self.logger.info(f"SSH tab created successfully: '{session.name}'")
-
-                    # Update tab bar visibility
-                    self._update_tab_bar_visibility()
-
-                return page
-
-            except Exception as e:
-                self._stats["tabs_failed"] += 1
-                self.logger.error(
-                    f"SSH tab creation failed for session '{session.name}': {e}"
-                )
-                handle_exception(
-                    e, f"SSH tab creation for {session.name}", "ashyterm.tabs"
-                )
-                return None
-
-    def _create_tab_for_terminal(
-        self,
-        terminal: Vte.Terminal,
-        title: str,
-        icon_name: Optional[str] = None,
-        tab_type: str = "local",
-    ) -> Optional[Adw.TabPage]:
-        """
-        Create a tab page for a terminal widget with comprehensive setup.
-        """
-        try:
-            self.logger.debug(
-                f"Creating tab page for terminal: '{title}' (type: {tab_type})"
-            )
-
-            # Adds scroll controller to decrease sensitivity
-            scroll_controller = Gtk.EventControllerScroll()
-            scroll_controller.set_flags(Gtk.EventControllerScrollFlags.VERTICAL)
-            scroll_controller.connect("scroll", self._on_terminal_scroll)
-            terminal.add_controller(scroll_controller)
-
-            # Wrap terminal in scrolled window
-            scrolled_window = Gtk.ScrolledWindow()
-            scrolled_window.set_policy(
-                Gtk.PolicyType.AUTOMATIC, Gtk.PolicyType.AUTOMATIC
-            )
-            scrolled_window.set_child(terminal)
-
-            # Create tab page
-            page = self.tab_view.add_page(scrolled_window, None)
-            page.set_title(title)
-            if icon_name:
-                page.set_icon(Gio.ThemedIcon.new(icon_name))
-
-            # Set tooltip with additional info
-            if tab_type == "ssh":
-                page.set_tooltip(f"SSH: {title}")
-            else:
-                page.set_tooltip(f"Local: {title}")
-
-            # Register in registry
-            tab_id = self.registry.register_tab(page, terminal, tab_type, title)
-
-            # Store tab ID on page for reference - GTK4 compatibility
-            page.tab_id = tab_id
-
-            # Set as selected page
-            self.tab_view.set_selected_page(page)
-
-            # Focus terminal with proper delay
-            self._schedule_terminal_focus(terminal, title)
-
-            self.logger.debug(
-                f"Tab page created successfully: '{title}' (ID: {tab_id})"
-            )
-            return page
-
-        except Exception as e:
-            self.logger.error(f"Tab page creation failed for '{title}': {e}")
-            raise UIError("tab_creation", f"failed to create tab page: {e}")
-
-    def _on_terminal_scroll(
-        self, controller: Gtk.EventControllerScroll, dx: float, dy: float
-    ) -> bool:
-        """
-        Handles terminal scroll events to reduce sensitivity.
-
-        Args:
-            controller: The scroll event controller.
-            dx: The horizontal scroll delta.
-            dy: The vertical scroll delta.
-
-        Returns:
-            True to stop the event from propagating further.
-        """
-        try:
-            terminal = controller.get_widget()
-            scrolled_window = terminal.get_parent()
-
-            if not isinstance(scrolled_window, Gtk.ScrolledWindow):
-                return Gdk.EVENT_PROPAGATE
-
-            vadjustment = scrolled_window.get_vadjustment()
-            if vadjustment:
-                # Get the step increment (what one "unit" of scroll does)
-                step = vadjustment.get_step_increment()
-
-                # Calculate the new roll amount with the sensitivity factor
-                scroll_amount = dy * step * self.SCROLL_SENSITIVITY_FACTOR
-
-                # Apply the new scroll
-                new_value = vadjustment.get_value() + scroll_amount
-                vadjustment.set_value(new_value)
-
-                # Prevents the original (very fast) scroll event from being processed
-                return Gdk.EVENT_STOP
-        except Exception as e:
-            self.logger.warning(f"Error handling custom scroll: {e}")
-
-        return Gdk.EVENT_PROPAGATE
-
-    def _schedule_terminal_focus(self, terminal: Vte.Terminal, title: str) -> None:
-        """
-        Schedule terminal focus with proper error handling.
-
-        Args:
-            terminal: Terminal to focus
-            title: Terminal title for logging
-        """
-
-        def focus_terminal():
-            try:
-                if terminal and terminal.get_realized():
-                    terminal.grab_focus()
-                    self.logger.debug(f"Terminal focused: '{title}'")
-                    return False  # Remove from idle
-                else:
-                    # Terminal not ready, try again
-                    return True
-            except Exception as e:
-                self.logger.warning(f"Terminal focus failed for '{title}': {e}")
-                return False
-
-        # Use timeout instead of idle_add for more predictable timing
-        GLib.timeout_add(50, focus_terminal)
-
-    # Em TabManager
-    def close_tab(self, page: Optional[Adw.TabPage] = None) -> bool:
-        """
-        Inicia o processo de fechamento de uma aba.
-        Este método agora APENAS inicia o encerramento do terminal.
-        A UI SÓ será removida quando o processo do terminal confirmar sua saída.
-        """
-        with self._cleanup_lock:
-            try:
-                if page is None:
-                    page = self.tab_view.get_selected_page()
-
-                if not page:
-                    self.logger.debug("Nenhuma página para fechar.")
-                    return False
-
-                terminal = self.registry.get_terminal_for_page(page)
-
-                if terminal:
-                    # A única responsabilidade deste método agora é pedir
-                    # ao TerminalManager para remover o terminal.
-                    # A guarda de proteção que adicionamos em remove_terminal
-                    # irá prevenir problemas com chamadas duplicadas.
-                    self.terminal_manager.remove_terminal(terminal)
-                    return True
-                else:
-                    # Se não há terminal, podemos fechar a aba imediatamente.
-                    self.logger.warning(
-                        f"Aba sem terminal associado. Fechando diretamente."
-                    )
-                    self.tab_view.close_page_finish(page, True)
-                    self.registry.unregister_tab(page)
-                    self._update_tab_bar_visibility()
-                    return True
-
-            except Exception as e:
-                self.logger.error(f"Falha ao iniciar o fechamento da aba: {e}")
-                handle_exception(e, "tab close", "ashyterm.tabs")
-                return False
 
     def get_selected_page(self) -> Optional[Adw.TabPage]:
         """Get the currently selected tab page."""
-        try:
-            return self.tab_view.get_selected_page()
-        except Exception as e:
-            self.logger.error(f"Failed to get selected page: {e}")
+        return self.tab_view.get_selected_page()
+
+    def create_local_tab(self, title: str = "Local") -> Optional[Adw.TabPage]:
+        terminal = self.terminal_manager.create_local_terminal(title)
+        if not terminal:
             return None
+        return self._create_tab_for_terminal(terminal, title, "computer-symbolic")
+
+    def create_ssh_tab(self, session: SessionItem) -> Optional[Adw.TabPage]:
+        terminal = self.terminal_manager.create_ssh_terminal(session)
+        if not terminal:
+            return None
+        return self._create_tab_for_terminal(
+            terminal, session.name, "network-server-symbolic"
+        )
+
+    def _create_tab_for_terminal(
+        self, terminal: Vte.Terminal, title: str, icon_name: str
+    ) -> Optional[Adw.TabPage]:
+        scrolled_window = Gtk.ScrolledWindow(child=terminal)
+        scrolled_window.set_policy(Gtk.PolicyType.AUTOMATIC, Gtk.PolicyType.AUTOMATIC)
+
+        focus_controller = Gtk.EventControllerFocus()
+        focus_controller.connect("enter", self._on_pane_focus_in, terminal)
+        terminal.add_controller(focus_controller)
+
+        page = self.tab_view.add_page(scrolled_window, None)
+        page.set_title(title)
+        if icon_name:
+            page.set_icon(Gio.ThemedIcon.new(icon_name))
+
+        terminal.ashy_parent_page = page
+
+        # Store the base title for terminal count display
+        if not hasattr(page, "_base_title"):
+            page._base_title = title
+
+        self.tab_view.set_selected_page(page)
+        self._schedule_terminal_focus(terminal, title)
+
+        # Update tab titles to reflect current terminal counts
+        GLib.idle_add(self.update_all_tab_titles)
+        GLib.idle_add(self._update_tab_bar_visibility)
+
+        self.logger.debug(f"Created tab '{title}' with terminal count display")
+        return page
+
+    def _on_pane_focus_in(self, controller, terminal):
+        self._last_focused_terminal = weakref.ref(terminal)
+        self.logger.debug(
+            f"Focus tracked on terminal ID: {getattr(terminal, 'terminal_id', 'N/A')}"
+        )
 
     def get_selected_terminal(self) -> Optional[Vte.Terminal]:
-        """Get the terminal in the currently selected tab."""
-        try:
-            page = self.get_selected_page()
-            if page:
-                return self.registry.get_terminal_for_page(page)
+        if self._last_focused_terminal and (terminal := self._last_focused_terminal()):
+            if (
+                terminal.get_ancestor(Adw.TabView) == self.tab_view
+                and terminal.get_realized()
+            ):
+                return terminal
+
+        page = self.tab_view.get_selected_page()
+        if not page:
             return None
-        except Exception as e:
-            self.logger.error(f"Failed to get selected terminal: {e}")
-            return None
 
-    def get_terminal_for_page(self, page: Adw.TabPage) -> Optional[Vte.Terminal]:
-        """Get the terminal widget for a specific page."""
-        return self.registry.get_terminal_for_page(page)
-
-    def get_page_for_terminal(self, terminal: Vte.Terminal) -> Optional[Adw.TabPage]:
-        """Get the tab page for a specific terminal."""
-        return self.registry.get_page_for_terminal(terminal)
-
-    def set_tab_title(self, page: Adw.TabPage, title: str) -> None:
-        """
-        Set the title of a tab with validation.
-
-        Args:
-            page: TabPage to update
-            title: New title
-        """
-        try:
-            if page and title:
-                page.set_title(title)
-                self.logger.debug(f"Tab title updated: '{title}'")
-        except Exception as e:
-            self.logger.error(f"Failed to set tab title: {e}")
-
-    def get_tab_count(self) -> int:
-        """Get the number of open tabs."""
-        try:
-            return self.tab_view.get_n_pages()
-        except Exception as e:
-            self.logger.error(f"Failed to get tab count: {e}")
-            return 0
-
-    def get_all_pages(self) -> List[Adw.TabPage]:
-        """Get list of all tab pages."""
-        try:
-            pages = []
-            for i in range(self.tab_view.get_n_pages()):
-                page = self.tab_view.get_nth_page(i)
-                if page:
-                    pages.append(page)
-            return pages
-        except Exception as e:
-            self.logger.error(f"Failed to get all pages: {e}")
-            return []
-
-    def get_all_terminals(self) -> List[Vte.Terminal]:
-        """Get list of all terminals in tabs."""
-        try:
-            terminals = []
-            for page in self.get_all_pages():
-                terminal = self.registry.get_terminal_for_page(page)
-                if terminal:
-                    terminals.append(terminal)
-            return terminals
-        except Exception as e:
-            self.logger.error(f"Failed to get all terminals: {e}")
-            return []
+        terminals = self.get_all_terminals_in_page(page)
+        return terminals[0] if terminals else None
 
     def split_horizontal(self, focused_terminal: Vte.Terminal) -> None:
-        """Splits the focused terminal horizontally."""
         self._split_terminal(focused_terminal, Gtk.Orientation.HORIZONTAL)
 
     def split_vertical(self, focused_terminal: Vte.Terminal) -> None:
-        """Splits the focused terminal vertically."""
         self._split_terminal(focused_terminal, Gtk.Orientation.VERTICAL)
 
     def _split_terminal(
         self, focused_terminal: Vte.Terminal, orientation: Gtk.Orientation
     ) -> None:
-        """Enhanced core logic for splitting a terminal pane, supporting nested splits with title bars."""
         with self._creation_lock:
-            self.logger.debug(f"Splitting terminal (orientation: {orientation})")
+            self.logger.debug(
+                f"Splitting terminal (orientation: {orientation.value_nick})"
+            )
 
-            new_terminal = self.terminal_manager.create_local_terminal()
+            terminal_id = getattr(focused_terminal, "terminal_id", None)
+            info = self.terminal_manager.registry.get_terminal_info(terminal_id)
+            identifier = info.get("identifier") if info else "Local"
+
+            current_directory = None
+            try:
+                current_uri = focused_terminal.get_current_directory_uri()
+                if current_uri:
+                    from urllib.parse import urlparse, unquote
+
+                    parsed_uri = urlparse(current_uri)
+                    if parsed_uri.scheme == "file":
+                        current_directory = unquote(parsed_uri.path)
+                        self.logger.debug(
+                            f"Will start new split in directory: {current_directory}"
+                        )
+            except Exception as e:
+                self.logger.debug(f"Could not get current directory for split: {e}")
+
+            new_terminal = None
+            new_pane_title = "Terminal"
+            if isinstance(identifier, SessionItem):
+                new_pane_title = identifier.name
+                if identifier.is_ssh():
+                    new_terminal = self.terminal_manager.create_ssh_terminal(identifier)
+                else:
+                    new_terminal = self.terminal_manager.create_local_terminal(
+                        identifier.name, working_directory=current_directory
+                    )
+            else:
+                new_pane_title = "Local"
+                new_terminal = self.terminal_manager.create_local_terminal(
+                    new_pane_title, working_directory=current_directory
+                )
+
             if not new_terminal:
-                raise UIError("split", "Failed to create a new terminal for the split.")
+                self.logger.error("Failed to create new terminal for split.")
+                return
 
-            new_terminal_title = "Local"
-            new_pane = TerminalPaneWithTitleBar(new_terminal, new_terminal_title)
+            if hasattr(focused_terminal, "ashy_parent_page"):
+                new_terminal.ashy_parent_page = focused_terminal.ashy_parent_page
+
+            new_pane = TerminalPaneWithTitleBar(new_terminal, new_pane_title)
             new_pane.on_close_requested = self.close_pane
 
-            # Find the widget to be replaced and its parent container
-            widget_to_replace = None
-            container = None
+            focus_controller = Gtk.EventControllerFocus()
+            focus_controller.connect("enter", self._on_pane_focus_in, new_terminal)
+            new_terminal.add_controller(focus_controller)
 
-            current_widget = focused_terminal
-            while current_widget:
-                parent = current_widget.get_parent()
-                if isinstance(parent, (Gtk.Paned, Adw.Bin)):
-                    widget_to_replace = current_widget
-                    container = parent
-                    break
-                current_widget = parent
+            widget_to_replace = focused_terminal.get_parent()
+            if isinstance(widget_to_replace.get_parent(), TerminalPaneWithTitleBar):
+                widget_to_replace = widget_to_replace.get_parent()
 
-            if not container or not widget_to_replace:
-                self.logger.error("Cannot find a suitable container to split.")
+            container = widget_to_replace.get_parent()
+            if not container:
+                self.logger.error(
+                    "Cannot split: focused terminal has no parent container."
+                )
                 self.terminal_manager.remove_terminal(new_terminal)
                 return
 
-            # If the widget to replace is just the ScrolledWindow, it means this is the first split.
-            # We need to wrap the existing terminal in a TerminalPaneWithTitleBar as well.
             if isinstance(widget_to_replace, Gtk.ScrolledWindow):
                 page = self.get_page_for_terminal(focused_terminal)
-                existing_title = page.get_title() if page else "Terminal"
-                existing_pane = TerminalPaneWithTitleBar(
-                    focused_terminal, existing_title
-                )
+                title = page.get_title() if page else "Terminal"
+                existing_pane = TerminalPaneWithTitleBar(focused_terminal, title)
                 existing_pane.on_close_requested = self.close_pane
             else:
-                # The widget to replace is already a TerminalPaneWithTitleBar
                 existing_pane = widget_to_replace
 
-            # Create new Paned for the split
+            is_start_child = False
+            if isinstance(container, Gtk.Paned):
+                is_start_child = container.get_start_child() == existing_pane
+                if is_start_child:
+                    container.set_start_child(None)
+                else:
+                    container.set_end_child(None)
+            elif isinstance(container, Adw.Bin):
+                container.set_child(None)
+
             paned = Gtk.Paned(orientation=orientation)
             paned.set_start_child(existing_pane)
             paned.set_end_child(new_pane)
 
-            # Replace the old widget with the new paned container
-            if isinstance(container, Adw.Bin):
-                container.set_child(paned)
-            elif isinstance(container, Gtk.Paned):
-                if container.get_start_child() == widget_to_replace:
+            if isinstance(container, Gtk.Paned):
+                if is_start_child:
                     container.set_start_child(paned)
-                elif container.get_end_child() == widget_to_replace:
-                    container.set_end_child(paned)
                 else:
-                    self.logger.error("Widget to replace not found in paned container")
-                    self.terminal_manager.remove_terminal(new_terminal)
-                    return
-            else:
-                self.logger.error(
-                    f"Cannot split inside unknown container type: {type(container)}"
-                )
-                self.terminal_manager.remove_terminal(new_terminal)
-                return
+                    container.set_end_child(paned)
+            elif isinstance(container, Adw.Bin):
+                container.set_child(paned)
 
-            # Defer setting position to allow widgets to allocate size
             GLib.idle_add(lambda: self._set_paned_position(paned))
-
             self._schedule_terminal_focus(new_terminal, "New Split")
-            log_terminal_event(
-                "split",
-                "Terminal",
-                "horizontal"
-                if orientation == Gtk.Orientation.HORIZONTAL
-                else "vertical",
+            self.logger.info(
+                f"Successfully created split with orientation {orientation.value_nick}"
             )
 
-            self.logger.info(
-                f"Successfully created nested split with title bars, orientation {orientation.value_nick}"
-            )
+            # Update tab titles to show new terminal count
+            GLib.idle_add(self.update_all_tab_titles)
 
     def _set_paned_position(self, paned: Gtk.Paned) -> bool:
-        """Set paned position to 50%."""
-        try:
-            orientation = paned.get_orientation()
-            total_size = (
-                paned.get_allocation().width
-                if orientation == Gtk.Orientation.HORIZONTAL
-                else paned.get_allocation().height
-            )
-            if total_size > 0:
-                paned.set_position(total_size // 2)
-        except Exception as e:
-            self.logger.debug(f"Could not set paned position: {e}")
-        return False  # Do not repeat
+        orientation = paned.get_orientation()
+        alloc = paned.get_allocation()
+        total_size = (
+            alloc.width if orientation == Gtk.Orientation.HORIZONTAL else alloc.height
+        )
+        if total_size > 0:
+            paned.set_position(total_size // 2)
+        return False
 
     def close_pane(self, focused_terminal: Vte.Terminal) -> None:
-        """Closes the currently focused terminal pane, supporting nested splits with title bars."""
+        """Close individual split pane - this only closes the specific pane, not all splits."""
         with self._cleanup_lock:
+            terminal_id = getattr(focused_terminal, "terminal_id", None)
+            self.logger.info(
+                f"PANE CLOSE: User requested close of individual split pane for terminal {terminal_id}"
+            )
 
-            def do_close():
-                page = self.get_page_for_terminal(focused_terminal)
-                if not page:
-                    return
+            # Mark this as an individual pane close so the exit handler knows
+            if terminal_id:
+                self._individual_pane_closes.add(terminal_id)
 
-                # If this is the last terminal in the tab, close the entire tab
-                if len(self.get_all_terminals_in_page(page)) <= 1:
-                    self.tab_view.close_page(page)
-                    return
+            # Use the old individual pane closing behavior
+            self.terminal_manager.remove_terminal(focused_terminal)
 
-                # Find the terminal pane (could be in ScrolledWindow or TerminalPaneWithTitleBar)
-                terminal_container = focused_terminal.get_parent()
-                pane_container = None
+    def _find_pane_and_parent(self, terminal: Vte.Terminal) -> tuple:
+        widget = terminal
+        while widget:
+            parent = widget.get_parent()
+            if isinstance(
+                widget, (TerminalPaneWithTitleBar, Gtk.ScrolledWindow)
+            ) and isinstance(parent, Gtk.Paned):
+                return widget, parent
+            widget = parent
+        return None, None
 
-                if isinstance(terminal_container, Gtk.ScrolledWindow):
-                    # Terminal is in a scrolled window, find its parent
-                    pane_container = terminal_container.get_parent()
-                    if isinstance(pane_container, TerminalPaneWithTitleBar):
-                        # Terminal is in a title bar pane
-                        paned = pane_container.get_parent()
-                    else:
-                        # Terminal is in a regular scrolled window
-                        paned = pane_container
-                        pane_container = terminal_container
-                else:
-                    # Terminal might be directly in a pane
-                    return
-
-                if not isinstance(paned, Gtk.Paned):
-                    self.logger.error("Terminal is not in a paned container")
-                    return
-
-                # Get the parent of the paned (for reconstruction)
-                grandparent = paned.get_parent()
-                if not grandparent:
-                    return
-
-                # Identify the other child to keep (the survivor)
-                other_child = (
-                    paned.get_start_child()
-                    if paned.get_end_child() == pane_container
-                    else paned.get_end_child()
-                )
-
-                if not other_child:
-                    self.logger.error("No surviving child found in paned")
-                    return
-
-                # Clean up the terminal being removed BEFORE restructuring
-                self.terminal_manager.remove_terminal(focused_terminal)
-                log_terminal_event("pane_closed", "Terminal", "user action")
-
-                # Remove the other child from the paned before destroying it
-                paned.remove(other_child)
-
-                # Replace the paned with the surviving child
-                if isinstance(grandparent, Adw.Bin):
-                    # This was the root split in the tab - remove title bars for single terminal
-                    if isinstance(other_child, TerminalPaneWithTitleBar):
-                        # Extract the terminal from the title bar pane and put it back in simple scrolled window
-                        surviving_terminal = other_child.get_terminal()
-                        other_child.scrolled_window.set_child(
-                            None
-                        )  # Remove terminal from pane
-
-                        simple_scroller = Gtk.ScrolledWindow()
-                        simple_scroller.set_policy(
-                            Gtk.PolicyType.AUTOMATIC, Gtk.PolicyType.AUTOMATIC
-                        )
-                        simple_scroller.set_child(surviving_terminal)
-
-                        grandparent.set_child(simple_scroller)
-                        self.logger.debug(
-                            "Restored single terminal to tab root without title bar"
-                        )
-                    else:
-                        grandparent.set_child(other_child)
-                        self.logger.debug("Restored single terminal to tab root")
-
-                elif isinstance(grandparent, Gtk.Paned):
-                    # This was a nested split - replace the paned with the survivor
-                    if grandparent.get_start_child() == paned:
-                        grandparent.set_start_child(other_child)
-                        self.logger.debug("Replaced nested split in start position")
-                    elif grandparent.get_end_child() == paned:
-                        grandparent.set_end_child(other_child)
-                        self.logger.debug("Replaced nested split in end position")
-                    else:
-                        self.logger.error("Paned not found in grandparent")
-                        return
-
-                elif isinstance(grandparent, Gtk.Box):
-                    # Handle box container case (less common)
-                    grandparent.remove(paned)
-                    grandparent.append(other_child)
-                    self.logger.debug("Replaced split in box container")
-
-                else:
-                    self.logger.error(f"Unknown grandparent type: {type(grandparent)}")
-                    return
-
-                # Focus the first terminal in the surviving subtree
-                remaining_terminals = []
-                self._find_terminals_recursive(other_child, remaining_terminals)
-                if remaining_terminals:
-                    remaining_terminals[0].grab_focus()
-                    self.logger.debug("Focused remaining terminal after pane close")
-
-                self.logger.info("Successfully closed nested split pane with title bar")
-
-            GLib.idle_add(do_close)
+    def get_all_terminals_in_page(self, page: Adw.TabPage) -> List[Vte.Terminal]:
+        terminals = []
+        if root_widget := page.get_child():
+            self._find_terminals_recursive(root_widget, terminals)
+        return terminals
 
     def _find_terminals_recursive(
         self, widget, terminals_list: List[Vte.Terminal]
     ) -> None:
-        """Recursively find all VTE terminals in a widget tree, including in title bar panes."""
-        if isinstance(widget, Vte.Terminal):
-            terminals_list.append(widget)
-        elif isinstance(widget, TerminalPaneWithTitleBar):
+        if isinstance(widget, TerminalPaneWithTitleBar):
             terminals_list.append(widget.get_terminal())
+        elif isinstance(widget, Gtk.ScrolledWindow) and isinstance(
+            widget.get_child(), Vte.Terminal
+        ):
+            terminals_list.append(widget.get_child())
         elif isinstance(widget, Gtk.Paned):
-            start_child = widget.get_start_child()
-            end_child = widget.get_end_child()
-            if start_child:
+            if start_child := widget.get_start_child():
                 self._find_terminals_recursive(start_child, terminals_list)
-            if end_child:
+            if end_child := widget.get_end_child():
                 self._find_terminals_recursive(end_child, terminals_list)
-        elif hasattr(widget, "get_child") and widget.get_child():
-            self._find_terminals_recursive(widget.get_child(), terminals_list)
-
-    def get_all_terminals_in_page(self, page: Adw.TabPage) -> List[Vte.Terminal]:
-        """Recursively find all terminals within a tab page, including in title bar panes."""
-        terminals = []
-        root_widget = page.get_child()
-
-        def find_terminals(widget):
-            if isinstance(widget, Vte.Terminal):
-                terminals.append(widget)
-            elif isinstance(widget, TerminalPaneWithTitleBar):
-                terminals.append(widget.get_terminal())
-            elif isinstance(widget, Gtk.Paned):
-                find_terminals(widget.get_start_child())
-                find_terminals(widget.get_end_child())
-            elif hasattr(widget, "get_child") and widget.get_child():
-                find_terminals(widget.get_child())
-
-        if root_widget:
-            find_terminals(root_widget)
-        return terminals
+        elif hasattr(widget, "get_child") and (child := widget.get_child()):
+            self._find_terminals_recursive(child, terminals_list)
 
     def update_terminal_title_in_splits(
         self, terminal: Vte.Terminal, new_title: str
     ) -> None:
-        """Update terminal title in split panes when directory changes."""
-        try:
-            # Find if this terminal is in a title bar pane
-            page = self.get_page_for_terminal(terminal)
-            if not page:
-                return
+        """Update terminal title in split panes and tab titles with terminal count."""
+        pane, _ = self._find_pane_and_parent(terminal)
+        if pane and isinstance(pane, TerminalPaneWithTitleBar):
+            pane.set_title(new_title)
 
-            # Search for the terminal in the page widget tree
-            root_widget = page.get_child()
-            self._update_terminal_title_recursive(root_widget, terminal, new_title)
-
-        except Exception as e:
-            self.logger.error(f"Failed to update terminal title in splits: {e}")
-
-    def _update_terminal_title_recursive(
-        self, widget, target_terminal: Vte.Terminal, new_title: str
-    ) -> bool:
-        """Recursively search for terminal and update its title bar."""
-        if isinstance(widget, TerminalPaneWithTitleBar):
-            if widget.get_terminal() == target_terminal:
-                widget.set_title(new_title)
-                return True
-        elif isinstance(widget, Gtk.Paned):
-            # Check both children
-            start_child = widget.get_start_child()
-            end_child = widget.get_end_child()
-            if start_child and self._update_terminal_title_recursive(
-                start_child, target_terminal, new_title
-            ):
-                return True
-            if end_child and self._update_terminal_title_recursive(
-                end_child, target_terminal, new_title
-            ):
-                return True
-        elif hasattr(widget, "get_child") and widget.get_child():
-            return self._update_terminal_title_recursive(
-                widget.get_child(), target_terminal, new_title
+        # Update tab title with terminal count - preserve OSC7 directory info
+        page = self.get_page_for_terminal(terminal)
+        if page:
+            # Update the base title to reflect the directory change from OSC7
+            page._base_title = new_title
+            self.set_tab_title(page, new_title)
+            self.logger.debug(
+                f"Updated tab title via OSC7 to show terminal count for '{new_title}'"
             )
 
-        return False
+    def _on_close_page_request(self, tab_view, page) -> bool:
+        """Handle close page request with proper Adwaita workflow."""
+        self.logger.debug(f"Close request received for tab page: {page.get_title()}")
 
-    def close_all_tabs(self) -> None:
-        """Close all tabs by correctly triggering the close-page signal for each."""
-        try:
-            self.logger.info("Requesting to close all tabs.")
-            # Get a static list of pages to close, as the view will be modified during iteration.
-            pages_to_close = self.get_all_pages()
-            for page in pages_to_close:
-                # This correctly emits the 'close-page' signal, which our
-                # _on_close_page_request handler will catch and process.
-                self.tab_view.close_page(page)
-            self.logger.info(f"Close request sent for {len(pages_to_close)} tabs.")
-        except Exception as e:
-            self.logger.error(f"Failed to request closing all tabs: {e}")
-
-    def focus_terminal_in_current_tab(self) -> bool:
-        """
-        Focus the terminal in the currently selected tab.
-
-        Returns:
-            True if terminal was focused successfully
-        """
-        with self._focus_lock:
+        # Check if already closing to prevent race conditions
+        if id(page) in self._closing_pages:
+            self.logger.debug(f"Page {page.get_title()} already being closed")
+            # If already marked as closing, just finalize (likely a terminal exit)
             try:
-                terminal = self.get_selected_terminal()
-                if terminal:
-                    terminal.grab_focus()
-                    self._stats["focus_changes"] += 1
-                    return True
-                return False
+                self.tab_view.close_page_finish(page, True)
             except Exception as e:
-                self.logger.error(f"Focus terminal failed: {e}")
-                return False
+                self.logger.debug(f"Close page finish failed (may be normal): {e}")
+            finally:
+                self._closing_pages.discard(id(page))
+            return True
 
-    def _on_tab_selected_changed(self, tab_view, param) -> None:
-        """Handle tab selection change with enhanced focus management."""
+        # Mark as closing
+        self._closing_pages.add(id(page))
+
+        # Request confirmation and start the close process
+        self._request_close_tab(page)
+        return True  # We handle the close process ourselves
+
+    def _request_close_tab(self, page: Adw.TabPage) -> None:
+        """Request tab close - this is for USER-INITIATED closures (close button), never quit app."""
         try:
-            page = self.tab_view.get_selected_page()
+            self.logger.info(
+                f"USER CLOSE: User requested close for tab '{page.get_title()}'"
+            )
 
-            if page:
-                # Update registry focus tracking
-                self.registry.update_tab_focus(page)
+            # Get all terminals in this tab
+            terminals_in_page = self.get_all_terminals_in_page(page)
 
-                terminal = self.registry.get_terminal_for_page(page)
-                if terminal:
-                    # Focus the terminal with proper timing
-                    def focus_selected_terminal():
-                        try:
-                            if terminal.get_realized():
-                                terminal.grab_focus()
-                                self._stats["focus_changes"] += 1
-                        except Exception as e:
-                            self.logger.error(f"Focus selected terminal failed: {e}")
-                        finally:
-                            # CRÍTICO: Limpa o ID após a execução para evitar a condição de corrida
-                            self._focus_timeout_id = None
-                        return False  # Remove da fila de eventos
+            if terminals_in_page:
+                self.logger.info(
+                    f"Terminating {len(terminals_in_page)} terminals in tab: {[getattr(t, 'terminal_id', 'N/A') for t in terminals_in_page]}"
+                )
 
-                    # Cancel any previous timeout that hasn't run yet
-                    if self._focus_timeout_id is not None:
-                        GLib.source_remove(self._focus_timeout_id)
-                        self._focus_timeout_id = None  # Garante que está limpo
+                # Terminate all terminal processes in this tab
+                for terminal in terminals_in_page:
+                    terminal_id = getattr(terminal, "terminal_id", None)
+                    if terminal_id:
+                        terminal_info = (
+                            self.terminal_manager.registry.get_terminal_info(
+                                terminal_id
+                            )
+                        )
+                        if terminal_info and terminal_info.get("status", "") not in [
+                            "exited",
+                            "spawn_failed",
+                        ]:
+                            self.logger.info(
+                                f"Terminating active terminal {terminal_id}"
+                            )
+                            # Kill the process directly to avoid triggering natural exit handler
+                            pid = terminal_info.get("process_id")
+                            if pid:
+                                try:
+                                    import os
+                                    import signal
 
-                    self._focus_timeout_id = GLib.timeout_add(
-                        50, focus_selected_terminal
+                                    os.killpg(os.getpgid(pid), signal.SIGTERM)
+                                    self.logger.info(
+                                        f"Sent SIGTERM to process {pid} for terminal {terminal_id}"
+                                    )
+                                except Exception as e:
+                                    self.logger.warning(
+                                        f"Failed to terminate process {pid}: {e}"
+                                    )
+
+                        # Clean up terminal resources
+                        self.terminal_manager._cleanup_terminal(terminal, terminal_id)
+
+            # Always close the tab, never quit the app for user-initiated closures
+            self.tab_view.close_page_finish(page, True)
+            self.logger.info(f"Tab '{page.get_title()}' closed by user request")
+
+        except Exception as e:
+            self.logger.error(f"User tab close request failed: {e}")
+            # Still try to finish close
+            try:
+                self.tab_view.close_page_finish(page, True)
+            except:
+                pass
+        finally:
+            # Always remove from closing set
+            self._closing_pages.discard(id(page))
+
+    def _confirm_close_tab(self, page: Adw.TabPage) -> None:
+        """Show confirmation dialog for closing tab with active processes."""
+        # For now, just close - we can add confirmation dialog later
+        # This maintains the old behavior while fixing the close mechanism
+        self._finalize_close_tab(page)
+
+    def _finalize_close_tab(self, page: Adw.TabPage) -> None:
+        """Finalize closing a tab by terminating processes and removing UI."""
+        try:
+            # Terminate all terminals in the page
+            terminals_in_page = self.get_all_terminals_in_page(page)
+            for terminal in terminals_in_page:
+                self.terminal_manager.remove_terminal(terminal)
+
+            # Use proper Adwaita close mechanism
+            self.tab_view.close_page_finish(page, True)
+
+        except Exception as e:
+            self.logger.error(f"Tab finalization failed: {e}")
+            # Still try to finish the close
+            try:
+                self.tab_view.close_page_finish(page, True)
+            except:
+                pass
+        finally:
+            # Always remove from closing set
+            self._closing_pages.discard(id(page))
+
+    def _on_terminal_process_exited(
+        self, terminal: Vte.Terminal, child_status: int, identifier
+    ) -> None:
+        """Handle terminal process exit - treat natural exits like individual pane closes."""
+        try:
+            terminal_id = getattr(terminal, "terminal_id", "N/A")
+            terminal_name = (
+                identifier.name if hasattr(identifier, "name") else str(identifier)
+            )
+
+            # Check if this is an individual pane close
+            is_individual_pane_close = terminal_id in self._individual_pane_closes
+            if is_individual_pane_close:
+                self._individual_pane_closes.discard(terminal_id)
+                self.logger.info(
+                    f"PANE EXIT: Terminal {terminal_id} exited from individual pane close"
+                )
+            else:
+                self.logger.info(
+                    f"NATURAL EXIT: Terminal '{terminal_name}' (ID: {terminal_id}) exited naturally with status {child_status}"
+                )
+
+            # Find which page this terminal belongs to
+            page = self.get_page_for_terminal(terminal)
+            if not page:
+                self.logger.warning(f"Cannot find page for terminal {terminal_id}")
+                self.terminal_manager._cleanup_terminal(terminal, terminal_id)
+                return
+
+            # Check if this is a split pane or the main terminal
+            pane_to_remove, parent_paned = self._find_pane_and_parent(terminal)
+
+            if parent_paned:
+                # This is a split pane - remove just the pane (both for natural exit and pane close)
+                self.logger.info(
+                    f"Removing individual split pane for terminal {terminal_id}"
+                )
+                self._remove_pane_ui(pane_to_remove, parent_paned)
+                # Clean up backend resources
+                self.terminal_manager._cleanup_terminal(terminal, terminal_id)
+                # Update tab titles after removing split
+                GLib.idle_add(self.update_all_tab_titles)
+
+            else:
+                # This is the main/only terminal in a tab
+                self.logger.info(
+                    f"Main terminal {terminal_id} exited in tab '{page.get_title()}'"
+                )
+
+                # Check if there are other terminals in this tab
+                all_terminals_in_page = self.get_all_terminals_in_page(page)
+                remaining_terminals = [
+                    t for t in all_terminals_in_page if t != terminal
+                ]
+
+                if remaining_terminals:
+                    # There are other terminals in the tab - just clean up this one
+                    self.logger.info(
+                        f"Other terminals remain in tab, only cleaning up terminal {terminal_id}"
+                    )
+                    self.terminal_manager._cleanup_terminal(terminal, terminal_id)
+                    GLib.idle_add(self.update_all_tab_titles)
+                else:
+                    # This was the only terminal in the tab - close the entire tab
+                    self.logger.info(
+                        f"Only terminal in tab - closing entire tab for terminal {terminal_id}"
                     )
 
-            # Call external callback if set
-            if self.on_tab_selected:
-                self.on_tab_selected(page)
+                    # Clean up the terminal first
+                    self.terminal_manager._cleanup_terminal(terminal, terminal_id)
+
+                    # Handle tab closure based on remaining tabs
+                    if self.get_tab_count() == 1:
+                        # This is the last tab - quit the application
+                        self.logger.info(
+                            "Last tab terminal exited - quitting application"
+                        )
+                        GLib.idle_add(self._quit_application)
+                    else:
+                        # Multiple tabs exist - just close this tab
+                        self.logger.info(
+                            f"Closing tab for exited terminal {terminal_id}"
+                        )
+                        if id(page) not in self._closing_pages:
+                            self._closing_pages.add(id(page))
+                            self.tab_view.close_page(page)
+                            GLib.idle_add(self._update_tab_bar_visibility)
 
         except Exception as e:
-            self.logger.error(f"Tab selection change handling failed: {e}")
+            self.logger.error(f"Terminal exit handling failed: {e}")
+            # Emergency cleanup
+            try:
+                terminal_id = getattr(terminal, "terminal_id", None)
+                if terminal_id:
+                    self._individual_pane_closes.discard(terminal_id)
+                    self.terminal_manager._cleanup_terminal(terminal, terminal_id)
+            except:
+                pass
 
-    def _on_page_attached(self, tab_view, page, position) -> None:
-        """Handle page being attached to tab view."""
+    def _handle_terminal_exit_ui(self, terminal: Vte.Terminal) -> None:
+        """Legacy method for compatibility - delegates to _on_terminal_process_exited."""
+        # Get terminal info for proper parameters
+        terminal_id = getattr(terminal, "terminal_id", None)
+        if terminal_id is not None:
+            terminal_info = self.terminal_manager.registry.get_terminal_info(
+                terminal_id
+            )
+            if terminal_info:
+                identifier = terminal_info.get("identifier", "Unknown")
+                self._on_terminal_process_exited(
+                    terminal, 0, identifier
+                )  # Assume clean exit
+            else:
+                self._on_terminal_process_exited(terminal, 0, "Unknown")
+
+    def close_tab(self, page: Optional[Adw.TabPage] = None) -> bool:
+        """Close a tab and properly terminate all associated processes."""
+        with self._cleanup_lock:
+            if page is None:
+                page = self.tab_view.get_selected_page()
+            if not page:
+                return False
+
+            if self.get_tab_count() <= 1:
+                self.logger.debug("Cannot close the last tab")
+                return False
+
+            # Get all terminals in this tab and terminate their processes
+            terminals_in_page = self.get_all_terminals_in_page(page)
+            self.logger.info(
+                f"Closing tab '{page.get_title()}' with {len(terminals_in_page)} terminals"
+            )
+
+            for terminal in terminals_in_page:
+                terminal_id = getattr(terminal, "terminal_id", None)
+                if terminal_id:
+                    # Get terminal info and terminate process
+                    terminal_info = self.terminal_manager.registry.get_terminal_info(
+                        terminal_id
+                    )
+                    if terminal_info and terminal_info.get("status", "") not in [
+                        "exited",
+                        "spawn_failed",
+                    ]:
+                        pid = terminal_info.get("process_id")
+                        if pid:
+                            try:
+                                import os
+                                import signal
+
+                                os.killpg(os.getpgid(pid), signal.SIGTERM)
+                                self.logger.info(
+                                    f"Terminated process {pid} for terminal {terminal_id}"
+                                )
+                            except Exception as e:
+                                self.logger.warning(
+                                    f"Failed to terminate process {pid}: {e}"
+                                )
+
+                    # Clean up terminal resources
+                    self.terminal_manager._cleanup_terminal(terminal, terminal_id)
+
+            # Close the tab
+            self.tab_view.close_page(page)
+            return True
+
+    def _schedule_terminal_focus(self, terminal: Vte.Terminal, title: str) -> None:
+        def focus_terminal():
+            try:
+                if terminal and terminal.get_realized():
+                    terminal.grab_focus()
+                    self.logger.debug(f"Terminal focused: '{title}'")
+                    return False
+                return True
+            except Exception as e:
+                self.logger.warning(f"Terminal focus failed for '{title}': {e}")
+                return False
+
+        GLib.timeout_add(100, focus_terminal)
+
+    def get_page_for_terminal(self, terminal: Vte.Terminal) -> Optional[Adw.TabPage]:
+        """
+        Finds the Adw.TabPage associated with a terminal using a stored reference.
+        """
+        page = getattr(terminal, "ashy_parent_page", None)
+        if page is None:
+            self.logger.warning(
+                f"Could not find Adw.TabPage for terminal {getattr(terminal, 'terminal_id', 'N/A')} via stored attribute."
+            )
+        return page
+
+    def set_tab_title(self, page: Adw.TabPage, title: str) -> None:
+        """Set tab title with terminal count for splits."""
         try:
-            self.logger.debug(f"Page attached at position {position}")
-        except Exception as e:
-            self.logger.error(f"Page attached handling failed: {e}")
+            if page and title:
+                # Store/update the base title (without terminal count)
+                if not hasattr(page, "_base_title") or not page._base_title:
+                    page._base_title = title
 
-    def _on_page_detached(self, tab_view, page, position) -> None:
-        """Handle page being detached from tab view."""
-        try:
-            self.logger.debug(f"Page detached from position {position}")
+                # Count terminals in this tab
+                terminals_in_page = self.get_all_terminals_in_page(page)
+                terminal_count = len(terminals_in_page)
+
+                # Create title with count for multiple terminals
+                if terminal_count > 1:
+                    final_title = f"{page._base_title} ({terminal_count})"
+                else:
+                    final_title = page._base_title
+
+                page.set_title(final_title)
+                self.logger.debug(
+                    f"Set tab title to '{final_title}' for {terminal_count} terminals"
+                )
         except Exception as e:
-            self.logger.error(f"Page detached handling failed: {e}")
+            self.logger.error(f"Failed to set tab title: {e}")
+
+    def update_all_tab_titles(self) -> None:
+        """Update titles for all tabs to show terminal count."""
+        try:
+            for i in range(self.get_tab_count()):
+                page = self.tab_view.get_nth_page(i)
+                if page:
+                    # Use the stored base title or extract from current title
+                    if hasattr(page, "_base_title") and page._base_title:
+                        base_title = page._base_title
+                    else:
+                        # Extract base title from current title (remove count if present)
+                        current_title = page.get_title()
+                        if " (" in current_title and current_title.endswith(")"):
+                            base_title = current_title[: current_title.rfind(" (")]
+                        else:
+                            base_title = current_title
+                        page._base_title = base_title
+
+                    # Update with current terminal count
+                    self.set_tab_title(page, base_title)
+        except Exception as e:
+            self.logger.error(f"Failed to update tab titles: {e}")
+
+    def get_tab_count(self) -> int:
+        return self.tab_view.get_n_pages()
+
+    def get_all_pages(self) -> List[Adw.TabPage]:
+        return [
+            self.tab_view.get_nth_page(i) for i in range(self.tab_view.get_n_pages())
+        ]
+
+    def get_all_terminals(self) -> List[Vte.Terminal]:
+        terminals = []
+        for page in self.get_all_pages():
+            terminals.extend(self.get_all_terminals_in_page(page))
+        return terminals
 
     def create_initial_tab_if_empty(self) -> Optional[Adw.TabPage]:
-        """Create an initial local tab if no tabs exist."""
-        try:
-            if self.get_tab_count() == 0:
-                self.logger.debug("Creating initial tab - no tabs exist")
-                result = self.create_local_tab("Local")
-                if result:
-                    self.logger.info("Initial tab created successfully")
-                else:
-                    self.logger.error("Failed to create initial tab")
-                return result
-            return None
-        except Exception as e:
-            self.logger.error(f"Initial tab creation failed: {e}")
-            handle_exception(e, "initial tab creation", "ashyterm.tabs")
-            return None
-
-    def select_next_tab(self) -> bool:
-        """Select the next tab in the tab view."""
-        try:
-            current_page = self.get_selected_page()
-            if not current_page:
-                return False
-
-            # Find current page index
-            for i in range(self.tab_view.get_n_pages()):
-                if self.tab_view.get_nth_page(i) == current_page:
-                    # Select next tab (wrap around)
-                    next_index = (i + 1) % self.tab_view.get_n_pages()
-                    next_page = self.tab_view.get_nth_page(next_index)
-                    if next_page:
-                        self.tab_view.set_selected_page(next_page)
-                        return True
-                    break
-
-            return False
-
-        except Exception as e:
-            self.logger.error(f"Select next tab failed: {e}")
-            return False
-
-    def select_previous_tab(self) -> bool:
-        """Select the previous tab in the tab view."""
-        try:
-            current_page = self.get_selected_page()
-            if not current_page:
-                return False
-
-            # Find current page index
-            for i in range(self.tab_view.get_n_pages()):
-                if self.tab_view.get_nth_page(i) == current_page:
-                    # Select previous tab (wrap around)
-                    prev_index = (i - 1) % self.tab_view.get_n_pages()
-                    prev_page = self.tab_view.get_nth_page(prev_index)
-                    if prev_page:
-                        self.tab_view.set_selected_page(prev_page)
-                        return True
-                    break
-
-            return False
-
-        except Exception as e:
-            self.logger.error(f"Select previous tab failed: {e}")
-            return False
+        if self.get_tab_count() == 0:
+            return self.create_local_tab("Local")
+        return None
 
     def copy_from_current_terminal(self) -> bool:
-        """Copy selection from current terminal."""
-        try:
-            terminal = self.get_selected_terminal()
-            if terminal:
-                return self.terminal_manager.copy_selection(terminal)
-            return False
-        except Exception as e:
-            self.logger.error(f"Copy from current terminal failed: {e}")
-            return False
+        if terminal := self.get_selected_terminal():
+            return self.terminal_manager.copy_selection(terminal)
+        return False
 
     def paste_to_current_terminal(self) -> bool:
-        """Paste to current terminal."""
-        try:
-            terminal = self.get_selected_terminal()
-            if terminal:
-                return self.terminal_manager.paste_clipboard(terminal)
-            return False
-        except Exception as e:
-            self.logger.error(f"Paste to current terminal failed: {e}")
-            return False
+        if terminal := self.get_selected_terminal():
+            return self.terminal_manager.paste_clipboard(terminal)
+        return False
 
     def select_all_in_current_terminal(self) -> None:
-        """Select all text in current terminal."""
-        try:
-            terminal = self.get_selected_terminal()
-            if terminal:
-                self.terminal_manager.select_all(terminal)
-        except Exception as e:
-            self.logger.error(f"Select all in current terminal failed: {e}")
+        if terminal := self.get_selected_terminal():
+            self.terminal_manager.select_all(terminal)
 
     def zoom_in_current_terminal(self, step: float = 0.1) -> bool:
-        """
-        Zoom in current terminal.
-
-        Args:
-            step: Zoom step increment
-
-        Returns:
-            True if zoom was successful
-        """
         try:
-            terminal = self.get_selected_terminal()
-            if terminal:
+            if terminal := self.get_selected_terminal():
                 return self.terminal_manager.zoom_in(terminal, step)
             return False
         except Exception as e:
@@ -1247,18 +825,8 @@ class TabManager:
             return False
 
     def zoom_out_current_terminal(self, step: float = 0.1) -> bool:
-        """
-        Zoom out current terminal.
-
-        Args:
-            step: Zoom step decrement
-
-        Returns:
-            True if zoom was successful
-        """
         try:
-            terminal = self.get_selected_terminal()
-            if terminal:
+            if terminal := self.get_selected_terminal():
                 return self.terminal_manager.zoom_out(terminal, step)
             return False
         except Exception as e:
@@ -1266,75 +834,134 @@ class TabManager:
             return False
 
     def zoom_reset_current_terminal(self) -> bool:
-        """
-        Reset zoom in current terminal.
-
-        Returns:
-            True if reset was successful
-        """
         try:
-            terminal = self.get_selected_terminal()
-            if terminal:
+            if terminal := self.get_selected_terminal():
                 return self.terminal_manager.zoom_reset(terminal)
             return False
         except Exception as e:
             self.logger.error(f"Zoom reset current terminal failed: {e}")
             return False
 
-    def get_statistics(self) -> Dict[str, Any]:
-        """
-        Get tab manager statistics.
-
-        Returns:
-            Dictionary with statistics
-        """
-        try:
-            stats = self._stats.copy()
-            stats.update(self.registry.get_statistics())
-            stats.update({
-                "platform": self.platform_info.platform_type.value,
-                "current_tabs": self.get_tab_count(),
-            })
-            return stats
-        except Exception as e:
-            self.logger.error(f"Failed to get statistics: {e}")
-            return {"error": str(e)}
-
     def _update_tab_bar_visibility(self) -> None:
-        """Update tab bar visibility based on tab count."""
         try:
             tab_count = self.get_tab_count()
             should_show = tab_count > 1
-
-            # Update tab bar visibility
             self.tab_bar.set_visible(should_show)
 
-            # Call callback if set (to update window title, etc.)
-            if self.on_tab_count_changed:
-                self.on_tab_count_changed(tab_count, should_show)
+            # Note: Do NOT create initial tab here automatically
+            # Let the application handle what to do when there are no tabs
 
             self.logger.debug(
                 f"Tab bar visibility updated: {should_show} (count: {tab_count})"
             )
-
         except Exception as e:
             self.logger.error(f"Tab bar visibility update failed: {e}")
 
     def cleanup(self) -> None:
-        """Perform cleanup of tab manager resources."""
         with self._cleanup_lock:
             try:
                 self.logger.debug("Starting tab manager cleanup")
-                
-                # Cancel pending timeouts
                 if self._focus_timeout_id is not None:
                     GLib.source_remove(self._focus_timeout_id)
                     self._focus_timeout_id = None
-                
-                # Close all tabs
                 self.close_all_tabs()
-                
                 self.logger.info("Tab manager cleanup completed")
-                
             except Exception as e:
                 self.logger.error(f"Tab manager cleanup failed: {e}")
+
+    def close_all_tabs(self) -> None:
+        """Close all tabs."""
+        try:
+            pages = self.get_all_pages()
+            for page in pages:
+                self.close_tab(page)
+        except Exception as e:
+            self.logger.error(f"Close all tabs failed: {e}")
+
+    def _quit_application(self) -> bool:
+        """Trigger application quit via callback."""
+        try:
+            if self.on_quit_application:
+                self.logger.info("Triggering application quit")
+                self.on_quit_application()
+            else:
+                self.logger.warning("No quit application callback set")
+        except Exception as e:
+            self.logger.error(f"Application quit trigger failed: {e}")
+        return False  # Don't repeat
+
+    def _remove_pane_ui(self, pane_to_remove, parent_paned):
+        """Helper to remove a single pane from a split view."""
+        is_start_child = parent_paned.get_start_child() == pane_to_remove
+        survivor_pane = (
+            parent_paned.get_end_child()
+            if is_start_child
+            else parent_paned.get_start_child()
+        )
+
+        if not survivor_pane:
+            self.logger.error("Survivor pane not found. Aborting UI removal.")
+            return
+
+        grandparent = parent_paned.get_parent()
+        if not grandparent:
+            self.logger.error("Gtk.Paned container has no parent. Aborting.")
+            return
+
+        # Detach panes from the paned widget before removing it
+        parent_paned.set_start_child(None)
+        parent_paned.set_end_child(None)
+
+        # Check if we need to convert back to normal tab mode
+        # If the survivor is a TerminalPaneWithTitleBar and grandparent is not a Paned,
+        # we're removing the last split, so convert back to normal scrolled window
+        needs_normal_mode_conversion = isinstance(
+            survivor_pane, TerminalPaneWithTitleBar
+        ) and not isinstance(grandparent, Gtk.Paned)
+
+        if needs_normal_mode_conversion:
+            self.logger.debug("Converting last split back to normal tab mode")
+
+            # Extract the terminal from the title bar pane
+            survivor_terminal = survivor_pane.get_terminal()
+
+            # Remove terminal from the title bar pane's scrolled window
+            survivor_scrolled_window = survivor_pane.scrolled_window
+            survivor_scrolled_window.set_child(None)
+
+            # Create new normal scrolled window for the terminal
+            new_scrolled_window = Gtk.ScrolledWindow(child=survivor_terminal)
+            new_scrolled_window.set_policy(
+                Gtk.PolicyType.AUTOMATIC, Gtk.PolicyType.AUTOMATIC
+            )
+            new_scrolled_window.set_vexpand(True)
+            new_scrolled_window.set_hexpand(True)
+
+            # Replace the paned widget with the normal scrolled window
+            if hasattr(grandparent, "set_child"):
+                grandparent.set_child(new_scrolled_window)
+            else:
+                self.logger.warning(
+                    f"Unsupported grandparent container type: {type(grandparent)}"
+                )
+
+            self.logger.info("Successfully converted split back to normal tab mode")
+        else:
+            # Normal case: replace the paned widget with the survivor pane in the grandparent
+            if isinstance(grandparent, Gtk.Paned):
+                is_grandparent_start = grandparent.get_start_child() == parent_paned
+                if is_grandparent_start:
+                    grandparent.set_start_child(survivor_pane)
+                else:
+                    grandparent.set_end_child(survivor_pane)
+            elif hasattr(grandparent, "set_child"):
+                grandparent.set_child(survivor_pane)
+            else:
+                self.logger.warning(
+                    f"Unsupported grandparent container type: {type(grandparent)}"
+                )
+
+        self.logger.info("Successfully removed split pane UI and restructured layout.")
+
+        # Update tab titles after removing split
+        GLib.idle_add(self.update_all_tab_titles)

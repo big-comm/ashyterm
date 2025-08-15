@@ -9,7 +9,6 @@ and command line argument processing.
 import sys
 import argparse
 import signal
-from pathlib import Path
 
 # Ensure we can find the package modules
 if __package__ is None:
@@ -26,25 +25,29 @@ from .utils.translation_utils import _
 from .app import CommTerminalApp
 from .utils.logger import (
     get_logger,
-    log_app_start,
-    log_app_shutdown,
     enable_debug_mode,
     set_console_level,
     LogLevel,
 )
-from .utils.exceptions import AshyTerminalError, VTENotAvailableError, ConfigError
-from .utils.platform import get_platform_info, get_config_directory, is_windows
-from .utils.crypto import is_encryption_available
+from .utils.platform import is_windows
 
 def setup_signal_handlers():
     """Set up signal handlers for graceful shutdown."""
     def signal_handler(sig, frame):
         print(_("\nReceived signal {}, shutting down gracefully...").format(sig))
         # The application's own shutdown handler will log this
-        app = Gtk.Application.get_default()
-        if app:
-            app.quit()
-        else:
+        try:
+            import gi
+
+            gi.require_version("Gtk", "4.0")
+            from gi.repository import Gtk
+
+            app = Gtk.Application.get_default()
+            if app:
+                app.quit()
+            else:
+                sys.exit(0)
+        except Exception:
             sys.exit(0)
 
     try:

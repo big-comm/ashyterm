@@ -1,5 +1,3 @@
-import sys
-import signal
 import atexit
 from typing import Optional, TYPE_CHECKING
 import time
@@ -21,14 +19,8 @@ from .settings.manager import SettingsManager
 
 # Import new utility systems
 from .utils.logger import get_logger, log_app_start, log_app_shutdown, enable_debug_mode
-from .utils.exceptions import (
-    AshyTerminalError, VTENotAvailableError, ConfigError,
-    handle_exception, ErrorCategory, ErrorSeverity
-)
-from .utils.platform import (
-    get_platform_info, is_windows, get_config_directory,
-    get_default_shell
-)
+from .utils.exceptions import VTENotAvailableError, handle_exception
+from .utils.platform import get_platform_info
 from .utils.backup import get_backup_manager, AutoBackupScheduler, BackupType
 from pathlib import Path
 from .utils.crypto import is_encryption_available, initialize_encryption
