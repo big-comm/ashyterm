@@ -815,8 +815,7 @@ class TerminalManager:
         if terminal_id is None:
             return False
 
-        # Use remove_terminal for graceful shutdown
-        return self.remove_terminal(terminal)
+        return self.remove_terminal(terminal, force_kill_group=False)
 
     # --- INÍCIO DA CORREÇÃO ---
     def _on_spawn_callback(
@@ -869,21 +868,18 @@ class TerminalManager:
             self.platform_info.cache_dir / f"ssh_control_{session.host}_{port}_{user}"
         )
 
-    def remove_terminal(self, terminal: Vte.Terminal) -> bool:
+    def remove_terminal(self, terminal: Vte.Terminal, force_kill_group: bool = False) -> bool:
         with self._cleanup_lock:
             terminal_id = getattr(terminal, "terminal_id", None)
             if terminal_id is None:
                 return False
 
             terminal_info = self.registry.get_terminal_info(terminal_id)
-            if not terminal_info or terminal_info.get("status", "").startswith(
-                "exited"
-            ):
+            if not terminal_info or terminal_info.get("status", "").startswith("exited"):
                 return False
 
             pid = terminal_info.get("process_id")
             if not pid or pid == -1:
-                # Se não há processo, apenas limpe a UI.
                 GLib.idle_add(self._cleanup_terminal, terminal, terminal_id)
                 return False
 
@@ -898,28 +894,34 @@ class TerminalManager:
                 f"Initiating shutdown for terminal '{terminal_name}' (PID: {pid}, Type: {terminal_type})"
             )
 
-            # Lógica de término de processo específica da plataforma
             if not is_windows():
                 try:
-                    # MELHOR PRÁTICA: Envie o sinal para todo o grupo de processos.
-                    # Isso garante que o shell e todos os seus filhos (splits) sejam terminados.
-                    pgid = os.getpgid(pid)
                     signal_to_send = (
                         signal.SIGHUP if terminal_type == "local" else signal.SIGTERM
                     )
                     signal_name = "SIGHUP" if terminal_type == "local" else "SIGTERM"
-                    os.killpg(pgid, signal_to_send)
-                    self.logger.debug(
-                        f"{signal_name} sent to process group {pgid} of PID {pid}."
-                    )
+                    
+                    # CORREÇÃO: Distinguir entre fechar split individual vs aba inteira
+                    if force_kill_group:
+                        # Fechar aba inteira - mata todo o grupo de processos
+                        pgid = os.getpgid(pid)
+                        os.killpg(pgid, signal_to_send)
+                        self.logger.debug(
+                            f"{signal_name} sent to process group {pgid} of PID {pid}."
+                        )
+                    else:
+                        # Fechar split individual - mata apenas este processo
+                        os.kill(pid, signal_to_send)
+                        self.logger.debug(
+                            f"{signal_name} sent to individual process PID {pid}."
+                        )
+                        
                 except (ProcessLookupError, PermissionError) as e:
                     self.logger.debug(
-                        f"Could not send signal to process group of PID {pid}, likely already exited: {e}"
+                        f"Could not send signal to PID {pid}, likely already exited: {e}"
                     )
-                    # O processo já saiu, então podemos considerar a operação um sucesso.
                     return True
             else:
-                # Abordagem para Windows (sem killpg)
                 try:
                     os.kill(pid, signal.SIGTERM)
                 except (ProcessLookupError, PermissionError) as e:
@@ -928,8 +930,6 @@ class TerminalManager:
                     )
                     return True
 
-            # ROBUSTEZ: Adiciona um temporizador de fallback para enviar SIGKILL
-            # caso o processo não termine graciosamente.
             timeout_id = GLib.timeout_add(
                 5000, self._ensure_process_terminated, pid, terminal_name, terminal_id
             )

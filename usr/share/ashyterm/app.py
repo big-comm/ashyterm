@@ -238,7 +238,11 @@ class CommTerminalApp(Adw.Application):
                 "zoom-reset",
                 "split-horizontal",
                 "split-vertical",
-                "close-pane"
+                "close-pane",
+                "focus-pane-up",
+                "focus-pane-down",
+                "focus-pane-left",
+                "focus-pane-right"
             ]
             
             for action_name in shortcut_actions:

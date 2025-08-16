@@ -158,6 +158,11 @@ class CommTerminalWindow(Adw.ApplicationWindow):
                 ("split-horizontal", self._on_split_horizontal),
                 ("split-vertical", self._on_split_vertical),
                 ("close-pane", self._on_close_pane),
+                # Split navigation actions
+                ("focus-pane-up", self._on_focus_pane_up),
+                ("focus-pane-down", self._on_focus_pane_down),
+                ("focus-pane-left", self._on_focus_pane_left),
+                ("focus-pane-right", self._on_focus_pane_right),
                 # Zoom actions
                 ("zoom-in", self._on_zoom_in),
                 ("zoom-out", self._on_zoom_out),
@@ -283,6 +288,35 @@ class CommTerminalWindow(Adw.ApplicationWindow):
         try:
             toolbar_view = Adw.ToolbarView()
             toolbar_view.add_css_class("background")
+
+            # Fix CSS conflicts for menu separators after splits
+            css = """
+            /* Make header separator rule more specific to avoid affecting menu separators */
+            .terminal-tab-view headerbar entry,
+            .terminal-tab-view headerbar spinbutton,
+            .terminal-tab-view headerbar button { 
+                margin-top: -10px; 
+                margin-bottom: -10px; 
+            }
+            
+            /* Ensure menu separators always have correct styling */
+            popover.menu menuitem separator,
+            .terminal-tab-view popover.menu menuitem separator {
+                border-top: 1px solid @borders;
+                margin: 6px 0;
+                min-height: 1px;
+                max-height: 1px;
+                padding: 0;
+                background: none;
+            }
+            """
+            provider = Gtk.CssProvider()
+            provider.load_from_data(css.encode("utf-8"))
+            Gtk.StyleContext.add_provider_for_display(
+                Gdk.Display.get_default(),
+                provider,
+                Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION + 1,
+            )
 
             scrolled_window = Gtk.ScrolledWindow()
             scrolled_window.set_policy(
@@ -836,7 +870,7 @@ class CommTerminalWindow(Adw.ApplicationWindow):
         try:
             focused_terminal = self.tab_manager.get_selected_terminal()
             if focused_terminal:
-                self.tab_manager.split_horizontal(focused_terminal)
+                self.tab_manager.split_vertical(focused_terminal)
         except Exception as e:
             self.logger.error(f"Horizontal split failed: {e}")
             self._show_error_dialog(_("Split Error"), str(e))
@@ -846,7 +880,7 @@ class CommTerminalWindow(Adw.ApplicationWindow):
         try:
             focused_terminal = self.tab_manager.get_selected_terminal()
             if focused_terminal:
-                self.tab_manager.split_vertical(focused_terminal)
+                self.tab_manager.split_horizontal(focused_terminal)
         except Exception as e:
             self.logger.error(f"Vertical split failed: {e}")
             self._show_error_dialog(_("Split Error"), str(e))
@@ -859,6 +893,34 @@ class CommTerminalWindow(Adw.ApplicationWindow):
                 self.tab_manager.close_pane(focused_terminal)
         except Exception as e:
             self.logger.error(f"Close pane failed: {e}")
+
+    def _on_focus_pane_up(self, action, param) -> None:
+        """Handle focus pane up action."""
+        try:
+            self.tab_manager.focus_pane_direction("up")
+        except Exception as e:
+            self.logger.error(f"Focus pane up failed: {e}")
+
+    def _on_focus_pane_down(self, action, param) -> None:
+        """Handle focus pane down action."""
+        try:
+            self.tab_manager.focus_pane_direction("down")
+        except Exception as e:
+            self.logger.error(f"Focus pane down failed: {e}")
+
+    def _on_focus_pane_left(self, action, param) -> None:
+        """Handle focus pane left action."""
+        try:
+            self.tab_manager.focus_pane_direction("left")
+        except Exception as e:
+            self.logger.error(f"Focus pane left failed: {e}")
+
+    def _on_focus_pane_right(self, action, param) -> None:
+        """Handle focus pane right action."""
+        try:
+            self.tab_manager.focus_pane_direction("right")
+        except Exception as e:
+            self.logger.error(f"Focus pane right failed: {e}")
 
     def _on_zoom_in(self, action, param) -> None:
         """Handle zoom in action."""
@@ -1124,6 +1186,20 @@ class CommTerminalWindow(Adw.ApplicationWindow):
                 shortcut = Gtk.ShortcutsShortcut(title=title, accelerator=accel)
                 terminal_group.append(shortcut)
 
+            # Split navigation shortcuts
+            split_group = Gtk.ShortcutsGroup(title=_("Split Navigation"))
+
+            split_shortcuts = [
+                (_("Focus Up"), "<Control>Up"),
+                (_("Focus Down"), "<Control>Down"),
+                (_("Focus Left"), "<Control>Left"),
+                (_("Focus Right"), "<Control>Right"),
+            ]
+
+            for title, accel in split_shortcuts:
+                shortcut = Gtk.ShortcutsShortcut(title=title, accelerator=accel)
+                split_group.append(shortcut)
+
             # Application shortcuts
             app_group = Gtk.ShortcutsGroup(title=_("Application"))
 
@@ -1138,6 +1214,7 @@ class CommTerminalWindow(Adw.ApplicationWindow):
                 app_group.append(shortcut)
 
             section.append(terminal_group)
+            section.append(split_group)
             section.append(app_group)
             shortcuts_window.add_section(section)
 

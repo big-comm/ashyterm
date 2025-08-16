@@ -19,6 +19,7 @@ from .manager import TerminalManager
 
 # Import new utility systems
 from ..utils.logger import get_logger
+from ..utils.translation_utils import _
 
 
 class TerminalPaneWithTitleBar(Gtk.Box):
@@ -58,8 +59,10 @@ class TerminalPaneWithTitleBar(Gtk.Box):
         tabbar { margin: -8px; }
         .terminal-tab-view headerbar entry,
         .terminal-tab-view headerbar spinbutton,
-        .terminal-tab-view headerbar button,
-        headerbar separator { margin-top: -10px; margin-bottom: -10px; }
+        .terminal-tab-view headerbar button { 
+            margin-top: -10px; 
+            margin-bottom: -10px; 
+        }
         """
         provider = Gtk.CssProvider()
         provider.load_from_data(css.encode("utf-8"))
@@ -104,12 +107,13 @@ class TabManager:
         self.tab_bar = Adw.TabBar(view=self.tab_view)
         self.tab_bar.get_style_context().add_class("tabbar")
 
-        # --- ALTERAÇÃO INICIADA ---
-        # Justificativa: Este bloco CSS realiza duas otimizações:
-        # 1. Compacta o HeaderBar e aplica a margem negativa à barra de abas para um visual integrado.
-        # 2. A nova regra `.tabbar .tab .label` define o modo de truncamento de texto para 'start'.
-        #    Isso garante que, quando o título de uma aba for muito longo, a parte final do texto
-        #    permaneça visível, o que é ideal para exibir caminhos de diretório.
+        # Justification: This CSS block performs three optimizations:
+        # 1. Compacts the HeaderBar and applies negative margin to the tab bar for an integrated look.
+        # 2. The new `.tabbar .tab .label` rule sets the text truncation mode to 'start'.
+        #    This ensures that when a tab title is too long, the end of the text
+        #    remains visible, which is ideal for displaying directory paths.
+        # 3. Adds a rule to ensure that menu separators inside a terminal panel
+        #    retain the default appearance, fixing the issue of thick lines.
         css = """
         headerbar.main-header-bar {
             min-height: 0;
@@ -123,15 +127,29 @@ class TabManager:
         .tabbar .tab .label {
             -gtk-ellipsize-mode: start;
         }
+        /*
+        * FIX: Force menu separators inside popovers to have a standard 1px height.
+        * This targets any popover menu within our main tab view, fixing the issue
+        * where separators become thick after creating a split pane.
+        * Increased priority and more specific selectors to override conflicting rules.
+        */
+        popover.menu menuitem separator,
+        .terminal-tab-view popover.menu menuitem separator {
+            border-top: 1px solid @borders !important;
+            margin: 6px 0 !important;
+            min-height: 1px !important;
+            max-height: 1px !important;
+            padding: 0 !important;
+            background: none !important;
+        }
         """
         provider = Gtk.CssProvider()
         provider.load_from_data(css.encode("utf-8"))
         Gtk.StyleContext.add_provider_for_display(
             Gdk.Display.get_default(),
             provider,
-            Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION,
+            Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION + 2,
         )
-        # --- ALTERAÇÃO FINALIZADA ---
 
         self._creation_lock = threading.Lock()
         self._cleanup_lock = threading.Lock()
@@ -341,7 +359,7 @@ class TabManager:
             terminal_id = getattr(focused_terminal, "terminal_id", None)
             if terminal_id:
                 self._individual_pane_closes.add(terminal_id)
-            self.terminal_manager.remove_terminal(focused_terminal)
+            self.terminal_manager.remove_terminal(focused_terminal, force_kill_group=False)
 
     def _find_pane_and_parent(self, terminal: Vte.Terminal) -> tuple:
         widget = terminal
@@ -414,7 +432,7 @@ class TabManager:
         # A nova lógica robusta em `remove_terminal` garantirá que todos os processos
         # (incluindo os de splits) sejam finalizados corretamente.
         for terminal in terminals_in_page:
-            self.terminal_manager.remove_terminal(terminal)
+            self.terminal_manager.remove_terminal(terminal, force_kill_group=True)
 
         # Retornar True informa ao Adw.TabView que estamos tratando o fechamento manualmente.
         # A aba só será realmente fechada pela função _on_terminal_process_exited
@@ -432,38 +450,52 @@ class TabManager:
                 self.terminal_manager._cleanup_terminal(terminal, terminal_id)
                 return
 
-            # O TerminalManager já marcou o status deste terminal como 'exited'.
-            # Agora, verificamos se restou algum *outro* terminal ativo.
-            # Se a contagem for 0, significa que este era o último.
-            active_terminals_left = (
-                self.terminal_manager.registry.get_active_terminal_count()
-            )
-
-            if active_terminals_left == 0:
-                self.logger.info(
-                    "Last active terminal has exited. Requesting application quit."
-                )
-                GLib.idle_add(self._quit_application)
-                return
-
-            # Se chegamos aqui, significa que outros terminais estão ativos.
-            # Prossiga com a limpeza normal da UI para este terminal.
+            # CRITICAL FIX: Check if this is a split pane BEFORE cleanup
             pane_to_remove, parent_paned = self._find_pane_and_parent(terminal)
+            is_split_pane = parent_paned is not None
+            
+            # Get remaining terminals in this page BEFORE cleanup
+            remaining_terminals_in_page = [
+                t for t in self.get_all_terminals_in_page(page) 
+                if getattr(t, "terminal_id", None) != terminal_id
+            ]
+
+            # Cleanup terminal resources
             self.terminal_manager._cleanup_terminal(terminal, terminal_id)
 
-            if parent_paned:
+            if is_split_pane:
+                # FIX: For splits, only remove UI pane - don't check global count
                 self.logger.debug(f"Removing split pane for terminal {terminal_id}.")
                 self._remove_pane_ui(pane_to_remove, parent_paned)
                 GLib.idle_add(self.update_all_tab_titles)
-            else:
-                self.logger.debug(f"Closing empty tab page for terminal {terminal_id}.")
-                if (
-                    id(page) in self._closing_pages
-                    or self.tab_view.get_page_position(page) != -1
-                ):
+                # DO NOT check if last terminal - splits should not close application
+                return
+
+            # Only for terminals that are NOT splits (last terminal in tab)
+            if not remaining_terminals_in_page:
+                # This was the last terminal in the tab
+                if id(page) in self._closing_pages:
+                    # Close initiated by user (clicked X)
+                    self.logger.debug(f"Finishing user-initiated close for page of terminal {terminal_id}.")
                     self.tab_view.close_page_finish(page, True)
                     self._closing_pages.discard(id(page))
-                    GLib.idle_add(self._update_tab_bar_visibility)
+                elif self.terminal_manager.settings_manager.get("auto_close_tab", True):
+                    # Process exited naturally (typed exit)
+                    self.logger.debug(f"Auto-closing page for terminal {terminal_id}.")
+                    self.tab_view.close_page(page)
+                else:
+                    # Auto-close disabled
+                    self.logger.debug(f"Auto-close disabled. Tab for terminal {terminal_id} remains open.")
+                    page.set_title(f"{page.get_title()} [{_('Exited')}]")
+
+                # FIX: Only check global count AFTER processing tab closure
+                active_terminals_left = self.terminal_manager.registry.get_active_terminal_count()
+                if active_terminals_left == 0:
+                    self.logger.info("Last active terminal has exited. Requesting application quit.")
+                    GLib.idle_add(self._quit_application)
+                    return
+
+                GLib.idle_add(self._update_tab_bar_visibility)
 
     def _schedule_terminal_focus(self, terminal: Vte.Terminal, title: str) -> None:
         def focus_terminal():
@@ -544,6 +576,132 @@ class TabManager:
         if terminal := self.get_selected_terminal():
             return self.terminal_manager.zoom_reset(terminal)
         return False
+
+    def focus_next_pane(self) -> bool:
+        """Focus the next pane in the current tab."""
+        page = self.tab_view.get_selected_page()
+        if not page:
+            return False
+        
+        terminals = self.get_all_terminals_in_page(page)
+        if len(terminals) <= 1:
+            return False
+        
+        current_terminal = self.get_selected_terminal()
+        if not current_terminal:
+            terminals[0].grab_focus()
+            return True
+        
+        try:
+            current_index = terminals.index(current_terminal)
+            next_index = (current_index + 1) % len(terminals)
+            terminals[next_index].grab_focus()
+            return True
+        except ValueError:
+            terminals[0].grab_focus()
+            return True
+
+    def focus_previous_pane(self) -> bool:
+        """Focus the previous pane in the current tab."""
+        page = self.tab_view.get_selected_page()
+        if not page:
+            return False
+        
+        terminals = self.get_all_terminals_in_page(page)
+        if len(terminals) <= 1:
+            return False
+        
+        current_terminal = self.get_selected_terminal()
+        if not current_terminal:
+            terminals[-1].grab_focus()
+            return True
+        
+        try:
+            current_index = terminals.index(current_terminal)
+            prev_index = (current_index - 1) % len(terminals)
+            terminals[prev_index].grab_focus()
+            return True
+        except ValueError:
+            terminals[-1].grab_focus()
+            return True
+
+    def focus_pane_direction(self, direction: str) -> bool:
+        """Focus pane in specified direction (up/down/left/right)."""
+        page = self.tab_view.get_selected_page()
+        if not page:
+            return False
+        
+        terminals = self.get_all_terminals_in_page(page)
+        if len(terminals) <= 1:
+            return False
+        
+        current_terminal = self.get_selected_terminal()
+        if not current_terminal:
+            return False
+        
+        # Get current terminal container position
+        current_container = self._get_terminal_container(current_terminal)
+        if not current_container:
+            return False
+            
+        current_allocation = current_container.get_allocation()
+        current_x = current_allocation.x + current_allocation.width // 2
+        current_y = current_allocation.y + current_allocation.height // 2
+        
+        best_terminal = None
+        best_distance = float('inf')
+        
+        for terminal in terminals:
+            if terminal == current_terminal:
+                continue
+                
+            container = self._get_terminal_container(terminal)
+            if not container:
+                continue
+                
+            allocation = container.get_allocation()
+            term_x = allocation.x + allocation.width // 2
+            term_y = allocation.y + allocation.height // 2
+            
+            # Check if terminal is in the right direction
+            valid_direction = False
+            if direction == "up" and term_y < current_y:
+                valid_direction = True
+            elif direction == "down" and term_y > current_y:
+                valid_direction = True
+            elif direction == "left" and term_x < current_x:
+                valid_direction = True
+            elif direction == "right" and term_x > current_x:
+                valid_direction = True
+            
+            if valid_direction:
+                distance = ((term_x - current_x) ** 2 + (term_y - current_y) ** 2) ** 0.5
+                if distance < best_distance:
+                    best_distance = distance
+                    best_terminal = terminal
+        
+        if best_terminal:
+            best_terminal.grab_focus()
+            return True
+        
+        return False
+
+    def _get_terminal_container(self, terminal: Vte.Terminal):
+        """Get the container that holds the terminal for position calculation."""
+        widget = terminal.get_parent()  # ScrolledWindow
+        
+        while widget:
+            parent = widget.get_parent()
+            
+            if isinstance(parent, Gtk.Paned):
+                return widget
+            
+            if isinstance(parent, Adw.Bin):
+                return widget
+                
+            widget = parent
+        
+        return widget
 
     def _update_tab_bar_visibility(self) -> None:
         self.tab_bar.set_visible(self.get_tab_count() > 1)

@@ -323,6 +323,10 @@ class DefaultSettings:
                 "split-horizontal": "<Control><Shift>o",
                 "split-vertical": "<Control><Shift>e",
                 "close-pane": "<Control><Shift>w",
+                "focus-pane-up": "<Control>Up",
+                "focus-pane-down": "<Control>Down",
+                "focus-pane-left": "<Control>Left",
+                "focus-pane-right": "<Control>Right",
             },
         }
 
