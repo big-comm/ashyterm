@@ -243,6 +243,12 @@ class CommTerminalWindow(Adw.ApplicationWindow):
         """Create the header bar with controls."""
         try:
             self.header_bar = Adw.HeaderBar()
+            # --- ALTERAÇÃO INICIADA ---
+            # Justificativa: Adicionar uma classe CSS específica nos permite
+            # remover o preenchimento e a borda padrão do HeaderBar,
+            # tornando-o um contêiner compacto para a barra de abas.
+            self.header_bar.add_css_class("main-header-bar")
+            # --- ALTERAÇÃO FINALIZADA ---
 
             # Sidebar toggle button
             self.toggle_sidebar_button = Gtk.ToggleButton()
@@ -655,7 +661,11 @@ class CommTerminalWindow(Adw.ApplicationWindow):
         self.logger.info("Performing window cleanup")
 
         try:
-            # Get all terminals
+            # CORREÇÃO CRÍTICA: Chame a limpeza do TerminalManager.
+            # Isso removerá o temporizador e outros recursos.
+            self.terminal_manager.cleanup_all_terminals()
+
+            # O código restante para fechar os terminais já existentes
             all_terminals = self.tab_manager.get_all_terminals()
 
             if not all_terminals:
@@ -664,9 +674,9 @@ class CommTerminalWindow(Adw.ApplicationWindow):
 
             self.logger.debug(f"Closing {len(all_terminals)} terminals")
 
-            # Close all terminals gracefully through the manager
             for terminal in all_terminals:
                 try:
+                    # A chamada a close_terminal agora é mais sobre o processo filho
                     self.terminal_manager.close_terminal(terminal)
                 except Exception as e:
                     self.logger.error(f"Error closing terminal: {e}")

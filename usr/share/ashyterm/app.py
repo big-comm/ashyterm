@@ -16,6 +16,7 @@ from .settings.config import (
     COPYRIGHT, WEBSITE, ISSUE_URL
 )
 from .settings.manager import SettingsManager
+from .terminal.spawner import cleanup_spawner
 
 # Import new utility systems
 from .utils.logger import get_logger, log_app_start, log_app_shutdown, enable_debug_mode
@@ -480,6 +481,7 @@ class CommTerminalApp(Adw.Application):
     def _on_shutdown(self, app) -> None:
         """Handle application shutdown."""
         self.logger.info(_("Application shutdown initiated"))
+        cleanup_spawner()
         self._shutdown_gracefully()
     
     def _shutdown_gracefully(self) -> None:

@@ -78,35 +78,55 @@ class ProcessTracker:
             return self._processes.copy()
 
     def terminate_all(self) -> None:
-        """Terminate all tracked processes."""
+        """Terminate all tracked processes robustly and cross-platform."""
         with self._lock:
-            processes_to_terminate = list(self._processes.keys())
+            pids_to_terminate = list(self._processes.keys())
+            if not pids_to_terminate:
+                return
 
-            for pid in processes_to_terminate:
-                try:
-                    if is_windows():
-                        os.kill(pid, signal.SIGTERM)
-                    else:
-                        os.kill(pid, signal.SIGTERM)
+            self.logger.info(f"Terminating {len(pids_to_terminate)} tracked processes.")
 
-                    self.logger.debug(f"Sent SIGTERM to process {pid}")
-                    time.sleep(0.1)  # Give process time to terminate gracefully
-
-                    # Force kill if still running
+            if is_windows():
+                # No Windows, use taskkill para um encerramento mais confiável.
+                for pid in pids_to_terminate:
                     try:
-                        if is_windows():
-                            os.kill(pid, signal.SIGKILL)
-                        else:
-                            os.kill(pid, signal.SIGKILL)
-                        self.logger.debug(f"Force killed process {pid}")
+                        subprocess.run(
+                            ["taskkill", "/F", "/PID", str(pid)],
+                            check=False,
+                            capture_output=True,
+                        )
+                        self.logger.debug(f"Sent taskkill to process {pid}")
+                    except (OSError, FileNotFoundError):
+                        self.logger.error("taskkill command not found.")
+                        break  # Para de tentar se o comando não existir
+                    finally:
+                        self.unregister_process(pid)
+            else:
+                # Em sistemas Unix-like, tente SIGTERM primeiro, depois SIGKILL.
+                # Etapa 1: Enviar SIGTERM para todos
+                for pid in pids_to_terminate:
+                    try:
+                        os.kill(pid, signal.SIGTERM)
+                        self.logger.debug(f"Sent SIGTERM to process {pid}")
                     except (OSError, ProcessLookupError):
-                        pass  # Process already terminated
+                        # O processo já pode ter terminado
+                        self.unregister_process(pid)
 
-                except (OSError, ProcessLookupError):
-                    pass  # Process already terminated
-                finally:
-                    self.unregister_process(pid)
+                # Dê um tempo para os processos encerrarem graciosamente
+                time.sleep(0.2)
 
+                # Etapa 2: Enviar SIGKILL para os que restaram
+                remaining_pids = list(self._processes.keys())
+                for pid in remaining_pids:
+                    try:
+                        os.kill(pid, signal.SIGKILL)
+                        self.logger.warning(
+                            f"Process {pid} did not respond to SIGTERM, sent SIGKILL."
+                        )
+                    except (OSError, ProcessLookupError):
+                        pass  # O processo terminou no meio tempo
+                    finally:
+                        self.unregister_process(pid)
 
 class ProcessSpawner:
     """Enhanced process spawner with comprehensive security and error handling."""

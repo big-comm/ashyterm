@@ -228,6 +228,15 @@ class TerminalRegistry:
             )
             return terminal_id
 
+    def get_active_terminal_count(self) -> int:
+        """Conta os terminais que são considerados ativos (não encerrados ou com falha)."""
+        with self._lock:
+            return sum(
+                1
+                for info in self._terminals.values()
+                if info.get("status") not in ["exited", "spawn_failed"]
+            )
+
     def update_terminal_process(self, terminal_id: int, process_id: int) -> None:
         with self._lock:
             if terminal_id in self._terminals:
@@ -351,14 +360,18 @@ class TerminalManager:
         return False
 
     def _on_directory_uri_changed(self, terminal: Vte.Terminal, param_spec):
-        """Handles the notify::current-directory-uri signal from VTE."""
+        """Manipula o sinal notify::current-directory-uri do VTE, que é muito mais eficiente."""
         try:
+            # Esta verificação é importante para evitar processamento desnecessário
+            if not self.settings_manager.get("osc7_enabled", True):
+                return
+
             uri = terminal.get_current_directory_uri()
             if not uri:
                 return
 
+            # O resto da lógica de parsing e atualização do título
             from urllib.parse import urlparse, unquote
-
             parsed_uri = urlparse(uri)
             if parsed_uri.scheme != "file":
                 return
@@ -371,10 +384,13 @@ class TerminalManager:
                 hostname=hostname, path=path, display_path=display_path
             )
 
+            # Chama a lógica unificada de atualização de título
             self._update_title(terminal, osc7_info)
 
         except Exception as e:
-            self.logger.error(f"Directory URI change handling failed: {e}")
+            self.logger.error(
+                f"O tratamento da mudança de URI do diretório falhou: {e}"
+            )
 
     def _update_title(
         self, terminal: Vte.Terminal, osc7_info: Optional[OSC7Info] = None
@@ -568,6 +584,8 @@ class TerminalManager:
                 "child-exited", self._on_child_exited, identifier, terminal_id
             )
             terminal.connect("eof", self._on_eof, identifier, terminal_id)
+
+            # CORREÇÃO DE PERFORMANCE: Use o sinal otimizado do VTE para OSC7
             terminal.connect(
                 "notify::current-directory-uri", self._on_directory_uri_changed
             )
@@ -577,7 +595,8 @@ class TerminalManager:
             )
             self.manual_ssh_tracker.track(terminal_id, terminal)
 
-            self.osc7_tracker.track_terminal(terminal, terminal_name)
+            # A chamada ao osc7_tracker agora é desnecessária aqui, pois o manager lida com o sinal
+            # self.osc7_tracker.track_terminal(terminal, terminal_name)
 
             focus_controller = Gtk.EventControllerFocus()
             focus_controller.connect(
@@ -597,11 +616,13 @@ class TerminalManager:
 
             terminal.terminal_id = terminal_id
 
-            self.logger.debug(f"Terminal events configured for ID: {terminal_id}")
+            self.logger.debug(
+                f"Eventos do terminal configurados para o ID: {terminal_id}"
+            )
 
         except Exception as e:
             self.logger.error(
-                f"Failed to setup terminal events for ID {terminal_id}: {e}"
+                f"Falha ao configurar eventos do terminal para o ID {terminal_id}: {e}"
             )
 
     def _setup_context_menu(self, terminal: Vte.Terminal) -> None:
@@ -797,7 +818,7 @@ class TerminalManager:
         # Use remove_terminal for graceful shutdown
         return self.remove_terminal(terminal)
 
-    # --- INÃCIO DA CORREÃ‡ÃƒO ---
+    # --- INÍCIO DA CORREÇÃO ---
     def _on_spawn_callback(
         self,
         terminal: Vte.Terminal,
@@ -862,6 +883,7 @@ class TerminalManager:
 
             pid = terminal_info.get("process_id")
             if not pid or pid == -1:
+                # Se não há processo, apenas limpe a UI.
                 GLib.idle_add(self._cleanup_terminal, terminal, terminal_id)
                 return False
 
@@ -876,27 +898,28 @@ class TerminalManager:
                 f"Initiating shutdown for terminal '{terminal_name}' (PID: {pid}, Type: {terminal_type})"
             )
 
-            if terminal_type == "ssh":
-                session = terminal_info.get("identifier")
-                if isinstance(session, SessionItem):
-                    self._shutdown_ssh_master_async(session)
-
+            # Lógica de término de processo específica da plataforma
             if not is_windows():
                 try:
+                    # MELHOR PRÁTICA: Envie o sinal para todo o grupo de processos.
+                    # Isso garante que o shell e todos os seus filhos (splits) sejam terminados.
+                    pgid = os.getpgid(pid)
                     signal_to_send = (
                         signal.SIGHUP if terminal_type == "local" else signal.SIGTERM
                     )
                     signal_name = "SIGHUP" if terminal_type == "local" else "SIGTERM"
-                    os.killpg(os.getpgid(pid), signal_to_send)
+                    os.killpg(pgid, signal_to_send)
                     self.logger.debug(
-                        f"{signal_name} sent to process group of PID {pid}."
+                        f"{signal_name} sent to process group {pgid} of PID {pid}."
                     )
                 except (ProcessLookupError, PermissionError) as e:
                     self.logger.debug(
-                        f"Could not send signal to PID {pid}, likely already exited: {e}"
+                        f"Could not send signal to process group of PID {pid}, likely already exited: {e}"
                     )
+                    # O processo já saiu, então podemos considerar a operação um sucesso.
                     return True
             else:
+                # Abordagem para Windows (sem killpg)
                 try:
                     os.kill(pid, signal.SIGTERM)
                 except (ProcessLookupError, PermissionError) as e:
@@ -905,6 +928,8 @@ class TerminalManager:
                     )
                     return True
 
+            # ROBUSTEZ: Adiciona um temporizador de fallback para enviar SIGKILL
+            # caso o processo não termine graciosamente.
             timeout_id = GLib.timeout_add(
                 5000, self._ensure_process_terminated, pid, terminal_name, terminal_id
             )
@@ -940,6 +965,8 @@ class TerminalManager:
         thread = threading.Thread(target=shutdown_task, daemon=True)
         thread.start()
 
+    # --- FIM DA CORREÇÃO ---
+
     def update_all_terminals(self) -> None:
         try:
             terminal_ids = self.registry.get_all_terminal_ids()
@@ -964,9 +991,13 @@ class TerminalManager:
         return terminals
 
     def cleanup_all_terminals(self) -> None:
+        self.logger.debug("Cleaning up TerminalManager resources.")
         if hasattr(self, "_process_check_timer_id") and self._process_check_timer_id:
             GLib.source_remove(self._process_check_timer_id)
             self._process_check_timer_id = None
+            self.logger.debug("Periodic process check timer removed.")
+
+        # Limpa os registros para evitar vazamentos de memória
         self.registry._terminals.clear()
         self.registry._terminal_refs.clear()
 
