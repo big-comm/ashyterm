@@ -78,12 +78,27 @@ def parse_command_line() -> argparse.Namespace:
         default="INFO",
         help=_("Set logging level"),
     )
-    # Other arguments can be added here as before
+    parser.add_argument(
+        '--working-directory', '-w',
+        metavar='DIR',
+        help=_('Set the working directory for the initial terminal')
+    )
+    parser.add_argument(
+        'directory',
+        nargs='?',  # Makes the positional argument optional
+        default=None,
+        help=_('Positional argument for the working directory (alternative to -w)')
+    )
     return parser.parse_args()
 
 
 def main() -> int:
     """Main entry point for the application."""
+    # We need to handle argument parsing before app.run() to pass the directory
+    original_argv = sys.argv
+    app = CommTerminalApp()
+    
+    # Parse arguments after creating the app instance
     args = parse_command_line()
 
     if args.debug:
@@ -96,9 +111,15 @@ def main() -> int:
 
     try:
         logger.info("Creating application instance")
-        app = CommTerminalApp()
+        # Determine the working directory, giving precedence to the named argument
+        working_directory = args.working_directory or args.directory
+        if working_directory:
+            app.initial_working_directory = working_directory
+            logger.info(f"Initial working directory set to: {working_directory}")
+        
         logger.info("Running application")
-        return app.run(sys.argv)
+        return app.run(original_argv)
+
     except KeyboardInterrupt:
         logger.info("Application interrupted by user.")
         return 0

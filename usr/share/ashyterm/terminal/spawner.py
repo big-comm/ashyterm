@@ -2,6 +2,7 @@
 
 import os
 import signal
+import subprocess
 import threading
 import time
 from typing import Optional, Callable, Any, TYPE_CHECKING, Dict, List
@@ -161,17 +162,12 @@ class ProcessSpawner:
         terminal: Vte.Terminal,
         callback: Optional[Callable] = None,
         user_data: Any = None,
+        working_directory: Optional[str] = None, # --- MODIFICATION START ---
     ) -> bool:
+        # --- MODIFICATION END ---
         """
         Spawn a local terminal session with enhanced platform support.
-
-        Args:
-            terminal: Vte.Terminal widget
-            callback: Optional callback function for spawn completion
-            user_data: Optional user data for callback
-
-        Returns:
-            True if spawn initiated successfully
+        ...
         """
         with self._spawn_lock:
             try:
@@ -184,8 +180,16 @@ class ProcessSpawner:
                 # Build command
                 cmd = [shell_path] + shell_args
 
-                # Get working directory
-                working_dir = str(self.platform_info.home_dir)
+                # --- MODIFICATION START ---
+                # Get working directory, using the provided one if valid
+                if working_directory and Path(working_directory).is_dir():
+                    working_dir = working_directory
+                    self.logger.debug(f"Using specified working directory: {working_dir}")
+                else:
+                    working_dir = str(self.platform_info.home_dir)
+                    if working_directory: # Log if provided path was invalid
+                        self.logger.warning(f"Invalid working directory specified: '{working_directory}'. Falling back to home directory.")
+                # --- MODIFICATION END ---
 
                 # Get environment
                 env = self.environment_manager.get_terminal_environment()

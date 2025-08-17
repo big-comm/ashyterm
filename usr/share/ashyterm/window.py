@@ -53,6 +53,7 @@ class CommTerminalWindow(Adw.ApplicationWindow):
         self.settings_manager = settings_manager
         self.is_main_window = True
         self.platform_info = get_platform_info()
+        self.initial_working_directory: Optional[str] = None
         
         # Window configuration
         self.set_default_size(1200, 700)
@@ -126,7 +127,9 @@ class CommTerminalWindow(Adw.ApplicationWindow):
         try:
             if self.tab_manager.get_tab_count() == 0:
                 self.logger.debug("Creating initial tab")
-                result = self.tab_manager.create_initial_tab_if_empty()
+                result = self.tab_manager.create_initial_tab_if_empty(
+                    working_directory=self.initial_working_directory
+                )
                 if result is None:
                     self.logger.warning("Failed to create initial tab")
                     self._show_error_dialog(
@@ -795,7 +798,7 @@ class CommTerminalWindow(Adw.ApplicationWindow):
             if not VTE_AVAILABLE:
                 raise VTENotAvailableError()
 
-            result = self.tab_manager.create_local_tab()
+            result = self.tab_manager.create_local_tab(working_directory=None)
             if result is None:
                 raise AshyTerminalError(
                     "Terminal creation failed",

@@ -452,10 +452,11 @@ class TerminalManager:
 
                 success = self.spawner.spawn_local_terminal(
                     terminal,
-                    lambda t, pid, error, data: self._on_spawn_callback(
+                    callback=lambda t, pid, error, data: self._on_spawn_callback(
                         t, pid, error, data, terminal_id
                     ),
-                    title,
+                    user_data=title,
+                    working_directory=working_directory  # Pass the directory down
                 )
 
                 if success:

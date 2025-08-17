@@ -46,6 +46,7 @@ class CommTerminalApp(Adw.Application):
         self.backup_manager = None
         self.auto_backup_scheduler = None
         self.security_auditor = None
+        self.initial_working_directory: Optional[str] = None
 
         self.platform_info = get_platform_info()
         self.logger.info(_("Running on {} platform").format(self.platform_info.platform_type.value))
@@ -268,7 +269,7 @@ class CommTerminalApp(Adw.Application):
             if not window:
                 self.logger.info(_("Creating main window"))
                 from .window import CommTerminalWindow
-                window = CommTerminalWindow(application=self, settings_manager=self.settings_manager)
+                window = self.create_new_window()
                 self._main_window = window
             
             window.present()
@@ -633,6 +634,9 @@ class CommTerminalApp(Adw.Application):
         try:
             from .window import CommTerminalWindow
             window = CommTerminalWindow(application=self, settings_manager=self.settings_manager)
+            # Pass the initial working directory to the new window instance
+            window.initial_working_directory = self.initial_working_directory
+
             self.add_window(window)
             
             self.logger.info(_("New window created successfully"))

@@ -174,8 +174,10 @@ class TabManager:
     def get_tab_bar(self) -> Adw.TabBar:
         return self.tab_bar
 
-    def create_local_tab(self, title: str = "Local") -> Optional[Adw.TabPage]:
-        terminal = self.terminal_manager.create_local_terminal(title)
+    def create_local_tab(self, title: str = "Local", working_directory: Optional[str] = None) -> Optional[Adw.TabPage]:
+        terminal = self.terminal_manager.create_local_terminal(
+            title, working_directory=working_directory
+        )
         if not terminal:
             return None
         return self._create_tab_for_terminal(terminal, title, "")
@@ -543,9 +545,9 @@ class TabManager:
             for term in self.get_all_terminals_in_page(page)
         ]
 
-    def create_initial_tab_if_empty(self) -> Optional[Adw.TabPage]:
+    def create_initial_tab_if_empty(self, working_directory: Optional[str] = None) -> Optional[Adw.TabPage]:
         if self.get_tab_count() == 0:
-            return self.create_local_tab("Local")
+            return self.create_local_tab("Local", working_directory=working_directory)
         return None
 
     def copy_from_current_terminal(self) -> bool:
