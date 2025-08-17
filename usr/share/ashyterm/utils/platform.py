@@ -564,8 +564,9 @@ class EnvironmentManager:
             # Unix-like systems
             if 'LANG' not in env:
                 env['LANG'] = 'en_US.UTF-8'
-            if 'LC_ALL' not in env:
-                env['LC_ALL'] = 'en_US.UTF-8'
+            # Disabled to open programs in the correct language.
+            #if 'LC_ALL' not in env:
+            #    env['LC_ALL'] = 'en_US.UTF-8'
         
         return env
     
