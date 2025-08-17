@@ -165,6 +165,9 @@ class CommTerminalWindow(Adw.ApplicationWindow):
                 ("split-horizontal", self._on_split_horizontal),
                 ("split-vertical", self._on_split_vertical),
                 ("close-pane", self._on_close_pane),
+                # Open URL
+                ("open-url", self._on_open_url),
+                ("copy-url", self._on_copy_url),
                 # Split navigation actions
                 ("focus-pane-up", self._on_focus_pane_up),
                 ("focus-pane-down", self._on_focus_pane_down),
@@ -1570,3 +1573,29 @@ class CommTerminalWindow(Adw.ApplicationWindow):
             super().destroy()
         except Exception as e:
             self.logger.error(f"Window destroy failed: {e}")
+            
+    def _on_open_url(self, action, param) -> None:
+        """Handle open URL action."""
+        try:
+            terminal = self.tab_manager.get_selected_terminal()
+            if terminal and hasattr(terminal, '_context_menu_url'):
+                url = terminal._context_menu_url
+                success = self.terminal_manager._open_hyperlink(url)
+                if success:
+                    self.logger.info(f"URL opened from context menu: {url}")
+                delattr(terminal, '_context_menu_url')
+        except Exception as e:
+            self.logger.error(f"Open URL action failed: {e}")
+
+    def _on_copy_url(self, action, param) -> None:
+        """Handle copy URL action."""
+        try:
+            terminal = self.tab_manager.get_selected_terminal()
+            if terminal and hasattr(terminal, '_context_menu_url'):
+                url = terminal._context_menu_url
+                clipboard = Gdk.Display.get_default().get_clipboard()
+                clipboard.set(url)
+                self.logger.info(f"URL copied to clipboard: {url}")
+                delattr(terminal, '_context_menu_url')
+        except Exception as e:
+            self.logger.error(f"Copy URL action failed: {e}")

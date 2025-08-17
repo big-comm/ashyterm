@@ -187,26 +187,63 @@ def create_root_menu(clipboard_has_content=False) -> Gio.Menu:
     return menu
 
 
-def create_terminal_menu(terminal) -> Gio.Menu:
+def create_terminal_menu(terminal, click_x=None, click_y=None) -> Gio.Menu:
     """
     Factory function to create a terminal context menu model.
+    
+    Args:
+        terminal: Vte.Terminal widget
+        click_x: X coordinate of right-click (for URL detection)
+        click_y: Y coordinate of right-click (for URL detection)
     """
     menu = Gio.Menu()
 
+    # Check for URL at click position
+    url_at_click = None
+    if click_x is not None and click_y is not None and hasattr(terminal, 'match_check'):
+        try:
+            char_width = terminal.get_char_width()
+            char_height = terminal.get_char_height()
+            
+            if char_width > 0 and char_height > 0:
+                col = int(click_x / char_width)
+                row = int(click_y / char_height)
+                
+                match_result = terminal.match_check(col, row)
+                if match_result and len(match_result) >= 2:
+                    matched_text = match_result[0]
+                    if matched_text and _is_valid_url_simple(matched_text):
+                        url_at_click = matched_text
+        except Exception:
+            pass
+
+    # URL section (if URL detected)
+    if url_at_click:
+        url_section = Gio.Menu()
+        
+        # Store URL in terminal for actions
+        terminal._context_menu_url = url_at_click
+        
+        url_section.append(_("Open Link"), "win.open-url")
+        url_section.append(_("Copy Link"), "win.copy-url")
+        menu.append_section(None, url_section)
+
     # Standard terminal operations
-    menu.append(_("Copy"), "win.copy")
-    menu.append(_("Paste"), "win.paste")
-    menu.append(_("Select All"), "win.select-all")
+    standard_section = Gio.Menu()
+    standard_section.append(_("Copy"), "win.copy")
+    standard_section.append(_("Paste"), "win.paste")
+    standard_section.append(_("Select All"), "win.select-all")
+    menu.append_section(None, standard_section)
 
     # Splitting options
     split_section = Gio.Menu()
 
-    # Create menu item for horizontal split with a more standard icon name
+    # Create menu item for horizontal split
     split_h_item = Gio.MenuItem.new(_("Split Horizontally"), "win.split-horizontal")
     split_h_item.set_icon(Gio.ThemedIcon.new("view-split-horizontal-symbolic"))
     split_section.append_item(split_h_item)
 
-    # Create menu item for vertical split with a more standard icon name
+    # Create menu item for vertical split
     split_v_item = Gio.MenuItem.new(_("Split Vertically"), "win.split-vertical")
     split_v_item.set_icon(Gio.ThemedIcon.new("view-split-vertical-symbolic"))
     split_section.append_item(split_v_item)
@@ -216,3 +253,8 @@ def create_terminal_menu(terminal) -> Gio.Menu:
     menu.append_section(None, split_section)
 
     return menu
+
+def _is_valid_url_simple(text: str) -> bool:
+    """Simple URL validation for menu."""
+    text = text.strip()
+    return any(text.startswith(scheme) for scheme in ['http://', 'https://', 'ftp://'])
