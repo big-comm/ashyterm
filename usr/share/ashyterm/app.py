@@ -633,18 +633,48 @@ class CommTerminalApp(Adw.Application):
         """
         try:
             from .window import CommTerminalWindow
-            window = CommTerminalWindow(application=self, settings_manager=self.settings_manager)
-            # Pass the initial working directory to the new window instance
-            window.initial_working_directory = self.initial_working_directory
+            
+            # Pass working directory directly in constructor
+            window = CommTerminalWindow(
+                application=self, 
+                settings_manager=self.settings_manager,
+                initial_working_directory=self.initial_working_directory
+            )
 
             self.add_window(window)
             
-            self.logger.info(_("New window created successfully"))
+            if self.initial_working_directory:
+                self.logger.info(_("New window created with working directory: {}").format(
+                    self.initial_working_directory))
+            else:
+                self.logger.info(_("New window created successfully"))
             return window
             
         except Exception as e:
             self.logger.error(_("Failed to create new window: {}").format(e))
             raise
+
+    def _on_activate(self, app) -> None:
+        """Handle application activation."""
+        try:
+            self.logger.debug(_("Application activation requested"))
+            
+            window = self.get_active_window()
+            if not window:
+                self.logger.info(_("Creating main window"))
+                from .window import CommTerminalWindow
+                window = self.create_new_window()
+                self._main_window = window
+            
+            window.present()
+            
+            self._update_window_shortcuts()
+            
+            self.logger.debug(_("Application activation completed"))
+            
+        except Exception as e:
+            self.logger.error(_("Application activation failed: {}").format(e))
+            self._show_error_dialog(_("Activation Error"), _("Failed to activate application: {}").format(e))
     
     def get_backup_manager(self):
         """Get the backup manager instance."""

@@ -35,13 +35,14 @@ from .utils.translation_utils import _
 class CommTerminalWindow(Adw.ApplicationWindow):
     """Main application window with enhanced functionality."""
     
-    def __init__(self, application, settings_manager: SettingsManager):
+    def __init__(self, application, settings_manager: SettingsManager, initial_working_directory: Optional[str] = None):
         """
         Initialize the main window.
         
         Args:
             application: Gtk.Application instance
             settings_manager: SettingsManager instance
+            initial_working_directory: Optional initial working directory for terminals
         """
         super().__init__(application=application)
         
@@ -53,7 +54,10 @@ class CommTerminalWindow(Adw.ApplicationWindow):
         self.settings_manager = settings_manager
         self.is_main_window = True
         self.platform_info = get_platform_info()
-        self.initial_working_directory: Optional[str] = None
+        self.initial_working_directory = initial_working_directory
+        
+        if self.initial_working_directory:
+            self.logger.info(f"Window initialized with working directory: {self.initial_working_directory}")
         
         # Window configuration
         self.set_default_size(1200, 700)

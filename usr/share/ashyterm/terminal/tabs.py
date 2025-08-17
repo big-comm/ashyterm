@@ -175,6 +175,11 @@ class TabManager:
         return self.tab_bar
 
     def create_local_tab(self, title: str = "Local", working_directory: Optional[str] = None) -> Optional[Adw.TabPage]:
+        if working_directory:
+            self.logger.debug(f"Creating local tab '{title}' with working directory: {working_directory}")
+        else:
+            self.logger.debug(f"Creating local tab '{title}' with default working directory")
+            
         terminal = self.terminal_manager.create_local_terminal(
             title, working_directory=working_directory
         )
@@ -547,6 +552,8 @@ class TabManager:
 
     def create_initial_tab_if_empty(self, working_directory: Optional[str] = None) -> Optional[Adw.TabPage]:
         if self.get_tab_count() == 0:
+            if working_directory:
+                self.logger.info(f"Creating initial tab with working directory: {working_directory}")
             return self.create_local_tab("Local", working_directory=working_directory)
         return None
 

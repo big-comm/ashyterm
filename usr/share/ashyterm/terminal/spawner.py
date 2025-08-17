@@ -162,12 +162,19 @@ class ProcessSpawner:
         terminal: Vte.Terminal,
         callback: Optional[Callable] = None,
         user_data: Any = None,
-        working_directory: Optional[str] = None, # --- MODIFICATION START ---
+        working_directory: Optional[str] = None,
     ) -> bool:
-        # --- MODIFICATION END ---
         """
         Spawn a local terminal session with enhanced platform support.
-        ...
+        
+        Args:
+            terminal: Vte.Terminal widget
+            callback: Optional callback function for spawn completion
+            user_data: Optional user data for callback
+            working_directory: Optional working directory for the terminal
+        
+        Returns:
+            True if spawn initiated successfully
         """
         with self._spawn_lock:
             try:
@@ -180,16 +187,15 @@ class ProcessSpawner:
                 # Build command
                 cmd = [shell_path] + shell_args
 
-                # --- MODIFICATION START ---
-                # Get working directory, using the provided one if valid
-                if working_directory and Path(working_directory).is_dir():
-                    working_dir = working_directory
-                    self.logger.debug(f"Using specified working directory: {working_dir}")
+                # Resolve working directory with comprehensive validation
+                working_dir = self._resolve_and_validate_working_directory(working_directory)
+                
+                if working_directory and working_dir:
+                    self.logger.info(f"Using working directory: {working_dir}")
+                elif working_directory and not working_dir:
+                    self.logger.warning(f"Invalid working directory '{working_directory}', using home directory: {self.platform_info.home_dir}")
                 else:
-                    working_dir = str(self.platform_info.home_dir)
-                    if working_directory: # Log if provided path was invalid
-                        self.logger.warning(f"Invalid working directory specified: '{working_directory}'. Falling back to home directory.")
-                # --- MODIFICATION END ---
+                    self.logger.debug(f"Using default working directory: {working_dir}")
 
                 # Get environment
                 env = self.environment_manager.get_terminal_environment()
@@ -665,6 +671,52 @@ class ProcessSpawner:
             return "SSH command not found or SSH key file missing"
         else:
             return "Check your SSH configuration and network connectivity"
+    
+    def _resolve_and_validate_working_directory(self, working_directory: Optional[str]) -> str:
+        """
+        Resolve and validate working directory with comprehensive error handling.
+        
+        Args:
+            working_directory: Working directory path to resolve
+            
+        Returns:
+            Valid working directory path (falls back to home if invalid)
+        """
+        if not working_directory:
+            return str(self.platform_info.home_dir)
+        
+        try:
+            import os
+            from pathlib import Path
+            
+            # Expand user home directory and environment variables
+            expanded_path = os.path.expanduser(os.path.expandvars(working_directory))
+            
+            # Convert to absolute path
+            resolved_path = os.path.abspath(expanded_path)
+            
+            # Create Path object for validation
+            path_obj = Path(resolved_path)
+            
+            # Comprehensive validation
+            if not path_obj.exists():
+                self.logger.error(f"Working directory does not exist: {working_directory}")
+                return str(self.platform_info.home_dir)
+            
+            if not path_obj.is_dir():
+                self.logger.error(f"Working directory is not a directory: {working_directory}")
+                return str(self.platform_info.home_dir)
+            
+            if not os.access(resolved_path, os.R_OK | os.X_OK):
+                self.logger.error(f"Working directory is not accessible: {working_directory}")
+                return str(self.platform_info.home_dir)
+            
+            self.logger.debug(f"Working directory validated successfully: {resolved_path}")
+            return resolved_path
+            
+        except Exception as e:
+            self.logger.error(f"Error validating working directory '{working_directory}': {e}")
+            return str(self.platform_info.home_dir)
     
     def cleanup_process(self, pid: int) -> None:
         """

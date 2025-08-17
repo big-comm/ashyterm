@@ -358,6 +358,41 @@ class TerminalManager:
         )
         self._update_title(terminal)
         return False
+    
+    def _resolve_working_directory(self, working_directory: Optional[str]) -> Optional[str]:
+        """
+        Resolve and validate working directory.
+        
+        Args:
+            working_directory: Working directory path to resolve
+            
+        Returns:
+            Resolved path or None if invalid
+        """
+        if not working_directory:
+            return None
+        
+        try:
+            import os
+            from pathlib import Path
+            
+            # Expand user home and environment variables
+            expanded_path = os.path.expanduser(os.path.expandvars(working_directory))
+            
+            # Convert to absolute path
+            resolved_path = os.path.abspath(expanded_path)
+            
+            # Validate directory exists and is accessible
+            path_obj = Path(resolved_path)
+            if path_obj.exists() and path_obj.is_dir() and os.access(resolved_path, os.R_OK | os.X_OK):
+                return resolved_path
+            else:
+                self.logger.warning(f"Working directory not accessible: {working_directory}")
+                return None
+                
+        except Exception as e:
+            self.logger.error(f"Error resolving working directory '{working_directory}': {e}")
+            return None
 
     def _on_directory_uri_changed(self, terminal: Vte.Terminal, param_spec):
         """Manipula o sinal notify::current-directory-uri do VTE, que é muito mais eficiente."""
@@ -438,7 +473,10 @@ class TerminalManager:
                 raise VTENotAvailableError()
 
             try:
-                self.logger.debug(f"Creating local terminal: '{title}'")
+                if working_directory:
+                    self.logger.debug(f"Creating local terminal: '{title}' with working directory: '{working_directory}'")
+                else:
+                    self.logger.debug(f"Creating local terminal: '{title}' with default working directory")
 
                 terminal = self._create_base_terminal()
                 if not terminal:
@@ -450,13 +488,18 @@ class TerminalManager:
 
                 self._setup_terminal_events(terminal, title, terminal_id)
 
+                # Validate and resolve working directory before passing to spawner
+                resolved_working_dir = self._resolve_working_directory(working_directory)
+                if working_directory and not resolved_working_dir:
+                    self.logger.warning(f"Invalid working directory '{working_directory}' for terminal '{title}', using default")
+
                 success = self.spawner.spawn_local_terminal(
                     terminal,
                     callback=lambda t, pid, error, data: self._on_spawn_callback(
                         t, pid, error, data, terminal_id
                     ),
                     user_data=title,
-                    working_directory=working_directory  # Pass the directory down
+                    working_directory=resolved_working_dir
                 )
 
                 if success:

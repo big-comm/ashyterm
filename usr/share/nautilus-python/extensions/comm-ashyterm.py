@@ -80,18 +80,10 @@ class OpenAshyTermExtension(GObject.GObject, Nautilus.MenuProvider):
 
     def _open_terminal(self, file_):
         if file_.get_uri_scheme() in REMOTE_URI_SCHEME:
-            result = urlparse(file_.get_uri())
-            if result.username:
-                value = 'ssh -t {0}@{1}'.format(result.username,
-                                                result.hostname)
-            else:
-                value = 'ssh -t {0}'.format(result.hostname)
-            if result.port:
-                value = "{0} -p {1}".format(value, result.port)
-            if file_.is_directory():
-                value = '{0} cd {1} ; $SHELL'.format(value, shlex.quote(result.path))
-
-            Popen([TERMINAL, '-e', value])
+            # For remote connections, just open terminal and let user type SSH command
+            # or implement SSH session creation via session manager
+            Popen([TERMINAL])
+            # TODO: In future, could create SSH session via session manager
         else:
             filename = Gio.File.new_for_uri(file_.get_uri()).get_path()
             open_terminal_in_file(filename)
