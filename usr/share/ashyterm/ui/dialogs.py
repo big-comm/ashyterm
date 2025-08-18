@@ -102,7 +102,24 @@ class BaseDialog(Adw.Window):
         self._original_data: Optional[Dict[str, Any]] = None
         
         self.logger.debug(f"Dialog initialized: {dialog_title}")
+
+        # ADICIONADO: Controlador de eventos de teclado para a tecla Escape.
+        key_controller = Gtk.EventControllerKey()
+        key_controller.connect("key-pressed", self._on_key_pressed)
+        self.add_controller(key_controller)
     
+    def _on_key_pressed(self, controller, keyval, keycode, state):
+        """Handle key presses for the dialog (e.g., Escape to cancel)."""
+        if keyval == Gdk.KEY_Escape:
+            # Aciona a mesma lógica do botão de cancelar.
+            self._on_cancel_clicked(None)
+            return Gdk.EVENT_STOP
+        return Gdk.EVENT_PROPAGATE
+
+    def _on_cancel_clicked(self, button):
+        """Default cancel action. Subclasses can override this."""
+        self.close()
+
     def _mark_changed(self):
         """Mark dialog as having unsaved changes."""
         self._has_changes = True
@@ -335,6 +352,10 @@ class SessionEditDialog(BaseDialog):
                 hexpand=True,
             )
             self.name_entry.connect("changed", self._on_name_changed)
+            # --- CÓDIGO MODIFICADO (INÍCIO) ---
+            # ADICIONADO: Conecta a tecla Enter para salvar.
+            self.name_entry.connect("activate", self._on_save_clicked)
+            # --- CÓDIGO MODIFICADO (FIM) ---
 
             name_row.add_suffix(self.name_entry)
             name_row.set_activatable_widget(self.name_entry)
@@ -443,6 +464,10 @@ class SessionEditDialog(BaseDialog):
                 hexpand=True,
             )
             self.host_entry.connect("changed", self._on_host_changed)
+            # --- CÓDIGO MODIFICADO (INÍCIO) ---
+            # ADICIONADO: Conecta a tecla Enter para salvar.
+            self.host_entry.connect("activate", self._on_save_clicked)
+            # --- CÓDIGO MODIFICADO (FIM) ---
 
             host_row.add_suffix(self.host_entry)
             host_row.set_activatable_widget(self.host_entry)
@@ -460,6 +485,10 @@ class SessionEditDialog(BaseDialog):
                 hexpand=True,
             )
             self.user_entry.connect("changed", self._on_user_changed)
+            # --- CÓDIGO MODIFICADO (INÍCIO) ---
+            # ADICIONADO: Conecta a tecla Enter para salvar.
+            self.user_entry.connect("activate", self._on_save_clicked)
+            # --- CÓDIGO MODIFICADO (FIM) ---
 
             user_row.add_suffix(self.user_entry)
             user_row.set_activatable_widget(self.user_entry)
@@ -528,6 +557,10 @@ class SessionEditDialog(BaseDialog):
                 hexpand=True,
             )
             self.key_path_entry.connect("changed", self._on_key_path_changed)
+            # --- CÓDIGO MODIFICADO (INÍCIO) ---
+            # ADICIONADO: Conecta a tecla Enter para salvar.
+            self.key_path_entry.connect("activate", self._on_save_clicked)
+            # --- CÓDIGO MODIFICADO (FIM) ---
 
             self.browse_button = Gtk.Button(label=_("Browse..."), css_classes=["flat"])
             self.browse_button.connect("clicked", self._on_browse_key_clicked)
@@ -588,6 +621,10 @@ class SessionEditDialog(BaseDialog):
                 hexpand=True,
             )
             self.password_entry.connect("changed", self._on_password_changed)
+            # --- CÓDIGO MODIFICADO (INÍCIO) ---
+            # ADICIONADO: Conecta a tecla Enter para salvar.
+            self.password_entry.connect("activate", self._on_save_clicked)
+            # --- CÓDIGO MODIFICADO (FIM) ---
 
             password_row.add_suffix(self.password_entry)
             password_row.set_activatable_widget(self.password_entry)
@@ -620,6 +657,9 @@ class SessionEditDialog(BaseDialog):
             save_button = Gtk.Button(label=_("Save"), css_classes=["suggested-action"])
             save_button.connect("clicked", self._on_save_clicked)
             action_bar.pack_end(save_button)
+
+            # ADICIONADO: Define o botão Salvar como o widget padrão para a tecla Enter.
+            self.set_default_widget(save_button)
 
             return action_bar
 
@@ -1189,6 +1229,10 @@ class FolderEditDialog(BaseDialog):
                 hexpand=True,
             )
             self.name_entry.connect("changed", self._on_name_changed)
+            # --- CÓDIGO MODIFICADO (INÍCIO) ---
+            # ADICIONADO: Conecta a tecla Enter para salvar.
+            self.name_entry.connect("activate", self._on_save_clicked)
+            # --- CÓDIGO MODIFICADO (FIM) ---
 
             name_row.add_suffix(self.name_entry)
             name_row.set_activatable_widget(self.name_entry)
@@ -1266,6 +1310,9 @@ class FolderEditDialog(BaseDialog):
             save_button = Gtk.Button(label=_("Save"), css_classes=["suggested-action"])
             save_button.connect("clicked", self._on_save_clicked)
             action_bar.pack_end(save_button)
+
+            # ADICIONADO: Define o botão Salvar como o widget padrão para a tecla Enter.
+            self.set_default_widget(save_button)
 
             return action_bar
 
