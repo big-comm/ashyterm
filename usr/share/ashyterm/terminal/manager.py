@@ -21,8 +21,7 @@ import gi
 gi.require_version("Gtk", "4.0")
 gi.require_version("Vte", "3.91")
 
-from gi.repository import Gtk, Gdk, GLib
-from gi.repository import Vte
+from gi.repository import Gtk, Adw, Gio, GLib, Gdk, Vte
 
 from ..sessions.models import SessionItem
 from ..settings.manager import SettingsManager
@@ -629,7 +628,7 @@ class TerminalManager:
             )
             terminal.connect("eof", self._on_eof, identifier, terminal_id)
 
-            # CORREÇÃO DE PERFORMANCE: Use o sinal otimizado do VTE para OSC7
+            # OSC7 directory tracking (Your existing correct code)
             terminal.connect(
                 "notify::current-directory-uri", self._on_directory_uri_changed
             )
@@ -639,9 +638,10 @@ class TerminalManager:
             )
             self.manual_ssh_tracker.track(terminal_id, terminal)
 
-            # A chamada ao osc7_tracker agora é desnecessária aqui, pois o manager lida com o sinal
-            # self.osc7_tracker.track_terminal(terminal, terminal_name)
+            # Setup VTE native hyperlink support
+            self._setup_native_hyperlinks(terminal, terminal_id) # MODIFICATION: Call new helper
 
+            # Focus controllers
             focus_controller = Gtk.EventControllerFocus()
             focus_controller.connect(
                 "enter", self._on_terminal_focus_in, terminal, terminal_id
@@ -651,8 +651,9 @@ class TerminalManager:
             )
             terminal.add_controller(focus_controller)
 
+            # Click controller for focus and hyperlink handling
             click_controller = Gtk.GestureClick()
-            click_controller.set_button(0)
+            click_controller.set_button(1)  # Left button only
             click_controller.connect(
                 "pressed", self._on_terminal_clicked, terminal, terminal_id
             )
@@ -661,12 +662,12 @@ class TerminalManager:
             terminal.terminal_id = terminal_id
 
             self.logger.debug(
-                f"Eventos do terminal configurados para o ID: {terminal_id}"
+                f"Terminal events configured for ID: {terminal_id}"
             )
 
         except Exception as e:
             self.logger.error(
-                f"Falha ao configurar eventos do terminal para o ID {terminal_id}: {e}"
+                f"Failed to configure terminal events for ID {terminal_id}: {e}"
             )
 
     def _setup_context_menu(self, terminal: Vte.Terminal) -> None:
@@ -686,7 +687,10 @@ class TerminalManager:
 
     def _on_terminal_right_click_pressed(self, gesture, n_press, x, y, terminal):
         try:
-            menu_model = create_terminal_menu(terminal)
+            self.logger.debug(f"Right click at ({x}, {y})")
+            
+            # Create menu with click coordinates for URL detection
+            menu_model = create_terminal_menu(terminal, int(x), int(y))
             popover = Gtk.PopoverMenu.new_from_model(menu_model)
             popover.set_parent(terminal)
             rect = Gdk.Rectangle()
@@ -697,14 +701,55 @@ class TerminalManager:
             self.logger.error(f"Terminal right click handling failed: {e}")
 
     def _on_terminal_clicked(self, gesture, n_press, x, y, terminal, terminal_id):
+        """Handle terminal clicks for focus and hyperlink opening."""
         try:
+            # Check for hovered hyperlink first
+            if hasattr(terminal, '_hovered_hyperlink') and terminal._hovered_hyperlink:
+                hyperlink_uri = terminal._hovered_hyperlink
+                success = self._open_hyperlink(hyperlink_uri)
+                if success:
+                    self.logger.info(f"Hyperlink opened from terminal {terminal_id}: {hyperlink_uri}")
+                    return Gdk.EVENT_STOP
+            
+            # Try VTE's match detection at click position using coordinates
+            if hasattr(terminal, 'match_check'):
+                try:
+                    # Convert click coordinates to character column/row
+                    char_width = terminal.get_char_width()
+                    char_height = terminal.get_char_height()
+                    
+                    if char_width > 0 and char_height > 0:
+                        col = int(x / char_width)
+                        row = int(y / char_height)
+                        
+                        # Try match_check with coordinates
+                        match_result = terminal.match_check(col, row)
+                        
+                        if match_result and len(match_result) >= 2:
+                            matched_text = match_result[0]
+                            tag = match_result[1]
+                            
+                            self.logger.debug(f"Match found at ({col}, {row}): '{matched_text}' (tag: {tag})")
+                            
+                            if matched_text and self._is_valid_url(matched_text):
+                                success = self._open_hyperlink(matched_text)
+                                if success:
+                                    self.logger.info(f"Matched URL opened: {matched_text}")
+                                    return Gdk.EVENT_STOP
+                                
+                except Exception as e:
+                    self.logger.debug(f"Match check failed: {e}")
+            
+            # Normal focus handling
             terminal.grab_focus()
             self.registry.update_terminal_status(terminal_id, "focused")
             if self.on_terminal_focus_changed:
                 self.on_terminal_focus_changed(terminal, False)
+            
             return Gdk.EVENT_PROPAGATE
+            
         except Exception as e:
-            self.logger.error(f"Terminal click handling failed: {e}")
+            self.logger.error(f"Terminal click handling failed for terminal {terminal_id}: {e}")
             return Gdk.EVENT_PROPAGATE
 
     def _on_terminal_focus_in(self, controller, terminal, terminal_id):
@@ -839,9 +884,15 @@ class TerminalManager:
                 f"Cleaning up resources for terminal '{terminal_name}' (ID: {terminal_id})"
             )
 
+            # Clean up tracking systems
             self.osc7_tracker.untrack_terminal(terminal)
             self.manual_ssh_tracker.untrack(terminal_id)
+            
+            # Clean up hyperlink state
+            if hasattr(terminal, '_hovered_hyperlink'):
+                delattr(terminal, '_hovered_hyperlink')
 
+            # Unregister from registry
             success = self.registry.unregister_terminal(terminal_id)
             if success:
                 self._stats["terminals_closed"] += 1
@@ -849,6 +900,7 @@ class TerminalManager:
                     "removed", terminal_name, "terminal resources cleaned"
                 )
 
+            # Cancel any pending SIGKILL timers
             if terminal_id in self._pending_kill_timers:
                 timeout_id = self._pending_kill_timers.pop(terminal_id)
                 GLib.source_remove(timeout_id)
@@ -861,7 +913,6 @@ class TerminalManager:
 
         return self.remove_terminal(terminal, force_kill_group=False)
 
-    # --- INÍCIO DA CORREÇÃO ---
     def _on_spawn_callback(
         self,
         terminal: Vte.Terminal,
@@ -1008,8 +1059,6 @@ class TerminalManager:
 
         thread = threading.Thread(target=shutdown_task, daemon=True)
         thread.start()
-
-    # --- FIM DA CORREÇÃO ---
 
     def update_all_terminals(self) -> None:
         try:
@@ -1166,3 +1215,159 @@ class TerminalManager:
                 ):
                     count += 1
         return count
+    
+    def _setup_native_hyperlinks(self, terminal: Vte.Terminal, terminal_id: int) -> None:
+        """Setup VTE's native hyperlink support with URL regex patterns."""
+        try:
+            # Enable VTE's built-in hyperlink detection
+            terminal.set_allow_hyperlink(True)
+            
+            # Configure URL detection patterns
+            self._configure_url_patterns(terminal)
+            
+            # Connect to VTE's native hyperlink hover signal
+            terminal.connect("hyperlink-hover-uri-changed", self._on_hyperlink_hover, terminal_id)
+            
+            self.logger.debug(f"Native hyperlink support with patterns enabled for terminal {terminal_id}")
+            
+        except Exception as e:
+            self.logger.error(f"Failed to setup native hyperlinks for terminal {terminal_id}: {e}")
+
+    def _on_hyperlink_hover(self, terminal: Vte.Terminal, uri: str, bbox, terminal_id: int):
+        """Handle VTE's native hyperlink hover signal."""
+        try:
+            if uri:
+                # Store the currently hovered URI for click handling
+                terminal._hovered_hyperlink = uri
+                self.logger.debug(f"Hyperlink hovered in terminal {terminal_id}: {uri}")
+            else:
+                # Clear hovered URI when mouse leaves hyperlink
+                if hasattr(terminal, '_hovered_hyperlink'):
+                    delattr(terminal, '_hovered_hyperlink')
+                    self.logger.debug(f"Hyperlink hover cleared in terminal {terminal_id}")
+            
+        except Exception as e:
+            self.logger.error(f"Hyperlink hover handling failed for terminal {terminal_id}: {e}")
+            
+    def _open_hyperlink(self, uri: str) -> bool:
+        """Open hyperlink using system default handler."""
+        try:
+            import subprocess
+            import webbrowser
+            import sys
+            from urllib.parse import urlparse
+            
+            if not uri or not uri.strip():
+                self.logger.warning("Empty or invalid URI provided")
+                return False
+            
+            uri = uri.strip()
+            
+            # Basic URI validation
+            try:
+                parsed = urlparse(uri)
+                if not parsed.scheme:
+                    self.logger.warning(f"URI missing scheme: {uri}")
+                    return False
+            except Exception as e:
+                self.logger.warning(f"Invalid URI format: {uri} - {e}")
+                return False
+            
+            self.logger.info(f"Opening hyperlink: {uri}")
+            
+            # Platform-specific opening using sys.platform
+            if sys.platform == 'win32':
+                subprocess.run(['cmd', '/c', 'start', '', uri], check=True, timeout=10)
+            elif sys.platform == 'darwin':
+                subprocess.run(['open', uri], check=True, timeout=10)
+            else:
+                # Linux/Unix - try xdg-open first, fallback to webbrowser
+                try:
+                    # Try to force focus on the browser window
+                    subprocess.run(['xdg-open', uri], check=True, timeout=10)
+                    
+                    # Additional attempt to bring browser to front
+                    GLib.timeout_add(500, self._try_focus_browser)
+                    
+                except (FileNotFoundError, subprocess.SubprocessError):
+                    # Fallback to Python webbrowser module
+                    webbrowser.open(uri)
+            
+            return True
+            
+        except subprocess.TimeoutExpired:
+            self.logger.error(f"Timeout opening hyperlink: {uri}")
+            return False
+        except Exception as e:
+            self.logger.error(f"Failed to open hyperlink '{uri}': {e}")
+            return False
+        
+    def _configure_url_patterns(self, terminal: Vte.Terminal) -> None:
+        """Configure URL detection patterns for the terminal."""
+        try:
+            # URL regex patterns
+            url_patterns = [
+                # HTTP/HTTPS URLs
+                r'https?://[^\s<>"{}|\\^`\[\]]+[^\s<>"{}|\\^`\[\].,;:!?]',
+                # FTP URLs  
+                r'ftp://[^\s<>"{}|\\^`\[\]]+[^\s<>"{}|\\^`\[\].,;:!?]',
+                # Email addresses
+                r'[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}',
+            ]
+            
+            # Try VTE.Regex first (newer VTE versions)
+            if hasattr(terminal, 'match_add_regex') and hasattr(Vte, 'Regex'):
+                for pattern in url_patterns:
+                    try:
+                        # Use Vte.Regex instead of GLib.Regex
+                        regex = Vte.Regex.new_for_match(pattern, len(pattern.encode()), 0)
+                        tag = terminal.match_add_regex(regex, 0)
+                        
+                        # Set match as hyperlink
+                        if hasattr(terminal, 'match_set_cursor_name'):
+                            terminal.match_set_cursor_name(tag, "pointer")
+                        
+                        self.logger.debug(f"URL pattern added (Vte.Regex): {pattern} (tag: {tag})")
+                        
+                    except Exception as e:
+                        self.logger.warning(f"Failed to add VTE regex pattern '{pattern}': {e}")
+            
+            # Fallback to GLib.Regex for older versions
+            elif hasattr(terminal, 'match_add_gregex'):
+                from gi.repository import GLib
+                for pattern in url_patterns:
+                    try:
+                        regex = GLib.Regex.new(pattern, GLib.RegexCompileFlags.OPTIMIZE, 0)
+                        tag = terminal.match_add_gregex(regex, 0)
+                        terminal.match_set_cursor_type(tag, 2)  # Hand cursor
+                        self.logger.debug(f"URL pattern added (GLib.Regex): {pattern} (tag: {tag})")
+                    except Exception as e:
+                        self.logger.warning(f"Failed to add GLib regex pattern '{pattern}': {e}")
+            
+            else:
+                self.logger.warning("No URL pattern matching method available in VTE")
+            
+        except Exception as e:
+            self.logger.error(f"Failed to configure URL patterns: {e}")
+            
+    def _is_valid_url(self, text: str) -> bool:
+        """Check if text is a valid URL."""
+        try:
+            from urllib.parse import urlparse
+            result = urlparse(text.strip())
+            return bool(result.scheme and result.netloc)
+        except Exception:
+            return False
+        
+    def _try_focus_browser(self) -> bool:
+        """Try to bring browser window to front."""
+        try:
+            # Try to focus browser using wmctrl if available
+            subprocess.run(['wmctrl', '-a', 'firefox'], timeout=2, capture_output=True)
+        except (FileNotFoundError, subprocess.SubprocessError):
+            try:
+                # Alternative: try with chrome/chromium
+                subprocess.run(['wmctrl', '-a', 'chrome'], timeout=2, capture_output=True)
+            except (FileNotFoundError, subprocess.SubprocessError):
+                pass
+        return False  # Don't repeat

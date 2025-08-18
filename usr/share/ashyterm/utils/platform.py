@@ -561,12 +561,23 @@ class EnvironmentManager:
             # Windows-specific environment
             env['PYTHONIOENCODING'] = 'utf-8'
         else:
-            # Unix-like systems
+            # Unix-like systems - preserve user's locale, fallback to system default
             if 'LANG' not in env:
-                env['LANG'] = 'en_US.UTF-8'
-            # Disabled to open programs in the correct language.
-            #if 'LC_ALL' not in env:
-            #    env['LC_ALL'] = 'en_US.UTF-8'
+                # Try to detect system locale instead of forcing English
+                import locale
+                try:
+                    system_locale = locale.getdefaultlocale()[0]
+                    if system_locale:
+                        env['LANG'] = f'{system_locale}.UTF-8'
+                    else:
+                        env['LANG'] = 'C.UTF-8'  # Neutral fallback instead of en_US
+                except:
+                    env['LANG'] = 'C.UTF-8'
+            
+            # Only set LC_ALL if absolutely necessary
+            # Usually LANG is sufficient and LC_ALL can override user preferences
+            if 'LC_ALL' not in env and 'LANG' not in os.environ:
+                env['LC_ALL'] = env['LANG']
         
         return env
     

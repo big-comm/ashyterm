@@ -253,6 +253,7 @@ class SecureStorage:
         """
         try:
             if not self.config_file.exists() or not self.salt_file.exists():
+                self.logger.debug("Master key files not found - first run or missing keys")
                 return None
             
             # Load configuration
@@ -313,7 +314,7 @@ class SecureStorage:
             raise EncryptionError("key loading", str(e))
     
     def initialize(self, passphrase: Optional[str] = None, 
-                  force_create: bool = False) -> bool:
+              force_create: bool = False) -> bool:
         """
         Initialize secure storage with master key.
         
@@ -325,10 +326,29 @@ class SecureStorage:
             True if initialization successful
         """
         try:
-            if force_create or not self._has_master_key():
+            self.logger.debug(f"Initializing secure storage - force_create: {force_create}")
+            has_key = self._has_master_key()
+            self.logger.debug(f"Has existing master key: {has_key}")
+            
+            if force_create or not has_key:
+                self.logger.debug("Creating new master key")
                 self._master_key = self._create_master_key(passphrase)
             else:
-                self._master_key = self._load_master_key(passphrase)
+                self.logger.debug("Loading existing master key")
+                try:
+                    self._master_key = self._load_master_key(passphrase)
+                except Exception as e:
+                    from cryptography.fernet import InvalidToken
+                    if isinstance(e, InvalidToken):
+                        self.logger.warning("Corrupted master key detected, regenerating...")
+                        # Remove corrupted files
+                        for file_path in [self.key_file, self.salt_file, self.config_file]:
+                            if file_path.exists():
+                                file_path.unlink()
+                        # Create new key
+                        self._master_key = self._create_master_key(passphrase)
+                    else:
+                        raise
             
             if self._master_key:
                 # Create Fernet instance
@@ -337,10 +357,12 @@ class SecureStorage:
                 self.logger.info("Secure storage initialized successfully")
                 return True
             
+            self.logger.warning("Failed to initialize secure storage - no master key available")
             return False
             
         except Exception as e:
-            self.logger.error(f"Failed to initialize secure storage: {e}")
+            error_msg = str(e) if str(e) else f"Unknown error of type {type(e).__name__}"
+            self.logger.error(f"Failed to initialize secure storage: {error_msg}")
             raise
     
     def _has_master_key(self) -> bool:
@@ -577,7 +599,8 @@ def initialize_encryption(passphrase: Optional[str] = None) -> bool:
         return storage.initialize(passphrase)
     except Exception as e:
         logger = get_logger('ashyterm.crypto')
-        logger.error(f"Failed to initialize encryption: {e}")
+        error_msg = str(e) if str(e) else f"Unknown error of type {type(e).__name__}"
+        logger.error(f"Failed to initialize encryption: {error_msg}")
         return False
 
 

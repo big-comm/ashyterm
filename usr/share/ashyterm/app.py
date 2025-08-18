@@ -36,7 +36,7 @@ class CommTerminalApp(Adw.Application):
     
     def __init__(self):
         """Initialize the application with comprehensive setup."""
-        super().__init__(application_id=APP_ID, flags=Gio.ApplicationFlags.FLAGS_NONE)
+        super().__init__(application_id=APP_ID, flags=Gio.ApplicationFlags.HANDLES_COMMAND_LINE)
         GLib.set_prgname(APP_ID)
         self.logger = get_logger('ashyterm.app')
         self.logger.info(_("Initializing {} v{}").format(APP_TITLE, APP_VERSION))
@@ -57,6 +57,7 @@ class CommTerminalApp(Adw.Application):
         self.connect("startup", self._on_startup)
         self.connect("activate", self._on_activate)
         self.connect("shutdown", self._on_shutdown)
+        self.connect("command-line", self._on_command_line)
 
         atexit.register(self._cleanup_on_exit)
 
@@ -281,6 +282,89 @@ class CommTerminalApp(Adw.Application):
         except Exception as e:
             self.logger.error(_("Application activation failed: {}").format(e))
             self._show_error_dialog(_("Activation Error"), _("Failed to activate application: {}").format(e))
+    
+    def do_command_line(self, command_line):
+        """Handle command line arguments for new instances."""
+        try:
+            options = command_line.get_options_dict()
+            arguments = command_line.get_arguments()
+            
+            working_directory = None
+            
+            # Check for working directory option
+            if options.contains("working-directory"):
+                working_directory = options.lookup_value("working-directory").get_string()
+            elif len(arguments) > 1:  # First argument is program name
+                working_directory = arguments[1]
+            
+            if working_directory:
+                # Resolve and validate working directory
+                working_directory = self._resolve_working_directory(working_directory)
+                if working_directory:
+                    self.initial_working_directory = working_directory
+                    self.logger.info(f"Command line working directory set: {working_directory}")
+            
+            # Always create new window when called from command line
+            self._create_new_window_from_command_line()
+            
+            return 0
+            
+        except Exception as e:
+            self.logger.error(f"Command line handling failed: {e}")
+            return 1
+
+    def _resolve_working_directory(self, working_dir: str) -> Optional[str]:
+        """Resolve and validate working directory path."""
+        if not working_dir:
+            return None
+        
+        try:
+            import os
+            # Expand user home directory and environment variables
+            expanded_path = os.path.expanduser(os.path.expandvars(working_dir))
+            
+            # Convert to absolute path
+            resolved_path = os.path.abspath(expanded_path)
+            
+            # Validate that directory exists and is accessible
+            if os.path.isdir(resolved_path) and os.access(resolved_path, os.R_OK | os.X_OK):
+                return resolved_path
+            else:
+                self.logger.warning(f"Directory '{working_dir}' is not accessible. Using default.")
+                return None
+                
+        except Exception as e:
+            self.logger.warning(f"Invalid working directory '{working_dir}': {e}. Using default.")
+            return None
+
+    def _create_new_window_from_command_line(self) -> None:
+        """Create new window from command line activation."""
+        try:
+            from .window import CommTerminalWindow
+            
+            window = CommTerminalWindow(
+                application=self, 
+                settings_manager=self.settings_manager,
+                initial_working_directory=self.initial_working_directory
+            )
+            
+            self.add_window(window)
+            window.present()
+            
+            if self.initial_working_directory:
+                self.logger.info(f"New window created from command line with directory: {self.initial_working_directory}")
+            else:
+                self.logger.info("New window created from command line")
+                
+            # Reset for next invocation
+            self.initial_working_directory = None
+            
+        except Exception as e:
+            self.logger.error(f"Failed to create window from command line: {e}")
+
+    def _on_command_line(self, app, command_line):
+        """Handle command-line signal."""
+        return self.do_command_line(command_line)
     
     def _on_quit_action(self, action, param) -> None:
         """Handle quit action with SSH session confirmation."""
@@ -665,6 +749,9 @@ class CommTerminalApp(Adw.Application):
                 from .window import CommTerminalWindow
                 window = self.create_new_window()
                 self._main_window = window
+            else:
+                # If window exists and no command line args, just present it
+                self.logger.debug(_("Presenting existing window"))
             
             window.present()
             
