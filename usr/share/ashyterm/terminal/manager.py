@@ -628,7 +628,7 @@ class TerminalManager:
             )
             terminal.connect("eof", self._on_eof, identifier, terminal_id)
 
-            # OSC7 directory tracking
+            # OSC7 directory tracking (Your existing correct code)
             terminal.connect(
                 "notify::current-directory-uri", self._on_directory_uri_changed
             )
@@ -639,7 +639,7 @@ class TerminalManager:
             self.manual_ssh_tracker.track(terminal_id, terminal)
 
             # Setup VTE native hyperlink support
-            self._setup_native_hyperlinks(terminal, terminal_id)
+            self._setup_native_hyperlinks(terminal, terminal_id) # MODIFICATION: Call new helper
 
             # Focus controllers
             focus_controller = Gtk.EventControllerFocus()
