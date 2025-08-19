@@ -19,7 +19,7 @@ from .sessions.storage import load_sessions_to_store, load_folders_to_store
 from .terminal.manager import TerminalManager
 from .terminal.tabs import TabManager
 from .sessions.tree import SessionTreeView
-from .ui.dialogs import SessionEditDialog, FolderEditDialog, PreferencesDialog
+from .ui.dialogs import SessionEditDialog, FolderEditDialog, PreferencesDialog, MoveSessionDialog
 from .ui.menus import MainApplicationMenu
 
 # Import new utility systems
@@ -319,6 +319,12 @@ class CommTerminalWindow(Adw.ApplicationWindow):
                 padding: 0;
                 background: none;
             }
+
+            /* --- DRAG AND DROP VISUAL FEEDBACK --- */
+            .drop-target {
+                background-color: alpha(@theme_selected_bg_color, 0.5);
+                border-radius: 6px;
+            }
             """
             provider = Gtk.CssProvider()
             provider.load_from_data(css.encode("utf-8"))
@@ -372,7 +378,7 @@ class CommTerminalWindow(Adw.ApplicationWindow):
         except Exception as e:
             self.logger.error(f"Sidebar creation failed: {e}")
             raise UIError("sidebar", f"creation failed: {e}")
-
+        
     def _create_content_area(self) -> Gtk.Widget:
         """Create the main content area with tabs."""
         try:
@@ -1011,7 +1017,13 @@ class CommTerminalWindow(Adw.ApplicationWindow):
         try:
             selected_item = self.session_tree.get_selected_item()
             if isinstance(selected_item, SessionItem):
-                self._show_move_session_dialog(selected_item)
+                dialog = MoveSessionDialog(
+                    self,
+                    selected_item,
+                    self.folder_store,
+                    self.session_tree.operations
+                )
+                dialog.present()
         except Exception as e:
             self.logger.error(f"Move session failed: {e}")
             self._show_error_dialog(
@@ -1019,6 +1031,10 @@ class CommTerminalWindow(Adw.ApplicationWindow):
                 _("Failed to move session: {error}").format(error=str(e)),
             )
 
+    def get_toast_overlay(self) -> Optional[Adw.ToastOverlay]:
+        """Provides access to the window's toast overlay for dialogs."""
+        return getattr(self, "toast_overlay", None)
+    
     def _on_delete_session(self, action, param) -> None:
         """Handle delete session action."""
         try:

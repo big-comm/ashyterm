@@ -11,7 +11,7 @@ import threading
 import time
 from typing import Optional, Dict, Any, List, Callable
 from pathlib import Path
-
+from ..sessions.operations import SessionOperations
 import gi
 gi.require_version("Gtk", "4.0")
 gi.require_version("Adw", "1")
@@ -2143,3 +2143,123 @@ class PreferencesDialog(Adw.PreferencesWindow):
             
         except Exception as e:
             self.logger.error(f"Reset settings dialog failed: {e}")
+
+class MoveSessionDialog(BaseDialog):
+    """A dialog to move a session to a different folder."""
+
+    def __init__(self, parent_window, session_to_move: SessionItem, 
+                 folder_store: Gio.ListStore, operations: SessionOperations):
+        """
+        Initialize the move session dialog.
+        
+        Args:
+            parent_window: The parent CommTerminalWindow.
+            session_to_move: The SessionItem instance to be moved.
+            folder_store: The Gio.ListStore containing all SessionFolder objects.
+            operations: The SessionOperations instance to perform the move.
+        """
+        title = _("Move Session")
+        super().__init__(parent_window, title, default_width=400, default_height=250)
+
+        self.session_to_move = session_to_move
+        self.folder_store = folder_store
+        self.operations = operations
+        
+        self.folder_paths_map: Dict[str, str] = {}
+        self.folder_combo: Optional[Adw.ComboRow] = None
+
+        self._setup_ui()
+        self.logger.info(f"Move session dialog opened for '{session_to_move.name}'")
+
+    def _setup_ui(self):
+        """Set up the dialog's user interface."""
+        main_box = Gtk.Box(
+            orientation=Gtk.Orientation.VERTICAL,
+            spacing=16, margin_top=24, margin_bottom=24, margin_start=24, margin_end=24
+        )
+
+        # Main content group
+        group = Adw.PreferencesGroup(
+            title=_("Select Destination"),
+            description=_("Choose the folder to move the session '{name}' to.").format(name=self.session_to_move.name)
+        )
+        main_box.append(group)
+
+        # Folder selection row
+        folder_row = Adw.ComboRow(
+            title=_("Destination Folder"),
+            subtitle=_("Select a folder or 'Root' for the top level")
+        )
+        self.folder_combo = folder_row
+        group.add(folder_row)
+
+        # Populate the folder list
+        self._populate_folder_combo()
+
+        # Action bar
+        action_bar = Gtk.ActionBar()
+        cancel_button = Gtk.Button(label=_("Cancel"))
+        cancel_button.connect("clicked", self._on_cancel_clicked)
+        action_bar.pack_start(cancel_button)
+
+        move_button = Gtk.Button(label=_("Move"), css_classes=["suggested-action"])
+        move_button.connect("clicked", self._on_move_clicked)
+        action_bar.pack_end(move_button)
+        self.set_default_widget(move_button)
+
+        # Final layout
+        content_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=0)
+        content_box.append(main_box)
+        content_box.append(action_bar)
+        self.set_content(content_box)
+
+    def _populate_folder_combo(self):
+        """Fill the folder combo box with available folders."""
+        folder_model = Gtk.StringList()
+        folder_model.append(_("Root"))
+        self.folder_paths_map = {_("Root"): ""}
+
+        # Sort folders by path for a hierarchical view
+        folders = sorted([self.folder_store.get_item(i) for i in range(self.folder_store.get_n_items())], key=lambda f: f.path)
+        
+        selected_index = 0
+        for folder in folders:
+            depth = folder.path.count("/")
+            display_name = f"{'  ' * depth}{folder.name}"
+            folder_model.append(display_name)
+            self.folder_paths_map[display_name] = folder.path
+            
+            # Find the index of the current folder to pre-select it
+            if folder.path == self.session_to_move.folder_path:
+                selected_index = folder_model.get_n_items() - 1
+        
+        self.folder_combo.set_model(folder_model)
+        self.folder_combo.set_selected(selected_index)
+
+    def _on_move_clicked(self, button):
+        """Handle the move button click."""
+        selected_item = self.folder_combo.get_selected_item()
+        if not selected_item:
+            return
+
+        display_name = selected_item.get_string()
+        target_folder_path = self.folder_paths_map.get(display_name, "")
+
+        if target_folder_path == self.session_to_move.folder_path:
+            self.logger.debug("Target folder is the same as the source. Closing dialog.")
+            self.close()
+            return
+
+        result = self.operations.move_session_to_folder(self.session_to_move, target_folder_path)
+
+        if result.success:
+            if result.warnings:
+                # Show a toast for non-critical warnings (like rename)
+                if hasattr(self.parent_window, 'get_toast_overlay') and (overlay := self.parent_window.get_toast_overlay()):
+                    overlay.add_toast(Adw.Toast(title=result.warnings[0]))
+            
+            self.logger.info(f"Session '{self.session_to_move.name}' moved to '{target_folder_path}'")
+            self.parent_window.refresh_tree()
+            self.close()
+        else:
+            self._show_error_dialog(_("Move Failed"), result.message)

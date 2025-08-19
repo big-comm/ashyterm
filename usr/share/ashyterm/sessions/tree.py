@@ -86,6 +86,12 @@ class SessionTreeView:
         right_click_empty.connect("pressed", self._on_empty_area_right_click)
         list_view.add_controller(right_click_empty)
 
+        # --- DRAG AND DROP FOR ROOT FOLDER ---
+        drop_target_root = Gtk.DropTarget.new(GObject.TYPE_STRING, Gdk.DragAction.MOVE)
+        drop_target_root.connect("accept", self._on_root_drop_accept)
+        drop_target_root.connect("drop", self._on_root_drop)
+        list_view.add_controller(drop_target_root)
+
         return list_view
 
     def _on_factory_setup(self, factory, list_item):
@@ -93,7 +99,7 @@ class SessionTreeView:
         box = Gtk.Box(
             orientation=Gtk.Orientation.HORIZONTAL, 
             spacing=10, 
-            hexpand=True  # Make the box fill the entire width of the row
+            hexpand=True
         )
         box.set_margin_top(6)
         box.set_margin_bottom(6)
@@ -105,7 +111,6 @@ class SessionTreeView:
 
         box.append(icon)
         box.append(label)
-
         list_item.set_child(box)
 
         # Attach context menu gesture to the box, which now fills the whole row
@@ -113,6 +118,20 @@ class SessionTreeView:
         right_click.set_button(Gdk.BUTTON_SECONDARY)
         right_click.connect("pressed", self._on_item_right_click, list_item)
         box.add_controller(right_click)
+
+        # --- DRAG SOURCE SETUP (for draggable items) ---
+        drag_source = Gtk.DragSource()
+        drag_source.connect("prepare", self._on_drag_prepare, list_item)
+        drag_source.connect("drag-begin", self._on_drag_begin, list_item)
+        box.add_controller(drag_source)
+
+        # --- DROP TARGET SETUP (for folders) ---
+        drop_target = Gtk.DropTarget.new(GObject.TYPE_STRING, Gdk.DragAction.MOVE)
+        drop_target.connect("accept", self._on_folder_drop_accept, list_item)
+        drop_target.connect("drop", self._on_folder_drop, list_item)
+        drop_target.connect("enter", self._on_folder_drag_enter, list_item)
+        drop_target.connect("leave", self._on_folder_drag_leave, list_item)
+        box.add_controller(drop_target)
 
     def _on_factory_bind(self, factory, list_item):
         """Bind data from a SessionItem or SessionFolder to the row widget."""
@@ -134,6 +153,99 @@ class SessionTreeView:
             icon.set_from_icon_name(icon_name)
             depth = item.folder_path.count("/") + 1 if item.folder_path else 1
             box.set_margin_start(12 + (depth * 12))
+
+    # --- DRAG AND DROP CALLBACKS ---
+
+    def _on_drag_prepare(self, source: Gtk.DragSource, x: float, y: float, list_item: Gtk.ListItem) -> Optional[Gdk.ContentProvider]:
+        """Prepare the data for a drag operation."""
+        item = list_item.get_item()
+        if not isinstance(item, SessionItem):
+            return None
+
+        self.logger.debug(f"Preparing drag for session: {item.name}")
+        data_string = f"{item.name}|{item.folder_path}"
+        value = GObject.Value(GObject.TYPE_STRING, data_string)
+        return Gdk.ContentProvider.new_for_value(value)
+
+    def _on_drag_begin(self, source: Gtk.DragSource, drag: Gdk.Drag, list_item: Gtk.ListItem):
+        """Set the icon for the drag operation."""
+        item = list_item.get_item()
+        if not isinstance(item, SessionItem):
+            return
+
+        label = Gtk.Label(label=item.name, css_classes=["drag-icon"])
+        paintable = Gtk.WidgetPaintable(widget=label)
+        source.set_icon(paintable, 0, 0)
+
+    def _on_root_drop_accept(self, target: Gtk.DropTarget, drop: Gdk.Drop) -> bool:
+        """The root area always accepts a drop of a session."""
+        return True
+
+    def _on_folder_drop_accept(self, target: Gtk.DropTarget, drop: Gdk.Drop, list_item: Gtk.ListItem) -> bool:
+        """Accept drops only on SessionFolder items."""
+        item = list_item.get_item()
+        return isinstance(item, SessionFolder)
+
+    def _on_folder_drag_enter(self, target: Gtk.DropTarget, x: float, y: float, list_item: Gtk.ListItem) -> Gdk.DragAction:
+        """Provide visual feedback when dragging over a valid folder target."""
+        item = list_item.get_item()
+        if isinstance(item, SessionFolder):
+            list_item.get_child().add_css_class("drop-target")
+            target.set_actions(Gdk.DragAction.MOVE)
+            return Gdk.DragAction.MOVE
+        target.set_actions(Gdk.DragAction.DEFAULT)
+        return Gdk.DragAction.DEFAULT
+
+    def _on_folder_drag_leave(self, target: Gtk.DropTarget, list_item: Gtk.ListItem):
+        """Remove visual feedback when leaving a drop target."""
+        list_item.get_child().remove_css_class("drop-target")
+
+    def _on_folder_drop(self, target: Gtk.DropTarget, value: str, x: float, y: float, list_item: Gtk.ListItem) -> bool:
+        """Handle the drop event on a folder."""
+        target_folder = list_item.get_item()
+        list_item.get_child().remove_css_class("drop-target")
+        
+        if not isinstance(target_folder, SessionFolder):
+            return False
+            
+        self._perform_move(value, target_folder.path)
+        return True
+
+    def _on_root_drop(self, target: Gtk.DropTarget, value: str, x: float, y: float) -> bool:
+        """Handle the drop event on the empty area (root)."""
+        self._perform_move(value, "")
+        return True
+
+    def _perform_move(self, session_data_string: str, target_folder_path: str):
+        """Core logic to move a session after a drop."""
+        try:
+            name, old_folder_path = session_data_string.split('|', 1)
+            self.logger.info(f"Drop event: Moving '{name}' from '{old_folder_path}' to '{target_folder_path}'")
+
+            result = self.operations.find_session_by_name_and_path(name, old_folder_path)
+            if not result:
+                self.logger.error(f"Could not find session '{name}' in '{old_folder_path}' to move.")
+                return
+
+            session_to_move, _ = result
+
+            if session_to_move.folder_path == target_folder_path:
+                self.logger.debug("Session dropped into its current folder. No action needed.")
+                return
+
+            move_result = self.operations.move_session_to_folder(session_to_move, target_folder_path)
+
+            if move_result.success:
+                self.refresh_tree()
+                self.logger.info("Session moved successfully via drag-and-drop.")
+            else:
+                self.logger.error(f"Failed to move session via drag-and-drop: {move_result.message}")
+                if hasattr(self.parent_window, 'get_toast_overlay') and (overlay := self.parent_window.get_toast_overlay()):
+                    overlay.add_toast(Adw.Toast(title=_("Failed to move session")))
+
+        except Exception as e:
+            self.logger.error(f"Error during drag-and-drop move operation: {e}")
+            log_error_with_context(e, "DnD move", "ashyterm.sessions.tree")
 
     def get_widget(self) -> Gtk.ListView:
         """Get the list view widget."""
