@@ -121,9 +121,16 @@ class SessionTreeView:
 
         # --- DRAG SOURCE SETUP (for draggable items) ---
         drag_source = Gtk.DragSource()
+        drag_source.set_actions(Gdk.DragAction.MOVE)
         drag_source.connect("prepare", self._on_drag_prepare, list_item)
         drag_source.connect("drag-begin", self._on_drag_begin, list_item)
         box.add_controller(drag_source)
+
+        # --- HOVER CURSOR SETUP (for drag feedback) ---
+        motion_controller = Gtk.EventControllerMotion()
+        motion_controller.connect("enter", self._on_hover_enter, list_item)
+        motion_controller.connect("leave", self._on_hover_leave, list_item)
+        box.add_controller(motion_controller)
 
         # --- DROP TARGET SETUP (for folders) ---
         drop_target = Gtk.DropTarget.new(GObject.TYPE_STRING, Gdk.DragAction.MOVE)
@@ -159,19 +166,37 @@ class SessionTreeView:
     def _on_drag_prepare(self, source: Gtk.DragSource, x: float, y: float, list_item: Gtk.ListItem) -> Optional[Gdk.ContentProvider]:
         """Prepare the data for a drag operation."""
         item = list_item.get_item()
-        if not isinstance(item, SessionItem):
-            return None
-
-        self.logger.debug(f"Preparing drag for session: {item.name}")
-        data_string = f"{item.name}|{item.folder_path}"
-        value = GObject.Value(GObject.TYPE_STRING, data_string)
-        return Gdk.ContentProvider.new_for_value(value)
+        
+        # Allow dragging both sessions and folders
+        if isinstance(item, SessionItem):
+            self.logger.debug(f"Preparing drag for session: {item.name}")
+            data_string = f"session|{item.name}|{item.folder_path}"
+            value = GObject.Value(GObject.TYPE_STRING, data_string)
+            return Gdk.ContentProvider.new_for_value(value)
+        elif isinstance(item, SessionFolder):
+            self.logger.debug(f"Preparing drag for folder: {item.name}")
+            data_string = f"folder|{item.name}|{item.path}"
+            value = GObject.Value(GObject.TYPE_STRING, data_string)
+            return Gdk.ContentProvider.new_for_value(value)
+        
+        return None
 
     def _on_drag_begin(self, source: Gtk.DragSource, drag: Gdk.Drag, list_item: Gtk.ListItem):
         """Set the icon for the drag operation."""
         item = list_item.get_item()
-        if not isinstance(item, SessionItem):
+        if not isinstance(item, (SessionItem, SessionFolder)):
             return
+
+        # Try setting cursor with timeout to override GTK default
+        try:
+            cursor = Gdk.Cursor.new_from_name("grabbing")
+            drag.set_cursor(cursor)
+            
+            # Also try setting it with a small delay
+            GLib.timeout_add(10, lambda: drag.set_cursor(cursor) or False)
+            
+        except Exception as e:
+            self.logger.debug(f"Could not set grabbing cursor: {e}")
 
         label = Gtk.Label(label=item.name, css_classes=["drag-icon"])
         paintable = Gtk.WidgetPaintable(widget=label)
@@ -216,36 +241,95 @@ class SessionTreeView:
         self._perform_move(value, "")
         return True
 
-    def _perform_move(self, session_data_string: str, target_folder_path: str):
-        """Core logic to move a session after a drop."""
+    def _perform_move(self, data_string: str, target_folder_path: str):
+        """Core logic to move a session or folder after a drop."""
         try:
-            name, old_folder_path = session_data_string.split('|', 1)
-            self.logger.info(f"Drop event: Moving '{name}' from '{old_folder_path}' to '{target_folder_path}'")
-
-            result = self.operations.find_session_by_name_and_path(name, old_folder_path)
-            if not result:
-                self.logger.error(f"Could not find session '{name}' in '{old_folder_path}' to move.")
+            parts = data_string.split('|')
+            if len(parts) < 3:
+                self.logger.error(f"Invalid drag data format: {data_string}")
                 return
+                
+            item_type, name, source_path = parts[0], parts[1], parts[2]
+            
+            if item_type == "session":
+                self.logger.info(f"Drop event: Moving session '{name}' from '{source_path}' to '{target_folder_path}'")
+                
+                result = self.operations.find_session_by_name_and_path(name, source_path)
+                if not result:
+                    self.logger.error(f"Could not find session '{name}' in '{source_path}' to move.")
+                    return
 
-            session_to_move, _ = result
+                session_to_move, _ = result
 
-            if session_to_move.folder_path == target_folder_path:
-                self.logger.debug("Session dropped into its current folder. No action needed.")
-                return
+                if session_to_move.folder_path == target_folder_path:
+                    self.logger.debug("Session dropped into its current folder. No action needed.")
+                    return
 
-            move_result = self.operations.move_session_to_folder(session_to_move, target_folder_path)
+                move_result = self.operations.move_session_to_folder(session_to_move, target_folder_path)
 
-            if move_result.success:
+                if move_result.success:
+                    self.refresh_tree()
+                    self.logger.info("Session moved successfully via drag-and-drop.")
+                else:
+                    self.logger.error(f"Failed to move session via drag-and-drop: {move_result.message}")
+                    if hasattr(self.parent_window, 'get_toast_overlay') and (overlay := self.parent_window.get_toast_overlay()):
+                        overlay.add_toast(Adw.Toast(title=_("Failed to move session")))
+                        
+            elif item_type == "folder":
+                self.logger.info(f"Drop event: Moving folder '{name}' from '{source_path}' to '{target_folder_path}'")
+                
+                # Find the folder to move
+                folder_to_move = None
+                for i in range(self.folder_store.get_n_items()):
+                    folder = self.folder_store.get_item(i)
+                    if isinstance(folder, SessionFolder) and folder.path == source_path:
+                        folder_to_move = folder
+                        break
+                
+                if not folder_to_move:
+                    self.logger.error(f"Could not find folder '{name}' at path '{source_path}' to move.")
+                    return
+                
+                # Check if trying to move to itself or a child
+                if source_path == target_folder_path or target_folder_path.startswith(source_path + "/"):
+                    self.logger.debug("Cannot move folder to itself or a child folder.")
+                    return
+                
+                # Update folder path
+                old_path = folder_to_move.path
+                folder_to_move.parent_path = target_folder_path
+                new_name = f"{target_folder_path}/{name}" if target_folder_path else f"/{name}"
+                folder_to_move.path = new_name
+                
+                # Update child paths if needed
+                if hasattr(self.operations, '_update_child_paths'):
+                    self.operations._update_child_paths(old_path, folder_to_move.path)
+                
+                # Save changes
+                self.operations._save_changes()
                 self.refresh_tree()
-                self.logger.info("Session moved successfully via drag-and-drop.")
-            else:
-                self.logger.error(f"Failed to move session via drag-and-drop: {move_result.message}")
-                if hasattr(self.parent_window, 'get_toast_overlay') and (overlay := self.parent_window.get_toast_overlay()):
-                    overlay.add_toast(Adw.Toast(title=_("Failed to move session")))
+                self.logger.info("Folder moved successfully via drag-and-drop.")
 
         except Exception as e:
             self.logger.error(f"Error during drag-and-drop move operation: {e}")
             log_error_with_context(e, "DnD move", "ashyterm.sessions.tree")
+            
+    def _on_hover_enter(self, controller, x, y, list_item):
+        """Set grab cursor when hovering over draggable items."""
+        item = list_item.get_item()
+        if isinstance(item, (SessionItem, SessionFolder)):
+            try:
+                cursor = Gdk.Cursor.new_from_name("grab")  # Mão aberta
+                list_item.get_child().set_cursor(cursor)
+            except Exception:
+                pass
+
+    def _on_hover_leave(self, controller, list_item):
+        """Reset cursor when leaving draggable items."""
+        try:
+            list_item.get_child().set_cursor(None)
+        except Exception:
+            pass
 
     def get_widget(self) -> Gtk.ListView:
         """Get the list view widget."""

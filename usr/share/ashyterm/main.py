@@ -125,10 +125,9 @@ def _resolve_working_directory(working_dir: str) -> Optional[str]:
         print(f"Warning: Invalid working directory '{working_dir}': {e}. Using default.")
         return None
 
-
 def _filter_argv_for_gtk(argv: list, working_directory: Optional[str]) -> list:
     """
-    Filter command line arguments to remove custom arguments before passing to GTK.
+    Filter command line arguments to remove only problematic arguments before passing to GTK.
     
     Args:
         argv: Original command line arguments
@@ -145,25 +144,16 @@ def _filter_argv_for_gtk(argv: list, working_directory: Optional[str]) -> list:
             skip_next = False
             continue
             
-        # Skip our custom arguments
-        if arg in ['--debug', '-d']:
-            continue
-        elif arg.startswith('--log-level'):
+        # Only filter out --log-level (not supported by our manual parser)
+        if arg.startswith('--log-level'):
             if '=' not in arg and i + 1 < len(argv):
                 skip_next = True  # Skip next argument too
             continue
-        elif arg in ['--working-directory', '-w']:
-            skip_next = True  # Skip next argument (the directory)
-            continue
-        elif arg.startswith('--working-directory='):
-            continue
-        elif working_directory and arg == working_directory:
-            continue  # Skip positional directory argument
         else:
+            # Keep everything else - our manual parser will handle it
             filtered_argv.append(arg)
     
     return filtered_argv
-
 
 def main() -> int:
     """Main entry point for the application."""

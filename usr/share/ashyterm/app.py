@@ -286,23 +286,56 @@ class CommTerminalApp(Adw.Application):
     def do_command_line(self, command_line):
         """Handle command line arguments for new instances."""
         try:
-            options = command_line.get_options_dict()
+            # Get raw arguments and parse them manually
             arguments = command_line.get_arguments()
+            self.logger.debug(f"Raw arguments received: {arguments}")
             
             working_directory = None
+            debug_mode = False
             
-            # Check for working directory option
-            if options.contains("working-directory"):
-                working_directory = options.lookup_value("working-directory").get_string()
-            elif len(arguments) > 1:  # First argument is program name
-                working_directory = arguments[1]
+            # Parse arguments manually (skip program name at index 0)
+            i = 1
+            while i < len(arguments):
+                arg = arguments[i]
+                
+                if arg in ['-w', '--working-directory']:
+                    # Next argument should be the directory
+                    if i + 1 < len(arguments):
+                        working_directory = arguments[i + 1]
+                        self.logger.info(f"Working directory from argument: {working_directory}")
+                        i += 2  # Skip both -w and the directory
+                    else:
+                        self.logger.warning("Working directory option found but no directory specified")
+                        i += 1
+                elif arg.startswith('--working-directory='):
+                    working_directory = arg.split('=', 1)[1]
+                    self.logger.info(f"Working directory from --working-directory=: {working_directory}")
+                    i += 1
+                elif arg in ['-d', '--debug']:
+                    debug_mode = True
+                    self.logger.info("Debug mode flag found")
+                    i += 1
+                else:
+                    # Could be a positional working directory argument
+                    if not working_directory and i == len(arguments) - 1:
+                        working_directory = arg
+                        self.logger.info(f"Working directory from positional arg: {working_directory}")
+                    i += 1
+            
+            # Process debug option
+            if debug_mode:
+                from .utils.logger import enable_debug_mode
+                enable_debug_mode()
+                self.logger.info("Debug mode enabled from command line")
             
             if working_directory:
                 # Resolve and validate working directory
-                working_directory = self._resolve_working_directory(working_directory)
-                if working_directory:
-                    self.initial_working_directory = working_directory
-                    self.logger.info(f"Command line working directory set: {working_directory}")
+                resolved_dir = self._resolve_working_directory(working_directory)
+                if resolved_dir:
+                    self.initial_working_directory = resolved_dir
+                    self.logger.info(f"Command line working directory resolved: {resolved_dir}")
+                else:
+                    self.logger.warning(f"Invalid working directory ignored: {working_directory}")
             
             # Always create new window when called from command line
             self._create_new_window_from_command_line()
