@@ -57,6 +57,11 @@ class SessionTreeView:
         self._clipboard_item: Optional[Union[SessionItem, SessionFolder]] = None
         self._clipboard_is_cut = False
         self._clipboard_timestamp = 0
+        
+        # --- START: State for range selection ---
+        self._selection_anchor = None
+        self._last_selected_pos = -1
+        # --- END: State for range selection ---
 
         # Callbacks
         self.on_session_activated: Optional[Callable[[SessionItem], None]] = None
@@ -70,7 +75,8 @@ class SessionTreeView:
         """Create and configure the Gtk.ListView widget."""
         self.logger.debug("Creating Gtk.ListView widget")
 
-        selection_model = Gtk.SingleSelection(model=self.flat_store)
+        # --- MODIFICATION: Use MultiSelection instead of SingleSelection ---
+        selection_model = Gtk.MultiSelection(model=self.flat_store)
 
         factory = Gtk.SignalListItemFactory()
         factory.connect("setup", self._on_factory_setup)
@@ -92,6 +98,12 @@ class SessionTreeView:
         drop_target_root.connect("accept", self._on_root_drop_accept)
         drop_target_root.connect("drop", self._on_root_drop)
         list_view.add_controller(drop_target_root)
+        
+        # --- START: Add Key Controller for Ctrl+A and Shift+Select ---
+        key_controller = Gtk.EventControllerKey()
+        key_controller.connect("key-pressed", self._on_key_pressed)
+        list_view.add_controller(key_controller)
+        # --- END: Add Key Controller ---
 
         return list_view
 
@@ -113,6 +125,13 @@ class SessionTreeView:
         box.append(icon)
         box.append(label)
         list_item.set_child(box)
+
+        # --- START: Add Left Click Gesture for selection anchor ---
+        left_click = Gtk.GestureClick()
+        left_click.set_button(Gdk.BUTTON_PRIMARY)
+        left_click.connect("pressed", self._on_item_left_click, list_item)
+        box.add_controller(left_click)
+        # --- END: Add Left Click Gesture ---
 
         # Attach context menu gesture to the box, which now fills the whole row
         right_click = Gtk.GestureClick()
@@ -368,17 +387,76 @@ class SessionTreeView:
         elif isinstance(item, SessionFolder):
             self.logger.debug(f"Folder '{item.name}' activated.")
 
+    # --- START: MODIFIED/NEW METHODS FOR MULTI-SELECTION ---
+    def _on_key_pressed(self, controller, keyval, keycode, state):
+        """Handle key presses for selection."""
+        # Ctrl+A for Select All
+        if keyval in (Gdk.KEY_a, Gdk.KEY_A) and (state & Gdk.ModifierType.CONTROL_MASK):
+            self.selection_model.select_all()
+            return Gdk.EVENT_STOP
+
+        # Shift + Up/Down for range selection
+        if (state & Gdk.ModifierType.SHIFT_MASK):
+            if keyval in (Gdk.KEY_Up, Gdk.KEY_Down):
+                if self._selection_anchor is None:
+                    # If there's no anchor, set it to the last selected item
+                    selection = self.selection_model.get_selection()
+                    if selection.get_size() > 0:
+                        self._selection_anchor = selection.get_nth(0)
+                    else:
+                        return Gdk.EVENT_PROPAGATE # Nothing to do
+
+                # Determine new position
+                if keyval == Gdk.KEY_Up:
+                    new_pos = max(0, self._last_selected_pos - 1)
+                else: # Down
+                    new_pos = min(self.flat_store.get_n_items() - 1, self._last_selected_pos + 1)
+
+                # --- FIX: Use the correct method to select a range ---
+                self.selection_model.unselect_all()
+                start = min(self._selection_anchor, new_pos)
+                end = max(self._selection_anchor, new_pos)
+                # The number of items is (end - start + 1)
+                # The fourth argument 'True' means "select these items".
+                self.selection_model.select_range(start, end - start + 1, True)
+                
+                # Update the "cursor" for the next shift+arrow press
+                self._last_selected_pos = new_pos
+                
+                return Gdk.EVENT_STOP
+
+        return Gdk.EVENT_PROPAGATE
+
+    def _on_item_left_click(self, gesture, n_press, x, y, list_item):
+        """Handle left click to set the selection anchor correctly."""
+        state = gesture.get_current_event_state()
+        is_shift_pressed = bool(state & Gdk.ModifierType.SHIFT_MASK)
+
+        # If shift is not pressed, this is a new selection, so we set the anchor.
+        if not is_shift_pressed:
+            self._selection_anchor = list_item.get_position()
+
     def _on_selection_changed(self, selection_model, position, n_items):
-        """Handle selection changes."""
-        pass
+        """Handle selection changes to update the last selected position."""
+        self._last_selected_pos = position
 
     def get_selected_item(self) -> Optional[Union[SessionItem, SessionFolder]]:
-        """Get the currently selected item."""
-        return self.selection_model.get_selected_item()
+        """Get the *first* selected item in a multi-selection model."""
+        selection = self.selection_model.get_selection()
+        if selection.get_size() > 0:
+            first_pos = selection.get_nth(0)
+            return self.flat_store.get_item(first_pos)
+        return None
+    # --- END: MODIFIED/NEW METHODS FOR MULTI-SELECTION ---
 
     def _on_item_right_click(self, gesture, n_press, x, y, list_item):
         """Handle right-click on a specific item row."""
-        self.selection_model.set_selected(list_item.get_position())
+        pos = list_item.get_position()
+        
+        if not self.selection_model.is_selected(pos):
+            self.selection_model.unselect_all()
+            self.selection_model.select_item(pos, True)
+
         item = list_item.get_item()
         menu_model = None
 
