@@ -262,7 +262,7 @@ class DefaultSettings:
             # Appearance settings
             "color_scheme": 0,  # Index in COLOR_SCHEME_MAP
             "transparency": 0,  # Percentage (0-100)
-            "font": "Monospace 10",
+            "font": "Noto Mono Nerd Font Medium 12",
             # UI behavior
             "sidebar_visible": True,
             "auto_hide_sidebar": False,

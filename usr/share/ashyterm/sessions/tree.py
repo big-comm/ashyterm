@@ -390,10 +390,38 @@ class SessionTreeView:
     # --- START: MODIFIED/NEW METHODS FOR MULTI-SELECTION ---
     def _on_key_pressed(self, controller, keyval, keycode, state):
         """Handle key presses for selection."""
-        # Ctrl+A for Select All
-        if keyval in (Gdk.KEY_a, Gdk.KEY_A) and (state & Gdk.ModifierType.CONTROL_MASK):
-            self.selection_model.select_all()
-            return Gdk.EVENT_STOP
+        # Check for Control modifier for clipboard and select all
+        if state & Gdk.ModifierType.CONTROL_MASK:
+            # Ctrl+A for Select All
+            if keyval in (Gdk.KEY_a, Gdk.KEY_A):
+                self.selection_model.select_all()
+                return Gdk.EVENT_STOP
+
+            # Ctrl+C for Copy
+            if keyval in (Gdk.KEY_c, Gdk.KEY_C):
+                self._copy_selected_item_safe()
+                self.logger.debug("Ctrl+C pressed, copying selected item.")
+                return Gdk.EVENT_STOP
+
+            # Ctrl+X for Cut
+            if keyval in (Gdk.KEY_x, Gdk.KEY_X):
+                self._cut_selected_item_safe()
+                self.logger.debug("Ctrl+X pressed, cutting selected item.")
+                return Gdk.EVENT_STOP
+
+            # Ctrl+V for Paste
+            if keyval in (Gdk.KEY_v, Gdk.KEY_V):
+                selected_item = self.get_selected_item()
+                target_folder_path = ""  # Default to root
+                if selected_item:
+                    if isinstance(selected_item, SessionFolder):
+                        target_folder_path = selected_item.path
+                    elif isinstance(selected_item, SessionItem):
+                        target_folder_path = selected_item.folder_path
+                
+                self._paste_item_safe(target_folder_path)
+                self.logger.debug(f"Ctrl+V pressed, pasting to '{target_folder_path}'.")
+                return Gdk.EVENT_STOP
 
         # Shift + Up/Down for range selection
         if (state & Gdk.ModifierType.SHIFT_MASK):
@@ -599,7 +627,7 @@ class SessionTreeView:
                     
                     result = self.operations.add_session(new_item)
                 elif isinstance(item_to_paste, SessionFolder):
-                    # NOTE: This is a shallow copy. A deep copy (including all child sessions/folders)
+                    # This is a shallow copy. A deep copy (including all child sessions/folders)
                     # would require a more complex recursive operation.
                     new_folder_data = item_to_paste.to_dict()
                     new_folder = SessionFolder.from_dict(new_folder_data)
