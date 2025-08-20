@@ -1572,18 +1572,21 @@ class PreferencesDialog(Adw.PreferencesWindow):
             transparency_row.set_activatable_widget(self.transparency_scale)
             colors_group.add(transparency_row)
 
-            # Font
-            font_row = Adw.FontRow(
+            font_row = Adw.ActionRow(
                 title=_("Terminal Font"),
                 subtitle=_("Select font family and size for terminal text"),
             )
-            font_row.set_font_name(self.settings_manager.get("font", "Monospace 10"))
-            font_row.connect("notify::font-name", self._on_font_changed)
+            
+            font_button = Gtk.FontButton()
+            font_button.set_font(self.settings_manager.get("font", "Monospace 10"))
+            font_button.connect("font-set", self._on_font_changed)
+            
+            font_row.add_suffix(font_button)
+            font_row.set_activatable_widget(font_button)
             colors_group.add(font_row)
 
         except Exception as e:
             self.logger.error(f"Failed to setup appearance page: {e}")
-
     def _setup_behavior_page(self) -> None:
         """Set up behavior preferences page."""
         try:
@@ -1976,16 +1979,16 @@ class PreferencesDialog(Adw.PreferencesWindow):
         except Exception as e:
             self.logger.error(f"Blur change failed: {e}")
     
-    def _on_font_changed(self, font_row, param) -> None:
-        """Handle font change."""
+    def _on_font_changed(self, font_button) -> None:
+        """Handle font change when user confirms selection in the font dialog."""
         try:
-            font = font_row.get_font_name()
+            font = font_button.get_font()
             self.settings_manager.set("font", font)
             self.emit("font-changed", font)
             self.logger.debug(f"Font changed to {font}")
         except Exception as e:
             self.logger.error(f"Font change failed: {e}")
-    
+             
     def _on_setting_changed(self, key: str, value: Any) -> None:
         """Handle generic setting change."""
         try:
