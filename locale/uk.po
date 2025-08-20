@@ -591,6 +591,12 @@ msgstr "Unnamed Folder"
 msgid "Failed to move session"
 msgstr "Не вдалося перемістити сесію"
 # 
+# File: usr/share/ashyterm/sessions/tree.py, line: 618
+# File: usr/share/ashyterm/sessions/tree.py, line: 623
+#: NEEDS WORK
+msgid "Paste Error"
+msgstr "Помилка вставки"
+# 
 # File: usr/share/ashyterm/app.py, line: 53
 #: NEEDS WORK
 #, python-brace-format
@@ -1499,11 +1505,11 @@ msgstr "Перемістити помилку"
 msgid "Delete Error"
 msgstr "Видалити помилку"
 # 
-# File: usr/share/ashyterm/window.py, line: 733
+# File: usr/share/ashyterm/window.py, line: 1043
 #: NEEDS WORK
 #, python-brace-format
-msgid "Failed to delete session: {error}"
-msgstr "Не вдалося видалити сеанс: {error}"
+msgid "Failed to delete selected items: {error}"
+msgstr "Не вдалося видалити вибрані елементи: {error}"
 # 
 # File: usr/share/ashyterm/window.py, line: 743
 #: NEEDS WORK
@@ -1533,12 +1539,6 @@ msgstr "Додати помилку"
 #, python-brace-format
 msgid "Failed to add session to folder: {error}"
 msgstr "Не вдалося додати сесію до папки: {error}"
-# 
-# File: usr/share/ashyterm/window.py, line: 771
-#: NEEDS WORK
-#, python-brace-format
-msgid "Failed to delete folder: {error}"
-msgstr "Не вдалося видалити папку: {error}"
 # 
 # File: usr/share/ashyterm/window.py, line: 835
 #: NEEDS WORK
@@ -1708,17 +1708,6 @@ msgstr "Помилка додавання папки"
 msgid "Failed to edit selected item: {error}"
 msgstr "Не вдалося редагувати вибраний елемент: {error}"
 # 
-# File: usr/share/ashyterm/window.py, line: 917
-#: NEEDS WORK
-msgid "Remove Error"
-msgstr "Remove Error"
-# 
-# File: usr/share/ashyterm/window.py, line: 917
-#: NEEDS WORK
-#, python-brace-format
-msgid "Failed to remove selected item: {error}"
-msgstr "Не вдалося видалити вибраний елемент: {error}"
-# 
 # File: usr/share/ashyterm/window.py, line: 944
 # File: usr/share/ashyterm/window.py, line: 999
 #: NEEDS WORK
@@ -1765,6 +1754,22 @@ msgstr "Перемістити сесію"
 msgid "Move session functionality will be implemented in folder selection dialog."
 msgstr "Функціональність переміщення сесії буде реалізована в діалоговому вікні вибору папки."
 # 
+# File: usr/share/ashyterm/window.py, line: 1450
+#: NEEDS WORK
+msgid "Delete Item"
+msgstr "Видалити елемент"
+# 
+# File: usr/share/ashyterm/window.py, line: 1450
+#: NEEDS WORK
+msgid "Delete Items"
+msgstr "Delete Items"
+# 
+# File: usr/share/ashyterm/window.py, line: 1009
+#: NEEDS WORK
+#, python-brace-format
+msgid "Delete {type}"
+msgstr "Видалити {type}"
+# 
 # File: usr/share/ashyterm/window.py, line: 1003
 #: NEEDS WORK
 #, python-brace-format
@@ -1781,11 +1786,16 @@ msgstr ""
 msgid "Are you sure you want to delete \"{name}\"?"
 msgstr "Ви впевнені, що хочете видалити \"{name}\"?"
 # 
-# File: usr/share/ashyterm/window.py, line: 1009
+# File: usr/share/ashyterm/window.py, line: 1464
 #: NEEDS WORK
 #, python-brace-format
-msgid "Delete {type}"
-msgstr "Видалити {type}"
+msgid "Are you sure you want to permanently delete these {count} items?"
+msgstr "Are you sure you want to permanently delete these {count} items?"
+# 
+# File: usr/share/ashyterm/window.py, line: 1466
+#: NEEDS WORK
+msgid "This will also delete all contents of any selected folders."
+msgstr "Це також видалить усі вмісти будь-яких вибраних папок."
 # 
 # #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
 # 
@@ -1795,12 +1805,6 @@ msgstr "Видалити {type}"
 #: NEEDS WORK
 msgid "Delete"
 msgstr "Delete"
-# 
-# File: usr/share/ashyterm/window.py, line: 1033
-#: NEEDS WORK
-#, python-brace-format
-msgid "Delete {type} Error"
-msgstr "Delete {type} Error"
 # 
 # #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
 # 

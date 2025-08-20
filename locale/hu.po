@@ -591,6 +591,12 @@ msgstr "Névtelen Mappa"
 msgid "Failed to move session"
 msgstr "Sikerült áthelyezni a munkamenetet."
 # 
+# File: usr/share/ashyterm/sessions/tree.py, line: 618
+# File: usr/share/ashyterm/sessions/tree.py, line: 623
+#: NEEDS WORK
+msgid "Paste Error"
+msgstr "Beillesztési hiba"
+# 
 # File: usr/share/ashyterm/app.py, line: 53
 #: NEEDS WORK
 #, python-brace-format
@@ -1501,11 +1507,11 @@ msgstr "Mozgási hiba"
 msgid "Delete Error"
 msgstr "Törlés Hiba"
 # 
-# File: usr/share/ashyterm/window.py, line: 733
+# File: usr/share/ashyterm/window.py, line: 1043
 #: NEEDS WORK
 #, python-brace-format
-msgid "Failed to delete session: {error}"
-msgstr "Sikerült törölni a munkamenetet: {error}"
+msgid "Failed to delete selected items: {error}"
+msgstr "A kijelölt elemek törlése nem sikerült: {error}"
 # 
 # File: usr/share/ashyterm/window.py, line: 743
 #: NEEDS WORK
@@ -1535,12 +1541,6 @@ msgstr "Hiba hozzáadása"
 #, python-brace-format
 msgid "Failed to add session to folder: {error}"
 msgstr "Sikertelenül sikerült hozzáadni a munkamenetet a mappához: {error}"
-# 
-# File: usr/share/ashyterm/window.py, line: 771
-#: NEEDS WORK
-#, python-brace-format
-msgid "Failed to delete folder: {error}"
-msgstr "A mappa törlése nem sikerült: {error}"
 # 
 # File: usr/share/ashyterm/window.py, line: 835
 #: NEEDS WORK
@@ -1713,17 +1713,6 @@ msgstr "Mappa hozzáadása hiba"
 msgid "Failed to edit selected item: {error}"
 msgstr "A kiválasztott elem szerkesztése nem sikerült: {error}"
 # 
-# File: usr/share/ashyterm/window.py, line: 917
-#: NEEDS WORK
-msgid "Remove Error"
-msgstr "Hiba eltávolítása"
-# 
-# File: usr/share/ashyterm/window.py, line: 917
-#: NEEDS WORK
-#, python-brace-format
-msgid "Failed to remove selected item: {error}"
-msgstr "A kiválasztott elem eltávolítása nem sikerült: {error}"
-# 
 # File: usr/share/ashyterm/window.py, line: 944
 # File: usr/share/ashyterm/window.py, line: 999
 #: NEEDS WORK
@@ -1770,6 +1759,22 @@ msgstr "Áthelyezés munkamenet"
 msgid "Move session functionality will be implemented in folder selection dialog."
 msgstr "A munkamenet áthelyezése funkciót a mappa kiválasztási párbeszédablakban fogják megvalósítani."
 # 
+# File: usr/share/ashyterm/window.py, line: 1450
+#: NEEDS WORK
+msgid "Delete Item"
+msgstr "Elem törlése"
+# 
+# File: usr/share/ashyterm/window.py, line: 1450
+#: NEEDS WORK
+msgid "Delete Items"
+msgstr "Elemek törlése"
+# 
+# File: usr/share/ashyterm/window.py, line: 1009
+#: NEEDS WORK
+#, python-brace-format
+msgid "Delete {type}"
+msgstr "Törlés {type}"
+# 
 # File: usr/share/ashyterm/window.py, line: 1003
 #: NEEDS WORK
 #, python-brace-format
@@ -1784,11 +1789,16 @@ msgstr "A \"{name}\" mappa nem üres. Biztosan törölni szeretné véglegesen, 
 msgid "Are you sure you want to delete \"{name}\"?"
 msgstr "Biztos benne, hogy törölni szeretné a \"{name}\"?"
 # 
-# File: usr/share/ashyterm/window.py, line: 1009
+# File: usr/share/ashyterm/window.py, line: 1464
 #: NEEDS WORK
 #, python-brace-format
-msgid "Delete {type}"
-msgstr "Törlés {type}"
+msgid "Are you sure you want to permanently delete these {count} items?"
+msgstr "Biztos benne, hogy véglegesen törölni szeretné ezeket a {count} elemet?"
+# 
+# File: usr/share/ashyterm/window.py, line: 1466
+#: NEEDS WORK
+msgid "This will also delete all contents of any selected folders."
+msgstr "Ez a kiválasztott mappák összes tartalmát is törli."
 # 
 # #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
 # 
@@ -1798,12 +1808,6 @@ msgstr "Törlés {type}"
 #: NEEDS WORK
 msgid "Delete"
 msgstr "Törlés"
-# 
-# File: usr/share/ashyterm/window.py, line: 1033
-#: NEEDS WORK
-#, python-brace-format
-msgid "Delete {type} Error"
-msgstr "Törlés {type} Hiba"
 # 
 # #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
 # 

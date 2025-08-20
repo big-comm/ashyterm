@@ -591,6 +591,12 @@ msgstr "Pasta Sem Nome"
 msgid "Failed to move session"
 msgstr "Falha ao mover a sessão"
 # 
+# File: usr/share/ashyterm/sessions/tree.py, line: 618
+# File: usr/share/ashyterm/sessions/tree.py, line: 623
+#: NEEDS WORK
+msgid "Paste Error"
+msgstr "Erro ao Colar"
+# 
 # File: usr/share/ashyterm/app.py, line: 53
 #: NEEDS WORK
 #, python-brace-format
@@ -1499,11 +1505,11 @@ msgstr "Erro de Movimento"
 msgid "Delete Error"
 msgstr "Erro ao Deletar"
 # 
-# File: usr/share/ashyterm/window.py, line: 733
+# File: usr/share/ashyterm/window.py, line: 1043
 #: NEEDS WORK
 #, python-brace-format
-msgid "Failed to delete session: {error}"
-msgstr "Falha ao excluir a sessão: {error}"
+msgid "Failed to delete selected items: {error}"
+msgstr "Falha ao excluir os itens selecionados: {error}"
 # 
 # File: usr/share/ashyterm/window.py, line: 743
 #: NEEDS WORK
@@ -1533,12 +1539,6 @@ msgstr "Adicionar Erro"
 #, python-brace-format
 msgid "Failed to add session to folder: {error}"
 msgstr "Falha ao adicionar sessão à pasta: {error}"
-# 
-# File: usr/share/ashyterm/window.py, line: 771
-#: NEEDS WORK
-#, python-brace-format
-msgid "Failed to delete folder: {error}"
-msgstr "Falha ao excluir a pasta: {error}"
 # 
 # File: usr/share/ashyterm/window.py, line: 835
 #: NEEDS WORK
@@ -1708,17 +1708,6 @@ msgstr "Erro ao Adicionar Pasta"
 msgid "Failed to edit selected item: {error}"
 msgstr "Falha ao editar o item selecionado: {error}"
 # 
-# File: usr/share/ashyterm/window.py, line: 917
-#: NEEDS WORK
-msgid "Remove Error"
-msgstr "Remover Erro"
-# 
-# File: usr/share/ashyterm/window.py, line: 917
-#: NEEDS WORK
-#, python-brace-format
-msgid "Failed to remove selected item: {error}"
-msgstr "Falha ao remover o item selecionado: {error}"
-# 
 # File: usr/share/ashyterm/window.py, line: 944
 # File: usr/share/ashyterm/window.py, line: 999
 #: NEEDS WORK
@@ -1765,6 +1754,22 @@ msgstr "Mover Sessão"
 msgid "Move session functionality will be implemented in folder selection dialog."
 msgstr "A funcionalidade de mover sessão será implementada na caixa de diálogo de seleção de pasta."
 # 
+# File: usr/share/ashyterm/window.py, line: 1450
+#: NEEDS WORK
+msgid "Delete Item"
+msgstr "Excluir Item"
+# 
+# File: usr/share/ashyterm/window.py, line: 1450
+#: NEEDS WORK
+msgid "Delete Items"
+msgstr "Excluir Itens"
+# 
+# File: usr/share/ashyterm/window.py, line: 1009
+#: NEEDS WORK
+#, python-brace-format
+msgid "Delete {type}"
+msgstr "Excluir {type}"
+# 
 # File: usr/share/ashyterm/window.py, line: 1003
 #: NEEDS WORK
 #, python-brace-format
@@ -1781,11 +1786,16 @@ msgstr ""
 msgid "Are you sure you want to delete \"{name}\"?"
 msgstr "Você tem certeza de que deseja excluir \"{name}\"?"
 # 
-# File: usr/share/ashyterm/window.py, line: 1009
+# File: usr/share/ashyterm/window.py, line: 1464
 #: NEEDS WORK
 #, python-brace-format
-msgid "Delete {type}"
-msgstr "Excluir {type}"
+msgid "Are you sure you want to permanently delete these {count} items?"
+msgstr "Você tem certeza de que deseja excluir permanentemente estes {count} itens?"
+# 
+# File: usr/share/ashyterm/window.py, line: 1466
+#: NEEDS WORK
+msgid "This will also delete all contents of any selected folders."
+msgstr "Isso também excluirá todo o conteúdo de quaisquer pastas selecionadas."
 # 
 # #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
 # 
@@ -1795,12 +1805,6 @@ msgstr "Excluir {type}"
 #: NEEDS WORK
 msgid "Delete"
 msgstr "Excluir"
-# 
-# File: usr/share/ashyterm/window.py, line: 1033
-#: NEEDS WORK
-#, python-brace-format
-msgid "Delete {type} Error"
-msgstr "Excluir Erro de {type}"
 # 
 # #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
 # 

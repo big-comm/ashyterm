@@ -591,6 +591,12 @@ msgstr "תיקייה ללא שם"
 msgid "Failed to move session"
 msgstr "כישלון בהעברת המושב"
 # 
+# File: usr/share/ashyterm/sessions/tree.py, line: 618
+# File: usr/share/ashyterm/sessions/tree.py, line: 623
+#: NEEDS WORK
+msgid "Paste Error"
+msgstr "שגיאת הדבקה"
+# 
 # File: usr/share/ashyterm/app.py, line: 53
 #: NEEDS WORK
 #, python-brace-format
@@ -1497,11 +1503,11 @@ msgstr "שגיאת הזזה"
 msgid "Delete Error"
 msgstr "שגיאת מחיקה"
 # 
-# File: usr/share/ashyterm/window.py, line: 733
+# File: usr/share/ashyterm/window.py, line: 1043
 #: NEEDS WORK
 #, python-brace-format
-msgid "Failed to delete session: {error}"
-msgstr "כישלון במחיקת המושב: {error}"
+msgid "Failed to delete selected items: {error}"
+msgstr "נכשל במחקת הפריטים שנבחרו: {error}"
 # 
 # File: usr/share/ashyterm/window.py, line: 743
 #: NEEDS WORK
@@ -1531,12 +1537,6 @@ msgstr "הוסף שגיאה"
 #, python-brace-format
 msgid "Failed to add session to folder: {error}"
 msgstr "נכשל בהוספת מושב לתיקייה: {error}"
-# 
-# File: usr/share/ashyterm/window.py, line: 771
-#: NEEDS WORK
-#, python-brace-format
-msgid "Failed to delete folder: {error}"
-msgstr "נכשל במחק תיקייה: {error}"
 # 
 # File: usr/share/ashyterm/window.py, line: 835
 #: NEEDS WORK
@@ -1709,17 +1709,6 @@ msgstr "שגיאת הוספת תיקייה"
 msgid "Failed to edit selected item: {error}"
 msgstr "נכשל בעריכת הפריט הנבחר: {error}"
 # 
-# File: usr/share/ashyterm/window.py, line: 917
-#: NEEDS WORK
-msgid "Remove Error"
-msgstr "הסר שגיאה"
-# 
-# File: usr/share/ashyterm/window.py, line: 917
-#: NEEDS WORK
-#, python-brace-format
-msgid "Failed to remove selected item: {error}"
-msgstr "כישלון בהסרת הפריט הנבחר: {error}"
-# 
 # File: usr/share/ashyterm/window.py, line: 944
 # File: usr/share/ashyterm/window.py, line: 999
 #: NEEDS WORK
@@ -1766,6 +1755,22 @@ msgstr "העבר מפגש"
 msgid "Move session functionality will be implemented in folder selection dialog."
 msgstr "פונקציית העברת מושב תיושם בדיאלוג בחירת תיקייה."
 # 
+# File: usr/share/ashyterm/window.py, line: 1450
+#: NEEDS WORK
+msgid "Delete Item"
+msgstr "מחק פריט"
+# 
+# File: usr/share/ashyterm/window.py, line: 1450
+#: NEEDS WORK
+msgid "Delete Items"
+msgstr "מחק פריטים"
+# 
+# File: usr/share/ashyterm/window.py, line: 1009
+#: NEEDS WORK
+#, python-brace-format
+msgid "Delete {type}"
+msgstr "מחק {type}"
+# 
 # File: usr/share/ashyterm/window.py, line: 1003
 #: NEEDS WORK
 #, python-brace-format
@@ -1780,11 +1785,16 @@ msgstr "התקייה \"{name}\" אינה ריקה. האם אתה בטוח שבר
 msgid "Are you sure you want to delete \"{name}\"?"
 msgstr "האם אתה בטוח שברצונך למחוק את \"{name}\"?"
 # 
-# File: usr/share/ashyterm/window.py, line: 1009
+# File: usr/share/ashyterm/window.py, line: 1464
 #: NEEDS WORK
 #, python-brace-format
-msgid "Delete {type}"
-msgstr "מחק {type}"
+msgid "Are you sure you want to permanently delete these {count} items?"
+msgstr "האם אתה בטוח שברצונך למחוק לצמיתות את {count} הפריטים הללו?"
+# 
+# File: usr/share/ashyterm/window.py, line: 1466
+#: NEEDS WORK
+msgid "This will also delete all contents of any selected folders."
+msgstr "זה גם ימחק את כל התוכן של כל התיקיות שנבחרו."
 # 
 # #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
 # 
@@ -1794,12 +1804,6 @@ msgstr "מחק {type}"
 #: NEEDS WORK
 msgid "Delete"
 msgstr "מחק"
-# 
-# File: usr/share/ashyterm/window.py, line: 1033
-#: NEEDS WORK
-#, python-brace-format
-msgid "Delete {type} Error"
-msgstr "מחק שגיאת {type}"
 # 
 # #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
 # 

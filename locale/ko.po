@@ -589,6 +589,12 @@ msgstr "이름 없는 폴더"
 msgid "Failed to move session"
 msgstr "세션 이동 실패"
 # 
+# File: usr/share/ashyterm/sessions/tree.py, line: 618
+# File: usr/share/ashyterm/sessions/tree.py, line: 623
+#: NEEDS WORK
+msgid "Paste Error"
+msgstr "붙여넣기 오류"
+# 
 # File: usr/share/ashyterm/app.py, line: 53
 #: NEEDS WORK
 #, python-brace-format
@@ -1495,11 +1501,11 @@ msgstr "이동 오류"
 msgid "Delete Error"
 msgstr "삭제 오류"
 # 
-# File: usr/share/ashyterm/window.py, line: 733
+# File: usr/share/ashyterm/window.py, line: 1043
 #: NEEDS WORK
 #, python-brace-format
-msgid "Failed to delete session: {error}"
-msgstr "세션 삭제 실패: {error}"
+msgid "Failed to delete selected items: {error}"
+msgstr "선택한 항목을 삭제하지 못했습니다: {error}"
 # 
 # File: usr/share/ashyterm/window.py, line: 743
 #: NEEDS WORK
@@ -1529,12 +1535,6 @@ msgstr "오류 추가"
 #, python-brace-format
 msgid "Failed to add session to folder: {error}"
 msgstr "폴더에 세션을 추가하지 못했습니다: {error}"
-# 
-# File: usr/share/ashyterm/window.py, line: 771
-#: NEEDS WORK
-#, python-brace-format
-msgid "Failed to delete folder: {error}"
-msgstr "폴더를 삭제하지 못했습니다: {error}"
 # 
 # File: usr/share/ashyterm/window.py, line: 835
 #: NEEDS WORK
@@ -1707,17 +1707,6 @@ msgstr "폴더 추가 오류"
 msgid "Failed to edit selected item: {error}"
 msgstr "선택한 항목을 편집하지 못했습니다: {error}"
 # 
-# File: usr/share/ashyterm/window.py, line: 917
-#: NEEDS WORK
-msgid "Remove Error"
-msgstr "오류 제거"
-# 
-# File: usr/share/ashyterm/window.py, line: 917
-#: NEEDS WORK
-#, python-brace-format
-msgid "Failed to remove selected item: {error}"
-msgstr "선택한 항목을 제거하지 못했습니다: {error}"
-# 
 # File: usr/share/ashyterm/window.py, line: 944
 # File: usr/share/ashyterm/window.py, line: 999
 #: NEEDS WORK
@@ -1764,6 +1753,22 @@ msgstr "세션 이동"
 msgid "Move session functionality will be implemented in folder selection dialog."
 msgstr "세션 이동 기능이 폴더 선택 대화상자에 구현될 것입니다."
 # 
+# File: usr/share/ashyterm/window.py, line: 1450
+#: NEEDS WORK
+msgid "Delete Item"
+msgstr "항목 삭제"
+# 
+# File: usr/share/ashyterm/window.py, line: 1450
+#: NEEDS WORK
+msgid "Delete Items"
+msgstr "항목 삭제"
+# 
+# File: usr/share/ashyterm/window.py, line: 1009
+#: NEEDS WORK
+#, python-brace-format
+msgid "Delete {type}"
+msgstr "{type} 삭제"
+# 
 # File: usr/share/ashyterm/window.py, line: 1003
 #: NEEDS WORK
 #, python-brace-format
@@ -1778,11 +1783,16 @@ msgstr "폴더 \"{name}\"가 비어 있지 않습니다. 정말로 영구적으�
 msgid "Are you sure you want to delete \"{name}\"?"
 msgstr "\"{name}\"을(를) 삭제하시겠습니까?"
 # 
-# File: usr/share/ashyterm/window.py, line: 1009
+# File: usr/share/ashyterm/window.py, line: 1464
 #: NEEDS WORK
 #, python-brace-format
-msgid "Delete {type}"
-msgstr "{type} 삭제"
+msgid "Are you sure you want to permanently delete these {count} items?"
+msgstr "이 {count} 항목을 영구적으로 삭제하시겠습니까?"
+# 
+# File: usr/share/ashyterm/window.py, line: 1466
+#: NEEDS WORK
+msgid "This will also delete all contents of any selected folders."
+msgstr "이렇게 하면 선택한 폴더의 모든 내용도 삭제됩니다."
 # 
 # #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
 # 
@@ -1792,12 +1802,6 @@ msgstr "{type} 삭제"
 #: NEEDS WORK
 msgid "Delete"
 msgstr "삭제"
-# 
-# File: usr/share/ashyterm/window.py, line: 1033
-#: NEEDS WORK
-#, python-brace-format
-msgid "Delete {type} Error"
-msgstr "{type} 삭제 오류"
 # 
 # #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
 # 

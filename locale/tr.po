@@ -591,6 +591,12 @@ msgstr "İsimsiz Klasör"
 msgid "Failed to move session"
 msgstr "Oturumu taşımak başarısız oldu"
 # 
+# File: usr/share/ashyterm/sessions/tree.py, line: 618
+# File: usr/share/ashyterm/sessions/tree.py, line: 623
+#: NEEDS WORK
+msgid "Paste Error"
+msgstr "Yapıştırma Hatası"
+# 
 # File: usr/share/ashyterm/app.py, line: 53
 #: NEEDS WORK
 #, python-brace-format
@@ -1499,11 +1505,11 @@ msgstr "Hareket Hatası"
 msgid "Delete Error"
 msgstr "Silme Hatası"
 # 
-# File: usr/share/ashyterm/window.py, line: 733
+# File: usr/share/ashyterm/window.py, line: 1043
 #: NEEDS WORK
 #, python-brace-format
-msgid "Failed to delete session: {error}"
-msgstr "Oturum silinemedi: {error}"
+msgid "Failed to delete selected items: {error}"
+msgstr "Seçilen öğeleri silme işlemi başarısız oldu: {error}"
 # 
 # File: usr/share/ashyterm/window.py, line: 743
 #: NEEDS WORK
@@ -1533,12 +1539,6 @@ msgstr "Hata Ekle"
 #, python-brace-format
 msgid "Failed to add session to folder: {error}"
 msgstr "Klasöre oturum eklenemedi: {error}"
-# 
-# File: usr/share/ashyterm/window.py, line: 771
-#: NEEDS WORK
-#, python-brace-format
-msgid "Failed to delete folder: {error}"
-msgstr "Klasörü silme başarısız oldu: {error}"
 # 
 # File: usr/share/ashyterm/window.py, line: 835
 #: NEEDS WORK
@@ -1708,17 +1708,6 @@ msgstr "Klasör Ekle Hatası"
 msgid "Failed to edit selected item: {error}"
 msgstr "Seçilen öğe düzenlenemedi: {error}"
 # 
-# File: usr/share/ashyterm/window.py, line: 917
-#: NEEDS WORK
-msgid "Remove Error"
-msgstr "Hata Kaldır"
-# 
-# File: usr/share/ashyterm/window.py, line: 917
-#: NEEDS WORK
-#, python-brace-format
-msgid "Failed to remove selected item: {error}"
-msgstr "Seçilen öğe kaldırılmadı: {error}"
-# 
 # File: usr/share/ashyterm/window.py, line: 944
 # File: usr/share/ashyterm/window.py, line: 999
 #: NEEDS WORK
@@ -1765,6 +1754,22 @@ msgstr "Oturumu Taşı"
 msgid "Move session functionality will be implemented in folder selection dialog."
 msgstr "Taşıma oturumu işlevselliği klasör seçim iletişim kutusunda uygulanacaktır."
 # 
+# File: usr/share/ashyterm/window.py, line: 1450
+#: NEEDS WORK
+msgid "Delete Item"
+msgstr "Öğeyi Sil"
+# 
+# File: usr/share/ashyterm/window.py, line: 1450
+#: NEEDS WORK
+msgid "Delete Items"
+msgstr "Öğeleri Sil"
+# 
+# File: usr/share/ashyterm/window.py, line: 1009
+#: NEEDS WORK
+#, python-brace-format
+msgid "Delete {type}"
+msgstr "Sil {type}"
+# 
 # File: usr/share/ashyterm/window.py, line: 1003
 #: NEEDS WORK
 #, python-brace-format
@@ -1779,11 +1784,16 @@ msgstr "\"{name}\" klasörü boş değil. Onu ve tüm içeriğini kalıcı olara
 msgid "Are you sure you want to delete \"{name}\"?"
 msgstr "\"{name}\" silmek istediğinize emin misiniz?"
 # 
-# File: usr/share/ashyterm/window.py, line: 1009
+# File: usr/share/ashyterm/window.py, line: 1464
 #: NEEDS WORK
 #, python-brace-format
-msgid "Delete {type}"
-msgstr "Sil {type}"
+msgid "Are you sure you want to permanently delete these {count} items?"
+msgstr "Bu {count} öğeyi kalıcı olarak silmek istediğinizden emin misiniz?"
+# 
+# File: usr/share/ashyterm/window.py, line: 1466
+#: NEEDS WORK
+msgid "This will also delete all contents of any selected folders."
+msgstr "Bu, seçilen klasörlerin tüm içeriklerini de silecektir."
 # 
 # #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
 # 
@@ -1793,12 +1803,6 @@ msgstr "Sil {type}"
 #: NEEDS WORK
 msgid "Delete"
 msgstr "Silmek"
-# 
-# File: usr/share/ashyterm/window.py, line: 1033
-#: NEEDS WORK
-#, python-brace-format
-msgid "Delete {type} Error"
-msgstr "{type} Hatasını Sil"
 # 
 # #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
 # 

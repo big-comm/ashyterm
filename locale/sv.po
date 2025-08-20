@@ -591,6 +591,12 @@ msgstr "Obenämnd mapp"
 msgid "Failed to move session"
 msgstr "Misslyckades med att flytta session"
 # 
+# File: usr/share/ashyterm/sessions/tree.py, line: 618
+# File: usr/share/ashyterm/sessions/tree.py, line: 623
+#: NEEDS WORK
+msgid "Paste Error"
+msgstr "Klistra in fel"
+# 
 # File: usr/share/ashyterm/app.py, line: 53
 #: NEEDS WORK
 #, python-brace-format
@@ -1499,11 +1505,11 @@ msgstr "Flyttningsfel"
 msgid "Delete Error"
 msgstr "Ta bort fel"
 # 
-# File: usr/share/ashyterm/window.py, line: 733
+# File: usr/share/ashyterm/window.py, line: 1043
 #: NEEDS WORK
 #, python-brace-format
-msgid "Failed to delete session: {error}"
-msgstr "Misslyckades med att ta bort session: {error}"
+msgid "Failed to delete selected items: {error}"
+msgstr "Misslyckades med att ta bort valda objekt: {error}"
 # 
 # File: usr/share/ashyterm/window.py, line: 743
 #: NEEDS WORK
@@ -1533,12 +1539,6 @@ msgstr "Lägg till fel"
 #, python-brace-format
 msgid "Failed to add session to folder: {error}"
 msgstr "Misslyckades med att lägga till session i mappen: {error}"
-# 
-# File: usr/share/ashyterm/window.py, line: 771
-#: NEEDS WORK
-#, python-brace-format
-msgid "Failed to delete folder: {error}"
-msgstr "Misslyckades med att ta bort mappen: {error}"
 # 
 # File: usr/share/ashyterm/window.py, line: 835
 #: NEEDS WORK
@@ -1708,17 +1708,6 @@ msgstr "Lägg till mappfel"
 msgid "Failed to edit selected item: {error}"
 msgstr "Misslyckades med att redigera det valda objektet: {error}"
 # 
-# File: usr/share/ashyterm/window.py, line: 917
-#: NEEDS WORK
-msgid "Remove Error"
-msgstr "Ta bort fel"
-# 
-# File: usr/share/ashyterm/window.py, line: 917
-#: NEEDS WORK
-#, python-brace-format
-msgid "Failed to remove selected item: {error}"
-msgstr "Misslyckades med att ta bort det valda objektet: {error}"
-# 
 # File: usr/share/ashyterm/window.py, line: 944
 # File: usr/share/ashyterm/window.py, line: 999
 #: NEEDS WORK
@@ -1765,6 +1754,22 @@ msgstr "Flytta session"
 msgid "Move session functionality will be implemented in folder selection dialog."
 msgstr "Flytta sessionsfunktionalitet kommer att implementeras i dialogrutan för mappval."
 # 
+# File: usr/share/ashyterm/window.py, line: 1450
+#: NEEDS WORK
+msgid "Delete Item"
+msgstr "Ta bort objekt"
+# 
+# File: usr/share/ashyterm/window.py, line: 1450
+#: NEEDS WORK
+msgid "Delete Items"
+msgstr "Ta bort objekt"
+# 
+# File: usr/share/ashyterm/window.py, line: 1009
+#: NEEDS WORK
+#, python-brace-format
+msgid "Delete {type}"
+msgstr "Ta bort {type}"
+# 
 # File: usr/share/ashyterm/window.py, line: 1003
 #: NEEDS WORK
 #, python-brace-format
@@ -1781,11 +1786,16 @@ msgstr ""
 msgid "Are you sure you want to delete \"{name}\"?"
 msgstr "Är du säker på att du vill ta bort \"{name}\"?"
 # 
-# File: usr/share/ashyterm/window.py, line: 1009
+# File: usr/share/ashyterm/window.py, line: 1464
 #: NEEDS WORK
 #, python-brace-format
-msgid "Delete {type}"
-msgstr "Ta bort {type}"
+msgid "Are you sure you want to permanently delete these {count} items?"
+msgstr "Är du säker på att du vill permanent ta bort dessa {count} objekt?"
+# 
+# File: usr/share/ashyterm/window.py, line: 1466
+#: NEEDS WORK
+msgid "This will also delete all contents of any selected folders."
+msgstr "Detta kommer också att radera allt innehåll i eventuella valda mappar."
 # 
 # #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
 # 
@@ -1795,12 +1805,6 @@ msgstr "Ta bort {type}"
 #: NEEDS WORK
 msgid "Delete"
 msgstr "Ta bort"
-# 
-# File: usr/share/ashyterm/window.py, line: 1033
-#: NEEDS WORK
-#, python-brace-format
-msgid "Delete {type} Error"
-msgstr "Ta bort {type} fel"
 # 
 # #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
 # 

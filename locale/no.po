@@ -591,6 +591,12 @@ msgstr "Uten navn-mappe"
 msgid "Failed to move session"
 msgstr "Mislyktes med å flytte økt"
 # 
+# File: usr/share/ashyterm/sessions/tree.py, line: 618
+# File: usr/share/ashyterm/sessions/tree.py, line: 623
+#: NEEDS WORK
+msgid "Paste Error"
+msgstr "Lim inn feil"
+# 
 # File: usr/share/ashyterm/app.py, line: 53
 #: NEEDS WORK
 #, python-brace-format
@@ -1499,11 +1505,11 @@ msgstr "Flyttingsfeil"
 msgid "Delete Error"
 msgstr "Slett feil"
 # 
-# File: usr/share/ashyterm/window.py, line: 733
+# File: usr/share/ashyterm/window.py, line: 1043
 #: NEEDS WORK
 #, python-brace-format
-msgid "Failed to delete session: {error}"
-msgstr "Mislyktes med å slette økt: {error}"
+msgid "Failed to delete selected items: {error}"
+msgstr "Feilet å slette valgte elementer: {error}"
 # 
 # File: usr/share/ashyterm/window.py, line: 743
 #: NEEDS WORK
@@ -1533,12 +1539,6 @@ msgstr "Legg til feil"
 #, python-brace-format
 msgid "Failed to add session to folder: {error}"
 msgstr "Kunne ikke legge til økt i mappen: {error}"
-# 
-# File: usr/share/ashyterm/window.py, line: 771
-#: NEEDS WORK
-#, python-brace-format
-msgid "Failed to delete folder: {error}"
-msgstr "Mislyktes med å slette mappen: {error}"
 # 
 # File: usr/share/ashyterm/window.py, line: 835
 #: NEEDS WORK
@@ -1711,17 +1711,6 @@ msgstr "Legg til mappe-feil"
 msgid "Failed to edit selected item: {error}"
 msgstr "Kunne ikke redigere valgt element: {error}"
 # 
-# File: usr/share/ashyterm/window.py, line: 917
-#: NEEDS WORK
-msgid "Remove Error"
-msgstr "Fjern feil"
-# 
-# File: usr/share/ashyterm/window.py, line: 917
-#: NEEDS WORK
-#, python-brace-format
-msgid "Failed to remove selected item: {error}"
-msgstr "Kunne ikke fjerne valgt element: {error}"
-# 
 # File: usr/share/ashyterm/window.py, line: 944
 # File: usr/share/ashyterm/window.py, line: 999
 #: NEEDS WORK
@@ -1768,6 +1757,22 @@ msgstr "Flytt økt"
 msgid "Move session functionality will be implemented in folder selection dialog."
 msgstr "Flyttesesjonsfunksjonalitet vil bli implementert i dialogboksen for mappeseleksjon."
 # 
+# File: usr/share/ashyterm/window.py, line: 1450
+#: NEEDS WORK
+msgid "Delete Item"
+msgstr "Slett element"
+# 
+# File: usr/share/ashyterm/window.py, line: 1450
+#: NEEDS WORK
+msgid "Delete Items"
+msgstr "Slett elementer"
+# 
+# File: usr/share/ashyterm/window.py, line: 1009
+#: NEEDS WORK
+#, python-brace-format
+msgid "Delete {type}"
+msgstr "Slett {type}"
+# 
 # File: usr/share/ashyterm/window.py, line: 1003
 #: NEEDS WORK
 #, python-brace-format
@@ -1782,11 +1787,16 @@ msgstr "Mappen \"{name}\" er ikke tom. Er du sikker på at du vil slette den per
 msgid "Are you sure you want to delete \"{name}\"?"
 msgstr "Er du sikker på at du vil slette \"{name}\"?"
 # 
-# File: usr/share/ashyterm/window.py, line: 1009
+# File: usr/share/ashyterm/window.py, line: 1464
 #: NEEDS WORK
 #, python-brace-format
-msgid "Delete {type}"
-msgstr "Slett {type}"
+msgid "Are you sure you want to permanently delete these {count} items?"
+msgstr "Er du sikker på at du vil slette disse {count} elementene permanent?"
+# 
+# File: usr/share/ashyterm/window.py, line: 1466
+#: NEEDS WORK
+msgid "This will also delete all contents of any selected folders."
+msgstr "Dette vil også slette alt innhold i eventuelle valgte mapper."
 # 
 # #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
 # 
@@ -1796,12 +1806,6 @@ msgstr "Slett {type}"
 #: NEEDS WORK
 msgid "Delete"
 msgstr "Slett"
-# 
-# File: usr/share/ashyterm/window.py, line: 1033
-#: NEEDS WORK
-#, python-brace-format
-msgid "Delete {type} Error"
-msgstr "Slett {type} feil"
 # 
 # #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
 # 

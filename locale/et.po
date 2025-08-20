@@ -591,6 +591,12 @@ msgstr "Nimetu kaust"
 msgid "Failed to move session"
 msgstr "Seansi liikumine ebaõnnestus"
 # 
+# File: usr/share/ashyterm/sessions/tree.py, line: 618
+# File: usr/share/ashyterm/sessions/tree.py, line: 623
+#: NEEDS WORK
+msgid "Paste Error"
+msgstr "Kopeerimise viga"
+# 
 # File: usr/share/ashyterm/app.py, line: 53
 #: NEEDS WORK
 #, python-brace-format
@@ -1497,11 +1503,11 @@ msgstr "Liikumise viga"
 msgid "Delete Error"
 msgstr "Kustuta viga"
 # 
-# File: usr/share/ashyterm/window.py, line: 733
+# File: usr/share/ashyterm/window.py, line: 1043
 #: NEEDS WORK
 #, python-brace-format
-msgid "Failed to delete session: {error}"
-msgstr "Seansi kustutamine ebaõnnestus: {error}"
+msgid "Failed to delete selected items: {error}"
+msgstr "Valikute kustutamine ebaõnnestus: {error}"
 # 
 # File: usr/share/ashyterm/window.py, line: 743
 #: NEEDS WORK
@@ -1531,12 +1537,6 @@ msgstr "Lisa viga"
 #, python-brace-format
 msgid "Failed to add session to folder: {error}"
 msgstr "Seansi kausta lisamine ebaõnnestus: {error}"
-# 
-# File: usr/share/ashyterm/window.py, line: 771
-#: NEEDS WORK
-#, python-brace-format
-msgid "Failed to delete folder: {error}"
-msgstr "Kausta kustutamine ebaõnnestus: {error}"
 # 
 # File: usr/share/ashyterm/window.py, line: 835
 #: NEEDS WORK
@@ -1788,17 +1788,6 @@ msgstr "Kausta lisamise viga"
 msgid "Failed to edit selected item: {error}"
 msgstr "Valitud elementi ei õnnestunud redigeerida: {error}"
 # 
-# File: usr/share/ashyterm/window.py, line: 917
-#: NEEDS WORK
-msgid "Remove Error"
-msgstr "Eemalda viga"
-# 
-# File: usr/share/ashyterm/window.py, line: 917
-#: NEEDS WORK
-#, python-brace-format
-msgid "Failed to remove selected item: {error}"
-msgstr "Valitud elementi ei õnnestunud eemaldada: {error}"
-# 
 # File: usr/share/ashyterm/window.py, line: 944
 # File: usr/share/ashyterm/window.py, line: 999
 #: NEEDS WORK
@@ -1845,6 +1834,22 @@ msgstr "Liiguta seanss"
 msgid "Move session functionality will be implemented in folder selection dialog."
 msgstr "Liikumisseansi funktsionaalsus rakendatakse kaustavaliku dialoogis."
 # 
+# File: usr/share/ashyterm/window.py, line: 1450
+#: NEEDS WORK
+msgid "Delete Item"
+msgstr "Kustuta ese"
+# 
+# File: usr/share/ashyterm/window.py, line: 1450
+#: NEEDS WORK
+msgid "Delete Items"
+msgstr "Kustuta esemed"
+# 
+# File: usr/share/ashyterm/window.py, line: 1009
+#: NEEDS WORK
+#, python-brace-format
+msgid "Delete {type}"
+msgstr "Kustuta {type}"
+# 
 # File: usr/share/ashyterm/window.py, line: 1003
 #: NEEDS WORK
 #, python-brace-format
@@ -1861,11 +1866,16 @@ msgstr ""
 msgid "Are you sure you want to delete \"{name}\"?"
 msgstr "Kas olete kindel, et soovite \"{name}\" kustutada?"
 # 
-# File: usr/share/ashyterm/window.py, line: 1009
+# File: usr/share/ashyterm/window.py, line: 1464
 #: NEEDS WORK
 #, python-brace-format
-msgid "Delete {type}"
-msgstr "Kustuta {type}"
+msgid "Are you sure you want to permanently delete these {count} items?"
+msgstr "Kas olete kindel, et soovite need {count} elementi püsivalt kustutada?"
+# 
+# File: usr/share/ashyterm/window.py, line: 1466
+#: NEEDS WORK
+msgid "This will also delete all contents of any selected folders."
+msgstr "See kustutab ka kõik valitud kaustade sisu."
 # 
 # #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
 # 
@@ -1875,12 +1885,6 @@ msgstr "Kustuta {type}"
 #: NEEDS WORK
 msgid "Delete"
 msgstr "Kustuta"
-# 
-# File: usr/share/ashyterm/window.py, line: 1033
-#: NEEDS WORK
-#, python-brace-format
-msgid "Delete {type} Error"
-msgstr "Kustuta {type} viga"
 # 
 # #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
 # 

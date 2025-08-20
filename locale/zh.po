@@ -589,6 +589,12 @@ msgstr "未命名文件夹"
 msgid "Failed to move session"
 msgstr "移动会话失败"
 # 
+# File: usr/share/ashyterm/sessions/tree.py, line: 618
+# File: usr/share/ashyterm/sessions/tree.py, line: 623
+#: NEEDS WORK
+msgid "Paste Error"
+msgstr "粘贴错误"
+# 
 # File: usr/share/ashyterm/app.py, line: 53
 #: NEEDS WORK
 #, python-brace-format
@@ -1495,11 +1501,11 @@ msgstr "移动错误"
 msgid "Delete Error"
 msgstr "删除错误"
 # 
-# File: usr/share/ashyterm/window.py, line: 733
+# File: usr/share/ashyterm/window.py, line: 1043
 #: NEEDS WORK
 #, python-brace-format
-msgid "Failed to delete session: {error}"
-msgstr "无法删除会话：{error}"
+msgid "Failed to delete selected items: {error}"
+msgstr "无法删除所选项目：{error}"
 # 
 # File: usr/share/ashyterm/window.py, line: 743
 #: NEEDS WORK
@@ -1529,12 +1535,6 @@ msgstr "添加错误"
 #, python-brace-format
 msgid "Failed to add session to folder: {error}"
 msgstr "无法将会话添加到文件夹：{error}"
-# 
-# File: usr/share/ashyterm/window.py, line: 771
-#: NEEDS WORK
-#, python-brace-format
-msgid "Failed to delete folder: {error}"
-msgstr "无法删除文件夹：{error}"
 # 
 # File: usr/share/ashyterm/window.py, line: 835
 #: NEEDS WORK
@@ -1704,17 +1704,6 @@ msgstr "添加文件夹错误"
 msgid "Failed to edit selected item: {error}"
 msgstr "无法编辑所选项目：{error}"
 # 
-# File: usr/share/ashyterm/window.py, line: 917
-#: NEEDS WORK
-msgid "Remove Error"
-msgstr "移除错误"
-# 
-# File: usr/share/ashyterm/window.py, line: 917
-#: NEEDS WORK
-#, python-brace-format
-msgid "Failed to remove selected item: {error}"
-msgstr "无法删除选定项：{error}"
-# 
 # File: usr/share/ashyterm/window.py, line: 944
 # File: usr/share/ashyterm/window.py, line: 999
 #: NEEDS WORK
@@ -1761,6 +1750,22 @@ msgstr "移动会话"
 msgid "Move session functionality will be implemented in folder selection dialog."
 msgstr "移动会话功能将在文件夹选择对话框中实现。"
 # 
+# File: usr/share/ashyterm/window.py, line: 1450
+#: NEEDS WORK
+msgid "Delete Item"
+msgstr "删除项目"
+# 
+# File: usr/share/ashyterm/window.py, line: 1450
+#: NEEDS WORK
+msgid "Delete Items"
+msgstr "删除项目"
+# 
+# File: usr/share/ashyterm/window.py, line: 1009
+#: NEEDS WORK
+#, python-brace-format
+msgid "Delete {type}"
+msgstr "删除 {type}"
+# 
 # File: usr/share/ashyterm/window.py, line: 1003
 #: NEEDS WORK
 #, python-brace-format
@@ -1775,11 +1780,16 @@ msgstr "文件夹“{name}”不是空的。您确定要永久删除它及其所
 msgid "Are you sure you want to delete \"{name}\"?"
 msgstr "您确定要删除“{name}”吗？"
 # 
-# File: usr/share/ashyterm/window.py, line: 1009
+# File: usr/share/ashyterm/window.py, line: 1464
 #: NEEDS WORK
 #, python-brace-format
-msgid "Delete {type}"
-msgstr "删除 {type}"
+msgid "Are you sure you want to permanently delete these {count} items?"
+msgstr "您确定要永久删除这 {count} 个项目吗？"
+# 
+# File: usr/share/ashyterm/window.py, line: 1466
+#: NEEDS WORK
+msgid "This will also delete all contents of any selected folders."
+msgstr "这也将删除任何选定文件夹的所有内容。"
 # 
 # #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
 # 
@@ -1789,12 +1799,6 @@ msgstr "删除 {type}"
 #: NEEDS WORK
 msgid "Delete"
 msgstr "删除"
-# 
-# File: usr/share/ashyterm/window.py, line: 1033
-#: NEEDS WORK
-#, python-brace-format
-msgid "Delete {type} Error"
-msgstr "删除 {type} 错误"
 # 
 # #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
 # 

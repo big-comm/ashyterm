@@ -591,6 +591,12 @@ msgstr "Ανώνυμος Φάκελος"
 msgid "Failed to move session"
 msgstr "Αποτυχία μεταφοράς συνεδρίας"
 # 
+# File: usr/share/ashyterm/sessions/tree.py, line: 618
+# File: usr/share/ashyterm/sessions/tree.py, line: 623
+#: NEEDS WORK
+msgid "Paste Error"
+msgstr "Σφάλμα Επικόλλησης"
+# 
 # File: usr/share/ashyterm/app.py, line: 53
 #: NEEDS WORK
 #, python-brace-format
@@ -1503,11 +1509,11 @@ msgstr "Σφάλμα Μετακίνησης"
 msgid "Delete Error"
 msgstr "Διαγραφή Σφάλματος"
 # 
-# File: usr/share/ashyterm/window.py, line: 733
+# File: usr/share/ashyterm/window.py, line: 1043
 #: NEEDS WORK
 #, python-brace-format
-msgid "Failed to delete session: {error}"
-msgstr "Αποτυχία διαγραφής συνεδρίας: {error}"
+msgid "Failed to delete selected items: {error}"
+msgstr "Αποτυχία διαγραφής επιλεγμένων στοιχείων: {error}"
 # 
 # File: usr/share/ashyterm/window.py, line: 743
 #: NEEDS WORK
@@ -1537,12 +1543,6 @@ msgstr "Προσθήκη Σφάλματος"
 #, python-brace-format
 msgid "Failed to add session to folder: {error}"
 msgstr "Αποτυχία προσθήκης συνεδρίας στον φάκελο: {error}"
-# 
-# File: usr/share/ashyterm/window.py, line: 771
-#: NEEDS WORK
-#, python-brace-format
-msgid "Failed to delete folder: {error}"
-msgstr "Αποτυχία διαγραφής φακέλου: {error}"
 # 
 # File: usr/share/ashyterm/window.py, line: 835
 #: NEEDS WORK
@@ -1715,17 +1715,6 @@ msgstr "Σφάλμα προσθήκης φακέλου"
 msgid "Failed to edit selected item: {error}"
 msgstr "Αποτυχία επεξεργασίας του επιλεγμένου στοιχείου: {error}"
 # 
-# File: usr/share/ashyterm/window.py, line: 917
-#: NEEDS WORK
-msgid "Remove Error"
-msgstr "Αφαίρεση Σφάλματος"
-# 
-# File: usr/share/ashyterm/window.py, line: 917
-#: NEEDS WORK
-#, python-brace-format
-msgid "Failed to remove selected item: {error}"
-msgstr "Αποτυχία κατά την αφαίρεση του επιλεγμένου στοιχείου: {error}"
-# 
 # File: usr/share/ashyterm/window.py, line: 944
 # File: usr/share/ashyterm/window.py, line: 999
 #: NEEDS WORK
@@ -1772,6 +1761,22 @@ msgstr "Μετακίνηση Συνεδρίας"
 msgid "Move session functionality will be implemented in folder selection dialog."
 msgstr "Η λειτουργία μεταφοράς συνεδρίας θα υλοποιηθεί στο διάλογο επιλογής φακέλου."
 # 
+# File: usr/share/ashyterm/window.py, line: 1450
+#: NEEDS WORK
+msgid "Delete Item"
+msgstr "Διαγραφή Στοιχείου"
+# 
+# File: usr/share/ashyterm/window.py, line: 1450
+#: NEEDS WORK
+msgid "Delete Items"
+msgstr "Διαγραφή Στοιχείων"
+# 
+# File: usr/share/ashyterm/window.py, line: 1009
+#: NEEDS WORK
+#, python-brace-format
+msgid "Delete {type}"
+msgstr "Διαγραφή {type}"
+# 
 # File: usr/share/ashyterm/window.py, line: 1003
 #: NEEDS WORK
 #, python-brace-format
@@ -1788,11 +1793,16 @@ msgstr ""
 msgid "Are you sure you want to delete \"{name}\"?"
 msgstr "Είστε σίγουροι ότι θέλετε να διαγράψετε το \"{name}\"?"
 # 
-# File: usr/share/ashyterm/window.py, line: 1009
+# File: usr/share/ashyterm/window.py, line: 1464
 #: NEEDS WORK
 #, python-brace-format
-msgid "Delete {type}"
-msgstr "Διαγραφή {type}"
+msgid "Are you sure you want to permanently delete these {count} items?"
+msgstr "Είστε σίγουροι ότι θέλετε να διαγράψετε μόνιμα αυτά τα {count} στοιχεία;"
+# 
+# File: usr/share/ashyterm/window.py, line: 1466
+#: NEEDS WORK
+msgid "This will also delete all contents of any selected folders."
+msgstr "Αυτό θα διαγράψει επίσης όλα τα περιεχόμενα οποιωνδήποτε επιλεγμένων φακέλων."
 # 
 # #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
 # 
@@ -1802,12 +1812,6 @@ msgstr "Διαγραφή {type}"
 #: NEEDS WORK
 msgid "Delete"
 msgstr "Διαγραφή"
-# 
-# File: usr/share/ashyterm/window.py, line: 1033
-#: NEEDS WORK
-#, python-brace-format
-msgid "Delete {type} Error"
-msgstr "Διαγραφή σφάλματος {type}"
 # 
 # #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
 # 

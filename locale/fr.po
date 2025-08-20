@@ -591,6 +591,12 @@ msgstr "Dossier sans nom"
 msgid "Failed to move session"
 msgstr "Échec du déplacement de la session"
 # 
+# File: usr/share/ashyterm/sessions/tree.py, line: 618
+# File: usr/share/ashyterm/sessions/tree.py, line: 623
+#: NEEDS WORK
+msgid "Paste Error"
+msgstr "Erreur de collage"
+# 
 # File: usr/share/ashyterm/app.py, line: 53
 #: NEEDS WORK
 #, python-brace-format
@@ -1499,11 +1505,11 @@ msgstr "Erreur de déplacement"
 msgid "Delete Error"
 msgstr "Erreur de suppression"
 # 
-# File: usr/share/ashyterm/window.py, line: 733
+# File: usr/share/ashyterm/window.py, line: 1043
 #: NEEDS WORK
 #, python-brace-format
-msgid "Failed to delete session: {error}"
-msgstr "Échec de la suppression de la session : {error}"
+msgid "Failed to delete selected items: {error}"
+msgstr "Échec de la suppression des éléments sélectionnés : {error}"
 # 
 # File: usr/share/ashyterm/window.py, line: 743
 #: NEEDS WORK
@@ -1533,12 +1539,6 @@ msgstr "Ajouter une erreur"
 #, python-brace-format
 msgid "Failed to add session to folder: {error}"
 msgstr "Échec de l'ajout de la session au dossier : {error}"
-# 
-# File: usr/share/ashyterm/window.py, line: 771
-#: NEEDS WORK
-#, python-brace-format
-msgid "Failed to delete folder: {error}"
-msgstr "Échec de la suppression du dossier : {error}"
 # 
 # File: usr/share/ashyterm/window.py, line: 835
 #: NEEDS WORK
@@ -1711,17 +1711,6 @@ msgstr "Erreur d'ajout de dossier"
 msgid "Failed to edit selected item: {error}"
 msgstr "Échec de la modification de l'élément sélectionné : {error}"
 # 
-# File: usr/share/ashyterm/window.py, line: 917
-#: NEEDS WORK
-msgid "Remove Error"
-msgstr "Supprimer l'erreur"
-# 
-# File: usr/share/ashyterm/window.py, line: 917
-#: NEEDS WORK
-#, python-brace-format
-msgid "Failed to remove selected item: {error}"
-msgstr "Échec de la suppression de l'élément sélectionné : {error}"
-# 
 # File: usr/share/ashyterm/window.py, line: 944
 # File: usr/share/ashyterm/window.py, line: 999
 #: NEEDS WORK
@@ -1770,6 +1759,22 @@ msgstr ""
 "La fonctionnalité de déplacement de session sera implémentée dans la boîte de dialogue de sélection "
 "de dossier."
 # 
+# File: usr/share/ashyterm/window.py, line: 1450
+#: NEEDS WORK
+msgid "Delete Item"
+msgstr "Supprimer l'élément"
+# 
+# File: usr/share/ashyterm/window.py, line: 1450
+#: NEEDS WORK
+msgid "Delete Items"
+msgstr "Supprimer les éléments"
+# 
+# File: usr/share/ashyterm/window.py, line: 1009
+#: NEEDS WORK
+#, python-brace-format
+msgid "Delete {type}"
+msgstr "Supprimer {type}"
+# 
 # File: usr/share/ashyterm/window.py, line: 1003
 #: NEEDS WORK
 #, python-brace-format
@@ -1786,11 +1791,16 @@ msgstr ""
 msgid "Are you sure you want to delete \"{name}\"?"
 msgstr "Êtes-vous sûr de vouloir supprimer \"{name}\" ?"
 # 
-# File: usr/share/ashyterm/window.py, line: 1009
+# File: usr/share/ashyterm/window.py, line: 1464
 #: NEEDS WORK
 #, python-brace-format
-msgid "Delete {type}"
-msgstr "Supprimer {type}"
+msgid "Are you sure you want to permanently delete these {count} items?"
+msgstr "Êtes-vous sûr de vouloir supprimer définitivement ces {count} éléments ?"
+# 
+# File: usr/share/ashyterm/window.py, line: 1466
+#: NEEDS WORK
+msgid "This will also delete all contents of any selected folders."
+msgstr "Cela supprimera également tout le contenu des dossiers sélectionnés."
 # 
 # #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
 # 
@@ -1800,12 +1810,6 @@ msgstr "Supprimer {type}"
 #: NEEDS WORK
 msgid "Delete"
 msgstr "Supprimer"
-# 
-# File: usr/share/ashyterm/window.py, line: 1033
-#: NEEDS WORK
-#, python-brace-format
-msgid "Delete {type} Error"
-msgstr "Supprimer l'erreur {type}"
 # 
 # #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
 # 
