@@ -22,6 +22,7 @@ from ..utils.security import validate_session_data, create_security_auditor
 from ..utils.platform import get_platform_info, is_windows
 from ..utils.translation_utils import _
 from ..ui.menus import create_session_menu, create_folder_menu, create_root_menu
+from ..utils import generate_unique_name
 
 
 class SessionTreeView:
@@ -319,7 +320,7 @@ class SessionTreeView:
         item = list_item.get_item()
         if isinstance(item, (SessionItem, SessionFolder)):
             try:
-                cursor = Gdk.Cursor.new_from_name("grab")  # Mão aberta
+                cursor = Gdk.Cursor.new_from_name("grab")
                 list_item.get_child().set_cursor(cursor)
             except Exception:
                 pass
@@ -433,3 +434,93 @@ class SessionTreeView:
             self._clipboard_item = None
             return False
         return True
+
+    # --- START: Clipboard Methods ---
+    def _copy_selected_item_safe(self):
+        """Safely copy the selected item to the internal clipboard."""
+        item = self.get_selected_item()
+        if item:
+            self._clipboard_item = item
+            self._clipboard_is_cut = False
+            self._clipboard_timestamp = time.time()
+            self.logger.info(f"Copied to clipboard: '{item.name}'")
+
+    def _cut_selected_item_safe(self):
+        """Safely cut the selected item to the internal clipboard."""
+        item = self.get_selected_item()
+        if item:
+            self._clipboard_item = item
+            self._clipboard_is_cut = True
+            self._clipboard_timestamp = time.time()
+            self.logger.info(f"Cut to clipboard: '{item.name}'")
+
+    def _paste_item_safe(self, target_folder_path: str):
+        """Safely paste the clipboard item to the target folder."""
+        if not self.has_clipboard_content():
+            self.logger.warning("Paste called with empty or expired clipboard.")
+            return
+
+        item_to_paste = self._clipboard_item
+        is_cut = self._clipboard_is_cut
+        result = None
+
+        # Clear clipboard immediately to prevent re-pasting the same item
+        self._clipboard_item = None
+        self._clipboard_is_cut = False
+
+        try:
+            if is_cut:
+                # This is a MOVE operation
+                self.logger.info(f"Pasting (move) '{item_to_paste.name}' to '{target_folder_path}'")
+                if isinstance(item_to_paste, SessionItem):
+                    result = self.operations.move_session_to_folder(item_to_paste, target_folder_path)
+                elif isinstance(item_to_paste, SessionFolder):
+                    # To move a folder, we create an "updated" version with the new parent path
+                    # and then call the update_folder operation.
+                    updated_folder = SessionFolder.from_dict(item_to_paste.to_dict())
+                    updated_folder.parent_path = target_folder_path
+                    updated_folder.path = f"{target_folder_path}/{updated_folder.name}" if target_folder_path else f"/{updated_folder.name}"
+                    
+                    found, position = self.folder_store.find(item_to_paste)
+                    if found:
+                        result = self.operations.update_folder(position, updated_folder)
+                    else:
+                        result = OperationResult(False, "Original folder not found.")
+            else:
+                # This is a COPY (duplicate) operation
+                self.logger.info(f"Pasting (copy) '{item_to_paste.name}' to '{target_folder_path}'")
+                if isinstance(item_to_paste, SessionItem):
+                    # Create a new item from the copied data
+                    new_item_data = item_to_paste.to_dict()
+                    new_item = SessionItem.from_dict(new_item_data)
+                    new_item.folder_path = target_folder_path
+                    
+                    # Ensure the name is unique in the new location
+                    existing_names = self.operations._get_session_names_in_folder(target_folder_path)
+                    new_item.name = generate_unique_name(new_item.name, existing_names)
+                    
+                    result = self.operations.add_session(new_item)
+                elif isinstance(item_to_paste, SessionFolder):
+                    # NOTE: This is a shallow copy. A deep copy (including all child sessions/folders)
+                    # would require a more complex recursive operation.
+                    new_folder_data = item_to_paste.to_dict()
+                    new_folder = SessionFolder.from_dict(new_folder_data)
+                    new_folder.parent_path = target_folder_path
+                    new_folder.path = f"{target_folder_path}/{new_folder.name}" if target_folder_path else f"/{new_folder.name}"
+                    
+                    result = self.operations.add_folder(new_folder)
+
+            # Handle the result of the operation
+            if result and result.success:
+                self.refresh_tree()
+                self.logger.info("Paste operation successful.")
+            elif result:
+                self.logger.error(f"Paste operation failed: {result.message}")
+                if hasattr(self.parent_window, '_show_error_dialog'):
+                    self.parent_window._show_error_dialog(_("Paste Error"), result.message)
+
+        except Exception as e:
+            log_error_with_context(e, "paste item", "ashyterm.sessions.tree")
+            if hasattr(self.parent_window, '_show_error_dialog'):
+                self.parent_window._show_error_dialog(_("Paste Error"), str(e))
+    # --- END: Clipboard Methods ---
