@@ -1,6 +1,6 @@
 # window.py
 
-from typing import Optional, Union
+from typing import Optional, Union, List
 import os
 import threading
 import time
@@ -182,12 +182,12 @@ class CommTerminalWindow(Adw.ApplicationWindow):
                 ("duplicate-session", self._on_duplicate_session),
                 ("rename-session", self._on_rename_session),
                 ("move-session-to-folder", self._on_move_session_to_folder),
-                ("delete-session", self._on_delete_session),
+                ("delete-session", self._on_delete_selected_items), # MODIFIED
                 # Folder actions
                 ("edit-folder", self._on_edit_folder),
                 ("rename-folder", self._on_rename_folder),
                 ("add-session-to-folder", self._on_add_session_to_folder),
-                ("delete-folder", self._on_delete_folder),
+                ("delete-folder", self._on_delete_selected_items), # MODIFIED
                 # Clipboard actions
                 ("cut-item", self._on_cut_item),
                 ("copy-item", self._on_copy_item),
@@ -258,12 +258,7 @@ class CommTerminalWindow(Adw.ApplicationWindow):
         """Create the header bar with controls."""
         try:
             self.header_bar = Adw.HeaderBar()
-            # --- ALTERAÇÃO INICIADA ---
-            # Justificativa: Adicionar uma classe CSS específica nos permite
-            # remover o preenchimento e a borda padrão do HeaderBar,
-            # tornando-o um contêiner compacto para a barra de abas.
             self.header_bar.add_css_class("main-header-bar")
-            # --- ALTERAÇÃO FINALIZADA ---
 
             # Sidebar toggle button
             self.toggle_sidebar_button = Gtk.ToggleButton()
@@ -474,7 +469,6 @@ class CommTerminalWindow(Adw.ApplicationWindow):
             )
 
             # Tab manager callbacks - simplified
-            self.tab_manager.on_tab_selected = self._on_tab_selected
             self.tab_manager.on_quit_application = self._on_quit_application_requested
 
             self.logger.debug("Callbacks configured")
@@ -1035,17 +1029,18 @@ class CommTerminalWindow(Adw.ApplicationWindow):
         """Provides access to the window's toast overlay for dialogs."""
         return getattr(self, "toast_overlay", None)
     
-    def _on_delete_session(self, action, param) -> None:
-        """Handle delete session action."""
+    # --- START: NEW/MODIFIED METHODS FOR MULTI-DELETE ---
+    def _on_delete_selected_items(self, action=None, param=None) -> None:
+        """Handle deleting all selected items from the session tree."""
         try:
-            selected_item = self.session_tree.get_selected_item()
-            if isinstance(selected_item, SessionItem):
-                self._show_delete_confirmation(selected_item, True)
+            selected_items = self.session_tree.get_selected_items()
+            if selected_items:
+                self._show_delete_confirmation(selected_items)
         except Exception as e:
-            self.logger.error(f"Delete session failed: {e}")
+            self.logger.error(f"Delete selected items failed: {e}")
             self._show_error_dialog(
                 _("Delete Error"),
-                _("Failed to delete session: {error}").format(error=str(e)),
+                _("Failed to delete selected items: {error}").format(error=str(e)),
             )
 
     # Action handlers - Folder actions
@@ -1093,24 +1088,10 @@ class CommTerminalWindow(Adw.ApplicationWindow):
                 _("Failed to add session to folder: {error}").format(error=str(e)),
             )
 
-    def _on_delete_folder(self, action, param) -> None:
-        """Handle delete folder action."""
-        try:
-            selected_item = self.session_tree.get_selected_item()
-            if isinstance(selected_item, SessionFolder):
-                self._show_delete_confirmation(selected_item, False)
-        except Exception as e:
-            self.logger.error(f"Delete folder failed: {e}")
-            self._show_error_dialog(
-                _("Delete Error"),
-                _("Failed to delete folder: {error}").format(error=str(e)),
-            )
-
     # Action handlers - Clipboard actions
     def _on_cut_item(self, action, param) -> None:
         """Handle cut item action."""
         try:
-            # --- CHANGED: Logic moved to SessionTreeView ---
             self.session_tree._cut_selected_item_safe()
         except Exception as e:
             self.logger.error(f"Cut item failed: {e}")
@@ -1118,7 +1099,6 @@ class CommTerminalWindow(Adw.ApplicationWindow):
     def _on_copy_item(self, action, param) -> None:
         """Handle copy item action."""
         try:
-            # --- CHANGED: Logic moved to SessionTreeView ---
             self.session_tree._copy_selected_item_safe()
         except Exception as e:
             self.logger.error(f"Copy item failed: {e}")
@@ -1126,7 +1106,6 @@ class CommTerminalWindow(Adw.ApplicationWindow):
     def _on_paste_item(self, action, param) -> None:
         """Handle paste item action."""
         try:
-            # --- CHANGED: Logic moved to SessionTreeView ---
             selected_item = self.session_tree.get_selected_item()
             target_path = ""
             if isinstance(selected_item, SessionFolder):
@@ -1141,7 +1120,6 @@ class CommTerminalWindow(Adw.ApplicationWindow):
     def _on_paste_item_root(self, action, param) -> None:
         """Handle paste item to root action."""
         try:
-            # --- CHANGED: Logic moved to SessionTreeView ---
             self.session_tree._paste_item_safe("")
         except Exception as e:
             self.logger.error(f"Paste item to root failed: {e}")
@@ -1366,18 +1344,7 @@ class CommTerminalWindow(Adw.ApplicationWindow):
 
     def _on_remove_selected_clicked(self, button) -> None:
         """Handle remove selected button click."""
-        try:
-            selected_item = self.session_tree.get_selected_item()
-            if isinstance(selected_item, SessionItem):
-                self._show_delete_confirmation(selected_item, True)
-            elif isinstance(selected_item, SessionFolder):
-                self._show_delete_confirmation(selected_item, False)
-        except Exception as e:
-            self.logger.error(f"Remove selected button failed: {e}")
-            self._show_error_dialog(
-                _("Remove Error"),
-                _("Failed to remove selected item: {error}").format(error=str(e)),
-            )
+        self._on_delete_selected_items()
 
     # Helper methods for dialogs
     def _show_session_edit_dialog(self, session: SessionItem, position: int) -> None:
@@ -1473,22 +1440,34 @@ class CommTerminalWindow(Adw.ApplicationWindow):
             ),
         )
 
-    def _show_delete_confirmation(
-        self, item: Union[SessionItem, SessionFolder], is_session: bool
-    ) -> None:
-        """Show delete confirmation dialog."""
+    def _show_delete_confirmation(self, items: List[Union[SessionItem, SessionFolder]]) -> None:
+        """Show delete confirmation dialog for one or more items."""
         try:
-            item_type = _("Session") if is_session else _("Folder")
+            if not items:
+                return
 
-            # Verifica se a pasta tem conteÃºdo antes de mostrar o diÃ¡logo de exclusÃ£o
-            if not is_session and self.session_tree.operations._folder_has_children(item.path):
-                body_text = _("The folder \"{name}\" is not empty. Are you sure you want to permanently delete it and all its contents?").format(name=item.name)
+            count = len(items)
+            title = _("Delete Item") if count == 1 else _("Delete Items")
+            
+            # Build the message based on the number of items
+            if count == 1:
+                item = items[0]
+                item_type = _("Session") if isinstance(item, SessionItem) else _("Folder")
+                title = _("Delete {type}").format(type=item_type)
+                
+                has_children = isinstance(item, SessionFolder) and self.session_tree.operations._folder_has_children(item.path)
+                if has_children:
+                    body_text = _("The folder \"{name}\" is not empty. Are you sure you want to permanently delete it and all its contents?").format(name=item.name)
+                else:
+                    body_text = _("Are you sure you want to delete \"{name}\"?").format(name=item.name)
             else:
-                body_text = _("Are you sure you want to delete \"{name}\"?").format(name=item.name)
+                body_text = _("Are you sure you want to permanently delete these {count} items?").format(count=count)
+                if any(isinstance(it, SessionFolder) and self.session_tree.operations._folder_has_children(it.path) for it in items):
+                    body_text += "\n\n" + _("This will also delete all contents of any selected folders.")
 
             dialog = Adw.MessageDialog(
                 transient_for=self,
-                title=_("Delete {type}").format(type=item_type),
+                title=title,
                 body=body_text
             )
             
@@ -1499,20 +1478,24 @@ class CommTerminalWindow(Adw.ApplicationWindow):
             def on_response(dlg, response_id):
                 try:
                     if response_id == "delete":
-                        result = None
-                        if is_session:
-                            result = self.session_tree.operations.remove_session(item)
-                            if result.success:
-                                log_session_event("deleted", item.name)
-                        else:
-                            # Se a pasta nÃ£o estiver vazia, use force=True
-                            force_delete = self.session_tree.operations._folder_has_children(item.path)
-                            result = self.session_tree.operations.remove_folder(item, force=force_delete)
+                        # Loop through all selected items and delete them
+                        for item in items:
+                            result = None
+                            if isinstance(item, SessionItem):
+                                result = self.session_tree.operations.remove_session(item)
+                                if result.success:
+                                    log_session_event("deleted", item.name)
+                            elif isinstance(item, SessionFolder):
+                                force_delete = self.session_tree.operations._folder_has_children(item.path)
+                                result = self.session_tree.operations.remove_folder(item, force=force_delete)
+                            
+                            if result and not result.success:
+                                self._show_error_dialog(_("Delete Error"), result.message)
+                                # Stop on first error
+                                break
                         
-                        if result and result.success:
-                            self.session_tree.refresh_tree()
-                        elif result:
-                            self._show_error_dialog(_("Delete {type} Error").format(type=item_type), result.message)
+                        # Refresh the tree once after all operations
+                        self.session_tree.refresh_tree()
 
                     dlg.close()
                 except Exception as e:
@@ -1525,6 +1508,7 @@ class CommTerminalWindow(Adw.ApplicationWindow):
         except Exception as e:
             self.logger.error(f"Delete confirmation dialog failed: {e}")
             raise DialogError("delete_confirmation", str(e))
+    # --- END: NEW/MODIFIED METHODS FOR MULTI-DELETE ---
     
     def _show_error_dialog(self, title: str, message: str) -> None:
         """Show an error dialog to the user."""

@@ -412,11 +412,9 @@ class SessionTreeView:
                 else: # Down
                     new_pos = min(self.flat_store.get_n_items() - 1, self._last_selected_pos + 1)
 
-                # --- FIX: Use the correct method to select a range ---
                 self.selection_model.unselect_all()
                 start = min(self._selection_anchor, new_pos)
                 end = max(self._selection_anchor, new_pos)
-                # The number of items is (end - start + 1)
                 # The fourth argument 'True' means "select these items".
                 self.selection_model.select_range(start, end - start + 1, True)
                 
@@ -424,6 +422,13 @@ class SessionTreeView:
                 self._last_selected_pos = new_pos
                 
                 return Gdk.EVENT_STOP
+        
+        # --- NEW: Handle Delete key ---
+        if keyval == Gdk.KEY_Delete:
+            # Trigger the deletion action in the main window
+            if hasattr(self.parent_window, '_on_delete_selected_items'):
+                self.parent_window._on_delete_selected_items()
+            return Gdk.EVENT_STOP
 
         return Gdk.EVENT_PROPAGATE
 
@@ -447,6 +452,21 @@ class SessionTreeView:
             first_pos = selection.get_nth(0)
             return self.flat_store.get_item(first_pos)
         return None
+
+    # --- NEW: Method to get ALL selected items ---
+    def get_selected_items(self) -> List[Union[SessionItem, SessionFolder]]:
+        """Get a list of all currently selected items."""
+        items = []
+        selection = self.selection_model.get_selection()
+        
+        # --- FINAL FIX: Use the correct Gtk.Bitset.contains() method ---
+        n_items = self.flat_store.get_n_items()
+        for i in range(n_items):
+            if selection.contains(i):
+                item = self.flat_store.get_item(i)
+                if item:
+                    items.append(item)
+        return items
     # --- END: MODIFIED/NEW METHODS FOR MULTI-SELECTION ---
 
     def _on_item_right_click(self, gesture, n_press, x, y, list_item):
