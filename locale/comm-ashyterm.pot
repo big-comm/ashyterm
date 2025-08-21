@@ -204,8 +204,8 @@ msgstr  ""
 # #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
 #
 # File: usr/share/ashyterm/sessions/operations.py, line: 257
-# File: usr/share/ashyterm/sessions/models.py, line: 367
-# File: usr/share/ashyterm/sessions/models.py, line: 718
+# File: usr/share/ashyterm/sessions/models.py, line: 374
+# File: usr/share/ashyterm/sessions/models.py, line: 741
 #, python-brace-format
 msgid   "Validation error: {error}"
 msgstr  ""
@@ -475,26 +475,26 @@ msgstr  ""
 #
 # #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
 #
-# File: usr/share/ashyterm/sessions/models.py, line: 92
+# File: usr/share/ashyterm/sessions/models.py, line: 99
 # File: usr/share/ashyterm/utils.py, line: 438
 # File: usr/share/ashyterm/utils/security.py, line: 786
 msgid   "Session name cannot be empty"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/sessions/models.py, line: 118
+# File: usr/share/ashyterm/sessions/models.py, line: 125
 #, python-brace-format
 msgid   "Invalid session type: {type}. Must be one of: {valid_types}"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/sessions/models.py, line: 142
+# File: usr/share/ashyterm/sessions/models.py, line: 149
 #, python-brace-format
 msgid   "Invalid hostname format: {hostname}"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/sessions/models.py, line: 194
+# File: usr/share/ashyterm/sessions/models.py, line: 201
 #, python-brace-format
 msgid   "Invalid authentication type: {type}. Must be one of: {valid_types}"
 msgstr  ""
@@ -502,7 +502,7 @@ msgstr  ""
 #
 # #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
 #
-# File: usr/share/ashyterm/sessions/models.py, line: 296
+# File: usr/share/ashyterm/sessions/models.py, line: 303
 # File: usr/share/ashyterm/utils/security.py, line: 811
 msgid   "Port must be between 1 and 65535"
 msgstr  ""
@@ -510,91 +510,96 @@ msgstr  ""
 #
 # #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
 #
-# File: usr/share/ashyterm/sessions/models.py, line: 302
+# File: usr/share/ashyterm/sessions/models.py, line: 309
 # File: usr/share/ashyterm/utils/security.py, line: 813
 msgid   "Port must be a valid number"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/sessions/models.py, line: 334
+# File: usr/share/ashyterm/sessions/models.py, line: 341
 msgid   "Session name is required"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/sessions/models.py, line: 337
+# File: usr/share/ashyterm/sessions/models.py, line: 344
 msgid   "Session type is required"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/sessions/models.py, line: 342
+# File: usr/share/ashyterm/sessions/models.py, line: 349
 msgid   "Host is required for SSH sessions"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/sessions/models.py, line: 349
+# File: usr/share/ashyterm/sessions/models.py, line: 356
 #, python-brace-format
 msgid   "SSH key validation failed: {error}"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/sessions/models.py, line: 351
+# File: usr/share/ashyterm/sessions/models.py, line: 358
 #, python-brace-format
 msgid   "SSH key validation error: {error}"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/sessions/models.py, line: 354
+# File: usr/share/ashyterm/sessions/models.py, line: 361
 msgid   "Authentication type is required for SSH sessions"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/sessions/models.py, line: 412
-# File: usr/share/ashyterm/sessions/models.py, line: 446
+# File: usr/share/ashyterm/sessions/models.py, line: 419
+# File: usr/share/ashyterm/sessions/models.py, line: 453
 msgid   "Unnamed Session"
 msgstr  ""
 
 #
 # #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
 #
-# File: usr/share/ashyterm/sessions/models.py, line: 538
+# File: usr/share/ashyterm/sessions/models.py, line: 545
 # File: usr/share/ashyterm/ui/dialogs.py, line: 431
 msgid   "Local Terminal"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/sessions/models.py, line: 610
+# File: usr/share/ashyterm/sessions/models.py, line: 633
 msgid   "Folder name cannot be empty"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/sessions/models.py, line: 696
+# File: usr/share/ashyterm/sessions/models.py, line: 719
 msgid   "Folder name is required"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/sessions/models.py, line: 700
+# File: usr/share/ashyterm/sessions/models.py, line: 723
 msgid   "Path contains invalid characters"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/sessions/models.py, line: 705
+# File: usr/share/ashyterm/sessions/models.py, line: 728
 msgid   "Path is not consistent with parent path"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/sessions/models.py, line: 754
-# File: usr/share/ashyterm/sessions/models.py, line: 779
+# File: usr/share/ashyterm/sessions/models.py, line: 777
+# File: usr/share/ashyterm/sessions/models.py, line: 802
 msgid   "Unnamed Folder"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/sessions/tree.py, line: 296
+# File: usr/share/ashyterm/sessions/tree.py, line: 101
+msgid   "Sessions"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/sessions/tree.py, line: 330
 msgid   "Failed to move session"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/sessions/tree.py, line: 646
-# File: usr/share/ashyterm/sessions/tree.py, line: 651
+# File: usr/share/ashyterm/sessions/tree.py, line: 618
+# File: usr/share/ashyterm/sessions/tree.py, line: 622
 msgid   "Paste Error"
 msgstr  ""
 
