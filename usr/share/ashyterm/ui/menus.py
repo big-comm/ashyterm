@@ -113,6 +113,15 @@ def create_session_menu(
     """
     menu = Gio.Menu()
 
+    # --- START OF MODIFICATION ---
+    # Add SFTP option if the session is of type SSH
+    if session_item.is_ssh():
+        sftp_item = Gio.MenuItem.new(_("Connect with SFTP"), "win.connect-sftp")
+        sftp_item.set_icon(Gio.ThemedIcon.new("folder-remote-symbolic"))
+        menu.append_item(sftp_item)
+        menu.append_section(None, Gio.Menu())  # Add a separator
+    # --- END OF MODIFICATION ---
+
     # Basic session operations
     menu.append_item(Gio.MenuItem.new(_("Edit"), "win.edit-session"))
     menu.append_item(Gio.MenuItem.new(_("Duplicate"), "win.duplicate-session"))

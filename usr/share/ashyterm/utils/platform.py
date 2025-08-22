@@ -1,10 +1,3 @@
-"""
-Platform compatibility utilities for Ashy Terminal.
-
-This module provides cross-platform compatibility for file paths, commands,
-shell detection, and platform-specific behaviors to support different operating systems.
-"""
-
 import os
 import sys
 import platform
@@ -424,62 +417,45 @@ class CommandBuilder:
         self.platform_info = platform_info
         self.logger = get_logger('ashyterm.platform.commands')
     
-    def build_ssh_command(self, hostname: str, username: Optional[str] = None,
-                         key_file: Optional[str] = None, port: Optional[int] = None,
-                         options: Optional[Dict[str, str]] = None) -> List[str]:
+    # --- START OF MODIFICATION: Generalize for remote commands ---
+    def build_remote_command(self, command_type: str, hostname: str, username: Optional[str] = None,
+                             key_file: Optional[str] = None, port: Optional[int] = None,
+                             options: Optional[Dict[str, str]] = None) -> List[str]:
         """
-        Build SSH command with platform-appropriate options.
-        
-        Args:
-            hostname: Target hostname
-            username: SSH username
-            key_file: SSH key file path
-            port: SSH port
-            options: Additional SSH options
-            
-        Returns:
-            SSH command as list of arguments
+        Builds a remote command (ssh, sftp) with platform-appropriate options.
         """
-        if not self.platform_info.has_command('ssh'):
+        if not self.platform_info.has_command(command_type):
             raise ConfigError(
-                "SSH command not found",
+                f"{command_type.upper()} command not found",
                 details={'platform': self.platform_info.platform_type.value}
             )
         
-        ssh_path = self.platform_info.get_command_path('ssh')
-        cmd = [ssh_path]
+        command_path = self.platform_info.get_command_path(command_type)
+        cmd = [command_path]
         
-        # Add standard options
-        default_options = {
-            'ConnectTimeout': '10',
-            'ServerAliveInterval': '5',
-            'ServerAliveCountMax': '3',
-            'StrictHostKeyChecking': 'ask'
-        }
-        
-        # Merge with user options
+        # Add options
         if options:
-            default_options.update(options)
+            for key, value in options.items():
+                cmd.extend(['-o', f'{key}={value}'])
         
-        # Add options to command
-        for key, value in default_options.items():
-            cmd.extend(['-o', f'{key}={value}'])
-        
-        # Add key file if specified
+        # Add key file
         if key_file:
             cmd.extend(['-i', key_file])
         
-        # Add port if specified
+        # Add port
         if port:
-            cmd.extend(['-p', str(port)])
+            # sftp uses -P (uppercase), ssh uses -p (lowercase)
+            port_flag = '-P' if command_type == 'sftp' else '-p'
+            cmd.extend([port_flag, str(port)])
         
-        # Add target
+        # Add connection target
         if username:
             cmd.append(f'{username}@{hostname}')
         else:
             cmd.append(hostname)
         
         return cmd
+    # --- END OF MODIFICATION ---
     
     def build_scp_command(self, source: str, destination: str,
                          username: Optional[str] = None, hostname: Optional[str] = None,

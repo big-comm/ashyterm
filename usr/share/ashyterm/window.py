@@ -1,5 +1,3 @@
-# window.py
-
 from typing import Optional, Union, List
 import os
 import threading
@@ -177,6 +175,9 @@ class CommTerminalWindow(Adw.ApplicationWindow):
                 ("zoom-in", self._on_zoom_in),
                 ("zoom-out", self._on_zoom_out),
                 ("zoom-reset", self._on_zoom_reset),
+                # --- START OF MODIFICATION ---
+                ("connect-sftp", self._on_connect_sftp),
+                # --- END OF MODIFICATION ---
                 # Session actions
                 ("edit-session", self._on_edit_session),
                 ("duplicate-session", self._on_duplicate_session),
@@ -705,11 +706,11 @@ class CommTerminalWindow(Adw.ApplicationWindow):
         self.logger.info("Performing window cleanup")
 
         try:
-            # CORREÇÃO CRÍTICA: Chame a limpeza do TerminalManager.
-            # Isso removerá o temporizador e outros recursos.
+            # CRITICAL FIX: Call TerminalManager's cleanup.
+            # This will remove the timer and other resources.
             self.terminal_manager.cleanup_all_terminals()
 
-            # O código restante para fechar os terminais já existentes
+            # The rest of the existing code to close terminals
             all_terminals = self.tab_manager.get_all_terminals()
 
             if not all_terminals:
@@ -720,7 +721,7 @@ class CommTerminalWindow(Adw.ApplicationWindow):
 
             for terminal in all_terminals:
                 try:
-                    # A chamada a close_terminal agora é mais sobre o processo filho
+                    # The call to close_terminal is now more about the child process
                     self.terminal_manager.close_terminal(terminal)
                 except Exception as e:
                     self.logger.error(f"Error closing terminal: {e}")
@@ -784,6 +785,35 @@ class CommTerminalWindow(Adw.ApplicationWindow):
         """Handle tab selection change."""
         # Tab manager already handles focus
         pass
+
+    # --- START OF MODIFICATION ---
+    def _on_connect_sftp(self, action, param) -> None:
+        """Handle connect with SFTP action."""
+        try:
+            selected_item = self.session_tree.get_selected_item()
+            if isinstance(selected_item, SessionItem) and selected_item.is_ssh():
+                self.logger.info(f"SFTP connection requested for session: '{selected_item.name}'")
+                
+                # Call the TabManager to create an SFTP tab
+                result = self.tab_manager.create_sftp_tab(selected_item)
+                
+                if result is None:
+                    self._show_error_dialog(
+                        _("SFTP Connection Failed"),
+                        _("Could not create SFTP terminal for this session."),
+                    )
+                else:
+                    log_terminal_event("created", selected_item.name, f"SFTP to {selected_item.get_connection_string()}")
+            else:
+                self.logger.warning("SFTP connection requested for a non-SSH or non-existent session.")
+
+        except Exception as e:
+            self.logger.error(f"SFTP connection failed: {e}")
+            self._show_error_dialog(
+                _("SFTP Error"),
+                _("Failed to start SFTP session: {error}").format(error=str(e)),
+            )
+    # --- END OF MODIFICATION ---
 
     # Action handlers - Terminal actions
     def _on_new_local_tab(self, action, param) -> None:

@@ -1,5 +1,3 @@
-# ashyterm/terminal/manager.py
-
 from typing import List, Optional, Union, Callable, Any, Dict
 import threading
 import time
@@ -228,7 +226,7 @@ class TerminalRegistry:
             return terminal_id
 
     def get_active_terminal_count(self) -> int:
-        """Conta os terminais que são considerados ativos (não encerrados ou com falha)."""
+        """Counts terminals that are considered active (not exited or failed)."""
         with self._lock:
             return sum(
                 1
@@ -394,9 +392,9 @@ class TerminalManager:
             return None
 
     def _on_directory_uri_changed(self, terminal: Vte.Terminal, param_spec):
-        """Manipula o sinal notify::current-directory-uri do VTE, que é muito mais eficiente."""
+        """Handles the VTE notify::current-directory-uri signal, which is much more efficient."""
         try:
-            # Esta verificação é importante para evitar processamento desnecessário
+            # This check is important to avoid unnecessary processing
             if not self.settings_manager.get("osc7_enabled", True):
                 return
 
@@ -404,7 +402,7 @@ class TerminalManager:
             if not uri:
                 return
 
-            # O resto da lógica de parsing e atualização do título
+            # The rest of the parsing and title update logic
             from urllib.parse import urlparse, unquote
             parsed_uri = urlparse(uri)
             if parsed_uri.scheme != "file":
@@ -418,12 +416,12 @@ class TerminalManager:
                 hostname=hostname, path=path, display_path=display_path
             )
 
-            # Chama a lógica unificada de atualização de título
+            # Calls the unified title update logic
             self._update_title(terminal, osc7_info)
 
         except Exception as e:
             self.logger.error(
-                f"O tratamento da mudança de URI do diretório falhou: {e}"
+                f"Directory URI change handling failed: {e}"
             )
 
     def _update_title(
@@ -590,6 +588,63 @@ class TerminalManager:
                 else:
                     raise TerminalCreationError(str(e), "ssh")
 
+    # --- START OF MODIFICATION 1: Add create_sftp_terminal ---
+    def create_sftp_terminal(self, session: SessionItem) -> Optional[Vte.Terminal]:
+        """Creates a new terminal and starts an SFTP session in it."""
+        with self._creation_lock:
+            if not VTE_AVAILABLE:
+                self.logger.error("VTE not available for SFTP terminal creation")
+                raise VTENotAvailableError()
+
+            try:
+                self.logger.debug(f"Creating SFTP terminal for session: '{session.name}'")
+
+                # Validate the session
+                session_data = session.to_dict()
+                is_valid, errors = validate_session_data(session_data)
+                if not is_valid:
+                    raise TerminalCreationError(f"Session validation failed: {', '.join(errors)}", "sftp")
+
+                # Create the base terminal widget
+                terminal = self._create_base_terminal()
+                if not terminal:
+                    raise TerminalCreationError("base terminal creation failed", "sftp")
+
+                # Register the terminal
+                terminal_id = self.registry.register_terminal(terminal, "sftp", session)
+                self._setup_terminal_events(terminal, session, terminal_id)
+
+                # Set up the specific Drag-and-Drop for SFTP
+                self._setup_sftp_drag_and_drop(terminal)
+
+                # Spawn the SFTP process
+                success = self.spawner.spawn_sftp_session(
+                    terminal,
+                    session,
+                    lambda t, pid, error, data: self._on_spawn_callback(
+                        t, pid, error, data, terminal_id
+                    ),
+                    session,
+                )
+
+                if success:
+                    self.logger.info(f"SFTP terminal created successfully: '{session.name}' (ID: {terminal_id})")
+                    self._stats["terminals_created"] += 1
+                    return terminal
+                else:
+                    self.registry.unregister_terminal(terminal_id)
+                    self._stats["terminals_failed"] += 1
+                    raise TerminalSpawnError(f"sftp://{session.get_connection_string()}", "SFTP process spawn failed")
+
+            except Exception as e:
+                self._stats["terminals_failed"] += 1
+                self.logger.error(f"Failed to create SFTP terminal for '{session.name}': {e}")
+                if isinstance(e, (TerminalCreationError, TerminalSpawnError, VTENotAvailableError)):
+                    raise
+                else:
+                    raise TerminalCreationError(str(e), "sftp")
+    # --- END OF MODIFICATION 1 ---
+
     def _create_base_terminal(self) -> Optional[Vte.Terminal]:
         try:
             self.logger.debug("Creating base VTE terminal widget")
@@ -615,6 +670,52 @@ class TerminalManager:
         except Exception as e:
             self.logger.error(f"Base terminal creation failed: {e}")
             return None
+
+    # --- START OF MODIFICATION 2: Add Drag-and-Drop logic ---
+    def _setup_sftp_drag_and_drop(self, terminal: Vte.Terminal) -> None:
+        """Sets up the drag-and-drop target for an SFTP terminal."""
+        try:
+            self.logger.debug(f"Setting up SFTP drag-and-drop for terminal {getattr(terminal, 'terminal_id', 'N/A')}")
+            
+            # 1. Create a DropTarget that accepts files (Gio.File).
+            drop_target = Gtk.DropTarget.new(type=Gio.File, actions=Gdk.DragAction.COPY)
+
+            # 2. Connect the "drop" signal to our callback.
+            drop_target.connect("drop", self._on_file_drop)
+            
+            # 3. Add the drop controller to the terminal widget.
+            terminal.add_controller(drop_target)
+            
+            self.logger.debug("SFTP drag-and-drop configured.")
+        except Exception as e:
+            self.logger.error(f"Failed to setup SFTP drag-and-drop: {e}")
+
+    def _on_file_drop(self, drop_target, value, x, y) -> bool:
+        """Callback called when a file is dropped on an SFTP terminal."""
+        try:
+            terminal = drop_target.get_widget()
+            file = value  # The value is a Gio.File
+
+            local_path = file.get_path()
+            if not local_path:
+                return False
+
+            self.logger.info(f"File dropped on SFTP terminal: {local_path}")
+            
+            # Assemble the SFTP 'put' command, ensuring the path is quoted
+            # to handle spaces, and add '\n' to execute it.
+            command_to_send = f'put "{local_path}"\n'
+            
+            self.logger.debug(f"Sending command to SFTP child: {command_to_send.strip()}")
+            
+            # Send the command to the sftp process running in the terminal.
+            terminal.feed_child(command_to_send.encode('utf-8'))
+            
+            return True # Indicate that the drop was handled successfully.
+        except Exception as e:
+            self.logger.error(f"Error handling file drop: {e}")
+            return False
+    # --- END OF MODIFICATION 2 ---
 
     def _setup_terminal_events(
         self,
@@ -996,16 +1097,16 @@ class TerminalManager:
                     )
                     signal_name = "SIGHUP" if terminal_type == "local" else "SIGTERM"
                     
-                    # CORREÇÃO: Distinguir entre fechar split individual vs aba inteira
+                    # FIX: Differentiate between closing an individual split vs an entire tab
                     if force_kill_group:
-                        # Fechar aba inteira - mata todo o grupo de processos
+                        # Closing an entire tab - kill the whole process group
                         pgid = os.getpgid(pid)
                         os.killpg(pgid, signal_to_send)
                         self.logger.debug(
                             f"{signal_name} sent to process group {pgid} of PID {pid}."
                         )
                     else:
-                        # Fechar split individual - mata apenas este processo
+                        # Closing an individual split - kill only this process
                         os.kill(pid, signal_to_send)
                         self.logger.debug(
                             f"{signal_name} sent to individual process PID {pid}."
@@ -1090,7 +1191,7 @@ class TerminalManager:
             self._process_check_timer_id = None
             self.logger.debug("Periodic process check timer removed.")
 
-        # Limpa os registros para evitar vazamentos de memória
+        # Clears the registries to prevent memory leaks
         self.registry._terminals.clear()
         self.registry._terminal_refs.clear()
 
