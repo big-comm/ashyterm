@@ -8,6 +8,7 @@ and application preferences.
 
 import os
 import threading
+from ..terminal.spawner import get_spawner
 import time
 from typing import Optional, Dict, Any, List, Callable
 from pathlib import Path
@@ -829,20 +830,84 @@ class SessionEditDialog(BaseDialog):
         except Exception as e:
             self.logger.error(f"File dialog response handling failed: {e}")
 
+
     def _on_test_connection_clicked(self, button) -> None:
-        """Handle test SSH connection button click."""
+        """Handle test SSH connection button click by running it in a background thread."""
         try:
-            if not self._validate_ssh_fields():
+            # 1. Create a temporary session item from the current dialog fields
+            test_session = self._create_session_from_fields()
+            if not test_session:
+                self._show_error_dialog(_("Validation Error"), _("Please fill in all required SSH fields first."))
                 return
 
-            # Show test dialog (placeholder implementation)
-            self._show_test_connection_dialog()
+            # 2. Show a "Testing..." dialog to the user
+            self.testing_dialog = Adw.MessageDialog(
+                transient_for=self,
+                title=_("Testing Connection..."),
+                body=_("Attempting to connect to {host}...").format(host=test_session.host)
+            )
+            spinner = Gtk.Spinner(spinning=True, halign=Gtk.Align.CENTER, margin_top=12)
+            self.testing_dialog.set_extra_child(spinner)
+            self.testing_dialog.present()
+
+            # 3. Run the actual test in a separate thread
+            thread = threading.Thread(target=self._run_test_in_thread, args=(test_session,))
+            thread.start()
 
         except Exception as e:
-            self.logger.error(f"Test connection failed: {e}")
+            self.logger.error(f"Test connection setup failed: {e}")
+            if hasattr(self, 'testing_dialog'):
+                self.testing_dialog.close()
             self._show_error_dialog(
-                _("Test Connection Error"), _("Failed to test SSH connection")
+                _("Test Connection Error"), _("Failed to start connection test: {}").format(e)
             )
+
+    def _create_session_from_fields(self) -> Optional[SessionItem]:
+        """Creates a temporary SessionItem from the current dialog fields for testing."""
+        if not self.host_entry.get_text().strip() or not self.user_entry.get_text().strip():
+            return None
+
+        return SessionItem(
+            name="Test Connection",
+            session_type="ssh",
+            host=self.host_entry.get_text().strip(),
+            user=self.user_entry.get_text().strip(),
+            port=int(self.port_entry.get_value()),
+            auth_type="key" if self.auth_combo.get_selected() == 0 else "password",
+            auth_value=self._get_auth_value()
+        )
+
+    def _run_test_in_thread(self, test_session: SessionItem):
+        """Worker function to be executed in a background thread."""
+        spawner = get_spawner()
+        success, message = spawner.test_ssh_connection(test_session)
+        
+        # Schedule the result handling back on the main GTK thread
+        GLib.idle_add(self._on_test_finished, success, message)
+
+    def _on_test_finished(self, success: bool, message: str):
+        """Callback executed on the main thread after the test completes."""
+        # Close the "Testing..." dialog
+        if hasattr(self, 'testing_dialog'):
+            self.testing_dialog.close()
+
+        if success:
+            # Show success message
+            result_dialog = Adw.MessageDialog(
+                transient_for=self,
+                title=_("Connection Successful"),
+                body=_("Successfully connected to the SSH server.")
+            )
+            result_dialog.add_response("ok", _("OK"))
+            result_dialog.present()
+        else:
+            # Show failure message with details
+            self._show_error_dialog(
+                _("Connection Failed"),
+                _("Could not connect to the SSH server."),
+                details=message
+            )
+        return False # Do not repeat idle_add
 
     def _show_test_connection_dialog(self) -> None:
         """Show SSH connection test dialog."""

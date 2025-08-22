@@ -5,7 +5,7 @@ import signal
 import subprocess
 import threading
 import time
-from typing import Optional, Callable, Any, TYPE_CHECKING, Dict, List
+from typing import Optional, Callable, Any, TYPE_CHECKING, Dict, List, Tuple
 from pathlib import Path
 
 import gi
@@ -771,15 +771,15 @@ class ProcessSpawner:
             self.logger.error(f"Failed to get statistics: {e}")
             return {'error': str(e)}
     
-    def test_ssh_connection(self, session: "SessionItem") -> bool:
+    def test_ssh_connection(self, session: "SessionItem") -> Tuple[bool, str]:
         """
-        Test SSH connection without spawning a terminal.
+        Test SSH connection without spawning a terminal, returning success and a message.
         
         Args:
             session: SessionItem to test
             
         Returns:
-            True if connection test successful
+            Tuple of (success_boolean, message_string)
         """
         try:
             self.logger.debug(f"Testing SSH connection for session: {session.name}")
@@ -787,33 +787,58 @@ class ProcessSpawner:
             # Validate session first
             self._validate_ssh_session(session)
             
-            # Build test command (just connection test)
+            # Build a non-interactive test command
             ssh_options = {
-                'ConnectTimeout': '5',
                 'BatchMode': 'yes',
-                'StrictHostKeyChecking': 'no'
+                'ConnectTimeout': '5',
+                'StrictHostKeyChecking': 'no', # Avoid interactive prompts for testing
+                'PasswordAuthentication': 'no' # Prefer key auth for non-interactive test
             }
             
+            # Build the base command
             cmd = self.command_builder.build_ssh_command(
                 hostname=session.host,
                 username=session.user if session.user else None,
                 key_file=session.auth_value if session.uses_key_auth() else None,
+                port=session.port if session.port != 22 else None,
                 options=ssh_options
             )
             
-            # Add exit command to test connection only
-            cmd.extend(['exit'])
+            # Add a simple command to execute and exit
+            cmd.append('exit')
             
+            # Handle password authentication with sshpass if available
+            if session.uses_password_auth() and session.auth_value:
+                if has_command('sshpass'):
+                    # Prepend sshpass command
+                    cmd = ['sshpass', '-p', session.auth_value] + cmd
+                    self.logger.debug("Using sshpass for connection test")
+                else:
+                    msg = "sshpass is not installed. Cannot test password-based connections automatically."
+                    self.logger.warning(msg)
+                    return False, msg
+
             self.logger.debug(f"SSH test command: {' '.join(cmd)}")
             
-            # This would require subprocess for actual testing
-            # For now, just return validation result
-            return True
+            # Execute the command
+            result = subprocess.run(
+                cmd,
+                capture_output=True,
+                text=True,
+                timeout=10  # A safety timeout for the whole process
+            )
             
-        except Exception as e:
-            self.logger.warning(f"SSH connection test failed for {session.name}: {e}")
-            return False
+            if result.returncode == 0:
+                self.logger.info(f"SSH connection test successful for {session.name}")
+                return True, "Connection successful!"
+            else:
+                error_message = result.stderr.strip()
+                self.logger.warning(f"SSH connection test failed for {session.name}: {error_message}")
+                return False, error_message
 
+        except Exception as e:
+            self.logger.error(f"SSH connection test failed with an exception for {session.name}: {e}")
+            return False, str(e)
 
 # Global spawner instance
 _spawner_instance: Optional[ProcessSpawner] = None
