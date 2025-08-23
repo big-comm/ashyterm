@@ -153,6 +153,10 @@ class SessionTreeView:
 
         label.set_label(item.name)
 
+        box.remove_css_class("indented-session")
+        if isinstance(item, SessionItem) and tree_list_row.get_depth() > 0:
+            box.add_css_class("indented-session")
+
         if isinstance(item, SessionFolder):
             def update_folder_icon(row, _=None):
                 if row.get_expanded():

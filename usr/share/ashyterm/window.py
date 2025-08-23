@@ -320,6 +320,10 @@ class CommTerminalWindow(Adw.ApplicationWindow):
                 background-color: alpha(@theme_selected_bg_color, 0.5);
                 border-radius: 6px;
             }
+            /* NEW: CSS rule for session indentation */
+            .indented-session {
+                margin-left: 16px;
+            }            
             """
             provider = Gtk.CssProvider()
             provider.load_from_data(css.encode("utf-8"))
