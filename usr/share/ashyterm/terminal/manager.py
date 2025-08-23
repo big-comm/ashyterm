@@ -670,19 +670,18 @@ class TerminalManager:
             self.logger.error(f"Base terminal creation failed: {e}")
             return None
 
-    # --- START OF MODIFICATION 2: Add Drag-and-Drop logic ---
     def _setup_sftp_drag_and_drop(self, terminal: Vte.Terminal) -> None:
         """Sets up the drag-and-drop target for an SFTP terminal."""
         try:
             self.logger.debug(f"Setting up SFTP drag-and-drop for terminal {getattr(terminal, 'terminal_id', 'N/A')}")
             
-            # 1. Create a DropTarget that accepts files (Gio.File).
+            # Create a DropTarget that accepts files (Gio.File).
             drop_target = Gtk.DropTarget.new(type=Gio.File, actions=Gdk.DragAction.COPY)
 
-            # 2. Connect the "drop" signal to our callback.
+            # Connect the "drop" signal to our callback.
             drop_target.connect("drop", self._on_file_drop)
             
-            # 3. Add the drop controller to the terminal widget.
+            # Add the drop controller to the terminal widget.
             terminal.add_controller(drop_target)
             
             self.logger.debug("SFTP drag-and-drop configured.")
@@ -690,7 +689,7 @@ class TerminalManager:
             self.logger.error(f"Failed to setup SFTP drag-and-drop: {e}")
 
     def _on_file_drop(self, drop_target, value, x, y) -> bool:
-        """Callback called when a file is dropped on an SFTP terminal."""
+        """Callback called when a file or folder is dropped on an SFTP terminal."""
         try:
             terminal = drop_target.get_widget()
             file = value  # The value is a Gio.File
@@ -699,12 +698,26 @@ class TerminalManager:
             if not local_path:
                 return False
 
-            self.logger.info(f"File dropped on SFTP terminal: {local_path}")
-            
-            # Assemble the SFTP 'put' command, ensuring the path is quoted
-            # to handle spaces, and add '\n' to execute it.
-            command_to_send = f'put "{local_path}"\n'
-            
+            # --- START OF MODIFICATION: Check if dropped item is a directory ---
+            try:
+                # Query the file type to differentiate between files and directories.
+                file_info = file.query_info('standard::type', Gio.FileQueryInfoFlags.NONE, None)
+                file_type = file_info.get_file_type()
+            except GLib.Error as e:
+                self.logger.error(f"Could not query file info for dropped item: {e}")
+                # Fallback to assuming it's a file if we can't get info
+                file_type = Gio.FileType.REGULAR
+
+            # Use 'put -r' for directories and 'put' for regular files.
+            if file_type == Gio.FileType.DIRECTORY:
+                self.logger.info(f"Directory dropped on SFTP terminal: {local_path}")
+                # The '-r' flag is for recursive upload.
+                command_to_send = f'put -r "{local_path}"\n'
+            else:
+                self.logger.info(f"File dropped on SFTP terminal: {local_path}")
+                command_to_send = f'put "{local_path}"\n'
+            # --- END OF MODIFICATION ---
+
             self.logger.debug(f"Sending command to SFTP child: {command_to_send.strip()}")
             
             # Send the command to the sftp process running in the terminal.
@@ -714,7 +727,6 @@ class TerminalManager:
         except Exception as e:
             self.logger.error(f"Error handling file drop: {e}")
             return False
-    # --- END OF MODIFICATION 2 ---
 
     def _setup_terminal_events(
         self,
