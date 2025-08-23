@@ -1407,117 +1407,62 @@ class FolderEditDialog(BaseDialog):
 
     def _on_save_clicked(self, button) -> None:
         """Handle save button click."""
+        # --- START MODIFICATION ---
         try:
-            if not self._validate_and_save():
-                return
+            # Get SessionOperations instance from the parent window
+            operations = self.parent_window.session_tree.operations
 
-            # Save to storage
-            save_sessions_and_folders(None, self.folder_store)
+            # Create a temporary folder object with the new data
+            updated_folder = self._build_updated_folder()
+            if not updated_folder:
+                return # Validation failed in build method
 
-            # Create backup
-            self._create_save_backup()
-
-            # Log folder event
-            event_type = "created" if self.is_new_item else "modified"
-            log_session_event(
-                f"folder_{event_type}",
-                self.editing_folder.name,
-                f"path: {self.editing_folder.path}",
-            )
-
-            # Refresh parent if possible
-            if hasattr(self.parent_window, "refresh_tree"):
+            result = None
+            if self.is_new_item:
+                result = operations.add_folder(updated_folder)
+            else:
+                result = operations.update_folder(self.position, updated_folder)
+            
+            if result and result.success:
+                self.logger.info(
+                    f"Folder {'created' if self.is_new_item else 'updated'}: {updated_folder.name}"
+                )
                 self.parent_window.refresh_tree()
-
-            self.logger.info(
-                f"Folder {'created' if self.is_new_item else 'updated'}: {self.editing_folder.name}"
-            )
-            self.close()
+                self.close()
+            elif result:
+                self._show_error_dialog(_("Save Error"), result.message)
 
         except Exception as e:
             self.logger.error(f"Save handling failed: {e}")
             self._show_error_dialog(
                 _("Save Error"), _("Failed to save folder: {}").format(e)
             )
+        # --- END MODIFICATION ---
 
-    def _validate_and_save(self) -> bool:
-        """Validate input and save changes."""
-        try:
-            self._clear_validation_errors()
-
-            # Validate folder name
-            if not self._validate_required_field(self.name_entry, _("Folder name")):
-                return False
-
-            name = self.name_entry.get_text().strip()
-
-            # Get parent path
-            selected_item = self.parent_combo.get_selected_item()
-            parent_path = ""
-            if selected_item:
-                display_name = selected_item.get_string()
-                parent_path = self.parent_paths_map.get(display_name, "")
-
-            # Build new path
-            new_path = normalize_path(
-                f"{parent_path}/{name}" if parent_path else f"/{name}"
-            )
-            new_path_str = str(new_path)
-
-            # Check for conflicts
-            for i in range(self.folder_store.get_n_items()):
-                folder = self.folder_store.get_item(i)
-                if isinstance(folder, SessionFolder) and folder != self.original_folder:
-                    if folder.path == new_path_str:
-                        self._show_error_dialog(
-                            _("Duplicate Folder"),
-                            _("Folder path '{}' already exists.").format(new_path_str),
-                        )
-                        return False
-
-            # Update folder
-            self.editing_folder.name = name
-            self.editing_folder.parent_path = parent_path
-            self.editing_folder.path = new_path_str
-
-            # Validate folder
-            if not self.editing_folder.validate():
-                errors = self.editing_folder.get_validation_errors()
-                self._show_error_dialog(
-                    _("Validation Error"),
-                    _("Folder validation failed:\n{}").format("\n".join(errors)),
-                )
-                return False
-
-            # Save changes
-            if self.is_new_item:
-                self.folder_store.append(self.editing_folder)
-            else:
-                # Update original folder
-                path_changed = self.old_path != self.editing_folder.path
-
-                self.original_folder.name = self.editing_folder.name
-                self.original_folder.parent_path = self.editing_folder.parent_path
-                self.original_folder.path = self.editing_folder.path
-
-                # Update child paths if path changed
-                if (
-                    path_changed
-                    and self.old_path
-                    and hasattr(self.parent_window, "_update_child_paths")
-                ):
-                    self.parent_window._update_child_paths(
-                        self.old_path, self.original_folder.path
-                    )
-
-            return True
-
-        except Exception as e:
-            self.logger.error(f"Validation and save failed: {e}")
-            self._show_error_dialog(
-                _("Validation Error"), _("Failed to validate folder: {}").format(e)
-            )
-            return False
+    def _build_updated_folder(self) -> Optional[SessionFolder]:
+        """Validate form and build a new SessionFolder object with the updated data."""
+        self._clear_validation_errors()
+        if not self._validate_required_field(self.name_entry, _("Folder name")):
+            return None
+        
+        name = self.name_entry.get_text().strip()
+        
+        selected_item = self.parent_combo.get_selected_item()
+        parent_path = ""
+        if selected_item:
+            display_name = selected_item.get_string()
+            parent_path = self.parent_paths_map.get(display_name, "")
+            
+        new_path = normalize_path(f"{parent_path}/{name}" if parent_path else f"/{name}")
+        
+        # Create a new object with updated data, preserving metadata
+        updated_data = self.editing_folder.to_dict()
+        updated_data.update({
+            "name": name,
+            "parent_path": parent_path,
+            "path": str(new_path)
+        })
+        return SessionFolder.from_dict(updated_data)
 
     def _create_save_backup(self) -> None:
         """Create backup after successful save."""
@@ -2331,3 +2276,4 @@ class MoveSessionDialog(BaseDialog):
             self.close()
         else:
             self._show_error_dialog(_("Move Failed"), result.message)
+
