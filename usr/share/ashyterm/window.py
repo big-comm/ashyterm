@@ -1469,64 +1469,60 @@ class CommTerminalWindow(Adw.ApplicationWindow):
     def _show_delete_confirmation(self, items: List[Union[SessionItem, SessionFolder]]) -> None:
         """Show delete confirmation dialog for one or more items."""
         try:
-            if not items:
-                return
+            if not items: return
 
             count = len(items)
             title = _("Delete Item") if count == 1 else _("Delete Items")
             
-            # Build the message based on the number of items
             if count == 1:
                 item = items[0]
                 item_type = _("Session") if isinstance(item, SessionItem) else _("Folder")
                 title = _("Delete {type}").format(type=item_type)
-                
                 has_children = isinstance(item, SessionFolder) and self.session_tree.operations._folder_has_children(item.path)
-                if has_children:
-                    body_text = _("The folder \"{name}\" is not empty. Are you sure you want to permanently delete it and all its contents?").format(name=item.name)
-                else:
-                    body_text = _("Are you sure you want to delete \"{name}\"?").format(name=item.name)
+                body_text = _("The folder \"{name}\" is not empty. Are you sure you want to permanently delete it and all its contents?").format(name=item.name) if has_children else _("Are you sure you want to delete \"{name}\"?").format(name=item.name)
             else:
                 body_text = _("Are you sure you want to permanently delete these {count} items?").format(count=count)
                 if any(isinstance(it, SessionFolder) and self.session_tree.operations._folder_has_children(it.path) for it in items):
                     body_text += "\n\n" + _("This will also delete all contents of any selected folders.")
 
-            dialog = Adw.MessageDialog(
-                transient_for=self,
-                title=title,
-                body=body_text
-            )
-            
+            dialog = Adw.MessageDialog(transient_for=self, title=title, body=body_text)
             dialog.add_response("cancel", _("Cancel"))
             dialog.add_response("delete", _("Delete"))
             dialog.set_response_appearance("delete", Adw.ResponseAppearance.DESTRUCTIVE)
             
             def on_response(dlg, response_id):
-                try:
-                    if response_id == "delete":
-                        # Loop through all selected items and delete them
-                        for item in items:
-                            result = None
-                            if isinstance(item, SessionItem):
-                                result = self.session_tree.operations.remove_session(item)
-                                if result.success:
-                                    log_session_event("deleted", item.name)
-                            elif isinstance(item, SessionFolder):
-                                force_delete = self.session_tree.operations._folder_has_children(item.path)
-                                result = self.session_tree.operations.remove_folder(item, force=force_delete)
-                            
-                            if result and not result.success:
-                                self._show_error_dialog(_("Delete Error"), result.message)
-                                # Stop on first error
-                                break
-                        
-                        # Refresh the tree once after all operations
-                        self.session_tree.refresh_tree()
+                if response_id == "delete":
+                    try:
+                        # --- START OF FIX ---
+                        folders_to_delete = [item for item in items if isinstance(item, SessionFolder)]
+                        sessions_to_delete = [item for item in items if isinstance(item, SessionItem)]
 
-                    dlg.close()
-                except Exception as e:
-                    self.logger.error(f"Delete confirmation response failed: {e}")
-                    dlg.close()
+                        # 1. Delete folders first. This also deletes their child sessions.
+                        for folder in folders_to_delete:
+                            result = self.session_tree.operations.remove_folder(folder, force=True)
+                            if not result.success:
+                                self._show_error_dialog(_("Delete Error"), result.message)
+                                self.session_tree.refresh_tree()
+                                dlg.close()
+                                return
+
+                        # 2. Delete remaining sessions, checking if they still exist.
+                        for session in sessions_to_delete:
+                            found, _ = self.session_store.find(session)
+                            if found:
+                                result = self.session_tree.operations.remove_session(session)
+                                if not result.success:
+                                    self._show_error_dialog(_("Delete Error"), result.message)
+                                    self.session_tree.refresh_tree()
+                                    dlg.close()
+                                    return
+                        # --- END OF FIX ---
+                        
+                        self.session_tree.refresh_tree()
+                    except Exception as e:
+                        self.logger.error(f"Delete operation failed: {e}")
+                        self._show_error_dialog(_("Delete Error"), str(e))
+                dlg.close()
             
             dialog.connect("response", on_response)
             dialog.present()
@@ -1547,7 +1543,6 @@ class CommTerminalWindow(Adw.ApplicationWindow):
             dialog.present()
         except Exception as e:
             self.logger.error(f"Error dialog failed: {e}")
-            # Fallback to print
             print(f"ERROR: {title} - {message}")
     
     def _show_info_dialog(self, title: str, message: str) -> None:
