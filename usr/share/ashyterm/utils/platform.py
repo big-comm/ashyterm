@@ -417,7 +417,6 @@ class CommandBuilder:
         self.platform_info = platform_info
         self.logger = get_logger('ashyterm.platform.commands')
     
-    # --- START OF MODIFICATION: Generalize for remote commands ---
     def build_remote_command(self, command_type: str, hostname: str, username: Optional[str] = None,
                              key_file: Optional[str] = None, port: Optional[int] = None,
                              options: Optional[Dict[str, str]] = None) -> List[str]:
@@ -455,7 +454,6 @@ class CommandBuilder:
             cmd.append(hostname)
         
         return cmd
-    # --- END OF MODIFICATION ---
     
     def build_scp_command(self, source: str, destination: str,
                          username: Optional[str] = None, hostname: Optional[str] = None,

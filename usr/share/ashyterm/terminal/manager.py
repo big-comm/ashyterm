@@ -588,7 +588,6 @@ class TerminalManager:
                 else:
                     raise TerminalCreationError(str(e), "ssh")
 
-    # --- START OF MODIFICATION 1: Add create_sftp_terminal ---
     def create_sftp_terminal(self, session: SessionItem) -> Optional[Vte.Terminal]:
         """Creates a new terminal and starts an SFTP session in it."""
         with self._creation_lock:
@@ -643,7 +642,6 @@ class TerminalManager:
                     raise
                 else:
                     raise TerminalCreationError(str(e), "sftp")
-    # --- END OF MODIFICATION 1 ---
 
     def _create_base_terminal(self) -> Optional[Vte.Terminal]:
         try:
@@ -656,6 +654,7 @@ class TerminalManager:
             terminal.set_cursor_blink_mode(Vte.CursorBlinkMode.ON)
             terminal.set_scroll_on_output(True)
             terminal.set_scroll_on_keystroke(True)
+            terminal.set_scroll_unit_is_pixels(True)
 
             if self.platform_info.is_windows():
                 terminal.set_encoding("utf-8")

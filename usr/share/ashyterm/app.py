@@ -272,6 +272,9 @@ class CommTerminalApp(Adw.Application):
                 from .window import CommTerminalWindow
                 window = self.create_new_window()
                 self._main_window = window
+            else:
+                # If window exists and no command line args, just present it
+                self.logger.debug(_("Presenting existing window"))
             
             window.present()
             
@@ -770,31 +773,6 @@ class CommTerminalApp(Adw.Application):
         except Exception as e:
             self.logger.error(_("Failed to create new window: {}").format(e))
             raise
-
-    def _on_activate(self, app) -> None:
-        """Handle application activation."""
-        try:
-            self.logger.debug(_("Application activation requested"))
-            
-            window = self.get_active_window()
-            if not window:
-                self.logger.info(_("Creating main window"))
-                from .window import CommTerminalWindow
-                window = self.create_new_window()
-                self._main_window = window
-            else:
-                # If window exists and no command line args, just present it
-                self.logger.debug(_("Presenting existing window"))
-            
-            window.present()
-            
-            self._update_window_shortcuts()
-            
-            self.logger.debug(_("Application activation completed"))
-            
-        except Exception as e:
-            self.logger.error(_("Application activation failed: {}").format(e))
-            self._show_error_dialog(_("Activation Error"), _("Failed to activate application: {}").format(e))
     
     def get_backup_manager(self):
         """Get the backup manager instance."""

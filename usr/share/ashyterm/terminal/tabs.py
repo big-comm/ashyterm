@@ -193,7 +193,6 @@ class TabManager:
             terminal, session.name, "network-server-symbolic"
         )
 
-    # --- START OF MODIFICATION ---
     def create_sftp_tab(self, session: SessionItem) -> Optional[Adw.TabPage]:
         """Creates a new tab with an SFTP terminal for the specified session."""
         self.logger.debug(f"Creating SFTP tab for session '{session.name}'")
@@ -208,13 +207,48 @@ class TabManager:
         return self._create_tab_for_terminal(
             terminal, f"SFTP: {session.name}", "folder-remote-symbolic"
         )
-    # --- END OF MODIFICATION ---
+
+    def _on_terminal_scroll(self, controller, dx, dy, scrolled_window):
+        event = controller.get_current_event()
+        if not event:
+            return Gdk.EVENT_PROPAGATE
+
+        device = event.get_device()
+        if not device:
+            return Gdk.EVENT_PROPAGATE
+
+        if device.get_source() == Gdk.InputSource.TOUCHPAD:
+            sensitivity_factor = 0.3
+            adjusted_dy = dy * sensitivity_factor
+
+            vadjustment = scrolled_window.get_vadjustment()
+            if vadjustment:
+                new_value = (
+                    vadjustment.get_value()
+                    + adjusted_dy * vadjustment.get_step_increment()
+                )
+
+                upper = vadjustment.get_upper() - vadjustment.get_page_size()
+                clamped_value = max(vadjustment.get_lower(), min(new_value, upper))
+
+                vadjustment.set_value(clamped_value)
+
+            return Gdk.EVENT_STOP
+
+        return Gdk.EVENT_PROPAGATE
 
     def _create_tab_for_terminal(
         self, terminal: Vte.Terminal, title: str, icon_name: str
     ) -> Optional[Adw.TabPage]:
         scrolled_window = Gtk.ScrolledWindow(child=terminal)
         scrolled_window.set_policy(Gtk.PolicyType.AUTOMATIC, Gtk.PolicyType.AUTOMATIC)
+
+        scroll_controller = Gtk.EventControllerScroll.new(
+            Gtk.EventControllerScrollFlags.VERTICAL
+        )
+        # Conecta ao nosso novo método corrigido
+        scroll_controller.connect("scroll", self._on_terminal_scroll, scrolled_window)
+        terminal.add_controller(scroll_controller)
 
         focus_controller = Gtk.EventControllerFocus()
         focus_controller.connect("enter", self._on_pane_focus_in, terminal)

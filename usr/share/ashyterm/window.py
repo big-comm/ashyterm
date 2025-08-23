@@ -175,9 +175,8 @@ class CommTerminalWindow(Adw.ApplicationWindow):
                 ("zoom-in", self._on_zoom_in),
                 ("zoom-out", self._on_zoom_out),
                 ("zoom-reset", self._on_zoom_reset),
-                # --- START OF MODIFICATION ---
+                # SFTP
                 ("connect-sftp", self._on_connect_sftp),
-                # --- END OF MODIFICATION ---
                 # Session actions
                 ("edit-session", self._on_edit_session),
                 ("duplicate-session", self._on_duplicate_session),
@@ -643,7 +642,7 @@ class CommTerminalWindow(Adw.ApplicationWindow):
                 self.close()
                 return
 
-            session_list = "\n".join([f"â€¢ {name}" for name in ssh_sessions])
+            session_list = "\n".join([f"• {name}" for name in ssh_sessions])
 
             try:
                 # Build the message in parts to avoid translation issues
@@ -786,7 +785,6 @@ class CommTerminalWindow(Adw.ApplicationWindow):
         # Tab manager already handles focus
         pass
 
-    # --- START OF MODIFICATION ---
     def _on_connect_sftp(self, action, param) -> None:
         """Handle connect with SFTP action."""
         try:
@@ -813,7 +811,6 @@ class CommTerminalWindow(Adw.ApplicationWindow):
                 _("SFTP Error"),
                 _("Failed to start SFTP session: {error}").format(error=str(e)),
             )
-    # --- END OF MODIFICATION ---
 
     # Action handlers - Terminal actions
     def _on_new_local_tab(self, action, param) -> None:
@@ -1059,7 +1056,6 @@ class CommTerminalWindow(Adw.ApplicationWindow):
         """Provides access to the window's toast overlay for dialogs."""
         return getattr(self, "toast_overlay", None)
     
-    # --- START: NEW/MODIFIED METHODS FOR MULTI-DELETE ---
     def _on_delete_selected_items(self, action=None, param=None) -> None:
         """Handle deleting all selected items from the session tree."""
         try:
@@ -1272,18 +1268,18 @@ class CommTerminalWindow(Adw.ApplicationWindow):
                     new_window.present()
                 else:
                     self._show_error_dialog(
-                        _("Nova Janela"), _("Falha ao criar nova janela")
+                        _("New Window"), _("Failed to create new window")
                     )
             else:
                 self._show_error_dialog(
-                    _("Nova Janela"), _("NÃ£o foi possÃ­vel criar uma nova janela")
+                    _("New Window"), _("Could not create a new window")
                 )
 
         except Exception as e:
             self.logger.error(f"New window creation failed: {e}")
             self._show_error_dialog(
-                _("Nova Janela"),
-                _("Falha ao criar nova janela: {error}").format(error=str(e)),
+                _("New Window"),
+                _("Failed to create new window: {error}").format(error=str(e)),
             )
 
     def _on_toggle_sidebar_action(self, action, param) -> None:
@@ -1538,7 +1534,6 @@ class CommTerminalWindow(Adw.ApplicationWindow):
         except Exception as e:
             self.logger.error(f"Delete confirmation dialog failed: {e}")
             raise DialogError("delete_confirmation", str(e))
-    # --- END: NEW/MODIFIED METHODS FOR MULTI-DELETE ---
     
     def _show_error_dialog(self, title: str, message: str) -> None:
         """Show an error dialog to the user."""
