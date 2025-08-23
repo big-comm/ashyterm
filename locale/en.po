@@ -3,7 +3,6 @@
 # This file is distributed under the same license as the comm-ashyterm package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: comm-ashyterm\n"
@@ -149,7 +148,7 @@ msgstr "Failed to save session data"
 # #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
 #
 # File: usr/share/ashyterm/sessions/operations.py, line: 203
-# File: usr/share/ashyterm/window.py, line: 1317
+# File: usr/share/ashyterm/window.py, line: 1313
 #, python-brace-format
 msgid "Failed to add session: {error}"
 msgstr "Failed to add session: {error}"
@@ -327,7 +326,7 @@ msgstr "Session duplicated as '{name}'"
 # #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
 #
 # File: usr/share/ashyterm/sessions/operations.py, line: 564
-# File: usr/share/ashyterm/window.py, line: 1023
+# File: usr/share/ashyterm/window.py, line: 1020
 #, python-brace-format
 msgid "Failed to duplicate session: {error}"
 msgstr "Failed to duplicate session: {error}"
@@ -365,7 +364,7 @@ msgstr "Failed to save after moving session"
 # #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
 #
 # File: usr/share/ashyterm/sessions/operations.py, line: 636
-# File: usr/share/ashyterm/window.py, line: 1055
+# File: usr/share/ashyterm/window.py, line: 1052
 #, python-brace-format
 msgid "Failed to move session: {error}"
 msgstr "Failed to move session: {error}"
@@ -406,7 +405,7 @@ msgstr "Folder name sanitized: '{original}' -> '{new}'"
 # #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
 #
 # File: usr/share/ashyterm/sessions/operations.py, line: 702
-# File: usr/share/ashyterm/window.py, line: 1357
+# File: usr/share/ashyterm/window.py, line: 1353
 #, python-brace-format
 msgid "Failed to add folder: {error}"
 msgstr "Failed to add folder: {error}"
@@ -631,7 +630,7 @@ msgstr "Settings manager initialized"
 
 #
 # File: usr/share/ashyterm/app.py, line: 79
-# File: usr/share/ashyterm/app.py, line: 528
+# File: usr/share/ashyterm/app.py, line: 531
 msgid "Debug mode enabled"
 msgstr "Debug mode enabled"
 
@@ -759,56 +758,55 @@ msgstr "Failed to setup actions: {}"
 
 #
 # File: usr/share/ashyterm/app.py, line: 267
-# File: usr/share/ashyterm/app.py, line: 777
 msgid "Application activation requested"
 msgstr "Application activation requested"
 
 #
 # File: usr/share/ashyterm/app.py, line: 271
-# File: usr/share/ashyterm/app.py, line: 781
 msgid "Creating main window"
 msgstr "Creating main window"
 
 #
-# File: usr/share/ashyterm/app.py, line: 280
-# File: usr/share/ashyterm/app.py, line: 793
+# File: usr/share/ashyterm/app.py, line: 277
+msgid "Presenting existing window"
+msgstr "Presenting existing window"
+
+#
+# File: usr/share/ashyterm/app.py, line: 283
 msgid "Application activation completed"
 msgstr "Application activation completed"
 
 #
-# File: usr/share/ashyterm/app.py, line: 283
-# File: usr/share/ashyterm/app.py, line: 796
+# File: usr/share/ashyterm/app.py, line: 286
 #, python-brace-format
 msgid "Application activation failed: {}"
 msgstr "Application activation failed: {}"
 
 #
-# File: usr/share/ashyterm/app.py, line: 284
-# File: usr/share/ashyterm/app.py, line: 797
+# File: usr/share/ashyterm/app.py, line: 287
 msgid "Activation Error"
 msgstr "Activation Error"
 
 #
-# File: usr/share/ashyterm/app.py, line: 284
-# File: usr/share/ashyterm/app.py, line: 797
+# File: usr/share/ashyterm/app.py, line: 287
 #, python-brace-format
 msgid "Failed to activate application: {}"
 msgstr "Failed to activate application: {}"
 
 #
-# File: usr/share/ashyterm/app.py, line: 408
+# File: usr/share/ashyterm/app.py, line: 411
 msgid "Quit action triggered - no SSH sessions"
 msgstr "Quit action triggered - no SSH sessions"
 
 #
-# File: usr/share/ashyterm/app.py, line: 411
+# File: usr/share/ashyterm/app.py, line: 414
 #, python-brace-format
 msgid "Quit action failed: {}"
 msgstr "Quit action failed: {}"
 
 #
-# File: usr/share/ashyterm/app.py, line: 429
-# File: usr/share/ashyterm/app.py, line: 430
+# File: usr/share/ashyterm/app.py, line: 432
+# File: usr/share/ashyterm/app.py, line: 433
 #, python-brace-format
 msgid "Failed to open preferences: {}"
 msgstr "Failed to open preferences: {}"
@@ -816,124 +814,124 @@ msgstr "Failed to open preferences: {}"
 #
 # #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
 #
-# File: usr/share/ashyterm/app.py, line: 430
-# File: usr/share/ashyterm/window.py, line: 1193
+# File: usr/share/ashyterm/app.py, line: 433
+# File: usr/share/ashyterm/window.py, line: 1189
 msgid "Preferences Error"
 msgstr "Preferences Error"
 
 #
 # #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
 #
-# File: usr/share/ashyterm/app.py, line: 447
+# File: usr/share/ashyterm/app.py, line: 450
 # File: usr/share/ashyterm/__init__.py, line: 20
 msgid "A modern terminal emulator with session management"
 msgstr "A modern terminal emulator with session management"
 
 #
-# File: usr/share/ashyterm/app.py, line: 451
+# File: usr/share/ashyterm/app.py, line: 454
 #, python-brace-format
 msgid "Platform: {}\n"
 msgstr "Platform: {}\n"
 
 #
-# File: usr/share/ashyterm/app.py, line: 452
+# File: usr/share/ashyterm/app.py, line: 455
 #, python-brace-format
 msgid "Architecture: {}\n"
 msgstr "Architecture: {}\n"
 
 #
-# File: usr/share/ashyterm/app.py, line: 453
+# File: usr/share/ashyterm/app.py, line: 456
 #, python-brace-format
 msgid "Shell: {}"
 msgstr "Shell: {}"
 
 #
-# File: usr/share/ashyterm/app.py, line: 459
+# File: usr/share/ashyterm/app.py, line: 462
 #, python-brace-format
 msgid "Failed to show about dialog: {}"
 msgstr "Failed to show about dialog: {}"
 
 #
-# File: usr/share/ashyterm/app.py, line: 465
-# File: usr/share/ashyterm/app.py, line: 476
-# File: usr/share/ashyterm/app.py, line: 489
-# File: usr/share/ashyterm/app.py, line: 493
+# File: usr/share/ashyterm/app.py, line: 468
+# File: usr/share/ashyterm/app.py, line: 479
+# File: usr/share/ashyterm/app.py, line: 492
+# File: usr/share/ashyterm/app.py, line: 496
 msgid "Backup Error"
 msgstr "Backup Error"
 
 #
-# File: usr/share/ashyterm/app.py, line: 465
-# File: usr/share/ashyterm/app.py, line: 499
+# File: usr/share/ashyterm/app.py, line: 468
+# File: usr/share/ashyterm/app.py, line: 502
 msgid "Backup system not available"
 msgstr "Backup system not available"
 
 #
-# File: usr/share/ashyterm/app.py, line: 476
+# File: usr/share/ashyterm/app.py, line: 479
 msgid "No files to backup"
 msgstr "No files to backup"
 
 #
-# File: usr/share/ashyterm/app.py, line: 482
+# File: usr/share/ashyterm/app.py, line: 485
 msgid "Manual backup from menu"
 msgstr "Manual backup from menu"
 
 #
-# File: usr/share/ashyterm/app.py, line: 486
+# File: usr/share/ashyterm/app.py, line: 489
 #, python-brace-format
 msgid "Manual backup created: {}"
 msgstr "Manual backup created: {}"
 
 #
-# File: usr/share/ashyterm/app.py, line: 487
+# File: usr/share/ashyterm/app.py, line: 490
 msgid "Backup Complete"
 msgstr "Backup Complete"
 
 #
-# File: usr/share/ashyterm/app.py, line: 487
+# File: usr/share/ashyterm/app.py, line: 490
 #, python-brace-format
 msgid "Backup created successfully: {}"
 msgstr "Backup created successfully: {}"
 
 #
-# File: usr/share/ashyterm/app.py, line: 489
+# File: usr/share/ashyterm/app.py, line: 492
 msgid "Failed to create backup"
 msgstr "Failed to create backup"
 
 #
-# File: usr/share/ashyterm/app.py, line: 492
+# File: usr/share/ashyterm/app.py, line: 495
 #, python-brace-format
 msgid "Manual backup failed: {}"
 msgstr "Manual backup failed: {}"
 
 #
-# File: usr/share/ashyterm/app.py, line: 493
+# File: usr/share/ashyterm/app.py, line: 496
 #, python-brace-format
 msgid "Backup failed: {}"
 msgstr "Backup failed: {}"
 
 #
-# File: usr/share/ashyterm/app.py, line: 499
-# File: usr/share/ashyterm/app.py, line: 513
+# File: usr/share/ashyterm/app.py, line: 502
+# File: usr/share/ashyterm/app.py, line: 516
 msgid "Restore Error"
 msgstr "Restore Error"
 
 #
-# File: usr/share/ashyterm/app.py, line: 504
+# File: usr/share/ashyterm/app.py, line: 507
 msgid "No Backups"
 msgstr "No Backups"
 
 #
-# File: usr/share/ashyterm/app.py, line: 504
+# File: usr/share/ashyterm/app.py, line: 507
 msgid "No backups available to restore"
 msgstr "No backups available to restore"
 
 #
-# File: usr/share/ashyterm/app.py, line: 508
+# File: usr/share/ashyterm/app.py, line: 511
 msgid "Backups Available"
 msgstr "Backups Available"
 
 #
-# File: usr/share/ashyterm/app.py, line: 509
+# File: usr/share/ashyterm/app.py, line: 512
 #, python-brace-format
 msgid ""
 "{} backup(s) available. Use preferences dialog for detailed restore options."
@@ -941,58 +939,58 @@ msgstr ""
 "{} backup(s) available. Use preferences dialog for detailed restore options."
 
 #
-# File: usr/share/ashyterm/app.py, line: 512
+# File: usr/share/ashyterm/app.py, line: 515
 #, python-brace-format
 msgid "Restore backup action failed: {}"
 msgstr "Restore backup action failed: {}"
 
 #
-# File: usr/share/ashyterm/app.py, line: 513
+# File: usr/share/ashyterm/app.py, line: 516
 #, python-brace-format
 msgid "Failed to access backups: {}"
 msgstr "Failed to access backups: {}"
 
 #
-# File: usr/share/ashyterm/app.py, line: 532
+# File: usr/share/ashyterm/app.py, line: 535
 msgid "Debug mode disabled"
 msgstr "Debug mode disabled"
 
 #
-# File: usr/share/ashyterm/app.py, line: 537
+# File: usr/share/ashyterm/app.py, line: 540
 #, python-brace-format
 msgid "Failed to toggle debug mode: {}"
 msgstr "Failed to toggle debug mode: {}"
 
 #
-# File: usr/share/ashyterm/app.py, line: 546
+# File: usr/share/ashyterm/app.py, line: 549
 msgid "Log Information"
 msgstr "Log Information"
 
 #
-# File: usr/share/ashyterm/app.py, line: 546
+# File: usr/share/ashyterm/app.py, line: 549
 #, python-brace-format
 msgid "Logs are stored in: {}"
 msgstr "Logs are stored in: {}"
 
 #
-# File: usr/share/ashyterm/app.py, line: 549
+# File: usr/share/ashyterm/app.py, line: 552
 #, python-brace-format
 msgid "Failed to show log info: {}"
 msgstr "Failed to show log info: {}"
 
 #
-# File: usr/share/ashyterm/app.py, line: 562
+# File: usr/share/ashyterm/app.py, line: 565
 #, python-brace-format
 msgid "Failed to check SSH sessions: {}"
 msgstr "Failed to check SSH sessions: {}"
 
 #
-# File: usr/share/ashyterm/app.py, line: 575
+# File: usr/share/ashyterm/app.py, line: 578
 msgid "Close Application"
 msgstr "Close Application"
 
 #
-# File: usr/share/ashyterm/app.py, line: 576
+# File: usr/share/ashyterm/app.py, line: 579
 msgid ""
 "There are active SSH connections. Closing will disconnect all sessions.\n"
 "\n"
@@ -1007,10 +1005,10 @@ msgstr ""
 #
 # #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
 #
-# File: usr/share/ashyterm/app.py, line: 579
-# File: usr/share/ashyterm/window.py, line: 666
-# File: usr/share/ashyterm/window.py, line: 1419
-# File: usr/share/ashyterm/window.py, line: 1504
+# File: usr/share/ashyterm/app.py, line: 582
+# File: usr/share/ashyterm/window.py, line: 665
+# File: usr/share/ashyterm/window.py, line: 1415
+# File: usr/share/ashyterm/window.py, line: 1500
 # File: usr/share/ashyterm/ui/dialogs.py, line: 177
 # File: usr/share/ashyterm/ui/dialogs.py, line: 636
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1358
@@ -1021,144 +1019,139 @@ msgid "Cancel"
 msgstr "Cancel"
 
 #
-# File: usr/share/ashyterm/app.py, line: 580
+# File: usr/share/ashyterm/app.py, line: 583
 msgid "Close All"
 msgstr "Close All"
 
 #
-# File: usr/share/ashyterm/app.py, line: 587
+# File: usr/share/ashyterm/app.py, line: 590
 msgid "User confirmed quit with active SSH sessions"
 msgstr "User confirmed quit with active SSH sessions"
 
 #
-# File: usr/share/ashyterm/app.py, line: 590
+# File: usr/share/ashyterm/app.py, line: 593
 msgid "User cancelled quit"
 msgstr "User cancelled quit"
 
 #
-# File: usr/share/ashyterm/app.py, line: 593
+# File: usr/share/ashyterm/app.py, line: 596
 #, python-brace-format
 msgid "SSH close confirmation response failed: {}"
 msgstr "SSH close confirmation response failed: {}"
 
 #
-# File: usr/share/ashyterm/app.py, line: 600
+# File: usr/share/ashyterm/app.py, line: 603
 #, python-brace-format
 msgid "SSH close confirmation dialog failed: {}"
 msgstr "SSH close confirmation dialog failed: {}"
 
 #
-# File: usr/share/ashyterm/app.py, line: 605
+# File: usr/share/ashyterm/app.py, line: 608
 msgid "Application shutdown initiated"
 msgstr "Application shutdown initiated"
 
 #
-# File: usr/share/ashyterm/app.py, line: 615
+# File: usr/share/ashyterm/app.py, line: 618
 msgid "Performing graceful shutdown"
 msgstr "Performing graceful shutdown"
 
 #
-# File: usr/share/ashyterm/app.py, line: 621
+# File: usr/share/ashyterm/app.py, line: 624
 msgid "Cleaning up main window"
 msgstr "Cleaning up main window"
 
 #
-# File: usr/share/ashyterm/app.py, line: 626
+# File: usr/share/ashyterm/app.py, line: 629
 msgid "Saving settings"
 msgstr "Saving settings"
 
 #
-# File: usr/share/ashyterm/app.py, line: 633
+# File: usr/share/ashyterm/app.py, line: 636
 msgid "Graceful shutdown completed"
 msgstr "Graceful shutdown completed"
 
 #
-# File: usr/share/ashyterm/app.py, line: 636
+# File: usr/share/ashyterm/app.py, line: 639
 #, python-brace-format
 msgid "Error during graceful shutdown: {}"
 msgstr "Error during graceful shutdown: {}"
 
 #
-# File: usr/share/ashyterm/app.py, line: 656
+# File: usr/share/ashyterm/app.py, line: 659
 msgid "Performing shutdown backup"
 msgstr "Performing shutdown backup"
 
 #
-# File: usr/share/ashyterm/app.py, line: 660
+# File: usr/share/ashyterm/app.py, line: 663
 msgid "Automatic backup on exit"
 msgstr "Automatic backup on exit"
 
 #
-# File: usr/share/ashyterm/app.py, line: 664
+# File: usr/share/ashyterm/app.py, line: 667
 #, python-brace-format
 msgid "Shutdown backup failed: {}"
 msgstr "Shutdown backup failed: {}"
 
 #
-# File: usr/share/ashyterm/app.py, line: 669
+# File: usr/share/ashyterm/app.py, line: 672
 msgid "Emergency cleanup on exit"
 msgstr "Emergency cleanup on exit"
 
 #
-# File: usr/share/ashyterm/app.py, line: 676
+# File: usr/share/ashyterm/app.py, line: 679
 msgid "Startup Error"
 msgstr "Startup Error"
 
 #
-# File: usr/share/ashyterm/app.py, line: 677
+# File: usr/share/ashyterm/app.py, line: 680
 #, python-brace-format
 msgid "Application failed to start: {}"
 msgstr "Application failed to start: {}"
 
 #
-# File: usr/share/ashyterm/app.py, line: 697
+# File: usr/share/ashyterm/app.py, line: 700
 #, python-brace-format
 msgid "Failed to show error dialog: {}"
 msgstr "Failed to show error dialog: {}"
 
 #
-# File: usr/share/ashyterm/app.py, line: 711
+# File: usr/share/ashyterm/app.py, line: 714
 #, python-brace-format
 msgid "Failed to show info dialog: {}"
 msgstr "Failed to show info dialog: {}"
 
 #
-# File: usr/share/ashyterm/app.py, line: 722
+# File: usr/share/ashyterm/app.py, line: 725
 #, python-brace-format
 msgid "Failed to refresh keyboard shortcuts: {}"
 msgstr "Failed to refresh keyboard shortcuts: {}"
 
 #
-# File: usr/share/ashyterm/app.py, line: 730
+# File: usr/share/ashyterm/app.py, line: 733
 msgid "Main window registered"
 msgstr "Main window registered"
 
 #
-# File: usr/share/ashyterm/app.py, line: 738
+# File: usr/share/ashyterm/app.py, line: 741
 msgid "Main window unregistered"
 msgstr "Main window unregistered"
 
 #
-# File: usr/share/ashyterm/app.py, line: 764
+# File: usr/share/ashyterm/app.py, line: 767
 #, python-brace-format
 msgid "New window created with working directory: {}"
 msgstr "New window created with working directory: {}"
 
 #
-# File: usr/share/ashyterm/app.py, line: 767
+# File: usr/share/ashyterm/app.py, line: 770
 msgid "New window created successfully"
 msgstr "New window created successfully"
 
 #
-# File: usr/share/ashyterm/app.py, line: 771
+# File: usr/share/ashyterm/app.py, line: 774
 #, python-brace-format
 msgid "Failed to create new window: {}"
 msgstr "Failed to create new window: {}"
-
-#
-# File: usr/share/ashyterm/app.py, line: 787
-msgid "Presenting existing window"
-msgstr "Presenting existing window"
 
 #
 # #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
@@ -1268,15 +1261,15 @@ msgid "Warning: Utils module initialization failed: {}"
 msgstr "Warning: Utils module initialization failed: {}"
 
 #
-# File: usr/share/ashyterm/terminal/tabs.py, line: 511
+# File: usr/share/ashyterm/terminal/tabs.py, line: 545
 msgid "Exited"
 msgstr "Exited"
 
 #
 # File: usr/share/ashyterm/window.py, line: 138
-# File: usr/share/ashyterm/window.py, line: 856
-# File: usr/share/ashyterm/window.py, line: 1334
-# File: usr/share/ashyterm/window.py, line: 1344
+# File: usr/share/ashyterm/window.py, line: 853
+# File: usr/share/ashyterm/window.py, line: 1330
+# File: usr/share/ashyterm/window.py, line: 1340
 msgid "Terminal Error"
 msgstr "Terminal Error"
 
@@ -1299,14 +1292,14 @@ msgstr "Failed to initialize terminal: {error}"
 #
 # #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
 #
-# File: usr/share/ashyterm/window.py, line: 267
-# File: usr/share/ashyterm/window.py, line: 1242
+# File: usr/share/ashyterm/window.py, line: 266
+# File: usr/share/ashyterm/window.py, line: 1238
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1836
 msgid "Toggle Sidebar"
 msgstr "Toggle Sidebar"
 
 #
-# File: usr/share/ashyterm/window.py, line: 274
+# File: usr/share/ashyterm/window.py, line: 273
 msgid "Main Menu"
 msgstr "Main Menu"
 
@@ -1315,8 +1308,8 @@ msgstr "Main Menu"
 #
 # #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
 #
-# File: usr/share/ashyterm/window.py, line: 280
-# File: usr/share/ashyterm/window.py, line: 1211
+# File: usr/share/ashyterm/window.py, line: 279
+# File: usr/share/ashyterm/window.py, line: 1207
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1826
 # File: usr/share/ashyterm/ui/menus.py, line: 70
 msgid "New Tab"
@@ -1327,7 +1320,7 @@ msgstr "New Tab"
 #
 # #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
 #
-# File: usr/share/ashyterm/window.py, line: 347
+# File: usr/share/ashyterm/window.py, line: 346
 # File: usr/share/ashyterm/ui/dialogs.py, line: 237
 # File: usr/share/ashyterm/ui/menus.py, line: 163
 # File: usr/share/ashyterm/ui/menus.py, line: 188
@@ -1339,110 +1332,110 @@ msgstr "Add Session"
 #
 # #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
 #
-# File: usr/share/ashyterm/window.py, line: 353
+# File: usr/share/ashyterm/window.py, line: 352
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1192
 # File: usr/share/ashyterm/ui/menus.py, line: 189
 msgid "Add Folder"
 msgstr "Add Folder"
 
 #
-# File: usr/share/ashyterm/window.py, line: 359
+# File: usr/share/ashyterm/window.py, line: 358
 msgid "Edit Selected"
 msgstr "Edit Selected"
 
 #
-# File: usr/share/ashyterm/window.py, line: 365
+# File: usr/share/ashyterm/window.py, line: 364
 msgid "Remove Selected"
 msgstr "Remove Selected"
 
 #
-# File: usr/share/ashyterm/window.py, line: 514
+# File: usr/share/ashyterm/window.py, line: 513
 msgid "Data Loading Error"
 msgstr "Data Loading Error"
 
 #
-# File: usr/share/ashyterm/window.py, line: 516
+# File: usr/share/ashyterm/window.py, line: 515
 msgid ""
 "Failed to load saved sessions and folders. Starting with empty configuration."
 msgstr ""
 "Failed to load saved sessions and folders. Starting with empty configuration."
 
 #
-# File: usr/share/ashyterm/window.py, line: 607
+# File: usr/share/ashyterm/window.py, line: 606
 msgid "Window close request received"
 msgstr "Window close request received"
 
 #
-# File: usr/share/ashyterm/window.py, line: 611
+# File: usr/share/ashyterm/window.py, line: 610
 msgid "Force closing - allowing window to close"
 msgstr "Force closing - allowing window to close"
 
 #
-# File: usr/share/ashyterm/window.py, line: 619
+# File: usr/share/ashyterm/window.py, line: 618
 msgid "Showing SSH close confirmation dialog"
 msgstr "Showing SSH close confirmation dialog"
 
 #
-# File: usr/share/ashyterm/window.py, line: 624
+# File: usr/share/ashyterm/window.py, line: 623
 msgid "No SSH sessions, proceeding with normal close"
 msgstr "No SSH sessions, proceeding with normal close"
 
 #
-# File: usr/share/ashyterm/window.py, line: 626
+# File: usr/share/ashyterm/window.py, line: 625
 msgid "Window cleanup completed"
 msgstr "Window cleanup completed"
 
 #
-# File: usr/share/ashyterm/window.py, line: 630
+# File: usr/share/ashyterm/window.py, line: 629
 #, python-brace-format
 msgid "Window close handling failed: {}"
 msgstr "Window close handling failed: {}"
 
 #
-# File: usr/share/ashyterm/window.py, line: 650
+# File: usr/share/ashyterm/window.py, line: 649
 msgid "This window has active SSH connections:"
 msgstr "This window has active SSH connections:"
 
 #
-# File: usr/share/ashyterm/window.py, line: 651
+# File: usr/share/ashyterm/window.py, line: 650
 msgid "Closing will disconnect these sessions."
 msgstr "Closing will disconnect these sessions."
 
 #
-# File: usr/share/ashyterm/window.py, line: 652
+# File: usr/share/ashyterm/window.py, line: 651
 msgid "Are you sure you want to close this window?"
 msgstr "Are you sure you want to close this window?"
 
 #
-# File: usr/share/ashyterm/window.py, line: 663
-# File: usr/share/ashyterm/window.py, line: 667
+# File: usr/share/ashyterm/window.py, line: 662
+# File: usr/share/ashyterm/window.py, line: 666
 msgid "Close Window"
 msgstr "Close Window"
 
 #
-# File: usr/share/ashyterm/window.py, line: 675
+# File: usr/share/ashyterm/window.py, line: 674
 msgid "User confirmed window close with active SSH sessions"
 msgstr "User confirmed window close with active SSH sessions"
 
 #
-# File: usr/share/ashyterm/window.py, line: 681
+# File: usr/share/ashyterm/window.py, line: 680
 msgid "User cancelled window close"
 msgstr "User cancelled window close"
 
 #
-# File: usr/share/ashyterm/window.py, line: 685
+# File: usr/share/ashyterm/window.py, line: 684
 #, python-brace-format
 msgid "Window SSH close confirmation response failed: {}"
 msgstr "Window SSH close confirmation response failed: {}"
 
 #
-# File: usr/share/ashyterm/window.py, line: 694
+# File: usr/share/ashyterm/window.py, line: 693
 #, python-brace-format
 msgid "Window SSH close confirmation dialog failed: {}"
 msgstr "Window SSH close confirmation dialog failed: {}"
 
 #
-# File: usr/share/ashyterm/window.py, line: 747
+# File: usr/share/ashyterm/window.py, line: 746
 #, python-brace-format
 msgid ""
 "Session validation failed:\n"
@@ -1452,161 +1445,161 @@ msgstr ""
 "{errors}"
 
 #
-# File: usr/share/ashyterm/window.py, line: 750
+# File: usr/share/ashyterm/window.py, line: 749
 msgid "Session Validation Error"
 msgstr "Session Validation Error"
 
 #
-# File: usr/share/ashyterm/window.py, line: 768
+# File: usr/share/ashyterm/window.py, line: 767
 msgid "Terminal Creation Failed"
 msgstr "Terminal Creation Failed"
 
 #
-# File: usr/share/ashyterm/window.py, line: 769
+# File: usr/share/ashyterm/window.py, line: 768
 msgid "Could not create terminal for this session."
 msgstr "Could not create terminal for this session."
 
 #
-# File: usr/share/ashyterm/window.py, line: 774
-# File: usr/share/ashyterm/window.py, line: 850
-# File: usr/share/ashyterm/window.py, line: 1325
+# File: usr/share/ashyterm/window.py, line: 773
+# File: usr/share/ashyterm/window.py, line: 847
+# File: usr/share/ashyterm/window.py, line: 1321
 msgid "VTE Not Available"
 msgstr "VTE Not Available"
 
 #
-# File: usr/share/ashyterm/window.py, line: 775
+# File: usr/share/ashyterm/window.py, line: 774
 msgid "Cannot open session - VTE library not installed."
 msgstr "Cannot open session - VTE library not installed."
 
 #
-# File: usr/share/ashyterm/window.py, line: 780
+# File: usr/share/ashyterm/window.py, line: 779
 msgid "Session Error"
 msgstr "Session Error"
 
 #
-# File: usr/share/ashyterm/window.py, line: 781
+# File: usr/share/ashyterm/window.py, line: 780
 #, python-brace-format
 msgid "Failed to activate session: {error}"
 msgstr "Failed to activate session: {error}"
 
 #
-# File: usr/share/ashyterm/window.py, line: 802
+# File: usr/share/ashyterm/window.py, line: 800
 msgid "SFTP Connection Failed"
 msgstr "SFTP Connection Failed"
 
 #
-# File: usr/share/ashyterm/window.py, line: 803
+# File: usr/share/ashyterm/window.py, line: 801
 msgid "Could not create SFTP terminal for this session."
 msgstr "Could not create SFTP terminal for this session."
 
 #
-# File: usr/share/ashyterm/window.py, line: 813
+# File: usr/share/ashyterm/window.py, line: 811
 msgid "SFTP Error"
 msgstr "SFTP Error"
 
 #
-# File: usr/share/ashyterm/window.py, line: 814
+# File: usr/share/ashyterm/window.py, line: 812
 #, python-brace-format
 msgid "Failed to start SFTP session: {error}"
 msgstr "Failed to start SFTP session: {error}"
 
 #
-# File: usr/share/ashyterm/window.py, line: 851
-# File: usr/share/ashyterm/window.py, line: 1326
+# File: usr/share/ashyterm/window.py, line: 848
+# File: usr/share/ashyterm/window.py, line: 1322
 msgid "Cannot create terminal - VTE library not installed."
 msgstr "Cannot create terminal - VTE library not installed."
 
 #
-# File: usr/share/ashyterm/window.py, line: 857
-# File: usr/share/ashyterm/window.py, line: 1345
+# File: usr/share/ashyterm/window.py, line: 854
+# File: usr/share/ashyterm/window.py, line: 1341
 #, python-brace-format
 msgid "Failed to create new tab: {error}"
 msgstr "Failed to create new tab: {error}"
 
 #
-# File: usr/share/ashyterm/window.py, line: 916
-# File: usr/share/ashyterm/window.py, line: 926
+# File: usr/share/ashyterm/window.py, line: 913
+# File: usr/share/ashyterm/window.py, line: 923
 msgid "Split Error"
 msgstr "Split Error"
 
 #
-# File: usr/share/ashyterm/window.py, line: 1004
-# File: usr/share/ashyterm/window.py, line: 1088
-# File: usr/share/ashyterm/window.py, line: 1371
+# File: usr/share/ashyterm/window.py, line: 1001
+# File: usr/share/ashyterm/window.py, line: 1084
+# File: usr/share/ashyterm/window.py, line: 1367
 msgid "Edit Error"
 msgstr "Edit Error"
 
 #
-# File: usr/share/ashyterm/window.py, line: 1005
+# File: usr/share/ashyterm/window.py, line: 1002
 #, python-brace-format
 msgid "Failed to edit session: {error}"
 msgstr "Failed to edit session: {error}"
 
 #
-# File: usr/share/ashyterm/window.py, line: 1022
+# File: usr/share/ashyterm/window.py, line: 1019
 msgid "Duplicate Error"
 msgstr "Duplicate Error"
 
 #
-# File: usr/share/ashyterm/window.py, line: 1035
-# File: usr/share/ashyterm/window.py, line: 1101
+# File: usr/share/ashyterm/window.py, line: 1032
+# File: usr/share/ashyterm/window.py, line: 1097
 msgid "Rename Error"
 msgstr "Rename Error"
 
 #
-# File: usr/share/ashyterm/window.py, line: 1036
+# File: usr/share/ashyterm/window.py, line: 1033
 #, python-brace-format
 msgid "Failed to rename session: {error}"
 msgstr "Failed to rename session: {error}"
 
 #
-# File: usr/share/ashyterm/window.py, line: 1054
+# File: usr/share/ashyterm/window.py, line: 1051
 msgid "Move Error"
 msgstr "Move Error"
 
 #
-# File: usr/share/ashyterm/window.py, line: 1072
-# File: usr/share/ashyterm/window.py, line: 1523
+# File: usr/share/ashyterm/window.py, line: 1068
+# File: usr/share/ashyterm/window.py, line: 1519
 msgid "Delete Error"
 msgstr "Delete Error"
 
 #
-# File: usr/share/ashyterm/window.py, line: 1073
+# File: usr/share/ashyterm/window.py, line: 1069
 #, python-brace-format
 msgid "Failed to delete selected items: {error}"
 msgstr "Failed to delete selected items: {error}"
 
 #
-# File: usr/share/ashyterm/window.py, line: 1089
+# File: usr/share/ashyterm/window.py, line: 1085
 #, python-brace-format
 msgid "Failed to edit folder: {error}"
 msgstr "Failed to edit folder: {error}"
 
 #
-# File: usr/share/ashyterm/window.py, line: 1102
+# File: usr/share/ashyterm/window.py, line: 1098
 #, python-brace-format
 msgid "Failed to rename folder: {error}"
 msgstr "Failed to rename folder: {error}"
 
 #
-# File: usr/share/ashyterm/window.py, line: 1111
-# File: usr/share/ashyterm/window.py, line: 1311
+# File: usr/share/ashyterm/window.py, line: 1107
+# File: usr/share/ashyterm/window.py, line: 1307
 msgid "New Session"
 msgstr "New Session"
 
 #
-# File: usr/share/ashyterm/window.py, line: 1117
+# File: usr/share/ashyterm/window.py, line: 1113
 msgid "Add Error"
 msgstr "Add Error"
 
 #
-# File: usr/share/ashyterm/window.py, line: 1118
+# File: usr/share/ashyterm/window.py, line: 1114
 #, python-brace-format
 msgid "Failed to add session to folder: {error}"
 msgstr "Failed to add session to folder: {error}"
 
 #
-# File: usr/share/ashyterm/window.py, line: 1194
+# File: usr/share/ashyterm/window.py, line: 1190
 #, python-brace-format
 msgid "Failed to open preferences: {error}"
 msgstr "Failed to open preferences: {error}"
@@ -1614,14 +1607,14 @@ msgstr "Failed to open preferences: {error}"
 #
 # #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
 #
-# File: usr/share/ashyterm/window.py, line: 1204
-# File: usr/share/ashyterm/window.py, line: 1260
+# File: usr/share/ashyterm/window.py, line: 1200
+# File: usr/share/ashyterm/window.py, line: 1256
 # File: usr/share/ashyterm/ui/menus.py, line: 92
 msgid "Keyboard Shortcuts"
 msgstr "Keyboard Shortcuts"
 
 #
-# File: usr/share/ashyterm/window.py, line: 1208
+# File: usr/share/ashyterm/window.py, line: 1204
 msgid "Terminal"
 msgstr "Terminal"
 
@@ -1630,7 +1623,7 @@ msgstr "Terminal"
 #
 # #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
 #
-# File: usr/share/ashyterm/window.py, line: 1212
+# File: usr/share/ashyterm/window.py, line: 1208
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1827
 # File: usr/share/ashyterm/ui/menus.py, line: 71
 msgid "Close Tab"
@@ -1641,7 +1634,10 @@ msgstr "Close Tab"
 #
 # #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
 #
-# File: usr/share/ashyterm/window.py, line: 1213
+# File: usr/share/ashyterm/window.py, line: 1209
+# File: usr/share/ashyterm/window.py, line: 1271
+# File: usr/share/ashyterm/window.py, line: 1275
+# File: usr/share/ashyterm/window.py, line: 1281
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1837
 # File: usr/share/ashyterm/ui/menus.py, line: 72
 msgid "New Window"
@@ -1652,7 +1648,7 @@ msgstr "New Window"
 #
 # #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
 #
-# File: usr/share/ashyterm/window.py, line: 1214
+# File: usr/share/ashyterm/window.py, line: 1210
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1828
 # File: usr/share/ashyterm/ui/menus.py, line: 84
 # File: usr/share/ashyterm/ui/menus.py, line: 133
@@ -1666,7 +1662,7 @@ msgstr "Copy"
 #
 # #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
 #
-# File: usr/share/ashyterm/window.py, line: 1215
+# File: usr/share/ashyterm/window.py, line: 1211
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1829
 # File: usr/share/ashyterm/ui/menus.py, line: 85
 # File: usr/share/ashyterm/ui/menus.py, line: 172
@@ -1679,7 +1675,7 @@ msgstr "Paste"
 #
 # #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
 #
-# File: usr/share/ashyterm/window.py, line: 1216
+# File: usr/share/ashyterm/window.py, line: 1212
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1830
 # File: usr/share/ashyterm/ui/menus.py, line: 86
 # File: usr/share/ashyterm/ui/menus.py, line: 244
@@ -1687,32 +1683,32 @@ msgid "Select All"
 msgstr "Select All"
 
 #
-# File: usr/share/ashyterm/window.py, line: 1224
+# File: usr/share/ashyterm/window.py, line: 1220
 msgid "Split Navigation"
 msgstr "Split Navigation"
 
 #
-# File: usr/share/ashyterm/window.py, line: 1227
+# File: usr/share/ashyterm/window.py, line: 1223
 msgid "Focus Up"
 msgstr "Focus Up"
 
 #
-# File: usr/share/ashyterm/window.py, line: 1228
+# File: usr/share/ashyterm/window.py, line: 1224
 msgid "Focus Down"
 msgstr "Focus Down"
 
 #
-# File: usr/share/ashyterm/window.py, line: 1229
+# File: usr/share/ashyterm/window.py, line: 1225
 msgid "Focus Left"
 msgstr "Focus Left"
 
 #
-# File: usr/share/ashyterm/window.py, line: 1230
+# File: usr/share/ashyterm/window.py, line: 1226
 msgid "Focus Right"
 msgstr "Focus Right"
 
 #
-# File: usr/share/ashyterm/window.py, line: 1238
+# File: usr/share/ashyterm/window.py, line: 1234
 msgid "Application"
 msgstr "Application"
 
@@ -1721,7 +1717,7 @@ msgstr "Application"
 #
 # #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
 #
-# File: usr/share/ashyterm/window.py, line: 1241
+# File: usr/share/ashyterm/window.py, line: 1237
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1562
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1834
 # File: usr/share/ashyterm/ui/menus.py, line: 91
@@ -1731,89 +1727,82 @@ msgstr "Preferences"
 #
 # #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
 #
-# File: usr/share/ashyterm/window.py, line: 1243
+# File: usr/share/ashyterm/window.py, line: 1239
 # File: usr/share/ashyterm/ui/menus.py, line: 98
 msgid "Quit"
 msgstr "Quit"
 
 #
-# File: usr/share/ashyterm/window.py, line: 1261
+# File: usr/share/ashyterm/window.py, line: 1257
 #, python-brace-format
 msgid "Failed to open shortcuts window: {error}"
 msgstr "Failed to open shortcuts window: {error}"
 
 #
-# File: usr/share/ashyterm/window.py, line: 1275
-# File: usr/share/ashyterm/window.py, line: 1279
-# File: usr/share/ashyterm/window.py, line: 1285
-msgid "Nova Janela"
-msgstr "Nova Janela"
+# File: usr/share/ashyterm/window.py, line: 1271
+msgid "Failed to create new window"
+msgstr "Failed to create new window"
 
 #
 # File: usr/share/ashyterm/window.py, line: 1275
-msgid "Falha ao criar nova janela"
-msgstr "Falha ao criar nova janela"
+msgid "Could not create a new window"
+msgstr "Could not create a new window"
 
 #
-# File: usr/share/ashyterm/window.py, line: 1279
-msgid "NÃ£o foi possÃ­vel criar uma nova janela"
-msgstr "NÃ£o foi possÃ­vel criar uma nova janela"
-
-#
-# File: usr/share/ashyterm/window.py, line: 1286
+# File: usr/share/ashyterm/window.py, line: 1282
 #, python-brace-format
-msgid "Falha ao criar nova janela: {error}"
-msgstr "Falha ao criar nova janela: {error}"
+msgid "Failed to create new window: {error}"
+msgstr "Failed to create new window: {error}"
 
 #
-# File: usr/share/ashyterm/window.py, line: 1316
+# File: usr/share/ashyterm/window.py, line: 1312
 msgid "Add Session Error"
 msgstr "Add Session Error"
 
 #
-# File: usr/share/ashyterm/window.py, line: 1334
+# File: usr/share/ashyterm/window.py, line: 1330
 msgid "Failed to create new tab."
 msgstr "Failed to create new tab."
 
 #
-# File: usr/share/ashyterm/window.py, line: 1351
+# File: usr/share/ashyterm/window.py, line: 1347
 msgid "New Folder"
 msgstr "New Folder"
 
 #
-# File: usr/share/ashyterm/window.py, line: 1356
+# File: usr/share/ashyterm/window.py, line: 1352
 msgid "Add Folder Error"
 msgstr "Add Folder Error"
 
 #
-# File: usr/share/ashyterm/window.py, line: 1372
+# File: usr/share/ashyterm/window.py, line: 1368
 #, python-brace-format
 msgid "Failed to edit selected item: {error}"
 msgstr "Failed to edit selected item: {error}"
 
 #
-# File: usr/share/ashyterm/window.py, line: 1410
-# File: usr/share/ashyterm/window.py, line: 1485
+# File: usr/share/ashyterm/window.py, line: 1406
+# File: usr/share/ashyterm/window.py, line: 1481
 msgid "Session"
 msgstr "Session"
 
 #
 # #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
 #
-# File: usr/share/ashyterm/window.py, line: 1410
-# File: usr/share/ashyterm/window.py, line: 1485
+# File: usr/share/ashyterm/window.py, line: 1406
+# File: usr/share/ashyterm/window.py, line: 1481
 # File: usr/share/ashyterm/ui/dialogs.py, line: 376
 msgid "Folder"
 msgstr "Folder"
 
 #
-# File: usr/share/ashyterm/window.py, line: 1413
+# File: usr/share/ashyterm/window.py, line: 1409
 #, python-brace-format
 msgid "Rename {type}"
 msgstr "Rename {type}"
 
 #
-# File: usr/share/ashyterm/window.py, line: 1414
+# File: usr/share/ashyterm/window.py, line: 1410
 #, python-brace-format
 msgid "Enter new name for \"{name}\":"
 msgstr "Enter new name for \"{name}\":"
@@ -1821,7 +1810,7 @@ msgstr "Enter new name for \"{name}\":"
 #
 # #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
 #
-# File: usr/share/ashyterm/window.py, line: 1420
+# File: usr/share/ashyterm/window.py, line: 1416
 # File: usr/share/ashyterm/ui/menus.py, line: 128
 # File: usr/share/ashyterm/ui/menus.py, line: 164
 msgid "Rename"
@@ -1830,36 +1819,36 @@ msgstr "Rename"
 #
 # #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
 #
-# File: usr/share/ashyterm/window.py, line: 1467
+# File: usr/share/ashyterm/window.py, line: 1463
 # File: usr/share/ashyterm/ui/dialogs.py, line: 2229
 msgid "Move Session"
 msgstr "Move Session"
 
 #
-# File: usr/share/ashyterm/window.py, line: 1469
+# File: usr/share/ashyterm/window.py, line: 1465
 msgid ""
 "Move session functionality will be implemented in folder selection dialog."
 msgstr ""
 "Move session functionality will be implemented in folder selection dialog."
 
 #
-# File: usr/share/ashyterm/window.py, line: 1480
+# File: usr/share/ashyterm/window.py, line: 1476
 msgid "Delete Item"
 msgstr "Delete Item"
 
 #
-# File: usr/share/ashyterm/window.py, line: 1480
+# File: usr/share/ashyterm/window.py, line: 1476
 msgid "Delete Items"
 msgstr "Delete Items"
 
 #
-# File: usr/share/ashyterm/window.py, line: 1486
+# File: usr/share/ashyterm/window.py, line: 1482
 #, python-brace-format
 msgid "Delete {type}"
 msgstr "Delete {type}"
 
 #
-# File: usr/share/ashyterm/window.py, line: 1490
+# File: usr/share/ashyterm/window.py, line: 1486
 #, python-brace-format
 msgid ""
 "The folder \"{name}\" is not empty. Are you sure you want to permanently "
@@ -1869,26 +1858,26 @@ msgstr ""
 "delete it and all its contents?"
 
 #
-# File: usr/share/ashyterm/window.py, line: 1492
+# File: usr/share/ashyterm/window.py, line: 1488
 #, python-brace-format
 msgid "Are you sure you want to delete \"{name}\"?"
 msgstr "Are you sure you want to delete \"{name}\"?"
 
 #
-# File: usr/share/ashyterm/window.py, line: 1494
+# File: usr/share/ashyterm/window.py, line: 1490
 #, python-brace-format
 msgid "Are you sure you want to permanently delete these {count} items?"
 msgstr "Are you sure you want to permanently delete these {count} items?"
 
 #
-# File: usr/share/ashyterm/window.py, line: 1496
+# File: usr/share/ashyterm/window.py, line: 1492
 msgid "This will also delete all contents of any selected folders."
 msgstr "This will also delete all contents of any selected folders."
 
 #
 # #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
 #
-# File: usr/share/ashyterm/window.py, line: 1505
+# File: usr/share/ashyterm/window.py, line: 1501
 # File: usr/share/ashyterm/ui/menus.py, line: 144
 # File: usr/share/ashyterm/ui/menus.py, line: 176
 msgid "Delete"
@@ -1897,8 +1886,8 @@ msgstr "Delete"
 #
 # #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
 #
-# File: usr/share/ashyterm/window.py, line: 1551
-# File: usr/share/ashyterm/window.py, line: 1566
+# File: usr/share/ashyterm/window.py, line: 1546
+# File: usr/share/ashyterm/window.py, line: 1561
 # File: usr/share/ashyterm/ui/dialogs.py, line: 150
 # File: usr/share/ashyterm/ui/dialogs.py, line: 901
 # File: usr/share/ashyterm/ui/dialogs.py, line: 943

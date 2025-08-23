@@ -768,6 +768,11 @@ msgstr "Rakenduse aktiveerimine nõutud"
 msgid "Creating main window"
 msgstr "Peamise akna loomine"
 # 
+# File: usr/share/ashyterm/app.py, line: 754
+#: NEEDS WORK
+msgid "Presenting existing window"
+msgstr "Käesoleva akna esitamine"
+# 
 # File: usr/share/ashyterm/app.py, line: 306
 #: NEEDS WORK
 msgid "Application activation completed"
@@ -1139,11 +1144,6 @@ msgstr "Uus aken on edukalt loodud"
 #, python-brace-format
 msgid "Failed to create new window: {}"
 msgstr "Uue akna loomine ebaõnnestus: {}"
-# 
-# File: usr/share/ashyterm/app.py, line: 754
-#: NEEDS WORK
-msgid "Presenting existing window"
-msgstr "Käesoleva akna esitamine"
 # 
 # File: usr/share/ashyterm/utils/__init__.py, line: 87
 # File: usr/share/ashyterm/utils/__init__.py, line: 104
@@ -1680,113 +1680,21 @@ msgstr "Välja"
 msgid "Failed to open shortcuts window: {error}"
 msgstr "Lühikeste otsete akna avamine ebaõnnestus: {error}"
 # 
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
-# 
-# File: usr/share/ashyterm/ui/menus.py, line: 143
-# File: usr/share/ashyterm/window.py, line: 863
-# File: usr/share/ashyterm/window.py, line: 913
-# File: usr/share/ashyterm/window.py, line: 918
+# File: usr/share/ashyterm/window.py, line: 1271
 #: NEEDS WORK
-msgid "Nova Janela"
-msgstr "Uus aken"
-# 
-# File: usr/share/ashyterm/window.py, line: 974
-#: NEEDS WORK
-msgid "Falha ao criar nova janela"
+msgid "Failed to create new window"
 msgstr "Uue akna loomine ebaõnnestus"
 # 
-# File: usr/share/ashyterm/window.py, line: 1245
+# File: usr/share/ashyterm/window.py, line: 1275
 #: NEEDS WORK
-msgid "NÃ£o foi possÃ­vel criar uma nova janela"
-msgstr ""
-"Uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue "
-"uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue "
-"uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue "
-"uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue "
-"uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue "
-"uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue "
-"uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue "
-"uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue "
-"uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue "
-"uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue "
-"uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue "
-"uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue "
-"uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue "
-"uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue "
-"uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue "
-"uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue "
-"uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue "
-"uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue "
-"uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue "
-"uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue "
-"uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue "
-"uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue "
-"uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue "
-"uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue "
-"uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue "
-"uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue "
-"uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue "
-"uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue "
-"uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue "
-"uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue "
-"uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue "
-"uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue "
-"uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue "
-"uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue "
-"uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue "
-"uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue "
-"uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue "
-"uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue "
-"uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue "
-"uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue "
-"uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue"
+msgid "Could not create a new window"
+msgstr "Uut akent ei saanud luua"
 # 
-# File: usr/share/ashyterm/window.py, line: 919
+# File: usr/share/ashyterm/window.py, line: 1282
 #: NEEDS WORK
 #, python-brace-format
-msgid "Falha ao criar nova janela: {error}"
-msgstr ""
-"Uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue "
-"uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue "
-"uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue "
-"uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue "
-"uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue "
-"uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue "
-"uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue "
-"uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue "
-"uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue "
-"uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue "
-"uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue "
-"uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue "
-"uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue "
-"uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue "
-"uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue "
-"uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue "
-"uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue "
-"uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue "
-"uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue "
-"uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue "
-"uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue "
-"uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue "
-"uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue "
-"uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue "
-"uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue "
-"uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue "
-"uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue "
-"uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue "
-"uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue "
-"uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue "
-"uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue "
-"uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue "
-"uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue "
-"uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue "
-"uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue "
-"uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue "
-"uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue "
-"uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue "
-"uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue "
-"uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue "
-"uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue uue"
+msgid "Failed to create new window: {error}"
+msgstr "Uue akna loomine ebaõnnestus: {error}"
 # 
 # File: usr/share/ashyterm/window.py, line: 879
 #: NEEDS WORK
