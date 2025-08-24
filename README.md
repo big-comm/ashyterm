@@ -13,8 +13,9 @@
 ## Screenshot
 
 <p align="center">
+
    <!-- TODO: Replace this with a high-quality screenshot of the application -->
-   <img src="https://raw.githubusercontent.com/big-comm/comm-ashyterm/main/data/screenshot.png" alt="Ashy Terminal Main Window" />
+   <img width="1322" height="822" alt="ashyterm" src="https://github.com/user-attachments/assets/e3296fab-b975-4d12-8692-41178f72fc7e" alt="Ashy Terminal" />
 </p>
 
 ## Key Features
