@@ -1,8 +1,10 @@
+# START OF FILE ashyterm/sessions/models.py
+
 from typing import Dict, Any, Optional, List
 import time
 import hashlib
 from pathlib import Path
-from gi.repository import GObject
+from gi.repository import GObject, Gio
 
 # Import new utility systems
 from ..utils.logger import get_logger, log_session_event
@@ -78,6 +80,11 @@ class SessionItem(GObject.GObject):
         
         
         self.logger.debug(f"Session item created: '{self.name}' (type: {self.session_type})")
+
+    @property
+    def children(self) -> Optional[Gio.ListStore]:
+        """Session items are leaf nodes, they have no children."""
+        return None
     
     @property
     def name(self) -> str:
@@ -588,6 +595,9 @@ class SessionFolder(GObject.GObject):
         # Validation flags
         self._validated = False
         self._validation_errors: List[str] = []
+
+        # --- NEW: Store for child items for TreeListModel ---
+        self._children = Gio.ListStore.new(GObject.GObject)
         
         # Set properties with validation
         self.name = name
@@ -595,6 +605,19 @@ class SessionFolder(GObject.GObject):
         self.parent_path = parent_path
         
         self.logger.debug(f"Folder created: '{self.name}' (path: {self.path})")
+
+    @property
+    def children(self) -> Gio.ListStore:
+        """Provides the list of children for Gtk.TreeListModel."""
+        return self._children
+
+    def add_child(self, item):
+        """Add a child item (SessionItem or SessionFolder) to this folder."""
+        self._children.append(item)
+
+    def clear_children(self):
+        """Remove all children from this folder."""
+        self._children.remove_all()
     
     @property
     def name(self) -> str:

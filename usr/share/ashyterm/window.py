@@ -1,6 +1,4 @@
-# window.py
-
-from typing import Optional, Union
+from typing import Optional, Union, List
 import os
 import threading
 import time
@@ -19,7 +17,7 @@ from .sessions.storage import load_sessions_to_store, load_folders_to_store
 from .terminal.manager import TerminalManager
 from .terminal.tabs import TabManager
 from .sessions.tree import SessionTreeView
-from .ui.dialogs import SessionEditDialog, FolderEditDialog, PreferencesDialog
+from .ui.dialogs import SessionEditDialog, FolderEditDialog, PreferencesDialog, MoveSessionDialog
 from .ui.menus import MainApplicationMenu
 
 # Import new utility systems
@@ -35,13 +33,14 @@ from .utils.translation_utils import _
 class CommTerminalWindow(Adw.ApplicationWindow):
     """Main application window with enhanced functionality."""
     
-    def __init__(self, application, settings_manager: SettingsManager):
+    def __init__(self, application, settings_manager: SettingsManager, initial_working_directory: Optional[str] = None):
         """
         Initialize the main window.
         
         Args:
             application: Gtk.Application instance
             settings_manager: SettingsManager instance
+            initial_working_directory: Optional initial working directory for terminals
         """
         super().__init__(application=application)
         
@@ -53,6 +52,10 @@ class CommTerminalWindow(Adw.ApplicationWindow):
         self.settings_manager = settings_manager
         self.is_main_window = True
         self.platform_info = get_platform_info()
+        self.initial_working_directory = initial_working_directory
+        
+        if self.initial_working_directory:
+            self.logger.info(f"Window initialized with working directory: {self.initial_working_directory}")
         
         # Window configuration
         self.set_default_size(1200, 700)
@@ -126,7 +129,9 @@ class CommTerminalWindow(Adw.ApplicationWindow):
         try:
             if self.tab_manager.get_tab_count() == 0:
                 self.logger.debug("Creating initial tab")
-                result = self.tab_manager.create_initial_tab_if_empty()
+                result = self.tab_manager.create_initial_tab_if_empty(
+                    working_directory=self.initial_working_directory
+                )
                 if result is None:
                     self.logger.warning("Failed to create initial tab")
                     self._show_error_dialog(
@@ -158,21 +163,31 @@ class CommTerminalWindow(Adw.ApplicationWindow):
                 ("split-horizontal", self._on_split_horizontal),
                 ("split-vertical", self._on_split_vertical),
                 ("close-pane", self._on_close_pane),
+                # Open URL
+                ("open-url", self._on_open_url),
+                ("copy-url", self._on_copy_url),
+                # Split navigation actions
+                ("focus-pane-up", self._on_focus_pane_up),
+                ("focus-pane-down", self._on_focus_pane_down),
+                ("focus-pane-left", self._on_focus_pane_left),
+                ("focus-pane-right", self._on_focus_pane_right),
                 # Zoom actions
                 ("zoom-in", self._on_zoom_in),
                 ("zoom-out", self._on_zoom_out),
                 ("zoom-reset", self._on_zoom_reset),
+                # SFTP
+                ("connect-sftp", self._on_connect_sftp),
                 # Session actions
                 ("edit-session", self._on_edit_session),
                 ("duplicate-session", self._on_duplicate_session),
                 ("rename-session", self._on_rename_session),
                 ("move-session-to-folder", self._on_move_session_to_folder),
-                ("delete-session", self._on_delete_session),
+                ("delete-session", self._on_delete_selected_items), # MODIFIED
                 # Folder actions
                 ("edit-folder", self._on_edit_folder),
                 ("rename-folder", self._on_rename_folder),
                 ("add-session-to-folder", self._on_add_session_to_folder),
-                ("delete-folder", self._on_delete_folder),
+                ("delete-folder", self._on_delete_selected_items), # MODIFIED
                 # Clipboard actions
                 ("cut-item", self._on_cut_item),
                 ("copy-item", self._on_copy_item),
@@ -243,12 +258,7 @@ class CommTerminalWindow(Adw.ApplicationWindow):
         """Create the header bar with controls."""
         try:
             self.header_bar = Adw.HeaderBar()
-            # --- ALTERAÇÃO INICIADA ---
-            # Justificativa: Adicionar uma classe CSS específica nos permite
-            # remover o preenchimento e a borda padrão do HeaderBar,
-            # tornando-o um contêiner compacto para a barra de abas.
             self.header_bar.add_css_class("main-header-bar")
-            # --- ALTERAÇÃO FINALIZADA ---
 
             # Sidebar toggle button
             self.toggle_sidebar_button = Gtk.ToggleButton()
@@ -283,6 +293,45 @@ class CommTerminalWindow(Adw.ApplicationWindow):
         try:
             toolbar_view = Adw.ToolbarView()
             toolbar_view.add_css_class("background")
+
+            # Fix CSS conflicts for menu separators after splits
+            css = """
+            /* Make header separator rule more specific to avoid affecting menu separators */
+            .terminal-tab-view headerbar entry,
+            .terminal-tab-view headerbar spinbutton,
+            .terminal-tab-view headerbar button { 
+                margin-top: -10px; 
+                margin-bottom: -10px; 
+            }
+            
+            /* Ensure menu separators always have correct styling */
+            popover.menu menuitem separator,
+            .terminal-tab-view popover.menu menuitem separator {
+                border-top: 1px solid @borders;
+                margin: 6px 0;
+                min-height: 1px;
+                max-height: 1px;
+                padding: 0;
+                background: none;
+            }
+
+            /* --- DRAG AND DROP VISUAL FEEDBACK --- */
+            .drop-target {
+                background-color: alpha(@theme_selected_bg_color, 0.5);
+                border-radius: 6px;
+            }
+            /* NEW: CSS rule for session indentation */
+            .indented-session {
+                margin-left: 16px;
+            }            
+            """
+            provider = Gtk.CssProvider()
+            provider.load_from_data(css.encode("utf-8"))
+            Gtk.StyleContext.add_provider_for_display(
+                Gdk.Display.get_default(),
+                provider,
+                Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION + 1,
+            )
 
             scrolled_window = Gtk.ScrolledWindow()
             scrolled_window.set_policy(
@@ -328,7 +377,7 @@ class CommTerminalWindow(Adw.ApplicationWindow):
         except Exception as e:
             self.logger.error(f"Sidebar creation failed: {e}")
             raise UIError("sidebar", f"creation failed: {e}")
-
+        
     def _create_content_area(self) -> Gtk.Widget:
         """Create the main content area with tabs."""
         try:
@@ -424,7 +473,6 @@ class CommTerminalWindow(Adw.ApplicationWindow):
             )
 
             # Tab manager callbacks - simplified
-            self.tab_manager.on_tab_selected = self._on_tab_selected
             self.tab_manager.on_quit_application = self._on_quit_application_requested
 
             self.logger.debug("Callbacks configured")
@@ -598,7 +646,7 @@ class CommTerminalWindow(Adw.ApplicationWindow):
                 self.close()
                 return
 
-            session_list = "\n".join([f"â€¢ {name}" for name in ssh_sessions])
+            session_list = "\n".join([f"• {name}" for name in ssh_sessions])
 
             try:
                 # Build the message in parts to avoid translation issues
@@ -661,11 +709,11 @@ class CommTerminalWindow(Adw.ApplicationWindow):
         self.logger.info("Performing window cleanup")
 
         try:
-            # CORREÇÃO CRÍTICA: Chame a limpeza do TerminalManager.
-            # Isso removerá o temporizador e outros recursos.
+            # CRITICAL FIX: Call TerminalManager's cleanup.
+            # This will remove the timer and other resources.
             self.terminal_manager.cleanup_all_terminals()
 
-            # O código restante para fechar os terminais já existentes
+            # The rest of the existing code to close terminals
             all_terminals = self.tab_manager.get_all_terminals()
 
             if not all_terminals:
@@ -676,7 +724,7 @@ class CommTerminalWindow(Adw.ApplicationWindow):
 
             for terminal in all_terminals:
                 try:
-                    # A chamada a close_terminal agora é mais sobre o processo filho
+                    # The call to close_terminal is now more about the child process
                     self.terminal_manager.close_terminal(terminal)
                 except Exception as e:
                     self.logger.error(f"Error closing terminal: {e}")
@@ -741,6 +789,33 @@ class CommTerminalWindow(Adw.ApplicationWindow):
         # Tab manager already handles focus
         pass
 
+    def _on_connect_sftp(self, action, param) -> None:
+        """Handle connect with SFTP action."""
+        try:
+            selected_item = self.session_tree.get_selected_item()
+            if isinstance(selected_item, SessionItem) and selected_item.is_ssh():
+                self.logger.info(f"SFTP connection requested for session: '{selected_item.name}'")
+                
+                # Call the TabManager to create an SFTP tab
+                result = self.tab_manager.create_sftp_tab(selected_item)
+                
+                if result is None:
+                    self._show_error_dialog(
+                        _("SFTP Connection Failed"),
+                        _("Could not create SFTP terminal for this session."),
+                    )
+                else:
+                    log_terminal_event("created", selected_item.name, f"SFTP to {selected_item.get_connection_string()}")
+            else:
+                self.logger.warning("SFTP connection requested for a non-SSH or non-existent session.")
+
+        except Exception as e:
+            self.logger.error(f"SFTP connection failed: {e}")
+            self._show_error_dialog(
+                _("SFTP Error"),
+                _("Failed to start SFTP session: {error}").format(error=str(e)),
+            )
+
     # Action handlers - Terminal actions
     def _on_new_local_tab(self, action, param) -> None:
         """Handle new local tab action with rate limiting."""
@@ -761,7 +836,7 @@ class CommTerminalWindow(Adw.ApplicationWindow):
             if not VTE_AVAILABLE:
                 raise VTENotAvailableError()
 
-            result = self.tab_manager.create_local_tab()
+            result = self.tab_manager.create_local_tab(working_directory=None)
             if result is None:
                 raise AshyTerminalError(
                     "Terminal creation failed",
@@ -836,7 +911,7 @@ class CommTerminalWindow(Adw.ApplicationWindow):
         try:
             focused_terminal = self.tab_manager.get_selected_terminal()
             if focused_terminal:
-                self.tab_manager.split_horizontal(focused_terminal)
+                self.tab_manager.split_vertical(focused_terminal)
         except Exception as e:
             self.logger.error(f"Horizontal split failed: {e}")
             self._show_error_dialog(_("Split Error"), str(e))
@@ -846,7 +921,7 @@ class CommTerminalWindow(Adw.ApplicationWindow):
         try:
             focused_terminal = self.tab_manager.get_selected_terminal()
             if focused_terminal:
-                self.tab_manager.split_vertical(focused_terminal)
+                self.tab_manager.split_horizontal(focused_terminal)
         except Exception as e:
             self.logger.error(f"Vertical split failed: {e}")
             self._show_error_dialog(_("Split Error"), str(e))
@@ -859,6 +934,34 @@ class CommTerminalWindow(Adw.ApplicationWindow):
                 self.tab_manager.close_pane(focused_terminal)
         except Exception as e:
             self.logger.error(f"Close pane failed: {e}")
+
+    def _on_focus_pane_up(self, action, param) -> None:
+        """Handle focus pane up action."""
+        try:
+            self.tab_manager.focus_pane_direction("up")
+        except Exception as e:
+            self.logger.error(f"Focus pane up failed: {e}")
+
+    def _on_focus_pane_down(self, action, param) -> None:
+        """Handle focus pane down action."""
+        try:
+            self.tab_manager.focus_pane_direction("down")
+        except Exception as e:
+            self.logger.error(f"Focus pane down failed: {e}")
+
+    def _on_focus_pane_left(self, action, param) -> None:
+        """Handle focus pane left action."""
+        try:
+            self.tab_manager.focus_pane_direction("left")
+        except Exception as e:
+            self.logger.error(f"Focus pane left failed: {e}")
+
+    def _on_focus_pane_right(self, action, param) -> None:
+        """Handle focus pane right action."""
+        try:
+            self.tab_manager.focus_pane_direction("right")
+        except Exception as e:
+            self.logger.error(f"Focus pane right failed: {e}")
 
     def _on_zoom_in(self, action, param) -> None:
         """Handle zoom in action."""
@@ -939,7 +1042,13 @@ class CommTerminalWindow(Adw.ApplicationWindow):
         try:
             selected_item = self.session_tree.get_selected_item()
             if isinstance(selected_item, SessionItem):
-                self._show_move_session_dialog(selected_item)
+                dialog = MoveSessionDialog(
+                    self,
+                    selected_item,
+                    self.folder_store,
+                    self.session_tree.operations
+                )
+                dialog.present()
         except Exception as e:
             self.logger.error(f"Move session failed: {e}")
             self._show_error_dialog(
@@ -947,17 +1056,21 @@ class CommTerminalWindow(Adw.ApplicationWindow):
                 _("Failed to move session: {error}").format(error=str(e)),
             )
 
-    def _on_delete_session(self, action, param) -> None:
-        """Handle delete session action."""
+    def get_toast_overlay(self) -> Optional[Adw.ToastOverlay]:
+        """Provides access to the window's toast overlay for dialogs."""
+        return getattr(self, "toast_overlay", None)
+    
+    def _on_delete_selected_items(self, action=None, param=None) -> None:
+        """Handle deleting all selected items from the session tree."""
         try:
-            selected_item = self.session_tree.get_selected_item()
-            if isinstance(selected_item, SessionItem):
-                self._show_delete_confirmation(selected_item, True)
+            selected_items = self.session_tree.get_selected_items()
+            if selected_items:
+                self._show_delete_confirmation(selected_items)
         except Exception as e:
-            self.logger.error(f"Delete session failed: {e}")
+            self.logger.error(f"Delete selected items failed: {e}")
             self._show_error_dialog(
                 _("Delete Error"),
-                _("Failed to delete session: {error}").format(error=str(e)),
+                _("Failed to delete selected items: {error}").format(error=str(e)),
             )
 
     # Action handlers - Folder actions
@@ -1005,24 +1118,10 @@ class CommTerminalWindow(Adw.ApplicationWindow):
                 _("Failed to add session to folder: {error}").format(error=str(e)),
             )
 
-    def _on_delete_folder(self, action, param) -> None:
-        """Handle delete folder action."""
-        try:
-            selected_item = self.session_tree.get_selected_item()
-            if isinstance(selected_item, SessionFolder):
-                self._show_delete_confirmation(selected_item, False)
-        except Exception as e:
-            self.logger.error(f"Delete folder failed: {e}")
-            self._show_error_dialog(
-                _("Delete Error"),
-                _("Failed to delete folder: {error}").format(error=str(e)),
-            )
-
     # Action handlers - Clipboard actions
     def _on_cut_item(self, action, param) -> None:
         """Handle cut item action."""
         try:
-            # --- CHANGED: Logic moved to SessionTreeView ---
             self.session_tree._cut_selected_item_safe()
         except Exception as e:
             self.logger.error(f"Cut item failed: {e}")
@@ -1030,7 +1129,6 @@ class CommTerminalWindow(Adw.ApplicationWindow):
     def _on_copy_item(self, action, param) -> None:
         """Handle copy item action."""
         try:
-            # --- CHANGED: Logic moved to SessionTreeView ---
             self.session_tree._copy_selected_item_safe()
         except Exception as e:
             self.logger.error(f"Copy item failed: {e}")
@@ -1038,7 +1136,6 @@ class CommTerminalWindow(Adw.ApplicationWindow):
     def _on_paste_item(self, action, param) -> None:
         """Handle paste item action."""
         try:
-            # --- CHANGED: Logic moved to SessionTreeView ---
             selected_item = self.session_tree.get_selected_item()
             target_path = ""
             if isinstance(selected_item, SessionFolder):
@@ -1053,7 +1150,6 @@ class CommTerminalWindow(Adw.ApplicationWindow):
     def _on_paste_item_root(self, action, param) -> None:
         """Handle paste item to root action."""
         try:
-            # --- CHANGED: Logic moved to SessionTreeView ---
             self.session_tree._paste_item_safe("")
         except Exception as e:
             self.logger.error(f"Paste item to root failed: {e}")
@@ -1124,6 +1220,20 @@ class CommTerminalWindow(Adw.ApplicationWindow):
                 shortcut = Gtk.ShortcutsShortcut(title=title, accelerator=accel)
                 terminal_group.append(shortcut)
 
+            # Split navigation shortcuts
+            split_group = Gtk.ShortcutsGroup(title=_("Split Navigation"))
+
+            split_shortcuts = [
+                (_("Focus Up"), "<Control>Up"),
+                (_("Focus Down"), "<Control>Down"),
+                (_("Focus Left"), "<Control>Left"),
+                (_("Focus Right"), "<Control>Right"),
+            ]
+
+            for title, accel in split_shortcuts:
+                shortcut = Gtk.ShortcutsShortcut(title=title, accelerator=accel)
+                split_group.append(shortcut)
+
             # Application shortcuts
             app_group = Gtk.ShortcutsGroup(title=_("Application"))
 
@@ -1138,6 +1248,7 @@ class CommTerminalWindow(Adw.ApplicationWindow):
                 app_group.append(shortcut)
 
             section.append(terminal_group)
+            section.append(split_group)
             section.append(app_group)
             shortcuts_window.add_section(section)
 
@@ -1161,18 +1272,18 @@ class CommTerminalWindow(Adw.ApplicationWindow):
                     new_window.present()
                 else:
                     self._show_error_dialog(
-                        _("Nova Janela"), _("Falha ao criar nova janela")
+                        _("New Window"), _("Failed to create new window")
                     )
             else:
                 self._show_error_dialog(
-                    _("Nova Janela"), _("NÃ£o foi possÃ­vel criar uma nova janela")
+                    _("New Window"), _("Could not create a new window")
                 )
 
         except Exception as e:
             self.logger.error(f"New window creation failed: {e}")
             self._show_error_dialog(
-                _("Nova Janela"),
-                _("Falha ao criar nova janela: {error}").format(error=str(e)),
+                _("New Window"),
+                _("Failed to create new window: {error}").format(error=str(e)),
             )
 
     def _on_toggle_sidebar_action(self, action, param) -> None:
@@ -1263,18 +1374,7 @@ class CommTerminalWindow(Adw.ApplicationWindow):
 
     def _on_remove_selected_clicked(self, button) -> None:
         """Handle remove selected button click."""
-        try:
-            selected_item = self.session_tree.get_selected_item()
-            if isinstance(selected_item, SessionItem):
-                self._show_delete_confirmation(selected_item, True)
-            elif isinstance(selected_item, SessionFolder):
-                self._show_delete_confirmation(selected_item, False)
-        except Exception as e:
-            self.logger.error(f"Remove selected button failed: {e}")
-            self._show_error_dialog(
-                _("Remove Error"),
-                _("Failed to remove selected item: {error}").format(error=str(e)),
-            )
+        self._on_delete_selected_items()
 
     # Helper methods for dialogs
     def _show_session_edit_dialog(self, session: SessionItem, position: int) -> None:
@@ -1370,51 +1470,61 @@ class CommTerminalWindow(Adw.ApplicationWindow):
             ),
         )
 
-    def _show_delete_confirmation(
-        self, item: Union[SessionItem, SessionFolder], is_session: bool
-    ) -> None:
-        """Show delete confirmation dialog."""
+    def _show_delete_confirmation(self, items: List[Union[SessionItem, SessionFolder]]) -> None:
+        """Show delete confirmation dialog for one or more items."""
         try:
-            item_type = _("Session") if is_session else _("Folder")
+            if not items: return
 
-            # Verifica se a pasta tem conteÃºdo antes de mostrar o diÃ¡logo de exclusÃ£o
-            if not is_session and self.session_tree.operations._folder_has_children(item.path):
-                body_text = _("The folder \"{name}\" is not empty. Are you sure you want to permanently delete it and all its contents?").format(name=item.name)
-            else:
-                body_text = _("Are you sure you want to delete \"{name}\"?").format(name=item.name)
-
-            dialog = Adw.MessageDialog(
-                transient_for=self,
-                title=_("Delete {type}").format(type=item_type),
-                body=body_text
-            )
+            count = len(items)
+            title = _("Delete Item") if count == 1 else _("Delete Items")
             
+            if count == 1:
+                item = items[0]
+                item_type = _("Session") if isinstance(item, SessionItem) else _("Folder")
+                title = _("Delete {type}").format(type=item_type)
+                has_children = isinstance(item, SessionFolder) and self.session_tree.operations._folder_has_children(item.path)
+                body_text = _("The folder \"{name}\" is not empty. Are you sure you want to permanently delete it and all its contents?").format(name=item.name) if has_children else _("Are you sure you want to delete \"{name}\"?").format(name=item.name)
+            else:
+                body_text = _("Are you sure you want to permanently delete these {count} items?").format(count=count)
+                if any(isinstance(it, SessionFolder) and self.session_tree.operations._folder_has_children(it.path) for it in items):
+                    body_text += "\n\n" + _("This will also delete all contents of any selected folders.")
+
+            dialog = Adw.MessageDialog(transient_for=self, title=title, body=body_text)
             dialog.add_response("cancel", _("Cancel"))
             dialog.add_response("delete", _("Delete"))
             dialog.set_response_appearance("delete", Adw.ResponseAppearance.DESTRUCTIVE)
             
             def on_response(dlg, response_id):
-                try:
-                    if response_id == "delete":
-                        result = None
-                        if is_session:
-                            result = self.session_tree.operations.remove_session(item)
-                            if result.success:
-                                log_session_event("deleted", item.name)
-                        else:
-                            # Se a pasta nÃ£o estiver vazia, use force=True
-                            force_delete = self.session_tree.operations._folder_has_children(item.path)
-                            result = self.session_tree.operations.remove_folder(item, force=force_delete)
-                        
-                        if result and result.success:
-                            self.session_tree.refresh_tree()
-                        elif result:
-                            self._show_error_dialog(_("Delete {type} Error").format(type=item_type), result.message)
+                if response_id == "delete":
+                    try:
+                        folders_to_delete = [item for item in items if isinstance(item, SessionFolder)]
+                        sessions_to_delete = [item for item in items if isinstance(item, SessionItem)]
 
-                    dlg.close()
-                except Exception as e:
-                    self.logger.error(f"Delete confirmation response failed: {e}")
-                    dlg.close()
+                        # 1. Delete folders first. This also deletes their child sessions.
+                        for folder in folders_to_delete:
+                            result = self.session_tree.operations.remove_folder(folder, force=True)
+                            if not result.success:
+                                self._show_error_dialog(_("Delete Error"), result.message)
+                                self.session_tree.refresh_tree()
+                                dlg.close()
+                                return
+
+                        # 2. Delete remaining sessions, checking if they still exist.
+                        for session in sessions_to_delete:
+                            found, _ = self.session_store.find(session)
+                            if found:
+                                result = self.session_tree.operations.remove_session(session)
+                                if not result.success:
+                                    self._show_error_dialog(_("Delete Error"), result.message)
+                                    self.session_tree.refresh_tree()
+                                    dlg.close()
+                                    return
+                        
+                        self.session_tree.refresh_tree()
+                    except Exception as e:
+                        self.logger.error(f"Delete operation failed: {e}")
+                        self._show_error_dialog(_("Delete Error"), str(e))
+                dlg.close()
             
             dialog.connect("response", on_response)
             dialog.present()
@@ -1435,7 +1545,6 @@ class CommTerminalWindow(Adw.ApplicationWindow):
             dialog.present()
         except Exception as e:
             self.logger.error(f"Error dialog failed: {e}")
-            # Fallback to print
             print(f"ERROR: {title} - {message}")
     
     def _show_info_dialog(self, title: str, message: str) -> None:
@@ -1486,3 +1595,29 @@ class CommTerminalWindow(Adw.ApplicationWindow):
             super().destroy()
         except Exception as e:
             self.logger.error(f"Window destroy failed: {e}")
+            
+    def _on_open_url(self, action, param) -> None:
+        """Handle open URL action."""
+        try:
+            terminal = self.tab_manager.get_selected_terminal()
+            if terminal and hasattr(terminal, '_context_menu_url'):
+                url = terminal._context_menu_url
+                success = self.terminal_manager._open_hyperlink(url)
+                if success:
+                    self.logger.info(f"URL opened from context menu: {url}")
+                delattr(terminal, '_context_menu_url')
+        except Exception as e:
+            self.logger.error(f"Open URL action failed: {e}")
+
+    def _on_copy_url(self, action, param) -> None:
+        """Handle copy URL action."""
+        try:
+            terminal = self.tab_manager.get_selected_terminal()
+            if terminal and hasattr(terminal, '_context_menu_url'):
+                url = terminal._context_menu_url
+                clipboard = Gdk.Display.get_default().get_clipboard()
+                clipboard.set(url)
+                self.logger.info(f"URL copied to clipboard: {url}")
+                delattr(terminal, '_context_menu_url')
+        except Exception as e:
+            self.logger.error(f"Copy URL action failed: {e}")

@@ -1,10 +1,9 @@
-# terminal/spawner.py
-
 import os
 import signal
+import subprocess
 import threading
 import time
-from typing import Optional, Callable, Any, TYPE_CHECKING, Dict, List
+from typing import Optional, Callable, Any, TYPE_CHECKING, Dict, List, Tuple
 from pathlib import Path
 
 import gi
@@ -87,7 +86,7 @@ class ProcessTracker:
             self.logger.info(f"Terminating {len(pids_to_terminate)} tracked processes.")
 
             if is_windows():
-                # No Windows, use taskkill para um encerramento mais confiável.
+                # On Windows, use taskkill for a more reliable shutdown.
                 for pid in pids_to_terminate:
                     try:
                         subprocess.run(
@@ -98,24 +97,24 @@ class ProcessTracker:
                         self.logger.debug(f"Sent taskkill to process {pid}")
                     except (OSError, FileNotFoundError):
                         self.logger.error("taskkill command not found.")
-                        break  # Para de tentar se o comando não existir
+                        break  # Stop trying if the command doesn't exist
                     finally:
                         self.unregister_process(pid)
             else:
-                # Em sistemas Unix-like, tente SIGTERM primeiro, depois SIGKILL.
-                # Etapa 1: Enviar SIGTERM para todos
+                # On Unix-like systems, try SIGTERM first, then SIGKILL.
+                # Step 1: Send SIGTERM to all
                 for pid in pids_to_terminate:
                     try:
                         os.kill(pid, signal.SIGTERM)
                         self.logger.debug(f"Sent SIGTERM to process {pid}")
                     except (OSError, ProcessLookupError):
-                        # O processo já pode ter terminado
+                        # The process may have already terminated
                         self.unregister_process(pid)
 
-                # Dê um tempo para os processos encerrarem graciosamente
+                # Give some time for processes to terminate gracefully
                 time.sleep(0.2)
 
-                # Etapa 2: Enviar SIGKILL para os que restaram
+                # Step 2: Send SIGKILL to those that remain
                 remaining_pids = list(self._processes.keys())
                 for pid in remaining_pids:
                     try:
@@ -124,7 +123,7 @@ class ProcessTracker:
                             f"Process {pid} did not respond to SIGTERM, sent SIGKILL."
                         )
                     except (OSError, ProcessLookupError):
-                        pass  # O processo terminou no meio tempo
+                        pass  # The process terminated in the meantime
                     finally:
                         self.unregister_process(pid)
 
@@ -161,15 +160,17 @@ class ProcessSpawner:
         terminal: Vte.Terminal,
         callback: Optional[Callable] = None,
         user_data: Any = None,
+        working_directory: Optional[str] = None,
     ) -> bool:
         """
         Spawn a local terminal session with enhanced platform support.
-
+        
         Args:
             terminal: Vte.Terminal widget
             callback: Optional callback function for spawn completion
             user_data: Optional user data for callback
-
+            working_directory: Optional working directory for the terminal
+        
         Returns:
             True if spawn initiated successfully
         """
@@ -184,8 +185,15 @@ class ProcessSpawner:
                 # Build command
                 cmd = [shell_path] + shell_args
 
-                # Get working directory
-                working_dir = str(self.platform_info.home_dir)
+                # Resolve working directory with comprehensive validation
+                working_dir = self._resolve_and_validate_working_directory(working_directory)
+                
+                if working_directory and working_dir:
+                    self.logger.info(f"Using working directory: {working_dir}")
+                elif working_directory and not working_dir:
+                    self.logger.warning(f"Invalid working directory '{working_directory}', using home directory: {self.platform_info.home_dir}")
+                else:
+                    self.logger.debug(f"Using default working directory: {working_dir}")
 
                 # Get environment
                 env = self.environment_manager.get_terminal_environment()
@@ -249,101 +257,75 @@ class ProcessSpawner:
         callback: Optional[Callable] = None,
         user_data: Any = None,
     ) -> bool:
-        """
-        Spawn an SSH terminal session with comprehensive security validation.
+        """Spawns an SSH terminal session."""
+        # This method now calls the generic spawner with the 'ssh' command
+        return self._spawn_remote_session(
+            "ssh", terminal, session, callback, user_data
+        )
 
-        Args:
-            terminal: Vte.Terminal widget
-            session: SessionItem with SSH configuration
-            callback: Optional callback function for spawn completion
-            user_data: Optional user data for callback
+    def spawn_sftp_session(
+        self,
+        terminal: Vte.Terminal,
+        session: "SessionItem",
+        callback: Optional[Callable] = None,
+        user_data: Any = None,
+    ) -> bool:
+        """Spawns an SFTP terminal session."""
+        # This method calls the generic spawner with the 'sftp' command
+        return self._spawn_remote_session(
+            "sftp", terminal, session, callback, user_data
+        )
 
-        Returns:
-            True if spawn initiated successfully
-        """
+    def _spawn_remote_session(
+        self,
+        command_type: str, # 'ssh' or 'sftp'
+        terminal: Vte.Terminal,
+        session: "SessionItem",
+        callback: Optional[Callable] = None,
+        user_data: Any = None,
+    ) -> bool:
+        """Generic logic for spawning remote sessions (SSH or SFTP)."""
         with self._spawn_lock:
             if not session.is_ssh():
-                raise TerminalSpawnError("ssh", "Session is not configured for SSH")
+                raise TerminalSpawnError(command_type, "Session is not configured for SSH")
 
             try:
-                self.logger.debug(f"Starting SSH spawn for session: {session.name}")
-
-                # Validate session configuration
+                self.logger.debug(f"Starting {command_type.upper()} spawn for session: {session.name}")
                 self._validate_ssh_session(session)
 
-                # Build SSH command with security considerations
-                ssh_cmd = self._build_ssh_command_secure(session, terminal)
+                # Build the command (ssh or sftp)
+                remote_cmd = self._build_remote_command_secure(command_type, session)
+                if not remote_cmd:
+                    raise TerminalSpawnError(command_type, f"Failed to build {command_type.upper()} command")
 
-                if not ssh_cmd:
-                    raise TerminalSpawnError("ssh", "Failed to build SSH command")
-
-                # Get working directory and environment
                 working_dir = str(self.platform_info.home_dir)
                 env = self.environment_manager.get_terminal_environment()
-
-                # Add VTE_VERSION to enable shell integration (OSC7)
-                vte_version = (
-                    Vte.get_major_version() * 10000
-                    + Vte.get_minor_version() * 100
-                    + Vte.get_micro_version()
-                )
-                env["VTE_VERSION"] = str(vte_version)
-                self.logger.debug(
-                    f"Setting VTE_VERSION={env['VTE_VERSION']} for SSH session"
-                )
-
                 env_list = [f"{k}={v}" for k, v in env.items()]
 
-                self.logger.debug(f"SSH command: {' '.join(ssh_cmd)}")
-                self.logger.debug(f"Working directory: {working_dir}")
+                self.logger.debug(f"{command_type.upper()} command: {' '.join(remote_cmd)}")
 
-                # Spawn the SSH process
                 terminal.spawn_async(
                     Vte.PtyFlags.DEFAULT,
                     working_dir,
-                    ssh_cmd,
+                    remote_cmd,
                     env_list,
                     GLib.SpawnFlags.DEFAULT,
-                    None,  # Child setup function
-                    None,  # Child setup data
-                    -1,  # Timeout
-                    None,  # Cancellable
+                    None, None, -1, None,
                     callback if callback else self._ssh_spawn_callback,
                     (user_data if user_data else session,),
                 )
 
                 self._stats["ssh_spawns"] += 1
-                self.logger.info(f"SSH session spawn initiated for: {session.name}")
-                log_terminal_event(
-                    "spawn_initiated",
-                    session.name,
-                    f"SSH to {session.get_connection_string()}",
-                )
-
+                self.logger.info(f"{command_type.upper()} session spawn initiated for: {session.name}")
+                log_terminal_event("spawn_initiated", session.name, f"{command_type.upper()} to {session.get_connection_string()}")
                 return True
 
             except Exception as e:
                 self._stats["spawn_failures"] += 1
-                self.logger.error(f"SSH session spawn failed for {session.name}: {e}")
-                log_error_with_context(
-                    e, f"SSH spawn for {session.name}", "ashyterm.spawner"
-                )
-
-                # Show error on terminal
+                self.logger.error(f"{command_type.upper()} session spawn failed for {session.name}: {e}")
+                log_error_with_context(e, f"{command_type.upper()} spawn for {session.name}", "ashyterm.spawner")
                 self._show_ssh_error_on_terminal(terminal, session, str(e))
-
-                if isinstance(
-                    e,
-                    (
-                        TerminalSpawnError,
-                        SSHConnectionError,
-                        SSHAuthenticationError,
-                        SSHKeyError,
-                    ),
-                ):
-                    raise
-                else:
-                    raise TerminalSpawnError("ssh", str(e))
+                raise TerminalSpawnError(command_type, str(e))
 
     def _validate_ssh_session(self, session: "SessionItem") -> None:
         """
@@ -399,51 +381,25 @@ class ProcessSpawner:
                 f"Hostname resolution check failed for {session.host}: {e}"
             )
 
-    def _build_ssh_command_secure(
-        self, session: "SessionItem", terminal: Vte.Terminal
+    def _build_remote_command_secure(
+        self, command_type: str, session: "SessionItem"
     ) -> Optional[List[str]]:
-        """
-        Build SSH command with security considerations and platform compatibility.
-
-        Args:
-            session: SessionItem with SSH configuration
-            terminal: Terminal widget for error messages
-
-        Returns:
-            List of command arguments or None if invalid
-        """
+        """Builds a remote command (SSH or SFTP) securely."""
         try:
-            # Check if SSH is available
-            if not has_command("ssh"):
-                raise SSHConnectionError(
-                    session.host, "SSH command not found on system"
-                )
+            if not has_command(command_type):
+                raise SSHConnectionError(session.host, f"{command_type.upper()} command not found on system")
 
-            # Use platform-aware command builder
+            # Common options for SSH and SFTP
             ssh_options = {
                 "ConnectTimeout": str(SSH_CONNECT_TIMEOUT),
                 "ServerAliveInterval": "30",
                 "ServerAliveCountMax": "3",
                 "StrictHostKeyChecking": "ask",
-                "UserKnownHostsFile": str(self.platform_info.ssh_dir / "known_hosts"),
-                "ControlMaster": "auto",
-                "ControlPath": str(
-                    self.platform_info.cache_dir / "ssh_control_%h_%p_%r"
-                ),
-                "ControlPersist": "600",
             }
 
-            # Platform-specific SSH options
-            if self.platform_info.is_windows():
-                # Windows-specific SSH options
-                ssh_options["PreferredAuthentications"] = "publickey,password"
-            else:
-                # Unix-specific SSH options
-                ssh_options["Compression"] = "yes"
-                ssh_options["TCPKeepAlive"] = "yes"
-
-            # Build command using platform-aware builder
-            cmd = self.command_builder.build_ssh_command(
+            # The CommandBuilder now needs a generic method
+            cmd = self.command_builder.build_remote_command(
+                command_type,
                 hostname=session.host,
                 port=session.port if session.port != 22 else None,
                 username=session.user if session.user else None,
@@ -451,44 +407,38 @@ class ProcessSpawner:
                 options=ssh_options,
             )
 
-            # --- INÍCIO DA MODIFICAÇÃO ---
-            # RESTAURADO: Injeta um comando remoto para configurar o PROMPT_COMMAND e emitir OSC7.
-            # Isso é robusto e funciona mesmo se o servidor não tiver o vte.sh.
-            try:
-                osc7_setup = (
-                    r"export PROMPT_COMMAND="
-                    "'"
-                    r'printf "\033]7;file://%s%s\007" "$(hostname)" "$PWD";'
-                    "'"
-                )
-                remote_cmd = f"{osc7_setup}; exec $SHELL -l"
+            # For SSH, inject a remote command to set up PROMPT_COMMAND for OSC7.
+            # This version uses corrected quoting to work reliably.
+            if command_type == "ssh":
+                try:
+                    # This string is carefully crafted to be passed as a single argument to the remote shell.
+                    # 1. `bash -c '...'`: Executes the entire string within the single quotes on the remote host.
+                    # 2. `export PROMPT_COMMAND=...`: Sets the prompt command.
+                    # 3. `printf ...`: The command to be executed at each prompt.
+                    # 4. The single quotes around the printf command ensure it's treated as a single value for PROMPT_COMMAND.
+                    # 5. `$(hostname)` and `$PWD` are NOT escaped, so they are evaluated by the remote shell dynamically.
+                    osc7_setup_command = 'export PROMPT_COMMAND=\'printf "\\033]7;file://%s%s\\007" "$(hostname)" "$PWD"\'; exec $SHELL -l'
+                    
+                    if "-t" not in cmd:
+                        cmd.insert(1, "-t")  # Force pseudo-terminal allocation, often needed for interactive shells
+                    
+                    # The entire command is passed as a single argument
+                    cmd.append(osc7_setup_command)
+                    self.logger.debug("Enhanced SSH command with dynamic OSC7 support.")
+                except Exception as e:
+                    self.logger.warning(f"Could not enhance SSH with OSC7: {e}")
 
-                if "-t" not in cmd:
-                    cmd.insert(1, "-t")
-
-                cmd.append(remote_cmd)
-                self.logger.debug(
-                    "Enhanced SSH command with OSC7 support for remote directory tracking."
-                )
-
-            except Exception as e:
-                self.logger.debug(f"Could not enhance SSH with OSC7: {e}")
-            # --- FIM DA MODIFICAÇÃO ---
-
-            # Handle password authentication with sshpass
+            # sshpass logic remains the same
             if session.uses_password_auth() and session.auth_value:
                 if has_command('sshpass'):
                     cmd = ['sshpass', '-p', session.auth_value] + cmd
-                    self.logger.debug("Using sshpass for password authentication")
                 else:
-                    warning_msg = "sshpass not found. You'll need to enter password manually.\r\n"
-                    self._feed_terminal_safely(terminal, warning_msg)
                     self.logger.warning("sshpass not available for password authentication")
             
             return cmd
             
         except Exception as e:
-            self.logger.error(f"SSH command building failed: {e}")
+            self.logger.error(f"{command_type.upper()} command building failed: {e}")
             raise SSHConnectionError(session.host, f"Command building failed: {e}")
     
     def _feed_terminal_safely(self, terminal: Vte.Terminal, message: str) -> None:
@@ -662,6 +612,52 @@ class ProcessSpawner:
         else:
             return "Check your SSH configuration and network connectivity"
     
+    def _resolve_and_validate_working_directory(self, working_directory: Optional[str]) -> str:
+        """
+        Resolve and validate working directory with comprehensive error handling.
+        
+        Args:
+            working_directory: Working directory path to resolve
+            
+        Returns:
+            Valid working directory path (falls back to home if invalid)
+        """
+        if not working_directory:
+            return str(self.platform_info.home_dir)
+        
+        try:
+            import os
+            from pathlib import Path
+            
+            # Expand user home directory and environment variables
+            expanded_path = os.path.expanduser(os.path.expandvars(working_directory))
+            
+            # Convert to absolute path
+            resolved_path = os.path.abspath(expanded_path)
+            
+            # Create Path object for validation
+            path_obj = Path(resolved_path)
+            
+            # Comprehensive validation
+            if not path_obj.exists():
+                self.logger.error(f"Working directory does not exist: {working_directory}")
+                return str(self.platform_info.home_dir)
+            
+            if not path_obj.is_dir():
+                self.logger.error(f"Working directory is not a directory: {working_directory}")
+                return str(self.platform_info.home_dir)
+            
+            if not os.access(resolved_path, os.R_OK | os.X_OK):
+                self.logger.error(f"Working directory is not accessible: {working_directory}")
+                return str(self.platform_info.home_dir)
+            
+            self.logger.debug(f"Working directory validated successfully: {resolved_path}")
+            return resolved_path
+            
+        except Exception as e:
+            self.logger.error(f"Error validating working directory '{working_directory}': {e}")
+            return str(self.platform_info.home_dir)
+    
     def cleanup_process(self, pid: int) -> None:
         """
         Clean up tracking for a terminated process.
@@ -715,15 +711,15 @@ class ProcessSpawner:
             self.logger.error(f"Failed to get statistics: {e}")
             return {'error': str(e)}
     
-    def test_ssh_connection(self, session: "SessionItem") -> bool:
+    def test_ssh_connection(self, session: "SessionItem") -> Tuple[bool, str]:
         """
-        Test SSH connection without spawning a terminal.
+        Test SSH connection without spawning a terminal, returning success and a message.
         
         Args:
             session: SessionItem to test
             
         Returns:
-            True if connection test successful
+            Tuple of (success_boolean, message_string)
         """
         try:
             self.logger.debug(f"Testing SSH connection for session: {session.name}")
@@ -731,33 +727,59 @@ class ProcessSpawner:
             # Validate session first
             self._validate_ssh_session(session)
             
-            # Build test command (just connection test)
+            # Build a non-interactive test command
             ssh_options = {
-                'ConnectTimeout': '5',
                 'BatchMode': 'yes',
-                'StrictHostKeyChecking': 'no'
+                'ConnectTimeout': '5',
+                'StrictHostKeyChecking': 'no', # Avoid interactive prompts for testing
+                'PasswordAuthentication': 'no' # Prefer key auth for non-interactive test
             }
             
-            cmd = self.command_builder.build_ssh_command(
+            # Build the base command
+            cmd = self.command_builder.build_remote_command(
+                'ssh',
                 hostname=session.host,
                 username=session.user if session.user else None,
                 key_file=session.auth_value if session.uses_key_auth() else None,
+                port=session.port if session.port != 22 else None,
                 options=ssh_options
             )
             
-            # Add exit command to test connection only
-            cmd.extend(['exit'])
+            # Add a simple command to execute and exit
+            cmd.append('exit')
             
+            # Handle password authentication with sshpass if available
+            if session.uses_password_auth() and session.auth_value:
+                if has_command('sshpass'):
+                    # Prepend sshpass command
+                    cmd = ['sshpass', '-p', session.auth_value] + cmd
+                    self.logger.debug("Using sshpass for connection test")
+                else:
+                    msg = "sshpass is not installed. Cannot test password-based connections automatically."
+                    self.logger.warning(msg)
+                    return False, msg
+
             self.logger.debug(f"SSH test command: {' '.join(cmd)}")
             
-            # This would require subprocess for actual testing
-            # For now, just return validation result
-            return True
+            # Execute the command
+            result = subprocess.run(
+                cmd,
+                capture_output=True,
+                text=True,
+                timeout=10  # A safety timeout for the whole process
+            )
             
-        except Exception as e:
-            self.logger.warning(f"SSH connection test failed for {session.name}: {e}")
-            return False
+            if result.returncode == 0:
+                self.logger.info(f"SSH connection test successful for {session.name}")
+                return True, "Connection successful!"
+            else:
+                error_message = result.stderr.strip()
+                self.logger.warning(f"SSH connection test failed for {session.name}: {error_message}")
+                return False, error_message
 
+        except Exception as e:
+            self.logger.error(f"SSH connection test failed with an exception for {session.name}: {e}")
+            return False, str(e)
 
 # Global spawner instance
 _spawner_instance: Optional[ProcessSpawner] = None

@@ -702,51 +702,6 @@ class SettingsManager:
                 self.logger.error(f"Error getting setting '{key}': {e}")
                 return default
     
-    def set(self, key: str, value: Any, save_immediately: bool = True) -> None:
-        """
-        Set a setting value with validation and change notification.
-        
-        Args:
-            key: Setting key
-            value: Setting value
-            save_immediately: Whether to save immediately
-        """
-        with self._lock:
-            try:
-                # Get old value for change notification
-                old_value = self.get(key)
-                
-                # Validate value
-                self._validate_setting_value(key, value)
-                
-                # Support nested keys
-                if '.' in key:
-                    keys = key.split('.')
-                    current = self._settings
-                    for k in keys[:-1]:
-                        if k not in current or not isinstance(current[k], dict):
-                            current[k] = {}
-                        current = current[k]
-                    current[keys[-1]] = value
-                else:
-                    self._settings[key] = value
-                
-                # Mark as dirty
-                self._dirty = True
-                
-                # Notify listeners
-                self._notify_change_listeners(key, old_value, value)
-                
-                # Save if requested
-                if save_immediately:
-                    self.save_settings()
-                
-                self.logger.debug(f"Setting updated: {key} = {value}")
-                
-            except Exception as e:
-                self.logger.error(f"Failed to set setting '{key}': {e}")
-                raise ConfigValidationError(key, value, str(e))
-    
     def _validate_setting_value(self, key: str, value: Any):
         """Validate a specific setting value."""
         # Extract base key for nested settings
@@ -848,7 +803,7 @@ class SettingsManager:
             fg_color.parse(color_scheme.get("foreground", "#FFFFFF"))
             bg_color.parse(color_scheme.get("background", "#000000"))
 
-            # --- CHANGED: Non-linear transparency calculation ---
+            # Non-linear transparency calculation
             transparency_normalized = transparency / 100.0
             effective_transparency = transparency_normalized**1.6
             bg_color.alpha = max(0.0, min(1.0, 1.0 - effective_transparency))

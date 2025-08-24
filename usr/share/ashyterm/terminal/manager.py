@@ -1,5 +1,3 @@
-# ashyterm/terminal/manager.py
-
 from typing import List, Optional, Union, Callable, Any, Dict
 import threading
 import time
@@ -21,8 +19,7 @@ import gi
 gi.require_version("Gtk", "4.0")
 gi.require_version("Vte", "3.91")
 
-from gi.repository import Gtk, Gdk, GLib
-from gi.repository import Vte
+from gi.repository import Gtk, Adw, Gio, GLib, Gdk, Vte
 
 from ..sessions.models import SessionItem
 from ..settings.manager import SettingsManager
@@ -229,7 +226,7 @@ class TerminalRegistry:
             return terminal_id
 
     def get_active_terminal_count(self) -> int:
-        """Conta os terminais que são considerados ativos (não encerrados ou com falha)."""
+        """Counts terminals that are considered active (not exited or failed)."""
         with self._lock:
             return sum(
                 1
@@ -358,11 +355,46 @@ class TerminalManager:
         )
         self._update_title(terminal)
         return False
+    
+    def _resolve_working_directory(self, working_directory: Optional[str]) -> Optional[str]:
+        """
+        Resolve and validate working directory.
+        
+        Args:
+            working_directory: Working directory path to resolve
+            
+        Returns:
+            Resolved path or None if invalid
+        """
+        if not working_directory:
+            return None
+        
+        try:
+            import os
+            from pathlib import Path
+            
+            # Expand user home and environment variables
+            expanded_path = os.path.expanduser(os.path.expandvars(working_directory))
+            
+            # Convert to absolute path
+            resolved_path = os.path.abspath(expanded_path)
+            
+            # Validate directory exists and is accessible
+            path_obj = Path(resolved_path)
+            if path_obj.exists() and path_obj.is_dir() and os.access(resolved_path, os.R_OK | os.X_OK):
+                return resolved_path
+            else:
+                self.logger.warning(f"Working directory not accessible: {working_directory}")
+                return None
+                
+        except Exception as e:
+            self.logger.error(f"Error resolving working directory '{working_directory}': {e}")
+            return None
 
     def _on_directory_uri_changed(self, terminal: Vte.Terminal, param_spec):
-        """Manipula o sinal notify::current-directory-uri do VTE, que é muito mais eficiente."""
+        """Handles the VTE notify::current-directory-uri signal, which is much more efficient."""
         try:
-            # Esta verificação é importante para evitar processamento desnecessário
+            # This check is important to avoid unnecessary processing
             if not self.settings_manager.get("osc7_enabled", True):
                 return
 
@@ -370,7 +402,7 @@ class TerminalManager:
             if not uri:
                 return
 
-            # O resto da lógica de parsing e atualização do título
+            # The rest of the parsing and title update logic
             from urllib.parse import urlparse, unquote
             parsed_uri = urlparse(uri)
             if parsed_uri.scheme != "file":
@@ -384,12 +416,12 @@ class TerminalManager:
                 hostname=hostname, path=path, display_path=display_path
             )
 
-            # Chama a lógica unificada de atualização de título
+            # Calls the unified title update logic
             self._update_title(terminal, osc7_info)
 
         except Exception as e:
             self.logger.error(
-                f"O tratamento da mudança de URI do diretório falhou: {e}"
+                f"Directory URI change handling failed: {e}"
             )
 
     def _update_title(
@@ -438,7 +470,10 @@ class TerminalManager:
                 raise VTENotAvailableError()
 
             try:
-                self.logger.debug(f"Creating local terminal: '{title}'")
+                if working_directory:
+                    self.logger.debug(f"Creating local terminal: '{title}' with working directory: '{working_directory}'")
+                else:
+                    self.logger.debug(f"Creating local terminal: '{title}' with default working directory")
 
                 terminal = self._create_base_terminal()
                 if not terminal:
@@ -450,12 +485,18 @@ class TerminalManager:
 
                 self._setup_terminal_events(terminal, title, terminal_id)
 
+                # Validate and resolve working directory before passing to spawner
+                resolved_working_dir = self._resolve_working_directory(working_directory)
+                if working_directory and not resolved_working_dir:
+                    self.logger.warning(f"Invalid working directory '{working_directory}' for terminal '{title}', using default")
+
                 success = self.spawner.spawn_local_terminal(
                     terminal,
-                    lambda t, pid, error, data: self._on_spawn_callback(
+                    callback=lambda t, pid, error, data: self._on_spawn_callback(
                         t, pid, error, data, terminal_id
                     ),
-                    title,
+                    user_data=title,
+                    working_directory=resolved_working_dir
                 )
 
                 if success:
@@ -547,6 +588,61 @@ class TerminalManager:
                 else:
                     raise TerminalCreationError(str(e), "ssh")
 
+    def create_sftp_terminal(self, session: SessionItem) -> Optional[Vte.Terminal]:
+        """Creates a new terminal and starts an SFTP session in it."""
+        with self._creation_lock:
+            if not VTE_AVAILABLE:
+                self.logger.error("VTE not available for SFTP terminal creation")
+                raise VTENotAvailableError()
+
+            try:
+                self.logger.debug(f"Creating SFTP terminal for session: '{session.name}'")
+
+                # Validate the session
+                session_data = session.to_dict()
+                is_valid, errors = validate_session_data(session_data)
+                if not is_valid:
+                    raise TerminalCreationError(f"Session validation failed: {', '.join(errors)}", "sftp")
+
+                # Create the base terminal widget
+                terminal = self._create_base_terminal()
+                if not terminal:
+                    raise TerminalCreationError("base terminal creation failed", "sftp")
+
+                # Register the terminal
+                terminal_id = self.registry.register_terminal(terminal, "sftp", session)
+                self._setup_terminal_events(terminal, session, terminal_id)
+
+                # Set up the specific Drag-and-Drop for SFTP
+                self._setup_sftp_drag_and_drop(terminal)
+
+                # Spawn the SFTP process
+                success = self.spawner.spawn_sftp_session(
+                    terminal,
+                    session,
+                    lambda t, pid, error, data: self._on_spawn_callback(
+                        t, pid, error, data, terminal_id
+                    ),
+                    session,
+                )
+
+                if success:
+                    self.logger.info(f"SFTP terminal created successfully: '{session.name}' (ID: {terminal_id})")
+                    self._stats["terminals_created"] += 1
+                    return terminal
+                else:
+                    self.registry.unregister_terminal(terminal_id)
+                    self._stats["terminals_failed"] += 1
+                    raise TerminalSpawnError(f"sftp://{session.get_connection_string()}", "SFTP process spawn failed")
+
+            except Exception as e:
+                self._stats["terminals_failed"] += 1
+                self.logger.error(f"Failed to create SFTP terminal for '{session.name}': {e}")
+                if isinstance(e, (TerminalCreationError, TerminalSpawnError, VTENotAvailableError)):
+                    raise
+                else:
+                    raise TerminalCreationError(str(e), "sftp")
+
     def _create_base_terminal(self) -> Optional[Vte.Terminal]:
         try:
             self.logger.debug("Creating base VTE terminal widget")
@@ -558,6 +654,7 @@ class TerminalManager:
             terminal.set_cursor_blink_mode(Vte.CursorBlinkMode.ON)
             terminal.set_scroll_on_output(True)
             terminal.set_scroll_on_keystroke(True)
+            terminal.set_scroll_unit_is_pixels(True)
 
             if self.platform_info.is_windows():
                 terminal.set_encoding("utf-8")
@@ -573,6 +670,63 @@ class TerminalManager:
             self.logger.error(f"Base terminal creation failed: {e}")
             return None
 
+    def _setup_sftp_drag_and_drop(self, terminal: Vte.Terminal) -> None:
+        """Sets up the drag-and-drop target for an SFTP terminal."""
+        try:
+            self.logger.debug(f"Setting up SFTP drag-and-drop for terminal {getattr(terminal, 'terminal_id', 'N/A')}")
+            
+            # Create a DropTarget that accepts files (Gio.File).
+            drop_target = Gtk.DropTarget.new(type=Gio.File, actions=Gdk.DragAction.COPY)
+
+            # Connect the "drop" signal to our callback.
+            drop_target.connect("drop", self._on_file_drop)
+            
+            # Add the drop controller to the terminal widget.
+            terminal.add_controller(drop_target)
+            
+            self.logger.debug("SFTP drag-and-drop configured.")
+        except Exception as e:
+            self.logger.error(f"Failed to setup SFTP drag-and-drop: {e}")
+
+    def _on_file_drop(self, drop_target, value, x, y) -> bool:
+        """Callback called when a file or folder is dropped on an SFTP terminal."""
+        try:
+            terminal = drop_target.get_widget()
+            file = value  # The value is a Gio.File
+
+            local_path = file.get_path()
+            if not local_path:
+                return False
+
+            # Check if dropped item is a directory
+            try:
+                # Query the file type to differentiate between files and directories.
+                file_info = file.query_info('standard::type', Gio.FileQueryInfoFlags.NONE, None)
+                file_type = file_info.get_file_type()
+            except GLib.Error as e:
+                self.logger.error(f"Could not query file info for dropped item: {e}")
+                # Fallback to assuming it's a file if we can't get info
+                file_type = Gio.FileType.REGULAR
+
+            # Use 'put -r' for directories and 'put' for regular files.
+            if file_type == Gio.FileType.DIRECTORY:
+                self.logger.info(f"Directory dropped on SFTP terminal: {local_path}")
+                # The '-r' flag is for recursive upload.
+                command_to_send = f'put -r "{local_path}"\n'
+            else:
+                self.logger.info(f"File dropped on SFTP terminal: {local_path}")
+                command_to_send = f'put "{local_path}"\n'
+
+            self.logger.debug(f"Sending command to SFTP child: {command_to_send.strip()}")
+            
+            # Send the command to the sftp process running in the terminal.
+            terminal.feed_child(command_to_send.encode('utf-8'))
+            
+            return True # Indicate that the drop was handled successfully.
+        except Exception as e:
+            self.logger.error(f"Error handling file drop: {e}")
+            return False
+
     def _setup_terminal_events(
         self,
         terminal: Vte.Terminal,
@@ -585,7 +739,7 @@ class TerminalManager:
             )
             terminal.connect("eof", self._on_eof, identifier, terminal_id)
 
-            # CORREÇÃO DE PERFORMANCE: Use o sinal otimizado do VTE para OSC7
+            # OSC7 directory tracking (Your existing correct code)
             terminal.connect(
                 "notify::current-directory-uri", self._on_directory_uri_changed
             )
@@ -595,9 +749,10 @@ class TerminalManager:
             )
             self.manual_ssh_tracker.track(terminal_id, terminal)
 
-            # A chamada ao osc7_tracker agora é desnecessária aqui, pois o manager lida com o sinal
-            # self.osc7_tracker.track_terminal(terminal, terminal_name)
+            # Setup VTE native hyperlink support
+            self._setup_native_hyperlinks(terminal, terminal_id)
 
+            # Focus controllers
             focus_controller = Gtk.EventControllerFocus()
             focus_controller.connect(
                 "enter", self._on_terminal_focus_in, terminal, terminal_id
@@ -607,8 +762,9 @@ class TerminalManager:
             )
             terminal.add_controller(focus_controller)
 
+            # Click controller for focus and hyperlink handling
             click_controller = Gtk.GestureClick()
-            click_controller.set_button(0)
+            click_controller.set_button(1)  # Left button only
             click_controller.connect(
                 "pressed", self._on_terminal_clicked, terminal, terminal_id
             )
@@ -617,12 +773,12 @@ class TerminalManager:
             terminal.terminal_id = terminal_id
 
             self.logger.debug(
-                f"Eventos do terminal configurados para o ID: {terminal_id}"
+                f"Terminal events configured for ID: {terminal_id}"
             )
 
         except Exception as e:
             self.logger.error(
-                f"Falha ao configurar eventos do terminal para o ID {terminal_id}: {e}"
+                f"Failed to configure terminal events for ID {terminal_id}: {e}"
             )
 
     def _setup_context_menu(self, terminal: Vte.Terminal) -> None:
@@ -642,7 +798,10 @@ class TerminalManager:
 
     def _on_terminal_right_click_pressed(self, gesture, n_press, x, y, terminal):
         try:
-            menu_model = create_terminal_menu(terminal)
+            self.logger.debug(f"Right click at ({x}, {y})")
+            
+            # Create menu with click coordinates for URL detection
+            menu_model = create_terminal_menu(terminal, int(x), int(y))
             popover = Gtk.PopoverMenu.new_from_model(menu_model)
             popover.set_parent(terminal)
             rect = Gdk.Rectangle()
@@ -653,14 +812,55 @@ class TerminalManager:
             self.logger.error(f"Terminal right click handling failed: {e}")
 
     def _on_terminal_clicked(self, gesture, n_press, x, y, terminal, terminal_id):
+        """Handle terminal clicks for focus and hyperlink opening."""
         try:
+            # Check for hovered hyperlink first
+            if hasattr(terminal, '_hovered_hyperlink') and terminal._hovered_hyperlink:
+                hyperlink_uri = terminal._hovered_hyperlink
+                success = self._open_hyperlink(hyperlink_uri)
+                if success:
+                    self.logger.info(f"Hyperlink opened from terminal {terminal_id}: {hyperlink_uri}")
+                    return Gdk.EVENT_STOP
+            
+            # Try VTE's match detection at click position using coordinates
+            if hasattr(terminal, 'match_check'):
+                try:
+                    # Convert click coordinates to character column/row
+                    char_width = terminal.get_char_width()
+                    char_height = terminal.get_char_height()
+                    
+                    if char_width > 0 and char_height > 0:
+                        col = int(x / char_width)
+                        row = int(y / char_height)
+                        
+                        # Try match_check with coordinates
+                        match_result = terminal.match_check(col, row)
+                        
+                        if match_result and len(match_result) >= 2:
+                            matched_text = match_result[0]
+                            tag = match_result[1]
+                            
+                            self.logger.debug(f"Match found at ({col}, {row}): '{matched_text}' (tag: {tag})")
+                            
+                            if matched_text and self._is_valid_url(matched_text):
+                                success = self._open_hyperlink(matched_text)
+                                if success:
+                                    self.logger.info(f"Matched URL opened: {matched_text}")
+                                    return Gdk.EVENT_STOP
+                                
+                except Exception as e:
+                    self.logger.debug(f"Match check failed: {e}")
+            
+            # Normal focus handling
             terminal.grab_focus()
             self.registry.update_terminal_status(terminal_id, "focused")
             if self.on_terminal_focus_changed:
                 self.on_terminal_focus_changed(terminal, False)
+            
             return Gdk.EVENT_PROPAGATE
+            
         except Exception as e:
-            self.logger.error(f"Terminal click handling failed: {e}")
+            self.logger.error(f"Terminal click handling failed for terminal {terminal_id}: {e}")
             return Gdk.EVENT_PROPAGATE
 
     def _on_terminal_focus_in(self, controller, terminal, terminal_id):
@@ -795,9 +995,15 @@ class TerminalManager:
                 f"Cleaning up resources for terminal '{terminal_name}' (ID: {terminal_id})"
             )
 
+            # Clean up tracking systems
             self.osc7_tracker.untrack_terminal(terminal)
             self.manual_ssh_tracker.untrack(terminal_id)
+            
+            # Clean up hyperlink state
+            if hasattr(terminal, '_hovered_hyperlink'):
+                delattr(terminal, '_hovered_hyperlink')
 
+            # Unregister from registry
             success = self.registry.unregister_terminal(terminal_id)
             if success:
                 self._stats["terminals_closed"] += 1
@@ -805,6 +1011,7 @@ class TerminalManager:
                     "removed", terminal_name, "terminal resources cleaned"
                 )
 
+            # Cancel any pending SIGKILL timers
             if terminal_id in self._pending_kill_timers:
                 timeout_id = self._pending_kill_timers.pop(terminal_id)
                 GLib.source_remove(timeout_id)
@@ -815,10 +1022,8 @@ class TerminalManager:
         if terminal_id is None:
             return False
 
-        # Use remove_terminal for graceful shutdown
-        return self.remove_terminal(terminal)
+        return self.remove_terminal(terminal, force_kill_group=False)
 
-    # --- INÍCIO DA CORREÇÃO ---
     def _on_spawn_callback(
         self,
         terminal: Vte.Terminal,
@@ -869,21 +1074,18 @@ class TerminalManager:
             self.platform_info.cache_dir / f"ssh_control_{session.host}_{port}_{user}"
         )
 
-    def remove_terminal(self, terminal: Vte.Terminal) -> bool:
+    def remove_terminal(self, terminal: Vte.Terminal, force_kill_group: bool = False) -> bool:
         with self._cleanup_lock:
             terminal_id = getattr(terminal, "terminal_id", None)
             if terminal_id is None:
                 return False
 
             terminal_info = self.registry.get_terminal_info(terminal_id)
-            if not terminal_info or terminal_info.get("status", "").startswith(
-                "exited"
-            ):
+            if not terminal_info or terminal_info.get("status", "").startswith("exited"):
                 return False
 
             pid = terminal_info.get("process_id")
             if not pid or pid == -1:
-                # Se não há processo, apenas limpe a UI.
                 GLib.idle_add(self._cleanup_terminal, terminal, terminal_id)
                 return False
 
@@ -898,28 +1100,34 @@ class TerminalManager:
                 f"Initiating shutdown for terminal '{terminal_name}' (PID: {pid}, Type: {terminal_type})"
             )
 
-            # Lógica de término de processo específica da plataforma
             if not is_windows():
                 try:
-                    # MELHOR PRÁTICA: Envie o sinal para todo o grupo de processos.
-                    # Isso garante que o shell e todos os seus filhos (splits) sejam terminados.
-                    pgid = os.getpgid(pid)
                     signal_to_send = (
                         signal.SIGHUP if terminal_type == "local" else signal.SIGTERM
                     )
                     signal_name = "SIGHUP" if terminal_type == "local" else "SIGTERM"
-                    os.killpg(pgid, signal_to_send)
-                    self.logger.debug(
-                        f"{signal_name} sent to process group {pgid} of PID {pid}."
-                    )
+                    
+                    # FIX: Differentiate between closing an individual split vs an entire tab
+                    if force_kill_group:
+                        # Closing an entire tab - kill the whole process group
+                        pgid = os.getpgid(pid)
+                        os.killpg(pgid, signal_to_send)
+                        self.logger.debug(
+                            f"{signal_name} sent to process group {pgid} of PID {pid}."
+                        )
+                    else:
+                        # Closing an individual split - kill only this process
+                        os.kill(pid, signal_to_send)
+                        self.logger.debug(
+                            f"{signal_name} sent to individual process PID {pid}."
+                        )
+                        
                 except (ProcessLookupError, PermissionError) as e:
                     self.logger.debug(
-                        f"Could not send signal to process group of PID {pid}, likely already exited: {e}"
+                        f"Could not send signal to PID {pid}, likely already exited: {e}"
                     )
-                    # O processo já saiu, então podemos considerar a operação um sucesso.
                     return True
             else:
-                # Abordagem para Windows (sem killpg)
                 try:
                     os.kill(pid, signal.SIGTERM)
                 except (ProcessLookupError, PermissionError) as e:
@@ -928,8 +1136,6 @@ class TerminalManager:
                     )
                     return True
 
-            # ROBUSTEZ: Adiciona um temporizador de fallback para enviar SIGKILL
-            # caso o processo não termine graciosamente.
             timeout_id = GLib.timeout_add(
                 5000, self._ensure_process_terminated, pid, terminal_name, terminal_id
             )
@@ -965,8 +1171,6 @@ class TerminalManager:
         thread = threading.Thread(target=shutdown_task, daemon=True)
         thread.start()
 
-    # --- FIM DA CORREÇÃO ---
-
     def update_all_terminals(self) -> None:
         try:
             terminal_ids = self.registry.get_all_terminal_ids()
@@ -997,7 +1201,7 @@ class TerminalManager:
             self._process_check_timer_id = None
             self.logger.debug("Periodic process check timer removed.")
 
-        # Limpa os registros para evitar vazamentos de memória
+        # Clears the registries to prevent memory leaks
         self.registry._terminals.clear()
         self.registry._terminal_refs.clear()
 
@@ -1122,3 +1326,159 @@ class TerminalManager:
                 ):
                     count += 1
         return count
+    
+    def _setup_native_hyperlinks(self, terminal: Vte.Terminal, terminal_id: int) -> None:
+        """Setup VTE's native hyperlink support with URL regex patterns."""
+        try:
+            # Enable VTE's built-in hyperlink detection
+            terminal.set_allow_hyperlink(True)
+            
+            # Configure URL detection patterns
+            self._configure_url_patterns(terminal)
+            
+            # Connect to VTE's native hyperlink hover signal
+            terminal.connect("hyperlink-hover-uri-changed", self._on_hyperlink_hover, terminal_id)
+            
+            self.logger.debug(f"Native hyperlink support with patterns enabled for terminal {terminal_id}")
+            
+        except Exception as e:
+            self.logger.error(f"Failed to setup native hyperlinks for terminal {terminal_id}: {e}")
+
+    def _on_hyperlink_hover(self, terminal: Vte.Terminal, uri: str, bbox, terminal_id: int):
+        """Handle VTE's native hyperlink hover signal."""
+        try:
+            if uri:
+                # Store the currently hovered URI for click handling
+                terminal._hovered_hyperlink = uri
+                self.logger.debug(f"Hyperlink hovered in terminal {terminal_id}: {uri}")
+            else:
+                # Clear hovered URI when mouse leaves hyperlink
+                if hasattr(terminal, '_hovered_hyperlink'):
+                    delattr(terminal, '_hovered_hyperlink')
+                    self.logger.debug(f"Hyperlink hover cleared in terminal {terminal_id}")
+            
+        except Exception as e:
+            self.logger.error(f"Hyperlink hover handling failed for terminal {terminal_id}: {e}")
+            
+    def _open_hyperlink(self, uri: str) -> bool:
+        """Open hyperlink using system default handler."""
+        try:
+            import subprocess
+            import webbrowser
+            import sys
+            from urllib.parse import urlparse
+            
+            if not uri or not uri.strip():
+                self.logger.warning("Empty or invalid URI provided")
+                return False
+            
+            uri = uri.strip()
+            
+            # Basic URI validation
+            try:
+                parsed = urlparse(uri)
+                if not parsed.scheme:
+                    self.logger.warning(f"URI missing scheme: {uri}")
+                    return False
+            except Exception as e:
+                self.logger.warning(f"Invalid URI format: {uri} - {e}")
+                return False
+            
+            self.logger.info(f"Opening hyperlink: {uri}")
+            
+            # Platform-specific opening using sys.platform
+            if sys.platform == 'win32':
+                subprocess.run(['cmd', '/c', 'start', '', uri], check=True, timeout=10)
+            elif sys.platform == 'darwin':
+                subprocess.run(['open', uri], check=True, timeout=10)
+            else:
+                # Linux/Unix - try xdg-open first, fallback to webbrowser
+                try:
+                    # Try to force focus on the browser window
+                    subprocess.run(['xdg-open', uri], check=True, timeout=10)
+                    
+                    # Additional attempt to bring browser to front
+                    GLib.timeout_add(500, self._try_focus_browser)
+                    
+                except (FileNotFoundError, subprocess.SubprocessError):
+                    # Fallback to Python webbrowser module
+                    webbrowser.open(uri)
+            
+            return True
+            
+        except subprocess.TimeoutExpired:
+            self.logger.error(f"Timeout opening hyperlink: {uri}")
+            return False
+        except Exception as e:
+            self.logger.error(f"Failed to open hyperlink '{uri}': {e}")
+            return False
+        
+    def _configure_url_patterns(self, terminal: Vte.Terminal) -> None:
+        """Configure URL detection patterns for the terminal."""
+        try:
+            # URL regex patterns
+            url_patterns = [
+                # HTTP/HTTPS URLs
+                r'https?://[^\s<>"{}|\\^`\[\]]+[^\s<>"{}|\\^`\[\].,;:!?]',
+                # FTP URLs  
+                r'ftp://[^\s<>"{}|\\^`\[\]]+[^\s<>"{}|\\^`\[\].,;:!?]',
+                # Email addresses
+                r'[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}',
+            ]
+            
+            # Try VTE.Regex first (newer VTE versions)
+            if hasattr(terminal, 'match_add_regex') and hasattr(Vte, 'Regex'):
+                for pattern in url_patterns:
+                    try:
+                        # Use Vte.Regex instead of GLib.Regex
+                        regex = Vte.Regex.new_for_match(pattern, len(pattern.encode()), 0)
+                        tag = terminal.match_add_regex(regex, 0)
+                        
+                        # Set match as hyperlink
+                        if hasattr(terminal, 'match_set_cursor_name'):
+                            terminal.match_set_cursor_name(tag, "pointer")
+                        
+                        self.logger.debug(f"URL pattern added (Vte.Regex): {pattern} (tag: {tag})")
+                        
+                    except Exception as e:
+                        self.logger.warning(f"Failed to add VTE regex pattern '{pattern}': {e}")
+            
+            # Fallback to GLib.Regex for older versions
+            elif hasattr(terminal, 'match_add_gregex'):
+                from gi.repository import GLib
+                for pattern in url_patterns:
+                    try:
+                        regex = GLib.Regex.new(pattern, GLib.RegexCompileFlags.OPTIMIZE, 0)
+                        tag = terminal.match_add_gregex(regex, 0)
+                        terminal.match_set_cursor_type(tag, 2)  # Hand cursor
+                        self.logger.debug(f"URL pattern added (GLib.Regex): {pattern} (tag: {tag})")
+                    except Exception as e:
+                        self.logger.warning(f"Failed to add GLib regex pattern '{pattern}': {e}")
+            
+            else:
+                self.logger.warning("No URL pattern matching method available in VTE")
+            
+        except Exception as e:
+            self.logger.error(f"Failed to configure URL patterns: {e}")
+            
+    def _is_valid_url(self, text: str) -> bool:
+        """Check if text is a valid URL."""
+        try:
+            from urllib.parse import urlparse
+            result = urlparse(text.strip())
+            return bool(result.scheme and result.netloc)
+        except Exception:
+            return False
+        
+    def _try_focus_browser(self) -> bool:
+        """Try to bring browser window to front."""
+        try:
+            # Try to focus browser using wmctrl if available
+            subprocess.run(['wmctrl', '-a', 'firefox'], timeout=2, capture_output=True)
+        except (FileNotFoundError, subprocess.SubprocessError):
+            try:
+                # Alternative: try with chrome/chromium
+                subprocess.run(['wmctrl', '-a', 'chrome'], timeout=2, capture_output=True)
+            except (FileNotFoundError, subprocess.SubprocessError):
+                pass
+        return False  # Don't repeat

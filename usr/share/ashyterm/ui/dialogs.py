@@ -8,10 +8,11 @@ and application preferences.
 
 import os
 import threading
+from ..terminal.spawner import get_spawner
 import time
 from typing import Optional, Dict, Any, List, Callable
 from pathlib import Path
-
+from ..sessions.operations import SessionOperations
 import gi
 gi.require_version("Gtk", "4.0")
 gi.require_version("Adw", "1")
@@ -47,7 +48,7 @@ from ..utils.platform import (
 )
 from ..utils.backup import get_backup_manager, BackupType
 from ..utils.crypto import is_encryption_available, get_secure_storage
-from ..utils import accelerator_to_label
+from ..helpers import accelerator_to_label
 from ..utils.translation_utils import _
 
 
@@ -102,7 +103,24 @@ class BaseDialog(Adw.Window):
         self._original_data: Optional[Dict[str, Any]] = None
         
         self.logger.debug(f"Dialog initialized: {dialog_title}")
+
+        # Triggers the same logic as the cancel button.
+        key_controller = Gtk.EventControllerKey()
+        key_controller.connect("key-pressed", self._on_key_pressed)
+        self.add_controller(key_controller)
     
+    def _on_key_pressed(self, controller, keyval, keycode, state):
+        """Handle key presses for the dialog (e.g., Escape to cancel)."""
+        if keyval == Gdk.KEY_Escape:
+            # Triggers the same logic as the cancel button.
+            self._on_cancel_clicked(None)
+            return Gdk.EVENT_STOP
+        return Gdk.EVENT_PROPAGATE
+
+    def _on_cancel_clicked(self, button):
+        """Default cancel action. Subclasses can override this."""
+        self.close()
+
     def _mark_changed(self):
         """Mark dialog as having unsaved changes."""
         self._has_changes = True
@@ -335,6 +353,8 @@ class SessionEditDialog(BaseDialog):
                 hexpand=True,
             )
             self.name_entry.connect("changed", self._on_name_changed)
+            # Connect the Enter key to save
+            self.name_entry.connect("activate", self._on_save_clicked)
 
             name_row.add_suffix(self.name_entry)
             name_row.set_activatable_widget(self.name_entry)
@@ -443,6 +463,8 @@ class SessionEditDialog(BaseDialog):
                 hexpand=True,
             )
             self.host_entry.connect("changed", self._on_host_changed)
+            # Connect the Enter key to save
+            self.host_entry.connect("activate", self._on_save_clicked)
 
             host_row.add_suffix(self.host_entry)
             host_row.set_activatable_widget(self.host_entry)
@@ -460,6 +482,8 @@ class SessionEditDialog(BaseDialog):
                 hexpand=True,
             )
             self.user_entry.connect("changed", self._on_user_changed)
+            # Connect the Enter key to save
+            self.user_entry.connect("activate", self._on_save_clicked)
 
             user_row.add_suffix(self.user_entry)
             user_row.set_activatable_widget(self.user_entry)
@@ -528,6 +552,8 @@ class SessionEditDialog(BaseDialog):
                 hexpand=True,
             )
             self.key_path_entry.connect("changed", self._on_key_path_changed)
+            # Connect the Enter key to save
+            self.key_path_entry.connect("activate", self._on_save_clicked)
 
             self.browse_button = Gtk.Button(label=_("Browse..."), css_classes=["flat"])
             self.browse_button.connect("clicked", self._on_browse_key_clicked)
@@ -588,6 +614,8 @@ class SessionEditDialog(BaseDialog):
                 hexpand=True,
             )
             self.password_entry.connect("changed", self._on_password_changed)
+            # Connect the Enter key to save
+            self.password_entry.connect("activate", self._on_save_clicked)
 
             password_row.add_suffix(self.password_entry)
             password_row.set_activatable_widget(self.password_entry)
@@ -620,6 +648,9 @@ class SessionEditDialog(BaseDialog):
             save_button = Gtk.Button(label=_("Save"), css_classes=["suggested-action"])
             save_button.connect("clicked", self._on_save_clicked)
             action_bar.pack_end(save_button)
+
+            # Sets the Save button as the default widget for the Enter key
+            self.set_default_widget(save_button)
 
             return action_bar
 
@@ -799,20 +830,84 @@ class SessionEditDialog(BaseDialog):
         except Exception as e:
             self.logger.error(f"File dialog response handling failed: {e}")
 
+
     def _on_test_connection_clicked(self, button) -> None:
-        """Handle test SSH connection button click."""
+        """Handle test SSH connection button click by running it in a background thread."""
         try:
-            if not self._validate_ssh_fields():
+            # 1. Create a temporary session item from the current dialog fields
+            test_session = self._create_session_from_fields()
+            if not test_session:
+                self._show_error_dialog(_("Validation Error"), _("Please fill in all required SSH fields first."))
                 return
 
-            # Show test dialog (placeholder implementation)
-            self._show_test_connection_dialog()
+            # 2. Show a "Testing..." dialog to the user
+            self.testing_dialog = Adw.MessageDialog(
+                transient_for=self,
+                title=_("Testing Connection..."),
+                body=_("Attempting to connect to {host}...").format(host=test_session.host)
+            )
+            spinner = Gtk.Spinner(spinning=True, halign=Gtk.Align.CENTER, margin_top=12)
+            self.testing_dialog.set_extra_child(spinner)
+            self.testing_dialog.present()
+
+            # 3. Run the actual test in a separate thread
+            thread = threading.Thread(target=self._run_test_in_thread, args=(test_session,))
+            thread.start()
 
         except Exception as e:
-            self.logger.error(f"Test connection failed: {e}")
+            self.logger.error(f"Test connection setup failed: {e}")
+            if hasattr(self, 'testing_dialog'):
+                self.testing_dialog.close()
             self._show_error_dialog(
-                _("Test Connection Error"), _("Failed to test SSH connection")
+                _("Test Connection Error"), _("Failed to start connection test: {}").format(e)
             )
+
+    def _create_session_from_fields(self) -> Optional[SessionItem]:
+        """Creates a temporary SessionItem from the current dialog fields for testing."""
+        if not self.host_entry.get_text().strip() or not self.user_entry.get_text().strip():
+            return None
+
+        return SessionItem(
+            name="Test Connection",
+            session_type="ssh",
+            host=self.host_entry.get_text().strip(),
+            user=self.user_entry.get_text().strip(),
+            port=int(self.port_entry.get_value()),
+            auth_type="key" if self.auth_combo.get_selected() == 0 else "password",
+            auth_value=self._get_auth_value()
+        )
+
+    def _run_test_in_thread(self, test_session: SessionItem):
+        """Worker function to be executed in a background thread."""
+        spawner = get_spawner()
+        success, message = spawner.test_ssh_connection(test_session)
+        
+        # Schedule the result handling back on the main GTK thread
+        GLib.idle_add(self._on_test_finished, success, message)
+
+    def _on_test_finished(self, success: bool, message: str):
+        """Callback executed on the main thread after the test completes."""
+        # Close the "Testing..." dialog
+        if hasattr(self, 'testing_dialog'):
+            self.testing_dialog.close()
+
+        if success:
+            # Show success message
+            result_dialog = Adw.MessageDialog(
+                transient_for=self,
+                title=_("Connection Successful"),
+                body=_("Successfully connected to the SSH server.")
+            )
+            result_dialog.add_response("ok", _("OK"))
+            result_dialog.present()
+        else:
+            # Show failure message with details
+            self._show_error_dialog(
+                _("Connection Failed"),
+                _("Could not connect to the SSH server."),
+                details=message
+            )
+        return False # Do not repeat idle_add
 
     def _show_test_connection_dialog(self) -> None:
         """Show SSH connection test dialog."""
@@ -1189,6 +1284,8 @@ class FolderEditDialog(BaseDialog):
                 hexpand=True,
             )
             self.name_entry.connect("changed", self._on_name_changed)
+            # Connects the Enter key to save.
+            self.name_entry.connect("activate", self._on_save_clicked)
 
             name_row.add_suffix(self.name_entry)
             name_row.set_activatable_widget(self.name_entry)
@@ -1267,6 +1364,9 @@ class FolderEditDialog(BaseDialog):
             save_button.connect("clicked", self._on_save_clicked)
             action_bar.pack_end(save_button)
 
+            # Sets the Save button as the default widget for the Enter key
+            self.set_default_widget(save_button)
+
             return action_bar
 
         except Exception as e:
@@ -1308,31 +1408,28 @@ class FolderEditDialog(BaseDialog):
     def _on_save_clicked(self, button) -> None:
         """Handle save button click."""
         try:
-            if not self._validate_and_save():
-                return
+            # Get SessionOperations instance from the parent window
+            operations = self.parent_window.session_tree.operations
 
-            # Save to storage
-            save_sessions_and_folders(None, self.folder_store)
+            # Create a temporary folder object with the new data
+            updated_folder = self._build_updated_folder()
+            if not updated_folder:
+                return # Validation failed in build method
 
-            # Create backup
-            self._create_save_backup()
-
-            # Log folder event
-            event_type = "created" if self.is_new_item else "modified"
-            log_session_event(
-                f"folder_{event_type}",
-                self.editing_folder.name,
-                f"path: {self.editing_folder.path}",
-            )
-
-            # Refresh parent if possible
-            if hasattr(self.parent_window, "refresh_tree"):
+            result = None
+            if self.is_new_item:
+                result = operations.add_folder(updated_folder)
+            else:
+                result = operations.update_folder(self.position, updated_folder)
+            
+            if result and result.success:
+                self.logger.info(
+                    f"Folder {'created' if self.is_new_item else 'updated'}: {updated_folder.name}"
+                )
                 self.parent_window.refresh_tree()
-
-            self.logger.info(
-                f"Folder {'created' if self.is_new_item else 'updated'}: {self.editing_folder.name}"
-            )
-            self.close()
+                self.close()
+            elif result:
+                self._show_error_dialog(_("Save Error"), result.message)
 
         except Exception as e:
             self.logger.error(f"Save handling failed: {e}")
@@ -1340,84 +1437,30 @@ class FolderEditDialog(BaseDialog):
                 _("Save Error"), _("Failed to save folder: {}").format(e)
             )
 
-    def _validate_and_save(self) -> bool:
-        """Validate input and save changes."""
-        try:
-            self._clear_validation_errors()
-
-            # Validate folder name
-            if not self._validate_required_field(self.name_entry, _("Folder name")):
-                return False
-
-            name = self.name_entry.get_text().strip()
-
-            # Get parent path
-            selected_item = self.parent_combo.get_selected_item()
-            parent_path = ""
-            if selected_item:
-                display_name = selected_item.get_string()
-                parent_path = self.parent_paths_map.get(display_name, "")
-
-            # Build new path
-            new_path = normalize_path(
-                f"{parent_path}/{name}" if parent_path else f"/{name}"
-            )
-            new_path_str = str(new_path)
-
-            # Check for conflicts
-            for i in range(self.folder_store.get_n_items()):
-                folder = self.folder_store.get_item(i)
-                if isinstance(folder, SessionFolder) and folder != self.original_folder:
-                    if folder.path == new_path_str:
-                        self._show_error_dialog(
-                            _("Duplicate Folder"),
-                            _("Folder path '{}' already exists.").format(new_path_str),
-                        )
-                        return False
-
-            # Update folder
-            self.editing_folder.name = name
-            self.editing_folder.parent_path = parent_path
-            self.editing_folder.path = new_path_str
-
-            # Validate folder
-            if not self.editing_folder.validate():
-                errors = self.editing_folder.get_validation_errors()
-                self._show_error_dialog(
-                    _("Validation Error"),
-                    _("Folder validation failed:\n{}").format("\n".join(errors)),
-                )
-                return False
-
-            # Save changes
-            if self.is_new_item:
-                self.folder_store.append(self.editing_folder)
-            else:
-                # Update original folder
-                path_changed = self.old_path != self.editing_folder.path
-
-                self.original_folder.name = self.editing_folder.name
-                self.original_folder.parent_path = self.editing_folder.parent_path
-                self.original_folder.path = self.editing_folder.path
-
-                # Update child paths if path changed
-                if (
-                    path_changed
-                    and self.old_path
-                    and hasattr(self.parent_window, "_update_child_paths")
-                ):
-                    self.parent_window._update_child_paths(
-                        self.old_path, self.original_folder.path
-                    )
-
-            return True
-
-        except Exception as e:
-            self.logger.error(f"Validation and save failed: {e}")
-            self._show_error_dialog(
-                _("Validation Error"), _("Failed to validate folder: {}").format(e)
-            )
-            return False
+    def _build_updated_folder(self) -> Optional[SessionFolder]:
+        """Validate form and build a new SessionFolder object with the updated data."""
+        self._clear_validation_errors()
+        if not self._validate_required_field(self.name_entry, _("Folder name")):
+            return None
+        
+        name = self.name_entry.get_text().strip()
+        
+        selected_item = self.parent_combo.get_selected_item()
+        parent_path = ""
+        if selected_item:
+            display_name = selected_item.get_string()
+            parent_path = self.parent_paths_map.get(display_name, "")
+            
+        new_path = normalize_path(f"{parent_path}/{name}" if parent_path else f"/{name}")
+        
+        # Create a new object with updated data, preserving metadata
+        updated_data = self.editing_folder.to_dict()
+        updated_data.update({
+            "name": name,
+            "parent_path": parent_path,
+            "path": str(new_path)
+        })
+        return SessionFolder.from_dict(updated_data)
 
     def _create_save_backup(self) -> None:
         """Create backup after successful save."""
@@ -1537,18 +1580,21 @@ class PreferencesDialog(Adw.PreferencesWindow):
             transparency_row.set_activatable_widget(self.transparency_scale)
             colors_group.add(transparency_row)
 
-            # Font
-            font_row = Adw.FontRow(
+            font_row = Adw.ActionRow(
                 title=_("Terminal Font"),
                 subtitle=_("Select font family and size for terminal text"),
             )
-            font_row.set_font_name(self.settings_manager.get("font", "Monospace 10"))
-            font_row.connect("notify::font-name", self._on_font_changed)
+            
+            font_button = Gtk.FontButton()
+            font_button.set_font(self.settings_manager.get("font", "Monospace 10"))
+            font_button.connect("font-set", self._on_font_changed)
+            
+            font_row.add_suffix(font_button)
+            font_row.set_activatable_widget(font_button)
             colors_group.add(font_row)
 
         except Exception as e:
             self.logger.error(f"Failed to setup appearance page: {e}")
-
     def _setup_behavior_page(self) -> None:
         """Set up behavior preferences page."""
         try:
@@ -1941,16 +1987,16 @@ class PreferencesDialog(Adw.PreferencesWindow):
         except Exception as e:
             self.logger.error(f"Blur change failed: {e}")
     
-    def _on_font_changed(self, font_row, param) -> None:
-        """Handle font change."""
+    def _on_font_changed(self, font_button) -> None:
+        """Handle font change when user confirms selection in the font dialog."""
         try:
-            font = font_row.get_font_name()
+            font = font_button.get_font()
             self.settings_manager.set("font", font)
             self.emit("font-changed", font)
             self.logger.debug(f"Font changed to {font}")
         except Exception as e:
             self.logger.error(f"Font change failed: {e}")
-    
+             
     def _on_setting_changed(self, key: str, value: Any) -> None:
         """Handle generic setting change."""
         try:
@@ -2108,3 +2154,123 @@ class PreferencesDialog(Adw.PreferencesWindow):
             
         except Exception as e:
             self.logger.error(f"Reset settings dialog failed: {e}")
+
+class MoveSessionDialog(BaseDialog):
+    """A dialog to move a session to a different folder."""
+
+    def __init__(self, parent_window, session_to_move: SessionItem, 
+                 folder_store: Gio.ListStore, operations: SessionOperations):
+        """
+        Initialize the move session dialog.
+        
+        Args:
+            parent_window: The parent CommTerminalWindow.
+            session_to_move: The SessionItem instance to be moved.
+            folder_store: The Gio.ListStore containing all SessionFolder objects.
+            operations: The SessionOperations instance to perform the move.
+        """
+        title = _("Move Session")
+        super().__init__(parent_window, title, default_width=400, default_height=250)
+
+        self.session_to_move = session_to_move
+        self.folder_store = folder_store
+        self.operations = operations
+        
+        self.folder_paths_map: Dict[str, str] = {}
+        self.folder_combo: Optional[Adw.ComboRow] = None
+
+        self._setup_ui()
+        self.logger.info(f"Move session dialog opened for '{session_to_move.name}'")
+
+    def _setup_ui(self):
+        """Set up the dialog's user interface."""
+        main_box = Gtk.Box(
+            orientation=Gtk.Orientation.VERTICAL,
+            spacing=16, margin_top=24, margin_bottom=24, margin_start=24, margin_end=24
+        )
+
+        # Main content group
+        group = Adw.PreferencesGroup(
+            title=_("Select Destination"),
+            description=_("Choose the folder to move the session '{name}' to.").format(name=self.session_to_move.name)
+        )
+        main_box.append(group)
+
+        # Folder selection row
+        folder_row = Adw.ComboRow(
+            title=_("Destination Folder"),
+            subtitle=_("Select a folder or 'Root' for the top level")
+        )
+        self.folder_combo = folder_row
+        group.add(folder_row)
+
+        # Populate the folder list
+        self._populate_folder_combo()
+
+        # Action bar
+        action_bar = Gtk.ActionBar()
+        cancel_button = Gtk.Button(label=_("Cancel"))
+        cancel_button.connect("clicked", self._on_cancel_clicked)
+        action_bar.pack_start(cancel_button)
+
+        move_button = Gtk.Button(label=_("Move"), css_classes=["suggested-action"])
+        move_button.connect("clicked", self._on_move_clicked)
+        action_bar.pack_end(move_button)
+        self.set_default_widget(move_button)
+
+        # Final layout
+        content_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=0)
+        content_box.append(main_box)
+        content_box.append(action_bar)
+        self.set_content(content_box)
+
+    def _populate_folder_combo(self):
+        """Fill the folder combo box with available folders."""
+        folder_model = Gtk.StringList()
+        folder_model.append(_("Root"))
+        self.folder_paths_map = {_("Root"): ""}
+
+        # Sort folders by path for a hierarchical view
+        folders = sorted([self.folder_store.get_item(i) for i in range(self.folder_store.get_n_items())], key=lambda f: f.path)
+        
+        selected_index = 0
+        for folder in folders:
+            depth = folder.path.count("/")
+            display_name = f"{'  ' * depth}{folder.name}"
+            folder_model.append(display_name)
+            self.folder_paths_map[display_name] = folder.path
+            
+            # Find the index of the current folder to pre-select it
+            if folder.path == self.session_to_move.folder_path:
+                selected_index = folder_model.get_n_items() - 1
+        
+        self.folder_combo.set_model(folder_model)
+        self.folder_combo.set_selected(selected_index)
+
+    def _on_move_clicked(self, button):
+        """Handle the move button click."""
+        selected_item = self.folder_combo.get_selected_item()
+        if not selected_item:
+            return
+
+        display_name = selected_item.get_string()
+        target_folder_path = self.folder_paths_map.get(display_name, "")
+
+        if target_folder_path == self.session_to_move.folder_path:
+            self.logger.debug("Target folder is the same as the source. Closing dialog.")
+            self.close()
+            return
+
+        result = self.operations.move_session_to_folder(self.session_to_move, target_folder_path)
+
+        if result.success:
+            if result.warnings:
+                # Show a toast for non-critical warnings (like rename)
+                if hasattr(self.parent_window, 'get_toast_overlay') and (overlay := self.parent_window.get_toast_overlay()):
+                    overlay.add_toast(Adw.Toast(title=result.warnings[0]))
+            
+            self.logger.info(f"Session '{self.session_to_move.name}' moved to '{target_folder_path}'")
+            self.parent_window.refresh_tree()
+            self.close()
+        else:
+            self._show_error_dialog(_("Move Failed"), result.message)

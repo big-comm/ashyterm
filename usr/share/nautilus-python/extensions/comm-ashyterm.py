@@ -1,0 +1,138 @@
+# -*- coding: UTF-8 -*-
+# Ashy Terminal Nautilus Extension
+# Based on Tilix Nautilus extension
+# Adds context menu to open Ashy Terminal in directories
+
+from gettext import gettext, textdomain
+from subprocess import Popen
+import shutil
+import shlex
+try:
+    from urllib import unquote
+    from urlparse import urlparse
+except ImportError:
+    from urllib.parse import unquote, urlparse
+
+from gi.repository import Gio, GObject, Nautilus
+from gi import require_version
+if hasattr(Nautilus, "LocationWidgetProvider"):
+    require_version('Gtk', '3.0')
+    from gi.repository import Gtk
+
+TERMINAL = shutil.which("ashyterm")
+ASHYTERM_KEYBINDINGS = "org.communitybig.ashyterm.Keybindings"
+GSETTINGS_OPEN_TERMINAL = "nautilus-open"
+REMOTE_URI_SCHEME = ['ftp', 'sftp']
+textdomain("ashyterm")
+_ = gettext
+
+def _checkdecode(s):
+    """Decode string assuming utf encoding if it's bytes, else return unmodified"""
+    return s.decode('utf-8') if isinstance(s, bytes) else s
+
+def open_terminal_in_file(filename):
+    if filename:
+        Popen([TERMINAL, '--working-directory', filename])
+    else:
+        Popen([TERMINAL])
+
+# Nautilus 43 doesn't offer the LocationWidgetProvider any more
+if hasattr(Nautilus, "LocationWidgetProvider"):
+    class OpenAshyTermShortcutProvider(GObject.GObject,
+                                       Nautilus.LocationWidgetProvider):
+
+        def __init__(self):
+            source = Gio.SettingsSchemaSource.get_default()
+            if source.lookup(ASHYTERM_KEYBINDINGS, True):
+                self._gsettings = Gio.Settings.new(ASHYTERM_KEYBINDINGS)
+                self._gsettings.connect("changed", self._bind_shortcut)
+                self._create_accel_group()
+            self._window = None
+            self._uri = None
+
+        def _create_accel_group(self):
+            self._accel_group = Gtk.AccelGroup()
+            shortcut = self._gsettings.get_string(GSETTINGS_OPEN_TERMINAL)
+            key, mod = Gtk.accelerator_parse(shortcut)
+            self._accel_group.connect(key, mod, Gtk.AccelFlags.VISIBLE,
+                                      self._open_terminal)
+
+        def _bind_shortcut(self, gsettings, key):
+            if key == GSETTINGS_OPEN_TERMINAL:
+                self._accel_group.disconnect(self._open_terminal)
+                self._create_accel_group()
+
+        def _open_terminal(self, *args):
+            filename = unquote(self._uri[7:])
+            open_terminal_in_file(filename)
+
+        def get_widget(self, uri, window):
+            self._uri = uri
+            if self._window:
+                self._window.remove_accel_group(self._accel_group)
+            if self._gsettings:
+                window.add_accel_group(self._accel_group)
+            self._window = window
+            return None
+
+
+class OpenAshyTermExtension(GObject.GObject, Nautilus.MenuProvider):
+
+    def _open_terminal(self, file_):
+        if file_.get_uri_scheme() in REMOTE_URI_SCHEME:
+            # For remote connections, just open terminal and let user type SSH command
+            # or implement SSH session creation via session manager
+            Popen([TERMINAL])
+            # TODO: In future, could create SSH session via session manager
+        else:
+            filename = Gio.File.new_for_uri(file_.get_uri()).get_path()
+            open_terminal_in_file(filename)
+
+    def _menu_activate_cb(self, menu, file_):
+        self._open_terminal(file_)
+
+    def _menu_background_activate_cb(self, menu, file_):
+        self._open_terminal(file_)
+
+    def get_file_items(self, *args):
+        files = args[-1]
+        if len(files) != 1:
+            return
+        items = []
+        file_ = files[0]
+
+        if file_.is_directory():
+
+            if file_.get_uri_scheme() in REMOTE_URI_SCHEME:
+                uri = _checkdecode(file_.get_uri())
+                item = Nautilus.MenuItem(name='NautilusPython::open_remote_item',
+                                         label=_(u'Open Remote Ashy Terminal'),
+                                         tip=_(u'Open Remote Ashy Terminal In {}').format(uri))
+                item.connect('activate', self._menu_activate_cb, file_)
+                items.append(item)
+
+            filename = _checkdecode(file_.get_name())
+            item = Nautilus.MenuItem(name='NautilusPython::open_file_item',
+                                     label=_(u'Open Ashy Terminal Here'),
+                                     tip=_(u'Open Ashy Terminal In {}').format(filename))
+            item.connect('activate', self._menu_activate_cb, file_)
+            items.append(item)
+
+        return items
+
+    def get_background_items(self, *args):
+        file_ = args[-1]
+        items = []
+        if file_.get_uri_scheme() in REMOTE_URI_SCHEME:
+            item = Nautilus.MenuItem(name='NautilusPython::open_bg_remote_item',
+                                     label=_(u'Open Remote Ashy Terminal Here'),
+                                     tip=_(u'Open Remote Ashy Terminal In This Directory'))
+            item.connect('activate', self._menu_activate_cb, file_)
+            items.append(item)
+
+        item = Nautilus.MenuItem(name='NautilusPython::open_bg_file_item',
+                                 label=_(u'Open Ashy Terminal Here'),
+                                 tip=_(u'Open Ashy Terminal In This Directory'))
+        item.connect('activate', self._menu_background_activate_cb, file_)
+        items.append(item)
+        return items

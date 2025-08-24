@@ -17,6 +17,7 @@ __all__ = [
     "SessionEditDialog",
     "FolderEditDialog",
     "PreferencesDialog",
+    "MoveSessionDialog",
     # Menus
     "MainApplicationMenu",
     "create_session_menu",

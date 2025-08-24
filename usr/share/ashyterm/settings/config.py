@@ -56,7 +56,7 @@ class AppConstants:
     DEVELOPER_EMAIL = "leo4berbert@gmail.com"
     
     # Legal and support
-    COPYRIGHT = "© 2025 BigCommunity"
+    COPYRIGHT = "Â© 2025 BigCommunity"
     LICENSE = "MIT"
     WEBSITE = "https://communitybig.org/"
     DOCUMENTATION_URL = "https://forum.biglinux.com.br/t/biglinuxcommunity"
@@ -262,13 +262,14 @@ class DefaultSettings:
             # Appearance settings
             "color_scheme": 0,  # Index in COLOR_SCHEME_MAP
             "transparency": 0,  # Percentage (0-100)
-            "font": "Monospace 10",
+            "font": "Noto Mono Nerd Font Medium 12",
             # UI behavior
             "sidebar_visible": True,
             "auto_hide_sidebar": False,
             "show_toolbar": True,
             "confirm_close": True,
             "confirm_delete": True,
+            "tree_expanded_folders": [],  # State persistence for tree view
             # Terminal behavior
             "auto_close_tab": True,
             "auto_close_delay": 1000,  # milliseconds
@@ -323,6 +324,10 @@ class DefaultSettings:
                 "split-horizontal": "<Control><Shift>o",
                 "split-vertical": "<Control><Shift>e",
                 "close-pane": "<Control><Shift>w",
+                "focus-pane-up": "<Control>Up",
+                "focus-pane-down": "<Control>Down",
+                "focus-pane-left": "<Control>Left",
+                "focus-pane-right": "<Control>Right",
             },
         }
 

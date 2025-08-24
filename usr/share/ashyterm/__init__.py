@@ -15,7 +15,7 @@ __version_info__ = (1, 0, 1)
 __author__ = "BigCommunity Team"
 __email__ = "contact@communitybig.org"
 __license__ = "MIT"
-__copyright__ = "© 2024 BigCommunity"
+__copyright__ = "© 2025 BigCommunity"
 __url__ = "https://communitybig.org/"
 __description__ = _("A modern terminal emulator with session management")
 
