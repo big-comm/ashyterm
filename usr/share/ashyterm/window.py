@@ -1497,7 +1497,6 @@ class CommTerminalWindow(Adw.ApplicationWindow):
             def on_response(dlg, response_id):
                 if response_id == "delete":
                     try:
-                        # --- START OF FIX ---
                         folders_to_delete = [item for item in items if isinstance(item, SessionFolder)]
                         sessions_to_delete = [item for item in items if isinstance(item, SessionItem)]
 
@@ -1520,7 +1519,6 @@ class CommTerminalWindow(Adw.ApplicationWindow):
                                     self.session_tree.refresh_tree()
                                     dlg.close()
                                     return
-                        # --- END OF FIX ---
                         
                         self.session_tree.refresh_tree()
                     except Exception as e:

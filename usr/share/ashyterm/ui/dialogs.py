@@ -48,7 +48,7 @@ from ..utils.platform import (
 )
 from ..utils.backup import get_backup_manager, BackupType
 from ..utils.crypto import is_encryption_available, get_secure_storage
-from ..utils import accelerator_to_label
+from ..helpers import accelerator_to_label
 from ..utils.translation_utils import _
 
 

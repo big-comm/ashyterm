@@ -20,7 +20,7 @@ from ..utils.security import validate_session_data, create_security_auditor
 from ..utils.platform import get_platform_info, is_windows
 from ..utils.translation_utils import _
 from ..ui.menus import create_session_menu, create_folder_menu, create_root_menu
-from ..utils import generate_unique_name
+from ..helpers import generate_unique_name
 
 
 def _get_children_model(item, user_data):

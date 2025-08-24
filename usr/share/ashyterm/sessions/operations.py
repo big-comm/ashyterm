@@ -28,7 +28,7 @@ from ..utils.security import (
 )
 from ..utils.platform import normalize_path, get_platform_info
 from ..utils.backup import get_backup_manager, BackupType
-from ..utils import generate_unique_name
+from ..helpers import generate_unique_name
 from ..utils.translation_utils import _
 
 
