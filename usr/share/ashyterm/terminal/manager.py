@@ -698,7 +698,7 @@ class TerminalManager:
             if not local_path:
                 return False
 
-            # --- START OF MODIFICATION: Check if dropped item is a directory ---
+            # Check if dropped item is a directory
             try:
                 # Query the file type to differentiate between files and directories.
                 file_info = file.query_info('standard::type', Gio.FileQueryInfoFlags.NONE, None)
@@ -716,7 +716,6 @@ class TerminalManager:
             else:
                 self.logger.info(f"File dropped on SFTP terminal: {local_path}")
                 command_to_send = f'put "{local_path}"\n'
-            # --- END OF MODIFICATION ---
 
             self.logger.debug(f"Sending command to SFTP child: {command_to_send.strip()}")
             
@@ -751,7 +750,7 @@ class TerminalManager:
             self.manual_ssh_tracker.track(terminal_id, terminal)
 
             # Setup VTE native hyperlink support
-            self._setup_native_hyperlinks(terminal, terminal_id) # MODIFICATION: Call new helper
+            self._setup_native_hyperlinks(terminal, terminal_id)
 
             # Focus controllers
             focus_controller = Gtk.EventControllerFocus()

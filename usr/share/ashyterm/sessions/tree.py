@@ -69,7 +69,7 @@ class SessionTreeView:
         self._selection_anchor = None
         self._last_selected_pos = -1
         
-        # --- Flag to prevent saving state while restoring it ---
+        # Flag to prevent saving state while restoring it
         self._is_restoring_state = False
 
         self.on_session_activated: Optional[Callable[[SessionItem], None]] = None
@@ -269,7 +269,7 @@ class SessionTreeView:
 
     def refresh_tree(self):
         self.logger.debug("Refreshing session tree view")
-        # --- FIX: Set restoring flag before any changes to the model ---
+        # Set restoring flag before any changes to the model
         self._is_restoring_state = True
         
         self.root_store.remove_all()
@@ -333,7 +333,7 @@ class SessionTreeView:
         except Exception as e:
             self.logger.error(f"Failed to apply tree expansion state: {e}")
         finally:
-            # --- FIX: Reset flag only after restoration is complete ---
+            # Reset flag only after restoration is complete
             self._is_restoring_state = False
             self.logger.debug("Finished restoring expansion state.")
         return False

@@ -382,7 +382,7 @@ class SessionStorageManager:
                 # The pre-save backup is now synchronous and critical for recovery
                 backup_id = self._create_pre_save_backup()
 
-                # ... (rest of the save logic from the original save_sessions_and_folders_safe)
+                # Rest of the save logic from the original save_sessions_and_folders_safe
                 # This includes validation, atomic write, and verification.
                 
                 if not self._validate_save_data(data_to_save):

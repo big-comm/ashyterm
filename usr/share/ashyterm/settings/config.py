@@ -56,7 +56,7 @@ class AppConstants:
     DEVELOPER_EMAIL = "leo4berbert@gmail.com"
     
     # Legal and support
-    COPYRIGHT = "© 2025 BigCommunity"
+    COPYRIGHT = "Â© 2025 BigCommunity"
     LICENSE = "MIT"
     WEBSITE = "https://communitybig.org/"
     DOCUMENTATION_URL = "https://forum.biglinux.com.br/t/biglinuxcommunity"
@@ -269,7 +269,7 @@ class DefaultSettings:
             "show_toolbar": True,
             "confirm_close": True,
             "confirm_delete": True,
-            "tree_expanded_folders": [], # --- NEW: State persistence for tree view ---
+            "tree_expanded_folders": [],  # State persistence for tree view
             # Terminal behavior
             "auto_close_tab": True,
             "auto_close_delay": 1000,  # milliseconds

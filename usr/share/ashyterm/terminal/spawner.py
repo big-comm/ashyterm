@@ -1,5 +1,3 @@
-# START OF FILE ashyterm/terminal/spawner.py
-
 import os
 import signal
 import subprocess
@@ -409,7 +407,6 @@ class ProcessSpawner:
                 options=ssh_options,
             )
 
-            # --- START OF CORRECTION ---
             # For SSH, inject a remote command to set up PROMPT_COMMAND for OSC7.
             # This version uses corrected quoting to work reliably.
             if command_type == "ssh":
@@ -430,7 +427,6 @@ class ProcessSpawner:
                     self.logger.debug("Enhanced SSH command with dynamic OSC7 support.")
                 except Exception as e:
                     self.logger.warning(f"Could not enhance SSH with OSC7: {e}")
-            # --- END OF CORRECTION ---
 
             # sshpass logic remains the same
             if session.uses_password_auth() and session.auth_value:
