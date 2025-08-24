@@ -246,7 +246,7 @@ class TabManager:
         scroll_controller = Gtk.EventControllerScroll.new(
             Gtk.EventControllerScrollFlags.VERTICAL
         )
-        # Conecta ao nosso novo método corrigido
+        # Connect to our corrected method
         scroll_controller.connect("scroll", self._on_terminal_scroll, scrolled_window)
         terminal.add_controller(scroll_controller)
 

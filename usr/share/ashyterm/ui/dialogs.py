@@ -1407,7 +1407,6 @@ class FolderEditDialog(BaseDialog):
 
     def _on_save_clicked(self, button) -> None:
         """Handle save button click."""
-        # --- START MODIFICATION ---
         try:
             # Get SessionOperations instance from the parent window
             operations = self.parent_window.session_tree.operations
@@ -1437,7 +1436,6 @@ class FolderEditDialog(BaseDialog):
             self._show_error_dialog(
                 _("Save Error"), _("Failed to save folder: {}").format(e)
             )
-        # --- END MODIFICATION ---
 
     def _build_updated_folder(self) -> Optional[SessionFolder]:
         """Validate form and build a new SessionFolder object with the updated data."""
@@ -2276,4 +2274,3 @@ class MoveSessionDialog(BaseDialog):
             self.close()
         else:
             self._show_error_dialog(_("Move Failed"), result.message)
-

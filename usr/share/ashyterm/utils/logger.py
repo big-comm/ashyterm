@@ -401,7 +401,7 @@ def log_session_event(event_type: str, item_name: str, details: str = ""):
         details: Additional details about the event
     """
     logger = get_logger('ashyterm.sessions')
-    # Determina o tipo de item a partir do tipo de evento
+    # Determine item type from event type
     item_type = "Folder" if "folder" in event_type else "Session"
     message = f"{item_type} '{item_name}' {event_type.replace('folder_', '')}"
     if details:

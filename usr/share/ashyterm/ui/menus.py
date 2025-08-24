@@ -18,7 +18,7 @@ class ZoomWidget(Gtk.Box):
         self.add_css_class("zoom-widget")
         
         # Zoom out button
-        zoom_out_btn = Gtk.Button(label="−")
+        zoom_out_btn = Gtk.Button(label="âˆ'")
         zoom_out_btn.add_css_class("flat")
         zoom_out_btn.connect("clicked", self._on_zoom_out)
         
@@ -72,7 +72,7 @@ class MainApplicationMenu:
         terminal_section.append(_("New Window"), "win.new-window")
         main_menu.append_section(None, terminal_section)
 
-        # Widget customizado como no GNOME Console
+        # Custom widget like GNOME Console
         zoom_section = Gio.Menu()
         zoom_section.append(_("Zoom Out (-)"), "win.zoom-out")
         zoom_section.append(_("Reset Zoom (100%)"), "win.zoom-reset")
@@ -113,14 +113,12 @@ def create_session_menu(
     """
     menu = Gio.Menu()
 
-    # --- START OF MODIFICATION ---
     # Add SFTP option if the session is of type SSH
     if session_item.is_ssh():
         sftp_item = Gio.MenuItem.new(_("Connect with SFTP"), "win.connect-sftp")
         sftp_item.set_icon(Gio.ThemedIcon.new("folder-remote-symbolic"))
         menu.append_item(sftp_item)
         menu.append_section(None, Gio.Menu())  # Add a separator
-    # --- END OF MODIFICATION ---
 
     # Basic session operations
     menu.append_item(Gio.MenuItem.new(_("Edit"), "win.edit-session"))
