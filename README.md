@@ -2,7 +2,9 @@
 
 <p align="center">
   <a href="https://github.com/big-comm/comm-ashyterm/releases"><img src="https://img.shields.io/badge/Version-1.1.0-blue.svg" alt="Version"/></a>
-  <a href="https://manjaro.org/"><img src="https://img.shields.io/badge/Base-Manjaro-35B679.svg?logo=manjaro" alt="Manjaro Base"/></a>
+  <a href="https://bigcommunity.com">
+  <img src="https://img.shields.io/badge/BigCommunity-Platform-blue" alt="BigCommunity Platform">
+</a>
   <a href="https://github.com/big-comm/comm-ashyterm/blob/main/LICENSE"><img src="https://img.shields.io/badge/License-MIT-green.svg" alt="License"/></a>
 </p>
 
