@@ -18,6 +18,10 @@
    <img width="1322" height="822" alt="ashyterm" src="https://github.com/user-attachments/assets/e3296fab-b975-4d12-8692-41178f72fc7e" alt="Ashy Terminal" />
 </p>
 
+## Example of use
+
+![ashy](https://github.com/user-attachments/assets/cfab5152-ca80-499d-a13d-c8087a9da6d1)
+
 ## Key Features
 
 - **Modern User Interface**: A clean and responsive UI built with the latest GTK4 and Adwaita libraries, providing a native look and feel on modern Linux desktops.

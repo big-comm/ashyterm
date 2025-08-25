@@ -78,72 +78,116 @@ def parse_accelerator_safely(
         return None
 
     try:
-        # Try standard parsing method
-        parsed_result = Gtk.accelerator_parse(accel_string)
-        if isinstance(parsed_result, tuple) and len(parsed_result) == 2:
-            keyval, mods = parsed_result
-            if keyval != 0:
-                return (keyval, mods)
+        # Use the recommended Gtk.accelerator_parse
+        success, keyval, mods = Gtk.accelerator_parse(accel_string)
+        if success and keyval != 0:
+            return keyval, mods
     except (GLib.Error, ValueError, TypeError) as e:
-        logger.debug(
-            f"Failed to parse accelerator '{accel_string}' with standard method: {e}"
-        )
-
-    try:
-        # Try alternative parsing if available
-        keyval, mods = Gtk.accelerator_parse_with_keycode(accel_string, None)
-        if keyval != 0:
-            return (keyval, mods)
-    except (GLib.Error, ValueError, TypeError, AttributeError) as e:
-        logger.debug(
-            f"Failed to parse accelerator '{accel_string}' with alternative method: {e}"
-        )
+        logger.debug(f"Failed to parse accelerator '{accel_string}': {e}")
 
     logger.warning(f"Could not parse accelerator string: '{accel_string}'")
     return None
 
-
-def accelerator_to_label(accel_string: str) -> str:
+def _manual_accelerator_conversion(accelerator: str) -> str:
     """
-    Convert accelerator string to human-readable label.
-
+    Manual conversion of accelerator string to label.
+    
     Args:
-        accel_string: Accelerator string (e.g., "<Control>t")
-
+        accelerator: GTK accelerator string
+        
     Returns:
-        Human-readable label (e.g., "Ctrl+T") or escaped string if invalid
+        Human-readable label
     """
-    logger = get_logger("ashyterm.utils")
+    if not accelerator:
+        return ""
+    
+    # Remove angle brackets and split by modifiers
+    clean_accel = accelerator.replace('<', '').replace('>', '+')
+    
+    # Replace common modifier names
+    replacements = {
+        'Control': 'Ctrl',
+        'Shift': 'Shift',
+        'Alt': 'Alt',
+        'Super': 'Super',
+        'Meta': 'Meta'
+    }
+    
+    # Apply replacements
+    result = clean_accel
+    for old, new in replacements.items():
+        result = result.replace(old, new)
+    
+    # Handle common key names
+    key_replacements = {
+        'plus': '+',
+        'minus': '-',
+        'Return': 'Enter',
+        'BackSpace': 'Backspace',
+        'Delete': 'Del',
+        'Insert': 'Ins',
+        'space': 'Space',
+        'Tab': 'Tab',
+        'Escape': 'Esc',
+        'comma': ',',
+        'period': '.',
+        'slash': '/',
+        'backslash': '\\',
+        'semicolon': ';',
+        'apostrophe': "'",
+        'grave': '`',
+        'bracketleft': '[',
+        'bracketright': ']',
+        'equal': '=',
+    }
+    
+    # Apply key replacements to the last part (the actual key)
+    parts = result.split('+')
+    if parts:
+        last_part = parts[-1].lower()
+        for old_key, new_key in key_replacements.items():
+            if last_part == old_key:
+                parts[-1] = new_key
+                break
+        else:
+            # Capitalize single letters
+            if len(parts[-1]) == 1:
+                parts[-1] = parts[-1].upper()
+    
+    return '+'.join(parts)
 
-    if not accel_string:
-        return _("None")
-
-    parsed = parse_accelerator_safely(accel_string)
-    if parsed is None:
-        # Escape XML characters to prevent markup errors
-        escaped = (
-            accel_string.replace("<", "&lt;").replace(">", "&gt;").replace("&", "&amp;")
-        )
-        logger.debug(f"Returning escaped accelerator string: '{escaped}'")
-        return escaped
-
-    keyval, mods = parsed
+def accelerator_to_label(accelerator: str) -> str:
+    """
+    Convert GTK accelerator string to human-readable label.
+    
+    Args:
+        accelerator: GTK accelerator string (e.g., "<Control>t", "<Control><Shift>c")
+        
+    Returns:
+        Human-readable label (e.g., "Ctrl+T", "Ctrl+Shift+C")
+    """
+    if not accelerator:
+        return ""
+    
     try:
-        label = Gtk.accelerator_get_label(keyval, mods)
-        # Ensure the result doesn't contain XML markup
-        escaped_label = (
-            label.replace("<", "&lt;").replace(">", "&gt;").replace("&", "&amp;")
-        )
-        return escaped_label
-    except (GLib.Error, TypeError) as e:
-        logger.debug(
-            f"Failed to get accelerator label for keyval={keyval}, mods={mods}: {e}"
-        )
-        # Escape XML characters to prevent markup errors
-        escaped = (
-            accel_string.replace("<", "&lt;").replace(">", "&gt;").replace("&", "&amp;")
-        )
-        return escaped
+        # Parse the accelerator
+        success, keyval, mods = Gtk.accelerator_parse(accelerator)
+        
+        if not success or keyval == 0:
+            return accelerator  # Return original if parsing fails
+        
+        # Get the key name
+        key_name = Gtk.accelerator_get_label(keyval, mods)
+        
+        if key_name:
+            return key_name
+        else:
+            # Fallback to manual conversion
+            return _manual_accelerator_conversion(accelerator)
+            
+    except Exception:
+        # Fallback to manual conversion if GTK methods fail
+        return _manual_accelerator_conversion(accelerator)
 
 
 def is_sshpass_available() -> bool:
