@@ -1,27 +1,28 @@
 import gi
+
 gi.require_version("Gtk", "4.0")
 gi.require_version("Adw", "1")
 
-from gi.repository import Gtk, Gio, GLib
-from typing import Optional
+from gi.repository import Gio, Gtk
 
 from ..utils.translation_utils import _
 
+
 class ZoomWidget(Gtk.Box):
     """Custom zoom widget for menu - horizontal layout like GNOME Console."""
-    
+
     def __init__(self, parent_window):
         super().__init__(orientation=Gtk.Orientation.HORIZONTAL, spacing=6)
         self.parent_window = parent_window
-        
+
         # Add CSS class for styling
         self.add_css_class("zoom-widget")
-        
+
         # Zoom out button
         zoom_out_btn = Gtk.Button(label="âˆ'")
         zoom_out_btn.add_css_class("flat")
         zoom_out_btn.connect("clicked", self._on_zoom_out)
-        
+
         # Zoom level label
         self.zoom_label = Gtk.Label(label="100%")
         self.zoom_label.set_halign(Gtk.Align.CENTER)
@@ -30,22 +31,22 @@ class ZoomWidget(Gtk.Box):
         zoom_in_btn = Gtk.Button(label="+")
         zoom_in_btn.add_css_class("flat")
         zoom_in_btn.connect("clicked", self._on_zoom_in)
-        
+
         # Add to box
         self.append(zoom_out_btn)
         self.append(self.zoom_label)
         self.append(zoom_in_btn)
-    
+
     def _on_zoom_out(self, button):
         """Handle zoom out button."""
-        if hasattr(self.parent_window, 'activate_action'):
-            self.parent_window.activate_action('zoom-out', None)
-    
+        if hasattr(self.parent_window, "activate_action"):
+            self.parent_window.activate_action("zoom-out", None)
+
     def _on_zoom_in(self, button):
         """Handle zoom in button."""
-        if hasattr(self.parent_window, 'activate_action'):
-            self.parent_window.activate_action('zoom-in', None)
-    
+        if hasattr(self.parent_window, "activate_action"):
+            self.parent_window.activate_action("zoom-in", None)
+
     def update_zoom_level(self, scale: float):
         """Update the zoom percentage display."""
         percentage = int(scale * 100)
@@ -197,7 +198,7 @@ def create_root_menu(clipboard_has_content=False) -> Gio.Menu:
 def create_terminal_menu(terminal, click_x=None, click_y=None) -> Gio.Menu:
     """
     Factory function to create a terminal context menu model.
-    
+
     Args:
         terminal: Vte.Terminal widget
         click_x: X coordinate of right-click (for URL detection)
@@ -207,15 +208,15 @@ def create_terminal_menu(terminal, click_x=None, click_y=None) -> Gio.Menu:
 
     # Check for URL at click position
     url_at_click = None
-    if click_x is not None and click_y is not None and hasattr(terminal, 'match_check'):
+    if click_x is not None and click_y is not None and hasattr(terminal, "match_check"):
         try:
             char_width = terminal.get_char_width()
             char_height = terminal.get_char_height()
-            
+
             if char_width > 0 and char_height > 0:
                 col = int(click_x / char_width)
                 row = int(click_y / char_height)
-                
+
                 match_result = terminal.match_check(col, row)
                 if match_result and len(match_result) >= 2:
                     matched_text = match_result[0]
@@ -227,10 +228,10 @@ def create_terminal_menu(terminal, click_x=None, click_y=None) -> Gio.Menu:
     # URL section (if URL detected)
     if url_at_click:
         url_section = Gio.Menu()
-        
+
         # Store URL in terminal for actions
         terminal._context_menu_url = url_at_click
-        
+
         url_section.append(_("Open Link"), "win.open-url")
         url_section.append(_("Copy Link"), "win.copy-url")
         menu.append_section(None, url_section)
@@ -261,7 +262,8 @@ def create_terminal_menu(terminal, click_x=None, click_y=None) -> Gio.Menu:
 
     return menu
 
+
 def _is_valid_url_simple(text: str) -> bool:
     """Simple URL validation for menu."""
     text = text.strip()
-    return any(text.startswith(scheme) for scheme in ['http://', 'https://', 'ftp://'])
+    return any(text.startswith(scheme) for scheme in ["http://", "https://", "ftp://"])

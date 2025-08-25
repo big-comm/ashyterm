@@ -1,138 +1,163 @@
-# -*- coding: UTF-8 -*-
-# Ashy Terminal Nautilus Extension
-# Based on Tilix Nautilus extension
-# Adds context menu to open Ashy Terminal in directories
+# -*- coding: utf-8 -*-
 
-from gettext import gettext, textdomain
-from subprocess import Popen
+"""
+Ashy Terminal - Nautilus Extension
+Adds context menu options to open Ashy Terminal. Supports local paths,
+GVFS mounts, and direct remote SSH connections.
+"""
+
+import gettext
+import os
+import subprocess
 import shutil
-import shlex
+from urllib.parse import urlparse
+
+# Import 'gi' and explicitly require GTK and Nautilus versions.
+import gi
+
+gi.require_version("Gtk", "4.0")
+gi.require_version("Nautilus", "4.0")
+
+from gi.repository import GObject, Nautilus, Gio
+
+# --- Internationalization (i18n) Setup ---
+APP_NAME = "comm-ashyterm"
+
 try:
-    from urllib import unquote
-    from urlparse import urlparse
-except ImportError:
-    from urllib.parse import unquote, urlparse
+    gettext.bindtextdomain(APP_NAME, "/usr/share/locale")
+    gettext.textdomain(APP_NAME)
+except Exception as e:
+    print(f"Ashy Terminal Extension: Could not set up localization: {e}")
 
-from gi.repository import Gio, GObject, Nautilus
-from gi import require_version
-if hasattr(Nautilus, "LocationWidgetProvider"):
-    require_version('Gtk', '3.0')
-    from gi.repository import Gtk
+_ = gettext.gettext
 
-TERMINAL = shutil.which("ashyterm")
-ASHYTERM_KEYBINDINGS = "org.communitybig.ashyterm.Keybindings"
-GSETTINGS_OPEN_TERMINAL = "nautilus-open"
-REMOTE_URI_SCHEME = ['ftp', 'sftp']
-textdomain("ashyterm")
-_ = gettext
+# --- Constants ---
+TERMINAL_EXECUTABLE = shutil.which("ashyterm")
+REMOTE_URI_SCHEMES = {"sftp", "ssh"}
 
-def _checkdecode(s):
-    """Decode string assuming utf encoding if it's bytes, else return unmodified"""
-    return s.decode('utf-8') if isinstance(s, bytes) else s
 
-def open_terminal_in_file(filename):
-    if filename:
-        Popen([TERMINAL, '--working-directory', filename])
-    else:
-        Popen([TERMINAL])
+class AshyTerminalExtension(GObject.GObject, Nautilus.MenuProvider):
+    """
+    Provides context menu items for opening directories in Ashy Terminal.
+    """
 
-# Nautilus 43 doesn't offer the LocationWidgetProvider any more
-if hasattr(Nautilus, "LocationWidgetProvider"):
-    class OpenAshyTermShortcutProvider(GObject.GObject,
-                                       Nautilus.LocationWidgetProvider):
+    def _launch(self, command: list[str]):
+        """
+        Launches a command, ensuring the environment is passed for Wayland focus.
+        """
+        if not TERMINAL_EXECUTABLE:
+            print("Ashy Terminal Error: 'ashyterm' executable not found.")
+            return
+        try:
+            # A chave é 'env=os.environ'. Isso passa o XDG_ACTIVATION_TOKEN
+            # para o novo processo, permitindo que ele ganhe foco no Wayland.
+            subprocess.Popen(command, env=os.environ)
+        except Exception as e:
+            print(f"Error launching '{' '.join(command)}': {e}")
 
-        def __init__(self):
-            source = Gio.SettingsSchemaSource.get_default()
-            if source.lookup(ASHYTERM_KEYBINDINGS, True):
-                self._gsettings = Gio.Settings.new(ASHYTERM_KEYBINDINGS)
-                self._gsettings.connect("changed", self._bind_shortcut)
-                self._create_accel_group()
-            self._window = None
-            self._uri = None
-
-        def _create_accel_group(self):
-            self._accel_group = Gtk.AccelGroup()
-            shortcut = self._gsettings.get_string(GSETTINGS_OPEN_TERMINAL)
-            key, mod = Gtk.accelerator_parse(shortcut)
-            self._accel_group.connect(key, mod, Gtk.AccelFlags.VISIBLE,
-                                      self._open_terminal)
-
-        def _bind_shortcut(self, gsettings, key):
-            if key == GSETTINGS_OPEN_TERMINAL:
-                self._accel_group.disconnect(self._open_terminal)
-                self._create_accel_group()
-
-        def _open_terminal(self, *args):
-            filename = unquote(self._uri[7:])
-            open_terminal_in_file(filename)
-
-        def get_widget(self, uri, window):
-            self._uri = uri
-            if self._window:
-                self._window.remove_accel_group(self._accel_group)
-            if self._gsettings:
-                window.add_accel_group(self._accel_group)
-            self._window = window
+    def _get_local_path(self, file_info: Nautilus.FileInfo) -> str | None:
+        """
+        Safely gets a local filesystem path from a FileInfo object.
+        """
+        try:
+            return Gio.File.new_for_uri(file_info.get_uri()).get_path()
+        except Exception:
             return None
 
-
-class OpenAshyTermExtension(GObject.GObject, Nautilus.MenuProvider):
-
-    def _open_terminal(self, file_):
-        if file_.get_uri_scheme() in REMOTE_URI_SCHEME:
-            # For remote connections, just open terminal and let user type SSH command
-            # or implement SSH session creation via session manager
-            Popen([TERMINAL])
-            # TODO: In future, could create SSH session via session manager
-        else:
-            filename = Gio.File.new_for_uri(file_.get_uri()).get_path()
-            open_terminal_in_file(filename)
-
-    def _menu_activate_cb(self, menu, file_):
-        self._open_terminal(file_)
-
-    def _menu_background_activate_cb(self, menu, file_):
-        self._open_terminal(file_)
-
-    def get_file_items(self, *args):
-        files = args[-1]
-        if len(files) != 1:
+    def _launch_local_session(self, menu_item: Nautilus.MenuItem, files: list[Nautilus.FileInfo]):
+        """
+        Opens Ashy Terminal in the specified local or GVFS directory path.
+        """
+        file = files[0]
+        local_path = self._get_local_path(file)
+        if not local_path:
+            print(f"Ashy Terminal Error: Could not get local path for {file.get_uri()}")
             return
-        items = []
-        file_ = files[0]
+        
+        cmd = [TERMINAL_EXECUTABLE, "--working-directory", local_path]
+        self._launch(cmd)
 
-        if file_.is_directory():
+    def _launch_remote_ssh_session(self, menu_item: Nautilus.MenuItem, files: list[Nautilus.FileInfo]):
+        """
+        Parses a remote URI and launches Ashy Terminal with a direct SSH connection.
+        """
+        file = files[0]
+        uri = file.get_uri()
+        try:
+            parsed_uri = urlparse(uri)
+            hostname = parsed_uri.hostname
+            if not hostname:
+                raise ValueError("Hostname is missing from the URI.")
 
-            if file_.get_uri_scheme() in REMOTE_URI_SCHEME:
-                uri = _checkdecode(file_.get_uri())
-                item = Nautilus.MenuItem(name='NautilusPython::open_remote_item',
-                                         label=_(u'Open Remote Ashy Terminal'),
-                                         tip=_(u'Open Remote Ashy Terminal In {}').format(uri))
-                item.connect('activate', self._menu_activate_cb, file_)
-                items.append(item)
+            target = hostname
+            if parsed_uri.username:
+                target = f"{parsed_uri.username}@{hostname}"
 
-            filename = _checkdecode(file_.get_name())
-            item = Nautilus.MenuItem(name='NautilusPython::open_file_item',
-                                     label=_(u'Open Ashy Terminal Here'),
-                                     tip=_(u'Open Ashy Terminal In {}').format(filename))
-            item.connect('activate', self._menu_activate_cb, file_)
-            items.append(item)
+            if parsed_uri.port:
+                target = f"{target}:{parsed_uri.port}"
 
-        return items
+            if parsed_uri.path and parsed_uri.path != "/":
+                target = f"{target}:{parsed_uri.path}"
 
-    def get_background_items(self, *args):
-        file_ = args[-1]
-        items = []
-        if file_.get_uri_scheme() in REMOTE_URI_SCHEME:
-            item = Nautilus.MenuItem(name='NautilusPython::open_bg_remote_item',
-                                     label=_(u'Open Remote Ashy Terminal Here'),
-                                     tip=_(u'Open Remote Ashy Terminal In This Directory'))
-            item.connect('activate', self._menu_activate_cb, file_)
-            items.append(item)
+            cmd = [TERMINAL_EXECUTABLE, "--ssh", target]
+            self._launch(cmd)
+            print(f"Ashy Terminal: Launched SSH session to {target}")
 
-        item = Nautilus.MenuItem(name='NautilusPython::open_bg_file_item',
-                                 label=_(u'Open Ashy Terminal Here'),
-                                 tip=_(u'Open Ashy Terminal In This Directory'))
-        item.connect('activate', self._menu_background_activate_cb, file_)
-        items.append(item)
-        return items
+        except Exception as e:
+            print(f"Error parsing URI '{uri}' or launching SSH session: {e}")
+
+    def _get_menu_items(self, files: list[Nautilus.FileInfo]) -> list[Nautilus.MenuItem]:
+        """
+        Core logic for generating menu items based on the file type.
+        """
+        if not TERMINAL_EXECUTABLE or len(files) != 1:
+            return []
+
+        file = files[0]
+        if not file.is_directory():
+            return []
+
+        is_remote = file.get_uri_scheme() in REMOTE_URI_SCHEMES
+        local_path = self._get_local_path(file)
+        menu_items = []
+
+        # Caso 1: Localização remota (ex: sftp://)
+        if is_remote:
+            # Opção A: Abrir uma conexão SSH direta
+            ssh_item = Nautilus.MenuItem(
+                name="AshyTerminal::OpenRemoteSSH",
+                label=_("Open in Ashy Terminal (SSH)"),
+                tip=_("Connect to {} via a new SSH session").format(file.get_uri()),
+            )
+            ssh_item.connect("activate", self._launch_remote_ssh_session, files)
+            menu_items.append(ssh_item)
+
+            # Opção B: Abrir o ponto de montagem local do GVFS, se existir
+            if local_path:
+                gvfs_item = Nautilus.MenuItem(
+                    name="AshyTerminal::OpenGVFS",
+                    label=_("Open in Ashy Terminal"),
+                    tip=_("Open the local mount point {}").format(local_path),
+                )
+                gvfs_item.connect("activate", self._launch_local_session, files)
+                menu_items.append(gvfs_item)
+        
+        # Caso 2: Localização local (file://)
+        elif local_path:
+            local_item = Nautilus.MenuItem(
+                name="AshyTerminal::OpenLocal",
+                label=_("Open in Ashy Terminal"),
+                tip=_("Open {} in Ashy Terminal").format(file.get_name()),
+            )
+            local_item.connect("activate", self._launch_local_session, files)
+            menu_items.append(local_item)
+
+        return menu_items
+
+    def get_file_items(self, files: list[Nautilus.FileInfo]) -> list[Nautilus.MenuItem]:
+        """Returns menu items for a single selected directory."""
+        return self._get_menu_items(files)
+
+    def get_background_items(self, current_folder: Nautilus.FileInfo) -> list[Nautilus.MenuItem]:
+        """Returns menu items for the background of the current directory."""
+        return self._get_menu_items([current_folder])

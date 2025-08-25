@@ -1,62 +1,102 @@
-from typing import Optional, Union, List
+# ashyterm/window.py
+
 import os
 import threading
 import time
+from typing import List, Optional, Union
 
 import gi
+
 gi.require_version("Gtk", "4.0")
 gi.require_version("Adw", "1")
 gi.require_version("Vte", "3.91")
 
-from gi.repository import Gtk, Adw, Gio, GLib, Gdk
+from gi.repository import Adw, Gdk, Gio, GLib, Gtk
 
-from .settings.manager import SettingsManager
+from .sessions.models import SessionFolder, SessionItem
+from .sessions.storage import load_folders_to_store, load_sessions_to_store
+from .sessions.tree import SessionTreeView
 from .settings.config import APP_TITLE, VTE_AVAILABLE
-from .sessions.models import SessionItem, SessionFolder
-from .sessions.storage import load_sessions_to_store, load_folders_to_store
+from .settings.manager import SettingsManager
 from .terminal.manager import TerminalManager
 from .terminal.tabs import TabManager
-from .sessions.tree import SessionTreeView
-from .ui.dialogs import SessionEditDialog, FolderEditDialog, PreferencesDialog, MoveSessionDialog
+from .ui.dialogs import (
+    FolderEditDialog,
+    MoveSessionDialog,
+    PreferencesDialog,
+    SessionEditDialog,
+)
 from .ui.menus import MainApplicationMenu
+from .utils.exceptions import (
+    AshyTerminalError,
+    DialogError,
+    ErrorCategory,
+    ErrorSeverity,
+    UIError,
+    VTENotAvailableError,
+    handle_exception,
+)
 
 # Import new utility systems
-from .utils.logger import get_logger, log_terminal_event, log_session_event
-from .utils.exceptions import (
-    AshyTerminalError, VTENotAvailableError, UIError, DialogError,
-    handle_exception, ErrorCategory, ErrorSeverity
-)
-from .utils.security import validate_session_data
+from .utils.logger import get_logger, log_session_event, log_terminal_event
 from .utils.platform import get_platform_info
+from .utils.security import validate_session_data
 from .utils.translation_utils import _
+
 
 class CommTerminalWindow(Adw.ApplicationWindow):
     """Main application window with enhanced functionality."""
-    
-    def __init__(self, application, settings_manager: SettingsManager, initial_working_directory: Optional[str] = None):
+
+    def __init__(
+        self,
+        application,
+        settings_manager: SettingsManager,
+        initial_working_directory: Optional[str] = None,
+        initial_execute_command: Optional[str] = None,
+        close_after_execute: bool = False,
+        initial_ssh_target: Optional[str] = None,
+    ):
         """
         Initialize the main window.
-        
+
         Args:
             application: Gtk.Application instance
             settings_manager: SettingsManager instance
             initial_working_directory: Optional initial working directory for terminals
+            initial_execute_command: Optional command to execute in the initial terminal
+            close_after_execute: Whether to close terminal after command execution
+            initial_ssh_target: Optional SSH target to connect to
         """
         super().__init__(application=application)
-        
+
         # Initialize logging
-        self.logger = get_logger('ashyterm.window')
+        self.logger = get_logger("ashyterm.window")
         self.logger.info("Initializing main window")
-        
+
         # Core components
         self.settings_manager = settings_manager
         self.is_main_window = True
         self.platform_info = get_platform_info()
         self.initial_working_directory = initial_working_directory
-        
+        self.initial_execute_command = initial_execute_command
+        self.close_after_execute = close_after_execute
+        self.initial_ssh_target = initial_ssh_target
+
         if self.initial_working_directory:
-            self.logger.info(f"Window initialized with working directory: {self.initial_working_directory}")
-        
+            self.logger.info(
+                f"Window initialized with working directory: {self.initial_working_directory}"
+            )
+
+        if self.initial_execute_command:
+            self.logger.info(
+                f"Window initialized with execute command: {self.initial_execute_command}"
+            )
+
+        if self.initial_ssh_target:
+            self.logger.info(
+                f"Window initialized with SSH target: {self.initial_ssh_target}"
+            )
+
         # Window configuration
         self.set_default_size(1200, 700)
         self.set_title(APP_TITLE)
@@ -65,11 +105,13 @@ class CommTerminalWindow(Adw.ApplicationWindow):
         # Data stores
         self.session_store = Gio.ListStore.new(SessionItem)
         self.folder_store = Gio.ListStore.new(SessionFolder)
-        
+
         # Component managers
         self.terminal_manager = TerminalManager(self, self.settings_manager)
         self.tab_manager = TabManager(self.terminal_manager)
-        self.session_tree = SessionTreeView(self, self.session_store, self.folder_store, self.settings_manager)
+        self.session_tree = SessionTreeView(
+            self, self.session_store, self.folder_store, self.settings_manager
+        )
 
         # Connect managers
         self.terminal_manager.set_tab_manager(self.tab_manager)
@@ -129,9 +171,20 @@ class CommTerminalWindow(Adw.ApplicationWindow):
         try:
             if self.tab_manager.get_tab_count() == 0:
                 self.logger.debug("Creating initial tab")
-                result = self.tab_manager.create_initial_tab_if_empty(
-                    working_directory=self.initial_working_directory
-                )
+
+                # If SSH target is provided, create SSH connection instead of local tab
+                if self.initial_ssh_target:
+                    result = self.tab_manager.create_ssh_tab_from_target(
+                        self.initial_ssh_target,
+                        close_after_execute=self.close_after_execute,
+                    )
+                else:
+                    result = self.tab_manager.create_initial_tab_if_empty(
+                        working_directory=self.initial_working_directory,
+                        execute_command=self.initial_execute_command,
+                        close_after_execute=self.close_after_execute,
+                    )
+
                 if result is None:
                     self.logger.warning("Failed to create initial tab")
                     self._show_error_dialog(
@@ -182,12 +235,12 @@ class CommTerminalWindow(Adw.ApplicationWindow):
                 ("duplicate-session", self._on_duplicate_session),
                 ("rename-session", self._on_rename_session),
                 ("move-session-to-folder", self._on_move_session_to_folder),
-                ("delete-session", self._on_delete_selected_items), # MODIFIED
+                ("delete-session", self._on_delete_selected_items),  # MODIFIED
                 # Folder actions
                 ("edit-folder", self._on_edit_folder),
                 ("rename-folder", self._on_rename_folder),
                 ("add-session-to-folder", self._on_add_session_to_folder),
-                ("delete-folder", self._on_delete_selected_items), # MODIFIED
+                ("delete-folder", self._on_delete_selected_items),  # MODIFIED
                 # Clipboard actions
                 ("cut-item", self._on_cut_item),
                 ("copy-item", self._on_copy_item),
@@ -377,7 +430,7 @@ class CommTerminalWindow(Adw.ApplicationWindow):
         except Exception as e:
             self.logger.error(f"Sidebar creation failed: {e}")
             raise UIError("sidebar", f"creation failed: {e}")
-        
+
     def _create_content_area(self) -> Gtk.Widget:
         """Create the main content area with tabs."""
         try:
@@ -787,27 +840,34 @@ class CommTerminalWindow(Adw.ApplicationWindow):
     def _on_tab_selected(self, page) -> None:
         """Handle tab selection change."""
         # Tab manager already handles focus
-        pass
 
     def _on_connect_sftp(self, action, param) -> None:
         """Handle connect with SFTP action."""
         try:
             selected_item = self.session_tree.get_selected_item()
             if isinstance(selected_item, SessionItem) and selected_item.is_ssh():
-                self.logger.info(f"SFTP connection requested for session: '{selected_item.name}'")
-                
+                self.logger.info(
+                    f"SFTP connection requested for session: '{selected_item.name}'"
+                )
+
                 # Call the TabManager to create an SFTP tab
                 result = self.tab_manager.create_sftp_tab(selected_item)
-                
+
                 if result is None:
                     self._show_error_dialog(
                         _("SFTP Connection Failed"),
                         _("Could not create SFTP terminal for this session."),
                     )
                 else:
-                    log_terminal_event("created", selected_item.name, f"SFTP to {selected_item.get_connection_string()}")
+                    log_terminal_event(
+                        "created",
+                        selected_item.name,
+                        f"SFTP to {selected_item.get_connection_string()}",
+                    )
             else:
-                self.logger.warning("SFTP connection requested for a non-SSH or non-existent session.")
+                self.logger.warning(
+                    "SFTP connection requested for a non-SSH or non-existent session."
+                )
 
         except Exception as e:
             self.logger.error(f"SFTP connection failed: {e}")
@@ -1043,10 +1103,7 @@ class CommTerminalWindow(Adw.ApplicationWindow):
             selected_item = self.session_tree.get_selected_item()
             if isinstance(selected_item, SessionItem):
                 dialog = MoveSessionDialog(
-                    self,
-                    selected_item,
-                    self.folder_store,
-                    self.session_tree.operations
+                    self, selected_item, self.folder_store, self.session_tree.operations
                 )
                 dialog.present()
         except Exception as e:
@@ -1059,7 +1116,7 @@ class CommTerminalWindow(Adw.ApplicationWindow):
     def get_toast_overlay(self) -> Optional[Adw.ToastOverlay]:
         """Provides access to the window's toast overlay for dialogs."""
         return getattr(self, "toast_overlay", None)
-    
+
     def _on_delete_selected_items(self, action=None, param=None) -> None:
         """Handle deleting all selected items from the session tree."""
         try:
@@ -1460,51 +1517,72 @@ class CommTerminalWindow(Adw.ApplicationWindow):
             self.logger.error(f"Rename dialog failed: {e}")
             raise DialogError("rename", str(e))
 
-    def _show_move_session_dialog(self, session: SessionItem) -> None:
-        """Show move session to folder dialog."""
-        # Implementation placeholder - would show folder selection dialog
-        self._show_info_dialog(
-            _("Move Session"),
-            _(
-                "Move session functionality will be implemented in folder selection dialog."
-            ),
-        )
-
-    def _show_delete_confirmation(self, items: List[Union[SessionItem, SessionFolder]]) -> None:
+    def _show_delete_confirmation(
+        self, items: List[Union[SessionItem, SessionFolder]]
+    ) -> None:
         """Show delete confirmation dialog for one or more items."""
         try:
-            if not items: return
+            if not items:
+                return
 
             count = len(items)
             title = _("Delete Item") if count == 1 else _("Delete Items")
-            
+
             if count == 1:
                 item = items[0]
-                item_type = _("Session") if isinstance(item, SessionItem) else _("Folder")
+                item_type = (
+                    _("Session") if isinstance(item, SessionItem) else _("Folder")
+                )
                 title = _("Delete {type}").format(type=item_type)
-                has_children = isinstance(item, SessionFolder) and self.session_tree.operations._folder_has_children(item.path)
-                body_text = _("The folder \"{name}\" is not empty. Are you sure you want to permanently delete it and all its contents?").format(name=item.name) if has_children else _("Are you sure you want to delete \"{name}\"?").format(name=item.name)
+                has_children = isinstance(
+                    item, SessionFolder
+                ) and self.session_tree.operations._folder_has_children(item.path)
+                body_text = (
+                    _(
+                        'The folder "{name}" is not empty. Are you sure you want to permanently delete it and all its contents?'
+                    ).format(name=item.name)
+                    if has_children
+                    else _('Are you sure you want to delete "{name}"?').format(
+                        name=item.name
+                    )
+                )
             else:
-                body_text = _("Are you sure you want to permanently delete these {count} items?").format(count=count)
-                if any(isinstance(it, SessionFolder) and self.session_tree.operations._folder_has_children(it.path) for it in items):
-                    body_text += "\n\n" + _("This will also delete all contents of any selected folders.")
+                body_text = _(
+                    "Are you sure you want to permanently delete these {count} items?"
+                ).format(count=count)
+                if any(
+                    isinstance(it, SessionFolder)
+                    and self.session_tree.operations._folder_has_children(it.path)
+                    for it in items
+                ):
+                    body_text += "\n\n" + _(
+                        "This will also delete all contents of any selected folders."
+                    )
 
             dialog = Adw.MessageDialog(transient_for=self, title=title, body=body_text)
             dialog.add_response("cancel", _("Cancel"))
             dialog.add_response("delete", _("Delete"))
             dialog.set_response_appearance("delete", Adw.ResponseAppearance.DESTRUCTIVE)
-            
+
             def on_response(dlg, response_id):
                 if response_id == "delete":
                     try:
-                        folders_to_delete = [item for item in items if isinstance(item, SessionFolder)]
-                        sessions_to_delete = [item for item in items if isinstance(item, SessionItem)]
+                        folders_to_delete = [
+                            item for item in items if isinstance(item, SessionFolder)
+                        ]
+                        sessions_to_delete = [
+                            item for item in items if isinstance(item, SessionItem)
+                        ]
 
                         # 1. Delete folders first. This also deletes their child sessions.
                         for folder in folders_to_delete:
-                            result = self.session_tree.operations.remove_folder(folder, force=True)
+                            result = self.session_tree.operations.remove_folder(
+                                folder, force=True
+                            )
                             if not result.success:
-                                self._show_error_dialog(_("Delete Error"), result.message)
+                                self._show_error_dialog(
+                                    ("Delete Error"), result.message
+                                )
                                 self.session_tree.refresh_tree()
                                 dlg.close()
                                 return
@@ -1513,53 +1591,49 @@ class CommTerminalWindow(Adw.ApplicationWindow):
                         for session in sessions_to_delete:
                             found, _ = self.session_store.find(session)
                             if found:
-                                result = self.session_tree.operations.remove_session(session)
+                                result = self.session_tree.operations.remove_session(
+                                    session
+                                )
                                 if not result.success:
-                                    self._show_error_dialog(_("Delete Error"), result.message)
+                                    self._show_error_dialog(
+                                        _("Delete Error"), result.message
+                                    )
                                     self.session_tree.refresh_tree()
                                     dlg.close()
                                     return
-                        
+
                         self.session_tree.refresh_tree()
                     except Exception as e:
                         self.logger.error(f"Delete operation failed: {e}")
                         self._show_error_dialog(_("Delete Error"), str(e))
                 dlg.close()
-            
+
             dialog.connect("response", on_response)
             dialog.present()
-            
+
         except Exception as e:
             self.logger.error(f"Delete confirmation dialog failed: {e}")
             raise DialogError("delete_confirmation", str(e))
-    
+
     def _show_error_dialog(self, title: str, message: str) -> None:
         """Show an error dialog to the user."""
         try:
-            dialog = Adw.MessageDialog(
-                transient_for=self,
-                title=title,
-                body=message
-            )
+            dialog = Adw.MessageDialog(transient_for=self, title=title, body=message)
             dialog.add_response("ok", _("OK"))
             dialog.present()
         except Exception as e:
             self.logger.error(f"Error dialog failed: {e}")
             print(f"ERROR: {title} - {message}")
-    
+
     def _show_info_dialog(self, title: str, message: str) -> None:
         """Show an info dialog to the user."""
         try:
-            dialog = Adw.MessageDialog(
-                transient_for=self,
-                title=title,
-                body=message
-            )
+            dialog = Adw.MessageDialog(transient_for=self, title=title, body=message)
             dialog.add_response("ok", _("OK"))
             dialog.present()
         except Exception as e:
             self.logger.error(f"Info dialog failed: {e}")
-    
+
     def _update_keyboard_shortcuts(self) -> None:
         """Update keyboard shortcuts after settings change."""
         try:
@@ -1567,7 +1641,7 @@ class CommTerminalWindow(Adw.ApplicationWindow):
                 self.get_application().refresh_keyboard_shortcuts()
         except Exception as e:
             self.logger.error(f"Keyboard shortcuts update failed: {e}")
-    
+
     # Public methods
     def refresh_tree(self) -> None:
         """Refresh the session tree view."""
@@ -1575,19 +1649,19 @@ class CommTerminalWindow(Adw.ApplicationWindow):
             self.session_tree.refresh_tree()
         except Exception as e:
             self.logger.error(f"Tree refresh failed: {e}")
-    
+
     def get_tab_manager(self) -> TabManager:
         """Get the tab manager instance."""
         return self.tab_manager
-    
+
     def get_terminal_manager(self) -> TerminalManager:
         """Get the terminal manager instance."""
         return self.terminal_manager
-    
+
     def get_session_tree(self) -> SessionTreeView:
         """Get the session tree view instance."""
         return self.session_tree
-    
+
     def destroy(self) -> None:
         """Override destroy to ensure cleanup."""
         try:
@@ -1595,17 +1669,17 @@ class CommTerminalWindow(Adw.ApplicationWindow):
             super().destroy()
         except Exception as e:
             self.logger.error(f"Window destroy failed: {e}")
-            
+
     def _on_open_url(self, action, param) -> None:
         """Handle open URL action."""
         try:
             terminal = self.tab_manager.get_selected_terminal()
-            if terminal and hasattr(terminal, '_context_menu_url'):
+            if terminal and hasattr(terminal, "_context_menu_url"):
                 url = terminal._context_menu_url
                 success = self.terminal_manager._open_hyperlink(url)
                 if success:
                     self.logger.info(f"URL opened from context menu: {url}")
-                delattr(terminal, '_context_menu_url')
+                delattr(terminal, "_context_menu_url")
         except Exception as e:
             self.logger.error(f"Open URL action failed: {e}")
 
@@ -1613,11 +1687,73 @@ class CommTerminalWindow(Adw.ApplicationWindow):
         """Handle copy URL action."""
         try:
             terminal = self.tab_manager.get_selected_terminal()
-            if terminal and hasattr(terminal, '_context_menu_url'):
+            if terminal and hasattr(terminal, "_context_menu_url"):
                 url = terminal._context_menu_url
                 clipboard = Gdk.Display.get_default().get_clipboard()
                 clipboard.set(url)
                 self.logger.info(f"URL copied to clipboard: {url}")
-                delattr(terminal, '_context_menu_url')
+                delattr(terminal, "_context_menu_url")
         except Exception as e:
             self.logger.error(f"Copy URL action failed: {e}")
+
+    # Tab creation methods for command line reuse
+    def create_ssh_tab(self, ssh_target: str) -> bool:
+        """Create SSH tab from SSH target string."""
+        try:
+            result = self.tab_manager.create_ssh_tab_from_target(ssh_target)
+            return result is not None
+        except Exception as e:
+            self.logger.error(f"Failed to create SSH tab: {e}")
+            return False
+
+    def create_execute_tab(
+        self,
+        command: str,
+        working_directory: Optional[str] = None,
+        close_after_execute: bool = False,
+    ) -> bool:
+        """Create tab with execute command."""
+        try:
+            # FIX: Pass execute_command and close_after_execute to the tab manager
+            result = self.tab_manager.create_local_tab(
+                title=command,  # Use command as initial title
+                working_directory=working_directory,
+                execute_command=command,
+                close_after_execute=close_after_execute,
+            )
+            return result is not None
+        except Exception as e:
+            self.logger.error(f"Failed to create execute tab: {e}")
+            return False
+
+    def create_local_tab(self, working_directory: str = None) -> bool:
+        """Create local tab with optional working directory."""
+        try:
+            result = self.tab_manager.create_local_tab(
+                working_directory=working_directory
+            )
+            return result is not None
+        except Exception as e:
+            self.logger.error(f"Failed to create local tab: {e}")
+            return False
+
+    def _schedule_close_after_execute(self, tab, terminal):
+        """Schedule tab closure after command execution completes."""
+        try:
+
+            def check_process_exit():
+                # Check if terminal process has exited
+                if hasattr(terminal, "get_exit_status"):
+                    exit_status = terminal.get_exit_status()
+                    if exit_status is not None:
+                        # Process exited, close the tab
+                        GLib.idle_add(lambda: self.tab_manager.close_tab(tab))
+                        return False  # Stop checking
+                # Continue checking
+                return True
+
+            # Check every 500ms for process completion
+            GLib.timeout_add(500, check_process_exit)
+
+        except Exception as e:
+            self.logger.error(f"Failed to schedule close after execute: {e}")

@@ -1,6 +1,8 @@
-from typing import Optional, Callable, List
+# ashyterm/terminal/tabs.py
+
 import threading
 import weakref
+from typing import Callable, List, Optional
 
 import gi
 
@@ -9,15 +11,14 @@ gi.require_version("Adw", "1")
 gi.require_version("Vte", "3.91")
 gi.require_version("Pango", "1.0")
 
-from gi.repository import Gtk, Adw, Gio, Gdk, GLib, Pango
-from gi.repository import Vte
+from gi.repository import Adw, Gdk, Gio, GLib, Gtk, Pango, Vte
 
 from ..sessions.models import SessionItem
-from .manager import TerminalManager
 
 # Import new utility systems
 from ..utils.logger import get_logger
 from ..utils.translation_utils import _
+from .manager import TerminalManager, TerminalState
 
 
 class TerminalPaneWithTitleBar(Gtk.Box):
@@ -105,13 +106,7 @@ class TabManager:
         self.tab_bar = Adw.TabBar(view=self.tab_view)
         self.tab_bar.get_style_context().add_class("tabbar")
 
-        # Justification: This CSS block performs three optimizations:
-        # 1. Compacts the HeaderBar and applies negative margin to the tab bar for an integrated look.
-        # 2. The new `.tabbar .tab .label` rule sets the text truncation mode to 'start'.
-        #    This ensures that when a tab title is too long, the end of the text
-        #    remains visible, which is ideal for displaying directory paths.
-        # 3. Adds a rule to ensure that menu separators inside a terminal panel
-        #    retain the default appearance, fixing the issue of thick lines.
+        # **CORREÇÃO: CSS corrigido para GTK4**
         css = """
         headerbar.main-header-bar {
             min-height: 0;
@@ -122,23 +117,16 @@ class TabManager:
         .tabbar { 
             margin: -8px; 
         }
-        .tabbar .tab .label {
-            -gtk-ellipsize-mode: start;
-        }
-        /*
-        * FIX: Force menu separators inside popovers to have a standard 1px height.
-        * This targets any popover menu within our main tab view, fixing the issue
-        * where separators become thick after creating a split pane.
-        * Increased priority and more specific selectors to override conflicting rules.
-        */
+        /* A elipse é controlada pela propriedade do widget, não por CSS no GTK4 */
+        
+        /* Regra corrigida para separadores de menu */
         popover.menu menuitem separator,
         .terminal-tab-view popover.menu menuitem separator {
-            border-top: 1px solid @borders !important;
-            margin: 6px 0 !important;
-            min-height: 1px !important;
-            max-height: 1px !important;
-            padding: 0 !important;
-            background: none !important;
+            border-top: 1px solid @borders;
+            margin: 6px 0;
+            min-height: 1px;
+            padding: 0;
+            background: transparent;
         }
         """
         provider = Gtk.CssProvider()
@@ -172,18 +160,151 @@ class TabManager:
     def get_tab_bar(self) -> Adw.TabBar:
         return self.tab_bar
 
-    def create_local_tab(self, title: str = "Local", working_directory: Optional[str] = None) -> Optional[Adw.TabPage]:
+    def create_local_tab(
+        self,
+        title: str = "Local",
+        working_directory: Optional[str] = None,
+        execute_command: Optional[str] = None,
+        close_after_execute: bool = False,
+    ) -> Optional[Adw.TabPage]:
         if working_directory:
-            self.logger.debug(f"Creating local tab '{title}' with working directory: {working_directory}")
+            self.logger.debug(
+                f"Creating local tab '{title}' with working directory: {working_directory}"
+            )
         else:
-            self.logger.debug(f"Creating local tab '{title}' with default working directory")
-            
+            self.logger.debug(
+                f"Creating local tab '{title}' with default working directory"
+            )
+
+        if execute_command:
+            self.logger.debug(
+                f"Creating local tab '{title}' with execute command: {execute_command}"
+            )
+
         terminal = self.terminal_manager.create_local_terminal(
-            title, working_directory=working_directory
+            title,
+            working_directory=working_directory,
+            execute_command=execute_command,
+            close_after_execute=close_after_execute,
         )
         if not terminal:
             return None
         return self._create_tab_for_terminal(terminal, title, "")
+
+    def create_ssh_tab_from_target(
+        self, ssh_target: str, close_after_execute: bool = False
+    ) -> Optional[Adw.TabPage]:
+        """
+        Create SSH tab from a target string like [user@]host[:port][:/path].
+
+        Args:
+            ssh_target: SSH target string
+            close_after_execute: Whether to close terminal after connection ends
+
+        Returns:
+            TabPage if successful, None otherwise
+        """
+        try:
+            self.logger.debug(f"Creating SSH tab from target: {ssh_target}")
+
+            # Parse the SSH target string
+            import os
+
+            user = os.getenv("USER", "root")  # Default to current user
+            host = None
+            port = 22
+            folder_path = ""
+
+            # Handle [user@]host[:port][:/path] format
+            target_parts = ssh_target.split("@", 1)
+            if len(target_parts) == 2:
+                user = target_parts[0]
+                host_part = target_parts[1]
+            else:
+                host_part = target_parts[0]
+
+            # Handle host[:port][:/path]
+            if ":/" in host_part:
+                # Split on the first occurrence of ":/" to separate host:port from /path
+                colon_slash_pos = host_part.find(":/")
+                host_port_part = host_part[:colon_slash_pos]
+                folder_path = host_part[colon_slash_pos + 1 :]  # Skip the ":"
+            else:
+                host_port_part = host_part
+
+            # Handle host:port - need to check if there's a path component mixed in
+            if ":" in host_port_part:
+                host_port_split = host_port_part.rsplit(
+                    ":", 1
+                )  # Split from right to handle IPv6
+                host = host_port_split[0]
+                port_part = host_port_split[1]
+
+                # Check if port_part contains a path (like "9891/home/tales/")
+                if "/" in port_part:
+                    # Extract port and path
+                    port_path_split = port_part.split("/", 1)
+                    try:
+                        port = int(port_path_split[0])
+                        # If folder_path was not set from ":/" parsing, set it from here
+                        if not folder_path:
+                            folder_path = "/" + port_path_split[1]
+                    except ValueError:
+                        self.logger.warning(
+                            f"Invalid port in SSH target: {port_path_split[0]}"
+                        )
+                        port = 22
+                        # Treat the whole thing as host if port is invalid
+                        host = host_port_part
+                else:
+                    # Normal port parsing
+                    try:
+                        port = int(port_part)
+                    except ValueError:
+                        self.logger.warning(f"Invalid port in SSH target: {port_part}")
+                        port = 22
+                        host = host_port_part
+            else:
+                host = host_port_part
+
+            if not host:
+                self.logger.error("No hostname found in SSH target")
+                return None
+
+            # Create a temporary SessionItem for the SSH connection
+            from ..sessions.models import SessionItem
+
+            temp_session = SessionItem(
+                name=f"SSH: {host}",
+                session_type="ssh",
+                host=host,
+                user=user,
+                port=port,
+                folder_path=folder_path,
+                auth_type="password",  # Use password auth to avoid key path requirement
+                auth_value="",  # No password, let SSH handle authentication
+            )
+
+            # Create SSH terminal using the session
+            terminal = self.terminal_manager.create_ssh_terminal(temp_session)
+
+            if not terminal:
+                return None
+
+            # Create tab with appropriate title
+            tab_title = f"SSH: {user}@{host}"
+            if port != 22:
+                tab_title += f":{port}"
+
+            return self._create_tab_for_terminal(
+                terminal, tab_title, "network-server-symbolic"
+            )
+
+        except Exception as e:
+            self.logger.error(
+                f"Failed to create SSH tab from target '{ssh_target}': {e}"
+            )
+            return None
 
     def create_ssh_tab(self, session: SessionItem) -> Optional[Adw.TabPage]:
         terminal = self.terminal_manager.create_ssh_terminal(session)
@@ -196,12 +317,12 @@ class TabManager:
     def create_sftp_tab(self, session: SessionItem) -> Optional[Adw.TabPage]:
         """Creates a new tab with an SFTP terminal for the specified session."""
         self.logger.debug(f"Creating SFTP tab for session '{session.name}'")
-        
+
         # Call the new method in TerminalManager
         terminal = self.terminal_manager.create_sftp_terminal(session)
         if not terminal:
             return None
-            
+
         # Create the tab using the SFTP terminal
         # We use a remote folder icon to differentiate
         return self._create_tab_for_terminal(
@@ -415,7 +536,9 @@ class TabManager:
             terminal_id = getattr(focused_terminal, "terminal_id", None)
             if terminal_id:
                 self._individual_pane_closes.add(terminal_id)
-            self.terminal_manager.remove_terminal(focused_terminal, force_kill_group=False)
+            self.terminal_manager.remove_terminal(
+                focused_terminal, force_kill_group=False
+            )
 
     def _find_pane_and_parent(self, terminal: Vte.Terminal) -> tuple:
         widget = terminal
@@ -473,10 +596,8 @@ class TabManager:
             self.set_tab_title(page, new_title)
 
     def _on_close_page_request(self, tab_view, page) -> bool:
-        # Prevents multiple calls for the same tab
         if id(page) in self._closing_pages:
             return True
-
         self._closing_pages.add(id(page))
 
         terminals_in_page = self.get_all_terminals_in_page(page)
@@ -484,15 +605,25 @@ class TabManager:
             f"User requested close for tab '{page.get_title()}' with {len(terminals_in_page)} terminals."
         )
 
-        # Main action: Iterate through all terminals in the tab and start the termination process for each.
-        # The new robust logic in `remove_terminal` will ensure that all processes
-        # (including those from splits) are terminated correctly.
         for terminal in terminals_in_page:
-            self.terminal_manager.remove_terminal(terminal, force_kill_group=True)
+            terminal_id = getattr(terminal, "terminal_id", None)
+            terminal_info = self.terminal_manager.registry.get_terminal_info(
+                terminal_id
+            )
+            status = terminal_info.get("status") if terminal_info else ""
 
-        # Returning True informs Adw.TabView that we are handling the closing manually.
-        # The tab will only be actually closed by the _on_terminal_process_exited function
-        # when the last terminal in it confirms its exit.
+            # If terminal process is already dead, just clean up the UI part.
+            if status in [TerminalState.EXITED.value, TerminalState.SPAWN_FAILED.value]:
+                self.logger.debug(
+                    f"Terminal {terminal_id} already exited, cleaning up UI directly."
+                )
+                self._on_terminal_process_exited(
+                    terminal, 0, terminal_info.get("identifier")
+                )
+            else:
+                # Otherwise, request termination of the running process.
+                self.terminal_manager.remove_terminal(terminal, force_kill_group=True)
+
         return True
 
     def _on_terminal_process_exited(
@@ -506,50 +637,61 @@ class TabManager:
                 self.terminal_manager._cleanup_terminal(terminal, terminal_id)
                 return
 
-            # CRITICAL FIX: Check if this is a split pane BEFORE cleanup
             pane_to_remove, parent_paned = self._find_pane_and_parent(terminal)
             is_split_pane = parent_paned is not None
-            
-            # Get remaining terminals in this page BEFORE cleanup
+
             remaining_terminals_in_page = [
-                t for t in self.get_all_terminals_in_page(page) 
+                t
+                for t in self.get_all_terminals_in_page(page)
                 if getattr(t, "terminal_id", None) != terminal_id
             ]
 
-            # Cleanup terminal resources
+            terminal_info = self.terminal_manager.registry.get_terminal_info(
+                terminal_id
+            )
+            status = terminal_info.get("status") if terminal_info else ""
+
             self.terminal_manager._cleanup_terminal(terminal, terminal_id)
 
             if is_split_pane:
-                # FIX: For splits, only remove UI pane - don't check global count
                 self.logger.debug(f"Removing split pane for terminal {terminal_id}.")
                 self._remove_pane_ui(pane_to_remove, parent_paned)
                 GLib.idle_add(self.update_all_tab_titles)
-                # DO NOT check if last terminal - splits should not close application
                 return
 
-            # Only for terminals that are NOT splits (last terminal in tab)
             if not remaining_terminals_in_page:
-                # This was the last terminal in the tab
-                if id(page) in self._closing_pages:
-                    # Close initiated by user (clicked X)
-                    self.logger.debug(f"Finishing user-initiated close for page of terminal {terminal_id}.")
+                if status == TerminalState.SPAWN_FAILED.value:
+                    self.logger.debug(
+                        f"Connection failed for terminal {terminal_id}. Closing tab after error dialog."
+                    )
+                    # The error dialog has been shown. Now, close the tab cleanly.
+                    self.tab_view.close_page(page)
+                elif id(page) in self._closing_pages:
+                    self.logger.debug(
+                        f"Finishing user-initiated close for page of terminal {terminal_id}."
+                    )
                     self.tab_view.close_page_finish(page, True)
                     self._closing_pages.discard(id(page))
                 elif self.terminal_manager.settings_manager.get("auto_close_tab", True):
-                    # Process exited naturally (typed exit)
                     self.logger.debug(f"Auto-closing page for terminal {terminal_id}.")
                     self.tab_view.close_page(page)
                 else:
-                    # Auto-close disabled
-                    self.logger.debug(f"Auto-close disabled. Tab for terminal {terminal_id} remains open.")
+                    self.logger.debug(
+                        f"Auto-close disabled. Tab for terminal {terminal_id} remains open."
+                    )
                     page.set_title(f"{page.get_title()} [{_('Exited')}]")
 
-                # FIX: Only check global count AFTER processing tab closure
-                active_terminals_left = self.terminal_manager.registry.get_active_terminal_count()
-                if active_terminals_left == 0:
-                    self.logger.info("Last active terminal has exited. Requesting application quit.")
-                    GLib.idle_add(self._quit_application)
-                    return
+                # Only quit if the last terminal didn't fail on spawn
+                if status != TerminalState.SPAWN_FAILED.value:
+                    active_terminals_left = (
+                        self.terminal_manager.registry.get_active_terminal_count()
+                    )
+                    if active_terminals_left == 0:
+                        self.logger.info(
+                            "Last active terminal has exited. Requesting application quit."
+                        )
+                        GLib.idle_add(self._quit_application)
+                        return
 
                 GLib.idle_add(self._update_tab_bar_visibility)
 
@@ -599,11 +741,27 @@ class TabManager:
             for term in self.get_all_terminals_in_page(page)
         ]
 
-    def create_initial_tab_if_empty(self, working_directory: Optional[str] = None) -> Optional[Adw.TabPage]:
+    def create_initial_tab_if_empty(
+        self,
+        working_directory: Optional[str] = None,
+        execute_command: Optional[str] = None,
+        close_after_execute: bool = False,
+    ) -> Optional[Adw.TabPage]:
         if self.get_tab_count() == 0:
             if working_directory:
-                self.logger.info(f"Creating initial tab with working directory: {working_directory}")
-            return self.create_local_tab("Local", working_directory=working_directory)
+                self.logger.info(
+                    f"Creating initial tab with working directory: {working_directory}"
+                )
+            if execute_command:
+                self.logger.info(
+                    f"Creating initial tab with execute command: {execute_command}"
+                )
+            return self.create_local_tab(
+                "Local",
+                working_directory=working_directory,
+                execute_command=execute_command,
+                close_after_execute=close_after_execute,
+            )
         return None
 
     def copy_from_current_terminal(self) -> bool:
@@ -640,16 +798,16 @@ class TabManager:
         page = self.tab_view.get_selected_page()
         if not page:
             return False
-        
+
         terminals = self.get_all_terminals_in_page(page)
         if len(terminals) <= 1:
             return False
-        
+
         current_terminal = self.get_selected_terminal()
         if not current_terminal:
             terminals[0].grab_focus()
             return True
-        
+
         try:
             current_index = terminals.index(current_terminal)
             next_index = (current_index + 1) % len(terminals)
@@ -664,16 +822,16 @@ class TabManager:
         page = self.tab_view.get_selected_page()
         if not page:
             return False
-        
+
         terminals = self.get_all_terminals_in_page(page)
         if len(terminals) <= 1:
             return False
-        
+
         current_terminal = self.get_selected_terminal()
         if not current_terminal:
             terminals[-1].grab_focus()
             return True
-        
+
         try:
             current_index = terminals.index(current_terminal)
             prev_index = (current_index - 1) % len(terminals)
@@ -688,39 +846,39 @@ class TabManager:
         page = self.tab_view.get_selected_page()
         if not page:
             return False
-        
+
         terminals = self.get_all_terminals_in_page(page)
         if len(terminals) <= 1:
             return False
-        
+
         current_terminal = self.get_selected_terminal()
         if not current_terminal:
             return False
-        
+
         # Get current terminal container position
         current_container = self._get_terminal_container(current_terminal)
         if not current_container:
             return False
-            
+
         current_allocation = current_container.get_allocation()
         current_x = current_allocation.x + current_allocation.width // 2
         current_y = current_allocation.y + current_allocation.height // 2
-        
+
         best_terminal = None
-        best_distance = float('inf')
-        
+        best_distance = float("inf")
+
         for terminal in terminals:
             if terminal == current_terminal:
                 continue
-                
+
             container = self._get_terminal_container(terminal)
             if not container:
                 continue
-                
+
             allocation = container.get_allocation()
             term_x = allocation.x + allocation.width // 2
             term_y = allocation.y + allocation.height // 2
-            
+
             # Check if terminal is in the right direction
             valid_direction = False
             if direction == "up" and term_y < current_y:
@@ -731,34 +889,36 @@ class TabManager:
                 valid_direction = True
             elif direction == "right" and term_x > current_x:
                 valid_direction = True
-            
+
             if valid_direction:
-                distance = ((term_x - current_x) ** 2 + (term_y - current_y) ** 2) ** 0.5
+                distance = (
+                    (term_x - current_x) ** 2 + (term_y - current_y) ** 2
+                ) ** 0.5
                 if distance < best_distance:
                     best_distance = distance
                     best_terminal = terminal
-        
+
         if best_terminal:
             best_terminal.grab_focus()
             return True
-        
+
         return False
 
     def _get_terminal_container(self, terminal: Vte.Terminal):
         """Get the container that holds the terminal for position calculation."""
         widget = terminal.get_parent()  # ScrolledWindow
-        
+
         while widget:
             parent = widget.get_parent()
-            
+
             if isinstance(parent, Gtk.Paned):
                 return widget
-            
+
             if isinstance(parent, Adw.Bin):
                 return widget
-                
+
             widget = parent
-        
+
         return widget
 
     def _update_tab_bar_visibility(self) -> None:

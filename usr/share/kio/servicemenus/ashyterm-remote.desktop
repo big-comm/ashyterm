@@ -1,0 +1,12 @@
+[Desktop Entry]
+Type=Service
+ServiceTypes=kio/servicemenu
+Protocols=sftp,ssh,fish
+Actions=openRemoteInAshyTerminal
+X-KDE-Priority=TopLevel
+
+[Desktop Action openRemoteInAshyTerminal]
+Name=Open Remote in Ashy Terminal
+Name[pt]=Abrir Remoto no Ashy Terminal
+Exec=sh -c 'target=$(echo %u | sed -e "s|^[a-z]*://||" -e "s|/|:|1"); gtk-launch ashyterm --ssh "$target"'
+Icon=ashyterm

@@ -5,14 +5,15 @@ This module defines custom exception classes that provide more specific
 error handling and better debugging information throughout the application.
 """
 
-from typing import Optional, Dict, Any, Union
 from enum import Enum
+from typing import Any, Dict, Optional
 
 from .translation_utils import _
 
 
 class ErrorSeverity(Enum):
     """Error severity levels."""
+
     LOW = "low"
     MEDIUM = "medium"
     HIGH = "high"
@@ -21,6 +22,7 @@ class ErrorSeverity(Enum):
 
 class ErrorCategory(Enum):
     """Error categories for classification."""
+
     TERMINAL = "terminal"
     SESSION = "session"
     SSH = "ssh"
@@ -35,16 +37,18 @@ class ErrorCategory(Enum):
 
 class AshyTerminalError(Exception):
     """Base exception class for all Ashy Terminal errors."""
-    
-    def __init__(self, 
-                 message: str,
-                 category: ErrorCategory = ErrorCategory.SYSTEM,
-                 severity: ErrorSeverity = ErrorSeverity.MEDIUM,
-                 details: Optional[Dict[str, Any]] = None,
-                 user_message: Optional[str] = None):
+
+    def __init__(
+        self,
+        message: str,
+        category: ErrorCategory = ErrorCategory.SYSTEM,
+        severity: ErrorSeverity = ErrorSeverity.MEDIUM,
+        details: Optional[Dict[str, Any]] = None,
+        user_message: Optional[str] = None,
+    ):
         """
         Initialize base exception.
-        
+
         Args:
             message: Technical error message for logging
             category: Error category for classification
@@ -58,7 +62,7 @@ class AshyTerminalError(Exception):
         self.severity = severity
         self.details = details or {}
         self.user_message = user_message or self._generate_user_message()
-    
+
     def _generate_user_message(self) -> str:
         """Generate a user-friendly message based on the category."""
         category_messages = {
@@ -71,21 +75,21 @@ class AshyTerminalError(Exception):
             ErrorCategory.PERMISSION: _("A permission error occurred"),
             ErrorCategory.NETWORK: _("A network error occurred"),
             ErrorCategory.SYSTEM: _("A system error occurred"),
-            ErrorCategory.VALIDATION: _("A validation error occurred")
+            ErrorCategory.VALIDATION: _("A validation error occurred"),
         }
         return category_messages.get(self.category, _("An unexpected error occurred"))
-    
+
     def to_dict(self) -> Dict[str, Any]:
         """Convert exception to dictionary for logging."""
         return {
-            'type': self.__class__.__name__,
-            'message': self.message,
-            'category': self.category.value,
-            'severity': self.severity.value,
-            'details': self.details,
-            'user_message': self.user_message
+            "type": self.__class__.__name__,
+            "message": self.message,
+            "category": self.category.value,
+            "severity": self.severity.value,
+            "details": self.details,
+            "user_message": self.user_message,
         }
-    
+
     def __str__(self) -> str:
         return f"[{self.category.value.upper()}:{self.severity.value.upper()}] {self.message}"
 
@@ -93,212 +97,189 @@ class AshyTerminalError(Exception):
 # Terminal-related exceptions
 class TerminalError(AshyTerminalError):
     """Base class for terminal-related errors."""
-    
+
     def __init__(self, message: str, **kwargs):
-        kwargs.setdefault('category', ErrorCategory.TERMINAL)
+        kwargs.setdefault("category", ErrorCategory.TERMINAL)
         super().__init__(message, **kwargs)
 
 
 class TerminalCreationError(TerminalError):
     """Raised when terminal creation fails."""
-    
+
     def __init__(self, reason: str, terminal_type: str = "unknown", **kwargs):
         message = _("Failed to create {} terminal: {}").format(terminal_type, reason)
-        kwargs.setdefault('severity', ErrorSeverity.HIGH)
-        kwargs.setdefault('details', {'terminal_type': terminal_type, 'reason': reason})
-        kwargs.setdefault('user_message', _("Could not create terminal. {}").format(reason))
+        kwargs.setdefault("severity", ErrorSeverity.HIGH)
+        kwargs.setdefault("details", {"terminal_type": terminal_type, "reason": reason})
+        kwargs.setdefault(
+            "user_message", _("Could not create terminal. {}").format(reason)
+        )
         super().__init__(message, **kwargs)
 
 
 class TerminalSpawnError(TerminalError):
     """Raised when process spawning fails."""
-    
+
     def __init__(self, command: str, reason: str, **kwargs):
         message = _("Failed to spawn process '{}': {}").format(command, reason)
-        kwargs.setdefault('severity', ErrorSeverity.HIGH)
-        kwargs.setdefault('details', {'command': command, 'reason': reason})
-        kwargs.setdefault('user_message', _("Failed to start terminal process"))
+        kwargs.setdefault("severity", ErrorSeverity.HIGH)
+        kwargs.setdefault("details", {"command": command, "reason": reason})
+        kwargs.setdefault("user_message", _("Failed to start terminal process"))
         super().__init__(message, **kwargs)
 
 
 class VTENotAvailableError(TerminalError):
     """Raised when VTE library is not available."""
-    
+
     def __init__(self, **kwargs):
         message = _("VTE library is not available or not properly installed")
-        kwargs.setdefault('severity', ErrorSeverity.CRITICAL)
-        kwargs.setdefault('user_message', 
-                         _("Terminal functionality requires VTE library. Please install gir1.2-vte-2.91"))
+        kwargs.setdefault("severity", ErrorSeverity.CRITICAL)
+        kwargs.setdefault(
+            "user_message",
+            _(
+                "Terminal functionality requires VTE library. Please install gir1.2-vte-2.91"
+            ),
+        )
         super().__init__(message, **kwargs)
 
 
 # SSH-related exceptions
 class SSHError(AshyTerminalError):
     """Base class for SSH-related errors."""
-    
+
     def __init__(self, message: str, **kwargs):
-        kwargs.setdefault('category', ErrorCategory.SSH)
+        kwargs.setdefault("category", ErrorCategory.SSH)
         super().__init__(message, **kwargs)
 
 
 class SSHConnectionError(SSHError):
     """Raised when SSH connection fails."""
-    
+
     def __init__(self, host: str, reason: str, **kwargs):
         message = _("SSH connection to '{}' failed: {}").format(host, reason)
-        kwargs.setdefault('severity', ErrorSeverity.HIGH)
-        kwargs.setdefault('details', {'host': host, 'reason': reason})
-        kwargs.setdefault('user_message', _("Could not connect to {}. {}").format(host, reason))
-        super().__init__(message, **kwargs)
-
-
-class SSHAuthenticationError(SSHError):
-    """Raised when SSH authentication fails."""
-    
-    def __init__(self, host: str, username: str, auth_type: str, **kwargs):
-        message = _("SSH authentication failed for {}@{} using {}").format(username, host, auth_type)
-        kwargs.setdefault('severity', ErrorSeverity.HIGH)
-        kwargs.setdefault('details', {'host': host, 'username': username, 'auth_type': auth_type})
-        kwargs.setdefault('user_message', _("Authentication failed for {}@{}").format(username, host))
+        kwargs.setdefault("severity", ErrorSeverity.HIGH)
+        kwargs.setdefault("details", {"host": host, "reason": reason})
+        kwargs.setdefault(
+            "user_message", _("Could not connect to {}. {}").format(host, reason)
+        )
         super().__init__(message, **kwargs)
 
 
 class SSHKeyError(SSHError):
     """Raised when SSH key is invalid or not found."""
-    
+
     def __init__(self, key_path: str, reason: str, **kwargs):
         message = _("SSH key error for '{}': {}").format(key_path, reason)
-        kwargs.setdefault('severity', ErrorSeverity.MEDIUM)
-        kwargs.setdefault('details', {'key_path': key_path, 'reason': reason})
-        kwargs.setdefault('user_message', _("SSH key problem: {}").format(reason))
+        kwargs.setdefault("severity", ErrorSeverity.MEDIUM)
+        kwargs.setdefault("details", {"key_path": key_path, "reason": reason})
+        kwargs.setdefault("user_message", _("SSH key problem: {}").format(reason))
         super().__init__(message, **kwargs)
 
 
 # Session-related exceptions
 class SessionError(AshyTerminalError):
     """Base class for session-related errors."""
-    
+
     def __init__(self, message: str, **kwargs):
-        kwargs.setdefault('category', ErrorCategory.SESSION)
-        super().__init__(message, **kwargs)
-
-
-class SessionNotFoundError(SessionError):
-    """Raised when session is not found."""
-    
-    def __init__(self, session_name: str, **kwargs):
-        message = _("Session '{}' not found").format(session_name)
-        kwargs.setdefault('severity', ErrorSeverity.MEDIUM)
-        kwargs.setdefault('details', {'session_name': session_name})
-        kwargs.setdefault('user_message', _("Session '{}' could not be found").format(session_name))
+        kwargs.setdefault("category", ErrorCategory.SESSION)
         super().__init__(message, **kwargs)
 
 
 class SessionValidationError(SessionError):
     """Raised when session validation fails."""
-    
+
     def __init__(self, session_name: str, validation_errors: list, **kwargs):
-        message = _("Session '{}' validation failed: {}").format(session_name, ', '.join(validation_errors))
-        kwargs.setdefault('severity', ErrorSeverity.MEDIUM)
-        kwargs.setdefault('details', {'session_name': session_name, 'errors': validation_errors})
-        kwargs.setdefault('user_message', _("Session configuration is invalid: {}").format(validation_errors[0]))
-        super().__init__(message, **kwargs)
-
-
-class SessionDuplicateError(SessionError):
-    """Raised when trying to create duplicate session."""
-    
-    def __init__(self, session_name: str, **kwargs):
-        message = _("Session '{}' already exists").format(session_name)
-        kwargs.setdefault('severity', ErrorSeverity.LOW)
-        kwargs.setdefault('details', {'session_name': session_name})
-        kwargs.setdefault('user_message', _("A session named '{}' already exists").format(session_name))
+        message = _("Session '{}' validation failed: {}").format(
+            session_name, ", ".join(validation_errors)
+        )
+        kwargs.setdefault("severity", ErrorSeverity.MEDIUM)
+        kwargs.setdefault(
+            "details", {"session_name": session_name, "errors": validation_errors}
+        )
+        kwargs.setdefault(
+            "user_message",
+            _("Session configuration is invalid: {}").format(validation_errors[0]),
+        )
         super().__init__(message, **kwargs)
 
 
 # Storage-related exceptions
 class StorageError(AshyTerminalError):
     """Base class for storage-related errors."""
-    
+
     def __init__(self, message: str, **kwargs):
-        kwargs.setdefault('category', ErrorCategory.STORAGE)
+        kwargs.setdefault("category", ErrorCategory.STORAGE)
         super().__init__(message, **kwargs)
 
 
 class StorageReadError(StorageError):
     """Raised when reading from storage fails."""
-    
+
     def __init__(self, file_path: str, reason: str, **kwargs):
         message = _("Failed to read from '{}': {}").format(file_path, reason)
-        kwargs.setdefault('severity', ErrorSeverity.HIGH)
-        kwargs.setdefault('details', {'file_path': file_path, 'reason': reason})
-        kwargs.setdefault('user_message', _("Could not load saved data"))
+        kwargs.setdefault("severity", ErrorSeverity.HIGH)
+        kwargs.setdefault("details", {"file_path": file_path, "reason": reason})
+        kwargs.setdefault("user_message", _("Could not load saved data"))
         super().__init__(message, **kwargs)
 
 
 class StorageWriteError(StorageError):
     """Raised when writing to storage fails."""
-    
+
     def __init__(self, file_path: str, reason: str, **kwargs):
         message = _("Failed to write to '{}': {}").format(file_path, reason)
-        kwargs.setdefault('severity', ErrorSeverity.HIGH)
-        kwargs.setdefault('details', {'file_path': file_path, 'reason': reason})
-        kwargs.setdefault('user_message', _("Could not save data"))
+        kwargs.setdefault("severity", ErrorSeverity.HIGH)
+        kwargs.setdefault("details", {"file_path": file_path, "reason": reason})
+        kwargs.setdefault("user_message", _("Could not save data"))
         super().__init__(message, **kwargs)
 
 
 class StorageCorruptedError(StorageError):
     """Raised when storage data is corrupted."""
-    
+
     def __init__(self, file_path: str, details: str = "", **kwargs):
         message = _("Storage file '{}' is corrupted").format(file_path)
         if details:
             message += _(": {}").format(details)
-        kwargs.setdefault('severity', ErrorSeverity.HIGH)
-        kwargs.setdefault('details', {'file_path': file_path, 'corruption_details': details})
-        kwargs.setdefault('user_message', _("Saved data appears to be corrupted"))
+        kwargs.setdefault("severity", ErrorSeverity.HIGH)
+        kwargs.setdefault(
+            "details", {"file_path": file_path, "corruption_details": details}
+        )
+        kwargs.setdefault("user_message", _("Saved data appears to be corrupted"))
         super().__init__(message, **kwargs)
 
 
 # Configuration-related exceptions
 class ConfigError(AshyTerminalError):
     """Base class for configuration-related errors."""
-    
+
     def __init__(self, message: str, **kwargs):
-        kwargs.setdefault('category', ErrorCategory.CONFIG)
+        kwargs.setdefault("category", ErrorCategory.CONFIG)
         super().__init__(message, **kwargs)
 
 
 class ConfigValidationError(ConfigError):
     """Raised when configuration validation fails."""
-    
+
     def __init__(self, config_key: str, value: Any, reason: str, **kwargs):
-        message = _("Invalid configuration for '{}' (value: {}): {}").format(config_key, value, reason)
-        kwargs.setdefault('severity', ErrorSeverity.MEDIUM)
-        kwargs.setdefault('details', {'config_key': config_key, 'value': value, 'reason': reason})
-        kwargs.setdefault('user_message', _("Configuration error: {}").format(reason))
-        super().__init__(message, **kwargs)
-
-
-class ConfigMissingError(ConfigError):
-    """Raised when required configuration is missing."""
-    
-    def __init__(self, config_key: str, **kwargs):
-        message = _("Required configuration '{}' is missing").format(config_key)
-        kwargs.setdefault('severity', ErrorSeverity.HIGH)
-        kwargs.setdefault('details', {'config_key': config_key})
-        kwargs.setdefault('user_message', _("Required setting '{}' is not configured").format(config_key))
+        message = _("Invalid configuration for '{}' (value: {}): {}").format(
+            config_key, value, reason
+        )
+        kwargs.setdefault("severity", ErrorSeverity.MEDIUM)
+        kwargs.setdefault(
+            "details", {"config_key": config_key, "value": value, "reason": reason}
+        )
+        kwargs.setdefault("user_message", _("Configuration error: {}").format(reason))
         super().__init__(message, **kwargs)
 
 
 # UI-related exceptions
 class UIError(AshyTerminalError):
     """Base class for UI-related errors."""
-    
+
     def __init__(self, component: str, message: str = None, **kwargs):
         """
         Initialize UI error.
-        
+
         Args:
             component: UI component that failed
             message: Error message
@@ -307,43 +288,41 @@ class UIError(AshyTerminalError):
             error_message = _("UI error in component: {}").format(component)
         else:
             error_message = _("UI error in {}: {}").format(component, message)
-        
-        kwargs.setdefault('category', ErrorCategory.UI)
-        kwargs.setdefault('details', {}).update({'component': component})
+
+        kwargs.setdefault("category", ErrorCategory.UI)
+        kwargs.setdefault("details", {}).update({"component": component})
         super().__init__(error_message, **kwargs)
         self.component = component
 
 
 class DialogError(UIError):
     """Raised when dialog operations fail."""
-    
+
     def __init__(self, dialog_type: str, reason: str, **kwargs):
         message = _("Dialog error ({}): {}").format(dialog_type, reason)
-        kwargs.setdefault('severity', ErrorSeverity.MEDIUM)
-        kwargs.setdefault('details', {'dialog_type': dialog_type, 'reason': reason})
-        kwargs.setdefault('user_message', _("Interface error: {}").format(reason))
-        super().__init__(message, **kwargs)
-
-
-class MenuError(UIError):
-    """Raised when menu operations fail."""
-    
-    def __init__(self, menu_type: str, reason: str, **kwargs):
-        message = _("Menu error ({}): {}").format(menu_type, reason)
-        kwargs.setdefault('severity', ErrorSeverity.LOW)
-        kwargs.setdefault('details', {'menu_type': menu_type, 'reason': reason})
-        kwargs.setdefault('user_message', _("Menu operation failed"))
+        kwargs.setdefault("severity", ErrorSeverity.MEDIUM)
+        kwargs.setdefault("details", {"dialog_type": dialog_type, "reason": reason})
+        kwargs.setdefault("user_message", _("Interface error: {}").format(reason))
         super().__init__(message, **kwargs)
 
 
 # Validation-related exceptions
 class ValidationError(AshyTerminalError):
     """Base class for validation errors."""
-    
-    def __init__(self, message: str, category=None, severity=None, field: str = None, value: Any = None, reason: str = None, **kwargs):
+
+    def __init__(
+        self,
+        message: str,
+        category=None,
+        severity=None,
+        field: str = None,
+        value: Any = None,
+        reason: str = None,
+        **kwargs,
+    ):
         """
         Initialize validation error with full compatibility.
-        
+
         Args:
             message: Main error message
             category: Error category (positional or keyword)
@@ -354,15 +333,15 @@ class ValidationError(AshyTerminalError):
         """
         # Handle both positional and keyword arguments for category/severity
         if category is not None:
-            kwargs.setdefault('category', category)
+            kwargs.setdefault("category", category)
         else:
-            kwargs.setdefault('category', ErrorCategory.VALIDATION)
-            
+            kwargs.setdefault("category", ErrorCategory.VALIDATION)
+
         if severity is not None:
-            kwargs.setdefault('severity', severity)
+            kwargs.setdefault("severity", severity)
         else:
-            kwargs.setdefault('severity', ErrorSeverity.MEDIUM)
-        
+            kwargs.setdefault("severity", ErrorSeverity.MEDIUM)
+
         # Build comprehensive error message
         if field and reason:
             error_message = _("Validation failed for '{}': {}").format(field, reason)
@@ -372,13 +351,13 @@ class ValidationError(AshyTerminalError):
             error_message = _("Validation failed for '{}': {}").format(field, message)
         else:
             error_message = message
-        
-        kwargs.setdefault('details', {}).update({
-            'field': field,
-            'value': value,
-            'reason': reason
+
+        kwargs.setdefault("details", {}).update({
+            "field": field,
+            "value": value,
+            "reason": reason,
         })
-        
+
         super().__init__(error_message, **kwargs)
         self.field = field
         self.value = value
@@ -387,110 +366,101 @@ class ValidationError(AshyTerminalError):
 
 class HostnameValidationError(ValidationError):
     """Raised when hostname validation fails."""
-    
+
     def __init__(self, hostname: str, reason: str, **kwargs):
         message = _("Invalid hostname '{}': {}").format(hostname, reason)
-        kwargs.setdefault('severity', ErrorSeverity.MEDIUM)
-        kwargs.setdefault('details', {'hostname': hostname, 'reason': reason})
-        kwargs.setdefault('user_message', _("Invalid hostname: {}").format(reason))
+        kwargs.setdefault("severity", ErrorSeverity.MEDIUM)
+        kwargs.setdefault("details", {"hostname": hostname, "reason": reason})
+        kwargs.setdefault("user_message", _("Invalid hostname: {}").format(reason))
         super().__init__(message, **kwargs)
 
 
 class PathValidationError(ValidationError):
     """Raised when path validation fails."""
-    
+
     def __init__(self, path: str, reason: str, **kwargs):
         message = _("Invalid path '{}': {}").format(path, reason)
-        kwargs.setdefault('severity', ErrorSeverity.MEDIUM)
-        kwargs.setdefault('details', {'path': path, 'reason': reason})
-        kwargs.setdefault('user_message', _("Invalid path: {}").format(reason))
+        kwargs.setdefault("severity", ErrorSeverity.MEDIUM)
+        kwargs.setdefault("details", {"path": path, "reason": reason})
+        kwargs.setdefault("user_message", _("Invalid path: {}").format(reason))
         super().__init__(message, **kwargs)
 
 
 # Permission-related exceptions
 class PermissionError(AshyTerminalError):
     """Base class for permission-related errors."""
-    
+
     def __init__(self, message: str, **kwargs):
-        kwargs.setdefault('category', ErrorCategory.PERMISSION)
+        kwargs.setdefault("category", ErrorCategory.PERMISSION)
         super().__init__(message, **kwargs)
 
 
 class FilePermissionError(PermissionError):
     """Raised when file permission is denied."""
-    
+
     def __init__(self, file_path: str, operation: str, **kwargs):
-        message = _("Permission denied for {} operation on '{}'").format(operation, file_path)
-        kwargs.setdefault('severity', ErrorSeverity.HIGH)
-        kwargs.setdefault('details', {'file_path': file_path, 'operation': operation})
-        kwargs.setdefault('user_message', _("Permission denied accessing {}").format(file_path))
+        message = _("Permission denied for {} operation on '{}'").format(
+            operation, file_path
+        )
+        kwargs.setdefault("severity", ErrorSeverity.HIGH)
+        kwargs.setdefault("details", {"file_path": file_path, "operation": operation})
+        kwargs.setdefault(
+            "user_message", _("Permission denied accessing {}").format(file_path)
+        )
         super().__init__(message, **kwargs)
 
 
 class DirectoryPermissionError(PermissionError):
     """Raised when directory permission is denied."""
-    
+
     def __init__(self, directory_path: str, operation: str, **kwargs):
-        message = _("Permission denied for {} operation on directory '{}'").format(operation, directory_path)
-        kwargs.setdefault('severity', ErrorSeverity.HIGH)
-        kwargs.setdefault('details', {'directory_path': directory_path, 'operation': operation})
-        kwargs.setdefault('user_message', _("Permission denied accessing directory {}").format(directory_path))
+        message = _("Permission denied for {} operation on directory '{}'").format(
+            operation, directory_path
+        )
+        kwargs.setdefault("severity", ErrorSeverity.HIGH)
+        kwargs.setdefault(
+            "details", {"directory_path": directory_path, "operation": operation}
+        )
+        kwargs.setdefault(
+            "user_message",
+            _("Permission denied accessing directory {}").format(directory_path),
+        )
         super().__init__(message, **kwargs)
 
 
 # Network-related exceptions
 class NetworkError(AshyTerminalError):
     """Base class for network-related errors."""
-    
+
     def __init__(self, message: str, **kwargs):
-        kwargs.setdefault('category', ErrorCategory.NETWORK)
-        super().__init__(message, **kwargs)
-
-
-class ConnectionTimeoutError(NetworkError):
-    """Raised when network connection times out."""
-    
-    def __init__(self, host: str, timeout: int, **kwargs):
-        message = _("Connection to '{}' timed out after {} seconds").format(host, timeout)
-        kwargs.setdefault('severity', ErrorSeverity.HIGH)
-        kwargs.setdefault('details', {'host': host, 'timeout': timeout})
-        kwargs.setdefault('user_message', _("Connection to {} timed out").format(host))
-        super().__init__(message, **kwargs)
-
-
-class HostUnreachableError(NetworkError):
-    """Raised when host is unreachable."""
-    
-    def __init__(self, host: str, **kwargs):
-        message = _("Host '{}' is unreachable").format(host)
-        kwargs.setdefault('severity', ErrorSeverity.HIGH)
-        kwargs.setdefault('details', {'host': host})
-        kwargs.setdefault('user_message', _("Cannot reach {}").format(host))
+        kwargs.setdefault("category", ErrorCategory.NETWORK)
         super().__init__(message, **kwargs)
 
 
 # Exception utilities
-def handle_exception(exception: Exception, 
-                    context: str = "",
-                    logger_name: str = None,
-                    reraise: bool = False) -> Optional[AshyTerminalError]:
+def handle_exception(
+    exception: Exception,
+    context: str = "",
+    logger_name: str = None,
+    reraise: bool = False,
+) -> Optional[AshyTerminalError]:
     """
     Handle an exception by logging it and optionally converting to AshyTerminalError.
-    
+
     Args:
         exception: Exception to handle
         context: Context where the exception occurred
         logger_name: Logger name to use
         reraise: Whether to re-raise the exception
-        
+
     Returns:
         AshyTerminalError if conversion was done, None otherwise
     """
-    from .logger import get_logger, log_error_with_context
-    
+    from .logger import log_error_with_context
+
     # Log the original exception
     log_error_with_context(exception, context, logger_name)
-    
+
     # Convert to AshyTerminalError if not already one
     if isinstance(exception, AshyTerminalError):
         converted_exception = exception
@@ -498,35 +468,10 @@ def handle_exception(exception: Exception,
         # Create a generic AshyTerminalError
         converted_exception = AshyTerminalError(
             message=str(exception),
-            details={'original_type': type(exception).__name__, 'context': context}
+            details={"original_type": type(exception).__name__, "context": context},
         )
-    
+
     if reraise:
         raise converted_exception
-    
+
     return converted_exception
-
-
-def create_error_from_exception(exception: Exception, 
-                               category: ErrorCategory = ErrorCategory.SYSTEM,
-                               severity: ErrorSeverity = ErrorSeverity.MEDIUM,
-                               user_message: str = None) -> AshyTerminalError:
-    """
-    Create an AshyTerminalError from a generic exception.
-    
-    Args:
-        exception: Original exception
-        category: Error category
-        severity: Error severity
-        user_message: User-friendly message
-        
-    Returns:
-        AshyTerminalError instance
-    """
-    return AshyTerminalError(
-        message=str(exception),
-        category=category,
-        severity=severity,
-        details={'original_type': type(exception).__name__},
-        user_message=user_message
-    )
