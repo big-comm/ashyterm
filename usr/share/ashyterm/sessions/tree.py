@@ -1,3 +1,5 @@
+# ashyterm/sessions/tree.py
+
 import time
 from typing import Callable, List, Optional, Union
 
@@ -8,8 +10,8 @@ gi.require_version("Adw", "1")
 from gi.repository import Gdk, Gio, GLib, GObject, Gtk
 
 from ..helpers import generate_unique_name
-from ..ui.menus import (create_folder_menu, create_root_menu,
-                        create_session_menu)
+from ..ui.menus import create_folder_menu, create_root_menu, create_session_menu
+
 # Import new utility systems
 from ..utils.logger import get_logger
 from ..utils.translation_utils import _
@@ -72,6 +74,7 @@ class SessionTreeView:
         self._clipboard_is_cut: bool = False
         self._clipboard_timestamp: float = 0.0
         self._is_restoring_state: bool = False
+        self._populated_folders = set()
 
         self.on_session_activated: Optional[Callable[[SessionItem], None]] = None
 
@@ -171,12 +174,22 @@ class SessionTreeView:
         if isinstance(item, SessionFolder):
 
             def update_folder_icon(row: Gtk.TreeListRow, _=None) -> None:
+                if (
+                    row.get_expanded()
+                    and row.get_item().path not in self._populated_folders
+                ):
+                    self._populate_folder_children(row.get_item())
+
                 if row.get_expanded():
                     icon.set_from_icon_name("folder-open-symbolic")
                 else:
+                    has_potential_children = any(
+                        s.folder_path == item.path for s in self.session_store
+                    ) or any(f.parent_path == item.path for f in self.folder_store)
+
                     icon_name = (
                         "folder-new-symbolic"
-                        if item.children and item.children.get_n_items() > 0
+                        if has_potential_children
                         else "folder-symbolic"
                     )
                     icon.set_from_icon_name(icon_name)
@@ -305,14 +318,12 @@ class SessionTreeView:
         try:
             item_type, name, source_path = data_string.split("|", 2)
             if item_type == "session":
-                if session := self.operations.find_session_by_name_and_path(
+                session, pos = self.operations.find_session_by_name_and_path(
                     name, source_path
-                ):
-                    if session.folder_path != target_folder_path:
-                        self.operations.move_session_to_folder(
-                            session, target_folder_path
-                        )
-                        self.refresh_tree()
+                )
+                if session and session.folder_path != target_folder_path:
+                    self.operations.move_session_to_folder(session, target_folder_path)
+                    self.refresh_tree()
             elif item_type == "folder":
                 if folder_result := self.operations.find_folder_by_path(source_path):
                     folder, pos = folder_result
@@ -340,57 +351,63 @@ class SessionTreeView:
         Rebuilds the entire tree view from the session and folder stores.
         This is the single source of truth for updating the view.
         """
-        self.logger.debug("Refreshing session tree view")
+        self.logger.debug("Refreshing session tree view (lazy method)")
         self._is_restoring_state = True
+
+        self._populated_folders.clear()
 
         self.root_store.remove_all()
 
-        folder_map = {
-            folder.path: folder
-            for folder in (
-                self.folder_store.get_item(i)
-                for i in range(self.folder_store.get_n_items())
-            )
-        }
-        for folder in folder_map.values():
+        for i in range(self.folder_store.get_n_items()):
+            folder = self.folder_store.get_item(i)
             folder.clear_children()
 
         root_items = []
         for i in range(self.session_store.get_n_items()):
             session = self.session_store.get_item(i)
-            if parent_folder := folder_map.get(session.folder_path):
-                parent_folder.add_child(session)
-            else:
+            if not session.folder_path:
                 root_items.append(session)
 
-        for folder in folder_map.values():
-            if parent_folder := folder_map.get(folder.parent_path):
-                parent_folder.add_child(folder)
-            else:
+        for i in range(self.folder_store.get_n_items()):
+            folder = self.folder_store.get_item(i)
+            if not folder.parent_path:
                 root_items.append(folder)
 
-        # Sort root items: folders first, then sessions, alphabetically
         sorted_root = sorted(
             root_items, key=lambda item: (isinstance(item, SessionItem), item.name)
         )
         for item in sorted_root:
             self.root_store.append(item)
 
-        # Sort children within each folder
-        for folder in folder_map.values():
-            children = [
-                folder.children.get_item(i)
-                for i in range(folder.children.get_n_items())
-            ]
-            sorted_children = sorted(
-                children, key=lambda item: (isinstance(item, SessionItem), item.name)
-            )
-            folder.clear_children()
-            for child in sorted_children:
-                folder.add_child(child)
-
-        # Defer restoring expansion state until the UI is idle to prevent glitches
         GLib.idle_add(self._apply_expansion_state)
+
+    def _populate_folder_children(self, folder: SessionFolder):
+        """Populates the children of a specific folder on-demand."""
+        if folder.path in self._populated_folders:
+            return
+
+        self.logger.debug(f"Lazily populating children for folder: {folder.path}")
+
+        folder.clear_children()
+        children = []
+
+        for i in range(self.session_store.get_n_items()):
+            session = self.session_store.get_item(i)
+            if session.folder_path == folder.path:
+                children.append(session)
+
+        for i in range(self.folder_store.get_n_items()):
+            sub_folder = self.folder_store.get_item(i)
+            if sub_folder.parent_path == folder.path:
+                children.append(sub_folder)
+
+        sorted_children = sorted(
+            children, key=lambda item: (isinstance(item, SessionItem), item.name)
+        )
+        for child in sorted_children:
+            folder.add_child(child)
+
+        self._populated_folders.add(folder.path)
 
     def _find_row_for_path(self, path: str) -> Optional[Gtk.TreeListRow]:
         """Finds the TreeListRow corresponding to a folder path."""
@@ -409,23 +426,51 @@ class SessionTreeView:
         try:
             expanded_paths = self.settings_manager.get("tree_expanded_folders", [])
             if not expanded_paths:
-                return False  # No need to continue
+                self._is_restoring_state = False
+                return False
 
             self.logger.debug(f"Applying expansion state for paths: {expanded_paths}")
-            # Sort by path depth to ensure parents are expanded before children
             sorted_paths = sorted(expanded_paths, key=lambda p: p.count("/"))
 
             for path in sorted_paths:
-                if row := self._find_row_for_path(path):
-                    if not row.get_expanded():
-                        row.set_expanded(True)
+                # ALTERAÇÃO: A lógica precisa encontrar a linha na árvore, que pode estar aninhada
+                # Esta função agora precisa ser mais inteligente para encontrar linhas em sub-níveis
+                row_to_expand = self._find_row_recursively(self.tree_model, path)
+                if row_to_expand and not row_to_expand.get_expanded():
+                    row_to_expand.set_expanded(True)
+
         except Exception as e:
             self.logger.error(f"Failed to apply tree expansion state: {e}")
         finally:
             self._is_restoring_state = False
             self.logger.debug("Finished restoring expansion state.")
 
-        return GLib.SOURCE_REMOVE  # Equivalent to False, stops the idle handler
+        return GLib.SOURCE_REMOVE
+
+    def _find_row_recursively(self, model, path_to_find):
+        for i in range(model.get_n_items()):
+            row = model.get_item(i)
+            if not row:
+                continue
+
+            item = row.get_item()
+            if isinstance(item, SessionFolder):
+                if item.path == path_to_find:
+                    return row
+                # Se o path a ser encontrado começa com o path da pasta atual, procure nos filhos
+                if path_to_find.startswith(item.path + "/"):
+                    # Garante que os filhos sejam populados antes de procurar neles
+                    if item.path not in self._populated_folders:
+                        self._populate_folder_children(item)
+
+                    child_model = self.tree_model.get_model_for_row(row)
+                    if child_model:
+                        found_in_child = self._find_row_recursively(
+                            child_model, path_to_find
+                        )
+                        if found_in_child:
+                            return found_in_child
+        return None
 
     # --- User Interaction Handlers ---
 

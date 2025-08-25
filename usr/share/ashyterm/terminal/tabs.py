@@ -106,7 +106,6 @@ class TabManager:
         self.tab_bar = Adw.TabBar(view=self.tab_view)
         self.tab_bar.get_style_context().add_class("tabbar")
 
-        # **CORREÇÃO: CSS corrigido para GTK4**
         css = """
         headerbar.main-header-bar {
             min-height: 0;
@@ -114,12 +113,10 @@ class TabManager:
             border: none;
             box-shadow: none;
         }
-        .tabbar { 
-            margin: -8px; 
+        .tabbar {
+            margin: -8px;
         }
-        /* A elipse é controlada pela propriedade do widget, não por CSS no GTK4 */
-        
-        /* Regra corrigida para separadores de menu */
+
         popover.menu menuitem separator,
         .terminal-tab-view popover.menu menuitem separator {
             border-top: 1px solid @borders;

@@ -55,9 +55,10 @@ class CommTerminalApp(Adw.Application):
 
         self.settings_manager: Optional[SettingsManager] = None
         self._main_window: Optional["CommTerminalWindow"] = None
-        self.backup_manager = None
-        self.auto_backup_scheduler = None
-        self.security_auditor = None
+
+        self._backup_manager = None
+        self._auto_backup_scheduler = None
+        self._security_auditor = None
 
         self.platform_info = get_platform_info()
         self.logger.info(
@@ -74,12 +75,45 @@ class CommTerminalApp(Adw.Application):
 
         atexit.register(self._cleanup_on_exit)
 
+    @property
+    def backup_manager(self):
+        if self._backup_manager is None:
+            try:
+                self._backup_manager = get_backup_manager()
+                self.logger.debug("Backup manager initialized on-demand.")
+            except Exception as e:
+                self.logger.error(f"Failed to initialize backup manager on-demand: {e}")
+        return self._backup_manager
+
+    @property
+    def auto_backup_scheduler(self):
+        if self._auto_backup_scheduler is None and self.backup_manager:
+            self._auto_backup_scheduler = AutoBackupScheduler(self.backup_manager)
+            auto_backup_enabled = self.settings_manager.get(
+                "auto_backup_enabled", False
+            )
+            if auto_backup_enabled:
+                self._auto_backup_scheduler.enable()
+            else:
+                self._auto_backup_scheduler.disable()
+            self.logger.debug("Auto backup scheduler initialized on-demand.")
+        return self._auto_backup_scheduler
+
+    @property
+    def security_auditor(self):
+        if self._security_auditor is None:
+            try:
+                self._security_auditor = create_security_auditor()
+                self.logger.debug("Security auditor initialized on-demand.")
+            except Exception as e:
+                self.logger.warning(
+                    f"Security auditor initialization on-demand failed: {e}"
+                )
+        return self._security_auditor
+
     def _initialize_subsystems(self) -> bool:
         """
         Initialize all application subsystems.
-
-        Returns:
-            True if initialization successful
         """
         try:
             self.logger.info(_("Initializing application subsystems"))
@@ -112,34 +146,6 @@ class CommTerminalApp(Adw.Application):
                     )
                 )
 
-            try:
-                self.backup_manager = get_backup_manager()
-                self.auto_backup_scheduler = AutoBackupScheduler(self.backup_manager)
-
-                auto_backup_enabled = self.settings_manager.get(
-                    "auto_backup_enabled", False
-                )
-                if auto_backup_enabled:
-                    self.auto_backup_scheduler.enable()
-                    self.logger.info(_("Automatic backups enabled"))
-                else:
-                    self.auto_backup_scheduler.disable()
-
-                self.logger.debug(_("Backup system initialized"))
-
-            except Exception as e:
-                self.logger.error(_("Failed to initialize backup system: {}").format(e))
-                self.backup_manager = None
-                self.auto_backup_scheduler = None
-
-            try:
-                self.security_auditor = create_security_auditor()
-                self.logger.debug(_("Security auditor initialized"))
-            except Exception as e:
-                self.logger.warning(
-                    _("Security auditor initialization failed: {}").format(e)
-                )
-
             from .settings.config import VTE_AVAILABLE
 
             if not VTE_AVAILABLE:
@@ -147,7 +153,7 @@ class CommTerminalApp(Adw.Application):
                 raise VTENotAvailableError()
 
             self._initialized = True
-            self.logger.info(_("All subsystems initialized successfully"))
+            self.logger.info(_("All essential subsystems initialized successfully"))
             return True
 
         except Exception as e:
@@ -171,7 +177,7 @@ class CommTerminalApp(Adw.Application):
             self._setup_actions()
             self._setup_keyboard_shortcuts()
 
-            self._check_startup_backup()
+            GLib.idle_add(self._check_startup_backup)
 
             self.logger.info(_("Application startup completed successfully"))
 
@@ -180,17 +186,17 @@ class CommTerminalApp(Adw.Application):
             self._show_startup_error(str(e))
             self.quit()
 
-    def _check_startup_backup(self) -> None:
+    def _check_startup_backup(self) -> bool:
         """Check if startup backup should be performed, and run it asynchronously."""
         try:
             if not self.auto_backup_scheduler or not self.backup_manager:
-                return
+                return False
 
             if not self.settings_manager.get("auto_backup_enabled", False):
                 self.logger.debug(
                     _("Automatic startup backup is disabled in settings.")
                 )
-                return
+                return False
 
             from .settings.config import SESSIONS_FILE, SETTINGS_FILE
 
@@ -211,6 +217,8 @@ class CommTerminalApp(Adw.Application):
 
         except Exception as e:
             self.logger.warning(_("Startup backup check failed: {}").format(e))
+
+        return False
 
     def _setup_actions(self) -> None:
         """Set up application-level actions."""

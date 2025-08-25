@@ -824,17 +824,23 @@ def save_sessions_and_folders(
     )
 
 
-def load_sessions_to_store(session_store: Gio.ListStore) -> None:
+def load_sessions_to_store(
+    session_store: Gio.ListStore, sessions_data: Optional[List[Dict[str, Any]]] = None
+) -> None:
     """
-    Load sessions from file and populate the given store with error handling.
+    Load sessions and populate the given store.
+    If sessions_data is provided, it uses it instead of reading from the file.
 
     Args:
         session_store: Store to populate with SessionItem objects
+        sessions_data: Optional pre-loaded session data
     """
     logger = get_logger("ashyterm.sessions.storage")
 
     try:
-        sessions_data, _ = load_sessions_and_folders()
+        if sessions_data is None:
+            sessions_data, _ = load_sessions_and_folders()
+
         loaded_count = 0
 
         for session_dict in sessions_data:
@@ -858,17 +864,23 @@ def load_sessions_to_store(session_store: Gio.ListStore) -> None:
         handle_exception(e, "load sessions to store", "ashyterm.sessions.storage")
 
 
-def load_folders_to_store(folder_store: Gio.ListStore) -> None:
+def load_folders_to_store(
+    folder_store: Gio.ListStore, folders_data: Optional[List[Dict[str, Any]]] = None
+) -> None:
     """
-    Load folders from file and populate the given store with error handling.
+    Load folders and populate the given store.
+    If folders_data is provided, it uses it instead of reading from the file.
 
     Args:
         folder_store: Store to populate with SessionFolder objects
+        folders_data: Optional pre-loaded folder data
     """
     logger = get_logger("ashyterm.sessions.storage")
 
     try:
-        _, folders_data = load_sessions_and_folders()
+        if folders_data is None:
+            _, folders_data = load_sessions_and_folders()
+
         loaded_count = 0
 
         for folder_dict in folders_data:

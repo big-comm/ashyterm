@@ -1,3 +1,4 @@
+# ashyterm/settings/manager.py
 """
 Enhanced settings manager for Ashy Terminal.
 
@@ -17,7 +18,7 @@ import gi
 gi.require_version("Gtk", "4.0")
 gi.require_version("Adw", "1")
 
-from gi.repository import Gdk, Gtk, Pango
+from gi.repository import Gdk, Gtk, Pango, GLib
 
 # VTE import with availability check
 try:
@@ -30,16 +31,25 @@ except ImportError:
 from ..utils.backup import BackupType, get_backup_manager
 from ..utils.crypto import get_secure_storage, is_encryption_available
 from ..utils.exceptions import ConfigValidationError
+
 # Import new utility systems
 from ..utils.logger import get_logger, log_error_with_context
 from ..utils.platform import get_platform_info
-from ..utils.security import (create_security_auditor,
-                              ensure_secure_file_permissions,
-                              validate_file_path)
+from ..utils.security import (
+    create_security_auditor,
+    ensure_secure_file_permissions,
+    validate_file_path,
+)
+
 # Import configuration constants
 from .config import VTE_AVAILABLE as CONFIG_VTE_AVAILABLE
-from .config import (AppConstants, ColorSchemeMap, ColorSchemes,
-                     DefaultSettings, get_config_paths)
+from .config import (
+    AppConstants,
+    ColorSchemeMap,
+    ColorSchemes,
+    DefaultSettings,
+    get_config_paths,
+)
 
 
 @dataclass
@@ -311,8 +321,8 @@ class SettingsManager:
                 # Ensure all default keys exist
                 self._merge_with_defaults()
 
-                # Create backup on first load
-                self._create_initialization_backup()
+                # Defer backup on first load to not block UI
+                GLib.idle_add(self._create_initialization_backup)
 
                 self.logger.debug("Settings initialization completed")
 
@@ -536,7 +546,7 @@ class SettingsManager:
     def _create_initialization_backup(self):
         """Create backup during initialization."""
         if not self.backup_manager or not self.settings_file.exists():
-            return
+            return False
 
         try:
             backup_id = self.backup_manager.create_backup(
@@ -550,6 +560,8 @@ class SettingsManager:
 
         except Exception as e:
             self.logger.warning(f"Failed to create initialization backup: {e}")
+
+        return False  # Prevent idle_add from repeating
 
     def save_settings(self, force: bool = False) -> None:
         """

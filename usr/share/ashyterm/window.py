@@ -14,7 +14,11 @@ gi.require_version("Vte", "3.91")
 from gi.repository import Adw, Gdk, Gio, GLib, Gtk
 
 from .sessions.models import SessionFolder, SessionItem
-from .sessions.storage import load_folders_to_store, load_sessions_to_store
+from .sessions.storage import (
+    load_folders_to_store,
+    load_sessions_and_folders,
+    load_sessions_to_store,
+)
 from .sessions.tree import SessionTreeView
 from .settings.config import APP_TITLE, VTE_AVAILABLE
 from .settings.manager import SettingsManager
@@ -549,12 +553,17 @@ class CommTerminalWindow(Adw.ApplicationWindow):
             self.logger.error(f"Window event setup failed: {e}")
 
     def _load_initial_data(self) -> None:
-        """Load initial sessions and folders data."""
+        """Load initial sessions and folders data efficiently."""
         try:
             self.logger.debug("Loading initial data")
 
-            load_sessions_to_store(self.session_store)
-            load_folders_to_store(self.folder_store)
+            # ALTERAÇÃO: Carrega os dados do disco UMA VEZ.
+            sessions_data, folders_data = load_sessions_and_folders()
+
+            # Passa os dados pré-carregados para as funções de população.
+            load_sessions_to_store(self.session_store, sessions_data)
+            load_folders_to_store(self.folder_store, folders_data)
+
             self.session_tree.refresh_tree()
 
             session_count = self.session_store.get_n_items()

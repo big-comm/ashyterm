@@ -1,3 +1,4 @@
+# ashyterm/utils/backup.py
 """
 Backup and recovery utilities for Ashy Terminal.
 
@@ -17,6 +18,8 @@ from datetime import datetime
 from enum import Enum
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple, Union
+
+from gi.repository import GLib
 
 from .exceptions import StorageCorruptedError, StorageError, StorageWriteError
 from .logger import get_logger
@@ -295,8 +298,8 @@ class BackupManager:
 
                 self.logger.info(f"Backup created successfully: {backup_id}")
 
-                # Clean up old backups
-                self._cleanup_old_backups()
+                # Defer cleanup of old backups
+                GLib.idle_add(self._cleanup_old_backups)
 
                 return backup_id
 
@@ -548,6 +551,8 @@ class BackupManager:
 
             except Exception as e:
                 self.logger.error(f"Error during backup cleanup: {e}")
+
+        return False  # Prevent idle_add from repeating
 
     def export_backup(self, backup_id: str, export_path: Path) -> bool:
         """
