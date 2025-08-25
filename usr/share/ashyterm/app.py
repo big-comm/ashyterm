@@ -390,9 +390,9 @@ class CommTerminalApp(Adw.Application):
 
     def _present_window_and_request_focus(self, window: Gtk.Window):
         """Present the window and use a modal dialog hack to request focus if needed."""
-        if not window.is_active():
+        if not window.is_active() and window.tab_manager.get_tab_count() > 1:
             self.logger.info(
-                "Window not focused, attempting focus hack via modal dialog."
+                "Window not focused and has multiple tabs, attempting focus hack via modal dialog."
             )
             # Create a tiny, transient, modal dialog
             dialog = Gtk.Dialog(transient_for=window, modal=True)
