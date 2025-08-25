@@ -479,8 +479,8 @@ msgstr "Failed to remove folder: {error}"
 # #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
 #
 # File: usr/share/ashyterm/sessions/models.py, line: 99
-# File: usr/share/ashyterm/utils.py, line: 438
 # File: usr/share/ashyterm/utils/security.py, line: 786
+# File: usr/share/ashyterm/helpers.py, line: 438
 msgid "Session name cannot be empty"
 msgstr "Session name cannot be empty"
 
@@ -1007,9 +1007,9 @@ msgstr ""
 # File: usr/share/ashyterm/ui/dialogs.py, line: 177
 # File: usr/share/ashyterm/ui/dialogs.py, line: 636
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1358
-# File: usr/share/ashyterm/ui/dialogs.py, line: 2073
-# File: usr/share/ashyterm/ui/dialogs.py, line: 2122
-# File: usr/share/ashyterm/ui/dialogs.py, line: 2214
+# File: usr/share/ashyterm/ui/dialogs.py, line: 2071
+# File: usr/share/ashyterm/ui/dialogs.py, line: 2120
+# File: usr/share/ashyterm/ui/dialogs.py, line: 2212
 msgid "Cancel"
 msgstr "Cancel"
 
@@ -1149,113 +1149,6 @@ msgid "Failed to create new window: {}"
 msgstr "Failed to create new window: {}"
 
 #
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
-#
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
-#
-# File: usr/share/ashyterm/utils.py, line: 172
-# File: usr/share/ashyterm/utils.py, line: 183
-# File: usr/share/ashyterm/utils/__init__.py, line: 87
-# File: usr/share/ashyterm/utils/__init__.py, line: 104
-# File: usr/share/ashyterm/utils/security.py, line: 80
-# File: usr/share/ashyterm/utils/security.py, line: 97
-msgid "unnamed"
-msgstr "unnamed"
-
-#
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
-#
-# File: usr/share/ashyterm/utils.py, line: 238
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1799
-# File: usr/share/ashyterm/ui/dialogs.py, line: 2023
-# File: usr/share/ashyterm/ui/dialogs.py, line: 2099
-msgid "None"
-msgstr "None"
-
-#
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
-#
-# File: usr/share/ashyterm/utils.py, line: 442
-# File: usr/share/ashyterm/utils/security.py, line: 843
-#, python-brace-format
-msgid "Invalid session type: {}"
-msgstr "Invalid session type: {}"
-
-#
-# File: usr/share/ashyterm/utils.py, line: 447
-msgid "SSH host cannot be empty"
-msgstr "SSH host cannot be empty"
-
-#
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
-#
-# File: usr/share/ashyterm/utils.py, line: 449
-# File: usr/share/ashyterm/utils/security.py, line: 508
-# File: usr/share/ashyterm/utils/security.py, line: 796
-#, python-brace-format
-msgid "Invalid hostname format: {}"
-msgstr "Invalid hostname format: {}"
-
-#
-# File: usr/share/ashyterm/utils.py, line: 461
-#, python-brace-format
-msgid "Error during session validation: {}"
-msgstr "Error during session validation: {}"
-
-#
-# File: usr/share/ashyterm/utils.py, line: 510
-msgid "unknown"
-msgstr "unknown"
-
-#
-# File: usr/share/ashyterm/utils.py, line: 539
-msgid "Global error handling configured"
-msgstr "Global error handling configured"
-
-#
-# File: usr/share/ashyterm/utils.py, line: 576
-msgid "unknown_session"
-msgstr "unknown_session"
-
-#
-# File: usr/share/ashyterm/utils.py, line: 586
-msgid ""
-"Using deprecated generate_unique_name_legacy(). Use generate_unique_name() "
-"instead."
-msgstr ""
-"Using deprecated generate_unique_name_legacy(). Use generate_unique_name() "
-"instead."
-
-#
-# File: usr/share/ashyterm/utils.py, line: 601
-#, python-brace-format
-msgid "Utils module initialized on {} platform"
-msgstr "Utils module initialized on {} platform"
-
-#
-# File: usr/share/ashyterm/utils.py, line: 605
-msgid "SSH command not found - SSH functionality will be limited"
-msgstr "SSH command not found - SSH functionality will be limited"
-
-#
-# File: usr/share/ashyterm/utils.py, line: 608
-msgid ""
-"sshpass not available - password SSH authentication will require manual input"
-msgstr ""
-"sshpass not available - password SSH authentication will require manual input"
-
-#
-# File: usr/share/ashyterm/utils.py, line: 610
-msgid "Utils module initialization completed"
-msgstr "Utils module initialization completed"
-
-#
-# File: usr/share/ashyterm/utils.py, line: 621
-#, python-brace-format
-msgid "Warning: Utils module initialization failed: {}"
-msgstr "Warning: Utils module initialization failed: {}"
-
-#
 # File: usr/share/ashyterm/terminal/tabs.py, line: 545
 msgid "Exited"
 msgstr "Exited"
@@ -1289,7 +1182,7 @@ msgstr "Failed to initialize terminal: {error}"
 #
 # File: usr/share/ashyterm/window.py, line: 266
 # File: usr/share/ashyterm/window.py, line: 1242
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1781
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1779
 msgid "Toggle Sidebar"
 msgstr "Toggle Sidebar"
 
@@ -1305,7 +1198,7 @@ msgstr "Main Menu"
 #
 # File: usr/share/ashyterm/window.py, line: 279
 # File: usr/share/ashyterm/window.py, line: 1211
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1771
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1769
 # File: usr/share/ashyterm/ui/menus.py, line: 70
 msgid "New Tab"
 msgstr "New Tab"
@@ -1317,8 +1210,8 @@ msgstr "New Tab"
 #
 # File: usr/share/ashyterm/window.py, line: 350
 # File: usr/share/ashyterm/ui/dialogs.py, line: 237
-# File: usr/share/ashyterm/ui/menus.py, line: 163
-# File: usr/share/ashyterm/ui/menus.py, line: 188
+# File: usr/share/ashyterm/ui/menus.py, line: 161
+# File: usr/share/ashyterm/ui/menus.py, line: 186
 msgid "Add Session"
 msgstr "Add Session"
 
@@ -1329,7 +1222,7 @@ msgstr "Add Session"
 #
 # File: usr/share/ashyterm/window.py, line: 356
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1192
-# File: usr/share/ashyterm/ui/menus.py, line: 189
+# File: usr/share/ashyterm/ui/menus.py, line: 187
 msgid "Add Folder"
 msgstr "Add Folder"
 
@@ -1554,9 +1447,9 @@ msgstr "Move Error"
 
 #
 # File: usr/share/ashyterm/window.py, line: 1072
-# File: usr/share/ashyterm/window.py, line: 1508
-# File: usr/share/ashyterm/window.py, line: 1519
-# File: usr/share/ashyterm/window.py, line: 1528
+# File: usr/share/ashyterm/window.py, line: 1507
+# File: usr/share/ashyterm/window.py, line: 1518
+# File: usr/share/ashyterm/window.py, line: 1526
 msgid "Delete Error"
 msgstr "Delete Error"
 
@@ -1621,7 +1514,7 @@ msgstr "Terminal"
 # #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
 #
 # File: usr/share/ashyterm/window.py, line: 1212
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1772
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1770
 # File: usr/share/ashyterm/ui/menus.py, line: 71
 msgid "Close Tab"
 msgstr "Close Tab"
@@ -1635,7 +1528,7 @@ msgstr "Close Tab"
 # File: usr/share/ashyterm/window.py, line: 1275
 # File: usr/share/ashyterm/window.py, line: 1279
 # File: usr/share/ashyterm/window.py, line: 1285
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1782
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1780
 # File: usr/share/ashyterm/ui/menus.py, line: 72
 msgid "New Window"
 msgstr "New Window"
@@ -1646,11 +1539,11 @@ msgstr "New Window"
 # #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
 #
 # File: usr/share/ashyterm/window.py, line: 1214
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1773
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1771
 # File: usr/share/ashyterm/ui/menus.py, line: 84
-# File: usr/share/ashyterm/ui/menus.py, line: 133
-# File: usr/share/ashyterm/ui/menus.py, line: 169
-# File: usr/share/ashyterm/ui/menus.py, line: 242
+# File: usr/share/ashyterm/ui/menus.py, line: 131
+# File: usr/share/ashyterm/ui/menus.py, line: 167
+# File: usr/share/ashyterm/ui/menus.py, line: 240
 msgid "Copy"
 msgstr "Copy"
 
@@ -1660,10 +1553,10 @@ msgstr "Copy"
 # #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
 #
 # File: usr/share/ashyterm/window.py, line: 1215
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1774
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1772
 # File: usr/share/ashyterm/ui/menus.py, line: 85
-# File: usr/share/ashyterm/ui/menus.py, line: 172
-# File: usr/share/ashyterm/ui/menus.py, line: 243
+# File: usr/share/ashyterm/ui/menus.py, line: 170
+# File: usr/share/ashyterm/ui/menus.py, line: 241
 msgid "Paste"
 msgstr "Paste"
 
@@ -1673,9 +1566,9 @@ msgstr "Paste"
 # #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
 #
 # File: usr/share/ashyterm/window.py, line: 1216
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1775
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1773
 # File: usr/share/ashyterm/ui/menus.py, line: 86
-# File: usr/share/ashyterm/ui/menus.py, line: 244
+# File: usr/share/ashyterm/ui/menus.py, line: 242
 msgid "Select All"
 msgstr "Select All"
 
@@ -1715,8 +1608,8 @@ msgstr "Application"
 # #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
 #
 # File: usr/share/ashyterm/window.py, line: 1241
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1507
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1779
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1505
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1777
 # File: usr/share/ashyterm/ui/menus.py, line: 91
 msgid "Preferences"
 msgstr "Preferences"
@@ -1808,8 +1701,8 @@ msgstr "Enter new name for \"{name}\":"
 # #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
 #
 # File: usr/share/ashyterm/window.py, line: 1420
-# File: usr/share/ashyterm/ui/menus.py, line: 128
-# File: usr/share/ashyterm/ui/menus.py, line: 164
+# File: usr/share/ashyterm/ui/menus.py, line: 126
+# File: usr/share/ashyterm/ui/menus.py, line: 162
 msgid "Rename"
 msgstr "Rename"
 
@@ -1817,7 +1710,7 @@ msgstr "Rename"
 # #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
 #
 # File: usr/share/ashyterm/window.py, line: 1467
-# File: usr/share/ashyterm/ui/dialogs.py, line: 2174
+# File: usr/share/ashyterm/ui/dialogs.py, line: 2172
 msgid "Move Session"
 msgstr "Move Session"
 
@@ -1875,21 +1768,21 @@ msgstr "This will also delete all contents of any selected folders."
 # #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
 #
 # File: usr/share/ashyterm/window.py, line: 1494
-# File: usr/share/ashyterm/ui/menus.py, line: 144
-# File: usr/share/ashyterm/ui/menus.py, line: 176
+# File: usr/share/ashyterm/ui/menus.py, line: 142
+# File: usr/share/ashyterm/ui/menus.py, line: 174
 msgid "Delete"
 msgstr "Delete"
 
 #
 # #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
 #
-# File: usr/share/ashyterm/window.py, line: 1546
-# File: usr/share/ashyterm/window.py, line: 1560
+# File: usr/share/ashyterm/window.py, line: 1544
+# File: usr/share/ashyterm/window.py, line: 1558
 # File: usr/share/ashyterm/ui/dialogs.py, line: 150
 # File: usr/share/ashyterm/ui/dialogs.py, line: 901
 # File: usr/share/ashyterm/ui/dialogs.py, line: 943
-# File: usr/share/ashyterm/ui/dialogs.py, line: 2137
-# File: usr/share/ashyterm/ui/dialogs.py, line: 2149
+# File: usr/share/ashyterm/ui/dialogs.py, line: 2135
+# File: usr/share/ashyterm/ui/dialogs.py, line: 2147
 msgid "OK"
 msgstr "OK"
 
@@ -1956,8 +1849,8 @@ msgstr "Choose a folder to organize this session"
 # File: usr/share/ashyterm/ui/dialogs.py, line: 383
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1308
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1309
-# File: usr/share/ashyterm/ui/dialogs.py, line: 2232
-# File: usr/share/ashyterm/ui/dialogs.py, line: 2233
+# File: usr/share/ashyterm/ui/dialogs.py, line: 2230
+# File: usr/share/ashyterm/ui/dialogs.py, line: 2231
 msgid "Root"
 msgstr "Root"
 
@@ -2252,8 +2145,8 @@ msgstr "You have unsaved changes. Are you sure you want to cancel?"
 #
 # File: usr/share/ashyterm/ui/dialogs.py, line: 995
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1001
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1433
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1438
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1432
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1437
 msgid "Save Error"
 msgstr "Save Error"
 
@@ -2346,377 +2239,387 @@ msgid "Choose a parent folder for organization"
 msgstr "Choose a parent folder for organization"
 
 #
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1438
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1437
 #, python-brace-format
 msgid "Failed to save folder: {}"
 msgstr "Failed to save folder: {}"
 
 #
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1445
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1443
 msgid "Folder name"
 msgstr "Folder name"
 
 #
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1475
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1473
 #, python-brace-format
 msgid "Folder {} {}"
 msgstr "Folder {} {}"
 
 #
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1537
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1535
 msgid "Appearance"
 msgstr "Appearance"
 
 #
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1543
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1541
 msgid "Colors & Font"
 msgstr "Colors & Font"
 
 #
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1544
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1542
 msgid "Customize terminal appearance and typography"
 msgstr "Customize terminal appearance and typography"
 
 #
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1550
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1548
 msgid "Color Scheme"
 msgstr "Color Scheme"
 
 #
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1550
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1548
 msgid "Select terminal color scheme"
 msgstr "Select terminal color scheme"
 
 #
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1564
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1562
 msgid "Background Transparency"
 msgstr "Background Transparency"
 
 #
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1565
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1563
 msgid "Adjust terminal background transparency"
 msgstr "Adjust terminal background transparency"
 
 #
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1586
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1584
 msgid "Terminal Font"
 msgstr "Terminal Font"
 
 #
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1587
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1585
 msgid "Select font family and size for terminal text"
 msgstr "Select font family and size for terminal text"
 
 #
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1604
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1602
 msgid "Behavior"
 msgstr "Behavior"
 
 #
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1610
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1608
 msgid "Terminal Behavior"
 msgstr "Terminal Behavior"
 
 #
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1611
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1609
 msgid "Configure how terminals behave"
 msgstr "Configure how terminals behave"
 
 #
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1617
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1615
 msgid "Auto Close Tabs"
 msgstr "Auto Close Tabs"
 
 #
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1618
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1616
 msgid "Automatically close tabs when process exits normally"
 msgstr "Automatically close tabs when process exits normally"
 
 #
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1629
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1627
 msgid "Scroll on Output"
 msgstr "Scroll on Output"
 
 #
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1630
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1628
 msgid "Automatically scroll when new output appears"
 msgstr "Automatically scroll when new output appears"
 
 #
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1645
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1643
 msgid "Scroll on Keystroke"
 msgstr "Scroll on Keystroke"
 
 #
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1646
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1644
 msgid "Automatically scroll when typing"
 msgstr "Automatically scroll when typing"
 
 #
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1661
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1659
 msgid "Hide Mouse Cursor"
 msgstr "Hide Mouse Cursor"
 
 #
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1662
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1660
 msgid "Hide mouse cursor when typing"
 msgstr "Hide mouse cursor when typing"
 
 #
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1673
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1671
 msgid "Cursor Blinking"
 msgstr "Cursor Blinking"
 
 #
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1674
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1672
 msgid "Enable cursor blinking animation"
 msgstr "Enable cursor blinking animation"
 
 #
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1685
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1683
 msgid "Directory Tracking"
 msgstr "Directory Tracking"
 
 #
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1686
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1684
 msgid "Track current directory and update tab titles"
 msgstr "Track current directory and update tab titles"
 
 #
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1692
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1690
 msgid "Enable Directory Tracking"
 msgstr "Enable Directory Tracking"
 
 #
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1693
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1691
 msgid "Monitor current directory and show it in tab titles"
 msgstr "Monitor current directory and show it in tab titles"
 
 #
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1704
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1702
 msgid "Show Hostname in Titles"
 msgstr "Show Hostname in Titles"
 
 #
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1705
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1703
 msgid "Include hostname in tab titles when available"
 msgstr "Include hostname in tab titles when available"
 
 #
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1720
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1718
 msgid "Interface Behavior"
 msgstr "Interface Behavior"
 
 #
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1721
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1719
 msgid "Configure application interface behavior"
 msgstr "Configure application interface behavior"
 
 #
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1727
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1725
 msgid "Confirm Application Exit"
 msgstr "Confirm Application Exit"
 
 #
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1728
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1726
 msgid "Show confirmation dialog when closing the application"
 msgstr "Show confirmation dialog when closing the application"
 
 #
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1736
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1734
 msgid "Confirm Deletion"
 msgstr "Confirm Deletion"
 
 #
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1737
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1735
 msgid "Show confirmation dialog when deleting sessions or folders"
 msgstr "Show confirmation dialog when deleting sessions or folders"
 
 #
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1750
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1748
 msgid "Shortcuts"
 msgstr "Shortcuts"
 
 #
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1757
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1755
 msgid "Terminal Actions"
 msgstr "Terminal Actions"
 
 #
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1758
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1756
 msgid "Keyboard shortcuts for terminal operations"
 msgstr "Keyboard shortcuts for terminal operations"
 
 #
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1764
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1762
 msgid "Application Actions"
 msgstr "Application Actions"
 
 #
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1765
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1763
 msgid "Keyboard shortcuts for application operations"
 msgstr "Keyboard shortcuts for application operations"
 
 #
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1780
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1778
 msgid "Quit Application"
 msgstr "Quit Application"
 
 #
 # #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
 #
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1812
-# File: usr/share/ashyterm/ui/menus.py, line: 126
-# File: usr/share/ashyterm/ui/menus.py, line: 162
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1797
+# File: usr/share/ashyterm/ui/dialogs.py, line: 2021
+# File: usr/share/ashyterm/ui/dialogs.py, line: 2097
+# File: usr/share/ashyterm/helpers.py, line: 238
+msgid "None"
+msgstr "None"
+
+#
+# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
+#
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1810
+# File: usr/share/ashyterm/ui/menus.py, line: 124
+# File: usr/share/ashyterm/ui/menus.py, line: 160
 msgid "Edit"
 msgstr "Edit"
 
 #
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1830
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1828
 msgid "Backup"
 msgstr "Backup"
 
 #
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1837
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1835
 msgid "Backup Settings"
 msgstr "Backup Settings"
 
 #
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1838
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1836
 msgid "Configure automatic backup and recovery options"
 msgstr "Configure automatic backup and recovery options"
 
 #
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1844
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1842
 msgid "Automatic Backups"
 msgstr "Automatic Backups"
 
 #
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1845
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1843
 msgid "Automatically create backups of sessions and settings"
 msgstr "Automatically create backups of sessions and settings"
 
 #
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1853
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1851
 msgid "Backup on Change"
 msgstr "Backup on Change"
 
 #
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1854
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1852
 msgid "Create a backup every time sessions or folders are modified"
 msgstr "Create a backup every time sessions or folders are modified"
 
 #
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1862
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1860
 msgid "Backup on Exit"
 msgstr "Backup on Exit"
 
 #
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1863
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1861
 msgid "Create backup when application exits"
 msgstr "Create backup when application exits"
 
 #
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1871
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1869
 msgid "Backup Interval"
 msgstr "Backup Interval"
 
 #
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1872
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1870
 msgid "Hours between automatic backups"
 msgstr "Hours between automatic backups"
 
 #
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1881
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1879
 msgid "Retention Period"
 msgstr "Retention Period"
 
 #
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1882
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1880
 msgid "Days to keep old backups"
 msgstr "Days to keep old backups"
 
 #
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1896
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1894
 msgid "Advanced"
 msgstr "Advanced"
 
 #
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1903
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1901
 msgid "Development & Debugging"
 msgstr "Development & Debugging"
 
 #
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1904
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1902
 msgid "Advanced options for development and troubleshooting"
 msgstr "Advanced options for development and troubleshooting"
 
 #
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1910
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1908
 msgid "Debug Mode"
 msgstr "Debug Mode"
 
 #
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1911
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1909
 msgid "Enable verbose logging and debug features"
 msgstr "Enable verbose logging and debug features"
 
 #
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1919
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1917
 msgid "Performance Mode"
 msgstr "Performance Mode"
 
 #
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1920
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1918
 msgid "Optimize for performance over features"
 msgstr "Optimize for performance over features"
 
 #
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1928
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1926
 msgid "Experimental Features"
 msgstr "Experimental Features"
 
 #
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1929
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1927
 msgid "Enable experimental and unstable features"
 msgstr "Enable experimental and unstable features"
 
 #
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1937
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1949
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1935
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1947
 msgid "Reset"
 msgstr "Reset"
 
 #
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1938
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1936
 msgid "Reset application settings to defaults"
 msgstr "Reset application settings to defaults"
 
 #
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1944
-# File: usr/share/ashyterm/ui/dialogs.py, line: 2118
-# File: usr/share/ashyterm/ui/dialogs.py, line: 2123
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1942
+# File: usr/share/ashyterm/ui/dialogs.py, line: 2116
+# File: usr/share/ashyterm/ui/dialogs.py, line: 2121
 msgid "Reset All Settings"
 msgstr "Reset All Settings"
 
 #
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1945
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1943
 msgid "Restore all settings to their default values"
 msgstr "Restore all settings to their default values"
 
 #
-# File: usr/share/ashyterm/ui/dialogs.py, line: 2016
+# File: usr/share/ashyterm/ui/dialogs.py, line: 2014
 msgid "Edit Shortcut"
 msgstr "Edit Shortcut"
 
 #
-# File: usr/share/ashyterm/ui/dialogs.py, line: 2017
+# File: usr/share/ashyterm/ui/dialogs.py, line: 2015
 #, python-brace-format
 msgid "Press the new key combination for '{}' or Esc to cancel."
 msgstr "Press the new key combination for '{}' or Esc to cancel."
 
 #
-# File: usr/share/ashyterm/ui/dialogs.py, line: 2030
+# File: usr/share/ashyterm/ui/dialogs.py, line: 2028
 #, python-brace-format
 msgid ""
 "Current: {}\n"
@@ -2726,7 +2629,7 @@ msgstr ""
 "New: (press keys)"
 
 #
-# File: usr/share/ashyterm/ui/dialogs.py, line: 2061
+# File: usr/share/ashyterm/ui/dialogs.py, line: 2059
 #, python-brace-format
 msgid ""
 "Current: {}\n"
@@ -2736,17 +2639,17 @@ msgstr ""
 "New: {}"
 
 #
-# File: usr/share/ashyterm/ui/dialogs.py, line: 2074
+# File: usr/share/ashyterm/ui/dialogs.py, line: 2072
 msgid "Clear"
 msgstr "Clear"
 
 #
-# File: usr/share/ashyterm/ui/dialogs.py, line: 2075
+# File: usr/share/ashyterm/ui/dialogs.py, line: 2073
 msgid "Set Shortcut"
 msgstr "Set Shortcut"
 
 #
-# File: usr/share/ashyterm/ui/dialogs.py, line: 2119
+# File: usr/share/ashyterm/ui/dialogs.py, line: 2117
 msgid ""
 "Are you sure you want to reset all settings to their default values? This "
 "action cannot be undone."
@@ -2755,12 +2658,12 @@ msgstr ""
 "action cannot be undone."
 
 #
-# File: usr/share/ashyterm/ui/dialogs.py, line: 2134
+# File: usr/share/ashyterm/ui/dialogs.py, line: 2132
 msgid "Settings Reset"
 msgstr "Settings Reset"
 
 #
-# File: usr/share/ashyterm/ui/dialogs.py, line: 2135
+# File: usr/share/ashyterm/ui/dialogs.py, line: 2133
 msgid ""
 "All settings have been reset to their default values. Please restart the "
 "application for all changes to take effect."
@@ -2769,44 +2672,44 @@ msgstr ""
 "application for all changes to take effect."
 
 #
-# File: usr/share/ashyterm/ui/dialogs.py, line: 2146
+# File: usr/share/ashyterm/ui/dialogs.py, line: 2144
 msgid "Reset Failed"
 msgstr "Reset Failed"
 
 #
-# File: usr/share/ashyterm/ui/dialogs.py, line: 2147
+# File: usr/share/ashyterm/ui/dialogs.py, line: 2145
 #, python-brace-format
 msgid "Failed to reset settings: {}"
 msgstr "Failed to reset settings: {}"
 
 #
-# File: usr/share/ashyterm/ui/dialogs.py, line: 2196
+# File: usr/share/ashyterm/ui/dialogs.py, line: 2194
 msgid "Select Destination"
 msgstr "Select Destination"
 
 #
-# File: usr/share/ashyterm/ui/dialogs.py, line: 2197
+# File: usr/share/ashyterm/ui/dialogs.py, line: 2195
 #, python-brace-format
 msgid "Choose the folder to move the session '{name}' to."
 msgstr "Choose the folder to move the session '{name}' to."
 
 #
-# File: usr/share/ashyterm/ui/dialogs.py, line: 2203
+# File: usr/share/ashyterm/ui/dialogs.py, line: 2201
 msgid "Destination Folder"
 msgstr "Destination Folder"
 
 #
-# File: usr/share/ashyterm/ui/dialogs.py, line: 2204
+# File: usr/share/ashyterm/ui/dialogs.py, line: 2202
 msgid "Select a folder or 'Root' for the top level"
 msgstr "Select a folder or 'Root' for the top level"
 
 #
-# File: usr/share/ashyterm/ui/dialogs.py, line: 2218
+# File: usr/share/ashyterm/ui/dialogs.py, line: 2216
 msgid "Move"
 msgstr "Move"
 
 #
-# File: usr/share/ashyterm/ui/dialogs.py, line: 2278
+# File: usr/share/ashyterm/ui/dialogs.py, line: 2276
 msgid "Move Failed"
 msgstr "Move Failed"
 
@@ -2831,53 +2734,53 @@ msgid "About"
 msgstr "About"
 
 #
-# File: usr/share/ashyterm/ui/menus.py, line: 119
+# File: usr/share/ashyterm/ui/menus.py, line: 118
 msgid "Connect with SFTP"
 msgstr "Connect with SFTP"
 
 #
-# File: usr/share/ashyterm/ui/menus.py, line: 127
+# File: usr/share/ashyterm/ui/menus.py, line: 125
 msgid "Duplicate"
 msgstr "Duplicate"
 
 #
-# File: usr/share/ashyterm/ui/menus.py, line: 132
-# File: usr/share/ashyterm/ui/menus.py, line: 168
+# File: usr/share/ashyterm/ui/menus.py, line: 130
+# File: usr/share/ashyterm/ui/menus.py, line: 166
 msgid "Cut"
 msgstr "Cut"
 
 #
-# File: usr/share/ashyterm/ui/menus.py, line: 140
+# File: usr/share/ashyterm/ui/menus.py, line: 138
 msgid "Move to Folder"
 msgstr "Move to Folder"
 
 #
-# File: usr/share/ashyterm/ui/menus.py, line: 194
+# File: usr/share/ashyterm/ui/menus.py, line: 192
 msgid "Paste to Root"
 msgstr "Paste to Root"
 
 #
-# File: usr/share/ashyterm/ui/menus.py, line: 236
+# File: usr/share/ashyterm/ui/menus.py, line: 234
 msgid "Open Link"
 msgstr "Open Link"
 
 #
-# File: usr/share/ashyterm/ui/menus.py, line: 237
+# File: usr/share/ashyterm/ui/menus.py, line: 235
 msgid "Copy Link"
 msgstr "Copy Link"
 
 #
-# File: usr/share/ashyterm/ui/menus.py, line: 251
+# File: usr/share/ashyterm/ui/menus.py, line: 249
 msgid "Split Horizontally"
 msgstr "Split Horizontally"
 
 #
-# File: usr/share/ashyterm/ui/menus.py, line: 256
+# File: usr/share/ashyterm/ui/menus.py, line: 254
 msgid "Split Vertically"
 msgstr "Split Vertically"
 
 #
-# File: usr/share/ashyterm/ui/menus.py, line: 260
+# File: usr/share/ashyterm/ui/menus.py, line: 258
 msgid "Close Pane"
 msgstr "Close Pane"
 
@@ -3221,6 +3124,20 @@ msgid "Cannot reach {}"
 msgstr "Cannot reach {}"
 
 #
+# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
+#
+# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
+#
+# File: usr/share/ashyterm/utils/__init__.py, line: 87
+# File: usr/share/ashyterm/utils/__init__.py, line: 104
+# File: usr/share/ashyterm/utils/security.py, line: 80
+# File: usr/share/ashyterm/utils/security.py, line: 97
+# File: usr/share/ashyterm/helpers.py, line: 172
+# File: usr/share/ashyterm/helpers.py, line: 183
+msgid "unnamed"
+msgstr "unnamed"
+
+#
 # File: usr/share/ashyterm/utils/security.py, line: 302
 msgid "Key path is empty"
 msgstr "Key path is empty"
@@ -3317,6 +3234,16 @@ msgstr "File has overly permissive permissions"
 #, python-brace-format
 msgid "Error checking file permissions: {}"
 msgstr "Error checking file permissions: {}"
+
+#
+# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
+#
+# File: usr/share/ashyterm/utils/security.py, line: 508
+# File: usr/share/ashyterm/utils/security.py, line: 796
+# File: usr/share/ashyterm/helpers.py, line: 449
+#, python-brace-format
+msgid "Invalid hostname format: {}"
+msgstr "Invalid hostname format: {}"
 
 #
 # File: usr/share/ashyterm/utils/security.py, line: 509
@@ -3513,6 +3440,15 @@ msgid "Invalid or unsafe folder path"
 msgstr "Invalid or unsafe folder path"
 
 #
+# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
+#
+# File: usr/share/ashyterm/utils/security.py, line: 843
+# File: usr/share/ashyterm/helpers.py, line: 442
+#, python-brace-format
+msgid "Invalid session type: {}"
+msgstr "Invalid session type: {}"
+
+#
 # File: usr/share/ashyterm/utils/security.py, line: 850
 #, python-brace-format
 msgid "Validation error: {}"
@@ -3529,6 +3465,70 @@ msgstr "Security: {}"
 #, python-brace-format
 msgid "Security validation error: {}"
 msgstr "Security validation error: {}"
+
+#
+# File: usr/share/ashyterm/helpers.py, line: 447
+msgid "SSH host cannot be empty"
+msgstr "SSH host cannot be empty"
+
+#
+# File: usr/share/ashyterm/helpers.py, line: 461
+#, python-brace-format
+msgid "Error during session validation: {}"
+msgstr "Error during session validation: {}"
+
+#
+# File: usr/share/ashyterm/helpers.py, line: 510
+msgid "unknown"
+msgstr "unknown"
+
+#
+# File: usr/share/ashyterm/helpers.py, line: 539
+msgid "Global error handling configured"
+msgstr "Global error handling configured"
+
+#
+# File: usr/share/ashyterm/helpers.py, line: 576
+msgid "unknown_session"
+msgstr "unknown_session"
+
+#
+# File: usr/share/ashyterm/helpers.py, line: 586
+msgid ""
+"Using deprecated generate_unique_name_legacy(). Use generate_unique_name() "
+"instead."
+msgstr ""
+"Using deprecated generate_unique_name_legacy(). Use generate_unique_name() "
+"instead."
+
+#
+# File: usr/share/ashyterm/helpers.py, line: 601
+#, python-brace-format
+msgid "Utils module initialized on {} platform"
+msgstr "Utils module initialized on {} platform"
+
+#
+# File: usr/share/ashyterm/helpers.py, line: 605
+msgid "SSH command not found - SSH functionality will be limited"
+msgstr "SSH command not found - SSH functionality will be limited"
+
+#
+# File: usr/share/ashyterm/helpers.py, line: 608
+msgid ""
+"sshpass not available - password SSH authentication will require manual input"
+msgstr ""
+"sshpass not available - password SSH authentication will require manual input"
+
+#
+# File: usr/share/ashyterm/helpers.py, line: 610
+msgid "Utils module initialization completed"
+msgstr "Utils module initialization completed"
+
+#
+# File: usr/share/ashyterm/helpers.py, line: 621
+#, python-brace-format
+msgid "Warning: Utils module initialization failed: {}"
+msgstr "Warning: Utils module initialization failed: {}"
 
 #
 # File: usr/share/ashyterm/main.py, line: 39
