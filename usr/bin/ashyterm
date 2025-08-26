@@ -1,3 +1,48 @@
-#!/bin/sh
+#!/bin/bash
 
-python /usr/share/ashyterm/main.py "$@"
+execute_ashy="python /usr/share/ashyterm/main.py"
+
+convert_to_ssh() {
+    local path="$*"
+
+    # Detects if it is KIO (sftp/fish)
+    if [[ $path =~ /(sftp|fish)/([^/]+)(/.*)? ]]; then
+        local protocol="${BASH_REMATCH[1]}"
+        local user_host_port="${BASH_REMATCH[2]}"
+        local kio_path="${BASH_REMATCH[3]}"
+
+        # Checks if there is a port in the KIO format
+        if [[ $user_host_port =~ ^([^@]+@[^:]+):([0-9]+)$ ]]; then
+            local user_host="${BASH_REMATCH[1]}"
+            local port="${BASH_REMATCH[2]}"
+            echo "--ssh $user_host:$port:$kio_path"
+            exec $execute_ashy --ssh "$user_host:$port:$kio_path"
+        else
+            exec $execute_ashy --ssh "$user_host_port:$kio_path"
+        fi
+
+    # Detects if it is GVFS (sftp:host=,port=,user=)
+    elif [[ $path =~ /gvfs/sftp:host=([^,]+),port=([^,]+),user=([^,/]+) ]]; then
+        local host="${BASH_REMATCH[1]}"
+        local port="${BASH_REMATCH[2]}"
+        local user="${BASH_REMATCH[3]}"
+        exec $execute_ashy --ssh "$user@$host:$port"
+
+    # Detects if it is GVFS without a port (sftp:host=,user=)
+    elif [[ $path =~ /gvfs/sftp:host=([^,]+),user=([^,/]+) ]]; then
+        local host="${BASH_REMATCH[1]}"
+        local user="${BASH_REMATCH[2]}"
+        exec $execute_ashy --ssh "$user@$host"
+
+    # If it is not any of the known formats, pass the parameters directly
+    else
+        exec $execute_ashy "$@"
+    fi
+}
+
+
+if [[ "$1" = "--convert-to-ssh" ]]; then
+    convert_to_ssh "$*"
+fi
+
+exec $execute_ashy "$@"

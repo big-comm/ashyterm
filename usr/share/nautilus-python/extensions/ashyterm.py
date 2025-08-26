@@ -8,8 +8,8 @@ GVFS mounts, and direct remote SSH connections.
 
 import gettext
 import os
-import subprocess
 import shutil
+import subprocess
 from urllib.parse import urlparse
 
 # Import 'gi' and explicitly require GTK and Nautilus versions.
@@ -18,7 +18,7 @@ import gi
 gi.require_version("Gtk", "4.0")
 gi.require_version("Nautilus", "4.0")
 
-from gi.repository import GObject, Nautilus, Gio
+from gi.repository import Gio, GObject, Nautilus
 
 # --- Internationalization (i18n) Setup ---
 APP_NAME = "comm-ashyterm"
@@ -49,8 +49,8 @@ class AshyTerminalExtension(GObject.GObject, Nautilus.MenuProvider):
             print("Ashy Terminal Error: 'ashyterm' executable not found.")
             return
         try:
-            # A chave é 'env=os.environ'. Isso passa o XDG_ACTIVATION_TOKEN
-            # para o novo processo, permitindo que ele ganhe foco no Wayland.
+            # The key is 'env=os.environ'. This passes the XDG_ACTIVATION_TOKEN
+            # to the new process, allowing it to gain focus on Wayland.
             subprocess.Popen(command, env=os.environ)
         except Exception as e:
             print(f"Error launching '{' '.join(command)}': {e}")
@@ -121,9 +121,9 @@ class AshyTerminalExtension(GObject.GObject, Nautilus.MenuProvider):
         local_path = self._get_local_path(file)
         menu_items = []
 
-        # Caso 1: Localização remota (ex: sftp://)
+        # Case 1: Remote location (e.g., sftp://)
         if is_remote:
-            # Opção A: Abrir uma conexão SSH direta
+            # Option A: Open a direct SSH connection
             ssh_item = Nautilus.MenuItem(
                 name="AshyTerminal::OpenRemoteSSH",
                 label=_("Open in Ashy Terminal (SSH)"),
@@ -132,7 +132,7 @@ class AshyTerminalExtension(GObject.GObject, Nautilus.MenuProvider):
             ssh_item.connect("activate", self._launch_remote_ssh_session, files)
             menu_items.append(ssh_item)
 
-            # Opção B: Abrir o ponto de montagem local do GVFS, se existir
+            # Option B: Open the local GVFS mount point, if it exists
             if local_path:
                 gvfs_item = Nautilus.MenuItem(
                     name="AshyTerminal::OpenGVFS",
@@ -141,8 +141,8 @@ class AshyTerminalExtension(GObject.GObject, Nautilus.MenuProvider):
                 )
                 gvfs_item.connect("activate", self._launch_local_session, files)
                 menu_items.append(gvfs_item)
-        
-        # Caso 2: Localização local (file://)
+
+        # Case 2: Local location (file://)
         elif local_path:
             local_item = Nautilus.MenuItem(
                 name="AshyTerminal::OpenLocal",

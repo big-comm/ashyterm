@@ -1,0 +1,39 @@
+[Desktop Entry]
+Type=Service
+ServiceTypes=KonqPopupMenu/Plugin
+MimeType=inode/directory;
+Actions=OpenTerminalHere;
+X-KDE-Priority=TopLevel
+Icon=ashyterm
+
+[Desktop Action OpenTerminalHere]
+Icon=ashyterm
+Name=Open in Ashy Terminal
+Name[pt]=Abrir no Ashy Terminal
+Name[es]=Abrir en Ashy Terminal
+Name[bg]=Отвори в Ashy Terminal
+Name[cs]=Otevřít v Ashy Terminal
+Name[da]=Åbn i Ashy Terminal
+Name[de]=In Ashy Terminal öffnen
+Name[el]=Άνοιγμα στο Ashy Terminal
+Name[et]=Ava Ashy Terminalis
+Name[fi]=Avaa Ashy Terminalissa
+Name[fr]=Ouvrir dans Ashy Terminal
+Name[he]=פתח ב-Ashy Terminal
+Name[hr]=Otvori u Ashy Terminalu
+Name[hu]=Megnyitás Ashy Terminalban
+Name[is]=Opna í Ashy Terminal
+Name[it]=Apri in Ashy Terminal
+Name[ja]=Ashy Terminalで開く
+Name[ko]=Ashy Terminal에서 열기
+Name[nl]=Openen in Ashy Terminal
+Name[no]=Åpne i Ashy Terminal
+Name[pl]=Otwórz w Ashy Terminal
+Name[ro]=Deschide în Ashy Terminal
+Name[ru]=Открыть в Ashy Terminal
+Name[sk]=Otvoriť v Ashy Terminal
+Name[sv]=Öppna i Ashy Terminal
+Name[tr]=Ashy Terminal’de aç
+Name[uk]=Відкрити в Ashy Terminal
+Name[zh]=在 Ashy Terminal 中打开
+Exec=ashyterm --working-directory %f

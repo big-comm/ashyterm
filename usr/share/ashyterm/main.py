@@ -114,6 +114,10 @@ def main() -> int:
         metavar="[USER@]HOST[:PORT][:/PATH]",
         help=_("Connect to SSH host with optional user, port, and remote path"),
     )
+    parser.add_argument(
+        "--convert-to-ssh",
+        help=_("Convert KIO/GVFS URI path to SSH format"),
+    )
 
     # If user asked for help/version argparse will handle it and exit.
     # We only parse known args so other Gtk/Gio handling isn't interfered.

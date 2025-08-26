@@ -1,14 +1,5 @@
-[Desktop Entry]
-Type=Service
-ServiceTypes=KonqPopupMenu/Plugin
-MimeType=inode/directory
-X-KDE-Protocols=sftp,ssh,fish
-Actions=OpenSSHConnection
-X-KDE-Priority=TopLevel
-Icon=ashyterm
-
-[Desktop Action OpenSSHConnection]
-Icon=ashyterm
+[Nemo Action]
+Active=true
 Name=Open in Ashy Terminal (SSH)
 Name[pt]=Abrir no Ashy Terminal (SSH)
 Name[es]=Abrir en Ashy Terminal (SSH)
@@ -37,4 +28,9 @@ Name[sv]=Öppna i Ashy Terminal (SSH)
 Name[tr]=Ashy Terminal’de aç (SSH)
 Name[uk]=Відкрити в Ashy Terminal (SSH)
 Name[zh]=在 Ashy Terminal 中打开 (SSH)
-Exec=ashyterm --convert-to-ssh "%u"
+
+Exec=ashyterm --convert-to-ssh %F
+Icon-Name=ashyterm
+Selection=any
+Extensions=dir
+UriScheme=sftp
