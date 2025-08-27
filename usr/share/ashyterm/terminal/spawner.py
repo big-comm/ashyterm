@@ -16,15 +16,22 @@ from gi.repository import GLib, Vte
 if TYPE_CHECKING:
     from ..sessions.models import SessionItem
 
-from ..utils.exceptions import (SSHConnectionError, SSHKeyError,
-                                TerminalSpawnError)
-from ..utils.logger import (get_logger, log_error_with_context,
-                            log_terminal_event)
-from ..utils.platform import (get_command_builder, get_environment_manager,
-                              get_platform_info, get_shell_detector,
-                              has_command, is_windows)
-from ..utils.security import (HostnameValidator, InputSanitizer,
-                              validate_ssh_hostname, validate_ssh_key_file)
+from ..utils.exceptions import SSHConnectionError, SSHKeyError, TerminalSpawnError
+from ..utils.logger import get_logger, log_error_with_context, log_terminal_event
+from ..utils.platform import (
+    get_command_builder,
+    get_environment_manager,
+    get_platform_info,
+    get_shell_detector,
+    has_command,
+    is_windows,
+)
+from ..utils.security import (
+    HostnameValidator,
+    InputSanitizer,
+    validate_ssh_hostname,
+    validate_ssh_key_file,
+)
 
 
 class ProcessTracker:
@@ -162,6 +169,14 @@ class ProcessSpawner:
 
         self.logger.info(
             f"Process spawner initialized on {self.platform_info.platform_type.value}"
+        )
+
+    def _get_ssh_control_path(self, session: "SessionItem") -> str:
+        user = session.user or os.getlogin()
+        port = session.port or 22
+        self.platform_info.cache_dir.mkdir(parents=True, exist_ok=True)
+        return str(
+            self.platform_info.cache_dir / f"ssh_control_{session.host}_{port}_{user}"
         )
 
     def spawn_local_terminal(
@@ -434,6 +449,9 @@ class ProcessSpawner:
                 "ServerAliveInterval": "30",
                 "ServerAliveCountMax": "3",
                 "StrictHostKeyChecking": "ask",
+                "ControlMaster": "auto",
+                "ControlPersist": "600",
+                "ControlPath": self._get_ssh_control_path(session),
             }
 
             # The CommandBuilder now needs a generic method

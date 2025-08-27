@@ -267,3 +267,46 @@ def _is_valid_url_simple(text: str) -> bool:
     """Simple URL validation for menu."""
     text = text.strip()
     return any(text.startswith(scheme) for scheme in ["http://", "https://", "ftp://"])
+
+
+def create_file_item_menu(file_item, is_remote_session=False) -> Gio.Menu:
+    menu = Gio.Menu()
+
+    # Basic file operations
+    menu.append_item(Gio.MenuItem.new(_("Rename"), "win.file-rename"))
+
+    # File management section
+    file_ops_section = Gio.Menu()
+    move_item = Gio.MenuItem.new(_("Move"), "win.file-move")
+    move_item.set_icon(Gio.ThemedIcon.new("edit-cut-symbolic"))
+    file_ops_section.append_item(move_item)
+
+    copy_item = Gio.MenuItem.new(_("Copy"), "win.file-copy")
+    copy_item.set_icon(Gio.ThemedIcon.new("edit-copy-symbolic"))
+    file_ops_section.append_item(copy_item)
+    menu.append_section(None, file_ops_section)
+
+    # Permissions
+    menu.append_item(Gio.MenuItem.new(_("Change Permissions"), "win.file-chmod"))
+
+    # Only show transfer options for remote (SSH/SFTP) sessions
+    if is_remote_session:
+        transfer_section = Gio.Menu()
+        if not file_item.is_directory:
+            download_item = Gio.MenuItem.new(_("Download File"), "win.file-download")
+            download_item.set_icon(Gio.ThemedIcon.new("folder-download-symbolic"))
+            transfer_section.append_item(download_item)
+            edit_item = Gio.MenuItem.new(_("Edit with Local App"), "win.file-edit")
+            edit_item.set_icon(Gio.ThemedIcon.new("document-edit-symbolic"))
+            transfer_section.append_item(edit_item)
+        upload_item = Gio.MenuItem.new(_("Upload Files Here"), "win.file-upload")
+        upload_item.set_icon(Gio.ThemedIcon.new("folder-upload-symbolic"))
+        transfer_section.append_item(upload_item)
+        menu.append_section(None, transfer_section)
+
+    delete_section = Gio.Menu()
+    delete_item = Gio.MenuItem.new(_("Delete"), "win.file-delete")
+    delete_item.set_icon(Gio.ThemedIcon.new("user-trash-symbolic"))
+    delete_section.append_item(delete_item)
+    menu.append_section(None, delete_section)
+    return menu

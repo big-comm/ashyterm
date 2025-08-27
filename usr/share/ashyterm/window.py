@@ -13,6 +13,7 @@ gi.require_version("Vte", "3.91")
 
 from gi.repository import Adw, Gdk, Gio, GLib, Gtk
 
+from .filemanager.manager import FileManager
 from .sessions.models import SessionFolder, SessionItem
 from .sessions.storage import (
     load_folders_to_store,
@@ -116,6 +117,9 @@ class CommTerminalWindow(Adw.ApplicationWindow):
         self.session_tree = SessionTreeView(
             self, self.session_store, self.folder_store, self.settings_manager
         )
+        # Track file managers per tab instead of one global instance
+        self.tab_file_managers = {}  # tab_page -> FileManager
+        self.current_file_manager = None
 
         # Connect managers
         self.terminal_manager.set_tab_manager(self.tab_manager)
@@ -129,6 +133,9 @@ class CommTerminalWindow(Adw.ApplicationWindow):
         self._last_tab_creation = 0
         self._cleanup_performed = False
         self._force_closing = False
+        self._currently_focused_terminal = (
+            None  # Track focused terminal for file manager binding
+        )
 
         # Security auditor
         self.security_auditor = None
@@ -220,6 +227,13 @@ class CommTerminalWindow(Adw.ApplicationWindow):
                 ("split-horizontal", self._on_split_horizontal),
                 ("split-vertical", self._on_split_vertical),
                 ("close-pane", self._on_close_pane),
+                # File manager actions
+                ("file-rename", lambda a, p: None),
+                ("file-chmod", lambda a, p: None),
+                ("file-download", lambda a, p: None),
+                ("file-upload", lambda a, p: None),
+                ("file-edit", lambda a, p: None),
+                ("file-delete", lambda a, p: None),
                 # Open URL
                 ("open-url", self._on_open_url),
                 ("copy-url", self._on_copy_url),
@@ -323,6 +337,13 @@ class CommTerminalWindow(Adw.ApplicationWindow):
             self.toggle_sidebar_button.set_tooltip_text(_("Toggle Sidebar"))
             self.toggle_sidebar_button.connect("toggled", self._on_toggle_sidebar)
             self.header_bar.pack_start(self.toggle_sidebar_button)
+
+            # File manager toggle button
+            file_manager_button = Gtk.ToggleButton()
+            file_manager_button.set_icon_name("folder-open-symbolic")
+            file_manager_button.set_tooltip_text(_("File Manager"))
+            file_manager_button.connect("toggled", self._on_toggle_file_manager)
+            self.header_bar.pack_start(file_manager_button)
 
             # Main menu button
             menu_button = Gtk.MenuButton()
@@ -438,30 +459,50 @@ class CommTerminalWindow(Adw.ApplicationWindow):
     def _create_content_area(self) -> Gtk.Widget:
         """Create the main content area with tabs."""
         try:
-            # Main content box - just contains the tab view, tab bar goes in header
+            main_paned = Gtk.Paned(orientation=Gtk.Orientation.VERTICAL)
             self.content_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=0)
-
-            # Get tab components
             self.tab_bar = self.tab_manager.get_tab_bar()
             tab_view = self.tab_manager.get_tab_view()
             tab_view.add_css_class("terminal-tab-view")
-
-            # Configure tab bar for better spacing and put it in header bar as title widget
-            self.tab_bar.set_expand_tabs(True)  # Expand tabs to fill available space
-            self.tab_bar.set_autohide(False)  # Don't auto-hide when multiple tabs
-
-            # Put tab bar in header bar as title widget for better space utilization
+            self.tab_bar.set_expand_tabs(True)
+            self.tab_bar.set_autohide(False)
             self.header_bar.set_title_widget(self.tab_bar)
-
-            # Add only tab view to content area
             self.content_box.append(tab_view)
+
+            main_paned.set_start_child(self.content_box)
+            main_paned.set_resize_start_child(True)
+            main_paned.set_shrink_start_child(False)
+
+            self.file_manager_placeholder = Gtk.Box()
+            # Add background to prevent transparency
+            self.file_manager_placeholder.add_css_class("background")
+            self.file_manager_placeholder.set_visible(
+                False
+            )  # Hide initially to prevent transparency
+
+            main_paned.set_end_child(self.file_manager_placeholder)
+            main_paned.set_resize_end_child(False)
+            main_paned.set_shrink_end_child(
+                False
+            )  # Don't allow shrinking below minimum
+
+            # Set minimum size for the end child (file manager area)
+            self.file_manager_placeholder.set_size_request(-1, 200)
+            self.main_paned = main_paned
+
+            self.connect(
+                "realize", lambda w: main_paned.set_position(self.get_height() - 250)
+            )
+
+            self.toast_overlay = Adw.ToastOverlay()
+            self.toast_overlay.set_child(main_paned)
 
             # Connect to tab events with proper parameter handling
             tab_view.connect("page-attached", self._on_tab_attached)
             tab_view.connect("page-detached", self._on_tab_detached)
 
-            self.logger.debug("Content area created with tabs in header bar")
-            return self.content_box
+            self.logger.debug("Content area created with paned layout")
+            return self.toast_overlay
 
         except Exception as e:
             self.logger.error(f"Content area creation failed: {e}")
@@ -528,9 +569,19 @@ class CommTerminalWindow(Adw.ApplicationWindow):
             self.terminal_manager.on_terminal_directory_changed = (
                 self._on_terminal_directory_changed
             )
+            self.terminal_manager.set_terminal_exit_handler(self._on_terminal_exit)
 
             # Tab manager callbacks - simplified
             self.tab_manager.on_quit_application = self._on_quit_application_requested
+
+            # Tab view callbacks for file manager switching
+            # Note: Tab switching will be handled through focus changes instead
+            self.tab_manager.get_tab_view().connect(
+                "page-detached", self._on_tab_closed
+            )
+            self.tab_manager.get_tab_view().connect(
+                "notify::selected-page", self._on_tab_changed
+            )
 
             self.logger.debug("Callbacks configured")
 
@@ -585,10 +636,7 @@ class CommTerminalWindow(Adw.ApplicationWindow):
     def _update_sidebar_button_icon(self) -> None:
         """Update sidebar toggle button icon."""
         try:
-            is_visible = self.sidebar_box.get_visible()
-            icon_name = (
-                "view-reveal-symbolic" if is_visible else "view-conceal-symbolic"
-            )
+            icon_name = "sidebar-show-symbolic"
             self.toggle_sidebar_button.set_icon_name(icon_name)
         except Exception as e:
             self.logger.error(f"Failed to update sidebar button icon: {e}")
@@ -607,6 +655,263 @@ class CommTerminalWindow(Adw.ApplicationWindow):
         except Exception as e:
             self.logger.error(f"Sidebar toggle failed: {e}")
 
+    def _on_toggle_file_manager(self, button: Gtk.ToggleButton):
+        """Toggle file manager - each tab gets its own file manager instance."""
+        try:
+            current_page = self.tab_manager.get_tab_view().get_selected_page()
+            if not current_page:
+                button.set_active(False)
+                return
+
+            is_active = button.get_active()
+
+            if is_active:
+                # Show file manager for current tab
+                active_terminal = self.tab_manager.get_selected_terminal()
+                if not active_terminal:
+                    button.set_active(False)
+                    return
+
+                # Get or create file manager for this specific tab
+                file_manager = self.tab_file_managers.get(current_page)
+                if not file_manager:
+                    try:
+                        file_manager = FileManager(self, active_terminal)
+                        self.tab_file_managers[current_page] = file_manager
+                        self.logger.debug(
+                            f"Created file manager for tab: {current_page.get_title()}"
+                        )
+                    except Exception as e:
+                        self.logger.error(f"Failed to create file manager: {e}")
+                        button.set_active(False)
+                        return
+
+                # Show this tab's file manager
+                self.current_file_manager = file_manager
+                self.main_paned.set_end_child(file_manager.get_main_widget())
+
+                # Restore position for this tab
+                last_pos = getattr(
+                    current_page, "_fm_paned_pos", self.get_height() - 250
+                )
+                self.main_paned.set_position(last_pos)
+
+                file_manager.set_visibility(True)
+
+            else:
+                # Hide file manager
+                if self.current_file_manager:
+                    # Store position for current tab
+                    if current_page:
+                        current_page._fm_paned_pos = self.main_paned.get_position()
+
+                    self.current_file_manager.set_visibility(False)
+                    self.main_paned.set_end_child(None)
+                    self.current_file_manager = None
+
+        except Exception as e:
+            self.logger.error(f"Error toggling file manager: {e}")
+            button.set_active(False)
+
+    def _on_tab_changed(self, tab_view, param):
+        """Handle tab changes by switching to the correct tab's file manager."""
+        try:
+            # Always hide the current file manager first
+            if self.current_file_manager:
+                # Store position for the previous tab
+                old_page = None
+                for page, fm in self.tab_file_managers.items():
+                    if fm == self.current_file_manager:
+                        old_page = page
+                        break
+                if old_page:
+                    old_page._fm_paned_pos = self.main_paned.get_position()
+
+                self.current_file_manager.set_visibility(False)
+                self.main_paned.set_end_child(None)
+                self.current_file_manager = None
+
+            # Get the new active tab
+            current_page = tab_view.get_selected_page()
+            if not current_page:
+                self._sync_toggle_button_state()
+                return
+
+            active_terminal = self.tab_manager.get_selected_terminal()
+            if not active_terminal:
+                self._sync_toggle_button_state()
+                return
+
+            # Check if this tab has a file manager and should show it
+            file_manager = self.tab_file_managers.get(current_page)
+            should_show_fm = file_manager is not None
+
+            if should_show_fm:
+                # Show this tab's file manager
+                self.current_file_manager = file_manager
+                self.main_paned.set_end_child(file_manager.get_main_widget())
+
+                # Restore position for this tab
+                last_pos = getattr(
+                    current_page, "_fm_paned_pos", self.get_height() - 250
+                )
+                self.main_paned.set_position(last_pos)
+
+                file_manager.set_visibility(True)
+
+            # Update toggle button to reflect current state
+            self._sync_toggle_button_state()
+
+        except Exception as e:
+            self.logger.error(f"Error in tab changed handler: {e}")
+
+    def _sync_toggle_button_state(self):
+        """Synchronize toggle button state with current file manager visibility."""
+        try:
+            toggle_button = self._get_file_manager_toggle_button()
+            if not toggle_button:
+                return
+
+            # Button should be active if we have a visible file manager
+            should_be_active = self.current_file_manager is not None
+
+            # Only update if state is different to avoid triggering handler
+            if toggle_button.get_active() != should_be_active:
+                # Use a simpler approach to block/unblock signals
+                toggle_button.handler_block_by_func(self._on_toggle_file_manager)
+                toggle_button.set_active(should_be_active)
+                toggle_button.handler_unblock_by_func(self._on_toggle_file_manager)
+
+        except Exception as e:
+            self.logger.error(f"Failed to sync toggle button state: {e}")
+
+    def _get_file_manager_toggle_button(self):
+        """Get the file manager toggle button from header bar."""
+        if not hasattr(self, "header_bar"):
+            return None
+
+        # Get all children from the header bar and look for the file manager button
+        def find_button_recursive(widget):
+            if (
+                isinstance(widget, Gtk.ToggleButton)
+                and widget.get_icon_name() == "folder-open-symbolic"
+            ):
+                return widget
+
+            # Check if widget has children
+            if hasattr(widget, "get_first_child"):
+                child = widget.get_first_child()
+                while child:
+                    result = find_button_recursive(child)
+                    if result:
+                        return result
+                    child = child.get_next_sibling()
+            return None
+
+        return find_button_recursive(self.header_bar)
+
+    def _sync_file_manager_with_terminal(self, file_manager):
+        """Sync file manager directory with the current terminal directory."""
+        try:
+            if not file_manager or not file_manager.bound_terminal:
+                return
+
+            # Get the current directory from the terminal
+            uri = file_manager.bound_terminal.get_current_directory_uri()
+            if not uri:
+                return
+
+            from urllib.parse import unquote, urlparse
+
+            parsed_uri = urlparse(uri)
+            if parsed_uri.scheme == "file":
+                current_dir = unquote(parsed_uri.path)
+                # Only refresh if directory changed
+                if (
+                    not hasattr(file_manager, "current_path")
+                    or current_dir != file_manager.current_path
+                ):
+                    self.logger.debug(f"Syncing file manager to: {current_dir}")
+                    file_manager.refresh(current_dir)
+        except Exception as e:
+            self.logger.error(
+                f"Failed to sync file manager with terminal directory: {e}"
+            )
+
+    def _on_tab_closed(self, tab_view, page, position):
+        if page in self.tab_file_managers:
+            file_manager = self.tab_file_managers.pop(page)
+            self.logger.debug(
+                f"Cleaning up FileManager for closed tab: {page.get_title()}"
+            )
+            if self.current_file_manager == file_manager:
+                self.current_file_manager = None
+            # If FileManager has a specific cleanup method, call it here.
+            # e.g., file_manager.cleanup()
+
+    def _get_page_for_terminal(self, terminal):
+        """Get the tab page that contains a specific terminal."""
+        try:
+            # Iterate through all tabs to find which one contains this terminal
+            for i in range(self.tab_manager.get_tab_count()):
+                page = self.tab_manager.tab_view.get_nth_page(i)
+                if self._page_contains_terminal(page, terminal):
+                    return page
+        except:
+            pass
+        return None
+
+    def _page_contains_terminal(self, page, terminal):
+        """Check if a page contains a specific terminal."""
+        try:
+            content = page.get_child()
+            if content:
+                return self._widget_contains_terminal(content, terminal)
+        except:
+            pass
+        return False
+
+    def _widget_contains_terminal(self, widget, terminal):
+        """Recursively check if widget contains terminal."""
+        try:
+            if widget == terminal:
+                return True
+
+            # Check children
+            if hasattr(widget, "get_child") and widget.get_child():
+                if self._widget_contains_terminal(widget.get_child(), terminal):
+                    return True
+
+            # Check paned widgets
+            if isinstance(widget, Gtk.Paned):
+                start_child = widget.get_start_child()
+                end_child = widget.get_end_child()
+                if start_child and self._widget_contains_terminal(
+                    start_child, terminal
+                ):
+                    return True
+                if end_child and self._widget_contains_terminal(end_child, terminal):
+                    return True
+        except:
+            pass
+        return False
+
+    def cleanup_terminal_file_manager(self, terminal):
+        """Clean up file manager when a terminal is closed."""
+        try:
+            # Cleanup will be handled by tab closure
+            pass
+        except Exception as e:
+            self.logger.error(f"Terminal file manager cleanup failed: {e}")
+
+    def _on_terminal_exit(self, terminal, child_status, identifier):
+        """Handle terminal exit to clean up file managers."""
+        try:
+            # Clean up file manager for this terminal
+            self.cleanup_terminal_file_manager(terminal)
+        except Exception as e:
+            self.logger.error(f"Terminal exit handling failed: {e}")
+
     def _on_window_key_pressed(self, controller, keyval, keycode, state) -> bool:
         """Handle window-level key presses for focus management."""
         try:
@@ -620,12 +925,95 @@ class CommTerminalWindow(Adw.ApplicationWindow):
             return Gdk.EVENT_PROPAGATE
 
     def _on_terminal_focus_changed(self, terminal, from_sidebar: bool) -> None:
-        """Handle terminal focus change."""
+        """Handle terminal focus change and manage file manager visibility."""
         try:
             if not from_sidebar:
                 self._sidebar_has_focus = False
+
+            # Update focused terminal tracking
+            self._currently_focused_terminal = terminal
+
+            # Handle file manager for the focused terminal
+            self._handle_file_manager_for_terminal_focus(terminal)
+
         except Exception as e:
             self.logger.error(f"Terminal focus change handling failed: {e}")
+
+    def _handle_file_manager_for_terminal_focus(self, focused_terminal):
+        """Handle file manager display when terminal focus changes."""
+        try:
+            # Check if file manager toggle is active
+            file_manager_button = self._get_file_manager_toggle_button()
+            if not file_manager_button or not file_manager_button.get_active():
+                return
+
+            # Get the current page for this tab
+            current_page = self.tab_manager.get_tab_view().get_selected_page()
+            if not current_page:
+                return
+
+            # Get the file manager for this tab
+            file_manager = self.tab_file_managers.get(current_page)
+            if not file_manager:
+                return
+
+            # Check if the focused terminal is the one bound to the file manager
+            if file_manager.bound_terminal == focused_terminal:
+                # This is the expected behavior - sync directory
+                self._sync_file_manager_with_terminal(file_manager)
+            else:
+                # Terminal focus changed within a split - we may need to handle this differently
+                # For now, let's sync the file manager with the focused terminal's directory
+                self.logger.debug(
+                    f"Terminal focus changed within tab to: {getattr(focused_terminal, 'terminal_id', 'unknown')}"
+                )
+
+                # Update the file manager's bound terminal reference if needed
+                # This handles splits where we want the file manager to follow the active split
+                if hasattr(file_manager, "bound_terminal"):
+                    old_terminal = file_manager.bound_terminal
+                    file_manager.bound_terminal = focused_terminal
+
+                    # Disconnect from old terminal and connect to new one
+                    if hasattr(old_terminal, "disconnect") and hasattr(
+                        file_manager, "directory_change_handler_id"
+                    ):
+                        try:
+                            old_terminal.disconnect(
+                                file_manager.directory_change_handler_id
+                            )
+                        except:
+                            pass
+
+                    # Connect to new terminal
+                    file_manager.directory_change_handler_id = focused_terminal.connect(
+                        "notify::current-directory-uri",
+                        file_manager._on_terminal_directory_changed,
+                    )
+
+                # Sync with the new terminal's directory
+                self._sync_file_manager_with_terminal(file_manager)
+
+        except Exception as e:
+            self.logger.error(f"Failed to handle file manager for terminal focus: {e}")
+
+        except Exception as e:
+            self.logger.error(f"File manager focus handling failed: {e}")
+
+    def _is_terminal_in_split(self, terminal):
+        """Check if terminal is in a split configuration."""
+        try:
+            current_page = self.tab_manager.get_selected_page()
+            if not current_page:
+                return False
+
+            # Get paned widget from page content
+            content = current_page.get_child()
+            if hasattr(content, "get_child") and content.get_child():
+                return isinstance(content.get_child(), Gtk.Paned)
+            return False
+        except:
+            return False
 
     def _on_terminal_directory_changed(
         self, terminal, new_title: str, osc7_info
@@ -640,6 +1028,12 @@ class CommTerminalWindow(Adw.ApplicationWindow):
                 self.set_title(f"{APP_TITLE} - {new_title}")
             else:
                 self.set_title(APP_TITLE)
+
+            # Synchronize with file manager of the current tab
+            if osc7_info:
+                # File manager directory sync is now handled automatically
+                # through terminal's notify::current-directory-uri signal
+                pass
 
             if osc7_info:
                 self.logger.debug(
