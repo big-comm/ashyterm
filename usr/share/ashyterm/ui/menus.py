@@ -1,105 +1,230 @@
+# ashyterm/ui/menus.py
+
 import gi
 
 gi.require_version("Gtk", "4.0")
 gi.require_version("Adw", "1")
 
-from gi.repository import Gio, Gtk
+from gi.repository import Adw, Gio, Gtk
 
+from ..helpers import accelerator_to_label
+from ..settings.config import DefaultSettings
+from ..settings.manager import SettingsManager
 from ..utils.translation_utils import _
 
 
-class ZoomWidget(Gtk.Box):
-    """Custom zoom widget for menu - horizontal layout like GNOME Console."""
+class ThemeSelectorWidget(Gtk.Box):
+    """Custom widget for selecting the GTK color scheme."""
+
+    def __init__(self, settings_manager: SettingsManager):
+        super().__init__(orientation=Gtk.Orientation.HORIZONTAL, spacing=30)
+        self.settings_manager = settings_manager
+        self.style_manager = Adw.StyleManager.get_default()
+
+        self.add_css_class("themeselector")
+        self.set_halign(Gtk.Align.CENTER)
+
+        # System Theme Button
+        self.system_button = Gtk.CheckButton()
+        self.system_button.add_css_class("follow")
+        self.system_button.add_css_class("theme-selector")
+        self.system_button.set_tooltip_text(_("Follow System Style"))
+        self.system_button.connect("toggled", self._on_theme_changed, "default")
+
+        # Light Theme Button
+        self.light_button = Gtk.CheckButton(group=self.system_button)
+        self.light_button.add_css_class("light")
+        self.light_button.add_css_class("theme-selector")
+        self.light_button.set_tooltip_text(_("Light Style"))
+        self.light_button.connect("toggled", self._on_theme_changed, "light")
+
+        # Dark Theme Button
+        self.dark_button = Gtk.CheckButton(group=self.system_button)
+        self.dark_button.add_css_class("dark")
+        self.dark_button.add_css_class("theme-selector")
+        self.dark_button.set_tooltip_text(_("Dark Style"))
+        self.dark_button.connect("toggled", self._on_theme_changed, "dark")
+
+        self.append(self.system_button)
+        self.append(self.light_button)
+        self.append(self.dark_button)
+
+        self._update_button_state()
+
+    def _on_theme_changed(self, button: Gtk.CheckButton, theme: str):
+        if not button.get_active():
+            return
+
+        if theme == "light":
+            self.style_manager.set_color_scheme(Adw.ColorScheme.FORCE_LIGHT)
+        elif theme == "dark":
+            self.style_manager.set_color_scheme(Adw.ColorScheme.FORCE_DARK)
+        else:
+            self.style_manager.set_color_scheme(Adw.ColorScheme.DEFAULT)
+
+        self.settings_manager.set("gtk_theme", theme)
+
+    def _update_button_state(self):
+        current_theme = self.settings_manager.get("gtk_theme", "default")
+        if current_theme == "light":
+            self.light_button.set_active(True)
+        elif current_theme == "dark":
+            self.dark_button.set_active(True)
+        else:
+            self.system_button.set_active(True)
+
+
+class FontSizerWidget(Gtk.CenterBox):
+    """Custom widget for changing the base font size with a centered layout."""
 
     def __init__(self, parent_window):
-        super().__init__(orientation=Gtk.Orientation.HORIZONTAL, spacing=6)
+        super().__init__()
         self.parent_window = parent_window
+        self.settings_manager = parent_window.settings_manager
 
-        # Add CSS class for styling
-        self.add_css_class("zoom-widget")
+        # --- Center Widget: Zoom Controls ---
+        zoom_controls_box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=20)
+        zoom_controls_box.add_css_class("navigation-sidebar")
 
-        # Zoom out button
-        zoom_out_btn = Gtk.Button(label="âˆ'")
-        zoom_out_btn.add_css_class("flat")
-        zoom_out_btn.connect("clicked", self._on_zoom_out)
+        decrement_btn = Gtk.Button.new_from_icon_name("zoom-out-symbolic")
+        decrement_btn.add_css_class("flat")
+        decrement_btn.connect("clicked", self._on_decrement)
 
-        # Zoom level label
-        self.zoom_label = Gtk.Label(label="100%")
-        self.zoom_label.set_halign(Gtk.Align.CENTER)
+        font_size_button = Gtk.Button()
+        font_size_button.add_css_class("flat")
+        font_size_button.connect("clicked", self._on_reset)
 
-        # Zoom in button
-        zoom_in_btn = Gtk.Button(label="+")
-        zoom_in_btn.add_css_class("flat")
-        zoom_in_btn.connect("clicked", self._on_zoom_in)
+        self.font_size_label = Gtk.Label(label="12 pt")
+        self.font_size_label.set_halign(Gtk.Align.CENTER)
+        self.font_size_label.set_size_request(60, -1)
+        font_size_button.set_child(self.font_size_label)
 
-        # Add to box
-        self.append(zoom_out_btn)
-        self.append(self.zoom_label)
-        self.append(zoom_in_btn)
+        increment_btn = Gtk.Button.new_from_icon_name("zoom-in-symbolic")
+        increment_btn.add_css_class("flat")
+        increment_btn.connect("clicked", self._on_increment)
 
-    def _on_zoom_out(self, button):
-        """Handle zoom out button."""
-        if hasattr(self.parent_window, "activate_action"):
-            self.parent_window.activate_action("zoom-out", None)
+        zoom_controls_box.append(decrement_btn)
+        zoom_controls_box.append(font_size_button)
+        zoom_controls_box.append(increment_btn)
 
-    def _on_zoom_in(self, button):
-        """Handle zoom in button."""
-        if hasattr(self.parent_window, "activate_action"):
-            self.parent_window.activate_action("zoom-in", None)
+        # Set the children of the CenterBox
+        self.set_center_widget(zoom_controls_box)
 
-    def update_zoom_level(self, scale: float):
-        """Update the zoom percentage display."""
-        percentage = int(scale * 100)
-        self.zoom_label.set_text(f"{percentage}%")
+        self.update_display()
+
+    def _parse_font_string(self, font_string: str) -> tuple[str, int]:
+        """Parses a font string like 'Family Name 12' into ('Family Name', 12)."""
+        try:
+            parts = font_string.rsplit(" ", 1)
+            family = parts[0]
+            size = int(parts[1])
+            return family, size
+        except (IndexError, ValueError):
+            return "Monospace", 12
+
+    def _change_font_size(self, delta: int):
+        """Changes the font size by a given delta."""
+        current_font = self.settings_manager.get("font")
+        family, size = self._parse_font_string(current_font)
+        new_size = max(6, min(72, size + delta))
+        new_font_string = f"{family} {new_size}"
+        self.settings_manager.set("font", new_font_string)
+
+    def _on_decrement(self, button):
+        self._change_font_size(-1)
+
+    def _on_increment(self, button):
+        self._change_font_size(1)
+
+    def _on_reset(self, button):
+        default_font = DefaultSettings.get_defaults()["font"]
+        self.settings_manager.set("font", default_font)
+
+    def update_display(self):
+        """Updates the label to show the current font size."""
+        font_string = self.settings_manager.get("font")
+        _family, size = self._parse_font_string(font_string)
+        self.font_size_label.set_text(f"{size} pt")
 
 
 class MainApplicationMenu:
-    """Factory for creating the main application menu."""
+    """Factory for creating the main application popover menu."""
 
     @staticmethod
-    def create_menu(parent_window=None) -> Gio.Menu:
+    def create_main_popover(parent_window) -> tuple[Gtk.Popover, FontSizerWidget]:
         """
-        Create the main application menu structure.
+        Creates a Gtk.Popover with a modern layout for the main menu.
+
+        Args:
+            parent_window: The main CommTerminalWindow instance.
 
         Returns:
-            Gio.Menu object for the main menu
+            A tuple containing the configured Gtk.Popover and the FontSizerWidget instance.
         """
-        main_menu = Gio.Menu()
+        popover = Gtk.Popover()
+        main_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=0)
+        main_box.add_css_class("main-menu-popover")
+        popover.set_child(main_box)
 
-        # Terminal actions section
-        terminal_section = Gio.Menu()
-        terminal_section.append(_("New Tab"), "win.new-local-tab")
-        terminal_section.append(_("Close Tab"), "win.close-tab")
-        terminal_section.append(_("New Window"), "win.new-window")
-        main_menu.append_section(None, terminal_section)
+        # --- Theme and Font Sizer Section ---
+        theme_selector = ThemeSelectorWidget(parent_window.settings_manager)
+        font_sizer_widget = FontSizerWidget(parent_window)
 
-        # Custom widget like GNOME Console
-        zoom_section = Gio.Menu()
-        zoom_section.append(_("Zoom Out (-)"), "win.zoom-out")
-        zoom_section.append(_("Reset Zoom (100%)"), "win.zoom-reset")
-        zoom_section.append(_("Zoom In (+)"), "win.zoom-in")
-        main_menu.append_section(None, zoom_section)
+        main_box.append(theme_selector)
+        main_box.append(font_sizer_widget)
+        main_box.append(Gtk.Separator(orientation=Gtk.Orientation.HORIZONTAL))
 
-        # Edit actions section
-        edit_section = Gio.Menu()
-        edit_section.append(_("Copy"), "win.copy")
-        edit_section.append(_("Paste"), "win.paste")
-        edit_section.append(_("Select All"), "win.select-all")
-        main_menu.append_section(None, edit_section)
+        # --- Menu Items ---
+        menu_items = [
+            {"label": _("New Window"), "action": "win.new-window"},
+            {"label": _("Preferences"), "action": "win.preferences"},
+            {"label": _("Keyboard Shortcuts"), "action": "win.shortcuts"},
+            {"label": _("About"), "action": "app.about"},
+            "---",
+            {"label": _("Quit"), "action": "app.quit"},
+        ]
 
-        # Settings and help section
-        settings_section = Gio.Menu()
-        settings_section.append(_("Preferences"), "win.preferences")
-        settings_section.append(_("Keyboard Shortcuts"), "win.shortcuts")
-        main_menu.append_section(None, settings_section)
+        # Define which actions should close the popover upon being clicked
+        actions_that_close_menu = {
+            "win.new-window",
+            "win.preferences",
+            "win.shortcuts",
+            "app.about",
+        }
 
-        # Application section
-        app_section = Gio.Menu()
-        app_section.append(_("About"), "app.about")
-        app_section.append(_("Quit"), "app.quit")
-        main_menu.append_section(None, app_section)
+        app = parent_window.get_application()
 
-        return main_menu
+        for item in menu_items:
+            if item == "---":
+                main_box.append(Gtk.Separator(orientation=Gtk.Orientation.HORIZONTAL))
+                main_box.add_css_class("navigation-sidebar")
+            else:
+                button = Gtk.Button()
+                button.set_action_name(item["action"])
+                button.add_css_class("flat")
+                button.add_css_class("body")
+                button.set_halign(Gtk.Align.FILL)
+
+                box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=24)
+                button.set_child(box)
+
+                action_label = Gtk.Label(label=item["label"], xalign=0.0, hexpand=True)
+                box.append(action_label)
+
+                accels = app.get_accels_for_action(item["action"])
+                if accels:
+                    shortcut_label = Gtk.Label(xalign=1.0)
+                    shortcut_label.add_css_class("dim-label")
+                    shortcut_label.set_text(accelerator_to_label(accels[0]))
+                    box.append(shortcut_label)
+
+                # If this button's action should close the menu, connect the signal.
+                if item["action"] in actions_that_close_menu:
+                    button.connect("clicked", lambda b: popover.popdown())
+
+                main_box.append(button)
+
+        return popover, font_sizer_widget
 
 
 def create_session_menu(

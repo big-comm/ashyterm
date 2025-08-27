@@ -269,6 +269,7 @@ class DefaultSettings:
         """
         return {
             # Appearance settings
+            "gtk_theme": "default",  # default, light, dark
             "color_scheme": 0,  # Index in COLOR_SCHEME_MAP
             "transparency": 0,  # Percentage (0-100)
             "font": "Noto Mono Nerd Font Medium 12",

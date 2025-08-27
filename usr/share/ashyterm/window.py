@@ -120,6 +120,7 @@ class CommTerminalWindow(Adw.ApplicationWindow):
         # Track file managers per tab instead of one global instance
         self.tab_file_managers = {}  # tab_page -> FileManager
         self.current_file_manager = None
+        self.font_sizer_widget = None  # To hold the font sizer widget from the menu
 
         # Connect managers
         self.terminal_manager.set_tab_manager(self.tab_manager)
@@ -253,12 +254,12 @@ class CommTerminalWindow(Adw.ApplicationWindow):
                 ("duplicate-session", self._on_duplicate_session),
                 ("rename-session", self._on_rename_session),
                 ("move-session-to-folder", self._on_move_session_to_folder),
-                ("delete-session", self._on_delete_selected_items),  # MODIFIED
+                ("delete-session", self._on_delete_selected_items),
                 # Folder actions
                 ("edit-folder", self._on_edit_folder),
                 ("rename-folder", self._on_rename_folder),
                 ("add-session-to-folder", self._on_add_session_to_folder),
-                ("delete-folder", self._on_delete_selected_items),  # MODIFIED
+                ("delete-folder", self._on_delete_selected_items),
                 # Clipboard actions
                 ("cut-item", self._on_cut_item),
                 ("copy-item", self._on_copy_item),
@@ -349,7 +350,10 @@ class CommTerminalWindow(Adw.ApplicationWindow):
             menu_button = Gtk.MenuButton()
             menu_button.set_icon_name("open-menu-symbolic")
             menu_button.set_tooltip_text(_("Main Menu"))
-            menu_button.set_menu_model(MainApplicationMenu.create_menu())
+            popover, self.font_sizer_widget = MainApplicationMenu.create_main_popover(
+                self
+            )
+            menu_button.set_popover(popover)
             self.header_bar.pack_end(menu_button)
 
             # New tab button
@@ -372,17 +376,57 @@ class CommTerminalWindow(Adw.ApplicationWindow):
             toolbar_view = Adw.ToolbarView()
             toolbar_view.add_css_class("background")
 
-            # Fix CSS conflicts for menu separators after splits
             css = """
-            /* Make header separator rule more specific to avoid affecting menu separators */
+            /* --- Theme Selector CSS --- */
+            .themeselector {
+                margin: 9px;
+            }
+            .themeselector checkbutton {
+                padding: 0;
+                min-height: 44px;
+                min-width: 44px;
+                padding: 1px;
+                background-clip: content-box;
+                border-radius: 9999px;
+                box-shadow: inset 0 0 0 1px @borders;
+            }
+            .themeselector checkbutton.follow:checked,
+            .themeselector checkbutton.light:checked,
+            .themeselector checkbutton.dark:checked {
+                box-shadow: inset 0 0 0 2px @accent_bg_color;
+            }
+            .themeselector checkbutton.follow {
+                background-image: linear-gradient(to bottom right, #fff 49.99%, #202020 50.01%);
+            }
+            .themeselector checkbutton.light {
+                background-color: #fff;
+            }
+            .themeselector checkbutton.dark {
+                background-color: #202020;
+            }
+            .themeselector checkbutton radio {
+                -gtk-icon-source: none;
+                border: none;
+                background: none;
+                box-shadow: none;
+                min-width: 12px;
+                min-height: 12px;
+                transform: translate(27px, 14px);
+                padding: 2px;
+            }
+            .themeselector checkbutton radio:checked {
+                -gtk-icon-source: -gtk-icontheme("object-select-symbolic");
+                background-color: @accent_bg_color;
+                color: @accent_fg_color;
+            }
+            
+            /* --- Other CSS --- */
             .terminal-tab-view headerbar entry,
             .terminal-tab-view headerbar spinbutton,
             .terminal-tab-view headerbar button { 
                 margin-top: -10px; 
                 margin-bottom: -10px; 
             }
-            
-            /* Ensure menu separators always have correct styling */
             popover.menu menuitem separator,
             .terminal-tab-view popover.menu menuitem separator {
                 border-top: 1px solid @borders;
@@ -392,13 +436,10 @@ class CommTerminalWindow(Adw.ApplicationWindow):
                 padding: 0;
                 background: none;
             }
-
-            /* --- DRAG AND DROP VISUAL FEEDBACK --- */
             .drop-target {
                 background-color: alpha(@theme_selected_bg_color, 0.5);
                 border-radius: 6px;
             }
-            /* NEW: CSS rule for session indentation */
             .indented-session {
                 margin-left: 16px;
             }            
@@ -583,10 +624,22 @@ class CommTerminalWindow(Adw.ApplicationWindow):
                 "notify::selected-page", self._on_tab_changed
             )
 
+            # CORREÇÃO: Conectar ao sinal de mudança de configuração da fonte
+            self.settings_manager.add_change_listener(self._on_setting_changed)
+
             self.logger.debug("Callbacks configured")
 
         except Exception as e:
             self.logger.error(f"Callback setup failed: {e}")
+
+    def _on_setting_changed(self, key: str, old_value, new_value):
+        """Handle changes from the settings manager."""
+        if key == "font":
+            # Update all terminals with the new font
+            self.terminal_manager.update_all_terminals()
+            # Update the font sizer widget display
+            if self.font_sizer_widget:
+                self.font_sizer_widget.update_display()
 
     def _setup_window_events(self) -> None:
         """Set up window-level event handlers."""
@@ -761,6 +814,7 @@ class CommTerminalWindow(Adw.ApplicationWindow):
 
             # Update toggle button to reflect current state
             self._sync_toggle_button_state()
+            self._update_font_sizer_widget()
 
         except Exception as e:
             self.logger.error(f"Error in tab changed handler: {e}")
@@ -935,6 +989,7 @@ class CommTerminalWindow(Adw.ApplicationWindow):
 
             # Handle file manager for the focused terminal
             self._handle_file_manager_for_terminal_focus(terminal)
+            self._update_font_sizer_widget()
 
         except Exception as e:
             self.logger.error(f"Terminal focus change handling failed: {e}")
@@ -1331,10 +1386,8 @@ class CommTerminalWindow(Adw.ApplicationWindow):
     def _on_close_tab(self, action, param) -> None:
         """Handle close tab action."""
         try:
-            # Get current page and close it properly
-            current_page = self.tab_manager.get_selected_page()
+            current_page = self.tab_manager.tab_view.get_selected_page()
             if current_page:
-                # This will trigger the proper Adwaita close flow
                 self.tab_manager.tab_view.close_page(current_page)
         except Exception as e:
             self.logger.error(f"Close tab action failed: {e}")
@@ -1430,7 +1483,9 @@ class CommTerminalWindow(Adw.ApplicationWindow):
         """Handle zoom in action."""
         try:
             success = self.tab_manager.zoom_in_current_terminal()
-            if not success:
+            if success:
+                self._update_font_sizer_widget()
+            else:
                 self.logger.debug("Zoom in failed - no terminal available")
         except Exception as e:
             self.logger.error(f"Zoom in action failed: {e}")
@@ -1439,7 +1494,9 @@ class CommTerminalWindow(Adw.ApplicationWindow):
         """Handle zoom out action."""
         try:
             success = self.tab_manager.zoom_out_current_terminal()
-            if not success:
+            if success:
+                self._update_font_sizer_widget()
+            else:
                 self.logger.debug("Zoom out failed - no terminal available")
         except Exception as e:
             self.logger.error(f"Zoom out action failed: {e}")
@@ -1448,10 +1505,19 @@ class CommTerminalWindow(Adw.ApplicationWindow):
         """Handle zoom reset action."""
         try:
             success = self.tab_manager.zoom_reset_current_terminal()
-            if not success:
+            if success:
+                self._update_font_sizer_widget()
+            else:
                 self.logger.debug("Zoom reset failed - no terminal available")
         except Exception as e:
             self.logger.error(f"Zoom reset action failed: {e}")
+
+    def _update_font_sizer_widget(self):
+        """Updates the font sizer widget in the menu to reflect the current font size."""
+        if not self.font_sizer_widget:
+            return
+        # The font size is a global setting, so we just need to update the display
+        self.font_sizer_widget.update_display()
 
     # Action handlers - Session actions
     def _on_edit_session(self, action, param) -> None:
