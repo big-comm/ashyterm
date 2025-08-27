@@ -16,43 +16,34 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: attranslate\n"
 # 
-# File: usr/share/nautilus-python/extensions/comm-ashyterm.py, line: 117
+# File: usr/share/nautilus-python/extensions/ashyterm.py, line: 129
 #: NEEDS WORK
-msgid "Open Remote Ashy Terminal"
-msgstr "원격 애쉬 터미널 열기"
+msgid "Open in Ashy Terminal (SSH)"
+msgstr "Ashy 터미널에서 열기 (SSH)"
 # 
-# File: usr/share/nautilus-python/extensions/comm-ashyterm.py, line: 118
+# File: usr/share/nautilus-python/extensions/ashyterm.py, line: 130
 #: NEEDS WORK
 #, python-brace-format
-msgid "Open Remote Ashy Terminal In {}"
-msgstr "원격 애쉬 터미널 열기 {}"
+msgid "Connect to {} via a new SSH session"
+msgstr "{}에 새 SSH 세션을 통해 연결합니다."
 # 
-# File: usr/share/nautilus-python/extensions/comm_ashyterm_extension.py, line: 61
-# File: usr/share/nautilus-python/extensions/comm_ashyterm_extension.py, line: 79
+# File: usr/share/nautilus-python/extensions/ashyterm.py, line: 139
+# File: usr/share/nautilus-python/extensions/ashyterm.py, line: 149
 #: NEEDS WORK
-msgid "Open Ashy Terminal Here"
-msgstr "애쉬 터미널 열기"
+msgid "Open in Ashy Terminal"
+msgstr "Ashy 터미널에서 열기"
 # 
-# File: usr/share/nautilus-python/extensions/comm-ashyterm.py, line: 125
+# File: usr/share/nautilus-python/extensions/ashyterm.py, line: 140
 #: NEEDS WORK
 #, python-brace-format
-msgid "Open Ashy Terminal In {}"
-msgstr "{}에서 Ashy 터미널 열기"
+msgid "Open the local mount point {}"
+msgstr "로컬 마운트 지점 {} 열기"
 # 
-# File: usr/share/nautilus-python/extensions/comm-ashyterm.py, line: 136
+# File: usr/share/nautilus-python/extensions/ashyterm.py, line: 150
 #: NEEDS WORK
-msgid "Open Remote Ashy Terminal Here"
-msgstr "원격 애쉬 터미널 열기"
-# 
-# File: usr/share/nautilus-python/extensions/comm-ashyterm.py, line: 137
-#: NEEDS WORK
-msgid "Open Remote Ashy Terminal In This Directory"
-msgstr "이 디렉토리에서 원격 애쉬 터미널 열기"
-# 
-# File: usr/share/nautilus-python/extensions/comm-ashyterm.py, line: 143
-#: NEEDS WORK
-msgid "Open Ashy Terminal In This Directory"
-msgstr "이 디렉토리에서 Ashy 터미널 열기"
+#, python-brace-format
+msgid "Open {} in Ashy Terminal"
+msgstr "Ashy 터미널에서 {} 열기"
 # 
 # File: usr/share/ashyterm/sessions/storage.py, line: 78
 #: NEEDS WORK
@@ -584,1098 +575,9 @@ msgstr "경로가 상위 경로와 일치하지 않습니다."
 msgid "Unnamed Folder"
 msgstr "이름 없는 폴더"
 # 
-# File: usr/share/ashyterm/sessions/tree.py, line: 101
+# File: usr/share/ashyterm/sessions/tree.py, line: 96
 #: NEEDS WORK
-#, python-brace-format
-msgid "Initializing {} v{}"
-msgstr "초기화 {} v{}"
-# 
-# File: usr/share/ashyterm/app.py, line: 64
-#: NEEDS WORK
-#, python-brace-format
-msgid "Running on {} platform"
-msgstr "{} 플랫폼에서 실행 중"
-# 
-# File: usr/share/ashyterm/app.py, line: 118
-#: NEEDS WORK
-msgid "Initializing application subsystems"
-msgstr "애플리케이션 하위 시스템 초기화 중"
-# 
-# File: usr/share/ashyterm/app.py, line: 121
-#: NEEDS WORK
-msgid "Settings manager initialized"
-msgstr "설정 관리자 초기화됨"
-# 
-# File: usr/share/ashyterm/app.py, line: 125
-# File: usr/share/ashyterm/app.py, line: 431
-#: NEEDS WORK
-msgid "Debug mode enabled"
-msgstr "디버그 모드 활성화됨"
-# 
-# File: usr/share/ashyterm/app.py, line: 130
-#: NEEDS WORK
-msgid "Encryption available but not initialized (may require passphrase)"
-msgstr "암호화 가능하지만 초기화되지 않음(암호 구문이 필요할 수 있음)"
-# 
-# File: usr/share/ashyterm/app.py, line: 132
-#: NEEDS WORK
-msgid "Encryption system initialized"
-msgstr "암호화 시스템 초기화됨"
-# 
-# File: usr/share/ashyterm/app.py, line: 134
-#: NEEDS WORK
-#, python-brace-format
-msgid "Encryption initialization failed: {}"
-msgstr "암호화 초기화 실패: {}"
-# 
-# File: usr/share/ashyterm/app.py, line: 136
-#: NEEDS WORK
-msgid "Encryption not available - passwords will be stored as plain text"
-msgstr "암호화 사용 불가 - 비밀번호는 일반 텍스트로 저장됩니다"
-# 
-# File: usr/share/ashyterm/app.py, line: 145
-#: NEEDS WORK
-msgid "Automatic backups enabled"
-msgstr "자동 백업 활성화"
-# 
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
-# 
-# File: usr/share/ashyterm/__init__.py, line: 470
-# File: usr/share/ashyterm/app.py, line: 149
-#: NEEDS WORK
-msgid "Backup system initialized"
-msgstr "백업 시스템이 초기화되었습니다."
-# 
-# File: usr/share/ashyterm/app.py, line: 152
-#: NEEDS WORK
-#, python-brace-format
-msgid "Failed to initialize backup system: {}"
-msgstr "백업 시스템 초기화 실패: {}"
-# 
-# File: usr/share/ashyterm/app.py, line: 158
-#: NEEDS WORK
-msgid "Security auditor initialized"
-msgstr "보안 감사자가 초기화되었습니다"
-# 
-# File: usr/share/ashyterm/app.py, line: 160
-#: NEEDS WORK
-#, python-brace-format
-msgid "Security auditor initialization failed: {}"
-msgstr "보안 감사기 초기화 실패: {}"
-# 
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
-# 
-# File: usr/share/ashyterm/app.py, line: 164
-# File: usr/share/ashyterm/main.py, line: 399
-#: NEEDS WORK
-msgid "VTE library not available"
-msgstr "VTE 라이브러리를 사용할 수 없습니다."
-# 
-# File: usr/share/ashyterm/app.py, line: 168
-#: NEEDS WORK
-msgid "All subsystems initialized successfully"
-msgstr "모든 하위 시스템이 성공적으로 초기화되었습니다."
-# 
-# File: usr/share/ashyterm/app.py, line: 172
-#: NEEDS WORK
-#, python-brace-format
-msgid "Subsystem initialization failed: {}"
-msgstr "서브시스템 초기화 실패: {}"
-# 
-# File: usr/share/ashyterm/app.py, line: 173
-#: NEEDS WORK
-msgid "application initialization"
-msgstr "애플리케이션 초기화"
-# 
-# File: usr/share/ashyterm/app.py, line: 179
-#: NEEDS WORK
-msgid "Application startup initiated"
-msgstr "애플리케이션 시작이 시작되었습니다"
-# 
-# File: usr/share/ashyterm/app.py, line: 183
-#: NEEDS WORK
-msgid "Failed to initialize application subsystems"
-msgstr "애플리케이션 하위 시스템 초기화에 실패했습니다."
-# 
-# File: usr/share/ashyterm/app.py, line: 192
-#: NEEDS WORK
-msgid "Application startup completed successfully"
-msgstr "애플리케이션 시작이 성공적으로 완료되었습니다."
-# 
-# File: usr/share/ashyterm/app.py, line: 195
-#: NEEDS WORK
-#, python-brace-format
-msgid "Application startup failed: {}"
-msgstr "애플리케이션 시작 실패: {}"
-# 
-# File: usr/share/ashyterm/app.py, line: 206
-#: NEEDS WORK
-msgid "Automatic startup backup is disabled in settings."
-msgstr "자동 시작 백업이 설정에서 비활성화되었습니다."
-# 
-# File: usr/share/ashyterm/app.py, line: 217
-#: NEEDS WORK
-msgid "Performing startup backup asynchronously"
-msgstr "시작 백업을 비동기적으로 수행 중"
-# 
-# File: usr/share/ashyterm/app.py, line: 222
-#: NEEDS WORK
-msgid "Automatic startup backup"
-msgstr "자동 시작 백업"
-# 
-# File: usr/share/ashyterm/app.py, line: 228
-#: NEEDS WORK
-#, python-brace-format
-msgid "Startup backup check failed: {}"
-msgstr "시작 백업 확인 실패: {}"
-# 
-# File: usr/share/ashyterm/app.py, line: 248
-#: NEEDS WORK
-msgid "Application actions configured"
-msgstr "애플리케이션 작업 구성됨"
-# 
-# File: usr/share/ashyterm/app.py, line: 251
-#: NEEDS WORK
-#, python-brace-format
-msgid "Failed to setup actions: {}"
-msgstr "작업 설정에 실패했습니다: {}"
-# 
-# File: usr/share/ashyterm/app.py, line: 293
-#: NEEDS WORK
-msgid "Application activation requested"
-msgstr "애플리케이션 활성화 요청됨"
-# 
-# File: usr/share/ashyterm/app.py, line: 297
-#: NEEDS WORK
-msgid "Creating main window"
-msgstr "주 창 만들기"
-# 
-# File: usr/share/ashyterm/app.py, line: 306
-#: NEEDS WORK
-msgid "Application activation completed"
-msgstr "애플리케이션 활성화 완료"
-# 
-# File: usr/share/ashyterm/app.py, line: 309
-#: NEEDS WORK
-#, python-brace-format
-msgid "Application activation failed: {}"
-msgstr "애플리케이션 활성화에 실패했습니다: {}"
-# 
-# File: usr/share/ashyterm/app.py, line: 310
-#: NEEDS WORK
-msgid "Activation Error"
-msgstr "활성화 오류"
-# 
-# File: usr/share/ashyterm/app.py, line: 310
-#: NEEDS WORK
-#, python-brace-format
-msgid "Failed to activate application: {}"
-msgstr "애플리케이션 활성화에 실패했습니다: {}"
-# 
-# File: usr/share/ashyterm/app.py, line: 330
-#: NEEDS WORK
-msgid "Quit action triggered - no SSH sessions"
-msgstr "종료 작업이 트리거되었습니다 - SSH 세션이 없습니다"
-# 
-# File: usr/share/ashyterm/app.py, line: 333
-#: NEEDS WORK
-#, python-brace-format
-msgid "Quit action failed: {}"
-msgstr "종료 작업 실패: {}"
-# 
-# File: usr/share/ashyterm/app.py, line: 332
-# File: usr/share/ashyterm/app.py, line: 333
-#: NEEDS WORK
-#, python-brace-format
-msgid "Failed to open preferences: {}"
-msgstr "환경 설정을 열지 못했습니다: {}"
-# 
-# File: usr/share/ashyterm/app.py, line: 333
-#: NEEDS WORK
-msgid "Preferences Error"
-msgstr "환경 설정 오류"
-# 
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
-# 
-# File: usr/share/ashyterm/__init__.py, line: 62
-# File: usr/share/ashyterm/app.py, line: 350
-#: NEEDS WORK
-msgid "A modern terminal emulator with session management"
-msgstr "세션 관리 기능이 있는 현대적인 터미널 에뮬레이터"
-# 
-# File: usr/share/ashyterm/app.py, line: 354
-#: NEEDS WORK
-#, python-brace-format
-msgid "Platform: {}\n"
-msgstr "플랫폼: {}"
-# 
-# File: usr/share/ashyterm/app.py, line: 355
-#: NEEDS WORK
-#, python-brace-format
-msgid "Architecture: {}\n"
-msgstr "아키텍처: {}"
-# 
-# File: usr/share/ashyterm/app.py, line: 356
-#: NEEDS WORK
-#, python-brace-format
-msgid "Shell: {}"
-msgstr "쉘: {}"
-# 
-# File: usr/share/ashyterm/app.py, line: 362
-#: NEEDS WORK
-#, python-brace-format
-msgid "Failed to show about dialog: {}"
-msgstr "정보 대화 상자를 표시하지 못했습니다: {}"
-# 
-# File: usr/share/ashyterm/app.py, line: 368
-# File: usr/share/ashyterm/app.py, line: 379
-# File: usr/share/ashyterm/app.py, line: 392
-# File: usr/share/ashyterm/app.py, line: 396
-#: NEEDS WORK
-msgid "Backup Error"
-msgstr "백업 오류"
-# 
-# File: usr/share/ashyterm/app.py, line: 368
-# File: usr/share/ashyterm/app.py, line: 402
-#: NEEDS WORK
-msgid "Backup system not available"
-msgstr "백업 시스템을 사용할 수 없습니다."
-# 
-# File: usr/share/ashyterm/app.py, line: 379
-#: NEEDS WORK
-msgid "No files to backup"
-msgstr "백업할 파일이 없습니다"
-# 
-# File: usr/share/ashyterm/app.py, line: 385
-#: NEEDS WORK
-msgid "Manual backup from menu"
-msgstr "메뉴에서 수동 백업"
-# 
-# File: usr/share/ashyterm/app.py, line: 389
-#: NEEDS WORK
-#, python-brace-format
-msgid "Manual backup created: {}"
-msgstr "수동 백업이 생성되었습니다: {}"
-# 
-# File: usr/share/ashyterm/app.py, line: 390
-#: NEEDS WORK
-msgid "Backup Complete"
-msgstr "백업 완료"
-# 
-# File: usr/share/ashyterm/app.py, line: 390
-#: NEEDS WORK
-#, python-brace-format
-msgid "Backup created successfully: {}"
-msgstr "백업이 성공적으로 생성되었습니다: {}"
-# 
-# File: usr/share/ashyterm/app.py, line: 392
-#: NEEDS WORK
-msgid "Failed to create backup"
-msgstr "백업 생성에 실패했습니다"
-# 
-# File: usr/share/ashyterm/app.py, line: 395
-#: NEEDS WORK
-#, python-brace-format
-msgid "Manual backup failed: {}"
-msgstr "수동 백업 실패: {}"
-# 
-# File: usr/share/ashyterm/app.py, line: 396
-#: NEEDS WORK
-#, python-brace-format
-msgid "Backup failed: {}"
-msgstr "백업 실패: {}"
-# 
-# File: usr/share/ashyterm/app.py, line: 402
-# File: usr/share/ashyterm/app.py, line: 416
-#: NEEDS WORK
-msgid "Restore Error"
-msgstr "복원 오류"
-# 
-# File: usr/share/ashyterm/app.py, line: 407
-#: NEEDS WORK
-msgid "No Backups"
-msgstr "백업 없음"
-# 
-# File: usr/share/ashyterm/app.py, line: 407
-#: NEEDS WORK
-msgid "No backups available to restore"
-msgstr "복원할 수 있는 백업이 없습니다."
-# 
-# File: usr/share/ashyterm/app.py, line: 411
-#: NEEDS WORK
-msgid "Backups Available"
-msgstr "백업 가능"
-# 
-# File: usr/share/ashyterm/app.py, line: 412
-#: NEEDS WORK
-#, python-brace-format
-msgid "{} backup(s) available. Use preferences dialog for detailed restore options."
-msgstr "{} 백업이 가능합니다. 자세한 복원 옵션은 환경설정 대화상자를 사용하세요."
-# 
-# File: usr/share/ashyterm/app.py, line: 415
-#: NEEDS WORK
-#, python-brace-format
-msgid "Restore backup action failed: {}"
-msgstr "백업 복원 작업 실패: {}"
-# 
-# File: usr/share/ashyterm/app.py, line: 416
-#: NEEDS WORK
-#, python-brace-format
-msgid "Failed to access backups: {}"
-msgstr "백업에 접근하지 못했습니다: {}"
-# 
-# File: usr/share/ashyterm/app.py, line: 435
-#: NEEDS WORK
-msgid "Debug mode disabled"
-msgstr "디버그 모드 비활성화"
-# 
-# File: usr/share/ashyterm/app.py, line: 440
-#: NEEDS WORK
-#, python-brace-format
-msgid "Failed to toggle debug mode: {}"
-msgstr "디버그 모드를 전환하지 못했습니다: {}"
-# 
-# File: usr/share/ashyterm/app.py, line: 449
-#: NEEDS WORK
-msgid "Log Information"
-msgstr "로그 정보"
-# 
-# File: usr/share/ashyterm/app.py, line: 449
-#: NEEDS WORK
-#, python-brace-format
-msgid "Logs are stored in: {}"
-msgstr "로그는 다음에 저장됩니다: {}"
-# 
-# File: usr/share/ashyterm/app.py, line: 452
-#: NEEDS WORK
-#, python-brace-format
-msgid "Failed to show log info: {}"
-msgstr "로그 정보를 표시하지 못했습니다: {}"
-# 
-# File: usr/share/ashyterm/app.py, line: 484
-#: NEEDS WORK
-#, python-brace-format
-msgid "Failed to check SSH sessions: {}"
-msgstr "SSH 세션 확인 실패: {}"
-# 
-# File: usr/share/ashyterm/app.py, line: 498
-#: NEEDS WORK
-msgid "Close Application"
-msgstr "애플리케이션 닫기"
-# 
-# File: usr/share/ashyterm/app.py, line: 499
-#: NEEDS WORK
-msgid ""
-"There are active SSH connections. Closing will disconnect all sessions.\n"
-"\n"
-"Are you sure you want to close the application?"
-msgstr ""
-"활성 SSH 연결이 있습니다. 닫으면 모든 세션이 끊어집니다.\n"
-"\n"
-"응용 프로그램을 닫으시겠습니까?"
-# 
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 163
-# File: usr/share/ashyterm/ui/dialogs.py, line: 575
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1213
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1957
-# File: usr/share/ashyterm/ui/dialogs.py, line: 2006
-# File: usr/share/ashyterm/window.py, line: 953
-# File: usr/share/ashyterm/window.py, line: 1013
-#: NEEDS WORK
-msgid "Cancel"
-msgstr "취소"
-# 
-# File: usr/share/ashyterm/app.py, line: 503
-#: NEEDS WORK
-msgid "Close All"
-msgstr "모두 닫기"
-# 
-# File: usr/share/ashyterm/app.py, line: 510
-#: NEEDS WORK
-msgid "User confirmed quit with active SSH sessions"
-msgstr "사용자가 활성 SSH 세션으로 종료를 확인했습니다."
-# 
-# File: usr/share/ashyterm/app.py, line: 513
-#: NEEDS WORK
-msgid "User cancelled quit"
-msgstr "사용자가 종료를 취소했습니다."
-# 
-# File: usr/share/ashyterm/app.py, line: 516
-#: NEEDS WORK
-#, python-brace-format
-msgid "SSH close confirmation response failed: {}"
-msgstr "SSH 종료 확인 응답 실패: {}"
-# 
-# File: usr/share/ashyterm/app.py, line: 523
-#: NEEDS WORK
-#, python-brace-format
-msgid "SSH close confirmation dialog failed: {}"
-msgstr "SSH 종료 확인 대화상자 실패: {}"
-# 
-# File: usr/share/ashyterm/app.py, line: 456
-#: NEEDS WORK
-msgid "Application shutdown initiated"
-msgstr "애플리케이션 종료가 시작되었습니다"
-# 
-# File: usr/share/ashyterm/app.py, line: 465
-#: NEEDS WORK
-msgid "Performing graceful shutdown"
-msgstr "우아한 종료 수행 중"
-# 
-# File: usr/share/ashyterm/app.py, line: 471
-#: NEEDS WORK
-msgid "Cleaning up main window"
-msgstr "주 창 정리 중"
-# 
-# File: usr/share/ashyterm/app.py, line: 476
-#: NEEDS WORK
-msgid "Saving settings"
-msgstr "설정 저장"
-# 
-# File: usr/share/ashyterm/app.py, line: 483
-#: NEEDS WORK
-msgid "Graceful shutdown completed"
-msgstr "우아한 종료가 완료되었습니다."
-# 
-# File: usr/share/ashyterm/app.py, line: 486
-#: NEEDS WORK
-#, python-brace-format
-msgid "Error during graceful shutdown: {}"
-msgstr "우아한 종료 중 오류: {}"
-# 
-# File: usr/share/ashyterm/app.py, line: 510
-#: NEEDS WORK
-msgid "Performing shutdown backup"
-msgstr "종료 백업 수행 중"
-# 
-# File: usr/share/ashyterm/app.py, line: 514
-#: NEEDS WORK
-msgid "Automatic backup on exit"
-msgstr "종료 시 자동 백업"
-# 
-# File: usr/share/ashyterm/app.py, line: 518
-#: NEEDS WORK
-#, python-brace-format
-msgid "Shutdown backup failed: {}"
-msgstr "백업 종료 실패: {}"
-# 
-# File: usr/share/ashyterm/app.py, line: 523
-#: NEEDS WORK
-msgid "Emergency cleanup on exit"
-msgstr "종료 시 긴급 정리"
-# 
-# File: usr/share/ashyterm/app.py, line: 530
-#: NEEDS WORK
-msgid "Startup Error"
-msgstr "시작 오류"
-# 
-# File: usr/share/ashyterm/app.py, line: 531
-#: NEEDS WORK
-#, python-brace-format
-msgid "Application failed to start: {}"
-msgstr "애플리케이션이 시작되지 않았습니다: {}"
-# 
-# File: usr/share/ashyterm/app.py, line: 551
-#: NEEDS WORK
-#, python-brace-format
-msgid "Failed to show error dialog: {}"
-msgstr "오류 대화 상자를 표시하지 못했습니다: {}"
-# 
-# File: usr/share/ashyterm/app.py, line: 565
-#: NEEDS WORK
-#, python-brace-format
-msgid "Failed to show info dialog: {}"
-msgstr "정보 대화 상자를 표시하지 못했습니다: {}"
-# 
-# File: usr/share/ashyterm/app.py, line: 576
-#: NEEDS WORK
-#, python-brace-format
-msgid "Failed to refresh keyboard shortcuts: {}"
-msgstr "키보드 단축키를 새로 고치는 데 실패했습니다: {}"
-# 
-# File: usr/share/ashyterm/app.py, line: 584
-#: NEEDS WORK
-msgid "Main window registered"
-msgstr "주 창 등록됨"
-# 
-# File: usr/share/ashyterm/app.py, line: 592
-#: NEEDS WORK
-msgid "Main window unregistered"
-msgstr "주 창 등록되지 않음"
-# 
-# File: usr/share/ashyterm/app.py, line: 683
-#: NEEDS WORK
-msgid "New window created successfully"
-msgstr "새 창이 성공적으로 생성되었습니다."
-# 
-# File: usr/share/ashyterm/app.py, line: 611
-#: NEEDS WORK
-#, python-brace-format
-msgid "Failed to create new window: {}"
-msgstr "새 창을 만드는 데 실패했습니다: {}"
-# 
-# File: usr/share/ashyterm/utils/__init__.py, line: 87
-# File: usr/share/ashyterm/utils/__init__.py, line: 104
-#: NEEDS WORK
-msgid "unnamed"
-msgstr "이름 없음"
-# 
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1624
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1907
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1983
-# File: usr/share/ashyterm/utils.py, line: 238
-#: NEEDS WORK
-msgid "None"
-msgstr "None"
-# 
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
-# 
-# File: usr/share/ashyterm/utils/security.py, line: 843
-# File: usr/share/ashyterm/utils.py, line: 442
-#: NEEDS WORK
-#, python-brace-format
-msgid "Invalid session type: {}"
-msgstr "유효하지 않은 세션 유형: {}"
-# 
-# File: usr/share/ashyterm/utils.py, line: 447
-#: NEEDS WORK
-msgid "SSH host cannot be empty"
-msgstr "SSH 호스트는 비어 있을 수 없습니다."
-# 
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
-# 
-# File: usr/share/ashyterm/utils/security.py, line: 508
-# File: usr/share/ashyterm/utils/security.py, line: 796
-# File: usr/share/ashyterm/utils.py, line: 449
-#: NEEDS WORK
-#, python-brace-format
-msgid "Invalid hostname format: {}"
-msgstr "잘못된 호스트 이름 형식: {}"
-# 
-# File: usr/share/ashyterm/utils.py, line: 461
-#: NEEDS WORK
-#, python-brace-format
-msgid "Error during session validation: {}"
-msgstr "세션 검증 중 오류: {}"
-# 
-# File: usr/share/ashyterm/utils.py, line: 510
-#: NEEDS WORK
-msgid "unknown"
-msgstr "알 수 없음"
-# 
-# File: usr/share/ashyterm/utils.py, line: 539
-#: NEEDS WORK
-msgid "Global error handling configured"
-msgstr "전역 오류 처리 구성됨"
-# 
-# File: usr/share/ashyterm/utils.py, line: 576
-#: NEEDS WORK
-msgid "unknown_session"
-msgstr "알 수 없는 세션"
-# 
-# File: usr/share/ashyterm/utils.py, line: 586
-#: NEEDS WORK
-msgid "Using deprecated generate_unique_name_legacy(). Use generate_unique_name() instead."
-msgstr "사용 중단된 generate_unique_name_legacy()를 사용하고 있습니다. 대신 generate_unique_name()을 사용하세요."
-# 
-# File: usr/share/ashyterm/utils.py, line: 601
-#: NEEDS WORK
-#, python-brace-format
-msgid "Utils module initialized on {} platform"
-msgstr "유틸리티 모듈이 {} 플랫폼에서 초기화되었습니다."
-# 
-# File: usr/share/ashyterm/utils.py, line: 605
-#: NEEDS WORK
-msgid "SSH command not found - SSH functionality will be limited"
-msgstr "SSH 명령을 찾을 수 없습니다 - SSH 기능이 제한됩니다"
-# 
-# File: usr/share/ashyterm/utils.py, line: 608
-#: NEEDS WORK
-msgid "sshpass not available - password SSH authentication will require manual input"
-msgstr "sshpass를 사용할 수 없습니다 - 비밀번호 SSH 인증은 수동 입력이 필요합니다"
-# 
-# File: usr/share/ashyterm/utils.py, line: 610
-#: NEEDS WORK
-msgid "Utils module initialization completed"
-msgstr "유틸리티 모듈 초기화 완료"
-# 
-# File: usr/share/ashyterm/utils.py, line: 621
-#: NEEDS WORK
-#, python-brace-format
-msgid "Warning: Utils module initialization failed: {}"
-msgstr "경고: 유틸리티 모듈 초기화 실패: {}"
-# 
-# File: usr/share/ashyterm/window.py, line: 140
-# File: usr/share/ashyterm/window.py, line: 644
-#: NEEDS WORK
-msgid "Terminal Error"
-msgstr "터미널 오류"
-# 
-# File: usr/share/ashyterm/window.py, line: 141
-#: NEEDS WORK
-msgid "Failed to create initial terminal. Check system configuration."
-msgstr "초기 터미널을 생성하지 못했습니다. 시스템 구성을 확인하십시오."
-# 
-# File: usr/share/ashyterm/window.py, line: 145
-#: NEEDS WORK
-msgid "Initialization Error"
-msgstr "초기화 오류"
-# 
-# File: usr/share/ashyterm/window.py, line: 146
-#: NEEDS WORK
-#, python-brace-format
-msgid "Failed to initialize terminal: {error}"
-msgstr "터미널 초기화 실패: {error}"
-# 
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1606
-# File: usr/share/ashyterm/window.py, line: 248
-#: NEEDS WORK
-msgid "Toggle Sidebar"
-msgstr "사이드바 전환"
-# 
-# File: usr/share/ashyterm/window.py, line: 268
-#: NEEDS WORK
-msgid "Main Menu"
-msgstr "메인 메뉴"
-# 
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
-# 
-# File: usr/share/ashyterm/ui/menus.py, line: 144
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1596
-#: NEEDS WORK
-msgid "New Tab"
-msgstr "새 탭"
-# 
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
-# 
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
-# 
-# File: usr/share/ashyterm/ui/menus.py, line: 60
-# File: usr/share/ashyterm/ui/menus.py, line: 92
-# File: usr/share/ashyterm/ui/dialogs.py, line: 223
-# File: usr/share/ashyterm/window.py, line: 325
-#: NEEDS WORK
-msgid "Add Session"
-msgstr "세션 추가"
-# 
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
-# 
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
-# 
-# File: usr/share/ashyterm/ui/menus.py, line: 93
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1056
-# File: usr/share/ashyterm/window.py, line: 331
-#: NEEDS WORK
-msgid "Add Folder"
-msgstr "폴더 추가"
-# 
-# File: usr/share/ashyterm/window.py, line: 337
-#: NEEDS WORK
-msgid "Edit Selected"
-msgstr "선택한 항목 편집"
-# 
-# File: usr/share/ashyterm/window.py, line: 343
-#: NEEDS WORK
-msgid "Remove Selected"
-msgstr "선택 항목 제거"
-# 
-# File: usr/share/ashyterm/window.py, line: 424
-#: NEEDS WORK
-msgid "Data Loading Error"
-msgstr "데이터 로딩 오류"
-# 
-# File: usr/share/ashyterm/window.py, line: 425
-#: NEEDS WORK
-msgid "Failed to load saved sessions and folders. Starting with empty configuration."
-msgstr "저장된 세션과 폴더를 로드하지 못했습니다. 빈 구성으로 시작합니다."
-# 
-# File: usr/share/ashyterm/window.py, line: 502
-#: NEEDS WORK
-msgid "Window close request received"
-msgstr "창 닫기 요청이 수신되었습니다"
-# 
-# File: usr/share/ashyterm/window.py, line: 507
-#: NEEDS WORK
-msgid "Force closing - allowing window to close"
-msgstr "강제 종료 - 창 닫기 허용"
-# 
-# File: usr/share/ashyterm/window.py, line: 515
-#: NEEDS WORK
-msgid "Showing SSH close confirmation dialog"
-msgstr "SSH 종료 확인 대화상자 표시"
-# 
-# File: usr/share/ashyterm/window.py, line: 520
-#: NEEDS WORK
-msgid "No SSH sessions, proceeding with normal close"
-msgstr "SSH 세션이 없습니다. 정상적으로 종료합니다."
-# 
-# File: usr/share/ashyterm/window.py, line: 511
-#: NEEDS WORK
-msgid "Window cleanup completed"
-msgstr "창 정리 완료"
-# 
-# File: usr/share/ashyterm/window.py, line: 515
-#: NEEDS WORK
-#, python-brace-format
-msgid "Window close handling failed: {}"
-msgstr "창 닫기 처리 실패: {}"
-# 
-# File: usr/share/ashyterm/window.py, line: 544
-#: NEEDS WORK
-msgid "This window has active SSH connections:"
-msgstr "이 창에는 활성 SSH 연결이 있습니다:"
-# 
-# File: usr/share/ashyterm/window.py, line: 545
-#: NEEDS WORK
-msgid "Closing will disconnect these sessions."
-msgstr "닫기를 하면 이러한 세션이 연결이 끊어집니다."
-# 
-# File: usr/share/ashyterm/window.py, line: 546
-#: NEEDS WORK
-msgid "Are you sure you want to close this window?"
-msgstr "이 창을 닫으시겠습니까?"
-# 
-# File: usr/share/ashyterm/window.py, line: 528
-# File: usr/share/ashyterm/window.py, line: 533
-#: NEEDS WORK
-msgid "Close Window"
-msgstr "창 닫기"
-# 
-# File: usr/share/ashyterm/window.py, line: 540
-#: NEEDS WORK
-msgid "User confirmed window close with active SSH sessions"
-msgstr "사용자가 활성 SSH 세션으로 창 닫기를 확인했습니다."
-# 
-# File: usr/share/ashyterm/window.py, line: 544
-#: NEEDS WORK
-msgid "User cancelled window close"
-msgstr "사용자가 창 닫기를 취소했습니다."
-# 
-# File: usr/share/ashyterm/window.py, line: 547
-#: NEEDS WORK
-#, python-brace-format
-msgid "Window SSH close confirmation response failed: {}"
-msgstr "창 SSH 종료 확인 응답 실패: {}"
-# 
-# File: usr/share/ashyterm/window.py, line: 554
-#: NEEDS WORK
-#, python-brace-format
-msgid "Window SSH close confirmation dialog failed: {}"
-msgstr "창 SSH 종료 확인 대화상자 실패: {}"
-# 
-# File: usr/share/ashyterm/window.py, line: 550
-#: NEEDS WORK
-#, python-brace-format
-msgid ""
-"Session validation failed:\n"
-"{errors}"
-msgstr ""
-"세션 유효성 검사 실패:  \n"
-"{errors}"
-# 
-# File: usr/share/ashyterm/window.py, line: 551
-#: NEEDS WORK
-msgid "Session Validation Error"
-msgstr "세션 유효성 검사 오류"
-# 
-# File: usr/share/ashyterm/window.py, line: 575
-#: NEEDS WORK
-msgid "Terminal Creation Failed"
-msgstr "터미널 생성 실패"
-# 
-# File: usr/share/ashyterm/window.py, line: 576
-#: NEEDS WORK
-msgid "Could not create terminal for this session."
-msgstr "이 세션에 대한 터미널을 생성할 수 없습니다."
-# 
-# File: usr/share/ashyterm/window.py, line: 579
-# File: usr/share/ashyterm/window.py, line: 640
-#: NEEDS WORK
-msgid "VTE Not Available"
-msgstr "VTE를 사용할 수 없습니다."
-# 
-# File: usr/share/ashyterm/window.py, line: 580
-#: NEEDS WORK
-msgid "Cannot open session - VTE library not installed."
-msgstr "세션을 열 수 없습니다 - VTE 라이브러리가 설치되지 않았습니다."
-# 
-# File: usr/share/ashyterm/window.py, line: 583
-#: NEEDS WORK
-msgid "Session Error"
-msgstr "세션 오류"
-# 
-# File: usr/share/ashyterm/window.py, line: 583
-#: NEEDS WORK
-#, python-brace-format
-msgid "Failed to activate session: {error}"
-msgstr "세션 활성화에 실패했습니다: {error}"
-# 
-# File: usr/share/ashyterm/window.py, line: 641
-#: NEEDS WORK
-msgid "Cannot create terminal - VTE library not installed."
-msgstr "터미널을 생성할 수 없습니다 - VTE 라이브러리가 설치되어 있지 않습니다."
-# 
-# File: usr/share/ashyterm/window.py, line: 644
-#: NEEDS WORK
-#, python-brace-format
-msgid "Failed to create new tab: {error}"
-msgstr "새 탭을 만들지 못했습니다: {error}"
-# 
-# File: usr/share/ashyterm/window.py, line: 842
-# File: usr/share/ashyterm/window.py, line: 852
-#: NEEDS WORK
-msgid "Split Error"
-msgstr "분할 오류"
-# 
-# File: usr/share/ashyterm/window.py, line: 694
-# File: usr/share/ashyterm/window.py, line: 743
-# File: usr/share/ashyterm/window.py, line: 903
-#: NEEDS WORK
-msgid "Edit Error"
-msgstr "편집 오류"
-# 
-# File: usr/share/ashyterm/window.py, line: 694
-#: NEEDS WORK
-#, python-brace-format
-msgid "Failed to edit session: {error}"
-msgstr "세션 편집 실패: {error}"
-# 
-# File: usr/share/ashyterm/window.py, line: 706
-#: NEEDS WORK
-msgid "Duplicate Error"
-msgstr "중복 오류"
-# 
-# File: usr/share/ashyterm/window.py, line: 715
-# File: usr/share/ashyterm/window.py, line: 752
-#: NEEDS WORK
-msgid "Rename Error"
-msgstr "이름 바꾸기 오류"
-# 
-# File: usr/share/ashyterm/window.py, line: 715
-#: NEEDS WORK
-#, python-brace-format
-msgid "Failed to rename session: {error}"
-msgstr "세션 이름 변경 실패: {error}"
-# 
-# File: usr/share/ashyterm/window.py, line: 724
-#: NEEDS WORK
-msgid "Move Error"
-msgstr "이동 오류"
-# 
-# File: usr/share/ashyterm/window.py, line: 733
-# File: usr/share/ashyterm/window.py, line: 771
-#: NEEDS WORK
-msgid "Delete Error"
-msgstr "삭제 오류"
-# 
-# File: usr/share/ashyterm/window.py, line: 733
-#: NEEDS WORK
-#, python-brace-format
-msgid "Failed to delete session: {error}"
-msgstr "세션 삭제 실패: {error}"
-# 
-# File: usr/share/ashyterm/window.py, line: 743
-#: NEEDS WORK
-#, python-brace-format
-msgid "Failed to edit folder: {error}"
-msgstr "폴더 편집에 실패했습니다: {error}"
-# 
-# File: usr/share/ashyterm/window.py, line: 752
-#: NEEDS WORK
-#, python-brace-format
-msgid "Failed to rename folder: {error}"
-msgstr "폴더 이름 변경 실패: {error}"
-# 
-# File: usr/share/ashyterm/window.py, line: 758
-# File: usr/share/ashyterm/window.py, line: 875
-#: NEEDS WORK
-msgid "New Session"
-msgstr "새 세션"
-# 
-# File: usr/share/ashyterm/window.py, line: 762
-#: NEEDS WORK
-msgid "Add Error"
-msgstr "오류 추가"
-# 
-# File: usr/share/ashyterm/window.py, line: 762
-#: NEEDS WORK
-#, python-brace-format
-msgid "Failed to add session to folder: {error}"
-msgstr "폴더에 세션을 추가하지 못했습니다: {error}"
-# 
-# File: usr/share/ashyterm/window.py, line: 771
-#: NEEDS WORK
-#, python-brace-format
-msgid "Failed to delete folder: {error}"
-msgstr "폴더를 삭제하지 못했습니다: {error}"
-# 
-# File: usr/share/ashyterm/window.py, line: 835
-#: NEEDS WORK
-#, python-brace-format
-msgid "Failed to open preferences: {error}"
-msgstr "환경 설정을 열지 못했습니다: {error}"
-# 
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
-# 
-# File: usr/share/ashyterm/ui/menus.py, line: 211
-# File: usr/share/ashyterm/window.py, line: 909
-# File: usr/share/ashyterm/window.py, line: 960
-#: NEEDS WORK
-msgid "Keyboard Shortcuts"
-msgstr "키보드 단축키"
-# 
-# File: usr/share/ashyterm/window.py, line: 857
-#: NEEDS WORK
-msgid "Terminal"
-msgstr "터미널"
-# 
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
-# 
-# File: usr/share/ashyterm/ui/menus.py, line: 145
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1597
-#: NEEDS WORK
-msgid "Close Tab"
-msgstr "탭 닫기"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1607
-#: NEEDS WORK
-msgid "New Window"
-msgstr "새 창"
-# 
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
-# 
-# File: usr/share/ashyterm/ui/menus.py, line: 30
-# File: usr/share/ashyterm/ui/menus.py, line: 66
-# File: usr/share/ashyterm/ui/menus.py, line: 117
-# File: usr/share/ashyterm/ui/menus.py, line: 153
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1598
-#: NEEDS WORK
-msgid "Copy"
-msgstr "복사"
-# 
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
-# 
-# File: usr/share/ashyterm/ui/menus.py, line: 69
-# File: usr/share/ashyterm/ui/menus.py, line: 118
-# File: usr/share/ashyterm/ui/menus.py, line: 154
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1599
-#: NEEDS WORK
-msgid "Paste"
-msgstr "붙여넣기"
-# 
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
-# 
-# File: usr/share/ashyterm/ui/menus.py, line: 119
-# File: usr/share/ashyterm/ui/menus.py, line: 155
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1600
-#: NEEDS WORK
-msgid "Select All"
-msgstr "모두 선택"
-# 
-# File: usr/share/ashyterm/window.py, line: 936
-#: NEEDS WORK
-msgid "Application"
-msgstr "애플리케이션"
-# 
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
-# 
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
-# 
-# File: usr/share/ashyterm/ui/menus.py, line: 157
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1390
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1604
-# File: usr/share/ashyterm/window.py, line: 261
-#: NEEDS WORK
-msgid "Preferences"
-msgstr "환경 설정"
-# 
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
-# 
-# File: usr/share/ashyterm/ui/menus.py, line: 217
-# File: usr/share/ashyterm/window.py, line: 942
-#: NEEDS WORK
-msgid "Quit"
-msgstr "종료"
-# 
-# File: usr/share/ashyterm/window.py, line: 961
-#: NEEDS WORK
-#, python-brace-format
-msgid "Failed to open shortcuts window: {error}"
-msgstr "단축키 창을 열지 못했습니다: {error}"
-# 
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
-# 
-# File: usr/share/ashyterm/ui/menus.py, line: 143
-# File: usr/share/ashyterm/window.py, line: 863
-# File: usr/share/ashyterm/window.py, line: 913
-# File: usr/share/ashyterm/window.py, line: 918
-#: NEEDS WORK
-msgid "Nova Janela"
-msgstr "새 창"
-# 
-# File: usr/share/ashyterm/window.py, line: 974
-#: NEEDS WORK
-msgid "Falha ao criar nova janela"
-msgstr "새 창을 만드는 데 실패했습니다."
-# 
-# File: usr/share/ashyterm/window.py, line: 1168
-#: NEEDS WORK
-msgid "NÃ£o foi possÃ­vel criar uma nova janela"
-msgstr "새 창을 만들 수 없습니다."
-# 
-# File: usr/share/ashyterm/window.py, line: 919
-#: NEEDS WORK
-#, python-brace-format
-msgid "Falha ao criar nova janela: {error}"
-msgstr "새 창을 만드는 데 실패했습니다: {error}"
-# 
-# File: usr/share/ashyterm/window.py, line: 879
-#: NEEDS WORK
-msgid "Add Session Error"
-msgstr "세션 추가 오류"
-# 
-# File: usr/share/ashyterm/window.py, line: 977
-#: NEEDS WORK
-msgid "Failed to create new tab."
-msgstr "새 탭을 만들지 못했습니다."
-# 
-# File: usr/share/ashyterm/window.py, line: 885
-#: NEEDS WORK
-msgid "New Folder"
-msgstr "새 폴더"
-# 
-# File: usr/share/ashyterm/window.py, line: 889
-#: NEEDS WORK
-msgid "Add Folder Error"
-msgstr "폴더 추가 오류"
-# 
-# File: usr/share/ashyterm/window.py, line: 903
-#: NEEDS WORK
-#, python-brace-format
-msgid "Failed to edit selected item: {error}"
-msgstr "선택한 항목을 편집하지 못했습니다: {error}"
-# 
-# File: usr/share/ashyterm/window.py, line: 917
-#: NEEDS WORK
-msgid "Remove Error"
-msgstr "오류 제거"
-# 
-# File: usr/share/ashyterm/window.py, line: 917
-#: NEEDS WORK
-#, python-brace-format
-msgid "Failed to remove selected item: {error}"
-msgstr "선택한 항목을 제거하지 못했습니다: {error}"
-# 
-# File: usr/share/ashyterm/window.py, line: 944
-# File: usr/share/ashyterm/window.py, line: 999
-#: NEEDS WORK
-msgid "Session"
+msgid "Sessions"
 msgstr "세션"
 # 
 # File: usr/share/ashyterm/sessions/tree.py, line: 618
@@ -1733,36 +635,6 @@ msgstr "암호화 초기화 실패: {}"
 msgid "Encryption not available - passwords will be stored as plain text"
 msgstr "암호화 사용 불가 - 비밀번호는 일반 텍스트로 저장됩니다"
 # 
-# File: usr/share/ashyterm/app.py, line: 145
-#: NEEDS WORK
-msgid "Automatic backups enabled"
-msgstr "자동 백업 활성화"
-# 
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
-# 
-# File: usr/share/ashyterm/__init__.py, line: 470
-# File: usr/share/ashyterm/app.py, line: 149
-#: NEEDS WORK
-msgid "Backup system initialized"
-msgstr "백업 시스템이 초기화되었습니다."
-# 
-# File: usr/share/ashyterm/app.py, line: 152
-#: NEEDS WORK
-#, python-brace-format
-msgid "Failed to initialize backup system: {}"
-msgstr "백업 시스템 초기화 실패: {}"
-# 
-# File: usr/share/ashyterm/app.py, line: 158
-#: NEEDS WORK
-msgid "Security auditor initialized"
-msgstr "보안 감사자가 초기화되었습니다"
-# 
-# File: usr/share/ashyterm/app.py, line: 160
-#: NEEDS WORK
-#, python-brace-format
-msgid "Security auditor initialization failed: {}"
-msgstr "보안 감사기 초기화 실패: {}"
-# 
 # #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
 # 
 # File: usr/share/ashyterm/app.py, line: 164
@@ -1771,10 +643,10 @@ msgstr "보안 감사기 초기화 실패: {}"
 msgid "VTE library not available"
 msgstr "VTE 라이브러리를 사용할 수 없습니다."
 # 
-# File: usr/share/ashyterm/app.py, line: 168
+# File: usr/share/ashyterm/app.py, line: 156
 #: NEEDS WORK
-msgid "All subsystems initialized successfully"
-msgstr "모든 하위 시스템이 성공적으로 초기화되었습니다."
+msgid "All essential subsystems initialized successfully"
+msgstr "모든 필수 하위 시스템이 성공적으로 초기화되었습니다."
 # 
 # File: usr/share/ashyterm/app.py, line: 172
 #: NEEDS WORK
@@ -1839,43 +711,6 @@ msgstr "애플리케이션 작업 구성됨"
 #, python-brace-format
 msgid "Failed to setup actions: {}"
 msgstr "작업 설정에 실패했습니다: {}"
-# 
-# File: usr/share/ashyterm/app.py, line: 293
-#: NEEDS WORK
-msgid "Application activation requested"
-msgstr "애플리케이션 활성화 요청됨"
-# 
-# File: usr/share/ashyterm/app.py, line: 297
-#: NEEDS WORK
-msgid "Creating main window"
-msgstr "주 창 만들기"
-# 
-# File: usr/share/ashyterm/app.py, line: 754
-#: NEEDS WORK
-msgid "Presenting existing window"
-msgstr "기존 창 표시"
-# 
-# File: usr/share/ashyterm/app.py, line: 306
-#: NEEDS WORK
-msgid "Application activation completed"
-msgstr "애플리케이션 활성화 완료"
-# 
-# File: usr/share/ashyterm/app.py, line: 309
-#: NEEDS WORK
-#, python-brace-format
-msgid "Application activation failed: {}"
-msgstr "애플리케이션 활성화에 실패했습니다: {}"
-# 
-# File: usr/share/ashyterm/app.py, line: 310
-#: NEEDS WORK
-msgid "Activation Error"
-msgstr "활성화 오류"
-# 
-# File: usr/share/ashyterm/app.py, line: 310
-#: NEEDS WORK
-#, python-brace-format
-msgid "Failed to activate application: {}"
-msgstr "애플리케이션 활성화에 실패했습니다: {}"
 # 
 # File: usr/share/ashyterm/app.py, line: 330
 #: NEEDS WORK
@@ -2210,115 +1045,11 @@ msgstr "주 창 등록됨"
 msgid "Main window unregistered"
 msgstr "주 창 등록되지 않음"
 # 
-# File: usr/share/ashyterm/app.py, line: 647
-#: NEEDS WORK
-#, python-brace-format
-msgid "New window created with working directory: {}"
-msgstr "작업 디렉터리가 설정된 새 창이 생성되었습니다: {}"
-# 
-# File: usr/share/ashyterm/app.py, line: 683
-#: NEEDS WORK
-msgid "New window created successfully"
-msgstr "새 창이 성공적으로 생성되었습니다."
-# 
 # File: usr/share/ashyterm/app.py, line: 611
 #: NEEDS WORK
 #, python-brace-format
 msgid "Failed to create new window: {}"
 msgstr "새 창을 만드는 데 실패했습니다: {}"
-# 
-# File: usr/share/ashyterm/utils/__init__.py, line: 87
-# File: usr/share/ashyterm/utils/__init__.py, line: 104
-#: NEEDS WORK
-msgid "unnamed"
-msgstr "이름 없음"
-# 
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1624
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1907
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1983
-# File: usr/share/ashyterm/utils.py, line: 238
-#: NEEDS WORK
-msgid "None"
-msgstr "None"
-# 
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
-# 
-# File: usr/share/ashyterm/utils/security.py, line: 843
-# File: usr/share/ashyterm/utils.py, line: 442
-#: NEEDS WORK
-#, python-brace-format
-msgid "Invalid session type: {}"
-msgstr "유효하지 않은 세션 유형: {}"
-# 
-# File: usr/share/ashyterm/utils.py, line: 447
-#: NEEDS WORK
-msgid "SSH host cannot be empty"
-msgstr "SSH 호스트는 비어 있을 수 없습니다."
-# 
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
-# 
-# File: usr/share/ashyterm/utils/security.py, line: 508
-# File: usr/share/ashyterm/utils/security.py, line: 796
-# File: usr/share/ashyterm/utils.py, line: 449
-#: NEEDS WORK
-#, python-brace-format
-msgid "Invalid hostname format: {}"
-msgstr "잘못된 호스트 이름 형식: {}"
-# 
-# File: usr/share/ashyterm/utils.py, line: 461
-#: NEEDS WORK
-#, python-brace-format
-msgid "Error during session validation: {}"
-msgstr "세션 검증 중 오류: {}"
-# 
-# File: usr/share/ashyterm/utils.py, line: 510
-#: NEEDS WORK
-msgid "unknown"
-msgstr "알 수 없음"
-# 
-# File: usr/share/ashyterm/utils.py, line: 539
-#: NEEDS WORK
-msgid "Global error handling configured"
-msgstr "전역 오류 처리 구성됨"
-# 
-# File: usr/share/ashyterm/utils.py, line: 576
-#: NEEDS WORK
-msgid "unknown_session"
-msgstr "알 수 없는 세션"
-# 
-# File: usr/share/ashyterm/utils.py, line: 586
-#: NEEDS WORK
-msgid "Using deprecated generate_unique_name_legacy(). Use generate_unique_name() instead."
-msgstr "사용 중단된 generate_unique_name_legacy()를 사용하고 있습니다. 대신 generate_unique_name()을 사용하세요."
-# 
-# File: usr/share/ashyterm/utils.py, line: 601
-#: NEEDS WORK
-#, python-brace-format
-msgid "Utils module initialized on {} platform"
-msgstr "유틸리티 모듈이 {} 플랫폼에서 초기화되었습니다."
-# 
-# File: usr/share/ashyterm/utils.py, line: 605
-#: NEEDS WORK
-msgid "SSH command not found - SSH functionality will be limited"
-msgstr "SSH 명령을 찾을 수 없습니다 - SSH 기능이 제한됩니다"
-# 
-# File: usr/share/ashyterm/utils.py, line: 608
-#: NEEDS WORK
-msgid "sshpass not available - password SSH authentication will require manual input"
-msgstr "sshpass를 사용할 수 없습니다 - 비밀번호 SSH 인증은 수동 입력이 필요합니다"
-# 
-# File: usr/share/ashyterm/utils.py, line: 610
-#: NEEDS WORK
-msgid "Utils module initialization completed"
-msgstr "유틸리티 모듈 초기화 완료"
-# 
-# File: usr/share/ashyterm/utils.py, line: 621
-#: NEEDS WORK
-#, python-brace-format
-msgid "Warning: Utils module initialization failed: {}"
-msgstr "경고: 유틸리티 모듈 초기화 실패: {}"
 # 
 # File: usr/share/ashyterm/terminal/tabs.py, line: 489
 #: NEEDS WORK
@@ -2354,6 +1085,11 @@ msgstr "터미널 초기화 실패: {error}"
 #: NEEDS WORK
 msgid "Toggle Sidebar"
 msgstr "사이드바 전환"
+# 
+# File: usr/share/ashyterm/window.py, line: 344
+#: NEEDS WORK
+msgid "File Manager"
+msgstr "파일 관리자"
 # 
 # File: usr/share/ashyterm/window.py, line: 268
 #: NEEDS WORK
@@ -2843,16 +1579,6 @@ msgstr "\"{name}의 새 이름을 입력하세요:\""
 msgid "Rename"
 msgstr "이름 바꾸기"
 # 
-# File: usr/share/ashyterm/window.py, line: 994
-#: NEEDS WORK
-msgid "Move Session"
-msgstr "세션 이동"
-# 
-# File: usr/share/ashyterm/window.py, line: 994
-#: NEEDS WORK
-msgid "Move session functionality will be implemented in folder selection dialog."
-msgstr "세션 이동 기능이 폴더 선택 대화상자에 구현될 것입니다."
-# 
 # File: usr/share/ashyterm/window.py, line: 1450
 #: NEEDS WORK
 msgid "Delete Item"
@@ -2914,6 +1640,92 @@ msgstr "삭제"
 #: NEEDS WORK
 msgid "OK"
 msgstr "확인"
+# 
+# File: usr/share/ashyterm/ui/ssh_dialogs.py, line: 51
+#: NEEDS WORK
+msgid "SSH Connection Timeout"
+msgstr "SSH 연결 시간 초과"
+# 
+# File: usr/share/ashyterm/ui/ssh_dialogs.py, line: 55
+#: NEEDS WORK
+#, python-brace-format
+msgid "The SSH connection attempt timed out after {seconds} seconds."
+msgstr "SSH 연결 시도가 {seconds}초 후에 시간 초과되었습니다."
+# 
+# File: usr/share/ashyterm/ui/ssh_dialogs.py, line: 59
+#: NEEDS WORK
+msgid "Connection details:"
+msgstr "연결 세부정보:"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 446
+#: NEEDS WORK
+msgid "Username"
+msgstr "사용자 이름"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 429
+# File: usr/share/ashyterm/ui/dialogs.py, line: 894
+#: NEEDS WORK
+msgid "Host"
+msgstr "호스트"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 464
+#: NEEDS WORK
+msgid "Port"
+msgstr "포트"
+# 
+# File: usr/share/ashyterm/ui/ssh_dialogs.py, line: 71
+#: NEEDS WORK
+msgid "Remote path"
+msgstr "원격 경로"
+# 
+# File: usr/share/ashyterm/ui/ssh_dialogs.py, line: 76
+#: NEEDS WORK
+msgid "Please check your network connection and verify the server is accessible."
+msgstr "네트워크 연결을 확인하고 서버에 접근할 수 있는지 확인하십시오."
+# 
+# File: usr/share/ashyterm/ui/ssh_dialogs.py, line: 83
+# File: usr/share/ashyterm/ui/ssh_dialogs.py, line: 239
+#: NEEDS WORK
+msgid "Close"
+msgstr "닫기"
+# 
+# File: usr/share/ashyterm/ui/ssh_dialogs.py, line: 84
+#: NEEDS WORK
+msgid "Retry Connection"
+msgstr "연결 재시도"
+# 
+# File: usr/share/ashyterm/ui/ssh_dialogs.py, line: 160
+#: NEEDS WORK
+msgid "SSH Authentication Required"
+msgstr "SSH 인증 필요"
+# 
+# File: usr/share/ashyterm/ui/ssh_dialogs.py, line: 162
+#: NEEDS WORK
+#, python-brace-format
+msgid "Please enter the password for {target_display}"
+msgstr "{target_display}의 비밀번호를 입력해 주세요."
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 467
+# File: usr/share/ashyterm/ui/dialogs.py, line: 533
+#: NEEDS WORK
+msgid "Password"
+msgstr "비밀번호"
+# 
+# File: usr/share/ashyterm/ui/ssh_dialogs.py, line: 177
+#: NEEDS WORK
+msgid "Connect"
+msgstr "연결"
+# 
+# File: usr/share/ashyterm/ui/ssh_dialogs.py, line: 206
+#: NEEDS WORK
+msgid "SSH Connection Failed"
+msgstr "SSH 연결 실패"
+# 
+# File: usr/share/ashyterm/ui/ssh_dialogs.py, line: 207
+#: NEEDS WORK
+#, python-brace-format
+msgid "Could not connect to session '{session_name}'."
+msgstr "세션 '{session_name}'에 연결할 수 없습니다."
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 164
 #: NEEDS WORK
@@ -3011,12 +1823,6 @@ msgstr "SSH 구성"
 msgid "Configure connection details for SSH sessions"
 msgstr "SSH 세션에 대한 연결 세부정보 구성"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 429
-# File: usr/share/ashyterm/ui/dialogs.py, line: 894
-#: NEEDS WORK
-msgid "Host"
-msgstr "호스트"
-# 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 430
 #: NEEDS WORK
 msgid "Hostname or IP address of the remote server"
@@ -3027,11 +1833,6 @@ msgstr "원격 서버의 호스트 이름 또는 IP 주소"
 msgid "example.com or 192.168.1.100"
 msgstr "example.com 또는 192.168.1.100"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 446
-#: NEEDS WORK
-msgid "Username"
-msgstr "사용자 이름"
-# 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 447
 #: NEEDS WORK
 msgid "Username for SSH authentication (optional)"
@@ -3041,11 +1842,6 @@ msgstr "SSH 인증을 위한 사용자 이름(선택 사항)"
 #: NEEDS WORK
 msgid "username"
 msgstr "사용자 이름"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 464
-#: NEEDS WORK
-msgid "Port"
-msgstr "포트"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 465
 #: NEEDS WORK
@@ -3066,12 +1862,6 @@ msgstr "인증 방법 선택"
 #: NEEDS WORK
 msgid "SSH Key"
 msgstr "SSH 키"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 467
-# File: usr/share/ashyterm/ui/dialogs.py, line: 533
-#: NEEDS WORK
-msgid "Password"
-msgstr "비밀번호"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 494
 #: NEEDS WORK
@@ -3214,47 +2004,6 @@ msgstr "연결 실패"
 #: NEEDS WORK
 msgid "Could not connect to the SSH server."
 msgstr "SSH 서버에 연결할 수 없습니다."
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 774
-#: NEEDS WORK
-#, python-brace-format
-msgid ""
-"Connection test failed:\n"
-"{}"
-msgstr ""
-"연결 테스트 실패:  \n"
-"{}"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 775
-#: NEEDS WORK
-msgid "Connection Test Failed"
-msgstr "연결 테스트 실패"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 781
-#: NEEDS WORK
-msgid "Connection Test"
-msgstr "연결 테스트"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 782
-#: NEEDS WORK
-msgid ""
-"SSH connection parameters appear valid.\n"
-"\n"
-"Note: Actual connection testing will be implemented in a future version."
-msgstr ""
-"SSH 연결 매개변수가 유효한 것으로 보입니다.\n"
-"\n"
-"참고: 실제 연결 테스트는 향후 버전에서 구현될 예정입니다."
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 789
-#: NEEDS WORK
-msgid "Test Error"
-msgstr "테스트 오류"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 789
-#: NEEDS WORK
-msgid "Connection test failed"
-msgstr "연결 테스트 실패"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 796
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1252
@@ -3530,6 +2279,26 @@ msgstr "인터페이스 동작"
 msgid "Configure application interface behavior"
 msgstr "애플리케이션 인터페이스 동작 구성"
 # 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1698
+#: NEEDS WORK
+msgid "When opening a new instance"
+msgstr "새 인스턴스를 열 때"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1699
+#: NEEDS WORK
+msgid "Choose whether to open a new tab or a new window"
+msgstr "새 탭 또는 새 창을 열지 선택하세요."
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1702
+#: NEEDS WORK
+msgid "Open in a new tab"
+msgstr "새 탭에서 열기"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1703
+#: NEEDS WORK
+msgid "Open in a new window"
+msgstr "새 창에서 열기"
+# 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1552
 #: NEEDS WORK
 msgid "Confirm Application Exit"
@@ -3579,6 +2348,16 @@ msgstr "애플리케이션 작업을 위한 키보드 단축키"
 #: NEEDS WORK
 msgid "Quit Application"
 msgstr "애플리케이션 종료"
+# 
+# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1624
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1907
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1983
+# File: usr/share/ashyterm/utils.py, line: 238
+#: NEEDS WORK
+msgid "None"
+msgstr "None"
 # 
 # #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
 # 
@@ -3792,6 +2571,11 @@ msgstr "재설정 실패"
 msgid "Failed to reset settings: {}"
 msgstr "설정 초기화 실패: {}"
 # 
+# File: usr/share/ashyterm/window.py, line: 994
+#: NEEDS WORK
+msgid "Move Session"
+msgstr "세션 이동"
+# 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 2183
 #: NEEDS WORK
 msgid "Select Destination"
@@ -3894,6 +2678,323 @@ msgstr "세로로 나누기"
 msgid "Close Pane"
 msgstr "패널 닫기"
 # 
+# File: usr/share/ashyterm/ui/menus.py, line: 290
+#: NEEDS WORK
+msgid "Change Permissions"
+msgstr "권한 변경"
+# 
+# File: usr/share/ashyterm/ui/menus.py, line: 296
+#: NEEDS WORK
+msgid "Download File"
+msgstr "파일 다운로드"
+# 
+# File: usr/share/ashyterm/ui/menus.py, line: 299
+#: NEEDS WORK
+msgid "Edit with Local App"
+msgstr "로컬 앱으로 편집"
+# 
+# File: usr/share/ashyterm/ui/menus.py, line: 302
+#: NEEDS WORK
+msgid "Upload Files Here"
+msgstr "파일 업로드 여기"
+# 
+# File: usr/share/ashyterm/filemanager/manager.py, line: 182
+# File: usr/share/ashyterm/filemanager/manager.py, line: 608
+#: NEEDS WORK
+msgid "Refresh"
+msgstr "새로 고침"
+# 
+# File: usr/share/ashyterm/filemanager/manager.py, line: 188
+#: NEEDS WORK
+msgid "Show hidden files"
+msgstr "숨김 파일 표시"
+# 
+# File: usr/share/ashyterm/filemanager/manager.py, line: 197
+#: NEEDS WORK
+msgid "Filter..."
+msgstr "필터..."
+# 
+# File: usr/share/ashyterm/filemanager/manager.py, line: 203
+#: NEEDS WORK
+msgid "Transfer History"
+msgstr "전송 기록"
+# 
+# File: usr/share/ashyterm/filemanager/manager.py, line: 209
+#: NEEDS WORK
+msgid "Upload Files"
+msgstr "파일 업로드"
+# 
+# File: usr/share/ashyterm/filemanager/manager.py, line: 366
+#: NEEDS WORK
+msgid "Name"
+msgstr "이름"
+# 
+# File: usr/share/ashyterm/filemanager/manager.py, line: 375
+#: NEEDS WORK
+msgid "Size"
+msgstr "크기"
+# 
+# File: usr/share/ashyterm/filemanager/manager.py, line: 380
+#: NEEDS WORK
+msgid "Date Modified"
+msgstr "수정 날짜"
+# 
+# File: usr/share/ashyterm/filemanager/manager.py, line: 388
+# File: usr/share/ashyterm/filemanager/manager.py, line: 641
+# File: usr/share/ashyterm/filemanager/manager.py, line: 700
+#: NEEDS WORK
+msgid "Permissions"
+msgstr "권한"
+# 
+# File: usr/share/ashyterm/filemanager/manager.py, line: 396
+# File: usr/share/ashyterm/filemanager/manager.py, line: 709
+#: NEEDS WORK
+msgid "Owner"
+msgstr "소유자"
+# 
+# File: usr/share/ashyterm/filemanager/manager.py, line: 404
+# File: usr/share/ashyterm/filemanager/manager.py, line: 723
+#: NEEDS WORK
+msgid "Group"
+msgstr "그룹"
+# 
+# File: usr/share/ashyterm/filemanager/manager.py, line: 532
+#: NEEDS WORK
+msgid "Loading..."
+msgstr "로딩 중..."
+# 
+# File: usr/share/ashyterm/filemanager/manager.py, line: 577
+#: NEEDS WORK
+msgid "Filter files..."
+msgstr "파일 필터링..."
+# 
+# File: usr/share/ashyterm/filemanager/manager.py, line: 630
+#: NEEDS WORK
+msgid "Open/Edit"
+msgstr "열기/편집"
+# 
+# File: usr/share/ashyterm/filemanager/manager.py, line: 631
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1051
+#: NEEDS WORK
+msgid "Open With..."
+msgstr "열기..."
+# 
+# File: usr/share/ashyterm/filemanager/manager.py, line: 638
+#: NEEDS WORK
+msgid "Download"
+msgstr "다운로드"
+# 
+# File: usr/share/ashyterm/filemanager/manager.py, line: 672
+#: NEEDS WORK
+msgid "Delete File"
+msgstr "파일 삭제"
+# 
+# File: usr/share/ashyterm/filemanager/manager.py, line: 674
+#: NEEDS WORK
+#, python-brace-format
+msgid ""
+"Are you sure you want to permanently delete '{name}'?\n"
+"\n"
+"This action cannot be undone."
+msgstr ""
+"'{name}'을(를) 영구적으로 삭제하시겠습니까?\n"
+"\n"
+"이 작업은 실행 취소할 수 없습니다."
+# 
+# File: usr/share/ashyterm/filemanager/manager.py, line: 691
+#: NEEDS WORK
+msgid "Delete command sent to terminal"
+msgstr "터미널에 삭제 명령이 전송되었습니다."
+# 
+# File: usr/share/ashyterm/filemanager/manager.py, line: 701
+#: NEEDS WORK
+#, python-brace-format
+msgid ""
+"Set file permissions for: {name}\n"
+"Current: {perms}"
+msgstr ""
+"파일 권한 설정: {name}  \n"
+"현재: {perms}"
+# 
+# File: usr/share/ashyterm/filemanager/manager.py, line: 712
+# File: usr/share/ashyterm/filemanager/manager.py, line: 726
+# File: usr/share/ashyterm/filemanager/manager.py, line: 740
+#: NEEDS WORK
+msgid "Read"
+msgstr "읽기"
+# 
+# File: usr/share/ashyterm/filemanager/manager.py, line: 713
+# File: usr/share/ashyterm/filemanager/manager.py, line: 727
+# File: usr/share/ashyterm/filemanager/manager.py, line: 741
+#: NEEDS WORK
+msgid "Write"
+msgstr "작성하다"
+# 
+# File: usr/share/ashyterm/filemanager/manager.py, line: 714
+# File: usr/share/ashyterm/filemanager/manager.py, line: 728
+# File: usr/share/ashyterm/filemanager/manager.py, line: 742
+#: NEEDS WORK
+msgid "Execute"
+msgstr "실행"
+# 
+# File: usr/share/ashyterm/filemanager/manager.py, line: 737
+#: NEEDS WORK
+msgid "Others"
+msgstr "기타"
+# 
+# File: usr/share/ashyterm/filemanager/manager.py, line: 772
+#: NEEDS WORK
+msgid "Apply"
+msgstr "적용"
+# 
+# File: usr/share/ashyterm/filemanager/manager.py, line: 785
+#: NEEDS WORK
+msgid "Chmod command sent to terminal"
+msgstr "터미널에 전송된 Chmod 명령"
+# 
+# File: usr/share/ashyterm/filemanager/manager.py, line: 826
+#: NEEDS WORK
+msgid "Save File As..."
+msgstr "다른 이름으로 저장..."
+# 
+# File: usr/share/ashyterm/filemanager/manager.py, line: 855
+# File: usr/share/ashyterm/filemanager/manager.py, line: 889
+#: NEEDS WORK
+msgid "Error"
+msgstr "오류"
+# 
+# File: usr/share/ashyterm/filemanager/manager.py, line: 859
+#: NEEDS WORK
+msgid "Upload File(s) to This Folder"
+msgstr "이 폴더에 파일 업로드"
+# 
+# File: usr/share/ashyterm/filemanager/manager.py, line: 861
+#: NEEDS WORK
+msgid "Upload"
+msgstr "업로드"
+# 
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1040
+#: NEEDS WORK
+msgid "Transfer cancelled."
+msgstr "전송이 취소되었습니다."
+# 
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1092
+#: NEEDS WORK
+msgid "Failed to open file."
+msgstr "파일을 열지 못했습니다."
+# 
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1165
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1202
+#: NEEDS WORK
+msgid "Ashy Terminal"
+msgstr "애쉬 터미널"
+# 
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1167
+#: NEEDS WORK
+msgid "File is open. Saving it will upload changes back to the server."
+msgstr "파일이 열려 있습니다. 저장하면 변경 사항이 서버에 업로드됩니다."
+# 
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1204
+#: NEEDS WORK
+msgid "Upload Complete"
+msgstr "업로드 완료"
+# 
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1206
+#: NEEDS WORK
+#, python-brace-format
+msgid "'{filename}' has been saved to the server."
+msgstr "'{filename}'이(가) 서버에 저장되었습니다."
+# 
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1211
+#: NEEDS WORK
+msgid "Upload Failed"
+msgstr "업로드 실패"
+# 
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1213
+#: NEEDS WORK
+#, python-brace-format
+msgid "Could not save '{filename}' to the server: {error}"
+msgstr "'{filename}'을(를) 서버에 저장할 수 없습니다: {error}"
+# 
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1251
+#: NEEDS WORK
+#, python-brace-format
+msgid "Enter a new name for '{name}'"
+msgstr "'{name}'에 대한 새 이름을 입력하세요."
+# 
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1274
+#: NEEDS WORK
+msgid "Rename command sent to terminal"
+msgstr "터미널에 전송된 이름 바꾸기 명령"
+# 
+# File: usr/share/ashyterm/filemanager/operations.py, line: 113
+#: NEEDS WORK
+msgid "No session context for file operation."
+msgstr "파일 작업을 위한 세션 컨텍스트가 없습니다."
+# 
+# File: usr/share/ashyterm/filemanager/operations.py, line: 146
+#: NEEDS WORK
+msgid "Command timed out."
+msgstr "명령이 시간 초과되었습니다."
+# 
+# File: usr/share/ashyterm/filemanager/operations.py, line: 149
+#: NEEDS WORK
+msgid "Unknown session type."
+msgstr "알 수 없는 세션 유형."
+# 
+# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 69
+#: NEEDS WORK
+msgid "Cancel transfer"
+msgstr "전송 취소"
+# 
+# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 76
+#: NEEDS WORK
+msgid "Retry transfer"
+msgstr "전송 재시도"
+# 
+# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 216
+#: NEEDS WORK
+msgid "Transfer Manager"
+msgstr "전송 관리자"
+# 
+# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 239
+# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 348
+#: NEEDS WORK
+msgid "Clear History"
+msgstr "기록 지우기"
+# 
+# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 244
+#: NEEDS WORK
+msgid "Cancel All"
+msgstr "모두 취소"
+# 
+# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 257
+#: NEEDS WORK
+msgid "No Transfers"
+msgstr "전송 없음"
+# 
+# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 258
+#: NEEDS WORK
+msgid "Active and past transfers will appear here."
+msgstr "활성 및 과거 전송이 여기에 표시됩니다."
+# 
+# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 340
+#: NEEDS WORK
+msgid "Clear Transfer History?"
+msgstr "전송 기록 지우기?"
+# 
+# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 342
+#: NEEDS WORK
+msgid ""
+"This action cannot be undone and will remove all completed, failed, and cancelled transfers from "
+"the list."
+msgstr "이 작업은 실행 취소할 수 없으며 목록에서 모든 완료된, 실패한 및 취소된 전송을 제거합니다."
+# 
+# File: usr/share/ashyterm/filemanager/transfer_manager.py, line: 273
+#: NEEDS WORK
+msgid "Cancel All Transfers"
+msgstr "모든 전송 취소"
+# 
 # File: usr/share/ashyterm/utils/exceptions.py, line: 65
 #: NEEDS WORK
 msgid "A terminal error occurred"
@@ -3994,18 +3095,6 @@ msgstr "'{}'에 대한 SSH 연결 실패: {}"
 msgid "Could not connect to {}. {}"
 msgstr "{}에 연결할 수 없습니다. {}"
 # 
-# File: usr/share/ashyterm/utils/exceptions.py, line: 159
-#: NEEDS WORK
-#, python-brace-format
-msgid "SSH authentication failed for {}@{} using {}"
-msgstr "SSH 인증이 {}@{}에 대해 {}를 사용하여 실패했습니다."
-# 
-# File: usr/share/ashyterm/utils/exceptions.py, line: 162
-#: NEEDS WORK
-#, python-brace-format
-msgid "Authentication failed for {}@{}"
-msgstr "인증 실패: {}@{}"
-# 
 # File: usr/share/ashyterm/utils/exceptions.py, line: 170
 #: NEEDS WORK
 #, python-brace-format
@@ -4018,18 +3107,6 @@ msgstr "'{}'에 대한 SSH 키 오류: {}"
 msgid "SSH key problem: {}"
 msgstr "SSH 키 문제: {}"
 # 
-# File: usr/share/ashyterm/utils/exceptions.py, line: 190
-#: NEEDS WORK
-#, python-brace-format
-msgid "Session '{}' not found"
-msgstr "세션 '{}'을(를) 찾을 수 없습니다."
-# 
-# File: usr/share/ashyterm/utils/exceptions.py, line: 193
-#: NEEDS WORK
-#, python-brace-format
-msgid "Session '{}' could not be found"
-msgstr "세션 '{}'을(를) 찾을 수 없습니다."
-# 
 # File: usr/share/ashyterm/utils/exceptions.py, line: 201
 #: NEEDS WORK
 #, python-brace-format
@@ -4041,18 +3118,6 @@ msgstr "세션 '{}' 검증 실패: {}"
 #, python-brace-format
 msgid "Session configuration is invalid: {}"
 msgstr "세션 구성은 유효하지 않습니다: {}"
-# 
-# File: usr/share/ashyterm/utils/exceptions.py, line: 212
-#: NEEDS WORK
-#, python-brace-format
-msgid "Session '{}' already exists"
-msgstr "세션 '{}'이(가) 이미 존재합니다."
-# 
-# File: usr/share/ashyterm/utils/exceptions.py, line: 215
-#: NEEDS WORK
-#, python-brace-format
-msgid "A session named '{}' already exists"
-msgstr "'{}'라는 이름의 세션이 이미 존재합니다."
 # 
 # File: usr/share/ashyterm/utils/exceptions.py, line: 232
 #: NEEDS WORK
@@ -4105,18 +3170,6 @@ msgstr "'{}'에 대한 잘못된 구성(값: {}): {}"
 msgid "Configuration error: {}"
 msgstr "구성 오류: {}"
 # 
-# File: usr/share/ashyterm/utils/exceptions.py, line: 287
-#: NEEDS WORK
-#, python-brace-format
-msgid "Required configuration '{}' is missing"
-msgstr "필수 구성 '{}'이(가) 누락되었습니다."
-# 
-# File: usr/share/ashyterm/utils/exceptions.py, line: 290
-#: NEEDS WORK
-#, python-brace-format
-msgid "Required setting '{}' is not configured"
-msgstr "필수 설정 '{}'이(가) 구성되어 있지 않습니다."
-# 
 # File: usr/share/ashyterm/utils/exceptions.py, line: 307
 #: NEEDS WORK
 #, python-brace-format
@@ -4140,17 +3193,6 @@ msgstr "대화 상자 오류 ({}): {}"
 #, python-brace-format
 msgid "Interface error: {}"
 msgstr "인터페이스 오류: {}"
-# 
-# File: usr/share/ashyterm/utils/exceptions.py, line: 332
-#: NEEDS WORK
-#, python-brace-format
-msgid "Menu error ({}): {}"
-msgstr "메뉴 오류 ({}): {}"
-# 
-# File: usr/share/ashyterm/utils/exceptions.py, line: 335
-#: NEEDS WORK
-msgid "Menu operation failed"
-msgstr "메뉴 작업 실패"
 # 
 # File: usr/share/ashyterm/utils/exceptions.py, line: 368
 # File: usr/share/ashyterm/utils/exceptions.py, line: 372
@@ -4207,29 +3249,11 @@ msgstr "'{}' 디렉토리에서 '{}' 작업에 대한 권한이 거부되었습�
 msgid "Permission denied accessing directory {}"
 msgstr "디렉토리 {}에 대한 접근이 거부되었습니다."
 # 
-# File: usr/share/ashyterm/utils/exceptions.py, line: 454
+# File: usr/share/ashyterm/utils/__init__.py, line: 87
+# File: usr/share/ashyterm/utils/__init__.py, line: 104
 #: NEEDS WORK
-#, python-brace-format
-msgid "Connection to '{}' timed out after {} seconds"
-msgstr "'{}'에 대한 연결이 {}초 후에 시간 초과되었습니다."
-# 
-# File: usr/share/ashyterm/utils/exceptions.py, line: 457
-#: NEEDS WORK
-#, python-brace-format
-msgid "Connection to {} timed out"
-msgstr "{}에 대한 연결이 시간 초과되었습니다."
-# 
-# File: usr/share/ashyterm/utils/exceptions.py, line: 465
-#: NEEDS WORK
-#, python-brace-format
-msgid "Host '{}' is unreachable"
-msgstr "호스트 '{}'에 연결할 수 없습니다."
-# 
-# File: usr/share/ashyterm/utils/exceptions.py, line: 468
-#: NEEDS WORK
-#, python-brace-format
-msgid "Cannot reach {}"
-msgstr "{}에 도달할 수 없습니다."
+msgid "unnamed"
+msgstr "이름 없음"
 # 
 # File: usr/share/ashyterm/utils/security.py, line: 302
 #: NEEDS WORK
@@ -4328,6 +3352,16 @@ msgstr "파일에 지나치게 관대한 권한이 설정되어 있습니다."
 #, python-brace-format
 msgid "Error checking file permissions: {}"
 msgstr "파일 권한 확인 오류: {}"
+# 
+# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
+# 
+# File: usr/share/ashyterm/utils/security.py, line: 508
+# File: usr/share/ashyterm/utils/security.py, line: 796
+# File: usr/share/ashyterm/utils.py, line: 449
+#: NEEDS WORK
+#, python-brace-format
+msgid "Invalid hostname format: {}"
+msgstr "잘못된 호스트 이름 형식: {}"
 # 
 # File: usr/share/ashyterm/utils/security.py, line: 509
 #: NEEDS WORK
@@ -4523,6 +3557,15 @@ msgstr "유효하지 않은 인증 유형: {}"
 msgid "Invalid or unsafe folder path"
 msgstr "유효하지 않거나 안전하지 않은 폴더 경로"
 # 
+# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
+# 
+# File: usr/share/ashyterm/utils/security.py, line: 843
+# File: usr/share/ashyterm/utils.py, line: 442
+#: NEEDS WORK
+#, python-brace-format
+msgid "Invalid session type: {}"
+msgstr "유효하지 않은 세션 유형: {}"
+# 
 # File: usr/share/ashyterm/utils/security.py, line: 850
 #: NEEDS WORK
 #, python-brace-format
@@ -4540,6 +3583,33 @@ msgstr "보안: {}"
 #, python-brace-format
 msgid "Security validation error: {}"
 msgstr "보안 검증 오류: {}"
+# 
+# File: usr/share/ashyterm/utils.py, line: 510
+#: NEEDS WORK
+msgid "unknown"
+msgstr "알 수 없음"
+# 
+# File: usr/share/ashyterm/utils.py, line: 539
+#: NEEDS WORK
+msgid "Global error handling configured"
+msgstr "전역 오류 처리 구성됨"
+# 
+# File: usr/share/ashyterm/utils.py, line: 601
+#: NEEDS WORK
+#, python-brace-format
+msgid "Utils module initialized on {} platform"
+msgstr "유틸리티 모듈이 {} 플랫폼에서 초기화되었습니다."
+# 
+# File: usr/share/ashyterm/utils.py, line: 605
+#: NEEDS WORK
+msgid "SSH command not found - SSH functionality will be limited"
+msgstr "SSH 명령을 찾을 수 없습니다 - SSH 기능이 제한됩니다"
+# 
+# File: usr/share/ashyterm/utils.py, line: 621
+#: NEEDS WORK
+#, python-brace-format
+msgid "Warning: Utils module initialization failed: {}"
+msgstr "경고: 유틸리티 모듈 초기화 실패: {}"
 # 
 # File: usr/share/ashyterm/main.py, line: 86
 #: NEEDS WORK
@@ -4585,7 +3655,22 @@ msgstr "초기 터미널의 작업 디렉토리를 설정합니다."
 msgid "Working directory (positional argument)"
 msgstr "작업 디렉토리 (위치 인수)"
 # 
-# File: usr/share/ashyterm/__init__.py, line: 33
+# File: usr/share/ashyterm/main.py, line: 105
 #: NEEDS WORK
-msgid "VTE 3.91 not found. Terminal functionality will be limited."
-msgstr "VTE 3.91을 찾을 수 없습니다. 터미널 기능이 제한됩니다."
+msgid "Execute command in the terminal"
+msgstr "터미널에서 명령 실행"
+# 
+# File: usr/share/ashyterm/main.py, line: 110
+#: NEEDS WORK
+msgid "Close terminal after executing command (only with --execute)"
+msgstr "명령 실행 후 터미널 닫기(오직 --execute와 함께)"
+# 
+# File: usr/share/ashyterm/main.py, line: 115
+#: NEEDS WORK
+msgid "Connect to SSH host with optional user, port, and remote path"
+msgstr "SSH 호스트에 선택적 사용자, 포트 및 원격 경로로 연결"
+# 
+# File: usr/share/ashyterm/main.py, line: 119
+#: NEEDS WORK
+msgid "Convert KIO/GVFS URI path to SSH format"
+msgstr "KIO/GVFS URI 경로를 SSH 형식으로 변환"

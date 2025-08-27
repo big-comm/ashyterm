@@ -16,43 +16,34 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: attranslate\n"
 # 
-# File: usr/share/nautilus-python/extensions/comm-ashyterm.py, line: 117
+# File: usr/share/nautilus-python/extensions/ashyterm.py, line: 129
 #: NEEDS WORK
-msgid "Open Remote Ashy Terminal"
-msgstr "Apri Terminal Remoto Ashy"
+msgid "Open in Ashy Terminal (SSH)"
+msgstr "Apri in Ashy Terminal (SSH)"
 # 
-# File: usr/share/nautilus-python/extensions/comm-ashyterm.py, line: 118
+# File: usr/share/nautilus-python/extensions/ashyterm.py, line: 130
 #: NEEDS WORK
 #, python-brace-format
-msgid "Open Remote Ashy Terminal In {}"
-msgstr "Apri Terminal Remoto Ashy In {}"
+msgid "Connect to {} via a new SSH session"
+msgstr "Connetti a {} tramite una nuova sessione SSH"
 # 
-# File: usr/share/nautilus-python/extensions/comm_ashyterm_extension.py, line: 61
-# File: usr/share/nautilus-python/extensions/comm_ashyterm_extension.py, line: 79
+# File: usr/share/nautilus-python/extensions/ashyterm.py, line: 139
+# File: usr/share/nautilus-python/extensions/ashyterm.py, line: 149
 #: NEEDS WORK
-msgid "Open Ashy Terminal Here"
-msgstr "Apri Terminal Ashy Qui"
+msgid "Open in Ashy Terminal"
+msgstr "Apri in Ashy Terminal"
 # 
-# File: usr/share/nautilus-python/extensions/comm-ashyterm.py, line: 125
+# File: usr/share/nautilus-python/extensions/ashyterm.py, line: 140
 #: NEEDS WORK
 #, python-brace-format
-msgid "Open Ashy Terminal In {}"
-msgstr "Apri Ashy Terminal in {}"
+msgid "Open the local mount point {}"
+msgstr "Apri il punto di montaggio locale {}"
 # 
-# File: usr/share/nautilus-python/extensions/comm-ashyterm.py, line: 136
+# File: usr/share/nautilus-python/extensions/ashyterm.py, line: 150
 #: NEEDS WORK
-msgid "Open Remote Ashy Terminal Here"
-msgstr "Apri Terminale Remoto Ashy Qui"
-# 
-# File: usr/share/nautilus-python/extensions/comm-ashyterm.py, line: 137
-#: NEEDS WORK
-msgid "Open Remote Ashy Terminal In This Directory"
-msgstr "Apri Terminal Remoto Ashy in Questa Directory"
-# 
-# File: usr/share/nautilus-python/extensions/comm-ashyterm.py, line: 143
-#: NEEDS WORK
-msgid "Open Ashy Terminal In This Directory"
-msgstr "Apri Ashy Terminal in questa directory"
+#, python-brace-format
+msgid "Open {} in Ashy Terminal"
+msgstr "Apri {} in Ashy Terminal"
 # 
 # File: usr/share/ashyterm/sessions/storage.py, line: 78
 #: NEEDS WORK
@@ -586,11 +577,10 @@ msgstr "Il percorso non è coerente con il percorso padre."
 msgid "Unnamed Folder"
 msgstr "Cartella senza nome"
 # 
-# File: usr/share/ashyterm/sessions/tree.py, line: 101
+# File: usr/share/ashyterm/sessions/tree.py, line: 96
 #: NEEDS WORK
-#, python-brace-format
-msgid "Initializing {} v{}"
-msgstr "Inizializzazione {} v{}"
+msgid "Sessions"
+msgstr "Sessioni"
 # 
 # File: usr/share/ashyterm/sessions/tree.py, line: 618
 # File: usr/share/ashyterm/sessions/tree.py, line: 623
@@ -647,36 +637,6 @@ msgstr "Inizializzazione della crittografia non riuscita: {}"
 msgid "Encryption not available - passwords will be stored as plain text"
 msgstr "Crittografia non disponibile - le password saranno memorizzate in testo semplice"
 # 
-# File: usr/share/ashyterm/app.py, line: 145
-#: NEEDS WORK
-msgid "Automatic backups enabled"
-msgstr "Backup automatici abilitati"
-# 
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
-# 
-# File: usr/share/ashyterm/__init__.py, line: 470
-# File: usr/share/ashyterm/app.py, line: 149
-#: NEEDS WORK
-msgid "Backup system initialized"
-msgstr "Sistema di backup inizializzato"
-# 
-# File: usr/share/ashyterm/app.py, line: 152
-#: NEEDS WORK
-#, python-brace-format
-msgid "Failed to initialize backup system: {}"
-msgstr "Impossibile inizializzare il sistema di backup: {}"
-# 
-# File: usr/share/ashyterm/app.py, line: 158
-#: NEEDS WORK
-msgid "Security auditor initialized"
-msgstr "Auditor di sicurezza inizializzato"
-# 
-# File: usr/share/ashyterm/app.py, line: 160
-#: NEEDS WORK
-#, python-brace-format
-msgid "Security auditor initialization failed: {}"
-msgstr "Inizializzazione dell'auditore di sicurezza non riuscita: {}"
-# 
 # #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
 # 
 # File: usr/share/ashyterm/app.py, line: 164
@@ -685,10 +645,10 @@ msgstr "Inizializzazione dell'auditore di sicurezza non riuscita: {}"
 msgid "VTE library not available"
 msgstr "Libreria VTE non disponibile"
 # 
-# File: usr/share/ashyterm/app.py, line: 168
+# File: usr/share/ashyterm/app.py, line: 156
 #: NEEDS WORK
-msgid "All subsystems initialized successfully"
-msgstr "Tutti i sottosistemi inizializzati con successo"
+msgid "All essential subsystems initialized successfully"
+msgstr "Tutti i sottosistemi essenziali sono stati inizializzati con successo"
 # 
 # File: usr/share/ashyterm/app.py, line: 172
 #: NEEDS WORK
@@ -753,43 +713,6 @@ msgstr "Azioni dell'applicazione configurate"
 #, python-brace-format
 msgid "Failed to setup actions: {}"
 msgstr "Impossibile configurare le azioni: {}"
-# 
-# File: usr/share/ashyterm/app.py, line: 293
-#: NEEDS WORK
-msgid "Application activation requested"
-msgstr "Attivazione dell'applicazione richiesta"
-# 
-# File: usr/share/ashyterm/app.py, line: 297
-#: NEEDS WORK
-msgid "Creating main window"
-msgstr "Creazione della finestra principale"
-# 
-# File: usr/share/ashyterm/app.py, line: 754
-#: NEEDS WORK
-msgid "Presenting existing window"
-msgstr "Presentazione della finestra esistente"
-# 
-# File: usr/share/ashyterm/app.py, line: 306
-#: NEEDS WORK
-msgid "Application activation completed"
-msgstr "Attivazione dell'applicazione completata"
-# 
-# File: usr/share/ashyterm/app.py, line: 309
-#: NEEDS WORK
-#, python-brace-format
-msgid "Application activation failed: {}"
-msgstr "Attivazione dell'applicazione non riuscita: {}"
-# 
-# File: usr/share/ashyterm/app.py, line: 310
-#: NEEDS WORK
-msgid "Activation Error"
-msgstr "Errore di attivazione"
-# 
-# File: usr/share/ashyterm/app.py, line: 310
-#: NEEDS WORK
-#, python-brace-format
-msgid "Failed to activate application: {}"
-msgstr "Impossibile attivare l'applicazione: {}"
 # 
 # File: usr/share/ashyterm/app.py, line: 330
 #: NEEDS WORK
@@ -1126,115 +1049,11 @@ msgstr "Finestra principale registrata"
 msgid "Main window unregistered"
 msgstr "Finestra principale non registrata"
 # 
-# File: usr/share/ashyterm/app.py, line: 647
-#: NEEDS WORK
-#, python-brace-format
-msgid "New window created with working directory: {}"
-msgstr "Nuova finestra creata con la directory di lavoro: {}"
-# 
-# File: usr/share/ashyterm/app.py, line: 683
-#: NEEDS WORK
-msgid "New window created successfully"
-msgstr "Nuova finestra creata con successo"
-# 
 # File: usr/share/ashyterm/app.py, line: 611
 #: NEEDS WORK
 #, python-brace-format
 msgid "Failed to create new window: {}"
 msgstr "Impossibile creare una nuova finestra: {}"
-# 
-# File: usr/share/ashyterm/utils/__init__.py, line: 87
-# File: usr/share/ashyterm/utils/__init__.py, line: 104
-#: NEEDS WORK
-msgid "unnamed"
-msgstr "senza nome"
-# 
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1624
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1907
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1983
-# File: usr/share/ashyterm/utils.py, line: 238
-#: NEEDS WORK
-msgid "None"
-msgstr "None"
-# 
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
-# 
-# File: usr/share/ashyterm/utils/security.py, line: 843
-# File: usr/share/ashyterm/utils.py, line: 442
-#: NEEDS WORK
-#, python-brace-format
-msgid "Invalid session type: {}"
-msgstr "Tipo di sessione non valido: {}"
-# 
-# File: usr/share/ashyterm/utils.py, line: 447
-#: NEEDS WORK
-msgid "SSH host cannot be empty"
-msgstr "L'host SSH non può essere vuoto"
-# 
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
-# 
-# File: usr/share/ashyterm/utils/security.py, line: 508
-# File: usr/share/ashyterm/utils/security.py, line: 796
-# File: usr/share/ashyterm/utils.py, line: 449
-#: NEEDS WORK
-#, python-brace-format
-msgid "Invalid hostname format: {}"
-msgstr "Formato del nome host non valido: {}"
-# 
-# File: usr/share/ashyterm/utils.py, line: 461
-#: NEEDS WORK
-#, python-brace-format
-msgid "Error during session validation: {}"
-msgstr "Erro durante la convalida della sessione: {}"
-# 
-# File: usr/share/ashyterm/utils.py, line: 510
-#: NEEDS WORK
-msgid "unknown"
-msgstr "sconosciuto"
-# 
-# File: usr/share/ashyterm/utils.py, line: 539
-#: NEEDS WORK
-msgid "Global error handling configured"
-msgstr "Gestione globale degli errori configurata"
-# 
-# File: usr/share/ashyterm/utils.py, line: 576
-#: NEEDS WORK
-msgid "unknown_session"
-msgstr "sessione_sconosciuta"
-# 
-# File: usr/share/ashyterm/utils.py, line: 586
-#: NEEDS WORK
-msgid "Using deprecated generate_unique_name_legacy(). Use generate_unique_name() instead."
-msgstr "Utilizzando generate_unique_name_legacy() deprecato. Utilizzare invece generate_unique_name()."
-# 
-# File: usr/share/ashyterm/utils.py, line: 601
-#: NEEDS WORK
-#, python-brace-format
-msgid "Utils module initialized on {} platform"
-msgstr "Modulo Utils inizializzato sulla piattaforma {}"
-# 
-# File: usr/share/ashyterm/utils.py, line: 605
-#: NEEDS WORK
-msgid "SSH command not found - SSH functionality will be limited"
-msgstr "Comando SSH non trovato - La funzionalità SSH sarà limitata"
-# 
-# File: usr/share/ashyterm/utils.py, line: 608
-#: NEEDS WORK
-msgid "sshpass not available - password SSH authentication will require manual input"
-msgstr "sshpass non disponibile - l'autenticazione SSH con password richiederà un input manuale"
-# 
-# File: usr/share/ashyterm/utils.py, line: 610
-#: NEEDS WORK
-msgid "Utils module initialization completed"
-msgstr "Inizializzazione del modulo Utils completata"
-# 
-# File: usr/share/ashyterm/utils.py, line: 621
-#: NEEDS WORK
-#, python-brace-format
-msgid "Warning: Utils module initialization failed: {}"
-msgstr "Avviso: Inizializzazione del modulo Utils non riuscita: {}"
 # 
 # File: usr/share/ashyterm/terminal/tabs.py, line: 489
 #: NEEDS WORK
@@ -1270,6 +1089,11 @@ msgstr "Impossibile inizializzare il terminale: {error}"
 #: NEEDS WORK
 msgid "Toggle Sidebar"
 msgstr "Attiva/Disattiva Barra Laterale"
+# 
+# File: usr/share/ashyterm/window.py, line: 344
+#: NEEDS WORK
+msgid "File Manager"
+msgstr "Gestore File"
 # 
 # File: usr/share/ashyterm/window.py, line: 268
 #: NEEDS WORK
@@ -1759,18 +1583,6 @@ msgstr "Inserisci un nuovo nome per \"{name}\":"
 msgid "Rename"
 msgstr "Rinomina"
 # 
-# File: usr/share/ashyterm/window.py, line: 994
-#: NEEDS WORK
-msgid "Move Session"
-msgstr "Sposta Sessione"
-# 
-# File: usr/share/ashyterm/window.py, line: 994
-#: NEEDS WORK
-msgid "Move session functionality will be implemented in folder selection dialog."
-msgstr ""
-"La funzionalità di spostamento della sessione sarà implementata nella finestra di selezione della "
-"cartella."
-# 
 # File: usr/share/ashyterm/window.py, line: 1450
 #: NEEDS WORK
 msgid "Delete Item"
@@ -1834,6 +1646,92 @@ msgstr "Elimina"
 #: NEEDS WORK
 msgid "OK"
 msgstr "OK"
+# 
+# File: usr/share/ashyterm/ui/ssh_dialogs.py, line: 51
+#: NEEDS WORK
+msgid "SSH Connection Timeout"
+msgstr "Timeout di connessione SSH"
+# 
+# File: usr/share/ashyterm/ui/ssh_dialogs.py, line: 55
+#: NEEDS WORK
+#, python-brace-format
+msgid "The SSH connection attempt timed out after {seconds} seconds."
+msgstr "Il tentativo di connessione SSH è scaduto dopo {seconds} secondi."
+# 
+# File: usr/share/ashyterm/ui/ssh_dialogs.py, line: 59
+#: NEEDS WORK
+msgid "Connection details:"
+msgstr "Dettagli di connessione:"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 446
+#: NEEDS WORK
+msgid "Username"
+msgstr "Nome utente"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 429
+# File: usr/share/ashyterm/ui/dialogs.py, line: 894
+#: NEEDS WORK
+msgid "Host"
+msgstr "Host"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 464
+#: NEEDS WORK
+msgid "Port"
+msgstr "Porta"
+# 
+# File: usr/share/ashyterm/ui/ssh_dialogs.py, line: 71
+#: NEEDS WORK
+msgid "Remote path"
+msgstr "Percorso remoto"
+# 
+# File: usr/share/ashyterm/ui/ssh_dialogs.py, line: 76
+#: NEEDS WORK
+msgid "Please check your network connection and verify the server is accessible."
+msgstr "Si prega di controllare la connessione di rete e verificare che il server sia accessibile."
+# 
+# File: usr/share/ashyterm/ui/ssh_dialogs.py, line: 83
+# File: usr/share/ashyterm/ui/ssh_dialogs.py, line: 239
+#: NEEDS WORK
+msgid "Close"
+msgstr "Chiudi"
+# 
+# File: usr/share/ashyterm/ui/ssh_dialogs.py, line: 84
+#: NEEDS WORK
+msgid "Retry Connection"
+msgstr "Riprova Connessione"
+# 
+# File: usr/share/ashyterm/ui/ssh_dialogs.py, line: 160
+#: NEEDS WORK
+msgid "SSH Authentication Required"
+msgstr "Autenticazione SSH richiesta"
+# 
+# File: usr/share/ashyterm/ui/ssh_dialogs.py, line: 162
+#: NEEDS WORK
+#, python-brace-format
+msgid "Please enter the password for {target_display}"
+msgstr "Inserisci la password per {target_display}"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 467
+# File: usr/share/ashyterm/ui/dialogs.py, line: 533
+#: NEEDS WORK
+msgid "Password"
+msgstr "Password"
+# 
+# File: usr/share/ashyterm/ui/ssh_dialogs.py, line: 177
+#: NEEDS WORK
+msgid "Connect"
+msgstr "Collegare"
+# 
+# File: usr/share/ashyterm/ui/ssh_dialogs.py, line: 206
+#: NEEDS WORK
+msgid "SSH Connection Failed"
+msgstr "Connessione SSH fallita"
+# 
+# File: usr/share/ashyterm/ui/ssh_dialogs.py, line: 207
+#: NEEDS WORK
+#, python-brace-format
+msgid "Could not connect to session '{session_name}'."
+msgstr "Impossibile connettersi alla sessione '{session_name}'."
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 164
 #: NEEDS WORK
@@ -1931,12 +1829,6 @@ msgstr "Configurazione SSH"
 msgid "Configure connection details for SSH sessions"
 msgstr "Configura i dettagli di connessione per le sessioni SSH"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 429
-# File: usr/share/ashyterm/ui/dialogs.py, line: 894
-#: NEEDS WORK
-msgid "Host"
-msgstr "Host"
-# 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 430
 #: NEEDS WORK
 msgid "Hostname or IP address of the remote server"
@@ -1947,11 +1839,6 @@ msgstr "Nome host o indirizzo IP del server remoto"
 msgid "example.com or 192.168.1.100"
 msgstr "example.com o 192.168.1.100"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 446
-#: NEEDS WORK
-msgid "Username"
-msgstr "Nome utente"
-# 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 447
 #: NEEDS WORK
 msgid "Username for SSH authentication (optional)"
@@ -1961,11 +1848,6 @@ msgstr "Nome utente per l'autenticazione SSH (opzionale)"
 #: NEEDS WORK
 msgid "username"
 msgstr "nome utente"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 464
-#: NEEDS WORK
-msgid "Port"
-msgstr "Porta"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 465
 #: NEEDS WORK
@@ -1986,12 +1868,6 @@ msgstr "Scegli il metodo di autenticazione"
 #: NEEDS WORK
 msgid "SSH Key"
 msgstr "Chiave SSH"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 467
-# File: usr/share/ashyterm/ui/dialogs.py, line: 533
-#: NEEDS WORK
-msgid "Password"
-msgstr "Password"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 494
 #: NEEDS WORK
@@ -2134,47 +2010,6 @@ msgstr "Connessione fallita"
 #: NEEDS WORK
 msgid "Could not connect to the SSH server."
 msgstr "Impossibile connettersi al server SSH."
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 774
-#: NEEDS WORK
-#, python-brace-format
-msgid ""
-"Connection test failed:\n"
-"{}"
-msgstr ""
-"Test di connessione non riuscito:\n"
-"{}"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 775
-#: NEEDS WORK
-msgid "Connection Test Failed"
-msgstr "Test di connessione non riuscito"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 781
-#: NEEDS WORK
-msgid "Connection Test"
-msgstr "Test di Connessione"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 782
-#: NEEDS WORK
-msgid ""
-"SSH connection parameters appear valid.\n"
-"\n"
-"Note: Actual connection testing will be implemented in a future version."
-msgstr ""
-"I parametri di connessione SSH sembrano validi.\n"
-"\n"
-"Nota: Il test di connessione effettivo sarà implementato in una versione futura."
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 789
-#: NEEDS WORK
-msgid "Test Error"
-msgstr "Errore di test"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 789
-#: NEEDS WORK
-msgid "Connection test failed"
-msgstr "Test di connessione non riuscito"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 796
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1252
@@ -2450,6 +2285,26 @@ msgstr "Comportamento dell'interfaccia"
 msgid "Configure application interface behavior"
 msgstr "Configura il comportamento dell'interfaccia dell'applicazione"
 # 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1698
+#: NEEDS WORK
+msgid "When opening a new instance"
+msgstr "Quando si apre una nuova istanza"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1699
+#: NEEDS WORK
+msgid "Choose whether to open a new tab or a new window"
+msgstr "Scegli se aprire una nuova scheda o una nuova finestra"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1702
+#: NEEDS WORK
+msgid "Open in a new tab"
+msgstr "Apri in una nuova scheda"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1703
+#: NEEDS WORK
+msgid "Open in a new window"
+msgstr "Apri in una nuova finestra"
+# 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1552
 #: NEEDS WORK
 msgid "Confirm Application Exit"
@@ -2499,6 +2354,16 @@ msgstr "Scorciatoie da tastiera per operazioni dell'applicazione"
 #: NEEDS WORK
 msgid "Quit Application"
 msgstr "Esci dall'applicazione"
+# 
+# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1624
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1907
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1983
+# File: usr/share/ashyterm/utils.py, line: 238
+#: NEEDS WORK
+msgid "None"
+msgstr "None"
 # 
 # #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
 # 
@@ -2716,6 +2581,11 @@ msgstr "Ripristino non riuscito"
 msgid "Failed to reset settings: {}"
 msgstr "Impossibile ripristinare le impostazioni: {}"
 # 
+# File: usr/share/ashyterm/window.py, line: 994
+#: NEEDS WORK
+msgid "Move Session"
+msgstr "Sposta Sessione"
+# 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 2183
 #: NEEDS WORK
 msgid "Select Destination"
@@ -2818,6 +2688,325 @@ msgstr "Dividi verticalmente"
 msgid "Close Pane"
 msgstr "Chiudi pannello"
 # 
+# File: usr/share/ashyterm/ui/menus.py, line: 290
+#: NEEDS WORK
+msgid "Change Permissions"
+msgstr "Cambia autorizzazioni"
+# 
+# File: usr/share/ashyterm/ui/menus.py, line: 296
+#: NEEDS WORK
+msgid "Download File"
+msgstr "Scarica file"
+# 
+# File: usr/share/ashyterm/ui/menus.py, line: 299
+#: NEEDS WORK
+msgid "Edit with Local App"
+msgstr "Modifica con App Locale"
+# 
+# File: usr/share/ashyterm/ui/menus.py, line: 302
+#: NEEDS WORK
+msgid "Upload Files Here"
+msgstr "Carica file qui"
+# 
+# File: usr/share/ashyterm/filemanager/manager.py, line: 182
+# File: usr/share/ashyterm/filemanager/manager.py, line: 608
+#: NEEDS WORK
+msgid "Refresh"
+msgstr "Aggiorna"
+# 
+# File: usr/share/ashyterm/filemanager/manager.py, line: 188
+#: NEEDS WORK
+msgid "Show hidden files"
+msgstr "Mostra file nascosti"
+# 
+# File: usr/share/ashyterm/filemanager/manager.py, line: 197
+#: NEEDS WORK
+msgid "Filter..."
+msgstr "Filtro..."
+# 
+# File: usr/share/ashyterm/filemanager/manager.py, line: 203
+#: NEEDS WORK
+msgid "Transfer History"
+msgstr "Cronologia trasferimenti"
+# 
+# File: usr/share/ashyterm/filemanager/manager.py, line: 209
+#: NEEDS WORK
+msgid "Upload Files"
+msgstr "Carica file"
+# 
+# File: usr/share/ashyterm/filemanager/manager.py, line: 366
+#: NEEDS WORK
+msgid "Name"
+msgstr "Nome"
+# 
+# File: usr/share/ashyterm/filemanager/manager.py, line: 375
+#: NEEDS WORK
+msgid "Size"
+msgstr "Dimensione"
+# 
+# File: usr/share/ashyterm/filemanager/manager.py, line: 380
+#: NEEDS WORK
+msgid "Date Modified"
+msgstr "Data Modificata"
+# 
+# File: usr/share/ashyterm/filemanager/manager.py, line: 388
+# File: usr/share/ashyterm/filemanager/manager.py, line: 641
+# File: usr/share/ashyterm/filemanager/manager.py, line: 700
+#: NEEDS WORK
+msgid "Permissions"
+msgstr "Autorizzazioni"
+# 
+# File: usr/share/ashyterm/filemanager/manager.py, line: 396
+# File: usr/share/ashyterm/filemanager/manager.py, line: 709
+#: NEEDS WORK
+msgid "Owner"
+msgstr "Proprietario"
+# 
+# File: usr/share/ashyterm/filemanager/manager.py, line: 404
+# File: usr/share/ashyterm/filemanager/manager.py, line: 723
+#: NEEDS WORK
+msgid "Group"
+msgstr "Gruppo"
+# 
+# File: usr/share/ashyterm/filemanager/manager.py, line: 532
+#: NEEDS WORK
+msgid "Loading..."
+msgstr "Caricamento..."
+# 
+# File: usr/share/ashyterm/filemanager/manager.py, line: 577
+#: NEEDS WORK
+msgid "Filter files..."
+msgstr "Filtra file..."
+# 
+# File: usr/share/ashyterm/filemanager/manager.py, line: 630
+#: NEEDS WORK
+msgid "Open/Edit"
+msgstr "Apri/Modifica"
+# 
+# File: usr/share/ashyterm/filemanager/manager.py, line: 631
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1051
+#: NEEDS WORK
+msgid "Open With..."
+msgstr "Apri con..."
+# 
+# File: usr/share/ashyterm/filemanager/manager.py, line: 638
+#: NEEDS WORK
+msgid "Download"
+msgstr "Scarica"
+# 
+# File: usr/share/ashyterm/filemanager/manager.py, line: 672
+#: NEEDS WORK
+msgid "Delete File"
+msgstr "Elimina file"
+# 
+# File: usr/share/ashyterm/filemanager/manager.py, line: 674
+#: NEEDS WORK
+#, python-brace-format
+msgid ""
+"Are you sure you want to permanently delete '{name}'?\n"
+"\n"
+"This action cannot be undone."
+msgstr ""
+"Sei sicuro di voler eliminare permanentemente '{name}'?\n"
+"\n"
+"Questa azione non può essere annullata."
+# 
+# File: usr/share/ashyterm/filemanager/manager.py, line: 691
+#: NEEDS WORK
+msgid "Delete command sent to terminal"
+msgstr "Comando di eliminazione inviato al terminale"
+# 
+# File: usr/share/ashyterm/filemanager/manager.py, line: 701
+#: NEEDS WORK
+#, python-brace-format
+msgid ""
+"Set file permissions for: {name}\n"
+"Current: {perms}"
+msgstr ""
+"Imposta le autorizzazioni del file per: {name}  \n"
+"Attuale: {perms}"
+# 
+# File: usr/share/ashyterm/filemanager/manager.py, line: 712
+# File: usr/share/ashyterm/filemanager/manager.py, line: 726
+# File: usr/share/ashyterm/filemanager/manager.py, line: 740
+#: NEEDS WORK
+msgid "Read"
+msgstr "Leggi"
+# 
+# File: usr/share/ashyterm/filemanager/manager.py, line: 713
+# File: usr/share/ashyterm/filemanager/manager.py, line: 727
+# File: usr/share/ashyterm/filemanager/manager.py, line: 741
+#: NEEDS WORK
+msgid "Write"
+msgstr "Scrivi"
+# 
+# File: usr/share/ashyterm/filemanager/manager.py, line: 714
+# File: usr/share/ashyterm/filemanager/manager.py, line: 728
+# File: usr/share/ashyterm/filemanager/manager.py, line: 742
+#: NEEDS WORK
+msgid "Execute"
+msgstr "Esegui"
+# 
+# File: usr/share/ashyterm/filemanager/manager.py, line: 737
+#: NEEDS WORK
+msgid "Others"
+msgstr "Altri"
+# 
+# File: usr/share/ashyterm/filemanager/manager.py, line: 772
+#: NEEDS WORK
+msgid "Apply"
+msgstr "Applica"
+# 
+# File: usr/share/ashyterm/filemanager/manager.py, line: 785
+#: NEEDS WORK
+msgid "Chmod command sent to terminal"
+msgstr "Comando Chmod inviato al terminale"
+# 
+# File: usr/share/ashyterm/filemanager/manager.py, line: 826
+#: NEEDS WORK
+msgid "Save File As..."
+msgstr "Salva file con nome..."
+# 
+# File: usr/share/ashyterm/filemanager/manager.py, line: 855
+# File: usr/share/ashyterm/filemanager/manager.py, line: 889
+#: NEEDS WORK
+msgid "Error"
+msgstr "Errore"
+# 
+# File: usr/share/ashyterm/filemanager/manager.py, line: 859
+#: NEEDS WORK
+msgid "Upload File(s) to This Folder"
+msgstr "Carica file in questa cartella"
+# 
+# File: usr/share/ashyterm/filemanager/manager.py, line: 861
+#: NEEDS WORK
+msgid "Upload"
+msgstr "Carica"
+# 
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1040
+#: NEEDS WORK
+msgid "Transfer cancelled."
+msgstr "Trasferimento annullato."
+# 
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1092
+#: NEEDS WORK
+msgid "Failed to open file."
+msgstr "Impossibile aprire il file."
+# 
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1165
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1202
+#: NEEDS WORK
+msgid "Ashy Terminal"
+msgstr "Ashy Terminal"
+# 
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1167
+#: NEEDS WORK
+msgid "File is open. Saving it will upload changes back to the server."
+msgstr "Il file è aperto. Salvarlo caricherà le modifiche sul server."
+# 
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1204
+#: NEEDS WORK
+msgid "Upload Complete"
+msgstr "Caricamento completato"
+# 
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1206
+#: NEEDS WORK
+#, python-brace-format
+msgid "'{filename}' has been saved to the server."
+msgstr "Il file '{filename}' è stato salvato sul server."
+# 
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1211
+#: NEEDS WORK
+msgid "Upload Failed"
+msgstr "Caricamento non riuscito"
+# 
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1213
+#: NEEDS WORK
+#, python-brace-format
+msgid "Could not save '{filename}' to the server: {error}"
+msgstr "Impossibile salvare '{filename}' sul server: {error}"
+# 
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1251
+#: NEEDS WORK
+#, python-brace-format
+msgid "Enter a new name for '{name}'"
+msgstr "Inserisci un nuovo nome per '{name}'"
+# 
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1274
+#: NEEDS WORK
+msgid "Rename command sent to terminal"
+msgstr "Comando di rinomina inviato al terminale"
+# 
+# File: usr/share/ashyterm/filemanager/operations.py, line: 113
+#: NEEDS WORK
+msgid "No session context for file operation."
+msgstr "Nessun contesto di sessione per l'operazione su file."
+# 
+# File: usr/share/ashyterm/filemanager/operations.py, line: 146
+#: NEEDS WORK
+msgid "Command timed out."
+msgstr "Il comando è scaduto."
+# 
+# File: usr/share/ashyterm/filemanager/operations.py, line: 149
+#: NEEDS WORK
+msgid "Unknown session type."
+msgstr "Tipo di sessione sconosciuto."
+# 
+# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 69
+#: NEEDS WORK
+msgid "Cancel transfer"
+msgstr "Annulla trasferimento"
+# 
+# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 76
+#: NEEDS WORK
+msgid "Retry transfer"
+msgstr "Ritenta trasferimento"
+# 
+# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 216
+#: NEEDS WORK
+msgid "Transfer Manager"
+msgstr "Gestore trasferimenti"
+# 
+# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 239
+# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 348
+#: NEEDS WORK
+msgid "Clear History"
+msgstr "Cancella cronologia"
+# 
+# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 244
+#: NEEDS WORK
+msgid "Cancel All"
+msgstr "Annulla tutto"
+# 
+# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 257
+#: NEEDS WORK
+msgid "No Transfers"
+msgstr "Nessun trasferimento"
+# 
+# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 258
+#: NEEDS WORK
+msgid "Active and past transfers will appear here."
+msgstr "Le trasferte attive e passate appariranno qui."
+# 
+# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 340
+#: NEEDS WORK
+msgid "Clear Transfer History?"
+msgstr "Cancella la cronologia delle trasferenze?"
+# 
+# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 342
+#: NEEDS WORK
+msgid ""
+"This action cannot be undone and will remove all completed, failed, and cancelled transfers from "
+"the list."
+msgstr ""
+"Questa azione non può essere annullata e rimuoverà tutti i trasferimenti completati, falliti e "
+"annullati dall'elenco."
+# 
+# File: usr/share/ashyterm/filemanager/transfer_manager.py, line: 273
+#: NEEDS WORK
+msgid "Cancel All Transfers"
+msgstr "Annulla tutte le trasferimenti"
+# 
 # File: usr/share/ashyterm/utils/exceptions.py, line: 65
 #: NEEDS WORK
 msgid "A terminal error occurred"
@@ -2918,18 +3107,6 @@ msgstr "La connessione SSH a '{}' è fallita: {}"
 msgid "Could not connect to {}. {}"
 msgstr "Impossibile connettersi a {}. {}"
 # 
-# File: usr/share/ashyterm/utils/exceptions.py, line: 159
-#: NEEDS WORK
-#, python-brace-format
-msgid "SSH authentication failed for {}@{} using {}"
-msgstr "Autenticazione SSH fallita per {}@{} utilizzando {}"
-# 
-# File: usr/share/ashyterm/utils/exceptions.py, line: 162
-#: NEEDS WORK
-#, python-brace-format
-msgid "Authentication failed for {}@{}"
-msgstr "Autenticazione fallita per {}@{}"
-# 
 # File: usr/share/ashyterm/utils/exceptions.py, line: 170
 #: NEEDS WORK
 #, python-brace-format
@@ -2942,18 +3119,6 @@ msgstr "Errore chiave SSH per '{}': {}"
 msgid "SSH key problem: {}"
 msgstr "Problema chiave SSH: {}"
 # 
-# File: usr/share/ashyterm/utils/exceptions.py, line: 190
-#: NEEDS WORK
-#, python-brace-format
-msgid "Session '{}' not found"
-msgstr "Session '{}' non trovata"
-# 
-# File: usr/share/ashyterm/utils/exceptions.py, line: 193
-#: NEEDS WORK
-#, python-brace-format
-msgid "Session '{}' could not be found"
-msgstr "Session '{}' non può essere trovata"
-# 
 # File: usr/share/ashyterm/utils/exceptions.py, line: 201
 #: NEEDS WORK
 #, python-brace-format
@@ -2965,18 +3130,6 @@ msgstr "La validazione della sessione '{}' è fallita: {}"
 #, python-brace-format
 msgid "Session configuration is invalid: {}"
 msgstr "La configurazione della sessione non è valida: {}"
-# 
-# File: usr/share/ashyterm/utils/exceptions.py, line: 212
-#: NEEDS WORK
-#, python-brace-format
-msgid "Session '{}' already exists"
-msgstr "La sessione '{}' esiste già"
-# 
-# File: usr/share/ashyterm/utils/exceptions.py, line: 215
-#: NEEDS WORK
-#, python-brace-format
-msgid "A session named '{}' already exists"
-msgstr "Una sessione chiamata '{}' esiste già."
 # 
 # File: usr/share/ashyterm/utils/exceptions.py, line: 232
 #: NEEDS WORK
@@ -3029,18 +3182,6 @@ msgstr "Configurazione non valida per '{}' (valore: {}): {}"
 msgid "Configuration error: {}"
 msgstr "Errore di configurazione: {}"
 # 
-# File: usr/share/ashyterm/utils/exceptions.py, line: 287
-#: NEEDS WORK
-#, python-brace-format
-msgid "Required configuration '{}' is missing"
-msgstr "La configurazione richiesta '{}' è mancante"
-# 
-# File: usr/share/ashyterm/utils/exceptions.py, line: 290
-#: NEEDS WORK
-#, python-brace-format
-msgid "Required setting '{}' is not configured"
-msgstr "Impostazione richiesta '{}' non è configurata"
-# 
 # File: usr/share/ashyterm/utils/exceptions.py, line: 307
 #: NEEDS WORK
 #, python-brace-format
@@ -3064,17 +3205,6 @@ msgstr "Errore di dialogo ({}): {}"
 #, python-brace-format
 msgid "Interface error: {}"
 msgstr "Errore di interfaccia: {}"
-# 
-# File: usr/share/ashyterm/utils/exceptions.py, line: 332
-#: NEEDS WORK
-#, python-brace-format
-msgid "Menu error ({}): {}"
-msgstr "Errore menu ({}): {}"
-# 
-# File: usr/share/ashyterm/utils/exceptions.py, line: 335
-#: NEEDS WORK
-msgid "Menu operation failed"
-msgstr "Operazione del menu non riuscita"
 # 
 # File: usr/share/ashyterm/utils/exceptions.py, line: 368
 # File: usr/share/ashyterm/utils/exceptions.py, line: 372
@@ -3131,29 +3261,11 @@ msgstr "Accesso negato per l'operazione {} sulla directory '{}'"
 msgid "Permission denied accessing directory {}"
 msgstr "Accesso negato alla directory {}"
 # 
-# File: usr/share/ashyterm/utils/exceptions.py, line: 454
+# File: usr/share/ashyterm/utils/__init__.py, line: 87
+# File: usr/share/ashyterm/utils/__init__.py, line: 104
 #: NEEDS WORK
-#, python-brace-format
-msgid "Connection to '{}' timed out after {} seconds"
-msgstr "Connessione a '{}' scaduta dopo {} secondi"
-# 
-# File: usr/share/ashyterm/utils/exceptions.py, line: 457
-#: NEEDS WORK
-#, python-brace-format
-msgid "Connection to {} timed out"
-msgstr "Connessione a {} scaduta"
-# 
-# File: usr/share/ashyterm/utils/exceptions.py, line: 465
-#: NEEDS WORK
-#, python-brace-format
-msgid "Host '{}' is unreachable"
-msgstr "Host '{}' non raggiungibile"
-# 
-# File: usr/share/ashyterm/utils/exceptions.py, line: 468
-#: NEEDS WORK
-#, python-brace-format
-msgid "Cannot reach {}"
-msgstr "Impossibile raggiungere {}"
+msgid "unnamed"
+msgstr "senza nome"
 # 
 # File: usr/share/ashyterm/utils/security.py, line: 302
 #: NEEDS WORK
@@ -3252,6 +3364,16 @@ msgstr "Il file ha permessi eccessivamente permissivi"
 #, python-brace-format
 msgid "Error checking file permissions: {}"
 msgstr "Errore durante il controllo dei permessi del file: {}"
+# 
+# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
+# 
+# File: usr/share/ashyterm/utils/security.py, line: 508
+# File: usr/share/ashyterm/utils/security.py, line: 796
+# File: usr/share/ashyterm/utils.py, line: 449
+#: NEEDS WORK
+#, python-brace-format
+msgid "Invalid hostname format: {}"
+msgstr "Formato del nome host non valido: {}"
 # 
 # File: usr/share/ashyterm/utils/security.py, line: 509
 #: NEEDS WORK
@@ -3447,6 +3569,15 @@ msgstr "Tipo di autenticazione non valido: {}"
 msgid "Invalid or unsafe folder path"
 msgstr "Percorso della cartella non valido o non sicuro"
 # 
+# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
+# 
+# File: usr/share/ashyterm/utils/security.py, line: 843
+# File: usr/share/ashyterm/utils.py, line: 442
+#: NEEDS WORK
+#, python-brace-format
+msgid "Invalid session type: {}"
+msgstr "Tipo di sessione non valido: {}"
+# 
 # File: usr/share/ashyterm/utils/security.py, line: 850
 #: NEEDS WORK
 #, python-brace-format
@@ -3464,6 +3595,33 @@ msgstr "Sicurezza: {}"
 #, python-brace-format
 msgid "Security validation error: {}"
 msgstr "Errore di convalida della sicurezza: {}"
+# 
+# File: usr/share/ashyterm/utils.py, line: 510
+#: NEEDS WORK
+msgid "unknown"
+msgstr "sconosciuto"
+# 
+# File: usr/share/ashyterm/utils.py, line: 539
+#: NEEDS WORK
+msgid "Global error handling configured"
+msgstr "Gestione globale degli errori configurata"
+# 
+# File: usr/share/ashyterm/utils.py, line: 601
+#: NEEDS WORK
+#, python-brace-format
+msgid "Utils module initialized on {} platform"
+msgstr "Modulo Utils inizializzato sulla piattaforma {}"
+# 
+# File: usr/share/ashyterm/utils.py, line: 605
+#: NEEDS WORK
+msgid "SSH command not found - SSH functionality will be limited"
+msgstr "Comando SSH non trovato - La funzionalità SSH sarà limitata"
+# 
+# File: usr/share/ashyterm/utils.py, line: 621
+#: NEEDS WORK
+#, python-brace-format
+msgid "Warning: Utils module initialization failed: {}"
+msgstr "Avviso: Inizializzazione del modulo Utils non riuscita: {}"
 # 
 # File: usr/share/ashyterm/main.py, line: 86
 #: NEEDS WORK
@@ -3509,7 +3667,22 @@ msgstr "Imposta la directory di lavoro per il terminale iniziale"
 msgid "Working directory (positional argument)"
 msgstr "Directory di lavoro (argomento posizionale)"
 # 
-# File: usr/share/ashyterm/__init__.py, line: 33
+# File: usr/share/ashyterm/main.py, line: 105
 #: NEEDS WORK
-msgid "VTE 3.91 not found. Terminal functionality will be limited."
-msgstr "VTE 3.91 non trovato. La funzionalità del terminale sarà limitata."
+msgid "Execute command in the terminal"
+msgstr "Esegui comando nel terminale"
+# 
+# File: usr/share/ashyterm/main.py, line: 110
+#: NEEDS WORK
+msgid "Close terminal after executing command (only with --execute)"
+msgstr "Chiudi il terminale dopo aver eseguito il comando (solo con --execute)"
+# 
+# File: usr/share/ashyterm/main.py, line: 115
+#: NEEDS WORK
+msgid "Connect to SSH host with optional user, port, and remote path"
+msgstr "Collegati all'host SSH con utente, porta e percorso remoto opzionali"
+# 
+# File: usr/share/ashyterm/main.py, line: 119
+#: NEEDS WORK
+msgid "Convert KIO/GVFS URI path to SSH format"
+msgstr "Converti il percorso URI KIO/GVFS in formato SSH"
