@@ -427,22 +427,20 @@ class CommTerminalWindow(Adw.ApplicationWindow):
                 margin-top: -10px; 
                 margin-bottom: -10px; 
             }
-            popover.menu menuitem separator,
-            .terminal-tab-view popover.menu menuitem separator {
-                border-top: 1px solid @borders;
-                margin: 6px 0;
-                min-height: 1px;
-                max-height: 1px;
-                padding: 0;
-                background: none;
-            }
             .drop-target {
                 background-color: alpha(@theme_selected_bg_color, 0.5);
                 border-radius: 6px;
             }
             .indented-session {
                 margin-left: 16px;
-            }            
+            }
+            paned separator {
+                background: var(--view-bg-color);
+            }
+            popover.menu separator {
+                background-color: color-mix(in srgb, var(--headerbar-border-color) var(--border-opacity), transparent);
+            }
+
             """
             provider = Gtk.CssProvider()
             provider.load_from_data(css.encode("utf-8"))
