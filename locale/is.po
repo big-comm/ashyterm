@@ -16,49 +16,637 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: attranslate\n"
 # 
-# File: usr/share/nautilus-python/extensions/comm-ashyterm.py, line: 117
+# File: usr/share/nautilus-python/extensions/ashyterm.py, line: 129
 #: NEEDS WORK
-msgid "Open Remote Ashy Terminal"
-msgstr "Opna Fjarðaða Ashy Terminal"
+msgid "Open in Ashy Terminal (SSH)"
+msgstr "Opna í Ashy Terminal (SSH)"
 # 
-# File: usr/share/nautilus-python/extensions/comm-ashyterm.py, line: 118
+# File: usr/share/nautilus-python/extensions/ashyterm.py, line: 130
 #: NEEDS WORK
 #, python-brace-format
-msgid "Open Remote Ashy Terminal In {}"
-msgstr "Opna fjarstýrðan Ashy Terminal í {}"
+msgid "Connect to {} via a new SSH session"
+msgstr "Tengdu samband við {} í nýrri SSH sesjón"
 # 
-# File: usr/share/nautilus-python/extensions/comm_ashyterm_extension.py, line: 61
-# File: usr/share/nautilus-python/extensions/comm_ashyterm_extension.py, line: 79
+# File: usr/share/nautilus-python/extensions/ashyterm.py, line: 139
+# File: usr/share/nautilus-python/extensions/ashyterm.py, line: 149
 #: NEEDS WORK
-msgid "Open Ashy Terminal Here"
-msgstr "Opna Ashy Terminal Hér"
+msgid "Open in Ashy Terminal"
+msgstr "Opna í Ashy Terminal"
 # 
-# File: usr/share/nautilus-python/extensions/comm-ashyterm.py, line: 125
-#: NEEDS WORK
-#, python-brace-format
-msgid "Open Ashy Terminal In {}"
-msgstr "Opna Ashy Terminal í {}"
-# 
-# File: usr/share/nautilus-python/extensions/comm-ashyterm.py, line: 136
-#: NEEDS WORK
-msgid "Open Remote Ashy Terminal Here"
-msgstr "Opna fjarstýrðan Ashy terminal hér"
-# 
-# File: usr/share/nautilus-python/extensions/comm-ashyterm.py, line: 137
-#: NEEDS WORK
-msgid "Open Remote Ashy Terminal In This Directory"
-msgstr "Opna fjarstýrðan Ashy Terminal í þessari skrá."
-# 
-# File: usr/share/nautilus-python/extensions/comm-ashyterm.py, line: 143
-#: NEEDS WORK
-msgid "Open Ashy Terminal In This Directory"
-msgstr "Opna Ashy Terminal í þessari skrá."
-# 
-# File: usr/share/ashyterm/sessions/storage.py, line: 78
+# File: usr/share/nautilus-python/extensions/ashyterm.py, line: 140
 #: NEEDS WORK
 #, python-brace-format
-msgid "Failed to create config directory: {}"
-msgstr "Mistók að búa til stillingaskrá: {}"
+msgid "Open the local mount point {}"
+msgstr "Opnaðu staðbundna tengipunktinn {}"
+# 
+# File: usr/share/nautilus-python/extensions/ashyterm.py, line: 150
+#: NEEDS WORK
+#, python-brace-format
+msgid "Open {} in Ashy Terminal"
+msgstr "Opna {} í Ashy Terminal"
+# 
+# File: usr/share/ashyterm/utils/exceptions.py, line: 65
+#: NEEDS WORK
+msgid "A terminal error occurred"
+msgstr "Alvarleg villa kom upp"
+# 
+# File: usr/share/ashyterm/utils/exceptions.py, line: 66
+#: NEEDS WORK
+msgid "A session error occurred"
+msgstr "Session villa kom upp."
+# 
+# File: usr/share/ashyterm/utils/exceptions.py, line: 67
+#: NEEDS WORK
+msgid "An SSH connection error occurred"
+msgstr "SSH tengingarvilla kom upp"
+# 
+# File: usr/share/ashyterm/utils/exceptions.py, line: 68
+#: NEEDS WORK
+msgid "A user interface error occurred"
+msgstr "Notendaviðmót villa kom upp"
+# 
+# File: usr/share/ashyterm/utils/exceptions.py, line: 69
+#: NEEDS WORK
+msgid "A data storage error occurred"
+msgstr "Geymsluvilla kom átti sér stað"
+# 
+# File: usr/share/ashyterm/utils/exceptions.py, line: 70
+#: NEEDS WORK
+msgid "A configuration error occurred"
+msgstr "Konfignunarvilla kom upp"
+# 
+# File: usr/share/ashyterm/utils/exceptions.py, line: 71
+#: NEEDS WORK
+msgid "A permission error occurred"
+msgstr "Aðgangsheimildarvilla kom upp"
+# 
+# File: usr/share/ashyterm/utils/exceptions.py, line: 72
+#: NEEDS WORK
+msgid "A network error occurred"
+msgstr "Nettókerfi villa kom upp"
+# 
+# File: usr/share/ashyterm/utils/exceptions.py, line: 73
+#: NEEDS WORK
+msgid "A system error occurred"
+msgstr "Kerflauta í kerfi átti sér stað"
+# 
+# File: usr/share/ashyterm/utils/exceptions.py, line: 74
+#: NEEDS WORK
+msgid "A validation error occurred"
+msgstr "Gildisvilla kom að."
+# 
+# File: usr/share/ashyterm/utils/exceptions.py, line: 76
+#: NEEDS WORK
+msgid "An unexpected error occurred"
+msgstr "Ósýnileg villa kom upp"
+# 
+# File: usr/share/ashyterm/utils/exceptions.py, line: 106
+#: NEEDS WORK
+#, python-brace-format
+msgid "Failed to create {} terminal: {}"
+msgstr "Ekki tókst að búa til {} terminal: {}"
+# 
+# File: usr/share/ashyterm/utils/exceptions.py, line: 109
+#: NEEDS WORK
+#, python-brace-format
+msgid "Could not create terminal. {}"
+msgstr "Gat ekki að búa til terminal. {}"
+# 
+# File: usr/share/ashyterm/utils/exceptions.py, line: 128
+#: NEEDS WORK
+msgid "VTE library is not available or not properly installed"
+msgstr "VTE bókasafnið er ekki tiltækt eða ekki rétt uppsett"
+# 
+# File: usr/share/ashyterm/utils/exceptions.py, line: 131
+#: NEEDS WORK
+msgid "Terminal functionality requires VTE library. Please install gir1.2-vte-2.91"
+msgstr "Terminal virkni krefst VTE bókasafns. Vinsamlegast settu upp gir1.2-vte-2.91"
+# 
+# File: usr/share/ashyterm/utils/exceptions.py, line: 148
+#: NEEDS WORK
+#, python-brace-format
+msgid "SSH connection to '{}' failed: {}"
+msgstr "SSH tenging við '{}' mistókst: {}"
+# 
+# File: usr/share/ashyterm/utils/exceptions.py, line: 151
+#: NEEDS WORK
+#, python-brace-format
+msgid "Could not connect to {}. {}"
+msgstr "Gat ekki tengst {}. {}"
+# 
+# File: usr/share/ashyterm/utils/exceptions.py, line: 170
+#: NEEDS WORK
+#, python-brace-format
+msgid "SSH key error for '{}': {}"
+msgstr "SSH lykilvilla villa fyrir '{}': {}"
+# 
+# File: usr/share/ashyterm/utils/exceptions.py, line: 173
+#: NEEDS WORK
+#, python-brace-format
+msgid "SSH key problem: {}"
+msgstr "SSH lykilvandamál: {}"
+# 
+# File: usr/share/ashyterm/utils/exceptions.py, line: 201
+#: NEEDS WORK
+#, python-brace-format
+msgid "Session '{}' validation failed: {}"
+msgstr "Session '{}' gilt ekki: {}"
+# 
+# File: usr/share/ashyterm/utils/exceptions.py, line: 204
+#: NEEDS WORK
+#, python-brace-format
+msgid "Session configuration is invalid: {}"
+msgstr "Session stilling er ógild: {}"
+# 
+# File: usr/share/ashyterm/utils/exceptions.py, line: 232
+#: NEEDS WORK
+#, python-brace-format
+msgid "Failed to read from '{}': {}"
+msgstr "Ekki tókst að lesa frá '{}': {}"
+# 
+# File: usr/share/ashyterm/utils/exceptions.py, line: 235
+#: NEEDS WORK
+msgid "Could not load saved data"
+msgstr "Gat ekki hlaðið vistað gögn"
+# 
+# File: usr/share/ashyterm/utils/exceptions.py, line: 243
+#: NEEDS WORK
+#, python-brace-format
+msgid "Failed to write to '{}': {}"
+msgstr "Ekki tókst að skrifa í '{}': {}"
+# 
+# File: usr/share/ashyterm/utils/exceptions.py, line: 246
+#: NEEDS WORK
+msgid "Could not save data"
+msgstr "Gat ekki að vista gögnin"
+# 
+# File: usr/share/ashyterm/utils/exceptions.py, line: 254
+#: NEEDS WORK
+#, python-brace-format
+msgid "Storage file '{}' is corrupted"
+msgstr "Geymslufaila '{}' er skemmdur"
+# 
+# File: usr/share/ashyterm/utils/exceptions.py, line: 256
+#: NEEDS WORK
+#, python-brace-format
+msgid ": {}"
+msgstr ": {}"
+# 
+# File: usr/share/ashyterm/utils/exceptions.py, line: 259
+#: NEEDS WORK
+msgid "Saved data appears to be corrupted"
+msgstr "Vistað gögn virðast vera skemmd."
+# 
+# File: usr/share/ashyterm/utils/exceptions.py, line: 276
+#: NEEDS WORK
+#, python-brace-format
+msgid "Invalid configuration for '{}' (value: {}): {}"
+msgstr "Ógild stilling fyrir '{}' (gildi: {}): {}"
+# 
+# File: usr/share/ashyterm/main.py, line: 405
+#: NEEDS WORK
+#, python-brace-format
+msgid "Configuration error: {}"
+msgstr "Konfignunarvilla: {}"
+# 
+# File: usr/share/ashyterm/utils/exceptions.py, line: 309
+#: NEEDS WORK
+#, python-brace-format
+msgid "UI error in {}: {}"
+msgstr "UI villa í {}: {}"
+# 
+# File: usr/share/ashyterm/utils/exceptions.py, line: 307
+#: NEEDS WORK
+#, python-brace-format
+msgid "UI error in component: {}"
+msgstr "UI villa í hluta: {}"
+# 
+# File: usr/share/ashyterm/utils/exceptions.py, line: 321
+#: NEEDS WORK
+#, python-brace-format
+msgid "Dialog error ({}): {}"
+msgstr "Samskipti villa ({}): {}"
+# 
+# File: usr/share/ashyterm/utils/exceptions.py, line: 324
+#: NEEDS WORK
+#, python-brace-format
+msgid "Interface error: {}"
+msgstr "Viðmót villa: {}"
+# 
+# File: usr/share/ashyterm/utils/exceptions.py, line: 368
+# File: usr/share/ashyterm/utils/exceptions.py, line: 372
+#: NEEDS WORK
+#, python-brace-format
+msgid "Validation failed for '{}': {}"
+msgstr "Gilding mistókst fyrir '{}': {}"
+# 
+# File: usr/share/ashyterm/utils/exceptions.py, line: 392
+#: NEEDS WORK
+#, python-brace-format
+msgid "Invalid hostname '{}': {}"
+msgstr "Ógilt hýsingarheiti '{}': {}"
+# 
+# File: usr/share/ashyterm/utils/exceptions.py, line: 395
+#: NEEDS WORK
+#, python-brace-format
+msgid "Invalid hostname: {}"
+msgstr "Ógilt hýsingarheiti: {}"
+# 
+# File: usr/share/ashyterm/utils/exceptions.py, line: 403
+#: NEEDS WORK
+#, python-brace-format
+msgid "Invalid path '{}': {}"
+msgstr "Ógild leið '{}': {}"
+# 
+# File: usr/share/ashyterm/utils/exceptions.py, line: 406
+#: NEEDS WORK
+#, python-brace-format
+msgid "Invalid path: {}"
+msgstr "Ógild leið: {}"
+# 
+# File: usr/share/ashyterm/utils/exceptions.py, line: 423
+#: NEEDS WORK
+#, python-brace-format
+msgid "Permission denied for {} operation on '{}'"
+msgstr "Aðgangur hafnað fyrir {} aðgerð á '{}'"
+# 
+# File: usr/share/ashyterm/utils/exceptions.py, line: 426
+#: NEEDS WORK
+#, python-brace-format
+msgid "Permission denied accessing {}"
+msgstr "Aðgangur hafnað að {}"
+# 
+# File: usr/share/ashyterm/utils/exceptions.py, line: 434
+#: NEEDS WORK
+#, python-brace-format
+msgid "Permission denied for {} operation on directory '{}'"
+msgstr "Aðgangur hafnað fyrir {} aðgerð á skráarsafni '{}'"
+# 
+# File: usr/share/ashyterm/utils/exceptions.py, line: 437
+#: NEEDS WORK
+#, python-brace-format
+msgid "Permission denied accessing directory {}"
+msgstr "Aðgangur að skráarsafni {} hafnað."
+# 
+# File: usr/share/ashyterm/utils/__init__.py, line: 87
+# File: usr/share/ashyterm/utils/__init__.py, line: 104
+#: NEEDS WORK
+msgid "unnamed"
+msgstr "ónefndur"
+# 
+# File: usr/share/ashyterm/utils/security.py, line: 302
+#: NEEDS WORK
+msgid "Key path is empty"
+msgstr "Lyklaleið er tóm."
+# 
+# File: usr/share/ashyterm/utils/security.py, line: 309
+#: NEEDS WORK
+#, python-brace-format
+msgid "Key file does not exist: {}"
+msgstr "Lyklaskrá er ekki til: {}"
+# 
+# File: usr/share/ashyterm/utils/security.py, line: 313
+#: NEEDS WORK
+#, python-brace-format
+msgid "Key path is not a file: {}"
+msgstr "Lykilstígur er ekki skrá: {}"
+# 
+# File: usr/share/ashyterm/utils/security.py, line: 318
+#: NEEDS WORK
+#, python-brace-format
+msgid "Key file too large: {} bytes"
+msgstr "Lykilskrá of stór: {} bætur"
+# 
+# File: usr/share/ashyterm/utils/security.py, line: 321
+#: NEEDS WORK
+msgid "Key file is empty"
+msgstr "Lyklaskráin er tóm."
+# 
+# File: usr/share/ashyterm/utils/security.py, line: 326
+#: NEEDS WORK
+msgid "Key file has insecure permissions (should be 600)"
+msgstr "Lykilskjal hefur óöruggar heimildir (ætti að vera 600)"
+# 
+# File: usr/share/ashyterm/utils/security.py, line: 330
+#: NEEDS WORK
+msgid "Key file is not readable"
+msgstr "Lyklaskrá er ekki læsileg."
+# 
+# File: usr/share/ashyterm/utils/security.py, line: 335
+#: NEEDS WORK
+#, python-brace-format
+msgid "Error accessing key file: {}"
+msgstr "Villa ekki aðgang að lykilskrá: {}"
+# 
+# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
+# 
+# File: usr/share/ashyterm/utils/security.py, line: 508
+# File: usr/share/ashyterm/utils/security.py, line: 796
+# File: usr/share/ashyterm/utils.py, line: 449
+#: NEEDS WORK
+#, python-brace-format
+msgid "Invalid hostname format: {}"
+msgstr "Ógildur hýsingarheiti: {}"
+# 
+# File: usr/share/ashyterm/utils/security.py, line: 509
+#: NEEDS WORK
+msgid "Use a valid hostname or IP address"
+msgstr "Notaðu gilt hýsingarnafn eða IP-tölu"
+# 
+# File: usr/share/ashyterm/utils/security.py, line: 519
+#: NEEDS WORK
+#, python-brace-format
+msgid "Connecting to private IP: {}"
+msgstr "Tengist tengingu við einkanet IP: {}"
+# 
+# File: usr/share/ashyterm/utils/security.py, line: 520
+#: NEEDS WORK
+msgid "Ensure this is intentional"
+msgstr "Tryggðu að þetta sé ásetningur"
+# 
+# File: usr/share/ashyterm/utils/security.py, line: 534
+# File: usr/share/ashyterm/utils/security.py, line: 827
+#: NEEDS WORK
+#, python-brace-format
+msgid "SSH key validation failed: {}"
+msgstr "SSH lykil staðfesting mistókst: {}"
+# 
+# File: usr/share/ashyterm/utils/security.py, line: 535
+#: NEEDS WORK
+msgid "Fix SSH key configuration"
+msgstr "Laga SSH lykil stillingu"
+# 
+# File: usr/share/ashyterm/utils/security.py, line: 541
+#: NEEDS WORK
+msgid "Using password authentication"
+msgstr "Notandi lykilorðs staðfesting"
+# 
+# File: usr/share/ashyterm/utils/security.py, line: 542
+#: NEEDS WORK
+msgid "Consider using SSH key authentication for better security"
+msgstr "Íhugaðu að nota SSH lyklauthentiseringu fyrir betri öryggi"
+# 
+# File: usr/share/ashyterm/utils/security.py, line: 551
+#: NEEDS WORK
+msgid "Connecting as root user"
+msgstr "Tengist tengingu sem rótnotandi"
+# 
+# File: usr/share/ashyterm/utils/security.py, line: 552
+#: NEEDS WORK
+msgid "Use a regular user account when possible"
+msgstr "Notaðu venjulegt notendareikning þegar mögulegt er"
+# 
+# File: usr/share/ashyterm/utils/security.py, line: 692
+#: NEEDS WORK
+msgid "Hostname cannot be empty"
+msgstr "Vertnafn má ekki vera tómt"
+# 
+# File: usr/share/ashyterm/utils/security.py, line: 696
+#: NEEDS WORK
+msgid "Invalid hostname format"
+msgstr "Ógildur hýsingarheiti sniðið"
+# 
+# File: usr/share/ashyterm/utils/security.py, line: 711
+#: NEEDS WORK
+msgid "Unknown validation error"
+msgstr "Óþekkt staðfestingarvilla"
+# 
+# File: usr/share/ashyterm/utils/security.py, line: 726
+#: NEEDS WORK
+msgid "Path contains unsafe elements"
+msgstr "Slóðin inniheldur óörugga þætti"
+# 
+# File: usr/share/ashyterm/utils/security.py, line: 744
+# File: usr/share/ashyterm/utils/security.py, line: 762
+#: NEEDS WORK
+msgid "set secure permissions"
+msgstr "settu öruggar heimildir"
+# 
+# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
+# 
+# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
+# 
+# File: usr/share/ashyterm/utils/security.py, line: 786
+# File: usr/share/ashyterm/utils.py, line: 438
+# File: usr/share/ashyterm/sessions/models.py, line: 89
+#: NEEDS WORK
+msgid "Session name cannot be empty"
+msgstr "Nafn sesjónar má ekki vera tómt"
+# 
+# File: usr/share/ashyterm/utils/security.py, line: 788
+#: NEEDS WORK
+#, python-brace-format
+msgid "Session name too long (max {} characters)"
+msgstr "Nafn sesjónar of langt (max {} stafir)"
+# 
+# File: usr/share/ashyterm/utils/security.py, line: 794
+#: NEEDS WORK
+msgid "Hostname cannot be empty for SSH sessions"
+msgstr "Hýsingarheiti má ekki vera tómt fyrir SSH sesjónir"
+# 
+# File: usr/share/ashyterm/utils/security.py, line: 801
+#: NEEDS WORK
+msgid "Username is required for SSH sessions"
+msgstr "Notendanafn er nauðsynlegt fyrir SSH sesjónir."
+# 
+# File: usr/share/ashyterm/utils/security.py, line: 803
+#: NEEDS WORK
+#, python-brace-format
+msgid "Username too long (max {} characters)"
+msgstr "Notendanafn of langt (max {} stafir)"
+# 
+# File: usr/share/ashyterm/utils/security.py, line: 811
+#: NEEDS WORK
+msgid "Port must be between 1 and 65535"
+msgstr "Portur verður að vera á milli 1 og 65535"
+# 
+# File: usr/share/ashyterm/utils/security.py, line: 813
+#: NEEDS WORK
+msgid "Port must be a valid number"
+msgstr "Port verður að vera gilt númer"
+# 
+# File: usr/share/ashyterm/utils/security.py, line: 822
+#: NEEDS WORK
+msgid "SSH key file path is required for key authentication"
+msgstr "SSH lykil skráar leið er nauðsynleg fyrir lykil auðkenningu"
+# 
+# File: usr/share/ashyterm/utils/security.py, line: 832
+#: NEEDS WORK
+#, python-brace-format
+msgid "Invalid authentication type: {}"
+msgstr "Ógildur auðkenningartýpa: {}"
+# 
+# File: usr/share/ashyterm/utils/security.py, line: 838
+#: NEEDS WORK
+msgid "Invalid or unsafe folder path"
+msgstr "Ógildur eða óöruggur möppuleið."
+# 
+# File: usr/share/ashyterm/utils/security.py, line: 850
+#: NEEDS WORK
+#, python-brace-format
+msgid "Validation error: {}"
+msgstr "Gildisvilla: {}"
+# 
+# File: usr/share/ashyterm/main.py, line: 86
+#: NEEDS WORK
+#, python-brace-format
+msgid ""
+"\n"
+"Received signal {}, shutting down gracefully..."
+msgstr "Móttók merki {}, að loka niður á fallegan hátt..."
+# 
+# File: usr/share/ashyterm/main.py, line: 97
+#: NEEDS WORK
+#, python-brace-format
+msgid "Warning: Could not set up signal handlers: {}"
+msgstr "Aðvörun: Gat ekki sett upp merki meðhöndlara: {}"
+# 
+# File: usr/share/ashyterm/main.py, line: 109
+#: NEEDS WORK
+msgid "Ashy Terminal - A modern terminal emulator with session management"
+msgstr "Ashy Terminal - Nútíma terminal emulátor með sessastjórnun"
+# 
+# File: usr/share/ashyterm/main.py, line: 110
+#: NEEDS WORK
+msgid "For more information, visit: https://communitybig.org/"
+msgstr "Fyrir frekari upplýsingar, heimsæktu: https://communitybig.org/"
+# 
+# File: usr/share/ashyterm/main.py, line: 73
+#: NEEDS WORK
+msgid "Enable debug mode"
+msgstr "Virkja villuhamstur mód"
+# 
+# File: usr/share/ashyterm/main.py, line: 79
+#: NEEDS WORK
+msgid "Set logging level"
+msgstr "Stillingar fyrir skráningu"
+# 
+# File: usr/share/ashyterm/main.py, line: 84
+#: NEEDS WORK
+msgid "Set the working directory for the initial terminal"
+msgstr "Stilltu vinnuslóðina fyrir upphafsterminalinn"
+# 
+# File: usr/share/ashyterm/main.py, line: 92
+#: NEEDS WORK
+msgid "Working directory (positional argument)"
+msgstr "Vinnuskrá (staðsetningargildi)"
+# 
+# File: usr/share/ashyterm/main.py, line: 102
+#: NEEDS WORK
+msgid "Execute command in the terminal"
+msgstr "Keyra skipun í terminali"
+# 
+# File: usr/share/ashyterm/main.py, line: 107
+#: NEEDS WORK
+msgid "Close terminal after executing command (only with --execute)"
+msgstr "Loka terminal eftir að hafa keyrt skipun (bara með --execute)"
+# 
+# File: usr/share/ashyterm/main.py, line: 112
+#: NEEDS WORK
+msgid "Connect to SSH host with optional user, port, and remote path"
+msgstr "Tengdu samband við SSH hýsingu með valfrjálsum notanda, porti og fjarleið."
+# 
+# File: usr/share/ashyterm/main.py, line: 115
+#: NEEDS WORK
+msgid "Convert KIO/GVFS URI path to SSH format"
+msgstr "Breytir KIO/GVFS URI slóð í SSH sniðið"
+# 
+# File: usr/share/ashyterm/sessions/models.py, line: 174
+#: NEEDS WORK
+msgid "Port must be a valid number between 1 and 65535"
+msgstr "Portur verður að vera gilt númer á milli 1 og 65535"
+# 
+# File: usr/share/ashyterm/sessions/models.py, line: 198
+#: NEEDS WORK
+msgid "Session name is required."
+msgstr "Nafn á sessi er nauðsynlegt."
+# 
+# File: usr/share/ashyterm/sessions/models.py, line: 201
+#: NEEDS WORK
+msgid "Host is required for SSH sessions."
+msgstr "Hýsing er nauðsynleg fyrir SSH lotur."
+# 
+# File: usr/share/ashyterm/sessions/models.py, line: 203
+#: NEEDS WORK
+msgid "Port must be between 1 and 65535."
+msgstr "Portur verður að vera á milli 1 og 65535."
+# 
+# File: usr/share/ashyterm/sessions/models.py, line: 386
+# File: usr/share/ashyterm/sessions/models.py, line: 419
+#: NEEDS WORK
+msgid "Unnamed Session"
+msgstr "Ónefndur fundur"
+# 
+# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 406
+# File: usr/share/ashyterm/sessions/models.py, line: 511
+#: NEEDS WORK
+msgid "Local Terminal"
+msgstr "Staðbundin Terminal"
+# 
+# File: usr/share/ashyterm/sessions/models.py, line: 346
+#: NEEDS WORK
+msgid "Folder name is required."
+msgstr "Fyrirsagnan er nauðsynleg."
+# 
+# File: usr/share/ashyterm/sessions/models.py, line: 352
+#: NEEDS WORK
+msgid "Folder path is not consistent with its parent path."
+msgstr "Skráarstig er ekki í samræmi við foreldrastrig."
+# 
+# File: usr/share/ashyterm/sessions/models.py, line: 727
+# File: usr/share/ashyterm/sessions/models.py, line: 752
+#: NEEDS WORK
+msgid "Unnamed Folder"
+msgstr "Ónefnd möppur"
+# 
+# File: usr/share/ashyterm/sessions/tree.py, line: 101
+#: NEEDS WORK
+msgid "Sessions"
+msgstr "Snið"
+# 
+# File: usr/share/ashyterm/sessions/tree.py, line: 618
+# File: usr/share/ashyterm/sessions/tree.py, line: 623
+#: NEEDS WORK
+msgid "Paste Error"
+msgstr "Límavillur"
+# 
+# File: usr/share/ashyterm/sessions/validation.py, line: 18
+#: NEEDS WORK
+#, python-brace-format
+msgid "Session validation failed: {}"
+msgstr "Samskipti staðfesting mistókst: {}"
+# 
+# File: usr/share/ashyterm/sessions/validation.py, line: 31
+#: NEEDS WORK
+#, python-brace-format
+msgid "A session with the name '{name}' already exists in this folder."
+msgstr "Sesíon með nafnið '{name}' er þegar til í þessari möppu."
+# 
+# File: usr/share/ashyterm/sessions/validation.py, line: 45
+#: NEEDS WORK
+#, python-brace-format
+msgid "The target folder '{folder}' does not exist."
+msgstr "Markmið möppan '{folder}' er ekki til."
+# 
+# File: usr/share/ashyterm/sessions/validation.py, line: 61
+#: NEEDS WORK
+#, python-brace-format
+msgid "Folder validation failed: {}"
+msgstr "Gildisvottun fyrir möppu mistókst: {}"
+# 
+# File: usr/share/ashyterm/sessions/validation.py, line: 69
+#: NEEDS WORK
+#, python-brace-format
+msgid "A folder with the path '{path}' already exists."
+msgstr "Möppun með slóðina '{path}' er þegar til."
+# 
+# File: usr/share/ashyterm/sessions/validation.py, line: 84
+#: NEEDS WORK
+#, python-brace-format
+msgid "The parent folder '{folder}' does not exist."
+msgstr "Foreldra möppan '{folder}' er ekki til."
 # 
 # File: usr/share/ashyterm/sessions/storage.py, line: 125
 #: NEEDS WORK
@@ -121,1133 +709,106 @@ msgstr "Vista staðfesting mistókst"
 msgid "Save failed: {}"
 msgstr "Vista misheitti: {}"
 # 
-# File: usr/share/ashyterm/sessions/operations.py, line: 164
+# File: usr/share/ashyterm/sessions/operations.py, line: 46
+#: NEEDS WORK
+msgid "Failed to save session data."
+msgstr "Mistók að vista sessgögn."
+# 
+# File: usr/share/ashyterm/sessions/operations.py, line: 51
 #: NEEDS WORK
 #, python-brace-format
-msgid "Session '{name}' already exists in the specified folder"
-msgstr "Sesión '{name}' er þegar til í tilgreindri möppu"
+msgid "Session '{name}' added successfully."
+msgstr "Sesión '{name}' bætt við með góðum árangri."
+# 
+# File: usr/share/ashyterm/sessions/operations.py, line: 62
+#: NEEDS WORK
+msgid "Item at position is not a session."
+msgstr "Vara á stöðu er ekki sess."
+# 
+# File: usr/share/ashyterm/sessions/operations.py, line: 74
+#: NEEDS WORK
+msgid "Failed to save updated session data."
+msgstr "Ekki tókst að vista uppfærða sessgögn."
+# 
+# File: usr/share/ashyterm/sessions/operations.py, line: 79
+#: NEEDS WORK
+#, python-brace-format
+msgid "Session '{name}' updated successfully."
+msgstr "Sesión '{name}' uppfærð með góðum árangri."
+# 
+# File: usr/share/ashyterm/sessions/operations.py, line: 90
+#: NEEDS WORK
+msgid "Session not found."
+msgstr "Session fannst ekki."
+# 
+# File: usr/share/ashyterm/sessions/operations.py, line: 96
+#: NEEDS WORK
+msgid "Failed to save after session removal."
+msgstr "Ekki tókst að vista eftir að sessión var fjarlægð."
+# 
+# File: usr/share/ashyterm/sessions/operations.py, line: 102
+#: NEEDS WORK
+#, python-brace-format
+msgid "Session '{name}' removed successfully."
+msgstr "Session '{name}' hefur verið fjarlægð með góðum árangri."
+# 
+# File: usr/share/ashyterm/sessions/operations.py, line: 115
+#: NEEDS WORK
+msgid "Failed to save folder data."
+msgstr "Ekki tókst að vista möppugögn."
+# 
+# File: usr/share/ashyterm/sessions/operations.py, line: 120
+#: NEEDS WORK
+#, python-brace-format
+msgid "Folder '{name}' added successfully."
+msgstr "Mappa '{name}' bættist við með góðum árangri."
+# 
+# File: usr/share/ashyterm/sessions/operations.py, line: 131
+#: NEEDS WORK
+msgid "Item at position is not a folder."
+msgstr "Vara á stöðu er ekki möppu."
+# 
+# File: usr/share/ashyterm/sessions/operations.py, line: 144
+#: NEEDS WORK
+msgid "Failed to save updated folder data."
+msgstr "Ekki tókst að vista uppfærða möppugögn."
+# 
+# File: usr/share/ashyterm/sessions/operations.py, line: 149
+#: NEEDS WORK
+#, python-brace-format
+msgid "Folder '{name}' updated successfully."
+msgstr "Mappa '{name}' uppfærð með góðum árangri."
+# 
+# File: usr/share/ashyterm/sessions/operations.py, line: 161
+#: NEEDS WORK
+msgid "Cannot remove a non-empty folder."
+msgstr "Get ekki fjarlægja ótóma möppu."
+# 
+# File: usr/share/ashyterm/sessions/operations.py, line: 168
+#: NEEDS WORK
+msgid "Folder not found."
+msgstr "Mappa fannst ekki."
 # 
 # File: usr/share/ashyterm/sessions/operations.py, line: 172
 #: NEEDS WORK
-#, python-brace-format
-msgid "Session '{name}' added successfully"
-msgstr "Session '{name}' bætt við með góðum árangri"
-# 
-# File: usr/share/ashyterm/sessions/operations.py, line: 175
-# File: usr/share/ashyterm/sessions/operations.py, line: 314
-#: NEEDS WORK
-#, python-brace-format
-msgid "Session name sanitized: '{original}' -> '{new}'"
-msgstr "Session nafn hreinsað: '{original}' -> '{new}'"
-# 
-# File: usr/share/ashyterm/sessions/operations.py, line: 189
-# File: usr/share/ashyterm/sessions/operations.py, line: 322
-#: NEEDS WORK
-msgid "Failed to save session data"
-msgstr "Ekki tókst að vista sessjónargögn"
-# 
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
-# 
-# File: usr/share/ashyterm/window.py, line: 879
-# File: usr/share/ashyterm/sessions/operations.py, line: 203
-#: NEEDS WORK
-#, python-brace-format
-msgid "Failed to add session: {error}"
-msgstr "Mistók að bæta við sessjón: {error}"
-# 
-# File: usr/share/ashyterm/sessions/operations.py, line: 219
-#: NEEDS WORK
-msgid "Validation passed"
-msgstr "Staðfesting samþykkt"
-# 
-# File: usr/share/ashyterm/sessions/operations.py, line: 224
-#: NEEDS WORK
-#, python-brace-format
-msgid "Session validation failed: {errors}"
-msgstr "Gildisskráning mistókst: {errors}"
-# 
-# File: usr/share/ashyterm/sessions/operations.py, line: 233
-# File: usr/share/ashyterm/sessions/operations.py, line: 371
-#: NEEDS WORK
-#, python-brace-format
-msgid "Security validation failed: {errors}"
-msgstr "Öryggisvottun mistókst: {errors}"
-# 
-# File: usr/share/ashyterm/sessions/operations.py, line: 241
-# File: usr/share/ashyterm/sessions/operations.py, line: 385
-#: NEEDS WORK
-#, python-brace-format
-msgid "Security: {message}"
-msgstr "Öryggi: {message}"
-# 
-# File: usr/share/ashyterm/sessions/operations.py, line: 243
-# File: usr/share/ashyterm/sessions/operations.py, line: 387
-#: NEEDS WORK
-#, python-brace-format
-msgid "Critical security issue: {message}"
-msgstr "Kritísk öryggismál: {message}"
-# 
-# File: usr/share/ashyterm/sessions/operations.py, line: 246
-# File: usr/share/ashyterm/sessions/operations.py, line: 390
-#: NEEDS WORK
-#, python-brace-format
-msgid "Security validation error: {error}"
-msgstr "Öryggisvottunarvilla: {error}"
-# 
-# File: usr/share/ashyterm/sessions/operations.py, line: 251
-# File: usr/share/ashyterm/sessions/operations.py, line: 395
-# File: usr/share/ashyterm/sessions/operations.py, line: 590
-#: NEEDS WORK
-#, python-brace-format
-msgid "Target folder '{folder}' does not exist"
-msgstr "Markmið möppan '{folder}' er ekki til."
-# 
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
-# 
-# File: usr/share/ashyterm/sessions/operations.py, line: 257
-# File: usr/share/ashyterm/sessions/models.py, line: 342
-# File: usr/share/ashyterm/sessions/models.py, line: 691
-#: NEEDS WORK
-#, python-brace-format
-msgid "Validation error: {error}"
-msgstr "Gildisvilla: {error}"
-# 
-# File: usr/share/ashyterm/sessions/operations.py, line: 276
-# File: usr/share/ashyterm/sessions/operations.py, line: 722
-#: NEEDS WORK
-#, python-brace-format
-msgid "Invalid position: {position}"
-msgstr "Ógild staða: {position}"
-# 
-# File: usr/share/ashyterm/sessions/operations.py, line: 280
-#: NEEDS WORK
-#, python-brace-format
-msgid "Item at position {position} is not a session"
-msgstr "Vara á staðsetningu {position} er ekki sess."
-# 
-# File: usr/share/ashyterm/sessions/operations.py, line: 300
-#: NEEDS WORK
-#, python-brace-format
-msgid "Session name '{name}' already exists in the target folder"
-msgstr "Sesjónarnafn '{name}' er þegar til í markmöppunni."
-# 
-# File: usr/share/ashyterm/sessions/operations.py, line: 329
-#: NEEDS WORK
-#, python-brace-format
-msgid "Session '{name}' updated successfully"
-msgstr "Session '{name}' uppfærð með góðum árangri"
-# 
-# File: usr/share/ashyterm/sessions/operations.py, line: 339
-#: NEEDS WORK
-#, python-brace-format
-msgid "Failed to update session: {error}"
-msgstr "Mistók að uppfæra sess: {error}"
-# 
-# File: usr/share/ashyterm/sessions/operations.py, line: 357
-#: NEEDS WORK
-msgid "Update validation passed"
-msgstr "Uppfærsluvottun staðfest."
-# 
-# File: usr/share/ashyterm/sessions/operations.py, line: 362
-#: NEEDS WORK
-#, python-brace-format
-msgid "Updated session validation failed: {errors}"
-msgstr "Uppfærð sess staðfesting mistókst: {errors}"
-# 
-# File: usr/share/ashyterm/sessions/operations.py, line: 378
-#: NEEDS WORK
-#, python-brace-format
-msgid "Security score decreased: {original} -> {updated}"
-msgstr "Öryggisstig lækkaði: {original} -> {updated}"
-# 
-# File: usr/share/ashyterm/sessions/operations.py, line: 401
-#: NEEDS WORK
-#, python-brace-format
-msgid "Update validation error: {error}"
-msgstr "Uppfærsluvillur: {error}"
-# 
-# File: usr/share/ashyterm/sessions/operations.py, line: 439
-#: NEEDS WORK
-msgid "Properties updated successfully"
-msgstr "Eiginleikar uppfærðir með góðum árangri"
-# 
-# File: usr/share/ashyterm/sessions/operations.py, line: 450
-#: NEEDS WORK
-#, python-brace-format
-msgid "Property update failed: {error}"
-msgstr "Eigningaruppfærslu mistókst: {error}"
-# 
-# File: usr/share/ashyterm/sessions/operations.py, line: 471
-#: NEEDS WORK
-#, python-brace-format
-msgid "Session '{name}' not found in store"
-msgstr "Session '{name}' fannst ekki í geymslu"
-# 
-# File: usr/share/ashyterm/sessions/operations.py, line: 482
-#: NEEDS WORK
-msgid "Failed to save after session removal"
-msgstr "Ekki tókst að vista eftir að sessión var fjarlægð"
-# 
-# File: usr/share/ashyterm/sessions/operations.py, line: 490
-#: NEEDS WORK
-#, python-brace-format
-msgid "Session '{name}' removed successfully"
-msgstr "Session '{name}' var fjarlægð með góðum árangri"
-# 
-# File: usr/share/ashyterm/sessions/operations.py, line: 499
-#: NEEDS WORK
-#, python-brace-format
-msgid "Failed to remove session: {error}"
-msgstr "Mistók að fjarlægja sess: {error}"
-# 
-# File: usr/share/ashyterm/sessions/operations.py, line: 530
-#: NEEDS WORK
-#, python-brace-format
-msgid "Copy of {name}"
-msgstr "Afrit af {name}"
-# 
-# File: usr/share/ashyterm/sessions/operations.py, line: 536
-#: NEEDS WORK
-#, python-brace-format
-msgid "Duplicate validation failed: {errors}"
-msgstr "Afturtekning staðfesting mistókst: {errors}"
-# 
-# File: usr/share/ashyterm/sessions/operations.py, line: 542
-#: NEEDS WORK
-#, python-brace-format
-msgid "Duplicate name '{name}' already exists"
-msgstr "Nafn '{name}' er þegar til."
-# 
-# File: usr/share/ashyterm/sessions/operations.py, line: 555
-#: NEEDS WORK
-#, python-brace-format
-msgid "Session duplicated as '{name}'"
-msgstr "Session duplicated as '{name}'"
-# 
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
-# 
-# File: usr/share/ashyterm/window.py, line: 706
-# File: usr/share/ashyterm/sessions/operations.py, line: 564
-#: NEEDS WORK
-#, python-brace-format
-msgid "Failed to duplicate session: {error}"
-msgstr "Mistók að afrita sessjón: {error}"
-# 
-# File: usr/share/ashyterm/sessions/operations.py, line: 599
-#: NEEDS WORK
-#, python-brace-format
-msgid "Session moved and renamed to '{name}'"
-msgstr "Session flutt og endurnefnd til '{name}'"
-# 
-# File: usr/share/ashyterm/sessions/operations.py, line: 600
-#: NEEDS WORK
-#, python-brace-format
-msgid "Session renamed to avoid conflict: '{original}' -> '{new}'"
-msgstr "Session hefur verið endurnefnd til að forðast árekstur: '{original}' -> '{new}'"
-# 
-# File: usr/share/ashyterm/sessions/operations.py, line: 602
-# File: usr/share/ashyterm/sessions/operations.py, line: 620
-#: NEEDS WORK
-msgid "root"
-msgstr "rótur"
-# 
-# File: usr/share/ashyterm/sessions/operations.py, line: 603
-#: NEEDS WORK
-#, python-brace-format
-msgid "Session moved to '{folder}'"
-msgstr "Sesión flutt í '{folder}'"
-# 
-# File: usr/share/ashyterm/sessions/operations.py, line: 614
-#: NEEDS WORK
-msgid "Failed to save after moving session"
-msgstr "Ekki tókst að vista eftir að hafa flutt sessjón."
-# 
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
-# 
-# File: usr/share/ashyterm/window.py, line: 724
-# File: usr/share/ashyterm/sessions/operations.py, line: 636
-#: NEEDS WORK
-#, python-brace-format
-msgid "Failed to move session: {error}"
-msgstr "Mistók að flytja sess: {error}"
-# 
-# File: usr/share/ashyterm/sessions/operations.py, line: 659
-#: NEEDS WORK
-#, python-brace-format
-msgid "Folder validation failed: {errors}"
-msgstr "Gildisskráning mistókst: {errors}"
-# 
-# File: usr/share/ashyterm/sessions/operations.py, line: 664
-# File: usr/share/ashyterm/sessions/operations.py, line: 742
-#: NEEDS WORK
-#, python-brace-format
-msgid "Folder path '{path}' already exists"
-msgstr "Möppuleið '{path}' er þegar til."
-# 
-# File: usr/share/ashyterm/sessions/operations.py, line: 682
-# File: usr/share/ashyterm/sessions/operations.py, line: 763
-#: NEEDS WORK
-msgid "Failed to save folder data"
-msgstr "Mistók að vista möppugögn"
-# 
-# File: usr/share/ashyterm/sessions/operations.py, line: 690
-#: NEEDS WORK
-#, python-brace-format
-msgid "Folder '{name}' added successfully"
-msgstr "Mappa '{name}' bættist við með góðum árangri"
-# 
-# File: usr/share/ashyterm/sessions/operations.py, line: 693
-# File: usr/share/ashyterm/sessions/operations.py, line: 774
-#: NEEDS WORK
-#, python-brace-format
-msgid "Folder name sanitized: '{original}' -> '{new}'"
-msgstr "Skráarnafn hreinsað: '{original}' -> '{new}'"
-# 
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
-# 
-# File: usr/share/ashyterm/window.py, line: 889
-# File: usr/share/ashyterm/sessions/operations.py, line: 702
-#: NEEDS WORK
-#, python-brace-format
-msgid "Failed to add folder: {error}"
-msgstr "Mistók að bæta við möppu: {error}"
-# 
-# File: usr/share/ashyterm/sessions/operations.py, line: 726
-#: NEEDS WORK
-#, python-brace-format
-msgid "Item at position {position} is not a folder"
-msgstr "Vara á staðsetningu {position} er ekki möppu."
-# 
-# File: usr/share/ashyterm/sessions/operations.py, line: 737
-#: NEEDS WORK
-#, python-brace-format
-msgid "Updated folder validation failed: {errors}"
-msgstr "Uppfærð skráarskoðun mistókst: {errors}"
-# 
-# File: usr/share/ashyterm/sessions/operations.py, line: 771
-#: NEEDS WORK
-#, python-brace-format
-msgid "Folder '{name}' updated successfully"
-msgstr "Mappa '{name}' uppfærð með góðum árangri"
-# 
-# File: usr/share/ashyterm/sessions/operations.py, line: 788
-#: NEEDS WORK
-#, python-brace-format
-msgid "Failed to update folder: {error}"
-msgstr "Mistók að uppfæra möppu: {error}"
-# 
-# File: usr/share/ashyterm/sessions/operations.py, line: 816
-#: NEEDS WORK
-#, python-brace-format
-msgid ""
-"Cannot remove folder '{name}' - it contains sessions or subfolders. Use force removal to delete "
-"anyway."
-msgstr ""
-"Getur ekki eytt möppu '{name}' - hún inniheldur lotur eða undirmöppur. Notaðu þvingaða eyðingu til "
-"að eyða samt."
-# 
-# File: usr/share/ashyterm/sessions/operations.py, line: 827
-#: NEEDS WORK
-#, python-brace-format
-msgid "Folder '{name}' not found in store"
-msgstr "Mappa '{name}' fannst ekki í geymslu"
-# 
-# File: usr/share/ashyterm/sessions/operations.py, line: 841
-#: NEEDS WORK
-msgid "Failed to save after folder removal"
+msgid "Failed to save after folder removal."
 msgstr "Ekki tókst að vista eftir möppufjarlægð."
 # 
-# File: usr/share/ashyterm/sessions/operations.py, line: 849
+# File: usr/share/ashyterm/sessions/operations.py, line: 177
 #: NEEDS WORK
 #, python-brace-format
-msgid "Folder '{name}' removed successfully"
-msgstr "Mappa '{name}' fjarlægð með góðum árangri"
+msgid "Folder '{name}' removed successfully."
+msgstr "Mappa '{name}' fjarlægð með góðum árangri."
 # 
-# File: usr/share/ashyterm/sessions/operations.py, line: 857
+# File: usr/share/ashyterm/sessions/operations.py, line: 190
 #: NEEDS WORK
-#, python-brace-format
-msgid "Removed {count} child items"
-msgstr "Fjarlægð {count} barnahlutir"
+msgid "Failed to save after moving session."
+msgstr "Ekki tókst að vista eftir að hafa flutt sess."
 # 
-# File: usr/share/ashyterm/sessions/operations.py, line: 866
+# File: usr/share/ashyterm/sessions/operations.py, line: 195
 #: NEEDS WORK
-#, python-brace-format
-msgid "Failed to remove folder: {error}"
-msgstr "Ekki tókst að fjarlægja möppu: {error}"
-# 
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
-# 
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
-# 
-# File: usr/share/ashyterm/utils/security.py, line: 786
-# File: usr/share/ashyterm/utils.py, line: 438
-# File: usr/share/ashyterm/sessions/models.py, line: 89
-#: NEEDS WORK
-msgid "Session name cannot be empty"
-msgstr "Nafn sesjónar má ekki vera tómt"
-# 
-# File: usr/share/ashyterm/sessions/models.py, line: 115
-#: NEEDS WORK
-#, python-brace-format
-msgid "Invalid session type: {type}. Must be one of: {valid_types}"
-msgstr "Ógildur sessíónartípa: {type}. Verður að vera einn af: {valid_types}"
-# 
-# File: usr/share/ashyterm/sessions/models.py, line: 139
-#: NEEDS WORK
-#, python-brace-format
-msgid "Invalid hostname format: {hostname}"
-msgstr "Ógildur hýsingarheiti sniðið: {hostname}"
-# 
-# File: usr/share/ashyterm/sessions/models.py, line: 191
-#: NEEDS WORK
-#, python-brace-format
-msgid "Invalid authentication type: {type}. Must be one of: {valid_types}"
-msgstr "Ógildur auðkenningartýpa: {type}. Verður að vera einn af: {valid_types}"
-# 
-# File: usr/share/ashyterm/utils/security.py, line: 811
-#: NEEDS WORK
-msgid "Port must be between 1 and 65535"
-msgstr "Portur verður að vera á milli 1 og 65535"
-# 
-# File: usr/share/ashyterm/utils/security.py, line: 813
-#: NEEDS WORK
-msgid "Port must be a valid number"
-msgstr "Port verður að vera gilt númer"
-# 
-# File: usr/share/ashyterm/sessions/models.py, line: 309
-#: NEEDS WORK
-msgid "Session name is required"
-msgstr "Nafn á sessi er nauðsynlegt"
-# 
-# File: usr/share/ashyterm/sessions/models.py, line: 312
-#: NEEDS WORK
-msgid "Session type is required"
-msgstr "Session type er nauðsynlegur"
-# 
-# File: usr/share/ashyterm/sessions/models.py, line: 317
-#: NEEDS WORK
-msgid "Host is required for SSH sessions"
-msgstr "Hýsing er nauðsynleg fyrir SSH lotur"
-# 
-# File: usr/share/ashyterm/sessions/models.py, line: 324
-#: NEEDS WORK
-#, python-brace-format
-msgid "SSH key validation failed: {error}"
-msgstr "SSH lykil staðfesting mistókst: {error}"
-# 
-# File: usr/share/ashyterm/sessions/models.py, line: 326
-#: NEEDS WORK
-#, python-brace-format
-msgid "SSH key validation error: {error}"
-msgstr "Villa SSH lykils: {error}"
-# 
-# File: usr/share/ashyterm/sessions/models.py, line: 329
-#: NEEDS WORK
-msgid "Authentication type is required for SSH sessions"
-msgstr "Krafgerð er nauðsynleg fyrir SSH sesjónir"
-# 
-# File: usr/share/ashyterm/sessions/models.py, line: 386
-# File: usr/share/ashyterm/sessions/models.py, line: 419
-#: NEEDS WORK
-msgid "Unnamed Session"
-msgstr "Ónefndur fundur"
-# 
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 406
-# File: usr/share/ashyterm/sessions/models.py, line: 511
-#: NEEDS WORK
-msgid "Local Terminal"
-msgstr "Staðbundin Terminal"
-# 
-# File: usr/share/ashyterm/sessions/models.py, line: 583
-#: NEEDS WORK
-msgid "Folder name cannot be empty"
-msgstr "Skráarnafn má ekki vera tómt"
-# 
-# File: usr/share/ashyterm/sessions/models.py, line: 669
-#: NEEDS WORK
-msgid "Folder name is required"
-msgstr "Mappaheiti er nauðsynlegur"
-# 
-# File: usr/share/ashyterm/sessions/models.py, line: 673
-#: NEEDS WORK
-msgid "Path contains invalid characters"
-msgstr "Slóðin inniheldur ógild tákn."
-# 
-# File: usr/share/ashyterm/sessions/models.py, line: 678
-#: NEEDS WORK
-msgid "Path is not consistent with parent path"
-msgstr "Slóð er ekki í samræmi við foreldraslóð."
-# 
-# File: usr/share/ashyterm/sessions/models.py, line: 727
-# File: usr/share/ashyterm/sessions/models.py, line: 752
-#: NEEDS WORK
-msgid "Unnamed Folder"
-msgstr "Ónefnd möppur"
-# 
-# File: usr/share/ashyterm/sessions/tree.py, line: 101
-#: NEEDS WORK
-msgid "Sessions"
-msgstr "Snið"
-# 
-# File: usr/share/ashyterm/sessions/tree.py, line: 618
-# File: usr/share/ashyterm/sessions/tree.py, line: 623
-#: NEEDS WORK
-msgid "Paste Error"
-msgstr "Límavillur"
-# 
-# File: usr/share/ashyterm/app.py, line: 53
-#: NEEDS WORK
-#, python-brace-format
-msgid "Initializing {} v{}"
-msgstr "Vinnur {} v{}"
-# 
-# File: usr/share/ashyterm/app.py, line: 64
-#: NEEDS WORK
-#, python-brace-format
-msgid "Running on {} platform"
-msgstr "Keyrandi á {} pallur"
-# 
-# File: usr/share/ashyterm/app.py, line: 118
-#: NEEDS WORK
-msgid "Initializing application subsystems"
-msgstr "Virkjandi forritsundakerfa"
-# 
-# File: usr/share/ashyterm/app.py, line: 121
-#: NEEDS WORK
-msgid "Settings manager initialized"
-msgstr "Stillingastjóri upphafinn"
-# 
-# File: usr/share/ashyterm/app.py, line: 125
-# File: usr/share/ashyterm/app.py, line: 431
-#: NEEDS WORK
-msgid "Debug mode enabled"
-msgstr "Villtengd stilling virkjuð"
-# 
-# File: usr/share/ashyterm/app.py, line: 130
-#: NEEDS WORK
-msgid "Encryption available but not initialized (may require passphrase)"
-msgstr "Dulkóðun tiltæk en ekki stillt (gæti krafist aðgangsorðs)"
-# 
-# File: usr/share/ashyterm/app.py, line: 132
-#: NEEDS WORK
-msgid "Encryption system initialized"
-msgstr "Kóðunarkerfi hafið"
-# 
-# File: usr/share/ashyterm/app.py, line: 134
-#: NEEDS WORK
-#, python-brace-format
-msgid "Encryption initialization failed: {}"
-msgstr "Kóðun upphafsferli mistókst: {}"
-# 
-# File: usr/share/ashyterm/app.py, line: 136
-#: NEEDS WORK
-msgid "Encryption not available - passwords will be stored as plain text"
-msgstr "Kóðun ekki í boði - lykilorð verða vistuð sem venjulegur texti"
-# 
-# File: usr/share/ashyterm/app.py, line: 145
-#: NEEDS WORK
-msgid "Automatic backups enabled"
-msgstr "Sjálfvirkar afritun er virk."
-# 
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
-# 
-# File: usr/share/ashyterm/__init__.py, line: 470
-# File: usr/share/ashyterm/app.py, line: 149
-#: NEEDS WORK
-msgid "Backup system initialized"
-msgstr "Öryggiskerfi hafið verið sett af stað"
-# 
-# File: usr/share/ashyterm/app.py, line: 152
-#: NEEDS WORK
-#, python-brace-format
-msgid "Failed to initialize backup system: {}"
-msgstr "Mistók að hefja afritunarkerfi: {}"
-# 
-# File: usr/share/ashyterm/app.py, line: 158
-#: NEEDS WORK
-msgid "Security auditor initialized"
-msgstr "Öryggisúttekt hafin"
-# 
-# File: usr/share/ashyterm/app.py, line: 160
-#: NEEDS WORK
-#, python-brace-format
-msgid "Security auditor initialization failed: {}"
-msgstr "Öryggisúttektaraðgerð mistókst: {}"
-# 
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
-# 
-# File: usr/share/ashyterm/app.py, line: 164
-# File: usr/share/ashyterm/main.py, line: 399
-#: NEEDS WORK
-msgid "VTE library not available"
-msgstr "VTE bókasafn ekki tiltækt"
-# 
-# File: usr/share/ashyterm/app.py, line: 168
-#: NEEDS WORK
-msgid "All subsystems initialized successfully"
-msgstr "Öll undirkerfi hafa verið virkjuð með árangri"
-# 
-# File: usr/share/ashyterm/app.py, line: 172
-#: NEEDS WORK
-#, python-brace-format
-msgid "Subsystem initialization failed: {}"
-msgstr "Undirkerfi upphaf mistókst: {}"
-# 
-# File: usr/share/ashyterm/app.py, line: 173
-#: NEEDS WORK
-msgid "application initialization"
-msgstr "forritsupphaf"
-# 
-# File: usr/share/ashyterm/app.py, line: 179
-#: NEEDS WORK
-msgid "Application startup initiated"
-msgstr "Forritsupphaf hafið verið hafið"
-# 
-# File: usr/share/ashyterm/app.py, line: 183
-#: NEEDS WORK
-msgid "Failed to initialize application subsystems"
-msgstr "Mistók að byrja undirkerfi forritsins"
-# 
-# File: usr/share/ashyterm/app.py, line: 192
-#: NEEDS WORK
-msgid "Application startup completed successfully"
-msgstr "Forritið hófst með góðum árangri"
-# 
-# File: usr/share/ashyterm/app.py, line: 195
-#: NEEDS WORK
-#, python-brace-format
-msgid "Application startup failed: {}"
-msgstr "Forritunarupphaf mistókst: {}"
-# 
-# File: usr/share/ashyterm/app.py, line: 206
-#: NEEDS WORK
-msgid "Automatic startup backup is disabled in settings."
-msgstr "Sjálfvirk upphafsafritun er óvirk í stillingum."
-# 
-# File: usr/share/ashyterm/app.py, line: 217
-#: NEEDS WORK
-msgid "Performing startup backup asynchronously"
-msgstr "Að framkvæma upphafsafritun samhliða"
-# 
-# File: usr/share/ashyterm/app.py, line: 222
-#: NEEDS WORK
-msgid "Automatic startup backup"
-msgstr "Sjálfvirk upphafsafritun"
-# 
-# File: usr/share/ashyterm/app.py, line: 228
-#: NEEDS WORK
-#, python-brace-format
-msgid "Startup backup check failed: {}"
-msgstr "Afturhalsun af öryggisafriti mistókst: {}"
-# 
-# File: usr/share/ashyterm/app.py, line: 248
-#: NEEDS WORK
-msgid "Application actions configured"
-msgstr "Forritaraðgerðir stilltar"
-# 
-# File: usr/share/ashyterm/app.py, line: 251
-#: NEEDS WORK
-#, python-brace-format
-msgid "Failed to setup actions: {}"
-msgstr "Mistók að stilla aðgerðir: {}"
-# 
-# File: usr/share/ashyterm/app.py, line: 293
-#: NEEDS WORK
-msgid "Application activation requested"
-msgstr "Beiðni um virkni forrits"
-# 
-# File: usr/share/ashyterm/app.py, line: 297
-#: NEEDS WORK
-msgid "Creating main window"
-msgstr "Að búa til aðalglugga"
-# 
-# File: usr/share/ashyterm/app.py, line: 754
-#: NEEDS WORK
-msgid "Presenting existing window"
-msgstr "Sýna núverandi glugga"
-# 
-# File: usr/share/ashyterm/app.py, line: 306
-#: NEEDS WORK
-msgid "Application activation completed"
-msgstr "Forrit virkni lokið"
-# 
-# File: usr/share/ashyterm/app.py, line: 309
-#: NEEDS WORK
-#, python-brace-format
-msgid "Application activation failed: {}"
-msgstr "Aðgerð virkni mistókst: {}"
-# 
-# File: usr/share/ashyterm/app.py, line: 310
-#: NEEDS WORK
-msgid "Activation Error"
-msgstr "Aktiveringar Villa"
-# 
-# File: usr/share/ashyterm/app.py, line: 310
-#: NEEDS WORK
-#, python-brace-format
-msgid "Failed to activate application: {}"
-msgstr "Ekki tókst að virkja forritið: {}"
-# 
-# File: usr/share/ashyterm/app.py, line: 330
-#: NEEDS WORK
-msgid "Quit action triggered - no SSH sessions"
-msgstr "Hætt aðgerðin virkjuð - engar SSH sesjónir"
-# 
-# File: usr/share/ashyterm/app.py, line: 333
-#: NEEDS WORK
-#, python-brace-format
-msgid "Quit action failed: {}"
-msgstr "Hætta aðgerðin mistókst: {}"
-# 
-# File: usr/share/ashyterm/app.py, line: 332
-# File: usr/share/ashyterm/app.py, line: 333
-#: NEEDS WORK
-#, python-brace-format
-msgid "Failed to open preferences: {}"
-msgstr "Ekki tókst að opna stillingar: {}"
-# 
-# File: usr/share/ashyterm/app.py, line: 333
-#: NEEDS WORK
-msgid "Preferences Error"
-msgstr "Stillir Villa"
-# 
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
-# 
-# File: usr/share/ashyterm/__init__.py, line: 62
-# File: usr/share/ashyterm/app.py, line: 350
-#: NEEDS WORK
-msgid "A modern terminal emulator with session management"
-msgstr "Nútíma skel emulators með sessastjórnun"
-# 
-# File: usr/share/ashyterm/app.py, line: 354
-#: NEEDS WORK
-#, python-brace-format
-msgid "Platform: {}\n"
-msgstr "Vettvangur: {}"
-# 
-# File: usr/share/ashyterm/app.py, line: 355
-#: NEEDS WORK
-#, python-brace-format
-msgid "Architecture: {}\n"
-msgstr "Arkitektúr: {}"
-# 
-# File: usr/share/ashyterm/app.py, line: 356
-#: NEEDS WORK
-#, python-brace-format
-msgid "Shell: {}"
-msgstr "Skel: {}"
-# 
-# File: usr/share/ashyterm/app.py, line: 362
-#: NEEDS WORK
-#, python-brace-format
-msgid "Failed to show about dialog: {}"
-msgstr "Mistók að sýna um glugga: {}"
-# 
-# File: usr/share/ashyterm/app.py, line: 368
-# File: usr/share/ashyterm/app.py, line: 379
-# File: usr/share/ashyterm/app.py, line: 392
-# File: usr/share/ashyterm/app.py, line: 396
-#: NEEDS WORK
-msgid "Backup Error"
-msgstr "Afturheimt Villa"
-# 
-# File: usr/share/ashyterm/app.py, line: 368
-# File: usr/share/ashyterm/app.py, line: 402
-#: NEEDS WORK
-msgid "Backup system not available"
-msgstr "Afturhalskerfi ekki í boði"
-# 
-# File: usr/share/ashyterm/app.py, line: 379
-#: NEEDS WORK
-msgid "No files to backup"
-msgstr "Engin ekki skráir til að afrita"
-# 
-# File: usr/share/ashyterm/app.py, line: 385
-#: NEEDS WORK
-msgid "Manual backup from menu"
-msgstr "Handvirkur afritun úr valmynd"
-# 
-# File: usr/share/ashyterm/app.py, line: 389
-#: NEEDS WORK
-#, python-brace-format
-msgid "Manual backup created: {}"
-msgstr "Handvirkur afrit búinn til: {}"
-# 
-# File: usr/share/ashyterm/app.py, line: 390
-#: NEEDS WORK
-msgid "Backup Complete"
-msgstr "Afturheimt lokið"
-# 
-# File: usr/share/ashyterm/app.py, line: 390
-#: NEEDS WORK
-#, python-brace-format
-msgid "Backup created successfully: {}"
-msgstr "Afsnið var búið til með góðum árangri: {}"
-# 
-# File: usr/share/ashyterm/app.py, line: 392
-#: NEEDS WORK
-msgid "Failed to create backup"
-msgstr "Mistók að búa til afrit"
-# 
-# File: usr/share/ashyterm/app.py, line: 395
-#: NEEDS WORK
-#, python-brace-format
-msgid "Manual backup failed: {}"
-msgstr "Handvirkur afritun mistókst: {}"
-# 
-# File: usr/share/ashyterm/app.py, line: 396
-#: NEEDS WORK
-#, python-brace-format
-msgid "Backup failed: {}"
-msgstr "Afturheimt mistókst: {}"
-# 
-# File: usr/share/ashyterm/app.py, line: 402
-# File: usr/share/ashyterm/app.py, line: 416
-#: NEEDS WORK
-msgid "Restore Error"
-msgstr "Endurunarvilla"
-# 
-# File: usr/share/ashyterm/app.py, line: 407
-#: NEEDS WORK
-msgid "No Backups"
-msgstr "Engin ekki afrit"
-# 
-# File: usr/share/ashyterm/app.py, line: 407
-#: NEEDS WORK
-msgid "No backups available to restore"
-msgstr "Engin öryggisafn er ekki til staðar til að endurheimta."
-# 
-# File: usr/share/ashyterm/app.py, line: 411
-#: NEEDS WORK
-msgid "Backups Available"
-msgstr "Afritun tiltæk"
-# 
-# File: usr/share/ashyterm/app.py, line: 412
-#: NEEDS WORK
-#, python-brace-format
-msgid "{} backup(s) available. Use preferences dialog for detailed restore options."
-msgstr "{} afritun(um) í boði. Notaðu stillingargluggann fyrir ítarlegar endurheimtarvalkostir."
-# 
-# File: usr/share/ashyterm/app.py, line: 415
-#: NEEDS WORK
-#, python-brace-format
-msgid "Restore backup action failed: {}"
-msgstr "Afturheimt aðgerð mistókst: {}"
-# 
-# File: usr/share/ashyterm/app.py, line: 416
-#: NEEDS WORK
-#, python-brace-format
-msgid "Failed to access backups: {}"
-msgstr "Mistók að fá aðgang að afritum: {}"
-# 
-# File: usr/share/ashyterm/app.py, line: 435
-#: NEEDS WORK
-msgid "Debug mode disabled"
-msgstr "Villtengd stilling óvirk"
-# 
-# File: usr/share/ashyterm/app.py, line: 440
-#: NEEDS WORK
-#, python-brace-format
-msgid "Failed to toggle debug mode: {}"
-msgstr "Mistók að kveikja á villuham: {}"
-# 
-# File: usr/share/ashyterm/app.py, line: 449
-#: NEEDS WORK
-msgid "Log Information"
-msgstr "Skráningaupplýsingar"
-# 
-# File: usr/share/ashyterm/app.py, line: 449
-#: NEEDS WORK
-#, python-brace-format
-msgid "Logs are stored in: {}"
-msgstr "Skrár eru vistaðar í: {}"
-# 
-# File: usr/share/ashyterm/app.py, line: 452
-#: NEEDS WORK
-#, python-brace-format
-msgid "Failed to show log info: {}"
-msgstr "Mistók að sýna skráningu upplýsingar: {}"
-# 
-# File: usr/share/ashyterm/app.py, line: 484
-#: NEEDS WORK
-#, python-brace-format
-msgid "Failed to check SSH sessions: {}"
-msgstr "Mistók að athuga SSH sesjónir: {}"
-# 
-# File: usr/share/ashyterm/app.py, line: 498
-#: NEEDS WORK
-msgid "Close Application"
-msgstr "Loka forrit"
-# 
-# File: usr/share/ashyterm/app.py, line: 499
-#: NEEDS WORK
-msgid ""
-"There are active SSH connections. Closing will disconnect all sessions.\n"
-"\n"
-"Are you sure you want to close the application?"
-msgstr ""
-"Það eru virk SSH tengingar. Að loka mun rjúfa allar sesjónir.\n"
-"\n"
-"Ertu viss um að þú viljir loka forritinu?"
-# 
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 163
-# File: usr/share/ashyterm/ui/dialogs.py, line: 575
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1213
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1957
-# File: usr/share/ashyterm/ui/dialogs.py, line: 2006
-# File: usr/share/ashyterm/window.py, line: 953
-# File: usr/share/ashyterm/window.py, line: 1013
-#: NEEDS WORK
-msgid "Cancel"
-msgstr "Hætta við"
-# 
-# File: usr/share/ashyterm/app.py, line: 503
-#: NEEDS WORK
-msgid "Close All"
-msgstr "Loka allt"
-# 
-# File: usr/share/ashyterm/app.py, line: 510
-#: NEEDS WORK
-msgid "User confirmed quit with active SSH sessions"
-msgstr "Notandi staðfesti að hætta með virk SSH tengingar"
-# 
-# File: usr/share/ashyterm/app.py, line: 513
-#: NEEDS WORK
-msgid "User cancelled quit"
-msgstr "Notandi hætti við að loka"
-# 
-# File: usr/share/ashyterm/app.py, line: 516
-#: NEEDS WORK
-#, python-brace-format
-msgid "SSH close confirmation response failed: {}"
-msgstr "SSH loka staðfestingarsvörun mistókst: {}"
-# 
-# File: usr/share/ashyterm/app.py, line: 523
-#: NEEDS WORK
-#, python-brace-format
-msgid "SSH close confirmation dialog failed: {}"
-msgstr "SSH lokun staðfestingargluggans mistókst: {}"
-# 
-# File: usr/share/ashyterm/app.py, line: 456
-#: NEEDS WORK
-msgid "Application shutdown initiated"
-msgstr "Forrit lokun hafin"
-# 
-# File: usr/share/ashyterm/app.py, line: 465
-#: NEEDS WORK
-msgid "Performing graceful shutdown"
-msgstr "Að framkvæma snyrtilega lokun"
-# 
-# File: usr/share/ashyterm/app.py, line: 471
-#: NEEDS WORK
-msgid "Cleaning up main window"
-msgstr "Raða aðalglugga"
-# 
-# File: usr/share/ashyterm/app.py, line: 476
-#: NEEDS WORK
-msgid "Saving settings"
-msgstr "Vista stillinga"
-# 
-# File: usr/share/ashyterm/app.py, line: 483
-#: NEEDS WORK
-msgid "Graceful shutdown completed"
-msgstr "Vélkomin lokun lokið"
-# 
-# File: usr/share/ashyterm/app.py, line: 486
-#: NEEDS WORK
-#, python-brace-format
-msgid "Error during graceful shutdown: {}"
-msgstr "Villa við að loka á sanngjarnan hátt: {}"
-# 
-# File: usr/share/ashyterm/app.py, line: 510
-#: NEEDS WORK
-msgid "Performing shutdown backup"
-msgstr "Að framkvæma afritun við lokun"
-# 
-# File: usr/share/ashyterm/app.py, line: 514
-#: NEEDS WORK
-msgid "Automatic backup on exit"
-msgstr "Sjálfvirk afritun við útgáfu"
-# 
-# File: usr/share/ashyterm/app.py, line: 518
-#: NEEDS WORK
-#, python-brace-format
-msgid "Shutdown backup failed: {}"
-msgstr "Afturhalsun af öryggisafriti mistókst: {}"
-# 
-# File: usr/share/ashyterm/app.py, line: 523
-#: NEEDS WORK
-msgid "Emergency cleanup on exit"
-msgstr "Nauðsynleg hreinsun við útskrift"
-# 
-# File: usr/share/ashyterm/app.py, line: 530
-#: NEEDS WORK
-msgid "Startup Error"
-msgstr "Ræsivillur"
-# 
-# File: usr/share/ashyterm/app.py, line: 531
-#: NEEDS WORK
-#, python-brace-format
-msgid "Application failed to start: {}"
-msgstr "Forrit gat ekki hafist: {}"
-# 
-# File: usr/share/ashyterm/app.py, line: 551
-#: NEEDS WORK
-#, python-brace-format
-msgid "Failed to show error dialog: {}"
-msgstr "Mistók að sýna villuskilaboð: {}"
-# 
-# File: usr/share/ashyterm/app.py, line: 565
-#: NEEDS WORK
-#, python-brace-format
-msgid "Failed to show info dialog: {}"
-msgstr "Mistók að sýna upplýsingaskjá: {}"
-# 
-# File: usr/share/ashyterm/app.py, line: 576
-#: NEEDS WORK
-#, python-brace-format
-msgid "Failed to refresh keyboard shortcuts: {}"
-msgstr "Mistók að endurnýja lyklaskammta: {}"
-# 
-# File: usr/share/ashyterm/app.py, line: 584
-#: NEEDS WORK
-msgid "Main window registered"
-msgstr "Aðalgluggi skráður"
-# 
-# File: usr/share/ashyterm/app.py, line: 592
-#: NEEDS WORK
-msgid "Main window unregistered"
-msgstr "Aðalgluggi óskráð"
-# 
-# File: usr/share/ashyterm/app.py, line: 647
-#: NEEDS WORK
-#, python-brace-format
-msgid "New window created with working directory: {}"
-msgstr "Nýr gluggi búinn til með vinnuslóð: {}"
-# 
-# File: usr/share/ashyterm/app.py, line: 683
-#: NEEDS WORK
-msgid "New window created successfully"
-msgstr "Nýr gluggi búinn til með góðum árangri"
-# 
-# File: usr/share/ashyterm/app.py, line: 611
-#: NEEDS WORK
-#, python-brace-format
-msgid "Failed to create new window: {}"
-msgstr "Mistók að búa til nýjan glugga: {}"
-# 
-# File: usr/share/ashyterm/utils/__init__.py, line: 87
-# File: usr/share/ashyterm/utils/__init__.py, line: 104
-#: NEEDS WORK
-msgid "unnamed"
-msgstr "ónefndur"
-# 
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1624
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1907
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1983
-# File: usr/share/ashyterm/utils.py, line: 238
-#: NEEDS WORK
-msgid "None"
-msgstr "None"
-# 
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
-# 
-# File: usr/share/ashyterm/utils/security.py, line: 843
-# File: usr/share/ashyterm/utils.py, line: 442
-#: NEEDS WORK
-#, python-brace-format
-msgid "Invalid session type: {}"
-msgstr "Ógildur sessíutegund: {}"
-# 
-# File: usr/share/ashyterm/utils.py, line: 447
-#: NEEDS WORK
-msgid "SSH host cannot be empty"
-msgstr "SSH hýsill má ekki vera auður"
-# 
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
-# 
-# File: usr/share/ashyterm/utils/security.py, line: 508
-# File: usr/share/ashyterm/utils/security.py, line: 796
-# File: usr/share/ashyterm/utils.py, line: 449
-#: NEEDS WORK
-#, python-brace-format
-msgid "Invalid hostname format: {}"
-msgstr "Ógildur hýsingarheiti: {}"
-# 
-# File: usr/share/ashyterm/utils.py, line: 461
-#: NEEDS WORK
-#, python-brace-format
-msgid "Error during session validation: {}"
-msgstr "Villa í gildisskoðun: {}"
-# 
-# File: usr/share/ashyterm/utils.py, line: 510
-#: NEEDS WORK
-msgid "unknown"
-msgstr "óvissur"
-# 
-# File: usr/share/ashyterm/utils.py, line: 539
-#: NEEDS WORK
-msgid "Global error handling configured"
-msgstr "Alheimsvilla villa stillt"
-# 
-# File: usr/share/ashyterm/utils.py, line: 576
-#: NEEDS WORK
-msgid "unknown_session"
-msgstr "óviss sk session"
-# 
-# File: usr/share/ashyterm/utils.py, line: 586
-#: NEEDS WORK
-msgid "Using deprecated generate_unique_name_legacy(). Use generate_unique_name() instead."
-msgstr "Notandi úrelt generate_unique_name_legacy(). Notaðu generate_unique_name() í staðinn."
-# 
-# File: usr/share/ashyterm/utils.py, line: 601
-#: NEEDS WORK
-#, python-brace-format
-msgid "Utils module initialized on {} platform"
-msgstr "Utils module stillt á {} vettvangi"
-# 
-# File: usr/share/ashyterm/utils.py, line: 605
-#: NEEDS WORK
-msgid "SSH command not found - SSH functionality will be limited"
-msgstr "SSH skipun fannst ekki - SSH virkni verður takmörkuð"
-# 
-# File: usr/share/ashyterm/utils.py, line: 608
-#: NEEDS WORK
-msgid "sshpass not available - password SSH authentication will require manual input"
-msgstr "sshpass ekki tiltækt - lykilorð SSH auðkenning mun krafast handvirkrar inntaks"
-# 
-# File: usr/share/ashyterm/utils.py, line: 610
-#: NEEDS WORK
-msgid "Utils module initialization completed"
-msgstr "Utils einingangsmódúl lokið"
-# 
-# File: usr/share/ashyterm/utils.py, line: 621
-#: NEEDS WORK
-#, python-brace-format
-msgid "Warning: Utils module initialization failed: {}"
-msgstr "Aðvörun: Utils einingarsmíð mistókst: {}"
-# 
-# File: usr/share/ashyterm/terminal/tabs.py, line: 489
-#: NEEDS WORK
-msgid "Exited"
-msgstr "Útgefið"
-# 
-# File: usr/share/ashyterm/window.py, line: 140
-# File: usr/share/ashyterm/window.py, line: 644
-#: NEEDS WORK
-msgid "Terminal Error"
-msgstr "Terminal Villa"
-# 
-# File: usr/share/ashyterm/window.py, line: 141
-#: NEEDS WORK
-msgid "Failed to create initial terminal. Check system configuration."
-msgstr "Mistók að búa til upphafsterminal. Athugaðu kerfiskonfígurun."
+msgid "Session moved successfully."
+msgstr "Session fluttuð með árangri."
 # 
 # File: usr/share/ashyterm/window.py, line: 145
 #: NEEDS WORK
@@ -1267,6 +828,11 @@ msgstr "Mistók að byrja terminal: {error}"
 #: NEEDS WORK
 msgid "Toggle Sidebar"
 msgstr "Vöndu hliðarstiku"
+# 
+# File: usr/share/ashyterm/window.py, line: 246
+#: NEEDS WORK
+msgid "File Manager"
+msgstr "Skráaskiptari"
 # 
 # File: usr/share/ashyterm/window.py, line: 268
 #: NEEDS WORK
@@ -1324,37 +890,6 @@ msgstr "Gagnahleðsluvilla"
 msgid "Failed to load saved sessions and folders. Starting with empty configuration."
 msgstr "Mistók að hlaða uppsöfnuðum sessíum og möppum. Byrjar með tómu stillingum."
 # 
-# File: usr/share/ashyterm/window.py, line: 502
-#: NEEDS WORK
-msgid "Window close request received"
-msgstr "Gluggastjórn lokunarbeiðni móttekin"
-# 
-# File: usr/share/ashyterm/window.py, line: 507
-#: NEEDS WORK
-msgid "Force closing - allowing window to close"
-msgstr "Þvingað að loka - leyfa glugga að loka"
-# 
-# File: usr/share/ashyterm/window.py, line: 515
-#: NEEDS WORK
-msgid "Showing SSH close confirmation dialog"
-msgstr "Sýna SSH loka staðfestingarglugga"
-# 
-# File: usr/share/ashyterm/window.py, line: 520
-#: NEEDS WORK
-msgid "No SSH sessions, proceeding with normal close"
-msgstr "Engin SSH, fer ég áfram með venjulegu lokun."
-# 
-# File: usr/share/ashyterm/window.py, line: 511
-#: NEEDS WORK
-msgid "Window cleanup completed"
-msgstr "Glugga hreinsun lokið"
-# 
-# File: usr/share/ashyterm/window.py, line: 515
-#: NEEDS WORK
-#, python-brace-format
-msgid "Window close handling failed: {}"
-msgstr "Glugga lokun meðhöndlun mistókst: {}"
-# 
 # File: usr/share/ashyterm/window.py, line: 544
 #: NEEDS WORK
 msgid "This window has active SSH connections:"
@@ -1376,27 +911,23 @@ msgstr "Ertu viss um að þú viljir loka þessu glugga?"
 msgid "Close Window"
 msgstr "Loka glugga"
 # 
-# File: usr/share/ashyterm/window.py, line: 540
-#: NEEDS WORK
-msgid "User confirmed window close with active SSH sessions"
-msgstr "Notandi staðfesti að loka glugganum með virkjum SSH sesjónum"
+# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
 # 
-# File: usr/share/ashyterm/window.py, line: 544
+# File: usr/share/ashyterm/ui/dialogs.py, line: 163
+# File: usr/share/ashyterm/ui/dialogs.py, line: 575
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1213
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1957
+# File: usr/share/ashyterm/ui/dialogs.py, line: 2006
+# File: usr/share/ashyterm/window.py, line: 953
+# File: usr/share/ashyterm/window.py, line: 1013
 #: NEEDS WORK
-msgid "User cancelled window close"
-msgstr "Notandi hætti við að loka glugga"
+msgid "Cancel"
+msgstr "Hætta við"
 # 
-# File: usr/share/ashyterm/window.py, line: 547
+# File: usr/share/ashyterm/window.py, line: 551
 #: NEEDS WORK
-#, python-brace-format
-msgid "Window SSH close confirmation response failed: {}"
-msgstr "Gluggi SSH lokun staðfestingarsvörun mistókst: {}"
-# 
-# File: usr/share/ashyterm/window.py, line: 554
-#: NEEDS WORK
-#, python-brace-format
-msgid "Window SSH close confirmation dialog failed: {}"
-msgstr "Gluggaskipti SSH lokunar staðfestingarglugginn mistókst: {}"
+msgid "Session Validation Error"
+msgstr "Villaunarskekkja í sessi"
 # 
 # File: usr/share/ashyterm/window.py, line: 550
 #: NEEDS WORK
@@ -1408,139 +939,10 @@ msgstr ""
 "Gildisvottun mistókst:\n"
 "{errors}"
 # 
-# File: usr/share/ashyterm/window.py, line: 551
+# File: usr/share/ashyterm/window.py, line: 586
 #: NEEDS WORK
-msgid "Session Validation Error"
-msgstr "Villaunarskekkja í sessi"
-# 
-# File: usr/share/ashyterm/window.py, line: 575
-#: NEEDS WORK
-msgid "Terminal Creation Failed"
-msgstr "Sköpun terminala mistókst"
-# 
-# File: usr/share/ashyterm/window.py, line: 576
-#: NEEDS WORK
-msgid "Could not create terminal for this session."
-msgstr "Gat ekki að búa til terminal fyrir þessa lotu."
-# 
-# File: usr/share/ashyterm/window.py, line: 579
-# File: usr/share/ashyterm/window.py, line: 640
-#: NEEDS WORK
-msgid "VTE Not Available"
-msgstr "VTE Ekki í boði"
-# 
-# File: usr/share/ashyterm/window.py, line: 580
-#: NEEDS WORK
-msgid "Cannot open session - VTE library not installed."
-msgstr "Get ekki opna sessjón - VTE bókasafnið er ekki uppsett."
-# 
-# File: usr/share/ashyterm/window.py, line: 583
-#: NEEDS WORK
-msgid "Session Error"
-msgstr "Samskipti Villa"
-# 
-# File: usr/share/ashyterm/window.py, line: 583
-#: NEEDS WORK
-#, python-brace-format
-msgid "Failed to activate session: {error}"
-msgstr "Mistók að virkja sess: {error}"
-# 
-# File: usr/share/ashyterm/window.py, line: 802
-#: NEEDS WORK
-msgid "SFTP Connection Failed"
-msgstr "SFTP tenging mistókst"
-# 
-# File: usr/share/ashyterm/window.py, line: 803
-#: NEEDS WORK
-msgid "Could not create SFTP terminal for this session."
-msgstr "Gat ekki að búa til SFTP terminal fyrir þessa lotu."
-# 
-# File: usr/share/ashyterm/window.py, line: 813
-#: NEEDS WORK
-msgid "SFTP Error"
-msgstr "SFTP villa"
-# 
-# File: usr/share/ashyterm/window.py, line: 814
-#: NEEDS WORK
-#, python-brace-format
-msgid "Failed to start SFTP session: {error}"
-msgstr "Mistók að hefja SFTP sessjón: {error}"
-# 
-# File: usr/share/ashyterm/window.py, line: 641
-#: NEEDS WORK
-msgid "Cannot create terminal - VTE library not installed."
-msgstr "Getur ekki búið til terminal - VTE bókasafnið er ekki uppsett."
-# 
-# File: usr/share/ashyterm/window.py, line: 644
-#: NEEDS WORK
-#, python-brace-format
-msgid "Failed to create new tab: {error}"
-msgstr "Mistók að búa til nýja flipa: {error}"
-# 
-# File: usr/share/ashyterm/window.py, line: 876
-# File: usr/share/ashyterm/window.py, line: 886
-#: NEEDS WORK
-msgid "Split Error"
-msgstr "Aðskilnaðarblaðavilla"
-# 
-# File: usr/share/ashyterm/window.py, line: 694
-# File: usr/share/ashyterm/window.py, line: 743
-# File: usr/share/ashyterm/window.py, line: 903
-#: NEEDS WORK
-msgid "Edit Error"
-msgstr "Breyta Villa"
-# 
-# File: usr/share/ashyterm/window.py, line: 694
-#: NEEDS WORK
-#, python-brace-format
-msgid "Failed to edit session: {error}"
-msgstr "Mistók að breyta sessi: {error}"
-# 
-# File: usr/share/ashyterm/window.py, line: 706
-#: NEEDS WORK
-msgid "Duplicate Error"
-msgstr "Afturkeyrsluvilla"
-# 
-# File: usr/share/ashyterm/window.py, line: 715
-# File: usr/share/ashyterm/window.py, line: 752
-#: NEEDS WORK
-msgid "Rename Error"
-msgstr "Nafnaskiptingarvilla"
-# 
-# File: usr/share/ashyterm/window.py, line: 715
-#: NEEDS WORK
-#, python-brace-format
-msgid "Failed to rename session: {error}"
-msgstr "Mistók að endurnefna sess: {error}"
-# 
-# File: usr/share/ashyterm/window.py, line: 724
-#: NEEDS WORK
-msgid "Move Error"
-msgstr "Hreyfingarvilla"
-# 
-# File: usr/share/ashyterm/window.py, line: 733
-# File: usr/share/ashyterm/window.py, line: 771
-#: NEEDS WORK
-msgid "Delete Error"
-msgstr "Eyða villu"
-# 
-# File: usr/share/ashyterm/window.py, line: 1043
-#: NEEDS WORK
-#, python-brace-format
-msgid "Failed to delete selected items: {error}"
-msgstr "Ekki tókst að eyða valdum hlutum: {error}"
-# 
-# File: usr/share/ashyterm/window.py, line: 743
-#: NEEDS WORK
-#, python-brace-format
-msgid "Failed to edit folder: {error}"
-msgstr "Mistók að breyta möppu: {error}"
-# 
-# File: usr/share/ashyterm/window.py, line: 752
-#: NEEDS WORK
-#, python-brace-format
-msgid "Failed to rename folder: {error}"
-msgstr "Mistók að endurnefna möppu: {error}"
+msgid "SFTP not implemented yet"
+msgstr "SFTP ekki innleitt ennþá"
 # 
 # File: usr/share/ashyterm/window.py, line: 758
 # File: usr/share/ashyterm/window.py, line: 875
@@ -1548,22 +950,10 @@ msgstr "Mistók að endurnefna möppu: {error}"
 msgid "New Session"
 msgstr "Nýja sessjón"
 # 
-# File: usr/share/ashyterm/window.py, line: 762
+# File: usr/share/ashyterm/window.py, line: 885
 #: NEEDS WORK
-msgid "Add Error"
-msgstr "Bæta við villu"
-# 
-# File: usr/share/ashyterm/window.py, line: 762
-#: NEEDS WORK
-#, python-brace-format
-msgid "Failed to add session to folder: {error}"
-msgstr "Mistók að bæta sessi við möppu: {error}"
-# 
-# File: usr/share/ashyterm/window.py, line: 835
-#: NEEDS WORK
-#, python-brace-format
-msgid "Failed to open preferences: {error}"
-msgstr "Ekki tókst að opna stillingar: {error}"
+msgid "New Folder"
+msgstr "Nýr möppur"
 # 
 # #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
 # 
@@ -1622,31 +1012,6 @@ msgstr "Líma"
 msgid "Select All"
 msgstr "Velja allt"
 # 
-# File: usr/share/ashyterm/window.py, line: 1190
-#: NEEDS WORK
-msgid "Split Navigation"
-msgstr "Sundurð Navigering"
-# 
-# File: usr/share/ashyterm/window.py, line: 1193
-#: NEEDS WORK
-msgid "Focus Up"
-msgstr "Fókus á upp"
-# 
-# File: usr/share/ashyterm/window.py, line: 1194
-#: NEEDS WORK
-msgid "Focus Down"
-msgstr "Fókus á niður"
-# 
-# File: usr/share/ashyterm/window.py, line: 1195
-#: NEEDS WORK
-msgid "Focus Left"
-msgstr "Fókus á vinstri"
-# 
-# File: usr/share/ashyterm/window.py, line: 1196
-#: NEEDS WORK
-msgid "Focus Right"
-msgstr "Fókus á hægri"
-# 
 # File: usr/share/ashyterm/window.py, line: 936
 #: NEEDS WORK
 msgid "Application"
@@ -1671,54 +1036,6 @@ msgstr "Valmyndir"
 #: NEEDS WORK
 msgid "Quit"
 msgstr "Hætta"
-# 
-# File: usr/share/ashyterm/window.py, line: 961
-#: NEEDS WORK
-#, python-brace-format
-msgid "Failed to open shortcuts window: {error}"
-msgstr "Mistók að opna flýtileiðaglugga: {error}"
-# 
-# File: usr/share/ashyterm/window.py, line: 1271
-#: NEEDS WORK
-msgid "Failed to create new window"
-msgstr "Ekki tókst að búa til nýjan glugga"
-# 
-# File: usr/share/ashyterm/window.py, line: 1275
-#: NEEDS WORK
-msgid "Could not create a new window"
-msgstr "Gat ekki að búa til nýjan glugga"
-# 
-# File: usr/share/ashyterm/window.py, line: 1282
-#: NEEDS WORK
-#, python-brace-format
-msgid "Failed to create new window: {error}"
-msgstr "Mistók að búa til nýjan glugga: {error}"
-# 
-# File: usr/share/ashyterm/window.py, line: 879
-#: NEEDS WORK
-msgid "Add Session Error"
-msgstr "Bæta við sessuvillu"
-# 
-# File: usr/share/ashyterm/window.py, line: 977
-#: NEEDS WORK
-msgid "Failed to create new tab."
-msgstr "Ekki tókst að búa til nýjan flipa."
-# 
-# File: usr/share/ashyterm/window.py, line: 885
-#: NEEDS WORK
-msgid "New Folder"
-msgstr "Nýr möppur"
-# 
-# File: usr/share/ashyterm/window.py, line: 889
-#: NEEDS WORK
-msgid "Add Folder Error"
-msgstr "Breyta möppu villa"
-# 
-# File: usr/share/ashyterm/window.py, line: 903
-#: NEEDS WORK
-#, python-brace-format
-msgid "Failed to edit selected item: {error}"
-msgstr "Mistók að breyta valda hlut: {error}"
 # 
 # File: usr/share/ashyterm/window.py, line: 944
 # File: usr/share/ashyterm/window.py, line: 999
@@ -1755,16 +1072,6 @@ msgstr "Sláðu inn nýtt nafn fyrir \"{name}\":"
 #: NEEDS WORK
 msgid "Rename"
 msgstr "Endurnefna"
-# 
-# File: usr/share/ashyterm/window.py, line: 994
-#: NEEDS WORK
-msgid "Move Session"
-msgstr "Færa sessjón"
-# 
-# File: usr/share/ashyterm/window.py, line: 994
-#: NEEDS WORK
-msgid "Move session functionality will be implemented in folder selection dialog."
-msgstr "Færsluvirkni verður innleidd í valglýsingu fyrir möppur."
 # 
 # File: usr/share/ashyterm/window.py, line: 1450
 #: NEEDS WORK
@@ -1829,6 +1136,97 @@ msgstr "Eyða"
 #: NEEDS WORK
 msgid "OK"
 msgstr "Í lagi"
+# 
+# File: usr/share/ashyterm/window.py, line: 958
+#: NEEDS WORK
+msgid "Cannot detach the last tab."
+msgstr "Get ekki að losa síðasta flipa."
+# 
+# File: usr/share/ashyterm/ui/ssh_dialogs.py, line: 18
+#: NEEDS WORK
+msgid "SSH Connection Timeout"
+msgstr "SSH tengi tímabil"
+# 
+# File: usr/share/ashyterm/ui/ssh_dialogs.py, line: 21
+#: NEEDS WORK
+#, python-brace-format
+msgid "The SSH connection attempt timed out after {seconds} seconds."
+msgstr "SSH tengingartilraunin tímabundið útrunnin eftir {seconds} sekúndur."
+# 
+# File: usr/share/ashyterm/ui/ssh_dialogs.py, line: 23
+#: NEEDS WORK
+msgid "Connection details:"
+msgstr "Samskipti upplýsingar:"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 446
+#: NEEDS WORK
+msgid "Username"
+msgstr "Notandi"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 429
+# File: usr/share/ashyterm/ui/dialogs.py, line: 894
+#: NEEDS WORK
+msgid "Host"
+msgstr "Gestirandi"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 464
+#: NEEDS WORK
+msgid "Port"
+msgstr "Portur"
+# 
+# File: usr/share/ashyterm/ui/ssh_dialogs.py, line: 31
+#: NEEDS WORK
+msgid "Remote path"
+msgstr "Fjarlægur slóð"
+# 
+# File: usr/share/ashyterm/ui/ssh_dialogs.py, line: 32
+#: NEEDS WORK
+msgid "Please check your network connection and verify the server is accessible."
+msgstr "Vinsamlegast athugaðu net tenginguna þína og staðfestu að þjónninn sé aðgengilegur."
+# 
+# File: usr/share/ashyterm/ui/ssh_dialogs.py, line: 35
+# File: usr/share/ashyterm/ui/ssh_dialogs.py, line: 117
+#: NEEDS WORK
+msgid "Close"
+msgstr "Lokaðu"
+# 
+# File: usr/share/ashyterm/ui/ssh_dialogs.py, line: 36
+#: NEEDS WORK
+msgid "Retry Connection"
+msgstr "Endurtaka tengingu"
+# 
+# File: usr/share/ashyterm/ui/ssh_dialogs.py, line: 74
+#: NEEDS WORK
+msgid "SSH Authentication Required"
+msgstr "SSH auðkenning krafist"
+# 
+# File: usr/share/ashyterm/ui/ssh_dialogs.py, line: 75
+#: NEEDS WORK
+#, python-brace-format
+msgid "Please enter the password for {target_display}"
+msgstr "Vinsamlegast sláðu inn lykilorðið fyrir {target_display}"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 467
+# File: usr/share/ashyterm/ui/dialogs.py, line: 533
+#: NEEDS WORK
+msgid "Password"
+msgstr "Lykilorð"
+# 
+# File: usr/share/ashyterm/ui/ssh_dialogs.py, line: 81
+#: NEEDS WORK
+msgid "Connect"
+msgstr "Tengdu"
+# 
+# File: usr/share/ashyterm/ui/ssh_dialogs.py, line: 96
+#: NEEDS WORK
+msgid "SSH Connection Failed"
+msgstr "SSH tenging mistókst"
+# 
+# File: usr/share/ashyterm/ui/ssh_dialogs.py, line: 97
+#: NEEDS WORK
+#, python-brace-format
+msgid "Could not connect to session '{session_name}'."
+msgstr "Gat ekki tengingu við sess '{session_name}'."
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 164
 #: NEEDS WORK
@@ -1926,12 +1324,6 @@ msgstr "SSH stilling"
 msgid "Configure connection details for SSH sessions"
 msgstr "Stilltu tengingarupplýsingar fyrir SSH lotur"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 429
-# File: usr/share/ashyterm/ui/dialogs.py, line: 894
-#: NEEDS WORK
-msgid "Host"
-msgstr "Gestirandi"
-# 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 430
 #: NEEDS WORK
 msgid "Hostname or IP address of the remote server"
@@ -1942,11 +1334,6 @@ msgstr "Heiti eða IP-tala fjarþjónsins"
 msgid "example.com or 192.168.1.100"
 msgstr "example.com eða 192.168.1.100"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 446
-#: NEEDS WORK
-msgid "Username"
-msgstr "Notandi"
-# 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 447
 #: NEEDS WORK
 msgid "Username for SSH authentication (optional)"
@@ -1956,11 +1343,6 @@ msgstr "Notandi fyrir SSH auðkenningu (valfrjálst)"
 #: NEEDS WORK
 msgid "username"
 msgstr "notandi"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 464
-#: NEEDS WORK
-msgid "Port"
-msgstr "Portur"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 465
 #: NEEDS WORK
@@ -1982,12 +1364,6 @@ msgstr "Veldu auðkenningaraðferð"
 msgid "SSH Key"
 msgstr "SSH lykill"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 467
-# File: usr/share/ashyterm/ui/dialogs.py, line: 533
-#: NEEDS WORK
-msgid "Password"
-msgstr "Lykilorð"
-# 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 494
 #: NEEDS WORK
 msgid "SSH Key Path"
@@ -2008,25 +1384,15 @@ msgstr "Skoða..."
 msgid "Password for SSH authentication"
 msgstr "Lykilorð fyrir SSH auðkenningu"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 542
+# File: usr/share/ashyterm/ui/dialogs.py, line: 342
 #: NEEDS WORK
-msgid "Password for SSH authentication (encrypted storage)"
-msgstr "Lykilorð fyrir SSH auðkenningu (dulkóðuð geymsla)"
+msgid "Password for SSH authentication (stored in system keyring)"
+msgstr "Lykilorð fyrir SSH auðkenningu (geymt í kerfiskerfi)"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 544
+# File: usr/share/ashyterm/ui/dialogs.py, line: 346
 #: NEEDS WORK
-msgid "Password for SSH authentication (encryption available but not initialized)"
-msgstr "Lykilorð fyrir SSH auðkenningu (dulkóðun tiltæk en ekki virkjuð)"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 546
-#: NEEDS WORK
-msgid "Password for SSH authentication (encryption not available)"
-msgstr "Lykilorð fyrir SSH auðkenningu (dulkóðun ekki í boði)"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 548
-#: NEEDS WORK
-msgid "Password for SSH authentication (stored as plain text)"
-msgstr "Lykilorð fyrir SSH auðkenningu (geymt sem hreinn texti)"
+msgid "Password for SSH authentication (keyring not available)"
+msgstr "Lykilorð fyrir SSH auðkenningu (lykilhringur ekki tiltækur)"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 553
 #: NEEDS WORK
@@ -2130,47 +1496,6 @@ msgstr "Tengist mistókst"
 msgid "Could not connect to the SSH server."
 msgstr "Gat ekki tengingu við SSH þjóninn."
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 774
-#: NEEDS WORK
-#, python-brace-format
-msgid ""
-"Connection test failed:\n"
-"{}"
-msgstr ""
-"Tengingarpróf mistókst:  \n"
-"{}"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 775
-#: NEEDS WORK
-msgid "Connection Test Failed"
-msgstr "Tengingarpróf mistókst"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 781
-#: NEEDS WORK
-msgid "Connection Test"
-msgstr "Tengja Próf"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 782
-#: NEEDS WORK
-msgid ""
-"SSH connection parameters appear valid.\n"
-"\n"
-"Note: Actual connection testing will be implemented in a future version."
-msgstr ""
-"SSH tengiparametrar virðast vera gild. \n"
-"\n"
-"Athugið: Raunveruleg tengingarprófun verður innleidd í framtíðartölu."
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 789
-#: NEEDS WORK
-msgid "Test Error"
-msgstr "Prófunarvilla"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 789
-#: NEEDS WORK
-msgid "Connection test failed"
-msgstr "Tengingarpróf mistókst"
-# 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 796
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1252
 #: NEEDS WORK
@@ -2222,6 +1547,11 @@ msgstr "Mistók að staðfesta sess: {}"
 msgid "Session name"
 msgstr "Sesíon nafn"
 # 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 921
+#: NEEDS WORK
+msgid "SSH Validation Error"
+msgstr "SSH staðfesting villa"
+# 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 920
 #: NEEDS WORK
 #, python-brace-format
@@ -2231,11 +1561,6 @@ msgid ""
 msgstr ""
 "SSH stilling villur:\n"
 "{}"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 921
-#: NEEDS WORK
-msgid "SSH Validation Error"
-msgstr "SSH staðfesting villa"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1034
 #: NEEDS WORK
@@ -2289,21 +1614,15 @@ msgstr "Mistók að vista möppu: {}"
 msgid "Folder name"
 msgstr "Möppunafn"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1361
+# File: usr/share/ashyterm/ui/dialogs.py, line: 923
 #: NEEDS WORK
-#, python-brace-format
-msgid "Folder {} {}"
-msgstr "Mappa {} {}"
+msgid "General"
+msgstr "Almennt"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1421
 #: NEEDS WORK
 msgid "Appearance"
 msgstr "Útlit"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1428
-#: NEEDS WORK
-msgid "Colors & Font"
-msgstr "Litir & Litur"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1429
 #: NEEDS WORK
@@ -2340,101 +1659,6 @@ msgstr "Terminal letur"
 msgid "Select font family and size for terminal text"
 msgstr "Veldu leturgerð og stærð fyrir terminal texta"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1486
-#: NEEDS WORK
-msgid "Behavior"
-msgstr "Hegðun"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1493
-#: NEEDS WORK
-msgid "Terminal Behavior"
-msgstr "Terminal hegðun"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1494
-#: NEEDS WORK
-msgid "Configure how terminals behave"
-msgstr "Stillir hvernig terminalar hegða sér"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1500
-#: NEEDS WORK
-msgid "Auto Close Tabs"
-msgstr "Sjálfvirk Lokun Flipa"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1501
-#: NEEDS WORK
-msgid "Automatically close tabs when process exits normally"
-msgstr "Loka sjálfkrafa flipa þegar ferlið lokar eðlilega"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1509
-#: NEEDS WORK
-msgid "Scroll on Output"
-msgstr "Rúlla á úttak"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1510
-#: NEEDS WORK
-msgid "Automatically scroll when new output appears"
-msgstr "Sjálfvirkt skrolla þegar nýtt úttak birtist"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1518
-#: NEEDS WORK
-msgid "Scroll on Keystroke"
-msgstr "Rúlla á lyklapressu"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1519
-#: NEEDS WORK
-msgid "Automatically scroll when typing"
-msgstr "Sjálfvirkt skrolla þegar skrifað er"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1527
-#: NEEDS WORK
-msgid "Hide Mouse Cursor"
-msgstr "Fela músarhnappinn"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1528
-#: NEEDS WORK
-msgid "Hide mouse cursor when typing"
-msgstr "Fela músarör þegar skrifað er"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1536
-#: NEEDS WORK
-msgid "Cursor Blinking"
-msgstr "Múska Blikkandi"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1537
-#: NEEDS WORK
-msgid "Enable cursor blinking animation"
-msgstr "Virkja blikkandi músarhnappinn"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1637
-#: NEEDS WORK
-msgid "Directory Tracking"
-msgstr "Skráningarsporun"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1638
-#: NEEDS WORK
-msgid "Track current directory and update tab titles"
-msgstr "Skráðu núverandi skráarslóð og uppfærðu flipaheiti"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1644
-#: NEEDS WORK
-msgid "Enable Directory Tracking"
-msgstr "Virkja skráningarslóðar"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1645
-#: NEEDS WORK
-msgid "Monitor current directory and show it in tab titles"
-msgstr "Vöktun núverandi skráarsviðs og sýna það í flipaheitum"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1656
-#: NEEDS WORK
-msgid "Show Hostname in Titles"
-msgstr "Sýna vélarheiti í titlum"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1657
-#: NEEDS WORK
-msgid "Include hostname in tab titles when available"
-msgstr "Inniheiti véfanga í fliptitlum þegar það er í boði"
-# 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1545
 #: NEEDS WORK
 msgid "Interface Behavior"
@@ -2445,25 +1669,25 @@ msgstr "Viðmót hegðun"
 msgid "Configure application interface behavior"
 msgstr "Stillir hegðun forritaviðmóts"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1552
+# File: usr/share/ashyterm/ui/dialogs.py, line: 979
 #: NEEDS WORK
-msgid "Confirm Application Exit"
-msgstr "Staðfesta útskrift forrits"
+msgid "When opening a new instance"
+msgstr "Þegar opnað er nýtt tilvik"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1553
+# File: usr/share/ashyterm/ui/dialogs.py, line: 980
 #: NEEDS WORK
-msgid "Show confirmation dialog when closing the application"
-msgstr "Sýna staðfestingarglugga þegar forritinu er lokað"
+msgid "Choose whether to open a new tab or a new window"
+msgstr "Veldu hvort opna eigi nýjan flipa eða nýjan glugga"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1561
+# File: usr/share/ashyterm/ui/dialogs.py, line: 983
 #: NEEDS WORK
-msgid "Confirm Deletion"
-msgstr "Staðfesta eyðingu"
+msgid "Open in a new tab"
+msgstr "Opna í nýjum flipa"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1562
+# File: usr/share/ashyterm/ui/dialogs.py, line: 984
 #: NEEDS WORK
-msgid "Show confirmation dialog when deleting sessions or folders"
-msgstr "Sýna staðfestingarglugga þegar eytt er að sessum eða möppum"
+msgid "Open in a new window"
+msgstr "Opna í nýju glugga"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1575
 #: NEEDS WORK
@@ -2497,6 +1721,16 @@ msgstr "Hætta við forrit"
 # 
 # #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
 # 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1624
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1907
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1983
+# File: usr/share/ashyterm/utils.py, line: 238
+#: NEEDS WORK
+msgid "None"
+msgstr "None"
+# 
+# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
+# 
 # File: usr/share/ashyterm/ui/menus.py, line: 23
 # File: usr/share/ashyterm/ui/menus.py, line: 59
 # File: usr/share/ashyterm/ui/menus.py, line: 151
@@ -2505,15 +1739,15 @@ msgstr "Hætta við forrit"
 msgid "Edit"
 msgstr "Breyta"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1716
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1790
 #: NEEDS WORK
-msgid "Backup"
-msgstr "Afritun"
+msgid "Advanced"
+msgstr "Fyrirlestrar"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1723
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1051
 #: NEEDS WORK
-msgid "Backup Settings"
-msgstr "Afturheimtaraðgerðir"
+msgid "Backup & Recovery"
+msgstr "Afritun og endurheimt"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1724
 #: NEEDS WORK
@@ -2530,90 +1764,35 @@ msgstr "Sjálfvirkar afritanir"
 msgid "Automatically create backups of sessions and settings"
 msgstr "Sjálfvirkt að búa til afrit af lotum og stillingum"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1739
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1071
 #: NEEDS WORK
-msgid "Backup on Change"
-msgstr "Afritun við Breytingu"
+msgid "Logging"
+msgstr "Skrásetning"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1740
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1071
 #: NEEDS WORK
-msgid "Create a backup every time sessions or folders are modified"
-msgstr "Búðu til afrit í hvert skipti sem sesjónir eða möppur eru breyttar"
+msgid "Configure application logging behavior"
+msgstr "Stillir skrásetningu forrits"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1748
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1076
 #: NEEDS WORK
-msgid "Backup on Exit"
-msgstr "Afturheimt við útgöngu"
+msgid "Save Logs to File"
+msgstr "Vista skrá yfir skráningar"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1749
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1077
 #: NEEDS WORK
-msgid "Create backup when application exits"
-msgstr "Búa til afrit þegar forritinu er lokað"
+msgid "Save application logs to the configuration directory"
+msgstr "Vista skráninga forrita í stillingaskrá."
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1757
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1087
 #: NEEDS WORK
-msgid "Backup Interval"
-msgstr "Bakgrunnartími"
+msgid "Console Log Level"
+msgstr "Skráningarstig í skel"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1758
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1088
 #: NEEDS WORK
-msgid "Hours between automatic backups"
-msgstr "Tímar á milli sjálfvirkra afritana"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1771
-#: NEEDS WORK
-msgid "Retention Period"
-msgstr "Geymslu Tími"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1772
-#: NEEDS WORK
-msgid "Days to keep old backups"
-msgstr "Dagar til að halda gömlum afritum"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1790
-#: NEEDS WORK
-msgid "Advanced"
-msgstr "Fyrirlestrar"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1797
-#: NEEDS WORK
-msgid "Development & Debugging"
-msgstr "Þróun og villuleit"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1798
-#: NEEDS WORK
-msgid "Advanced options for development and troubleshooting"
-msgstr "Fyrirlestrarvalkostir fyrir þróun og vandamálaleit"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1804
-#: NEEDS WORK
-msgid "Debug Mode"
-msgstr "Villurhamur"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1805
-#: NEEDS WORK
-msgid "Enable verbose logging and debug features"
-msgstr "Virkja ítarlegan skráningu og villuleitaraðgerðir"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1813
-#: NEEDS WORK
-msgid "Performance Mode"
-msgstr "Frammistöðulíkan"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1814
-#: NEEDS WORK
-msgid "Optimize for performance over features"
-msgstr "Bæta frammistöðu fremur en eiginleika"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1822
-#: NEEDS WORK
-msgid "Experimental Features"
-msgstr "Tilraunareiginleikar"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1823
-#: NEEDS WORK
-msgid "Enable experimental and unstable features"
-msgstr "Virkja tilrauna- og óstöðugar eiginleika"
+msgid "Set the minimum level of messages shown in the console"
+msgstr "Stilltu lágmarksstig skilaboða sem sýnd eru í skálinni"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1831
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1843
@@ -2711,6 +1890,11 @@ msgstr "Endurstilling mistókst"
 msgid "Failed to reset settings: {}"
 msgstr "Mistók að endurstilla stillingar: {}"
 # 
+# File: usr/share/ashyterm/window.py, line: 994
+#: NEEDS WORK
+msgid "Move Session"
+msgstr "Færa sessjón"
+# 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 2183
 #: NEEDS WORK
 msgid "Select Destination"
@@ -2742,20 +1926,20 @@ msgstr "Færa"
 msgid "Move Failed"
 msgstr "Færsla mistókst"
 # 
-# File: usr/share/ashyterm/ui/menus.py, line: 196
+# File: usr/share/ashyterm/ui/menus.py, line: 24
 #: NEEDS WORK
-msgid "Zoom Out (-)"
-msgstr "Aðdráttur (-)"
+msgid "Follow System Style"
+msgstr "Fylgdu kerfisstílnum"
 # 
-# File: usr/share/ashyterm/ui/menus.py, line: 197
+# File: usr/share/ashyterm/ui/menus.py, line: 29
 #: NEEDS WORK
-msgid "Reset Zoom (100%)"
-msgstr "Endurstilla aðdrátt (100%)"
+msgid "Light Style"
+msgstr "Létt útlit"
 # 
-# File: usr/share/ashyterm/ui/menus.py, line: 198
+# File: usr/share/ashyterm/ui/menus.py, line: 34
 #: NEEDS WORK
-msgid "Zoom In (+)"
-msgstr "Auka inn (+)"
+msgid "Dark Style"
+msgstr "Dökk Stíll"
 # 
 # File: usr/share/ashyterm/ui/menus.py, line: 216
 #: NEEDS WORK
@@ -2778,10 +1962,15 @@ msgstr "Afritun"
 msgid "Cut"
 msgstr "Klippa"
 # 
-# File: usr/share/ashyterm/ui/menus.py, line: 36
+# File: usr/share/ashyterm/ui/menus.py, line: 203
 #: NEEDS WORK
-msgid "Move to Folder"
-msgstr "Færa í möppu"
+msgid "Move to Folder..."
+msgstr "Færa í möppu..."
+# 
+# File: usr/share/ashyterm/ui/menus.py, line: 220
+#: NEEDS WORK
+msgid "Add Session Here"
+msgstr "Bæta við lotu hér"
 # 
 # File: usr/share/ashyterm/ui/menus.py, line: 98
 #: NEEDS WORK
@@ -2813,698 +2002,458 @@ msgstr "Skipta lóðrétt"
 msgid "Close Pane"
 msgstr "Loka glugga"
 # 
-# File: usr/share/ashyterm/utils/exceptions.py, line: 65
+# File: usr/share/ashyterm/app.py, line: 222
 #: NEEDS WORK
-msgid "A terminal error occurred"
-msgstr "Alvarleg villa kom upp"
+msgid "Automatic startup backup"
+msgstr "Sjálfvirk upphafsafritun"
 # 
-# File: usr/share/ashyterm/utils/exceptions.py, line: 66
+# File: usr/share/ashyterm/app.py, line: 333
 #: NEEDS WORK
-msgid "A session error occurred"
-msgstr "Session villa kom upp."
+msgid "Preferences Error"
+msgstr "Stillir Villa"
 # 
-# File: usr/share/ashyterm/utils/exceptions.py, line: 67
+# File: usr/share/ashyterm/app.py, line: 332
+# File: usr/share/ashyterm/app.py, line: 333
 #: NEEDS WORK
-msgid "An SSH connection error occurred"
-msgstr "SSH tengingarvilla kom upp"
-# 
-# File: usr/share/ashyterm/utils/exceptions.py, line: 68
-#: NEEDS WORK
-msgid "A user interface error occurred"
-msgstr "Notendaviðmót villa kom upp"
-# 
-# File: usr/share/ashyterm/utils/exceptions.py, line: 69
-#: NEEDS WORK
-msgid "A data storage error occurred"
-msgstr "Geymsluvilla kom átti sér stað"
-# 
-# File: usr/share/ashyterm/utils/exceptions.py, line: 70
-#: NEEDS WORK
-msgid "A configuration error occurred"
-msgstr "Konfignunarvilla kom upp"
-# 
-# File: usr/share/ashyterm/utils/exceptions.py, line: 71
-#: NEEDS WORK
-msgid "A permission error occurred"
-msgstr "Aðgangsheimildarvilla kom upp"
-# 
-# File: usr/share/ashyterm/utils/exceptions.py, line: 72
-#: NEEDS WORK
-msgid "A network error occurred"
-msgstr "Nettókerfi villa kom upp"
-# 
-# File: usr/share/ashyterm/utils/exceptions.py, line: 73
-#: NEEDS WORK
-msgid "A system error occurred"
-msgstr "Kerflauta í kerfi átti sér stað"
-# 
-# File: usr/share/ashyterm/utils/exceptions.py, line: 74
-#: NEEDS WORK
-msgid "A validation error occurred"
-msgstr "Gildisvilla kom að."
-# 
-# File: usr/share/ashyterm/utils/exceptions.py, line: 76
-#: NEEDS WORK
-msgid "An unexpected error occurred"
-msgstr "Ósýnileg villa kom upp"
-# 
-# File: usr/share/ashyterm/utils/exceptions.py, line: 106
-#: NEEDS WORK
-#, python-brace-format
-msgid "Failed to create {} terminal: {}"
-msgstr "Ekki tókst að búa til {} terminal: {}"
-# 
-# File: usr/share/ashyterm/utils/exceptions.py, line: 109
-#: NEEDS WORK
-#, python-brace-format
-msgid "Could not create terminal. {}"
-msgstr "Gat ekki að búa til terminal. {}"
-# 
-# File: usr/share/ashyterm/utils/exceptions.py, line: 117
-#: NEEDS WORK
-#, python-brace-format
-msgid "Failed to spawn process '{}': {}"
-msgstr "Mistók að búa til ferli '{}': {}"
-# 
-# File: usr/share/ashyterm/utils/exceptions.py, line: 120
-#: NEEDS WORK
-msgid "Failed to start terminal process"
-msgstr "Mistók að hefja ferli í terminali"
-# 
-# File: usr/share/ashyterm/utils/exceptions.py, line: 128
-#: NEEDS WORK
-msgid "VTE library is not available or not properly installed"
-msgstr "VTE bókasafnið er ekki tiltækt eða ekki rétt uppsett"
-# 
-# File: usr/share/ashyterm/utils/exceptions.py, line: 131
-#: NEEDS WORK
-msgid "Terminal functionality requires VTE library. Please install gir1.2-vte-2.91"
-msgstr "Terminal virkni krefst VTE bókasafns. Vinsamlegast settu upp gir1.2-vte-2.91"
-# 
-# File: usr/share/ashyterm/utils/exceptions.py, line: 148
-#: NEEDS WORK
-#, python-brace-format
-msgid "SSH connection to '{}' failed: {}"
-msgstr "SSH tenging við '{}' mistókst: {}"
-# 
-# File: usr/share/ashyterm/utils/exceptions.py, line: 151
-#: NEEDS WORK
-#, python-brace-format
-msgid "Could not connect to {}. {}"
-msgstr "Gat ekki tengst {}. {}"
-# 
-# File: usr/share/ashyterm/utils/exceptions.py, line: 159
-#: NEEDS WORK
-#, python-brace-format
-msgid "SSH authentication failed for {}@{} using {}"
-msgstr "SSH auðkenning mistókst fyrir {}@{} með {}"
-# 
-# File: usr/share/ashyterm/utils/exceptions.py, line: 162
-#: NEEDS WORK
-#, python-brace-format
-msgid "Authentication failed for {}@{}"
-msgstr "Autentisering mistókst fyrir {}@{}"
-# 
-# File: usr/share/ashyterm/utils/exceptions.py, line: 170
-#: NEEDS WORK
-#, python-brace-format
-msgid "SSH key error for '{}': {}"
-msgstr "SSH lykilvilla villa fyrir '{}': {}"
-# 
-# File: usr/share/ashyterm/utils/exceptions.py, line: 173
-#: NEEDS WORK
-#, python-brace-format
-msgid "SSH key problem: {}"
-msgstr "SSH lykilvandamál: {}"
-# 
-# File: usr/share/ashyterm/utils/exceptions.py, line: 190
-#: NEEDS WORK
-#, python-brace-format
-msgid "Session '{}' not found"
-msgstr "Session '{}' fannst ekki"
-# 
-# File: usr/share/ashyterm/utils/exceptions.py, line: 193
-#: NEEDS WORK
-#, python-brace-format
-msgid "Session '{}' could not be found"
-msgstr "Session '{}' fannst ekki"
-# 
-# File: usr/share/ashyterm/utils/exceptions.py, line: 201
-#: NEEDS WORK
-#, python-brace-format
-msgid "Session '{}' validation failed: {}"
-msgstr "Session '{}' gilt ekki: {}"
-# 
-# File: usr/share/ashyterm/utils/exceptions.py, line: 204
-#: NEEDS WORK
-#, python-brace-format
-msgid "Session configuration is invalid: {}"
-msgstr "Session stilling er ógild: {}"
-# 
-# File: usr/share/ashyterm/utils/exceptions.py, line: 212
-#: NEEDS WORK
-#, python-brace-format
-msgid "Session '{}' already exists"
-msgstr "Session '{}' er þegar til."
-# 
-# File: usr/share/ashyterm/utils/exceptions.py, line: 215
-#: NEEDS WORK
-#, python-brace-format
-msgid "A session named '{}' already exists"
-msgstr "Samskipti sem heitir '{}' eru þegar til."
-# 
-# File: usr/share/ashyterm/utils/exceptions.py, line: 232
-#: NEEDS WORK
-#, python-brace-format
-msgid "Failed to read from '{}': {}"
-msgstr "Ekki tókst að lesa frá '{}': {}"
-# 
-# File: usr/share/ashyterm/utils/exceptions.py, line: 235
-#: NEEDS WORK
-msgid "Could not load saved data"
-msgstr "Gat ekki hlaðið vistað gögn"
-# 
-# File: usr/share/ashyterm/utils/exceptions.py, line: 243
-#: NEEDS WORK
-#, python-brace-format
-msgid "Failed to write to '{}': {}"
-msgstr "Ekki tókst að skrifa í '{}': {}"
-# 
-# File: usr/share/ashyterm/utils/exceptions.py, line: 246
-#: NEEDS WORK
-msgid "Could not save data"
-msgstr "Gat ekki að vista gögnin"
-# 
-# File: usr/share/ashyterm/utils/exceptions.py, line: 254
-#: NEEDS WORK
-#, python-brace-format
-msgid "Storage file '{}' is corrupted"
-msgstr "Geymslufaila '{}' er skemmdur"
-# 
-# File: usr/share/ashyterm/utils/exceptions.py, line: 256
-#: NEEDS WORK
-#, python-brace-format
-msgid ": {}"
-msgstr ": {}"
-# 
-# File: usr/share/ashyterm/utils/exceptions.py, line: 259
-#: NEEDS WORK
-msgid "Saved data appears to be corrupted"
-msgstr "Vistað gögn virðast vera skemmd."
-# 
-# File: usr/share/ashyterm/utils/exceptions.py, line: 276
-#: NEEDS WORK
-#, python-brace-format
-msgid "Invalid configuration for '{}' (value: {}): {}"
-msgstr "Ógild stilling fyrir '{}' (gildi: {}): {}"
-# 
-# File: usr/share/ashyterm/main.py, line: 405
-#: NEEDS WORK
-#, python-brace-format
-msgid "Configuration error: {}"
-msgstr "Konfignunarvilla: {}"
-# 
-# File: usr/share/ashyterm/utils/exceptions.py, line: 287
-#: NEEDS WORK
-#, python-brace-format
-msgid "Required configuration '{}' is missing"
-msgstr "Skilyrði fyrir stillingu '{}' vantar."
-# 
-# File: usr/share/ashyterm/utils/exceptions.py, line: 290
-#: NEEDS WORK
-#, python-brace-format
-msgid "Required setting '{}' is not configured"
-msgstr "Krafinn stilling '{}' er ekki stillt."
-# 
-# File: usr/share/ashyterm/utils/exceptions.py, line: 307
-#: NEEDS WORK
-#, python-brace-format
-msgid "UI error in component: {}"
-msgstr "UI villa í hluta: {}"
-# 
-# File: usr/share/ashyterm/utils/exceptions.py, line: 309
-#: NEEDS WORK
-#, python-brace-format
-msgid "UI error in {}: {}"
-msgstr "UI villa í {}: {}"
-# 
-# File: usr/share/ashyterm/utils/exceptions.py, line: 321
-#: NEEDS WORK
-#, python-brace-format
-msgid "Dialog error ({}): {}"
-msgstr "Samskipti villa ({}): {}"
-# 
-# File: usr/share/ashyterm/utils/exceptions.py, line: 324
-#: NEEDS WORK
-#, python-brace-format
-msgid "Interface error: {}"
-msgstr "Viðmót villa: {}"
-# 
-# File: usr/share/ashyterm/utils/exceptions.py, line: 332
-#: NEEDS WORK
-#, python-brace-format
-msgid "Menu error ({}): {}"
-msgstr "Valmynd villa ({}): {}"
-# 
-# File: usr/share/ashyterm/utils/exceptions.py, line: 335
-#: NEEDS WORK
-msgid "Menu operation failed"
-msgstr "Valmyndaraðgerð mistókst"
-# 
-# File: usr/share/ashyterm/utils/exceptions.py, line: 368
-# File: usr/share/ashyterm/utils/exceptions.py, line: 372
-#: NEEDS WORK
-#, python-brace-format
-msgid "Validation failed for '{}': {}"
-msgstr "Gilding mistókst fyrir '{}': {}"
-# 
-# File: usr/share/ashyterm/utils/exceptions.py, line: 392
-#: NEEDS WORK
-#, python-brace-format
-msgid "Invalid hostname '{}': {}"
-msgstr "Ógilt hýsingarheiti '{}': {}"
-# 
-# File: usr/share/ashyterm/utils/exceptions.py, line: 395
-#: NEEDS WORK
-#, python-brace-format
-msgid "Invalid hostname: {}"
-msgstr "Ógilt hýsingarheiti: {}"
-# 
-# File: usr/share/ashyterm/utils/exceptions.py, line: 403
-#: NEEDS WORK
-#, python-brace-format
-msgid "Invalid path '{}': {}"
-msgstr "Ógild leið '{}': {}"
-# 
-# File: usr/share/ashyterm/utils/exceptions.py, line: 406
-#: NEEDS WORK
-#, python-brace-format
-msgid "Invalid path: {}"
-msgstr "Ógild leið: {}"
-# 
-# File: usr/share/ashyterm/utils/exceptions.py, line: 423
-#: NEEDS WORK
-#, python-brace-format
-msgid "Permission denied for {} operation on '{}'"
-msgstr "Aðgangur hafnað fyrir {} aðgerð á '{}'"
-# 
-# File: usr/share/ashyterm/utils/exceptions.py, line: 426
-#: NEEDS WORK
-#, python-brace-format
-msgid "Permission denied accessing {}"
-msgstr "Aðgangur hafnað að {}"
-# 
-# File: usr/share/ashyterm/utils/exceptions.py, line: 434
-#: NEEDS WORK
-#, python-brace-format
-msgid "Permission denied for {} operation on directory '{}'"
-msgstr "Aðgangur hafnað fyrir {} aðgerð á skráarsafni '{}'"
-# 
-# File: usr/share/ashyterm/utils/exceptions.py, line: 437
-#: NEEDS WORK
-#, python-brace-format
-msgid "Permission denied accessing directory {}"
-msgstr "Aðgangur að skráarsafni {} hafnað."
-# 
-# File: usr/share/ashyterm/utils/exceptions.py, line: 454
-#: NEEDS WORK
-#, python-brace-format
-msgid "Connection to '{}' timed out after {} seconds"
-msgstr "Tenging við '{}' tímabundið útrunnið eftir {} sekúndur"
-# 
-# File: usr/share/ashyterm/utils/exceptions.py, line: 457
-#: NEEDS WORK
-#, python-brace-format
-msgid "Connection to {} timed out"
-msgstr "Tenging við {} tímabundið útrunnið"
-# 
-# File: usr/share/ashyterm/utils/exceptions.py, line: 465
-#: NEEDS WORK
-#, python-brace-format
-msgid "Host '{}' is unreachable"
-msgstr "Hýsing '{}' er ófáanlegur"
-# 
-# File: usr/share/ashyterm/utils/exceptions.py, line: 468
-#: NEEDS WORK
-#, python-brace-format
-msgid "Cannot reach {}"
-msgstr "Getur ekki náð {}"
-# 
-# File: usr/share/ashyterm/utils/security.py, line: 302
-#: NEEDS WORK
-msgid "Key path is empty"
-msgstr "Lyklaleið er tóm."
-# 
-# File: usr/share/ashyterm/utils/security.py, line: 309
-#: NEEDS WORK
-#, python-brace-format
-msgid "Key file does not exist: {}"
-msgstr "Lyklaskrá er ekki til: {}"
-# 
-# File: usr/share/ashyterm/utils/security.py, line: 313
-#: NEEDS WORK
-#, python-brace-format
-msgid "Key path is not a file: {}"
-msgstr "Lykilstígur er ekki skrá: {}"
-# 
-# File: usr/share/ashyterm/utils/security.py, line: 318
-#: NEEDS WORK
-#, python-brace-format
-msgid "Key file too large: {} bytes"
-msgstr "Lykilskrá of stór: {} bætur"
-# 
-# File: usr/share/ashyterm/utils/security.py, line: 321
-#: NEEDS WORK
-msgid "Key file is empty"
-msgstr "Lyklaskráin er tóm."
-# 
-# File: usr/share/ashyterm/utils/security.py, line: 326
-#: NEEDS WORK
-msgid "Key file has insecure permissions (should be 600)"
-msgstr "Lykilskjal hefur óöruggar heimildir (ætti að vera 600)"
-# 
-# File: usr/share/ashyterm/utils/security.py, line: 330
-#: NEEDS WORK
-msgid "Key file is not readable"
-msgstr "Lyklaskrá er ekki læsileg."
-# 
-# File: usr/share/ashyterm/utils/security.py, line: 335
-#: NEEDS WORK
-#, python-brace-format
-msgid "Error accessing key file: {}"
-msgstr "Villa ekki aðgang að lykilskrá: {}"
-# 
-# File: usr/share/ashyterm/utils/security.py, line: 349
-#: NEEDS WORK
-msgid "Key content is empty"
-msgstr "Lykil innihaldið er tómt"
-# 
-# File: usr/share/ashyterm/utils/security.py, line: 356
-#: NEEDS WORK
-msgid "Invalid key format (missing parts)"
-msgstr "Ógildur lykilform (vantar hluta)"
-# 
-# File: usr/share/ashyterm/utils/security.py, line: 363
-#: NEEDS WORK
 #, python-brace-format
-msgid "Unsupported key type: {}"
-msgstr "Óstuddur lyklagerð: {}"
-# 
-# File: usr/share/ashyterm/utils/security.py, line: 370
-#: NEEDS WORK
-msgid "Key data appears to be too short"
-msgstr "Lykilgögn virðast vera of stutt."
+msgid "Failed to open preferences: {}"
+msgstr "Ekki tókst að opna stillingar: {}"
 # 
-# File: usr/share/ashyterm/utils/security.py, line: 372
-#: NEEDS WORK
-msgid "Invalid base64 encoding in key data"
-msgstr "Ógildandi base64 kóðun í lykjadögnunum"
+# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
 # 
-# File: usr/share/ashyterm/utils/security.py, line: 377
+# File: usr/share/ashyterm/__init__.py, line: 62
+# File: usr/share/ashyterm/app.py, line: 350
 #: NEEDS WORK
-#, python-brace-format
-msgid "Error validating key content: {}"
-msgstr "Villa að staðfesta efni lykils: {}"
+msgid "A modern terminal emulator with session management"
+msgstr "Nútíma skel emulators með sessastjórnun"
 # 
-# File: usr/share/ashyterm/utils/security.py, line: 464
+# File: usr/share/ashyterm/app.py, line: 368
+# File: usr/share/ashyterm/app.py, line: 379
+# File: usr/share/ashyterm/app.py, line: 392
+# File: usr/share/ashyterm/app.py, line: 396
 #: NEEDS WORK
-msgid "File does not exist"
-msgstr "Skrá er ekki til."
+msgid "Backup Error"
+msgstr "Afturheimt Villa"
 # 
-# File: usr/share/ashyterm/utils/security.py, line: 471
+# File: usr/share/ashyterm/app.py, line: 368
+# File: usr/share/ashyterm/app.py, line: 402
 #: NEEDS WORK
-#, python-brace-format
-msgid "Incorrect permissions: {} (expected {})"
-msgstr "Rangskiptingar ekki réttar: {} (væntanlegt {})"
+msgid "Backup system not available"
+msgstr "Afturhalskerfi ekki í boði"
 # 
-# File: usr/share/ashyterm/utils/security.py, line: 475
+# File: usr/share/ashyterm/app.py, line: 379
 #: NEEDS WORK
-msgid "File has overly permissive permissions"
-msgstr "Skjal hefur of víðtækar heimildir"
+msgid "No files to backup"
+msgstr "Engin ekki skráir til að afrita"
 # 
-# File: usr/share/ashyterm/utils/security.py, line: 480
+# File: usr/share/ashyterm/app.py, line: 385
 #: NEEDS WORK
-#, python-brace-format
-msgid "Error checking file permissions: {}"
-msgstr "Villa að athuga skráaréttindi: {}"
+msgid "Manual backup from menu"
+msgstr "Handvirkur afritun úr valmynd"
 # 
-# File: usr/share/ashyterm/utils/security.py, line: 509
+# File: usr/share/ashyterm/app.py, line: 390
 #: NEEDS WORK
-msgid "Use a valid hostname or IP address"
-msgstr "Notaðu gilt hýsingarnafn eða IP-tölu"
+msgid "Backup Complete"
+msgstr "Afturheimt lokið"
 # 
-# File: usr/share/ashyterm/utils/security.py, line: 519
+# File: usr/share/ashyterm/app.py, line: 390
 #: NEEDS WORK
 #, python-brace-format
-msgid "Connecting to private IP: {}"
-msgstr "Tengist tengingu við einkanet IP: {}"
+msgid "Backup created successfully: {}"
+msgstr "Afsnið var búið til með góðum árangri: {}"
 # 
-# File: usr/share/ashyterm/utils/security.py, line: 520
+# File: usr/share/ashyterm/app.py, line: 392
 #: NEEDS WORK
-msgid "Ensure this is intentional"
-msgstr "Tryggðu að þetta sé ásetningur"
+msgid "Failed to create backup"
+msgstr "Mistók að búa til afrit"
 # 
-# File: usr/share/ashyterm/utils/security.py, line: 534
-# File: usr/share/ashyterm/utils/security.py, line: 827
+# File: usr/share/ashyterm/app.py, line: 396
 #: NEEDS WORK
 #, python-brace-format
-msgid "SSH key validation failed: {}"
-msgstr "SSH lykil staðfesting mistókst: {}"
-# 
-# File: usr/share/ashyterm/utils/security.py, line: 535
-#: NEEDS WORK
-msgid "Fix SSH key configuration"
-msgstr "Laga SSH lykil stillingu"
+msgid "Backup failed: {}"
+msgstr "Afturheimt mistókst: {}"
 # 
-# File: usr/share/ashyterm/utils/security.py, line: 541
+# File: usr/share/ashyterm/app.py, line: 402
+# File: usr/share/ashyterm/app.py, line: 416
 #: NEEDS WORK
-msgid "Using password authentication"
-msgstr "Notandi lykilorðs staðfesting"
+msgid "Restore Error"
+msgstr "Endurunarvilla"
 # 
-# File: usr/share/ashyterm/utils/security.py, line: 542
+# File: usr/share/ashyterm/app.py, line: 407
 #: NEEDS WORK
-msgid "Consider using SSH key authentication for better security"
-msgstr "Íhugaðu að nota SSH lyklauthentiseringu fyrir betri öryggi"
+msgid "No Backups"
+msgstr "Engin ekki afrit"
 # 
-# File: usr/share/ashyterm/utils/security.py, line: 551
+# File: usr/share/ashyterm/app.py, line: 407
 #: NEEDS WORK
-msgid "Connecting as root user"
-msgstr "Tengist tengingu sem rótnotandi"
+msgid "No backups available to restore"
+msgstr "Engin öryggisafn er ekki til staðar til að endurheimta."
 # 
-# File: usr/share/ashyterm/utils/security.py, line: 552
+# File: usr/share/ashyterm/app.py, line: 411
 #: NEEDS WORK
-msgid "Use a regular user account when possible"
-msgstr "Notaðu venjulegt notendareikning þegar mögulegt er"
+msgid "Backups Available"
+msgstr "Afritun tiltæk"
 # 
-# File: usr/share/ashyterm/utils/security.py, line: 576
+# File: usr/share/ashyterm/app.py, line: 412
 #: NEEDS WORK
 #, python-brace-format
-msgid "File does not exist: {}"
-msgstr "Skrá er ekki til: {}"
+msgid "{} backup(s) available. Use preferences dialog for detailed restore options."
+msgstr "{} afritun(um) í boði. Notaðu stillingargluggann fyrir ítarlegar endurheimtarvalkostir."
 # 
-# File: usr/share/ashyterm/utils/security.py, line: 577
+# File: usr/share/ashyterm/app.py, line: 416
 #: NEEDS WORK
-msgid "Verify file path"
-msgstr "Staðfesta skráarleiðina"
-# 
-# File: usr/share/ashyterm/utils/security.py, line: 588
-#: NEEDS WORK
-msgid "Set secure file permissions (600 for files, 700 for directories)"
-msgstr "Settu öruggar skráarheimildir (600 fyrir skrár, 700 fyrir möppur)"
-# 
-# File: usr/share/ashyterm/utils/security.py, line: 600
-#: NEEDS WORK
 #, python-brace-format
-msgid "File is owned by different user: {}"
-msgstr "Skjal er í eigu annarrar notanda: {}"
+msgid "Failed to access backups: {}"
+msgstr "Mistók að fá aðgang að afritum: {}"
 # 
-# File: usr/share/ashyterm/utils/security.py, line: 601
+# File: usr/share/ashyterm/app.py, line: 449
 #: NEEDS WORK
-msgid "Ensure file ownership is correct"
-msgstr "Tryggðu að skráaréttindi séu rétt."
+msgid "Log Information"
+msgstr "Skráningaupplýsingar"
 # 
-# File: usr/share/ashyterm/utils/security.py, line: 608
+# File: usr/share/ashyterm/app.py, line: 449
 #: NEEDS WORK
 #, python-brace-format
-msgid "Error auditing file: {}"
-msgstr "Villa villur: {}"
+msgid "Logs are stored in: {}"
+msgstr "Skrár eru vistaðar í: {}"
 # 
-# File: usr/share/ashyterm/utils/security.py, line: 609
+# File: usr/share/ashyterm/app.py, line: 498
 #: NEEDS WORK
-msgid "Check file accessibility"
-msgstr "Athugaðu aðgengi að skrá."
+msgid "Close Application"
+msgstr "Loka forrit"
 # 
-# File: usr/share/ashyterm/utils/security.py, line: 633
+# File: usr/share/ashyterm/app.py, line: 499
 #: NEEDS WORK
-#, python-brace-format
-msgid "Directory does not exist: {}"
-msgstr "Skráarsafn er ekki til: {}"
+msgid ""
+"There are active SSH connections. Closing will disconnect all sessions.\n"
+"\n"
+"Are you sure you want to close the application?"
+msgstr ""
+"Það eru virk SSH tengingar. Að loka mun rjúfa allar sesjónir.\n"
+"\n"
+"Ertu viss um að þú viljir loka forritinu?"
 # 
-# File: usr/share/ashyterm/utils/security.py, line: 634
+# File: usr/share/ashyterm/app.py, line: 503
 #: NEEDS WORK
-msgid "Create directory with secure permissions"
-msgstr "Búa til skráarsafn með öruggum heimildum"
+msgid "Close All"
+msgstr "Loka allt"
 # 
-# File: usr/share/ashyterm/utils/security.py, line: 642
+# File: usr/share/ashyterm/app.py, line: 514
 #: NEEDS WORK
-#, python-brace-format
-msgid "Path is not a directory: {}"
-msgstr "Slóðin er ekki skráarsafn: {}"
+msgid "Automatic backup on exit"
+msgstr "Sjálfvirk afritun við útgáfu"
 # 
-# File: usr/share/ashyterm/utils/security.py, line: 643
+# File: usr/share/ashyterm/app.py, line: 530
 #: NEEDS WORK
-msgid "Use a valid directory path"
-msgstr "Notaðu gilt skráarslóð."
+msgid "Startup Error"
+msgstr "Ræsivillur"
 # 
-# File: usr/share/ashyterm/utils/security.py, line: 655
+# File: usr/share/ashyterm/app.py, line: 531
 #: NEEDS WORK
 #, python-brace-format
-msgid "Directory has overly permissive permissions: {}"
-msgstr "Skrá hefur of víðtæk réttindi: {}"
+msgid "Application failed to start: {}"
+msgstr "Forrit gat ekki hafist: {}"
 # 
-# File: usr/share/ashyterm/utils/security.py, line: 656
+# File: usr/share/ashyterm/terminal/tabs.py, line: 237
 #: NEEDS WORK
-msgid "Set directory permissions to 700"
-msgstr "Settu skráarskráningarheimildir á 700"
+msgid "Detach Tab"
+msgstr "Aðskilja flipa"
 # 
-# File: usr/share/ashyterm/utils/security.py, line: 663
+# File: usr/share/ashyterm/filemanager/manager.py, line: 182
+# File: usr/share/ashyterm/filemanager/manager.py, line: 608
 #: NEEDS WORK
-#, python-brace-format
-msgid "Error auditing directory: {}"
-msgstr "Villa villu: {}"
+msgid "Refresh"
+msgstr "Endurnýja"
 # 
-# File: usr/share/ashyterm/utils/security.py, line: 664
+# File: usr/share/ashyterm/filemanager/manager.py, line: 188
 #: NEEDS WORK
-msgid "Check directory accessibility"
-msgstr "Athugið aðgengi að skráarsafni"
+msgid "Show hidden files"
+msgstr "Sýna falin skrár"
 # 
-# File: usr/share/ashyterm/utils/security.py, line: 692
+# File: usr/share/ashyterm/filemanager/manager.py, line: 197
 #: NEEDS WORK
-msgid "Hostname cannot be empty"
-msgstr "Vertnafn má ekki vera tómt"
+msgid "Filter..."
+msgstr "Sía..."
 # 
-# File: usr/share/ashyterm/utils/security.py, line: 696
+# File: usr/share/ashyterm/filemanager/manager.py, line: 203
 #: NEEDS WORK
-msgid "Invalid hostname format"
-msgstr "Ógildur hýsingarheiti sniðið"
+msgid "Transfer History"
+msgstr "Flutningssaga"
 # 
-# File: usr/share/ashyterm/utils/security.py, line: 711
+# File: usr/share/ashyterm/filemanager/manager.py, line: 209
 #: NEEDS WORK
-msgid "Unknown validation error"
-msgstr "Óþekkt staðfestingarvilla"
+msgid "Upload Files"
+msgstr "Hlaða upp skrám"
 # 
-# File: usr/share/ashyterm/utils/security.py, line: 726
+# File: usr/share/ashyterm/filemanager/manager.py, line: 366
 #: NEEDS WORK
-msgid "Path contains unsafe elements"
-msgstr "Slóðin inniheldur óörugga þætti"
+msgid "Name"
+msgstr "Nafn"
 # 
-# File: usr/share/ashyterm/utils/security.py, line: 744
-# File: usr/share/ashyterm/utils/security.py, line: 762
+# File: usr/share/ashyterm/filemanager/manager.py, line: 375
 #: NEEDS WORK
-msgid "set secure permissions"
-msgstr "settu öruggar heimildir"
+msgid "Size"
+msgstr "stærð"
 # 
-# File: usr/share/ashyterm/utils/security.py, line: 788
+# File: usr/share/ashyterm/filemanager/manager.py, line: 380
 #: NEEDS WORK
-#, python-brace-format
-msgid "Session name too long (max {} characters)"
-msgstr "Nafn sesjónar of langt (max {} stafir)"
+msgid "Date Modified"
+msgstr "Síðast breytt"
 # 
-# File: usr/share/ashyterm/utils/security.py, line: 794
+# File: usr/share/ashyterm/filemanager/manager.py, line: 388
+# File: usr/share/ashyterm/filemanager/manager.py, line: 641
+# File: usr/share/ashyterm/filemanager/manager.py, line: 700
 #: NEEDS WORK
-msgid "Hostname cannot be empty for SSH sessions"
-msgstr "Hýsingarheiti má ekki vera tómt fyrir SSH sesjónir"
+msgid "Permissions"
+msgstr "Leyfi"
 # 
-# File: usr/share/ashyterm/utils/security.py, line: 801
+# File: usr/share/ashyterm/filemanager/manager.py, line: 396
+# File: usr/share/ashyterm/filemanager/manager.py, line: 709
 #: NEEDS WORK
-msgid "Username is required for SSH sessions"
-msgstr "Notendanafn er nauðsynlegt fyrir SSH sesjónir."
+msgid "Owner"
+msgstr "Eigandi"
 # 
-# File: usr/share/ashyterm/utils/security.py, line: 803
+# File: usr/share/ashyterm/filemanager/manager.py, line: 404
+# File: usr/share/ashyterm/filemanager/manager.py, line: 723
 #: NEEDS WORK
-#, python-brace-format
-msgid "Username too long (max {} characters)"
-msgstr "Notendanafn of langt (max {} stafir)"
+msgid "Group"
+msgstr "Hópur"
 # 
-# File: usr/share/ashyterm/utils/security.py, line: 822
+# File: usr/share/ashyterm/filemanager/manager.py, line: 532
 #: NEEDS WORK
-msgid "SSH key file path is required for key authentication"
-msgstr "SSH lykil skráar leið er nauðsynleg fyrir lykil auðkenningu"
+msgid "Loading..."
+msgstr "Hlaða..."
 # 
-# File: usr/share/ashyterm/utils/security.py, line: 832
+# File: usr/share/ashyterm/filemanager/manager.py, line: 577
 #: NEEDS WORK
-#, python-brace-format
-msgid "Invalid authentication type: {}"
-msgstr "Ógildur auðkenningartýpa: {}"
+msgid "Filter files..."
+msgstr "Sía skrár..."
 # 
-# File: usr/share/ashyterm/utils/security.py, line: 838
+# File: usr/share/ashyterm/filemanager/manager.py, line: 630
 #: NEEDS WORK
-msgid "Invalid or unsafe folder path"
-msgstr "Ógildur eða óöruggur möppuleið."
+msgid "Open/Edit"
+msgstr "Opna/Breyta"
 # 
-# File: usr/share/ashyterm/utils/security.py, line: 850
+# File: usr/share/ashyterm/filemanager/manager.py, line: 631
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1050
 #: NEEDS WORK
-#, python-brace-format
-msgid "Validation error: {}"
-msgstr "Gildisvilla: {}"
+msgid "Open With..."
+msgstr "Opna með..."
 # 
-# File: usr/share/ashyterm/utils/security.py, line: 881
+# File: usr/share/ashyterm/filemanager/manager.py, line: 638
 #: NEEDS WORK
-#, python-brace-format
-msgid "Security: {}"
-msgstr "Öryggi: {}"
+msgid "Download"
+msgstr "Sækja"
 # 
-# File: usr/share/ashyterm/utils/security.py, line: 888
+# File: usr/share/ashyterm/filemanager/manager.py, line: 672
 #: NEEDS WORK
-#, python-brace-format
-msgid "Security validation error: {}"
-msgstr "Öryggisvottun villur: {}"
+msgid "Delete File"
+msgstr "Eyða skrá"
 # 
-# File: usr/share/ashyterm/main.py, line: 86
+# File: usr/share/ashyterm/filemanager/manager.py, line: 674
 #: NEEDS WORK
 #, python-brace-format
 msgid ""
+"Are you sure you want to permanently delete '{name}'?\n"
 "\n"
-"Received signal {}, shutting down gracefully..."
-msgstr "Móttók merki {}, að loka niður á fallegan hátt..."
+"This action cannot be undone."
+msgstr ""
+"Ertu viss um að þú viljir varanlega eyða '{name}'?\n"
+"\n"
+"Þetta aðgerð er ekki hægt að afturkalla."
 # 
-# File: usr/share/ashyterm/main.py, line: 97
+# File: usr/share/ashyterm/filemanager/manager.py, line: 691
+#: NEEDS WORK
+msgid "Delete command sent to terminal"
+msgstr "Eyða skipun send til terminala"
+# 
+# File: usr/share/ashyterm/filemanager/manager.py, line: 701
 #: NEEDS WORK
 #, python-brace-format
-msgid "Warning: Could not set up signal handlers: {}"
-msgstr "Aðvörun: Gat ekki sett upp merki meðhöndlara: {}"
+msgid ""
+"Set file permissions for: {name}\n"
+"Current: {perms}"
+msgstr ""
+"Settu skráarheimildir fyrir: {name}  \n"
+"Núverandi: {perms}"
 # 
-# File: usr/share/ashyterm/main.py, line: 109
+# File: usr/share/ashyterm/filemanager/manager.py, line: 712
+# File: usr/share/ashyterm/filemanager/manager.py, line: 726
+# File: usr/share/ashyterm/filemanager/manager.py, line: 740
 #: NEEDS WORK
-msgid "Ashy Terminal - A modern terminal emulator with session management"
-msgstr "Ashy Terminal - Nútíma terminal emulátor með sessastjórnun"
+msgid "Read"
+msgstr "Lesa"
 # 
-# File: usr/share/ashyterm/main.py, line: 110
+# File: usr/share/ashyterm/filemanager/manager.py, line: 713
+# File: usr/share/ashyterm/filemanager/manager.py, line: 727
+# File: usr/share/ashyterm/filemanager/manager.py, line: 741
 #: NEEDS WORK
-msgid "For more information, visit: https://communitybig.org/"
-msgstr "Fyrir frekari upplýsingar, heimsæktu: https://communitybig.org/"
+msgid "Write"
+msgstr "Skrifa"
 # 
-# File: usr/share/ashyterm/main.py, line: 73
+# File: usr/share/ashyterm/filemanager/manager.py, line: 714
+# File: usr/share/ashyterm/filemanager/manager.py, line: 728
+# File: usr/share/ashyterm/filemanager/manager.py, line: 742
 #: NEEDS WORK
-msgid "Enable debug mode"
-msgstr "Virkja villuhamstur mód"
+msgid "Execute"
+msgstr "Framkvæma"
 # 
-# File: usr/share/ashyterm/main.py, line: 79
+# File: usr/share/ashyterm/filemanager/manager.py, line: 737
 #: NEEDS WORK
-msgid "Set logging level"
-msgstr "Stillingar fyrir skráningu"
+msgid "Others"
+msgstr "Aðrir"
 # 
-# File: usr/share/ashyterm/main.py, line: 84
+# File: usr/share/ashyterm/filemanager/manager.py, line: 772
 #: NEEDS WORK
-msgid "Set the working directory for the initial terminal"
-msgstr "Stilltu vinnuslóðina fyrir upphafsterminalinn"
+msgid "Apply"
+msgstr "Beita"
 # 
-# File: usr/share/ashyterm/main.py, line: 92
+# File: usr/share/ashyterm/filemanager/manager.py, line: 785
 #: NEEDS WORK
-msgid "Working directory (positional argument)"
-msgstr "Vinnuskrá (staðsetningargildi)"
+msgid "Chmod command sent to terminal"
+msgstr "Chmod skipun send til terminala"
 # 
-# File: usr/share/ashyterm/__init__.py, line: 33
+# File: usr/share/ashyterm/filemanager/manager.py, line: 826
 #: NEEDS WORK
-msgid "VTE 3.91 not found. Terminal functionality will be limited."
-msgstr "VTE 3.91 fannst ekki. Virkni terminal mun vera takmörkuð."
+msgid "Save File As..."
+msgstr "Vista skrá sem..."
+# 
+# File: usr/share/ashyterm/filemanager/manager.py, line: 855
+# File: usr/share/ashyterm/filemanager/manager.py, line: 889
+#: NEEDS WORK
+msgid "Error"
+msgstr "Villa"
+# 
+# File: usr/share/ashyterm/filemanager/manager.py, line: 859
+#: NEEDS WORK
+msgid "Upload File(s) to This Folder"
+msgstr "Hlaða upp skrá(um) í þessa möppu"
+# 
+# File: usr/share/ashyterm/filemanager/manager.py, line: 861
+#: NEEDS WORK
+msgid "Upload"
+msgstr "Hlaða upp"
+# 
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1039
+#: NEEDS WORK
+msgid "Transfer cancelled."
+msgstr "Flutningur aflýstur."
+# 
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1091
+#: NEEDS WORK
+msgid "Failed to open file."
+msgstr "Ekki tókst að opna skrá."
+# 
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1160
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1196
+#: NEEDS WORK
+msgid "Ashy Terminal"
+msgstr "Ashy Terminal"
+# 
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1162
+#: NEEDS WORK
+msgid "File is open. Saving it will upload changes back to the server."
+msgstr "Skjal er opið. Að vista það mun hlaða breytingum aftur á þjóninn."
+# 
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1198
+#: NEEDS WORK
+msgid "Upload Complete"
+msgstr "Hlaða upp lokið"
+# 
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1200
+#: NEEDS WORK
+#, python-brace-format
+msgid "'{filename}' has been saved to the server."
+msgstr "'{filename}' hefur verið vistað á þjóninum."
+# 
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1205
+#: NEEDS WORK
+msgid "Upload Failed"
+msgstr "Hleðsla mistókst"
+# 
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1207
+#: NEEDS WORK
+#, python-brace-format
+msgid "Could not save '{filename}' to the server: {error}"
+msgstr "Gat ekki að vista '{filename}' á þjóninum: {error}"
+# 
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1243
+#: NEEDS WORK
+#, python-brace-format
+msgid "Enter a new name for '{name}'"
+msgstr "Sláðu inn nýtt nafn fyrir '{name}'"
+# 
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1266
+#: NEEDS WORK
+msgid "Rename command sent to terminal"
+msgstr "Nafnaskipun send til terminala"
+# 
+# File: usr/share/ashyterm/filemanager/transfer_manager.py, line: 273
+#: NEEDS WORK
+msgid "Cancel All Transfers"
+msgstr "Hætta við allar flutninga"
+# 
+# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 69
+#: NEEDS WORK
+msgid "Cancel transfer"
+msgstr "Hætta við flutning"
+# 
+# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 76
+#: NEEDS WORK
+msgid "Retry transfer"
+msgstr "Reyndu að flytja aftur"
+# 
+# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 216
+#: NEEDS WORK
+msgid "Transfer Manager"
+msgstr "Flutningsstjóri"
+# 
+# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 239
+# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 348
+#: NEEDS WORK
+msgid "Clear History"
+msgstr "Tæma sögu"
+# 
+# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 244
+#: NEEDS WORK
+msgid "Cancel All"
+msgstr "Hætta við allt"
+# 
+# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 257
+#: NEEDS WORK
+msgid "No Transfers"
+msgstr "Engin ekki flutningar"
+# 
+# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 258
+#: NEEDS WORK
+msgid "Active and past transfers will appear here."
+msgstr "Virkar og fyrri flutningar munu birtast hér."
+# 
+# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 340
+#: NEEDS WORK
+msgid "Clear Transfer History?"
+msgstr "Hreinsa flutningssögu?"
+# 
+# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 342
+#: NEEDS WORK
+msgid ""
+"This action cannot be undone and will remove all completed, failed, and cancelled transfers from "
+"the list."
+msgstr ""
+"Þetta aðgerð er ekki hægt að afturkalla og mun fjarlægja allar lokið, misheppnaðar og aflýstar "
+"flutninga úr listanum."
+# 
+# File: usr/share/ashyterm/filemanager/operations.py, line: 113
+#: NEEDS WORK
+msgid "No session context for file operation."
+msgstr "Engin sessíónarsamhengi fyrir skráaraðgerð."
+# 
+# File: usr/share/ashyterm/filemanager/operations.py, line: 146
+#: NEEDS WORK
+msgid "Command timed out."
+msgstr "Skipun tímabund."
+# 
+# File: usr/share/ashyterm/filemanager/operations.py, line: 149
+#: NEEDS WORK
+msgid "Unknown session type."
+msgstr "Óþekkt sessíutegund."

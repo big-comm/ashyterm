@@ -45,11 +45,610 @@ msgstr "Abrir el punto de montaje local {}"
 msgid "Open {} in Ashy Terminal"
 msgstr "Abrir {} en Ashy Terminal"
 # 
-# File: usr/share/ashyterm/sessions/storage.py, line: 78
+# File: usr/share/ashyterm/utils/exceptions.py, line: 65
+#: NEEDS WORK
+msgid "A terminal error occurred"
+msgstr "Se produjo un error terminal."
+# 
+# File: usr/share/ashyterm/utils/exceptions.py, line: 66
+#: NEEDS WORK
+msgid "A session error occurred"
+msgstr "Ocurrió un error de sesión"
+# 
+# File: usr/share/ashyterm/utils/exceptions.py, line: 67
+#: NEEDS WORK
+msgid "An SSH connection error occurred"
+msgstr "Ocurrió un error de conexión SSH."
+# 
+# File: usr/share/ashyterm/utils/exceptions.py, line: 68
+#: NEEDS WORK
+msgid "A user interface error occurred"
+msgstr "Se produjo un error en la interfaz de usuario."
+# 
+# File: usr/share/ashyterm/utils/exceptions.py, line: 69
+#: NEEDS WORK
+msgid "A data storage error occurred"
+msgstr "Ocurrió un error de almacenamiento de datos"
+# 
+# File: usr/share/ashyterm/utils/exceptions.py, line: 70
+#: NEEDS WORK
+msgid "A configuration error occurred"
+msgstr "Se produjo un error de configuración"
+# 
+# File: usr/share/ashyterm/utils/exceptions.py, line: 71
+#: NEEDS WORK
+msgid "A permission error occurred"
+msgstr "Se produjo un error de permisos"
+# 
+# File: usr/share/ashyterm/utils/exceptions.py, line: 72
+#: NEEDS WORK
+msgid "A network error occurred"
+msgstr "Ocurrió un error de red"
+# 
+# File: usr/share/ashyterm/utils/exceptions.py, line: 73
+#: NEEDS WORK
+msgid "A system error occurred"
+msgstr "Se produjo un error del sistema"
+# 
+# File: usr/share/ashyterm/utils/exceptions.py, line: 74
+#: NEEDS WORK
+msgid "A validation error occurred"
+msgstr "Se produjo un error de validación."
+# 
+# File: usr/share/ashyterm/utils/exceptions.py, line: 76
+#: NEEDS WORK
+msgid "An unexpected error occurred"
+msgstr "Ocurrió un error inesperado"
+# 
+# File: usr/share/ashyterm/utils/exceptions.py, line: 106
 #: NEEDS WORK
 #, python-brace-format
-msgid "Failed to create config directory: {}"
-msgstr "Error al crear el directorio de configuración: {}"
+msgid "Failed to create {} terminal: {}"
+msgstr "Error al crear {} terminal: {}"
+# 
+# File: usr/share/ashyterm/utils/exceptions.py, line: 109
+#: NEEDS WORK
+#, python-brace-format
+msgid "Could not create terminal. {}"
+msgstr "No se pudo crear el terminal. {}"
+# 
+# File: usr/share/ashyterm/utils/exceptions.py, line: 128
+#: NEEDS WORK
+msgid "VTE library is not available or not properly installed"
+msgstr "La biblioteca VTE no está disponible o no está instalada correctamente."
+# 
+# File: usr/share/ashyterm/utils/exceptions.py, line: 131
+#: NEEDS WORK
+msgid "Terminal functionality requires VTE library. Please install gir1.2-vte-2.91"
+msgstr "La funcionalidad del terminal requiere la biblioteca VTE. Por favor, instala gir1.2-vte-2.91."
+# 
+# File: usr/share/ashyterm/utils/exceptions.py, line: 148
+#: NEEDS WORK
+#, python-brace-format
+msgid "SSH connection to '{}' failed: {}"
+msgstr "La conexión SSH a '{}' falló: {}"
+# 
+# File: usr/share/ashyterm/utils/exceptions.py, line: 151
+#: NEEDS WORK
+#, python-brace-format
+msgid "Could not connect to {}. {}"
+msgstr "No se pudo conectar a {}. {}"
+# 
+# File: usr/share/ashyterm/utils/exceptions.py, line: 170
+#: NEEDS WORK
+#, python-brace-format
+msgid "SSH key error for '{}': {}"
+msgstr "Error de clave SSH para '{}': {}"
+# 
+# File: usr/share/ashyterm/utils/exceptions.py, line: 173
+#: NEEDS WORK
+#, python-brace-format
+msgid "SSH key problem: {}"
+msgstr "Problema de clave SSH: {}"
+# 
+# File: usr/share/ashyterm/utils/exceptions.py, line: 201
+#: NEEDS WORK
+#, python-brace-format
+msgid "Session '{}' validation failed: {}"
+msgstr "La validación de la sesión '{}' ha fallado: {}"
+# 
+# File: usr/share/ashyterm/utils/exceptions.py, line: 204
+#: NEEDS WORK
+#, python-brace-format
+msgid "Session configuration is invalid: {}"
+msgstr "La configuración de la sesión no es válida: {}"
+# 
+# File: usr/share/ashyterm/utils/exceptions.py, line: 232
+#: NEEDS WORK
+#, python-brace-format
+msgid "Failed to read from '{}': {}"
+msgstr "Error al leer de '{}': {}"
+# 
+# File: usr/share/ashyterm/utils/exceptions.py, line: 235
+#: NEEDS WORK
+msgid "Could not load saved data"
+msgstr "No se pudo cargar los datos guardados"
+# 
+# File: usr/share/ashyterm/utils/exceptions.py, line: 243
+#: NEEDS WORK
+#, python-brace-format
+msgid "Failed to write to '{}': {}"
+msgstr "Error al escribir en '{}': {}"
+# 
+# File: usr/share/ashyterm/utils/exceptions.py, line: 246
+#: NEEDS WORK
+msgid "Could not save data"
+msgstr "No se pudo guardar los datos"
+# 
+# File: usr/share/ashyterm/utils/exceptions.py, line: 254
+#: NEEDS WORK
+#, python-brace-format
+msgid "Storage file '{}' is corrupted"
+msgstr "El archivo de almacenamiento '{}' está dañado."
+# 
+# File: usr/share/ashyterm/utils/exceptions.py, line: 256
+#: NEEDS WORK
+#, python-brace-format
+msgid ": {}"
+msgstr ""
+"clave: {}  \n"
+"cadena a traducir: {}"
+# 
+# File: usr/share/ashyterm/utils/exceptions.py, line: 259
+#: NEEDS WORK
+msgid "Saved data appears to be corrupted"
+msgstr "Los datos guardados parecen estar corruptos."
+# 
+# File: usr/share/ashyterm/utils/exceptions.py, line: 276
+#: NEEDS WORK
+#, python-brace-format
+msgid "Invalid configuration for '{}' (value: {}): {}"
+msgstr "Configuración no válida para '{}' (valor: {}): {}"
+# 
+# File: usr/share/ashyterm/main.py, line: 405
+#: NEEDS WORK
+#, python-brace-format
+msgid "Configuration error: {}"
+msgstr "Error de configuración: {}"
+# 
+# File: usr/share/ashyterm/utils/exceptions.py, line: 309
+#: NEEDS WORK
+#, python-brace-format
+msgid "UI error in {}: {}"
+msgstr "Error de UI en {}: {}"
+# 
+# File: usr/share/ashyterm/utils/exceptions.py, line: 307
+#: NEEDS WORK
+#, python-brace-format
+msgid "UI error in component: {}"
+msgstr "Error de UI en el componente: {}"
+# 
+# File: usr/share/ashyterm/utils/exceptions.py, line: 321
+#: NEEDS WORK
+#, python-brace-format
+msgid "Dialog error ({}): {}"
+msgstr "Error de diálogo ({}): {}"
+# 
+# File: usr/share/ashyterm/utils/exceptions.py, line: 324
+#: NEEDS WORK
+#, python-brace-format
+msgid "Interface error: {}"
+msgstr "Error de interfaz: {}"
+# 
+# File: usr/share/ashyterm/utils/exceptions.py, line: 368
+# File: usr/share/ashyterm/utils/exceptions.py, line: 372
+#: NEEDS WORK
+#, python-brace-format
+msgid "Validation failed for '{}': {}"
+msgstr "La validación falló para '{}': {}"
+# 
+# File: usr/share/ashyterm/utils/exceptions.py, line: 392
+#: NEEDS WORK
+#, python-brace-format
+msgid "Invalid hostname '{}': {}"
+msgstr "Nombre de host no válido '{}': {}"
+# 
+# File: usr/share/ashyterm/utils/exceptions.py, line: 395
+#: NEEDS WORK
+#, python-brace-format
+msgid "Invalid hostname: {}"
+msgstr "Nombre de host no válido: {}"
+# 
+# File: usr/share/ashyterm/utils/exceptions.py, line: 403
+#: NEEDS WORK
+#, python-brace-format
+msgid "Invalid path '{}': {}"
+msgstr "Ruta no válida '{}': {}"
+# 
+# File: usr/share/ashyterm/utils/exceptions.py, line: 406
+#: NEEDS WORK
+#, python-brace-format
+msgid "Invalid path: {}"
+msgstr "Ruta no válida: {}"
+# 
+# File: usr/share/ashyterm/utils/exceptions.py, line: 423
+#: NEEDS WORK
+#, python-brace-format
+msgid "Permission denied for {} operation on '{}'"
+msgstr "Permiso denegado para la operación {} en '{}'"
+# 
+# File: usr/share/ashyterm/utils/exceptions.py, line: 426
+#: NEEDS WORK
+#, python-brace-format
+msgid "Permission denied accessing {}"
+msgstr "Permiso denegado al acceder a {}"
+# 
+# File: usr/share/ashyterm/utils/exceptions.py, line: 434
+#: NEEDS WORK
+#, python-brace-format
+msgid "Permission denied for {} operation on directory '{}'"
+msgstr "Permiso denegado para la operación {} en el directorio '{}'"
+# 
+# File: usr/share/ashyterm/utils/exceptions.py, line: 437
+#: NEEDS WORK
+#, python-brace-format
+msgid "Permission denied accessing directory {}"
+msgstr "Permiso denegado al acceder al directorio {}"
+# 
+# File: usr/share/ashyterm/utils/__init__.py, line: 87
+# File: usr/share/ashyterm/utils/__init__.py, line: 104
+#: NEEDS WORK
+msgid "unnamed"
+msgstr "sin nombre"
+# 
+# File: usr/share/ashyterm/utils/security.py, line: 302
+#: NEEDS WORK
+msgid "Key path is empty"
+msgstr "La ruta de la clave está vacía"
+# 
+# File: usr/share/ashyterm/utils/security.py, line: 309
+#: NEEDS WORK
+#, python-brace-format
+msgid "Key file does not exist: {}"
+msgstr "El archivo de clave no existe: {}"
+# 
+# File: usr/share/ashyterm/utils/security.py, line: 313
+#: NEEDS WORK
+#, python-brace-format
+msgid "Key path is not a file: {}"
+msgstr "La ruta de la clave no es un archivo: {}"
+# 
+# File: usr/share/ashyterm/utils/security.py, line: 318
+#: NEEDS WORK
+#, python-brace-format
+msgid "Key file too large: {} bytes"
+msgstr "El archivo de clave es demasiado grande: {} bytes"
+# 
+# File: usr/share/ashyterm/utils/security.py, line: 321
+#: NEEDS WORK
+msgid "Key file is empty"
+msgstr "El archivo de clave está vacío."
+# 
+# File: usr/share/ashyterm/utils/security.py, line: 326
+#: NEEDS WORK
+msgid "Key file has insecure permissions (should be 600)"
+msgstr "El archivo de clave tiene permisos inseguros (debería ser 600)"
+# 
+# File: usr/share/ashyterm/utils/security.py, line: 330
+#: NEEDS WORK
+msgid "Key file is not readable"
+msgstr "El archivo de clave no es legible"
+# 
+# File: usr/share/ashyterm/utils/security.py, line: 335
+#: NEEDS WORK
+#, python-brace-format
+msgid "Error accessing key file: {}"
+msgstr "Error al acceder al archivo de clave: {}"
+# 
+# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
+# 
+# File: usr/share/ashyterm/utils/security.py, line: 508
+# File: usr/share/ashyterm/utils/security.py, line: 796
+# File: usr/share/ashyterm/utils.py, line: 449
+#: NEEDS WORK
+#, python-brace-format
+msgid "Invalid hostname format: {}"
+msgstr "Formato de nombre de host no válido: {}"
+# 
+# File: usr/share/ashyterm/utils/security.py, line: 509
+#: NEEDS WORK
+msgid "Use a valid hostname or IP address"
+msgstr "Utilice un nombre de host o dirección IP válidos"
+# 
+# File: usr/share/ashyterm/utils/security.py, line: 519
+#: NEEDS WORK
+#, python-brace-format
+msgid "Connecting to private IP: {}"
+msgstr "Conectando a IP privada: {}"
+# 
+# File: usr/share/ashyterm/utils/security.py, line: 520
+#: NEEDS WORK
+msgid "Ensure this is intentional"
+msgstr "Asegúrate de que esto sea intencional"
+# 
+# File: usr/share/ashyterm/utils/security.py, line: 534
+# File: usr/share/ashyterm/utils/security.py, line: 827
+#: NEEDS WORK
+#, python-brace-format
+msgid "SSH key validation failed: {}"
+msgstr "La validación de la clave SSH falló: {}"
+# 
+# File: usr/share/ashyterm/utils/security.py, line: 535
+#: NEEDS WORK
+msgid "Fix SSH key configuration"
+msgstr "Corregir la configuración de la clave SSH"
+# 
+# File: usr/share/ashyterm/utils/security.py, line: 541
+#: NEEDS WORK
+msgid "Using password authentication"
+msgstr "Usando autenticación por contraseña"
+# 
+# File: usr/share/ashyterm/utils/security.py, line: 542
+#: NEEDS WORK
+msgid "Consider using SSH key authentication for better security"
+msgstr "Considere usar la autenticación de clave SSH para una mejor seguridad."
+# 
+# File: usr/share/ashyterm/utils/security.py, line: 551
+#: NEEDS WORK
+msgid "Connecting as root user"
+msgstr "Conectando como usuario root"
+# 
+# File: usr/share/ashyterm/utils/security.py, line: 552
+#: NEEDS WORK
+msgid "Use a regular user account when possible"
+msgstr "Utiliza una cuenta de usuario regular cuando sea posible"
+# 
+# File: usr/share/ashyterm/utils/security.py, line: 692
+#: NEEDS WORK
+msgid "Hostname cannot be empty"
+msgstr "El nombre de host no puede estar vacío."
+# 
+# File: usr/share/ashyterm/utils/security.py, line: 696
+#: NEEDS WORK
+msgid "Invalid hostname format"
+msgstr "Formato de nombre de host no válido"
+# 
+# File: usr/share/ashyterm/utils/security.py, line: 711
+#: NEEDS WORK
+msgid "Unknown validation error"
+msgstr "Error de validación desconocido"
+# 
+# File: usr/share/ashyterm/utils/security.py, line: 726
+#: NEEDS WORK
+msgid "Path contains unsafe elements"
+msgstr "La ruta contiene elementos inseguros"
+# 
+# File: usr/share/ashyterm/utils/security.py, line: 744
+# File: usr/share/ashyterm/utils/security.py, line: 762
+#: NEEDS WORK
+msgid "set secure permissions"
+msgstr "establecer permisos seguros"
+# 
+# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
+# 
+# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
+# 
+# File: usr/share/ashyterm/utils/security.py, line: 786
+# File: usr/share/ashyterm/utils.py, line: 438
+# File: usr/share/ashyterm/sessions/models.py, line: 89
+#: NEEDS WORK
+msgid "Session name cannot be empty"
+msgstr "El nombre de la sesión no puede estar vacío."
+# 
+# File: usr/share/ashyterm/utils/security.py, line: 788
+#: NEEDS WORK
+#, python-brace-format
+msgid "Session name too long (max {} characters)"
+msgstr "El nombre de la sesión es demasiado largo (máx. {} caracteres)"
+# 
+# File: usr/share/ashyterm/utils/security.py, line: 794
+#: NEEDS WORK
+msgid "Hostname cannot be empty for SSH sessions"
+msgstr "El nombre de host no puede estar vacío para las sesiones SSH."
+# 
+# File: usr/share/ashyterm/utils/security.py, line: 801
+#: NEEDS WORK
+msgid "Username is required for SSH sessions"
+msgstr "Se requiere un nombre de usuario para las sesiones SSH."
+# 
+# File: usr/share/ashyterm/utils/security.py, line: 803
+#: NEEDS WORK
+#, python-brace-format
+msgid "Username too long (max {} characters)"
+msgstr "El nombre de usuario es demasiado largo (máx. {} caracteres)"
+# 
+# File: usr/share/ashyterm/utils/security.py, line: 811
+#: NEEDS WORK
+msgid "Port must be between 1 and 65535"
+msgstr "El puerto debe estar entre 1 y 65535."
+# 
+# File: usr/share/ashyterm/utils/security.py, line: 813
+#: NEEDS WORK
+msgid "Port must be a valid number"
+msgstr "El puerto debe ser un número válido"
+# 
+# File: usr/share/ashyterm/utils/security.py, line: 822
+#: NEEDS WORK
+msgid "SSH key file path is required for key authentication"
+msgstr "Se requiere la ruta del archivo de clave SSH para la autenticación de clave."
+# 
+# File: usr/share/ashyterm/utils/security.py, line: 832
+#: NEEDS WORK
+#, python-brace-format
+msgid "Invalid authentication type: {}"
+msgstr "Tipo de autenticación no válido: {}"
+# 
+# File: usr/share/ashyterm/utils/security.py, line: 838
+#: NEEDS WORK
+msgid "Invalid or unsafe folder path"
+msgstr "Ruta de carpeta no válida o insegura"
+# 
+# File: usr/share/ashyterm/utils/security.py, line: 850
+#: NEEDS WORK
+#, python-brace-format
+msgid "Validation error: {}"
+msgstr "Error de validación: {}"
+# 
+# File: usr/share/ashyterm/main.py, line: 86
+#: NEEDS WORK
+#, python-brace-format
+msgid ""
+"\n"
+"Received signal {}, shutting down gracefully..."
+msgstr "Señal recibida {}, apagando de manera ordenada..."
+# 
+# File: usr/share/ashyterm/main.py, line: 97
+#: NEEDS WORK
+#, python-brace-format
+msgid "Warning: Could not set up signal handlers: {}"
+msgstr "Advertencia: No se pudieron configurar los controladores de señal: {}"
+# 
+# File: usr/share/ashyterm/main.py, line: 109
+#: NEEDS WORK
+msgid "Ashy Terminal - A modern terminal emulator with session management"
+msgstr "Ashy Terminal - Un emulador de terminal moderno con gestión de sesiones"
+# 
+# File: usr/share/ashyterm/main.py, line: 110
+#: NEEDS WORK
+msgid "For more information, visit: https://communitybig.org/"
+msgstr "Para más información, visita: https://communitybig.org/"
+# 
+# File: usr/share/ashyterm/main.py, line: 73
+#: NEEDS WORK
+msgid "Enable debug mode"
+msgstr "Habilitar modo de depuración"
+# 
+# File: usr/share/ashyterm/main.py, line: 79
+#: NEEDS WORK
+msgid "Set logging level"
+msgstr "Establecer nivel de registro"
+# 
+# File: usr/share/ashyterm/main.py, line: 84
+#: NEEDS WORK
+msgid "Set the working directory for the initial terminal"
+msgstr "Establecer el directorio de trabajo para el terminal inicial"
+# 
+# File: usr/share/ashyterm/main.py, line: 92
+#: NEEDS WORK
+msgid "Working directory (positional argument)"
+msgstr "Directorio de trabajo (argumento posicional)"
+# 
+# File: usr/share/ashyterm/main.py, line: 105
+#: NEEDS WORK
+msgid "Execute command in the terminal"
+msgstr "Ejecutar comando en la terminal"
+# 
+# File: usr/share/ashyterm/main.py, line: 110
+#: NEEDS WORK
+msgid "Close terminal after executing command (only with --execute)"
+msgstr "Cerrar terminal después de ejecutar el comando (solo con --execute)"
+# 
+# File: usr/share/ashyterm/main.py, line: 115
+#: NEEDS WORK
+msgid "Connect to SSH host with optional user, port, and remote path"
+msgstr "Conectar al host SSH con usuario, puerto y ruta remota opcionales"
+# 
+# File: usr/share/ashyterm/main.py, line: 119
+#: NEEDS WORK
+msgid "Convert KIO/GVFS URI path to SSH format"
+msgstr "Convertir la ruta URI de KIO/GVFS al formato SSH"
+# 
+# File: usr/share/ashyterm/sessions/models.py, line: 174
+#: NEEDS WORK
+msgid "Port must be a valid number between 1 and 65535"
+msgstr "El puerto debe ser un número válido entre 1 y 65535."
+# 
+# File: usr/share/ashyterm/sessions/models.py, line: 198
+#: NEEDS WORK
+msgid "Session name is required."
+msgstr "Se requiere un nombre de sesión."
+# 
+# File: usr/share/ashyterm/sessions/models.py, line: 201
+#: NEEDS WORK
+msgid "Host is required for SSH sessions."
+msgstr "Se requiere un host para las sesiones SSH."
+# 
+# File: usr/share/ashyterm/sessions/models.py, line: 203
+#: NEEDS WORK
+msgid "Port must be between 1 and 65535."
+msgstr "El puerto debe estar entre 1 y 65535."
+# 
+# File: usr/share/ashyterm/sessions/models.py, line: 386
+# File: usr/share/ashyterm/sessions/models.py, line: 419
+#: NEEDS WORK
+msgid "Unnamed Session"
+msgstr "Sesión sin nombre"
+# 
+# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 406
+# File: usr/share/ashyterm/sessions/models.py, line: 511
+#: NEEDS WORK
+msgid "Local Terminal"
+msgstr "Terminal Local"
+# 
+# File: usr/share/ashyterm/sessions/models.py, line: 346
+#: NEEDS WORK
+msgid "Folder name is required."
+msgstr "Se requiere un nombre de carpeta."
+# 
+# File: usr/share/ashyterm/sessions/models.py, line: 352
+#: NEEDS WORK
+msgid "Folder path is not consistent with its parent path."
+msgstr "La ruta de la carpeta no es consistente con su ruta padre."
+# 
+# File: usr/share/ashyterm/sessions/models.py, line: 727
+# File: usr/share/ashyterm/sessions/models.py, line: 752
+#: NEEDS WORK
+msgid "Unnamed Folder"
+msgstr "Carpeta sin nombre"
+# 
+# File: usr/share/ashyterm/sessions/tree.py, line: 96
+#: NEEDS WORK
+msgid "Sessions"
+msgstr "Sesiones"
+# 
+# File: usr/share/ashyterm/sessions/tree.py, line: 618
+# File: usr/share/ashyterm/sessions/tree.py, line: 623
+#: NEEDS WORK
+msgid "Paste Error"
+msgstr "Error de pegado"
+# 
+# File: usr/share/ashyterm/sessions/validation.py, line: 18
+#: NEEDS WORK
+#, python-brace-format
+msgid "Session validation failed: {}"
+msgstr "La validación de la sesión ha fallado: {}"
+# 
+# File: usr/share/ashyterm/sessions/validation.py, line: 31
+#: NEEDS WORK
+#, python-brace-format
+msgid "A session with the name '{name}' already exists in this folder."
+msgstr "Ya existe una sesión con el nombre '{name}' en esta carpeta."
+# 
+# File: usr/share/ashyterm/sessions/validation.py, line: 45
+#: NEEDS WORK
+#, python-brace-format
+msgid "The target folder '{folder}' does not exist."
+msgstr "La carpeta de destino '{folder}' no existe."
+# 
+# File: usr/share/ashyterm/sessions/validation.py, line: 61
+#: NEEDS WORK
+#, python-brace-format
+msgid "Folder validation failed: {}"
+msgstr "La validación de la carpeta ha fallado: {}"
+# 
+# File: usr/share/ashyterm/sessions/validation.py, line: 69
+#: NEEDS WORK
+#, python-brace-format
+msgid "A folder with the path '{path}' already exists."
+msgstr "Ya existe una carpeta con la ruta '{path}'."
+# 
+# File: usr/share/ashyterm/sessions/validation.py, line: 84
+#: NEEDS WORK
+#, python-brace-format
+msgid "The parent folder '{folder}' does not exist."
+msgstr "La carpeta principal '{folder}' no existe."
 # 
 # File: usr/share/ashyterm/sessions/storage.py, line: 125
 #: NEEDS WORK
@@ -112,964 +711,106 @@ msgstr "La verificación de guardado falló"
 msgid "Save failed: {}"
 msgstr "Error al guardar: {}"
 # 
-# File: usr/share/ashyterm/sessions/operations.py, line: 164
+# File: usr/share/ashyterm/sessions/operations.py, line: 46
+#: NEEDS WORK
+msgid "Failed to save session data."
+msgstr "Error al guardar los datos de la sesión."
+# 
+# File: usr/share/ashyterm/sessions/operations.py, line: 51
 #: NEEDS WORK
 #, python-brace-format
-msgid "Session '{name}' already exists in the specified folder"
-msgstr "La sesión '{name}' ya existe en la carpeta especificada."
+msgid "Session '{name}' added successfully."
+msgstr "Sesión '{name}' añadida con éxito."
+# 
+# File: usr/share/ashyterm/sessions/operations.py, line: 62
+#: NEEDS WORK
+msgid "Item at position is not a session."
+msgstr "El elemento en la posición no es una sesión."
+# 
+# File: usr/share/ashyterm/sessions/operations.py, line: 74
+#: NEEDS WORK
+msgid "Failed to save updated session data."
+msgstr "Error al guardar los datos de sesión actualizados."
+# 
+# File: usr/share/ashyterm/sessions/operations.py, line: 79
+#: NEEDS WORK
+#, python-brace-format
+msgid "Session '{name}' updated successfully."
+msgstr "Sesión '{name}' actualizada con éxito."
+# 
+# File: usr/share/ashyterm/sessions/operations.py, line: 90
+#: NEEDS WORK
+msgid "Session not found."
+msgstr "Sesión no encontrada."
+# 
+# File: usr/share/ashyterm/sessions/operations.py, line: 96
+#: NEEDS WORK
+msgid "Failed to save after session removal."
+msgstr "Error al guardar después de la eliminación de la sesión."
+# 
+# File: usr/share/ashyterm/sessions/operations.py, line: 102
+#: NEEDS WORK
+#, python-brace-format
+msgid "Session '{name}' removed successfully."
+msgstr "Sesión '{name}' eliminada con éxito."
+# 
+# File: usr/share/ashyterm/sessions/operations.py, line: 115
+#: NEEDS WORK
+msgid "Failed to save folder data."
+msgstr "Error al guardar los datos de la carpeta."
+# 
+# File: usr/share/ashyterm/sessions/operations.py, line: 120
+#: NEEDS WORK
+#, python-brace-format
+msgid "Folder '{name}' added successfully."
+msgstr "Carpeta '{name}' añadida con éxito."
+# 
+# File: usr/share/ashyterm/sessions/operations.py, line: 131
+#: NEEDS WORK
+msgid "Item at position is not a folder."
+msgstr "El elemento en la posición no es una carpeta."
+# 
+# File: usr/share/ashyterm/sessions/operations.py, line: 144
+#: NEEDS WORK
+msgid "Failed to save updated folder data."
+msgstr "Error al guardar los datos de la carpeta actualizada."
+# 
+# File: usr/share/ashyterm/sessions/operations.py, line: 149
+#: NEEDS WORK
+#, python-brace-format
+msgid "Folder '{name}' updated successfully."
+msgstr "La carpeta '{name}' se actualizó correctamente."
+# 
+# File: usr/share/ashyterm/sessions/operations.py, line: 161
+#: NEEDS WORK
+msgid "Cannot remove a non-empty folder."
+msgstr "No se puede eliminar una carpeta no vacía."
+# 
+# File: usr/share/ashyterm/sessions/operations.py, line: 168
+#: NEEDS WORK
+msgid "Folder not found."
+msgstr "Carpeta no encontrada."
 # 
 # File: usr/share/ashyterm/sessions/operations.py, line: 172
 #: NEEDS WORK
-#, python-brace-format
-msgid "Session '{name}' added successfully"
-msgstr "Sesión '{name}' añadida con éxito"
+msgid "Failed to save after folder removal."
+msgstr "Error al guardar después de eliminar la carpeta."
 # 
-# File: usr/share/ashyterm/sessions/operations.py, line: 175
-# File: usr/share/ashyterm/sessions/operations.py, line: 314
+# File: usr/share/ashyterm/sessions/operations.py, line: 177
 #: NEEDS WORK
 #, python-brace-format
-msgid "Session name sanitized: '{original}' -> '{new}'"
-msgstr "Nombre de sesión saneado: '{original}' -> '{new}'"
-# 
-# File: usr/share/ashyterm/sessions/operations.py, line: 189
-# File: usr/share/ashyterm/sessions/operations.py, line: 322
-#: NEEDS WORK
-msgid "Failed to save session data"
-msgstr "Error al guardar los datos de la sesión"
-# 
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
-# 
-# File: usr/share/ashyterm/window.py, line: 879
-# File: usr/share/ashyterm/sessions/operations.py, line: 203
-#: NEEDS WORK
-#, python-brace-format
-msgid "Failed to add session: {error}"
-msgstr "Error al agregar la sesión: {error}"
-# 
-# File: usr/share/ashyterm/sessions/operations.py, line: 219
-#: NEEDS WORK
-msgid "Validation passed"
-msgstr "Validación exitosa"
-# 
-# File: usr/share/ashyterm/sessions/operations.py, line: 224
-#: NEEDS WORK
-#, python-brace-format
-msgid "Session validation failed: {errors}"
-msgstr "La validación de la sesión falló: {errors}"
-# 
-# File: usr/share/ashyterm/sessions/operations.py, line: 233
-# File: usr/share/ashyterm/sessions/operations.py, line: 371
-#: NEEDS WORK
-#, python-brace-format
-msgid "Security validation failed: {errors}"
-msgstr "La validación de seguridad ha fallado: {errors}"
-# 
-# File: usr/share/ashyterm/sessions/operations.py, line: 241
-# File: usr/share/ashyterm/sessions/operations.py, line: 385
-#: NEEDS WORK
-#, python-brace-format
-msgid "Security: {message}"
-msgstr "Seguridad: {mensaje}"
-# 
-# File: usr/share/ashyterm/sessions/operations.py, line: 243
-# File: usr/share/ashyterm/sessions/operations.py, line: 387
-#: NEEDS WORK
-#, python-brace-format
-msgid "Critical security issue: {message}"
-msgstr "Problema crítico de seguridad: {message}"
-# 
-# File: usr/share/ashyterm/sessions/operations.py, line: 246
-# File: usr/share/ashyterm/sessions/operations.py, line: 390
-#: NEEDS WORK
-#, python-brace-format
-msgid "Security validation error: {error}"
-msgstr "Error de validación de seguridad: {error}"
-# 
-# File: usr/share/ashyterm/sessions/operations.py, line: 251
-# File: usr/share/ashyterm/sessions/operations.py, line: 395
-# File: usr/share/ashyterm/sessions/operations.py, line: 590
-#: NEEDS WORK
-#, python-brace-format
-msgid "Target folder '{folder}' does not exist"
-msgstr "La carpeta de destino '{folder}' no existe."
-# 
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
-# 
-# File: usr/share/ashyterm/sessions/operations.py, line: 257
-# File: usr/share/ashyterm/sessions/models.py, line: 342
-# File: usr/share/ashyterm/sessions/models.py, line: 691
-#: NEEDS WORK
-#, python-brace-format
-msgid "Validation error: {error}"
-msgstr "Error de validación: {error}"
-# 
-# File: usr/share/ashyterm/sessions/operations.py, line: 276
-# File: usr/share/ashyterm/sessions/operations.py, line: 722
-#: NEEDS WORK
-#, python-brace-format
-msgid "Invalid position: {position}"
-msgstr "Posición no válida: {position}"
-# 
-# File: usr/share/ashyterm/sessions/operations.py, line: 280
-#: NEEDS WORK
-#, python-brace-format
-msgid "Item at position {position} is not a session"
-msgstr "El elemento en la posición {position} no es una sesión."
-# 
-# File: usr/share/ashyterm/sessions/operations.py, line: 300
-#: NEEDS WORK
-#, python-brace-format
-msgid "Session name '{name}' already exists in the target folder"
-msgstr "El nombre de la sesión '{name}' ya existe en la carpeta de destino."
-# 
-# File: usr/share/ashyterm/sessions/operations.py, line: 329
-#: NEEDS WORK
-#, python-brace-format
-msgid "Session '{name}' updated successfully"
-msgstr "Sesión '{name}' actualizada con éxito"
-# 
-# File: usr/share/ashyterm/sessions/operations.py, line: 339
-#: NEEDS WORK
-#, python-brace-format
-msgid "Failed to update session: {error}"
-msgstr "Error al actualizar la sesión: {error}"
-# 
-# File: usr/share/ashyterm/sessions/operations.py, line: 357
-#: NEEDS WORK
-msgid "Update validation passed"
-msgstr "Validación de actualización aprobada"
-# 
-# File: usr/share/ashyterm/sessions/operations.py, line: 362
-#: NEEDS WORK
-#, python-brace-format
-msgid "Updated session validation failed: {errors}"
-msgstr "La validación de sesión actualizada falló: {errors}"
-# 
-# File: usr/share/ashyterm/sessions/operations.py, line: 378
-#: NEEDS WORK
-#, python-brace-format
-msgid "Security score decreased: {original} -> {updated}"
-msgstr "La puntuación de seguridad ha disminuido: {original} -> {updated}"
-# 
-# File: usr/share/ashyterm/sessions/operations.py, line: 401
-#: NEEDS WORK
-#, python-brace-format
-msgid "Update validation error: {error}"
-msgstr "Error de validación de actualización: {error}"
-# 
-# File: usr/share/ashyterm/sessions/operations.py, line: 439
-#: NEEDS WORK
-msgid "Properties updated successfully"
-msgstr "Propiedades actualizadas con éxito"
-# 
-# File: usr/share/ashyterm/sessions/operations.py, line: 450
-#: NEEDS WORK
-#, python-brace-format
-msgid "Property update failed: {error}"
-msgstr "La actualización de la propiedad falló: {error}"
-# 
-# File: usr/share/ashyterm/sessions/operations.py, line: 471
-#: NEEDS WORK
-#, python-brace-format
-msgid "Session '{name}' not found in store"
-msgstr "Sesión '{name}' no encontrada en la tienda"
-# 
-# File: usr/share/ashyterm/sessions/operations.py, line: 482
-#: NEEDS WORK
-msgid "Failed to save after session removal"
-msgstr "Error al guardar después de la eliminación de la sesión"
-# 
-# File: usr/share/ashyterm/sessions/operations.py, line: 490
-#: NEEDS WORK
-#, python-brace-format
-msgid "Session '{name}' removed successfully"
-msgstr "Sesión '{name}' eliminada con éxito"
-# 
-# File: usr/share/ashyterm/sessions/operations.py, line: 499
-#: NEEDS WORK
-#, python-brace-format
-msgid "Failed to remove session: {error}"
-msgstr "Error al eliminar la sesión: {error}"
-# 
-# File: usr/share/ashyterm/sessions/operations.py, line: 530
-#: NEEDS WORK
-#, python-brace-format
-msgid "Copy of {name}"
-msgstr "Copia de {name}"
-# 
-# File: usr/share/ashyterm/sessions/operations.py, line: 536
-#: NEEDS WORK
-#, python-brace-format
-msgid "Duplicate validation failed: {errors}"
-msgstr "La validación de duplicados ha fallado: {errors}"
-# 
-# File: usr/share/ashyterm/sessions/operations.py, line: 542
-#: NEEDS WORK
-#, python-brace-format
-msgid "Duplicate name '{name}' already exists"
-msgstr "El nombre duplicado '{name}' ya existe."
-# 
-# File: usr/share/ashyterm/sessions/operations.py, line: 555
-#: NEEDS WORK
-#, python-brace-format
-msgid "Session duplicated as '{name}'"
-msgstr "Sesión duplicada como '{name}'"
-# 
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
-# 
-# File: usr/share/ashyterm/window.py, line: 706
-# File: usr/share/ashyterm/sessions/operations.py, line: 564
-#: NEEDS WORK
-#, python-brace-format
-msgid "Failed to duplicate session: {error}"
-msgstr "Error al duplicar la sesión: {error}"
-# 
-# File: usr/share/ashyterm/sessions/operations.py, line: 599
-#: NEEDS WORK
-#, python-brace-format
-msgid "Session moved and renamed to '{name}'"
-msgstr "Sesión movida y renombrada a '{name}'"
-# 
-# File: usr/share/ashyterm/sessions/operations.py, line: 600
-#: NEEDS WORK
-#, python-brace-format
-msgid "Session renamed to avoid conflict: '{original}' -> '{new}'"
-msgstr "Sesión renombrada para evitar conflictos: '{original}' -> '{new}'"
-# 
-# File: usr/share/ashyterm/sessions/operations.py, line: 602
-# File: usr/share/ashyterm/sessions/operations.py, line: 620
-#: NEEDS WORK
-msgid "root"
-msgstr "raíz"
-# 
-# File: usr/share/ashyterm/sessions/operations.py, line: 603
-#: NEEDS WORK
-#, python-brace-format
-msgid "Session moved to '{folder}'"
-msgstr "Sesión movida a '{folder}'"
-# 
-# File: usr/share/ashyterm/sessions/operations.py, line: 614
-#: NEEDS WORK
-msgid "Failed to save after moving session"
-msgstr "Error al guardar después de mover la sesión"
-# 
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
-# 
-# File: usr/share/ashyterm/window.py, line: 724
-# File: usr/share/ashyterm/sessions/operations.py, line: 636
-#: NEEDS WORK
-#, python-brace-format
-msgid "Failed to move session: {error}"
-msgstr "Error al mover la sesión: {error}"
-# 
-# File: usr/share/ashyterm/sessions/operations.py, line: 659
-#: NEEDS WORK
-#, python-brace-format
-msgid "Folder validation failed: {errors}"
-msgstr "La validación de la carpeta falló: {errors}"
-# 
-# File: usr/share/ashyterm/sessions/operations.py, line: 664
-# File: usr/share/ashyterm/sessions/operations.py, line: 742
-#: NEEDS WORK
-#, python-brace-format
-msgid "Folder path '{path}' already exists"
-msgstr "La ruta de la carpeta '{path}' ya existe."
-# 
-# File: usr/share/ashyterm/sessions/operations.py, line: 682
-# File: usr/share/ashyterm/sessions/operations.py, line: 763
-#: NEEDS WORK
-msgid "Failed to save folder data"
-msgstr "Error al guardar los datos de la carpeta"
-# 
-# File: usr/share/ashyterm/sessions/operations.py, line: 690
-#: NEEDS WORK
-#, python-brace-format
-msgid "Folder '{name}' added successfully"
-msgstr "Carpeta '{name}' añadida con éxito"
-# 
-# File: usr/share/ashyterm/sessions/operations.py, line: 693
-# File: usr/share/ashyterm/sessions/operations.py, line: 774
-#: NEEDS WORK
-#, python-brace-format
-msgid "Folder name sanitized: '{original}' -> '{new}'"
-msgstr "Nombre de la carpeta sanitizado: '{original}' -> '{new}'"
-# 
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
-# 
-# File: usr/share/ashyterm/window.py, line: 889
-# File: usr/share/ashyterm/sessions/operations.py, line: 702
-#: NEEDS WORK
-#, python-brace-format
-msgid "Failed to add folder: {error}"
-msgstr "Error al agregar la carpeta: {error}"
-# 
-# File: usr/share/ashyterm/sessions/operations.py, line: 726
-#: NEEDS WORK
-#, python-brace-format
-msgid "Item at position {position} is not a folder"
-msgstr "El elemento en la posición {position} no es una carpeta."
-# 
-# File: usr/share/ashyterm/sessions/operations.py, line: 737
-#: NEEDS WORK
-#, python-brace-format
-msgid "Updated folder validation failed: {errors}"
-msgstr "La validación de la carpeta actualizada ha fallado: {errors}"
-# 
-# File: usr/share/ashyterm/sessions/operations.py, line: 771
-#: NEEDS WORK
-#, python-brace-format
-msgid "Folder '{name}' updated successfully"
-msgstr "La carpeta '{name}' se actualizó correctamente."
-# 
-# File: usr/share/ashyterm/sessions/operations.py, line: 788
-#: NEEDS WORK
-#, python-brace-format
-msgid "Failed to update folder: {error}"
-msgstr "Error al actualizar la carpeta: {error}"
-# 
-# File: usr/share/ashyterm/sessions/operations.py, line: 816
-#: NEEDS WORK
-#, python-brace-format
-msgid ""
-"Cannot remove folder '{name}' - it contains sessions or subfolders. Use force removal to delete "
-"anyway."
-msgstr ""
-"No se puede eliminar la carpeta '{name}' - contiene sesiones o subcarpetas. Utilice la eliminación "
-"forzada para borrar de todos modos."
-# 
-# File: usr/share/ashyterm/sessions/operations.py, line: 827
-#: NEEDS WORK
-#, python-brace-format
-msgid "Folder '{name}' not found in store"
-msgstr "La carpeta '{name}' no se encontró en la tienda."
-# 
-# File: usr/share/ashyterm/sessions/operations.py, line: 841
-#: NEEDS WORK
-msgid "Failed to save after folder removal"
-msgstr "Error al guardar después de eliminar la carpeta"
-# 
-# File: usr/share/ashyterm/sessions/operations.py, line: 849
-#: NEEDS WORK
-#, python-brace-format
-msgid "Folder '{name}' removed successfully"
+msgid "Folder '{name}' removed successfully."
 msgstr "La carpeta '{name}' se eliminó correctamente."
 # 
-# File: usr/share/ashyterm/sessions/operations.py, line: 857
+# File: usr/share/ashyterm/sessions/operations.py, line: 190
 #: NEEDS WORK
-#, python-brace-format
-msgid "Removed {count} child items"
-msgstr "Se eliminaron {count} elementos secundarios"
+msgid "Failed to save after moving session."
+msgstr "Error al guardar después de mover la sesión."
 # 
-# File: usr/share/ashyterm/sessions/operations.py, line: 866
+# File: usr/share/ashyterm/sessions/operations.py, line: 195
 #: NEEDS WORK
-#, python-brace-format
-msgid "Failed to remove folder: {error}"
-msgstr "Error al eliminar la carpeta: {error}"
-# 
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
-# 
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
-# 
-# File: usr/share/ashyterm/utils/security.py, line: 786
-# File: usr/share/ashyterm/utils.py, line: 438
-# File: usr/share/ashyterm/sessions/models.py, line: 89
-#: NEEDS WORK
-msgid "Session name cannot be empty"
-msgstr "El nombre de la sesión no puede estar vacío."
-# 
-# File: usr/share/ashyterm/sessions/models.py, line: 115
-#: NEEDS WORK
-#, python-brace-format
-msgid "Invalid session type: {type}. Must be one of: {valid_types}"
-msgstr "Tipo de sesión no válido: {type}. Debe ser uno de: {valid_types}"
-# 
-# File: usr/share/ashyterm/sessions/models.py, line: 139
-#: NEEDS WORK
-#, python-brace-format
-msgid "Invalid hostname format: {hostname}"
-msgstr "Formato de nombre de host no válido: {hostname}"
-# 
-# File: usr/share/ashyterm/sessions/models.py, line: 191
-#: NEEDS WORK
-#, python-brace-format
-msgid "Invalid authentication type: {type}. Must be one of: {valid_types}"
-msgstr "Tipo de autenticación no válido: {type}. Debe ser uno de: {valid_types}"
-# 
-# File: usr/share/ashyterm/utils/security.py, line: 811
-#: NEEDS WORK
-msgid "Port must be between 1 and 65535"
-msgstr "El puerto debe estar entre 1 y 65535."
-# 
-# File: usr/share/ashyterm/utils/security.py, line: 813
-#: NEEDS WORK
-msgid "Port must be a valid number"
-msgstr "El puerto debe ser un número válido"
-# 
-# File: usr/share/ashyterm/sessions/models.py, line: 309
-#: NEEDS WORK
-msgid "Session name is required"
-msgstr "Se requiere un nombre de sesión"
-# 
-# File: usr/share/ashyterm/sessions/models.py, line: 312
-#: NEEDS WORK
-msgid "Session type is required"
-msgstr "Se requiere el tipo de sesión"
-# 
-# File: usr/share/ashyterm/sessions/models.py, line: 317
-#: NEEDS WORK
-msgid "Host is required for SSH sessions"
-msgstr "Se requiere un host para las sesiones SSH."
-# 
-# File: usr/share/ashyterm/sessions/models.py, line: 324
-#: NEEDS WORK
-#, python-brace-format
-msgid "SSH key validation failed: {error}"
-msgstr "La validación de la clave SSH falló: {error}"
-# 
-# File: usr/share/ashyterm/sessions/models.py, line: 326
-#: NEEDS WORK
-#, python-brace-format
-msgid "SSH key validation error: {error}"
-msgstr "Error de validación de clave SSH: {error}"
-# 
-# File: usr/share/ashyterm/sessions/models.py, line: 329
-#: NEEDS WORK
-msgid "Authentication type is required for SSH sessions"
-msgstr "Se requiere un tipo de autenticación para las sesiones SSH."
-# 
-# File: usr/share/ashyterm/sessions/models.py, line: 386
-# File: usr/share/ashyterm/sessions/models.py, line: 419
-#: NEEDS WORK
-msgid "Unnamed Session"
-msgstr "Sesión sin nombre"
-# 
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 406
-# File: usr/share/ashyterm/sessions/models.py, line: 511
-#: NEEDS WORK
-msgid "Local Terminal"
-msgstr "Terminal Local"
-# 
-# File: usr/share/ashyterm/sessions/models.py, line: 583
-#: NEEDS WORK
-msgid "Folder name cannot be empty"
-msgstr "El nombre de la carpeta no puede estar vacío."
-# 
-# File: usr/share/ashyterm/sessions/models.py, line: 669
-#: NEEDS WORK
-msgid "Folder name is required"
-msgstr "Se requiere un nombre de carpeta"
-# 
-# File: usr/share/ashyterm/sessions/models.py, line: 673
-#: NEEDS WORK
-msgid "Path contains invalid characters"
-msgstr "La ruta contiene caracteres no válidos"
-# 
-# File: usr/share/ashyterm/sessions/models.py, line: 678
-#: NEEDS WORK
-msgid "Path is not consistent with parent path"
-msgstr "La ruta no es consistente con la ruta padre."
-# 
-# File: usr/share/ashyterm/sessions/models.py, line: 727
-# File: usr/share/ashyterm/sessions/models.py, line: 752
-#: NEEDS WORK
-msgid "Unnamed Folder"
-msgstr "Carpeta sin nombre"
-# 
-# File: usr/share/ashyterm/sessions/tree.py, line: 96
-#: NEEDS WORK
-msgid "Sessions"
-msgstr "Sesiones"
-# 
-# File: usr/share/ashyterm/sessions/tree.py, line: 618
-# File: usr/share/ashyterm/sessions/tree.py, line: 623
-#: NEEDS WORK
-msgid "Paste Error"
-msgstr "Error de pegado"
-# 
-# File: usr/share/ashyterm/app.py, line: 53
-#: NEEDS WORK
-#, python-brace-format
-msgid "Initializing {} v{}"
-msgstr "Inicializando {} v{}"
-# 
-# File: usr/share/ashyterm/app.py, line: 64
-#: NEEDS WORK
-#, python-brace-format
-msgid "Running on {} platform"
-msgstr "Ejecutándose en la plataforma {}"
-# 
-# File: usr/share/ashyterm/app.py, line: 118
-#: NEEDS WORK
-msgid "Initializing application subsystems"
-msgstr "Inicializando subsistemas de la aplicación"
-# 
-# File: usr/share/ashyterm/app.py, line: 121
-#: NEEDS WORK
-msgid "Settings manager initialized"
-msgstr "Administrador de configuraciones inicializado"
-# 
-# File: usr/share/ashyterm/app.py, line: 125
-# File: usr/share/ashyterm/app.py, line: 431
-#: NEEDS WORK
-msgid "Debug mode enabled"
-msgstr "Modo de depuración habilitado"
-# 
-# File: usr/share/ashyterm/app.py, line: 130
-#: NEEDS WORK
-msgid "Encryption available but not initialized (may require passphrase)"
-msgstr "Cifrado disponible pero no inicializado (puede requerir frase de paso)"
-# 
-# File: usr/share/ashyterm/app.py, line: 132
-#: NEEDS WORK
-msgid "Encryption system initialized"
-msgstr "Sistema de cifrado inicializado"
-# 
-# File: usr/share/ashyterm/app.py, line: 134
-#: NEEDS WORK
-#, python-brace-format
-msgid "Encryption initialization failed: {}"
-msgstr "La inicialización de la encriptación falló: {}"
-# 
-# File: usr/share/ashyterm/app.py, line: 136
-#: NEEDS WORK
-msgid "Encryption not available - passwords will be stored as plain text"
-msgstr "Cifrado no disponible - las contraseñas se almacenarán como texto plano"
-# 
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
-# 
-# File: usr/share/ashyterm/app.py, line: 164
-# File: usr/share/ashyterm/main.py, line: 399
-#: NEEDS WORK
-msgid "VTE library not available"
-msgstr "Biblioteca VTE no disponible"
-# 
-# File: usr/share/ashyterm/app.py, line: 156
-#: NEEDS WORK
-msgid "All essential subsystems initialized successfully"
-msgstr "Todos los subsistemas esenciales se inicializaron correctamente."
-# 
-# File: usr/share/ashyterm/app.py, line: 172
-#: NEEDS WORK
-#, python-brace-format
-msgid "Subsystem initialization failed: {}"
-msgstr "La inicialización del subsistema ha fallado: {}"
-# 
-# File: usr/share/ashyterm/app.py, line: 173
-#: NEEDS WORK
-msgid "application initialization"
-msgstr "inicialización de la aplicación"
-# 
-# File: usr/share/ashyterm/app.py, line: 179
-#: NEEDS WORK
-msgid "Application startup initiated"
-msgstr "Inicio de la aplicación iniciado"
-# 
-# File: usr/share/ashyterm/app.py, line: 183
-#: NEEDS WORK
-msgid "Failed to initialize application subsystems"
-msgstr "Error al inicializar los subsistemas de la aplicación"
-# 
-# File: usr/share/ashyterm/app.py, line: 192
-#: NEEDS WORK
-msgid "Application startup completed successfully"
-msgstr "La aplicación se inició correctamente."
-# 
-# File: usr/share/ashyterm/app.py, line: 195
-#: NEEDS WORK
-#, python-brace-format
-msgid "Application startup failed: {}"
-msgstr "Error de inicio de la aplicación: {}"
-# 
-# File: usr/share/ashyterm/app.py, line: 206
-#: NEEDS WORK
-msgid "Automatic startup backup is disabled in settings."
-msgstr "La copia de seguridad de inicio automático está desactivada en la configuración."
-# 
-# File: usr/share/ashyterm/app.py, line: 217
-#: NEEDS WORK
-msgid "Performing startup backup asynchronously"
-msgstr "Realizando copia de seguridad de inicio de forma asíncrona"
-# 
-# File: usr/share/ashyterm/app.py, line: 222
-#: NEEDS WORK
-msgid "Automatic startup backup"
-msgstr "Copia de seguridad automática al inicio"
-# 
-# File: usr/share/ashyterm/app.py, line: 228
-#: NEEDS WORK
-#, python-brace-format
-msgid "Startup backup check failed: {}"
-msgstr "La verificación de copia de seguridad de inicio falló: {}"
-# 
-# File: usr/share/ashyterm/app.py, line: 248
-#: NEEDS WORK
-msgid "Application actions configured"
-msgstr "Acciones de la aplicación configuradas"
-# 
-# File: usr/share/ashyterm/app.py, line: 251
-#: NEEDS WORK
-#, python-brace-format
-msgid "Failed to setup actions: {}"
-msgstr "Error al configurar acciones: {}"
-# 
-# File: usr/share/ashyterm/app.py, line: 330
-#: NEEDS WORK
-msgid "Quit action triggered - no SSH sessions"
-msgstr "Acción de salida activada - sin sesiones SSH"
-# 
-# File: usr/share/ashyterm/app.py, line: 333
-#: NEEDS WORK
-#, python-brace-format
-msgid "Quit action failed: {}"
-msgstr "La acción de salir falló: {}"
-# 
-# File: usr/share/ashyterm/app.py, line: 332
-# File: usr/share/ashyterm/app.py, line: 333
-#: NEEDS WORK
-#, python-brace-format
-msgid "Failed to open preferences: {}"
-msgstr "Error al abrir las preferencias: {}"
-# 
-# File: usr/share/ashyterm/app.py, line: 333
-#: NEEDS WORK
-msgid "Preferences Error"
-msgstr "Error de Preferencias"
-# 
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
-# 
-# File: usr/share/ashyterm/__init__.py, line: 62
-# File: usr/share/ashyterm/app.py, line: 350
-#: NEEDS WORK
-msgid "A modern terminal emulator with session management"
-msgstr "Un emulador de terminal moderno con gestión de sesiones"
-# 
-# File: usr/share/ashyterm/app.py, line: 354
-#: NEEDS WORK
-#, python-brace-format
-msgid "Platform: {}\n"
-msgstr "Plataforma: {}"
-# 
-# File: usr/share/ashyterm/app.py, line: 355
-#: NEEDS WORK
-#, python-brace-format
-msgid "Architecture: {}\n"
-msgstr "Arquitectura: {}"
-# 
-# File: usr/share/ashyterm/app.py, line: 356
-#: NEEDS WORK
-#, python-brace-format
-msgid "Shell: {}"
-msgstr "Shell: {}"
-# 
-# File: usr/share/ashyterm/app.py, line: 362
-#: NEEDS WORK
-#, python-brace-format
-msgid "Failed to show about dialog: {}"
-msgstr "Error al mostrar el diálogo Acerca de: {}"
-# 
-# File: usr/share/ashyterm/app.py, line: 368
-# File: usr/share/ashyterm/app.py, line: 379
-# File: usr/share/ashyterm/app.py, line: 392
-# File: usr/share/ashyterm/app.py, line: 396
-#: NEEDS WORK
-msgid "Backup Error"
-msgstr "Error de copia de seguridad"
-# 
-# File: usr/share/ashyterm/app.py, line: 368
-# File: usr/share/ashyterm/app.py, line: 402
-#: NEEDS WORK
-msgid "Backup system not available"
-msgstr "Sistema de copia de seguridad no disponible"
-# 
-# File: usr/share/ashyterm/app.py, line: 379
-#: NEEDS WORK
-msgid "No files to backup"
-msgstr "No hay archivos para respaldar"
-# 
-# File: usr/share/ashyterm/app.py, line: 385
-#: NEEDS WORK
-msgid "Manual backup from menu"
-msgstr "Copia de seguridad manual desde el menú"
-# 
-# File: usr/share/ashyterm/app.py, line: 389
-#: NEEDS WORK
-#, python-brace-format
-msgid "Manual backup created: {}"
-msgstr "Copia de seguridad manual creada: {}"
-# 
-# File: usr/share/ashyterm/app.py, line: 390
-#: NEEDS WORK
-msgid "Backup Complete"
-msgstr "Copia de seguridad completa"
-# 
-# File: usr/share/ashyterm/app.py, line: 390
-#: NEEDS WORK
-#, python-brace-format
-msgid "Backup created successfully: {}"
-msgstr "Copia de seguridad creada con éxito: {}"
-# 
-# File: usr/share/ashyterm/app.py, line: 392
-#: NEEDS WORK
-msgid "Failed to create backup"
-msgstr "Error al crear la copia de seguridad"
-# 
-# File: usr/share/ashyterm/app.py, line: 395
-#: NEEDS WORK
-#, python-brace-format
-msgid "Manual backup failed: {}"
-msgstr "La copia de seguridad manual falló: {}"
-# 
-# File: usr/share/ashyterm/app.py, line: 396
-#: NEEDS WORK
-#, python-brace-format
-msgid "Backup failed: {}"
-msgstr "La copia de seguridad falló: {}"
-# 
-# File: usr/share/ashyterm/app.py, line: 402
-# File: usr/share/ashyterm/app.py, line: 416
-#: NEEDS WORK
-msgid "Restore Error"
-msgstr "Error de restauración"
-# 
-# File: usr/share/ashyterm/app.py, line: 407
-#: NEEDS WORK
-msgid "No Backups"
-msgstr "Sin copias de seguridad"
-# 
-# File: usr/share/ashyterm/app.py, line: 407
-#: NEEDS WORK
-msgid "No backups available to restore"
-msgstr "No hay copias de seguridad disponibles para restaurar"
-# 
-# File: usr/share/ashyterm/app.py, line: 411
-#: NEEDS WORK
-msgid "Backups Available"
-msgstr "Copias de seguridad disponibles"
-# 
-# File: usr/share/ashyterm/app.py, line: 412
-#: NEEDS WORK
-#, python-brace-format
-msgid "{} backup(s) available. Use preferences dialog for detailed restore options."
-msgstr ""
-"{} copia(s) de seguridad disponible(s). Utilice el diálogo de preferencias para opciones de "
-"restauración detalladas."
-# 
-# File: usr/share/ashyterm/app.py, line: 415
-#: NEEDS WORK
-#, python-brace-format
-msgid "Restore backup action failed: {}"
-msgstr "La acción de restaurar la copia de seguridad falló: {}"
-# 
-# File: usr/share/ashyterm/app.py, line: 416
-#: NEEDS WORK
-#, python-brace-format
-msgid "Failed to access backups: {}"
-msgstr "Error al acceder a las copias de seguridad: {}"
-# 
-# File: usr/share/ashyterm/app.py, line: 435
-#: NEEDS WORK
-msgid "Debug mode disabled"
-msgstr "Modo de depuración desactivado"
-# 
-# File: usr/share/ashyterm/app.py, line: 440
-#: NEEDS WORK
-#, python-brace-format
-msgid "Failed to toggle debug mode: {}"
-msgstr "Error al alternar el modo de depuración: {}"
-# 
-# File: usr/share/ashyterm/app.py, line: 449
-#: NEEDS WORK
-msgid "Log Information"
-msgstr "Información de registro"
-# 
-# File: usr/share/ashyterm/app.py, line: 449
-#: NEEDS WORK
-#, python-brace-format
-msgid "Logs are stored in: {}"
-msgstr "Los registros se almacenan en: {}"
-# 
-# File: usr/share/ashyterm/app.py, line: 452
-#: NEEDS WORK
-#, python-brace-format
-msgid "Failed to show log info: {}"
-msgstr "Error al mostrar la información del registro: {}"
-# 
-# File: usr/share/ashyterm/app.py, line: 484
-#: NEEDS WORK
-#, python-brace-format
-msgid "Failed to check SSH sessions: {}"
-msgstr "Error al verificar las sesiones SSH: {}"
-# 
-# File: usr/share/ashyterm/app.py, line: 498
-#: NEEDS WORK
-msgid "Close Application"
-msgstr "Cerrar aplicación"
-# 
-# File: usr/share/ashyterm/app.py, line: 499
-#: NEEDS WORK
-msgid ""
-"There are active SSH connections. Closing will disconnect all sessions.\n"
-"\n"
-"Are you sure you want to close the application?"
-msgstr ""
-"Hay conexiones SSH activas. Cerrar desconectará todas las sesiones.\n"
-"\n"
-"¿Está seguro de que desea cerrar la aplicación?"
-# 
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 163
-# File: usr/share/ashyterm/ui/dialogs.py, line: 575
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1213
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1957
-# File: usr/share/ashyterm/ui/dialogs.py, line: 2006
-# File: usr/share/ashyterm/window.py, line: 953
-# File: usr/share/ashyterm/window.py, line: 1013
-#: NEEDS WORK
-msgid "Cancel"
-msgstr "Cancelar"
-# 
-# File: usr/share/ashyterm/app.py, line: 503
-#: NEEDS WORK
-msgid "Close All"
-msgstr "Cerrar todo"
-# 
-# File: usr/share/ashyterm/app.py, line: 510
-#: NEEDS WORK
-msgid "User confirmed quit with active SSH sessions"
-msgstr "El usuario confirmó salir con sesiones SSH activas."
-# 
-# File: usr/share/ashyterm/app.py, line: 513
-#: NEEDS WORK
-msgid "User cancelled quit"
-msgstr "El usuario canceló la salida"
-# 
-# File: usr/share/ashyterm/app.py, line: 516
-#: NEEDS WORK
-#, python-brace-format
-msgid "SSH close confirmation response failed: {}"
-msgstr "La respuesta de confirmación de cierre de SSH falló: {}"
-# 
-# File: usr/share/ashyterm/app.py, line: 523
-#: NEEDS WORK
-#, python-brace-format
-msgid "SSH close confirmation dialog failed: {}"
-msgstr "Error al cerrar el diálogo de confirmación de SSH: {}"
-# 
-# File: usr/share/ashyterm/app.py, line: 456
-#: NEEDS WORK
-msgid "Application shutdown initiated"
-msgstr "Se ha iniciado el cierre de la aplicación"
-# 
-# File: usr/share/ashyterm/app.py, line: 465
-#: NEEDS WORK
-msgid "Performing graceful shutdown"
-msgstr "Realizando un apagado controlado"
-# 
-# File: usr/share/ashyterm/app.py, line: 471
-#: NEEDS WORK
-msgid "Cleaning up main window"
-msgstr "Limpiando la ventana principal"
-# 
-# File: usr/share/ashyterm/app.py, line: 476
-#: NEEDS WORK
-msgid "Saving settings"
-msgstr "Guardando configuraciones"
-# 
-# File: usr/share/ashyterm/app.py, line: 483
-#: NEEDS WORK
-msgid "Graceful shutdown completed"
-msgstr "Apagado elegante completado"
-# 
-# File: usr/share/ashyterm/app.py, line: 486
-#: NEEDS WORK
-#, python-brace-format
-msgid "Error during graceful shutdown: {}"
-msgstr "Error durante el apagado controlado: {}"
-# 
-# File: usr/share/ashyterm/app.py, line: 510
-#: NEEDS WORK
-msgid "Performing shutdown backup"
-msgstr "Realizando copia de seguridad de apagado"
-# 
-# File: usr/share/ashyterm/app.py, line: 514
-#: NEEDS WORK
-msgid "Automatic backup on exit"
-msgstr "Copia de seguridad automática al salir"
-# 
-# File: usr/share/ashyterm/app.py, line: 518
-#: NEEDS WORK
-#, python-brace-format
-msgid "Shutdown backup failed: {}"
-msgstr "La copia de seguridad de apagado falló: {}"
-# 
-# File: usr/share/ashyterm/app.py, line: 523
-#: NEEDS WORK
-msgid "Emergency cleanup on exit"
-msgstr "Limpieza de emergencia al salir"
-# 
-# File: usr/share/ashyterm/app.py, line: 530
-#: NEEDS WORK
-msgid "Startup Error"
-msgstr "Error de inicio"
-# 
-# File: usr/share/ashyterm/app.py, line: 531
-#: NEEDS WORK
-#, python-brace-format
-msgid "Application failed to start: {}"
-msgstr "La aplicación no pudo iniciarse: {}"
-# 
-# File: usr/share/ashyterm/app.py, line: 551
-#: NEEDS WORK
-#, python-brace-format
-msgid "Failed to show error dialog: {}"
-msgstr "Error al mostrar el diálogo de error: {}"
-# 
-# File: usr/share/ashyterm/app.py, line: 565
-#: NEEDS WORK
-#, python-brace-format
-msgid "Failed to show info dialog: {}"
-msgstr "Error al mostrar el diálogo de información: {}"
-# 
-# File: usr/share/ashyterm/app.py, line: 576
-#: NEEDS WORK
-#, python-brace-format
-msgid "Failed to refresh keyboard shortcuts: {}"
-msgstr "Error al actualizar los atajos de teclado: {}"
-# 
-# File: usr/share/ashyterm/app.py, line: 584
-#: NEEDS WORK
-msgid "Main window registered"
-msgstr "Ventana principal registrada"
-# 
-# File: usr/share/ashyterm/app.py, line: 592
-#: NEEDS WORK
-msgid "Main window unregistered"
-msgstr "Ventana principal no registrada"
-# 
-# File: usr/share/ashyterm/app.py, line: 611
-#: NEEDS WORK
-#, python-brace-format
-msgid "Failed to create new window: {}"
-msgstr "Error al crear una nueva ventana: {}"
-# 
-# File: usr/share/ashyterm/terminal/tabs.py, line: 489
-#: NEEDS WORK
-msgid "Exited"
-msgstr "Salió"
-# 
-# File: usr/share/ashyterm/window.py, line: 140
-# File: usr/share/ashyterm/window.py, line: 644
-#: NEEDS WORK
-msgid "Terminal Error"
-msgstr "Error de Terminal"
-# 
-# File: usr/share/ashyterm/window.py, line: 141
-#: NEEDS WORK
-msgid "Failed to create initial terminal. Check system configuration."
-msgstr "Error al crear el terminal inicial. Verifique la configuración del sistema."
+msgid "Session moved successfully."
+msgstr "Sesión movida con éxito."
 # 
 # File: usr/share/ashyterm/window.py, line: 145
 #: NEEDS WORK
@@ -1151,37 +892,6 @@ msgstr "Error de carga de datos"
 msgid "Failed to load saved sessions and folders. Starting with empty configuration."
 msgstr "Error al cargar sesiones y carpetas guardadas. Comenzando con una configuración vacía."
 # 
-# File: usr/share/ashyterm/window.py, line: 502
-#: NEEDS WORK
-msgid "Window close request received"
-msgstr "Solicitud de cierre de ventana recibida"
-# 
-# File: usr/share/ashyterm/window.py, line: 507
-#: NEEDS WORK
-msgid "Force closing - allowing window to close"
-msgstr "Cierre forzado - permitiendo que la ventana se cierre"
-# 
-# File: usr/share/ashyterm/window.py, line: 515
-#: NEEDS WORK
-msgid "Showing SSH close confirmation dialog"
-msgstr "Mostrando el diálogo de confirmación para cerrar SSH"
-# 
-# File: usr/share/ashyterm/window.py, line: 520
-#: NEEDS WORK
-msgid "No SSH sessions, proceeding with normal close"
-msgstr "No hay sesiones SSH, procediendo con el cierre normal"
-# 
-# File: usr/share/ashyterm/window.py, line: 511
-#: NEEDS WORK
-msgid "Window cleanup completed"
-msgstr "Limpieza de ventanas completada"
-# 
-# File: usr/share/ashyterm/window.py, line: 515
-#: NEEDS WORK
-#, python-brace-format
-msgid "Window close handling failed: {}"
-msgstr "El manejo del cierre de la ventana ha fallado: {}"
-# 
 # File: usr/share/ashyterm/window.py, line: 544
 #: NEEDS WORK
 msgid "This window has active SSH connections:"
@@ -1203,27 +913,23 @@ msgstr "¿Estás seguro de que deseas cerrar esta ventana?"
 msgid "Close Window"
 msgstr "Cerrar ventana"
 # 
-# File: usr/share/ashyterm/window.py, line: 540
-#: NEEDS WORK
-msgid "User confirmed window close with active SSH sessions"
-msgstr "El usuario confirmó el cierre de la ventana con sesiones SSH activas."
+# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
 # 
-# File: usr/share/ashyterm/window.py, line: 544
+# File: usr/share/ashyterm/ui/dialogs.py, line: 163
+# File: usr/share/ashyterm/ui/dialogs.py, line: 575
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1213
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1957
+# File: usr/share/ashyterm/ui/dialogs.py, line: 2006
+# File: usr/share/ashyterm/window.py, line: 953
+# File: usr/share/ashyterm/window.py, line: 1013
 #: NEEDS WORK
-msgid "User cancelled window close"
-msgstr "El usuario canceló el cierre de la ventana"
+msgid "Cancel"
+msgstr "Cancelar"
 # 
-# File: usr/share/ashyterm/window.py, line: 547
+# File: usr/share/ashyterm/window.py, line: 551
 #: NEEDS WORK
-#, python-brace-format
-msgid "Window SSH close confirmation response failed: {}"
-msgstr "La respuesta de confirmación para cerrar la ventana SSH falló: {}"
-# 
-# File: usr/share/ashyterm/window.py, line: 554
-#: NEEDS WORK
-#, python-brace-format
-msgid "Window SSH close confirmation dialog failed: {}"
-msgstr "Fallo en el diálogo de confirmación para cerrar la ventana SSH: {}"
+msgid "Session Validation Error"
+msgstr "Error de validación de sesión"
 # 
 # File: usr/share/ashyterm/window.py, line: 550
 #: NEEDS WORK
@@ -1235,139 +941,10 @@ msgstr ""
 "La validación de la sesión ha fallado:\n"
 "{errors}"
 # 
-# File: usr/share/ashyterm/window.py, line: 551
+# File: usr/share/ashyterm/window.py, line: 586
 #: NEEDS WORK
-msgid "Session Validation Error"
-msgstr "Error de validación de sesión"
-# 
-# File: usr/share/ashyterm/window.py, line: 575
-#: NEEDS WORK
-msgid "Terminal Creation Failed"
-msgstr "Error al crear el terminal"
-# 
-# File: usr/share/ashyterm/window.py, line: 576
-#: NEEDS WORK
-msgid "Could not create terminal for this session."
-msgstr "No se pudo crear el terminal para esta sesión."
-# 
-# File: usr/share/ashyterm/window.py, line: 579
-# File: usr/share/ashyterm/window.py, line: 640
-#: NEEDS WORK
-msgid "VTE Not Available"
-msgstr "VTE No Disponible"
-# 
-# File: usr/share/ashyterm/window.py, line: 580
-#: NEEDS WORK
-msgid "Cannot open session - VTE library not installed."
-msgstr "No se puede abrir la sesión - Biblioteca VTE no instalada."
-# 
-# File: usr/share/ashyterm/window.py, line: 583
-#: NEEDS WORK
-msgid "Session Error"
-msgstr "Error de sesión"
-# 
-# File: usr/share/ashyterm/window.py, line: 583
-#: NEEDS WORK
-#, python-brace-format
-msgid "Failed to activate session: {error}"
-msgstr "Error al activar la sesión: {error}"
-# 
-# File: usr/share/ashyterm/window.py, line: 802
-#: NEEDS WORK
-msgid "SFTP Connection Failed"
-msgstr "Conexión SFTP fallida"
-# 
-# File: usr/share/ashyterm/window.py, line: 803
-#: NEEDS WORK
-msgid "Could not create SFTP terminal for this session."
-msgstr "No se pudo crear el terminal SFTP para esta sesión."
-# 
-# File: usr/share/ashyterm/window.py, line: 813
-#: NEEDS WORK
-msgid "SFTP Error"
-msgstr "Error SFTP"
-# 
-# File: usr/share/ashyterm/window.py, line: 814
-#: NEEDS WORK
-#, python-brace-format
-msgid "Failed to start SFTP session: {error}"
-msgstr "Error al iniciar la sesión SFTP: {error}"
-# 
-# File: usr/share/ashyterm/window.py, line: 641
-#: NEEDS WORK
-msgid "Cannot create terminal - VTE library not installed."
-msgstr "No se puede crear el terminal - biblioteca VTE no instalada."
-# 
-# File: usr/share/ashyterm/window.py, line: 644
-#: NEEDS WORK
-#, python-brace-format
-msgid "Failed to create new tab: {error}"
-msgstr "Error al crear una nueva pestaña: {error}"
-# 
-# File: usr/share/ashyterm/window.py, line: 876
-# File: usr/share/ashyterm/window.py, line: 886
-#: NEEDS WORK
-msgid "Split Error"
-msgstr "Error de división"
-# 
-# File: usr/share/ashyterm/window.py, line: 694
-# File: usr/share/ashyterm/window.py, line: 743
-# File: usr/share/ashyterm/window.py, line: 903
-#: NEEDS WORK
-msgid "Edit Error"
-msgstr "Editar error"
-# 
-# File: usr/share/ashyterm/window.py, line: 694
-#: NEEDS WORK
-#, python-brace-format
-msgid "Failed to edit session: {error}"
-msgstr "Error al editar la sesión: {error}"
-# 
-# File: usr/share/ashyterm/window.py, line: 706
-#: NEEDS WORK
-msgid "Duplicate Error"
-msgstr "Error de duplicado"
-# 
-# File: usr/share/ashyterm/window.py, line: 715
-# File: usr/share/ashyterm/window.py, line: 752
-#: NEEDS WORK
-msgid "Rename Error"
-msgstr "Error de Renombrar"
-# 
-# File: usr/share/ashyterm/window.py, line: 715
-#: NEEDS WORK
-#, python-brace-format
-msgid "Failed to rename session: {error}"
-msgstr "Error al renombrar la sesión: {error}"
-# 
-# File: usr/share/ashyterm/window.py, line: 724
-#: NEEDS WORK
-msgid "Move Error"
-msgstr "Error de Movimiento"
-# 
-# File: usr/share/ashyterm/window.py, line: 733
-# File: usr/share/ashyterm/window.py, line: 771
-#: NEEDS WORK
-msgid "Delete Error"
-msgstr "Error de eliminación"
-# 
-# File: usr/share/ashyterm/window.py, line: 1043
-#: NEEDS WORK
-#, python-brace-format
-msgid "Failed to delete selected items: {error}"
-msgstr "Error al eliminar los elementos seleccionados: {error}"
-# 
-# File: usr/share/ashyterm/window.py, line: 743
-#: NEEDS WORK
-#, python-brace-format
-msgid "Failed to edit folder: {error}"
-msgstr "Error al editar la carpeta: {error}"
-# 
-# File: usr/share/ashyterm/window.py, line: 752
-#: NEEDS WORK
-#, python-brace-format
-msgid "Failed to rename folder: {error}"
-msgstr "Error al renombrar la carpeta: {error}"
+msgid "SFTP not implemented yet"
+msgstr "SFTP aún no implementado"
 # 
 # File: usr/share/ashyterm/window.py, line: 758
 # File: usr/share/ashyterm/window.py, line: 875
@@ -1375,22 +952,10 @@ msgstr "Error al renombrar la carpeta: {error}"
 msgid "New Session"
 msgstr "Nueva sesión"
 # 
-# File: usr/share/ashyterm/window.py, line: 762
+# File: usr/share/ashyterm/window.py, line: 885
 #: NEEDS WORK
-msgid "Add Error"
-msgstr "Agregar Error"
-# 
-# File: usr/share/ashyterm/window.py, line: 762
-#: NEEDS WORK
-#, python-brace-format
-msgid "Failed to add session to folder: {error}"
-msgstr "Error al agregar la sesión a la carpeta: {error}"
-# 
-# File: usr/share/ashyterm/window.py, line: 835
-#: NEEDS WORK
-#, python-brace-format
-msgid "Failed to open preferences: {error}"
-msgstr "Error al abrir las preferencias: {error}"
+msgid "New Folder"
+msgstr "Nueva Carpeta"
 # 
 # #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
 # 
@@ -1449,31 +1014,6 @@ msgstr "Pegar"
 msgid "Select All"
 msgstr "Seleccionar todo"
 # 
-# File: usr/share/ashyterm/window.py, line: 1190
-#: NEEDS WORK
-msgid "Split Navigation"
-msgstr "Navegación dividida"
-# 
-# File: usr/share/ashyterm/window.py, line: 1193
-#: NEEDS WORK
-msgid "Focus Up"
-msgstr "Enfocar Arriba"
-# 
-# File: usr/share/ashyterm/window.py, line: 1194
-#: NEEDS WORK
-msgid "Focus Down"
-msgstr "Enfocar Abajo"
-# 
-# File: usr/share/ashyterm/window.py, line: 1195
-#: NEEDS WORK
-msgid "Focus Left"
-msgstr "Enfocar Izquierda"
-# 
-# File: usr/share/ashyterm/window.py, line: 1196
-#: NEEDS WORK
-msgid "Focus Right"
-msgstr "Enfocar a la derecha"
-# 
 # File: usr/share/ashyterm/window.py, line: 936
 #: NEEDS WORK
 msgid "Application"
@@ -1498,54 +1038,6 @@ msgstr "Preferencias"
 #: NEEDS WORK
 msgid "Quit"
 msgstr "Salir"
-# 
-# File: usr/share/ashyterm/window.py, line: 961
-#: NEEDS WORK
-#, python-brace-format
-msgid "Failed to open shortcuts window: {error}"
-msgstr "Error al abrir la ventana de accesos directos: {error}"
-# 
-# File: usr/share/ashyterm/window.py, line: 1271
-#: NEEDS WORK
-msgid "Failed to create new window"
-msgstr "Error al crear una nueva ventana"
-# 
-# File: usr/share/ashyterm/window.py, line: 1275
-#: NEEDS WORK
-msgid "Could not create a new window"
-msgstr "No se pudo crear una nueva ventana"
-# 
-# File: usr/share/ashyterm/window.py, line: 1282
-#: NEEDS WORK
-#, python-brace-format
-msgid "Failed to create new window: {error}"
-msgstr "Error al crear una nueva ventana: {error}"
-# 
-# File: usr/share/ashyterm/window.py, line: 879
-#: NEEDS WORK
-msgid "Add Session Error"
-msgstr "Error al agregar sesión"
-# 
-# File: usr/share/ashyterm/window.py, line: 977
-#: NEEDS WORK
-msgid "Failed to create new tab."
-msgstr "Error al crear una nueva pestaña."
-# 
-# File: usr/share/ashyterm/window.py, line: 885
-#: NEEDS WORK
-msgid "New Folder"
-msgstr "Nueva Carpeta"
-# 
-# File: usr/share/ashyterm/window.py, line: 889
-#: NEEDS WORK
-msgid "Add Folder Error"
-msgstr "Error al agregar carpeta"
-# 
-# File: usr/share/ashyterm/window.py, line: 903
-#: NEEDS WORK
-#, python-brace-format
-msgid "Failed to edit selected item: {error}"
-msgstr "Error al editar el elemento seleccionado: {error}"
 # 
 # File: usr/share/ashyterm/window.py, line: 944
 # File: usr/share/ashyterm/window.py, line: 999
@@ -1646,6 +1138,11 @@ msgstr "Eliminar"
 #: NEEDS WORK
 msgid "OK"
 msgstr "Aceptar"
+# 
+# File: usr/share/ashyterm/window.py, line: 958
+#: NEEDS WORK
+msgid "Cannot detach the last tab."
+msgstr "No se puede separar la última pestaña."
 # 
 # File: usr/share/ashyterm/ui/ssh_dialogs.py, line: 51
 #: NEEDS WORK
@@ -1889,25 +1386,15 @@ msgstr "Explorar..."
 msgid "Password for SSH authentication"
 msgstr "Contraseña para la autenticación SSH"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 542
+# File: usr/share/ashyterm/ui/dialogs.py, line: 342
 #: NEEDS WORK
-msgid "Password for SSH authentication (encrypted storage)"
-msgstr "Contraseña para la autenticación SSH (almacenamiento cifrado)"
+msgid "Password for SSH authentication (stored in system keyring)"
+msgstr "Contraseña para la autenticación SSH (almacenada en el llavero del sistema)"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 544
+# File: usr/share/ashyterm/ui/dialogs.py, line: 346
 #: NEEDS WORK
-msgid "Password for SSH authentication (encryption available but not initialized)"
-msgstr "Contraseña para la autenticación SSH (cifrado disponible pero no inicializado)"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 546
-#: NEEDS WORK
-msgid "Password for SSH authentication (encryption not available)"
-msgstr "Contraseña para la autenticación SSH (cifrado no disponible)"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 548
-#: NEEDS WORK
-msgid "Password for SSH authentication (stored as plain text)"
-msgstr "Contraseña para la autenticación SSH (almacenada como texto plano)"
+msgid "Password for SSH authentication (keyring not available)"
+msgstr "Contraseña para la autenticación SSH (no disponible el llavero)"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 553
 #: NEEDS WORK
@@ -2062,6 +1549,11 @@ msgstr "Error al validar la sesión: {}"
 msgid "Session name"
 msgstr "Nombre de la sesión"
 # 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 921
+#: NEEDS WORK
+msgid "SSH Validation Error"
+msgstr "Error de validación de SSH"
+# 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 920
 #: NEEDS WORK
 #, python-brace-format
@@ -2071,11 +1563,6 @@ msgid ""
 msgstr ""
 "Errores de configuración de SSH:\n"
 "{}"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 921
-#: NEEDS WORK
-msgid "SSH Validation Error"
-msgstr "Error de validación de SSH"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1034
 #: NEEDS WORK
@@ -2129,21 +1616,15 @@ msgstr "Error al guardar la carpeta: {}"
 msgid "Folder name"
 msgstr "Nombre de la carpeta"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1361
+# File: usr/share/ashyterm/ui/dialogs.py, line: 923
 #: NEEDS WORK
-#, python-brace-format
-msgid "Folder {} {}"
-msgstr "Carpeta {} {}"
+msgid "General"
+msgstr "General"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1421
 #: NEEDS WORK
 msgid "Appearance"
 msgstr "Apariencia"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1428
-#: NEEDS WORK
-msgid "Colors & Font"
-msgstr "Colores y fuente"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1429
 #: NEEDS WORK
@@ -2180,101 +1661,6 @@ msgstr "Fuente de Terminal"
 msgid "Select font family and size for terminal text"
 msgstr "Selecciona la familia de fuentes y el tamaño para el texto del terminal"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1486
-#: NEEDS WORK
-msgid "Behavior"
-msgstr "Comportamiento"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1493
-#: NEEDS WORK
-msgid "Terminal Behavior"
-msgstr "Comportamiento del Terminal"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1494
-#: NEEDS WORK
-msgid "Configure how terminals behave"
-msgstr "Configurar cómo se comportan los terminales"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1500
-#: NEEDS WORK
-msgid "Auto Close Tabs"
-msgstr "Cierre automático de pestañas"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1501
-#: NEEDS WORK
-msgid "Automatically close tabs when process exits normally"
-msgstr "Cerrar automáticamente las pestañas cuando el proceso finaliza normalmente"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1509
-#: NEEDS WORK
-msgid "Scroll on Output"
-msgstr "Desplazar en la salida"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1510
-#: NEEDS WORK
-msgid "Automatically scroll when new output appears"
-msgstr "Desplazamiento automático cuando aparece nueva salida"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1518
-#: NEEDS WORK
-msgid "Scroll on Keystroke"
-msgstr "Desplazar con la tecla"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1519
-#: NEEDS WORK
-msgid "Automatically scroll when typing"
-msgstr "Desplazamiento automático al escribir"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1527
-#: NEEDS WORK
-msgid "Hide Mouse Cursor"
-msgstr "Ocultar cursor del ratón"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1528
-#: NEEDS WORK
-msgid "Hide mouse cursor when typing"
-msgstr "Ocultar el cursor del ratón al escribir"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1536
-#: NEEDS WORK
-msgid "Cursor Blinking"
-msgstr "Parpadeo del cursor"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1537
-#: NEEDS WORK
-msgid "Enable cursor blinking animation"
-msgstr "Habilitar animación de parpadeo del cursor"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1637
-#: NEEDS WORK
-msgid "Directory Tracking"
-msgstr "Seguimiento de Directorios"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1638
-#: NEEDS WORK
-msgid "Track current directory and update tab titles"
-msgstr "Rastrear el directorio actual y actualizar los títulos de las pestañas"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1644
-#: NEEDS WORK
-msgid "Enable Directory Tracking"
-msgstr "Habilitar el seguimiento de directorios"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1645
-#: NEEDS WORK
-msgid "Monitor current directory and show it in tab titles"
-msgstr "Monitore el directorio actual y muéstrelo en los títulos de las pestañas."
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1656
-#: NEEDS WORK
-msgid "Show Hostname in Titles"
-msgstr "Mostrar nombre de host en títulos"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1657
-#: NEEDS WORK
-msgid "Include hostname in tab titles when available"
-msgstr "Incluir el nombre del host en los títulos de las pestañas cuando esté disponible"
-# 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1545
 #: NEEDS WORK
 msgid "Interface Behavior"
@@ -2304,26 +1690,6 @@ msgstr "Abrir en una nueva pestaña"
 #: NEEDS WORK
 msgid "Open in a new window"
 msgstr "Abrir en una nueva ventana"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1552
-#: NEEDS WORK
-msgid "Confirm Application Exit"
-msgstr "Confirmar salida de la aplicación"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1553
-#: NEEDS WORK
-msgid "Show confirmation dialog when closing the application"
-msgstr "Mostrar diálogo de confirmación al cerrar la aplicación"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1561
-#: NEEDS WORK
-msgid "Confirm Deletion"
-msgstr "Confirmar eliminación"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1562
-#: NEEDS WORK
-msgid "Show confirmation dialog when deleting sessions or folders"
-msgstr "Mostrar diálogo de confirmación al eliminar sesiones o carpetas"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1575
 #: NEEDS WORK
@@ -2375,15 +1741,15 @@ msgstr "None"
 msgid "Edit"
 msgstr "Editar"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1716
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1790
 #: NEEDS WORK
-msgid "Backup"
-msgstr "Copia de seguridad"
+msgid "Advanced"
+msgstr "Avanzado"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1723
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1051
 #: NEEDS WORK
-msgid "Backup Settings"
-msgstr "Configuración de Copia de Seguridad"
+msgid "Backup & Recovery"
+msgstr "Copia de seguridad y recuperación"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1724
 #: NEEDS WORK
@@ -2400,90 +1766,35 @@ msgstr "Copias de seguridad automáticas"
 msgid "Automatically create backups of sessions and settings"
 msgstr "Crear copias de seguridad automáticamente de sesiones y configuraciones"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1739
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1071
 #: NEEDS WORK
-msgid "Backup on Change"
-msgstr "Copia de seguridad al cambiar"
+msgid "Logging"
+msgstr "Registro"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1740
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1071
 #: NEEDS WORK
-msgid "Create a backup every time sessions or folders are modified"
-msgstr "Crea una copia de seguridad cada vez que se modifiquen las sesiones o carpetas."
+msgid "Configure application logging behavior"
+msgstr "Configurar el comportamiento de registro de la aplicación"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1748
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1076
 #: NEEDS WORK
-msgid "Backup on Exit"
-msgstr "Copia de seguridad al salir"
+msgid "Save Logs to File"
+msgstr "Guardar registros en archivo"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1749
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1077
 #: NEEDS WORK
-msgid "Create backup when application exits"
-msgstr "Crear copia de seguridad al salir de la aplicación"
+msgid "Save application logs to the configuration directory"
+msgstr "Guardar los registros de la aplicación en el directorio de configuración"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1757
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1087
 #: NEEDS WORK
-msgid "Backup Interval"
-msgstr "Intervalo de copia de seguridad"
+msgid "Console Log Level"
+msgstr "Nivel de registro de consola"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1758
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1088
 #: NEEDS WORK
-msgid "Hours between automatic backups"
-msgstr "Horas entre copias de seguridad automáticas"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1771
-#: NEEDS WORK
-msgid "Retention Period"
-msgstr "Período de retención"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1772
-#: NEEDS WORK
-msgid "Days to keep old backups"
-msgstr "Días para conservar copias de seguridad antiguas"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1790
-#: NEEDS WORK
-msgid "Advanced"
-msgstr "Avanzado"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1797
-#: NEEDS WORK
-msgid "Development & Debugging"
-msgstr "Desarrollo y Depuración"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1798
-#: NEEDS WORK
-msgid "Advanced options for development and troubleshooting"
-msgstr "Opciones avanzadas para el desarrollo y la solución de problemas"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1804
-#: NEEDS WORK
-msgid "Debug Mode"
-msgstr "Modo de depuración"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1805
-#: NEEDS WORK
-msgid "Enable verbose logging and debug features"
-msgstr "Habilitar registro detallado y funciones de depuración"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1813
-#: NEEDS WORK
-msgid "Performance Mode"
-msgstr "Modo de Rendimiento"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1814
-#: NEEDS WORK
-msgid "Optimize for performance over features"
-msgstr "Optimizar para el rendimiento sobre las características"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1822
-#: NEEDS WORK
-msgid "Experimental Features"
-msgstr "Características Experimentales"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1823
-#: NEEDS WORK
-msgid "Enable experimental and unstable features"
-msgstr "Habilitar funciones experimentales e inestables"
+msgid "Set the minimum level of messages shown in the console"
+msgstr "Establecer el nivel mínimo de mensajes mostrados en la consola"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1831
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1843
@@ -2617,20 +1928,20 @@ msgstr "Mover"
 msgid "Move Failed"
 msgstr "Movimiento fallido"
 # 
-# File: usr/share/ashyterm/ui/menus.py, line: 196
+# File: usr/share/ashyterm/ui/menus.py, line: 24
 #: NEEDS WORK
-msgid "Zoom Out (-)"
-msgstr "Alejar (-)"
+msgid "Follow System Style"
+msgstr "Seguir el estilo del sistema"
 # 
-# File: usr/share/ashyterm/ui/menus.py, line: 197
+# File: usr/share/ashyterm/ui/menus.py, line: 29
 #: NEEDS WORK
-msgid "Reset Zoom (100%)"
-msgstr "Restablecer zoom (100%)"
+msgid "Light Style"
+msgstr "Estilo Claro"
 # 
-# File: usr/share/ashyterm/ui/menus.py, line: 198
+# File: usr/share/ashyterm/ui/menus.py, line: 34
 #: NEEDS WORK
-msgid "Zoom In (+)"
-msgstr "Acercar (+)"
+msgid "Dark Style"
+msgstr "Estilo Oscuro"
 # 
 # File: usr/share/ashyterm/ui/menus.py, line: 216
 #: NEEDS WORK
@@ -2653,10 +1964,15 @@ msgstr "Duplicar"
 msgid "Cut"
 msgstr "Cortar"
 # 
-# File: usr/share/ashyterm/ui/menus.py, line: 36
+# File: usr/share/ashyterm/ui/menus.py, line: 203
 #: NEEDS WORK
-msgid "Move to Folder"
-msgstr "Mover a la carpeta"
+msgid "Move to Folder..."
+msgstr "Mover a la carpeta..."
+# 
+# File: usr/share/ashyterm/ui/menus.py, line: 220
+#: NEEDS WORK
+msgid "Add Session Here"
+msgstr "Agregar sesión aquí"
 # 
 # File: usr/share/ashyterm/ui/menus.py, line: 98
 #: NEEDS WORK
@@ -2688,25 +2004,164 @@ msgstr "Dividir verticalmente"
 msgid "Close Pane"
 msgstr "Cerrar panel"
 # 
-# File: usr/share/ashyterm/ui/menus.py, line: 290
+# File: usr/share/ashyterm/app.py, line: 222
 #: NEEDS WORK
-msgid "Change Permissions"
-msgstr "Cambiar permisos"
+msgid "Automatic startup backup"
+msgstr "Copia de seguridad automática al inicio"
 # 
-# File: usr/share/ashyterm/ui/menus.py, line: 296
+# File: usr/share/ashyterm/app.py, line: 333
 #: NEEDS WORK
-msgid "Download File"
-msgstr "Descargar archivo"
+msgid "Preferences Error"
+msgstr "Error de Preferencias"
 # 
-# File: usr/share/ashyterm/ui/menus.py, line: 299
+# File: usr/share/ashyterm/app.py, line: 332
+# File: usr/share/ashyterm/app.py, line: 333
 #: NEEDS WORK
-msgid "Edit with Local App"
-msgstr "Editar con la aplicación local"
+#, python-brace-format
+msgid "Failed to open preferences: {}"
+msgstr "Error al abrir las preferencias: {}"
 # 
-# File: usr/share/ashyterm/ui/menus.py, line: 302
+# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
+# 
+# File: usr/share/ashyterm/__init__.py, line: 62
+# File: usr/share/ashyterm/app.py, line: 350
 #: NEEDS WORK
-msgid "Upload Files Here"
-msgstr "Sube archivos aquí"
+msgid "A modern terminal emulator with session management"
+msgstr "Un emulador de terminal moderno con gestión de sesiones"
+# 
+# File: usr/share/ashyterm/app.py, line: 368
+# File: usr/share/ashyterm/app.py, line: 379
+# File: usr/share/ashyterm/app.py, line: 392
+# File: usr/share/ashyterm/app.py, line: 396
+#: NEEDS WORK
+msgid "Backup Error"
+msgstr "Error de copia de seguridad"
+# 
+# File: usr/share/ashyterm/app.py, line: 368
+# File: usr/share/ashyterm/app.py, line: 402
+#: NEEDS WORK
+msgid "Backup system not available"
+msgstr "Sistema de copia de seguridad no disponible"
+# 
+# File: usr/share/ashyterm/app.py, line: 379
+#: NEEDS WORK
+msgid "No files to backup"
+msgstr "No hay archivos para respaldar"
+# 
+# File: usr/share/ashyterm/app.py, line: 385
+#: NEEDS WORK
+msgid "Manual backup from menu"
+msgstr "Copia de seguridad manual desde el menú"
+# 
+# File: usr/share/ashyterm/app.py, line: 390
+#: NEEDS WORK
+msgid "Backup Complete"
+msgstr "Copia de seguridad completa"
+# 
+# File: usr/share/ashyterm/app.py, line: 390
+#: NEEDS WORK
+#, python-brace-format
+msgid "Backup created successfully: {}"
+msgstr "Copia de seguridad creada con éxito: {}"
+# 
+# File: usr/share/ashyterm/app.py, line: 392
+#: NEEDS WORK
+msgid "Failed to create backup"
+msgstr "Error al crear la copia de seguridad"
+# 
+# File: usr/share/ashyterm/app.py, line: 396
+#: NEEDS WORK
+#, python-brace-format
+msgid "Backup failed: {}"
+msgstr "La copia de seguridad falló: {}"
+# 
+# File: usr/share/ashyterm/app.py, line: 402
+# File: usr/share/ashyterm/app.py, line: 416
+#: NEEDS WORK
+msgid "Restore Error"
+msgstr "Error de restauración"
+# 
+# File: usr/share/ashyterm/app.py, line: 407
+#: NEEDS WORK
+msgid "No Backups"
+msgstr "Sin copias de seguridad"
+# 
+# File: usr/share/ashyterm/app.py, line: 407
+#: NEEDS WORK
+msgid "No backups available to restore"
+msgstr "No hay copias de seguridad disponibles para restaurar"
+# 
+# File: usr/share/ashyterm/app.py, line: 411
+#: NEEDS WORK
+msgid "Backups Available"
+msgstr "Copias de seguridad disponibles"
+# 
+# File: usr/share/ashyterm/app.py, line: 412
+#: NEEDS WORK
+#, python-brace-format
+msgid "{} backup(s) available. Use preferences dialog for detailed restore options."
+msgstr ""
+"{} copia(s) de seguridad disponible(s). Utilice el diálogo de preferencias para opciones de "
+"restauración detalladas."
+# 
+# File: usr/share/ashyterm/app.py, line: 416
+#: NEEDS WORK
+#, python-brace-format
+msgid "Failed to access backups: {}"
+msgstr "Error al acceder a las copias de seguridad: {}"
+# 
+# File: usr/share/ashyterm/app.py, line: 449
+#: NEEDS WORK
+msgid "Log Information"
+msgstr "Información de registro"
+# 
+# File: usr/share/ashyterm/app.py, line: 449
+#: NEEDS WORK
+#, python-brace-format
+msgid "Logs are stored in: {}"
+msgstr "Los registros se almacenan en: {}"
+# 
+# File: usr/share/ashyterm/app.py, line: 498
+#: NEEDS WORK
+msgid "Close Application"
+msgstr "Cerrar aplicación"
+# 
+# File: usr/share/ashyterm/app.py, line: 499
+#: NEEDS WORK
+msgid ""
+"There are active SSH connections. Closing will disconnect all sessions.\n"
+"\n"
+"Are you sure you want to close the application?"
+msgstr ""
+"Hay conexiones SSH activas. Cerrar desconectará todas las sesiones.\n"
+"\n"
+"¿Está seguro de que desea cerrar la aplicación?"
+# 
+# File: usr/share/ashyterm/app.py, line: 503
+#: NEEDS WORK
+msgid "Close All"
+msgstr "Cerrar todo"
+# 
+# File: usr/share/ashyterm/app.py, line: 514
+#: NEEDS WORK
+msgid "Automatic backup on exit"
+msgstr "Copia de seguridad automática al salir"
+# 
+# File: usr/share/ashyterm/app.py, line: 530
+#: NEEDS WORK
+msgid "Startup Error"
+msgstr "Error de inicio"
+# 
+# File: usr/share/ashyterm/app.py, line: 531
+#: NEEDS WORK
+#, python-brace-format
+msgid "Application failed to start: {}"
+msgstr "La aplicación no pudo iniciarse: {}"
+# 
+# File: usr/share/ashyterm/terminal/tabs.py, line: 237
+#: NEEDS WORK
+msgid "Detach Tab"
+msgstr "Desacoplar pestaña"
 # 
 # File: usr/share/ashyterm/filemanager/manager.py, line: 182
 # File: usr/share/ashyterm/filemanager/manager.py, line: 608
@@ -2937,20 +2392,10 @@ msgstr "Ingrese un nuevo nombre para '{name}'"
 msgid "Rename command sent to terminal"
 msgstr "Comando de renombrar enviado al terminal"
 # 
-# File: usr/share/ashyterm/filemanager/operations.py, line: 113
+# File: usr/share/ashyterm/filemanager/transfer_manager.py, line: 273
 #: NEEDS WORK
-msgid "No session context for file operation."
-msgstr "No hay contexto de sesión para la operación de archivo."
-# 
-# File: usr/share/ashyterm/filemanager/operations.py, line: 146
-#: NEEDS WORK
-msgid "Command timed out."
-msgstr "El comando ha expirado."
-# 
-# File: usr/share/ashyterm/filemanager/operations.py, line: 149
-#: NEEDS WORK
-msgid "Unknown session type."
-msgstr "Tipo de sesión desconocido."
+msgid "Cancel All Transfers"
+msgstr "Cancelar todas las transferencias"
 # 
 # File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 69
 #: NEEDS WORK
@@ -3002,689 +2447,17 @@ msgstr ""
 "Esta acción no se puede deshacer y eliminará todas las transferencias completadas, fallidas y "
 "canceladas de la lista."
 # 
-# File: usr/share/ashyterm/filemanager/transfer_manager.py, line: 273
+# File: usr/share/ashyterm/filemanager/operations.py, line: 113
 #: NEEDS WORK
-msgid "Cancel All Transfers"
-msgstr "Cancelar todas las transferencias"
+msgid "No session context for file operation."
+msgstr "No hay contexto de sesión para la operación de archivo."
 # 
-# File: usr/share/ashyterm/utils/exceptions.py, line: 65
+# File: usr/share/ashyterm/filemanager/operations.py, line: 146
 #: NEEDS WORK
-msgid "A terminal error occurred"
-msgstr "Se produjo un error terminal."
+msgid "Command timed out."
+msgstr "El comando ha expirado."
 # 
-# File: usr/share/ashyterm/utils/exceptions.py, line: 66
+# File: usr/share/ashyterm/filemanager/operations.py, line: 149
 #: NEEDS WORK
-msgid "A session error occurred"
-msgstr "Ocurrió un error de sesión"
-# 
-# File: usr/share/ashyterm/utils/exceptions.py, line: 67
-#: NEEDS WORK
-msgid "An SSH connection error occurred"
-msgstr "Ocurrió un error de conexión SSH."
-# 
-# File: usr/share/ashyterm/utils/exceptions.py, line: 68
-#: NEEDS WORK
-msgid "A user interface error occurred"
-msgstr "Se produjo un error en la interfaz de usuario."
-# 
-# File: usr/share/ashyterm/utils/exceptions.py, line: 69
-#: NEEDS WORK
-msgid "A data storage error occurred"
-msgstr "Ocurrió un error de almacenamiento de datos"
-# 
-# File: usr/share/ashyterm/utils/exceptions.py, line: 70
-#: NEEDS WORK
-msgid "A configuration error occurred"
-msgstr "Se produjo un error de configuración"
-# 
-# File: usr/share/ashyterm/utils/exceptions.py, line: 71
-#: NEEDS WORK
-msgid "A permission error occurred"
-msgstr "Se produjo un error de permisos"
-# 
-# File: usr/share/ashyterm/utils/exceptions.py, line: 72
-#: NEEDS WORK
-msgid "A network error occurred"
-msgstr "Ocurrió un error de red"
-# 
-# File: usr/share/ashyterm/utils/exceptions.py, line: 73
-#: NEEDS WORK
-msgid "A system error occurred"
-msgstr "Se produjo un error del sistema"
-# 
-# File: usr/share/ashyterm/utils/exceptions.py, line: 74
-#: NEEDS WORK
-msgid "A validation error occurred"
-msgstr "Se produjo un error de validación."
-# 
-# File: usr/share/ashyterm/utils/exceptions.py, line: 76
-#: NEEDS WORK
-msgid "An unexpected error occurred"
-msgstr "Ocurrió un error inesperado"
-# 
-# File: usr/share/ashyterm/utils/exceptions.py, line: 106
-#: NEEDS WORK
-#, python-brace-format
-msgid "Failed to create {} terminal: {}"
-msgstr "Error al crear {} terminal: {}"
-# 
-# File: usr/share/ashyterm/utils/exceptions.py, line: 109
-#: NEEDS WORK
-#, python-brace-format
-msgid "Could not create terminal. {}"
-msgstr "No se pudo crear el terminal. {}"
-# 
-# File: usr/share/ashyterm/utils/exceptions.py, line: 117
-#: NEEDS WORK
-#, python-brace-format
-msgid "Failed to spawn process '{}': {}"
-msgstr "Error al iniciar el proceso '{}': {}"
-# 
-# File: usr/share/ashyterm/utils/exceptions.py, line: 120
-#: NEEDS WORK
-msgid "Failed to start terminal process"
-msgstr "Error al iniciar el proceso del terminal"
-# 
-# File: usr/share/ashyterm/utils/exceptions.py, line: 128
-#: NEEDS WORK
-msgid "VTE library is not available or not properly installed"
-msgstr "La biblioteca VTE no está disponible o no está instalada correctamente."
-# 
-# File: usr/share/ashyterm/utils/exceptions.py, line: 131
-#: NEEDS WORK
-msgid "Terminal functionality requires VTE library. Please install gir1.2-vte-2.91"
-msgstr "La funcionalidad del terminal requiere la biblioteca VTE. Por favor, instala gir1.2-vte-2.91."
-# 
-# File: usr/share/ashyterm/utils/exceptions.py, line: 148
-#: NEEDS WORK
-#, python-brace-format
-msgid "SSH connection to '{}' failed: {}"
-msgstr "La conexión SSH a '{}' falló: {}"
-# 
-# File: usr/share/ashyterm/utils/exceptions.py, line: 151
-#: NEEDS WORK
-#, python-brace-format
-msgid "Could not connect to {}. {}"
-msgstr "No se pudo conectar a {}. {}"
-# 
-# File: usr/share/ashyterm/utils/exceptions.py, line: 170
-#: NEEDS WORK
-#, python-brace-format
-msgid "SSH key error for '{}': {}"
-msgstr "Error de clave SSH para '{}': {}"
-# 
-# File: usr/share/ashyterm/utils/exceptions.py, line: 173
-#: NEEDS WORK
-#, python-brace-format
-msgid "SSH key problem: {}"
-msgstr "Problema de clave SSH: {}"
-# 
-# File: usr/share/ashyterm/utils/exceptions.py, line: 201
-#: NEEDS WORK
-#, python-brace-format
-msgid "Session '{}' validation failed: {}"
-msgstr "La validación de la sesión '{}' ha fallado: {}"
-# 
-# File: usr/share/ashyterm/utils/exceptions.py, line: 204
-#: NEEDS WORK
-#, python-brace-format
-msgid "Session configuration is invalid: {}"
-msgstr "La configuración de la sesión no es válida: {}"
-# 
-# File: usr/share/ashyterm/utils/exceptions.py, line: 232
-#: NEEDS WORK
-#, python-brace-format
-msgid "Failed to read from '{}': {}"
-msgstr "Error al leer de '{}': {}"
-# 
-# File: usr/share/ashyterm/utils/exceptions.py, line: 235
-#: NEEDS WORK
-msgid "Could not load saved data"
-msgstr "No se pudo cargar los datos guardados"
-# 
-# File: usr/share/ashyterm/utils/exceptions.py, line: 243
-#: NEEDS WORK
-#, python-brace-format
-msgid "Failed to write to '{}': {}"
-msgstr "Error al escribir en '{}': {}"
-# 
-# File: usr/share/ashyterm/utils/exceptions.py, line: 246
-#: NEEDS WORK
-msgid "Could not save data"
-msgstr "No se pudo guardar los datos"
-# 
-# File: usr/share/ashyterm/utils/exceptions.py, line: 254
-#: NEEDS WORK
-#, python-brace-format
-msgid "Storage file '{}' is corrupted"
-msgstr "El archivo de almacenamiento '{}' está dañado."
-# 
-# File: usr/share/ashyterm/utils/exceptions.py, line: 256
-#: NEEDS WORK
-#, python-brace-format
-msgid ": {}"
-msgstr ""
-"clave: {}  \n"
-"cadena a traducir: {}"
-# 
-# File: usr/share/ashyterm/utils/exceptions.py, line: 259
-#: NEEDS WORK
-msgid "Saved data appears to be corrupted"
-msgstr "Los datos guardados parecen estar corruptos."
-# 
-# File: usr/share/ashyterm/utils/exceptions.py, line: 276
-#: NEEDS WORK
-#, python-brace-format
-msgid "Invalid configuration for '{}' (value: {}): {}"
-msgstr "Configuración no válida para '{}' (valor: {}): {}"
-# 
-# File: usr/share/ashyterm/main.py, line: 405
-#: NEEDS WORK
-#, python-brace-format
-msgid "Configuration error: {}"
-msgstr "Error de configuración: {}"
-# 
-# File: usr/share/ashyterm/utils/exceptions.py, line: 307
-#: NEEDS WORK
-#, python-brace-format
-msgid "UI error in component: {}"
-msgstr "Error de UI en el componente: {}"
-# 
-# File: usr/share/ashyterm/utils/exceptions.py, line: 309
-#: NEEDS WORK
-#, python-brace-format
-msgid "UI error in {}: {}"
-msgstr "Error de UI en {}: {}"
-# 
-# File: usr/share/ashyterm/utils/exceptions.py, line: 321
-#: NEEDS WORK
-#, python-brace-format
-msgid "Dialog error ({}): {}"
-msgstr "Error de diálogo ({}): {}"
-# 
-# File: usr/share/ashyterm/utils/exceptions.py, line: 324
-#: NEEDS WORK
-#, python-brace-format
-msgid "Interface error: {}"
-msgstr "Error de interfaz: {}"
-# 
-# File: usr/share/ashyterm/utils/exceptions.py, line: 368
-# File: usr/share/ashyterm/utils/exceptions.py, line: 372
-#: NEEDS WORK
-#, python-brace-format
-msgid "Validation failed for '{}': {}"
-msgstr "La validación falló para '{}': {}"
-# 
-# File: usr/share/ashyterm/utils/exceptions.py, line: 392
-#: NEEDS WORK
-#, python-brace-format
-msgid "Invalid hostname '{}': {}"
-msgstr "Nombre de host no válido '{}': {}"
-# 
-# File: usr/share/ashyterm/utils/exceptions.py, line: 395
-#: NEEDS WORK
-#, python-brace-format
-msgid "Invalid hostname: {}"
-msgstr "Nombre de host no válido: {}"
-# 
-# File: usr/share/ashyterm/utils/exceptions.py, line: 403
-#: NEEDS WORK
-#, python-brace-format
-msgid "Invalid path '{}': {}"
-msgstr "Ruta no válida '{}': {}"
-# 
-# File: usr/share/ashyterm/utils/exceptions.py, line: 406
-#: NEEDS WORK
-#, python-brace-format
-msgid "Invalid path: {}"
-msgstr "Ruta no válida: {}"
-# 
-# File: usr/share/ashyterm/utils/exceptions.py, line: 423
-#: NEEDS WORK
-#, python-brace-format
-msgid "Permission denied for {} operation on '{}'"
-msgstr "Permiso denegado para la operación {} en '{}'"
-# 
-# File: usr/share/ashyterm/utils/exceptions.py, line: 426
-#: NEEDS WORK
-#, python-brace-format
-msgid "Permission denied accessing {}"
-msgstr "Permiso denegado al acceder a {}"
-# 
-# File: usr/share/ashyterm/utils/exceptions.py, line: 434
-#: NEEDS WORK
-#, python-brace-format
-msgid "Permission denied for {} operation on directory '{}'"
-msgstr "Permiso denegado para la operación {} en el directorio '{}'"
-# 
-# File: usr/share/ashyterm/utils/exceptions.py, line: 437
-#: NEEDS WORK
-#, python-brace-format
-msgid "Permission denied accessing directory {}"
-msgstr "Permiso denegado al acceder al directorio {}"
-# 
-# File: usr/share/ashyterm/utils/__init__.py, line: 87
-# File: usr/share/ashyterm/utils/__init__.py, line: 104
-#: NEEDS WORK
-msgid "unnamed"
-msgstr "sin nombre"
-# 
-# File: usr/share/ashyterm/utils/security.py, line: 302
-#: NEEDS WORK
-msgid "Key path is empty"
-msgstr "La ruta de la clave está vacía"
-# 
-# File: usr/share/ashyterm/utils/security.py, line: 309
-#: NEEDS WORK
-#, python-brace-format
-msgid "Key file does not exist: {}"
-msgstr "El archivo de clave no existe: {}"
-# 
-# File: usr/share/ashyterm/utils/security.py, line: 313
-#: NEEDS WORK
-#, python-brace-format
-msgid "Key path is not a file: {}"
-msgstr "La ruta de la clave no es un archivo: {}"
-# 
-# File: usr/share/ashyterm/utils/security.py, line: 318
-#: NEEDS WORK
-#, python-brace-format
-msgid "Key file too large: {} bytes"
-msgstr "El archivo de clave es demasiado grande: {} bytes"
-# 
-# File: usr/share/ashyterm/utils/security.py, line: 321
-#: NEEDS WORK
-msgid "Key file is empty"
-msgstr "El archivo de clave está vacío."
-# 
-# File: usr/share/ashyterm/utils/security.py, line: 326
-#: NEEDS WORK
-msgid "Key file has insecure permissions (should be 600)"
-msgstr "El archivo de clave tiene permisos inseguros (debería ser 600)"
-# 
-# File: usr/share/ashyterm/utils/security.py, line: 330
-#: NEEDS WORK
-msgid "Key file is not readable"
-msgstr "El archivo de clave no es legible"
-# 
-# File: usr/share/ashyterm/utils/security.py, line: 335
-#: NEEDS WORK
-#, python-brace-format
-msgid "Error accessing key file: {}"
-msgstr "Error al acceder al archivo de clave: {}"
-# 
-# File: usr/share/ashyterm/utils/security.py, line: 349
-#: NEEDS WORK
-msgid "Key content is empty"
-msgstr "El contenido de la clave está vacío."
-# 
-# File: usr/share/ashyterm/utils/security.py, line: 356
-#: NEEDS WORK
-msgid "Invalid key format (missing parts)"
-msgstr "Formato de clave no válido (faltan partes)"
-# 
-# File: usr/share/ashyterm/utils/security.py, line: 363
-#: NEEDS WORK
-#, python-brace-format
-msgid "Unsupported key type: {}"
-msgstr "Tipo de clave no soportado: {}"
-# 
-# File: usr/share/ashyterm/utils/security.py, line: 370
-#: NEEDS WORK
-msgid "Key data appears to be too short"
-msgstr "Los datos de la clave parecen ser demasiado cortos."
-# 
-# File: usr/share/ashyterm/utils/security.py, line: 372
-#: NEEDS WORK
-msgid "Invalid base64 encoding in key data"
-msgstr "Codificación base64 no válida en los datos de la clave"
-# 
-# File: usr/share/ashyterm/utils/security.py, line: 377
-#: NEEDS WORK
-#, python-brace-format
-msgid "Error validating key content: {}"
-msgstr "Error al validar el contenido de la clave: {}"
-# 
-# File: usr/share/ashyterm/utils/security.py, line: 464
-#: NEEDS WORK
-msgid "File does not exist"
-msgstr "El archivo no existe"
-# 
-# File: usr/share/ashyterm/utils/security.py, line: 471
-#: NEEDS WORK
-#, python-brace-format
-msgid "Incorrect permissions: {} (expected {})"
-msgstr "Permisos incorrectos: {} (se esperaba {})"
-# 
-# File: usr/share/ashyterm/utils/security.py, line: 475
-#: NEEDS WORK
-msgid "File has overly permissive permissions"
-msgstr "El archivo tiene permisos excesivamente permisivos."
-# 
-# File: usr/share/ashyterm/utils/security.py, line: 480
-#: NEEDS WORK
-#, python-brace-format
-msgid "Error checking file permissions: {}"
-msgstr "Error al verificar los permisos del archivo: {}"
-# 
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
-# 
-# File: usr/share/ashyterm/utils/security.py, line: 508
-# File: usr/share/ashyterm/utils/security.py, line: 796
-# File: usr/share/ashyterm/utils.py, line: 449
-#: NEEDS WORK
-#, python-brace-format
-msgid "Invalid hostname format: {}"
-msgstr "Formato de nombre de host no válido: {}"
-# 
-# File: usr/share/ashyterm/utils/security.py, line: 509
-#: NEEDS WORK
-msgid "Use a valid hostname or IP address"
-msgstr "Utilice un nombre de host o dirección IP válidos"
-# 
-# File: usr/share/ashyterm/utils/security.py, line: 519
-#: NEEDS WORK
-#, python-brace-format
-msgid "Connecting to private IP: {}"
-msgstr "Conectando a IP privada: {}"
-# 
-# File: usr/share/ashyterm/utils/security.py, line: 520
-#: NEEDS WORK
-msgid "Ensure this is intentional"
-msgstr "Asegúrate de que esto sea intencional"
-# 
-# File: usr/share/ashyterm/utils/security.py, line: 534
-# File: usr/share/ashyterm/utils/security.py, line: 827
-#: NEEDS WORK
-#, python-brace-format
-msgid "SSH key validation failed: {}"
-msgstr "La validación de la clave SSH falló: {}"
-# 
-# File: usr/share/ashyterm/utils/security.py, line: 535
-#: NEEDS WORK
-msgid "Fix SSH key configuration"
-msgstr "Corregir la configuración de la clave SSH"
-# 
-# File: usr/share/ashyterm/utils/security.py, line: 541
-#: NEEDS WORK
-msgid "Using password authentication"
-msgstr "Usando autenticación por contraseña"
-# 
-# File: usr/share/ashyterm/utils/security.py, line: 542
-#: NEEDS WORK
-msgid "Consider using SSH key authentication for better security"
-msgstr "Considere usar la autenticación de clave SSH para una mejor seguridad."
-# 
-# File: usr/share/ashyterm/utils/security.py, line: 551
-#: NEEDS WORK
-msgid "Connecting as root user"
-msgstr "Conectando como usuario root"
-# 
-# File: usr/share/ashyterm/utils/security.py, line: 552
-#: NEEDS WORK
-msgid "Use a regular user account when possible"
-msgstr "Utiliza una cuenta de usuario regular cuando sea posible"
-# 
-# File: usr/share/ashyterm/utils/security.py, line: 576
-#: NEEDS WORK
-#, python-brace-format
-msgid "File does not exist: {}"
-msgstr "El archivo no existe: {}"
-# 
-# File: usr/share/ashyterm/utils/security.py, line: 577
-#: NEEDS WORK
-msgid "Verify file path"
-msgstr "Verificar ruta de archivo"
-# 
-# File: usr/share/ashyterm/utils/security.py, line: 588
-#: NEEDS WORK
-msgid "Set secure file permissions (600 for files, 700 for directories)"
-msgstr "Establecer permisos de archivo seguros (600 para archivos, 700 para directorios)"
-# 
-# File: usr/share/ashyterm/utils/security.py, line: 600
-#: NEEDS WORK
-#, python-brace-format
-msgid "File is owned by different user: {}"
-msgstr "El archivo es propiedad de otro usuario: {}"
-# 
-# File: usr/share/ashyterm/utils/security.py, line: 601
-#: NEEDS WORK
-msgid "Ensure file ownership is correct"
-msgstr "Asegúrate de que la propiedad del archivo sea correcta"
-# 
-# File: usr/share/ashyterm/utils/security.py, line: 608
-#: NEEDS WORK
-#, python-brace-format
-msgid "Error auditing file: {}"
-msgstr "Error al auditar el archivo: {}"
-# 
-# File: usr/share/ashyterm/utils/security.py, line: 609
-#: NEEDS WORK
-msgid "Check file accessibility"
-msgstr "Verificar la accesibilidad del archivo"
-# 
-# File: usr/share/ashyterm/utils/security.py, line: 633
-#: NEEDS WORK
-#, python-brace-format
-msgid "Directory does not exist: {}"
-msgstr "El directorio no existe: {}"
-# 
-# File: usr/share/ashyterm/utils/security.py, line: 634
-#: NEEDS WORK
-msgid "Create directory with secure permissions"
-msgstr "Crear directorio con permisos seguros"
-# 
-# File: usr/share/ashyterm/utils/security.py, line: 642
-#: NEEDS WORK
-#, python-brace-format
-msgid "Path is not a directory: {}"
-msgstr "La ruta no es un directorio: {}"
-# 
-# File: usr/share/ashyterm/utils/security.py, line: 643
-#: NEEDS WORK
-msgid "Use a valid directory path"
-msgstr "Utiliza una ruta de directorio válida"
-# 
-# File: usr/share/ashyterm/utils/security.py, line: 655
-#: NEEDS WORK
-#, python-brace-format
-msgid "Directory has overly permissive permissions: {}"
-msgstr "El directorio tiene permisos excesivamente permisivos: {}"
-# 
-# File: usr/share/ashyterm/utils/security.py, line: 656
-#: NEEDS WORK
-msgid "Set directory permissions to 700"
-msgstr "Establecer permisos de directorio a 700"
-# 
-# File: usr/share/ashyterm/utils/security.py, line: 663
-#: NEEDS WORK
-#, python-brace-format
-msgid "Error auditing directory: {}"
-msgstr "Error al auditar el directorio: {}"
-# 
-# File: usr/share/ashyterm/utils/security.py, line: 664
-#: NEEDS WORK
-msgid "Check directory accessibility"
-msgstr "Verificar la accesibilidad del directorio"
-# 
-# File: usr/share/ashyterm/utils/security.py, line: 692
-#: NEEDS WORK
-msgid "Hostname cannot be empty"
-msgstr "El nombre de host no puede estar vacío."
-# 
-# File: usr/share/ashyterm/utils/security.py, line: 696
-#: NEEDS WORK
-msgid "Invalid hostname format"
-msgstr "Formato de nombre de host no válido"
-# 
-# File: usr/share/ashyterm/utils/security.py, line: 711
-#: NEEDS WORK
-msgid "Unknown validation error"
-msgstr "Error de validación desconocido"
-# 
-# File: usr/share/ashyterm/utils/security.py, line: 726
-#: NEEDS WORK
-msgid "Path contains unsafe elements"
-msgstr "La ruta contiene elementos inseguros"
-# 
-# File: usr/share/ashyterm/utils/security.py, line: 744
-# File: usr/share/ashyterm/utils/security.py, line: 762
-#: NEEDS WORK
-msgid "set secure permissions"
-msgstr "establecer permisos seguros"
-# 
-# File: usr/share/ashyterm/utils/security.py, line: 788
-#: NEEDS WORK
-#, python-brace-format
-msgid "Session name too long (max {} characters)"
-msgstr "El nombre de la sesión es demasiado largo (máx. {} caracteres)"
-# 
-# File: usr/share/ashyterm/utils/security.py, line: 794
-#: NEEDS WORK
-msgid "Hostname cannot be empty for SSH sessions"
-msgstr "El nombre de host no puede estar vacío para las sesiones SSH."
-# 
-# File: usr/share/ashyterm/utils/security.py, line: 801
-#: NEEDS WORK
-msgid "Username is required for SSH sessions"
-msgstr "Se requiere un nombre de usuario para las sesiones SSH."
-# 
-# File: usr/share/ashyterm/utils/security.py, line: 803
-#: NEEDS WORK
-#, python-brace-format
-msgid "Username too long (max {} characters)"
-msgstr "El nombre de usuario es demasiado largo (máx. {} caracteres)"
-# 
-# File: usr/share/ashyterm/utils/security.py, line: 822
-#: NEEDS WORK
-msgid "SSH key file path is required for key authentication"
-msgstr "Se requiere la ruta del archivo de clave SSH para la autenticación de clave."
-# 
-# File: usr/share/ashyterm/utils/security.py, line: 832
-#: NEEDS WORK
-#, python-brace-format
-msgid "Invalid authentication type: {}"
-msgstr "Tipo de autenticación no válido: {}"
-# 
-# File: usr/share/ashyterm/utils/security.py, line: 838
-#: NEEDS WORK
-msgid "Invalid or unsafe folder path"
-msgstr "Ruta de carpeta no válida o insegura"
-# 
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
-# 
-# File: usr/share/ashyterm/utils/security.py, line: 843
-# File: usr/share/ashyterm/utils.py, line: 442
-#: NEEDS WORK
-#, python-brace-format
-msgid "Invalid session type: {}"
-msgstr "Tipo de sesión no válido: {}"
-# 
-# File: usr/share/ashyterm/utils/security.py, line: 850
-#: NEEDS WORK
-#, python-brace-format
-msgid "Validation error: {}"
-msgstr "Error de validación: {}"
-# 
-# File: usr/share/ashyterm/utils/security.py, line: 881
-#: NEEDS WORK
-#, python-brace-format
-msgid "Security: {}"
-msgstr "Seguridad: {}"
-# 
-# File: usr/share/ashyterm/utils/security.py, line: 888
-#: NEEDS WORK
-#, python-brace-format
-msgid "Security validation error: {}"
-msgstr "Error de validación de seguridad: {}"
-# 
-# File: usr/share/ashyterm/utils.py, line: 510
-#: NEEDS WORK
-msgid "unknown"
-msgstr "desconocido"
-# 
-# File: usr/share/ashyterm/utils.py, line: 539
-#: NEEDS WORK
-msgid "Global error handling configured"
-msgstr "Manejo global de errores configurado"
-# 
-# File: usr/share/ashyterm/utils.py, line: 601
-#: NEEDS WORK
-#, python-brace-format
-msgid "Utils module initialized on {} platform"
-msgstr "Módulo de utilidades inicializado en la plataforma {}"
-# 
-# File: usr/share/ashyterm/utils.py, line: 605
-#: NEEDS WORK
-msgid "SSH command not found - SSH functionality will be limited"
-msgstr "Comando SSH no encontrado - La funcionalidad SSH será limitada"
-# 
-# File: usr/share/ashyterm/utils.py, line: 621
-#: NEEDS WORK
-#, python-brace-format
-msgid "Warning: Utils module initialization failed: {}"
-msgstr "Advertencia: La inicialización del módulo Utils falló: {}"
-# 
-# File: usr/share/ashyterm/main.py, line: 86
-#: NEEDS WORK
-#, python-brace-format
-msgid ""
-"\n"
-"Received signal {}, shutting down gracefully..."
-msgstr "Señal recibida {}, apagando de manera ordenada..."
-# 
-# File: usr/share/ashyterm/main.py, line: 97
-#: NEEDS WORK
-#, python-brace-format
-msgid "Warning: Could not set up signal handlers: {}"
-msgstr "Advertencia: No se pudieron configurar los controladores de señal: {}"
-# 
-# File: usr/share/ashyterm/main.py, line: 109
-#: NEEDS WORK
-msgid "Ashy Terminal - A modern terminal emulator with session management"
-msgstr "Ashy Terminal - Un emulador de terminal moderno con gestión de sesiones"
-# 
-# File: usr/share/ashyterm/main.py, line: 110
-#: NEEDS WORK
-msgid "For more information, visit: https://communitybig.org/"
-msgstr "Para más información, visita: https://communitybig.org/"
-# 
-# File: usr/share/ashyterm/main.py, line: 73
-#: NEEDS WORK
-msgid "Enable debug mode"
-msgstr "Habilitar modo de depuración"
-# 
-# File: usr/share/ashyterm/main.py, line: 79
-#: NEEDS WORK
-msgid "Set logging level"
-msgstr "Establecer nivel de registro"
-# 
-# File: usr/share/ashyterm/main.py, line: 84
-#: NEEDS WORK
-msgid "Set the working directory for the initial terminal"
-msgstr "Establecer el directorio de trabajo para el terminal inicial"
-# 
-# File: usr/share/ashyterm/main.py, line: 92
-#: NEEDS WORK
-msgid "Working directory (positional argument)"
-msgstr "Directorio de trabajo (argumento posicional)"
-# 
-# File: usr/share/ashyterm/main.py, line: 105
-#: NEEDS WORK
-msgid "Execute command in the terminal"
-msgstr "Ejecutar comando en la terminal"
-# 
-# File: usr/share/ashyterm/main.py, line: 110
-#: NEEDS WORK
-msgid "Close terminal after executing command (only with --execute)"
-msgstr "Cerrar terminal después de ejecutar el comando (solo con --execute)"
-# 
-# File: usr/share/ashyterm/main.py, line: 115
-#: NEEDS WORK
-msgid "Connect to SSH host with optional user, port, and remote path"
-msgstr "Conectar al host SSH con usuario, puerto y ruta remota opcionales"
-# 
-# File: usr/share/ashyterm/main.py, line: 119
-#: NEEDS WORK
-msgid "Convert KIO/GVFS URI path to SSH format"
-msgstr "Convertir la ruta URI de KIO/GVFS al formato SSH"
+msgid "Unknown session type."
+msgstr "Tipo de sesión desconocido."

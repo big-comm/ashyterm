@@ -45,11 +45,608 @@ msgstr "Ava kohaliku mount-punkti {}"
 msgid "Open {} in Ashy Terminal"
 msgstr "Ava {} Ashy Terminalis"
 # 
-# File: usr/share/ashyterm/sessions/storage.py, line: 78
+# File: usr/share/ashyterm/utils/exceptions.py, line: 65
+#: NEEDS WORK
+msgid "A terminal error occurred"
+msgstr "Toimimatu viga tekkis"
+# 
+# File: usr/share/ashyterm/utils/exceptions.py, line: 66
+#: NEEDS WORK
+msgid "A session error occurred"
+msgstr "Seansi viga tekkis"
+# 
+# File: usr/share/ashyterm/utils/exceptions.py, line: 67
+#: NEEDS WORK
+msgid "An SSH connection error occurred"
+msgstr "SSH ühenduse viga tekkis"
+# 
+# File: usr/share/ashyterm/utils/exceptions.py, line: 68
+#: NEEDS WORK
+msgid "A user interface error occurred"
+msgstr "Kasutajaliidese viga tekkis"
+# 
+# File: usr/share/ashyterm/utils/exceptions.py, line: 69
+#: NEEDS WORK
+msgid "A data storage error occurred"
+msgstr "Andmete salvestamise viga tekkis"
+# 
+# File: usr/share/ashyterm/utils/exceptions.py, line: 70
+#: NEEDS WORK
+msgid "A configuration error occurred"
+msgstr "Konfiguratsiooni viga tekkis"
+# 
+# File: usr/share/ashyterm/utils/exceptions.py, line: 71
+#: NEEDS WORK
+msgid "A permission error occurred"
+msgstr "Toimivusviga tekkis"
+# 
+# File: usr/share/ashyterm/utils/exceptions.py, line: 72
+#: NEEDS WORK
+msgid "A network error occurred"
+msgstr "Võrguviga tekkis"
+# 
+# File: usr/share/ashyterm/utils/exceptions.py, line: 73
+#: NEEDS WORK
+msgid "A system error occurred"
+msgstr "Süsteemi viga tekkis"
+# 
+# File: usr/share/ashyterm/utils/exceptions.py, line: 74
+#: NEEDS WORK
+msgid "A validation error occurred"
+msgstr "Keerukuse viga tekkis"
+# 
+# File: usr/share/ashyterm/utils/exceptions.py, line: 76
+#: NEEDS WORK
+msgid "An unexpected error occurred"
+msgstr "Ilmnen ootamatu viga tekkis"
+# 
+# File: usr/share/ashyterm/utils/exceptions.py, line: 106
 #: NEEDS WORK
 #, python-brace-format
-msgid "Failed to create config directory: {}"
-msgstr "Ebaõnnestus luua konfiguratsioonikausta: {}"
+msgid "Failed to create {} terminal: {}"
+msgstr "Terminali loomine ebaõnnestus: {}"
+# 
+# File: usr/share/ashyterm/utils/exceptions.py, line: 109
+#: NEEDS WORK
+#, python-brace-format
+msgid "Could not create terminal. {}"
+msgstr "Terminalit ei saanud luua. {}"
+# 
+# File: usr/share/ashyterm/utils/exceptions.py, line: 128
+#: NEEDS WORK
+msgid "VTE library is not available or not properly installed"
+msgstr "VTE teekond ei ole saadaval või ei ole see korralikult installitud"
+# 
+# File: usr/share/ashyterm/utils/exceptions.py, line: 131
+#: NEEDS WORK
+msgid "Terminal functionality requires VTE library. Please install gir1.2-vte-2.91"
+msgstr "Terminali funktsionaalsus nõuab VTE teeki. Palun installige gir1.2-vte-2.91"
+# 
+# File: usr/share/ashyterm/utils/exceptions.py, line: 148
+#: NEEDS WORK
+#, python-brace-format
+msgid "SSH connection to '{}' failed: {}"
+msgstr "SSH-ühendus '{}' ebaõnnestus: {}"
+# 
+# File: usr/share/ashyterm/utils/exceptions.py, line: 151
+#: NEEDS WORK
+#, python-brace-format
+msgid "Could not connect to {}. {}"
+msgstr "Ei saanud ühendust {}. {}"
+# 
+# File: usr/share/ashyterm/utils/exceptions.py, line: 170
+#: NEEDS WORK
+#, python-brace-format
+msgid "SSH key error for '{}': {}"
+msgstr "SSH võtme viga '{}': {}"
+# 
+# File: usr/share/ashyterm/utils/exceptions.py, line: 173
+#: NEEDS WORK
+#, python-brace-format
+msgid "SSH key problem: {}"
+msgstr "SSH võtme probleem: {}"
+# 
+# File: usr/share/ashyterm/utils/exceptions.py, line: 201
+#: NEEDS WORK
+#, python-brace-format
+msgid "Session '{}' validation failed: {}"
+msgstr "Seansi '{}' valideerimine ebaõnnestus: {}"
+# 
+# File: usr/share/ashyterm/utils/exceptions.py, line: 204
+#: NEEDS WORK
+#, python-brace-format
+msgid "Session configuration is invalid: {}"
+msgstr "Seansi konfiguratsioon on kehtetu: {}"
+# 
+# File: usr/share/ashyterm/utils/exceptions.py, line: 232
+#: NEEDS WORK
+#, python-brace-format
+msgid "Failed to read from '{}': {}"
+msgstr "Eba lugeda '{}': {}"
+# 
+# File: usr/share/ashyterm/utils/exceptions.py, line: 235
+#: NEEDS WORK
+msgid "Could not load saved data"
+msgstr "Salvestatud andmeid ei saanud laadida"
+# 
+# File: usr/share/ashyterm/utils/exceptions.py, line: 243
+#: NEEDS WORK
+#, python-brace-format
+msgid "Failed to write to '{}': {}"
+msgstr "Eba kirjutamine '{}' ebaõnnestus: {}"
+# 
+# File: usr/share/ashyterm/utils/exceptions.py, line: 246
+#: NEEDS WORK
+msgid "Could not save data"
+msgstr "Andmeid ei saanud salvestada"
+# 
+# File: usr/share/ashyterm/utils/exceptions.py, line: 254
+#: NEEDS WORK
+#, python-brace-format
+msgid "Storage file '{}' is corrupted"
+msgstr "Salvestusfail '{}' on rikutud"
+# 
+# File: usr/share/ashyterm/utils/exceptions.py, line: 256
+#: NEEDS WORK
+#, python-brace-format
+msgid ": {}"
+msgstr "{}"
+# 
+# File: usr/share/ashyterm/utils/exceptions.py, line: 259
+#: NEEDS WORK
+msgid "Saved data appears to be corrupted"
+msgstr "Salvestatud andmed näivad olevat rikutud."
+# 
+# File: usr/share/ashyterm/utils/exceptions.py, line: 276
+#: NEEDS WORK
+#, python-brace-format
+msgid "Invalid configuration for '{}' (value: {}): {}"
+msgstr "Kehtetu konfiguratsioon '{}' jaoks (väärtus: {}): {}"
+# 
+# File: usr/share/ashyterm/main.py, line: 405
+#: NEEDS WORK
+#, python-brace-format
+msgid "Configuration error: {}"
+msgstr "Konfiguratsiooni viga: {}"
+# 
+# File: usr/share/ashyterm/utils/exceptions.py, line: 309
+#: NEEDS WORK
+#, python-brace-format
+msgid "UI error in {}: {}"
+msgstr "Kasutajaliidese viga {}: {}"
+# 
+# File: usr/share/ashyterm/utils/exceptions.py, line: 307
+#: NEEDS WORK
+#, python-brace-format
+msgid "UI error in component: {}"
+msgstr "Kasutajaliidese viga komponendis: {}"
+# 
+# File: usr/share/ashyterm/utils/exceptions.py, line: 321
+#: NEEDS WORK
+#, python-brace-format
+msgid "Dialog error ({}): {}"
+msgstr "Dialooge viga ({}): {}"
+# 
+# File: usr/share/ashyterm/utils/exceptions.py, line: 324
+#: NEEDS WORK
+#, python-brace-format
+msgid "Interface error: {}"
+msgstr "Liidese viga: {}"
+# 
+# File: usr/share/ashyterm/utils/exceptions.py, line: 368
+# File: usr/share/ashyterm/utils/exceptions.py, line: 372
+#: NEEDS WORK
+#, python-brace-format
+msgid "Validation failed for '{}': {}"
+msgstr "Kehtivuse kontroll ebaõnnestus '{}': {}"
+# 
+# File: usr/share/ashyterm/utils/exceptions.py, line: 392
+#: NEEDS WORK
+#, python-brace-format
+msgid "Invalid hostname '{}': {}"
+msgstr "Kehtetu hostinimi '{}': {}"
+# 
+# File: usr/share/ashyterm/utils/exceptions.py, line: 395
+#: NEEDS WORK
+#, python-brace-format
+msgid "Invalid hostname: {}"
+msgstr "Kehtetu hostinimi: {}"
+# 
+# File: usr/share/ashyterm/utils/exceptions.py, line: 403
+#: NEEDS WORK
+#, python-brace-format
+msgid "Invalid path '{}': {}"
+msgstr "Kehtetu tee '{}': {}"
+# 
+# File: usr/share/ashyterm/utils/exceptions.py, line: 406
+#: NEEDS WORK
+#, python-brace-format
+msgid "Invalid path: {}"
+msgstr "Kehtetu tee: {}"
+# 
+# File: usr/share/ashyterm/utils/exceptions.py, line: 423
+#: NEEDS WORK
+#, python-brace-format
+msgid "Permission denied for {} operation on '{}'"
+msgstr "Ligipääs keelatud {} toimingu jaoks '{}'"
+# 
+# File: usr/share/ashyterm/utils/exceptions.py, line: 426
+#: NEEDS WORK
+#, python-brace-format
+msgid "Permission denied accessing {}"
+msgstr "Juurdepääs keelatud {}"
+# 
+# File: usr/share/ashyterm/utils/exceptions.py, line: 434
+#: NEEDS WORK
+#, python-brace-format
+msgid "Permission denied for {} operation on directory '{}'"
+msgstr "Juurdepääs keelatud {} toimingu jaoks kataloogis '{}'"
+# 
+# File: usr/share/ashyterm/utils/exceptions.py, line: 437
+#: NEEDS WORK
+#, python-brace-format
+msgid "Permission denied accessing directory {}"
+msgstr "Ligipääs kaustale {} on keelatud."
+# 
+# File: usr/share/ashyterm/utils/__init__.py, line: 87
+# File: usr/share/ashyterm/utils/__init__.py, line: 104
+#: NEEDS WORK
+msgid "unnamed"
+msgstr "nimetu"
+# 
+# File: usr/share/ashyterm/utils/security.py, line: 302
+#: NEEDS WORK
+msgid "Key path is empty"
+msgstr "Võtme tee on tühi"
+# 
+# File: usr/share/ashyterm/utils/security.py, line: 309
+#: NEEDS WORK
+#, python-brace-format
+msgid "Key file does not exist: {}"
+msgstr "Võtmefail ei eksisteeri: {}"
+# 
+# File: usr/share/ashyterm/utils/security.py, line: 313
+#: NEEDS WORK
+#, python-brace-format
+msgid "Key path is not a file: {}"
+msgstr "Ahi tee ei ole fail: {}"
+# 
+# File: usr/share/ashyterm/utils/security.py, line: 318
+#: NEEDS WORK
+#, python-brace-format
+msgid "Key file too large: {} bytes"
+msgstr "Võtmefail on liiga suur: {} baiti"
+# 
+# File: usr/share/ashyterm/utils/security.py, line: 321
+#: NEEDS WORK
+msgid "Key file is empty"
+msgstr "Võtmefail on tühi"
+# 
+# File: usr/share/ashyterm/utils/security.py, line: 326
+#: NEEDS WORK
+msgid "Key file has insecure permissions (should be 600)"
+msgstr "Võtmefailil on ebaturvalised õigused (peaks olema 600)"
+# 
+# File: usr/share/ashyterm/utils/security.py, line: 330
+#: NEEDS WORK
+msgid "Key file is not readable"
+msgstr "Võtmefaili ei saa lugeda"
+# 
+# File: usr/share/ashyterm/utils/security.py, line: 335
+#: NEEDS WORK
+#, python-brace-format
+msgid "Error accessing key file: {}"
+msgstr "Viga võtme faili juurde pääsemisel: {}"
+# 
+# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
+# 
+# File: usr/share/ashyterm/utils/security.py, line: 508
+# File: usr/share/ashyterm/utils/security.py, line: 796
+# File: usr/share/ashyterm/utils.py, line: 449
+#: NEEDS WORK
+#, python-brace-format
+msgid "Invalid hostname format: {}"
+msgstr "Kehtetu hostinime formaat: {}"
+# 
+# File: usr/share/ashyterm/utils/security.py, line: 509
+#: NEEDS WORK
+msgid "Use a valid hostname or IP address"
+msgstr "Kasutage kehtivat hostinime või IP-aadressi"
+# 
+# File: usr/share/ashyterm/utils/security.py, line: 519
+#: NEEDS WORK
+#, python-brace-format
+msgid "Connecting to private IP: {}"
+msgstr "Ühendamine privaatse IP-ga: {}"
+# 
+# File: usr/share/ashyterm/utils/security.py, line: 520
+#: NEEDS WORK
+msgid "Ensure this is intentional"
+msgstr "Veenduge, et see on tahtlik."
+# 
+# File: usr/share/ashyterm/utils/security.py, line: 534
+# File: usr/share/ashyterm/utils/security.py, line: 827
+#: NEEDS WORK
+#, python-brace-format
+msgid "SSH key validation failed: {}"
+msgstr "SSH võtme valideerimine ebaõnnestus: {}"
+# 
+# File: usr/share/ashyterm/utils/security.py, line: 535
+#: NEEDS WORK
+msgid "Fix SSH key configuration"
+msgstr "Paranda SSH võtme konfiguratsioon"
+# 
+# File: usr/share/ashyterm/utils/security.py, line: 541
+#: NEEDS WORK
+msgid "Using password authentication"
+msgstr "Parooli autentimise kasutamine"
+# 
+# File: usr/share/ashyterm/utils/security.py, line: 542
+#: NEEDS WORK
+msgid "Consider using SSH key authentication for better security"
+msgstr "Kaalu SSH võtme autentimise kasutamist parema turvalisuse tagamiseks."
+# 
+# File: usr/share/ashyterm/utils/security.py, line: 551
+#: NEEDS WORK
+msgid "Connecting as root user"
+msgstr "Ühendamine juurkasutajana"
+# 
+# File: usr/share/ashyterm/utils/security.py, line: 552
+#: NEEDS WORK
+msgid "Use a regular user account when possible"
+msgstr "Kasutage võimalusel tavalist kasutajakontot"
+# 
+# File: usr/share/ashyterm/utils/security.py, line: 692
+#: NEEDS WORK
+msgid "Hostname cannot be empty"
+msgstr "Hostname ei saa olla tühi"
+# 
+# File: usr/share/ashyterm/utils/security.py, line: 696
+#: NEEDS WORK
+msgid "Invalid hostname format"
+msgstr "Kehtetu hostinime formaat"
+# 
+# File: usr/share/ashyterm/utils/security.py, line: 711
+#: NEEDS WORK
+msgid "Unknown validation error"
+msgstr "Tundmatu valideerimisviga"
+# 
+# File: usr/share/ashyterm/utils/security.py, line: 726
+#: NEEDS WORK
+msgid "Path contains unsafe elements"
+msgstr "Teel sisaldab ohtlikke elemente"
+# 
+# File: usr/share/ashyterm/utils/security.py, line: 744
+# File: usr/share/ashyterm/utils/security.py, line: 762
+#: NEEDS WORK
+msgid "set secure permissions"
+msgstr "sead turvalised õigused"
+# 
+# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
+# 
+# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
+# 
+# File: usr/share/ashyterm/utils/security.py, line: 786
+# File: usr/share/ashyterm/utils.py, line: 438
+# File: usr/share/ashyterm/sessions/models.py, line: 89
+#: NEEDS WORK
+msgid "Session name cannot be empty"
+msgstr "Seansi nimi ei tohi olla tühi"
+# 
+# File: usr/share/ashyterm/utils/security.py, line: 788
+#: NEEDS WORK
+#, python-brace-format
+msgid "Session name too long (max {} characters)"
+msgstr "Seansi nimi on liiga pikk (max {} tähemärki)"
+# 
+# File: usr/share/ashyterm/utils/security.py, line: 794
+#: NEEDS WORK
+msgid "Hostname cannot be empty for SSH sessions"
+msgstr "Hostname ei saa SSH seansside jaoks tühi olla"
+# 
+# File: usr/share/ashyterm/utils/security.py, line: 801
+#: NEEDS WORK
+msgid "Username is required for SSH sessions"
+msgstr "Kasutajanimi on vajalik SSH seansside jaoks"
+# 
+# File: usr/share/ashyterm/utils/security.py, line: 803
+#: NEEDS WORK
+#, python-brace-format
+msgid "Username too long (max {} characters)"
+msgstr "Kasutajanimi on liiga pikk (max {} tähemärki)"
+# 
+# File: usr/share/ashyterm/utils/security.py, line: 811
+#: NEEDS WORK
+msgid "Port must be between 1 and 65535"
+msgstr "Port peab olema vahemikus 1 kuni 65535"
+# 
+# File: usr/share/ashyterm/utils/security.py, line: 813
+#: NEEDS WORK
+msgid "Port must be a valid number"
+msgstr "Port peab olema kehtiv number"
+# 
+# File: usr/share/ashyterm/utils/security.py, line: 822
+#: NEEDS WORK
+msgid "SSH key file path is required for key authentication"
+msgstr "SSH võtmefaili tee on vajalik võtme autentimiseks"
+# 
+# File: usr/share/ashyterm/utils/security.py, line: 832
+#: NEEDS WORK
+#, python-brace-format
+msgid "Invalid authentication type: {}"
+msgstr "Kehtetu autentimisviis: {}"
+# 
+# File: usr/share/ashyterm/utils/security.py, line: 838
+#: NEEDS WORK
+msgid "Invalid or unsafe folder path"
+msgstr "Kehtetu või ohtlik kaustatee"
+# 
+# File: usr/share/ashyterm/utils/security.py, line: 850
+#: NEEDS WORK
+#, python-brace-format
+msgid "Validation error: {}"
+msgstr "Keeramisviga: {}"
+# 
+# File: usr/share/ashyterm/main.py, line: 86
+#: NEEDS WORK
+#, python-brace-format
+msgid ""
+"\n"
+"Received signal {}, shutting down gracefully..."
+msgstr "Saadi signaal {}, sulgedes sujuvalt alla..."
+# 
+# File: usr/share/ashyterm/main.py, line: 97
+#: NEEDS WORK
+#, python-brace-format
+msgid "Warning: Could not set up signal handlers: {}"
+msgstr "Hoiatus: Signaalide käitlejate seadistamine ebaõnnestus: {}"
+# 
+# File: usr/share/ashyterm/main.py, line: 109
+#: NEEDS WORK
+msgid "Ashy Terminal - A modern terminal emulator with session management"
+msgstr "Ashy Terminal - Kaasaegne terminali emulaator sessioonihaldusega"
+# 
+# File: usr/share/ashyterm/main.py, line: 110
+#: NEEDS WORK
+msgid "For more information, visit: https://communitybig.org/"
+msgstr "Rohkem teabe saamiseks külastage: https://communitybig.org/"
+# 
+# File: usr/share/ashyterm/main.py, line: 73
+#: NEEDS WORK
+msgid "Enable debug mode"
+msgstr "Luba debug-režiim"
+# 
+# File: usr/share/ashyterm/main.py, line: 79
+#: NEEDS WORK
+msgid "Set logging level"
+msgstr "Seadke logimise tase"
+# 
+# File: usr/share/ashyterm/main.py, line: 84
+#: NEEDS WORK
+msgid "Set the working directory for the initial terminal"
+msgstr "Seadke algterminali töökaust."
+# 
+# File: usr/share/ashyterm/main.py, line: 92
+#: NEEDS WORK
+msgid "Working directory (positional argument)"
+msgstr "Töökataloog (positsiooniline argument)"
+# 
+# File: usr/share/ashyterm/main.py, line: 105
+#: NEEDS WORK
+msgid "Execute command in the terminal"
+msgstr "Käsku täitma terminalis"
+# 
+# File: usr/share/ashyterm/main.py, line: 110
+#: NEEDS WORK
+msgid "Close terminal after executing command (only with --execute)"
+msgstr "Sulge terminal pärast käsu täitmist (ainult --execute puhul)"
+# 
+# File: usr/share/ashyterm/main.py, line: 115
+#: NEEDS WORK
+msgid "Connect to SSH host with optional user, port, and remote path"
+msgstr "Ühenda SSH hostiga valikulise kasutaja, pordi ja kaugteega"
+# 
+# File: usr/share/ashyterm/main.py, line: 119
+#: NEEDS WORK
+msgid "Convert KIO/GVFS URI path to SSH format"
+msgstr "Muuda KIO/GVFS URI tee SSH formaati"
+# 
+# File: usr/share/ashyterm/sessions/models.py, line: 174
+#: NEEDS WORK
+msgid "Port must be a valid number between 1 and 65535"
+msgstr "Port peab olema kehtiv number vahemikus 1 kuni 65535"
+# 
+# File: usr/share/ashyterm/sessions/models.py, line: 198
+#: NEEDS WORK
+msgid "Session name is required."
+msgstr "Seansi nimi on kohustuslik."
+# 
+# File: usr/share/ashyterm/sessions/models.py, line: 201
+#: NEEDS WORK
+msgid "Host is required for SSH sessions."
+msgstr "Host on vajalik SSH seansside jaoks."
+# 
+# File: usr/share/ashyterm/sessions/models.py, line: 203
+#: NEEDS WORK
+msgid "Port must be between 1 and 65535."
+msgstr "Port peab olema vahemikus 1 kuni 65535."
+# 
+# File: usr/share/ashyterm/sessions/models.py, line: 386
+# File: usr/share/ashyterm/sessions/models.py, line: 419
+#: NEEDS WORK
+msgid "Unnamed Session"
+msgstr "Nimetu seanss"
+# 
+# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 406
+# File: usr/share/ashyterm/sessions/models.py, line: 511
+#: NEEDS WORK
+msgid "Local Terminal"
+msgstr "Kohalik terminal"
+# 
+# File: usr/share/ashyterm/sessions/models.py, line: 346
+#: NEEDS WORK
+msgid "Folder name is required."
+msgstr "Kausta nime on nõutav."
+# 
+# File: usr/share/ashyterm/sessions/models.py, line: 352
+#: NEEDS WORK
+msgid "Folder path is not consistent with its parent path."
+msgstr "Kausta tee ei ühti oma vanema teega."
+# 
+# File: usr/share/ashyterm/sessions/models.py, line: 727
+# File: usr/share/ashyterm/sessions/models.py, line: 752
+#: NEEDS WORK
+msgid "Unnamed Folder"
+msgstr "Nimetu kaust"
+# 
+# File: usr/share/ashyterm/sessions/tree.py, line: 96
+#: NEEDS WORK
+msgid "Sessions"
+msgstr "Seansid"
+# 
+# File: usr/share/ashyterm/sessions/tree.py, line: 618
+# File: usr/share/ashyterm/sessions/tree.py, line: 623
+#: NEEDS WORK
+msgid "Paste Error"
+msgstr "Kopeerimise viga"
+# 
+# File: usr/share/ashyterm/sessions/validation.py, line: 18
+#: NEEDS WORK
+#, python-brace-format
+msgid "Session validation failed: {}"
+msgstr "Seansi valideerimine ebaõnnestus: {}"
+# 
+# File: usr/share/ashyterm/sessions/validation.py, line: 31
+#: NEEDS WORK
+#, python-brace-format
+msgid "A session with the name '{name}' already exists in this folder."
+msgstr "Selles kaustas on juba olemas seanss nimega '{name}'."
+# 
+# File: usr/share/ashyterm/sessions/validation.py, line: 45
+#: NEEDS WORK
+#, python-brace-format
+msgid "The target folder '{folder}' does not exist."
+msgstr "Sihtkaust '{folder}' ei eksisteeri."
+# 
+# File: usr/share/ashyterm/sessions/validation.py, line: 61
+#: NEEDS WORK
+#, python-brace-format
+msgid "Folder validation failed: {}"
+msgstr "Katalooge valideerimine ebaõnnestus: {}"
+# 
+# File: usr/share/ashyterm/sessions/validation.py, line: 69
+#: NEEDS WORK
+#, python-brace-format
+msgid "A folder with the path '{path}' already exists."
+msgstr "Kaustikuga '{path}' on juba olemas."
+# 
+# File: usr/share/ashyterm/sessions/validation.py, line: 84
+#: NEEDS WORK
+#, python-brace-format
+msgid "The parent folder '{folder}' does not exist."
+msgstr "Vanem kaust '{folder}' ei eksisteeri."
 # 
 # File: usr/share/ashyterm/sessions/storage.py, line: 125
 #: NEEDS WORK
@@ -112,962 +709,106 @@ msgstr "Salvestamise kontrollimine ebaõnnestus"
 msgid "Save failed: {}"
 msgstr "Salvestamine ebaõnnestus: {}"
 # 
-# File: usr/share/ashyterm/sessions/operations.py, line: 164
+# File: usr/share/ashyterm/sessions/operations.py, line: 46
+#: NEEDS WORK
+msgid "Failed to save session data."
+msgstr "Seansi andmete salvestamine ebaõnnestus."
+# 
+# File: usr/share/ashyterm/sessions/operations.py, line: 51
 #: NEEDS WORK
 #, python-brace-format
-msgid "Session '{name}' already exists in the specified folder"
-msgstr "Seans '{name}' eksisteerib juba määratud kaustas."
+msgid "Session '{name}' added successfully."
+msgstr "Seans '{name}' lisati edukalt."
+# 
+# File: usr/share/ashyterm/sessions/operations.py, line: 62
+#: NEEDS WORK
+msgid "Item at position is not a session."
+msgstr "Element positsioonil ei ole seanss."
+# 
+# File: usr/share/ashyterm/sessions/operations.py, line: 74
+#: NEEDS WORK
+msgid "Failed to save updated session data."
+msgstr "Eba updated sessiooni andmete salvestamine."
+# 
+# File: usr/share/ashyterm/sessions/operations.py, line: 79
+#: NEEDS WORK
+#, python-brace-format
+msgid "Session '{name}' updated successfully."
+msgstr "Seans '{name}' uuendatud edukalt."
+# 
+# File: usr/share/ashyterm/sessions/operations.py, line: 90
+#: NEEDS WORK
+msgid "Session not found."
+msgstr "Seansit ei leitud."
+# 
+# File: usr/share/ashyterm/sessions/operations.py, line: 96
+#: NEEDS WORK
+msgid "Failed to save after session removal."
+msgstr "Salvestamine ebaõnnestus seansi eemaldamise järel."
+# 
+# File: usr/share/ashyterm/sessions/operations.py, line: 102
+#: NEEDS WORK
+#, python-brace-format
+msgid "Session '{name}' removed successfully."
+msgstr "Seans '{name}' eemaldati edukalt."
+# 
+# File: usr/share/ashyterm/sessions/operations.py, line: 115
+#: NEEDS WORK
+msgid "Failed to save folder data."
+msgstr "Kausta andmete salvestamine ebaõnnestus."
+# 
+# File: usr/share/ashyterm/sessions/operations.py, line: 120
+#: NEEDS WORK
+#, python-brace-format
+msgid "Folder '{name}' added successfully."
+msgstr "Kaust '{name}' lisatud edukalt."
+# 
+# File: usr/share/ashyterm/sessions/operations.py, line: 131
+#: NEEDS WORK
+msgid "Item at position is not a folder."
+msgstr "Element positsioonil ei ole kaust."
+# 
+# File: usr/share/ashyterm/sessions/operations.py, line: 144
+#: NEEDS WORK
+msgid "Failed to save updated folder data."
+msgstr "Kausta andmete uuendamine ebaõnnestus."
+# 
+# File: usr/share/ashyterm/sessions/operations.py, line: 149
+#: NEEDS WORK
+#, python-brace-format
+msgid "Folder '{name}' updated successfully."
+msgstr "Kaust '{name}' uuendatud edukalt."
+# 
+# File: usr/share/ashyterm/sessions/operations.py, line: 161
+#: NEEDS WORK
+msgid "Cannot remove a non-empty folder."
+msgstr "Ei saa eemaldada mitte-tühja kausta."
+# 
+# File: usr/share/ashyterm/sessions/operations.py, line: 168
+#: NEEDS WORK
+msgid "Folder not found."
+msgstr "Kaust ei leitud."
 # 
 # File: usr/share/ashyterm/sessions/operations.py, line: 172
 #: NEEDS WORK
-#, python-brace-format
-msgid "Session '{name}' added successfully"
-msgstr "Seans '{name}' lisatud edukalt"
-# 
-# File: usr/share/ashyterm/sessions/operations.py, line: 175
-# File: usr/share/ashyterm/sessions/operations.py, line: 314
-#: NEEDS WORK
-#, python-brace-format
-msgid "Session name sanitized: '{original}' -> '{new}'"
-msgstr "Seansi nimi on puhastatud: '{original}' -> '{new}'"
-# 
-# File: usr/share/ashyterm/sessions/operations.py, line: 189
-# File: usr/share/ashyterm/sessions/operations.py, line: 322
-#: NEEDS WORK
-msgid "Failed to save session data"
-msgstr "Seansi andmete salvestamine ebaõnnestus"
-# 
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
-# 
-# File: usr/share/ashyterm/window.py, line: 879
-# File: usr/share/ashyterm/sessions/operations.py, line: 203
-#: NEEDS WORK
-#, python-brace-format
-msgid "Failed to add session: {error}"
-msgstr "Seansi lisamine ebaõnnestus: {error}"
-# 
-# File: usr/share/ashyterm/sessions/operations.py, line: 219
-#: NEEDS WORK
-msgid "Validation passed"
-msgstr "Kinnitus läbitud"
-# 
-# File: usr/share/ashyterm/sessions/operations.py, line: 224
-#: NEEDS WORK
-#, python-brace-format
-msgid "Session validation failed: {errors}"
-msgstr "Seansi valideerimine ebaõnnestus: {errors}"
-# 
-# File: usr/share/ashyterm/sessions/operations.py, line: 233
-# File: usr/share/ashyterm/sessions/operations.py, line: 371
-#: NEEDS WORK
-#, python-brace-format
-msgid "Security validation failed: {errors}"
-msgstr "Turvalisuse valideerimine ebaõnnestus: {errors}"
-# 
-# File: usr/share/ashyterm/sessions/operations.py, line: 241
-# File: usr/share/ashyterm/sessions/operations.py, line: 385
-#: NEEDS WORK
-#, python-brace-format
-msgid "Security: {message}"
-msgstr "Turvalisus: {message}"
-# 
-# File: usr/share/ashyterm/sessions/operations.py, line: 243
-# File: usr/share/ashyterm/sessions/operations.py, line: 387
-#: NEEDS WORK
-#, python-brace-format
-msgid "Critical security issue: {message}"
-msgstr "Kriitiline turvaprobleem: {message}"
-# 
-# File: usr/share/ashyterm/sessions/operations.py, line: 246
-# File: usr/share/ashyterm/sessions/operations.py, line: 390
-#: NEEDS WORK
-#, python-brace-format
-msgid "Security validation error: {error}"
-msgstr "Turvalisuse valideerimise viga: {error}"
-# 
-# File: usr/share/ashyterm/sessions/operations.py, line: 251
-# File: usr/share/ashyterm/sessions/operations.py, line: 395
-# File: usr/share/ashyterm/sessions/operations.py, line: 590
-#: NEEDS WORK
-#, python-brace-format
-msgid "Target folder '{folder}' does not exist"
-msgstr "Sihtkaust '{folder}' ei eksisteeri."
-# 
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
-# 
-# File: usr/share/ashyterm/sessions/operations.py, line: 257
-# File: usr/share/ashyterm/sessions/models.py, line: 342
-# File: usr/share/ashyterm/sessions/models.py, line: 691
-#: NEEDS WORK
-#, python-brace-format
-msgid "Validation error: {error}"
-msgstr "Keerukuse viga: {error}"
-# 
-# File: usr/share/ashyterm/sessions/operations.py, line: 276
-# File: usr/share/ashyterm/sessions/operations.py, line: 722
-#: NEEDS WORK
-#, python-brace-format
-msgid "Invalid position: {position}"
-msgstr "Kehtetu positsioon: {position}"
-# 
-# File: usr/share/ashyterm/sessions/operations.py, line: 280
-#: NEEDS WORK
-#, python-brace-format
-msgid "Item at position {position} is not a session"
-msgstr "Ese positsioonil {position} ei ole seanss."
-# 
-# File: usr/share/ashyterm/sessions/operations.py, line: 300
-#: NEEDS WORK
-#, python-brace-format
-msgid "Session name '{name}' already exists in the target folder"
-msgstr "Seansi nimi '{name}' eksisteerib juba sihtkaustas."
-# 
-# File: usr/share/ashyterm/sessions/operations.py, line: 329
-#: NEEDS WORK
-#, python-brace-format
-msgid "Session '{name}' updated successfully"
-msgstr "Seans '{name}' uuendatud edukalt"
-# 
-# File: usr/share/ashyterm/sessions/operations.py, line: 339
-#: NEEDS WORK
-#, python-brace-format
-msgid "Failed to update session: {error}"
-msgstr "Seansi uuendamine ebaõnnestus: {error}"
-# 
-# File: usr/share/ashyterm/sessions/operations.py, line: 357
-#: NEEDS WORK
-msgid "Update validation passed"
-msgstr "Uuenduse valideerimine läbitud"
-# 
-# File: usr/share/ashyterm/sessions/operations.py, line: 362
-#: NEEDS WORK
-#, python-brace-format
-msgid "Updated session validation failed: {errors}"
-msgstr "Uuendatud seansi valideerimine ebaõnnestus: {errors}"
-# 
-# File: usr/share/ashyterm/sessions/operations.py, line: 378
-#: NEEDS WORK
-#, python-brace-format
-msgid "Security score decreased: {original} -> {updated}"
-msgstr "Turvalisuse skoor langes: {originaal} -> {uuendatud}"
-# 
-# File: usr/share/ashyterm/sessions/operations.py, line: 401
-#: NEEDS WORK
-#, python-brace-format
-msgid "Update validation error: {error}"
-msgstr "Uuendamise valideerimise viga: {error}"
-# 
-# File: usr/share/ashyterm/sessions/operations.py, line: 439
-#: NEEDS WORK
-msgid "Properties updated successfully"
-msgstr "Atribuudid on edukalt uuendatud"
-# 
-# File: usr/share/ashyterm/sessions/operations.py, line: 450
-#: NEEDS WORK
-#, python-brace-format
-msgid "Property update failed: {error}"
-msgstr "Kinnisvara uuendamine ebaõnnestus: {error}"
-# 
-# File: usr/share/ashyterm/sessions/operations.py, line: 471
-#: NEEDS WORK
-#, python-brace-format
-msgid "Session '{name}' not found in store"
-msgstr "Seansit '{name}' ei leitud poest"
-# 
-# File: usr/share/ashyterm/sessions/operations.py, line: 482
-#: NEEDS WORK
-msgid "Failed to save after session removal"
-msgstr "Salvestamine ebaõnnestus pärast seansi eemaldamist"
-# 
-# File: usr/share/ashyterm/sessions/operations.py, line: 490
-#: NEEDS WORK
-#, python-brace-format
-msgid "Session '{name}' removed successfully"
-msgstr "Seans '{name}' eemaldati edukalt"
-# 
-# File: usr/share/ashyterm/sessions/operations.py, line: 499
-#: NEEDS WORK
-#, python-brace-format
-msgid "Failed to remove session: {error}"
-msgstr "Seansi eemaldamine ebaõnnestus: {error}"
-# 
-# File: usr/share/ashyterm/sessions/operations.py, line: 530
-#: NEEDS WORK
-#, python-brace-format
-msgid "Copy of {name}"
-msgstr "Kopeeri {name}"
-# 
-# File: usr/share/ashyterm/sessions/operations.py, line: 536
-#: NEEDS WORK
-#, python-brace-format
-msgid "Duplicate validation failed: {errors}"
-msgstr "Dubleerimise valideerimine ebaõnnestus: {errors}"
-# 
-# File: usr/share/ashyterm/sessions/operations.py, line: 542
-#: NEEDS WORK
-#, python-brace-format
-msgid "Duplicate name '{name}' already exists"
-msgstr "Duplikaat nime '{name}' juba eksisteerib"
-# 
-# File: usr/share/ashyterm/sessions/operations.py, line: 555
-#: NEEDS WORK
-#, python-brace-format
-msgid "Session duplicated as '{name}'"
-msgstr "Seans kopeeritud kui '{name}'"
-# 
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
-# 
-# File: usr/share/ashyterm/window.py, line: 706
-# File: usr/share/ashyterm/sessions/operations.py, line: 564
-#: NEEDS WORK
-#, python-brace-format
-msgid "Failed to duplicate session: {error}"
-msgstr "Seansi kopeerimine ebaõnnestus: {error}"
-# 
-# File: usr/share/ashyterm/sessions/operations.py, line: 599
-#: NEEDS WORK
-#, python-brace-format
-msgid "Session moved and renamed to '{name}'"
-msgstr "Seans liigutati ja nimetati ümber '{name}'-ks"
-# 
-# File: usr/share/ashyterm/sessions/operations.py, line: 600
-#: NEEDS WORK
-#, python-brace-format
-msgid "Session renamed to avoid conflict: '{original}' -> '{new}'"
-msgstr "Seans nimetati ümber konflikti vältimiseks: '{original}' -> '{new}'"
-# 
-# File: usr/share/ashyterm/sessions/operations.py, line: 602
-# File: usr/share/ashyterm/sessions/operations.py, line: 620
-#: NEEDS WORK
-msgid "root"
-msgstr "juur"
-# 
-# File: usr/share/ashyterm/sessions/operations.py, line: 603
-#: NEEDS WORK
-#, python-brace-format
-msgid "Session moved to '{folder}'"
-msgstr "Seans liikus kausta '{folder}'"
-# 
-# File: usr/share/ashyterm/sessions/operations.py, line: 614
-#: NEEDS WORK
-msgid "Failed to save after moving session"
-msgstr "Seansi liigutamisel salvestamine ebaõnnestus"
-# 
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
-# 
-# File: usr/share/ashyterm/window.py, line: 724
-# File: usr/share/ashyterm/sessions/operations.py, line: 636
-#: NEEDS WORK
-#, python-brace-format
-msgid "Failed to move session: {error}"
-msgstr "Seansi liigutamine ebaõnnestus: {error}"
-# 
-# File: usr/share/ashyterm/sessions/operations.py, line: 659
-#: NEEDS WORK
-#, python-brace-format
-msgid "Folder validation failed: {errors}"
-msgstr "Katalooge valideerimine ebaõnnestus: {errors}"
-# 
-# File: usr/share/ashyterm/sessions/operations.py, line: 664
-# File: usr/share/ashyterm/sessions/operations.py, line: 742
-#: NEEDS WORK
-#, python-brace-format
-msgid "Folder path '{path}' already exists"
-msgstr "Kaustikute tee '{path}' on juba olemas."
-# 
-# File: usr/share/ashyterm/sessions/operations.py, line: 682
-# File: usr/share/ashyterm/sessions/operations.py, line: 763
-#: NEEDS WORK
-msgid "Failed to save folder data"
-msgstr "Kausta andmete salvestamine ebaõnnestus"
-# 
-# File: usr/share/ashyterm/sessions/operations.py, line: 690
-#: NEEDS WORK
-#, python-brace-format
-msgid "Folder '{name}' added successfully"
-msgstr "Kaust '{name}' lisatud edukalt"
-# 
-# File: usr/share/ashyterm/sessions/operations.py, line: 693
-# File: usr/share/ashyterm/sessions/operations.py, line: 774
-#: NEEDS WORK
-#, python-brace-format
-msgid "Folder name sanitized: '{original}' -> '{new}'"
-msgstr "Kausta nimi on puhastatud: '{original}' -> '{new}'"
-# 
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
-# 
-# File: usr/share/ashyterm/window.py, line: 889
-# File: usr/share/ashyterm/sessions/operations.py, line: 702
-#: NEEDS WORK
-#, python-brace-format
-msgid "Failed to add folder: {error}"
-msgstr "Kausta lisamine ebaõnnestus: {error}"
-# 
-# File: usr/share/ashyterm/sessions/operations.py, line: 726
-#: NEEDS WORK
-#, python-brace-format
-msgid "Item at position {position} is not a folder"
-msgstr "Element {position} ei ole kaust."
-# 
-# File: usr/share/ashyterm/sessions/operations.py, line: 737
-#: NEEDS WORK
-#, python-brace-format
-msgid "Updated folder validation failed: {errors}"
-msgstr "Uuendatud kausta valideerimine ebaõnnestus: {errors}"
-# 
-# File: usr/share/ashyterm/sessions/operations.py, line: 771
-#: NEEDS WORK
-#, python-brace-format
-msgid "Folder '{name}' updated successfully"
-msgstr "Kaust '{name}' uuendatud edukalt"
-# 
-# File: usr/share/ashyterm/sessions/operations.py, line: 788
-#: NEEDS WORK
-#, python-brace-format
-msgid "Failed to update folder: {error}"
-msgstr "Kausta värskendamine ebaõnnestus: {error}"
-# 
-# File: usr/share/ashyterm/sessions/operations.py, line: 816
-#: NEEDS WORK
-#, python-brace-format
-msgid ""
-"Cannot remove folder '{name}' - it contains sessions or subfolders. Use force removal to delete "
-"anyway."
-msgstr ""
-"Ei saa kausta '{name}' eemaldada - see sisaldab sessioone või alamkaustu. Kasutage sundeemaldamist, "
-"et ikkagi kustutada."
-# 
-# File: usr/share/ashyterm/sessions/operations.py, line: 827
-#: NEEDS WORK
-#, python-brace-format
-msgid "Folder '{name}' not found in store"
-msgstr "Kaust '{name}' ei leitud poest"
-# 
-# File: usr/share/ashyterm/sessions/operations.py, line: 841
-#: NEEDS WORK
-msgid "Failed to save after folder removal"
-msgstr "Salvestamine ebaõnnestus pärast kausta eemaldamist"
-# 
-# File: usr/share/ashyterm/sessions/operations.py, line: 849
-#: NEEDS WORK
-#, python-brace-format
-msgid "Folder '{name}' removed successfully"
-msgstr "Kaust '{name}' eemaldati edukalt"
-# 
-# File: usr/share/ashyterm/sessions/operations.py, line: 857
-#: NEEDS WORK
-#, python-brace-format
-msgid "Removed {count} child items"
-msgstr "Eemaldatud {count} alamobjekti"
-# 
-# File: usr/share/ashyterm/sessions/operations.py, line: 866
-#: NEEDS WORK
-#, python-brace-format
-msgid "Failed to remove folder: {error}"
-msgstr "Kausta eemaldamine ebaõnnestus: {error}"
-# 
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
-# 
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
-# 
-# File: usr/share/ashyterm/utils/security.py, line: 786
-# File: usr/share/ashyterm/utils.py, line: 438
-# File: usr/share/ashyterm/sessions/models.py, line: 89
-#: NEEDS WORK
-msgid "Session name cannot be empty"
-msgstr "Seansi nimi ei tohi olla tühi"
-# 
-# File: usr/share/ashyterm/sessions/models.py, line: 115
-#: NEEDS WORK
-#, python-brace-format
-msgid "Invalid session type: {type}. Must be one of: {valid_types}"
-msgstr "Kehtetu seansi tüüp: {type}. Peab olema üks järgmistest: {valid_types}"
-# 
-# File: usr/share/ashyterm/sessions/models.py, line: 139
-#: NEEDS WORK
-#, python-brace-format
-msgid "Invalid hostname format: {hostname}"
-msgstr "Kehtetu hostinime formaat: {hostname}"
-# 
-# File: usr/share/ashyterm/sessions/models.py, line: 191
-#: NEEDS WORK
-#, python-brace-format
-msgid "Invalid authentication type: {type}. Must be one of: {valid_types}"
-msgstr "Kehtetu autentimisviis: {type}. Peab olema üks järgmistest: {valid_types}"
-# 
-# File: usr/share/ashyterm/utils/security.py, line: 811
-#: NEEDS WORK
-msgid "Port must be between 1 and 65535"
-msgstr "Port peab olema vahemikus 1 kuni 65535"
-# 
-# File: usr/share/ashyterm/utils/security.py, line: 813
-#: NEEDS WORK
-msgid "Port must be a valid number"
-msgstr "Port peab olema kehtiv number"
-# 
-# File: usr/share/ashyterm/sessions/models.py, line: 309
-#: NEEDS WORK
-msgid "Session name is required"
-msgstr "Seansi nimi on kohustuslik"
-# 
-# File: usr/share/ashyterm/sessions/models.py, line: 312
-#: NEEDS WORK
-msgid "Session type is required"
-msgstr "Seansi tüüp on kohustuslik"
-# 
-# File: usr/share/ashyterm/sessions/models.py, line: 317
-#: NEEDS WORK
-msgid "Host is required for SSH sessions"
-msgstr "Host on vajalik SSH seansside jaoks"
-# 
-# File: usr/share/ashyterm/sessions/models.py, line: 324
-#: NEEDS WORK
-#, python-brace-format
-msgid "SSH key validation failed: {error}"
-msgstr "SSH võtme valideerimine ebaõnnestus: {error}"
-# 
-# File: usr/share/ashyterm/sessions/models.py, line: 326
-#: NEEDS WORK
-#, python-brace-format
-msgid "SSH key validation error: {error}"
-msgstr "SSH võtme valideerimise viga: {error}"
-# 
-# File: usr/share/ashyterm/sessions/models.py, line: 329
-#: NEEDS WORK
-msgid "Authentication type is required for SSH sessions"
-msgstr "Autentimise tüüp on vajalik SSH seansside jaoks"
-# 
-# File: usr/share/ashyterm/sessions/models.py, line: 386
-# File: usr/share/ashyterm/sessions/models.py, line: 419
-#: NEEDS WORK
-msgid "Unnamed Session"
-msgstr "Nimetu seanss"
-# 
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 406
-# File: usr/share/ashyterm/sessions/models.py, line: 511
-#: NEEDS WORK
-msgid "Local Terminal"
-msgstr "Kohalik terminal"
-# 
-# File: usr/share/ashyterm/sessions/models.py, line: 583
-#: NEEDS WORK
-msgid "Folder name cannot be empty"
-msgstr "Kausta nimi ei tohi olla tühi"
-# 
-# File: usr/share/ashyterm/sessions/models.py, line: 669
-#: NEEDS WORK
-msgid "Folder name is required"
-msgstr "Kausta nime on nõutav"
-# 
-# File: usr/share/ashyterm/sessions/models.py, line: 673
-#: NEEDS WORK
-msgid "Path contains invalid characters"
-msgstr "Teel sisaldab kehtetuid märke"
-# 
-# File: usr/share/ashyterm/sessions/models.py, line: 678
-#: NEEDS WORK
-msgid "Path is not consistent with parent path"
-msgstr "Tee ei ühti vanema tee kanssa."
-# 
-# File: usr/share/ashyterm/sessions/models.py, line: 727
-# File: usr/share/ashyterm/sessions/models.py, line: 752
-#: NEEDS WORK
-msgid "Unnamed Folder"
-msgstr "Nimetu kaust"
-# 
-# File: usr/share/ashyterm/sessions/tree.py, line: 96
-#: NEEDS WORK
-msgid "Sessions"
-msgstr "Seansid"
-# 
-# File: usr/share/ashyterm/sessions/tree.py, line: 618
-# File: usr/share/ashyterm/sessions/tree.py, line: 623
-#: NEEDS WORK
-msgid "Paste Error"
-msgstr "Kopeerimise viga"
-# 
-# File: usr/share/ashyterm/app.py, line: 53
-#: NEEDS WORK
-#, python-brace-format
-msgid "Initializing {} v{}"
-msgstr "Initsialiseerimine {} v{}"
-# 
-# File: usr/share/ashyterm/app.py, line: 64
-#: NEEDS WORK
-#, python-brace-format
-msgid "Running on {} platform"
-msgstr "Käivitamine platvormil {}"
-# 
-# File: usr/share/ashyterm/app.py, line: 118
-#: NEEDS WORK
-msgid "Initializing application subsystems"
-msgstr "Rakenduse alam süsteemide initsialiseerimine"
-# 
-# File: usr/share/ashyterm/app.py, line: 121
-#: NEEDS WORK
-msgid "Settings manager initialized"
-msgstr "Seadete haldur algatatud"
-# 
-# File: usr/share/ashyterm/app.py, line: 125
-# File: usr/share/ashyterm/app.py, line: 431
-#: NEEDS WORK
-msgid "Debug mode enabled"
-msgstr "Silumisrežiim lubatud"
-# 
-# File: usr/share/ashyterm/app.py, line: 130
-#: NEEDS WORK
-msgid "Encryption available but not initialized (may require passphrase)"
-msgstr "Krüpteerimine on saadaval, kuid pole algatatud (võib nõuda parooli)."
-# 
-# File: usr/share/ashyterm/app.py, line: 132
-#: NEEDS WORK
-msgid "Encryption system initialized"
-msgstr "Krüpteerimissüsteem on initsialiseeritud"
-# 
-# File: usr/share/ashyterm/app.py, line: 134
-#: NEEDS WORK
-#, python-brace-format
-msgid "Encryption initialization failed: {}"
-msgstr "Krüpteerimise algatamine ebaõnnestus: {}"
-# 
-# File: usr/share/ashyterm/app.py, line: 136
-#: NEEDS WORK
-msgid "Encryption not available - passwords will be stored as plain text"
-msgstr "Krüpteerimine ei ole saadaval - paroolid salvestatakse selges tekstis."
-# 
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
-# 
-# File: usr/share/ashyterm/app.py, line: 164
-# File: usr/share/ashyterm/main.py, line: 399
-#: NEEDS WORK
-msgid "VTE library not available"
-msgstr "VTE teekond ei ole saadaval"
-# 
-# File: usr/share/ashyterm/app.py, line: 156
-#: NEEDS WORK
-msgid "All essential subsystems initialized successfully"
-msgstr "Kõik olulised alamsüsteemid on edukalt initsialiseeritud"
-# 
-# File: usr/share/ashyterm/app.py, line: 172
-#: NEEDS WORK
-#, python-brace-format
-msgid "Subsystem initialization failed: {}"
-msgstr "Alamsüsteemi initsialiseerimine ebaõnnestus: {}"
-# 
-# File: usr/share/ashyterm/app.py, line: 173
-#: NEEDS WORK
-msgid "application initialization"
-msgstr "rakenduse alglaadimine"
-# 
-# File: usr/share/ashyterm/app.py, line: 179
-#: NEEDS WORK
-msgid "Application startup initiated"
-msgstr "Rakenduse käivitamine algatatud"
-# 
-# File: usr/share/ashyterm/app.py, line: 183
-#: NEEDS WORK
-msgid "Failed to initialize application subsystems"
-msgstr "Rakenduse alamüsteemide algatamine ebaõnnestus"
-# 
-# File: usr/share/ashyterm/app.py, line: 192
-#: NEEDS WORK
-msgid "Application startup completed successfully"
-msgstr "Rakenduse käivitamine lõpetati edukalt"
-# 
-# File: usr/share/ashyterm/app.py, line: 195
-#: NEEDS WORK
-#, python-brace-format
-msgid "Application startup failed: {}"
-msgstr "Rakenduse käivitamine ebaõnnestus: {}"
-# 
-# File: usr/share/ashyterm/app.py, line: 206
-#: NEEDS WORK
-msgid "Automatic startup backup is disabled in settings."
-msgstr "Automaatne käivitamise varundamine on seadetes keelatud."
-# 
-# File: usr/share/ashyterm/app.py, line: 217
-#: NEEDS WORK
-msgid "Performing startup backup asynchronously"
-msgstr "Teostan käivitamise varukoopia asünkroonselt"
-# 
-# File: usr/share/ashyterm/app.py, line: 222
-#: NEEDS WORK
-msgid "Automatic startup backup"
-msgstr "Automaatne käivitamise varukoopia"
-# 
-# File: usr/share/ashyterm/app.py, line: 228
-#: NEEDS WORK
-#, python-brace-format
-msgid "Startup backup check failed: {}"
-msgstr "Käivitamise varukoopia kontroll ebaõnnestus: {}"
-# 
-# File: usr/share/ashyterm/app.py, line: 248
-#: NEEDS WORK
-msgid "Application actions configured"
-msgstr "Rakenduse toimingud konfigureeritud"
-# 
-# File: usr/share/ashyterm/app.py, line: 251
-#: NEEDS WORK
-#, python-brace-format
-msgid "Failed to setup actions: {}"
-msgstr "Eba tegevuste seadistamine: {}"
-# 
-# File: usr/share/ashyterm/app.py, line: 330
-#: NEEDS WORK
-msgid "Quit action triggered - no SSH sessions"
-msgstr "Väljumise toiming käivitati - SSH seansse pole"
-# 
-# File: usr/share/ashyterm/app.py, line: 333
-#: NEEDS WORK
-#, python-brace-format
-msgid "Quit action failed: {}"
-msgstr "Väljumise toiming ebaõnnestus: {}"
-# 
-# File: usr/share/ashyterm/app.py, line: 332
-# File: usr/share/ashyterm/app.py, line: 333
-#: NEEDS WORK
-#, python-brace-format
-msgid "Failed to open preferences: {}"
-msgstr "Eelistuste avamine ebaõnnestus: {}"
-# 
-# File: usr/share/ashyterm/app.py, line: 333
-#: NEEDS WORK
-msgid "Preferences Error"
-msgstr "Eelistuste viga"
-# 
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
-# 
-# File: usr/share/ashyterm/__init__.py, line: 62
-# File: usr/share/ashyterm/app.py, line: 350
-#: NEEDS WORK
-msgid "A modern terminal emulator with session management"
-msgstr "Kaasaegne terminali emulaator seansihaldusega"
-# 
-# File: usr/share/ashyterm/app.py, line: 354
-#: NEEDS WORK
-#, python-brace-format
-msgid "Platform: {}\n"
-msgstr "Platvorm: {}"
-# 
-# File: usr/share/ashyterm/app.py, line: 355
-#: NEEDS WORK
-#, python-brace-format
-msgid "Architecture: {}\n"
-msgstr "Arhitektuur: {}"
-# 
-# File: usr/share/ashyterm/app.py, line: 356
-#: NEEDS WORK
-#, python-brace-format
-msgid "Shell: {}"
-msgstr "Kest: {}"
-# 
-# File: usr/share/ashyterm/app.py, line: 362
-#: NEEDS WORK
-#, python-brace-format
-msgid "Failed to show about dialog: {}"
-msgstr "Eba näitama teavet dialooge: {}"
-# 
-# File: usr/share/ashyterm/app.py, line: 368
-# File: usr/share/ashyterm/app.py, line: 379
-# File: usr/share/ashyterm/app.py, line: 392
-# File: usr/share/ashyterm/app.py, line: 396
-#: NEEDS WORK
-msgid "Backup Error"
-msgstr "Varundusviga"
-# 
-# File: usr/share/ashyterm/app.py, line: 368
-# File: usr/share/ashyterm/app.py, line: 402
-#: NEEDS WORK
-msgid "Backup system not available"
-msgstr "Varundussüsteem ei ole saadaval"
-# 
-# File: usr/share/ashyterm/app.py, line: 379
-#: NEEDS WORK
-msgid "No files to backup"
-msgstr "Ei faile varundamiseks."
-# 
-# File: usr/share/ashyterm/app.py, line: 385
-#: NEEDS WORK
-msgid "Manual backup from menu"
-msgstr "Käsitsi varundamine menüüst"
-# 
-# File: usr/share/ashyterm/app.py, line: 389
-#: NEEDS WORK
-#, python-brace-format
-msgid "Manual backup created: {}"
-msgstr "Käsitsi varukoopia loodud: {}"
-# 
-# File: usr/share/ashyterm/app.py, line: 390
-#: NEEDS WORK
-msgid "Backup Complete"
-msgstr "Varundus lõpetatud"
-# 
-# File: usr/share/ashyterm/app.py, line: 390
-#: NEEDS WORK
-#, python-brace-format
-msgid "Backup created successfully: {}"
-msgstr "Varundus loodud edukalt: {}"
-# 
-# File: usr/share/ashyterm/app.py, line: 392
-#: NEEDS WORK
-msgid "Failed to create backup"
-msgstr "Varundus loomine ebaõnnestus"
-# 
-# File: usr/share/ashyterm/app.py, line: 395
-#: NEEDS WORK
-#, python-brace-format
-msgid "Manual backup failed: {}"
-msgstr "Käsitsi varundamine ebaõnnestus: {}"
-# 
-# File: usr/share/ashyterm/app.py, line: 396
-#: NEEDS WORK
-#, python-brace-format
-msgid "Backup failed: {}"
-msgstr "Varundus ebaõnnestus: {}"
-# 
-# File: usr/share/ashyterm/app.py, line: 402
-# File: usr/share/ashyterm/app.py, line: 416
-#: NEEDS WORK
-msgid "Restore Error"
-msgstr "Taastev viga"
-# 
-# File: usr/share/ashyterm/app.py, line: 407
-#: NEEDS WORK
-msgid "No Backups"
-msgstr "Ei varukoopiaid"
-# 
-# File: usr/share/ashyterm/app.py, line: 407
-#: NEEDS WORK
-msgid "No backups available to restore"
-msgstr "Taasteks ei ole saadaval varukoopiaid."
-# 
-# File: usr/share/ashyterm/app.py, line: 411
-#: NEEDS WORK
-msgid "Backups Available"
-msgstr "Varundused saadaval"
-# 
-# File: usr/share/ashyterm/app.py, line: 412
-#: NEEDS WORK
-#, python-brace-format
-msgid "{} backup(s) available. Use preferences dialog for detailed restore options."
-msgstr "{} varukoopia(d) saadaval. Kasutage eelistuste dialooge üksikasjalike taastamisvalikute jaoks."
-# 
-# File: usr/share/ashyterm/app.py, line: 415
-#: NEEDS WORK
-#, python-brace-format
-msgid "Restore backup action failed: {}"
-msgstr "Varunduskoopia taastamise toiming ebaõnnestus: {}"
-# 
-# File: usr/share/ashyterm/app.py, line: 416
-#: NEEDS WORK
-#, python-brace-format
-msgid "Failed to access backups: {}"
-msgstr "Varundus varukoopiatele: {}"
-# 
-# File: usr/share/ashyterm/app.py, line: 435
-#: NEEDS WORK
-msgid "Debug mode disabled"
-msgstr "Silumisrežiim keelatud"
-# 
-# File: usr/share/ashyterm/app.py, line: 440
-#: NEEDS WORK
-#, python-brace-format
-msgid "Failed to toggle debug mode: {}"
-msgstr "Eba debug-režiimi lülitamine: {}"
-# 
-# File: usr/share/ashyterm/app.py, line: 449
-#: NEEDS WORK
-msgid "Log Information"
-msgstr "Logiteave teave"
-# 
-# File: usr/share/ashyterm/app.py, line: 449
-#: NEEDS WORK
-#, python-brace-format
-msgid "Logs are stored in: {}"
-msgstr "Logid salvestatakse: {}"
-# 
-# File: usr/share/ashyterm/app.py, line: 452
-#: NEEDS WORK
-#, python-brace-format
-msgid "Failed to show log info: {}"
-msgstr "Logi teabe kuvamine ebaõnnestus: {}"
-# 
-# File: usr/share/ashyterm/app.py, line: 484
-#: NEEDS WORK
-#, python-brace-format
-msgid "Failed to check SSH sessions: {}"
-msgstr "SSH seansside kontrollimine ebaõnnestus: {}"
-# 
-# File: usr/share/ashyterm/app.py, line: 498
-#: NEEDS WORK
-msgid "Close Application"
-msgstr "Sulge rakendus"
-# 
-# File: usr/share/ashyterm/app.py, line: 499
-#: NEEDS WORK
-msgid ""
-"There are active SSH connections. Closing will disconnect all sessions.\n"
-"\n"
-"Are you sure you want to close the application?"
-msgstr ""
-"Seal on aktiivsed SSH-ühendused. Sulgemine katkestab kõik seansid.\n"
-"\n"
-"Kas olete kindel, et soovite rakenduse sulgeda?"
-# 
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 163
-# File: usr/share/ashyterm/ui/dialogs.py, line: 575
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1213
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1957
-# File: usr/share/ashyterm/ui/dialogs.py, line: 2006
-# File: usr/share/ashyterm/window.py, line: 953
-# File: usr/share/ashyterm/window.py, line: 1013
-#: NEEDS WORK
-msgid "Cancel"
-msgstr "Tühista"
-# 
-# File: usr/share/ashyterm/app.py, line: 503
-#: NEEDS WORK
-msgid "Close All"
-msgstr "Sulge kõik"
-# 
-# File: usr/share/ashyterm/app.py, line: 510
-#: NEEDS WORK
-msgid "User confirmed quit with active SSH sessions"
-msgstr "Kasutaja kinnitas väljumist aktiivsete SSH seanssidega"
-# 
-# File: usr/share/ashyterm/app.py, line: 513
-#: NEEDS WORK
-msgid "User cancelled quit"
-msgstr "Kasutaja tühistas väljumise"
-# 
-# File: usr/share/ashyterm/app.py, line: 516
-#: NEEDS WORK
-#, python-brace-format
-msgid "SSH close confirmation response failed: {}"
-msgstr "SSH sulgemise kinnituse vastus ebaõnnestus: {}"
-# 
-# File: usr/share/ashyterm/app.py, line: 523
-#: NEEDS WORK
-#, python-brace-format
-msgid "SSH close confirmation dialog failed: {}"
-msgstr "SSH sulgemise kinnituse dialooge ei õnnestunud: {}"
-# 
-# File: usr/share/ashyterm/app.py, line: 456
-#: NEEDS WORK
-msgid "Application shutdown initiated"
-msgstr "Rakenduse sulgemine algatatud"
-# 
-# File: usr/share/ashyterm/app.py, line: 465
-#: NEEDS WORK
-msgid "Performing graceful shutdown"
-msgstr "Tegevuse sujuv lõpetamine"
-# 
-# File: usr/share/ashyterm/app.py, line: 471
-#: NEEDS WORK
-msgid "Cleaning up main window"
-msgstr "Peamise akna puhastamine"
-# 
-# File: usr/share/ashyterm/app.py, line: 476
-#: NEEDS WORK
-msgid "Saving settings"
-msgstr "Seadete salvestamine"
-# 
-# File: usr/share/ashyterm/app.py, line: 483
-#: NEEDS WORK
-msgid "Graceful shutdown completed"
-msgstr "Suleline sulgemine lõpetatud"
-# 
-# File: usr/share/ashyterm/app.py, line: 486
-#: NEEDS WORK
-#, python-brace-format
-msgid "Error during graceful shutdown: {}"
-msgstr "Viga sujuva sulgemise ajal: {}"
-# 
-# File: usr/share/ashyterm/app.py, line: 510
-#: NEEDS WORK
-msgid "Performing shutdown backup"
-msgstr "Tegevus sulgemise varundamine"
-# 
-# File: usr/share/ashyterm/app.py, line: 514
-#: NEEDS WORK
-msgid "Automatic backup on exit"
-msgstr "Automaatne varundamine väljumisel"
-# 
-# File: usr/share/ashyterm/app.py, line: 518
-#: NEEDS WORK
-#, python-brace-format
-msgid "Shutdown backup failed: {}"
-msgstr "Shuti varundus ebaõnnestus: {}"
-# 
-# File: usr/share/ashyterm/app.py, line: 523
-#: NEEDS WORK
-msgid "Emergency cleanup on exit"
-msgstr "Hädaolukorra puhastus väljumisel"
-# 
-# File: usr/share/ashyterm/app.py, line: 530
-#: NEEDS WORK
-msgid "Startup Error"
-msgstr "Käivitamise viga"
-# 
-# File: usr/share/ashyterm/app.py, line: 531
-#: NEEDS WORK
-#, python-brace-format
-msgid "Application failed to start: {}"
-msgstr "Rakendus ei suutnud käivituda: {}"
-# 
-# File: usr/share/ashyterm/app.py, line: 551
-#: NEEDS WORK
-#, python-brace-format
-msgid "Failed to show error dialog: {}"
-msgstr "Eba näidiku dialooge kuvada: {}"
-# 
-# File: usr/share/ashyterm/app.py, line: 565
-#: NEEDS WORK
-#, python-brace-format
-msgid "Failed to show info dialog: {}"
-msgstr "Eba info dialooge näitamine: {}"
-# 
-# File: usr/share/ashyterm/app.py, line: 576
-#: NEEDS WORK
-#, python-brace-format
-msgid "Failed to refresh keyboard shortcuts: {}"
-msgstr "Klaviatuuri otseteede värskendamine ebaõnnestus: {}"
-# 
-# File: usr/share/ashyterm/app.py, line: 584
-#: NEEDS WORK
-msgid "Main window registered"
-msgstr "Peamine aken registreeritud"
+msgid "Failed to save after folder removal."
+msgstr "Salvestamine ebaõnnestus pärast kausta eemaldamist."
 # 
-# File: usr/share/ashyterm/app.py, line: 592
+# File: usr/share/ashyterm/sessions/operations.py, line: 177
 #: NEEDS WORK
-msgid "Main window unregistered"
-msgstr "Peamine aken registreerimata"
-# 
-# File: usr/share/ashyterm/app.py, line: 611
-#: NEEDS WORK
 #, python-brace-format
-msgid "Failed to create new window: {}"
-msgstr "Uue akna loomine ebaõnnestus: {}"
-# 
-# File: usr/share/ashyterm/terminal/tabs.py, line: 489
-#: NEEDS WORK
-msgid "Exited"
-msgstr "Väljunud"
+msgid "Folder '{name}' removed successfully."
+msgstr "Kaust '{name}' eemaldati edukalt."
 # 
-# File: usr/share/ashyterm/window.py, line: 140
-# File: usr/share/ashyterm/window.py, line: 644
+# File: usr/share/ashyterm/sessions/operations.py, line: 190
 #: NEEDS WORK
-msgid "Terminal Error"
-msgstr "Terminali viga"
+msgid "Failed to save after moving session."
+msgstr "Seansi liigutamisel salvestamine ebaõnnestus."
 # 
-# File: usr/share/ashyterm/window.py, line: 141
+# File: usr/share/ashyterm/sessions/operations.py, line: 195
 #: NEEDS WORK
-msgid "Failed to create initial terminal. Check system configuration."
-msgstr "Eba esimese terminali loomine. Kontrollige süsteemi konfiguratsiooni."
+msgid "Session moved successfully."
+msgstr "Seans liikus edukalt."
 # 
 # File: usr/share/ashyterm/window.py, line: 145
 #: NEEDS WORK
@@ -1149,37 +890,6 @@ msgstr "Andmete laadimise viga"
 msgid "Failed to load saved sessions and folders. Starting with empty configuration."
 msgstr "Salvestatud seansside ja kaustade laadimine ebaõnnestus. Alustamine tühja konfiguratsiooniga."
 # 
-# File: usr/share/ashyterm/window.py, line: 502
-#: NEEDS WORK
-msgid "Window close request received"
-msgstr "Akna sulgemise päring saadetud"
-# 
-# File: usr/share/ashyterm/window.py, line: 507
-#: NEEDS WORK
-msgid "Force closing - allowing window to close"
-msgstr "Sundimine - lubades akna sulgeda"
-# 
-# File: usr/share/ashyterm/window.py, line: 515
-#: NEEDS WORK
-msgid "Showing SSH close confirmation dialog"
-msgstr "Kuvatakse SSH sulgemise kinnituse dialoog."
-# 
-# File: usr/share/ashyterm/window.py, line: 520
-#: NEEDS WORK
-msgid "No SSH sessions, proceeding with normal close"
-msgstr "Ei SSH seansse, jätkame tavalise sulgemisega."
-# 
-# File: usr/share/ashyterm/window.py, line: 511
-#: NEEDS WORK
-msgid "Window cleanup completed"
-msgstr "Akna puhastus lõpetatud"
-# 
-# File: usr/share/ashyterm/window.py, line: 515
-#: NEEDS WORK
-#, python-brace-format
-msgid "Window close handling failed: {}"
-msgstr "Akna sulgemise käsitlemine ebaõnnestus: {}"
-# 
 # File: usr/share/ashyterm/window.py, line: 544
 #: NEEDS WORK
 msgid "This window has active SSH connections:"
@@ -1201,27 +911,23 @@ msgstr "Kas olete kindel, et soovite selle akna sulgeda?"
 msgid "Close Window"
 msgstr "Sulge aken"
 # 
-# File: usr/share/ashyterm/window.py, line: 540
-#: NEEDS WORK
-msgid "User confirmed window close with active SSH sessions"
-msgstr "Kasutaja kinnitas akna sulgemist aktiivsete SSH seanssidega"
+# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
 # 
-# File: usr/share/ashyterm/window.py, line: 544
+# File: usr/share/ashyterm/ui/dialogs.py, line: 163
+# File: usr/share/ashyterm/ui/dialogs.py, line: 575
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1213
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1957
+# File: usr/share/ashyterm/ui/dialogs.py, line: 2006
+# File: usr/share/ashyterm/window.py, line: 953
+# File: usr/share/ashyterm/window.py, line: 1013
 #: NEEDS WORK
-msgid "User cancelled window close"
-msgstr "Kasutaja tühistas akna sulgemise"
+msgid "Cancel"
+msgstr "Tühista"
 # 
-# File: usr/share/ashyterm/window.py, line: 547
+# File: usr/share/ashyterm/window.py, line: 551
 #: NEEDS WORK
-#, python-brace-format
-msgid "Window SSH close confirmation response failed: {}"
-msgstr "Aken SSH sulgemise kinnituse vastus ebaõnnestus: {}"
-# 
-# File: usr/share/ashyterm/window.py, line: 554
-#: NEEDS WORK
-#, python-brace-format
-msgid "Window SSH close confirmation dialog failed: {}"
-msgstr "Aken SSH sulgemise kinnituse dialooge ebaõnnestus: {}"
+msgid "Session Validation Error"
+msgstr "Seansi valideerimise viga"
 # 
 # File: usr/share/ashyterm/window.py, line: 550
 #: NEEDS WORK
@@ -1233,139 +939,10 @@ msgstr ""
 "Seansi valideerimine ebaõnnestus:\n"
 "{errors}"
 # 
-# File: usr/share/ashyterm/window.py, line: 551
+# File: usr/share/ashyterm/window.py, line: 586
 #: NEEDS WORK
-msgid "Session Validation Error"
-msgstr "Seansi valideerimise viga"
-# 
-# File: usr/share/ashyterm/window.py, line: 575
-#: NEEDS WORK
-msgid "Terminal Creation Failed"
-msgstr "Terminali loomine ebaõnnestus"
-# 
-# File: usr/share/ashyterm/window.py, line: 576
-#: NEEDS WORK
-msgid "Could not create terminal for this session."
-msgstr "Selle seansi jaoks terminali luua ei õnnestunud."
-# 
-# File: usr/share/ashyterm/window.py, line: 579
-# File: usr/share/ashyterm/window.py, line: 640
-#: NEEDS WORK
-msgid "VTE Not Available"
-msgstr "VTE ei ole saadaval"
-# 
-# File: usr/share/ashyterm/window.py, line: 580
-#: NEEDS WORK
-msgid "Cannot open session - VTE library not installed."
-msgstr "Ei saa seanssi avada - VTE teek ei ole installitud."
-# 
-# File: usr/share/ashyterm/window.py, line: 583
-#: NEEDS WORK
-msgid "Session Error"
-msgstr "Seansi viga"
-# 
-# File: usr/share/ashyterm/window.py, line: 583
-#: NEEDS WORK
-#, python-brace-format
-msgid "Failed to activate session: {error}"
-msgstr "Seansi aktiveerimine ebaõnnestus: {error}"
-# 
-# File: usr/share/ashyterm/window.py, line: 802
-#: NEEDS WORK
-msgid "SFTP Connection Failed"
-msgstr "SFTP ühenduse loomine ebaõnnestus"
-# 
-# File: usr/share/ashyterm/window.py, line: 803
-#: NEEDS WORK
-msgid "Could not create SFTP terminal for this session."
-msgstr "Selle seansi jaoks ei õnnestunud SFTP terminali luua."
-# 
-# File: usr/share/ashyterm/window.py, line: 813
-#: NEEDS WORK
-msgid "SFTP Error"
-msgstr "SFTP viga"
-# 
-# File: usr/share/ashyterm/window.py, line: 814
-#: NEEDS WORK
-#, python-brace-format
-msgid "Failed to start SFTP session: {error}"
-msgstr "SFTP seansi käivitamine ebaõnnestus: {error}"
-# 
-# File: usr/share/ashyterm/window.py, line: 641
-#: NEEDS WORK
-msgid "Cannot create terminal - VTE library not installed."
-msgstr "Ei saa terminali luua - VTE teek ei ole installitud."
-# 
-# File: usr/share/ashyterm/window.py, line: 644
-#: NEEDS WORK
-#, python-brace-format
-msgid "Failed to create new tab: {error}"
-msgstr "Uue vahekaartide loomine ebaõnnestus: {error}"
-# 
-# File: usr/share/ashyterm/window.py, line: 876
-# File: usr/share/ashyterm/window.py, line: 886
-#: NEEDS WORK
-msgid "Split Error"
-msgstr "Jagamise viga"
-# 
-# File: usr/share/ashyterm/window.py, line: 694
-# File: usr/share/ashyterm/window.py, line: 743
-# File: usr/share/ashyterm/window.py, line: 903
-#: NEEDS WORK
-msgid "Edit Error"
-msgstr "Muuda viga"
-# 
-# File: usr/share/ashyterm/window.py, line: 694
-#: NEEDS WORK
-#, python-brace-format
-msgid "Failed to edit session: {error}"
-msgstr "Seansi muutmine ebaõnnestus: {error}"
-# 
-# File: usr/share/ashyterm/window.py, line: 706
-#: NEEDS WORK
-msgid "Duplicate Error"
-msgstr "Kopeerimise viga"
-# 
-# File: usr/share/ashyterm/window.py, line: 715
-# File: usr/share/ashyterm/window.py, line: 752
-#: NEEDS WORK
-msgid "Rename Error"
-msgstr "Nime muutmise viga"
-# 
-# File: usr/share/ashyterm/window.py, line: 715
-#: NEEDS WORK
-#, python-brace-format
-msgid "Failed to rename session: {error}"
-msgstr "Seansi ümbernimetamine ebaõnnestus: {error}"
-# 
-# File: usr/share/ashyterm/window.py, line: 724
-#: NEEDS WORK
-msgid "Move Error"
-msgstr "Liikumise viga"
-# 
-# File: usr/share/ashyterm/window.py, line: 733
-# File: usr/share/ashyterm/window.py, line: 771
-#: NEEDS WORK
-msgid "Delete Error"
-msgstr "Kustuta viga"
-# 
-# File: usr/share/ashyterm/window.py, line: 1043
-#: NEEDS WORK
-#, python-brace-format
-msgid "Failed to delete selected items: {error}"
-msgstr "Valikute kustutamine ebaõnnestus: {error}"
-# 
-# File: usr/share/ashyterm/window.py, line: 743
-#: NEEDS WORK
-#, python-brace-format
-msgid "Failed to edit folder: {error}"
-msgstr "Kausta redigeerimine ebaõnnestus: {error}"
-# 
-# File: usr/share/ashyterm/window.py, line: 752
-#: NEEDS WORK
-#, python-brace-format
-msgid "Failed to rename folder: {error}"
-msgstr "Kausta ümbernimetamine ebaõnnestus: {error}"
+msgid "SFTP not implemented yet"
+msgstr "SFTP ei ole veel rakendatud"
 # 
 # File: usr/share/ashyterm/window.py, line: 758
 # File: usr/share/ashyterm/window.py, line: 875
@@ -1373,22 +950,10 @@ msgstr "Kausta ümbernimetamine ebaõnnestus: {error}"
 msgid "New Session"
 msgstr "Uus seanss"
 # 
-# File: usr/share/ashyterm/window.py, line: 762
+# File: usr/share/ashyterm/window.py, line: 885
 #: NEEDS WORK
-msgid "Add Error"
-msgstr "Lisa viga"
-# 
-# File: usr/share/ashyterm/window.py, line: 762
-#: NEEDS WORK
-#, python-brace-format
-msgid "Failed to add session to folder: {error}"
-msgstr "Seansi kausta lisamine ebaõnnestus: {error}"
-# 
-# File: usr/share/ashyterm/window.py, line: 835
-#: NEEDS WORK
-#, python-brace-format
-msgid "Failed to open preferences: {error}"
-msgstr "Eelistuste avamine ebaõnnestus: {error}"
+msgid "New Folder"
+msgstr "Uus kaust"
 # 
 # #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
 # 
@@ -1447,31 +1012,6 @@ msgstr "Kleebi"
 msgid "Select All"
 msgstr "Vali kõik"
 # 
-# File: usr/share/ashyterm/window.py, line: 1190
-#: NEEDS WORK
-msgid "Split Navigation"
-msgstr "Jagatud navigeerimine"
-# 
-# File: usr/share/ashyterm/window.py, line: 1193
-#: NEEDS WORK
-msgid "Focus Up"
-msgstr "Fookus üles"
-# 
-# File: usr/share/ashyterm/window.py, line: 1194
-#: NEEDS WORK
-msgid "Focus Down"
-msgstr "Fookus alla"
-# 
-# File: usr/share/ashyterm/window.py, line: 1195
-#: NEEDS WORK
-msgid "Focus Left"
-msgstr "Fookus Vasak"
-# 
-# File: usr/share/ashyterm/window.py, line: 1196
-#: NEEDS WORK
-msgid "Focus Right"
-msgstr "Fookus Paremale"
-# 
 # File: usr/share/ashyterm/window.py, line: 936
 #: NEEDS WORK
 msgid "Application"
@@ -1493,54 +1033,6 @@ msgstr "Eelistused"
 #: NEEDS WORK
 msgid "Quit"
 msgstr "Välja"
-# 
-# File: usr/share/ashyterm/window.py, line: 961
-#: NEEDS WORK
-#, python-brace-format
-msgid "Failed to open shortcuts window: {error}"
-msgstr "Lühikeste otsete akna avamine ebaõnnestus: {error}"
-# 
-# File: usr/share/ashyterm/window.py, line: 1271
-#: NEEDS WORK
-msgid "Failed to create new window"
-msgstr "Uue akna loomine ebaõnnestus"
-# 
-# File: usr/share/ashyterm/window.py, line: 1275
-#: NEEDS WORK
-msgid "Could not create a new window"
-msgstr "Uut akent ei saanud luua"
-# 
-# File: usr/share/ashyterm/window.py, line: 1282
-#: NEEDS WORK
-#, python-brace-format
-msgid "Failed to create new window: {error}"
-msgstr "Uue akna loomine ebaõnnestus: {error}"
-# 
-# File: usr/share/ashyterm/window.py, line: 879
-#: NEEDS WORK
-msgid "Add Session Error"
-msgstr "Lisa seansi viga"
-# 
-# File: usr/share/ashyterm/window.py, line: 977
-#: NEEDS WORK
-msgid "Failed to create new tab."
-msgstr "Uue vahekaartide loomine ebaõnnestus."
-# 
-# File: usr/share/ashyterm/window.py, line: 885
-#: NEEDS WORK
-msgid "New Folder"
-msgstr "Uus kaust"
-# 
-# File: usr/share/ashyterm/window.py, line: 889
-#: NEEDS WORK
-msgid "Add Folder Error"
-msgstr "Kausta lisamise viga"
-# 
-# File: usr/share/ashyterm/window.py, line: 903
-#: NEEDS WORK
-#, python-brace-format
-msgid "Failed to edit selected item: {error}"
-msgstr "Valitud elementi ei õnnestunud redigeerida: {error}"
 # 
 # File: usr/share/ashyterm/window.py, line: 944
 # File: usr/share/ashyterm/window.py, line: 999
@@ -1641,6 +1133,11 @@ msgstr "Kustuta"
 #: NEEDS WORK
 msgid "OK"
 msgstr "OK"
+# 
+# File: usr/share/ashyterm/window.py, line: 958
+#: NEEDS WORK
+msgid "Cannot detach the last tab."
+msgstr "Viimast vahekaarti ei saa eraldada."
 # 
 # File: usr/share/ashyterm/ui/ssh_dialogs.py, line: 51
 #: NEEDS WORK
@@ -1884,25 +1381,15 @@ msgstr "Sirvi..."
 msgid "Password for SSH authentication"
 msgstr "SSH autentimise parool"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 542
+# File: usr/share/ashyterm/ui/dialogs.py, line: 342
 #: NEEDS WORK
-msgid "Password for SSH authentication (encrypted storage)"
-msgstr "SSH autentimise parool (krüpteeritud salvestus)"
+msgid "Password for SSH authentication (stored in system keyring)"
+msgstr "SSH autentimise parool (salvestatud süsteemi võtmehoidlas)"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 544
+# File: usr/share/ashyterm/ui/dialogs.py, line: 346
 #: NEEDS WORK
-msgid "Password for SSH authentication (encryption available but not initialized)"
-msgstr "SSH autentimise parool (krüpteerimine saadaval, kuid mitte algatatud)"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 546
-#: NEEDS WORK
-msgid "Password for SSH authentication (encryption not available)"
-msgstr "SSH autentimise parool (krüpteerimine ei ole saadaval)"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 548
-#: NEEDS WORK
-msgid "Password for SSH authentication (stored as plain text)"
-msgstr "SSH autentimise parool (salvestatud lihttekstina)"
+msgid "Password for SSH authentication (keyring not available)"
+msgstr "SSH autentimise parool (võtmehoidja ei ole saadaval)"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 553
 #: NEEDS WORK
@@ -2057,6 +1544,11 @@ msgstr "Seansi valideerimine ebaõnnestus: {}"
 msgid "Session name"
 msgstr "Seansi nimi"
 # 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 921
+#: NEEDS WORK
+msgid "SSH Validation Error"
+msgstr "SSH valideerimise viga"
+# 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 920
 #: NEEDS WORK
 #, python-brace-format
@@ -2066,11 +1558,6 @@ msgid ""
 msgstr ""
 "SSH konfiguratsiooni vead:  \n"
 "{}"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 921
-#: NEEDS WORK
-msgid "SSH Validation Error"
-msgstr "SSH valideerimise viga"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1034
 #: NEEDS WORK
@@ -2124,21 +1611,15 @@ msgstr "Kausta salvestamine ebaõnnestus: {}"
 msgid "Folder name"
 msgstr "Kausta nimi"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1361
+# File: usr/share/ashyterm/ui/dialogs.py, line: 923
 #: NEEDS WORK
-#, python-brace-format
-msgid "Folder {} {}"
-msgstr "Kaust {} {}"
+msgid "General"
+msgstr "Üldine"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1421
 #: NEEDS WORK
 msgid "Appearance"
 msgstr "Välimus"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1428
-#: NEEDS WORK
-msgid "Colors & Font"
-msgstr "Värvid ja fondid"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1429
 #: NEEDS WORK
@@ -2175,101 +1656,6 @@ msgstr "Terminali font"
 msgid "Select font family and size for terminal text"
 msgstr "Vali terminali teksti jaoks fondi perekond ja suurus"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1486
-#: NEEDS WORK
-msgid "Behavior"
-msgstr "Käitumine"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1493
-#: NEEDS WORK
-msgid "Terminal Behavior"
-msgstr "Terminali käitumine"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1494
-#: NEEDS WORK
-msgid "Configure how terminals behave"
-msgstr "Konfigureeri, kuidas terminalid käituvad"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1500
-#: NEEDS WORK
-msgid "Auto Close Tabs"
-msgstr "Automaatne sulgemine vahelehtedele"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1501
-#: NEEDS WORK
-msgid "Automatically close tabs when process exits normally"
-msgstr "Automaatne vahekaartide sulgemine, kui protsess lõpetab normaalselt"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1509
-#: NEEDS WORK
-msgid "Scroll on Output"
-msgstr "Kerige väljundil"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1510
-#: NEEDS WORK
-msgid "Automatically scroll when new output appears"
-msgstr "Automaatne kerimine, kui uus väljund ilmub"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1518
-#: NEEDS WORK
-msgid "Scroll on Keystroke"
-msgstr "Kerige klahvi vajutamisel"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1519
-#: NEEDS WORK
-msgid "Automatically scroll when typing"
-msgstr "Automaatne kerimine kirjutamise ajal"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1527
-#: NEEDS WORK
-msgid "Hide Mouse Cursor"
-msgstr "Peida hiirekursor"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1528
-#: NEEDS WORK
-msgid "Hide mouse cursor when typing"
-msgstr "Peida hiirekursor kirjutamise ajal"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1536
-#: NEEDS WORK
-msgid "Cursor Blinking"
-msgstr "Kursori vilkumine"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1537
-#: NEEDS WORK
-msgid "Enable cursor blinking animation"
-msgstr "Luba kursori vilkumise animatsioon"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1637
-#: NEEDS WORK
-msgid "Directory Tracking"
-msgstr "Katalooge jälgimine"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1638
-#: NEEDS WORK
-msgid "Track current directory and update tab titles"
-msgstr "Jälgi praegust katalooge ja uuenda vahekaartide pealkirju"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1644
-#: NEEDS WORK
-msgid "Enable Directory Tracking"
-msgstr "Luba Katalooge Jälgimine"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1645
-#: NEEDS WORK
-msgid "Monitor current directory and show it in tab titles"
-msgstr "Jälgige praegust kausta ja kuvage see vahekaardipealkirjades."
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1656
-#: NEEDS WORK
-msgid "Show Hostname in Titles"
-msgstr "Kuvaa hostinimi pealkirjades"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1657
-#: NEEDS WORK
-msgid "Include hostname in tab titles when available"
-msgstr "Kasutage hostinime vahekaartide pealkirjades, kui see on saadaval."
-# 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1545
 #: NEEDS WORK
 msgid "Interface Behavior"
@@ -2299,26 +1685,6 @@ msgstr "Ava uues vahekaardis"
 #: NEEDS WORK
 msgid "Open in a new window"
 msgstr "Ava uues aknas"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1552
-#: NEEDS WORK
-msgid "Confirm Application Exit"
-msgstr "Kinnita rakenduse väljumine"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1553
-#: NEEDS WORK
-msgid "Show confirmation dialog when closing the application"
-msgstr "Kuva kinnituse dialooge rakenduse sulgemisel"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1561
-#: NEEDS WORK
-msgid "Confirm Deletion"
-msgstr "Kinnita kustutamine"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1562
-#: NEEDS WORK
-msgid "Show confirmation dialog when deleting sessions or folders"
-msgstr "Kinnita kinnituse dialoog seansside või kaustade kustutamisel"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1575
 #: NEEDS WORK
@@ -2370,15 +1736,15 @@ msgstr "None"
 msgid "Edit"
 msgstr "Redigeeri"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1716
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1790
 #: NEEDS WORK
-msgid "Backup"
-msgstr "Varundus"
+msgid "Advanced"
+msgstr "Täpsem"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1723
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1051
 #: NEEDS WORK
-msgid "Backup Settings"
-msgstr "Varunduse seaded"
+msgid "Backup & Recovery"
+msgstr "Varundus ja taastamine"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1724
 #: NEEDS WORK
@@ -2395,90 +1761,35 @@ msgstr "Automaatne varundamine"
 msgid "Automatically create backups of sessions and settings"
 msgstr "Automaatne varundamine seansside ja seadete jaoks"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1739
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1071
 #: NEEDS WORK
-msgid "Backup on Change"
-msgstr "Varundamine muutuste korral"
+msgid "Logging"
+msgstr "Logimine"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1740
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1071
 #: NEEDS WORK
-msgid "Create a backup every time sessions or folders are modified"
-msgstr "Looge varukoopia iga kord, kui seansse või kaustu muudetakse."
+msgid "Configure application logging behavior"
+msgstr "Konfigureeri rakenduse logimise käitumine"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1748
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1076
 #: NEEDS WORK
-msgid "Backup on Exit"
-msgstr "Vara kopeerimine väljumisel"
+msgid "Save Logs to File"
+msgstr "Salvesta logid faili"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1749
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1077
 #: NEEDS WORK
-msgid "Create backup when application exits"
-msgstr "Loo varukoopia, kui rakendus sulgub"
+msgid "Save application logs to the configuration directory"
+msgstr "Salvesta rakenduse logid konfiguratsioonikausta"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1757
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1087
 #: NEEDS WORK
-msgid "Backup Interval"
-msgstr "Varundusintervall"
+msgid "Console Log Level"
+msgstr "Konsoli logi tase"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1758
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1088
 #: NEEDS WORK
-msgid "Hours between automatic backups"
-msgstr "Tunnid automaatsete varukoopiate vahel"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1771
-#: NEEDS WORK
-msgid "Retention Period"
-msgstr "Säilitamise periood"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1772
-#: NEEDS WORK
-msgid "Days to keep old backups"
-msgstr "Päevad vanade varukoopiate säilitamiseks"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1790
-#: NEEDS WORK
-msgid "Advanced"
-msgstr "Täpsem"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1797
-#: NEEDS WORK
-msgid "Development & Debugging"
-msgstr "Arendamine ja tõrkeotsing"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1798
-#: NEEDS WORK
-msgid "Advanced options for development and troubleshooting"
-msgstr "Arendatud valikud arendamiseks ja tõrkeotsinguks"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1804
-#: NEEDS WORK
-msgid "Debug Mode"
-msgstr "Silumisrežiim"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1805
-#: NEEDS WORK
-msgid "Enable verbose logging and debug features"
-msgstr "Luba verbose logimine ja silumisfunktsioonid"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1813
-#: NEEDS WORK
-msgid "Performance Mode"
-msgstr "Töörežiim"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1814
-#: NEEDS WORK
-msgid "Optimize for performance over features"
-msgstr "Optimeeri jõudluse nimel funktsioonide arvelt"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1822
-#: NEEDS WORK
-msgid "Experimental Features"
-msgstr "Eksperimentaalsed funktsioonid"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1823
-#: NEEDS WORK
-msgid "Enable experimental and unstable features"
-msgstr "Luba katsetamiseks ja ebastabiilsete funktsioonide lubamine"
+msgid "Set the minimum level of messages shown in the console"
+msgstr "Seadke konsoolis kuvatavate sõnumite minimaalne tase."
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1831
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1843
@@ -2612,20 +1923,20 @@ msgstr "Liiguta"
 msgid "Move Failed"
 msgstr "Liikumine ebaõnnestus"
 # 
-# File: usr/share/ashyterm/ui/menus.py, line: 196
+# File: usr/share/ashyterm/ui/menus.py, line: 24
 #: NEEDS WORK
-msgid "Zoom Out (-)"
-msgstr "Vähenda (−)"
+msgid "Follow System Style"
+msgstr "Järgi süsteemi stiili"
 # 
-# File: usr/share/ashyterm/ui/menus.py, line: 197
+# File: usr/share/ashyterm/ui/menus.py, line: 29
 #: NEEDS WORK
-msgid "Reset Zoom (100%)"
-msgstr "Lähtesta suurust (100%)"
+msgid "Light Style"
+msgstr "Kerge stiil"
 # 
-# File: usr/share/ashyterm/ui/menus.py, line: 198
+# File: usr/share/ashyterm/ui/menus.py, line: 34
 #: NEEDS WORK
-msgid "Zoom In (+)"
-msgstr "Suurenda (+)"
+msgid "Dark Style"
+msgstr "Tume stiil"
 # 
 # File: usr/share/ashyterm/ui/menus.py, line: 216
 #: NEEDS WORK
@@ -2648,10 +1959,15 @@ msgstr "Kopeeri"
 msgid "Cut"
 msgstr "Lõika"
 # 
-# File: usr/share/ashyterm/ui/menus.py, line: 36
+# File: usr/share/ashyterm/ui/menus.py, line: 203
 #: NEEDS WORK
-msgid "Move to Folder"
-msgstr "Liiguta kausta"
+msgid "Move to Folder..."
+msgstr "Liiguta kausta..."
+# 
+# File: usr/share/ashyterm/ui/menus.py, line: 220
+#: NEEDS WORK
+msgid "Add Session Here"
+msgstr "Lisa seanssi siia"
 # 
 # File: usr/share/ashyterm/ui/menus.py, line: 98
 #: NEEDS WORK
@@ -2683,25 +1999,162 @@ msgstr "Jagada vertikaalselt"
 msgid "Close Pane"
 msgstr "Sulge paneel"
 # 
-# File: usr/share/ashyterm/ui/menus.py, line: 290
+# File: usr/share/ashyterm/app.py, line: 222
 #: NEEDS WORK
-msgid "Change Permissions"
-msgstr "Muuda õigusi"
+msgid "Automatic startup backup"
+msgstr "Automaatne käivitamise varukoopia"
 # 
-# File: usr/share/ashyterm/ui/menus.py, line: 296
+# File: usr/share/ashyterm/app.py, line: 333
 #: NEEDS WORK
-msgid "Download File"
-msgstr "Laadi fail"
+msgid "Preferences Error"
+msgstr "Eelistuste viga"
 # 
-# File: usr/share/ashyterm/ui/menus.py, line: 299
+# File: usr/share/ashyterm/app.py, line: 332
+# File: usr/share/ashyterm/app.py, line: 333
 #: NEEDS WORK
-msgid "Edit with Local App"
-msgstr "Redigeeri kohaliku rakendusega"
+#, python-brace-format
+msgid "Failed to open preferences: {}"
+msgstr "Eelistuste avamine ebaõnnestus: {}"
 # 
-# File: usr/share/ashyterm/ui/menus.py, line: 302
+# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
+# 
+# File: usr/share/ashyterm/__init__.py, line: 62
+# File: usr/share/ashyterm/app.py, line: 350
 #: NEEDS WORK
-msgid "Upload Files Here"
-msgstr "Lae failid siia"
+msgid "A modern terminal emulator with session management"
+msgstr "Kaasaegne terminali emulaator seansihaldusega"
+# 
+# File: usr/share/ashyterm/app.py, line: 368
+# File: usr/share/ashyterm/app.py, line: 379
+# File: usr/share/ashyterm/app.py, line: 392
+# File: usr/share/ashyterm/app.py, line: 396
+#: NEEDS WORK
+msgid "Backup Error"
+msgstr "Varundusviga"
+# 
+# File: usr/share/ashyterm/app.py, line: 368
+# File: usr/share/ashyterm/app.py, line: 402
+#: NEEDS WORK
+msgid "Backup system not available"
+msgstr "Varundussüsteem ei ole saadaval"
+# 
+# File: usr/share/ashyterm/app.py, line: 379
+#: NEEDS WORK
+msgid "No files to backup"
+msgstr "Ei faile varundamiseks."
+# 
+# File: usr/share/ashyterm/app.py, line: 385
+#: NEEDS WORK
+msgid "Manual backup from menu"
+msgstr "Käsitsi varundamine menüüst"
+# 
+# File: usr/share/ashyterm/app.py, line: 390
+#: NEEDS WORK
+msgid "Backup Complete"
+msgstr "Varundus lõpetatud"
+# 
+# File: usr/share/ashyterm/app.py, line: 390
+#: NEEDS WORK
+#, python-brace-format
+msgid "Backup created successfully: {}"
+msgstr "Varundus loodud edukalt: {}"
+# 
+# File: usr/share/ashyterm/app.py, line: 392
+#: NEEDS WORK
+msgid "Failed to create backup"
+msgstr "Varundus loomine ebaõnnestus"
+# 
+# File: usr/share/ashyterm/app.py, line: 396
+#: NEEDS WORK
+#, python-brace-format
+msgid "Backup failed: {}"
+msgstr "Varundus ebaõnnestus: {}"
+# 
+# File: usr/share/ashyterm/app.py, line: 402
+# File: usr/share/ashyterm/app.py, line: 416
+#: NEEDS WORK
+msgid "Restore Error"
+msgstr "Taastev viga"
+# 
+# File: usr/share/ashyterm/app.py, line: 407
+#: NEEDS WORK
+msgid "No Backups"
+msgstr "Ei varukoopiaid"
+# 
+# File: usr/share/ashyterm/app.py, line: 407
+#: NEEDS WORK
+msgid "No backups available to restore"
+msgstr "Taasteks ei ole saadaval varukoopiaid."
+# 
+# File: usr/share/ashyterm/app.py, line: 411
+#: NEEDS WORK
+msgid "Backups Available"
+msgstr "Varundused saadaval"
+# 
+# File: usr/share/ashyterm/app.py, line: 412
+#: NEEDS WORK
+#, python-brace-format
+msgid "{} backup(s) available. Use preferences dialog for detailed restore options."
+msgstr "{} varukoopia(d) saadaval. Kasutage eelistuste dialooge üksikasjalike taastamisvalikute jaoks."
+# 
+# File: usr/share/ashyterm/app.py, line: 416
+#: NEEDS WORK
+#, python-brace-format
+msgid "Failed to access backups: {}"
+msgstr "Varundus varukoopiatele: {}"
+# 
+# File: usr/share/ashyterm/app.py, line: 449
+#: NEEDS WORK
+msgid "Log Information"
+msgstr "Logiteave teave"
+# 
+# File: usr/share/ashyterm/app.py, line: 449
+#: NEEDS WORK
+#, python-brace-format
+msgid "Logs are stored in: {}"
+msgstr "Logid salvestatakse: {}"
+# 
+# File: usr/share/ashyterm/app.py, line: 498
+#: NEEDS WORK
+msgid "Close Application"
+msgstr "Sulge rakendus"
+# 
+# File: usr/share/ashyterm/app.py, line: 499
+#: NEEDS WORK
+msgid ""
+"There are active SSH connections. Closing will disconnect all sessions.\n"
+"\n"
+"Are you sure you want to close the application?"
+msgstr ""
+"Seal on aktiivsed SSH-ühendused. Sulgemine katkestab kõik seansid.\n"
+"\n"
+"Kas olete kindel, et soovite rakenduse sulgeda?"
+# 
+# File: usr/share/ashyterm/app.py, line: 503
+#: NEEDS WORK
+msgid "Close All"
+msgstr "Sulge kõik"
+# 
+# File: usr/share/ashyterm/app.py, line: 514
+#: NEEDS WORK
+msgid "Automatic backup on exit"
+msgstr "Automaatne varundamine väljumisel"
+# 
+# File: usr/share/ashyterm/app.py, line: 530
+#: NEEDS WORK
+msgid "Startup Error"
+msgstr "Käivitamise viga"
+# 
+# File: usr/share/ashyterm/app.py, line: 531
+#: NEEDS WORK
+#, python-brace-format
+msgid "Application failed to start: {}"
+msgstr "Rakendus ei suutnud käivituda: {}"
+# 
+# File: usr/share/ashyterm/terminal/tabs.py, line: 237
+#: NEEDS WORK
+msgid "Detach Tab"
+msgstr "Eemalda vahekaart"
 # 
 # File: usr/share/ashyterm/filemanager/manager.py, line: 182
 # File: usr/share/ashyterm/filemanager/manager.py, line: 608
@@ -2932,20 +2385,10 @@ msgstr "Sisestage uus nimi '{name}' jaoks"
 msgid "Rename command sent to terminal"
 msgstr "Käsku ümbernimetamiseks saadetud terminalile"
 # 
-# File: usr/share/ashyterm/filemanager/operations.py, line: 113
+# File: usr/share/ashyterm/filemanager/transfer_manager.py, line: 273
 #: NEEDS WORK
-msgid "No session context for file operation."
-msgstr "Faili toimingu jaoks ei ole seansikonteksti."
-# 
-# File: usr/share/ashyterm/filemanager/operations.py, line: 146
-#: NEEDS WORK
-msgid "Command timed out."
-msgstr "Käsk aegus."
-# 
-# File: usr/share/ashyterm/filemanager/operations.py, line: 149
-#: NEEDS WORK
-msgid "Unknown session type."
-msgstr "Tundmatu seansi tüüp."
+msgid "Cancel All Transfers"
+msgstr "Tühista kõik ülekanded"
 # 
 # File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 69
 #: NEEDS WORK
@@ -2997,687 +2440,17 @@ msgstr ""
 "Seda toimingut ei saa tagasi võtta ja see eemaldab loendist kõik lõpetatud, ebaõnnestunud ja "
 "tühistatud ülekanded."
 # 
-# File: usr/share/ashyterm/filemanager/transfer_manager.py, line: 273
+# File: usr/share/ashyterm/filemanager/operations.py, line: 113
 #: NEEDS WORK
-msgid "Cancel All Transfers"
-msgstr "Tühista kõik ülekanded"
+msgid "No session context for file operation."
+msgstr "Faili toimingu jaoks ei ole seansikonteksti."
 # 
-# File: usr/share/ashyterm/utils/exceptions.py, line: 65
+# File: usr/share/ashyterm/filemanager/operations.py, line: 146
 #: NEEDS WORK
-msgid "A terminal error occurred"
-msgstr "Toimimatu viga tekkis"
+msgid "Command timed out."
+msgstr "Käsk aegus."
 # 
-# File: usr/share/ashyterm/utils/exceptions.py, line: 66
+# File: usr/share/ashyterm/filemanager/operations.py, line: 149
 #: NEEDS WORK
-msgid "A session error occurred"
-msgstr "Seansi viga tekkis"
-# 
-# File: usr/share/ashyterm/utils/exceptions.py, line: 67
-#: NEEDS WORK
-msgid "An SSH connection error occurred"
-msgstr "SSH ühenduse viga tekkis"
-# 
-# File: usr/share/ashyterm/utils/exceptions.py, line: 68
-#: NEEDS WORK
-msgid "A user interface error occurred"
-msgstr "Kasutajaliidese viga tekkis"
-# 
-# File: usr/share/ashyterm/utils/exceptions.py, line: 69
-#: NEEDS WORK
-msgid "A data storage error occurred"
-msgstr "Andmete salvestamise viga tekkis"
-# 
-# File: usr/share/ashyterm/utils/exceptions.py, line: 70
-#: NEEDS WORK
-msgid "A configuration error occurred"
-msgstr "Konfiguratsiooni viga tekkis"
-# 
-# File: usr/share/ashyterm/utils/exceptions.py, line: 71
-#: NEEDS WORK
-msgid "A permission error occurred"
-msgstr "Toimivusviga tekkis"
-# 
-# File: usr/share/ashyterm/utils/exceptions.py, line: 72
-#: NEEDS WORK
-msgid "A network error occurred"
-msgstr "Võrguviga tekkis"
-# 
-# File: usr/share/ashyterm/utils/exceptions.py, line: 73
-#: NEEDS WORK
-msgid "A system error occurred"
-msgstr "Süsteemi viga tekkis"
-# 
-# File: usr/share/ashyterm/utils/exceptions.py, line: 74
-#: NEEDS WORK
-msgid "A validation error occurred"
-msgstr "Keerukuse viga tekkis"
-# 
-# File: usr/share/ashyterm/utils/exceptions.py, line: 76
-#: NEEDS WORK
-msgid "An unexpected error occurred"
-msgstr "Ilmnen ootamatu viga tekkis"
-# 
-# File: usr/share/ashyterm/utils/exceptions.py, line: 106
-#: NEEDS WORK
-#, python-brace-format
-msgid "Failed to create {} terminal: {}"
-msgstr "Terminali loomine ebaõnnestus: {}"
-# 
-# File: usr/share/ashyterm/utils/exceptions.py, line: 109
-#: NEEDS WORK
-#, python-brace-format
-msgid "Could not create terminal. {}"
-msgstr "Terminalit ei saanud luua. {}"
-# 
-# File: usr/share/ashyterm/utils/exceptions.py, line: 117
-#: NEEDS WORK
-#, python-brace-format
-msgid "Failed to spawn process '{}': {}"
-msgstr "Eba protsessi käivitamine '{}': {}"
-# 
-# File: usr/share/ashyterm/utils/exceptions.py, line: 120
-#: NEEDS WORK
-msgid "Failed to start terminal process"
-msgstr "Terminali protsessi käivitamine ebaõnnestus"
-# 
-# File: usr/share/ashyterm/utils/exceptions.py, line: 128
-#: NEEDS WORK
-msgid "VTE library is not available or not properly installed"
-msgstr "VTE teekond ei ole saadaval või ei ole see korralikult installitud"
-# 
-# File: usr/share/ashyterm/utils/exceptions.py, line: 131
-#: NEEDS WORK
-msgid "Terminal functionality requires VTE library. Please install gir1.2-vte-2.91"
-msgstr "Terminali funktsionaalsus nõuab VTE teeki. Palun installige gir1.2-vte-2.91"
-# 
-# File: usr/share/ashyterm/utils/exceptions.py, line: 148
-#: NEEDS WORK
-#, python-brace-format
-msgid "SSH connection to '{}' failed: {}"
-msgstr "SSH-ühendus '{}' ebaõnnestus: {}"
-# 
-# File: usr/share/ashyterm/utils/exceptions.py, line: 151
-#: NEEDS WORK
-#, python-brace-format
-msgid "Could not connect to {}. {}"
-msgstr "Ei saanud ühendust {}. {}"
-# 
-# File: usr/share/ashyterm/utils/exceptions.py, line: 170
-#: NEEDS WORK
-#, python-brace-format
-msgid "SSH key error for '{}': {}"
-msgstr "SSH võtme viga '{}': {}"
-# 
-# File: usr/share/ashyterm/utils/exceptions.py, line: 173
-#: NEEDS WORK
-#, python-brace-format
-msgid "SSH key problem: {}"
-msgstr "SSH võtme probleem: {}"
-# 
-# File: usr/share/ashyterm/utils/exceptions.py, line: 201
-#: NEEDS WORK
-#, python-brace-format
-msgid "Session '{}' validation failed: {}"
-msgstr "Seansi '{}' valideerimine ebaõnnestus: {}"
-# 
-# File: usr/share/ashyterm/utils/exceptions.py, line: 204
-#: NEEDS WORK
-#, python-brace-format
-msgid "Session configuration is invalid: {}"
-msgstr "Seansi konfiguratsioon on kehtetu: {}"
-# 
-# File: usr/share/ashyterm/utils/exceptions.py, line: 232
-#: NEEDS WORK
-#, python-brace-format
-msgid "Failed to read from '{}': {}"
-msgstr "Eba lugeda '{}': {}"
-# 
-# File: usr/share/ashyterm/utils/exceptions.py, line: 235
-#: NEEDS WORK
-msgid "Could not load saved data"
-msgstr "Salvestatud andmeid ei saanud laadida"
-# 
-# File: usr/share/ashyterm/utils/exceptions.py, line: 243
-#: NEEDS WORK
-#, python-brace-format
-msgid "Failed to write to '{}': {}"
-msgstr "Eba kirjutamine '{}' ebaõnnestus: {}"
-# 
-# File: usr/share/ashyterm/utils/exceptions.py, line: 246
-#: NEEDS WORK
-msgid "Could not save data"
-msgstr "Andmeid ei saanud salvestada"
-# 
-# File: usr/share/ashyterm/utils/exceptions.py, line: 254
-#: NEEDS WORK
-#, python-brace-format
-msgid "Storage file '{}' is corrupted"
-msgstr "Salvestusfail '{}' on rikutud"
-# 
-# File: usr/share/ashyterm/utils/exceptions.py, line: 256
-#: NEEDS WORK
-#, python-brace-format
-msgid ": {}"
-msgstr "{}"
-# 
-# File: usr/share/ashyterm/utils/exceptions.py, line: 259
-#: NEEDS WORK
-msgid "Saved data appears to be corrupted"
-msgstr "Salvestatud andmed näivad olevat rikutud."
-# 
-# File: usr/share/ashyterm/utils/exceptions.py, line: 276
-#: NEEDS WORK
-#, python-brace-format
-msgid "Invalid configuration for '{}' (value: {}): {}"
-msgstr "Kehtetu konfiguratsioon '{}' jaoks (väärtus: {}): {}"
-# 
-# File: usr/share/ashyterm/main.py, line: 405
-#: NEEDS WORK
-#, python-brace-format
-msgid "Configuration error: {}"
-msgstr "Konfiguratsiooni viga: {}"
-# 
-# File: usr/share/ashyterm/utils/exceptions.py, line: 307
-#: NEEDS WORK
-#, python-brace-format
-msgid "UI error in component: {}"
-msgstr "Kasutajaliidese viga komponendis: {}"
-# 
-# File: usr/share/ashyterm/utils/exceptions.py, line: 309
-#: NEEDS WORK
-#, python-brace-format
-msgid "UI error in {}: {}"
-msgstr "Kasutajaliidese viga {}: {}"
-# 
-# File: usr/share/ashyterm/utils/exceptions.py, line: 321
-#: NEEDS WORK
-#, python-brace-format
-msgid "Dialog error ({}): {}"
-msgstr "Dialooge viga ({}): {}"
-# 
-# File: usr/share/ashyterm/utils/exceptions.py, line: 324
-#: NEEDS WORK
-#, python-brace-format
-msgid "Interface error: {}"
-msgstr "Liidese viga: {}"
-# 
-# File: usr/share/ashyterm/utils/exceptions.py, line: 368
-# File: usr/share/ashyterm/utils/exceptions.py, line: 372
-#: NEEDS WORK
-#, python-brace-format
-msgid "Validation failed for '{}': {}"
-msgstr "Kehtivuse kontroll ebaõnnestus '{}': {}"
-# 
-# File: usr/share/ashyterm/utils/exceptions.py, line: 392
-#: NEEDS WORK
-#, python-brace-format
-msgid "Invalid hostname '{}': {}"
-msgstr "Kehtetu hostinimi '{}': {}"
-# 
-# File: usr/share/ashyterm/utils/exceptions.py, line: 395
-#: NEEDS WORK
-#, python-brace-format
-msgid "Invalid hostname: {}"
-msgstr "Kehtetu hostinimi: {}"
-# 
-# File: usr/share/ashyterm/utils/exceptions.py, line: 403
-#: NEEDS WORK
-#, python-brace-format
-msgid "Invalid path '{}': {}"
-msgstr "Kehtetu tee '{}': {}"
-# 
-# File: usr/share/ashyterm/utils/exceptions.py, line: 406
-#: NEEDS WORK
-#, python-brace-format
-msgid "Invalid path: {}"
-msgstr "Kehtetu tee: {}"
-# 
-# File: usr/share/ashyterm/utils/exceptions.py, line: 423
-#: NEEDS WORK
-#, python-brace-format
-msgid "Permission denied for {} operation on '{}'"
-msgstr "Ligipääs keelatud {} toimingu jaoks '{}'"
-# 
-# File: usr/share/ashyterm/utils/exceptions.py, line: 426
-#: NEEDS WORK
-#, python-brace-format
-msgid "Permission denied accessing {}"
-msgstr "Juurdepääs keelatud {}"
-# 
-# File: usr/share/ashyterm/utils/exceptions.py, line: 434
-#: NEEDS WORK
-#, python-brace-format
-msgid "Permission denied for {} operation on directory '{}'"
-msgstr "Juurdepääs keelatud {} toimingu jaoks kataloogis '{}'"
-# 
-# File: usr/share/ashyterm/utils/exceptions.py, line: 437
-#: NEEDS WORK
-#, python-brace-format
-msgid "Permission denied accessing directory {}"
-msgstr "Ligipääs kaustale {} on keelatud."
-# 
-# File: usr/share/ashyterm/utils/__init__.py, line: 87
-# File: usr/share/ashyterm/utils/__init__.py, line: 104
-#: NEEDS WORK
-msgid "unnamed"
-msgstr "nimetu"
-# 
-# File: usr/share/ashyterm/utils/security.py, line: 302
-#: NEEDS WORK
-msgid "Key path is empty"
-msgstr "Võtme tee on tühi"
-# 
-# File: usr/share/ashyterm/utils/security.py, line: 309
-#: NEEDS WORK
-#, python-brace-format
-msgid "Key file does not exist: {}"
-msgstr "Võtmefail ei eksisteeri: {}"
-# 
-# File: usr/share/ashyterm/utils/security.py, line: 313
-#: NEEDS WORK
-#, python-brace-format
-msgid "Key path is not a file: {}"
-msgstr "Ahi tee ei ole fail: {}"
-# 
-# File: usr/share/ashyterm/utils/security.py, line: 318
-#: NEEDS WORK
-#, python-brace-format
-msgid "Key file too large: {} bytes"
-msgstr "Võtmefail on liiga suur: {} baiti"
-# 
-# File: usr/share/ashyterm/utils/security.py, line: 321
-#: NEEDS WORK
-msgid "Key file is empty"
-msgstr "Võtmefail on tühi"
-# 
-# File: usr/share/ashyterm/utils/security.py, line: 326
-#: NEEDS WORK
-msgid "Key file has insecure permissions (should be 600)"
-msgstr "Võtmefailil on ebaturvalised õigused (peaks olema 600)"
-# 
-# File: usr/share/ashyterm/utils/security.py, line: 330
-#: NEEDS WORK
-msgid "Key file is not readable"
-msgstr "Võtmefaili ei saa lugeda"
-# 
-# File: usr/share/ashyterm/utils/security.py, line: 335
-#: NEEDS WORK
-#, python-brace-format
-msgid "Error accessing key file: {}"
-msgstr "Viga võtme faili juurde pääsemisel: {}"
-# 
-# File: usr/share/ashyterm/utils/security.py, line: 349
-#: NEEDS WORK
-msgid "Key content is empty"
-msgstr "Ahi sisu on tühi"
-# 
-# File: usr/share/ashyterm/utils/security.py, line: 356
-#: NEEDS WORK
-msgid "Invalid key format (missing parts)"
-msgstr "Kehtetu vorming (puuduvad osad)"
-# 
-# File: usr/share/ashyterm/utils/security.py, line: 363
-#: NEEDS WORK
-#, python-brace-format
-msgid "Unsupported key type: {}"
-msgstr "Toetamata võtme tüüp: {}"
-# 
-# File: usr/share/ashyterm/utils/security.py, line: 370
-#: NEEDS WORK
-msgid "Key data appears to be too short"
-msgstr "Võtmeandmed näivad olevat liiga lühikesed"
-# 
-# File: usr/share/ashyterm/utils/security.py, line: 372
-#: NEEDS WORK
-msgid "Invalid base64 encoding in key data"
-msgstr "Valevatu base64 kodeerimine võtmeandmetes"
-# 
-# File: usr/share/ashyterm/utils/security.py, line: 377
-#: NEEDS WORK
-#, python-brace-format
-msgid "Error validating key content: {}"
-msgstr "Viga võtme sisu valideerimisel: {}"
-# 
-# File: usr/share/ashyterm/utils/security.py, line: 464
-#: NEEDS WORK
-msgid "File does not exist"
-msgstr "Faili ei eksisteeri"
-# 
-# File: usr/share/ashyterm/utils/security.py, line: 471
-#: NEEDS WORK
-#, python-brace-format
-msgid "Incorrect permissions: {} (expected {})"
-msgstr "Vale õigused: {} (oodatud {})"
-# 
-# File: usr/share/ashyterm/utils/security.py, line: 475
-#: NEEDS WORK
-msgid "File has overly permissive permissions"
-msgstr "Failil on liiga avatud õigused"
-# 
-# File: usr/share/ashyterm/utils/security.py, line: 480
-#: NEEDS WORK
-#, python-brace-format
-msgid "Error checking file permissions: {}"
-msgstr "Viga faili õiguste kontrollimisel: {}"
-# 
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
-# 
-# File: usr/share/ashyterm/utils/security.py, line: 508
-# File: usr/share/ashyterm/utils/security.py, line: 796
-# File: usr/share/ashyterm/utils.py, line: 449
-#: NEEDS WORK
-#, python-brace-format
-msgid "Invalid hostname format: {}"
-msgstr "Kehtetu hostinime formaat: {}"
-# 
-# File: usr/share/ashyterm/utils/security.py, line: 509
-#: NEEDS WORK
-msgid "Use a valid hostname or IP address"
-msgstr "Kasutage kehtivat hostinime või IP-aadressi"
-# 
-# File: usr/share/ashyterm/utils/security.py, line: 519
-#: NEEDS WORK
-#, python-brace-format
-msgid "Connecting to private IP: {}"
-msgstr "Ühendamine privaatse IP-ga: {}"
-# 
-# File: usr/share/ashyterm/utils/security.py, line: 520
-#: NEEDS WORK
-msgid "Ensure this is intentional"
-msgstr "Veenduge, et see on tahtlik."
-# 
-# File: usr/share/ashyterm/utils/security.py, line: 534
-# File: usr/share/ashyterm/utils/security.py, line: 827
-#: NEEDS WORK
-#, python-brace-format
-msgid "SSH key validation failed: {}"
-msgstr "SSH võtme valideerimine ebaõnnestus: {}"
-# 
-# File: usr/share/ashyterm/utils/security.py, line: 535
-#: NEEDS WORK
-msgid "Fix SSH key configuration"
-msgstr "Paranda SSH võtme konfiguratsioon"
-# 
-# File: usr/share/ashyterm/utils/security.py, line: 541
-#: NEEDS WORK
-msgid "Using password authentication"
-msgstr "Parooli autentimise kasutamine"
-# 
-# File: usr/share/ashyterm/utils/security.py, line: 542
-#: NEEDS WORK
-msgid "Consider using SSH key authentication for better security"
-msgstr "Kaalu SSH võtme autentimise kasutamist parema turvalisuse tagamiseks."
-# 
-# File: usr/share/ashyterm/utils/security.py, line: 551
-#: NEEDS WORK
-msgid "Connecting as root user"
-msgstr "Ühendamine juurkasutajana"
-# 
-# File: usr/share/ashyterm/utils/security.py, line: 552
-#: NEEDS WORK
-msgid "Use a regular user account when possible"
-msgstr "Kasutage võimalusel tavalist kasutajakontot"
-# 
-# File: usr/share/ashyterm/utils/security.py, line: 576
-#: NEEDS WORK
-#, python-brace-format
-msgid "File does not exist: {}"
-msgstr "Faili ei eksisteeri: {}"
-# 
-# File: usr/share/ashyterm/utils/security.py, line: 577
-#: NEEDS WORK
-msgid "Verify file path"
-msgstr "Kontrolli faili teed"
-# 
-# File: usr/share/ashyterm/utils/security.py, line: 588
-#: NEEDS WORK
-msgid "Set secure file permissions (600 for files, 700 for directories)"
-msgstr "Seadke turvalised faili õigused (600 failide jaoks, 700 kataloogide jaoks)"
-# 
-# File: usr/share/ashyterm/utils/security.py, line: 600
-#: NEEDS WORK
-#, python-brace-format
-msgid "File is owned by different user: {}"
-msgstr "Fail on erineva kasutaja omandis: {}"
-# 
-# File: usr/share/ashyterm/utils/security.py, line: 601
-#: NEEDS WORK
-msgid "Ensure file ownership is correct"
-msgstr "Veenduge, et faili omandiõigus on õige."
-# 
-# File: usr/share/ashyterm/utils/security.py, line: 608
-#: NEEDS WORK
-#, python-brace-format
-msgid "Error auditing file: {}"
-msgstr "Viga auditeerimise fail: {}"
-# 
-# File: usr/share/ashyterm/utils/security.py, line: 609
-#: NEEDS WORK
-msgid "Check file accessibility"
-msgstr "Kontrolli faili ligipääsetavust"
-# 
-# File: usr/share/ashyterm/utils/security.py, line: 633
-#: NEEDS WORK
-#, python-brace-format
-msgid "Directory does not exist: {}"
-msgstr "Kataloog ei eksisteeri: {}"
-# 
-# File: usr/share/ashyterm/utils/security.py, line: 634
-#: NEEDS WORK
-msgid "Create directory with secure permissions"
-msgstr "Loo kaust turvaliste õigustega"
-# 
-# File: usr/share/ashyterm/utils/security.py, line: 642
-#: NEEDS WORK
-#, python-brace-format
-msgid "Path is not a directory: {}"
-msgstr "Teekond ei ole kataloog: {}"
-# 
-# File: usr/share/ashyterm/utils/security.py, line: 643
-#: NEEDS WORK
-msgid "Use a valid directory path"
-msgstr "Kasutage kehtivat katalooge teed"
-# 
-# File: usr/share/ashyterm/utils/security.py, line: 655
-#: NEEDS WORK
-#, python-brace-format
-msgid "Directory has overly permissive permissions: {}"
-msgstr "Kataloogil on liiga leebed õigused: {}"
-# 
-# File: usr/share/ashyterm/utils/security.py, line: 656
-#: NEEDS WORK
-msgid "Set directory permissions to 700"
-msgstr "Sead directory õigused 700-ks"
-# 
-# File: usr/share/ashyterm/utils/security.py, line: 663
-#: NEEDS WORK
-#, python-brace-format
-msgid "Error auditing directory: {}"
-msgstr "Viga auditeerimise kataloog: {}"
-# 
-# File: usr/share/ashyterm/utils/security.py, line: 664
-#: NEEDS WORK
-msgid "Check directory accessibility"
-msgstr "Kontrolli katalooge juurdepääsu"
-# 
-# File: usr/share/ashyterm/utils/security.py, line: 692
-#: NEEDS WORK
-msgid "Hostname cannot be empty"
-msgstr "Hostname ei saa olla tühi"
-# 
-# File: usr/share/ashyterm/utils/security.py, line: 696
-#: NEEDS WORK
-msgid "Invalid hostname format"
-msgstr "Kehtetu hostinime formaat"
-# 
-# File: usr/share/ashyterm/utils/security.py, line: 711
-#: NEEDS WORK
-msgid "Unknown validation error"
-msgstr "Tundmatu valideerimisviga"
-# 
-# File: usr/share/ashyterm/utils/security.py, line: 726
-#: NEEDS WORK
-msgid "Path contains unsafe elements"
-msgstr "Teel sisaldab ohtlikke elemente"
-# 
-# File: usr/share/ashyterm/utils/security.py, line: 744
-# File: usr/share/ashyterm/utils/security.py, line: 762
-#: NEEDS WORK
-msgid "set secure permissions"
-msgstr "sead turvalised õigused"
-# 
-# File: usr/share/ashyterm/utils/security.py, line: 788
-#: NEEDS WORK
-#, python-brace-format
-msgid "Session name too long (max {} characters)"
-msgstr "Seansi nimi on liiga pikk (max {} tähemärki)"
-# 
-# File: usr/share/ashyterm/utils/security.py, line: 794
-#: NEEDS WORK
-msgid "Hostname cannot be empty for SSH sessions"
-msgstr "Hostname ei saa SSH seansside jaoks tühi olla"
-# 
-# File: usr/share/ashyterm/utils/security.py, line: 801
-#: NEEDS WORK
-msgid "Username is required for SSH sessions"
-msgstr "Kasutajanimi on vajalik SSH seansside jaoks"
-# 
-# File: usr/share/ashyterm/utils/security.py, line: 803
-#: NEEDS WORK
-#, python-brace-format
-msgid "Username too long (max {} characters)"
-msgstr "Kasutajanimi on liiga pikk (max {} tähemärki)"
-# 
-# File: usr/share/ashyterm/utils/security.py, line: 822
-#: NEEDS WORK
-msgid "SSH key file path is required for key authentication"
-msgstr "SSH võtmefaili tee on vajalik võtme autentimiseks"
-# 
-# File: usr/share/ashyterm/utils/security.py, line: 832
-#: NEEDS WORK
-#, python-brace-format
-msgid "Invalid authentication type: {}"
-msgstr "Kehtetu autentimisviis: {}"
-# 
-# File: usr/share/ashyterm/utils/security.py, line: 838
-#: NEEDS WORK
-msgid "Invalid or unsafe folder path"
-msgstr "Kehtetu või ohtlik kaustatee"
-# 
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
-# 
-# File: usr/share/ashyterm/utils/security.py, line: 843
-# File: usr/share/ashyterm/utils.py, line: 442
-#: NEEDS WORK
-#, python-brace-format
-msgid "Invalid session type: {}"
-msgstr "Kehtetu seansi tüüp: {}"
-# 
-# File: usr/share/ashyterm/utils/security.py, line: 850
-#: NEEDS WORK
-#, python-brace-format
-msgid "Validation error: {}"
-msgstr "Keeramisviga: {}"
-# 
-# File: usr/share/ashyterm/utils/security.py, line: 881
-#: NEEDS WORK
-#, python-brace-format
-msgid "Security: {}"
-msgstr "Turvalisus: {}"
-# 
-# File: usr/share/ashyterm/utils/security.py, line: 888
-#: NEEDS WORK
-#, python-brace-format
-msgid "Security validation error: {}"
-msgstr "Turvalisuse valideerimise viga: {}"
-# 
-# File: usr/share/ashyterm/utils.py, line: 510
-#: NEEDS WORK
-msgid "unknown"
-msgstr "tundmatu"
-# 
-# File: usr/share/ashyterm/utils.py, line: 539
-#: NEEDS WORK
-msgid "Global error handling configured"
-msgstr "Globaalne veahaldus on konfigureeritud"
-# 
-# File: usr/share/ashyterm/utils.py, line: 601
-#: NEEDS WORK
-#, python-brace-format
-msgid "Utils module initialized on {} platform"
-msgstr "Utils moodul on initsialiseeritud platvormil {}"
-# 
-# File: usr/share/ashyterm/utils.py, line: 605
-#: NEEDS WORK
-msgid "SSH command not found - SSH functionality will be limited"
-msgstr "SSH käsku ei leitud - SSH funktsionaalsus on piiratud"
-# 
-# File: usr/share/ashyterm/utils.py, line: 621
-#: NEEDS WORK
-#, python-brace-format
-msgid "Warning: Utils module initialization failed: {}"
-msgstr "Hoiatus: Utils mooduli initsialiseerimine ebaõnnestus: {}"
-# 
-# File: usr/share/ashyterm/main.py, line: 86
-#: NEEDS WORK
-#, python-brace-format
-msgid ""
-"\n"
-"Received signal {}, shutting down gracefully..."
-msgstr "Saadi signaal {}, sulgedes sujuvalt alla..."
-# 
-# File: usr/share/ashyterm/main.py, line: 97
-#: NEEDS WORK
-#, python-brace-format
-msgid "Warning: Could not set up signal handlers: {}"
-msgstr "Hoiatus: Signaalide käitlejate seadistamine ebaõnnestus: {}"
-# 
-# File: usr/share/ashyterm/main.py, line: 109
-#: NEEDS WORK
-msgid "Ashy Terminal - A modern terminal emulator with session management"
-msgstr "Ashy Terminal - Kaasaegne terminali emulaator sessioonihaldusega"
-# 
-# File: usr/share/ashyterm/main.py, line: 110
-#: NEEDS WORK
-msgid "For more information, visit: https://communitybig.org/"
-msgstr "Rohkem teabe saamiseks külastage: https://communitybig.org/"
-# 
-# File: usr/share/ashyterm/main.py, line: 73
-#: NEEDS WORK
-msgid "Enable debug mode"
-msgstr "Luba debug-režiim"
-# 
-# File: usr/share/ashyterm/main.py, line: 79
-#: NEEDS WORK
-msgid "Set logging level"
-msgstr "Seadke logimise tase"
-# 
-# File: usr/share/ashyterm/main.py, line: 84
-#: NEEDS WORK
-msgid "Set the working directory for the initial terminal"
-msgstr "Seadke algterminali töökaust."
-# 
-# File: usr/share/ashyterm/main.py, line: 92
-#: NEEDS WORK
-msgid "Working directory (positional argument)"
-msgstr "Töökataloog (positsiooniline argument)"
-# 
-# File: usr/share/ashyterm/main.py, line: 105
-#: NEEDS WORK
-msgid "Execute command in the terminal"
-msgstr "Käsku täitma terminalis"
-# 
-# File: usr/share/ashyterm/main.py, line: 110
-#: NEEDS WORK
-msgid "Close terminal after executing command (only with --execute)"
-msgstr "Sulge terminal pärast käsu täitmist (ainult --execute puhul)"
-# 
-# File: usr/share/ashyterm/main.py, line: 115
-#: NEEDS WORK
-msgid "Connect to SSH host with optional user, port, and remote path"
-msgstr "Ühenda SSH hostiga valikulise kasutaja, pordi ja kaugteega"
-# 
-# File: usr/share/ashyterm/main.py, line: 119
-#: NEEDS WORK
-msgid "Convert KIO/GVFS URI path to SSH format"
-msgstr "Muuda KIO/GVFS URI tee SSH formaati"
+msgid "Unknown session type."
+msgstr "Tundmatu seansi tüüp."

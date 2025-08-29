@@ -45,11 +45,608 @@ msgstr "Otvorite lokalnu točku montiranja {}"
 msgid "Open {} in Ashy Terminal"
 msgstr "Otvorite {} u Ashy Terminalu"
 # 
-# File: usr/share/ashyterm/sessions/storage.py, line: 78
+# File: usr/share/ashyterm/utils/exceptions.py, line: 65
+#: NEEDS WORK
+msgid "A terminal error occurred"
+msgstr "Došlo je do terminalne pogreške"
+# 
+# File: usr/share/ashyterm/utils/exceptions.py, line: 66
+#: NEEDS WORK
+msgid "A session error occurred"
+msgstr "Došlo je do pogreške u sesiji"
+# 
+# File: usr/share/ashyterm/utils/exceptions.py, line: 67
+#: NEEDS WORK
+msgid "An SSH connection error occurred"
+msgstr "Došlo je do pogreške u SSH vezi."
+# 
+# File: usr/share/ashyterm/utils/exceptions.py, line: 68
+#: NEEDS WORK
+msgid "A user interface error occurred"
+msgstr "Došlo je do pogreške u korisničkom sučelju."
+# 
+# File: usr/share/ashyterm/utils/exceptions.py, line: 69
+#: NEEDS WORK
+msgid "A data storage error occurred"
+msgstr "Došlo je do pogreške u pohrani podataka"
+# 
+# File: usr/share/ashyterm/utils/exceptions.py, line: 70
+#: NEEDS WORK
+msgid "A configuration error occurred"
+msgstr "Došlo je do pogreške u konfiguraciji"
+# 
+# File: usr/share/ashyterm/utils/exceptions.py, line: 71
+#: NEEDS WORK
+msgid "A permission error occurred"
+msgstr "Došlo je do pogreške u dozvolama"
+# 
+# File: usr/share/ashyterm/utils/exceptions.py, line: 72
+#: NEEDS WORK
+msgid "A network error occurred"
+msgstr "Došlo je do mrežne pogreške"
+# 
+# File: usr/share/ashyterm/utils/exceptions.py, line: 73
+#: NEEDS WORK
+msgid "A system error occurred"
+msgstr "Došlo je do sistemske pogreške"
+# 
+# File: usr/share/ashyterm/utils/exceptions.py, line: 74
+#: NEEDS WORK
+msgid "A validation error occurred"
+msgstr "Došlo je do pogreške pri validaciji"
+# 
+# File: usr/share/ashyterm/utils/exceptions.py, line: 76
+#: NEEDS WORK
+msgid "An unexpected error occurred"
+msgstr "Došlo je do neočekivane pogreške."
+# 
+# File: usr/share/ashyterm/utils/exceptions.py, line: 106
 #: NEEDS WORK
 #, python-brace-format
-msgid "Failed to create config directory: {}"
-msgstr "Nije moguće stvoriti direktorij konfiguracije: {}"
+msgid "Failed to create {} terminal: {}"
+msgstr "Nije moguće stvoriti {} terminal: {}"
+# 
+# File: usr/share/ashyterm/utils/exceptions.py, line: 109
+#: NEEDS WORK
+#, python-brace-format
+msgid "Could not create terminal. {}"
+msgstr "Nije moguće stvoriti terminal. {}"
+# 
+# File: usr/share/ashyterm/utils/exceptions.py, line: 128
+#: NEEDS WORK
+msgid "VTE library is not available or not properly installed"
+msgstr "VTE knjižnica nije dostupna ili nije ispravno instalirana"
+# 
+# File: usr/share/ashyterm/utils/exceptions.py, line: 131
+#: NEEDS WORK
+msgid "Terminal functionality requires VTE library. Please install gir1.2-vte-2.91"
+msgstr "Funkcionalnost terminala zahtijeva VTE biblioteku. Molimo instalirajte gir1.2-vte-2.91."
+# 
+# File: usr/share/ashyterm/utils/exceptions.py, line: 148
+#: NEEDS WORK
+#, python-brace-format
+msgid "SSH connection to '{}' failed: {}"
+msgstr "SSH veza na '{}' nije uspjela: {}"
+# 
+# File: usr/share/ashyterm/utils/exceptions.py, line: 151
+#: NEEDS WORK
+#, python-brace-format
+msgid "Could not connect to {}. {}"
+msgstr "Nije se moglo povezati s {}. {}"
+# 
+# File: usr/share/ashyterm/utils/exceptions.py, line: 170
+#: NEEDS WORK
+#, python-brace-format
+msgid "SSH key error for '{}': {}"
+msgstr "Greška SSH ključa za '{}': {}"
+# 
+# File: usr/share/ashyterm/utils/exceptions.py, line: 173
+#: NEEDS WORK
+#, python-brace-format
+msgid "SSH key problem: {}"
+msgstr "Problem s SSH ključem: {}"
+# 
+# File: usr/share/ashyterm/utils/exceptions.py, line: 201
+#: NEEDS WORK
+#, python-brace-format
+msgid "Session '{}' validation failed: {}"
+msgstr "Validacija sesije '{}' nije uspjela: {}"
+# 
+# File: usr/share/ashyterm/utils/exceptions.py, line: 204
+#: NEEDS WORK
+#, python-brace-format
+msgid "Session configuration is invalid: {}"
+msgstr "Konfiguracija sesije je nevažeća: {}"
+# 
+# File: usr/share/ashyterm/utils/exceptions.py, line: 232
+#: NEEDS WORK
+#, python-brace-format
+msgid "Failed to read from '{}': {}"
+msgstr "Neuspjelo čitanje iz '{}': {}"
+# 
+# File: usr/share/ashyterm/utils/exceptions.py, line: 235
+#: NEEDS WORK
+msgid "Could not load saved data"
+msgstr "Nije moguće učitati spremljene podatke"
+# 
+# File: usr/share/ashyterm/utils/exceptions.py, line: 243
+#: NEEDS WORK
+#, python-brace-format
+msgid "Failed to write to '{}': {}"
+msgstr "Neuspješno pisanje u '{}': {}"
+# 
+# File: usr/share/ashyterm/utils/exceptions.py, line: 246
+#: NEEDS WORK
+msgid "Could not save data"
+msgstr "Nije moguće spremiti podatke"
+# 
+# File: usr/share/ashyterm/utils/exceptions.py, line: 254
+#: NEEDS WORK
+#, python-brace-format
+msgid "Storage file '{}' is corrupted"
+msgstr "Datoteka za pohranu '{}' je oštećena."
+# 
+# File: usr/share/ashyterm/utils/exceptions.py, line: 256
+#: NEEDS WORK
+#, python-brace-format
+msgid ": {}"
+msgstr "ključ"
+# 
+# File: usr/share/ashyterm/utils/exceptions.py, line: 259
+#: NEEDS WORK
+msgid "Saved data appears to be corrupted"
+msgstr "Spremeljeni podaci čine se oštećenima."
+# 
+# File: usr/share/ashyterm/utils/exceptions.py, line: 276
+#: NEEDS WORK
+#, python-brace-format
+msgid "Invalid configuration for '{}' (value: {}): {}"
+msgstr "Nevažeća konfiguracija za '{}' (vrijednost: {}): {}"
+# 
+# File: usr/share/ashyterm/main.py, line: 405
+#: NEEDS WORK
+#, python-brace-format
+msgid "Configuration error: {}"
+msgstr "Pogreška u konfiguraciji: {}"
+# 
+# File: usr/share/ashyterm/utils/exceptions.py, line: 309
+#: NEEDS WORK
+#, python-brace-format
+msgid "UI error in {}: {}"
+msgstr "UI greška u {}: {}"
+# 
+# File: usr/share/ashyterm/utils/exceptions.py, line: 307
+#: NEEDS WORK
+#, python-brace-format
+msgid "UI error in component: {}"
+msgstr "UI greška u komponenti: {}"
+# 
+# File: usr/share/ashyterm/utils/exceptions.py, line: 321
+#: NEEDS WORK
+#, python-brace-format
+msgid "Dialog error ({}): {}"
+msgstr "Pogreška dijaloga ({}): {}"
+# 
+# File: usr/share/ashyterm/utils/exceptions.py, line: 324
+#: NEEDS WORK
+#, python-brace-format
+msgid "Interface error: {}"
+msgstr "Greška u sučelju: {}"
+# 
+# File: usr/share/ashyterm/utils/exceptions.py, line: 368
+# File: usr/share/ashyterm/utils/exceptions.py, line: 372
+#: NEEDS WORK
+#, python-brace-format
+msgid "Validation failed for '{}': {}"
+msgstr "Validacija nije uspjela za '{}': {}"
+# 
+# File: usr/share/ashyterm/utils/exceptions.py, line: 392
+#: NEEDS WORK
+#, python-brace-format
+msgid "Invalid hostname '{}': {}"
+msgstr "Nevažeći naziv hosta '{}': {}"
+# 
+# File: usr/share/ashyterm/utils/exceptions.py, line: 395
+#: NEEDS WORK
+#, python-brace-format
+msgid "Invalid hostname: {}"
+msgstr "Nevažeći naziv hosta: {}"
+# 
+# File: usr/share/ashyterm/utils/exceptions.py, line: 403
+#: NEEDS WORK
+#, python-brace-format
+msgid "Invalid path '{}': {}"
+msgstr "Nevažeća putanja '{}': {}"
+# 
+# File: usr/share/ashyterm/utils/exceptions.py, line: 406
+#: NEEDS WORK
+#, python-brace-format
+msgid "Invalid path: {}"
+msgstr "Nevažeća putanja: {}"
+# 
+# File: usr/share/ashyterm/utils/exceptions.py, line: 423
+#: NEEDS WORK
+#, python-brace-format
+msgid "Permission denied for {} operation on '{}'"
+msgstr "Odbijena dozvola za {} operaciju na '{}'"
+# 
+# File: usr/share/ashyterm/utils/exceptions.py, line: 426
+#: NEEDS WORK
+#, python-brace-format
+msgid "Permission denied accessing {}"
+msgstr "Pristup odbijen za {}"
+# 
+# File: usr/share/ashyterm/utils/exceptions.py, line: 434
+#: NEEDS WORK
+#, python-brace-format
+msgid "Permission denied for {} operation on directory '{}'"
+msgstr "Odbijena dozvola za {} operaciju na direktoriju '{}'"
+# 
+# File: usr/share/ashyterm/utils/exceptions.py, line: 437
+#: NEEDS WORK
+#, python-brace-format
+msgid "Permission denied accessing directory {}"
+msgstr "Pristup direktoriju {} je odbijen."
+# 
+# File: usr/share/ashyterm/utils/__init__.py, line: 87
+# File: usr/share/ashyterm/utils/__init__.py, line: 104
+#: NEEDS WORK
+msgid "unnamed"
+msgstr "neimenovan"
+# 
+# File: usr/share/ashyterm/utils/security.py, line: 302
+#: NEEDS WORK
+msgid "Key path is empty"
+msgstr "Putanja ključa je prazna"
+# 
+# File: usr/share/ashyterm/utils/security.py, line: 309
+#: NEEDS WORK
+#, python-brace-format
+msgid "Key file does not exist: {}"
+msgstr "Datoteka s ključem ne postoji: {}"
+# 
+# File: usr/share/ashyterm/utils/security.py, line: 313
+#: NEEDS WORK
+#, python-brace-format
+msgid "Key path is not a file: {}"
+msgstr "Putanja ključa nije datoteka: {}"
+# 
+# File: usr/share/ashyterm/utils/security.py, line: 318
+#: NEEDS WORK
+#, python-brace-format
+msgid "Key file too large: {} bytes"
+msgstr "Datoteka ključa je prevelika: {} bajtova"
+# 
+# File: usr/share/ashyterm/utils/security.py, line: 321
+#: NEEDS WORK
+msgid "Key file is empty"
+msgstr "Datoteka ključa je prazna"
+# 
+# File: usr/share/ashyterm/utils/security.py, line: 326
+#: NEEDS WORK
+msgid "Key file has insecure permissions (should be 600)"
+msgstr "Datoteka ključa ima nesigurne dozvole (trebala bi biti 600)"
+# 
+# File: usr/share/ashyterm/utils/security.py, line: 330
+#: NEEDS WORK
+msgid "Key file is not readable"
+msgstr "Datoteka ključa nije čitljiva"
+# 
+# File: usr/share/ashyterm/utils/security.py, line: 335
+#: NEEDS WORK
+#, python-brace-format
+msgid "Error accessing key file: {}"
+msgstr "Greška prilikom pristupa datoteci ključa: {}"
+# 
+# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
+# 
+# File: usr/share/ashyterm/utils/security.py, line: 508
+# File: usr/share/ashyterm/utils/security.py, line: 796
+# File: usr/share/ashyterm/utils.py, line: 449
+#: NEEDS WORK
+#, python-brace-format
+msgid "Invalid hostname format: {}"
+msgstr "Neispravan format imena domaćina: {}"
+# 
+# File: usr/share/ashyterm/utils/security.py, line: 509
+#: NEEDS WORK
+msgid "Use a valid hostname or IP address"
+msgstr "Koristite valjani naziv hosta ili IP adresu"
+# 
+# File: usr/share/ashyterm/utils/security.py, line: 519
+#: NEEDS WORK
+#, python-brace-format
+msgid "Connecting to private IP: {}"
+msgstr "Povezivanje na privatnu IP adresu: {}"
+# 
+# File: usr/share/ashyterm/utils/security.py, line: 520
+#: NEEDS WORK
+msgid "Ensure this is intentional"
+msgstr "Osigurajte da je to namjerno"
+# 
+# File: usr/share/ashyterm/utils/security.py, line: 534
+# File: usr/share/ashyterm/utils/security.py, line: 827
+#: NEEDS WORK
+#, python-brace-format
+msgid "SSH key validation failed: {}"
+msgstr "Provjera SSH ključa nije uspjela: {}"
+# 
+# File: usr/share/ashyterm/utils/security.py, line: 535
+#: NEEDS WORK
+msgid "Fix SSH key configuration"
+msgstr "Ispravi konfiguraciju SSH ključa"
+# 
+# File: usr/share/ashyterm/utils/security.py, line: 541
+#: NEEDS WORK
+msgid "Using password authentication"
+msgstr "Korištenje autentifikacije lozinkom"
+# 
+# File: usr/share/ashyterm/utils/security.py, line: 542
+#: NEEDS WORK
+msgid "Consider using SSH key authentication for better security"
+msgstr "Razmotrite korištenje SSH ključeva za autentifikaciju radi bolje sigurnosti"
+# 
+# File: usr/share/ashyterm/utils/security.py, line: 551
+#: NEEDS WORK
+msgid "Connecting as root user"
+msgstr "Povezivanje kao root korisnik"
+# 
+# File: usr/share/ashyterm/utils/security.py, line: 552
+#: NEEDS WORK
+msgid "Use a regular user account when possible"
+msgstr "Koristite redoviti korisnički račun kada je to moguće"
+# 
+# File: usr/share/ashyterm/utils/security.py, line: 692
+#: NEEDS WORK
+msgid "Hostname cannot be empty"
+msgstr "Hostname ne može biti prazan"
+# 
+# File: usr/share/ashyterm/utils/security.py, line: 696
+#: NEEDS WORK
+msgid "Invalid hostname format"
+msgstr "Neispravan format imena domaćina"
+# 
+# File: usr/share/ashyterm/utils/security.py, line: 711
+#: NEEDS WORK
+msgid "Unknown validation error"
+msgstr "Nepoznata greška pri validaciji"
+# 
+# File: usr/share/ashyterm/utils/security.py, line: 726
+#: NEEDS WORK
+msgid "Path contains unsafe elements"
+msgstr "Putanja sadrži nesigurne elemente"
+# 
+# File: usr/share/ashyterm/utils/security.py, line: 744
+# File: usr/share/ashyterm/utils/security.py, line: 762
+#: NEEDS WORK
+msgid "set secure permissions"
+msgstr "postavi sigurne dozvole"
+# 
+# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
+# 
+# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
+# 
+# File: usr/share/ashyterm/utils/security.py, line: 786
+# File: usr/share/ashyterm/utils.py, line: 438
+# File: usr/share/ashyterm/sessions/models.py, line: 89
+#: NEEDS WORK
+msgid "Session name cannot be empty"
+msgstr "Naziv sesije ne može biti prazan"
+# 
+# File: usr/share/ashyterm/utils/security.py, line: 788
+#: NEEDS WORK
+#, python-brace-format
+msgid "Session name too long (max {} characters)"
+msgstr "Ime sesije je predugo (maks. {} znakova)"
+# 
+# File: usr/share/ashyterm/utils/security.py, line: 794
+#: NEEDS WORK
+msgid "Hostname cannot be empty for SSH sessions"
+msgstr "Hostname ne može biti prazan za SSH sesije"
+# 
+# File: usr/share/ashyterm/utils/security.py, line: 801
+#: NEEDS WORK
+msgid "Username is required for SSH sessions"
+msgstr "Korisničko ime je obavezno za SSH sesije"
+# 
+# File: usr/share/ashyterm/utils/security.py, line: 803
+#: NEEDS WORK
+#, python-brace-format
+msgid "Username too long (max {} characters)"
+msgstr "Korisničko ime je predugačko (maks. {} znakova)"
+# 
+# File: usr/share/ashyterm/utils/security.py, line: 811
+#: NEEDS WORK
+msgid "Port must be between 1 and 65535"
+msgstr "Port mora biti između 1 i 65535"
+# 
+# File: usr/share/ashyterm/utils/security.py, line: 813
+#: NEEDS WORK
+msgid "Port must be a valid number"
+msgstr "Port mora biti valjani broj"
+# 
+# File: usr/share/ashyterm/utils/security.py, line: 822
+#: NEEDS WORK
+msgid "SSH key file path is required for key authentication"
+msgstr "Putanja do SSH ključa je obavezna za autentifikaciju ključa."
+# 
+# File: usr/share/ashyterm/utils/security.py, line: 832
+#: NEEDS WORK
+#, python-brace-format
+msgid "Invalid authentication type: {}"
+msgstr "Nevažeća vrsta autentifikacije: {}"
+# 
+# File: usr/share/ashyterm/utils/security.py, line: 838
+#: NEEDS WORK
+msgid "Invalid or unsafe folder path"
+msgstr "Nevažeća ili nesigurna putanja mape"
+# 
+# File: usr/share/ashyterm/utils/security.py, line: 850
+#: NEEDS WORK
+#, python-brace-format
+msgid "Validation error: {}"
+msgstr "Pogreška pri validaciji: {}"
+# 
+# File: usr/share/ashyterm/main.py, line: 86
+#: NEEDS WORK
+#, python-brace-format
+msgid ""
+"\n"
+"Received signal {}, shutting down gracefully..."
+msgstr "Primljen signal {}, isključivanje na siguran način..."
+# 
+# File: usr/share/ashyterm/main.py, line: 97
+#: NEEDS WORK
+#, python-brace-format
+msgid "Warning: Could not set up signal handlers: {}"
+msgstr "Upozorenje: Nije moguće postaviti rukovatelje signala: {}"
+# 
+# File: usr/share/ashyterm/main.py, line: 109
+#: NEEDS WORK
+msgid "Ashy Terminal - A modern terminal emulator with session management"
+msgstr "Ashy Terminal - Moderni emulator terminala s upravljanjem sesijama"
+# 
+# File: usr/share/ashyterm/main.py, line: 110
+#: NEEDS WORK
+msgid "For more information, visit: https://communitybig.org/"
+msgstr "Za više informacija, posjetite: https://communitybig.org/"
+# 
+# File: usr/share/ashyterm/main.py, line: 73
+#: NEEDS WORK
+msgid "Enable debug mode"
+msgstr "Omogući način rada za otklanjanje pogrešaka"
+# 
+# File: usr/share/ashyterm/main.py, line: 79
+#: NEEDS WORK
+msgid "Set logging level"
+msgstr "Postavi razinu zapisivanja"
+# 
+# File: usr/share/ashyterm/main.py, line: 84
+#: NEEDS WORK
+msgid "Set the working directory for the initial terminal"
+msgstr "Postavite radni direktorij za inicijalni terminal"
+# 
+# File: usr/share/ashyterm/main.py, line: 92
+#: NEEDS WORK
+msgid "Working directory (positional argument)"
+msgstr "Radni direktorij (pozicijski argument)"
+# 
+# File: usr/share/ashyterm/main.py, line: 105
+#: NEEDS WORK
+msgid "Execute command in the terminal"
+msgstr "Izvrši naredbu u terminalu"
+# 
+# File: usr/share/ashyterm/main.py, line: 110
+#: NEEDS WORK
+msgid "Close terminal after executing command (only with --execute)"
+msgstr "Zatvori terminal nakon izvršavanja naredbe (samo s --execute)"
+# 
+# File: usr/share/ashyterm/main.py, line: 115
+#: NEEDS WORK
+msgid "Connect to SSH host with optional user, port, and remote path"
+msgstr "Poveži se na SSH poslužitelj s opcionalnim korisnikom, portom i udaljenom putanjom"
+# 
+# File: usr/share/ashyterm/main.py, line: 119
+#: NEEDS WORK
+msgid "Convert KIO/GVFS URI path to SSH format"
+msgstr "Pretvori KIO/GVFS URI putanju u SSH format"
+# 
+# File: usr/share/ashyterm/sessions/models.py, line: 174
+#: NEEDS WORK
+msgid "Port must be a valid number between 1 and 65535"
+msgstr "Port mora biti valjani broj između 1 i 65535"
+# 
+# File: usr/share/ashyterm/sessions/models.py, line: 198
+#: NEEDS WORK
+msgid "Session name is required."
+msgstr "Naziv sesije je obavezan."
+# 
+# File: usr/share/ashyterm/sessions/models.py, line: 201
+#: NEEDS WORK
+msgid "Host is required for SSH sessions."
+msgstr "Host je obavezan za SSH sesije."
+# 
+# File: usr/share/ashyterm/sessions/models.py, line: 203
+#: NEEDS WORK
+msgid "Port must be between 1 and 65535."
+msgstr "Port mora biti između 1 i 65535."
+# 
+# File: usr/share/ashyterm/sessions/models.py, line: 386
+# File: usr/share/ashyterm/sessions/models.py, line: 419
+#: NEEDS WORK
+msgid "Unnamed Session"
+msgstr "Nepoznata sesija"
+# 
+# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 406
+# File: usr/share/ashyterm/sessions/models.py, line: 511
+#: NEEDS WORK
+msgid "Local Terminal"
+msgstr "Lokalni terminal"
+# 
+# File: usr/share/ashyterm/sessions/models.py, line: 346
+#: NEEDS WORK
+msgid "Folder name is required."
+msgstr "Naziv mape je obavezan."
+# 
+# File: usr/share/ashyterm/sessions/models.py, line: 352
+#: NEEDS WORK
+msgid "Folder path is not consistent with its parent path."
+msgstr "Putanja mape nije dosljedna s putanjom roditelja."
+# 
+# File: usr/share/ashyterm/sessions/models.py, line: 727
+# File: usr/share/ashyterm/sessions/models.py, line: 752
+#: NEEDS WORK
+msgid "Unnamed Folder"
+msgstr "Nepoznati direktorij"
+# 
+# File: usr/share/ashyterm/sessions/tree.py, line: 96
+#: NEEDS WORK
+msgid "Sessions"
+msgstr "Sesije"
+# 
+# File: usr/share/ashyterm/sessions/tree.py, line: 618
+# File: usr/share/ashyterm/sessions/tree.py, line: 623
+#: NEEDS WORK
+msgid "Paste Error"
+msgstr "Pogreška pri lijepljenju"
+# 
+# File: usr/share/ashyterm/sessions/validation.py, line: 18
+#: NEEDS WORK
+#, python-brace-format
+msgid "Session validation failed: {}"
+msgstr "Validacija sesije nije uspjela: {}"
+# 
+# File: usr/share/ashyterm/sessions/validation.py, line: 31
+#: NEEDS WORK
+#, python-brace-format
+msgid "A session with the name '{name}' already exists in this folder."
+msgstr "Sesija s imenom '{name}' već postoji u ovoj mapi."
+# 
+# File: usr/share/ashyterm/sessions/validation.py, line: 45
+#: NEEDS WORK
+#, python-brace-format
+msgid "The target folder '{folder}' does not exist."
+msgstr "Odredišna mapa '{folder}' ne postoji."
+# 
+# File: usr/share/ashyterm/sessions/validation.py, line: 61
+#: NEEDS WORK
+#, python-brace-format
+msgid "Folder validation failed: {}"
+msgstr "Validacija mape nije uspjela: {}"
+# 
+# File: usr/share/ashyterm/sessions/validation.py, line: 69
+#: NEEDS WORK
+#, python-brace-format
+msgid "A folder with the path '{path}' already exists."
+msgstr "Mapa s putanjom '{path}' već postoji."
+# 
+# File: usr/share/ashyterm/sessions/validation.py, line: 84
+#: NEEDS WORK
+#, python-brace-format
+msgid "The parent folder '{folder}' does not exist."
+msgstr "Roditeljski direktorij '{folder}' ne postoji."
 # 
 # File: usr/share/ashyterm/sessions/storage.py, line: 125
 #: NEEDS WORK
@@ -112,962 +709,106 @@ msgstr "Provjera spremanja nije uspjela"
 msgid "Save failed: {}"
 msgstr "Spremanje nije uspjelo: {}"
 # 
-# File: usr/share/ashyterm/sessions/operations.py, line: 164
+# File: usr/share/ashyterm/sessions/operations.py, line: 46
+#: NEEDS WORK
+msgid "Failed to save session data."
+msgstr "Neuspjelo spremanje podataka sesije."
+# 
+# File: usr/share/ashyterm/sessions/operations.py, line: 51
 #: NEEDS WORK
 #, python-brace-format
-msgid "Session '{name}' already exists in the specified folder"
-msgstr "Sesija '{name}' već postoji u navedenoj mapi"
+msgid "Session '{name}' added successfully."
+msgstr "Sesija '{name}' uspješno dodana."
+# 
+# File: usr/share/ashyterm/sessions/operations.py, line: 62
+#: NEEDS WORK
+msgid "Item at position is not a session."
+msgstr "Stavka na poziciji nije sesija."
+# 
+# File: usr/share/ashyterm/sessions/operations.py, line: 74
+#: NEEDS WORK
+msgid "Failed to save updated session data."
+msgstr "Nije moguće spremiti ažurirane podatke sesije."
+# 
+# File: usr/share/ashyterm/sessions/operations.py, line: 79
+#: NEEDS WORK
+#, python-brace-format
+msgid "Session '{name}' updated successfully."
+msgstr "Sesija '{name}' uspješno ažurirana."
+# 
+# File: usr/share/ashyterm/sessions/operations.py, line: 90
+#: NEEDS WORK
+msgid "Session not found."
+msgstr "Sesija nije pronađena."
+# 
+# File: usr/share/ashyterm/sessions/operations.py, line: 96
+#: NEEDS WORK
+msgid "Failed to save after session removal."
+msgstr "Nije uspjelo spremanje nakon uklanjanja sesije."
+# 
+# File: usr/share/ashyterm/sessions/operations.py, line: 102
+#: NEEDS WORK
+#, python-brace-format
+msgid "Session '{name}' removed successfully."
+msgstr "Sesija '{name}' uspješno uklonjena."
+# 
+# File: usr/share/ashyterm/sessions/operations.py, line: 115
+#: NEEDS WORK
+msgid "Failed to save folder data."
+msgstr "Neuspjelo spremanje podataka mape."
+# 
+# File: usr/share/ashyterm/sessions/operations.py, line: 120
+#: NEEDS WORK
+#, python-brace-format
+msgid "Folder '{name}' added successfully."
+msgstr "Mapa '{name}' uspješno dodana."
+# 
+# File: usr/share/ashyterm/sessions/operations.py, line: 131
+#: NEEDS WORK
+msgid "Item at position is not a folder."
+msgstr "Stav na poziciji nije mapa."
+# 
+# File: usr/share/ashyterm/sessions/operations.py, line: 144
+#: NEEDS WORK
+msgid "Failed to save updated folder data."
+msgstr "Neuspjelo spremanje ažuriranih podataka o mapi."
+# 
+# File: usr/share/ashyterm/sessions/operations.py, line: 149
+#: NEEDS WORK
+#, python-brace-format
+msgid "Folder '{name}' updated successfully."
+msgstr "Mapa '{name}' uspješno ažurirana."
+# 
+# File: usr/share/ashyterm/sessions/operations.py, line: 161
+#: NEEDS WORK
+msgid "Cannot remove a non-empty folder."
+msgstr "Ne može se ukloniti neispunjena mapa."
+# 
+# File: usr/share/ashyterm/sessions/operations.py, line: 168
+#: NEEDS WORK
+msgid "Folder not found."
+msgstr "Mapa nije pronađena."
 # 
 # File: usr/share/ashyterm/sessions/operations.py, line: 172
 #: NEEDS WORK
-#, python-brace-format
-msgid "Session '{name}' added successfully"
-msgstr "Sesija '{name}' uspješno dodana"
-# 
-# File: usr/share/ashyterm/sessions/operations.py, line: 175
-# File: usr/share/ashyterm/sessions/operations.py, line: 314
-#: NEEDS WORK
-#, python-brace-format
-msgid "Session name sanitized: '{original}' -> '{new}'"
-msgstr "Naziv sesije očišćen: '{original}' -> '{new}'"
-# 
-# File: usr/share/ashyterm/sessions/operations.py, line: 189
-# File: usr/share/ashyterm/sessions/operations.py, line: 322
-#: NEEDS WORK
-msgid "Failed to save session data"
-msgstr "Neuspjelo spremanje podataka sesije"
-# 
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
-# 
-# File: usr/share/ashyterm/window.py, line: 879
-# File: usr/share/ashyterm/sessions/operations.py, line: 203
-#: NEEDS WORK
-#, python-brace-format
-msgid "Failed to add session: {error}"
-msgstr "Neuspjelo dodavanje sesije: {error}"
-# 
-# File: usr/share/ashyterm/sessions/operations.py, line: 219
-#: NEEDS WORK
-msgid "Validation passed"
-msgstr "Validacija prošla"
-# 
-# File: usr/share/ashyterm/sessions/operations.py, line: 224
-#: NEEDS WORK
-#, python-brace-format
-msgid "Session validation failed: {errors}"
-msgstr "Validacija sesije nije uspjela: {errors}"
-# 
-# File: usr/share/ashyterm/sessions/operations.py, line: 233
-# File: usr/share/ashyterm/sessions/operations.py, line: 371
-#: NEEDS WORK
-#, python-brace-format
-msgid "Security validation failed: {errors}"
-msgstr "Provjera sigurnosti nije uspjela: {errors}"
-# 
-# File: usr/share/ashyterm/sessions/operations.py, line: 241
-# File: usr/share/ashyterm/sessions/operations.py, line: 385
-#: NEEDS WORK
-#, python-brace-format
-msgid "Security: {message}"
-msgstr "Sigurnost: {message}"
-# 
-# File: usr/share/ashyterm/sessions/operations.py, line: 243
-# File: usr/share/ashyterm/sessions/operations.py, line: 387
-#: NEEDS WORK
-#, python-brace-format
-msgid "Critical security issue: {message}"
-msgstr "Kritična sigurnosna pitanja: {message}"
-# 
-# File: usr/share/ashyterm/sessions/operations.py, line: 246
-# File: usr/share/ashyterm/sessions/operations.py, line: 390
-#: NEEDS WORK
-#, python-brace-format
-msgid "Security validation error: {error}"
-msgstr "Pogreška u provjeri sigurnosti: {error}"
-# 
-# File: usr/share/ashyterm/sessions/operations.py, line: 251
-# File: usr/share/ashyterm/sessions/operations.py, line: 395
-# File: usr/share/ashyterm/sessions/operations.py, line: 590
-#: NEEDS WORK
-#, python-brace-format
-msgid "Target folder '{folder}' does not exist"
-msgstr "Odredišna mapa '{folder}' ne postoji"
-# 
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
-# 
-# File: usr/share/ashyterm/sessions/operations.py, line: 257
-# File: usr/share/ashyterm/sessions/models.py, line: 342
-# File: usr/share/ashyterm/sessions/models.py, line: 691
-#: NEEDS WORK
-#, python-brace-format
-msgid "Validation error: {error}"
-msgstr "Pogreška validacije: {error}"
-# 
-# File: usr/share/ashyterm/sessions/operations.py, line: 276
-# File: usr/share/ashyterm/sessions/operations.py, line: 722
-#: NEEDS WORK
-#, python-brace-format
-msgid "Invalid position: {position}"
-msgstr "Nevažeća pozicija: {position}"
-# 
-# File: usr/share/ashyterm/sessions/operations.py, line: 280
-#: NEEDS WORK
-#, python-brace-format
-msgid "Item at position {position} is not a session"
-msgstr "Stav na poziciji {position} nije sesija"
-# 
-# File: usr/share/ashyterm/sessions/operations.py, line: 300
-#: NEEDS WORK
-#, python-brace-format
-msgid "Session name '{name}' already exists in the target folder"
-msgstr "Ime sesije '{name}' već postoji u odredišnoj mapi."
-# 
-# File: usr/share/ashyterm/sessions/operations.py, line: 329
-#: NEEDS WORK
-#, python-brace-format
-msgid "Session '{name}' updated successfully"
-msgstr "Sesija '{name}' uspješno ažurirana"
-# 
-# File: usr/share/ashyterm/sessions/operations.py, line: 339
-#: NEEDS WORK
-#, python-brace-format
-msgid "Failed to update session: {error}"
-msgstr "Neuspjela ažuriranja sesije: {error}"
-# 
-# File: usr/share/ashyterm/sessions/operations.py, line: 357
-#: NEEDS WORK
-msgid "Update validation passed"
-msgstr "Provjera ažuriranja prošla"
-# 
-# File: usr/share/ashyterm/sessions/operations.py, line: 362
-#: NEEDS WORK
-#, python-brace-format
-msgid "Updated session validation failed: {errors}"
-msgstr "Ažuriranje validacije sesije nije uspjelo: {errors}"
-# 
-# File: usr/share/ashyterm/sessions/operations.py, line: 378
-#: NEEDS WORK
-#, python-brace-format
-msgid "Security score decreased: {original} -> {updated}"
-msgstr "Ocjena sigurnosti smanjena: {original} -> {updated}"
-# 
-# File: usr/share/ashyterm/sessions/operations.py, line: 401
-#: NEEDS WORK
-#, python-brace-format
-msgid "Update validation error: {error}"
-msgstr "Pogreška pri provjeri ažuriranja: {error}"
-# 
-# File: usr/share/ashyterm/sessions/operations.py, line: 439
-#: NEEDS WORK
-msgid "Properties updated successfully"
-msgstr "Svojstva su uspješno ažurirana"
-# 
-# File: usr/share/ashyterm/sessions/operations.py, line: 450
-#: NEEDS WORK
-#, python-brace-format
-msgid "Property update failed: {error}"
-msgstr "Ažuriranje svojstva nije uspjelo: {error}"
-# 
-# File: usr/share/ashyterm/sessions/operations.py, line: 471
-#: NEEDS WORK
-#, python-brace-format
-msgid "Session '{name}' not found in store"
-msgstr "Sesija '{name}' nije pronađena u spremištu"
-# 
-# File: usr/share/ashyterm/sessions/operations.py, line: 482
-#: NEEDS WORK
-msgid "Failed to save after session removal"
-msgstr "Nije uspjelo spremanje nakon uklanjanja sesije"
-# 
-# File: usr/share/ashyterm/sessions/operations.py, line: 490
-#: NEEDS WORK
-#, python-brace-format
-msgid "Session '{name}' removed successfully"
-msgstr "Sesija '{name}' uspješno uklonjena"
-# 
-# File: usr/share/ashyterm/sessions/operations.py, line: 499
-#: NEEDS WORK
-#, python-brace-format
-msgid "Failed to remove session: {error}"
-msgstr "Neuspjelo uklanjanje sesije: {error}"
-# 
-# File: usr/share/ashyterm/sessions/operations.py, line: 530
-#: NEEDS WORK
-#, python-brace-format
-msgid "Copy of {name}"
-msgstr "Kopija od {name}"
-# 
-# File: usr/share/ashyterm/sessions/operations.py, line: 536
-#: NEEDS WORK
-#, python-brace-format
-msgid "Duplicate validation failed: {errors}"
-msgstr "Validacija duplicata nije uspjela: {errors}"
-# 
-# File: usr/share/ashyterm/sessions/operations.py, line: 542
-#: NEEDS WORK
-#, python-brace-format
-msgid "Duplicate name '{name}' already exists"
-msgstr "Duplikat imena '{name}' već postoji"
-# 
-# File: usr/share/ashyterm/sessions/operations.py, line: 555
-#: NEEDS WORK
-#, python-brace-format
-msgid "Session duplicated as '{name}'"
-msgstr "Sesija duplicirana kao '{name}'"
-# 
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
-# 
-# File: usr/share/ashyterm/window.py, line: 706
-# File: usr/share/ashyterm/sessions/operations.py, line: 564
-#: NEEDS WORK
-#, python-brace-format
-msgid "Failed to duplicate session: {error}"
-msgstr "Neuspjelo dupliciranje sesije: {error}"
-# 
-# File: usr/share/ashyterm/sessions/operations.py, line: 599
-#: NEEDS WORK
-#, python-brace-format
-msgid "Session moved and renamed to '{name}'"
-msgstr "Sesija premještena i preimenovana u '{name}'"
-# 
-# File: usr/share/ashyterm/sessions/operations.py, line: 600
-#: NEEDS WORK
-#, python-brace-format
-msgid "Session renamed to avoid conflict: '{original}' -> '{new}'"
-msgstr "Sesija preimenovana kako bi se izbjegla sukob: '{original}' -> '{new}'"
-# 
-# File: usr/share/ashyterm/sessions/operations.py, line: 602
-# File: usr/share/ashyterm/sessions/operations.py, line: 620
-#: NEEDS WORK
-msgid "root"
-msgstr "korijen"
-# 
-# File: usr/share/ashyterm/sessions/operations.py, line: 603
-#: NEEDS WORK
-#, python-brace-format
-msgid "Session moved to '{folder}'"
-msgstr "Sesija premještena u '{folder}'"
-# 
-# File: usr/share/ashyterm/sessions/operations.py, line: 614
-#: NEEDS WORK
-msgid "Failed to save after moving session"
-msgstr "Neuspjelo spremanje nakon premještanja sesije"
-# 
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
-# 
-# File: usr/share/ashyterm/window.py, line: 724
-# File: usr/share/ashyterm/sessions/operations.py, line: 636
-#: NEEDS WORK
-#, python-brace-format
-msgid "Failed to move session: {error}"
-msgstr "Neuspješno premještanje sesije: {error}"
-# 
-# File: usr/share/ashyterm/sessions/operations.py, line: 659
-#: NEEDS WORK
-#, python-brace-format
-msgid "Folder validation failed: {errors}"
-msgstr "Validacija mape nije uspjela: {errors}"
-# 
-# File: usr/share/ashyterm/sessions/operations.py, line: 664
-# File: usr/share/ashyterm/sessions/operations.py, line: 742
-#: NEEDS WORK
-#, python-brace-format
-msgid "Folder path '{path}' already exists"
-msgstr "Putanja mape '{path}' već postoji"
-# 
-# File: usr/share/ashyterm/sessions/operations.py, line: 682
-# File: usr/share/ashyterm/sessions/operations.py, line: 763
-#: NEEDS WORK
-msgid "Failed to save folder data"
-msgstr "Neuspjelo spremanje podataka mape"
-# 
-# File: usr/share/ashyterm/sessions/operations.py, line: 690
-#: NEEDS WORK
-#, python-brace-format
-msgid "Folder '{name}' added successfully"
-msgstr "Mapa '{name}' uspješno dodana"
-# 
-# File: usr/share/ashyterm/sessions/operations.py, line: 693
-# File: usr/share/ashyterm/sessions/operations.py, line: 774
-#: NEEDS WORK
-#, python-brace-format
-msgid "Folder name sanitized: '{original}' -> '{new}'"
-msgstr "Naziv mape je očišćen: '{original}' -> '{new}'"
-# 
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
-# 
-# File: usr/share/ashyterm/window.py, line: 889
-# File: usr/share/ashyterm/sessions/operations.py, line: 702
-#: NEEDS WORK
-#, python-brace-format
-msgid "Failed to add folder: {error}"
-msgstr "Nije moguće dodati mapu: {error}"
-# 
-# File: usr/share/ashyterm/sessions/operations.py, line: 726
-#: NEEDS WORK
-#, python-brace-format
-msgid "Item at position {position} is not a folder"
-msgstr "Stavka na poziciji {position} nije mapa"
-# 
-# File: usr/share/ashyterm/sessions/operations.py, line: 737
-#: NEEDS WORK
-#, python-brace-format
-msgid "Updated folder validation failed: {errors}"
-msgstr "Validacija ažurirane mape nije uspjela: {errors}"
-# 
-# File: usr/share/ashyterm/sessions/operations.py, line: 771
-#: NEEDS WORK
-#, python-brace-format
-msgid "Folder '{name}' updated successfully"
-msgstr "Mapa '{name}' uspješno ažurirana"
-# 
-# File: usr/share/ashyterm/sessions/operations.py, line: 788
-#: NEEDS WORK
-#, python-brace-format
-msgid "Failed to update folder: {error}"
-msgstr "Neuspjela je ažurirati mapu: {error}"
-# 
-# File: usr/share/ashyterm/sessions/operations.py, line: 816
-#: NEEDS WORK
-#, python-brace-format
-msgid ""
-"Cannot remove folder '{name}' - it contains sessions or subfolders. Use force removal to delete "
-"anyway."
-msgstr ""
-"Ne može se ukloniti mapa '{name}' - sadrži sesije ili podmape. Koristite prisilno uklanjanje za "
-"brisanje."
-# 
-# File: usr/share/ashyterm/sessions/operations.py, line: 827
-#: NEEDS WORK
-#, python-brace-format
-msgid "Folder '{name}' not found in store"
-msgstr "Mapa '{name}' nije pronađena u spremištu"
-# 
-# File: usr/share/ashyterm/sessions/operations.py, line: 841
-#: NEEDS WORK
-msgid "Failed to save after folder removal"
-msgstr "Nije uspjelo spremanje nakon uklanjanja mape"
-# 
-# File: usr/share/ashyterm/sessions/operations.py, line: 849
-#: NEEDS WORK
-#, python-brace-format
-msgid "Folder '{name}' removed successfully"
-msgstr "Mapa '{name}' uspješno uklonjena"
-# 
-# File: usr/share/ashyterm/sessions/operations.py, line: 857
-#: NEEDS WORK
-#, python-brace-format
-msgid "Removed {count} child items"
-msgstr "Uklonjeno {count} djece stavki"
-# 
-# File: usr/share/ashyterm/sessions/operations.py, line: 866
-#: NEEDS WORK
-#, python-brace-format
-msgid "Failed to remove folder: {error}"
-msgstr "Nije moguće ukloniti mapu: {error}"
-# 
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
-# 
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
-# 
-# File: usr/share/ashyterm/utils/security.py, line: 786
-# File: usr/share/ashyterm/utils.py, line: 438
-# File: usr/share/ashyterm/sessions/models.py, line: 89
-#: NEEDS WORK
-msgid "Session name cannot be empty"
-msgstr "Naziv sesije ne može biti prazan"
-# 
-# File: usr/share/ashyterm/sessions/models.py, line: 115
-#: NEEDS WORK
-#, python-brace-format
-msgid "Invalid session type: {type}. Must be one of: {valid_types}"
-msgstr "Nevažeća vrsta sesije: {type}. Mora biti jedna od: {valid_types}"
-# 
-# File: usr/share/ashyterm/sessions/models.py, line: 139
-#: NEEDS WORK
-#, python-brace-format
-msgid "Invalid hostname format: {hostname}"
-msgstr "Neispravan format imena domaćina: {hostname}"
-# 
-# File: usr/share/ashyterm/sessions/models.py, line: 191
-#: NEEDS WORK
-#, python-brace-format
-msgid "Invalid authentication type: {type}. Must be one of: {valid_types}"
-msgstr "Nevažeća vrsta autentifikacije: {type}. Mora biti jedna od: {valid_types}"
-# 
-# File: usr/share/ashyterm/utils/security.py, line: 811
-#: NEEDS WORK
-msgid "Port must be between 1 and 65535"
-msgstr "Port mora biti između 1 i 65535"
-# 
-# File: usr/share/ashyterm/utils/security.py, line: 813
-#: NEEDS WORK
-msgid "Port must be a valid number"
-msgstr "Port mora biti valjani broj"
-# 
-# File: usr/share/ashyterm/sessions/models.py, line: 309
-#: NEEDS WORK
-msgid "Session name is required"
-msgstr "Naziv sesije je obavezan"
-# 
-# File: usr/share/ashyterm/sessions/models.py, line: 312
-#: NEEDS WORK
-msgid "Session type is required"
-msgstr "Vrsta sesije je obavezna"
-# 
-# File: usr/share/ashyterm/sessions/models.py, line: 317
-#: NEEDS WORK
-msgid "Host is required for SSH sessions"
-msgstr "Host je obavezan za SSH sesije"
-# 
-# File: usr/share/ashyterm/sessions/models.py, line: 324
-#: NEEDS WORK
-#, python-brace-format
-msgid "SSH key validation failed: {error}"
-msgstr "Provjera SSH ključa nije uspjela: {error}"
-# 
-# File: usr/share/ashyterm/sessions/models.py, line: 326
-#: NEEDS WORK
-#, python-brace-format
-msgid "SSH key validation error: {error}"
-msgstr "Pogreška pri provjeri SSH ključa: {error}"
-# 
-# File: usr/share/ashyterm/sessions/models.py, line: 329
-#: NEEDS WORK
-msgid "Authentication type is required for SSH sessions"
-msgstr "Vrsta autentifikacije je obavezna za SSH sesije"
-# 
-# File: usr/share/ashyterm/sessions/models.py, line: 386
-# File: usr/share/ashyterm/sessions/models.py, line: 419
-#: NEEDS WORK
-msgid "Unnamed Session"
-msgstr "Nepoznata sesija"
-# 
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 406
-# File: usr/share/ashyterm/sessions/models.py, line: 511
-#: NEEDS WORK
-msgid "Local Terminal"
-msgstr "Lokalni terminal"
-# 
-# File: usr/share/ashyterm/sessions/models.py, line: 583
-#: NEEDS WORK
-msgid "Folder name cannot be empty"
-msgstr "Naziv mape ne može biti prazan"
-# 
-# File: usr/share/ashyterm/sessions/models.py, line: 669
-#: NEEDS WORK
-msgid "Folder name is required"
-msgstr "Naziv mape je obavezan"
-# 
-# File: usr/share/ashyterm/sessions/models.py, line: 673
-#: NEEDS WORK
-msgid "Path contains invalid characters"
-msgstr "Putanja sadrži nevažeće znakove"
-# 
-# File: usr/share/ashyterm/sessions/models.py, line: 678
-#: NEEDS WORK
-msgid "Path is not consistent with parent path"
-msgstr "Putanja nije dosljedna s putanjom roditelja"
-# 
-# File: usr/share/ashyterm/sessions/models.py, line: 727
-# File: usr/share/ashyterm/sessions/models.py, line: 752
-#: NEEDS WORK
-msgid "Unnamed Folder"
-msgstr "Nepoznati direktorij"
-# 
-# File: usr/share/ashyterm/sessions/tree.py, line: 96
-#: NEEDS WORK
-msgid "Sessions"
-msgstr "Sesije"
-# 
-# File: usr/share/ashyterm/sessions/tree.py, line: 618
-# File: usr/share/ashyterm/sessions/tree.py, line: 623
-#: NEEDS WORK
-msgid "Paste Error"
-msgstr "Pogreška pri lijepljenju"
-# 
-# File: usr/share/ashyterm/app.py, line: 53
-#: NEEDS WORK
-#, python-brace-format
-msgid "Initializing {} v{}"
-msgstr "Inicijalizacija {} v{}"
-# 
-# File: usr/share/ashyterm/app.py, line: 64
-#: NEEDS WORK
-#, python-brace-format
-msgid "Running on {} platform"
-msgstr "Radi na {} platformi"
-# 
-# File: usr/share/ashyterm/app.py, line: 118
-#: NEEDS WORK
-msgid "Initializing application subsystems"
-msgstr "Inicijalizacija podsustava aplikacije"
-# 
-# File: usr/share/ashyterm/app.py, line: 121
-#: NEEDS WORK
-msgid "Settings manager initialized"
-msgstr "Upravitelj postavki inicijaliziran"
-# 
-# File: usr/share/ashyterm/app.py, line: 125
-# File: usr/share/ashyterm/app.py, line: 431
-#: NEEDS WORK
-msgid "Debug mode enabled"
-msgstr "Način ispravljanja omogućен"
-# 
-# File: usr/share/ashyterm/app.py, line: 130
-#: NEEDS WORK
-msgid "Encryption available but not initialized (may require passphrase)"
-msgstr "Šifriranje dostupno, ali nije inicijalizirano (možda je potrebna lozinka)"
-# 
-# File: usr/share/ashyterm/app.py, line: 132
-#: NEEDS WORK
-msgid "Encryption system initialized"
-msgstr "Sustav enkripcije inicijaliziran"
-# 
-# File: usr/share/ashyterm/app.py, line: 134
-#: NEEDS WORK
-#, python-brace-format
-msgid "Encryption initialization failed: {}"
-msgstr "Inicijalizacija enkripcije nije uspjela: {}"
-# 
-# File: usr/share/ashyterm/app.py, line: 136
-#: NEEDS WORK
-msgid "Encryption not available - passwords will be stored as plain text"
-msgstr "Šifriranje nije dostupno - lozinke će biti pohranjene kao običan tekst"
-# 
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
-# 
-# File: usr/share/ashyterm/app.py, line: 164
-# File: usr/share/ashyterm/main.py, line: 399
-#: NEEDS WORK
-msgid "VTE library not available"
-msgstr "VTE knjižnica nije dostupna"
-# 
-# File: usr/share/ashyterm/app.py, line: 156
-#: NEEDS WORK
-msgid "All essential subsystems initialized successfully"
-msgstr "Svi bitni podsustavi su uspješno inicijalizirani"
-# 
-# File: usr/share/ashyterm/app.py, line: 172
-#: NEEDS WORK
-#, python-brace-format
-msgid "Subsystem initialization failed: {}"
-msgstr "Inicijalizacija podsustava nije uspjela: {}"
-# 
-# File: usr/share/ashyterm/app.py, line: 173
-#: NEEDS WORK
-msgid "application initialization"
-msgstr "inicijalizacija aplikacije"
-# 
-# File: usr/share/ashyterm/app.py, line: 179
-#: NEEDS WORK
-msgid "Application startup initiated"
-msgstr "Pokretanje aplikacije inicirano"
-# 
-# File: usr/share/ashyterm/app.py, line: 183
-#: NEEDS WORK
-msgid "Failed to initialize application subsystems"
-msgstr "Neuspješno inicijaliziranje podsustava aplikacije"
-# 
-# File: usr/share/ashyterm/app.py, line: 192
-#: NEEDS WORK
-msgid "Application startup completed successfully"
-msgstr "Pokretanje aplikacije uspješno je završeno"
-# 
-# File: usr/share/ashyterm/app.py, line: 195
-#: NEEDS WORK
-#, python-brace-format
-msgid "Application startup failed: {}"
-msgstr "Pokretanje aplikacije nije uspjelo: {}"
-# 
-# File: usr/share/ashyterm/app.py, line: 206
-#: NEEDS WORK
-msgid "Automatic startup backup is disabled in settings."
-msgstr "Automatska sigurnosna kopija pri pokretanju je onemogućena u postavkama."
-# 
-# File: usr/share/ashyterm/app.py, line: 217
-#: NEEDS WORK
-msgid "Performing startup backup asynchronously"
-msgstr "Izvršavanje sigurnosne kopije pri pokretanju asinkrono"
-# 
-# File: usr/share/ashyterm/app.py, line: 222
-#: NEEDS WORK
-msgid "Automatic startup backup"
-msgstr "Automatska sigurnosna kopija pri pokretanju"
-# 
-# File: usr/share/ashyterm/app.py, line: 228
-#: NEEDS WORK
-#, python-brace-format
-msgid "Startup backup check failed: {}"
-msgstr "Provjera sigurnosne kopije pri pokretanju nije uspjela: {}"
-# 
-# File: usr/share/ashyterm/app.py, line: 248
-#: NEEDS WORK
-msgid "Application actions configured"
-msgstr "Konfigurirane akcije aplikacije"
-# 
-# File: usr/share/ashyterm/app.py, line: 251
-#: NEEDS WORK
-#, python-brace-format
-msgid "Failed to setup actions: {}"
-msgstr "Neuspjelo postavljanje radnji: {}"
-# 
-# File: usr/share/ashyterm/app.py, line: 330
-#: NEEDS WORK
-msgid "Quit action triggered - no SSH sessions"
-msgstr "Akcija izlaska pokrenuta - nema SSH sesija"
-# 
-# File: usr/share/ashyterm/app.py, line: 333
-#: NEEDS WORK
-#, python-brace-format
-msgid "Quit action failed: {}"
-msgstr "Akcija izlaska nije uspjela: {}"
-# 
-# File: usr/share/ashyterm/app.py, line: 332
-# File: usr/share/ashyterm/app.py, line: 333
-#: NEEDS WORK
-#, python-brace-format
-msgid "Failed to open preferences: {}"
-msgstr "Nije moguće otvoriti postavke: {}"
-# 
-# File: usr/share/ashyterm/app.py, line: 333
-#: NEEDS WORK
-msgid "Preferences Error"
-msgstr "Pogreška u postavkama"
-# 
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
-# 
-# File: usr/share/ashyterm/__init__.py, line: 62
-# File: usr/share/ashyterm/app.py, line: 350
-#: NEEDS WORK
-msgid "A modern terminal emulator with session management"
-msgstr "Moderni terminal emulator s upravljanjem sesijama"
-# 
-# File: usr/share/ashyterm/app.py, line: 354
-#: NEEDS WORK
-#, python-brace-format
-msgid "Platform: {}\n"
-msgstr "Platforma: {}"
-# 
-# File: usr/share/ashyterm/app.py, line: 355
-#: NEEDS WORK
-#, python-brace-format
-msgid "Architecture: {}\n"
-msgstr "Arhitektura: {}"
-# 
-# File: usr/share/ashyterm/app.py, line: 356
-#: NEEDS WORK
-#, python-brace-format
-msgid "Shell: {}"
-msgstr "Ljusna: {}"
-# 
-# File: usr/share/ashyterm/app.py, line: 362
-#: NEEDS WORK
-#, python-brace-format
-msgid "Failed to show about dialog: {}"
-msgstr "Nije moguće prikazati dijalog o programu: {}"
-# 
-# File: usr/share/ashyterm/app.py, line: 368
-# File: usr/share/ashyterm/app.py, line: 379
-# File: usr/share/ashyterm/app.py, line: 392
-# File: usr/share/ashyterm/app.py, line: 396
-#: NEEDS WORK
-msgid "Backup Error"
-msgstr "Pogreška sigurnosne kopije"
-# 
-# File: usr/share/ashyterm/app.py, line: 368
-# File: usr/share/ashyterm/app.py, line: 402
-#: NEEDS WORK
-msgid "Backup system not available"
-msgstr "Sustav sigurnosne kopije nije dostupan"
-# 
-# File: usr/share/ashyterm/app.py, line: 379
-#: NEEDS WORK
-msgid "No files to backup"
-msgstr "Nema datoteka za sigurnosnu kopiju"
-# 
-# File: usr/share/ashyterm/app.py, line: 385
-#: NEEDS WORK
-msgid "Manual backup from menu"
-msgstr "Ručno sigurnosno kopiranje iz izbornika"
-# 
-# File: usr/share/ashyterm/app.py, line: 389
-#: NEEDS WORK
-#, python-brace-format
-msgid "Manual backup created: {}"
-msgstr "Ručno izrađena sigurnosna kopija: {}"
-# 
-# File: usr/share/ashyterm/app.py, line: 390
-#: NEEDS WORK
-msgid "Backup Complete"
-msgstr "Sigurnosna kopija dovršena"
-# 
-# File: usr/share/ashyterm/app.py, line: 390
-#: NEEDS WORK
-#, python-brace-format
-msgid "Backup created successfully: {}"
-msgstr "Sigurnosna kopija uspješno je kreirana: {}"
-# 
-# File: usr/share/ashyterm/app.py, line: 392
-#: NEEDS WORK
-msgid "Failed to create backup"
-msgstr "Nije uspjelo stvaranje sigurnosne kopije"
-# 
-# File: usr/share/ashyterm/app.py, line: 395
-#: NEEDS WORK
-#, python-brace-format
-msgid "Manual backup failed: {}"
-msgstr "Ručno sigurnosno kopiranje nije uspjelo: {}"
-# 
-# File: usr/share/ashyterm/app.py, line: 396
-#: NEEDS WORK
-#, python-brace-format
-msgid "Backup failed: {}"
-msgstr "Backup nije uspio: {}"
-# 
-# File: usr/share/ashyterm/app.py, line: 402
-# File: usr/share/ashyterm/app.py, line: 416
-#: NEEDS WORK
-msgid "Restore Error"
-msgstr "Pogreška pri vraćanju"
-# 
-# File: usr/share/ashyterm/app.py, line: 407
-#: NEEDS WORK
-msgid "No Backups"
-msgstr "Nema sigurnosnih kopija"
-# 
-# File: usr/share/ashyterm/app.py, line: 407
-#: NEEDS WORK
-msgid "No backups available to restore"
-msgstr "Nema dostupnih sigurnosnih kopija za vraćanje"
-# 
-# File: usr/share/ashyterm/app.py, line: 411
-#: NEEDS WORK
-msgid "Backups Available"
-msgstr "Dostupne sigurnosne kopije"
-# 
-# File: usr/share/ashyterm/app.py, line: 412
-#: NEEDS WORK
-#, python-brace-format
-msgid "{} backup(s) available. Use preferences dialog for detailed restore options."
-msgstr "{} sigurnosna kopija(e) dostupna(e). Koristite dijalog s postavkama za detaljne opcije vraćanja."
-# 
-# File: usr/share/ashyterm/app.py, line: 415
-#: NEEDS WORK
-#, python-brace-format
-msgid "Restore backup action failed: {}"
-msgstr "Obnova akcije sigurnosne kopije nije uspjela: {}"
-# 
-# File: usr/share/ashyterm/app.py, line: 416
-#: NEEDS WORK
-#, python-brace-format
-msgid "Failed to access backups: {}"
-msgstr "Neuspješno pristupanje sigurnosnim kopijama: {}"
-# 
-# File: usr/share/ashyterm/app.py, line: 435
-#: NEEDS WORK
-msgid "Debug mode disabled"
-msgstr "Način ispravljanja grešaka onemogućen"
-# 
-# File: usr/share/ashyterm/app.py, line: 440
-#: NEEDS WORK
-#, python-brace-format
-msgid "Failed to toggle debug mode: {}"
-msgstr "Neuspjelo prebacivanje načina rada za otklanjanje pogrešaka: {}"
-# 
-# File: usr/share/ashyterm/app.py, line: 449
-#: NEEDS WORK
-msgid "Log Information"
-msgstr "Informacije o zapisima"
-# 
-# File: usr/share/ashyterm/app.py, line: 449
-#: NEEDS WORK
-#, python-brace-format
-msgid "Logs are stored in: {}"
-msgstr "Zapisnici su pohranjeni u: {}"
-# 
-# File: usr/share/ashyterm/app.py, line: 452
-#: NEEDS WORK
-#, python-brace-format
-msgid "Failed to show log info: {}"
-msgstr "Nije moguće prikazati informacije o dnevniku: {}"
-# 
-# File: usr/share/ashyterm/app.py, line: 484
-#: NEEDS WORK
-#, python-brace-format
-msgid "Failed to check SSH sessions: {}"
-msgstr "Neuspjelo provjeravanje SSH sesija: {}"
-# 
-# File: usr/share/ashyterm/app.py, line: 498
-#: NEEDS WORK
-msgid "Close Application"
-msgstr "Zatvori aplikaciju"
-# 
-# File: usr/share/ashyterm/app.py, line: 499
-#: NEEDS WORK
-msgid ""
-"There are active SSH connections. Closing will disconnect all sessions.\n"
-"\n"
-"Are you sure you want to close the application?"
-msgstr ""
-"Postoje aktivne SSH veze. Zatvaranjem će se prekinuti sve sesije.\n"
-"\n"
-"Jeste li sigurni da želite zatvoriti aplikaciju?"
-# 
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 163
-# File: usr/share/ashyterm/ui/dialogs.py, line: 575
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1213
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1957
-# File: usr/share/ashyterm/ui/dialogs.py, line: 2006
-# File: usr/share/ashyterm/window.py, line: 953
-# File: usr/share/ashyterm/window.py, line: 1013
-#: NEEDS WORK
-msgid "Cancel"
-msgstr "Otkaži"
-# 
-# File: usr/share/ashyterm/app.py, line: 503
-#: NEEDS WORK
-msgid "Close All"
-msgstr "Zatvori sve"
-# 
-# File: usr/share/ashyterm/app.py, line: 510
-#: NEEDS WORK
-msgid "User confirmed quit with active SSH sessions"
-msgstr "Korisnik je potvrdio izlazak s aktivnim SSH sesijama"
-# 
-# File: usr/share/ashyterm/app.py, line: 513
-#: NEEDS WORK
-msgid "User cancelled quit"
-msgstr "Korisnik je otkazao izlaz."
-# 
-# File: usr/share/ashyterm/app.py, line: 516
-#: NEEDS WORK
-#, python-brace-format
-msgid "SSH close confirmation response failed: {}"
-msgstr "SSH zatvaranje potvrde odgovora nije uspjelo: {}"
-# 
-# File: usr/share/ashyterm/app.py, line: 523
-#: NEEDS WORK
-#, python-brace-format
-msgid "SSH close confirmation dialog failed: {}"
-msgstr "SSH dijalog za potvrdu zatvaranja nije uspio: {}"
-# 
-# File: usr/share/ashyterm/app.py, line: 456
-#: NEEDS WORK
-msgid "Application shutdown initiated"
-msgstr "Inicirana je gašenje aplikacije"
-# 
-# File: usr/share/ashyterm/app.py, line: 465
-#: NEEDS WORK
-msgid "Performing graceful shutdown"
-msgstr "Izvršavanje urednog gašenja"
-# 
-# File: usr/share/ashyterm/app.py, line: 471
-#: NEEDS WORK
-msgid "Cleaning up main window"
-msgstr "Čišćenje glavnog prozora"
-# 
-# File: usr/share/ashyterm/app.py, line: 476
-#: NEEDS WORK
-msgid "Saving settings"
-msgstr "Spremanje postavki"
-# 
-# File: usr/share/ashyterm/app.py, line: 483
-#: NEEDS WORK
-msgid "Graceful shutdown completed"
-msgstr "Uređaj je uspješno isključen."
-# 
-# File: usr/share/ashyterm/app.py, line: 486
-#: NEEDS WORK
-#, python-brace-format
-msgid "Error during graceful shutdown: {}"
-msgstr "Greška tijekom urednog gašenja: {}"
-# 
-# File: usr/share/ashyterm/app.py, line: 510
-#: NEEDS WORK
-msgid "Performing shutdown backup"
-msgstr "Izvršavanje sigurnosne kopije pri isključivanju"
-# 
-# File: usr/share/ashyterm/app.py, line: 514
-#: NEEDS WORK
-msgid "Automatic backup on exit"
-msgstr "Automatska sigurnosna kopija pri izlasku"
-# 
-# File: usr/share/ashyterm/app.py, line: 518
-#: NEEDS WORK
-#, python-brace-format
-msgid "Shutdown backup failed: {}"
-msgstr "Neuspjeh sigurnosne kopije pri isključivanju: {}"
-# 
-# File: usr/share/ashyterm/app.py, line: 523
-#: NEEDS WORK
-msgid "Emergency cleanup on exit"
-msgstr "Hitna čišćenje pri izlasku"
-# 
-# File: usr/share/ashyterm/app.py, line: 530
-#: NEEDS WORK
-msgid "Startup Error"
-msgstr "Pogreška pri pokretanju"
-# 
-# File: usr/share/ashyterm/app.py, line: 531
-#: NEEDS WORK
-#, python-brace-format
-msgid "Application failed to start: {}"
-msgstr "Aplikacija nije uspjela pokrenuti: {}"
-# 
-# File: usr/share/ashyterm/app.py, line: 551
-#: NEEDS WORK
-#, python-brace-format
-msgid "Failed to show error dialog: {}"
-msgstr "Nije moguće prikazati dijalog o pogrešci: {}"
-# 
-# File: usr/share/ashyterm/app.py, line: 565
-#: NEEDS WORK
-#, python-brace-format
-msgid "Failed to show info dialog: {}"
-msgstr "Nije uspjelo prikazivanje dijaloga s informacijama: {}"
-# 
-# File: usr/share/ashyterm/app.py, line: 576
-#: NEEDS WORK
-#, python-brace-format
-msgid "Failed to refresh keyboard shortcuts: {}"
-msgstr "Neuspjelo osvježavanje prečaca na tipkovnici: {}"
-# 
-# File: usr/share/ashyterm/app.py, line: 584
-#: NEEDS WORK
-msgid "Main window registered"
-msgstr "Glavni prozor registriran"
+msgid "Failed to save after folder removal."
+msgstr "Spremanje nije uspjelo nakon uklanjanja mape."
 # 
-# File: usr/share/ashyterm/app.py, line: 592
+# File: usr/share/ashyterm/sessions/operations.py, line: 177
 #: NEEDS WORK
-msgid "Main window unregistered"
-msgstr "Glavni prozor nije registriran"
-# 
-# File: usr/share/ashyterm/app.py, line: 611
-#: NEEDS WORK
 #, python-brace-format
-msgid "Failed to create new window: {}"
-msgstr "Nije moguće stvoriti novi prozor: {}"
-# 
-# File: usr/share/ashyterm/terminal/tabs.py, line: 489
-#: NEEDS WORK
-msgid "Exited"
-msgstr "Izašao"
+msgid "Folder '{name}' removed successfully."
+msgstr "Mapa '{name}' uspješno uklonjena."
 # 
-# File: usr/share/ashyterm/window.py, line: 140
-# File: usr/share/ashyterm/window.py, line: 644
+# File: usr/share/ashyterm/sessions/operations.py, line: 190
 #: NEEDS WORK
-msgid "Terminal Error"
-msgstr "Terminalna pogreška"
+msgid "Failed to save after moving session."
+msgstr "Neuspjelo spremanje nakon premještanja sesije."
 # 
-# File: usr/share/ashyterm/window.py, line: 141
+# File: usr/share/ashyterm/sessions/operations.py, line: 195
 #: NEEDS WORK
-msgid "Failed to create initial terminal. Check system configuration."
-msgstr "Nije moguće stvoriti inicijalni terminal. Provjerite konfiguraciju sustava."
+msgid "Session moved successfully."
+msgstr "Sesija je uspješno premještena."
 # 
 # File: usr/share/ashyterm/window.py, line: 145
 #: NEEDS WORK
@@ -1149,37 +890,6 @@ msgstr "Pogreška pri učitavanju podataka"
 msgid "Failed to load saved sessions and folders. Starting with empty configuration."
 msgstr "Nije moguće učitati spremljene sesije i mape. Počinje s praznom konfiguracijom."
 # 
-# File: usr/share/ashyterm/window.py, line: 502
-#: NEEDS WORK
-msgid "Window close request received"
-msgstr "Zahtev za zatvaranje prozora primljen"
-# 
-# File: usr/share/ashyterm/window.py, line: 507
-#: NEEDS WORK
-msgid "Force closing - allowing window to close"
-msgstr "Prisilno zatvaranje - dopuštanje zatvaranja prozora"
-# 
-# File: usr/share/ashyterm/window.py, line: 515
-#: NEEDS WORK
-msgid "Showing SSH close confirmation dialog"
-msgstr "Prikazivanje dijaloga za potvrdu zatvaranja SSH-a"
-# 
-# File: usr/share/ashyterm/window.py, line: 520
-#: NEEDS WORK
-msgid "No SSH sessions, proceeding with normal close"
-msgstr "Nema SSH sesija, nastavljam s normalnim zatvaranjem"
-# 
-# File: usr/share/ashyterm/window.py, line: 511
-#: NEEDS WORK
-msgid "Window cleanup completed"
-msgstr "Čišćenje prozora završeno"
-# 
-# File: usr/share/ashyterm/window.py, line: 515
-#: NEEDS WORK
-#, python-brace-format
-msgid "Window close handling failed: {}"
-msgstr "Zatvaranje prozora nije uspjelo: {}"
-# 
 # File: usr/share/ashyterm/window.py, line: 544
 #: NEEDS WORK
 msgid "This window has active SSH connections:"
@@ -1201,27 +911,23 @@ msgstr "Jeste li sigurni da želite zatvoriti ovo prozorno?"
 msgid "Close Window"
 msgstr "Zatvori prozor"
 # 
-# File: usr/share/ashyterm/window.py, line: 540
-#: NEEDS WORK
-msgid "User confirmed window close with active SSH sessions"
-msgstr "Korisnik je potvrdio zatvaranje prozora s aktivnim SSH sesijama"
+# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
 # 
-# File: usr/share/ashyterm/window.py, line: 544
+# File: usr/share/ashyterm/ui/dialogs.py, line: 163
+# File: usr/share/ashyterm/ui/dialogs.py, line: 575
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1213
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1957
+# File: usr/share/ashyterm/ui/dialogs.py, line: 2006
+# File: usr/share/ashyterm/window.py, line: 953
+# File: usr/share/ashyterm/window.py, line: 1013
 #: NEEDS WORK
-msgid "User cancelled window close"
-msgstr "Korisnik je otkazao zatvaranje prozora"
+msgid "Cancel"
+msgstr "Otkaži"
 # 
-# File: usr/share/ashyterm/window.py, line: 547
+# File: usr/share/ashyterm/window.py, line: 551
 #: NEEDS WORK
-#, python-brace-format
-msgid "Window SSH close confirmation response failed: {}"
-msgstr "Potvrda o zatvaranju SSH prozora nije uspjela: {}"
-# 
-# File: usr/share/ashyterm/window.py, line: 554
-#: NEEDS WORK
-#, python-brace-format
-msgid "Window SSH close confirmation dialog failed: {}"
-msgstr "Prozor SSH dijalog za potvrdu zatvaranja nije uspio: {}"
+msgid "Session Validation Error"
+msgstr "Pogreška validacije sesije"
 # 
 # File: usr/share/ashyterm/window.py, line: 550
 #: NEEDS WORK
@@ -1233,139 +939,10 @@ msgstr ""
 "Validacija sesije nije uspjela:  \n"
 "{errors}"
 # 
-# File: usr/share/ashyterm/window.py, line: 551
+# File: usr/share/ashyterm/window.py, line: 586
 #: NEEDS WORK
-msgid "Session Validation Error"
-msgstr "Pogreška validacije sesije"
-# 
-# File: usr/share/ashyterm/window.py, line: 575
-#: NEEDS WORK
-msgid "Terminal Creation Failed"
-msgstr "Stvaranje terminala nije uspjelo"
-# 
-# File: usr/share/ashyterm/window.py, line: 576
-#: NEEDS WORK
-msgid "Could not create terminal for this session."
-msgstr "Nije moguće stvoriti terminal za ovu sesiju."
-# 
-# File: usr/share/ashyterm/window.py, line: 579
-# File: usr/share/ashyterm/window.py, line: 640
-#: NEEDS WORK
-msgid "VTE Not Available"
-msgstr "VTE nije dostupno"
-# 
-# File: usr/share/ashyterm/window.py, line: 580
-#: NEEDS WORK
-msgid "Cannot open session - VTE library not installed."
-msgstr "Ne mogu otvoriti sesiju - VTE knjižnica nije instalirana."
-# 
-# File: usr/share/ashyterm/window.py, line: 583
-#: NEEDS WORK
-msgid "Session Error"
-msgstr "Greška sesije"
-# 
-# File: usr/share/ashyterm/window.py, line: 583
-#: NEEDS WORK
-#, python-brace-format
-msgid "Failed to activate session: {error}"
-msgstr "Neuspjela aktivacija sesije: {error}"
-# 
-# File: usr/share/ashyterm/window.py, line: 802
-#: NEEDS WORK
-msgid "SFTP Connection Failed"
-msgstr "SFTP veza nije uspjela"
-# 
-# File: usr/share/ashyterm/window.py, line: 803
-#: NEEDS WORK
-msgid "Could not create SFTP terminal for this session."
-msgstr "Nije moguće stvoriti SFTP terminal za ovu sesiju."
-# 
-# File: usr/share/ashyterm/window.py, line: 813
-#: NEEDS WORK
-msgid "SFTP Error"
-msgstr "SFTP pogreška"
-# 
-# File: usr/share/ashyterm/window.py, line: 814
-#: NEEDS WORK
-#, python-brace-format
-msgid "Failed to start SFTP session: {error}"
-msgstr "Neuspješno pokretanje SFTP sesije: {error}"
-# 
-# File: usr/share/ashyterm/window.py, line: 641
-#: NEEDS WORK
-msgid "Cannot create terminal - VTE library not installed."
-msgstr "Nije moguće stvoriti terminal - VTE biblioteka nije instalirana."
-# 
-# File: usr/share/ashyterm/window.py, line: 644
-#: NEEDS WORK
-#, python-brace-format
-msgid "Failed to create new tab: {error}"
-msgstr "Nije moguće stvoriti novu karticu: {error}"
-# 
-# File: usr/share/ashyterm/window.py, line: 876
-# File: usr/share/ashyterm/window.py, line: 886
-#: NEEDS WORK
-msgid "Split Error"
-msgstr "Greška pri dijeljenju"
-# 
-# File: usr/share/ashyterm/window.py, line: 694
-# File: usr/share/ashyterm/window.py, line: 743
-# File: usr/share/ashyterm/window.py, line: 903
-#: NEEDS WORK
-msgid "Edit Error"
-msgstr "Uredi pogrešku"
-# 
-# File: usr/share/ashyterm/window.py, line: 694
-#: NEEDS WORK
-#, python-brace-format
-msgid "Failed to edit session: {error}"
-msgstr "Neuspjelo uređivanje sesije: {error}"
-# 
-# File: usr/share/ashyterm/window.py, line: 706
-#: NEEDS WORK
-msgid "Duplicate Error"
-msgstr "Pogreška dupliciranja"
-# 
-# File: usr/share/ashyterm/window.py, line: 715
-# File: usr/share/ashyterm/window.py, line: 752
-#: NEEDS WORK
-msgid "Rename Error"
-msgstr "Pogreška preimenuvanja"
-# 
-# File: usr/share/ashyterm/window.py, line: 715
-#: NEEDS WORK
-#, python-brace-format
-msgid "Failed to rename session: {error}"
-msgstr "Neuspjelo preimenovanje sesije: {error}"
-# 
-# File: usr/share/ashyterm/window.py, line: 724
-#: NEEDS WORK
-msgid "Move Error"
-msgstr "Pogreška pri premještanju"
-# 
-# File: usr/share/ashyterm/window.py, line: 733
-# File: usr/share/ashyterm/window.py, line: 771
-#: NEEDS WORK
-msgid "Delete Error"
-msgstr "Izbriši pogrešku"
-# 
-# File: usr/share/ashyterm/window.py, line: 1043
-#: NEEDS WORK
-#, python-brace-format
-msgid "Failed to delete selected items: {error}"
-msgstr "Nije moguće izbrisati odabrane stavke: {error}"
-# 
-# File: usr/share/ashyterm/window.py, line: 743
-#: NEEDS WORK
-#, python-brace-format
-msgid "Failed to edit folder: {error}"
-msgstr "Neuspjelo uređivanje mape: {error}"
-# 
-# File: usr/share/ashyterm/window.py, line: 752
-#: NEEDS WORK
-#, python-brace-format
-msgid "Failed to rename folder: {error}"
-msgstr "Neuspjelo preimenovanje mape: {error}"
+msgid "SFTP not implemented yet"
+msgstr "SFTP još nije implementiran"
 # 
 # File: usr/share/ashyterm/window.py, line: 758
 # File: usr/share/ashyterm/window.py, line: 875
@@ -1373,22 +950,10 @@ msgstr "Neuspjelo preimenovanje mape: {error}"
 msgid "New Session"
 msgstr "Nova sesija"
 # 
-# File: usr/share/ashyterm/window.py, line: 762
+# File: usr/share/ashyterm/window.py, line: 885
 #: NEEDS WORK
-msgid "Add Error"
-msgstr "Dodaj pogrešku"
-# 
-# File: usr/share/ashyterm/window.py, line: 762
-#: NEEDS WORK
-#, python-brace-format
-msgid "Failed to add session to folder: {error}"
-msgstr "Nije uspjelo dodavanje sesije u mapu: {error}"
-# 
-# File: usr/share/ashyterm/window.py, line: 835
-#: NEEDS WORK
-#, python-brace-format
-msgid "Failed to open preferences: {error}"
-msgstr "Nije moguće otvoriti postavke: {error}"
+msgid "New Folder"
+msgstr "Nova mapa"
 # 
 # #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
 # 
@@ -1447,31 +1012,6 @@ msgstr "Zalijepi"
 msgid "Select All"
 msgstr "Odaberi sve"
 # 
-# File: usr/share/ashyterm/window.py, line: 1190
-#: NEEDS WORK
-msgid "Split Navigation"
-msgstr "Podijeljena navigacija"
-# 
-# File: usr/share/ashyterm/window.py, line: 1193
-#: NEEDS WORK
-msgid "Focus Up"
-msgstr "Fokus Gore"
-# 
-# File: usr/share/ashyterm/window.py, line: 1194
-#: NEEDS WORK
-msgid "Focus Down"
-msgstr "Fokus dolje"
-# 
-# File: usr/share/ashyterm/window.py, line: 1195
-#: NEEDS WORK
-msgid "Focus Left"
-msgstr "Fokus lijevo"
-# 
-# File: usr/share/ashyterm/window.py, line: 1196
-#: NEEDS WORK
-msgid "Focus Right"
-msgstr "Fokus desno"
-# 
 # File: usr/share/ashyterm/window.py, line: 936
 #: NEEDS WORK
 msgid "Application"
@@ -1496,54 +1036,6 @@ msgstr "Postavke"
 #: NEEDS WORK
 msgid "Quit"
 msgstr "Izlaz"
-# 
-# File: usr/share/ashyterm/window.py, line: 961
-#: NEEDS WORK
-#, python-brace-format
-msgid "Failed to open shortcuts window: {error}"
-msgstr "Nije moguće otvoriti prozor prečaca: {error}"
-# 
-# File: usr/share/ashyterm/window.py, line: 1271
-#: NEEDS WORK
-msgid "Failed to create new window"
-msgstr "Nije moguće stvoriti novi prozor"
-# 
-# File: usr/share/ashyterm/window.py, line: 1275
-#: NEEDS WORK
-msgid "Could not create a new window"
-msgstr "Nije moguće stvoriti novi prozor"
-# 
-# File: usr/share/ashyterm/window.py, line: 1282
-#: NEEDS WORK
-#, python-brace-format
-msgid "Failed to create new window: {error}"
-msgstr "Nije moguće stvoriti novi prozor: {error}"
-# 
-# File: usr/share/ashyterm/window.py, line: 879
-#: NEEDS WORK
-msgid "Add Session Error"
-msgstr "Pogreška pri dodavanju sesije"
-# 
-# File: usr/share/ashyterm/window.py, line: 977
-#: NEEDS WORK
-msgid "Failed to create new tab."
-msgstr "Nije moguće stvoriti novu karticu."
-# 
-# File: usr/share/ashyterm/window.py, line: 885
-#: NEEDS WORK
-msgid "New Folder"
-msgstr "Nova mapa"
-# 
-# File: usr/share/ashyterm/window.py, line: 889
-#: NEEDS WORK
-msgid "Add Folder Error"
-msgstr "Greška pri dodavanju mape"
-# 
-# File: usr/share/ashyterm/window.py, line: 903
-#: NEEDS WORK
-#, python-brace-format
-msgid "Failed to edit selected item: {error}"
-msgstr "Nije uspjelo uređivanje odabranog stavke: {error}"
 # 
 # File: usr/share/ashyterm/window.py, line: 944
 # File: usr/share/ashyterm/window.py, line: 999
@@ -1642,6 +1134,11 @@ msgstr "Izbriši"
 #: NEEDS WORK
 msgid "OK"
 msgstr "U redu"
+# 
+# File: usr/share/ashyterm/window.py, line: 958
+#: NEEDS WORK
+msgid "Cannot detach the last tab."
+msgstr "Ne može se odvojiti posljednja kartica."
 # 
 # File: usr/share/ashyterm/ui/ssh_dialogs.py, line: 51
 #: NEEDS WORK
@@ -1885,25 +1382,15 @@ msgstr "Pretraži..."
 msgid "Password for SSH authentication"
 msgstr "Lozinka za SSH autentifikaciju"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 542
+# File: usr/share/ashyterm/ui/dialogs.py, line: 342
 #: NEEDS WORK
-msgid "Password for SSH authentication (encrypted storage)"
-msgstr "Lozinka za SSH autentifikaciju (kriptirano pohranjivanje)"
+msgid "Password for SSH authentication (stored in system keyring)"
+msgstr "Lozinka za SSH autentifikaciju (pohranjena u sustavskom ključniku)"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 544
+# File: usr/share/ashyterm/ui/dialogs.py, line: 346
 #: NEEDS WORK
-msgid "Password for SSH authentication (encryption available but not initialized)"
-msgstr "Lozinka za SSH autentifikaciju (enkripcija dostupna, ali nije inicijalizirana)"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 546
-#: NEEDS WORK
-msgid "Password for SSH authentication (encryption not available)"
-msgstr "Lozinka za SSH autentifikaciju (enkripcija nije dostupna)"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 548
-#: NEEDS WORK
-msgid "Password for SSH authentication (stored as plain text)"
-msgstr "Lozinka za SSH autentifikaciju (pohranjena kao običan tekst)"
+msgid "Password for SSH authentication (keyring not available)"
+msgstr "Lozinka za SSH autentifikaciju (ključanica nije dostupna)"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 553
 #: NEEDS WORK
@@ -2058,6 +1545,11 @@ msgstr "Neuspjela validacija sesije: {}"
 msgid "Session name"
 msgstr "Naziv sesije"
 # 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 921
+#: NEEDS WORK
+msgid "SSH Validation Error"
+msgstr "SSH pogreška pri validaciji"
+# 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 920
 #: NEEDS WORK
 #, python-brace-format
@@ -2067,11 +1559,6 @@ msgid ""
 msgstr ""
 "SSH konfiguracijske pogreške:\n"
 "{}"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 921
-#: NEEDS WORK
-msgid "SSH Validation Error"
-msgstr "SSH pogreška pri validaciji"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1034
 #: NEEDS WORK
@@ -2125,21 +1612,15 @@ msgstr "Neuspjelo spremanje mape: {}"
 msgid "Folder name"
 msgstr "Naziv mape"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1361
+# File: usr/share/ashyterm/ui/dialogs.py, line: 923
 #: NEEDS WORK
-#, python-brace-format
-msgid "Folder {} {}"
-msgstr "Mapa {} {}"
+msgid "General"
+msgstr "Općenito"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1421
 #: NEEDS WORK
 msgid "Appearance"
 msgstr "Izgled"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1428
-#: NEEDS WORK
-msgid "Colors & Font"
-msgstr "Boje i fontovi"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1429
 #: NEEDS WORK
@@ -2176,101 +1657,6 @@ msgstr "Terminal Font"
 msgid "Select font family and size for terminal text"
 msgstr "Odaberite obitelj fonta i veličinu za tekst terminala"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1486
-#: NEEDS WORK
-msgid "Behavior"
-msgstr "Ponašanje"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1493
-#: NEEDS WORK
-msgid "Terminal Behavior"
-msgstr "Ponašanje terminala"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1494
-#: NEEDS WORK
-msgid "Configure how terminals behave"
-msgstr "Konfigurirajte kako terminali djeluju"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1500
-#: NEEDS WORK
-msgid "Auto Close Tabs"
-msgstr "Automatsko zatvaranje kartica"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1501
-#: NEEDS WORK
-msgid "Automatically close tabs when process exits normally"
-msgstr "Automatski zatvori kartice kada proces normalno završi"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1509
-#: NEEDS WORK
-msgid "Scroll on Output"
-msgstr "Pomakni se na izlazu"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1510
-#: NEEDS WORK
-msgid "Automatically scroll when new output appears"
-msgstr "Automatski pomakni kada se pojavi novi izlaz"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1518
-#: NEEDS WORK
-msgid "Scroll on Keystroke"
-msgstr "Pomakni se na tipku"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1519
-#: NEEDS WORK
-msgid "Automatically scroll when typing"
-msgstr "Automatski pomak pri tipkanju"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1527
-#: NEEDS WORK
-msgid "Hide Mouse Cursor"
-msgstr "Sakrij pokazivač miša"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1528
-#: NEEDS WORK
-msgid "Hide mouse cursor when typing"
-msgstr "Sakrijte pokazivač miša prilikom tipkanja"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1536
-#: NEEDS WORK
-msgid "Cursor Blinking"
-msgstr "Treptanje pokazivača"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1537
-#: NEEDS WORK
-msgid "Enable cursor blinking animation"
-msgstr "Omogući animaciju treptanja kursora"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1637
-#: NEEDS WORK
-msgid "Directory Tracking"
-msgstr "Praćenje direktorija"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1638
-#: NEEDS WORK
-msgid "Track current directory and update tab titles"
-msgstr "Pratite trenutni direktorij i ažurirajte naslove kartica"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1644
-#: NEEDS WORK
-msgid "Enable Directory Tracking"
-msgstr "Omogući praćenje direktorija"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1645
-#: NEEDS WORK
-msgid "Monitor current directory and show it in tab titles"
-msgstr "Pratite trenutni direktorij i prikažite ga u naslovima kartica"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1656
-#: NEEDS WORK
-msgid "Show Hostname in Titles"
-msgstr "Prikaži naziv hosta u naslovima"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1657
-#: NEEDS WORK
-msgid "Include hostname in tab titles when available"
-msgstr "Uključite naziv hosta u naslovima kartica kada je dostupno"
-# 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1545
 #: NEEDS WORK
 msgid "Interface Behavior"
@@ -2300,26 +1686,6 @@ msgstr "Otvorite u novoj kartici"
 #: NEEDS WORK
 msgid "Open in a new window"
 msgstr "Otvorite u novom prozoru"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1552
-#: NEEDS WORK
-msgid "Confirm Application Exit"
-msgstr "Potvrdi izlaz iz aplikacije"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1553
-#: NEEDS WORK
-msgid "Show confirmation dialog when closing the application"
-msgstr "Prikaži dijalog za potvrdu prilikom zatvaranja aplikacije"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1561
-#: NEEDS WORK
-msgid "Confirm Deletion"
-msgstr "Potvrdi brisanje"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1562
-#: NEEDS WORK
-msgid "Show confirmation dialog when deleting sessions or folders"
-msgstr "Prikaži dijalog za potvrdu prilikom brisanja sesija ili mapa"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1575
 #: NEEDS WORK
@@ -2371,15 +1737,15 @@ msgstr "Nema."
 msgid "Edit"
 msgstr "Uredi"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1716
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1790
 #: NEEDS WORK
-msgid "Backup"
-msgstr "Sigurnosna kopija"
+msgid "Advanced"
+msgstr "Napredni"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1723
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1051
 #: NEEDS WORK
-msgid "Backup Settings"
-msgstr "Postavke sigurnosne kopije"
+msgid "Backup & Recovery"
+msgstr "Sigurnosna kopija i obnova"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1724
 #: NEEDS WORK
@@ -2396,90 +1762,35 @@ msgstr "Automatske sigurnosne kopije"
 msgid "Automatically create backups of sessions and settings"
 msgstr "Automatski kreirajte sigurnosne kopije sesija i postavki"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1739
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1071
 #: NEEDS WORK
-msgid "Backup on Change"
-msgstr "Sigurnosna kopija pri promjeni"
+msgid "Logging"
+msgstr "Zapisivanje"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1740
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1071
 #: NEEDS WORK
-msgid "Create a backup every time sessions or folders are modified"
-msgstr "Izradite sigurnosnu kopiju svaki put kada se sesije ili mape izmijene."
+msgid "Configure application logging behavior"
+msgstr "Konfigurirajte ponašanje zapisivanja aplikacije"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1748
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1076
 #: NEEDS WORK
-msgid "Backup on Exit"
-msgstr "Sigurnosna kopija pri izlasku"
+msgid "Save Logs to File"
+msgstr "Spremi dnevnike u datoteku"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1749
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1077
 #: NEEDS WORK
-msgid "Create backup when application exits"
-msgstr "Izradi sigurnosnu kopiju kada aplikacija izlazi"
+msgid "Save application logs to the configuration directory"
+msgstr "Spremi dnevničke datoteke aplikacije u direktorij konfiguracije"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1757
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1087
 #: NEEDS WORK
-msgid "Backup Interval"
-msgstr "Interval sigurnosne kopije"
+msgid "Console Log Level"
+msgstr "Razina zapisivanja na konzoli"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1758
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1088
 #: NEEDS WORK
-msgid "Hours between automatic backups"
-msgstr "Sati između automatskih sigurnosnih kopija"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1771
-#: NEEDS WORK
-msgid "Retention Period"
-msgstr "Razdoblje zadržavanja"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1772
-#: NEEDS WORK
-msgid "Days to keep old backups"
-msgstr "Dani za čuvanje starih sigurnosnih kopija"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1790
-#: NEEDS WORK
-msgid "Advanced"
-msgstr "Napredni"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1797
-#: NEEDS WORK
-msgid "Development & Debugging"
-msgstr "Razvoj i otklanjanje grešaka"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1798
-#: NEEDS WORK
-msgid "Advanced options for development and troubleshooting"
-msgstr "Napredne opcije za razvoj i rješavanje problema"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1804
-#: NEEDS WORK
-msgid "Debug Mode"
-msgstr "Način ispravljanja grešaka"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1805
-#: NEEDS WORK
-msgid "Enable verbose logging and debug features"
-msgstr "Omogući detaljno bilježenje i značajke otklanjanja pogrešaka"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1813
-#: NEEDS WORK
-msgid "Performance Mode"
-msgstr "Način izvedbe"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1814
-#: NEEDS WORK
-msgid "Optimize for performance over features"
-msgstr "Optimizirajte za performanse umjesto značajki"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1822
-#: NEEDS WORK
-msgid "Experimental Features"
-msgstr "Eksperimentalne značajke"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1823
-#: NEEDS WORK
-msgid "Enable experimental and unstable features"
-msgstr "Omogući eksperimentalne i nestabilne značajke"
+msgid "Set the minimum level of messages shown in the console"
+msgstr "Postavite minimalnu razinu poruka prikazanih u konzoli"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1831
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1843
@@ -2613,20 +1924,20 @@ msgstr "Premjesti"
 msgid "Move Failed"
 msgstr "Premještaj nije uspio"
 # 
-# File: usr/share/ashyterm/ui/menus.py, line: 196
+# File: usr/share/ashyterm/ui/menus.py, line: 24
 #: NEEDS WORK
-msgid "Zoom Out (-)"
-msgstr "Povećaj udaljenost (-)"
+msgid "Follow System Style"
+msgstr "Prati stil sustava"
 # 
-# File: usr/share/ashyterm/ui/menus.py, line: 197
+# File: usr/share/ashyterm/ui/menus.py, line: 29
 #: NEEDS WORK
-msgid "Reset Zoom (100%)"
-msgstr "Poništi zum (100%)"
+msgid "Light Style"
+msgstr "Svjetlosni stil"
 # 
-# File: usr/share/ashyterm/ui/menus.py, line: 198
+# File: usr/share/ashyterm/ui/menus.py, line: 34
 #: NEEDS WORK
-msgid "Zoom In (+)"
-msgstr "Povećaj (+)"
+msgid "Dark Style"
+msgstr "Tamna tema"
 # 
 # File: usr/share/ashyterm/ui/menus.py, line: 216
 #: NEEDS WORK
@@ -2649,10 +1960,15 @@ msgstr "Dupliciraj"
 msgid "Cut"
 msgstr "Izreži"
 # 
-# File: usr/share/ashyterm/ui/menus.py, line: 36
+# File: usr/share/ashyterm/ui/menus.py, line: 203
 #: NEEDS WORK
-msgid "Move to Folder"
-msgstr "Premjesti u mapu"
+msgid "Move to Folder..."
+msgstr "Premjesti u mapu..."
+# 
+# File: usr/share/ashyterm/ui/menus.py, line: 220
+#: NEEDS WORK
+msgid "Add Session Here"
+msgstr "Dodaj sesiju ovdje"
 # 
 # File: usr/share/ashyterm/ui/menus.py, line: 98
 #: NEEDS WORK
@@ -2684,25 +2000,162 @@ msgstr "Podijeli vertikalno"
 msgid "Close Pane"
 msgstr "Zatvori okno"
 # 
-# File: usr/share/ashyterm/ui/menus.py, line: 290
+# File: usr/share/ashyterm/app.py, line: 222
 #: NEEDS WORK
-msgid "Change Permissions"
-msgstr "Promijeni dozvole"
+msgid "Automatic startup backup"
+msgstr "Automatska sigurnosna kopija pri pokretanju"
 # 
-# File: usr/share/ashyterm/ui/menus.py, line: 296
+# File: usr/share/ashyterm/app.py, line: 333
 #: NEEDS WORK
-msgid "Download File"
-msgstr "Preuzmi datoteku"
+msgid "Preferences Error"
+msgstr "Pogreška u postavkama"
 # 
-# File: usr/share/ashyterm/ui/menus.py, line: 299
+# File: usr/share/ashyterm/app.py, line: 332
+# File: usr/share/ashyterm/app.py, line: 333
 #: NEEDS WORK
-msgid "Edit with Local App"
-msgstr "Uredi s lokalnom aplikacijom"
+#, python-brace-format
+msgid "Failed to open preferences: {}"
+msgstr "Nije moguće otvoriti postavke: {}"
 # 
-# File: usr/share/ashyterm/ui/menus.py, line: 302
+# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
+# 
+# File: usr/share/ashyterm/__init__.py, line: 62
+# File: usr/share/ashyterm/app.py, line: 350
 #: NEEDS WORK
-msgid "Upload Files Here"
-msgstr "Otpremi datoteke ovdje"
+msgid "A modern terminal emulator with session management"
+msgstr "Moderni terminal emulator s upravljanjem sesijama"
+# 
+# File: usr/share/ashyterm/app.py, line: 368
+# File: usr/share/ashyterm/app.py, line: 379
+# File: usr/share/ashyterm/app.py, line: 392
+# File: usr/share/ashyterm/app.py, line: 396
+#: NEEDS WORK
+msgid "Backup Error"
+msgstr "Pogreška sigurnosne kopije"
+# 
+# File: usr/share/ashyterm/app.py, line: 368
+# File: usr/share/ashyterm/app.py, line: 402
+#: NEEDS WORK
+msgid "Backup system not available"
+msgstr "Sustav sigurnosne kopije nije dostupan"
+# 
+# File: usr/share/ashyterm/app.py, line: 379
+#: NEEDS WORK
+msgid "No files to backup"
+msgstr "Nema datoteka za sigurnosnu kopiju"
+# 
+# File: usr/share/ashyterm/app.py, line: 385
+#: NEEDS WORK
+msgid "Manual backup from menu"
+msgstr "Ručno sigurnosno kopiranje iz izbornika"
+# 
+# File: usr/share/ashyterm/app.py, line: 390
+#: NEEDS WORK
+msgid "Backup Complete"
+msgstr "Sigurnosna kopija dovršena"
+# 
+# File: usr/share/ashyterm/app.py, line: 390
+#: NEEDS WORK
+#, python-brace-format
+msgid "Backup created successfully: {}"
+msgstr "Sigurnosna kopija uspješno je kreirana: {}"
+# 
+# File: usr/share/ashyterm/app.py, line: 392
+#: NEEDS WORK
+msgid "Failed to create backup"
+msgstr "Nije uspjelo stvaranje sigurnosne kopije"
+# 
+# File: usr/share/ashyterm/app.py, line: 396
+#: NEEDS WORK
+#, python-brace-format
+msgid "Backup failed: {}"
+msgstr "Backup nije uspio: {}"
+# 
+# File: usr/share/ashyterm/app.py, line: 402
+# File: usr/share/ashyterm/app.py, line: 416
+#: NEEDS WORK
+msgid "Restore Error"
+msgstr "Pogreška pri vraćanju"
+# 
+# File: usr/share/ashyterm/app.py, line: 407
+#: NEEDS WORK
+msgid "No Backups"
+msgstr "Nema sigurnosnih kopija"
+# 
+# File: usr/share/ashyterm/app.py, line: 407
+#: NEEDS WORK
+msgid "No backups available to restore"
+msgstr "Nema dostupnih sigurnosnih kopija za vraćanje"
+# 
+# File: usr/share/ashyterm/app.py, line: 411
+#: NEEDS WORK
+msgid "Backups Available"
+msgstr "Dostupne sigurnosne kopije"
+# 
+# File: usr/share/ashyterm/app.py, line: 412
+#: NEEDS WORK
+#, python-brace-format
+msgid "{} backup(s) available. Use preferences dialog for detailed restore options."
+msgstr "{} sigurnosna kopija(e) dostupna(e). Koristite dijalog s postavkama za detaljne opcije vraćanja."
+# 
+# File: usr/share/ashyterm/app.py, line: 416
+#: NEEDS WORK
+#, python-brace-format
+msgid "Failed to access backups: {}"
+msgstr "Neuspješno pristupanje sigurnosnim kopijama: {}"
+# 
+# File: usr/share/ashyterm/app.py, line: 449
+#: NEEDS WORK
+msgid "Log Information"
+msgstr "Informacije o zapisima"
+# 
+# File: usr/share/ashyterm/app.py, line: 449
+#: NEEDS WORK
+#, python-brace-format
+msgid "Logs are stored in: {}"
+msgstr "Zapisnici su pohranjeni u: {}"
+# 
+# File: usr/share/ashyterm/app.py, line: 498
+#: NEEDS WORK
+msgid "Close Application"
+msgstr "Zatvori aplikaciju"
+# 
+# File: usr/share/ashyterm/app.py, line: 499
+#: NEEDS WORK
+msgid ""
+"There are active SSH connections. Closing will disconnect all sessions.\n"
+"\n"
+"Are you sure you want to close the application?"
+msgstr ""
+"Postoje aktivne SSH veze. Zatvaranjem će se prekinuti sve sesije.\n"
+"\n"
+"Jeste li sigurni da želite zatvoriti aplikaciju?"
+# 
+# File: usr/share/ashyterm/app.py, line: 503
+#: NEEDS WORK
+msgid "Close All"
+msgstr "Zatvori sve"
+# 
+# File: usr/share/ashyterm/app.py, line: 514
+#: NEEDS WORK
+msgid "Automatic backup on exit"
+msgstr "Automatska sigurnosna kopija pri izlasku"
+# 
+# File: usr/share/ashyterm/app.py, line: 530
+#: NEEDS WORK
+msgid "Startup Error"
+msgstr "Pogreška pri pokretanju"
+# 
+# File: usr/share/ashyterm/app.py, line: 531
+#: NEEDS WORK
+#, python-brace-format
+msgid "Application failed to start: {}"
+msgstr "Aplikacija nije uspjela pokrenuti: {}"
+# 
+# File: usr/share/ashyterm/terminal/tabs.py, line: 237
+#: NEEDS WORK
+msgid "Detach Tab"
+msgstr "Odvojite karticu"
 # 
 # File: usr/share/ashyterm/filemanager/manager.py, line: 182
 # File: usr/share/ashyterm/filemanager/manager.py, line: 608
@@ -2933,20 +2386,10 @@ msgstr "Unesite novo ime za '{name}'"
 msgid "Rename command sent to terminal"
 msgstr "Naredba za preimenovanje poslana terminalu"
 # 
-# File: usr/share/ashyterm/filemanager/operations.py, line: 113
+# File: usr/share/ashyterm/filemanager/transfer_manager.py, line: 273
 #: NEEDS WORK
-msgid "No session context for file operation."
-msgstr "Nema konteksta sesije za operaciju s datotekom."
-# 
-# File: usr/share/ashyterm/filemanager/operations.py, line: 146
-#: NEEDS WORK
-msgid "Command timed out."
-msgstr "Vrijeme za izvršenje naredbe je isteklo."
-# 
-# File: usr/share/ashyterm/filemanager/operations.py, line: 149
-#: NEEDS WORK
-msgid "Unknown session type."
-msgstr "Nepoznata vrsta sesije."
+msgid "Cancel All Transfers"
+msgstr "Otkaži sve prijenose"
 # 
 # File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 69
 #: NEEDS WORK
@@ -2996,687 +2439,17 @@ msgid ""
 "the list."
 msgstr "Ova radnja se ne može poništiti i uklonit će sve dovršene, neuspjele i otkazane transfere s popisa."
 # 
-# File: usr/share/ashyterm/filemanager/transfer_manager.py, line: 273
+# File: usr/share/ashyterm/filemanager/operations.py, line: 113
 #: NEEDS WORK
-msgid "Cancel All Transfers"
-msgstr "Otkaži sve prijenose"
+msgid "No session context for file operation."
+msgstr "Nema konteksta sesije za operaciju s datotekom."
 # 
-# File: usr/share/ashyterm/utils/exceptions.py, line: 65
+# File: usr/share/ashyterm/filemanager/operations.py, line: 146
 #: NEEDS WORK
-msgid "A terminal error occurred"
-msgstr "Došlo je do terminalne pogreške"
+msgid "Command timed out."
+msgstr "Vrijeme za izvršenje naredbe je isteklo."
 # 
-# File: usr/share/ashyterm/utils/exceptions.py, line: 66
+# File: usr/share/ashyterm/filemanager/operations.py, line: 149
 #: NEEDS WORK
-msgid "A session error occurred"
-msgstr "Došlo je do pogreške u sesiji"
-# 
-# File: usr/share/ashyterm/utils/exceptions.py, line: 67
-#: NEEDS WORK
-msgid "An SSH connection error occurred"
-msgstr "Došlo je do pogreške u SSH vezi."
-# 
-# File: usr/share/ashyterm/utils/exceptions.py, line: 68
-#: NEEDS WORK
-msgid "A user interface error occurred"
-msgstr "Došlo je do pogreške u korisničkom sučelju."
-# 
-# File: usr/share/ashyterm/utils/exceptions.py, line: 69
-#: NEEDS WORK
-msgid "A data storage error occurred"
-msgstr "Došlo je do pogreške u pohrani podataka"
-# 
-# File: usr/share/ashyterm/utils/exceptions.py, line: 70
-#: NEEDS WORK
-msgid "A configuration error occurred"
-msgstr "Došlo je do pogreške u konfiguraciji"
-# 
-# File: usr/share/ashyterm/utils/exceptions.py, line: 71
-#: NEEDS WORK
-msgid "A permission error occurred"
-msgstr "Došlo je do pogreške u dozvolama"
-# 
-# File: usr/share/ashyterm/utils/exceptions.py, line: 72
-#: NEEDS WORK
-msgid "A network error occurred"
-msgstr "Došlo je do mrežne pogreške"
-# 
-# File: usr/share/ashyterm/utils/exceptions.py, line: 73
-#: NEEDS WORK
-msgid "A system error occurred"
-msgstr "Došlo je do sistemske pogreške"
-# 
-# File: usr/share/ashyterm/utils/exceptions.py, line: 74
-#: NEEDS WORK
-msgid "A validation error occurred"
-msgstr "Došlo je do pogreške pri validaciji"
-# 
-# File: usr/share/ashyterm/utils/exceptions.py, line: 76
-#: NEEDS WORK
-msgid "An unexpected error occurred"
-msgstr "Došlo je do neočekivane pogreške."
-# 
-# File: usr/share/ashyterm/utils/exceptions.py, line: 106
-#: NEEDS WORK
-#, python-brace-format
-msgid "Failed to create {} terminal: {}"
-msgstr "Nije moguće stvoriti {} terminal: {}"
-# 
-# File: usr/share/ashyterm/utils/exceptions.py, line: 109
-#: NEEDS WORK
-#, python-brace-format
-msgid "Could not create terminal. {}"
-msgstr "Nije moguće stvoriti terminal. {}"
-# 
-# File: usr/share/ashyterm/utils/exceptions.py, line: 117
-#: NEEDS WORK
-#, python-brace-format
-msgid "Failed to spawn process '{}': {}"
-msgstr "Neuspješno pokretanje procesa '{}': {}"
-# 
-# File: usr/share/ashyterm/utils/exceptions.py, line: 120
-#: NEEDS WORK
-msgid "Failed to start terminal process"
-msgstr "Neuspješno pokretanje terminalskog procesa"
-# 
-# File: usr/share/ashyterm/utils/exceptions.py, line: 128
-#: NEEDS WORK
-msgid "VTE library is not available or not properly installed"
-msgstr "VTE knjižnica nije dostupna ili nije ispravno instalirana"
-# 
-# File: usr/share/ashyterm/utils/exceptions.py, line: 131
-#: NEEDS WORK
-msgid "Terminal functionality requires VTE library. Please install gir1.2-vte-2.91"
-msgstr "Funkcionalnost terminala zahtijeva VTE biblioteku. Molimo instalirajte gir1.2-vte-2.91."
-# 
-# File: usr/share/ashyterm/utils/exceptions.py, line: 148
-#: NEEDS WORK
-#, python-brace-format
-msgid "SSH connection to '{}' failed: {}"
-msgstr "SSH veza na '{}' nije uspjela: {}"
-# 
-# File: usr/share/ashyterm/utils/exceptions.py, line: 151
-#: NEEDS WORK
-#, python-brace-format
-msgid "Could not connect to {}. {}"
-msgstr "Nije se moglo povezati s {}. {}"
-# 
-# File: usr/share/ashyterm/utils/exceptions.py, line: 170
-#: NEEDS WORK
-#, python-brace-format
-msgid "SSH key error for '{}': {}"
-msgstr "Greška SSH ključa za '{}': {}"
-# 
-# File: usr/share/ashyterm/utils/exceptions.py, line: 173
-#: NEEDS WORK
-#, python-brace-format
-msgid "SSH key problem: {}"
-msgstr "Problem s SSH ključem: {}"
-# 
-# File: usr/share/ashyterm/utils/exceptions.py, line: 201
-#: NEEDS WORK
-#, python-brace-format
-msgid "Session '{}' validation failed: {}"
-msgstr "Validacija sesije '{}' nije uspjela: {}"
-# 
-# File: usr/share/ashyterm/utils/exceptions.py, line: 204
-#: NEEDS WORK
-#, python-brace-format
-msgid "Session configuration is invalid: {}"
-msgstr "Konfiguracija sesije je nevažeća: {}"
-# 
-# File: usr/share/ashyterm/utils/exceptions.py, line: 232
-#: NEEDS WORK
-#, python-brace-format
-msgid "Failed to read from '{}': {}"
-msgstr "Neuspjelo čitanje iz '{}': {}"
-# 
-# File: usr/share/ashyterm/utils/exceptions.py, line: 235
-#: NEEDS WORK
-msgid "Could not load saved data"
-msgstr "Nije moguće učitati spremljene podatke"
-# 
-# File: usr/share/ashyterm/utils/exceptions.py, line: 243
-#: NEEDS WORK
-#, python-brace-format
-msgid "Failed to write to '{}': {}"
-msgstr "Neuspješno pisanje u '{}': {}"
-# 
-# File: usr/share/ashyterm/utils/exceptions.py, line: 246
-#: NEEDS WORK
-msgid "Could not save data"
-msgstr "Nije moguće spremiti podatke"
-# 
-# File: usr/share/ashyterm/utils/exceptions.py, line: 254
-#: NEEDS WORK
-#, python-brace-format
-msgid "Storage file '{}' is corrupted"
-msgstr "Datoteka za pohranu '{}' je oštećena."
-# 
-# File: usr/share/ashyterm/utils/exceptions.py, line: 256
-#: NEEDS WORK
-#, python-brace-format
-msgid ": {}"
-msgstr "ključ"
-# 
-# File: usr/share/ashyterm/utils/exceptions.py, line: 259
-#: NEEDS WORK
-msgid "Saved data appears to be corrupted"
-msgstr "Spremeljeni podaci čine se oštećenima."
-# 
-# File: usr/share/ashyterm/utils/exceptions.py, line: 276
-#: NEEDS WORK
-#, python-brace-format
-msgid "Invalid configuration for '{}' (value: {}): {}"
-msgstr "Nevažeća konfiguracija za '{}' (vrijednost: {}): {}"
-# 
-# File: usr/share/ashyterm/main.py, line: 405
-#: NEEDS WORK
-#, python-brace-format
-msgid "Configuration error: {}"
-msgstr "Pogreška u konfiguraciji: {}"
-# 
-# File: usr/share/ashyterm/utils/exceptions.py, line: 307
-#: NEEDS WORK
-#, python-brace-format
-msgid "UI error in component: {}"
-msgstr "UI greška u komponenti: {}"
-# 
-# File: usr/share/ashyterm/utils/exceptions.py, line: 309
-#: NEEDS WORK
-#, python-brace-format
-msgid "UI error in {}: {}"
-msgstr "UI greška u {}: {}"
-# 
-# File: usr/share/ashyterm/utils/exceptions.py, line: 321
-#: NEEDS WORK
-#, python-brace-format
-msgid "Dialog error ({}): {}"
-msgstr "Pogreška dijaloga ({}): {}"
-# 
-# File: usr/share/ashyterm/utils/exceptions.py, line: 324
-#: NEEDS WORK
-#, python-brace-format
-msgid "Interface error: {}"
-msgstr "Greška u sučelju: {}"
-# 
-# File: usr/share/ashyterm/utils/exceptions.py, line: 368
-# File: usr/share/ashyterm/utils/exceptions.py, line: 372
-#: NEEDS WORK
-#, python-brace-format
-msgid "Validation failed for '{}': {}"
-msgstr "Validacija nije uspjela za '{}': {}"
-# 
-# File: usr/share/ashyterm/utils/exceptions.py, line: 392
-#: NEEDS WORK
-#, python-brace-format
-msgid "Invalid hostname '{}': {}"
-msgstr "Nevažeći naziv hosta '{}': {}"
-# 
-# File: usr/share/ashyterm/utils/exceptions.py, line: 395
-#: NEEDS WORK
-#, python-brace-format
-msgid "Invalid hostname: {}"
-msgstr "Nevažeći naziv hosta: {}"
-# 
-# File: usr/share/ashyterm/utils/exceptions.py, line: 403
-#: NEEDS WORK
-#, python-brace-format
-msgid "Invalid path '{}': {}"
-msgstr "Nevažeća putanja '{}': {}"
-# 
-# File: usr/share/ashyterm/utils/exceptions.py, line: 406
-#: NEEDS WORK
-#, python-brace-format
-msgid "Invalid path: {}"
-msgstr "Nevažeća putanja: {}"
-# 
-# File: usr/share/ashyterm/utils/exceptions.py, line: 423
-#: NEEDS WORK
-#, python-brace-format
-msgid "Permission denied for {} operation on '{}'"
-msgstr "Odbijena dozvola za {} operaciju na '{}'"
-# 
-# File: usr/share/ashyterm/utils/exceptions.py, line: 426
-#: NEEDS WORK
-#, python-brace-format
-msgid "Permission denied accessing {}"
-msgstr "Pristup odbijen za {}"
-# 
-# File: usr/share/ashyterm/utils/exceptions.py, line: 434
-#: NEEDS WORK
-#, python-brace-format
-msgid "Permission denied for {} operation on directory '{}'"
-msgstr "Odbijena dozvola za {} operaciju na direktoriju '{}'"
-# 
-# File: usr/share/ashyterm/utils/exceptions.py, line: 437
-#: NEEDS WORK
-#, python-brace-format
-msgid "Permission denied accessing directory {}"
-msgstr "Pristup direktoriju {} je odbijen."
-# 
-# File: usr/share/ashyterm/utils/__init__.py, line: 87
-# File: usr/share/ashyterm/utils/__init__.py, line: 104
-#: NEEDS WORK
-msgid "unnamed"
-msgstr "neimenovan"
-# 
-# File: usr/share/ashyterm/utils/security.py, line: 302
-#: NEEDS WORK
-msgid "Key path is empty"
-msgstr "Putanja ključa je prazna"
-# 
-# File: usr/share/ashyterm/utils/security.py, line: 309
-#: NEEDS WORK
-#, python-brace-format
-msgid "Key file does not exist: {}"
-msgstr "Datoteka s ključem ne postoji: {}"
-# 
-# File: usr/share/ashyterm/utils/security.py, line: 313
-#: NEEDS WORK
-#, python-brace-format
-msgid "Key path is not a file: {}"
-msgstr "Putanja ključa nije datoteka: {}"
-# 
-# File: usr/share/ashyterm/utils/security.py, line: 318
-#: NEEDS WORK
-#, python-brace-format
-msgid "Key file too large: {} bytes"
-msgstr "Datoteka ključa je prevelika: {} bajtova"
-# 
-# File: usr/share/ashyterm/utils/security.py, line: 321
-#: NEEDS WORK
-msgid "Key file is empty"
-msgstr "Datoteka ključa je prazna"
-# 
-# File: usr/share/ashyterm/utils/security.py, line: 326
-#: NEEDS WORK
-msgid "Key file has insecure permissions (should be 600)"
-msgstr "Datoteka ključa ima nesigurne dozvole (trebala bi biti 600)"
-# 
-# File: usr/share/ashyterm/utils/security.py, line: 330
-#: NEEDS WORK
-msgid "Key file is not readable"
-msgstr "Datoteka ključa nije čitljiva"
-# 
-# File: usr/share/ashyterm/utils/security.py, line: 335
-#: NEEDS WORK
-#, python-brace-format
-msgid "Error accessing key file: {}"
-msgstr "Greška prilikom pristupa datoteci ključa: {}"
-# 
-# File: usr/share/ashyterm/utils/security.py, line: 349
-#: NEEDS WORK
-msgid "Key content is empty"
-msgstr "Ključni sadržaj je prazan"
-# 
-# File: usr/share/ashyterm/utils/security.py, line: 356
-#: NEEDS WORK
-msgid "Invalid key format (missing parts)"
-msgstr "Neispravan format ključa (nedostaju dijelovi)"
-# 
-# File: usr/share/ashyterm/utils/security.py, line: 363
-#: NEEDS WORK
-#, python-brace-format
-msgid "Unsupported key type: {}"
-msgstr "Nepodržana vrsta ključa: {}"
-# 
-# File: usr/share/ashyterm/utils/security.py, line: 370
-#: NEEDS WORK
-msgid "Key data appears to be too short"
-msgstr "Podaci o ključeve čine se prekratkima."
-# 
-# File: usr/share/ashyterm/utils/security.py, line: 372
-#: NEEDS WORK
-msgid "Invalid base64 encoding in key data"
-msgstr "Nevažeća base64 kodiranja u podacima ključa"
-# 
-# File: usr/share/ashyterm/utils/security.py, line: 377
-#: NEEDS WORK
-#, python-brace-format
-msgid "Error validating key content: {}"
-msgstr "Pogreška pri provjeri sadržaja ključa: {}"
-# 
-# File: usr/share/ashyterm/utils/security.py, line: 464
-#: NEEDS WORK
-msgid "File does not exist"
-msgstr "Datoteka ne postoji"
-# 
-# File: usr/share/ashyterm/utils/security.py, line: 471
-#: NEEDS WORK
-#, python-brace-format
-msgid "Incorrect permissions: {} (expected {})"
-msgstr "Neispravna dopuštenja: {} (očekivano {})"
-# 
-# File: usr/share/ashyterm/utils/security.py, line: 475
-#: NEEDS WORK
-msgid "File has overly permissive permissions"
-msgstr "Datoteka ima previše dopuštene dozvole"
-# 
-# File: usr/share/ashyterm/utils/security.py, line: 480
-#: NEEDS WORK
-#, python-brace-format
-msgid "Error checking file permissions: {}"
-msgstr "Greška prilikom provjere dozvola datoteka: {}"
-# 
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
-# 
-# File: usr/share/ashyterm/utils/security.py, line: 508
-# File: usr/share/ashyterm/utils/security.py, line: 796
-# File: usr/share/ashyterm/utils.py, line: 449
-#: NEEDS WORK
-#, python-brace-format
-msgid "Invalid hostname format: {}"
-msgstr "Neispravan format imena domaćina: {}"
-# 
-# File: usr/share/ashyterm/utils/security.py, line: 509
-#: NEEDS WORK
-msgid "Use a valid hostname or IP address"
-msgstr "Koristite valjani naziv hosta ili IP adresu"
-# 
-# File: usr/share/ashyterm/utils/security.py, line: 519
-#: NEEDS WORK
-#, python-brace-format
-msgid "Connecting to private IP: {}"
-msgstr "Povezivanje na privatnu IP adresu: {}"
-# 
-# File: usr/share/ashyterm/utils/security.py, line: 520
-#: NEEDS WORK
-msgid "Ensure this is intentional"
-msgstr "Osigurajte da je to namjerno"
-# 
-# File: usr/share/ashyterm/utils/security.py, line: 534
-# File: usr/share/ashyterm/utils/security.py, line: 827
-#: NEEDS WORK
-#, python-brace-format
-msgid "SSH key validation failed: {}"
-msgstr "Provjera SSH ključa nije uspjela: {}"
-# 
-# File: usr/share/ashyterm/utils/security.py, line: 535
-#: NEEDS WORK
-msgid "Fix SSH key configuration"
-msgstr "Ispravi konfiguraciju SSH ključa"
-# 
-# File: usr/share/ashyterm/utils/security.py, line: 541
-#: NEEDS WORK
-msgid "Using password authentication"
-msgstr "Korištenje autentifikacije lozinkom"
-# 
-# File: usr/share/ashyterm/utils/security.py, line: 542
-#: NEEDS WORK
-msgid "Consider using SSH key authentication for better security"
-msgstr "Razmotrite korištenje SSH ključeva za autentifikaciju radi bolje sigurnosti"
-# 
-# File: usr/share/ashyterm/utils/security.py, line: 551
-#: NEEDS WORK
-msgid "Connecting as root user"
-msgstr "Povezivanje kao root korisnik"
-# 
-# File: usr/share/ashyterm/utils/security.py, line: 552
-#: NEEDS WORK
-msgid "Use a regular user account when possible"
-msgstr "Koristite redoviti korisnički račun kada je to moguće"
-# 
-# File: usr/share/ashyterm/utils/security.py, line: 576
-#: NEEDS WORK
-#, python-brace-format
-msgid "File does not exist: {}"
-msgstr "Datoteka ne postoji: {}"
-# 
-# File: usr/share/ashyterm/utils/security.py, line: 577
-#: NEEDS WORK
-msgid "Verify file path"
-msgstr "Provjerite putanju datoteke"
-# 
-# File: usr/share/ashyterm/utils/security.py, line: 588
-#: NEEDS WORK
-msgid "Set secure file permissions (600 for files, 700 for directories)"
-msgstr "Postavite sigurne dozvole za datoteke (600 za datoteke, 700 za direktorije)"
-# 
-# File: usr/share/ashyterm/utils/security.py, line: 600
-#: NEEDS WORK
-#, python-brace-format
-msgid "File is owned by different user: {}"
-msgstr "Datoteku posjeduje drugi korisnik: {}"
-# 
-# File: usr/share/ashyterm/utils/security.py, line: 601
-#: NEEDS WORK
-msgid "Ensure file ownership is correct"
-msgstr "Osigurajte ispravnost vlasništva datoteke"
-# 
-# File: usr/share/ashyterm/utils/security.py, line: 608
-#: NEEDS WORK
-#, python-brace-format
-msgid "Error auditing file: {}"
-msgstr "Greška u reviziji datoteke: {}"
-# 
-# File: usr/share/ashyterm/utils/security.py, line: 609
-#: NEEDS WORK
-msgid "Check file accessibility"
-msgstr "Provjerite pristup datoteci"
-# 
-# File: usr/share/ashyterm/utils/security.py, line: 633
-#: NEEDS WORK
-#, python-brace-format
-msgid "Directory does not exist: {}"
-msgstr "Direktorij ne postoji: {}"
-# 
-# File: usr/share/ashyterm/utils/security.py, line: 634
-#: NEEDS WORK
-msgid "Create directory with secure permissions"
-msgstr "Kreiraj direktorij s sigurnim dozvolama"
-# 
-# File: usr/share/ashyterm/utils/security.py, line: 642
-#: NEEDS WORK
-#, python-brace-format
-msgid "Path is not a directory: {}"
-msgstr "Putanja nije direktorij: {}"
-# 
-# File: usr/share/ashyterm/utils/security.py, line: 643
-#: NEEDS WORK
-msgid "Use a valid directory path"
-msgstr "Koristite važeću putanju direktorija"
-# 
-# File: usr/share/ashyterm/utils/security.py, line: 655
-#: NEEDS WORK
-#, python-brace-format
-msgid "Directory has overly permissive permissions: {}"
-msgstr "Direktorij ima previše dopuštene dozvole: {}"
-# 
-# File: usr/share/ashyterm/utils/security.py, line: 656
-#: NEEDS WORK
-msgid "Set directory permissions to 700"
-msgstr "Postavi dozvole direktorija na 700"
-# 
-# File: usr/share/ashyterm/utils/security.py, line: 663
-#: NEEDS WORK
-#, python-brace-format
-msgid "Error auditing directory: {}"
-msgstr "Greška u reviziji direktorija: {}"
-# 
-# File: usr/share/ashyterm/utils/security.py, line: 664
-#: NEEDS WORK
-msgid "Check directory accessibility"
-msgstr "Provjerite pristupnost direktorija"
-# 
-# File: usr/share/ashyterm/utils/security.py, line: 692
-#: NEEDS WORK
-msgid "Hostname cannot be empty"
-msgstr "Hostname ne može biti prazan"
-# 
-# File: usr/share/ashyterm/utils/security.py, line: 696
-#: NEEDS WORK
-msgid "Invalid hostname format"
-msgstr "Neispravan format imena domaćina"
-# 
-# File: usr/share/ashyterm/utils/security.py, line: 711
-#: NEEDS WORK
-msgid "Unknown validation error"
-msgstr "Nepoznata greška pri validaciji"
-# 
-# File: usr/share/ashyterm/utils/security.py, line: 726
-#: NEEDS WORK
-msgid "Path contains unsafe elements"
-msgstr "Putanja sadrži nesigurne elemente"
-# 
-# File: usr/share/ashyterm/utils/security.py, line: 744
-# File: usr/share/ashyterm/utils/security.py, line: 762
-#: NEEDS WORK
-msgid "set secure permissions"
-msgstr "postavi sigurne dozvole"
-# 
-# File: usr/share/ashyterm/utils/security.py, line: 788
-#: NEEDS WORK
-#, python-brace-format
-msgid "Session name too long (max {} characters)"
-msgstr "Ime sesije je predugo (maks. {} znakova)"
-# 
-# File: usr/share/ashyterm/utils/security.py, line: 794
-#: NEEDS WORK
-msgid "Hostname cannot be empty for SSH sessions"
-msgstr "Hostname ne može biti prazan za SSH sesije"
-# 
-# File: usr/share/ashyterm/utils/security.py, line: 801
-#: NEEDS WORK
-msgid "Username is required for SSH sessions"
-msgstr "Korisničko ime je obavezno za SSH sesije"
-# 
-# File: usr/share/ashyterm/utils/security.py, line: 803
-#: NEEDS WORK
-#, python-brace-format
-msgid "Username too long (max {} characters)"
-msgstr "Korisničko ime je predugačko (maks. {} znakova)"
-# 
-# File: usr/share/ashyterm/utils/security.py, line: 822
-#: NEEDS WORK
-msgid "SSH key file path is required for key authentication"
-msgstr "Putanja do SSH ključa je obavezna za autentifikaciju ključa."
-# 
-# File: usr/share/ashyterm/utils/security.py, line: 832
-#: NEEDS WORK
-#, python-brace-format
-msgid "Invalid authentication type: {}"
-msgstr "Nevažeća vrsta autentifikacije: {}"
-# 
-# File: usr/share/ashyterm/utils/security.py, line: 838
-#: NEEDS WORK
-msgid "Invalid or unsafe folder path"
-msgstr "Nevažeća ili nesigurna putanja mape"
-# 
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
-# 
-# File: usr/share/ashyterm/utils/security.py, line: 843
-# File: usr/share/ashyterm/utils.py, line: 442
-#: NEEDS WORK
-#, python-brace-format
-msgid "Invalid session type: {}"
-msgstr "Nevažeća vrsta sesije: {}"
-# 
-# File: usr/share/ashyterm/utils/security.py, line: 850
-#: NEEDS WORK
-#, python-brace-format
-msgid "Validation error: {}"
-msgstr "Pogreška pri validaciji: {}"
-# 
-# File: usr/share/ashyterm/utils/security.py, line: 881
-#: NEEDS WORK
-#, python-brace-format
-msgid "Security: {}"
-msgstr "Sigurnost: {}"
-# 
-# File: usr/share/ashyterm/utils/security.py, line: 888
-#: NEEDS WORK
-#, python-brace-format
-msgid "Security validation error: {}"
-msgstr "Pogreška u provjeri sigurnosti: {}"
-# 
-# File: usr/share/ashyterm/utils.py, line: 510
-#: NEEDS WORK
-msgid "unknown"
-msgstr "nepoznato"
-# 
-# File: usr/share/ashyterm/utils.py, line: 539
-#: NEEDS WORK
-msgid "Global error handling configured"
-msgstr "Globalno upravljanje pogreškama konfigurirano"
-# 
-# File: usr/share/ashyterm/utils.py, line: 601
-#: NEEDS WORK
-#, python-brace-format
-msgid "Utils module initialized on {} platform"
-msgstr "Utils modul inicijaliziran na {} platformi"
-# 
-# File: usr/share/ashyterm/utils.py, line: 605
-#: NEEDS WORK
-msgid "SSH command not found - SSH functionality will be limited"
-msgstr "SSH naredba nije pronađena - SSH funkcionalnost će biti ograničena"
-# 
-# File: usr/share/ashyterm/utils.py, line: 621
-#: NEEDS WORK
-#, python-brace-format
-msgid "Warning: Utils module initialization failed: {}"
-msgstr "Upozorenje: Inicijalizacija Utils modula nije uspjela: {}"
-# 
-# File: usr/share/ashyterm/main.py, line: 86
-#: NEEDS WORK
-#, python-brace-format
-msgid ""
-"\n"
-"Received signal {}, shutting down gracefully..."
-msgstr "Primljen signal {}, isključivanje na siguran način..."
-# 
-# File: usr/share/ashyterm/main.py, line: 97
-#: NEEDS WORK
-#, python-brace-format
-msgid "Warning: Could not set up signal handlers: {}"
-msgstr "Upozorenje: Nije moguće postaviti rukovatelje signala: {}"
-# 
-# File: usr/share/ashyterm/main.py, line: 109
-#: NEEDS WORK
-msgid "Ashy Terminal - A modern terminal emulator with session management"
-msgstr "Ashy Terminal - Moderni emulator terminala s upravljanjem sesijama"
-# 
-# File: usr/share/ashyterm/main.py, line: 110
-#: NEEDS WORK
-msgid "For more information, visit: https://communitybig.org/"
-msgstr "Za više informacija, posjetite: https://communitybig.org/"
-# 
-# File: usr/share/ashyterm/main.py, line: 73
-#: NEEDS WORK
-msgid "Enable debug mode"
-msgstr "Omogući način rada za otklanjanje pogrešaka"
-# 
-# File: usr/share/ashyterm/main.py, line: 79
-#: NEEDS WORK
-msgid "Set logging level"
-msgstr "Postavi razinu zapisivanja"
-# 
-# File: usr/share/ashyterm/main.py, line: 84
-#: NEEDS WORK
-msgid "Set the working directory for the initial terminal"
-msgstr "Postavite radni direktorij za inicijalni terminal"
-# 
-# File: usr/share/ashyterm/main.py, line: 92
-#: NEEDS WORK
-msgid "Working directory (positional argument)"
-msgstr "Radni direktorij (pozicijski argument)"
-# 
-# File: usr/share/ashyterm/main.py, line: 105
-#: NEEDS WORK
-msgid "Execute command in the terminal"
-msgstr "Izvrši naredbu u terminalu"
-# 
-# File: usr/share/ashyterm/main.py, line: 110
-#: NEEDS WORK
-msgid "Close terminal after executing command (only with --execute)"
-msgstr "Zatvori terminal nakon izvršavanja naredbe (samo s --execute)"
-# 
-# File: usr/share/ashyterm/main.py, line: 115
-#: NEEDS WORK
-msgid "Connect to SSH host with optional user, port, and remote path"
-msgstr "Poveži se na SSH poslužitelj s opcionalnim korisnikom, portom i udaljenom putanjom"
-# 
-# File: usr/share/ashyterm/main.py, line: 119
-#: NEEDS WORK
-msgid "Convert KIO/GVFS URI path to SSH format"
-msgstr "Pretvori KIO/GVFS URI putanju u SSH format"
+msgid "Unknown session type."
+msgstr "Nepoznata vrsta sesije."

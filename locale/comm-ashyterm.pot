@@ -44,1049 +44,766 @@ msgid   "Open {} in Ashy Terminal"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/sessions/storage.py, line: 83
+# File: usr/share/ashyterm/utils/exceptions.py, line: 54
+msgid   "A terminal error occurred"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/utils/exceptions.py, line: 55
+msgid   "A session error occurred"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/utils/exceptions.py, line: 56
+msgid   "An SSH connection error occurred"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/utils/exceptions.py, line: 57
+msgid   "A user interface error occurred"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/utils/exceptions.py, line: 58
+msgid   "A data storage error occurred"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/utils/exceptions.py, line: 59
+msgid   "A configuration error occurred"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/utils/exceptions.py, line: 60
+msgid   "A permission error occurred"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/utils/exceptions.py, line: 61
+msgid   "A network error occurred"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/utils/exceptions.py, line: 62
+msgid   "A system error occurred"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/utils/exceptions.py, line: 63
+msgid   "A validation error occurred"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/utils/exceptions.py, line: 65
+msgid   "An unexpected error occurred"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/utils/exceptions.py, line: 83
 #, python-brace-format
-msgid   "Failed to create config directory: {}"
+msgid   "Failed to create {} terminal: {}"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/sessions/storage.py, line: 139
+# File: usr/share/ashyterm/utils/exceptions.py, line: 87
 #, python-brace-format
-msgid   "File path validation failed: {}"
+msgid   "Could not create terminal. {}"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/sessions/storage.py, line: 150
-msgid   "File too large (>50MB)"
+# File: usr/share/ashyterm/utils/exceptions.py, line: 96
+msgid   "VTE library is not available or not properly installed"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/sessions/storage.py, line: 166
+# File: usr/share/ashyterm/utils/exceptions.py, line: 101
+msgid   "Terminal functionality requires VTE library. Please install gir1.2-"
+        "vte-2.91"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/utils/exceptions.py, line: 119
 #, python-brace-format
-msgid   "Invalid JSON: {}"
+msgid   "SSH connection to '{}' failed: {}"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/sessions/storage.py, line: 171
+# File: usr/share/ashyterm/utils/exceptions.py, line: 123
 #, python-brace-format
-msgid   "Encoding error: {}"
+msgid   "Could not connect to {}. {}"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/sessions/storage.py, line: 177
-msgid   "Root data is not a dictionary"
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/sessions/storage.py, line: 230
+# File: usr/share/ashyterm/utils/exceptions.py, line: 132
 #, python-brace-format
-msgid   "Load failed: {}"
+msgid   "SSH key error for '{}': {}"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/sessions/storage.py, line: 448
-msgid   "Data validation failed"
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/sessions/storage.py, line: 463
-msgid   "Temporary file was not written correctly"
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/sessions/storage.py, line: 477
+# File: usr/share/ashyterm/utils/exceptions.py, line: 135
 #, python-brace-format
-msgid   "File write failed: {}"
+msgid   "SSH key problem: {}"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/sessions/storage.py, line: 493
-msgid   "Save verification failed"
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/sessions/storage.py, line: 528
+# File: usr/share/ashyterm/utils/exceptions.py, line: 151
 #, python-brace-format
-msgid   "Save failed: {}"
+msgid   "Session '{}' validation failed: {}"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/sessions/operations.py, line: 175
+# File: usr/share/ashyterm/utils/exceptions.py, line: 160
 #, python-brace-format
-msgid   "Session '{name}' already exists in the specified folder"
+msgid   "Session configuration is invalid: {}"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/sessions/operations.py, line: 186
+# File: usr/share/ashyterm/utils/exceptions.py, line: 177
 #, python-brace-format
-msgid   "Session '{name}' added successfully"
+msgid   "Failed to read from '{}': {}"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/sessions/operations.py, line: 192
-# File: usr/share/ashyterm/sessions/operations.py, line: 394
+# File: usr/share/ashyterm/utils/exceptions.py, line: 180
+msgid   "Could not load saved data"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/utils/exceptions.py, line: 188
 #, python-brace-format
-msgid   "Session name sanitized: '{original}' -> '{new}'"
+msgid   "Failed to write to '{}': {}"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/sessions/operations.py, line: 209
-# File: usr/share/ashyterm/sessions/operations.py, line: 405
-msgid   "Failed to save session data"
+# File: usr/share/ashyterm/utils/exceptions.py, line: 191
+msgid   "Could not save data"
 msgstr  ""
 
 #
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
-#
-# File: usr/share/ashyterm/sessions/operations.py, line: 230
-# File: usr/share/ashyterm/window.py, line: 1777
+# File: usr/share/ashyterm/utils/exceptions.py, line: 199
 #, python-brace-format
-msgid   "Failed to add session: {error}"
+msgid   "Storage file '{}' is corrupted"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/sessions/operations.py, line: 249
-msgid   "Validation passed"
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/sessions/operations.py, line: 256
+# File: usr/share/ashyterm/utils/exceptions.py, line: 201
 #, python-brace-format
-msgid   "Session validation failed: {errors}"
+msgid   ": {}"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/sessions/operations.py, line: 270
-# File: usr/share/ashyterm/sessions/operations.py, line: 474
+# File: usr/share/ashyterm/utils/exceptions.py, line: 206
+msgid   "Saved data appears to be corrupted"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/utils/exceptions.py, line: 222
 #, python-brace-format
-msgid   "Security validation failed: {errors}"
+msgid   "Invalid configuration for '{}' (value: {}): {}"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/sessions/operations.py, line: 282
-# File: usr/share/ashyterm/sessions/operations.py, line: 498
+# File: usr/share/ashyterm/utils/exceptions.py, line: 229
 #, python-brace-format
-msgid   "Security: {message}"
+msgid   "Configuration error: {}"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/sessions/operations.py, line: 289
-# File: usr/share/ashyterm/sessions/operations.py, line: 505
+# File: usr/share/ashyterm/utils/exceptions.py, line: 238
 #, python-brace-format
-msgid   "Critical security issue: {message}"
+msgid   "UI error in {}: {}"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/sessions/operations.py, line: 296
-# File: usr/share/ashyterm/sessions/operations.py, line: 512
+# File: usr/share/ashyterm/utils/exceptions.py, line: 240
 #, python-brace-format
-msgid   "Security validation error: {error}"
+msgid   "UI error in component: {}"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/sessions/operations.py, line: 304
-# File: usr/share/ashyterm/sessions/operations.py, line: 520
-# File: usr/share/ashyterm/sessions/operations.py, line: 786
+# File: usr/share/ashyterm/utils/exceptions.py, line: 251
 #, python-brace-format
-msgid   "Target folder '{folder}' does not exist"
+msgid   "Dialog error ({}): {}"
 msgstr  ""
 
 #
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
-#
-# File: usr/share/ashyterm/sessions/operations.py, line: 314
-# File: usr/share/ashyterm/sessions/models.py, line: 432
-# File: usr/share/ashyterm/sessions/models.py, line: 807
+# File: usr/share/ashyterm/utils/exceptions.py, line: 254
 #, python-brace-format
-msgid   "Validation error: {error}"
+msgid   "Interface error: {}"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/sessions/operations.py, line: 341
-# File: usr/share/ashyterm/sessions/operations.py, line: 982
+# File: usr/share/ashyterm/utils/exceptions.py, line: 280
+# File: usr/share/ashyterm/utils/exceptions.py, line: 284
 #, python-brace-format
-msgid   "Invalid position: {position}"
+msgid   "Validation failed for '{}': {}"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/sessions/operations.py, line: 348
+# File: usr/share/ashyterm/utils/exceptions.py, line: 299
 #, python-brace-format
-msgid   "Item at position {position} is not a session"
+msgid   "Invalid hostname '{}': {}"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/sessions/operations.py, line: 376
+# File: usr/share/ashyterm/utils/exceptions.py, line: 302
 #, python-brace-format
-msgid   "Session name '{name}' already exists in the target folder"
+msgid   "Invalid hostname: {}"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/sessions/operations.py, line: 416
+# File: usr/share/ashyterm/utils/exceptions.py, line: 310
 #, python-brace-format
-msgid   "Session '{name}' updated successfully"
+msgid   "Invalid path '{}': {}"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/sessions/operations.py, line: 433
+# File: usr/share/ashyterm/utils/exceptions.py, line: 313
 #, python-brace-format
-msgid   "Failed to update session: {error}"
+msgid   "Invalid path: {}"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/sessions/operations.py, line: 453
-msgid   "Update validation passed"
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/sessions/operations.py, line: 460
+# File: usr/share/ashyterm/utils/exceptions.py, line: 329
 #, python-brace-format
-msgid   "Updated session validation failed: {errors}"
+msgid   "Permission denied for {} operation on '{}'"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/sessions/operations.py, line: 488
+# File: usr/share/ashyterm/utils/exceptions.py, line: 335
 #, python-brace-format
-msgid   "Security score decreased: {original} -> {updated}"
+msgid   "Permission denied accessing {}"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/sessions/operations.py, line: 530
+# File: usr/share/ashyterm/utils/exceptions.py, line: 344
 #, python-brace-format
-msgid   "Update validation error: {error}"
+msgid   "Permission denied for {} operation on directory '{}'"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/sessions/operations.py, line: 571
-msgid   "Properties updated successfully"
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/sessions/operations.py, line: 583
+# File: usr/share/ashyterm/utils/exceptions.py, line: 353
 #, python-brace-format
-msgid   "Property update failed: {error}"
+msgid   "Permission denied accessing directory {}"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/sessions/operations.py, line: 609
+# File: usr/share/ashyterm/utils/security.py, line: 36
+# File: usr/share/ashyterm/utils/security.py, line: 44
+msgid   "unnamed"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/utils/security.py, line: 118
+msgid   "Key path is empty"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/utils/security.py, line: 121
 #, python-brace-format
-msgid   "Session '{name}' not found in store"
+msgid   "Key file does not exist: {}"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/sessions/operations.py, line: 624
-msgid   "Failed to save after session removal"
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/sessions/operations.py, line: 637
+# File: usr/share/ashyterm/utils/security.py, line: 122
 #, python-brace-format
-msgid   "Session '{name}' removed successfully"
+msgid   "Key path is not a file: {}"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/sessions/operations.py, line: 652
+# File: usr/share/ashyterm/utils/security.py, line: 124
 #, python-brace-format
-msgid   "Failed to remove session: {error}"
+msgid   "Key file too large: {} bytes"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/sessions/operations.py, line: 691
+# File: usr/share/ashyterm/utils/security.py, line: 125
+msgid   "Key file is empty"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/utils/security.py, line: 126
+msgid   "Key file has insecure permissions (should be 600)"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/utils/security.py, line: 127
+msgid   "Key file is not readable"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/utils/security.py, line: 130
 #, python-brace-format
-msgid   "Copy of {name}"
+msgid   "Error accessing key file: {}"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/sessions/operations.py, line: 700
+# File: usr/share/ashyterm/utils/security.py, line: 169
+# File: usr/share/ashyterm/utils/security.py, line: 240
 #, python-brace-format
-msgid   "Duplicate validation failed: {errors}"
+msgid   "Invalid hostname format: {}"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/sessions/operations.py, line: 711
+# File: usr/share/ashyterm/utils/security.py, line: 169
+msgid   "Use a valid hostname or IP address"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/utils/security.py, line: 171
 #, python-brace-format
-msgid   "Duplicate name '{name}' already exists"
+msgid   "Connecting to private IP: {}"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/sessions/operations.py, line: 737
+# File: usr/share/ashyterm/utils/security.py, line: 171
+msgid   "Ensure this is intentional"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/utils/security.py, line: 178
+# File: usr/share/ashyterm/utils/security.py, line: 262
 #, python-brace-format
-msgid   "Session duplicated as '{name}'"
+msgid   "SSH key validation failed: {}"
 msgstr  ""
 
 #
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
-#
-# File: usr/share/ashyterm/sessions/operations.py, line: 754
-# File: usr/share/ashyterm/window.py, line: 1487
-#, python-brace-format
-msgid   "Failed to duplicate session: {error}"
+# File: usr/share/ashyterm/utils/security.py, line: 178
+msgid   "Fix SSH key configuration"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/sessions/operations.py, line: 800
-#, python-brace-format
-msgid   "Session moved and renamed to '{name}'"
+# File: usr/share/ashyterm/utils/security.py, line: 180
+msgid   "Using password authentication"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/sessions/operations.py, line: 807
-#, python-brace-format
-msgid   "Session renamed to avoid conflict: '{original}' -> '{new}'"
+# File: usr/share/ashyterm/utils/security.py, line: 180
+msgid   "Consider using SSH key authentication for better security"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/sessions/operations.py, line: 811
-# File: usr/share/ashyterm/sessions/operations.py, line: 839
-msgid   "root"
+# File: usr/share/ashyterm/utils/security.py, line: 184
+msgid   "Connecting as root user"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/sessions/operations.py, line: 814
-#, python-brace-format
-msgid   "Session moved to '{folder}'"
+# File: usr/share/ashyterm/utils/security.py, line: 184
+msgid   "Use a regular user account when possible"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/sessions/operations.py, line: 828
-msgid   "Failed to save after moving session"
+# File: usr/share/ashyterm/utils/security.py, line: 196
+msgid   "Hostname cannot be empty"
 msgstr  ""
 
 #
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
-#
-# File: usr/share/ashyterm/sessions/operations.py, line: 860
-# File: usr/share/ashyterm/window.py, line: 1516
-#, python-brace-format
-msgid   "Failed to move session: {error}"
+# File: usr/share/ashyterm/utils/security.py, line: 199
+msgid   "Invalid hostname format"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/sessions/operations.py, line: 890
-#, python-brace-format
-msgid   "Folder validation failed: {errors}"
+# File: usr/share/ashyterm/utils/security.py, line: 204
+msgid   "Unknown validation error"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/sessions/operations.py, line: 900
-# File: usr/share/ashyterm/sessions/operations.py, line: 1019
-#, python-brace-format
-msgid   "Folder path '{path}' already exists"
+# File: usr/share/ashyterm/utils/security.py, line: 208
+msgid   "Path contains unsafe elements"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/sessions/operations.py, line: 925
-# File: usr/share/ashyterm/sessions/operations.py, line: 1043
-msgid   "Failed to save folder data"
+# File: usr/share/ashyterm/utils/security.py, line: 214
+# File: usr/share/ashyterm/utils/security.py, line: 220
+msgid   "set secure permissions"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/sessions/operations.py, line: 937
-#, python-brace-format
-msgid   "Folder '{name}' added successfully"
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/sessions/operations.py, line: 943
-# File: usr/share/ashyterm/sessions/operations.py, line: 1067
-#, python-brace-format
-msgid   "Folder name sanitized: '{original}' -> '{new}'"
-msgstr  ""
-
-#
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
-#
-# File: usr/share/ashyterm/sessions/operations.py, line: 958
-# File: usr/share/ashyterm/window.py, line: 1817
-#, python-brace-format
-msgid   "Failed to add folder: {error}"
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/sessions/operations.py, line: 989
-#, python-brace-format
-msgid   "Item at position {position} is not a folder"
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/sessions/operations.py, line: 1007
-#, python-brace-format
-msgid   "Updated folder validation failed: {errors}"
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/sessions/operations.py, line: 1059
-#, python-brace-format
-msgid   "Folder '{name}' updated successfully"
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/sessions/operations.py, line: 1089
-#, python-brace-format
-msgid   "Failed to update folder: {error}"
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/sessions/operations.py, line: 1122
-#, python-brace-format
-msgid   "Cannot remove folder '{name}' - it contains sessions or subfolders. "
-        "Use force removal to delete anyway."
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/sessions/operations.py, line: 1136
-#, python-brace-format
-msgid   "Folder '{name}' not found in store"
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/sessions/operations.py, line: 1154
-msgid   "Failed to save after folder removal"
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/sessions/operations.py, line: 1171
-#, python-brace-format
-msgid   "Folder '{name}' removed successfully"
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/sessions/operations.py, line: 1181
-#, python-brace-format
-msgid   "Removed {count} child items"
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/sessions/operations.py, line: 1196
-#, python-brace-format
-msgid   "Failed to remove folder: {error}"
-msgstr  ""
-
-#
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
-#
-# File: usr/share/ashyterm/sessions/models.py, line: 103
-# File: usr/share/ashyterm/utils/security.py, line: 805
+# File: usr/share/ashyterm/utils/security.py, line: 232
 msgid   "Session name cannot be empty"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/sessions/models.py, line: 133
+# File: usr/share/ashyterm/utils/security.py, line: 234
 #, python-brace-format
-msgid   "Invalid session type: {type}. Must be one of: {valid_types}"
+msgid   "Session name too long (max {} characters)"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/sessions/models.py, line: 163
-#, python-brace-format
-msgid   "Invalid hostname format: {hostname}"
+# File: usr/share/ashyterm/utils/security.py, line: 238
+msgid   "Hostname cannot be empty for SSH sessions"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/sessions/models.py, line: 223
-#, python-brace-format
-msgid   "Invalid authentication type: {type}. Must be one of: {valid_types}"
+# File: usr/share/ashyterm/utils/security.py, line: 243
+msgid   "Username is required for SSH sessions"
 msgstr  ""
 
 #
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
+# File: usr/share/ashyterm/utils/security.py, line: 245
+#, python-brace-format
+msgid   "Username too long (max {} characters)"
+msgstr  ""
+
 #
-# File: usr/share/ashyterm/sessions/models.py, line: 343
-# File: usr/share/ashyterm/utils/security.py, line: 838
+# File: usr/share/ashyterm/utils/security.py, line: 250
 msgid   "Port must be between 1 and 65535"
 msgstr  ""
 
 #
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
-#
-# File: usr/share/ashyterm/sessions/models.py, line: 350
-# File: usr/share/ashyterm/utils/security.py, line: 840
+# File: usr/share/ashyterm/utils/security.py, line: 252
 msgid   "Port must be a valid number"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/sessions/models.py, line: 384
-msgid   "Session name is required"
+# File: usr/share/ashyterm/utils/security.py, line: 258
+msgid   "SSH key file path is required for key authentication"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/sessions/models.py, line: 387
-msgid   "Session type is required"
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/sessions/models.py, line: 393
-msgid   "Host is required for SSH sessions"
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/sessions/models.py, line: 404
+# File: usr/share/ashyterm/utils/security.py, line: 264
 #, python-brace-format
-msgid   "SSH key validation failed: {error}"
+msgid   "Invalid authentication type: {}"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/sessions/models.py, line: 410
+# File: usr/share/ashyterm/utils/security.py, line: 267
+msgid   "Invalid or unsafe folder path"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/utils/security.py, line: 272
 #, python-brace-format
-msgid   "SSH key validation error: {error}"
+msgid   "Validation error: {}"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/sessions/models.py, line: 415
-msgid   "Authentication type is required for SSH sessions"
+# File: usr/share/ashyterm/main.py, line: 30
+#, python-brace-format
+msgid   "\n"
+        "Received signal {}, shutting down gracefully..."
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/sessions/models.py, line: 478
-# File: usr/share/ashyterm/sessions/models.py, line: 512
+# File: usr/share/ashyterm/main.py, line: 49
+#, python-brace-format
+msgid   "Warning: Could not set up signal handlers: {}"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/main.py, line: 74
+msgid   "Ashy Terminal - A modern terminal emulator with session management"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/main.py, line: 76
+msgid   "For more information, visit: https://communitybig.org/"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/main.py, line: 82
+msgid   "Enable debug mode"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/main.py, line: 87
+msgid   "Set logging level"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/main.py, line: 93
+msgid   "Set the working directory for the initial terminal"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/main.py, line: 99
+msgid   "Working directory (positional argument)"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/main.py, line: 102
+msgid   "Execute command in the terminal"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/main.py, line: 107
+msgid   "Close terminal after executing command (only with --execute)"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/main.py, line: 112
+msgid   "Connect to SSH host with optional user, port, and remote path"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/main.py, line: 115
+msgid   "Convert KIO/GVFS URI path to SSH format"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/sessions/models.py, line: 174
+msgid   "Port must be a valid number between 1 and 65535"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/sessions/models.py, line: 198
+msgid   "Session name is required."
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/sessions/models.py, line: 201
+msgid   "Host is required for SSH sessions."
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/sessions/models.py, line: 203
+msgid   "Port must be between 1 and 65535."
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/sessions/models.py, line: 231
 msgid   "Unnamed Session"
 msgstr  ""
 
 #
 # #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
 #
-# File: usr/share/ashyterm/sessions/models.py, line: 604
-# File: usr/share/ashyterm/ui/dialogs.py, line: 423
+# File: usr/share/ashyterm/sessions/models.py, line: 264
+# File: usr/share/ashyterm/ui/dialogs.py, line: 250
 msgid   "Local Terminal"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/sessions/models.py, line: 692
-msgid   "Folder name cannot be empty"
+# File: usr/share/ashyterm/sessions/models.py, line: 346
+msgid   "Folder name is required."
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/sessions/models.py, line: 778
-msgid   "Folder name is required"
+# File: usr/share/ashyterm/sessions/models.py, line: 352
+msgid   "Folder path is not consistent with its parent path."
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/sessions/models.py, line: 784
-msgid   "Path contains invalid characters"
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/sessions/models.py, line: 790
-msgid   "Path is not consistent with parent path"
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/sessions/models.py, line: 844
-# File: usr/share/ashyterm/sessions/models.py, line: 869
+# File: usr/share/ashyterm/sessions/models.py, line: 370
 msgid   "Unnamed Folder"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/sessions/tree.py, line: 96
+# File: usr/share/ashyterm/sessions/tree.py, line: 73
 msgid   "Sessions"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/sessions/tree.py, line: 673
-# File: usr/share/ashyterm/sessions/tree.py, line: 677
+# File: usr/share/ashyterm/sessions/tree.py, line: 558
+# File: usr/share/ashyterm/sessions/tree.py, line: 562
 msgid   "Paste Error"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/app.py, line: 54
+# File: usr/share/ashyterm/sessions/validation.py, line: 18
 #, python-brace-format
-msgid   "Initializing {} v{}"
+msgid   "Session validation failed: {}"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/app.py, line: 65
+# File: usr/share/ashyterm/sessions/validation.py, line: 31
 #, python-brace-format
-msgid   "Running on {} platform"
+msgid   "A session with the name '{name}' already exists in this folder."
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/app.py, line: 119
-msgid   "Initializing application subsystems"
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/app.py, line: 122
-msgid   "Settings manager initialized"
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/app.py, line: 126
-# File: usr/share/ashyterm/app.py, line: 557
-msgid   "Debug mode enabled"
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/app.py, line: 133
-msgid   "Encryption available but not initialized (may require passphrase)"
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/app.py, line: 137
-msgid   "Encryption system initialized"
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/app.py, line: 140
+# File: usr/share/ashyterm/sessions/validation.py, line: 45
 #, python-brace-format
-msgid   "Encryption initialization failed: {}"
+msgid   "The target folder '{folder}' does not exist."
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/app.py, line: 145
-msgid   "Encryption not available - passwords will be stored as plain text"
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/app.py, line: 152
-msgid   "VTE library not available"
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/app.py, line: 156
-msgid   "All essential subsystems initialized successfully"
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/app.py, line: 160
+# File: usr/share/ashyterm/sessions/validation.py, line: 61
 #, python-brace-format
-msgid   "Subsystem initialization failed: {}"
+msgid   "Folder validation failed: {}"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/app.py, line: 162
-msgid   "application initialization"
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/app.py, line: 169
-msgid   "Application startup initiated"
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/app.py, line: 173
-msgid   "Failed to initialize application subsystems"
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/app.py, line: 182
-msgid   "Application startup completed successfully"
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/app.py, line: 185
+# File: usr/share/ashyterm/sessions/validation.py, line: 69
 #, python-brace-format
-msgid   "Application startup failed: {}"
+msgid   "A folder with the path '{path}' already exists."
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/app.py, line: 197
-msgid   "Automatic startup backup is disabled in settings."
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/app.py, line: 210
-msgid   "Performing startup backup asynchronously"
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/app.py, line: 213
-msgid   "Automatic startup backup"
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/app.py, line: 219
+# File: usr/share/ashyterm/sessions/validation.py, line: 84
 #, python-brace-format
-msgid   "Startup backup check failed: {}"
+msgid   "The parent folder '{folder}' does not exist."
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/app.py, line: 241
-msgid   "Application actions configured"
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/app.py, line: 244
+# File: usr/share/ashyterm/sessions/storage.py, line: 85
 #, python-brace-format
-msgid   "Failed to setup actions: {}"
+msgid   "File path validation failed: {}"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/app.py, line: 417
-msgid   "Quit action triggered - no SSH sessions"
+# File: usr/share/ashyterm/sessions/storage.py, line: 93
+msgid   "File too large (>50MB)"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/app.py, line: 420
+# File: usr/share/ashyterm/sessions/storage.py, line: 104
 #, python-brace-format
-msgid   "Quit action failed: {}"
+msgid   "Invalid JSON: {}"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/app.py, line: 438
-# File: usr/share/ashyterm/app.py, line: 440
+# File: usr/share/ashyterm/sessions/storage.py, line: 108
 #, python-brace-format
-msgid   "Failed to open preferences: {}"
+msgid   "Encoding error: {}"
 msgstr  ""
 
 #
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
-#
-# File: usr/share/ashyterm/app.py, line: 440
-# File: usr/share/ashyterm/window.py, line: 1653
-msgid   "Preferences Error"
+# File: usr/share/ashyterm/sessions/storage.py, line: 113
+msgid   "Root data is not a dictionary"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/app.py, line: 458
-msgid   "A modern terminal emulator with session management"
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/app.py, line: 462
+# File: usr/share/ashyterm/sessions/storage.py, line: 148
 #, python-brace-format
-msgid   "Platform: {}\n"
+msgid   "Load failed: {}"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/app.py, line: 465
+# File: usr/share/ashyterm/sessions/storage.py, line: 279
+msgid   "Data validation failed"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/sessions/storage.py, line: 291
+msgid   "Temporary file was not written correctly"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/sessions/storage.py, line: 299
 #, python-brace-format
-msgid   "Architecture: {}\n"
+msgid   "File write failed: {}"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/app.py, line: 468
+# File: usr/share/ashyterm/sessions/storage.py, line: 314
+msgid   "Save verification failed"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/sessions/storage.py, line: 336
 #, python-brace-format
-msgid   "Shell: {}"
+msgid   "Save failed: {}"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/app.py, line: 474
+# File: usr/share/ashyterm/sessions/operations.py, line: 46
+msgid   "Failed to save session data."
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/sessions/operations.py, line: 51
 #, python-brace-format
-msgid   "Failed to show about dialog: {}"
+msgid   "Session '{name}' added successfully."
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/app.py, line: 481
-# File: usr/share/ashyterm/app.py, line: 494
-# File: usr/share/ashyterm/app.py, line: 508
-# File: usr/share/ashyterm/app.py, line: 512
-msgid   "Backup Error"
+# File: usr/share/ashyterm/sessions/operations.py, line: 62
+msgid   "Item at position is not a session."
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/app.py, line: 481
-# File: usr/share/ashyterm/app.py, line: 519
-msgid   "Backup system not available"
+# File: usr/share/ashyterm/sessions/operations.py, line: 74
+msgid   "Failed to save updated session data."
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/app.py, line: 494
-msgid   "No files to backup"
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/app.py, line: 498
-msgid   "Manual backup from menu"
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/app.py, line: 502
+# File: usr/share/ashyterm/sessions/operations.py, line: 79
 #, python-brace-format
-msgid   "Manual backup created: {}"
+msgid   "Session '{name}' updated successfully."
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/app.py, line: 504
-msgid   "Backup Complete"
+# File: usr/share/ashyterm/sessions/operations.py, line: 90
+msgid   "Session not found."
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/app.py, line: 505
+# File: usr/share/ashyterm/sessions/operations.py, line: 96
+msgid   "Failed to save after session removal."
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/sessions/operations.py, line: 102
 #, python-brace-format
-msgid   "Backup created successfully: {}"
+msgid   "Session '{name}' removed successfully."
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/app.py, line: 508
-msgid   "Failed to create backup"
+# File: usr/share/ashyterm/sessions/operations.py, line: 115
+msgid   "Failed to save folder data."
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/app.py, line: 511
+# File: usr/share/ashyterm/sessions/operations.py, line: 120
 #, python-brace-format
-msgid   "Manual backup failed: {}"
+msgid   "Folder '{name}' added successfully."
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/app.py, line: 512
+# File: usr/share/ashyterm/sessions/operations.py, line: 131
+msgid   "Item at position is not a folder."
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/sessions/operations.py, line: 144
+msgid   "Failed to save updated folder data."
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/sessions/operations.py, line: 149
 #, python-brace-format
-msgid   "Backup failed: {}"
+msgid   "Folder '{name}' updated successfully."
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/app.py, line: 519
-# File: usr/share/ashyterm/app.py, line: 541
-msgid   "Restore Error"
+# File: usr/share/ashyterm/sessions/operations.py, line: 161
+msgid   "Cannot remove a non-empty folder."
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/app.py, line: 526
-msgid   "No Backups"
+# File: usr/share/ashyterm/sessions/operations.py, line: 168
+msgid   "Folder not found."
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/app.py, line: 526
-msgid   "No backups available to restore"
+# File: usr/share/ashyterm/sessions/operations.py, line: 172
+msgid   "Failed to save after folder removal."
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/app.py, line: 532
-msgid   "Backups Available"
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/app.py, line: 534
+# File: usr/share/ashyterm/sessions/operations.py, line: 177
 #, python-brace-format
-msgid   "{} backup(s) available. Use preferences dialog for detailed restore "
-        "options."
+msgid   "Folder '{name}' removed successfully."
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/app.py, line: 539
-#, python-brace-format
-msgid   "Restore backup action failed: {}"
+# File: usr/share/ashyterm/sessions/operations.py, line: 190
+msgid   "Failed to save after moving session."
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/app.py, line: 541
-#, python-brace-format
-msgid   "Failed to access backups: {}"
+# File: usr/share/ashyterm/sessions/operations.py, line: 195
+msgid   "Session moved successfully."
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/app.py, line: 562
-msgid   "Debug mode disabled"
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/app.py, line: 567
-#, python-brace-format
-msgid   "Failed to toggle debug mode: {}"
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/app.py, line: 578
-msgid   "Log Information"
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/app.py, line: 578
-#, python-brace-format
-msgid   "Logs are stored in: {}"
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/app.py, line: 582
-#, python-brace-format
-msgid   "Failed to show log info: {}"
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/app.py, line: 595
-#, python-brace-format
-msgid   "Failed to check SSH sessions: {}"
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/app.py, line: 608
-msgid   "Close Application"
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/app.py, line: 610
-msgid   "There are active SSH connections. Closing will disconnect all "
-        "sessions.\n"
-        "\n"
-        "Are you sure you want to close the application?"
-msgstr  ""
-
-#
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
-#
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
-#
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
-#
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
-#
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
-#
-# File: usr/share/ashyterm/app.py, line: 614
-# File: usr/share/ashyterm/window.py, line: 1125
-# File: usr/share/ashyterm/window.py, line: 1879
-# File: usr/share/ashyterm/window.py, line: 1966
-# File: usr/share/ashyterm/ui/ssh_dialogs.py, line: 176
-# File: usr/share/ashyterm/ui/dialogs.py, line: 161
-# File: usr/share/ashyterm/ui/dialogs.py, line: 627
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1328
-# File: usr/share/ashyterm/ui/dialogs.py, line: 2152
-# File: usr/share/ashyterm/ui/dialogs.py, line: 2211
-# File: usr/share/ashyterm/ui/dialogs.py, line: 2317
-# File: usr/share/ashyterm/filemanager/manager.py, line: 678
-# File: usr/share/ashyterm/filemanager/manager.py, line: 771
-# File: usr/share/ashyterm/filemanager/manager.py, line: 1257
-# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 347
-msgid   "Cancel"
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/app.py, line: 615
-msgid   "Close All"
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/app.py, line: 623
-msgid   "User confirmed quit with active SSH sessions"
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/app.py, line: 627
-msgid   "User cancelled quit"
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/app.py, line: 631
-#, python-brace-format
-msgid   "SSH close confirmation response failed: {}"
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/app.py, line: 639
-#, python-brace-format
-msgid   "SSH close confirmation dialog failed: {}"
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/app.py, line: 644
-msgid   "Application shutdown initiated"
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/app.py, line: 654
-msgid   "Performing graceful shutdown"
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/app.py, line: 660
-msgid   "Cleaning up main window"
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/app.py, line: 665
-msgid   "Saving settings"
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/app.py, line: 672
-msgid   "Graceful shutdown completed"
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/app.py, line: 675
-#, python-brace-format
-msgid   "Error during graceful shutdown: {}"
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/app.py, line: 696
-msgid   "Performing shutdown backup"
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/app.py, line: 698
-msgid   "Automatic backup on exit"
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/app.py, line: 702
-#, python-brace-format
-msgid   "Shutdown backup failed: {}"
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/app.py, line: 707
-msgid   "Emergency cleanup on exit"
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/app.py, line: 714
-msgid   "Startup Error"
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/app.py, line: 715
-#, python-brace-format
-msgid   "Application failed to start: {}"
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/app.py, line: 733
-#, python-brace-format
-msgid   "Failed to show error dialog: {}"
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/app.py, line: 743
-#, python-brace-format
-msgid   "Failed to show info dialog: {}"
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/app.py, line: 754
-#, python-brace-format
-msgid   "Failed to refresh keyboard shortcuts: {}"
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/app.py, line: 762
-msgid   "Main window registered"
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/app.py, line: 770
-msgid   "Main window unregistered"
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/app.py, line: 803
-#, python-brace-format
-msgid   "Failed to create new window: {}"
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/terminal/tabs.py, line: 679
-msgid   "Exited"
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/window.py, line: 202
-# File: usr/share/ashyterm/window.py, line: 1320
-# File: usr/share/ashyterm/window.py, line: 1794
-# File: usr/share/ashyterm/window.py, line: 1804
-msgid   "Terminal Error"
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/window.py, line: 204
-msgid   "Failed to create initial terminal. Check system configuration."
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/window.py, line: 211
+# File: usr/share/ashyterm/window.py, line: 158
 msgid   "Initialization Error"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/window.py, line: 212
+# File: usr/share/ashyterm/window.py, line: 159
 #, python-brace-format
 msgid   "Failed to initialize terminal: {error}"
 msgstr  ""
@@ -1094,31 +811,28 @@ msgstr  ""
 #
 # #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
 #
-# File: usr/share/ashyterm/window.py, line: 337
-# File: usr/share/ashyterm/window.py, line: 1702
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1786
+# File: usr/share/ashyterm/window.py, line: 240
+# File: usr/share/ashyterm/window.py, line: 744
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1020
 msgid   "Toggle Sidebar"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/window.py, line: 344
+# File: usr/share/ashyterm/window.py, line: 246
 msgid   "File Manager"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/window.py, line: 351
+# File: usr/share/ashyterm/window.py, line: 252
 msgid   "Main Menu"
 msgstr  ""
 
 #
 # #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
 #
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
-#
-# File: usr/share/ashyterm/window.py, line: 357
-# File: usr/share/ashyterm/window.py, line: 1671
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1776
-# File: usr/share/ashyterm/ui/menus.py, line: 71
+# File: usr/share/ashyterm/window.py, line: 259
+# File: usr/share/ashyterm/window.py, line: 732
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1011
 msgid   "New Tab"
 msgstr  ""
 
@@ -1127,10 +841,9 @@ msgstr  ""
 #
 # #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
 #
-# File: usr/share/ashyterm/window.py, line: 428
-# File: usr/share/ashyterm/ui/dialogs.py, line: 229
-# File: usr/share/ashyterm/ui/menus.py, line: 162
-# File: usr/share/ashyterm/ui/menus.py, line: 187
+# File: usr/share/ashyterm/window.py, line: 286
+# File: usr/share/ashyterm/ui/dialogs.py, line: 138
+# File: usr/share/ashyterm/ui/menus.py, line: 235
 msgid   "Add Session"
 msgstr  ""
 
@@ -1139,297 +852,131 @@ msgstr  ""
 #
 # #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
 #
-# File: usr/share/ashyterm/window.py, line: 434
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1161
-# File: usr/share/ashyterm/ui/menus.py, line: 188
+# File: usr/share/ashyterm/window.py, line: 290
+# File: usr/share/ashyterm/ui/dialogs.py, line: 726
+# File: usr/share/ashyterm/ui/menus.py, line: 236
 msgid   "Add Folder"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/window.py, line: 440
+# File: usr/share/ashyterm/window.py, line: 294
 msgid   "Edit Selected"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/window.py, line: 446
+# File: usr/share/ashyterm/window.py, line: 298
 msgid   "Remove Selected"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/window.py, line: 630
+# File: usr/share/ashyterm/window.py, line: 389
 msgid   "Data Loading Error"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/window.py, line: 632
+# File: usr/share/ashyterm/window.py, line: 391
 msgid   "Failed to load saved sessions and folders. Starting with empty "
         "configuration."
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/window.py, line: 1066
-msgid   "Window close request received"
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/window.py, line: 1070
-msgid   "Force closing - allowing window to close"
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/window.py, line: 1078
-msgid   "Showing SSH close confirmation dialog"
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/window.py, line: 1083
-msgid   "No SSH sessions, proceeding with normal close"
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/window.py, line: 1085
-msgid   "Window cleanup completed"
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/window.py, line: 1089
-#, python-brace-format
-msgid   "Window close handling failed: {}"
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/window.py, line: 1109
+# File: usr/share/ashyterm/window.py, line: 538
 msgid   "This window has active SSH connections:"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/window.py, line: 1110
+# File: usr/share/ashyterm/window.py, line: 538
 msgid   "Closing will disconnect these sessions."
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/window.py, line: 1111
+# File: usr/share/ashyterm/window.py, line: 538
 msgid   "Are you sure you want to close this window?"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/window.py, line: 1122
-# File: usr/share/ashyterm/window.py, line: 1126
+# File: usr/share/ashyterm/window.py, line: 540
+# File: usr/share/ashyterm/window.py, line: 543
 msgid   "Close Window"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/window.py, line: 1134
-msgid   "User confirmed window close with active SSH sessions"
+# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
+#
+# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
+#
+# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
+#
+# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
+#
+# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
+#
+# File: usr/share/ashyterm/window.py, line: 542
+# File: usr/share/ashyterm/window.py, line: 804
+# File: usr/share/ashyterm/window.py, line: 875
+# File: usr/share/ashyterm/ui/ssh_dialogs.py, line: 80
+# File: usr/share/ashyterm/ui/dialogs.py, line: 94
+# File: usr/share/ashyterm/ui/dialogs.py, line: 368
+# File: usr/share/ashyterm/ui/dialogs.py, line: 821
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1193
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1226
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1302
+# File: usr/share/ashyterm/app.py, line: 504
+# File: usr/share/ashyterm/filemanager/manager.py, line: 678
+# File: usr/share/ashyterm/filemanager/manager.py, line: 771
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1249
+# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 347
+msgid   "Cancel"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/window.py, line: 1140
-msgid   "User cancelled window close"
+# File: usr/share/ashyterm/window.py, line: 572
+msgid   "Session Validation Error"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/window.py, line: 1144
-#, python-brace-format
-msgid   "Window SSH close confirmation response failed: {}"
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/window.py, line: 1153
-#, python-brace-format
-msgid   "Window SSH close confirmation dialog failed: {}"
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/window.py, line: 1206
+# File: usr/share/ashyterm/window.py, line: 573
 #, python-brace-format
 msgid   "Session validation failed:\n"
         "{errors}"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/window.py, line: 1209
-msgid   "Session Validation Error"
+# File: usr/share/ashyterm/window.py, line: 586
+msgid   "SFTP not implemented yet"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/window.py, line: 1227
-msgid   "Terminal Creation Failed"
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/window.py, line: 1228
-msgid   "Could not create terminal for this session."
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/window.py, line: 1233
-# File: usr/share/ashyterm/window.py, line: 1314
-# File: usr/share/ashyterm/window.py, line: 1785
-msgid   "VTE Not Available"
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/window.py, line: 1234
-msgid   "Cannot open session - VTE library not installed."
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/window.py, line: 1239
-msgid   "Session Error"
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/window.py, line: 1240
-#, python-brace-format
-msgid   "Failed to activate session: {error}"
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/window.py, line: 1261
-msgid   "SFTP Connection Failed"
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/window.py, line: 1262
-msgid   "Could not create SFTP terminal for this session."
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/window.py, line: 1278
-msgid   "SFTP Error"
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/window.py, line: 1279
-#, python-brace-format
-msgid   "Failed to start SFTP session: {error}"
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/window.py, line: 1315
-# File: usr/share/ashyterm/window.py, line: 1786
-msgid   "Cannot create terminal - VTE library not installed."
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/window.py, line: 1321
-# File: usr/share/ashyterm/window.py, line: 1805
-#, python-brace-format
-msgid   "Failed to create new tab: {error}"
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/window.py, line: 1380
-# File: usr/share/ashyterm/window.py, line: 1390
-msgid   "Split Error"
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/window.py, line: 1468
-# File: usr/share/ashyterm/window.py, line: 1548
-# File: usr/share/ashyterm/window.py, line: 1831
-msgid   "Edit Error"
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/window.py, line: 1469
-#, python-brace-format
-msgid   "Failed to edit session: {error}"
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/window.py, line: 1486
-msgid   "Duplicate Error"
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/window.py, line: 1499
-# File: usr/share/ashyterm/window.py, line: 1561
-msgid   "Rename Error"
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/window.py, line: 1500
-#, python-brace-format
-msgid   "Failed to rename session: {error}"
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/window.py, line: 1515
-msgid   "Move Error"
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/window.py, line: 1532
-# File: usr/share/ashyterm/window.py, line: 2002
-# File: usr/share/ashyterm/window.py, line: 2011
-msgid   "Delete Error"
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/window.py, line: 1533
-#, python-brace-format
-msgid   "Failed to delete selected items: {error}"
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/window.py, line: 1549
-#, python-brace-format
-msgid   "Failed to edit folder: {error}"
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/window.py, line: 1562
-#, python-brace-format
-msgid   "Failed to rename folder: {error}"
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/window.py, line: 1571
-# File: usr/share/ashyterm/window.py, line: 1771
+# File: usr/share/ashyterm/window.py, line: 682
+# File: usr/share/ashyterm/window.py, line: 703
+# File: usr/share/ashyterm/window.py, line: 764
 msgid   "New Session"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/window.py, line: 1577
-msgid   "Add Error"
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/window.py, line: 1578
-#, python-brace-format
-msgid   "Failed to add session to folder: {error}"
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/window.py, line: 1654
-#, python-brace-format
-msgid   "Failed to open preferences: {error}"
+# File: usr/share/ashyterm/window.py, line: 706
+# File: usr/share/ashyterm/window.py, line: 770
+msgid   "New Folder"
 msgstr  ""
 
 #
 # #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
 #
-# File: usr/share/ashyterm/window.py, line: 1664
-# File: usr/share/ashyterm/window.py, line: 1720
-# File: usr/share/ashyterm/ui/menus.py, line: 93
+# File: usr/share/ashyterm/window.py, line: 728
+# File: usr/share/ashyterm/ui/menus.py, line: 151
 msgid   "Keyboard Shortcuts"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/window.py, line: 1668
+# File: usr/share/ashyterm/window.py, line: 730
 msgid   "Terminal"
 msgstr  ""
 
 #
 # #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
 #
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
-#
-# File: usr/share/ashyterm/window.py, line: 1672
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1777
-# File: usr/share/ashyterm/ui/menus.py, line: 72
+# File: usr/share/ashyterm/window.py, line: 733
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1012
 msgid   "Close Tab"
 msgstr  ""
 
@@ -1438,12 +985,9 @@ msgstr  ""
 #
 # #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
 #
-# File: usr/share/ashyterm/window.py, line: 1673
-# File: usr/share/ashyterm/window.py, line: 1735
-# File: usr/share/ashyterm/window.py, line: 1739
-# File: usr/share/ashyterm/window.py, line: 1745
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1787
-# File: usr/share/ashyterm/ui/menus.py, line: 73
+# File: usr/share/ashyterm/window.py, line: 734
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1021
+# File: usr/share/ashyterm/ui/menus.py, line: 149
 msgid   "New Window"
 msgstr  ""
 
@@ -1452,13 +996,11 @@ msgstr  ""
 #
 # #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
 #
-# File: usr/share/ashyterm/window.py, line: 1674
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1778
-# File: usr/share/ashyterm/ui/menus.py, line: 85
-# File: usr/share/ashyterm/ui/menus.py, line: 132
-# File: usr/share/ashyterm/ui/menus.py, line: 168
-# File: usr/share/ashyterm/ui/menus.py, line: 241
-# File: usr/share/ashyterm/ui/menus.py, line: 284
+# File: usr/share/ashyterm/window.py, line: 735
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1013
+# File: usr/share/ashyterm/ui/menus.py, line: 200
+# File: usr/share/ashyterm/ui/menus.py, line: 224
+# File: usr/share/ashyterm/ui/menus.py, line: 270
 msgid   "Copy"
 msgstr  ""
 
@@ -1467,11 +1009,10 @@ msgstr  ""
 #
 # #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
 #
-# File: usr/share/ashyterm/window.py, line: 1675
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1779
-# File: usr/share/ashyterm/ui/menus.py, line: 86
-# File: usr/share/ashyterm/ui/menus.py, line: 171
-# File: usr/share/ashyterm/ui/menus.py, line: 242
+# File: usr/share/ashyterm/window.py, line: 736
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1014
+# File: usr/share/ashyterm/ui/menus.py, line: 226
+# File: usr/share/ashyterm/ui/menus.py, line: 271
 msgid   "Paste"
 msgstr  ""
 
@@ -1480,40 +1021,14 @@ msgstr  ""
 #
 # #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
 #
-# File: usr/share/ashyterm/window.py, line: 1676
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1780
-# File: usr/share/ashyterm/ui/menus.py, line: 87
-# File: usr/share/ashyterm/ui/menus.py, line: 243
+# File: usr/share/ashyterm/window.py, line: 737
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1015
+# File: usr/share/ashyterm/ui/menus.py, line: 272
 msgid   "Select All"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/window.py, line: 1684
-msgid   "Split Navigation"
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/window.py, line: 1687
-msgid   "Focus Up"
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/window.py, line: 1688
-msgid   "Focus Down"
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/window.py, line: 1689
-msgid   "Focus Left"
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/window.py, line: 1690
-msgid   "Focus Right"
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/window.py, line: 1698
+# File: usr/share/ashyterm/window.py, line: 741
 msgid   "Application"
 msgstr  ""
 
@@ -1522,92 +1037,44 @@ msgstr  ""
 #
 # #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
 #
-# File: usr/share/ashyterm/window.py, line: 1701
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1477
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1784
-# File: usr/share/ashyterm/ui/menus.py, line: 92
+# File: usr/share/ashyterm/window.py, line: 743
+# File: usr/share/ashyterm/ui/dialogs.py, line: 906
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1018
+# File: usr/share/ashyterm/ui/menus.py, line: 150
 msgid   "Preferences"
 msgstr  ""
 
 #
 # #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
 #
-# File: usr/share/ashyterm/window.py, line: 1703
-# File: usr/share/ashyterm/ui/menus.py, line: 99
+# File: usr/share/ashyterm/window.py, line: 745
+# File: usr/share/ashyterm/ui/menus.py, line: 154
 msgid   "Quit"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/window.py, line: 1721
-#, python-brace-format
-msgid   "Failed to open shortcuts window: {error}"
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/window.py, line: 1735
-msgid   "Failed to create new window"
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/window.py, line: 1739
-msgid   "Could not create a new window"
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/window.py, line: 1746
-#, python-brace-format
-msgid   "Failed to create new window: {error}"
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/window.py, line: 1776
-msgid   "Add Session Error"
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/window.py, line: 1794
-msgid   "Failed to create new tab."
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/window.py, line: 1811
-msgid   "New Folder"
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/window.py, line: 1816
-msgid   "Add Folder Error"
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/window.py, line: 1832
-#, python-brace-format
-msgid   "Failed to edit selected item: {error}"
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/window.py, line: 1870
-# File: usr/share/ashyterm/window.py, line: 1937
+# File: usr/share/ashyterm/window.py, line: 796
+# File: usr/share/ashyterm/window.py, line: 848
 msgid   "Session"
 msgstr  ""
 
 #
 # #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
 #
-# File: usr/share/ashyterm/window.py, line: 1870
-# File: usr/share/ashyterm/window.py, line: 1937
-# File: usr/share/ashyterm/ui/dialogs.py, line: 367
+# File: usr/share/ashyterm/window.py, line: 796
+# File: usr/share/ashyterm/window.py, line: 848
+# File: usr/share/ashyterm/ui/dialogs.py, line: 214
 msgid   "Folder"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/window.py, line: 1873
+# File: usr/share/ashyterm/window.py, line: 799
 #, python-brace-format
 msgid   "Rename {type}"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/window.py, line: 1874
+# File: usr/share/ashyterm/window.py, line: 800
 #, python-brace-format
 msgid   "Enter new name for \"{name}\":"
 msgstr  ""
@@ -1617,53 +1084,52 @@ msgstr  ""
 #
 # #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
 #
-# File: usr/share/ashyterm/window.py, line: 1880
-# File: usr/share/ashyterm/ui/menus.py, line: 127
-# File: usr/share/ashyterm/ui/menus.py, line: 163
-# File: usr/share/ashyterm/ui/menus.py, line: 276
+# File: usr/share/ashyterm/window.py, line: 805
+# File: usr/share/ashyterm/ui/menus.py, line: 197
+# File: usr/share/ashyterm/ui/menus.py, line: 221
 # File: usr/share/ashyterm/filemanager/manager.py, line: 634
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1242
 # File: usr/share/ashyterm/filemanager/manager.py, line: 1250
-# File: usr/share/ashyterm/filemanager/manager.py, line: 1258
 msgid   "Rename"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/window.py, line: 1932
+# File: usr/share/ashyterm/window.py, line: 845
 msgid   "Delete Item"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/window.py, line: 1932
+# File: usr/share/ashyterm/window.py, line: 845
 msgid   "Delete Items"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/window.py, line: 1939
+# File: usr/share/ashyterm/window.py, line: 849
 #, python-brace-format
 msgid   "Delete {type}"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/window.py, line: 1945
+# File: usr/share/ashyterm/window.py, line: 855
 #, python-brace-format
 msgid   "The folder \"{name}\" is not empty. Are you sure you want to "
         "permanently delete it and all its contents?"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/window.py, line: 1948
+# File: usr/share/ashyterm/window.py, line: 858
 #, python-brace-format
 msgid   "Are you sure you want to delete \"{name}\"?"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/window.py, line: 1954
+# File: usr/share/ashyterm/window.py, line: 864
 #, python-brace-format
 msgid   "Are you sure you want to permanently delete these {count} items?"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/window.py, line: 1962
+# File: usr/share/ashyterm/window.py, line: 872
 msgid   "This will also delete all contents of any selected folders."
 msgstr  ""
 
@@ -1672,10 +1138,9 @@ msgstr  ""
 #
 # #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
 #
-# File: usr/share/ashyterm/window.py, line: 1967
-# File: usr/share/ashyterm/ui/menus.py, line: 143
-# File: usr/share/ashyterm/ui/menus.py, line: 175
-# File: usr/share/ashyterm/ui/menus.py, line: 308
+# File: usr/share/ashyterm/window.py, line: 876
+# File: usr/share/ashyterm/ui/menus.py, line: 205
+# File: usr/share/ashyterm/ui/menus.py, line: 228
 # File: usr/share/ashyterm/filemanager/manager.py, line: 644
 # File: usr/share/ashyterm/filemanager/manager.py, line: 679
 msgid   "Delete"
@@ -1684,85 +1149,90 @@ msgstr  ""
 #
 # #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
 #
-# File: usr/share/ashyterm/window.py, line: 2025
-# File: usr/share/ashyterm/window.py, line: 2035
-# File: usr/share/ashyterm/ui/dialogs.py, line: 137
-# File: usr/share/ashyterm/ui/dialogs.py, line: 902
-# File: usr/share/ashyterm/ui/dialogs.py, line: 2228
-# File: usr/share/ashyterm/ui/dialogs.py, line: 2240
+# File: usr/share/ashyterm/window.py, line: 894
+# File: usr/share/ashyterm/window.py, line: 899
+# File: usr/share/ashyterm/ui/dialogs.py, line: 83
+# File: usr/share/ashyterm/ui/dialogs.py, line: 542
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1241
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1251
 msgid   "OK"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/ui/ssh_dialogs.py, line: 51
+# File: usr/share/ashyterm/window.py, line: 958
+msgid   "Cannot detach the last tab."
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/ui/ssh_dialogs.py, line: 18
 msgid   "SSH Connection Timeout"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/ui/ssh_dialogs.py, line: 55
+# File: usr/share/ashyterm/ui/ssh_dialogs.py, line: 21
 #, python-brace-format
 msgid   "The SSH connection attempt timed out after {seconds} seconds."
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/ui/ssh_dialogs.py, line: 59
+# File: usr/share/ashyterm/ui/ssh_dialogs.py, line: 23
 msgid   "Connection details:"
 msgstr  ""
 
 #
 # #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
 #
-# File: usr/share/ashyterm/ui/ssh_dialogs.py, line: 63
-# File: usr/share/ashyterm/ui/dialogs.py, line: 466
+# File: usr/share/ashyterm/ui/ssh_dialogs.py, line: 26
+# File: usr/share/ashyterm/ui/dialogs.py, line: 277
 msgid   "Username"
 msgstr  ""
 
 #
 # #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
 #
-# File: usr/share/ashyterm/ui/ssh_dialogs.py, line: 65
-# File: usr/share/ashyterm/ui/dialogs.py, line: 447
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1025
+# File: usr/share/ashyterm/ui/ssh_dialogs.py, line: 27
+# File: usr/share/ashyterm/ui/dialogs.py, line: 264
+# File: usr/share/ashyterm/ui/dialogs.py, line: 626
 msgid   "Host"
 msgstr  ""
 
 #
 # #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
 #
-# File: usr/share/ashyterm/ui/ssh_dialogs.py, line: 68
-# File: usr/share/ashyterm/ui/dialogs.py, line: 485
+# File: usr/share/ashyterm/ui/ssh_dialogs.py, line: 29
+# File: usr/share/ashyterm/ui/dialogs.py, line: 289
 msgid   "Port"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/ui/ssh_dialogs.py, line: 71
+# File: usr/share/ashyterm/ui/ssh_dialogs.py, line: 31
 msgid   "Remote path"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/ui/ssh_dialogs.py, line: 76
+# File: usr/share/ashyterm/ui/ssh_dialogs.py, line: 32
 msgid   "Please check your network connection and verify the server is "
         "accessible."
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/ui/ssh_dialogs.py, line: 83
-# File: usr/share/ashyterm/ui/ssh_dialogs.py, line: 239
+# File: usr/share/ashyterm/ui/ssh_dialogs.py, line: 35
+# File: usr/share/ashyterm/ui/ssh_dialogs.py, line: 117
 msgid   "Close"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/ui/ssh_dialogs.py, line: 84
+# File: usr/share/ashyterm/ui/ssh_dialogs.py, line: 36
 msgid   "Retry Connection"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/ui/ssh_dialogs.py, line: 160
+# File: usr/share/ashyterm/ui/ssh_dialogs.py, line: 74
 msgid   "SSH Authentication Required"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/ui/ssh_dialogs.py, line: 162
+# File: usr/share/ashyterm/ui/ssh_dialogs.py, line: 75
 #, python-brace-format
 msgid   "Please enter the password for {target_display}"
 msgstr  ""
@@ -1770,990 +1240,936 @@ msgstr  ""
 #
 # #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
 #
-# File: usr/share/ashyterm/ui/ssh_dialogs.py, line: 169
-# File: usr/share/ashyterm/ui/dialogs.py, line: 501
-# File: usr/share/ashyterm/ui/dialogs.py, line: 570
+# File: usr/share/ashyterm/ui/ssh_dialogs.py, line: 77
+# File: usr/share/ashyterm/ui/dialogs.py, line: 300
+# File: usr/share/ashyterm/ui/dialogs.py, line: 338
 msgid   "Password"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/ui/ssh_dialogs.py, line: 177
+# File: usr/share/ashyterm/ui/ssh_dialogs.py, line: 81
 msgid   "Connect"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/ui/ssh_dialogs.py, line: 206
+# File: usr/share/ashyterm/ui/ssh_dialogs.py, line: 96
 msgid   "SSH Connection Failed"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/ui/ssh_dialogs.py, line: 207
+# File: usr/share/ashyterm/ui/ssh_dialogs.py, line: 97
 #, python-brace-format
 msgid   "Could not connect to session '{session_name}'."
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/ui/dialogs.py, line: 162
+# File: usr/share/ashyterm/ui/dialogs.py, line: 95
 msgid   "Continue"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/ui/dialogs.py, line: 192
+# File: usr/share/ashyterm/ui/dialogs.py, line: 114
 #, python-brace-format
 msgid   "{} is required"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/ui/dialogs.py, line: 229
+# File: usr/share/ashyterm/ui/dialogs.py, line: 138
 msgid   "Edit Session"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/ui/dialogs.py, line: 326
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1239
+# File: usr/share/ashyterm/ui/dialogs.py, line: 190
+# File: usr/share/ashyterm/ui/dialogs.py, line: 771
 msgid   "UI Error"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/ui/dialogs.py, line: 326
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1239
+# File: usr/share/ashyterm/ui/dialogs.py, line: 190
+# File: usr/share/ashyterm/ui/dialogs.py, line: 771
 msgid   "Failed to initialize dialog interface"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/ui/dialogs.py, line: 333
+# File: usr/share/ashyterm/ui/dialogs.py, line: 195
 msgid   "Session Information"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/ui/dialogs.py, line: 337
+# File: usr/share/ashyterm/ui/dialogs.py, line: 197
 msgid   "Session Name"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/ui/dialogs.py, line: 338
+# File: usr/share/ashyterm/ui/dialogs.py, line: 197
 msgid   "A descriptive name for this session"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/ui/dialogs.py, line: 343
+# File: usr/share/ashyterm/ui/dialogs.py, line: 201
 msgid   "Enter session name..."
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/ui/dialogs.py, line: 363
+# File: usr/share/ashyterm/ui/dialogs.py, line: 212
 msgid   "Organization"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/ui/dialogs.py, line: 368
+# File: usr/share/ashyterm/ui/dialogs.py, line: 214
 msgid   "Choose a folder to organize this session"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/ui/dialogs.py, line: 373
-# File: usr/share/ashyterm/ui/dialogs.py, line: 374
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1278
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1279
-# File: usr/share/ashyterm/ui/dialogs.py, line: 2335
-# File: usr/share/ashyterm/ui/dialogs.py, line: 2336
+# File: usr/share/ashyterm/ui/dialogs.py, line: 217
+# File: usr/share/ashyterm/ui/dialogs.py, line: 218
+# File: usr/share/ashyterm/ui/dialogs.py, line: 797
+# File: usr/share/ashyterm/ui/dialogs.py, line: 798
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1316
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1317
 msgid   "Root"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/ui/dialogs.py, line: 414
+# File: usr/share/ashyterm/ui/dialogs.py, line: 244
 msgid   "Connection Type"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/ui/dialogs.py, line: 418
+# File: usr/share/ashyterm/ui/dialogs.py, line: 246
 msgid   "Session Type"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/ui/dialogs.py, line: 419
+# File: usr/share/ashyterm/ui/dialogs.py, line: 247
 msgid   "Choose between local terminal or SSH connection"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/ui/dialogs.py, line: 423
+# File: usr/share/ashyterm/ui/dialogs.py, line: 250
 msgid   "SSH Connection"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/ui/dialogs.py, line: 441
+# File: usr/share/ashyterm/ui/dialogs.py, line: 260
 msgid   "SSH Configuration"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/ui/dialogs.py, line: 442
+# File: usr/share/ashyterm/ui/dialogs.py, line: 261
 msgid   "Configure connection details for SSH sessions"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/ui/dialogs.py, line: 448
+# File: usr/share/ashyterm/ui/dialogs.py, line: 264
 msgid   "Hostname or IP address of the remote server"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/ui/dialogs.py, line: 453
+# File: usr/share/ashyterm/ui/dialogs.py, line: 268
 msgid   "example.com or 192.168.1.100"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/ui/dialogs.py, line: 467
+# File: usr/share/ashyterm/ui/dialogs.py, line: 278
 msgid   "Username for SSH authentication (optional)"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/ui/dialogs.py, line: 472
+# File: usr/share/ashyterm/ui/dialogs.py, line: 281
 msgid   "username"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/ui/dialogs.py, line: 485
+# File: usr/share/ashyterm/ui/dialogs.py, line: 289
 msgid   "SSH port number (default: 22)"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/ui/dialogs.py, line: 498
+# File: usr/share/ashyterm/ui/dialogs.py, line: 298
 msgid   "Authentication"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/ui/dialogs.py, line: 498
+# File: usr/share/ashyterm/ui/dialogs.py, line: 298
 msgid   "Choose authentication method"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/ui/dialogs.py, line: 501
+# File: usr/share/ashyterm/ui/dialogs.py, line: 300
 msgid   "SSH Key"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/ui/dialogs.py, line: 528
+# File: usr/share/ashyterm/ui/dialogs.py, line: 312
 msgid   "SSH Key Path"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/ui/dialogs.py, line: 528
+# File: usr/share/ashyterm/ui/dialogs.py, line: 312
 msgid   "Path to private SSH key file"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/ui/dialogs.py, line: 549
+# File: usr/share/ashyterm/ui/dialogs.py, line: 327
 msgid   "Browse..."
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/ui/dialogs.py, line: 570
+# File: usr/share/ashyterm/ui/dialogs.py, line: 338
 msgid   "Password for SSH authentication"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/ui/dialogs.py, line: 579
-msgid   "Password for SSH authentication (encrypted storage)"
+# File: usr/share/ashyterm/ui/dialogs.py, line: 342
+msgid   "Password for SSH authentication (stored in system keyring)"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/ui/dialogs.py, line: 584
-msgid   "Password for SSH authentication (encryption available but not "
-        "initialized)"
+# File: usr/share/ashyterm/ui/dialogs.py, line: 346
+msgid   "Password for SSH authentication (keyring not available)"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/ui/dialogs.py, line: 589
-msgid   "Password for SSH authentication (encryption not available)"
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/ui/dialogs.py, line: 593
-msgid   "Password for SSH authentication (stored as plain text)"
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/ui/dialogs.py, line: 603
+# File: usr/share/ashyterm/ui/dialogs.py, line: 355
 msgid   "Enter password..."
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/ui/dialogs.py, line: 633
+# File: usr/share/ashyterm/ui/dialogs.py, line: 371
 msgid   "Test Connection"
 msgstr  ""
 
 #
 # #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
 #
-# File: usr/share/ashyterm/ui/dialogs.py, line: 639
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1333
+# File: usr/share/ashyterm/ui/dialogs.py, line: 374
+# File: usr/share/ashyterm/ui/dialogs.py, line: 824
 # File: usr/share/ashyterm/filemanager/manager.py, line: 828
 msgid   "Save"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/ui/dialogs.py, line: 784
+# File: usr/share/ashyterm/ui/dialogs.py, line: 449
 msgid   "Select SSH Key"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/ui/dialogs.py, line: 796
+# File: usr/share/ashyterm/ui/dialogs.py, line: 457
 msgid   "File Dialog Error"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/ui/dialogs.py, line: 796
+# File: usr/share/ashyterm/ui/dialogs.py, line: 457
 msgid   "Failed to open file browser"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/ui/dialogs.py, line: 812
+# File: usr/share/ashyterm/ui/dialogs.py, line: 469
 msgid   "Invalid SSH Key"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/ui/dialogs.py, line: 818
+# File: usr/share/ashyterm/ui/dialogs.py, line: 474
 msgid   "File Selection Error"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/ui/dialogs.py, line: 819
+# File: usr/share/ashyterm/ui/dialogs.py, line: 475
 #, python-brace-format
 msgid   "Failed to select file: {}"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/ui/dialogs.py, line: 831
-# File: usr/share/ashyterm/ui/dialogs.py, line: 990
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1006
+# File: usr/share/ashyterm/ui/dialogs.py, line: 485
+# File: usr/share/ashyterm/ui/dialogs.py, line: 605
+# File: usr/share/ashyterm/ui/dialogs.py, line: 617
 msgid   "Validation Error"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/ui/dialogs.py, line: 832
+# File: usr/share/ashyterm/ui/dialogs.py, line: 486
 msgid   "Please fill in all required SSH fields first."
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/ui/dialogs.py, line: 839
+# File: usr/share/ashyterm/ui/dialogs.py, line: 491
 msgid   "Testing Connection..."
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/ui/dialogs.py, line: 840
+# File: usr/share/ashyterm/ui/dialogs.py, line: 492
 #, python-brace-format
 msgid   "Attempting to connect to {host}..."
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/ui/dialogs.py, line: 859
+# File: usr/share/ashyterm/ui/dialogs.py, line: 508
 msgid   "Test Connection Error"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/ui/dialogs.py, line: 860
+# File: usr/share/ashyterm/ui/dialogs.py, line: 509
 #, python-brace-format
 msgid   "Failed to start connection test: {}"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/ui/dialogs.py, line: 899
+# File: usr/share/ashyterm/ui/dialogs.py, line: 539
 msgid   "Connection Successful"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/ui/dialogs.py, line: 900
+# File: usr/share/ashyterm/ui/dialogs.py, line: 540
 msgid   "Successfully connected to the SSH server."
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/ui/dialogs.py, line: 907
+# File: usr/share/ashyterm/ui/dialogs.py, line: 546
 msgid   "Connection Failed"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/ui/dialogs.py, line: 908
+# File: usr/share/ashyterm/ui/dialogs.py, line: 547
 msgid   "Could not connect to the SSH server."
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/ui/dialogs.py, line: 918
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1367
+# File: usr/share/ashyterm/ui/dialogs.py, line: 556
+# File: usr/share/ashyterm/ui/dialogs.py, line: 840
 msgid   "Unsaved Changes"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/ui/dialogs.py, line: 919
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1368
+# File: usr/share/ashyterm/ui/dialogs.py, line: 557
+# File: usr/share/ashyterm/ui/dialogs.py, line: 841
 msgid   "You have unsaved changes. Are you sure you want to cancel?"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/ui/dialogs.py, line: 958
-# File: usr/share/ashyterm/ui/dialogs.py, line: 964
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1402
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1407
+# File: usr/share/ashyterm/ui/dialogs.py, line: 586
+# File: usr/share/ashyterm/ui/dialogs.py, line: 591
+# File: usr/share/ashyterm/ui/dialogs.py, line: 865
+# File: usr/share/ashyterm/ui/dialogs.py, line: 869
 msgid   "Save Error"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/ui/dialogs.py, line: 958
+# File: usr/share/ashyterm/ui/dialogs.py, line: 586
 #, python-brace-format
 msgid   "Failed to save session: {}"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/ui/dialogs.py, line: 964
+# File: usr/share/ashyterm/ui/dialogs.py, line: 591
 msgid   "An unexpected error occurred while saving"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/ui/dialogs.py, line: 991
+# File: usr/share/ashyterm/ui/dialogs.py, line: 606
 #, python-brace-format
 msgid   "Session validation failed:\n"
         "{}"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1006
+# File: usr/share/ashyterm/ui/dialogs.py, line: 617
 #, python-brace-format
 msgid   "Failed to validate session: {}"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1015
+# File: usr/share/ashyterm/ui/dialogs.py, line: 622
 msgid   "Session name"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1051
+# File: usr/share/ashyterm/ui/dialogs.py, line: 649
+msgid   "SSH Validation Error"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/ui/dialogs.py, line: 650
 #, python-brace-format
 msgid   "SSH configuration errors:\n"
         "{}"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1054
-msgid   "SSH Validation Error"
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1130
+# File: usr/share/ashyterm/ui/dialogs.py, line: 706
 #, python-brace-format
 msgid   "Session {} {}"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1161
+# File: usr/share/ashyterm/ui/dialogs.py, line: 726
 msgid   "Edit Folder"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1214
+# File: usr/share/ashyterm/ui/dialogs.py, line: 759
 msgid   "Folder Information"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1247
+# File: usr/share/ashyterm/ui/dialogs.py, line: 777
 msgid   "Folder Name"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1248
+# File: usr/share/ashyterm/ui/dialogs.py, line: 778
 msgid   "A descriptive name for organizing sessions"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1253
+# File: usr/share/ashyterm/ui/dialogs.py, line: 782
 msgid   "Enter folder name..."
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1272
+# File: usr/share/ashyterm/ui/dialogs.py, line: 793
 msgid   "Parent Folder"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1273
+# File: usr/share/ashyterm/ui/dialogs.py, line: 794
 msgid   "Choose a parent folder for organization"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1407
+# File: usr/share/ashyterm/ui/dialogs.py, line: 869
 #, python-brace-format
 msgid   "Failed to save folder: {}"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1413
+# File: usr/share/ashyterm/ui/dialogs.py, line: 874
 msgid   "Folder name"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1445
-#, python-brace-format
-msgid   "Folder {} {}"
+# File: usr/share/ashyterm/ui/dialogs.py, line: 923
+msgid   "General"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1507
+# File: usr/share/ashyterm/ui/dialogs.py, line: 928
 msgid   "Appearance"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1513
-msgid   "Colors & Font"
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1514
+# File: usr/share/ashyterm/ui/dialogs.py, line: 929
 msgid   "Customize terminal appearance and typography"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1520
+# File: usr/share/ashyterm/ui/dialogs.py, line: 934
 msgid   "Color Scheme"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1520
+# File: usr/share/ashyterm/ui/dialogs.py, line: 934
 msgid   "Select terminal color scheme"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1534
+# File: usr/share/ashyterm/ui/dialogs.py, line: 946
 msgid   "Background Transparency"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1535
+# File: usr/share/ashyterm/ui/dialogs.py, line: 947
 msgid   "Adjust terminal background transparency"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1556
+# File: usr/share/ashyterm/ui/dialogs.py, line: 962
 msgid   "Terminal Font"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1557
+# File: usr/share/ashyterm/ui/dialogs.py, line: 963
 msgid   "Select font family and size for terminal text"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1575
-msgid   "Behavior"
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1581
-msgid   "Terminal Behavior"
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1582
-msgid   "Configure how terminals behave"
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1588
-msgid   "Auto Close Tabs"
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1589
-msgid   "Automatically close tabs when process exits normally"
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1600
-msgid   "Scroll on Output"
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1601
-msgid   "Automatically scroll when new output appears"
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1616
-msgid   "Scroll on Keystroke"
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1617
-msgid   "Automatically scroll when typing"
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1632
-msgid   "Hide Mouse Cursor"
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1633
-msgid   "Hide mouse cursor when typing"
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1644
-msgid   "Cursor Blinking"
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1645
-msgid   "Enable cursor blinking animation"
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1656
-msgid   "Directory Tracking"
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1657
-msgid   "Track current directory and update tab titles"
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1663
-msgid   "Enable Directory Tracking"
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1664
-msgid   "Monitor current directory and show it in tab titles"
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1675
-msgid   "Show Hostname in Titles"
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1676
-msgid   "Include hostname in tab titles when available"
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1691
+# File: usr/share/ashyterm/ui/dialogs.py, line: 973
 msgid   "Interface Behavior"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1692
+# File: usr/share/ashyterm/ui/dialogs.py, line: 974
 msgid   "Configure application interface behavior"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1698
+# File: usr/share/ashyterm/ui/dialogs.py, line: 979
 msgid   "When opening a new instance"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1699
+# File: usr/share/ashyterm/ui/dialogs.py, line: 980
 msgid   "Choose whether to open a new tab or a new window"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1702
+# File: usr/share/ashyterm/ui/dialogs.py, line: 983
 msgid   "Open in a new tab"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1703
+# File: usr/share/ashyterm/ui/dialogs.py, line: 984
 msgid   "Open in a new window"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1720
-msgid   "Confirm Application Exit"
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1721
-msgid   "Show confirmation dialog when closing the application"
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1734
-msgid   "Confirm Deletion"
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1736
-msgid   "Show confirmation dialog when deleting sessions or folders"
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1755
+# File: usr/share/ashyterm/ui/dialogs.py, line: 996
 msgid   "Shortcuts"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1762
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1001
 msgid   "Terminal Actions"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1763
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1002
 msgid   "Keyboard shortcuts for terminal operations"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1769
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1006
 msgid   "Application Actions"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1770
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1007
 msgid   "Keyboard shortcuts for application operations"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1785
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1019
 msgid   "Quit Application"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1806
-# File: usr/share/ashyterm/ui/dialogs.py, line: 2089
-# File: usr/share/ashyterm/ui/dialogs.py, line: 2186
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1034
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1156
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1211
 msgid   "None"
 msgstr  ""
 
 #
 # #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
 #
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1815
-# File: usr/share/ashyterm/ui/menus.py, line: 125
-# File: usr/share/ashyterm/ui/menus.py, line: 161
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1037
+# File: usr/share/ashyterm/ui/menus.py, line: 195
+# File: usr/share/ashyterm/ui/menus.py, line: 219
 msgid   "Edit"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1831
-msgid   "Backup"
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1837
-msgid   "Backup Settings"
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1838
-msgid   "Configure automatic backup and recovery options"
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1844
-msgid   "Automatic Backups"
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1845
-msgid   "Automatically create backups of sessions and settings"
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1860
-msgid   "Backup on Change"
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1862
-msgid   "Create a backup every time sessions or folders are modified"
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1878
-msgid   "Backup on Exit"
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1879
-msgid   "Create backup when application exits"
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1892
-msgid   "Backup Interval"
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1893
-msgid   "Hours between automatic backups"
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1911
-msgid   "Retention Period"
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1912
-msgid   "Days to keep old backups"
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1935
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1046
 msgid   "Advanced"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1941
-msgid   "Development & Debugging"
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1051
+msgid   "Backup & Recovery"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1942
-msgid   "Advanced options for development and troubleshooting"
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1052
+msgid   "Configure automatic backup and recovery options"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1948
-msgid   "Debug Mode"
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1056
+msgid   "Automatic Backups"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1949
-msgid   "Enable verbose logging and debug features"
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1057
+msgid   "Automatically create backups of sessions and settings"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1960
-msgid   "Performance Mode"
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1071
+msgid   "Logging"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1961
-msgid   "Optimize for performance over features"
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1071
+msgid   "Configure application logging behavior"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1976
-msgid   "Experimental Features"
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1076
+msgid   "Save Logs to File"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1977
-msgid   "Enable experimental and unstable features"
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1077
+msgid   "Save application logs to the configuration directory"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1992
-# File: usr/share/ashyterm/ui/dialogs.py, line: 2004
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1087
+msgid   "Console Log Level"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1088
+msgid   "Set the minimum level of messages shown in the console"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1102
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1109
 msgid   "Reset"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1993
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1102
 msgid   "Reset application settings to defaults"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1999
-# File: usr/share/ashyterm/ui/dialogs.py, line: 2205
-# File: usr/share/ashyterm/ui/dialogs.py, line: 2212
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1106
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1221
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1227
 msgid   "Reset All Settings"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/ui/dialogs.py, line: 2000
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1107
 msgid   "Restore all settings to their default values"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/ui/dialogs.py, line: 2080
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1149
 msgid   "Edit Shortcut"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/ui/dialogs.py, line: 2082
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1150
 #, python-brace-format
 msgid   "Press the new key combination for '{}' or Esc to cancel."
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/ui/dialogs.py, line: 2097
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1159
 #, python-brace-format
 msgid   "Current: {}\n"
         "New: (press keys)"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/ui/dialogs.py, line: 2139
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1187
 #, python-brace-format
 msgid   "Current: {}\n"
         "New: {}"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/ui/dialogs.py, line: 2153
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1194
 msgid   "Clear"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/ui/dialogs.py, line: 2154
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1195
 msgid   "Set Shortcut"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/ui/dialogs.py, line: 2207
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1223
 msgid   "Are you sure you want to reset all settings to their default values? "
         "This action cannot be undone."
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/ui/dialogs.py, line: 2223
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1236
 msgid   "Settings Reset"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/ui/dialogs.py, line: 2225
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1238
 msgid   "All settings have been reset to their default values. Please restart "
         "the application for all changes to take effect."
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/ui/dialogs.py, line: 2237
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1248
 msgid   "Reset Failed"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/ui/dialogs.py, line: 2238
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1249
 #, python-brace-format
 msgid   "Failed to reset settings: {}"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/ui/dialogs.py, line: 2271
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1269
 msgid   "Move Session"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/ui/dialogs.py, line: 2297
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1288
 msgid   "Select Destination"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/ui/dialogs.py, line: 2298
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1289
 #, python-brace-format
 msgid   "Choose the folder to move the session '{name}' to."
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/ui/dialogs.py, line: 2306
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1295
 msgid   "Destination Folder"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/ui/dialogs.py, line: 2307
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1296
 msgid   "Select a folder or 'Root' for the top level"
 msgstr  ""
 
 #
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
-#
-# File: usr/share/ashyterm/ui/dialogs.py, line: 2321
-# File: usr/share/ashyterm/ui/menus.py, line: 280
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1305
 msgid   "Move"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/ui/dialogs.py, line: 2395
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1366
 msgid   "Move Failed"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/ui/menus.py, line: 78
-msgid   "Zoom Out (-)"
+# File: usr/share/ashyterm/ui/menus.py, line: 24
+msgid   "Follow System Style"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/ui/menus.py, line: 79
-msgid   "Reset Zoom (100%)"
+# File: usr/share/ashyterm/ui/menus.py, line: 29
+msgid   "Light Style"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/ui/menus.py, line: 80
-msgid   "Zoom In (+)"
+# File: usr/share/ashyterm/ui/menus.py, line: 34
+msgid   "Dark Style"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/ui/menus.py, line: 98
+# File: usr/share/ashyterm/ui/menus.py, line: 152
 msgid   "About"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/ui/menus.py, line: 119
+# File: usr/share/ashyterm/ui/menus.py, line: 191
 msgid   "Connect with SFTP"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/ui/menus.py, line: 126
+# File: usr/share/ashyterm/ui/menus.py, line: 196
 msgid   "Duplicate"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/ui/menus.py, line: 131
-# File: usr/share/ashyterm/ui/menus.py, line: 167
+# File: usr/share/ashyterm/ui/menus.py, line: 199
+# File: usr/share/ashyterm/ui/menus.py, line: 223
 msgid   "Cut"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/ui/menus.py, line: 139
-msgid   "Move to Folder"
+# File: usr/share/ashyterm/ui/menus.py, line: 203
+msgid   "Move to Folder..."
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/ui/menus.py, line: 193
+# File: usr/share/ashyterm/ui/menus.py, line: 220
+msgid   "Add Session Here"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/ui/menus.py, line: 239
 msgid   "Paste to Root"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/ui/menus.py, line: 235
+# File: usr/share/ashyterm/ui/menus.py, line: 265
 msgid   "Open Link"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/ui/menus.py, line: 236
+# File: usr/share/ashyterm/ui/menus.py, line: 266
 msgid   "Copy Link"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/ui/menus.py, line: 250
+# File: usr/share/ashyterm/ui/menus.py, line: 276
 msgid   "Split Horizontally"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/ui/menus.py, line: 255
+# File: usr/share/ashyterm/ui/menus.py, line: 279
 msgid   "Split Vertically"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/ui/menus.py, line: 259
+# File: usr/share/ashyterm/ui/menus.py, line: 282
 msgid   "Close Pane"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/ui/menus.py, line: 290
-msgid   "Change Permissions"
+# File: usr/share/ashyterm/app.py, line: 169
+msgid   "Automatic startup backup"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/ui/menus.py, line: 296
-msgid   "Download File"
+# File: usr/share/ashyterm/app.py, line: 354
+msgid   "Preferences Error"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/ui/menus.py, line: 299
-msgid   "Edit with Local App"
+# File: usr/share/ashyterm/app.py, line: 354
+#, python-brace-format
+msgid   "Failed to open preferences: {}"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/ui/menus.py, line: 302
-msgid   "Upload Files Here"
+# File: usr/share/ashyterm/app.py, line: 372
+msgid   "A modern terminal emulator with session management"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/app.py, line: 388
+# File: usr/share/ashyterm/app.py, line: 399
+# File: usr/share/ashyterm/app.py, line: 411
+# File: usr/share/ashyterm/app.py, line: 414
+msgid   "Backup Error"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/app.py, line: 388
+# File: usr/share/ashyterm/app.py, line: 421
+msgid   "Backup system not available"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/app.py, line: 399
+msgid   "No files to backup"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/app.py, line: 402
+msgid   "Manual backup from menu"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/app.py, line: 407
+msgid   "Backup Complete"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/app.py, line: 408
+#, python-brace-format
+msgid   "Backup created successfully: {}"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/app.py, line: 411
+msgid   "Failed to create backup"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/app.py, line: 414
+#, python-brace-format
+msgid   "Backup failed: {}"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/app.py, line: 421
+# File: usr/share/ashyterm/app.py, line: 439
+msgid   "Restore Error"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/app.py, line: 427
+msgid   "No Backups"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/app.py, line: 427
+msgid   "No backups available to restore"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/app.py, line: 431
+msgid   "Backups Available"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/app.py, line: 433
+#, python-brace-format
+msgid   "{} backup(s) available. Use preferences dialog for detailed restore "
+        "options."
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/app.py, line: 439
+#, python-brace-format
+msgid   "Failed to access backups: {}"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/app.py, line: 469
+msgid   "Log Information"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/app.py, line: 469
+#, python-brace-format
+msgid   "Logs are stored in: {}"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/app.py, line: 499
+msgid   "Close Application"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/app.py, line: 501
+msgid   "There are active SSH connections. Closing will disconnect all "
+        "sessions.\n"
+        "\n"
+        "Are you sure you want to close the application?"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/app.py, line: 505
+msgid   "Close All"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/app.py, line: 571
+msgid   "Automatic backup on exit"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/app.py, line: 586
+msgid   "Startup Error"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/app.py, line: 587
+#, python-brace-format
+msgid   "Application failed to start: {}"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/terminal/tabs.py, line: 237
+msgid   "Detach Tab"
 msgstr  ""
 
 #
@@ -2833,7 +2249,7 @@ msgstr  ""
 
 #
 # File: usr/share/ashyterm/filemanager/manager.py, line: 631
-# File: usr/share/ashyterm/filemanager/manager.py, line: 1051
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1050
 msgid   "Open With..."
 msgstr  ""
 
@@ -2925,72 +2341,62 @@ msgid   "Upload"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/filemanager/manager.py, line: 1040
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1039
 msgid   "Transfer cancelled."
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/filemanager/manager.py, line: 1092
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1091
 msgid   "Failed to open file."
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/filemanager/manager.py, line: 1165
-# File: usr/share/ashyterm/filemanager/manager.py, line: 1202
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1160
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1196
 msgid   "Ashy Terminal"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/filemanager/manager.py, line: 1167
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1162
 msgid   "File is open. Saving it will upload changes back to the server."
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/filemanager/manager.py, line: 1204
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1198
 msgid   "Upload Complete"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/filemanager/manager.py, line: 1206
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1200
 #, python-brace-format
 msgid   "'{filename}' has been saved to the server."
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/filemanager/manager.py, line: 1211
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1205
 msgid   "Upload Failed"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/filemanager/manager.py, line: 1213
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1207
 #, python-brace-format
 msgid   "Could not save '{filename}' to the server: {error}"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/filemanager/manager.py, line: 1251
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1243
 #, python-brace-format
 msgid   "Enter a new name for '{name}'"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/filemanager/manager.py, line: 1274
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1266
 msgid   "Rename command sent to terminal"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/filemanager/operations.py, line: 113
-msgid   "No session context for file operation."
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/filemanager/operations.py, line: 146
-msgid   "Command timed out."
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/filemanager/operations.py, line: 149
-msgid   "Unknown session type."
+# File: usr/share/ashyterm/filemanager/transfer_manager.py, line: 273
+msgid   "Cancel All Transfers"
 msgstr  ""
 
 #
@@ -3041,680 +2447,16 @@ msgid   "This action cannot be undone and will remove all completed, failed, "
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/filemanager/transfer_manager.py, line: 273
-msgid   "Cancel All Transfers"
+# File: usr/share/ashyterm/filemanager/operations.py, line: 113
+msgid   "No session context for file operation."
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/utils/exceptions.py, line: 69
-msgid   "A terminal error occurred"
+# File: usr/share/ashyterm/filemanager/operations.py, line: 146
+msgid   "Command timed out."
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/utils/exceptions.py, line: 70
-msgid   "A session error occurred"
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/utils/exceptions.py, line: 71
-msgid   "An SSH connection error occurred"
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/utils/exceptions.py, line: 72
-msgid   "A user interface error occurred"
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/utils/exceptions.py, line: 73
-msgid   "A data storage error occurred"
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/utils/exceptions.py, line: 74
-msgid   "A configuration error occurred"
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/utils/exceptions.py, line: 75
-msgid   "A permission error occurred"
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/utils/exceptions.py, line: 76
-msgid   "A network error occurred"
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/utils/exceptions.py, line: 77
-msgid   "A system error occurred"
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/utils/exceptions.py, line: 78
-msgid   "A validation error occurred"
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/utils/exceptions.py, line: 80
-msgid   "An unexpected error occurred"
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/utils/exceptions.py, line: 110
-#, python-brace-format
-msgid   "Failed to create {} terminal: {}"
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/utils/exceptions.py, line: 114
-#, python-brace-format
-msgid   "Could not create terminal. {}"
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/utils/exceptions.py, line: 123
-#, python-brace-format
-msgid   "Failed to spawn process '{}': {}"
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/utils/exceptions.py, line: 126
-msgid   "Failed to start terminal process"
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/utils/exceptions.py, line: 134
-msgid   "VTE library is not available or not properly installed"
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/utils/exceptions.py, line: 139
-msgid   "Terminal functionality requires VTE library. Please install gir1.2-"
-        "vte-2.91"
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/utils/exceptions.py, line: 158
-#, python-brace-format
-msgid   "SSH connection to '{}' failed: {}"
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/utils/exceptions.py, line: 162
-#, python-brace-format
-msgid   "Could not connect to {}. {}"
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/utils/exceptions.py, line: 171
-#, python-brace-format
-msgid   "SSH key error for '{}': {}"
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/utils/exceptions.py, line: 174
-#, python-brace-format
-msgid   "SSH key problem: {}"
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/utils/exceptions.py, line: 191
-#, python-brace-format
-msgid   "Session '{}' validation failed: {}"
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/utils/exceptions.py, line: 200
-#, python-brace-format
-msgid   "Session configuration is invalid: {}"
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/utils/exceptions.py, line: 218
-#, python-brace-format
-msgid   "Failed to read from '{}': {}"
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/utils/exceptions.py, line: 221
-msgid   "Could not load saved data"
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/utils/exceptions.py, line: 229
-#, python-brace-format
-msgid   "Failed to write to '{}': {}"
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/utils/exceptions.py, line: 232
-msgid   "Could not save data"
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/utils/exceptions.py, line: 240
-#, python-brace-format
-msgid   "Storage file '{}' is corrupted"
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/utils/exceptions.py, line: 242
-#, python-brace-format
-msgid   ": {}"
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/utils/exceptions.py, line: 247
-msgid   "Saved data appears to be corrupted"
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/utils/exceptions.py, line: 264
-#, python-brace-format
-msgid   "Invalid configuration for '{}' (value: {}): {}"
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/utils/exceptions.py, line: 271
-#, python-brace-format
-msgid   "Configuration error: {}"
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/utils/exceptions.py, line: 288
-#, python-brace-format
-msgid   "UI error in component: {}"
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/utils/exceptions.py, line: 290
-#, python-brace-format
-msgid   "UI error in {}: {}"
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/utils/exceptions.py, line: 302
-#, python-brace-format
-msgid   "Dialog error ({}): {}"
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/utils/exceptions.py, line: 305
-#, python-brace-format
-msgid   "Interface error: {}"
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/utils/exceptions.py, line: 347
-# File: usr/share/ashyterm/utils/exceptions.py, line: 351
-#, python-brace-format
-msgid   "Validation failed for '{}': {}"
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/utils/exceptions.py, line: 371
-#, python-brace-format
-msgid   "Invalid hostname '{}': {}"
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/utils/exceptions.py, line: 374
-#, python-brace-format
-msgid   "Invalid hostname: {}"
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/utils/exceptions.py, line: 382
-#, python-brace-format
-msgid   "Invalid path '{}': {}"
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/utils/exceptions.py, line: 385
-#, python-brace-format
-msgid   "Invalid path: {}"
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/utils/exceptions.py, line: 402
-#, python-brace-format
-msgid   "Permission denied for {} operation on '{}'"
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/utils/exceptions.py, line: 408
-#, python-brace-format
-msgid   "Permission denied accessing {}"
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/utils/exceptions.py, line: 417
-#, python-brace-format
-msgid   "Permission denied for {} operation on directory '{}'"
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/utils/exceptions.py, line: 426
-#, python-brace-format
-msgid   "Permission denied accessing directory {}"
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/utils/security.py, line: 79
-# File: usr/share/ashyterm/utils/security.py, line: 96
-msgid   "unnamed"
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/utils/security.py, line: 303
-msgid   "Key path is empty"
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/utils/security.py, line: 310
-#, python-brace-format
-msgid   "Key file does not exist: {}"
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/utils/security.py, line: 314
-#, python-brace-format
-msgid   "Key path is not a file: {}"
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/utils/security.py, line: 319
-#, python-brace-format
-msgid   "Key file too large: {} bytes"
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/utils/security.py, line: 322
-msgid   "Key file is empty"
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/utils/security.py, line: 327
-msgid   "Key file has insecure permissions (should be 600)"
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/utils/security.py, line: 331
-msgid   "Key file is not readable"
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/utils/security.py, line: 336
-#, python-brace-format
-msgid   "Error accessing key file: {}"
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/utils/security.py, line: 350
-msgid   "Key content is empty"
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/utils/security.py, line: 357
-msgid   "Invalid key format (missing parts)"
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/utils/security.py, line: 364
-#, python-brace-format
-msgid   "Unsupported key type: {}"
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/utils/security.py, line: 372
-msgid   "Key data appears to be too short"
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/utils/security.py, line: 374
-msgid   "Invalid base64 encoding in key data"
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/utils/security.py, line: 379
-#, python-brace-format
-msgid   "Error validating key content: {}"
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/utils/security.py, line: 469
-msgid   "File does not exist"
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/utils/security.py, line: 476
-#, python-brace-format
-msgid   "Incorrect permissions: {} (expected {})"
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/utils/security.py, line: 482
-msgid   "File has overly permissive permissions"
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/utils/security.py, line: 487
-#, python-brace-format
-msgid   "Error checking file permissions: {}"
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/utils/security.py, line: 515
-# File: usr/share/ashyterm/utils/security.py, line: 819
-#, python-brace-format
-msgid   "Invalid hostname format: {}"
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/utils/security.py, line: 516
-msgid   "Use a valid hostname or IP address"
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/utils/security.py, line: 526
-#, python-brace-format
-msgid   "Connecting to private IP: {}"
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/utils/security.py, line: 527
-msgid   "Ensure this is intentional"
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/utils/security.py, line: 541
-# File: usr/share/ashyterm/utils/security.py, line: 859
-#, python-brace-format
-msgid   "SSH key validation failed: {}"
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/utils/security.py, line: 542
-msgid   "Fix SSH key configuration"
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/utils/security.py, line: 548
-msgid   "Using password authentication"
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/utils/security.py, line: 550
-msgid   "Consider using SSH key authentication for better security"
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/utils/security.py, line: 560
-msgid   "Connecting as root user"
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/utils/security.py, line: 561
-msgid   "Use a regular user account when possible"
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/utils/security.py, line: 585
-#, python-brace-format
-msgid   "File does not exist: {}"
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/utils/security.py, line: 586
-msgid   "Verify file path"
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/utils/security.py, line: 598
-msgid   "Set secure file permissions (600 for files, 700 for directories)"
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/utils/security.py, line: 611
-#, python-brace-format
-msgid   "File is owned by different user: {}"
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/utils/security.py, line: 614
-msgid   "Ensure file ownership is correct"
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/utils/security.py, line: 621
-#, python-brace-format
-msgid   "Error auditing file: {}"
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/utils/security.py, line: 622
-msgid   "Check file accessibility"
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/utils/security.py, line: 646
-#, python-brace-format
-msgid   "Directory does not exist: {}"
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/utils/security.py, line: 647
-msgid   "Create directory with secure permissions"
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/utils/security.py, line: 655
-#, python-brace-format
-msgid   "Path is not a directory: {}"
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/utils/security.py, line: 656
-msgid   "Use a valid directory path"
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/utils/security.py, line: 669
-#, python-brace-format
-msgid   "Directory has overly permissive permissions: {}"
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/utils/security.py, line: 671
-msgid   "Set directory permissions to 700"
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/utils/security.py, line: 678
-#, python-brace-format
-msgid   "Error auditing directory: {}"
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/utils/security.py, line: 679
-msgid   "Check directory accessibility"
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/utils/security.py, line: 707
-msgid   "Hostname cannot be empty"
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/utils/security.py, line: 711
-msgid   "Invalid hostname format"
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/utils/security.py, line: 726
-msgid   "Unknown validation error"
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/utils/security.py, line: 741
-msgid   "Path contains unsafe elements"
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/utils/security.py, line: 760
-# File: usr/share/ashyterm/utils/security.py, line: 780
-msgid   "set secure permissions"
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/utils/security.py, line: 808
-#, python-brace-format
-msgid   "Session name too long (max {} characters)"
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/utils/security.py, line: 817
-msgid   "Hostname cannot be empty for SSH sessions"
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/utils/security.py, line: 824
-msgid   "Username is required for SSH sessions"
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/utils/security.py, line: 827
-#, python-brace-format
-msgid   "Username too long (max {} characters)"
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/utils/security.py, line: 850
-msgid   "SSH key file path is required for key authentication"
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/utils/security.py, line: 865
-#, python-brace-format
-msgid   "Invalid authentication type: {}"
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/utils/security.py, line: 871
-msgid   "Invalid or unsafe folder path"
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/utils/security.py, line: 876
-#, python-brace-format
-msgid   "Invalid session type: {}"
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/utils/security.py, line: 883
-#, python-brace-format
-msgid   "Validation error: {}"
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/utils/security.py, line: 917
-#, python-brace-format
-msgid   "Security: {}"
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/utils/security.py, line: 924
-#, python-brace-format
-msgid   "Security validation error: {}"
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/helpers.py, line: 253
-msgid   "unknown"
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/helpers.py, line: 280
-msgid   "Global error handling configured"
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/helpers.py, line: 298
-#, python-brace-format
-msgid   "Utils module initialized on {} platform"
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/helpers.py, line: 306
-msgid   "SSH command not found - SSH functionality will be limited"
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/helpers.py, line: 318
-#, python-brace-format
-msgid   "Warning: Utils module initialization failed: {}"
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/main.py, line: 30
-#, python-brace-format
-msgid   "\n"
-        "Received signal {}, shutting down gracefully..."
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/main.py, line: 52
-#, python-brace-format
-msgid   "Warning: Could not set up signal handlers: {}"
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/main.py, line: 76
-msgid   "Ashy Terminal - A modern terminal emulator with session management"
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/main.py, line: 78
-msgid   "For more information, visit: https://communitybig.org/"
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/main.py, line: 84
-msgid   "Enable debug mode"
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/main.py, line: 90
-msgid   "Set logging level"
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/main.py, line: 96
-msgid   "Set the working directory for the initial terminal"
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/main.py, line: 102
-msgid   "Working directory (positional argument)"
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/main.py, line: 105
-msgid   "Execute command in the terminal"
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/main.py, line: 110
-msgid   "Close terminal after executing command (only with --execute)"
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/main.py, line: 115
-msgid   "Connect to SSH host with optional user, port, and remote path"
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/main.py, line: 119
-msgid   "Convert KIO/GVFS URI path to SSH format"
+# File: usr/share/ashyterm/filemanager/operations.py, line: 149
+msgid   "Unknown session type."
 msgstr  ""
