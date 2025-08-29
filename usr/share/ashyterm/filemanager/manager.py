@@ -1,3 +1,4 @@
+# ashyterm/filemanager/manager.py
 import gi
 
 gi.require_version("Gtk", "4.0")
@@ -96,8 +97,8 @@ class FileManager:
 
         self.revealer.connect("destroy", self.shutdown)
 
-        self.logger.debug(
-            f"FileManager instance created and bound directly to terminal: {getattr(self.bound_terminal, 'terminal_id', 'unknown')}"
+        self.logger.info(
+            f"FileManager instance created and bound to terminal: {getattr(self.bound_terminal, 'terminal_id', 'unknown')}"
         )
 
     def shutdown(self, widget):
@@ -150,7 +151,6 @@ class FileManager:
 
             new_path = unquote(parsed_uri.path)
             if new_path != self.current_path:
-                self.logger.debug(f"Terminal directory changed to: {new_path}")
                 self.refresh(new_path)
         except Exception as e:
             self.logger.error(f"Failed to handle terminal directory change: {e}")
@@ -893,7 +893,6 @@ class FileManager:
 
     def _on_transfer_history_destroyed(self, widget):
         self.transfer_history_window = None
-        self.logger.debug("Transfer history window destroyed, reference cleared.")
 
     def _on_show_transfer_history(self, button):
         if self.transfer_history_window:
@@ -1118,14 +1117,13 @@ class FileManager:
         monitor = self.file_monitors.pop(remote_path, None)
         if monitor:
             monitor.cancel()
-            self.logger.debug(f"Cancelled file monitor for '{remote_path}'.")
 
         # Delete the temporary file
         try:
             local_path.unlink()
             self.logger.info(f"Removed temporary file: {local_path}")
         except FileNotFoundError:
-            self.logger.debug(f"Temporary file {local_path} was already removed.")
+            pass
         except Exception as e:
             self.logger.error(f"Failed to remove temporary file {local_path}: {e}")
 
@@ -1139,20 +1137,17 @@ class FileManager:
             app_info = Gio.AppInfo.get_default_for_type(content_type, False)
 
         if app_info:
-            # Use GAppLaunchContext to get the PID of the launched process
             launch_context = Gio.AppLaunchContext()
             launch_context.connect(
                 "launched", self._on_editor_launched, local_path, remote_path
             )
             app_info.launch([local_gio_file], launch_context)
         else:
-            # Fallback for xdg-open, PID monitoring is not possible here
             subprocess.Popen(["xdg-open", str(local_path)])
             self.logger.warning(
                 f"Opened {local_path.name} with xdg-open. Cannot monitor process exit for cleanup."
             )
 
-        # Cancel any previous monitor for the same remote file
         if remote_path in self.file_monitors:
             self.file_monitors[remote_path].cancel()
 
@@ -1192,7 +1187,6 @@ class FileManager:
         if not app:
             return
 
-        # Find the transfer in history to get details
         transfer = next(
             (t for t in self.transfer_manager.history if t.id == transfer_id), None
         )
@@ -1218,7 +1212,7 @@ class FileManager:
         app.send_notification(f"ashy-upload-complete-{transfer_id}", notification)
 
     def _upload_on_save_thread(self, local_path, remote_path):
-        """Correctly handles uploading a file on save using the TransferManager."""
+        """Handles uploading a file on save using the TransferManager."""
         try:
             file_size = local_path.stat().st_size if local_path.exists() else 0
             transfer_id = self.transfer_manager.add_transfer(
@@ -1229,8 +1223,6 @@ class FileManager:
                 transfer_type=TransferType.UPLOAD,
                 is_cancellable=True,
             )
-            # This transfer is now "managed" and will appear in the UI.
-            # We call the correct async method from operations.
             self.operations.start_upload_with_progress(
                 transfer_id,
                 self.session_item,

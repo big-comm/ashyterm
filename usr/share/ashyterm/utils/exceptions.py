@@ -1,9 +1,4 @@
-"""
-Custom exceptions for Ashy Terminal.
-
-This module defines custom exception classes that provide more specific
-error handling and better debugging information throughout the application.
-"""
+# ashyterm/utils/exceptions.py
 
 from enum import Enum
 from typing import Any, Dict, Optional
@@ -46,16 +41,6 @@ class AshyTerminalError(Exception):
         details: Optional[Dict[str, Any]] = None,
         user_message: Optional[str] = None,
     ):
-        """
-        Initialize base exception.
-
-        Args:
-            message: Technical error message for logging
-            category: Error category for classification
-            severity: Error severity level
-            details: Additional details for debugging
-            user_message: User-friendly message for display
-        """
         super().__init__(message)
         self.message = message
         self.category = category
@@ -79,22 +64,10 @@ class AshyTerminalError(Exception):
         }
         return category_messages.get(self.category, _("An unexpected error occurred"))
 
-    def to_dict(self) -> Dict[str, Any]:
-        """Convert exception to dictionary for logging."""
-        return {
-            "type": self.__class__.__name__,
-            "message": self.message,
-            "category": self.category.value,
-            "severity": self.severity.value,
-            "details": self.details,
-            "user_message": self.user_message,
-        }
-
     def __str__(self) -> str:
         return f"[{self.category.value.upper()}:{self.severity.value.upper()}] {self.message}"
 
 
-# Terminal-related exceptions
 class TerminalError(AshyTerminalError):
     """Base class for terminal-related errors."""
 
@@ -116,17 +89,6 @@ class TerminalCreationError(TerminalError):
         super().__init__(message, **kwargs)
 
 
-class TerminalSpawnError(TerminalError):
-    """Raised when process spawning fails."""
-
-    def __init__(self, command: str, reason: str, **kwargs):
-        message = _("Failed to spawn process '{}': {}").format(command, reason)
-        kwargs.setdefault("severity", ErrorSeverity.HIGH)
-        kwargs.setdefault("details", {"command": command, "reason": reason})
-        kwargs.setdefault("user_message", _("Failed to start terminal process"))
-        super().__init__(message, **kwargs)
-
-
 class VTENotAvailableError(TerminalError):
     """Raised when VTE library is not available."""
 
@@ -142,7 +104,6 @@ class VTENotAvailableError(TerminalError):
         super().__init__(message, **kwargs)
 
 
-# SSH-related exceptions
 class SSHError(AshyTerminalError):
     """Base class for SSH-related errors."""
 
@@ -175,7 +136,6 @@ class SSHKeyError(SSHError):
         super().__init__(message, **kwargs)
 
 
-# Session-related exceptions
 class SessionError(AshyTerminalError):
     """Base class for session-related errors."""
 
@@ -202,7 +162,6 @@ class SessionValidationError(SessionError):
         super().__init__(message, **kwargs)
 
 
-# Storage-related exceptions
 class StorageError(AshyTerminalError):
     """Base class for storage-related errors."""
 
@@ -248,7 +207,6 @@ class StorageCorruptedError(StorageError):
         super().__init__(message, **kwargs)
 
 
-# Configuration-related exceptions
 class ConfigError(AshyTerminalError):
     """Base class for configuration-related errors."""
 
@@ -272,27 +230,18 @@ class ConfigValidationError(ConfigError):
         super().__init__(message, **kwargs)
 
 
-# UI-related exceptions
 class UIError(AshyTerminalError):
     """Base class for UI-related errors."""
 
     def __init__(self, component: str, message: str = None, **kwargs):
-        """
-        Initialize UI error.
-
-        Args:
-            component: UI component that failed
-            message: Error message
-        """
-        if message is None:
-            error_message = _("UI error in component: {}").format(component)
-        else:
-            error_message = _("UI error in {}: {}").format(component, message)
-
+        error_message = (
+            _("UI error in {}: {}").format(component, message)
+            if message
+            else _("UI error in component: {}").format(component)
+        )
         kwargs.setdefault("category", ErrorCategory.UI)
         kwargs.setdefault("details", {}).update({"component": component})
         super().__init__(error_message, **kwargs)
-        self.component = component
 
 
 class DialogError(UIError):
@@ -303,10 +252,9 @@ class DialogError(UIError):
         kwargs.setdefault("severity", ErrorSeverity.MEDIUM)
         kwargs.setdefault("details", {"dialog_type": dialog_type, "reason": reason})
         kwargs.setdefault("user_message", _("Interface error: {}").format(reason))
-        super().__init__(message, **kwargs)
+        super().__init__(dialog_type, message, **kwargs)
 
 
-# Validation-related exceptions
 class ValidationError(AshyTerminalError):
     """Base class for validation errors."""
 
@@ -320,29 +268,14 @@ class ValidationError(AshyTerminalError):
         reason: str = None,
         **kwargs,
     ):
-        """
-        Initialize validation error with full compatibility.
-
-        Args:
-            message: Main error message
-            category: Error category (positional or keyword)
-            severity: Error severity (positional or keyword)
-            field: Field that failed validation (optional)
-            value: Value that failed validation (optional)
-            reason: Specific reason for failure (optional)
-        """
-        # Handle both positional and keyword arguments for category/severity
         if category is not None:
             kwargs.setdefault("category", category)
         else:
             kwargs.setdefault("category", ErrorCategory.VALIDATION)
-
         if severity is not None:
             kwargs.setdefault("severity", severity)
         else:
             kwargs.setdefault("severity", ErrorSeverity.MEDIUM)
-
-        # Build comprehensive error message
         if field and reason:
             error_message = _("Validation failed for '{}': {}").format(field, reason)
             if message and message != reason:
@@ -351,17 +284,12 @@ class ValidationError(AshyTerminalError):
             error_message = _("Validation failed for '{}': {}").format(field, message)
         else:
             error_message = message
-
         kwargs.setdefault("details", {}).update({
             "field": field,
             "value": value,
             "reason": reason,
         })
-
         super().__init__(error_message, **kwargs)
-        self.field = field
-        self.value = value
-        self.reason = reason
 
 
 class HostnameValidationError(ValidationError):
@@ -386,7 +314,6 @@ class PathValidationError(ValidationError):
         super().__init__(message, **kwargs)
 
 
-# Permission-related exceptions
 class PermissionError(AshyTerminalError):
     """Base class for permission-related errors."""
 
@@ -428,50 +355,24 @@ class DirectoryPermissionError(PermissionError):
         super().__init__(message, **kwargs)
 
 
-# Network-related exceptions
-class NetworkError(AshyTerminalError):
-    """Base class for network-related errors."""
-
-    def __init__(self, message: str, **kwargs):
-        kwargs.setdefault("category", ErrorCategory.NETWORK)
-        super().__init__(message, **kwargs)
-
-
-# Exception utilities
 def handle_exception(
     exception: Exception,
     context: str = "",
     logger_name: str = None,
     reraise: bool = False,
 ) -> Optional[AshyTerminalError]:
-    """
-    Handle an exception by logging it and optionally converting to AshyTerminalError.
-
-    Args:
-        exception: Exception to handle
-        context: Context where the exception occurred
-        logger_name: Logger name to use
-        reraise: Whether to re-raise the exception
-
-    Returns:
-        AshyTerminalError if conversion was done, None otherwise
-    """
+    """Handle an exception by logging it and optionally converting to AshyTerminalError."""
     from .logger import log_error_with_context
 
-    # Log the original exception
     log_error_with_context(exception, context, logger_name)
-
-    # Convert to AshyTerminalError if not already one
-    if isinstance(exception, AshyTerminalError):
-        converted_exception = exception
-    else:
-        # Create a generic AshyTerminalError
-        converted_exception = AshyTerminalError(
+    converted_exception = (
+        exception
+        if isinstance(exception, AshyTerminalError)
+        else AshyTerminalError(
             message=str(exception),
             details={"original_type": type(exception).__name__, "context": context},
         )
-
+    )
     if reraise:
         raise converted_exception
-
     return converted_exception

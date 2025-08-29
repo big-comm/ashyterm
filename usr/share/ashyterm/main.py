@@ -1,10 +1,9 @@
-# ashyterm/main.py
+# ashyterm/__main__.py
 
 import argparse
 import signal
 import sys
 
-# Ensure we can find the package modules
 if __package__ is None:
     import pathlib
 
@@ -13,22 +12,22 @@ if __package__ is None:
         sys.path.insert(0, str(parent_dir))
     __package__ = "ashyterm"
 
-# Import necessary components
 from .app import CommTerminalApp
 from .settings.config import APP_VERSION
-from .utils.logger import LogLevel, enable_debug_mode, get_logger, set_console_level
-from .utils.platform import is_windows
-
-# Import translation utility
+from .utils.logger import (
+    LogLevel,
+    enable_debug_mode,
+    get_logger,
+    set_console_log_level,
+)
 from .utils.translation_utils import _
 
 
 def setup_signal_handlers():
-    """Set up signal handlers for graceful shutdown."""
+    """Set up signal handlers for graceful shutdown on Linux."""
 
     def signal_handler(sig, frame):
         print(_("\nReceived signal {}, shutting down gracefully...").format(sig))
-        # The application's own shutdown handler will log this
         try:
             import gi
 
@@ -46,30 +45,29 @@ def setup_signal_handlers():
     try:
         signal.signal(signal.SIGINT, signal_handler)
         signal.signal(signal.SIGTERM, signal_handler)
-        if is_windows():
-            signal.signal(signal.SIGBREAK, signal_handler)
     except Exception as e:
         print(_("Warning: Could not set up signal handlers: {}").format(e))
 
 
 def main() -> int:
     """Main entry point for the application."""
-    # Minimal pre-initialization parsing for debug/log level, and
-    # a simple full parser for user-facing help output.
+    # Use a separate parser to handle debug/log flags before the main app starts
     pre_parser = argparse.ArgumentParser(add_help=False)
     pre_parser.add_argument("--debug", "-d", action="store_true")
-    pre_parser.add_argument("--log-level", default="INFO")
+    pre_parser.add_argument("--log-level")
     pre_args, remaining_argv = pre_parser.parse_known_args()
 
+    # Apply pre-launch log settings if provided
     if pre_args.debug:
         enable_debug_mode()
-    else:
+    elif pre_args.log_level:
         try:
-            set_console_level(LogLevel[pre_args.log_level.upper()])
+            set_console_log_level(pre_args.log_level)
         except KeyError:
-            pass  # Ignore invalid log levels
+            print(f"Warning: Invalid log level '{pre_args.log_level}' provided.")
+            pass
 
-    # Simple user-facing parser (provides --help and other common flags)
+    # Main parser for the application's command-line interface
     parser = argparse.ArgumentParser(
         prog="ashyterm",
         description=_(
@@ -78,7 +76,7 @@ def main() -> int:
         epilog=_("For more information, visit: https://communitybig.org/"),
     )
     parser.add_argument(
-        "--version", "-v", action="version", version="%(prog)s " + APP_VERSION
+        "--version", "-v", action="version", version=f"%(prog)s {APP_VERSION}"
     )
     parser.add_argument(
         "--debug", "-d", action="store_true", help=_("Enable debug mode")
@@ -86,7 +84,6 @@ def main() -> int:
     parser.add_argument(
         "--log-level",
         choices=["DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"],
-        default="INFO",
         help=_("Set logging level"),
     )
     parser.add_argument(
@@ -115,16 +112,12 @@ def main() -> int:
         help=_("Connect to SSH host with optional user, port, and remote path"),
     )
     parser.add_argument(
-        "--convert-to-ssh",
-        help=_("Convert KIO/GVFS URI path to SSH format"),
+        "--convert-to-ssh", help=_("Convert KIO/GVFS URI path to SSH format")
     )
 
-    # If user asked for help/version argparse will handle it and exit.
-    # We only parse known args so other Gtk/Gio handling isn't interfered.
     try:
-        parsed_args, _unknown = parser.parse_known_args()
+        parser.parse_known_args()
     except SystemExit:
-        # argparse already printed help or version and exited; mirror exit.
         return 0
 
     logger = get_logger("ashyterm.main")
@@ -133,16 +126,12 @@ def main() -> int:
     try:
         logger.info("Creating application instance")
         app = CommTerminalApp()
-
-        # Pass all original arguments to the application instance
         return app.run(sys.argv)
-
     except KeyboardInterrupt:
         logger.info("Application interrupted by user.")
         return 0
     except Exception as e:
         logger.critical(f"A fatal error occurred: {e}", exc_info=True)
-        # A simple dialog for critical startup errors
         import gi
 
         gi.require_version("Gtk", "4.0")
