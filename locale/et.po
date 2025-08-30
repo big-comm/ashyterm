@@ -112,16 +112,6 @@ msgstr "Terminali loomine ebaõnnestus: {}"
 msgid "Could not create terminal. {}"
 msgstr "Terminalit ei saanud luua. {}"
 # 
-# File: usr/share/ashyterm/utils/exceptions.py, line: 128
-#: NEEDS WORK
-msgid "VTE library is not available or not properly installed"
-msgstr "VTE teekond ei ole saadaval või ei ole see korralikult installitud"
-# 
-# File: usr/share/ashyterm/utils/exceptions.py, line: 131
-#: NEEDS WORK
-msgid "Terminal functionality requires VTE library. Please install gir1.2-vte-2.91"
-msgstr "Terminali funktsionaalsus nõuab VTE teeki. Palun installige gir1.2-vte-2.91"
-# 
 # File: usr/share/ashyterm/utils/exceptions.py, line: 148
 #: NEEDS WORK
 #, python-brace-format
@@ -220,18 +210,6 @@ msgstr "Kasutajaliidese viga {}: {}"
 #, python-brace-format
 msgid "UI error in component: {}"
 msgstr "Kasutajaliidese viga komponendis: {}"
-# 
-# File: usr/share/ashyterm/utils/exceptions.py, line: 321
-#: NEEDS WORK
-#, python-brace-format
-msgid "Dialog error ({}): {}"
-msgstr "Dialooge viga ({}): {}"
-# 
-# File: usr/share/ashyterm/utils/exceptions.py, line: 324
-#: NEEDS WORK
-#, python-brace-format
-msgid "Interface error: {}"
-msgstr "Liidese viga: {}"
 # 
 # File: usr/share/ashyterm/utils/exceptions.py, line: 368
 # File: usr/share/ashyterm/utils/exceptions.py, line: 372
@@ -606,6 +584,12 @@ msgstr "Nimetu kaust"
 msgid "Sessions"
 msgstr "Seansid"
 # 
+# File: usr/share/ashyterm/sessions/tree.py, line: 298
+# File: usr/share/ashyterm/sessions/tree.py, line: 302
+#: NEEDS WORK
+msgid "Move Error"
+msgstr "Liikumise viga"
+# 
 # File: usr/share/ashyterm/sessions/tree.py, line: 618
 # File: usr/share/ashyterm/sessions/tree.py, line: 623
 #: NEEDS WORK
@@ -810,6 +794,16 @@ msgstr "Seansi liigutamisel salvestamine ebaõnnestus."
 msgid "Session moved successfully."
 msgstr "Seans liikus edukalt."
 # 
+# File: usr/share/ashyterm/sessions/operations.py, line: 209
+#: NEEDS WORK
+msgid "Cannot move a folder into itself."
+msgstr "Ei saa kausta iseendasse liigutada."
+# 
+# File: usr/share/ashyterm/sessions/operations.py, line: 260
+#: NEEDS WORK
+msgid "Unsupported item type for paste operation."
+msgstr "Toetamata tüüp kleepimise toimingu jaoks."
+# 
 # File: usr/share/ashyterm/window.py, line: 145
 #: NEEDS WORK
 msgid "Initialization Error"
@@ -938,6 +932,40 @@ msgid ""
 msgstr ""
 "Seansi valideerimine ebaõnnestus:\n"
 "{errors}"
+# 
+# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 136
+# File: usr/share/ashyterm/ui/dialogs.py, line: 784
+# File: usr/share/ashyterm/ui/dialogs.py, line: 2021
+# File: usr/share/ashyterm/ui/dialogs.py, line: 2033
+# File: usr/share/ashyterm/window.py, line: 1055
+# File: usr/share/ashyterm/window.py, line: 1070
+#: NEEDS WORK
+msgid "OK"
+msgstr "OK"
+# 
+# File: usr/share/ashyterm/window.py, line: 958
+#: NEEDS WORK
+msgid "Cannot detach the last tab."
+msgstr "Viimast vahekaarti ei saa eraldada."
+# 
+# File: usr/share/ashyterm/ui/ssh_dialogs.py, line: 206
+#: NEEDS WORK
+msgid "SSH Connection Failed"
+msgstr "SSH ühenduse loomine ebaõnnestus"
+# 
+# File: usr/share/ashyterm/ui/ssh_dialogs.py, line: 207
+#: NEEDS WORK
+#, python-brace-format
+msgid "Could not connect to session '{session_name}'."
+msgstr "Ei saanud seansiga '{session_name}' ühendust luua."
+# 
+# File: usr/share/ashyterm/ui/ssh_dialogs.py, line: 83
+# File: usr/share/ashyterm/ui/ssh_dialogs.py, line: 239
+#: NEEDS WORK
+msgid "Close"
+msgstr "Sulge"
 # 
 # File: usr/share/ashyterm/window.py, line: 586
 #: NEEDS WORK
@@ -1122,109 +1150,6 @@ msgstr "See kustutab ka kõik valitud kaustade sisu."
 msgid "Delete"
 msgstr "Kustuta"
 # 
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 136
-# File: usr/share/ashyterm/ui/dialogs.py, line: 784
-# File: usr/share/ashyterm/ui/dialogs.py, line: 2021
-# File: usr/share/ashyterm/ui/dialogs.py, line: 2033
-# File: usr/share/ashyterm/window.py, line: 1055
-# File: usr/share/ashyterm/window.py, line: 1070
-#: NEEDS WORK
-msgid "OK"
-msgstr "OK"
-# 
-# File: usr/share/ashyterm/window.py, line: 958
-#: NEEDS WORK
-msgid "Cannot detach the last tab."
-msgstr "Viimast vahekaarti ei saa eraldada."
-# 
-# File: usr/share/ashyterm/ui/ssh_dialogs.py, line: 51
-#: NEEDS WORK
-msgid "SSH Connection Timeout"
-msgstr "SSH ühenduse aegumine"
-# 
-# File: usr/share/ashyterm/ui/ssh_dialogs.py, line: 55
-#: NEEDS WORK
-#, python-brace-format
-msgid "The SSH connection attempt timed out after {seconds} seconds."
-msgstr "SSH ühenduse katse aegus pärast {seconds} sekundit."
-# 
-# File: usr/share/ashyterm/ui/ssh_dialogs.py, line: 59
-#: NEEDS WORK
-msgid "Connection details:"
-msgstr "Ühenduse üksikasjad:"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 446
-#: NEEDS WORK
-msgid "Username"
-msgstr "Kasutajanimi"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 429
-# File: usr/share/ashyterm/ui/dialogs.py, line: 894
-#: NEEDS WORK
-msgid "Host"
-msgstr "Host"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 464
-#: NEEDS WORK
-msgid "Port"
-msgstr "Port"
-# 
-# File: usr/share/ashyterm/ui/ssh_dialogs.py, line: 71
-#: NEEDS WORK
-msgid "Remote path"
-msgstr "Kaugtee"
-# 
-# File: usr/share/ashyterm/ui/ssh_dialogs.py, line: 76
-#: NEEDS WORK
-msgid "Please check your network connection and verify the server is accessible."
-msgstr "Palun kontrollige oma võrguühendust ja veenduge, et server on ligipääsetav."
-# 
-# File: usr/share/ashyterm/ui/ssh_dialogs.py, line: 83
-# File: usr/share/ashyterm/ui/ssh_dialogs.py, line: 239
-#: NEEDS WORK
-msgid "Close"
-msgstr "Sulge"
-# 
-# File: usr/share/ashyterm/ui/ssh_dialogs.py, line: 84
-#: NEEDS WORK
-msgid "Retry Connection"
-msgstr "Ühenda uuesti"
-# 
-# File: usr/share/ashyterm/ui/ssh_dialogs.py, line: 160
-#: NEEDS WORK
-msgid "SSH Authentication Required"
-msgstr "SSH autentimine vajalik"
-# 
-# File: usr/share/ashyterm/ui/ssh_dialogs.py, line: 162
-#: NEEDS WORK
-#, python-brace-format
-msgid "Please enter the password for {target_display}"
-msgstr "Palun sisestage {target_display} parool."
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 467
-# File: usr/share/ashyterm/ui/dialogs.py, line: 533
-#: NEEDS WORK
-msgid "Password"
-msgstr "Parool"
-# 
-# File: usr/share/ashyterm/ui/ssh_dialogs.py, line: 177
-#: NEEDS WORK
-msgid "Connect"
-msgstr "Ühenda"
-# 
-# File: usr/share/ashyterm/ui/ssh_dialogs.py, line: 206
-#: NEEDS WORK
-msgid "SSH Connection Failed"
-msgstr "SSH ühenduse loomine ebaõnnestus"
-# 
-# File: usr/share/ashyterm/ui/ssh_dialogs.py, line: 207
-#: NEEDS WORK
-#, python-brace-format
-msgid "Could not connect to session '{session_name}'."
-msgstr "Ei saanud seansiga '{session_name}' ühendust luua."
-# 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 164
 #: NEEDS WORK
 msgid "Continue"
@@ -1321,6 +1246,12 @@ msgstr "SSH konfiguratsioon"
 msgid "Configure connection details for SSH sessions"
 msgstr "Konfigureeri SSH seansside ühenduse üksikasjad"
 # 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 429
+# File: usr/share/ashyterm/ui/dialogs.py, line: 894
+#: NEEDS WORK
+msgid "Host"
+msgstr "Host"
+# 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 430
 #: NEEDS WORK
 msgid "Hostname or IP address of the remote server"
@@ -1331,6 +1262,11 @@ msgstr "Kaugniku hostinimi või IP-aadress kaugserverile"
 msgid "example.com or 192.168.1.100"
 msgstr "example.com või 192.168.1.100"
 # 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 446
+#: NEEDS WORK
+msgid "Username"
+msgstr "Kasutajanimi"
+# 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 447
 #: NEEDS WORK
 msgid "Username for SSH authentication (optional)"
@@ -1340,6 +1276,11 @@ msgstr "SSH autentimiseks kasutatav kasutajanimi (valikuline)"
 #: NEEDS WORK
 msgid "username"
 msgstr "kasutajanimi"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 464
+#: NEEDS WORK
+msgid "Port"
+msgstr "Port"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 465
 #: NEEDS WORK
@@ -1360,6 +1301,12 @@ msgstr "Vali autentimise meetod"
 #: NEEDS WORK
 msgid "SSH Key"
 msgstr "SSH võti"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 467
+# File: usr/share/ashyterm/ui/dialogs.py, line: 533
+#: NEEDS WORK
+msgid "Password"
+msgstr "Parool"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 494
 #: NEEDS WORK
@@ -2151,10 +2098,20 @@ msgstr "Käivitamise viga"
 msgid "Application failed to start: {}"
 msgstr "Rakendus ei suutnud käivituda: {}"
 # 
+# File: usr/share/ashyterm/terminal/tabs.py, line: 43
+#: NEEDS WORK
+msgid "Move to New Tab"
+msgstr "Liiguta uude vahekaardile"
+# 
 # File: usr/share/ashyterm/terminal/tabs.py, line: 237
 #: NEEDS WORK
 msgid "Detach Tab"
 msgstr "Eemalda vahekaart"
+# 
+# File: usr/share/ashyterm/terminal/tabs.py, line: 585
+#: NEEDS WORK
+msgid "This is the only pane in the tab."
+msgstr "See on ainus paneel vahekaardil."
 # 
 # File: usr/share/ashyterm/filemanager/manager.py, line: 182
 # File: usr/share/ashyterm/filemanager/manager.py, line: 608

@@ -112,16 +112,6 @@ msgstr "Échec de la création du terminal {} : {}"
 msgid "Could not create terminal. {}"
 msgstr "Impossible de créer le terminal. {}"
 # 
-# File: usr/share/ashyterm/utils/exceptions.py, line: 128
-#: NEEDS WORK
-msgid "VTE library is not available or not properly installed"
-msgstr "La bibliothèque VTE n'est pas disponible ou n'est pas correctement installée."
-# 
-# File: usr/share/ashyterm/utils/exceptions.py, line: 131
-#: NEEDS WORK
-msgid "Terminal functionality requires VTE library. Please install gir1.2-vte-2.91"
-msgstr "La fonctionnalité du terminal nécessite la bibliothèque VTE. Veuillez installer gir1.2-vte-2.91."
-# 
 # File: usr/share/ashyterm/utils/exceptions.py, line: 148
 #: NEEDS WORK
 #, python-brace-format
@@ -220,18 +210,6 @@ msgstr "Erreur d'interface utilisateur dans {} : {}"
 #, python-brace-format
 msgid "UI error in component: {}"
 msgstr "Erreur d'interface utilisateur dans le composant : {}"
-# 
-# File: usr/share/ashyterm/utils/exceptions.py, line: 321
-#: NEEDS WORK
-#, python-brace-format
-msgid "Dialog error ({}): {}"
-msgstr "Erreur de dialogue ({}): {}"
-# 
-# File: usr/share/ashyterm/utils/exceptions.py, line: 324
-#: NEEDS WORK
-#, python-brace-format
-msgid "Interface error: {}"
-msgstr "Erreur d'interface : {}"
 # 
 # File: usr/share/ashyterm/utils/exceptions.py, line: 368
 # File: usr/share/ashyterm/utils/exceptions.py, line: 372
@@ -606,6 +584,12 @@ msgstr "Dossier sans nom"
 msgid "Sessions"
 msgstr "Sessions"
 # 
+# File: usr/share/ashyterm/sessions/tree.py, line: 298
+# File: usr/share/ashyterm/sessions/tree.py, line: 302
+#: NEEDS WORK
+msgid "Move Error"
+msgstr "Erreur de déplacement"
+# 
 # File: usr/share/ashyterm/sessions/tree.py, line: 618
 # File: usr/share/ashyterm/sessions/tree.py, line: 623
 #: NEEDS WORK
@@ -810,6 +794,16 @@ msgstr "Échec de l'enregistrement après le déplacement de la session."
 msgid "Session moved successfully."
 msgstr "Session déplacée avec succès."
 # 
+# File: usr/share/ashyterm/sessions/operations.py, line: 209
+#: NEEDS WORK
+msgid "Cannot move a folder into itself."
+msgstr "Impossible de déplacer un dossier dans lui-même."
+# 
+# File: usr/share/ashyterm/sessions/operations.py, line: 260
+#: NEEDS WORK
+msgid "Unsupported item type for paste operation."
+msgstr "Type d'élément non pris en charge pour l'opération de collage."
+# 
 # File: usr/share/ashyterm/window.py, line: 145
 #: NEEDS WORK
 msgid "Initialization Error"
@@ -938,6 +932,40 @@ msgid ""
 msgstr ""
 "Échec de la validation de la session :  \n"
 "{errors}"
+# 
+# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 136
+# File: usr/share/ashyterm/ui/dialogs.py, line: 784
+# File: usr/share/ashyterm/ui/dialogs.py, line: 2021
+# File: usr/share/ashyterm/ui/dialogs.py, line: 2033
+# File: usr/share/ashyterm/window.py, line: 1055
+# File: usr/share/ashyterm/window.py, line: 1070
+#: NEEDS WORK
+msgid "OK"
+msgstr "D'accord"
+# 
+# File: usr/share/ashyterm/window.py, line: 958
+#: NEEDS WORK
+msgid "Cannot detach the last tab."
+msgstr "Impossible de détacher le dernier onglet."
+# 
+# File: usr/share/ashyterm/ui/ssh_dialogs.py, line: 206
+#: NEEDS WORK
+msgid "SSH Connection Failed"
+msgstr "Échec de la connexion SSH"
+# 
+# File: usr/share/ashyterm/ui/ssh_dialogs.py, line: 207
+#: NEEDS WORK
+#, python-brace-format
+msgid "Could not connect to session '{session_name}'."
+msgstr "Impossible de se connecter à la session '{session_name}'."
+# 
+# File: usr/share/ashyterm/ui/ssh_dialogs.py, line: 83
+# File: usr/share/ashyterm/ui/ssh_dialogs.py, line: 239
+#: NEEDS WORK
+msgid "Close"
+msgstr "Fermer"
 # 
 # File: usr/share/ashyterm/window.py, line: 586
 #: NEEDS WORK
@@ -1125,109 +1153,6 @@ msgstr "Cela supprimera également tout le contenu des dossiers sélectionnés."
 msgid "Delete"
 msgstr "Supprimer"
 # 
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 136
-# File: usr/share/ashyterm/ui/dialogs.py, line: 784
-# File: usr/share/ashyterm/ui/dialogs.py, line: 2021
-# File: usr/share/ashyterm/ui/dialogs.py, line: 2033
-# File: usr/share/ashyterm/window.py, line: 1055
-# File: usr/share/ashyterm/window.py, line: 1070
-#: NEEDS WORK
-msgid "OK"
-msgstr "D'accord"
-# 
-# File: usr/share/ashyterm/window.py, line: 958
-#: NEEDS WORK
-msgid "Cannot detach the last tab."
-msgstr "Impossible de détacher le dernier onglet."
-# 
-# File: usr/share/ashyterm/ui/ssh_dialogs.py, line: 51
-#: NEEDS WORK
-msgid "SSH Connection Timeout"
-msgstr "Délai d'expiration de la connexion SSH"
-# 
-# File: usr/share/ashyterm/ui/ssh_dialogs.py, line: 55
-#: NEEDS WORK
-#, python-brace-format
-msgid "The SSH connection attempt timed out after {seconds} seconds."
-msgstr "La tentative de connexion SSH a expiré après {seconds} secondes."
-# 
-# File: usr/share/ashyterm/ui/ssh_dialogs.py, line: 59
-#: NEEDS WORK
-msgid "Connection details:"
-msgstr "Détails de connexion :"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 446
-#: NEEDS WORK
-msgid "Username"
-msgstr "Nom d'utilisateur"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 429
-# File: usr/share/ashyterm/ui/dialogs.py, line: 894
-#: NEEDS WORK
-msgid "Host"
-msgstr "Hôte"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 464
-#: NEEDS WORK
-msgid "Port"
-msgstr "Port"
-# 
-# File: usr/share/ashyterm/ui/ssh_dialogs.py, line: 71
-#: NEEDS WORK
-msgid "Remote path"
-msgstr "Chemin distant"
-# 
-# File: usr/share/ashyterm/ui/ssh_dialogs.py, line: 76
-#: NEEDS WORK
-msgid "Please check your network connection and verify the server is accessible."
-msgstr "Veuillez vérifier votre connexion réseau et vous assurer que le serveur est accessible."
-# 
-# File: usr/share/ashyterm/ui/ssh_dialogs.py, line: 83
-# File: usr/share/ashyterm/ui/ssh_dialogs.py, line: 239
-#: NEEDS WORK
-msgid "Close"
-msgstr "Fermer"
-# 
-# File: usr/share/ashyterm/ui/ssh_dialogs.py, line: 84
-#: NEEDS WORK
-msgid "Retry Connection"
-msgstr "Réessayer la connexion"
-# 
-# File: usr/share/ashyterm/ui/ssh_dialogs.py, line: 160
-#: NEEDS WORK
-msgid "SSH Authentication Required"
-msgstr "Authentification SSH requise"
-# 
-# File: usr/share/ashyterm/ui/ssh_dialogs.py, line: 162
-#: NEEDS WORK
-#, python-brace-format
-msgid "Please enter the password for {target_display}"
-msgstr "Veuillez entrer le mot de passe pour {target_display}"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 467
-# File: usr/share/ashyterm/ui/dialogs.py, line: 533
-#: NEEDS WORK
-msgid "Password"
-msgstr "Mot de passe"
-# 
-# File: usr/share/ashyterm/ui/ssh_dialogs.py, line: 177
-#: NEEDS WORK
-msgid "Connect"
-msgstr "Connecter"
-# 
-# File: usr/share/ashyterm/ui/ssh_dialogs.py, line: 206
-#: NEEDS WORK
-msgid "SSH Connection Failed"
-msgstr "Échec de la connexion SSH"
-# 
-# File: usr/share/ashyterm/ui/ssh_dialogs.py, line: 207
-#: NEEDS WORK
-#, python-brace-format
-msgid "Could not connect to session '{session_name}'."
-msgstr "Impossible de se connecter à la session '{session_name}'."
-# 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 164
 #: NEEDS WORK
 msgid "Continue"
@@ -1324,6 +1249,12 @@ msgstr "Configuration SSH"
 msgid "Configure connection details for SSH sessions"
 msgstr "Configurer les détails de connexion pour les sessions SSH"
 # 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 429
+# File: usr/share/ashyterm/ui/dialogs.py, line: 894
+#: NEEDS WORK
+msgid "Host"
+msgstr "Hôte"
+# 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 430
 #: NEEDS WORK
 msgid "Hostname or IP address of the remote server"
@@ -1334,6 +1265,11 @@ msgstr "Nom d'hôte ou adresse IP du serveur distant"
 msgid "example.com or 192.168.1.100"
 msgstr "example.com ou 192.168.1.100"
 # 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 446
+#: NEEDS WORK
+msgid "Username"
+msgstr "Nom d'utilisateur"
+# 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 447
 #: NEEDS WORK
 msgid "Username for SSH authentication (optional)"
@@ -1343,6 +1279,11 @@ msgstr "Nom d'utilisateur pour l'authentification SSH (facultatif)"
 #: NEEDS WORK
 msgid "username"
 msgstr "nom d'utilisateur"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 464
+#: NEEDS WORK
+msgid "Port"
+msgstr "Port"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 465
 #: NEEDS WORK
@@ -1363,6 +1304,12 @@ msgstr "Choisissez la méthode d'authentification"
 #: NEEDS WORK
 msgid "SSH Key"
 msgstr "Clé SSH"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 467
+# File: usr/share/ashyterm/ui/dialogs.py, line: 533
+#: NEEDS WORK
+msgid "Password"
+msgstr "Mot de passe"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 494
 #: NEEDS WORK
@@ -2156,10 +2103,20 @@ msgstr "Erreur de démarrage"
 msgid "Application failed to start: {}"
 msgstr "L'application a échoué à démarrer : {}"
 # 
+# File: usr/share/ashyterm/terminal/tabs.py, line: 43
+#: NEEDS WORK
+msgid "Move to New Tab"
+msgstr "Déplacer vers un nouvel onglet"
+# 
 # File: usr/share/ashyterm/terminal/tabs.py, line: 237
 #: NEEDS WORK
 msgid "Detach Tab"
 msgstr "Détacher l'onglet"
+# 
+# File: usr/share/ashyterm/terminal/tabs.py, line: 585
+#: NEEDS WORK
+msgid "This is the only pane in the tab."
+msgstr "C'est le seul panneau de l'onglet."
 # 
 # File: usr/share/ashyterm/filemanager/manager.py, line: 182
 # File: usr/share/ashyterm/filemanager/manager.py, line: 608

@@ -112,16 +112,6 @@ msgstr "{} terminal oluşturulamadı: {}"
 msgid "Could not create terminal. {}"
 msgstr "Terminal oluşturulamadı. {}"
 # 
-# File: usr/share/ashyterm/utils/exceptions.py, line: 128
-#: NEEDS WORK
-msgid "VTE library is not available or not properly installed"
-msgstr "VTE kütüphanesi mevcut değil veya düzgün bir şekilde kurulmamış."
-# 
-# File: usr/share/ashyterm/utils/exceptions.py, line: 131
-#: NEEDS WORK
-msgid "Terminal functionality requires VTE library. Please install gir1.2-vte-2.91"
-msgstr "Terminal işlevselliği VTE kütüphanesini gerektirir. Lütfen gir1.2-vte-2.91'i yükleyin."
-# 
 # File: usr/share/ashyterm/utils/exceptions.py, line: 148
 #: NEEDS WORK
 #, python-brace-format
@@ -220,18 +210,6 @@ msgstr "{}: {} içindeki UI hatası"
 #, python-brace-format
 msgid "UI error in component: {}"
 msgstr "Bileşende UI hatası: {}"
-# 
-# File: usr/share/ashyterm/utils/exceptions.py, line: 321
-#: NEEDS WORK
-#, python-brace-format
-msgid "Dialog error ({}): {}"
-msgstr "Diyalog hatası ({}): {}"
-# 
-# File: usr/share/ashyterm/utils/exceptions.py, line: 324
-#: NEEDS WORK
-#, python-brace-format
-msgid "Interface error: {}"
-msgstr "Arayüz hatası: {}"
 # 
 # File: usr/share/ashyterm/utils/exceptions.py, line: 368
 # File: usr/share/ashyterm/utils/exceptions.py, line: 372
@@ -606,6 +584,12 @@ msgstr "İsimsiz Klasör"
 msgid "Sessions"
 msgstr "Oturumlar"
 # 
+# File: usr/share/ashyterm/sessions/tree.py, line: 298
+# File: usr/share/ashyterm/sessions/tree.py, line: 302
+#: NEEDS WORK
+msgid "Move Error"
+msgstr "Hareket Hatası"
+# 
 # File: usr/share/ashyterm/sessions/tree.py, line: 618
 # File: usr/share/ashyterm/sessions/tree.py, line: 623
 #: NEEDS WORK
@@ -810,6 +794,16 @@ msgstr "Oturumu taşımadan sonra kaydedilemedi."
 msgid "Session moved successfully."
 msgstr "Oturum başarıyla taşındı."
 # 
+# File: usr/share/ashyterm/sessions/operations.py, line: 209
+#: NEEDS WORK
+msgid "Cannot move a folder into itself."
+msgstr "Bir klasörü kendisine taşıyamazsınız."
+# 
+# File: usr/share/ashyterm/sessions/operations.py, line: 260
+#: NEEDS WORK
+msgid "Unsupported item type for paste operation."
+msgstr "Yapıştırma işlemi için desteklenmeyen öğe türü."
+# 
 # File: usr/share/ashyterm/window.py, line: 145
 #: NEEDS WORK
 msgid "Initialization Error"
@@ -938,6 +932,40 @@ msgid ""
 msgstr ""
 "Oturum doğrulaması başarısız oldu:\n"
 "{errors}"
+# 
+# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 136
+# File: usr/share/ashyterm/ui/dialogs.py, line: 784
+# File: usr/share/ashyterm/ui/dialogs.py, line: 2021
+# File: usr/share/ashyterm/ui/dialogs.py, line: 2033
+# File: usr/share/ashyterm/window.py, line: 1055
+# File: usr/share/ashyterm/window.py, line: 1070
+#: NEEDS WORK
+msgid "OK"
+msgstr "Tamam"
+# 
+# File: usr/share/ashyterm/window.py, line: 958
+#: NEEDS WORK
+msgid "Cannot detach the last tab."
+msgstr "Son sekmeyi ayıramazsınız."
+# 
+# File: usr/share/ashyterm/ui/ssh_dialogs.py, line: 206
+#: NEEDS WORK
+msgid "SSH Connection Failed"
+msgstr "SSH Bağlantısı Başarısız"
+# 
+# File: usr/share/ashyterm/ui/ssh_dialogs.py, line: 207
+#: NEEDS WORK
+#, python-brace-format
+msgid "Could not connect to session '{session_name}'."
+msgstr "'{session_name}' oturumuna bağlanılamadı."
+# 
+# File: usr/share/ashyterm/ui/ssh_dialogs.py, line: 83
+# File: usr/share/ashyterm/ui/ssh_dialogs.py, line: 239
+#: NEEDS WORK
+msgid "Close"
+msgstr "Kapat"
 # 
 # File: usr/share/ashyterm/window.py, line: 586
 #: NEEDS WORK
@@ -1120,109 +1148,6 @@ msgstr "Bu, seçilen klasörlerin tüm içeriklerini de silecektir."
 msgid "Delete"
 msgstr "Silmek"
 # 
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 136
-# File: usr/share/ashyterm/ui/dialogs.py, line: 784
-# File: usr/share/ashyterm/ui/dialogs.py, line: 2021
-# File: usr/share/ashyterm/ui/dialogs.py, line: 2033
-# File: usr/share/ashyterm/window.py, line: 1055
-# File: usr/share/ashyterm/window.py, line: 1070
-#: NEEDS WORK
-msgid "OK"
-msgstr "Tamam"
-# 
-# File: usr/share/ashyterm/window.py, line: 958
-#: NEEDS WORK
-msgid "Cannot detach the last tab."
-msgstr "Son sekmeyi ayıramazsınız."
-# 
-# File: usr/share/ashyterm/ui/ssh_dialogs.py, line: 51
-#: NEEDS WORK
-msgid "SSH Connection Timeout"
-msgstr "SSH Bağlantı Zaman Aşımı"
-# 
-# File: usr/share/ashyterm/ui/ssh_dialogs.py, line: 55
-#: NEEDS WORK
-#, python-brace-format
-msgid "The SSH connection attempt timed out after {seconds} seconds."
-msgstr "SSH bağlantı denemesi {seconds} saniye sonra zaman aşımına uğradı."
-# 
-# File: usr/share/ashyterm/ui/ssh_dialogs.py, line: 59
-#: NEEDS WORK
-msgid "Connection details:"
-msgstr "Bağlantı ayrıntıları:"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 446
-#: NEEDS WORK
-msgid "Username"
-msgstr "Kullanıcı Adı"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 429
-# File: usr/share/ashyterm/ui/dialogs.py, line: 894
-#: NEEDS WORK
-msgid "Host"
-msgstr "Anahtar"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 464
-#: NEEDS WORK
-msgid "Port"
-msgstr "Bağlantı Noktası"
-# 
-# File: usr/share/ashyterm/ui/ssh_dialogs.py, line: 71
-#: NEEDS WORK
-msgid "Remote path"
-msgstr "Uzak yol"
-# 
-# File: usr/share/ashyterm/ui/ssh_dialogs.py, line: 76
-#: NEEDS WORK
-msgid "Please check your network connection and verify the server is accessible."
-msgstr "Lütfen ağ bağlantınızı kontrol edin ve sunucunun erişilebilir olduğunu doğrulayın."
-# 
-# File: usr/share/ashyterm/ui/ssh_dialogs.py, line: 83
-# File: usr/share/ashyterm/ui/ssh_dialogs.py, line: 239
-#: NEEDS WORK
-msgid "Close"
-msgstr "Kapat"
-# 
-# File: usr/share/ashyterm/ui/ssh_dialogs.py, line: 84
-#: NEEDS WORK
-msgid "Retry Connection"
-msgstr "Bağlantıyı Yeniden Deneyin"
-# 
-# File: usr/share/ashyterm/ui/ssh_dialogs.py, line: 160
-#: NEEDS WORK
-msgid "SSH Authentication Required"
-msgstr "SSH Kimlik Doğrulaması Gerekiyor"
-# 
-# File: usr/share/ashyterm/ui/ssh_dialogs.py, line: 162
-#: NEEDS WORK
-#, python-brace-format
-msgid "Please enter the password for {target_display}"
-msgstr "Lütfen {target_display} için şifreyi girin."
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 467
-# File: usr/share/ashyterm/ui/dialogs.py, line: 533
-#: NEEDS WORK
-msgid "Password"
-msgstr "Şifre"
-# 
-# File: usr/share/ashyterm/ui/ssh_dialogs.py, line: 177
-#: NEEDS WORK
-msgid "Connect"
-msgstr "Bağlan"
-# 
-# File: usr/share/ashyterm/ui/ssh_dialogs.py, line: 206
-#: NEEDS WORK
-msgid "SSH Connection Failed"
-msgstr "SSH Bağlantısı Başarısız"
-# 
-# File: usr/share/ashyterm/ui/ssh_dialogs.py, line: 207
-#: NEEDS WORK
-#, python-brace-format
-msgid "Could not connect to session '{session_name}'."
-msgstr "'{session_name}' oturumuna bağlanılamadı."
-# 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 164
 #: NEEDS WORK
 msgid "Continue"
@@ -1319,6 +1244,12 @@ msgstr "SSH Yapılandırması"
 msgid "Configure connection details for SSH sessions"
 msgstr "SSH oturumları için bağlantı ayrıntılarını yapılandırın"
 # 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 429
+# File: usr/share/ashyterm/ui/dialogs.py, line: 894
+#: NEEDS WORK
+msgid "Host"
+msgstr "Anahtar"
+# 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 430
 #: NEEDS WORK
 msgid "Hostname or IP address of the remote server"
@@ -1329,6 +1260,11 @@ msgstr "Uzak sunucunun ana bilgisayar adı veya IP adresi"
 msgid "example.com or 192.168.1.100"
 msgstr "example.com veya 192.168.1.100"
 # 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 446
+#: NEEDS WORK
+msgid "Username"
+msgstr "Kullanıcı Adı"
+# 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 447
 #: NEEDS WORK
 msgid "Username for SSH authentication (optional)"
@@ -1338,6 +1274,11 @@ msgstr "SSH kimlik doğrulaması için kullanıcı adı (isteğe bağlı)"
 #: NEEDS WORK
 msgid "username"
 msgstr "kullanıcı adı"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 464
+#: NEEDS WORK
+msgid "Port"
+msgstr "Bağlantı Noktası"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 465
 #: NEEDS WORK
@@ -1358,6 +1299,12 @@ msgstr "Kimlik doğrulama yöntemini seçin"
 #: NEEDS WORK
 msgid "SSH Key"
 msgstr "SSH Anahtarı"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 467
+# File: usr/share/ashyterm/ui/dialogs.py, line: 533
+#: NEEDS WORK
+msgid "Password"
+msgstr "Şifre"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 494
 #: NEEDS WORK
@@ -2147,10 +2094,20 @@ msgstr "Başlangıç Hatası"
 msgid "Application failed to start: {}"
 msgstr "Uygulama başlatılamadı: {}"
 # 
+# File: usr/share/ashyterm/terminal/tabs.py, line: 43
+#: NEEDS WORK
+msgid "Move to New Tab"
+msgstr "Yeni Sekmeye Taşı"
+# 
 # File: usr/share/ashyterm/terminal/tabs.py, line: 237
 #: NEEDS WORK
 msgid "Detach Tab"
 msgstr "Sekmeyi Ayır"
+# 
+# File: usr/share/ashyterm/terminal/tabs.py, line: 585
+#: NEEDS WORK
+msgid "This is the only pane in the tab."
+msgstr "Bu sekmedeki tek bölmedir."
 # 
 # File: usr/share/ashyterm/filemanager/manager.py, line: 182
 # File: usr/share/ashyterm/filemanager/manager.py, line: 608

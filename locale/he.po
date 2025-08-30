@@ -112,16 +112,6 @@ msgstr "נכשל ביצירת {} טרמינל: {}"
 msgid "Could not create terminal. {}"
 msgstr "לא ניתן ליצור טרמינל. {}"
 # 
-# File: usr/share/ashyterm/utils/exceptions.py, line: 128
-#: NEEDS WORK
-msgid "VTE library is not available or not properly installed"
-msgstr "ספריית VTE אינה זמינה או לא מותקנת כראוי"
-# 
-# File: usr/share/ashyterm/utils/exceptions.py, line: 131
-#: NEEDS WORK
-msgid "Terminal functionality requires VTE library. Please install gir1.2-vte-2.91"
-msgstr "פונקציונליות הטרמינל דורשת את ספריית VTE. אנא התקן gir1.2-vte-2.91"
-# 
 # File: usr/share/ashyterm/utils/exceptions.py, line: 148
 #: NEEDS WORK
 #, python-brace-format
@@ -220,18 +210,6 @@ msgstr "שגיאת ממשק משתמש ב{}: {}"
 #, python-brace-format
 msgid "UI error in component: {}"
 msgstr "שגיאת UI ברכיב: {}"
-# 
-# File: usr/share/ashyterm/utils/exceptions.py, line: 321
-#: NEEDS WORK
-#, python-brace-format
-msgid "Dialog error ({}): {}"
-msgstr "שגיאת דיאלוג ({}): {}"
-# 
-# File: usr/share/ashyterm/utils/exceptions.py, line: 324
-#: NEEDS WORK
-#, python-brace-format
-msgid "Interface error: {}"
-msgstr "שגיאת ממשק: {}"
 # 
 # File: usr/share/ashyterm/utils/exceptions.py, line: 368
 # File: usr/share/ashyterm/utils/exceptions.py, line: 372
@@ -606,6 +584,12 @@ msgstr "תיקייה ללא שם"
 msgid "Sessions"
 msgstr "מושבים"
 # 
+# File: usr/share/ashyterm/sessions/tree.py, line: 298
+# File: usr/share/ashyterm/sessions/tree.py, line: 302
+#: NEEDS WORK
+msgid "Move Error"
+msgstr "שגיאת הזזה"
+# 
 # File: usr/share/ashyterm/sessions/tree.py, line: 618
 # File: usr/share/ashyterm/sessions/tree.py, line: 623
 #: NEEDS WORK
@@ -810,6 +794,16 @@ msgstr "נכשל בשמירה לאחר העברת המושב."
 msgid "Session moved successfully."
 msgstr "הישיבה הועברה בהצלחה."
 # 
+# File: usr/share/ashyterm/sessions/operations.py, line: 209
+#: NEEDS WORK
+msgid "Cannot move a folder into itself."
+msgstr "לא ניתן להעביר תיקיה לתוך עצמה."
+# 
+# File: usr/share/ashyterm/sessions/operations.py, line: 260
+#: NEEDS WORK
+msgid "Unsupported item type for paste operation."
+msgstr "סוג פריט לא נתמך לפעולת הדבקה."
+# 
 # File: usr/share/ashyterm/window.py, line: 145
 #: NEEDS WORK
 msgid "Initialization Error"
@@ -938,6 +932,40 @@ msgid ""
 msgstr ""
 "אימות מושב נכשל:\n"
 "{errors}"
+# 
+# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 136
+# File: usr/share/ashyterm/ui/dialogs.py, line: 784
+# File: usr/share/ashyterm/ui/dialogs.py, line: 2021
+# File: usr/share/ashyterm/ui/dialogs.py, line: 2033
+# File: usr/share/ashyterm/window.py, line: 1055
+# File: usr/share/ashyterm/window.py, line: 1070
+#: NEEDS WORK
+msgid "OK"
+msgstr "אוקי"
+# 
+# File: usr/share/ashyterm/window.py, line: 958
+#: NEEDS WORK
+msgid "Cannot detach the last tab."
+msgstr "לא ניתן לנתק את הלשונית האחרונה."
+# 
+# File: usr/share/ashyterm/ui/ssh_dialogs.py, line: 206
+#: NEEDS WORK
+msgid "SSH Connection Failed"
+msgstr "חיבור SSH נכשל"
+# 
+# File: usr/share/ashyterm/ui/ssh_dialogs.py, line: 207
+#: NEEDS WORK
+#, python-brace-format
+msgid "Could not connect to session '{session_name}'."
+msgstr "לא ניתן להתחבר לסשן '{session_name}'."
+# 
+# File: usr/share/ashyterm/ui/ssh_dialogs.py, line: 83
+# File: usr/share/ashyterm/ui/ssh_dialogs.py, line: 239
+#: NEEDS WORK
+msgid "Close"
+msgstr "סגור"
 # 
 # File: usr/share/ashyterm/window.py, line: 586
 #: NEEDS WORK
@@ -1123,109 +1151,6 @@ msgstr "זה גם ימחק את כל התוכן של כל התיקיות שנב�
 msgid "Delete"
 msgstr "מחק"
 # 
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 136
-# File: usr/share/ashyterm/ui/dialogs.py, line: 784
-# File: usr/share/ashyterm/ui/dialogs.py, line: 2021
-# File: usr/share/ashyterm/ui/dialogs.py, line: 2033
-# File: usr/share/ashyterm/window.py, line: 1055
-# File: usr/share/ashyterm/window.py, line: 1070
-#: NEEDS WORK
-msgid "OK"
-msgstr "אוקי"
-# 
-# File: usr/share/ashyterm/window.py, line: 958
-#: NEEDS WORK
-msgid "Cannot detach the last tab."
-msgstr "לא ניתן לנתק את הלשונית האחרונה."
-# 
-# File: usr/share/ashyterm/ui/ssh_dialogs.py, line: 51
-#: NEEDS WORK
-msgid "SSH Connection Timeout"
-msgstr "זמן קצוב לחיבור SSH"
-# 
-# File: usr/share/ashyterm/ui/ssh_dialogs.py, line: 55
-#: NEEDS WORK
-#, python-brace-format
-msgid "The SSH connection attempt timed out after {seconds} seconds."
-msgstr "ניסיון החיבור SSH פג לאחר {seconds} שניות."
-# 
-# File: usr/share/ashyterm/ui/ssh_dialogs.py, line: 59
-#: NEEDS WORK
-msgid "Connection details:"
-msgstr "פרטי חיבור:"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 446
-#: NEEDS WORK
-msgid "Username"
-msgstr "שם משתמש"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 429
-# File: usr/share/ashyterm/ui/dialogs.py, line: 894
-#: NEEDS WORK
-msgid "Host"
-msgstr "מארח"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 464
-#: NEEDS WORK
-msgid "Port"
-msgstr "פורט"
-# 
-# File: usr/share/ashyterm/ui/ssh_dialogs.py, line: 71
-#: NEEDS WORK
-msgid "Remote path"
-msgstr "נתיב מרוחק"
-# 
-# File: usr/share/ashyterm/ui/ssh_dialogs.py, line: 76
-#: NEEDS WORK
-msgid "Please check your network connection and verify the server is accessible."
-msgstr "אנא בדוק את חיבור הרשת שלך ואמת שהשרת נגיש."
-# 
-# File: usr/share/ashyterm/ui/ssh_dialogs.py, line: 83
-# File: usr/share/ashyterm/ui/ssh_dialogs.py, line: 239
-#: NEEDS WORK
-msgid "Close"
-msgstr "סגור"
-# 
-# File: usr/share/ashyterm/ui/ssh_dialogs.py, line: 84
-#: NEEDS WORK
-msgid "Retry Connection"
-msgstr "נסה להתחבר שוב"
-# 
-# File: usr/share/ashyterm/ui/ssh_dialogs.py, line: 160
-#: NEEDS WORK
-msgid "SSH Authentication Required"
-msgstr "דרושה אימות SSH"
-# 
-# File: usr/share/ashyterm/ui/ssh_dialogs.py, line: 162
-#: NEEDS WORK
-#, python-brace-format
-msgid "Please enter the password for {target_display}"
-msgstr "אנא הזן את הסיסמה עבור {target_display}"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 467
-# File: usr/share/ashyterm/ui/dialogs.py, line: 533
-#: NEEDS WORK
-msgid "Password"
-msgstr "סיסמה"
-# 
-# File: usr/share/ashyterm/ui/ssh_dialogs.py, line: 177
-#: NEEDS WORK
-msgid "Connect"
-msgstr "חבר"
-# 
-# File: usr/share/ashyterm/ui/ssh_dialogs.py, line: 206
-#: NEEDS WORK
-msgid "SSH Connection Failed"
-msgstr "חיבור SSH נכשל"
-# 
-# File: usr/share/ashyterm/ui/ssh_dialogs.py, line: 207
-#: NEEDS WORK
-#, python-brace-format
-msgid "Could not connect to session '{session_name}'."
-msgstr "לא ניתן להתחבר לסשן '{session_name}'."
-# 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 164
 #: NEEDS WORK
 msgid "Continue"
@@ -1322,6 +1247,12 @@ msgstr "הגדרת SSH"
 msgid "Configure connection details for SSH sessions"
 msgstr "הגדר פרטי חיבור עבור מושבי SSH"
 # 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 429
+# File: usr/share/ashyterm/ui/dialogs.py, line: 894
+#: NEEDS WORK
+msgid "Host"
+msgstr "מארח"
+# 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 430
 #: NEEDS WORK
 msgid "Hostname or IP address of the remote server"
@@ -1332,6 +1263,11 @@ msgstr "שם המחשב או כתובת ה-IP של השרת המרוחק"
 msgid "example.com or 192.168.1.100"
 msgstr "example.com או 192.168.1.100"
 # 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 446
+#: NEEDS WORK
+msgid "Username"
+msgstr "שם משתמש"
+# 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 447
 #: NEEDS WORK
 msgid "Username for SSH authentication (optional)"
@@ -1341,6 +1277,11 @@ msgstr "שם משתמש לאימות SSH (אופציונלי)"
 #: NEEDS WORK
 msgid "username"
 msgstr "שם משתמש"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 464
+#: NEEDS WORK
+msgid "Port"
+msgstr "פורט"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 465
 #: NEEDS WORK
@@ -1361,6 +1302,12 @@ msgstr "בחר שיטת אימות"
 #: NEEDS WORK
 msgid "SSH Key"
 msgstr "מפתח SSH"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 467
+# File: usr/share/ashyterm/ui/dialogs.py, line: 533
+#: NEEDS WORK
+msgid "Password"
+msgstr "סיסמה"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 494
 #: NEEDS WORK
@@ -2148,10 +2095,20 @@ msgstr "שגיאת הפעלה"
 msgid "Application failed to start: {}"
 msgstr "היישום נכשל בהפעלה: {}"
 # 
+# File: usr/share/ashyterm/terminal/tabs.py, line: 43
+#: NEEDS WORK
+msgid "Move to New Tab"
+msgstr "עבור לטאב חדש"
+# 
 # File: usr/share/ashyterm/terminal/tabs.py, line: 237
 #: NEEDS WORK
 msgid "Detach Tab"
 msgstr "הפרד כרטיסייה"
+# 
+# File: usr/share/ashyterm/terminal/tabs.py, line: 585
+#: NEEDS WORK
+msgid "This is the only pane in the tab."
+msgstr "זהו הפאנל היחיד בכרטיסייה."
 # 
 # File: usr/share/ashyterm/filemanager/manager.py, line: 182
 # File: usr/share/ashyterm/filemanager/manager.py, line: 608

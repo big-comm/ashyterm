@@ -112,16 +112,6 @@ msgstr "Ekki tókst að búa til {} terminal: {}"
 msgid "Could not create terminal. {}"
 msgstr "Gat ekki að búa til terminal. {}"
 # 
-# File: usr/share/ashyterm/utils/exceptions.py, line: 128
-#: NEEDS WORK
-msgid "VTE library is not available or not properly installed"
-msgstr "VTE bókasafnið er ekki tiltækt eða ekki rétt uppsett"
-# 
-# File: usr/share/ashyterm/utils/exceptions.py, line: 131
-#: NEEDS WORK
-msgid "Terminal functionality requires VTE library. Please install gir1.2-vte-2.91"
-msgstr "Terminal virkni krefst VTE bókasafns. Vinsamlegast settu upp gir1.2-vte-2.91"
-# 
 # File: usr/share/ashyterm/utils/exceptions.py, line: 148
 #: NEEDS WORK
 #, python-brace-format
@@ -220,18 +210,6 @@ msgstr "UI villa í {}: {}"
 #, python-brace-format
 msgid "UI error in component: {}"
 msgstr "UI villa í hluta: {}"
-# 
-# File: usr/share/ashyterm/utils/exceptions.py, line: 321
-#: NEEDS WORK
-#, python-brace-format
-msgid "Dialog error ({}): {}"
-msgstr "Samskipti villa ({}): {}"
-# 
-# File: usr/share/ashyterm/utils/exceptions.py, line: 324
-#: NEEDS WORK
-#, python-brace-format
-msgid "Interface error: {}"
-msgstr "Viðmót villa: {}"
 # 
 # File: usr/share/ashyterm/utils/exceptions.py, line: 368
 # File: usr/share/ashyterm/utils/exceptions.py, line: 372
@@ -606,6 +584,12 @@ msgstr "Ónefnd möppur"
 msgid "Sessions"
 msgstr "Snið"
 # 
+# File: usr/share/ashyterm/sessions/tree.py, line: 298
+# File: usr/share/ashyterm/sessions/tree.py, line: 302
+#: NEEDS WORK
+msgid "Move Error"
+msgstr "Hreyfingarvilla"
+# 
 # File: usr/share/ashyterm/sessions/tree.py, line: 618
 # File: usr/share/ashyterm/sessions/tree.py, line: 623
 #: NEEDS WORK
@@ -810,6 +794,16 @@ msgstr "Ekki tókst að vista eftir að hafa flutt sess."
 msgid "Session moved successfully."
 msgstr "Session fluttuð með árangri."
 # 
+# File: usr/share/ashyterm/sessions/operations.py, line: 209
+#: NEEDS WORK
+msgid "Cannot move a folder into itself."
+msgstr "Get ekki flokka í sjálfan sig."
+# 
+# File: usr/share/ashyterm/sessions/operations.py, line: 260
+#: NEEDS WORK
+msgid "Unsupported item type for paste operation."
+msgstr "Ósamþykktur hlutategund fyrir límaraðgerð."
+# 
 # File: usr/share/ashyterm/window.py, line: 145
 #: NEEDS WORK
 msgid "Initialization Error"
@@ -938,6 +932,40 @@ msgid ""
 msgstr ""
 "Gildisvottun mistókst:\n"
 "{errors}"
+# 
+# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 136
+# File: usr/share/ashyterm/ui/dialogs.py, line: 784
+# File: usr/share/ashyterm/ui/dialogs.py, line: 2021
+# File: usr/share/ashyterm/ui/dialogs.py, line: 2033
+# File: usr/share/ashyterm/window.py, line: 1055
+# File: usr/share/ashyterm/window.py, line: 1070
+#: NEEDS WORK
+msgid "OK"
+msgstr "Í lagi"
+# 
+# File: usr/share/ashyterm/window.py, line: 958
+#: NEEDS WORK
+msgid "Cannot detach the last tab."
+msgstr "Get ekki að losa síðasta flipa."
+# 
+# File: usr/share/ashyterm/ui/ssh_dialogs.py, line: 96
+#: NEEDS WORK
+msgid "SSH Connection Failed"
+msgstr "SSH tenging mistókst"
+# 
+# File: usr/share/ashyterm/ui/ssh_dialogs.py, line: 97
+#: NEEDS WORK
+#, python-brace-format
+msgid "Could not connect to session '{session_name}'."
+msgstr "Gat ekki tengingu við sess '{session_name}'."
+# 
+# File: usr/share/ashyterm/ui/ssh_dialogs.py, line: 35
+# File: usr/share/ashyterm/ui/ssh_dialogs.py, line: 117
+#: NEEDS WORK
+msgid "Close"
+msgstr "Lokaðu"
 # 
 # File: usr/share/ashyterm/window.py, line: 586
 #: NEEDS WORK
@@ -1125,109 +1153,6 @@ msgstr "Þetta mun einnig eyða öllum efni í hvaða valin möppum sem er."
 msgid "Delete"
 msgstr "Eyða"
 # 
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 136
-# File: usr/share/ashyterm/ui/dialogs.py, line: 784
-# File: usr/share/ashyterm/ui/dialogs.py, line: 2021
-# File: usr/share/ashyterm/ui/dialogs.py, line: 2033
-# File: usr/share/ashyterm/window.py, line: 1055
-# File: usr/share/ashyterm/window.py, line: 1070
-#: NEEDS WORK
-msgid "OK"
-msgstr "Í lagi"
-# 
-# File: usr/share/ashyterm/window.py, line: 958
-#: NEEDS WORK
-msgid "Cannot detach the last tab."
-msgstr "Get ekki að losa síðasta flipa."
-# 
-# File: usr/share/ashyterm/ui/ssh_dialogs.py, line: 18
-#: NEEDS WORK
-msgid "SSH Connection Timeout"
-msgstr "SSH tengi tímabil"
-# 
-# File: usr/share/ashyterm/ui/ssh_dialogs.py, line: 21
-#: NEEDS WORK
-#, python-brace-format
-msgid "The SSH connection attempt timed out after {seconds} seconds."
-msgstr "SSH tengingartilraunin tímabundið útrunnin eftir {seconds} sekúndur."
-# 
-# File: usr/share/ashyterm/ui/ssh_dialogs.py, line: 23
-#: NEEDS WORK
-msgid "Connection details:"
-msgstr "Samskipti upplýsingar:"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 446
-#: NEEDS WORK
-msgid "Username"
-msgstr "Notandi"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 429
-# File: usr/share/ashyterm/ui/dialogs.py, line: 894
-#: NEEDS WORK
-msgid "Host"
-msgstr "Gestirandi"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 464
-#: NEEDS WORK
-msgid "Port"
-msgstr "Portur"
-# 
-# File: usr/share/ashyterm/ui/ssh_dialogs.py, line: 31
-#: NEEDS WORK
-msgid "Remote path"
-msgstr "Fjarlægur slóð"
-# 
-# File: usr/share/ashyterm/ui/ssh_dialogs.py, line: 32
-#: NEEDS WORK
-msgid "Please check your network connection and verify the server is accessible."
-msgstr "Vinsamlegast athugaðu net tenginguna þína og staðfestu að þjónninn sé aðgengilegur."
-# 
-# File: usr/share/ashyterm/ui/ssh_dialogs.py, line: 35
-# File: usr/share/ashyterm/ui/ssh_dialogs.py, line: 117
-#: NEEDS WORK
-msgid "Close"
-msgstr "Lokaðu"
-# 
-# File: usr/share/ashyterm/ui/ssh_dialogs.py, line: 36
-#: NEEDS WORK
-msgid "Retry Connection"
-msgstr "Endurtaka tengingu"
-# 
-# File: usr/share/ashyterm/ui/ssh_dialogs.py, line: 74
-#: NEEDS WORK
-msgid "SSH Authentication Required"
-msgstr "SSH auðkenning krafist"
-# 
-# File: usr/share/ashyterm/ui/ssh_dialogs.py, line: 75
-#: NEEDS WORK
-#, python-brace-format
-msgid "Please enter the password for {target_display}"
-msgstr "Vinsamlegast sláðu inn lykilorðið fyrir {target_display}"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 467
-# File: usr/share/ashyterm/ui/dialogs.py, line: 533
-#: NEEDS WORK
-msgid "Password"
-msgstr "Lykilorð"
-# 
-# File: usr/share/ashyterm/ui/ssh_dialogs.py, line: 81
-#: NEEDS WORK
-msgid "Connect"
-msgstr "Tengdu"
-# 
-# File: usr/share/ashyterm/ui/ssh_dialogs.py, line: 96
-#: NEEDS WORK
-msgid "SSH Connection Failed"
-msgstr "SSH tenging mistókst"
-# 
-# File: usr/share/ashyterm/ui/ssh_dialogs.py, line: 97
-#: NEEDS WORK
-#, python-brace-format
-msgid "Could not connect to session '{session_name}'."
-msgstr "Gat ekki tengingu við sess '{session_name}'."
-# 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 164
 #: NEEDS WORK
 msgid "Continue"
@@ -1324,6 +1249,12 @@ msgstr "SSH stilling"
 msgid "Configure connection details for SSH sessions"
 msgstr "Stilltu tengingarupplýsingar fyrir SSH lotur"
 # 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 429
+# File: usr/share/ashyterm/ui/dialogs.py, line: 894
+#: NEEDS WORK
+msgid "Host"
+msgstr "Gestirandi"
+# 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 430
 #: NEEDS WORK
 msgid "Hostname or IP address of the remote server"
@@ -1334,6 +1265,11 @@ msgstr "Heiti eða IP-tala fjarþjónsins"
 msgid "example.com or 192.168.1.100"
 msgstr "example.com eða 192.168.1.100"
 # 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 446
+#: NEEDS WORK
+msgid "Username"
+msgstr "Notandi"
+# 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 447
 #: NEEDS WORK
 msgid "Username for SSH authentication (optional)"
@@ -1343,6 +1279,11 @@ msgstr "Notandi fyrir SSH auðkenningu (valfrjálst)"
 #: NEEDS WORK
 msgid "username"
 msgstr "notandi"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 464
+#: NEEDS WORK
+msgid "Port"
+msgstr "Portur"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 465
 #: NEEDS WORK
@@ -1363,6 +1304,12 @@ msgstr "Veldu auðkenningaraðferð"
 #: NEEDS WORK
 msgid "SSH Key"
 msgstr "SSH lykill"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 467
+# File: usr/share/ashyterm/ui/dialogs.py, line: 533
+#: NEEDS WORK
+msgid "Password"
+msgstr "Lykilorð"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 494
 #: NEEDS WORK
@@ -2154,10 +2101,20 @@ msgstr "Ræsivillur"
 msgid "Application failed to start: {}"
 msgstr "Forrit gat ekki hafist: {}"
 # 
+# File: usr/share/ashyterm/terminal/tabs.py, line: 43
+#: NEEDS WORK
+msgid "Move to New Tab"
+msgstr "Færa í nýja flipa"
+# 
 # File: usr/share/ashyterm/terminal/tabs.py, line: 237
 #: NEEDS WORK
 msgid "Detach Tab"
 msgstr "Aðskilja flipa"
+# 
+# File: usr/share/ashyterm/terminal/tabs.py, line: 585
+#: NEEDS WORK
+msgid "This is the only pane in the tab."
+msgstr "Þetta er eina glugginn í flipanum."
 # 
 # File: usr/share/ashyterm/filemanager/manager.py, line: 182
 # File: usr/share/ashyterm/filemanager/manager.py, line: 608
