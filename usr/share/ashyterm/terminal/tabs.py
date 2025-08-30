@@ -18,69 +18,79 @@ from ..utils.translation_utils import _
 from .manager import TerminalManager
 
 
-class TerminalPaneWithTitleBar(Gtk.Box):
-    """A terminal pane with an integrated, Adwaita-native title bar."""
+def _create_terminal_pane(
+    terminal: Vte.Terminal,
+    title: str,
+    on_close_callback: Callable[[Vte.Terminal], None],
+    on_move_to_tab_callback: Callable[[Vte.Terminal], None],
+) -> Adw.ToolbarView:
+    """
+    Creates a terminal pane using Adw.ToolbarView, the idiomatic standard
+    for a main content area with a toolbar.
+    """
+    toolbar_view = Adw.ToolbarView()
+    toolbar_view.add_css_class("terminal-pane")
 
-    def __init__(self, terminal: Vte.Terminal, title: str = "Terminal"):
-        super().__init__(orientation=Gtk.Orientation.VERTICAL, spacing=0)
-        self.terminal = terminal
-        self._title = title
-        self.title_bar = self._create_title_bar()
-        self.append(self.title_bar)
+    # Top title bar
+    header_bar = Adw.HeaderBar()
+    header_bar.set_show_end_title_buttons(False)
+    header_bar.set_show_start_title_buttons(False)
 
-        current_parent = terminal.get_parent()
-        if isinstance(current_parent, Gtk.ScrolledWindow):
-            self.scrolled_window = current_parent
-            if grandparent := current_parent.get_parent():
-                grandparent.set_child(None)
-        else:
-            self.scrolled_window = Gtk.ScrolledWindow()
-            self.scrolled_window.set_policy(
-                Gtk.PolicyType.AUTOMATIC, Gtk.PolicyType.AUTOMATIC
-            )
-            if current_parent:
-                current_parent.set_child(None)
+    title_label = Gtk.Label(label=title, ellipsize=Pango.EllipsizeMode.END, xalign=0.0)
+    header_bar.set_title_widget(title_label)
 
-        if terminal.get_parent() != self.scrolled_window:
-            self.scrolled_window.set_child(terminal)
+    move_to_tab_button = Gtk.Button(
+        icon_name="select-rectangular-symbolic", tooltip_text=_("Move to New Tab")
+    )
+    move_to_tab_button.connect("clicked", lambda _: on_move_to_tab_callback(terminal))
 
-        self.scrolled_window.set_vexpand(True)
-        self.scrolled_window.set_hexpand(True)
-        self.append(self.scrolled_window)
-        self.on_close_requested: Optional[Callable[[Vte.Terminal], None]] = None
+    close_button = Gtk.Button(
+        icon_name="window-close-symbolic", tooltip_text=_("Close Pane")
+    )
+    close_button.connect("clicked", lambda _: on_close_callback(terminal))
+    header_bar.pack_end(close_button)
+    header_bar.pack_end(move_to_tab_button)
+    toolbar_view.add_top_bar(header_bar)
 
-    def _create_title_bar(self) -> Adw.HeaderBar:
-        title_bar = Adw.HeaderBar()
-        title_bar.set_show_end_title_buttons(False)
-        title_bar.set_show_start_title_buttons(False)
-        self.title_label = Gtk.Label(
-            label=self._title, ellipsize=Pango.EllipsizeMode.END, xalign=0.0
-        )
-        title_bar.set_title_widget(self.title_label)
-        close_button = Gtk.Button(
-            icon_name="window-close-symbolic", tooltip_text="Close Pane"
-        )
-        close_button.connect("clicked", self._on_close_clicked)
-        title_bar.pack_end(close_button)
-        return title_bar
+    # Main content (the terminal)
+    scrolled_window = Gtk.ScrolledWindow(child=terminal)
+    scrolled_window.set_policy(Gtk.PolicyType.AUTOMATIC, Gtk.PolicyType.AUTOMATIC)
+    scrolled_window.set_vexpand(True)
+    scrolled_window.set_hexpand(True)
+    toolbar_view.set_content(scrolled_window)
 
-    def _on_close_clicked(self, button) -> None:
-        if self.on_close_requested:
-            self.on_close_requested(self.terminal)
+    # Attach important widgets for later access
+    toolbar_view.terminal = terminal
+    toolbar_view.title_label = title_label
 
-    def set_title(self, title: str) -> None:
-        self._title = title
-        if hasattr(self, "title_label"):
-            self.title_label.set_text(title)
-
-    def get_terminal(self) -> Vte.Terminal:
-        return self.terminal
+    return toolbar_view
 
 
 class TabManager:
-    def __init__(self, terminal_manager: TerminalManager):
+    def __init__(
+        self,
+        terminal_manager: TerminalManager,
+        on_quit_callback: Callable[[], None],
+        on_detach_tab_callback: Callable[[Adw.ViewStackPage], None],
+        scrolled_tab_bar: Gtk.ScrolledWindow,
+        on_tab_count_changed: Callable[[], None] = None,
+    ):
+        """
+        Initializes the TabManager.
+
+        Args:
+            terminal_manager: The central manager for terminal instances.
+            on_quit_callback: A function to call when the last tab closes.
+            on_detach_tab_callback: A function to call to detach a tab into a new window.
+            scrolled_tab_bar: The ScrolledWindow containing the tab bar.
+            on_tab_count_changed: A function to call when the number of tabs changes.
+        """
         self.logger = get_logger("ashyterm.tabs.manager")
         self.terminal_manager = terminal_manager
+        self.on_quit_application = on_quit_callback
+        self.on_detach_tab_requested = on_detach_tab_callback
+        self.scrolled_tab_bar = scrolled_tab_bar
+        self.on_tab_count_changed = on_tab_count_changed
 
         self.view_stack = Adw.ViewStack()
         self.tab_bar_box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=4)
@@ -98,10 +108,6 @@ class TabManager:
 
         self.terminal_manager.set_terminal_exit_handler(
             self._on_terminal_process_exited
-        )
-        self.on_quit_application = None
-        self.on_detach_tab_requested: Optional[Callable[[Adw.ViewStackPage], None]] = (
-            None
         )
         self.logger.info("Tab manager initialized with custom tab bar")
 
@@ -164,6 +170,31 @@ class TabManager:
                 terminal, session.name, "network-server-symbolic"
             )
 
+    def _scroll_to_widget(self, widget: Gtk.Widget) -> bool:
+        """Scrolls the tab bar to make the given widget visible."""
+        hadjustment = self.scrolled_tab_bar.get_hadjustment()
+        if not hadjustment:
+            return False
+
+        coords = widget.translate_coordinates(self.scrolled_tab_bar, 0, 0)
+        if coords is None:
+            return False
+
+        widget_x, _ = coords
+        widget_width = widget.get_width()
+        viewport_width = self.scrolled_tab_bar.get_width()
+
+        current_scroll_value = hadjustment.get_value()
+
+        if widget_x < 0:
+            hadjustment.set_value(current_scroll_value + widget_x)
+        elif widget_x + widget_width > viewport_width:
+            hadjustment.set_value(
+                current_scroll_value + (widget_x + widget_width - viewport_width)
+            )
+
+        return False
+
     def _create_tab_for_terminal(
         self, terminal: Vte.Terminal, title: str, icon_name: str
     ) -> None:
@@ -189,6 +220,11 @@ class TabManager:
         self.set_active_tab(tab_widget)
         self._schedule_terminal_focus(terminal)
         self.update_all_tab_titles()
+
+        if self.on_tab_count_changed:
+            self.on_tab_count_changed()
+
+        GLib.idle_add(self._scroll_to_widget, tab_widget)
 
     def _create_tab_widget(
         self, title: str, icon_name: str, page: Adw.ViewStackPage
@@ -221,7 +257,6 @@ class TabManager:
 
         close_button.connect("clicked", self._on_tab_close_button_clicked, tab_widget)
 
-        tab_widget.page_widget = page
         tab_widget.label_widget = label
         tab_widget._base_title = title
         tab_widget._icon_name = icon_name
@@ -229,10 +264,10 @@ class TabManager:
 
         return tab_widget
 
-    def _on_tab_clicked(self, gesture, n_press, x, y, tab_widget):
+    def _on_tab_clicked(self, _gesture, _n_press, _x, _y, tab_widget):
         self.set_active_tab(tab_widget)
 
-    def _on_tab_right_click(self, gesture, n_press, x, y, tab_widget):
+    def _on_tab_right_click(self, _gesture, _n_press, _x, _y, tab_widget):
         menu = Gio.Menu()
         menu.append(_("Detach Tab"), "win.detach-tab")
         popover = Gtk.PopoverMenu.new_from_model(menu)
@@ -243,9 +278,8 @@ class TabManager:
             action_group = Gio.SimpleActionGroup()
             action = Gio.SimpleAction.new("detach-tab", None)
 
-            # Use a partial or lambda to capture the page object
             action.connect(
-                "activate", lambda a, p, pg=page: self._request_detach_tab(pg)
+                "activate", lambda a, _, pg=page: self._request_detach_tab(pg)
             )
             action_group.add_action(action)
             popover.insert_action_group("win", action_group)
@@ -342,6 +376,8 @@ class TabManager:
                 self.active_tab = None
 
         self.update_all_tab_titles()
+        if self.on_tab_count_changed:
+            self.on_tab_count_changed()
 
     def get_all_active_terminals_in_page(
         self, page: Adw.ViewStackPage
@@ -466,9 +502,14 @@ class TabManager:
     def _find_terminals_recursive(
         self, widget, terminals_list: List[Vte.Terminal]
     ) -> None:
-        if isinstance(widget, TerminalPaneWithTitleBar):
-            terminals_list.append(widget.get_terminal())
+        """Recursively find all Vte.Terminal widgets within a container."""
+        if isinstance(widget, Adw.ToolbarView):
+            if hasattr(widget, "terminal") and isinstance(
+                widget.terminal, Vte.Terminal
+            ):
+                terminals_list.append(widget.terminal)
             return
+
         if isinstance(widget, Gtk.ScrolledWindow) and isinstance(
             widget.get_child(), Vte.Terminal
         ):
@@ -521,10 +562,10 @@ class TabManager:
             grandparent.set_child(survivor_pane)
 
         is_last_split = not isinstance(grandparent, Gtk.Paned)
-        if is_last_split and isinstance(survivor_pane, TerminalPaneWithTitleBar):
-            scrolled_win_child = survivor_pane.scrolled_window
+        if is_last_split and isinstance(survivor_pane, Adw.ToolbarView):
+            scrolled_win_child = survivor_pane.get_content()
             if hasattr(grandparent, "set_child"):
-                survivor_pane.remove(scrolled_win_child)
+                survivor_pane.set_content(None)
                 grandparent.set_child(scrolled_win_child)
 
         GLib.idle_add(self.update_all_tab_titles)
@@ -532,6 +573,43 @@ class TabManager:
     def close_pane(self, terminal: Vte.Terminal) -> None:
         """Close a single pane within a tab."""
         self.terminal_manager.remove_terminal(terminal)
+
+    def _on_move_to_tab_callback(self, terminal: Vte.Terminal):
+        """Callback to move a terminal from a split pane to a new tab."""
+        self.logger.info(f"Request to move terminal {terminal.terminal_id} to new tab.")
+        pane_to_remove, parent_paned = self._find_pane_and_parent(terminal)
+
+        if not isinstance(parent_paned, Gtk.Paned):
+            self.logger.warning("Attempted to move a pane that is not in a split.")
+            if hasattr(self.terminal_manager.parent_window, "toast_overlay"):
+                toast = Adw.Toast(title=_("This is the only pane in the tab."))
+                self.terminal_manager.parent_window.toast_overlay.add_toast(toast)
+            return
+
+        current_parent = terminal.get_parent()
+        if current_parent and hasattr(current_parent, "set_child"):
+            current_parent.set_child(None)
+
+        self._remove_pane_ui(pane_to_remove, parent_paned)
+
+        terminal_id = getattr(terminal, "terminal_id", None)
+        info = self.terminal_manager.registry.get_terminal_info(terminal_id)
+        identifier = info.get("identifier") if info else "Local"
+
+        title = "Terminal"
+        icon_name = "computer-symbolic"
+        if isinstance(identifier, SessionItem):
+            title = identifier.name
+            icon_name = (
+                "network-server-symbolic"
+                if identifier.is_ssh()
+                else "computer-symbolic"
+            )
+        elif isinstance(identifier, str):
+            title = identifier
+
+        self._create_tab_for_terminal(terminal, title, icon_name)
+        self.logger.info(f"Terminal {terminal_id} successfully moved to a new tab.")
 
     def split_horizontal(self, focused_terminal: Vte.Terminal) -> None:
         self._split_terminal(focused_terminal, Gtk.Orientation.HORIZONTAL)
@@ -583,8 +661,12 @@ class TabManager:
                 return
 
             new_terminal.ashy_parent_page = page
-            new_pane = TerminalPaneWithTitleBar(new_terminal, new_pane_title)
-            new_pane.on_close_requested = self.close_pane
+            new_pane = _create_terminal_pane(
+                new_terminal,
+                new_pane_title,
+                self.close_pane,
+                self._on_move_to_tab_callback,
+            )
             focus_controller = Gtk.EventControllerFocus()
             focus_controller.connect("enter", self._on_pane_focus_in, new_terminal)
             new_terminal.add_controller(focus_controller)
@@ -596,13 +678,26 @@ class TabManager:
                 return
 
             if isinstance(pane_to_replace, Gtk.ScrolledWindow):
-                title = "Terminal"
-                for tab in self.tabs:
-                    if self.pages.get(tab) == page:
-                        title = tab._base_title
-                        break
-                pane_being_split = TerminalPaneWithTitleBar(focused_terminal, title)
-                pane_being_split.on_close_requested = self.close_pane
+                uri = focused_terminal.get_current_directory_uri()
+                if uri:
+                    from urllib.parse import unquote, urlparse
+
+                    path = unquote(urlparse(uri).path)
+                    title = (
+                        self.terminal_manager.osc7_tracker.parser._create_display_path(
+                            path
+                        )
+                    )
+                else:
+                    title = "Terminal"
+
+                pane_to_replace.set_child(None)
+                pane_being_split = _create_terminal_pane(
+                    focused_terminal,
+                    title,
+                    self.close_pane,
+                    self._on_move_to_tab_callback,
+                )
             else:
                 pane_being_split = pane_to_replace
 
@@ -645,7 +740,6 @@ class TabManager:
         page_name = f"page_detached_{GLib.random_int()}"
         page = self.view_stack.add_titled(content, page_name, title)
 
-        # Update parent page for all terminals within the re-attached content
         for terminal in self.get_all_terminals_in_page(page):
             terminal.ashy_parent_page = page
 
@@ -659,9 +753,35 @@ class TabManager:
             self._schedule_terminal_focus(terminal)
 
         self.update_all_tab_titles()
+        if self.on_tab_count_changed:
+            self.on_tab_count_changed()
         return page
 
     def close_active_tab(self):
         """A helper to forcefully close the currently active tab."""
         if self.active_tab:
             self._on_tab_close_button_clicked(None, self.active_tab)
+
+    def select_next_tab(self):
+        """Selects the next tab in the list."""
+        if not self.tabs or len(self.tabs) <= 1:
+            return
+        try:
+            current_index = self.tabs.index(self.active_tab)
+            next_index = (current_index + 1) % len(self.tabs)
+            self.set_active_tab(self.tabs[next_index])
+        except (ValueError, IndexError):
+            if self.tabs:
+                self.set_active_tab(self.tabs[0])
+
+    def select_previous_tab(self):
+        """Selects the previous tab in the list."""
+        if not self.tabs or len(self.tabs) <= 1:
+            return
+        try:
+            current_index = self.tabs.index(self.active_tab)
+            prev_index = (current_index - 1 + len(self.tabs)) % len(self.tabs)
+            self.set_active_tab(self.tabs[prev_index])
+        except (ValueError, IndexError):
+            if self.tabs:
+                self.set_active_tab(self.tabs[0])

@@ -325,7 +325,7 @@ class CommTerminalApp(Adw.Application):
     def _on_command_line(self, app, command_line):
         return self.do_command_line(command_line)
 
-    def _on_quit_action(self, action, param) -> None:
+    def _on_quit_action(self, _action, _param) -> None:
         """Handle quit action with SSH session confirmation."""
         try:
             if self._has_active_ssh_sessions():
@@ -337,7 +337,7 @@ class CommTerminalApp(Adw.Application):
             self.logger.error(f"Quit action failed: {e}")
             self.quit()
 
-    def _on_preferences_action(self, action, param) -> None:
+    def _on_preferences_action(self, _action, _param) -> None:
         """Handle preferences action."""
         try:
             window = self.get_active_window()
@@ -354,7 +354,7 @@ class CommTerminalApp(Adw.Application):
                 _("Preferences Error"), _("Failed to open preferences: {}").format(e)
             )
 
-    def _on_about_action(self, action, param) -> None:
+    def _on_about_action(self, _action, _param) -> None:
         """Handle about action."""
         try:
             about_dialog = Adw.AboutWindow(
@@ -372,7 +372,7 @@ class CommTerminalApp(Adw.Application):
                 comments=_("A modern terminal emulator with session management"),
             )
             if self.settings_manager and self.settings_manager.get("debug_mode", False):
-                debug_info = f"Platform: Linux\n"
+                debug_info = "Platform: Linux\n"
                 debug_info += f"Architecture: {self.platform_info.architecture}\n"
                 debug_info += f"Shell: {os.environ.get('SHELL', 'N/A')}"
                 about_dialog.set_debug_info(debug_info)
@@ -380,7 +380,7 @@ class CommTerminalApp(Adw.Application):
         except Exception as e:
             self.logger.error(f"Failed to show about dialog: {e}")
 
-    def _on_backup_now_action(self, action, param) -> None:
+    def _on_backup_now_action(self, _action, _param) -> None:
         """Handle manual backup action."""
         try:
             if not self.backup_manager:
@@ -413,7 +413,7 @@ class CommTerminalApp(Adw.Application):
             self.logger.error(f"Manual backup failed: {e}")
             self._show_error_dialog(_("Backup Error"), _("Backup failed: {}").format(e))
 
-    def _on_restore_backup_action(self, action, param) -> None:
+    def _on_restore_backup_action(self, _action, _param) -> None:
         """Handle restore backup action."""
         try:
             if not self.backup_manager:
@@ -439,7 +439,7 @@ class CommTerminalApp(Adw.Application):
                 _("Restore Error"), _("Failed to access backups: {}").format(e)
             )
 
-    def _on_toggle_debug_action(self, action, param) -> None:
+    def _on_toggle_debug_action(self, _action, _param) -> None:
         """Handle toggle debug mode action."""
         try:
             if not self.settings_manager:
@@ -458,7 +458,7 @@ class CommTerminalApp(Adw.Application):
         except Exception as e:
             self.logger.error(f"Failed to toggle debug mode: {e}")
 
-    def _on_show_logs_action(self, action, param) -> None:
+    def _on_show_logs_action(self, _action, _param) -> None:
         """Handle show logs action."""
         try:
             from .utils.logger import get_log_info

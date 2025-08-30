@@ -10,7 +10,7 @@ gi.require_version("Vte", "3.91")
 from gi.repository import GLib, Vte
 
 from .logger import get_logger
-from .osc7 import OSC7Info, OSC7Parser, format_tab_title
+from .osc7 import OSC7Info, OSC7Parser
 
 
 class OSC7TerminalTracker:
@@ -57,7 +57,7 @@ class OSC7TerminalTracker:
         except Exception as e:
             self.logger.error(f"Failed to untrack terminal: {e}")
 
-    def _on_directory_uri_changed(self, terminal: Vte.Terminal, param_spec) -> None:
+    def _on_directory_uri_changed(self, terminal: Vte.Terminal, _param_spec) -> None:
         """Handle directory change detected from VTE's current directory URI."""
         try:
             with self._lock:

@@ -2,7 +2,6 @@
 
 import os
 import signal
-import subprocess
 import threading
 import time
 from pathlib import Path
@@ -52,11 +51,6 @@ class ProcessTracker:
                 return True
             return False
 
-    def get_process_info(self, pid: int) -> Optional[Dict[str, Any]]:
-        """Get process information."""
-        with self._lock:
-            return self._processes.get(pid, {}).copy()
-
     def get_all_processes(self) -> Dict[int, Dict[str, Any]]:
         """Get all tracked processes."""
         with self._lock:
@@ -92,21 +86,11 @@ class ProcessTracker:
                 finally:
                     self.unregister_process(pid)
 
-    def register_ssh_timeout(self, session_name: str, timeout_id: int) -> None:
-        with self._lock:
-            self._ssh_timeouts[session_name] = timeout_id
-
     def cancel_ssh_timeout(self, session_name: str) -> None:
         with self._lock:
             timeout_id = self._ssh_timeouts.pop(session_name, None)
             if timeout_id:
                 GLib.source_remove(timeout_id)
-
-    def cleanup_ssh_timeouts(self) -> None:
-        with self._lock:
-            for timeout_id in self._ssh_timeouts.values():
-                GLib.source_remove(timeout_id)
-            self._ssh_timeouts.clear()
 
 
 class ProcessSpawner:
@@ -119,7 +103,7 @@ class ProcessSpawner:
         self.environment_manager = get_environment_manager()
         self.process_tracker = ProcessTracker()
         self._spawn_lock = threading.Lock()
-        self.logger.info(f"Process spawner initialized on Linux")
+        self.logger.info("Process spawner initialized on Linux")
 
     def _get_ssh_control_path(self, session: "SessionItem") -> str:
         user = session.user or os.getlogin()
@@ -186,15 +170,6 @@ class ProcessSpawner:
         user_data: Any = None,
     ) -> None:
         self._spawn_remote_session("ssh", terminal, session, callback, user_data)
-
-    def spawn_sftp_session(
-        self,
-        terminal: Vte.Terminal,
-        session: "SessionItem",
-        callback: Optional[Callable] = None,
-        user_data: Any = None,
-    ) -> None:
-        self._spawn_remote_session("sftp", terminal, session, callback, user_data)
 
     def _spawn_remote_session(
         self,

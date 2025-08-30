@@ -15,7 +15,6 @@ if __package__ is None:
 from .app import CommTerminalApp
 from .settings.config import APP_VERSION
 from .utils.logger import (
-    LogLevel,
     enable_debug_mode,
     get_logger,
     set_console_log_level,

@@ -17,7 +17,6 @@ class PlatformInfo:
         self.home_dir = Path.home()
         self.config_dir = self._get_config_directory()
         self.cache_dir = self._get_cache_directory()
-        self.data_dir = self._get_data_directory()
         self.ssh_dir = self.home_dir / ".ssh"
         self._detect_commands()
 
@@ -33,16 +32,9 @@ class PlatformInfo:
             return Path(xdg_cache) / "ashyterm"
         return self.home_dir / ".cache" / "ashyterm"
 
-    def _get_data_directory(self) -> Path:
-        """Get the data directory for Linux."""
-        if xdg_data := os.environ.get("XDG_DATA_HOME"):
-            return Path(xdg_data) / "ashyterm"
-        return self.home_dir / ".local" / "share" / "ashyterm"
-
     def _detect_commands(self):
         """Detect available system commands that are essential for the application."""
         self.commands = {}
-        # Only check for commands that the application's logic depends on.
         command_list = ["ssh", "sshpass", "sftp", "rsync"]
         for cmd in command_list:
             if cmd_path := shutil.which(cmd):
@@ -132,7 +124,11 @@ class EnvironmentManager:
         return env
 
 
+# Singleton instances for efficiency
 _platform_info: Optional[PlatformInfo] = None
+_path_manager: Optional[PathManager] = None
+_command_builder: Optional[CommandBuilder] = None
+_environment_manager: Optional[EnvironmentManager] = None
 
 
 def get_platform_info() -> PlatformInfo:
@@ -144,15 +140,27 @@ def get_platform_info() -> PlatformInfo:
 
 
 def get_path_manager() -> PathManager:
-    return PathManager(get_platform_info())
+    global _path_manager
+    if _path_manager is None:
+        _path_manager = PathManager(get_platform_info())
+    return _path_manager
 
 
 def get_command_builder() -> CommandBuilder:
-    return CommandBuilder(get_platform_info())
+    global _command_builder
+    if _command_builder is None:
+        _command_builder = CommandBuilder(get_platform_info())
+    return _command_builder
 
 
 def get_environment_manager() -> EnvironmentManager:
-    return EnvironmentManager(get_platform_info())
+    global _environment_manager
+    if _environment_manager is None:
+        _environment_manager = EnvironmentManager(get_platform_info())
+    return _environment_manager
+
+
+# --- Funções de conveniência restauradas ---
 
 
 def get_config_directory() -> Path:

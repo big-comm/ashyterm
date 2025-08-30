@@ -1,3 +1,4 @@
+# ashyterm/filemanager/transfer_dialog.py
 import time
 from datetime import datetime
 from typing import Dict
@@ -69,7 +70,7 @@ class TransferRow(Gtk.ListBoxRow):
         self.cancel_button.set_tooltip_text(_("Cancel transfer"))
         self.cancel_button.add_css_class("flat")
         self.cancel_button.connect(
-            "clicked", lambda w: self.transfer_manager.cancel_transfer(self.transfer.id)
+            "clicked", lambda _: self.transfer_manager.cancel_transfer(self.transfer.id)
         )
 
         self.retry_button = Gtk.Button.new_from_icon_name("view-refresh-symbolic")
@@ -309,7 +310,7 @@ class TransferManagerDialog(Adw.Window):
             # Always prepend to keep the newest at the top
             self.transfer_listbox.prepend(row)
 
-    def _on_transfer_change(self, manager, transfer_id, *args):
+    def _on_transfer_change(self, manager, transfer_id, *_):
         transfer = manager.get_transfer(transfer_id) or next(
             (t for t in manager.history if t.id == transfer_id), None
         )

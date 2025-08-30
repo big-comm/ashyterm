@@ -5,6 +5,7 @@ from typing import Optional, Tuple, Union
 
 from gi.repository import Gio
 
+from ..helpers import generate_unique_name
 from ..utils.backup import BackupType, get_backup_manager
 from ..utils.logger import get_logger
 from ..utils.translation_utils import _
@@ -182,6 +183,9 @@ class SessionOperations:
     ) -> OperationResult:
         """Moves a session to a different folder."""
         with self._operation_lock:
+            if session.folder_path == target_folder_path:
+                return OperationResult(True, "Session already in target folder.")
+
             original_folder = session.folder_path
             session.folder_path = target_folder_path
 
@@ -194,7 +198,67 @@ class SessionOperations:
             )
             return OperationResult(True, _("Session moved successfully."), session)
 
-    # CORREÇÃO: Adicionando a função que faltava
+    def move_folder(
+        self, folder: SessionFolder, target_parent_path: str
+    ) -> OperationResult:
+        """Moves a folder to a new parent folder."""
+        with self._operation_lock:
+            if folder.parent_path == target_parent_path:
+                return OperationResult(True, "Folder already in target parent.")
+            if target_parent_path.startswith(folder.path + "/"):
+                return OperationResult(False, _("Cannot move a folder into itself."))
+
+            _found, position = self.find_folder_by_path(folder.path)
+            if position == -1:
+                return OperationResult(False, _("Folder not found."))
+
+            updated_folder = SessionFolder.from_dict(folder.to_dict())
+            updated_folder.parent_path = target_parent_path
+            updated_folder.path = (
+                f"{target_parent_path}/{updated_folder.name}"
+                if target_parent_path
+                else f"/{updated_folder.name}"
+            )
+            return self.update_folder(position, updated_folder)
+
+    def duplicate_session(self, session: SessionItem) -> OperationResult:
+        """Duplicates a session, giving it a unique name."""
+        with self._operation_lock:
+            new_item = SessionItem.from_dict(session.to_dict())
+            existing_names = self._get_session_names_in_folder(session.folder_path)
+            new_item.name = generate_unique_name(new_item.name, existing_names)
+            return self.add_session(new_item)
+
+    def paste_item(
+        self,
+        item_to_paste: Union[SessionItem, SessionFolder],
+        target_folder_path: str,
+        is_cut: bool,
+    ) -> OperationResult:
+        """Pastes an item from clipboard logic (cut/copy)."""
+        with self._operation_lock:
+            if is_cut:
+                if isinstance(item_to_paste, SessionItem):
+                    return self.move_session_to_folder(item_to_paste, target_folder_path)
+                elif isinstance(item_to_paste, SessionFolder):
+                    return self.move_folder(item_to_paste, target_folder_path)
+            else:  # Is copy
+                if isinstance(item_to_paste, SessionItem):
+                    new_item = SessionItem.from_dict(item_to_paste.to_dict())
+                    new_item.folder_path = target_folder_path
+                    return self.duplicate_session(new_item)
+                elif isinstance(item_to_paste, SessionFolder):
+                    # Recursive copy is complex, for now, we can just create a new folder
+                    new_folder = SessionFolder.from_dict(item_to_paste.to_dict())
+                    new_folder.parent_path = target_folder_path
+                    new_folder.path = (
+                        f"{target_folder_path}/{new_folder.name}"
+                        if target_folder_path
+                        else f"/{new_folder.name}"
+                    )
+                    return self.add_folder(new_folder)
+            return OperationResult(False, _("Unsupported item type for paste operation."))
+
     def find_session_by_name_and_path(
         self, name: str, path: str
     ) -> Optional[Tuple[SessionItem, int]]:
@@ -234,15 +298,18 @@ class SessionOperations:
         """Updates the paths of all children when a folder is moved or renamed."""
         for i in range(self.session_store.get_n_items()):
             session = self.session_store.get_item(i)
-            if session.folder_path.startswith(old_path):
-                session.folder_path = session.folder_path.replace(old_path, new_path, 1)
+            if session.folder_path == old_path:
+                session.folder_path = new_path
 
         for i in range(self.folder_store.get_n_items()):
             folder = self.folder_store.get_item(i)
-            if folder.path.startswith(old_path):
-                folder.path = folder.path.replace(old_path, new_path, 1)
-            if folder.parent_path.startswith(old_path):
-                folder.parent_path = folder.parent_path.replace(old_path, new_path, 1)
+            if folder.parent_path == old_path:
+                folder.parent_path = new_path
+                # Recursively update paths of sub-folders
+                old_sub_path = folder.path
+                new_sub_path = f"{new_path}/{folder.name}"
+                folder.path = new_sub_path
+                self._update_child_paths(old_sub_path, new_sub_path)
 
     def _folder_has_children(self, folder_path: str) -> bool:
         """Checks if a folder contains any sessions or subfolders."""

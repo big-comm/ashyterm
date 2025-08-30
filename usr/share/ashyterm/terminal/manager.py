@@ -28,7 +28,6 @@ from ..ui.menus import create_terminal_menu
 from ..ui.ssh_dialogs import create_generic_ssh_error_dialog
 from ..utils.exceptions import (
     TerminalCreationError,
-    VTENotAvailableError,
 )
 from ..utils.logger import get_logger, log_terminal_event
 from ..utils.osc7_tracker import OSC7Info, get_osc7_tracker
@@ -246,10 +245,6 @@ class TerminalRegistry:
         with self._lock:
             return list(self._terminals.keys())
 
-    def get_terminal_count(self) -> int:
-        with self._lock:
-            return len(self._terminals)
-
 
 class TerminalManager:
     """Enhanced terminal manager with comprehensive functionality."""
@@ -343,7 +338,7 @@ class TerminalManager:
             )
             return None
 
-    def _on_directory_uri_changed(self, terminal: Vte.Terminal, param_spec):
+    def _on_directory_uri_changed(self, terminal: Vte.Terminal, _param_spec):
         try:
             uri = terminal.get_current_directory_uri()
             if not uri:
@@ -438,7 +433,7 @@ class TerminalManager:
             log_terminal_event("created", title, "local terminal")
             self._stats["terminals_created"] += 1
             return terminal
-        except TerminalCreationError as e:
+        except TerminalCreationError:
             self.registry.unregister_terminal(terminal_id)
             self._stats["terminals_failed"] += 1
             raise
@@ -476,7 +471,7 @@ class TerminalManager:
                 )
                 self._stats["terminals_created"] += 1
                 return terminal
-            except TerminalCreationError as e:
+            except TerminalCreationError:
                 self.registry.unregister_terminal(terminal_id)
                 self._stats["terminals_failed"] += 1
                 raise
@@ -531,7 +526,7 @@ class TerminalManager:
         except Exception as e:
             self.logger.error(f"Context menu setup failed: {e}")
 
-    def _on_terminal_focus_in(self, controller, terminal, terminal_id):
+    def _on_terminal_focus_in(self, _controller, terminal, terminal_id):
         try:
             self.registry.update_terminal_status(terminal_id, "focused")
             if self.on_terminal_focus_changed:

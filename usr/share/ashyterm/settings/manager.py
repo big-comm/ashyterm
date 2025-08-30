@@ -15,7 +15,6 @@ gi.require_version("Vte", "3.91")
 from gi.repository import Gdk, GLib, Gtk, Pango, Vte
 
 from ..utils.backup import BackupType, get_backup_manager
-from ..utils.crypto import is_encryption_available
 from ..utils.exceptions import ConfigValidationError
 from ..utils.logger import get_logger, log_error_with_context
 from ..utils.platform import get_platform_info

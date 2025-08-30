@@ -8,7 +8,7 @@ import threading
 from datetime import datetime
 from enum import Enum
 from pathlib import Path
-from typing import Any, Dict, Optional, Union
+from typing import Dict, Optional
 
 
 class LogLevel(Enum):
@@ -29,7 +29,6 @@ class LoggerConfig:
         self.log_dir.mkdir(parents=True, exist_ok=True)
         self.main_log_file = self.log_dir / "ashyterm.log"
         self.error_log_file = self.log_dir / "ashyterm_errors.log"
-        self.debug_log_file = self.log_dir / "ashyterm_debug.log"
         self.max_file_size = 10 * 1024 * 1024  # 10MB
         self.backup_count = 5
         self.log_to_file = False
@@ -116,8 +115,6 @@ class ThreadSafeLogger:
                 error_file_handler.setFormatter(file_formatter)
                 self._logger.addHandler(error_file_handler)
 
-            self._logger._ashyterm_configured = True
-
     def debug(self, message: str, **kwargs):
         self._logger.debug(message, **kwargs)
 
@@ -141,7 +138,6 @@ class LoggerManager:
     """Centralized logger manager."""
 
     _instance: Optional["LoggerManager"] = None
-    # CORREÇÃO: Usar RLock para evitar deadlock em chamadas aninhadas
     _lock = threading.RLock()
 
     def __new__(cls) -> "LoggerManager":

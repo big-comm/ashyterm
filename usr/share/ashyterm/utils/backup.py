@@ -24,8 +24,6 @@ class BackupType(Enum):
 
     MANUAL = "manual"
     AUTOMATIC = "automatic"
-    SCHEDULED = "scheduled"
-    EXPORT = "export"
 
 
 class BackupStatus(Enum):
@@ -33,8 +31,6 @@ class BackupStatus(Enum):
 
     SUCCESS = "success"
     FAILED = "failed"
-    PARTIAL = "partial"
-    CORRUPTED = "corrupted"
 
 
 @dataclass
@@ -43,7 +39,6 @@ class BackupMetadata:
 
     timestamp: str
     backup_type: BackupType
-    version: str
     file_count: int
     total_size: int
     checksum: str
@@ -205,7 +200,6 @@ class BackupManager:
                 metadata = BackupMetadata(
                     timestamp=datetime.now().isoformat(),
                     backup_type=backup_type,
-                    version="1.1.0",
                     file_count=len(copied_files),
                     total_size=total_size,
                     checksum=backup_checksum,
@@ -229,7 +223,6 @@ class BackupManager:
                 error_metadata = BackupMetadata(
                     timestamp=datetime.now().isoformat(),
                     backup_type=backup_type,
-                    version="1.1.0",
                     file_count=0,
                     total_size=0,
                     checksum="",
@@ -388,22 +381,6 @@ class AutoBackupScheduler:
         time_since_last = time.time() - self.last_backup_time
         return time_since_last >= self.backup_manager.auto_backup_interval
 
-    def perform_auto_backup(self, source_files: List[Path]) -> Optional[str]:
-        """Perform automatic backup if needed."""
-        if not self.should_backup():
-            return None
-        try:
-            backup_id = self.backup_manager.create_backup(
-                source_files, BackupType.AUTOMATIC, "Automatic backup"
-            )
-            if backup_id:
-                self.last_backup_time = time.time()
-                self.logger.info(f"Automatic backup completed: {backup_id}")
-            return backup_id
-        except Exception as e:
-            self.logger.error(f"Automatic backup failed: {e}")
-            return None
-
     def enable(self):
         self.enabled = True
         self.logger.info("Automatic backups enabled")
@@ -435,19 +412,3 @@ def create_backup(
 def restore_backup(backup_id: str, target_dir: Union[str, Path]) -> bool:
     """Restore a backup."""
     return get_backup_manager().restore_backup(backup_id, Path(target_dir))
-
-
-def list_available_backups() -> List[Tuple[str, Dict[str, Any]]]:
-    """List all available backups."""
-    backups = get_backup_manager().list_backups()
-    return [(backup_id, metadata.to_dict()) for backup_id, metadata in backups]
-
-
-def verify_backup_integrity(backup_id: str) -> bool:
-    """Verify backup integrity."""
-    return get_backup_manager().verify_backup(backup_id)
-
-
-def cleanup_old_backups():
-    """Clean up old backups according to retention policy."""
-    get_backup_manager()._cleanup_old_backups()

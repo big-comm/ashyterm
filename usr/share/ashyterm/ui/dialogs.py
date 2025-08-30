@@ -51,19 +51,18 @@ class BaseDialog(Adw.Window):
         self.config_paths = get_config_paths()
         self._validation_errors: List[str] = []
         self._has_changes = False
-        self._original_data: Optional[Dict[str, Any]] = None
 
         key_controller = Gtk.EventControllerKey()
         key_controller.connect("key-pressed", self._on_key_pressed)
         self.add_controller(key_controller)
 
-    def _on_key_pressed(self, controller, keyval, keycode, state):
+    def _on_key_pressed(self, _controller, keyval, _keycode, _state):
         if keyval == Gdk.KEY_Escape:
             self._on_cancel_clicked(None)
             return Gdk.EVENT_STOP
         return Gdk.EVENT_PROPAGATE
 
-    def _on_cancel_clicked(self, button):
+    def _on_cancel_clicked(self, _button):
         self.close()
 
     def _mark_changed(self):
@@ -120,12 +119,8 @@ class BaseDialog(Adw.Window):
     def _clear_validation_errors(self):
         self._validation_errors.clear()
 
-    def _has_validation_errors(self) -> bool:
-        return len(self._validation_errors) > 0
-
 
 class SessionEditDialog(BaseDialog):
-    # This class remains unchanged
     def __init__(
         self,
         parent_window,
@@ -147,7 +142,6 @@ class SessionEditDialog(BaseDialog):
             else session_item
         )
         self.original_session = session_item if not self.is_new_item else None
-        self._original_data = self.editing_session.to_dict()
         self.folder_paths_map: Dict[str, str] = {}
         self._setup_ui()
         self.connect("map", self._on_map)
@@ -155,7 +149,7 @@ class SessionEditDialog(BaseDialog):
             f"Session edit dialog opened: {self.editing_session.name} ({'new' if self.is_new_item else 'edit'})"
         )
 
-    def _on_map(self, widget):
+    def _on_map(self, _widget):
         if self.name_entry:
             self.name_entry.grab_focus()
 
@@ -230,7 +224,7 @@ class SessionEditDialog(BaseDialog):
             self.folder_paths_map[display_name] = folder.path
         folder_row.set_model(folder_model)
         selected_index = 0
-        for i, (display, path_val) in enumerate(self.folder_paths_map.items()):
+        for i, (_display, path_val) in enumerate(self.folder_paths_map.items()):
             if path_val == self.editing_session.folder_path:
                 selected_index = i
                 break
@@ -381,10 +375,10 @@ class SessionEditDialog(BaseDialog):
         entry.remove_css_class("error")
         self._mark_changed()
 
-    def _on_folder_changed(self, combo_row, param) -> None:
+    def _on_folder_changed(self, _combo_row, _param) -> None:
         self._mark_changed()
 
-    def _on_type_changed(self, combo_row, param) -> None:
+    def _on_type_changed(self, combo_row, _param) -> None:
         if (
             combo_row.get_selected() == 1
             and self.is_new_item
@@ -402,7 +396,7 @@ class SessionEditDialog(BaseDialog):
         if hostname and not HostnameValidator.is_valid_hostname(hostname):
             entry.add_css_class("error")
 
-    def _on_user_changed(self, entry: Gtk.Entry) -> None:
+    def _on_user_changed(self, _entry: Gtk.Entry) -> None:
         self._mark_changed()
 
     def _on_port_changed(self, spin_button: Gtk.SpinButton) -> None:
@@ -412,7 +406,7 @@ class SessionEditDialog(BaseDialog):
             "error"
         ) if 1 <= port <= 65535 else spin_button.add_css_class("error")
 
-    def _on_auth_changed(self, combo_row, param) -> None:
+    def _on_auth_changed(self, combo_row, _param) -> None:
         if combo_row.get_selected() == 0 and not self.key_path_entry.get_text().strip():
             self.key_path_entry.set_text(f"{get_ssh_directory()}/id_rsa")
         self._update_auth_visibility()
@@ -428,7 +422,7 @@ class SessionEditDialog(BaseDialog):
             except Exception:
                 entry.add_css_class("error")
 
-    def _on_password_changed(self, entry: Gtk.PasswordEntry) -> None:
+    def _on_password_changed(self, _entry: Gtk.PasswordEntry) -> None:
         self._mark_changed()
 
     def _update_ssh_visibility(self) -> None:
@@ -444,7 +438,7 @@ class SessionEditDialog(BaseDialog):
             self.key_box.set_visible(is_key)
             self.password_box.set_visible(not is_key)
 
-    def _on_browse_key_clicked(self, button) -> None:
+    def _on_browse_key_clicked(self, _button) -> None:
         try:
             file_dialog = Gtk.FileDialog(title=_("Select SSH Key"), modal=True)
             ssh_dir = get_ssh_directory()
@@ -477,7 +471,7 @@ class SessionEditDialog(BaseDialog):
         except Exception as e:
             self.logger.error(f"File dialog response handling failed: {e}")
 
-    def _on_test_connection_clicked(self, button) -> None:
+    def _on_test_connection_clicked(self, _button) -> None:
         try:
             test_session = self._create_session_from_fields()
             if not test_session:
@@ -549,7 +543,7 @@ class SessionEditDialog(BaseDialog):
             )
         return False
 
-    def _on_cancel_clicked(self, button) -> None:
+    def _on_cancel_clicked(self, _button) -> None:
         try:
             if self._has_changes:
                 self._show_warning_dialog(
@@ -563,7 +557,7 @@ class SessionEditDialog(BaseDialog):
             self.logger.error(f"Cancel handling failed: {e}")
             self.close()
 
-    def _on_save_clicked(self, button) -> None:
+    def _on_save_clicked(self, _button) -> None:
         try:
             if not self._validate_and_save():
                 return
@@ -734,7 +728,6 @@ class FolderEditDialog(BaseDialog):
         )
         self.position = position
         self.old_path = folder_item.path if folder_item else None
-        self._original_data = self.editing_folder.to_dict()
         self.parent_paths_map: Dict[str, str] = {}
         self._setup_ui()
         self.connect("map", self._on_map)
@@ -742,7 +735,7 @@ class FolderEditDialog(BaseDialog):
             f"Folder edit dialog opened: {self.editing_folder.name} ({'new' if self.is_new_item else 'edit'})"
         )
 
-    def _on_map(self, widget):
+    def _on_map(self, _widget):
         if self.name_entry:
             self.name_entry.grab_focus()
 
@@ -831,10 +824,10 @@ class FolderEditDialog(BaseDialog):
         entry.remove_css_class("error")
         self._mark_changed()
 
-    def _on_parent_changed(self, combo_row, param) -> None:
+    def _on_parent_changed(self, _combo_row, _param) -> None:
         self._mark_changed()
 
-    def _on_cancel_clicked(self, button) -> None:
+    def _on_cancel_clicked(self, _button) -> None:
         if self._has_changes:
             self._show_warning_dialog(
                 _("Unsaved Changes"),
@@ -844,7 +837,7 @@ class FolderEditDialog(BaseDialog):
         else:
             self.close()
 
-    def _on_save_clicked(self, button) -> None:
+    def _on_save_clicked(self, _button) -> None:
         try:
             operations = self.parent_window.session_tree.operations
             updated_folder = self._build_updated_folder()
@@ -1061,7 +1054,7 @@ class PreferencesDialog(Adw.PreferencesWindow):
         )
         auto_backup_row.connect(
             "notify::active",
-            lambda r, p: self._on_setting_changed(
+            lambda r, _: self._on_setting_changed(
                 "auto_backup_enabled", r.get_active()
             ),
         )
@@ -1079,7 +1072,7 @@ class PreferencesDialog(Adw.PreferencesWindow):
         log_to_file_row.set_active(self.settings_manager.get("log_to_file", False))
         log_to_file_row.connect(
             "notify::active",
-            lambda r, p: self._on_setting_changed("log_to_file", r.get_active()),
+            lambda r, _: self._on_setting_changed("log_to_file", r.get_active()),
         )
         log_group.add(log_to_file_row)
 
@@ -1112,13 +1105,13 @@ class PreferencesDialog(Adw.PreferencesWindow):
         reset_row.set_activatable_widget(reset_button)
         reset_group.add(reset_row)
 
-    def _on_log_level_changed(self, combo_row, param):
+    def _on_log_level_changed(self, combo_row, _param):
         selected_item = combo_row.get_selected_item()
         if selected_item:
             level_str = selected_item.get_string()
             self._on_setting_changed("console_log_level", level_str)
 
-    def _on_color_scheme_changed(self, combo_row, param) -> None:
+    def _on_color_scheme_changed(self, combo_row, _param) -> None:
         index = combo_row.get_selected()
         self.settings_manager.set("color_scheme", index)
         self.emit("color-scheme-changed", index)
@@ -1137,7 +1130,7 @@ class PreferencesDialog(Adw.PreferencesWindow):
         self.settings_manager.set(key, value)
         self.emit("setting-changed", key, value)
 
-    def _on_instance_behavior_changed(self, combo_row, param) -> None:
+    def _on_instance_behavior_changed(self, combo_row, _param) -> None:
         value = "new_window" if combo_row.get_selected() == 1 else "new_tab"
         self._on_setting_changed("new_instance_behavior", value)
 
@@ -1162,7 +1155,7 @@ class PreferencesDialog(Adw.PreferencesWindow):
         key_controller = Gtk.EventControllerKey()
         new_shortcut = [None]
 
-        def on_key_pressed(controller, keyval, keycode, state):
+        def on_key_pressed(_controller, keyval, _keycode, state):
             if keyval in (
                 Gdk.KEY_Control_L,
                 Gdk.KEY_Control_R,

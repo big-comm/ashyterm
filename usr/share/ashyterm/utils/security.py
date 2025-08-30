@@ -7,19 +7,23 @@ import socket
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple
 
-from .exceptions import (DirectoryPermissionError, FilePermissionError,
-                         HostnameValidationError, PathValidationError,
-                         SSHKeyError)
+from .exceptions import (
+    DirectoryPermissionError,
+    FilePermissionError,
+    HostnameValidationError,
+    PathValidationError,
+    SSHKeyError,
+)
 from .logger import get_logger
 from .translation_utils import _
 
 
 class SecurityConfig:
     """Security configuration and limits."""
+
     MAX_HOSTNAME_LENGTH = 253
     MAX_USERNAME_LENGTH = 32
     MAX_SSH_KEY_SIZE = 16384
-    ALLOWED_SSH_KEY_TYPES = ["ssh-rsa", "ssh-dss", "ssh-ed25519", "ecdsa-sha2-nistp256", "ecdsa-sha2-nistp384", "ecdsa-sha2-nistp521"]
     MAX_PATH_LENGTH = 4096
     FORBIDDEN_PATH_CHARS = ["<", ">", ":", '"', "|", "?", "*", "\0"]
     FORBIDDEN_PATH_SEQUENCES = ["../", "..\\"]
@@ -30,6 +34,7 @@ class SecurityConfig:
 
 class InputSanitizer:
     """Input sanitization utilities."""
+
     @staticmethod
     def sanitize_filename(filename: str, replacement: str = "_") -> str:
         if not filename:
@@ -48,36 +53,18 @@ class InputSanitizer:
 
     @staticmethod
     def sanitize_hostname(hostname: str) -> str:
-        if not hostname: return ""
+        if not hostname:
+            return ""
         sanitized = hostname.strip().lower()
         sanitized = re.sub(r"[^a-z0-9.-]", "", sanitized)
         if len(sanitized) > SecurityConfig.MAX_HOSTNAME_LENGTH:
             sanitized = sanitized[: SecurityConfig.MAX_HOSTNAME_LENGTH]
         return sanitized
 
-    @staticmethod
-    def sanitize_username(username: str) -> str:
-        if not username: return ""
-        sanitized = username.strip()
-        sanitized = re.sub(r"[^a-zA-Z0-9._-]", "", sanitized)
-        if len(sanitized) > SecurityConfig.MAX_USERNAME_LENGTH:
-            sanitized = sanitized[: SecurityConfig.MAX_USERNAME_LENGTH]
-        return sanitized
-
-    @staticmethod
-    def sanitize_path(path: str) -> str:
-        if not path: return ""
-        sanitized = os.path.normpath(path)
-        for sequence in SecurityConfig.FORBIDDEN_PATH_SEQUENCES:
-            sanitized = sanitized.replace(sequence, "")
-        sanitized = "".join(char for char in sanitized if ord(char) >= 32 and char != "\0")
-        if len(sanitized) > SecurityConfig.MAX_PATH_LENGTH:
-            sanitized = sanitized[: SecurityConfig.MAX_PATH_LENGTH]
-        return sanitized
-
 
 class HostnameValidator:
     """Hostname validation utilities."""
+
     @staticmethod
     def is_valid_hostname(hostname: str) -> bool:
         if not hostname or len(hostname) > SecurityConfig.MAX_HOSTNAME_LENGTH:
@@ -86,7 +73,12 @@ class HostnameValidator:
             return False
         labels = hostname.split(".")
         for label in labels:
-            if not label or len(label) > 63 or label.startswith("-") or label.endswith("-"):
+            if (
+                not label
+                or len(label) > 63
+                or label.startswith("-")
+                or label.endswith("-")
+            ):
                 return False
         return True
 
@@ -112,25 +104,34 @@ class HostnameValidator:
 
 class SSHKeyValidator:
     """SSH key validation utilities."""
+
     @staticmethod
     def validate_ssh_key_path(key_path: str) -> Tuple[bool, Optional[str]]:
         if not key_path:
             return False, _("Key path is empty")
         try:
             path = Path(key_path)
-            if not path.exists(): return False, _("Key file does not exist: {}").format(key_path)
-            if not path.is_file(): return False, _("Key path is not a file: {}").format(key_path)
+            if not path.exists():
+                return False, _("Key file does not exist: {}").format(key_path)
+            if not path.is_file():
+                return False, _("Key path is not a file: {}").format(key_path)
             file_size = path.stat().st_size
-            if file_size > SecurityConfig.MAX_SSH_KEY_SIZE: return False, _("Key file too large: {} bytes").format(file_size)
-            if file_size == 0: return False, _("Key file is empty")
-            if path.stat().st_mode & 0o077: return False, _("Key file has insecure permissions (should be 600)")
-            if not os.access(path, os.R_OK): return False, _("Key file is not readable")
+            if file_size > SecurityConfig.MAX_SSH_KEY_SIZE:
+                return False, _("Key file too large: {} bytes").format(file_size)
+            if file_size == 0:
+                return False, _("Key file is empty")
+            if path.stat().st_mode & 0o077:
+                return False, _("Key file has insecure permissions (should be 600)")
+            if not os.access(path, os.R_OK):
+                return False, _("Key file is not readable")
             return True, None
         except OSError as e:
             return False, _("Error accessing key file: {}").format(e)
 
     @staticmethod
-    def read_and_validate_ssh_key(key_path: str) -> Tuple[bool, Optional[str], Optional[str]]:
+    def read_and_validate_ssh_key(
+        key_path: str,
+    ) -> Tuple[bool, Optional[str], Optional[str]]:
         path_valid, path_error = SSHKeyValidator.validate_ssh_key_path(key_path)
         if not path_valid:
             return False, path_error, None
@@ -139,24 +140,30 @@ class SSHKeyValidator:
 
 class PathValidator:
     """File path validation utilities."""
+
     @staticmethod
     def is_safe_path(path: str, base_path: Optional[str] = None) -> bool:
-        if not path: return False
+        if not path:
+            return False
         try:
             normalized = os.path.normpath(path)
-            if ".." in normalized.split(os.sep): return False
+            if ".." in normalized.split(os.sep):
+                return False
             for char in SecurityConfig.FORBIDDEN_PATH_CHARS:
-                if char in normalized: return False
+                if char in normalized:
+                    return False
             if base_path and not normalized.startswith(os.path.normpath(base_path)):
                 return False
-            if len(normalized) > SecurityConfig.MAX_PATH_LENGTH: return False
+            if len(normalized) > SecurityConfig.MAX_PATH_LENGTH:
+                return False
             return True
         except Exception:
             return False
 
-# CORREÇÃO: Restaurar a classe SecurityAuditor
+
 class SecurityAuditor:
     """Security auditing utilities."""
+
     def __init__(self):
         self.logger = get_logger("ashyterm.security.audit")
 
@@ -166,30 +173,61 @@ class SecurityAuditor:
         hostname = session_data.get("host", "")
         if hostname:
             if not HostnameValidator.is_valid_hostname(hostname):
-                findings.append({"severity": "medium", "type": "invalid_hostname", "message": _("Invalid hostname format: {}").format(hostname), "recommendation": _("Use a valid hostname or IP address")})
-            elif (ip := HostnameValidator.resolve_hostname(hostname)) and HostnameValidator.is_private_ip(ip):
-                findings.append({"severity": "low", "type": "private_ip", "message": _("Connecting to private IP: {}").format(ip), "recommendation": _("Ensure this is intentional")})
-        
+                findings.append({
+                    "severity": "medium",
+                    "type": "invalid_hostname",
+                    "message": _("Invalid hostname format: {}").format(hostname),
+                    "recommendation": _("Use a valid hostname or IP address"),
+                })
+            elif (
+                ip := HostnameValidator.resolve_hostname(hostname)
+            ) and HostnameValidator.is_private_ip(ip):
+                findings.append({
+                    "severity": "low",
+                    "type": "private_ip",
+                    "message": _("Connecting to private IP: {}").format(ip),
+                    "recommendation": _("Ensure this is intentional"),
+                })
+
         auth_type = session_data.get("auth_type", "")
         auth_value = session_data.get("auth_value", "")
         if auth_type == "key" and auth_value:
             is_valid, error = SSHKeyValidator.validate_ssh_key_path(auth_value)
             if not is_valid:
-                findings.append({"severity": "high", "type": "invalid_ssh_key", "message": _("SSH key validation failed: {}").format(error), "recommendation": _("Fix SSH key configuration")})
+                findings.append({
+                    "severity": "high",
+                    "type": "invalid_ssh_key",
+                    "message": _("SSH key validation failed: {}").format(error),
+                    "recommendation": _("Fix SSH key configuration"),
+                })
         elif auth_type == "password":
-            findings.append({"severity": "medium", "type": "password_auth", "message": _("Using password authentication"), "recommendation": _("Consider using SSH key authentication for better security")})
-        
+            findings.append({
+                "severity": "medium",
+                "type": "password_auth",
+                "message": _("Using password authentication"),
+                "recommendation": _(
+                    "Consider using SSH key authentication for better security"
+                ),
+            })
+
         username = session_data.get("user", "")
         if username == "root":
-            findings.append({"severity": "medium", "type": "root_user", "message": _("Connecting as root user"), "recommendation": _("Use a regular user account when possible")})
-        
+            findings.append({
+                "severity": "medium",
+                "type": "root_user",
+                "message": _("Connecting as root user"),
+                "recommendation": _("Use a regular user account when possible"),
+            })
+
         return findings
 
 def sanitize_session_name(name: str) -> str:
     return InputSanitizer.sanitize_filename(name)
 
+
 def sanitize_folder_name(name: str) -> str:
     return InputSanitizer.sanitize_filename(name)
+
 
 def validate_ssh_hostname(hostname: str) -> None:
     if not hostname:
@@ -198,31 +236,40 @@ def validate_ssh_hostname(hostname: str) -> None:
     if not HostnameValidator.is_valid_hostname(sanitized):
         raise HostnameValidationError(hostname, _("Invalid hostname format"))
 
+
 def validate_ssh_key_file(key_path: str) -> None:
     is_valid, error, _ = SSHKeyValidator.read_and_validate_ssh_key(key_path)
     if not is_valid:
         raise SSHKeyError(key_path, error or _("Unknown validation error"))
 
+
 def validate_file_path(file_path: str, base_path: Optional[str] = None) -> None:
     if not PathValidator.is_safe_path(file_path, base_path):
         raise PathValidationError(file_path, _("Path contains unsafe elements"))
+
 
 def ensure_secure_file_permissions(file_path: str) -> None:
     try:
         Path(file_path).chmod(SecurityConfig.SECURE_FILE_PERMISSIONS)
     except OSError as e:
-        raise FilePermissionError(file_path, _("set secure permissions"), details={"reason": str(e)})
+        raise FilePermissionError(
+            file_path, _("set secure permissions"), details={"reason": str(e)}
+        )
+
 
 def ensure_secure_directory_permissions(dir_path: str) -> None:
     try:
         Path(dir_path).chmod(SecurityConfig.SECURE_DIR_PERMISSIONS)
     except OSError as e:
-        raise DirectoryPermissionError(dir_path, _("set secure permissions"), details={"reason": str(e)})
+        raise DirectoryPermissionError(
+            dir_path, _("set secure permissions"), details={"reason": str(e)}
+        )
 
-# CORREÇÃO: Restaurar a função que faltava
+
 def create_security_auditor() -> SecurityAuditor:
     """Create a new security auditor instance."""
     return SecurityAuditor()
+
 
 def validate_session_data(session_data: Dict[str, Any]) -> Tuple[bool, List[str]]:
     errors = []
@@ -231,7 +278,11 @@ def validate_session_data(session_data: Dict[str, Any]) -> Tuple[bool, List[str]
         if not name or not name.strip():
             errors.append(_("Session name cannot be empty"))
         elif len(name) > SecurityConfig.MAX_SESSION_NAME_LENGTH:
-            errors.append(_("Session name too long (max {} characters)").format(SecurityConfig.MAX_SESSION_NAME_LENGTH))
+            errors.append(
+                _("Session name too long (max {} characters)").format(
+                    SecurityConfig.MAX_SESSION_NAME_LENGTH
+                )
+            )
         host = session_data.get("host", "")
         if host:
             if not host.strip():
@@ -242,7 +293,11 @@ def validate_session_data(session_data: Dict[str, Any]) -> Tuple[bool, List[str]
         if host and not username:
             errors.append(_("Username is required for SSH sessions"))
         elif username and len(username) > SecurityConfig.MAX_USERNAME_LENGTH:
-            errors.append(_("Username too long (max {} characters)").format(SecurityConfig.MAX_USERNAME_LENGTH))
+            errors.append(
+                _("Username too long (max {} characters)").format(
+                    SecurityConfig.MAX_USERNAME_LENGTH
+                )
+            )
         port = session_data.get("port", 22)
         if port is not None:
             try:
@@ -255,11 +310,17 @@ def validate_session_data(session_data: Dict[str, Any]) -> Tuple[bool, List[str]
         if host:
             if auth_type == "key":
                 if not auth_value:
-                    errors.append(_("SSH key file path is required for key authentication"))
+                    errors.append(
+                        _("SSH key file path is required for key authentication")
+                    )
                 else:
-                    is_key_valid, key_error = SSHKeyValidator.validate_ssh_key_path(auth_value)
+                    is_key_valid, key_error = SSHKeyValidator.validate_ssh_key_path(
+                        auth_value
+                    )
                     if not is_key_valid:
-                        errors.append(_("SSH key validation failed: {}").format(key_error))
+                        errors.append(
+                            _("SSH key validation failed: {}").format(key_error)
+                        )
             elif auth_type not in ["key", "password", ""]:
                 errors.append(_("Invalid authentication type: {}").format(auth_type))
         if folder_path := session_data.get("folder_path", ""):

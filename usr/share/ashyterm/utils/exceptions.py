@@ -89,21 +89,6 @@ class TerminalCreationError(TerminalError):
         super().__init__(message, **kwargs)
 
 
-class VTENotAvailableError(TerminalError):
-    """Raised when VTE library is not available."""
-
-    def __init__(self, **kwargs):
-        message = _("VTE library is not available or not properly installed")
-        kwargs.setdefault("severity", ErrorSeverity.CRITICAL)
-        kwargs.setdefault(
-            "user_message",
-            _(
-                "Terminal functionality requires VTE library. Please install gir1.2-vte-2.91"
-            ),
-        )
-        super().__init__(message, **kwargs)
-
-
 class SSHError(AshyTerminalError):
     """Base class for SSH-related errors."""
 
@@ -242,17 +227,6 @@ class UIError(AshyTerminalError):
         kwargs.setdefault("category", ErrorCategory.UI)
         kwargs.setdefault("details", {}).update({"component": component})
         super().__init__(error_message, **kwargs)
-
-
-class DialogError(UIError):
-    """Raised when dialog operations fail."""
-
-    def __init__(self, dialog_type: str, reason: str, **kwargs):
-        message = _("Dialog error ({}): {}").format(dialog_type, reason)
-        kwargs.setdefault("severity", ErrorSeverity.MEDIUM)
-        kwargs.setdefault("details", {"dialog_type": dialog_type, "reason": reason})
-        kwargs.setdefault("user_message", _("Interface error: {}").format(reason))
-        super().__init__(dialog_type, message, **kwargs)
 
 
 class ValidationError(AshyTerminalError):

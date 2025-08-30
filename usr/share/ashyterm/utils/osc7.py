@@ -1,17 +1,16 @@
 # ashyterm/utils/osc7.py
 
 import re
-import socket
 from pathlib import Path
 from typing import NamedTuple, Optional
 from urllib.parse import unquote
 
 from .logger import get_logger
-from .platform import get_platform_info
 
 
 class OSC7Info(NamedTuple):
     """Information extracted from OSC7 sequence."""
+
     hostname: str
     path: str
     display_path: str
@@ -19,6 +18,7 @@ class OSC7Info(NamedTuple):
 
 class OSC7Parser:
     """Parser for OSC7 escape sequences."""
+
     OSC7_PATTERN = re.compile(
         rb"\x1b\]7;file://([^/\x07\x1b]*)(/?[^\x07\x1b]*?)(?:\x07|\x1b\\)",
         re.IGNORECASE,
@@ -122,47 +122,3 @@ class OSC7Parser:
         except Exception as e:
             self.logger.warning(f"Display path creation failed for '{path}': {e}")
             return path
-
-
-class OSC7Buffer:
-    """Buffer for collecting partial OSC7 sequences across multiple data chunks."""
-    def __init__(self, max_size: int = 2048):
-        self.logger = get_logger("ashyterm.utils.osc7.buffer")
-        self.max_size = max_size
-        self._buffer = bytearray()
-
-    def add_data(self, data: bytes) -> bytes:
-        """Add data to buffer and return complete buffer for parsing."""
-        try:
-            self._buffer.extend(data)
-            if len(self._buffer) > self.max_size:
-                self._buffer = self._buffer[-self.max_size // 2 :]
-            return bytes(self._buffer)
-        except Exception as e:
-            self.logger.error(f"OSC7 buffer add_data failed: {e}")
-            self.clear()
-            return data
-
-    def clear_processed(self, parsed_data: bytes) -> None:
-        """Clear buffer up to the end of successfully parsed data."""
-        try:
-            if parsed_data and len(parsed_data) <= len(self._buffer):
-                self._buffer = self._buffer[len(parsed_data) :]
-        except Exception as e:
-            self.logger.error(f"OSC7 buffer clear_processed failed: {e}")
-            self.clear()
-
-    def clear(self) -> None:
-        """Clear the entire buffer."""
-        self._buffer.clear()
-
-
-def format_tab_title(base_title: str, osc7_info: OSC7Info, show_hostname: bool = False) -> str:
-    """Format a tab title with OSC7 directory information."""
-    try:
-        if show_hostname and osc7_info.hostname != socket.gethostname():
-            return f"{base_title} - {osc7_info.hostname}:{osc7_info.display_path}"
-        else:
-            return f"{osc7_info.display_path}"
-    except Exception:
-        return base_title

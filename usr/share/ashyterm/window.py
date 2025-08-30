@@ -12,6 +12,7 @@ from gi.repository import Adw, Gdk, Gio, GLib, Gtk
 
 from .filemanager.manager import FileManager
 from .sessions.models import SessionFolder, SessionItem
+from .sessions.operations import SessionOperations
 from .sessions.storage import (
     load_folders_to_store,
     load_sessions_and_folders,
@@ -22,18 +23,10 @@ from .settings.config import APP_TITLE
 from .settings.manager import SettingsManager
 from .terminal.manager import TerminalManager
 from .terminal.tabs import TabManager
-from .ui.dialogs import (
-    FolderEditDialog,
-    MoveSessionDialog,
-    PreferencesDialog,
-    SessionEditDialog,
-)
+from .ui.actions import WindowActions
 from .ui.menus import MainApplicationMenu
 from .utils.exceptions import (
-    DialogError,
     UIError,
-    VTENotAvailableError,
-    handle_exception,
 )
 from .utils.logger import get_logger, log_session_event
 from .utils.security import validate_session_data
@@ -41,52 +34,132 @@ from .utils.translation_utils import _
 
 
 class CommTerminalWindow(Adw.ApplicationWindow):
-    """Main application window with enhanced functionality."""
+    """
+    Main application window.
+    Acts as the central controller, responsible for creating and wiring together
+    all major components (managers) and handling user interactions.
+    """
 
     def __init__(self, application, settings_manager: SettingsManager, **kwargs):
         super().__init__(application=application)
         self.logger = get_logger("ashyterm.window")
         self.logger.info("Initializing main window")
 
+        # Core properties and dependencies
         self.settings_manager = settings_manager
         self.is_main_window = True
+        self._cleanup_performed = False
+        self._force_closing = False
+
+        # Initial state from command line or other windows
         self.initial_working_directory = kwargs.get("initial_working_directory")
         self.initial_execute_command = kwargs.get("initial_execute_command")
         self.close_after_execute = kwargs.get("close_after_execute", False)
         self.initial_ssh_target = kwargs.get("initial_ssh_target")
         self._is_for_detached_tab = kwargs.get("_is_for_detached_tab", False)
 
+        # Window setup
         self.set_default_size(1200, 700)
         self.set_title(APP_TITLE)
         self.set_icon_name("ashyterm")
 
+        # Component Initialization
+        self._create_managers()
+        self._build_ui_and_connect_signals()
+
+    def _create_managers(self) -> None:
+        """
+        Centralize Component Creation.
+        This method acts as the "assembly line" for the application's main
+        components. It creates and wires them together.
+        """
+        self.logger.info("Creating and wiring core components")
+        # Data Stores
         self.session_store = Gio.ListStore.new(SessionItem)
         self.folder_store = Gio.ListStore.new(SessionFolder)
-        self.terminal_manager = TerminalManager(self, self.settings_manager)
-        self.tab_manager = TabManager(self.terminal_manager)
-        self.session_tree = SessionTreeView(
-            self, self.session_store, self.folder_store, self.settings_manager
+
+        # Business Logic Layer
+        self.session_operations = SessionOperations(
+            self.session_store, self.folder_store, self.settings_manager
         )
+
+        # UI/View-Model Layer
+        self.terminal_manager = TerminalManager(self, self.settings_manager)
+        self.tab_manager = None
+        self.action_handler = None
+
+        self.session_tree = SessionTreeView(
+            self,
+            self.session_store,
+            self.folder_store,
+            self.settings_manager,
+            self.session_operations,
+        )
+
+        # On-demand created managers
         self.tab_file_managers = {}
         self.current_file_manager = None
+
+    def _build_ui_and_connect_signals(self) -> None:
+        """
+        Builds the main UI structure and connects all necessary signals
+        and callbacks between components.
+        """
         self.font_sizer_widget = None
-        self.terminal_manager.set_tab_manager(self.tab_manager)
-        self._cleanup_performed = False
-        self._force_closing = False
+        self.fm_button_handler_id = 0
+        self.single_tab_title_widget = None
+        self.scrolled_tab_bar = None
+        self.title_stack = None
 
-        self._initialize_window()
-
-    def _initialize_window(self) -> None:
-        """Initialize window components safely."""
         self._setup_styles()
-        self._setup_actions()
         self._setup_ui()
+        self._setup_actions()
         self._setup_callbacks()
         self._load_initial_data()
         self._setup_window_events()
+        self._setup_keyboard_shortcuts()
+
         if not self._is_for_detached_tab:
             GLib.idle_add(self._create_initial_tab_safe)
         self.logger.info("Main window initialization completed")
+
+    def _setup_keyboard_shortcuts(self) -> None:
+        """Sets up window-level keyboard shortcuts for tab navigation."""
+        controller = Gtk.EventControllerKey.new()
+        controller.set_propagation_phase(Gtk.PropagationPhase.CAPTURE)
+        controller.connect("key-pressed", self._on_key_pressed)
+        self.add_controller(controller)
+
+    def _on_key_pressed(self, _controller, keyval, _keycode, state):
+        """Handles key press events for the main window."""
+        if state & Gdk.ModifierType.CONTROL_MASK:
+            if keyval == Gdk.KEY_Page_Down:
+                self.tab_manager.select_next_tab()
+                return Gdk.EVENT_STOP
+            if keyval == Gdk.KEY_Page_Up:
+                self.tab_manager.select_previous_tab()
+                return Gdk.EVENT_STOP
+
+        elif state & Gdk.ModifierType.ALT_MASK:
+            key_to_index = {
+                Gdk.KEY_1: 0,
+                Gdk.KEY_2: 1,
+                Gdk.KEY_3: 2,
+                Gdk.KEY_4: 3,
+                Gdk.KEY_5: 4,
+                Gdk.KEY_6: 5,
+                Gdk.KEY_7: 6,
+                Gdk.KEY_8: 7,
+                Gdk.KEY_9: 8,
+                Gdk.KEY_0: 9,
+            }
+            if keyval in key_to_index:
+                index = key_to_index[keyval]
+                if index < self.tab_manager.get_tab_count():
+                    self.tab_manager.set_active_tab(self.tab_manager.tabs[index])
+                return Gdk.EVENT_STOP
+
+        return Gdk.EVENT_PROPAGATE
 
     def _setup_styles(self) -> None:
         """Applies application-wide CSS for various custom widgets."""
@@ -114,19 +187,17 @@ class CommTerminalWindow(Adw.ApplicationWindow):
         .indented-session { margin-left: 16px; }
         paned separator { background: var(--view-bg-color); }
         popover.menu separator { background-color: color-mix(in srgb, var(--headerbar-border-color) var(--border-opacity), transparent); }
-        
-        .custom-tab-bar { padding: 0; margin: 0; }
-        .custom-tab-button { padding: 4px 8px; margin: 0; border-radius: 0; }
-        .custom-tab-button > box { align-items: center; }
-        .custom-tab-button button.circular { padding: 2px; min-height: 24px; min-width: 24px; }
-        .custom-tab-button.active { background-color: var(--headerbar-shade-color, @theme_selected_bg_color); }
+        #scrolled_tab_bar scrollbar trough { margin: 0px; }
+        #scrolled_tab_bar button { min-width:24px; margin-right: 8px; }
+        headerbar box { margin: 0px; padding-top:0px; padding-bottom:0px; }
+        .custom-tab-button { padding-left: 12px; padding-right: 0px; border-radius: 10px; padding-top: 2px; padding-bottom: 2px; }
+        .custom-tab-button.active { background: color-mix(in srgb, currentColor 12%, transparent); }
+        .custom-tab-button:hover { background: color-mix(in srgb, currentColor 7%, transparent); }
         """
         provider = Gtk.CssProvider()
         provider.load_from_data(css.encode("utf-8"))
         Gtk.StyleContext.add_provider_for_display(
-            Gdk.Display.get_default(),
-            provider,
-            Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION,
+            Gdk.Display.get_default(), provider, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION
         )
 
     def _create_initial_tab_safe(self) -> bool:
@@ -134,8 +205,6 @@ class CommTerminalWindow(Adw.ApplicationWindow):
         try:
             if self.tab_manager.get_tab_count() == 0:
                 if self.initial_ssh_target:
-                    from .sessions.models import SessionItem
-
                     user_host = self.initial_ssh_target.split("@")
                     user = user_host[0] if len(user_host) > 1 else os.getlogin()
                     host = user_host[-1]
@@ -161,45 +230,45 @@ class CommTerminalWindow(Adw.ApplicationWindow):
         return False
 
     def _setup_actions(self) -> None:
-        """Set up window-level actions."""
+        """Set up window-level actions by delegating to the action handler."""
         try:
-            actions = [
-                ("new-local-tab", self._on_new_local_tab),
-                ("close-tab", self._on_close_tab),
-                ("copy", self._on_copy),
-                ("paste", self._on_paste),
-                ("select-all", self._on_select_all),
-                ("split-horizontal", self._on_split_horizontal),
-                ("split-vertical", self._on_split_vertical),
-                ("close-pane", self._on_close_pane),
-                ("open-url", self._on_open_url),
-                ("copy-url", self._on_copy_url),
-                ("zoom-in", self._on_zoom_in),
-                ("zoom-out", self._on_zoom_out),
-                ("zoom-reset", self._on_zoom_reset),
-                ("connect-sftp", self._on_connect_sftp),
-                ("edit-session", self._on_edit_session),
-                ("duplicate-session", self._on_duplicate_session),
-                ("rename-session", self._on_rename_session),
-                ("move-session-to-folder", self._on_move_session_to_folder),
-                ("delete-session", self._on_delete_selected_items),
-                ("edit-folder", self._on_edit_folder),
-                ("rename-folder", self._on_rename_folder),
-                ("add-session-to-folder", self._on_add_session_to_folder),
-                ("delete-folder", self._on_delete_selected_items),
-                ("cut-item", self._on_cut_item),
-                ("copy-item", self._on_copy_item),
-                ("paste-item", self._on_paste_item),
-                ("paste-item-root", self._on_paste_item_root),
-                ("add-session-root", self._on_add_session_root),
-                ("add-folder-root", self._on_add_folder_root),
-                ("toggle-sidebar", self._on_toggle_sidebar_action),
-                ("preferences", self._on_preferences),
-                ("shortcuts", self._on_shortcuts),
-                ("new-window", self._on_new_window),
-            ]
-            for action_name, callback in actions:
-                action = Gio.SimpleAction.new(action_name, None)
+            actions_map = {
+                "new-local-tab": self.action_handler.new_local_tab,
+                "close-tab": self.action_handler.close_tab,
+                "copy": self.action_handler.copy,
+                "paste": self.action_handler.paste,
+                "select-all": self.action_handler.select_all,
+                "split-horizontal": self.action_handler.split_horizontal,
+                "split-vertical": self.action_handler.split_vertical,
+                "close-pane": self.action_handler.close_pane,
+                "open-url": self.action_handler.open_url,
+                "copy-url": self.action_handler.copy_url,
+                "zoom-in": self.action_handler.zoom_in,
+                "zoom-out": self.action_handler.zoom_out,
+                "zoom-reset": self.action_handler.zoom_reset,
+                "connect-sftp": self.action_handler.connect_sftp,
+                "edit-session": self.action_handler.edit_session,
+                "duplicate-session": self.action_handler.duplicate_session,
+                "rename-session": self.action_handler.rename_session,
+                "move-session-to-folder": self.action_handler.move_session_to_folder,
+                "delete-session": self.action_handler.delete_selected_items,
+                "edit-folder": self.action_handler.edit_folder,
+                "rename-folder": self.action_handler.rename_folder,
+                "add-session-to-folder": self.action_handler.add_session_to_folder,
+                "delete-folder": self.action_handler.delete_selected_items,
+                "cut-item": self.action_handler.cut_item,
+                "copy-item": self.action_handler.copy_item,
+                "paste-item": self.action_handler.paste_item,
+                "paste-item-root": self.action_handler.paste_item_root,
+                "add-session-root": self.action_handler.add_session_root,
+                "add-folder-root": self.action_handler.add_folder_root,
+                "toggle-sidebar": self.action_handler.toggle_sidebar_action,
+                "preferences": self.action_handler.preferences,
+                "shortcuts": self.action_handler.shortcuts,
+                "new-window": self.action_handler.new_window,
+            }
+            for name, callback in actions_map.items():
+                action = Gio.SimpleAction.new(name, None)
                 action.connect("activate", callback)
                 self.add_action(action)
         except Exception as e:
@@ -245,7 +314,9 @@ class CommTerminalWindow(Adw.ApplicationWindow):
         self.file_manager_button = Gtk.ToggleButton(
             icon_name="folder-open-symbolic", tooltip_text=_("File Manager")
         )
-        self.file_manager_button.connect("toggled", self._on_toggle_file_manager)
+        self.fm_button_handler_id = self.file_manager_button.connect(
+            "toggled", self._on_toggle_file_manager
+        )
         header_bar.pack_start(self.file_manager_button)
 
         menu_button = Gtk.MenuButton(
@@ -261,18 +332,52 @@ class CommTerminalWindow(Adw.ApplicationWindow):
         new_tab_button.add_css_class("flat")
         header_bar.pack_end(new_tab_button)
 
+        self.scrolled_tab_bar = Gtk.ScrolledWindow()
+        self.scrolled_tab_bar.set_name("scrolled_tab_bar")
+        self.scrolled_tab_bar.set_policy(Gtk.PolicyType.AUTOMATIC, Gtk.PolicyType.NEVER)
+        self.scrolled_tab_bar.set_propagate_natural_height(True)
+        self.scrolled_tab_bar.set_hexpand(True)
+
+        self.tab_manager = TabManager(
+            self.terminal_manager,
+            on_quit_callback=self._on_quit_application_requested,
+            on_detach_tab_callback=self._on_detach_tab_requested,
+            scrolled_tab_bar=self.scrolled_tab_bar,
+            on_tab_count_changed=self._update_tab_layout,
+        )
+        self.terminal_manager.set_tab_manager(self.tab_manager)
+        self.action_handler = WindowActions(self)
+
         self.tab_bar = self.tab_manager.get_tab_bar()
         self.tab_bar.add_css_class("custom-tab-bar")
+        self.scrolled_tab_bar.set_child(self.tab_bar)
 
-        scrolled_tab_bar = Gtk.ScrolledWindow()
-        scrolled_tab_bar.set_child(self.tab_bar)
-        scrolled_tab_bar.set_policy(Gtk.PolicyType.AUTOMATIC, Gtk.PolicyType.NEVER)
-        scrolled_tab_bar.set_propagate_natural_height(True)
-        scrolled_tab_bar.set_hexpand(True)
+        scroll_controller = Gtk.EventControllerScroll.new(
+            flags=Gtk.EventControllerScrollFlags.VERTICAL
+        )
+        scroll_controller.connect("scroll", self._on_tab_bar_scroll)
+        self.scrolled_tab_bar.add_controller(scroll_controller)
 
-        header_bar.set_title_widget(scrolled_tab_bar)
+        self.single_tab_title_widget = Adw.WindowTitle(title=APP_TITLE)
+
+        self.title_stack = Gtk.Stack()
+        self.title_stack.add_named(self.scrolled_tab_bar, "tabs-view")
+        self.title_stack.add_named(self.single_tab_title_widget, "title-view")
+        header_bar.set_title_widget(self.title_stack)
 
         return header_bar
+
+    def _on_tab_bar_scroll(self, controller, dx, dy):
+        """Handle mouse scroll events on the tab bar to scroll horizontally."""
+        scrolled_window = controller.get_widget()
+        hadjustment = scrolled_window.get_hadjustment()
+        scroll_speed = 25
+        new_value = hadjustment.get_value() + dy * scroll_speed
+        lower = hadjustment.get_lower()
+        upper = hadjustment.get_upper() - hadjustment.get_page_size()
+        new_value = max(lower, min(new_value, upper))
+        hadjustment.set_value(new_value)
+        return True
 
     def _create_sidebar(self) -> Gtk.Widget:
         """Create the sidebar with session tree."""
@@ -324,24 +429,33 @@ class CommTerminalWindow(Adw.ApplicationWindow):
         self.main_paned = main_paned
 
         self.connect(
-            "realize", lambda w: main_paned.set_position(self.get_height() - 250)
+            "realize", lambda _: self.main_paned.set_position(self.get_height() - 250)
         )
         self.toast_overlay = Adw.ToastOverlay(child=main_paned)
 
         return self.toast_overlay
 
     def _update_tab_layout(self):
-        """Update tab layout based on tab count."""
+        """Update tab layout and window title based on tab count."""
         tab_count = self.tab_manager.get_tab_count()
-        self.tab_bar.get_parent().set_visible(tab_count > 0)
+        self.set_title(APP_TITLE)
 
-        if tab_count <= 1:
-            visible_child = self.tab_manager.view_stack.get_visible_child()
-            if visible_child:
-                page = self.tab_manager.view_stack.get_page(visible_child)
-                self.set_title(f"{APP_TITLE} - {page.get_title()}")
+        if tab_count > 1:
+            self.title_stack.set_visible_child_name("tabs-view")
         else:
-            self.set_title(APP_TITLE)
+            self.title_stack.set_visible_child_name("title-view")
+            if tab_count == 1:
+                visible_child = self.tab_manager.view_stack.get_visible_child()
+                if visible_child:
+                    page = self.tab_manager.view_stack.get_page(visible_child)
+                    page_title = page.get_title() or _("New Tab")
+                    self.single_tab_title_widget.set_title(
+                        f"{APP_TITLE} - {page_title}"
+                    )
+                else:
+                    self.single_tab_title_widget.set_title(APP_TITLE)
+            else:
+                self.single_tab_title_widget.set_title(APP_TITLE)
 
     def _setup_callbacks(self) -> None:
         """Set up callbacks between components."""
@@ -353,13 +467,9 @@ class CommTerminalWindow(Adw.ApplicationWindow):
             self._on_terminal_directory_changed
         )
         self.terminal_manager.set_terminal_exit_handler(self._on_terminal_exit)
-        self.tab_manager.on_quit_application = self._on_quit_application_requested
-        self.tab_manager.on_detach_tab_requested = self._on_detach_tab_requested
-
         self.tab_manager.get_view_stack().connect(
             "notify::visible-child", self._on_tab_changed
         )
-
         self.settings_manager.add_change_listener(self._on_setting_changed)
 
     def _on_setting_changed(self, key: str, old_value, new_value):
@@ -418,15 +528,19 @@ class CommTerminalWindow(Adw.ApplicationWindow):
             if not active_terminal:
                 button.set_active(False)
                 return
+
             file_manager = self.tab_file_managers.get(current_page)
             if not file_manager:
                 try:
-                    file_manager = FileManager(self, active_terminal)
+                    file_manager = FileManager(
+                        self, self.terminal_manager, active_terminal
+                    )
                     self.tab_file_managers[current_page] = file_manager
                 except Exception as e:
                     self.logger.error(f"Failed to create file manager: {e}")
                     button.set_active(False)
                     return
+
             self.current_file_manager = file_manager
             self.main_paned.set_end_child(file_manager.get_main_widget())
             last_pos = getattr(current_page, "_fm_paned_pos", self.get_height() - 250)
@@ -439,7 +553,7 @@ class CommTerminalWindow(Adw.ApplicationWindow):
             self.main_paned.set_end_child(None)
             self.current_file_manager = None
 
-    def _on_tab_changed(self, view_stack, param):
+    def _on_tab_changed(self, view_stack, _param):
         """Handle tab changes by switching the file manager."""
         if self.current_file_manager:
             old_page_content = next(
@@ -461,6 +575,7 @@ class CommTerminalWindow(Adw.ApplicationWindow):
         current_page_content = view_stack.get_visible_child()
         if not current_page_content or not self.tab_manager.get_selected_terminal():
             self._sync_toggle_button_state()
+            self._update_tab_layout()
             return
 
         current_page = self.tab_manager.view_stack.get_page(current_page_content)
@@ -480,12 +595,11 @@ class CommTerminalWindow(Adw.ApplicationWindow):
         if toggle_button := self._get_file_manager_toggle_button():
             should_be_active = self.current_file_manager is not None
             if toggle_button.get_active() != should_be_active:
-                handler_id = GLib.signal_handler_find(toggle_button, name="toggled")
-                if handler_id > 0:
-                    GLib.signal_handler_block(toggle_button, handler_id)
+                if self.fm_button_handler_id > 0:
+                    toggle_button.handler_block(self.fm_button_handler_id)
                 toggle_button.set_active(should_be_active)
-                if handler_id > 0:
-                    GLib.signal_handler_unblock(toggle_button, handler_id)
+                if self.fm_button_handler_id > 0:
+                    toggle_button.handler_unblock(self.fm_button_handler_id)
 
     def _get_file_manager_toggle_button(self) -> Optional[Gtk.ToggleButton]:
         """Get the file manager toggle button from the header bar."""
@@ -494,17 +608,35 @@ class CommTerminalWindow(Adw.ApplicationWindow):
     def _on_terminal_exit(self, terminal, child_status, identifier):
         pass
 
-    def _on_terminal_focus_changed(self, terminal, from_sidebar: bool) -> None:
-        """Handle terminal focus change."""
+    def _on_terminal_focus_changed(self, terminal, _from_sidebar: bool) -> None:
+        """Handle terminal focus change, rebinding file manager if necessary."""
         self._update_font_sizer_widget()
+        if self.current_file_manager:
+            self.current_file_manager.rebind_terminal(terminal)
+
+    def _find_parent_toolbar_view(
+        self, widget: Gtk.Widget
+    ) -> Optional[Adw.ToolbarView]:
+        """Traverse up the widget tree to find the parent Adw.ToolbarView."""
+        parent = widget.get_parent()
+        while parent:
+            if isinstance(parent, Adw.ToolbarView):
+                return parent
+            parent = parent.get_parent()
+        return None
 
     def _on_terminal_directory_changed(
         self, terminal, new_title: str, osc7_info
     ) -> None:
-        """Handle OSC7 directory change and update titles."""
+        """Handle OSC7 directory change and update titles for both tab and pane."""
         page = self.tab_manager.get_page_for_terminal(terminal)
         if page:
             self.tab_manager.set_tab_title(page, new_title)
+
+        toolbar_view = self._find_parent_toolbar_view(terminal)
+        if toolbar_view and hasattr(toolbar_view, "title_label"):
+            toolbar_view.title_label.set_text(new_title)
+
         self._update_tab_layout()
 
     def _on_quit_application_requested(self) -> None:
@@ -580,314 +712,23 @@ class CommTerminalWindow(Adw.ApplicationWindow):
         else:
             self.tab_manager.create_ssh_tab(session)
 
-    def _on_connect_sftp(self, action, param) -> None:
-        selected_item = self.session_tree.get_selected_item()
-        if isinstance(selected_item, SessionItem) and selected_item.is_ssh():
-            self.toast_overlay.add_toast(Adw.Toast(title=_("SFTP not implemented yet")))
+    def _on_add_session_clicked(self, _button) -> None:
+        self.action_handler.add_session_root(None, None)
 
-    def _on_new_local_tab(self, action, param) -> None:
-        self.tab_manager.create_local_tab()
+    def _on_new_tab_clicked(self, _button) -> None:
+        self.action_handler.new_local_tab(None, None)
 
-    def _on_close_tab(self, action, param) -> None:
-        if self.tab_manager.active_tab:
-            self.tab_manager._on_tab_close_button_clicked(
-                None, self.tab_manager.active_tab
-            )
+    def _on_add_folder_clicked(self, _button) -> None:
+        self.action_handler.add_folder_root(None, None)
 
-    def _on_copy(self, action, param) -> None:
-        self.tab_manager.copy_from_current_terminal()
-
-    def _on_paste(self, action, param) -> None:
-        self.tab_manager.paste_to_current_terminal()
-
-    def _on_select_all(self, action, param) -> None:
-        self.tab_manager.select_all_in_current_terminal()
-
-    def _on_split_horizontal(self, action, param) -> None:
-        if terminal := self.tab_manager.get_selected_terminal():
-            self.tab_manager.split_horizontal(terminal)
-
-    def _on_split_vertical(self, action, param) -> None:
-        if terminal := self.tab_manager.get_selected_terminal():
-            self.tab_manager.split_vertical(terminal)
-
-    def _on_close_pane(self, action, param) -> None:
-        if terminal := self.tab_manager.get_selected_terminal():
-            self.tab_manager.close_pane(terminal)
-
-    def _on_zoom_in(self, action, param) -> None:
-        if terminal := self.tab_manager.get_selected_terminal():
-            terminal.set_font_scale(terminal.get_font_scale() * 1.1)
-            self._update_font_sizer_widget()
-
-    def _on_zoom_out(self, action, param) -> None:
-        if terminal := self.tab_manager.get_selected_terminal():
-            terminal.set_font_scale(terminal.get_font_scale() / 1.1)
-            self._update_font_sizer_widget()
-
-    def _on_zoom_reset(self, action, param) -> None:
-        if terminal := self.tab_manager.get_selected_terminal():
-            terminal.set_font_scale(1.0)
-            self._update_font_sizer_widget()
-
-    def _update_font_sizer_widget(self):
-        if self.font_sizer_widget:
-            self.font_sizer_widget.update_display()
-
-    def _on_edit_session(self, action, param) -> None:
+    def _on_edit_selected_clicked(self, _button) -> None:
         if isinstance(item := self.session_tree.get_selected_item(), SessionItem):
-            found, position = self.session_store.find(item)
-            if found:
-                self._show_session_edit_dialog(item, position)
-
-    def _on_duplicate_session(self, action, param) -> None:
-        if isinstance(item := self.session_tree.get_selected_item(), SessionItem):
-            new_item = SessionItem.from_dict(item.to_dict())
-            existing_names = {
-                s.name for s in self.session_store if s.folder_path == item.folder_path
-            }
-            from ..helpers import generate_unique_name
-
-            new_item.name = generate_unique_name(new_item.name, existing_names)
-            self.session_tree.operations.add_session(new_item)
-            self.refresh_tree()
-
-    def _on_rename_session(self, action, param) -> None:
-        if isinstance(item := self.session_tree.get_selected_item(), SessionItem):
-            self._show_rename_dialog(item, True)
-
-    def _on_move_session_to_folder(self, action, param) -> None:
-        if isinstance(item := self.session_tree.get_selected_item(), SessionItem):
-            MoveSessionDialog(
-                self, item, self.folder_store, self.session_tree.operations
-            ).present()
-
-    def _on_delete_selected_items(self, action=None, param=None) -> None:
-        if items := self.session_tree.get_selected_items():
-            self._show_delete_confirmation(items)
-
-    def _on_edit_folder(self, action, param) -> None:
-        if isinstance(item := self.session_tree.get_selected_item(), SessionFolder):
-            found, position = self.folder_store.find(item)
-            if found:
-                self._show_folder_edit_dialog(item, position)
-
-    def _on_rename_folder(self, action, param) -> None:
-        if isinstance(item := self.session_tree.get_selected_item(), SessionFolder):
-            self._show_rename_dialog(item, False)
-
-    def _on_add_session_to_folder(self, action, param) -> None:
-        if isinstance(item := self.session_tree.get_selected_item(), SessionFolder):
-            self._show_session_edit_dialog(
-                SessionItem(name=_("New Session"), folder_path=item.path), -1
-            )
-
-    def _on_cut_item(self, action, param) -> None:
-        self.session_tree._cut_selected_item()
-
-    def _on_copy_item(self, action, param) -> None:
-        self.session_tree._copy_selected_item()
-
-    def _on_paste_item(self, action, param) -> None:
-        target_path = ""
-        if item := self.session_tree.get_selected_item():
-            target_path = (
-                item.path if isinstance(item, SessionFolder) else item.folder_path
-            )
-        self.session_tree._paste_item(target_path)
-
-    def _on_paste_item_root(self, action, param) -> None:
-        self.session_tree._paste_item("")
-
-    def _on_add_session_root(self, action, param) -> None:
-        self._show_session_edit_dialog(SessionItem(name=_("New Session")), -1)
-
-    def _on_add_folder_root(self, action, param) -> None:
-        self._show_folder_edit_dialog(SessionFolder(name=_("New Folder")), None)
-
-    def _on_preferences(self, action, param) -> None:
-        dialog = PreferencesDialog(self, self.settings_manager)
-        dialog.connect(
-            "color-scheme-changed",
-            lambda d, i: self.terminal_manager.apply_settings_to_all_terminals(),
-        )
-        dialog.connect(
-            "transparency-changed",
-            lambda d, v: self.terminal_manager.apply_settings_to_all_terminals(),
-        )
-        dialog.connect(
-            "font-changed",
-            lambda d, f: self.terminal_manager.apply_settings_to_all_terminals(),
-        )
-        dialog.connect("shortcut-changed", lambda d: self._update_keyboard_shortcuts())
-        dialog.present()
-
-    def _on_shortcuts(self, action, param) -> None:
-        shortcuts_window = Gtk.ShortcutsWindow(transient_for=self, modal=True)
-        section = Gtk.ShortcutsSection(
-            title=_("Keyboard Shortcuts"), section_name="shortcuts"
-        )
-        terminal_group = Gtk.ShortcutsGroup(title=_("Terminal"))
-        for title, accel in [
-            (_("New Tab"), "<Control>t"),
-            (_("Close Tab"), "<Control>w"),
-            (_("New Window"), "<Control>n"),
-            (_("Copy"), "<Control><Shift>c"),
-            (_("Paste"), "<Control><Shift>v"),
-            (_("Select All"), "<Control><Shift>a"),
-        ]:
-            terminal_group.append(Gtk.ShortcutsShortcut(title=title, accelerator=accel))
-
-        app_group = Gtk.ShortcutsGroup(title=_("Application"))
-        for title, accel in [
-            (_("Preferences"), "<Control>comma"),
-            (_("Toggle Sidebar"), "<Control><Shift>h"),
-            (_("Quit"), "<Control>q"),
-        ]:
-            app_group.append(Gtk.ShortcutsShortcut(title=title, accelerator=accel))
-        section.append(terminal_group)
-        section.append(app_group)
-        shortcuts_window.add_section(section)
-        shortcuts_window.present()
-
-    def _on_new_window(self, action, param) -> None:
-        if app := self.get_application():
-            if new_window := app.create_new_window():
-                new_window.present()
-
-    def _on_toggle_sidebar_action(self, action, param) -> None:
-        self.toggle_sidebar_button.set_active(
-            not self.toggle_sidebar_button.get_active()
-        )
-
-    def _on_add_session_clicked(self, button) -> None:
-        self._show_session_edit_dialog(SessionItem(name=_("New Session")), -1)
-
-    def _on_new_tab_clicked(self, button) -> None:
-        self.tab_manager.create_local_tab()
-
-    def _on_add_folder_clicked(self, button) -> None:
-        self._show_folder_edit_dialog(SessionFolder(name=_("New Folder")), None)
-
-    def _on_edit_selected_clicked(self, button) -> None:
-        if isinstance(item := self.session_tree.get_selected_item(), SessionItem):
-            self._on_edit_session(None, None)
+            self.action_handler.edit_session(None, None)
         elif isinstance(item, SessionFolder):
-            self._on_edit_folder(None, None)
+            self.action_handler.edit_folder(None, None)
 
-    def _on_remove_selected_clicked(self, button) -> None:
-        self._on_delete_selected_items()
-
-    def _show_session_edit_dialog(self, session: SessionItem, position: int) -> None:
-        SessionEditDialog(
-            self, session, self.session_store, position, self.folder_store
-        ).present()
-
-    def _show_folder_edit_dialog(
-        self, folder: Optional[SessionFolder], position: Optional[int]
-    ) -> None:
-        FolderEditDialog(
-            self, self.folder_store, folder, position, is_new=position is None
-        ).present()
-
-    def _show_rename_dialog(
-        self, item: Union[SessionItem, SessionFolder], is_session: bool
-    ) -> None:
-        item_type = _("Session") if is_session else _("Folder")
-        dialog = Adw.MessageDialog(
-            transient_for=self,
-            title=_("Rename {type}").format(type=item_type),
-            body=_('Enter new name for "{name}":').format(name=item.name),
-        )
-        entry = Gtk.Entry(text=item.name)
-        dialog.set_extra_child(entry)
-        dialog.add_response("cancel", _("Cancel"))
-        dialog.add_response("rename", _("Rename"))
-        dialog.set_default_response("rename")
-
-        def on_response(dlg, response_id):
-            if response_id == "rename":
-                new_name = entry.get_text().strip()
-                if new_name and new_name != item.name:
-                    old_name = item.name
-                    item.name = new_name
-                    if is_session:
-                        self.session_tree.operations._save_changes_with_backup(
-                            "Session renamed"
-                        )
-                        log_session_event("renamed", f"{old_name} -> {new_name}")
-                    else:
-                        if isinstance(item, SessionFolder):
-                            old_path = item.path
-                            item.path = os.path.normpath(
-                                f"{item.parent_path}/{new_name}"
-                                if item.parent_path
-                                else f"/{new_name}"
-                            )
-                            self.session_tree.operations._update_child_paths(
-                                old_path, item.path
-                            )
-                        self.session_tree.operations._save_changes_with_backup(
-                            "Folder renamed"
-                        )
-                    self.session_tree.refresh_tree()
-            dlg.close()
-
-        dialog.connect("response", on_response)
-        dialog.present()
-
-    def _show_delete_confirmation(
-        self, items: List[Union[SessionItem, SessionFolder]]
-    ) -> None:
-        if not items:
-            return
-        count = len(items)
-        title = _("Delete Item") if count == 1 else _("Delete Items")
-        if count == 1:
-            item = items[0]
-            item_type = _("Session") if isinstance(item, SessionItem) else _("Folder")
-            title = _("Delete {type}").format(type=item_type)
-            has_children = isinstance(
-                item, SessionFolder
-            ) and self.session_tree.operations._folder_has_children(item.path)
-            body_text = (
-                _(
-                    'The folder "{name}" is not empty. Are you sure you want to permanently delete it and all its contents?'
-                ).format(name=item.name)
-                if has_children
-                else _('Are you sure you want to delete "{name}"?').format(
-                    name=item.name
-                )
-            )
-        else:
-            body_text = _(
-                "Are you sure you want to permanently delete these {count} items?"
-            ).format(count=count)
-            if any(
-                isinstance(it, SessionFolder)
-                and self.session_tree.operations._folder_has_children(it.path)
-                for it in items
-            ):
-                body_text += "\n\n" + _(
-                    "This will also delete all contents of any selected folders."
-                )
-        dialog = Adw.MessageDialog(transient_for=self, title=title, body=body_text)
-        dialog.add_response("cancel", _("Cancel"))
-        dialog.add_response("delete", _("Delete"))
-        dialog.set_response_appearance("delete", Adw.ResponseAppearance.DESTRUCTIVE)
-
-        def on_response(dlg, response_id):
-            if response_id == "delete":
-                for item in items:
-                    if isinstance(item, SessionFolder):
-                        self.session_tree.operations.remove_folder(item, force=True)
-                    elif isinstance(item, SessionItem):
-                        self.session_tree.operations.remove_session(item)
-                self.session_tree.refresh_tree()
-            dlg.close()
-
-        dialog.connect("response", on_response)
-        dialog.present()
+    def _on_remove_selected_clicked(self, _button) -> None:
+        self.action_handler.delete_selected_items()
 
     def _show_error_dialog(self, title: str, message: str) -> None:
         dialog = Adw.MessageDialog(transient_for=self, title=title, body=message)
@@ -903,6 +744,10 @@ class CommTerminalWindow(Adw.ApplicationWindow):
         if app := self.get_application():
             app.refresh_keyboard_shortcuts()
 
+    def _update_font_sizer_widget(self):
+        if self.font_sizer_widget:
+            self.font_sizer_widget.update_display()
+
     def refresh_tree(self) -> None:
         self.session_tree.refresh_tree()
 
@@ -912,21 +757,6 @@ class CommTerminalWindow(Adw.ApplicationWindow):
     def destroy(self) -> None:
         self._perform_cleanup()
         super().destroy()
-
-    def _on_open_url(self, action, param) -> None:
-        if terminal := self.tab_manager.get_selected_terminal():
-            if hasattr(terminal, "_context_menu_url"):
-                url = terminal._context_menu_url
-                launcher = Gtk.UriLauncher.new(url)
-                launcher.launch(self, None, None, None)
-                delattr(terminal, "_context_menu_url")
-
-    def _on_copy_url(self, action, param) -> None:
-        if terminal := self.tab_manager.get_selected_terminal():
-            if hasattr(terminal, "_context_menu_url"):
-                url = terminal._context_menu_url
-                Gdk.Display.get_default().get_clipboard().set(url)
-                delattr(terminal, "_context_menu_url")
 
     def create_ssh_tab(self, ssh_target: str) -> bool:
         session = SessionItem(name=ssh_target, session_type="ssh", host=ssh_target)
@@ -959,12 +789,14 @@ class CommTerminalWindow(Adw.ApplicationWindow):
             )
             return
 
-        tab_widget = None
-        for tab in self.tab_manager.tabs:
-            if self.tab_manager.pages.get(tab) == page_to_detach:
-                tab_widget = tab
-                break
-
+        tab_widget = next(
+            (
+                tab
+                for tab in self.tab_manager.tabs
+                if self.tab_manager.pages.get(tab) == page_to_detach
+            ),
+            None,
+        )
         if not tab_widget:
             self.logger.error("Could not find tab widget for page to detach.")
             return
@@ -977,11 +809,8 @@ class CommTerminalWindow(Adw.ApplicationWindow):
         title = tab_widget._base_title
         icon_name = getattr(tab_widget, "_icon_name", "computer-symbolic")
 
-        # Unparent the content from the source ViewStack. This is the key step.
         self.tab_manager.view_stack.remove(content)
 
-        # Manually perform the cleanup that _close_tab_by_page would do,
-        # but without destroying the content.
         was_active = self.tab_manager.active_tab == tab_widget
         self.tab_manager.tab_bar_box.remove(tab_widget)
         self.tab_manager.tabs.remove(tab_widget)
@@ -993,11 +822,10 @@ class CommTerminalWindow(Adw.ApplicationWindow):
         elif not self.tab_manager.tabs:
             self.tab_manager.active_tab = None
             if self.get_application():
-                self.close()  # Close window if it becomes empty
+                self.close()
 
         app = self.get_application()
         new_window = app.create_new_window(_is_for_detached_tab=True)
-
         new_page = new_window.tab_manager.re_attach_detached_page(
             content, title, icon_name
         )

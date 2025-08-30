@@ -12,9 +12,10 @@ from functools import partial
 from pathlib import Path
 from typing import Optional
 
-from gi.repository import Adw, Gdk, Gio, GLib, Gtk, Vte
+from gi.repository import Adw, Gdk, Gio, GLib, GObject, Gtk, Vte
 
 from ..sessions.models import SessionItem
+from ..terminal.manager import TerminalManager as TerminalManagerType
 from ..utils.logger import get_logger
 from ..utils.translation_utils import _
 from .models import FileItem
@@ -40,9 +41,24 @@ CSS_DATA = b"""
 
 
 class FileManager:
-    def __init__(self, parent_window, terminal_to_bind: Vte.Terminal):
+    def __init__(
+        self,
+        parent_window: Gtk.Window,
+        terminal_manager: TerminalManagerType,
+        terminal_to_bind: Vte.Terminal,
+    ):
+        """
+        Initializes the FileManager.
+        Dependencies like TerminalManager are injected for better decoupling.
+
+        Args:
+            parent_window: The parent window, used for dialogs.
+            terminal_manager: The central manager for terminal instances.
+            terminal_to_bind: The initial terminal to bind to.
+        """
         self.logger = get_logger("ashyterm.filemanager.manager")
         self.parent_window = parent_window
+        self.terminal_manager = terminal_manager
         self.transfer_history_window = None
 
         css_provider = Gtk.CssProvider()
@@ -53,9 +69,8 @@ class FileManager:
             Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION,
         )
 
-        terminal_manager = self.parent_window.get_terminal_manager()
         terminal_id = getattr(terminal_to_bind, "terminal_id", None)
-        info = terminal_manager.registry.get_terminal_info(terminal_id)
+        info = self.terminal_manager.registry.get_terminal_info(terminal_id)
         if not info or not info.get("identifier"):
             raise ValueError(
                 "Cannot create FileManager for a terminal without a valid session identifier."
@@ -86,19 +101,44 @@ class FileManager:
 
         self._build_ui()
 
-        self.bound_terminal = terminal_to_bind
+        self.bound_terminal = None
+        self.directory_change_handler_id = 0
+        self.rebind_terminal(terminal_to_bind)  # Initial bind
+
+        self.revealer.connect("destroy", self.shutdown)
+
+        self.logger.info(
+            f"FileManager instance created and bound to terminal: {getattr(self.bound_terminal, 'terminal_id', 'unknown')}"
+        )
+
+    def rebind_terminal(self, new_terminal: Vte.Terminal):
+        """
+        Binds the file manager to a new terminal instance.
+        This is crucial for handling focus changes in split panes.
+        """
+        if self.bound_terminal and self.directory_change_handler_id > 0:
+            if GObject.signal_handler_is_connected(
+                self.bound_terminal, self.directory_change_handler_id
+            ):
+                try:
+                    self.bound_terminal.disconnect(self.directory_change_handler_id)
+                except TypeError:
+                    self.logger.warning(
+                        f"Could not disconnect handler {self.directory_change_handler_id} from old terminal."
+                    )
+
+        self.bound_terminal = new_terminal
+
         self.directory_change_handler_id = self.bound_terminal.connect(
             "notify::current-directory-uri", self._on_terminal_directory_changed
         )
 
         terminal_dir = self._get_terminal_current_directory()
         if terminal_dir:
-            self.current_path = terminal_dir
-
-        self.revealer.connect("destroy", self.shutdown)
+            self.refresh(terminal_dir)
 
         self.logger.info(
-            f"FileManager instance created and bound to terminal: {getattr(self.bound_terminal, 'terminal_id', 'unknown')}"
+            f"File manager rebound to terminal ID: {getattr(new_terminal, 'terminal_id', 'unknown')}"
         )
 
     def shutdown(self, widget):
@@ -113,12 +153,11 @@ class FileManager:
         if self.operations:
             self.operations.shutdown()
 
-        if (
-            self.bound_terminal
-            and self.bound_terminal.is_valid()
-            and self.directory_change_handler_id > 0
-        ):
-            self.bound_terminal.disconnect(self.directory_change_handler_id)
+        if self.bound_terminal and self.directory_change_handler_id > 0:
+            if GObject.signal_handler_is_connected(
+                self.bound_terminal, self.directory_change_handler_id
+            ):
+                self.bound_terminal.disconnect(self.directory_change_handler_id)
             self.directory_change_handler_id = 0
 
     def _get_terminal_current_directory(self):
@@ -134,12 +173,12 @@ class FileManager:
             pass
         return None
 
-    def _on_terminal_directory_changed(self, terminal, param_spec):
+    def _on_terminal_directory_changed(self, _terminal, _param_spec):
         if not self.revealer.get_child_revealed():
             return
 
         try:
-            uri = terminal.get_current_directory_uri()
+            uri = self.bound_terminal.get_current_directory_uri()
             if not uri:
                 return
 
@@ -178,7 +217,7 @@ class FileManager:
         action_bar = Gtk.ActionBar()
 
         refresh_button = Gtk.Button.new_from_icon_name("view-refresh-symbolic")
-        refresh_button.connect("clicked", lambda w: self.refresh())
+        refresh_button.connect("clicked", lambda _: self.refresh())
         refresh_button.set_tooltip_text(_("Refresh"))
         action_bar.pack_start(refresh_button)
 
@@ -302,10 +341,10 @@ class FileManager:
         name_b = file_item_b.name.lower()
         return (name_a > name_b) - (name_a < name_b)
 
-    def _sort_by_name(self, a, b, *args):
+    def _sort_by_name(self, a, b, *_):
         return self._dolphin_sort_priority(a, b)
 
-    def _sort_by_permissions(self, a, b, *args):
+    def _sort_by_permissions(self, a, b, *_):
         return self._dolphin_sort_priority(
             a,
             b,
@@ -313,22 +352,22 @@ class FileManager:
             - (x.permissions < y.permissions),
         )
 
-    def _sort_by_owner(self, a, b, *args):
+    def _sort_by_owner(self, a, b, *_):
         return self._dolphin_sort_priority(
             a, b, lambda x, y: (x.owner > y.owner) - (x.owner < y.owner)
         )
 
-    def _sort_by_group(self, a, b, *args):
+    def _sort_by_group(self, a, b, *_):
         return self._dolphin_sort_priority(
             a, b, lambda x, y: (x.group > y.group) - (x.group < y.group)
         )
 
-    def _sort_by_size(self, a, b, *args):
+    def _sort_by_size(self, a, b, *_):
         return self._dolphin_sort_priority(
             a, b, lambda x, y: (x.size > y.size) - (x.size < y.size)
         )
 
-    def _sort_by_date(self, a, b, *args):
+    def _sort_by_date(self, a, b, *_):
         return self._dolphin_sort_priority(
             a, b, lambda x, y: (x.date > y.date) - (x.date < y.date)
         )
@@ -587,7 +626,7 @@ class FileManager:
     def _is_remote_session(self) -> bool:
         return not self.session_item.is_local()
 
-    def _on_item_right_click(self, gesture, n_press, x, y):
+    def _on_item_right_click(self, _gesture, _n_press, x, y):
         try:
             selection_model = self.column_view.get_model()
             if not selection_model:
@@ -662,12 +701,12 @@ class FileManager:
         for name, callback in actions.items():
             action = Gio.SimpleAction.new(name, None)
             action.connect(
-                "activate", lambda a, p, cb=callback, item=file_item: cb(a, p, item)
+                "activate", lambda a, _, cb=callback, item=file_item: cb(a, _, item)
             )
             action_group.add_action(action)
         popover.insert_action_group("context", action_group)
 
-    def _on_delete_action(self, action, param, file_item: FileItem):
+    def _on_delete_action(self, _action, _param, file_item: FileItem):
         dialog = Adw.AlertDialog(
             heading=_("Delete File"),
             body=_(
@@ -692,7 +731,7 @@ class FileManager:
                 )
                 GLib.timeout_add(500, self.refresh)
 
-    def _on_chmod_action(self, action, param, file_item: FileItem):
+    def _on_chmod_action(self, _action, _param, file_item: FileItem):
         self._show_permissions_dialog(file_item)
 
     def _show_permissions_dialog(self, file_item: FileItem):
@@ -766,7 +805,7 @@ class FileManager:
             self.others_write,
             self.others_execute,
         ]:
-            checkbox.connect("toggled", lambda cb: self._update_mode_display())
+            checkbox.connect("toggled", lambda _: self._update_mode_display())
 
         dialog.add_response("cancel", _("Cancel"))
         dialog.add_response("apply", _("Apply"))
@@ -821,7 +860,7 @@ class FileManager:
         mode = self._calculate_mode()
         self.mode_label.set_text(f"Numeric mode: {mode}")
 
-    def _on_download_action(self, action, param, file_item: FileItem):
+    def _on_download_action(self, _action, _param, file_item: FileItem):
         dialog = Gtk.FileDialog(
             title=_("Save File As..."),
             modal=True,
@@ -854,7 +893,7 @@ class FileManager:
             if not e.matches(Gio.io_error_quark(), Gio.IOErrorEnum.CANCELLED):
                 self.parent_window._show_error_dialog(_("Error"), e.message)
 
-    def _on_upload_action(self, action, param, file_item: FileItem):
+    def _on_upload_action(self, _action, _param, _file_item: FileItem):
         dialog = Gtk.FileDialog(
             title=_("Upload File(s) to This Folder"),
             modal=True,
@@ -882,7 +921,7 @@ class FileManager:
                         transfer_id,
                         "Uploading",
                         self._background_upload_worker,
-                        on_success_callback=lambda lp, rp: GLib.idle_add(self.refresh),
+                        on_success_callback=lambda _, __: GLib.idle_add(self.refresh),
                     )
         except GLib.Error as e:
             if not e.matches(Gio.io_error_quark(), Gio.IOErrorEnum.CANCELLED):
@@ -915,7 +954,7 @@ class FileManager:
             self._on_upload_action(None, None, None)
         return True
 
-    def _on_open_edit_action(self, action, param, file_item: FileItem):
+    def _on_open_edit_action(self, _action, _param, file_item: FileItem):
         if self._is_remote_session():
             callback = partial(self._open_and_monitor_local_file, app_info=None)
             self._download_and_execute(file_item, callback)
@@ -923,7 +962,7 @@ class FileManager:
             full_path = Path(self.current_path).joinpath(file_item.name)
             self._open_local_file(full_path)
 
-    def _on_open_with_action(self, action, param, file_item: FileItem):
+    def _on_open_with_action(self, _action, _param, file_item: FileItem):
         if self._is_remote_session():
             self._download_and_execute(file_item, self._show_open_with_dialog)
         else:
@@ -947,7 +986,7 @@ class FileManager:
         )
 
     def _start_cancellable_transfer(
-        self, transfer_id, verb, worker_func, on_success_callback
+        self, transfer_id, _verb, worker_func, on_success_callback
     ):
         transfer = self.transfer_manager.get_transfer(transfer_id)
         if not transfer:
@@ -1092,7 +1131,7 @@ class FileManager:
             )
 
     def _on_editor_launched(
-        self, context, app_info, platform_data, local_path, remote_path
+        self, _context, app_info, _platform_data, local_path, remote_path
     ):
         """Callback for when the editor process has been launched."""
         pid = app_info.get_pid()
@@ -1167,7 +1206,7 @@ class FileManager:
         return False
 
     def _on_local_file_saved(
-        self, monitor, file, other_file, event_type, remote_path, local_path
+        self, _monitor, _file, _other_file, event_type, remote_path, local_path
     ):
         if event_type == Gio.FileMonitorEvent.CHANGES_DONE_HINT:
             threading.Thread(
@@ -1237,7 +1276,7 @@ class FileManager:
         except Exception as e:
             self.logger.error(f"Failed to initiate upload-on-save: {e}")
 
-    def _on_rename_action(self, action, param, file_item: FileItem):
+    def _on_rename_action(self, _action, _param, file_item: FileItem):
         dialog = Adw.AlertDialog(
             heading=_("Rename"),
             body=_("Enter a new name for '{name}'").format(name=file_item.name),

@@ -32,15 +32,25 @@ class SessionTreeView:
         session_store: Gio.ListStore,
         folder_store: Gio.ListStore,
         settings_manager,
+        operations: SessionOperations,
     ):
+        """
+        Initializes the SessionTreeView.
+
+        Args:
+            parent_window: The parent window, used for dialogs.
+            session_store: The Gio.ListStore for SessionItem objects.
+            folder_store: The Gio.ListStore for SessionFolder objects.
+            settings_manager: The application's settings manager.
+            operations: The injected SessionOperations instance for business logic.
+        """
         self.logger = get_logger("ashyterm.sessions.tree")
         self.parent_window = parent_window
         self.session_store = session_store
         self.folder_store = folder_store
         self.settings_manager = settings_manager
-        self.operations = SessionOperations(
-            session_store, folder_store, settings_manager
-        )
+        self.operations = operations  # Dependency is now injected
+
         self.root_store = Gio.ListStore.new(GObject.GObject)
         self.tree_model = Gtk.TreeListModel.new(
             self.root_store,
@@ -81,7 +91,7 @@ class SessionTreeView:
         column_view.add_controller(empty_area_gesture)
 
         root_drop_target = Gtk.DropTarget.new(GObject.TYPE_STRING, Gdk.DragAction.MOVE)
-        root_drop_target.connect("accept", lambda t, d: True)
+        root_drop_target.connect("accept", lambda _, __: True)
         root_drop_target.connect("drop", self._on_root_drop)
         column_view.add_controller(root_drop_target)
 
@@ -178,7 +188,7 @@ class SessionTreeView:
             del list_item.handler_ids
 
     def _on_folder_expansion_changed(
-        self, tree_list_row: Gtk.TreeListRow, param
+        self, tree_list_row: Gtk.TreeListRow, _param
     ) -> None:
         """Saves the expansion state of a folder when it's changed by the user."""
         if self._is_restoring_state:
@@ -210,7 +220,7 @@ class SessionTreeView:
         return Gdk.ContentProvider.new_for_value(data_string)
 
     def _on_drag_begin(
-        self, source: Gtk.DragSource, drag: Gdk.Drag, list_item: Gtk.ListItem
+        self, source: Gtk.DragSource, _drag: Gdk.Drag, list_item: Gtk.ListItem
     ) -> None:
         """Sets the drag icon when a drag begins."""
         item = list_item.get_item().get_item()
@@ -220,13 +230,13 @@ class SessionTreeView:
         source.set_icon(paintable, 0, 0)
 
     def _on_folder_drop_accept(
-        self, target: Gtk.DropTarget, drop: Gdk.Drop, list_item: Gtk.ListItem
+        self, _target: Gtk.DropTarget, _drop: Gdk.Drop, list_item: Gtk.ListItem
     ) -> bool:
         """Accepts a drop only if the target is a folder."""
         return isinstance(list_item.get_item().get_item(), SessionFolder)
 
     def _on_folder_drag_enter(
-        self, target: Gtk.DropTarget, x: float, y: float, list_item: Gtk.ListItem
+        self, _target: Gtk.DropTarget, x: float, y: float, list_item: Gtk.ListItem
     ) -> Gdk.DragAction:
         """Adds a CSS class to highlight the drop target folder."""
         if isinstance(list_item.get_item().get_item(), SessionFolder):
@@ -235,14 +245,14 @@ class SessionTreeView:
         return Gdk.DragAction.DEFAULT
 
     def _on_folder_drag_leave(
-        self, target: Gtk.DropTarget, list_item: Gtk.ListItem
+        self, _target: Gtk.DropTarget, list_item: Gtk.ListItem
     ) -> None:
         """Removes the highlight CSS class when the drag leaves a folder."""
         list_item.get_child().remove_css_class("drop-target")
 
     def _on_folder_drop(
         self,
-        target: Gtk.DropTarget,
+        _target: Gtk.DropTarget,
         value: str,
         x: float,
         y: float,
@@ -255,41 +265,41 @@ class SessionTreeView:
         return True
 
     def _on_root_drop(
-        self, target: Gtk.DropTarget, value: str, x: float, y: float
+        self, _target: Gtk.DropTarget, value: str, x: float, y: float
     ) -> bool:
         """Handles a drop onto the empty (root) area."""
         self._perform_move(value, "")
         return True
 
     def _perform_move(self, data_string: str, target_folder_path: str) -> None:
-        """Executes the logic to move a session or folder."""
+        """
+        Delegates the logic to move a session or folder to the operations layer.
+        """
         try:
             item_type, name, source_path = data_string.split("|", 2)
+            result = None
             if item_type == "session":
-                session, pos = self.operations.find_session_by_name_and_path(
+                session, _ = self.operations.find_session_by_name_and_path(
                     name, source_path
                 )
-                if session and session.folder_path != target_folder_path:
-                    self.operations.move_session_to_folder(session, target_folder_path)
-                    self.refresh_tree()
+                if session:
+                    result = self.operations.move_session_to_folder(
+                        session, target_folder_path
+                    )
             elif item_type == "folder":
-                if folder_result := self.operations.find_folder_by_path(source_path):
-                    folder, pos = folder_result
-                    if (
-                        source_path != target_folder_path
-                        and not target_folder_path.startswith(source_path + "/")
-                    ):
-                        updated_folder = SessionFolder.from_dict(folder.to_dict())
-                        updated_folder.parent_path = target_folder_path
-                        updated_folder.path = (
-                            f"{target_folder_path}/{name}"
-                            if target_folder_path
-                            else f"/{name}"
-                        )
-                        self.operations.update_folder(pos, updated_folder)
-                        self.refresh_tree()
+                folder, _ = self.operations.find_folder_by_path(source_path)
+                if folder:
+                    result = self.operations.move_folder(folder, target_folder_path)
+
+            if result and result.success:
+                self.refresh_tree()
+            elif result:
+                if hasattr(self.parent_window, "_show_error_dialog"):
+                    self.parent_window._show_error_dialog(_("Move Error"), result.message)
         except Exception as e:
             self.logger.error(f"Drag-and-drop move error: {e}")
+            if hasattr(self.parent_window, "_show_error_dialog"):
+                self.parent_window._show_error_dialog(_("Move Error"), str(e))
 
     def refresh_tree(self) -> None:
         """Rebuilds the entire tree view from the session and folder stores."""
@@ -373,7 +383,7 @@ class SessionTreeView:
                             return found_in_child
         return None
 
-    def _on_row_activated(self, list_view: Gtk.ListView, position: int) -> None:
+    def _on_row_activated(self, _list_view: Gtk.ListView, position: int) -> None:
         """Handles item activation (e.g., double-click or Enter key)."""
         if not (tree_list_row := self.tree_model.get_item(position)):
             return
@@ -388,7 +398,7 @@ class SessionTreeView:
         self,
         controller: Gtk.EventControllerKey,
         keyval: int,
-        keycode: int,
+        _keycode: int,
         state: Gdk.ModifierType,
     ) -> bool:
         """Handles key presses for shortcuts."""
@@ -439,8 +449,8 @@ class SessionTreeView:
 
     def _on_item_right_click(
         self,
-        gesture: Gtk.GestureClick,
-        n_press: int,
+        _gesture: Gtk.GestureClick,
+        _n_press: int,
         x: float,
         y: float,
         list_item: Gtk.ListItem,
@@ -478,7 +488,7 @@ class SessionTreeView:
             popover.popup()
 
     def _on_empty_area_right_click(
-        self, gesture: Gtk.GestureClick, n_press: int, x: float, y: float
+        self, _gesture: Gtk.GestureClick, _n_press: int, x: float, y: float
     ) -> None:
         """Shows a context menu for the empty area (root)."""
         self.selection_model.unselect_all()
@@ -508,54 +518,27 @@ class SessionTreeView:
             self._clipboard_is_cut = True
 
     def _paste_item(self, target_folder_path: str) -> None:
-        """Pastes the clipboard item into the target folder."""
+        """
+        Delegates the paste logic to the operations layer.
+        """
         if not self.has_clipboard_content():
             return
+
         item_to_paste = self._clipboard_item
         is_cut = self._clipboard_is_cut
         self._clipboard_item, self._clipboard_is_cut = None, False
+
         try:
-            result = None
-            if is_cut:
-                if isinstance(item_to_paste, SessionItem):
-                    result = self.operations.move_session_to_folder(
-                        item_to_paste, target_folder_path
-                    )
-                elif isinstance(item_to_paste, SessionFolder):
-                    updated_folder = SessionFolder.from_dict(item_to_paste.to_dict())
-                    updated_folder.parent_path = target_folder_path
-                    updated_folder.path = (
-                        f"{target_folder_path}/{updated_folder.name}"
-                        if target_folder_path
-                        else f"/{updated_folder.name}"
-                    )
-                    found, pos = self.folder_store.find(item_to_paste)
-                    if found:
-                        result = self.operations.update_folder(pos, updated_folder)
-            else:
-                if isinstance(item_to_paste, SessionItem):
-                    new_item = SessionItem.from_dict(item_to_paste.to_dict())
-                    new_item.folder_path = target_folder_path
-                    new_item.name = generate_unique_name(
-                        new_item.name,
-                        self.operations._get_session_names_in_folder(
-                            target_folder_path
-                        ),
-                    )
-                    result = self.operations.add_session(new_item)
-                elif isinstance(item_to_paste, SessionFolder):
-                    new_folder = SessionFolder.from_dict(item_to_paste.to_dict())
-                    new_folder.parent_path = target_folder_path
-                    new_folder.path = (
-                        f"{target_folder_path}/{new_folder.name}"
-                        if target_folder_path
-                        else f"/{new_folder.name}"
-                    )
-                    result = self.operations.add_folder(new_folder)
+            result = self.operations.paste_item(
+                item_to_paste, target_folder_path, is_cut
+            )
             if result and result.success:
                 self.refresh_tree()
-            elif result and hasattr(self.parent_window, "_show_error_dialog"):
-                self.parent_window._show_error_dialog(_("Paste Error"), result.message)
+            elif result:
+                if hasattr(self.parent_window, "_show_error_dialog"):
+                    self.parent_window._show_error_dialog(
+                        _("Paste Error"), result.message
+                    )
         except Exception as e:
             self.logger.error(f"Paste operation failed: {e}")
             if hasattr(self.parent_window, "_show_error_dialog"):

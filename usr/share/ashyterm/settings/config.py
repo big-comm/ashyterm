@@ -51,7 +51,6 @@ class ConfigPaths:
 
             self.SESSIONS_FILE = self.CONFIG_DIR / "sessions.json"
             self.SETTINGS_FILE = self.CONFIG_DIR / "settings.json"
-            self.FOLDERS_FILE = self.CONFIG_DIR / "folders.json"
             self.CACHE_DIR = self._get_cache_directory()
             self.LOG_DIR = self.CONFIG_DIR / "logs"
             self.BACKUP_DIR = self.CONFIG_DIR / "backups"
@@ -92,7 +91,6 @@ class ConfigPaths:
         self.CONFIG_DIR = home / ".config" / "ashyterm"
         self.SESSIONS_FILE = self.CONFIG_DIR / "sessions.json"
         self.SETTINGS_FILE = self.CONFIG_DIR / "settings.json"
-        self.FOLDERS_FILE = self.CONFIG_DIR / "folders.json"
         self.CACHE_DIR = home / ".cache" / "ashyterm"
         self.LOG_DIR = self.CONFIG_DIR / "logs"
         self.BACKUP_DIR = self.CONFIG_DIR / "backups"
@@ -364,13 +362,6 @@ class ColorSchemeMap:
     @classmethod
     def get_schemes_list(cls) -> List[str]:
         return cls.SCHEME_ORDER.copy()
-
-    @classmethod
-    def get_scheme_index(cls, scheme_name: str) -> int:
-        try:
-            return cls.SCHEME_ORDER.index(scheme_name)
-        except ValueError:
-            return 0
 
     @classmethod
     def get_scheme_name(cls, index: int) -> str:
