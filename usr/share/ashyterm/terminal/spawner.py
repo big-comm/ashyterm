@@ -15,6 +15,7 @@ from gi.repository import GLib, Vte
 if TYPE_CHECKING:
     from ..sessions.models import SessionItem
 
+from ..settings.manager import get_settings_manager
 from ..utils.exceptions import SSHConnectionError, SSHKeyError, TerminalCreationError
 from ..utils.logger import get_logger, log_error_with_context, log_terminal_event
 from ..utils.platform import (
@@ -102,6 +103,7 @@ class ProcessSpawner:
         self.command_builder = get_command_builder()
         self.environment_manager = get_environment_manager()
         self.process_tracker = ProcessTracker()
+        self.settings_manager = get_settings_manager()  # NOVO
         self._spawn_lock = threading.Lock()
         self.logger.info("Process spawner initialized on Linux")
 
@@ -122,10 +124,15 @@ class ProcessSpawner:
     ) -> None:
         """Spawn a local terminal session. Raises TerminalCreationError on setup failure."""
         with self._spawn_lock:
-            # Use Vte's built-in function to get the user's default shell.
-            # This is the most reliable and simplest method.
             shell = Vte.get_user_shell()
-            cmd = [shell]
+
+            # INÍCIO DA ALTERAÇÃO: Usar shell de login se configurado
+            if self.settings_manager.get("use_login_shell", False):
+                cmd = [shell, "-l"]
+                self.logger.info(f"Spawning '{shell} -l' as a login shell.")
+            else:
+                cmd = [shell]
+            # FIM DA ALTERAÇÃO
 
             working_dir = self._resolve_and_validate_working_directory(
                 working_directory
@@ -159,7 +166,7 @@ class ProcessSpawner:
             )
             self.logger.info("Local terminal spawn initiated successfully")
             log_terminal_event(
-                "spawn_initiated", str(user_data), f"default user shell: {shell}"
+                "spawn_initiated", str(user_data), f"shell command: {' '.join(cmd)}"
             )
 
     def spawn_ssh_session(

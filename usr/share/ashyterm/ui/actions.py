@@ -58,6 +58,12 @@ class WindowActions:
                 None, self.tab_manager.active_tab
             )
 
+    def next_tab(self, _action, _param) -> None:
+        self.tab_manager.select_next_tab()
+
+    def previous_tab(self, _action, _param) -> None:
+        self.tab_manager.select_previous_tab()
+
     def split_horizontal(self, _action, _param) -> None:
         if terminal := self.tab_manager.get_selected_terminal():
             self.tab_manager.split_horizontal(terminal)
@@ -116,7 +122,9 @@ class WindowActions:
     def connect_sftp(self, _action, _param) -> None:
         selected_item = self.session_tree.get_selected_item()
         if isinstance(selected_item, SessionItem) and selected_item.is_ssh():
-            self.window.toast_overlay.add_toast(Adw.Toast(title=_("SFTP not implemented yet")))
+            self.window.toast_overlay.add_toast(
+                Adw.Toast(title=_("SFTP not implemented yet"))
+            )
 
     def edit_session(self, _action, _param) -> None:
         if isinstance(item := self.session_tree.get_selected_item(), SessionItem):
@@ -203,7 +211,9 @@ class WindowActions:
             "font-changed",
             lambda d, f: self.terminal_manager.apply_settings_to_all_terminals(),
         )
-        dialog.connect("shortcut-changed", lambda d: self.window._update_keyboard_shortcuts())
+        dialog.connect(
+            "shortcut-changed", lambda d: self.window._update_keyboard_shortcuts()
+        )
         dialog.present()
 
     def shortcuts(self, _action, _param) -> None:
@@ -213,21 +223,24 @@ class WindowActions:
         )
         terminal_group = Gtk.ShortcutsGroup(title=_("Terminal"))
         for title, accel in [
-            (_("New Tab"), "<Control>t"), (_("Close Tab"), "<Control>w"),
-            (_("New Window"), "<Control>n"), (_("Copy"), "<Control><Shift>c"),
-            (_("Paste"), "<Control><Shift>v"), (_("Select All"), "<Control><Shift>a"),
+            (_("New Tab"), "<Control>t"),
+            (_("Close Tab"), "<Control>w"),
+            (_("New Window"), "<Control>n"),
+            (_("Copy"), "<Control><Shift>c"),
+            (_("Paste"), "<Control><Shift>v"),
+            (_("Select All"), "<Control><Shift>a"),
         ]:
             terminal_group.append(Gtk.ShortcutsShortcut(title=title, accelerator=accel))
 
         app_group = Gtk.ShortcutsGroup(title=_("Application"))
         for title, accel in [
             (_("Preferences"), "<Control>comma"),
-            (_("Toggle Sidebar"), "<Control><Shift>h"), (_("Quit"), "<Control>q"),
+            (_("Toggle Sidebar"), "<Control><Shift>h"),
+            (_("Quit"), "<Control>q"),
         ]:
             app_group.append(Gtk.ShortcutsShortcut(title=title, accelerator=accel))
         section.append(terminal_group)
         section.append(app_group)
-        shortcuts_window.add_section(section)
         shortcuts_window.present()
 
     def new_window(self, _action, _param) -> None:
@@ -330,7 +343,9 @@ class WindowActions:
                 body_text += "\n\n" + _(
                     "This will also delete all contents of any selected folders."
                 )
-        dialog = Adw.MessageDialog(transient_for=self.window, title=title, body=body_text)
+        dialog = Adw.MessageDialog(
+            transient_for=self.window, title=title, body=body_text
+        )
         dialog.add_response("cancel", _("Cancel"))
         dialog.add_response("delete", _("Delete"))
         dialog.set_response_appearance("delete", Adw.ResponseAppearance.DESTRUCTIVE)

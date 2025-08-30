@@ -153,7 +153,7 @@ class TabManager:
         working_directory: Optional[str] = None,
         execute_command: Optional[str] = None,
         close_after_execute: bool = False,
-    ) -> None:
+    ) -> Optional[Vte.Terminal]:
         terminal = self.terminal_manager.create_local_terminal(
             title=title,
             working_directory=working_directory,
@@ -162,13 +162,15 @@ class TabManager:
         )
         if terminal:
             self._create_tab_for_terminal(terminal, title, "computer-symbolic")
+        return terminal
 
-    def create_ssh_tab(self, session: SessionItem) -> None:
+    def create_ssh_tab(self, session: SessionItem) -> Optional[Vte.Terminal]:
         terminal = self.terminal_manager.create_ssh_terminal(session)
         if terminal:
             self._create_tab_for_terminal(
                 terminal, session.name, "network-server-symbolic"
             )
+        return terminal
 
     def _scroll_to_widget(self, widget: Gtk.Widget) -> bool:
         """Scrolls the tab bar to make the given widget visible."""
@@ -637,24 +639,51 @@ class TabManager:
                 self.logger.error("Cannot split: could not find parent page.")
                 return
 
-            terminal_id = getattr(focused_terminal, "terminal_id", None)
-            info = self.terminal_manager.registry.get_terminal_info(terminal_id)
-            identifier = info.get("identifier") if info else "Local"
             new_terminal = None
             new_pane_title = "Terminal"
 
-            if isinstance(identifier, SessionItem):
-                new_pane_title = identifier.name
-                new_terminal = (
-                    self.terminal_manager.create_ssh_terminal(identifier)
-                    if identifier.is_ssh()
-                    else self.terminal_manager.create_local_terminal(identifier.name)
-                )
-            else:
-                new_pane_title = "Local"
-                new_terminal = self.terminal_manager.create_local_terminal(
-                    new_pane_title
-                )
+            restore_node = getattr(focused_terminal, "_node_to_restore_child2", None)
+
+            if restore_node:
+                if restore_node["session_type"] == "ssh":
+                    session = next(
+                        (
+                            s
+                            for s in self.terminal_manager.parent_window.session_store
+                            if s.name == restore_node["session_name"]
+                        ),
+                        None,
+                    )
+                    if session:
+                        new_terminal = self.terminal_manager.create_ssh_terminal(
+                            session
+                        )
+                        new_pane_title = session.name
+                else:  # local
+                    new_terminal = self.terminal_manager.create_local_terminal(
+                        title=restore_node["session_name"],
+                        working_directory=restore_node.get("working_dir"),
+                    )
+                    new_pane_title = restore_node["session_name"]
+            else:  # Standard split behavior
+                terminal_id = getattr(focused_terminal, "terminal_id", None)
+                info = self.terminal_manager.registry.get_terminal_info(terminal_id)
+                identifier = info.get("identifier") if info else "Local"
+
+                if isinstance(identifier, SessionItem):
+                    new_pane_title = identifier.name
+                    new_terminal = (
+                        self.terminal_manager.create_ssh_terminal(identifier)
+                        if identifier.is_ssh()
+                        else self.terminal_manager.create_local_terminal(
+                            identifier.name
+                        )
+                    )
+                else:
+                    new_pane_title = "Local"
+                    new_terminal = self.terminal_manager.create_local_terminal(
+                        new_pane_title
+                    )
 
             if not new_terminal:
                 self.logger.error("Failed to create new terminal for split.")

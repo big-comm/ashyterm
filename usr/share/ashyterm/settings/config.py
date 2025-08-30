@@ -51,6 +51,7 @@ class ConfigPaths:
 
             self.SESSIONS_FILE = self.CONFIG_DIR / "sessions.json"
             self.SETTINGS_FILE = self.CONFIG_DIR / "settings.json"
+            self.STATE_FILE = self.CONFIG_DIR / "session_state.json"
             self.CACHE_DIR = self._get_cache_directory()
             self.LOG_DIR = self.CONFIG_DIR / "logs"
             self.BACKUP_DIR = self.CONFIG_DIR / "backups"
@@ -91,6 +92,7 @@ class ConfigPaths:
         self.CONFIG_DIR = home / ".config" / "ashyterm"
         self.SESSIONS_FILE = self.CONFIG_DIR / "sessions.json"
         self.SETTINGS_FILE = self.CONFIG_DIR / "settings.json"
+        self.STATE_FILE = self.CONFIG_DIR / "session_state.json"
         self.CACHE_DIR = home / ".cache" / "ashyterm"
         self.LOG_DIR = self.CONFIG_DIR / "logs"
         self.BACKUP_DIR = self.CONFIG_DIR / "backups"
@@ -103,26 +105,45 @@ class DefaultSettings:
     @staticmethod
     def get_defaults() -> Dict[str, Any]:
         return {
+            # General Appearance
             "gtk_theme": "default",
-            "color_scheme": 0,
+            "color_scheme": 2,
             "transparency": 0,
-            "font": "Noto Mono Nerd Font Medium 12",
+            "font": "Monospace 12",
+            "line_spacing": 1.0,
+            "bold_is_bright": True,
+            # Behavior
             "sidebar_visible": True,
             "confirm_close": True,
             "auto_close_tab": True,
             "scroll_on_output": True,
             "scroll_on_keystroke": True,
             "mouse_autohide": True,
-            "cursor_blink": True,
+            "cursor_blink": 0,
             "osc7_enabled": True,
             "new_instance_behavior": "new_tab",
+            "use_login_shell": False,
+            "restore_tabs_on_restart": True,
+            # VTE Features
+            "scrollback_lines": 10000,
+            "cursor_shape": 0,
+            "bidi_enabled": False,
+            "sixel_enabled": True,
+            "text_blink_mode": 0,
+            "accessibility_enabled": True,
+            # Compatibility
+            "backspace_binding": 0,
+            "delete_binding": 0,
+            "cjk_ambiguous_width": 1,
+            # Backup Settings
             "auto_backup_enabled": False,
             "backup_on_change": True,
             "backup_interval_hours": 24,
             "backup_retention_days": 30,
-            # Novas configurações de log
-            "log_to_file": False,  # Desativado por padrão
-            "console_log_level": "ERROR",  # Apenas erros no console por padrão
+            # Logging Settings
+            "log_to_file": False,
+            "console_log_level": "ERROR",
+            # Shortcuts
             "shortcuts": {
                 "new-local-tab": "<Control>t",
                 "close-tab": "<Control>w",
@@ -140,6 +161,8 @@ class DefaultSettings:
                 "split-horizontal": "<Control><Shift>o",
                 "split-vertical": "<Control><Shift>e",
                 "close-pane": "<Control><Shift>w",
+                "next-tab": "<Control>Page_Down",  # NOVO
+                "previous-tab": "<Control>Page_Up",  # NOVO
             },
         }
 
@@ -408,7 +431,6 @@ try:
 except Exception as e:
     print(f"WARNING: Configuration initialization failed: {e}")
 
-# CORREÇÃO: Restaurar o bloco de exportação completo para compatibilidade
 APP_ID = AppConstants.APP_ID
 APP_TITLE = AppConstants.APP_TITLE
 APP_VERSION = AppConstants.APP_VERSION
@@ -418,14 +440,15 @@ COPYRIGHT = AppConstants.COPYRIGHT
 WEBSITE = AppConstants.WEBSITE
 ISSUE_URL = AppConstants.ISSUE_URL
 
-# Initialize legacy paths
 try:
     _paths = get_config_paths()
     CONFIG_DIR = str(_paths.CONFIG_DIR)
     SESSIONS_FILE = str(_paths.SESSIONS_FILE)
     SETTINGS_FILE = str(_paths.SETTINGS_FILE)
+    STATE_FILE = str(_paths.STATE_FILE)
 except Exception:
     CONFIG_DIR = os.path.expanduser("~/.config/ashyterm")
     SESSIONS_FILE = os.path.join(CONFIG_DIR, "sessions.json")
     SETTINGS_FILE = os.path.join(CONFIG_DIR, "settings.json")
+    STATE_FILE = os.path.join(CONFIG_DIR, "session_state.json")
     os.makedirs(CONFIG_DIR, exist_ok=True)

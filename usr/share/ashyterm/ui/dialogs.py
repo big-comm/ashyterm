@@ -7,7 +7,7 @@ import gi
 
 gi.require_version("Gtk", "4.0")
 gi.require_version("Adw", "1")
-from gi.repository import Adw, Gdk, Gio, GLib, GObject, Gtk
+from gi.repository import Adw, Gdk, Gio, GLib, GObject, Gtk, Vte
 
 from ..helpers import accelerator_to_label
 from ..sessions.models import SessionFolder, SessionItem
@@ -883,6 +883,67 @@ class FolderEditDialog(BaseDialog):
         return SessionFolder.from_dict(updated_data)
 
 
+class _PalettePreview(Gtk.CheckButton):
+    """A custom widget to display a color scheme preview."""
+
+    def __init__(self, scheme_data, **kwargs):
+        super().__init__(**kwargs)
+        self.set_can_focus(False)
+        self.add_css_class("card")
+        self.add_css_class("palette-preview")
+
+        main_vbox = Gtk.Box(
+            orientation=Gtk.Orientation.VERTICAL,
+            spacing=8,
+            margin_top=12,
+            margin_bottom=12,
+            margin_start=12,
+            margin_end=12,
+        )
+        self.set_child(main_vbox)
+
+        label = Gtk.Label(
+            label=f"The quick brown fox\njumps over the lazy dog",
+            justify=Gtk.Justification.LEFT,
+            xalign=0,
+        )
+        main_vbox.append(label)
+
+        color_box = Gtk.Box(
+            orientation=Gtk.Orientation.HORIZONTAL,
+            spacing=4,
+            halign=Gtk.Align.START,
+            margin_top=4,
+        )
+        main_vbox.append(color_box)
+
+        for i in range(8):
+            color_widget = Gtk.Box()
+            color_widget.set_size_request(16, 16)
+            color_widget.add_css_class(f"color-swatch-{i}")
+            color_box.append(color_widget)
+
+        self.provider = Gtk.CssProvider()
+        style_context = self.get_style_context()
+        style_context.add_provider(self.provider, Gtk.STYLE_PROVIDER_PRIORITY_USER)
+        self._update_colors(scheme_data)
+
+    def _update_colors(self, scheme_data):
+        fg = scheme_data["foreground"]
+        bg = scheme_data["background"]
+        palette = scheme_data["palette"]
+        css = f"""
+        .palette-preview.card {{
+            background-color: {bg};
+            color: {fg};
+        }}
+        """
+        for i in range(8):
+            if i < len(palette):
+                css += f".color-swatch-{i} {{ background-color: {palette[i]}; border-radius: 3px; }}"
+        self.provider.load_from_data(css.encode("utf-8"))
+
+
 class PreferencesDialog(Adw.PreferencesWindow):
     """Enhanced preferences dialog with comprehensive settings management."""
 
@@ -906,34 +967,83 @@ class PreferencesDialog(Adw.PreferencesWindow):
         self.logger = get_logger("ashyterm.ui.dialogs.preferences")
         self.settings_manager = settings_manager
         self.shortcut_rows: Dict[str, Adw.ActionRow] = {}
-        self._setup_general_page()
+        self._setup_appearance_page()
+        self._setup_behavior_page()
         self._setup_shortcuts_page()
         self._setup_advanced_page()
         self.logger.info("Preferences dialog initialized")
 
-    def _setup_general_page(self) -> None:
+    def _setup_appearance_page(self) -> None:
         page = Adw.PreferencesPage(
-            title=_("General"), icon_name="preferences-system-symbolic"
+            title=_("Appearance"), icon_name="preferences-desktop-display-symbolic"
         )
         self.add(page)
 
-        appearance_group = Adw.PreferencesGroup(
-            title=_("Appearance"),
-            description=_("Customize terminal appearance and typography"),
-        )
-        page.add(appearance_group)
+        palette_group = Adw.PreferencesGroup(title=_("Palette"))
+        page.add(palette_group)
 
-        color_scheme_row = Adw.ComboRow(
-            title=_("Color Scheme"), subtitle=_("Select terminal color scheme")
-        )
+        flowbox = Gtk.FlowBox()
+        flowbox.set_valign(Gtk.Align.START)
+        flowbox.set_max_children_per_line(3)
+        flowbox.set_min_children_per_line(2)
+        flowbox.set_selection_mode(Gtk.SelectionMode.NONE)
+        flowbox.set_homogeneous(True)
+
         schemes = ColorSchemes.get_schemes()
-        scheme_names = [
-            schemes[name]["name"] for name in ColorSchemeMap.get_schemes_list()
-        ]
-        color_scheme_row.set_model(Gtk.StringList.new(scheme_names))
-        color_scheme_row.set_selected(self.settings_manager.get("color_scheme", 0))
-        color_scheme_row.connect("notify::selected", self._on_color_scheme_changed)
-        appearance_group.add(color_scheme_row)
+        scheme_order = ColorSchemeMap.get_schemes_list()
+        current_selection_index = self.settings_manager.get("color_scheme", 0)
+
+        first_button = None
+        for i, scheme_key in enumerate(scheme_order):
+            scheme_data = schemes[scheme_key]
+            preview = _PalettePreview(scheme_data=scheme_data)
+            if first_button is None:
+                first_button = preview
+            else:
+                preview.set_group(first_button)
+
+            if i == current_selection_index:
+                preview.set_active(True)
+
+            preview.connect("toggled", self._on_palette_selected, i)
+            flowbox.insert(preview, -1)
+
+        palette_row = Adw.PreferencesRow()
+        palette_row.set_child(flowbox)
+        palette_group.add(palette_row)
+
+        font_group = Adw.PreferencesGroup(
+            title=_("Typography"),
+            description=_("Configure fonts and spacing"),
+        )
+        page.add(font_group)
+
+        font_row = Adw.ActionRow(
+            title=_("Terminal Font"),
+            subtitle=_("Select font family and size for terminal text"),
+        )
+        font_button = Gtk.FontButton()
+        font_button.set_font(self.settings_manager.get("font", "Monospace 10"))
+        font_button.connect("font-set", self._on_font_changed)
+        font_row.add_suffix(font_button)
+        font_row.set_activatable_widget(font_button)
+        font_group.add(font_row)
+
+        line_spacing_row = Adw.ActionRow(
+            title=_("Line Spacing"),
+            subtitle=_("Adjust the vertical space between lines"),
+        )
+        spacing_box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=6)
+        self.spacing_spin = Gtk.SpinButton.new_with_range(0.8, 2.0, 0.05)
+        self.spacing_spin.set_value(self.settings_manager.get("line_spacing", 1.0))
+        self.spacing_spin.connect("value-changed", self._on_line_spacing_changed)
+        spacing_box.append(self.spacing_spin)
+        line_spacing_row.add_suffix(spacing_box)
+        line_spacing_row.set_activatable_widget(self.spacing_spin)
+        font_group.add(line_spacing_row)
+
+        misc_group = Adw.PreferencesGroup(title=_("Miscellaneous"))
+        page.add(misc_group)
 
         transparency_row = Adw.ActionRow(
             title=_("Background Transparency"),
@@ -949,40 +1059,162 @@ class PreferencesDialog(Adw.PreferencesWindow):
         self.transparency_scale.connect("value-changed", self._on_transparency_changed)
         transparency_row.add_suffix(self.transparency_scale)
         transparency_row.set_activatable_widget(self.transparency_scale)
-        appearance_group.add(transparency_row)
+        misc_group.add(transparency_row)
 
-        font_row = Adw.ActionRow(
-            title=_("Terminal Font"),
-            subtitle=_("Select font family and size for terminal text"),
+        bold_bright_row = Adw.SwitchRow(
+            title=_("Use Bright Colors for Bold Text"),
+            subtitle=_("Render bold text with the brighter version of the base color"),
         )
-        font_button = Gtk.FontButton()
-        font_button.set_font(self.settings_manager.get("font", "Monospace 10"))
-        font_button.connect("font-set", self._on_font_changed)
-        font_row.add_suffix(font_button)
-        font_row.set_activatable_widget(font_button)
-        appearance_group.add(font_row)
+        bold_bright_row.set_active(self.settings_manager.get("bold_is_bright", True))
+        bold_bright_row.connect(
+            "notify::active",
+            lambda r, _: self._on_setting_changed("bold_is_bright", r.get_active()),
+        )
+        misc_group.add(bold_bright_row)
 
-        ui_group = Adw.PreferencesGroup(
-            title=_("Interface Behavior"),
-            description=_("Configure application interface behavior"),
+    def _setup_behavior_page(self) -> None:
+        """Sets up the Terminal preferences page."""
+        page = Adw.PreferencesPage(
+            title=_("Behavior"), icon_name="preferences-system-symbolic"
         )
-        page.add(ui_group)
+        self.add(page)
 
-        instance_behavior_row = Adw.ComboRow(
-            title=_("When opening a new instance"),
-            subtitle=_("Choose whether to open a new tab or a new window"),
+        startup_group = Adw.PreferencesGroup(title=_("Startup"))
+        page.add(startup_group)
+
+        restore_tabs_row = Adw.SwitchRow(
+            title=_("Restore tabs on restart"),
+            subtitle=_("Reopen tabs and panels from the previous session"),
         )
-        instance_behavior_model = Gtk.StringList.new([
-            _("Open in a new tab"),
-            _("Open in a new window"),
-        ])
-        instance_behavior_row.set_model(instance_behavior_model)
-        current_behavior = self.settings_manager.get("new_instance_behavior", "new_tab")
-        instance_behavior_row.set_selected(1 if current_behavior == "new_window" else 0)
-        instance_behavior_row.connect(
-            "notify::selected", self._on_instance_behavior_changed
+        restore_tabs_row.set_active(
+            self.settings_manager.get("restore_tabs_on_restart", True)
         )
-        ui_group.add(instance_behavior_row)
+        restore_tabs_row.connect(
+            "notify::active",
+            lambda r, _: self._on_setting_changed(
+                "restore_tabs_on_restart", r.get_active()
+            ),
+        )
+        startup_group.add(restore_tabs_row)
+
+        shell_group = Adw.PreferencesGroup(
+            title=_("Shell"),
+            description=_("Configure shell integration and behavior"),
+        )
+        page.add(shell_group)
+
+        login_shell_row = Adw.SwitchRow(
+            title=_("Run Command as a Login Shell"),
+            subtitle=_("Sources /etc/profile and ~/.profile on startup"),
+        )
+        login_shell_row.set_active(self.settings_manager.get("use_login_shell", False))
+        login_shell_row.connect(
+            "notify::active",
+            lambda r, _: self._on_setting_changed("use_login_shell", r.get_active()),
+        )
+        shell_group.add(login_shell_row)
+
+        scrolling_group = Adw.PreferencesGroup(
+            title=_("Scrolling"),
+        )
+        page.add(scrolling_group)
+
+        scrollback_row = Adw.ActionRow(
+            title=_("Scrollback Lines"),
+            subtitle=_("Number of lines to keep in history (0 for unlimited)"),
+        )
+        scrollback_spin = Gtk.SpinButton.new_with_range(0, 1000000, 1000)
+        scrollback_spin.set_value(self.settings_manager.get("scrollback_lines", 10000))
+        scrollback_spin.connect("value-changed", self._on_scrollback_changed)
+        scrollback_row.add_suffix(scrollback_spin)
+        scrollback_row.set_activatable_widget(scrollback_spin)
+        scrolling_group.add(scrollback_row)
+
+        cursor_group = Adw.PreferencesGroup(title=_("Cursor"))
+        page.add(cursor_group)
+
+        cursor_shape_row = Adw.ComboRow(
+            title=_("Cursor Shape"),
+            subtitle=_("Select the shape of the terminal cursor"),
+        )
+        cursor_shape_row.set_model(
+            Gtk.StringList.new([_("Block"), _("I-Beam"), _("Underline")])
+        )
+        cursor_shape_row.set_selected(self.settings_manager.get("cursor_shape", 0))
+        cursor_shape_row.connect("notify::selected", self._on_cursor_shape_changed)
+        cursor_group.add(cursor_shape_row)
+
+        cursor_blink_row = Adw.ComboRow(
+            title=_("Cursor Blinking"), subtitle=_("Control cursor blinking behavior")
+        )
+        cursor_blink_row.set_model(
+            Gtk.StringList.new([_("Follow System"), _("On"), _("Off")])
+        )
+        cursor_blink_row.set_selected(self.settings_manager.get("cursor_blink", 0))
+        cursor_blink_row.connect("notify::selected", self._on_cursor_blink_changed)
+        cursor_group.add(cursor_blink_row)
+
+        bell_group = Adw.PreferencesGroup(title=_("Bell"))
+        page.add(bell_group)
+
+        bell_row = Adw.SwitchRow(
+            title=_("Audible Bell"),
+            subtitle=_("Emit a sound for the terminal bell character"),
+        )
+        bell_row.set_active(self.settings_manager.get("bell_sound", False))
+        bell_row.connect(
+            "notify::active",
+            lambda r, _: self._on_setting_changed("bell_sound", r.get_active()),
+        )
+        bell_group.add(bell_row)
+
+        compatibility_group = Adw.PreferencesGroup(
+            title=_("Compatibility"),
+            description=_("Settings for compatibility with older systems and tools"),
+        )
+        page.add(compatibility_group)
+
+        backspace_row = Adw.ComboRow(
+            title=_("Backspace Key"), subtitle=_("Sequence to send for Backspace key")
+        )
+        backspace_row.set_model(
+            Gtk.StringList.new([
+                _("Automatic"),
+                _("ASCII BACKSPACE (^H)"),
+                _("ASCII DELETE"),
+                _("Escape Sequence"),
+            ])
+        )
+        backspace_row.set_selected(self.settings_manager.get("backspace_binding", 0))
+        backspace_row.connect("notify::selected", self._on_backspace_binding_changed)
+        compatibility_group.add(backspace_row)
+
+        delete_row = Adw.ComboRow(
+            title=_("Delete Key"), subtitle=_("Sequence to send for Delete key")
+        )
+        delete_row.set_model(
+            Gtk.StringList.new([
+                _("Automatic"),
+                _("ASCII DELETE"),
+                _("Escape Sequence"),
+            ])
+        )
+        delete_row.set_selected(self.settings_manager.get("delete_binding", 0))
+        delete_row.connect("notify::selected", self._on_delete_binding_changed)
+        compatibility_group.add(delete_row)
+
+        ambiguous_width_row = Adw.ComboRow(
+            title=_("Ambiguous-width Characters"),
+            subtitle=_("Render ambiguous characters as narrow or wide"),
+        )
+        ambiguous_width_row.set_model(Gtk.StringList.new([_("Narrow"), _("Wide")]))
+        ambiguous_width_row.set_selected(
+            self.settings_manager.get("cjk_ambiguous_width", 1) - 1
+        )
+        ambiguous_width_row.connect(
+            "notify::selected", self._on_ambiguous_width_changed
+        )
+        compatibility_group.add(ambiguous_width_row)
 
     def _setup_shortcuts_page(self) -> None:
         shortcuts_page = Adw.PreferencesPage(
@@ -1039,6 +1271,57 @@ class PreferencesDialog(Adw.PreferencesWindow):
             title=_("Advanced"), icon_name="preferences-other-symbolic"
         )
         self.add(advanced_page)
+
+        features_group = Adw.PreferencesGroup(
+            title=_("Advanced Features"),
+            description=_("Enable or disable advanced terminal features"),
+        )
+        advanced_page.add(features_group)
+
+        bidi_row = Adw.SwitchRow(
+            title=_("Bidirectional Text Support"),
+            subtitle=_(
+                "Enable for languages like Arabic and Hebrew (may affect performance)"
+            ),
+        )
+        bidi_row.set_active(self.settings_manager.get("bidi_enabled", False))
+        bidi_row.connect(
+            "notify::active",
+            lambda r, _: self._on_setting_changed("bidi_enabled", r.get_active()),
+        )
+        features_group.add(bidi_row)
+
+        sixel_row = Adw.SwitchRow(
+            title=_("SIXEL Graphics Support"),
+            subtitle=_("Allow the terminal to display SIXEL images (experimental)"),
+        )
+        sixel_row.set_active(self.settings_manager.get("sixel_enabled", True))
+        sixel_row.connect(
+            "notify::active",
+            lambda r, _: self._on_setting_changed("sixel_enabled", r.get_active()),
+        )
+        features_group.add(sixel_row)
+
+        accessibility_group = Adw.PreferencesGroup(
+            title=_("Accessibility"),
+            description=_(
+                "Settings for screen readers and other assistive technologies"
+            ),
+        )
+        advanced_page.add(accessibility_group)
+
+        a11y_row = Adw.SwitchRow(
+            title=_("Allow Screen Readers"),
+            subtitle=_("Permit tools like Orca to read terminal content"),
+        )
+        a11y_row.set_active(self.settings_manager.get("accessibility_enabled", True))
+        a11y_row.connect(
+            "notify::active",
+            lambda r, _: self._on_setting_changed(
+                "accessibility_enabled", r.get_active()
+            ),
+        )
+        accessibility_group.add(a11y_row)
 
         backup_group = Adw.PreferencesGroup(
             title=_("Backup & Recovery"),
@@ -1111,8 +1394,11 @@ class PreferencesDialog(Adw.PreferencesWindow):
             level_str = selected_item.get_string()
             self._on_setting_changed("console_log_level", level_str)
 
-    def _on_color_scheme_changed(self, combo_row, _param) -> None:
-        index = combo_row.get_selected()
+    def _on_palette_selected(self, button, index):
+        if button.get_active():
+            self._on_color_scheme_changed(None, index)
+
+    def _on_color_scheme_changed(self, combo_row, index) -> None:
         self.settings_manager.set("color_scheme", index)
         self.emit("color-scheme-changed", index)
 
@@ -1133,6 +1419,39 @@ class PreferencesDialog(Adw.PreferencesWindow):
     def _on_instance_behavior_changed(self, combo_row, _param) -> None:
         value = "new_window" if combo_row.get_selected() == 1 else "new_tab"
         self._on_setting_changed("new_instance_behavior", value)
+
+    def _on_scrollback_changed(self, spin_button) -> None:
+        value = int(spin_button.get_value())
+        self._on_setting_changed("scrollback_lines", value)
+
+    def _on_cursor_shape_changed(self, combo_row, _param) -> None:
+        index = combo_row.get_selected()
+        self._on_setting_changed("cursor_shape", index)
+
+    def _on_cursor_blink_changed(self, combo_row, _param) -> None:
+        index = combo_row.get_selected()
+        self._on_setting_changed("cursor_blink", index)
+
+    def _on_text_blink_mode_changed(self, combo_row, _param) -> None:
+        index = combo_row.get_selected()
+        self._on_setting_changed("text_blink_mode", index)
+
+    def _on_line_spacing_changed(self, spin_button) -> None:
+        value = spin_button.get_value()
+        self._on_setting_changed("line_spacing", value)
+
+    def _on_backspace_binding_changed(self, combo_row, _param) -> None:
+        index = combo_row.get_selected()
+        self._on_setting_changed("backspace_binding", index)
+
+    def _on_delete_binding_changed(self, combo_row, _param) -> None:
+        index = combo_row.get_selected()
+        self._on_setting_changed("delete_binding", index)
+
+    def _on_ambiguous_width_changed(self, combo_row, _param) -> None:
+        # VTE usa 1 para Narrow e 2 para Wide, o combo usa 0 e 1.
+        value = combo_row.get_selected() + 1
+        self._on_setting_changed("cjk_ambiguous_width", value)
 
     def _on_shortcut_edit_clicked(
         self, button, shortcut_key: str, row: Adw.ActionRow

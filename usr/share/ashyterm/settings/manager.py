@@ -120,7 +120,6 @@ class SettingsValidator:
             "scroll_on_output",
             "scroll_on_keystroke",
             "mouse_autohide",
-            "cursor_blink",
             "bell_sound",
             "restore_sessions",
             "auto_save_sessions",
@@ -569,12 +568,72 @@ class SettingsManager:
         terminal.set_scroll_on_output(self.get("scroll_on_output", True))
         terminal.set_scroll_on_keystroke(self.get("scroll_on_keystroke", True))
         terminal.set_mouse_autohide(self.get("mouse_autohide", True))
-        terminal.set_cursor_blink_mode(
-            Vte.CursorBlinkMode.ON
-            if self.get("cursor_blink", True)
-            else Vte.CursorBlinkMode.OFF
-        )
         terminal.set_audible_bell(self.get("bell_sound", False))
+
+        # VTE Features
+        terminal.set_scrollback_lines(self.get("scrollback_lines", 10000))
+        cursor_shape_map = [
+            Vte.CursorShape.BLOCK,
+            Vte.CursorShape.IBEAM,
+            Vte.CursorShape.UNDERLINE,
+        ]
+        shape_index = self.get("cursor_shape", 0)
+        terminal.set_cursor_shape(
+            cursor_shape_map[shape_index]
+            if 0 <= shape_index < len(cursor_shape_map)
+            else Vte.CursorShape.BLOCK
+        )
+        terminal.set_enable_bidi(self.get("bidi_enabled", False))
+        terminal.set_enable_sixel(self.get("sixel_enabled", True))
+
+        # Fase 1
+        text_blink_map = [Vte.TextBlinkMode.FOCUSED, Vte.TextBlinkMode.UNFOCUSED]
+        blink_index = self.get("text_blink_mode", 0)
+        terminal.set_text_blink_mode(
+            text_blink_map[blink_index]
+            if 0 <= blink_index < len(text_blink_map)
+            else Vte.TextBlinkMode.FOCUSED
+        )
+        cursor_blink_map = [
+            Vte.CursorBlinkMode.SYSTEM,
+            Vte.CursorBlinkMode.ON,
+            Vte.CursorBlinkMode.OFF,
+        ]
+        cursor_blink_index = self.get("cursor_blink", 0)
+        terminal.set_cursor_blink_mode(
+            cursor_blink_map[cursor_blink_index]
+            if 0 <= cursor_blink_index < len(cursor_blink_map)
+            else Vte.CursorBlinkMode.SYSTEM
+        )
+        terminal.set_enable_a11y(self.get("accessibility_enabled", True))
+
+        # Fase 2
+        terminal.set_cell_height_scale(self.get("line_spacing", 1.0))
+        terminal.set_bold_is_bright(self.get("bold_is_bright", True))
+        backspace_map = [
+            Vte.EraseBinding.AUTO,
+            Vte.EraseBinding.ASCII_BACKSPACE,
+            Vte.EraseBinding.ASCII_DELETE,
+            Vte.EraseBinding.DELETE_SEQUENCE,
+        ]
+        backspace_index = self.get("backspace_binding", 0)
+        terminal.set_backspace_binding(
+            backspace_map[backspace_index]
+            if 0 <= backspace_index < len(backspace_map)
+            else Vte.EraseBinding.AUTO
+        )
+        delete_map = [
+            Vte.EraseBinding.AUTO,
+            Vte.EraseBinding.ASCII_DELETE,
+            Vte.EraseBinding.DELETE_SEQUENCE,
+        ]
+        delete_index = self.get("delete_binding", 0)
+        terminal.set_delete_binding(
+            delete_map[delete_index]
+            if 0 <= delete_index < len(delete_map)
+            else Vte.EraseBinding.AUTO
+        )
+        terminal.set_cjk_ambiguous_width(self.get("cjk_ambiguous_width", 1))
 
     def get_shortcut(self, action_name: str) -> str:
         return self.get(f"shortcuts.{action_name}", "")

@@ -1,5 +1,6 @@
 # ashyterm/window.py
 
+import json
 import os
 from typing import List, Optional, Union
 
@@ -8,7 +9,7 @@ import gi
 gi.require_version("Gtk", "4.0")
 gi.require_version("Adw", "1")
 gi.require_version("Vte", "3.91")
-from gi.repository import Adw, Gdk, Gio, GLib, Gtk
+from gi.repository import Adw, Gdk, Gio, GLib, Gtk, Vte
 
 from .filemanager.manager import FileManager
 from .sessions.models import SessionFolder, SessionItem
@@ -19,7 +20,7 @@ from .sessions.storage import (
     load_sessions_to_store,
 )
 from .sessions.tree import SessionTreeView
-from .settings.config import APP_TITLE
+from .settings.config import APP_TITLE, STATE_FILE
 from .settings.manager import SettingsManager
 from .terminal.manager import TerminalManager
 from .terminal.tabs import TabManager
@@ -193,6 +194,9 @@ class CommTerminalWindow(Adw.ApplicationWindow):
         .custom-tab-button { padding-left: 12px; padding-right: 0px; border-radius: 10px; padding-top: 2px; padding-bottom: 2px; }
         .custom-tab-button.active { background: color-mix(in srgb, currentColor 12%, transparent); }
         .custom-tab-button:hover { background: color-mix(in srgb, currentColor 7%, transparent); }
+        .palette-preview.card:checked {
+            box-shadow: inset 0 0 0 2px @accent_bg_color;
+        }
         """
         provider = Gtk.CssProvider()
         provider.load_from_data(css.encode("utf-8"))
@@ -201,26 +205,28 @@ class CommTerminalWindow(Adw.ApplicationWindow):
         )
 
     def _create_initial_tab_safe(self) -> bool:
-        """Safely create initial tab with proper error handling."""
+        """Safely create initial tab, trying to restore session first."""
         try:
-            if self.tab_manager.get_tab_count() == 0:
-                if self.initial_ssh_target:
-                    user_host = self.initial_ssh_target.split("@")
-                    user = user_host[0] if len(user_host) > 1 else os.getlogin()
-                    host = user_host[-1]
-                    session = SessionItem(
-                        name=self.initial_ssh_target,
-                        session_type="ssh",
-                        user=user,
-                        host=host,
-                    )
-                    self.tab_manager.create_ssh_tab(session)
-                else:
-                    self.tab_manager.create_initial_tab_if_empty(
-                        working_directory=self.initial_working_directory,
-                        execute_command=self.initial_execute_command,
-                        close_after_execute=self.close_after_execute,
-                    )
+            # Tenta restaurar a sessão. Se não for possível ou estiver desativado, cria uma aba padrão.
+            if not self._restore_session_state():
+                if self.tab_manager.get_tab_count() == 0:
+                    if self.initial_ssh_target:
+                        user_host = self.initial_ssh_target.split("@")
+                        user = user_host[0] if len(user_host) > 1 else os.getlogin()
+                        host = user_host[-1]
+                        session = SessionItem(
+                            name=self.initial_ssh_target,
+                            session_type="ssh",
+                            user=user,
+                            host=host,
+                        )
+                        self.tab_manager.create_ssh_tab(session)
+                    else:
+                        self.tab_manager.create_initial_tab_if_empty(
+                            working_directory=self.initial_working_directory,
+                            execute_command=self.initial_execute_command,
+                            close_after_execute=self.close_after_execute,
+                        )
         except Exception as e:
             self.logger.error(f"Failed to create initial tab: {e}")
             self._show_error_dialog(
@@ -474,7 +480,22 @@ class CommTerminalWindow(Adw.ApplicationWindow):
 
     def _on_setting_changed(self, key: str, old_value, new_value):
         """Handle changes from the settings manager."""
-        if key in ["font", "color_scheme", "transparency"]:
+        if key in [
+            "font",
+            "color_scheme",
+            "transparency",
+            "line_spacing",
+            "bold_is_bright",
+            "cursor_shape",
+            "cursor_blink",
+            "text_blink_mode",
+            "bidi_enabled",
+            "sixel_enabled",
+            "accessibility_enabled",
+            "backspace_binding",
+            "delete_binding",
+            "cjk_ambiguous_width",
+        ]:
             self.terminal_manager.apply_settings_to_all_terminals()
             if self.font_sizer_widget and key == "font":
                 self.font_sizer_widget.update_display()
@@ -650,6 +671,9 @@ class CommTerminalWindow(Adw.ApplicationWindow):
         self.logger.info("Window close request received")
         if self._force_closing:
             return Gdk.EVENT_PROPAGATE
+
+        self._save_session_state()
+
         if self.terminal_manager.has_active_ssh_sessions():
             self._show_window_ssh_close_confirmation()
             return Gdk.EVENT_STOP
@@ -758,28 +782,24 @@ class CommTerminalWindow(Adw.ApplicationWindow):
         self._perform_cleanup()
         super().destroy()
 
-    def create_ssh_tab(self, ssh_target: str) -> bool:
-        session = SessionItem(name=ssh_target, session_type="ssh", host=ssh_target)
-        self.tab_manager.create_ssh_tab(session)
-        return True
+    def create_ssh_tab(self, session: SessionItem) -> Optional[Vte.Terminal]:
+        return self.tab_manager.create_ssh_tab(session)
 
     def create_execute_tab(
         self,
         command: str,
         working_directory: Optional[str] = None,
         close_after_execute: bool = False,
-    ) -> bool:
-        self.tab_manager.create_local_tab(
+    ) -> Optional[Vte.Terminal]:
+        return self.tab_manager.create_local_tab(
             title=command,
             working_directory=working_directory,
             execute_command=command,
             close_after_execute=close_after_execute,
         )
-        return True
 
-    def create_local_tab(self, working_directory: str = None) -> bool:
-        self.tab_manager.create_local_tab(working_directory=working_directory)
-        return True
+    def create_local_tab(self, working_directory: str = None) -> Optional[Vte.Terminal]:
+        return self.tab_manager.create_local_tab(working_directory=working_directory)
 
     def _on_detach_tab_requested(self, page_to_detach: Adw.ViewStackPage):
         """Orchestrates detaching a tab into a new window."""
@@ -841,3 +861,208 @@ class CommTerminalWindow(Adw.ApplicationWindow):
         """Prepares a newly created window to receive a detached tab by closing its initial empty tab."""
         if self.tab_manager.get_tab_count() > 0:
             self.tab_manager.close_active_tab()
+
+    def _save_session_state(self):
+        if not self.settings_manager.get("restore_tabs_on_restart", True):
+            if os.path.exists(STATE_FILE):
+                try:
+                    os.remove(STATE_FILE)
+                except OSError as e:
+                    self.logger.error(f"Failed to remove state file: {e}")
+            return
+
+        state = {"tabs": []}
+        for page in self.tab_manager.pages.values():
+            tab_content = page.get_child()
+            if tab_content:
+                tab_structure = self._serialize_widget_tree(tab_content)
+                if tab_structure:
+                    state["tabs"].append(tab_structure)
+
+        try:
+            with open(STATE_FILE, "w") as f:
+                json.dump(state, f, indent=2)
+            self.logger.info("Session state saved successfully.")
+        except Exception as e:
+            self.logger.error(f"Failed to save session state: {e}")
+
+    def _serialize_widget_tree(self, widget):
+        if isinstance(widget, Gtk.Paned):
+            return {
+                "type": "paned",
+                "orientation": "horizontal"
+                if widget.get_orientation() == Gtk.Orientation.HORIZONTAL
+                else "vertical",
+                "position": widget.get_position(),
+                "child1": self._serialize_widget_tree(widget.get_start_child()),
+                "child2": self._serialize_widget_tree(widget.get_end_child()),
+            }
+
+        terminal = None
+        if isinstance(widget, Gtk.ScrolledWindow) and isinstance(
+            widget.get_child(), Vte.Terminal
+        ):
+            terminal = widget.get_child()
+        elif hasattr(widget, "terminal") and isinstance(widget.terminal, Vte.Terminal):
+            terminal = widget.terminal
+        elif isinstance(widget, Adw.Bin):
+            return self._serialize_widget_tree(widget.get_child())
+
+        if terminal:
+            terminal_id = getattr(terminal, "terminal_id", None)
+            info = self.terminal_manager.registry.get_terminal_info(terminal_id)
+            if not info:
+                return None
+
+            uri = terminal.get_current_directory_uri()
+            working_dir = None
+            if uri:
+                from urllib.parse import unquote, urlparse
+
+                parsed_uri = urlparse(uri)
+                if parsed_uri.scheme == "file":
+                    working_dir = unquote(parsed_uri.path)
+
+            session_info = info.get("identifier")
+            if isinstance(session_info, SessionItem):
+                return {
+                    "type": "terminal",
+                    "session_type": "ssh",
+                    "session_name": session_info.name,
+                    "working_dir": working_dir,
+                }
+            else:
+                return {
+                    "type": "terminal",
+                    "session_type": "local",
+                    "session_name": session_info,
+                    "working_dir": working_dir,
+                }
+        return None
+
+    def _restore_session_state(self) -> bool:
+        if not self.settings_manager.get("restore_tabs_on_restart", True):
+            return False
+
+        if not os.path.exists(STATE_FILE):
+            return False
+
+        try:
+            with open(STATE_FILE, "r") as f:
+                state = json.load(f)
+        except Exception as e:
+            self.logger.error(f"Failed to read session state file: {e}")
+            return False
+
+        if not state.get("tabs"):
+            return False
+
+        self.logger.info(f"Restoring {len(state['tabs'])} tabs from previous session.")
+        for tab_structure in state["tabs"]:
+            self._recreate_tab_from_structure(tab_structure)
+
+        try:
+            os.remove(STATE_FILE)
+        except OSError as e:
+            self.logger.warning(f"Could not remove state file after restore: {e}")
+
+        return True
+
+    def _recreate_tab_from_structure(self, structure):
+        if not structure:
+            return
+
+        terminals_to_configure = []
+        root_terminal = self._recreate_node_and_splits(
+            structure, None, terminals_to_configure
+        )
+
+        if not root_terminal:
+            self.logger.error("Failed to create root terminal for tab restoration.")
+            return
+
+        self._set_working_dirs(terminals_to_configure)
+
+    def _recreate_node_and_splits(self, node, parent_terminal, terminals_list):
+        if not node:
+            return None
+
+        if node["type"] == "terminal":
+            if parent_terminal:  # This should not happen for the root of a split
+                return parent_terminal
+
+            terminal = None
+            if node["session_type"] == "ssh":
+                found_session = next(
+                    (s for s in self.session_store if s.name == node["session_name"]),
+                    None,
+                )
+                if found_session:
+                    terminal = self.tab_manager.create_ssh_tab(found_session)
+                else:
+                    self.logger.warning(
+                        f"Could not find SSH session '{node['session_name']}' to restore."
+                    )
+                    terminal = self.tab_manager.create_local_tab(
+                        title=f"Missing: {node['session_name']}"
+                    )
+            else:
+                terminal = self.tab_manager.create_local_tab(
+                    title=node["session_name"],
+                    working_directory=node.get("working_dir"),
+                )
+
+            if terminal:
+                terminals_list.append({"terminal": terminal, "node": node})
+            return terminal
+
+        elif node["type"] == "paned":
+            anchor_terminal = self._recreate_node_and_splits(
+                node["child1"], parent_terminal, terminals_list
+            )
+            if not anchor_terminal:
+                return None
+
+            orientation = (
+                Gtk.Orientation.HORIZONTAL
+                if node["orientation"] == "horizontal"
+                else Gtk.Orientation.VERTICAL
+            )
+
+            anchor_terminal._node_to_restore_child2 = node["child2"]
+
+            if orientation == Gtk.Orientation.HORIZONTAL:
+                self.tab_manager.split_horizontal(anchor_terminal)
+            else:
+                self.tab_manager.split_vertical(anchor_terminal)
+
+            del anchor_terminal._node_to_restore_child2
+
+            page = self.tab_manager.get_page_for_terminal(anchor_terminal)
+            newly_created_terminal = self.tab_manager.get_all_terminals_in_page(page)[
+                -1
+            ]
+
+            self._recreate_node_and_splits(
+                node["child2"], newly_created_terminal, terminals_list
+            )
+
+            return anchor_terminal
+        return None
+
+    def _set_working_dirs(self, terminals_to_configure):
+        for item in terminals_to_configure:
+            terminal = item["terminal"]
+            node = item["node"]
+
+            if node["session_type"] == "ssh":
+                working_dir = node.get("working_dir")
+                if working_dir:
+                    GLib.timeout_add(1500, self._send_cd_command, terminal, working_dir)
+
+    def _send_cd_command(self, terminal, working_dir):
+        if terminal and terminal.get_realized() and working_dir:
+            command = f'cd "{working_dir}"\n'
+            terminal.feed_child(command.encode("utf-8"))
+            return False
+        return True
