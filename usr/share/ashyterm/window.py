@@ -197,6 +197,14 @@ class CommTerminalWindow(Adw.ApplicationWindow):
         .palette-preview.card:checked {
             box-shadow: inset 0 0 0 2px @accent_bg_color;
         }
+        .top-bar box {
+            margin-top: -8px;
+            margin-bottom: -8px;
+        }
+
+        .top-bar {
+            background: var(--secondary-sidebar-bg-color);
+        }
         """
         provider = Gtk.CssProvider()
         provider.load_from_data(css.encode("utf-8"))
@@ -269,6 +277,8 @@ class CommTerminalWindow(Adw.ApplicationWindow):
                 "add-session-root": self.action_handler.add_session_root,
                 "add-folder-root": self.action_handler.add_folder_root,
                 "toggle-sidebar": self.action_handler.toggle_sidebar_action,
+                # CORREÇÃO: Registrar a nova ação
+                "toggle-file-manager": self.action_handler.toggle_file_manager,
                 "preferences": self.action_handler.preferences,
                 "shortcuts": self.action_handler.shortcuts,
                 "new-window": self.action_handler.new_window,
@@ -1026,7 +1036,7 @@ class CommTerminalWindow(Adw.ApplicationWindow):
             orientation = (
                 Gtk.Orientation.HORIZONTAL
                 if node["orientation"] == "horizontal"
-                else Gtk.Orientation.VERTICAL
+                else "vertical"
             )
 
             anchor_terminal._node_to_restore_child2 = node["child2"]

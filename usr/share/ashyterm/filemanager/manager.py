@@ -238,6 +238,11 @@ class FileManager:
         self.search_entry.connect("search-changed", self._on_search_changed)
         action_bar.pack_end(self.search_entry)
 
+        # NOVO: Controlador de teclado para o campo de busca
+        search_key_controller = Gtk.EventControllerKey.new()
+        search_key_controller.connect("key-pressed", self._on_search_key_pressed)
+        self.search_entry.add_controller(search_key_controller)
+
         history_button = Gtk.Button.new_from_icon_name("folder-download-symbolic")
         history_button.set_tooltip_text(_("Transfer History"))
         history_button.connect("clicked", self._on_show_transfer_history)
@@ -462,6 +467,12 @@ class FileManager:
         right_click_gesture.connect("pressed", self._on_item_right_click)
         col_view.add_controller(right_click_gesture)
 
+        # NOVO: Controladores de teclado para a lista de arquivos
+        key_controller = Gtk.EventControllerKey.new()
+        key_controller.connect("key-pressed", self._on_column_view_key_pressed)
+        key_controller.connect("key-released", self._on_column_view_key_released)
+        col_view.add_controller(key_controller)
+
         if self._is_remote_session():
             drop_target = Gtk.DropTarget.new(Gio.File, Gdk.DragAction.COPY)
             drop_target.connect("drop", self._on_files_dropped)
@@ -552,10 +563,15 @@ class FileManager:
                 full_path = Path(self.current_path).joinpath(item.name)
                 self._open_local_file(full_path)
 
+    # ALTERADO: Gerenciamento de foco
     def set_visibility(self, visible: bool):
         self.revealer.set_reveal_child(visible)
         if visible:
             self.refresh()
+            self.column_view.grab_focus()
+        else:
+            if self.bound_terminal:
+                self.bound_terminal.grab_focus()
 
     def refresh(self, path: str = None):
         if path:
@@ -661,6 +677,75 @@ class FileManager:
         rect.x, rect.y, rect.width, rect.height = int(x), int(y), 1, 1
         popover.set_pointing_to(rect)
         popover.popup()
+
+    # --- NOVO: Handlers de Interação por Teclado ---
+
+    def _on_search_key_pressed(self, controller, keyval, keycode, state):
+        """Handle key presses on the search entry for list navigation."""
+        selection_model = self.column_view.get_model()
+        if not selection_model:
+            return Gdk.EVENT_PROPAGATE
+
+        current_pos = (
+            selection_model.get_selection().get_nth(0)
+            if selection_model.get_selection().get_size() > 0
+            else Gtk.INVALID_LIST_POSITION
+        )
+
+        if keyval in (Gdk.KEY_Up, Gdk.KEY_Down):
+            if current_pos == Gtk.INVALID_LIST_POSITION:
+                new_pos = 0
+            else:
+                delta = -1 if keyval == Gdk.KEY_Up else 1
+                new_pos = current_pos + delta
+
+            if 0 <= new_pos < self.sorted_store.get_n_items():
+                selection_model.select_item(new_pos, True)
+                self.column_view.scroll_to(
+                    new_pos, None, Gtk.ListScrollFlags.NONE, None, None
+                )
+
+            return Gdk.EVENT_STOP
+
+        elif keyval in (Gdk.KEY_Return, Gdk.KEY_KP_Enter):
+            if current_pos != Gtk.INVALID_LIST_POSITION:
+                self._on_row_activated(self.column_view, current_pos)
+            return Gdk.EVENT_STOP
+
+        return Gdk.EVENT_PROPAGATE
+
+    def _on_column_view_key_pressed(self, controller, keyval, keycode, state):
+        """Handle key presses on the column view for instant filtering."""
+        unicode_val = Gdk.keyval_to_unicode(keyval)
+        if unicode_val != 0:
+            char = chr(unicode_val)
+            if char.isprintable():
+                self.search_entry.set_text(char)
+                self.search_entry.set_position(-1)
+                self.search_entry.grab_focus()
+                return Gdk.EVENT_STOP
+
+        if keyval in (Gdk.KEY_Return, Gdk.KEY_KP_Enter):
+            selection_model = self.column_view.get_model()
+            if selection_model and selection_model.get_selection().get_size() > 0:
+                pos = selection_model.get_selection().get_nth(0)
+                self._on_row_activated(self.column_view, pos)
+                return Gdk.EVENT_STOP
+
+        return Gdk.EVENT_PROPAGATE
+
+    def _on_column_view_key_released(self, controller, keyval, keycode, state):
+        """Handle key releases on the column view for context menu."""
+        if keyval in (Gdk.KEY_Alt_L, Gdk.KEY_Alt_R):
+            selection_model = self.column_view.get_model()
+            if selection_model and selection_model.get_selection().get_size() > 0:
+                position = selection_model.get_selection().get_nth(0)
+                file_item = selection_model.get_item(position)
+                if file_item and file_item.name != "..":
+                    # Usamos 0,0 para x,y pois o popover será posicionado relativo à view
+                    self._show_context_menu(file_item, 0, 0)
+                return Gdk.EVENT_STOP
+        return Gdk.EVENT_PROPAGATE
 
     def _create_context_menu_model(self, file_item):
         menu = Gio.Menu()

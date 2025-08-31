@@ -158,11 +158,13 @@ class DefaultSettings:
                 "zoom-in": "<Control>plus",
                 "zoom-out": "<Control>minus",
                 "zoom-reset": "<Control>0",
-                "split-horizontal": "<Control><Shift>o",
-                "split-vertical": "<Control><Shift>e",
+                # CORREÇÃO: Atalhos de split e file manager
+                "split-horizontal": "<Control>parenleft",
+                "split-vertical": "<Control>parenright",
                 "close-pane": "<Control><Shift>w",
-                "next-tab": "<Control>Page_Down",  # NOVO
-                "previous-tab": "<Control>Page_Up",  # NOVO
+                "next-tab": "<Control>Page_Down",
+                "previous-tab": "<Control>Page_Up",
+                "toggle-file-manager": "<Control><Shift>E",
             },
         }
 

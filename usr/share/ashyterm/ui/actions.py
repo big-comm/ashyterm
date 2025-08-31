@@ -197,6 +197,14 @@ class WindowActions:
             not self.window.toggle_sidebar_button.get_active()
         )
 
+    # ALTERADO: Ação para alternar o gerenciador de arquivos
+    def toggle_file_manager(self, _action, _param) -> None:
+        """Toggles the visibility of the file manager via its button."""
+        if hasattr(self.window, "file_manager_button"):
+            self.window.file_manager_button.set_active(
+                not self.window.file_manager_button.get_active()
+            )
+
     def preferences(self, _action, _param) -> None:
         dialog = PreferencesDialog(self.window, self.settings_manager)
         dialog.connect(
