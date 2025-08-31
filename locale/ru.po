@@ -1554,40 +1554,25 @@ msgstr "Не удалось сохранить папку: {}"
 msgid "Folder name"
 msgstr "Имя папки"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 923
-#: NEEDS WORK
-msgid "General"
-msgstr "Общий"
-# 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1421
 #: NEEDS WORK
 msgid "Appearance"
 msgstr "Внешний вид"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1429
+# File: usr/share/ashyterm/ui/dialogs.py, line: 982
 #: NEEDS WORK
-msgid "Customize terminal appearance and typography"
-msgstr "Настроить внешний вид терминала и типографику"
+msgid "Palette"
+msgstr "Палитра"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1435
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1016
 #: NEEDS WORK
-msgid "Color Scheme"
-msgstr "Цветовая схема"
+msgid "Typography"
+msgstr "Типография"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1436
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1017
 #: NEEDS WORK
-msgid "Select terminal color scheme"
-msgstr "Выберите цветовую схему терминала"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1448
-#: NEEDS WORK
-msgid "Background Transparency"
-msgstr "Прозрачность фона"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1449
-#: NEEDS WORK
-msgid "Adjust terminal background transparency"
-msgstr "Настроить прозрачность фона терминала"
+msgid "Configure fonts and spacing"
+msgstr "Настроить шрифты и интервал между ними"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1465
 #: NEEDS WORK
@@ -1599,35 +1584,238 @@ msgstr "Шрифт терминала"
 msgid "Select font family and size for terminal text"
 msgstr "Выберите семейство шрифтов и размер для текста терминала"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1545
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1033
 #: NEEDS WORK
-msgid "Interface Behavior"
-msgstr "Поведение интерфейса"
+msgid "Line Spacing"
+msgstr "Интервал между строками"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1546
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1034
 #: NEEDS WORK
-msgid "Configure application interface behavior"
-msgstr "Настроить поведение интерфейса приложения"
+msgid "Adjust the vertical space between lines"
+msgstr "Настройте вертикальное пространство между строками"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1698
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1045
 #: NEEDS WORK
-msgid "When opening a new instance"
-msgstr "При открытии нового экземпляра"
+msgid "Miscellaneous"
+msgstr "Разное"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1699
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1448
 #: NEEDS WORK
-msgid "Choose whether to open a new tab or a new window"
-msgstr "Выберите, открывать ли новую вкладку или новое окно"
+msgid "Background Transparency"
+msgstr "Прозрачность фона"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1702
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1449
 #: NEEDS WORK
-msgid "Open in a new tab"
-msgstr "Открыть в новой вкладке"
+msgid "Adjust terminal background transparency"
+msgstr "Настроить прозрачность фона терминала"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1703
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1065
 #: NEEDS WORK
-msgid "Open in a new window"
-msgstr "Открыть в новом окне"
+msgid "Use Bright Colors for Bold Text"
+msgstr "Используйте яркие цвета для жирного текста"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1066
+#: NEEDS WORK
+msgid "Render bold text with the brighter version of the base color"
+msgstr "Отобразить жирный текст с более яркой версией основного цвета"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1078
+#: NEEDS WORK
+msgid "Behavior"
+msgstr "Поведение"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1082
+#: NEEDS WORK
+msgid "Startup"
+msgstr "Запуск"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1086
+#: NEEDS WORK
+msgid "Restore tabs on restart"
+msgstr "Восстановить вкладки при перезапуске"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1087
+#: NEEDS WORK
+msgid "Reopen tabs and panels from the previous session"
+msgstr "Повторно открыть вкладки и панели из предыдущей сессии"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1101
+#: NEEDS WORK
+msgid "Shell"
+msgstr "Оболочка"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1102
+#: NEEDS WORK
+msgid "Configure shell integration and behavior"
+msgstr "Настроить интеграцию с оболочкой и поведение"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1107
+#: NEEDS WORK
+msgid "Run Command as a Login Shell"
+msgstr "Запустить команду как оболочку входа"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1108
+#: NEEDS WORK
+msgid "Sources /etc/profile and ~/.profile on startup"
+msgstr "Источники /etc/profile и ~/.profile при запуске"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1118
+#: NEEDS WORK
+msgid "Scrolling"
+msgstr "Прокрутка"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1123
+#: NEEDS WORK
+msgid "Scrollback Lines"
+msgstr "Линии прокрутки"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1124
+#: NEEDS WORK
+msgid "Number of lines to keep in history (0 for unlimited)"
+msgstr "Количество строк для сохранения в истории (0 для неограниченного)"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1133
+#: NEEDS WORK
+msgid "Cursor"
+msgstr "Курсор"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1137
+#: NEEDS WORK
+msgid "Cursor Shape"
+msgstr "Форма курсора"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1138
+#: NEEDS WORK
+msgid "Select the shape of the terminal cursor"
+msgstr "Выберите форму курсора терминала"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1141
+#: NEEDS WORK
+msgid "Block"
+msgstr "Блок"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1141
+#: NEEDS WORK
+msgid "I-Beam"
+msgstr "I-Луч"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1141
+#: NEEDS WORK
+msgid "Underline"
+msgstr "Подчеркнуть"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1148
+#: NEEDS WORK
+msgid "Cursor Blinking"
+msgstr "Мигающий курсор"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1148
+#: NEEDS WORK
+msgid "Control cursor blinking behavior"
+msgstr "Управление поведением мигания курсора"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1151
+#: NEEDS WORK
+msgid "Follow System"
+msgstr "Следовать системе"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1151
+#: NEEDS WORK
+msgid "On"
+msgstr "Включено"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1151
+#: NEEDS WORK
+msgid "Off"
+msgstr "Выкл."
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1157
+#: NEEDS WORK
+msgid "Bell"
+msgstr "Звонок"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1161
+#: NEEDS WORK
+msgid "Audible Bell"
+msgstr "Слышимый сигнал"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1162
+#: NEEDS WORK
+msgid "Emit a sound for the terminal bell character"
+msgstr "Издать звук для символа звонка терминала"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1172
+#: NEEDS WORK
+msgid "Compatibility"
+msgstr "Совместимость"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1173
+#: NEEDS WORK
+msgid "Settings for compatibility with older systems and tools"
+msgstr "Настройки для совместимости со старыми системами и инструментами"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1178
+#: NEEDS WORK
+msgid "Backspace Key"
+msgstr "Клавиша Backspace"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1178
+#: NEEDS WORK
+msgid "Sequence to send for Backspace key"
+msgstr "Последовательность для отправки клавиши Backspace"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1182
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1197
+#: NEEDS WORK
+msgid "Automatic"
+msgstr "Автоматический"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1183
+#: NEEDS WORK
+msgid "ASCII BACKSPACE (^H)"
+msgstr "ASCII BACKSPACE (^H)"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1184
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1198
+#: NEEDS WORK
+msgid "ASCII DELETE"
+msgstr "ASCII УДАЛИТЬ"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1185
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1199
+#: NEEDS WORK
+msgid "Escape Sequence"
+msgstr "Эскейп-последовательность"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1193
+#: NEEDS WORK
+msgid "Delete Key"
+msgstr "Клавиша удаления"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1193
+#: NEEDS WORK
+msgid "Sequence to send for Delete key"
+msgstr "Последовательность для отправки клавиши Delete"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1207
+#: NEEDS WORK
+msgid "Ambiguous-width Characters"
+msgstr "Неоднозначные ширины символов"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1208
+#: NEEDS WORK
+msgid "Render ambiguous characters as narrow or wide"
+msgstr "Отображать неоднозначные символы как узкие или широкие"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1210
+#: NEEDS WORK
+msgid "Narrow"
+msgstr "Узкий"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1210
+#: NEEDS WORK
+msgid "Wide"
+msgstr "Широкий"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1575
 #: NEEDS WORK
@@ -1683,6 +1871,56 @@ msgstr "Редактировать"
 #: NEEDS WORK
 msgid "Advanced"
 msgstr "Расширенный"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1276
+#: NEEDS WORK
+msgid "Advanced Features"
+msgstr "Расширенные функции"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1277
+#: NEEDS WORK
+msgid "Enable or disable advanced terminal features"
+msgstr "Включить или отключить расширенные функции терминала"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1282
+#: NEEDS WORK
+msgid "Bidirectional Text Support"
+msgstr "Поддержка двунаправленного текста"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1284
+#: NEEDS WORK
+msgid "Enable for languages like Arabic and Hebrew (may affect performance)"
+msgstr "Включить для языков, таких как арабский и иврит (может повлиять на производительность)"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1295
+#: NEEDS WORK
+msgid "SIXEL Graphics Support"
+msgstr "Поддержка графики SIXEL"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1296
+#: NEEDS WORK
+msgid "Allow the terminal to display SIXEL images (experimental)"
+msgstr "Разрешить терминалу отображать изображения SIXEL (экспериментально)"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1306
+#: NEEDS WORK
+msgid "Accessibility"
+msgstr "Доступность"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1308
+#: NEEDS WORK
+msgid "Settings for screen readers and other assistive technologies"
+msgstr "Настройки для экранных читалок и других вспомогательных технологий"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1314
+#: NEEDS WORK
+msgid "Allow Screen Readers"
+msgstr "Разрешить экранные считыватели"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1315
+#: NEEDS WORK
+msgid "Permit tools like Orca to read terminal content"
+msgstr "Разрешите таким инструментам, как Orca, читать содержимое терминала"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1051
 #: NEEDS WORK

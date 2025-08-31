@@ -1561,40 +1561,25 @@ msgstr "Mistók að vista möppu: {}"
 msgid "Folder name"
 msgstr "Möppunafn"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 923
-#: NEEDS WORK
-msgid "General"
-msgstr "Almennt"
-# 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1421
 #: NEEDS WORK
 msgid "Appearance"
 msgstr "Útlit"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1429
+# File: usr/share/ashyterm/ui/dialogs.py, line: 982
 #: NEEDS WORK
-msgid "Customize terminal appearance and typography"
-msgstr "Sérsni útlit og leturfræði terminala"
+msgid "Palette"
+msgstr "Litaská."
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1435
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1016
 #: NEEDS WORK
-msgid "Color Scheme"
-msgstr "Litaskipulag"
+msgid "Typography"
+msgstr "Leturgerð"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1436
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1017
 #: NEEDS WORK
-msgid "Select terminal color scheme"
-msgstr "Veldu litaskema fyrir terminalinn"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1448
-#: NEEDS WORK
-msgid "Background Transparency"
-msgstr "Bakgrunnsgegndransparens"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1449
-#: NEEDS WORK
-msgid "Adjust terminal background transparency"
-msgstr "Aðlaga gegnsæi bakgrunns terminala"
+msgid "Configure fonts and spacing"
+msgstr "Stillir letur og bilun."
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1465
 #: NEEDS WORK
@@ -1606,35 +1591,238 @@ msgstr "Terminal letur"
 msgid "Select font family and size for terminal text"
 msgstr "Veldu leturgerð og stærð fyrir terminal texta"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1545
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1033
 #: NEEDS WORK
-msgid "Interface Behavior"
-msgstr "Viðmót hegðun"
+msgid "Line Spacing"
+msgstr "Línufjarlægð"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1546
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1034
 #: NEEDS WORK
-msgid "Configure application interface behavior"
-msgstr "Stillir hegðun forritaviðmóts"
+msgid "Adjust the vertical space between lines"
+msgstr "Aðlaga lóðrétta rýmið milli lína"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 979
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1045
 #: NEEDS WORK
-msgid "When opening a new instance"
-msgstr "Þegar opnað er nýtt tilvik"
+msgid "Miscellaneous"
+msgstr "Ýmislegt"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 980
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1448
 #: NEEDS WORK
-msgid "Choose whether to open a new tab or a new window"
-msgstr "Veldu hvort opna eigi nýjan flipa eða nýjan glugga"
+msgid "Background Transparency"
+msgstr "Bakgrunnsgegndransparens"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 983
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1449
 #: NEEDS WORK
-msgid "Open in a new tab"
-msgstr "Opna í nýjum flipa"
+msgid "Adjust terminal background transparency"
+msgstr "Aðlaga gegnsæi bakgrunns terminala"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 984
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1065
 #: NEEDS WORK
-msgid "Open in a new window"
-msgstr "Opna í nýju glugga"
+msgid "Use Bright Colors for Bold Text"
+msgstr "Notaðu bjarta liti fyrir feitletraðan texta"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1066
+#: NEEDS WORK
+msgid "Render bold text with the brighter version of the base color"
+msgstr "Sýna feitletraðan texta með bjartari útgáfu af grunnlitnum"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1078
+#: NEEDS WORK
+msgid "Behavior"
+msgstr "Hegðun"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1082
+#: NEEDS WORK
+msgid "Startup"
+msgstr "Upphaf"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1086
+#: NEEDS WORK
+msgid "Restore tabs on restart"
+msgstr "Endurheimta flipa við endurræsingu"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1087
+#: NEEDS WORK
+msgid "Reopen tabs and panels from the previous session"
+msgstr "Enduropna flipa og glugga frá fyrri lotu"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1101
+#: NEEDS WORK
+msgid "Shell"
+msgstr "Skelkur"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1102
+#: NEEDS WORK
+msgid "Configure shell integration and behavior"
+msgstr "Stillirðu skelarsamþættingu og hegðun"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1107
+#: NEEDS WORK
+msgid "Run Command as a Login Shell"
+msgstr "Keyra skipun sem innskráningarskál."
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1108
+#: NEEDS WORK
+msgid "Sources /etc/profile and ~/.profile on startup"
+msgstr "Heimildir /etc/profile og ~/.profile við ræsingu"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1118
+#: NEEDS WORK
+msgid "Scrolling"
+msgstr "Rúllun"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1123
+#: NEEDS WORK
+msgid "Scrollback Lines"
+msgstr "Skráningarlínur"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1124
+#: NEEDS WORK
+msgid "Number of lines to keep in history (0 for unlimited)"
+msgstr "Fjöldi lína til að halda í sögu (0 fyrir ótakmarkað)"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1133
+#: NEEDS WORK
+msgid "Cursor"
+msgstr "Músíkur"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1137
+#: NEEDS WORK
+msgid "Cursor Shape"
+msgstr "Múska lögun"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1138
+#: NEEDS WORK
+msgid "Select the shape of the terminal cursor"
+msgstr "Veldu lögun terminal músar."
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1141
+#: NEEDS WORK
+msgid "Block"
+msgstr "Blokkur"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1141
+#: NEEDS WORK
+msgid "I-Beam"
+msgstr "I-geisli"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1141
+#: NEEDS WORK
+msgid "Underline"
+msgstr "Undirstrika"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1148
+#: NEEDS WORK
+msgid "Cursor Blinking"
+msgstr "Múska Blikkandi"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1148
+#: NEEDS WORK
+msgid "Control cursor blinking behavior"
+msgstr "Stýra blikkun músarferils"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1151
+#: NEEDS WORK
+msgid "Follow System"
+msgstr "Fylgdu kerfinu"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1151
+#: NEEDS WORK
+msgid "On"
+msgstr "Áfram"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1151
+#: NEEDS WORK
+msgid "Off"
+msgstr "Slökkt"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1157
+#: NEEDS WORK
+msgid "Bell"
+msgstr "Bjalla"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1161
+#: NEEDS WORK
+msgid "Audible Bell"
+msgstr "Hljóðmerki"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1162
+#: NEEDS WORK
+msgid "Emit a sound for the terminal bell character"
+msgstr "Spila hljóð fyrir terminal bjöllu táknið"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1172
+#: NEEDS WORK
+msgid "Compatibility"
+msgstr "Samruni"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1173
+#: NEEDS WORK
+msgid "Settings for compatibility with older systems and tools"
+msgstr "Stillingar fyrir samhæfi við eldri kerfi og verkfæri"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1178
+#: NEEDS WORK
+msgid "Backspace Key"
+msgstr "Baksteytahnappur"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1178
+#: NEEDS WORK
+msgid "Sequence to send for Backspace key"
+msgstr "Röð til að senda fyrir Bakstafslykill"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1182
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1197
+#: NEEDS WORK
+msgid "Automatic"
+msgstr "Sjálfvirkt"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1183
+#: NEEDS WORK
+msgid "ASCII BACKSPACE (^H)"
+msgstr "ASCII BAKRÚN (^H)"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1184
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1198
+#: NEEDS WORK
+msgid "ASCII DELETE"
+msgstr "ASCII Eyða"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1185
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1199
+#: NEEDS WORK
+msgid "Escape Sequence"
+msgstr "Flóttasyrpa"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1193
+#: NEEDS WORK
+msgid "Delete Key"
+msgstr "Eyða takki"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1193
+#: NEEDS WORK
+msgid "Sequence to send for Delete key"
+msgstr "Röð til að senda fyrir Eyða takka"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1207
+#: NEEDS WORK
+msgid "Ambiguous-width Characters"
+msgstr "Ósýnilegar breiddarstafir"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1208
+#: NEEDS WORK
+msgid "Render ambiguous characters as narrow or wide"
+msgstr "Sýna óljós tákn sem mjó eða breið"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1210
+#: NEEDS WORK
+msgid "Narrow"
+msgstr "Narrow"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1210
+#: NEEDS WORK
+msgid "Wide"
+msgstr "Breiður"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1575
 #: NEEDS WORK
@@ -1690,6 +1878,56 @@ msgstr "Breyta"
 #: NEEDS WORK
 msgid "Advanced"
 msgstr "Fyrirlestrar"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1276
+#: NEEDS WORK
+msgid "Advanced Features"
+msgstr "Aðgerðir fyrir háþróaða notendur"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1277
+#: NEEDS WORK
+msgid "Enable or disable advanced terminal features"
+msgstr "Virkja eða slökkva á háþróuðum terminal eiginleikum"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1282
+#: NEEDS WORK
+msgid "Bidirectional Text Support"
+msgstr "Stuðningur við tvíhliða texta"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1284
+#: NEEDS WORK
+msgid "Enable for languages like Arabic and Hebrew (may affect performance)"
+msgstr "Virkja fyrir tungumál eins og arabíska og hebreska (gæti haft áhrif á frammistöðu)"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1295
+#: NEEDS WORK
+msgid "SIXEL Graphics Support"
+msgstr "SIXEL Grafík Stuðningur"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1296
+#: NEEDS WORK
+msgid "Allow the terminal to display SIXEL images (experimental)"
+msgstr "Leyfðu terminalinum að sýna SIXEL myndir (tilraunastarfsemi)"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1306
+#: NEEDS WORK
+msgid "Accessibility"
+msgstr "Aðgengi"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1308
+#: NEEDS WORK
+msgid "Settings for screen readers and other assistive technologies"
+msgstr "Stillingar fyrir skjálesara og aðrar aðstoðartækni"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1314
+#: NEEDS WORK
+msgid "Allow Screen Readers"
+msgstr "Leyfa skjálesara"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1315
+#: NEEDS WORK
+msgid "Permit tools like Orca to read terminal content"
+msgstr "Leyfðu verkfærum eins og Orca að lesa efni terminala"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1051
 #: NEEDS WORK

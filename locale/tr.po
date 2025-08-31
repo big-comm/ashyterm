@@ -1556,40 +1556,25 @@ msgstr "Klasörü kaydetme başarısız oldu: {}"
 msgid "Folder name"
 msgstr "Klasör adı"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 923
-#: NEEDS WORK
-msgid "General"
-msgstr "Genel"
-# 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1421
 #: NEEDS WORK
 msgid "Appearance"
 msgstr "Görünüm"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1429
+# File: usr/share/ashyterm/ui/dialogs.py, line: 982
 #: NEEDS WORK
-msgid "Customize terminal appearance and typography"
-msgstr "Terminal görünümünü ve tipografisini özelleştir"
+msgid "Palette"
+msgstr "Palet"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1435
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1016
 #: NEEDS WORK
-msgid "Color Scheme"
-msgstr "Renk Şeması"
+msgid "Typography"
+msgstr "Tipografi"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1436
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1017
 #: NEEDS WORK
-msgid "Select terminal color scheme"
-msgstr "Terminal renk şemasını seçin"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1448
-#: NEEDS WORK
-msgid "Background Transparency"
-msgstr "Arka Plan Şeffaflığı"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1449
-#: NEEDS WORK
-msgid "Adjust terminal background transparency"
-msgstr "Terminal arka plan saydamlığını ayarla"
+msgid "Configure fonts and spacing"
+msgstr "Yazı tiplerini ve aralıkları yapılandırın"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1465
 #: NEEDS WORK
@@ -1601,35 +1586,238 @@ msgstr "Terminal Yazı Tipi"
 msgid "Select font family and size for terminal text"
 msgstr "Terminal metin için yazı tipi ailesini ve boyutunu seçin"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1545
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1033
 #: NEEDS WORK
-msgid "Interface Behavior"
-msgstr "Arayüz Davranışı"
+msgid "Line Spacing"
+msgstr "Satır Aralığı"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1546
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1034
 #: NEEDS WORK
-msgid "Configure application interface behavior"
-msgstr "Uygulama arayüzü davranışını yapılandırın"
+msgid "Adjust the vertical space between lines"
+msgstr "Satırların arasındaki dikey boşluğu ayarlayın"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1698
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1045
 #: NEEDS WORK
-msgid "When opening a new instance"
-msgstr "Yeni bir örnek açıldığında"
+msgid "Miscellaneous"
+msgstr "Çeşitli"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1699
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1448
 #: NEEDS WORK
-msgid "Choose whether to open a new tab or a new window"
-msgstr "Yeni bir sekme mi yoksa yeni bir pencere mi açılacağını seçin"
+msgid "Background Transparency"
+msgstr "Arka Plan Şeffaflığı"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1702
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1449
 #: NEEDS WORK
-msgid "Open in a new tab"
-msgstr "Yeni sekmede aç"
+msgid "Adjust terminal background transparency"
+msgstr "Terminal arka plan saydamlığını ayarla"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1703
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1065
 #: NEEDS WORK
-msgid "Open in a new window"
-msgstr "Yeni bir pencerede aç"
+msgid "Use Bright Colors for Bold Text"
+msgstr "Cesur Metin için Parlak Renkler Kullanın"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1066
+#: NEEDS WORK
+msgid "Render bold text with the brighter version of the base color"
+msgstr "Temel rengin daha parlak versiyonu ile kalın metin oluştur."
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1078
+#: NEEDS WORK
+msgid "Behavior"
+msgstr "Davranış"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1082
+#: NEEDS WORK
+msgid "Startup"
+msgstr "Başlangıç"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1086
+#: NEEDS WORK
+msgid "Restore tabs on restart"
+msgstr "Başlatıldığında sekmeleri geri yükle"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1087
+#: NEEDS WORK
+msgid "Reopen tabs and panels from the previous session"
+msgstr "Önceki oturumdan sekmeleri ve panelleri yeniden açın"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1101
+#: NEEDS WORK
+msgid "Shell"
+msgstr "Kabuk"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1102
+#: NEEDS WORK
+msgid "Configure shell integration and behavior"
+msgstr "Kabuk entegrasyonunu ve davranışını yapılandırın"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1107
+#: NEEDS WORK
+msgid "Run Command as a Login Shell"
+msgstr "Giriş Kabuk Olarak Komut Çalıştır"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1108
+#: NEEDS WORK
+msgid "Sources /etc/profile and ~/.profile on startup"
+msgstr "Başlangıçta /etc/profile ve ~/.profile kaynakları"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1118
+#: NEEDS WORK
+msgid "Scrolling"
+msgstr "Kaydırma"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1123
+#: NEEDS WORK
+msgid "Scrollback Lines"
+msgstr "Kaydırma Satırları"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1124
+#: NEEDS WORK
+msgid "Number of lines to keep in history (0 for unlimited)"
+msgstr "Geçmişte saklanacak satır sayısı (sınırsız için 0)"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1133
+#: NEEDS WORK
+msgid "Cursor"
+msgstr "İmleç"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1137
+#: NEEDS WORK
+msgid "Cursor Shape"
+msgstr "İmleç Şekli"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1138
+#: NEEDS WORK
+msgid "Select the shape of the terminal cursor"
+msgstr "Terminal imlecinin şeklini seçin"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1141
+#: NEEDS WORK
+msgid "Block"
+msgstr "Blok"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1141
+#: NEEDS WORK
+msgid "I-Beam"
+msgstr "I-Kiriş"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1141
+#: NEEDS WORK
+msgid "Underline"
+msgstr "Altı çizili"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1148
+#: NEEDS WORK
+msgid "Cursor Blinking"
+msgstr "İmleç Yanıp Sönme"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1148
+#: NEEDS WORK
+msgid "Control cursor blinking behavior"
+msgstr "İmleç yanıp sönme davranışını kontrol et"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1151
+#: NEEDS WORK
+msgid "Follow System"
+msgstr "Sistemi Takip Et"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1151
+#: NEEDS WORK
+msgid "On"
+msgstr "Açık"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1151
+#: NEEDS WORK
+msgid "Off"
+msgstr "Kapalı"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1157
+#: NEEDS WORK
+msgid "Bell"
+msgstr "Çan"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1161
+#: NEEDS WORK
+msgid "Audible Bell"
+msgstr "Sesli Zil"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1162
+#: NEEDS WORK
+msgid "Emit a sound for the terminal bell character"
+msgstr "Terminal zil sesi çıkar."
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1172
+#: NEEDS WORK
+msgid "Compatibility"
+msgstr "Uyumluluk"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1173
+#: NEEDS WORK
+msgid "Settings for compatibility with older systems and tools"
+msgstr "Eski sistemler ve araçlarla uyumluluk ayarları"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1178
+#: NEEDS WORK
+msgid "Backspace Key"
+msgstr "Geri Alma Tuşu"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1178
+#: NEEDS WORK
+msgid "Sequence to send for Backspace key"
+msgstr "Geri alma tuşu için gönderilecek dizilim"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1182
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1197
+#: NEEDS WORK
+msgid "Automatic"
+msgstr "Otomatik"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1183
+#: NEEDS WORK
+msgid "ASCII BACKSPACE (^H)"
+msgstr "ASCII GERI ALMA (^H)"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1184
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1198
+#: NEEDS WORK
+msgid "ASCII DELETE"
+msgstr "ASCII SİLME"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1185
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1199
+#: NEEDS WORK
+msgid "Escape Sequence"
+msgstr "Kaçış Dizisi"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1193
+#: NEEDS WORK
+msgid "Delete Key"
+msgstr "Silme Tuşu"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1193
+#: NEEDS WORK
+msgid "Sequence to send for Delete key"
+msgstr "Silmek için gönderilecek dizilim"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1207
+#: NEEDS WORK
+msgid "Ambiguous-width Characters"
+msgstr "Belirsiz genişlikteki Karakterler"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1208
+#: NEEDS WORK
+msgid "Render ambiguous characters as narrow or wide"
+msgstr "Belirsiz karakterleri dar veya geniş olarak renderle."
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1210
+#: NEEDS WORK
+msgid "Narrow"
+msgstr "Daraltılmış"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1210
+#: NEEDS WORK
+msgid "Wide"
+msgstr "Geniş"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1575
 #: NEEDS WORK
@@ -1685,6 +1873,56 @@ msgstr "Düzenle"
 #: NEEDS WORK
 msgid "Advanced"
 msgstr "Gelişmiş"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1276
+#: NEEDS WORK
+msgid "Advanced Features"
+msgstr "Gelişmiş Özellikler"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1277
+#: NEEDS WORK
+msgid "Enable or disable advanced terminal features"
+msgstr "Gelişmiş terminal özelliklerini etkinleştir veya devre dışı bırak."
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1282
+#: NEEDS WORK
+msgid "Bidirectional Text Support"
+msgstr "İki Yönlü Metin Desteği"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1284
+#: NEEDS WORK
+msgid "Enable for languages like Arabic and Hebrew (may affect performance)"
+msgstr "Arapça ve İbranice gibi diller için etkinleştir (performansı etkileyebilir)"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1295
+#: NEEDS WORK
+msgid "SIXEL Graphics Support"
+msgstr "SIXEL Grafik Desteği"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1296
+#: NEEDS WORK
+msgid "Allow the terminal to display SIXEL images (experimental)"
+msgstr "Terminalin SIXEL görüntülerini görüntülemesine izin ver (deneysel)"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1306
+#: NEEDS WORK
+msgid "Accessibility"
+msgstr "Erişilebilirlik"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1308
+#: NEEDS WORK
+msgid "Settings for screen readers and other assistive technologies"
+msgstr "Ekran okuyucular ve diğer yardımcı teknolojiler için ayarlar"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1314
+#: NEEDS WORK
+msgid "Allow Screen Readers"
+msgstr "Ekran Okuyucularına İzin Ver"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1315
+#: NEEDS WORK
+msgid "Permit tools like Orca to read terminal content"
+msgstr "Orca gibi araçların terminal içeriğini okumasına izin verin"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1051
 #: NEEDS WORK

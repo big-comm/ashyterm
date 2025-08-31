@@ -1558,40 +1558,25 @@ msgstr "Kausta salvestamine ebaõnnestus: {}"
 msgid "Folder name"
 msgstr "Kausta nimi"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 923
-#: NEEDS WORK
-msgid "General"
-msgstr "Üldine"
-# 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1421
 #: NEEDS WORK
 msgid "Appearance"
 msgstr "Välimus"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1429
+# File: usr/share/ashyterm/ui/dialogs.py, line: 982
 #: NEEDS WORK
-msgid "Customize terminal appearance and typography"
-msgstr "Kohanda terminali välimust ja tüpograafiat"
+msgid "Palette"
+msgstr "Värvipalett"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1435
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1016
 #: NEEDS WORK
-msgid "Color Scheme"
-msgstr "Värviskeem"
+msgid "Typography"
+msgstr "Tüpograafia"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1436
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1017
 #: NEEDS WORK
-msgid "Select terminal color scheme"
-msgstr "Vali terminali värviskeem"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1448
-#: NEEDS WORK
-msgid "Background Transparency"
-msgstr "Taustaläbipaistvus"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1449
-#: NEEDS WORK
-msgid "Adjust terminal background transparency"
-msgstr "Reguleeri terminali tausta läbipaistvust"
+msgid "Configure fonts and spacing"
+msgstr "Konfigureeri fondid ja vahemaa"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1465
 #: NEEDS WORK
@@ -1603,35 +1588,238 @@ msgstr "Terminali font"
 msgid "Select font family and size for terminal text"
 msgstr "Vali terminali teksti jaoks fondi perekond ja suurus"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1545
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1033
 #: NEEDS WORK
-msgid "Interface Behavior"
-msgstr "Liidese käitumine"
+msgid "Line Spacing"
+msgstr "Reavahe kaugus"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1546
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1034
 #: NEEDS WORK
-msgid "Configure application interface behavior"
-msgstr "Konfigureeri rakenduse liidese käitumine"
+msgid "Adjust the vertical space between lines"
+msgstr "Reguleeri vertikaalset ruumi ridade vahel"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1698
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1045
 #: NEEDS WORK
-msgid "When opening a new instance"
-msgstr "Uue instantsi avamisel"
+msgid "Miscellaneous"
+msgstr "Mitmesuguseid"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1699
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1448
 #: NEEDS WORK
-msgid "Choose whether to open a new tab or a new window"
-msgstr "Valige, kas avada uus vahekaart või uus aken"
+msgid "Background Transparency"
+msgstr "Taustaläbipaistvus"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1702
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1449
 #: NEEDS WORK
-msgid "Open in a new tab"
-msgstr "Ava uues vahekaardis"
+msgid "Adjust terminal background transparency"
+msgstr "Reguleeri terminali tausta läbipaistvust"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1703
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1065
 #: NEEDS WORK
-msgid "Open in a new window"
-msgstr "Ava uues aknas"
+msgid "Use Bright Colors for Bold Text"
+msgstr "Kasutage eredaid värve julgete tekstide jaoks"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1066
+#: NEEDS WORK
+msgid "Render bold text with the brighter version of the base color"
+msgstr "Renderi julge teksti põhivärvi heledama versiooniga"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1078
+#: NEEDS WORK
+msgid "Behavior"
+msgstr "Käitumine"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1082
+#: NEEDS WORK
+msgid "Startup"
+msgstr "Käivitamine"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1086
+#: NEEDS WORK
+msgid "Restore tabs on restart"
+msgstr "Taastee vahekaartide taastamine taaskäivitamisel"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1087
+#: NEEDS WORK
+msgid "Reopen tabs and panels from the previous session"
+msgstr "Avatud vahekaartide ja paneelide taastamine eelmisest seansist"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1101
+#: NEEDS WORK
+msgid "Shell"
+msgstr "Kestus"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1102
+#: NEEDS WORK
+msgid "Configure shell integration and behavior"
+msgstr "Konfigureeri shell'i integreerimine ja käitumine"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1107
+#: NEEDS WORK
+msgid "Run Command as a Login Shell"
+msgstr "Käivita käsk sisselogimise kestana"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1108
+#: NEEDS WORK
+msgid "Sources /etc/profile and ~/.profile on startup"
+msgstr "Allika /etc/profile ja ~/.profile käivitamisel"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1118
+#: NEEDS WORK
+msgid "Scrolling"
+msgstr "Kerimine"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1123
+#: NEEDS WORK
+msgid "Scrollback Lines"
+msgstr "Kerimisread"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1124
+#: NEEDS WORK
+msgid "Number of lines to keep in history (0 for unlimited)"
+msgstr "Ajalugu hoidmiseks säilitamise ridade arv (0 piiramatu jaoks)"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1133
+#: NEEDS WORK
+msgid "Cursor"
+msgstr "Kursor"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1137
+#: NEEDS WORK
+msgid "Cursor Shape"
+msgstr "Kursori kuju"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1138
+#: NEEDS WORK
+msgid "Select the shape of the terminal cursor"
+msgstr "Vali terminali kursorite kuju"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1141
+#: NEEDS WORK
+msgid "Block"
+msgstr "Blokk"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1141
+#: NEEDS WORK
+msgid "I-Beam"
+msgstr "I-säde"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1141
+#: NEEDS WORK
+msgid "Underline"
+msgstr "Allakriip."
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1148
+#: NEEDS WORK
+msgid "Cursor Blinking"
+msgstr "Kursori vilkumine"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1148
+#: NEEDS WORK
+msgid "Control cursor blinking behavior"
+msgstr "Kontrolli kursori vilkumise käitumist"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1151
+#: NEEDS WORK
+msgid "Follow System"
+msgstr "Jälgi süsteemi"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1151
+#: NEEDS WORK
+msgid "On"
+msgstr "Käesolev"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1151
+#: NEEDS WORK
+msgid "Off"
+msgstr "Väljas"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1157
+#: NEEDS WORK
+msgid "Bell"
+msgstr "Kell"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1161
+#: NEEDS WORK
+msgid "Audible Bell"
+msgstr "Kuuldav kell"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1162
+#: NEEDS WORK
+msgid "Emit a sound for the terminal bell character"
+msgstr "Käivita heli terminali kellatähe jaoks"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1172
+#: NEEDS WORK
+msgid "Compatibility"
+msgstr "Ühilduvus"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1173
+#: NEEDS WORK
+msgid "Settings for compatibility with older systems and tools"
+msgstr "Seaded vanemate süsteemide ja tööriistadega ühilduvuse jaoks"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1178
+#: NEEDS WORK
+msgid "Backspace Key"
+msgstr "Tagasi ruumi klahv"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1178
+#: NEEDS WORK
+msgid "Sequence to send for Backspace key"
+msgstr "Tagastusklahvi jaoks saadetav järjestus"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1182
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1197
+#: NEEDS WORK
+msgid "Automatic"
+msgstr "Automaatne"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1183
+#: NEEDS WORK
+msgid "ASCII BACKSPACE (^H)"
+msgstr "ASCII TAGASI KUSTUTUS (^H)"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1184
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1198
+#: NEEDS WORK
+msgid "ASCII DELETE"
+msgstr "ASCII KUSTUTA"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1185
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1199
+#: NEEDS WORK
+msgid "Escape Sequence"
+msgstr "Põgenemisjärjestus"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1193
+#: NEEDS WORK
+msgid "Delete Key"
+msgstr "Kustuta klahv"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1193
+#: NEEDS WORK
+msgid "Sequence to send for Delete key"
+msgstr "Käik, mida saata Kustuta klahvi jaoks"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1207
+#: NEEDS WORK
+msgid "Ambiguous-width Characters"
+msgstr "Ambiguus laius tähemärgid"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1208
+#: NEEDS WORK
+msgid "Render ambiguous characters as narrow or wide"
+msgstr "Render ambivalent märkeid kitsasteks või laiadeks"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1210
+#: NEEDS WORK
+msgid "Narrow"
+msgstr "Kitsas"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1210
+#: NEEDS WORK
+msgid "Wide"
+msgstr "Laius"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1575
 #: NEEDS WORK
@@ -1687,6 +1875,56 @@ msgstr "Redigeeri"
 #: NEEDS WORK
 msgid "Advanced"
 msgstr "Täpsem"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1276
+#: NEEDS WORK
+msgid "Advanced Features"
+msgstr "Täpsemad funktsioonid"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1277
+#: NEEDS WORK
+msgid "Enable or disable advanced terminal features"
+msgstr "Luba või keela täiustatud terminali funktsioonid"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1282
+#: NEEDS WORK
+msgid "Bidirectional Text Support"
+msgstr "Kaksisuunaline teksti tugi"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1284
+#: NEEDS WORK
+msgid "Enable for languages like Arabic and Hebrew (may affect performance)"
+msgstr "Luba araabia ja heebrea keelede jaoks (võib mõjutada jõudlust)"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1295
+#: NEEDS WORK
+msgid "SIXEL Graphics Support"
+msgstr "SIXEL graafika tugi"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1296
+#: NEEDS WORK
+msgid "Allow the terminal to display SIXEL images (experimental)"
+msgstr "Luba terminalil kuvada SIXEL pilte (eksperimentaalne)"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1306
+#: NEEDS WORK
+msgid "Accessibility"
+msgstr "Ligipääs"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1308
+#: NEEDS WORK
+msgid "Settings for screen readers and other assistive technologies"
+msgstr "Seaded ekraanilugejate ja teiste abitehnoloogiate jaoks"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1314
+#: NEEDS WORK
+msgid "Allow Screen Readers"
+msgstr "Luba ekraanilugejad"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1315
+#: NEEDS WORK
+msgid "Permit tools like Orca to read terminal content"
+msgstr "Luba tööriistadel nagu Orca lugeda terminali sisu"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1051
 #: NEEDS WORK

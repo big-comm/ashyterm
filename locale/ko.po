@@ -1559,40 +1559,25 @@ msgstr "폴더를 저장하지 못했습니다: {}"
 msgid "Folder name"
 msgstr "폴더 이름"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 923
-#: NEEDS WORK
-msgid "General"
-msgstr "일반"
-# 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1421
 #: NEEDS WORK
 msgid "Appearance"
 msgstr "모양"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1429
+# File: usr/share/ashyterm/ui/dialogs.py, line: 982
 #: NEEDS WORK
-msgid "Customize terminal appearance and typography"
-msgstr "터미널 모양과 타이포그래피 사용자 정의"
+msgid "Palette"
+msgstr "팔레트"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1435
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1016
 #: NEEDS WORK
-msgid "Color Scheme"
-msgstr "색 구성표"
+msgid "Typography"
+msgstr "타이포그래피"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1436
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1017
 #: NEEDS WORK
-msgid "Select terminal color scheme"
-msgstr "터미널 색상 구성표 선택"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1448
-#: NEEDS WORK
-msgid "Background Transparency"
-msgstr "배경 투명도"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1449
-#: NEEDS WORK
-msgid "Adjust terminal background transparency"
-msgstr "터미널 배경 투명도 조정"
+msgid "Configure fonts and spacing"
+msgstr "글꼴 및 간격 구성"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1465
 #: NEEDS WORK
@@ -1604,35 +1589,238 @@ msgstr "터미널 글꼴"
 msgid "Select font family and size for terminal text"
 msgstr "터미널 텍스트의 글꼴 패밀리와 크기를 선택하세요."
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1545
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1033
 #: NEEDS WORK
-msgid "Interface Behavior"
-msgstr "인터페이스 동작"
+msgid "Line Spacing"
+msgstr "줄 간격"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1546
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1034
 #: NEEDS WORK
-msgid "Configure application interface behavior"
-msgstr "애플리케이션 인터페이스 동작 구성"
+msgid "Adjust the vertical space between lines"
+msgstr "행 간의 수직 간격 조정"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1698
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1045
 #: NEEDS WORK
-msgid "When opening a new instance"
-msgstr "새 인스턴스를 열 때"
+msgid "Miscellaneous"
+msgstr "기타"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1699
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1448
 #: NEEDS WORK
-msgid "Choose whether to open a new tab or a new window"
-msgstr "새 탭 또는 새 창을 열지 선택하세요."
+msgid "Background Transparency"
+msgstr "배경 투명도"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1702
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1449
 #: NEEDS WORK
-msgid "Open in a new tab"
-msgstr "새 탭에서 열기"
+msgid "Adjust terminal background transparency"
+msgstr "터미널 배경 투명도 조정"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1703
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1065
 #: NEEDS WORK
-msgid "Open in a new window"
-msgstr "새 창에서 열기"
+msgid "Use Bright Colors for Bold Text"
+msgstr "굵은 텍스트에 밝은 색상 사용"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1066
+#: NEEDS WORK
+msgid "Render bold text with the brighter version of the base color"
+msgstr "기본 색상의 더 밝은 버전으로 굵은 텍스트 렌더링"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1078
+#: NEEDS WORK
+msgid "Behavior"
+msgstr "행동"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1082
+#: NEEDS WORK
+msgid "Startup"
+msgstr "시작 프로그램"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1086
+#: NEEDS WORK
+msgid "Restore tabs on restart"
+msgstr "재시작 시 탭 복원"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1087
+#: NEEDS WORK
+msgid "Reopen tabs and panels from the previous session"
+msgstr "이전 세션의 탭과 패널 다시 열기"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1101
+#: NEEDS WORK
+msgid "Shell"
+msgstr "쉘"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1102
+#: NEEDS WORK
+msgid "Configure shell integration and behavior"
+msgstr "셸 통합 및 동작 구성"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1107
+#: NEEDS WORK
+msgid "Run Command as a Login Shell"
+msgstr "로그인 셸로 명령 실행"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1108
+#: NEEDS WORK
+msgid "Sources /etc/profile and ~/.profile on startup"
+msgstr "시작 시 /etc/profile 및 ~/.profile 소스"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1118
+#: NEEDS WORK
+msgid "Scrolling"
+msgstr "스크롤링"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1123
+#: NEEDS WORK
+msgid "Scrollback Lines"
+msgstr "스크롤백 라인"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1124
+#: NEEDS WORK
+msgid "Number of lines to keep in history (0 for unlimited)"
+msgstr "기록에 유지할 줄 수 (무제한은 0)"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1133
+#: NEEDS WORK
+msgid "Cursor"
+msgstr "커서"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1137
+#: NEEDS WORK
+msgid "Cursor Shape"
+msgstr "커서 모양"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1138
+#: NEEDS WORK
+msgid "Select the shape of the terminal cursor"
+msgstr "터미널 커서의 모양을 선택하세요"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1141
+#: NEEDS WORK
+msgid "Block"
+msgstr "블록"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1141
+#: NEEDS WORK
+msgid "I-Beam"
+msgstr "I-빔"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1141
+#: NEEDS WORK
+msgid "Underline"
+msgstr "밑줄"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1148
+#: NEEDS WORK
+msgid "Cursor Blinking"
+msgstr "커서 깜박임"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1148
+#: NEEDS WORK
+msgid "Control cursor blinking behavior"
+msgstr "커서 깜박임 동작 제어"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1151
+#: NEEDS WORK
+msgid "Follow System"
+msgstr "시스템 따르기"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1151
+#: NEEDS WORK
+msgid "On"
+msgstr "켜짐"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1151
+#: NEEDS WORK
+msgid "Off"
+msgstr "끄기"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1157
+#: NEEDS WORK
+msgid "Bell"
+msgstr "벨"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1161
+#: NEEDS WORK
+msgid "Audible Bell"
+msgstr "소리 알림"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1162
+#: NEEDS WORK
+msgid "Emit a sound for the terminal bell character"
+msgstr "터미널 벨 문자에 대한 소리를 내십시오."
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1172
+#: NEEDS WORK
+msgid "Compatibility"
+msgstr "호환성"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1173
+#: NEEDS WORK
+msgid "Settings for compatibility with older systems and tools"
+msgstr "구형 시스템 및 도구와의 호환성 설정"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1178
+#: NEEDS WORK
+msgid "Backspace Key"
+msgstr "백스페이스 키"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1178
+#: NEEDS WORK
+msgid "Sequence to send for Backspace key"
+msgstr "백스페이스 키에 대한 전송 시퀀스"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1182
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1197
+#: NEEDS WORK
+msgid "Automatic"
+msgstr "자동"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1183
+#: NEEDS WORK
+msgid "ASCII BACKSPACE (^H)"
+msgstr "ASCII 백스페이스 (^H)"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1184
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1198
+#: NEEDS WORK
+msgid "ASCII DELETE"
+msgstr "ASCII 삭제"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1185
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1199
+#: NEEDS WORK
+msgid "Escape Sequence"
+msgstr "이스케이프 시퀀스"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1193
+#: NEEDS WORK
+msgid "Delete Key"
+msgstr "삭제 키"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1193
+#: NEEDS WORK
+msgid "Sequence to send for Delete key"
+msgstr "삭제 키를 보내기 위한 시퀀스"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1207
+#: NEEDS WORK
+msgid "Ambiguous-width Characters"
+msgstr "모호한 너비 문자"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1208
+#: NEEDS WORK
+msgid "Render ambiguous characters as narrow or wide"
+msgstr "모호한 문자를 좁거나 넓게 렌더링"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1210
+#: NEEDS WORK
+msgid "Narrow"
+msgstr "좁음"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1210
+#: NEEDS WORK
+msgid "Wide"
+msgstr "넓은"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1575
 #: NEEDS WORK
@@ -1688,6 +1876,56 @@ msgstr "편집"
 #: NEEDS WORK
 msgid "Advanced"
 msgstr "고급"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1276
+#: NEEDS WORK
+msgid "Advanced Features"
+msgstr "고급 기능"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1277
+#: NEEDS WORK
+msgid "Enable or disable advanced terminal features"
+msgstr "고급 터미널 기능을 활성화하거나 비활성화합니다."
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1282
+#: NEEDS WORK
+msgid "Bidirectional Text Support"
+msgstr "양방향 텍스트 지원"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1284
+#: NEEDS WORK
+msgid "Enable for languages like Arabic and Hebrew (may affect performance)"
+msgstr "아랍어 및 히브리어와 같은 언어에 대해 활성화(성능에 영향을 미칠 수 있음)"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1295
+#: NEEDS WORK
+msgid "SIXEL Graphics Support"
+msgstr "SIXEL 그래픽스 지원"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1296
+#: NEEDS WORK
+msgid "Allow the terminal to display SIXEL images (experimental)"
+msgstr "터미널에서 SIXEL 이미지를 표시할 수 있도록 허용합니다(실험적)."
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1306
+#: NEEDS WORK
+msgid "Accessibility"
+msgstr "접근성"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1308
+#: NEEDS WORK
+msgid "Settings for screen readers and other assistive technologies"
+msgstr "스크린 리더 및 기타 보조 기술에 대한 설정"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1314
+#: NEEDS WORK
+msgid "Allow Screen Readers"
+msgstr "스크린 리더 허용"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1315
+#: NEEDS WORK
+msgid "Permit tools like Orca to read terminal content"
+msgstr "Orca와 같은 도구가 터미널 내용을 읽을 수 있도록 허용합니다."
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1051
 #: NEEDS WORK
