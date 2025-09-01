@@ -7,7 +7,6 @@ gi.require_version("Vte", "3.91")
 import subprocess
 import tempfile
 import threading
-from datetime import datetime
 from functools import partial
 from pathlib import Path
 from typing import Optional
@@ -133,9 +132,13 @@ class FileManager:
             "notify::current-directory-uri", self._on_terminal_directory_changed
         )
 
+        # Track directory changes initiated by file manager
+        self._fm_initiated_cd = False
+
+        # Only refresh if the directory is different, don't refresh on focus changes
         terminal_dir = self._get_terminal_current_directory()
-        if terminal_dir:
-            self.refresh(terminal_dir)
+        if terminal_dir and terminal_dir != self.current_path:
+            self.refresh(terminal_dir, source="terminal")
 
         self.logger.info(
             f"File manager rebound to terminal ID: {getattr(new_terminal, 'terminal_id', 'unknown')}"
@@ -190,7 +193,10 @@ class FileManager:
 
             new_path = unquote(parsed_uri.path)
             if new_path != self.current_path:
-                self.refresh(new_path)
+                # Determine source based on whether this was initiated by file manager
+                source = "filemanager" if self._fm_initiated_cd else "terminal"
+                self._fm_initiated_cd = False  # Reset the flag
+                self.refresh(new_path, source=source)
         except Exception as e:
             self.logger.error(f"Failed to handle terminal directory change: {e}")
 
@@ -217,7 +223,7 @@ class FileManager:
         action_bar = Gtk.ActionBar()
 
         refresh_button = Gtk.Button.new_from_icon_name("view-refresh-symbolic")
-        refresh_button.connect("clicked", lambda _: self.refresh())
+        refresh_button.connect("clicked", lambda _: self.refresh(source="filemanager"))
         refresh_button.set_tooltip_text(_("Refresh"))
         action_bar.pack_start(refresh_button)
 
@@ -236,11 +242,14 @@ class FileManager:
         self.search_entry.set_placeholder_text(_("Filter..."))
         self.search_entry.set_max_width_chars(12)
         self.search_entry.connect("search-changed", self._on_search_changed)
+        self.search_entry.connect("activate", self._on_search_activate)
+        self.search_entry.connect("delete-text", self._on_search_delete_text)
         action_bar.pack_end(self.search_entry)
 
         # NOVO: Controlador de teclado para o campo de busca
         search_key_controller = Gtk.EventControllerKey.new()
         search_key_controller.connect("key-pressed", self._on_search_key_pressed)
+        search_key_controller.set_propagation_phase(Gtk.PropagationPhase.CAPTURE)
         self.search_entry.add_controller(search_key_controller)
 
         history_button = Gtk.Button.new_from_icon_name("folder-download-symbolic")
@@ -299,10 +308,11 @@ class FileManager:
     def _on_breadcrumb_button_clicked(self, button, path_to_navigate):
         if path_to_navigate != self.current_path:
             if self.bound_terminal:
+                self._fm_initiated_cd = True
                 command = f'cd "{path_to_navigate}"\n'
                 self.bound_terminal.feed_child(command.encode("utf-8"))
             else:
-                self.refresh(path_to_navigate)
+                self.refresh(path_to_navigate, source="filemanager")
 
     def _setup_filtering_and_sorting(self):
         self.combined_filter = Gtk.CustomFilter()
@@ -331,13 +341,14 @@ class FileManager:
         if file_item_b.name == "..":
             return 1
 
-        a_is_dir = file_item_a.is_directory
-        b_is_dir = file_item_b.is_directory
+        def get_type(item):
+            return 0 if item.is_directory else 1
 
-        if a_is_dir and not b_is_dir:
-            return -1
-        if not a_is_dir and b_is_dir:
-            return 1
+        a_type = get_type(file_item_a)
+        b_type = get_type(file_item_b)
+
+        if a_type != b_type:
+            return a_type - b_type
 
         if secondary_sort_func:
             return secondary_sort_func(file_item_a, file_item_b)
@@ -382,6 +393,46 @@ class FileManager:
 
     def _on_search_changed(self, search_entry):
         self.combined_filter.changed(Gtk.FilterChange.DIFFERENT)
+        # Select first item if available after filtering
+        if hasattr(self, "column_view") and self.column_view:
+            selection_model = self.column_view.get_model()
+            if selection_model and selection_model.get_n_items() > 0:
+                selection_model.select_item(0, True)
+                self.column_view.scroll_to(0, None, Gtk.ListScrollFlags.NONE, None)
+
+    def _on_search_activate(self, search_entry):
+        """Handle activation (Enter key) on the search entry to open selected item."""
+        selection_model = self.column_view.get_model()
+        if selection_model and selection_model.get_selection().get_size() > 0:
+            position = selection_model.get_selection().get_nth(0)
+            # Defer activation to allow focus events to be processed properly
+            GLib.idle_add(self._deferred_activate_row, self.column_view, position)
+
+    def _on_search_delete_text(self, search_entry, start_pos, end_pos):
+        """Handle text deletion in search entry for backspace navigation."""
+        # Check if the search entry will be empty after deletion
+        current_text = search_entry.get_text()
+        if start_pos == 0 and end_pos == len(current_text):
+            # Full text deletion - will be empty
+            GLib.idle_add(self._navigate_up_directory)
+
+    def _navigate_up_directory(self):
+        """Navigate up one directory level."""
+        if self.bound_terminal:
+            self._fm_initiated_cd = True
+            command = "cd ..\n"
+            self.bound_terminal.feed_child(command.encode("utf-8"))
+        else:
+            # For local sessions, calculate parent directory
+            parent_path = Path(self.current_path).parent
+            if str(parent_path) != self.current_path:
+                self.refresh(str(parent_path), source="filemanager")
+        return False
+
+    def _deferred_activate_row(self, col_view, position):
+        """Deferred row activation to allow focus events to be processed properly."""
+        self._on_row_activated(col_view, position)
+        return False  # Remove from idle queue
 
     def _create_column(self, title, sorter, setup_func, bind_func, expand=False):
         factory = Gtk.SignalListItemFactory()
@@ -484,14 +535,27 @@ class FileManager:
         box = Gtk.Box(spacing=6, orientation=Gtk.Orientation.HORIZONTAL)
         box.append(Gtk.Image())
         box.append(Gtk.Label(xalign=0.0))
+        link_icon = Gtk.Image()
+        link_icon.set_visible(False)
+        box.append(link_icon)
         list_item.set_child(box)
 
     def _bind_name_cell(self, factory, list_item):
         box = list_item.get_child()
-        icon, label = box.get_first_child(), box.get_last_child()
+        icon = box.get_first_child()
+        label = icon.get_next_sibling()
+        link_icon = label.get_next_sibling()
         file_item: FileItem = list_item.get_item()
         icon.set_from_icon_name(file_item.icon_name)
-        label.set_text(file_item.name)
+        display_name = file_item.name
+        if file_item.is_directory and display_name.endswith("/"):
+            display_name = display_name[:-1]
+        label.set_text(display_name)
+        if file_item.is_link:
+            link_icon.set_from_icon_name("emblem-symbolic-link-symbolic")
+            link_icon.set_visible(True)
+        else:
+            link_icon.set_visible(False)
 
     def _setup_text_cell(self, factory, list_item):
         label = Gtk.Label(xalign=0.0)
@@ -554,6 +618,7 @@ class FileManager:
             if not new_path:
                 return
             if self.bound_terminal:
+                self._fm_initiated_cd = True
                 command = f'cd "{new_path}"\n'
                 self.bound_terminal.feed_child(command.encode("utf-8"))
         else:
@@ -563,17 +628,18 @@ class FileManager:
                 full_path = Path(self.current_path).joinpath(item.name)
                 self._open_local_file(full_path)
 
-    # ALTERADO: Gerenciamento de foco
-    def set_visibility(self, visible: bool):
+    def set_visibility(self, visible: bool, source: str = "filemanager"):
         self.revealer.set_reveal_child(visible)
         if visible:
-            self.refresh()
-            self.column_view.grab_focus()
+            self.refresh(source=source)
+            # Only grab focus if the visibility change was triggered by file manager interaction
+            if source == "filemanager":
+                self.column_view.grab_focus()
         else:
             if self.bound_terminal:
                 self.bound_terminal.grab_focus()
 
-    def refresh(self, path: str = None):
+    def refresh(self, path: str = None, source: str = "filemanager"):
         if path:
             self.current_path = path
             if hasattr(self, "search_entry"):
@@ -587,46 +653,53 @@ class FileManager:
             self.search_entry.set_placeholder_text(_("Loading..."))
 
         thread = threading.Thread(
-            target=self._list_files_thread, daemon=True, name="FileListingThread"
+            target=self._list_files_thread,
+            args=(source,),
+            daemon=True,
+            name="FileListingThread",
         )
         thread.start()
 
-    def _list_files_thread(self):
+    def _list_files_thread(self, source: str = "filemanager"):
         try:
+            print(self.current_path)
             success, output = self.operations.execute_command_on_session(
-                f"ls -la --full-time '{self.current_path}'"
+                f"ls -la --file-type --full-time '{self.current_path}/'"
             )
 
             file_items = []
-            if self.current_path != "/":
-                file_items.append(
-                    FileItem("..", "drwxr-xr-x", 0, datetime.now(), "root", "root")
-                )
-
             if success:
                 lines = output.strip().split("\n")[1:]
                 for line in lines:
                     file_item = FileItem.from_ls_line(line)
                     if file_item and file_item.name not in [".", ".."]:
+                        if file_item.is_link and file_item._link_target:
+                            if not file_item._link_target.startswith("/"):
+                                file_item._link_target = f"{self.current_path.rstrip('/')}/{file_item._link_target}"
                         file_items.append(file_item)
 
             GLib.idle_add(
-                self._update_store_with_files, file_items, output if not success else ""
+                self._update_store_with_files,
+                file_items,
+                output if not success else "",
+                source,
             )
 
         except Exception as e:
             self.logger.error(f"Error in background file listing: {e}")
-            GLib.idle_add(self._update_store_with_files, [], str(e))
+            GLib.idle_add(self._update_store_with_files, [], str(e), source)
 
-    def _update_store_with_files(self, file_items, error_message):
+    def _update_store_with_files(
+        self, file_items, error_message, source: str = "filemanager"
+    ):
         if error_message:
             self.logger.error(f"Error listing files: {error_message}")
 
         self.store.splice(0, self.store.get_n_items(), file_items)
-        self._restore_search_entry()
+        self._restore_search_entry(source)
         return False
 
-    def _restore_search_entry(self):
+    def _restore_search_entry(self, source: str = "filemanager"):
         if hasattr(self, "search_entry"):
             self.search_entry.set_sensitive(True)
             self.search_entry.set_placeholder_text(_("Filter files..."))
@@ -637,6 +710,15 @@ class FileManager:
             sorter = self.sorted_store.get_sorter()
             if sorter:
                 sorter.changed(Gtk.SorterChange.DIFFERENT)
+        # Select first item if available after restoring
+        if hasattr(self, "column_view") and self.column_view:
+            selection_model = self.column_view.get_model()
+            if selection_model and selection_model.get_n_items() > 0:
+                selection_model.select_item(0, True)
+                self.column_view.scroll_to(0, None, Gtk.ListScrollFlags.NONE, None)
+                # Only grab focus if the refresh was triggered by file manager interaction
+                if source == "filemanager":
+                    self.column_view.grab_focus()
         return False
 
     def _is_remote_session(self) -> bool:
@@ -702,7 +784,7 @@ class FileManager:
             if 0 <= new_pos < self.sorted_store.get_n_items():
                 selection_model.select_item(new_pos, True)
                 self.column_view.scroll_to(
-                    new_pos, None, Gtk.ListScrollFlags.NONE, None, None
+                    new_pos, None, Gtk.ListScrollFlags.NONE, None
                 )
 
             return Gdk.EVENT_STOP
@@ -711,6 +793,14 @@ class FileManager:
             if current_pos != Gtk.INVALID_LIST_POSITION:
                 self._on_row_activated(self.column_view, current_pos)
             return Gdk.EVENT_STOP
+
+        elif keyval == Gdk.KEY_BackSpace:
+            # If search entry is empty and user presses backspace, go up one directory
+            if not self.search_entry.get_text().strip():
+                # Stop the event completely to prevent SearchEntry's default behavior
+                controller.stop_emission("key-pressed")
+                self._navigate_up_directory()
+                return Gdk.EVENT_STOP
 
         return Gdk.EVENT_PROPAGATE
 
@@ -730,6 +820,12 @@ class FileManager:
             if selection_model and selection_model.get_selection().get_size() > 0:
                 pos = selection_model.get_selection().get_nth(0)
                 self._on_row_activated(self.column_view, pos)
+                return Gdk.EVENT_STOP
+
+        elif keyval == Gdk.KEY_BackSpace:
+            # If search entry is empty, go up one directory
+            if not self.search_entry.get_text().strip():
+                self._navigate_up_directory()
                 return Gdk.EVENT_STOP
 
         return Gdk.EVENT_PROPAGATE
@@ -814,7 +910,7 @@ class FileManager:
                 self.parent_window.toast_overlay.add_toast(
                     Adw.Toast(title=_("Delete command sent to terminal"))
                 )
-                GLib.timeout_add(500, self.refresh)
+                GLib.timeout_add(500, lambda: self.refresh(source="filemanager"))
 
     def _on_chmod_action(self, _action, _param, file_item: FileItem):
         self._show_permissions_dialog(file_item)
@@ -908,7 +1004,7 @@ class FileManager:
                 self.parent_window.toast_overlay.add_toast(
                     Adw.Toast(title=_("Chmod command sent to terminal"))
                 )
-                GLib.timeout_add(500, self.refresh)
+                GLib.timeout_add(500, lambda: self.refresh(source="filemanager"))
 
     def _parse_permissions(self, perms_str: str):
         if len(perms_str) < 10:
@@ -1006,7 +1102,9 @@ class FileManager:
                         transfer_id,
                         "Uploading",
                         self._background_upload_worker,
-                        on_success_callback=lambda _, __: GLib.idle_add(self.refresh),
+                        on_success_callback=lambda _, __: GLib.idle_add(
+                            lambda: self.refresh(source="filemanager")
+                        ),
                     )
         except GLib.Error as e:
             if not e.matches(Gio.io_error_quark(), Gio.IOErrorEnum.CANCELLED):
@@ -1389,4 +1487,4 @@ class FileManager:
                     self.parent_window.toast_overlay.add_toast(
                         Adw.Toast(title=_("Rename command sent to terminal"))
                     )
-                    GLib.timeout_add(500, self.refresh)
+                    GLib.timeout_add(500, lambda: self.refresh(source="filemanager"))
