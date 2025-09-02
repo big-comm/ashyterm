@@ -52,6 +52,7 @@ class ConfigPaths:
             self.SESSIONS_FILE = self.CONFIG_DIR / "sessions.json"
             self.SETTINGS_FILE = self.CONFIG_DIR / "settings.json"
             self.STATE_FILE = self.CONFIG_DIR / "session_state.json"
+            self.LAYOUT_DIR = self.CONFIG_DIR / "layouts"
             self.CACHE_DIR = self._get_cache_directory()
             self.LOG_DIR = self.CONFIG_DIR / "logs"
             self.BACKUP_DIR = self.CONFIG_DIR / "backups"
@@ -62,6 +63,7 @@ class ConfigPaths:
                 self.LOG_DIR,
                 self.BACKUP_DIR,
                 self.SECURE_DIR,
+                self.LAYOUT_DIR,
             ]:
                 try:
                     directory.mkdir(parents=True, exist_ok=True)
@@ -93,6 +95,7 @@ class ConfigPaths:
         self.SESSIONS_FILE = self.CONFIG_DIR / "sessions.json"
         self.SETTINGS_FILE = self.CONFIG_DIR / "settings.json"
         self.STATE_FILE = self.CONFIG_DIR / "session_state.json"
+        self.LAYOUT_DIR = self.CONFIG_DIR / "layouts"
         self.CACHE_DIR = home / ".cache" / "ashyterm"
         self.LOG_DIR = self.CONFIG_DIR / "logs"
         self.BACKUP_DIR = self.CONFIG_DIR / "backups"
@@ -107,13 +110,13 @@ class DefaultSettings:
         return {
             # General Appearance
             "gtk_theme": "default",
-            "color_scheme": 2,
+            "color_scheme": 5,
             "transparency": 0,
             "font": "Monospace 12",
             "line_spacing": 1.0,
             "bold_is_bright": True,
             # Behavior
-            "sidebar_visible": True,
+            "sidebar_visible": False,
             "confirm_close": True,
             "auto_close_tab": True,
             "scroll_on_output": True,
@@ -123,9 +126,11 @@ class DefaultSettings:
             "osc7_enabled": True,
             "new_instance_behavior": "new_tab",
             "use_login_shell": False,
-            "restore_tabs_on_restart": True,
+            "session_restore_policy": "never",
             # VTE Features
             "scrollback_lines": 10000,
+            "mouse_scroll_sensitivity": 30.0,
+            "touchpad_scroll_sensitivity": 30.0,
             "cursor_shape": 0,
             "bidi_enabled": False,
             "sixel_enabled": True,
@@ -158,7 +163,6 @@ class DefaultSettings:
                 "zoom-in": "<Control>plus",
                 "zoom-out": "<Control>minus",
                 "zoom-reset": "<Control>0",
-                # CORREÇÃO: Atalhos de split e file manager
                 "split-horizontal": "<Control>parenleft",
                 "split-vertical": "<Control>parenright",
                 "close-pane": "<Control><Shift>w",
@@ -448,9 +452,12 @@ try:
     SESSIONS_FILE = str(_paths.SESSIONS_FILE)
     SETTINGS_FILE = str(_paths.SETTINGS_FILE)
     STATE_FILE = str(_paths.STATE_FILE)
+    LAYOUT_DIR = str(_paths.LAYOUT_DIR)
 except Exception:
     CONFIG_DIR = os.path.expanduser("~/.config/ashyterm")
     SESSIONS_FILE = os.path.join(CONFIG_DIR, "sessions.json")
     SETTINGS_FILE = os.path.join(CONFIG_DIR, "settings.json")
     STATE_FILE = os.path.join(CONFIG_DIR, "session_state.json")
+    LAYOUT_DIR = os.path.join(CONFIG_DIR, "layouts")
     os.makedirs(CONFIG_DIR, exist_ok=True)
+    os.makedirs(LAYOUT_DIR, exist_ok=True)

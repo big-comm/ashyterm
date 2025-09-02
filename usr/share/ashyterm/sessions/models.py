@@ -13,13 +13,39 @@ from ..utils.crypto import (
 )
 from ..utils.exceptions import SessionValidationError
 from ..utils.logger import get_logger
-
-# CORREÇÃO: Importar a função de conveniência novamente
 from ..utils.platform import normalize_path
-
-# CORREÇÃO: Importar as funções de conveniência novamente
 from ..utils.security import sanitize_folder_name, sanitize_session_name
 from ..utils.translation_utils import _
+
+
+# NOVO: Classe de modelo para representar um layout na árvore
+class LayoutItem(GObject.GObject):
+    """Data model for a saved layout item in the tree view."""
+
+    def __init__(self, name: str, folder_path: str = ""):
+        super().__init__()
+        self._name = name
+        self._folder_path = str(normalize_path(folder_path)) if folder_path else ""
+
+    @property
+    def name(self) -> str:
+        return self._name
+
+    @name.setter
+    def name(self, value: str):
+        self._name = value
+
+    @property
+    def folder_path(self) -> str:
+        return self._folder_path
+
+    @folder_path.setter
+    def folder_path(self, value: str):
+        self._folder_path = str(normalize_path(value)) if value else ""
+
+    @property
+    def children(self) -> Optional[Gio.ListStore]:
+        return None
 
 
 class SessionItem(GObject.GObject):

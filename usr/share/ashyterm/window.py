@@ -12,7 +12,7 @@ gi.require_version("Vte", "3.91")
 from gi.repository import Adw, Gdk, Gio, GLib, Gtk, Vte
 
 from .filemanager.manager import FileManager
-from .sessions.models import SessionFolder, SessionItem
+from .sessions.models import LayoutItem, SessionFolder, SessionItem
 from .sessions.operations import SessionOperations
 from .sessions.storage import (
     load_folders_to_store,
@@ -20,7 +20,7 @@ from .sessions.storage import (
     load_sessions_to_store,
 )
 from .sessions.tree import SessionTreeView
-from .settings.config import APP_TITLE, STATE_FILE
+from .settings.config import APP_TITLE, LAYOUT_DIR, STATE_FILE
 from .settings.manager import SettingsManager
 from .terminal.manager import TerminalManager
 from .terminal.tabs import TabManager
@@ -30,7 +30,7 @@ from .utils.exceptions import (
     UIError,
 )
 from .utils.logger import get_logger, log_session_event
-from .utils.security import validate_session_data
+from .utils.security import sanitize_session_name, validate_session_data
 from .utils.translation_utils import _
 
 
@@ -51,6 +51,7 @@ class CommTerminalWindow(Adw.ApplicationWindow):
         self.is_main_window = True
         self._cleanup_performed = False
         self._force_closing = False
+        self.layouts: List[LayoutItem] = []
 
         # Initial state from command line or other windows
         self.initial_working_directory = kwargs.get("initial_working_directory")
@@ -197,11 +198,6 @@ class CommTerminalWindow(Adw.ApplicationWindow):
         .palette-preview.card:checked {
             box-shadow: inset 0 0 0 2px @accent_bg_color;
         }
-        .top-bar box {
-            margin-top: -8px;
-            margin-bottom: -8px;
-        }
-
         .top-bar {
             background: var(--secondary-sidebar-bg-color);
         }
@@ -215,7 +211,6 @@ class CommTerminalWindow(Adw.ApplicationWindow):
     def _create_initial_tab_safe(self) -> bool:
         """Safely create initial tab, trying to restore session first."""
         try:
-            # Tenta restaurar a sessão. Se não for possível ou estiver desativado, cria uma aba padrão.
             if not self._restore_session_state():
                 if self.tab_manager.get_tab_count() == 0:
                     if self.initial_ssh_target:
@@ -277,16 +272,30 @@ class CommTerminalWindow(Adw.ApplicationWindow):
                 "add-session-root": self.action_handler.add_session_root,
                 "add-folder-root": self.action_handler.add_folder_root,
                 "toggle-sidebar": self.action_handler.toggle_sidebar_action,
-                # CORREÇÃO: Registrar a nova ação
                 "toggle-file-manager": self.action_handler.toggle_file_manager,
                 "preferences": self.action_handler.preferences,
                 "shortcuts": self.action_handler.shortcuts,
                 "new-window": self.action_handler.new_window,
+                "save-layout": self.action_handler.save_layout,
+                "move-layout-to-folder": self.action_handler.move_layout_to_folder,
             }
             for name, callback in actions_map.items():
                 action = Gio.SimpleAction.new(name, None)
                 action.connect("activate", callback)
                 self.add_action(action)
+
+            restore_action = Gio.SimpleAction.new(
+                "restore_layout", GLib.VariantType.new("s")
+            )
+            restore_action.connect("activate", self.action_handler.restore_layout)
+            self.add_action(restore_action)
+
+            delete_action = Gio.SimpleAction.new(
+                "delete_layout", GLib.VariantType.new("s")
+            )
+            delete_action.connect("activate", self.action_handler.delete_layout)
+            self.add_action(delete_action)
+
         except Exception as e:
             self.logger.error(f"Failed to setup actions: {e}")
             raise UIError("window", f"action setup failed: {e}")
@@ -407,6 +416,10 @@ class CommTerminalWindow(Adw.ApplicationWindow):
         add_session_button.set_tooltip_text(_("Add Session"))
         add_session_button.connect("clicked", self._on_add_session_clicked)
         toolbar.pack_start(add_session_button)
+        save_layout_button = Gtk.Button.new_from_icon_name("document-save-symbolic")
+        save_layout_button.set_tooltip_text(_("Save Current Layout"))
+        save_layout_button.connect("clicked", self._on_save_layout_clicked)
+        toolbar.pack_start(save_layout_button)
         add_folder_button = Gtk.Button.new_from_icon_name("folder-new-symbolic")
         add_folder_button.set_tooltip_text(_("Add Folder"))
         add_folder_button.connect("clicked", self._on_add_folder_clicked)
@@ -419,6 +432,7 @@ class CommTerminalWindow(Adw.ApplicationWindow):
         remove_button.set_tooltip_text(_("Remove Selected"))
         remove_button.connect("clicked", self._on_remove_selected_clicked)
         toolbar.pack_start(remove_button)
+
         toolbar_view.add_bottom_bar(toolbar)
         return toolbar_view
 
@@ -476,6 +490,7 @@ class CommTerminalWindow(Adw.ApplicationWindow):
     def _setup_callbacks(self) -> None:
         """Set up callbacks between components."""
         self.session_tree.on_session_activated = self._on_session_activated
+        self.session_tree.on_layout_activated = self.restore_saved_layout
         self.terminal_manager.on_terminal_focus_changed = (
             self._on_terminal_focus_changed
         )
@@ -517,12 +532,15 @@ class CommTerminalWindow(Adw.ApplicationWindow):
     def _load_initial_data(self) -> None:
         """Load initial sessions and folders data efficiently."""
         try:
+            self._load_layouts()
             sessions_data, folders_data = load_sessions_and_folders()
             load_sessions_to_store(self.session_store, sessions_data)
             load_folders_to_store(self.folder_store, folders_data)
             self.session_tree.refresh_tree()
             self.logger.info(
-                f"Loaded {self.session_store.get_n_items()} sessions and {self.folder_store.get_n_items()} folders"
+                f"Loaded {self.session_store.get_n_items()} sessions, "
+                f"{self.folder_store.get_n_items()} folders, "
+                f"and {len(self.layouts)} layouts"
             )
         except Exception as e:
             self.logger.error(f"Failed to load initial data: {e}")
@@ -682,12 +700,57 @@ class CommTerminalWindow(Adw.ApplicationWindow):
         if self._force_closing:
             return Gdk.EVENT_PROPAGATE
 
-        self._save_session_state()
+        policy = self.settings_manager.get("session_restore_policy", "never")
 
+        if policy == "ask":
+            self._show_save_session_dialog()
+            return Gdk.EVENT_STOP
+
+        if policy == "always":
+            self._save_session_state()
+        else:  # "never"
+            self._clear_session_state()
+
+        return self._continue_close_process()
+
+    def _show_save_session_dialog(self):
+        dialog = Adw.MessageDialog(
+            transient_for=self,
+            heading=_("Save Current Session?"),
+            body=_(
+                "Do you want to restore these tabs the next time you open Ashy Terminal?"
+            ),
+            close_response="cancel",
+        )
+        dialog.add_response("dont-save", _("Don't Save"))
+        dialog.add_response("cancel", _("Cancel"))
+        dialog.add_response("save", _("Save and Close"))
+        dialog.set_response_appearance("save", Adw.ResponseAppearance.SUGGESTED)
+        dialog.set_default_response("save")
+
+        dialog.connect("response", self._on_save_session_dialog_response)
+        dialog.present()
+
+    def _on_save_session_dialog_response(self, dialog, response_id):
+        dialog.close()
+        if response_id == "save":
+            self._save_session_state()
+            self._continue_close_process(force_close=True)
+        elif response_id == "dont-save":
+            self._clear_session_state()
+            self._continue_close_process(force_close=True)
+        # If "cancel", do nothing.
+
+    def _continue_close_process(self, force_close=False) -> bool:
         if self.terminal_manager.has_active_ssh_sessions():
             self._show_window_ssh_close_confirmation()
             return Gdk.EVENT_STOP
+
         self._perform_cleanup()
+        if force_close:
+            self._force_closing = True
+            self.close()
+            return Gdk.EVENT_STOP
         return Gdk.EVENT_PROPAGATE
 
     def _show_window_ssh_close_confirmation(self) -> None:
@@ -763,6 +826,9 @@ class CommTerminalWindow(Adw.ApplicationWindow):
 
     def _on_remove_selected_clicked(self, _button) -> None:
         self.action_handler.delete_selected_items()
+
+    def _on_save_layout_clicked(self, _button) -> None:
+        self.action_handler.save_layout(None, None)
 
     def _show_error_dialog(self, title: str, message: str) -> None:
         dialog = Adw.MessageDialog(transient_for=self, title=title, body=message)
@@ -873,14 +939,6 @@ class CommTerminalWindow(Adw.ApplicationWindow):
             self.tab_manager.close_active_tab()
 
     def _save_session_state(self):
-        if not self.settings_manager.get("restore_tabs_on_restart", True):
-            if os.path.exists(STATE_FILE):
-                try:
-                    os.remove(STATE_FILE)
-                except OSError as e:
-                    self.logger.error(f"Failed to remove state file: {e}")
-            return
-
         state = {"tabs": []}
         for page in self.tab_manager.pages.values():
             tab_content = page.get_child()
@@ -896,14 +954,32 @@ class CommTerminalWindow(Adw.ApplicationWindow):
         except Exception as e:
             self.logger.error(f"Failed to save session state: {e}")
 
+    def _clear_session_state(self):
+        """Removes the state file to prevent restoration on next startup."""
+        if os.path.exists(STATE_FILE):
+            try:
+                os.remove(STATE_FILE)
+                self.logger.info("Session state file removed.")
+            except OSError as e:
+                self.logger.error(f"Failed to remove state file: {e}")
+
     def _serialize_widget_tree(self, widget):
         if isinstance(widget, Gtk.Paned):
+            position = widget.get_position()
+            orientation = widget.get_orientation()
+            total_size = (
+                widget.get_width()
+                if orientation == Gtk.Orientation.HORIZONTAL
+                else widget.get_height()
+            )
+            position_ratio = position / total_size if total_size > 0 else 0.5
+
             return {
                 "type": "paned",
                 "orientation": "horizontal"
-                if widget.get_orientation() == Gtk.Orientation.HORIZONTAL
+                if orientation == Gtk.Orientation.HORIZONTAL
                 else "vertical",
-                "position": widget.get_position(),
+                "position_ratio": position_ratio,
                 "child1": self._serialize_widget_tree(widget.get_start_child()),
                 "child2": self._serialize_widget_tree(widget.get_end_child()),
             }
@@ -951,7 +1027,10 @@ class CommTerminalWindow(Adw.ApplicationWindow):
         return None
 
     def _restore_session_state(self) -> bool:
-        if not self.settings_manager.get("restore_tabs_on_restart", True):
+        policy = self.settings_manager.get("session_restore_policy", "never")
+
+        if policy == "never":
+            self._clear_session_state()
             return False
 
         if not os.path.exists(STATE_FILE):
@@ -969,110 +1048,205 @@ class CommTerminalWindow(Adw.ApplicationWindow):
 
         self.logger.info(f"Restoring {len(state['tabs'])} tabs from previous session.")
         for tab_structure in state["tabs"]:
-            self._recreate_tab_from_structure(tab_structure)
+            self.tab_manager.recreate_tab_from_structure(tab_structure)
+
+        self._clear_session_state()
+        return True
+
+    def save_current_layout(self):
+        """Prompts for a name and saves the current window layout."""
+        dialog = Adw.MessageDialog(
+            transient_for=self,
+            heading=_("Save Layout"),
+            body=_("Enter a name for the current layout:"),
+            close_response="cancel",
+        )
+        entry = Gtk.Entry(
+            placeholder_text=_("e.g., 'My Dev Setup'"),
+            hexpand=True,
+            activates_default=True,
+        )
+        dialog.set_extra_child(entry)
+        dialog.add_response("cancel", _("Cancel"))
+        dialog.add_response("save", _("Save"))
+        dialog.set_response_appearance("save", Adw.ResponseAppearance.SUGGESTED)
+        dialog.set_default_response("save")
+        dialog.connect("response", self._on_save_layout_dialog_response, entry)
+        dialog.present()
+
+    def _on_save_layout_dialog_response(self, dialog, response_id, entry):
+        dialog.close()
+        if response_id == "save":
+            layout_name = entry.get_text().strip()
+            if not layout_name:
+                self.toast_overlay.add_toast(
+                    Adw.Toast(title=_("Layout name cannot be empty."))
+                )
+                return
+
+            sanitized_name = sanitize_session_name(layout_name).replace(" ", "_")
+            target_file = os.path.join(LAYOUT_DIR, f"{sanitized_name}.json")
+
+            if os.path.exists(target_file):
+                self.logger.warning(f"Overwriting existing layout: {sanitized_name}")
+
+            state = {"tabs": [], "folder_path": ""}
+            for page in self.tab_manager.pages.values():
+                tab_content = page.get_child()
+                if tab_content:
+                    tab_structure = self._serialize_widget_tree(tab_content)
+                    if tab_structure:
+                        state["tabs"].append(tab_structure)
+
+            try:
+                with open(target_file, "w") as f:
+                    json.dump(state, f, indent=2)
+                self.logger.info(f"Layout '{layout_name}' saved successfully.")
+                self.toast_overlay.add_toast(Adw.Toast(title=_("Layout Saved")))
+                self._load_layouts()
+                self.refresh_tree()
+            except Exception as e:
+                self.logger.error(f"Failed to save layout '{layout_name}': {e}")
+                self._show_error_dialog(_("Error Saving Layout"), str(e))
+
+    def restore_saved_layout(self, layout_name: str):
+        """Restores a previously saved layout, replacing the current one."""
+        sanitized_name = sanitize_session_name(layout_name).replace(" ", "_")
+        layout_file = os.path.join(LAYOUT_DIR, f"{sanitized_name}.json")
+        if not os.path.exists(layout_file):
+            self.toast_overlay.add_toast(Adw.Toast(title=_("Saved layout not found.")))
+            return
+
+        dialog = Adw.MessageDialog(
+            transient_for=self,
+            heading=_("Restore Saved Layout?"),
+            body=_(
+                "This will close all current tabs and restore the '{name}' layout. Are you sure?"
+            ).format(name=layout_name),
+            close_response="cancel",
+        )
+        dialog.add_response("cancel", _("Cancel"))
+        dialog.add_response("restore", _("Restore Layout"))
+        dialog.set_response_appearance("restore", Adw.ResponseAppearance.DESTRUCTIVE)
+        dialog.set_default_response("cancel")
+        dialog.connect("response", self._on_restore_layout_dialog_response, layout_file)
+        dialog.present()
+
+    def _on_restore_layout_dialog_response(self, dialog, response_id, layout_file):
+        dialog.close()
+        if response_id == "restore":
+            self._perform_layout_restore(layout_file)
+
+    def _perform_layout_restore(self, layout_file: str):
+        """Closes all tabs and restores the layout from the file."""
+        try:
+            with open(layout_file, "r") as f:
+                state = json.load(f)
+        except Exception as e:
+            self.logger.error(f"Failed to read layout file: {layout_file}: {e}")
+            self._show_error_dialog(_("Error Restoring Layout"), str(e))
+            return
+
+        if not state.get("tabs"):
+            self.logger.warning(f"Layout file '{layout_file}' is empty or invalid.")
+            return
+
+        self._close_all_tabs()
+        GLib.idle_add(self._recreate_tabs_from_state, state)
+
+    def _recreate_tabs_from_state(self, state):
+        self.logger.info(f"Restoring {len(state['tabs'])} tabs from saved layout.")
+        for tab_structure in state["tabs"]:
+            self.tab_manager.recreate_tab_from_structure(tab_structure)
+        return False
+
+    def _close_all_tabs(self):
+        """Closes all currently open tabs."""
+        for tab_widget in self.tab_manager.tabs[:]:
+            self.tab_manager._on_tab_close_button_clicked(None, tab_widget)
+
+    def delete_saved_layout(self, layout_name: str, confirm: bool = True):
+        """Deletes a saved layout file."""
+        if confirm:
+            dialog = Adw.MessageDialog(
+                transient_for=self,
+                heading=_("Delete Layout?"),
+                body=_(
+                    "Are you sure you want to permanently delete the layout '{name}'?"
+                ).format(name=layout_name),
+                close_response="cancel",
+            )
+            dialog.add_response("cancel", _("Cancel"))
+            dialog.add_response("delete", _("Delete"))
+            dialog.set_response_appearance("delete", Adw.ResponseAppearance.DESTRUCTIVE)
+            dialog.connect(
+                "response", self._on_delete_layout_dialog_response, layout_name
+            )
+            dialog.present()
+        else:
+            self._perform_delete_layout(layout_name)
+
+    def _on_delete_layout_dialog_response(self, dialog, response_id, layout_name):
+        dialog.close()
+        if response_id == "delete":
+            self._perform_delete_layout(layout_name)
+
+    def _perform_delete_layout(self, layout_name: str):
+        try:
+            sanitized_name = sanitize_session_name(layout_name).replace(" ", "_")
+            layout_file = os.path.join(LAYOUT_DIR, f"{sanitized_name}.json")
+            os.remove(layout_file)
+            self.logger.info(f"Layout '{layout_name}' deleted.")
+            self.toast_overlay.add_toast(Adw.Toast(title=_("Layout Deleted")))
+            self._load_layouts()
+            self.refresh_tree()
+        except Exception as e:
+            self.logger.error(f"Failed to delete layout '{layout_name}': {e}")
+            self._show_error_dialog(_("Error Deleting Layout"), str(e))
+
+    def _load_layouts(self):
+        """Loads all saved layouts from the layout directory."""
+        self.layouts.clear()
+        if not os.path.exists(LAYOUT_DIR):
+            return
+        for layout_file in sorted(os.listdir(LAYOUT_DIR)):
+            if layout_file.endswith(".json"):
+                layout_name = os.path.splitext(layout_file)[0]
+                folder_path = ""
+                try:
+                    with open(os.path.join(LAYOUT_DIR, layout_file), "r") as f:
+                        data = json.load(f)
+                        folder_path = data.get("folder_path", "")
+                except Exception as e:
+                    self.logger.warning(
+                        f"Could not read folder_path from {layout_file}: {e}"
+                    )
+                self.layouts.append(
+                    LayoutItem(name=layout_name, folder_path=folder_path)
+                )
+
+    def move_layout(self, layout_name: str, old_folder: str, new_folder: str):
+        """Moves a layout to a new virtual folder by updating its JSON file."""
+        if old_folder == new_folder:
+            return
+
+        sanitized_name = sanitize_session_name(layout_name).replace(" ", "_")
+        layout_file = os.path.join(LAYOUT_DIR, f"{sanitized_name}.json")
 
         try:
-            os.remove(STATE_FILE)
-        except OSError as e:
-            self.logger.warning(f"Could not remove state file after restore: {e}")
+            state = {}
+            if os.path.exists(layout_file):
+                with open(layout_file, "r") as f:
+                    state = json.load(f)
 
-        return True
+            state["folder_path"] = new_folder
 
-    def _recreate_tab_from_structure(self, structure):
-        if not structure:
-            return
+            with open(layout_file, "w") as f:
+                json.dump(state, f, indent=2)
 
-        terminals_to_configure = []
-        root_terminal = self._recreate_node_and_splits(
-            structure, None, terminals_to_configure
-        )
-
-        if not root_terminal:
-            self.logger.error("Failed to create root terminal for tab restoration.")
-            return
-
-        self._set_working_dirs(terminals_to_configure)
-
-    def _recreate_node_and_splits(self, node, parent_terminal, terminals_list):
-        if not node:
-            return None
-
-        if node["type"] == "terminal":
-            if parent_terminal:  # This should not happen for the root of a split
-                return parent_terminal
-
-            terminal = None
-            if node["session_type"] == "ssh":
-                found_session = next(
-                    (s for s in self.session_store if s.name == node["session_name"]),
-                    None,
-                )
-                if found_session:
-                    terminal = self.tab_manager.create_ssh_tab(found_session)
-                else:
-                    self.logger.warning(
-                        f"Could not find SSH session '{node['session_name']}' to restore."
-                    )
-                    terminal = self.tab_manager.create_local_tab(
-                        title=f"Missing: {node['session_name']}"
-                    )
-            else:
-                terminal = self.tab_manager.create_local_tab(
-                    title=node["session_name"],
-                    working_directory=node.get("working_dir"),
-                )
-
-            if terminal:
-                terminals_list.append({"terminal": terminal, "node": node})
-            return terminal
-
-        elif node["type"] == "paned":
-            anchor_terminal = self._recreate_node_and_splits(
-                node["child1"], parent_terminal, terminals_list
-            )
-            if not anchor_terminal:
-                return None
-
-            orientation = (
-                Gtk.Orientation.HORIZONTAL
-                if node["orientation"] == "horizontal"
-                else "vertical"
-            )
-
-            anchor_terminal._node_to_restore_child2 = node["child2"]
-
-            if orientation == Gtk.Orientation.HORIZONTAL:
-                self.tab_manager.split_horizontal(anchor_terminal)
-            else:
-                self.tab_manager.split_vertical(anchor_terminal)
-
-            del anchor_terminal._node_to_restore_child2
-
-            page = self.tab_manager.get_page_for_terminal(anchor_terminal)
-            newly_created_terminal = self.tab_manager.get_all_terminals_in_page(page)[
-                -1
-            ]
-
-            self._recreate_node_and_splits(
-                node["child2"], newly_created_terminal, terminals_list
-            )
-
-            return anchor_terminal
-        return None
-
-    def _set_working_dirs(self, terminals_to_configure):
-        for item in terminals_to_configure:
-            terminal = item["terminal"]
-            node = item["node"]
-
-            if node["session_type"] == "ssh":
-                working_dir = node.get("working_dir")
-                if working_dir:
-                    GLib.timeout_add(1500, self._send_cd_command, terminal, working_dir)
-
-    def _send_cd_command(self, terminal, working_dir):
-        if terminal and terminal.get_realized() and working_dir:
-            command = f'cd "{working_dir}"\n'
-            terminal.feed_child(command.encode("utf-8"))
-            return False
-        return True
+            self.logger.info(f"Moved layout '{layout_name}' to folder '{new_folder}'")
+            self._load_layouts()
+            self.refresh_tree()
+        except Exception as e:
+            self.logger.error(f"Failed to move layout '{layout_name}': {e}")
+            self._show_error_dialog(_("Error Moving Layout"), str(e))

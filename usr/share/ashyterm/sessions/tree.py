@@ -1,5 +1,7 @@
 # ashyterm/sessions/tree.py
 
+import json
+import os
 from typing import Callable, List, Optional, Union
 
 import gi
@@ -9,10 +11,11 @@ gi.require_version("Adw", "1")
 from gi.repository import Gdk, Gio, GLib, GObject, Gtk
 
 from ..helpers import generate_unique_name
+from ..settings.config import LAYOUT_DIR
 from ..ui.menus import create_folder_menu, create_root_menu, create_session_menu
 from ..utils.logger import get_logger
 from ..utils.translation_utils import _
-from .models import SessionFolder, SessionItem
+from .models import LayoutItem, SessionFolder, SessionItem
 from .operations import SessionOperations
 
 
@@ -34,22 +37,12 @@ class SessionTreeView:
         settings_manager,
         operations: SessionOperations,
     ):
-        """
-        Initializes the SessionTreeView.
-
-        Args:
-            parent_window: The parent window, used for dialogs.
-            session_store: The Gio.ListStore for SessionItem objects.
-            folder_store: The Gio.ListStore for SessionFolder objects.
-            settings_manager: The application's settings manager.
-            operations: The injected SessionOperations instance for business logic.
-        """
         self.logger = get_logger("ashyterm.sessions.tree")
         self.parent_window = parent_window
         self.session_store = session_store
         self.folder_store = folder_store
         self.settings_manager = settings_manager
-        self.operations = operations  # Dependency is now injected
+        self.operations = operations
 
         self.root_store = Gio.ListStore.new(GObject.GObject)
         self.tree_model = Gtk.TreeListModel.new(
@@ -66,6 +59,7 @@ class SessionTreeView:
         self._is_restoring_state: bool = False
         self._populated_folders = set()
         self.on_session_activated: Optional[Callable[[SessionItem], None]] = None
+        self.on_layout_activated: Optional[Callable[[str], None]] = None
         self.refresh_tree()
         self.logger.info("SessionTreeView (ColumnView) initialized")
 
@@ -140,9 +134,19 @@ class SessionTreeView:
         item = tree_list_row.get_item()
         label.set_label(item.name)
         box.remove_css_class("indented-session")
-        if isinstance(item, SessionItem) and tree_list_row.get_depth() > 0:
-            box.add_css_class("indented-session")
-        if isinstance(item, SessionFolder):
+
+        if isinstance(item, SessionItem) or isinstance(item, LayoutItem):
+            if tree_list_row.get_depth() > 0:
+                box.add_css_class("indented-session")
+            if isinstance(item, SessionItem):
+                icon.set_from_icon_name(
+                    "computer-symbolic"
+                    if item.is_local()
+                    else "network-server-symbolic"
+                )
+            else:  # LayoutItem
+                icon.set_from_icon_name("view-restore-symbolic")
+        elif isinstance(item, SessionFolder):
 
             def update_folder_icon(row: Gtk.TreeListRow, _=None) -> None:
                 if (
@@ -150,15 +154,20 @@ class SessionTreeView:
                     and row.get_item().path not in self._populated_folders
                 ):
                     self._populate_folder_children(row.get_item())
+
+                has_children = (
+                    any(s.folder_path == item.path for s in self.session_store)
+                    or any(f.parent_path == item.path for f in self.folder_store)
+                    or any(
+                        isinstance(l, LayoutItem) and l.folder_path == item.path
+                        for l in self.parent_window.layouts
+                    )
+                )
+
                 icon_name = (
                     "folder-open-symbolic"
                     if row.get_expanded()
-                    else (
-                        "folder-new-symbolic"
-                        if any(s.folder_path == item.path for s in self.session_store)
-                        or any(f.parent_path == item.path for f in self.folder_store)
-                        else "folder-symbolic"
-                    )
+                    else ("folder-new-symbolic" if has_children else "folder-symbolic")
                 )
                 icon.set_from_icon_name(icon_name)
 
@@ -170,10 +179,6 @@ class SessionTreeView:
                 "notify::expanded", self._on_folder_expansion_changed
             )
             list_item.handler_ids = [icon_handler_id, expansion_handler_id]
-        elif isinstance(item, SessionItem):
-            icon.set_from_icon_name(
-                "computer-symbolic" if item.is_local() else "network-server-symbolic"
-            )
 
     def _on_factory_unbind(
         self, factory: Gtk.SignalListItemFactory, list_item: Gtk.ListItem
@@ -215,6 +220,8 @@ class SessionTreeView:
             data_string = f"session|{item.name}|{item.folder_path}"
         elif isinstance(item, SessionFolder):
             data_string = f"folder|{item.name}|{item.path}"
+        elif isinstance(item, LayoutItem):
+            data_string = f"layout|{item.name}|{item.folder_path}"
         else:
             return None
         return Gdk.ContentProvider.new_for_value(data_string)
@@ -290,12 +297,17 @@ class SessionTreeView:
                 folder, _ = self.operations.find_folder_by_path(source_path)
                 if folder:
                     result = self.operations.move_folder(folder, target_folder_path)
+            elif item_type == "layout":
+                self.parent_window.move_layout(name, source_path, target_folder_path)
+                return  # move_layout handles its own refresh
 
             if result and result.success:
                 self.refresh_tree()
             elif result:
                 if hasattr(self.parent_window, "_show_error_dialog"):
-                    self.parent_window._show_error_dialog(_("Move Error"), result.message)
+                    self.parent_window._show_error_dialog(
+                        _("Move Error"), result.message
+                    )
         except Exception as e:
             self.logger.error(f"Drag-and-drop move error: {e}")
             if hasattr(self.parent_window, "_show_error_dialog"):
@@ -308,20 +320,34 @@ class SessionTreeView:
         self.root_store.remove_all()
         for i in range(self.folder_store.get_n_items()):
             self.folder_store.get_item(i).clear_children()
+
         root_items = []
-        for i in range(self.session_store.get_n_items()):
-            session = self.session_store.get_item(i)
-            if not session.folder_path:
-                root_items.append(session)
-        for i in range(self.folder_store.get_n_items()):
-            folder = self.folder_store.get_item(i)
-            if not folder.parent_path:
-                root_items.append(folder)
+        # Add sessions, folders, and layouts to their parent (or root)
+        all_items = (
+            list(self.session_store)
+            + list(self.folder_store)
+            + self.parent_window.layouts
+        )
+
+        for item in all_items:
+            parent_path = getattr(item, "parent_path", None)
+            if parent_path is None:  # SessionItem or LayoutItem
+                parent_path = getattr(item, "folder_path", "")
+
+            if not parent_path:
+                root_items.append(item)
+
         sorted_root = sorted(
-            root_items, key=lambda item: (isinstance(item, SessionItem), item.name)
+            root_items,
+            key=lambda item: (
+                isinstance(item, SessionItem),
+                isinstance(item, LayoutItem),
+                item.name,
+            ),
         )
         for item in sorted_root:
             self.root_store.append(item)
+
         GLib.idle_add(self._apply_expansion_state)
 
     def _populate_folder_children(self, folder: SessionFolder):
@@ -330,16 +356,27 @@ class SessionTreeView:
             return
         folder.clear_children()
         children = []
-        for i in range(self.session_store.get_n_items()):
-            session = self.session_store.get_item(i)
-            if session.folder_path == folder.path:
-                children.append(session)
-        for i in range(self.folder_store.get_n_items()):
-            sub_folder = self.folder_store.get_item(i)
-            if sub_folder.parent_path == folder.path:
-                children.append(sub_folder)
+
+        all_items = (
+            list(self.session_store)
+            + list(self.folder_store)
+            + self.parent_window.layouts
+        )
+        for item in all_items:
+            parent_path = getattr(item, "parent_path", None)
+            if parent_path is None:
+                parent_path = getattr(item, "folder_path", "")
+
+            if parent_path == folder.path:
+                children.append(item)
+
         sorted_children = sorted(
-            children, key=lambda item: (isinstance(item, SessionItem), item.name)
+            children,
+            key=lambda item: (
+                isinstance(item, SessionItem),
+                isinstance(item, LayoutItem),
+                item.name,
+            ),
         )
         for child in sorted_children:
             folder.add_child(child)
@@ -391,6 +428,9 @@ class SessionTreeView:
         if isinstance(item, SessionItem):
             if self.on_session_activated:
                 self.on_session_activated(item)
+        elif isinstance(item, LayoutItem):
+            if self.on_layout_activated:
+                self.on_layout_activated(item.name)
         elif isinstance(item, SessionFolder):
             tree_list_row.set_expanded(not tree_list_row.get_expanded())
 
@@ -428,7 +468,9 @@ class SessionTreeView:
             return Gdk.EVENT_STOP
         return Gdk.EVENT_PROPAGATE
 
-    def get_selected_item(self) -> Optional[Union[SessionItem, SessionFolder]]:
+    def get_selected_item(
+        self,
+    ) -> Optional[Union[SessionItem, SessionFolder, LayoutItem]]:
         """Gets the single selected item, or None if multiple/none are selected."""
         selection = self.selection_model.get_selection()
         if selection.get_size() == 1:
@@ -436,7 +478,7 @@ class SessionTreeView:
                 return row.get_item()
         return None
 
-    def get_selected_items(self) -> List[Union[SessionItem, SessionFolder]]:
+    def get_selected_items(self) -> List[Union[SessionItem, SessionFolder, LayoutItem]]:
         """Gets all selected items from the tree view."""
         items = []
         selection = self.selection_model.get_selection()
@@ -482,6 +524,15 @@ class SessionTreeView:
                     self.session_store,
                     self.has_clipboard_content(),
                 )
+        elif isinstance(item, LayoutItem):
+            menu_model = Gio.Menu()
+            menu_model.append(_("Restore Layout"), f"win.restore_layout('{item.name}')")
+            menu_model.append(
+                _("Move to Folder..."), f"win.move-layout-to-folder('{item.name}')"
+            )
+            menu_model.append_section(None, Gio.Menu())
+            menu_model.append(_("Delete Layout"), f"win.delete_layout('{item.name}')")
+
         if menu_model:
             popover = Gtk.PopoverMenu.new_from_model(menu_model)
             popover.set_parent(list_item.get_child())
@@ -508,14 +559,16 @@ class SessionTreeView:
     def _copy_selected_item(self) -> None:
         """Copies the selected item to the internal clipboard."""
         if item := self.get_selected_item():
-            self._clipboard_item = item
-            self._clipboard_is_cut = False
+            if isinstance(item, (SessionItem, SessionFolder)):
+                self._clipboard_item = item
+                self._clipboard_is_cut = False
 
     def _cut_selected_item(self) -> None:
         """Marks the selected item for cutting."""
         if item := self.get_selected_item():
-            self._clipboard_item = item
-            self._clipboard_is_cut = True
+            if isinstance(item, (SessionItem, SessionFolder)):
+                self._clipboard_item = item
+                self._clipboard_is_cut = True
 
     def _paste_item(self, target_folder_path: str) -> None:
         """

@@ -31,8 +31,6 @@ from ..utils.security import (
 
 
 class ProcessTracker:
-    """Track spawned processes for proper cleanup."""
-
     def __init__(self):
         self.logger = get_logger("ashyterm.spawner.tracker")
         self._processes: Dict[int, Dict[str, Any]] = {}
@@ -40,12 +38,10 @@ class ProcessTracker:
         self._lock = threading.RLock()
 
     def register_process(self, pid: int, process_info: Dict[str, Any]) -> None:
-        """Register a spawned process."""
         with self._lock:
             self._processes[pid] = {**process_info, "registered_at": time.time()}
 
     def unregister_process(self, pid: int) -> bool:
-        """Unregister a process."""
         with self._lock:
             if pid in self._processes:
                 del self._processes[pid]
@@ -53,12 +49,10 @@ class ProcessTracker:
             return False
 
     def get_all_processes(self) -> Dict[int, Dict[str, Any]]:
-        """Get all tracked processes."""
         with self._lock:
             return self._processes.copy()
 
     def terminate_all(self) -> None:
-        """Terminate all tracked processes robustly on Linux."""
         with self._lock:
             pids_to_terminate = list(self._processes.keys())
             if not pids_to_terminate:
@@ -66,7 +60,6 @@ class ProcessTracker:
 
             self.logger.info(f"Terminating {len(pids_to_terminate)} tracked processes.")
 
-            # On Unix-like systems, try SIGTERM first, then SIGKILL.
             for pid in pids_to_terminate:
                 try:
                     os.kill(pid, signal.SIGTERM)
@@ -95,15 +88,13 @@ class ProcessTracker:
 
 
 class ProcessSpawner:
-    """Enhanced process spawner with comprehensive security and error handling."""
-
     def __init__(self):
         self.logger = get_logger("ashyterm.spawner")
         self.platform_info = get_platform_info()
         self.command_builder = get_command_builder()
         self.environment_manager = get_environment_manager()
         self.process_tracker = ProcessTracker()
-        self.settings_manager = get_settings_manager()  # NOVO
+        self.settings_manager = get_settings_manager()
         self._spawn_lock = threading.Lock()
         self.logger.info("Process spawner initialized on Linux")
 
@@ -122,17 +113,14 @@ class ProcessSpawner:
         user_data: Any = None,
         working_directory: Optional[str] = None,
     ) -> None:
-        """Spawn a local terminal session. Raises TerminalCreationError on setup failure."""
         with self._spawn_lock:
             shell = Vte.get_user_shell()
 
-            # INÍCIO DA ALTERAÇÃO: Usar shell de login se configurado
             if self.settings_manager.get("use_login_shell", False):
                 cmd = [shell, "-l"]
                 self.logger.info(f"Spawning '{shell} -l' as a login shell.")
             else:
                 cmd = [shell]
-            # FIM DA ALTERAÇÃO
 
             working_dir = self._resolve_and_validate_working_directory(
                 working_directory
@@ -175,8 +163,11 @@ class ProcessSpawner:
         session: "SessionItem",
         callback: Optional[Callable] = None,
         user_data: Any = None,
+        initial_command: Optional[str] = None,
     ) -> None:
-        self._spawn_remote_session("ssh", terminal, session, callback, user_data)
+        self._spawn_remote_session(
+            "ssh", terminal, session, callback, user_data, initial_command
+        )
 
     def _spawn_remote_session(
         self,
@@ -185,13 +176,16 @@ class ProcessSpawner:
         session: "SessionItem",
         callback: Optional[Callable] = None,
         user_data: Any = None,
+        initial_command: Optional[str] = None,
     ) -> None:
         with self._spawn_lock:
             if not session.is_ssh():
                 raise TerminalCreationError("Session is not configured for SSH", "ssh")
             try:
                 self._validate_ssh_session(session)
-                remote_cmd = self._build_remote_command_secure(command_type, session)
+                remote_cmd = self._build_remote_command_secure(
+                    command_type, session, initial_command
+                )
                 if not remote_cmd:
                     raise TerminalCreationError(
                         f"Failed to build {command_type.upper()} command", "ssh"
@@ -249,7 +243,10 @@ class ProcessSpawner:
                 raise SSHKeyError(session.auth_value, str(e)) from e
 
     def _build_remote_command_secure(
-        self, command_type: str, session: "SessionItem"
+        self,
+        command_type: str,
+        session: "SessionItem",
+        initial_command: Optional[str] = None,
     ) -> Optional[List[str]]:
         if not has_command(command_type):
             raise SSHConnectionError(
@@ -274,10 +271,22 @@ class ProcessSpawner:
             options=ssh_options,
         )
         if command_type == "ssh":
-            osc7_setup_command = 'export PROMPT_COMMAND=\'printf "\\033]7;file://%s%s\\007" "$(hostname)" "$PWD"\'; exec $SHELL -l'
+            # REFACTORED: Build the remote command dynamically
+            remote_commands = []
+            if initial_command:
+                remote_commands.append(initial_command)
+
+            osc7_setup = 'export PROMPT_COMMAND=\'printf "\\033]7;file://%s%s\\007" "$(hostname)" "$PWD"\''
+            remote_commands.append(osc7_setup)
+
+            shell_exec = f"exec {os.environ.get('SHELL', '/bin/bash')} -l"
+            remote_commands.append(shell_exec)
+
+            full_remote_command = " && ".join(remote_commands)
+
             if "-t" not in cmd:
                 cmd.insert(1, "-t")
-            cmd.append(osc7_setup_command)
+            cmd.append(full_remote_command)
 
         if session.uses_password_auth() and session.auth_value:
             if has_command("sshpass"):
@@ -385,8 +394,7 @@ class ProcessSpawner:
             self.logger.error(f"SSH spawn callback handling failed: {e}")
 
     def _monitor_ssh_errors(self, terminal, session) -> None:
-        # This method is complex and seems to be working, so it's kept as is, minus debug logs.
-        pass  # Logic is preserved from original but not shown here for brevity
+        pass
 
     def _get_ssh_error_guidance(self, error_message: str) -> str:
         error_lower = error_message.lower()
@@ -437,13 +445,11 @@ class ProcessSpawner:
             return str(self.platform_info.home_dir)
 
 
-# Global spawner instance
 _spawner_instance: Optional[ProcessSpawner] = None
 _spawner_lock = threading.Lock()
 
 
 def get_spawner() -> ProcessSpawner:
-    """Get the global ProcessSpawner instance (thread-safe singleton)."""
     global _spawner_instance
     if _spawner_instance is None:
         with _spawner_lock:
@@ -453,7 +459,6 @@ def get_spawner() -> ProcessSpawner:
 
 
 def cleanup_spawner() -> None:
-    """Clean up the global spawner instance."""
     global _spawner_instance
     if _spawner_instance is not None:
         with _spawner_lock:

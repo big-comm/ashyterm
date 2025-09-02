@@ -37,8 +37,6 @@ from .spawner import get_spawner
 
 
 class TerminalState(Enum):
-    """Terminal lifecycle states for proper management."""
-
     INITIALIZING = "initializing"
     RUNNING = "running"
     FOCUSED = "focused"
@@ -49,8 +47,6 @@ class TerminalState(Enum):
 
 
 class TerminalLifecycleManager:
-    """Manages terminal lifecycle with state tracking and proper cleanup."""
-
     def __init__(self, registry, logger):
         self.registry = registry
         self.logger = logger
@@ -85,8 +81,6 @@ class TerminalLifecycleManager:
 
 
 class ManualSSHTracker:
-    """Tracks manually initiated SSH sessions and their targets."""
-
     def __init__(self, registry, on_state_changed_callback):
         self.logger = get_logger("ashyterm.terminal.ssh_tracker")
         self.registry = registry
@@ -167,8 +161,6 @@ class ManualSSHTracker:
 
 
 class TerminalRegistry:
-    """Registry for tracking terminal instances and their metadata."""
-
     def __init__(self):
         self.logger = get_logger("ashyterm.terminal.registry")
         self._terminals: Dict[int, Dict[str, Any]] = {}
@@ -247,8 +239,6 @@ class TerminalRegistry:
 
 
 class TerminalManager:
-    """Enhanced terminal manager with comprehensive functionality."""
-
     def __init__(self, parent_window, settings_manager: SettingsManager):
         self.logger = get_logger("ashyterm.terminal.manager")
         self.parent_window = parent_window
@@ -280,7 +270,6 @@ class TerminalManager:
         self.logger.info("Terminal manager initialized")
 
     def apply_settings_to_all_terminals(self):
-        """Applies current settings to all active terminals."""
         self.logger.info("Applying settings to all active terminals.")
         for terminal_id in self.registry.get_all_terminal_ids():
             terminal = self.registry.get_terminal(terminal_id)
@@ -438,7 +427,9 @@ class TerminalManager:
             self._stats["terminals_failed"] += 1
             raise
 
-    def create_ssh_terminal(self, session: SessionItem) -> Optional[Vte.Terminal]:
+    def create_ssh_terminal(
+        self, session: SessionItem, initial_command: Optional[str] = None
+    ) -> Optional[Vte.Terminal]:
         with self._creation_lock:
             session_data = session.to_dict()
             is_valid, errors = validate_session_data(session_data)
@@ -460,6 +451,7 @@ class TerminalManager:
                     session,
                     callback=self._on_spawn_callback,
                     user_data=user_data_for_spawn,
+                    initial_command=initial_command,
                 )
                 self.logger.info(
                     f"SSH terminal created successfully: '{session.name}' (ID: {terminal_id})"

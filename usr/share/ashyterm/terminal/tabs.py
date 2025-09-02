@@ -25,32 +25,40 @@ def _create_terminal_pane(
     on_move_to_tab_callback: Callable[[Vte.Terminal], None],
 ) -> Adw.ToolbarView:
     """
-    Creates a terminal pane using Adw.ToolbarView, the idiomatic standard
-    for a main content area with a toolbar.
+    Creates a terminal pane using Adw.ToolbarView with a custom header to avoid GTK baseline warnings.
     """
     toolbar_view = Adw.ToolbarView()
     toolbar_view.add_css_class("terminal-pane")
 
-    # Top title bar
-    header_bar = Adw.HeaderBar()
-    header_bar.set_show_end_title_buttons(False)
-    header_bar.set_show_start_title_buttons(False)
+    # Create custom header bar using basic GTK widgets to avoid Adw.HeaderBar baseline issues
+    header_box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=6)
+    header_box.add_css_class("header-bar")
+    header_box.set_hexpand(True)
+    header_box.set_valign(Gtk.Align.START)
 
+    # Title label
     title_label = Gtk.Label(label=title, ellipsize=Pango.EllipsizeMode.END, xalign=0.0)
-    header_bar.set_title_widget(title_label)
+    title_label.set_hexpand(True)
+    title_label.set_halign(Gtk.Align.START)
+    header_box.append(title_label)
 
+    # Action buttons
     move_to_tab_button = Gtk.Button(
         icon_name="select-rectangular-symbolic", tooltip_text=_("Move to New Tab")
     )
+    move_to_tab_button.add_css_class("flat")
     move_to_tab_button.connect("clicked", lambda _: on_move_to_tab_callback(terminal))
 
     close_button = Gtk.Button(
         icon_name="window-close-symbolic", tooltip_text=_("Close Pane")
     )
+    close_button.add_css_class("flat")
     close_button.connect("clicked", lambda _: on_close_callback(terminal))
-    header_bar.pack_end(close_button)
-    header_bar.pack_end(move_to_tab_button)
-    toolbar_view.add_top_bar(header_bar)
+
+    header_box.append(move_to_tab_button)
+    header_box.append(close_button)
+
+    toolbar_view.add_top_bar(header_box)
 
     # Main content (the terminal)
     scrolled_window = Gtk.ScrolledWindow(child=terminal)
@@ -164,8 +172,12 @@ class TabManager:
             self._create_tab_for_terminal(terminal, title, "computer-symbolic")
         return terminal
 
-    def create_ssh_tab(self, session: SessionItem) -> Optional[Vte.Terminal]:
-        terminal = self.terminal_manager.create_ssh_terminal(session)
+    def create_ssh_tab(
+        self, session: SessionItem, initial_command: Optional[str] = None
+    ) -> Optional[Vte.Terminal]:
+        terminal = self.terminal_manager.create_ssh_terminal(
+            session, initial_command=initial_command
+        )
         if terminal:
             self._create_tab_for_terminal(
                 terminal, session.name, "network-server-symbolic"
@@ -197,9 +209,55 @@ class TabManager:
 
         return False
 
+    def _on_terminal_scroll(self, controller, dx, dy):
+        """Handles terminal scroll events to apply custom sensitivity."""
+        try:
+            terminal = controller.get_widget()
+            scrolled_window = terminal.get_parent()
+
+            if not isinstance(scrolled_window, Gtk.ScrolledWindow):
+                return Gdk.EVENT_PROPAGATE
+
+            vadjustment = scrolled_window.get_vadjustment()
+            if not vadjustment:
+                return Gdk.EVENT_PROPAGATE
+
+            # Determina o dispositivo de entrada para aplicar a sensibilidade correta
+            event = controller.get_current_event()
+            device = event.get_device() if event else None
+            source = device.get_source() if device else Gdk.InputSource.MOUSE
+
+            if source == Gdk.InputSource.TOUCHPAD:
+                sensitivity_percent = self.terminal_manager.settings_manager.get(
+                    "touchpad_scroll_sensitivity", 30.0
+                )
+            else:  # Mouse ou outro dispositivo
+                sensitivity_percent = self.terminal_manager.settings_manager.get(
+                    "mouse_scroll_sensitivity", 30.0
+                )
+
+            sensitivity_factor = sensitivity_percent / 10.0
+
+            step = vadjustment.get_step_increment()
+            scroll_amount = dy * step * sensitivity_factor
+
+            new_value = vadjustment.get_value() + scroll_amount
+            vadjustment.set_value(new_value)
+
+            return Gdk.EVENT_STOP
+        except Exception as e:
+            self.logger.warning(f"Error handling custom scroll: {e}")
+
+        return Gdk.EVENT_PROPAGATE
+
     def _create_tab_for_terminal(
         self, terminal: Vte.Terminal, title: str, icon_name: str
     ) -> None:
+        scroll_controller = Gtk.EventControllerScroll()
+        scroll_controller.set_flags(Gtk.EventControllerScrollFlags.VERTICAL)
+        scroll_controller.connect("scroll", self._on_terminal_scroll)
+        terminal.add_controller(scroll_controller)
+
         scrolled_window = Gtk.ScrolledWindow(child=terminal)
         scrolled_window.set_policy(Gtk.PolicyType.AUTOMATIC, Gtk.PolicyType.AUTOMATIC)
 
@@ -551,6 +609,11 @@ class TabManager:
         if not grandparent:
             return
 
+        survivor_terminals = []
+        self._find_terminals_recursive(survivor_pane, survivor_terminals)
+        survivor_terminal = survivor_terminals[0] if survivor_terminals else None
+
+        parent_paned.set_focus_child(None)
         parent_paned.set_start_child(None)
         parent_paned.set_end_child(None)
 
@@ -570,6 +633,12 @@ class TabManager:
                 survivor_pane.set_content(None)
                 grandparent.set_child(scrolled_win_child)
 
+        def _restore_focus():
+            if survivor_terminal and survivor_terminal.get_realized():
+                survivor_terminal.grab_focus()
+            return False
+
+        GLib.idle_add(_restore_focus)
         GLib.idle_add(self.update_all_tab_titles)
 
     def close_pane(self, terminal: Vte.Terminal) -> None:
@@ -619,7 +688,7 @@ class TabManager:
     def split_vertical(self, focused_terminal: Vte.Terminal) -> None:
         self._split_terminal(focused_terminal, Gtk.Orientation.VERTICAL)
 
-    def _set_paned_position(self, paned: Gtk.Paned) -> bool:
+    def _set_paned_position_from_ratio(self, paned: Gtk.Paned, ratio: float) -> bool:
         alloc = paned.get_allocation()
         total_size = (
             alloc.width
@@ -627,7 +696,7 @@ class TabManager:
             else alloc.height
         )
         if total_size > 0:
-            paned.set_position(total_size // 2)
+            paned.set_position(int(total_size * ratio))
         return False
 
     def _split_terminal(
@@ -639,51 +708,24 @@ class TabManager:
                 self.logger.error("Cannot split: could not find parent page.")
                 return
 
+            terminal_id = getattr(focused_terminal, "terminal_id", None)
+            info = self.terminal_manager.registry.get_terminal_info(terminal_id)
+            identifier = info.get("identifier") if info else "Local"
+
             new_terminal = None
             new_pane_title = "Terminal"
-
-            restore_node = getattr(focused_terminal, "_node_to_restore_child2", None)
-
-            if restore_node:
-                if restore_node["session_type"] == "ssh":
-                    session = next(
-                        (
-                            s
-                            for s in self.terminal_manager.parent_window.session_store
-                            if s.name == restore_node["session_name"]
-                        ),
-                        None,
-                    )
-                    if session:
-                        new_terminal = self.terminal_manager.create_ssh_terminal(
-                            session
-                        )
-                        new_pane_title = session.name
-                else:  # local
-                    new_terminal = self.terminal_manager.create_local_terminal(
-                        title=restore_node["session_name"],
-                        working_directory=restore_node.get("working_dir"),
-                    )
-                    new_pane_title = restore_node["session_name"]
-            else:  # Standard split behavior
-                terminal_id = getattr(focused_terminal, "terminal_id", None)
-                info = self.terminal_manager.registry.get_terminal_info(terminal_id)
-                identifier = info.get("identifier") if info else "Local"
-
-                if isinstance(identifier, SessionItem):
-                    new_pane_title = identifier.name
-                    new_terminal = (
-                        self.terminal_manager.create_ssh_terminal(identifier)
-                        if identifier.is_ssh()
-                        else self.terminal_manager.create_local_terminal(
-                            identifier.name
-                        )
-                    )
-                else:
-                    new_pane_title = "Local"
-                    new_terminal = self.terminal_manager.create_local_terminal(
-                        new_pane_title
-                    )
+            if isinstance(identifier, SessionItem):
+                new_pane_title = identifier.name
+                new_terminal = (
+                    self.terminal_manager.create_ssh_terminal(identifier)
+                    if identifier.is_ssh()
+                    else self.terminal_manager.create_local_terminal(identifier.name)
+                )
+            else:
+                new_pane_title = "Local"
+                new_terminal = self.terminal_manager.create_local_terminal(
+                    new_pane_title
+                )
 
             if not new_terminal:
                 self.logger.error("Failed to create new terminal for split.")
@@ -708,6 +750,7 @@ class TabManager:
 
             if isinstance(pane_to_replace, Gtk.ScrolledWindow):
                 uri = focused_terminal.get_current_directory_uri()
+                title = "Terminal"
                 if uri:
                     from urllib.parse import unquote, urlparse
 
@@ -717,8 +760,6 @@ class TabManager:
                             path
                         )
                     )
-                else:
-                    title = "Terminal"
 
                 pane_to_replace.set_child(None)
                 pane_being_split = _create_terminal_pane(
@@ -733,6 +774,7 @@ class TabManager:
             is_start_child = False
             if isinstance(container, Gtk.Paned):
                 is_start_child = container.get_start_child() == pane_to_replace
+                container.set_focus_child(None)
                 if is_start_child:
                     container.set_start_child(None)
                 else:
@@ -758,7 +800,7 @@ class TabManager:
                 self.terminal_manager.remove_terminal(new_terminal)
                 return
 
-            GLib.idle_add(lambda: self._set_paned_position(new_split_paned))
+            GLib.idle_add(self._set_paned_position_from_ratio, new_split_paned, 0.5)
             self._schedule_terminal_focus(new_terminal)
             self.update_all_tab_titles()
 
@@ -814,3 +856,162 @@ class TabManager:
         except (ValueError, IndexError):
             if self.tabs:
                 self.set_active_tab(self.tabs[0])
+
+    def recreate_tab_from_structure(self, structure: dict):
+        """Recreates a complete tab, including splits, from a saved structure."""
+        if not structure:
+            return
+
+        root_widget = self._recreate_widget_from_node(structure)
+        if not root_widget:
+            self.logger.error("Failed to create root widget for tab restoration.")
+            return
+
+        # If the root is a ToolbarView (a single pane), unwrap it for a single-terminal tab.
+        final_content = root_widget
+        if isinstance(root_widget, Adw.ToolbarView):
+            scrolled_win = root_widget.get_content()
+            if scrolled_win:
+                root_widget.set_content(None)
+                final_content = Adw.Bin(child=scrolled_win)
+
+        first_terminal = None
+        terminals = []
+        self._find_terminals_recursive(root_widget, terminals)
+        if terminals:
+            first_terminal = terminals[0]
+
+        if not first_terminal:
+            self.logger.error("Restored tab contains no terminals.")
+            for term in terminals:
+                self.terminal_manager.remove_terminal(term)
+            return
+
+        terminal_id = getattr(first_terminal, "terminal_id", None)
+        info = self.terminal_manager.registry.get_terminal_info(terminal_id)
+        identifier = info.get("identifier") if info else "Local"
+
+        title = "Terminal"
+        icon_name = "computer-symbolic"
+        if isinstance(identifier, SessionItem):
+            title = identifier.name
+            icon_name = (
+                "network-server-symbolic"
+                if identifier.is_ssh()
+                else "computer-symbolic"
+            )
+        elif isinstance(identifier, str):
+            title = identifier
+
+        page_name = f"page_restored_{GLib.random_int()}"
+        page = self.view_stack.add_titled(final_content, page_name, title)
+        for term in terminals:
+            term.ashy_parent_page = page
+
+        tab_widget = self._create_tab_widget(title, icon_name, page)
+        self.tabs.append(tab_widget)
+        self.pages[tab_widget] = page
+        self.tab_bar_box.append(tab_widget)
+
+        self.set_active_tab(tab_widget)
+        self._schedule_terminal_focus(first_terminal)
+        self.update_all_tab_titles()
+
+        if self.on_tab_count_changed:
+            self.on_tab_count_changed()
+
+    def _recreate_widget_from_node(self, node: dict) -> Optional[Gtk.Widget]:
+        """Recursively builds a widget tree from a serialized node."""
+        if not node or "type" not in node:
+            return None
+
+        node_type = node["type"]
+
+        if node_type == "terminal":
+            terminal = None
+            working_dir = node.get("working_dir")
+            initial_command = (
+                f'cd "{working_dir}"'
+                if working_dir and node["session_type"] == "ssh"
+                else None
+            )
+            title = node.get("session_name", "Terminal")
+
+            if node["session_type"] == "ssh":
+                session = next(
+                    (
+                        s
+                        for s in self.terminal_manager.parent_window.session_store
+                        if s.name == node["session_name"]
+                    ),
+                    None,
+                )
+                if session:
+                    terminal = self.terminal_manager.create_ssh_terminal(
+                        session, initial_command=initial_command
+                    )
+                else:
+                    self.logger.warning(
+                        f"Could not find SSH session '{node['session_name']}' to restore."
+                    )
+                    terminal = self.terminal_manager.create_local_terminal(
+                        title=f"Missing: {title}"
+                    )
+            else:
+                terminal = self.terminal_manager.create_local_terminal(
+                    title=title, working_directory=working_dir
+                )
+
+            if not terminal:
+                return None
+
+            # CORRECTED: Return the pane widget, which includes the header.
+            # The caller (`recreate_tab_from_structure`) will decide whether to unwrap it.
+            pane_widget = _create_terminal_pane(
+                terminal,
+                title,
+                self.close_pane,
+                self._on_move_to_tab_callback,
+            )
+
+            focus_controller = Gtk.EventControllerFocus()
+            focus_controller.connect("enter", self._on_pane_focus_in, terminal)
+            terminal.add_controller(focus_controller)
+
+            return pane_widget
+
+        elif node_type == "paned":
+            orientation = (
+                Gtk.Orientation.HORIZONTAL
+                if node["orientation"] == "horizontal"
+                else Gtk.Orientation.VERTICAL
+            )
+            paned = Gtk.Paned(orientation=orientation)
+
+            child1 = self._recreate_widget_from_node(node["child1"])
+            child2 = self._recreate_widget_from_node(node["child2"])
+
+            if not child1 or not child2:
+                self.logger.error("Failed to recreate children for a split pane.")
+                if child1:
+                    self._find_and_remove_terminals(child1)
+                if child2:
+                    self._find_and_remove_terminals(child2)
+                return None
+
+            paned.set_start_child(child1)
+            paned.set_end_child(child2)
+
+            ratio = node.get("position_ratio", 0.5)
+            GLib.idle_add(self._set_paned_position_from_ratio, paned, ratio)
+
+            return paned
+
+        return None
+
+    def _find_and_remove_terminals(self, widget: Gtk.Widget):
+        """Finds all terminals in a widget tree and removes them."""
+        terminals = []
+        self._find_terminals_recursive(widget, terminals)
+        for term in terminals:
+            self.terminal_manager.remove_terminal(term)

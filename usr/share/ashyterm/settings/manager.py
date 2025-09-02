@@ -48,10 +48,10 @@ class SettingsValidator:
     def __init__(self):
         self.logger = get_logger("ashyterm.settings.validator")
 
-    def validate_color_scheme(self, value: Any) -> bool:
+    def validate_color_scheme(self, value: Any, num_schemes: int) -> bool:
         if not isinstance(value, int):
             return False
-        return 0 <= value < len(ColorSchemeMap.get_schemes_list())
+        return 0 <= value < num_schemes
 
     def validate_transparency(self, value: Any) -> bool:
         if not isinstance(value, (int, float)):
@@ -94,20 +94,24 @@ class SettingsValidator:
                 errors.append(f"Invalid shortcut for action '{action}': {shortcut}")
         return errors
 
-    def validate_settings_structure(self, settings: Dict[str, Any]) -> List[str]:
+    def validate_settings_structure(
+        self, settings: Dict[str, Any], num_schemes: int
+    ) -> List[str]:
         errors = []
         required_keys = ["color_scheme", "font", "shortcuts"]
         for key in required_keys:
             if key not in settings:
                 errors.append(f"Missing required setting: {key}")
+
         validators = {
-            "color_scheme": self.validate_color_scheme,
+            "color_scheme": lambda v: self.validate_color_scheme(v, num_schemes),
             "transparency": self.validate_transparency,
             "font": self.validate_font,
         }
         for key, validator in validators.items():
             if key in settings and not validator(settings[key]):
                 errors.append(f"Invalid value for setting '{key}': {settings[key]}")
+
         if "shortcuts" in settings:
             errors.extend(self.validate_shortcuts(settings["shortcuts"]))
         boolean_settings = [
@@ -170,6 +174,7 @@ class SettingsManager:
         self.validator = SettingsValidator()
         self.config_paths = get_config_paths()
         self.settings_file = settings_file or self.config_paths.SETTINGS_FILE
+        self.custom_schemes_file = self.config_paths.CONFIG_DIR / "custom_schemes.json"
         self._settings: Dict[str, Any] = {}
         self._defaults = DefaultSettings.get_defaults()
         self._metadata: Optional[SettingsMetadata] = None
@@ -182,6 +187,7 @@ class SettingsManager:
             self.logger.warning(f"Backup manager not available: {e}")
 
         self._change_listeners: List[Callable[[str, Any, Any], None]] = []
+        self.custom_schemes: Dict[str, Any] = {}
         self._initialize()
         self.logger.info("Settings manager initialized")
 
@@ -189,15 +195,38 @@ class SettingsManager:
         try:
             with self._lock:
                 self._settings = self._load_settings_safe()
+                self.custom_schemes = self._load_custom_schemes()
                 self._validate_and_repair()
                 self._merge_with_defaults()
-                # Aplica as configurações de log na inicialização
                 self._apply_log_settings()
                 GLib.idle_add(self._create_initialization_backup)
         except Exception as e:
             self.logger.error(f"Settings initialization failed: {e}")
             self._settings = self._defaults.copy()
+            self.custom_schemes = {}
             self._dirty = True
+
+    def _load_custom_schemes(self) -> Dict[str, Any]:
+        if not self.custom_schemes_file.exists():
+            return {}
+        try:
+            with open(self.custom_schemes_file, "r", encoding="utf-8") as f:
+                data = json.load(f)
+            if isinstance(data, dict):
+                return data
+            self.logger.warning("Custom schemes file is not a valid dictionary.")
+            return {}
+        except Exception as e:
+            self.logger.error(f"Failed to load custom color schemes: {e}")
+            return {}
+
+    def save_custom_schemes(self):
+        try:
+            with open(self.custom_schemes_file, "w", encoding="utf-8") as f:
+                json.dump(self.custom_schemes, f, indent=2)
+            self.logger.info(f"Saved {len(self.custom_schemes)} custom schemes.")
+        except Exception as e:
+            self.logger.error(f"Failed to save custom color schemes: {e}")
 
     def _apply_log_settings(self):
         """Aplica as configurações de log ao sistema de logger."""
@@ -263,7 +292,7 @@ class SettingsManager:
                 return self._defaults.copy()
             backup_id, metadata = settings_backups[0]
             self.logger.info(f"Attempting to restore settings from backup: {backup_id}")
-            temp_restore_dir = self.config_paths.TEMP_DIR / "settings_recovery"
+            temp_restore_dir = self.config_paths.CACHE_DIR / "settings_recovery"
             if self.backup_manager.restore_backup(backup_id, temp_restore_dir):
                 restored_settings_file = temp_restore_dir / "settings.json"
                 if restored_settings_file.exists():
@@ -279,7 +308,10 @@ class SettingsManager:
 
     def _validate_and_repair(self):
         try:
-            errors = self.validator.validate_settings_structure(self._settings)
+            num_schemes = len(self.get_scheme_order())
+            errors = self.validator.validate_settings_structure(
+                self._settings, num_schemes
+            )
             if errors:
                 self.logger.warning(f"Settings validation failed: {errors}")
                 if self._repair_settings(errors):
@@ -357,8 +389,9 @@ class SettingsManager:
         def save_task():
             with self._lock:
                 try:
+                    num_schemes = len(self.get_scheme_order())
                     errors = self.validator.validate_settings_structure(
-                        settings_to_save
+                        settings_to_save, num_schemes
                     )
                     if errors:
                         self.logger.error(
@@ -421,7 +454,6 @@ class SettingsManager:
                     self._settings[key] = value
                 self._dirty = True
 
-                # Aplica as configurações de log imediatamente se forem alteradas
                 if key == "console_log_level":
                     from ..utils import logger
 
@@ -471,7 +503,9 @@ class SettingsManager:
     def _validate_setting_value(self, key: str, value: Any):
         base_key = key.split(".")[0]
         validators = {
-            "color_scheme": self.validator.validate_color_scheme,
+            "color_scheme": lambda v: self.validator.validate_color_scheme(
+                v, len(self.get_scheme_order())
+            ),
             "transparency": self.validator.validate_transparency,
             "font": self.validator.validate_font,
         }
@@ -495,14 +529,27 @@ class SettingsManager:
         if listener in self._change_listeners:
             self._change_listeners.remove(listener)
 
+    def get_all_schemes(self) -> Dict[str, Any]:
+        """Merges built-in schemes with custom schemes."""
+        schemes = ColorSchemes.get_schemes().copy()
+        schemes.update(self.custom_schemes)
+        return schemes
+
+    def get_scheme_order(self) -> List[str]:
+        """Returns the order of built-in schemes followed by sorted custom schemes."""
+        return ColorSchemeMap.get_schemes_list() + sorted(self.custom_schemes.keys())
+
     def get_color_scheme_name(self) -> str:
         index = self.get("color_scheme", 0)
-        return ColorSchemeMap.get_scheme_name(index)
+        scheme_order = self.get_scheme_order()
+        if 0 <= index < len(scheme_order):
+            return scheme_order[index]
+        return scheme_order[0]
 
     def get_color_scheme_data(self) -> Dict[str, Any]:
         scheme_name = self.get_color_scheme_name()
-        schemes = ColorSchemes.get_schemes()
-        return schemes.get(scheme_name, schemes[ColorSchemeMap.get_schemes_list()[0]])
+        all_schemes = self.get_all_schemes()
+        return all_schemes.get(scheme_name, all_schemes[self.get_scheme_order()[0]])
 
     def apply_terminal_settings(self, terminal, window) -> None:
         transparency = self.get("transparency", 0)
@@ -570,7 +617,6 @@ class SettingsManager:
         terminal.set_mouse_autohide(self.get("mouse_autohide", True))
         terminal.set_audible_bell(self.get("bell_sound", False))
 
-        # VTE Features
         terminal.set_scrollback_lines(self.get("scrollback_lines", 10000))
         cursor_shape_map = [
             Vte.CursorShape.BLOCK,
@@ -586,7 +632,6 @@ class SettingsManager:
         terminal.set_enable_bidi(self.get("bidi_enabled", False))
         terminal.set_enable_sixel(self.get("sixel_enabled", True))
 
-        # Fase 1
         text_blink_map = [Vte.TextBlinkMode.FOCUSED, Vte.TextBlinkMode.UNFOCUSED]
         blink_index = self.get("text_blink_mode", 0)
         terminal.set_text_blink_mode(
@@ -607,7 +652,6 @@ class SettingsManager:
         )
         terminal.set_enable_a11y(self.get("accessibility_enabled", True))
 
-        # Fase 2
         terminal.set_cell_height_scale(self.get("line_spacing", 1.0))
         terminal.set_bold_is_bright(self.get("bold_is_bright", True))
         backspace_map = [
@@ -665,7 +709,6 @@ class SettingsManager:
         self.set("sidebar_visible", visible)
 
 
-# Global settings manager instance
 _settings_manager: Optional[SettingsManager] = None
 _settings_lock = threading.Lock()
 

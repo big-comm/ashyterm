@@ -7,13 +7,13 @@ import gi
 
 gi.require_version("Gtk", "4.0")
 gi.require_version("Adw", "1")
-from gi.repository import Adw, Gdk, Gio, GLib, GObject, Gtk, Vte
+from gi.repository import Adw, Gdk, Gio, GLib, GObject, Gtk
 
 from ..helpers import accelerator_to_label
-from ..sessions.models import SessionFolder, SessionItem
+from ..sessions.models import LayoutItem, SessionFolder, SessionItem
 from ..sessions.operations import SessionOperations
 from ..sessions.storage import save_sessions_and_folders
-from ..settings.config import ColorSchemeMap, ColorSchemes, get_config_paths
+from ..settings.config import get_config_paths
 from ..settings.manager import SettingsManager
 from ..terminal.spawner import get_spawner
 from ..utils.backup import BackupType, get_backup_manager
@@ -27,6 +27,7 @@ from ..utils.security import (
     validate_ssh_key_file,
 )
 from ..utils.translation_utils import _
+from .color_scheme_dialog import ColorSchemeDialog
 
 
 class BaseDialog(Adw.Window):
@@ -38,8 +39,6 @@ class BaseDialog(Adw.Window):
             "modal": True,
             "transient_for": parent_window,
             "hide_on_close": True,
-            "default_width": 450,
-            "default_height": 500,
         }
         default_props.update(kwargs)
         super().__init__(**default_props)
@@ -51,18 +50,19 @@ class BaseDialog(Adw.Window):
         self.config_paths = get_config_paths()
         self._validation_errors: List[str] = []
         self._has_changes = False
+        self._original_data: Optional[Dict[str, Any]] = None
 
         key_controller = Gtk.EventControllerKey()
         key_controller.connect("key-pressed", self._on_key_pressed)
         self.add_controller(key_controller)
 
-    def _on_key_pressed(self, _controller, keyval, _keycode, _state):
+    def _on_key_pressed(self, controller, keyval, keycode, state):
         if keyval == Gdk.KEY_Escape:
             self._on_cancel_clicked(None)
             return Gdk.EVENT_STOP
         return Gdk.EVENT_PROPAGATE
 
-    def _on_cancel_clicked(self, _button):
+    def _on_cancel_clicked(self, button):
         self.close()
 
     def _mark_changed(self):
@@ -119,6 +119,9 @@ class BaseDialog(Adw.Window):
     def _clear_validation_errors(self):
         self._validation_errors.clear()
 
+    def _has_validation_errors(self) -> bool:
+        return len(self._validation_errors) > 0
+
 
 class SessionEditDialog(BaseDialog):
     def __init__(
@@ -142,6 +145,7 @@ class SessionEditDialog(BaseDialog):
             else session_item
         )
         self.original_session = session_item if not self.is_new_item else None
+        self._original_data = self.editing_session.to_dict()
         self.folder_paths_map: Dict[str, str] = {}
         self._setup_ui()
         self.connect("map", self._on_map)
@@ -149,7 +153,7 @@ class SessionEditDialog(BaseDialog):
             f"Session edit dialog opened: {self.editing_session.name} ({'new' if self.is_new_item else 'edit'})"
         )
 
-    def _on_map(self, _widget):
+    def _on_map(self, widget):
         if self.name_entry:
             self.name_entry.grab_focus()
 
@@ -224,7 +228,7 @@ class SessionEditDialog(BaseDialog):
             self.folder_paths_map[display_name] = folder.path
         folder_row.set_model(folder_model)
         selected_index = 0
-        for i, (_display, path_val) in enumerate(self.folder_paths_map.items()):
+        for i, (display, path_val) in enumerate(self.folder_paths_map.items()):
             if path_val == self.editing_session.folder_path:
                 selected_index = i
                 break
@@ -283,6 +287,7 @@ class SessionEditDialog(BaseDialog):
             title=_("Port"), subtitle=_("SSH port number (default: 22)")
         )
         self.port_entry = Gtk.SpinButton.new_with_range(1, 65535, 1)
+        self.port_entry.set_valign(Gtk.Align.CENTER)
         self.port_entry.set_value(self.editing_session.port)
         self.port_entry.connect("value-changed", self._on_port_changed)
         port_row.add_suffix(self.port_entry)
@@ -319,6 +324,7 @@ class SessionEditDialog(BaseDialog):
         self.key_path_entry.connect("changed", self._on_key_path_changed)
         self.key_path_entry.connect("activate", self._on_save_clicked)
         self.browse_button = Gtk.Button(label=_("Browse..."), css_classes=["flat"])
+        self.browse_button.set_valign(Gtk.Align.CENTER)
         self.browse_button.connect("clicked", self._on_browse_key_clicked)
         key_box.append(self.key_path_entry)
         key_box.append(self.browse_button)
@@ -360,12 +366,15 @@ class SessionEditDialog(BaseDialog):
     def _create_action_bar(self) -> Gtk.ActionBar:
         action_bar = Gtk.ActionBar()
         cancel_button = Gtk.Button(label=_("Cancel"))
+        cancel_button.set_valign(Gtk.Align.CENTER)
         cancel_button.connect("clicked", self._on_cancel_clicked)
         action_bar.pack_start(cancel_button)
         self.test_button = Gtk.Button(label=_("Test Connection"), css_classes=["flat"])
+        self.test_button.set_valign(Gtk.Align.CENTER)
         self.test_button.connect("clicked", self._on_test_connection_clicked)
         action_bar.pack_start(self.test_button)
         save_button = Gtk.Button(label=_("Save"), css_classes=["suggested-action"])
+        save_button.set_valign(Gtk.Align.CENTER)
         save_button.connect("clicked", self._on_save_clicked)
         action_bar.pack_end(save_button)
         self.set_default_widget(save_button)
@@ -375,10 +384,10 @@ class SessionEditDialog(BaseDialog):
         entry.remove_css_class("error")
         self._mark_changed()
 
-    def _on_folder_changed(self, _combo_row, _param) -> None:
+    def _on_folder_changed(self, combo_row, param) -> None:
         self._mark_changed()
 
-    def _on_type_changed(self, combo_row, _param) -> None:
+    def _on_type_changed(self, combo_row, param) -> None:
         if (
             combo_row.get_selected() == 1
             and self.is_new_item
@@ -396,7 +405,7 @@ class SessionEditDialog(BaseDialog):
         if hostname and not HostnameValidator.is_valid_hostname(hostname):
             entry.add_css_class("error")
 
-    def _on_user_changed(self, _entry: Gtk.Entry) -> None:
+    def _on_user_changed(self, entry: Gtk.Entry) -> None:
         self._mark_changed()
 
     def _on_port_changed(self, spin_button: Gtk.SpinButton) -> None:
@@ -406,7 +415,7 @@ class SessionEditDialog(BaseDialog):
             "error"
         ) if 1 <= port <= 65535 else spin_button.add_css_class("error")
 
-    def _on_auth_changed(self, combo_row, _param) -> None:
+    def _on_auth_changed(self, combo_row, param) -> None:
         if combo_row.get_selected() == 0 and not self.key_path_entry.get_text().strip():
             self.key_path_entry.set_text(f"{get_ssh_directory()}/id_rsa")
         self._update_auth_visibility()
@@ -422,7 +431,7 @@ class SessionEditDialog(BaseDialog):
             except Exception:
                 entry.add_css_class("error")
 
-    def _on_password_changed(self, _entry: Gtk.PasswordEntry) -> None:
+    def _on_password_changed(self, entry: Gtk.PasswordEntry) -> None:
         self._mark_changed()
 
     def _update_ssh_visibility(self) -> None:
@@ -438,7 +447,7 @@ class SessionEditDialog(BaseDialog):
             self.key_box.set_visible(is_key)
             self.password_box.set_visible(not is_key)
 
-    def _on_browse_key_clicked(self, _button) -> None:
+    def _on_browse_key_clicked(self, button) -> None:
         try:
             file_dialog = Gtk.FileDialog(title=_("Select SSH Key"), modal=True)
             ssh_dir = get_ssh_directory()
@@ -471,7 +480,7 @@ class SessionEditDialog(BaseDialog):
         except Exception as e:
             self.logger.error(f"File dialog response handling failed: {e}")
 
-    def _on_test_connection_clicked(self, _button) -> None:
+    def _on_test_connection_clicked(self, button) -> None:
         try:
             test_session = self._create_session_from_fields()
             if not test_session:
@@ -543,7 +552,7 @@ class SessionEditDialog(BaseDialog):
             )
         return False
 
-    def _on_cancel_clicked(self, _button) -> None:
+    def _on_cancel_clicked(self, button) -> None:
         try:
             if self._has_changes:
                 self._show_warning_dialog(
@@ -557,7 +566,7 @@ class SessionEditDialog(BaseDialog):
             self.logger.error(f"Cancel handling failed: {e}")
             self.close()
 
-    def _on_save_clicked(self, _button) -> None:
+    def _on_save_clicked(self, button) -> None:
         try:
             if not self._validate_and_save():
                 return
@@ -707,7 +716,6 @@ class SessionEditDialog(BaseDialog):
 
 
 class FolderEditDialog(BaseDialog):
-    # This class remains unchanged
     def __init__(
         self,
         parent_window,
@@ -728,6 +736,7 @@ class FolderEditDialog(BaseDialog):
         )
         self.position = position
         self.old_path = folder_item.path if folder_item else None
+        self._original_data = self.editing_folder.to_dict()
         self.parent_paths_map: Dict[str, str] = {}
         self._setup_ui()
         self.connect("map", self._on_map)
@@ -735,7 +744,7 @@ class FolderEditDialog(BaseDialog):
             f"Folder edit dialog opened: {self.editing_folder.name} ({'new' if self.is_new_item else 'edit'})"
         )
 
-    def _on_map(self, _widget):
+    def _on_map(self, widget):
         if self.name_entry:
             self.name_entry.grab_focus()
 
@@ -812,9 +821,11 @@ class FolderEditDialog(BaseDialog):
     def _create_action_bar(self) -> Gtk.ActionBar:
         action_bar = Gtk.ActionBar()
         cancel_button = Gtk.Button(label=_("Cancel"))
+        cancel_button.set_valign(Gtk.Align.CENTER)
         cancel_button.connect("clicked", self._on_cancel_clicked)
         action_bar.pack_start(cancel_button)
         save_button = Gtk.Button(label=_("Save"), css_classes=["suggested-action"])
+        save_button.set_valign(Gtk.Align.CENTER)
         save_button.connect("clicked", self._on_save_clicked)
         action_bar.pack_end(save_button)
         self.set_default_widget(save_button)
@@ -824,10 +835,10 @@ class FolderEditDialog(BaseDialog):
         entry.remove_css_class("error")
         self._mark_changed()
 
-    def _on_parent_changed(self, _combo_row, _param) -> None:
+    def _on_parent_changed(self, combo_row, param) -> None:
         self._mark_changed()
 
-    def _on_cancel_clicked(self, _button) -> None:
+    def _on_cancel_clicked(self, button) -> None:
         if self._has_changes:
             self._show_warning_dialog(
                 _("Unsaved Changes"),
@@ -837,7 +848,7 @@ class FolderEditDialog(BaseDialog):
         else:
             self.close()
 
-    def _on_save_clicked(self, _button) -> None:
+    def _on_save_clicked(self, button) -> None:
         try:
             operations = self.parent_window.session_tree.operations
             updated_folder = self._build_updated_folder()
@@ -883,72 +894,10 @@ class FolderEditDialog(BaseDialog):
         return SessionFolder.from_dict(updated_data)
 
 
-class _PalettePreview(Gtk.CheckButton):
-    """A custom widget to display a color scheme preview."""
-
-    def __init__(self, scheme_data, **kwargs):
-        super().__init__(**kwargs)
-        self.set_can_focus(False)
-        self.add_css_class("card")
-        self.add_css_class("palette-preview")
-
-        main_vbox = Gtk.Box(
-            orientation=Gtk.Orientation.VERTICAL,
-            spacing=8,
-            margin_top=12,
-            margin_bottom=12,
-            margin_start=12,
-            margin_end=12,
-        )
-        self.set_child(main_vbox)
-
-        label = Gtk.Label(
-            label=f"The quick brown fox\njumps over the lazy dog",
-            justify=Gtk.Justification.LEFT,
-            xalign=0,
-        )
-        main_vbox.append(label)
-
-        color_box = Gtk.Box(
-            orientation=Gtk.Orientation.HORIZONTAL,
-            spacing=4,
-            halign=Gtk.Align.START,
-            margin_top=4,
-        )
-        main_vbox.append(color_box)
-
-        for i in range(8):
-            color_widget = Gtk.Box()
-            color_widget.set_size_request(16, 16)
-            color_widget.add_css_class(f"color-swatch-{i}")
-            color_box.append(color_widget)
-
-        self.provider = Gtk.CssProvider()
-        style_context = self.get_style_context()
-        style_context.add_provider(self.provider, Gtk.STYLE_PROVIDER_PRIORITY_USER)
-        self._update_colors(scheme_data)
-
-    def _update_colors(self, scheme_data):
-        fg = scheme_data["foreground"]
-        bg = scheme_data["background"]
-        palette = scheme_data["palette"]
-        css = f"""
-        .palette-preview.card {{
-            background-color: {bg};
-            color: {fg};
-        }}
-        """
-        for i in range(8):
-            if i < len(palette):
-                css += f".color-swatch-{i} {{ background-color: {palette[i]}; border-radius: 3px; }}"
-        self.provider.load_from_data(css.encode("utf-8"))
-
-
 class PreferencesDialog(Adw.PreferencesWindow):
     """Enhanced preferences dialog with comprehensive settings management."""
 
     __gsignals__ = {
-        "color-scheme-changed": (GObject.SignalFlags.RUN_FIRST, None, (int,)),
         "transparency-changed": (GObject.SignalFlags.RUN_FIRST, None, (float,)),
         "font-changed": (GObject.SignalFlags.RUN_FIRST, None, (str,)),
         "shortcut-changed": (GObject.SignalFlags.RUN_FIRST, None, ()),
@@ -959,18 +908,22 @@ class PreferencesDialog(Adw.PreferencesWindow):
         super().__init__(
             title=_("Preferences"),
             transient_for=parent_window,
-            modal=True,
+            modal=False,
             hide_on_close=True,
-            default_width=600,
-            default_height=700,
+            default_width=900,
+            default_height=680,
+            search_enabled=True,
         )
         self.logger = get_logger("ashyterm.ui.dialogs.preferences")
         self.settings_manager = settings_manager
         self.shortcut_rows: Dict[str, Adw.ActionRow] = {}
+        self.shortcut_groups: List[Adw.PreferencesGroup] = []
         self._setup_appearance_page()
-        self._setup_behavior_page()
+        self._setup_terminal_page()
+        self._setup_profiles_page()
         self._setup_shortcuts_page()
         self._setup_advanced_page()
+        self.connect("notify::search-text", self._on_shortcut_search_changed)
         self.logger.info("Preferences dialog initialized")
 
     def _setup_appearance_page(self) -> None:
@@ -979,38 +932,18 @@ class PreferencesDialog(Adw.PreferencesWindow):
         )
         self.add(page)
 
-        palette_group = Adw.PreferencesGroup(title=_("Palette"))
+        palette_group = Adw.PreferencesGroup(title=_("Color Scheme"))
         page.add(palette_group)
 
-        flowbox = Gtk.FlowBox()
-        flowbox.set_valign(Gtk.Align.START)
-        flowbox.set_max_children_per_line(3)
-        flowbox.set_min_children_per_line(2)
-        flowbox.set_selection_mode(Gtk.SelectionMode.NONE)
-        flowbox.set_homogeneous(True)
+        self.color_scheme_row = Adw.ActionRow(title=_("Current Scheme"))
+        self._update_color_scheme_row_subtitle()
 
-        schemes = ColorSchemes.get_schemes()
-        scheme_order = ColorSchemeMap.get_schemes_list()
-        current_selection_index = self.settings_manager.get("color_scheme", 0)
-
-        first_button = None
-        for i, scheme_key in enumerate(scheme_order):
-            scheme_data = schemes[scheme_key]
-            preview = _PalettePreview(scheme_data=scheme_data)
-            if first_button is None:
-                first_button = preview
-            else:
-                preview.set_group(first_button)
-
-            if i == current_selection_index:
-                preview.set_active(True)
-
-            preview.connect("toggled", self._on_palette_selected, i)
-            flowbox.insert(preview, -1)
-
-        palette_row = Adw.PreferencesRow()
-        palette_row.set_child(flowbox)
-        palette_group.add(palette_row)
+        manage_button = Gtk.Button(label=_("Manage Schemes..."))
+        manage_button.set_valign(Gtk.Align.CENTER)
+        manage_button.connect("clicked", self._on_manage_schemes_clicked)
+        self.color_scheme_row.add_suffix(manage_button)
+        self.color_scheme_row.set_activatable_widget(manage_button)
+        palette_group.add(self.color_scheme_row)
 
         font_group = Adw.PreferencesGroup(
             title=_("Typography"),
@@ -1023,6 +956,7 @@ class PreferencesDialog(Adw.PreferencesWindow):
             subtitle=_("Select font family and size for terminal text"),
         )
         font_button = Gtk.FontButton()
+        font_button.set_valign(Gtk.Align.CENTER)
         font_button.set_font(self.settings_manager.get("font", "Monospace 10"))
         font_button.connect("font-set", self._on_font_changed)
         font_row.add_suffix(font_button)
@@ -1035,6 +969,7 @@ class PreferencesDialog(Adw.PreferencesWindow):
         )
         spacing_box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=6)
         self.spacing_spin = Gtk.SpinButton.new_with_range(0.8, 2.0, 0.05)
+        self.spacing_spin.set_valign(Gtk.Align.CENTER)
         self.spacing_spin.set_value(self.settings_manager.get("line_spacing", 1.0))
         self.spacing_spin.connect("value-changed", self._on_line_spacing_changed)
         spacing_box.append(self.spacing_spin)
@@ -1072,63 +1007,11 @@ class PreferencesDialog(Adw.PreferencesWindow):
         )
         misc_group.add(bold_bright_row)
 
-    def _setup_behavior_page(self) -> None:
-        """Sets up the Terminal preferences page."""
+    def _setup_terminal_page(self) -> None:
         page = Adw.PreferencesPage(
-            title=_("Behavior"), icon_name="preferences-system-symbolic"
+            title=_("Terminal"), icon_name="utilities-terminal-symbolic"
         )
         self.add(page)
-
-        startup_group = Adw.PreferencesGroup(title=_("Startup"))
-        page.add(startup_group)
-
-        restore_tabs_row = Adw.SwitchRow(
-            title=_("Restore tabs on restart"),
-            subtitle=_("Reopen tabs and panels from the previous session"),
-        )
-        restore_tabs_row.set_active(
-            self.settings_manager.get("restore_tabs_on_restart", True)
-        )
-        restore_tabs_row.connect(
-            "notify::active",
-            lambda r, _: self._on_setting_changed(
-                "restore_tabs_on_restart", r.get_active()
-            ),
-        )
-        startup_group.add(restore_tabs_row)
-
-        shell_group = Adw.PreferencesGroup(
-            title=_("Shell"),
-            description=_("Configure shell integration and behavior"),
-        )
-        page.add(shell_group)
-
-        login_shell_row = Adw.SwitchRow(
-            title=_("Run Command as a Login Shell"),
-            subtitle=_("Sources /etc/profile and ~/.profile on startup"),
-        )
-        login_shell_row.set_active(self.settings_manager.get("use_login_shell", False))
-        login_shell_row.connect(
-            "notify::active",
-            lambda r, _: self._on_setting_changed("use_login_shell", r.get_active()),
-        )
-        shell_group.add(login_shell_row)
-
-        scrolling_group = Adw.PreferencesGroup(
-            title=_("Scrolling"),
-        )
-        page.add(scrolling_group)
-
-        scrollback_row = Adw.ActionRow(
-            title=_("Scrollback Lines"),
-            subtitle=_("Number of lines to keep in history (0 for unlimited)"),
-        )
-        scrollback_spin = Gtk.SpinButton.new_with_range(0, 1000000, 1000)
-        scrollback_spin.set_value(self.settings_manager.get("scrollback_lines", 10000))
-        scrollback_spin.connect("value-changed", self._on_scrollback_changed)
-        scrollback_row.add_suffix(scrollback_spin)
-        scrollback_row.set_activatable_widget(scrollback_spin)
-        scrolling_group.add(scrollback_row)
 
         cursor_group = Adw.PreferencesGroup(title=_("Cursor"))
         page.add(cursor_group)
@@ -1154,8 +1037,66 @@ class PreferencesDialog(Adw.PreferencesWindow):
         cursor_blink_row.connect("notify::selected", self._on_cursor_blink_changed)
         cursor_group.add(cursor_blink_row)
 
-        bell_group = Adw.PreferencesGroup(title=_("Bell"))
-        page.add(bell_group)
+        scrolling_group = Adw.PreferencesGroup(title=_("Scrolling"))
+        page.add(scrolling_group)
+
+        scrollback_row = Adw.ActionRow(
+            title=_("Scrollback Lines"),
+            subtitle=_("Number of lines to keep in history (0 for unlimited)"),
+        )
+        scrollback_spin = Gtk.SpinButton.new_with_range(0, 1000000, 1000)
+        scrollback_spin.set_valign(Gtk.Align.CENTER)
+        scrollback_spin.set_value(self.settings_manager.get("scrollback_lines", 10000))
+        scrollback_spin.connect("value-changed", self._on_scrollback_changed)
+        scrollback_row.add_suffix(scrollback_spin)
+        scrollback_row.set_activatable_widget(scrollback_spin)
+        scrolling_group.add(scrollback_row)
+
+        mouse_scroll_row = Adw.ActionRow(
+            title=_("Mouse Scroll Sensitivity"),
+            subtitle=_("Controls the scroll speed for a mouse wheel. Lower is slower."),
+        )
+        mouse_scroll_spin = Gtk.SpinButton.new_with_range(1, 500, 1)
+        mouse_scroll_spin.set_valign(Gtk.Align.CENTER)
+        mouse_scroll_spin.set_value(
+            self.settings_manager.get("mouse_scroll_sensitivity", 30.0)
+        )
+        mouse_scroll_spin.connect(
+            "value-changed", self._on_mouse_scroll_sensitivity_changed
+        )
+        mouse_scroll_row.add_suffix(mouse_scroll_spin)
+        mouse_scroll_row.set_activatable_widget(mouse_scroll_spin)
+        scrolling_group.add(mouse_scroll_row)
+
+        touchpad_scroll_row = Adw.ActionRow(
+            title=_("Touchpad Scroll Sensitivity"),
+            subtitle=_("Controls the scroll speed for a touchpad. Lower is slower."),
+        )
+        touchpad_scroll_spin = Gtk.SpinButton.new_with_range(1, 500, 1)
+        touchpad_scroll_spin.set_valign(Gtk.Align.CENTER)
+        touchpad_scroll_spin.set_value(
+            self.settings_manager.get("touchpad_scroll_sensitivity", 30.0)
+        )
+        touchpad_scroll_spin.connect(
+            "value-changed", self._on_touchpad_scroll_sensitivity_changed
+        )
+        touchpad_scroll_row.add_suffix(touchpad_scroll_spin)
+        touchpad_scroll_row.set_activatable_widget(touchpad_scroll_spin)
+        scrolling_group.add(touchpad_scroll_row)
+
+        shell_group = Adw.PreferencesGroup(title=_("Shell &amp; Bell"))
+        page.add(shell_group)
+
+        login_shell_row = Adw.SwitchRow(
+            title=_("Run Command as a Login Shell"),
+            subtitle=_("Sources /etc/profile and ~/.profile on startup"),
+        )
+        login_shell_row.set_active(self.settings_manager.get("use_login_shell", False))
+        login_shell_row.connect(
+            "notify::active",
+            lambda r, _: self._on_setting_changed("use_login_shell", r.get_active()),
+        )
+        shell_group.add(login_shell_row)
 
         bell_row = Adw.SwitchRow(
             title=_("Audible Bell"),
@@ -1166,55 +1107,70 @@ class PreferencesDialog(Adw.PreferencesWindow):
             "notify::active",
             lambda r, _: self._on_setting_changed("bell_sound", r.get_active()),
         )
-        bell_group.add(bell_row)
+        shell_group.add(bell_row)
 
-        compatibility_group = Adw.PreferencesGroup(
-            title=_("Compatibility"),
-            description=_("Settings for compatibility with older systems and tools"),
+    def _setup_profiles_page(self) -> None:
+        page = Adw.PreferencesPage(
+            title=_("Profiles & Data"), icon_name="folder-saved-search-symbolic"
         )
-        page.add(compatibility_group)
+        self.add(page)
 
-        backspace_row = Adw.ComboRow(
-            title=_("Backspace Key"), subtitle=_("Sequence to send for Backspace key")
-        )
-        backspace_row.set_model(
-            Gtk.StringList.new([
-                _("Automatic"),
-                _("ASCII BACKSPACE (^H)"),
-                _("ASCII DELETE"),
-                _("Escape Sequence"),
-            ])
-        )
-        backspace_row.set_selected(self.settings_manager.get("backspace_binding", 0))
-        backspace_row.connect("notify::selected", self._on_backspace_binding_changed)
-        compatibility_group.add(backspace_row)
+        startup_group = Adw.PreferencesGroup(title=_("Startup"))
+        page.add(startup_group)
 
-        delete_row = Adw.ComboRow(
-            title=_("Delete Key"), subtitle=_("Sequence to send for Delete key")
+        restore_policy_row = Adw.ComboRow(
+            title=_("On Startup"),
+            subtitle=_("Action to take when the application starts"),
         )
-        delete_row.set_model(
-            Gtk.StringList.new([
-                _("Automatic"),
-                _("ASCII DELETE"),
-                _("Escape Sequence"),
-            ])
+        policy_map = ["always", "ask", "never"]
+        policy_strings = [
+            _("Always restore previous session"),
+            _("Ask to restore previous session"),
+            _("Never restore previous session"),
+        ]
+        restore_policy_row.set_model(Gtk.StringList.new(policy_strings))
+        current_policy = self.settings_manager.get("session_restore_policy", "never")
+        try:
+            selected_index = policy_map.index(current_policy)
+        except ValueError:
+            selected_index = 2
+        restore_policy_row.set_selected(selected_index)
+        restore_policy_row.connect(
+            "notify::selected", self._on_restore_policy_changed, policy_map
         )
-        delete_row.set_selected(self.settings_manager.get("delete_binding", 0))
-        delete_row.connect("notify::selected", self._on_delete_binding_changed)
-        compatibility_group.add(delete_row)
+        startup_group.add(restore_policy_row)
 
-        ambiguous_width_row = Adw.ComboRow(
-            title=_("Ambiguous-width Characters"),
-            subtitle=_("Render ambiguous characters as narrow or wide"),
+        backup_group = Adw.PreferencesGroup(
+            title=_("Backup &amp; Recovery"),
+            description=_("Configure automatic backup and recovery options"),
         )
-        ambiguous_width_row.set_model(Gtk.StringList.new([_("Narrow"), _("Wide")]))
-        ambiguous_width_row.set_selected(
-            self.settings_manager.get("cjk_ambiguous_width", 1) - 1
+        page.add(backup_group)
+
+        auto_backup_row = Adw.SwitchRow(
+            title=_("Automatic Backups"),
+            subtitle=_("Automatically create backups of sessions and settings"),
         )
-        ambiguous_width_row.connect(
-            "notify::selected", self._on_ambiguous_width_changed
+        auto_backup_row.set_active(
+            self.settings_manager.get("auto_backup_enabled", False)
         )
-        compatibility_group.add(ambiguous_width_row)
+        auto_backup_row.connect(
+            "notify::active",
+            lambda r, _: self._on_setting_changed(
+                "auto_backup_enabled", r.get_active()
+            ),
+        )
+        backup_group.add(auto_backup_row)
+
+        backup_now_row = Adw.ActionRow(
+            title=_("Manual Backup"),
+            subtitle=_("Create a backup of your current sessions and settings now"),
+        )
+        backup_now_button = Gtk.Button(label=_("Backup Now"))
+        backup_now_button.set_valign(Gtk.Align.CENTER)
+        backup_now_button.connect("clicked", self._on_backup_now_clicked)
+        backup_now_row.add_suffix(backup_now_button)
+        backup_now_row.set_activatable_widget(backup_now_button)
+        backup_group.add(backup_now_row)
 
     def _setup_shortcuts_page(self) -> None:
         shortcuts_page = Adw.PreferencesPage(
@@ -1222,16 +1178,21 @@ class PreferencesDialog(Adw.PreferencesWindow):
             icon_name="preferences-desktop-keyboard-shortcuts-symbolic",
         )
         self.add(shortcuts_page)
+
         terminal_group = Adw.PreferencesGroup(
             title=_("Terminal Actions"),
             description=_("Keyboard shortcuts for terminal operations"),
         )
+        self.shortcut_groups.append(terminal_group)
         shortcuts_page.add(terminal_group)
+
         app_group = Adw.PreferencesGroup(
             title=_("Application Actions"),
             description=_("Keyboard shortcuts for application operations"),
         )
+        self.shortcut_groups.append(app_group)
         shortcuts_page.add(app_group)
+
         terminal_shortcuts = {
             "new-local-tab": _("New Tab"),
             "close-tab": _("Close Tab"),
@@ -1247,24 +1208,6 @@ class PreferencesDialog(Adw.PreferencesWindow):
         }
         self._create_shortcut_rows(terminal_group, terminal_shortcuts)
         self._create_shortcut_rows(app_group, app_shortcuts)
-
-    def _create_shortcut_rows(
-        self, group: Adw.PreferencesGroup, shortcuts: Dict[str, str]
-    ) -> None:
-        for key, title in shortcuts.items():
-            current_shortcut = self.settings_manager.get_shortcut(key)
-            subtitle = (
-                accelerator_to_label(current_shortcut)
-                if current_shortcut
-                else _("None")
-            )
-            row = Adw.ActionRow(title=title, subtitle=subtitle)
-            button = Gtk.Button(label=_("Edit"), css_classes=["flat"])
-            button.connect("clicked", self._on_shortcut_edit_clicked, key, row)
-            row.add_suffix(button)
-            row.set_activatable_widget(button)
-            group.add(row)
-            self.shortcut_rows[key] = row
 
     def _setup_advanced_page(self) -> None:
         advanced_page = Adw.PreferencesPage(
@@ -1302,46 +1245,40 @@ class PreferencesDialog(Adw.PreferencesWindow):
         )
         features_group.add(sixel_row)
 
-        accessibility_group = Adw.PreferencesGroup(
-            title=_("Accessibility"),
-            description=_(
-                "Settings for screen readers and other assistive technologies"
-            ),
+        compatibility_group = Adw.PreferencesGroup(
+            title=_("Compatibility"),
+            description=_("Settings for compatibility with older systems and tools"),
         )
-        advanced_page.add(accessibility_group)
+        advanced_page.add(compatibility_group)
 
-        a11y_row = Adw.SwitchRow(
-            title=_("Allow Screen Readers"),
-            subtitle=_("Permit tools like Orca to read terminal content"),
+        backspace_row = Adw.ComboRow(
+            title=_("Backspace Key"), subtitle=_("Sequence to send for Backspace key")
         )
-        a11y_row.set_active(self.settings_manager.get("accessibility_enabled", True))
-        a11y_row.connect(
-            "notify::active",
-            lambda r, _: self._on_setting_changed(
-                "accessibility_enabled", r.get_active()
-            ),
+        backspace_row.set_model(
+            Gtk.StringList.new([
+                _("Automatic"),
+                _("ASCII BACKSPACE (^H)"),
+                _("ASCII DELETE"),
+                _("Escape Sequence"),
+            ])
         )
-        accessibility_group.add(a11y_row)
+        backspace_row.set_selected(self.settings_manager.get("backspace_binding", 0))
+        backspace_row.connect("notify::selected", self._on_backspace_binding_changed)
+        compatibility_group.add(backspace_row)
 
-        backup_group = Adw.PreferencesGroup(
-            title=_("Backup & Recovery"),
-            description=_("Configure automatic backup and recovery options"),
+        delete_row = Adw.ComboRow(
+            title=_("Delete Key"), subtitle=_("Sequence to send for Delete key")
         )
-        advanced_page.add(backup_group)
-        auto_backup_row = Adw.SwitchRow(
-            title=_("Automatic Backups"),
-            subtitle=_("Automatically create backups of sessions and settings"),
+        delete_row.set_model(
+            Gtk.StringList.new([
+                _("Automatic"),
+                _("ASCII DELETE"),
+                _("Escape Sequence"),
+            ])
         )
-        auto_backup_row.set_active(
-            self.settings_manager.get("auto_backup_enabled", False)
-        )
-        auto_backup_row.connect(
-            "notify::active",
-            lambda r, _: self._on_setting_changed(
-                "auto_backup_enabled", r.get_active()
-            ),
-        )
-        backup_group.add(auto_backup_row)
+        delete_row.set_selected(self.settings_manager.get("delete_binding", 0))
+        delete_row.connect("notify::selected", self._on_delete_binding_changed)
+        compatibility_group.add(delete_row)
 
         log_group = Adw.PreferencesGroup(
             title=_("Logging"), description=_("Configure application logging behavior")
@@ -1383,10 +1320,70 @@ class PreferencesDialog(Adw.PreferencesWindow):
             subtitle=_("Restore all settings to their default values"),
         )
         reset_button = Gtk.Button(label=_("Reset"), css_classes=["destructive-action"])
+        reset_button.set_valign(Gtk.Align.CENTER)
         reset_button.connect("clicked", self._on_reset_settings_clicked)
         reset_row.add_suffix(reset_button)
         reset_row.set_activatable_widget(reset_button)
         reset_group.add(reset_row)
+
+    def _update_color_scheme_row_subtitle(self):
+        scheme_data = self.settings_manager.get_color_scheme_data()
+        self.color_scheme_row.set_subtitle(scheme_data.get("name", "Unknown"))
+
+    def _on_manage_schemes_clicked(self, button):
+        dialog = ColorSchemeDialog(self, self.settings_manager)
+        main_window = self.get_transient_for()
+        if main_window and hasattr(main_window, "terminal_manager"):
+            dialog.connect(
+                "scheme-changed",
+                lambda d,
+                idx: main_window.terminal_manager.apply_settings_to_all_terminals(),
+            )
+        dialog.connect(
+            "close-request", lambda win: self._update_color_scheme_row_subtitle()
+        )
+        dialog.present()
+
+    def _on_font_changed(self, font_button) -> None:
+        font = font_button.get_font()
+        self.settings_manager.set("font", font)
+        self.emit("font-changed", font)
+
+    def _on_line_spacing_changed(self, spin_button) -> None:
+        value = spin_button.get_value()
+        self._on_setting_changed("line_spacing", value)
+
+    def _on_transparency_changed(self, scale) -> None:
+        value = scale.get_value()
+        self.settings_manager.set("transparency", value)
+        self.emit("transparency-changed", value)
+
+    def _on_restore_policy_changed(self, combo_row, _param, policy_map):
+        index = combo_row.get_selected()
+        if 0 <= index < len(policy_map):
+            policy = policy_map[index]
+            self._on_setting_changed("session_restore_policy", policy)
+
+    def _on_backup_now_clicked(self, button):
+        app = self.get_transient_for().get_application()
+        if app:
+            app.activate_action("backup-now", None)
+
+    def _on_shortcut_search_changed(self, window, _param):
+        query = self.get_search_text().lower().strip()
+        for group in self.shortcut_groups:
+            group_visible = False
+            child = group.get_first_child()
+            while child:
+                if isinstance(child, Adw.ActionRow):
+                    title = child.get_title().lower()
+                    subtitle = (child.get_subtitle() or "").lower()
+                    is_match = query in title or query in subtitle
+                    child.set_visible(is_match)
+                    if is_match:
+                        group_visible = True
+                child = child.get_next_sibling()
+            group.set_visible(group_visible)
 
     def _on_log_level_changed(self, combo_row, _param):
         selected_item = combo_row.get_selected_item()
@@ -1394,35 +1391,17 @@ class PreferencesDialog(Adw.PreferencesWindow):
             level_str = selected_item.get_string()
             self._on_setting_changed("console_log_level", level_str)
 
-    def _on_palette_selected(self, button, index):
-        if button.get_active():
-            self._on_color_scheme_changed(None, index)
-
-    def _on_color_scheme_changed(self, combo_row, index) -> None:
-        self.settings_manager.set("color_scheme", index)
-        self.emit("color-scheme-changed", index)
-
-    def _on_transparency_changed(self, scale) -> None:
-        value = scale.get_value()
-        self.settings_manager.set("transparency", value)
-        self.emit("transparency-changed", value)
-
-    def _on_font_changed(self, font_button) -> None:
-        font = font_button.get_font()
-        self.settings_manager.set("font", font)
-        self.emit("font-changed", font)
-
-    def _on_setting_changed(self, key: str, value: Any) -> None:
-        self.settings_manager.set(key, value)
-        self.emit("setting-changed", key, value)
-
-    def _on_instance_behavior_changed(self, combo_row, _param) -> None:
-        value = "new_window" if combo_row.get_selected() == 1 else "new_tab"
-        self._on_setting_changed("new_instance_behavior", value)
-
     def _on_scrollback_changed(self, spin_button) -> None:
         value = int(spin_button.get_value())
         self._on_setting_changed("scrollback_lines", value)
+
+    def _on_mouse_scroll_sensitivity_changed(self, spin_button) -> None:
+        value = spin_button.get_value()
+        self._on_setting_changed("mouse_scroll_sensitivity", value)
+
+    def _on_touchpad_scroll_sensitivity_changed(self, spin_button) -> None:
+        value = spin_button.get_value()
+        self._on_setting_changed("touchpad_scroll_sensitivity", value)
 
     def _on_cursor_shape_changed(self, combo_row, _param) -> None:
         index = combo_row.get_selected()
@@ -1432,14 +1411,6 @@ class PreferencesDialog(Adw.PreferencesWindow):
         index = combo_row.get_selected()
         self._on_setting_changed("cursor_blink", index)
 
-    def _on_text_blink_mode_changed(self, combo_row, _param) -> None:
-        index = combo_row.get_selected()
-        self._on_setting_changed("text_blink_mode", index)
-
-    def _on_line_spacing_changed(self, spin_button) -> None:
-        value = spin_button.get_value()
-        self._on_setting_changed("line_spacing", value)
-
     def _on_backspace_binding_changed(self, combo_row, _param) -> None:
         index = combo_row.get_selected()
         self._on_setting_changed("backspace_binding", index)
@@ -1448,10 +1419,28 @@ class PreferencesDialog(Adw.PreferencesWindow):
         index = combo_row.get_selected()
         self._on_setting_changed("delete_binding", index)
 
-    def _on_ambiguous_width_changed(self, combo_row, _param) -> None:
-        # VTE usa 1 para Narrow e 2 para Wide, o combo usa 0 e 1.
-        value = combo_row.get_selected() + 1
-        self._on_setting_changed("cjk_ambiguous_width", value)
+    def _on_setting_changed(self, key: str, value: Any) -> None:
+        self.settings_manager.set(key, value)
+        self.emit("setting-changed", key, value)
+
+    def _create_shortcut_rows(
+        self, group: Adw.PreferencesGroup, shortcuts: Dict[str, str]
+    ) -> None:
+        for key, title in shortcuts.items():
+            current_shortcut = self.settings_manager.get_shortcut(key)
+            subtitle = (
+                accelerator_to_label(current_shortcut)
+                if current_shortcut
+                else _("None")
+            )
+            row = Adw.ActionRow(title=title, subtitle=subtitle)
+            button = Gtk.Button(label=_("Edit"), css_classes=["flat"])
+            button.set_valign(Gtk.Align.CENTER)
+            button.connect("clicked", self._on_shortcut_edit_clicked, key, row)
+            row.add_suffix(button)
+            row.set_activatable_widget(button)
+            group.add(row)
+            self.shortcut_rows[key] = row
 
     def _on_shortcut_edit_clicked(
         self, button, shortcut_key: str, row: Adw.ActionRow
@@ -1612,9 +1601,11 @@ class MoveSessionDialog(BaseDialog):
         self._populate_folder_combo()
         action_bar = Gtk.ActionBar()
         cancel_button = Gtk.Button(label=_("Cancel"))
+        cancel_button.set_valign(Gtk.Align.CENTER)
         cancel_button.connect("clicked", self._on_cancel_clicked)
         action_bar.pack_start(cancel_button)
         move_button = Gtk.Button(label=_("Move"), css_classes=["suggested-action"])
+        move_button.set_valign(Gtk.Align.CENTER)
         move_button.connect("clicked", self._on_move_clicked)
         action_bar.pack_end(move_button)
         self.set_default_widget(move_button)
@@ -1676,3 +1667,104 @@ class MoveSessionDialog(BaseDialog):
             self.close()
         else:
             self._show_error_dialog(_("Move Failed"), result.message)
+
+
+class MoveLayoutDialog(BaseDialog):
+    """A dialog to move a layout to a different folder."""
+
+    def __init__(
+        self,
+        parent_window,
+        layout_to_move: LayoutItem,
+        folder_store: Gio.ListStore,
+    ):
+        title = _("Move Layout")
+        super().__init__(parent_window, title, default_width=400, default_height=250)
+        self.layout_to_move = layout_to_move
+        self.folder_store = folder_store
+        self.folder_paths_map: Dict[str, str] = {}
+        self._setup_ui()
+        self.logger.info(f"Move layout dialog opened for '{layout_to_move.name}'")
+
+    def _setup_ui(self):
+        main_box = Gtk.Box(
+            orientation=Gtk.Orientation.VERTICAL,
+            spacing=16,
+            margin_top=24,
+            margin_bottom=24,
+            margin_start=24,
+            margin_end=24,
+        )
+        group = Adw.PreferencesGroup(
+            title=_("Select Destination"),
+            description=_("Choose the folder to move the layout '{name}' to.").format(
+                name=self.layout_to_move.name
+            ),
+        )
+        main_box.append(group)
+        folder_row = Adw.ComboRow(
+            title=_("Destination Folder"),
+            subtitle=_("Select a folder or 'Root' for the top level"),
+        )
+        self.folder_combo = folder_row
+        group.add(folder_row)
+        self._populate_folder_combo()
+        action_bar = Gtk.ActionBar()
+        cancel_button = Gtk.Button(label=_("Cancel"))
+        cancel_button.set_valign(Gtk.Align.CENTER)
+        cancel_button.connect("clicked", self._on_cancel_clicked)
+        action_bar.pack_start(cancel_button)
+        move_button = Gtk.Button(label=_("Move"), css_classes=["suggested-action"])
+        move_button.set_valign(Gtk.Align.CENTER)
+        move_button.connect("clicked", self._on_move_clicked)
+        action_bar.pack_end(move_button)
+        self.set_default_widget(move_button)
+        content_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=0)
+        content_box.append(main_box)
+        content_box.append(action_bar)
+        self.set_content(content_box)
+
+    def _populate_folder_combo(self):
+        folder_model = Gtk.StringList()
+        folder_model.append(_("Root"))
+        self.folder_paths_map = {_("Root"): ""}
+        folders = sorted(
+            [
+                self.folder_store.get_item(i)
+                for i in range(self.folder_store.get_n_items())
+            ],
+            key=lambda f: f.path,
+        )
+        selected_index = 0
+        current_path = self.layout_to_move.folder_path
+
+        for i, folder in enumerate(folders):
+            display_name = f"{'  ' * folder.path.count('/')}{folder.name}"
+            folder_model.append(display_name)
+            self.folder_paths_map[display_name] = folder.path
+            if folder.path == current_path:
+                selected_index = i + 1
+
+        self.folder_combo.set_model(folder_model)
+        self.folder_combo.set_selected(selected_index)
+
+    def _on_move_clicked(self, button):
+        selected_item = self.folder_combo.get_selected_item()
+        if not selected_item:
+            return
+        display_name = selected_item.get_string()
+        target_folder_path = self.folder_paths_map.get(display_name, "")
+
+        if (
+            self.layout_to_move
+            and target_folder_path == self.layout_to_move.folder_path
+        ):
+            self.close()
+            return
+
+        self.parent_window.move_layout(
+            self.layout_to_move.name,
+            self.layout_to_move.folder_path,
+            target_folder_path,
+        )
+        self.close()

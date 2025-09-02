@@ -3,14 +3,14 @@
 import os
 from typing import TYPE_CHECKING, List, Optional, Union
 
-from gi.repository import Adw, Gdk, Gio, Gtk
+from gi.repository import Adw, Gdk, Gtk
 
-from ..helpers import generate_unique_name
-from ..sessions.models import SessionFolder, SessionItem
+from ..sessions.models import LayoutItem, SessionFolder, SessionItem
 from ..utils.logger import get_logger, log_session_event
 from ..utils.translation_utils import _
 from .dialogs import (
     FolderEditDialog,
+    MoveLayoutDialog,
     MoveSessionDialog,
     PreferencesDialog,
     SessionEditDialog,
@@ -197,7 +197,6 @@ class WindowActions:
             not self.window.toggle_sidebar_button.get_active()
         )
 
-    # ALTERADO: Ação para alternar o gerenciador de arquivos
     def toggle_file_manager(self, _action, _param) -> None:
         """Toggles the visibility of the file manager via its button."""
         if hasattr(self.window, "file_manager_button"):
@@ -207,10 +206,6 @@ class WindowActions:
 
     def preferences(self, _action, _param) -> None:
         dialog = PreferencesDialog(self.window, self.settings_manager)
-        dialog.connect(
-            "color-scheme-changed",
-            lambda d, i: self.terminal_manager.apply_settings_to_all_terminals(),
-        )
         dialog.connect(
             "transparency-changed",
             lambda d, v: self.terminal_manager.apply_settings_to_all_terminals(),
@@ -255,6 +250,23 @@ class WindowActions:
         if app := self.window.get_application():
             if new_window := app.create_new_window():
                 new_window.present()
+
+    def save_layout(self, _action, _param) -> None:
+        self.window.save_current_layout()
+
+    def restore_layout(self, action, param) -> None:
+        layout_name = param.get_string()
+        self.window.restore_saved_layout(layout_name)
+
+    def delete_layout(self, action, param) -> None:
+        layout_name = param.get_string()
+        self.window.delete_saved_layout(layout_name)
+
+    def move_layout_to_folder(self, action, param) -> None:
+        layout_name = param.get_string()
+        layout = next((l for l in self.window.layouts if l.name == layout_name), None)
+        if layout:
+            MoveLayoutDialog(self.window, layout, self.folder_store).present()
 
     # --- Helper Methods for Dialogs ---
 
@@ -326,6 +338,8 @@ class WindowActions:
         if count == 1:
             item = items[0]
             item_type = _("Session") if isinstance(item, SessionItem) else _("Folder")
+            if isinstance(item, LayoutItem):
+                item_type = _("Layout")
             title = _("Delete {type}").format(type=item_type)
             has_children = isinstance(
                 item, SessionFolder
@@ -365,6 +379,8 @@ class WindowActions:
                         self.session_operations.remove_folder(item, force=True)
                     elif isinstance(item, SessionItem):
                         self.session_operations.remove_session(item)
+                    elif isinstance(item, LayoutItem):
+                        self.window.delete_saved_layout(item.name, confirm=False)
                 self.window.refresh_tree()
             dlg.close()
 
