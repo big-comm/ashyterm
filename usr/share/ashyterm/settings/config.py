@@ -117,6 +117,8 @@ class DefaultSettings:
             "bold_is_bright": True,
             # Behavior
             "sidebar_visible": False,
+            "auto_hide_sidebar": False,
+            "sidebar_width": 300,  # Default sidebar width in pixels
             "confirm_close": True,
             "auto_close_tab": True,
             "scroll_on_output": True,

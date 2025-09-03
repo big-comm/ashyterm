@@ -2,7 +2,7 @@
 
 import json
 import os
-from typing import List, Optional, Union
+from typing import Any, List, Optional, Tuple
 
 import gi
 
@@ -29,7 +29,7 @@ from .ui.menus import MainApplicationMenu
 from .utils.exceptions import (
     UIError,
 )
-from .utils.logger import get_logger, log_session_event
+from .utils.logger import get_logger
 from .utils.security import sanitize_session_name, validate_session_data
 from .utils.translation_utils import _
 
@@ -185,8 +185,34 @@ class CommTerminalWindow(Adw.ApplicationWindow):
             background-color: @accent_bg_color; color: @accent_fg_color;
         }
         headerbar.main-header-bar { min-height: 0; padding: 0; border: none; box-shadow: none; }
-        .drop-target { background-color: alpha(@theme_selected_bg_color, 0.5); border-radius: 6px; }
-        .indented-session { margin-left: 16px; }
+        .drop-target { background-color: alpha(@theme_selected_bg_color, 0.5); }
+        .sessions-tree .card {
+            margin: 2px 4px;
+            padding: 6px;
+            border-radius: 6px;
+        }
+        .sessions-tree .card:hover {
+            background-color: @theme_bg_color;
+        }
+        .sessions-tree row:selected .card {
+            background-color: @accent_bg_color;
+            color: @accent_fg_color;
+        }
+        .indented-session {
+            margin-left: 20px;
+        }
+        .indented-session-depth-1 {
+            margin-left: 20px;
+        }
+        .indented-session-depth-2 {
+            margin-left: 40px;
+        }
+        .indented-session-depth-3 {
+            margin-left: 60px;
+        }
+        .indented-session-depth-4 {
+            margin-left: 80px;
+        }
         paned separator { background: var(--view-bg-color); }
         popover.menu separator { background-color: color-mix(in srgb, var(--headerbar-border-color) var(--border-opacity), transparent); }
         #scrolled_tab_bar scrollbar trough { margin: 0px; }
@@ -195,11 +221,101 @@ class CommTerminalWindow(Adw.ApplicationWindow):
         .custom-tab-button { padding-left: 12px; padding-right: 0px; border-radius: 10px; padding-top: 2px; padding-bottom: 2px; }
         .custom-tab-button.active { background: color-mix(in srgb, currentColor 12%, transparent); }
         .custom-tab-button:hover { background: color-mix(in srgb, currentColor 7%, transparent); }
-        .palette-preview.card:checked {
-            box-shadow: inset 0 0 0 2px @accent_bg_color;
+        .sidebar-toolbar-view button {
+            min-width: 28px;
+            min-height: 28px;
+            padding: 4px;
+            margin: 0;
+            border-radius: 4px;
+            transition: all 200ms ease;
+            border: none;
+            background: transparent;
+        }
+        .sidebar-toolbar-view button:hover {
+            background-color: alpha(@accent_bg_color, 0.1);
+            transform: scale(1.05);
+        }
+        .sidebar-toolbar-view button:active {
+            background-color: alpha(@accent_bg_color, 0.2);
+            transform: scale(0.95);
+        }
+        .sidebar-toolbar-view button.destructive:hover {
+            background-color: alpha(@destructive_color, 0.1);
+        }
+        .sidebar-search {
+            padding: 8px 12px;
+        }
+        .sidebar-session-tree row:hover {
+            background-color: alpha(@theme_selected_bg_color, 0.4);
+            transition: background-color 150ms ease;
+        }
+        .sidebar-session-tree row:selected {
+            background-color: @accent_bg_color;
+            color: @accent_fg_color;
+            font-weight: 500;
+        }
+        .sidebar-session-tree row:selected:hover {
+            background-color: alpha(@accent_bg_color, 0.9);
+        }
+        .sidebar-session-tree row:active {
+            background-color: alpha(@accent_bg_color, 0.6);
+            transition: background-color 100ms ease;
+        }
+        /* Enhanced button feedback */
+        .sidebar-toolbar-view button {
+            transition: all 200ms cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .sidebar-toolbar-view button:hover {
+            background-color: alpha(@accent_bg_color, 0.12);
+            transform: scale(1.02);
+            box-shadow: 0 1px 3px alpha(@accent_bg_color, 0.2);
+        }
+        .sidebar-toolbar-view button:active {
+            background-color: alpha(@accent_bg_color, 0.18);
+            transform: scale(0.98);
+            transition-duration: 100ms;
+        }
+        .sidebar-toolbar-view button.destructive:hover {
+            background-color: alpha(@destructive_color, 0.12);
+            box-shadow: 0 1px 3px alpha(@destructive_color, 0.2);
+        }
+        .sidebar-toolbar-view button.destructive:active {
+            background-color: alpha(@destructive_color, 0.18);
+        }
+        /* Responsive design improvements */
+            .sidebar-toolbar-view {
+                min-width: 350px;
+            }
+        /* Enhanced toolbar view styling */
+        .sidebar-toolbar-view {
+            background: @sidebar_bg_color;
+            border-right: 1px solid var(--border-color, @borders);
+            border-left: 1px solid var(--border-color, @borders);
+        }
+
+        .sidebar-session-tree row {
+            padding: 4px 12px;
+            margin: 1px 8px;
+            border-radius: 4px;
+            transition: background-color 150ms ease;
+        }
+        .sidebar-session-tree row:hover {
+            background-color: alpha(@theme_selected_bg_color, 0.3);
+        }
+        .sidebar-session-tree row:selected {
+            background-color: @accent_bg_color;
+            color: @accent_fg_color;
+        }
+        .sidebar-session-tree row:selected:hover {
+            background-color: alpha(@accent_bg_color, 0.5);
         }
         .top-bar {
             background: var(--secondary-sidebar-bg-color);
+        }
+        /* Sidebar toggle button styling - hover only, no active background */
+        .sidebar-toggle-button:active,
+        .sidebar-toggle-button:checked {
+            background: transparent;
         }
         """
         provider = Gtk.CssProvider()
@@ -311,6 +427,26 @@ class CommTerminalWindow(Adw.ApplicationWindow):
             self.sidebar_box = self._create_sidebar()
             self.flap.set_flap(self.sidebar_box)
 
+            # Create popover for auto-hide mode
+            self.sidebar_popover = Gtk.Popover()
+            self.sidebar_popover.set_position(Gtk.PositionType.BOTTOM)
+            self.sidebar_popover.set_has_arrow(True)
+            self.sidebar_popover.connect("closed", self._on_sidebar_popover_closed)
+            # Connect to show signal to update size when popover becomes visible
+            self.sidebar_popover.connect("show", self._on_sidebar_popover_show)
+
+            # Allow popover to close when clicking outside
+            # Remove the click controller that was preventing auto-hide
+            # The popover will now close automatically when clicking outside
+
+            # Initial size will be set when popover is shown
+            self.sidebar_popover.set_size_request(200, 800)
+
+            popover_provider = Gtk.CssProvider()
+            self.sidebar_popover.get_style_context().add_provider(
+                popover_provider, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION
+            )
+
             content_box = self._create_content_area()
             self.flap.set_content(content_box)
 
@@ -318,9 +454,24 @@ class CommTerminalWindow(Adw.ApplicationWindow):
             self.set_content(main_box)
 
             initial_visible = self.settings_manager.get_sidebar_visible()
-            self.flap.set_reveal_flap(initial_visible)
-            self.toggle_sidebar_button.set_active(initial_visible)
-            self._update_sidebar_button_icon()
+            auto_hide = self.settings_manager.get("auto_hide_sidebar", False)
+
+            if auto_hide:
+                # In auto-hide mode, don't reveal flap and set up popover
+                self.flap.set_reveal_flap(False)
+                self.flap.set_flap(None)
+                self.sidebar_popover.set_child(self.sidebar_box)
+                self.toggle_sidebar_button.set_active(False)
+            else:
+                # Normal mode: use flap
+                self.flap.set_flap(self.sidebar_box)
+                self.flap.set_reveal_flap(initial_visible)
+                self.toggle_sidebar_button.set_active(initial_visible)
+
+                # Set up responsive design handling
+                self.flap.connect("notify::folded", self._on_sidebar_folded_changed)
+                self._update_sidebar_responsive_design()
+                self._update_sidebar_button_icon()
             self._update_tab_layout()
 
         except Exception as e:
@@ -333,6 +484,7 @@ class CommTerminalWindow(Adw.ApplicationWindow):
         self.toggle_sidebar_button = Gtk.ToggleButton(
             icon_name="view-reveal-symbolic", tooltip_text=_("Toggle Sidebar")
         )
+        self.toggle_sidebar_button.add_css_class("sidebar-toggle-button")
         self.toggle_sidebar_button.connect("toggled", self._on_toggle_sidebar)
         header_bar.pack_start(self.toggle_sidebar_button)
 
@@ -406,34 +558,64 @@ class CommTerminalWindow(Adw.ApplicationWindow):
 
     def _create_sidebar(self) -> Gtk.Widget:
         """Create the sidebar with session tree."""
-        toolbar_view = Adw.ToolbarView(css_classes=["background"])
-        scrolled_window = Gtk.ScrolledWindow(vexpand=True)
-        scrolled_window.set_policy(Gtk.PolicyType.AUTOMATIC, Gtk.PolicyType.AUTOMATIC)
-        scrolled_window.set_child(self.session_tree.get_widget())
-        toolbar_view.set_content(scrolled_window)
-        toolbar = Gtk.ActionBar()
+        toolbar_view = Adw.ToolbarView(
+            css_classes=["background", "sidebar-toolbar-view"]
+        )
+
+        # Add action buttons at the top
+        toolbar = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL)
+        toolbar.set_halign(Gtk.Align.CENTER)
+
         add_session_button = Gtk.Button.new_from_icon_name("list-add-symbolic")
         add_session_button.set_tooltip_text(_("Add Session"))
         add_session_button.connect("clicked", self._on_add_session_clicked)
-        toolbar.pack_start(add_session_button)
-        save_layout_button = Gtk.Button.new_from_icon_name("document-save-symbolic")
-        save_layout_button.set_tooltip_text(_("Save Current Layout"))
-        save_layout_button.connect("clicked", self._on_save_layout_clicked)
-        toolbar.pack_start(save_layout_button)
+        toolbar.append(add_session_button)
+
         add_folder_button = Gtk.Button.new_from_icon_name("folder-new-symbolic")
         add_folder_button.set_tooltip_text(_("Add Folder"))
         add_folder_button.connect("clicked", self._on_add_folder_clicked)
-        toolbar.pack_start(add_folder_button)
+        toolbar.append(add_folder_button)
+
         edit_button = Gtk.Button.new_from_icon_name("document-edit-symbolic")
         edit_button.set_tooltip_text(_("Edit Selected"))
         edit_button.connect("clicked", self._on_edit_selected_clicked)
-        toolbar.pack_start(edit_button)
-        remove_button = Gtk.Button.new_from_icon_name("list-remove-symbolic")
+        toolbar.append(edit_button)
+
+        save_layout_button = Gtk.Button.new_from_icon_name("document-save-symbolic")
+        save_layout_button.set_tooltip_text(_("Save Current Layout"))
+        save_layout_button.connect("clicked", self.save_current_layout)
+        toolbar.append(save_layout_button)
+
+        remove_button = Gtk.Button.new_from_icon_name("user-trash-symbolic")
         remove_button.set_tooltip_text(_("Remove Selected"))
         remove_button.connect("clicked", self._on_remove_selected_clicked)
-        toolbar.pack_start(remove_button)
+        remove_button.add_css_class("destructive")
+        toolbar.append(remove_button)
 
-        toolbar_view.add_bottom_bar(toolbar)
+        toolbar_view.add_top_bar(toolbar)
+
+        scrolled_window = Gtk.ScrolledWindow(vexpand=True)
+        scrolled_window.set_policy(Gtk.PolicyType.AUTOMATIC, Gtk.PolicyType.AUTOMATIC)
+        scrolled_window.set_child(self.session_tree.get_widget())
+        scrolled_window.add_css_class("sidebar-session-tree")
+        toolbar_view.set_content(scrolled_window)
+
+        # Add search entry at the bottom with margins
+        search_container = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
+        search_container.add_css_class("sidebar-search")
+        self.search_entry = Gtk.SearchEntry(placeholder_text=_("Search sessions..."))
+        self.search_entry.set_margin_start(6)
+        self.search_entry.set_margin_end(6)
+        self.search_entry.connect("search-changed", self._on_search_changed)
+
+        # Add key controller for search entry navigation
+        search_key_controller = Gtk.EventControllerKey.new()
+        search_key_controller.connect("key-pressed", self._on_search_key_pressed)
+        self.search_entry.add_controller(search_key_controller)
+
+        search_container.append(self.search_entry)
+        toolbar_view.add_bottom_bar(search_container)
+
         return toolbar_view
 
     def _create_content_area(self) -> Gtk.Widget:
@@ -491,6 +673,9 @@ class CommTerminalWindow(Adw.ApplicationWindow):
         """Set up callbacks between components."""
         self.session_tree.on_session_activated = self._on_session_activated
         self.session_tree.on_layout_activated = self.restore_saved_layout
+        self.session_tree.on_folder_expansion_changed = (
+            self._on_folder_expansion_changed
+        )
         self.terminal_manager.on_terminal_focus_changed = (
             self._on_terminal_focus_changed
         )
@@ -505,7 +690,9 @@ class CommTerminalWindow(Adw.ApplicationWindow):
 
     def _on_setting_changed(self, key: str, old_value, new_value):
         """Handle changes from the settings manager."""
-        if key in [
+        if key == "auto_hide_sidebar":
+            self._handle_auto_hide_change(new_value)
+        elif key in [
             "font",
             "color_scheme",
             "transparency",
@@ -528,6 +715,9 @@ class CommTerminalWindow(Adw.ApplicationWindow):
     def _setup_window_events(self) -> None:
         """Set up window-level event handlers."""
         self.connect("close-request", self._on_window_close_request)
+        # Update popover size when window is resized
+        self.connect("notify::default-width", self._on_window_size_changed)
+        self.connect("notify::default-height", self._on_window_size_changed)
 
     def _load_initial_data(self) -> None:
         """Load initial sessions and folders data efficiently."""
@@ -542,6 +732,9 @@ class CommTerminalWindow(Adw.ApplicationWindow):
                 f"{self.folder_store.get_n_items()} folders, "
                 f"and {len(self.layouts)} layouts"
             )
+
+            # Update sidebar size after loading initial data
+            self._update_sidebar_sizes()
         except Exception as e:
             self.logger.error(f"Failed to load initial data: {e}")
             self._show_error_dialog(
@@ -553,13 +746,176 @@ class CommTerminalWindow(Adw.ApplicationWindow):
 
     def _update_sidebar_button_icon(self) -> None:
         """Update sidebar toggle button icon."""
-        self.toggle_sidebar_button.set_icon_name("sidebar-show-symbolic")
+        auto_hide = self.settings_manager.get("auto_hide_sidebar", False)
+        if auto_hide:
+            # In auto-hide mode, always show the reveal icon since it's a popover
+            self.toggle_sidebar_button.set_icon_name("view-reveal-symbolic")
+        else:
+            # In normal mode, show appropriate icon based on visibility
+            is_visible = self.flap.get_reveal_flap()
+            icon_name = (
+                "sidebar-hide-symbolic" if is_visible else "sidebar-show-symbolic"
+            )
+            self.toggle_sidebar_button.set_icon_name(icon_name)
+
+    def _focus_search_entry(self):
+        """Focus the search entry in the sidebar when popover opens."""
+        if hasattr(self, "search_entry") and self.search_entry:
+            self.search_entry.grab_focus()
+        return False
 
     def _on_toggle_sidebar(self, button: Gtk.ToggleButton) -> None:
         """Handle sidebar toggle button."""
-        is_visible = button.get_active()
-        self.flap.set_reveal_flap(is_visible)
-        self.settings_manager.set_sidebar_visible(is_visible)
+        auto_hide = self.settings_manager.get("auto_hide_sidebar", False)
+
+        if auto_hide:
+            # In auto-hide mode, use popover instead of flap
+            if button.get_active():
+                # Move sidebar from flap to popover if needed
+                current_parent = self.sidebar_box.get_parent()
+                if current_parent == self.flap:
+                    self.flap.set_flap(None)
+                elif current_parent and current_parent != self.sidebar_popover:
+                    # Remove from any other parent
+                    if hasattr(current_parent, "remove"):
+                        current_parent.remove(self.sidebar_box)
+                    elif hasattr(current_parent, "set_child"):
+                        current_parent.set_child(None)
+
+                # Only set as child if it's not already the child
+                if self.sidebar_popover.get_child() != self.sidebar_box:
+                    self.sidebar_popover.set_child(self.sidebar_box)
+
+                # Update popover size based on current window dimensions
+                self._update_popover_size()
+
+                if self.sidebar_popover.get_parent() is not None:
+                    self.sidebar_popover.unparent()
+                self.sidebar_popover.set_parent(button)
+                self.sidebar_popover.popup()
+                # Focus the search entry when popover opens
+                GLib.idle_add(self._focus_search_entry)
+                # Keep button active while popover is open
+                button.set_active(True)
+            else:
+                self.sidebar_popover.popdown()
+                button.set_active(False)
+        else:
+            # Normal mode: use flap
+            current_parent = self.sidebar_box.get_parent()
+            if current_parent == self.sidebar_popover:
+                self.sidebar_popover.set_child(None)
+            elif current_parent and current_parent != self.flap:
+                # Remove from any other parent
+                if hasattr(current_parent, "remove"):
+                    current_parent.remove(self.sidebar_box)
+                elif hasattr(current_parent, "set_child"):
+                    current_parent.set_child(None)
+
+            # Only set flap if it's not already set
+            if self.flap.get_flap() != self.sidebar_box:
+                self.flap.set_flap(self.sidebar_box)
+            is_visible = button.get_active()
+            self.flap.set_reveal_flap(is_visible)
+            self.settings_manager.set_sidebar_visible(is_visible)
+
+            # Update flap size when showing in normal mode
+            if is_visible:
+                self._update_flap_size()
+
+        self._update_sidebar_button_icon()
+
+    def _on_sidebar_popover_show(self, popover):
+        """Handle sidebar popover show event to update size."""
+        try:
+            # Update size when popover is shown
+            self._update_popover_size()
+        except Exception as e:
+            self.logger.debug(f"Error updating popover size on show: {e}")
+
+    def _on_sidebar_popover_closed(self, popover):
+        """Handle sidebar popover closing."""
+        self.toggle_sidebar_button.set_active(False)
+        self._update_sidebar_button_icon()
+        # Clear the search entry and filter when popover closes
+        if hasattr(self, "search_entry") and self.search_entry:
+            self.search_entry.set_text("")
+            # Clear the filter and restore original expansion state
+            self.session_tree.clear_search()
+
+    def _update_popover_size(self):
+        """Update popover size based on current window dimensions and content."""
+        try:
+            # Use calculated natural width instead of fixed setting
+            sidebar_width = self._calculate_sidebar_natural_width()
+
+            # Get current window dimensions
+            window_width = self.get_width()
+            window_height = self.get_height()
+
+            # Calculate optimal popover size
+            # Width: sidebar_width, but not wider than 80% of window
+            popover_width = min(sidebar_width, int(window_width * 0.8))
+
+            # Height: Use 90% of total terminal height
+            popover_height = int(window_height * 0.9)
+
+            self.sidebar_popover.set_size_request(popover_width, popover_height)
+
+            self.logger.debug(
+                f"Updated popover size: {popover_width}x{popover_height}px "
+                f"(window: {window_width}x{window_height}, sidebar: {sidebar_width}px)"
+            )
+
+        except Exception as e:
+            self.logger.warning(f"Failed to update popover size: {e}")
+            # Fallback to default size
+            self.sidebar_popover.set_size_request(200, 800)
+
+    def _handle_auto_hide_change(self, auto_hide_enabled: bool):
+        """Handle changes to auto_hide_sidebar setting."""
+        if auto_hide_enabled:
+            # Switch to auto-hide mode
+            current_parent = self.sidebar_box.get_parent()
+            if current_parent == self.flap:
+                self.flap.set_flap(None)
+            elif current_parent and current_parent != self.sidebar_popover:
+                # Remove from any other parent
+                if hasattr(current_parent, "remove"):
+                    current_parent.remove(self.sidebar_box)
+                elif hasattr(current_parent, "set_child"):
+                    current_parent.set_child(None)
+
+            # Only set as child if it's not already the child
+            if self.sidebar_popover.get_child() != self.sidebar_box:
+                self.sidebar_popover.set_child(self.sidebar_box)
+
+            self.flap.set_reveal_flap(False)
+            self.sidebar_popover.popdown()
+            self.toggle_sidebar_button.set_active(False)
+        else:
+            # Switch to normal mode
+            current_parent = self.sidebar_box.get_parent()
+            if current_parent == self.sidebar_popover:
+                self.sidebar_popover.set_child(None)
+            elif current_parent and current_parent != self.flap:
+                # Remove from any other parent
+                if hasattr(current_parent, "remove"):
+                    current_parent.remove(self.sidebar_box)
+                elif hasattr(current_parent, "set_child"):
+                    current_parent.set_child(None)
+
+            # Only set flap if it's not already set
+            if self.flap.get_flap() != self.sidebar_box:
+                self.flap.set_flap(self.sidebar_box)
+            initial_visible = self.settings_manager.get_sidebar_visible()
+            self.flap.set_reveal_flap(initial_visible)
+            self.toggle_sidebar_button.set_active(initial_visible)
+
+            # Update flap size when switching to normal mode
+            if initial_visible:
+                self._update_flap_size()
+
         self._update_sidebar_button_icon()
 
     def _on_toggle_file_manager(self, button: Gtk.ToggleButton):
@@ -713,6 +1069,11 @@ class CommTerminalWindow(Adw.ApplicationWindow):
 
         return self._continue_close_process()
 
+    def _on_window_size_changed(self, window, param):
+        """Handle window size changes to update popover size."""
+        if self.sidebar_popover.get_visible():
+            self._update_popover_size()
+
     def _show_save_session_dialog(self):
         dialog = Adw.MessageDialog(
             transient_for=self,
@@ -809,14 +1170,29 @@ class CommTerminalWindow(Adw.ApplicationWindow):
         else:
             self.tab_manager.create_ssh_tab(session)
 
+    def _on_folder_expansion_changed(self) -> None:
+        """Handle folder expansion changes by updating sidebar width if needed"""
+        try:
+            if hasattr(self, "_auto_size_sidebar") and self._auto_size_sidebar:
+                # Defer the resize to avoid conflicts during expansion animation
+                GLib.idle_add(self._apply_sidebar_autoresize)
+        except Exception as e:
+            self.logger.error(f"Error handling folder expansion change: {e}")
+
     def _on_add_session_clicked(self, _button) -> None:
         self.action_handler.add_session_root(None, None)
+        # Close popover if it's open (auto-hide mode)
+        if hasattr(self, "sidebar_popover") and self.sidebar_popover.get_visible():
+            self.sidebar_popover.popdown()
 
     def _on_new_tab_clicked(self, _button) -> None:
         self.action_handler.new_local_tab(None, None)
 
     def _on_add_folder_clicked(self, _button) -> None:
         self.action_handler.add_folder_root(None, None)
+        # Close popover if it's open (auto-hide mode)
+        if hasattr(self, "sidebar_popover") and self.sidebar_popover.get_visible():
+            self.sidebar_popover.popdown()
 
     def _on_edit_selected_clicked(self, _button) -> None:
         if isinstance(item := self.session_tree.get_selected_item(), SessionItem):
@@ -827,8 +1203,33 @@ class CommTerminalWindow(Adw.ApplicationWindow):
     def _on_remove_selected_clicked(self, _button) -> None:
         self.action_handler.delete_selected_items()
 
-    def _on_save_layout_clicked(self, _button) -> None:
-        self.action_handler.save_layout(None, None)
+    def _on_search_changed(self, search_entry: Gtk.SearchEntry) -> None:
+        """Handle search entry changes by updating the tree filter."""
+        search_text = search_entry.get_text().lower()
+
+        if not search_text:
+            # If search is cleared, use the new clear_search method
+            self.session_tree.clear_search()
+        else:
+            # Otherwise, set the filter text normally
+            self.session_tree.set_filter_text(search_text)
+
+        # Update sidebar size after filter changes
+        self._update_sidebar_sizes()
+
+    def _on_search_key_pressed(
+        self,
+        controller: Gtk.EventControllerKey,
+        keyval: int,
+        keycode: int,
+        state: Gdk.ModifierType,
+    ) -> bool:
+        """Handle key presses in the search entry for navigation."""
+        if keyval == Gdk.KEY_Up:
+            # Move focus to the session tree when pressing up arrow
+            self.session_tree.get_widget().grab_focus()
+            return Gdk.EVENT_STOP
+        return Gdk.EVENT_PROPAGATE
 
     def _show_error_dialog(self, title: str, message: str) -> None:
         dialog = Adw.MessageDialog(transient_for=self, title=title, body=message)
@@ -850,6 +1251,11 @@ class CommTerminalWindow(Adw.ApplicationWindow):
 
     def refresh_tree(self) -> None:
         self.session_tree.refresh_tree()
+        # Update sidebar size after tree refresh
+        self._update_sidebar_sizes()
+        # Also update popover size if it's currently visible
+        if hasattr(self, "sidebar_popover") and self.sidebar_popover.get_visible():
+            GLib.idle_add(self._update_popover_size)
 
     def get_terminal_manager(self) -> TerminalManager:
         return self.terminal_manager
@@ -1053,7 +1459,7 @@ class CommTerminalWindow(Adw.ApplicationWindow):
         self._clear_session_state()
         return True
 
-    def save_current_layout(self):
+    def save_current_layout(self, button=None):
         """Prompts for a name and saves the current window layout."""
         dialog = Adw.MessageDialog(
             transient_for=self,
@@ -1073,6 +1479,9 @@ class CommTerminalWindow(Adw.ApplicationWindow):
         dialog.set_default_response("save")
         dialog.connect("response", self._on_save_layout_dialog_response, entry)
         dialog.present()
+        # Close popover if it's open (auto-hide mode)
+        if hasattr(self, "sidebar_popover") and self.sidebar_popover.get_visible():
+            self.sidebar_popover.popdown()
 
     def _on_save_layout_dialog_response(self, dialog, response_id, entry):
         dialog.close()
@@ -1113,24 +1522,54 @@ class CommTerminalWindow(Adw.ApplicationWindow):
         """Restores a previously saved layout, replacing the current one."""
         sanitized_name = sanitize_session_name(layout_name).replace(" ", "_")
         layout_file = os.path.join(LAYOUT_DIR, f"{sanitized_name}.json")
-        if not os.path.exists(layout_file):
-            self.toast_overlay.add_toast(Adw.Toast(title=_("Saved layout not found.")))
-            return
 
-        dialog = Adw.MessageDialog(
-            transient_for=self,
-            heading=_("Restore Saved Layout?"),
-            body=_(
-                "This will close all current tabs and restore the '{name}' layout. Are you sure?"
-            ).format(name=layout_name),
-            close_response="cancel",
-        )
-        dialog.add_response("cancel", _("Cancel"))
-        dialog.add_response("restore", _("Restore Layout"))
-        dialog.set_response_appearance("restore", Adw.ResponseAppearance.DESTRUCTIVE)
-        dialog.set_default_response("cancel")
-        dialog.connect("response", self._on_restore_layout_dialog_response, layout_file)
-        dialog.present()
+        def _show_confirmation_dialog():
+            """Inner function to create and show the modal dialog."""
+            if not os.path.exists(layout_file):
+                self.toast_overlay.add_toast(
+                    Adw.Toast(title=_("Saved layout not found."))
+                )
+                return
+
+            # Show dialog immediately without delay
+            dialog = Adw.MessageDialog(
+                transient_for=self,
+                heading=_("Restore Saved Layout?"),
+                body=_(
+                    "This will close all current tabs and restore the '{name}' layout. Are you sure?"
+                ).format(name=layout_name),
+                close_response="cancel",
+            )
+            dialog.add_response("cancel", _("Cancel"))
+            dialog.add_response("restore", _("Restore Layout"))
+            dialog.set_response_appearance(
+                "restore", Adw.ResponseAppearance.DESTRUCTIVE
+            )
+            dialog.set_default_response("cancel")
+            dialog.connect(
+                "response", self._on_restore_layout_dialog_response, layout_file
+            )
+            dialog.present()
+
+        # Check if the sidebar popover is visible. If so, close it first
+        # and only show the dialog after the popover has fully closed.
+        if (
+            self.settings_manager.get("auto_hide_sidebar", False)
+            and self.sidebar_popover.get_visible()
+        ):
+            self.logger.info(
+                "Sidebar popover is visible. Deferring restore confirmation."
+            )
+
+            def on_popover_closed(popover):
+                popover.disconnect(handler_id)
+                _show_confirmation_dialog()
+
+            handler_id = self.sidebar_popover.connect("closed", on_popover_closed)
+            self.sidebar_popover.popdown()
+        else:
+            # If the popover isn't a factor, show the dialog immediately.
+            _show_confirmation_dialog()
 
     def _on_restore_layout_dialog_response(self, dialog, response_id, layout_file):
         dialog.close()
@@ -1250,3 +1689,221 @@ class CommTerminalWindow(Adw.ApplicationWindow):
         except Exception as e:
             self.logger.error(f"Failed to move layout '{layout_name}': {e}")
             self._show_error_dialog(_("Error Moving Layout"), str(e))
+
+    def _calculate_sidebar_natural_width(self) -> int:
+        """Calculate the natural width required for the sidebar content."""
+        if not hasattr(self, "sidebar_box") or not self.sidebar_box:
+            return 300  # fallback
+
+        try:
+            # Get the session tree widget
+            tree_widget = self.session_tree.get_widget()
+            if not tree_widget:
+                return 300
+
+            # Measure the width requirements of different components
+            min_width = 220  # Minimum usable width
+            max_width = 500  # Maximum reasonable width
+            padding = 32  # Account for margins and padding
+
+            # Get natural width from the tree widget
+            tree_width = 250  # Default fallback
+            if tree_widget.get_visible():
+                tree_req = tree_widget.get_preferred_size()
+                if tree_req and tree_req.natural_size.width > 0:
+                    tree_width = tree_req.natural_size.width
+
+            # Measure actual text content in the tree
+            content_width = self._measure_tree_content_width()
+            if content_width > 0:
+                tree_width = max(tree_width, content_width)
+
+            # Account for toolbar buttons (approximately 5 buttons * 32px + spacing)
+            toolbar_width = 200
+
+            # Account for search entry
+            search_width = 200
+
+            # Calculate the maximum natural width needed
+            content_width = max(tree_width, toolbar_width, search_width) + padding
+
+            # Constrain to reasonable bounds
+            final_width = max(min_width, min(content_width, max_width))
+
+            self.logger.debug(
+                f"Calculated sidebar width: {final_width}px (tree: {tree_width}, content: {content_width})"
+            )
+            return final_width
+
+        except Exception as e:
+            self.logger.warning(f"Failed to calculate sidebar natural width: {e}")
+            return 300  # fallback to default
+
+    def _measure_tree_content_width(self) -> int:
+        """Measure the width of the widest visible text content in the session tree."""
+        try:
+            # Create a temporary label to measure text width
+            temp_label = Gtk.Label()
+            temp_label.set_use_markup(False)
+            temp_label.add_css_class("sidebar-session-tree")  # Use same styling as tree
+
+            max_width = 0
+            expanded_paths = set(self.settings_manager.get("tree_expanded_folders", []))
+
+            # Get all currently visible items and measure them with proper indentation
+            visible_items = self._get_visible_tree_items(expanded_paths)
+
+            for item, depth in visible_items:
+                if hasattr(item, "name") and item.name:
+                    temp_label.set_text(item.name)
+                    req = temp_label.get_preferred_size()
+                    if req and req.natural_size.width > 0:
+                        text_width = req.natural_size.width
+
+                        # Calculate total width including visual elements
+                        icon_width = 20  # Icon size
+                        indentation = depth * 20  # 20px per indentation level
+                        margins = 24  # Left/right margins and spacing
+
+                        total_width = text_width + icon_width + indentation + margins
+
+                        if total_width > max_width:
+                            max_width = total_width
+
+                        self.logger.debug(
+                            f"Item '{item.name}' (depth {depth}): text={text_width}px, "
+                            f"total={total_width}px"
+                        )
+
+            temp_label.destroy()
+
+            # Ensure minimum width for empty content
+            return max(int(max_width), 180)
+
+        except Exception as e:
+            self.logger.debug(f"Failed to measure tree content width: {e}")
+            return 180  # Fallback minimum width
+
+    def _get_visible_tree_items(self, expanded_paths: set) -> List[Tuple[Any, int]]:
+        """Get all currently visible items in the tree with their indentation depth."""
+        visible_items = []
+
+        # Add root-level items (depth 0)
+        # Sessions at root
+        for i in range(self.session_store.get_n_items()):
+            item = self.session_store.get_item(i)
+            if item and (not hasattr(item, "folder_path") or not item.folder_path):
+                visible_items.append((item, 0))
+
+        # Folders at root
+        for i in range(self.folder_store.get_n_items()):
+            folder = self.folder_store.get_item(i)
+            if folder and (
+                not hasattr(folder, "parent_path") or not folder.parent_path
+            ):
+                visible_items.append((folder, 0))
+                # If folder is expanded, add its children recursively
+                if folder.path in expanded_paths:
+                    visible_items.extend(
+                        self._get_folder_children(folder.path, expanded_paths, 1)
+                    )
+
+        # Layouts at root
+        if hasattr(self, "layouts"):
+            for layout in self.layouts:
+                if not hasattr(layout, "folder_path") or not layout.folder_path:
+                    visible_items.append((layout, 0))
+
+        return visible_items
+
+    def _get_folder_children(
+        self, parent_path: str, expanded_paths: set, depth: int
+    ) -> List[Tuple[Any, int]]:
+        """Recursively get children of a folder at given depth."""
+        children = []
+
+        # Add sessions in this folder
+        for i in range(self.session_store.get_n_items()):
+            item = self.session_store.get_item(i)
+            if (
+                item
+                and hasattr(item, "folder_path")
+                and item.folder_path == parent_path
+            ):
+                children.append((item, depth))
+
+        # Add subfolders in this folder
+        for i in range(self.folder_store.get_n_items()):
+            folder = self.folder_store.get_item(i)
+            if (
+                folder
+                and hasattr(folder, "parent_path")
+                and folder.parent_path == parent_path
+            ):
+                children.append((folder, depth))
+                # If subfolder is expanded, add its children recursively
+                if folder.path in expanded_paths:
+                    children.extend(
+                        self._get_folder_children(
+                            folder.path, expanded_paths, depth + 1
+                        )
+                    )
+
+        # Add layouts in this folder
+        if hasattr(self, "layouts"):
+            for layout in self.layouts:
+                if hasattr(layout, "folder_path") and layout.folder_path == parent_path:
+                    children.append((layout, depth))
+
+        return children
+
+    def _update_flap_size(self):
+        """Update the flap sidebar width based on content."""
+        if not hasattr(self, "sidebar_box") or not self.sidebar_box:
+            return
+
+        try:
+            natural_width = self._calculate_sidebar_natural_width()
+            self.sidebar_box.set_size_request(natural_width, -1)
+            self.logger.debug(f"Updated flap sidebar width to {natural_width}px")
+        except Exception as e:
+            self.logger.warning(f"Failed to update flap size: {e}")
+
+    def _update_sidebar_sizes(self):
+        """Update sidebar sizes for both flap and popover modes."""
+        try:
+            auto_hide = self.settings_manager.get("auto_hide_sidebar", False)
+            if auto_hide:
+                # In auto-hide mode, update popover size
+                if (
+                    hasattr(self, "sidebar_popover")
+                    and self.sidebar_popover.get_visible()
+                ):
+                    self._update_popover_size()
+            else:
+                # In normal mode, update flap size
+                if hasattr(self, "flap") and self.flap.get_reveal_flap():
+                    self._update_flap_size()
+        except Exception as e:
+            self.logger.warning(f"Failed to update sidebar sizes: {e}")
+
+    def _update_sidebar_responsive_design(self):
+        """Update sidebar styling based on current width for responsive design."""
+        if not hasattr(self, "sidebar_box") or not self.sidebar_box:
+            return
+
+        # Get current sidebar width
+        sidebar_width = self.sidebar_box.get_width()
+        if sidebar_width == 0:
+            # If width is 0, try to get calculated natural width
+            sidebar_width = self._calculate_sidebar_natural_width()
+
+        # Apply compact styling for narrow sidebars (more aggressive threshold)
+        if sidebar_width < 260:
+            self.sidebar_box.add_css_class("sidebar-compact")
+        else:
+            self.sidebar_box.remove_css_class("sidebar-compact")
+
+    def _on_sidebar_folded_changed(self, flap, param):
+        """Handle sidebar folding changes for responsive design."""
+        self._update_sidebar_responsive_design()

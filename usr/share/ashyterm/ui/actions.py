@@ -125,6 +125,12 @@ class WindowActions:
             self.window.toast_overlay.add_toast(
                 Adw.Toast(title=_("SFTP not implemented yet"))
             )
+            # Auto-hide sidebar popup if it's open
+            if (
+                hasattr(self.window, "sidebar_popover")
+                and self.window.sidebar_popover.get_visible()
+            ):
+                self.window.sidebar_popover.popdown()
 
     def edit_session(self, _action, _param) -> None:
         if isinstance(item := self.session_tree.get_selected_item(), SessionItem):
@@ -136,6 +142,12 @@ class WindowActions:
         if isinstance(item := self.session_tree.get_selected_item(), SessionItem):
             self.session_operations.duplicate_session(item)
             self.window.refresh_tree()
+            # Auto-hide sidebar popup if it's open
+            if (
+                hasattr(self.window, "sidebar_popover")
+                and self.window.sidebar_popover.get_visible()
+            ):
+                self.window.sidebar_popover.popdown()
 
     def rename_session(self, _action, _param) -> None:
         if isinstance(item := self.session_tree.get_selected_item(), SessionItem):
@@ -146,6 +158,12 @@ class WindowActions:
             MoveSessionDialog(
                 self.window, item, self.folder_store, self.session_operations
             ).present()
+            # Auto-hide sidebar popup if it's open
+            if (
+                hasattr(self.window, "sidebar_popover")
+                and self.window.sidebar_popover.get_visible()
+            ):
+                self.window.sidebar_popover.popdown()
 
     def delete_selected_items(self, _action=None, _param=None) -> None:
         if items := self.session_tree.get_selected_items():
@@ -169,9 +187,21 @@ class WindowActions:
 
     def cut_item(self, _action, _param) -> None:
         self.session_tree._cut_selected_item()
+        # Auto-hide sidebar popup if it's open
+        if (
+            hasattr(self.window, "sidebar_popover")
+            and self.window.sidebar_popover.get_visible()
+        ):
+            self.window.sidebar_popover.popdown()
 
     def copy_item(self, _action, _param) -> None:
         self.session_tree._copy_selected_item()
+        # Auto-hide sidebar popup if it's open
+        if (
+            hasattr(self.window, "sidebar_popover")
+            and self.window.sidebar_popover.get_visible()
+        ):
+            self.window.sidebar_popover.popdown()
 
     def paste_item(self, _action, _param) -> None:
         target_path = ""
@@ -180,9 +210,21 @@ class WindowActions:
                 item.path if isinstance(item, SessionFolder) else item.folder_path
             )
         self.session_tree._paste_item(target_path)
+        # Auto-hide sidebar popup if it's open
+        if (
+            hasattr(self.window, "sidebar_popover")
+            and self.window.sidebar_popover.get_visible()
+        ):
+            self.window.sidebar_popover.popdown()
 
     def paste_item_root(self, _action, _param) -> None:
         self.session_tree._paste_item("")
+        # Auto-hide sidebar popup if it's open
+        if (
+            hasattr(self.window, "sidebar_popover")
+            and self.window.sidebar_popover.get_visible()
+        ):
+            self.window.sidebar_popover.popdown()
 
     def add_session_root(self, _action, _param) -> None:
         self._show_session_edit_dialog(SessionItem(name=_("New Session")), -1)
@@ -264,9 +306,22 @@ class WindowActions:
 
     def move_layout_to_folder(self, action, param) -> None:
         layout_name = param.get_string()
-        layout = next((l for l in self.window.layouts if l.name == layout_name), None)
+        layout = next(
+            (
+                layout_item
+                for layout_item in self.window.layouts
+                if layout_item.name == layout_name
+            ),
+            None,
+        )
         if layout:
             MoveLayoutDialog(self.window, layout, self.folder_store).present()
+            # Auto-hide sidebar popup if it's open
+            if (
+                hasattr(self.window, "sidebar_popover")
+                and self.window.sidebar_popover.get_visible()
+            ):
+                self.window.sidebar_popover.popdown()
 
     # --- Helper Methods for Dialogs ---
 
@@ -274,6 +329,12 @@ class WindowActions:
         SessionEditDialog(
             self.window, session, self.session_store, position, self.folder_store
         ).present()
+        # Auto-hide sidebar popup if it's open
+        if (
+            hasattr(self.window, "sidebar_popover")
+            and self.window.sidebar_popover.get_visible()
+        ):
+            self.window.sidebar_popover.popdown()
 
     def _show_folder_edit_dialog(
         self, folder: Optional[SessionFolder], position: Optional[int]
@@ -281,6 +342,12 @@ class WindowActions:
         FolderEditDialog(
             self.window, self.folder_store, folder, position, is_new=position is None
         ).present()
+        # Auto-hide sidebar popup if it's open
+        if (
+            hasattr(self.window, "sidebar_popover")
+            and self.window.sidebar_popover.get_visible()
+        ):
+            self.window.sidebar_popover.popdown()
 
     def _show_rename_dialog(
         self, item: Union[SessionItem, SessionFolder], is_session: bool
@@ -327,6 +394,12 @@ class WindowActions:
 
         dialog.connect("response", on_response)
         dialog.present()
+        # Auto-hide sidebar popup if it's open
+        if (
+            hasattr(self.window, "sidebar_popover")
+            and self.window.sidebar_popover.get_visible()
+        ):
+            self.window.sidebar_popover.popdown()
 
     def _show_delete_confirmation(
         self, items: List[Union[SessionItem, SessionFolder]]
@@ -386,3 +459,9 @@ class WindowActions:
 
         dialog.connect("response", on_response)
         dialog.present()
+        # Auto-hide sidebar popup if it's open
+        if (
+            hasattr(self.window, "sidebar_popover")
+            and self.window.sidebar_popover.get_visible()
+        ):
+            self.window.sidebar_popover.popdown()

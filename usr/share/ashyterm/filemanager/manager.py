@@ -744,6 +744,8 @@ class FileManager:
         menu = Gio.Menu()
         menu.append(_("Refresh"), "app.refresh")
         popover = Gtk.PopoverMenu.new_from_model(menu)
+        if popover.get_parent() is not None:
+            popover.unparent()
         popover.set_parent(self.column_view)
         rect = Gdk.Rectangle()
         rect.x, rect.y, rect.width, rect.height = int(x), int(y), 1, 1
@@ -753,6 +755,8 @@ class FileManager:
     def _show_context_menu(self, file_item, x, y):
         menu_model = self._create_context_menu_model(file_item)
         popover = Gtk.PopoverMenu.new_from_model(menu_model)
+        if popover.get_parent() is not None:
+            popover.unparent()
         popover.set_parent(self.column_view)
         self._setup_context_actions(popover, file_item)
         rect = Gdk.Rectangle()

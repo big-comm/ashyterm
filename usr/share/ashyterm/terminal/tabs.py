@@ -331,6 +331,8 @@ class TabManager:
         menu = Gio.Menu()
         menu.append(_("Detach Tab"), "win.detach-tab")
         popover = Gtk.PopoverMenu.new_from_model(menu)
+        if popover.get_parent() is not None:
+            popover.unparent()
         popover.set_parent(tab_widget)
 
         page = self.pages.get(tab_widget)

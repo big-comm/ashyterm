@@ -1,17 +1,14 @@
 # ashyterm/sessions/tree.py
 
-import json
-import os
-from typing import Callable, List, Optional, Union
+from typing import Callable, List, Optional, Set, Union
 
 import gi
 
 gi.require_version("Gtk", "4.0")
 gi.require_version("Adw", "1")
+gi.require_version("Gdk", "4.0")
 from gi.repository import Gdk, Gio, GLib, GObject, Gtk
 
-from ..helpers import generate_unique_name
-from ..settings.config import LAYOUT_DIR
 from ..ui.menus import create_folder_menu, create_root_menu, create_session_menu
 from ..utils.logger import get_logger
 from ..utils.translation_utils import _
@@ -52,47 +49,246 @@ class SessionTreeView:
             create_func=_get_children_model,
             user_data=None,
         )
+
+        # Set up filtering
+        self.filter = Gtk.CustomFilter.new(self._filter_func)
+        self.filter_model = Gtk.FilterListModel(
+            model=self.tree_model, filter=self.filter
+        )
+        self.selection_model = Gtk.MultiSelection(model=self.filter_model)
         self.column_view = self._create_column_view()
-        self.selection_model = self.column_view.get_model()
+
         self._clipboard_item: Optional[Union[SessionItem, SessionFolder]] = None
         self._clipboard_is_cut: bool = False
         self._is_restoring_state: bool = False
         self._populated_folders = set()
+        self._filter_text = ""
+        self._saved_expansion_state: Optional[Set[str]] = (
+            None  # Save expansion state before search
+        )
         self.on_session_activated: Optional[Callable[[SessionItem], None]] = None
         self.on_layout_activated: Optional[Callable[[str], None]] = None
+        self.on_folder_expansion_changed: Optional[Callable[[], None]] = None
         self.refresh_tree()
         self.logger.info("SessionTreeView (ColumnView) initialized")
 
-    def get_widget(self) -> Gtk.ColumnView:
-        """Returns the main widget for this view."""
+    def _filter_func(self, item: GObject.GObject) -> bool:
+        """Filter function that determines if an item should be visible."""
+        if not self._filter_text:
+            return True
+
+        # Get the actual item from the tree list row
+        if hasattr(item, "get_item"):
+            tree_list_row = item
+            actual_item = tree_list_row.get_item()
+        else:
+            actual_item = item
+
+        # Check if the item name contains the filter text
+        item_name = getattr(actual_item, "name", "").lower()
+        if self._filter_text in item_name:
+            return True
+
+        # For folders, also check if any children match the filter
+        if isinstance(actual_item, SessionFolder):
+            return self._folder_contains_matching_items(actual_item)
+
+        return False
+
+    def _folder_contains_matching_items(self, folder: SessionFolder) -> bool:
+        """Recursively check if a folder contains any items matching the current filter."""
+        if not self._filter_text:
+            return False
+
+        # Ensure folder children are populated
+        if folder.path not in self._populated_folders:
+            self._populate_folder_children(folder)
+
+        # Check all children recursively
+        for child in folder.children:
+            # Check if child name matches
+            child_name = getattr(child, "name", "").lower()
+            if self._filter_text in child_name:
+                return True
+
+            # If child is a folder, check its children recursively
+            if isinstance(child, SessionFolder):
+                if self._folder_contains_matching_items(child):
+                    return True
+
+        return False
+
+    def set_filter_text(self, text: str) -> None:
+        """Updates the filter text and refreshes the filter."""
+        old_filter_text = self._filter_text
+        self._filter_text = text.lower()
+
+        # If we're starting a new search (text was added to empty search), save current expansion state
+        if text and not old_filter_text:
+            self._save_current_expansion_state()
+
+        # If we're starting a new search (text was added), expand folders with matches
+        if text and (not old_filter_text or text.startswith(old_filter_text)):
+            self._expand_folders_with_matches()
+
+        self.filter.changed(Gtk.FilterChange.DIFFERENT)
+
+    def _expand_folders_with_matches(self) -> None:
+        """Automatically expand folders that contain items matching the current filter."""
+        if not self._filter_text:
+            return
+
+        def expand_matching_folders_recursively(model, parent_path=""):
+            """Recursively expand folders that contain matching items."""
+            for i in range(model.get_n_items()):
+                row = model.get_item(i)
+                if not row:
+                    continue
+
+                item = row.get_item()
+                if isinstance(item, SessionFolder):
+                    # Check if this folder contains matching items
+                    if self._folder_contains_matching_items(item):
+                        # Expand this folder to show matching children
+                        if not row.get_expanded():
+                            row.set_expanded(True)
+
+                        # Also expand any child folders that contain matches
+                        if item.path not in self._populated_folders:
+                            self._populate_folder_children(item)
+
+                        # Since TreeListModel creates child models automatically when rows are expanded,
+                        # and we've already populated the children, we don't need to manually recurse
+                        # into child models. The TreeListModel will handle creating the child rows
+                        # from the folder's children list.
+
+        # Start expansion from root
+        expand_matching_folders_recursively(self.tree_model)
+
+    def clear_search(self) -> None:
+        """Clears the search filter and restores original expansion state."""
+        if self._filter_text:
+            self._filter_text = ""
+            self._restore_saved_expansion_state()
+            self.filter.changed(Gtk.FilterChange.DIFFERENT)
+
+    def _save_current_expansion_state(self) -> None:
+        """Saves the current expansion state of all folders before search begins."""
+        self._saved_expansion_state = set()
+
+        def collect_expanded_folders(model):
+            """Recursively collect all expanded folder paths."""
+            for i in range(model.get_n_items()):
+                row = model.get_item(i)
+                if not row:
+                    continue
+
+                item = row.get_item()
+                if isinstance(item, SessionFolder):
+                    if row.get_expanded():
+                        self._saved_expansion_state.add(item.path)
+
+                    # If expanded, check children too
+                    if row.get_expanded():
+                        try:
+                            child_model = row.get_model()
+                            if child_model:
+                                collect_expanded_folders(child_model)
+                        except AttributeError:
+                            pass
+
+        collect_expanded_folders(self.tree_model)
+        self.logger.debug(f"Saved expansion state: {self._saved_expansion_state}")
+
+    def _restore_saved_expansion_state(self) -> None:
+        """Restores the expansion state that was saved before search began."""
+        if self._saved_expansion_state is None:
+            # If no saved state, fall back to settings
+            self._restore_original_expansion_state()
+            return
+
+        self.logger.debug(
+            f"Restoring saved expansion state: {self._saved_expansion_state}"
+        )
+
+        def restore_expansion_state(model):
+            """Recursively restore expansion state for all folders."""
+            for i in range(model.get_n_items()):
+                row = model.get_item(i)
+                if not row:
+                    continue
+
+                item = row.get_item()
+                if isinstance(item, SessionFolder):
+                    should_be_expanded = item.path in self._saved_expansion_state
+                    current_expanded = row.get_expanded()
+
+                    if should_be_expanded and not current_expanded:
+                        row.set_expanded(True)
+                    elif not should_be_expanded and current_expanded:
+                        row.set_expanded(False)
+
+                    # If this folder should be expanded, check its children
+                    if should_be_expanded:
+                        try:
+                            child_model = row.get_model()
+                            if child_model:
+                                restore_expansion_state(child_model)
+                        except AttributeError:
+                            pass
+
+        # Set restoring state flag to prevent saving during restoration
+        self._is_restoring_state = True
+        try:
+            restore_expansion_state(self.tree_model)
+        finally:
+            self._is_restoring_state = False
+
+        # Clear the saved state
+        self._saved_expansion_state = None
+
+    def get_widget(self) -> Gtk.ListView:
+        """Returns the list view widget."""
         return self.column_view
 
-    def _create_column_view(self) -> Gtk.ColumnView:
-        """Creates and configures the Gtk.ColumnView widget."""
-        selection_model = Gtk.MultiSelection(model=self.tree_model)
+    def _create_column_view(self) -> Gtk.ListView:
+        """Creates and configures a Gtk.ListView widget (no headers)."""
         factory = Gtk.SignalListItemFactory()
         factory.connect("setup", self._on_factory_setup)
         factory.connect("bind", self._on_factory_bind)
         factory.connect("unbind", self._on_factory_unbind)
-        column = Gtk.ColumnViewColumn(title=_("Sessions"), factory=factory, expand=True)
-        column_view = Gtk.ColumnView(model=selection_model)
-        column_view.append_column(column)
-        column_view.connect("activate", self._on_row_activated)
+
+        list_view = Gtk.ListView(model=self.selection_model, factory=factory)
+        list_view.set_show_separators(False)
+        list_view.set_focusable(True)
+        list_view.connect("activate", self._on_row_activated)
+
+        # Handle focus to ensure navigation works
+        focus_controller = Gtk.EventControllerFocus.new()
+        focus_controller.connect("enter", self._on_column_view_focus_enter)
+        list_view.add_controller(focus_controller)
 
         empty_area_gesture = Gtk.GestureClick.new()
         empty_area_gesture.set_button(Gdk.BUTTON_SECONDARY)
         empty_area_gesture.connect("pressed", self._on_empty_area_right_click)
-        column_view.add_controller(empty_area_gesture)
+        list_view.add_controller(empty_area_gesture)
 
         root_drop_target = Gtk.DropTarget.new(GObject.TYPE_STRING, Gdk.DragAction.MOVE)
         root_drop_target.connect("accept", lambda _, __: True)
         root_drop_target.connect("drop", self._on_root_drop)
-        column_view.add_controller(root_drop_target)
+        list_view.add_controller(root_drop_target)
 
         key_controller = Gtk.EventControllerKey.new()
         key_controller.connect("key-pressed", self._on_key_pressed)
-        column_view.add_controller(key_controller)
-        return column_view
+        list_view.add_controller(key_controller)
+        return list_view
+
+    def _on_column_view_focus_enter(self, controller: Gtk.EventControllerFocus) -> None:
+        """Handle focus entering the column view to ensure proper navigation."""
+        if self.selection_model.get_selection().get_size() == 0:
+            # Select first item if nothing is selected
+            if self.filter_model.get_n_items() > 0:
+                self.selection_model.select_item(0, True)
 
     def _on_factory_setup(
         self, factory: Gtk.SignalListItemFactory, list_item: Gtk.ListItem
@@ -135,9 +331,21 @@ class SessionTreeView:
         label.set_label(item.name)
         box.remove_css_class("indented-session")
 
+        # Remove any existing indentation classes
+        for i in range(1, 5):
+            box.remove_css_class(f"indented-session-depth-{i}")
+
         if isinstance(item, SessionItem) or isinstance(item, LayoutItem):
-            if tree_list_row.get_depth() > 0:
-                box.add_css_class("indented-session")
+            depth = tree_list_row.get_depth()
+            if depth > 0:
+                # Remove any existing indentation classes
+                for i in range(1, 5):  # Support up to 4 levels of nesting
+                    box.remove_css_class(f"indented-session-depth-{i}")
+                # Add the appropriate indentation class
+                if depth <= 4:
+                    box.add_css_class(f"indented-session-depth-{depth}")
+                else:
+                    box.add_css_class("indented-session-depth-4")  # Max depth
             if isinstance(item, SessionItem):
                 icon.set_from_icon_name(
                     "computer-symbolic"
@@ -159,8 +367,9 @@ class SessionTreeView:
                     any(s.folder_path == item.path for s in self.session_store)
                     or any(f.parent_path == item.path for f in self.folder_store)
                     or any(
-                        isinstance(l, LayoutItem) and l.folder_path == item.path
-                        for l in self.parent_window.layouts
+                        isinstance(layout, LayoutItem)
+                        and layout.folder_path == item.path
+                        for layout in self.parent_window.layouts
                     )
                 )
 
@@ -208,6 +417,10 @@ class SessionTreeView:
             else:
                 expanded_paths.discard(folder.path)
             self.settings_manager.set("tree_expanded_folders", list(expanded_paths))
+
+            # Notify parent window about expansion change for dynamic sizing
+            if self.on_folder_expansion_changed:
+                self.on_folder_expansion_changed()
         except Exception as e:
             self.logger.error(f"Failed to save folder expansion state: {e}")
 
@@ -412,17 +625,28 @@ class SessionTreeView:
                 if path_to_find.startswith(item.path + "/"):
                     if item.path not in self._populated_folders:
                         self._populate_folder_children(item)
-                    child_model = self.tree_model.get_model_for_row(row)
-                    if child_model:
-                        if found_in_child := self._find_row_recursively(
-                            child_model, path_to_find
-                        ):
-                            return found_in_child
+
+                    # Since TreeListModel creates child models automatically when rows are expanded,
+                    # we need to expand the row first to access its children
+                    if not row.get_expanded():
+                        row.set_expanded(True)
+
+                    # Try to get the child model
+                    try:
+                        child_model = row.get_model()
+                        if child_model:
+                            if found_in_child := self._find_row_recursively(
+                                child_model, path_to_find
+                            ):
+                                return found_in_child
+                    except AttributeError:
+                        # If get_model doesn't exist or fails, continue without recursing
+                        pass
         return None
 
     def _on_row_activated(self, _list_view: Gtk.ListView, position: int) -> None:
         """Handles item activation (e.g., double-click or Enter key)."""
-        if not (tree_list_row := self.tree_model.get_item(position)):
+        if not (tree_list_row := self.filter_model.get_item(position)):
             return
         item = tree_list_row.get_item()
         if isinstance(item, SessionItem):
@@ -432,7 +656,32 @@ class SessionTreeView:
             if self.on_layout_activated:
                 self.on_layout_activated(item.name)
         elif isinstance(item, SessionFolder):
+            # For folders, just toggle expansion without triggering auto-hide
             tree_list_row.set_expanded(not tree_list_row.get_expanded())
+            return  # Don't trigger auto-hide for folder operations
+
+        # Auto-hide sidebar if enabled (only for non-folder items)
+        if self.settings_manager.get("auto_hide_sidebar", False):
+            # Use a longer delay to ensure the activation is fully processed
+            def delayed_auto_hide():
+                # Double-check we're still in auto-hide mode and popover is visible
+                if (
+                    self.settings_manager.get("auto_hide_sidebar", False)
+                    and hasattr(self.parent_window, "sidebar_popover")
+                    and self.parent_window.sidebar_popover.get_visible()
+                ):
+                    # We're in popup mode, close the popover
+                    self.parent_window.sidebar_popover.popdown()
+                    self.parent_window.toggle_sidebar_button.set_active(False)
+                else:
+                    # We're in normal flap mode
+                    self.parent_window.flap.set_reveal_flap(False)
+                    self.parent_window.settings_manager.set_sidebar_visible(False)
+                    self.parent_window.toggle_sidebar_button.set_active(False)
+                return GLib.SOURCE_REMOVE
+
+            # Use a longer timeout to ensure activation is fully processed
+            GLib.timeout_add(100, delayed_auto_hide)
 
     def _on_key_pressed(
         self,
@@ -442,6 +691,26 @@ class SessionTreeView:
         state: Gdk.ModifierType,
     ) -> bool:
         """Handles key presses for shortcuts."""
+        # Check for alphanumeric keys to start search
+        if not state & (
+            Gdk.ModifierType.CONTROL_MASK
+            | Gdk.ModifierType.ALT_MASK
+            | Gdk.ModifierType.SHIFT_MASK
+        ):
+            # Get the Unicode character for the key
+            unicode_val = Gdk.keyval_to_unicode(keyval)
+            if unicode_val != 0:  # Valid Unicode character
+                unicode_char = chr(unicode_val)
+                if unicode_char.isalnum() or unicode_char in " -_":
+                    # Move focus to search entry and start typing
+                    if hasattr(self.parent_window, "search_entry"):
+                        self.parent_window.search_entry.grab_focus()
+                        self.parent_window.search_entry.set_text(unicode_char)
+                        self.parent_window.search_entry.set_position(
+                            -1
+                        )  # Move cursor to end
+                    return Gdk.EVENT_STOP
+
         if state & Gdk.ModifierType.CONTROL_MASK:
             if keyval in (Gdk.KEY_a, Gdk.KEY_A):
                 self.selection_model.select_all()
@@ -474,7 +743,7 @@ class SessionTreeView:
         """Gets the single selected item, or None if multiple/none are selected."""
         selection = self.selection_model.get_selection()
         if selection.get_size() == 1:
-            if row := self.tree_model.get_item(selection.get_nth(0)):
+            if row := self.filter_model.get_item(selection.get_nth(0)):
                 return row.get_item()
         return None
 
@@ -485,7 +754,7 @@ class SessionTreeView:
         size = selection.get_size()
         for i in range(size):
             position = selection.get_nth(i)
-            if row := self.tree_model.get_item(position):
+            if row := self.filter_model.get_item(position):
                 items.append(row.get_item())
         return items
 
@@ -502,41 +771,50 @@ class SessionTreeView:
         if not self.selection_model.is_selected(pos):
             self.selection_model.unselect_all()
             self.selection_model.select_item(pos, True)
-        item = list_item.get_item().get_item()
-        menu_model = None
-        if isinstance(item, SessionItem):
-            found, position = self.session_store.find(item)
-            if found:
-                menu_model = create_session_menu(
-                    item,
-                    self.session_store,
-                    position,
-                    self.folder_store,
-                    self.has_clipboard_content(),
+        tree_list_row = self.filter_model.get_item(pos)
+        if tree_list_row:
+            item = tree_list_row.get_item()
+            menu_model = None
+            if isinstance(item, SessionItem):
+                found, position = self.session_store.find(item)
+                if found:
+                    menu_model = create_session_menu(
+                        item,
+                        self.session_store,
+                        position,
+                        self.folder_store,
+                        self.has_clipboard_content(),
+                    )
+            elif isinstance(item, SessionFolder):
+                found, position = self.folder_store.find(item)
+                if found:
+                    menu_model = create_folder_menu(
+                        item,
+                        self.folder_store,
+                        position,
+                        self.session_store,
+                        self.has_clipboard_content(),
+                    )
+            elif isinstance(item, LayoutItem):
+                menu_model = Gio.Menu()
+                menu_model.append(
+                    _("Restore Layout"), f"win.restore_layout('{item.name}')"
                 )
-        elif isinstance(item, SessionFolder):
-            found, position = self.folder_store.find(item)
-            if found:
-                menu_model = create_folder_menu(
-                    item,
-                    self.folder_store,
-                    position,
-                    self.session_store,
-                    self.has_clipboard_content(),
+                menu_model.append(
+                    _("Move to Folder..."), f"win.move-layout-to-folder('{item.name}')"
                 )
-        elif isinstance(item, LayoutItem):
-            menu_model = Gio.Menu()
-            menu_model.append(_("Restore Layout"), f"win.restore_layout('{item.name}')")
-            menu_model.append(
-                _("Move to Folder..."), f"win.move-layout-to-folder('{item.name}')"
-            )
-            menu_model.append_section(None, Gio.Menu())
-            menu_model.append(_("Delete Layout"), f"win.delete_layout('{item.name}')")
+                menu_model.append_section(None, Gio.Menu())
+                menu_model.append(
+                    _("Delete Layout"), f"win.delete_layout('{item.name}')"
+                )
 
-        if menu_model:
-            popover = Gtk.PopoverMenu.new_from_model(menu_model)
-            popover.set_parent(list_item.get_child())
-            popover.popup()
+            if menu_model:
+                popover = Gtk.PopoverMenu.new_from_model(menu_model)
+                # Ensure popover is not already parented
+                if popover.get_parent() is not None:
+                    popover.unparent()
+                popover.set_parent(list_item.get_child())
+                popover.popup()
 
     def _on_empty_area_right_click(
         self, _gesture: Gtk.GestureClick, _n_press: int, x: float, y: float
@@ -545,8 +823,10 @@ class SessionTreeView:
         self.selection_model.unselect_all()
         menu_model = create_root_menu(self.has_clipboard_content())
         popover = Gtk.PopoverMenu.new_from_model(menu_model)
+        # Ensure popover is not already parented
+        if popover.get_parent() is not None:
+            popover.unparent()
         popover.set_parent(self.column_view)
-        popover.set_pointing_to(Gdk.Rectangle(x=int(x), y=int(y), width=1, height=1))
         popover.popup()
 
     def has_clipboard_content(self) -> bool:

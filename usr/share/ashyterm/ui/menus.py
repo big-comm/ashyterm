@@ -1,6 +1,7 @@
 # ashyterm/ui/menus.py
 
 import gi
+
 gi.require_version("Gtk", "4.0")
 gi.require_version("Adw", "1")
 from gi.repository import Adw, Gio, Gtk
@@ -196,9 +197,6 @@ def create_session_menu(
     menu.append(_("Duplicate"), "win.duplicate-session")
     menu.append(_("Rename"), "win.rename-session")
     menu.append_section(None, Gio.Menu())
-    menu.append(_("Cut"), "win.cut-item")
-    menu.append(_("Copy"), "win.copy-item")
-    menu.append_section(None, Gio.Menu())
     if folder_store and folder_store.get_n_items() > 0:
         menu.append(_("Move to Folder..."), "win.move-session-to-folder")
     menu.append_section(None, Gio.Menu())
@@ -220,8 +218,6 @@ def create_folder_menu(
     menu.append(_("Add Session Here"), "win.add-session-to-folder")
     menu.append(_("Rename"), "win.rename-folder")
     menu.append_section(None, Gio.Menu())
-    menu.append(_("Cut"), "win.cut-item")
-    menu.append(_("Copy"), "win.copy-item")
     if clipboard_has_content:
         menu.append(_("Paste"), "win.paste-item")
     menu.append_section(None, Gio.Menu())
