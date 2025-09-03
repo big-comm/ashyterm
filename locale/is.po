@@ -579,16 +579,29 @@ msgstr "Skráarstig er ekki í samræmi við foreldrastrig."
 msgid "Unnamed Folder"
 msgstr "Ónefnd möppur"
 # 
-# File: usr/share/ashyterm/sessions/tree.py, line: 101
-#: NEEDS WORK
-msgid "Sessions"
-msgstr "Snið"
-# 
 # File: usr/share/ashyterm/sessions/tree.py, line: 298
 # File: usr/share/ashyterm/sessions/tree.py, line: 302
 #: NEEDS WORK
 msgid "Move Error"
 msgstr "Hreyfingarvilla"
+# 
+# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
+# 
+# File: usr/share/ashyterm/sessions/tree.py, line: 801
+# File: usr/share/ashyterm/window.py, line: 1544
+#: NEEDS WORK
+msgid "Restore Layout"
+msgstr "Endurheimta uppsetningu"
+# 
+# File: usr/share/ashyterm/ui/menus.py, line: 203
+#: NEEDS WORK
+msgid "Move to Folder..."
+msgstr "Færa í möppu..."
+# 
+# File: usr/share/ashyterm/sessions/tree.py, line: 808
+#: NEEDS WORK
+msgid "Delete Layout"
+msgstr "Eyða uppsetningu"
 # 
 # File: usr/share/ashyterm/sessions/tree.py, line: 618
 # File: usr/share/ashyterm/sessions/tree.py, line: 623
@@ -869,10 +882,20 @@ msgstr "Bæta við möppu"
 msgid "Edit Selected"
 msgstr "Breyta valið"
 # 
+# File: usr/share/ashyterm/window.py, line: 585
+#: NEEDS WORK
+msgid "Save Current Layout"
+msgstr "Vista núverandi uppsetningu"
+# 
 # File: usr/share/ashyterm/window.py, line: 343
 #: NEEDS WORK
 msgid "Remove Selected"
 msgstr "Fjarlægðu valið"
+# 
+# File: usr/share/ashyterm/window.py, line: 606
+#: NEEDS WORK
+msgid "Search sessions..."
+msgstr "Leita að sessum..."
 # 
 # File: usr/share/ashyterm/window.py, line: 424
 #: NEEDS WORK
@@ -883,6 +906,39 @@ msgstr "Gagnahleðsluvilla"
 #: NEEDS WORK
 msgid "Failed to load saved sessions and folders. Starting with empty configuration."
 msgstr "Mistók að hlaða uppsöfnuðum sessíum og möppum. Byrjar með tómu stillingum."
+# 
+# File: usr/share/ashyterm/window.py, line: 1080
+#: NEEDS WORK
+msgid "Save Current Session?"
+msgstr "Vista núverandi sess?"
+# 
+# File: usr/share/ashyterm/window.py, line: 1082
+#: NEEDS WORK
+msgid "Do you want to restore these tabs the next time you open Ashy Terminal?"
+msgstr "Viltu endurheimta þessar flipar næst þegar þú opnar Ashy Terminal?"
+# 
+# File: usr/share/ashyterm/window.py, line: 1086
+#: NEEDS WORK
+msgid "Don't Save"
+msgstr "Ekki vista"
+# 
+# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 163
+# File: usr/share/ashyterm/ui/dialogs.py, line: 575
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1213
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1957
+# File: usr/share/ashyterm/ui/dialogs.py, line: 2006
+# File: usr/share/ashyterm/window.py, line: 953
+# File: usr/share/ashyterm/window.py, line: 1013
+#: NEEDS WORK
+msgid "Cancel"
+msgstr "Hætta við"
+# 
+# File: usr/share/ashyterm/window.py, line: 1088
+#: NEEDS WORK
+msgid "Save and Close"
+msgstr "Vista og Loka"
 # 
 # File: usr/share/ashyterm/window.py, line: 544
 #: NEEDS WORK
@@ -904,19 +960,6 @@ msgstr "Ertu viss um að þú viljir loka þessu glugga?"
 #: NEEDS WORK
 msgid "Close Window"
 msgstr "Loka glugga"
-# 
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 163
-# File: usr/share/ashyterm/ui/dialogs.py, line: 575
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1213
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1957
-# File: usr/share/ashyterm/ui/dialogs.py, line: 2006
-# File: usr/share/ashyterm/window.py, line: 953
-# File: usr/share/ashyterm/window.py, line: 1013
-#: NEEDS WORK
-msgid "Cancel"
-msgstr "Hætta við"
 # 
 # File: usr/share/ashyterm/window.py, line: 551
 #: NEEDS WORK
@@ -950,6 +993,219 @@ msgstr "Í lagi"
 msgid "Cannot detach the last tab."
 msgstr "Get ekki að losa síðasta flipa."
 # 
+# File: usr/share/ashyterm/window.py, line: 1466
+#: NEEDS WORK
+msgid "Save Layout"
+msgstr "Vista skipulag"
+# 
+# File: usr/share/ashyterm/window.py, line: 1467
+#: NEEDS WORK
+msgid "Enter a name for the current layout:"
+msgstr "Sláðu inn nafn fyrir núverandi uppsetningu:"
+# 
+# File: usr/share/ashyterm/window.py, line: 1471
+#: NEEDS WORK
+msgid "e.g., 'My Dev Setup'"
+msgstr "Mín þróunaruppsetning"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 589
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1219
+#: NEEDS WORK
+msgid "Save"
+msgstr "Vista"
+# 
+# File: usr/share/ashyterm/window.py, line: 1492
+#: NEEDS WORK
+msgid "Layout name cannot be empty."
+msgstr "Layout nafnið má ekki vera tómt."
+# 
+# File: usr/share/ashyterm/window.py, line: 1514
+#: NEEDS WORK
+msgid "Layout Saved"
+msgstr "Uppsetning vistuð"
+# 
+# File: usr/share/ashyterm/window.py, line: 1519
+#: NEEDS WORK
+msgid "Error Saving Layout"
+msgstr "Villa að vista uppsetningu"
+# 
+# File: usr/share/ashyterm/window.py, line: 1530
+#: NEEDS WORK
+msgid "Saved layout not found."
+msgstr "Vistaður uppsetning fannst ekki."
+# 
+# File: usr/share/ashyterm/window.py, line: 1537
+#: NEEDS WORK
+msgid "Restore Saved Layout?"
+msgstr "Endurðu vistaða uppsetningu?"
+# 
+# File: usr/share/ashyterm/window.py, line: 1539
+#: NEEDS WORK
+#, python-brace-format
+msgid "This will close all current tabs and restore the '{name}' layout. Are you sure?"
+msgstr "Þetta mun loka öllum núverandi flipum og endurheimta '{name}' uppsetninguna. Ertu viss?"
+# 
+# File: usr/share/ashyterm/window.py, line: 1586
+#: NEEDS WORK
+msgid "Error Restoring Layout"
+msgstr "Villa við að endurheimta uppsetningu"
+# 
+# File: usr/share/ashyterm/window.py, line: 1612
+#: NEEDS WORK
+msgid "Delete Layout?"
+msgstr "Eyða skipulagi?"
+# 
+# File: usr/share/ashyterm/window.py, line: 1614
+#: NEEDS WORK
+#, python-brace-format
+msgid "Are you sure you want to permanently delete the layout '{name}'?"
+msgstr "Ertu viss um að þú viljir varanlega eyða skipulaginu '{name}'?"
+# 
+# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
+# 
+# File: usr/share/ashyterm/ui/menus.py, line: 39
+# File: usr/share/ashyterm/ui/menus.py, line: 73
+# File: usr/share/ashyterm/window.py, line: 1014
+#: NEEDS WORK
+msgid "Delete"
+msgstr "Eyða"
+# 
+# File: usr/share/ashyterm/window.py, line: 1639
+#: NEEDS WORK
+msgid "Layout Deleted"
+msgstr "Uppsetning Eytt"
+# 
+# File: usr/share/ashyterm/window.py, line: 1644
+#: NEEDS WORK
+msgid "Error Deleting Layout"
+msgstr "Villa að eyða uppsetningu"
+# 
+# File: usr/share/ashyterm/window.py, line: 1691
+#: NEEDS WORK
+msgid "Error Moving Layout"
+msgstr "Villa að færa uppsetningu"
+# 
+# File: usr/share/ashyterm/ui/color_scheme_dialog.py, line: 42
+#: NEEDS WORK
+msgid "Edit Scheme"
+msgstr "Breyta áætlun"
+# 
+# File: usr/share/ashyterm/ui/color_scheme_dialog.py, line: 42
+#: NEEDS WORK
+msgid "New Scheme"
+msgstr "Nýr áætlun"
+# 
+# File: usr/share/ashyterm/ui/color_scheme_dialog.py, line: 44
+#: NEEDS WORK
+msgid "Scheme Name"
+msgstr "Sniðheiti"
+# 
+# File: usr/share/ashyterm/ui/color_scheme_dialog.py, line: 73
+#: NEEDS WORK
+msgid "General Colors"
+msgstr "Almennar Litur"
+# 
+# File: usr/share/ashyterm/ui/color_scheme_dialog.py, line: 78
+#: NEEDS WORK
+msgid "Foreground"
+msgstr "Framgrunnur"
+# 
+# File: usr/share/ashyterm/ui/color_scheme_dialog.py, line: 82
+#: NEEDS WORK
+msgid "Background"
+msgstr "Bakgrunn"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1133
+#: NEEDS WORK
+msgid "Cursor"
+msgstr "Músíkur"
+# 
+# File: usr/share/ashyterm/ui/color_scheme_dialog.py, line: 90
+#: NEEDS WORK
+msgid "16-Color Palette"
+msgstr "16-lita paletta"
+# 
+# File: usr/share/ashyterm/ui/color_scheme_dialog.py, line: 135
+#: NEEDS WORK
+msgid "Name Error"
+msgstr "Nafn Villa"
+# 
+# File: usr/share/ashyterm/ui/color_scheme_dialog.py, line: 135
+#: NEEDS WORK
+msgid "Scheme name cannot be empty."
+msgstr "Sniðheiti má ekki vera tómt."
+# 
+# File: usr/share/ashyterm/ui/color_scheme_dialog.py, line: 149
+# File: usr/share/ashyterm/ui/color_scheme_dialog.py, line: 159
+#: NEEDS WORK
+msgid "Name Conflict"
+msgstr "Nafn árekstur"
+# 
+# File: usr/share/ashyterm/ui/color_scheme_dialog.py, line: 151
+#: NEEDS WORK
+#, python-brace-format
+msgid "A color scheme with the name '{name}' already exists. Please choose a different name."
+msgstr "Litaskema með nafnið '{name}' er þegar til. Vinsamlegast veldu annað nafn."
+# 
+# File: usr/share/ashyterm/ui/color_scheme_dialog.py, line: 161
+#: NEEDS WORK
+#, python-brace-format
+msgid ""
+"A scheme with a similar internal name ('{key}') already exists. Please choose a slightly different "
+"name."
+msgstr "Snið með svipað innra nafn ('{key}') er þegar til. Vinsamlegast veldu aðeins annað nafn."
+# 
+# File: usr/share/ashyterm/ui/color_scheme_dialog.py, line: 186
+#: NEEDS WORK
+msgid "Custom"
+msgstr "Sérsniðið"
+# 
+# File: usr/share/ashyterm/ui/color_scheme_dialog.py, line: 186
+#: NEEDS WORK
+msgid "Built-in"
+msgstr "Innbyggð"
+# 
+# File: usr/share/ashyterm/ui/color_scheme_dialog.py, line: 282
+#: NEEDS WORK
+msgid "Color Schemes"
+msgstr "Litaskemur"
+# 
+# File: usr/share/ashyterm/ui/color_scheme_dialog.py, line: 307
+#: NEEDS WORK
+msgid "Available Schemes"
+msgstr "Tiltækir áætlun"
+# 
+# File: usr/share/ashyterm/ui/color_scheme_dialog.py, line: 309
+#: NEEDS WORK
+msgid "Select a scheme to apply it instantly. Double-click to edit."
+msgstr "Veldu skema til að beita því strax. Tvíklikkaðu til að breyta."
+# 
+# File: usr/share/ashyterm/ui/color_scheme_dialog.py, line: 335
+#: NEEDS WORK
+msgid "New"
+msgstr "Nýr"
+# 
+# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
+# 
+# File: usr/share/ashyterm/ui/menus.py, line: 23
+# File: usr/share/ashyterm/ui/menus.py, line: 59
+# File: usr/share/ashyterm/ui/menus.py, line: 151
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1637
+#: NEEDS WORK
+msgid "Edit"
+msgstr "Breyta"
+# 
+# File: usr/share/ashyterm/ui/color_scheme_dialog.py, line: 468
+#: NEEDS WORK
+msgid "Delete Scheme?"
+msgstr "Eyða skema?"
+# 
+# File: usr/share/ashyterm/ui/color_scheme_dialog.py, line: 470
+#: NEEDS WORK
+#, python-brace-format
+msgid "Are you sure you want to delete the scheme '{name}'? This cannot be undone."
+msgstr "Ertu viss um að þú viljir eyða skema '{name}'? Þetta er ekki hægt að endurheimta."
+# 
 # File: usr/share/ashyterm/ui/ssh_dialogs.py, line: 96
 #: NEEDS WORK
 msgid "SSH Connection Failed"
@@ -967,207 +1223,15 @@ msgstr "Gat ekki tengingu við sess '{session_name}'."
 msgid "Close"
 msgstr "Lokaðu"
 # 
-# File: usr/share/ashyterm/window.py, line: 586
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1056
 #: NEEDS WORK
-msgid "SFTP not implemented yet"
-msgstr "SFTP ekki innleitt ennþá"
+msgid "Edit Folder"
+msgstr "Breyta möppu"
 # 
-# File: usr/share/ashyterm/window.py, line: 758
-# File: usr/share/ashyterm/window.py, line: 875
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1100
 #: NEEDS WORK
-msgid "New Session"
-msgstr "Nýja sessjón"
-# 
-# File: usr/share/ashyterm/window.py, line: 885
-#: NEEDS WORK
-msgid "New Folder"
-msgstr "Nýr möppur"
-# 
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
-# 
-# File: usr/share/ashyterm/ui/menus.py, line: 211
-# File: usr/share/ashyterm/window.py, line: 909
-# File: usr/share/ashyterm/window.py, line: 960
-#: NEEDS WORK
-msgid "Keyboard Shortcuts"
-msgstr "Takkastýringar"
-# 
-# File: usr/share/ashyterm/window.py, line: 857
-#: NEEDS WORK
-msgid "Terminal"
-msgstr "Terminal"
-# 
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
-# 
-# File: usr/share/ashyterm/ui/menus.py, line: 145
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1597
-#: NEEDS WORK
-msgid "Close Tab"
-msgstr "Loka flipa"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1607
-#: NEEDS WORK
-msgid "New Window"
-msgstr "Nýr Gluggi"
-# 
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
-# 
-# File: usr/share/ashyterm/ui/menus.py, line: 30
-# File: usr/share/ashyterm/ui/menus.py, line: 66
-# File: usr/share/ashyterm/ui/menus.py, line: 117
-# File: usr/share/ashyterm/ui/menus.py, line: 153
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1598
-#: NEEDS WORK
-msgid "Copy"
-msgstr "Afrita"
-# 
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
-# 
-# File: usr/share/ashyterm/ui/menus.py, line: 69
-# File: usr/share/ashyterm/ui/menus.py, line: 118
-# File: usr/share/ashyterm/ui/menus.py, line: 154
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1599
-#: NEEDS WORK
-msgid "Paste"
-msgstr "Líma"
-# 
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
-# 
-# File: usr/share/ashyterm/ui/menus.py, line: 119
-# File: usr/share/ashyterm/ui/menus.py, line: 155
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1600
-#: NEEDS WORK
-msgid "Select All"
-msgstr "Velja allt"
-# 
-# File: usr/share/ashyterm/window.py, line: 936
-#: NEEDS WORK
-msgid "Application"
-msgstr "Forrit"
-# 
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
-# 
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
-# 
-# File: usr/share/ashyterm/ui/menus.py, line: 157
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1390
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1604
-# File: usr/share/ashyterm/window.py, line: 261
-#: NEEDS WORK
-msgid "Preferences"
-msgstr "Valmyndir"
-# 
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
-# 
-# File: usr/share/ashyterm/ui/menus.py, line: 217
-# File: usr/share/ashyterm/window.py, line: 942
-#: NEEDS WORK
-msgid "Quit"
-msgstr "Hætta"
-# 
-# File: usr/share/ashyterm/window.py, line: 944
-# File: usr/share/ashyterm/window.py, line: 999
-#: NEEDS WORK
-msgid "Session"
-msgstr "Samskipti"
-# 
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 351
-# File: usr/share/ashyterm/window.py, line: 944
-# File: usr/share/ashyterm/window.py, line: 999
-#: NEEDS WORK
-msgid "Folder"
-msgstr "Mappa"
-# 
-# File: usr/share/ashyterm/window.py, line: 947
-#: NEEDS WORK
-#, python-brace-format
-msgid "Rename {type}"
-msgstr "Endurnefna {type}"
-# 
-# File: usr/share/ashyterm/window.py, line: 948
-#: NEEDS WORK
-#, python-brace-format
-msgid "Enter new name for \"{name}\":"
-msgstr "Sláðu inn nýtt nafn fyrir \"{name}\":"
-# 
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
-# 
-# File: usr/share/ashyterm/ui/menus.py, line: 25
-# File: usr/share/ashyterm/ui/menus.py, line: 61
-# File: usr/share/ashyterm/window.py, line: 954
-#: NEEDS WORK
-msgid "Rename"
-msgstr "Endurnefna"
-# 
-# File: usr/share/ashyterm/window.py, line: 1450
-#: NEEDS WORK
-msgid "Delete Item"
-msgstr "Eyða atriði"
-# 
-# File: usr/share/ashyterm/window.py, line: 1450
-#: NEEDS WORK
-msgid "Delete Items"
-msgstr "Eyða hlutum"
-# 
-# File: usr/share/ashyterm/window.py, line: 1009
-#: NEEDS WORK
-#, python-brace-format
-msgid "Delete {type}"
-msgstr "Eyða {type}"
-# 
-# File: usr/share/ashyterm/window.py, line: 1003
-#: NEEDS WORK
-#, python-brace-format
-msgid ""
-"The folder \"{name}\" is not empty. Are you sure you want to permanently delete it and all its "
-"contents?"
-msgstr ""
-"Skráin \"{name}\" er ekki tóm. Ertu viss um að þú viljir varanlega eyða henni og öllum innihaldi "
-"hennar?"
-# 
-# File: usr/share/ashyterm/window.py, line: 1005
-#: NEEDS WORK
-#, python-brace-format
-msgid "Are you sure you want to delete \"{name}\"?"
-msgstr "Ertu viss um að þú viljir eyða \"{name}\"?"
-# 
-# File: usr/share/ashyterm/window.py, line: 1464
-#: NEEDS WORK
-#, python-brace-format
-msgid "Are you sure you want to permanently delete these {count} items?"
-msgstr "Ertu viss um að þú viljir varanlega eyða þessum {count} hlutum?"
-# 
-# File: usr/share/ashyterm/window.py, line: 1466
-#: NEEDS WORK
-msgid "This will also delete all contents of any selected folders."
-msgstr "Þetta mun einnig eyða öllum efni í hvaða valin möppum sem er."
-# 
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
-# 
-# File: usr/share/ashyterm/ui/menus.py, line: 39
-# File: usr/share/ashyterm/ui/menus.py, line: 73
-# File: usr/share/ashyterm/window.py, line: 1014
-#: NEEDS WORK
-msgid "Delete"
-msgstr "Eyða"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 164
-#: NEEDS WORK
-msgid "Continue"
-msgstr "Halda áfram"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 192
-#: NEEDS WORK
-#, python-brace-format
-msgid "{} is required"
-msgstr "{} er nauðsynlegt"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 223
-#: NEEDS WORK
-msgid "Edit Session"
-msgstr "Breyta skemmtun"
+msgid "Folder Information"
+msgstr "Mappa Upplýsingar"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 313
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1128
@@ -1180,6 +1244,121 @@ msgstr "UI Villa"
 #: NEEDS WORK
 msgid "Failed to initialize dialog interface"
 msgstr "Mistók í að hefja samskiptarými"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1135
+#: NEEDS WORK
+msgid "Folder Name"
+msgstr "Skráarnafn"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1136
+#: NEEDS WORK
+msgid "A descriptive name for organizing sessions"
+msgstr "Lýsingarheiti fyrir skipulagningu funda"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1141
+#: NEEDS WORK
+msgid "Enter folder name..."
+msgstr "Sláðu inn nafn möppu..."
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1158
+#: NEEDS WORK
+msgid "Parent Folder"
+msgstr "Aðal möppan"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1159
+#: NEEDS WORK
+msgid "Choose a parent folder for organization"
+msgstr "Veldu aðalmöppu til skipulags"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 357
+# File: usr/share/ashyterm/ui/dialogs.py, line: 358
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1164
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1165
+#: NEEDS WORK
+msgid "Root"
+msgstr "Rótur"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 796
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1252
+#: NEEDS WORK
+msgid "Unsaved Changes"
+msgstr "Ósýndar breytingar"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 797
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1253
+#: NEEDS WORK
+msgid "You have unsaved changes. Are you sure you want to cancel?"
+msgstr "Þú hefur óvistaðar breytingar. Ertu viss um að þú viljir hætta?"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 833
+# File: usr/share/ashyterm/ui/dialogs.py, line: 837
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1288
+#: NEEDS WORK
+msgid "Save Error"
+msgstr "Vista Villa"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1288
+#: NEEDS WORK
+#, python-brace-format
+msgid "Failed to save folder: {}"
+msgstr "Mistók að vista möppu: {}"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1296
+#: NEEDS WORK
+msgid "Folder name"
+msgstr "Möppunafn"
+# 
+# File: usr/share/ashyterm/window.py, line: 994
+#: NEEDS WORK
+msgid "Move Session"
+msgstr "Færa sessjón"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 2183
+#: NEEDS WORK
+msgid "Select Destination"
+msgstr "Veldu áfangastað"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 2184
+#: NEEDS WORK
+#, python-brace-format
+msgid "Choose the folder to move the session '{name}' to."
+msgstr "Veldu möppuna til að flytja sessinn '{name}' yfir."
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 2190
+#: NEEDS WORK
+msgid "Destination Folder"
+msgstr "Áfangastaður möppu"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 2191
+#: NEEDS WORK
+msgid "Select a folder or 'Root' for the top level"
+msgstr "Veldu möppu eða 'Rót' fyrir efsta stigið"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 2205
+#: NEEDS WORK
+msgid "Move"
+msgstr "Færa"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 2265
+#: NEEDS WORK
+msgid "Move Failed"
+msgstr "Færsla mistókst"
+# 
+# File: usr/share/ashyterm/ui/dialogs/move_dialogs.py, line: 136
+#: NEEDS WORK
+msgid "Move Layout"
+msgstr "Færa uppsetningu"
+# 
+# File: usr/share/ashyterm/ui/dialogs/move_dialogs.py, line: 155
+#: NEEDS WORK
+#, python-brace-format
+msgid "Choose the folder to move the layout '{name}' to."
+msgstr "Veldu möppuna til að flytja uppsetninguna '{name}' í."
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 223
+#: NEEDS WORK
+msgid "Edit Session"
+msgstr "Breyta skemmtun"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 319
 #: NEEDS WORK
@@ -1206,18 +1385,19 @@ msgstr "Sláðu inn sessnafn..."
 msgid "Organization"
 msgstr "Samtök"
 # 
+# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 351
+# File: usr/share/ashyterm/window.py, line: 944
+# File: usr/share/ashyterm/window.py, line: 999
+#: NEEDS WORK
+msgid "Folder"
+msgstr "Mappa"
+# 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 352
 #: NEEDS WORK
 msgid "Choose a folder to organize this session"
 msgstr "Veldu möppu til að skipuleggja þessa lotu"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 357
-# File: usr/share/ashyterm/ui/dialogs.py, line: 358
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1164
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1165
-#: NEEDS WORK
-msgid "Root"
-msgstr "Rótur"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 398
 #: NEEDS WORK
@@ -1351,12 +1531,6 @@ msgstr "Sláðu inn lykilorð..."
 msgid "Test Connection"
 msgstr "Prófa tengingu"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 589
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1219
-#: NEEDS WORK
-msgid "Save"
-msgstr "Vista"
-# 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 707
 #: NEEDS WORK
 msgid "Select SSH Key"
@@ -1443,25 +1617,6 @@ msgstr "Tengist mistókst"
 msgid "Could not connect to the SSH server."
 msgstr "Gat ekki tengingu við SSH þjóninn."
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 796
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1252
-#: NEEDS WORK
-msgid "Unsaved Changes"
-msgstr "Ósýndar breytingar"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 797
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1253
-#: NEEDS WORK
-msgid "You have unsaved changes. Are you sure you want to cancel?"
-msgstr "Þú hefur óvistaðar breytingar. Ertu viss um að þú viljir hætta?"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 833
-# File: usr/share/ashyterm/ui/dialogs.py, line: 837
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1288
-#: NEEDS WORK
-msgid "Save Error"
-msgstr "Vista Villa"
-# 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 833
 #: NEEDS WORK
 #, python-brace-format
@@ -1515,61 +1670,37 @@ msgstr ""
 msgid "Session {} {}"
 msgstr "Session {} {}"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1056
-#: NEEDS WORK
-msgid "Edit Folder"
-msgstr "Breyta möppu"
+# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1100
-#: NEEDS WORK
-msgid "Folder Information"
-msgstr "Mappa Upplýsingar"
+# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1135
+# File: usr/share/ashyterm/ui/menus.py, line: 157
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1390
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1604
+# File: usr/share/ashyterm/window.py, line: 261
 #: NEEDS WORK
-msgid "Folder Name"
-msgstr "Skráarnafn"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1136
-#: NEEDS WORK
-msgid "A descriptive name for organizing sessions"
-msgstr "Lýsingarheiti fyrir skipulagningu funda"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1141
-#: NEEDS WORK
-msgid "Enter folder name..."
-msgstr "Sláðu inn nafn möppu..."
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1158
-#: NEEDS WORK
-msgid "Parent Folder"
-msgstr "Aðal möppan"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1159
-#: NEEDS WORK
-msgid "Choose a parent folder for organization"
-msgstr "Veldu aðalmöppu til skipulags"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1288
-#: NEEDS WORK
-#, python-brace-format
-msgid "Failed to save folder: {}"
-msgstr "Mistók að vista möppu: {}"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1296
-#: NEEDS WORK
-msgid "Folder name"
-msgstr "Möppunafn"
+msgid "Preferences"
+msgstr "Valmyndir"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1421
 #: NEEDS WORK
 msgid "Appearance"
 msgstr "Útlit"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 982
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 56
 #: NEEDS WORK
-msgid "Palette"
-msgstr "Litaská."
+msgid "Color Scheme"
+msgstr "Litaskipulag"
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 59
+#: NEEDS WORK
+msgid "Current Scheme"
+msgstr "Núverandi kerfi"
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 62
+#: NEEDS WORK
+msgid "Manage Schemes..."
+msgstr "Stjórna áætlunum..."
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1016
 #: NEEDS WORK
@@ -1626,65 +1757,20 @@ msgstr "Notaðu bjarta liti fyrir feitletraðan texta"
 msgid "Render bold text with the brighter version of the base color"
 msgstr "Sýna feitletraðan texta með bjartari útgáfu af grunnlitnum"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1078
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 132
 #: NEEDS WORK
-msgid "Behavior"
-msgstr "Hegðun"
+msgid "Auto-Hide Sidebar"
+msgstr "Sjálfvirk falið hliðarstika"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1082
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 134
 #: NEEDS WORK
-msgid "Startup"
-msgstr "Upphaf"
+msgid "Automatically hide the sidebar when activating sessions or layouts"
+msgstr "Sjálfvirkt fela hliðarstikuna þegar virkjuð eru sesjónir eða uppsetningar"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1086
+# File: usr/share/ashyterm/window.py, line: 857
 #: NEEDS WORK
-msgid "Restore tabs on restart"
-msgstr "Endurheimta flipa við endurræsingu"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1087
-#: NEEDS WORK
-msgid "Reopen tabs and panels from the previous session"
-msgstr "Enduropna flipa og glugga frá fyrri lotu"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1101
-#: NEEDS WORK
-msgid "Shell"
-msgstr "Skelkur"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1102
-#: NEEDS WORK
-msgid "Configure shell integration and behavior"
-msgstr "Stillirðu skelarsamþættingu og hegðun"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1107
-#: NEEDS WORK
-msgid "Run Command as a Login Shell"
-msgstr "Keyra skipun sem innskráningarskál."
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1108
-#: NEEDS WORK
-msgid "Sources /etc/profile and ~/.profile on startup"
-msgstr "Heimildir /etc/profile og ~/.profile við ræsingu"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1118
-#: NEEDS WORK
-msgid "Scrolling"
-msgstr "Rúllun"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1123
-#: NEEDS WORK
-msgid "Scrollback Lines"
-msgstr "Skráningarlínur"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1124
-#: NEEDS WORK
-msgid "Number of lines to keep in history (0 for unlimited)"
-msgstr "Fjöldi lína til að halda í sögu (0 fyrir ótakmarkað)"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1133
-#: NEEDS WORK
-msgid "Cursor"
-msgstr "Músíkur"
+msgid "Terminal"
+msgstr "Terminal"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1137
 #: NEEDS WORK
@@ -1736,10 +1822,55 @@ msgstr "Áfram"
 msgid "Off"
 msgstr "Slökkt"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1157
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1118
 #: NEEDS WORK
-msgid "Bell"
-msgstr "Bjalla"
+msgid "Scrolling"
+msgstr "Rúllun"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1123
+#: NEEDS WORK
+msgid "Scrollback Lines"
+msgstr "Skráningarlínur"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1124
+#: NEEDS WORK
+msgid "Number of lines to keep in history (0 for unlimited)"
+msgstr "Fjöldi lína til að halda í sögu (0 fyrir ótakmarkað)"
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 192
+#: NEEDS WORK
+msgid "Mouse Scroll Sensitivity"
+msgstr "Múska Rúllun Næmni"
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 193
+#: NEEDS WORK
+msgid "Controls the scroll speed for a mouse wheel. Lower is slower."
+msgstr "Stýrir skriðhraða fyrir músarhjól. Lægri er hægari."
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 208
+#: NEEDS WORK
+msgid "Touchpad Scroll Sensitivity"
+msgstr "Snerting á snertiflötum"
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 209
+#: NEEDS WORK
+msgid "Controls the scroll speed for a touchpad. Lower is slower."
+msgstr "Stýrir skrollhraða fyrir snertiplötu. Lægri er hægari."
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 223
+#: NEEDS WORK
+msgid "Shell &amp; Bell"
+msgstr "Skel &amp; Bjalla"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1107
+#: NEEDS WORK
+msgid "Run Command as a Login Shell"
+msgstr "Keyra skipun sem innskráningarskál."
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1108
+#: NEEDS WORK
+msgid "Sources /etc/profile and ~/.profile on startup"
+msgstr "Heimildir /etc/profile og ~/.profile við ræsingu"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1161
 #: NEEDS WORK
@@ -1750,6 +1881,184 @@ msgstr "Hljóðmerki"
 #: NEEDS WORK
 msgid "Emit a sound for the terminal bell character"
 msgstr "Spila hljóð fyrir terminal bjöllu táknið"
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 250
+#: NEEDS WORK
+msgid "Profiles & Data"
+msgstr "Profílar & Gögn"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1082
+#: NEEDS WORK
+msgid "Startup"
+msgstr "Upphaf"
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 258
+#: NEEDS WORK
+msgid "On Startup"
+msgstr "Við ræsingu"
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 259
+#: NEEDS WORK
+msgid "Action to take when the application starts"
+msgstr "Aðgerð sem á að framkvæma þegar forritið byrjar"
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 263
+#: NEEDS WORK
+msgid "Always restore previous session"
+msgstr "Alltaf endurheimta fyrri sesjón"
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 264
+#: NEEDS WORK
+msgid "Ask to restore previous session"
+msgstr "Vinsamlegast endurheimtu fyrri sesjón"
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 265
+#: NEEDS WORK
+msgid "Never restore previous session"
+msgstr "Aldrei endurheimta fyrri sessjón"
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 280
+#: NEEDS WORK
+msgid "Backup &amp; Recovery"
+msgstr "Afritun &amp; Endurheimt"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1724
+#: NEEDS WORK
+msgid "Configure automatic backup and recovery options"
+msgstr "Stilltu sjálfvirkar afritunar- og endurheimtarvalkostir"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1730
+#: NEEDS WORK
+msgid "Automatic Backups"
+msgstr "Sjálfvirkar afritanir"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1731
+#: NEEDS WORK
+msgid "Automatically create backups of sessions and settings"
+msgstr "Sjálfvirkt að búa til afrit af lotum og stillingum"
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 301
+#: NEEDS WORK
+msgid "Manual Backup"
+msgstr "Handvirkur afritun"
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 302
+#: NEEDS WORK
+msgid "Create a backup of your current sessions and settings now"
+msgstr "Búðu til afrit af núverandi lotum og stillingum þínum núna"
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 304
+#: NEEDS WORK
+msgid "Backup Now"
+msgstr "Bæta við núna"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1575
+#: NEEDS WORK
+msgid "Shortcuts"
+msgstr "Snertar"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1582
+#: NEEDS WORK
+msgid "Terminal Actions"
+msgstr "Terminal aðgerðir"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1583
+#: NEEDS WORK
+msgid "Keyboard shortcuts for terminal operations"
+msgstr "Takkar fyrir skyndiathafnir fyrir terminal aðgerðir"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1589
+#: NEEDS WORK
+msgid "Application Actions"
+msgstr "Forritsaðgerðir"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1590
+#: NEEDS WORK
+msgid "Keyboard shortcuts for application operations"
+msgstr "Takkar fyrir forritunarstarfsemi"
+# 
+# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
+# 
+# File: usr/share/ashyterm/ui/menus.py, line: 145
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1597
+#: NEEDS WORK
+msgid "Close Tab"
+msgstr "Loka flipa"
+# 
+# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
+# 
+# File: usr/share/ashyterm/ui/menus.py, line: 30
+# File: usr/share/ashyterm/ui/menus.py, line: 66
+# File: usr/share/ashyterm/ui/menus.py, line: 117
+# File: usr/share/ashyterm/ui/menus.py, line: 153
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1598
+#: NEEDS WORK
+msgid "Copy"
+msgstr "Afrita"
+# 
+# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
+# 
+# File: usr/share/ashyterm/ui/menus.py, line: 69
+# File: usr/share/ashyterm/ui/menus.py, line: 118
+# File: usr/share/ashyterm/ui/menus.py, line: 154
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1599
+#: NEEDS WORK
+msgid "Paste"
+msgstr "Líma"
+# 
+# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
+# 
+# File: usr/share/ashyterm/ui/menus.py, line: 119
+# File: usr/share/ashyterm/ui/menus.py, line: 155
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1600
+#: NEEDS WORK
+msgid "Select All"
+msgstr "Velja allt"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1605
+#: NEEDS WORK
+msgid "Quit Application"
+msgstr "Hætta við forrit"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1607
+#: NEEDS WORK
+msgid "New Window"
+msgstr "Nýr Gluggi"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1790
+#: NEEDS WORK
+msgid "Advanced"
+msgstr "Fyrirlestrar"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1276
+#: NEEDS WORK
+msgid "Advanced Features"
+msgstr "Aðgerðir fyrir háþróaða notendur"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1277
+#: NEEDS WORK
+msgid "Enable or disable advanced terminal features"
+msgstr "Virkja eða slökkva á háþróuðum terminal eiginleikum"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1282
+#: NEEDS WORK
+msgid "Bidirectional Text Support"
+msgstr "Stuðningur við tvíhliða texta"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1284
+#: NEEDS WORK
+msgid "Enable for languages like Arabic and Hebrew (may affect performance)"
+msgstr "Virkja fyrir tungumál eins og arabíska og hebreska (gæti haft áhrif á frammistöðu)"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1295
+#: NEEDS WORK
+msgid "SIXEL Graphics Support"
+msgstr "SIXEL Grafík Stuðningur"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1296
+#: NEEDS WORK
+msgid "Allow the terminal to display SIXEL images (experimental)"
+msgstr "Leyfðu terminalinum að sýna SIXEL myndir (tilraunastarfsemi)"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1172
 #: NEEDS WORK
@@ -1804,151 +2113,6 @@ msgstr "Eyða takki"
 msgid "Sequence to send for Delete key"
 msgstr "Röð til að senda fyrir Eyða takka"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1207
-#: NEEDS WORK
-msgid "Ambiguous-width Characters"
-msgstr "Ósýnilegar breiddarstafir"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1208
-#: NEEDS WORK
-msgid "Render ambiguous characters as narrow or wide"
-msgstr "Sýna óljós tákn sem mjó eða breið"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1210
-#: NEEDS WORK
-msgid "Narrow"
-msgstr "Narrow"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1210
-#: NEEDS WORK
-msgid "Wide"
-msgstr "Breiður"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1575
-#: NEEDS WORK
-msgid "Shortcuts"
-msgstr "Snertar"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1582
-#: NEEDS WORK
-msgid "Terminal Actions"
-msgstr "Terminal aðgerðir"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1583
-#: NEEDS WORK
-msgid "Keyboard shortcuts for terminal operations"
-msgstr "Takkar fyrir skyndiathafnir fyrir terminal aðgerðir"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1589
-#: NEEDS WORK
-msgid "Application Actions"
-msgstr "Forritsaðgerðir"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1590
-#: NEEDS WORK
-msgid "Keyboard shortcuts for application operations"
-msgstr "Takkar fyrir forritunarstarfsemi"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1605
-#: NEEDS WORK
-msgid "Quit Application"
-msgstr "Hætta við forrit"
-# 
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1624
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1907
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1983
-# File: usr/share/ashyterm/utils.py, line: 238
-#: NEEDS WORK
-msgid "None"
-msgstr "None"
-# 
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
-# 
-# File: usr/share/ashyterm/ui/menus.py, line: 23
-# File: usr/share/ashyterm/ui/menus.py, line: 59
-# File: usr/share/ashyterm/ui/menus.py, line: 151
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1637
-#: NEEDS WORK
-msgid "Edit"
-msgstr "Breyta"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1790
-#: NEEDS WORK
-msgid "Advanced"
-msgstr "Fyrirlestrar"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1276
-#: NEEDS WORK
-msgid "Advanced Features"
-msgstr "Aðgerðir fyrir háþróaða notendur"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1277
-#: NEEDS WORK
-msgid "Enable or disable advanced terminal features"
-msgstr "Virkja eða slökkva á háþróuðum terminal eiginleikum"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1282
-#: NEEDS WORK
-msgid "Bidirectional Text Support"
-msgstr "Stuðningur við tvíhliða texta"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1284
-#: NEEDS WORK
-msgid "Enable for languages like Arabic and Hebrew (may affect performance)"
-msgstr "Virkja fyrir tungumál eins og arabíska og hebreska (gæti haft áhrif á frammistöðu)"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1295
-#: NEEDS WORK
-msgid "SIXEL Graphics Support"
-msgstr "SIXEL Grafík Stuðningur"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1296
-#: NEEDS WORK
-msgid "Allow the terminal to display SIXEL images (experimental)"
-msgstr "Leyfðu terminalinum að sýna SIXEL myndir (tilraunastarfsemi)"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1306
-#: NEEDS WORK
-msgid "Accessibility"
-msgstr "Aðgengi"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1308
-#: NEEDS WORK
-msgid "Settings for screen readers and other assistive technologies"
-msgstr "Stillingar fyrir skjálesara og aðrar aðstoðartækni"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1314
-#: NEEDS WORK
-msgid "Allow Screen Readers"
-msgstr "Leyfa skjálesara"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1315
-#: NEEDS WORK
-msgid "Permit tools like Orca to read terminal content"
-msgstr "Leyfðu verkfærum eins og Orca að lesa efni terminala"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1051
-#: NEEDS WORK
-msgid "Backup & Recovery"
-msgstr "Afritun og endurheimt"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1724
-#: NEEDS WORK
-msgid "Configure automatic backup and recovery options"
-msgstr "Stilltu sjálfvirkar afritunar- og endurheimtarvalkostir"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1730
-#: NEEDS WORK
-msgid "Automatic Backups"
-msgstr "Sjálfvirkar afritanir"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1731
-#: NEEDS WORK
-msgid "Automatically create backups of sessions and settings"
-msgstr "Sjálfvirkt að búa til afrit af lotum og stillingum"
-# 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1071
 #: NEEDS WORK
 msgid "Logging"
@@ -2001,6 +2165,16 @@ msgstr "Endurstillu allar stillingar"
 #: NEEDS WORK
 msgid "Restore all settings to their default values"
 msgstr "Endurðu allar stillingar í þeirra sjálfgefnar gildi."
+# 
+# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1624
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1907
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1983
+# File: usr/share/ashyterm/utils.py, line: 238
+#: NEEDS WORK
+msgid "None"
+msgstr "None"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1900
 #: NEEDS WORK
@@ -2075,41 +2249,129 @@ msgstr "Endurstilling mistókst"
 msgid "Failed to reset settings: {}"
 msgstr "Mistók að endurstilla stillingar: {}"
 # 
-# File: usr/share/ashyterm/window.py, line: 994
+# File: usr/share/ashyterm/ui/dialogs.py, line: 164
 #: NEEDS WORK
-msgid "Move Session"
-msgstr "Færa sessjón"
+msgid "Continue"
+msgstr "Halda áfram"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 2183
-#: NEEDS WORK
-msgid "Select Destination"
-msgstr "Veldu áfangastað"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 2184
+# File: usr/share/ashyterm/ui/dialogs.py, line: 192
 #: NEEDS WORK
 #, python-brace-format
-msgid "Choose the folder to move the session '{name}' to."
-msgstr "Veldu möppuna til að flytja sessinn '{name}' yfir."
+msgid "{} is required"
+msgstr "{} er nauðsynlegt"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 2190
+# File: usr/share/ashyterm/window.py, line: 586
 #: NEEDS WORK
-msgid "Destination Folder"
-msgstr "Áfangastaður möppu"
+msgid "SFTP not implemented yet"
+msgstr "SFTP ekki innleitt ennþá"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 2191
+# File: usr/share/ashyterm/window.py, line: 758
+# File: usr/share/ashyterm/window.py, line: 875
 #: NEEDS WORK
-msgid "Select a folder or 'Root' for the top level"
-msgstr "Veldu möppu eða 'Rót' fyrir efsta stigið"
+msgid "New Session"
+msgstr "Nýja sessjón"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 2205
+# File: usr/share/ashyterm/window.py, line: 885
 #: NEEDS WORK
-msgid "Move"
-msgstr "Færa"
+msgid "New Folder"
+msgstr "Nýr möppur"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 2265
+# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
+# 
+# File: usr/share/ashyterm/ui/menus.py, line: 211
+# File: usr/share/ashyterm/window.py, line: 909
+# File: usr/share/ashyterm/window.py, line: 960
 #: NEEDS WORK
-msgid "Move Failed"
-msgstr "Færsla mistókst"
+msgid "Keyboard Shortcuts"
+msgstr "Takkastýringar"
+# 
+# File: usr/share/ashyterm/window.py, line: 936
+#: NEEDS WORK
+msgid "Application"
+msgstr "Forrit"
+# 
+# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
+# 
+# File: usr/share/ashyterm/ui/menus.py, line: 217
+# File: usr/share/ashyterm/window.py, line: 942
+#: NEEDS WORK
+msgid "Quit"
+msgstr "Hætta"
+# 
+# File: usr/share/ashyterm/window.py, line: 944
+# File: usr/share/ashyterm/window.py, line: 999
+#: NEEDS WORK
+msgid "Session"
+msgstr "Samskipti"
+# 
+# File: usr/share/ashyterm/window.py, line: 947
+#: NEEDS WORK
+#, python-brace-format
+msgid "Rename {type}"
+msgstr "Endurnefna {type}"
+# 
+# File: usr/share/ashyterm/window.py, line: 948
+#: NEEDS WORK
+#, python-brace-format
+msgid "Enter new name for \"{name}\":"
+msgstr "Sláðu inn nýtt nafn fyrir \"{name}\":"
+# 
+# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
+# 
+# File: usr/share/ashyterm/ui/menus.py, line: 25
+# File: usr/share/ashyterm/ui/menus.py, line: 61
+# File: usr/share/ashyterm/window.py, line: 954
+#: NEEDS WORK
+msgid "Rename"
+msgstr "Endurnefna"
+# 
+# File: usr/share/ashyterm/window.py, line: 1450
+#: NEEDS WORK
+msgid "Delete Item"
+msgstr "Eyða atriði"
+# 
+# File: usr/share/ashyterm/window.py, line: 1450
+#: NEEDS WORK
+msgid "Delete Items"
+msgstr "Eyða hlutum"
+# 
+# File: usr/share/ashyterm/ui/actions.py, line: 415
+#: NEEDS WORK
+msgid "Layout"
+msgstr "Uppsetning"
+# 
+# File: usr/share/ashyterm/window.py, line: 1009
+#: NEEDS WORK
+#, python-brace-format
+msgid "Delete {type}"
+msgstr "Eyða {type}"
+# 
+# File: usr/share/ashyterm/window.py, line: 1003
+#: NEEDS WORK
+#, python-brace-format
+msgid ""
+"The folder \"{name}\" is not empty. Are you sure you want to permanently delete it and all its "
+"contents?"
+msgstr ""
+"Skráin \"{name}\" er ekki tóm. Ertu viss um að þú viljir varanlega eyða henni og öllum innihaldi "
+"hennar?"
+# 
+# File: usr/share/ashyterm/window.py, line: 1005
+#: NEEDS WORK
+#, python-brace-format
+msgid "Are you sure you want to delete \"{name}\"?"
+msgstr "Ertu viss um að þú viljir eyða \"{name}\"?"
+# 
+# File: usr/share/ashyterm/window.py, line: 1464
+#: NEEDS WORK
+#, python-brace-format
+msgid "Are you sure you want to permanently delete these {count} items?"
+msgstr "Ertu viss um að þú viljir varanlega eyða þessum {count} hlutum?"
+# 
+# File: usr/share/ashyterm/window.py, line: 1466
+#: NEEDS WORK
+msgid "This will also delete all contents of any selected folders."
+msgstr "Þetta mun einnig eyða öllum efni í hvaða valin möppum sem er."
 # 
 # File: usr/share/ashyterm/ui/menus.py, line: 24
 #: NEEDS WORK
@@ -2140,17 +2402,6 @@ msgstr "Tengdu samband við SFTP"
 #: NEEDS WORK
 msgid "Duplicate"
 msgstr "Afritun"
-# 
-# File: usr/share/ashyterm/ui/menus.py, line: 29
-# File: usr/share/ashyterm/ui/menus.py, line: 65
-#: NEEDS WORK
-msgid "Cut"
-msgstr "Klippa"
-# 
-# File: usr/share/ashyterm/ui/menus.py, line: 203
-#: NEEDS WORK
-msgid "Move to Folder..."
-msgstr "Færa í möppu..."
 # 
 # File: usr/share/ashyterm/ui/menus.py, line: 220
 #: NEEDS WORK

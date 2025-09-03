@@ -579,16 +579,29 @@ msgstr "A mappa elérési útja nem egyezik meg a szülőmappa elérési útjáv
 msgid "Unnamed Folder"
 msgstr "Névtelen Mappa"
 # 
-# File: usr/share/ashyterm/sessions/tree.py, line: 96
-#: NEEDS WORK
-msgid "Sessions"
-msgstr "Munkamenetek"
-# 
 # File: usr/share/ashyterm/sessions/tree.py, line: 298
 # File: usr/share/ashyterm/sessions/tree.py, line: 302
 #: NEEDS WORK
 msgid "Move Error"
 msgstr "Mozgási hiba"
+# 
+# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
+# 
+# File: usr/share/ashyterm/sessions/tree.py, line: 801
+# File: usr/share/ashyterm/window.py, line: 1544
+#: NEEDS WORK
+msgid "Restore Layout"
+msgstr "Elrendezés visszaállítása"
+# 
+# File: usr/share/ashyterm/ui/menus.py, line: 203
+#: NEEDS WORK
+msgid "Move to Folder..."
+msgstr "Áthelyezés mappába..."
+# 
+# File: usr/share/ashyterm/sessions/tree.py, line: 808
+#: NEEDS WORK
+msgid "Delete Layout"
+msgstr "Elrendezés törlése"
 # 
 # File: usr/share/ashyterm/sessions/tree.py, line: 618
 # File: usr/share/ashyterm/sessions/tree.py, line: 623
@@ -869,10 +882,20 @@ msgstr "Mappa hozzáadása"
 msgid "Edit Selected"
 msgstr "Kiválasztott szerkesztése"
 # 
+# File: usr/share/ashyterm/window.py, line: 585
+#: NEEDS WORK
+msgid "Save Current Layout"
+msgstr "Jelenlegi elrendezés mentése"
+# 
 # File: usr/share/ashyterm/window.py, line: 343
 #: NEEDS WORK
 msgid "Remove Selected"
 msgstr "Kiválasztott eltávolítása"
+# 
+# File: usr/share/ashyterm/window.py, line: 606
+#: NEEDS WORK
+msgid "Search sessions..."
+msgstr "Keresési munkamenetek..."
 # 
 # File: usr/share/ashyterm/window.py, line: 424
 #: NEEDS WORK
@@ -883,6 +906,39 @@ msgstr "Adatbetöltési hiba"
 #: NEEDS WORK
 msgid "Failed to load saved sessions and folders. Starting with empty configuration."
 msgstr "A mentett munkamenetek és mappák betöltése nem sikerült. Üres konfigurációval indul."
+# 
+# File: usr/share/ashyterm/window.py, line: 1080
+#: NEEDS WORK
+msgid "Save Current Session?"
+msgstr "Jelenlegi munkamenet mentése?"
+# 
+# File: usr/share/ashyterm/window.py, line: 1082
+#: NEEDS WORK
+msgid "Do you want to restore these tabs the next time you open Ashy Terminal?"
+msgstr "Szeretnéd visszaállítani ezeket a füleket, amikor legközelebb megnyitod az Ashy Terminált?"
+# 
+# File: usr/share/ashyterm/window.py, line: 1086
+#: NEEDS WORK
+msgid "Don't Save"
+msgstr "Ne mentse el"
+# 
+# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 163
+# File: usr/share/ashyterm/ui/dialogs.py, line: 575
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1213
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1957
+# File: usr/share/ashyterm/ui/dialogs.py, line: 2006
+# File: usr/share/ashyterm/window.py, line: 953
+# File: usr/share/ashyterm/window.py, line: 1013
+#: NEEDS WORK
+msgid "Cancel"
+msgstr "Mégsem"
+# 
+# File: usr/share/ashyterm/window.py, line: 1088
+#: NEEDS WORK
+msgid "Save and Close"
+msgstr "Mentés és Bezárás"
 # 
 # File: usr/share/ashyterm/window.py, line: 544
 #: NEEDS WORK
@@ -904,19 +960,6 @@ msgstr "Biztos benne, hogy be akarja zárni ezt az ablakot?"
 #: NEEDS WORK
 msgid "Close Window"
 msgstr "Ablak bezárása"
-# 
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 163
-# File: usr/share/ashyterm/ui/dialogs.py, line: 575
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1213
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1957
-# File: usr/share/ashyterm/ui/dialogs.py, line: 2006
-# File: usr/share/ashyterm/window.py, line: 953
-# File: usr/share/ashyterm/window.py, line: 1013
-#: NEEDS WORK
-msgid "Cancel"
-msgstr "Mégsem"
 # 
 # File: usr/share/ashyterm/window.py, line: 551
 #: NEEDS WORK
@@ -950,6 +993,221 @@ msgstr "Rendben"
 msgid "Cannot detach the last tab."
 msgstr "Nem lehet leválasztani az utolsó fület."
 # 
+# File: usr/share/ashyterm/window.py, line: 1466
+#: NEEDS WORK
+msgid "Save Layout"
+msgstr "Elrendezés mentése"
+# 
+# File: usr/share/ashyterm/window.py, line: 1467
+#: NEEDS WORK
+msgid "Enter a name for the current layout:"
+msgstr "Adjon meg egy nevet a jelenlegi elrendezéshez:"
+# 
+# File: usr/share/ashyterm/window.py, line: 1471
+#: NEEDS WORK
+msgid "e.g., 'My Dev Setup'"
+msgstr "A fejlesztői környezetem"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 589
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1219
+#: NEEDS WORK
+msgid "Save"
+msgstr "Mentés"
+# 
+# File: usr/share/ashyterm/window.py, line: 1492
+#: NEEDS WORK
+msgid "Layout name cannot be empty."
+msgstr "A elrendezés neve nem lehet üres."
+# 
+# File: usr/share/ashyterm/window.py, line: 1514
+#: NEEDS WORK
+msgid "Layout Saved"
+msgstr "Elrendezés mentve"
+# 
+# File: usr/share/ashyterm/window.py, line: 1519
+#: NEEDS WORK
+msgid "Error Saving Layout"
+msgstr "Hiba a elrendezés mentésekor"
+# 
+# File: usr/share/ashyterm/window.py, line: 1530
+#: NEEDS WORK
+msgid "Saved layout not found."
+msgstr "Mentett elrendezés nem található."
+# 
+# File: usr/share/ashyterm/window.py, line: 1537
+#: NEEDS WORK
+msgid "Restore Saved Layout?"
+msgstr "Mentett elrendezés visszaállítása?"
+# 
+# File: usr/share/ashyterm/window.py, line: 1539
+#: NEEDS WORK
+#, python-brace-format
+msgid "This will close all current tabs and restore the '{name}' layout. Are you sure?"
+msgstr "Ez bezárja az összes aktuális lapot, és visszaállítja a '{name}' elrendezést. Biztos benne?"
+# 
+# File: usr/share/ashyterm/window.py, line: 1586
+#: NEEDS WORK
+msgid "Error Restoring Layout"
+msgstr "Hiba a megjelenés visszaállításakor"
+# 
+# File: usr/share/ashyterm/window.py, line: 1612
+#: NEEDS WORK
+msgid "Delete Layout?"
+msgstr "Elrendezés törlése?"
+# 
+# File: usr/share/ashyterm/window.py, line: 1614
+#: NEEDS WORK
+#, python-brace-format
+msgid "Are you sure you want to permanently delete the layout '{name}'?"
+msgstr "Biztos benne, hogy véglegesen törölni szeretné a '{name}' elrendezést?"
+# 
+# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
+# 
+# File: usr/share/ashyterm/ui/menus.py, line: 39
+# File: usr/share/ashyterm/ui/menus.py, line: 73
+# File: usr/share/ashyterm/window.py, line: 1014
+#: NEEDS WORK
+msgid "Delete"
+msgstr "Törlés"
+# 
+# File: usr/share/ashyterm/window.py, line: 1639
+#: NEEDS WORK
+msgid "Layout Deleted"
+msgstr "Elrendezés törölve"
+# 
+# File: usr/share/ashyterm/window.py, line: 1644
+#: NEEDS WORK
+msgid "Error Deleting Layout"
+msgstr "Hiba a elrendezés törlésekor"
+# 
+# File: usr/share/ashyterm/window.py, line: 1691
+#: NEEDS WORK
+msgid "Error Moving Layout"
+msgstr "Hiba a elrendezés áthelyezésekor"
+# 
+# File: usr/share/ashyterm/ui/color_scheme_dialog.py, line: 42
+#: NEEDS WORK
+msgid "Edit Scheme"
+msgstr "Séma szerkesztése"
+# 
+# File: usr/share/ashyterm/ui/color_scheme_dialog.py, line: 42
+#: NEEDS WORK
+msgid "New Scheme"
+msgstr "Új séma"
+# 
+# File: usr/share/ashyterm/ui/color_scheme_dialog.py, line: 44
+#: NEEDS WORK
+msgid "Scheme Name"
+msgstr "Séma neve"
+# 
+# File: usr/share/ashyterm/ui/color_scheme_dialog.py, line: 73
+#: NEEDS WORK
+msgid "General Colors"
+msgstr "Általános színek"
+# 
+# File: usr/share/ashyterm/ui/color_scheme_dialog.py, line: 78
+#: NEEDS WORK
+msgid "Foreground"
+msgstr "Előtér"
+# 
+# File: usr/share/ashyterm/ui/color_scheme_dialog.py, line: 82
+#: NEEDS WORK
+msgid "Background"
+msgstr "Háttér"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1133
+#: NEEDS WORK
+msgid "Cursor"
+msgstr "Kurzor"
+# 
+# File: usr/share/ashyterm/ui/color_scheme_dialog.py, line: 90
+#: NEEDS WORK
+msgid "16-Color Palette"
+msgstr "16 színű paletta"
+# 
+# File: usr/share/ashyterm/ui/color_scheme_dialog.py, line: 135
+#: NEEDS WORK
+msgid "Name Error"
+msgstr "Név hiba"
+# 
+# File: usr/share/ashyterm/ui/color_scheme_dialog.py, line: 135
+#: NEEDS WORK
+msgid "Scheme name cannot be empty."
+msgstr "A séma neve nem lehet üres."
+# 
+# File: usr/share/ashyterm/ui/color_scheme_dialog.py, line: 149
+# File: usr/share/ashyterm/ui/color_scheme_dialog.py, line: 159
+#: NEEDS WORK
+msgid "Name Conflict"
+msgstr "Névütközés"
+# 
+# File: usr/share/ashyterm/ui/color_scheme_dialog.py, line: 151
+#: NEEDS WORK
+#, python-brace-format
+msgid "A color scheme with the name '{name}' already exists. Please choose a different name."
+msgstr "A '{name}' nevű színséma már létezik. Kérjük, válasszon egy másik nevet."
+# 
+# File: usr/share/ashyterm/ui/color_scheme_dialog.py, line: 161
+#: NEEDS WORK
+#, python-brace-format
+msgid ""
+"A scheme with a similar internal name ('{key}') already exists. Please choose a slightly different "
+"name."
+msgstr ""
+"Egy hasonló belső névvel rendelkező séma ('{key}') már létezik. Kérjük, válasszon egy kicsit más "
+"nevet."
+# 
+# File: usr/share/ashyterm/ui/color_scheme_dialog.py, line: 186
+#: NEEDS WORK
+msgid "Custom"
+msgstr "Egyedi"
+# 
+# File: usr/share/ashyterm/ui/color_scheme_dialog.py, line: 186
+#: NEEDS WORK
+msgid "Built-in"
+msgstr "Beépített"
+# 
+# File: usr/share/ashyterm/ui/color_scheme_dialog.py, line: 282
+#: NEEDS WORK
+msgid "Color Schemes"
+msgstr "Színminták"
+# 
+# File: usr/share/ashyterm/ui/color_scheme_dialog.py, line: 307
+#: NEEDS WORK
+msgid "Available Schemes"
+msgstr "Elérhető sémák"
+# 
+# File: usr/share/ashyterm/ui/color_scheme_dialog.py, line: 309
+#: NEEDS WORK
+msgid "Select a scheme to apply it instantly. Double-click to edit."
+msgstr "Válasszon egy sémát, hogy azonnal alkalmazza. Kattintson duplán a szerkesztéshez."
+# 
+# File: usr/share/ashyterm/ui/color_scheme_dialog.py, line: 335
+#: NEEDS WORK
+msgid "New"
+msgstr "Új"
+# 
+# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
+# 
+# File: usr/share/ashyterm/ui/menus.py, line: 23
+# File: usr/share/ashyterm/ui/menus.py, line: 59
+# File: usr/share/ashyterm/ui/menus.py, line: 151
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1637
+#: NEEDS WORK
+msgid "Edit"
+msgstr "Szerkesztés"
+# 
+# File: usr/share/ashyterm/ui/color_scheme_dialog.py, line: 468
+#: NEEDS WORK
+msgid "Delete Scheme?"
+msgstr "Séma törlése?"
+# 
+# File: usr/share/ashyterm/ui/color_scheme_dialog.py, line: 470
+#: NEEDS WORK
+#, python-brace-format
+msgid "Are you sure you want to delete the scheme '{name}'? This cannot be undone."
+msgstr "Biztos benne, hogy törölni szeretné a '{name}' sémát? Ezt nem lehet visszavonni."
+# 
 # File: usr/share/ashyterm/ui/ssh_dialogs.py, line: 206
 #: NEEDS WORK
 msgid "SSH Connection Failed"
@@ -967,205 +1225,15 @@ msgstr "Nem sikerült csatlakozni a '{session_name}' munkamenethez."
 msgid "Close"
 msgstr "Bezárás"
 # 
-# File: usr/share/ashyterm/window.py, line: 586
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1056
 #: NEEDS WORK
-msgid "SFTP not implemented yet"
-msgstr "SFTP még nincs megvalósítva"
+msgid "Edit Folder"
+msgstr "Mappa szerkesztése"
 # 
-# File: usr/share/ashyterm/window.py, line: 758
-# File: usr/share/ashyterm/window.py, line: 875
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1100
 #: NEEDS WORK
-msgid "New Session"
-msgstr "Új munkamenet"
-# 
-# File: usr/share/ashyterm/window.py, line: 885
-#: NEEDS WORK
-msgid "New Folder"
-msgstr "Új mappa"
-# 
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
-# 
-# File: usr/share/ashyterm/ui/menus.py, line: 211
-# File: usr/share/ashyterm/window.py, line: 909
-# File: usr/share/ashyterm/window.py, line: 960
-#: NEEDS WORK
-msgid "Keyboard Shortcuts"
-msgstr "Billentyűparancsok"
-# 
-# File: usr/share/ashyterm/window.py, line: 857
-#: NEEDS WORK
-msgid "Terminal"
-msgstr "Terminál"
-# 
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
-# 
-# File: usr/share/ashyterm/ui/menus.py, line: 145
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1597
-#: NEEDS WORK
-msgid "Close Tab"
-msgstr "Fül bezárása"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1607
-#: NEEDS WORK
-msgid "New Window"
-msgstr "Új ablak"
-# 
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
-# 
-# File: usr/share/ashyterm/ui/menus.py, line: 30
-# File: usr/share/ashyterm/ui/menus.py, line: 66
-# File: usr/share/ashyterm/ui/menus.py, line: 117
-# File: usr/share/ashyterm/ui/menus.py, line: 153
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1598
-#: NEEDS WORK
-msgid "Copy"
-msgstr "Másolás"
-# 
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
-# 
-# File: usr/share/ashyterm/ui/menus.py, line: 69
-# File: usr/share/ashyterm/ui/menus.py, line: 118
-# File: usr/share/ashyterm/ui/menus.py, line: 154
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1599
-#: NEEDS WORK
-msgid "Paste"
-msgstr "Beillesztés"
-# 
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
-# 
-# File: usr/share/ashyterm/ui/menus.py, line: 119
-# File: usr/share/ashyterm/ui/menus.py, line: 155
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1600
-#: NEEDS WORK
-msgid "Select All"
-msgstr "Összes kiválasztása"
-# 
-# File: usr/share/ashyterm/window.py, line: 936
-#: NEEDS WORK
-msgid "Application"
-msgstr "Alkalmazás"
-# 
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
-# 
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
-# 
-# File: usr/share/ashyterm/ui/menus.py, line: 157
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1390
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1604
-# File: usr/share/ashyterm/window.py, line: 261
-#: NEEDS WORK
-msgid "Preferences"
-msgstr "Beállítások"
-# 
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
-# 
-# File: usr/share/ashyterm/ui/menus.py, line: 217
-# File: usr/share/ashyterm/window.py, line: 942
-#: NEEDS WORK
-msgid "Quit"
-msgstr "Kilépés"
-# 
-# File: usr/share/ashyterm/window.py, line: 944
-# File: usr/share/ashyterm/window.py, line: 999
-#: NEEDS WORK
-msgid "Session"
-msgstr "Munkamenet"
-# 
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 351
-# File: usr/share/ashyterm/window.py, line: 944
-# File: usr/share/ashyterm/window.py, line: 999
-#: NEEDS WORK
-msgid "Folder"
-msgstr "Mappa"
-# 
-# File: usr/share/ashyterm/window.py, line: 947
-#: NEEDS WORK
-#, python-brace-format
-msgid "Rename {type}"
-msgstr "Átnevezés {type}"
-# 
-# File: usr/share/ashyterm/window.py, line: 948
-#: NEEDS WORK
-#, python-brace-format
-msgid "Enter new name for \"{name}\":"
-msgstr "Írja be az új nevet a(z) \"{name}\":"
-# 
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
-# 
-# File: usr/share/ashyterm/ui/menus.py, line: 25
-# File: usr/share/ashyterm/ui/menus.py, line: 61
-# File: usr/share/ashyterm/window.py, line: 954
-#: NEEDS WORK
-msgid "Rename"
-msgstr "Átnevezés"
-# 
-# File: usr/share/ashyterm/window.py, line: 1450
-#: NEEDS WORK
-msgid "Delete Item"
-msgstr "Elem törlése"
-# 
-# File: usr/share/ashyterm/window.py, line: 1450
-#: NEEDS WORK
-msgid "Delete Items"
-msgstr "Elemek törlése"
-# 
-# File: usr/share/ashyterm/window.py, line: 1009
-#: NEEDS WORK
-#, python-brace-format
-msgid "Delete {type}"
-msgstr "Törlés {type}"
-# 
-# File: usr/share/ashyterm/window.py, line: 1003
-#: NEEDS WORK
-#, python-brace-format
-msgid ""
-"The folder \"{name}\" is not empty. Are you sure you want to permanently delete it and all its "
-"contents?"
-msgstr "A \"{name}\" mappa nem üres. Biztosan törölni szeretné véglegesen, és az összes tartalmát?"
-# 
-# File: usr/share/ashyterm/window.py, line: 1005
-#: NEEDS WORK
-#, python-brace-format
-msgid "Are you sure you want to delete \"{name}\"?"
-msgstr "Biztos benne, hogy törölni szeretné a \"{name}\"?"
-# 
-# File: usr/share/ashyterm/window.py, line: 1464
-#: NEEDS WORK
-#, python-brace-format
-msgid "Are you sure you want to permanently delete these {count} items?"
-msgstr "Biztos benne, hogy véglegesen törölni szeretné ezeket a {count} elemet?"
-# 
-# File: usr/share/ashyterm/window.py, line: 1466
-#: NEEDS WORK
-msgid "This will also delete all contents of any selected folders."
-msgstr "Ez a kiválasztott mappák összes tartalmát is törli."
-# 
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
-# 
-# File: usr/share/ashyterm/ui/menus.py, line: 39
-# File: usr/share/ashyterm/ui/menus.py, line: 73
-# File: usr/share/ashyterm/window.py, line: 1014
-#: NEEDS WORK
-msgid "Delete"
-msgstr "Törlés"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 164
-#: NEEDS WORK
-msgid "Continue"
-msgstr "Folytatás"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 192
-#: NEEDS WORK
-#, python-brace-format
-msgid "{} is required"
-msgstr "{} kötelező"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 223
-#: NEEDS WORK
-msgid "Edit Session"
-msgstr "Szerkesztési munkamenet"
+msgid "Folder Information"
+msgstr "Mappa információ"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 313
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1128
@@ -1178,6 +1246,121 @@ msgstr "UI Hiba"
 #: NEEDS WORK
 msgid "Failed to initialize dialog interface"
 msgstr "A párbeszédfelület inicializálása nem sikerült"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1135
+#: NEEDS WORK
+msgid "Folder Name"
+msgstr "Mappa neve"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1136
+#: NEEDS WORK
+msgid "A descriptive name for organizing sessions"
+msgstr "Ülések szervezésére szolgáló leíró név"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1141
+#: NEEDS WORK
+msgid "Enter folder name..."
+msgstr "Adja meg a mappa nevét..."
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1158
+#: NEEDS WORK
+msgid "Parent Folder"
+msgstr "Szülőmappa"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1159
+#: NEEDS WORK
+msgid "Choose a parent folder for organization"
+msgstr "Válasszon egy szülőmappát a szervezéshez"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 357
+# File: usr/share/ashyterm/ui/dialogs.py, line: 358
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1164
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1165
+#: NEEDS WORK
+msgid "Root"
+msgstr "Gyökér"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 796
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1252
+#: NEEDS WORK
+msgid "Unsaved Changes"
+msgstr "Mentett változtatások"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 797
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1253
+#: NEEDS WORK
+msgid "You have unsaved changes. Are you sure you want to cancel?"
+msgstr "Vannak mentetlen változtatásaid. Biztosan törölni szeretnéd?"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 833
+# File: usr/share/ashyterm/ui/dialogs.py, line: 837
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1288
+#: NEEDS WORK
+msgid "Save Error"
+msgstr "Mentési hiba"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1288
+#: NEEDS WORK
+#, python-brace-format
+msgid "Failed to save folder: {}"
+msgstr "A mappa mentése nem sikerült: {}"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1296
+#: NEEDS WORK
+msgid "Folder name"
+msgstr "Mappa neve"
+# 
+# File: usr/share/ashyterm/window.py, line: 994
+#: NEEDS WORK
+msgid "Move Session"
+msgstr "Áthelyezés munkamenet"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 2183
+#: NEEDS WORK
+msgid "Select Destination"
+msgstr "Célhely kiválasztása"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 2184
+#: NEEDS WORK
+#, python-brace-format
+msgid "Choose the folder to move the session '{name}' to."
+msgstr "Válaszd ki a mappát, ahová a '{name}' munkamenetet áthelyezed."
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 2190
+#: NEEDS WORK
+msgid "Destination Folder"
+msgstr "Célmappa"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 2191
+#: NEEDS WORK
+msgid "Select a folder or 'Root' for the top level"
+msgstr "Válasszon egy mappát vagy 'Gyökér' a legfelső szinthez"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 2205
+#: NEEDS WORK
+msgid "Move"
+msgstr "Mozgás"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 2265
+#: NEEDS WORK
+msgid "Move Failed"
+msgstr "Mozgás sikertelen"
+# 
+# File: usr/share/ashyterm/ui/dialogs/move_dialogs.py, line: 136
+#: NEEDS WORK
+msgid "Move Layout"
+msgstr "Elrendezés áthelyezése"
+# 
+# File: usr/share/ashyterm/ui/dialogs/move_dialogs.py, line: 155
+#: NEEDS WORK
+#, python-brace-format
+msgid "Choose the folder to move the layout '{name}' to."
+msgstr "Válaszd ki a mappát, ahová a '{name}' elrendezést áthelyezed."
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 223
+#: NEEDS WORK
+msgid "Edit Session"
+msgstr "Szerkesztési munkamenet"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 319
 #: NEEDS WORK
@@ -1204,18 +1387,19 @@ msgstr "Adja meg a munkamenet nevét..."
 msgid "Organization"
 msgstr "Szervezet"
 # 
+# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 351
+# File: usr/share/ashyterm/window.py, line: 944
+# File: usr/share/ashyterm/window.py, line: 999
+#: NEEDS WORK
+msgid "Folder"
+msgstr "Mappa"
+# 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 352
 #: NEEDS WORK
 msgid "Choose a folder to organize this session"
 msgstr "Válasszon egy mappát az ülés rendezéséhez"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 357
-# File: usr/share/ashyterm/ui/dialogs.py, line: 358
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1164
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1165
-#: NEEDS WORK
-msgid "Root"
-msgstr "Gyökér"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 398
 #: NEEDS WORK
@@ -1349,12 +1533,6 @@ msgstr "Írja be a jelszót..."
 msgid "Test Connection"
 msgstr "Kapcsolat tesztelése"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 589
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1219
-#: NEEDS WORK
-msgid "Save"
-msgstr "Mentés"
-# 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 707
 #: NEEDS WORK
 msgid "Select SSH Key"
@@ -1441,25 +1619,6 @@ msgstr "Kapcsolódás sikertelen"
 msgid "Could not connect to the SSH server."
 msgstr "Nem sikerült csatlakozni az SSH szerverhez."
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 796
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1252
-#: NEEDS WORK
-msgid "Unsaved Changes"
-msgstr "Mentett változtatások"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 797
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1253
-#: NEEDS WORK
-msgid "You have unsaved changes. Are you sure you want to cancel?"
-msgstr "Vannak mentetlen változtatásaid. Biztosan törölni szeretnéd?"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 833
-# File: usr/share/ashyterm/ui/dialogs.py, line: 837
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1288
-#: NEEDS WORK
-msgid "Save Error"
-msgstr "Mentési hiba"
-# 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 833
 #: NEEDS WORK
 #, python-brace-format
@@ -1513,61 +1672,37 @@ msgstr ""
 msgid "Session {} {}"
 msgstr "Munkamenet {} {}"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1056
-#: NEEDS WORK
-msgid "Edit Folder"
-msgstr "Mappa szerkesztése"
+# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1100
-#: NEEDS WORK
-msgid "Folder Information"
-msgstr "Mappa információ"
+# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1135
+# File: usr/share/ashyterm/ui/menus.py, line: 157
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1390
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1604
+# File: usr/share/ashyterm/window.py, line: 261
 #: NEEDS WORK
-msgid "Folder Name"
-msgstr "Mappa neve"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1136
-#: NEEDS WORK
-msgid "A descriptive name for organizing sessions"
-msgstr "Ülések szervezésére szolgáló leíró név"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1141
-#: NEEDS WORK
-msgid "Enter folder name..."
-msgstr "Adja meg a mappa nevét..."
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1158
-#: NEEDS WORK
-msgid "Parent Folder"
-msgstr "Szülőmappa"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1159
-#: NEEDS WORK
-msgid "Choose a parent folder for organization"
-msgstr "Válasszon egy szülőmappát a szervezéshez"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1288
-#: NEEDS WORK
-#, python-brace-format
-msgid "Failed to save folder: {}"
-msgstr "A mappa mentése nem sikerült: {}"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1296
-#: NEEDS WORK
-msgid "Folder name"
-msgstr "Mappa neve"
+msgid "Preferences"
+msgstr "Beállítások"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1421
 #: NEEDS WORK
 msgid "Appearance"
 msgstr "Megjelenés"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 982
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 56
 #: NEEDS WORK
-msgid "Palette"
-msgstr "Paletta"
+msgid "Color Scheme"
+msgstr "Színpaletta"
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 59
+#: NEEDS WORK
+msgid "Current Scheme"
+msgstr "Jelenlegi séma"
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 62
+#: NEEDS WORK
+msgid "Manage Schemes..."
+msgstr "Sémák kezelése..."
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1016
 #: NEEDS WORK
@@ -1624,65 +1759,20 @@ msgstr "Használj élénk színeket a vastag szöveghez"
 msgid "Render bold text with the brighter version of the base color"
 msgstr "Rajzoljon ki vastag szöveget az alap szín világosabb változatával."
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1078
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 132
 #: NEEDS WORK
-msgid "Behavior"
-msgstr "Viselkedés"
+msgid "Auto-Hide Sidebar"
+msgstr "Automatikus elrejtés oldalsáv"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1082
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 134
 #: NEEDS WORK
-msgid "Startup"
-msgstr "Indítás"
+msgid "Automatically hide the sidebar when activating sessions or layouts"
+msgstr "Automatikusan elrejti az oldalsávot, amikor üléseket vagy elrendezéseket aktivál."
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1086
+# File: usr/share/ashyterm/window.py, line: 857
 #: NEEDS WORK
-msgid "Restore tabs on restart"
-msgstr "Lapok visszaállítása újraindításkor"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1087
-#: NEEDS WORK
-msgid "Reopen tabs and panels from the previous session"
-msgstr "A korábbi munkamenet lapjainak és paneljeinek újbóli megnyitása"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1101
-#: NEEDS WORK
-msgid "Shell"
-msgstr "Shell"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1102
-#: NEEDS WORK
-msgid "Configure shell integration and behavior"
-msgstr "Shell integráció és viselkedés konfigurálása"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1107
-#: NEEDS WORK
-msgid "Run Command as a Login Shell"
-msgstr "Futtassa a parancsot bejelentkezési héjként"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1108
-#: NEEDS WORK
-msgid "Sources /etc/profile and ~/.profile on startup"
-msgstr "Források /etc/profile és ~/.profile indításkor"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1118
-#: NEEDS WORK
-msgid "Scrolling"
-msgstr "Görgetés"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1123
-#: NEEDS WORK
-msgid "Scrollback Lines"
-msgstr "Visszagörgetési sorok"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1124
-#: NEEDS WORK
-msgid "Number of lines to keep in history (0 for unlimited)"
-msgstr "A megőrzendő sorok száma a történelemben (0 a korlátlanhoz)"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1133
-#: NEEDS WORK
-msgid "Cursor"
-msgstr "Kurzor"
+msgid "Terminal"
+msgstr "Terminál"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1137
 #: NEEDS WORK
@@ -1734,10 +1824,55 @@ msgstr "Bekapcsolva"
 msgid "Off"
 msgstr "Ki."
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1157
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1118
 #: NEEDS WORK
-msgid "Bell"
-msgstr "Harang"
+msgid "Scrolling"
+msgstr "Görgetés"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1123
+#: NEEDS WORK
+msgid "Scrollback Lines"
+msgstr "Visszagörgetési sorok"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1124
+#: NEEDS WORK
+msgid "Number of lines to keep in history (0 for unlimited)"
+msgstr "A megőrzendő sorok száma a történelemben (0 a korlátlanhoz)"
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 192
+#: NEEDS WORK
+msgid "Mouse Scroll Sensitivity"
+msgstr "Egér Görgetési Érzékenység"
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 193
+#: NEEDS WORK
+msgid "Controls the scroll speed for a mouse wheel. Lower is slower."
+msgstr "Irányítja az egérkerék görgetési sebességét. Alacsonyabb érték lassabb."
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 208
+#: NEEDS WORK
+msgid "Touchpad Scroll Sensitivity"
+msgstr "Touchpad görgetési érzékenység"
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 209
+#: NEEDS WORK
+msgid "Controls the scroll speed for a touchpad. Lower is slower."
+msgstr "Irányítja a görgetési sebességet egy érintőpadon. Alacsonyabb érték lassabb."
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 223
+#: NEEDS WORK
+msgid "Shell &amp; Bell"
+msgstr "Shell & Bell"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1107
+#: NEEDS WORK
+msgid "Run Command as a Login Shell"
+msgstr "Futtassa a parancsot bejelentkezési héjként"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1108
+#: NEEDS WORK
+msgid "Sources /etc/profile and ~/.profile on startup"
+msgstr "Források /etc/profile és ~/.profile indításkor"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1161
 #: NEEDS WORK
@@ -1748,6 +1883,184 @@ msgstr "Hallható Harang"
 #: NEEDS WORK
 msgid "Emit a sound for the terminal bell character"
 msgstr "Jelentést ad ki a terminál harang karakterének hangjára"
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 250
+#: NEEDS WORK
+msgid "Profiles & Data"
+msgstr "Profilok és Adatok"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1082
+#: NEEDS WORK
+msgid "Startup"
+msgstr "Indítás"
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 258
+#: NEEDS WORK
+msgid "On Startup"
+msgstr "Indításkor"
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 259
+#: NEEDS WORK
+msgid "Action to take when the application starts"
+msgstr "Művelet, amelyet az alkalmazás indításakor kell végrehajtani"
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 263
+#: NEEDS WORK
+msgid "Always restore previous session"
+msgstr "Mindig állítsa vissza az előző munkamenetet"
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 264
+#: NEEDS WORK
+msgid "Ask to restore previous session"
+msgstr "Kérjük, állítsa vissza az előző munkamenetet"
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 265
+#: NEEDS WORK
+msgid "Never restore previous session"
+msgstr "Soha ne állítsa vissza az előző munkamenetet"
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 280
+#: NEEDS WORK
+msgid "Backup &amp; Recovery"
+msgstr "Biztonsági mentés és helyreállítás"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1724
+#: NEEDS WORK
+msgid "Configure automatic backup and recovery options"
+msgstr "Automatikus biztonsági mentés és helyreállítási lehetőségek konfigurálása"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1730
+#: NEEDS WORK
+msgid "Automatic Backups"
+msgstr "Automatikus Biztonsági Mentések"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1731
+#: NEEDS WORK
+msgid "Automatically create backups of sessions and settings"
+msgstr "Automatikusan készítsen biztonsági másolatokat a munkamenetekről és a beállításokról"
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 301
+#: NEEDS WORK
+msgid "Manual Backup"
+msgstr "Kézi mentés"
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 302
+#: NEEDS WORK
+msgid "Create a backup of your current sessions and settings now"
+msgstr "Készítsen biztonsági másolatot a jelenlegi munkameneteiről és beállításairól most."
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 304
+#: NEEDS WORK
+msgid "Backup Now"
+msgstr "Biztonsági mentés most"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1575
+#: NEEDS WORK
+msgid "Shortcuts"
+msgstr "Gyorsbillentyűk"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1582
+#: NEEDS WORK
+msgid "Terminal Actions"
+msgstr "Terminál műveletek"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1583
+#: NEEDS WORK
+msgid "Keyboard shortcuts for terminal operations"
+msgstr "Terminál műveletek billentyűparancsai"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1589
+#: NEEDS WORK
+msgid "Application Actions"
+msgstr "Alkalmazás műveletek"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1590
+#: NEEDS WORK
+msgid "Keyboard shortcuts for application operations"
+msgstr "Alkalmazásműveletek billentyűparancsai"
+# 
+# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
+# 
+# File: usr/share/ashyterm/ui/menus.py, line: 145
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1597
+#: NEEDS WORK
+msgid "Close Tab"
+msgstr "Fül bezárása"
+# 
+# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
+# 
+# File: usr/share/ashyterm/ui/menus.py, line: 30
+# File: usr/share/ashyterm/ui/menus.py, line: 66
+# File: usr/share/ashyterm/ui/menus.py, line: 117
+# File: usr/share/ashyterm/ui/menus.py, line: 153
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1598
+#: NEEDS WORK
+msgid "Copy"
+msgstr "Másolás"
+# 
+# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
+# 
+# File: usr/share/ashyterm/ui/menus.py, line: 69
+# File: usr/share/ashyterm/ui/menus.py, line: 118
+# File: usr/share/ashyterm/ui/menus.py, line: 154
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1599
+#: NEEDS WORK
+msgid "Paste"
+msgstr "Beillesztés"
+# 
+# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
+# 
+# File: usr/share/ashyterm/ui/menus.py, line: 119
+# File: usr/share/ashyterm/ui/menus.py, line: 155
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1600
+#: NEEDS WORK
+msgid "Select All"
+msgstr "Összes kiválasztása"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1605
+#: NEEDS WORK
+msgid "Quit Application"
+msgstr "Alkalmazás bezárása"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1607
+#: NEEDS WORK
+msgid "New Window"
+msgstr "Új ablak"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1790
+#: NEEDS WORK
+msgid "Advanced"
+msgstr "Haladó"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1276
+#: NEEDS WORK
+msgid "Advanced Features"
+msgstr "Fejlett funkciók"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1277
+#: NEEDS WORK
+msgid "Enable or disable advanced terminal features"
+msgstr "Fejlett terminálszolgáltatások engedélyezése vagy letiltása"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1282
+#: NEEDS WORK
+msgid "Bidirectional Text Support"
+msgstr "Kétirányú Szöveg Támogatás"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1284
+#: NEEDS WORK
+msgid "Enable for languages like Arabic and Hebrew (may affect performance)"
+msgstr "Engedélyezze az olyan nyelvekhez, mint az arab és a héber (hatással lehet a teljesítményre)"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1295
+#: NEEDS WORK
+msgid "SIXEL Graphics Support"
+msgstr "SIXEL Grafika Támogatás"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1296
+#: NEEDS WORK
+msgid "Allow the terminal to display SIXEL images (experimental)"
+msgstr "Engedélyezze a terminál számára a SIXEL képek megjelenítését (kísérleti)"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1172
 #: NEEDS WORK
@@ -1802,151 +2115,6 @@ msgstr "Törlés gomb"
 msgid "Sequence to send for Delete key"
 msgstr "Törlés gombhoz küldendő szekvencia"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1207
-#: NEEDS WORK
-msgid "Ambiguous-width Characters"
-msgstr "Kétértelmű szélességű karakterek"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1208
-#: NEEDS WORK
-msgid "Render ambiguous characters as narrow or wide"
-msgstr "A kétértelmű karaktereket keskeny vagy széles formában jelenítse meg"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1210
-#: NEEDS WORK
-msgid "Narrow"
-msgstr "Keskeny"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1210
-#: NEEDS WORK
-msgid "Wide"
-msgstr "Széles"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1575
-#: NEEDS WORK
-msgid "Shortcuts"
-msgstr "Gyorsbillentyűk"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1582
-#: NEEDS WORK
-msgid "Terminal Actions"
-msgstr "Terminál műveletek"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1583
-#: NEEDS WORK
-msgid "Keyboard shortcuts for terminal operations"
-msgstr "Terminál műveletek billentyűparancsai"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1589
-#: NEEDS WORK
-msgid "Application Actions"
-msgstr "Alkalmazás műveletek"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1590
-#: NEEDS WORK
-msgid "Keyboard shortcuts for application operations"
-msgstr "Alkalmazásműveletek billentyűparancsai"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1605
-#: NEEDS WORK
-msgid "Quit Application"
-msgstr "Alkalmazás bezárása"
-# 
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1624
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1907
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1983
-# File: usr/share/ashyterm/utils.py, line: 238
-#: NEEDS WORK
-msgid "None"
-msgstr "None"
-# 
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
-# 
-# File: usr/share/ashyterm/ui/menus.py, line: 23
-# File: usr/share/ashyterm/ui/menus.py, line: 59
-# File: usr/share/ashyterm/ui/menus.py, line: 151
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1637
-#: NEEDS WORK
-msgid "Edit"
-msgstr "Szerkesztés"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1790
-#: NEEDS WORK
-msgid "Advanced"
-msgstr "Haladó"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1276
-#: NEEDS WORK
-msgid "Advanced Features"
-msgstr "Fejlett funkciók"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1277
-#: NEEDS WORK
-msgid "Enable or disable advanced terminal features"
-msgstr "Fejlett terminálszolgáltatások engedélyezése vagy letiltása"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1282
-#: NEEDS WORK
-msgid "Bidirectional Text Support"
-msgstr "Kétirányú Szöveg Támogatás"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1284
-#: NEEDS WORK
-msgid "Enable for languages like Arabic and Hebrew (may affect performance)"
-msgstr "Engedélyezze az olyan nyelvekhez, mint az arab és a héber (hatással lehet a teljesítményre)"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1295
-#: NEEDS WORK
-msgid "SIXEL Graphics Support"
-msgstr "SIXEL Grafika Támogatás"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1296
-#: NEEDS WORK
-msgid "Allow the terminal to display SIXEL images (experimental)"
-msgstr "Engedélyezze a terminál számára a SIXEL képek megjelenítését (kísérleti)"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1306
-#: NEEDS WORK
-msgid "Accessibility"
-msgstr "Hozzáférhetőség"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1308
-#: NEEDS WORK
-msgid "Settings for screen readers and other assistive technologies"
-msgstr "Képernyőolvasók és egyéb segítő technológiák beállításai"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1314
-#: NEEDS WORK
-msgid "Allow Screen Readers"
-msgstr "Képernyőolvasók engedélyezése"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1315
-#: NEEDS WORK
-msgid "Permit tools like Orca to read terminal content"
-msgstr "Engedélyezze az olyan eszközök, mint az Orca, számára a terminál tartalmának olvasását."
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1051
-#: NEEDS WORK
-msgid "Backup & Recovery"
-msgstr "Biztonsági mentés és helyreállítás"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1724
-#: NEEDS WORK
-msgid "Configure automatic backup and recovery options"
-msgstr "Automatikus biztonsági mentés és helyreállítási lehetőségek konfigurálása"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1730
-#: NEEDS WORK
-msgid "Automatic Backups"
-msgstr "Automatikus Biztonsági Mentések"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1731
-#: NEEDS WORK
-msgid "Automatically create backups of sessions and settings"
-msgstr "Automatikusan készítsen biztonsági másolatokat a munkamenetekről és a beállításokról"
-# 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1071
 #: NEEDS WORK
 msgid "Logging"
@@ -1999,6 +2167,16 @@ msgstr "Minden beállítás visszaállítása"
 #: NEEDS WORK
 msgid "Restore all settings to their default values"
 msgstr "Állítsa vissza az összes beállítást az alapértelmezett értékekre."
+# 
+# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1624
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1907
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1983
+# File: usr/share/ashyterm/utils.py, line: 238
+#: NEEDS WORK
+msgid "None"
+msgstr "None"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1900
 #: NEEDS WORK
@@ -2073,41 +2251,127 @@ msgstr "Visszaállítás sikertelen"
 msgid "Failed to reset settings: {}"
 msgstr "A beállítások visszaállítása nem sikerült: {}"
 # 
-# File: usr/share/ashyterm/window.py, line: 994
+# File: usr/share/ashyterm/ui/dialogs.py, line: 164
 #: NEEDS WORK
-msgid "Move Session"
-msgstr "Áthelyezés munkamenet"
+msgid "Continue"
+msgstr "Folytatás"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 2183
-#: NEEDS WORK
-msgid "Select Destination"
-msgstr "Célhely kiválasztása"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 2184
+# File: usr/share/ashyterm/ui/dialogs.py, line: 192
 #: NEEDS WORK
 #, python-brace-format
-msgid "Choose the folder to move the session '{name}' to."
-msgstr "Válaszd ki a mappát, ahová a '{name}' munkamenetet áthelyezed."
+msgid "{} is required"
+msgstr "{} kötelező"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 2190
+# File: usr/share/ashyterm/window.py, line: 586
 #: NEEDS WORK
-msgid "Destination Folder"
-msgstr "Célmappa"
+msgid "SFTP not implemented yet"
+msgstr "SFTP még nincs megvalósítva"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 2191
+# File: usr/share/ashyterm/window.py, line: 758
+# File: usr/share/ashyterm/window.py, line: 875
 #: NEEDS WORK
-msgid "Select a folder or 'Root' for the top level"
-msgstr "Válasszon egy mappát vagy 'Gyökér' a legfelső szinthez"
+msgid "New Session"
+msgstr "Új munkamenet"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 2205
+# File: usr/share/ashyterm/window.py, line: 885
 #: NEEDS WORK
-msgid "Move"
-msgstr "Mozgás"
+msgid "New Folder"
+msgstr "Új mappa"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 2265
+# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
+# 
+# File: usr/share/ashyterm/ui/menus.py, line: 211
+# File: usr/share/ashyterm/window.py, line: 909
+# File: usr/share/ashyterm/window.py, line: 960
 #: NEEDS WORK
-msgid "Move Failed"
-msgstr "Mozgás sikertelen"
+msgid "Keyboard Shortcuts"
+msgstr "Billentyűparancsok"
+# 
+# File: usr/share/ashyterm/window.py, line: 936
+#: NEEDS WORK
+msgid "Application"
+msgstr "Alkalmazás"
+# 
+# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
+# 
+# File: usr/share/ashyterm/ui/menus.py, line: 217
+# File: usr/share/ashyterm/window.py, line: 942
+#: NEEDS WORK
+msgid "Quit"
+msgstr "Kilépés"
+# 
+# File: usr/share/ashyterm/window.py, line: 944
+# File: usr/share/ashyterm/window.py, line: 999
+#: NEEDS WORK
+msgid "Session"
+msgstr "Munkamenet"
+# 
+# File: usr/share/ashyterm/window.py, line: 947
+#: NEEDS WORK
+#, python-brace-format
+msgid "Rename {type}"
+msgstr "Átnevezés {type}"
+# 
+# File: usr/share/ashyterm/window.py, line: 948
+#: NEEDS WORK
+#, python-brace-format
+msgid "Enter new name for \"{name}\":"
+msgstr "Írja be az új nevet a(z) \"{name}\":"
+# 
+# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
+# 
+# File: usr/share/ashyterm/ui/menus.py, line: 25
+# File: usr/share/ashyterm/ui/menus.py, line: 61
+# File: usr/share/ashyterm/window.py, line: 954
+#: NEEDS WORK
+msgid "Rename"
+msgstr "Átnevezés"
+# 
+# File: usr/share/ashyterm/window.py, line: 1450
+#: NEEDS WORK
+msgid "Delete Item"
+msgstr "Elem törlése"
+# 
+# File: usr/share/ashyterm/window.py, line: 1450
+#: NEEDS WORK
+msgid "Delete Items"
+msgstr "Elemek törlése"
+# 
+# File: usr/share/ashyterm/ui/actions.py, line: 415
+#: NEEDS WORK
+msgid "Layout"
+msgstr "Elrendezés"
+# 
+# File: usr/share/ashyterm/window.py, line: 1009
+#: NEEDS WORK
+#, python-brace-format
+msgid "Delete {type}"
+msgstr "Törlés {type}"
+# 
+# File: usr/share/ashyterm/window.py, line: 1003
+#: NEEDS WORK
+#, python-brace-format
+msgid ""
+"The folder \"{name}\" is not empty. Are you sure you want to permanently delete it and all its "
+"contents?"
+msgstr "A \"{name}\" mappa nem üres. Biztosan törölni szeretné véglegesen, és az összes tartalmát?"
+# 
+# File: usr/share/ashyterm/window.py, line: 1005
+#: NEEDS WORK
+#, python-brace-format
+msgid "Are you sure you want to delete \"{name}\"?"
+msgstr "Biztos benne, hogy törölni szeretné a \"{name}\"?"
+# 
+# File: usr/share/ashyterm/window.py, line: 1464
+#: NEEDS WORK
+#, python-brace-format
+msgid "Are you sure you want to permanently delete these {count} items?"
+msgstr "Biztos benne, hogy véglegesen törölni szeretné ezeket a {count} elemet?"
+# 
+# File: usr/share/ashyterm/window.py, line: 1466
+#: NEEDS WORK
+msgid "This will also delete all contents of any selected folders."
+msgstr "Ez a kiválasztott mappák összes tartalmát is törli."
 # 
 # File: usr/share/ashyterm/ui/menus.py, line: 24
 #: NEEDS WORK
@@ -2138,17 +2402,6 @@ msgstr "Csatlakozás SFTP-vel"
 #: NEEDS WORK
 msgid "Duplicate"
 msgstr "Duplikálás"
-# 
-# File: usr/share/ashyterm/ui/menus.py, line: 29
-# File: usr/share/ashyterm/ui/menus.py, line: 65
-#: NEEDS WORK
-msgid "Cut"
-msgstr "Vágás"
-# 
-# File: usr/share/ashyterm/ui/menus.py, line: 203
-#: NEEDS WORK
-msgid "Move to Folder..."
-msgstr "Áthelyezés mappába..."
 # 
 # File: usr/share/ashyterm/ui/menus.py, line: 220
 #: NEEDS WORK

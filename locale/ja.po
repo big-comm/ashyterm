@@ -579,16 +579,29 @@ msgstr "フォルダパスが親パスと一致していません。"
 msgid "Unnamed Folder"
 msgstr "名前のないフォルダー"
 # 
-# File: usr/share/ashyterm/sessions/tree.py, line: 96
-#: NEEDS WORK
-msgid "Sessions"
-msgstr "セッション"
-# 
 # File: usr/share/ashyterm/sessions/tree.py, line: 298
 # File: usr/share/ashyterm/sessions/tree.py, line: 302
 #: NEEDS WORK
 msgid "Move Error"
 msgstr "移動エラー"
+# 
+# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
+# 
+# File: usr/share/ashyterm/sessions/tree.py, line: 801
+# File: usr/share/ashyterm/window.py, line: 1544
+#: NEEDS WORK
+msgid "Restore Layout"
+msgstr "レイアウトを復元"
+# 
+# File: usr/share/ashyterm/ui/menus.py, line: 203
+#: NEEDS WORK
+msgid "Move to Folder..."
+msgstr "フォルダーに移動..."
+# 
+# File: usr/share/ashyterm/sessions/tree.py, line: 808
+#: NEEDS WORK
+msgid "Delete Layout"
+msgstr "レイアウトを削除"
 # 
 # File: usr/share/ashyterm/sessions/tree.py, line: 618
 # File: usr/share/ashyterm/sessions/tree.py, line: 623
@@ -869,10 +882,20 @@ msgstr "フォルダーを追加"
 msgid "Edit Selected"
 msgstr "選択した項目を編集"
 # 
+# File: usr/share/ashyterm/window.py, line: 585
+#: NEEDS WORK
+msgid "Save Current Layout"
+msgstr "現在のレイアウトを保存"
+# 
 # File: usr/share/ashyterm/window.py, line: 343
 #: NEEDS WORK
 msgid "Remove Selected"
 msgstr "選択した項目を削除"
+# 
+# File: usr/share/ashyterm/window.py, line: 606
+#: NEEDS WORK
+msgid "Search sessions..."
+msgstr "検索セッション..."
 # 
 # File: usr/share/ashyterm/window.py, line: 424
 #: NEEDS WORK
@@ -883,6 +906,39 @@ msgstr "データ読み込みエラー"
 #: NEEDS WORK
 msgid "Failed to load saved sessions and folders. Starting with empty configuration."
 msgstr "保存されたセッションとフォルダーの読み込みに失敗しました。空の構成から開始します。"
+# 
+# File: usr/share/ashyterm/window.py, line: 1080
+#: NEEDS WORK
+msgid "Save Current Session?"
+msgstr "現在のセッションを保存しますか？"
+# 
+# File: usr/share/ashyterm/window.py, line: 1082
+#: NEEDS WORK
+msgid "Do you want to restore these tabs the next time you open Ashy Terminal?"
+msgstr "次回Ashy Terminalを開いたときに、これらのタブを復元しますか？"
+# 
+# File: usr/share/ashyterm/window.py, line: 1086
+#: NEEDS WORK
+msgid "Don't Save"
+msgstr "保存しない"
+# 
+# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 163
+# File: usr/share/ashyterm/ui/dialogs.py, line: 575
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1213
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1957
+# File: usr/share/ashyterm/ui/dialogs.py, line: 2006
+# File: usr/share/ashyterm/window.py, line: 953
+# File: usr/share/ashyterm/window.py, line: 1013
+#: NEEDS WORK
+msgid "Cancel"
+msgstr "キャンセル"
+# 
+# File: usr/share/ashyterm/window.py, line: 1088
+#: NEEDS WORK
+msgid "Save and Close"
+msgstr "保存して閉じる"
 # 
 # File: usr/share/ashyterm/window.py, line: 544
 #: NEEDS WORK
@@ -904,19 +960,6 @@ msgstr "このウィンドウを閉じてもよろしいですか？"
 #: NEEDS WORK
 msgid "Close Window"
 msgstr "ウィンドウを閉じる"
-# 
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 163
-# File: usr/share/ashyterm/ui/dialogs.py, line: 575
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1213
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1957
-# File: usr/share/ashyterm/ui/dialogs.py, line: 2006
-# File: usr/share/ashyterm/window.py, line: 953
-# File: usr/share/ashyterm/window.py, line: 1013
-#: NEEDS WORK
-msgid "Cancel"
-msgstr "キャンセル"
 # 
 # File: usr/share/ashyterm/window.py, line: 551
 #: NEEDS WORK
@@ -950,6 +993,219 @@ msgstr "OK"
 msgid "Cannot detach the last tab."
 msgstr "最後のタブを切り離すことはできません。"
 # 
+# File: usr/share/ashyterm/window.py, line: 1466
+#: NEEDS WORK
+msgid "Save Layout"
+msgstr "レイアウトを保存"
+# 
+# File: usr/share/ashyterm/window.py, line: 1467
+#: NEEDS WORK
+msgid "Enter a name for the current layout:"
+msgstr "現在のレイアウトの名前を入力してください："
+# 
+# File: usr/share/ashyterm/window.py, line: 1471
+#: NEEDS WORK
+msgid "e.g., 'My Dev Setup'"
+msgstr "私の開発環境"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 589
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1219
+#: NEEDS WORK
+msgid "Save"
+msgstr "保存"
+# 
+# File: usr/share/ashyterm/window.py, line: 1492
+#: NEEDS WORK
+msgid "Layout name cannot be empty."
+msgstr "レイアウト名は空にできません。"
+# 
+# File: usr/share/ashyterm/window.py, line: 1514
+#: NEEDS WORK
+msgid "Layout Saved"
+msgstr "レイアウトが保存されました"
+# 
+# File: usr/share/ashyterm/window.py, line: 1519
+#: NEEDS WORK
+msgid "Error Saving Layout"
+msgstr "レイアウトの保存エラー"
+# 
+# File: usr/share/ashyterm/window.py, line: 1530
+#: NEEDS WORK
+msgid "Saved layout not found."
+msgstr "保存されたレイアウトが見つかりません。"
+# 
+# File: usr/share/ashyterm/window.py, line: 1537
+#: NEEDS WORK
+msgid "Restore Saved Layout?"
+msgstr "保存されたレイアウトを復元しますか？"
+# 
+# File: usr/share/ashyterm/window.py, line: 1539
+#: NEEDS WORK
+#, python-brace-format
+msgid "This will close all current tabs and restore the '{name}' layout. Are you sure?"
+msgstr "これにより、すべての現在のタブが閉じられ、'{name}' レイアウトが復元されます。よろしいですか？"
+# 
+# File: usr/share/ashyterm/window.py, line: 1586
+#: NEEDS WORK
+msgid "Error Restoring Layout"
+msgstr "レイアウトの復元エラー"
+# 
+# File: usr/share/ashyterm/window.py, line: 1612
+#: NEEDS WORK
+msgid "Delete Layout?"
+msgstr "レイアウトを削除しますか？"
+# 
+# File: usr/share/ashyterm/window.py, line: 1614
+#: NEEDS WORK
+#, python-brace-format
+msgid "Are you sure you want to permanently delete the layout '{name}'?"
+msgstr "'{name}' のレイアウトを永久に削除してもよろしいですか？"
+# 
+# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
+# 
+# File: usr/share/ashyterm/ui/menus.py, line: 39
+# File: usr/share/ashyterm/ui/menus.py, line: 73
+# File: usr/share/ashyterm/window.py, line: 1014
+#: NEEDS WORK
+msgid "Delete"
+msgstr "削除"
+# 
+# File: usr/share/ashyterm/window.py, line: 1639
+#: NEEDS WORK
+msgid "Layout Deleted"
+msgstr "レイアウトが削除されました"
+# 
+# File: usr/share/ashyterm/window.py, line: 1644
+#: NEEDS WORK
+msgid "Error Deleting Layout"
+msgstr "レイアウトの削除中にエラーが発生しました"
+# 
+# File: usr/share/ashyterm/window.py, line: 1691
+#: NEEDS WORK
+msgid "Error Moving Layout"
+msgstr "レイアウトの移動エラー"
+# 
+# File: usr/share/ashyterm/ui/color_scheme_dialog.py, line: 42
+#: NEEDS WORK
+msgid "Edit Scheme"
+msgstr "スキームを編集"
+# 
+# File: usr/share/ashyterm/ui/color_scheme_dialog.py, line: 42
+#: NEEDS WORK
+msgid "New Scheme"
+msgstr "新しいスキーム"
+# 
+# File: usr/share/ashyterm/ui/color_scheme_dialog.py, line: 44
+#: NEEDS WORK
+msgid "Scheme Name"
+msgstr "スキーム名"
+# 
+# File: usr/share/ashyterm/ui/color_scheme_dialog.py, line: 73
+#: NEEDS WORK
+msgid "General Colors"
+msgstr "一般的な色"
+# 
+# File: usr/share/ashyterm/ui/color_scheme_dialog.py, line: 78
+#: NEEDS WORK
+msgid "Foreground"
+msgstr "前景"
+# 
+# File: usr/share/ashyterm/ui/color_scheme_dialog.py, line: 82
+#: NEEDS WORK
+msgid "Background"
+msgstr "背景"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1133
+#: NEEDS WORK
+msgid "Cursor"
+msgstr "カーソル"
+# 
+# File: usr/share/ashyterm/ui/color_scheme_dialog.py, line: 90
+#: NEEDS WORK
+msgid "16-Color Palette"
+msgstr "16色パレット"
+# 
+# File: usr/share/ashyterm/ui/color_scheme_dialog.py, line: 135
+#: NEEDS WORK
+msgid "Name Error"
+msgstr "名前エラー"
+# 
+# File: usr/share/ashyterm/ui/color_scheme_dialog.py, line: 135
+#: NEEDS WORK
+msgid "Scheme name cannot be empty."
+msgstr "スキーム名は空にできません。"
+# 
+# File: usr/share/ashyterm/ui/color_scheme_dialog.py, line: 149
+# File: usr/share/ashyterm/ui/color_scheme_dialog.py, line: 159
+#: NEEDS WORK
+msgid "Name Conflict"
+msgstr "名前の衝突"
+# 
+# File: usr/share/ashyterm/ui/color_scheme_dialog.py, line: 151
+#: NEEDS WORK
+#, python-brace-format
+msgid "A color scheme with the name '{name}' already exists. Please choose a different name."
+msgstr "名前 '{name}' のカラースキームはすでに存在します。別の名前を選択してください。"
+# 
+# File: usr/share/ashyterm/ui/color_scheme_dialog.py, line: 161
+#: NEEDS WORK
+#, python-brace-format
+msgid ""
+"A scheme with a similar internal name ('{key}') already exists. Please choose a slightly different "
+"name."
+msgstr "同じ内部名（'{key}'）のスキームが既に存在します。少し異なる名前を選択してください。"
+# 
+# File: usr/share/ashyterm/ui/color_scheme_dialog.py, line: 186
+#: NEEDS WORK
+msgid "Custom"
+msgstr "カスタム"
+# 
+# File: usr/share/ashyterm/ui/color_scheme_dialog.py, line: 186
+#: NEEDS WORK
+msgid "Built-in"
+msgstr "組み込み"
+# 
+# File: usr/share/ashyterm/ui/color_scheme_dialog.py, line: 282
+#: NEEDS WORK
+msgid "Color Schemes"
+msgstr "カラースキーム"
+# 
+# File: usr/share/ashyterm/ui/color_scheme_dialog.py, line: 307
+#: NEEDS WORK
+msgid "Available Schemes"
+msgstr "利用可能なスキーム"
+# 
+# File: usr/share/ashyterm/ui/color_scheme_dialog.py, line: 309
+#: NEEDS WORK
+msgid "Select a scheme to apply it instantly. Double-click to edit."
+msgstr "スキームを選択して即座に適用します。ダブルクリックして編集します。"
+# 
+# File: usr/share/ashyterm/ui/color_scheme_dialog.py, line: 335
+#: NEEDS WORK
+msgid "New"
+msgstr "新規"
+# 
+# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
+# 
+# File: usr/share/ashyterm/ui/menus.py, line: 23
+# File: usr/share/ashyterm/ui/menus.py, line: 59
+# File: usr/share/ashyterm/ui/menus.py, line: 151
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1637
+#: NEEDS WORK
+msgid "Edit"
+msgstr "編集"
+# 
+# File: usr/share/ashyterm/ui/color_scheme_dialog.py, line: 468
+#: NEEDS WORK
+msgid "Delete Scheme?"
+msgstr "スキームを削除しますか？"
+# 
+# File: usr/share/ashyterm/ui/color_scheme_dialog.py, line: 470
+#: NEEDS WORK
+#, python-brace-format
+msgid "Are you sure you want to delete the scheme '{name}'? This cannot be undone."
+msgstr "'{name}'を削除してもよろしいですか？これは元に戻すことはできません。"
+# 
 # File: usr/share/ashyterm/ui/ssh_dialogs.py, line: 206
 #: NEEDS WORK
 msgid "SSH Connection Failed"
@@ -967,205 +1223,15 @@ msgstr "セッション '{session_name}' に接続できませんでした。"
 msgid "Close"
 msgstr "閉じる"
 # 
-# File: usr/share/ashyterm/window.py, line: 586
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1056
 #: NEEDS WORK
-msgid "SFTP not implemented yet"
-msgstr "SFTPはまだ実装されていません"
+msgid "Edit Folder"
+msgstr "フォルダーを編集"
 # 
-# File: usr/share/ashyterm/window.py, line: 758
-# File: usr/share/ashyterm/window.py, line: 875
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1100
 #: NEEDS WORK
-msgid "New Session"
-msgstr "新しいセッション"
-# 
-# File: usr/share/ashyterm/window.py, line: 885
-#: NEEDS WORK
-msgid "New Folder"
-msgstr "新しいフォルダー"
-# 
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
-# 
-# File: usr/share/ashyterm/ui/menus.py, line: 211
-# File: usr/share/ashyterm/window.py, line: 909
-# File: usr/share/ashyterm/window.py, line: 960
-#: NEEDS WORK
-msgid "Keyboard Shortcuts"
-msgstr "キーボードショートカット"
-# 
-# File: usr/share/ashyterm/window.py, line: 857
-#: NEEDS WORK
-msgid "Terminal"
-msgstr "ターミナル"
-# 
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
-# 
-# File: usr/share/ashyterm/ui/menus.py, line: 145
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1597
-#: NEEDS WORK
-msgid "Close Tab"
-msgstr "タブを閉じる"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1607
-#: NEEDS WORK
-msgid "New Window"
-msgstr "新しいウィンドウ"
-# 
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
-# 
-# File: usr/share/ashyterm/ui/menus.py, line: 30
-# File: usr/share/ashyterm/ui/menus.py, line: 66
-# File: usr/share/ashyterm/ui/menus.py, line: 117
-# File: usr/share/ashyterm/ui/menus.py, line: 153
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1598
-#: NEEDS WORK
-msgid "Copy"
-msgstr "コピー"
-# 
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
-# 
-# File: usr/share/ashyterm/ui/menus.py, line: 69
-# File: usr/share/ashyterm/ui/menus.py, line: 118
-# File: usr/share/ashyterm/ui/menus.py, line: 154
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1599
-#: NEEDS WORK
-msgid "Paste"
-msgstr "貼り付け"
-# 
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
-# 
-# File: usr/share/ashyterm/ui/menus.py, line: 119
-# File: usr/share/ashyterm/ui/menus.py, line: 155
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1600
-#: NEEDS WORK
-msgid "Select All"
-msgstr "すべて選択"
-# 
-# File: usr/share/ashyterm/window.py, line: 936
-#: NEEDS WORK
-msgid "Application"
-msgstr "アプリケーション"
-# 
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
-# 
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
-# 
-# File: usr/share/ashyterm/ui/menus.py, line: 157
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1390
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1604
-# File: usr/share/ashyterm/window.py, line: 261
-#: NEEDS WORK
-msgid "Preferences"
-msgstr "設定"
-# 
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
-# 
-# File: usr/share/ashyterm/ui/menus.py, line: 217
-# File: usr/share/ashyterm/window.py, line: 942
-#: NEEDS WORK
-msgid "Quit"
-msgstr "終了"
-# 
-# File: usr/share/ashyterm/window.py, line: 944
-# File: usr/share/ashyterm/window.py, line: 999
-#: NEEDS WORK
-msgid "Session"
-msgstr "セッション"
-# 
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 351
-# File: usr/share/ashyterm/window.py, line: 944
-# File: usr/share/ashyterm/window.py, line: 999
-#: NEEDS WORK
-msgid "Folder"
-msgstr "フォルダー"
-# 
-# File: usr/share/ashyterm/window.py, line: 947
-#: NEEDS WORK
-#, python-brace-format
-msgid "Rename {type}"
-msgstr "{type}の名前を変更"
-# 
-# File: usr/share/ashyterm/window.py, line: 948
-#: NEEDS WORK
-#, python-brace-format
-msgid "Enter new name for \"{name}\":"
-msgstr "\"{name}の新しい名前を入力してください：\""
-# 
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
-# 
-# File: usr/share/ashyterm/ui/menus.py, line: 25
-# File: usr/share/ashyterm/ui/menus.py, line: 61
-# File: usr/share/ashyterm/window.py, line: 954
-#: NEEDS WORK
-msgid "Rename"
-msgstr "名前を変更"
-# 
-# File: usr/share/ashyterm/window.py, line: 1450
-#: NEEDS WORK
-msgid "Delete Item"
-msgstr "アイテムを削除"
-# 
-# File: usr/share/ashyterm/window.py, line: 1450
-#: NEEDS WORK
-msgid "Delete Items"
-msgstr "アイテムを削除"
-# 
-# File: usr/share/ashyterm/window.py, line: 1009
-#: NEEDS WORK
-#, python-brace-format
-msgid "Delete {type}"
-msgstr "{type}を削除"
-# 
-# File: usr/share/ashyterm/window.py, line: 1003
-#: NEEDS WORK
-#, python-brace-format
-msgid ""
-"The folder \"{name}\" is not empty. Are you sure you want to permanently delete it and all its "
-"contents?"
-msgstr "フォルダー「{name}」は空ではありません。本当にそれとそのすべての内容を永久に削除してもよろしいですか？"
-# 
-# File: usr/share/ashyterm/window.py, line: 1005
-#: NEEDS WORK
-#, python-brace-format
-msgid "Are you sure you want to delete \"{name}\"?"
-msgstr "\"{name}\"を削除してもよろしいですか？"
-# 
-# File: usr/share/ashyterm/window.py, line: 1464
-#: NEEDS WORK
-#, python-brace-format
-msgid "Are you sure you want to permanently delete these {count} items?"
-msgstr "これらの {count} アイテムを永久に削除してもよろしいですか？"
-# 
-# File: usr/share/ashyterm/window.py, line: 1466
-#: NEEDS WORK
-msgid "This will also delete all contents of any selected folders."
-msgstr "これにより、選択したフォルダーのすべての内容も削除されます。"
-# 
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
-# 
-# File: usr/share/ashyterm/ui/menus.py, line: 39
-# File: usr/share/ashyterm/ui/menus.py, line: 73
-# File: usr/share/ashyterm/window.py, line: 1014
-#: NEEDS WORK
-msgid "Delete"
-msgstr "削除"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 164
-#: NEEDS WORK
-msgid "Continue"
-msgstr "続行"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 192
-#: NEEDS WORK
-#, python-brace-format
-msgid "{} is required"
-msgstr "{} は必須です"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 223
-#: NEEDS WORK
-msgid "Edit Session"
-msgstr "セッションを編集"
+msgid "Folder Information"
+msgstr "フォルダー情報"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 313
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1128
@@ -1178,6 +1244,121 @@ msgstr "UIエラー"
 #: NEEDS WORK
 msgid "Failed to initialize dialog interface"
 msgstr "ダイアログインターフェースの初期化に失敗しました"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1135
+#: NEEDS WORK
+msgid "Folder Name"
+msgstr "フォルダー名"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1136
+#: NEEDS WORK
+msgid "A descriptive name for organizing sessions"
+msgstr "セッションを整理するための説明的な名前"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1141
+#: NEEDS WORK
+msgid "Enter folder name..."
+msgstr "フォルダー名を入力してください..."
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1158
+#: NEEDS WORK
+msgid "Parent Folder"
+msgstr "親フォルダー"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1159
+#: NEEDS WORK
+msgid "Choose a parent folder for organization"
+msgstr "整理のための親フォルダーを選択してください"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 357
+# File: usr/share/ashyterm/ui/dialogs.py, line: 358
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1164
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1165
+#: NEEDS WORK
+msgid "Root"
+msgstr "ルート"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 796
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1252
+#: NEEDS WORK
+msgid "Unsaved Changes"
+msgstr "未保存の変更"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 797
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1253
+#: NEEDS WORK
+msgid "You have unsaved changes. Are you sure you want to cancel?"
+msgstr "保存されていない変更があります。キャンセルしてもよろしいですか？"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 833
+# File: usr/share/ashyterm/ui/dialogs.py, line: 837
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1288
+#: NEEDS WORK
+msgid "Save Error"
+msgstr "保存エラー"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1288
+#: NEEDS WORK
+#, python-brace-format
+msgid "Failed to save folder: {}"
+msgstr "フォルダーの保存に失敗しました: {}"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1296
+#: NEEDS WORK
+msgid "Folder name"
+msgstr "フォルダー名"
+# 
+# File: usr/share/ashyterm/window.py, line: 994
+#: NEEDS WORK
+msgid "Move Session"
+msgstr "セッションを移動"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 2183
+#: NEEDS WORK
+msgid "Select Destination"
+msgstr "宛先を選択"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 2184
+#: NEEDS WORK
+#, python-brace-format
+msgid "Choose the folder to move the session '{name}' to."
+msgstr "セッション '{name}' を移動するフォルダーを選択してください。"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 2190
+#: NEEDS WORK
+msgid "Destination Folder"
+msgstr "宛先フォルダー"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 2191
+#: NEEDS WORK
+msgid "Select a folder or 'Root' for the top level"
+msgstr "フォルダーまたは「ルート」を選択して最上位を指定してください"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 2205
+#: NEEDS WORK
+msgid "Move"
+msgstr "移動"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 2265
+#: NEEDS WORK
+msgid "Move Failed"
+msgstr "移動に失敗しました"
+# 
+# File: usr/share/ashyterm/ui/dialogs/move_dialogs.py, line: 136
+#: NEEDS WORK
+msgid "Move Layout"
+msgstr "レイアウトを移動"
+# 
+# File: usr/share/ashyterm/ui/dialogs/move_dialogs.py, line: 155
+#: NEEDS WORK
+#, python-brace-format
+msgid "Choose the folder to move the layout '{name}' to."
+msgstr "レイアウト '{name}' を移動するフォルダーを選択してください。"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 223
+#: NEEDS WORK
+msgid "Edit Session"
+msgstr "セッションを編集"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 319
 #: NEEDS WORK
@@ -1204,18 +1385,19 @@ msgstr "セッション名を入力してください..."
 msgid "Organization"
 msgstr "組織"
 # 
+# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 351
+# File: usr/share/ashyterm/window.py, line: 944
+# File: usr/share/ashyterm/window.py, line: 999
+#: NEEDS WORK
+msgid "Folder"
+msgstr "フォルダー"
+# 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 352
 #: NEEDS WORK
 msgid "Choose a folder to organize this session"
 msgstr "このセッションを整理するフォルダーを選択してください"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 357
-# File: usr/share/ashyterm/ui/dialogs.py, line: 358
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1164
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1165
-#: NEEDS WORK
-msgid "Root"
-msgstr "ルート"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 398
 #: NEEDS WORK
@@ -1349,12 +1531,6 @@ msgstr "パスワードを入力してください..."
 msgid "Test Connection"
 msgstr "接続テスト"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 589
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1219
-#: NEEDS WORK
-msgid "Save"
-msgstr "保存"
-# 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 707
 #: NEEDS WORK
 msgid "Select SSH Key"
@@ -1441,25 +1617,6 @@ msgstr "接続に失敗しました"
 msgid "Could not connect to the SSH server."
 msgstr "SSHサーバーに接続できませんでした。"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 796
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1252
-#: NEEDS WORK
-msgid "Unsaved Changes"
-msgstr "未保存の変更"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 797
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1253
-#: NEEDS WORK
-msgid "You have unsaved changes. Are you sure you want to cancel?"
-msgstr "保存されていない変更があります。キャンセルしてもよろしいですか？"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 833
-# File: usr/share/ashyterm/ui/dialogs.py, line: 837
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1288
-#: NEEDS WORK
-msgid "Save Error"
-msgstr "保存エラー"
-# 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 833
 #: NEEDS WORK
 #, python-brace-format
@@ -1513,61 +1670,37 @@ msgstr ""
 msgid "Session {} {}"
 msgstr "セッション {} {}"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1056
-#: NEEDS WORK
-msgid "Edit Folder"
-msgstr "フォルダーを編集"
+# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1100
-#: NEEDS WORK
-msgid "Folder Information"
-msgstr "フォルダー情報"
+# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1135
+# File: usr/share/ashyterm/ui/menus.py, line: 157
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1390
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1604
+# File: usr/share/ashyterm/window.py, line: 261
 #: NEEDS WORK
-msgid "Folder Name"
-msgstr "フォルダー名"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1136
-#: NEEDS WORK
-msgid "A descriptive name for organizing sessions"
-msgstr "セッションを整理するための説明的な名前"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1141
-#: NEEDS WORK
-msgid "Enter folder name..."
-msgstr "フォルダー名を入力してください..."
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1158
-#: NEEDS WORK
-msgid "Parent Folder"
-msgstr "親フォルダー"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1159
-#: NEEDS WORK
-msgid "Choose a parent folder for organization"
-msgstr "整理のための親フォルダーを選択してください"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1288
-#: NEEDS WORK
-#, python-brace-format
-msgid "Failed to save folder: {}"
-msgstr "フォルダーの保存に失敗しました: {}"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1296
-#: NEEDS WORK
-msgid "Folder name"
-msgstr "フォルダー名"
+msgid "Preferences"
+msgstr "設定"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1421
 #: NEEDS WORK
 msgid "Appearance"
 msgstr "外観"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 982
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 56
 #: NEEDS WORK
-msgid "Palette"
-msgstr "パレット"
+msgid "Color Scheme"
+msgstr "カラースキーム"
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 59
+#: NEEDS WORK
+msgid "Current Scheme"
+msgstr "現在のスキーム"
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 62
+#: NEEDS WORK
+msgid "Manage Schemes..."
+msgstr "スキームを管理..."
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1016
 #: NEEDS WORK
@@ -1624,65 +1757,20 @@ msgstr "太字のテキストに明るい色を使用する"
 msgid "Render bold text with the brighter version of the base color"
 msgstr "ベースカラーの明るいバージョンで太字のテキストをレンダリングする"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1078
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 132
 #: NEEDS WORK
-msgid "Behavior"
-msgstr "動作"
+msgid "Auto-Hide Sidebar"
+msgstr "自動非表示サイドバー"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1082
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 134
 #: NEEDS WORK
-msgid "Startup"
-msgstr "スタートアップ"
+msgid "Automatically hide the sidebar when activating sessions or layouts"
+msgstr "セッションやレイアウトをアクティブにするときにサイドバーを自動的に隠す"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1086
+# File: usr/share/ashyterm/window.py, line: 857
 #: NEEDS WORK
-msgid "Restore tabs on restart"
-msgstr "再起動時にタブを復元"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1087
-#: NEEDS WORK
-msgid "Reopen tabs and panels from the previous session"
-msgstr "前のセッションからタブとパネルを再オープン"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1101
-#: NEEDS WORK
-msgid "Shell"
-msgstr "シェル"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1102
-#: NEEDS WORK
-msgid "Configure shell integration and behavior"
-msgstr "シェル統合と動作を設定する"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1107
-#: NEEDS WORK
-msgid "Run Command as a Login Shell"
-msgstr "ログインシェルとしてコマンドを実行"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1108
-#: NEEDS WORK
-msgid "Sources /etc/profile and ~/.profile on startup"
-msgstr "起動時に /etc/profile と ~/.profile を読み込む"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1118
-#: NEEDS WORK
-msgid "Scrolling"
-msgstr "スクロール"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1123
-#: NEEDS WORK
-msgid "Scrollback Lines"
-msgstr "スクロールバック行"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1124
-#: NEEDS WORK
-msgid "Number of lines to keep in history (0 for unlimited)"
-msgstr "履歴に保持する行数 (無制限の場合は0)"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1133
-#: NEEDS WORK
-msgid "Cursor"
-msgstr "カーソル"
+msgid "Terminal"
+msgstr "ターミナル"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1137
 #: NEEDS WORK
@@ -1734,10 +1822,55 @@ msgstr "オン"
 msgid "Off"
 msgstr "オフ"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1157
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1118
 #: NEEDS WORK
-msgid "Bell"
-msgstr "ベル"
+msgid "Scrolling"
+msgstr "スクロール"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1123
+#: NEEDS WORK
+msgid "Scrollback Lines"
+msgstr "スクロールバック行"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1124
+#: NEEDS WORK
+msgid "Number of lines to keep in history (0 for unlimited)"
+msgstr "履歴に保持する行数 (無制限の場合は0)"
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 192
+#: NEEDS WORK
+msgid "Mouse Scroll Sensitivity"
+msgstr "マウススクロール感度"
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 193
+#: NEEDS WORK
+msgid "Controls the scroll speed for a mouse wheel. Lower is slower."
+msgstr "マウスホイールのスクロール速度を制御します。低いほど遅くなります。"
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 208
+#: NEEDS WORK
+msgid "Touchpad Scroll Sensitivity"
+msgstr "タッチパッドスクロール感度"
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 209
+#: NEEDS WORK
+msgid "Controls the scroll speed for a touchpad. Lower is slower."
+msgstr "タッチパッドのスクロール速度を制御します。低いほど遅くなります。"
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 223
+#: NEEDS WORK
+msgid "Shell &amp; Bell"
+msgstr "シェル＆ベル"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1107
+#: NEEDS WORK
+msgid "Run Command as a Login Shell"
+msgstr "ログインシェルとしてコマンドを実行"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1108
+#: NEEDS WORK
+msgid "Sources /etc/profile and ~/.profile on startup"
+msgstr "起動時に /etc/profile と ~/.profile を読み込む"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1161
 #: NEEDS WORK
@@ -1748,6 +1881,184 @@ msgstr "音声ベル"
 #: NEEDS WORK
 msgid "Emit a sound for the terminal bell character"
 msgstr "端末ベル文字のために音を出す"
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 250
+#: NEEDS WORK
+msgid "Profiles & Data"
+msgstr "プロファイルとデータ"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1082
+#: NEEDS WORK
+msgid "Startup"
+msgstr "スタートアップ"
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 258
+#: NEEDS WORK
+msgid "On Startup"
+msgstr "起動時"
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 259
+#: NEEDS WORK
+msgid "Action to take when the application starts"
+msgstr "アプリケーションが起動したときに実行するアクション"
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 263
+#: NEEDS WORK
+msgid "Always restore previous session"
+msgstr "前のセッションを常に復元する"
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 264
+#: NEEDS WORK
+msgid "Ask to restore previous session"
+msgstr "前のセッションを復元するように求める"
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 265
+#: NEEDS WORK
+msgid "Never restore previous session"
+msgstr "前のセッションを復元しない"
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 280
+#: NEEDS WORK
+msgid "Backup &amp; Recovery"
+msgstr "バックアップと復元"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1724
+#: NEEDS WORK
+msgid "Configure automatic backup and recovery options"
+msgstr "自動バックアップと復元オプションを構成する"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1730
+#: NEEDS WORK
+msgid "Automatic Backups"
+msgstr "自動バックアップ"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1731
+#: NEEDS WORK
+msgid "Automatically create backups of sessions and settings"
+msgstr "セッションと設定のバックアップを自動的に作成する"
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 301
+#: NEEDS WORK
+msgid "Manual Backup"
+msgstr "手動バックアップ"
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 302
+#: NEEDS WORK
+msgid "Create a backup of your current sessions and settings now"
+msgstr "現在のセッションと設定のバックアップを作成します"
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 304
+#: NEEDS WORK
+msgid "Backup Now"
+msgstr "今すぐバックアップ"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1575
+#: NEEDS WORK
+msgid "Shortcuts"
+msgstr "ショートカット"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1582
+#: NEEDS WORK
+msgid "Terminal Actions"
+msgstr "ターミナルアクション"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1583
+#: NEEDS WORK
+msgid "Keyboard shortcuts for terminal operations"
+msgstr "ターミナル操作のキーボードショートカット"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1589
+#: NEEDS WORK
+msgid "Application Actions"
+msgstr "アプリケーションアクション"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1590
+#: NEEDS WORK
+msgid "Keyboard shortcuts for application operations"
+msgstr "アプリケーション操作のキーボードショートカット"
+# 
+# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
+# 
+# File: usr/share/ashyterm/ui/menus.py, line: 145
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1597
+#: NEEDS WORK
+msgid "Close Tab"
+msgstr "タブを閉じる"
+# 
+# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
+# 
+# File: usr/share/ashyterm/ui/menus.py, line: 30
+# File: usr/share/ashyterm/ui/menus.py, line: 66
+# File: usr/share/ashyterm/ui/menus.py, line: 117
+# File: usr/share/ashyterm/ui/menus.py, line: 153
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1598
+#: NEEDS WORK
+msgid "Copy"
+msgstr "コピー"
+# 
+# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
+# 
+# File: usr/share/ashyterm/ui/menus.py, line: 69
+# File: usr/share/ashyterm/ui/menus.py, line: 118
+# File: usr/share/ashyterm/ui/menus.py, line: 154
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1599
+#: NEEDS WORK
+msgid "Paste"
+msgstr "貼り付け"
+# 
+# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
+# 
+# File: usr/share/ashyterm/ui/menus.py, line: 119
+# File: usr/share/ashyterm/ui/menus.py, line: 155
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1600
+#: NEEDS WORK
+msgid "Select All"
+msgstr "すべて選択"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1605
+#: NEEDS WORK
+msgid "Quit Application"
+msgstr "アプリケーションを終了"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1607
+#: NEEDS WORK
+msgid "New Window"
+msgstr "新しいウィンドウ"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1790
+#: NEEDS WORK
+msgid "Advanced"
+msgstr "高度な"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1276
+#: NEEDS WORK
+msgid "Advanced Features"
+msgstr "高度な機能"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1277
+#: NEEDS WORK
+msgid "Enable or disable advanced terminal features"
+msgstr "高度なターミナル機能を有効または無効にする"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1282
+#: NEEDS WORK
+msgid "Bidirectional Text Support"
+msgstr "双方向テキストサポート"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1284
+#: NEEDS WORK
+msgid "Enable for languages like Arabic and Hebrew (may affect performance)"
+msgstr "アラビア語やヘブライ語のような言語を有効にする（パフォーマンスに影響を与える可能性があります）"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1295
+#: NEEDS WORK
+msgid "SIXEL Graphics Support"
+msgstr "SIXELグラフィックスサポート"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1296
+#: NEEDS WORK
+msgid "Allow the terminal to display SIXEL images (experimental)"
+msgstr "ターミナルがSIXEL画像を表示できるようにする（実験的）"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1172
 #: NEEDS WORK
@@ -1802,151 +2113,6 @@ msgstr "削除キー"
 msgid "Sequence to send for Delete key"
 msgstr "削除キー用の送信シーケンス"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1207
-#: NEEDS WORK
-msgid "Ambiguous-width Characters"
-msgstr "曖昧幅文字"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1208
-#: NEEDS WORK
-msgid "Render ambiguous characters as narrow or wide"
-msgstr "あいまいな文字を狭いまたは広いとしてレンダリングする"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1210
-#: NEEDS WORK
-msgid "Narrow"
-msgstr "狭い"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1210
-#: NEEDS WORK
-msgid "Wide"
-msgstr "ワイド"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1575
-#: NEEDS WORK
-msgid "Shortcuts"
-msgstr "ショートカット"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1582
-#: NEEDS WORK
-msgid "Terminal Actions"
-msgstr "ターミナルアクション"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1583
-#: NEEDS WORK
-msgid "Keyboard shortcuts for terminal operations"
-msgstr "ターミナル操作のキーボードショートカット"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1589
-#: NEEDS WORK
-msgid "Application Actions"
-msgstr "アプリケーションアクション"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1590
-#: NEEDS WORK
-msgid "Keyboard shortcuts for application operations"
-msgstr "アプリケーション操作のキーボードショートカット"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1605
-#: NEEDS WORK
-msgid "Quit Application"
-msgstr "アプリケーションを終了"
-# 
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1624
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1907
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1983
-# File: usr/share/ashyterm/utils.py, line: 238
-#: NEEDS WORK
-msgid "None"
-msgstr "None"
-# 
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
-# 
-# File: usr/share/ashyterm/ui/menus.py, line: 23
-# File: usr/share/ashyterm/ui/menus.py, line: 59
-# File: usr/share/ashyterm/ui/menus.py, line: 151
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1637
-#: NEEDS WORK
-msgid "Edit"
-msgstr "編集"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1790
-#: NEEDS WORK
-msgid "Advanced"
-msgstr "高度な"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1276
-#: NEEDS WORK
-msgid "Advanced Features"
-msgstr "高度な機能"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1277
-#: NEEDS WORK
-msgid "Enable or disable advanced terminal features"
-msgstr "高度なターミナル機能を有効または無効にする"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1282
-#: NEEDS WORK
-msgid "Bidirectional Text Support"
-msgstr "双方向テキストサポート"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1284
-#: NEEDS WORK
-msgid "Enable for languages like Arabic and Hebrew (may affect performance)"
-msgstr "アラビア語やヘブライ語のような言語を有効にする（パフォーマンスに影響を与える可能性があります）"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1295
-#: NEEDS WORK
-msgid "SIXEL Graphics Support"
-msgstr "SIXELグラフィックスサポート"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1296
-#: NEEDS WORK
-msgid "Allow the terminal to display SIXEL images (experimental)"
-msgstr "ターミナルがSIXEL画像を表示できるようにする（実験的）"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1306
-#: NEEDS WORK
-msgid "Accessibility"
-msgstr "アクセシビリティ"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1308
-#: NEEDS WORK
-msgid "Settings for screen readers and other assistive technologies"
-msgstr "スクリーンリーダーおよびその他の支援技術の設定"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1314
-#: NEEDS WORK
-msgid "Allow Screen Readers"
-msgstr "スクリーンリーダーを許可"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1315
-#: NEEDS WORK
-msgid "Permit tools like Orca to read terminal content"
-msgstr "Orcaのようなツールがターミナルの内容を読み取ることを許可する"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1051
-#: NEEDS WORK
-msgid "Backup & Recovery"
-msgstr "バックアップと復元"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1724
-#: NEEDS WORK
-msgid "Configure automatic backup and recovery options"
-msgstr "自動バックアップと復元オプションを構成する"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1730
-#: NEEDS WORK
-msgid "Automatic Backups"
-msgstr "自動バックアップ"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1731
-#: NEEDS WORK
-msgid "Automatically create backups of sessions and settings"
-msgstr "セッションと設定のバックアップを自動的に作成する"
-# 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1071
 #: NEEDS WORK
 msgid "Logging"
@@ -1999,6 +2165,16 @@ msgstr "すべての設定をリセット"
 #: NEEDS WORK
 msgid "Restore all settings to their default values"
 msgstr "すべての設定をデフォルト値にリセットする"
+# 
+# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1624
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1907
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1983
+# File: usr/share/ashyterm/utils.py, line: 238
+#: NEEDS WORK
+msgid "None"
+msgstr "None"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1900
 #: NEEDS WORK
@@ -2069,41 +2245,127 @@ msgstr "リセットに失敗しました"
 msgid "Failed to reset settings: {}"
 msgstr "設定のリセットに失敗しました: {}"
 # 
-# File: usr/share/ashyterm/window.py, line: 994
+# File: usr/share/ashyterm/ui/dialogs.py, line: 164
 #: NEEDS WORK
-msgid "Move Session"
-msgstr "セッションを移動"
+msgid "Continue"
+msgstr "続行"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 2183
-#: NEEDS WORK
-msgid "Select Destination"
-msgstr "宛先を選択"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 2184
+# File: usr/share/ashyterm/ui/dialogs.py, line: 192
 #: NEEDS WORK
 #, python-brace-format
-msgid "Choose the folder to move the session '{name}' to."
-msgstr "セッション '{name}' を移動するフォルダーを選択してください。"
+msgid "{} is required"
+msgstr "{} は必須です"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 2190
+# File: usr/share/ashyterm/window.py, line: 586
 #: NEEDS WORK
-msgid "Destination Folder"
-msgstr "宛先フォルダー"
+msgid "SFTP not implemented yet"
+msgstr "SFTPはまだ実装されていません"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 2191
+# File: usr/share/ashyterm/window.py, line: 758
+# File: usr/share/ashyterm/window.py, line: 875
 #: NEEDS WORK
-msgid "Select a folder or 'Root' for the top level"
-msgstr "フォルダーまたは「ルート」を選択して最上位を指定してください"
+msgid "New Session"
+msgstr "新しいセッション"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 2205
+# File: usr/share/ashyterm/window.py, line: 885
 #: NEEDS WORK
-msgid "Move"
-msgstr "移動"
+msgid "New Folder"
+msgstr "新しいフォルダー"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 2265
+# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
+# 
+# File: usr/share/ashyterm/ui/menus.py, line: 211
+# File: usr/share/ashyterm/window.py, line: 909
+# File: usr/share/ashyterm/window.py, line: 960
 #: NEEDS WORK
-msgid "Move Failed"
-msgstr "移動に失敗しました"
+msgid "Keyboard Shortcuts"
+msgstr "キーボードショートカット"
+# 
+# File: usr/share/ashyterm/window.py, line: 936
+#: NEEDS WORK
+msgid "Application"
+msgstr "アプリケーション"
+# 
+# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
+# 
+# File: usr/share/ashyterm/ui/menus.py, line: 217
+# File: usr/share/ashyterm/window.py, line: 942
+#: NEEDS WORK
+msgid "Quit"
+msgstr "終了"
+# 
+# File: usr/share/ashyterm/window.py, line: 944
+# File: usr/share/ashyterm/window.py, line: 999
+#: NEEDS WORK
+msgid "Session"
+msgstr "セッション"
+# 
+# File: usr/share/ashyterm/window.py, line: 947
+#: NEEDS WORK
+#, python-brace-format
+msgid "Rename {type}"
+msgstr "{type}の名前を変更"
+# 
+# File: usr/share/ashyterm/window.py, line: 948
+#: NEEDS WORK
+#, python-brace-format
+msgid "Enter new name for \"{name}\":"
+msgstr "\"{name}の新しい名前を入力してください：\""
+# 
+# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
+# 
+# File: usr/share/ashyterm/ui/menus.py, line: 25
+# File: usr/share/ashyterm/ui/menus.py, line: 61
+# File: usr/share/ashyterm/window.py, line: 954
+#: NEEDS WORK
+msgid "Rename"
+msgstr "名前を変更"
+# 
+# File: usr/share/ashyterm/window.py, line: 1450
+#: NEEDS WORK
+msgid "Delete Item"
+msgstr "アイテムを削除"
+# 
+# File: usr/share/ashyterm/window.py, line: 1450
+#: NEEDS WORK
+msgid "Delete Items"
+msgstr "アイテムを削除"
+# 
+# File: usr/share/ashyterm/ui/actions.py, line: 415
+#: NEEDS WORK
+msgid "Layout"
+msgstr "レイアウト"
+# 
+# File: usr/share/ashyterm/window.py, line: 1009
+#: NEEDS WORK
+#, python-brace-format
+msgid "Delete {type}"
+msgstr "{type}を削除"
+# 
+# File: usr/share/ashyterm/window.py, line: 1003
+#: NEEDS WORK
+#, python-brace-format
+msgid ""
+"The folder \"{name}\" is not empty. Are you sure you want to permanently delete it and all its "
+"contents?"
+msgstr "フォルダー「{name}」は空ではありません。本当にそれとそのすべての内容を永久に削除してもよろしいですか？"
+# 
+# File: usr/share/ashyterm/window.py, line: 1005
+#: NEEDS WORK
+#, python-brace-format
+msgid "Are you sure you want to delete \"{name}\"?"
+msgstr "\"{name}\"を削除してもよろしいですか？"
+# 
+# File: usr/share/ashyterm/window.py, line: 1464
+#: NEEDS WORK
+#, python-brace-format
+msgid "Are you sure you want to permanently delete these {count} items?"
+msgstr "これらの {count} アイテムを永久に削除してもよろしいですか？"
+# 
+# File: usr/share/ashyterm/window.py, line: 1466
+#: NEEDS WORK
+msgid "This will also delete all contents of any selected folders."
+msgstr "これにより、選択したフォルダーのすべての内容も削除されます。"
 # 
 # File: usr/share/ashyterm/ui/menus.py, line: 24
 #: NEEDS WORK
@@ -2134,17 +2396,6 @@ msgstr "SFTPで接続"
 #: NEEDS WORK
 msgid "Duplicate"
 msgstr "重複"
-# 
-# File: usr/share/ashyterm/ui/menus.py, line: 29
-# File: usr/share/ashyterm/ui/menus.py, line: 65
-#: NEEDS WORK
-msgid "Cut"
-msgstr "カット"
-# 
-# File: usr/share/ashyterm/ui/menus.py, line: 203
-#: NEEDS WORK
-msgid "Move to Folder..."
-msgstr "フォルダーに移動..."
 # 
 # File: usr/share/ashyterm/ui/menus.py, line: 220
 #: NEEDS WORK
