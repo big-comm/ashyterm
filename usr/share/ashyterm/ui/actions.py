@@ -235,9 +235,15 @@ class WindowActions:
     # --- Window and Application Actions ---
 
     def toggle_sidebar_action(self, _action, _param) -> None:
-        self.window.toggle_sidebar_button.set_active(
-            not self.window.toggle_sidebar_button.get_active()
-        )
+        """
+        Toggles the sidebar visibility by simply toggling the button state.
+        The button's own 'toggled' signal handler (_on_toggle_sidebar in window.py)
+        contains all the necessary logic for both normal and auto-hide modes.
+        This centralization prevents conflicting logic.
+        """
+        if hasattr(self.window, "toggle_sidebar_button"):
+            button = self.window.toggle_sidebar_button
+            button.set_active(not button.get_active())
 
     def toggle_file_manager(self, _action, _param) -> None:
         """Toggles the visibility of the file manager via its button."""
@@ -262,31 +268,153 @@ class WindowActions:
         dialog.present()
 
     def shortcuts(self, _action, _param) -> None:
-        shortcuts_window = Gtk.ShortcutsWindow(transient_for=self.window, modal=True)
+        # Create shortcuts dialog using AdwDialog for better lifecycle management
+        dialog = Adw.Dialog()
+        dialog.set_title(_("Keyboard Shortcuts"))
+
+        # Set proper dialog sizing
+        dialog.set_content_width(700)
+        dialog.set_content_height(600)
+
+        # Helper function to get shortcut from settings
+        def get_shortcut(action_name: str, fallback: str = "") -> str:
+            """Get shortcut from settings manager, with fallback."""
+            if hasattr(self, "settings_manager") and self.settings_manager:
+                shortcut = self.settings_manager.get_shortcut(action_name)
+                return shortcut if shortcut else fallback
+            return fallback
+
+        # Create the shortcuts content
         section = Gtk.ShortcutsSection(
             title=_("Keyboard Shortcuts"), section_name="shortcuts"
         )
-        terminal_group = Gtk.ShortcutsGroup(title=_("Terminal"))
-        for title, accel in [
-            (_("New Tab"), "<Control>t"),
-            (_("Close Tab"), "<Control>w"),
-            (_("New Window"), "<Control>n"),
-            (_("Copy"), "<Control><Shift>c"),
-            (_("Paste"), "<Control><Shift>v"),
-            (_("Select All"), "<Control><Shift>a"),
-        ]:
-            terminal_group.append(Gtk.ShortcutsShortcut(title=title, accelerator=accel))
 
-        app_group = Gtk.ShortcutsGroup(title=_("Application"))
-        for title, accel in [
-            (_("Preferences"), "<Control>comma"),
-            (_("Toggle Sidebar"), "<Control><Shift>h"),
-            (_("Quit"), "<Control>q"),
-        ]:
-            app_group.append(Gtk.ShortcutsShortcut(title=title, accelerator=accel))
+        # Interface group - moved to first position
+        interface_group = Gtk.ShortcutsGroup(title=_("Interface"))
+        interface_shortcuts = [
+            (_("New Window"), get_shortcut("new-window", "<Control><Shift>n")),
+            (_("New Tab"), get_shortcut("new-local-tab", "<Control><Shift>t")),
+            (_("Close Tab"), get_shortcut("close-tab", "<Control><Shift>w")),
+            (_("Toggle Sidebar"), get_shortcut("toggle-sidebar", "<Control><Shift>h")),
+            (
+                _("Toggle File Manager"),
+                get_shortcut("toggle-file-manager", "<Control><Shift>e"),
+            ),
+            (_("Preferences"), get_shortcut("preferences", "<Control><Shift>comma")),
+            (_("Show Shortcuts"), "<Control><Shift>slash"),
+            (_("Quit"), get_shortcut("quit", "<Control><Shift>q")),
+        ]
+        for title, accel in interface_shortcuts:
+            if accel:  # Only add if we have an accelerator
+                interface_group.append(
+                    Gtk.ShortcutsShortcut(title=title, accelerator=accel)
+                )
+
+        # Terminal group - basic operations
+        terminal_group = Gtk.ShortcutsGroup(title=_("Terminal"))
+        terminal_shortcuts = [
+            (_("Copy"), get_shortcut("copy", "<Control><Shift>c")),
+            (_("Paste"), get_shortcut("paste", "<Control><Shift>v")),
+            (_("Select All"), get_shortcut("select-all", "<Control><Shift>a")),
+        ]
+        for title, accel in terminal_shortcuts:
+            if accel:  # Only add if we have an accelerator
+                terminal_group.append(
+                    Gtk.ShortcutsShortcut(title=title, accelerator=accel)
+                )
+
+        # Tab navigation group
+        tab_group = Gtk.ShortcutsGroup(title=_("Tab Navigation"))
+        tab_shortcuts = [
+            (_("Next Tab"), get_shortcut("next-tab", "<Alt>Page_Down")),
+            (_("Previous Tab"), get_shortcut("previous-tab", "<Alt>Page_Up")),
+            (_("Switch to Tab 1"), "<Alt>1"),
+            (_("Switch to Tab 2"), "<Alt>2"),
+            (_("Switch to Tab 3"), "<Alt>3"),
+            (_("Switch to Tab 4"), "<Alt>4"),
+            (_("Switch to Tab 5"), "<Alt>5"),
+            (_("Switch to Tab 6"), "<Alt>6"),
+            (_("Switch to Tab 7"), "<Alt>7"),
+            (_("Switch to Tab 8"), "<Alt>8"),
+            (_("Switch to Tab 9"), "<Alt>9"),
+        ]
+        for title, accel in tab_shortcuts:
+            if accel:  # Only add if we have an accelerator
+                tab_group.append(Gtk.ShortcutsShortcut(title=title, accelerator=accel))
+
+        # Pane management group
+        pane_group = Gtk.ShortcutsGroup(title=_("Pane Management"))
+        pane_shortcuts = [
+            (
+                _("Split Horizontal"),
+                get_shortcut("split-horizontal", "<Control>parenleft"),
+            ),
+            (
+                _("Split Vertical"),
+                get_shortcut("split-vertical", "<Control>parenright"),
+            ),
+            (_("Close Pane"), get_shortcut("close-pane", "<Control><Shift>k")),
+        ]
+        for title, accel in pane_shortcuts:
+            if accel:  # Only add if we have an accelerator
+                pane_group.append(Gtk.ShortcutsShortcut(title=title, accelerator=accel))
+
+        # Text operations group
+        text_group = Gtk.ShortcutsGroup(title=_("Text Operations"))
+        text_shortcuts = [
+            (_("Zoom In"), get_shortcut("zoom-in", "<Control>plus")),
+            (_("Zoom Out"), get_shortcut("zoom-out", "<Control>minus")),
+            (_("Reset Zoom"), get_shortcut("zoom-reset", "<Control>0")),
+            (_("Open URL"), "<Control><Shift>u"),
+            (_("Copy URL"), "<Control><Shift>o"),
+        ]
+        for title, accel in text_shortcuts:
+            if accel:  # Only add if we have an accelerator
+                text_group.append(Gtk.ShortcutsShortcut(title=title, accelerator=accel))
+
+        # File operations group
+        file_group = Gtk.ShortcutsGroup(title=_("File Operations"))
+        file_shortcuts = [
+            (_("Copy"), get_shortcut("copy", "<Control><Shift>c")),
+            (_("Paste"), get_shortcut("paste", "<Control><Shift>v")),
+        ]
+        for title, accel in file_shortcuts:
+            if accel:  # Only add if we have an accelerator
+                file_group.append(Gtk.ShortcutsShortcut(title=title, accelerator=accel))
+
+        # Add all groups to the section in correct order
+        section.append(interface_group)
         section.append(terminal_group)
-        section.append(app_group)
-        shortcuts_window.present()
+        section.append(tab_group)
+        section.append(pane_group)
+        section.append(text_group)
+        section.append(file_group)
+
+        # Create a scrolled window for the content
+        scrolled = Gtk.ScrolledWindow()
+        scrolled.set_child(section)
+        scrolled.set_policy(Gtk.PolicyType.NEVER, Gtk.PolicyType.AUTOMATIC)
+
+        # Create header bar with close button
+        header_bar = Adw.HeaderBar()
+        close_button = Gtk.Button()
+        close_button.set_icon_name("window-close-symbolic")
+        close_button.set_tooltip_text(_("Close"))
+        close_button.connect("clicked", lambda btn: dialog.close())
+        header_bar.pack_end(close_button)
+
+        # Create toolbar view to structure the dialog
+        toolbar_view = Adw.ToolbarView()
+        toolbar_view.add_top_bar(header_bar)
+        toolbar_view.set_content(scrolled)
+
+        dialog.set_child(toolbar_view)
+
+        # Connect to the closed signal to handle proper cleanup
+        dialog.connect("closed", lambda d: d.force_close())
+
+        # Present the dialog with the parent window
+        dialog.present(self.window)
 
     def new_window(self, _action, _param) -> None:
         if app := self.window.get_application():

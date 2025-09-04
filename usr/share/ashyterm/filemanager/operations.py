@@ -1,3 +1,4 @@
+# ashyterm/filemanager/operations.py
 import ctypes
 import os
 import re
@@ -64,9 +65,6 @@ class FileOperations:
                 try:
                     # Best effort to terminate gracefully first.
                     pgid = os.getpgid(process.pid)
-                    self.logger.debug(
-                        f"Terminating process group {pgid} for transfer {transfer_id} (PID: {process.pid})"
-                    )
                     os.killpg(pgid, signal.SIGTERM)
                     process.wait(timeout=2)
                 except ProcessLookupError:

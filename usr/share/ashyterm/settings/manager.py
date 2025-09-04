@@ -229,7 +229,7 @@ class SettingsManager:
             self.logger.error(f"Failed to save custom color schemes: {e}")
 
     def _apply_log_settings(self):
-        """Aplica as configurações de log ao sistema de logger."""
+        """Applies log settings to the logger system."""
         from ..utils import logger
 
         log_to_file = self.get("log_to_file", False)
@@ -612,12 +612,14 @@ class SettingsManager:
             terminal.set_font_scale(self.get("font_scale", 1.0))
         except Exception as e:
             self.logger.warning(f"Failed to apply font scale: {e}")
-        terminal.set_scroll_on_output(self.get("scroll_on_output", True))
+
+        # Smart scrolling is handled in TabManager, so we don't call set_scroll_on_output here.
         terminal.set_scroll_on_keystroke(self.get("scroll_on_keystroke", True))
+        terminal.set_scroll_on_insert(self.get("scroll_on_insert", True))
         terminal.set_mouse_autohide(self.get("mouse_autohide", True))
         terminal.set_audible_bell(self.get("bell_sound", False))
-
         terminal.set_scrollback_lines(self.get("scrollback_lines", 10000))
+
         cursor_shape_map = [
             Vte.CursorShape.BLOCK,
             Vte.CursorShape.IBEAM,
@@ -628,16 +630,6 @@ class SettingsManager:
             cursor_shape_map[shape_index]
             if 0 <= shape_index < len(cursor_shape_map)
             else Vte.CursorShape.BLOCK
-        )
-        terminal.set_enable_bidi(self.get("bidi_enabled", False))
-        terminal.set_enable_sixel(self.get("sixel_enabled", True))
-
-        text_blink_map = [Vte.TextBlinkMode.FOCUSED, Vte.TextBlinkMode.UNFOCUSED]
-        blink_index = self.get("text_blink_mode", 0)
-        terminal.set_text_blink_mode(
-            text_blink_map[blink_index]
-            if 0 <= blink_index < len(text_blink_map)
-            else Vte.TextBlinkMode.FOCUSED
         )
         cursor_blink_map = [
             Vte.CursorBlinkMode.SYSTEM,
@@ -650,10 +642,23 @@ class SettingsManager:
             if 0 <= cursor_blink_index < len(cursor_blink_map)
             else Vte.CursorBlinkMode.SYSTEM
         )
-        terminal.set_enable_a11y(self.get("accessibility_enabled", True))
+        text_blink_map = [Vte.TextBlinkMode.FOCUSED, Vte.TextBlinkMode.UNFOCUSED]
+        blink_index = self.get("text_blink_mode", 0)
+        terminal.set_text_blink_mode(
+            text_blink_map[blink_index]
+            if 0 <= blink_index < len(text_blink_map)
+            else Vte.TextBlinkMode.FOCUSED
+        )
 
+        terminal.set_enable_bidi(self.get("bidi_enabled", False))
+        terminal.set_enable_shaping(self.get("enable_shaping", False))
+        terminal.set_enable_sixel(self.get("sixel_enabled", True))
+        terminal.set_allow_hyperlink(self.get("allow_hyperlink", True))
+        terminal.set_word_char_exceptions(self.get("word_char_exceptions", "-_.:/~"))
+        terminal.set_enable_a11y(self.get("accessibility_enabled", True))
         terminal.set_cell_height_scale(self.get("line_spacing", 1.0))
         terminal.set_bold_is_bright(self.get("bold_is_bright", True))
+
         backspace_map = [
             Vte.EraseBinding.AUTO,
             Vte.EraseBinding.ASCII_BACKSPACE,

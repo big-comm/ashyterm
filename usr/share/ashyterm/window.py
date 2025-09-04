@@ -135,6 +135,7 @@ class CommTerminalWindow(Adw.ApplicationWindow):
     def _on_key_pressed(self, _controller, keyval, _keycode, state):
         """Handles key press events for the main window."""
         if state & Gdk.ModifierType.CONTROL_MASK:
+            # Keep Ctrl+Page_Down/Up for now as fallback, but prefer Alt
             if keyval == Gdk.KEY_Page_Down:
                 self.tab_manager.select_next_tab()
                 return Gdk.EVENT_STOP
@@ -143,6 +144,13 @@ class CommTerminalWindow(Adw.ApplicationWindow):
                 return Gdk.EVENT_STOP
 
         elif state & Gdk.ModifierType.ALT_MASK:
+            if keyval == Gdk.KEY_Page_Down:
+                self.tab_manager.select_next_tab()
+                return Gdk.EVENT_STOP
+            if keyval == Gdk.KEY_Page_Up:
+                self.tab_manager.select_previous_tab()
+                return Gdk.EVENT_STOP
+
             key_to_index = {
                 Gdk.KEY_1: 0,
                 Gdk.KEY_2: 1,
@@ -434,6 +442,15 @@ class CommTerminalWindow(Adw.ApplicationWindow):
             self.sidebar_popover.connect("closed", self._on_sidebar_popover_closed)
             # Connect to show signal to update size when popover becomes visible
             self.sidebar_popover.connect("show", self._on_sidebar_popover_show)
+
+            # Add ESC key handling to close the popover
+            popover_key_controller = Gtk.EventControllerKey.new()
+            # CORRECTION: Set propagation phase to CAPTURE
+            popover_key_controller.set_propagation_phase(Gtk.PropagationPhase.CAPTURE)
+            popover_key_controller.connect(
+                "key-pressed", self._on_sidebar_popover_key_pressed
+            )
+            self.sidebar_popover.add_controller(popover_key_controller)
 
             # Allow popover to close when clicking outside
             # Remove the click controller that was preventing auto-hide
@@ -830,6 +847,9 @@ class CommTerminalWindow(Adw.ApplicationWindow):
         try:
             # Update size when popover is shown
             self._update_popover_size()
+            # Ensure the popover can receive keyboard focus
+            popover.set_can_focus(True)
+            popover.grab_focus()
         except Exception as e:
             self.logger.debug(f"Error updating popover size on show: {e}")
 
@@ -912,7 +932,7 @@ class CommTerminalWindow(Adw.ApplicationWindow):
             self.flap.set_reveal_flap(initial_visible)
             self.toggle_sidebar_button.set_active(initial_visible)
 
-            # Update flap size when switching to normal mode
+            # Update flap size when showing in normal mode
             if initial_visible:
                 self._update_flap_size()
 
@@ -1229,6 +1249,35 @@ class CommTerminalWindow(Adw.ApplicationWindow):
             # Move focus to the session tree when pressing up arrow
             self.session_tree.get_widget().grab_focus()
             return Gdk.EVENT_STOP
+        return Gdk.EVENT_PROPAGATE
+
+    def _on_sidebar_popover_key_pressed(
+        self,
+        controller: Gtk.EventControllerKey,
+        keyval: int,
+        keycode: int,
+        state: Gdk.ModifierType,
+    ) -> bool:
+        """Handle key presses in the sidebar popover to close it with ESC or the sidebar shortcut."""
+        # Check for ESC key
+        if keyval == Gdk.KEY_Escape:
+            if hasattr(self, "sidebar_popover") and self.sidebar_popover.get_visible():
+                self.sidebar_popover.popdown()
+                return Gdk.EVENT_STOP
+
+        # Check if the pressed key combo matches the 'toggle-sidebar' shortcut
+        app = self.get_application()
+        if app:
+            for accel in app.get_accels_for_action("win.toggle-sidebar"):
+                success, parsed_key, parsed_mods = Gtk.accelerator_parse(accel)
+                if success and keyval == parsed_key:
+                    if (
+                        hasattr(self, "sidebar_popover")
+                        and self.sidebar_popover.get_visible()
+                    ):
+                        self.sidebar_popover.popdown()
+                        return Gdk.EVENT_STOP
+
         return Gdk.EVENT_PROPAGATE
 
     def _show_error_dialog(self, title: str, message: str) -> None:

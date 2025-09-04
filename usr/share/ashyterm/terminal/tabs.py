@@ -222,7 +222,6 @@ class TabManager:
             if not vadjustment:
                 return Gdk.EVENT_PROPAGATE
 
-            # Determina o dispositivo de entrada para aplicar a sensibilidade correta
             event = controller.get_current_event()
             device = event.get_device() if event else None
             source = device.get_source() if device else Gdk.InputSource.MOUSE
@@ -231,7 +230,7 @@ class TabManager:
                 sensitivity_percent = self.terminal_manager.settings_manager.get(
                     "touchpad_scroll_sensitivity", 30.0
                 )
-            else:  # Mouse ou outro dispositivo
+            else:
                 sensitivity_percent = self.terminal_manager.settings_manager.get(
                     "mouse_scroll_sensitivity", 30.0
                 )
@@ -250,6 +249,36 @@ class TabManager:
 
         return Gdk.EVENT_PROPAGATE
 
+    def _on_terminal_contents_changed(self, terminal: Vte.Terminal):
+        """Handles smart scrolling on new terminal output."""
+        if not self.terminal_manager.settings_manager.get("scroll_on_output", True):
+            return
+
+        scrolled_window = terminal.get_parent()
+        if not isinstance(scrolled_window, Gtk.ScrolledWindow):
+            return
+
+        adjustment = scrolled_window.get_vadjustment()
+        if not adjustment:
+            return
+
+        # Check if we are scrolled to the bottom (with a small tolerance of 1.0)
+        is_at_bottom = (
+            adjustment.get_value() + adjustment.get_page_size()
+            >= adjustment.get_upper() - 1.0
+        )
+
+        if is_at_bottom:
+            # Defer scrolling to the end to the idle loop. This ensures that the
+            # adjustment's 'upper' value is updated before we try to scroll.
+            def scroll_to_end():
+                adjustment.set_value(
+                    adjustment.get_upper() - adjustment.get_page_size()
+                )
+                return GLib.SOURCE_REMOVE
+
+            GLib.idle_add(scroll_to_end)
+
     def _create_tab_for_terminal(
         self, terminal: Vte.Terminal, title: str, icon_name: str
     ) -> None:
@@ -257,6 +286,9 @@ class TabManager:
         scroll_controller.set_flags(Gtk.EventControllerScrollFlags.VERTICAL)
         scroll_controller.connect("scroll", self._on_terminal_scroll)
         terminal.add_controller(scroll_controller)
+
+        # Connect the smart scrolling handler
+        terminal.connect("contents-changed", self._on_terminal_contents_changed)
 
         scrolled_window = Gtk.ScrolledWindow(child=terminal)
         scrolled_window.set_policy(Gtk.PolicyType.AUTOMATIC, Gtk.PolicyType.AUTOMATIC)

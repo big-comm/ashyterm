@@ -6,11 +6,11 @@ import gi
 
 gi.require_version("Gtk", "4.0")
 gi.require_version("Adw", "1")
-from gi.repository import Adw, GObject, Gtk
+from gi.repository import Adw, Gdk, GObject, Gtk
 
 from ...helpers import accelerator_to_label
 from ...settings.manager import SettingsManager
-from ...utils.logger import get_logger  # <-- IMPORTAÇÃO CORRIGIDA
+from ...utils.logger import get_logger
 from ...utils.translation_utils import _
 from ..color_scheme_dialog import ColorSchemeDialog
 
@@ -143,6 +143,15 @@ class PreferencesDialog(Adw.PreferencesWindow):
         )
         misc_group.add(auto_hide_sidebar_row)
 
+        text_blink_row = Adw.ComboRow(
+            title=_("Blinking Text"),
+            subtitle=_("Control how the terminal handles blinking text"),
+        )
+        text_blink_row.set_model(Gtk.StringList.new([_("When focused"), _("Always")]))
+        text_blink_row.set_selected(self.settings_manager.get("text_blink_mode", 0))
+        text_blink_row.connect("notify::selected", self._on_text_blink_mode_changed)
+        misc_group.add(text_blink_row)
+
     def _setup_terminal_page(self) -> None:
         page = Adw.PreferencesPage(
             title=_("Terminal"), icon_name="utilities-terminal-symbolic"
@@ -219,6 +228,34 @@ class PreferencesDialog(Adw.PreferencesWindow):
         touchpad_scroll_row.add_suffix(touchpad_scroll_spin)
         touchpad_scroll_row.set_activatable_widget(touchpad_scroll_spin)
         scrolling_group.add(touchpad_scroll_row)
+
+        scroll_on_insert_row = Adw.SwitchRow(
+            title=_("Scroll on Paste"),
+            subtitle=_("Automatically scroll to the bottom when pasting text"),
+        )
+        scroll_on_insert_row.set_active(
+            self.settings_manager.get("scroll_on_insert", True)
+        )
+        scroll_on_insert_row.connect(
+            "notify::active",
+            lambda r, _: self._on_setting_changed("scroll_on_insert", r.get_active()),
+        )
+        scrolling_group.add(scroll_on_insert_row)
+
+        selection_group = Adw.PreferencesGroup(
+            title=_("Selection"),
+            description=_("Extra characters for word selection (e.g., -_.:/~)"),
+        )
+        page.add(selection_group)
+
+        word_chars_row = Adw.EntryRow(
+            title=_("Word Characters"),
+        )
+        word_chars_row.set_text(
+            self.settings_manager.get("word_char_exceptions", "-_.:/~")
+        )
+        word_chars_row.connect("changed", self._on_word_chars_changed)
+        selection_group.add(word_chars_row)
 
         shell_group = Adw.PreferencesGroup(title=_("Shell &amp; Bell"))
         page.add(shell_group)
@@ -370,6 +407,19 @@ class PreferencesDialog(Adw.PreferencesWindow):
         )
         features_group.add(bidi_row)
 
+        shaping_row = Adw.SwitchRow(
+            title=_("Enable Arabic Text Shaping"),
+            subtitle=_(
+                "Correctly render ligatures and contextual forms for Arabic script"
+            ),
+        )
+        shaping_row.set_active(self.settings_manager.get("enable_shaping", False))
+        shaping_row.connect(
+            "notify::active",
+            lambda r, _: self._on_setting_changed("enable_shaping", r.get_active()),
+        )
+        features_group.add(shaping_row)
+
         sixel_row = Adw.SwitchRow(
             title=_("SIXEL Graphics Support"),
             subtitle=_("Allow the terminal to display SIXEL images (experimental)"),
@@ -380,6 +430,17 @@ class PreferencesDialog(Adw.PreferencesWindow):
             lambda r, _: self._on_setting_changed("sixel_enabled", r.get_active()),
         )
         features_group.add(sixel_row)
+
+        hyperlink_row = Adw.SwitchRow(
+            title=_("Enable Hyperlinks (OSC 8)"),
+            subtitle=_("Allow the terminal to recognize and display clickable links"),
+        )
+        hyperlink_row.set_active(self.settings_manager.get("allow_hyperlink", True))
+        hyperlink_row.connect(
+            "notify::active",
+            lambda r, _: self._on_setting_changed("allow_hyperlink", r.get_active()),
+        )
+        features_group.add(hyperlink_row)
 
         compatibility_group = Adw.PreferencesGroup(
             title=_("Compatibility"),
@@ -415,6 +476,19 @@ class PreferencesDialog(Adw.PreferencesWindow):
         delete_row.set_selected(self.settings_manager.get("delete_binding", 0))
         delete_row.connect("notify::selected", self._on_delete_binding_changed)
         compatibility_group.add(delete_row)
+
+        cjk_width_row = Adw.ComboRow(
+            title=_("Ambiguous-width Characters"),
+            subtitle=_("Set the width for ambiguous characters (e.g., CJK)"),
+        )
+        cjk_width_row.set_model(
+            Gtk.StringList.new([_("Narrow (single-cell)"), _("Wide (double-cell)")])
+        )
+        cjk_width_row.set_selected(
+            self.settings_manager.get("cjk_ambiguous_width", 1) - 1
+        )
+        cjk_width_row.connect("notify::selected", self._on_cjk_width_changed)
+        compatibility_group.add(cjk_width_row)
 
         log_group = Adw.PreferencesGroup(
             title=_("Logging"), description=_("Configure application logging behavior")
@@ -546,6 +620,18 @@ class PreferencesDialog(Adw.PreferencesWindow):
     def _on_cursor_blink_changed(self, combo_row, _param) -> None:
         index = combo_row.get_selected()
         self._on_setting_changed("cursor_blink", index)
+
+    def _on_text_blink_mode_changed(self, combo_row, _param) -> None:
+        index = combo_row.get_selected()
+        self._on_setting_changed("text_blink_mode", index)
+
+    def _on_word_chars_changed(self, entry_row):
+        text = entry_row.get_text()
+        self._on_setting_changed("word_char_exceptions", text)
+
+    def _on_cjk_width_changed(self, combo_row, _param) -> None:
+        value = combo_row.get_selected() + 1  # 0 -> 1 (Narrow), 1 -> 2 (Wide)
+        self._on_setting_changed("cjk_ambiguous_width", value)
 
     def _on_backspace_binding_changed(self, combo_row, _param) -> None:
         index = combo_row.get_selected()

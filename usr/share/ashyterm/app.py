@@ -195,8 +195,8 @@ class CommTerminalApp(Adw.Application):
     def _setup_keyboard_shortcuts(self) -> None:
         """Set up application-level keyboard shortcuts."""
         try:
-            self.set_accels_for_action("app.quit", ["<Control>q"])
-            self.set_accels_for_action("app.preferences", ["<Control>comma"])
+            self.set_accels_for_action("app.quit", ["<Control><Shift>q"])
+            self.set_accels_for_action("app.preferences", ["<Control><Shift>comma"])
             if self.settings_manager and self.settings_manager.get("debug_mode", False):
                 self.set_accels_for_action("app.toggle-debug", ["<Control><Shift>d"])
                 self.set_accels_for_action("app.show-logs", ["<Control><Shift>l"])

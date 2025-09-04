@@ -25,7 +25,7 @@ class FolderEditDialog(BaseDialog):
     ):
         self.is_new_item = is_new
         title = _("Add Folder") if self.is_new_item else _("Edit Folder")
-        super().__init__(parent_window, title, default_width=420, default_height=380)
+        super().__init__(parent_window, title, default_width=600, default_height=500)
         self.folder_store = folder_store
         self.original_folder = folder_item if not self.is_new_item else None
         self.editing_folder = (
@@ -51,19 +51,19 @@ class FolderEditDialog(BaseDialog):
         try:
             main_box = Gtk.Box(
                 orientation=Gtk.Orientation.VERTICAL,
-                spacing=20,
+                spacing=16,
                 margin_top=24,
                 margin_bottom=24,
                 margin_start=24,
                 margin_end=24,
             )
-            folder_group = Adw.PreferencesGroup(title=_("Folder Information"))
-            self._create_name_row(folder_group)
-            self._create_parent_row(folder_group)
-            main_box.append(folder_group)
+            self._create_folder_section(main_box)
             action_bar = self._create_action_bar()
             content_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=0)
-            content_box.append(main_box)
+            scrolled_window = Gtk.ScrolledWindow(vexpand=True, hexpand=True)
+            scrolled_window.set_policy(Gtk.PolicyType.NEVER, Gtk.PolicyType.AUTOMATIC)
+            scrolled_window.set_child(main_box)
+            content_box.append(scrolled_window)
             content_box.append(action_bar)
             self.set_content(content_box)
         except Exception as e:
@@ -72,6 +72,18 @@ class FolderEditDialog(BaseDialog):
                 _("UI Error"), _("Failed to initialize dialog interface")
             )
             self.close()
+
+    def _create_folder_section(self, parent: Gtk.Box) -> None:
+        # Folder Information Section
+        folder_info_group = Adw.PreferencesGroup(title=_("Folder Information"))
+        self._create_name_row(folder_info_group)
+        parent.append(folder_info_group)
+
+        # Organization Section
+        if self.folder_store and self.folder_store.get_n_items() > 0:
+            organization_group = Adw.PreferencesGroup(title=_("Organization"))
+            self._create_parent_row(organization_group)
+            parent.append(organization_group)
 
     def _create_name_row(self, parent: Adw.PreferencesGroup) -> None:
         name_row = Adw.ActionRow(
@@ -177,10 +189,11 @@ class FolderEditDialog(BaseDialog):
         if not self._validate_required_field(self.name_entry, _("Folder name")):
             return None
         name = self.name_entry.get_text().strip()
-        selected_item = self.parent_combo.get_selected_item()
         parent_path = ""
-        if selected_item:
-            parent_path = self.parent_paths_map.get(selected_item.get_string(), "")
+        if hasattr(self, "parent_combo") and self.parent_combo:
+            selected_item = self.parent_combo.get_selected_item()
+            if selected_item:
+                parent_path = self.parent_paths_map.get(selected_item.get_string(), "")
         new_path = normalize_path(
             f"{parent_path}/{name}" if parent_path else f"/{name}"
         )

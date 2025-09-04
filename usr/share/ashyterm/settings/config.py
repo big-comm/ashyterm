@@ -121,8 +121,9 @@ class DefaultSettings:
             "sidebar_width": 300,  # Default sidebar width in pixels
             "confirm_close": True,
             "auto_close_tab": True,
-            "scroll_on_output": True,
+            "scroll_on_output": True,  # Enables smart scrolling
             "scroll_on_keystroke": True,
+            "scroll_on_insert": True,  # Scroll to bottom on paste
             "mouse_autohide": True,
             "cursor_blink": 0,
             "osc7_enabled": True,
@@ -135,13 +136,16 @@ class DefaultSettings:
             "touchpad_scroll_sensitivity": 30.0,
             "cursor_shape": 0,
             "bidi_enabled": False,
+            "enable_shaping": False,  # For Arabic text shaping
             "sixel_enabled": True,
+            "allow_hyperlink": True,  # OSC 8 hyperlink support
             "text_blink_mode": 0,
             "accessibility_enabled": True,
-            # Compatibility
+            # Compatibility & Advanced
             "backspace_binding": 0,
             "delete_binding": 0,
             "cjk_ambiguous_width": 1,
+            "word_char_exceptions": "-_.:/~",  # For word selection on double-click
             # Backup Settings
             "auto_backup_enabled": False,
             "backup_on_change": True,
@@ -152,14 +156,14 @@ class DefaultSettings:
             "console_log_level": "ERROR",
             # Shortcuts
             "shortcuts": {
-                "new-local-tab": "<Control>t",
-                "close-tab": "<Control>w",
+                "new-local-tab": "<Control><Shift>t",
+                "close-tab": "<Control><Shift>w",
                 "copy": "<Control><Shift>c",
                 "paste": "<Control><Shift>v",
                 "select-all": "<Control><Shift>a",
-                "preferences": "<Control>comma",
-                "quit": "<Control>q",
-                "new-window": "<Control>n",
+                "preferences": "<Control><Shift>comma",
+                "quit": "<Control><Shift>q",
+                "new-window": "<Control><Shift>n",
                 "toggle-sidebar": "<Control><Shift>h",
                 "find": "<Control>f",
                 "zoom-in": "<Control>plus",
@@ -167,10 +171,10 @@ class DefaultSettings:
                 "zoom-reset": "<Control>0",
                 "split-horizontal": "<Control>parenleft",
                 "split-vertical": "<Control>parenright",
-                "close-pane": "<Control><Shift>w",
-                "next-tab": "<Control>Page_Down",
-                "previous-tab": "<Control>Page_Up",
-                "toggle-file-manager": "<Control><Shift>E",
+                "close-pane": "<Control><Shift>k",
+                "next-tab": "<Alt>Page_Down",
+                "previous-tab": "<Alt>Page_Up",
+                "toggle-file-manager": "<Control><Shift>e",
             },
         }
 
