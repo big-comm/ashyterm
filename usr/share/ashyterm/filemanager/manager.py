@@ -11,7 +11,7 @@ from functools import partial
 from pathlib import Path
 from typing import Optional
 
-from gi.repository import Adw, Gdk, Gio, GLib, GObject, Gtk, Vte
+from gi.repository import Adw, Gdk, Gio, GLib, GObject, Gtk, Pango, Vte
 
 from ..sessions.models import SessionItem
 from ..terminal.manager import TerminalManager as TerminalManagerType
@@ -320,16 +320,21 @@ class FileManager:
         self.filtered_store.set_filter(self.combined_filter)
 
     def _filter_files(self, file_item):
-        show_hidden = self.hidden_files_toggle.get_active()
-        if not show_hidden:
-            if file_item.name.startswith(".") and file_item.name != "..":
-                return False
-
+        # Primeiro, verificar se há um termo de busca ativo.
         search_text = getattr(self, "search_entry", None)
-        if search_text:
-            search_term = search_text.get_text().lower().strip()
-            if search_term:
-                return search_term in file_item.name.lower()
+        search_term = search_text.get_text().lower().strip() if search_text else ""
+
+        if search_term:
+            if file_item.name == "..":
+                return False
+            return search_term in file_item.name.lower()
+
+        if file_item.name == "..":
+            return True
+
+        show_hidden = self.hidden_files_toggle.get_active()
+        if not show_hidden and file_item.name.startswith("."):
+            return False
 
         return True
 
@@ -518,7 +523,6 @@ class FileManager:
         right_click_gesture.connect("pressed", self._on_item_right_click)
         col_view.add_controller(right_click_gesture)
 
-        # NOVO: Controladores de teclado para a lista de arquivos
         key_controller = Gtk.EventControllerKey.new()
         key_controller.connect("key-pressed", self._on_column_view_key_pressed)
         key_controller.connect("key-released", self._on_column_view_key_released)
@@ -534,7 +538,9 @@ class FileManager:
     def _setup_name_cell(self, factory, list_item):
         box = Gtk.Box(spacing=6, orientation=Gtk.Orientation.HORIZONTAL)
         box.append(Gtk.Image())
-        box.append(Gtk.Label(xalign=0.0))
+        label = Gtk.Label(xalign=0.0)
+        label.set_ellipsize(Pango.EllipsizeMode.END)
+        box.append(label)
         link_icon = Gtk.Image()
         link_icon.set_visible(False)
         box.append(link_icon)
@@ -668,15 +674,23 @@ class FileManager:
             )
 
             file_items = []
+            parent_item = None
             if success:
                 lines = output.strip().split("\n")[1:]
                 for line in lines:
                     file_item = FileItem.from_ls_line(line)
-                    if file_item and file_item.name not in [".", ".."]:
-                        if file_item.is_link and file_item._link_target:
-                            if not file_item._link_target.startswith("/"):
-                                file_item._link_target = f"{self.current_path.rstrip('/')}/{file_item._link_target}"
-                        file_items.append(file_item)
+                    if file_item:
+                        if file_item.name == "..":
+                            parent_item = file_item
+                        elif file_item.name not in [".", ".."]:
+                            if file_item.is_link and file_item._link_target:
+                                if not file_item._link_target.startswith("/"):
+                                    file_item._link_target = f"{self.current_path.rstrip('/')}/{file_item._link_target}"
+                            file_items.append(file_item)
+
+            if self.current_path != "/":
+                if parent_item:
+                    file_items.insert(0, parent_item)
 
             GLib.idle_add(
                 self._update_store_with_files,
@@ -764,8 +778,6 @@ class FileManager:
         popover.set_pointing_to(rect)
         popover.popup()
 
-    # --- NOVO: Handlers de Interação por Teclado ---
-
     def _on_search_key_pressed(self, controller, keyval, keycode, state):
         """Handle key presses on the search entry for list navigation."""
         selection_model = self.column_view.get_model()
@@ -842,7 +854,6 @@ class FileManager:
                 position = selection_model.get_selection().get_nth(0)
                 file_item = selection_model.get_item(position)
                 if file_item and file_item.name != "..":
-                    # Usamos 0,0 para x,y pois o popover será posicionado relativo à view
                     self._show_context_menu(file_item, 0, 0)
                 return Gdk.EVENT_STOP
         return Gdk.EVENT_PROPAGATE

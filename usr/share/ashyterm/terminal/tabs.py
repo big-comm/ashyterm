@@ -230,12 +230,12 @@ class TabManager:
                 sensitivity_percent = self.terminal_manager.settings_manager.get(
                     "touchpad_scroll_sensitivity", 30.0
                 )
+                sensitivity_factor = sensitivity_percent / 50.0
             else:
                 sensitivity_percent = self.terminal_manager.settings_manager.get(
                     "mouse_scroll_sensitivity", 30.0
                 )
-
-            sensitivity_factor = sensitivity_percent / 10.0
+                sensitivity_factor = sensitivity_percent / 10.0
 
             step = vadjustment.get_step_increment()
             scroll_amount = dy * step * sensitivity_factor

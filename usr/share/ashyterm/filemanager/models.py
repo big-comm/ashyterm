@@ -159,8 +159,11 @@ class FileItem(GObject.GObject):
             date_obj = datetime.strptime(date_part, "%Y-%m-%d %H:%M:%S")
         except ValueError:
             date_obj = datetime.now()
+        name = data["name"]
+        # Remove file type indicators added by --file-type
+        name = name.rstrip("/@=*|>")
         return cls(
-            name=data["name"],
+            name=name,
             perms=data["perms"],
             size=int(data["size"]),
             date=date_obj,
