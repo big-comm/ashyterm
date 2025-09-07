@@ -132,17 +132,30 @@ class FileItem(GObject.GObject):
         return self._permissions.startswith("l")
 
     @property
+    def is_directory_like(self) -> bool:
+        """Returns True if the item is a directory or a link to a directory."""
+        return self.is_directory or (
+            self.is_link and self._link_target and self._link_target.endswith("/")
+        )
+
+    @property
     def icon_name(self) -> str:
+        # For links to directories, always use the folder icon.
+        # This relies on the `ls --classify` command appending a '/' to the link target.
+        if self.is_link and self._link_target and self._link_target.endswith("/"):
+            return "folder-symbolic"
+
+        # For actual directories.
         if self.is_directory:
             return "folder-symbolic"
-        if self.is_link:
-            return "emblem-symbolic-link-symbolic"
+
+        # For all other cases (files and links to files), guess the icon from the name.
         mime_type, _ = Gio.content_type_guess(self.name, None)
-        if not mime_type:
-            return "text-x-generic-symbolic"
-        gicon = Gio.content_type_get_icon(mime_type)
-        if isinstance(gicon, Gio.ThemedIcon) and gicon.get_names():
-            return gicon.get_names()[0]
+        if mime_type:
+            gicon = Gio.content_type_get_icon(mime_type)
+            if isinstance(gicon, Gio.ThemedIcon) and gicon.get_names():
+                return gicon.get_names()[0]
+
         return "text-x-generic-symbolic"
 
     @classmethod

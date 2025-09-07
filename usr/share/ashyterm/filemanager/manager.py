@@ -409,7 +409,7 @@ class FileManager(GObject.Object):
             return 1
 
         def get_type(item):
-            return 0 if item.is_directory else 1
+            return 0 if item.is_directory_like else 1
 
         a_type = get_type(file_item_a)
         b_type = get_type(file_item_b)
@@ -668,22 +668,25 @@ class FileManager(GObject.Object):
         if not item:
             return
 
-        if item.is_directory:
+        if item.is_directory_like:
             new_path = ""
             if item.name == "..":
                 if self.current_path != "/":
-                    new_path = (
-                        "/".join(self.current_path.rstrip("/").split("/")[:-1]) or "/"
-                    )
+                    new_path = str(Path(self.current_path).parent)
             else:
                 base_path = self.current_path.rstrip("/")
                 new_path = f"{base_path}/{item.name}"
+
             if not new_path:
                 return
+
             if self.bound_terminal:
                 self._fm_initiated_cd = True
                 command = f'cd "{new_path}"\n'
                 self.bound_terminal.feed_child(command.encode("utf-8"))
+
+            self.refresh(new_path, source="filemanager")
+
         else:
             if self._is_remote_session():
                 self._on_open_edit_action(None, None, item)
@@ -722,7 +725,6 @@ class FileManager(GObject.Object):
         )
         thread.start()
 
-    # MODIFICADO: Aceitar 'requested_path' para saber para qual diretório esta thread foi iniciada
     def _list_files_thread(self, requested_path: str, source: str = "filemanager"):
         try:
             if not self.operations:
@@ -736,8 +738,11 @@ class FileManager(GObject.Object):
                 )
                 return
 
-            # MODIFICADO: Usar 'requested_path' em vez de 'self.current_path'
-            command = ["ls", "-la", "--file-type", "--full-time", requested_path]
+            path_for_ls = requested_path
+            if not path_for_ls.endswith("/"):
+                path_for_ls += "/"
+
+            command = ["ls", "-la", "--classify", "--full-time", path_for_ls]
             success, output = self.operations.execute_command_on_session(command)
 
             file_items = []
@@ -752,7 +757,6 @@ class FileManager(GObject.Object):
                         elif file_item.name not in [".", ".."]:
                             if file_item.is_link and file_item._link_target:
                                 if not file_item._link_target.startswith("/"):
-                                    # MODIFICADO: Usar 'requested_path' para resolver links relativos
                                     file_item._link_target = f"{requested_path.rstrip('/')}/{file_item._link_target}"
                             file_items.append(file_item)
 
@@ -760,7 +764,6 @@ class FileManager(GObject.Object):
                 if parent_item:
                     file_items.insert(0, parent_item)
 
-            # MODIFICADO: Passar 'requested_path' para a função de atualização da UI
             GLib.idle_add(
                 self._update_store_with_files,
                 requested_path,
@@ -775,7 +778,6 @@ class FileManager(GObject.Object):
                 self._update_store_with_files, requested_path, [], str(e), source
             )
 
-    # MODIFICADO: Aceitar 'requested_path' e adicionar verificação de relevância
     def _update_store_with_files(
         self,
         requested_path: str,
@@ -783,12 +785,11 @@ class FileManager(GObject.Object):
         error_message,
         source: str = "filemanager",
     ):
-        # NOVO: Verificação para descartar atualizações de threads obsoletos
         if requested_path != self.current_path:
             self.logger.info(
                 f"Discarding stale file list for '{requested_path}'. Current path is '{self.current_path}'."
             )
-            return False  # Interrompe o processamento
+            return False
 
         if error_message:
             self.logger.error(f"Error listing files: {error_message}")
