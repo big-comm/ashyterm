@@ -178,7 +178,6 @@ class MainApplicationMenu:
         return popover, font_sizer_widget
 
 
-# CORREÇÃO: Restaurar a assinatura original da função
 def create_session_menu(
     session_item,
     session_store,
@@ -204,7 +203,6 @@ def create_session_menu(
     return menu
 
 
-# CORREÇÃO: Restaurar a assinatura original da função
 def create_folder_menu(
     folder_item,
     folder_store,

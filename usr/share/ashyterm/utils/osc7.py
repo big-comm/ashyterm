@@ -108,8 +108,6 @@ class OSC7Parser:
                 return "/"
 
             if path.startswith(self._home_path):
-                # CORREÇÃO: Retornar o caminho completo se for exatamente o home,
-                # e usar '~' apenas para subdiretórios.
                 if path == self._home_path:
                     return path
                 else:

@@ -7,7 +7,7 @@ import subprocess
 import tempfile
 import threading
 from pathlib import Path
-from typing import Optional, Tuple
+from typing import List, Optional, Tuple
 
 from gi.repository import GLib
 
@@ -95,7 +95,7 @@ class FileOperations:
         ):
             return self._command_cache[session_key][command]
 
-        check_command = f"command -v {command}"
+        check_command = ["command", "-v", command]
         success, _ = self.execute_command_on_session(check_command)
 
         if session_key not in self._command_cache:
@@ -104,7 +104,7 @@ class FileOperations:
         return success
 
     def execute_command_on_session(
-        self, command: str, session_override: Optional[SessionItem] = None
+        self, command: List[str], session_override: Optional[SessionItem] = None
     ) -> Tuple[bool, str]:
         session_to_use = session_override if session_override else self.session_item
         if not session_to_use:
@@ -112,8 +112,13 @@ class FileOperations:
 
         try:
             if session_to_use.is_local():
+                # CORRIGIDO: Executar comando local de forma segura, sem shell.
                 result = subprocess.run(
-                    command, shell=True, capture_output=True, text=True, timeout=15
+                    command,
+                    shell=False,
+                    capture_output=True,
+                    text=True,
+                    timeout=15,
                 )
                 return (
                     (True, result.stdout)
@@ -127,11 +132,13 @@ class FileOperations:
                 ssh_cmd_base = spawner._build_remote_command_secure(
                     "ssh", session_to_use
                 )
+                # Remove the interactive shell part for non-interactive commands
                 if ssh_cmd_base and ssh_cmd_base[-1].startswith(
                     "export PROMPT_COMMAND"
                 ):
                     ssh_cmd_base = ssh_cmd_base[:-1]
-                full_cmd = ssh_cmd_base + [command]
+
+                full_cmd = ssh_cmd_base + command
                 result = subprocess.run(
                     full_cmd, capture_output=True, text=True, timeout=15
                 )
@@ -145,6 +152,18 @@ class FileOperations:
         except Exception as e:
             return False, str(e)
         return False, _("Unknown session type.")
+
+    def get_remote_file_timestamp(self, remote_path: str) -> Optional[int]:
+        """Gets the modification timestamp of a remote file."""
+        # The command 'stat -c %Y' is standard on GNU systems for getting the epoch timestamp.
+        command = ["stat", "-c", "%Y", remote_path]
+        success, output = self.execute_command_on_session(command)
+        if success and output.strip().isdigit():
+            return int(output.strip())
+        self.logger.warning(
+            f"Failed to get timestamp for {remote_path}. Output: {output}"
+        )
+        return None
 
     def _start_process(self, transfer_id, command):
         """Helper to start a subprocess with robust lifecycle management."""

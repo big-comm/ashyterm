@@ -4,12 +4,14 @@ import gi
 gi.require_version("Gtk", "4.0")
 gi.require_version("Adw", "1")
 gi.require_version("Vte", "3.91")
+import os
+import shutil
 import subprocess
 import tempfile
 import threading
 from functools import partial
 from pathlib import Path
-from typing import Optional
+from typing import Dict, List, Optional
 
 from gi.repository import Adw, Gdk, Gio, GLib, GObject, Gtk, Pango, Vte
 
@@ -39,12 +41,15 @@ CSS_DATA = b"""
 """
 
 
-class FileManager:
+class FileManager(GObject.Object):
+    __gsignals__ = {
+        "temp-files-changed": (GObject.SignalFlags.RUN_FIRST, None, (int,)),
+    }
+
     def __init__(
         self,
         parent_window: Gtk.Window,
         terminal_manager: TerminalManagerType,
-        terminal_to_bind: Vte.Terminal,
     ):
         """
         Initializes the FileManager.
@@ -53,8 +58,8 @@ class FileManager:
         Args:
             parent_window: The parent window, used for dialogs.
             terminal_manager: The central manager for terminal instances.
-            terminal_to_bind: The initial terminal to bind to.
         """
+        super().__init__()
         self.logger = get_logger("ashyterm.filemanager.manager")
         self.parent_window = parent_window
         self.terminal_manager = terminal_manager
@@ -68,53 +73,36 @@ class FileManager:
             Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION,
         )
 
-        terminal_id = getattr(terminal_to_bind, "terminal_id", None)
-        info = self.terminal_manager.registry.get_terminal_info(terminal_id)
-        if not info or not info.get("identifier"):
-            raise ValueError(
-                "Cannot create FileManager for a terminal without a valid session identifier."
-            )
-
-        identifier = info.get("identifier")
-        terminal_type = info.get("type", "local")
-
-        if isinstance(identifier, SessionItem):
-            self.session_item = identifier
-        elif terminal_type == "local":
-            self.session_item = SessionItem("Local Terminal", session_type="local")
-        else:
-            raise ValueError(
-                f"Invalid identifier type for terminal: {type(identifier)}"
-            )
-
-        self.operations = FileOperations(self.session_item)
+        self.session_item: Optional[SessionItem] = None
+        self.operations: Optional[FileOperations] = None
 
         from ..utils.platform import get_config_directory
 
-        self.transfer_manager = TransferManager(
-            str(get_config_directory()), self.operations
-        )
+        self.config_dir = get_config_directory()
+        self.transfer_manager = TransferManager(str(self.config_dir), self.operations)
+        self.remote_edit_dir = self.config_dir / "remote_edit_tmp"
+        self.remote_edit_dir.mkdir(exist_ok=True)
 
-        self.current_path = "/tmp"
+        self.current_path = ""
         self.file_monitors = {}
+        self.edited_file_metadata = {}
+        self._is_rebinding = False  # Flag to prevent race conditions during rebind
 
         self._build_ui()
 
         self.bound_terminal = None
         self.directory_change_handler_id = 0
-        self.rebind_terminal(terminal_to_bind)  # Initial bind
 
         self.revealer.connect("destroy", self.shutdown)
 
-        self.logger.info(
-            f"FileManager instance created and bound to terminal: {getattr(self.bound_terminal, 'terminal_id', 'unknown')}"
-        )
+        self.logger.info("FileManager instance created, awaiting terminal binding.")
 
     def rebind_terminal(self, new_terminal: Vte.Terminal):
         """
-        Binds the file manager to a new terminal instance.
-        This is crucial for handling focus changes in split panes.
+        Binds the file manager to a new terminal instance, dynamically adjusting
+        its context (local vs. remote) based on the terminal's current state.
         """
+        self._is_rebinding = True  # Set flag to prevent race conditions
         if self.bound_terminal and self.directory_change_handler_id > 0:
             if GObject.signal_handler_is_connected(
                 self.bound_terminal, self.directory_change_handler_id
@@ -127,22 +115,74 @@ class FileManager:
                     )
 
         self.bound_terminal = new_terminal
+        self.logger.info(
+            f"Rebinding file manager to terminal ID: {getattr(new_terminal, 'terminal_id', 'unknown')}"
+        )
+
+        terminal_id = getattr(new_terminal, "terminal_id", None)
+        info = self.terminal_manager.registry.get_terminal_info(terminal_id)
+        if not info:
+            self.logger.error(
+                f"Cannot rebind to terminal {terminal_id}: no info found."
+            )
+            self._is_rebinding = False
+            return
+
+        ssh_target = self.terminal_manager.manual_ssh_tracker.get_ssh_target(
+            terminal_id
+        )
+        if ssh_target:
+            self.logger.info(
+                f"Terminal is in a manual SSH session to {ssh_target}. Creating dynamic context."
+            )
+            parts = ssh_target.split("@", 1)
+            user, host = (parts[0], parts[1]) if len(parts) > 1 else (None, parts[0])
+            self.session_item = SessionItem(
+                name=f"SSH: {ssh_target}",
+                session_type="ssh",
+                host=host,
+                user=user or "",
+            )
+        elif isinstance(info.get("identifier"), SessionItem):
+            self.session_item = info.get("identifier")
+        else:
+            self.session_item = SessionItem("Local Terminal", session_type="local")
+
+        self.operations = FileOperations(self.session_item)
+        self.transfer_manager.file_operations = self.operations
 
         self.directory_change_handler_id = self.bound_terminal.connect(
             "notify::current-directory-uri", self._on_terminal_directory_changed
         )
-
-        # Track directory changes initiated by file manager
         self._fm_initiated_cd = False
 
-        # Only refresh if the directory is different, don't refresh on focus changes
-        terminal_dir = self._get_terminal_current_directory()
-        if terminal_dir and terminal_dir != self.current_path:
+        self._update_action_bar_for_session_type()
+        terminal_dir = self._get_terminal_current_directory() or "/"
+
+        terminal_dir_path = Path(terminal_dir).resolve()
+        current_path_path = Path(self.current_path).resolve()
+        if terminal_dir_path != current_path_path:
+            self.logger.info(
+                f"Terminal directory changed from {self.current_path} to {terminal_dir}, refreshing."
+            )
             self.refresh(terminal_dir, source="terminal")
 
-        self.logger.info(
-            f"File manager rebound to terminal ID: {getattr(new_terminal, 'terminal_id', 'unknown')}"
-        )
+        GLib.timeout_add(100, self._finish_rebinding)
+
+    def _finish_rebinding(self) -> bool:
+        self._is_rebinding = False
+        return GLib.SOURCE_REMOVE
+
+    def unbind(self):
+        """Unbinds from the current terminal, effectively pausing updates."""
+        if self.bound_terminal and self.directory_change_handler_id > 0:
+            if GObject.signal_handler_is_connected(
+                self.bound_terminal, self.directory_change_handler_id
+            ):
+                self.bound_terminal.disconnect(self.directory_change_handler_id)
+        self.bound_terminal = None
+        self.directory_change_handler_id = 0
+        self.logger.info("File manager unbound from terminal.")
 
     def shutdown(self, widget):
         self.logger.info("Shutting down FileManager, cancelling active transfers.")
@@ -156,14 +196,26 @@ class FileManager:
         if self.operations:
             self.operations.shutdown()
 
-        if self.bound_terminal and self.directory_change_handler_id > 0:
-            if GObject.signal_handler_is_connected(
-                self.bound_terminal, self.directory_change_handler_id
-            ):
-                self.bound_terminal.disconnect(self.directory_change_handler_id)
-            self.directory_change_handler_id = 0
+        self.unbind()
+
+    def get_temp_files_info(self) -> List[Dict]:
+        """Returns information about currently edited temporary files."""
+        return list(self.edited_file_metadata.values())
+
+    def cleanup_all_temp_files(self, dir_path_to_clear: Optional[str] = None):
+        """
+        Cleans up temporary files. If a specific path is provided, only that
+        directory is cleaned. Otherwise, all temporary directories are cleaned.
+        """
+        if dir_path_to_clear:
+            self._cleanup_edited_file_dir(dir_path_to_clear)
+        else:
+            for dir_path_str in list(self.edited_file_metadata.keys()):
+                self._cleanup_edited_file_dir(dir_path_str)
 
     def _get_terminal_current_directory(self):
+        if not self.bound_terminal:
+            return None
         try:
             uri = self.bound_terminal.get_current_directory_uri()
             if uri:
@@ -177,6 +229,9 @@ class FileManager:
         return None
 
     def _on_terminal_directory_changed(self, _terminal, _param_spec):
+        if self._is_rebinding:
+            return
+
         if not self.revealer.get_child_revealed():
             return
 
@@ -192,10 +247,15 @@ class FileManager:
                 return
 
             new_path = unquote(parsed_uri.path)
+
+            if not os.path.isabs(new_path):
+                self.logger.warning(
+                    f"Received relative path from terminal: {new_path}. Resolving against current path: {self.current_path}"
+                )
+                new_path = os.path.normpath(os.path.join(self.current_path, new_path))
+
             if new_path != self.current_path:
-                # Determine source based on whether this was initiated by file manager
                 source = "filemanager" if self._fm_initiated_cd else "terminal"
-                self._fm_initiated_cd = False  # Reset the flag
                 self.refresh(new_path, source=source)
         except Exception as e:
             self.logger.error(f"Failed to handle terminal directory change: {e}")
@@ -220,23 +280,23 @@ class FileManager:
         self.column_view = self._create_detailed_column_view()
         scrolled_window.set_child(self.column_view)
 
-        action_bar = Gtk.ActionBar()
+        self.action_bar = Gtk.ActionBar()
 
         refresh_button = Gtk.Button.new_from_icon_name("view-refresh-symbolic")
         refresh_button.connect("clicked", lambda _: self.refresh(source="filemanager"))
         refresh_button.set_tooltip_text(_("Refresh"))
-        action_bar.pack_start(refresh_button)
+        self.action_bar.pack_start(refresh_button)
 
         self.hidden_files_toggle = Gtk.ToggleButton()
         self.hidden_files_toggle.set_icon_name("view-reveal-symbolic")
         self.hidden_files_toggle.connect("toggled", self._on_hidden_toggle)
         self.hidden_files_toggle.set_tooltip_text(_("Show hidden files"))
-        action_bar.pack_start(self.hidden_files_toggle)
+        self.action_bar.pack_start(self.hidden_files_toggle)
 
         self.breadcrumb_box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=0)
         self.breadcrumb_box.add_css_class("breadcrumb-trail")
         self.breadcrumb_box.set_hexpand(True)
-        action_bar.pack_start(self.breadcrumb_box)
+        self.action_bar.pack_start(self.breadcrumb_box)
 
         self.search_entry = Gtk.SearchEntry()
         self.search_entry.set_placeholder_text(_("Filter..."))
@@ -244,9 +304,8 @@ class FileManager:
         self.search_entry.connect("search-changed", self._on_search_changed)
         self.search_entry.connect("activate", self._on_search_activate)
         self.search_entry.connect("delete-text", self._on_search_delete_text)
-        action_bar.pack_end(self.search_entry)
+        self.action_bar.pack_end(self.search_entry)
 
-        # NOVO: Controlador de teclado para o campo de busca
         search_key_controller = Gtk.EventControllerKey.new()
         search_key_controller.connect("key-pressed", self._on_search_key_pressed)
         search_key_controller.set_propagation_phase(Gtk.PropagationPhase.CAPTURE)
@@ -255,22 +314,26 @@ class FileManager:
         history_button = Gtk.Button.new_from_icon_name("folder-download-symbolic")
         history_button.set_tooltip_text(_("Transfer History"))
         history_button.connect("clicked", self._on_show_transfer_history)
-        action_bar.pack_end(history_button)
+        self.action_bar.pack_end(history_button)
 
-        if self._is_remote_session():
-            upload_button = Gtk.Button.new_from_icon_name("document-send-symbolic")
-            upload_button.set_tooltip_text(_("Upload Files"))
-            upload_button.connect("clicked", self._on_upload_clicked)
-            action_bar.pack_end(upload_button)
+        self.upload_button = Gtk.Button.new_from_icon_name("document-send-symbolic")
+        self.upload_button.set_tooltip_text(_("Upload Files"))
+        self.upload_button.connect("clicked", self._on_upload_clicked)
+        self.action_bar.pack_end(self.upload_button)
 
         progress_widget = self.transfer_manager.create_progress_widget()
         main_box.append(progress_widget)
 
         main_box.append(scrolled_window)
-        main_box.append(action_bar)
+        main_box.append(self.action_bar)
         self.revealer.set_child(main_box)
 
         self._setup_filtering_and_sorting()
+
+    def _update_action_bar_for_session_type(self):
+        """Shows or hides UI elements based on whether the session is remote."""
+        is_remote = self._is_remote_session()
+        self.upload_button.set_visible(is_remote)
 
     def _update_breadcrumb(self):
         child = self.breadcrumb_box.get_first_child()
@@ -320,7 +383,6 @@ class FileManager:
         self.filtered_store.set_filter(self.combined_filter)
 
     def _filter_files(self, file_item):
-        # Primeiro, verificar se há um termo de busca ativo.
         search_text = getattr(self, "search_entry", None)
         search_term = search_text.get_text().lower().strip() if search_text else ""
 
@@ -398,7 +460,6 @@ class FileManager:
 
     def _on_search_changed(self, search_entry):
         self.combined_filter.changed(Gtk.FilterChange.DIFFERENT)
-        # Select first item if available after filtering
         if hasattr(self, "column_view") and self.column_view:
             selection_model = self.column_view.get_model()
             if selection_model and selection_model.get_n_items() > 0:
@@ -410,15 +471,12 @@ class FileManager:
         selection_model = self.column_view.get_model()
         if selection_model and selection_model.get_selection().get_size() > 0:
             position = selection_model.get_selection().get_nth(0)
-            # Defer activation to allow focus events to be processed properly
             GLib.idle_add(self._deferred_activate_row, self.column_view, position)
 
     def _on_search_delete_text(self, search_entry, start_pos, end_pos):
         """Handle text deletion in search entry for backspace navigation."""
-        # Check if the search entry will be empty after deletion
         current_text = search_entry.get_text()
         if start_pos == 0 and end_pos == len(current_text):
-            # Full text deletion - will be empty
             GLib.idle_add(self._navigate_up_directory)
 
     def _navigate_up_directory(self):
@@ -428,7 +486,6 @@ class FileManager:
             command = "cd ..\n"
             self.bound_terminal.feed_child(command.encode("utf-8"))
         else:
-            # For local sessions, calculate parent directory
             parent_path = Path(self.current_path).parent
             if str(parent_path) != self.current_path:
                 self.refresh(str(parent_path), source="filemanager")
@@ -437,7 +494,7 @@ class FileManager:
     def _deferred_activate_row(self, col_view, position):
         """Deferred row activation to allow focus events to be processed properly."""
         self._on_row_activated(col_view, position)
-        return False  # Remove from idle queue
+        return False
 
     def _create_column(self, title, sorter, setup_func, bind_func, expand=False):
         factory = Gtk.SignalListItemFactory()
@@ -638,7 +695,6 @@ class FileManager:
         self.revealer.set_reveal_child(visible)
         if visible:
             self.refresh(source=source)
-            # Only grab focus if the visibility change was triggered by file manager interaction
             if source == "filemanager":
                 self.column_view.grab_focus()
         else:
@@ -646,11 +702,10 @@ class FileManager:
                 self.bound_terminal.grab_focus()
 
     def refresh(self, path: str = None, source: str = "filemanager"):
+        if hasattr(self, "search_entry"):
+            self.search_entry.set_text("")
         if path:
             self.current_path = path
-            if hasattr(self, "search_entry"):
-                self.search_entry.set_text("")
-
         self._update_breadcrumb()
         self.store.remove_all()
 
@@ -658,20 +713,32 @@ class FileManager:
             self.search_entry.set_sensitive(False)
             self.search_entry.set_placeholder_text(_("Loading..."))
 
+        # MODIFICADO: Passar o caminho atual para o thread para evitar race conditions
         thread = threading.Thread(
             target=self._list_files_thread,
-            args=(source,),
+            args=(self.current_path, source),
             daemon=True,
             name="FileListingThread",
         )
         thread.start()
 
-    def _list_files_thread(self, source: str = "filemanager"):
+    # MODIFICADO: Aceitar 'requested_path' para saber para qual diretório esta thread foi iniciada
+    def _list_files_thread(self, requested_path: str, source: str = "filemanager"):
         try:
-            print(self.current_path)
-            success, output = self.operations.execute_command_on_session(
-                f"ls -la --file-type --full-time '{self.current_path}/'"
-            )
+            if not self.operations:
+                self.logger.warning("File operations not available. Cannot list files.")
+                GLib.idle_add(
+                    self._update_store_with_files,
+                    requested_path,
+                    [],
+                    "Operations not initialized",
+                    source,
+                )
+                return
+
+            # MODIFICADO: Usar 'requested_path' em vez de 'self.current_path'
+            command = ["ls", "-la", "--file-type", "--full-time", requested_path]
+            success, output = self.operations.execute_command_on_session(command)
 
             file_items = []
             parent_item = None
@@ -685,15 +752,18 @@ class FileManager:
                         elif file_item.name not in [".", ".."]:
                             if file_item.is_link and file_item._link_target:
                                 if not file_item._link_target.startswith("/"):
-                                    file_item._link_target = f"{self.current_path.rstrip('/')}/{file_item._link_target}"
+                                    # MODIFICADO: Usar 'requested_path' para resolver links relativos
+                                    file_item._link_target = f"{requested_path.rstrip('/')}/{file_item._link_target}"
                             file_items.append(file_item)
 
-            if self.current_path != "/":
+            if requested_path != "/":
                 if parent_item:
                     file_items.insert(0, parent_item)
 
+            # MODIFICADO: Passar 'requested_path' para a função de atualização da UI
             GLib.idle_add(
                 self._update_store_with_files,
+                requested_path,
                 file_items,
                 output if not success else "",
                 source,
@@ -701,11 +771,25 @@ class FileManager:
 
         except Exception as e:
             self.logger.error(f"Error in background file listing: {e}")
-            GLib.idle_add(self._update_store_with_files, [], str(e), source)
+            GLib.idle_add(
+                self._update_store_with_files, requested_path, [], str(e), source
+            )
 
+    # MODIFICADO: Aceitar 'requested_path' e adicionar verificação de relevância
     def _update_store_with_files(
-        self, file_items, error_message, source: str = "filemanager"
+        self,
+        requested_path: str,
+        file_items,
+        error_message,
+        source: str = "filemanager",
     ):
+        # NOVO: Verificação para descartar atualizações de threads obsoletos
+        if requested_path != self.current_path:
+            self.logger.info(
+                f"Discarding stale file list for '{requested_path}'. Current path is '{self.current_path}'."
+            )
+            return False  # Interrompe o processamento
+
         if error_message:
             self.logger.error(f"Error listing files: {error_message}")
 
@@ -724,19 +808,17 @@ class FileManager:
             sorter = self.sorted_store.get_sorter()
             if sorter:
                 sorter.changed(Gtk.SorterChange.DIFFERENT)
-        # Select first item if available after restoring
         if hasattr(self, "column_view") and self.column_view:
             selection_model = self.column_view.get_model()
             if selection_model and selection_model.get_n_items() > 0:
                 selection_model.select_item(0, True)
                 self.column_view.scroll_to(0, None, Gtk.ListScrollFlags.NONE, None)
-                # Only grab focus if the refresh was triggered by file manager interaction
                 if source == "filemanager":
                     self.column_view.grab_focus()
         return False
 
     def _is_remote_session(self) -> bool:
-        return not self.session_item.is_local()
+        return self.session_item and not self.session_item.is_local()
 
     def _on_item_right_click(self, _gesture, _n_press, x, y):
         try:
@@ -811,9 +893,7 @@ class FileManager:
             return Gdk.EVENT_STOP
 
         elif keyval == Gdk.KEY_BackSpace:
-            # If search entry is empty and user presses backspace, go up one directory
             if not self.search_entry.get_text().strip():
-                # Stop the event completely to prevent SearchEntry's default behavior
                 controller.stop_emission("key-pressed")
                 self._navigate_up_directory()
                 return Gdk.EVENT_STOP
@@ -839,7 +919,6 @@ class FileManager:
                 return Gdk.EVENT_STOP
 
         elif keyval == Gdk.KEY_BackSpace:
-            # If search entry is empty, go up one directory
             if not self.search_entry.get_text().strip():
                 self._navigate_up_directory()
                 return Gdk.EVENT_STOP
@@ -920,8 +999,8 @@ class FileManager:
         if response == "delete":
             full_path = f"{self.current_path.rstrip('/')}/{file_item.name}"
             if self.bound_terminal:
-                command = f'rm -rf "{full_path}"\n'
-                self.bound_terminal.feed_child(command.encode("utf-8"))
+                command = ["rm", "-rf", full_path]
+                self.bound_terminal.feed_child(f"{' '.join(command)}\n".encode("utf-8"))
                 self.parent_window.toast_overlay.add_toast(
                     Adw.Toast(title=_("Delete command sent to terminal"))
                 )
@@ -1014,8 +1093,8 @@ class FileManager:
             mode = self._calculate_mode()
             full_path = f"{self.current_path.rstrip('/')}/{file_item.name}"
             if self.bound_terminal:
-                command = f'chmod {mode} "{full_path}"\n'
-                self.bound_terminal.feed_child(command.encode("utf-8"))
+                command = ["chmod", mode, full_path]
+                self.bound_terminal.feed_child(f"{' '.join(command)}\n".encode("utf-8"))
                 self.parent_window.toast_overlay.add_toast(
                     Adw.Toast(title=_("Chmod command sent to terminal"))
                 )
@@ -1157,7 +1236,7 @@ class FileManager:
             callback = partial(self._open_and_monitor_local_file, app_info=None)
             self._download_and_execute(file_item, callback)
         else:
-            full_path = Path(self.current_path).joinpath(file_item.name)
+            full_path = Path(self.current_path).joinpath(item.name)
             self._open_local_file(full_path)
 
     def _on_open_with_action(self, _action, _param, file_item: FileItem):
@@ -1168,6 +1247,14 @@ class FileManager:
             self._show_open_with_dialog(full_path, remote_path=None)
 
     def _download_and_execute(self, file_item: FileItem, on_success_callback):
+        remote_path = f"{self.current_path.rstrip('/')}/{file_item.name}"
+        timestamp = self.operations.get_remote_file_timestamp(remote_path)
+        if timestamp is None:
+            self.parent_window.toast_overlay.add_toast(
+                Adw.Toast(title=_("Could not get remote file details."))
+            )
+            return
+
         transfer_id = self.transfer_manager.add_transfer(
             filename=file_item.name,
             local_path="",
@@ -1176,11 +1263,14 @@ class FileManager:
             transfer_type=TransferType.DOWNLOAD,
             is_cancellable=True,
         )
+        success_callback_with_ts = partial(
+            on_success_callback, initial_timestamp=timestamp
+        )
         self._start_cancellable_transfer(
             transfer_id,
             "Downloading",
             self._background_download_worker,
-            on_success_callback,
+            success_callback_with_ts,
         )
 
     def _start_cancellable_transfer(
@@ -1201,9 +1291,10 @@ class FileManager:
             return
 
         remote_path = f"{self.current_path.rstrip('/')}/{transfer.filename}"
-        temp_dir = Path(tempfile.gettempdir()) / "ashyterm_edit"
-        temp_dir.mkdir(exist_ok=True)
-        local_path = temp_dir / transfer.filename
+        unique_dir_path = Path(
+            tempfile.mkdtemp(prefix="ashy_edit_", dir=self.remote_edit_dir)
+        )
+        local_path = unique_dir_path / transfer.filename
         transfer.local_path = str(local_path)
         transfer.remote_path = remote_path
 
@@ -1277,7 +1368,10 @@ class FileManager:
                 )
 
     def _show_open_with_dialog(
-        self, local_path: Path, remote_path: Optional[str] = None
+        self,
+        local_path: Path,
+        remote_path: Optional[str] = None,
+        initial_timestamp: Optional[int] = None,
     ):
         try:
             local_gio_file = Gio.File.new_for_path(str(local_path))
@@ -1290,11 +1384,11 @@ class FileManager:
                 if response_id == Gtk.ResponseType.OK:
                     app_info = d.get_app_info()
                     if app_info:
-                        if remote_path:  # This is a remote file
+                        if remote_path:
                             self._open_and_monitor_local_file(
-                                local_path, remote_path, app_info
+                                local_path, remote_path, app_info, initial_timestamp
                             )
-                        else:  # This is a local file
+                        else:
                             self._open_local_file(local_path, app_info)
                 d.destroy()
 
@@ -1328,44 +1422,12 @@ class FileManager:
                 Adw.Toast(title=_("Failed to open file."))
             )
 
-    def _on_editor_launched(
-        self, _context, app_info, _platform_data, local_path, remote_path
-    ):
-        """Callback for when the editor process has been launched."""
-        pid = app_info.get_pid()
-        if pid > 0:
-            self.logger.info(
-                f"Editor for '{local_path.name}' launched with PID {pid}. Watching for exit."
-            )
-            GLib.child_watch_add(pid, self._on_editor_closed, (local_path, remote_path))
-        else:
-            self.logger.warning(
-                f"Could not get PID for editor of '{local_path.name}'. Temp file will not be cleaned up automatically."
-            )
-
-    def _on_editor_closed(self, pid, status, user_data):
-        """Callback for when the editor process exits. Cleans up resources."""
-        local_path, remote_path = user_data
-        self.logger.info(
-            f"Editor process {pid} for '{local_path.name}' has exited. Cleaning up."
-        )
-
-        # Cancel the file monitor
-        monitor = self.file_monitors.pop(remote_path, None)
-        if monitor:
-            monitor.cancel()
-
-        # Delete the temporary file
-        try:
-            local_path.unlink()
-            self.logger.info(f"Removed temporary file: {local_path}")
-        except FileNotFoundError:
-            pass
-        except Exception as e:
-            self.logger.error(f"Failed to remove temporary file {local_path}: {e}")
-
     def _open_and_monitor_local_file(
-        self, local_path: Path, remote_path: str, app_info: Gio.AppInfo = None
+        self,
+        local_path: Path,
+        remote_path: str,
+        app_info: Gio.AppInfo = None,
+        initial_timestamp: Optional[int] = None,
     ):
         local_gio_file = Gio.File.new_for_path(str(local_path))
 
@@ -1374,16 +1436,9 @@ class FileManager:
             app_info = Gio.AppInfo.get_default_for_type(content_type, False)
 
         if app_info:
-            launch_context = Gio.AppLaunchContext()
-            launch_context.connect(
-                "launched", self._on_editor_launched, local_path, remote_path
-            )
-            app_info.launch([local_gio_file], launch_context)
+            app_info.launch([local_gio_file], None)
         else:
             subprocess.Popen(["xdg-open", str(local_path)])
-            self.logger.warning(
-                f"Opened {local_path.name} with xdg-open. Cannot monitor process exit for cleanup."
-            )
 
         if remote_path in self.file_monitors:
             self.file_monitors[remote_path].cancel()
@@ -1391,6 +1446,14 @@ class FileManager:
         monitor = local_gio_file.monitor(Gio.FileMonitorFlags.NONE, None)
         monitor.connect("changed", self._on_local_file_saved, remote_path, local_path)
         self.file_monitors[remote_path] = monitor
+
+        unique_dir_path = str(local_path.parent)
+        self.edited_file_metadata[unique_dir_path] = {
+            "remote_path": remote_path,
+            "local_file_path": str(local_path),
+            "timestamp": initial_timestamp,
+        }
+        self.emit("temp-files-changed", len(self.edited_file_metadata))
 
         app = self.parent_window.get_application()
         if app:
@@ -1408,15 +1471,112 @@ class FileManager:
     ):
         if event_type == Gio.FileMonitorEvent.CHANGES_DONE_HINT:
             threading.Thread(
-                target=self._upload_on_save_thread,
+                target=self._check_conflict_and_upload,
                 args=(local_path, remote_path),
                 daemon=True,
             ).start()
+
+    def _check_conflict_and_upload(self, local_path: Path, remote_path: str):
+        """Checks for remote changes before uploading the local file."""
+        unique_dir_path = str(local_path.parent)
+        metadata = self.edited_file_metadata.get(unique_dir_path)
+        if not metadata:
+            self.logger.warning(
+                f"No metadata for edited file {local_path}, cannot upload."
+            )
+            return
+
+        last_known_timestamp = metadata.get("timestamp")
+        current_remote_timestamp = self.operations.get_remote_file_timestamp(
+            remote_path
+        )
+
+        if current_remote_timestamp is None:
+            self.logger.error(
+                f"Could not verify remote timestamp for {remote_path}. Aborting upload."
+            )
+            GLib.idle_add(
+                self.parent_window.toast_overlay.add_toast,
+                Adw.Toast(title=_("Upload failed: Could not verify remote file.")),
+            )
+            return
+
+        if (
+            last_known_timestamp is not None
+            and current_remote_timestamp > last_known_timestamp
+        ):
+            self.logger.warning(f"Conflict detected for {remote_path}. Prompting user.")
+            GLib.idle_add(self._show_conflict_dialog, local_path, remote_path)
+        else:
+            self.logger.info(f"No conflict for {remote_path}. Proceeding with upload.")
+            self._upload_on_save_thread(local_path, remote_path)
+
+    def _show_conflict_dialog(self, local_path: Path, remote_path: str):
+        """Shows a dialog to the user to resolve an edit conflict."""
+        dialog = Adw.MessageDialog(
+            transient_for=self.parent_window,
+            heading=_("File Conflict"),
+            body=_(
+                "The file '{filename}' has been modified on the server since you started editing it. How would you like to proceed?"
+            ).format(filename=local_path.name),
+            close_response="cancel",
+        )
+        dialog.add_response("cancel", _("Cancel Upload"))
+        dialog.add_response("overwrite", _("Overwrite Server File"))
+        dialog.add_response("save-as", _("Save as New File"))
+        dialog.set_response_appearance("overwrite", Adw.ResponseAppearance.DESTRUCTIVE)
+        dialog.set_default_response("cancel")
+
+        def on_response(d, response_id):
+            if response_id == "overwrite":
+                self._upload_on_save_thread(local_path, remote_path)
+            elif response_id == "save-as":
+                self._prompt_for_new_filename_and_upload(local_path, remote_path)
+            d.close()
+
+        dialog.connect("response", on_response)
+        dialog.present()
+
+    def _prompt_for_new_filename_and_upload(self, local_path: Path, remote_path: str):
+        """Prompts for a new filename and uploads the file."""
+        dialog = Adw.MessageDialog(
+            transient_for=self.parent_window,
+            heading=_("Save As"),
+            body=_("Enter a new name for the file on the server:"),
+            close_response="cancel",
+        )
+        entry = Gtk.Entry(text=f"{local_path.stem}-copy{local_path.suffix}")
+        dialog.set_extra_child(entry)
+        dialog.add_response("cancel", _("Cancel"))
+        dialog.add_response("save", _("Save"))
+        dialog.set_default_response("save")
+
+        def on_response(d, response_id):
+            if response_id == "save":
+                new_name = entry.get_text().strip()
+                if new_name:
+                    new_remote_path = str(Path(remote_path).parent / new_name)
+                    self._upload_on_save_thread(local_path, new_remote_path)
+            d.close()
+
+        dialog.connect("response", on_response)
+        dialog.present()
 
     def _on_save_upload_complete(self, transfer_id, success, message):
         """Callback to finalize transfer and show system notification."""
         if success:
             self.transfer_manager.complete_transfer(transfer_id)
+            transfer = next(
+                (t for t in self.transfer_manager.history if t.id == transfer_id), None
+            )
+            if transfer:
+                unique_dir_path = str(Path(transfer.local_path).parent)
+                if unique_dir_path in self.edited_file_metadata:
+                    new_ts = self.operations.get_remote_file_timestamp(
+                        transfer.remote_path
+                    )
+                    if new_ts:
+                        self.edited_file_metadata[unique_dir_path]["timestamp"] = new_ts
         else:
             self.transfer_manager.fail_transfer(transfer_id, message)
 
@@ -1497,9 +1657,36 @@ class FileManager:
                 old_path = f"{self.current_path.rstrip('/')}/{file_item.name}"
                 new_path = f"{self.current_path.rstrip('/')}/{new_name}"
                 if self.bound_terminal:
-                    command = f'mv "{old_path}" "{new_path}"\n'
-                    self.bound_terminal.feed_child(command.encode("utf-8"))
+                    command = ["mv", old_path, new_path]
+                    self.bound_terminal.feed_child(
+                        f"{' '.join(command)}\n".encode("utf-8")
+                    )
                     self.parent_window.toast_overlay.add_toast(
                         Adw.Toast(title=_("Rename command sent to terminal"))
                     )
                     GLib.timeout_add(500, lambda: self.refresh(source="filemanager"))
+
+    def _cleanup_edited_file_dir(self, dir_path_str: str):
+        """Cleans up all resources associated with a closed temporary file's directory."""
+        metadata = self.edited_file_metadata.pop(dir_path_str, None)
+        if not metadata:
+            return False
+
+        remote_path = metadata.get("remote_path")
+        if remote_path:
+            monitor = self.file_monitors.pop(remote_path, None)
+            if monitor:
+                monitor.cancel()
+
+        try:
+            dir_path = Path(dir_path_str)
+            if dir_path.exists():
+                shutil.rmtree(dir_path)
+                self.logger.info(f"Removed temporary directory: {dir_path}")
+        except Exception as e:
+            self.logger.error(
+                f"Failed to remove temporary directory {dir_path_str}: {e}"
+            )
+
+        self.emit("temp-files-changed", len(self.edited_file_metadata))
+        return False

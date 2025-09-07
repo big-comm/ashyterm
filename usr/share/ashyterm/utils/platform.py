@@ -160,9 +160,6 @@ def get_environment_manager() -> EnvironmentManager:
     return _environment_manager
 
 
-# --- Funções de conveniência restauradas ---
-
-
 def get_config_directory() -> Path:
     return get_platform_info().config_dir
 

@@ -682,7 +682,7 @@ class PreferencesDialog(Adw.PreferencesWindow):
             label=_("Current: {}\nNew: (press keys)").format(current_label)
         )
         dialog.set_extra_child(feedback_label)
-        key_controller = Gtk.EventControllerKey()
+        key_controller = Gtk.EventControllerKey.new()
         new_shortcut = [None]
 
         def on_key_pressed(_controller, keyval, _keycode, state):

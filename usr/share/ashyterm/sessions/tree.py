@@ -204,7 +204,7 @@ class SessionTreeView:
         """Restores the expansion state that was saved before search began."""
         if self._saved_expansion_state is None:
             # If no saved state, fall back to settings
-            self._restore_original_expansion_state()
+            self._apply_expansion_state()
             return
 
         self.logger.debug(
@@ -732,8 +732,8 @@ class SessionTreeView:
                 self._paste_item(target_path)
                 return Gdk.EVENT_STOP
         if keyval == Gdk.KEY_Delete:
-            if hasattr(self.parent_window, "_on_delete_selected_items"):
-                self.parent_window._on_delete_selected_items()
+            if hasattr(self.parent_window, "action_handler"):
+                self.parent_window.action_handler.delete_selected_items()
             return Gdk.EVENT_STOP
         return Gdk.EVENT_PROPAGATE
 

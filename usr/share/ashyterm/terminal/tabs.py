@@ -12,6 +12,7 @@ gi.require_version("Vte", "3.91")
 gi.require_version("Pango", "1.0")
 from gi.repository import Adw, Gdk, Gio, GLib, Gtk, Pango, Vte
 
+from ..filemanager.manager import FileManager
 from ..sessions.models import SessionItem
 from ..utils.logger import get_logger
 from ..utils.translation_utils import _
@@ -108,6 +109,9 @@ class TabManager:
         self.pages: weakref.WeakKeyDictionary[Gtk.Box, Adw.ViewStackPage] = (
             weakref.WeakKeyDictionary()
         )
+        self.file_managers: weakref.WeakKeyDictionary[
+            Adw.ViewStackPage, FileManager
+        ] = weakref.WeakKeyDictionary()
         self.active_tab: Optional[Gtk.Box] = None
 
         self._creation_lock = threading.Lock()
@@ -287,7 +291,6 @@ class TabManager:
         scroll_controller.connect("scroll", self._on_terminal_scroll)
         terminal.add_controller(scroll_controller)
 
-        # Connect the smart scrolling handler
         terminal.connect("contents-changed", self._on_terminal_contents_changed)
 
         scrolled_window = Gtk.ScrolledWindow(child=terminal)
@@ -297,11 +300,32 @@ class TabManager:
         focus_controller.connect("enter", self._on_pane_focus_in, terminal)
         terminal.add_controller(focus_controller)
 
-        root_container = Adw.Bin()
-        root_container.set_child(scrolled_window)
+        # Connect to the 'realize' signal to grab focus when the widget is ready.
+        # This is a one-shot connection; it disconnects itself after running.
+        handler_id_ref = [None]
+
+        def on_terminal_realize_once(widget, *args):
+            widget.grab_focus()
+            if handler_id_ref[0] and widget.handler_is_connected(handler_id_ref[0]):
+                widget.disconnect(handler_id_ref[0])
+
+        handler_id = terminal.connect_after("realize", on_terminal_realize_once)
+        handler_id_ref[0] = handler_id
+
+        terminal_area = Adw.Bin()
+        terminal_area.set_child(scrolled_window)
+
+        content_paned = Gtk.Paned(orientation=Gtk.Orientation.VERTICAL)
+        content_paned.set_start_child(terminal_area)
+        content_paned.set_resize_start_child(True)
+        content_paned.set_shrink_start_child(False)
+        content_paned.set_end_child(None)
+        content_paned.set_resize_end_child(False)
+        content_paned.set_shrink_end_child(True)
 
         page_name = f"page_{terminal.terminal_id}"
-        page = self.view_stack.add_titled(root_container, page_name, title)
+        page = self.view_stack.add_titled(content_paned, page_name, title)
+        page.content_paned = content_paned
         terminal.ashy_parent_page = page
 
         tab_widget = self._create_tab_widget(title, icon_name, page)
@@ -310,7 +334,6 @@ class TabManager:
         self.tab_bar_box.append(tab_widget)
 
         self.set_active_tab(tab_widget)
-        self._schedule_terminal_focus(terminal)
         self.update_all_tab_titles()
 
         if self.on_tab_count_changed:
@@ -384,9 +407,36 @@ class TabManager:
         if self.on_detach_tab_requested:
             self.on_detach_tab_requested(page)
 
+    def _is_widget_in_filemanager(self, widget: Gtk.Widget) -> bool:
+        """Checks if a widget is a descendant of the FileManager's main widget."""
+        if not widget or not self.active_tab:
+            return False
+
+        page = self.pages.get(self.active_tab)
+        if not page:
+            return False
+
+        fm = self.file_managers.get(page)
+        if not fm:
+            return False
+
+        fm_widget = fm.get_main_widget()
+        current = widget
+        while current:
+            if current == fm_widget:
+                return True
+            current = current.get_parent()
+        return False
+
     def set_active_tab(self, tab_to_activate: Gtk.Box):
         if self.active_tab == tab_to_activate:
             return
+
+        if self.active_tab:
+            main_window = self.terminal_manager.parent_window
+            focus_widget = main_window.get_focus()
+            if focus_widget and self._is_widget_in_filemanager(focus_widget):
+                self.view_stack.grab_focus()
 
         if self.active_tab:
             self.active_tab.remove_css_class("active")
@@ -397,9 +447,76 @@ class TabManager:
         page = self.pages.get(self.active_tab)
         if page:
             self.view_stack.set_visible_child(page.get_child())
-            terminal = self.get_selected_terminal()
-            if terminal:
-                self._schedule_terminal_focus(terminal)
+            terminals_in_page = self.get_all_terminals_in_page(page)
+            if terminals_in_page:
+                self._schedule_terminal_focus(terminals_in_page[0])
+
+    def toggle_file_manager_for_active_tab(self, is_active: bool):
+        """Toggles the file manager's visibility for the currently active tab."""
+        if not self.active_tab:
+            if hasattr(self.terminal_manager.parent_window, "file_manager_button"):
+                self.terminal_manager.parent_window.file_manager_button.set_active(
+                    False
+                )
+            return
+
+        page = self.pages.get(self.active_tab)
+        if not page:
+            if hasattr(self.terminal_manager.parent_window, "file_manager_button"):
+                self.terminal_manager.parent_window.file_manager_button.set_active(
+                    False
+                )
+            return
+
+        # NOVO: Adicionar verificação para 'content_paned'
+        # Se a página não tiver o 'content_paned' (como em uma aba destacada),
+        # desative o botão e retorne para evitar o erro.
+        if not hasattr(page, "content_paned"):
+            self.logger.warning(
+                "Attempted to toggle file manager on a page without a content_paned (likely a detached tab)."
+            )
+            if hasattr(self.terminal_manager.parent_window, "file_manager_button"):
+                self.terminal_manager.parent_window.file_manager_button.set_active(
+                    False
+                )
+            return
+        # FIM DA ALTERAÇÃO
+
+        paned = page.content_paned
+        fm = self.file_managers.get(page)
+
+        if is_active:
+            active_terminal = self.get_selected_terminal()
+            if not active_terminal:
+                if hasattr(self.terminal_manager.parent_window, "file_manager_button"):
+                    self.terminal_manager.parent_window.file_manager_button.set_active(
+                        False
+                    )
+
+            if not fm:
+                fm = FileManager(
+                    self.terminal_manager.parent_window, self.terminal_manager
+                )
+                fm.connect(
+                    "temp-files-changed",
+                    self.terminal_manager.parent_window._on_temp_files_changed,
+                    page,
+                )
+                self.file_managers[page] = fm
+
+            fm.rebind_terminal(active_terminal)
+            paned.set_end_child(fm.get_main_widget())
+            last_pos = getattr(
+                page,
+                "_fm_paned_pos",
+                self.terminal_manager.parent_window.get_height() - 250,
+            )
+            paned.set_position(last_pos)
+            fm.set_visibility(True, source="filemanager")
+        elif fm:
+            page._fm_paned_pos = paned.get_position()
+            fm.set_visibility(False, source="filemanager")
+            paned.set_end_child(None)
 
     def _on_tab_close_button_clicked(self, button: Gtk.Button, tab_widget: Gtk.Box):
         self.logger.debug(
@@ -461,6 +578,10 @@ class TabManager:
             self.tabs.remove(tab_to_remove)
             if tab_to_remove in self.pages:
                 del self.pages[tab_to_remove]
+
+            if page in self.file_managers:
+                fm = self.file_managers.pop(page)
+                fm.shutdown(None)
 
             self.view_stack.remove(page.get_child())
 
@@ -571,13 +692,26 @@ class TabManager:
         self._last_focused_terminal = weakref.ref(terminal)
 
     def _schedule_terminal_focus(self, terminal: Vte.Terminal) -> None:
-        def focus_terminal():
-            if terminal and terminal.get_realized():
-                terminal.grab_focus()
-                return False
-            return True
+        """Schedules a deferred focus call for the terminal, ensuring the UI is ready."""
 
-        GLib.timeout_add(100, focus_terminal)
+        def focus_task():
+            if (
+                terminal
+                and terminal.get_realized()
+                and terminal.is_visible()
+                and terminal.get_can_focus()
+            ):
+                terminal.grab_focus()
+                self.logger.debug(
+                    f"Focus set on terminal {getattr(terminal, 'terminal_id', 'N/A')}"
+                )
+            else:
+                self.logger.warning(
+                    f"Could not set focus on terminal {getattr(terminal, 'terminal_id', 'N/A')}: not ready or invalid."
+                )
+            return GLib.SOURCE_REMOVE
+
+        GLib.idle_add(focus_task)
 
     def _find_pane_and_parent(self, terminal: Vte.Terminal) -> tuple:
         """
@@ -999,8 +1133,6 @@ class TabManager:
             if not terminal:
                 return None
 
-            # CORRECTED: Return the pane widget, which includes the header.
-            # The caller (`recreate_tab_from_structure`) will decide whether to unwrap it.
             pane_widget = _create_terminal_pane(
                 terminal,
                 title,
@@ -1049,3 +1181,8 @@ class TabManager:
         self._find_terminals_recursive(widget, terminals)
         for term in terminals:
             self.terminal_manager.remove_terminal(term)
+
+    def close_all_tabs(self):
+        """Closes all currently open tabs by simulating a click on each close button."""
+        for tab_widget in self.tabs[:]:
+            self._on_tab_close_button_clicked(None, tab_widget)

@@ -650,6 +650,7 @@ class CommTerminalApp(Adw.Application):
                 "initial_execute_command": kwargs.get("initial_execute_command"),
                 "close_after_execute": kwargs.get("close_after_execute", False),
                 "initial_ssh_target": kwargs.get("initial_ssh_target"),
+                "_is_for_detached_tab": kwargs.get("_is_for_detached_tab", False),
             }
             window = CommTerminalWindow(
                 application=self, settings_manager=self.settings_manager, **init_args

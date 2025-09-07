@@ -4,7 +4,7 @@ from gi.repository import Gio
 
 from ..utils.translation_utils import _
 from .models import SessionFolder, SessionItem
-from .results import OperationResult  # <-- IMPORTAÇÃO CORRIGIDA
+from .results import OperationResult
 
 
 def validate_session_for_add(

@@ -50,15 +50,18 @@ class ColoredFormatter(logging.Formatter):
     }
 
     def format(self, record):
+        formatted_message = super().format(record)
+
         levelname = record.levelname
         if levelname in self.COLORS:
             colored_levelname = (
                 f"{self.COLORS[levelname]}{levelname}{self.COLORS['RESET']}"
             )
-            record.levelname = colored_levelname
-        formatted = super().format(record)
-        record.levelname = levelname
-        return formatted
+            formatted_message = formatted_message.replace(
+                levelname, colored_levelname, 1
+            )
+
+        return formatted_message
 
 
 class ThreadSafeLogger:
