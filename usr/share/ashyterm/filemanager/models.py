@@ -78,27 +78,6 @@ class FileItem(GObject.GObject):
         self._is_link = is_link
         self._link_target = link_target
 
-    def do_get_property(self, prop):
-        """Handle property access."""
-        if prop.name == "name":
-            return self._name
-        elif prop.name == "permissions":
-            return self._permissions
-        elif prop.name == "size":
-            return self._size
-        elif prop.name == "owner":
-            return self._owner
-        elif prop.name == "group":
-            return self._group
-        elif prop.name == "is-directory":
-            return self._permissions.startswith("d")
-        elif prop.name == "is-link":
-            return self._permissions.startswith("l")
-        elif prop.name == "icon-name":
-            return self.icon_name
-        else:
-            raise AttributeError(f"Unknown property {prop.name}")
-
     @property
     def name(self) -> str:
         return self._name

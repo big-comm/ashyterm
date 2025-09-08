@@ -101,6 +101,3 @@ class BaseDialog(Adw.Window):
 
     def _clear_validation_errors(self):
         self._validation_errors.clear()
-
-    def _has_validation_errors(self) -> bool:
-        return len(self._validation_errors) > 0

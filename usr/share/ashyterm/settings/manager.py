@@ -12,7 +12,7 @@ import gi
 gi.require_version("Gtk", "4.0")
 gi.require_version("Adw", "1")
 gi.require_version("Vte", "3.91")
-from gi.repository import Gdk, GLib, Gtk, Pango, Vte
+from gi.repository import Gdk, Gtk, Pango, Vte
 
 from ..utils.exceptions import ConfigValidationError
 from ..utils.logger import get_logger, log_error_with_context
@@ -454,10 +454,6 @@ class SettingsManager:
         if listener not in self._change_listeners:
             self._change_listeners.append(listener)
 
-    def remove_change_listener(self, listener: Callable[[str, Any, Any], None]):
-        if listener in self._change_listeners:
-            self._change_listeners.remove(listener)
-
     def get_all_schemes(self) -> Dict[str, Any]:
         """Merges built-in schemes with custom schemes."""
         schemes = ColorSchemes.get_schemes().copy()
@@ -655,10 +651,3 @@ def get_settings_manager() -> SettingsManager:
             if _settings_manager is None:
                 _settings_manager = SettingsManager()
     return _settings_manager
-
-
-def reset_settings_manager():
-    """Reset the global settings manager (for testing)."""
-    global _settings_manager
-    with _settings_lock:
-        _settings_manager = None

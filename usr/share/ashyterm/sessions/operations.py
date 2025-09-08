@@ -53,36 +53,6 @@ class SessionOperations:
                 session,
             )
 
-    def update_session(
-        self, position: int, updated_session: SessionItem
-    ) -> OperationResult:
-        """Updates an existing session."""
-        with self._operation_lock:
-            original_session = self.session_store.get_item(position)
-            if not isinstance(original_session, SessionItem):
-                return OperationResult(False, _("Item at position is not a session."))
-
-            original_session.name = updated_session.name
-            original_session.session_type = updated_session.session_type
-            original_session.host = updated_session.host
-            original_session.user = updated_session.user
-            original_session.auth_type = updated_session.auth_type
-            original_session.auth_value = updated_session.auth_value
-            original_session.folder_path = updated_session.folder_path
-            original_session.port = updated_session.port
-
-            if not self._save_changes_with_backup("Session updated"):
-                return OperationResult(False, _("Failed to save updated session data."))
-
-            self.logger.info(f"Session updated successfully: '{original_session.name}'")
-            return OperationResult(
-                True,
-                _("Session '{name}' updated successfully.").format(
-                    name=original_session.name
-                ),
-                original_session,
-            )
-
     def remove_session(self, session: SessionItem) -> OperationResult:
         """Removes a session from the store."""
         with self._operation_lock:

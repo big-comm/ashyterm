@@ -55,10 +55,6 @@ class TerminalLifecycleManager:
         self._closing_terminals = set()
         self._lock = threading.RLock()
 
-    def is_terminal_closing(self, terminal_id: int) -> bool:
-        with self._lock:
-            return terminal_id in self._closing_terminals
-
     def mark_terminal_closing(self, terminal_id: int) -> bool:
         with self._lock:
             if terminal_id in self._closing_terminals:

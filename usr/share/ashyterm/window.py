@@ -9,7 +9,7 @@ import gi
 gi.require_version("Gtk", "4.0")
 gi.require_version("Adw", "1")
 gi.require_version("Vte", "3.91")
-from gi.repository import Adw, Gdk, Gio, GLib, Gtk, Vte
+from gi.repository import Adw, Gdk, Gio, GLib, Gtk
 
 from .sessions.models import LayoutItem, SessionFolder, SessionItem
 from .sessions.operations import SessionOperations
@@ -344,15 +344,6 @@ class CommTerminalWindow(Adw.ApplicationWindow):
         self._update_font_sizer_widget()
         self._update_tab_layout()
 
-    def _ensure_terminal_focus(self, terminal: Vte.Terminal) -> bool:
-        """
-        Callback to forcefully grab focus for the terminal.
-        Returns False to ensure the timeout runs only once.
-        """
-        if terminal and terminal.get_realized() and terminal.get_can_focus():
-            terminal.grab_focus()
-        return GLib.SOURCE_REMOVE
-
     def _on_toggle_file_manager(self, button: Gtk.ToggleButton):
         """Toggle file manager for the current tab."""
         self.tab_manager.toggle_file_manager_for_active_tab(button.get_active())
@@ -593,20 +584,11 @@ class CommTerminalWindow(Adw.ApplicationWindow):
     def _on_new_tab_clicked(self, _button) -> None:
         self.action_handler.new_local_tab(None, None)
 
-    def _on_add_session_clicked(self, _button) -> None:
-        self.action_handler.add_session_root(None, None)
-
-    def _on_add_folder_clicked(self, _button) -> None:
-        self.action_handler.add_folder_root(None, None)
-
     def _on_edit_selected_clicked(self, _button) -> None:
         if isinstance(item := self.session_tree.get_selected_item(), SessionItem):
             self.action_handler.edit_session(None, None)
         elif isinstance(item, SessionFolder):
             self.action_handler.edit_folder(None, None)
-
-    def _on_remove_selected_clicked(self, _button) -> None:
-        self.action_handler.delete_selected_items()
 
     def _update_cleanup_button_visibility(self):
         """Show or hide the cleanup button based on the total count of temp files."""

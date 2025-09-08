@@ -618,13 +618,6 @@ class CommTerminalApp(Adw.Application):
     def get_settings_manager(self) -> Optional[SettingsManager]:
         return self.settings_manager
 
-    def refresh_keyboard_shortcuts(self) -> None:
-        """Refresh keyboard shortcuts after settings change."""
-        try:
-            self._update_window_shortcuts()
-        except Exception as e:
-            self.logger.error(f"Failed to refresh keyboard shortcuts: {e}")
-
     def do_window_added(self, window) -> None:
         """Handle window being added to application."""
         Adw.Application.do_window_added(self, window)
@@ -636,9 +629,6 @@ class CommTerminalApp(Adw.Application):
         Adw.Application.do_window_removed(self, window)
         if window == self._main_window:
             self._main_window = None
-
-    def get_main_window(self) -> Optional["CommTerminalWindow"]:
-        return self._main_window
 
     def create_new_window(self, **kwargs) -> "CommTerminalWindow":
         """Create a new main window, passing through any initial arguments."""
@@ -664,9 +654,3 @@ class CommTerminalApp(Adw.Application):
 
     def get_backup_manager(self):
         return self.backup_manager
-
-    def get_security_auditor(self):
-        return self.security_auditor
-
-    def is_initialized(self) -> bool:
-        return self._initialized

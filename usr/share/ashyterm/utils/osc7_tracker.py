@@ -28,26 +28,6 @@ class OSC7TerminalTracker:
             Callable[[Vte.Terminal, OSC7Info], None]
         ] = None
 
-    def track_terminal(
-        self, terminal: Vte.Terminal, base_title: str = "Terminal"
-    ) -> None:
-        """Start tracking OSC7 sequences for a terminal."""
-        try:
-            with self._lock:
-                if terminal in self._terminals:
-                    return
-                self._terminals[terminal] = {
-                    "base_title": base_title,
-                    "current_dir": None,
-                    "last_osc7": None,
-                }
-                terminal.connect(
-                    "notify::current-directory-uri", self._on_directory_uri_changed
-                )
-                self.logger.info(f"Started OSC7 tracking for terminal: '{base_title}'")
-        except Exception as e:
-            self.logger.error(f"Failed to track terminal '{base_title}': {e}")
-
     def untrack_terminal(self, terminal: Vte.Terminal) -> None:
         """Stop tracking OSC7 sequences for a terminal."""
         try:

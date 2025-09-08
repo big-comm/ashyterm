@@ -996,11 +996,6 @@ class TabManager:
             self.on_tab_count_changed()
         return page
 
-    def close_active_tab(self):
-        """A helper to forcefully close the currently active tab."""
-        if self.active_tab:
-            self._on_tab_close_button_clicked(None, self.active_tab)
-
     def select_next_tab(self):
         """Selects the next tab in the list."""
         if not self.tabs or len(self.tabs) <= 1:

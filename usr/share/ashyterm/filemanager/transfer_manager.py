@@ -52,13 +52,6 @@ class TransferItem:
             return self.end_time - self.start_time
         return None
 
-    def get_speed(self) -> Optional[float]:
-        duration = self.get_duration()
-        if duration and duration > 0 and self.file_size > 0:
-            return self.file_size / duration
-        return None
-
-
 class TransferManager(GObject.Object):
     __gsignals__ = {
         "transfer-started": (GObject.SignalFlags.RUN_FIRST, None, (str,)),

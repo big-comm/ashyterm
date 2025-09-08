@@ -65,11 +65,6 @@ class ProcessTracker:
                 return True
             return False
 
-    def get_all_processes(self) -> Dict[int, Dict[str, Any]]:
-        """Get all tracked processes."""
-        with self._lock:
-            return self._processes.copy()
-
     def terminate_all(self) -> None:
         """Terminate all tracked processes robustly on Linux."""
         with self._lock:

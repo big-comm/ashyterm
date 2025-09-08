@@ -394,13 +394,6 @@ class ColorSchemeMap:
     def get_schemes_list(cls) -> List[str]:
         return cls.SCHEME_ORDER.copy()
 
-    @classmethod
-    def get_scheme_name(cls, index: int) -> str:
-        if 0 <= index < len(cls.SCHEME_ORDER):
-            return cls.SCHEME_ORDER[index]
-        return cls.SCHEME_ORDER[0]
-
-
 _config_paths = None
 
 
