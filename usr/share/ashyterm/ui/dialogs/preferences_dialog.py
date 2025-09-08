@@ -431,17 +431,6 @@ class PreferencesDialog(Adw.PreferencesWindow):
         )
         features_group.add(sixel_row)
 
-        hyperlink_row = Adw.SwitchRow(
-            title=_("Enable Hyperlinks (OSC 8)"),
-            subtitle=_("Allow the terminal to recognize and display clickable links"),
-        )
-        hyperlink_row.set_active(self.settings_manager.get("allow_hyperlink", True))
-        hyperlink_row.connect(
-            "notify::active",
-            lambda r, _: self._on_setting_changed("allow_hyperlink", r.get_active()),
-        )
-        features_group.add(hyperlink_row)
-
         compatibility_group = Adw.PreferencesGroup(
             title=_("Compatibility"),
             description=_("Settings for compatibility with older systems and tools"),

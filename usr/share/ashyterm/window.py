@@ -60,7 +60,7 @@ class CommTerminalWindow(Adw.ApplicationWindow):
         self._is_for_detached_tab = kwargs.get("_is_for_detached_tab", False)
 
         # Window setup
-        self.set_default_size(1200, 700)
+        self._setup_initial_window_size()
         self.set_title(_("Ashy Terminal"))
         self.set_icon_name("ashyterm")
 
@@ -180,6 +180,47 @@ class CommTerminalWindow(Adw.ApplicationWindow):
     def _setup_window_events(self) -> None:
         """Set up window-level event handlers."""
         self.connect("close-request", self._on_window_close_request)
+        # Connect window state change signals
+        self.connect("notify::default-width", self._on_window_size_changed)
+        self.connect("notify::default-height", self._on_window_size_changed)
+        self.connect("notify::maximized", self._on_window_maximized_changed)
+
+    def _setup_initial_window_size(self) -> None:
+        """Set up initial window size and state from settings."""
+        if self.settings_manager.get("remember_window_state", True):
+            width = self.settings_manager.get("window_width", 1200)
+            height = self.settings_manager.get("window_height", 700)
+            maximized = self.settings_manager.get("window_maximized", False)
+            
+            self.set_default_size(width, height)
+            
+            if maximized:
+                # Delay maximization to ensure window is realized
+                GLib.idle_add(self.maximize)
+        else:
+            self.set_default_size(1200, 700)
+
+    def _on_window_size_changed(self, window, param_spec) -> None:
+        """Handle window size changes to save to settings."""
+        if not self.settings_manager.get("remember_window_state", True):
+            return
+            
+        if not self.is_maximized():
+            # Only save size when not maximized
+            width = self.get_width()
+            height = self.get_height()
+            
+            if width > 0 and height > 0:
+                self.settings_manager.set("window_width", width)
+                self.settings_manager.set("window_height", height)
+
+    def _on_window_maximized_changed(self, window, param_spec) -> None:
+        """Handle window maximized state changes to save to settings."""
+        if not self.settings_manager.get("remember_window_state", True):
+            return
+            
+        maximized = self.is_maximized()
+        self.settings_manager.set("window_maximized", maximized)
 
     def _load_initial_data(self) -> None:
         """Load initial sessions, folders, and layouts data."""

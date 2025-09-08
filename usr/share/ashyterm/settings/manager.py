@@ -653,7 +653,7 @@ class SettingsManager:
         terminal.set_enable_bidi(self.get("bidi_enabled", False))
         terminal.set_enable_shaping(self.get("enable_shaping", False))
         terminal.set_enable_sixel(self.get("sixel_enabled", True))
-        terminal.set_allow_hyperlink(self.get("allow_hyperlink", True))
+        terminal.set_allow_hyperlink(True)  # OSC8 hyperlinks always enabled
         terminal.set_word_char_exceptions(self.get("word_char_exceptions", "-_.:/~"))
         terminal.set_enable_a11y(self.get("accessibility_enabled", True))
         terminal.set_cell_height_scale(self.get("line_spacing", 1.0))

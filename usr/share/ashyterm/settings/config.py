@@ -115,6 +115,11 @@ class DefaultSettings:
             "font": "Monospace 12",
             "line_spacing": 1.0,
             "bold_is_bright": True,
+            # Window State
+            "window_width": 1200,
+            "window_height": 700,
+            "window_maximized": False,
+            "remember_window_state": True,
             # Behavior
             "sidebar_visible": False,
             "auto_hide_sidebar": False,
@@ -138,7 +143,6 @@ class DefaultSettings:
             "bidi_enabled": False,
             "enable_shaping": False,  # For Arabic text shaping
             "sixel_enabled": True,
-            "allow_hyperlink": True,  # OSC 8 hyperlink support
             "text_blink_mode": 0,
             "accessibility_enabled": True,
             # Compatibility & Advanced
