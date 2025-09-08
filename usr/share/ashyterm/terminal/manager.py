@@ -475,7 +475,7 @@ class TerminalManager:
             terminal.set_hexpand(True)
             terminal.set_mouse_autohide(True)
             terminal.set_cursor_blink_mode(Vte.CursorBlinkMode.ON)
-            terminal.set_scroll_on_output(True)
+            terminal.set_scroll_on_output(False)
             terminal.set_scroll_on_keystroke(True)
             terminal.set_scroll_unit_is_pixels(True)
             self.settings_manager.apply_terminal_settings(terminal, self.parent_window)
