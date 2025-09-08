@@ -191,9 +191,9 @@ class CommTerminalWindow(Adw.ApplicationWindow):
             width = self.settings_manager.get("window_width", 1200)
             height = self.settings_manager.get("window_height", 700)
             maximized = self.settings_manager.get("window_maximized", False)
-            
+
             self.set_default_size(width, height)
-            
+
             if maximized:
                 # Delay maximization to ensure window is realized
                 GLib.idle_add(self.maximize)
@@ -204,12 +204,12 @@ class CommTerminalWindow(Adw.ApplicationWindow):
         """Handle window size changes to save to settings."""
         if not self.settings_manager.get("remember_window_state", True):
             return
-            
+
         if not self.is_maximized():
             # Only save size when not maximized
             width = self.get_width()
             height = self.get_height()
-            
+
             if width > 0 and height > 0:
                 self.settings_manager.set("window_width", width)
                 self.settings_manager.set("window_height", height)
@@ -218,7 +218,7 @@ class CommTerminalWindow(Adw.ApplicationWindow):
         """Handle window maximized state changes to save to settings."""
         if not self.settings_manager.get("remember_window_state", True):
             return
-            
+
         maximized = self.is_maximized()
         self.settings_manager.set("window_maximized", maximized)
 
@@ -583,12 +583,6 @@ class CommTerminalWindow(Adw.ApplicationWindow):
 
     def _on_new_tab_clicked(self, _button) -> None:
         self.action_handler.new_local_tab(None, None)
-
-    def _on_edit_selected_clicked(self, _button) -> None:
-        if isinstance(item := self.session_tree.get_selected_item(), SessionItem):
-            self.action_handler.edit_session(None, None)
-        elif isinstance(item, SessionFolder):
-            self.action_handler.edit_folder(None, None)
 
     def _update_cleanup_button_visibility(self):
         """Show or hide the cleanup button based on the total count of temp files."""

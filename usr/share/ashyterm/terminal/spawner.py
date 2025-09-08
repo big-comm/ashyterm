@@ -3,11 +3,12 @@
 import os
 import shutil
 import signal
+import subprocess
 import tempfile
 import threading
 import time
 from pathlib import Path
-from typing import TYPE_CHECKING, Any, Callable, Dict, List, Optional
+from typing import TYPE_CHECKING, Any, Callable, Dict, List, Optional, Tuple
 
 import gi
 
@@ -235,37 +236,22 @@ class ProcessSpawner:
         user_data: Any = None,
         initial_command: Optional[str] = None,
     ) -> None:
-        self._spawn_remote_session(
-            "ssh", terminal, session, callback, user_data, initial_command
-        )
-
-    def _spawn_remote_session(
-        self,
-        command_type: str,
-        terminal: Vte.Terminal,
-        session: "SessionItem",
-        callback: Optional[Callable] = None,
-        user_data: Any = None,
-        initial_command: Optional[str] = None,
-    ) -> None:
+        """Spawns an SSH session in the given terminal."""
         with self._spawn_lock:
             if not session.is_ssh():
                 raise TerminalCreationError("Session is not configured for SSH", "ssh")
             try:
                 self._validate_ssh_session(session)
                 remote_cmd = self._build_remote_command_secure(
-                    command_type, session, initial_command
+                    "ssh", session, initial_command
                 )
                 if not remote_cmd:
-                    raise TerminalCreationError(
-                        f"Failed to build {command_type.upper()} command", "ssh"
-                    )
+                    raise TerminalCreationError("Failed to build SSH command", "ssh")
 
                 working_dir = str(self.platform_info.home_dir)
                 env = self.environment_manager.get_terminal_environment()
                 env_list = [f"{k}={v}" for k, v in env.items()]
 
-                # Wrap user_data for consistency with local terminal spawning
                 final_user_data = {
                     "original_user_data": user_data,
                     "temp_dir_path": None,
@@ -284,26 +270,76 @@ class ProcessSpawner:
                     callback if callback else self._ssh_spawn_callback,
                     (final_user_data,),
                 )
-                self._monitor_ssh_errors(terminal, session)
-                self.logger.info(
-                    f"{command_type.upper()} session spawn initiated for: {session.name}"
-                )
+                self.logger.info(f"SSH session spawn initiated for: {session.name}")
                 log_terminal_event(
                     "spawn_initiated",
                     session.name,
-                    f"{command_type.upper()} to {session.get_connection_string()}",
+                    f"SSH to {session.get_connection_string()}",
                 )
             except Exception as e:
-                self.logger.error(
-                    f"{command_type.upper()} session spawn failed for {session.name}: {e}"
-                )
+                self.logger.error(f"SSH session spawn failed for {session.name}: {e}")
                 log_error_with_context(
-                    e,
-                    f"{command_type.upper()} spawn for {session.name}",
-                    "ashyterm.spawner",
+                    e, f"SSH spawn for {session.name}", "ashyterm.spawner"
                 )
                 self._show_ssh_error_on_terminal(terminal, session, str(e))
                 raise TerminalCreationError(str(e), "ssh") from e
+
+    def test_ssh_connection(self, session: "SessionItem") -> Tuple[bool, str]:
+        """
+        Tests an SSH connection without spawning a full terminal.
+        Returns a tuple of (success, message).
+        """
+        if not session.is_ssh():
+            return False, "Not an SSH session."
+
+        try:
+            self._validate_ssh_session(session)
+
+            ssh_options = {
+                "BatchMode": "yes",
+                "ConnectTimeout": "10",
+                "StrictHostKeyChecking": "no",
+                "PasswordAuthentication": "no" if session.uses_key_auth() else "yes",
+            }
+
+            cmd = self.command_builder.build_remote_command(
+                "ssh",
+                hostname=session.host,
+                port=session.port if session.port != 22 else None,
+                username=session.user if session.user else None,
+                key_file=session.auth_value if session.uses_key_auth() else None,
+                options=ssh_options,
+            )
+            cmd.append("exit")
+
+            if session.uses_password_auth() and session.auth_value:
+                if has_command("sshpass"):
+                    cmd = ["sshpass", "-p", session.auth_value] + cmd
+                else:
+                    return (
+                        False,
+                        "sshpass is not installed, cannot test password authentication.",
+                    )
+
+            self.logger.info(f"Testing SSH connection with command: {' '.join(cmd)}")
+
+            result = subprocess.run(cmd, capture_output=True, text=True, timeout=15)
+
+            if result.returncode == 0:
+                self.logger.info(f"SSH connection test successful for {session.name}")
+                return True, "Connection successful."
+            else:
+                error_message = result.stderr.strip()
+                self.logger.warning(
+                    f"SSH connection test failed for {session.name}: {error_message}"
+                )
+                return False, error_message
+
+        except Exception as e:
+            self.logger.error(
+                f"Exception during SSH connection test for {session.name}: {e}"
+            )
+            return False, str(e)
 
     def _validate_ssh_session(self, session: "SessionItem") -> None:
         try:
@@ -476,9 +512,6 @@ class ProcessSpawner:
                     )
         except Exception as e:
             self.logger.error(f"SSH spawn callback handling failed: {e}")
-
-    def _monitor_ssh_errors(self, terminal, session) -> None:
-        pass
 
     def _get_ssh_error_guidance(self, error_message: str) -> str:
         error_lower = error_message.lower()
