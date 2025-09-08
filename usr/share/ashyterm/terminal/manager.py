@@ -3,11 +3,13 @@
 import os
 import pathlib
 import signal
+import subprocess
 import threading
 import time
 import weakref
 from enum import Enum
 from typing import Any, Callable, Dict, List, Optional, Union
+from urllib.parse import urlparse
 
 try:
     import psutil
@@ -20,7 +22,7 @@ import gi
 
 gi.require_version("Gtk", "4.0")
 gi.require_version("Vte", "3.91")
-from gi.repository import GLib, Gtk, Vte
+from gi.repository import Gdk, GLib, Gtk, Vte
 
 from ..sessions.models import SessionItem
 from ..settings.manager import SettingsManager
@@ -480,6 +482,8 @@ class TerminalManager:
             terminal.set_scroll_unit_is_pixels(True)
             self.settings_manager.apply_terminal_settings(terminal, self.parent_window)
             self._setup_context_menu(terminal)
+            # Setup URL pattern detection and hyperlink support
+            self._setup_url_patterns(terminal)
             return terminal
         except Exception as e:
             self.logger.error(f"Base terminal creation failed: {e}")
@@ -500,11 +504,22 @@ class TerminalManager:
                 "notify::current-directory-uri", self._on_directory_uri_changed
             )
             self.manual_ssh_tracker.track(terminal_id, terminal)
+
+            # Focus controllers
             focus_controller = Gtk.EventControllerFocus()
             focus_controller.connect(
                 "enter", self._on_terminal_focus_in, terminal, terminal_id
             )
             terminal.add_controller(focus_controller)
+
+            # Click controller for URL handling
+            click_controller = Gtk.GestureClick()
+            click_controller.set_button(1)  # Left mouse button
+            click_controller.connect(
+                "pressed", self._on_terminal_clicked, terminal, terminal_id
+            )
+            terminal.add_controller(click_controller)
+
             terminal.terminal_id = terminal_id
         except Exception as e:
             self.logger.error(
@@ -654,6 +669,14 @@ class TerminalManager:
             )
             self.osc7_tracker.untrack_terminal(terminal)
             self.manual_ssh_tracker.untrack(terminal_id)
+
+            # Clean up OSC8 hyperlink state
+            if hasattr(terminal, "_osc8_hovered_uri"):
+                try:
+                    delattr(terminal, "_osc8_hovered_uri")
+                except Exception:
+                    pass
+
             if hasattr(terminal, "_closed_by_user"):
                 try:
                     delattr(terminal, "_closed_by_user")
@@ -792,3 +815,213 @@ class TerminalManager:
             GLib.source_remove(self._process_check_timer_id)
             self._process_check_timer_id = None
         get_spawner().process_tracker.terminate_all()
+
+    def _setup_url_patterns(self, terminal: Vte.Terminal) -> None:
+        """Configure URL detection patterns for the terminal."""
+        try:
+            # Enable VTE's built-in hyperlink detection
+            terminal.set_allow_hyperlink(True)
+
+            # Connect to OSC8 hyperlink hover signal for tracking
+            if hasattr(terminal, "connect"):
+                terminal.connect(
+                    "hyperlink-hover-uri-changed", self._on_hyperlink_hover_changed
+                )
+
+            # URL regex patterns for detection
+            url_patterns = [
+                # HTTP/HTTPS URLs
+                r'https?://[^\s<>"{}|\\^`\[\]]+[^\s<>"{}|\\^`\[\].,;:!?]',
+                # FTP URLs
+                r'ftp://[^\s<>"{}|\\^`\[\]]+[^\s<>"{}|\\^`\[\].,;:!?]',
+                # Email addresses
+                r"[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}",
+            ]
+
+            # Try VTE.Regex first (newer VTE versions)
+            if hasattr(terminal, "match_add_regex") and hasattr(Vte, "Regex"):
+                for pattern in url_patterns:
+                    try:
+                        # Use proper VTE regex compilation with MULTILINE flag
+                        regex_flags = 0
+                        if hasattr(Vte, "RegexFlags") and hasattr(
+                            Vte.RegexFlags, "MULTILINE"
+                        ):
+                            regex_flags = Vte.RegexFlags.MULTILINE
+
+                        regex = Vte.Regex.new_for_match(
+                            pattern, len(pattern.encode()), regex_flags
+                        )
+                        tag = terminal.match_add_regex(regex, 0)
+
+                        # Set match as hyperlink
+                        if hasattr(terminal, "match_set_cursor_name"):
+                            terminal.match_set_cursor_name(tag, "pointer")
+
+                        self.logger.debug(
+                            f"URL pattern added (Vte.Regex): {pattern} (tag: {tag})"
+                        )
+
+                    except Exception as e:
+                        self.logger.warning(
+                            f"Failed to add VTE regex pattern '{pattern}': {e}"
+                        )
+
+            # Fallback to GLib.Regex for older versions
+            elif hasattr(terminal, "match_add_gregex"):
+                from gi.repository import GLib
+
+                for pattern in url_patterns:
+                    try:
+                        regex = GLib.Regex.new(pattern, 0, 0)
+                        tag = terminal.match_add_gregex(regex, 0)
+
+                        if hasattr(terminal, "match_set_cursor_name"):
+                            terminal.match_set_cursor_name(tag, "pointer")
+
+                        self.logger.debug(
+                            f"URL pattern added (GLib.Regex): {pattern} (tag: {tag})"
+                        )
+
+                    except Exception as e:
+                        self.logger.warning(
+                            f"Failed to add GLib regex pattern '{pattern}': {e}"
+                        )
+
+            self.logger.debug("URL pattern detection configured for terminal")
+
+        except Exception as e:
+            self.logger.error(f"Failed to setup URL patterns: {e}")
+
+    def _on_hyperlink_hover_changed(self, terminal, uri, bbox):
+        """Handle OSC8 hyperlink hover events."""
+        try:
+            terminal_id = getattr(terminal, "terminal_id", None)
+            if terminal_id is not None:
+                if uri:
+                    # Store the currently hovered OSC8 hyperlink
+                    terminal._osc8_hovered_uri = uri
+                    self.logger.debug(
+                        f"OSC8 hyperlink hovered in terminal {terminal_id}: {uri}"
+                    )
+                else:
+                    # Clear hovered OSC8 hyperlink when mouse leaves
+                    if hasattr(terminal, "_osc8_hovered_uri"):
+                        delattr(terminal, "_osc8_hovered_uri")
+                        self.logger.debug(
+                            f"OSC8 hyperlink hover cleared in terminal {terminal_id}"
+                        )
+        except Exception as e:
+            self.logger.error(f"OSC8 hyperlink hover handling failed: {e}")
+
+    def _on_terminal_clicked(self, gesture, n_press, x, y, terminal, terminal_id):
+        """Handle terminal clicks for URL opening and focus."""
+        try:
+            # First, check for OSC8 hyperlinks (priority over regex matches)
+            if hasattr(terminal, "_osc8_hovered_uri") and terminal._osc8_hovered_uri:
+                osc8_uri = terminal._osc8_hovered_uri
+                success = self._open_hyperlink(osc8_uri)
+                if success:
+                    self.logger.info(f"OSC8 hyperlink opened from click: {osc8_uri}")
+                    return Gdk.EVENT_STOP
+
+            # Fallback: Try VTE's current hyperlink detection at click position
+            if hasattr(terminal, "get_hyperlink_hover_uri"):
+                try:
+                    # Get the hyperlink URI at the current position
+                    hover_uri = terminal.get_hyperlink_hover_uri()
+                    if hover_uri:
+                        success = self._open_hyperlink(hover_uri)
+                        if success:
+                            self.logger.info(
+                                f"VTE hyperlink opened from click: {hover_uri}"
+                            )
+                            return Gdk.EVENT_STOP
+                except Exception as e:
+                    self.logger.debug(f"VTE hyperlink detection failed: {e}")
+
+            # Fallback: Try VTE's match detection at click position for regex-based URLs
+            if hasattr(terminal, "match_check"):
+                try:
+                    # Convert click coordinates to character column/row
+                    char_width = terminal.get_char_width()
+                    char_height = terminal.get_char_height()
+
+                    if char_width > 0 and char_height > 0:
+                        col = int(x / char_width)
+                        row = int(y / char_height)
+
+                        # Try match_check with coordinates
+                        match_result = terminal.match_check(col, row)
+
+                        if match_result and len(match_result) >= 2:
+                            matched_text = match_result[0]
+                            tag = match_result[1]
+
+                            self.logger.debug(
+                                f"Regex match found at ({col}, {row}): '{matched_text}' (tag: {tag})"
+                            )
+
+                            if matched_text and self._is_valid_url(matched_text):
+                                success = self._open_hyperlink(matched_text)
+                                if success:
+                                    self.logger.info(
+                                        f"Regex URL opened from click: {matched_text}"
+                                    )
+                                    return Gdk.EVENT_STOP
+
+                except Exception as e:
+                    self.logger.debug(f"Regex match check failed: {e}")
+
+            # Normal focus handling
+            terminal.grab_focus()
+            self.registry.update_terminal_status(terminal_id, "focused")
+            if self.on_terminal_focus_changed:
+                self.on_terminal_focus_changed(terminal, False)
+
+            return Gdk.EVENT_PROPAGATE
+
+        except Exception as e:
+            self.logger.error(
+                f"Terminal click handling failed for terminal {terminal_id}: {e}"
+            )
+            return Gdk.EVENT_PROPAGATE
+
+    def _is_valid_url(self, text: str) -> bool:
+        """Check if text is a valid URL."""
+        try:
+            result = urlparse(text.strip())
+            return bool(result.scheme and result.netloc)
+        except Exception:
+            return False
+
+    def _open_hyperlink(self, uri: str) -> bool:
+        """Open hyperlink using system default handler."""
+        try:
+            if not uri or not uri.strip():
+                self.logger.warning("Empty or invalid URI provided")
+                return False
+
+            uri = uri.strip()
+
+            # Basic URI validation
+            try:
+                parsed = urlparse(uri)
+                if not parsed.scheme:
+                    self.logger.warning(f"URI missing scheme: {uri}")
+                    return False
+            except Exception as e:
+                self.logger.warning(f"Invalid URI format: {uri} - {e}")
+                return False
+
+            self.logger.info(f"Opening hyperlink: {uri}")
+
+            subprocess.run(["xdg-open", uri], check=True, timeout=10)
+            return True
+
+        except subprocess.TimeoutExpired:
+            self.logger.error(f"Timeout opening hyperlink: {uri}")
+            return False
+        except Exception as e:
+            self.logger.error(f"Failed to open hyperlink '{uri}': {e}")
+            return False

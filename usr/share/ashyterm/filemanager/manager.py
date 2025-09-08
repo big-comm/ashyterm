@@ -1237,7 +1237,7 @@ class FileManager(GObject.Object):
             callback = partial(self._open_and_monitor_local_file, app_info=None)
             self._download_and_execute(file_item, callback)
         else:
-            full_path = Path(self.current_path).joinpath(item.name)
+            full_path = Path(self.current_path).joinpath(file_item.name)
             self._open_local_file(full_path)
 
     def _on_open_with_action(self, _action, _param, file_item: FileItem):

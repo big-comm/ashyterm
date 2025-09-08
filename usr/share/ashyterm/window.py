@@ -2,7 +2,7 @@
 
 import weakref
 from pathlib import Path
-from typing import Any, List, Optional
+from typing import List
 
 import gi
 
@@ -11,7 +11,6 @@ gi.require_version("Adw", "1")
 gi.require_version("Vte", "3.91")
 from gi.repository import Adw, Gdk, Gio, GLib, Gtk, Vte
 
-from .filemanager.manager import FileManager
 from .sessions.models import LayoutItem, SessionFolder, SessionItem
 from .sessions.operations import SessionOperations
 from .sessions.storage import (

@@ -3,7 +3,7 @@
 import os
 from typing import TYPE_CHECKING, List, Optional, Union
 
-from gi.repository import Adw, Gdk, Gtk, Gio, GLib
+from gi.repository import Adw, Gdk, Gio, GLib, Gtk
 
 from ..sessions.models import LayoutItem, SessionFolder, SessionItem
 from ..utils.logger import get_logger, log_session_event
@@ -126,8 +126,9 @@ class WindowActions:
         if terminal := self.window.tab_manager.get_selected_terminal():
             if hasattr(terminal, "_context_menu_url"):
                 url = terminal._context_menu_url
-                launcher = Gtk.UriLauncher.new(url)
-                launcher.launch(self.window, None, None, None)
+                success = self.window.terminal_manager._open_hyperlink(url)
+                if success:
+                    self.logger.info(f"URL opened from context menu: {url}")
                 delattr(terminal, "_context_menu_url")
 
     def copy_url(self, *args):
