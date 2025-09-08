@@ -31,6 +31,7 @@ from ..utils.security import (
     validate_ssh_hostname,
     validate_ssh_key_file,
 )
+from ..utils.translation_utils import _
 
 
 class ProcessTracker:
@@ -281,8 +282,53 @@ class ProcessSpawner:
                 log_error_with_context(
                     e, f"SSH spawn for {session.name}", "ashyterm.spawner"
                 )
-                self._show_ssh_error_on_terminal(terminal, session, str(e))
                 raise TerminalCreationError(str(e), "ssh") from e
+
+    def execute_remote_command_sync(
+        self, session: "SessionItem", command: List[str], timeout: int = 15
+    ) -> Tuple[bool, str]:
+        """
+        Executes a non-interactive command on a remote session synchronously.
+        Returns a tuple of (success, output).
+        """
+        if not session.is_ssh():
+            return False, _("Not an SSH session.")
+
+        try:
+            self._validate_ssh_session(session)
+            full_cmd = self._build_non_interactive_ssh_command(session, command)
+            if not full_cmd:
+                raise TerminalCreationError(
+                    "Failed to build non-interactive SSH command", "ssh"
+                )
+
+            self.logger.debug(f"Executing remote command: {' '.join(full_cmd)}")
+
+            result = subprocess.run(
+                full_cmd, capture_output=True, text=True, timeout=timeout
+            )
+
+            if result.returncode == 0:
+                return True, result.stdout
+            else:
+                error_output = (
+                    result.stdout.strip() + "\n" + result.stderr.strip()
+                ).strip()
+                self.logger.warning(
+                    f"Remote command failed for {session.name} with code {result.returncode}: {error_output}"
+                )
+                return False, error_output
+        except subprocess.TimeoutExpired:
+            self.logger.error(f"Remote command timed out for session {session.name}")
+            return False, _("Command timed out.")
+        except Exception as e:
+            self.logger.error(
+                f"Failed to execute remote command for {session.name}: {e}"
+            )
+            log_error_with_context(
+                e, f"Remote command execution for {session.name}", "ashyterm.spawner"
+            )
+            return False, str(e)
 
     def test_ssh_connection(self, session: "SessionItem") -> Tuple[bool, str]:
         """
@@ -360,6 +406,7 @@ class ProcessSpawner:
         session: "SessionItem",
         initial_command: Optional[str] = None,
     ) -> Optional[List[str]]:
+        """Builds an SSH command for an INTERACTIVE session, forcing TTY allocation."""
         if not has_command(command_type):
             raise SSHConnectionError(
                 session.host, f"{command_type.upper()} command not found on system"
@@ -396,6 +443,7 @@ class ProcessSpawner:
 
             full_remote_command = "; ".join(remote_parts)
 
+            # Force TTY allocation for interactive sessions
             if "-t" not in cmd:
                 cmd.insert(1, "-t")
             cmd.append(full_remote_command)
@@ -407,20 +455,38 @@ class ProcessSpawner:
                 self.logger.warning("sshpass not available for password authentication")
         return cmd
 
-    def _show_ssh_error_on_terminal(
-        self, terminal: Vte.Terminal, session: "SessionItem", error_message: str
-    ) -> None:
-        try:
-            error_text = f"\r\n{'=' * 60}\r\n"
-            error_text += f"SSH Connection Error for '{session.name}'\r\n"
-            error_text += f"Host: {session.get_connection_string()}\r\n"
-            error_text += f"Error: {error_message}\r\n"
-            error_text += f"{'=' * 60}\r\n"
-            error_text += "Please check your connection settings and try again.\r\n\r\n"
-            if terminal.get_realized():
-                terminal.feed(error_text.encode("utf-8"))
-        except Exception as e:
-            self.logger.error(f"Failed to show SSH error on terminal: {e}")
+    def _build_non_interactive_ssh_command(
+        self, session: "SessionItem", command: List[str]
+    ) -> Optional[List[str]]:
+        """Builds an SSH command for a NON-INTERACTIVE session, without TTY allocation."""
+        if not has_command("ssh"):
+            raise SSHConnectionError(session.host, "SSH command not found on system")
+
+        ssh_options = {
+            "ConnectTimeout": "15",
+            "ControlMaster": "auto",
+            "ControlPersist": "600",
+            "ControlPath": self._get_ssh_control_path(session),
+            "BatchMode": "yes",  # Ensure it doesn't prompt for passwords
+        }
+        cmd = self.command_builder.build_remote_command(
+            "ssh",
+            hostname=session.host,
+            port=session.port if session.port != 22 else None,
+            username=session.user if session.user else None,
+            key_file=session.auth_value if session.uses_key_auth() else None,
+            options=ssh_options,
+        )
+
+        # Append the actual command to be executed
+        cmd.extend(command)
+
+        if session.uses_password_auth() and session.auth_value:
+            if has_command("sshpass"):
+                cmd = ["sshpass", "-p", session.auth_value] + cmd
+            else:
+                self.logger.warning("sshpass not available for password authentication")
+        return cmd
 
     def _default_spawn_callback(
         self,
@@ -445,7 +511,8 @@ class ProcessSpawner:
                 log_terminal_event(
                     "spawn_failed", terminal_name, f"error: {error.message}"
                 )
-                error_msg = f"\r\nFailed to start {terminal_name}:\r\nError: {error.message}\r\nPlease check your system configuration.\r\n\r\n"
+                # Use Unix-style newlines (\n) for terminal output
+                error_msg = f"\nFailed to start {terminal_name}:\nError: {error.message}\nPlease check your system configuration.\n\n"
                 if terminal.get_realized():
                     terminal.feed(error_msg.encode("utf-8"))
             else:
@@ -489,10 +556,11 @@ class ProcessSpawner:
                     "ssh_spawn_failed", session_name, f"error: {error.message}"
                 )
                 error_guidance = self._get_ssh_error_guidance(error.message)
-                error_msg = f"\r\nSSH Connection Failed:\r\nSession: {session_name}\r\nHost: {getattr(actual_data, 'get_connection_string', lambda: 'unknown')()}\r\nError: {error.message}\r\n"
+                # Use Unix-style newlines (\n) for terminal output
+                error_msg = f"\nSSH Connection Failed:\nSession: {session_name}\nHost: {getattr(actual_data, 'get_connection_string', lambda: 'unknown')()}\nError: {error.message}\n"
                 if error_guidance:
-                    error_msg += f"Suggestion: {error_guidance}\r\n"
-                error_msg += "\r\n"
+                    error_msg += f"Suggestion: {error_guidance}\n"
+                error_msg += "\n"
                 if terminal.get_realized():
                     terminal.feed(error_msg.encode("utf-8"))
             else:

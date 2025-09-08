@@ -106,13 +106,15 @@ class FileOperations:
     def execute_command_on_session(
         self, command: List[str], session_override: Optional[SessionItem] = None
     ) -> Tuple[bool, str]:
+        """
+        Executes a command either locally or remotely via the centralized spawner.
+        """
         session_to_use = session_override if session_override else self.session_item
         if not session_to_use:
             return False, _("No session context for file operation.")
 
         try:
             if session_to_use.is_local():
-                # CORRIGIDO: Executar comando local de forma segura, sem shell.
                 result = subprocess.run(
                     command,
                     shell=False,
@@ -129,29 +131,16 @@ class FileOperations:
                 from ..terminal.spawner import get_spawner
 
                 spawner = get_spawner()
-                ssh_cmd_base = spawner._build_remote_command_secure(
-                    "ssh", session_to_use
-                )
-                # Remove the interactive shell part for non-interactive commands
-                if ssh_cmd_base and ssh_cmd_base[-1].startswith(
-                    "export PROMPT_COMMAND"
-                ):
-                    ssh_cmd_base = ssh_cmd_base[:-1]
-
-                full_cmd = ssh_cmd_base + command
-                result = subprocess.run(
-                    full_cmd, capture_output=True, text=True, timeout=15
-                )
-                return (
-                    (True, result.stdout)
-                    if result.returncode == 0
-                    else (False, result.stderr)
-                )
+                return spawner.execute_remote_command_sync(session_to_use, command)
         except subprocess.TimeoutExpired:
+            self.logger.error(f"Command timed out: {' '.join(command)}")
             return False, _("Command timed out.")
         except Exception as e:
+            self.logger.error(f"Command execution failed: {e}")
             return False, str(e)
-        return False, _("Unknown session type.")
+
+        # This case should not be reached if session is always local or ssh
+        return False, _("Unsupported session type for command execution.")
 
     def get_remote_file_timestamp(self, remote_path: str) -> Optional[int]:
         """Gets the modification timestamp of a remote file."""

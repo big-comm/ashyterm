@@ -1,6 +1,7 @@
 # ashyterm/ui/dialogs/session_edit_dialog.py
 
 import threading
+from typing import Optional
 
 import gi
 
@@ -9,9 +10,7 @@ gi.require_version("Adw", "1")
 from gi.repository import Adw, Gio, GLib, Gtk
 
 from ...sessions.models import SessionItem
-from ...sessions.storage import save_sessions_and_folders
 from ...terminal.spawner import get_spawner
-from ...utils.backup import BackupType, get_backup_manager
 from ...utils.crypto import is_encryption_available
 from ...utils.exceptions import HostnameValidationError, SSHKeyError
 from ...utils.logger import log_session_event
@@ -41,6 +40,7 @@ class SessionEditDialog(BaseDialog):
         self.session_store = session_store
         self.folder_store = folder_store
         self.position = position
+        # The editing_session is a data holder, not the live store object
         self.editing_session = (
             SessionItem.from_dict(session_item.to_dict())
             if not self.is_new_item
@@ -413,7 +413,7 @@ class SessionEditDialog(BaseDialog):
                 _("Failed to start connection test: {}").format(e),
             )
 
-    def _create_session_from_fields(self) -> SessionItem | None:
+    def _create_session_from_fields(self) -> Optional[SessionItem]:
         if (
             not self.host_entry.get_text().strip()
             or not self.user_entry.get_text().strip()
@@ -468,59 +468,90 @@ class SessionEditDialog(BaseDialog):
             self.close()
 
     def _on_save_clicked(self, button) -> None:
+        """Handles the save button click by delegating to the SessionOperations layer."""
         try:
-            if not self._validate_and_save():
-                return
-            try:
-                save_sessions_and_folders(self.session_store, self.folder_store)
-                self._create_save_backup()
-                log_session_event(
-                    "created" if self.is_new_item else "modified",
-                    self.editing_session.name,
-                )
-                if hasattr(self.parent_window, "refresh_tree"):
-                    self.parent_window.refresh_tree()
+            updated_session = self._build_updated_session()
+            if not updated_session:
+                return  # Validation failed and showed a dialog
+
+            operations = self.parent_window.session_operations
+            if self.is_new_item:
+                result = operations.add_session(updated_session)
+            else:
+                result = operations.update_session(self.position, updated_session)
+
+            if result and result.success:
                 self.logger.info(
-                    f"Session {'created' if self.is_new_item else 'updated'}: {self.editing_session.name}"
+                    f"Session operation successful: {updated_session.name}"
                 )
+                self.parent_window.refresh_tree()
                 self.close()
-            except Exception as e:
-                self.logger.error(f"Failed to save session: {e}")
-                self._show_error_dialog(
-                    _("Save Error"), _("Failed to save session: {}").format(e)
-                )
+            elif result:
+                self._show_error_dialog(_("Save Error"), result.message)
         except Exception as e:
             self.logger.error(f"Save handling failed: {e}")
             self._show_error_dialog(
-                _("Save Error"), _("An unexpected error occurred while saving")
+                _("Save Error"), _("An unexpected error occurred while saving.")
             )
 
-    def _validate_and_save(self) -> bool:
-        try:
-            self._clear_validation_errors()
-            if not self._validate_basic_fields():
-                return False
-            if self.type_combo.get_selected() == 1 and not self._validate_ssh_fields():
-                return False
-            self._apply_changes_to_session()
-            if not self.editing_session.validate():
-                errors = self.editing_session.get_validation_errors()
-                self._show_error_dialog(
-                    _("Validation Error"),
-                    _("Session validation failed:\n{}").format("\n".join(errors)),
-                )
-                return False
-            if self.is_new_item:
-                self.session_store.append(self.editing_session)
-            else:
-                self._update_original_session()
-            return True
-        except Exception as e:
-            self.logger.error(f"Validation and save failed: {e}")
-            self._show_error_dialog(
-                _("Validation Error"), _("Failed to validate session: {}").format(e)
+    def _build_updated_session(self) -> Optional[SessionItem]:
+        """Builds a SessionItem from dialog fields and performs validation."""
+        self._clear_validation_errors()
+        if not self._validate_basic_fields():
+            return None
+        if self.type_combo.get_selected() == 1 and not self._validate_ssh_fields():
+            return None
+
+        # Create a new SessionItem instance with the data from the form
+        session_data = self.editing_session.to_dict()
+        session_data.update({
+            "name": self.name_entry.get_text().strip(),
+            "session_type": "local" if self.type_combo.get_selected() == 0 else "ssh",
+        })
+
+        if self.folder_combo and (
+            selected_item := self.folder_combo.get_selected_item()
+        ):
+            session_data["folder_path"] = self.folder_paths_map.get(
+                selected_item.get_string(), ""
             )
-            return False
+
+        raw_password = ""
+        if session_data["session_type"] == "ssh":
+            session_data.update({
+                "host": self.host_entry.get_text().strip(),
+                "user": self.user_entry.get_text().strip(),
+                "port": int(self.port_entry.get_value()),
+                "auth_type": "key"
+                if self.auth_combo.get_selected() == 0
+                else "password",
+            })
+            if session_data["auth_type"] == "key":
+                session_data["auth_value"] = self.key_path_entry.get_text().strip()
+            else:
+                raw_password = self.password_entry.get_text()
+                session_data["auth_value"] = ""  # Will be stored in keyring
+        else:
+            session_data.update({
+                "host": "",
+                "user": "",
+                "auth_type": "",
+                "auth_value": "",
+            })
+
+        updated_session = SessionItem.from_dict(session_data)
+        if updated_session.uses_password_auth() and raw_password:
+            updated_session.auth_value = raw_password
+
+        if not updated_session.validate():
+            errors = updated_session.get_validation_errors()
+            self._show_error_dialog(
+                _("Validation Error"),
+                _("Session validation failed:\n{}").format("\n".join(errors)),
+            )
+            return None
+
+        return updated_session
 
     def _validate_basic_fields(self) -> bool:
         return self._validate_required_field(self.name_entry, _("Session name"))
@@ -564,53 +595,3 @@ class SessionEditDialog(BaseDialog):
             return self.key_path_entry.get_text().strip()
         else:
             return self.password_entry.get_text()
-
-    def _apply_changes_to_session(self) -> None:
-        self.editing_session.name = self.name_entry.get_text().strip()
-        self.editing_session.session_type = (
-            "local" if self.type_combo.get_selected() == 0 else "ssh"
-        )
-        if self.folder_combo and (
-            selected_item := self.folder_combo.get_selected_item()
-        ):
-            self.editing_session.folder_path = self.folder_paths_map.get(
-                selected_item.get_string(), ""
-            )
-        if self.editing_session.is_ssh():
-            self.editing_session.host = self.host_entry.get_text().strip()
-            self.editing_session.user = self.user_entry.get_text().strip()
-            self.editing_session.port = int(self.port_entry.get_value())
-            self.editing_session.auth_type = (
-                "key" if self.auth_combo.get_selected() == 0 else "password"
-            )
-            self.editing_session.auth_value = self._get_auth_value()
-        else:
-            self.editing_session.host = ""
-            self.editing_session.user = ""
-            self.editing_session.auth_type = ""
-            self.editing_session.auth_value = ""
-
-    def _update_original_session(self) -> None:
-        self.original_session.name = self.editing_session.name
-        self.original_session.session_type = self.editing_session.session_type
-        self.original_session.host = self.editing_session.host
-        self.original_session.user = self.editing_session.user
-        self.original_session.port = self.editing_session.port
-        self.original_session.auth_type = self.editing_session.auth_type
-        self.original_session.auth_value = self.editing_session.auth_value
-        self.original_session.folder_path = self.editing_session.folder_path
-
-    def _create_save_backup(self) -> None:
-        try:
-            backup_manager = get_backup_manager()
-            if backup_manager and self.config_paths.SESSIONS_FILE.exists():
-                backup_manager.create_backup(
-                    [self.config_paths.SESSIONS_FILE],
-                    BackupType.AUTOMATIC,
-                    _("Session {} {}").format(
-                        "created" if self.is_new_item else "modified",
-                        self.editing_session.name,
-                    ),
-                )
-        except Exception as e:
-            self.logger.warning(f"Failed to create session backup: {e}")

@@ -38,7 +38,7 @@ class LoggerConfig:
 
 
 class ColoredFormatter(logging.Formatter):
-    """Colored formatter for console output."""
+    """Colored formatter for console output that preserves alignment."""
 
     COLORS = {
         "DEBUG": "\033[36m",
@@ -50,16 +50,34 @@ class ColoredFormatter(logging.Formatter):
     }
 
     def format(self, record):
-        formatted_message = super().format(record)
-
+        """
+        Applies color and padding to the log level name before formatting.
+        This ensures that the ANSI escape codes do not break the alignment
+        of the log columns.
+        """
         levelname = record.levelname
+        original_levelname = record.levelname
+
+        # Standard padding width for log levels is 8 characters.
+        padding_width = 8
+
         if levelname in self.COLORS:
             colored_levelname = (
                 f"{self.COLORS[levelname]}{levelname}{self.COLORS['RESET']}"
             )
-            formatted_message = formatted_message.replace(
-                levelname, colored_levelname, 1
-            )
+            # Manually pad the colored string to the correct visual width.
+            padding = " " * (padding_width - len(levelname))
+            record.levelname = f"{colored_levelname}{padding}"
+        else:
+            # Ensure non-colored levels are also padded for alignment.
+            record.levelname = f"{levelname:<{padding_width}}"
+
+        # Let the parent class handle the final formatting with our modified record.
+        formatted_message = super().format(record)
+
+        # Restore the original levelname on the record object in case other
+        # handlers in the chain need it in its original state.
+        record.levelname = original_levelname
 
         return formatted_message
 
@@ -85,6 +103,7 @@ class ThreadSafeLogger:
 
             console_handler = logging.StreamHandler(sys.stdout)
             console_handler.setLevel(self.config.console_level.value)
+            # The format string now uses the pre-formatted `levelname`.
             console_formatter = ColoredFormatter(
                 fmt="%(asctime)s | %(name)s | %(levelname)s | %(message)s",
                 datefmt="%H:%M:%S",
@@ -94,7 +113,7 @@ class ThreadSafeLogger:
 
             if self.config.log_to_file:
                 file_formatter = logging.Formatter(
-                    fmt="%(asctime)s | %(name)s | %(levelname)s | %(funcName)s:%(lineno)d | %(message)s",
+                    fmt="%(asctime)s | %(name)s | %(levelname)-8s | %(funcName)s:%(lineno)d | %(message)s",
                     datefmt="%Y-%m-%d %H:%M:%S",
                 )
 
