@@ -455,7 +455,7 @@ class FileManager(GObject.Object):
             a, b, lambda x, y: (x.date > y.date) - (x.date < y.date)
         )
 
-    def _on_hidden_toggle(self, toggle_button):
+    def _on_hidden_toggle(self, _toggle_button):
         self.combined_filter.changed(Gtk.FilterChange.DIFFERENT)
 
     def _on_search_changed(self, search_entry):
@@ -861,7 +861,7 @@ class FileManager(GObject.Object):
         popover.set_pointing_to(rect)
         popover.popup()
 
-    def _on_search_key_pressed(self, controller, keyval, keycode, state):
+    def _on_search_key_pressed(self, controller, keyval, _keycode, state):
         """Handle key presses on the search entry for list navigation."""
         selection_model = self.column_view.get_model()
         if not selection_model:
@@ -901,7 +901,7 @@ class FileManager(GObject.Object):
 
         return Gdk.EVENT_PROPAGATE
 
-    def _on_column_view_key_pressed(self, controller, keyval, keycode, state):
+    def _on_column_view_key_pressed(self, controller, keyval, _keycode, state):
         """Handle key presses on the column view for instant filtering."""
         unicode_val = Gdk.keyval_to_unicode(keyval)
         if unicode_val != 0:
@@ -926,7 +926,7 @@ class FileManager(GObject.Object):
 
         return Gdk.EVENT_PROPAGATE
 
-    def _on_column_view_key_released(self, controller, keyval, keycode, state):
+    def _on_column_view_key_released(self, controller, keyval, _keycode, state):
         """Handle key releases on the column view for context menu."""
         if keyval in (Gdk.KEY_Alt_L, Gdk.KEY_Alt_R):
             selection_model = self.column_view.get_model()

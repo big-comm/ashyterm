@@ -881,7 +881,7 @@ class TerminalManager:
         except Exception as e:
             self.logger.error(f"Failed to setup URL patterns: {e}")
 
-    def _on_hyperlink_hover_changed(self, terminal, uri, bbox):
+    def _on_hyperlink_hover_changed(self, terminal, uri, _bbox):
         """Handle OSC8 hyperlink hover events."""
         try:
             terminal_id = getattr(terminal, "terminal_id", None)
@@ -902,7 +902,7 @@ class TerminalManager:
         except Exception as e:
             self.logger.error(f"OSC8 hyperlink hover handling failed: {e}")
 
-    def _on_terminal_clicked(self, gesture, n_press, x, y, terminal, terminal_id):
+    def _on_terminal_clicked(self, gesture, _n_press, x, y, terminal, terminal_id):
         """Handle terminal clicks for URL opening (Ctrl+click only) and focus."""
         try:
             # Check if Ctrl key is pressed
@@ -932,7 +932,9 @@ class TerminalManager:
             )
             return Gdk.EVENT_PROPAGATE
 
-    def _on_terminal_right_clicked(self, gesture, n_press, x, y, terminal, terminal_id):
+    def _on_terminal_right_clicked(
+        self, gesture, _n_press, x, y, terminal, terminal_id
+    ):
         """Handle right-click for context menu with URL detection."""
         try:
             # Update context menu to include URL options if URL is at click position

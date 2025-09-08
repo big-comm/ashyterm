@@ -82,47 +82,45 @@ class WindowActions:
         restore_action.connect("activate", self.restore_layout)
         self.window.add_action(restore_action)
 
-        delete_action = Gio.SimpleAction.new(
-            "delete_layout", GLib.VariantType.new("s")
-        )
+        delete_action = Gio.SimpleAction.new("delete_layout", GLib.VariantType.new("s"))
         delete_action.connect("activate", self.delete_layout)
         self.window.add_action(delete_action)
 
     # --- Tab and Pane Actions ---
 
-    def new_local_tab(self, *args):
+    def new_local_tab(self, *_args):
         self.window.tab_manager.create_local_tab()
 
-    def close_tab(self, *args):
+    def close_tab(self, *_args):
         if self.window.tab_manager.active_tab:
             self.window.tab_manager._on_tab_close_button_clicked(
                 None, self.window.tab_manager.active_tab
             )
 
-    def split_horizontal(self, *args):
+    def split_horizontal(self, *_args):
         if terminal := self.window.tab_manager.get_selected_terminal():
             self.window.tab_manager.split_horizontal(terminal)
 
-    def split_vertical(self, *args):
+    def split_vertical(self, *_args):
         if terminal := self.window.tab_manager.get_selected_terminal():
             self.window.tab_manager.split_vertical(terminal)
 
-    def close_pane(self, *args):
+    def close_pane(self, *_args):
         if terminal := self.window.tab_manager.get_selected_terminal():
             self.window.tab_manager.close_pane(terminal)
 
     # --- Terminal Actions ---
 
-    def copy(self, *args):
+    def copy(self, *_args):
         self.window.tab_manager.copy_from_current_terminal()
 
-    def paste(self, *args):
+    def paste(self, *_args):
         self.window.tab_manager.paste_to_current_terminal()
 
-    def select_all(self, *args):
+    def select_all(self, *_args):
         self.window.tab_manager.select_all_in_current_terminal()
 
-    def open_url(self, *args):
+    def open_url(self, *_args):
         if terminal := self.window.tab_manager.get_selected_terminal():
             if hasattr(terminal, "_context_menu_url"):
                 url = terminal._context_menu_url
@@ -131,54 +129,62 @@ class WindowActions:
                     self.logger.info(f"URL opened from context menu: {url}")
                 delattr(terminal, "_context_menu_url")
 
-    def copy_url(self, *args):
+    def copy_url(self, *_args):
         if terminal := self.window.tab_manager.get_selected_terminal():
             if hasattr(terminal, "_context_menu_url"):
                 url = terminal._context_menu_url
                 Gdk.Display.get_default().get_clipboard().set(url)
                 delattr(terminal, "_context_menu_url")
 
-    def zoom_in(self, *args):
+    def zoom_in(self, *_args):
         if terminal := self.window.tab_manager.get_selected_terminal():
             terminal.set_font_scale(terminal.get_font_scale() * 1.1)
             self.window._update_font_sizer_widget()
 
-    def zoom_out(self, *args):
+    def zoom_out(self, *_args):
         if terminal := self.window.tab_manager.get_selected_terminal():
             terminal.set_font_scale(terminal.get_font_scale() / 1.1)
             self.window._update_font_sizer_widget()
 
-    def zoom_reset(self, *args):
+    def zoom_reset(self, *_args):
         if terminal := self.window.tab_manager.get_selected_terminal():
             terminal.set_font_scale(1.0)
             self.window._update_font_sizer_widget()
 
     # --- Session Tree Actions ---
 
-    def connect_sftp(self, *args):
+    def connect_sftp(self, *_args):
         selected_item = self.window.session_tree.get_selected_item()
         if isinstance(selected_item, SessionItem) and selected_item.is_ssh():
             self.window.toast_overlay.add_toast(
                 Adw.Toast(title=_("SFTP not implemented yet"))
             )
 
-    def edit_session(self, *args):
-        if isinstance(item := self.window.session_tree.get_selected_item(), SessionItem):
+    def edit_session(self, *_args):
+        if isinstance(
+            item := self.window.session_tree.get_selected_item(), SessionItem
+        ):
             found, position = self.window.session_store.find(item)
             if found:
                 self._show_session_edit_dialog(item, position)
 
-    def duplicate_session(self, *args):
-        if isinstance(item := self.window.session_tree.get_selected_item(), SessionItem):
+    def duplicate_session(self, *_args):
+        if isinstance(
+            item := self.window.session_tree.get_selected_item(), SessionItem
+        ):
             self.window.session_operations.duplicate_session(item)
             self.window.refresh_tree()
 
-    def rename_session(self, *args):
-        if isinstance(item := self.window.session_tree.get_selected_item(), SessionItem):
+    def rename_session(self, *_args):
+        if isinstance(
+            item := self.window.session_tree.get_selected_item(), SessionItem
+        ):
             self._show_rename_dialog(item, True)
 
-    def move_session_to_folder(self, *args):
-        if isinstance(item := self.window.session_tree.get_selected_item(), SessionItem):
+    def move_session_to_folder(self, *_args):
+        if isinstance(
+            item := self.window.session_tree.get_selected_item(), SessionItem
+        ):
             MoveSessionDialog(
                 self.window,
                 item,
@@ -186,33 +192,39 @@ class WindowActions:
                 self.window.session_operations,
             ).present()
 
-    def delete_selected_items(self, *args):
+    def delete_selected_items(self, *_args):
         if items := self.window.session_tree.get_selected_items():
             self._show_delete_confirmation(items)
 
-    def edit_folder(self, *args):
-        if isinstance(item := self.window.session_tree.get_selected_item(), SessionFolder):
+    def edit_folder(self, *_args):
+        if isinstance(
+            item := self.window.session_tree.get_selected_item(), SessionFolder
+        ):
             found, position = self.window.folder_store.find(item)
             if found:
                 self._show_folder_edit_dialog(item, position)
 
-    def rename_folder(self, *args):
-        if isinstance(item := self.window.session_tree.get_selected_item(), SessionFolder):
+    def rename_folder(self, *_args):
+        if isinstance(
+            item := self.window.session_tree.get_selected_item(), SessionFolder
+        ):
             self._show_rename_dialog(item, False)
 
-    def add_session_to_folder(self, *args):
-        if isinstance(item := self.window.session_tree.get_selected_item(), SessionFolder):
+    def add_session_to_folder(self, *_args):
+        if isinstance(
+            item := self.window.session_tree.get_selected_item(), SessionFolder
+        ):
             self._show_session_edit_dialog(
                 SessionItem(name=_("New Session"), folder_path=item.path), -1
             )
 
-    def cut_item(self, *args):
+    def cut_item(self, *_args):
         self.window.session_tree._cut_selected_item()
 
-    def copy_item(self, *args):
+    def copy_item(self, *_args):
         self.window.session_tree._copy_selected_item()
 
-    def paste_item(self, *args):
+    def paste_item(self, *_args):
         target_path = ""
         if item := self.window.session_tree.get_selected_item():
             target_path = (
@@ -220,28 +232,28 @@ class WindowActions:
             )
         self.window.session_tree._paste_item(target_path)
 
-    def paste_item_root(self, *args):
+    def paste_item_root(self, *_args):
         self.window.session_tree._paste_item("")
 
-    def add_session_root(self, *args):
+    def add_session_root(self, *_args):
         self._show_session_edit_dialog(SessionItem(name=_("New Session")), -1)
 
-    def add_folder_root(self, *args):
+    def add_folder_root(self, *_args):
         self._show_folder_edit_dialog(SessionFolder(name=_("New Folder")), None)
 
     # --- Window and Application Actions ---
 
-    def toggle_sidebar_action(self, *args):
+    def toggle_sidebar_action(self, *_args):
         self.window.toggle_sidebar_button.set_active(
             not self.window.toggle_sidebar_button.get_active()
         )
 
-    def toggle_file_manager(self, *args):
+    def toggle_file_manager(self, *_args):
         self.window.file_manager_button.set_active(
             not self.window.file_manager_button.get_active()
         )
 
-    def preferences(self, *args):
+    def preferences(self, *_args):
         dialog = PreferencesDialog(self.window, self.window.settings_manager)
         dialog.connect(
             "transparency-changed",
@@ -256,16 +268,16 @@ class WindowActions:
         )
         dialog.present()
 
-    def shortcuts(self, *args):
+    def shortcuts(self, *_args):
         shortcuts_window = Gtk.ShortcutsWindow(transient_for=self.window)
         shortcuts_window.present()
 
-    def new_window(self, *args):
+    def new_window(self, *_args):
         if app := self.window.get_application():
             if new_window := app.create_new_window():
                 new_window.present()
 
-    def save_layout(self, *args):
+    def save_layout(self, *_args):
         self.window.state_manager.save_current_layout()
 
     def restore_layout(self, action, param):
@@ -287,9 +299,7 @@ class WindowActions:
             None,
         )
         if layout:
-            MoveLayoutDialog(
-                self.window, layout, self.window.folder_store
-            ).present()
+            MoveLayoutDialog(self.window, layout, self.window.folder_store).present()
 
     # --- Helper Methods for Dialogs (Moved from CommTerminalWindow) ---
 
