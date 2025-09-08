@@ -31,6 +31,8 @@ from ..utils.security import (
 
 
 class ProcessTracker:
+    """Track spawned processes for proper cleanup."""
+
     def __init__(self):
         self.logger = get_logger("ashyterm.spawner.tracker")
         self._processes: Dict[int, Dict[str, Any]] = {}
@@ -38,10 +40,12 @@ class ProcessTracker:
         self._lock = threading.RLock()
 
     def register_process(self, pid: int, process_info: Dict[str, Any]) -> None:
+        """Register a spawned process."""
         with self._lock:
             self._processes[pid] = {**process_info, "registered_at": time.time()}
 
     def unregister_process(self, pid: int) -> bool:
+        """Unregister a process."""
         with self._lock:
             if pid in self._processes:
                 del self._processes[pid]
@@ -49,10 +53,12 @@ class ProcessTracker:
             return False
 
     def get_all_processes(self) -> Dict[int, Dict[str, Any]]:
+        """Get all tracked processes."""
         with self._lock:
             return self._processes.copy()
 
     def terminate_all(self) -> None:
+        """Terminate all tracked processes robustly on Linux."""
         with self._lock:
             pids_to_terminate = list(self._processes.keys())
             if not pids_to_terminate:
@@ -60,6 +66,7 @@ class ProcessTracker:
 
             self.logger.info(f"Terminating {len(pids_to_terminate)} tracked processes.")
 
+            # On Unix-like systems, try SIGTERM first, then SIGKILL.
             for pid in pids_to_terminate:
                 try:
                     os.kill(pid, signal.SIGTERM)
@@ -88,6 +95,8 @@ class ProcessTracker:
 
 
 class ProcessSpawner:
+    """Enhanced process spawner with comprehensive security and error handling."""
+
     def __init__(self):
         self.logger = get_logger("ashyterm.spawner")
         self.platform_info = get_platform_info()
@@ -113,6 +122,7 @@ class ProcessSpawner:
         user_data: Any = None,
         working_directory: Optional[str] = None,
     ) -> None:
+        """Spawn a local terminal session. Raises TerminalCreationError on setup failure."""
         with self._spawn_lock:
             shell = Vte.get_user_shell()
 
@@ -271,18 +281,18 @@ class ProcessSpawner:
             options=ssh_options,
         )
         if command_type == "ssh":
-            # REFACTORED: Build the remote command dynamically
-            remote_commands = []
-            if initial_command:
-                remote_commands.append(initial_command)
-
+            # This command sets up OSC7 tracking for bash/zsh and then executes the user's default shell.
+            # It's a pragmatic approach that works for the most common shells.
             osc7_setup = 'export PROMPT_COMMAND=\'printf "\\033]7;file://%s%s\\007" "$(hostname)" "$PWD"\''
-            remote_commands.append(osc7_setup)
+            shell_exec = 'exec "$SHELL" -l'
 
-            shell_exec = f"exec {os.environ.get('SHELL', '/bin/bash')} -l"
-            remote_commands.append(shell_exec)
+            remote_parts = []
+            if initial_command:
+                remote_parts.append(initial_command)
+            remote_parts.append(osc7_setup)
+            remote_parts.append(shell_exec)
 
-            full_remote_command = " && ".join(remote_commands)
+            full_remote_command = "; ".join(remote_parts)
 
             if "-t" not in cmd:
                 cmd.insert(1, "-t")
