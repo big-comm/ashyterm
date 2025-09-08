@@ -1,7 +1,9 @@
 # ashyterm/terminal/spawner.py
 
 import os
+import shutil
 import signal
+import tempfile
 import threading
 import time
 from pathlib import Path
@@ -48,7 +50,18 @@ class ProcessTracker:
         """Unregister a process."""
         with self._lock:
             if pid in self._processes:
-                del self._processes[pid]
+                process_info = self._processes.pop(pid)
+                temp_dir_path = process_info.get("temp_dir_path")
+                if temp_dir_path:
+                    try:
+                        shutil.rmtree(temp_dir_path)
+                        self.logger.debug(
+                            f"Cleaned up temp zshrc directory: {temp_dir_path}"
+                        )
+                    except Exception as e:
+                        self.logger.error(
+                            f"Failed to clean up temp zshrc directory {temp_dir_path}: {e}"
+                        )
                 return True
             return False
 
@@ -125,12 +138,8 @@ class ProcessSpawner:
         """Spawn a local terminal session. Raises TerminalCreationError on setup failure."""
         with self._spawn_lock:
             shell = Vte.get_user_shell()
-
-            if self.settings_manager.get("use_login_shell", False):
-                cmd = [shell, "-l"]
-                self.logger.info(f"Spawning '{shell} -l' as a login shell.")
-            else:
-                cmd = [shell]
+            shell_basename = os.path.basename(shell)
+            temp_dir_path_for_zsh = None
 
             working_dir = self._resolve_and_validate_working_directory(
                 working_directory
@@ -147,7 +156,63 @@ class ProcessSpawner:
                 + Vte.get_micro_version()
             )
             env["VTE_VERSION"] = str(vte_version)
+
+            # OSC7 integration for CWD tracking
+            osc7_command = 'printf "\\033]7;file://%s%s\\007" "$(hostname)" "$PWD"'
+
+            if shell_basename == "zsh":
+                try:
+                    # Create a temporary directory that we will manage for cleanup
+                    temp_dir_path_for_zsh = tempfile.mkdtemp(prefix="ashyterm_zsh_")
+                    zshrc_path = os.path.join(temp_dir_path_for_zsh, ".zshrc")
+
+                    # This zshrc adds our hook, then sources the user's real .zshrc
+                    zshrc_content = (
+                        f"_ashyterm_update_cwd() {{ {osc7_command}; }}\n"
+                        'if [[ -z "$precmd_functions" ]]; then\n'
+                        "  typeset -a precmd_functions\n"
+                        "fi\n"
+                        "precmd_functions+=(_ashyterm_update_cwd)\n"
+                        'if [ -f "$HOME/.zshrc" ]; then . "$HOME/.zshrc"; fi\n'
+                    )
+
+                    with open(zshrc_path, "w", encoding="utf-8") as f:
+                        f.write(zshrc_content)
+
+                    env["ZDOTDIR"] = temp_dir_path_for_zsh
+                    self.logger.info(
+                        f"Using temporary ZDOTDIR for zsh OSC7 integration: {temp_dir_path_for_zsh}"
+                    )
+
+                except Exception as e:
+                    self.logger.error(f"Failed to set up zsh OSC7 integration: {e}")
+                    if temp_dir_path_for_zsh:
+                        shutil.rmtree(temp_dir_path_for_zsh, ignore_errors=True)
+                    temp_dir_path_for_zsh = None  # Ensure it's not registered
+            else:  # Bash and other compatible shells
+                existing_prompt_command = env.get("PROMPT_COMMAND", "")
+                if existing_prompt_command:
+                    # Prepend our command to ensure it runs, then the user's
+                    env["PROMPT_COMMAND"] = f"{osc7_command};{existing_prompt_command}"
+                else:
+                    env["PROMPT_COMMAND"] = osc7_command
+                self.logger.info(
+                    "Injected PROMPT_COMMAND for bash/compatible shell OSC7 integration."
+                )
+
+            if self.settings_manager.get("use_login_shell", False):
+                cmd = [shell, "-l"]
+                self.logger.info(f"Spawning '{shell} -l' as a login shell.")
+            else:
+                cmd = [shell]
+
             env_list = [f"{k}={v}" for k, v in env.items()]
+
+            # Wrap user_data to include the temp dir path for zsh cleanup
+            final_user_data = {
+                "original_user_data": user_data,
+                "temp_dir_path": temp_dir_path_for_zsh,
+            }
 
             terminal.spawn_async(
                 Vte.PtyFlags.DEFAULT,
@@ -160,7 +225,7 @@ class ProcessSpawner:
                 -1,
                 None,
                 callback if callback else self._default_spawn_callback,
-                (user_data if user_data else "Local Terminal",),
+                (final_user_data,),
             )
             self.logger.info("Local terminal spawn initiated successfully")
             log_terminal_event(
@@ -205,6 +270,12 @@ class ProcessSpawner:
                 env = self.environment_manager.get_terminal_environment()
                 env_list = [f"{k}={v}" for k, v in env.items()]
 
+                # Wrap user_data for consistency with local terminal spawning
+                final_user_data = {
+                    "original_user_data": user_data,
+                    "temp_dir_path": None,
+                }
+
                 terminal.spawn_async(
                     Vte.PtyFlags.DEFAULT,
                     working_dir,
@@ -216,7 +287,7 @@ class ProcessSpawner:
                     -1,
                     None,
                     callback if callback else self._ssh_spawn_callback,
-                    (user_data if user_data else session,),
+                    (final_user_data,),
                 )
                 self._monitor_ssh_errors(terminal, session)
                 self.logger.info(
@@ -328,9 +399,12 @@ class ProcessSpawner:
         user_data: Any = None,
     ) -> None:
         try:
+            original_user_data = user_data.get("original_user_data")
+            temp_dir_path = user_data.get("temp_dir_path")
+
             terminal_name = (
-                str(user_data[0])
-                if isinstance(user_data, tuple) and user_data
+                str(original_user_data[0])
+                if isinstance(original_user_data, tuple) and original_user_data
                 else "Terminal"
             )
             if error:
@@ -349,10 +423,14 @@ class ProcessSpawner:
                 )
                 log_terminal_event("spawned", terminal_name, f"PID {pid}")
                 if pid > 0:
-                    self.process_tracker.register_process(
-                        pid,
-                        {"name": terminal_name, "type": "local", "terminal": terminal},
-                    )
+                    process_info = {
+                        "name": terminal_name,
+                        "type": "local",
+                        "terminal": terminal,
+                    }
+                    if temp_dir_path:
+                        process_info["temp_dir_path"] = temp_dir_path
+                    self.process_tracker.register_process(pid, process_info)
         except Exception as e:
             self.logger.error(f"Spawn callback handling failed: {e}")
 
@@ -364,10 +442,11 @@ class ProcessSpawner:
         user_data: Any = None,
     ) -> None:
         try:
+            original_user_data = user_data.get("original_user_data")
             actual_data = (
-                user_data[0]
-                if isinstance(user_data, tuple) and user_data
-                else user_data
+                original_user_data[0]
+                if isinstance(original_user_data, tuple) and original_user_data
+                else original_user_data
             )
             session_name = getattr(actual_data, "name", "SSH Session")
             if error:

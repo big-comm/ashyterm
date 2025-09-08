@@ -542,7 +542,9 @@ class TerminalManager:
         except Exception as e:
             self.logger.error(f"Context menu setup failed: {e}")
 
-    def _update_context_menu_with_url(self, terminal: Vte.Terminal, x: float, y: float) -> None:
+    def _update_context_menu_with_url(
+        self, terminal: Vte.Terminal, x: float, y: float
+    ) -> None:
         """Update terminal context menu with URL detection at click position."""
         try:
             menu_model = create_terminal_menu(terminal, x, y)
@@ -675,6 +677,9 @@ class TerminalManager:
             if not self.registry.get_terminal_info(terminal_id):
                 return
             terminal_info = self.registry.get_terminal_info(terminal_id)
+            pid = terminal_info.get("process_id")
+            if pid:
+                self.spawner.process_tracker.unregister_process(pid)
             identifier = terminal_info.get("identifier", "Unknown")
             terminal_name = (
                 identifier
@@ -712,9 +717,10 @@ class TerminalManager:
         terminal: Vte.Terminal,
         pid: int,
         error: Optional[GLib.Error],
-        user_data_tuple: tuple,
+        user_data_dict: dict,
     ) -> None:
         try:
+            user_data_tuple = user_data_dict.get("original_user_data")
             terminal_id, user_data = user_data_tuple
             if error:
                 self.logger.error(
@@ -836,87 +842,41 @@ class TerminalManager:
     def _setup_url_patterns(self, terminal: Vte.Terminal) -> None:
         """Configure URL detection patterns for the terminal."""
         try:
-            # Enable VTE's built-in hyperlink detection
             terminal.set_allow_hyperlink(True)
-
-            # Connect to OSC8 hyperlink hover signal for tracking
             if hasattr(terminal, "connect"):
                 terminal.connect(
                     "hyperlink-hover-uri-changed", self._on_hyperlink_hover_changed
                 )
 
-            # URL regex patterns for detection
             url_patterns = [
-                # HTTP/HTTPS URLs
-                r'https?://[^\s<>"{}|\\^`\[\]]+[^\s<>"{}|\\^`\[\].,;:!?]',
-                # FTP URLs
-                r'ftp://[^\s<>"{}|\\^`\[\]]+[^\s<>"{}|\\^`\[\].,;:!?]',
-                # Email addresses
+                r"https?://[^\s<>()\"{}|\\^`\[\]]+[^\s<>()\"{}|\\^`\[\].,;:!?]",
+                r"ftp://[^\s<>()\"{}|\\^`\[\]]+[^\s<>()\"{}|\\^`\[\].,;:!?]",
                 r"[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}",
             ]
 
             patterns_added = 0
+            if hasattr(terminal, "match_add_regex") and hasattr(Vte, "Regex"):
+                self.logger.debug("Using Vte.Regex for URL pattern matching")
 
-            # Prioritize GLib.Regex for better compatibility with VTE 3.91
-            if hasattr(terminal, "match_add_gregex"):
-                self.logger.debug("Using GLib.Regex for URL pattern matching (primary)")
-                from gi.repository import GLib
+                vte_flags = 1024
 
                 for pattern in url_patterns:
                     try:
-                        regex = GLib.Regex.new(pattern, 0, 0)
-                        tag = terminal.match_add_gregex(regex, 0)
-
-                        if hasattr(terminal, "match_set_cursor_name"):
-                            terminal.match_set_cursor_name(tag, "pointer")
-
-                        self.logger.debug(
-                            f"GLib URL pattern added: {pattern} (tag: {tag})"
-                        )
-                        patterns_added += 1
-
+                        regex = Vte.Regex.new_for_match(pattern, -1, vte_flags)
+                        if regex:
+                            tag = terminal.match_add_regex(regex, 0)
+                            if hasattr(terminal, "match_set_cursor_name"):
+                                terminal.match_set_cursor_name(tag, "pointer")
+                            patterns_added += 1
                     except Exception as e:
                         self.logger.warning(
-                            f"GLib regex pattern '{pattern}' failed: {e}"
+                            f"Vte.Regex pattern '{pattern}' failed: {e}"
                         )
-
-            # Only try VTE.Regex if GLib.Regex completely failed
-            if (
-                patterns_added == 0
-                and hasattr(terminal, "match_add_regex")
-                and hasattr(Vte, "Regex")
-            ):
-                self.logger.debug("Fallback to VTE.Regex for URL pattern matching")
-
-                for pattern in url_patterns:
-                    try:
-                        # For VTE 3.91 without RegexFlags, try simple approach
-                        regex = Vte.Regex.new_for_match(pattern, -1, 0)
-
-                        if regex is None:
-                            self.logger.debug(
-                                f"VTE regex creation failed for pattern: {pattern}"
-                            )
-                            continue
-
-                        tag = terminal.match_add_regex(regex, 0)
-
-                        if hasattr(terminal, "match_set_cursor_name"):
-                            terminal.match_set_cursor_name(tag, "pointer")
-
-                        self.logger.debug(
-                            f"VTE URL pattern added: {pattern} (tag: {tag})"
-                        )
-                        patterns_added += 1
-
-                    except Exception as e:
-                        self.logger.debug(f"VTE regex pattern '{pattern}' failed: {e}")
 
             if patterns_added > 0:
                 self.logger.info(
                     f"URL pattern detection configured ({patterns_added} patterns)"
                 )
-                return
             else:
                 self.logger.error(
                     "Failed to configure URL patterns - URL clicking disabled"
@@ -952,7 +912,7 @@ class TerminalManager:
             # Check if Ctrl key is pressed
             modifiers = gesture.get_current_event_state()
             ctrl_pressed = bool(modifiers & Gdk.ModifierType.CONTROL_MASK)
-            
+
             # Only open URLs on Ctrl+click
             if ctrl_pressed:
                 url_to_open = self._get_url_at_position(terminal, x, y)
@@ -981,17 +941,19 @@ class TerminalManager:
         try:
             # Update context menu to include URL options if URL is at click position
             self._update_context_menu_with_url(terminal, x, y)
-            
+
             # Let the default context menu handling proceed
             return Gdk.EVENT_PROPAGATE
-            
+
         except Exception as e:
             self.logger.error(
                 f"Terminal right-click handling failed for terminal {terminal_id}: {e}"
             )
             return Gdk.EVENT_PROPAGATE
 
-    def _get_url_at_position(self, terminal: Vte.Terminal, x: float, y: float) -> Optional[str]:
+    def _get_url_at_position(
+        self, terminal: Vte.Terminal, x: float, y: float
+    ) -> Optional[str]:
         """Get URL at the specified position if any."""
         try:
             # First, check for OSC8 hyperlinks (priority over regex matches)
@@ -1021,7 +983,7 @@ class TerminalManager:
 
                         if match_result and len(match_result) >= 2:
                             matched_text = match_result[0]
-                            
+
                             self.logger.debug(
                                 f"Regex match found at ({col}, {row}): '{matched_text}'"
                             )
@@ -1031,9 +993,9 @@ class TerminalManager:
 
                 except Exception as e:
                     self.logger.debug(f"Regex match check failed: {e}")
-                    
+
             return None
-            
+
         except Exception as e:
             self.logger.error(f"URL detection at position failed: {e}")
             return None
@@ -1056,7 +1018,12 @@ class TerminalManager:
             uri = uri.strip()
 
             # Handle email addresses by adding mailto: prefix
-            if "@" in uri and not uri.startswith(("http://", "https://", "ftp://", "mailto:")):
+            if "@" in uri and not uri.startswith((
+                "http://",
+                "https://",
+                "ftp://",
+                "mailto:",
+            )):
                 if "." in uri.split("@")[-1]:  # Basic email validation
                     uri = f"mailto:{uri}"
 
