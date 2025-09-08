@@ -520,6 +520,14 @@ class TerminalManager:
             )
             terminal.add_controller(click_controller)
 
+            # Right-click controller for context menu with URL detection
+            right_click_controller = Gtk.GestureClick()
+            right_click_controller.set_button(3)  # Right mouse button
+            right_click_controller.connect(
+                "pressed", self._on_terminal_right_clicked, terminal, terminal_id
+            )
+            terminal.add_controller(right_click_controller)
+
             terminal.terminal_id = terminal_id
         except Exception as e:
             self.logger.error(
@@ -528,10 +536,19 @@ class TerminalManager:
 
     def _setup_context_menu(self, terminal: Vte.Terminal) -> None:
         try:
+            # Initial context menu without URL detection
             menu_model = create_terminal_menu(terminal)
             terminal.set_context_menu_model(menu_model)
         except Exception as e:
             self.logger.error(f"Context menu setup failed: {e}")
+
+    def _update_context_menu_with_url(self, terminal: Vte.Terminal, x: float, y: float) -> None:
+        """Update terminal context menu with URL detection at click position."""
+        try:
+            menu_model = create_terminal_menu(terminal, x, y)
+            terminal.set_context_menu_model(menu_model)
+        except Exception as e:
+            self.logger.error(f"Context menu URL update failed: {e}")
 
     def _on_terminal_focus_in(self, _controller, terminal, terminal_id):
         try:
@@ -838,37 +855,11 @@ class TerminalManager:
                 r"[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}",
             ]
 
-            # Try VTE.Regex first (newer VTE versions)
-            if hasattr(terminal, "match_add_regex") and hasattr(Vte, "Regex"):
-                for pattern in url_patterns:
-                    try:
-                        # Use proper VTE regex compilation with MULTILINE flag
-                        regex_flags = 0
-                        if hasattr(Vte, "RegexFlags") and hasattr(
-                            Vte.RegexFlags, "MULTILINE"
-                        ):
-                            regex_flags = Vte.RegexFlags.MULTILINE
+            patterns_added = 0
 
-                        regex = Vte.Regex.new_for_match(
-                            pattern, len(pattern.encode()), regex_flags
-                        )
-                        tag = terminal.match_add_regex(regex, 0)
-
-                        # Set match as hyperlink
-                        if hasattr(terminal, "match_set_cursor_name"):
-                            terminal.match_set_cursor_name(tag, "pointer")
-
-                        self.logger.debug(
-                            f"URL pattern added (Vte.Regex): {pattern} (tag: {tag})"
-                        )
-
-                    except Exception as e:
-                        self.logger.warning(
-                            f"Failed to add VTE regex pattern '{pattern}': {e}"
-                        )
-
-            # Fallback to GLib.Regex for older versions
-            elif hasattr(terminal, "match_add_gregex"):
+            # Prioritize GLib.Regex for better compatibility with VTE 3.91
+            if hasattr(terminal, "match_add_gregex"):
+                self.logger.debug("Using GLib.Regex for URL pattern matching (primary)")
                 from gi.repository import GLib
 
                 for pattern in url_patterns:
@@ -880,15 +871,56 @@ class TerminalManager:
                             terminal.match_set_cursor_name(tag, "pointer")
 
                         self.logger.debug(
-                            f"URL pattern added (GLib.Regex): {pattern} (tag: {tag})"
+                            f"GLib URL pattern added: {pattern} (tag: {tag})"
                         )
+                        patterns_added += 1
 
                     except Exception as e:
                         self.logger.warning(
-                            f"Failed to add GLib regex pattern '{pattern}': {e}"
+                            f"GLib regex pattern '{pattern}' failed: {e}"
                         )
 
-            self.logger.debug("URL pattern detection configured for terminal")
+            # Only try VTE.Regex if GLib.Regex completely failed
+            if (
+                patterns_added == 0
+                and hasattr(terminal, "match_add_regex")
+                and hasattr(Vte, "Regex")
+            ):
+                self.logger.debug("Fallback to VTE.Regex for URL pattern matching")
+
+                for pattern in url_patterns:
+                    try:
+                        # For VTE 3.91 without RegexFlags, try simple approach
+                        regex = Vte.Regex.new_for_match(pattern, -1, 0)
+
+                        if regex is None:
+                            self.logger.debug(
+                                f"VTE regex creation failed for pattern: {pattern}"
+                            )
+                            continue
+
+                        tag = terminal.match_add_regex(regex, 0)
+
+                        if hasattr(terminal, "match_set_cursor_name"):
+                            terminal.match_set_cursor_name(tag, "pointer")
+
+                        self.logger.debug(
+                            f"VTE URL pattern added: {pattern} (tag: {tag})"
+                        )
+                        patterns_added += 1
+
+                    except Exception as e:
+                        self.logger.debug(f"VTE regex pattern '{pattern}' failed: {e}")
+
+            if patterns_added > 0:
+                self.logger.info(
+                    f"URL pattern detection configured ({patterns_added} patterns)"
+                )
+                return
+            else:
+                self.logger.error(
+                    "Failed to configure URL patterns - URL clicking disabled"
+                )
 
         except Exception as e:
             self.logger.error(f"Failed to setup URL patterns: {e}")
@@ -915,65 +947,22 @@ class TerminalManager:
             self.logger.error(f"OSC8 hyperlink hover handling failed: {e}")
 
     def _on_terminal_clicked(self, gesture, n_press, x, y, terminal, terminal_id):
-        """Handle terminal clicks for URL opening and focus."""
+        """Handle terminal clicks for URL opening (Ctrl+click only) and focus."""
         try:
-            # First, check for OSC8 hyperlinks (priority over regex matches)
-            if hasattr(terminal, "_osc8_hovered_uri") and terminal._osc8_hovered_uri:
-                osc8_uri = terminal._osc8_hovered_uri
-                success = self._open_hyperlink(osc8_uri)
-                if success:
-                    self.logger.info(f"OSC8 hyperlink opened from click: {osc8_uri}")
-                    return Gdk.EVENT_STOP
+            # Check if Ctrl key is pressed
+            modifiers = gesture.get_current_event_state()
+            ctrl_pressed = bool(modifiers & Gdk.ModifierType.CONTROL_MASK)
+            
+            # Only open URLs on Ctrl+click
+            if ctrl_pressed:
+                url_to_open = self._get_url_at_position(terminal, x, y)
+                if url_to_open:
+                    success = self._open_hyperlink(url_to_open)
+                    if success:
+                        self.logger.info(f"URL opened from Ctrl+click: {url_to_open}")
+                        return Gdk.EVENT_STOP
 
-            # Fallback: Try VTE's current hyperlink detection at click position
-            if hasattr(terminal, "get_hyperlink_hover_uri"):
-                try:
-                    # Get the hyperlink URI at the current position
-                    hover_uri = terminal.get_hyperlink_hover_uri()
-                    if hover_uri:
-                        success = self._open_hyperlink(hover_uri)
-                        if success:
-                            self.logger.info(
-                                f"VTE hyperlink opened from click: {hover_uri}"
-                            )
-                            return Gdk.EVENT_STOP
-                except Exception as e:
-                    self.logger.debug(f"VTE hyperlink detection failed: {e}")
-
-            # Fallback: Try VTE's match detection at click position for regex-based URLs
-            if hasattr(terminal, "match_check"):
-                try:
-                    # Convert click coordinates to character column/row
-                    char_width = terminal.get_char_width()
-                    char_height = terminal.get_char_height()
-
-                    if char_width > 0 and char_height > 0:
-                        col = int(x / char_width)
-                        row = int(y / char_height)
-
-                        # Try match_check with coordinates
-                        match_result = terminal.match_check(col, row)
-
-                        if match_result and len(match_result) >= 2:
-                            matched_text = match_result[0]
-                            tag = match_result[1]
-
-                            self.logger.debug(
-                                f"Regex match found at ({col}, {row}): '{matched_text}' (tag: {tag})"
-                            )
-
-                            if matched_text and self._is_valid_url(matched_text):
-                                success = self._open_hyperlink(matched_text)
-                                if success:
-                                    self.logger.info(
-                                        f"Regex URL opened from click: {matched_text}"
-                                    )
-                                    return Gdk.EVENT_STOP
-
-                except Exception as e:
-                    self.logger.debug(f"Regex match check failed: {e}")
-
-            # Normal focus handling
+            # Normal focus handling for regular clicks
             terminal.grab_focus()
             self.registry.update_terminal_status(terminal_id, "focused")
             if self.on_terminal_focus_changed:
@@ -986,6 +975,68 @@ class TerminalManager:
                 f"Terminal click handling failed for terminal {terminal_id}: {e}"
             )
             return Gdk.EVENT_PROPAGATE
+
+    def _on_terminal_right_clicked(self, gesture, n_press, x, y, terminal, terminal_id):
+        """Handle right-click for context menu with URL detection."""
+        try:
+            # Update context menu to include URL options if URL is at click position
+            self._update_context_menu_with_url(terminal, x, y)
+            
+            # Let the default context menu handling proceed
+            return Gdk.EVENT_PROPAGATE
+            
+        except Exception as e:
+            self.logger.error(
+                f"Terminal right-click handling failed for terminal {terminal_id}: {e}"
+            )
+            return Gdk.EVENT_PROPAGATE
+
+    def _get_url_at_position(self, terminal: Vte.Terminal, x: float, y: float) -> Optional[str]:
+        """Get URL at the specified position if any."""
+        try:
+            # First, check for OSC8 hyperlinks (priority over regex matches)
+            if hasattr(terminal, "_osc8_hovered_uri") and terminal._osc8_hovered_uri:
+                return terminal._osc8_hovered_uri
+
+            # Fallback: Try VTE's current hyperlink detection at position
+            if hasattr(terminal, "get_hyperlink_hover_uri"):
+                try:
+                    hover_uri = terminal.get_hyperlink_hover_uri()
+                    if hover_uri:
+                        return hover_uri
+                except Exception as e:
+                    self.logger.debug(f"VTE hyperlink detection failed: {e}")
+
+            # Fallback: Try VTE's match detection at position for regex-based URLs
+            if hasattr(terminal, "match_check"):
+                try:
+                    char_width = terminal.get_char_width()
+                    char_height = terminal.get_char_height()
+
+                    if char_width > 0 and char_height > 0:
+                        col = int(x / char_width)
+                        row = int(y / char_height)
+
+                        match_result = terminal.match_check(col, row)
+
+                        if match_result and len(match_result) >= 2:
+                            matched_text = match_result[0]
+                            
+                            self.logger.debug(
+                                f"Regex match found at ({col}, {row}): '{matched_text}'"
+                            )
+
+                            if matched_text and self._is_valid_url(matched_text):
+                                return matched_text
+
+                except Exception as e:
+                    self.logger.debug(f"Regex match check failed: {e}")
+                    
+            return None
+            
+        except Exception as e:
+            self.logger.error(f"URL detection at position failed: {e}")
+            return None
 
     def _is_valid_url(self, text: str) -> bool:
         """Check if text is a valid URL."""
@@ -1003,6 +1054,11 @@ class TerminalManager:
                 return False
 
             uri = uri.strip()
+
+            # Handle email addresses by adding mailto: prefix
+            if "@" in uri and not uri.startswith(("http://", "https://", "ftp://", "mailto:")):
+                if "." in uri.split("@")[-1]:  # Basic email validation
+                    uri = f"mailto:{uri}"
 
             # Basic URI validation
             try:

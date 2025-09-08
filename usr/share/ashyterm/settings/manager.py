@@ -14,7 +14,6 @@ gi.require_version("Adw", "1")
 gi.require_version("Vte", "3.91")
 from gi.repository import Gdk, GLib, Gtk, Pango, Vte
 
-from ..utils.backup import BackupType, get_backup_manager
 from ..utils.exceptions import ConfigValidationError
 from ..utils.logger import get_logger, log_error_with_context
 from ..utils.platform import get_platform_info
@@ -39,7 +38,6 @@ class SettingsMetadata:
     created_at: float
     modified_at: float
     checksum: Optional[str] = None
-    backup_id: Optional[str] = None
 
 
 class SettingsValidator:
@@ -127,13 +125,10 @@ class SettingsValidator:
             "bell_sound",
             "restore_sessions",
             "auto_save_sessions",
-            "session_backup",
             "security_warnings",
             "audit_sessions",
             "encrypt_passwords",
             "secure_file_permissions",
-            "auto_backup_enabled",
-            "backup_on_exit",
             "debug_mode",
             "performance_mode",
             "experimental_features",
@@ -147,9 +142,6 @@ class SettingsValidator:
         numeric_settings = {
             "auto_close_delay": (0, 60000),
             "max_recent_sessions": (1, 100),
-            "backup_interval_hours": (1, 168),
-            "backup_retention_days": (1, 365),
-            "max_backup_count": (1, 100),
         }
         for key, (min_val, max_val) in numeric_settings.items():
             if key in settings:
@@ -180,12 +172,6 @@ class SettingsManager:
         self._metadata: Optional[SettingsMetadata] = None
         self._dirty = False
         self._lock = threading.RLock()
-        self.backup_manager = None
-        try:
-            self.backup_manager = get_backup_manager()
-        except Exception as e:
-            self.logger.warning(f"Backup manager not available: {e}")
-
         self._change_listeners: List[Callable[[str, Any, Any], None]] = []
         self.custom_schemes: Dict[str, Any] = {}
         self._initialize()
@@ -199,7 +185,6 @@ class SettingsManager:
                 self._validate_and_repair()
                 self._merge_with_defaults()
                 self._apply_log_settings()
-                GLib.idle_add(self._create_initialization_backup)
         except Exception as e:
             self.logger.error(f"Settings initialization failed: {e}")
             self._settings = self._defaults.copy()
@@ -257,11 +242,11 @@ class SettingsManager:
             return settings
         except json.JSONDecodeError as e:
             self.logger.error(f"Settings file is corrupted: {e}")
-            return self._recover_from_backup()
+            return self._defaults.copy()
         except Exception as e:
             self.logger.error(f"Failed to load settings: {e}")
             log_error_with_context(e, "settings loading", "ashyterm.settings")
-            return self._recover_from_backup()
+            return self._defaults.copy()
 
     def _verify_settings_integrity(self, settings: Dict[str, Any]):
         try:
@@ -275,36 +260,6 @@ class SettingsManager:
                 )
         except Exception as e:
             self.logger.warning(f"Checksum verification failed: {e}")
-
-    def _recover_from_backup(self) -> Dict[str, Any]:
-        if not self.backup_manager:
-            self.logger.warning("No backup manager available for recovery")
-            return self._defaults.copy()
-        try:
-            backups = self.backup_manager.list_backups()
-            settings_backups = [
-                (backup_id, metadata)
-                for backup_id, metadata in backups
-                if "settings" in metadata.description.lower()
-            ]
-            if not settings_backups:
-                self.logger.warning("No settings backups found")
-                return self._defaults.copy()
-            backup_id, metadata = settings_backups[0]
-            self.logger.info(f"Attempting to restore settings from backup: {backup_id}")
-            temp_restore_dir = self.config_paths.CACHE_DIR / "settings_recovery"
-            if self.backup_manager.restore_backup(backup_id, temp_restore_dir):
-                restored_settings_file = temp_restore_dir / "settings.json"
-                if restored_settings_file.exists():
-                    with open(restored_settings_file, "r", encoding="utf-8") as f:
-                        restored_data = json.load(f)
-                    restored_settings = restored_data.get("settings", restored_data)
-                    self.logger.info("Settings successfully restored from backup")
-                    return restored_settings
-        except Exception as e:
-            self.logger.error(f"Settings recovery from backup failed: {e}")
-        self.logger.warning("Using default settings as fallback")
-        return self._defaults.copy()
 
     def _validate_and_repair(self):
         try:
@@ -367,18 +322,6 @@ class SettingsManager:
         except Exception as e:
             self.logger.error(f"Failed to merge with defaults: {e}")
 
-    def _create_initialization_backup(self):
-        if self.backup_manager and self.settings_file.exists():
-            try:
-                self.backup_manager.create_backup(
-                    [self.settings_file],
-                    BackupType.AUTOMATIC,
-                    "Settings initialization backup",
-                )
-            except Exception as e:
-                self.logger.warning(f"Failed to create initialization backup: {e}")
-        return False
-
     def save_settings(self, force: bool = False) -> None:
         with self._lock:
             if not self._dirty and not force:
@@ -399,7 +342,6 @@ class SettingsManager:
                         )
                         self._dirty = True
                         return
-                    self._create_pre_save_backup()
                     current_time = time.time()
                     if self._metadata:
                         self._metadata.modified_at = current_time
@@ -469,19 +411,6 @@ class SettingsManager:
             except Exception as e:
                 self.logger.error(f"Failed to set setting '{key}': {e}")
                 raise ConfigValidationError(key, value, str(e))
-
-    def _create_pre_save_backup(self):
-        if self.backup_manager and self.settings_file.exists():
-            try:
-                backup_id = self.backup_manager.create_backup(
-                    [self.settings_file],
-                    BackupType.AUTOMATIC,
-                    "Pre-save settings backup",
-                )
-                if backup_id and self._metadata:
-                    self._metadata.backup_id = backup_id
-            except Exception as e:
-                self.logger.warning(f"Failed to create pre-save backup: {e}")
 
     def get(self, key: str, default: Any = None) -> Any:
         with self._lock:

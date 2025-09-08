@@ -139,7 +139,7 @@ class PreferencesDialog(Adw.PreferencesWindow):
         )
         auto_hide_sidebar_row.connect(
             "notify::active",
-            lambda r, _: self._on_setting_changed("auto_hide_sidebar", r.get_active()),
+            lambda r, _: self._on_auto_hide_sidebar_changed(r.get_active()),
         )
         misc_group.add(auto_hide_sidebar_row)
 
@@ -633,6 +633,31 @@ class PreferencesDialog(Adw.PreferencesWindow):
     def _on_setting_changed(self, key: str, value) -> None:
         self.settings_manager.set(key, value)
         self.emit("setting-changed", key, value)
+
+    def _on_auto_hide_sidebar_changed(self, new_value: bool) -> None:
+        """Handle auto-hide sidebar setting change with informational dialog."""
+        current_value = self.settings_manager.get("auto_hide_sidebar", True)
+
+        # If user is disabling auto-hide sidebar, show informational dialog
+        if current_value and not new_value:
+            self._show_sidebar_info_dialog()
+
+        # Apply the setting
+        self._on_setting_changed("auto_hide_sidebar", new_value)
+
+    def _show_sidebar_info_dialog(self) -> None:
+        """Show informational dialog about sidebar visibility changes."""
+        dialog = Adw.MessageDialog(
+            transient_for=self,
+            heading=_("Sidebar Visibility"),
+            body=_(
+                "The sidebar visibility change will take effect when you close and reopen the application. "
+                "You can also toggle the sidebar manually using Ctrl+Shift+H."
+            ),
+        )
+        dialog.add_response("ok", _("OK"))
+        dialog.set_default_response("ok")
+        dialog.present()
 
     def _create_shortcut_rows(
         self, group: Adw.PreferencesGroup, shortcuts: Dict[str, str]

@@ -282,4 +282,10 @@ def create_terminal_menu(terminal, click_x=None, click_y=None) -> Gio.Menu:
 def _is_valid_url_simple(text: str) -> bool:
     """Simple URL validation for menu."""
     text = text.strip()
-    return any(text.startswith(scheme) for scheme in ["http://", "https://", "ftp://"])
+    # Check for HTTP/HTTPS/FTP URLs
+    if any(text.startswith(scheme) for scheme in ["http://", "https://", "ftp://"]):
+        return True
+    # Check for email addresses
+    if "@" in text and "." in text.split("@")[-1]:
+        return True
+    return False

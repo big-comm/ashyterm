@@ -8,7 +8,6 @@ from typing import Any, Dict, List, Optional, Tuple
 from gi.repository import Gio
 
 from ..settings.config import SESSIONS_FILE
-from ..utils.backup import BackupType, get_backup_manager
 from ..utils.exceptions import (
     StorageCorruptedError,
     StorageError,
@@ -38,7 +37,6 @@ class SessionStorageManager:
         self.logger = get_logger("ashyterm.sessions.storage")
         self._file_lock = threading.RLock()
         self.sessions_file = Path(SESSIONS_FILE)
-        self.backup_manager = None
         self.security_auditor = None
         self._initialize_storage()
         self.logger.info("Session storage manager initialized")
@@ -50,10 +48,6 @@ class SessionStorageManager:
             if not ensure_directory_exists(str(config_dir)):
                 raise StorageError(f"Failed to create config directory: {config_dir}")
             ensure_secure_directory_permissions(str(config_dir))
-            try:
-                self.backup_manager = get_backup_manager()
-            except Exception as e:
-                self.logger.warning(f"Backup manager initialization failed: {e}")
             try:
                 self.security_auditor = create_security_auditor()
             except Exception as e:
@@ -98,8 +92,6 @@ class SessionStorageManager:
                         data = json.load(f)
                 except json.JSONDecodeError as e:
                     self.logger.error(f"JSON parsing failed: {e}")
-                    if recovered_data := self._attempt_recovery_from_backup():
-                        return recovered_data
                     raise StorageCorruptedError(
                         str(self.sessions_file), _("Invalid JSON: {}").format(e)
                     )
@@ -142,8 +134,6 @@ class SessionStorageManager:
                 log_error_with_context(
                     e, "load sessions and folders", "ashyterm.sessions.storage"
                 )
-                if recovered_data := self._attempt_recovery_from_backup():
-                    return recovered_data
                 raise StorageReadError(
                     str(self.sessions_file), _("Load failed: {}").format(e)
                 )
@@ -227,43 +217,6 @@ class SessionStorageManager:
         except Exception as e:
             self.logger.error(f"Security audit failed: {e}")
 
-    def _attempt_recovery_from_backup(
-        self,
-    ) -> Optional[Tuple[List[Dict[str, Any]], List[Dict[str, Any]]]]:
-        """Attempt to recover data from backup."""
-        try:
-            if not self.backup_manager:
-                self.logger.warning("No backup manager available for recovery")
-                return None
-            backups = self.backup_manager.list_backups()
-            if not backups:
-                self.logger.warning("No backups available for recovery")
-                return None
-            backup_id, _ = backups[0]
-            self.logger.info(f"Attempting recovery from backup: {backup_id}")
-            import tempfile
-
-            with tempfile.TemporaryDirectory() as temp_dir:
-                temp_path = Path(temp_dir)
-                if not self.backup_manager.restore_backup(backup_id, temp_path):
-                    self.logger.error("Backup restore failed")
-                    return None
-                restored_file = temp_path / "sessions.json"
-                if not restored_file.exists():
-                    self.logger.error("Restored backup does not contain sessions.json")
-                    return None
-                with open(restored_file, "r", encoding="utf-8") as f:
-                    data = json.load(f)
-                sessions = data.get("sessions", [])
-                folders = data.get("folders", [])
-                self.logger.info(
-                    f"Successfully recovered {len(sessions)} sessions and {len(folders)} folders from backup"
-                )
-                return sessions, folders
-        except Exception as e:
-            self.logger.error(f"Backup recovery failed: {e}")
-            return None
-
     def save_sessions_and_folders_safe(
         self,
         session_store: Optional[Gio.ListStore] = None,
@@ -273,7 +226,6 @@ class SessionStorageManager:
         with self._file_lock:
             try:
                 data_to_save = self._prepare_save_data(session_store, folder_store)
-                backup_id = self._create_pre_save_backup()
                 if not self._validate_save_data(data_to_save):
                     raise StorageWriteError(
                         str(self.sessions_file), _("Data validation failed")
@@ -300,16 +252,6 @@ class SessionStorageManager:
                     )
 
                 if not self._verify_saved_file(data_to_save):
-                    if backup_id and self.backup_manager:
-                        self.logger.error(
-                            "Save verification failed, attempting restore from backup"
-                        )
-                        try:
-                            self.backup_manager.restore_backup(
-                                backup_id, self.sessions_file.parent
-                            )
-                        except Exception as restore_error:
-                            self.logger.error(f"Backup restore failed: {restore_error}")
                     raise StorageWriteError(
                         str(self.sessions_file), _("Save verification failed")
                     )
@@ -322,7 +264,6 @@ class SessionStorageManager:
                 log_session_event(
                     "storage_saved",
                     f"{sessions_count} sessions, {folders_count} folders",
-                    f"backup: {backup_id is not None}",
                 )
                 return True
             except (StorageWriteError, StorageError):
@@ -412,17 +353,6 @@ class SessionStorageManager:
         except Exception as e:
             self.logger.error(f"Save data validation failed: {e}")
             return False
-
-    def _create_pre_save_backup(self) -> Optional[str]:
-        """Create backup before saving."""
-        try:
-            if self.backup_manager and self.sessions_file.exists():
-                return self.backup_manager.create_backup(
-                    [self.sessions_file], BackupType.AUTOMATIC, "Pre-save backup"
-                )
-        except Exception as e:
-            self.logger.error(f"Pre-save backup failed: {e}")
-        return None
 
     def _verify_saved_file(self, expected_data: Dict[str, Any]) -> bool:
         """Verify that the saved file contains the expected data."""

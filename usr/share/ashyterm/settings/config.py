@@ -55,19 +55,17 @@ class ConfigPaths:
             self.LAYOUT_DIR = self.CONFIG_DIR / "layouts"
             self.CACHE_DIR = self._get_cache_directory()
             self.LOG_DIR = self.CONFIG_DIR / "logs"
-            self.BACKUP_DIR = self.CONFIG_DIR / "backups"
             self.SECURE_DIR = self.CONFIG_DIR / "secure"
 
             for directory in [
                 self.CACHE_DIR,
                 self.LOG_DIR,
-                self.BACKUP_DIR,
                 self.SECURE_DIR,
                 self.LAYOUT_DIR,
             ]:
                 try:
                     directory.mkdir(parents=True, exist_ok=True)
-                    if directory.name in ["secure", "backups"]:
+                    if directory.name in ["secure"]:
                         directory.chmod(0o700)
                 except OSError as e:
                     if self.logger:
@@ -98,7 +96,6 @@ class ConfigPaths:
         self.LAYOUT_DIR = self.CONFIG_DIR / "layouts"
         self.CACHE_DIR = home / ".cache" / "ashyterm"
         self.LOG_DIR = self.CONFIG_DIR / "logs"
-        self.BACKUP_DIR = self.CONFIG_DIR / "backups"
         self.SECURE_DIR = self.CONFIG_DIR / "secure"
 
 
@@ -122,7 +119,7 @@ class DefaultSettings:
             "remember_window_state": True,
             # Behavior
             "sidebar_visible": False,
-            "auto_hide_sidebar": False,
+            "auto_hide_sidebar": True,
             "sidebar_width": 300,  # Default sidebar width in pixels
             "confirm_close": True,
             "auto_close_tab": True,
@@ -150,11 +147,6 @@ class DefaultSettings:
             "delete_binding": 0,
             "cjk_ambiguous_width": 1,
             "word_char_exceptions": "-_.:/~",  # For word selection on double-click
-            # Backup Settings
-            "auto_backup_enabled": False,
-            "backup_on_change": True,
-            "backup_interval_hours": 24,
-            "backup_retention_days": 30,
             # Logging Settings
             "log_to_file": False,
             "console_log_level": "ERROR",
