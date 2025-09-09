@@ -87,6 +87,8 @@ class FileManager(GObject.Object):
         self.file_monitors = {}
         self.edited_file_metadata = {}
         self._is_rebinding = False  # Flag to prevent race conditions during rebind
+        self._pending_cd_path = None
+        self._cd_timeout_id = 0
 
         self._build_ui()
 
@@ -232,9 +234,6 @@ class FileManager(GObject.Object):
         if self._is_rebinding:
             return
 
-        if not self.revealer.get_child_revealed():
-            return
-
         try:
             uri = self.bound_terminal.get_current_directory_uri()
             if not uri:
@@ -253,6 +252,17 @@ class FileManager(GObject.Object):
                     f"Received relative path from terminal: {new_path}. Resolving against current path: {self.current_path}"
                 )
                 new_path = os.path.normpath(os.path.join(self.current_path, new_path))
+
+            # Event-driven check for our pending 'cd' command
+            if self._pending_cd_path and new_path == self._pending_cd_path:
+                self.logger.info(f"Programmatic CD to '{new_path}' confirmed.")
+                if self._cd_timeout_id > 0:
+                    GLib.source_remove(self._cd_timeout_id)
+                    self._cd_timeout_id = 0
+
+                # Restore user's original input
+                self.bound_terminal.feed_child(b"\x19")  # CTRL+Y (Yank)
+                self._pending_cd_path = None
 
             if new_path != self.current_path:
                 source = "filemanager" if self._fm_initiated_cd else "terminal"
@@ -663,6 +673,31 @@ class FileManager(GObject.Object):
         date_str = file_item.date.strftime("%Y-%m-%d %H:%M")
         label.set_text(date_str)
 
+    def _on_cd_timeout(self):
+        """Called if the directory change signal is not received in time."""
+        self.logger.warning(
+            f"CD command to '{self._pending_cd_path}' timed out. Assuming failure."
+        )
+
+        # Restore user's original input
+        self.bound_terminal.feed_child(b"\x19")  # CTRL+Y (Yank)
+
+        dialog = Adw.MessageDialog(
+            transient_for=self.parent_window,
+            heading=_("Cannot Change Directory"),
+            body=_(
+                "Unable to change to the specified folder. The terminal did not respond. Please verify if there are any commands running that might be preventing the change."
+            ),
+            close_response="ok",
+        )
+        dialog.add_response("ok", _("OK"))
+        dialog.present()
+
+        # Clean up state
+        self._pending_cd_path = None
+        self._cd_timeout_id = 0
+        return GLib.SOURCE_REMOVE
+
     def _on_row_activated(self, col_view, position):
         item: FileItem = col_view.get_model().get_item(position)
         if not item:
@@ -682,9 +717,26 @@ class FileManager(GObject.Object):
 
             if self.bound_terminal:
                 self._fm_initiated_cd = True
-                command = f'cd "{new_path}"\n'
-                self.bound_terminal.feed_child(command.encode("utf-8"))
 
+                # Clean up any previous pending operation
+                if self._cd_timeout_id > 0:
+                    GLib.source_remove(self._cd_timeout_id)
+
+                # Set state for the new operation
+                self._pending_cd_path = new_path
+
+                # Preserve user input
+                self.bound_terminal.feed_child(b"\x01")  # CTRL+A: Beginning of line
+                self.bound_terminal.feed_child(b"\x0b")  # CTRL+K: Kill to end of line
+
+                # Send command
+                cd_command = f'cd "{new_path}"\n'.encode("utf-8")
+                self.bound_terminal.feed_child(cd_command)
+
+                # Set a safety timeout to handle cases where the command fails silently
+                self._cd_timeout_id = GLib.timeout_add(8000, self._on_cd_timeout)
+
+            # Optimistically refresh the UI. The directory change handler will confirm.
             self.refresh(new_path, source="filemanager")
 
         else:
@@ -716,7 +768,6 @@ class FileManager(GObject.Object):
             self.search_entry.set_sensitive(False)
             self.search_entry.set_placeholder_text(_("Loading..."))
 
-        # MODIFICADO: Passar o caminho atual para o thread para evitar race conditions
         thread = threading.Thread(
             target=self._list_files_thread,
             args=(self.current_path, source),

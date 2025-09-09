@@ -387,7 +387,3 @@ class FileOperations:
                         del self._active_processes[transfer_id]
 
         threading.Thread(target=upload_thread, daemon=True).start()
-
-    # The download_item and upload_item methods are less critical as they are synchronous,
-    # but could be updated for consistency if needed. For now, the focus is on the
-    # long-running background tasks.
