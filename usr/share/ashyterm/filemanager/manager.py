@@ -87,8 +87,10 @@ class FileManager(GObject.Object):
         self.file_monitors = {}
         self.edited_file_metadata = {}
         self._is_rebinding = False  # Flag to prevent race conditions during rebind
-        self._pending_cd_path = None
-        self._cd_timeout_id = 0
+
+        # State for verified command execution
+        self._pending_command = None
+        self._command_timeout_id = 0
 
         self._build_ui()
 
@@ -254,15 +256,13 @@ class FileManager(GObject.Object):
                 new_path = os.path.normpath(os.path.join(self.current_path, new_path))
 
             # Event-driven check for our pending 'cd' command
-            if self._pending_cd_path and new_path == self._pending_cd_path:
+            if (
+                self._pending_command
+                and self._pending_command["type"] == "cd"
+                and new_path == self._pending_command["path"]
+            ):
                 self.logger.info(f"Programmatic CD to '{new_path}' confirmed.")
-                if self._cd_timeout_id > 0:
-                    GLib.source_remove(self._cd_timeout_id)
-                    self._cd_timeout_id = 0
-
-                # Restore user's original input
-                self.bound_terminal.feed_child(b"\x19")  # CTRL+Y (Yank)
-                self._pending_cd_path = None
+                self._confirm_pending_command()
 
             if new_path != self.current_path:
                 source = "filemanager" if self._fm_initiated_cd else "terminal"
@@ -490,15 +490,19 @@ class FileManager(GObject.Object):
             GLib.idle_add(self._navigate_up_directory)
 
     def _navigate_up_directory(self):
-        """Navigate up one directory level."""
+        """Navigate up one directory level, preserving user input."""
+        if self.current_path == "/":
+            return False
+
+        parent_path = str(Path(self.current_path).parent)
         if self.bound_terminal:
-            self._fm_initiated_cd = True
-            command = "cd ..\n"
-            self.bound_terminal.feed_child(command.encode("utf-8"))
+            command = ["cd", parent_path]
+            self._execute_verified_command(
+                command, command_type="cd", expected_path=parent_path
+            )
         else:
-            parent_path = Path(self.current_path).parent
-            if str(parent_path) != self.current_path:
-                self.refresh(str(parent_path), source="filemanager")
+            if parent_path != self.current_path:
+                self.refresh(parent_path, source="filemanager")
         return False
 
     def _deferred_activate_row(self, col_view, position):
@@ -673,20 +677,25 @@ class FileManager(GObject.Object):
         date_str = file_item.date.strftime("%Y-%m-%d %H:%M")
         label.set_text(date_str)
 
-    def _on_cd_timeout(self):
-        """Called if the directory change signal is not received in time."""
+    def _on_command_timeout(self):
+        """
+        Handles command failure. This is one of two places where user input is restored.
+        """
+        if not self._pending_command:
+            return GLib.SOURCE_REMOVE
+
         self.logger.warning(
-            f"CD command to '{self._pending_cd_path}' timed out. Assuming failure."
+            f"Command '{self._pending_command['str']}' timed out. Assuming failure."
         )
 
-        # Restore user's original input
+        # Restore user's original input because the command failed
         self.bound_terminal.feed_child(b"\x19")  # CTRL+Y (Yank)
 
         dialog = Adw.MessageDialog(
             transient_for=self.parent_window,
-            heading=_("Cannot Change Directory"),
+            heading=_("Command Failed"),
             body=_(
-                "Unable to change to the specified folder. The terminal did not respond. Please verify if there are any commands running that might be preventing the change."
+                "The command did not complete in time. The terminal may be busy or unresponsive. Your original input has been restored."
             ),
             close_response="ok",
         )
@@ -694,9 +703,63 @@ class FileManager(GObject.Object):
         dialog.present()
 
         # Clean up state
-        self._pending_cd_path = None
-        self._cd_timeout_id = 0
+        self._pending_command = None
+        self._command_timeout_id = 0
         return GLib.SOURCE_REMOVE
+
+    def _confirm_pending_command(self):
+        """
+        Confirms a pending command was successful and restores user input, as per the new rule.
+        """
+        if self._command_timeout_id > 0:
+            GLib.source_remove(self._command_timeout_id)
+            self._command_timeout_id = 0
+
+        # ALWAYS restore the user's input on completion, success or failure.
+        if self.bound_terminal:
+            self.bound_terminal.feed_child(b"\x19")  # CTRL+Y (Yank)
+
+        self._pending_command = None
+
+    def _execute_verified_command(
+        self,
+        command_list: List[str],
+        command_type: str,
+        expected_path: Optional[str] = None,
+    ):
+        """
+        Executes a command in the terminal, preserving user input and verifying
+        its completion via a timeout and a subsequent confirmation event.
+        """
+        if not self.bound_terminal:
+            return
+
+        # Clean up any previous pending operation
+        if self._command_timeout_id > 0:
+            GLib.source_remove(self._command_timeout_id)
+
+        command_str = " ".join(
+            f'"{arg}"' if " " in arg else arg for arg in command_list
+        )
+
+        # Set state for the new operation
+        self._pending_command = {"type": command_type, "str": command_str}
+        if command_type == "cd":
+            self._pending_command["path"] = expected_path
+
+        # Preserve user input by cutting it
+        self.bound_terminal.feed_child(b"\x01")  # CTRL+A: Beginning of line
+        self.bound_terminal.feed_child(b"\x0b")  # CTRL+K: Kill to end of line
+
+        # Send command
+        self.bound_terminal.feed_child(f"{command_str}\n".encode("utf-8"))
+
+        # Set a safety timeout
+        self._command_timeout_id = GLib.timeout_add(5000, self._on_command_timeout)
+
+        # For non-cd commands, success is confirmed by the refresh completing
+        if command_type != "cd":
+            GLib.timeout_add(500, lambda: self.refresh(source="filemanager"))
 
     def _on_row_activated(self, col_view, position):
         item: FileItem = col_view.get_model().get_item(position)
@@ -717,27 +780,13 @@ class FileManager(GObject.Object):
 
             if self.bound_terminal:
                 self._fm_initiated_cd = True
-
-                # Clean up any previous pending operation
-                if self._cd_timeout_id > 0:
-                    GLib.source_remove(self._cd_timeout_id)
-
-                # Set state for the new operation
-                self._pending_cd_path = new_path
-
-                # Preserve user input
-                self.bound_terminal.feed_child(b"\x01")  # CTRL+A: Beginning of line
-                self.bound_terminal.feed_child(b"\x0b")  # CTRL+K: Kill to end of line
-
-                # Send command
-                cd_command = f'cd "{new_path}"\n'.encode("utf-8")
-                self.bound_terminal.feed_child(cd_command)
-
-                # Set a safety timeout to handle cases where the command fails silently
-                self._cd_timeout_id = GLib.timeout_add(8000, self._on_cd_timeout)
-
-            # Optimistically refresh the UI. The directory change handler will confirm.
-            self.refresh(new_path, source="filemanager")
+                self._execute_verified_command(
+                    ["cd", new_path], command_type="cd", expected_path=new_path
+                )
+                # Optimistically refresh the UI. The directory change handler will confirm.
+                self.refresh(new_path, source="filemanager")
+            else:
+                self.refresh(new_path, source="filemanager")
 
         else:
             if self._is_remote_session():
@@ -846,6 +895,14 @@ class FileManager(GObject.Object):
             self.logger.error(f"Error listing files: {error_message}")
 
         self.store.splice(0, self.store.get_n_items(), file_items)
+
+        # If a non-cd command was pending, the completion of the refresh confirms it.
+        if self._pending_command and self._pending_command["type"] != "cd":
+            self.logger.info(
+                f"Command '{self._pending_command['str']}' confirmed by successful refresh."
+            )
+            self._confirm_pending_command()
+
         self._restore_search_entry(source)
         return False
 
@@ -1050,13 +1107,11 @@ class FileManager(GObject.Object):
     def _on_delete_dialog_response(self, dialog, response, file_item):
         if response == "delete":
             full_path = f"{self.current_path.rstrip('/')}/{file_item.name}"
-            if self.bound_terminal:
-                command = ["rm", "-rf", full_path]
-                self.bound_terminal.feed_child(f"{' '.join(command)}\n".encode("utf-8"))
-                self.parent_window.toast_overlay.add_toast(
-                    Adw.Toast(title=_("Delete command sent to terminal"))
-                )
-                GLib.timeout_add(500, lambda: self.refresh(source="filemanager"))
+            command = ["rm", "-rf", full_path]
+            self._execute_verified_command(command, command_type="rm")
+            self.parent_window.toast_overlay.add_toast(
+                Adw.Toast(title=_("Delete command sent to terminal"))
+            )
 
     def _on_chmod_action(self, _action, _param, file_item: FileItem):
         self._show_permissions_dialog(file_item)
@@ -1144,13 +1199,11 @@ class FileManager(GObject.Object):
         if response == "apply":
             mode = self._calculate_mode()
             full_path = f"{self.current_path.rstrip('/')}/{file_item.name}"
-            if self.bound_terminal:
-                command = ["chmod", mode, full_path]
-                self.bound_terminal.feed_child(f"{' '.join(command)}\n".encode("utf-8"))
-                self.parent_window.toast_overlay.add_toast(
-                    Adw.Toast(title=_("Chmod command sent to terminal"))
-                )
-                GLib.timeout_add(500, lambda: self.refresh(source="filemanager"))
+            command = ["chmod", mode, full_path]
+            self._execute_verified_command(command, command_type="chmod")
+            self.parent_window.toast_overlay.add_toast(
+                Adw.Toast(title=_("Chmod command sent to terminal"))
+            )
 
     def _parse_permissions(self, perms_str: str):
         if len(perms_str) < 10:
@@ -1708,15 +1761,11 @@ class FileManager(GObject.Object):
             if new_name and new_name != file_item.name:
                 old_path = f"{self.current_path.rstrip('/')}/{file_item.name}"
                 new_path = f"{self.current_path.rstrip('/')}/{new_name}"
-                if self.bound_terminal:
-                    command = ["mv", old_path, new_path]
-                    self.bound_terminal.feed_child(
-                        f"{' '.join(command)}\n".encode("utf-8")
-                    )
-                    self.parent_window.toast_overlay.add_toast(
-                        Adw.Toast(title=_("Rename command sent to terminal"))
-                    )
-                    GLib.timeout_add(500, lambda: self.refresh(source="filemanager"))
+                command = ["mv", old_path, new_path]
+                self._execute_verified_command(command, command_type="mv")
+                self.parent_window.toast_overlay.add_toast(
+                    Adw.Toast(title=_("Rename command sent to terminal"))
+                )
 
     def _cleanup_edited_file_dir(self, dir_path_str: str):
         """Cleans up all resources associated with a closed temporary file's directory."""
