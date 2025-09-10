@@ -565,7 +565,9 @@ class TabManager:
 
             if not fm:
                 fm = FileManager(
-                    self.terminal_manager.parent_window, self.terminal_manager
+                    self.terminal_manager.parent_window,
+                    self.terminal_manager,
+                    self.terminal_manager.settings_manager,
                 )
                 fm.connect(
                     "temp-files-changed",

@@ -5,7 +5,6 @@ gi.require_version("Gtk", "4.0")
 gi.require_version("Adw", "1")
 gi.require_version("Vte", "3.91")
 import os
-import shutil
 import subprocess
 import tempfile
 import threading
@@ -18,7 +17,7 @@ from gi.repository import Adw, Gdk, Gio, GLib, GObject, Gtk, Pango, Vte
 from ..sessions.models import SessionItem
 from ..terminal.manager import TerminalManager as TerminalManagerType
 from ..utils.logger import get_logger
-from ..utils.security import sanitize_session_name
+from ..utils.security import ensure_secure_directory_permissions, sanitize_session_name
 from ..utils.translation_utils import _
 from .models import FileItem
 from .operations import FileOperations
@@ -51,6 +50,7 @@ class FileManager(GObject.Object):
         self,
         parent_window: Gtk.Window,
         terminal_manager: TerminalManagerType,
+        settings_manager,
     ):
         """
         Initializes the FileManager.
@@ -59,11 +59,13 @@ class FileManager(GObject.Object):
         Args:
             parent_window: The parent window, used for dialogs.
             terminal_manager: The central manager for terminal instances.
+            settings_manager: The application's settings manager.
         """
         super().__init__()
         self.logger = get_logger("ashyterm.filemanager.manager")
         self.parent_window = parent_window
         self.terminal_manager = terminal_manager
+        self.settings_manager = settings_manager
         self.transfer_history_window = None
 
         css_provider = Gtk.CssProvider()
@@ -81,8 +83,20 @@ class FileManager(GObject.Object):
 
         self.config_dir = get_config_directory()
         self.transfer_manager = TransferManager(str(self.config_dir), self.operations)
-        self.remote_edit_dir = self.config_dir / "remote_edit_tmp"
-        self.remote_edit_dir.mkdir(exist_ok=True)
+
+        if self.settings_manager.get("use_system_tmp_for_edit", False):
+            self.remote_edit_dir = Path(tempfile.gettempdir()) / "ashyterm_remote_edit"
+            self.logger.info(
+                f"Using system temporary directory for remote edits: {self.remote_edit_dir}"
+            )
+        else:
+            self.remote_edit_dir = self.config_dir / "remote_edit_tmp"
+            self.logger.info(
+                f"Using config directory for remote edits: {self.remote_edit_dir}"
+            )
+
+        self.remote_edit_dir.mkdir(parents=True, exist_ok=True)
+        ensure_secure_directory_permissions(str(self.remote_edit_dir))
 
         self.current_path = ""
         self.file_monitors = {}
@@ -291,6 +305,14 @@ class FileManager(GObject.Object):
         self.column_view = self._create_detailed_column_view()
         scrolled_window.set_child(self.column_view)
 
+        # Drop target for external files, attached to the stable ScrolledWindow
+        drop_target = Gtk.DropTarget.new(Gdk.FileList, Gdk.DragAction.COPY)
+        drop_target.connect("accept", self._on_drop_accept)
+        drop_target.connect("enter", self._on_drop_enter, scrolled_window)
+        drop_target.connect("leave", self._on_drop_leave, scrolled_window)
+        drop_target.connect("drop", self._on_files_dropped, scrolled_window)
+        scrolled_window.add_controller(drop_target)
+
         self.action_bar = Gtk.ActionBar()
 
         refresh_button = Gtk.Button.new_from_icon_name("view-refresh-symbolic")
@@ -472,16 +494,14 @@ class FileManager(GObject.Object):
     def _on_search_changed(self, search_entry):
         self.combined_filter.changed(Gtk.FilterChange.DIFFERENT)
         if hasattr(self, "column_view") and self.column_view:
-            selection_model = self.column_view.get_model()
-            if selection_model and selection_model.get_n_items() > 0:
-                selection_model.select_item(0, True)
+            if self.selection_model and self.selection_model.get_n_items() > 0:
+                self.selection_model.select_item(0, True)
                 self.column_view.scroll_to(0, None, Gtk.ListScrollFlags.NONE, None)
 
     def _on_search_activate(self, search_entry):
         """Handle activation (Enter key) on the search entry to open selected item."""
-        selection_model = self.column_view.get_model()
-        if selection_model and selection_model.get_selection().get_size() > 0:
-            position = selection_model.get_selection().get_nth(0)
+        if self.selection_model and self.selection_model.get_selection().get_size() > 0:
+            position = self.selection_model.get_selection().get_nth(0)
             GLib.idle_add(self._deferred_activate_row, self.column_view, position)
 
     def _on_search_delete_text(self, search_entry, start_pos, end_pos):
@@ -520,6 +540,20 @@ class FileManager(GObject.Object):
         )
         column.set_sorter(sorter)
         return column
+
+    def get_selected_items(self) -> List[FileItem]:
+        """Gets all selected items from the ColumnView."""
+        items = []
+        if not hasattr(self, "selection_model"):
+            return items
+
+        selection = self.selection_model.get_selection()
+        size = selection.get_size()
+        for i in range(size):
+            position = selection.get_nth(i)
+            if item := self.sorted_store.get_item(position):
+                items.append(item)
+        return items
 
     def _create_detailed_column_view(self) -> Gtk.ColumnView:
         col_view = Gtk.ColumnView()
@@ -584,26 +618,18 @@ class FileManager(GObject.Object):
         self.sorted_store = Gtk.SortListModel(
             model=self.filtered_store, sorter=view_sorter
         )
-        selection_model = Gtk.SingleSelection(model=self.sorted_store)
-        col_view.set_model(selection_model)
+        self.selection_model = Gtk.MultiSelection(model=self.sorted_store)
+        col_view.set_model(self.selection_model)
         col_view.sort_by_column(
             col_view.get_columns().get_item(0), Gtk.SortType.ASCENDING
         )
 
         col_view.connect("activate", self._on_row_activated)
-        right_click_gesture = Gtk.GestureClick(button=Gdk.BUTTON_SECONDARY)
-        right_click_gesture.connect("pressed", self._on_item_right_click)
-        col_view.add_controller(right_click_gesture)
 
         key_controller = Gtk.EventControllerKey.new()
         key_controller.connect("key-pressed", self._on_column_view_key_pressed)
         key_controller.connect("key-released", self._on_column_view_key_released)
         col_view.add_controller(key_controller)
-
-        if self._is_remote_session():
-            drop_target = Gtk.DropTarget.new(Gio.File, Gdk.DragAction.COPY)
-            drop_target.connect("drop", self._on_files_dropped)
-            col_view.add_controller(drop_target)
 
         return col_view
 
@@ -617,6 +643,9 @@ class FileManager(GObject.Object):
         link_icon.set_visible(False)
         box.append(link_icon)
         list_item.set_child(box)
+        right_click_gesture = Gtk.GestureClick(button=Gdk.BUTTON_SECONDARY)
+        right_click_gesture.connect("pressed", self._on_item_right_click, list_item)
+        box.add_controller(right_click_gesture)
 
     def _bind_name_cell(self, factory, list_item):
         box = list_item.get_child()
@@ -638,10 +667,16 @@ class FileManager(GObject.Object):
     def _setup_text_cell(self, factory, list_item):
         label = Gtk.Label(xalign=0.0)
         list_item.set_child(label)
+        right_click_gesture = Gtk.GestureClick(button=Gdk.BUTTON_SECONDARY)
+        right_click_gesture.connect("pressed", self._on_item_right_click, list_item)
+        label.add_controller(right_click_gesture)
 
     def _setup_size_cell(self, factory, list_item):
         label = Gtk.Label(xalign=1.0)
         list_item.set_child(label)
+        right_click_gesture = Gtk.GestureClick(button=Gdk.BUTTON_SECONDARY)
+        right_click_gesture.connect("pressed", self._on_item_right_click, list_item)
+        label.add_controller(right_click_gesture)
 
     def _bind_permissions_cell(self, factory, list_item):
         label = list_item.get_child()
@@ -791,7 +826,7 @@ class FileManager(GObject.Object):
 
         else:
             if self._is_remote_session():
-                self._on_open_edit_action(None, None, item)
+                self._on_open_edit_action(None, None, [item])
             else:
                 full_path = Path(self.current_path).joinpath(item.name)
                 self._open_local_file(full_path)
@@ -919,9 +954,8 @@ class FileManager(GObject.Object):
             if sorter:
                 sorter.changed(Gtk.SorterChange.DIFFERENT)
         if hasattr(self, "column_view") and self.column_view:
-            selection_model = self.column_view.get_model()
-            if selection_model and selection_model.get_n_items() > 0:
-                selection_model.select_item(0, True)
+            if self.selection_model and self.selection_model.get_n_items() > 0:
+                self.selection_model.select_item(0, True)
                 self.column_view.scroll_to(0, None, Gtk.ListScrollFlags.NONE, None)
                 if source == "filemanager":
                     self.column_view.grab_focus()
@@ -930,17 +964,25 @@ class FileManager(GObject.Object):
     def _is_remote_session(self) -> bool:
         return self.session_item and not self.session_item.is_local()
 
-    def _on_item_right_click(self, _gesture, _n_press, x, y):
+    def _on_item_right_click(self, _gesture, _n_press, x, y, list_item: Gtk.ListItem):
         try:
-            selection_model = self.column_view.get_model()
-            if not selection_model:
+            if not list_item:
+                self._show_general_context_menu(x, y)
                 return
-            current_selection = selection_model.get_selection()
-            if current_selection and current_selection.get_size() > 0:
-                position = current_selection.get_nth(0)
-                file_item = selection_model.get_item(position)
-                if file_item and file_item.name != "..":
-                    self._show_context_menu(file_item, x, y)
+
+            position = list_item.get_position()
+
+            if not self.selection_model.is_selected(position):
+                self.selection_model.unselect_all()
+                self.selection_model.select_item(position, True)
+
+            selected_items = self.get_selected_items()
+            if selected_items:
+                actionable_items = [
+                    item for item in selected_items if item.name != ".."
+                ]
+                if actionable_items:
+                    self._show_context_menu(actionable_items, x, y)
             else:
                 self._show_general_context_menu(x, y)
         except Exception as e:
@@ -958,13 +1000,13 @@ class FileManager(GObject.Object):
         popover.set_pointing_to(rect)
         popover.popup()
 
-    def _show_context_menu(self, file_item, x, y):
-        menu_model = self._create_context_menu_model(file_item)
+    def _show_context_menu(self, items: List[FileItem], x, y):
+        menu_model = self._create_context_menu_model(items)
         popover = Gtk.PopoverMenu.new_from_model(menu_model)
         if popover.get_parent() is not None:
             popover.unparent()
         popover.set_parent(self.column_view)
-        self._setup_context_actions(popover, file_item)
+        self._setup_context_actions(popover, items)
         rect = Gdk.Rectangle()
         rect.x, rect.y, rect.width, rect.height = int(x), int(y), 1, 1
         popover.set_pointing_to(rect)
@@ -972,13 +1014,12 @@ class FileManager(GObject.Object):
 
     def _on_search_key_pressed(self, controller, keyval, _keycode, state):
         """Handle key presses on the search entry for list navigation."""
-        selection_model = self.column_view.get_model()
-        if not selection_model:
+        if not self.selection_model:
             return Gdk.EVENT_PROPAGATE
 
         current_pos = (
-            selection_model.get_selection().get_nth(0)
-            if selection_model.get_selection().get_size() > 0
+            self.selection_model.get_selection().get_nth(0)
+            if self.selection_model.get_selection().get_size() > 0
             else Gtk.INVALID_LIST_POSITION
         )
 
@@ -990,7 +1031,7 @@ class FileManager(GObject.Object):
                 new_pos = current_pos + delta
 
             if 0 <= new_pos < self.sorted_store.get_n_items():
-                selection_model.select_item(new_pos, True)
+                self.selection_model.select_item(new_pos, True)
                 self.column_view.scroll_to(
                     new_pos, None, Gtk.ListScrollFlags.NONE, None
                 )
@@ -1022,9 +1063,11 @@ class FileManager(GObject.Object):
                 return Gdk.EVENT_STOP
 
         if keyval in (Gdk.KEY_Return, Gdk.KEY_KP_Enter):
-            selection_model = self.column_view.get_model()
-            if selection_model and selection_model.get_selection().get_size() > 0:
-                pos = selection_model.get_selection().get_nth(0)
+            if (
+                self.selection_model
+                and self.selection_model.get_selection().get_size() > 0
+            ):
+                pos = self.selection_model.get_selection().get_nth(0)
                 self._on_row_activated(self.column_view, pos)
                 return Gdk.EVENT_STOP
 
@@ -1038,26 +1081,25 @@ class FileManager(GObject.Object):
     def _on_column_view_key_released(self, controller, keyval, _keycode, state):
         """Handle key releases on the column view for context menu."""
         if keyval in (Gdk.KEY_Alt_L, Gdk.KEY_Alt_R):
-            selection_model = self.column_view.get_model()
-            if selection_model and selection_model.get_selection().get_size() > 0:
-                position = selection_model.get_selection().get_nth(0)
-                file_item = selection_model.get_item(position)
-                if file_item and file_item.name != "..":
-                    self._show_context_menu(file_item, 0, 0)
+            selected_items = self.get_selected_items()
+            if selected_items:
+                self._show_context_menu(selected_items, 0, 0)
                 return Gdk.EVENT_STOP
         return Gdk.EVENT_PROPAGATE
 
-    def _create_context_menu_model(self, file_item):
+    def _create_context_menu_model(self, items: List[FileItem]):
         menu = Gio.Menu()
+        num_items = len(items)
 
-        if not file_item.is_directory:
+        if num_items == 1 and not items[0].is_directory:
             menu.append(_("Open/Edit"), "context.open_edit")
             menu.append(_("Open With..."), "context.open_with")
             menu.append_section(None, Gio.Menu())
 
-        menu.append(_("Rename"), "context.rename")
+        if num_items == 1:
+            menu.append(_("Rename"), "context.rename")
 
-        if self._is_remote_session() and not file_item.is_directory:
+        if self._is_remote_session():
             menu.append_section(None, Gio.Menu())
             menu.append(_("Download"), "context.download")
 
@@ -1073,7 +1115,7 @@ class FileManager(GObject.Object):
 
         return menu
 
-    def _setup_context_actions(self, popover, file_item):
+    def _setup_context_actions(self, popover, items: List[FileItem]):
         action_group = Gio.SimpleActionGroup()
         actions = {
             "open_edit": self._on_open_edit_action,
@@ -1086,45 +1128,62 @@ class FileManager(GObject.Object):
         for name, callback in actions.items():
             action = Gio.SimpleAction.new(name, None)
             action.connect(
-                "activate", lambda a, _, cb=callback, item=file_item: cb(a, _, item)
+                "activate", lambda a, _, cb=callback, itms=items: cb(a, _, itms)
             )
             action_group.add_action(action)
         popover.insert_action_group("context", action_group)
 
-    def _on_delete_action(self, _action, _param, file_item: FileItem):
-        dialog = Adw.AlertDialog(
-            heading=_("Delete File"),
-            body=_(
+    def _on_delete_action(self, _action, _param, items: List[FileItem]):
+        count = len(items)
+        if count == 1:
+            title = _("Delete File")
+            body = _(
                 "Are you sure you want to permanently delete '{name}'?\n\nThis action cannot be undone."
-            ).format(name=file_item.name),
-            close_response="cancel",
-        )
+            ).format(name=items[0].name)
+        else:
+            title = _("Delete Multiple Items")
+            body = _(
+                "Are you sure you want to permanently delete these {count} items?\n\nThis action cannot be undone."
+            ).format(count=count)
+
+        dialog = Adw.AlertDialog(heading=title, body=body, close_response="cancel")
         dialog.add_response("cancel", _("Cancel"))
         dialog.add_response("delete", _("Delete"))
         dialog.set_response_appearance("delete", Adw.ResponseAppearance.DESTRUCTIVE)
-        dialog.connect("response", self._on_delete_dialog_response, file_item)
+        dialog.connect("response", self._on_delete_dialog_response, items)
         dialog.present(self.parent_window)
 
-    def _on_delete_dialog_response(self, dialog, response, file_item):
+    def _on_delete_dialog_response(self, dialog, response, items: List[FileItem]):
         if response == "delete":
-            full_path = f"{self.current_path.rstrip('/')}/{file_item.name}"
-            command = ["rm", "-rf", full_path]
+            paths_to_delete = [
+                f"{self.current_path.rstrip('/')}/{item.name}" for item in items
+            ]
+            command = ["rm", "-rf"] + paths_to_delete
             self._execute_verified_command(command, command_type="rm")
             self.parent_window.toast_overlay.add_toast(
                 Adw.Toast(title=_("Delete command sent to terminal"))
             )
 
-    def _on_chmod_action(self, _action, _param, file_item: FileItem):
-        self._show_permissions_dialog(file_item)
+    def _on_chmod_action(self, _action, _param, items: List[FileItem]):
+        self._show_permissions_dialog(items)
 
-    def _show_permissions_dialog(self, file_item: FileItem):
-        dialog = Adw.AlertDialog(
-            heading=_("Permissions"),
-            body=_("Set file permissions for: {name}\nCurrent: {perms}").format(
-                name=file_item.name, perms=file_item.permissions
-            ),
-            close_response="cancel",
+    def _show_permissions_dialog(self, items: List[FileItem]):
+        is_multi = len(items) > 1
+        title = (
+            _("Set Permissions for {count} Items").format(count=len(items))
+            if is_multi
+            else _("Permissions for {name}").format(name=items[0].name)
         )
+        current_perms = "" if is_multi else items[0].permissions
+        body = (
+            _("Set new file permissions.")
+            if is_multi
+            else _("Set file permissions for: {name}\nCurrent: {perms}").format(
+                name=items[0].name, perms=current_perms
+            )
+        )
+
+        dialog = Adw.AlertDialog(heading=title, body=body, close_response="cancel")
         content_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=12)
         content_box.set_size_request(350, -1)
 
@@ -1174,7 +1233,8 @@ class FileManager(GObject.Object):
         content_box.append(self.mode_label)
         dialog.set_extra_child(content_box)
 
-        self._parse_permissions(file_item.permissions)
+        if not is_multi:
+            self._parse_permissions(items[0].permissions)
         self._update_mode_display()
 
         for checkbox in [
@@ -1193,14 +1253,16 @@ class FileManager(GObject.Object):
         dialog.add_response("cancel", _("Cancel"))
         dialog.add_response("apply", _("Apply"))
         dialog.set_response_appearance("apply", Adw.ResponseAppearance.SUGGESTED)
-        dialog.connect("response", self._on_chmod_dialog_response, file_item)
+        dialog.connect("response", self._on_chmod_dialog_response, items)
         dialog.present(self.parent_window)
 
-    def _on_chmod_dialog_response(self, dialog, response, file_item):
+    def _on_chmod_dialog_response(self, dialog, response, items: List[FileItem]):
         if response == "apply":
             mode = self._calculate_mode()
-            full_path = f"{self.current_path.rstrip('/')}/{file_item.name}"
-            command = ["chmod", mode, full_path]
+            paths_to_change = [
+                f"{self.current_path.rstrip('/')}/{item.name}" for item in items
+            ]
+            command = ["chmod", mode] + paths_to_change
             self._execute_verified_command(command, command_type="chmod")
             self.parent_window.toast_overlay.add_toast(
                 Adw.Toast(title=_("Chmod command sent to terminal"))
@@ -1241,35 +1303,37 @@ class FileManager(GObject.Object):
         mode = self._calculate_mode()
         self.mode_label.set_text(f"Numeric mode: {mode}")
 
-    def _on_download_action(self, _action, _param, file_item: FileItem):
+    def _on_download_action(self, _action, _param, items: List[FileItem]):
         dialog = Gtk.FileDialog(
-            title=_("Save File As..."),
+            title=_("Select Destination Folder"),
             modal=True,
-            accept_label=_("Save"),
-            initial_name=file_item.name,
+            accept_label=_("Download Here"),
         )
-        dialog.save(
-            self.parent_window, None, self._on_download_dialog_response, file_item
+        dialog.select_folder(
+            self.parent_window, None, self._on_download_dialog_response, items
         )
 
-    def _on_download_dialog_response(self, source, result, file_item):
+    def _on_download_dialog_response(self, source, result, items: List[FileItem]):
         try:
-            local_file = source.save_finish(result)
-            if local_file:
-                transfer_id = self.transfer_manager.add_transfer(
-                    filename=file_item.name,
-                    local_path=str(local_file.get_path()),
-                    remote_path=f"{self.current_path.rstrip('/')}/{file_item.name}",
-                    file_size=file_item.size,
-                    transfer_type=TransferType.DOWNLOAD,
-                    is_cancellable=True,
-                )
-                self._start_cancellable_transfer(
-                    transfer_id,
-                    "Downloading",
-                    self._background_download_worker,
-                    on_success_callback=None,
-                )
+            dest_folder = source.select_folder_finish(result)
+            if dest_folder:
+                dest_path = Path(dest_folder.get_path())
+                for item in items:
+                    transfer_id = self.transfer_manager.add_transfer(
+                        filename=item.name,
+                        local_path=str(dest_path / item.name),
+                        remote_path=f"{self.current_path.rstrip('/')}/{item.name}",
+                        file_size=item.size,
+                        transfer_type=TransferType.DOWNLOAD,
+                        is_cancellable=True,
+                        is_directory=item.is_directory_like,
+                    )
+                    self._start_cancellable_transfer(
+                        transfer_id,
+                        "Downloading",
+                        self._background_download_worker,
+                        on_success_callback=None,
+                    )
         except GLib.Error as e:
             if not e.matches(Gio.io_error_quark(), Gio.IOErrorEnum.CANCELLED):
                 self.parent_window._show_error_dialog(_("Error"), e.message)
@@ -1287,28 +1351,32 @@ class FileManager(GObject.Object):
             files = source.open_multiple_finish(result)
             if files:
                 for gio_file in files:
-                    local_path = Path(gio_file.get_path())
-                    remote_path = f"{self.current_path.rstrip('/')}/{local_path.name}"
-                    file_size = local_path.stat().st_size if local_path.exists() else 0
-                    transfer_id = self.transfer_manager.add_transfer(
-                        filename=local_path.name,
-                        local_path=str(local_path),
-                        remote_path=remote_path,
-                        file_size=file_size,
-                        transfer_type=TransferType.UPLOAD,
-                        is_cancellable=True,
-                    )
-                    self._start_cancellable_transfer(
-                        transfer_id,
-                        "Uploading",
-                        self._background_upload_worker,
-                        on_success_callback=lambda _, __: GLib.idle_add(
-                            lambda: self.refresh(source="filemanager")
-                        ),
-                    )
+                    self._initiate_upload(Path(gio_file.get_path()))
         except GLib.Error as e:
             if not e.matches(Gio.io_error_quark(), Gio.IOErrorEnum.CANCELLED):
                 self.parent_window._show_error_dialog(_("Error"), e.message)
+
+    def _initiate_upload(self, local_path: Path):
+        """Helper to start the upload process for a single local path."""
+        remote_path = f"{self.current_path.rstrip('/')}/{local_path.name}"
+        file_size = local_path.stat().st_size if local_path.exists() else 0
+        transfer_id = self.transfer_manager.add_transfer(
+            filename=local_path.name,
+            local_path=str(local_path),
+            remote_path=remote_path,
+            file_size=file_size,
+            transfer_type=TransferType.UPLOAD,
+            is_cancellable=True,
+            is_directory=local_path.is_dir(),
+        )
+        self._start_cancellable_transfer(
+            transfer_id,
+            "Uploading",
+            self._background_upload_worker,
+            on_success_callback=lambda _, __: GLib.idle_add(
+                lambda: self.refresh(source="filemanager")
+            ),
+        )
 
     def _on_upload_clicked(self, button):
         self._on_upload_action(None, None, None)
@@ -1329,13 +1397,65 @@ class FileManager(GObject.Object):
         )
         self.transfer_history_window.present()
 
-    def _on_files_dropped(self, drop_target, value, x, y):
+    def _on_drop_accept(self, target, drop):
+        return self._is_remote_session()
+
+    def _on_drop_enter(self, target, x, y, scrolled_window):
+        scrolled_window.add_css_class("drop-target")
+        return Gdk.DragAction.COPY
+
+    def _on_drop_leave(self, target, scrolled_window):
+        scrolled_window.remove_css_class("drop-target")
+
+    def _on_files_dropped(self, drop_target, value, x, y, scrolled_window):
+        scrolled_window.remove_css_class("drop-target")
         if not self._is_remote_session():
             return False
-        files = list(value) if hasattr(value, "__iter__") else [value]
-        if files:
-            self._on_upload_action(None, None, None)
+
+        files_to_upload = []
+        if isinstance(value, Gdk.FileList):
+            for file in value.get_files():
+                if path_str := file.get_path():
+                    files_to_upload.append(Path(path_str))
+
+        if files_to_upload:
+            self._show_upload_confirmation_dialog(files_to_upload)
+
         return True
+
+    def _show_upload_confirmation_dialog(self, local_paths: List[Path]):
+        count = len(local_paths)
+        dialog = Adw.MessageDialog(
+            transient_for=self.parent_window,
+            heading=_("Confirm Upload"),
+            body=_(
+                "You are about to upload {count} item(s) to:\n<b>{dest}</b>\n\nDo you want to proceed?"
+            ).format(count=count, dest=self.current_path),
+            body_use_markup=True,
+            close_response="cancel",
+        )
+
+        scrolled_window = Gtk.ScrolledWindow(
+            vexpand=True, min_content_height=100, max_content_height=200
+        )
+        list_box = Gtk.ListBox(css_classes=["boxed-list"])
+        scrolled_window.set_child(list_box)
+
+        for path in local_paths:
+            list_box.append(Gtk.Label(label=path.name, xalign=0.0))
+
+        dialog.set_extra_child(scrolled_window)
+        dialog.add_response("cancel", _("Cancel"))
+        dialog.add_response("upload", _("Upload"))
+        dialog.set_response_appearance("upload", Adw.ResponseAppearance.SUGGESTED)
+        dialog.set_default_response("upload")
+        dialog.connect("response", self._on_upload_confirmation_response, local_paths)
+        dialog.present()
+
+    def _on_upload_confirmation_response(self, dialog, response_id, local_paths):
+        if response_id == "upload":
+            for path in local_paths:
+                self._initiate_upload(path)
 
     def _get_local_path_for_remote_file(
         self, session: SessionItem, remote_path: str
@@ -1348,7 +1468,11 @@ class FileManager(GObject.Object):
         local_path.parent.mkdir(parents=True, exist_ok=True)
         return local_path
 
-    def _on_open_edit_action(self, _action, _param, file_item: FileItem):
+    def _on_open_edit_action(self, _action, _param, items: List[FileItem]):
+        if not items:
+            return
+        file_item = items[0]  # Open/Edit only works on single items
+
         if not self._is_remote_session():
             full_path = Path(self.current_path).joinpath(file_item.name)
             self._open_local_file(full_path)
@@ -1402,7 +1526,11 @@ class FileManager(GObject.Object):
         dialog.connect("response", on_response)
         dialog.present()
 
-    def _on_open_with_action(self, _action, _param, file_item: FileItem):
+    def _on_open_with_action(self, _action, _param, items: List[FileItem]):
+        if not items:
+            return
+        file_item = items[0]  # Open With only works on single items
+
         if self._is_remote_session():
             self._download_and_execute(file_item, self._show_open_with_dialog)
         else:
@@ -1429,6 +1557,7 @@ class FileManager(GObject.Object):
             file_size=file_item.size,
             transfer_type=TransferType.DOWNLOAD,
             is_cancellable=True,
+            is_directory=file_item.is_directory_like,
         )
         success_callback_with_ts = partial(
             on_success_callback, initial_timestamp=timestamp
@@ -1467,6 +1596,7 @@ class FileManager(GObject.Object):
                 self.session_item,
                 transfer.remote_path,
                 Path(transfer.local_path),
+                is_directory=transfer.is_directory,
                 progress_callback=self.transfer_manager.update_progress,
                 completion_callback=completion_callback,
                 cancellation_event=self.transfer_manager.get_cancellation_event(
@@ -1497,6 +1627,7 @@ class FileManager(GObject.Object):
                 self.session_item,
                 Path(transfer.local_path),
                 transfer.remote_path,
+                is_directory=transfer.is_directory,
                 progress_callback=self.transfer_manager.update_progress,
                 completion_callback=completion_callback,
                 cancellation_event=self.transfer_manager.get_cancellation_event(
@@ -1781,12 +1912,14 @@ class FileManager(GObject.Object):
                 file_size=file_size,
                 transfer_type=TransferType.UPLOAD,
                 is_cancellable=True,
+                is_directory=local_path.is_dir(),
             )
             self.operations.start_upload_with_progress(
                 transfer_id,
                 self.session_item,
                 local_path,
                 remote_path,
+                is_directory=local_path.is_dir(),
                 progress_callback=self.transfer_manager.update_progress,
                 completion_callback=self._on_save_upload_complete,
                 cancellation_event=self.transfer_manager.get_cancellation_event(
@@ -1796,7 +1929,10 @@ class FileManager(GObject.Object):
         except Exception as e:
             self.logger.error(f"Failed to initiate upload-on-save: {e}")
 
-    def _on_rename_action(self, _action, _param, file_item: FileItem):
+    def _on_rename_action(self, _action, _param, items: List[FileItem]):
+        if not items or len(items) > 1:
+            return
+        file_item = items[0]
         dialog = Adw.AlertDialog(
             heading=_("Rename"),
             body=_("Enter a new name for '{name}'").format(name=file_item.name),

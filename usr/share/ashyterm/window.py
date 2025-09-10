@@ -1,7 +1,6 @@
 # ashyterm/window.py
 
 import weakref
-from pathlib import Path
 from typing import List
 
 import gi
@@ -504,6 +503,12 @@ class CommTerminalWindow(Adw.ApplicationWindow):
         self._cleanup_performed = True
         self.logger.info("Performing window cleanup")
         self.terminal_manager.cleanup_all_terminals()
+
+        if self.settings_manager.get("clear_remote_edit_files_on_exit", False):
+            self.logger.info("Clearing all temporary remote edit files on exit.")
+            for fm in self.tab_manager.file_managers.values():
+                fm.cleanup_all_temp_files()
+
         for fm in self.tab_manager.file_managers.values():
             fm.shutdown(None)
 

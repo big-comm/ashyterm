@@ -345,6 +345,43 @@ class PreferencesDialog(Adw.PreferencesWindow):
         backup_now_row.set_activatable_widget(backup_now_button)
         backup_group.add(backup_now_row)
 
+        remote_edit_group = Adw.PreferencesGroup(title=_("Remote Editing"))
+        page.add(remote_edit_group)
+
+        use_tmp_dir_row = Adw.SwitchRow(
+            title=_("Use System Temporary Directory"),
+            subtitle=_(
+                "Store temporary files for remote editing in /tmp instead of the config folder"
+            ),
+        )
+        use_tmp_dir_row.set_active(
+            self.settings_manager.get("use_system_tmp_for_edit", False)
+        )
+        use_tmp_dir_row.connect(
+            "notify::active",
+            lambda r, _: self._on_setting_changed(
+                "use_system_tmp_for_edit", r.get_active()
+            ),
+        )
+        remote_edit_group.add(use_tmp_dir_row)
+
+        clear_on_exit_row = Adw.SwitchRow(
+            title=_("Clear Remote Edit Files on Exit"),
+            subtitle=_(
+                "Automatically delete all temporary remote files when closing the app"
+            ),
+        )
+        clear_on_exit_row.set_active(
+            self.settings_manager.get("clear_remote_edit_files_on_exit", False)
+        )
+        clear_on_exit_row.connect(
+            "notify::active",
+            lambda r, _: self._on_setting_changed(
+                "clear_remote_edit_files_on_exit", r.get_active()
+            ),
+        )
+        remote_edit_group.add(clear_on_exit_row)
+
     def _setup_shortcuts_page(self) -> None:
         shortcuts_page = Adw.PreferencesPage(
             title=_("Shortcuts"),

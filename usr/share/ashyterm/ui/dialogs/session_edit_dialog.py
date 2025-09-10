@@ -13,7 +13,6 @@ from ...sessions.models import SessionItem
 from ...terminal.spawner import get_spawner
 from ...utils.crypto import is_encryption_available
 from ...utils.exceptions import HostnameValidationError, SSHKeyError
-from ...utils.logger import log_session_event
 from ...utils.platform import get_ssh_directory
 from ...utils.security import (
     HostnameValidator,

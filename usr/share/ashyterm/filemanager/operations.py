@@ -176,6 +176,7 @@ class FileOperations:
         session: SessionItem,
         remote_path: str,
         local_path: Path,
+        is_directory: bool,
         progress_callback=None,
         completion_callback=None,
         cancellation_event: Optional[threading.Event] = None,
@@ -186,17 +187,24 @@ class FileOperations:
                 from ..terminal.spawner import get_spawner
 
                 spawner = get_spawner()
+
                 if self._is_command_available(session, "rsync"):
                     ssh_cmd = (
                         f"ssh -o ControlPath={spawner._get_ssh_control_path(session)}"
                     )
+
+                    # FIX: Add trailing slash to source for rsync directory copy
+                    source_path_rsync = remote_path
+                    if is_directory:
+                        source_path_rsync = remote_path.rstrip("/") + "/"
+
                     transfer_cmd = [
                         "rsync",
                         "-avz",
                         "--progress",
                         "-e",
                         ssh_cmd,
-                        f"{session.user}@{session.host}:{remote_path}",
+                        f"{session.user}@{session.host}:{source_path_rsync}",
                         str(local_path),
                     ]
                     process = self._start_process(transfer_id, transfer_cmd)
@@ -229,16 +237,20 @@ class FileOperations:
                             f"Download failed (code: {exit_code})",
                         )
                 else:  # Fallback for SFTP, less ideal for progress.
-                    # This part remains as is since it's a fallback and not rsync.
-                    # The process management is still more robust.
                     sftp_cmd_base = spawner.command_builder.build_remote_command(
                         "sftp", session
                     )
+
+                    # FIX: For SFTP directory copy, destination must be the parent directory
+                    dest_path_sftp = str(local_path)
+                    if is_directory:
+                        dest_path_sftp = str(local_path.parent)
+
                     with tempfile.NamedTemporaryFile(
                         mode="w", delete=False, suffix=".sftp"
                     ) as batch_file:
                         batch_file.write(
-                            f'get -r "{remote_path}" "{str(local_path)}"\nquit\n'
+                            f'get -r "{remote_path}" "{dest_path_sftp}"\nquit\n'
                         )
                         batch_file_path = batch_file.name
                     transfer_cmd = sftp_cmd_base + ["-b", batch_file_path]
@@ -286,6 +298,7 @@ class FileOperations:
         session: SessionItem,
         local_path: Path,
         remote_path: str,
+        is_directory: bool,
         progress_callback=None,
         completion_callback=None,
         cancellation_event: Optional[threading.Event] = None,
@@ -296,17 +309,24 @@ class FileOperations:
                 from ..terminal.spawner import get_spawner
 
                 spawner = get_spawner()
+
                 if self._is_command_available(session, "rsync"):
                     ssh_cmd = (
                         f"ssh -o ControlPath={spawner._get_ssh_control_path(session)}"
                     )
+
+                    # FIX: Add trailing slash to source for rsync directory copy
+                    source_path_rsync = str(local_path)
+                    if is_directory:
+                        source_path_rsync = str(local_path).rstrip("/") + "/"
+
                     transfer_cmd = [
                         "rsync",
                         "-avz",
                         "--progress",
                         "-e",
                         ssh_cmd,
-                        str(local_path),
+                        source_path_rsync,
                         f"{session.user}@{session.host}:{remote_path}",
                     ]
                     process = self._start_process(transfer_id, transfer_cmd)
@@ -342,11 +362,17 @@ class FileOperations:
                     sftp_cmd_base = spawner.command_builder.build_remote_command(
                         "sftp", session
                     )
+
+                    # FIX: For SFTP directory copy, destination must be the parent directory
+                    dest_path_sftp = remote_path
+                    if is_directory:
+                        dest_path_sftp = str(Path(remote_path).parent)
+
                     with tempfile.NamedTemporaryFile(
                         mode="w", delete=False, suffix=".sftp"
                     ) as batch_file:
                         batch_file.write(
-                            f'put -r "{str(local_path)}" "{remote_path}"\nquit\n'
+                            f'put -r "{str(local_path)}" "{dest_path_sftp}"\nquit\n'
                         )
                         batch_file_path = batch_file.name
                     transfer_cmd = sftp_cmd_base + ["-b", batch_file_path]

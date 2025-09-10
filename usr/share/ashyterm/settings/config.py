@@ -150,6 +150,9 @@ class DefaultSettings:
             # Logging Settings
             "log_to_file": False,
             "console_log_level": "ERROR",
+            # Remote Editing
+            "use_system_tmp_for_edit": False,
+            "clear_remote_edit_files_on_exit": False,
             # Shortcuts
             "shortcuts": {
                 "new-local-tab": "<Control><Shift>t",
@@ -393,6 +396,7 @@ class ColorSchemeMap:
     @classmethod
     def get_schemes_list(cls) -> List[str]:
         return cls.SCHEME_ORDER.copy()
+
 
 _config_paths = None
 

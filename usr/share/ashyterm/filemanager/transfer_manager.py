@@ -1,3 +1,4 @@
+# ashyterm/filemanager/transfer_manager.py
 import json
 import os
 import threading
@@ -38,6 +39,7 @@ class TransferItem:
     file_size: int
     transfer_type: TransferType
     status: TransferStatus
+    is_directory: bool = False
     start_time: Optional[float] = None
     end_time: Optional[float] = None
     progress: float = 0.0
@@ -51,6 +53,7 @@ class TransferItem:
         if self.start_time and self.end_time:
             return self.end_time - self.start_time
         return None
+
 
 class TransferManager(GObject.Object):
     __gsignals__ = {
@@ -93,6 +96,9 @@ class TransferManager(GObject.Object):
                         # These are not saved, so they are not in item_data
                         item_data.pop("cancellation_event", None)
                         item_data.pop("is_cancellable", None)
+                        # For backward compatibility with old history files
+                        if "is_directory" not in item_data:
+                            item_data["is_directory"] = False
                         self.history.append(TransferItem(**item_data))
             # Keep history trimmed
             self.history = self.history[:50]
@@ -114,6 +120,7 @@ class TransferManager(GObject.Object):
                     "file_size": item.file_size,
                     "transfer_type": item.transfer_type.value,
                     "status": item.status.value,
+                    "is_directory": item.is_directory,
                     "start_time": item.start_time,
                     "end_time": item.end_time,
                     "progress": item.progress,
@@ -134,6 +141,7 @@ class TransferManager(GObject.Object):
         file_size: int,
         transfer_type: TransferType,
         is_cancellable: bool = False,
+        is_directory: bool = False,
     ) -> str:
         transfer_id = f"{int(time.time() * 1000)}_{len(self.active_transfers)}"
         transfer_item = TransferItem(
@@ -145,6 +153,7 @@ class TransferManager(GObject.Object):
             transfer_type=transfer_type,
             status=TransferStatus.PENDING,
             is_cancellable=is_cancellable,
+            is_directory=is_directory,
         )
         self.active_transfers[transfer_id] = transfer_item
         return transfer_id
