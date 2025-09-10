@@ -18,6 +18,7 @@ from gi.repository import Adw, Gdk, Gio, GLib, GObject, Gtk, Pango, Vte
 from ..sessions.models import SessionItem
 from ..terminal.manager import TerminalManager as TerminalManagerType
 from ..utils.logger import get_logger
+from ..utils.security import sanitize_session_name
 from ..utils.translation_utils import _
 from .models import FileItem
 from .operations import FileOperations
@@ -206,16 +207,16 @@ class FileManager(GObject.Object):
         """Returns information about currently edited temporary files."""
         return list(self.edited_file_metadata.values())
 
-    def cleanup_all_temp_files(self, dir_path_to_clear: Optional[str] = None):
+    def cleanup_all_temp_files(self, key_to_clear: Optional[tuple] = None):
         """
-        Cleans up temporary files. If a specific path is provided, only that
-        directory is cleaned. Otherwise, all temporary directories are cleaned.
+        Cleans up temporary files. If a specific key is provided, only that
+        file is cleaned. Otherwise, all temporary files are cleaned.
         """
-        if dir_path_to_clear:
-            self._cleanup_edited_file_dir(dir_path_to_clear)
+        if key_to_clear:
+            self._cleanup_edited_file(key_to_clear)
         else:
-            for dir_path_str in list(self.edited_file_metadata.keys()):
-                self._cleanup_edited_file_dir(dir_path_str)
+            for key in list(self.edited_file_metadata.keys()):
+                self._cleanup_edited_file(key)
 
     def _get_terminal_current_directory(self):
         if not self.bound_terminal:
@@ -1336,13 +1337,70 @@ class FileManager(GObject.Object):
             self._on_upload_action(None, None, None)
         return True
 
+    def _get_local_path_for_remote_file(
+        self, session: SessionItem, remote_path: str
+    ) -> Path:
+        """Constructs a deterministic, human-readable local path for a remote file."""
+        sanitized_session_name = sanitize_session_name(session.name).replace(" ", "_")
+        # Remove leading slash from remote_path to prevent it being treated as an absolute path
+        clean_remote_path = remote_path.lstrip("/")
+        local_path = self.remote_edit_dir / sanitized_session_name / clean_remote_path
+        local_path.parent.mkdir(parents=True, exist_ok=True)
+        return local_path
+
     def _on_open_edit_action(self, _action, _param, file_item: FileItem):
-        if self._is_remote_session():
-            callback = partial(self._open_and_monitor_local_file, app_info=None)
-            self._download_and_execute(file_item, callback)
-        else:
+        if not self._is_remote_session():
             full_path = Path(self.current_path).joinpath(file_item.name)
             self._open_local_file(full_path)
+            return
+
+        remote_path = f"{self.current_path.rstrip('/')}/{file_item.name}"
+        edit_key = (self.session_item.name, remote_path)
+
+        if edit_key in self.edited_file_metadata:
+            metadata = self.edited_file_metadata[edit_key]
+            local_path = Path(metadata["local_file_path"])
+            last_known_ts = metadata["timestamp"]
+
+            current_remote_ts = self.operations.get_remote_file_timestamp(remote_path)
+
+            if (
+                current_remote_ts
+                and last_known_ts
+                and current_remote_ts > last_known_ts
+            ):
+                self._show_conflict_on_open_dialog(local_path, remote_path, file_item)
+            else:
+                self.logger.info(f"Opening existing local copy for {remote_path}")
+                self._open_local_file(local_path)
+        else:
+            self._download_and_execute(file_item, self._open_and_monitor_local_file)
+
+    def _show_conflict_on_open_dialog(self, local_path, remote_path, file_item):
+        dialog = Adw.MessageDialog(
+            transient_for=self.parent_window,
+            heading=_("File Has Changed on Server"),
+            body=_(
+                "The file '{filename}' has been modified on the server since you last opened it. Your local changes will be lost if you download the new version."
+            ).format(filename=file_item.name),
+            close_response="cancel",
+        )
+        dialog.add_response("cancel", _("Cancel"))
+        dialog.add_response("open-local", _("Open Local Version"))
+        dialog.add_response("download-new", _("Download New Version"))
+        dialog.set_response_appearance(
+            "download-new", Adw.ResponseAppearance.DESTRUCTIVE
+        )
+
+        def on_response(d, response_id):
+            if response_id == "open-local":
+                self._open_local_file(local_path)
+            elif response_id == "download-new":
+                self._download_and_execute(file_item, self._open_and_monitor_local_file)
+            d.close()
+
+        dialog.connect("response", on_response)
+        dialog.present()
 
     def _on_open_with_action(self, _action, _param, file_item: FileItem):
         if self._is_remote_session():
@@ -1360,10 +1418,14 @@ class FileManager(GObject.Object):
             )
             return
 
+        local_path = self._get_local_path_for_remote_file(
+            self.session_item, remote_path
+        )
+
         transfer_id = self.transfer_manager.add_transfer(
             filename=file_item.name,
-            local_path="",
-            remote_path="",
+            local_path=str(local_path),
+            remote_path=remote_path,
             file_size=file_item.size,
             transfer_type=TransferType.DOWNLOAD,
             is_cancellable=True,
@@ -1395,14 +1457,6 @@ class FileManager(GObject.Object):
         if not transfer:
             return
 
-        remote_path = f"{self.current_path.rstrip('/')}/{transfer.filename}"
-        unique_dir_path = Path(
-            tempfile.mkdtemp(prefix="ashy_edit_", dir=self.remote_edit_dir)
-        )
-        local_path = unique_dir_path / transfer.filename
-        transfer.local_path = str(local_path)
-        transfer.remote_path = remote_path
-
         try:
             self.transfer_manager.start_transfer(transfer_id)
             completion_callback = partial(
@@ -1411,8 +1465,8 @@ class FileManager(GObject.Object):
             self.operations.start_download_with_progress(
                 transfer_id,
                 self.session_item,
-                remote_path,
-                local_path,
+                transfer.remote_path,
+                Path(transfer.local_path),
                 progress_callback=self.transfer_manager.update_progress,
                 completion_callback=completion_callback,
                 cancellation_event=self.transfer_manager.get_cancellation_event(
@@ -1483,6 +1537,7 @@ class FileManager(GObject.Object):
             dialog = Gtk.AppChooserDialog.new(
                 self.parent_window, Gtk.DialogFlags.MODAL, local_gio_file
             )
+            dialog.set_default_size(550, 450)
             dialog.set_title(_("Open With..."))
 
             def on_response(d, response_id):
@@ -1545,15 +1600,17 @@ class FileManager(GObject.Object):
         else:
             subprocess.Popen(["xdg-open", str(local_path)])
 
-        if remote_path in self.file_monitors:
-            self.file_monitors[remote_path].cancel()
+        edit_key = (self.session_item.name, remote_path)
+
+        if edit_key in self.file_monitors:
+            self.file_monitors[edit_key].cancel()
 
         monitor = local_gio_file.monitor(Gio.FileMonitorFlags.NONE, None)
         monitor.connect("changed", self._on_local_file_saved, remote_path, local_path)
-        self.file_monitors[remote_path] = monitor
+        self.file_monitors[edit_key] = monitor
 
-        unique_dir_path = str(local_path.parent)
-        self.edited_file_metadata[unique_dir_path] = {
+        self.edited_file_metadata[edit_key] = {
+            "session_name": self.session_item.name,
             "remote_path": remote_path,
             "local_file_path": str(local_path),
             "timestamp": initial_timestamp,
@@ -1583,8 +1640,8 @@ class FileManager(GObject.Object):
 
     def _check_conflict_and_upload(self, local_path: Path, remote_path: str):
         """Checks for remote changes before uploading the local file."""
-        unique_dir_path = str(local_path.parent)
-        metadata = self.edited_file_metadata.get(unique_dir_path)
+        edit_key = (self.session_item.name, remote_path)
+        metadata = self.edited_file_metadata.get(edit_key)
         if not metadata:
             self.logger.warning(
                 f"No metadata for edited file {local_path}, cannot upload."
@@ -1675,13 +1732,13 @@ class FileManager(GObject.Object):
                 (t for t in self.transfer_manager.history if t.id == transfer_id), None
             )
             if transfer:
-                unique_dir_path = str(Path(transfer.local_path).parent)
-                if unique_dir_path in self.edited_file_metadata:
+                edit_key = (self.session_item.name, transfer.remote_path)
+                if edit_key in self.edited_file_metadata:
                     new_ts = self.operations.get_remote_file_timestamp(
                         transfer.remote_path
                     )
                     if new_ts:
-                        self.edited_file_metadata[unique_dir_path]["timestamp"] = new_ts
+                        self.edited_file_metadata[edit_key]["timestamp"] = new_ts
         else:
             self.transfer_manager.fail_transfer(transfer_id, message)
 
@@ -1767,26 +1824,32 @@ class FileManager(GObject.Object):
                     Adw.Toast(title=_("Rename command sent to terminal"))
                 )
 
-    def _cleanup_edited_file_dir(self, dir_path_str: str):
-        """Cleans up all resources associated with a closed temporary file's directory."""
-        metadata = self.edited_file_metadata.pop(dir_path_str, None)
+    def _cleanup_edited_file(self, edit_key: tuple):
+        """Cleans up all resources associated with a closed temporary file."""
+        metadata = self.edited_file_metadata.pop(edit_key, None)
         if not metadata:
             return False
 
-        remote_path = metadata.get("remote_path")
-        if remote_path:
-            monitor = self.file_monitors.pop(remote_path, None)
-            if monitor:
-                monitor.cancel()
+        monitor = self.file_monitors.pop(edit_key, None)
+        if monitor:
+            monitor.cancel()
 
         try:
-            dir_path = Path(dir_path_str)
-            if dir_path.exists():
-                shutil.rmtree(dir_path)
-                self.logger.info(f"Removed temporary directory: {dir_path}")
+            local_path = Path(metadata["local_file_path"])
+            if local_path.exists():
+                local_path.unlink()
+                self.logger.info(f"Removed temporary file: {local_path}")
+                # Clean up empty parent directories
+                try:
+                    parent = local_path.parent
+                    while parent != self.remote_edit_dir and not any(parent.iterdir()):
+                        parent.rmdir()
+                        parent = parent.parent
+                except OSError as e:
+                    self.logger.warning(f"Could not remove empty parent dir: {e}")
         except Exception as e:
             self.logger.error(
-                f"Failed to remove temporary directory {dir_path_str}: {e}"
+                f"Failed to remove temporary file for key {edit_key}: {e}"
             )
 
         self.emit("temp-files-changed", len(self.edited_file_metadata))

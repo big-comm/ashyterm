@@ -280,6 +280,15 @@ class WindowStateManager:
     def _serialize_widget_tree(self, widget) -> Optional[dict]:
         """Recursively serializes the widget tree into a dictionary."""
         if isinstance(widget, Gtk.Paned):
+            child1_node = self._serialize_widget_tree(widget.get_start_child())
+            child2_node = self._serialize_widget_tree(widget.get_end_child())
+
+            # If child2 failed to serialize (e.g., it's a file manager or empty),
+            # this is not a layout split. Just return the serialization of child1.
+            if child2_node is None:
+                return child1_node
+
+            # Otherwise, it's a real split. Proceed as before.
             position = widget.get_position()
             orientation = widget.get_orientation()
             total_size = (
@@ -295,8 +304,8 @@ class WindowStateManager:
                 if orientation == Gtk.Orientation.HORIZONTAL
                 else "vertical",
                 "position_ratio": position_ratio,
-                "child1": self._serialize_widget_tree(widget.get_start_child()),
-                "child2": self._serialize_widget_tree(widget.get_end_child()),
+                "child1": child1_node,
+                "child2": child2_node,
             }
 
         terminal = None
@@ -328,7 +337,7 @@ class WindowStateManager:
             if isinstance(session_info, SessionItem):
                 return {
                     "type": "terminal",
-                    "session_type": "ssh",
+                    "session_type": "ssh" if session_info.is_ssh() else "local",
                     "session_name": session_info.name,
                     "working_dir": working_dir,
                 }
@@ -336,7 +345,7 @@ class WindowStateManager:
                 return {
                     "type": "terminal",
                     "session_type": "local",
-                    "session_name": session_info,
+                    "session_name": str(session_info),
                     "working_dir": working_dir,
                 }
         return None

@@ -1,5 +1,6 @@
 # ashyterm/terminal/tabs.py
 
+import re
 import threading
 import weakref
 from typing import Callable, List, Optional
@@ -153,7 +154,6 @@ class TabManager:
     ) -> None:
         if self.get_tab_count() == 0:
             self.create_local_tab(
-                title="Local",
                 working_directory=working_directory,
                 execute_command=execute_command,
                 close_after_execute=close_after_execute,
@@ -161,19 +161,24 @@ class TabManager:
 
     def create_local_tab(
         self,
+        session: Optional[SessionItem] = None,
         title: str = "Local",
         working_directory: Optional[str] = None,
         execute_command: Optional[str] = None,
         close_after_execute: bool = False,
     ) -> Optional[Vte.Terminal]:
+        if session is None:
+            session = SessionItem(name=title, session_type="local")
+
         terminal = self.terminal_manager.create_local_terminal(
-            title=title,
+            session=session,
+            title=session.name,
             working_directory=working_directory,
             execute_command=execute_command,
             close_after_execute=close_after_execute,
         )
         if terminal:
-            self._create_tab_for_terminal(terminal, title, "computer-symbolic")
+            self._create_tab_for_terminal(terminal, session)
         return terminal
 
     def create_ssh_tab(
@@ -183,9 +188,7 @@ class TabManager:
             session, initial_command=initial_command
         )
         if terminal:
-            self._create_tab_for_terminal(
-                terminal, session.name, "network-server-symbolic"
-            )
+            self._create_tab_for_terminal(terminal, session)
         return terminal
 
     def _scroll_to_widget(self, widget: Gtk.Widget) -> bool:
@@ -284,7 +287,7 @@ class TabManager:
             GLib.idle_add(scroll_to_end)
 
     def _create_tab_for_terminal(
-        self, terminal: Vte.Terminal, title: str, icon_name: str
+        self, terminal: Vte.Terminal, session: SessionItem
     ) -> None:
         scroll_controller = Gtk.EventControllerScroll()
         scroll_controller.set_flags(Gtk.EventControllerScrollFlags.VERTICAL)
@@ -324,11 +327,11 @@ class TabManager:
         content_paned.set_shrink_end_child(True)
 
         page_name = f"page_{terminal.terminal_id}"
-        page = self.view_stack.add_titled(content_paned, page_name, title)
+        page = self.view_stack.add_titled(content_paned, page_name, session.name)
         page.content_paned = content_paned
         terminal.ashy_parent_page = page
 
-        tab_widget = self._create_tab_widget(title, icon_name, page)
+        tab_widget = self._create_tab_widget(page, session)
         self.tabs.append(tab_widget)
         self.pages[tab_widget] = page
         self.tab_bar_box.append(tab_widget)
@@ -341,18 +344,72 @@ class TabManager:
 
         GLib.idle_add(self._scroll_to_widget, tab_widget)
 
+    def _get_contrasting_text_color(self, bg_color_str: str) -> str:
+        """Calculates whether black or white text is more readable on a given background color."""
+        if not bg_color_str:
+            return "#000000"  # Default to black
+
+        try:
+            match = re.match(r"rgba?\((\d+),\s*(\d+),\s*(\d+),?.*\)", bg_color_str)
+            if not match:
+                return "#000000"
+
+            r, g, b = [int(c) / 255.0 for c in match.groups()]
+
+            # WCAG luminance formula
+            luminance = 0.2126 * r + 0.7152 * g + 0.0722 * b
+
+            return "#000000" if luminance > 0.5 else "#FFFFFF"
+        except Exception as e:
+            self.logger.warning(f"Could not parse color '{bg_color_str}': {e}")
+            return "#000000"
+
+    def _apply_tab_color(self, widget: Gtk.Widget, color_string: Optional[str]):
+        style_context = widget.get_style_context()
+        if hasattr(widget, "_color_provider"):
+            style_context.remove_provider(widget._color_provider)
+            del widget._color_provider
+
+        if color_string:
+            provider = Gtk.CssProvider()
+            text_color = self._get_contrasting_text_color(color_string)
+
+            # This CSS is more robust. It overrides theme gradients and sets the color.
+            css = f"""
+                .custom-tab-button {{
+                    background-image: none;
+                    background-color: {color_string};
+                    border-color: transparent;
+                    color: {text_color};
+                }}
+                .custom-tab-button.active {{
+                    background-image: none;
+                    background-color: mix({color_string}, @theme_selected_bg_color, 0.7);
+                    color: {text_color};
+                }}
+            """
+            provider.load_from_data(css.encode("utf-8"))
+            style_context.add_provider(provider, Gtk.STYLE_PROVIDER_PRIORITY_USER)
+            widget._color_provider = provider
+
     def _create_tab_widget(
-        self, title: str, icon_name: str, page: Adw.ViewStackPage
+        self, page: Adw.ViewStackPage, session: SessionItem
     ) -> Gtk.Box:
         tab_widget = Gtk.Box(spacing=6)
         tab_widget.add_css_class("custom-tab-button")
         tab_widget.add_css_class("pill")
 
+        icon_name = (
+            "network-server-symbolic" if session.is_ssh() else "computer-symbolic"
+        )
+
         if icon_name != "computer-symbolic":
             icon = Gtk.Image.new_from_icon_name(icon_name)
             tab_widget.append(icon)
 
-        label = Gtk.Label(label=title, ellipsize=Pango.EllipsizeMode.START, xalign=1.0)
+        label = Gtk.Label(
+            label=session.name, ellipsize=Pango.EllipsizeMode.START, xalign=1.0
+        )
         label.set_width_chars(8)
         tab_widget.append(label)
 
@@ -373,9 +430,12 @@ class TabManager:
         close_button.connect("clicked", self._on_tab_close_button_clicked, tab_widget)
 
         tab_widget.label_widget = label
-        tab_widget._base_title = title
+        tab_widget._base_title = session.name
         tab_widget._icon_name = icon_name
-        tab_widget._is_local = icon_name == "computer-symbolic"
+        tab_widget._is_local = session.is_local()
+        tab_widget.session_item = session
+
+        self._apply_tab_color(tab_widget, session.tab_color)
 
         return tab_widget
 
@@ -447,9 +507,23 @@ class TabManager:
         page = self.pages.get(self.active_tab)
         if page:
             self.view_stack.set_visible_child(page.get_child())
-            terminals_in_page = self.get_all_terminals_in_page(page)
-            if terminals_in_page:
-                self._schedule_terminal_focus(terminals_in_page[0])
+
+            terminal_to_focus = None
+            # Check if the page has a remembered focused terminal
+            if hasattr(page, "_last_focused_in_page") and page._last_focused_in_page:
+                terminal_to_focus = (
+                    page._last_focused_in_page()
+                )  # This might be None if the ref is dead
+
+            # If no valid remembered terminal, fall back to the first one
+            if not terminal_to_focus:
+                terminals_in_page = self.get_all_terminals_in_page(page)
+                if terminals_in_page:
+                    terminal_to_focus = terminals_in_page[0]
+
+            # If we have a terminal, schedule the focus. The schedule function will check if it's realized.
+            if terminal_to_focus:
+                self._schedule_terminal_focus(terminal_to_focus)
 
     def toggle_file_manager_for_active_tab(self, is_active: bool):
         """Toggles the file manager's visibility for the currently active tab."""
@@ -468,9 +542,6 @@ class TabManager:
                 )
             return
 
-        # NOVO: Adicionar verificação para 'content_paned'
-        # Se a página não tiver o 'content_paned' (como em uma aba destacada),
-        # desative o botão e retorne para evitar o erro.
         if not hasattr(page, "content_paned"):
             self.logger.warning(
                 "Attempted to toggle file manager on a page without a content_paned (likely a detached tab)."
@@ -480,7 +551,6 @@ class TabManager:
                     False
                 )
             return
-        # FIM DA ALTERAÇÃO
 
         paned = page.content_paned
         fm = self.file_managers.get(page)
@@ -631,6 +701,20 @@ class TabManager:
     ) -> Optional[Adw.ViewStackPage]:
         return getattr(terminal, "ashy_parent_page", None)
 
+    def update_titles_for_terminal(self, terminal, new_title: str, osc7_info):
+        """Updates the tab title and the specific pane title for a terminal."""
+        page = self.get_page_for_terminal(terminal)
+        if not page:
+            return
+
+        # Update the main tab title
+        self.set_tab_title(page, new_title)
+
+        # Update the specific pane's title
+        pane = self._find_pane_for_terminal(page, terminal)
+        if pane and hasattr(pane, "title_label"):
+            pane.title_label.set_label(new_title)
+
     def set_tab_title(self, page: Adw.ViewStackPage, new_title: str) -> None:
         if not (page and new_title):
             return
@@ -690,6 +774,9 @@ class TabManager:
 
     def _on_pane_focus_in(self, controller, terminal):
         self._last_focused_terminal = weakref.ref(terminal)
+        page = self.get_page_for_terminal(terminal)
+        if page:
+            page._last_focused_in_page = weakref.ref(terminal)
 
     def _schedule_terminal_focus(self, terminal: Vte.Terminal) -> None:
         """Schedules a deferred focus call for the terminal, ensuring the UI is ready."""
@@ -712,6 +799,33 @@ class TabManager:
             return GLib.SOURCE_REMOVE
 
         GLib.idle_add(focus_task)
+
+    def _find_pane_for_terminal(
+        self, page: Adw.ViewStackPage, terminal_to_find: Vte.Terminal
+    ) -> Optional[Adw.ToolbarView]:
+        """Recursively finds the Adw.ToolbarView pane that contains a specific terminal."""
+
+        def find_recursive(widget):
+            if (
+                isinstance(widget, Adw.ToolbarView)
+                and getattr(widget, "terminal", None) == terminal_to_find
+            ):
+                return widget
+
+            if isinstance(widget, Gtk.Paned):
+                if start_child := widget.get_start_child():
+                    if found := find_recursive(start_child):
+                        return found
+                if end_child := widget.get_end_child():
+                    if found := find_recursive(end_child):
+                        return found
+
+            if hasattr(widget, "get_child") and (child := widget.get_child()):
+                return find_recursive(child)
+
+            return None
+
+        return find_recursive(page.get_child())
 
     def _find_pane_and_parent(self, terminal: Vte.Terminal) -> tuple:
         """
@@ -835,19 +949,12 @@ class TabManager:
         info = self.terminal_manager.registry.get_terminal_info(terminal_id)
         identifier = info.get("identifier") if info else "Local"
 
-        title = "Terminal"
-        icon_name = "computer-symbolic"
         if isinstance(identifier, SessionItem):
-            title = identifier.name
-            icon_name = (
-                "network-server-symbolic"
-                if identifier.is_ssh()
-                else "computer-symbolic"
-            )
-        elif isinstance(identifier, str):
-            title = identifier
+            session = identifier
+        else:
+            session = SessionItem(name=str(identifier), session_type="local")
 
-        self._create_tab_for_terminal(terminal, title, icon_name)
+        self._create_tab_for_terminal(terminal, session)
         self.logger.info(f"Terminal {terminal_id} successfully moved to a new tab.")
 
     def split_horizontal(self, focused_terminal: Vte.Terminal) -> None:
@@ -887,12 +994,12 @@ class TabManager:
                 new_terminal = (
                     self.terminal_manager.create_ssh_terminal(identifier)
                     if identifier.is_ssh()
-                    else self.terminal_manager.create_local_terminal(identifier.name)
+                    else self.terminal_manager.create_local_terminal(session=identifier)
                 )
             else:
                 new_pane_title = "Local"
                 new_terminal = self.terminal_manager.create_local_terminal(
-                    new_pane_title
+                    title=new_pane_title
                 )
 
             if not new_terminal:
@@ -979,10 +1086,15 @@ class TabManager:
         page_name = f"page_detached_{GLib.random_int()}"
         page = self.view_stack.add_titled(content, page_name, title)
 
+        # Re-create a dummy session for the tab widget
+        session = SessionItem(
+            name=title, session_type="ssh" if "server" in icon_name else "local"
+        )
+
         for terminal in self.get_all_terminals_in_page(page):
             terminal.ashy_parent_page = page
 
-        tab_widget = self._create_tab_widget(title, icon_name, page)
+        tab_widget = self._create_tab_widget(page, session)
         self.tabs.append(tab_widget)
         self.pages[tab_widget] = page
         self.tab_bar_box.append(tab_widget)
@@ -1030,13 +1142,26 @@ class TabManager:
             self.logger.error("Failed to create root widget for tab restoration.")
             return
 
-        # If the root is a ToolbarView (a single pane), unwrap it for a single-terminal tab.
-        final_content = root_widget
+        # If the restored root is a single pane (ToolbarView), we need to unwrap it
+        # to match the structure of a newly created single-terminal tab.
+        terminal_area_content = root_widget
         if isinstance(root_widget, Adw.ToolbarView):
             scrolled_win = root_widget.get_content()
             if scrolled_win:
                 root_widget.set_content(None)
-                final_content = Adw.Bin(child=scrolled_win)
+                terminal_area_content = scrolled_win
+
+        # Now, build the standard tab structure with the restored content
+        terminal_area = Adw.Bin()
+        terminal_area.set_child(terminal_area_content)
+
+        content_paned = Gtk.Paned(orientation=Gtk.Orientation.VERTICAL)
+        content_paned.set_start_child(terminal_area)
+        content_paned.set_resize_start_child(True)
+        content_paned.set_shrink_start_child(False)
+        content_paned.set_end_child(None)
+        content_paned.set_resize_end_child(False)
+        content_paned.set_shrink_end_child(True)
 
         first_terminal = None
         terminals = []
@@ -1054,24 +1179,18 @@ class TabManager:
         info = self.terminal_manager.registry.get_terminal_info(terminal_id)
         identifier = info.get("identifier") if info else "Local"
 
-        title = "Terminal"
-        icon_name = "computer-symbolic"
         if isinstance(identifier, SessionItem):
-            title = identifier.name
-            icon_name = (
-                "network-server-symbolic"
-                if identifier.is_ssh()
-                else "computer-symbolic"
-            )
-        elif isinstance(identifier, str):
-            title = identifier
+            session = identifier
+        else:
+            session = SessionItem(name=str(identifier), session_type="local")
 
         page_name = f"page_restored_{GLib.random_int()}"
-        page = self.view_stack.add_titled(final_content, page_name, title)
+        page = self.view_stack.add_titled(content_paned, page_name, session.name)
+        page.content_paned = content_paned
         for term in terminals:
             term.ashy_parent_page = page
 
-        tab_widget = self._create_tab_widget(title, icon_name, page)
+        tab_widget = self._create_tab_widget(page, session)
         self.tabs.append(tab_widget)
         self.pages[tab_widget] = page
         self.tab_bar_box.append(tab_widget)
@@ -1099,8 +1218,9 @@ class TabManager:
                 else None
             )
             title = node.get("session_name", "Terminal")
+            session_type = node.get("session_type", "local")
 
-            if node["session_type"] == "ssh":
+            if session_type == "ssh":
                 session = next(
                     (
                         s
@@ -1109,25 +1229,34 @@ class TabManager:
                     ),
                     None,
                 )
-                if session:
+                if session and session.is_ssh():
                     terminal = self.terminal_manager.create_ssh_terminal(
                         session, initial_command=initial_command
                     )
                 else:
                     self.logger.warning(
-                        f"Could not find SSH session '{node['session_name']}' to restore."
+                        f"Could not find SSH session '{node['session_name']}' to restore, or type mismatch."
                     )
                     terminal = self.terminal_manager.create_local_terminal(
                         title=f"Missing: {title}"
                     )
-            else:
+            else:  # session_type is local
+                session = next(
+                    (
+                        s
+                        for s in self.terminal_manager.parent_window.session_store
+                        if s.name == node["session_name"] and s.is_local()
+                    ),
+                    None,
+                )
                 terminal = self.terminal_manager.create_local_terminal(
-                    title=title, working_directory=working_dir
+                    session=session, title=title, working_directory=working_dir
                 )
 
             if not terminal:
                 return None
 
+            # For splits, we need the pane wrapper. For single terminals, we'll unwrap it later.
             pane_widget = _create_terminal_pane(
                 terminal,
                 title,

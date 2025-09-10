@@ -61,6 +61,7 @@ class SessionItem(GObject.GObject):
         auth_value: str = "",
         folder_path: str = "",
         port: int = 22,
+        tab_color: Optional[str] = None,
     ):
         super().__init__()
         self.logger = get_logger("ashyterm.sessions.model")
@@ -74,6 +75,7 @@ class SessionItem(GObject.GObject):
         self._auth_value = auth_value
         self._folder_path = str(normalize_path(folder_path)) if folder_path else ""
         self._port = port
+        self._tab_color = tab_color
 
         # Metadata
         self._created_at = time.time()
@@ -199,6 +201,15 @@ class SessionItem(GObject.GObject):
                 self.name, [_("Port must be a valid number between 1 and 65535")]
             )
 
+    @property
+    def tab_color(self) -> Optional[str]:
+        return self._tab_color
+
+    @tab_color.setter
+    def tab_color(self, value: Optional[str]):
+        self._tab_color = value
+        self._mark_modified()
+
     def _mark_modified(self):
         self._modified_at = time.time()
 
@@ -236,6 +247,7 @@ class SessionItem(GObject.GObject):
             "auth_value": auth_value_to_save,
             "folder_path": self._folder_path,
             "port": self.port,
+            "tab_color": self.tab_color,
             "created_at": self._created_at,
             "modified_at": self._modified_at,
             "last_used": self._last_used,
@@ -256,6 +268,7 @@ class SessionItem(GObject.GObject):
             port=data.get("port", 22),
         )
         session._auth_value = data.get("auth_value", "")
+        session.tab_color = data.get("tab_color")
         session._created_at = data.get("created_at", time.time())
         session._modified_at = data.get("modified_at", time.time())
         session._last_used = data.get("last_used")

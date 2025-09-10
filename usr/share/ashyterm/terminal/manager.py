@@ -255,7 +255,6 @@ class TerminalManager:
         self._pending_kill_timers: Dict[int, int] = {}
         self.tab_manager = None
         self.on_terminal_focus_changed: Optional[Callable] = None
-        self.on_terminal_directory_changed: Optional[Callable] = None
         self.terminal_exit_handler: Optional[Callable] = None
         self._stats = {
             "terminals_created": 0,
@@ -354,6 +353,21 @@ class TerminalManager:
         terminal_info = self.registry.get_terminal_info(terminal_id)
         if not terminal_info:
             return
+
+        if osc7_info is None:
+            uri = terminal.get_current_directory_uri()
+            if uri:
+                from urllib.parse import unquote, urlparse
+
+                parsed_uri = urlparse(uri)
+                if parsed_uri.scheme == "file":
+                    path = unquote(parsed_uri.path)
+                    hostname = parsed_uri.hostname or "localhost"
+                    display_path = self.osc7_tracker.parser._create_display_path(path)
+                    osc7_info = OSC7Info(
+                        hostname=hostname, path=path, display_path=display_path
+                    )
+
         new_title = "Terminal"
         if terminal_info.get("type") == "ssh":
             session = terminal_info.get("identifier")
@@ -374,12 +388,18 @@ class TerminalManager:
             elif osc7_info:
                 new_title = osc7_info.display_path
             else:
-                new_title = terminal_info.get("identifier", "Local")
-        if self.on_terminal_directory_changed:
-            self.on_terminal_directory_changed(terminal, new_title, osc7_info)
+                identifier = terminal_info.get("identifier")
+                if isinstance(identifier, SessionItem):
+                    new_title = identifier.name
+                else:
+                    new_title = str(identifier)
+
+        if self.tab_manager:
+            self.tab_manager.update_titles_for_terminal(terminal, new_title, osc7_info)
 
     def create_local_terminal(
         self,
+        session: Optional[SessionItem] = None,
         title: str = "Local Terminal",
         working_directory: Optional[str] = None,
         execute_command: Optional[str] = None,
@@ -389,8 +409,9 @@ class TerminalManager:
         if not terminal:
             raise TerminalCreationError("base terminal creation failed", "local")
 
-        terminal_id = self.registry.register_terminal(terminal, "local", title)
-        self._setup_terminal_events(terminal, title, terminal_id)
+        identifier = session if session else title
+        terminal_id = self.registry.register_terminal(terminal, "local", identifier)
+        self._setup_terminal_events(terminal, identifier, terminal_id)
 
         try:
             resolved_working_dir = self._resolve_working_directory(working_directory)
@@ -414,10 +435,11 @@ class TerminalManager:
                 working_directory=resolved_working_dir,
             )
 
+            log_title = session.name if session else title
             self.logger.info(
-                f"Local terminal created successfully: '{title}' (ID: {terminal_id})"
+                f"Local terminal created successfully: '{log_title}' (ID: {terminal_id})"
             )
-            log_terminal_event("created", title, "local terminal")
+            log_terminal_event("created", log_title, "local terminal")
             self._stats["terminals_created"] += 1
             return terminal
         except TerminalCreationError:

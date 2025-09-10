@@ -7,7 +7,7 @@ import gi
 
 gi.require_version("Gtk", "4.0")
 gi.require_version("Adw", "1")
-from gi.repository import Adw, Gio, GLib, Gtk
+from gi.repository import Adw, Gdk, Gio, GLib, Gtk
 
 from ...sessions.models import SessionItem
 from ...terminal.spawner import get_spawner
@@ -70,6 +70,7 @@ class SessionEditDialog(BaseDialog):
                 margin_end=24,
             )
             self._create_name_section(main_box)
+            self._create_appearance_section(main_box)
             if self.folder_store:
                 self._create_folder_section(main_box)
             self._create_type_section(main_box)
@@ -107,6 +108,41 @@ class SessionEditDialog(BaseDialog):
         name_row.set_activatable_widget(self.name_entry)
         name_group.add(name_row)
         parent.append(name_group)
+
+    def _create_appearance_section(self, parent: Gtk.Box) -> None:
+        appearance_group = Adw.PreferencesGroup(title=_("Appearance"))
+        color_row = Adw.ActionRow(
+            title=_("Tab Color"),
+            subtitle=_("Choose a color to identify this session's tab"),
+        )
+
+        color_box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=6)
+        self.color_button = Gtk.ColorButton(valign=Gtk.Align.CENTER, show_editor=True)
+        self.color_button.connect("color-set", self._on_color_changed)
+
+        if self.editing_session.tab_color:
+            rgba = Gdk.RGBA()
+            if rgba.parse(self.editing_session.tab_color):
+                self.color_button.set_rgba(rgba)
+            else:
+                self.color_button.set_rgba(Gdk.RGBA())  # Set to no color
+        else:
+            self.color_button.set_rgba(Gdk.RGBA())  # Set to no color
+
+        clear_button = Gtk.Button(
+            icon_name="edit-clear-symbolic",
+            valign=Gtk.Align.CENTER,
+            tooltip_text=_("Clear Color"),
+            css_classes=["flat"],
+        )
+        clear_button.connect("clicked", self._on_clear_color_clicked)
+
+        color_box.append(self.color_button)
+        color_box.append(clear_button)
+        color_row.add_suffix(color_box)
+        color_row.set_activatable_widget(self.color_button)
+        appearance_group.add(color_row)
+        parent.append(appearance_group)
 
     def _create_folder_section(self, parent: Gtk.Box) -> None:
         folder_group = Adw.PreferencesGroup(title=_("Organization"))
@@ -283,6 +319,13 @@ class SessionEditDialog(BaseDialog):
 
     def _on_name_changed(self, entry: Gtk.Entry) -> None:
         entry.remove_css_class("error")
+        self._mark_changed()
+
+    def _on_color_changed(self, button: Gtk.ColorButton) -> None:
+        self._mark_changed()
+
+    def _on_clear_color_clicked(self, button: Gtk.Button) -> None:
+        self.color_button.set_rgba(Gdk.RGBA())  # Set to no color
         self._mark_changed()
 
     def _on_folder_changed(self, combo_row, param) -> None:
@@ -508,6 +551,12 @@ class SessionEditDialog(BaseDialog):
             "name": self.name_entry.get_text().strip(),
             "session_type": "local" if self.type_combo.get_selected() == 0 else "ssh",
         })
+
+        rgba = self.color_button.get_rgba()
+        if rgba.alpha > 0:  # Check if a color is set
+            session_data["tab_color"] = rgba.to_string()
+        else:
+            session_data["tab_color"] = None
 
         if self.folder_combo and (
             selected_item := self.folder_combo.get_selected_item()

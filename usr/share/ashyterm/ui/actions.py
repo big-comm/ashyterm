@@ -86,6 +86,11 @@ class WindowActions:
         delete_action.connect("activate", self.delete_layout)
         self.window.add_action(delete_action)
 
+    def _close_sidebar_popover_if_active(self):
+        """Helper to close the sidebar popover if it's active."""
+        if hasattr(self.window, "sidebar_manager"):
+            self.window.sidebar_manager._close_popover_if_active()
+
     # --- Tab and Pane Actions ---
 
     def new_local_tab(self, *_args):
@@ -154,6 +159,7 @@ class WindowActions:
     # --- Session Tree Actions ---
 
     def connect_sftp(self, *_args):
+        self._close_sidebar_popover_if_active()
         selected_item = self.window.session_tree.get_selected_item()
         if isinstance(selected_item, SessionItem) and selected_item.is_ssh():
             self.window.toast_overlay.add_toast(
@@ -161,6 +167,7 @@ class WindowActions:
             )
 
     def edit_session(self, *_args):
+        self._close_sidebar_popover_if_active()
         if isinstance(
             item := self.window.session_tree.get_selected_item(), SessionItem
         ):
@@ -169,6 +176,7 @@ class WindowActions:
                 self._show_session_edit_dialog(item, position)
 
     def duplicate_session(self, *_args):
+        self._close_sidebar_popover_if_active()
         if isinstance(
             item := self.window.session_tree.get_selected_item(), SessionItem
         ):
@@ -176,12 +184,14 @@ class WindowActions:
             self.window.refresh_tree()
 
     def rename_session(self, *_args):
+        self._close_sidebar_popover_if_active()
         if isinstance(
             item := self.window.session_tree.get_selected_item(), SessionItem
         ):
             self._show_rename_dialog(item, True)
 
     def move_session_to_folder(self, *_args):
+        self._close_sidebar_popover_if_active()
         if isinstance(
             item := self.window.session_tree.get_selected_item(), SessionItem
         ):
@@ -193,10 +203,12 @@ class WindowActions:
             ).present()
 
     def delete_selected_items(self, *_args):
+        self._close_sidebar_popover_if_active()
         if items := self.window.session_tree.get_selected_items():
             self._show_delete_confirmation(items)
 
     def edit_folder(self, *_args):
+        self._close_sidebar_popover_if_active()
         if isinstance(
             item := self.window.session_tree.get_selected_item(), SessionFolder
         ):
@@ -205,12 +217,14 @@ class WindowActions:
                 self._show_folder_edit_dialog(item, position)
 
     def rename_folder(self, *_args):
+        self._close_sidebar_popover_if_active()
         if isinstance(
             item := self.window.session_tree.get_selected_item(), SessionFolder
         ):
             self._show_rename_dialog(item, False)
 
     def add_session_to_folder(self, *_args):
+        self._close_sidebar_popover_if_active()
         if isinstance(
             item := self.window.session_tree.get_selected_item(), SessionFolder
         ):
@@ -236,9 +250,11 @@ class WindowActions:
         self.window.session_tree._paste_item("")
 
     def add_session_root(self, *_args):
+        self._close_sidebar_popover_if_active()
         self._show_session_edit_dialog(SessionItem(name=_("New Session")), -1)
 
     def add_folder_root(self, *_args):
+        self._close_sidebar_popover_if_active()
         self._show_folder_edit_dialog(SessionFolder(name=_("New Folder")), None)
 
     # --- Window and Application Actions ---
@@ -278,17 +294,21 @@ class WindowActions:
                 new_window.present()
 
     def save_layout(self, *_args):
+        self._close_sidebar_popover_if_active()
         self.window.state_manager.save_current_layout()
 
     def restore_layout(self, action, param):
+        self._close_sidebar_popover_if_active()
         layout_name = param.get_string()
         self.window.state_manager.restore_saved_layout(layout_name)
 
     def delete_layout(self, action, param):
+        self._close_sidebar_popover_if_active()
         layout_name = param.get_string()
         self.window.state_manager.delete_saved_layout(layout_name)
 
     def move_layout_to_folder(self, action, param):
+        self._close_sidebar_popover_if_active()
         layout_name = param.get_string()
         layout = next(
             (

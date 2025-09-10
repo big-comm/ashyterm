@@ -60,13 +60,12 @@ class SidebarManager:
 
         self.flap.connect("notify::folded", self._on_sidebar_folded_changed)
 
-        # Connect toolbar buttons to the central action handler
-        action_handler = self.window.action_handler
-        self.add_session_button.connect("clicked", action_handler.add_session_root)
-        self.add_folder_button.connect("clicked", action_handler.add_folder_root)
+        # ALTERADO: Conectar os botões a métodos intermediários nesta classe
+        self.add_session_button.connect("clicked", self._on_add_session_clicked)
+        self.add_folder_button.connect("clicked", self._on_add_folder_clicked)
         self.edit_button.connect("clicked", self._on_edit_selected_clicked)
-        self.save_layout_button.connect("clicked", action_handler.save_layout)
-        self.remove_button.connect("clicked", action_handler.delete_selected_items)
+        self.save_layout_button.connect("clicked", self._on_save_layout_clicked)
+        self.remove_button.connect("clicked", self._on_delete_selected_clicked)
 
         # Search
         self.search_entry.connect("search-changed", self._on_search_changed)
@@ -78,11 +77,34 @@ class SidebarManager:
         self.window.connect("notify::default-width", self._on_window_size_changed)
         self.window.connect("notify::default-height", self._on_window_size_changed)
 
+    # NOVO: Métodos de callback que fecham o popover antes de chamar a ação
+    def _close_popover_if_active(self):
+        """Fecha o popover se ele estiver visível."""
+        if self.sidebar_popover and self.sidebar_popover.get_visible():
+            self.sidebar_popover.popdown()
+
+    def _on_add_session_clicked(self, button):
+        self._close_popover_if_active()
+        self.window.action_handler.add_session_root(None, None)
+
+    def _on_add_folder_clicked(self, button):
+        self._close_popover_if_active()
+        self.window.action_handler.add_folder_root(None, None)
+
+    def _on_save_layout_clicked(self, button):
+        self._close_popover_if_active()
+        self.window.action_handler.save_layout(None, None)
+
+    def _on_delete_selected_clicked(self, button):
+        self._close_popover_if_active()
+        self.window.action_handler.delete_selected_items(None, None)
+
     def _on_edit_selected_clicked(self, _button):
         """
         Determines the type of the selected item and calls the appropriate
-        action handler method.
+        action handler method, closing the popover first.
         """
+        self._close_popover_if_active()
         item = self.session_tree.get_selected_item()
         if isinstance(item, SessionItem):
             self.window.action_handler.edit_session()
@@ -246,7 +268,9 @@ class SidebarManager:
 
         tree_req = tree_widget.get_preferred_size()
         tree_width = (
-            tree_req.natural_size.width if tree_req and tree_req.natural_size.width > 0 else 250
+            tree_req.natural_size.width
+            if tree_req and tree_req.natural_size.width > 0
+            else 250
         )
         content_width = self._measure_tree_content_width()
         tree_width = max(tree_width, content_width)
@@ -268,14 +292,14 @@ class SidebarManager:
                 req = temp_label.get_preferred_size()
                 if req and req.natural_size.width > 0:
                     text_width = req.natural_size.width
-                    total_width = text_width + 20 + (depth * 20) + 24  # icon, indent, margins
+                    total_width = (
+                        text_width + 20 + (depth * 20) + 24
+                    )  # icon, indent, margins
                     if total_width > max_width:
                         max_width = total_width
         return max(int(max_width), 180)
 
-    def _get_visible_tree_items(
-        self, expanded_paths: set
-    ) -> List[Tuple[Any, int]]:
+    def _get_visible_tree_items(self, expanded_paths: set) -> List[Tuple[Any, int]]:
         """Get all currently visible items in the tree with their indentation depth."""
         visible_items = []
         for item in list(self.window.session_store) + list(self.window.layouts):
@@ -303,6 +327,8 @@ class SidebarManager:
                 children.append((folder, depth))
                 if folder.path in expanded_paths:
                     children.extend(
-                        self._get_folder_children(folder.path, expanded_paths, depth + 1)
+                        self._get_folder_children(
+                            folder.path, expanded_paths, depth + 1
+                        )
                     )
         return children

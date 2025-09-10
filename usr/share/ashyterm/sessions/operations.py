@@ -75,6 +75,7 @@ class SessionOperations:
             # The auth_value setter handles the keyring
             original_session.auth_value = updated_session.auth_value
             original_session.folder_path = updated_session.folder_path
+            original_session.tab_color = updated_session.tab_color
 
             if not self._save_changes_with_backup("Session updated"):
                 # Rollback changes on failure by recreating the item from original data

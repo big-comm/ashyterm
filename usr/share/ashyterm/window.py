@@ -151,9 +151,6 @@ class CommTerminalWindow(Adw.ApplicationWindow):
         self.terminal_manager.on_terminal_focus_changed = (
             self._on_terminal_focus_changed
         )
-        self.terminal_manager.on_terminal_directory_changed = (
-            self._on_terminal_directory_changed
-        )
         self.terminal_manager.set_terminal_exit_handler(self._on_terminal_exit)
         self.tab_manager.get_view_stack().connect(
             "notify::visible-child", self._on_tab_changed
@@ -310,30 +307,22 @@ class CommTerminalWindow(Adw.ApplicationWindow):
             )
             return
         if session.is_local():
-            self.tab_manager.create_local_tab(title=session.name)
+            self.tab_manager.create_local_tab(session=session)
         else:
             self.tab_manager.create_ssh_tab(session)
 
     def _on_terminal_focus_changed(self, terminal, _from_sidebar: bool) -> None:
         page = self.tab_manager.get_page_for_terminal(terminal)
-        # NOVO: Adicionar verificação para 'content_paned' para evitar erro em abas destacadas.
-        # Esta verificação previne o crash e corrige o problema de sincronização do file manager.
         if not page or not hasattr(page, "content_paned"):
             return
-        # FIM DA ALTERAÇÃO
 
         if page.content_paned.get_end_child():
             fm = self.tab_manager.file_managers.get(page)
             if fm:
                 fm.rebind_terminal(terminal)
 
-    def _on_terminal_directory_changed(
-        self, terminal, new_title: str, osc7_info
-    ) -> None:
-        page = self.tab_manager.get_page_for_terminal(terminal)
-        if page:
-            self.tab_manager.set_tab_title(page, new_title)
-        self._update_tab_layout()
+        # Trigger a title update to reflect the newly focused pane
+        self.terminal_manager._update_title(terminal)
 
     def _on_tab_changed(self, view_stack, _param):
         """Handle tab changes."""
@@ -612,32 +601,47 @@ class CommTerminalWindow(Adw.ApplicationWindow):
         scrolled.set_child(content_container)
 
         has_files = False
+        all_files = []
+        for fm in self.tab_manager.file_managers.values():
+            all_files.extend(fm.get_temp_files_info())
 
-        # Iterate through all file managers associated with tabs
-        for page, fm in self.tab_manager.file_managers.items():
-            if fm in self.active_temp_files and self.active_temp_files[fm] > 0:
-                has_files = True
-                group = Adw.PreferencesGroup(title=fm.session_item.name)
-                content_container.append(group)
-                for info in fm.get_temp_files_info():
-                    row = Adw.ActionRow(title=info["remote_path"], subtitle="")
-                    row.set_title_selectable(True)
-                    remove_button = Gtk.Button(
-                        icon_name="edit-delete-symbolic",
-                        css_classes=["flat", "circular"],
-                        tooltip_text=_("Remove this temporary file"),
-                    )
-                    dir_path = str(Path(info["local_file_path"]).parent)
+        if all_files:
+            has_files = True
+            group = Adw.PreferencesGroup()
+            content_container.append(group)
+            for info in all_files:
+                row = Adw.ActionRow(
+                    title=info["remote_path"], subtitle=info["session_name"]
+                )
+                row.set_title_selectable(True)
+                remove_button = Gtk.Button(
+                    icon_name="edit-delete-symbolic",
+                    css_classes=["flat", "circular"],
+                    tooltip_text=_("Remove this temporary file"),
+                )
+
+                # Find the correct file manager instance to call cleanup on
+                fm_to_call = next(
+                    (
+                        fm
+                        for fm in self.tab_manager.file_managers.values()
+                        if fm.session_item.name == info["session_name"]
+                    ),
+                    None,
+                )
+
+                if fm_to_call:
+                    edit_key = (info["session_name"], info["remote_path"])
                     remove_button.connect(
                         "clicked",
                         lambda _,
-                        fm_instance=fm,
-                        dp=dir_path: self._on_clear_single_temp_file_clicked(
-                            fm_instance, dp
+                        fm_instance=fm_to_call,
+                        key=edit_key: self._on_clear_single_temp_file_clicked(
+                            fm_instance, key
                         ),
                     )
-                    row.add_suffix(remove_button)
-                    group.add(row)
+                row.add_suffix(remove_button)
+                group.add(row)
 
         if not has_files:
             content_container.append(Gtk.Label(label=_("No temporary files found.")))
@@ -655,9 +659,9 @@ class CommTerminalWindow(Adw.ApplicationWindow):
         box.append(clear_button)
         self.cleanup_popover.set_child(box)
 
-    def _on_clear_single_temp_file_clicked(self, file_manager, dir_path_to_clear):
+    def _on_clear_single_temp_file_clicked(self, file_manager, edit_key):
         """Callback to clear a single temporary file and its directory."""
-        file_manager.cleanup_all_temp_files(dir_path_to_clear)
+        file_manager.cleanup_all_temp_files(edit_key)
         self._populate_cleanup_popover()
 
     def _on_clear_all_temp_files_clicked(self, button):
