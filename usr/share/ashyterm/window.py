@@ -367,7 +367,8 @@ class CommTerminalWindow(Adw.ApplicationWindow):
 
         content = page_to_detach.get_child()
         title = tab_widget._base_title
-        icon_name = getattr(tab_widget, "_icon_name", "computer-symbolic")
+        session = getattr(tab_widget, "session_item", None)
+        session_type = session.session_type if session else "local"
 
         self.tab_manager.view_stack.remove(content)
         self.tab_manager.tab_bar_box.remove(tab_widget)
@@ -383,7 +384,7 @@ class CommTerminalWindow(Adw.ApplicationWindow):
 
         app = self.get_application()
         new_window = app.create_new_window(_is_for_detached_tab=True)
-        new_window.tab_manager.re_attach_detached_page(content, title, icon_name)
+        new_window.tab_manager.re_attach_detached_page(content, title, session_type)
 
         new_window._update_tab_layout()
         new_window.present()
@@ -533,14 +534,16 @@ class CommTerminalWindow(Adw.ApplicationWindow):
                 user = ""
 
             if ":" in user_host_port:
-                host, port_str = user_host_port.split(":", 1)
+                host, port_str = user_host_port.rsplit(":", 1)
                 port = int(port_str)
             else:
                 host = user_host_port
                 port = 22
 
+            session_name = f"{user}@{host}" if user else host
+
             session = SessionItem(
-                name=ssh_target, session_type="ssh", user=user, host=host, port=port
+                name=session_name, session_type="ssh", user=user, host=host, port=port
             )
             initial_command = f"cd '{remote_path}'" if remote_path else None
             self.tab_manager.create_ssh_tab(session, initial_command=initial_command)

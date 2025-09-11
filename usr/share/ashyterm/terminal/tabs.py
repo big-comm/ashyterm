@@ -408,16 +408,15 @@ class TabManager:
         tab_widget.add_css_class("custom-tab-button")
         tab_widget.add_css_class("pill")
 
-        icon_name = (
-            "folder-remote-symbolic"
-            if session.name.startswith("SFTP:")
-            else "network-server-symbolic"
-            if session.is_ssh()
-            else "computer-symbolic"
-        )
+        icon_name = None
+        if session.name.startswith("SFTP:"):
+            icon_name = "folder-remote-symbolic"
+        elif session.is_ssh():
+            icon_name = "network-server-symbolic"
 
-        icon = Gtk.Image.new_from_icon_name(icon_name)
-        tab_widget.append(icon)
+        if icon_name:
+            icon = Gtk.Image.new_from_icon_name(icon_name)
+            tab_widget.append(icon)
 
         label = Gtk.Label(
             label=session.name, ellipsize=Pango.EllipsizeMode.START, xalign=1.0
@@ -761,6 +760,10 @@ class TabManager:
             tab_button.label_widget.set_text(display_title)
             page.set_title(display_title)
 
+            # NOVO: Forçar a atualização da UI da janela principal
+            if hasattr(self.terminal_manager.parent_window, "_update_tab_layout"):
+                self.terminal_manager.parent_window._update_tab_layout()
+
     def update_all_tab_titles(self) -> None:
         """Updates all tab titles based on the current state of the terminal."""
         for tab in self.tabs:
@@ -1094,32 +1097,30 @@ class TabManager:
             self.update_all_tab_titles()
 
     def re_attach_detached_page(
-        self, content: Gtk.Widget, title: str, icon_name: str
+        self, content: Gtk.Widget, title: str, session_type: str
     ) -> Adw.ViewStackPage:
         """Creates a new tab for a content widget that was detached from another window."""
         page_name = f"page_detached_{GLib.random_int()}"
         page = self.view_stack.add_titled(content, page_name, title)
 
         # Re-create a dummy session for the tab widget
-        session = SessionItem(
-            name=title, session_type="ssh" if "server" in icon_name else "local"
-        )
+        session = SessionItem(name=title, session_type=session_type)
 
         for terminal in self.get_all_terminals_in_page(page):
             terminal.ashy_parent_page = page
 
-        tab_widget = self._create_tab_widget(page, session)
-        self.tabs.append(tab_widget)
-        self.pages[tab_widget] = page
-        self.tab_bar_box.append(tab_widget)
+        tab_widget = self.tab_manager._create_tab_widget(page, session)
+        self.tab_manager.tabs.append(tab_widget)
+        self.tab_manager.pages[tab_widget] = page
+        self.tab_manager.tab_bar_box.append(tab_widget)
 
-        self.set_active_tab(tab_widget)
-        if terminal := self.get_selected_terminal():
-            self._schedule_terminal_focus(terminal)
+        self.tab_manager.set_active_tab(tab_widget)
+        if terminal := self.tab_manager.get_selected_terminal():
+            self.tab_manager._schedule_terminal_focus(terminal)
 
-        self.update_all_tab_titles()
-        if self.on_tab_count_changed:
-            self.on_tab_count_changed()
+        self.tab_manager.update_all_tab_titles()
+        if self.tab_manager.on_tab_count_changed:
+            self.tab_manager.on_tab_count_changed()
         return page
 
     def select_next_tab(self):
