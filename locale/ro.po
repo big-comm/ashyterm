@@ -443,11 +443,6 @@ msgstr "Portul trebuie să fie între 1 și 65535"
 msgid "Port must be a valid number"
 msgstr "Portul trebuie să fie un număr valid"
 # 
-# File: usr/share/ashyterm/utils/security.py, line: 822
-#: NEEDS WORK
-msgid "SSH key file path is required for key authentication"
-msgstr "Calea fișierului cheii SSH este necesară pentru autentificarea cheii."
-# 
 # File: usr/share/ashyterm/utils/security.py, line: 832
 #: NEEDS WORK
 #, python-brace-format
@@ -907,6 +902,16 @@ msgstr "Închide fereastra"
 #: NEEDS WORK
 msgid "This window has active SSH connections. Closing will disconnect them. Are you sure?"
 msgstr "Această fereastră are conexiuni SSH active. Închiderea va deconecta aceste conexiuni. Ești sigur?"
+# 
+# File: usr/share/ashyterm/window.py, line: 553
+#: NEEDS WORK
+msgid "Invalid SSH Target"
+msgstr "Țintă SSH invalidă"
+# 
+# File: usr/share/ashyterm/window.py, line: 554
+#: NEEDS WORK
+msgid "Could not parse the provided SSH connection string."
+msgstr "Nu s-a putut analiza șirul de conexiune SSH furnizat."
 # 
 # #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
 # 
@@ -1871,35 +1876,68 @@ msgstr "Niciodată nu restaura sesiunea anterioară"
 msgid "Backup &amp; Recovery"
 msgstr "Backup și Recuperare"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1724
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 319
 #: NEEDS WORK
-msgid "Configure automatic backup and recovery options"
-msgstr "Configurează opțiunile de backup și recuperare automate"
+msgid "Create an encrypted backup of your data or restore from a previous backup."
+msgstr "Creează un backup criptat al datelor tale sau restaurează dintr-un backup anterior."
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1730
-#: NEEDS WORK
-msgid "Automatic Backups"
-msgstr "Backup-uri automate"
+# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1731
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 325
+# File: usr/share/ashyterm/app.py, line: 390
 #: NEEDS WORK
-msgid "Automatically create backups of sessions and settings"
-msgstr "Creează automat copii de rezervă ale sesiunilor și setărilor"
+msgid "Create Backup"
+msgstr "Creează Backup"
 # 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 301
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 327
 #: NEEDS WORK
-msgid "Manual Backup"
-msgstr "Backup manual"
+msgid "Save all sessions, settings, and passwords to an encrypted file."
+msgstr "Salvează toate sesiunile, setările și parolele într-un fișier criptat."
 # 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 302
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 330
 #: NEEDS WORK
-msgid "Create a backup of your current sessions and settings now"
-msgstr "Creează o copie de rezervă a sesiunilor și setărilor tale curente acum"
+msgid "Create Backup..."
+msgstr "Creează backup..."
 # 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 304
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 338
 #: NEEDS WORK
-msgid "Backup Now"
-msgstr "Backup acum"
+msgid "Restore from Backup"
+msgstr "Restaurare din backup"
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 339
+#: NEEDS WORK
+msgid "Replace all current data with a backup file."
+msgstr "Înlocuiți toate datele curente cu un fișier de rezervă."
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 341
+#: NEEDS WORK
+msgid "Restore..."
+msgstr "Restaurare..."
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 348
+#: NEEDS WORK
+msgid "Remote Editing"
+msgstr "Editare de la distanță"
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 352
+#: NEEDS WORK
+msgid "Use System Temporary Directory"
+msgstr "Utilizați directorul temporar al sistemului"
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 354
+#: NEEDS WORK
+msgid "Store temporary files for remote editing in /tmp instead of the config folder"
+msgstr "Stocați fișiere temporare pentru editare la distanță în /tmp în loc de folderul de configurare"
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 369
+#: NEEDS WORK
+msgid "Clear Remote Edit Files on Exit"
+msgstr "Șterge fișierele editate de la distanță la ieșire"
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 371
+#: NEEDS WORK
+msgid "Automatically delete all temporary remote files when closing the app"
+msgstr "Șterge automat toate fișierele temporare remote la închiderea aplicației"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1575
 #: NEEDS WORK
@@ -2269,10 +2307,10 @@ msgstr "Continuare"
 msgid "{} is required"
 msgstr "{} este necesar"
 # 
-# File: usr/share/ashyterm/window.py, line: 586
+# File: usr/share/ashyterm/ui/actions.py, line: 168
 #: NEEDS WORK
-msgid "SFTP not implemented yet"
-msgstr "SFTP nu este implementat încă"
+msgid "Please select an SSH session to connect with SFTP."
+msgstr "Vă rugăm să selectați o sesiune SSH pentru a vă conecta cu SFTP."
 # 
 # File: usr/share/ashyterm/window.py, line: 758
 # File: usr/share/ashyterm/window.py, line: 875
@@ -2483,11 +2521,6 @@ msgstr "Împărțiți Sus/Jos"
 msgid "Close Pane"
 msgstr "Închide Panoul"
 # 
-# File: usr/share/ashyterm/app.py, line: 222
-#: NEEDS WORK
-msgid "Automatic startup backup"
-msgstr "Backup automat de pornire"
-# 
 # File: usr/share/ashyterm/app.py, line: 333
 #: NEEDS WORK
 msgid "Preferences Error"
@@ -2508,6 +2541,11 @@ msgstr "Eșec la deschiderea preferințelor: {}"
 msgid "A modern terminal emulator with session management"
 msgstr "Un emulator de terminal modern cu gestionarea sesiunilor"
 # 
+# File: usr/share/ashyterm/app.py, line: 356
+#: NEEDS WORK
+msgid "Save Backup As..."
+msgstr "Salvează copia de rezervă ca..."
+# 
 # File: usr/share/ashyterm/app.py, line: 368
 # File: usr/share/ashyterm/app.py, line: 379
 # File: usr/share/ashyterm/app.py, line: 392
@@ -2516,43 +2554,100 @@ msgstr "Un emulator de terminal modern cu gestionarea sesiunilor"
 msgid "Backup Error"
 msgstr "Eroare de backup"
 # 
-# File: usr/share/ashyterm/app.py, line: 368
-# File: usr/share/ashyterm/app.py, line: 402
+# File: usr/share/ashyterm/app.py, line: 375
 #: NEEDS WORK
-msgid "Backup system not available"
-msgstr "Sistem de backup indisponibil"
+msgid "Set Backup Password"
+msgstr "Setați parola de rezervă"
 # 
-# File: usr/share/ashyterm/app.py, line: 379
+# File: usr/share/ashyterm/app.py, line: 376
 #: NEEDS WORK
-msgid "No files to backup"
-msgstr "Niciun fișier de salvat"
+msgid "Please enter a password to encrypt the backup file."
+msgstr "Vă rugăm să introduceți o parolă pentru a cripta fișierul de backup."
 # 
-# File: usr/share/ashyterm/app.py, line: 385
+# File: usr/share/ashyterm/app.py, line: 384
 #: NEEDS WORK
-msgid "Manual backup from menu"
-msgstr "Backup manual din meniu"
+msgid "Confirm Password"
+msgstr "Confirmă parola"
+# 
+# File: usr/share/ashyterm/app.py, line: 400
+# File: usr/share/ashyterm/app.py, line: 405
+#: NEEDS WORK
+msgid "Password Error"
+msgstr "Eroare parolă"
+# 
+# File: usr/share/ashyterm/app.py, line: 400
+#: NEEDS WORK
+msgid "Password cannot be empty."
+msgstr "Parola nu poate fi goală."
+# 
+# File: usr/share/ashyterm/app.py, line: 405
+#: NEEDS WORK
+msgid "Passwords do not match."
+msgstr "Parolele nu se potrivesc."
+# 
+# File: usr/share/ashyterm/app.py, line: 423
+#: NEEDS WORK
+msgid "Creating backup..."
+msgstr "Crearea unei copii de rezervă..."
 # 
 # File: usr/share/ashyterm/app.py, line: 390
 #: NEEDS WORK
 msgid "Backup Complete"
 msgstr "Backup complet"
 # 
-# File: usr/share/ashyterm/app.py, line: 390
+# File: usr/share/ashyterm/app.py, line: 440
 #: NEEDS WORK
 #, python-brace-format
-msgid "Backup created successfully: {}"
-msgstr "Backup creat cu succes: {}"
+msgid ""
+"Backup saved successfully to:\n"
+"{}"
+msgstr ""
+"Backup salvat cu succes în:  \n"
+"{}"
 # 
-# File: usr/share/ashyterm/app.py, line: 392
+# File: usr/share/ashyterm/app.py, line: 446
 #: NEEDS WORK
-msgid "Failed to create backup"
-msgstr "Eșec la crearea backup-ului"
+msgid "Backup Failed"
+msgstr "Backup eșuat"
 # 
-# File: usr/share/ashyterm/app.py, line: 396
+# File: usr/share/ashyterm/app.py, line: 447
 #: NEEDS WORK
 #, python-brace-format
-msgid "Backup failed: {}"
-msgstr "Backup eșuat: {}"
+msgid "Could not create backup: {}"
+msgstr "Nu s-a putut crea backup-ul: {}"
+# 
+# File: usr/share/ashyterm/app.py, line: 458
+#: NEEDS WORK
+msgid "Restore from Backup?"
+msgstr "Restaurare din backup?"
+# 
+# File: usr/share/ashyterm/app.py, line: 460
+#: NEEDS WORK
+msgid ""
+"Restoring from a backup will overwrite all your current sessions, settings, and layouts. This "
+"action cannot be undone.\n"
+"\n"
+"<b>The application will need to be restarted after restoring.</b>"
+msgstr ""
+"Restaurarea dintr-o copie de rezervă va suprascrie toate sesiunile, setările și aranjamentele "
+"curente. Această acțiune nu poate fi anulată.\n"
+"\n"
+"<b>Aplicația va trebui să fie repornită după restaurare.</b>"
+# 
+# File: usr/share/ashyterm/app.py, line: 466
+#: NEEDS WORK
+msgid "Choose File and Restore"
+msgstr "Alege Fișier și Restaurează"
+# 
+# File: usr/share/ashyterm/app.py, line: 474
+#: NEEDS WORK
+msgid "Select Backup File"
+msgstr "Selectați fișierul de backup"
+# 
+# File: usr/share/ashyterm/app.py, line: 477
+#: NEEDS WORK
+msgid "Backup Files"
+msgstr "Fișiere de rezervă"
 # 
 # File: usr/share/ashyterm/app.py, line: 402
 # File: usr/share/ashyterm/app.py, line: 416
@@ -2560,32 +2655,48 @@ msgstr "Backup eșuat: {}"
 msgid "Restore Error"
 msgstr "Eroare de restaurare"
 # 
-# File: usr/share/ashyterm/app.py, line: 407
+# File: usr/share/ashyterm/app.py, line: 499
 #: NEEDS WORK
-msgid "No Backups"
-msgstr "Fără copii de rezervă"
+msgid "Enter Backup Password"
+msgstr "Introduceți parola de rezervă"
 # 
-# File: usr/share/ashyterm/app.py, line: 407
+# File: usr/share/ashyterm/app.py, line: 500
 #: NEEDS WORK
-msgid "No backups available to restore"
-msgstr "Nu există copii de rezervă disponibile pentru restaurare."
+msgid "Please enter the password for the selected backup file."
+msgstr "Vă rugăm să introduceți parola pentru fișierul de rezervă selectat."
 # 
-# File: usr/share/ashyterm/app.py, line: 411
+# File: usr/share/ashyterm/app.py, line: 508
 #: NEEDS WORK
-msgid "Backups Available"
-msgstr "Copii de rezervă disponibile"
+msgid "Restore"
+msgstr "Restaurare"
 # 
-# File: usr/share/ashyterm/app.py, line: 412
+# File: usr/share/ashyterm/app.py, line: 525
+#: NEEDS WORK
+msgid "Restoring from backup..."
+msgstr "Restaurare din backup..."
+# 
+# File: usr/share/ashyterm/app.py, line: 538
+#: NEEDS WORK
+msgid "Restore Failed"
+msgstr "Restaurare eșuată"
+# 
+# File: usr/share/ashyterm/app.py, line: 539
 #: NEEDS WORK
 #, python-brace-format
-msgid "{} backup(s) available. Use preferences dialog for detailed restore options."
-msgstr "{} backup-uri disponibile. Utilizați dialogul de preferințe pentru opțiuni detaliate de restaurare."
+msgid "Could not restore from backup: {}"
+msgstr "Nu s-a putut restaura din backup: {}"
 # 
-# File: usr/share/ashyterm/app.py, line: 416
+# File: usr/share/ashyterm/app.py, line: 549
 #: NEEDS WORK
-#, python-brace-format
-msgid "Failed to access backups: {}"
-msgstr "Nu s-a putut accesa copiile de rezervă: {}"
+msgid "Restore Complete"
+msgstr "Restaurare completă"
+# 
+# File: usr/share/ashyterm/app.py, line: 551
+#: NEEDS WORK
+msgid "Data has been restored successfully. Please restart Ashy Terminal for the changes to take effect."
+msgstr ""
+"Datele au fost restaurate cu succes. Vă rugăm să reporniți Ashy Terminal pentru ca modificările să "
+"aibă efect."
 # 
 # File: usr/share/ashyterm/app.py, line: 449
 #: NEEDS WORK
@@ -2618,11 +2729,6 @@ msgstr ""
 #: NEEDS WORK
 msgid "Close All"
 msgstr "Închide tot"
-# 
-# File: usr/share/ashyterm/app.py, line: 514
-#: NEEDS WORK
-msgid "Automatic backup on exit"
-msgstr "Backup automat pe ieșire"
 # 
 # File: usr/share/ashyterm/app.py, line: 530
 #: NEEDS WORK
@@ -2777,10 +2883,44 @@ msgstr ""
 "\n"
 "Această acțiune nu poate fi anulată."
 # 
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1144
+#: NEEDS WORK
+msgid "Delete Multiple Items"
+msgstr "Ștergeți elemente multiple"
+# 
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1146
+#: NEEDS WORK
+#, python-brace-format
+msgid ""
+"Are you sure you want to permanently delete these {count} items?\n"
+"\n"
+"This action cannot be undone."
+msgstr ""
+"Ești sigur că vrei să ștergi permanent aceste {count} elemente?\n"
+"\n"
+"Această acțiune nu poate fi anulată."
+# 
 # File: usr/share/ashyterm/filemanager/manager.py, line: 691
 #: NEEDS WORK
 msgid "Delete command sent to terminal"
 msgstr "Comandă de ștergere trimisă la terminal"
+# 
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1173
+#: NEEDS WORK
+#, python-brace-format
+msgid "Set Permissions for {count} Items"
+msgstr "Setări de permisiuni pentru {count} elemente"
+# 
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1175
+#: NEEDS WORK
+#, python-brace-format
+msgid "Permissions for {name}"
+msgstr "Permisiuni pentru {name}"
+# 
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1179
+#: NEEDS WORK
+msgid "Set new file permissions."
+msgstr "Setați noi permisiuni pentru fișier."
 # 
 # File: usr/share/ashyterm/filemanager/manager.py, line: 701
 #: NEEDS WORK
@@ -2828,10 +2968,15 @@ msgstr "Aplică"
 msgid "Chmod command sent to terminal"
 msgstr "Comanda Chmod trimisă la terminal"
 # 
-# File: usr/share/ashyterm/filemanager/manager.py, line: 826
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1308
 #: NEEDS WORK
-msgid "Save File As..."
-msgstr "Salvează fișierul ca..."
+msgid "Select Destination Folder"
+msgstr "Selectați folderul de destinație"
+# 
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1310
+#: NEEDS WORK
+msgid "Download Here"
+msgstr "Descarcă aici"
 # 
 # File: usr/share/ashyterm/filemanager/manager.py, line: 855
 # File: usr/share/ashyterm/filemanager/manager.py, line: 889
@@ -2848,6 +2993,25 @@ msgstr "Încărcați fișier(e) în acest folder"
 #: NEEDS WORK
 msgid "Upload"
 msgstr "Încărcare"
+# 
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1430
+#: NEEDS WORK
+msgid "Confirm Upload"
+msgstr "Confirmare încărcare"
+# 
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1432
+#: NEEDS WORK
+#, python-brace-format
+msgid ""
+"You are about to upload {count} item(s) to:\n"
+"<b>{dest}</b>\n"
+"\n"
+"Do you want to proceed?"
+msgstr ""
+"Ești pe cale să încarci {count} element(e) la:\n"
+"<b>{dest}</b>\n"
+"\n"
+"Vrei să continui?"
 # 
 # File: usr/share/ashyterm/filemanager/manager.py, line: 1382
 #: NEEDS WORK
