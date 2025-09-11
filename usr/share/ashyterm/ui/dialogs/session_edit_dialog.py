@@ -557,8 +557,10 @@ class SessionEditDialog(BaseDialog):
         else:
             session_data["tab_color"] = None
 
-        if self.folder_combo and (
-            selected_item := self.folder_combo.get_selected_item()
+        if (
+            hasattr(self, "folder_combo")
+            and self.folder_combo
+            and (selected_item := self.folder_combo.get_selected_item())
         ):
             session_data["folder_path"] = self.folder_paths_map.get(
                 selected_item.get_string(), ""
