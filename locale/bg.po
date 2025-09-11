@@ -443,11 +443,6 @@ msgstr "Портът трябва да бъде между 1 и 65535"
 msgid "Port must be a valid number"
 msgstr "Портът трябва да бъде валидно число"
 # 
-# File: usr/share/ashyterm/utils/security.py, line: 822
-#: NEEDS WORK
-msgid "SSH key file path is required for key authentication"
-msgstr "Необходим е пътят до файла с SSH ключа за удостоверяване с ключ."
-# 
 # File: usr/share/ashyterm/utils/security.py, line: 832
 #: NEEDS WORK
 #, python-brace-format
@@ -907,6 +902,16 @@ msgstr "Затвори прозореца"
 #: NEEDS WORK
 msgid "This window has active SSH connections. Closing will disconnect them. Are you sure?"
 msgstr "Този прозорец има активни SSH връзки. Затварянето им ще ги прекъсне. Сигурни ли сте?"
+# 
+# File: usr/share/ashyterm/window.py, line: 553
+#: NEEDS WORK
+msgid "Invalid SSH Target"
+msgstr "Невалиден SSH цел"
+# 
+# File: usr/share/ashyterm/window.py, line: 554
+#: NEEDS WORK
+msgid "Could not parse the provided SSH connection string."
+msgstr "Не можа да анализира предоставената SSH връзка."
 # 
 # #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
 # 
@@ -1871,35 +1876,68 @@ msgstr "Никога не възстановявайте предишната с
 msgid "Backup &amp; Recovery"
 msgstr "Резервно копиране и възстановяване"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1724
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 319
 #: NEEDS WORK
-msgid "Configure automatic backup and recovery options"
-msgstr "Конфигуриране на автоматични опции за архивиране и възстановяване"
+msgid "Create an encrypted backup of your data or restore from a previous backup."
+msgstr "Създайте криптиран архив на вашите данни или възстановете от предишен архив."
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1730
-#: NEEDS WORK
-msgid "Automatic Backups"
-msgstr "Автоматични резервни копия"
+# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1731
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 325
+# File: usr/share/ashyterm/app.py, line: 390
 #: NEEDS WORK
-msgid "Automatically create backups of sessions and settings"
-msgstr "Автоматично създаване на резервни копия на сесии и настройки"
+msgid "Create Backup"
+msgstr "Създаване на резервно копие"
 # 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 301
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 327
 #: NEEDS WORK
-msgid "Manual Backup"
-msgstr "Ръчно архивиране"
+msgid "Save all sessions, settings, and passwords to an encrypted file."
+msgstr "Запазете всички сесии, настройки и пароли в криптиран файл."
 # 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 302
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 330
 #: NEEDS WORK
-msgid "Create a backup of your current sessions and settings now"
-msgstr "Създайте резервно копие на текущите си сесии и настройки сега"
+msgid "Create Backup..."
+msgstr "Създаване на резервно копие..."
 # 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 304
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 338
 #: NEEDS WORK
-msgid "Backup Now"
-msgstr "Резервно копиране сега"
+msgid "Restore from Backup"
+msgstr "Възстановяване от резервно копие"
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 339
+#: NEEDS WORK
+msgid "Replace all current data with a backup file."
+msgstr "Заменете всички текущи данни с резервно копие."
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 341
+#: NEEDS WORK
+msgid "Restore..."
+msgstr "Възстановяване..."
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 348
+#: NEEDS WORK
+msgid "Remote Editing"
+msgstr "Отдалечено редактиране"
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 352
+#: NEEDS WORK
+msgid "Use System Temporary Directory"
+msgstr "Използвайте системната временна директория"
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 354
+#: NEEDS WORK
+msgid "Store temporary files for remote editing in /tmp instead of the config folder"
+msgstr "Съхранявайте временни файлове за дистанционно редактиране в /tmp вместо в конфигурационната папка"
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 369
+#: NEEDS WORK
+msgid "Clear Remote Edit Files on Exit"
+msgstr "Изчисти отдалечените файлове за редактиране при изход"
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 371
+#: NEEDS WORK
+msgid "Automatically delete all temporary remote files when closing the app"
+msgstr "Автоматично изтрийте всички временни отдалечени файлове при затваряне на приложението."
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1575
 #: NEEDS WORK
@@ -2269,10 +2307,10 @@ msgstr "Продължи"
 msgid "{} is required"
 msgstr "{} е задължителен"
 # 
-# File: usr/share/ashyterm/window.py, line: 586
+# File: usr/share/ashyterm/ui/actions.py, line: 168
 #: NEEDS WORK
-msgid "SFTP not implemented yet"
-msgstr "SFTP все още не е реализиран"
+msgid "Please select an SSH session to connect with SFTP."
+msgstr "Моля, изберете SSH сесия, с която да се свържете чрез SFTP."
 # 
 # File: usr/share/ashyterm/window.py, line: 758
 # File: usr/share/ashyterm/window.py, line: 875
@@ -2483,11 +2521,6 @@ msgstr "Раздели горе/долу"
 msgid "Close Pane"
 msgstr "Затвори панела"
 # 
-# File: usr/share/ashyterm/app.py, line: 222
-#: NEEDS WORK
-msgid "Automatic startup backup"
-msgstr "Автоматично стартиране на резервно копие"
-# 
 # File: usr/share/ashyterm/app.py, line: 333
 #: NEEDS WORK
 msgid "Preferences Error"
@@ -2508,6 +2541,11 @@ msgstr "Неуспешно отваряне на предпочитания: {}"
 msgid "A modern terminal emulator with session management"
 msgstr "Модерен терминален емулатор с управление на сесии"
 # 
+# File: usr/share/ashyterm/app.py, line: 356
+#: NEEDS WORK
+msgid "Save Backup As..."
+msgstr "Запази резервно копие като..."
+# 
 # File: usr/share/ashyterm/app.py, line: 368
 # File: usr/share/ashyterm/app.py, line: 379
 # File: usr/share/ashyterm/app.py, line: 392
@@ -2516,43 +2554,100 @@ msgstr "Модерен терминален емулатор с управлен
 msgid "Backup Error"
 msgstr "Грешка при архивиране"
 # 
-# File: usr/share/ashyterm/app.py, line: 368
-# File: usr/share/ashyterm/app.py, line: 402
+# File: usr/share/ashyterm/app.py, line: 375
 #: NEEDS WORK
-msgid "Backup system not available"
-msgstr "Системата за архивиране не е налична"
+msgid "Set Backup Password"
+msgstr "Задайте парола за резервно копие"
 # 
-# File: usr/share/ashyterm/app.py, line: 379
+# File: usr/share/ashyterm/app.py, line: 376
 #: NEEDS WORK
-msgid "No files to backup"
-msgstr "Няма файлове за архивиране"
+msgid "Please enter a password to encrypt the backup file."
+msgstr "Моля, въведете парола за криптиране на резервното копие."
 # 
-# File: usr/share/ashyterm/app.py, line: 385
+# File: usr/share/ashyterm/app.py, line: 384
 #: NEEDS WORK
-msgid "Manual backup from menu"
-msgstr "Ръчно архивиране от менюто"
+msgid "Confirm Password"
+msgstr "Потвърдете паролата"
+# 
+# File: usr/share/ashyterm/app.py, line: 400
+# File: usr/share/ashyterm/app.py, line: 405
+#: NEEDS WORK
+msgid "Password Error"
+msgstr "Грешка в паролата"
+# 
+# File: usr/share/ashyterm/app.py, line: 400
+#: NEEDS WORK
+msgid "Password cannot be empty."
+msgstr "Паролата не може да бъде празна."
+# 
+# File: usr/share/ashyterm/app.py, line: 405
+#: NEEDS WORK
+msgid "Passwords do not match."
+msgstr "Паролите не съвпадат."
+# 
+# File: usr/share/ashyterm/app.py, line: 423
+#: NEEDS WORK
+msgid "Creating backup..."
+msgstr "Създаване на резервно копие..."
 # 
 # File: usr/share/ashyterm/app.py, line: 390
 #: NEEDS WORK
 msgid "Backup Complete"
 msgstr "Резервното копие е завършено"
 # 
-# File: usr/share/ashyterm/app.py, line: 390
+# File: usr/share/ashyterm/app.py, line: 440
 #: NEEDS WORK
 #, python-brace-format
-msgid "Backup created successfully: {}"
-msgstr "Резервното копие е създадено успешно: {}"
+msgid ""
+"Backup saved successfully to:\n"
+"{}"
+msgstr ""
+"Резервното копие беше успешно запазено в:  \n"
+"{}"
 # 
-# File: usr/share/ashyterm/app.py, line: 392
+# File: usr/share/ashyterm/app.py, line: 446
 #: NEEDS WORK
-msgid "Failed to create backup"
-msgstr "Неуспешно създаване на резервно копие"
+msgid "Backup Failed"
+msgstr "Резервното копие неуспешно"
 # 
-# File: usr/share/ashyterm/app.py, line: 396
+# File: usr/share/ashyterm/app.py, line: 447
 #: NEEDS WORK
 #, python-brace-format
-msgid "Backup failed: {}"
-msgstr "Резервното копие не успя: {}"
+msgid "Could not create backup: {}"
+msgstr "Не можа да се създаде резервно копие: {}"
+# 
+# File: usr/share/ashyterm/app.py, line: 458
+#: NEEDS WORK
+msgid "Restore from Backup?"
+msgstr "Възстановяване от резервно копие?"
+# 
+# File: usr/share/ashyterm/app.py, line: 460
+#: NEEDS WORK
+msgid ""
+"Restoring from a backup will overwrite all your current sessions, settings, and layouts. This "
+"action cannot be undone.\n"
+"\n"
+"<b>The application will need to be restarted after restoring.</b>"
+msgstr ""
+"Възстановяването от резервно копие ще презапише всичките ви текущи сесии, настройки и оформления. "
+"Това действие не може да бъде отменено.\n"
+"\n"
+"<b>Приложението ще трябва да бъде рестартирано след възстановяването.</b>"
+# 
+# File: usr/share/ashyterm/app.py, line: 466
+#: NEEDS WORK
+msgid "Choose File and Restore"
+msgstr "Изберете файл и възстановете"
+# 
+# File: usr/share/ashyterm/app.py, line: 474
+#: NEEDS WORK
+msgid "Select Backup File"
+msgstr "Изберете файл за резервно копие"
+# 
+# File: usr/share/ashyterm/app.py, line: 477
+#: NEEDS WORK
+msgid "Backup Files"
+msgstr "Резервни файлове"
 # 
 # File: usr/share/ashyterm/app.py, line: 402
 # File: usr/share/ashyterm/app.py, line: 416
@@ -2560,34 +2655,46 @@ msgstr "Резервното копие не успя: {}"
 msgid "Restore Error"
 msgstr "Грешка при възстановяване"
 # 
-# File: usr/share/ashyterm/app.py, line: 407
+# File: usr/share/ashyterm/app.py, line: 499
 #: NEEDS WORK
-msgid "No Backups"
-msgstr "Няма резервни копия"
+msgid "Enter Backup Password"
+msgstr "Въведете паролата за резервно копие"
 # 
-# File: usr/share/ashyterm/app.py, line: 407
+# File: usr/share/ashyterm/app.py, line: 500
 #: NEEDS WORK
-msgid "No backups available to restore"
-msgstr "Няма налични резервни копия за възстановяване"
+msgid "Please enter the password for the selected backup file."
+msgstr "Моля, въведете паролата за избрания резервен файл."
 # 
-# File: usr/share/ashyterm/app.py, line: 411
+# File: usr/share/ashyterm/app.py, line: 508
 #: NEEDS WORK
-msgid "Backups Available"
-msgstr "Налични резервни копия"
+msgid "Restore"
+msgstr "Възстановяване"
 # 
-# File: usr/share/ashyterm/app.py, line: 412
+# File: usr/share/ashyterm/app.py, line: 525
+#: NEEDS WORK
+msgid "Restoring from backup..."
+msgstr "Възстановяване от резервно копие..."
+# 
+# File: usr/share/ashyterm/app.py, line: 538
+#: NEEDS WORK
+msgid "Restore Failed"
+msgstr "Възстановяването неуспешно"
+# 
+# File: usr/share/ashyterm/app.py, line: 539
 #: NEEDS WORK
 #, python-brace-format
-msgid "{} backup(s) available. Use preferences dialog for detailed restore options."
-msgstr ""
-"{} резервно копие(я) на разположение. Използвайте диалога с предпочитанията за подробни опции за "
-"възстановяване."
+msgid "Could not restore from backup: {}"
+msgstr "Не можа да се възстанови от резервно копие: {}"
 # 
-# File: usr/share/ashyterm/app.py, line: 416
+# File: usr/share/ashyterm/app.py, line: 549
 #: NEEDS WORK
-#, python-brace-format
-msgid "Failed to access backups: {}"
-msgstr "Неуспешен достъп до резервни копия: {}"
+msgid "Restore Complete"
+msgstr "Възстановяването е завършено"
+# 
+# File: usr/share/ashyterm/app.py, line: 551
+#: NEEDS WORK
+msgid "Data has been restored successfully. Please restart Ashy Terminal for the changes to take effect."
+msgstr "Данните бяха възстановени успешно. Моля, рестартирайте Ashy Terminal, за да влязат промените в сила."
 # 
 # File: usr/share/ashyterm/app.py, line: 449
 #: NEEDS WORK
@@ -2620,11 +2727,6 @@ msgstr ""
 #: NEEDS WORK
 msgid "Close All"
 msgstr "Затвори всичко"
-# 
-# File: usr/share/ashyterm/app.py, line: 514
-#: NEEDS WORK
-msgid "Automatic backup on exit"
-msgstr "Автоматично архивиране при изход"
 # 
 # File: usr/share/ashyterm/app.py, line: 530
 #: NEEDS WORK
@@ -2779,10 +2881,44 @@ msgstr ""
 "\n"
 "Тази операция не може да бъде отменена."
 # 
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1144
+#: NEEDS WORK
+msgid "Delete Multiple Items"
+msgstr "Изтрийте множество елементи"
+# 
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1146
+#: NEEDS WORK
+#, python-brace-format
+msgid ""
+"Are you sure you want to permanently delete these {count} items?\n"
+"\n"
+"This action cannot be undone."
+msgstr ""
+"Сигурни ли сте, че искате да изтриете трайно тези {count} елементи?\n"
+"\n"
+"Тази операция не може да бъде отменена."
+# 
 # File: usr/share/ashyterm/filemanager/manager.py, line: 691
 #: NEEDS WORK
 msgid "Delete command sent to terminal"
 msgstr "Команда за изтриване, изпратена до терминала"
+# 
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1173
+#: NEEDS WORK
+#, python-brace-format
+msgid "Set Permissions for {count} Items"
+msgstr "Настройте разрешения за {count} елемента"
+# 
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1175
+#: NEEDS WORK
+#, python-brace-format
+msgid "Permissions for {name}"
+msgstr "Разрешения за {name}"
+# 
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1179
+#: NEEDS WORK
+msgid "Set new file permissions."
+msgstr "Настройте нови разрешения за файл."
 # 
 # File: usr/share/ashyterm/filemanager/manager.py, line: 701
 #: NEEDS WORK
@@ -2830,10 +2966,15 @@ msgstr "Приложи"
 msgid "Chmod command sent to terminal"
 msgstr "Команда Chmod изпратена до терминала"
 # 
-# File: usr/share/ashyterm/filemanager/manager.py, line: 826
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1308
 #: NEEDS WORK
-msgid "Save File As..."
-msgstr "Запази файла като..."
+msgid "Select Destination Folder"
+msgstr "Изберете папка за целта"
+# 
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1310
+#: NEEDS WORK
+msgid "Download Here"
+msgstr "Изтеглете тук"
 # 
 # File: usr/share/ashyterm/filemanager/manager.py, line: 855
 # File: usr/share/ashyterm/filemanager/manager.py, line: 889
@@ -2850,6 +2991,25 @@ msgstr "Качете файл(ове) в тази папка"
 #: NEEDS WORK
 msgid "Upload"
 msgstr "Качване"
+# 
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1430
+#: NEEDS WORK
+msgid "Confirm Upload"
+msgstr "Потвърдете качването"
+# 
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1432
+#: NEEDS WORK
+#, python-brace-format
+msgid ""
+"You are about to upload {count} item(s) to:\n"
+"<b>{dest}</b>\n"
+"\n"
+"Do you want to proceed?"
+msgstr ""
+"Вие сте на път да качите {count} артикул(а) в:\n"
+"<b>{dest}</b>\n"
+"\n"
+"Искате ли да продължите?"
 # 
 # File: usr/share/ashyterm/filemanager/manager.py, line: 1382
 #: NEEDS WORK

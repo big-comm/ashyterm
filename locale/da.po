@@ -443,11 +443,6 @@ msgstr "Porten skal være mellem 1 og 65535"
 msgid "Port must be a valid number"
 msgstr "Porten skal være et gyldigt nummer"
 # 
-# File: usr/share/ashyterm/utils/security.py, line: 822
-#: NEEDS WORK
-msgid "SSH key file path is required for key authentication"
-msgstr "SSH nøglefilsti er påkrævet for nøgleautentifikation"
-# 
 # File: usr/share/ashyterm/utils/security.py, line: 832
 #: NEEDS WORK
 #, python-brace-format
@@ -907,6 +902,16 @@ msgstr "Luk vindue"
 #: NEEDS WORK
 msgid "This window has active SSH connections. Closing will disconnect them. Are you sure?"
 msgstr "Dette vindue har aktive SSH-forbindelser. Lukning vil afbryde dem. Er du sikker?"
+# 
+# File: usr/share/ashyterm/window.py, line: 553
+#: NEEDS WORK
+msgid "Invalid SSH Target"
+msgstr "Ugyldig SSH-mål"
+# 
+# File: usr/share/ashyterm/window.py, line: 554
+#: NEEDS WORK
+msgid "Could not parse the provided SSH connection string."
+msgstr "Kunne ikke analysere den angivne SSH-forbindelsesstreng."
 # 
 # #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
 # 
@@ -1873,35 +1878,68 @@ msgstr "Gendan aldrig den tidligere session"
 msgid "Backup &amp; Recovery"
 msgstr "Sikkerhedskopiering &amp; Gendannelse"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1724
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 319
 #: NEEDS WORK
-msgid "Configure automatic backup and recovery options"
-msgstr "Konfigurer automatiske backup- og gendannelsesindstillinger"
+msgid "Create an encrypted backup of your data or restore from a previous backup."
+msgstr "Opret en krypteret sikkerhedskopi af dine data eller gendan fra en tidligere sikkerhedskopi."
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1730
-#: NEEDS WORK
-msgid "Automatic Backups"
-msgstr "Automatiske sikkerhedskopier"
+# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1731
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 325
+# File: usr/share/ashyterm/app.py, line: 390
 #: NEEDS WORK
-msgid "Automatically create backups of sessions and settings"
-msgstr "Automatisk opret sikkerhedskopier af sessioner og indstillinger"
+msgid "Create Backup"
+msgstr "Opret sikkerhedskopi"
 # 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 301
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 327
 #: NEEDS WORK
-msgid "Manual Backup"
-msgstr "Manuel backup"
+msgid "Save all sessions, settings, and passwords to an encrypted file."
+msgstr "Gem alle sessioner, indstillinger og adgangskoder i en krypteret fil."
 # 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 302
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 330
 #: NEEDS WORK
-msgid "Create a backup of your current sessions and settings now"
-msgstr "Opret en sikkerhedskopi af dine nuværende sessioner og indstillinger nu"
+msgid "Create Backup..."
+msgstr "Opret sikkerhedskopi..."
 # 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 304
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 338
 #: NEEDS WORK
-msgid "Backup Now"
-msgstr "Sikkerhedskopier nu"
+msgid "Restore from Backup"
+msgstr "Gendan fra sikkerhedskopi"
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 339
+#: NEEDS WORK
+msgid "Replace all current data with a backup file."
+msgstr "Erstat alle nuværende data med en backupfil."
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 341
+#: NEEDS WORK
+msgid "Restore..."
+msgstr "Gendan..."
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 348
+#: NEEDS WORK
+msgid "Remote Editing"
+msgstr "Fjernredigering"
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 352
+#: NEEDS WORK
+msgid "Use System Temporary Directory"
+msgstr "Brug systemets midlertidige mappe"
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 354
+#: NEEDS WORK
+msgid "Store temporary files for remote editing in /tmp instead of the config folder"
+msgstr "Gem midlertidige filer til fjernredigering i /tmp i stedet for konfigurationsmappen"
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 369
+#: NEEDS WORK
+msgid "Clear Remote Edit Files on Exit"
+msgstr "Ryd fjernredigeringsfiler ved afslutning"
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 371
+#: NEEDS WORK
+msgid "Automatically delete all temporary remote files when closing the app"
+msgstr "Automatisk slet alle midlertidige fjernfiler, når appen lukkes"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1575
 #: NEEDS WORK
@@ -2271,10 +2309,10 @@ msgstr "Fortsæt"
 msgid "{} is required"
 msgstr "{} er påkrævet"
 # 
-# File: usr/share/ashyterm/window.py, line: 586
+# File: usr/share/ashyterm/ui/actions.py, line: 168
 #: NEEDS WORK
-msgid "SFTP not implemented yet"
-msgstr "SFTP er endnu ikke implementeret"
+msgid "Please select an SSH session to connect with SFTP."
+msgstr "Vælg venligst en SSH-session for at oprette forbindelse med SFTP."
 # 
 # File: usr/share/ashyterm/window.py, line: 758
 # File: usr/share/ashyterm/window.py, line: 875
@@ -2483,11 +2521,6 @@ msgstr "Del op Top/Bund"
 msgid "Close Pane"
 msgstr "Luk panel"
 # 
-# File: usr/share/ashyterm/app.py, line: 222
-#: NEEDS WORK
-msgid "Automatic startup backup"
-msgstr "Automatisk opstartssikkerhedskopi"
-# 
 # File: usr/share/ashyterm/app.py, line: 333
 #: NEEDS WORK
 msgid "Preferences Error"
@@ -2508,6 +2541,11 @@ msgstr "Kunne ikke åbne indstillinger: {}"
 msgid "A modern terminal emulator with session management"
 msgstr "En moderne terminalemulator med sessionshåndtering"
 # 
+# File: usr/share/ashyterm/app.py, line: 356
+#: NEEDS WORK
+msgid "Save Backup As..."
+msgstr "Gem backup som..."
+# 
 # File: usr/share/ashyterm/app.py, line: 368
 # File: usr/share/ashyterm/app.py, line: 379
 # File: usr/share/ashyterm/app.py, line: 392
@@ -2516,43 +2554,100 @@ msgstr "En moderne terminalemulator med sessionshåndtering"
 msgid "Backup Error"
 msgstr "Sikkerhedskopieringsfejl"
 # 
-# File: usr/share/ashyterm/app.py, line: 368
-# File: usr/share/ashyterm/app.py, line: 402
+# File: usr/share/ashyterm/app.py, line: 375
 #: NEEDS WORK
-msgid "Backup system not available"
-msgstr "Backup-system ikke tilgængelig"
+msgid "Set Backup Password"
+msgstr "Indstil sikkerhedskopi adgangskode"
 # 
-# File: usr/share/ashyterm/app.py, line: 379
+# File: usr/share/ashyterm/app.py, line: 376
 #: NEEDS WORK
-msgid "No files to backup"
-msgstr "Ingen filer at sikkerhedskopiere"
+msgid "Please enter a password to encrypt the backup file."
+msgstr "Indtast venligst en adgangskode for at kryptere backupfilen."
 # 
-# File: usr/share/ashyterm/app.py, line: 385
+# File: usr/share/ashyterm/app.py, line: 384
 #: NEEDS WORK
-msgid "Manual backup from menu"
-msgstr "Manuel backup fra menu"
+msgid "Confirm Password"
+msgstr "Bekræft adgangskode"
+# 
+# File: usr/share/ashyterm/app.py, line: 400
+# File: usr/share/ashyterm/app.py, line: 405
+#: NEEDS WORK
+msgid "Password Error"
+msgstr "Adgangskodefejl"
+# 
+# File: usr/share/ashyterm/app.py, line: 400
+#: NEEDS WORK
+msgid "Password cannot be empty."
+msgstr "Adgangskoden kan ikke være tom."
+# 
+# File: usr/share/ashyterm/app.py, line: 405
+#: NEEDS WORK
+msgid "Passwords do not match."
+msgstr "Adgangskoderne stemmer ikke overens."
+# 
+# File: usr/share/ashyterm/app.py, line: 423
+#: NEEDS WORK
+msgid "Creating backup..."
+msgstr "Opretter sikkerhedskopi..."
 # 
 # File: usr/share/ashyterm/app.py, line: 390
 #: NEEDS WORK
 msgid "Backup Complete"
 msgstr "Sikkerhedskopiering fuldført"
 # 
-# File: usr/share/ashyterm/app.py, line: 390
+# File: usr/share/ashyterm/app.py, line: 440
 #: NEEDS WORK
 #, python-brace-format
-msgid "Backup created successfully: {}"
-msgstr "Sikkerhedskopiering oprettet med succes: {}"
+msgid ""
+"Backup saved successfully to:\n"
+"{}"
+msgstr ""
+"Sikkerhedskopiering gemt med succes til:\n"
+"{}"
 # 
-# File: usr/share/ashyterm/app.py, line: 392
+# File: usr/share/ashyterm/app.py, line: 446
 #: NEEDS WORK
-msgid "Failed to create backup"
-msgstr "Mislykkedes at oprette sikkerhedskopi"
+msgid "Backup Failed"
+msgstr "Sikkerhedskopiering mislykkedes"
 # 
-# File: usr/share/ashyterm/app.py, line: 396
+# File: usr/share/ashyterm/app.py, line: 447
 #: NEEDS WORK
 #, python-brace-format
-msgid "Backup failed: {}"
-msgstr "Sikkerhedskopiering mislykkedes: {}"
+msgid "Could not create backup: {}"
+msgstr "Kunne ikke oprette backup: {}"
+# 
+# File: usr/share/ashyterm/app.py, line: 458
+#: NEEDS WORK
+msgid "Restore from Backup?"
+msgstr "Gendan fra sikkerhedskopi?"
+# 
+# File: usr/share/ashyterm/app.py, line: 460
+#: NEEDS WORK
+msgid ""
+"Restoring from a backup will overwrite all your current sessions, settings, and layouts. This "
+"action cannot be undone.\n"
+"\n"
+"<b>The application will need to be restarted after restoring.</b>"
+msgstr ""
+"Gendannelse fra en sikkerhedskopi vil overskrive alle dine nuværende sessioner, indstillinger og "
+"layout. Denne handling kan ikke fortrydes.\n"
+"\n"
+"<b>Applikationen skal genstartes efter gendannelse.</b>"
+# 
+# File: usr/share/ashyterm/app.py, line: 466
+#: NEEDS WORK
+msgid "Choose File and Restore"
+msgstr "Vælg fil og gendan"
+# 
+# File: usr/share/ashyterm/app.py, line: 474
+#: NEEDS WORK
+msgid "Select Backup File"
+msgstr "Vælg sikkerhedskopi fil"
+# 
+# File: usr/share/ashyterm/app.py, line: 477
+#: NEEDS WORK
+msgid "Backup Files"
+msgstr "Sikkerhedskopifiler"
 # 
 # File: usr/share/ashyterm/app.py, line: 402
 # File: usr/share/ashyterm/app.py, line: 416
@@ -2560,32 +2655,48 @@ msgstr "Sikkerhedskopiering mislykkedes: {}"
 msgid "Restore Error"
 msgstr "Gendannelsesfejl"
 # 
-# File: usr/share/ashyterm/app.py, line: 407
+# File: usr/share/ashyterm/app.py, line: 499
 #: NEEDS WORK
-msgid "No Backups"
-msgstr "Ingen sikkerhedskopier"
+msgid "Enter Backup Password"
+msgstr "Indtast backupadgangskode"
 # 
-# File: usr/share/ashyterm/app.py, line: 407
+# File: usr/share/ashyterm/app.py, line: 500
 #: NEEDS WORK
-msgid "No backups available to restore"
-msgstr "Ingen sikkerhedskopier tilgængelige for at gendanne."
+msgid "Please enter the password for the selected backup file."
+msgstr "Indtast venligst adgangskoden til den valgte backupfil."
 # 
-# File: usr/share/ashyterm/app.py, line: 411
+# File: usr/share/ashyterm/app.py, line: 508
 #: NEEDS WORK
-msgid "Backups Available"
-msgstr "Sikkerhedskopier tilgængelige"
+msgid "Restore"
+msgstr "Gendan"
 # 
-# File: usr/share/ashyterm/app.py, line: 412
+# File: usr/share/ashyterm/app.py, line: 525
+#: NEEDS WORK
+msgid "Restoring from backup..."
+msgstr "Gendannelse fra sikkerhedskopi..."
+# 
+# File: usr/share/ashyterm/app.py, line: 538
+#: NEEDS WORK
+msgid "Restore Failed"
+msgstr "Gendannelse mislykkedes"
+# 
+# File: usr/share/ashyterm/app.py, line: 539
 #: NEEDS WORK
 #, python-brace-format
-msgid "{} backup(s) available. Use preferences dialog for detailed restore options."
-msgstr "{} backup(s) tilgængelige. Brug præferencer-dialogen for detaljerede gendannelsesmuligheder."
+msgid "Could not restore from backup: {}"
+msgstr "Kunne ikke gendanne fra sikkerhedskopi: {}"
 # 
-# File: usr/share/ashyterm/app.py, line: 416
+# File: usr/share/ashyterm/app.py, line: 549
 #: NEEDS WORK
-#, python-brace-format
-msgid "Failed to access backups: {}"
-msgstr "Mislykkedes med at få adgang til sikkerhedskopier: {}"
+msgid "Restore Complete"
+msgstr "Gendannelse Fuldført"
+# 
+# File: usr/share/ashyterm/app.py, line: 551
+#: NEEDS WORK
+msgid "Data has been restored successfully. Please restart Ashy Terminal for the changes to take effect."
+msgstr ""
+"Data er blevet gendannet med succes. Genstart venligst Ashy Terminal for at ændringerne træder i "
+"kraft."
 # 
 # File: usr/share/ashyterm/app.py, line: 449
 #: NEEDS WORK
@@ -2618,11 +2729,6 @@ msgstr ""
 #: NEEDS WORK
 msgid "Close All"
 msgstr "Luk alle"
-# 
-# File: usr/share/ashyterm/app.py, line: 514
-#: NEEDS WORK
-msgid "Automatic backup on exit"
-msgstr "Automatisk sikkerhedskopiering ved exit"
 # 
 # File: usr/share/ashyterm/app.py, line: 530
 #: NEEDS WORK
@@ -2777,10 +2883,44 @@ msgstr ""
 "\n"
 "Denne handling kan ikke fortrydes."
 # 
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1144
+#: NEEDS WORK
+msgid "Delete Multiple Items"
+msgstr "Slet flere elementer"
+# 
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1146
+#: NEEDS WORK
+#, python-brace-format
+msgid ""
+"Are you sure you want to permanently delete these {count} items?\n"
+"\n"
+"This action cannot be undone."
+msgstr ""
+"Er du sikker på, at du vil permanent slette disse {count} elementer?\n"
+"\n"
+"Denne handling kan ikke fortrydes."
+# 
 # File: usr/share/ashyterm/filemanager/manager.py, line: 691
 #: NEEDS WORK
 msgid "Delete command sent to terminal"
 msgstr "Slet kommando sendt til terminal"
+# 
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1173
+#: NEEDS WORK
+#, python-brace-format
+msgid "Set Permissions for {count} Items"
+msgstr "Indstil tilladelser for {count} elementer"
+# 
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1175
+#: NEEDS WORK
+#, python-brace-format
+msgid "Permissions for {name}"
+msgstr "Tilladelser for {name}"
+# 
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1179
+#: NEEDS WORK
+msgid "Set new file permissions."
+msgstr "Indstil nye filrettigheder."
 # 
 # File: usr/share/ashyterm/filemanager/manager.py, line: 701
 #: NEEDS WORK
@@ -2828,10 +2968,15 @@ msgstr "Anvend"
 msgid "Chmod command sent to terminal"
 msgstr "Chmod-kommando sendt til terminal"
 # 
-# File: usr/share/ashyterm/filemanager/manager.py, line: 826
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1308
 #: NEEDS WORK
-msgid "Save File As..."
-msgstr "Gem fil som..."
+msgid "Select Destination Folder"
+msgstr "Vælg destinationsmappe"
+# 
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1310
+#: NEEDS WORK
+msgid "Download Here"
+msgstr "Download her"
 # 
 # File: usr/share/ashyterm/filemanager/manager.py, line: 855
 # File: usr/share/ashyterm/filemanager/manager.py, line: 889
@@ -2848,6 +2993,25 @@ msgstr "Upload fil(er) til denne mappe"
 #: NEEDS WORK
 msgid "Upload"
 msgstr "Upload"
+# 
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1430
+#: NEEDS WORK
+msgid "Confirm Upload"
+msgstr "Bekræft upload"
+# 
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1432
+#: NEEDS WORK
+#, python-brace-format
+msgid ""
+"You are about to upload {count} item(s) to:\n"
+"<b>{dest}</b>\n"
+"\n"
+"Do you want to proceed?"
+msgstr ""
+"Du er ved at uploade {count} element(er) til:\n"
+"<b>{dest}</b>\n"
+"\n"
+"Vil du fortsætte?"
 # 
 # File: usr/share/ashyterm/filemanager/manager.py, line: 1382
 #: NEEDS WORK

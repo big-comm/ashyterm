@@ -443,11 +443,6 @@ msgstr "A portnak 1 és 65535 között kell lennie."
 msgid "Port must be a valid number"
 msgstr "A portnak érvényes számnak kell lennie"
 # 
-# File: usr/share/ashyterm/utils/security.py, line: 822
-#: NEEDS WORK
-msgid "SSH key file path is required for key authentication"
-msgstr "SSH kulcs fájl elérési útja szükséges a kulcs hitelesítéshez"
-# 
 # File: usr/share/ashyterm/utils/security.py, line: 832
 #: NEEDS WORK
 #, python-brace-format
@@ -907,6 +902,16 @@ msgstr "Ablak bezárása"
 #: NEEDS WORK
 msgid "This window has active SSH connections. Closing will disconnect them. Are you sure?"
 msgstr "Ez az ablak aktív SSH kapcsolatokat tartalmaz. A bezárás megszakítja azokat. Biztos benne?"
+# 
+# File: usr/share/ashyterm/window.py, line: 553
+#: NEEDS WORK
+msgid "Invalid SSH Target"
+msgstr "Érvénytelen SSH célpont"
+# 
+# File: usr/share/ashyterm/window.py, line: 554
+#: NEEDS WORK
+msgid "Could not parse the provided SSH connection string."
+msgstr "Nem sikerült elemezni a megadott SSH kapcsolati karakterláncot."
 # 
 # #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
 # 
@@ -1873,35 +1878,70 @@ msgstr "Soha ne állítsa vissza az előző munkamenetet"
 msgid "Backup &amp; Recovery"
 msgstr "Biztonsági mentés és helyreállítás"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1724
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 319
 #: NEEDS WORK
-msgid "Configure automatic backup and recovery options"
-msgstr "Automatikus biztonsági mentés és helyreállítási lehetőségek konfigurálása"
+msgid "Create an encrypted backup of your data or restore from a previous backup."
+msgstr ""
+"Hozzon létre egy titkosított biztonsági másolatot az adatairól, vagy állítson vissza egy korábbi "
+"biztonsági másolatot."
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1730
-#: NEEDS WORK
-msgid "Automatic Backups"
-msgstr "Automatikus Biztonsági Mentések"
+# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1731
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 325
+# File: usr/share/ashyterm/app.py, line: 390
 #: NEEDS WORK
-msgid "Automatically create backups of sessions and settings"
-msgstr "Automatikusan készítsen biztonsági másolatokat a munkamenetekről és a beállításokról"
+msgid "Create Backup"
+msgstr "Biztonsági mentés készítése"
 # 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 301
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 327
 #: NEEDS WORK
-msgid "Manual Backup"
-msgstr "Kézi mentés"
+msgid "Save all sessions, settings, and passwords to an encrypted file."
+msgstr "Minden munkamenetet, beállítást és jelszót egy titkosított fájlba ment."
 # 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 302
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 330
 #: NEEDS WORK
-msgid "Create a backup of your current sessions and settings now"
-msgstr "Készítsen biztonsági másolatot a jelenlegi munkameneteiről és beállításairól most."
+msgid "Create Backup..."
+msgstr "Biztonsági mentés létrehozása..."
 # 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 304
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 338
 #: NEEDS WORK
-msgid "Backup Now"
-msgstr "Biztonsági mentés most"
+msgid "Restore from Backup"
+msgstr "Visszaállítás biztonsági mentésből"
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 339
+#: NEEDS WORK
+msgid "Replace all current data with a backup file."
+msgstr "Cserélje le az összes aktuális adatot egy biztonsági másolattal."
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 341
+#: NEEDS WORK
+msgid "Restore..."
+msgstr "Visszaállítás..."
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 348
+#: NEEDS WORK
+msgid "Remote Editing"
+msgstr "Távszerkesztés"
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 352
+#: NEEDS WORK
+msgid "Use System Temporary Directory"
+msgstr "Használja a rendszer ideiglenes könyvtárat"
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 354
+#: NEEDS WORK
+msgid "Store temporary files for remote editing in /tmp instead of the config folder"
+msgstr "Ideiglenes fájlok tárolása távoli szerkesztéshez a /tmp mappában a konfigurációs mappa helyett"
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 369
+#: NEEDS WORK
+msgid "Clear Remote Edit Files on Exit"
+msgstr "Távoli szerkesztési fájlok törlése kilépéskor"
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 371
+#: NEEDS WORK
+msgid "Automatically delete all temporary remote files when closing the app"
+msgstr "Automatikusan törölje az összes ideiglenes távoli fájlt az alkalmazás bezárásakor"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1575
 #: NEEDS WORK
@@ -2271,10 +2311,10 @@ msgstr "Folytatás"
 msgid "{} is required"
 msgstr "{} kötelező"
 # 
-# File: usr/share/ashyterm/window.py, line: 586
+# File: usr/share/ashyterm/ui/actions.py, line: 168
 #: NEEDS WORK
-msgid "SFTP not implemented yet"
-msgstr "SFTP még nincs megvalósítva"
+msgid "Please select an SSH session to connect with SFTP."
+msgstr "Kérjük, válasszon egy SSH munkamenetet az SFTP-hez való csatlakozáshoz."
 # 
 # File: usr/share/ashyterm/window.py, line: 758
 # File: usr/share/ashyterm/window.py, line: 875
@@ -2483,11 +2523,6 @@ msgstr "Felosztás Felül/Alul"
 msgid "Close Pane"
 msgstr "Pane bezárása"
 # 
-# File: usr/share/ashyterm/app.py, line: 222
-#: NEEDS WORK
-msgid "Automatic startup backup"
-msgstr "Automatikus indítási biztonsági mentés"
-# 
 # File: usr/share/ashyterm/app.py, line: 333
 #: NEEDS WORK
 msgid "Preferences Error"
@@ -2508,6 +2543,11 @@ msgstr "Nem sikerült megnyitni a beállításokat: {}"
 msgid "A modern terminal emulator with session management"
 msgstr "Egy modern terminálemulátor munkamenetkezeléssel."
 # 
+# File: usr/share/ashyterm/app.py, line: 356
+#: NEEDS WORK
+msgid "Save Backup As..."
+msgstr "Biztonsági mentés mentése másként..."
+# 
 # File: usr/share/ashyterm/app.py, line: 368
 # File: usr/share/ashyterm/app.py, line: 379
 # File: usr/share/ashyterm/app.py, line: 392
@@ -2516,43 +2556,100 @@ msgstr "Egy modern terminálemulátor munkamenetkezeléssel."
 msgid "Backup Error"
 msgstr "Biztonsági mentés hiba"
 # 
-# File: usr/share/ashyterm/app.py, line: 368
-# File: usr/share/ashyterm/app.py, line: 402
+# File: usr/share/ashyterm/app.py, line: 375
 #: NEEDS WORK
-msgid "Backup system not available"
-msgstr "Biztonsági mentési rendszer nem elérhető"
+msgid "Set Backup Password"
+msgstr "Biztonsági mentés jelszó beállítása"
 # 
-# File: usr/share/ashyterm/app.py, line: 379
+# File: usr/share/ashyterm/app.py, line: 376
 #: NEEDS WORK
-msgid "No files to backup"
-msgstr "Nincsenek biztonsági mentésre szánt fájlok"
+msgid "Please enter a password to encrypt the backup file."
+msgstr "Kérjük, adjon meg egy jelszót a biztonsági mentés fájl titkosításához."
 # 
-# File: usr/share/ashyterm/app.py, line: 385
+# File: usr/share/ashyterm/app.py, line: 384
 #: NEEDS WORK
-msgid "Manual backup from menu"
-msgstr "Kézi mentés a menüből"
+msgid "Confirm Password"
+msgstr "Jelszó megerősítése"
+# 
+# File: usr/share/ashyterm/app.py, line: 400
+# File: usr/share/ashyterm/app.py, line: 405
+#: NEEDS WORK
+msgid "Password Error"
+msgstr "Jelszó hiba"
+# 
+# File: usr/share/ashyterm/app.py, line: 400
+#: NEEDS WORK
+msgid "Password cannot be empty."
+msgstr "A jelszó nem lehet üres."
+# 
+# File: usr/share/ashyterm/app.py, line: 405
+#: NEEDS WORK
+msgid "Passwords do not match."
+msgstr "A jelszavak nem egyeznek."
+# 
+# File: usr/share/ashyterm/app.py, line: 423
+#: NEEDS WORK
+msgid "Creating backup..."
+msgstr "Biztonsági másolat készítése..."
 # 
 # File: usr/share/ashyterm/app.py, line: 390
 #: NEEDS WORK
 msgid "Backup Complete"
 msgstr "Biztonsági mentés kész."
 # 
-# File: usr/share/ashyterm/app.py, line: 390
+# File: usr/share/ashyterm/app.py, line: 440
 #: NEEDS WORK
 #, python-brace-format
-msgid "Backup created successfully: {}"
-msgstr "A biztonsági másolat sikeresen létrejött: {}"
+msgid ""
+"Backup saved successfully to:\n"
+"{}"
+msgstr ""
+"A biztonsági mentés sikeresen mentve ide:  \n"
+"{}"
 # 
-# File: usr/share/ashyterm/app.py, line: 392
+# File: usr/share/ashyterm/app.py, line: 446
 #: NEEDS WORK
-msgid "Failed to create backup"
-msgstr "A biztonsági mentés létrehozása nem sikerült"
+msgid "Backup Failed"
+msgstr "Biztonsági mentés sikertelen"
 # 
-# File: usr/share/ashyterm/app.py, line: 396
+# File: usr/share/ashyterm/app.py, line: 447
 #: NEEDS WORK
 #, python-brace-format
-msgid "Backup failed: {}"
-msgstr "A biztonsági mentés nem sikerült: {}"
+msgid "Could not create backup: {}"
+msgstr "Nem sikerült biztonsági másolatot készíteni: {}"
+# 
+# File: usr/share/ashyterm/app.py, line: 458
+#: NEEDS WORK
+msgid "Restore from Backup?"
+msgstr "Visszaállítás biztonsági mentésből?"
+# 
+# File: usr/share/ashyterm/app.py, line: 460
+#: NEEDS WORK
+msgid ""
+"Restoring from a backup will overwrite all your current sessions, settings, and layouts. This "
+"action cannot be undone.\n"
+"\n"
+"<b>The application will need to be restarted after restoring.</b>"
+msgstr ""
+"A biztonsági mentésből való visszaállítás felülírja az összes aktuális munkamenetet, beállítást és "
+"elrendezést. Ezt a műveletet nem lehet visszavonni.\n"
+"\n"
+"<b>Az alkalmazást újra kell indítani a visszaállítás után.</b>"
+# 
+# File: usr/share/ashyterm/app.py, line: 466
+#: NEEDS WORK
+msgid "Choose File and Restore"
+msgstr "Fájl kiválasztása és visszaállítás"
+# 
+# File: usr/share/ashyterm/app.py, line: 474
+#: NEEDS WORK
+msgid "Select Backup File"
+msgstr "Válassza ki a biztonsági másolat fájlt"
+# 
+# File: usr/share/ashyterm/app.py, line: 477
+#: NEEDS WORK
+msgid "Backup Files"
+msgstr "Biztonsági mentések"
 # 
 # File: usr/share/ashyterm/app.py, line: 402
 # File: usr/share/ashyterm/app.py, line: 416
@@ -2560,34 +2657,48 @@ msgstr "A biztonsági mentés nem sikerült: {}"
 msgid "Restore Error"
 msgstr "Helyreállítási hiba"
 # 
-# File: usr/share/ashyterm/app.py, line: 407
+# File: usr/share/ashyterm/app.py, line: 499
 #: NEEDS WORK
-msgid "No Backups"
-msgstr "Nincsenek biztonsági másolatok"
+msgid "Enter Backup Password"
+msgstr "Adja meg a biztonsági mentés jelszavát"
 # 
-# File: usr/share/ashyterm/app.py, line: 407
+# File: usr/share/ashyterm/app.py, line: 500
 #: NEEDS WORK
-msgid "No backups available to restore"
-msgstr "Nincsenek elérhető biztonsági másolatok a visszaállításhoz."
+msgid "Please enter the password for the selected backup file."
+msgstr "Kérjük, adja meg a jelszót a kiválasztott biztonsági mentési fájlhoz."
 # 
-# File: usr/share/ashyterm/app.py, line: 411
+# File: usr/share/ashyterm/app.py, line: 508
 #: NEEDS WORK
-msgid "Backups Available"
-msgstr "Biztonsági mentések elérhetők"
+msgid "Restore"
+msgstr "Visszaállítás"
 # 
-# File: usr/share/ashyterm/app.py, line: 412
+# File: usr/share/ashyterm/app.py, line: 525
+#: NEEDS WORK
+msgid "Restoring from backup..."
+msgstr "Visszaállítás biztonsági mentésből..."
+# 
+# File: usr/share/ashyterm/app.py, line: 538
+#: NEEDS WORK
+msgid "Restore Failed"
+msgstr "Helyreállítás sikertelen"
+# 
+# File: usr/share/ashyterm/app.py, line: 539
 #: NEEDS WORK
 #, python-brace-format
-msgid "{} backup(s) available. Use preferences dialog for detailed restore options."
+msgid "Could not restore from backup: {}"
+msgstr "Nem sikerült visszaállítani a biztonsági mentésből: {}"
+# 
+# File: usr/share/ashyterm/app.py, line: 549
+#: NEEDS WORK
+msgid "Restore Complete"
+msgstr "Visszaállítás befejeződött"
+# 
+# File: usr/share/ashyterm/app.py, line: 551
+#: NEEDS WORK
+msgid "Data has been restored successfully. Please restart Ashy Terminal for the changes to take effect."
 msgstr ""
-"{} biztonsági másolat(ok) elérhető. Használja a beállítások párbeszédpanelt a részletes "
-"visszaállítási lehetőségekhez."
-# 
-# File: usr/share/ashyterm/app.py, line: 416
-#: NEEDS WORK
-#, python-brace-format
-msgid "Failed to access backups: {}"
-msgstr "Hozzáférés a biztonsági mentésekhez nem sikerült: {}"
+"Az adatok sikeresen visszaállításra kerültek. Kérjük, indítsa újra az Ashy Terminált a "
+"változtatások érvénybe lépéséhez."
 # 
 # File: usr/share/ashyterm/app.py, line: 449
 #: NEEDS WORK
@@ -2620,11 +2731,6 @@ msgstr ""
 #: NEEDS WORK
 msgid "Close All"
 msgstr "Összes bezárása"
-# 
-# File: usr/share/ashyterm/app.py, line: 514
-#: NEEDS WORK
-msgid "Automatic backup on exit"
-msgstr "Automatikus mentés kilépéskor"
 # 
 # File: usr/share/ashyterm/app.py, line: 530
 #: NEEDS WORK
@@ -2779,10 +2885,44 @@ msgstr ""
 "\n"
 "Ez a művelet nem vonható vissza."
 # 
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1144
+#: NEEDS WORK
+msgid "Delete Multiple Items"
+msgstr "Több elem törlése"
+# 
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1146
+#: NEEDS WORK
+#, python-brace-format
+msgid ""
+"Are you sure you want to permanently delete these {count} items?\n"
+"\n"
+"This action cannot be undone."
+msgstr ""
+"Biztos benne, hogy véglegesen törölni szeretné ezeket a {count} elemet?\n"
+"\n"
+"Ez a művelet nem vonható vissza."
+# 
 # File: usr/share/ashyterm/filemanager/manager.py, line: 691
 #: NEEDS WORK
 msgid "Delete command sent to terminal"
 msgstr "Törlés parancs elküldve a terminálnak"
+# 
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1173
+#: NEEDS WORK
+#, python-brace-format
+msgid "Set Permissions for {count} Items"
+msgstr "Engedélyek beállítása {count} elemhez"
+# 
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1175
+#: NEEDS WORK
+#, python-brace-format
+msgid "Permissions for {name}"
+msgstr "Engedélyek {name} számára"
+# 
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1179
+#: NEEDS WORK
+msgid "Set new file permissions."
+msgstr "Állítsa be az új fájlengedélyeket."
 # 
 # File: usr/share/ashyterm/filemanager/manager.py, line: 701
 #: NEEDS WORK
@@ -2830,10 +2970,15 @@ msgstr "Alkalmazás"
 msgid "Chmod command sent to terminal"
 msgstr "Chmod parancs elküldve a terminálnak"
 # 
-# File: usr/share/ashyterm/filemanager/manager.py, line: 826
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1308
 #: NEEDS WORK
-msgid "Save File As..."
-msgstr "Fájl mentése másként..."
+msgid "Select Destination Folder"
+msgstr "Válassza ki a célmappát"
+# 
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1310
+#: NEEDS WORK
+msgid "Download Here"
+msgstr "Letöltés itt"
 # 
 # File: usr/share/ashyterm/filemanager/manager.py, line: 855
 # File: usr/share/ashyterm/filemanager/manager.py, line: 889
@@ -2850,6 +2995,25 @@ msgstr "Fájl(ok) feltöltése erre a mappára"
 #: NEEDS WORK
 msgid "Upload"
 msgstr "Feltöltés"
+# 
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1430
+#: NEEDS WORK
+msgid "Confirm Upload"
+msgstr "Feltöltés megerősítése"
+# 
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1432
+#: NEEDS WORK
+#, python-brace-format
+msgid ""
+"You are about to upload {count} item(s) to:\n"
+"<b>{dest}</b>\n"
+"\n"
+"Do you want to proceed?"
+msgstr ""
+"Feltöltésre készül {count} elem(ek) a következőre:\n"
+"<b>{dest}</b>\n"
+"\n"
+"Folytatni szeretnéd?"
 # 
 # File: usr/share/ashyterm/filemanager/manager.py, line: 1382
 #: NEEDS WORK

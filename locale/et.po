@@ -443,11 +443,6 @@ msgstr "Port peab olema vahemikus 1 kuni 65535"
 msgid "Port must be a valid number"
 msgstr "Port peab olema kehtiv number"
 # 
-# File: usr/share/ashyterm/utils/security.py, line: 822
-#: NEEDS WORK
-msgid "SSH key file path is required for key authentication"
-msgstr "SSH võtmefaili tee on vajalik võtme autentimiseks"
-# 
 # File: usr/share/ashyterm/utils/security.py, line: 832
 #: NEEDS WORK
 #, python-brace-format
@@ -907,6 +902,16 @@ msgstr "Sulge aken"
 #: NEEDS WORK
 msgid "This window has active SSH connections. Closing will disconnect them. Are you sure?"
 msgstr "See aken on aktiivsed SSH-ühendused. Sulgemine katkestab need. Kas olete kindel?"
+# 
+# File: usr/share/ashyterm/window.py, line: 553
+#: NEEDS WORK
+msgid "Invalid SSH Target"
+msgstr "Kehtetu SSH sihtkoht"
+# 
+# File: usr/share/ashyterm/window.py, line: 554
+#: NEEDS WORK
+msgid "Could not parse the provided SSH connection string."
+msgstr "Ei suutnud analüüsida antud SSH ühenduse stringi."
 # 
 # #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
 # 
@@ -1868,35 +1873,68 @@ msgstr "Ära taasta eelmist seanssi"
 msgid "Backup &amp; Recovery"
 msgstr "Varundus ja taastamine"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1724
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 319
 #: NEEDS WORK
-msgid "Configure automatic backup and recovery options"
-msgstr "Konfigureeri automaatne varundamine ja taastamisvalikud"
+msgid "Create an encrypted backup of your data or restore from a previous backup."
+msgstr "Looge oma andmete krüpteeritud varukoopia või taastage eelmisest varukoopiast."
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1730
-#: NEEDS WORK
-msgid "Automatic Backups"
-msgstr "Automaatne varundamine"
+# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1731
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 325
+# File: usr/share/ashyterm/app.py, line: 390
 #: NEEDS WORK
-msgid "Automatically create backups of sessions and settings"
-msgstr "Automaatne varundamine seansside ja seadete jaoks"
+msgid "Create Backup"
+msgstr "Loo varukoopia"
 # 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 301
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 327
 #: NEEDS WORK
-msgid "Manual Backup"
-msgstr "Käsitsi varundamine"
+msgid "Save all sessions, settings, and passwords to an encrypted file."
+msgstr "Salvesta kõik seansid, seaded ja paroolid krüpteeritud faili."
 # 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 302
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 330
 #: NEEDS WORK
-msgid "Create a backup of your current sessions and settings now"
-msgstr "Looge varukoopia oma praegustest seanssidest ja seadistustest nüüd."
+msgid "Create Backup..."
+msgstr "Loo varukoopia..."
 # 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 304
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 338
 #: NEEDS WORK
-msgid "Backup Now"
-msgstr "Varunda nüüd"
+msgid "Restore from Backup"
+msgstr "Taasta varukoopiast"
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 339
+#: NEEDS WORK
+msgid "Replace all current data with a backup file."
+msgstr "Asenda kõik praegused andmed varukoopia failiga."
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 341
+#: NEEDS WORK
+msgid "Restore..."
+msgstr "Taasta..."
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 348
+#: NEEDS WORK
+msgid "Remote Editing"
+msgstr "Kaugredigeerimine"
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 352
+#: NEEDS WORK
+msgid "Use System Temporary Directory"
+msgstr "Kasutage süsteemi ajutist katalooge"
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 354
+#: NEEDS WORK
+msgid "Store temporary files for remote editing in /tmp instead of the config folder"
+msgstr "Salvesta ajutfailid kaugredigeerimiseks kaustas /tmp, mitte konfiguratsioonikaustas."
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 369
+#: NEEDS WORK
+msgid "Clear Remote Edit Files on Exit"
+msgstr "Kustuta kaugredigeerimise failid väljumisel"
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 371
+#: NEEDS WORK
+msgid "Automatically delete all temporary remote files when closing the app"
+msgstr "Kustuta automaatselt kõik ajutised kaugfailid rakenduse sulgemisel."
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1575
 #: NEEDS WORK
@@ -2266,10 +2304,10 @@ msgstr "Jätka"
 msgid "{} is required"
 msgstr "{} on vajalik"
 # 
-# File: usr/share/ashyterm/window.py, line: 586
+# File: usr/share/ashyterm/ui/actions.py, line: 168
 #: NEEDS WORK
-msgid "SFTP not implemented yet"
-msgstr "SFTP ei ole veel rakendatud"
+msgid "Please select an SSH session to connect with SFTP."
+msgstr "Palun valige SSH seanss, millega SFTP-ga ühenduda."
 # 
 # File: usr/share/ashyterm/window.py, line: 758
 # File: usr/share/ashyterm/window.py, line: 875
@@ -2480,11 +2518,6 @@ msgstr "Jagage Üles/Alla"
 msgid "Close Pane"
 msgstr "Sulge paneel"
 # 
-# File: usr/share/ashyterm/app.py, line: 222
-#: NEEDS WORK
-msgid "Automatic startup backup"
-msgstr "Automaatne käivitamise varukoopia"
-# 
 # File: usr/share/ashyterm/app.py, line: 333
 #: NEEDS WORK
 msgid "Preferences Error"
@@ -2505,6 +2538,11 @@ msgstr "Eelistuste avamine ebaõnnestus: {}"
 msgid "A modern terminal emulator with session management"
 msgstr "Kaasaegne terminali emulaator seansihaldusega"
 # 
+# File: usr/share/ashyterm/app.py, line: 356
+#: NEEDS WORK
+msgid "Save Backup As..."
+msgstr "Salvesta varukoopia nimega..."
+# 
 # File: usr/share/ashyterm/app.py, line: 368
 # File: usr/share/ashyterm/app.py, line: 379
 # File: usr/share/ashyterm/app.py, line: 392
@@ -2513,43 +2551,100 @@ msgstr "Kaasaegne terminali emulaator seansihaldusega"
 msgid "Backup Error"
 msgstr "Varundusviga"
 # 
-# File: usr/share/ashyterm/app.py, line: 368
-# File: usr/share/ashyterm/app.py, line: 402
+# File: usr/share/ashyterm/app.py, line: 375
 #: NEEDS WORK
-msgid "Backup system not available"
-msgstr "Varundussüsteem ei ole saadaval"
+msgid "Set Backup Password"
+msgstr "Seadme varukoopia parool"
 # 
-# File: usr/share/ashyterm/app.py, line: 379
+# File: usr/share/ashyterm/app.py, line: 376
 #: NEEDS WORK
-msgid "No files to backup"
-msgstr "Ei faile varundamiseks."
+msgid "Please enter a password to encrypt the backup file."
+msgstr "Palun sisestage parool varufaili krüpteerimiseks."
 # 
-# File: usr/share/ashyterm/app.py, line: 385
+# File: usr/share/ashyterm/app.py, line: 384
 #: NEEDS WORK
-msgid "Manual backup from menu"
-msgstr "Käsitsi varundamine menüüst"
+msgid "Confirm Password"
+msgstr "Kinnita parool"
+# 
+# File: usr/share/ashyterm/app.py, line: 400
+# File: usr/share/ashyterm/app.py, line: 405
+#: NEEDS WORK
+msgid "Password Error"
+msgstr "Parooli viga"
+# 
+# File: usr/share/ashyterm/app.py, line: 400
+#: NEEDS WORK
+msgid "Password cannot be empty."
+msgstr "Parool ei tohi olla tühi."
+# 
+# File: usr/share/ashyterm/app.py, line: 405
+#: NEEDS WORK
+msgid "Passwords do not match."
+msgstr "Paroolid ei ühti."
+# 
+# File: usr/share/ashyterm/app.py, line: 423
+#: NEEDS WORK
+msgid "Creating backup..."
+msgstr "Varunduse loomine..."
 # 
 # File: usr/share/ashyterm/app.py, line: 390
 #: NEEDS WORK
 msgid "Backup Complete"
 msgstr "Varundus lõpetatud"
 # 
-# File: usr/share/ashyterm/app.py, line: 390
+# File: usr/share/ashyterm/app.py, line: 440
 #: NEEDS WORK
 #, python-brace-format
-msgid "Backup created successfully: {}"
-msgstr "Varundus loodud edukalt: {}"
+msgid ""
+"Backup saved successfully to:\n"
+"{}"
+msgstr ""
+"Varundus salvestati edukalt siia:  \n"
+"{}"
 # 
-# File: usr/share/ashyterm/app.py, line: 392
+# File: usr/share/ashyterm/app.py, line: 446
 #: NEEDS WORK
-msgid "Failed to create backup"
-msgstr "Varundus loomine ebaõnnestus"
+msgid "Backup Failed"
+msgstr "Varundus ebaõnnestus"
 # 
-# File: usr/share/ashyterm/app.py, line: 396
+# File: usr/share/ashyterm/app.py, line: 447
 #: NEEDS WORK
 #, python-brace-format
-msgid "Backup failed: {}"
-msgstr "Varundus ebaõnnestus: {}"
+msgid "Could not create backup: {}"
+msgstr "Ei saanud varukoopiat luua: {}"
+# 
+# File: usr/share/ashyterm/app.py, line: 458
+#: NEEDS WORK
+msgid "Restore from Backup?"
+msgstr "Taasta varukoopiast?"
+# 
+# File: usr/share/ashyterm/app.py, line: 460
+#: NEEDS WORK
+msgid ""
+"Restoring from a backup will overwrite all your current sessions, settings, and layouts. This "
+"action cannot be undone.\n"
+"\n"
+"<b>The application will need to be restarted after restoring.</b>"
+msgstr ""
+"Varundus varukoopiast kirjutab üle kõik teie praegused seansid, seaded ja paigutused. Seda "
+"toimingut ei saa tagasi võtta.\n"
+"\n"
+"<b>Rakendus tuleb pärast varundamist taaskäivitada.</b>"
+# 
+# File: usr/share/ashyterm/app.py, line: 466
+#: NEEDS WORK
+msgid "Choose File and Restore"
+msgstr "Vali fail ja taasta"
+# 
+# File: usr/share/ashyterm/app.py, line: 474
+#: NEEDS WORK
+msgid "Select Backup File"
+msgstr "Vali varukoopia fail"
+# 
+# File: usr/share/ashyterm/app.py, line: 477
+#: NEEDS WORK
+msgid "Backup Files"
+msgstr "Varukoopiad"
 # 
 # File: usr/share/ashyterm/app.py, line: 402
 # File: usr/share/ashyterm/app.py, line: 416
@@ -2557,32 +2652,46 @@ msgstr "Varundus ebaõnnestus: {}"
 msgid "Restore Error"
 msgstr "Taastev viga"
 # 
-# File: usr/share/ashyterm/app.py, line: 407
+# File: usr/share/ashyterm/app.py, line: 499
 #: NEEDS WORK
-msgid "No Backups"
-msgstr "Ei varukoopiaid"
+msgid "Enter Backup Password"
+msgstr "Sisestage varukoopia parool"
 # 
-# File: usr/share/ashyterm/app.py, line: 407
+# File: usr/share/ashyterm/app.py, line: 500
 #: NEEDS WORK
-msgid "No backups available to restore"
-msgstr "Taasteks ei ole saadaval varukoopiaid."
+msgid "Please enter the password for the selected backup file."
+msgstr "Palun sisestage valitud varukoopia faili parool."
 # 
-# File: usr/share/ashyterm/app.py, line: 411
+# File: usr/share/ashyterm/app.py, line: 508
 #: NEEDS WORK
-msgid "Backups Available"
-msgstr "Varundused saadaval"
+msgid "Restore"
+msgstr "Taasta"
 # 
-# File: usr/share/ashyterm/app.py, line: 412
+# File: usr/share/ashyterm/app.py, line: 525
+#: NEEDS WORK
+msgid "Restoring from backup..."
+msgstr "Taasteb varundusest..."
+# 
+# File: usr/share/ashyterm/app.py, line: 538
+#: NEEDS WORK
+msgid "Restore Failed"
+msgstr "Taaste ebaõnnestus"
+# 
+# File: usr/share/ashyterm/app.py, line: 539
 #: NEEDS WORK
 #, python-brace-format
-msgid "{} backup(s) available. Use preferences dialog for detailed restore options."
-msgstr "{} varukoopia(d) saadaval. Kasutage eelistuste dialooge üksikasjalike taastamisvalikute jaoks."
+msgid "Could not restore from backup: {}"
+msgstr "Ei saanud varukoopiast taastada: {}"
 # 
-# File: usr/share/ashyterm/app.py, line: 416
+# File: usr/share/ashyterm/app.py, line: 549
 #: NEEDS WORK
-#, python-brace-format
-msgid "Failed to access backups: {}"
-msgstr "Varundus varukoopiatele: {}"
+msgid "Restore Complete"
+msgstr "Taastamine lõpetatud"
+# 
+# File: usr/share/ashyterm/app.py, line: 551
+#: NEEDS WORK
+msgid "Data has been restored successfully. Please restart Ashy Terminal for the changes to take effect."
+msgstr "Andmed on edukalt taastatud. Palun taaskäivitage Ashy Terminal, et muudatused jõustuksid."
 # 
 # File: usr/share/ashyterm/app.py, line: 449
 #: NEEDS WORK
@@ -2615,11 +2724,6 @@ msgstr ""
 #: NEEDS WORK
 msgid "Close All"
 msgstr "Sulge kõik"
-# 
-# File: usr/share/ashyterm/app.py, line: 514
-#: NEEDS WORK
-msgid "Automatic backup on exit"
-msgstr "Automaatne varundamine väljumisel"
 # 
 # File: usr/share/ashyterm/app.py, line: 530
 #: NEEDS WORK
@@ -2774,10 +2878,44 @@ msgstr ""
 "\n"
 "Seda toimingut ei saa tagasi võtta."
 # 
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1144
+#: NEEDS WORK
+msgid "Delete Multiple Items"
+msgstr "Kustuta mitu elementi"
+# 
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1146
+#: NEEDS WORK
+#, python-brace-format
+msgid ""
+"Are you sure you want to permanently delete these {count} items?\n"
+"\n"
+"This action cannot be undone."
+msgstr ""
+"Kas olete kindel, et soovite need {count} elementi püsivalt kustutada?\n"
+"\n"
+"Seda toimingut ei saa tagasi võtta."
+# 
 # File: usr/share/ashyterm/filemanager/manager.py, line: 691
 #: NEEDS WORK
 msgid "Delete command sent to terminal"
 msgstr "Kustutamise käsk saadetud terminalile"
+# 
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1173
+#: NEEDS WORK
+#, python-brace-format
+msgid "Set Permissions for {count} Items"
+msgstr "Määra õigused {count} elemendi jaoks"
+# 
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1175
+#: NEEDS WORK
+#, python-brace-format
+msgid "Permissions for {name}"
+msgstr "{ name } õigused"
+# 
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1179
+#: NEEDS WORK
+msgid "Set new file permissions."
+msgstr "Määra uued faili õigused."
 # 
 # File: usr/share/ashyterm/filemanager/manager.py, line: 701
 #: NEEDS WORK
@@ -2825,10 +2963,15 @@ msgstr "Rakenda"
 msgid "Chmod command sent to terminal"
 msgstr "Chmod käsk saadetud terminali"
 # 
-# File: usr/share/ashyterm/filemanager/manager.py, line: 826
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1308
 #: NEEDS WORK
-msgid "Save File As..."
-msgstr "Salvesta fail nimega..."
+msgid "Select Destination Folder"
+msgstr "Vali sihtkaust"
+# 
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1310
+#: NEEDS WORK
+msgid "Download Here"
+msgstr "Laadi alla"
 # 
 # File: usr/share/ashyterm/filemanager/manager.py, line: 855
 # File: usr/share/ashyterm/filemanager/manager.py, line: 889
@@ -2845,6 +2988,25 @@ msgstr "Lae fail(id) selle kausta"
 #: NEEDS WORK
 msgid "Upload"
 msgstr "Laadi üles"
+# 
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1430
+#: NEEDS WORK
+msgid "Confirm Upload"
+msgstr "Kinnita üleslaadimine"
+# 
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1432
+#: NEEDS WORK
+#, python-brace-format
+msgid ""
+"You are about to upload {count} item(s) to:\n"
+"<b>{dest}</b>\n"
+"\n"
+"Do you want to proceed?"
+msgstr ""
+"Oled just uploadimas {count} eseet(d) siia:\n"
+"<b>{dest}</b>\n"
+"\n"
+"Kas soovite jätkata?"
 # 
 # File: usr/share/ashyterm/filemanager/manager.py, line: 1382
 #: NEEDS WORK

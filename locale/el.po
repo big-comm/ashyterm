@@ -443,11 +443,6 @@ msgstr "Η θύρα πρέπει να είναι μεταξύ 1 και 65535"
 msgid "Port must be a valid number"
 msgstr "Η θύρα πρέπει να είναι ένας έγκυρος αριθμός"
 # 
-# File: usr/share/ashyterm/utils/security.py, line: 822
-#: NEEDS WORK
-msgid "SSH key file path is required for key authentication"
-msgstr "Η διαδρομή αρχείου κλειδιού SSH είναι απαραίτητη για την αυθεντικοποίηση με κλειδί."
-# 
 # File: usr/share/ashyterm/utils/security.py, line: 832
 #: NEEDS WORK
 #, python-brace-format
@@ -907,6 +902,16 @@ msgstr "Κλείσιμο παραθύρου"
 #: NEEDS WORK
 msgid "This window has active SSH connections. Closing will disconnect them. Are you sure?"
 msgstr "Αυτό το παράθυρο έχει ενεργές συνδέσεις SSH. Το κλείσιμο θα τις αποσυνδέσει. Είστε σίγουροι;"
+# 
+# File: usr/share/ashyterm/window.py, line: 553
+#: NEEDS WORK
+msgid "Invalid SSH Target"
+msgstr "Μη έγκυρος στόχος SSH"
+# 
+# File: usr/share/ashyterm/window.py, line: 554
+#: NEEDS WORK
+msgid "Could not parse the provided SSH connection string."
+msgstr "Δεν ήταν δυνατή η ανάλυση της παρεχόμενης συμβολοσειράς σύνδεσης SSH."
 # 
 # #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
 # 
@@ -1873,35 +1878,70 @@ msgstr "Ποτέ μην επαναφέρετε την προηγούμενη σ�
 msgid "Backup &amp; Recovery"
 msgstr "Αντίγραφο ασφαλείας &amp; Ανάκτηση"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1724
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 319
 #: NEEDS WORK
-msgid "Configure automatic backup and recovery options"
-msgstr "Ρυθμίστε αυτόματες επιλογές αντιγράφου ασφαλείας και αποκατάστασης"
+msgid "Create an encrypted backup of your data or restore from a previous backup."
+msgstr ""
+"Δημιουργήστε ένα κρυπτογραφημένο αντίγραφο ασφαλείας των δεδομένων σας ή επαναφέρετε από ένα "
+"προηγούμενο αντίγραφο ασφαλείας."
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1730
-#: NEEDS WORK
-msgid "Automatic Backups"
-msgstr "Αυτόματες Δημιουργίες Αντιγράφων ασφαλείας"
+# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1731
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 325
+# File: usr/share/ashyterm/app.py, line: 390
 #: NEEDS WORK
-msgid "Automatically create backups of sessions and settings"
-msgstr "Αυτόματη δημιουργία αντιγράφων ασφαλείας των συνεδριών και των ρυθμίσεων"
+msgid "Create Backup"
+msgstr "Δημιουργία Αντιγράφου Ασφαλείας"
 # 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 301
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 327
 #: NEEDS WORK
-msgid "Manual Backup"
-msgstr "Μη αυτόματη εφεδρική αντιγραφή"
+msgid "Save all sessions, settings, and passwords to an encrypted file."
+msgstr "Αποθήκευση όλων των συνεδριών, ρυθμίσεων και κωδικών πρόσβασης σε ένα κρυπτογραφημένο αρχείο."
 # 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 302
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 330
 #: NEEDS WORK
-msgid "Create a backup of your current sessions and settings now"
-msgstr "Δημιουργήστε ένα αντίγραφο ασφαλείας των τρεχουσών συνεδριών και ρυθμίσεών σας τώρα"
+msgid "Create Backup..."
+msgstr "Δημιουργία Αντιγράφου Ασφαλείας..."
 # 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 304
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 338
 #: NEEDS WORK
-msgid "Backup Now"
-msgstr "Αντίγραφο ασφαλείας τώρα"
+msgid "Restore from Backup"
+msgstr "Ανάκτηση από Αντίγραφο Ασφαλείας"
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 339
+#: NEEDS WORK
+msgid "Replace all current data with a backup file."
+msgstr "Αντικαταστήστε όλα τα τρέχοντα δεδομένα με ένα αρχείο αντιγράφου ασφαλείας."
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 341
+#: NEEDS WORK
+msgid "Restore..."
+msgstr "Ανάκτηση..."
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 348
+#: NEEDS WORK
+msgid "Remote Editing"
+msgstr "Απομακρυσμένη Επεξεργασία"
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 352
+#: NEEDS WORK
+msgid "Use System Temporary Directory"
+msgstr "Χρησιμοποιήστε τον προσωρινό φάκελο του συστήματος"
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 354
+#: NEEDS WORK
+msgid "Store temporary files for remote editing in /tmp instead of the config folder"
+msgstr "Αποθηκεύστε προσωρινά αρχεία για απομακρυσμένη επεξεργασία στο /tmp αντί για τον φάκελο ρυθμίσεων."
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 369
+#: NEEDS WORK
+msgid "Clear Remote Edit Files on Exit"
+msgstr "Καθαρισμός Απομακρυσμένων Αρχείων Επεξεργασίας κατά Έξοδο"
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 371
+#: NEEDS WORK
+msgid "Automatically delete all temporary remote files when closing the app"
+msgstr "Αυτόματα διαγράψτε όλα τα προσωρινά απομακρυσμένα αρχεία κατά το κλείσιμο της εφαρμογής"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1575
 #: NEEDS WORK
@@ -2271,10 +2311,10 @@ msgstr "Συνέχεια"
 msgid "{} is required"
 msgstr "{} είναι υποχρεωτικό"
 # 
-# File: usr/share/ashyterm/window.py, line: 586
+# File: usr/share/ashyterm/ui/actions.py, line: 168
 #: NEEDS WORK
-msgid "SFTP not implemented yet"
-msgstr "SFTP δεν έχει υλοποιηθεί ακόμα"
+msgid "Please select an SSH session to connect with SFTP."
+msgstr "Παρακαλώ επιλέξτε μια συνεδρία SSH για να συνδεθείτε με SFTP."
 # 
 # File: usr/share/ashyterm/window.py, line: 758
 # File: usr/share/ashyterm/window.py, line: 875
@@ -2485,11 +2525,6 @@ msgstr "Διαίρεση Κάτω/Επάνω"
 msgid "Close Pane"
 msgstr "Κλείσιμο Πλαισίου"
 # 
-# File: usr/share/ashyterm/app.py, line: 222
-#: NEEDS WORK
-msgid "Automatic startup backup"
-msgstr "Αυτόματη εκκίνηση αντιγράφου ασφαλείας"
-# 
 # File: usr/share/ashyterm/app.py, line: 333
 #: NEEDS WORK
 msgid "Preferences Error"
@@ -2510,6 +2545,11 @@ msgstr "Αποτυχία ανοίγματος προτιμήσεων: {}"
 msgid "A modern terminal emulator with session management"
 msgstr "Ένας σύγχρονος εξομοιωτής τερματικού με διαχείριση συνεδριών"
 # 
+# File: usr/share/ashyterm/app.py, line: 356
+#: NEEDS WORK
+msgid "Save Backup As..."
+msgstr "Αποθήκευση Αντιγράφου Ασφαλείας Ως..."
+# 
 # File: usr/share/ashyterm/app.py, line: 368
 # File: usr/share/ashyterm/app.py, line: 379
 # File: usr/share/ashyterm/app.py, line: 392
@@ -2518,43 +2558,100 @@ msgstr "Ένας σύγχρονος εξομοιωτής τερματικού μ
 msgid "Backup Error"
 msgstr "Σφάλμα Αντιγράφου Ασφαλείας"
 # 
-# File: usr/share/ashyterm/app.py, line: 368
-# File: usr/share/ashyterm/app.py, line: 402
+# File: usr/share/ashyterm/app.py, line: 375
 #: NEEDS WORK
-msgid "Backup system not available"
-msgstr "Το σύστημα αντιγράφων ασφαλείας δεν είναι διαθέσιμο"
+msgid "Set Backup Password"
+msgstr "Ρυθμίστε τον Κωδικό Πρόσβασης Αντιγράφου Ασφαλείας"
 # 
-# File: usr/share/ashyterm/app.py, line: 379
+# File: usr/share/ashyterm/app.py, line: 376
 #: NEEDS WORK
-msgid "No files to backup"
-msgstr "Δεν υπάρχουν αρχεία προς δημιουργία αντιγράφου ασφαλείας"
+msgid "Please enter a password to encrypt the backup file."
+msgstr "Παρακαλώ εισάγετε έναν κωδικό πρόσβασης για να κρυπτογραφήσετε το αρχείο αντιγράφου ασφαλείας."
 # 
-# File: usr/share/ashyterm/app.py, line: 385
+# File: usr/share/ashyterm/app.py, line: 384
 #: NEEDS WORK
-msgid "Manual backup from menu"
-msgstr "Μη αυτόματη δημιουργία αντιγράφου ασφαλείας από το μενού"
+msgid "Confirm Password"
+msgstr "Επιβεβαίωση Κωδικού πρόσβασης"
+# 
+# File: usr/share/ashyterm/app.py, line: 400
+# File: usr/share/ashyterm/app.py, line: 405
+#: NEEDS WORK
+msgid "Password Error"
+msgstr "Σφάλμα Κωδικού Πρόσβασης"
+# 
+# File: usr/share/ashyterm/app.py, line: 400
+#: NEEDS WORK
+msgid "Password cannot be empty."
+msgstr "Ο κωδικός πρόσβασης δεν μπορεί να είναι κενός."
+# 
+# File: usr/share/ashyterm/app.py, line: 405
+#: NEEDS WORK
+msgid "Passwords do not match."
+msgstr "Οι κωδικοί πρόσβασης δεν ταιριάζουν."
+# 
+# File: usr/share/ashyterm/app.py, line: 423
+#: NEEDS WORK
+msgid "Creating backup..."
+msgstr "Δημιουργία αντιγράφου ασφαλείας..."
 # 
 # File: usr/share/ashyterm/app.py, line: 390
 #: NEEDS WORK
 msgid "Backup Complete"
 msgstr "Αντίγραφο ασφαλείας ολοκληρώθηκε"
 # 
-# File: usr/share/ashyterm/app.py, line: 390
+# File: usr/share/ashyterm/app.py, line: 440
 #: NEEDS WORK
 #, python-brace-format
-msgid "Backup created successfully: {}"
-msgstr "Η δημιουργία αντιγράφου ασφαλείας ολοκληρώθηκε με επιτυχία: {}"
+msgid ""
+"Backup saved successfully to:\n"
+"{}"
+msgstr ""
+"Η δημιουργία αντιγράφου ασφαλείας αποθηκεύτηκε με επιτυχία στο:  \n"
+"{}"
 # 
-# File: usr/share/ashyterm/app.py, line: 392
+# File: usr/share/ashyterm/app.py, line: 446
 #: NEEDS WORK
-msgid "Failed to create backup"
-msgstr "Αποτυχία δημιουργίας αντιγράφου ασφαλείας"
+msgid "Backup Failed"
+msgstr "Αποτυχία Δημιουργίας Αντιγράφου Ασφαλείας"
 # 
-# File: usr/share/ashyterm/app.py, line: 396
+# File: usr/share/ashyterm/app.py, line: 447
 #: NEEDS WORK
 #, python-brace-format
-msgid "Backup failed: {}"
-msgstr "Η δημιουργία αντιγράφου ασφαλείας απέτυχε: {}"
+msgid "Could not create backup: {}"
+msgstr "Δεν ήταν δυνατή η δημιουργία αντιγράφου ασφαλείας: {}"
+# 
+# File: usr/share/ashyterm/app.py, line: 458
+#: NEEDS WORK
+msgid "Restore from Backup?"
+msgstr "Ανάκτηση από αντίγραφο ασφαλείας;"
+# 
+# File: usr/share/ashyterm/app.py, line: 460
+#: NEEDS WORK
+msgid ""
+"Restoring from a backup will overwrite all your current sessions, settings, and layouts. This "
+"action cannot be undone.\n"
+"\n"
+"<b>The application will need to be restarted after restoring.</b>"
+msgstr ""
+"Η αποκατάσταση από ένα αντίγραφο ασφαλείας θα αντικαταστήσει όλες τις τρέχουσες συνεδρίες, "
+"ρυθμίσεις και διατάξεις σας. Αυτή η ενέργεια δεν μπορεί να αναιρεθεί.\n"
+"\n"
+"<b>Η εφαρμογή θα χρειαστεί να επανεκκινηθεί μετά την αποκατάσταση.</b>"
+# 
+# File: usr/share/ashyterm/app.py, line: 466
+#: NEEDS WORK
+msgid "Choose File and Restore"
+msgstr "Επιλέξτε Αρχείο και Επαναφορά"
+# 
+# File: usr/share/ashyterm/app.py, line: 474
+#: NEEDS WORK
+msgid "Select Backup File"
+msgstr "Επιλέξτε Αρχείο Αντιγράφου Ασφαλείας"
+# 
+# File: usr/share/ashyterm/app.py, line: 477
+#: NEEDS WORK
+msgid "Backup Files"
+msgstr "Αρχεία Αντιγράφου Ασφαλείας"
 # 
 # File: usr/share/ashyterm/app.py, line: 402
 # File: usr/share/ashyterm/app.py, line: 416
@@ -2562,34 +2659,48 @@ msgstr "Η δημιουργία αντιγράφου ασφαλείας απέτ
 msgid "Restore Error"
 msgstr "Σφάλμα Επαναφοράς"
 # 
-# File: usr/share/ashyterm/app.py, line: 407
+# File: usr/share/ashyterm/app.py, line: 499
 #: NEEDS WORK
-msgid "No Backups"
-msgstr "Κανένα αντίγραφο ασφαλείας"
+msgid "Enter Backup Password"
+msgstr "Εισάγετε τον Κωδικό Δημιουργίας Αντιγράφου Ασφαλείας"
 # 
-# File: usr/share/ashyterm/app.py, line: 407
+# File: usr/share/ashyterm/app.py, line: 500
 #: NEEDS WORK
-msgid "No backups available to restore"
-msgstr "Δεν υπάρχουν διαθέσιμα αντίγραφα ασφαλείας για αποκατάσταση"
+msgid "Please enter the password for the selected backup file."
+msgstr "Παρακαλώ εισάγετε τον κωδικό πρόσβασης για το επιλεγμένο αρχείο αντιγράφου ασφαλείας."
 # 
-# File: usr/share/ashyterm/app.py, line: 411
+# File: usr/share/ashyterm/app.py, line: 508
 #: NEEDS WORK
-msgid "Backups Available"
-msgstr "Διαθέσιμα Αντίγραφα Ασφαλείας"
+msgid "Restore"
+msgstr "Ανάκτηση"
 # 
-# File: usr/share/ashyterm/app.py, line: 412
+# File: usr/share/ashyterm/app.py, line: 525
+#: NEEDS WORK
+msgid "Restoring from backup..."
+msgstr "Ανάκτηση από αντίγραφο ασφαλείας..."
+# 
+# File: usr/share/ashyterm/app.py, line: 538
+#: NEEDS WORK
+msgid "Restore Failed"
+msgstr "Αποκατάσταση Απέτυχε"
+# 
+# File: usr/share/ashyterm/app.py, line: 539
 #: NEEDS WORK
 #, python-brace-format
-msgid "{} backup(s) available. Use preferences dialog for detailed restore options."
+msgid "Could not restore from backup: {}"
+msgstr "Δεν ήταν δυνατή η αποκατάσταση από το αντίγραφο ασφαλείας: {}"
+# 
+# File: usr/share/ashyterm/app.py, line: 549
+#: NEEDS WORK
+msgid "Restore Complete"
+msgstr "Αποκατάσταση Ολοκληρώθηκε"
+# 
+# File: usr/share/ashyterm/app.py, line: 551
+#: NEEDS WORK
+msgid "Data has been restored successfully. Please restart Ashy Terminal for the changes to take effect."
 msgstr ""
-"{} αντίγραφα ασφαλείας διαθέσιμα. Χρησιμοποιήστε το παράθυρο προτιμήσεων για λεπτομερείς επιλογές "
-"επαναφοράς."
-# 
-# File: usr/share/ashyterm/app.py, line: 416
-#: NEEDS WORK
-#, python-brace-format
-msgid "Failed to access backups: {}"
-msgstr "Αποτυχία πρόσβασης στα αντίγραφα ασφαλείας: {}"
+"Τα δεδομένα έχουν αποκατασταθεί με επιτυχία. Παρακαλώ επανεκκινήστε το Ashy Terminal για να "
+"ισχύσουν οι αλλαγές."
 # 
 # File: usr/share/ashyterm/app.py, line: 449
 #: NEEDS WORK
@@ -2622,11 +2733,6 @@ msgstr ""
 #: NEEDS WORK
 msgid "Close All"
 msgstr "Κλείσιμο όλων"
-# 
-# File: usr/share/ashyterm/app.py, line: 514
-#: NEEDS WORK
-msgid "Automatic backup on exit"
-msgstr "Αυτόματη δημιουργία αντιγράφου ασφαλείας κατά την έξοδο"
 # 
 # File: usr/share/ashyterm/app.py, line: 530
 #: NEEDS WORK
@@ -2781,10 +2887,44 @@ msgstr ""
 "\n"
 "Αυτή η ενέργεια δεν μπορεί να αναιρεθεί."
 # 
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1144
+#: NEEDS WORK
+msgid "Delete Multiple Items"
+msgstr "Διαγραφή Πολλαπλών Στοιχείων"
+# 
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1146
+#: NEEDS WORK
+#, python-brace-format
+msgid ""
+"Are you sure you want to permanently delete these {count} items?\n"
+"\n"
+"This action cannot be undone."
+msgstr ""
+"Είστε σίγουροι ότι θέλετε να διαγράψετε μόνιμα αυτά τα {count} στοιχεία;\n"
+"\n"
+"Αυτή η ενέργεια δεν μπορεί να αναιρεθεί."
+# 
 # File: usr/share/ashyterm/filemanager/manager.py, line: 691
 #: NEEDS WORK
 msgid "Delete command sent to terminal"
 msgstr "Εντολή διαγραφής που στάλθηκε στο τερματικό"
+# 
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1173
+#: NEEDS WORK
+#, python-brace-format
+msgid "Set Permissions for {count} Items"
+msgstr "Ρυθμίσεις Δικαιωμάτων για {count} Στοιχεία"
+# 
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1175
+#: NEEDS WORK
+#, python-brace-format
+msgid "Permissions for {name}"
+msgstr "Δικαιώματα για {name}"
+# 
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1179
+#: NEEDS WORK
+msgid "Set new file permissions."
+msgstr "Ρυθμίστε νέες άδειες αρχείου."
 # 
 # File: usr/share/ashyterm/filemanager/manager.py, line: 701
 #: NEEDS WORK
@@ -2832,10 +2972,15 @@ msgstr "Εφαρμογή"
 msgid "Chmod command sent to terminal"
 msgstr "Η εντολή Chmod στάλθηκε στο τερματικό"
 # 
-# File: usr/share/ashyterm/filemanager/manager.py, line: 826
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1308
 #: NEEDS WORK
-msgid "Save File As..."
-msgstr "Αποθήκευση αρχείου ως..."
+msgid "Select Destination Folder"
+msgstr "Επιλέξτε Φάκελο Προορισμού"
+# 
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1310
+#: NEEDS WORK
+msgid "Download Here"
+msgstr "Κατεβάστε εδώ"
 # 
 # File: usr/share/ashyterm/filemanager/manager.py, line: 855
 # File: usr/share/ashyterm/filemanager/manager.py, line: 889
@@ -2852,6 +2997,25 @@ msgstr "Ανέβασμα Αρχείου(ων) σε Αυτόν τον Φάκελ�
 #: NEEDS WORK
 msgid "Upload"
 msgstr "Ανέβασμα"
+# 
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1430
+#: NEEDS WORK
+msgid "Confirm Upload"
+msgstr "Επιβεβαίωση Μεταφόρτωσης"
+# 
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1432
+#: NEEDS WORK
+#, python-brace-format
+msgid ""
+"You are about to upload {count} item(s) to:\n"
+"<b>{dest}</b>\n"
+"\n"
+"Do you want to proceed?"
+msgstr ""
+"Είστε έτοιμοι να ανεβάσετε {count} αντικείμενο(α) στο:\n"
+"<b>{dest}</b>\n"
+"\n"
+"Θέλετε να προχωρήσετε;"
 # 
 # File: usr/share/ashyterm/filemanager/manager.py, line: 1382
 #: NEEDS WORK

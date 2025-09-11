@@ -443,11 +443,6 @@ msgstr "Portur verður að vera á milli 1 og 65535"
 msgid "Port must be a valid number"
 msgstr "Port verður að vera gilt númer"
 # 
-# File: usr/share/ashyterm/utils/security.py, line: 822
-#: NEEDS WORK
-msgid "SSH key file path is required for key authentication"
-msgstr "SSH lykil skráar leið er nauðsynleg fyrir lykil auðkenningu"
-# 
 # File: usr/share/ashyterm/utils/security.py, line: 832
 #: NEEDS WORK
 #, python-brace-format
@@ -907,6 +902,16 @@ msgstr "Loka glugga"
 #: NEEDS WORK
 msgid "This window has active SSH connections. Closing will disconnect them. Are you sure?"
 msgstr "Þetta gluggi hefur virk SSH tengingar. Að loka honum mun slíta tengingunum. Ertu viss?"
+# 
+# File: usr/share/ashyterm/window.py, line: 553
+#: NEEDS WORK
+msgid "Invalid SSH Target"
+msgstr "Ógildur SSH markmið"
+# 
+# File: usr/share/ashyterm/window.py, line: 554
+#: NEEDS WORK
+msgid "Could not parse the provided SSH connection string."
+msgstr "Gat ekki að greina veitt SSH tengistreng."
 # 
 # #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
 # 
@@ -1871,35 +1876,68 @@ msgstr "Aldrei endurheimta fyrri sessjón"
 msgid "Backup &amp; Recovery"
 msgstr "Afritun &amp; Endurheimt"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1724
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 319
 #: NEEDS WORK
-msgid "Configure automatic backup and recovery options"
-msgstr "Stilltu sjálfvirkar afritunar- og endurheimtarvalkostir"
+msgid "Create an encrypted backup of your data or restore from a previous backup."
+msgstr "Búðu til dulkóðaða afrit af gögnum þínum eða endurheimtu úr fyrri afriti."
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1730
-#: NEEDS WORK
-msgid "Automatic Backups"
-msgstr "Sjálfvirkar afritanir"
+# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1731
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 325
+# File: usr/share/ashyterm/app.py, line: 390
 #: NEEDS WORK
-msgid "Automatically create backups of sessions and settings"
-msgstr "Sjálfvirkt að búa til afrit af lotum og stillingum"
+msgid "Create Backup"
+msgstr "Búa til afrit"
 # 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 301
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 327
 #: NEEDS WORK
-msgid "Manual Backup"
-msgstr "Handvirkur afritun"
+msgid "Save all sessions, settings, and passwords to an encrypted file."
+msgstr "Vistaðu allar sesjónir, stillingar og lykilorð í dulkóðaða skrá."
 # 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 302
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 330
 #: NEEDS WORK
-msgid "Create a backup of your current sessions and settings now"
-msgstr "Búðu til afrit af núverandi lotum og stillingum þínum núna"
+msgid "Create Backup..."
+msgstr "Búa til afrit..."
 # 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 304
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 338
 #: NEEDS WORK
-msgid "Backup Now"
-msgstr "Bæta við núna"
+msgid "Restore from Backup"
+msgstr "Endurheimta úr afriti"
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 339
+#: NEEDS WORK
+msgid "Replace all current data with a backup file."
+msgstr "Skiptaðu öllum núverandi gögnum með afrits skrá."
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 341
+#: NEEDS WORK
+msgid "Restore..."
+msgstr "Endurheimta..."
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 348
+#: NEEDS WORK
+msgid "Remote Editing"
+msgstr "Fjarritgerð"
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 352
+#: NEEDS WORK
+msgid "Use System Temporary Directory"
+msgstr "Notaðu kerfisskjalasafn."
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 354
+#: NEEDS WORK
+msgid "Store temporary files for remote editing in /tmp instead of the config folder"
+msgstr "Vista tímabundna skrár fyrir fjarritun í /tmp í staðinn fyrir stillingaskrána"
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 369
+#: NEEDS WORK
+msgid "Clear Remote Edit Files on Exit"
+msgstr "Tæma fjarritunarskrár við útgöngu"
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 371
+#: NEEDS WORK
+msgid "Automatically delete all temporary remote files when closing the app"
+msgstr "Sjálfvirkt eyða öllu tímabundnu fjarfílum við lokun forritsins"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1575
 #: NEEDS WORK
@@ -2269,10 +2307,10 @@ msgstr "Halda áfram"
 msgid "{} is required"
 msgstr "{} er nauðsynlegt"
 # 
-# File: usr/share/ashyterm/window.py, line: 586
+# File: usr/share/ashyterm/ui/actions.py, line: 168
 #: NEEDS WORK
-msgid "SFTP not implemented yet"
-msgstr "SFTP ekki innleitt ennþá"
+msgid "Please select an SSH session to connect with SFTP."
+msgstr "Vinsamlegast veldu SSH lotu til að tengjast SFTP."
 # 
 # File: usr/share/ashyterm/window.py, line: 758
 # File: usr/share/ashyterm/window.py, line: 875
@@ -2483,11 +2521,6 @@ msgstr "Skipta Ofan/Neðan"
 msgid "Close Pane"
 msgstr "Loka glugga"
 # 
-# File: usr/share/ashyterm/app.py, line: 222
-#: NEEDS WORK
-msgid "Automatic startup backup"
-msgstr "Sjálfvirk upphafsafritun"
-# 
 # File: usr/share/ashyterm/app.py, line: 333
 #: NEEDS WORK
 msgid "Preferences Error"
@@ -2508,6 +2541,11 @@ msgstr "Ekki tókst að opna stillingar: {}"
 msgid "A modern terminal emulator with session management"
 msgstr "Nútíma skel emulators með sessastjórnun"
 # 
+# File: usr/share/ashyterm/app.py, line: 356
+#: NEEDS WORK
+msgid "Save Backup As..."
+msgstr "Vista afritunar sem..."
+# 
 # File: usr/share/ashyterm/app.py, line: 368
 # File: usr/share/ashyterm/app.py, line: 379
 # File: usr/share/ashyterm/app.py, line: 392
@@ -2516,43 +2554,100 @@ msgstr "Nútíma skel emulators með sessastjórnun"
 msgid "Backup Error"
 msgstr "Afturheimt Villa"
 # 
-# File: usr/share/ashyterm/app.py, line: 368
-# File: usr/share/ashyterm/app.py, line: 402
+# File: usr/share/ashyterm/app.py, line: 375
 #: NEEDS WORK
-msgid "Backup system not available"
-msgstr "Afturhalskerfi ekki í boði"
+msgid "Set Backup Password"
+msgstr "Stilltu afritunarlykil"
 # 
-# File: usr/share/ashyterm/app.py, line: 379
+# File: usr/share/ashyterm/app.py, line: 376
 #: NEEDS WORK
-msgid "No files to backup"
-msgstr "Engin ekki skráir til að afrita"
+msgid "Please enter a password to encrypt the backup file."
+msgstr "Vinsamlegast sláðu inn lykilorð til að dulkóða afritaskrána."
 # 
-# File: usr/share/ashyterm/app.py, line: 385
+# File: usr/share/ashyterm/app.py, line: 384
 #: NEEDS WORK
-msgid "Manual backup from menu"
-msgstr "Handvirkur afritun úr valmynd"
+msgid "Confirm Password"
+msgstr "Staðfesta lykilorð"
+# 
+# File: usr/share/ashyterm/app.py, line: 400
+# File: usr/share/ashyterm/app.py, line: 405
+#: NEEDS WORK
+msgid "Password Error"
+msgstr "Lykilorð Villa"
+# 
+# File: usr/share/ashyterm/app.py, line: 400
+#: NEEDS WORK
+msgid "Password cannot be empty."
+msgstr "Lykilorð má ekki vera tómt."
+# 
+# File: usr/share/ashyterm/app.py, line: 405
+#: NEEDS WORK
+msgid "Passwords do not match."
+msgstr "Lyklar passa ekki saman."
+# 
+# File: usr/share/ashyterm/app.py, line: 423
+#: NEEDS WORK
+msgid "Creating backup..."
+msgstr "Að búa til afrit..."
 # 
 # File: usr/share/ashyterm/app.py, line: 390
 #: NEEDS WORK
 msgid "Backup Complete"
 msgstr "Afturheimt lokið"
 # 
-# File: usr/share/ashyterm/app.py, line: 390
+# File: usr/share/ashyterm/app.py, line: 440
 #: NEEDS WORK
 #, python-brace-format
-msgid "Backup created successfully: {}"
-msgstr "Afsnið var búið til með góðum árangri: {}"
+msgid ""
+"Backup saved successfully to:\n"
+"{}"
+msgstr ""
+"Afritun vistu með góðum árangri á:  \n"
+"{}"
 # 
-# File: usr/share/ashyterm/app.py, line: 392
+# File: usr/share/ashyterm/app.py, line: 446
 #: NEEDS WORK
-msgid "Failed to create backup"
-msgstr "Mistók að búa til afrit"
+msgid "Backup Failed"
+msgstr "Afturheimt mistókst"
 # 
-# File: usr/share/ashyterm/app.py, line: 396
+# File: usr/share/ashyterm/app.py, line: 447
 #: NEEDS WORK
 #, python-brace-format
-msgid "Backup failed: {}"
-msgstr "Afturheimt mistókst: {}"
+msgid "Could not create backup: {}"
+msgstr "Gat ekki að búa til afrit: {}"
+# 
+# File: usr/share/ashyterm/app.py, line: 458
+#: NEEDS WORK
+msgid "Restore from Backup?"
+msgstr "Endurheimta úr afriti?"
+# 
+# File: usr/share/ashyterm/app.py, line: 460
+#: NEEDS WORK
+msgid ""
+"Restoring from a backup will overwrite all your current sessions, settings, and layouts. This "
+"action cannot be undone.\n"
+"\n"
+"<b>The application will need to be restarted after restoring.</b>"
+msgstr ""
+"Að endurheimta úr afriti mun skrifa yfir allar núverandi lotur, stillingar og uppsetningar. Þessi "
+"aðgerð er ekki hægt að afturkalla.\n"
+"\n"
+"<b>Forritið þarf að vera endurræst eftir endurheimt.</b>"
+# 
+# File: usr/share/ashyterm/app.py, line: 466
+#: NEEDS WORK
+msgid "Choose File and Restore"
+msgstr "Veldu skrá og endurheimtu"
+# 
+# File: usr/share/ashyterm/app.py, line: 474
+#: NEEDS WORK
+msgid "Select Backup File"
+msgstr "Veldu afritunar skrá"
+# 
+# File: usr/share/ashyterm/app.py, line: 477
+#: NEEDS WORK
+msgid "Backup Files"
+msgstr "Afritunarskrár"
 # 
 # File: usr/share/ashyterm/app.py, line: 402
 # File: usr/share/ashyterm/app.py, line: 416
@@ -2560,32 +2655,48 @@ msgstr "Afturheimt mistókst: {}"
 msgid "Restore Error"
 msgstr "Endurunarvilla"
 # 
-# File: usr/share/ashyterm/app.py, line: 407
+# File: usr/share/ashyterm/app.py, line: 499
 #: NEEDS WORK
-msgid "No Backups"
-msgstr "Engin ekki afrit"
+msgid "Enter Backup Password"
+msgstr "Sláðu inn afritunarlykil"
 # 
-# File: usr/share/ashyterm/app.py, line: 407
+# File: usr/share/ashyterm/app.py, line: 500
 #: NEEDS WORK
-msgid "No backups available to restore"
-msgstr "Engin öryggisafn er ekki til staðar til að endurheimta."
+msgid "Please enter the password for the selected backup file."
+msgstr "Vinsamlegast sláðu inn lykilorðið fyrir valda afritaskrána."
 # 
-# File: usr/share/ashyterm/app.py, line: 411
+# File: usr/share/ashyterm/app.py, line: 508
 #: NEEDS WORK
-msgid "Backups Available"
-msgstr "Afritun tiltæk"
+msgid "Restore"
+msgstr "Endurheimta"
 # 
-# File: usr/share/ashyterm/app.py, line: 412
+# File: usr/share/ashyterm/app.py, line: 525
+#: NEEDS WORK
+msgid "Restoring from backup..."
+msgstr "Að endurheimta úr afriti..."
+# 
+# File: usr/share/ashyterm/app.py, line: 538
+#: NEEDS WORK
+msgid "Restore Failed"
+msgstr "Endurta mistókst"
+# 
+# File: usr/share/ashyterm/app.py, line: 539
 #: NEEDS WORK
 #, python-brace-format
-msgid "{} backup(s) available. Use preferences dialog for detailed restore options."
-msgstr "{} afritun(um) í boði. Notaðu stillingargluggann fyrir ítarlegar endurheimtarvalkostir."
+msgid "Could not restore from backup: {}"
+msgstr "Gat ekki að endurheimta úr afriti: {}"
 # 
-# File: usr/share/ashyterm/app.py, line: 416
+# File: usr/share/ashyterm/app.py, line: 549
 #: NEEDS WORK
-#, python-brace-format
-msgid "Failed to access backups: {}"
-msgstr "Mistók að fá aðgang að afritum: {}"
+msgid "Restore Complete"
+msgstr "Endurheimta Lokið"
+# 
+# File: usr/share/ashyterm/app.py, line: 551
+#: NEEDS WORK
+msgid "Data has been restored successfully. Please restart Ashy Terminal for the changes to take effect."
+msgstr ""
+"Gögnin hafa verið endurheimt með árangri. Vinsamlegast endurræstu Ashy Terminal til að "
+"breytingarnar taki gildi."
 # 
 # File: usr/share/ashyterm/app.py, line: 449
 #: NEEDS WORK
@@ -2618,11 +2729,6 @@ msgstr ""
 #: NEEDS WORK
 msgid "Close All"
 msgstr "Loka allt"
-# 
-# File: usr/share/ashyterm/app.py, line: 514
-#: NEEDS WORK
-msgid "Automatic backup on exit"
-msgstr "Sjálfvirk afritun við útgáfu"
 # 
 # File: usr/share/ashyterm/app.py, line: 530
 #: NEEDS WORK
@@ -2777,10 +2883,44 @@ msgstr ""
 "\n"
 "Þetta aðgerð er ekki hægt að afturkalla."
 # 
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1144
+#: NEEDS WORK
+msgid "Delete Multiple Items"
+msgstr "Eyða mörgum hlutum"
+# 
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1146
+#: NEEDS WORK
+#, python-brace-format
+msgid ""
+"Are you sure you want to permanently delete these {count} items?\n"
+"\n"
+"This action cannot be undone."
+msgstr ""
+"Ertu viss um að þú viljir varanlega eyða þessum {count} hlutum?\n"
+"\n"
+"Þessi aðgerð er ekki hægt að endurtaka."
+# 
 # File: usr/share/ashyterm/filemanager/manager.py, line: 691
 #: NEEDS WORK
 msgid "Delete command sent to terminal"
 msgstr "Eyða skipun send til terminala"
+# 
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1173
+#: NEEDS WORK
+#, python-brace-format
+msgid "Set Permissions for {count} Items"
+msgstr "Settu heimildir fyrir {count} atriði"
+# 
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1175
+#: NEEDS WORK
+#, python-brace-format
+msgid "Permissions for {name}"
+msgstr "Leyfi fyrir {name}"
+# 
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1179
+#: NEEDS WORK
+msgid "Set new file permissions."
+msgstr "Settu nýjar skráarheimildir."
 # 
 # File: usr/share/ashyterm/filemanager/manager.py, line: 701
 #: NEEDS WORK
@@ -2828,10 +2968,15 @@ msgstr "Beita"
 msgid "Chmod command sent to terminal"
 msgstr "Chmod skipun send til terminala"
 # 
-# File: usr/share/ashyterm/filemanager/manager.py, line: 826
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1308
 #: NEEDS WORK
-msgid "Save File As..."
-msgstr "Vista skrá sem..."
+msgid "Select Destination Folder"
+msgstr "Veldu áfangastaðaskrá."
+# 
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1310
+#: NEEDS WORK
+msgid "Download Here"
+msgstr "Sæktu hér"
 # 
 # File: usr/share/ashyterm/filemanager/manager.py, line: 855
 # File: usr/share/ashyterm/filemanager/manager.py, line: 889
@@ -2848,6 +2993,25 @@ msgstr "Hlaða upp skrá(um) í þessa möppu"
 #: NEEDS WORK
 msgid "Upload"
 msgstr "Hlaða upp"
+# 
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1430
+#: NEEDS WORK
+msgid "Confirm Upload"
+msgstr "Staðfesta Hleðslu"
+# 
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1432
+#: NEEDS WORK
+#, python-brace-format
+msgid ""
+"You are about to upload {count} item(s) to:\n"
+"<b>{dest}</b>\n"
+"\n"
+"Do you want to proceed?"
+msgstr ""
+"Þú ert að fara að hlaða upp {count} hlut(um) á:\n"
+"<b>{dest}</b>\n"
+"\n"
+"Viltu halda áfram?"
 # 
 # File: usr/share/ashyterm/filemanager/manager.py, line: 1382
 #: NEEDS WORK

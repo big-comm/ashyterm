@@ -443,11 +443,6 @@ msgstr "Port 1 ile 65535 arasında olmalıdır."
 msgid "Port must be a valid number"
 msgstr "Port geçerli bir sayı olmalıdır."
 # 
-# File: usr/share/ashyterm/utils/security.py, line: 822
-#: NEEDS WORK
-msgid "SSH key file path is required for key authentication"
-msgstr "Anahtar kimlik doğrulaması için SSH anahtar dosyası yolu gereklidir."
-# 
 # File: usr/share/ashyterm/utils/security.py, line: 832
 #: NEEDS WORK
 #, python-brace-format
@@ -907,6 +902,16 @@ msgstr "Pencereyi Kapat"
 #: NEEDS WORK
 msgid "This window has active SSH connections. Closing will disconnect them. Are you sure?"
 msgstr "Bu pencerede aktif SSH bağlantıları var. Kapatmak bunları keser. Emin misiniz?"
+# 
+# File: usr/share/ashyterm/window.py, line: 553
+#: NEEDS WORK
+msgid "Invalid SSH Target"
+msgstr "Geçersiz SSH Hedefi"
+# 
+# File: usr/share/ashyterm/window.py, line: 554
+#: NEEDS WORK
+msgid "Could not parse the provided SSH connection string."
+msgstr "Verilen SSH bağlantı dizesi ayrıştırılamadı."
 # 
 # #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
 # 
@@ -1868,35 +1873,68 @@ msgstr "Önceki oturumu asla geri yükleme"
 msgid "Backup &amp; Recovery"
 msgstr "Yedekleme ve Kurtarma"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1724
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 319
 #: NEEDS WORK
-msgid "Configure automatic backup and recovery options"
-msgstr "Otomatik yedekleme ve kurtarma seçeneklerini yapılandırın"
+msgid "Create an encrypted backup of your data or restore from a previous backup."
+msgstr "Verilerinizi şifreli bir yedek oluşturun veya önceki bir yedekten geri yükleyin."
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1730
-#: NEEDS WORK
-msgid "Automatic Backups"
-msgstr "Otomatik Yedeklemeler"
+# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1731
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 325
+# File: usr/share/ashyterm/app.py, line: 390
 #: NEEDS WORK
-msgid "Automatically create backups of sessions and settings"
-msgstr "Otomatik olarak oturumların ve ayarların yedeklerini oluşturun"
+msgid "Create Backup"
+msgstr "Yedek Oluştur"
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 327
+#: NEEDS WORK
+msgid "Save all sessions, settings, and passwords to an encrypted file."
+msgstr "Tüm oturumları, ayarları ve şifreleri şifreli bir dosyaya kaydet."
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 330
+#: NEEDS WORK
+msgid "Create Backup..."
+msgstr "Yedek Oluştur..."
 # 
 # File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 338
 #: NEEDS WORK
-msgid "Manual Backup"
-msgstr "Manuel Yedekleme"
+msgid "Restore from Backup"
+msgstr "Yedekten Geri Yükle"
 # 
 # File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 339
 #: NEEDS WORK
-msgid "Create a backup of your current sessions and settings now"
-msgstr "Mevcut oturumlarınızın ve ayarlarınızın yedeğini şimdi oluşturun."
+msgid "Replace all current data with a backup file."
+msgstr "Tüm mevcut verileri bir yedek dosyasıyla değiştir."
 # 
 # File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 341
 #: NEEDS WORK
-msgid "Backup Now"
-msgstr "Şimdi Yedekle"
+msgid "Restore..."
+msgstr "Geri Yükle..."
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 348
+#: NEEDS WORK
+msgid "Remote Editing"
+msgstr "Uzaktan Düzenleme"
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 352
+#: NEEDS WORK
+msgid "Use System Temporary Directory"
+msgstr "Sistem Geçici Dizinini Kullan"
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 354
+#: NEEDS WORK
+msgid "Store temporary files for remote editing in /tmp instead of the config folder"
+msgstr "Geçici dosyaları uzaktan düzenleme için /tmp dizininde, yapılandırma klasörü yerine saklayın."
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 369
+#: NEEDS WORK
+msgid "Clear Remote Edit Files on Exit"
+msgstr "Çıkışta Uzaktan Düzenleme Dosyalarını Temizle"
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 371
+#: NEEDS WORK
+msgid "Automatically delete all temporary remote files when closing the app"
+msgstr "Uygulama kapatıldığında tüm geçici uzak dosyaları otomatik olarak sil."
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1575
 #: NEEDS WORK
@@ -2264,10 +2302,10 @@ msgstr "Devam et"
 msgid "{} is required"
 msgstr "{} gereklidir"
 # 
-# File: usr/share/ashyterm/window.py, line: 586
+# File: usr/share/ashyterm/ui/actions.py, line: 168
 #: NEEDS WORK
-msgid "SFTP not implemented yet"
-msgstr "SFTP henüz uygulanmadı"
+msgid "Please select an SSH session to connect with SFTP."
+msgstr "Lütfen SFTP ile bağlanmak için bir SSH oturumu seçin."
 # 
 # File: usr/share/ashyterm/window.py, line: 758
 # File: usr/share/ashyterm/window.py, line: 875
@@ -2476,11 +2514,6 @@ msgstr "Üst/Aşağı Ayır"
 msgid "Close Pane"
 msgstr "Paneyi Kapat"
 # 
-# File: usr/share/ashyterm/app.py, line: 222
-#: NEEDS WORK
-msgid "Automatic startup backup"
-msgstr "Otomatik başlangıç yedeği"
-# 
 # File: usr/share/ashyterm/app.py, line: 333
 #: NEEDS WORK
 msgid "Preferences Error"
@@ -2501,6 +2534,11 @@ msgstr "Tercihleri açma başarısız oldu: {}"
 msgid "A modern terminal emulator with session management"
 msgstr "Modern bir terminal emülatörü ve oturum yönetimi."
 # 
+# File: usr/share/ashyterm/app.py, line: 356
+#: NEEDS WORK
+msgid "Save Backup As..."
+msgstr "Yedekle Olarak Kaydet..."
+# 
 # File: usr/share/ashyterm/app.py, line: 368
 # File: usr/share/ashyterm/app.py, line: 379
 # File: usr/share/ashyterm/app.py, line: 392
@@ -2509,43 +2547,100 @@ msgstr "Modern bir terminal emülatörü ve oturum yönetimi."
 msgid "Backup Error"
 msgstr "Yedekleme Hatası"
 # 
-# File: usr/share/ashyterm/app.py, line: 368
-# File: usr/share/ashyterm/app.py, line: 402
+# File: usr/share/ashyterm/app.py, line: 375
 #: NEEDS WORK
-msgid "Backup system not available"
-msgstr "Yedekleme sistemi mevcut değil"
+msgid "Set Backup Password"
+msgstr "Yedek Şifre Belirle"
 # 
-# File: usr/share/ashyterm/app.py, line: 379
+# File: usr/share/ashyterm/app.py, line: 376
 #: NEEDS WORK
-msgid "No files to backup"
-msgstr "Yedeklenecek dosya yok"
+msgid "Please enter a password to encrypt the backup file."
+msgstr "Lütfen yedek dosyasını şifrelemek için bir şifre girin."
 # 
-# File: usr/share/ashyterm/app.py, line: 385
+# File: usr/share/ashyterm/app.py, line: 384
 #: NEEDS WORK
-msgid "Manual backup from menu"
-msgstr "Menüden manuel yedekleme"
+msgid "Confirm Password"
+msgstr "Şifreyi Onayla"
+# 
+# File: usr/share/ashyterm/app.py, line: 400
+# File: usr/share/ashyterm/app.py, line: 405
+#: NEEDS WORK
+msgid "Password Error"
+msgstr "Şifre Hatası"
+# 
+# File: usr/share/ashyterm/app.py, line: 400
+#: NEEDS WORK
+msgid "Password cannot be empty."
+msgstr "Şifre boş olamaz."
+# 
+# File: usr/share/ashyterm/app.py, line: 405
+#: NEEDS WORK
+msgid "Passwords do not match."
+msgstr "Şifreler eşleşmiyor."
+# 
+# File: usr/share/ashyterm/app.py, line: 423
+#: NEEDS WORK
+msgid "Creating backup..."
+msgstr "Yedek oluşturuluyor..."
 # 
 # File: usr/share/ashyterm/app.py, line: 390
 #: NEEDS WORK
 msgid "Backup Complete"
 msgstr "Yedekleme Tamamlandı"
 # 
-# File: usr/share/ashyterm/app.py, line: 390
+# File: usr/share/ashyterm/app.py, line: 440
 #: NEEDS WORK
 #, python-brace-format
-msgid "Backup created successfully: {}"
-msgstr "Yedek başarıyla oluşturuldu: {}"
+msgid ""
+"Backup saved successfully to:\n"
+"{}"
+msgstr ""
+"Yedek başarıyla kaydedildi:\n"
+"{}"
 # 
-# File: usr/share/ashyterm/app.py, line: 392
+# File: usr/share/ashyterm/app.py, line: 446
 #: NEEDS WORK
-msgid "Failed to create backup"
-msgstr "Yedek oluşturulamadı"
+msgid "Backup Failed"
+msgstr "Yedekleme Başarısız"
 # 
-# File: usr/share/ashyterm/app.py, line: 396
+# File: usr/share/ashyterm/app.py, line: 447
 #: NEEDS WORK
 #, python-brace-format
-msgid "Backup failed: {}"
-msgstr "Yedekleme başarısız: {}"
+msgid "Could not create backup: {}"
+msgstr "Yedek oluşturulamadı: {}"
+# 
+# File: usr/share/ashyterm/app.py, line: 458
+#: NEEDS WORK
+msgid "Restore from Backup?"
+msgstr "Yedekten Geri Yükle?"
+# 
+# File: usr/share/ashyterm/app.py, line: 460
+#: NEEDS WORK
+msgid ""
+"Restoring from a backup will overwrite all your current sessions, settings, and layouts. This "
+"action cannot be undone.\n"
+"\n"
+"<b>The application will need to be restarted after restoring.</b>"
+msgstr ""
+"Yedekten geri yükleme, mevcut oturumlarınızı, ayarlarınızı ve düzenlerinizi üzerine yazacaktır. Bu "
+"işlem geri alınamaz.\n"
+"\n"
+"<b>Geri yüklemeden sonra uygulamanın yeniden başlatılması gerekecektir.</b>"
+# 
+# File: usr/share/ashyterm/app.py, line: 466
+#: NEEDS WORK
+msgid "Choose File and Restore"
+msgstr "Dosya Seç ve Geri Yükle"
+# 
+# File: usr/share/ashyterm/app.py, line: 474
+#: NEEDS WORK
+msgid "Select Backup File"
+msgstr "Yedek Dosyası Seçin"
+# 
+# File: usr/share/ashyterm/app.py, line: 477
+#: NEEDS WORK
+msgid "Backup Files"
+msgstr "Yedek Dosyaları"
 # 
 # File: usr/share/ashyterm/app.py, line: 402
 # File: usr/share/ashyterm/app.py, line: 416
@@ -2553,32 +2648,46 @@ msgstr "Yedekleme başarısız: {}"
 msgid "Restore Error"
 msgstr "Geri Yükleme Hatası"
 # 
-# File: usr/share/ashyterm/app.py, line: 407
+# File: usr/share/ashyterm/app.py, line: 499
 #: NEEDS WORK
-msgid "No Backups"
-msgstr "Yedek Yok"
+msgid "Enter Backup Password"
+msgstr "Yedek Şifreyi Girin"
 # 
-# File: usr/share/ashyterm/app.py, line: 407
+# File: usr/share/ashyterm/app.py, line: 500
 #: NEEDS WORK
-msgid "No backups available to restore"
-msgstr "Geri yüklemek için kullanılabilir yedek yok."
+msgid "Please enter the password for the selected backup file."
+msgstr "Lütfen seçilen yedek dosyası için şifreyi girin."
 # 
-# File: usr/share/ashyterm/app.py, line: 411
+# File: usr/share/ashyterm/app.py, line: 508
 #: NEEDS WORK
-msgid "Backups Available"
-msgstr "Yedekler Mevcut"
+msgid "Restore"
+msgstr "Geri Yükle"
 # 
-# File: usr/share/ashyterm/app.py, line: 412
+# File: usr/share/ashyterm/app.py, line: 525
+#: NEEDS WORK
+msgid "Restoring from backup..."
+msgstr "Yedekten geri yükleniyor..."
+# 
+# File: usr/share/ashyterm/app.py, line: 538
+#: NEEDS WORK
+msgid "Restore Failed"
+msgstr "Geri Yükleme Başarısız"
+# 
+# File: usr/share/ashyterm/app.py, line: 539
 #: NEEDS WORK
 #, python-brace-format
-msgid "{} backup(s) available. Use preferences dialog for detailed restore options."
-msgstr "{} yedek(ler) mevcut. Ayrıntılı geri yükleme seçenekleri için tercihler penceresini kullanın."
+msgid "Could not restore from backup: {}"
+msgstr "Yedekten geri yüklenemedi: {}"
 # 
-# File: usr/share/ashyterm/app.py, line: 416
+# File: usr/share/ashyterm/app.py, line: 549
 #: NEEDS WORK
-#, python-brace-format
-msgid "Failed to access backups: {}"
-msgstr "Yedeklere erişim sağlanamadı: {}"
+msgid "Restore Complete"
+msgstr "Geri Yükleme Tamamlandı"
+# 
+# File: usr/share/ashyterm/app.py, line: 551
+#: NEEDS WORK
+msgid "Data has been restored successfully. Please restart Ashy Terminal for the changes to take effect."
+msgstr "Veri başarıyla geri yüklendi. Değişikliklerin etkili olması için Ashy Terminal'i yeniden başlatın."
 # 
 # File: usr/share/ashyterm/app.py, line: 449
 #: NEEDS WORK
@@ -2611,11 +2720,6 @@ msgstr ""
 #: NEEDS WORK
 msgid "Close All"
 msgstr "Tümünü Kapat"
-# 
-# File: usr/share/ashyterm/app.py, line: 514
-#: NEEDS WORK
-msgid "Automatic backup on exit"
-msgstr "Çıkışta otomatik yedekleme"
 # 
 # File: usr/share/ashyterm/app.py, line: 530
 #: NEEDS WORK
@@ -2770,10 +2874,44 @@ msgstr ""
 "\n"
 "Bu işlem geri alınamaz."
 # 
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1144
+#: NEEDS WORK
+msgid "Delete Multiple Items"
+msgstr "Birden Fazla Öğeyi Sil"
+# 
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1146
+#: NEEDS WORK
+#, python-brace-format
+msgid ""
+"Are you sure you want to permanently delete these {count} items?\n"
+"\n"
+"This action cannot be undone."
+msgstr ""
+"Bu {count} öğeyi kalıcı olarak silmek istediğinizden emin misiniz?\n"
+"\n"
+"Bu işlem geri alınamaz."
+# 
 # File: usr/share/ashyterm/filemanager/manager.py, line: 691
 #: NEEDS WORK
 msgid "Delete command sent to terminal"
 msgstr "Terminal'e silme komutu gönderildi"
+# 
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1173
+#: NEEDS WORK
+#, python-brace-format
+msgid "Set Permissions for {count} Items"
+msgstr "{count} Öğe için İzinleri Ayarla"
+# 
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1175
+#: NEEDS WORK
+#, python-brace-format
+msgid "Permissions for {name}"
+msgstr "{name} için İzinler"
+# 
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1179
+#: NEEDS WORK
+msgid "Set new file permissions."
+msgstr "Yeni dosya izinlerini ayarla."
 # 
 # File: usr/share/ashyterm/filemanager/manager.py, line: 701
 #: NEEDS WORK
@@ -2821,10 +2959,15 @@ msgstr "Uygula"
 msgid "Chmod command sent to terminal"
 msgstr "Chmod komutu terminale gönderildi"
 # 
-# File: usr/share/ashyterm/filemanager/manager.py, line: 826
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1308
 #: NEEDS WORK
-msgid "Save File As..."
-msgstr "Farklı Kaydet..."
+msgid "Select Destination Folder"
+msgstr "Hedef Klasörü Seçin"
+# 
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1310
+#: NEEDS WORK
+msgid "Download Here"
+msgstr "Buradan İndir"
 # 
 # File: usr/share/ashyterm/filemanager/manager.py, line: 855
 # File: usr/share/ashyterm/filemanager/manager.py, line: 889
@@ -2841,6 +2984,25 @@ msgstr "Bu Klasöre Dosya(lar) Yükle"
 #: NEEDS WORK
 msgid "Upload"
 msgstr "Yükle"
+# 
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1430
+#: NEEDS WORK
+msgid "Confirm Upload"
+msgstr "Yüklemeyi Onayla"
+# 
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1432
+#: NEEDS WORK
+#, python-brace-format
+msgid ""
+"You are about to upload {count} item(s) to:\n"
+"<b>{dest}</b>\n"
+"\n"
+"Do you want to proceed?"
+msgstr ""
+"{count} öğe(leri) yüklemek üzeresiniz:\n"
+"<b>{dest}</b>\n"
+"\n"
+"Devam etmek istiyor musunuz?"
 # 
 # File: usr/share/ashyterm/filemanager/manager.py, line: 1382
 #: NEEDS WORK

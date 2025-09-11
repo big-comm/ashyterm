@@ -443,11 +443,6 @@ msgstr "Port mora biti između 1 i 65535"
 msgid "Port must be a valid number"
 msgstr "Port mora biti valjani broj"
 # 
-# File: usr/share/ashyterm/utils/security.py, line: 822
-#: NEEDS WORK
-msgid "SSH key file path is required for key authentication"
-msgstr "Putanja do SSH ključa je obavezna za autentifikaciju ključa."
-# 
 # File: usr/share/ashyterm/utils/security.py, line: 832
 #: NEEDS WORK
 #, python-brace-format
@@ -907,6 +902,16 @@ msgstr "Zatvori prozor"
 #: NEEDS WORK
 msgid "This window has active SSH connections. Closing will disconnect them. Are you sure?"
 msgstr "Ovaj prozor ima aktivne SSH veze. Zatvaranjem će se prekinuti. Jeste li sigurni?"
+# 
+# File: usr/share/ashyterm/window.py, line: 553
+#: NEEDS WORK
+msgid "Invalid SSH Target"
+msgstr "Nevažeći SSH cilj"
+# 
+# File: usr/share/ashyterm/window.py, line: 554
+#: NEEDS WORK
+msgid "Could not parse the provided SSH connection string."
+msgstr "Nije moguće analizirati pruženi SSH konekcijski niz."
 # 
 # #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
 # 
@@ -1871,35 +1876,68 @@ msgstr "Nikada ne obnavljaj prethodnu sesiju"
 msgid "Backup &amp; Recovery"
 msgstr "Sigurnosna kopija i obnova"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1724
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 319
 #: NEEDS WORK
-msgid "Configure automatic backup and recovery options"
-msgstr "Konfigurirajte opcije automatskog sigurnosnog kopiranja i oporavka"
+msgid "Create an encrypted backup of your data or restore from a previous backup."
+msgstr "Izradite šifriranu sigurnosnu kopiju svojih podataka ili vratite iz prethodne sigurnosne kopije."
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1730
-#: NEEDS WORK
-msgid "Automatic Backups"
-msgstr "Automatske sigurnosne kopije"
+# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1731
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 325
+# File: usr/share/ashyterm/app.py, line: 390
 #: NEEDS WORK
-msgid "Automatically create backups of sessions and settings"
-msgstr "Automatski kreirajte sigurnosne kopije sesija i postavki"
+msgid "Create Backup"
+msgstr "Izradi sigurnosnu kopiju"
 # 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 301
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 327
 #: NEEDS WORK
-msgid "Manual Backup"
-msgstr "Ručno sigurnosno kopiranje"
+msgid "Save all sessions, settings, and passwords to an encrypted file."
+msgstr "Spremi sve sesije, postavke i lozinke u šifriranu datoteku."
 # 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 302
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 330
 #: NEEDS WORK
-msgid "Create a backup of your current sessions and settings now"
-msgstr "Izradite sigurnosnu kopiju svojih trenutnih sesija i postavki sada"
+msgid "Create Backup..."
+msgstr "Izradi sigurnosnu kopiju..."
 # 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 304
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 338
 #: NEEDS WORK
-msgid "Backup Now"
-msgstr "Izradi sigurnosnu kopiju sada"
+msgid "Restore from Backup"
+msgstr "Vrati iz sigurnosne kopije"
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 339
+#: NEEDS WORK
+msgid "Replace all current data with a backup file."
+msgstr "Zamijeni sve trenutne podatke s datotekom sigurnosne kopije."
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 341
+#: NEEDS WORK
+msgid "Restore..."
+msgstr "Vrati..."
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 348
+#: NEEDS WORK
+msgid "Remote Editing"
+msgstr "Udaljeno uređivanje"
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 352
+#: NEEDS WORK
+msgid "Use System Temporary Directory"
+msgstr "Koristi privremeni direktorij sustava"
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 354
+#: NEEDS WORK
+msgid "Store temporary files for remote editing in /tmp instead of the config folder"
+msgstr "Pohrani privremene datoteke za daljinsko uređivanje u /tmp umjesto u konfiguracijski direktorij."
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 369
+#: NEEDS WORK
+msgid "Clear Remote Edit Files on Exit"
+msgstr "Obriši udaljene uređene datoteke pri izlasku"
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 371
+#: NEEDS WORK
+msgid "Automatically delete all temporary remote files when closing the app"
+msgstr "Automatski izbriši sve privremene udaljene datoteke prilikom zatvaranja aplikacije"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1575
 #: NEEDS WORK
@@ -2269,10 +2307,10 @@ msgstr "Nastavi"
 msgid "{} is required"
 msgstr "{} je obavezno"
 # 
-# File: usr/share/ashyterm/window.py, line: 586
+# File: usr/share/ashyterm/ui/actions.py, line: 168
 #: NEEDS WORK
-msgid "SFTP not implemented yet"
-msgstr "SFTP još nije implementiran"
+msgid "Please select an SSH session to connect with SFTP."
+msgstr "Molimo odaberite SSH sesiju za povezivanje s SFTP-om."
 # 
 # File: usr/share/ashyterm/window.py, line: 758
 # File: usr/share/ashyterm/window.py, line: 875
@@ -2481,11 +2519,6 @@ msgstr "Podijeli gornje/donje"
 msgid "Close Pane"
 msgstr "Zatvori okno"
 # 
-# File: usr/share/ashyterm/app.py, line: 222
-#: NEEDS WORK
-msgid "Automatic startup backup"
-msgstr "Automatska sigurnosna kopija pri pokretanju"
-# 
 # File: usr/share/ashyterm/app.py, line: 333
 #: NEEDS WORK
 msgid "Preferences Error"
@@ -2506,6 +2539,11 @@ msgstr "Nije moguće otvoriti postavke: {}"
 msgid "A modern terminal emulator with session management"
 msgstr "Moderni terminal emulator s upravljanjem sesijama"
 # 
+# File: usr/share/ashyterm/app.py, line: 356
+#: NEEDS WORK
+msgid "Save Backup As..."
+msgstr "Spremi sigurnosnu kopiju kao..."
+# 
 # File: usr/share/ashyterm/app.py, line: 368
 # File: usr/share/ashyterm/app.py, line: 379
 # File: usr/share/ashyterm/app.py, line: 392
@@ -2514,43 +2552,100 @@ msgstr "Moderni terminal emulator s upravljanjem sesijama"
 msgid "Backup Error"
 msgstr "Pogreška sigurnosne kopije"
 # 
-# File: usr/share/ashyterm/app.py, line: 368
-# File: usr/share/ashyterm/app.py, line: 402
+# File: usr/share/ashyterm/app.py, line: 375
 #: NEEDS WORK
-msgid "Backup system not available"
-msgstr "Sustav sigurnosne kopije nije dostupan"
+msgid "Set Backup Password"
+msgstr "Postavi lozinku za sigurnosnu kopiju"
 # 
-# File: usr/share/ashyterm/app.py, line: 379
+# File: usr/share/ashyterm/app.py, line: 376
 #: NEEDS WORK
-msgid "No files to backup"
-msgstr "Nema datoteka za sigurnosnu kopiju"
+msgid "Please enter a password to encrypt the backup file."
+msgstr "Molimo unesite lozinku za šifriranje datoteke sigurnosne kopije."
 # 
-# File: usr/share/ashyterm/app.py, line: 385
+# File: usr/share/ashyterm/app.py, line: 384
 #: NEEDS WORK
-msgid "Manual backup from menu"
-msgstr "Ručno sigurnosno kopiranje iz izbornika"
+msgid "Confirm Password"
+msgstr "Potvrdi lozinku"
+# 
+# File: usr/share/ashyterm/app.py, line: 400
+# File: usr/share/ashyterm/app.py, line: 405
+#: NEEDS WORK
+msgid "Password Error"
+msgstr "Pogreška lozinke"
+# 
+# File: usr/share/ashyterm/app.py, line: 400
+#: NEEDS WORK
+msgid "Password cannot be empty."
+msgstr "Lozinka ne može biti prazna."
+# 
+# File: usr/share/ashyterm/app.py, line: 405
+#: NEEDS WORK
+msgid "Passwords do not match."
+msgstr "Lozinke se ne podudaraju."
+# 
+# File: usr/share/ashyterm/app.py, line: 423
+#: NEEDS WORK
+msgid "Creating backup..."
+msgstr "Izrada sigurnosne kopije..."
 # 
 # File: usr/share/ashyterm/app.py, line: 390
 #: NEEDS WORK
 msgid "Backup Complete"
 msgstr "Sigurnosna kopija dovršena"
 # 
-# File: usr/share/ashyterm/app.py, line: 390
+# File: usr/share/ashyterm/app.py, line: 440
 #: NEEDS WORK
 #, python-brace-format
-msgid "Backup created successfully: {}"
-msgstr "Sigurnosna kopija uspješno je kreirana: {}"
+msgid ""
+"Backup saved successfully to:\n"
+"{}"
+msgstr ""
+"Sigurnosna kopija uspješno spremljena na:  \n"
+"{}"
 # 
-# File: usr/share/ashyterm/app.py, line: 392
+# File: usr/share/ashyterm/app.py, line: 446
 #: NEEDS WORK
-msgid "Failed to create backup"
-msgstr "Nije uspjelo stvaranje sigurnosne kopije"
+msgid "Backup Failed"
+msgstr "Backup nije uspio"
 # 
-# File: usr/share/ashyterm/app.py, line: 396
+# File: usr/share/ashyterm/app.py, line: 447
 #: NEEDS WORK
 #, python-brace-format
-msgid "Backup failed: {}"
-msgstr "Backup nije uspio: {}"
+msgid "Could not create backup: {}"
+msgstr "Nije moguće stvoriti sigurnosnu kopiju: {}"
+# 
+# File: usr/share/ashyterm/app.py, line: 458
+#: NEEDS WORK
+msgid "Restore from Backup?"
+msgstr "Vrati iz sigurnosne kopije?"
+# 
+# File: usr/share/ashyterm/app.py, line: 460
+#: NEEDS WORK
+msgid ""
+"Restoring from a backup will overwrite all your current sessions, settings, and layouts. This "
+"action cannot be undone.\n"
+"\n"
+"<b>The application will need to be restarted after restoring.</b>"
+msgstr ""
+"Obnavljanje iz sigurnosne kopije će prebrisati sve vaše trenutne sesije, postavke i rasporede. Ova "
+"radnja se ne može poništiti.\n"
+"\n"
+"<b>Aplikaciju će biti potrebno ponovo pokrenuti nakon obnavljanja.</b>"
+# 
+# File: usr/share/ashyterm/app.py, line: 466
+#: NEEDS WORK
+msgid "Choose File and Restore"
+msgstr "Odaberi datoteku i vrati"
+# 
+# File: usr/share/ashyterm/app.py, line: 474
+#: NEEDS WORK
+msgid "Select Backup File"
+msgstr "Odaberite datoteku sigurnosne kopije"
+# 
+# File: usr/share/ashyterm/app.py, line: 477
+#: NEEDS WORK
+msgid "Backup Files"
+msgstr "Sigurnosne kopije datoteka"
 # 
 # File: usr/share/ashyterm/app.py, line: 402
 # File: usr/share/ashyterm/app.py, line: 416
@@ -2558,32 +2653,48 @@ msgstr "Backup nije uspio: {}"
 msgid "Restore Error"
 msgstr "Pogreška pri vraćanju"
 # 
-# File: usr/share/ashyterm/app.py, line: 407
+# File: usr/share/ashyterm/app.py, line: 499
 #: NEEDS WORK
-msgid "No Backups"
-msgstr "Nema sigurnosnih kopija"
+msgid "Enter Backup Password"
+msgstr "Unesite lozinku za sigurnosnu kopiju"
 # 
-# File: usr/share/ashyterm/app.py, line: 407
+# File: usr/share/ashyterm/app.py, line: 500
 #: NEEDS WORK
-msgid "No backups available to restore"
-msgstr "Nema dostupnih sigurnosnih kopija za vraćanje"
+msgid "Please enter the password for the selected backup file."
+msgstr "Molimo unesite lozinku za odabranu sigurnosnu kopiju."
 # 
-# File: usr/share/ashyterm/app.py, line: 411
+# File: usr/share/ashyterm/app.py, line: 508
 #: NEEDS WORK
-msgid "Backups Available"
-msgstr "Dostupne sigurnosne kopije"
+msgid "Restore"
+msgstr "Vrati"
 # 
-# File: usr/share/ashyterm/app.py, line: 412
+# File: usr/share/ashyterm/app.py, line: 525
+#: NEEDS WORK
+msgid "Restoring from backup..."
+msgstr "Obnavljanje iz sigurnosne kopije..."
+# 
+# File: usr/share/ashyterm/app.py, line: 538
+#: NEEDS WORK
+msgid "Restore Failed"
+msgstr "Obnova nije uspjela"
+# 
+# File: usr/share/ashyterm/app.py, line: 539
 #: NEEDS WORK
 #, python-brace-format
-msgid "{} backup(s) available. Use preferences dialog for detailed restore options."
-msgstr "{} sigurnosna kopija(e) dostupna(e). Koristite dijalog s postavkama za detaljne opcije vraćanja."
+msgid "Could not restore from backup: {}"
+msgstr "Nije moguće vratiti iz sigurnosne kopije: {}"
 # 
-# File: usr/share/ashyterm/app.py, line: 416
+# File: usr/share/ashyterm/app.py, line: 549
 #: NEEDS WORK
-#, python-brace-format
-msgid "Failed to access backups: {}"
-msgstr "Neuspješno pristupanje sigurnosnim kopijama: {}"
+msgid "Restore Complete"
+msgstr "Obnova dovršena"
+# 
+# File: usr/share/ashyterm/app.py, line: 551
+#: NEEDS WORK
+msgid "Data has been restored successfully. Please restart Ashy Terminal for the changes to take effect."
+msgstr ""
+"Podaci su uspješno vraćeni. Molimo ponovno pokrenite Ashy Terminal kako bi promjene stupile na "
+"snagu."
 # 
 # File: usr/share/ashyterm/app.py, line: 449
 #: NEEDS WORK
@@ -2616,11 +2727,6 @@ msgstr ""
 #: NEEDS WORK
 msgid "Close All"
 msgstr "Zatvori sve"
-# 
-# File: usr/share/ashyterm/app.py, line: 514
-#: NEEDS WORK
-msgid "Automatic backup on exit"
-msgstr "Automatska sigurnosna kopija pri izlasku"
 # 
 # File: usr/share/ashyterm/app.py, line: 530
 #: NEEDS WORK
@@ -2775,10 +2881,44 @@ msgstr ""
 "\n"
 "Ova radnja se ne može poništiti."
 # 
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1144
+#: NEEDS WORK
+msgid "Delete Multiple Items"
+msgstr "Izbriši više stavki"
+# 
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1146
+#: NEEDS WORK
+#, python-brace-format
+msgid ""
+"Are you sure you want to permanently delete these {count} items?\n"
+"\n"
+"This action cannot be undone."
+msgstr ""
+"Jeste li sigurni da želite trajno izbrisati ovih {count} stavki?\n"
+"\n"
+"Ova radnja se ne može poništiti."
+# 
 # File: usr/share/ashyterm/filemanager/manager.py, line: 691
 #: NEEDS WORK
 msgid "Delete command sent to terminal"
 msgstr "Naredba za brisanje poslana terminalu"
+# 
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1173
+#: NEEDS WORK
+#, python-brace-format
+msgid "Set Permissions for {count} Items"
+msgstr "Postavi dozvole za {count} stavki"
+# 
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1175
+#: NEEDS WORK
+#, python-brace-format
+msgid "Permissions for {name}"
+msgstr "Dozvole za {name}"
+# 
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1179
+#: NEEDS WORK
+msgid "Set new file permissions."
+msgstr "Postavi nove dozvole za datoteku."
 # 
 # File: usr/share/ashyterm/filemanager/manager.py, line: 701
 #: NEEDS WORK
@@ -2826,10 +2966,15 @@ msgstr "Primijeni"
 msgid "Chmod command sent to terminal"
 msgstr "Chmod naredba poslana terminalu"
 # 
-# File: usr/share/ashyterm/filemanager/manager.py, line: 826
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1308
 #: NEEDS WORK
-msgid "Save File As..."
-msgstr "Spremi datoteku kao..."
+msgid "Select Destination Folder"
+msgstr "Odaberite odredišnu mapu"
+# 
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1310
+#: NEEDS WORK
+msgid "Download Here"
+msgstr "Preuzmi ovdje"
 # 
 # File: usr/share/ashyterm/filemanager/manager.py, line: 855
 # File: usr/share/ashyterm/filemanager/manager.py, line: 889
@@ -2846,6 +2991,25 @@ msgstr "Prenesi datoteku(e) u ovu mapu"
 #: NEEDS WORK
 msgid "Upload"
 msgstr "Otpremi"
+# 
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1430
+#: NEEDS WORK
+msgid "Confirm Upload"
+msgstr "Potvrdi prijenos"
+# 
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1432
+#: NEEDS WORK
+#, python-brace-format
+msgid ""
+"You are about to upload {count} item(s) to:\n"
+"<b>{dest}</b>\n"
+"\n"
+"Do you want to proceed?"
+msgstr ""
+"Spremni ste za prijenos {count} stavke(a) na:\n"
+"<b>{dest}</b>\n"
+"\n"
+"Želite li nastaviti?"
 # 
 # File: usr/share/ashyterm/filemanager/manager.py, line: 1382
 #: NEEDS WORK

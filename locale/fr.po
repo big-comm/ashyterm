@@ -443,11 +443,6 @@ msgstr "Le port doit être compris entre 1 et 65535."
 msgid "Port must be a valid number"
 msgstr "Le port doit être un numéro valide"
 # 
-# File: usr/share/ashyterm/utils/security.py, line: 822
-#: NEEDS WORK
-msgid "SSH key file path is required for key authentication"
-msgstr "Le chemin du fichier de clé SSH est requis pour l'authentification par clé."
-# 
 # File: usr/share/ashyterm/utils/security.py, line: 832
 #: NEEDS WORK
 #, python-brace-format
@@ -907,6 +902,16 @@ msgstr "Fermer la fenêtre"
 #: NEEDS WORK
 msgid "This window has active SSH connections. Closing will disconnect them. Are you sure?"
 msgstr "Cette fenêtre a des connexions SSH actives. La fermeture déconnectera celles-ci. Êtes-vous sûr ?"
+# 
+# File: usr/share/ashyterm/window.py, line: 553
+#: NEEDS WORK
+msgid "Invalid SSH Target"
+msgstr "Cible SSH invalide"
+# 
+# File: usr/share/ashyterm/window.py, line: 554
+#: NEEDS WORK
+msgid "Could not parse the provided SSH connection string."
+msgstr "Impossible d'analyser la chaîne de connexion SSH fournie."
 # 
 # #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
 # 
@@ -1876,35 +1881,72 @@ msgstr "Ne jamais restaurer la session précédente"
 msgid "Backup &amp; Recovery"
 msgstr "Sauvegarde et Récupération"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1724
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 319
 #: NEEDS WORK
-msgid "Configure automatic backup and recovery options"
-msgstr "Configurer les options de sauvegarde et de récupération automatiques"
+msgid "Create an encrypted backup of your data or restore from a previous backup."
+msgstr "Créez une sauvegarde chiffrée de vos données ou restaurez à partir d'une sauvegarde précédente."
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1730
-#: NEEDS WORK
-msgid "Automatic Backups"
-msgstr "Sauvegardes automatiques"
+# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1731
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 325
+# File: usr/share/ashyterm/app.py, line: 390
 #: NEEDS WORK
-msgid "Automatically create backups of sessions and settings"
-msgstr "Créer automatiquement des sauvegardes des sessions et des paramètres"
+msgid "Create Backup"
+msgstr "Créer une sauvegarde"
 # 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 301
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 327
 #: NEEDS WORK
-msgid "Manual Backup"
-msgstr "Sauvegarde manuelle"
+msgid "Save all sessions, settings, and passwords to an encrypted file."
+msgstr "Enregistrer toutes les sessions, paramètres et mots de passe dans un fichier chiffré."
 # 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 302
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 330
 #: NEEDS WORK
-msgid "Create a backup of your current sessions and settings now"
-msgstr "Créez une sauvegarde de vos sessions et paramètres actuels maintenant"
+msgid "Create Backup..."
+msgstr "Créer une sauvegarde..."
 # 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 304
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 338
 #: NEEDS WORK
-msgid "Backup Now"
-msgstr "Sauvegarder maintenant"
+msgid "Restore from Backup"
+msgstr "Restaurer à partir de la sauvegarde"
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 339
+#: NEEDS WORK
+msgid "Replace all current data with a backup file."
+msgstr "Remplacer toutes les données actuelles par un fichier de sauvegarde."
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 341
+#: NEEDS WORK
+msgid "Restore..."
+msgstr "Restaurer..."
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 348
+#: NEEDS WORK
+msgid "Remote Editing"
+msgstr "Édition à distance"
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 352
+#: NEEDS WORK
+msgid "Use System Temporary Directory"
+msgstr "Utiliser le répertoire temporaire du système"
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 354
+#: NEEDS WORK
+msgid "Store temporary files for remote editing in /tmp instead of the config folder"
+msgstr ""
+"Stockez les fichiers temporaires pour l'édition à distance dans /tmp au lieu du dossier de "
+"configuration."
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 369
+#: NEEDS WORK
+msgid "Clear Remote Edit Files on Exit"
+msgstr "Effacer les fichiers d'édition à distance à la fermeture"
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 371
+#: NEEDS WORK
+msgid "Automatically delete all temporary remote files when closing the app"
+msgstr ""
+"Supprimer automatiquement tous les fichiers temporaires distants lors de la fermeture de "
+"l'application."
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1575
 #: NEEDS WORK
@@ -2275,10 +2317,10 @@ msgstr "Continuer"
 msgid "{} is required"
 msgstr "{} est requis"
 # 
-# File: usr/share/ashyterm/window.py, line: 586
+# File: usr/share/ashyterm/ui/actions.py, line: 168
 #: NEEDS WORK
-msgid "SFTP not implemented yet"
-msgstr "SFTP pas encore implémenté"
+msgid "Please select an SSH session to connect with SFTP."
+msgstr "Veuillez sélectionner une session SSH pour vous connecter avec SFTP."
 # 
 # File: usr/share/ashyterm/window.py, line: 758
 # File: usr/share/ashyterm/window.py, line: 875
@@ -2489,11 +2531,6 @@ msgstr "Diviser Haut/Bas"
 msgid "Close Pane"
 msgstr "Fermer le panneau"
 # 
-# File: usr/share/ashyterm/app.py, line: 222
-#: NEEDS WORK
-msgid "Automatic startup backup"
-msgstr "Sauvegarde automatique au démarrage"
-# 
 # File: usr/share/ashyterm/app.py, line: 333
 #: NEEDS WORK
 msgid "Preferences Error"
@@ -2514,6 +2551,11 @@ msgstr "Échec de l'ouverture des préférences : {}"
 msgid "A modern terminal emulator with session management"
 msgstr "Un émulateur de terminal moderne avec gestion des sessions"
 # 
+# File: usr/share/ashyterm/app.py, line: 356
+#: NEEDS WORK
+msgid "Save Backup As..."
+msgstr "Enregistrer une sauvegarde sous..."
+# 
 # File: usr/share/ashyterm/app.py, line: 368
 # File: usr/share/ashyterm/app.py, line: 379
 # File: usr/share/ashyterm/app.py, line: 392
@@ -2522,43 +2564,100 @@ msgstr "Un émulateur de terminal moderne avec gestion des sessions"
 msgid "Backup Error"
 msgstr "Erreur de sauvegarde"
 # 
-# File: usr/share/ashyterm/app.py, line: 368
-# File: usr/share/ashyterm/app.py, line: 402
+# File: usr/share/ashyterm/app.py, line: 375
 #: NEEDS WORK
-msgid "Backup system not available"
-msgstr "Système de sauvegarde non disponible"
+msgid "Set Backup Password"
+msgstr "Définir le mot de passe de sauvegarde"
 # 
-# File: usr/share/ashyterm/app.py, line: 379
+# File: usr/share/ashyterm/app.py, line: 376
 #: NEEDS WORK
-msgid "No files to backup"
-msgstr "Aucun fichier à sauvegarder"
+msgid "Please enter a password to encrypt the backup file."
+msgstr "Veuillez entrer un mot de passe pour chiffrer le fichier de sauvegarde."
 # 
-# File: usr/share/ashyterm/app.py, line: 385
+# File: usr/share/ashyterm/app.py, line: 384
 #: NEEDS WORK
-msgid "Manual backup from menu"
-msgstr "Sauvegarde manuelle depuis le menu"
+msgid "Confirm Password"
+msgstr "Confirmer le mot de passe"
+# 
+# File: usr/share/ashyterm/app.py, line: 400
+# File: usr/share/ashyterm/app.py, line: 405
+#: NEEDS WORK
+msgid "Password Error"
+msgstr "Erreur de mot de passe"
+# 
+# File: usr/share/ashyterm/app.py, line: 400
+#: NEEDS WORK
+msgid "Password cannot be empty."
+msgstr "Le mot de passe ne peut pas être vide."
+# 
+# File: usr/share/ashyterm/app.py, line: 405
+#: NEEDS WORK
+msgid "Passwords do not match."
+msgstr "Les mots de passe ne correspondent pas."
+# 
+# File: usr/share/ashyterm/app.py, line: 423
+#: NEEDS WORK
+msgid "Creating backup..."
+msgstr "Création de la sauvegarde..."
 # 
 # File: usr/share/ashyterm/app.py, line: 390
 #: NEEDS WORK
 msgid "Backup Complete"
 msgstr "Sauvegarde terminée"
 # 
-# File: usr/share/ashyterm/app.py, line: 390
+# File: usr/share/ashyterm/app.py, line: 440
 #: NEEDS WORK
 #, python-brace-format
-msgid "Backup created successfully: {}"
-msgstr "Sauvegarde créée avec succès : {}"
+msgid ""
+"Backup saved successfully to:\n"
+"{}"
+msgstr ""
+"Sauvegarde enregistrée avec succès dans :  \n"
+"{}"
 # 
-# File: usr/share/ashyterm/app.py, line: 392
+# File: usr/share/ashyterm/app.py, line: 446
 #: NEEDS WORK
-msgid "Failed to create backup"
-msgstr "Échec de la création de la sauvegarde"
+msgid "Backup Failed"
+msgstr "Sauvegarde échouée"
 # 
-# File: usr/share/ashyterm/app.py, line: 396
+# File: usr/share/ashyterm/app.py, line: 447
 #: NEEDS WORK
 #, python-brace-format
-msgid "Backup failed: {}"
-msgstr "Sauvegarde échouée : {}"
+msgid "Could not create backup: {}"
+msgstr "Impossible de créer une sauvegarde : {}"
+# 
+# File: usr/share/ashyterm/app.py, line: 458
+#: NEEDS WORK
+msgid "Restore from Backup?"
+msgstr "Restaurer à partir de la sauvegarde ?"
+# 
+# File: usr/share/ashyterm/app.py, line: 460
+#: NEEDS WORK
+msgid ""
+"Restoring from a backup will overwrite all your current sessions, settings, and layouts. This "
+"action cannot be undone.\n"
+"\n"
+"<b>The application will need to be restarted after restoring.</b>"
+msgstr ""
+"La restauration à partir d'une sauvegarde écrasera toutes vos sessions, paramètres et mises en page "
+"actuels. Cette action ne peut pas être annulée.\n"
+"\n"
+"<b>L'application devra être redémarrée après la restauration.</b>"
+# 
+# File: usr/share/ashyterm/app.py, line: 466
+#: NEEDS WORK
+msgid "Choose File and Restore"
+msgstr "Choisir Fichier et Restaurer"
+# 
+# File: usr/share/ashyterm/app.py, line: 474
+#: NEEDS WORK
+msgid "Select Backup File"
+msgstr "Sélectionner le fichier de sauvegarde"
+# 
+# File: usr/share/ashyterm/app.py, line: 477
+#: NEEDS WORK
+msgid "Backup Files"
+msgstr "Fichiers de sauvegarde"
 # 
 # File: usr/share/ashyterm/app.py, line: 402
 # File: usr/share/ashyterm/app.py, line: 416
@@ -2566,34 +2665,48 @@ msgstr "Sauvegarde échouée : {}"
 msgid "Restore Error"
 msgstr "Erreur de restauration"
 # 
-# File: usr/share/ashyterm/app.py, line: 407
+# File: usr/share/ashyterm/app.py, line: 499
 #: NEEDS WORK
-msgid "No Backups"
-msgstr "Pas de sauvegardes"
+msgid "Enter Backup Password"
+msgstr "Entrez le mot de passe de sauvegarde"
 # 
-# File: usr/share/ashyterm/app.py, line: 407
+# File: usr/share/ashyterm/app.py, line: 500
 #: NEEDS WORK
-msgid "No backups available to restore"
-msgstr "Aucune sauvegarde disponible à restaurer"
+msgid "Please enter the password for the selected backup file."
+msgstr "Veuillez entrer le mot de passe pour le fichier de sauvegarde sélectionné."
 # 
-# File: usr/share/ashyterm/app.py, line: 411
+# File: usr/share/ashyterm/app.py, line: 508
 #: NEEDS WORK
-msgid "Backups Available"
-msgstr "Sauvegardes disponibles"
+msgid "Restore"
+msgstr "Restaurer"
 # 
-# File: usr/share/ashyterm/app.py, line: 412
+# File: usr/share/ashyterm/app.py, line: 525
+#: NEEDS WORK
+msgid "Restoring from backup..."
+msgstr "Restauration à partir de la sauvegarde..."
+# 
+# File: usr/share/ashyterm/app.py, line: 538
+#: NEEDS WORK
+msgid "Restore Failed"
+msgstr "Restauration échouée"
+# 
+# File: usr/share/ashyterm/app.py, line: 539
 #: NEEDS WORK
 #, python-brace-format
-msgid "{} backup(s) available. Use preferences dialog for detailed restore options."
+msgid "Could not restore from backup: {}"
+msgstr "Impossible de restaurer à partir de la sauvegarde : {}"
+# 
+# File: usr/share/ashyterm/app.py, line: 549
+#: NEEDS WORK
+msgid "Restore Complete"
+msgstr "Restauration complète"
+# 
+# File: usr/share/ashyterm/app.py, line: 551
+#: NEEDS WORK
+msgid "Data has been restored successfully. Please restart Ashy Terminal for the changes to take effect."
 msgstr ""
-"{} sauvegarde(s) disponible(s). Utilisez la boîte de dialogue des préférences pour des options de "
-"restauration détaillées."
-# 
-# File: usr/share/ashyterm/app.py, line: 416
-#: NEEDS WORK
-#, python-brace-format
-msgid "Failed to access backups: {}"
-msgstr "Échec d'accès aux sauvegardes : {}"
+"Les données ont été restaurées avec succès. Veuillez redémarrer Ashy Terminal pour que les "
+"modifications prennent effet."
 # 
 # File: usr/share/ashyterm/app.py, line: 449
 #: NEEDS WORK
@@ -2626,11 +2739,6 @@ msgstr ""
 #: NEEDS WORK
 msgid "Close All"
 msgstr "Fermer tout"
-# 
-# File: usr/share/ashyterm/app.py, line: 514
-#: NEEDS WORK
-msgid "Automatic backup on exit"
-msgstr "Sauvegarde automatique à la fermeture"
 # 
 # File: usr/share/ashyterm/app.py, line: 530
 #: NEEDS WORK
@@ -2785,10 +2893,44 @@ msgstr ""
 "\n"
 "Cette action ne peut pas être annulée."
 # 
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1144
+#: NEEDS WORK
+msgid "Delete Multiple Items"
+msgstr "Supprimer plusieurs éléments"
+# 
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1146
+#: NEEDS WORK
+#, python-brace-format
+msgid ""
+"Are you sure you want to permanently delete these {count} items?\n"
+"\n"
+"This action cannot be undone."
+msgstr ""
+"Êtes-vous sûr de vouloir supprimer définitivement ces {count} éléments ?\n"
+"\n"
+"Cette action ne peut pas être annulée."
+# 
 # File: usr/share/ashyterm/filemanager/manager.py, line: 691
 #: NEEDS WORK
 msgid "Delete command sent to terminal"
 msgstr "Commande de suppression envoyée au terminal"
+# 
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1173
+#: NEEDS WORK
+#, python-brace-format
+msgid "Set Permissions for {count} Items"
+msgstr "Définir les autorisations pour {count} éléments"
+# 
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1175
+#: NEEDS WORK
+#, python-brace-format
+msgid "Permissions for {name}"
+msgstr "Permissions pour {name}"
+# 
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1179
+#: NEEDS WORK
+msgid "Set new file permissions."
+msgstr "Définir de nouvelles autorisations de fichier."
 # 
 # File: usr/share/ashyterm/filemanager/manager.py, line: 701
 #: NEEDS WORK
@@ -2836,10 +2978,15 @@ msgstr "Appliquer"
 msgid "Chmod command sent to terminal"
 msgstr "Commande Chmod envoyée au terminal"
 # 
-# File: usr/share/ashyterm/filemanager/manager.py, line: 826
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1308
 #: NEEDS WORK
-msgid "Save File As..."
-msgstr "Enregistrer sous..."
+msgid "Select Destination Folder"
+msgstr "Sélectionner le dossier de destination"
+# 
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1310
+#: NEEDS WORK
+msgid "Download Here"
+msgstr "Télécharger ici"
 # 
 # File: usr/share/ashyterm/filemanager/manager.py, line: 855
 # File: usr/share/ashyterm/filemanager/manager.py, line: 889
@@ -2856,6 +3003,25 @@ msgstr "Télécharger le(s) fichier(s) dans ce dossier"
 #: NEEDS WORK
 msgid "Upload"
 msgstr "Télécharger"
+# 
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1430
+#: NEEDS WORK
+msgid "Confirm Upload"
+msgstr "Confirmer le téléchargement"
+# 
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1432
+#: NEEDS WORK
+#, python-brace-format
+msgid ""
+"You are about to upload {count} item(s) to:\n"
+"<b>{dest}</b>\n"
+"\n"
+"Do you want to proceed?"
+msgstr ""
+"Vous êtes sur le point de télécharger {count} élément(s) vers :\n"
+"<b>{dest}</b>\n"
+"\n"
+"Voulez-vous continuer ?"
 # 
 # File: usr/share/ashyterm/filemanager/manager.py, line: 1382
 #: NEEDS WORK
