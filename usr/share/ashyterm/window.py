@@ -396,14 +396,7 @@ class CommTerminalWindow(Adw.ApplicationWindow):
             if not self.state_manager.restore_session_state():
                 if self.tab_manager.get_tab_count() == 0:
                     if self.initial_ssh_target:
-                        user, host = self.initial_ssh_target.split("@", 1)
-                        session = SessionItem(
-                            name=self.initial_ssh_target,
-                            session_type="ssh",
-                            user=user,
-                            host=host,
-                        )
-                        self.tab_manager.create_ssh_tab(session)
+                        self.create_ssh_tab(self.initial_ssh_target)
                     else:
                         self.tab_manager.create_initial_tab_if_empty(
                             working_directory=self.initial_working_directory,
@@ -517,6 +510,56 @@ class CommTerminalWindow(Adw.ApplicationWindow):
         super().destroy()
 
     # --- Public API & Helpers ---
+
+    def create_local_tab(self, working_directory=None):
+        """Public method to create a local tab."""
+        self.tab_manager.create_local_tab(working_directory=working_directory)
+
+    def create_ssh_tab(self, ssh_target: str):
+        """Public method to parse an SSH target string and create a tab."""
+        try:
+            # Robust parsing for [user@]host[:port][/path]
+            remote_path = None
+            if "/" in ssh_target:
+                connection_part, remote_path_part = ssh_target.split("/", 1)
+                remote_path = "/" + remote_path_part
+            else:
+                connection_part = ssh_target
+
+            user_host_port = connection_part
+            if "@" in connection_part:
+                user, user_host_port = connection_part.split("@", 1)
+            else:
+                user = ""
+
+            if ":" in user_host_port:
+                host, port_str = user_host_port.split(":", 1)
+                port = int(port_str)
+            else:
+                host = user_host_port
+                port = 22
+
+            session = SessionItem(
+                name=ssh_target, session_type="ssh", user=user, host=host, port=port
+            )
+            initial_command = f"cd '{remote_path}'" if remote_path else None
+            self.tab_manager.create_ssh_tab(session, initial_command=initial_command)
+        except Exception as e:
+            self.logger.error(f"Failed to parse SSH target '{ssh_target}': {e}")
+            self._show_error_dialog(
+                _("Invalid SSH Target"),
+                _("Could not parse the provided SSH connection string."),
+            )
+
+    def create_execute_tab(
+        self, command: str, working_directory: str, close_after: bool
+    ):
+        """Public method to create a tab that executes a command."""
+        self.tab_manager.create_local_tab(
+            working_directory=working_directory,
+            execute_command=command,
+            close_after_execute=close_after,
+        )
 
     def refresh_tree(self) -> None:
         self.session_tree.refresh_tree()

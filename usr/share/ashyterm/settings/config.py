@@ -56,12 +56,16 @@ class ConfigPaths:
             self.CACHE_DIR = self._get_cache_directory()
             self.LOG_DIR = self.CONFIG_DIR / "logs"
             self.SECURE_DIR = self.CONFIG_DIR / "secure"
+            self.BACKUP_DIR = (
+                self.CONFIG_DIR / "backups"
+            )  # Directory for manual backups
 
             for directory in [
                 self.CACHE_DIR,
                 self.LOG_DIR,
                 self.SECURE_DIR,
                 self.LAYOUT_DIR,
+                self.BACKUP_DIR,
             ]:
                 try:
                     directory.mkdir(parents=True, exist_ok=True)
@@ -97,6 +101,7 @@ class ConfigPaths:
         self.CACHE_DIR = home / ".cache" / "ashyterm"
         self.LOG_DIR = self.CONFIG_DIR / "logs"
         self.SECURE_DIR = self.CONFIG_DIR / "secure"
+        self.BACKUP_DIR = self.CONFIG_DIR / "backups"
 
 
 class DefaultSettings:
@@ -452,11 +457,14 @@ try:
     SETTINGS_FILE = str(_paths.SETTINGS_FILE)
     STATE_FILE = str(_paths.STATE_FILE)
     LAYOUT_DIR = str(_paths.LAYOUT_DIR)
+    BACKUP_DIR = str(_paths.BACKUP_DIR)
 except Exception:
     CONFIG_DIR = os.path.expanduser("~/.config/ashyterm")
     SESSIONS_FILE = os.path.join(CONFIG_DIR, "sessions.json")
     SETTINGS_FILE = os.path.join(CONFIG_DIR, "settings.json")
     STATE_FILE = os.path.join(CONFIG_DIR, "session_state.json")
     LAYOUT_DIR = os.path.join(CONFIG_DIR, "layouts")
+    BACKUP_DIR = os.path.join(CONFIG_DIR, "backups")
     os.makedirs(CONFIG_DIR, exist_ok=True)
     os.makedirs(LAYOUT_DIR, exist_ok=True)
+    os.makedirs(BACKUP_DIR, exist_ok=True)

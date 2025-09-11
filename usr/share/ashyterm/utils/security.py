@@ -221,6 +221,7 @@ class SecurityAuditor:
 
         return findings
 
+
 def sanitize_session_name(name: str) -> str:
     return InputSanitizer.sanitize_filename(name)
 
@@ -309,11 +310,9 @@ def validate_session_data(session_data: Dict[str, Any]) -> Tuple[bool, List[str]
         auth_value = session_data.get("auth_value", "")
         if host:
             if auth_type == "key":
-                if not auth_value:
-                    errors.append(
-                        _("SSH key file path is required for key authentication")
-                    )
-                else:
+                # CORRECTED LOGIC: Only validate the key path if one is provided.
+                # An empty path is valid for agent-based authentication.
+                if auth_value:
                     is_key_valid, key_error = SSHKeyValidator.validate_ssh_key_path(
                         auth_value
                     )

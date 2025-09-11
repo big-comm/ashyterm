@@ -393,6 +393,10 @@ class TerminalManager:
                     new_title = identifier.name
                 else:
                     new_title = str(identifier)
+        elif terminal_info.get("type") == "sftp":
+            session = terminal_info.get("identifier")
+            if isinstance(session, SessionItem):
+                new_title = f"SFTP: {session.name}"
 
         if self.tab_manager:
             self.tab_manager.update_titles_for_terminal(terminal, new_title, osc7_info)
@@ -488,6 +492,49 @@ class TerminalManager:
                 self._stats["terminals_failed"] += 1
                 raise
 
+    def create_sftp_terminal(self, session: SessionItem) -> Optional[Vte.Terminal]:
+        """Creates a new terminal and starts an SFTP session in it."""
+        with self._creation_lock:
+            session_data = session.to_dict()
+            is_valid, errors = validate_session_data(session_data)
+            if not is_valid:
+                error_msg = f"Session validation failed for SFTP: {', '.join(errors)}"
+                raise TerminalCreationError(error_msg, "sftp")
+
+            terminal = self._create_base_terminal()
+            if not terminal:
+                raise TerminalCreationError(
+                    "base terminal creation failed for SFTP", "sftp"
+                )
+
+            terminal_id = self.registry.register_terminal(terminal, "sftp", session)
+            self._setup_terminal_events(terminal, session, terminal_id)
+            self._setup_sftp_drag_and_drop(terminal)
+
+            user_data_for_spawn = (terminal_id, session)
+
+            try:
+                self.spawner.spawn_sftp_session(
+                    terminal,
+                    session,
+                    callback=self._on_spawn_callback,
+                    user_data=user_data_for_spawn,
+                )
+                self.logger.info(
+                    f"SFTP terminal created successfully: '{session.name}' (ID: {terminal_id})"
+                )
+                log_terminal_event(
+                    "created",
+                    session.name,
+                    f"SFTP to {session.get_connection_string()}",
+                )
+                self._stats["terminals_created"] += 1
+                return terminal
+            except TerminalCreationError:
+                self.registry.unregister_terminal(terminal_id)
+                self._stats["terminals_failed"] += 1
+                raise
+
     def _create_base_terminal(self) -> Optional[Vte.Terminal]:
         try:
             terminal = Vte.Terminal()
@@ -506,6 +553,31 @@ class TerminalManager:
         except Exception as e:
             self.logger.error(f"Base terminal creation failed: {e}")
             return None
+
+    def _setup_sftp_drag_and_drop(self, terminal: Vte.Terminal):
+        """Sets up drag-and-drop for an SFTP terminal to handle uploads."""
+        drop_target = Gtk.DropTarget.new(Gdk.FileList, Gdk.DragAction.COPY)
+        drop_target.connect("drop", self._on_file_drop, terminal)
+        terminal.add_controller(drop_target)
+
+    def _on_file_drop(self, drop_target, value, x, y, terminal: Vte.Terminal) -> bool:
+        """Callback for when files are dropped onto an SFTP terminal."""
+        try:
+            files = value.get_files()
+            for file in files:
+                local_path = file.get_path()
+                if local_path:
+                    # The `put` command in sftp handles both files and (with -r) directories.
+                    # We add quotes to handle paths with spaces.
+                    command_to_send = f'put -r "{local_path}"\n'
+                    self.logger.info(
+                        f"File dropped on SFTP terminal. Sending command: {command_to_send.strip()}"
+                    )
+                    terminal.feed_child(command_to_send.encode("utf-8"))
+            return True
+        except Exception as e:
+            self.logger.error(f"Error handling file drop for SFTP: {e}")
+            return False
 
     def _setup_terminal_events(
         self,

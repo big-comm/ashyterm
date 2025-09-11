@@ -97,7 +97,7 @@ class AshyTerminalExtension(GObject.GObject, Nautilus.MenuProvider):
                 target = f"{target}:{parsed_uri.port}"
 
             if parsed_uri.path and parsed_uri.path != "/":
-                target = f"{target}:{parsed_uri.path}"
+                target = f"{target}{parsed_uri.path}"
 
             cmd = [TERMINAL_EXECUTABLE, "--ssh", target]
             self._launch(cmd)

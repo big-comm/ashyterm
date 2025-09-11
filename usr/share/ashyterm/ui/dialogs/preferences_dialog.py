@@ -315,35 +315,35 @@ class PreferencesDialog(Adw.PreferencesWindow):
 
         backup_group = Adw.PreferencesGroup(
             title=_("Backup &amp; Recovery"),
-            description=_("Configure automatic backup and recovery options"),
+            description=_(
+                "Create an encrypted backup of your data or restore from a previous backup."
+            ),
         )
         page.add(backup_group)
 
-        auto_backup_row = Adw.SwitchRow(
-            title=_("Automatic Backups"),
-            subtitle=_("Automatically create backups of sessions and settings"),
-        )
-        auto_backup_row.set_active(
-            self.settings_manager.get("auto_backup_enabled", False)
-        )
-        auto_backup_row.connect(
-            "notify::active",
-            lambda r, _: self._on_setting_changed(
-                "auto_backup_enabled", r.get_active()
+        backup_now_row = Adw.ActionRow(
+            title=_("Create Backup"),
+            subtitle=_(
+                "Save all sessions, settings, and passwords to an encrypted file."
             ),
         )
-        backup_group.add(auto_backup_row)
-
-        backup_now_row = Adw.ActionRow(
-            title=_("Manual Backup"),
-            subtitle=_("Create a backup of your current sessions and settings now"),
-        )
-        backup_now_button = Gtk.Button(label=_("Backup Now"))
+        backup_now_button = Gtk.Button(label=_("Create Backup..."))
         backup_now_button.set_valign(Gtk.Align.CENTER)
         backup_now_button.connect("clicked", self._on_backup_now_clicked)
         backup_now_row.add_suffix(backup_now_button)
         backup_now_row.set_activatable_widget(backup_now_button)
         backup_group.add(backup_now_row)
+
+        restore_row = Adw.ActionRow(
+            title=_("Restore from Backup"),
+            subtitle=_("Replace all current data with a backup file."),
+        )
+        restore_button = Gtk.Button(label=_("Restore..."))
+        restore_button.set_valign(Gtk.Align.CENTER)
+        restore_button.connect("clicked", self._on_restore_backup_clicked)
+        restore_row.add_suffix(restore_button)
+        restore_row.set_activatable_widget(restore_button)
+        backup_group.add(restore_row)
 
         remote_edit_group = Adw.PreferencesGroup(title=_("Remote Editing"))
         page.add(remote_edit_group)
@@ -604,6 +604,11 @@ class PreferencesDialog(Adw.PreferencesWindow):
         app = self.get_transient_for().get_application()
         if app:
             app.activate_action("backup-now", None)
+
+    def _on_restore_backup_clicked(self, button):
+        app = self.get_transient_for().get_application()
+        if app:
+            app.activate_action("restore-backup", None)
 
     def _on_shortcut_search_changed(self, window, _param):
         query = self.get_search_text().lower().strip()

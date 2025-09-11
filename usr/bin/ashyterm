@@ -15,24 +15,25 @@ convert_to_ssh() {
         if [[ $user_host_port =~ ^([^@]+@[^:]+):([0-9]+)$ ]]; then
             local user_host="${BASH_REMATCH[1]}"
             local port="${BASH_REMATCH[2]}"
-            echo "--ssh $user_host:$port:$kio_path"
-            exec $execute_ashy --ssh "$user_host:$port:$kio_path"
+            exec $execute_ashy --ssh "$user_host:$port$kio_path"
         else
-            exec $execute_ashy --ssh "$user_host_port:$kio_path"
+            exec $execute_ashy --ssh "$user_host_port$kio_path"
         fi
 
     # Detects if it is GVFS (sftp:host=,port=,user=)
-    elif [[ $path =~ /gvfs/sftp:host=([^,]+),port=([^,]+),user=([^,/]+) ]]; then
+    elif [[ $path =~ /gvfs/sftp:host=([^,]+),port=([^,]+),user=([^,/]+)/(.+) ]]; then
         local host="${BASH_REMATCH[1]}"
         local port="${BASH_REMATCH[2]}"
         local user="${BASH_REMATCH[3]}"
-        exec $execute_ashy --ssh "$user@$host:$port"
+        local folder="${BASH_REMATCH[4]}"
+        exec $execute_ashy --ssh "$user@$host:$port/$folder"
 
     # Detects if it is GVFS without a port (sftp:host=,user=)
-    elif [[ $path =~ /gvfs/sftp:host=([^,]+),user=([^,/]+) ]]; then
+    elif [[ $path =~ /gvfs/sftp:host=([^,]+),user=([^,/]+)/(.+) ]]; then
         local host="${BASH_REMATCH[1]}"
         local user="${BASH_REMATCH[2]}"
-        exec $execute_ashy --ssh "$user@$host"
+        local folder="${BASH_REMATCH[3]}"
+        exec $execute_ashy --ssh "$user@$host/$folder"
 
     # If it is not any of the known formats, pass the parameters directly
     else

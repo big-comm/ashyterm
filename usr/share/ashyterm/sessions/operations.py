@@ -6,7 +6,6 @@ from typing import Optional, Tuple, Union
 from gi.repository import Gio
 
 from ..helpers import generate_unique_name
-from ..utils.backup import BackupType, get_backup_manager
 from ..utils.logger import get_logger
 from ..utils.translation_utils import _
 from .models import SessionFolder, SessionItem
@@ -30,7 +29,6 @@ class SessionOperations:
         self.settings_manager = settings_manager
         self._operation_lock = threading.RLock()
         self.storage_manager = get_storage_manager()
-        self.backup_manager = get_backup_manager()
 
     def add_session(self, session: SessionItem) -> OperationResult:
         """Adds a new session to the store with validation."""
@@ -42,7 +40,7 @@ class SessionOperations:
                 return validation_result
 
             self.session_store.append(session)
-            if not self._save_changes_with_backup("Session added"):
+            if not self._save_changes():
                 self._remove_item_from_store(session)
                 return OperationResult(False, _("Failed to save session data."))
 
@@ -77,7 +75,7 @@ class SessionOperations:
             original_session.folder_path = updated_session.folder_path
             original_session.tab_color = updated_session.tab_color
 
-            if not self._save_changes_with_backup("Session updated"):
+            if not self._save_changes():
                 # Rollback changes on failure by recreating the item from original data
                 rolled_back_session = SessionItem.from_dict(original_data)
                 self.session_store.remove(position)
@@ -101,7 +99,7 @@ class SessionOperations:
                 return OperationResult(False, _("Session not found."))
 
             self.session_store.remove(position)
-            if not self._save_changes_with_backup("Session removed"):
+            if not self._save_changes():
                 self.session_store.insert(position, session)  # Rollback
                 return OperationResult(
                     False, _("Failed to save after session removal.")
@@ -121,7 +119,7 @@ class SessionOperations:
                 return validation_result
 
             self.folder_store.append(folder)
-            if not self._save_changes_with_backup("Folder added"):
+            if not self._save_changes():
                 self._remove_item_from_store(folder)
                 return OperationResult(False, _("Failed to save folder data."))
 
@@ -151,7 +149,7 @@ class SessionOperations:
             if old_path != new_path:
                 self._update_child_paths(old_path, new_path)
 
-            if not self._save_changes_with_backup("Folder updated"):
+            if not self._save_changes():
                 return OperationResult(False, _("Failed to save updated folder data."))
 
             self.logger.info(f"Folder updated successfully: '{original_folder.name}'")
@@ -179,7 +177,7 @@ class SessionOperations:
                 return OperationResult(False, _("Folder not found."))
 
             self.folder_store.remove(position)
-            if not self._save_changes_with_backup("Folder removed"):
+            if not self._save_changes():
                 return OperationResult(False, _("Failed to save after folder removal."))
 
             self.logger.info(f"Folder removed successfully: '{folder.name}'")
@@ -199,7 +197,7 @@ class SessionOperations:
             original_folder = session.folder_path
             session.folder_path = target_folder_path
 
-            if not self._save_changes_with_backup("Session moved"):
+            if not self._save_changes():
                 session.folder_path = original_folder  # Rollback
                 return OperationResult(False, _("Failed to save after moving session."))
 
@@ -291,22 +289,11 @@ class SessionOperations:
                 return folder, i
         return None, -1
 
-    def _save_changes_with_backup(self, description: str) -> bool:
-        """Saves all data and creates a backup if enabled."""
-        success = self.storage_manager.save_sessions_and_folders_safe(
+    def _save_changes(self) -> bool:
+        """Saves all session and folder data."""
+        return self.storage_manager.save_sessions_and_folders_safe(
             self.session_store, self.folder_store
         )
-        if (
-            success
-            and self.settings_manager.get("auto_backup_enabled", False)
-            and self.settings_manager.get("backup_on_change", True)
-        ):
-            source_file = self.storage_manager.sessions_file
-            if source_file.exists():
-                self.backup_manager.create_backup_async(
-                    [source_file], BackupType.AUTOMATIC, description
-                )
-        return success
 
     def _update_child_paths(self, old_path: str, new_path: str):
         """Updates the paths of all children when a folder is moved or renamed."""

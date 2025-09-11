@@ -191,6 +191,15 @@ class TabManager:
             self._create_tab_for_terminal(terminal, session)
         return terminal
 
+    def create_sftp_tab(self, session: SessionItem) -> Optional[Vte.Terminal]:
+        """Creates a new tab with an SFTP terminal for the specified session."""
+        terminal = self.terminal_manager.create_sftp_terminal(session)
+        if terminal:
+            sftp_session = SessionItem.from_dict(session.to_dict())
+            sftp_session.name = f"SFTP: {session.name}"
+            self._create_tab_for_terminal(terminal, sftp_session)
+        return terminal
+
     def _scroll_to_widget(self, widget: Gtk.Widget) -> bool:
         """Scrolls the tab bar to make the given widget visible."""
         hadjustment = self.scrolled_tab_bar.get_hadjustment()
@@ -400,12 +409,15 @@ class TabManager:
         tab_widget.add_css_class("pill")
 
         icon_name = (
-            "network-server-symbolic" if session.is_ssh() else "computer-symbolic"
+            "folder-remote-symbolic"
+            if session.name.startswith("SFTP:")
+            else "network-server-symbolic"
+            if session.is_ssh()
+            else "computer-symbolic"
         )
 
-        if icon_name != "computer-symbolic":
-            icon = Gtk.Image.new_from_icon_name(icon_name)
-            tab_widget.append(icon)
+        icon = Gtk.Image.new_from_icon_name(icon_name)
+        tab_widget.append(icon)
 
         label = Gtk.Label(
             label=session.name, ellipsize=Pango.EllipsizeMode.START, xalign=1.0

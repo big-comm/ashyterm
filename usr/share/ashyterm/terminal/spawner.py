@@ -284,6 +284,61 @@ class ProcessSpawner:
                 )
                 raise TerminalCreationError(str(e), "ssh") from e
 
+    def spawn_sftp_session(
+        self,
+        terminal: Vte.Terminal,
+        session: "SessionItem",
+        callback: Optional[Callable] = None,
+        user_data: Any = None,
+    ) -> None:
+        """Spawns an SFTP session in the given terminal."""
+        with self._spawn_lock:
+            if not session.is_ssh():
+                raise TerminalCreationError(
+                    "Session is not configured for SFTP", "sftp"
+                )
+            try:
+                self._validate_ssh_session(session)
+                # Build an SFTP command; no initial command is needed for interactive sftp
+                remote_cmd = self._build_remote_command_secure("sftp", session)
+                if not remote_cmd:
+                    raise TerminalCreationError("Failed to build SFTP command", "sftp")
+
+                working_dir = str(self.platform_info.home_dir)
+                env = self.environment_manager.get_terminal_environment()
+                env_list = [f"{k}={v}" for k, v in env.items()]
+
+                final_user_data = {
+                    "original_user_data": user_data,
+                    "temp_dir_path": None,
+                }
+
+                terminal.spawn_async(
+                    Vte.PtyFlags.DEFAULT,
+                    working_dir,
+                    remote_cmd,
+                    env_list,
+                    GLib.SpawnFlags.DEFAULT,
+                    None,
+                    None,
+                    -1,
+                    None,
+                    callback if callback else self._ssh_spawn_callback,
+                    (final_user_data,),
+                )
+                self.logger.info(f"SFTP session spawn initiated for: {session.name}")
+                log_terminal_event(
+                    "spawn_initiated",
+                    session.name,
+                    f"SFTP to {session.get_connection_string()}",
+                )
+            except Exception as e:
+                self.logger.error(f"SFTP session spawn failed for {session.name}: {e}")
+                log_error_with_context(
+                    e, f"SFTP spawn for {session.name}", "ashyterm.spawner"
+                )
+                raise TerminalCreationError(str(e), "sftp") from e
+
     def execute_remote_command_sync(
         self, session: "SessionItem", command: List[str], timeout: int = 15
     ) -> Tuple[bool, str]:
@@ -393,12 +448,12 @@ class ProcessSpawner:
         except Exception as e:
             raise SSHConnectionError(session.host, f"Invalid hostname: {e}") from e
         if session.uses_key_auth():
-            if not session.auth_value:
-                raise SSHKeyError("", "SSH key path is empty")
-            try:
-                validate_ssh_key_file(session.auth_value)
-            except Exception as e:
-                raise SSHKeyError(session.auth_value, str(e)) from e
+            # CORRECTED LOGIC: Only validate the key file if a path is provided.
+            if session.auth_value:
+                try:
+                    validate_ssh_key_file(session.auth_value)
+                except Exception as e:
+                    raise SSHKeyError(session.auth_value, str(e)) from e
 
     def _build_remote_command_secure(
         self,
@@ -406,7 +461,7 @@ class ProcessSpawner:
         session: "SessionItem",
         initial_command: Optional[str] = None,
     ) -> Optional[List[str]]:
-        """Builds an SSH command for an INTERACTIVE session, forcing TTY allocation."""
+        """Builds an SSH/SFTP command for an INTERACTIVE session."""
         if not has_command(command_type):
             raise SSHConnectionError(
                 session.host, f"{command_type.upper()} command not found on system"
@@ -429,6 +484,7 @@ class ProcessSpawner:
             key_file=session.auth_value if session.uses_key_auth() else None,
             options=ssh_options,
         )
+
         if command_type == "ssh":
             # This command sets up OSC7 tracking for bash/zsh and then executes the user's default shell.
             # It's a pragmatic approach that works for the most common shells.
@@ -447,6 +503,8 @@ class ProcessSpawner:
             if "-t" not in cmd:
                 cmd.insert(1, "-t")
             cmd.append(full_remote_command)
+
+        # For SFTP, no extra remote command is needed for an interactive session.
 
         if session.uses_password_auth() and session.auth_value:
             if has_command("sshpass"):
@@ -496,8 +554,11 @@ class ProcessSpawner:
         user_data: Any = None,
     ) -> None:
         try:
-            original_user_data = user_data.get("original_user_data")
-            temp_dir_path = user_data.get("temp_dir_path")
+            final_user_data = (
+                user_data[0] if isinstance(user_data, tuple) else user_data
+            )
+            original_user_data = final_user_data.get("original_user_data")
+            temp_dir_path = final_user_data.get("temp_dir_path")
 
             terminal_name = (
                 str(original_user_data[0])
@@ -540,7 +601,10 @@ class ProcessSpawner:
         user_data: Any = None,
     ) -> None:
         try:
-            original_user_data = user_data.get("original_user_data")
+            final_user_data = (
+                user_data[0] if isinstance(user_data, tuple) else user_data
+            )
+            original_user_data = final_user_data.get("original_user_data")
             actual_data = (
                 original_user_data[0]
                 if isinstance(original_user_data, tuple) and original_user_data

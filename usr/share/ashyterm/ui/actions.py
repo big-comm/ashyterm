@@ -162,8 +162,10 @@ class WindowActions:
         self._close_sidebar_popover_if_active()
         selected_item = self.window.session_tree.get_selected_item()
         if isinstance(selected_item, SessionItem) and selected_item.is_ssh():
+            self.window.tab_manager.create_sftp_tab(selected_item)
+        else:
             self.window.toast_overlay.add_toast(
-                Adw.Toast(title=_("SFTP not implemented yet"))
+                Adw.Toast(title=_("Please select an SSH session to connect with SFTP."))
             )
 
     def edit_session(self, *_args):
@@ -365,9 +367,7 @@ class WindowActions:
                     old_name = item.name
                     item.name = new_name
                     if is_session:
-                        self.window.session_operations._save_changes_with_backup(
-                            "Session renamed"
-                        )
+                        self.window.session_operations._save_changes()
                         log_session_event("renamed", f"{old_name} -> {new_name}")
                     else:
                         if isinstance(item, SessionFolder):
@@ -380,9 +380,7 @@ class WindowActions:
                             self.window.session_operations._update_child_paths(
                                 old_path, item.path
                             )
-                        self.window.session_operations._save_changes_with_backup(
-                            "Folder renamed"
-                        )
+                        self.window.session_operations._save_changes()
                     self.window.refresh_tree()
             dlg.close()
 

@@ -2,7 +2,8 @@
 
 import atexit
 import os
-import time
+import threading
+from datetime import datetime
 from typing import TYPE_CHECKING, Optional
 
 import gi
@@ -21,11 +22,14 @@ from .settings.config import (
     DEVELOPER_NAME,
     DEVELOPER_TEAM,
     ISSUE_URL,
+    LAYOUT_DIR,
+    SESSIONS_FILE,
+    SETTINGS_FILE,
     WEBSITE,
 )
 from .settings.manager import SettingsManager
 from .terminal.spawner import cleanup_spawner
-from .utils.backup import AutoBackupScheduler, BackupType, get_backup_manager
+from .utils.backup import get_backup_manager
 from .utils.crypto import is_encryption_available
 from .utils.exceptions import handle_exception
 from .utils.logger import enable_debug_mode, get_logger, log_app_shutdown, log_app_start
@@ -51,7 +55,6 @@ class CommTerminalApp(Adw.Application):
         self.settings_manager: Optional[SettingsManager] = None
         self._main_window: Optional["CommTerminalWindow"] = None
         self._backup_manager = None
-        self._auto_backup_scheduler = None
         self._security_auditor = None
         self.platform_info = get_platform_info()
         self._initialized = False
@@ -71,16 +74,6 @@ class CommTerminalApp(Adw.Application):
             except Exception as e:
                 self.logger.error(f"Failed to initialize backup manager on-demand: {e}")
         return self._backup_manager
-
-    @property
-    def auto_backup_scheduler(self):
-        if self._auto_backup_scheduler is None and self.backup_manager:
-            self._auto_backup_scheduler = AutoBackupScheduler(self.backup_manager)
-            if self.settings_manager.get("auto_backup_enabled", False):
-                self._auto_backup_scheduler.enable()
-            else:
-                self._auto_backup_scheduler.disable()
-        return self._auto_backup_scheduler
 
     @property
     def security_auditor(self):
@@ -142,36 +135,11 @@ class CommTerminalApp(Adw.Application):
                 return
             self._setup_actions()
             self._setup_keyboard_shortcuts()
-            GLib.idle_add(self._check_startup_backup)
             self.logger.info("Application startup completed successfully")
         except Exception as e:
             self.logger.critical(f"Application startup failed: {e}")
             self._show_startup_error(str(e))
             self.quit()
-
-    def _check_startup_backup(self) -> bool:
-        """Check if startup backup should be performed, and run it asynchronously."""
-        try:
-            if not self.auto_backup_scheduler or not self.backup_manager:
-                return False
-            if not self.settings_manager.get("auto_backup_enabled", False):
-                return False
-            from .settings.config import SESSIONS_FILE, SETTINGS_FILE
-
-            backup_files = [
-                Path(p)
-                for p in [SESSIONS_FILE, SETTINGS_FILE]
-                if p and Path(p).exists()
-            ]
-            if backup_files and self.auto_backup_scheduler.should_backup():
-                self.logger.info("Performing startup backup asynchronously")
-                self.backup_manager.create_backup_async(
-                    backup_files, BackupType.AUTOMATIC, _("Automatic startup backup")
-                )
-                self.auto_backup_scheduler.last_backup_time = time.time()
-        except Exception as e:
-            self.logger.warning(f"Startup backup check failed: {e}")
-        return False
 
     def _setup_actions(self) -> None:
         """Set up application-level actions."""
@@ -288,9 +256,11 @@ class CommTerminalApp(Adw.Application):
             i += 1
 
         behavior = self.settings_manager.get("new_instance_behavior", "new_tab")
-        active_window = self.get_active_window()
 
-        if behavior == "new_window" or not active_window:
+        windows = self.get_windows()
+        target_window = windows[0] if windows else None
+
+        if behavior == "new_window" or not target_window:
             self.logger.info("Creating a new window for command line arguments.")
             window = self.create_new_window(
                 initial_working_directory=working_directory,
@@ -301,15 +271,15 @@ class CommTerminalApp(Adw.Application):
             self._present_window_and_request_focus(window)
         else:
             self.logger.info("Reusing existing window for a new tab.")
-            self._present_window_and_request_focus(active_window)
+            self._present_window_and_request_focus(target_window)
             if ssh_target:
-                active_window.create_ssh_tab(ssh_target)
+                target_window.create_ssh_tab(ssh_target)
             elif execute_command:
-                active_window.create_execute_tab(
+                target_window.create_execute_tab(
                     execute_command, working_directory, close_after_execute
                 )
             else:
-                active_window.create_local_tab(working_directory)
+                target_window.create_local_tab(working_directory)
 
     def _present_window_and_request_focus(self, window: Gtk.Window):
         """Present the window and use a modal dialog hack to request focus if needed."""
@@ -382,63 +352,209 @@ class CommTerminalApp(Adw.Application):
             self.logger.error(f"Failed to show about dialog: {e}")
 
     def _on_backup_now_action(self, _action, _param) -> None:
-        """Handle manual backup action."""
-        try:
-            if not self.backup_manager:
-                self._show_error_dialog(
-                    _("Backup Error"), _("Backup system not available")
-                )
-                return
-            from .settings.config import SESSIONS_FILE, SETTINGS_FILE
+        """Handles the manual backup creation flow."""
+        file_dialog = Gtk.FileDialog(title=_("Save Backup As..."), modal=True)
+        timestamp = datetime.now().strftime("%Y-%m-%d")
+        file_dialog.set_initial_name(f"ashyterm-backup-{timestamp}.7z")
+        file_dialog.save(self.get_active_window(), None, self._on_backup_file_selected)
 
-            backup_files = [
-                Path(p)
-                for p in [SESSIONS_FILE, SETTINGS_FILE]
-                if p and Path(p).exists()
-            ]
-            if not backup_files:
-                self._show_error_dialog(_("Backup Error"), _("No files to backup"))
-                return
-            backup_id = self.backup_manager.create_backup(
-                backup_files, BackupType.MANUAL, _("Manual backup from menu")
-            )
-            if backup_id:
-                self.logger.info(f"Manual backup created: {backup_id}")
-                self._show_info_dialog(
-                    _("Backup Complete"),
-                    _("Backup created successfully: {}").format(backup_id),
-                )
+    def _on_backup_file_selected(self, dialog, result):
+        """Callback after user selects a location to save the backup."""
+        try:
+            gio_file = dialog.save_finish(result)
+            if gio_file:
+                self._prompt_for_backup_password(gio_file.get_path())
+        except GLib.Error as e:
+            if not e.matches(Gio.io_error_quark(), Gio.IOErrorEnum.CANCELLED):
+                self._show_error_dialog(_("Backup Error"), e.message)
+
+    def _prompt_for_backup_password(self, target_path: str):
+        """Shows a dialog to get and confirm a password for the backup."""
+        dialog = Adw.MessageDialog(
+            transient_for=self.get_active_window(),
+            heading=_("Set Backup Password"),
+            body=_("Please enter a password to encrypt the backup file."),
+            close_response="cancel",
+        )
+        content = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=12)
+        pass_entry = Gtk.PasswordEntry(
+            placeholder_text=_("Password"), show_peek_icon=True
+        )
+        confirm_entry = Gtk.PasswordEntry(
+            placeholder_text=_("Confirm Password"), show_peek_icon=True
+        )
+        content.append(pass_entry)
+        content.append(confirm_entry)
+        dialog.set_extra_child(content)
+        dialog.add_response("cancel", _("Cancel"))
+        dialog.add_response("backup", _("Create Backup"))
+        dialog.set_default_response("backup")
+        dialog.set_response_appearance("backup", Adw.ResponseAppearance.SUGGESTED)
+
+        def on_response(d, response_id):
+            if response_id == "backup":
+                pwd1 = pass_entry.get_text()
+                pwd2 = confirm_entry.get_text()
+                if not pwd1:
+                    self._show_error_dialog(
+                        _("Password Error"), _("Password cannot be empty."), parent=d
+                    )
+                    return
+                if pwd1 != pwd2:
+                    self._show_error_dialog(
+                        _("Password Error"), _("Passwords do not match."), parent=d
+                    )
+                    return
+
+                d.close()
+                self._execute_backup(target_path, pwd1)
             else:
-                self._show_error_dialog(_("Backup Error"), _("Failed to create backup"))
-        except Exception as e:
-            self.logger.error(f"Manual backup failed: {e}")
-            self._show_error_dialog(_("Backup Error"), _("Backup failed: {}").format(e))
+                d.close()
+
+        dialog.connect("response", on_response)
+        dialog.present()
+
+    def _execute_backup(self, target_path: str, password: str):
+        """Executes the backup process in a separate thread."""
+        active_window = self.get_active_window()
+        if not active_window:
+            return
+
+        toast = Adw.Toast(title=_("Creating backup..."), timeout=0)
+        active_window.toast_overlay.add_toast(toast)
+
+        def backup_thread():
+            try:
+                source_files = [Path(SESSIONS_FILE), Path(SETTINGS_FILE)]
+                layouts_dir = Path(LAYOUT_DIR)
+                self.backup_manager.create_encrypted_backup(
+                    target_path,
+                    password,
+                    active_window.session_store,
+                    source_files,
+                    layouts_dir,
+                )
+                GLib.idle_add(
+                    self._show_info_dialog,
+                    _("Backup Complete"),
+                    _("Backup saved successfully to:\n{}").format(target_path),
+                )
+            except Exception as e:
+                self.logger.error(f"Manual backup failed: {e}")
+                GLib.idle_add(
+                    self._show_error_dialog,
+                    _("Backup Failed"),
+                    _("Could not create backup: {}").format(e),
+                )
+            finally:
+                GLib.idle_add(toast.dismiss)
+
+        threading.Thread(target=backup_thread, daemon=True).start()
 
     def _on_restore_backup_action(self, _action, _param) -> None:
-        """Handle restore backup action."""
+        """Handles the restore backup flow."""
+        dialog = Adw.MessageDialog(
+            transient_for=self.get_active_window(),
+            heading=_("Restore from Backup?"),
+            body=_(
+                "Restoring from a backup will overwrite all your current sessions, settings, and layouts. This action cannot be undone.\n\n<b>The application will need to be restarted after restoring.</b>"
+            ),
+            body_use_markup=True,
+            close_response="cancel",
+        )
+        dialog.add_response("cancel", _("Cancel"))
+        dialog.add_response("restore", _("Choose File and Restore"))
+        dialog.set_response_appearance("restore", Adw.ResponseAppearance.DESTRUCTIVE)
+        dialog.connect("response", self._on_restore_confirmation)
+        dialog.present()
+
+    def _on_restore_confirmation(self, dialog, response_id):
+        dialog.close()
+        if response_id == "restore":
+            file_dialog = Gtk.FileDialog(title=_("Select Backup File"), modal=True)
+            file_filter = Gtk.FileFilter()
+            file_filter.add_pattern("*.7z")
+            file_filter.set_name(_("Backup Files"))
+            filters = Gio.ListStore.new(Gtk.FileFilter)
+            filters.append(file_filter)
+            file_dialog.set_filters(filters)
+            file_dialog.open(
+                self.get_active_window(), None, self._on_restore_file_selected
+            )
+
+    def _on_restore_file_selected(self, dialog, result):
+        """Callback after user selects a backup file to restore."""
         try:
-            if not self.backup_manager:
-                self._show_error_dialog(
-                    _("Restore Error"), _("Backup system not available")
+            gio_file = dialog.open_finish(result)
+            if gio_file:
+                self._prompt_for_restore_password(gio_file.get_path())
+        except GLib.Error as e:
+            if not e.matches(Gio.io_error_quark(), Gio.IOErrorEnum.CANCELLED):
+                self._show_error_dialog(_("Restore Error"), e.message)
+
+    def _prompt_for_restore_password(self, source_path: str):
+        """Shows a dialog to get the password for the backup file."""
+        dialog = Adw.MessageDialog(
+            transient_for=self.get_active_window(),
+            heading=_("Enter Backup Password"),
+            body=_("Please enter the password for the selected backup file."),
+            close_response="cancel",
+        )
+        pass_entry = Gtk.PasswordEntry(
+            placeholder_text=_("Password"), show_peek_icon=True
+        )
+        dialog.set_extra_child(pass_entry)
+        dialog.add_response("cancel", _("Cancel"))
+        dialog.add_response("restore", _("Restore"))
+        dialog.set_default_response("restore")
+        dialog.set_response_appearance("restore", Adw.ResponseAppearance.SUGGESTED)
+
+        def on_response(d, response_id):
+            if response_id == "restore":
+                password = pass_entry.get_text()
+                if password:
+                    self._execute_restore(source_path, password)
+            d.close()
+
+        dialog.connect("response", on_response)
+        dialog.present()
+
+    def _execute_restore(self, source_path: str, password: str):
+        """Executes the restore process in a separate thread."""
+        active_window = self.get_active_window()
+        toast = Adw.Toast(title=_("Restoring from backup..."), timeout=0)
+        active_window.toast_overlay.add_toast(toast)
+
+        def restore_thread():
+            try:
+                self.backup_manager.restore_from_encrypted_backup(
+                    source_path, password, self.platform_info.config_dir
                 )
-                return
-            backups = self.backup_manager.list_backups()
-            if not backups:
-                self._show_info_dialog(
-                    _("No Backups"), _("No backups available to restore")
+                GLib.idle_add(self._show_restore_success_dialog)
+            except Exception as e:
+                self.logger.error(f"Restore failed: {e}")
+                GLib.idle_add(
+                    self._show_error_dialog,
+                    _("Restore Failed"),
+                    _("Could not restore from backup: {}").format(e),
                 )
-                return
-            self._show_info_dialog(
-                _("Backups Available"),
-                _(
-                    "{} backup(s) available. Use preferences dialog for detailed restore options."
-                ).format(len(backups)),
-            )
-        except Exception as e:
-            self.logger.error(f"Restore backup action failed: {e}")
-            self._show_error_dialog(
-                _("Restore Error"), _("Failed to access backups: {}").format(e)
-            )
+            finally:
+                GLib.idle_add(toast.dismiss)
+
+        threading.Thread(target=restore_thread, daemon=True).start()
+
+    def _show_restore_success_dialog(self):
+        dialog = Adw.MessageDialog(
+            transient_for=self.get_active_window(),
+            heading=_("Restore Complete"),
+            body=_(
+                "Data has been restored successfully. Please restart Ashy Terminal for the changes to take effect."
+            ),
+            close_response="ok",
+        )
+        dialog.add_response("ok", _("OK"))
+        dialog.present()
+        return False
 
     def _on_toggle_debug_action(self, _action, _param) -> None:
         """Handle toggle debug mode action."""
@@ -536,43 +652,15 @@ class CommTerminalApp(Adw.Application):
         self._shutting_down = True
         self.logger.info("Performing graceful shutdown")
         try:
-            self._perform_shutdown_backup()
             if self._main_window:
                 self._main_window.destroy()
                 self._main_window = None
             if self.settings_manager:
                 self.settings_manager.save_settings()
-            if self.auto_backup_scheduler:
-                self.auto_backup_scheduler.disable()
             log_app_shutdown()
             self.logger.info("Graceful shutdown completed")
         except Exception as e:
             self.logger.error(f"Error during graceful shutdown: {e}")
-
-    def _perform_shutdown_backup(self) -> None:
-        """Perform backup on shutdown if configured."""
-        try:
-            if not self.settings_manager:
-                return
-            if (
-                not self.settings_manager.get("backup_on_exit", False)
-                or not self.backup_manager
-            ):
-                return
-            from .settings.config import SESSIONS_FILE, SETTINGS_FILE
-
-            backup_files = [
-                Path(p)
-                for p in [SESSIONS_FILE, SETTINGS_FILE]
-                if p and Path(p).exists()
-            ]
-            if backup_files:
-                self.logger.info("Performing shutdown backup")
-                self.backup_manager.create_backup_async(
-                    backup_files, BackupType.AUTOMATIC, _("Automatic backup on exit")
-                )
-        except Exception as e:
-            self.logger.warning(f"Shutdown backup failed: {e}")
 
     def _cleanup_on_exit(self) -> None:
         """Cleanup function called on exit."""
@@ -595,10 +683,11 @@ class CommTerminalApp(Adw.Application):
         except Exception:
             print(f"STARTUP ERROR: {error_message}")
 
-    def _show_error_dialog(self, title: str, message: str) -> None:
+    def _show_error_dialog(self, title: str, message: str, parent=None) -> None:
         """Show error dialog to user."""
         try:
-            parent = self.get_active_window()
+            if parent is None:
+                parent = self.get_active_window()
             dialog = Adw.MessageDialog(transient_for=parent, title=title, body=message)
             dialog.add_response("ok", "OK")
             dialog.present()

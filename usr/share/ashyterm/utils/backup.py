@@ -1,414 +1,187 @@
 # ashyterm/utils/backup.py
 
-import gzip
-import hashlib
 import json
 import shutil
+import tempfile
 import threading
-import time
-from dataclasses import asdict, dataclass
-from datetime import datetime
-from enum import Enum
 from pathlib import Path
-from typing import Any, Dict, List, Optional, Tuple, Union
+from typing import List, Optional
 
-from gi.repository import GLib
+from gi.repository import Gio
 
-from .exceptions import StorageCorruptedError, StorageError, StorageWriteError
+from .crypto import export_all_passwords, store_password
+from .exceptions import StorageReadError, StorageWriteError
 from .logger import get_logger
-from .platform import get_config_directory, get_platform_info
+from .platform import get_config_directory
 
-
-class BackupType(Enum):
-    """Types of backups."""
-
-    MANUAL = "manual"
-    AUTOMATIC = "automatic"
-
-
-class BackupStatus(Enum):
-    """Backup operation status."""
-
-    SUCCESS = "success"
-    FAILED = "failed"
-
-
-@dataclass
-class BackupMetadata:
-    """Metadata for a backup."""
-
-    timestamp: str
-    backup_type: BackupType
-    file_count: int
-    total_size: int
-    checksum: str
-    description: str
-    status: BackupStatus
-    error_message: Optional[str] = None
-
-    def to_dict(self) -> Dict[str, Any]:
-        """Convert to dictionary."""
-        data = asdict(self)
-        data["backup_type"] = self.backup_type.value
-        data["status"] = self.status.value
-        return data
-
-    @classmethod
-    def from_dict(cls, data: Dict[str, Any]) -> "BackupMetadata":
-        """Create from dictionary."""
-        data = data.copy()
-        data["backup_type"] = BackupType(data["backup_type"])
-        data["status"] = BackupStatus(data["status"])
-        return cls(**data)
+try:
+    import py7zr
+except ImportError:
+    py7zr = None
 
 
 class BackupManager:
-    """Manages backup and recovery operations."""
+    """Manages encrypted backup and recovery operations."""
 
     def __init__(self, backup_dir: Optional[Path] = None):
         self.logger = get_logger("ashyterm.backup")
-        self.platform_info = get_platform_info()
         if backup_dir is None:
             backup_dir = get_config_directory() / "backups"
         self.backup_dir = Path(backup_dir)
         self.backup_dir.mkdir(parents=True, exist_ok=True)
-        self.max_backups = 10
-        self._lock = threading.RLock()
-        self.metadata_file = self.backup_dir / "backup_index.json"
-        self._load_metadata()
+        self._lock = threading.Lock()
         self.logger.info(
             f"Backup manager initialized with directory: {self.backup_dir}"
         )
 
-    def _load_metadata(self):
-        """Load backup metadata index."""
-        self.backup_metadata: Dict[str, BackupMetadata] = {}
-        if not self.metadata_file.exists():
-            return
-        try:
-            with open(self.metadata_file, "r", encoding="utf-8") as f:
-                data = json.load(f)
-            for backup_id, meta_dict in data.items():
+    def create_encrypted_backup(
+        self,
+        target_file_path: str,
+        password: str,
+        sessions_store: Gio.ListStore,
+        source_files: List[Path],
+        layouts_dir: Path,
+    ) -> None:
+        """
+        Creates a single, password-protected .7z backup file.
+
+        Args:
+            target_file_path: The full path where the backup file will be saved.
+            password: The password for encrypting the backup.
+            sessions_store: The session store to export passwords from.
+            source_files: List of primary config files to include (e.g., sessions.json).
+            layouts_dir: The directory containing layout files to be backed up.
+
+        Raises:
+            StorageWriteError: If the backup process fails.
+        """
+        if not py7zr:
+            raise StorageWriteError(
+                target_file_path,
+                "The 'py7zr' library is required for encrypted backups. Please install it.",
+            )
+
+        with self._lock:
+            with tempfile.TemporaryDirectory(prefix="ashyterm_backup_") as tmpdir:
+                temp_path = Path(tmpdir)
+                self.logger.debug(f"Using temporary directory for backup: {temp_path}")
+
                 try:
-                    self.backup_metadata[backup_id] = BackupMetadata.from_dict(
-                        meta_dict
+                    # 1. Copy primary source files
+                    for src_file in source_files:
+                        if src_file.exists():
+                            shutil.copy(src_file, temp_path / src_file.name)
+
+                    # 2. Copy layouts directory
+                    if layouts_dir.exists() and layouts_dir.is_dir():
+                        shutil.copytree(
+                            layouts_dir, temp_path / "layouts", dirs_exist_ok=True
+                        )
+
+                    # 3. Export and save passwords
+                    passwords = export_all_passwords(sessions_store)
+                    if passwords:
+                        with open(temp_path / "passwords.json", "w") as f:
+                            json.dump(passwords, f, indent=2)
+
+                    # 4. Create the encrypted 7z archive
+                    self.logger.info(f"Creating encrypted backup at {target_file_path}")
+                    with py7zr.SevenZipFile(
+                        target_file_path, "w", password=password
+                    ) as archive:
+                        archive.writeall(temp_path, arcname="")
+
+                    self.logger.info("Encrypted backup created successfully.")
+
+                except Exception as e:
+                    self.logger.error(f"Failed to create encrypted backup: {e}")
+                    raise StorageWriteError(target_file_path, str(e)) from e
+
+    def restore_from_encrypted_backup(
+        self, source_file_path: str, password: str, config_dir: Path
+    ) -> None:
+        """
+        Restores configuration from a password-protected .7z backup file.
+
+        Args:
+            source_file_path: The path to the .7z backup file.
+            password: The password to decrypt the backup.
+            config_dir: The root configuration directory to restore files to.
+
+        Raises:
+            StorageReadError: If the restore process fails.
+        """
+        if not py7zr:
+            raise StorageReadError(
+                source_file_path,
+                "The 'py7zr' library is required for encrypted backups. Please install it.",
+            )
+
+        with self._lock:
+            with tempfile.TemporaryDirectory(prefix="ashyterm_restore_") as tmpdir:
+                temp_path = Path(tmpdir)
+                self.logger.debug(f"Using temporary directory for restore: {temp_path}")
+
+                try:
+                    # 1. Extract the archive
+                    self.logger.info(f"Extracting backup from {source_file_path}")
+                    with py7zr.SevenZipFile(
+                        source_file_path, "r", password=password
+                    ) as archive:
+                        archive.extractall(path=temp_path)
+
+                    # 2. Restore files
+                    for item in temp_path.iterdir():
+                        target_path = config_dir / item.name
+                        if item.is_dir():
+                            shutil.rmtree(target_path, ignore_errors=True)
+                            shutil.copytree(item, target_path, dirs_exist_ok=True)
+                        elif item.is_file() and item.name != "passwords.json":
+                            shutil.copy(item, target_path)
+
+                    # 3. Import passwords
+                    passwords_file = temp_path / "passwords.json"
+                    if passwords_file.exists():
+                        with open(passwords_file, "r") as f:
+                            passwords = json.load(f)
+
+                        imported_count = 0
+                        for session_name, pwd in passwords.items():
+                            try:
+                                store_password(session_name, pwd)
+                                imported_count += 1
+                            except Exception as e:
+                                self.logger.error(
+                                    f"Failed to import password for '{session_name}': {e}"
+                                )
+                        self.logger.info(f"Imported {imported_count} passwords.")
+
+                    self.logger.info(
+                        "Restore from encrypted backup completed successfully."
+                    )
+
+                except py7zr.exceptions.PasswordRequired:
+                    self.logger.error("Password required for backup file.")
+                    raise StorageReadError(source_file_path, "Password required.")
+                except py7zr.exceptions.Bad7zFile:
+                    self.logger.error("Bad 7z file or incorrect password.")
+                    raise StorageReadError(
+                        source_file_path, "Incorrect password or corrupted file."
                     )
                 except Exception as e:
-                    self.logger.warning(
-                        f"Failed to load metadata for backup {backup_id}: {e}"
-                    )
-        except Exception as e:
-            self.logger.error(f"Failed to load backup metadata: {e}")
-
-    def _save_metadata(self):
-        """Save backup metadata index."""
-        try:
-            data = {
-                backup_id: metadata.to_dict()
-                for backup_id, metadata in self.backup_metadata.items()
-            }
-            with open(self.metadata_file, "w", encoding="utf-8") as f:
-                json.dump(data, f, indent=2, ensure_ascii=False)
-        except Exception as e:
-            self.logger.error(f"Failed to save backup metadata: {e}")
-            raise StorageWriteError(str(self.metadata_file), str(e))
-
-    def create_backup_async(
-        self,
-        source_files: List[Path],
-        backup_type: BackupType = BackupType.MANUAL,
-        description: str = "",
-    ) -> None:
-        """Create a backup asynchronously in a separate thread."""
-
-        def backup_task():
-            try:
-                self.create_backup(source_files, backup_type, description)
-            except Exception as e:
-                self.logger.error(f"Async backup task failed: {e}")
-
-        threading.Thread(target=backup_task, daemon=True).start()
-
-    def _generate_backup_id(self, backup_type: BackupType) -> str:
-        """Generate unique backup ID."""
-        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-        return f"{backup_type.value}_{timestamp}"
-
-    def _calculate_checksum(self, file_path: Path) -> str:
-        """Calculate SHA256 checksum of a file."""
-        sha256_hash = hashlib.sha256()
-        try:
-            with open(file_path, "rb") as f:
-                for chunk in iter(lambda: f.read(4096), b""):
-                    sha256_hash.update(chunk)
-            return sha256_hash.hexdigest()
-        except Exception as e:
-            self.logger.error(f"Failed to calculate checksum for {file_path}: {e}")
-            return ""
-
-    def _compress_file(self, source_path: Path, target_path: Path) -> bool:
-        """Compress a file using gzip."""
-        try:
-            with open(source_path, "rb") as f_in, gzip.open(target_path, "wb") as f_out:
-                shutil.copyfileobj(f_in, f_out)
-            return True
-        except Exception as e:
-            self.logger.error(f"Failed to compress {source_path}: {e}")
-            return False
-
-    def _decompress_file(self, source_path: Path, target_path: Path) -> bool:
-        """Decompress a gzip file."""
-        try:
-            with gzip.open(source_path, "rb") as f_in, open(target_path, "wb") as f_out:
-                shutil.copyfileobj(f_in, f_out)
-            return True
-        except Exception as e:
-            self.logger.error(f"Failed to decompress {source_path}: {e}")
-            return False
-
-    def create_backup(
-        self,
-        source_files: List[Path],
-        backup_type: BackupType = BackupType.MANUAL,
-        description: str = "",
-    ) -> Optional[str]:
-        """Create a backup of specified files."""
-        with self._lock:
-            backup_id = self._generate_backup_id(backup_type)
-            backup_path = self.backup_dir / backup_id
-            try:
-                backup_path.mkdir(exist_ok=True)
-                copied_files, total_size = [], 0
-                for source_file in source_files:
-                    if not source_file.exists():
-                        self.logger.warning(f"Source file not found: {source_file}")
-                        continue
-                    target_file = backup_path / f"{source_file.name}.gz"
-                    if self._compress_file(source_file, target_file):
-                        copied_files.append(target_file)
-                        total_size += target_file.stat().st_size
-                    else:
-                        self.logger.error(f"Failed to backup file: {source_file}")
-
-                if not copied_files:
-                    shutil.rmtree(backup_path, ignore_errors=True)
-                    raise StorageError(
-                        str(backup_path), "No files were successfully backed up"
-                    )
-
-                backup_checksum = self._calculate_backup_checksum(backup_path)
-                metadata = BackupMetadata(
-                    timestamp=datetime.now().isoformat(),
-                    backup_type=backup_type,
-                    file_count=len(copied_files),
-                    total_size=total_size,
-                    checksum=backup_checksum,
-                    description=description,
-                    status=BackupStatus.SUCCESS,
-                )
-                with open(
-                    backup_path / "backup_metadata.json", "w", encoding="utf-8"
-                ) as f:
-                    json.dump(metadata.to_dict(), f, indent=2, ensure_ascii=False)
-
-                self.backup_metadata[backup_id] = metadata
-                self._save_metadata()
-                self.logger.info(f"Backup created successfully: {backup_id}")
-                GLib.idle_add(self._cleanup_old_backups)
-                return backup_id
-            except Exception as e:
-                if backup_path.exists():
-                    shutil.rmtree(backup_path, ignore_errors=True)
-                self.logger.error(f"Failed to create backup: {e}")
-                error_metadata = BackupMetadata(
-                    timestamp=datetime.now().isoformat(),
-                    backup_type=backup_type,
-                    file_count=0,
-                    total_size=0,
-                    checksum="",
-                    description=description,
-                    status=BackupStatus.FAILED,
-                    error_message=str(e),
-                )
-                self.backup_metadata[backup_id] = error_metadata
-                self._save_metadata()
-                raise StorageError(str(backup_path), f"backup creation failed: {e}")
-
-    def _calculate_backup_checksum(self, backup_path: Path) -> str:
-        """Calculate checksum for entire backup directory."""
-        sha256_hash = hashlib.sha256()
-        files = sorted(
-            f
-            for f in backup_path.glob("*")
-            if f.is_file() and f.name != "backup_metadata.json"
-        )
-        for file_path in files:
-            sha256_hash.update(self._calculate_checksum(file_path).encode("utf-8"))
-        return sha256_hash.hexdigest()
-
-    def restore_backup(
-        self, backup_id: str, target_dir: Path, verify_integrity: bool = True
-    ) -> bool:
-        """Restore a backup to target directory."""
-        with self._lock:
-            if backup_id not in self.backup_metadata:
-                raise StorageError(backup_id, "Backup not found")
-            backup_path = self.backup_dir / backup_id
-            if not backup_path.exists():
-                raise StorageError(str(backup_path), "Backup directory not found")
-            try:
-                if verify_integrity and not self.verify_backup(backup_id):
-                    raise StorageCorruptedError(
-                        str(backup_path), "Backup integrity check failed"
-                    )
-
-                target_dir.mkdir(parents=True, exist_ok=True)
-                restored_count = 0
-                for backup_file in backup_path.glob("*.gz"):
-                    target_name = backup_file.name[:-3]
-                    target_file = target_dir / target_name
-                    if self._decompress_file(backup_file, target_file):
-                        restored_count += 1
-                    else:
-                        self.logger.error(f"Failed to restore file: {backup_file}")
-
-                if restored_count == 0:
-                    raise StorageError(
-                        str(backup_path), "No files were successfully restored"
-                    )
-
-                self.logger.info(
-                    f"Backup restored successfully: {backup_id} ({restored_count} files)"
-                )
-                return True
-            except Exception as e:
-                self.logger.error(f"Failed to restore backup {backup_id}: {e}")
-                raise StorageError(str(backup_path), f"restore failed: {e}")
-
-    def verify_backup(self, backup_id: str) -> bool:
-        """Verify backup integrity."""
-        if backup_id not in self.backup_metadata:
-            return False
-        metadata = self.backup_metadata[backup_id]
-        backup_path = self.backup_dir / backup_id
-        if (
-            not backup_path.exists()
-            or not (backup_path / "backup_metadata.json").exists()
-        ):
-            return False
-        try:
-            backup_files = [
-                f for f in backup_path.glob("*") if f.name != "backup_metadata.json"
-            ]
-            if len(backup_files) != metadata.file_count:
-                self.logger.warning(f"File count mismatch in backup {backup_id}")
-                return False
-            if self._calculate_backup_checksum(backup_path) != metadata.checksum:
-                self.logger.warning(f"Checksum mismatch in backup {backup_id}")
-                return False
-            return True
-        except Exception as e:
-            self.logger.error(f"Error verifying backup {backup_id}: {e}")
-            return False
-
-    def list_backups(
-        self, backup_type: Optional[BackupType] = None
-    ) -> List[Tuple[str, BackupMetadata]]:
-        """List available backups."""
-        backups = [
-            (bid, meta)
-            for bid, meta in self.backup_metadata.items()
-            if backup_type is None or meta.backup_type == backup_type
-        ]
-        backups.sort(key=lambda x: x[1].timestamp, reverse=True)
-        return backups
-
-    def delete_backup(self, backup_id: str) -> bool:
-        """Delete a backup."""
-        with self._lock:
-            if backup_id not in self.backup_metadata:
-                return False
-            backup_path = self.backup_dir / backup_id
-            try:
-                if backup_path.exists():
-                    shutil.rmtree(backup_path)
-                del self.backup_metadata[backup_id]
-                self._save_metadata()
-                self.logger.info(f"Backup deleted: {backup_id}")
-                return True
-            except Exception as e:
-                self.logger.error(f"Failed to delete backup {backup_id}: {e}")
-                return False
-
-    def _cleanup_old_backups(self):
-        """Clean up old backups based on retention policy."""
-        with self._lock:
-            try:
-                backups_by_type = {}
-                for backup_id, metadata in self.backup_metadata.items():
-                    backups_by_type.setdefault(metadata.backup_type, []).append((
-                        backup_id,
-                        metadata,
-                    ))
-
-                for backup_type, backups in backups_by_type.items():
-                    backups.sort(key=lambda x: x[1].timestamp, reverse=True)
-                    max_count = (
-                        5 if backup_type == BackupType.AUTOMATIC else self.max_backups
-                    )
-                    if len(backups) > max_count:
-                        for backup_id, _ in backups[max_count:]:
-                            self.logger.info(f"Cleaning up old backup: {backup_id}")
-                            self.delete_backup(backup_id)
-            except Exception as e:
-                self.logger.error(f"Error during backup cleanup: {e}")
-        return False
-
-
-class AutoBackupScheduler:
-    """Automatic backup scheduler."""
-
-    def __init__(self, backup_manager: BackupManager):
-        self.backup_manager = backup_manager
-        self.logger = get_logger("ashyterm.backup.scheduler")
-        self.enabled = True
-        self.last_backup_time = 0
-
-    def should_backup(self) -> bool:
-        """Check if automatic backup should be performed."""
-        if not self.enabled:
-            return False
-        time_since_last = time.time() - self.last_backup_time
-        return time_since_last >= self.backup_manager.auto_backup_interval
-
-    def enable(self):
-        self.enabled = True
-        self.logger.info("Automatic backups enabled")
-
-    def disable(self):
-        self.enabled = False
-        self.logger.info("Automatic backups disabled")
+                    self.logger.error(f"Failed to restore from encrypted backup: {e}")
+                    raise StorageReadError(source_file_path, str(e)) from e
 
 
 _backup_manager: Optional[BackupManager] = None
+_backup_manager_lock = threading.Lock()
 
 
 def get_backup_manager() -> BackupManager:
     """Get the global backup manager instance."""
     global _backup_manager
     if _backup_manager is None:
-        _backup_manager = BackupManager()
+        with _backup_manager_lock:
+            if _backup_manager is None:
+                _backup_manager = BackupManager()
     return _backup_manager
-
-
-def create_backup(
-    source_files: List[Union[str, Path]], description: str = ""
-) -> Optional[str]:
-    """Create a backup of specified files."""
-    path_list = [Path(f) for f in source_files]
-    return get_backup_manager().create_backup(path_list, BackupType.MANUAL, description)
-
-
-def restore_backup(backup_id: str, target_dir: Union[str, Path]) -> bool:
-    """Restore a backup."""
-    return get_backup_manager().restore_backup(backup_id, Path(target_dir))
