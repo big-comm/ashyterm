@@ -149,8 +149,6 @@ class CommTerminalApp(Adw.Application):
                 ("about", self._on_about_action),
                 ("backup-now", self._on_backup_now_action),
                 ("restore-backup", self._on_restore_backup_action),
-                ("toggle-debug", self._on_toggle_debug_action),
-                ("show-logs", self._on_show_logs_action),
             ]
             for action_name, callback in actions:
                 action = Gio.SimpleAction.new(action_name, None)
@@ -164,9 +162,6 @@ class CommTerminalApp(Adw.Application):
         try:
             self.set_accels_for_action("app.quit", ["<Control><Shift>q"])
             self.set_accels_for_action("app.preferences", ["<Control><Shift>comma"])
-            if self.settings_manager and self.settings_manager.get("debug_mode", False):
-                self.set_accels_for_action("app.toggle-debug", ["<Control><Shift>d"])
-                self.set_accels_for_action("app.show-logs", ["<Control><Shift>l"])
             self._update_window_shortcuts()
         except Exception as e:
             self.logger.error(f"Failed to setup keyboard shortcuts: {e}")
@@ -191,10 +186,8 @@ class CommTerminalApp(Adw.Application):
                 "split-horizontal",
                 "split-vertical",
                 "close-pane",
-                "focus-pane-up",
-                "focus-pane-down",
-                "focus-pane-left",
-                "focus-pane-right",
+                "next-tab",
+                "previous-tab",
             ]
             for action_name in shortcut_actions:
                 shortcut = self.settings_manager.get_shortcut(action_name)
@@ -553,38 +546,6 @@ class CommTerminalApp(Adw.Application):
         dialog.add_response("ok", _("OK"))
         dialog.present()
         return False
-
-    def _on_toggle_debug_action(self, _action, _param) -> None:
-        """Handle toggle debug mode action."""
-        try:
-            if not self.settings_manager:
-                return
-            new_debug = not self.settings_manager.get("debug_mode", False)
-            self.settings_manager.set("debug_mode", new_debug)
-            if new_debug:
-                enable_debug_mode()
-                self.logger.info("Debug mode enabled")
-            else:
-                from .utils.logger import disable_debug_mode
-
-                disable_debug_mode()
-                self.logger.info("Debug mode disabled")
-            self._setup_keyboard_shortcuts()
-        except Exception as e:
-            self.logger.error(f"Failed to toggle debug mode: {e}")
-
-    def _on_show_logs_action(self, _action, _param) -> None:
-        """Handle show logs action."""
-        try:
-            from .utils.logger import get_log_info
-
-            log_info = get_log_info()
-            log_dir = log_info.get("log_dir", "Unknown")
-            self._show_info_dialog(
-                _("Log Information"), _("Logs are stored in: {}").format(log_dir)
-            )
-        except Exception as e:
-            self.logger.error(f"Failed to show log info: {e}")
 
     def _has_active_ssh_sessions(self) -> bool:
         """Check if there are active SSH sessions across all windows."""

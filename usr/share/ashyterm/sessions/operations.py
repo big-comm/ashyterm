@@ -265,16 +265,7 @@ class SessionOperations:
                     new_item = SessionItem.from_dict(item_to_paste.to_dict())
                     new_item.folder_path = target_folder_path
                     return self.duplicate_session(new_item)
-                elif isinstance(item_to_paste, SessionFolder):
-                    # Recursive copy is complex, for now, we can just create a new folder
-                    new_folder = SessionFolder.from_dict(item_to_paste.to_dict())
-                    new_folder.parent_path = target_folder_path
-                    new_folder.path = (
-                        f"{target_folder_path}/{new_folder.name}"
-                        if target_folder_path
-                        else f"/{new_folder.name}"
-                    )
-                    return self.add_folder(new_folder)
+
             return OperationResult(
                 False, _("Unsupported item type for paste operation.")
             )

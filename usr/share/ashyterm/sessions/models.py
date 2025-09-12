@@ -25,8 +25,6 @@ class BaseModel(GObject.GObject):
         super().__init__()
         self._created_at = time.time()
         self._modified_at = self._created_at
-        self._version = 1
-        # The logger will be set by subclasses, this is a fallback.
         self.logger = get_logger("ashyterm.sessions.basemodel")
 
     def _mark_modified(self):
@@ -56,7 +54,6 @@ class BaseModel(GObject.GObject):
         return True
 
 
-# NOVO: Classe de modelo para representar um layout na árvore
 class LayoutItem(GObject.GObject):
     """Data model for a saved layout item in the tree view."""
 
@@ -114,10 +111,6 @@ class SessionItem(BaseModel):
         self._folder_path = str(normalize_path(folder_path)) if folder_path else ""
         self._port = port
         self._tab_color = tab_color
-
-        # Metadata specific to SessionItem
-        self._last_used = None
-        self._use_count = 0
 
     @property
     def children(self) -> Optional[Gio.ListStore]:
@@ -272,9 +265,6 @@ class SessionItem(BaseModel):
             "tab_color": self.tab_color,
             "created_at": self._created_at,
             "modified_at": self._modified_at,
-            "last_used": self._last_used,
-            "use_count": self._use_count,
-            "version": self._version,
         }
 
     @classmethod
@@ -294,10 +284,6 @@ class SessionItem(BaseModel):
         session.tab_color = data.get("tab_color")
         session._created_at = data.get("created_at", time.time())
         session._modified_at = data.get("modified_at", time.time())
-        session._version = data.get("version", 1)
-        # Session-specific metadata
-        session._last_used = data.get("last_used")
-        session._use_count = data.get("use_count", 0)
         return session
 
     def is_local(self) -> bool:
@@ -395,7 +381,6 @@ class SessionFolder(BaseModel):
             "parent_path": self.parent_path,
             "created_at": self._created_at,
             "modified_at": self._modified_at,
-            "version": self._version,
         }
 
     @classmethod
@@ -409,7 +394,6 @@ class SessionFolder(BaseModel):
         # __init__ sets default metadata; overwrite with loaded data
         folder._created_at = data.get("created_at", time.time())
         folder._modified_at = data.get("modified_at", time.time())
-        folder._version = data.get("version", 1)
         return folder
 
     def __str__(self) -> str:

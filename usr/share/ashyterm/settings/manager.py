@@ -115,23 +115,10 @@ class SettingsValidator:
         boolean_settings = [
             "sidebar_visible",
             "auto_hide_sidebar",
-            "show_toolbar",
-            "confirm_close",
-            "confirm_delete",
-            "auto_close_tab",
             "scroll_on_output",
             "scroll_on_keystroke",
             "mouse_autohide",
             "bell_sound",
-            "restore_sessions",
-            "auto_save_sessions",
-            "security_warnings",
-            "audit_sessions",
-            "encrypt_passwords",
-            "secure_file_permissions",
-            "debug_mode",
-            "performance_mode",
-            "experimental_features",
             "log_to_file",
         ]
         for key in boolean_settings:
@@ -139,21 +126,6 @@ class SettingsValidator:
                 errors.append(
                     f"Setting '{key}' must be boolean, got {type(settings[key]).__name__}"
                 )
-        numeric_settings = {
-            "auto_close_delay": (0, 60000),
-            "max_recent_sessions": (1, 100),
-        }
-        for key, (min_val, max_val) in numeric_settings.items():
-            if key in settings:
-                value = settings[key]
-                if not isinstance(value, (int, float)):
-                    errors.append(
-                        f"Setting '{key}' must be numeric, got {type(value).__name__}"
-                    )
-                elif not (min_val <= value <= max_val):
-                    errors.append(
-                        f"Setting '{key}' must be between {min_val} and {max_val}, got {value}"
-                    )
         return errors
 
 

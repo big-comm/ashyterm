@@ -40,7 +40,6 @@ class ProcessTracker:
     def __init__(self):
         self.logger = get_logger("ashyterm.spawner.tracker")
         self._processes: Dict[int, Dict[str, Any]] = {}
-        self._ssh_timeouts: Dict[str, int] = {}
         self._lock = threading.RLock()
 
     def register_process(self, pid: int, process_info: Dict[str, Any]) -> None:
@@ -96,12 +95,6 @@ class ProcessTracker:
                     pass
                 finally:
                     self.unregister_process(pid)
-
-    def cancel_ssh_timeout(self, session_name: str) -> None:
-        with self._lock:
-            timeout_id = self._ssh_timeouts.pop(session_name, None)
-            if timeout_id:
-                GLib.source_remove(timeout_id)
 
 
 class ProcessSpawner:
@@ -592,7 +585,6 @@ class ProcessSpawner:
             )
             session_name = getattr(actual_data, "name", "SSH Session")
             if error:
-                self.process_tracker.cancel_ssh_timeout(session_name)
                 self.logger.error(
                     f"SSH spawn failed for {session_name}: {error.message}"
                 )
@@ -608,7 +600,6 @@ class ProcessSpawner:
                 if terminal.get_realized():
                     terminal.feed(error_msg.encode("utf-8"))
             else:
-                self.process_tracker.cancel_ssh_timeout(session_name)
                 self.logger.info(
                     f"SSH process spawned successfully for {session_name} with PID {pid}"
                 )

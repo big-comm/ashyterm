@@ -230,7 +230,6 @@ class CommTerminalWindow(Adw.ApplicationWindow):
         )
         self.settings_manager.add_change_listener(self._on_setting_changed)
         self.file_manager_button.connect("toggled", self._on_toggle_file_manager)
-        self.cleanup_button.connect("notify::active", self._on_cleanup_button_toggled)
 
     def _setup_actions(self) -> None:
         """Set up window-level actions by delegating to the action handler."""
@@ -729,10 +728,6 @@ class CommTerminalWindow(Adw.ApplicationWindow):
         total_count = sum(self.active_temp_files.values())
         self.cleanup_button.set_visible(total_count > 0)
 
-    def _on_cleanup_button_toggled(self, button, gparam):
-        """Popula e mostra o popover de limpeza de arquivos temporários."""
-        pass
-
     def _populate_cleanup_popover(self):
         """Dynamically build the list of temporary files for the popover."""
         if self.cleanup_popover.get_child():
@@ -845,18 +840,13 @@ class CommTerminalWindow(Adw.ApplicationWindow):
         adjustment = self.scrolled_tab_bar.get_hadjustment()
         if not adjustment:
             return Gdk.EVENT_PROPAGATE
-
-        # Combina o delta vertical (dy) e horizontal (dx) para a rolagem.
-        # A maioria dos mouses enviará apenas dy.
         delta = dy + dx
 
-        # Um fator de sensibilidade para tornar a rolagem mais natural.
         scroll_amount = delta * 30
 
         current_value = adjustment.get_value()
         new_value = current_value + scroll_amount
 
-        # Garante que o novo valor está dentro dos limites da barra de rolagem.
         lower = adjustment.get_lower()
         upper = adjustment.get_upper() - adjustment.get_page_size()
         new_value = max(lower, min(new_value, upper))

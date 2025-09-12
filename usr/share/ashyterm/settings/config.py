@@ -55,7 +55,6 @@ class ConfigPaths:
             self.LAYOUT_DIR = self.CONFIG_DIR / "layouts"
             self.CACHE_DIR = self._get_cache_directory()
             self.LOG_DIR = self.CONFIG_DIR / "logs"
-            self.SECURE_DIR = self.CONFIG_DIR / "secure"
             self.BACKUP_DIR = (
                 self.CONFIG_DIR / "backups"
             )  # Directory for manual backups
@@ -63,14 +62,11 @@ class ConfigPaths:
             for directory in [
                 self.CACHE_DIR,
                 self.LOG_DIR,
-                self.SECURE_DIR,
                 self.LAYOUT_DIR,
                 self.BACKUP_DIR,
             ]:
                 try:
                     directory.mkdir(parents=True, exist_ok=True)
-                    if directory.name in ["secure"]:
-                        directory.chmod(0o700)
                 except OSError as e:
                     if self.logger:
                         self.logger.warning(
@@ -100,7 +96,6 @@ class ConfigPaths:
         self.LAYOUT_DIR = self.CONFIG_DIR / "layouts"
         self.CACHE_DIR = home / ".cache" / "ashyterm"
         self.LOG_DIR = self.CONFIG_DIR / "logs"
-        self.SECURE_DIR = self.CONFIG_DIR / "secure"
         self.BACKUP_DIR = self.CONFIG_DIR / "backups"
 
 
@@ -126,14 +121,11 @@ class DefaultSettings:
             "sidebar_visible": False,
             "auto_hide_sidebar": True,
             "sidebar_width": 300,  # Default sidebar width in pixels
-            "confirm_close": True,
-            "auto_close_tab": True,
             "scroll_on_output": True,  # Enables smart scrolling
             "scroll_on_keystroke": True,
             "scroll_on_insert": True,  # Scroll to bottom on paste
             "mouse_autohide": True,
             "cursor_blink": 0,
-            "osc7_enabled": True,
             "new_instance_behavior": "new_tab",
             "use_login_shell": False,
             "session_restore_policy": "never",
@@ -169,7 +161,6 @@ class DefaultSettings:
                 "quit": "<Control><Shift>q",
                 "new-window": "<Control><Shift>n",
                 "toggle-sidebar": "<Control><Shift>h",
-                "find": "<Control>f",
                 "zoom-in": "<Control>plus",
                 "zoom-out": "<Control>minus",
                 "zoom-reset": "<Control>0",
