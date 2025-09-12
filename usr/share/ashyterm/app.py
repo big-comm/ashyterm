@@ -275,15 +275,24 @@ class CommTerminalApp(Adw.Application):
 
     def _present_window_and_request_focus(self, window: Gtk.Window):
         """Present the window and use a modal dialog hack to request focus if needed."""
-        if not window.is_active() and window.tab_manager.get_tab_count() > 1:
-            self.logger.info(
-                "Window not focused and has multiple tabs, attempting focus hack via modal dialog."
-            )
-            dialog = Gtk.Dialog(transient_for=window, modal=True)
-            dialog.set_default_size(1, 1)
-            dialog.present()
-            GLib.idle_add(dialog.destroy)
         window.present()
+
+        def check_and_apply_hack():
+            if not window.is_active():
+                self.logger.info(
+                    "Window not active after present(), applying modal window hack."
+                )
+                hack_window = Gtk.Window(transient_for=window, modal=True)
+
+                hack_window.set_default_size(1, 1)
+                hack_window.set_decorated(False)
+
+                hack_window.present()
+                GLib.idle_add(hack_window.destroy)
+
+            return GLib.SOURCE_REMOVE
+
+        GLib.idle_add(check_and_apply_hack)
 
     def _on_command_line(self, app, command_line):
         return self.do_command_line(command_line)
@@ -468,7 +477,6 @@ class CommTerminalApp(Adw.Application):
             file_filter.set_name(_("Backup Files"))
             filters = Gio.ListStore.new(Gtk.FileFilter)
             filters.append(file_filter)
-            file_dialog.set_filters(filters)
             file_dialog.open(
                 self.get_active_window(), None, self._on_restore_file_selected
             )
@@ -689,6 +697,9 @@ class CommTerminalApp(Adw.Application):
                 "close_after_execute": kwargs.get("close_after_execute", False),
                 "initial_ssh_target": kwargs.get("initial_ssh_target"),
                 "_is_for_detached_tab": kwargs.get("_is_for_detached_tab", False),
+                "_triggered_by_command_line": kwargs.get(
+                    "_triggered_by_command_line", False
+                ),
                 "detached_terminals_data": kwargs.get("detached_terminals_data"),
                 "detached_file_manager": kwargs.get("detached_file_manager"),
             }
