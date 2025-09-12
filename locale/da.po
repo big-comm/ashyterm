@@ -701,16 +701,17 @@ msgstr "Gem verificering mislykkedes"
 msgid "Save failed: {}"
 msgstr "Gemte mislykkedes: {}"
 # 
-# File: usr/share/ashyterm/sessions/operations.py, line: 46
-#: NEEDS WORK
-msgid "Failed to save session data."
-msgstr "Fejl ved gemning af sessionsdata."
-# 
 # File: usr/share/ashyterm/sessions/operations.py, line: 51
 #: NEEDS WORK
 #, python-brace-format
-msgid "Session '{name}' added successfully."
-msgstr "Session '{name}' blev tilføjet med succes."
+msgid "Failed to save {item_type} data."
+msgstr "Fejl ved gemning af {item_type} data."
+# 
+# File: usr/share/ashyterm/sessions/operations.py, line: 59
+#: NEEDS WORK
+#, python-brace-format
+msgid "{item_type} '{name}' added successfully."
+msgstr "{item_type} '{name}' tilføjet med succes."
 # 
 # File: usr/share/ashyterm/sessions/operations.py, line: 62
 #: NEEDS WORK
@@ -743,17 +744,6 @@ msgstr "Fejl ved gemning efter session fjernelse."
 #, python-brace-format
 msgid "Session '{name}' removed successfully."
 msgstr "Session '{name}' blev fjernet med succes."
-# 
-# File: usr/share/ashyterm/sessions/operations.py, line: 115
-#: NEEDS WORK
-msgid "Failed to save folder data."
-msgstr "Fejl ved gemning af mappedata."
-# 
-# File: usr/share/ashyterm/sessions/operations.py, line: 120
-#: NEEDS WORK
-#, python-brace-format
-msgid "Folder '{name}' added successfully."
-msgstr "Mappe '{name}' tilføjet med succes."
 # 
 # File: usr/share/ashyterm/sessions/operations.py, line: 131
 #: NEEDS WORK
@@ -817,6 +807,16 @@ msgstr "Ikke understøttet elementtype til indsætningsoperation."
 #: NEEDS WORK
 msgid "Ashy Terminal"
 msgstr "Ashy Terminal"
+# 
+# File: usr/share/ashyterm/ui/menus.py, line: 214
+#: NEEDS WORK
+msgid "Close Pane"
+msgstr "Luk panel"
+# 
+# File: usr/share/ashyterm/terminal/tabs.py, line: 43
+#: NEEDS WORK
+msgid "Move to New Tab"
+msgstr "Flyt til ny fane"
 # 
 # File: usr/share/ashyterm/window.py, line: 424
 #: NEEDS WORK
@@ -1215,21 +1215,22 @@ msgstr "Fejl ved at gemme mappe: {}"
 msgid "Folder name"
 msgstr "Mappenavn"
 # 
-# File: usr/share/ashyterm/window.py, line: 994
+# File: usr/share/ashyterm/ui/dialogs/move_dialogs.py, line: 28
 #: NEEDS WORK
-msgid "Move Session"
-msgstr "Flyt session"
+#, python-brace-format
+msgid "Move {item_type}"
+msgstr "Flyt {item_type}"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 2183
 #: NEEDS WORK
 msgid "Select Destination"
 msgstr "Vælg destination"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 2184
+# File: usr/share/ashyterm/ui/dialogs/move_dialogs.py, line: 50
 #: NEEDS WORK
 #, python-brace-format
-msgid "Choose the folder to move the session '{name}' to."
-msgstr "Vælg den mappe, hvor sessionen '{name}' skal flyttes til."
+msgid "Choose the folder to move the {item_type} '{name}' to."
+msgstr "Vælg mappen for at flytte {item_type} '{name}' til."
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 2190
 #: NEEDS WORK
@@ -1251,16 +1252,16 @@ msgstr "Flyt"
 msgid "Move Failed"
 msgstr "Flytning mislykkedes"
 # 
-# File: usr/share/ashyterm/ui/dialogs/move_dialogs.py, line: 136
+# File: usr/share/ashyterm/window.py, line: 944
+# File: usr/share/ashyterm/window.py, line: 999
 #: NEEDS WORK
-msgid "Move Layout"
-msgstr "Flyt Layout"
+msgid "Session"
+msgstr "Session"
 # 
-# File: usr/share/ashyterm/ui/dialogs/move_dialogs.py, line: 155
+# File: usr/share/ashyterm/ui/actions.py, line: 415
 #: NEEDS WORK
-#, python-brace-format
-msgid "Choose the folder to move the layout '{name}' to."
-msgstr "Vælg den mappe, hvor layoutet '{name}' skal flyttes til."
+msgid "Layout"
+msgstr "Layout"
 # 
 # #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
 # 
@@ -2325,12 +2326,6 @@ msgstr "Ny session"
 msgid "New Folder"
 msgstr "Ny mappe"
 # 
-# File: usr/share/ashyterm/window.py, line: 944
-# File: usr/share/ashyterm/window.py, line: 999
-#: NEEDS WORK
-msgid "Session"
-msgstr "Session"
-# 
 # File: usr/share/ashyterm/window.py, line: 947
 #: NEEDS WORK
 #, python-brace-format
@@ -2361,11 +2356,6 @@ msgstr "Slet element"
 #: NEEDS WORK
 msgid "Delete Items"
 msgstr "Slet elementer"
-# 
-# File: usr/share/ashyterm/ui/actions.py, line: 415
-#: NEEDS WORK
-msgid "Layout"
-msgstr "Layout"
 # 
 # File: usr/share/ashyterm/window.py, line: 1009
 #: NEEDS WORK
@@ -2515,11 +2505,6 @@ msgstr "Opdel Venstre/Højre"
 #: NEEDS WORK
 msgid "Split Top/Bottom"
 msgstr "Del op Top/Bund"
-# 
-# File: usr/share/ashyterm/ui/menus.py, line: 214
-#: NEEDS WORK
-msgid "Close Pane"
-msgstr "Luk panel"
 # 
 # File: usr/share/ashyterm/app.py, line: 333
 #: NEEDS WORK
@@ -2740,11 +2725,6 @@ msgstr "Opstartsfejl"
 #, python-brace-format
 msgid "Application failed to start: {}"
 msgstr "Applikationen kunne ikke starte: {}"
-# 
-# File: usr/share/ashyterm/terminal/tabs.py, line: 43
-#: NEEDS WORK
-msgid "Move to New Tab"
-msgstr "Flyt til ny fane"
 # 
 # File: usr/share/ashyterm/terminal/tabs.py, line: 237
 #: NEEDS WORK

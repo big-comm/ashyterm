@@ -701,16 +701,17 @@ msgstr "Ошибка проверки сохранения"
 msgid "Save failed: {}"
 msgstr "Сохранение не удалось: {}"
 # 
-# File: usr/share/ashyterm/sessions/operations.py, line: 46
-#: NEEDS WORK
-msgid "Failed to save session data."
-msgstr "Не удалось сохранить данные сессии."
-# 
 # File: usr/share/ashyterm/sessions/operations.py, line: 51
 #: NEEDS WORK
 #, python-brace-format
-msgid "Session '{name}' added successfully."
-msgstr "Сессия '{name}' успешно добавлена."
+msgid "Failed to save {item_type} data."
+msgstr "Не удалось сохранить данные {item_type}."
+# 
+# File: usr/share/ashyterm/sessions/operations.py, line: 59
+#: NEEDS WORK
+#, python-brace-format
+msgid "{item_type} '{name}' added successfully."
+msgstr "{item_type} '{name}' успешно добавлен."
 # 
 # File: usr/share/ashyterm/sessions/operations.py, line: 62
 #: NEEDS WORK
@@ -743,17 +744,6 @@ msgstr "Не удалось сохранить после удаления се�
 #, python-brace-format
 msgid "Session '{name}' removed successfully."
 msgstr "Сессия '{name}' успешно удалена."
-# 
-# File: usr/share/ashyterm/sessions/operations.py, line: 115
-#: NEEDS WORK
-msgid "Failed to save folder data."
-msgstr "Не удалось сохранить данные папки."
-# 
-# File: usr/share/ashyterm/sessions/operations.py, line: 120
-#: NEEDS WORK
-#, python-brace-format
-msgid "Folder '{name}' added successfully."
-msgstr "Папка '{name}' успешно добавлена."
 # 
 # File: usr/share/ashyterm/sessions/operations.py, line: 131
 #: NEEDS WORK
@@ -817,6 +807,16 @@ msgstr "Неподдерживаемый тип элемента для опер
 #: NEEDS WORK
 msgid "Ashy Terminal"
 msgstr "Пепельный терминал"
+# 
+# File: usr/share/ashyterm/ui/menus.py, line: 214
+#: NEEDS WORK
+msgid "Close Pane"
+msgstr "Закрыть панель"
+# 
+# File: usr/share/ashyterm/terminal/tabs.py, line: 43
+#: NEEDS WORK
+msgid "Move to New Tab"
+msgstr "Переместить на новую вкладку"
 # 
 # File: usr/share/ashyterm/window.py, line: 424
 #: NEEDS WORK
@@ -1213,21 +1213,22 @@ msgstr "Не удалось сохранить папку: {}"
 msgid "Folder name"
 msgstr "Имя папки"
 # 
-# File: usr/share/ashyterm/window.py, line: 994
+# File: usr/share/ashyterm/ui/dialogs/move_dialogs.py, line: 28
 #: NEEDS WORK
-msgid "Move Session"
-msgstr "Переместить сессию"
+#, python-brace-format
+msgid "Move {item_type}"
+msgstr "Переместить {item_type}"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 2183
 #: NEEDS WORK
 msgid "Select Destination"
 msgstr "Выберите место назначения"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 2184
+# File: usr/share/ashyterm/ui/dialogs/move_dialogs.py, line: 50
 #: NEEDS WORK
 #, python-brace-format
-msgid "Choose the folder to move the session '{name}' to."
-msgstr "Выберите папку для перемещения сессии '{name}'."
+msgid "Choose the folder to move the {item_type} '{name}' to."
+msgstr "Выберите папку, в которую нужно переместить {item_type} '{name}'."
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 2190
 #: NEEDS WORK
@@ -1249,16 +1250,16 @@ msgstr "Переместить"
 msgid "Move Failed"
 msgstr "Перемещение не удалось"
 # 
-# File: usr/share/ashyterm/ui/dialogs/move_dialogs.py, line: 136
+# File: usr/share/ashyterm/window.py, line: 944
+# File: usr/share/ashyterm/window.py, line: 999
 #: NEEDS WORK
-msgid "Move Layout"
-msgstr "Переместить макет"
+msgid "Session"
+msgstr "Сессия"
 # 
-# File: usr/share/ashyterm/ui/dialogs/move_dialogs.py, line: 155
+# File: usr/share/ashyterm/ui/actions.py, line: 415
 #: NEEDS WORK
-#, python-brace-format
-msgid "Choose the folder to move the layout '{name}' to."
-msgstr "Выберите папку, в которую нужно переместить макет '{name}'."
+msgid "Layout"
+msgstr "Макет"
 # 
 # #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
 # 
@@ -2318,12 +2319,6 @@ msgstr "Новая сессия"
 msgid "New Folder"
 msgstr "Новая папка"
 # 
-# File: usr/share/ashyterm/window.py, line: 944
-# File: usr/share/ashyterm/window.py, line: 999
-#: NEEDS WORK
-msgid "Session"
-msgstr "Сессия"
-# 
 # File: usr/share/ashyterm/window.py, line: 947
 #: NEEDS WORK
 #, python-brace-format
@@ -2354,11 +2349,6 @@ msgstr "Удалить элемент"
 #: NEEDS WORK
 msgid "Delete Items"
 msgstr "Удалить элементы"
-# 
-# File: usr/share/ashyterm/ui/actions.py, line: 415
-#: NEEDS WORK
-msgid "Layout"
-msgstr "Макет"
 # 
 # File: usr/share/ashyterm/window.py, line: 1009
 #: NEEDS WORK
@@ -2508,11 +2498,6 @@ msgstr "Разделить влево/вправо"
 #: NEEDS WORK
 msgid "Split Top/Bottom"
 msgstr "Разделить верх/низ"
-# 
-# File: usr/share/ashyterm/ui/menus.py, line: 214
-#: NEEDS WORK
-msgid "Close Pane"
-msgstr "Закрыть панель"
 # 
 # File: usr/share/ashyterm/app.py, line: 333
 #: NEEDS WORK
@@ -2733,11 +2718,6 @@ msgstr "Ошибка при запуске"
 #, python-brace-format
 msgid "Application failed to start: {}"
 msgstr "Приложение не удалось запустить: {}"
-# 
-# File: usr/share/ashyterm/terminal/tabs.py, line: 43
-#: NEEDS WORK
-msgid "Move to New Tab"
-msgstr "Переместить на новую вкладку"
 # 
 # File: usr/share/ashyterm/terminal/tabs.py, line: 237
 #: NEEDS WORK

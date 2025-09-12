@@ -701,16 +701,17 @@ msgstr "保存验证失败"
 msgid "Save failed: {}"
 msgstr "保存失败：{}"
 # 
-# File: usr/share/ashyterm/sessions/operations.py, line: 46
-#: NEEDS WORK
-msgid "Failed to save session data."
-msgstr "保存会话数据失败。"
-# 
 # File: usr/share/ashyterm/sessions/operations.py, line: 51
 #: NEEDS WORK
 #, python-brace-format
-msgid "Session '{name}' added successfully."
-msgstr "会话 '{name}' 添加成功。"
+msgid "Failed to save {item_type} data."
+msgstr "保存 {item_type} 数据失败。"
+# 
+# File: usr/share/ashyterm/sessions/operations.py, line: 59
+#: NEEDS WORK
+#, python-brace-format
+msgid "{item_type} '{name}' added successfully."
+msgstr "{item_type} '{name}' 添加成功。"
 # 
 # File: usr/share/ashyterm/sessions/operations.py, line: 62
 #: NEEDS WORK
@@ -743,17 +744,6 @@ msgstr "会话移除后保存失败。"
 #, python-brace-format
 msgid "Session '{name}' removed successfully."
 msgstr "会话 '{name}' 已成功移除。"
-# 
-# File: usr/share/ashyterm/sessions/operations.py, line: 115
-#: NEEDS WORK
-msgid "Failed to save folder data."
-msgstr "保存文件夹数据失败。"
-# 
-# File: usr/share/ashyterm/sessions/operations.py, line: 120
-#: NEEDS WORK
-#, python-brace-format
-msgid "Folder '{name}' added successfully."
-msgstr "文件夹 '{name}' 添加成功。"
 # 
 # File: usr/share/ashyterm/sessions/operations.py, line: 131
 #: NEEDS WORK
@@ -817,6 +807,16 @@ msgstr "不支持的粘贴操作项类型。"
 #: NEEDS WORK
 msgid "Ashy Terminal"
 msgstr "灰色终端"
+# 
+# File: usr/share/ashyterm/ui/menus.py, line: 214
+#: NEEDS WORK
+msgid "Close Pane"
+msgstr "关闭面板"
+# 
+# File: usr/share/ashyterm/terminal/tabs.py, line: 43
+#: NEEDS WORK
+msgid "Move to New Tab"
+msgstr "移动到新标签页"
 # 
 # File: usr/share/ashyterm/window.py, line: 424
 #: NEEDS WORK
@@ -1211,21 +1211,22 @@ msgstr "无法保存文件夹：{}"
 msgid "Folder name"
 msgstr "文件夹名称"
 # 
-# File: usr/share/ashyterm/window.py, line: 994
+# File: usr/share/ashyterm/ui/dialogs/move_dialogs.py, line: 28
 #: NEEDS WORK
-msgid "Move Session"
-msgstr "移动会话"
+#, python-brace-format
+msgid "Move {item_type}"
+msgstr "移动 {item_type}"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 2183
 #: NEEDS WORK
 msgid "Select Destination"
 msgstr "选择目标"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 2184
+# File: usr/share/ashyterm/ui/dialogs/move_dialogs.py, line: 50
 #: NEEDS WORK
 #, python-brace-format
-msgid "Choose the folder to move the session '{name}' to."
-msgstr "选择要将会话 '{name}' 移动到的文件夹。"
+msgid "Choose the folder to move the {item_type} '{name}' to."
+msgstr "选择要将 {item_type} '{name}' 移动到的文件夹。"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 2190
 #: NEEDS WORK
@@ -1247,16 +1248,16 @@ msgstr "移动"
 msgid "Move Failed"
 msgstr "移动失败"
 # 
-# File: usr/share/ashyterm/ui/dialogs/move_dialogs.py, line: 136
+# File: usr/share/ashyterm/window.py, line: 944
+# File: usr/share/ashyterm/window.py, line: 999
 #: NEEDS WORK
-msgid "Move Layout"
-msgstr "移动布局"
+msgid "Session"
+msgstr "会话"
 # 
-# File: usr/share/ashyterm/ui/dialogs/move_dialogs.py, line: 155
+# File: usr/share/ashyterm/ui/actions.py, line: 415
 #: NEEDS WORK
-#, python-brace-format
-msgid "Choose the folder to move the layout '{name}' to."
-msgstr "选择要将布局 '{name}' 移动到的文件夹。"
+msgid "Layout"
+msgstr "布局"
 # 
 # #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
 # 
@@ -2312,12 +2313,6 @@ msgstr "新会话"
 msgid "New Folder"
 msgstr "新建文件夹"
 # 
-# File: usr/share/ashyterm/window.py, line: 944
-# File: usr/share/ashyterm/window.py, line: 999
-#: NEEDS WORK
-msgid "Session"
-msgstr "会话"
-# 
 # File: usr/share/ashyterm/window.py, line: 947
 #: NEEDS WORK
 #, python-brace-format
@@ -2348,11 +2343,6 @@ msgstr "删除项目"
 #: NEEDS WORK
 msgid "Delete Items"
 msgstr "删除项目"
-# 
-# File: usr/share/ashyterm/ui/actions.py, line: 415
-#: NEEDS WORK
-msgid "Layout"
-msgstr "布局"
 # 
 # File: usr/share/ashyterm/window.py, line: 1009
 #: NEEDS WORK
@@ -2502,11 +2492,6 @@ msgstr "左右拆分"
 #: NEEDS WORK
 msgid "Split Top/Bottom"
 msgstr "分割上下"
-# 
-# File: usr/share/ashyterm/ui/menus.py, line: 214
-#: NEEDS WORK
-msgid "Close Pane"
-msgstr "关闭面板"
 # 
 # File: usr/share/ashyterm/app.py, line: 333
 #: NEEDS WORK
@@ -2724,11 +2709,6 @@ msgstr "启动错误"
 #, python-brace-format
 msgid "Application failed to start: {}"
 msgstr "应用程序启动失败：{}"
-# 
-# File: usr/share/ashyterm/terminal/tabs.py, line: 43
-#: NEEDS WORK
-msgid "Move to New Tab"
-msgstr "移动到新标签页"
 # 
 # File: usr/share/ashyterm/terminal/tabs.py, line: 237
 #: NEEDS WORK

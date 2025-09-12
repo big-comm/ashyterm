@@ -701,16 +701,17 @@ msgstr "저장 검증 실패"
 msgid "Save failed: {}"
 msgstr "저장 실패: {}"
 # 
-# File: usr/share/ashyterm/sessions/operations.py, line: 46
-#: NEEDS WORK
-msgid "Failed to save session data."
-msgstr "세션 데이터를 저장하지 못했습니다."
-# 
 # File: usr/share/ashyterm/sessions/operations.py, line: 51
 #: NEEDS WORK
 #, python-brace-format
-msgid "Session '{name}' added successfully."
-msgstr "세션 '{name}'이(가) 성공적으로 추가되었습니다."
+msgid "Failed to save {item_type} data."
+msgstr "{item_type} 데이터를 저장하지 못했습니다."
+# 
+# File: usr/share/ashyterm/sessions/operations.py, line: 59
+#: NEEDS WORK
+#, python-brace-format
+msgid "{item_type} '{name}' added successfully."
+msgstr "{item_type} '{name}'이(가) 성공적으로 추가되었습니다."
 # 
 # File: usr/share/ashyterm/sessions/operations.py, line: 62
 #: NEEDS WORK
@@ -743,17 +744,6 @@ msgstr "세션 제거 후 저장 실패."
 #, python-brace-format
 msgid "Session '{name}' removed successfully."
 msgstr "세션 '{name}'이(가) 성공적으로 제거되었습니다."
-# 
-# File: usr/share/ashyterm/sessions/operations.py, line: 115
-#: NEEDS WORK
-msgid "Failed to save folder data."
-msgstr "폴더 데이터를 저장하지 못했습니다."
-# 
-# File: usr/share/ashyterm/sessions/operations.py, line: 120
-#: NEEDS WORK
-#, python-brace-format
-msgid "Folder '{name}' added successfully."
-msgstr "폴더 '{name}'가 성공적으로 추가되었습니다."
 # 
 # File: usr/share/ashyterm/sessions/operations.py, line: 131
 #: NEEDS WORK
@@ -817,6 +807,16 @@ msgstr "붙여넣기 작업을 위한 지원되지 않는 항목 유형입니다
 #: NEEDS WORK
 msgid "Ashy Terminal"
 msgstr "애쉬 터미널"
+# 
+# File: usr/share/ashyterm/ui/menus.py, line: 214
+#: NEEDS WORK
+msgid "Close Pane"
+msgstr "패널 닫기"
+# 
+# File: usr/share/ashyterm/terminal/tabs.py, line: 43
+#: NEEDS WORK
+msgid "Move to New Tab"
+msgstr "새 탭으로 이동"
 # 
 # File: usr/share/ashyterm/window.py, line: 424
 #: NEEDS WORK
@@ -1211,21 +1211,22 @@ msgstr "폴더를 저장하지 못했습니다: {}"
 msgid "Folder name"
 msgstr "폴더 이름"
 # 
-# File: usr/share/ashyterm/window.py, line: 994
+# File: usr/share/ashyterm/ui/dialogs/move_dialogs.py, line: 28
 #: NEEDS WORK
-msgid "Move Session"
-msgstr "세션 이동"
+#, python-brace-format
+msgid "Move {item_type}"
+msgstr "이동 {item_type}"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 2183
 #: NEEDS WORK
 msgid "Select Destination"
 msgstr "대상 선택"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 2184
+# File: usr/share/ashyterm/ui/dialogs/move_dialogs.py, line: 50
 #: NEEDS WORK
 #, python-brace-format
-msgid "Choose the folder to move the session '{name}' to."
-msgstr "세션 '{name}'을(를) 이동할 폴더를 선택하세요."
+msgid "Choose the folder to move the {item_type} '{name}' to."
+msgstr "{item_type} '{name}'을(를) 이동할 폴더를 선택하세요."
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 2190
 #: NEEDS WORK
@@ -1247,16 +1248,16 @@ msgstr "이동"
 msgid "Move Failed"
 msgstr "이동 실패"
 # 
-# File: usr/share/ashyterm/ui/dialogs/move_dialogs.py, line: 136
+# File: usr/share/ashyterm/window.py, line: 944
+# File: usr/share/ashyterm/window.py, line: 999
 #: NEEDS WORK
-msgid "Move Layout"
-msgstr "레이아웃 이동"
+msgid "Session"
+msgstr "세션"
 # 
-# File: usr/share/ashyterm/ui/dialogs/move_dialogs.py, line: 155
+# File: usr/share/ashyterm/ui/actions.py, line: 415
 #: NEEDS WORK
-#, python-brace-format
-msgid "Choose the folder to move the layout '{name}' to."
-msgstr "레이아웃 '{name}'을(를) 이동할 폴더를 선택하세요."
+msgid "Layout"
+msgstr "레이아웃"
 # 
 # #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
 # 
@@ -2315,12 +2316,6 @@ msgstr "새 세션"
 msgid "New Folder"
 msgstr "새 폴더"
 # 
-# File: usr/share/ashyterm/window.py, line: 944
-# File: usr/share/ashyterm/window.py, line: 999
-#: NEEDS WORK
-msgid "Session"
-msgstr "세션"
-# 
 # File: usr/share/ashyterm/window.py, line: 947
 #: NEEDS WORK
 #, python-brace-format
@@ -2351,11 +2346,6 @@ msgstr "항목 삭제"
 #: NEEDS WORK
 msgid "Delete Items"
 msgstr "항목 삭제"
-# 
-# File: usr/share/ashyterm/ui/actions.py, line: 415
-#: NEEDS WORK
-msgid "Layout"
-msgstr "레이아웃"
 # 
 # File: usr/share/ashyterm/window.py, line: 1009
 #: NEEDS WORK
@@ -2505,11 +2495,6 @@ msgstr "왼쪽/오른쪽 나누기"
 #: NEEDS WORK
 msgid "Split Top/Bottom"
 msgstr "상단/하단 분할"
-# 
-# File: usr/share/ashyterm/ui/menus.py, line: 214
-#: NEEDS WORK
-msgid "Close Pane"
-msgstr "패널 닫기"
 # 
 # File: usr/share/ashyterm/app.py, line: 333
 #: NEEDS WORK
@@ -2727,11 +2712,6 @@ msgstr "시작 오류"
 #, python-brace-format
 msgid "Application failed to start: {}"
 msgstr "애플리케이션이 시작되지 않았습니다: {}"
-# 
-# File: usr/share/ashyterm/terminal/tabs.py, line: 43
-#: NEEDS WORK
-msgid "Move to New Tab"
-msgstr "새 탭으로 이동"
 # 
 # File: usr/share/ashyterm/terminal/tabs.py, line: 237
 #: NEEDS WORK

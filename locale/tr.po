@@ -701,16 +701,17 @@ msgstr "Kaydetme doğrulaması başarısız oldu"
 msgid "Save failed: {}"
 msgstr "Kaydetme başarısız: {}"
 # 
-# File: usr/share/ashyterm/sessions/operations.py, line: 46
-#: NEEDS WORK
-msgid "Failed to save session data."
-msgstr "Oturum verisi kaydedilemedi."
-# 
 # File: usr/share/ashyterm/sessions/operations.py, line: 51
 #: NEEDS WORK
 #, python-brace-format
-msgid "Session '{name}' added successfully."
-msgstr "Oturum '{name}' başarıyla eklendi."
+msgid "Failed to save {item_type} data."
+msgstr "{item_type} verisi kaydedilemedi."
+# 
+# File: usr/share/ashyterm/sessions/operations.py, line: 59
+#: NEEDS WORK
+#, python-brace-format
+msgid "{item_type} '{name}' added successfully."
+msgstr "{item_type} '{name}' başarıyla eklendi."
 # 
 # File: usr/share/ashyterm/sessions/operations.py, line: 62
 #: NEEDS WORK
@@ -743,17 +744,6 @@ msgstr "Oturum kaldırıldıktan sonra kaydedilemedi."
 #, python-brace-format
 msgid "Session '{name}' removed successfully."
 msgstr "Oturum '{name}' başarıyla kaldırıldı."
-# 
-# File: usr/share/ashyterm/sessions/operations.py, line: 115
-#: NEEDS WORK
-msgid "Failed to save folder data."
-msgstr "Klasör verileri kaydedilemedi."
-# 
-# File: usr/share/ashyterm/sessions/operations.py, line: 120
-#: NEEDS WORK
-#, python-brace-format
-msgid "Folder '{name}' added successfully."
-msgstr "Klasör '{name}' başarıyla eklendi."
 # 
 # File: usr/share/ashyterm/sessions/operations.py, line: 131
 #: NEEDS WORK
@@ -817,6 +807,16 @@ msgstr "Yapıştırma işlemi için desteklenmeyen öğe türü."
 #: NEEDS WORK
 msgid "Ashy Terminal"
 msgstr "Ashy Terminal"
+# 
+# File: usr/share/ashyterm/ui/menus.py, line: 214
+#: NEEDS WORK
+msgid "Close Pane"
+msgstr "Paneyi Kapat"
+# 
+# File: usr/share/ashyterm/terminal/tabs.py, line: 43
+#: NEEDS WORK
+msgid "Move to New Tab"
+msgstr "Yeni Sekmeye Taşı"
 # 
 # File: usr/share/ashyterm/window.py, line: 424
 #: NEEDS WORK
@@ -1213,21 +1213,22 @@ msgstr "Klasörü kaydetme başarısız oldu: {}"
 msgid "Folder name"
 msgstr "Klasör adı"
 # 
-# File: usr/share/ashyterm/window.py, line: 994
+# File: usr/share/ashyterm/ui/dialogs/move_dialogs.py, line: 28
 #: NEEDS WORK
-msgid "Move Session"
-msgstr "Oturumu Taşı"
+#, python-brace-format
+msgid "Move {item_type}"
+msgstr "Taşı {item_type}"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 2183
 #: NEEDS WORK
 msgid "Select Destination"
 msgstr "Hedefi Seç"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 2184
+# File: usr/share/ashyterm/ui/dialogs/move_dialogs.py, line: 50
 #: NEEDS WORK
 #, python-brace-format
-msgid "Choose the folder to move the session '{name}' to."
-msgstr "'{name}' oturumunu taşımak için klasörü seçin."
+msgid "Choose the folder to move the {item_type} '{name}' to."
+msgstr "{item_type} '{name}' öğesini taşımak için bir klasör seçin."
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 2190
 #: NEEDS WORK
@@ -1249,16 +1250,16 @@ msgstr "Hareket Ettir"
 msgid "Move Failed"
 msgstr "Taşınma Başarısız"
 # 
-# File: usr/share/ashyterm/ui/dialogs/move_dialogs.py, line: 136
+# File: usr/share/ashyterm/window.py, line: 944
+# File: usr/share/ashyterm/window.py, line: 999
 #: NEEDS WORK
-msgid "Move Layout"
-msgstr "Düzen Taşıma"
+msgid "Session"
+msgstr "Oturum"
 # 
-# File: usr/share/ashyterm/ui/dialogs/move_dialogs.py, line: 155
+# File: usr/share/ashyterm/ui/actions.py, line: 375
 #: NEEDS WORK
-#, python-brace-format
-msgid "Choose the folder to move the layout '{name}' to."
-msgstr "'{name}' düzenini taşımak için klasörü seçin."
+msgid "Layout"
+msgstr "Düzen"
 # 
 # #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
 # 
@@ -2318,12 +2319,6 @@ msgstr "Yeni Oturum"
 msgid "New Folder"
 msgstr "Yeni Klasör"
 # 
-# File: usr/share/ashyterm/window.py, line: 944
-# File: usr/share/ashyterm/window.py, line: 999
-#: NEEDS WORK
-msgid "Session"
-msgstr "Oturum"
-# 
 # File: usr/share/ashyterm/window.py, line: 947
 #: NEEDS WORK
 #, python-brace-format
@@ -2354,11 +2349,6 @@ msgstr "Öğeyi Sil"
 #: NEEDS WORK
 msgid "Delete Items"
 msgstr "Öğeleri Sil"
-# 
-# File: usr/share/ashyterm/ui/actions.py, line: 375
-#: NEEDS WORK
-msgid "Layout"
-msgstr "Düzen"
 # 
 # File: usr/share/ashyterm/window.py, line: 1009
 #: NEEDS WORK
@@ -2508,11 +2498,6 @@ msgstr "Solunu Sol/sağ Ayır"
 #: NEEDS WORK
 msgid "Split Top/Bottom"
 msgstr "Üst/Aşağı Ayır"
-# 
-# File: usr/share/ashyterm/ui/menus.py, line: 214
-#: NEEDS WORK
-msgid "Close Pane"
-msgstr "Paneyi Kapat"
 # 
 # File: usr/share/ashyterm/app.py, line: 333
 #: NEEDS WORK
@@ -2731,11 +2716,6 @@ msgstr "Başlangıç Hatası"
 #, python-brace-format
 msgid "Application failed to start: {}"
 msgstr "Uygulama başlatılamadı: {}"
-# 
-# File: usr/share/ashyterm/terminal/tabs.py, line: 43
-#: NEEDS WORK
-msgid "Move to New Tab"
-msgstr "Yeni Sekmeye Taşı"
 # 
 # File: usr/share/ashyterm/terminal/tabs.py, line: 237
 #: NEEDS WORK

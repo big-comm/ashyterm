@@ -701,16 +701,17 @@ msgstr "Provjera spremanja nije uspjela"
 msgid "Save failed: {}"
 msgstr "Spremanje nije uspjelo: {}"
 # 
-# File: usr/share/ashyterm/sessions/operations.py, line: 46
-#: NEEDS WORK
-msgid "Failed to save session data."
-msgstr "Neuspjelo spremanje podataka sesije."
-# 
 # File: usr/share/ashyterm/sessions/operations.py, line: 51
 #: NEEDS WORK
 #, python-brace-format
-msgid "Session '{name}' added successfully."
-msgstr "Sesija '{name}' uspješno dodana."
+msgid "Failed to save {item_type} data."
+msgstr "Neuspjelo spremanje podataka {item_type}."
+# 
+# File: usr/share/ashyterm/sessions/operations.py, line: 59
+#: NEEDS WORK
+#, python-brace-format
+msgid "{item_type} '{name}' added successfully."
+msgstr "{item_type} '{name}' uspješno dodan."
 # 
 # File: usr/share/ashyterm/sessions/operations.py, line: 62
 #: NEEDS WORK
@@ -743,17 +744,6 @@ msgstr "Nije uspjelo spremanje nakon uklanjanja sesije."
 #, python-brace-format
 msgid "Session '{name}' removed successfully."
 msgstr "Sesija '{name}' uspješno uklonjena."
-# 
-# File: usr/share/ashyterm/sessions/operations.py, line: 115
-#: NEEDS WORK
-msgid "Failed to save folder data."
-msgstr "Neuspjelo spremanje podataka mape."
-# 
-# File: usr/share/ashyterm/sessions/operations.py, line: 120
-#: NEEDS WORK
-#, python-brace-format
-msgid "Folder '{name}' added successfully."
-msgstr "Mapa '{name}' uspješno dodana."
 # 
 # File: usr/share/ashyterm/sessions/operations.py, line: 131
 #: NEEDS WORK
@@ -817,6 +807,16 @@ msgstr "Nepodržana vrsta stavke za operaciju lijepljenja."
 #: NEEDS WORK
 msgid "Ashy Terminal"
 msgstr "Ashy Terminal"
+# 
+# File: usr/share/ashyterm/ui/menus.py, line: 214
+#: NEEDS WORK
+msgid "Close Pane"
+msgstr "Zatvori okno"
+# 
+# File: usr/share/ashyterm/terminal/tabs.py, line: 43
+#: NEEDS WORK
+msgid "Move to New Tab"
+msgstr "Premjesti na novu karticu"
 # 
 # File: usr/share/ashyterm/window.py, line: 424
 #: NEEDS WORK
@@ -1213,21 +1213,22 @@ msgstr "Neuspjelo spremanje mape: {}"
 msgid "Folder name"
 msgstr "Naziv mape"
 # 
-# File: usr/share/ashyterm/window.py, line: 994
+# File: usr/share/ashyterm/ui/dialogs/move_dialogs.py, line: 28
 #: NEEDS WORK
-msgid "Move Session"
-msgstr "Premjesti sesiju"
+#, python-brace-format
+msgid "Move {item_type}"
+msgstr "Premjesti {item_type}"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 2183
 #: NEEDS WORK
 msgid "Select Destination"
 msgstr "Odaberite odredište"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 2184
+# File: usr/share/ashyterm/ui/dialogs/move_dialogs.py, line: 50
 #: NEEDS WORK
 #, python-brace-format
-msgid "Choose the folder to move the session '{name}' to."
-msgstr "Odaberite mapu u koju želite premjestiti sesiju '{name}'."
+msgid "Choose the folder to move the {item_type} '{name}' to."
+msgstr "Odaberite mapu u koju želite premjestiti {item_type} '{name}'."
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 2190
 #: NEEDS WORK
@@ -1249,16 +1250,16 @@ msgstr "Premjesti"
 msgid "Move Failed"
 msgstr "Premještaj nije uspio"
 # 
-# File: usr/share/ashyterm/ui/dialogs/move_dialogs.py, line: 136
+# File: usr/share/ashyterm/window.py, line: 944
+# File: usr/share/ashyterm/window.py, line: 999
 #: NEEDS WORK
-msgid "Move Layout"
-msgstr "Premjesti raspored"
+msgid "Session"
+msgstr "Sesija"
 # 
-# File: usr/share/ashyterm/ui/dialogs/move_dialogs.py, line: 155
+# File: usr/share/ashyterm/ui/actions.py, line: 415
 #: NEEDS WORK
-#, python-brace-format
-msgid "Choose the folder to move the layout '{name}' to."
-msgstr "Odaberite mapu u koju želite premjestiti raspored '{name}'."
+msgid "Layout"
+msgstr "Izgled"
 # 
 # #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
 # 
@@ -2323,12 +2324,6 @@ msgstr "Nova sesija"
 msgid "New Folder"
 msgstr "Nova mapa"
 # 
-# File: usr/share/ashyterm/window.py, line: 944
-# File: usr/share/ashyterm/window.py, line: 999
-#: NEEDS WORK
-msgid "Session"
-msgstr "Sesija"
-# 
 # File: usr/share/ashyterm/window.py, line: 947
 #: NEEDS WORK
 #, python-brace-format
@@ -2359,11 +2354,6 @@ msgstr "Izbriši stavku"
 #: NEEDS WORK
 msgid "Delete Items"
 msgstr "Izbriši stavke"
-# 
-# File: usr/share/ashyterm/ui/actions.py, line: 415
-#: NEEDS WORK
-msgid "Layout"
-msgstr "Izgled"
 # 
 # File: usr/share/ashyterm/window.py, line: 1009
 #: NEEDS WORK
@@ -2513,11 +2503,6 @@ msgstr "Podijeli lijevo/desno"
 #: NEEDS WORK
 msgid "Split Top/Bottom"
 msgstr "Podijeli gornje/donje"
-# 
-# File: usr/share/ashyterm/ui/menus.py, line: 214
-#: NEEDS WORK
-msgid "Close Pane"
-msgstr "Zatvori okno"
 # 
 # File: usr/share/ashyterm/app.py, line: 333
 #: NEEDS WORK
@@ -2738,11 +2723,6 @@ msgstr "Pogreška pri pokretanju"
 #, python-brace-format
 msgid "Application failed to start: {}"
 msgstr "Aplikacija nije uspjela pokrenuti: {}"
-# 
-# File: usr/share/ashyterm/terminal/tabs.py, line: 43
-#: NEEDS WORK
-msgid "Move to New Tab"
-msgstr "Premjesti na novu karticu"
 # 
 # File: usr/share/ashyterm/terminal/tabs.py, line: 237
 #: NEEDS WORK

@@ -701,16 +701,17 @@ msgstr "Verificarea salvării a eșuat"
 msgid "Save failed: {}"
 msgstr "Salvarea a eșuat: {}"
 # 
-# File: usr/share/ashyterm/sessions/operations.py, line: 46
-#: NEEDS WORK
-msgid "Failed to save session data."
-msgstr "A înregistrat datele sesiunii."
-# 
 # File: usr/share/ashyterm/sessions/operations.py, line: 51
 #: NEEDS WORK
 #, python-brace-format
-msgid "Session '{name}' added successfully."
-msgstr "Sesiune '{name}' adăugată cu succes."
+msgid "Failed to save {item_type} data."
+msgstr "Nu s-a reușit salvarea datelor {item_type}."
+# 
+# File: usr/share/ashyterm/sessions/operations.py, line: 59
+#: NEEDS WORK
+#, python-brace-format
+msgid "{item_type} '{name}' added successfully."
+msgstr "{item_type} '{name}' a fost adăugat cu succes."
 # 
 # File: usr/share/ashyterm/sessions/operations.py, line: 62
 #: NEEDS WORK
@@ -743,17 +744,6 @@ msgstr "Salvare eșuată după eliminarea sesiunii."
 #, python-brace-format
 msgid "Session '{name}' removed successfully."
 msgstr "Sesiunea '{name}' a fost eliminată cu succes."
-# 
-# File: usr/share/ashyterm/sessions/operations.py, line: 115
-#: NEEDS WORK
-msgid "Failed to save folder data."
-msgstr "Nu s-a reușit salvarea datelor folderului."
-# 
-# File: usr/share/ashyterm/sessions/operations.py, line: 120
-#: NEEDS WORK
-#, python-brace-format
-msgid "Folder '{name}' added successfully."
-msgstr "Folder '{name}' a fost adăugat cu succes."
 # 
 # File: usr/share/ashyterm/sessions/operations.py, line: 131
 #: NEEDS WORK
@@ -817,6 +807,16 @@ msgstr "Tip de element nesuportat pentru operațiunea de lipire."
 #: NEEDS WORK
 msgid "Ashy Terminal"
 msgstr "Ashy Terminal"
+# 
+# File: usr/share/ashyterm/ui/menus.py, line: 214
+#: NEEDS WORK
+msgid "Close Pane"
+msgstr "Închide Panoul"
+# 
+# File: usr/share/ashyterm/terminal/tabs.py, line: 43
+#: NEEDS WORK
+msgid "Move to New Tab"
+msgstr "Mută în tab nou"
 # 
 # File: usr/share/ashyterm/window.py, line: 424
 #: NEEDS WORK
@@ -1213,21 +1213,22 @@ msgstr "Nu s-a reușit salvarea folderului: {}"
 msgid "Folder name"
 msgstr "Nume folder"
 # 
-# File: usr/share/ashyterm/window.py, line: 994
+# File: usr/share/ashyterm/ui/dialogs/move_dialogs.py, line: 28
 #: NEEDS WORK
-msgid "Move Session"
-msgstr "Mutare sesiune"
+#, python-brace-format
+msgid "Move {item_type}"
+msgstr "Mută {item_type}"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 2183
 #: NEEDS WORK
 msgid "Select Destination"
 msgstr "Selectați destinația"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 2184
+# File: usr/share/ashyterm/ui/dialogs/move_dialogs.py, line: 50
 #: NEEDS WORK
 #, python-brace-format
-msgid "Choose the folder to move the session '{name}' to."
-msgstr "Alegeți folderul în care doriți să mutați sesiunea '{name}'."
+msgid "Choose the folder to move the {item_type} '{name}' to."
+msgstr "Alegeți folderul în care doriți să mutați {item_type} '{name}'."
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 2190
 #: NEEDS WORK
@@ -1249,16 +1250,16 @@ msgstr "Mutare"
 msgid "Move Failed"
 msgstr "Mutare eșuată"
 # 
-# File: usr/share/ashyterm/ui/dialogs/move_dialogs.py, line: 136
+# File: usr/share/ashyterm/window.py, line: 944
+# File: usr/share/ashyterm/window.py, line: 999
 #: NEEDS WORK
-msgid "Move Layout"
-msgstr "Mutare Layout"
+msgid "Session"
+msgstr "Sesiune"
 # 
-# File: usr/share/ashyterm/ui/dialogs/move_dialogs.py, line: 155
+# File: usr/share/ashyterm/ui/actions.py, line: 415
 #: NEEDS WORK
-#, python-brace-format
-msgid "Choose the folder to move the layout '{name}' to."
-msgstr "Alegeți folderul în care doriți să mutați layout-ul '{name}'."
+msgid "Layout"
+msgstr "Aspect."
 # 
 # #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
 # 
@@ -2323,12 +2324,6 @@ msgstr "Sesiune nouă"
 msgid "New Folder"
 msgstr "Folder Nouă"
 # 
-# File: usr/share/ashyterm/window.py, line: 944
-# File: usr/share/ashyterm/window.py, line: 999
-#: NEEDS WORK
-msgid "Session"
-msgstr "Sesiune"
-# 
 # File: usr/share/ashyterm/window.py, line: 947
 #: NEEDS WORK
 #, python-brace-format
@@ -2359,11 +2354,6 @@ msgstr "Șterge elementul"
 #: NEEDS WORK
 msgid "Delete Items"
 msgstr "Șterge elemente"
-# 
-# File: usr/share/ashyterm/ui/actions.py, line: 415
-#: NEEDS WORK
-msgid "Layout"
-msgstr "Aspect."
 # 
 # File: usr/share/ashyterm/window.py, line: 1009
 #: NEEDS WORK
@@ -2515,11 +2505,6 @@ msgstr "Împărțiți Stânga/Dreapta"
 #: NEEDS WORK
 msgid "Split Top/Bottom"
 msgstr "Împărțiți Sus/Jos"
-# 
-# File: usr/share/ashyterm/ui/menus.py, line: 214
-#: NEEDS WORK
-msgid "Close Pane"
-msgstr "Închide Panoul"
 # 
 # File: usr/share/ashyterm/app.py, line: 333
 #: NEEDS WORK
@@ -2740,11 +2725,6 @@ msgstr "Eroare la pornire"
 #, python-brace-format
 msgid "Application failed to start: {}"
 msgstr "Aplicația nu a reușit să pornească: {}"
-# 
-# File: usr/share/ashyterm/terminal/tabs.py, line: 43
-#: NEEDS WORK
-msgid "Move to New Tab"
-msgstr "Mută în tab nou"
 # 
 # File: usr/share/ashyterm/terminal/tabs.py, line: 237
 #: NEEDS WORK

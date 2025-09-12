@@ -701,16 +701,17 @@ msgstr "Échec de la vérification de la sauvegarde"
 msgid "Save failed: {}"
 msgstr "Échec de l'enregistrement : {}"
 # 
-# File: usr/share/ashyterm/sessions/operations.py, line: 46
-#: NEEDS WORK
-msgid "Failed to save session data."
-msgstr "Échec de l'enregistrement des données de session."
-# 
 # File: usr/share/ashyterm/sessions/operations.py, line: 51
 #: NEEDS WORK
 #, python-brace-format
-msgid "Session '{name}' added successfully."
-msgstr "Session '{name}' ajoutée avec succès."
+msgid "Failed to save {item_type} data."
+msgstr "Échec de l'enregistrement des données {item_type}."
+# 
+# File: usr/share/ashyterm/sessions/operations.py, line: 59
+#: NEEDS WORK
+#, python-brace-format
+msgid "{item_type} '{name}' added successfully."
+msgstr "{item_type} '{name}' ajouté avec succès."
 # 
 # File: usr/share/ashyterm/sessions/operations.py, line: 62
 #: NEEDS WORK
@@ -743,17 +744,6 @@ msgstr "Échec de l'enregistrement après la suppression de la session."
 #, python-brace-format
 msgid "Session '{name}' removed successfully."
 msgstr "La session '{name}' a été supprimée avec succès."
-# 
-# File: usr/share/ashyterm/sessions/operations.py, line: 115
-#: NEEDS WORK
-msgid "Failed to save folder data."
-msgstr "Échec de l'enregistrement des données du dossier."
-# 
-# File: usr/share/ashyterm/sessions/operations.py, line: 120
-#: NEEDS WORK
-#, python-brace-format
-msgid "Folder '{name}' added successfully."
-msgstr "Dossier '{name}' ajouté avec succès."
 # 
 # File: usr/share/ashyterm/sessions/operations.py, line: 131
 #: NEEDS WORK
@@ -817,6 +807,16 @@ msgstr "Type d'élément non pris en charge pour l'opération de collage."
 #: NEEDS WORK
 msgid "Ashy Terminal"
 msgstr "Terminal Cendré"
+# 
+# File: usr/share/ashyterm/ui/menus.py, line: 214
+#: NEEDS WORK
+msgid "Close Pane"
+msgstr "Fermer le panneau"
+# 
+# File: usr/share/ashyterm/terminal/tabs.py, line: 43
+#: NEEDS WORK
+msgid "Move to New Tab"
+msgstr "Déplacer vers un nouvel onglet"
 # 
 # File: usr/share/ashyterm/window.py, line: 424
 #: NEEDS WORK
@@ -1216,21 +1216,22 @@ msgstr "Échec de l'enregistrement du dossier : {}"
 msgid "Folder name"
 msgstr "Nom du dossier"
 # 
-# File: usr/share/ashyterm/window.py, line: 994
+# File: usr/share/ashyterm/ui/dialogs/move_dialogs.py, line: 28
 #: NEEDS WORK
-msgid "Move Session"
-msgstr "Déplacer la session"
+#, python-brace-format
+msgid "Move {item_type}"
+msgstr "Déplacer {item_type}"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 2183
 #: NEEDS WORK
 msgid "Select Destination"
 msgstr "Sélectionner la destination"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 2184
+# File: usr/share/ashyterm/ui/dialogs/move_dialogs.py, line: 50
 #: NEEDS WORK
 #, python-brace-format
-msgid "Choose the folder to move the session '{name}' to."
-msgstr "Choisissez le dossier vers lequel déplacer la session '{name}'."
+msgid "Choose the folder to move the {item_type} '{name}' to."
+msgstr "Choisissez le dossier dans lequel déplacer le {item_type} '{name}'."
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 2190
 #: NEEDS WORK
@@ -1252,16 +1253,16 @@ msgstr "Déplacer"
 msgid "Move Failed"
 msgstr "Déplacement échoué"
 # 
-# File: usr/share/ashyterm/ui/dialogs/move_dialogs.py, line: 136
+# File: usr/share/ashyterm/window.py, line: 944
+# File: usr/share/ashyterm/window.py, line: 999
 #: NEEDS WORK
-msgid "Move Layout"
-msgstr "Déplacer la mise en page"
+msgid "Session"
+msgstr "Session"
 # 
-# File: usr/share/ashyterm/ui/dialogs/move_dialogs.py, line: 155
+# File: usr/share/ashyterm/ui/actions.py, line: 415
 #: NEEDS WORK
-#, python-brace-format
-msgid "Choose the folder to move the layout '{name}' to."
-msgstr "Choisissez le dossier pour déplacer la mise en page '{name}'."
+msgid "Layout"
+msgstr "Mise en page"
 # 
 # #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
 # 
@@ -2333,12 +2334,6 @@ msgstr "Nouvelle session"
 msgid "New Folder"
 msgstr "Nouveau dossier"
 # 
-# File: usr/share/ashyterm/window.py, line: 944
-# File: usr/share/ashyterm/window.py, line: 999
-#: NEEDS WORK
-msgid "Session"
-msgstr "Session"
-# 
 # File: usr/share/ashyterm/window.py, line: 947
 #: NEEDS WORK
 #, python-brace-format
@@ -2369,11 +2364,6 @@ msgstr "Supprimer l'élément"
 #: NEEDS WORK
 msgid "Delete Items"
 msgstr "Supprimer les éléments"
-# 
-# File: usr/share/ashyterm/ui/actions.py, line: 415
-#: NEEDS WORK
-msgid "Layout"
-msgstr "Mise en page"
 # 
 # File: usr/share/ashyterm/window.py, line: 1009
 #: NEEDS WORK
@@ -2525,11 +2515,6 @@ msgstr "Diviser gauche/droite"
 #: NEEDS WORK
 msgid "Split Top/Bottom"
 msgstr "Diviser Haut/Bas"
-# 
-# File: usr/share/ashyterm/ui/menus.py, line: 214
-#: NEEDS WORK
-msgid "Close Pane"
-msgstr "Fermer le panneau"
 # 
 # File: usr/share/ashyterm/app.py, line: 333
 #: NEEDS WORK
@@ -2750,11 +2735,6 @@ msgstr "Erreur de démarrage"
 #, python-brace-format
 msgid "Application failed to start: {}"
 msgstr "L'application a échoué à démarrer : {}"
-# 
-# File: usr/share/ashyterm/terminal/tabs.py, line: 43
-#: NEEDS WORK
-msgid "Move to New Tab"
-msgstr "Déplacer vers un nouvel onglet"
 # 
 # File: usr/share/ashyterm/terminal/tabs.py, line: 237
 #: NEEDS WORK

@@ -701,16 +701,17 @@ msgstr "Tallennuksen vahvistaminen epäonnistui"
 msgid "Save failed: {}"
 msgstr "Tallennus epäonnistui: {}"
 # 
-# File: usr/share/ashyterm/sessions/operations.py, line: 46
-#: NEEDS WORK
-msgid "Failed to save session data."
-msgstr "Istunnon tietojen tallentaminen epäonnistui."
-# 
 # File: usr/share/ashyterm/sessions/operations.py, line: 51
 #: NEEDS WORK
 #, python-brace-format
-msgid "Session '{name}' added successfully."
-msgstr "Istunto '{name}' lisätty onnistuneesti."
+msgid "Failed to save {item_type} data."
+msgstr "Tallennus epäonnistui {item_type} tietojen osalta."
+# 
+# File: usr/share/ashyterm/sessions/operations.py, line: 59
+#: NEEDS WORK
+#, python-brace-format
+msgid "{item_type} '{name}' added successfully."
+msgstr "{item_type} '{name}' lisätty onnistuneesti."
 # 
 # File: usr/share/ashyterm/sessions/operations.py, line: 62
 #: NEEDS WORK
@@ -743,17 +744,6 @@ msgstr "Tallennus epäonnistui istunnon poistamisen jälkeen."
 #, python-brace-format
 msgid "Session '{name}' removed successfully."
 msgstr "Istunto '{name}' poistettiin onnistuneesti."
-# 
-# File: usr/share/ashyterm/sessions/operations.py, line: 115
-#: NEEDS WORK
-msgid "Failed to save folder data."
-msgstr "Kansion tietojen tallentaminen epäonnistui."
-# 
-# File: usr/share/ashyterm/sessions/operations.py, line: 120
-#: NEEDS WORK
-#, python-brace-format
-msgid "Folder '{name}' added successfully."
-msgstr "Kansio '{name}' lisätty onnistuneesti."
 # 
 # File: usr/share/ashyterm/sessions/operations.py, line: 131
 #: NEEDS WORK
@@ -817,6 +807,16 @@ msgstr "Tuetonta kohdetta liittämistä varten."
 #: NEEDS WORK
 msgid "Ashy Terminal"
 msgstr "Ashy Terminal"
+# 
+# File: usr/share/ashyterm/ui/menus.py, line: 214
+#: NEEDS WORK
+msgid "Close Pane"
+msgstr "Sulje paneeli"
+# 
+# File: usr/share/ashyterm/terminal/tabs.py, line: 43
+#: NEEDS WORK
+msgid "Move to New Tab"
+msgstr "Siirry uuteen välilehteen"
 # 
 # File: usr/share/ashyterm/window.py, line: 424
 #: NEEDS WORK
@@ -1215,21 +1215,22 @@ msgstr "Kansion tallentaminen epäonnistui: {}"
 msgid "Folder name"
 msgstr "Kansion nimi"
 # 
-# File: usr/share/ashyterm/window.py, line: 994
+# File: usr/share/ashyterm/ui/dialogs/move_dialogs.py, line: 28
 #: NEEDS WORK
-msgid "Move Session"
-msgstr "Siirrä istunto"
+#, python-brace-format
+msgid "Move {item_type}"
+msgstr "Siirrä {item_type}"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 2183
 #: NEEDS WORK
 msgid "Select Destination"
 msgstr "Valitse kohde"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 2184
+# File: usr/share/ashyterm/ui/dialogs/move_dialogs.py, line: 50
 #: NEEDS WORK
 #, python-brace-format
-msgid "Choose the folder to move the session '{name}' to."
-msgstr "Valitse kansio, johon siirrät istunnon '{name}'."
+msgid "Choose the folder to move the {item_type} '{name}' to."
+msgstr "Valitse kansio, johon siirrät {item_type} '{name}'."
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 2190
 #: NEEDS WORK
@@ -1251,16 +1252,16 @@ msgstr "Siirrä"
 msgid "Move Failed"
 msgstr "Siirto epäonnistui"
 # 
-# File: usr/share/ashyterm/ui/dialogs/move_dialogs.py, line: 136
+# File: usr/share/ashyterm/window.py, line: 944
+# File: usr/share/ashyterm/window.py, line: 999
 #: NEEDS WORK
-msgid "Move Layout"
-msgstr "Siirrä asettelu"
+msgid "Session"
+msgstr "Istunto"
 # 
-# File: usr/share/ashyterm/ui/dialogs/move_dialogs.py, line: 155
+# File: usr/share/ashyterm/ui/actions.py, line: 415
 #: NEEDS WORK
-#, python-brace-format
-msgid "Choose the folder to move the layout '{name}' to."
-msgstr "Valitse kansio, johon siirrät asettelun '{name}'."
+msgid "Layout"
+msgstr "Asettelu"
 # 
 # #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
 # 
@@ -2327,12 +2328,6 @@ msgstr "Uusi istunto"
 msgid "New Folder"
 msgstr "Uusi kansio"
 # 
-# File: usr/share/ashyterm/window.py, line: 944
-# File: usr/share/ashyterm/window.py, line: 999
-#: NEEDS WORK
-msgid "Session"
-msgstr "Istunto"
-# 
 # File: usr/share/ashyterm/window.py, line: 947
 #: NEEDS WORK
 #, python-brace-format
@@ -2363,11 +2358,6 @@ msgstr "Poista kohde"
 #: NEEDS WORK
 msgid "Delete Items"
 msgstr "Poista kohteet"
-# 
-# File: usr/share/ashyterm/ui/actions.py, line: 415
-#: NEEDS WORK
-msgid "Layout"
-msgstr "Asettelu"
 # 
 # File: usr/share/ashyterm/window.py, line: 1009
 #: NEEDS WORK
@@ -2519,11 +2509,6 @@ msgstr "Jaa vasemmalle/oikealle"
 #: NEEDS WORK
 msgid "Split Top/Bottom"
 msgstr "Jaa ylhäältä/alhaalta"
-# 
-# File: usr/share/ashyterm/ui/menus.py, line: 214
-#: NEEDS WORK
-msgid "Close Pane"
-msgstr "Sulje paneeli"
 # 
 # File: usr/share/ashyterm/app.py, line: 333
 #: NEEDS WORK
@@ -2744,11 +2729,6 @@ msgstr "Käynnistysvirhe"
 #, python-brace-format
 msgid "Application failed to start: {}"
 msgstr "Sovellus ei onnistunut käynnistymään: {}"
-# 
-# File: usr/share/ashyterm/terminal/tabs.py, line: 43
-#: NEEDS WORK
-msgid "Move to New Tab"
-msgstr "Siirry uuteen välilehteen"
 # 
 # File: usr/share/ashyterm/terminal/tabs.py, line: 237
 #: NEEDS WORK

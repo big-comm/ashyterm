@@ -701,16 +701,17 @@ msgstr "保存の検証に失敗しました"
 msgid "Save failed: {}"
 msgstr "保存に失敗しました: {}"
 # 
-# File: usr/share/ashyterm/sessions/operations.py, line: 46
-#: NEEDS WORK
-msgid "Failed to save session data."
-msgstr "セッションデータの保存に失敗しました。"
-# 
 # File: usr/share/ashyterm/sessions/operations.py, line: 51
 #: NEEDS WORK
 #, python-brace-format
-msgid "Session '{name}' added successfully."
-msgstr "セッション '{name}' が正常に追加されました。"
+msgid "Failed to save {item_type} data."
+msgstr "{item_type}データの保存に失敗しました。"
+# 
+# File: usr/share/ashyterm/sessions/operations.py, line: 59
+#: NEEDS WORK
+#, python-brace-format
+msgid "{item_type} '{name}' added successfully."
+msgstr "{item_type} '{name}' が正常に追加されました。"
 # 
 # File: usr/share/ashyterm/sessions/operations.py, line: 62
 #: NEEDS WORK
@@ -743,17 +744,6 @@ msgstr "セッション削除後に保存に失敗しました。"
 #, python-brace-format
 msgid "Session '{name}' removed successfully."
 msgstr "セッション '{name}' が正常に削除されました。"
-# 
-# File: usr/share/ashyterm/sessions/operations.py, line: 115
-#: NEEDS WORK
-msgid "Failed to save folder data."
-msgstr "フォルダデータの保存に失敗しました。"
-# 
-# File: usr/share/ashyterm/sessions/operations.py, line: 120
-#: NEEDS WORK
-#, python-brace-format
-msgid "Folder '{name}' added successfully."
-msgstr "フォルダー '{name}' が正常に追加されました。"
 # 
 # File: usr/share/ashyterm/sessions/operations.py, line: 131
 #: NEEDS WORK
@@ -817,6 +807,16 @@ msgstr "ペースト操作のためのサポートされていないアイテム
 #: NEEDS WORK
 msgid "Ashy Terminal"
 msgstr "アシーターミナル"
+# 
+# File: usr/share/ashyterm/ui/menus.py, line: 214
+#: NEEDS WORK
+msgid "Close Pane"
+msgstr "パネルを閉じる"
+# 
+# File: usr/share/ashyterm/terminal/tabs.py, line: 43
+#: NEEDS WORK
+msgid "Move to New Tab"
+msgstr "新しいタブに移動"
 # 
 # File: usr/share/ashyterm/window.py, line: 424
 #: NEEDS WORK
@@ -1211,21 +1211,22 @@ msgstr "フォルダーの保存に失敗しました: {}"
 msgid "Folder name"
 msgstr "フォルダー名"
 # 
-# File: usr/share/ashyterm/window.py, line: 994
+# File: usr/share/ashyterm/ui/dialogs/move_dialogs.py, line: 28
 #: NEEDS WORK
-msgid "Move Session"
-msgstr "セッションを移動"
+#, python-brace-format
+msgid "Move {item_type}"
+msgstr "アイテムタイプを移動"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 2183
 #: NEEDS WORK
 msgid "Select Destination"
 msgstr "宛先を選択"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 2184
+# File: usr/share/ashyterm/ui/dialogs/move_dialogs.py, line: 50
 #: NEEDS WORK
 #, python-brace-format
-msgid "Choose the folder to move the session '{name}' to."
-msgstr "セッション '{name}' を移動するフォルダーを選択してください。"
+msgid "Choose the folder to move the {item_type} '{name}' to."
+msgstr "移動する{item_type} '{name}'のフォルダーを選択してください。"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 2190
 #: NEEDS WORK
@@ -1247,16 +1248,16 @@ msgstr "移動"
 msgid "Move Failed"
 msgstr "移動に失敗しました"
 # 
-# File: usr/share/ashyterm/ui/dialogs/move_dialogs.py, line: 136
+# File: usr/share/ashyterm/window.py, line: 944
+# File: usr/share/ashyterm/window.py, line: 999
 #: NEEDS WORK
-msgid "Move Layout"
-msgstr "レイアウトを移動"
+msgid "Session"
+msgstr "セッション"
 # 
-# File: usr/share/ashyterm/ui/dialogs/move_dialogs.py, line: 155
+# File: usr/share/ashyterm/ui/actions.py, line: 415
 #: NEEDS WORK
-#, python-brace-format
-msgid "Choose the folder to move the layout '{name}' to."
-msgstr "レイアウト '{name}' を移動するフォルダーを選択してください。"
+msgid "Layout"
+msgstr "レイアウト"
 # 
 # #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
 # 
@@ -2315,12 +2316,6 @@ msgstr "新しいセッション"
 msgid "New Folder"
 msgstr "新しいフォルダー"
 # 
-# File: usr/share/ashyterm/window.py, line: 944
-# File: usr/share/ashyterm/window.py, line: 999
-#: NEEDS WORK
-msgid "Session"
-msgstr "セッション"
-# 
 # File: usr/share/ashyterm/window.py, line: 947
 #: NEEDS WORK
 #, python-brace-format
@@ -2351,11 +2346,6 @@ msgstr "アイテムを削除"
 #: NEEDS WORK
 msgid "Delete Items"
 msgstr "アイテムを削除"
-# 
-# File: usr/share/ashyterm/ui/actions.py, line: 415
-#: NEEDS WORK
-msgid "Layout"
-msgstr "レイアウト"
 # 
 # File: usr/share/ashyterm/window.py, line: 1009
 #: NEEDS WORK
@@ -2505,11 +2495,6 @@ msgstr "左右分割"
 #: NEEDS WORK
 msgid "Split Top/Bottom"
 msgstr "上下分割"
-# 
-# File: usr/share/ashyterm/ui/menus.py, line: 214
-#: NEEDS WORK
-msgid "Close Pane"
-msgstr "パネルを閉じる"
 # 
 # File: usr/share/ashyterm/app.py, line: 333
 #: NEEDS WORK
@@ -2727,11 +2712,6 @@ msgstr "起動エラー"
 #, python-brace-format
 msgid "Application failed to start: {}"
 msgstr "アプリケーションの起動に失敗しました: {}"
-# 
-# File: usr/share/ashyterm/terminal/tabs.py, line: 43
-#: NEEDS WORK
-msgid "Move to New Tab"
-msgstr "新しいタブに移動"
 # 
 # File: usr/share/ashyterm/terminal/tabs.py, line: 237
 #: NEEDS WORK

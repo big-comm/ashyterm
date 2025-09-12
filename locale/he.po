@@ -701,16 +701,17 @@ msgstr "שגיאת אימות שמירה"
 msgid "Save failed: {}"
 msgstr "שימור נכשל: {}"
 # 
-# File: usr/share/ashyterm/sessions/operations.py, line: 46
-#: NEEDS WORK
-msgid "Failed to save session data."
-msgstr "שגיאה בשמירת נתוני המושב."
-# 
 # File: usr/share/ashyterm/sessions/operations.py, line: 51
 #: NEEDS WORK
 #, python-brace-format
-msgid "Session '{name}' added successfully."
-msgstr "הסשן '{name}' נוסף בהצלחה."
+msgid "Failed to save {item_type} data."
+msgstr "שגיאה בשמירת נתוני {item_type}."
+# 
+# File: usr/share/ashyterm/sessions/operations.py, line: 59
+#: NEEDS WORK
+#, python-brace-format
+msgid "{item_type} '{name}' added successfully."
+msgstr "{item_type} '{name}' נוסף בהצלחה."
 # 
 # File: usr/share/ashyterm/sessions/operations.py, line: 62
 #: NEEDS WORK
@@ -743,17 +744,6 @@ msgstr "שגיאה בשמירה לאחר הסרת המושב."
 #, python-brace-format
 msgid "Session '{name}' removed successfully."
 msgstr "הסשן '{name}' הוסר בהצלחה."
-# 
-# File: usr/share/ashyterm/sessions/operations.py, line: 115
-#: NEEDS WORK
-msgid "Failed to save folder data."
-msgstr "שגיאה בשמירת נתוני התיקייה."
-# 
-# File: usr/share/ashyterm/sessions/operations.py, line: 120
-#: NEEDS WORK
-#, python-brace-format
-msgid "Folder '{name}' added successfully."
-msgstr "התיקייה '{name}' נוספה בהצלחה."
 # 
 # File: usr/share/ashyterm/sessions/operations.py, line: 131
 #: NEEDS WORK
@@ -817,6 +807,16 @@ msgstr "סוג פריט לא נתמך לפעולת הדבקה."
 #: NEEDS WORK
 msgid "Ashy Terminal"
 msgstr "אשי טרמינל"
+# 
+# File: usr/share/ashyterm/ui/menus.py, line: 214
+#: NEEDS WORK
+msgid "Close Pane"
+msgstr "סגור פאנל"
+# 
+# File: usr/share/ashyterm/terminal/tabs.py, line: 43
+#: NEEDS WORK
+msgid "Move to New Tab"
+msgstr "עבור לטאב חדש"
 # 
 # File: usr/share/ashyterm/window.py, line: 424
 #: NEEDS WORK
@@ -1213,21 +1213,22 @@ msgstr "נכשל בשמירת תיקייה: {}"
 msgid "Folder name"
 msgstr "שם תיקייה"
 # 
-# File: usr/share/ashyterm/window.py, line: 994
+# File: usr/share/ashyterm/ui/dialogs/move_dialogs.py, line: 28
 #: NEEDS WORK
-msgid "Move Session"
-msgstr "העבר מפגש"
+#, python-brace-format
+msgid "Move {item_type}"
+msgstr "העבר {item_type}"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 2183
 #: NEEDS WORK
 msgid "Select Destination"
 msgstr "בחר יעד"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 2184
+# File: usr/share/ashyterm/ui/dialogs/move_dialogs.py, line: 50
 #: NEEDS WORK
 #, python-brace-format
-msgid "Choose the folder to move the session '{name}' to."
-msgstr "בחר את התיקייה להעברת הסשן '{name}' אליה."
+msgid "Choose the folder to move the {item_type} '{name}' to."
+msgstr "בחר את התיקייה להעברת ה-{item_type} '{name}'."
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 2190
 #: NEEDS WORK
@@ -1249,16 +1250,16 @@ msgstr "זוז"
 msgid "Move Failed"
 msgstr "הזזה נכשלה"
 # 
-# File: usr/share/ashyterm/ui/dialogs/move_dialogs.py, line: 136
+# File: usr/share/ashyterm/window.py, line: 944
+# File: usr/share/ashyterm/window.py, line: 999
 #: NEEDS WORK
-msgid "Move Layout"
-msgstr "הזז פריסה"
+msgid "Session"
+msgstr "סשן"
 # 
-# File: usr/share/ashyterm/ui/dialogs/move_dialogs.py, line: 155
+# File: usr/share/ashyterm/ui/actions.py, line: 415
 #: NEEDS WORK
-#, python-brace-format
-msgid "Choose the folder to move the layout '{name}' to."
-msgstr "בחר את התיקייה להעברת הפריסה '{name}'."
+msgid "Layout"
+msgstr "פריסה"
 # 
 # #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
 # 
@@ -2319,12 +2320,6 @@ msgstr "סשן חדש"
 msgid "New Folder"
 msgstr "תיקייה חדשה"
 # 
-# File: usr/share/ashyterm/window.py, line: 944
-# File: usr/share/ashyterm/window.py, line: 999
-#: NEEDS WORK
-msgid "Session"
-msgstr "סשן"
-# 
 # File: usr/share/ashyterm/window.py, line: 947
 #: NEEDS WORK
 #, python-brace-format
@@ -2355,11 +2350,6 @@ msgstr "מחק פריט"
 #: NEEDS WORK
 msgid "Delete Items"
 msgstr "מחק פריטים"
-# 
-# File: usr/share/ashyterm/ui/actions.py, line: 415
-#: NEEDS WORK
-msgid "Layout"
-msgstr "פריסה"
 # 
 # File: usr/share/ashyterm/window.py, line: 1009
 #: NEEDS WORK
@@ -2509,11 +2499,6 @@ msgstr "חלק שמאלה/ימינה"
 #: NEEDS WORK
 msgid "Split Top/Bottom"
 msgstr "חלק עליון/תחתון"
-# 
-# File: usr/share/ashyterm/ui/menus.py, line: 214
-#: NEEDS WORK
-msgid "Close Pane"
-msgstr "סגור פאנל"
 # 
 # File: usr/share/ashyterm/app.py, line: 333
 #: NEEDS WORK
@@ -2731,11 +2716,6 @@ msgstr "שגיאת הפעלה"
 #, python-brace-format
 msgid "Application failed to start: {}"
 msgstr "היישום נכשל בהפעלה: {}"
-# 
-# File: usr/share/ashyterm/terminal/tabs.py, line: 43
-#: NEEDS WORK
-msgid "Move to New Tab"
-msgstr "עבור לטאב חדש"
 # 
 # File: usr/share/ashyterm/terminal/tabs.py, line: 237
 #: NEEDS WORK

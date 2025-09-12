@@ -701,16 +701,17 @@ msgstr "Uloženie overenia zlyhalo"
 msgid "Save failed: {}"
 msgstr "Uloženie zlyhalo: {}"
 # 
-# File: usr/share/ashyterm/sessions/operations.py, line: 46
-#: NEEDS WORK
-msgid "Failed to save session data."
-msgstr "Nepodarilo sa uložiť údaje relácie."
-# 
 # File: usr/share/ashyterm/sessions/operations.py, line: 51
 #: NEEDS WORK
 #, python-brace-format
-msgid "Session '{name}' added successfully."
-msgstr "Relácia '{name}' bola úspešne pridaná."
+msgid "Failed to save {item_type} data."
+msgstr "Nepodarilo sa uložiť údaje {item_type}."
+# 
+# File: usr/share/ashyterm/sessions/operations.py, line: 59
+#: NEEDS WORK
+#, python-brace-format
+msgid "{item_type} '{name}' added successfully."
+msgstr "{item_type} '{name}' bol úspešne pridaný."
 # 
 # File: usr/share/ashyterm/sessions/operations.py, line: 62
 #: NEEDS WORK
@@ -743,17 +744,6 @@ msgstr "Uloženie zlyhalo po odstránení relácie."
 #, python-brace-format
 msgid "Session '{name}' removed successfully."
 msgstr "Relácia '{name}' bola úspešne odstránená."
-# 
-# File: usr/share/ashyterm/sessions/operations.py, line: 115
-#: NEEDS WORK
-msgid "Failed to save folder data."
-msgstr "Nepodarilo sa uložiť údaje priečinka."
-# 
-# File: usr/share/ashyterm/sessions/operations.py, line: 120
-#: NEEDS WORK
-#, python-brace-format
-msgid "Folder '{name}' added successfully."
-msgstr "Zložka '{name}' bola úspešne pridaná."
 # 
 # File: usr/share/ashyterm/sessions/operations.py, line: 131
 #: NEEDS WORK
@@ -817,6 +807,16 @@ msgstr "Nepodporovaný typ položky pre operáciu prilepenia."
 #: NEEDS WORK
 msgid "Ashy Terminal"
 msgstr "Ashy Terminál"
+# 
+# File: usr/share/ashyterm/ui/menus.py, line: 214
+#: NEEDS WORK
+msgid "Close Pane"
+msgstr "Zavrieť panel"
+# 
+# File: usr/share/ashyterm/terminal/tabs.py, line: 43
+#: NEEDS WORK
+msgid "Move to New Tab"
+msgstr "Presunúť na novú kartu"
 # 
 # File: usr/share/ashyterm/window.py, line: 424
 #: NEEDS WORK
@@ -1213,21 +1213,22 @@ msgstr "Nepodarilo sa uložiť priečinok: {}"
 msgid "Folder name"
 msgstr "Názov priečinka"
 # 
-# File: usr/share/ashyterm/window.py, line: 994
+# File: usr/share/ashyterm/ui/dialogs/move_dialogs.py, line: 28
 #: NEEDS WORK
-msgid "Move Session"
-msgstr "Presunúť reláciu"
+#, python-brace-format
+msgid "Move {item_type}"
+msgstr "Presuň {item_type}"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 2183
 #: NEEDS WORK
 msgid "Select Destination"
 msgstr "Vyberte cieľ"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 2184
+# File: usr/share/ashyterm/ui/dialogs/move_dialogs.py, line: 50
 #: NEEDS WORK
 #, python-brace-format
-msgid "Choose the folder to move the session '{name}' to."
-msgstr "Vyberte priečinok, do ktorého chcete presunúť reláciu '{name}'."
+msgid "Choose the folder to move the {item_type} '{name}' to."
+msgstr "Vyberte priečinok, do ktorého chcete presunúť {item_type} '{name}'."
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 2190
 #: NEEDS WORK
@@ -1249,16 +1250,16 @@ msgstr "Presunúť"
 msgid "Move Failed"
 msgstr "Presun zlyhal"
 # 
-# File: usr/share/ashyterm/ui/dialogs/move_dialogs.py, line: 136
+# File: usr/share/ashyterm/window.py, line: 944
+# File: usr/share/ashyterm/window.py, line: 999
 #: NEEDS WORK
-msgid "Move Layout"
-msgstr "Presunúť rozloženie"
+msgid "Session"
+msgstr "Relácia"
 # 
-# File: usr/share/ashyterm/ui/dialogs/move_dialogs.py, line: 155
+# File: usr/share/ashyterm/ui/actions.py, line: 415
 #: NEEDS WORK
-#, python-brace-format
-msgid "Choose the folder to move the layout '{name}' to."
-msgstr "Vyberte priečinok, do ktorého chcete presunúť rozloženie '{name}'."
+msgid "Layout"
+msgstr "Rozloženie"
 # 
 # #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
 # 
@@ -2323,12 +2324,6 @@ msgstr "Nová relácia"
 msgid "New Folder"
 msgstr "Nová zložka"
 # 
-# File: usr/share/ashyterm/window.py, line: 944
-# File: usr/share/ashyterm/window.py, line: 999
-#: NEEDS WORK
-msgid "Session"
-msgstr "Relácia"
-# 
 # File: usr/share/ashyterm/window.py, line: 947
 #: NEEDS WORK
 #, python-brace-format
@@ -2359,11 +2354,6 @@ msgstr "Odstrániť položku"
 #: NEEDS WORK
 msgid "Delete Items"
 msgstr "Odstrániť položky"
-# 
-# File: usr/share/ashyterm/ui/actions.py, line: 415
-#: NEEDS WORK
-msgid "Layout"
-msgstr "Rozloženie"
 # 
 # File: usr/share/ashyterm/window.py, line: 1009
 #: NEEDS WORK
@@ -2515,11 +2505,6 @@ msgstr "Rozdeliť vľavo/vpravo"
 #: NEEDS WORK
 msgid "Split Top/Bottom"
 msgstr "Rozdeliť hore/dole"
-# 
-# File: usr/share/ashyterm/ui/menus.py, line: 214
-#: NEEDS WORK
-msgid "Close Pane"
-msgstr "Zavrieť panel"
 # 
 # File: usr/share/ashyterm/app.py, line: 333
 #: NEEDS WORK
@@ -2738,11 +2723,6 @@ msgstr "Chyba pri spustení"
 #, python-brace-format
 msgid "Application failed to start: {}"
 msgstr "Aplikácia sa nepodarilo spustiť: {}"
-# 
-# File: usr/share/ashyterm/terminal/tabs.py, line: 43
-#: NEEDS WORK
-msgid "Move to New Tab"
-msgstr "Presunúť na novú kartu"
 # 
 # File: usr/share/ashyterm/terminal/tabs.py, line: 237
 #: NEEDS WORK

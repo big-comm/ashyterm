@@ -701,16 +701,17 @@ msgstr "A mentés ellenőrzése meghiúsult"
 msgid "Save failed: {}"
 msgstr "Mentés nem sikerült: {}"
 # 
-# File: usr/share/ashyterm/sessions/operations.py, line: 46
-#: NEEDS WORK
-msgid "Failed to save session data."
-msgstr "A munkamenet adatok mentése nem sikerült."
-# 
 # File: usr/share/ashyterm/sessions/operations.py, line: 51
 #: NEEDS WORK
 #, python-brace-format
-msgid "Session '{name}' added successfully."
-msgstr "A '{name}' munkamenet sikeresen hozzáadva."
+msgid "Failed to save {item_type} data."
+msgstr "Nem sikerült menteni a {item_type} adatokat."
+# 
+# File: usr/share/ashyterm/sessions/operations.py, line: 59
+#: NEEDS WORK
+#, python-brace-format
+msgid "{item_type} '{name}' added successfully."
+msgstr "{item_type} '{name}' sikeresen hozzáadva."
 # 
 # File: usr/share/ashyterm/sessions/operations.py, line: 62
 #: NEEDS WORK
@@ -743,17 +744,6 @@ msgstr "A munkamenet eltávolítása után nem sikerült menteni."
 #, python-brace-format
 msgid "Session '{name}' removed successfully."
 msgstr "A '{name}' munkamenet sikeresen eltávolítva."
-# 
-# File: usr/share/ashyterm/sessions/operations.py, line: 115
-#: NEEDS WORK
-msgid "Failed to save folder data."
-msgstr "A mappa adatai mentése nem sikerült."
-# 
-# File: usr/share/ashyterm/sessions/operations.py, line: 120
-#: NEEDS WORK
-#, python-brace-format
-msgid "Folder '{name}' added successfully."
-msgstr "A '{name}' mappa sikeresen hozzáadva."
 # 
 # File: usr/share/ashyterm/sessions/operations.py, line: 131
 #: NEEDS WORK
@@ -817,6 +807,16 @@ msgstr "Nem támogatott elem típus a beillesztési művelethez."
 #: NEEDS WORK
 msgid "Ashy Terminal"
 msgstr "Ashy Terminál"
+# 
+# File: usr/share/ashyterm/ui/menus.py, line: 214
+#: NEEDS WORK
+msgid "Close Pane"
+msgstr "Pane bezárása"
+# 
+# File: usr/share/ashyterm/terminal/tabs.py, line: 43
+#: NEEDS WORK
+msgid "Move to New Tab"
+msgstr "Új fülre lépés"
 # 
 # File: usr/share/ashyterm/window.py, line: 424
 #: NEEDS WORK
@@ -1215,21 +1215,22 @@ msgstr "A mappa mentése nem sikerült: {}"
 msgid "Folder name"
 msgstr "Mappa neve"
 # 
-# File: usr/share/ashyterm/window.py, line: 994
+# File: usr/share/ashyterm/ui/dialogs/move_dialogs.py, line: 28
 #: NEEDS WORK
-msgid "Move Session"
-msgstr "Áthelyezés munkamenet"
+#, python-brace-format
+msgid "Move {item_type}"
+msgstr "Mozgassa a {item_type}"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 2183
 #: NEEDS WORK
 msgid "Select Destination"
 msgstr "Célhely kiválasztása"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 2184
+# File: usr/share/ashyterm/ui/dialogs/move_dialogs.py, line: 50
 #: NEEDS WORK
 #, python-brace-format
-msgid "Choose the folder to move the session '{name}' to."
-msgstr "Válaszd ki a mappát, ahová a '{name}' munkamenetet áthelyezed."
+msgid "Choose the folder to move the {item_type} '{name}' to."
+msgstr "Válaszd ki a mappát, ahová a {item_type} '{name}' elemet áthelyezed."
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 2190
 #: NEEDS WORK
@@ -1251,16 +1252,16 @@ msgstr "Mozgás"
 msgid "Move Failed"
 msgstr "Mozgás sikertelen"
 # 
-# File: usr/share/ashyterm/ui/dialogs/move_dialogs.py, line: 136
+# File: usr/share/ashyterm/window.py, line: 944
+# File: usr/share/ashyterm/window.py, line: 999
 #: NEEDS WORK
-msgid "Move Layout"
-msgstr "Elrendezés áthelyezése"
+msgid "Session"
+msgstr "Munkamenet"
 # 
-# File: usr/share/ashyterm/ui/dialogs/move_dialogs.py, line: 155
+# File: usr/share/ashyterm/ui/actions.py, line: 415
 #: NEEDS WORK
-#, python-brace-format
-msgid "Choose the folder to move the layout '{name}' to."
-msgstr "Válaszd ki a mappát, ahová a '{name}' elrendezést áthelyezed."
+msgid "Layout"
+msgstr "Elrendezés"
 # 
 # #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
 # 
@@ -2327,12 +2328,6 @@ msgstr "Új munkamenet"
 msgid "New Folder"
 msgstr "Új mappa"
 # 
-# File: usr/share/ashyterm/window.py, line: 944
-# File: usr/share/ashyterm/window.py, line: 999
-#: NEEDS WORK
-msgid "Session"
-msgstr "Munkamenet"
-# 
 # File: usr/share/ashyterm/window.py, line: 947
 #: NEEDS WORK
 #, python-brace-format
@@ -2363,11 +2358,6 @@ msgstr "Elem törlése"
 #: NEEDS WORK
 msgid "Delete Items"
 msgstr "Elemek törlése"
-# 
-# File: usr/share/ashyterm/ui/actions.py, line: 415
-#: NEEDS WORK
-msgid "Layout"
-msgstr "Elrendezés"
 # 
 # File: usr/share/ashyterm/window.py, line: 1009
 #: NEEDS WORK
@@ -2517,11 +2507,6 @@ msgstr "Balra/Jobbra osztás"
 #: NEEDS WORK
 msgid "Split Top/Bottom"
 msgstr "Felosztás Felül/Alul"
-# 
-# File: usr/share/ashyterm/ui/menus.py, line: 214
-#: NEEDS WORK
-msgid "Close Pane"
-msgstr "Pane bezárása"
 # 
 # File: usr/share/ashyterm/app.py, line: 333
 #: NEEDS WORK
@@ -2742,11 +2727,6 @@ msgstr "Indítási hiba"
 #, python-brace-format
 msgid "Application failed to start: {}"
 msgstr "Az alkalmazás indítása nem sikerült: {}"
-# 
-# File: usr/share/ashyterm/terminal/tabs.py, line: 43
-#: NEEDS WORK
-msgid "Move to New Tab"
-msgstr "Új fülre lépés"
 # 
 # File: usr/share/ashyterm/terminal/tabs.py, line: 237
 #: NEEDS WORK
