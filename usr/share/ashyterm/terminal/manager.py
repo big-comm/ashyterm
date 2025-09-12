@@ -24,6 +24,7 @@ gi.require_version("Gtk", "4.0")
 gi.require_version("Vte", "3.91")
 from gi.repository import Gdk, GLib, Gtk, Vte
 
+from ..helpers import is_valid_url
 from ..sessions.models import SessionItem
 from ..settings.manager import SettingsManager
 from ..ui.menus import create_terminal_menu
@@ -475,82 +476,62 @@ class TerminalManager:
             self._stats["terminals_failed"] += 1
             raise
 
-    def create_ssh_terminal(
-        self, session: SessionItem, initial_command: Optional[str] = None
+    def _create_remote_terminal(
+        self,
+        session: SessionItem,
+        terminal_type: str,
+        initial_command: Optional[str] = None,
     ) -> Optional[Vte.Terminal]:
+        """Generic private method to create remote terminals (SSH/SFTP)."""
         with self._creation_lock:
             session_data = session.to_dict()
             is_valid, errors = validate_session_data(session_data)
             if not is_valid:
-                error_msg = f"Session validation failed: {', '.join(errors)}"
-                raise TerminalCreationError(error_msg, "ssh")
-
-            terminal = self._create_base_terminal()
-            if not terminal:
-                raise TerminalCreationError("base terminal creation failed", "ssh")
-
-            terminal_id = self.registry.register_terminal(terminal, "ssh", session)
-            self._setup_terminal_events(terminal, session, terminal_id)
-            user_data_for_spawn = (terminal_id, session)
-
-            try:
-                self.spawner.spawn_ssh_session(
-                    terminal,
-                    session,
-                    callback=self._on_spawn_callback,
-                    user_data=user_data_for_spawn,
-                    initial_command=initial_command,
-                )
-                self.logger.info(
-                    f"SSH terminal created successfully: '{session.name}' (ID: {terminal_id})"
-                )
-                log_terminal_event(
-                    "created",
-                    session.name,
-                    f"SSH to {session.get_connection_string()}",
-                )
-                self._stats["terminals_created"] += 1
-                return terminal
-            except TerminalCreationError:
-                self.registry.unregister_terminal(terminal_id)
-                self._stats["terminals_failed"] += 1
-                raise
-
-    def create_sftp_terminal(self, session: SessionItem) -> Optional[Vte.Terminal]:
-        """Creates a new terminal and starts an SFTP session in it."""
-        with self._creation_lock:
-            session_data = session.to_dict()
-            is_valid, errors = validate_session_data(session_data)
-            if not is_valid:
-                error_msg = f"Session validation failed for SFTP: {', '.join(errors)}"
-                raise TerminalCreationError(error_msg, "sftp")
+                error_msg = f"Session validation failed for {terminal_type.upper()}: {', '.join(errors)}"
+                raise TerminalCreationError(error_msg, terminal_type)
 
             terminal = self._create_base_terminal()
             if not terminal:
                 raise TerminalCreationError(
-                    "base terminal creation failed for SFTP", "sftp"
+                    f"base terminal creation failed for {terminal_type.upper()}",
+                    terminal_type,
                 )
 
-            terminal_id = self.registry.register_terminal(terminal, "sftp", session)
+            terminal_id = self.registry.register_terminal(
+                terminal, terminal_type, session
+            )
             self._setup_terminal_events(terminal, session, terminal_id)
-            self._setup_sftp_drag_and_drop(terminal)
-
             user_data_for_spawn = (terminal_id, session)
 
             try:
-                self.spawner.spawn_sftp_session(
-                    terminal,
-                    session,
-                    callback=self._on_spawn_callback,
-                    user_data=user_data_for_spawn,
-                )
+                if terminal_type == "ssh":
+                    self.spawner.spawn_ssh_session(
+                        terminal,
+                        session,
+                        callback=self._on_spawn_callback,
+                        user_data=user_data_for_spawn,
+                        initial_command=initial_command,
+                    )
+                elif terminal_type == "sftp":
+                    self._setup_sftp_drag_and_drop(terminal)
+                    self.spawner.spawn_sftp_session(
+                        terminal,
+                        session,
+                        callback=self._on_spawn_callback,
+                        user_data=user_data_for_spawn,
+                    )
+                else:
+                    raise ValueError(
+                        f"Unsupported remote terminal type: {terminal_type}"
+                    )
+
                 self.logger.info(
-                    f"SFTP terminal created successfully: '{session.name}' (ID: {terminal_id})"
+                    f"{terminal_type.upper()} terminal created successfully: '{session.name}' (ID: {terminal_id})"
                 )
                 log_terminal_event(
                     "created",
                     session.name,
-                    f"SFTP to {session.get_connection_string()}",
+                    f"{terminal_type.upper()} to {session.get_connection_string()}",
                 )
                 self._stats["terminals_created"] += 1
                 return terminal
@@ -558,6 +539,16 @@ class TerminalManager:
                 self.registry.unregister_terminal(terminal_id)
                 self._stats["terminals_failed"] += 1
                 raise
+
+    def create_ssh_terminal(
+        self, session: SessionItem, initial_command: Optional[str] = None
+    ) -> Optional[Vte.Terminal]:
+        """Creates a new terminal and starts an SSH session in it."""
+        return self._create_remote_terminal(session, "ssh", initial_command)
+
+    def create_sftp_terminal(self, session: SessionItem) -> Optional[Vte.Terminal]:
+        """Creates a new terminal and starts an SFTP session in it."""
+        return self._create_remote_terminal(session, "sftp")
 
     def _create_base_terminal(self) -> Optional[Vte.Terminal]:
         try:
@@ -1104,7 +1095,7 @@ class TerminalManager:
                                 f"Regex match found at ({col}, {row}): '{matched_text}'"
                             )
 
-                            if matched_text and self._is_valid_url(matched_text):
+                            if matched_text and is_valid_url(matched_text):
                                 return matched_text
 
                 except Exception as e:
@@ -1115,14 +1106,6 @@ class TerminalManager:
         except Exception as e:
             self.logger.error(f"URL detection at position failed: {e}")
             return None
-
-    def _is_valid_url(self, text: str) -> bool:
-        """Check if text is a valid URL."""
-        try:
-            result = urlparse(text.strip())
-            return bool(result.scheme and result.netloc)
-        except Exception:
-            return False
 
     def _open_hyperlink(self, uri: str) -> bool:
         """Open hyperlink using system default handler."""

@@ -123,8 +123,10 @@ class CommTerminalWindow(Adw.ApplicationWindow):
                         new_move_button.add_css_class("flat")
                         new_move_button.connect(
                             "clicked",
-                            self.tab_manager._on_move_to_tab_callback,
-                            terminal_widget,
+                            lambda _,
+                            term=terminal_widget: self.tab_manager._on_move_to_tab_callback(
+                                term
+                            ),
                         )
 
                         # Replace old buttons with new ones

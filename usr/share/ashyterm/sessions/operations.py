@@ -1,7 +1,8 @@
 # ashyterm/sessions/operations.py
 
 import threading
-from typing import Optional, Tuple, Union
+from functools import partial
+from typing import Callable, Optional, Tuple, Union
 
 from gi.repository import Gio
 
@@ -30,26 +31,46 @@ class SessionOperations:
         self._operation_lock = threading.RLock()
         self.storage_manager = get_storage_manager()
 
+    def _add_item(
+        self,
+        item: Union[SessionItem, SessionFolder],
+        store: Gio.ListStore,
+        validator: Callable[[Union[SessionItem, SessionFolder]], OperationResult],
+        item_type_name: str,
+    ) -> OperationResult:
+        """Generic method to add an item to a store with validation and rollback."""
+        validation_result = validator(item)
+        if not validation_result.success:
+            return validation_result
+
+        store.append(item)
+        if not self._save_changes():
+            self._remove_item_from_store(item)  # Rollback
+            return OperationResult(
+                False,
+                _("Failed to save {item_type} data.").format(item_type=item_type_name),
+            )
+
+        self.logger.info(
+            f"{item_type_name.capitalize()} added successfully: '{item.name}'"
+        )
+        return OperationResult(
+            True,
+            _("{item_type} '{name}' added successfully.").format(
+                item_type=item_type_name.capitalize(), name=item.name
+            ),
+            item,
+        )
+
     def add_session(self, session: SessionItem) -> OperationResult:
         """Adds a new session to the store with validation."""
         with self._operation_lock:
-            validation_result = validate_session_for_add(
-                session, self.session_store, self.folder_store
+            validator = partial(
+                validate_session_for_add,
+                session_store=self.session_store,
+                folder_store=self.folder_store,
             )
-            if not validation_result.success:
-                return validation_result
-
-            self.session_store.append(session)
-            if not self._save_changes():
-                self._remove_item_from_store(session)
-                return OperationResult(False, _("Failed to save session data."))
-
-            self.logger.info(f"Session added successfully: '{session.name}'")
-            return OperationResult(
-                True,
-                _("Session '{name}' added successfully.").format(name=session.name),
-                session,
-            )
+            return self._add_item(session, self.session_store, validator, "session")
 
     def update_session(
         self, position: int, updated_session: SessionItem
@@ -114,21 +135,8 @@ class SessionOperations:
     def add_folder(self, folder: SessionFolder) -> OperationResult:
         """Adds a new folder to the store."""
         with self._operation_lock:
-            validation_result = validate_folder_for_add(folder, self.folder_store)
-            if not validation_result.success:
-                return validation_result
-
-            self.folder_store.append(folder)
-            if not self._save_changes():
-                self._remove_item_from_store(folder)
-                return OperationResult(False, _("Failed to save folder data."))
-
-            self.logger.info(f"Folder added successfully: '{folder.name}'")
-            return OperationResult(
-                True,
-                _("Folder '{name}' added successfully.").format(name=folder.name),
-                folder,
-            )
+            validator = partial(validate_folder_for_add, folder_store=self.folder_store)
+            return self._add_item(folder, self.folder_store, validator, "folder")
 
     def update_folder(
         self, position: int, updated_folder: SessionFolder

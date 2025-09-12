@@ -14,7 +14,7 @@ from gi.repository import Adw, Gtk, Vte
 from ..sessions.models import LayoutItem, SessionItem
 from ..settings.config import LAYOUT_DIR, STATE_FILE
 from ..utils.logger import get_logger
-from ..utils.security import sanitize_session_name
+from ..utils.security import InputSanitizer
 from ..utils.translation_utils import _
 
 if TYPE_CHECKING:
@@ -117,7 +117,7 @@ class WindowStateManager:
             )
             return
 
-        sanitized_name = sanitize_session_name(layout_name).replace(" ", "_")
+        sanitized_name = InputSanitizer.sanitize_filename(layout_name).replace(" ", "_")
         target_file = os.path.join(LAYOUT_DIR, f"{sanitized_name}.json")
 
         if os.path.exists(target_file):
@@ -144,7 +144,7 @@ class WindowStateManager:
 
     def restore_saved_layout(self, layout_name: str):
         """Restores a previously saved layout, replacing the current one."""
-        sanitized_name = sanitize_session_name(layout_name).replace(" ", "_")
+        sanitized_name = InputSanitizer.sanitize_filename(layout_name).replace(" ", "_")
         layout_file = os.path.join(LAYOUT_DIR, f"{sanitized_name}.json")
 
         if not os.path.exists(layout_file):
@@ -219,7 +219,9 @@ class WindowStateManager:
 
     def _perform_delete_layout(self, layout_name: str):
         try:
-            sanitized_name = sanitize_session_name(layout_name).replace(" ", "_")
+            sanitized_name = InputSanitizer.sanitize_filename(layout_name).replace(
+                " ", "_"
+            )
             layout_file = os.path.join(LAYOUT_DIR, f"{sanitized_name}.json")
             os.remove(layout_file)
             self.logger.info(f"Layout '{layout_name}' deleted.")
@@ -256,7 +258,7 @@ class WindowStateManager:
         if old_folder == new_folder:
             return
 
-        sanitized_name = sanitize_session_name(layout_name).replace(" ", "_")
+        sanitized_name = InputSanitizer.sanitize_filename(layout_name).replace(" ", "_")
         layout_file = os.path.join(LAYOUT_DIR, f"{sanitized_name}.json")
 
         try:

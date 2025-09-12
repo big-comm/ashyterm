@@ -222,14 +222,6 @@ class SecurityAuditor:
         return findings
 
 
-def sanitize_session_name(name: str) -> str:
-    return InputSanitizer.sanitize_filename(name)
-
-
-def sanitize_folder_name(name: str) -> str:
-    return InputSanitizer.sanitize_filename(name)
-
-
 def validate_ssh_hostname(hostname: str) -> None:
     if not hostname:
         raise HostnameValidationError("", _("Hostname cannot be empty"))

@@ -17,7 +17,7 @@ from gi.repository import Adw, Gdk, Gio, GLib, GObject, Gtk, Pango, Vte
 from ..sessions.models import SessionItem
 from ..terminal.manager import TerminalManager as TerminalManagerType
 from ..utils.logger import get_logger
-from ..utils.security import ensure_secure_directory_permissions, sanitize_session_name
+from ..utils.security import InputSanitizer, ensure_secure_directory_permissions
 from ..utils.translation_utils import _
 from .models import FileItem
 from .operations import FileOperations
@@ -1467,7 +1467,9 @@ class FileManager(GObject.Object):
         self, session: SessionItem, remote_path: str
     ) -> Path:
         """Constructs a deterministic, human-readable local path for a remote file."""
-        sanitized_session_name = sanitize_session_name(session.name).replace(" ", "_")
+        sanitized_session_name = InputSanitizer.sanitize_filename(session.name).replace(
+            " ", "_"
+        )
         # Remove leading slash from remote_path to prevent it being treated as an absolute path
         clean_remote_path = remote_path.lstrip("/")
         local_path = self.remote_edit_dir / sanitized_session_name / clean_remote_path

@@ -6,7 +6,7 @@ gi.require_version("Gtk", "4.0")
 gi.require_version("Adw", "1")
 from gi.repository import Adw, Gio, Gtk
 
-from ..helpers import accelerator_to_label
+from ..helpers import accelerator_to_label, is_valid_url
 from ..settings.config import DefaultSettings
 from ..settings.manager import SettingsManager
 from ..utils.translation_utils import _
@@ -14,6 +14,7 @@ from ..utils.translation_utils import _
 
 class ThemeSelectorWidget(Gtk.Box):
     """Custom widget for selecting the GTK color scheme."""
+
     def __init__(self, settings_manager: SettingsManager):
         super().__init__(orientation=Gtk.Orientation.HORIZONTAL, spacing=30)
         self.settings_manager = settings_manager
@@ -27,12 +28,16 @@ class ThemeSelectorWidget(Gtk.Box):
         self.system_button.add_css_class("theme-selector")
         self.system_button.connect("toggled", self._on_theme_changed, "default")
 
-        self.light_button = Gtk.CheckButton(group=self.system_button, tooltip_text=_("Light Style"))
+        self.light_button = Gtk.CheckButton(
+            group=self.system_button, tooltip_text=_("Light Style")
+        )
         self.light_button.add_css_class("light")
         self.light_button.add_css_class("theme-selector")
         self.light_button.connect("toggled", self._on_theme_changed, "light")
 
-        self.dark_button = Gtk.CheckButton(group=self.system_button, tooltip_text=_("Dark Style"))
+        self.dark_button = Gtk.CheckButton(
+            group=self.system_button, tooltip_text=_("Dark Style")
+        )
         self.dark_button.add_css_class("dark")
         self.dark_button.add_css_class("theme-selector")
         self.dark_button.connect("toggled", self._on_theme_changed, "dark")
@@ -68,6 +73,7 @@ class ThemeSelectorWidget(Gtk.Box):
 
 class FontSizerWidget(Gtk.CenterBox):
     """Custom widget for changing the base font size."""
+
     def __init__(self, parent_window):
         super().__init__()
         self.parent_window = parent_window
@@ -132,6 +138,7 @@ class FontSizerWidget(Gtk.CenterBox):
 
 class MainApplicationMenu:
     """Factory for creating the main application popover menu."""
+
     @staticmethod
     def create_main_popover(parent_window) -> tuple[Gtk.Popover, FontSizerWidget]:
         popover = Gtk.Popover()
@@ -154,14 +161,23 @@ class MainApplicationMenu:
             "---",
             {"label": _("Quit"), "action": "app.quit"},
         ]
-        actions_that_close_menu = {"win.new-window", "win.preferences", "win.shortcuts", "app.about"}
+        actions_that_close_menu = {
+            "win.new-window",
+            "win.preferences",
+            "win.shortcuts",
+            "app.about",
+        }
         app = parent_window.get_application()
 
         for item in menu_items:
             if item == "---":
                 main_box.append(Gtk.Separator(orientation=Gtk.Orientation.HORIZONTAL))
             else:
-                button = Gtk.Button(action_name=item["action"], css_classes=["flat", "body"], halign=Gtk.Align.FILL)
+                button = Gtk.Button(
+                    action_name=item["action"],
+                    css_classes=["flat", "body"],
+                    halign=Gtk.Align.FILL,
+                )
                 box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=24)
                 button.set_child(box)
                 action_label = Gtk.Label(label=item["label"], xalign=0.0, hexpand=True)
@@ -248,7 +264,7 @@ def create_terminal_menu(terminal, click_x=None, click_y=None) -> Gio.Menu:
                 match_result = terminal.match_check(col, row)
                 if match_result and len(match_result) >= 2:
                     matched_text = match_result[0]
-                    if matched_text and _is_valid_url_simple(matched_text):
+                    if matched_text and is_valid_url(matched_text):
                         url_at_click = matched_text
         except Exception:
             pass
@@ -277,15 +293,3 @@ def create_terminal_menu(terminal, click_x=None, click_y=None) -> Gio.Menu:
     menu.append_section(None, split_section)
 
     return menu
-
-
-def _is_valid_url_simple(text: str) -> bool:
-    """Simple URL validation for menu."""
-    text = text.strip()
-    # Check for HTTP/HTTPS/FTP URLs
-    if any(text.startswith(scheme) for scheme in ["http://", "https://", "ftp://"]):
-        return True
-    # Check for email addresses
-    if "@" in text and "." in text.split("@")[-1]:
-        return True
-    return False

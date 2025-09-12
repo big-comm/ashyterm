@@ -229,6 +229,73 @@ class ProcessSpawner:
                 "spawn_initiated", str(user_data), f"shell command: {' '.join(cmd)}"
             )
 
+    def _spawn_remote_session(
+        self,
+        terminal: Vte.Terminal,
+        session: "SessionItem",
+        command_type: str,
+        callback: Optional[Callable] = None,
+        user_data: Any = None,
+        initial_command: Optional[str] = None,
+    ) -> None:
+        """Generic method to spawn a remote (SSH/SFTP) session."""
+        with self._spawn_lock:
+            if not session.is_ssh():
+                raise TerminalCreationError(
+                    f"Session is not configured for {command_type.upper()}",
+                    command_type,
+                )
+            try:
+                self._validate_ssh_session(session)
+                remote_cmd = self._build_remote_command_secure(
+                    command_type, session, initial_command
+                )
+                if not remote_cmd:
+                    raise TerminalCreationError(
+                        f"Failed to build {command_type.upper()} command", command_type
+                    )
+
+                working_dir = str(self.platform_info.home_dir)
+                env = self.environment_manager.get_terminal_environment()
+                env_list = [f"{k}={v}" for k, v in env.items()]
+
+                final_user_data = {
+                    "original_user_data": user_data,
+                    "temp_dir_path": None,
+                }
+
+                terminal.spawn_async(
+                    Vte.PtyFlags.DEFAULT,
+                    working_dir,
+                    remote_cmd,
+                    env_list,
+                    GLib.SpawnFlags.DEFAULT,
+                    None,
+                    None,
+                    -1,
+                    None,
+                    callback if callback else self._ssh_spawn_callback,
+                    (final_user_data,),
+                )
+                self.logger.info(
+                    f"{command_type.upper()} session spawn initiated for: {session.name}"
+                )
+                log_terminal_event(
+                    "spawn_initiated",
+                    session.name,
+                    f"{command_type.upper()} to {session.get_connection_string()}",
+                )
+            except Exception as e:
+                self.logger.error(
+                    f"{command_type.upper()} session spawn failed for {session.name}: {e}"
+                )
+                log_error_with_context(
+                    e,
+                    f"{command_type.upper()} spawn for {session.name}",
+                    "ashyterm.spawner",
+                )
+                raise TerminalCreationError(str(e), command_type) from e
+
     def spawn_ssh_session(
         self,
         terminal: Vte.Terminal,
@@ -238,51 +305,9 @@ class ProcessSpawner:
         initial_command: Optional[str] = None,
     ) -> None:
         """Spawns an SSH session in the given terminal."""
-        with self._spawn_lock:
-            if not session.is_ssh():
-                raise TerminalCreationError("Session is not configured for SSH", "ssh")
-            try:
-                self._validate_ssh_session(session)
-                remote_cmd = self._build_remote_command_secure(
-                    "ssh", session, initial_command
-                )
-                if not remote_cmd:
-                    raise TerminalCreationError("Failed to build SSH command", "ssh")
-
-                working_dir = str(self.platform_info.home_dir)
-                env = self.environment_manager.get_terminal_environment()
-                env_list = [f"{k}={v}" for k, v in env.items()]
-
-                final_user_data = {
-                    "original_user_data": user_data,
-                    "temp_dir_path": None,
-                }
-
-                terminal.spawn_async(
-                    Vte.PtyFlags.DEFAULT,
-                    working_dir,
-                    remote_cmd,
-                    env_list,
-                    GLib.SpawnFlags.DEFAULT,
-                    None,
-                    None,
-                    -1,
-                    None,
-                    callback if callback else self._ssh_spawn_callback,
-                    (final_user_data,),
-                )
-                self.logger.info(f"SSH session spawn initiated for: {session.name}")
-                log_terminal_event(
-                    "spawn_initiated",
-                    session.name,
-                    f"SSH to {session.get_connection_string()}",
-                )
-            except Exception as e:
-                self.logger.error(f"SSH session spawn failed for {session.name}: {e}")
-                log_error_with_context(
-                    e, f"SSH spawn for {session.name}", "ashyterm.spawner"
-                )
-                raise TerminalCreationError(str(e), "ssh") from e
+        self._spawn_remote_session(
+            terminal, session, "ssh", callback, user_data, initial_command
+        )
 
     def spawn_sftp_session(
         self,
@@ -292,52 +317,7 @@ class ProcessSpawner:
         user_data: Any = None,
     ) -> None:
         """Spawns an SFTP session in the given terminal."""
-        with self._spawn_lock:
-            if not session.is_ssh():
-                raise TerminalCreationError(
-                    "Session is not configured for SFTP", "sftp"
-                )
-            try:
-                self._validate_ssh_session(session)
-                # Build an SFTP command; no initial command is needed for interactive sftp
-                remote_cmd = self._build_remote_command_secure("sftp", session)
-                if not remote_cmd:
-                    raise TerminalCreationError("Failed to build SFTP command", "sftp")
-
-                working_dir = str(self.platform_info.home_dir)
-                env = self.environment_manager.get_terminal_environment()
-                env_list = [f"{k}={v}" for k, v in env.items()]
-
-                final_user_data = {
-                    "original_user_data": user_data,
-                    "temp_dir_path": None,
-                }
-
-                terminal.spawn_async(
-                    Vte.PtyFlags.DEFAULT,
-                    working_dir,
-                    remote_cmd,
-                    env_list,
-                    GLib.SpawnFlags.DEFAULT,
-                    None,
-                    None,
-                    -1,
-                    None,
-                    callback if callback else self._ssh_spawn_callback,
-                    (final_user_data,),
-                )
-                self.logger.info(f"SFTP session spawn initiated for: {session.name}")
-                log_terminal_event(
-                    "spawn_initiated",
-                    session.name,
-                    f"SFTP to {session.get_connection_string()}",
-                )
-            except Exception as e:
-                self.logger.error(f"SFTP session spawn failed for {session.name}: {e}")
-                log_error_with_context(
-                    e, f"SFTP spawn for {session.name}", "ashyterm.spawner"
-                )
-                raise TerminalCreationError(str(e), "sftp") from e
+        self._spawn_remote_session(terminal, session, "sftp", callback, user_data)
 
     def execute_remote_command_sync(
         self, session: "SessionItem", command: List[str], timeout: int = 15

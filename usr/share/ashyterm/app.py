@@ -337,7 +337,6 @@ class CommTerminalApp(Adw.Application):
                 developers=DEVELOPER_TEAM,
                 copyright=COPYRIGHT,
                 license_type=Gtk.License.MIT_X11,
-                website=WEBSITE,
                 issue_url=ISSUE_URL,
                 comments=_("A modern terminal emulator with session management"),
             )

@@ -14,8 +14,46 @@ from ..utils.crypto import (
 from ..utils.exceptions import SessionValidationError
 from ..utils.logger import get_logger
 from ..utils.platform import normalize_path
-from ..utils.security import sanitize_folder_name, sanitize_session_name
+from ..utils.security import InputSanitizer
 from ..utils.translation_utils import _
+
+
+class BaseModel(GObject.GObject):
+    """Base model for data items, providing common metadata and validation logic."""
+
+    def __init__(self):
+        super().__init__()
+        self._created_at = time.time()
+        self._modified_at = self._created_at
+        self._version = 1
+        # The logger will be set by subclasses, this is a fallback.
+        self.logger = get_logger("ashyterm.sessions.basemodel")
+
+    def _mark_modified(self):
+        """Updates the modification timestamp."""
+        self._modified_at = time.time()
+
+    def get_validation_errors(self) -> List[str]:
+        """
+        Returns a list of validation error messages.
+        Subclasses must override this method.
+        """
+        return []
+
+    def validate(self) -> bool:
+        """
+        Performs basic validation on the item's configuration.
+        Logs a warning if validation fails.
+        """
+        errors = self.get_validation_errors()
+        if errors:
+            # Use getattr to safely access 'name' which exists on subclasses
+            item_name = getattr(self, "name", "Unknown Item")
+            self.logger.warning(
+                f"{self.__class__.__name__} validation failed for '{item_name}': {errors}"
+            )
+            return False
+        return True
 
 
 # NOVO: Classe de modelo para representar um layout na árvore
@@ -48,7 +86,7 @@ class LayoutItem(GObject.GObject):
         return None
 
 
-class SessionItem(GObject.GObject):
+class SessionItem(BaseModel):
     """Data model for a terminal session, either local or remote (SSH)."""
 
     def __init__(
@@ -67,7 +105,7 @@ class SessionItem(GObject.GObject):
         self.logger = get_logger("ashyterm.sessions.model")
 
         # Core properties
-        self._name = sanitize_session_name(name)
+        self._name = InputSanitizer.sanitize_filename(name)
         self._session_type = session_type
         self._host = host
         self._user = user
@@ -77,12 +115,9 @@ class SessionItem(GObject.GObject):
         self._port = port
         self._tab_color = tab_color
 
-        # Metadata
-        self._created_at = time.time()
-        self._modified_at = self._created_at
+        # Metadata specific to SessionItem
         self._last_used = None
         self._use_count = 0
-        self._version = 1
 
     @property
     def children(self) -> Optional[Gio.ListStore]:
@@ -96,7 +131,7 @@ class SessionItem(GObject.GObject):
     @name.setter
     def name(self, value: str):
         old_name = self._name
-        new_name = sanitize_session_name(value)
+        new_name = InputSanitizer.sanitize_filename(value)
         if old_name != new_name and self.uses_password_auth():
             password = lookup_password(old_name)
             if password:
@@ -210,19 +245,6 @@ class SessionItem(GObject.GObject):
         self._tab_color = value
         self._mark_modified()
 
-    def _mark_modified(self):
-        self._modified_at = time.time()
-
-    def validate(self) -> bool:
-        """Performs basic validation on the session's configuration."""
-        errors = self.get_validation_errors()
-        if errors:
-            self.logger.warning(
-                f"Session validation failed for '{self.name}': {errors}"
-            )
-            return False
-        return True
-
     def get_validation_errors(self) -> List[str]:
         """Returns a list of validation error messages."""
         errors = []
@@ -267,13 +289,15 @@ class SessionItem(GObject.GObject):
             folder_path=data.get("folder_path", ""),
             port=data.get("port", 22),
         )
+        # __init__ sets default metadata; overwrite with loaded data
         session._auth_value = data.get("auth_value", "")
         session.tab_color = data.get("tab_color")
         session._created_at = data.get("created_at", time.time())
         session._modified_at = data.get("modified_at", time.time())
+        session._version = data.get("version", 1)
+        # Session-specific metadata
         session._last_used = data.get("last_used")
         session._use_count = data.get("use_count", 0)
-        session._version = data.get("version", 1)
         return session
 
     def is_local(self) -> bool:
@@ -297,21 +321,16 @@ class SessionItem(GObject.GObject):
         return f"SessionItem(name='{self.name}', type='{self._session_type}')"
 
 
-class SessionFolder(GObject.GObject):
+class SessionFolder(BaseModel):
     """Data model for a folder used to organize sessions."""
 
     def __init__(self, name: str, path: str = "", parent_path: str = ""):
         super().__init__()
         self.logger = get_logger("ashyterm.sessions.folder")
 
-        self._name = sanitize_folder_name(name)
+        self._name = InputSanitizer.sanitize_filename(name)
         self._path = str(normalize_path(path)) if path else ""
         self._parent_path = str(normalize_path(parent_path)) if parent_path else ""
-
-        self._created_at = time.time()
-        self._modified_at = self._created_at
-        self._version = 1
-
         self._children = Gio.ListStore.new(GObject.GObject)
 
     @property
@@ -333,7 +352,7 @@ class SessionFolder(GObject.GObject):
 
     @name.setter
     def name(self, value: str):
-        self._name = sanitize_folder_name(value)
+        self._name = InputSanitizer.sanitize_filename(value)
         self._mark_modified()
 
     @property
@@ -354,17 +373,6 @@ class SessionFolder(GObject.GObject):
         self._parent_path = str(normalize_path(value)) if value else ""
         self._mark_modified()
 
-    def _mark_modified(self):
-        self._modified_at = time.time()
-
-    def validate(self) -> bool:
-        """Performs basic validation on the folder's configuration."""
-        errors = self.get_validation_errors()
-        if errors:
-            self.logger.warning(f"Folder validation failed for '{self.name}': {errors}")
-            return False
-        return True
-
     def get_validation_errors(self) -> List[str]:
         """Returns a list of validation error messages."""
         errors = []
@@ -374,6 +382,7 @@ class SessionFolder(GObject.GObject):
             self.path
             and self.parent_path
             and not self.path.startswith(self.parent_path + "/")
+            and self.parent_path != ""
         ):
             errors.append(_("Folder path is not consistent with its parent path."))
         return errors
@@ -397,6 +406,7 @@ class SessionFolder(GObject.GObject):
             path=data.get("path", ""),
             parent_path=data.get("parent_path", ""),
         )
+        # __init__ sets default metadata; overwrite with loaded data
         folder._created_at = data.get("created_at", time.time())
         folder._modified_at = data.get("modified_at", time.time())
         folder._version = data.get("version", 1)

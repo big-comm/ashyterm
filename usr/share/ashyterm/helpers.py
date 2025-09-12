@@ -1,11 +1,36 @@
 # ashyterm/helpers.py
 
 from typing import Set
+from urllib.parse import urlparse
 
 from gi.repository import Gtk
 
 from .utils.logger import get_logger
-from .utils.security import sanitize_session_name
+from .utils.security import InputSanitizer
+
+
+def is_valid_url(text: str) -> bool:
+    """
+    Checks if a string is a valid URL or an email address.
+    """
+    if not text:
+        return False
+
+    stripped_text = text.strip()
+
+    # Check for email-like strings first, which urlparse might not handle as a URL
+    if "@" in stripped_text and "." in stripped_text.split("@")[-1]:
+        # A simple check to avoid matching things like 'user@host' without a TLD
+        # and also avoid re-matching things that are already full mailto links.
+        if not any(stripped_text.startswith(s) for s in ["http", "ftp", "mailto"]):
+            return True
+
+    # Use urlparse for standard URL schemes
+    try:
+        result = urlparse(stripped_text)
+        return bool(result.scheme and result.netloc)
+    except Exception:
+        return False
 
 
 def generate_unique_name(base_name: str, existing_names: Set[str]) -> str:
@@ -21,7 +46,7 @@ def generate_unique_name(base_name: str, existing_names: Set[str]) -> str:
     """
     logger = get_logger("ashyterm.helpers")
     try:
-        sanitized_base = sanitize_session_name(base_name)
+        sanitized_base = InputSanitizer.sanitize_filename(base_name)
         if sanitized_base not in existing_names:
             return sanitized_base
         counter = 1
