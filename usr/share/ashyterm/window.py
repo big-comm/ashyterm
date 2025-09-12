@@ -57,6 +57,8 @@ class CommTerminalWindow(Adw.ApplicationWindow):
         self.close_after_execute = kwargs.get("close_after_execute", False)
         self.initial_ssh_target = kwargs.get("initial_ssh_target")
         self._is_for_detached_tab = kwargs.get("_is_for_detached_tab", False)
+        self.detached_terminals_data = kwargs.get("detached_terminals_data")
+        self.detached_file_manager = kwargs.get("detached_file_manager")
 
         # Window setup
         self._setup_initial_window_size()
@@ -68,6 +70,76 @@ class CommTerminalWindow(Adw.ApplicationWindow):
         self._connect_component_signals()
         self._load_initial_data()
         self._setup_window_events()
+
+        # Re-register terminals and reconnect signals for a detached tab
+        if self._is_for_detached_tab and self.detached_terminals_data:
+            self.logger.info(
+                f"Re-registering and reconnecting signals for {len(self.detached_terminals_data)} terminals."
+            )
+            for term_data in self.detached_terminals_data:
+                terminal_widget = term_data["widget"]
+                terminal_id = term_data["id"]
+                terminal_info = term_data["info"]
+
+                # Step 1: Re-register the terminal in the new window's registry
+                self.terminal_manager.registry.reregister_terminal(
+                    terminal=terminal_widget,
+                    terminal_id=terminal_id,
+                    terminal_info=terminal_info,
+                )
+
+                # Step 2: Reconnect process signals to the new window's manager
+                self.terminal_manager._setup_terminal_events(
+                    terminal=terminal_widget,
+                    identifier=terminal_info.get("identifier"),
+                    terminal_id=terminal_id,
+                )
+
+                # Step 3: Reconnect UI control signals for split panes
+                pane = terminal_widget.get_parent().get_parent()
+                if isinstance(pane, Adw.ToolbarView) and hasattr(pane, "close_button"):
+                    old_close_button = pane.close_button
+                    old_move_button = pane.move_button
+                    button_container = old_close_button.get_parent()
+
+                    if button_container:
+                        # Create new buttons connected to the NEW tab manager
+                        new_close_button = Gtk.Button(
+                            icon_name="window-close-symbolic",
+                            tooltip_text=_("Close Pane"),
+                        )
+                        new_close_button.add_css_class("flat")
+                        new_close_button.connect(
+                            "clicked",
+                            lambda _, term=terminal_widget: self.tab_manager.close_pane(
+                                term
+                            ),
+                        )
+
+                        new_move_button = Gtk.Button(
+                            icon_name="select-rectangular-symbolic",
+                            tooltip_text=_("Move to New Tab"),
+                        )
+                        new_move_button.add_css_class("flat")
+                        new_move_button.connect(
+                            "clicked",
+                            self.tab_manager._on_move_to_tab_callback,
+                            terminal_widget,
+                        )
+
+                        # Replace old buttons with new ones
+                        button_container.remove(old_move_button)
+                        button_container.remove(old_close_button)
+                        button_container.append(new_move_button)
+                        button_container.append(new_close_button)
+
+                        # Update references on the pane itself
+                        pane.move_button = new_move_button
+                        pane.close_button = new_close_button
+
+                        self.logger.info(
+                            f"Reconnected UI controls for terminal {terminal_id}"
+                        )
 
         if not self._is_for_detached_tab:
             GLib.idle_add(self._create_initial_tab_safe)
@@ -365,6 +437,26 @@ class CommTerminalWindow(Adw.ApplicationWindow):
         if not tab_widget:
             return
 
+        fm_to_detach = self.tab_manager.file_managers.pop(page_to_detach, None)
+
+        # Collect and deregister all terminals from the tab
+        terminals_to_move = []
+        terminals_in_page = self.tab_manager.get_all_terminals_in_page(page_to_detach)
+        for terminal in terminals_in_page:
+            terminal_id = getattr(terminal, "terminal_id", None)
+            if terminal_id:
+                terminal_info = (
+                    self.terminal_manager.registry.deregister_terminal_for_move(
+                        terminal_id
+                    )
+                )
+                if terminal_info:
+                    terminals_to_move.append({
+                        "id": terminal_id,
+                        "info": terminal_info,
+                        "widget": terminal,
+                    })
+
         content = page_to_detach.get_child()
         title = tab_widget._base_title
         session = getattr(tab_widget, "session_item", None)
@@ -383,8 +475,14 @@ class CommTerminalWindow(Adw.ApplicationWindow):
                 self.close()
 
         app = self.get_application()
-        new_window = app.create_new_window(_is_for_detached_tab=True)
-        new_window.tab_manager.re_attach_detached_page(content, title, session_type)
+        new_window = app.create_new_window(
+            _is_for_detached_tab=True,
+            detached_terminals_data=terminals_to_move,
+            detached_file_manager=fm_to_detach,
+        )
+        new_window.tab_manager.re_attach_detached_page(
+            content, title, session_type, fm_to_detach
+        )
 
         new_window._update_tab_layout()
         new_window.present()
@@ -739,3 +837,28 @@ class CommTerminalWindow(Adw.ApplicationWindow):
             self.logger.info("User confirmed clearing all temporary files.")
             for fm in self.tab_manager.file_managers.values():
                 fm.cleanup_all_temp_files()
+
+    def _on_tab_bar_scroll(self, controller, dx, dy):
+        """Handles scroll events on the tab bar to move it horizontally."""
+        adjustment = self.scrolled_tab_bar.get_hadjustment()
+        if not adjustment:
+            return Gdk.EVENT_PROPAGATE
+
+        # Combina o delta vertical (dy) e horizontal (dx) para a rolagem.
+        # A maioria dos mouses enviará apenas dy.
+        delta = dy + dx
+
+        # Um fator de sensibilidade para tornar a rolagem mais natural.
+        scroll_amount = delta * 30
+
+        current_value = adjustment.get_value()
+        new_value = current_value + scroll_amount
+
+        # Garante que o novo valor está dentro dos limites da barra de rolagem.
+        lower = adjustment.get_lower()
+        upper = adjustment.get_upper() - adjustment.get_page_size()
+        new_value = max(lower, min(new_value, upper))
+
+        adjustment.set_value(new_value)
+
+        return Gdk.EVENT_STOP

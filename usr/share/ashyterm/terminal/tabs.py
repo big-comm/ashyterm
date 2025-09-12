@@ -72,6 +72,8 @@ def _create_terminal_pane(
     # Attach important widgets for later access
     toolbar_view.terminal = terminal
     toolbar_view.title_label = title_label
+    toolbar_view.move_button = move_to_tab_button
+    toolbar_view.close_button = close_button
 
     return toolbar_view
 
@@ -1097,11 +1099,16 @@ class TabManager:
             self.update_all_tab_titles()
 
     def re_attach_detached_page(
-        self, content: Gtk.Widget, title: str, session_type: str
+        self,
+        content: Gtk.Widget,
+        title: str,
+        session_type: str,
+        file_manager_instance: Optional[FileManager] = None,
     ) -> Adw.ViewStackPage:
         """Creates a new tab for a content widget that was detached from another window."""
         page_name = f"page_detached_{GLib.random_int()}"
         page = self.view_stack.add_titled(content, page_name, title)
+        page.content_paned = content
 
         # Re-create a dummy session for the tab widget
         session = SessionItem(name=title, session_type=session_type)
@@ -1109,18 +1116,24 @@ class TabManager:
         for terminal in self.get_all_terminals_in_page(page):
             terminal.ashy_parent_page = page
 
-        tab_widget = self.tab_manager._create_tab_widget(page, session)
-        self.tab_manager.tabs.append(tab_widget)
-        self.tab_manager.pages[tab_widget] = page
-        self.tab_manager.tab_bar_box.append(tab_widget)
+        tab_widget = self._create_tab_widget(page, session)
+        self.tabs.append(tab_widget)
+        self.pages[tab_widget] = page
+        self.tab_bar_box.append(tab_widget)
 
-        self.tab_manager.set_active_tab(tab_widget)
-        if terminal := self.tab_manager.get_selected_terminal():
-            self.tab_manager._schedule_terminal_focus(terminal)
+        if file_manager_instance:
+            self.file_managers[page] = file_manager_instance
+            file_manager_instance.reparent(
+                self.terminal_manager.parent_window, self.terminal_manager
+            )
 
-        self.tab_manager.update_all_tab_titles()
-        if self.tab_manager.on_tab_count_changed:
-            self.tab_manager.on_tab_count_changed()
+        self.set_active_tab(tab_widget)
+        if terminal := self.get_selected_terminal():
+            self._schedule_terminal_focus(terminal)
+
+        self.update_all_tab_titles()
+        if self.on_tab_count_changed:
+            self.on_tab_count_changed()
         return page
 
     def select_next_tab(self):

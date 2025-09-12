@@ -287,6 +287,13 @@ class WindowUIBuilder:
         self.scrolled_tab_bar.set_policy(Gtk.PolicyType.AUTOMATIC, Gtk.PolicyType.NEVER)
         self.scrolled_tab_bar.set_child(self.tab_manager.get_tab_bar())
 
+        # ALTERADO: Adicionar o controlador de rolagem com o flag correto
+        scroll_controller = Gtk.EventControllerScroll.new(
+            Gtk.EventControllerScrollFlags.BOTH_AXES
+        )
+        scroll_controller.connect("scroll", self.window._on_tab_bar_scroll)
+        self.scrolled_tab_bar.add_controller(scroll_controller)
+
         self.single_tab_title_widget = Adw.WindowTitle(title=_("Ashy Terminal"))
 
         self.title_stack = Gtk.Stack()

@@ -116,6 +116,12 @@ class FileManager(GObject.Object):
 
         self.logger.info("FileManager instance created, awaiting terminal binding.")
 
+    def reparent(self, new_parent_window, new_terminal_manager):
+        """Updates internal references when moved to a new window."""
+        self.logger.info("Reparenting FileManager to a new window.")
+        self.parent_window = new_parent_window
+        self.terminal_manager = new_terminal_manager
+
     def rebind_terminal(self, new_terminal: Vte.Terminal):
         """
         Binds the file manager to a new terminal instance, dynamically adjusting

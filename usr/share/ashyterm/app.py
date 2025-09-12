@@ -25,7 +25,6 @@ from .settings.config import (
     LAYOUT_DIR,
     SESSIONS_FILE,
     SETTINGS_FILE,
-    WEBSITE,
 )
 from .settings.manager import SettingsManager
 from .terminal.spawner import cleanup_spawner
@@ -730,6 +729,8 @@ class CommTerminalApp(Adw.Application):
                 "close_after_execute": kwargs.get("close_after_execute", False),
                 "initial_ssh_target": kwargs.get("initial_ssh_target"),
                 "_is_for_detached_tab": kwargs.get("_is_for_detached_tab", False),
+                "detached_terminals_data": kwargs.get("detached_terminals_data"),
+                "detached_file_manager": kwargs.get("detached_file_manager"),
             }
             window = CommTerminalWindow(
                 application=self, settings_manager=self.settings_manager, **init_args

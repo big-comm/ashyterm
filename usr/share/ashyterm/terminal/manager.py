@@ -189,6 +189,30 @@ class TerminalRegistry:
             self._terminal_refs[terminal_id] = weakref.ref(terminal, cleanup_callback)
             return terminal_id
 
+    def reregister_terminal(
+        self, terminal: Vte.Terminal, terminal_id: int, terminal_info: Dict[str, Any]
+    ):
+        """Re-registers a terminal that was moved from another window."""
+        with self._lock:
+            self._terminals[terminal_id] = terminal_info
+            self._terminal_refs[terminal_id] = weakref.ref(
+                terminal, lambda ref: self._cleanup_terminal_ref(terminal_id)
+            )
+            # Ensure the next ID is higher than any existing ID to prevent collisions
+            self._next_id = max(self._next_id, terminal_id + 1)
+            self.logger.info(f"Re-registered terminal {terminal_id} in new window.")
+
+    def deregister_terminal_for_move(
+        self, terminal_id: int
+    ) -> Optional[Dict[str, Any]]:
+        """Removes a terminal from the registry for moving, without cleanup."""
+        with self._lock:
+            if terminal_id in self._terminals:
+                self.logger.info(f"De-registering terminal {terminal_id} for move.")
+                self._terminal_refs.pop(terminal_id, None)
+                return self._terminals.pop(terminal_id, None)
+            return None
+
     def get_active_terminal_count(self) -> int:
         with self._lock:
             return sum(
