@@ -1,6 +1,7 @@
 #!/bin/bash
 
-execute_ashy="python /usr/share/ashyterm/main.py"
+cd /usr/share/ashyterm
+execute_ashy="python main.py"
 
 convert_to_ssh() {
     local path="$*"
