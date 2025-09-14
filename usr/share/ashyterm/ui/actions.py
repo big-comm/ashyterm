@@ -9,6 +9,7 @@ from ..sessions.models import LayoutItem, SessionFolder, SessionItem
 from ..utils.logger import get_logger, log_session_event
 from ..utils.translation_utils import _
 from .dialogs import (
+    CommandGuideDialog,
     FolderEditDialog,
     MoveLayoutDialog,
     MoveSessionDialog,
@@ -66,6 +67,7 @@ class WindowActions:
             "add-folder-root": self.add_folder_root,
             "toggle-sidebar": self.toggle_sidebar_action,
             "toggle-file-manager": self.toggle_file_manager,
+            "show-command-guide": self.show_command_guide,
             "preferences": self.preferences,
             "shortcuts": self.shortcuts,
             "new-window": self.new_window,
@@ -271,6 +273,9 @@ class WindowActions:
         self.window.file_manager_button.set_active(
             not self.window.file_manager_button.get_active()
         )
+
+    def show_command_guide(self, *_args):
+        self.window._show_command_guide_dialog()
 
     def preferences(self, *_args):
         dialog = PreferencesDialog(self.window, self.window.settings_manager)

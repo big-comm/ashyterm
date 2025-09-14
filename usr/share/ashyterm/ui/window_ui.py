@@ -38,6 +38,7 @@ class WindowUIBuilder:
         self.sidebar_popover = None
         self.toggle_sidebar_button = None
         self.file_manager_button = None
+        self.command_guide_button = None
         self.cleanup_button = None
         self.font_sizer_widget = None
         self.scrolled_tab_bar = None
@@ -228,6 +229,14 @@ class WindowUIBuilder:
             min-width: 40px;
             text-align: center;
         }
+        /* Command Guide Dialog Card Style */
+        .command-guide-card {
+            background-color: @window_bg_color;
+            border: 1px solid @borders;
+            border-radius: 8px;
+            padding: 8px;
+            margin: 4px 0;
+        }
         """
         provider = Gtk.CssProvider()
         provider.load_from_data(css.encode("utf-8"))
@@ -261,7 +270,7 @@ class WindowUIBuilder:
         case_sensitive_label = Gtk.Label(label=_("Case sensitive"))
         case_sensitive_box.append(case_sensitive_label)
         case_sensitive_box.append(self.case_sensitive_switch)
-        
+
         # Regex switch
         self.regex_switch = Gtk.Switch()
         self.regex_switch.set_tooltip_text(_("Use regular expressions"))
@@ -269,7 +278,7 @@ class WindowUIBuilder:
         regex_label = Gtk.Label(label=_("Regex"))
         regex_box.append(regex_label)
         regex_box.append(self.regex_switch)
-        
+
         search_box.append(self.terminal_search_entry)
         search_box.append(self.search_occurrence_label)
         search_box.append(case_sensitive_box)
@@ -309,6 +318,13 @@ class WindowUIBuilder:
             icon_name="folder-open-symbolic", tooltip_text=_("File Manager")
         )
         header_bar.pack_start(self.file_manager_button)
+
+        self.command_guide_button = Gtk.Button(
+            icon_name="help-faq-symbolic",
+            tooltip_text=_("Command Guide (Ctrl+Shift+P)"),
+        )
+        self.command_guide_button.set_action_name("win.show-command-guide")
+        header_bar.pack_start(self.command_guide_button)
 
         self.cleanup_button = Gtk.MenuButton(
             icon_name="user-trash-symbolic",

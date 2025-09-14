@@ -23,6 +23,7 @@ from .state.window_state import WindowStateManager
 from .terminal.manager import TerminalManager
 from .terminal.tabs import TabManager
 from .ui.actions import WindowActions
+from .ui.dialogs.command_guide_dialog import CommandGuideDialog
 from .ui.sidebar_manager import SidebarManager
 from .ui.window_ui import WindowUIBuilder
 from .utils.exceptions import UIError
@@ -204,6 +205,7 @@ class CommTerminalWindow(Adw.ApplicationWindow):
         self.sidebar_popover = self.ui_builder.sidebar_popover
         self.toggle_sidebar_button = self.ui_builder.toggle_sidebar_button
         self.file_manager_button = self.ui_builder.file_manager_button
+        self.command_guide_button = self.ui_builder.command_guide_button
         self.cleanup_button = self.ui_builder.cleanup_button
         self.cleanup_popover = self.ui_builder.cleanup_popover
         self.font_sizer_widget = self.ui_builder.font_sizer_widget
@@ -281,14 +283,20 @@ class CommTerminalWindow(Adw.ApplicationWindow):
             "notify::search-mode-enabled", self._on_search_mode_changed
         )
         # Connect case sensitive switch
-        self.case_sensitive_switch.connect("notify::active", self._on_case_sensitive_changed)
+        self.case_sensitive_switch.connect(
+            "notify::active", self._on_case_sensitive_changed
+        )
         # Initialize switch state from settings
-        self.case_sensitive_switch.set_active(self.settings_manager.get("search_case_sensitive", False))
-        
+        self.case_sensitive_switch.set_active(
+            self.settings_manager.get("search_case_sensitive", False)
+        )
+
         # Connect regex switch
         self.regex_switch.connect("notify::active", self._on_regex_changed)
         # Initialize switch state from settings
-        self.regex_switch.set_active(self.settings_manager.get("search_use_regex", False))
+        self.regex_switch.set_active(
+            self.settings_manager.get("search_use_regex", False)
+        )
 
     def _setup_window_events(self) -> None:
         """Set up window-level event handlers."""
@@ -602,7 +610,7 @@ class CommTerminalWindow(Adw.ApplicationWindow):
     def _on_search_text_changed(self, search_entry):
         """Handle search text changes immediately."""
         text = search_entry.get_text()
-        
+
         # If text is empty, clear search immediately
         if not text:
             terminal = self.tab_manager.get_selected_terminal()
@@ -1167,3 +1175,20 @@ class CommTerminalWindow(Adw.ApplicationWindow):
         adjustment.set_value(new_value)
 
         return Gdk.EVENT_STOP
+
+    def _show_command_guide_dialog(self):
+        """Creates and shows the command guide popover."""
+        dialog = CommandGuideDialog(self)
+        dialog.connect("command-selected", self._on_command_selected_from_guide)
+        dialog.present()
+
+    def _on_command_selected_from_guide(self, dialog, command_text):
+        """Callback for when a command is selected from the guide."""
+        terminal = self.tab_manager.get_selected_terminal()
+        if terminal:
+            terminal.feed_child(command_text.encode("utf-8"))
+            terminal.grab_focus()
+        else:
+            self.toast_overlay.add_toast(
+                Adw.Toast(title=_("No active terminal to send command to."))
+            )

@@ -19,6 +19,7 @@ from .settings.config import (
     APP_TITLE,
     APP_VERSION,
     COPYRIGHT,
+    CUSTOM_COMMANDS_FILE,
     DEVELOPER_NAME,
     DEVELOPER_TEAM,
     ISSUE_URL,
@@ -179,6 +180,7 @@ class CommTerminalApp(Adw.Application):
                 "select-all",
                 "toggle-sidebar",
                 "toggle-file-manager",
+                "show-command-guide",
                 "new-window",
                 "zoom-in",
                 "zoom-out",
@@ -425,7 +427,11 @@ class CommTerminalApp(Adw.Application):
 
         def backup_thread():
             try:
-                source_files = [Path(SESSIONS_FILE), Path(SETTINGS_FILE)]
+                source_files = [
+                    Path(SESSIONS_FILE),
+                    Path(SETTINGS_FILE),
+                    Path(CUSTOM_COMMANDS_FILE),
+                ]
                 layouts_dir = Path(LAYOUT_DIR)
                 self.backup_manager.create_encrypted_backup(
                     target_path,
