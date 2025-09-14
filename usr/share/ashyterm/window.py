@@ -8,7 +8,7 @@ import gi
 gi.require_version("Gtk", "4.0")
 gi.require_version("Adw", "1")
 gi.require_version("Vte", "3.91")
-from gi.repository import Adw, Gdk, Gio, GLib, Gtk
+from gi.repository import Adw, Gdk, Gio, GLib, GObject, Gtk, Vte
 
 from .sessions.models import LayoutItem, SessionFolder, SessionItem
 from .sessions.operations import SessionOperations
@@ -206,7 +206,13 @@ class CommTerminalWindow(Adw.ApplicationWindow):
         self.single_tab_title_widget = self.ui_builder.single_tab_title_widget
         self.title_stack = self.ui_builder.title_stack
         self.toast_overlay = self.ui_builder.toast_overlay
-        self.search_entry = self.ui_builder.search_entry
+        self.search_bar = self.ui_builder.search_bar
+        self.search_button = self.ui_builder.search_button
+        # Assign the correctly named widgets
+        self.terminal_search_entry = self.ui_builder.terminal_search_entry
+        self.search_entry = self.ui_builder.sidebar_search_entry
+        self.search_prev_button = self.ui_builder.search_prev_button
+        self.search_next_button = self.ui_builder.search_next_button
         self.tab_manager.scrolled_tab_bar = self.scrolled_tab_bar
 
     def _connect_component_signals(self) -> None:
@@ -215,6 +221,7 @@ class CommTerminalWindow(Adw.ApplicationWindow):
         """
         self._setup_actions()
         self._setup_keyboard_shortcuts()
+        self._setup_search()
 
         self.session_tree.on_session_activated = self._on_session_activated
         self.session_tree.on_layout_activated = self.state_manager.restore_saved_layout
@@ -245,6 +252,25 @@ class CommTerminalWindow(Adw.ApplicationWindow):
         controller.set_propagation_phase(Gtk.PropagationPhase.CAPTURE)
         controller.connect("key-pressed", self._on_key_pressed)
         self.add_controller(controller)
+
+    def _setup_search(self) -> None:
+        """Connects signals for the terminal search UI."""
+        self.search_button.bind_property(
+            "active",
+            self.search_bar,
+            "search-mode-enabled",
+            GObject.BindingFlags.BIDIRECTIONAL,
+        )
+        # Connect the correct search entry to the correct handler
+        self.terminal_search_entry.connect(
+            "search-changed", self._on_search_text_changed
+        )
+        self.terminal_search_entry.connect("stop-search", self._on_search_stop)
+        self.search_prev_button.connect("clicked", self._on_search_previous)
+        self.search_next_button.connect("clicked", self._on_search_next)
+        self.search_bar.connect(
+            "notify::search-mode-enabled", self._on_search_mode_changed
+        )
 
     def _setup_window_events(self) -> None:
         """Set up window-level event handlers."""
@@ -487,6 +513,89 @@ class CommTerminalWindow(Adw.ApplicationWindow):
 
         new_window._update_tab_layout()
         new_window.present()
+
+    # --- Search Handlers ---
+
+    def _on_search_mode_changed(self, search_bar, param):
+        if search_bar.get_search_mode():
+            self.terminal_search_entry.grab_focus()
+        else:
+            self._on_search_stop()
+
+    def _on_search_text_changed(self, search_entry):
+        terminal = self.tab_manager.get_selected_terminal()
+        if not terminal:
+            self.logger.warning("Search triggered but no active terminal found.")
+            self.toast_overlay.add_toast(
+                Adw.Toast(title=_("No active terminal to search in."))
+            )
+            return
+
+        # First, clear any existing search to reset the state.
+        terminal.search_set_regex(None, 0)
+
+        text = search_entry.get_text()
+        if not text:
+            return
+
+        try:
+            # Use Vte.Regex.new_for_search for search operations.
+            # PCRE2_MULTILINE (0x00000400) and PCRE2_CASELESS (0x00000008)
+            pcre2_flags = 0x00000400 | 0x00000008
+            regex = Vte.Regex.new_for_search(text, -1, pcre2_flags)
+
+            if not regex:
+                self.logger.warning(
+                    f"Failed to compile search regex for pattern: {text}"
+                )
+                self.toast_overlay.add_toast(
+                    Adw.Toast(title=_("Invalid search pattern."))
+                )
+                return
+
+            # Set the regex for search
+            terminal.search_set_regex(regex, 0)
+            # Find the first match after setting the regex.
+            found = terminal.search_find_next()
+            self.logger.debug(f"Search for '{text}' initiated. Found: {found}")
+
+            if not found:
+                self.toast_overlay.add_toast(
+                    Adw.Toast(title=_("No matches found."))
+                )
+
+        except GLib.Error as e:
+            self.logger.error(
+                f"Invalid regex for search pattern '{text}': {e.message}", exc_info=True
+            )
+            self.toast_overlay.add_toast(
+                Adw.Toast(title=_("Invalid search pattern."))
+            )
+            terminal.search_set_regex(None, 0)
+
+    def _on_search_next(self, button):
+        terminal = self.tab_manager.get_selected_terminal()
+        if terminal:
+            found = terminal.search_find_next()
+            if not found:
+                self.toast_overlay.add_toast(
+                    Adw.Toast(title=_("No more matches found."))
+                )
+
+    def _on_search_previous(self, button):
+        terminal = self.tab_manager.get_selected_terminal()
+        if terminal:
+            found = terminal.search_find_previous()
+            if not found:
+                self.toast_overlay.add_toast(
+                    Adw.Toast(title=_("No more matches found."))
+                )
+
+    def _on_search_stop(self):
+        terminal = self.tab_manager.get_selected_terminal()
+        if terminal:
+            terminal.search_set_regex(None, 0)
+            terminal.grab_focus()
 
     # --- Window Lifecycle and State ---
 

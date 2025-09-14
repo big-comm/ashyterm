@@ -560,6 +560,9 @@ class TerminalManager:
             terminal.set_scroll_on_output(False)
             terminal.set_scroll_on_keystroke(True)
             terminal.set_scroll_unit_is_pixels(True)
+            # Enable search highlighting
+            if hasattr(terminal, 'set_search_highlight_enabled'):
+                terminal.set_search_highlight_enabled(True)
             self.settings_manager.apply_terminal_settings(terminal, self.parent_window)
             self._setup_context_menu(terminal)
             # Setup URL pattern detection and hyperlink support

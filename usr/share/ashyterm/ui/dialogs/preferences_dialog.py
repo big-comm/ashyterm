@@ -21,7 +21,6 @@ class PreferencesDialog(Adw.PreferencesWindow):
     __gsignals__ = {
         "transparency-changed": (GObject.SignalFlags.RUN_FIRST, None, (float,)),
         "font-changed": (GObject.SignalFlags.RUN_FIRST, None, (str,)),
-        "shortcut-changed": (GObject.SignalFlags.RUN_FIRST, None, ()),
         "setting-changed": (GObject.SignalFlags.RUN_FIRST, None, (str, object)),
     }
 
@@ -37,14 +36,10 @@ class PreferencesDialog(Adw.PreferencesWindow):
         )
         self.logger = get_logger("ashyterm.ui.dialogs.preferences")
         self.settings_manager = settings_manager
-        self.shortcut_rows: Dict[str, Adw.ActionRow] = {}
-        self.shortcut_groups: List[Adw.PreferencesGroup] = []
         self._setup_appearance_page()
         self._setup_terminal_page()
         self._setup_profiles_page()
-        self._setup_shortcuts_page()
         self._setup_advanced_page()
-        self.connect("notify::search-text", self._on_shortcut_search_changed)
         self.logger.info("Preferences dialog initialized")
 
     def _setup_appearance_page(self) -> None:
@@ -382,43 +377,6 @@ class PreferencesDialog(Adw.PreferencesWindow):
         )
         remote_edit_group.add(clear_on_exit_row)
 
-    def _setup_shortcuts_page(self) -> None:
-        shortcuts_page = Adw.PreferencesPage(
-            title=_("Shortcuts"),
-            icon_name="preferences-desktop-keyboard-shortcuts-symbolic",
-        )
-        self.add(shortcuts_page)
-
-        terminal_group = Adw.PreferencesGroup(
-            title=_("Terminal Actions"),
-            description=_("Keyboard shortcuts for terminal operations"),
-        )
-        self.shortcut_groups.append(terminal_group)
-        shortcuts_page.add(terminal_group)
-
-        app_group = Adw.PreferencesGroup(
-            title=_("Application Actions"),
-            description=_("Keyboard shortcuts for application operations"),
-        )
-        self.shortcut_groups.append(app_group)
-        shortcuts_page.add(app_group)
-
-        terminal_shortcuts = {
-            "new-local-tab": _("New Tab"),
-            "close-tab": _("Close Tab"),
-            "copy": _("Copy"),
-            "paste": _("Paste"),
-            "select-all": _("Select All"),
-        }
-        app_shortcuts = {
-            "preferences": _("Preferences"),
-            "quit": _("Quit Application"),
-            "toggle-sidebar": _("Toggle Sidebar"),
-            "new-window": _("New Window"),
-        }
-        self._create_shortcut_rows(terminal_group, terminal_shortcuts)
-        self._create_shortcut_rows(app_group, app_shortcuts)
-
     def _setup_advanced_page(self) -> None:
         advanced_page = Adw.PreferencesPage(
             title=_("Advanced"), icon_name="preferences-other-symbolic"
@@ -610,22 +568,6 @@ class PreferencesDialog(Adw.PreferencesWindow):
         if app:
             app.activate_action("restore-backup", None)
 
-    def _on_shortcut_search_changed(self, window, _param):
-        query = self.get_search_text().lower().strip()
-        for group in self.shortcut_groups:
-            group_visible = False
-            child = group.get_first_child()
-            while child:
-                if isinstance(child, Adw.ActionRow):
-                    title = child.get_title().lower()
-                    subtitle = (child.get_subtitle() or "").lower()
-                    is_match = query in title or query in subtitle
-                    child.set_visible(is_match)
-                    if is_match:
-                        group_visible = True
-                child = child.get_next_sibling()
-            group.set_visible(group_visible)
-
     def _on_log_level_changed(self, combo_row, _param):
         selected_item = combo_row.get_selected_item()
         if selected_item:
@@ -699,99 +641,6 @@ class PreferencesDialog(Adw.PreferencesWindow):
         )
         dialog.add_response("ok", _("OK"))
         dialog.set_default_response("ok")
-        dialog.present()
-
-    def _create_shortcut_rows(
-        self, group: Adw.PreferencesGroup, shortcuts: Dict[str, str]
-    ) -> None:
-        for key, title in shortcuts.items():
-            current_shortcut = self.settings_manager.get_shortcut(key)
-            subtitle = (
-                accelerator_to_label(current_shortcut)
-                if current_shortcut
-                else _("None")
-            )
-            row = Adw.ActionRow(title=title, subtitle=subtitle)
-            button = Gtk.Button(label=_("Edit"), css_classes=["flat"])
-            button.set_valign(Gtk.Align.CENTER)
-            button.connect("clicked", self._on_shortcut_edit_clicked, key, row)
-            row.add_suffix(button)
-            row.set_activatable_widget(button)
-            group.add(row)
-            self.shortcut_rows[key] = row
-
-    def _on_shortcut_edit_clicked(
-        self, button, shortcut_key: str, row: Adw.ActionRow
-    ) -> None:
-        dialog = Adw.MessageDialog(
-            transient_for=self,
-            title=_("Edit Shortcut"),
-            body=_("Press the new key combination for '{}' or Esc to cancel.").format(
-                row.get_title()
-            ),
-        )
-        current_shortcut = self.settings_manager.get_shortcut(shortcut_key)
-        current_label = (
-            accelerator_to_label(current_shortcut) if current_shortcut else _("None")
-        )
-        feedback_label = Gtk.Label(
-            label=_("Current: {}\nNew: (press keys)").format(current_label)
-        )
-        dialog.set_extra_child(feedback_label)
-        key_controller = Gtk.EventControllerKey.new()
-        new_shortcut = [None]
-
-        def on_key_pressed(_controller, keyval, _keycode, state):
-            if keyval in (
-                Gdk.KEY_Control_L,
-                Gdk.KEY_Control_R,
-                Gdk.KEY_Shift_L,
-                Gdk.KEY_Shift_R,
-                Gdk.KEY_Alt_L,
-                Gdk.KEY_Alt_R,
-                Gdk.KEY_Super_L,
-                Gdk.KEY_Super_R,
-            ):
-                return Gdk.EVENT_PROPAGATE
-            if keyval == Gdk.KEY_Escape:
-                new_shortcut[0] = "cancel"
-                dialog.response("cancel")
-                return Gdk.EVENT_STOP
-            shortcut_string = Gtk.accelerator_name(
-                keyval, state & Gtk.accelerator_get_default_mod_mask()
-            )
-            new_shortcut[0] = shortcut_string
-            label_text = accelerator_to_label(shortcut_string)
-            feedback_label.set_label(
-                _("Current: {}\nNew: {}").format(current_label, label_text)
-            )
-            return Gdk.EVENT_STOP
-
-        key_controller.connect("key-pressed", on_key_pressed)
-        dialog.add_controller(key_controller)
-        dialog.add_response("cancel", _("Cancel"))
-        dialog.add_response("clear", _("Clear"))
-        dialog.add_response("save", _("Set Shortcut"))
-        dialog.set_default_response("save")
-        dialog.set_response_appearance("save", Adw.ResponseAppearance.SUGGESTED)
-        dialog.set_response_appearance("clear", Adw.ResponseAppearance.DESTRUCTIVE)
-
-        def on_response(dlg, response_id):
-            if (
-                response_id == "save"
-                and new_shortcut[0]
-                and new_shortcut[0] != "cancel"
-            ):
-                self.settings_manager.set_shortcut(shortcut_key, new_shortcut[0])
-                row.set_subtitle(accelerator_to_label(new_shortcut[0]))
-                self.emit("shortcut-changed")
-            elif response_id == "clear":
-                self.settings_manager.set_shortcut(shortcut_key, "")
-                row.set_subtitle(_("None"))
-                self.emit("shortcut-changed")
-            dlg.close()
-
-        dialog.connect("response", on_response)
         dialog.present()
 
     def _on_reset_settings_clicked(self, button) -> None:

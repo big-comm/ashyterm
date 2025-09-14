@@ -14,6 +14,7 @@ from .dialogs import (
     MoveSessionDialog,
     PreferencesDialog,
     SessionEditDialog,
+    ShortcutsDialog,
 )
 
 if TYPE_CHECKING:
@@ -281,14 +282,11 @@ class WindowActions:
             "font-changed",
             lambda d, f: self.window.terminal_manager.apply_settings_to_all_terminals(),
         )
-        dialog.connect(
-            "shortcut-changed", lambda d: self.window._update_keyboard_shortcuts()
-        )
         dialog.present()
 
     def shortcuts(self, *_args):
-        shortcuts_window = Gtk.ShortcutsWindow(transient_for=self.window)
-        shortcuts_window.present()
+        dialog = ShortcutsDialog(self.window)
+        dialog.present()
 
     def new_window(self, *_args):
         if app := self.window.get_application():

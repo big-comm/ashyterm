@@ -44,7 +44,12 @@ class WindowUIBuilder:
         self.single_tab_title_widget = None
         self.title_stack = None
         self.toast_overlay = None
-        self.search_entry = None
+        self.search_bar = None
+        self.search_button = None
+        self.terminal_search_entry = None  # Renamed for clarity
+        self.sidebar_search_entry = None  # Renamed for clarity
+        self.search_prev_button = None
+        self.search_next_button = None
         self.add_session_button = None
         self.add_folder_button = None
         self.edit_button = None
@@ -220,11 +225,25 @@ class WindowUIBuilder:
         )
 
     def _setup_main_structure(self) -> Gtk.Box:
-        """Sets up the main window structure (header, flap, content)."""
+        """Sets up the main window structure (header, search bar, flap, content)."""
         main_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
         self.header_bar = self._create_header_bar()
         main_box.append(self.header_bar)
 
+        # Create the SearchBar
+        self.search_bar = Gtk.SearchBar()
+        search_box = Gtk.Box(spacing=6)
+        self.terminal_search_entry = Gtk.SearchEntry(hexpand=True)
+        self.search_bar.connect_entry(self.terminal_search_entry)
+        self.search_prev_button = Gtk.Button.new_from_icon_name("go-up-symbolic")
+        self.search_next_button = Gtk.Button.new_from_icon_name("go-down-symbolic")
+        search_box.append(self.terminal_search_entry)
+        search_box.append(self.search_prev_button)
+        search_box.append(self.search_next_button)
+        self.search_bar.set_child(search_box)
+        main_box.append(self.search_bar)
+
+        # Create the main content area (Flap)
         self.flap = Adw.Flap(transition_type=Adw.FlapTransitionType.SLIDE)
         self.sidebar_box = self._create_sidebar()
         self.flap.set_flap(self.sidebar_box)
@@ -237,6 +256,7 @@ class WindowUIBuilder:
         content_area = self._create_content_area()
         self.flap.set_content(content_area)
 
+        # Add the Flap as the main content of the window, which will be revealed/hidden by the SearchBar
         main_box.append(self.flap)
         return main_box
 
@@ -273,6 +293,12 @@ class WindowUIBuilder:
         menu_button.set_popover(popover)
         header_bar.pack_end(menu_button)
 
+        # Add the new search button
+        self.search_button = Gtk.ToggleButton(
+            icon_name="edit-find-symbolic", tooltip_text=_("Search in Terminal")
+        )
+        header_bar.pack_end(self.search_button)
+
         new_tab_button = Gtk.Button.new_from_icon_name("tab-new-symbolic")
         new_tab_button.set_tooltip_text(_("New Tab"))
         new_tab_button.connect("clicked", self.window._on_new_tab_clicked)
@@ -287,7 +313,6 @@ class WindowUIBuilder:
         self.scrolled_tab_bar.set_policy(Gtk.PolicyType.AUTOMATIC, Gtk.PolicyType.NEVER)
         self.scrolled_tab_bar.set_child(self.tab_manager.get_tab_bar())
 
-        # ALTERADO: Adicionar o controlador de rolagem com o flag correto
         scroll_controller = Gtk.EventControllerScroll.new(
             Gtk.EventControllerScrollFlags.BOTH_AXES
         )
@@ -345,10 +370,12 @@ class WindowUIBuilder:
         search_container = Gtk.Box(
             orientation=Gtk.Orientation.VERTICAL, css_classes=["sidebar-search"]
         )
-        self.search_entry = Gtk.SearchEntry(placeholder_text=_("Search sessions..."))
-        self.search_entry.set_margin_start(6)
-        self.search_entry.set_margin_end(6)
-        search_container.append(self.search_entry)
+        self.sidebar_search_entry = Gtk.SearchEntry(
+            placeholder_text=_("Search sessions...")
+        )
+        self.sidebar_search_entry.set_margin_start(6)
+        self.sidebar_search_entry.set_margin_end(6)
+        search_container.append(self.sidebar_search_entry)
         toolbar_view.add_bottom_bar(search_container)
 
         return toolbar_view
