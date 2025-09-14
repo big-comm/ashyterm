@@ -848,6 +848,23 @@ msgstr ""
 msgid "Cannot detach the last tab."
 msgstr "Kann den letzten Tab nicht abtrennen."
 # 
+# File: usr/share/ashyterm/window.py, line: 652
+#: NEEDS WORK
+msgid "No active terminal to search in."
+msgstr "Kein aktives Terminal zum Suchen."
+# 
+# File: usr/share/ashyterm/window.py, line: 687
+# File: usr/share/ashyterm/window.py, line: 734
+#: NEEDS WORK
+msgid "Invalid search pattern."
+msgstr "Ungültiges Suchmuster."
+# 
+# File: usr/share/ashyterm/window.py, line: 762
+# File: usr/share/ashyterm/window.py, line: 795
+#: NEEDS WORK
+msgid "No more matches found."
+msgstr "Keine weiteren Übereinstimmungen gefunden."
+# 
 # File: usr/share/ashyterm/window.py, line: 145
 #: NEEDS WORK
 msgid "Initialization Error"
@@ -959,6 +976,11 @@ msgstr ""
 #: NEEDS WORK
 msgid "Clear All"
 msgstr "Alle löschen"
+# 
+# File: usr/share/ashyterm/window.py, line: 1193
+#: NEEDS WORK
+msgid "No active terminal to send command to."
+msgstr "Kein aktives Terminal, um einen Befehl zu senden."
 # 
 # File: usr/share/ashyterm/ui/color_scheme_dialog.py, line: 42
 #: NEEDS WORK
@@ -1116,6 +1138,56 @@ msgstr "Konnte keine Verbindung zur Sitzung '{session_name}' herstellen."
 #: NEEDS WORK
 msgid "Close"
 msgstr "Schließen"
+# 
+# File: usr/share/ashyterm/ui/dialogs/command_guide_dialog.py, line: 32
+#: NEEDS WORK
+msgid "Add Custom Command"
+msgstr "Benutzerdefinierten Befehl hinzufügen"
+# 
+# File: usr/share/ashyterm/ui/dialogs/command_guide_dialog.py, line: 32
+#: NEEDS WORK
+msgid "Edit Custom Command"
+msgstr "Benutzerdefinierten Befehl bearbeiten"
+# 
+# File: usr/share/ashyterm/ui/dialogs/command_guide_dialog.py, line: 34
+#: NEEDS WORK
+msgid "Command"
+msgstr "Befehl"
+# 
+# File: usr/share/ashyterm/ui/dialogs/command_guide_dialog.py, line: 35
+#: NEEDS WORK
+msgid "Category"
+msgstr "Kategorie"
+# 
+# File: usr/share/ashyterm/ui/dialogs/command_guide_dialog.py, line: 59
+#: NEEDS WORK
+msgid "Description"
+msgstr "Beschreibung"
+# 
+# File: usr/share/ashyterm/ui/dialogs/command_guide_dialog.py, line: 143
+#: NEEDS WORK
+msgid "Command Guide"
+msgstr "Befehlsanleitung"
+# 
+# File: usr/share/ashyterm/ui/dialogs/command_guide_dialog.py, line: 165
+#: NEEDS WORK
+msgid "Search commands..."
+msgstr "Suchbefehle..."
+# 
+# File: usr/share/ashyterm/ui/dialogs/command_guide_dialog.py, line: 208
+#: NEEDS WORK
+msgid "Show Only Custom Commands"
+msgstr "Nur benutzerdefinierte Befehle anzeigen"
+# 
+# File: usr/share/ashyterm/ui/dialogs/command_guide_dialog.py, line: 216
+#: NEEDS WORK
+msgid "Add New"
+msgstr "Neu hinzufügen"
+# 
+# File: usr/share/ashyterm/window.py, line: 343
+#: NEEDS WORK
+msgid "Remove Selected"
+msgstr "Ausgewählte entfernen"
 # 
 # #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
 # 
@@ -1949,95 +2021,6 @@ msgstr "Entfernen Sie entfernte Bearbeitungsdateien beim Beenden"
 msgid "Automatically delete all temporary remote files when closing the app"
 msgstr "Automatisch alle temporären Remote-Dateien beim Schließen der App löschen"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1575
-#: NEEDS WORK
-msgid "Shortcuts"
-msgstr "Tastenkombinationen"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1582
-#: NEEDS WORK
-msgid "Terminal Actions"
-msgstr "Terminalaktionen"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1583
-#: NEEDS WORK
-msgid "Keyboard shortcuts for terminal operations"
-msgstr "Tastenkombinationen für Terminaloperationen"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1589
-#: NEEDS WORK
-msgid "Application Actions"
-msgstr "Anwendungsaktionen"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1590
-#: NEEDS WORK
-msgid "Keyboard shortcuts for application operations"
-msgstr "Tastenkombinationen für Anwendungsoperationen"
-# 
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
-# 
-# File: usr/share/ashyterm/ui/menus.py, line: 144
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1596
-#: NEEDS WORK
-msgid "New Tab"
-msgstr "Neuer Tab"
-# 
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
-# 
-# File: usr/share/ashyterm/ui/menus.py, line: 145
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1597
-#: NEEDS WORK
-msgid "Close Tab"
-msgstr "Tab schließen"
-# 
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
-# 
-# File: usr/share/ashyterm/ui/menus.py, line: 30
-# File: usr/share/ashyterm/ui/menus.py, line: 66
-# File: usr/share/ashyterm/ui/menus.py, line: 117
-# File: usr/share/ashyterm/ui/menus.py, line: 153
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1598
-#: NEEDS WORK
-msgid "Copy"
-msgstr "Kopieren"
-# 
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
-# 
-# File: usr/share/ashyterm/ui/menus.py, line: 69
-# File: usr/share/ashyterm/ui/menus.py, line: 118
-# File: usr/share/ashyterm/ui/menus.py, line: 154
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1599
-#: NEEDS WORK
-msgid "Paste"
-msgstr "Einfügen"
-# 
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
-# 
-# File: usr/share/ashyterm/ui/menus.py, line: 119
-# File: usr/share/ashyterm/ui/menus.py, line: 155
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1600
-#: NEEDS WORK
-msgid "Select All"
-msgstr "Alle auswählen"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1605
-#: NEEDS WORK
-msgid "Quit Application"
-msgstr "Anwendung beenden"
-# 
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1606
-# File: usr/share/ashyterm/window.py, line: 248
-#: NEEDS WORK
-msgid "Toggle Sidebar"
-msgstr "Seitenleiste umschalten"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1607
-#: NEEDS WORK
-msgid "New Window"
-msgstr "Neues Fenster"
-# 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1790
 #: NEEDS WORK
 msgid "Advanced"
@@ -2223,57 +2206,6 @@ msgstr ""
 "Die Änderung der Sichtbarkeit der Seitenleiste tritt in Kraft, wenn Sie die Anwendung schließen und "
 "erneut öffnen. Sie können die Seitenleiste auch manuell mit Ctrl+Shift+H umschalten."
 # 
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1624
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1907
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1983
-# File: usr/share/ashyterm/utils.py, line: 238
-#: NEEDS WORK
-msgid "None"
-msgstr "None"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1900
-#: NEEDS WORK
-msgid "Edit Shortcut"
-msgstr "Bearbeiten Verknüpfung"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1901
-#: NEEDS WORK
-#, python-brace-format
-msgid "Press the new key combination for '{}' or Esc to cancel."
-msgstr "Drücken Sie die neue Tastenkombination für '{}' oder Esc, um abzubrechen."
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1914
-#: NEEDS WORK
-#, python-brace-format
-msgid ""
-"Current: {}\n"
-"New: (press keys)"
-msgstr ""
-"Aktuell: {}\n"
-"Neu: (Tasten drücken)"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1945
-#: NEEDS WORK
-#, python-brace-format
-msgid ""
-"Current: {}\n"
-"New: {}"
-msgstr ""
-"Aktuell: {}\n"
-"Neu: {}"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1958
-#: NEEDS WORK
-msgid "Clear"
-msgstr "Löschen"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1959
-#: NEEDS WORK
-msgid "Set Shortcut"
-msgstr "Tastenkombination festlegen"
-# 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 2003
 #: NEEDS WORK
 msgid "Are you sure you want to reset all settings to their default values? This action cannot be undone."
@@ -2316,6 +2248,243 @@ msgstr "Fortfahren"
 #, python-brace-format
 msgid "{} is required"
 msgstr "{} ist erforderlich"
+# 
+# File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 17
+#: NEEDS WORK
+msgid "Tab &amp; Pane Management"
+msgstr "Tab- und Bereichsverwaltung"
+# 
+# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
+# 
+# File: usr/share/ashyterm/ui/menus.py, line: 144
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1596
+#: NEEDS WORK
+msgid "New Tab"
+msgstr "Neuer Tab"
+# 
+# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
+# 
+# File: usr/share/ashyterm/ui/menus.py, line: 145
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1597
+#: NEEDS WORK
+msgid "Close Tab"
+msgstr "Tab schließen"
+# 
+# File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 21
+#: NEEDS WORK
+msgid "Next Tab"
+msgstr "Nächster Tab"
+# 
+# File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 22
+#: NEEDS WORK
+msgid "Previous Tab"
+msgstr "Vorheriger Tab"
+# 
+# File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 26
+#: NEEDS WORK
+msgid "Splitting"
+msgstr "Aufteilen"
+# 
+# File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 28
+#: NEEDS WORK
+msgid "Split Horizontally"
+msgstr "Horizontal teilen"
+# 
+# File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 29
+#: NEEDS WORK
+msgid "Split Vertically"
+msgstr "Vertikal teilen"
+# 
+# File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 30
+#: NEEDS WORK
+msgid "Close Active Pane"
+msgstr "Aktives Fenster schließen"
+# 
+# File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 34
+#: NEEDS WORK
+msgid "Terminal Interaction"
+msgstr "Terminalinteraktion"
+# 
+# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
+# 
+# File: usr/share/ashyterm/ui/menus.py, line: 30
+# File: usr/share/ashyterm/ui/menus.py, line: 66
+# File: usr/share/ashyterm/ui/menus.py, line: 117
+# File: usr/share/ashyterm/ui/menus.py, line: 153
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1598
+#: NEEDS WORK
+msgid "Copy"
+msgstr "Kopieren"
+# 
+# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
+# 
+# File: usr/share/ashyterm/ui/menus.py, line: 69
+# File: usr/share/ashyterm/ui/menus.py, line: 118
+# File: usr/share/ashyterm/ui/menus.py, line: 154
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1599
+#: NEEDS WORK
+msgid "Paste"
+msgstr "Einfügen"
+# 
+# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
+# 
+# File: usr/share/ashyterm/ui/menus.py, line: 119
+# File: usr/share/ashyterm/ui/menus.py, line: 155
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1600
+#: NEEDS WORK
+msgid "Select All"
+msgstr "Alle auswählen"
+# 
+# File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 42
+#: NEEDS WORK
+msgid "Zoom"
+msgstr "Zoom"
+# 
+# File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 44
+#: NEEDS WORK
+msgid "Zoom In"
+msgstr "Vergrößern"
+# 
+# File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 45
+#: NEEDS WORK
+msgid "Zoom Out"
+msgstr "Verkleinern"
+# 
+# File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 46
+#: NEEDS WORK
+msgid "Reset Zoom"
+msgstr "Zoom zurücksetzen"
+# 
+# File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 50
+#: NEEDS WORK
+msgid "Application &amp; Window"
+msgstr "Anwendung &amp; Fenster"
+# 
+# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1606
+# File: usr/share/ashyterm/window.py, line: 248
+#: NEEDS WORK
+msgid "Toggle Sidebar"
+msgstr "Seitenleiste umschalten"
+# 
+# File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 53
+#: NEEDS WORK
+msgid "Toggle File Manager"
+msgstr "Dateimanager umschalten"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1607
+#: NEEDS WORK
+msgid "New Window"
+msgstr "Neues Fenster"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1605
+#: NEEDS WORK
+msgid "Quit Application"
+msgstr "Anwendung beenden"
+# 
+# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
+# 
+# File: usr/share/ashyterm/ui/menus.py, line: 211
+# File: usr/share/ashyterm/window.py, line: 909
+# File: usr/share/ashyterm/window.py, line: 960
+#: NEEDS WORK
+msgid "Keyboard Shortcuts"
+msgstr "Tastenkombinationen"
+# 
+# File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 93
+#: NEEDS WORK
+msgid "Reset All"
+msgstr "Alle zurücksetzen"
+# 
+# File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 94
+#: NEEDS WORK
+msgid "Reset all shortcuts to default values"
+msgstr "Alle Tastenkombinationen auf die Standardwerte zurücksetzen"
+# 
+# File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 128
+#: NEEDS WORK
+msgid "Reset all shortcuts to defaults"
+msgstr "Alle Tastenkombinationen auf die Standardwerte zurücksetzen"
+# 
+# File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 186
+# File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 213
+# File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 294
+# File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 334
+#: NEEDS WORK
+msgid "Not set"
+msgstr "Nicht festgelegt"
+# 
+# File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 191
+#: NEEDS WORK
+msgid "Shortcut for: "
+msgstr "Tastenkombination für:"
+# 
+# File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 195
+#: NEEDS WORK
+msgid "Click to change the keyboard shortcut for this action"
+msgstr "Klicken Sie, um die Tastenkombination für diese Aktion zu ändern."
+# 
+# File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 205
+#: NEEDS WORK
+msgid "Set New Shortcut"
+msgstr "Neuen Shortcut festlegen"
+# 
+# File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 206
+#: NEEDS WORK
+#, python-brace-format
+msgid "Press the new key combination for '{}', or Esc to cancel."
+msgstr "Drücken Sie die neue Tastenkombination für '{}', oder Esc, um abzubrechen."
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1914
+#: NEEDS WORK
+#, python-brace-format
+msgid ""
+"Current: {}\n"
+"New: (press keys)"
+msgstr ""
+"Aktuell: {}\n"
+"Neu: (Tasten drücken)"
+# 
+# File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 257
+#: NEEDS WORK
+#, python-brace-format
+msgid ""
+"Current: {}\n"
+"New: {} (Conflicts with {})"
+msgstr ""
+"Aktuell: {}\n"
+"Neu: {} (Konflikte mit {})"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1945
+#: NEEDS WORK
+#, python-brace-format
+msgid ""
+"Current: {}\n"
+"New: {}"
+msgstr ""
+"Aktuell: {}\n"
+"Neu: {}"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1958
+#: NEEDS WORK
+msgid "Clear"
+msgstr "Löschen"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1959
+#: NEEDS WORK
+msgid "Set Shortcut"
+msgstr "Tastenkombination festlegen"
+# 
+# File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 306
+#: NEEDS WORK
+msgid "Reset All Shortcuts"
+msgstr "Alle Tastenkombinationen zurücksetzen"
+# 
+# File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 307
+#: NEEDS WORK
+msgid "This will reset all keyboard shortcuts to their default values. Continue?"
+msgstr "Dies setzt alle Tastenkombinationen auf ihre Standardwerte zurück. Fortfahren?"
 # 
 # File: usr/share/ashyterm/ui/actions.py, line: 168
 #: NEEDS WORK
@@ -2397,10 +2566,40 @@ msgstr "Sind Sie sicher, dass Sie diese {count} Elemente dauerhaft löschen möc
 msgid "This will also delete all contents of any selected folders."
 msgstr "Dies löscht auch alle Inhalte der ausgewählten Ordner."
 # 
+# File: usr/share/ashyterm/ui/window_ui.py, line: 264
+#: NEEDS WORK
+msgid "Current occurrence"
+msgstr "Aktuelle Vorkommen"
+# 
+# File: usr/share/ashyterm/ui/window_ui.py, line: 268
+#: NEEDS WORK
+msgid "Case sensitive search"
+msgstr "Groß-/Kleinschreibung beachten bei der Suche"
+# 
+# File: usr/share/ashyterm/ui/window_ui.py, line: 270
+#: NEEDS WORK
+msgid "Case sensitive"
+msgstr "Groß- und Kleinschreibung beachten"
+# 
+# File: usr/share/ashyterm/ui/window_ui.py, line: 276
+#: NEEDS WORK
+msgid "Use regular expressions"
+msgstr "Verwenden Sie reguläre Ausdrücke"
+# 
+# File: usr/share/ashyterm/ui/window_ui.py, line: 278
+#: NEEDS WORK
+msgid "Regex"
+msgstr "Regulärer Ausdruck"
+# 
 # File: usr/share/ashyterm/window.py, line: 344
 #: NEEDS WORK
 msgid "File Manager"
 msgstr "Dateimanager"
+# 
+# File: usr/share/ashyterm/ui/window_ui.py, line: 324
+#: NEEDS WORK
+msgid "Command Guide (Ctrl+Shift+P)"
+msgstr "Befehlsübersicht (Strg+Umschalt+P)"
 # 
 # File: usr/share/ashyterm/ui/window_ui.py, line: 259
 #: NEEDS WORK
@@ -2412,6 +2611,11 @@ msgstr "Temporäre Dateien verwalten"
 msgid "Main Menu"
 msgstr "Hauptmenü"
 # 
+# File: usr/share/ashyterm/ui/window_ui.py, line: 350
+#: NEEDS WORK
+msgid "Search in Terminal"
+msgstr "Im Terminal suchen"
+# 
 # File: usr/share/ashyterm/window.py, line: 337
 #: NEEDS WORK
 msgid "Edit Selected"
@@ -2421,11 +2625,6 @@ msgstr "Auswahl bearbeiten"
 #: NEEDS WORK
 msgid "Save Current Layout"
 msgstr "Aktuelles Layout speichern"
-# 
-# File: usr/share/ashyterm/window.py, line: 343
-#: NEEDS WORK
-msgid "Remove Selected"
-msgstr "Ausgewählte entfernen"
 # 
 # File: usr/share/ashyterm/window.py, line: 606
 #: NEEDS WORK
@@ -2446,15 +2645,6 @@ msgstr "Heller Stil"
 #: NEEDS WORK
 msgid "Dark Style"
 msgstr "Dunkler Stil"
-# 
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
-# 
-# File: usr/share/ashyterm/ui/menus.py, line: 211
-# File: usr/share/ashyterm/window.py, line: 909
-# File: usr/share/ashyterm/window.py, line: 960
-#: NEEDS WORK
-msgid "Keyboard Shortcuts"
-msgstr "Tastenkombinationen"
 # 
 # File: usr/share/ashyterm/ui/menus.py, line: 216
 #: NEEDS WORK
@@ -2514,6 +2704,274 @@ msgstr "Links/Rechts teilen"
 #: NEEDS WORK
 msgid "Split Top/Bottom"
 msgstr "Oben/Unten teilen"
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 7
+# File: usr/share/ashyterm/data/command_data.py, line: 38
+#: NEEDS WORK
+msgid "Navegação e Listagem de Arquivos"
+msgstr "Navigation und Dateiansicht"
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 9
+#: NEEDS WORK
+msgid "Lista o conteúdo de um diretório."
+msgstr "Listet den Inhalt eines Verzeichnisses."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 14
+#: NEEDS WORK
+msgid "Usa um formato de lista longa, mostrando permissões, dono, tamanho e data."
+msgstr "Verwenden Sie ein langes Listenformat, das Berechtigungen, Eigentümer, Größe und Datum anzeigt."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 20
+#: NEEDS WORK
+msgid "Mostra todos os arquivos, incluindo os ocultos (que começam com '.')."
+msgstr "Zeige alle Dateien an, einschließlich der versteckten (die mit '.' beginnen)."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 26
+#: NEEDS WORK
+msgid "Formato longo com tamanhos de arquivo legíveis para humanos (KB, MB, GB)."
+msgstr "Langes Format mit menschenlesbaren Dateigrößen (KB, MB, GB)."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 32
+#: NEEDS WORK
+msgid "Ordena os arquivos por data de modificação, os mais recentes primeiro."
+msgstr "Sortiere die Dateien nach Änderungsdatum, die neuesten zuerst."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 40
+#: NEEDS WORK
+msgid "Muda o diretório de trabalho atual."
+msgstr "Ändert das aktuelle Arbeitsverzeichnis."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 44
+#: NEEDS WORK
+msgid "Navega para um caminho absoluto específico."
+msgstr "Navigiere zu einem bestimmten absoluten Pfad."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 48
+#: NEEDS WORK
+msgid "Sobe um nível, indo para o diretório pai."
+msgstr "Eine Ebene nach oben, zum übergeordneten Verzeichnis wechseln."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 53
+#: NEEDS WORK
+msgid "Vai diretamente para o seu diretório 'home'. O mesmo que 'cd' sem argumentos."
+msgstr "Geht direkt in Ihr 'home'-Verzeichnis. Dasselbe wie 'cd' ohne Argumente."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 58
+#: NEEDS WORK
+msgid "Volta para o último diretório em que você estava."
+msgstr "Gehe zurück zum letzten Verzeichnis, in dem du warst."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 63
+# File: usr/share/ashyterm/data/command_data.py, line: 84
+# File: usr/share/ashyterm/data/command_data.py, line: 99
+#: NEEDS WORK
+msgid "Manipulação de Arquivos"
+msgstr "Dateiverwaltung"
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 65
+#: NEEDS WORK
+msgid "Copia arquivos ou diretórios."
+msgstr "Kopiere Dateien oder Verzeichnisse."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 69
+#: NEEDS WORK
+msgid "Copia um único arquivo."
+msgstr "Kopiere eine einzelne Datei."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 74
+#: NEEDS WORK
+msgid "Copia um diretório e todo o seu conteúdo recursivamente."
+msgstr "Kopiert ein Verzeichnis und dessen gesamten Inhalt rekursiv."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 79
+#: NEEDS WORK
+msgid "Modo 'verbose', mostra o que está sendo copiado."
+msgstr "Modus 'verbose', zeigt an, was kopiert wird."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 86
+#: NEEDS WORK
+msgid "Move ou renomeia arquivos e diretórios."
+msgstr "Verschieben oder umbenennen von Dateien und Verzeichnissen."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 90
+#: NEEDS WORK
+msgid "Renomeia um arquivo ou diretório no local atual."
+msgstr "Benennt eine Datei oder ein Verzeichnis im aktuellen Standort um."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 94
+#: NEEDS WORK
+msgid "Move um arquivo para um novo local."
+msgstr "Bewege eine Datei an einen neuen Speicherort."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 102
+#: NEEDS WORK
+msgid "Remove (apaga) arquivos ou diretórios. CUIDADO: esta ação é permanente."
+msgstr "Entfernen Sie Dateien oder Verzeichnisse. VORSICHT: Diese Aktion ist dauerhaft."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 105
+#: NEEDS WORK
+msgid "Remove um único arquivo."
+msgstr "Entfernen Sie eine einzelne Datei."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 108
+#: NEEDS WORK
+msgid "Remove um diretório e todo o seu conteúdo."
+msgstr "Entfernen Sie ein Verzeichnis und dessen gesamten Inhalt."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 112
+#: NEEDS WORK
+msgid "Modo interativo, pede confirmação antes de remover."
+msgstr "Interaktiver Modus, fordert Bestätigung, bevor entfernt wird."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 117
+#: NEEDS WORK
+msgid "Força a remoção sem pedir confirmação (usar com cautela)."
+msgstr "Zwingt die Entfernung ohne Bestätigung (mit Vorsicht verwenden)."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 123
+#: NEEDS WORK
+msgid "Busca e Filtragem"
+msgstr "Suche und Filterung"
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 126
+#: NEEDS WORK
+msgid "Busca por um padrão de texto dentro de arquivos ou saídas de outros comandos."
+msgstr "Sucht nach einem Textmuster in Dateien oder Ausgaben anderer Befehle."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 132
+#: NEEDS WORK
+msgid "Encontra e exibe todas as linhas que contêm 'palavra' no arquivo."
+msgstr "Findet und zeigt alle Zeilen an, die 'Wort' in der Datei enthalten."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 138
+#: NEEDS WORK
+msgid "Busca ignorando a diferença entre maiúsculas e minúsculas."
+msgstr "Suche ohne Berücksichtigung von Groß- und Kleinschreibung."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 144
+#: NEEDS WORK
+msgid "Busca recursivamente por 'palavra' em todos os arquivos do diretório atual."
+msgstr "Durchsucht rekursiv nach 'Wort' in allen Dateien des aktuellen Verzeichnisses."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 150
+#: NEEDS WORK
+msgid "Filtra a saída do comando 'ls -l' para mostrar apenas linhas que contêm 'txt'."
+msgstr "Filtern Sie die Ausgabe des Befehls 'ls -l', um nur Zeilen anzuzeigen, die 'txt' enthalten."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 156
+# File: usr/share/ashyterm/data/command_data.py, line: 175
+# File: usr/share/ashyterm/data/command_data.py, line: 194
+# File: usr/share/ashyterm/data/command_data.py, line: 209
+#: NEEDS WORK
+msgid "Controle de Fluxo (Shell Script)"
+msgstr "Flusskontrolle (Shell-Skript)"
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 158
+#: NEEDS WORK
+msgid "Executa blocos de comandos condicionalmente."
+msgstr "Führt bedingte Befehlsblöcke aus."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 162
+#: NEEDS WORK
+msgid "Testa se um arquivo existe e é um arquivo regular."
+msgstr "Überprüft, ob eine Datei existiert und eine reguläre Datei ist."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 166
+#: NEEDS WORK
+msgid "Testa se um caminho existe e é um diretório."
+msgstr "Überprüft, ob ein Pfad existiert und ein Verzeichnis ist."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 170
+#: NEEDS WORK
+msgid "Testa se uma variável numérica é igual a 5."
+msgstr "Überprüft, ob eine numerische Variable gleich 5 ist."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 178
+#: NEEDS WORK
+msgid "Cria um laço (loop) que itera sobre uma lista de itens."
+msgstr "Erstellt eine Schleife, die über eine Liste von Elementen iteriert."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 183
+#: NEEDS WORK
+msgid "Itera sobre uma lista explícita de números."
+msgstr "Iteriert über eine explizite Liste von Zahlen."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 188
+#: NEEDS WORK
+msgid "Itera sobre todos os arquivos que terminam com .txt no diretório."
+msgstr "Durchläuft alle Dateien im Verzeichnis, die mit .txt enden."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 197
+#: NEEDS WORK
+msgid "Cria um laço (loop) que continua enquanto uma condição for verdadeira."
+msgstr "Erstellt eine Schleife, die fortfährt, solange eine Bedingung wahr ist."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 203
+#: NEEDS WORK
+msgid "Executa o bloco de código enquanto a variável COUNT for menor que 5."
+msgstr "Führt den Codeblock aus, solange die Variable COUNT kleiner als 5 ist."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 212
+#: NEEDS WORK
+msgid "Cria um laço (loop) que continua enquanto uma condição for falsa."
+msgstr "Erstellt eine Schleife, die fortfährt, solange eine Bedingung falsch ist."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 218
+#: NEEDS WORK
+msgid "Executa o bloco de código até que a variável COUNT seja igual a 0."
+msgstr "Führt den Codeblock aus, bis die Variable COUNT gleich 0 ist."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 224
+#: NEEDS WORK
+msgid "Entrada do Usuário (Shell Script)"
+msgstr "Benutzereingabe (Shell-Skript)"
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 227
+#: NEEDS WORK
+msgid "Lê uma linha da entrada padrão e a armazena em uma variável."
+msgstr "Liest eine Zeile von der Standardeingabe und speichert sie in einer Variablen."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 233
+#: NEEDS WORK
+msgid "Espera o usuário digitar algo e pressionar Enter, salvando na variável NOME."
+msgstr ""
+"Warte darauf, dass der Benutzer etwas eingibt und die Eingabetaste drückt, wobei der Wert in der "
+"Variablen NAME gespeichert wird."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 239
+#: NEEDS WORK
+msgid "Mostra uma mensagem (prompt) para o usuário antes de esperar a entrada."
+msgstr "Zeigt eine Nachricht (Prompt) für den Benutzer an, bevor die Eingabe erwartet wird."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 245
+#: NEEDS WORK
+msgid "Expansão de Parâmetros"
+msgstr "Parametererweiterung"
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 248
+#: NEEDS WORK
+msgid "Mecanismos do shell para manipular o valor de variáveis."
+msgstr "Shell-Mechanismen zur Manipulation von Variablenwerten."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 254
+#: NEEDS WORK
+msgid "Substitui pelo valor da variável VAR. É o mesmo que $VAR, mas mais seguro."
+msgstr "Ersetzt durch den Wert der Variablen VAR. Es ist dasselbe wie $VAR, aber sicherer."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 260
+#: NEEDS WORK
+msgid "Usa 'default' se VAR não estiver definida. A variável VAR não é alterada."
+msgstr "Verwende 'default', wenn VAR nicht definiert ist. Die Variable VAR wird nicht geändert."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 266
+#: NEEDS WORK
+msgid "Usa e atribui 'default' a VAR se ela não estiver definida."
+msgstr "Verwendet und weist 'default' an VAR zu, wenn es nicht definiert ist."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 272
+#: NEEDS WORK
+msgid "Retorna o número de caracteres no valor da variável VAR."
+msgstr "Gibt die Anzahl der Zeichen im Wert der Variablen VAR zurück."
 # 
 # File: usr/share/ashyterm/app.py, line: 333
 #: NEEDS WORK

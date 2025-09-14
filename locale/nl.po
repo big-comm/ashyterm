@@ -848,6 +848,23 @@ msgstr ""
 msgid "Cannot detach the last tab."
 msgstr "Kan het laatste tabblad niet loskoppelen."
 # 
+# File: usr/share/ashyterm/window.py, line: 652
+#: NEEDS WORK
+msgid "No active terminal to search in."
+msgstr "Geen actieve terminal om in te zoeken."
+# 
+# File: usr/share/ashyterm/window.py, line: 687
+# File: usr/share/ashyterm/window.py, line: 734
+#: NEEDS WORK
+msgid "Invalid search pattern."
+msgstr "Ongeldig zoekpatroon."
+# 
+# File: usr/share/ashyterm/window.py, line: 762
+# File: usr/share/ashyterm/window.py, line: 795
+#: NEEDS WORK
+msgid "No more matches found."
+msgstr "Geen verdere overeenkomsten gevonden."
+# 
 # File: usr/share/ashyterm/window.py, line: 145
 #: NEEDS WORK
 msgid "Initialization Error"
@@ -958,6 +975,11 @@ msgstr ""
 #: NEEDS WORK
 msgid "Clear All"
 msgstr "Alles wissen"
+# 
+# File: usr/share/ashyterm/window.py, line: 1193
+#: NEEDS WORK
+msgid "No active terminal to send command to."
+msgstr "Geen actieve terminal om commando naar te verzenden."
 # 
 # File: usr/share/ashyterm/ui/color_scheme_dialog.py, line: 42
 #: NEEDS WORK
@@ -1113,6 +1135,56 @@ msgstr "Kon niet verbinden met sessie '{session_name}'."
 #: NEEDS WORK
 msgid "Close"
 msgstr "Sluiten"
+# 
+# File: usr/share/ashyterm/ui/dialogs/command_guide_dialog.py, line: 32
+#: NEEDS WORK
+msgid "Add Custom Command"
+msgstr "Voeg Aangepaste Opdracht Toe"
+# 
+# File: usr/share/ashyterm/ui/dialogs/command_guide_dialog.py, line: 32
+#: NEEDS WORK
+msgid "Edit Custom Command"
+msgstr "Bewerk Aangepaste Opdracht"
+# 
+# File: usr/share/ashyterm/ui/dialogs/command_guide_dialog.py, line: 34
+#: NEEDS WORK
+msgid "Command"
+msgstr "Opdracht"
+# 
+# File: usr/share/ashyterm/ui/dialogs/command_guide_dialog.py, line: 35
+#: NEEDS WORK
+msgid "Category"
+msgstr "Categorie"
+# 
+# File: usr/share/ashyterm/ui/dialogs/command_guide_dialog.py, line: 59
+#: NEEDS WORK
+msgid "Description"
+msgstr "Beschrijving"
+# 
+# File: usr/share/ashyterm/ui/dialogs/command_guide_dialog.py, line: 143
+#: NEEDS WORK
+msgid "Command Guide"
+msgstr "Opdrachtgids"
+# 
+# File: usr/share/ashyterm/ui/dialogs/command_guide_dialog.py, line: 165
+#: NEEDS WORK
+msgid "Search commands..."
+msgstr "Zoekopdrachten..."
+# 
+# File: usr/share/ashyterm/ui/dialogs/command_guide_dialog.py, line: 208
+#: NEEDS WORK
+msgid "Show Only Custom Commands"
+msgstr "Toon Alleen Aangepaste Commando's"
+# 
+# File: usr/share/ashyterm/ui/dialogs/command_guide_dialog.py, line: 216
+#: NEEDS WORK
+msgid "Add New"
+msgstr "Nieuw toevoegen"
+# 
+# File: usr/share/ashyterm/window.py, line: 343
+#: NEEDS WORK
+msgid "Remove Selected"
+msgstr "Verwijder Geselecteerd"
 # 
 # #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
 # 
@@ -1940,95 +2012,6 @@ msgstr "Verwijder externe bewerkingsbestanden bij afsluiten"
 msgid "Automatically delete all temporary remote files when closing the app"
 msgstr "Verwijder automatisch alle tijdelijke externe bestanden bij het sluiten van de app"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1575
-#: NEEDS WORK
-msgid "Shortcuts"
-msgstr "Sneltoetsen"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1582
-#: NEEDS WORK
-msgid "Terminal Actions"
-msgstr "Terminalacties"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1583
-#: NEEDS WORK
-msgid "Keyboard shortcuts for terminal operations"
-msgstr "Toetsenbord sneltoetsen voor terminalbewerkingen"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1589
-#: NEEDS WORK
-msgid "Application Actions"
-msgstr "Toepassingsacties"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1590
-#: NEEDS WORK
-msgid "Keyboard shortcuts for application operations"
-msgstr "Toetsenbord sneltoetsen voor applicatieoperaties"
-# 
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
-# 
-# File: usr/share/ashyterm/ui/menus.py, line: 144
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1596
-#: NEEDS WORK
-msgid "New Tab"
-msgstr "Nieuw Tabblad"
-# 
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
-# 
-# File: usr/share/ashyterm/ui/menus.py, line: 145
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1597
-#: NEEDS WORK
-msgid "Close Tab"
-msgstr "Tabblad Sluiten"
-# 
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
-# 
-# File: usr/share/ashyterm/ui/menus.py, line: 30
-# File: usr/share/ashyterm/ui/menus.py, line: 66
-# File: usr/share/ashyterm/ui/menus.py, line: 117
-# File: usr/share/ashyterm/ui/menus.py, line: 153
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1598
-#: NEEDS WORK
-msgid "Copy"
-msgstr "Kopiëren"
-# 
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
-# 
-# File: usr/share/ashyterm/ui/menus.py, line: 69
-# File: usr/share/ashyterm/ui/menus.py, line: 118
-# File: usr/share/ashyterm/ui/menus.py, line: 154
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1599
-#: NEEDS WORK
-msgid "Paste"
-msgstr "Plakken"
-# 
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
-# 
-# File: usr/share/ashyterm/ui/menus.py, line: 119
-# File: usr/share/ashyterm/ui/menus.py, line: 155
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1600
-#: NEEDS WORK
-msgid "Select All"
-msgstr "Alles selecteren"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1605
-#: NEEDS WORK
-msgid "Quit Application"
-msgstr "Toepassing afsluiten"
-# 
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1606
-# File: usr/share/ashyterm/window.py, line: 248
-#: NEEDS WORK
-msgid "Toggle Sidebar"
-msgstr "Zijbalk in-/uitschakelen"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1607
-#: NEEDS WORK
-msgid "New Window"
-msgstr "Nieuw venster"
-# 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1790
 #: NEEDS WORK
 msgid "Advanced"
@@ -2214,57 +2197,6 @@ msgstr ""
 "De wijziging van de zichtbaarheid van de zijbalk wordt van kracht wanneer u de applicatie sluit en "
 "opnieuw opent. U kunt de zijbalk ook handmatig in- en uitschakelen met Ctrl+Shift+H."
 # 
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1624
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1907
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1983
-# File: usr/share/ashyterm/utils.py, line: 238
-#: NEEDS WORK
-msgid "None"
-msgstr "Geen"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1900
-#: NEEDS WORK
-msgid "Edit Shortcut"
-msgstr "Bewerk Snelkoppeling"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1901
-#: NEEDS WORK
-#, python-brace-format
-msgid "Press the new key combination for '{}' or Esc to cancel."
-msgstr "Druk de nieuwe toetscombinatie voor '{}' of Esc om te annuleren."
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1914
-#: NEEDS WORK
-#, python-brace-format
-msgid ""
-"Current: {}\n"
-"New: (press keys)"
-msgstr ""
-"Huidig: {}\n"
-"Nieuw: (druk op toetsen)"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1945
-#: NEEDS WORK
-#, python-brace-format
-msgid ""
-"Current: {}\n"
-"New: {}"
-msgstr ""
-"Huidig: {}\n"
-"Nieuw: {}"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1958
-#: NEEDS WORK
-msgid "Clear"
-msgstr "Wispen"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1959
-#: NEEDS WORK
-msgid "Set Shortcut"
-msgstr "Sneltoets instellen"
-# 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 2003
 #: NEEDS WORK
 msgid "Are you sure you want to reset all settings to their default values? This action cannot be undone."
@@ -2307,6 +2239,243 @@ msgstr "Doorgaan"
 #, python-brace-format
 msgid "{} is required"
 msgstr "{} is verplicht"
+# 
+# File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 17
+#: NEEDS WORK
+msgid "Tab &amp; Pane Management"
+msgstr "Tab- en Paneelbeheer"
+# 
+# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
+# 
+# File: usr/share/ashyterm/ui/menus.py, line: 144
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1596
+#: NEEDS WORK
+msgid "New Tab"
+msgstr "Nieuw Tabblad"
+# 
+# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
+# 
+# File: usr/share/ashyterm/ui/menus.py, line: 145
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1597
+#: NEEDS WORK
+msgid "Close Tab"
+msgstr "Tabblad Sluiten"
+# 
+# File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 21
+#: NEEDS WORK
+msgid "Next Tab"
+msgstr "Volgende Tabblad"
+# 
+# File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 22
+#: NEEDS WORK
+msgid "Previous Tab"
+msgstr "Vorige tabblad"
+# 
+# File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 26
+#: NEEDS WORK
+msgid "Splitting"
+msgstr "Splitsen"
+# 
+# File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 28
+#: NEEDS WORK
+msgid "Split Horizontally"
+msgstr "Horizontaal splitsen"
+# 
+# File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 29
+#: NEEDS WORK
+msgid "Split Vertically"
+msgstr "Verticaal Splitsen"
+# 
+# File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 30
+#: NEEDS WORK
+msgid "Close Active Pane"
+msgstr "Sluit Actief Paneel"
+# 
+# File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 34
+#: NEEDS WORK
+msgid "Terminal Interaction"
+msgstr "Terminalinteractie"
+# 
+# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
+# 
+# File: usr/share/ashyterm/ui/menus.py, line: 30
+# File: usr/share/ashyterm/ui/menus.py, line: 66
+# File: usr/share/ashyterm/ui/menus.py, line: 117
+# File: usr/share/ashyterm/ui/menus.py, line: 153
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1598
+#: NEEDS WORK
+msgid "Copy"
+msgstr "Kopiëren"
+# 
+# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
+# 
+# File: usr/share/ashyterm/ui/menus.py, line: 69
+# File: usr/share/ashyterm/ui/menus.py, line: 118
+# File: usr/share/ashyterm/ui/menus.py, line: 154
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1599
+#: NEEDS WORK
+msgid "Paste"
+msgstr "Plakken"
+# 
+# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
+# 
+# File: usr/share/ashyterm/ui/menus.py, line: 119
+# File: usr/share/ashyterm/ui/menus.py, line: 155
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1600
+#: NEEDS WORK
+msgid "Select All"
+msgstr "Alles selecteren"
+# 
+# File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 42
+#: NEEDS WORK
+msgid "Zoom"
+msgstr "Zoom"
+# 
+# File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 44
+#: NEEDS WORK
+msgid "Zoom In"
+msgstr "Inzoomen"
+# 
+# File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 45
+#: NEEDS WORK
+msgid "Zoom Out"
+msgstr "Inzoomen"
+# 
+# File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 46
+#: NEEDS WORK
+msgid "Reset Zoom"
+msgstr "Zoom resetten"
+# 
+# File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 50
+#: NEEDS WORK
+msgid "Application &amp; Window"
+msgstr "Toepassing & Venster"
+# 
+# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1606
+# File: usr/share/ashyterm/window.py, line: 248
+#: NEEDS WORK
+msgid "Toggle Sidebar"
+msgstr "Zijbalk in-/uitschakelen"
+# 
+# File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 53
+#: NEEDS WORK
+msgid "Toggle File Manager"
+msgstr "Bestandbeheer in-/uitschakelen"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1607
+#: NEEDS WORK
+msgid "New Window"
+msgstr "Nieuw venster"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1605
+#: NEEDS WORK
+msgid "Quit Application"
+msgstr "Toepassing afsluiten"
+# 
+# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
+# 
+# File: usr/share/ashyterm/ui/menus.py, line: 211
+# File: usr/share/ashyterm/window.py, line: 909
+# File: usr/share/ashyterm/window.py, line: 960
+#: NEEDS WORK
+msgid "Keyboard Shortcuts"
+msgstr "Toetsenbord sneltoetsen"
+# 
+# File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 93
+#: NEEDS WORK
+msgid "Reset All"
+msgstr "Alles resetten"
+# 
+# File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 94
+#: NEEDS WORK
+msgid "Reset all shortcuts to default values"
+msgstr "Stel alle sneltoetsen in op de standaardwaarden"
+# 
+# File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 128
+#: NEEDS WORK
+msgid "Reset all shortcuts to defaults"
+msgstr "Stel alle sneltoetsen in op de standaardinstellingen"
+# 
+# File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 186
+# File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 213
+# File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 294
+# File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 334
+#: NEEDS WORK
+msgid "Not set"
+msgstr "Niet ingesteld"
+# 
+# File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 191
+#: NEEDS WORK
+msgid "Shortcut for: "
+msgstr "Sneltoets voor:"
+# 
+# File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 195
+#: NEEDS WORK
+msgid "Click to change the keyboard shortcut for this action"
+msgstr "Klik om de sneltoets voor deze actie te wijzigen"
+# 
+# File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 205
+#: NEEDS WORK
+msgid "Set New Shortcut"
+msgstr "Nieuwe sneltoets instellen"
+# 
+# File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 206
+#: NEEDS WORK
+#, python-brace-format
+msgid "Press the new key combination for '{}', or Esc to cancel."
+msgstr "Druk op de nieuwe toetscombinatie voor '{}', of Esc om te annuleren."
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1914
+#: NEEDS WORK
+#, python-brace-format
+msgid ""
+"Current: {}\n"
+"New: (press keys)"
+msgstr ""
+"Huidig: {}\n"
+"Nieuw: (druk op toetsen)"
+# 
+# File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 257
+#: NEEDS WORK
+#, python-brace-format
+msgid ""
+"Current: {}\n"
+"New: {} (Conflicts with {})"
+msgstr ""
+"Huidig: {}\n"
+"Nieuw: {} (Conflicteert met {})"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1945
+#: NEEDS WORK
+#, python-brace-format
+msgid ""
+"Current: {}\n"
+"New: {}"
+msgstr ""
+"Huidig: {}\n"
+"Nieuw: {}"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1958
+#: NEEDS WORK
+msgid "Clear"
+msgstr "Wispen"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1959
+#: NEEDS WORK
+msgid "Set Shortcut"
+msgstr "Sneltoets instellen"
+# 
+# File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 306
+#: NEEDS WORK
+msgid "Reset All Shortcuts"
+msgstr "Reset alle sneltoetsen"
+# 
+# File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 307
+#: NEEDS WORK
+msgid "This will reset all keyboard shortcuts to their default values. Continue?"
+msgstr "Dit zal alle sneltoetsen resetten naar hun standaardwaarden. Doorgaan?"
 # 
 # File: usr/share/ashyterm/ui/actions.py, line: 168
 #: NEEDS WORK
@@ -2388,10 +2557,40 @@ msgstr "Weet u zeker dat u deze {count} items permanent wilt verwijderen?"
 msgid "This will also delete all contents of any selected folders."
 msgstr "Dit zal ook alle inhoud van geselecteerde mappen verwijderen."
 # 
+# File: usr/share/ashyterm/ui/window_ui.py, line: 264
+#: NEEDS WORK
+msgid "Current occurrence"
+msgstr "Huidige gebeurtenis"
+# 
+# File: usr/share/ashyterm/ui/window_ui.py, line: 268
+#: NEEDS WORK
+msgid "Case sensitive search"
+msgstr "Hoofdlettergevoelige zoekopdracht"
+# 
+# File: usr/share/ashyterm/ui/window_ui.py, line: 270
+#: NEEDS WORK
+msgid "Case sensitive"
+msgstr "Hoofdlettergevoelig"
+# 
+# File: usr/share/ashyterm/ui/window_ui.py, line: 276
+#: NEEDS WORK
+msgid "Use regular expressions"
+msgstr "Gebruik reguliere expressies"
+# 
+# File: usr/share/ashyterm/ui/window_ui.py, line: 278
+#: NEEDS WORK
+msgid "Regex"
+msgstr "Regex"
+# 
 # File: usr/share/ashyterm/window.py, line: 344
 #: NEEDS WORK
 msgid "File Manager"
 msgstr "Bestandsbeheerder"
+# 
+# File: usr/share/ashyterm/ui/window_ui.py, line: 324
+#: NEEDS WORK
+msgid "Command Guide (Ctrl+Shift+P)"
+msgstr "Opdrachtenhandleiding (Ctrl+Shift+P)"
 # 
 # File: usr/share/ashyterm/ui/window_ui.py, line: 259
 #: NEEDS WORK
@@ -2403,6 +2602,11 @@ msgstr "Beheer tijdelijke bestanden"
 msgid "Main Menu"
 msgstr "Hoofdmenu"
 # 
+# File: usr/share/ashyterm/ui/window_ui.py, line: 350
+#: NEEDS WORK
+msgid "Search in Terminal"
+msgstr "Zoeken in Terminal"
+# 
 # File: usr/share/ashyterm/window.py, line: 337
 #: NEEDS WORK
 msgid "Edit Selected"
@@ -2412,11 +2616,6 @@ msgstr "Bewerk Geselecteerd"
 #: NEEDS WORK
 msgid "Save Current Layout"
 msgstr "Huidige indeling opslaan"
-# 
-# File: usr/share/ashyterm/window.py, line: 343
-#: NEEDS WORK
-msgid "Remove Selected"
-msgstr "Verwijder Geselecteerd"
 # 
 # File: usr/share/ashyterm/window.py, line: 606
 #: NEEDS WORK
@@ -2437,15 +2636,6 @@ msgstr "Lichtstijl"
 #: NEEDS WORK
 msgid "Dark Style"
 msgstr "Donkere stijl"
-# 
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
-# 
-# File: usr/share/ashyterm/ui/menus.py, line: 211
-# File: usr/share/ashyterm/window.py, line: 909
-# File: usr/share/ashyterm/window.py, line: 960
-#: NEEDS WORK
-msgid "Keyboard Shortcuts"
-msgstr "Toetsenbord sneltoetsen"
 # 
 # File: usr/share/ashyterm/ui/menus.py, line: 216
 #: NEEDS WORK
@@ -2505,6 +2695,274 @@ msgstr "Split Links/Rechts"
 #: NEEDS WORK
 msgid "Split Top/Bottom"
 msgstr "Split Boven/Beneden"
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 7
+# File: usr/share/ashyterm/data/command_data.py, line: 38
+#: NEEDS WORK
+msgid "Navegação e Listagem de Arquivos"
+msgstr "Navigatie en Lijstweergave van Bestanden"
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 9
+#: NEEDS WORK
+msgid "Lista o conteúdo de um diretório."
+msgstr "Lijst de inhoud van een map."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 14
+#: NEEDS WORK
+msgid "Usa um formato de lista longa, mostrando permissões, dono, tamanho e data."
+msgstr "Gebruik een lange lijstweergave, met machtigingen, eigenaar, grootte en datum."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 20
+#: NEEDS WORK
+msgid "Mostra todos os arquivos, incluindo os ocultos (que começam com '.')."
+msgstr "Toon alle bestanden, inclusief de verborgen bestanden (die beginnen met '.')."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 26
+#: NEEDS WORK
+msgid "Formato longo com tamanhos de arquivo legíveis para humanos (KB, MB, GB)."
+msgstr "Lange indeling met leesbare bestandsgroottes voor mensen (KB, MB, GB)."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 32
+#: NEEDS WORK
+msgid "Ordena os arquivos por data de modificação, os mais recentes primeiro."
+msgstr "Sorteer de bestanden op datum van wijziging, de recentste eerst."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 40
+#: NEEDS WORK
+msgid "Muda o diretório de trabalho atual."
+msgstr "Wijzig de huidige werkdirectory."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 44
+#: NEEDS WORK
+msgid "Navega para um caminho absoluto específico."
+msgstr "Navigeer naar een specifieke absolute pad."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 48
+#: NEEDS WORK
+msgid "Sobe um nível, indo para o diretório pai."
+msgstr "Ga één niveau omhoog, ga naar de bovenliggende map."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 53
+#: NEEDS WORK
+msgid "Vai diretamente para o seu diretório 'home'. O mesmo que 'cd' sem argumentos."
+msgstr "Ga direct naar uw 'home' directory. Hetzelfde als 'cd' zonder argumenten."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 58
+#: NEEDS WORK
+msgid "Volta para o último diretório em que você estava."
+msgstr "Ga terug naar de laatste map waarin je was."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 63
+# File: usr/share/ashyterm/data/command_data.py, line: 84
+# File: usr/share/ashyterm/data/command_data.py, line: 99
+#: NEEDS WORK
+msgid "Manipulação de Arquivos"
+msgstr "Bestand Manipulatie"
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 65
+#: NEEDS WORK
+msgid "Copia arquivos ou diretórios."
+msgstr "Kopieer bestanden of mappen."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 69
+#: NEEDS WORK
+msgid "Copia um único arquivo."
+msgstr "Kopieer een enkel bestand."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 74
+#: NEEDS WORK
+msgid "Copia um diretório e todo o seu conteúdo recursivamente."
+msgstr "Kopieert een map en al zijn inhoud recursief."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 79
+#: NEEDS WORK
+msgid "Modo 'verbose', mostra o que está sendo copiado."
+msgstr "Modus 'verbose', toont wat er wordt gekopieerd."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 86
+#: NEEDS WORK
+msgid "Move ou renomeia arquivos e diretórios."
+msgstr "Verplaats of hernoem bestanden en mappen."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 90
+#: NEEDS WORK
+msgid "Renomeia um arquivo ou diretório no local atual."
+msgstr "Hernoem een bestand of map in de huidige locatie."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 94
+#: NEEDS WORK
+msgid "Move um arquivo para um novo local."
+msgstr "Verplaats een bestand naar een nieuwe locatie."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 102
+#: NEEDS WORK
+msgid "Remove (apaga) arquivos ou diretórios. CUIDADO: esta ação é permanente."
+msgstr "Verwijder bestanden of mappen. LET OP: deze actie is permanent."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 105
+#: NEEDS WORK
+msgid "Remove um único arquivo."
+msgstr "Verwijder een enkel bestand."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 108
+#: NEEDS WORK
+msgid "Remove um diretório e todo o seu conteúdo."
+msgstr "Verwijder een map en al zijn inhoud."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 112
+#: NEEDS WORK
+msgid "Modo interativo, pede confirmação antes de remover."
+msgstr "Interactieve modus, vraagt om bevestiging voordat het verwijdert."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 117
+#: NEEDS WORK
+msgid "Força a remoção sem pedir confirmação (usar com cautela)."
+msgstr "Dwing verwijdering af zonder om bevestiging te vragen (gebruik met voorzichtigheid)."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 123
+#: NEEDS WORK
+msgid "Busca e Filtragem"
+msgstr "Zoeken en Filteren"
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 126
+#: NEEDS WORK
+msgid "Busca por um padrão de texto dentro de arquivos ou saídas de outros comandos."
+msgstr "Zoek naar een tekstpatroon binnen bestanden of uitvoer van andere commando's."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 132
+#: NEEDS WORK
+msgid "Encontra e exibe todas as linhas que contêm 'palavra' no arquivo."
+msgstr "Zoek en toon alle regels die 'woord' in het bestand bevatten."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 138
+#: NEEDS WORK
+msgid "Busca ignorando a diferença entre maiúsculas e minúsculas."
+msgstr "Zoeken zonder onderscheid tussen hoofdletters en kleine letters."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 144
+#: NEEDS WORK
+msgid "Busca recursivamente por 'palavra' em todos os arquivos do diretório atual."
+msgstr "Zoekt recursief naar 'woord' in alle bestanden van de huidige map."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 150
+#: NEEDS WORK
+msgid "Filtra a saída do comando 'ls -l' para mostrar apenas linhas que contêm 'txt'."
+msgstr "Filter de uitvoer van het commando 'ls -l' om alleen regels weer te geven die 'txt' bevatten."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 156
+# File: usr/share/ashyterm/data/command_data.py, line: 175
+# File: usr/share/ashyterm/data/command_data.py, line: 194
+# File: usr/share/ashyterm/data/command_data.py, line: 209
+#: NEEDS WORK
+msgid "Controle de Fluxo (Shell Script)"
+msgstr "Stroomcontrole (Shell Script)"
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 158
+#: NEEDS WORK
+msgid "Executa blocos de comandos condicionalmente."
+msgstr "Voert blokken van opdrachten voorwaardelijk uit."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 162
+#: NEEDS WORK
+msgid "Testa se um arquivo existe e é um arquivo regular."
+msgstr "Controleert of een bestand bestaat en een regulier bestand is."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 166
+#: NEEDS WORK
+msgid "Testa se um caminho existe e é um diretório."
+msgstr "Controleert of een pad bestaat en een map is."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 170
+#: NEEDS WORK
+msgid "Testa se uma variável numérica é igual a 5."
+msgstr "Test of een numerieke variabele gelijk is aan 5."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 178
+#: NEEDS WORK
+msgid "Cria um laço (loop) que itera sobre uma lista de itens."
+msgstr "Maak een lus die over een lijst van items itereert."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 183
+#: NEEDS WORK
+msgid "Itera sobre uma lista explícita de números."
+msgstr "Iterate over an explicit list of numbers."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 188
+#: NEEDS WORK
+msgid "Itera sobre todos os arquivos que terminam com .txt no diretório."
+msgstr "Itereert over alle bestanden die eindigen op .txt in de map."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 197
+#: NEEDS WORK
+msgid "Cria um laço (loop) que continua enquanto uma condição for verdadeira."
+msgstr "Creëert een lus die doorgaat zolang een voorwaarde waar is."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 203
+#: NEEDS WORK
+msgid "Executa o bloco de código enquanto a variável COUNT for menor que 5."
+msgstr "Voer het codeblok uit zolang de variabele COUNT kleiner is dan 5."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 212
+#: NEEDS WORK
+msgid "Cria um laço (loop) que continua enquanto uma condição for falsa."
+msgstr "Creëert een lus die doorgaat zolang een voorwaarde onwaar is."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 218
+#: NEEDS WORK
+msgid "Executa o bloco de código até que a variável COUNT seja igual a 0."
+msgstr "Voert het codeblok uit totdat de variabele COUNT gelijk is aan 0."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 224
+#: NEEDS WORK
+msgid "Entrada do Usuário (Shell Script)"
+msgstr "Gebruikersinvoer (Shell Script)"
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 227
+#: NEEDS WORK
+msgid "Lê uma linha da entrada padrão e a armazena em uma variável."
+msgstr "Leest een regel van de standaardinvoer en slaat deze op in een variabele."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 233
+#: NEEDS WORK
+msgid "Espera o usuário digitar algo e pressionar Enter, salvando na variável NOME."
+msgstr ""
+"Wacht tot de gebruiker iets typt en op Enter drukt, waarbij het wordt opgeslagen in de variabele "
+"NAAM."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 239
+#: NEEDS WORK
+msgid "Mostra uma mensagem (prompt) para o usuário antes de esperar a entrada."
+msgstr "Toon een bericht (prompt) aan de gebruiker voordat je op de invoer wacht."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 245
+#: NEEDS WORK
+msgid "Expansão de Parâmetros"
+msgstr "Parameter Expansion"
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 248
+#: NEEDS WORK
+msgid "Mecanismos do shell para manipular o valor de variáveis."
+msgstr "Shellmechanismen voor het manipuleren van de waarde van variabelen."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 254
+#: NEEDS WORK
+msgid "Substitui pelo valor da variável VAR. É o mesmo que $VAR, mas mais seguro."
+msgstr "Vervangt door de waarde van de variabele VAR. Het is hetzelfde als $VAR, maar veiliger."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 260
+#: NEEDS WORK
+msgid "Usa 'default' se VAR não estiver definida. A variável VAR não é alterada."
+msgstr "Gebruik 'default' als VAR niet is gedefinieerd. De variabele VAR wordt niet gewijzigd."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 266
+#: NEEDS WORK
+msgid "Usa e atribui 'default' a VAR se ela não estiver definida."
+msgstr "Gebruik en wijs 'default' toe aan VAR als deze niet is gedefinieerd."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 272
+#: NEEDS WORK
+msgid "Retorna o número de caracteres no valor da variável VAR."
+msgstr "Geeft het aantal tekens in de waarde van de variabele VAR terug."
 # 
 # File: usr/share/ashyterm/app.py, line: 333
 #: NEEDS WORK
