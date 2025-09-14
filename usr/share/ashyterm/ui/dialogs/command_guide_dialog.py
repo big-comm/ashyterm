@@ -228,6 +228,11 @@ class CommandGuideDialog(Adw.Window):
         self._filter_list()
 
     def _filter_list(self):
+        # Clear selection before removing children to prevent GLib-GIO-CRITICAL errors
+        selected_row = self.list_box.get_selected_row()
+        if selected_row:
+            self.list_box.select_row(None)
+
         while child := self.list_box.get_first_child():
             self.list_box.remove(child)
 
