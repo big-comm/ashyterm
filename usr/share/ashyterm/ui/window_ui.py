@@ -52,6 +52,7 @@ class WindowUIBuilder:
         self.search_next_button = None
         self.case_sensitive_switch = None
         self.regex_switch = None
+        self.search_occurrence_label = None
         self.add_session_button = None
         self.add_folder_button = None
         self.edit_button = None
@@ -219,6 +220,14 @@ class WindowUIBuilder:
         .sidebar-toggle-button:checked {
             background: transparent;
         }
+        /* Search occurrence counter styling */
+        .dim-label {
+            opacity: 0.7;
+            font-size: 0.9em;
+            font-weight: 500;
+            min-width: 40px;
+            text-align: center;
+        }
         """
         provider = Gtk.CssProvider()
         provider.load_from_data(css.encode("utf-8"))
@@ -239,7 +248,12 @@ class WindowUIBuilder:
         self.search_bar.connect_entry(self.terminal_search_entry)
         self.search_prev_button = Gtk.Button.new_from_icon_name("go-up-symbolic")
         self.search_next_button = Gtk.Button.new_from_icon_name("go-down-symbolic")
-        
+
+        # Search occurrence counter
+        self.search_occurrence_label = Gtk.Label()
+        self.search_occurrence_label.add_css_class("dim-label")
+        self.search_occurrence_label.set_tooltip_text(_("Current occurrence"))
+
         # Case sensitive switch
         self.case_sensitive_switch = Gtk.Switch()
         self.case_sensitive_switch.set_tooltip_text(_("Case sensitive search"))
@@ -257,6 +271,7 @@ class WindowUIBuilder:
         regex_box.append(self.regex_switch)
         
         search_box.append(self.terminal_search_entry)
+        search_box.append(self.search_occurrence_label)
         search_box.append(case_sensitive_box)
         search_box.append(regex_box)
         search_box.append(self.search_prev_button)
