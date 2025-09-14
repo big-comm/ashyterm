@@ -848,6 +848,23 @@ msgstr ""
 msgid "Cannot detach the last tab."
 msgstr "Viimeistä välilehteä ei voi irrottaa."
 # 
+# File: usr/share/ashyterm/window.py, line: 652
+#: NEEDS WORK
+msgid "No active terminal to search in."
+msgstr "Ei aktiivista terminaalia, johon etsiä."
+# 
+# File: usr/share/ashyterm/window.py, line: 687
+# File: usr/share/ashyterm/window.py, line: 734
+#: NEEDS WORK
+msgid "Invalid search pattern."
+msgstr "Virheellinen hakumalli."
+# 
+# File: usr/share/ashyterm/window.py, line: 762
+# File: usr/share/ashyterm/window.py, line: 795
+#: NEEDS WORK
+msgid "No more matches found."
+msgstr "Ei enää osumia löytynyt."
+# 
 # File: usr/share/ashyterm/window.py, line: 145
 #: NEEDS WORK
 msgid "Initialization Error"
@@ -958,6 +975,11 @@ msgstr ""
 #: NEEDS WORK
 msgid "Clear All"
 msgstr "Tyhjennä kaikki"
+# 
+# File: usr/share/ashyterm/window.py, line: 1193
+#: NEEDS WORK
+msgid "No active terminal to send command to."
+msgstr "Ei aktiivista terminaalia komennon lähettämistä varten."
 # 
 # File: usr/share/ashyterm/ui/color_scheme_dialog.py, line: 42
 #: NEEDS WORK
@@ -1113,6 +1135,56 @@ msgstr "Ei voitu yhdistää istuntoon '{session_name}'."
 #: NEEDS WORK
 msgid "Close"
 msgstr "Sulje"
+# 
+# File: usr/share/ashyterm/ui/dialogs/command_guide_dialog.py, line: 32
+#: NEEDS WORK
+msgid "Add Custom Command"
+msgstr "Lisää mukautettu komento"
+# 
+# File: usr/share/ashyterm/ui/dialogs/command_guide_dialog.py, line: 32
+#: NEEDS WORK
+msgid "Edit Custom Command"
+msgstr "Muokkaa mukautettua komentoa"
+# 
+# File: usr/share/ashyterm/ui/dialogs/command_guide_dialog.py, line: 34
+#: NEEDS WORK
+msgid "Command"
+msgstr "Komento"
+# 
+# File: usr/share/ashyterm/ui/dialogs/command_guide_dialog.py, line: 35
+#: NEEDS WORK
+msgid "Category"
+msgstr "Kategoria"
+# 
+# File: usr/share/ashyterm/ui/dialogs/command_guide_dialog.py, line: 59
+#: NEEDS WORK
+msgid "Description"
+msgstr "Kuvaus"
+# 
+# File: usr/share/ashyterm/ui/dialogs/command_guide_dialog.py, line: 143
+#: NEEDS WORK
+msgid "Command Guide"
+msgstr "Komentohaku"
+# 
+# File: usr/share/ashyterm/ui/dialogs/command_guide_dialog.py, line: 165
+#: NEEDS WORK
+msgid "Search commands..."
+msgstr "Etsi komentoja..."
+# 
+# File: usr/share/ashyterm/ui/dialogs/command_guide_dialog.py, line: 208
+#: NEEDS WORK
+msgid "Show Only Custom Commands"
+msgstr "Näytä vain mukautetut komennot"
+# 
+# File: usr/share/ashyterm/ui/dialogs/command_guide_dialog.py, line: 216
+#: NEEDS WORK
+msgid "Add New"
+msgstr "Lisää uusi"
+# 
+# File: usr/share/ashyterm/window.py, line: 343
+#: NEEDS WORK
+msgid "Remove Selected"
+msgstr "Poista valitut"
 # 
 # #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
 # 
@@ -1944,95 +2016,6 @@ msgstr "Tyhjennä etämuokkaustiedostot poistuttaessa"
 msgid "Automatically delete all temporary remote files when closing the app"
 msgstr "Poista automaattisesti kaikki tilapäiset etä tiedostot sovelluksen sulkemisen yhteydessä."
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1575
-#: NEEDS WORK
-msgid "Shortcuts"
-msgstr "Pikanäppäimet"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1582
-#: NEEDS WORK
-msgid "Terminal Actions"
-msgstr "Päätteentoiminnot"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1583
-#: NEEDS WORK
-msgid "Keyboard shortcuts for terminal operations"
-msgstr "Pikanäppäimet terminaalitoimintoihin"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1589
-#: NEEDS WORK
-msgid "Application Actions"
-msgstr "Sovellustoiminnot"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1590
-#: NEEDS WORK
-msgid "Keyboard shortcuts for application operations"
-msgstr "Sovelluksen toimintojen pikanäppäimet"
-# 
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
-# 
-# File: usr/share/ashyterm/ui/menus.py, line: 144
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1596
-#: NEEDS WORK
-msgid "New Tab"
-msgstr "Uusi välilehti"
-# 
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
-# 
-# File: usr/share/ashyterm/ui/menus.py, line: 145
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1597
-#: NEEDS WORK
-msgid "Close Tab"
-msgstr "Sulje välilehti"
-# 
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
-# 
-# File: usr/share/ashyterm/ui/menus.py, line: 30
-# File: usr/share/ashyterm/ui/menus.py, line: 66
-# File: usr/share/ashyterm/ui/menus.py, line: 117
-# File: usr/share/ashyterm/ui/menus.py, line: 153
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1598
-#: NEEDS WORK
-msgid "Copy"
-msgstr "Kopioi"
-# 
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
-# 
-# File: usr/share/ashyterm/ui/menus.py, line: 69
-# File: usr/share/ashyterm/ui/menus.py, line: 118
-# File: usr/share/ashyterm/ui/menus.py, line: 154
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1599
-#: NEEDS WORK
-msgid "Paste"
-msgstr "Liitä"
-# 
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
-# 
-# File: usr/share/ashyterm/ui/menus.py, line: 119
-# File: usr/share/ashyterm/ui/menus.py, line: 155
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1600
-#: NEEDS WORK
-msgid "Select All"
-msgstr "Valitse kaikki"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1605
-#: NEEDS WORK
-msgid "Quit Application"
-msgstr "Lopeta sovellus"
-# 
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1606
-# File: usr/share/ashyterm/window.py, line: 248
-#: NEEDS WORK
-msgid "Toggle Sidebar"
-msgstr "Vaihda sivupalkki"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1607
-#: NEEDS WORK
-msgid "New Window"
-msgstr "Uusi ikkuna"
-# 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1790
 #: NEEDS WORK
 msgid "Advanced"
@@ -2218,57 +2201,6 @@ msgstr ""
 "Sivupaneelin näkyvyyden muutos astuu voimaan, kun suljet ja avaat sovelluksen uudelleen. Voit myös "
 "vaihtaa sivupaneelin näkyvyyttä manuaalisesti käyttämällä Ctrl+Shift+H."
 # 
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1624
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1907
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1983
-# File: usr/share/ashyterm/utils.py, line: 238
-#: NEEDS WORK
-msgid "None"
-msgstr "None"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1900
-#: NEEDS WORK
-msgid "Edit Shortcut"
-msgstr "Muokkaa pikanäppäintä"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1901
-#: NEEDS WORK
-#, python-brace-format
-msgid "Press the new key combination for '{}' or Esc to cancel."
-msgstr "Paina uusi näppäinyhdistelmä '{}' tai Esc peruuttaaksesi."
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1914
-#: NEEDS WORK
-#, python-brace-format
-msgid ""
-"Current: {}\n"
-"New: (press keys)"
-msgstr ""
-"Nykyinen: {}\n"
-"Uusi: (paina näppäimiä)"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1945
-#: NEEDS WORK
-#, python-brace-format
-msgid ""
-"Current: {}\n"
-"New: {}"
-msgstr ""
-"Nykyinen: {}\n"
-"Uusi: {}"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1958
-#: NEEDS WORK
-msgid "Clear"
-msgstr "Tyhjennä"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1959
-#: NEEDS WORK
-msgid "Set Shortcut"
-msgstr "Aseta pikanäppäin"
-# 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 2003
 #: NEEDS WORK
 msgid "Are you sure you want to reset all settings to their default values? This action cannot be undone."
@@ -2311,6 +2243,243 @@ msgstr "Jatka"
 #, python-brace-format
 msgid "{} is required"
 msgstr "{} on pakollinen"
+# 
+# File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 17
+#: NEEDS WORK
+msgid "Tab &amp; Pane Management"
+msgstr "Välilehti- ja paneelihallinta"
+# 
+# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
+# 
+# File: usr/share/ashyterm/ui/menus.py, line: 144
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1596
+#: NEEDS WORK
+msgid "New Tab"
+msgstr "Uusi välilehti"
+# 
+# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
+# 
+# File: usr/share/ashyterm/ui/menus.py, line: 145
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1597
+#: NEEDS WORK
+msgid "Close Tab"
+msgstr "Sulje välilehti"
+# 
+# File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 21
+#: NEEDS WORK
+msgid "Next Tab"
+msgstr "Seuraava välilehti"
+# 
+# File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 22
+#: NEEDS WORK
+msgid "Previous Tab"
+msgstr "Edellinen välilehti"
+# 
+# File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 26
+#: NEEDS WORK
+msgid "Splitting"
+msgstr "Jakaminen"
+# 
+# File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 28
+#: NEEDS WORK
+msgid "Split Horizontally"
+msgstr "Jaa vaakasuoraan"
+# 
+# File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 29
+#: NEEDS WORK
+msgid "Split Vertically"
+msgstr "Jaa pystysuunnassa"
+# 
+# File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 30
+#: NEEDS WORK
+msgid "Close Active Pane"
+msgstr "Sulje aktiivinen paneeli"
+# 
+# File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 34
+#: NEEDS WORK
+msgid "Terminal Interaction"
+msgstr "Päätteeseen vuorovaikutus"
+# 
+# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
+# 
+# File: usr/share/ashyterm/ui/menus.py, line: 30
+# File: usr/share/ashyterm/ui/menus.py, line: 66
+# File: usr/share/ashyterm/ui/menus.py, line: 117
+# File: usr/share/ashyterm/ui/menus.py, line: 153
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1598
+#: NEEDS WORK
+msgid "Copy"
+msgstr "Kopioi"
+# 
+# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
+# 
+# File: usr/share/ashyterm/ui/menus.py, line: 69
+# File: usr/share/ashyterm/ui/menus.py, line: 118
+# File: usr/share/ashyterm/ui/menus.py, line: 154
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1599
+#: NEEDS WORK
+msgid "Paste"
+msgstr "Liitä"
+# 
+# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
+# 
+# File: usr/share/ashyterm/ui/menus.py, line: 119
+# File: usr/share/ashyterm/ui/menus.py, line: 155
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1600
+#: NEEDS WORK
+msgid "Select All"
+msgstr "Valitse kaikki"
+# 
+# File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 42
+#: NEEDS WORK
+msgid "Zoom"
+msgstr "Zoom"
+# 
+# File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 44
+#: NEEDS WORK
+msgid "Zoom In"
+msgstr "Zoomaa sisään"
+# 
+# File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 45
+#: NEEDS WORK
+msgid "Zoom Out"
+msgstr "Zoomaa ulos"
+# 
+# File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 46
+#: NEEDS WORK
+msgid "Reset Zoom"
+msgstr "Nollaa zoomaus"
+# 
+# File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 50
+#: NEEDS WORK
+msgid "Application &amp; Window"
+msgstr "Sovellus &amp; Ikkuna"
+# 
+# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1606
+# File: usr/share/ashyterm/window.py, line: 248
+#: NEEDS WORK
+msgid "Toggle Sidebar"
+msgstr "Vaihda sivupalkki"
+# 
+# File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 53
+#: NEEDS WORK
+msgid "Toggle File Manager"
+msgstr "Vaihda Tiedostonhallinta"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1607
+#: NEEDS WORK
+msgid "New Window"
+msgstr "Uusi ikkuna"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1605
+#: NEEDS WORK
+msgid "Quit Application"
+msgstr "Lopeta sovellus"
+# 
+# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
+# 
+# File: usr/share/ashyterm/ui/menus.py, line: 211
+# File: usr/share/ashyterm/window.py, line: 909
+# File: usr/share/ashyterm/window.py, line: 960
+#: NEEDS WORK
+msgid "Keyboard Shortcuts"
+msgstr "Näppäinoikotiet"
+# 
+# File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 93
+#: NEEDS WORK
+msgid "Reset All"
+msgstr "Nollaa kaikki"
+# 
+# File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 94
+#: NEEDS WORK
+msgid "Reset all shortcuts to default values"
+msgstr "Palauta kaikki pikanäppäimet oletusarvoihin"
+# 
+# File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 128
+#: NEEDS WORK
+msgid "Reset all shortcuts to defaults"
+msgstr "Palauta kaikki pikanäppäimet oletusasetuksiin"
+# 
+# File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 186
+# File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 213
+# File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 294
+# File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 334
+#: NEEDS WORK
+msgid "Not set"
+msgstr "Ei asetettu"
+# 
+# File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 191
+#: NEEDS WORK
+msgid "Shortcut for: "
+msgstr "Pikanäppäin:"
+# 
+# File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 195
+#: NEEDS WORK
+msgid "Click to change the keyboard shortcut for this action"
+msgstr "Napsauta muuttaaksesi tämän toiminnon näppäinyhdistelmää"
+# 
+# File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 205
+#: NEEDS WORK
+msgid "Set New Shortcut"
+msgstr "Aseta uusi pikanäppäin"
+# 
+# File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 206
+#: NEEDS WORK
+#, python-brace-format
+msgid "Press the new key combination for '{}', or Esc to cancel."
+msgstr "Paina uusi näppäinyhdistelmä '{}', tai Esc peruuttaaksesi."
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1914
+#: NEEDS WORK
+#, python-brace-format
+msgid ""
+"Current: {}\n"
+"New: (press keys)"
+msgstr ""
+"Nykyinen: {}\n"
+"Uusi: (paina näppäimiä)"
+# 
+# File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 257
+#: NEEDS WORK
+#, python-brace-format
+msgid ""
+"Current: {}\n"
+"New: {} (Conflicts with {})"
+msgstr ""
+"Nykyinen: {}\n"
+"Uusi: {} (ristiriidassa {})"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1945
+#: NEEDS WORK
+#, python-brace-format
+msgid ""
+"Current: {}\n"
+"New: {}"
+msgstr ""
+"Nykyinen: {}\n"
+"Uusi: {}"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1958
+#: NEEDS WORK
+msgid "Clear"
+msgstr "Tyhjennä"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1959
+#: NEEDS WORK
+msgid "Set Shortcut"
+msgstr "Aseta pikanäppäin"
+# 
+# File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 306
+#: NEEDS WORK
+msgid "Reset All Shortcuts"
+msgstr "Nollaa kaikki pikanäppäimet"
+# 
+# File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 307
+#: NEEDS WORK
+msgid "This will reset all keyboard shortcuts to their default values. Continue?"
+msgstr "Tämä palauttaa kaikki näppäinoikotiet oletusarvoihinsa. Jatketaanko?"
 # 
 # File: usr/share/ashyterm/ui/actions.py, line: 168
 #: NEEDS WORK
@@ -2392,10 +2561,40 @@ msgstr "Oletko varma, että haluat pysyvästi poistaa nämä {count} kohdetta?"
 msgid "This will also delete all contents of any selected folders."
 msgstr "Tämä poistaa myös kaikkien valittujen kansioiden sisällön."
 # 
+# File: usr/share/ashyterm/ui/window_ui.py, line: 264
+#: NEEDS WORK
+msgid "Current occurrence"
+msgstr "Nykyinen esiintyminen"
+# 
+# File: usr/share/ashyterm/ui/window_ui.py, line: 268
+#: NEEDS WORK
+msgid "Case sensitive search"
+msgstr "Eroava haku"
+# 
+# File: usr/share/ashyterm/ui/window_ui.py, line: 270
+#: NEEDS WORK
+msgid "Case sensitive"
+msgstr "Eroava kirjainkoko"
+# 
+# File: usr/share/ashyterm/ui/window_ui.py, line: 276
+#: NEEDS WORK
+msgid "Use regular expressions"
+msgstr "Käytä säännöllisiä lausekkeita"
+# 
+# File: usr/share/ashyterm/ui/window_ui.py, line: 278
+#: NEEDS WORK
+msgid "Regex"
+msgstr "Säännöllinen lauseke"
+# 
 # File: usr/share/ashyterm/window.py, line: 344
 #: NEEDS WORK
 msgid "File Manager"
 msgstr "Tiedostohallinta"
+# 
+# File: usr/share/ashyterm/ui/window_ui.py, line: 324
+#: NEEDS WORK
+msgid "Command Guide (Ctrl+Shift+P)"
+msgstr "Komentto-opas (Ctrl+Shift+P)"
 # 
 # File: usr/share/ashyterm/ui/window_ui.py, line: 259
 #: NEEDS WORK
@@ -2407,6 +2606,11 @@ msgstr "Hallitse tilapäisiä tiedostoja"
 msgid "Main Menu"
 msgstr "Päävalikko"
 # 
+# File: usr/share/ashyterm/ui/window_ui.py, line: 350
+#: NEEDS WORK
+msgid "Search in Terminal"
+msgstr "Etsi terminaalista"
+# 
 # File: usr/share/ashyterm/window.py, line: 337
 #: NEEDS WORK
 msgid "Edit Selected"
@@ -2416,11 +2620,6 @@ msgstr "Muokkaa valittua"
 #: NEEDS WORK
 msgid "Save Current Layout"
 msgstr "Tallenna nykyinen asettelu"
-# 
-# File: usr/share/ashyterm/window.py, line: 343
-#: NEEDS WORK
-msgid "Remove Selected"
-msgstr "Poista valitut"
 # 
 # File: usr/share/ashyterm/window.py, line: 606
 #: NEEDS WORK
@@ -2441,15 +2640,6 @@ msgstr "Vaalea tyyli"
 #: NEEDS WORK
 msgid "Dark Style"
 msgstr "Tumma tyyli"
-# 
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
-# 
-# File: usr/share/ashyterm/ui/menus.py, line: 211
-# File: usr/share/ashyterm/window.py, line: 909
-# File: usr/share/ashyterm/window.py, line: 960
-#: NEEDS WORK
-msgid "Keyboard Shortcuts"
-msgstr "Näppäinoikotiet"
 # 
 # File: usr/share/ashyterm/ui/menus.py, line: 216
 #: NEEDS WORK
@@ -2509,6 +2699,272 @@ msgstr "Jaa vasemmalle/oikealle"
 #: NEEDS WORK
 msgid "Split Top/Bottom"
 msgstr "Jaa ylhäältä/alhaalta"
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 7
+# File: usr/share/ashyterm/data/command_data.py, line: 38
+#: NEEDS WORK
+msgid "Navegação e Listagem de Arquivos"
+msgstr "Navigointi ja tiedostojen luettelointi"
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 9
+#: NEEDS WORK
+msgid "Lista o conteúdo de um diretório."
+msgstr "Näytä hakemiston sisältö."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 14
+#: NEEDS WORK
+msgid "Usa um formato de lista longa, mostrando permissões, dono, tamanho e data."
+msgstr "Käytä pitkää luettelomuotoa, joka näyttää oikeudet, omistajan, koon ja päivämäärän."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 20
+#: NEEDS WORK
+msgid "Mostra todos os arquivos, incluindo os ocultos (que começam com '.')."
+msgstr "Näytä kaikki tiedostot, mukaan lukien piilotetut (jotka alkavat '.')."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 26
+#: NEEDS WORK
+msgid "Formato longo com tamanhos de arquivo legíveis para humanos (KB, MB, GB)."
+msgstr "Pitkä muoto, jossa tiedostokoot ovat ihmisten luettavissa (KB, MB, GB)."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 32
+#: NEEDS WORK
+msgid "Ordena os arquivos por data de modificação, os mais recentes primeiro."
+msgstr "Järjestä tiedostot muokkauspäivämäärän mukaan, uudemmat ensin."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 40
+#: NEEDS WORK
+msgid "Muda o diretório de trabalho atual."
+msgstr "Vaihda nykyinen työhakemisto."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 44
+#: NEEDS WORK
+msgid "Navega para um caminho absoluto específico."
+msgstr "Siirry tiettyyn absoluuttiseen polkuun."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 48
+#: NEEDS WORK
+msgid "Sobe um nível, indo para o diretório pai."
+msgstr "Nouse ylös tasoa, siirtyen vanhempaan hakemistoon."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 53
+#: NEEDS WORK
+msgid "Vai diretamente para o seu diretório 'home'. O mesmo que 'cd' sem argumentos."
+msgstr "Siirtyy suoraan kotihakemistoosi. Sama kuin 'cd' ilman argumentteja."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 58
+#: NEEDS WORK
+msgid "Volta para o último diretório em que você estava."
+msgstr "Palaa viimeiseen hakemistoon, jossa olit."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 63
+# File: usr/share/ashyterm/data/command_data.py, line: 84
+# File: usr/share/ashyterm/data/command_data.py, line: 99
+#: NEEDS WORK
+msgid "Manipulação de Arquivos"
+msgstr "Tiedostojen käsittely"
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 65
+#: NEEDS WORK
+msgid "Copia arquivos ou diretórios."
+msgstr "Kopioi tiedostoja tai hakemistoja."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 69
+#: NEEDS WORK
+msgid "Copia um único arquivo."
+msgstr "Kopioi yksi tiedosto."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 74
+#: NEEDS WORK
+msgid "Copia um diretório e todo o seu conteúdo recursivamente."
+msgstr "Kopioi hakemiston ja sen koko sisällön rekursiivisesti."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 79
+#: NEEDS WORK
+msgid "Modo 'verbose', mostra o que está sendo copiado."
+msgstr "Verbose-tila, näyttää mitä kopioidaan."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 86
+#: NEEDS WORK
+msgid "Move ou renomeia arquivos e diretórios."
+msgstr "Siirrä tai nimeä tiedostoja ja hakemistoja."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 90
+#: NEEDS WORK
+msgid "Renomeia um arquivo ou diretório no local atual."
+msgstr "Nimeä tiedosto tai hakemisto nykyisessä sijainnissa."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 94
+#: NEEDS WORK
+msgid "Move um arquivo para um novo local."
+msgstr "Siirrä tiedosto uuteen sijaintiin."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 102
+#: NEEDS WORK
+msgid "Remove (apaga) arquivos ou diretórios. CUIDADO: esta ação é permanente."
+msgstr "Poista tiedostoja tai hakemistoja. VAROITUS: tämä toiminto on pysyvä."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 105
+#: NEEDS WORK
+msgid "Remove um único arquivo."
+msgstr "Poista yksi tiedosto."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 108
+#: NEEDS WORK
+msgid "Remove um diretório e todo o seu conteúdo."
+msgstr "Poista hakemisto ja sen koko sisältö."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 112
+#: NEEDS WORK
+msgid "Modo interativo, pede confirmação antes de remover."
+msgstr "Interaktiivinen tila, pyytää vahvistusta ennen poistamista."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 117
+#: NEEDS WORK
+msgid "Força a remoção sem pedir confirmação (usar com cautela)."
+msgstr "Pakota poistaminen ilman vahvistusta (käytä varoen)."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 123
+#: NEEDS WORK
+msgid "Busca e Filtragem"
+msgstr "Haku ja Suodatus"
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 126
+#: NEEDS WORK
+msgid "Busca por um padrão de texto dentro de arquivos ou saídas de outros comandos."
+msgstr "Haku tekstimallin perään tiedostoista tai muiden komentojen tulosteista."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 132
+#: NEEDS WORK
+msgid "Encontra e exibe todas as linhas que contêm 'palavra' no arquivo."
+msgstr "Etsi ja näytä kaikki rivit, jotka sisältävät 'sana' tiedostossa."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 138
+#: NEEDS WORK
+msgid "Busca ignorando a diferença entre maiúsculas e minúsculas."
+msgstr "Haku, joka ei ota huomioon suuria ja pieniä kirjaimia."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 144
+#: NEEDS WORK
+msgid "Busca recursivamente por 'palavra' em todos os arquivos do diretório atual."
+msgstr "Hakee rekursiivisesti 'sana' kaikista nykyisen hakemiston tiedostoista."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 150
+#: NEEDS WORK
+msgid "Filtra a saída do comando 'ls -l' para mostrar apenas linhas que contêm 'txt'."
+msgstr "Suodata 'ls -l' -komennon tulos näyttämään vain rivit, jotka sisältävät 'txt'."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 156
+# File: usr/share/ashyterm/data/command_data.py, line: 175
+# File: usr/share/ashyterm/data/command_data.py, line: 194
+# File: usr/share/ashyterm/data/command_data.py, line: 209
+#: NEEDS WORK
+msgid "Controle de Fluxo (Shell Script)"
+msgstr "Virranhallinta (Shell Script)"
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 158
+#: NEEDS WORK
+msgid "Executa blocos de comandos condicionalmente."
+msgstr "Suorita komentoja ehdollisesti."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 162
+#: NEEDS WORK
+msgid "Testa se um arquivo existe e é um arquivo regular."
+msgstr "Tarkista, onko tiedosto olemassa ja onko se tavallinen tiedosto."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 166
+#: NEEDS WORK
+msgid "Testa se um caminho existe e é um diretório."
+msgstr "Tarkista, onko polku olemassa ja onko se hakemisto."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 170
+#: NEEDS WORK
+msgid "Testa se uma variável numérica é igual a 5."
+msgstr "Testaa, onko numeerinen muuttuja yhtä suuri kuin 5."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 178
+#: NEEDS WORK
+msgid "Cria um laço (loop) que itera sobre uma lista de itens."
+msgstr "Luo silmukka, joka iteroi kohteiden listan yli."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 183
+#: NEEDS WORK
+msgid "Itera sobre uma lista explícita de números."
+msgstr "Käy läpi selkeä lista numeroista."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 188
+#: NEEDS WORK
+msgid "Itera sobre todos os arquivos que terminam com .txt no diretório."
+msgstr "Käy läpi kaikki tiedostot, jotka päättyvät .txt -päätteeseen hakemistossa."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 197
+#: NEEDS WORK
+msgid "Cria um laço (loop) que continua enquanto uma condição for verdadeira."
+msgstr "Luo silmukka, joka jatkuu niin kauan kuin ehto on tosi."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 203
+#: NEEDS WORK
+msgid "Executa o bloco de código enquanto a variável COUNT for menor que 5."
+msgstr "Suorita koodilohko, kun muuttuja COUNT on pienempi kuin 5."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 212
+#: NEEDS WORK
+msgid "Cria um laço (loop) que continua enquanto uma condição for falsa."
+msgstr "Luo silmukka, joka jatkuu niin kauan kuin ehto on epätosi."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 218
+#: NEEDS WORK
+msgid "Executa o bloco de código até que a variável COUNT seja igual a 0."
+msgstr "Suorita koodilohko, kunnes muuttuja COUNT on yhtä suuri kuin 0."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 224
+#: NEEDS WORK
+msgid "Entrada do Usuário (Shell Script)"
+msgstr "Käyttäjän syöte (Shell Script)"
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 227
+#: NEEDS WORK
+msgid "Lê uma linha da entrada padrão e a armazena em uma variável."
+msgstr "Lue rivi standardisyötteestä ja tallenna se muuttujaan."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 233
+#: NEEDS WORK
+msgid "Espera o usuário digitar algo e pressionar Enter, salvando na variável NOME."
+msgstr "Odota käyttäjän kirjoittavan jotain ja painavan Enteriä, tallentaen NIMEEN."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 239
+#: NEEDS WORK
+msgid "Mostra uma mensagem (prompt) para o usuário antes de esperar a entrada."
+msgstr "Näyttää viestin (kehotteen) käyttäjälle ennen kuin odottaa syötettä."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 245
+#: NEEDS WORK
+msgid "Expansão de Parâmetros"
+msgstr "Parametrien laajentaminen"
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 248
+#: NEEDS WORK
+msgid "Mecanismos do shell para manipular o valor de variáveis."
+msgstr "Shell-mekanismit muuttujien arvojen käsittelemiseen."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 254
+#: NEEDS WORK
+msgid "Substitui pelo valor da variável VAR. É o mesmo que $VAR, mas mais seguro."
+msgstr "Korvataan muuttujan VAR arvo. Se on sama kuin $VAR, mutta turvallisempi."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 260
+#: NEEDS WORK
+msgid "Usa 'default' se VAR não estiver definida. A variável VAR não é alterada."
+msgstr "Käytä 'oletusarvoa', jos VAR ei ole määritelty. Muuttuja VAR ei muutu."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 266
+#: NEEDS WORK
+msgid "Usa e atribui 'default' a VAR se ela não estiver definida."
+msgstr "Käytä ja määritä 'oletus' VAR:lle, jos se ei ole määritelty."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 272
+#: NEEDS WORK
+msgid "Retorna o número de caracteres no valor da variável VAR."
+msgstr "Palauttaa merkkien määrän VAR-muuttujan arvossa."
 # 
 # File: usr/share/ashyterm/app.py, line: 333
 #: NEEDS WORK
