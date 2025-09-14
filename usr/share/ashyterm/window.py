@@ -43,7 +43,7 @@ class CommTerminalWindow(Adw.ApplicationWindow):
         self.logger = get_logger("ashyterm.window")
         self.logger.info("Initializing main window")
 
-        # Core properties and dependencies
+        # Component Initialization
         self.settings_manager = settings_manager
         self.is_main_window = True
         self._cleanup_performed = False
@@ -213,6 +213,8 @@ class CommTerminalWindow(Adw.ApplicationWindow):
         self.search_entry = self.ui_builder.sidebar_search_entry
         self.search_prev_button = self.ui_builder.search_prev_button
         self.search_next_button = self.ui_builder.search_next_button
+        self.case_sensitive_switch = self.ui_builder.case_sensitive_switch
+        self.regex_switch = self.ui_builder.regex_switch
         self.tab_manager.scrolled_tab_bar = self.scrolled_tab_bar
 
     def _connect_component_signals(self) -> None:
@@ -266,11 +268,21 @@ class CommTerminalWindow(Adw.ApplicationWindow):
             "search-changed", self._on_search_text_changed
         )
         self.terminal_search_entry.connect("stop-search", self._on_search_stop)
+        self.terminal_search_entry.connect("activate", self._on_search_next)
         self.search_prev_button.connect("clicked", self._on_search_previous)
         self.search_next_button.connect("clicked", self._on_search_next)
         self.search_bar.connect(
             "notify::search-mode-enabled", self._on_search_mode_changed
         )
+        # Connect case sensitive switch
+        self.case_sensitive_switch.connect("notify::active", self._on_case_sensitive_changed)
+        # Initialize switch state from settings
+        self.case_sensitive_switch.set_active(self.settings_manager.get("search_case_sensitive", False))
+        
+        # Connect regex switch
+        self.regex_switch.connect("notify::active", self._on_regex_changed)
+        # Initialize switch state from settings
+        self.regex_switch.set_active(self.settings_manager.get("search_use_regex", False))
 
     def _setup_window_events(self) -> None:
         """Set up window-level event handlers."""
@@ -522,7 +534,38 @@ class CommTerminalWindow(Adw.ApplicationWindow):
         else:
             self._on_search_stop()
 
+    def _on_case_sensitive_changed(self, switch, param):
+        """Handle case sensitive switch changes."""
+        case_sensitive = switch.get_active()
+        self.settings_manager.set("search_case_sensitive", case_sensitive)
+        # Re-trigger search if there's text in the search entry
+        if self.terminal_search_entry.get_text():
+            self._on_search_text_changed(self.terminal_search_entry)
+
+    def _on_regex_changed(self, switch, param):
+        """Handle regex switch changes."""
+        use_regex = switch.get_active()
+        self.settings_manager.set("search_use_regex", use_regex)
+        # Re-trigger search if there's text in the search entry
+        if self.terminal_search_entry.get_text():
+            self._on_search_text_changed(self.terminal_search_entry)
+
     def _on_search_text_changed(self, search_entry):
+        """Handle search text changes immediately without debouncing."""
+        text = search_entry.get_text()
+        
+        # If text is empty, clear search immediately
+        if not text:
+            terminal = self.tab_manager.get_selected_terminal()
+            if terminal:
+                terminal.search_set_regex(None, 0)
+            return
+        
+        # Perform search immediately
+        self._perform_search(text)
+
+    def _perform_search(self, text):
+        """Perform search immediately for the given text."""
         terminal = self.tab_manager.get_selected_terminal()
         if not terminal:
             self.logger.warning("Search triggered but no active terminal found.")
@@ -534,15 +577,23 @@ class CommTerminalWindow(Adw.ApplicationWindow):
         # First, clear any existing search to reset the state.
         terminal.search_set_regex(None, 0)
 
-        text = search_entry.get_text()
-        if not text:
-            return
-
         try:
-            # Use Vte.Regex.new_for_search for search operations.
-            # PCRE2_MULTILINE (0x00000400) and PCRE2_CASELESS (0x00000008)
-            pcre2_flags = 0x00000400 | 0x00000008
-            regex = Vte.Regex.new_for_search(text, -1, pcre2_flags)
+            # Use Vte.Regex for search operations
+            # PCRE2_MULTILINE (0x00000400) and optionally PCRE2_CASELESS (0x00000008)
+            pcre2_flags = 0x00000400  # PCRE2_MULTILINE always enabled
+            if not self.settings_manager.get("search_case_sensitive", False):
+                pcre2_flags |= 0x00000008  # PCRE2_CASELESS for case insensitive
+            
+            use_regex = self.settings_manager.get("search_use_regex", False)
+            search_text = text
+            
+            if not use_regex:
+                # For literal search, escape regex special characters
+                import re
+                search_text = re.escape(text)
+            
+            # Always use new_for_search, but with escaped pattern for literal mode
+            regex = Vte.Regex.new_for_search(search_text, -1, pcre2_flags)
 
             if not regex:
                 self.logger.warning(
@@ -555,9 +606,44 @@ class CommTerminalWindow(Adw.ApplicationWindow):
 
             # Set the regex for search
             terminal.search_set_regex(regex, 0)
-            # Find the first match after setting the regex.
+            
+            # More robust search: try multiple approaches to ensure consistency
+            found = False
+            
+            # Method 1: Try from current position
+            current_col, current_row = terminal.get_cursor_position()
+            self.logger.debug(f"Starting search for '{text}' from cursor position: ({current_col}, {current_row})")
+            
             found = terminal.search_find_next()
-            self.logger.debug(f"Search for '{text}' initiated. Found: {found}")
+            self.logger.debug(f"Search from current position found: {found}")
+            
+            # Method 2: If not found, try scrolling to beginning and searching again
+            if not found:
+                try:
+                    # Save current scroll position
+                    v_adjustment = terminal.get_vadjustment()
+                    if v_adjustment:
+                        current_scroll = v_adjustment.get_value()
+                        
+                        # Scroll to the beginning
+                        v_adjustment.set_value(0.0)
+                        
+                        # Try search from the beginning
+                        found = terminal.search_find_next()
+                        self.logger.debug(f"Search from beginning (after scroll) found: {found}")
+                        
+                        # If still not found, scroll back to original position
+                        if not found:
+                            v_adjustment.set_value(current_scroll)
+                            found = terminal.search_find_next()
+                            self.logger.debug(f"Search from original position (after scroll back) found: {found}")
+                        
+                except Exception as e:
+                    self.logger.debug(f"Error during scroll-based search: {e}")
+                    # Fallback to just trying again from current position
+                    found = terminal.search_find_next()
+            
+            self.logger.debug(f"Final search result for '{text}': Found: {found}")
 
             if not found:
                 self.toast_overlay.add_toast(
@@ -573,19 +659,59 @@ class CommTerminalWindow(Adw.ApplicationWindow):
             )
             terminal.search_set_regex(None, 0)
 
-    def _on_search_next(self, button):
+    def _on_search_next(self, button=None):
         terminal = self.tab_manager.get_selected_terminal()
         if terminal:
+            # Try to find next match
             found = terminal.search_find_next()
+            
+            # If no match found from current position, try scrolling to beginning
+            if not found:
+                try:
+                    v_adjustment = terminal.get_vadjustment()
+                    if v_adjustment:
+                        current_scroll = v_adjustment.get_value()
+                        
+                        # Scroll to the beginning
+                        v_adjustment.set_value(0.0)
+                        found = terminal.search_find_next()
+                        
+                        # If still not found, scroll back to original position
+                        if not found:
+                            v_adjustment.set_value(current_scroll)
+                            found = terminal.search_find_next()
+                except Exception as e:
+                    self.logger.debug(f"Error during next search: {e}")
+            
             if not found:
                 self.toast_overlay.add_toast(
                     Adw.Toast(title=_("No more matches found."))
                 )
 
-    def _on_search_previous(self, button):
+    def _on_search_previous(self, button=None):
         terminal = self.tab_manager.get_selected_terminal()
         if terminal:
+            # Try to find previous match
             found = terminal.search_find_previous()
+            
+            # If no match found, try scrolling to end
+            if not found:
+                try:
+                    v_adjustment = terminal.get_vadjustment()
+                    if v_adjustment:
+                        current_scroll = v_adjustment.get_value()
+                        
+                        # Scroll to the end
+                        v_adjustment.set_value(v_adjustment.get_upper() - v_adjustment.get_page_size())
+                        found = terminal.search_find_previous()
+                        
+                        # If still not found, scroll back to original position
+                        if not found:
+                            v_adjustment.set_value(current_scroll)
+                            found = terminal.search_find_previous()
+                except Exception as e:
+                    self.logger.debug(f"Error during previous search: {e}")
+            
             if not found:
                 self.toast_overlay.add_toast(
                     Adw.Toast(title=_("No more matches found."))

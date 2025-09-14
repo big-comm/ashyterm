@@ -50,6 +50,8 @@ class WindowUIBuilder:
         self.sidebar_search_entry = None  # Renamed for clarity
         self.search_prev_button = None
         self.search_next_button = None
+        self.case_sensitive_switch = None
+        self.regex_switch = None
         self.add_session_button = None
         self.add_folder_button = None
         self.edit_button = None
@@ -237,7 +239,26 @@ class WindowUIBuilder:
         self.search_bar.connect_entry(self.terminal_search_entry)
         self.search_prev_button = Gtk.Button.new_from_icon_name("go-up-symbolic")
         self.search_next_button = Gtk.Button.new_from_icon_name("go-down-symbolic")
+        
+        # Case sensitive switch
+        self.case_sensitive_switch = Gtk.Switch()
+        self.case_sensitive_switch.set_tooltip_text(_("Case sensitive search"))
+        case_sensitive_box = Gtk.Box(spacing=6)
+        case_sensitive_label = Gtk.Label(label=_("Case sensitive"))
+        case_sensitive_box.append(case_sensitive_label)
+        case_sensitive_box.append(self.case_sensitive_switch)
+        
+        # Regex switch
+        self.regex_switch = Gtk.Switch()
+        self.regex_switch.set_tooltip_text(_("Use regular expressions"))
+        regex_box = Gtk.Box(spacing=6)
+        regex_label = Gtk.Label(label=_("Regex"))
+        regex_box.append(regex_label)
+        regex_box.append(self.regex_switch)
+        
         search_box.append(self.terminal_search_entry)
+        search_box.append(case_sensitive_box)
+        search_box.append(regex_box)
         search_box.append(self.search_prev_button)
         search_box.append(self.search_next_button)
         self.search_bar.set_child(search_box)

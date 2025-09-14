@@ -150,6 +150,9 @@ class DefaultSettings:
             # Remote Editing
             "use_system_tmp_for_edit": False,
             "clear_remote_edit_files_on_exit": False,
+            # Search Settings
+            "search_case_sensitive": False,
+            "search_use_regex": False,
             # Shortcuts
             "shortcuts": {
                 "new-local-tab": "<Control><Shift>t",
