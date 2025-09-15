@@ -474,7 +474,7 @@ class TabManager:
             action_group.add_action(action)
             popover.insert_action_group("win", action_group)
 
-        popover.popup()
+        popover.popup_at_pointer()
 
     def _request_detach_tab(self, page: Adw.ViewStackPage):
         if self.on_detach_tab_requested:

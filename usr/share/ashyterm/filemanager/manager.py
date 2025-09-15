@@ -649,9 +649,7 @@ class FileManager(GObject.Object):
         link_icon.set_visible(False)
         box.append(link_icon)
         list_item.set_child(box)
-        right_click_gesture = Gtk.GestureClick(button=Gdk.BUTTON_SECONDARY)
-        right_click_gesture.connect("pressed", self._on_item_right_click, list_item)
-        box.add_controller(right_click_gesture)
+        box.list_item = list_item
 
     def _bind_name_cell(self, factory, list_item):
         box = list_item.get_child()
@@ -669,38 +667,79 @@ class FileManager(GObject.Object):
             link_icon.set_visible(True)
         else:
             link_icon.set_visible(False)
+        # Add right-click gesture to the row
+        row = box.get_parent()
+        if row and not hasattr(row, "right_click_added"):
+            row.right_click_added = True
+            right_click_gesture = Gtk.GestureClick(button=Gdk.BUTTON_SECONDARY)
+            right_click_gesture.connect(
+                "released", self._on_item_right_click, list_item.get_position()
+            )
+            row.add_controller(right_click_gesture)
 
     def _setup_text_cell(self, factory, list_item):
         label = Gtk.Label(xalign=0.0)
         list_item.set_child(label)
-        right_click_gesture = Gtk.GestureClick(button=Gdk.BUTTON_SECONDARY)
-        right_click_gesture.connect("pressed", self._on_item_right_click, list_item)
-        label.add_controller(right_click_gesture)
+        label.list_item = list_item
 
     def _setup_size_cell(self, factory, list_item):
         label = Gtk.Label(xalign=1.0)
         list_item.set_child(label)
-        right_click_gesture = Gtk.GestureClick(button=Gdk.BUTTON_SECONDARY)
-        right_click_gesture.connect("pressed", self._on_item_right_click, list_item)
-        label.add_controller(right_click_gesture)
+        label.list_item = list_item
 
     def _bind_permissions_cell(self, factory, list_item):
         label = list_item.get_child()
+        # Add right-click gesture to the row
+        row = label.get_parent()
+        if row and not hasattr(row, "right_click_added"):
+            row.right_click_added = True
+            right_click_gesture = Gtk.GestureClick(button=Gdk.BUTTON_SECONDARY)
+            right_click_gesture.connect(
+                "released", self._on_item_right_click, list_item.get_position()
+            )
+            row.add_controller(right_click_gesture)
         file_item: FileItem = list_item.get_item()
         label.set_text(file_item.permissions)
 
     def _bind_owner_cell(self, factory, list_item):
         label = list_item.get_child()
+        # Add right-click gesture to the row
+        row = label.get_parent()
+        if row and not hasattr(row, "right_click_added"):
+            row.right_click_added = True
+            right_click_gesture = Gtk.GestureClick(button=Gdk.BUTTON_SECONDARY)
+            right_click_gesture.connect(
+                "released", self._on_item_right_click, list_item.get_position()
+            )
+            row.add_controller(right_click_gesture)
         file_item: FileItem = list_item.get_item()
         label.set_text(file_item.owner)
 
     def _bind_group_cell(self, factory, list_item):
         label = list_item.get_child()
+        # Add right-click gesture to the row
+        row = label.get_parent()
+        if row and not hasattr(row, "right_click_added"):
+            row.right_click_added = True
+            right_click_gesture = Gtk.GestureClick(button=Gdk.BUTTON_SECONDARY)
+            right_click_gesture.connect(
+                "released", self._on_item_right_click, list_item.get_position()
+            )
+            row.add_controller(right_click_gesture)
         file_item: FileItem = list_item.get_item()
         label.set_text(file_item.group)
 
     def _bind_size_cell(self, factory, list_item):
         label = list_item.get_child()
+        # Add right-click gesture to the row
+        row = label.get_parent()
+        if row and not hasattr(row, "right_click_added"):
+            row.right_click_added = True
+            right_click_gesture = Gtk.GestureClick(button=Gdk.BUTTON_SECONDARY)
+            right_click_gesture.connect(
+                "released", self._on_item_right_click, list_item.get_position()
+            )
+            row.add_controller(right_click_gesture)
         file_item: FileItem = list_item.get_item()
         size = file_item.size
         if size < 1024:
@@ -715,6 +754,15 @@ class FileManager(GObject.Object):
 
     def _bind_date_cell(self, factory, list_item):
         label = list_item.get_child()
+        # Add right-click gesture to the row
+        row = label.get_parent()
+        if row and not hasattr(row, "right_click_added"):
+            row.right_click_added = True
+            right_click_gesture = Gtk.GestureClick(button=Gdk.BUTTON_SECONDARY)
+            right_click_gesture.connect(
+                "released", self._on_item_right_click, list_item.get_position()
+            )
+            row.add_controller(right_click_gesture)
         file_item: FileItem = list_item.get_item()
         date_str = file_item.date.strftime("%Y-%m-%d %H:%M")
         label.set_text(date_str)
@@ -970,14 +1018,12 @@ class FileManager(GObject.Object):
     def _is_remote_session(self) -> bool:
         return self.session_item and not self.session_item.is_local()
 
-    def _on_item_right_click(self, _gesture, _n_press, x, y, list_item: Gtk.ListItem):
+    def _on_item_right_click(self, gesture, n_press, x, y, position):
         try:
-            if not list_item:
-                self._show_general_context_menu(x, y)
-                return
-
-            position = list_item.get_position()
-
+            row = gesture.get_widget()
+            translated_x, translated_y = row.translate_coordinates(
+                self.column_view, x, y
+            )
             if not self.selection_model.is_selected(position):
                 self.selection_model.unselect_all()
                 self.selection_model.select_item(position, True)
@@ -988,11 +1034,57 @@ class FileManager(GObject.Object):
                     item for item in selected_items if item.name != ".."
                 ]
                 if actionable_items:
-                    self._show_context_menu(actionable_items, x, y)
+                    self._show_context_menu(
+                        actionable_items, translated_x, translated_y
+                    )
             else:
-                self._show_general_context_menu(x, y)
+                self._show_general_context_menu(translated_x, translated_y)
         except Exception as e:
             self.logger.error(f"Error in right-click handler: {e}")
+
+    def _on_column_view_right_click(self, gesture, n_press, x, y):
+        try:
+            widget = self.column_view.pick(x, y, Gtk.PickFlags.DEFAULT)
+            list_item = None
+            if widget and widget != self.column_view:
+                # Find the list_item
+                current = widget
+                while current and not hasattr(current, "list_item"):
+                    current = current.get_parent()
+                if current and hasattr(current, "list_item"):
+                    list_item = current.list_item
+            if list_item:
+                position = list_item.get_position()
+                self._on_item_right_click(gesture, n_press, x, y, position)
+            else:
+                # Calculate position from y coordinate
+                list_view = self.column_view.get_first_child()
+                if list_view:
+                    children = list(list_view)
+                    if children:
+                        first_child = children[0]
+                        start_position = first_child.get_position()
+                        row_height = first_child.get_allocation().height
+                        if row_height > 0:
+                            list_view_alloc = list_view.get_allocation()
+                            y_in_list = y - list_view_alloc.y
+                            row_index = int(y_in_list // row_height)
+                            position = start_position + row_index
+                            n_items = self.selection_model.get_n_items()
+                            if 0 <= position < n_items:
+                                self._on_item_right_click(
+                                    gesture, n_press, x, y, position
+                                )
+                            else:
+                                self._show_general_context_menu(x, y)
+                        else:
+                            self._show_general_context_menu(x, y)
+                    else:
+                        self._show_general_context_menu(x, y)
+                else:
+                    self._show_general_context_menu(x, y)
+        except Exception as e:
+            self.logger.error(f"Error in column view right-click handler: {e}")
 
     def _show_general_context_menu(self, x, y):
         menu = Gio.Menu()
@@ -1002,8 +1094,9 @@ class FileManager(GObject.Object):
             popover.unparent()
         popover.set_parent(self.column_view)
         rect = Gdk.Rectangle()
-        rect.x, rect.y, rect.width, rect.height = int(x), int(y), 1, 1
+        rect.x, rect.y = int(x), int(y)
         popover.set_pointing_to(rect)
+        popover.set_has_arrow(False)
         popover.popup()
 
     def _show_context_menu(self, items: List[FileItem], x, y):
@@ -1014,8 +1107,9 @@ class FileManager(GObject.Object):
         popover.set_parent(self.column_view)
         self._setup_context_actions(popover, items)
         rect = Gdk.Rectangle()
-        rect.x, rect.y, rect.width, rect.height = int(x), int(y), 1, 1
+        rect.x, rect.y = int(x), int(y)
         popover.set_pointing_to(rect)
+        popover.set_has_arrow(False)
         popover.popup()
 
     def _on_search_key_pressed(self, controller, keyval, _keycode, state):
