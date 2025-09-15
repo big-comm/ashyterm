@@ -9,7 +9,6 @@ from ..sessions.models import LayoutItem, SessionFolder, SessionItem
 from ..utils.logger import get_logger, log_session_event
 from ..utils.translation_utils import _
 from .dialogs import (
-    CommandGuideDialog,
     FolderEditDialog,
     MoveLayoutDialog,
     MoveSessionDialog,

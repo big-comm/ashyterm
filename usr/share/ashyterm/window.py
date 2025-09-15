@@ -415,6 +415,8 @@ class CommTerminalWindow(Adw.ApplicationWindow):
         """Handle changes from the settings manager."""
         if key == "auto_hide_sidebar":
             self.sidebar_manager.handle_auto_hide_change(new_value)
+        elif key == "tab_alignment":
+            self.tab_manager._update_tab_alignment()
         elif key in [
             "font",
             "color_scheme",

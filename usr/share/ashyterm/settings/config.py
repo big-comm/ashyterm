@@ -114,6 +114,7 @@ class DefaultSettings:
             "font": "Monospace 12",
             "line_spacing": 1.0,
             "bold_is_bright": True,
+            "tab_alignment": "center",
             # Window State
             "window_width": 1200,
             "window_height": 700,

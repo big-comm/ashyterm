@@ -4,9 +4,8 @@ from typing import TYPE_CHECKING
 
 import gi
 
-gi.require_version("Gtk", "4.0")
 gi.require_version("Adw", "1")
-from gi.repository import Adw, Gdk, Gtk
+from gi.repository import Adw, Gdk, Gio, Gtk
 
 from ..utils.logger import get_logger
 from ..utils.translation_utils import _
@@ -30,6 +29,12 @@ class WindowUIBuilder:
         self.settings_manager = window.settings_manager
         self.tab_manager = window.tab_manager
         self.session_tree = window.session_tree
+
+        # WM settings for dynamic button layout
+        self.wm_settings = Gio.Settings.new("org.gnome.desktop.wm.preferences")
+        self.wm_settings.connect(
+            "changed::button-layout", self._on_button_layout_changed
+        )
 
         # --- Widgets to be created and exposed ---
         self.header_bar = None
@@ -59,6 +64,8 @@ class WindowUIBuilder:
         self.edit_button = None
         self.save_layout_button = None
         self.remove_button = None
+        self.menu_button = None
+        self.new_tab_button = None
 
     def build_ui(self):
         """Constructs the entire UI and sets it on the parent window."""
@@ -221,14 +228,7 @@ class WindowUIBuilder:
         .sidebar-toggle-button:checked {
             background: transparent;
         }
-        /* Search occurrence counter styling */
-        .dim-label {
-            opacity: 0.7;
-            font-size: 0.9em;
-            font-weight: 500;
-            min-width: 40px;
-            text-align: center;
-        }
+        .flipped-icon { transform: scaleX(-1); }
         /* Command Guide Dialog Card Style */
         .command-guide-card {
             background-color: @window_bg_color;
@@ -308,23 +308,27 @@ class WindowUIBuilder:
     def _create_header_bar(self) -> Adw.HeaderBar:
         """Create the header bar with controls."""
         header_bar = Adw.HeaderBar(css_classes=["main-header-bar"])
+
+        # Create buttons
         self.toggle_sidebar_button = Gtk.ToggleButton(
-            icon_name="view-reveal-symbolic", tooltip_text=_("Toggle Sidebar")
+            icon_name="view-pin-symbolic", tooltip_text=_("Toggle Sidebar")
         )
         self.toggle_sidebar_button.add_css_class("sidebar-toggle-button")
-        header_bar.pack_start(self.toggle_sidebar_button)
 
         self.file_manager_button = Gtk.ToggleButton(
             icon_name="folder-open-symbolic", tooltip_text=_("File Manager")
         )
-        header_bar.pack_start(self.file_manager_button)
 
         self.command_guide_button = Gtk.Button(
             icon_name="help-faq-symbolic",
             tooltip_text=_("Command Guide (Ctrl+Shift+P)"),
         )
         self.command_guide_button.set_action_name("win.show-command-guide")
-        header_bar.pack_start(self.command_guide_button)
+
+        # Add the new search button
+        self.search_button = Gtk.ToggleButton(
+            icon_name="edit-find-symbolic", tooltip_text=_("Search in Terminal")
+        )
 
         self.cleanup_button = Gtk.MenuButton(
             icon_name="user-trash-symbolic",
@@ -334,28 +338,56 @@ class WindowUIBuilder:
         )
         self.cleanup_popover = Gtk.Popover()
         self.cleanup_button.set_popover(self.cleanup_popover)
-        header_bar.pack_start(self.cleanup_button)
 
-        menu_button = Gtk.MenuButton(
+        self.menu_button = Gtk.MenuButton(
             icon_name="open-menu-symbolic", tooltip_text=_("Main Menu")
         )
         popover, self.font_sizer_widget = MainApplicationMenu.create_main_popover(
             self.window
         )
-        menu_button.set_popover(popover)
-        header_bar.pack_end(menu_button)
+        self.menu_button.set_popover(popover)
 
-        # Add the new search button
-        self.search_button = Gtk.ToggleButton(
-            icon_name="edit-find-symbolic", tooltip_text=_("Search in Terminal")
-        )
-        header_bar.pack_end(self.search_button)
+        self.new_tab_button = Gtk.Button.new_from_icon_name("tab-new-symbolic")
+        self.new_tab_button.set_tooltip_text(_("New Tab"))
+        self.new_tab_button.connect("clicked", self.window._on_new_tab_clicked)
+        self.new_tab_button.add_css_class("flat")
 
-        new_tab_button = Gtk.Button.new_from_icon_name("tab-new-symbolic")
-        new_tab_button.set_tooltip_text(_("New Tab"))
-        new_tab_button.connect("clicked", self.window._on_new_tab_clicked)
-        new_tab_button.add_css_class("flat")
-        header_bar.pack_end(new_tab_button)
+        # Check if window controls are on the left
+        button_layout = self.wm_settings.get_string("button-layout")
+        if ":" in button_layout:
+            left_part = button_layout.split(":")[0]
+            window_controls_on_left = any(
+                btn in left_part for btn in ["close", "minimize", "maximize"]
+            )
+        else:
+            window_controls_on_left = False
+
+        if window_controls_on_left:
+            # Add flipped class to icons
+            self.toggle_sidebar_button.add_css_class("flipped-icon")
+            self.file_manager_button.add_css_class("flipped-icon")
+            self.command_guide_button.add_css_class("flipped-icon")
+            self.search_button.add_css_class("flipped-icon")
+            self.cleanup_button.add_css_class("flipped-icon")
+            self.menu_button.add_css_class("flipped-icon")
+            self.new_tab_button.add_css_class("flipped-icon")
+            # Swap sides: left buttons to right, right buttons to left
+            header_bar.pack_end(self.toggle_sidebar_button)
+            header_bar.pack_end(self.file_manager_button)
+            header_bar.pack_end(self.command_guide_button)
+            header_bar.pack_end(self.search_button)
+            header_bar.pack_end(self.cleanup_button)
+            header_bar.pack_start(self.menu_button)
+            header_bar.pack_start(self.new_tab_button)
+        else:
+            # Normal packing
+            header_bar.pack_start(self.toggle_sidebar_button)
+            header_bar.pack_start(self.file_manager_button)
+            header_bar.pack_start(self.command_guide_button)
+            header_bar.pack_start(self.search_button)
+            header_bar.pack_start(self.cleanup_button)
+            header_bar.pack_end(self.menu_button)
+            header_bar.pack_end(self.new_tab_button)
 
         self.scrolled_tab_bar = Gtk.ScrolledWindow(
             name="scrolled_tab_bar",
@@ -379,6 +411,60 @@ class WindowUIBuilder:
         header_bar.set_title_widget(self.title_stack)
 
         return header_bar
+
+    def _on_button_layout_changed(self, settings, key):
+        """Handle dynamic changes to window button layout."""
+        if self.header_bar is None:
+            return
+
+        # Remove all buttons from header_bar
+        buttons = [
+            self.toggle_sidebar_button,
+            self.file_manager_button,
+            self.command_guide_button,
+            self.search_button,
+            self.cleanup_button,
+            self.menu_button,
+            self.new_tab_button,
+        ]
+        for btn in buttons:
+            if btn and btn.get_parent() is not None:
+                btn.get_parent().remove(btn)
+            # Remove flipped class
+            btn.remove_css_class("flipped-icon")
+
+        # Re-determine layout
+        button_layout = settings.get_string("button-layout")
+        if ":" in button_layout:
+            left_part = button_layout.split(":")[0]
+            window_controls_on_left = any(
+                btn in left_part for btn in ["close", "minimize", "maximize"]
+            )
+        else:
+            window_controls_on_left = False
+
+        # Re-pack buttons
+        if window_controls_on_left:
+            # Add flipped class
+            for btn in buttons:
+                btn.add_css_class("flipped-icon")
+            # Swap sides
+            self.header_bar.pack_end(self.toggle_sidebar_button)
+            self.header_bar.pack_end(self.file_manager_button)
+            self.header_bar.pack_end(self.command_guide_button)
+            self.header_bar.pack_end(self.search_button)
+            self.header_bar.pack_end(self.cleanup_button)
+            self.header_bar.pack_start(self.menu_button)
+            self.header_bar.pack_start(self.new_tab_button)
+        else:
+            # Normal packing
+            self.header_bar.pack_start(self.toggle_sidebar_button)
+            self.header_bar.pack_start(self.file_manager_button)
+            self.header_bar.pack_start(self.command_guide_button)
+            self.header_bar.pack_start(self.search_button)
+            self.header_bar.pack_start(self.cleanup_button)
+            self.header_bar.pack_end(self.menu_button)
+            self.header_bar.pack_end(self.new_tab_button)
 
     def _create_sidebar(self) -> Gtk.Widget:
         """Create the sidebar with session tree."""

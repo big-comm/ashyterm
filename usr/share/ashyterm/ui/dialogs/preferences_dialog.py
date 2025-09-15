@@ -147,6 +147,17 @@ class PreferencesDialog(Adw.PreferencesWindow):
         text_blink_row.connect("notify::selected", self._on_text_blink_mode_changed)
         misc_group.add(text_blink_row)
 
+        tab_alignment_row = Adw.ComboRow(
+            title=_("Tab Alignment"),
+            subtitle=_("Align tabs to the left or center of the tab bar"),
+        )
+        tab_alignment_row.set_model(Gtk.StringList.new([_("Left"), _("Center")]))
+        current_alignment = self.settings_manager.get("tab_alignment", "center")
+        selected_index = 0 if current_alignment == "left" else 1
+        tab_alignment_row.set_selected(selected_index)
+        tab_alignment_row.connect("notify::selected", self._on_tab_alignment_changed)
+        misc_group.add(tab_alignment_row)
+
     def _setup_terminal_page(self) -> None:
         page = Adw.PreferencesPage(
             title=_("Terminal"), icon_name="utilities-terminal-symbolic"
@@ -597,6 +608,11 @@ class PreferencesDialog(Adw.PreferencesWindow):
     def _on_text_blink_mode_changed(self, combo_row, _param) -> None:
         index = combo_row.get_selected()
         self._on_setting_changed("text_blink_mode", index)
+
+    def _on_tab_alignment_changed(self, combo_row, _param) -> None:
+        index = combo_row.get_selected()
+        alignment = "left" if index == 0 else "center"
+        self._on_setting_changed("tab_alignment", alignment)
 
     def _on_word_chars_changed(self, entry_row):
         text = entry_row.get_text()
