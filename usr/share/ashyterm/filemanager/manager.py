@@ -300,24 +300,25 @@ class FileManager(GObject.Object):
         )
         self.revealer.set_size_request(-1, 200)
 
-        main_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
-        main_box.set_size_request(-1, 200)
+        self.main_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
+        self.main_box.set_size_request(-1, 200)
+        self.main_box.add_css_class("file-manager-main-box")
 
-        scrolled_window = Gtk.ScrolledWindow(vexpand=True)
+        self.scrolled_window = Gtk.ScrolledWindow(vexpand=True)
 
         self.store = Gio.ListStore.new(FileItem)
         self.filtered_store = Gtk.FilterListModel(model=self.store)
 
         self.column_view = self._create_detailed_column_view()
-        scrolled_window.set_child(self.column_view)
+        self.scrolled_window.set_child(self.column_view)
 
         # Drop target for external files, attached to the stable ScrolledWindow
         drop_target = Gtk.DropTarget.new(Gdk.FileList, Gdk.DragAction.COPY)
         drop_target.connect("accept", self._on_drop_accept)
-        drop_target.connect("enter", self._on_drop_enter, scrolled_window)
-        drop_target.connect("leave", self._on_drop_leave, scrolled_window)
-        drop_target.connect("drop", self._on_files_dropped, scrolled_window)
-        scrolled_window.add_controller(drop_target)
+        drop_target.connect("enter", self._on_drop_enter, self.scrolled_window)
+        drop_target.connect("leave", self._on_drop_leave, self.scrolled_window)
+        drop_target.connect("drop", self._on_files_dropped, self.scrolled_window)
+        self.scrolled_window.add_controller(drop_target)
 
         self.action_bar = Gtk.ActionBar()
 
@@ -361,13 +362,43 @@ class FileManager(GObject.Object):
         self.action_bar.pack_end(self.upload_button)
 
         progress_widget = self.transfer_manager.create_progress_widget()
-        main_box.append(progress_widget)
+        self.main_box.append(progress_widget)
 
-        main_box.append(scrolled_window)
-        main_box.append(self.action_bar)
-        self.revealer.set_child(main_box)
+        self.main_box.append(self.scrolled_window)
+        self.main_box.append(self.action_bar)
+        self.revealer.set_child(self.main_box)
 
         self._setup_filtering_and_sorting()
+
+    def _apply_background_transparency(self):
+        """Apply background transparency to the file manager."""
+        try:
+            # Get settings from parent window's settings manager
+            if hasattr(self.parent_window, "settings_manager"):
+                settings_manager = self.parent_window.settings_manager
+                transparency = settings_manager.get("headerbar_transparency", 0)
+                self.logger.info(f"File manager transparency: {transparency}")
+
+                if transparency > 0:
+                    # Calculate opacity using the same formula as terminal transparency
+                    alpha = max(0.0, min(1.0, 1.0 - (transparency / 100.0) ** 1.6))
+                    self.logger.info(f"Calculated alpha for file manager: {alpha}")
+
+                    # Apply opacity directly to the revealer widget
+                    self.revealer.set_opacity(alpha)
+                    self.logger.info(
+                        f"File manager opacity set to {alpha} using widget property"
+                    )
+                else:
+                    # Reset to full opacity when transparency is 0
+                    self.revealer.set_opacity(1.0)
+                    self.logger.info(
+                        "File manager transparency is 0, setting full opacity"
+                    )
+        except Exception as e:
+            self.logger.warning(
+                f"Failed to apply background transparency to file manager: {e}"
+            )
 
     def _update_action_bar_for_session_type(self):
         """Shows or hides UI elements based on whether the session is remote."""
@@ -889,6 +920,7 @@ class FileManager(GObject.Object):
         self.revealer.set_reveal_child(visible)
         if visible:
             self.refresh(source=source)
+            self._apply_background_transparency()
             if source == "filemanager":
                 self.column_view.grab_focus()
         else:

@@ -283,6 +283,10 @@ class WindowActions:
             lambda d, v: self.window.terminal_manager.apply_settings_to_all_terminals(),
         )
         dialog.connect(
+            "headerbar-transparency-changed",
+            lambda d, v: self.window.terminal_manager.apply_settings_to_all_terminals(),
+        )
+        dialog.connect(
             "font-changed",
             lambda d, f: self.window.terminal_manager.apply_settings_to_all_terminals(),
         )
