@@ -1,14 +1,11 @@
 # ashyterm/ui/dialogs/preferences_dialog.py
 
-from typing import Dict, List
-
 import gi
 
 gi.require_version("Gtk", "4.0")
 gi.require_version("Adw", "1")
-from gi.repository import Adw, Gdk, GObject, Gtk
+from gi.repository import Adw, GObject, Gtk
 
-from ...helpers import accelerator_to_label
 from ...settings.manager import SettingsManager
 from ...utils.logger import get_logger
 from ...utils.translation_utils import _
@@ -20,6 +17,11 @@ class PreferencesDialog(Adw.PreferencesWindow):
 
     __gsignals__ = {
         "transparency-changed": (GObject.SignalFlags.RUN_FIRST, None, (float,)),
+        "headerbar-transparency-changed": (
+            GObject.SignalFlags.RUN_FIRST,
+            None,
+            (float,),
+        ),
         "font-changed": (GObject.SignalFlags.RUN_FIRST, None, (str,)),
         "setting-changed": (GObject.SignalFlags.RUN_FIRST, None, (str, object)),
     }
@@ -97,7 +99,7 @@ class PreferencesDialog(Adw.PreferencesWindow):
         page.add(misc_group)
 
         transparency_row = Adw.ActionRow(
-            title=_("Background Transparency"),
+            title=_("Terminal Transparency"),
             subtitle=_("Adjust terminal background transparency"),
         )
         self.transparency_scale = Gtk.Scale.new_with_range(
@@ -111,6 +113,28 @@ class PreferencesDialog(Adw.PreferencesWindow):
         transparency_row.add_suffix(self.transparency_scale)
         transparency_row.set_activatable_widget(self.transparency_scale)
         misc_group.add(transparency_row)
+
+        headerbar_transparency_row = Adw.ActionRow(
+            title=_("Headerbar and File Manager Transparency"),
+            subtitle=_("Adjust headerbar and file manager background transparency"),
+        )
+        self.headerbar_transparency_scale = Gtk.Scale.new_with_range(
+            Gtk.Orientation.HORIZONTAL, 0, 100, 1
+        )
+        self.headerbar_transparency_scale.set_value(
+            self.settings_manager.get("headerbar_transparency", 0)
+        )
+        self.headerbar_transparency_scale.set_draw_value(True)
+        self.headerbar_transparency_scale.set_value_pos(Gtk.PositionType.RIGHT)
+        self.headerbar_transparency_scale.set_hexpand(True)
+        self.headerbar_transparency_scale.connect(
+            "value-changed", self._on_headerbar_transparency_changed
+        )
+        headerbar_transparency_row.add_suffix(self.headerbar_transparency_scale)
+        headerbar_transparency_row.set_activatable_widget(
+            self.headerbar_transparency_scale
+        )
+        misc_group.add(headerbar_transparency_row)
 
         bold_bright_row = Adw.SwitchRow(
             title=_("Use Bright Colors for Bold Text"),
@@ -146,6 +170,17 @@ class PreferencesDialog(Adw.PreferencesWindow):
         text_blink_row.set_selected(self.settings_manager.get("text_blink_mode", 0))
         text_blink_row.connect("notify::selected", self._on_text_blink_mode_changed)
         misc_group.add(text_blink_row)
+
+        tab_alignment_row = Adw.ComboRow(
+            title=_("Tab Alignment"),
+            subtitle=_("Align tabs to the left or center of the tab bar"),
+        )
+        tab_alignment_row.set_model(Gtk.StringList.new([_("Left"), _("Center")]))
+        current_alignment = self.settings_manager.get("tab_alignment", "center")
+        selected_index = 0 if current_alignment == "left" else 1
+        tab_alignment_row.set_selected(selected_index)
+        tab_alignment_row.connect("notify::selected", self._on_tab_alignment_changed)
+        misc_group.add(tab_alignment_row)
 
     def _setup_terminal_page(self) -> None:
         page = Adw.PreferencesPage(
@@ -552,6 +587,11 @@ class PreferencesDialog(Adw.PreferencesWindow):
         self.settings_manager.set("transparency", value)
         self.emit("transparency-changed", value)
 
+    def _on_headerbar_transparency_changed(self, scale) -> None:
+        value = scale.get_value()
+        self.settings_manager.set("headerbar_transparency", value)
+        self.emit("headerbar-transparency-changed", value)
+
     def _on_restore_policy_changed(self, combo_row, _param, policy_map):
         index = combo_row.get_selected()
         if 0 <= index < len(policy_map):
@@ -597,6 +637,11 @@ class PreferencesDialog(Adw.PreferencesWindow):
     def _on_text_blink_mode_changed(self, combo_row, _param) -> None:
         index = combo_row.get_selected()
         self._on_setting_changed("text_blink_mode", index)
+
+    def _on_tab_alignment_changed(self, combo_row, _param) -> None:
+        index = combo_row.get_selected()
+        alignment = "left" if index == 0 else "center"
+        self._on_setting_changed("tab_alignment", alignment)
 
     def _on_word_chars_changed(self, entry_row):
         text = entry_row.get_text()

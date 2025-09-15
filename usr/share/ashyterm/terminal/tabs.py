@@ -106,8 +106,7 @@ class TabManager:
 
         self.view_stack = Adw.ViewStack()
         self.tab_bar_box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=4)
-        self.tab_bar_box.set_halign(Gtk.Align.CENTER)
-
+        self._update_tab_alignment()
         self.tabs: List[Gtk.Box] = []
         self.pages: weakref.WeakKeyDictionary[Gtk.Box, Adw.ViewStackPage] = (
             weakref.WeakKeyDictionary()
@@ -125,6 +124,14 @@ class TabManager:
             self._on_terminal_process_exited
         )
         self.logger.info("Tab manager initialized with custom tab bar")
+
+    def _update_tab_alignment(self):
+        """Updates the tab bar alignment based on the current setting."""
+        alignment = self.terminal_manager.settings_manager.get("tab_alignment", "center")
+        if alignment == "left":
+            self.tab_bar_box.set_halign(Gtk.Align.START)
+        else:  # center or any other value defaults to center
+            self.tab_bar_box.set_halign(Gtk.Align.CENTER)
 
     def get_view_stack(self) -> Adw.ViewStack:
         return self.view_stack
@@ -474,7 +481,7 @@ class TabManager:
             action_group.add_action(action)
             popover.insert_action_group("win", action_group)
 
-        popover.popup()
+        popover.popup_at_pointer()
 
     def _request_detach_tab(self, page: Adw.ViewStackPage):
         if self.on_detach_tab_requested:

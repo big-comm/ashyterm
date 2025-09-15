@@ -1122,6 +1122,21 @@ msgstr ""
 "Sind Sie sicher, dass Sie das Schema '{name}' löschen möchten? Dies kann nicht rückgängig gemacht "
 "werden."
 # 
+# File: usr/share/ashyterm/ui/sidebar_manager.py, line: 220
+#: NEEDS WORK
+msgid "Show Sessions"
+msgstr "Sitzungen anzeigen"
+# 
+# File: usr/share/ashyterm/ui/sidebar_manager.py, line: 227
+#: NEEDS WORK
+msgid "Hide Sidebar"
+msgstr "Seitenleiste ausblenden"
+# 
+# File: usr/share/ashyterm/ui/sidebar_manager.py, line: 227
+#: NEEDS WORK
+msgid "Show Sidebar"
+msgstr "Seitenleiste anzeigen"
+# 
 # File: usr/share/ashyterm/ui/ssh_dialogs.py, line: 206
 #: NEEDS WORK
 msgid "SSH Connection Failed"
@@ -1169,17 +1184,17 @@ msgstr "Beschreibung"
 msgid "Command Guide"
 msgstr "Befehlsanleitung"
 # 
-# File: usr/share/ashyterm/ui/dialogs/command_guide_dialog.py, line: 165
+# File: usr/share/ashyterm/ui/dialogs/command_guide_dialog.py, line: 164
 #: NEEDS WORK
 msgid "Search commands..."
 msgstr "Suchbefehle..."
 # 
-# File: usr/share/ashyterm/ui/dialogs/command_guide_dialog.py, line: 208
+# File: usr/share/ashyterm/ui/dialogs/command_guide_dialog.py, line: 202
 #: NEEDS WORK
 msgid "Show Only Custom Commands"
 msgstr "Nur benutzerdefinierte Befehle anzeigen"
 # 
-# File: usr/share/ashyterm/ui/dialogs/command_guide_dialog.py, line: 216
+# File: usr/share/ashyterm/ui/dialogs/command_guide_dialog.py, line: 210
 #: NEEDS WORK
 msgid "Add New"
 msgstr "Neu hinzufügen"
@@ -1724,15 +1739,25 @@ msgstr "Passen Sie den vertikalen Abstand zwischen den Zeilen an"
 msgid "Miscellaneous"
 msgstr "Verschiedenes"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1448
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 102
 #: NEEDS WORK
-msgid "Background Transparency"
-msgstr "Hintergrundtransparenz"
+msgid "Terminal Transparency"
+msgstr "Terminal-Transparenz"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1449
 #: NEEDS WORK
 msgid "Adjust terminal background transparency"
 msgstr "Terminal-Hintergrundtransparenz anpassen"
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 118
+#: NEEDS WORK
+msgid "Headerbar and File Manager Transparency"
+msgstr "Headerleiste und Dateimanager-Transparenz"
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 119
+#: NEEDS WORK
+msgid "Adjust headerbar and file manager background transparency"
+msgstr "Passen Sie die Transparenz der Kopfzeile und des Dateimanagers an."
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1065
 #: NEEDS WORK
@@ -1773,6 +1798,26 @@ msgstr "Wenn fokussiert"
 #: NEEDS WORK
 msgid "Always"
 msgstr "Immer"
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 175
+#: NEEDS WORK
+msgid "Tab Alignment"
+msgstr "Tab-Ausrichtung"
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 176
+#: NEEDS WORK
+msgid "Align tabs to the left or center of the tab bar"
+msgstr "Tabs nach links oder zur Mitte der Tab-Leiste ausrichten"
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 178
+#: NEEDS WORK
+msgid "Left"
+msgstr "Links"
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 178
+#: NEEDS WORK
+msgid "Center"
+msgstr "Zentrum"
 # 
 # File: usr/share/ashyterm/window.py, line: 857
 #: NEEDS WORK
@@ -2601,6 +2646,11 @@ msgstr "Dateimanager"
 msgid "Command Guide (Ctrl+Shift+P)"
 msgstr "Befehlsübersicht (Strg+Umschalt+P)"
 # 
+# File: usr/share/ashyterm/ui/window_ui.py, line: 350
+#: NEEDS WORK
+msgid "Search in Terminal"
+msgstr "Im Terminal suchen"
+# 
 # File: usr/share/ashyterm/ui/window_ui.py, line: 259
 #: NEEDS WORK
 msgid "Manage Temporary Files"
@@ -2796,7 +2846,7 @@ msgstr "Verschieben oder umbenennen von Dateien und Verzeichnissen."
 # File: usr/share/ashyterm/data/command_data.py, line: 90
 #: NEEDS WORK
 msgid "Renomeia um arquivo ou diretório no local atual."
-msgstr "Benennt eine Datei oder ein Verzeichnis im aktuellen Standort um."
+msgstr "Benennt eine Datei oder ein Verzeichnis am aktuellen Standort um."
 # 
 # File: usr/share/ashyterm/data/command_data.py, line: 94
 #: NEEDS WORK
@@ -2816,12 +2866,12 @@ msgstr "Entfernen Sie eine einzelne Datei."
 # File: usr/share/ashyterm/data/command_data.py, line: 108
 #: NEEDS WORK
 msgid "Remove um diretório e todo o seu conteúdo."
-msgstr "Entfernen Sie ein Verzeichnis und dessen gesamten Inhalt."
+msgstr "Entfernt ein Verzeichnis und dessen gesamten Inhalt."
 # 
 # File: usr/share/ashyterm/data/command_data.py, line: 112
 #: NEEDS WORK
 msgid "Modo interativo, pede confirmação antes de remover."
-msgstr "Interaktiver Modus, fordert Bestätigung, bevor entfernt wird."
+msgstr "Interaktiver Modus, fordert Bestätigung vor dem Entfernen."
 # 
 # File: usr/share/ashyterm/data/command_data.py, line: 117
 #: NEEDS WORK
@@ -2894,12 +2944,12 @@ msgstr "Erstellt eine Schleife, die über eine Liste von Elementen iteriert."
 # File: usr/share/ashyterm/data/command_data.py, line: 183
 #: NEEDS WORK
 msgid "Itera sobre uma lista explícita de números."
-msgstr "Iteriert über eine explizite Liste von Zahlen."
+msgstr "Durchläuft eine explizite Liste von Zahlen."
 # 
 # File: usr/share/ashyterm/data/command_data.py, line: 188
 #: NEEDS WORK
 msgid "Itera sobre todos os arquivos que terminam com .txt no diretório."
-msgstr "Durchläuft alle Dateien im Verzeichnis, die mit .txt enden."
+msgstr "Durchläuft alle Dateien, die mit .txt im Verzeichnis enden."
 # 
 # File: usr/share/ashyterm/data/command_data.py, line: 197
 #: NEEDS WORK
@@ -2935,7 +2985,7 @@ msgstr "Liest eine Zeile von der Standardeingabe und speichert sie in einer Vari
 #: NEEDS WORK
 msgid "Espera o usuário digitar algo e pressionar Enter, salvando na variável NOME."
 msgstr ""
-"Warte darauf, dass der Benutzer etwas eingibt und die Eingabetaste drückt, wobei der Wert in der "
+"Warte darauf, dass der Benutzer etwas eingibt und die Eingabetaste drückt, wobei es in der "
 "Variablen NAME gespeichert wird."
 # 
 # File: usr/share/ashyterm/data/command_data.py, line: 239
@@ -2966,7 +3016,7 @@ msgstr "Verwende 'default', wenn VAR nicht definiert ist. Die Variable VAR wird 
 # File: usr/share/ashyterm/data/command_data.py, line: 266
 #: NEEDS WORK
 msgid "Usa e atribui 'default' a VAR se ela não estiver definida."
-msgstr "Verwendet und weist 'default' an VAR zu, wenn es nicht definiert ist."
+msgstr "Verwendet und weist 'default' VAR zu, wenn es nicht definiert ist."
 # 
 # File: usr/share/ashyterm/data/command_data.py, line: 272
 #: NEEDS WORK

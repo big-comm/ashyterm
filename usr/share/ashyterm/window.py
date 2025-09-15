@@ -225,6 +225,9 @@ class CommTerminalWindow(Adw.ApplicationWindow):
         self.regex_switch = self.ui_builder.regex_switch
         self.tab_manager.scrolled_tab_bar = self.scrolled_tab_bar
 
+        # Apply initial headerbar transparency
+        self.settings_manager.apply_headerbar_transparency(self.header_bar)
+
     def _connect_component_signals(self) -> None:
         """
         Connects signals and callbacks between the window and its managers.
@@ -415,10 +418,13 @@ class CommTerminalWindow(Adw.ApplicationWindow):
         """Handle changes from the settings manager."""
         if key == "auto_hide_sidebar":
             self.sidebar_manager.handle_auto_hide_change(new_value)
+        elif key == "tab_alignment":
+            self.tab_manager._update_tab_alignment()
         elif key in [
             "font",
             "color_scheme",
             "transparency",
+            "headerbar_transparency",
             "line_spacing",
             "bold_is_bright",
             "cursor_shape",
@@ -432,6 +438,9 @@ class CommTerminalWindow(Adw.ApplicationWindow):
             "cjk_ambiguous_width",
         ]:
             self.terminal_manager.apply_settings_to_all_terminals()
+            # Update file manager transparency when transparency settings change
+            if key in ["transparency", "headerbar_transparency"]:
+                self._update_file_manager_transparency()
             if self.font_sizer_widget and key == "font":
                 self.font_sizer_widget.update_display()
 
@@ -1031,6 +1040,9 @@ class CommTerminalWindow(Adw.ApplicationWindow):
         dialog.add_response("ok", _("OK"))
         dialog.present()
 
+    def _on_terminal_exit(self, terminal, child_status, identifier):
+        pass
+
     def _on_quit_application_requested(self) -> None:
         """Handle quit request from tab manager."""
         if app := self.get_application():
@@ -1038,8 +1050,25 @@ class CommTerminalWindow(Adw.ApplicationWindow):
         else:
             self.destroy()
 
-    def _on_terminal_exit(self, terminal, child_status, identifier):
-        pass
+    def _update_file_manager_transparency(self):
+        """Update transparency for all file managers when settings change."""
+        # Apply headerbar transparency to main window
+        if hasattr(self, "header_bar"):
+            self.settings_manager.apply_headerbar_transparency(self.header_bar)
+
+        for file_manager in self.tab_manager.file_managers.values():
+            try:
+                file_manager._apply_background_transparency()
+                # Also update headerbar transparency for any open dialogs
+                if (
+                    hasattr(file_manager, "transfer_history_window")
+                    and file_manager.transfer_history_window
+                ):
+                    self.settings_manager.apply_headerbar_transparency(
+                        file_manager.transfer_history_window.header_bar
+                    )
+            except Exception as e:
+                self.logger.warning(f"Failed to update file manager transparency: {e}")
 
     def _on_new_tab_clicked(self, _button) -> None:
         self.action_handler.new_local_tab(None, None)

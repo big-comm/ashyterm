@@ -110,10 +110,12 @@ class DefaultSettings:
             # General Appearance
             "gtk_theme": "default",
             "color_scheme": 5,
-            "transparency": 0,
+            "transparency": 12,
+            "headerbar_transparency": 10,
             "font": "Monospace 12",
             "line_spacing": 1.0,
             "bold_is_bright": True,
+            "tab_alignment": "center",
             # Window State
             "window_width": 1200,
             "window_height": 700,

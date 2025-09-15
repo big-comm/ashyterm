@@ -10,6 +10,7 @@ from gi.repository import Adw, Gdk, GLib, Gtk
 
 from ..sessions.models import SessionFolder, SessionItem
 from ..utils.logger import get_logger
+from ..utils.translation_utils import _
 
 if TYPE_CHECKING:
     from ..sessions.tree import SessionTreeView
@@ -215,13 +216,16 @@ class SidebarManager:
     def _update_sidebar_button_icon(self) -> None:
         auto_hide = self.settings_manager.get("auto_hide_sidebar", False)
         if auto_hide:
-            self.toggle_sidebar_button.set_icon_name("view-reveal-symbolic")
+            self.toggle_sidebar_button.set_icon_name("view-pin-symbolic")
+            self.toggle_sidebar_button.set_tooltip_text(_("Show Sessions"))
         else:
             is_visible = self.flap.get_reveal_flap()
             icon_name = (
                 "sidebar-hide-symbolic" if is_visible else "sidebar-show-symbolic"
             )
             self.toggle_sidebar_button.set_icon_name(icon_name)
+            tooltip_text = _("Hide Sidebar") if is_visible else _("Show Sidebar")
+            self.toggle_sidebar_button.set_tooltip_text(tooltip_text)
 
     def _focus_search_entry(self):
         self.search_entry.grab_focus()

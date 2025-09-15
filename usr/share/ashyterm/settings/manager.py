@@ -1,5 +1,4 @@
 # ashyterm/settings/manager.py
-
 import json
 import threading
 import time
@@ -451,6 +450,8 @@ class SettingsManager:
     def apply_terminal_settings(self, terminal, window) -> None:
         transparency = self.get("transparency", 0)
         style_context = window.get_style_context()
+
+        # Handle terminal transparency
         if hasattr(window, "_transparency_css_provider"):
             style_context.remove_provider(window._transparency_css_provider)
         if transparency > 0:
@@ -580,6 +581,22 @@ class SettingsManager:
             else Vte.EraseBinding.AUTO
         )
         terminal.set_cjk_ambiguous_width(self.get("cjk_ambiguous_width", 1))
+
+    def apply_headerbar_transparency(self, headerbar) -> None:
+        """Apply headerbar transparency to a headerbar widget."""
+        try:
+            transparency = self.get("headerbar_transparency", 0)
+            if transparency > 0:
+                # Calculate opacity using the same formula as terminal transparency
+                alpha = max(0.0, min(1.0, 1.0 - (transparency / 100.0) ** 1.6))
+                headerbar.set_opacity(alpha)
+                self.logger.info(f"Headerbar opacity set to {alpha}")
+            else:
+                # Reset to full opacity when transparency is 0
+                headerbar.set_opacity(1.0)
+                self.logger.info("Headerbar transparency is 0, setting full opacity")
+        except Exception as e:
+            self.logger.warning(f"Failed to apply headerbar transparency: {e}")
 
     def get_shortcut(self, action_name: str) -> str:
         return self.get(f"shortcuts.{action_name}", "")

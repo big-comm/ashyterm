@@ -205,6 +205,21 @@ class TransferManagerDialog(Adw.Window):
         self._populate_transfers()
         self.connect("close-request", self._on_close_request)
 
+        # Apply headerbar transparency
+        self._apply_headerbar_transparency()
+
+    def _apply_headerbar_transparency(self):
+        """Apply headerbar transparency to the transfer dialog."""
+        try:
+            if hasattr(self, "parent_window") and self.parent_window:
+                settings_manager = getattr(self.parent_window, "settings_manager", None)
+                if settings_manager:
+                    settings_manager.apply_headerbar_transparency(self.header_bar)
+        except Exception as e:
+            self.logger.warning(
+                f"Failed to apply headerbar transparency to transfer dialog: {e}"
+            )
+
     def _on_close_request(self, window):
         """Safely disconnect all signal handlers before closing."""
         for handler_id in self.handler_ids:
@@ -219,8 +234,8 @@ class TransferManagerDialog(Adw.Window):
         toolbar_view = Adw.ToolbarView()
         self.set_content(toolbar_view)
 
-        header = Adw.HeaderBar()
-        toolbar_view.add_top_bar(header)
+        self.header_bar = Adw.HeaderBar()
+        toolbar_view.add_top_bar(self.header_bar)
 
         self.clear_history_button = Gtk.Button(label=_("Clear History"))
         self.clear_history_button.add_css_class("destructive-action")
@@ -230,14 +245,14 @@ class TransferManagerDialog(Adw.Window):
 
         self.cancel_all_button = Gtk.Button(label=_("Cancelar Tudo"))
         self.cancel_all_button.connect("clicked", self._on_cancel_all_clicked)
-        header.pack_end(self.cancel_all_button)
+        self.header_bar.pack_end(self.cancel_all_button)
 
-        bottom_bar = Adw.HeaderBar()
-        bottom_bar.set_show_title(False)
-        bottom_bar.set_show_end_title_buttons(False)
-        bottom_bar.set_show_start_title_buttons(False)
-        bottom_bar.pack_end(self.clear_history_button)
-        toolbar_view.add_bottom_bar(bottom_bar)
+        self.bottom_bar = Adw.HeaderBar()
+        self.bottom_bar.set_show_title(False)
+        self.bottom_bar.set_show_end_title_buttons(False)
+        self.bottom_bar.set_show_start_title_buttons(False)
+        self.bottom_bar.pack_end(self.clear_history_button)
+        toolbar_view.add_bottom_bar(self.bottom_bar)
 
         # Main content area without PreferencesPage
         self.scrolled = Gtk.ScrolledWindow(vexpand=True, min_content_height=400)

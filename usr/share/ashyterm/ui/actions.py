@@ -9,7 +9,6 @@ from ..sessions.models import LayoutItem, SessionFolder, SessionItem
 from ..utils.logger import get_logger, log_session_event
 from ..utils.translation_utils import _
 from .dialogs import (
-    CommandGuideDialog,
     FolderEditDialog,
     MoveLayoutDialog,
     MoveSessionDialog,
@@ -281,6 +280,10 @@ class WindowActions:
         dialog = PreferencesDialog(self.window, self.window.settings_manager)
         dialog.connect(
             "transparency-changed",
+            lambda d, v: self.window.terminal_manager.apply_settings_to_all_terminals(),
+        )
+        dialog.connect(
+            "headerbar-transparency-changed",
             lambda d, v: self.window.terminal_manager.apply_settings_to_all_terminals(),
         )
         dialog.connect(
