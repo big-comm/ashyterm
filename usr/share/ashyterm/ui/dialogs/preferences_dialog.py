@@ -115,8 +115,8 @@ class PreferencesDialog(Adw.PreferencesWindow):
         misc_group.add(transparency_row)
 
         headerbar_transparency_row = Adw.ActionRow(
-            title=_("Headerbar and File Manager Transparency"),
-            subtitle=_("Adjust headerbar and file manager background transparency"),
+            title=_("Headerbar Transparency"),
+            subtitle=_("For headerbar and file manager"),
         )
         self.headerbar_transparency_scale = Gtk.Scale.new_with_range(
             Gtk.Orientation.HORIZONTAL, 0, 100, 1
