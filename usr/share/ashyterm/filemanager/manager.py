@@ -853,9 +853,6 @@ class FileManager(GObject.Object):
         if path:
             self.current_path = path
         self._update_breadcrumb()
-        # Temporarily disconnect the model to prevent selection update errors
-        if hasattr(self, "column_view") and self.column_view:
-            self.column_view.set_model(None)
         self.store.remove_all()
 
         if hasattr(self, "search_entry"):
@@ -939,14 +936,7 @@ class FileManager(GObject.Object):
         if error_message:
             self.logger.error(f"Error listing files: {error_message}")
 
-        # Clear selection before updating the store to prevent GLib-GIO-CRITICAL errors
-        if hasattr(self, "selection_model") and self.selection_model:
-            self.selection_model.unselect_all()
         self.store.splice(0, self.store.get_n_items(), file_items)
-
-        # Reconnect the model
-        if hasattr(self, "column_view") and self.column_view:
-            self.column_view.set_model(self.selection_model)
 
         # If a non-cd command was pending, the completion of the refresh confirms it.
         if self._pending_command and self._pending_command["type"] != "cd":

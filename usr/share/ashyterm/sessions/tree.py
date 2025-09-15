@@ -530,10 +530,6 @@ class SessionTreeView:
         """Rebuilds the entire tree view from the session and folder stores."""
         self._is_restoring_state = True
         self._populated_folders.clear()
-        # Temporarily disconnect the model to prevent selection update errors
-        self.column_view.set_model(None)
-        # Clear selection before clearing the store to prevent GLib-GIO-CRITICAL errors
-        self.selection_model.unselect_all()
         self.root_store.remove_all()
         for i in range(self.folder_store.get_n_items()):
             self.folder_store.get_item(i).clear_children()
@@ -565,8 +561,6 @@ class SessionTreeView:
         for item in sorted_root:
             self.root_store.append(item)
 
-        # Reconnect the model
-        self.column_view.set_model(self.selection_model)
         GLib.idle_add(self._apply_expansion_state)
 
     def _populate_folder_children(self, folder: SessionFolder):

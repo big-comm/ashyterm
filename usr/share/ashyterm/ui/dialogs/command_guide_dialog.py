@@ -6,7 +6,7 @@ import gi
 
 gi.require_version("Gtk", "4.0")
 gi.require_version("Adw", "1")
-from gi.repository import Adw, Gdk, Gio, GLib, GObject, Gtk, Pango
+from gi.repository import Adw, Gdk, GLib, GObject, Gtk, Pango
 
 from ...data.commands import CommandItem, get_command_manager
 from ...utils.translation_utils import _
@@ -142,7 +142,6 @@ class CommandGuideDialog(Adw.Window):
         self.set_default_size(int(parent_width * 0.8), int(parent_height * 0.9))
         self.set_title(_("Command Guide"))
 
-        self.connect("notify::has-focus", self._on_focus_changed)
         self.connect("notify::is-active", self._on_active_changed)
 
         self._build_ui()
@@ -189,11 +188,6 @@ class CommandGuideDialog(Adw.Window):
         )
         scrolled_window.set_child(self.list_box)
 
-        # Add gesture to detect background clicks
-        gesture = Gtk.GestureClick.new()
-        gesture.connect("pressed", self._on_background_clicked)
-        toolbar_view.add_controller(gesture)
-
         bottom_bar = Adw.HeaderBar()
         bottom_bar.set_show_end_title_buttons(False)
         toolbar_view.add_bottom_bar(bottom_bar)
@@ -228,11 +222,6 @@ class CommandGuideDialog(Adw.Window):
         self._filter_list()
 
     def _filter_list(self):
-        # Clear selection before removing children to prevent GLib-GIO-CRITICAL errors
-        selected_row = self.list_box.get_selected_row()
-        if selected_row:
-            self.list_box.select_row(None)
-
         while child := self.list_box.get_first_child():
             self.list_box.remove(child)
 
@@ -383,25 +372,9 @@ class CommandGuideDialog(Adw.Window):
 
         return Gdk.EVENT_PROPAGATE
 
-    def _on_focus_changed(self, widget, pspec):
-        if not self.has_focus():
-            self.close()
-
     def _on_active_changed(self, widget, pspec):
-        if not self.is_active():
+        if not self.is_active() and self.get_visible():
             self.close()
-
-    def _on_background_clicked(self, gesture, n_press, x, y):
-        # Get the widget at the click position
-        widget = self.toolbar_view.pick(x, y, Gtk.PickFlags.DEFAULT)
-
-        # Close only if clicking on background (scrolled_window) or its children that are not list_box
-        if widget == self.scrolled_window:
-            self.close()
-        elif self.scrolled_window.is_ancestor(widget):
-            # Check if it's not the list_box or its descendants
-            if widget != self.list_box and not self.list_box.is_ancestor(widget):
-                self.close()
 
     def _on_add_clicked(self, _button):
         dialog = CommandEditDialog(self)
