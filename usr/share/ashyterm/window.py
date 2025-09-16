@@ -1215,7 +1215,11 @@ class CommTerminalWindow(Adw.ApplicationWindow):
         """Callback for when a command is selected from the guide."""
         terminal = self.tab_manager.get_selected_terminal()
         if terminal:
-            terminal.feed_child(command_text.encode("utf-8"))
+            # Use bracketed paste to insert command without auto-executing
+            if "\n" in command_text:
+                command_text += "\n"
+            paste_data = b"\x1b[200~" + command_text.encode("utf-8") + b"\x1b[201~"
+            terminal.feed_child(paste_data)
             terminal.grab_focus()
         else:
             self.toast_overlay.add_toast(
