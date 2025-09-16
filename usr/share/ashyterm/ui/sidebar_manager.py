@@ -36,7 +36,7 @@ class SidebarManager:
         self.sidebar_box = ui.sidebar_box
         self.sidebar_popover = ui.sidebar_popover
         self.toggle_sidebar_button = ui.toggle_sidebar_button
-        self.search_entry = ui.sidebar_search_entry  # CORRECTED LINE
+        self.search_entry = ui.sidebar_search_entry
         self.add_session_button = ui.add_session_button
         self.add_folder_button = ui.add_folder_button
         self.edit_button = ui.edit_button

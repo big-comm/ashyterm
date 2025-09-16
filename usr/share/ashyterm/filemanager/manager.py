@@ -211,17 +211,39 @@ class FileManager(GObject.Object):
 
     def shutdown(self, widget):
         self.logger.info("Shutting down FileManager, cancelling active transfers.")
+
+        # **FIX START**: Disconnect signal to prevent memory leak
+        if hasattr(self, "temp_files_changed_handler_id"):
+            if GObject.signal_handler_is_connected(
+                self, self.temp_files_changed_handler_id
+            ):
+                self.disconnect(self.temp_files_changed_handler_id)
+            del self.temp_files_changed_handler_id
+        # **FIX END**
+
         if self.transfer_manager:
             for transfer_id in list(self.transfer_manager.active_transfers.keys()):
                 self.transfer_manager.cancel_transfer(transfer_id)
 
         if self.transfer_history_window:
             self.transfer_history_window.destroy()
+            self.transfer_history_window = None
 
         if self.operations:
             self.operations.shutdown()
 
         self.unbind()
+
+        # **FIX START**: Nullify references to aid garbage collection.
+        self.parent_window = None
+        self.terminal_manager = None
+        self.revealer = None
+        self.main_box = None
+        self.column_view = None
+        self.store = None
+        self.operations = None
+        self.transfer_manager = None
+        # **FIX END**
 
     def get_temp_files_info(self) -> List[Dict]:
         """Returns information about currently edited temporary files."""
@@ -572,6 +594,7 @@ class FileManager(GObject.Object):
         factory = Gtk.SignalListItemFactory()
         factory.connect("setup", setup_func)
         factory.connect("bind", bind_func)
+        factory.connect("unbind", self._unbind_cell)  # MODIFIED: Connect unbind
         column = Gtk.ColumnViewColumn(
             title=title, factory=factory, expand=expand, resizable=True
         )
@@ -680,9 +703,27 @@ class FileManager(GObject.Object):
         link_icon.set_visible(False)
         box.append(link_icon)
         list_item.set_child(box)
-        box.list_item = list_item
+
+    def _bind_cell_common(self, list_item):
+        """Common logic for binding cells, including adding the right-click gesture."""
+        row = list_item.get_child().get_parent()
+        if row and not hasattr(row, "right_click_gesture"):
+            right_click_gesture = Gtk.GestureClick(button=Gdk.BUTTON_SECONDARY)
+            right_click_gesture.connect(
+                "released", self._on_item_right_click, list_item.get_position()
+            )
+            row.add_controller(right_click_gesture)
+            row.right_click_gesture = right_click_gesture
+
+    def _unbind_cell(self, factory, list_item):
+        """Disconnects handlers to prevent memory leaks."""
+        row = list_item.get_child().get_parent()
+        if row and hasattr(row, "right_click_gesture"):
+            row.remove_controller(row.right_click_gesture)
+            delattr(row, "right_click_gesture")
 
     def _bind_name_cell(self, factory, list_item):
+        self._bind_cell_common(list_item)
         box = list_item.get_child()
         icon = box.get_first_child()
         label = icon.get_next_sibling()
@@ -698,79 +739,36 @@ class FileManager(GObject.Object):
             link_icon.set_visible(True)
         else:
             link_icon.set_visible(False)
-        # Add right-click gesture to the row
-        row = box.get_parent()
-        if row and not hasattr(row, "right_click_added"):
-            row.right_click_added = True
-            right_click_gesture = Gtk.GestureClick(button=Gdk.BUTTON_SECONDARY)
-            right_click_gesture.connect(
-                "released", self._on_item_right_click, list_item.get_position()
-            )
-            row.add_controller(right_click_gesture)
 
     def _setup_text_cell(self, factory, list_item):
         label = Gtk.Label(xalign=0.0)
         list_item.set_child(label)
-        label.list_item = list_item
 
     def _setup_size_cell(self, factory, list_item):
         label = Gtk.Label(xalign=1.0)
         list_item.set_child(label)
-        label.list_item = list_item
 
     def _bind_permissions_cell(self, factory, list_item):
+        self._bind_cell_common(list_item)
         label = list_item.get_child()
-        # Add right-click gesture to the row
-        row = label.get_parent()
-        if row and not hasattr(row, "right_click_added"):
-            row.right_click_added = True
-            right_click_gesture = Gtk.GestureClick(button=Gdk.BUTTON_SECONDARY)
-            right_click_gesture.connect(
-                "released", self._on_item_right_click, list_item.get_position()
-            )
-            row.add_controller(right_click_gesture)
         file_item: FileItem = list_item.get_item()
         label.set_text(file_item.permissions)
 
     def _bind_owner_cell(self, factory, list_item):
+        self._bind_cell_common(list_item)
         label = list_item.get_child()
-        # Add right-click gesture to the row
-        row = label.get_parent()
-        if row and not hasattr(row, "right_click_added"):
-            row.right_click_added = True
-            right_click_gesture = Gtk.GestureClick(button=Gdk.BUTTON_SECONDARY)
-            right_click_gesture.connect(
-                "released", self._on_item_right_click, list_item.get_position()
-            )
-            row.add_controller(right_click_gesture)
         file_item: FileItem = list_item.get_item()
         label.set_text(file_item.owner)
 
     def _bind_group_cell(self, factory, list_item):
+        self._bind_cell_common(list_item)
         label = list_item.get_child()
-        # Add right-click gesture to the row
-        row = label.get_parent()
-        if row and not hasattr(row, "right_click_added"):
-            row.right_click_added = True
-            right_click_gesture = Gtk.GestureClick(button=Gdk.BUTTON_SECONDARY)
-            right_click_gesture.connect(
-                "released", self._on_item_right_click, list_item.get_position()
-            )
-            row.add_controller(right_click_gesture)
         file_item: FileItem = list_item.get_item()
         label.set_text(file_item.group)
 
     def _bind_size_cell(self, factory, list_item):
+        self._bind_cell_common(list_item)
         label = list_item.get_child()
-        # Add right-click gesture to the row
-        row = label.get_parent()
-        if row and not hasattr(row, "right_click_added"):
-            row.right_click_added = True
-            right_click_gesture = Gtk.GestureClick(button=Gdk.BUTTON_SECONDARY)
-            right_click_gesture.connect(
-                "released", self._on_item_right_click, list_item.get_position()
-            )
-            row.add_controller(right_click_gesture)
         file_item: FileItem = list_item.get_item()
         size = file_item.size
         if size < 1024:
@@ -784,16 +782,8 @@ class FileManager(GObject.Object):
         label.set_text(size_str)
 
     def _bind_date_cell(self, factory, list_item):
+        self._bind_cell_common(list_item)
         label = list_item.get_child()
-        # Add right-click gesture to the row
-        row = label.get_parent()
-        if row and not hasattr(row, "right_click_added"):
-            row.right_click_added = True
-            right_click_gesture = Gtk.GestureClick(button=Gdk.BUTTON_SECONDARY)
-            right_click_gesture.connect(
-                "released", self._on_item_right_click, list_item.get_position()
-            )
-            row.add_controller(right_click_gesture)
         file_item: FileItem = list_item.get_item()
         date_str = file_item.date.strftime("%Y-%m-%d %H:%M")
         label.set_text(date_str)

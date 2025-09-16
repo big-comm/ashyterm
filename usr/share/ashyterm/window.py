@@ -51,6 +51,7 @@ class CommTerminalWindow(Adw.ApplicationWindow):
         self._force_closing = False
         self.layouts: List[LayoutItem] = []
         self.active_temp_files = weakref.WeakKeyDictionary()
+        self.command_guide_dialog = None  # MODIFIED: For singleton dialog
 
         # Search state tracking
         self.current_search_terminal = None
@@ -1207,9 +1208,12 @@ class CommTerminalWindow(Adw.ApplicationWindow):
 
     def _show_command_guide_dialog(self):
         """Creates and shows the command guide popover."""
-        dialog = CommandGuideDialog(self)
-        dialog.connect("command-selected", self._on_command_selected_from_guide)
-        dialog.present()
+        if self.command_guide_dialog is None:
+            self.command_guide_dialog = CommandGuideDialog(self)
+            self.command_guide_dialog.connect(
+                "command-selected", self._on_command_selected_from_guide
+            )
+        self.command_guide_dialog.present()
 
     def _on_command_selected_from_guide(self, dialog, command_text):
         """Callback for when a command is selected from the guide."""

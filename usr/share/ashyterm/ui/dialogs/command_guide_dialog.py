@@ -161,9 +161,8 @@ class CommandGuideDialog(Adw.Window):
         self.set_title(_("Command Guide"))
 
         self.connect("notify::is-active", self._on_active_changed)
-        self.connect("hide", self._on_hide)
+        self.connect("destroy", self._on_destroy)
         self.connect("close-request", self._on_close_request)
-        self.connect("show", self._on_show)
 
         self._build_ui()
         self._populate_list()
@@ -575,14 +574,14 @@ class CommandGuideDialog(Adw.Window):
 
         return Gdk.EVENT_PROPAGATE
 
-    def _on_hide(self, widget):
-        """Clean up resources when dialog is hidden to prevent memory leaks."""
+    def _on_destroy(self, widget):
+        """Clean up resources when dialog is destroyed to prevent memory leaks."""
         self._cleanup_resources()
 
     def _on_close_request(self, widget):
-        """Clean up resources when dialog is about to be closed."""
-        self._cleanup_resources()
-        return False  # Allow the close to proceed
+        """Ensure cleanup happens, then allow the window to close."""
+        self.hide()
+        return Gdk.EVENT_STOP
 
     def _cleanup_resources(self):
         """Clean up widgets and resources to free memory."""
@@ -594,44 +593,19 @@ class CommandGuideDialog(Adw.Window):
             # Clear command data references
             self.all_commands.clear()
 
-            # Clear event controllers list (GTK handles cleanup automatically)
-            self._event_controllers.clear()
-
             # Disconnect scroll event handler
             if hasattr(self, "scrolled_window") and self.scrolled_window:
                 vadjustment = self.scrolled_window.get_vadjustment()
-                if vadjustment:
-                    # Note: GTK automatically disconnects when widgets are destroyed,
-                    # but we clear the list to be explicit
-                    pass
-
-            # Clear sticky header content
-            if hasattr(self, "sticky_header"):
-                self.sticky_header.set_visible(False)
-                # Clear sticky header labels
-                if hasattr(self, "sticky_category_label"):
-                    self.sticky_category_label.set_text("")
-                if hasattr(self, "sticky_description_label"):
-                    self.sticky_description_label.set_text("")
-
-            # Clear search entry
-            if hasattr(self, "search_entry"):
-                self.search_entry.set_text("")
-
-            # Force garbage collection hint
-            import gc
-
-            gc.collect()
+                if vadjustment and hasattr(self, "_scroll_handler_id"):
+                    if GObject.signal_handler_is_connected(
+                        vadjustment, self._scroll_handler_id
+                    ):
+                        vadjustment.disconnect(self._scroll_handler_id)
+                    del self._scroll_handler_id
 
         except Exception as e:
             # Log error but don't crash during cleanup
             print(f"Warning: Error during CommandGuideDialog cleanup: {e}")
-
-    def _on_show(self, widget):
-        """Repopulate the list when dialog is shown again."""
-        if not self.all_commands:  # Only repopulate if list is empty (was cleaned up)
-            self._populate_list()
-            GLib.idle_add(self._update_sticky_header)
 
     def _on_active_changed(self, widget, pspec):
         if not self.is_active() and self.get_visible():
