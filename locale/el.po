@@ -524,6 +524,11 @@ msgstr "Συνδεθείτε με τον διακομιστή SSH με προα�
 msgid "Convert KIO/GVFS URI path to SSH format"
 msgstr "Μετατροπή διαδρομής URI KIO/GVFS σε μορφή SSH"
 # 
+# File: usr/share/ashyterm/main.py, line: 129
+#: NEEDS WORK
+msgid "Force opening a new window"
+msgstr "Αναγκαστική άνοιγμα νέου παραθύρου"
+# 
 # File: usr/share/ashyterm/sessions/models.py, line: 174
 #: NEEDS WORK
 msgid "Port must be a valid number between 1 and 65535"
@@ -1161,15 +1166,15 @@ msgstr "Προσθήκη Προσαρμοσμένης Εντολής"
 msgid "Edit Custom Command"
 msgstr "Επεξεργασία Προσαρμοσμένης Εντολής"
 # 
-# File: usr/share/ashyterm/ui/dialogs/command_guide_dialog.py, line: 34
-#: NEEDS WORK
-msgid "Command"
-msgstr "Εντολή"
-# 
 # File: usr/share/ashyterm/ui/dialogs/command_guide_dialog.py, line: 35
 #: NEEDS WORK
 msgid "Category"
 msgstr "Κατηγορία"
+# 
+# File: usr/share/ashyterm/ui/dialogs/command_guide_dialog.py, line: 34
+#: NEEDS WORK
+msgid "Command"
+msgstr "Εντολή"
 # 
 # File: usr/share/ashyterm/ui/dialogs/command_guide_dialog.py, line: 59
 #: NEEDS WORK
@@ -1748,13 +1753,13 @@ msgstr "Ρυθμίστε τη διαφάνεια του φόντου του τε
 # 
 # File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 118
 #: NEEDS WORK
-msgid "Headerbar and File Manager Transparency"
-msgstr "Διαφάνεια Επικεφαλίδας και Διαχειριστή Αρχείων"
+msgid "Headerbar Transparency"
+msgstr "Διαφάνεια Επικεφαλίδας"
 # 
 # File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 119
 #: NEEDS WORK
-msgid "Adjust headerbar and file manager background transparency"
-msgstr "Ρυθμίστε τη διαφάνεια της γραμμής τίτλου και του παραθύρου διαχείρισης αρχείων"
+msgid "For headerbar and file manager"
+msgstr "Για τη γραμμή τίτλου και τον διαχειριστή αρχείων"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1065
 #: NEEDS WORK
@@ -2748,268 +2753,1678 @@ msgstr "Διαίρεση Κάτω/Επάνω"
 # File: usr/share/ashyterm/data/command_data.py, line: 7
 # File: usr/share/ashyterm/data/command_data.py, line: 38
 #: NEEDS WORK
-msgid "Navegação e Listagem de Arquivos"
-msgstr "Πλοήγηση και Καταχώρηση Αρχείων"
+msgid "File Navigation and Listing"
+msgstr "Πλοήγηση και Κατάλογος Αρχείων"
 # 
 # File: usr/share/ashyterm/data/command_data.py, line: 9
 #: NEEDS WORK
-msgid "Lista o conteúdo de um diretório."
-msgstr "Λίστα του περιεχομένου ενός καταλόγου."
+msgid "Lists the contents of a directory."
+msgstr "Λίστες τα περιεχόμενα ενός καταλόγου."
 # 
 # File: usr/share/ashyterm/data/command_data.py, line: 14
 #: NEEDS WORK
-msgid "Usa um formato de lista longa, mostrando permissões, dono, tamanho e data."
-msgstr "Χρησιμοποιήστε μια μακρά λίστα μορφής, εμφανίζοντας δικαιώματα, κάτοχο, μέγεθος και ημερομηνία."
+msgid "Uses a long listing format, showing permissions, owner, size and date."
+msgstr "Χρησιμοποιεί μια μακρά μορφή καταχώρισης, εμφανίζοντας δικαιώματα, κάτοχο, μέγεθος και ημερομηνία."
 # 
 # File: usr/share/ashyterm/data/command_data.py, line: 20
 #: NEEDS WORK
-msgid "Mostra todos os arquivos, incluindo os ocultos (que começam com '.')."
-msgstr "Εμφάνιση όλων των αρχείων, συμπεριλαμβανομένων των κρυφών (που ξεκινούν με '.')."
+msgid "Shows all files, including hidden ones (that start with '.')."
+msgstr "Εμφανίζει όλα τα αρχεία, συμπεριλαμβανομένων των κρυφών (που ξεκινούν με '.')."
 # 
 # File: usr/share/ashyterm/data/command_data.py, line: 26
 #: NEEDS WORK
-msgid "Formato longo com tamanhos de arquivo legíveis para humanos (KB, MB, GB)."
-msgstr "Μακρύς μορφότυπος με μεγέθη αρχείων ευανάγνωστα από ανθρώπους (KB, MB, GB)."
+msgid "Long format with human-readable file sizes (KB, MB, GB)."
+msgstr "Μακρύς μορφή με αναγνώσιμα από άνθρωπο μεγέθη αρχείων (KB, MB, GB)."
 # 
 # File: usr/share/ashyterm/data/command_data.py, line: 32
 #: NEEDS WORK
-msgid "Ordena os arquivos por data de modificação, os mais recentes primeiro."
-msgstr "Ταξινόμηση των αρχείων κατά ημερομηνία τροποποίησης, τα πιο πρόσφατα πρώτα."
+msgid "Sorts files by modification date, most recent first."
+msgstr "Ταξινομεί τα αρχεία κατά ημερομηνία τροποποίησης, τα πιο πρόσφατα πρώτα."
 # 
 # File: usr/share/ashyterm/data/command_data.py, line: 40
 #: NEEDS WORK
-msgid "Muda o diretório de trabalho atual."
+msgid "Changes the current working directory."
 msgstr "Αλλάζει τον τρέχοντα κατάλογο εργασίας."
 # 
 # File: usr/share/ashyterm/data/command_data.py, line: 44
 #: NEEDS WORK
-msgid "Navega para um caminho absoluto específico."
+msgid "Navigates to a specific absolute path."
 msgstr "Πλοηγείται σε μια συγκεκριμένη απόλυτη διαδρομή."
 # 
 # File: usr/share/ashyterm/data/command_data.py, line: 48
 #: NEEDS WORK
-msgid "Sobe um nível, indo para o diretório pai."
-msgstr "Ανεβαίνει ένα επίπεδο, πηγαίνοντας στον γονικό κατάλογο."
+msgid "Goes up one level, to the parent directory."
+msgstr "Πηγαίνει ένα επίπεδο πάνω, στον γονικό κατάλογο."
 # 
 # File: usr/share/ashyterm/data/command_data.py, line: 53
 #: NEEDS WORK
-msgid "Vai diretamente para o seu diretório 'home'. O mesmo que 'cd' sem argumentos."
-msgstr "Πηγαίνει απευθείας στον κατάλογό σας 'home'. Το ίδιο με το 'cd' χωρίς επιχειρήματα."
+msgid "Goes directly to your 'home' directory. Same as 'cd' with no arguments."
+msgstr "Πηγαίνει απευθείας στον φάκελο 'home' σας. Ίδιο με το 'cd' χωρίς ορίσματα."
 # 
 # File: usr/share/ashyterm/data/command_data.py, line: 58
 #: NEEDS WORK
-msgid "Volta para o último diretório em que você estava."
-msgstr "Επιστροφή στον τελευταίο κατάλογο στον οποίο ήσασταν."
+msgid "Returns to the last directory you were in."
+msgstr "Επιστρέφει στον τελευταίο φάκελο που ήσασταν."
 # 
 # File: usr/share/ashyterm/data/command_data.py, line: 63
 # File: usr/share/ashyterm/data/command_data.py, line: 84
-# File: usr/share/ashyterm/data/command_data.py, line: 99
+# File: usr/share/ashyterm/data/command_data.py, line: 101
+# File: usr/share/ashyterm/data/command_data.py, line: 428
+# File: usr/share/ashyterm/data/command_data.py, line: 445
 #: NEEDS WORK
-msgid "Manipulação de Arquivos"
+msgid "File Manipulation"
 msgstr "Διαχείριση Αρχείων"
 # 
 # File: usr/share/ashyterm/data/command_data.py, line: 65
 #: NEEDS WORK
-msgid "Copia arquivos ou diretórios."
+msgid "Copies files or directories."
 msgstr "Αντιγράφει αρχεία ή καταλόγους."
 # 
 # File: usr/share/ashyterm/data/command_data.py, line: 69
 #: NEEDS WORK
-msgid "Copia um único arquivo."
+msgid "Copies a single file."
 msgstr "Αντιγράφει ένα μόνο αρχείο."
 # 
 # File: usr/share/ashyterm/data/command_data.py, line: 74
 #: NEEDS WORK
-msgid "Copia um diretório e todo o seu conteúdo recursivamente."
-msgstr "Αντιγράφει έναν φάκελο και όλο το περιεχόμενό του αναδρομικά."
+msgid "Copies a directory and all its contents recursively."
+msgstr "Αντιγράφει έναν φάκελο και όλα τα περιεχόμενά του αναδρομικά."
 # 
 # File: usr/share/ashyterm/data/command_data.py, line: 79
 #: NEEDS WORK
-msgid "Modo 'verbose', mostra o que está sendo copiado."
-msgstr "Λειτουργία 'verbose', δείχνει τι αντιγράφεται."
+msgid "Verbose mode, shows what is being copied."
+msgstr "Λεπτομερής λειτουργία, δείχνει τι αντιγράφεται."
 # 
 # File: usr/share/ashyterm/data/command_data.py, line: 86
 #: NEEDS WORK
-msgid "Move ou renomeia arquivos e diretórios."
+msgid "Moves or renames files and directories."
 msgstr "Μετακινεί ή μετονομάζει αρχεία και καταλόγους."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 90
+# File: usr/share/ashyterm/data/command_data.py, line: 91
 #: NEEDS WORK
-msgid "Renomeia um arquivo ou diretório no local atual."
+msgid "Renames a file or directory in the current location."
 msgstr "Μετονομάζει ένα αρχείο ή φάκελο στην τρέχουσα τοποθεσία."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 94
+# File: usr/share/ashyterm/data/command_data.py, line: 96
 #: NEEDS WORK
-msgid "Move um arquivo para um novo local."
-msgstr "Μεταφορά ενός αρχείου σε νέα τοποθεσία."
+msgid "Moves a file to a new location."
+msgstr "Μετακινεί ένα αρχείο σε νέα τοποθεσία."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 102
+# File: usr/share/ashyterm/data/command_data.py, line: 104
 #: NEEDS WORK
-msgid "Remove (apaga) arquivos ou diretórios. CUIDADO: esta ação é permanente."
-msgstr "Αφαίρεση αρχείων ή καταλόγων. ΠΡΟΣΟΧΗ: αυτή η ενέργεια είναι μόνιμη."
+msgid "Removes (deletes) files or directories. CAUTION: this action is permanent."
+msgstr "Αφαιρεί (διαγράφει) αρχεία ή καταλόγους. ΠΡΟΣΟΧΗ: αυτή η ενέργεια είναι μόνιμη."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 105
+# File: usr/share/ashyterm/data/command_data.py, line: 107
 #: NEEDS WORK
-msgid "Remove um único arquivo."
-msgstr "Αφαιρέστε ένα μόνο αρχείο."
+msgid "Removes a single file."
+msgstr "Αφαιρεί ένα μόνο αρχείο."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 108
+# File: usr/share/ashyterm/data/command_data.py, line: 110
 #: NEEDS WORK
-msgid "Remove um diretório e todo o seu conteúdo."
-msgstr "Αφαιρέστε έναν κατάλογο και όλο το περιεχόμενό του."
+msgid "Removes a directory and all its contents."
+msgstr "Αφαιρεί έναν κατάλογο και όλα τα περιεχόμενά του."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 112
+# File: usr/share/ashyterm/data/command_data.py, line: 115
 #: NEEDS WORK
-msgid "Modo interativo, pede confirmação antes de remover."
-msgstr "Διαδραστικός τρόπος, ζητά επιβεβαίωση πριν από την αφαίρεση."
+msgid "Interactive mode, asks for confirmation before removing."
+msgstr "Διαδραστική λειτουργία, ζητά επιβεβαίωση πριν από την αφαίρεση."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 117
+# File: usr/share/ashyterm/data/command_data.py, line: 121
 #: NEEDS WORK
-msgid "Força a remoção sem pedir confirmação (usar com cautela)."
+msgid "Forces removal without asking for confirmation (use with caution)."
 msgstr "Αναγκάζει την αφαίρεση χωρίς να ζητά επιβεβαίωση (χρησιμοποιήστε με προσοχή)."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 123
+# File: usr/share/ashyterm/data/command_data.py, line: 127
 #: NEEDS WORK
-msgid "Busca e Filtragem"
+msgid "Search and Filtering"
 msgstr "Αναζήτηση και Φιλτράρισμα"
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 126
+# File: usr/share/ashyterm/data/command_data.py, line: 130
 #: NEEDS WORK
-msgid "Busca por um padrão de texto dentro de arquivos ou saídas de outros comandos."
-msgstr "Αναζητήστε ένα πρότυπο κειμένου μέσα σε αρχεία ή εξόδους άλλων εντολών."
+msgid "Searches for a text pattern within files or other command outputs."
+msgstr "Αναζητά ένα κείμενο μοτίβο μέσα σε αρχεία ή άλλες εξόδους εντολών."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 132
+# File: usr/share/ashyterm/data/command_data.py, line: 136
 #: NEEDS WORK
-msgid "Encontra e exibe todas as linhas que contêm 'palavra' no arquivo."
-msgstr "Βρείτε και εμφανίστε όλες τις γραμμές που περιέχουν 'λέξη' στο αρχείο."
+msgid "Finds and displays all lines containing 'word' in the file."
+msgstr "Βρίσκει και εμφανίζει όλες τις γραμμές που περιέχουν τη λέξη 'word' στο αρχείο."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 138
+# File: usr/share/ashyterm/data/command_data.py, line: 142
 #: NEEDS WORK
-msgid "Busca ignorando a diferença entre maiúsculas e minúsculas."
-msgstr "Αναζήτηση αγνοώντας τη διαφορά μεταξύ κεφαλαίων και πεζών."
+msgid "Searches ignoring case differences between uppercase and lowercase."
+msgstr "Αναζητήσεις αγνοώντας τις διαφορές πεζών και κεφαλαίων γραμμάτων."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 144
+# File: usr/share/ashyterm/data/command_data.py, line: 148
 #: NEEDS WORK
-msgid "Busca recursivamente por 'palavra' em todos os arquivos do diretório atual."
-msgstr "Αναζητά αναδρομικά τη 'λέξη' σε όλα τα αρχεία του τρέχοντος καταλόγου."
+msgid "Searches recursively for 'word' in all files in the current directory."
+msgstr "Αναζητά αναδρομικά για τη λέξη 'word' σε όλα τα αρχεία στον τρέχοντα φάκελο."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 150
+# File: usr/share/ashyterm/data/command_data.py, line: 154
 #: NEEDS WORK
-msgid "Filtra a saída do comando 'ls -l' para mostrar apenas linhas que contêm 'txt'."
-msgstr "Φιλτράρει την έξοδο της εντολής 'ls -l' για να δείξει μόνο γραμμές που περιέχουν 'txt'."
+msgid "Filters the output of 'ls -l' to show only lines containing 'txt'."
+msgstr "Φιλτράρει την έξοδο του 'ls -l' για να εμφανίσει μόνο γραμμές που περιέχουν 'txt'."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 156
-# File: usr/share/ashyterm/data/command_data.py, line: 175
-# File: usr/share/ashyterm/data/command_data.py, line: 194
-# File: usr/share/ashyterm/data/command_data.py, line: 209
+# File: usr/share/ashyterm/data/command_data.py, line: 160
+# File: usr/share/ashyterm/data/command_data.py, line: 179
+# File: usr/share/ashyterm/data/command_data.py, line: 196
+# File: usr/share/ashyterm/data/command_data.py, line: 211
 #: NEEDS WORK
-msgid "Controle de Fluxo (Shell Script)"
-msgstr "Έλεγχος Ροής (Shell Script)"
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 158
-#: NEEDS WORK
-msgid "Executa blocos de comandos condicionalmente."
-msgstr "Εκτελεί μπλοκ εντολών υπό προϋποθέσεις."
+msgid "Flow Control (Shell Script)"
+msgstr "Έλεγχος ροής (Shell Script)"
 # 
 # File: usr/share/ashyterm/data/command_data.py, line: 162
 #: NEEDS WORK
-msgid "Testa se um arquivo existe e é um arquivo regular."
-msgstr "Ελέγχει αν ένα αρχείο υπάρχει και είναι κανονικό αρχείο."
+msgid "Executes command blocks conditionally."
+msgstr "Εκτελεί μπλοκ εντολών υπό προϋποθέσεις."
 # 
 # File: usr/share/ashyterm/data/command_data.py, line: 166
 #: NEEDS WORK
-msgid "Testa se um caminho existe e é um diretório."
-msgstr "Ελέγχει αν μια διαδρομή υπάρχει και είναι κατάλογος."
+msgid "Tests if a file exists and is a regular file."
+msgstr "Ελέγχει αν ένα αρχείο υπάρχει και είναι κανονικό αρχείο."
 # 
 # File: usr/share/ashyterm/data/command_data.py, line: 170
 #: NEEDS WORK
-msgid "Testa se uma variável numérica é igual a 5."
+msgid "Tests if a path exists and is a directory."
+msgstr "Ελέγχει αν μια διαδρομή υπάρχει και είναι κατάλογος."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 174
+#: NEEDS WORK
+msgid "Tests if a numeric variable is equal to 5."
 msgstr "Ελέγχει αν μια αριθμητική μεταβλητή είναι ίση με 5."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 178
+# File: usr/share/ashyterm/data/command_data.py, line: 181
 #: NEEDS WORK
-msgid "Cria um laço (loop) que itera sobre uma lista de itens."
-msgstr "Δημιουργεί έναν βρόχο (loop) που επαναλαμβάνει μια λίστα στοιχείων."
+msgid "Creates a loop that iterates over a list of items."
+msgstr "Δημιουργεί έναν βρόχο που επαναλαμβάνεται σε μια λίστα στοιχείων."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 183
+# File: usr/share/ashyterm/data/command_data.py, line: 185
 #: NEEDS WORK
-msgid "Itera sobre uma lista explícita de números."
+msgid "Iterates over an explicit list of numbers."
 msgstr "Διατρέχει μια ρητή λίστα αριθμών."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 188
+# File: usr/share/ashyterm/data/command_data.py, line: 190
 #: NEEDS WORK
-msgid "Itera sobre todos os arquivos que terminam com .txt no diretório."
-msgstr "Διατρέχει όλα τα αρχεία που τελειώνουν με .txt στον κατάλογο."
+msgid "Iterates over all files ending with .txt in the directory."
+msgstr "Διατρέχει όλα τα αρχεία που καταλήγουν σε .txt στον κατάλογο."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 197
+# File: usr/share/ashyterm/data/command_data.py, line: 199
 #: NEEDS WORK
-msgid "Cria um laço (loop) que continua enquanto uma condição for verdadeira."
-msgstr "Δημιουργεί έναν βρόχο (loop) που συνεχίζεται όσο μια συνθήκη είναι αληθής."
+msgid "Creates a loop that continues while a condition is true."
+msgstr "Δημιουργεί έναν βρόχο που συνεχίζεται όσο μια συνθήκη είναι αληθής."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 203
+# File: usr/share/ashyterm/data/command_data.py, line: 205
 #: NEEDS WORK
-msgid "Executa o bloco de código enquanto a variável COUNT for menor que 5."
+msgid "Executes the code block while the COUNT variable is less than 5."
 msgstr "Εκτελεί το μπλοκ κώδικα ενώ η μεταβλητή COUNT είναι μικρότερη από 5."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 212
+# File: usr/share/ashyterm/data/command_data.py, line: 214
 #: NEEDS WORK
-msgid "Cria um laço (loop) que continua enquanto uma condição for falsa."
+msgid "Creates a loop that continues while a condition is false."
 msgstr "Δημιουργεί έναν βρόχο που συνεχίζεται όσο μια συνθήκη είναι ψευδής."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 218
+# File: usr/share/ashyterm/data/command_data.py, line: 220
 #: NEEDS WORK
-msgid "Executa o bloco de código até que a variável COUNT seja igual a 0."
-msgstr "Εκτελεί το μπλοκ κώδικα μέχρι η μεταβλητή COUNT να είναι ίση με 0."
+msgid "Executes the code block until the COUNT variable equals 0."
+msgstr "Εκτελεί το μπλοκ κώδικα μέχρι η μεταβλητή COUNT να ισούται με 0."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 224
+# File: usr/share/ashyterm/data/command_data.py, line: 226
 #: NEEDS WORK
-msgid "Entrada do Usuário (Shell Script)"
+msgid "User Input (Shell Script)"
 msgstr "Είσοδος Χρήστη (Shell Script)"
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 227
+# File: usr/share/ashyterm/data/command_data.py, line: 229
 #: NEEDS WORK
-msgid "Lê uma linha da entrada padrão e a armazena em uma variável."
+msgid "Reads a line from standard input and stores it in a variable."
 msgstr "Διαβάζει μια γραμμή από την τυπική είσοδο και την αποθηκεύει σε μια μεταβλητή."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 233
+# File: usr/share/ashyterm/data/command_data.py, line: 235
 #: NEEDS WORK
-msgid "Espera o usuário digitar algo e pressionar Enter, salvando na variável NOME."
-msgstr "Περιμένει τον χρήστη να πληκτρολογήσει κάτι και να πατήσει Enter, αποθηκεύοντας στη μεταβλητή ΟΝΟΜΑ."
+msgid "Waits for the user to type something and press Enter, saving it in the NAME variable."
+msgstr ""
+"Περιμένει τον χρήστη να πληκτρολογήσει κάτι και να πατήσει Enter, αποθηκεύοντάς το στη μεταβλητή "
+"NAME."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 239
+# File: usr/share/ashyterm/data/command_data.py, line: 241
 #: NEEDS WORK
-msgid "Mostra uma mensagem (prompt) para o usuário antes de esperar a entrada."
-msgstr "Εμφανίζει ένα μήνυμα (prompt) στον χρήστη πριν περιμένει την είσοδο."
+msgid "Shows a message (prompt) to the user before waiting for input."
+msgstr "Εμφανίζει ένα μήνυμα (προτροπή) στον χρήστη πριν περιμένει είσοδο."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 245
+# File: usr/share/ashyterm/data/command_data.py, line: 247
 #: NEEDS WORK
-msgid "Expansão de Parâmetros"
+msgid "Parameter Expansion"
 msgstr "Επέκταση Παραμέτρων"
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 248
+# File: usr/share/ashyterm/data/command_data.py, line: 250
 #: NEEDS WORK
-msgid "Mecanismos do shell para manipular o valor de variáveis."
-msgstr "Μηχανισμοί του shell για την επεξεργασία της τιμής μεταβλητών."
+msgid "Advanced shell mechanisms for manipulating variable values and strings."
+msgstr "Προηγμένοι μηχανισμοί κελύφους για την επεξεργασία τιμών μεταβλητών και συμβολοσειρών."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 254
+# File: usr/share/ashyterm/data/command_data.py, line: 255
 #: NEEDS WORK
-msgid "Substitui pelo valor da variável VAR. É o mesmo que $VAR, mas mais seguro."
-msgstr "Αντικαθιστά με την τιμή της μεταβλητής VAR. Είναι το ίδιο με το $VAR, αλλά πιο ασφαλές."
+msgid "Basic variable substitution using braces."
+msgstr "Βασική αντικατάσταση μεταβλητών χρησιμοποιώντας αγκύλες."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 260
+# File: usr/share/ashyterm/data/command_data.py, line: 259
 #: NEEDS WORK
-msgid "Usa 'default' se VAR não estiver definida. A variável VAR não é alterada."
-msgstr "Χρησιμοποίησε 'default' αν η VAR δεν έχει οριστεί. Η μεταβλητή VAR δεν αλλάζει."
+msgid "String substitution - replaces first 'b' with 'B'."
+msgstr "Αντικατάσταση συμβολοσειράς - αντικαθιστά το πρώτο 'b' με 'B'."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 266
+# File: usr/share/ashyterm/data/command_data.py, line: 263
 #: NEEDS WORK
-msgid "Usa e atribui 'default' a VAR se ela não estiver definida."
-msgstr "Χρησιμοποιεί και αναθέτει 'default' στη VAR αν δεν έχει οριστεί."
+msgid "Substring extraction - first 2 characters."
+msgstr "Εξαγωγή υποσυνόλου - πρώτοι 2 χαρακτήρες."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 272
+# File: usr/share/ashyterm/data/command_data.py, line: 267
 #: NEEDS WORK
-msgid "Retorna o número de caracteres no valor da variável VAR."
-msgstr "Επιστρέφει τον αριθμό χαρακτήρων στην τιμή της μεταβλητής VAR."
+msgid "Substring from start - first 2 characters."
+msgstr "Υποσύνολο από την αρχή - πρώτοι 2 χαρακτήρες."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 271
+#: NEEDS WORK
+msgid "Substring excluding last character."
+msgstr "Υποσύνολο εκτός του τελευταίου χαρακτήρα."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 275
+#: NEEDS WORK
+msgid "Substring from right - last character."
+msgstr "Υποστρίνγκ από τα δεξιά - τελευταίος χαρακτήρας."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 279
+#: NEEDS WORK
+msgid "Substring from right - second to last character."
+msgstr "Υποστρίνγκ από τα δεξιά - δεύτερος από το τέλος χαρακτήρας."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 283
+#: NEEDS WORK
+msgid "Substring using variable length parameter."
+msgstr "Υποσύνολο χρησιμοποιώντας παράμετρο μεταβλητού μήκους."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 287
+#: NEEDS WORK
+msgid "Remove file extension (.py)."
+msgstr "Αφαίρεση επέκτασης αρχείου (.py)."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 291
+#: NEEDS WORK
+msgid "Replace file extension (.py to .bak)."
+msgstr "Αντικαταστήστε την επέκταση αρχείου (.py σε .bak)."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 295
+#: NEEDS WORK
+msgid "Remove everything after last slash (get directory)."
+msgstr "Αφαιρέστε τα πάντα μετά την τελευταία κάθετο (πάρε τον κατάλογο)."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 299
+#: NEEDS WORK
+msgid "Extract file extension (longest match)."
+msgstr "Εξαγωγή επέκτασης αρχείου (μεγαλύτερη αντιστοιχία)."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 303
+#: NEEDS WORK
+msgid "Extract filename from path (longest match)."
+msgstr "Εξαγωγή ονόματος αρχείου από τη διαδρομή (μεγαλύτερη αντιστοιχία)."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 307
+#: NEEDS WORK
+msgid "Remove shortest prefix match up to first slash."
+msgstr "Αφαίρεση της συντομότερης προθέματος που ταιριάζει μέχρι την πρώτη κάθετο."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 312
+#: NEEDS WORK
+msgid "Replace first occurrence of 'project' with 'scripts'."
+msgstr "Αντικαταστήστε την πρώτη εμφάνιση του 'project' με 'scripts'."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 317
+#: NEEDS WORK
+msgid "Extract substring starting at position 6, length 5."
+msgstr "Εξαγωγή υποσυμβολοσειράς που ξεκινά από τη θέση 6, μήκος 5."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 321
+#: NEEDS WORK
+msgid "Extract last 5 characters using negative offset."
+msgstr "Εξαγάγετε τους τελευταίους 5 χαρακτήρες χρησιμοποιώντας αρνητική μετατόπιση."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 325
+#: NEEDS WORK
+msgid "Extract basename (filename) from path."
+msgstr "Εξαγωγή του βασικού ονόματος (όνομα αρχείου) από τη διαδρομή."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 329
+#: NEEDS WORK
+msgid "Extract directory path by removing basename."
+msgstr "Εξαγωγή διαδρομής καταλόγου αφαιρώντας το basename."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 333
+#: NEEDS WORK
+msgid "List all variable names starting with 'user_'."
+msgstr "Καταγράψτε όλα τα ονόματα μεταβλητών που ξεκινούν με 'user_'."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 337
+#: NEEDS WORK
+msgid "Indirect variable expansion using pointer."
+msgstr "Έμμεση επέκταση μεταβλητής χρησιμοποιώντας δείκτη."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 341
+#: NEEDS WORK
+msgid "Remove shortest suffix match."
+msgstr "Αφαίρεση της συντομότερης αντιστοιχίας κατάληξης."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 345
+#: NEEDS WORK
+msgid "Remove shortest prefix match."
+msgstr "Αφαίρεση της συντομότερης αντιστοιχίας προθέματος."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 349
+#: NEEDS WORK
+msgid "Remove longest suffix match."
+msgstr "Αφαίρεση της μεγαλύτερης αντιστοιχίας κατάληξης."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 353
+#: NEEDS WORK
+msgid "Remove longest prefix match."
+msgstr "Αφαίρεση της μεγαλύτερης αντιστοιχίας προθέματος."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 357
+#: NEEDS WORK
+msgid "Replace first occurrence of 'old' with 'new'."
+msgstr "Αντικαταστήστε την πρώτη εμφάνιση του 'παλιού' με 'νέου'."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 361
+# File: usr/share/ashyterm/data/command_data.py, line: 1466
+#: NEEDS WORK
+msgid "Replace all occurrences of 'old' with 'new'."
+msgstr "Αντικαταστήστε όλες τις εμφανίσεις του 'παλιού' με 'νέου'."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 365
+#: NEEDS WORK
+msgid "Replace suffix 'old' with 'new'."
+msgstr "Αντικαταστήστε το επίθημα 'old' με 'new'."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 369
+#: NEEDS WORK
+msgid "Replace prefix 'old' with 'new'."
+msgstr "Αντικαταστήστε το πρόθεμα 'παλιό' με 'νέο'."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 373
+#: NEEDS WORK
+msgid "Extract substring (position 0, length 3)."
+msgstr "Εξαγωγή υποσυμβολοσειράς (θέση 0, μήκος 3)."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 377
+#: NEEDS WORK
+msgid "Extract substring from right (last 3 characters)."
+msgstr "Εξαγωγή υποσυμβολοσειράς από τα δεξιά (τελευταίοι 3 χαρακτήρες)."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 381
+#: NEEDS WORK
+msgid "Get length of variable $filename."
+msgstr "Λάβετε το μήκος της μεταβλητής $filename."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 385
+#: NEEDS WORK
+msgid "Convert first character to lowercase."
+msgstr "Μετατροπή του πρώτου χαρακτήρα σε πεζά."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 389
+#: NEEDS WORK
+msgid "Convert all characters to lowercase."
+msgstr "Μετατρέψτε όλους τους χαρακτήρες σε πεζά."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 393
+#: NEEDS WORK
+msgid "Convert first character to uppercase."
+msgstr "Μετατροπή του πρώτου χαρακτήρα σε κεφαλαίο."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 397
+#: NEEDS WORK
+msgid "Convert all characters to uppercase."
+msgstr "Μετατρέψτε όλους τους χαρακτήρες σε κεφαλαία."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 401
+#: NEEDS WORK
+msgid "Use $username, or 'guest' if unset (or null)."
+msgstr "Χρησιμοποιήστε το $username, ή 'επισκέπτης' αν δεν έχει οριστεί (ή είναι null)."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 406
+#: NEEDS WORK
+msgid "Set $username to 'guest' if unset (or null), then use it."
+msgstr "Ορίστε το $username σε 'guest' αν δεν έχει οριστεί (ή είναι null), στη συνέχεια χρησιμοποιήστε το."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 411
+#: NEEDS WORK
+msgid "Use 'admin' if $username is set (and not null)."
+msgstr "Χρησιμοποιήστε 'admin' αν έχει οριστεί το $username (και δεν είναι null)."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 416
+#: NEEDS WORK
+msgid "Show error message and exit if $username is unset (or null)."
+msgstr "Εμφάνιση μηνύματος σφάλματος και έξοδος αν το $username είναι μη καθορισμένο (ή null)."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 422
+#: NEEDS WORK
+msgid "Use $username, or 'guest' if unset (ignores null values)."
+msgstr "Χρησιμοποιήστε το $username, ή 'επισκέπτης' αν δεν έχει οριστεί (αγνοεί τις μηδενικές τιμές)."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 430
+#: NEEDS WORK
+msgid "Creates directories."
+msgstr "Δημιουργεί καταλόγους."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 434
+#: NEEDS WORK
+msgid "Creates a single directory."
+msgstr "Δημιουργεί έναν μόνο φάκελο."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 439
+#: NEEDS WORK
+msgid "Creates nested directories, creating parent directories as needed."
+msgstr "Δημιουργεί εμφωλευμένους καταλόγους, δημιουργώντας τους γονικούς καταλόγους όπως απαιτείται."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 447
+#: NEEDS WORK
+msgid "Creates empty files or updates file timestamps."
+msgstr "Δημιουργεί κενά αρχεία ή ενημερώνει τις χρονικές σφραγίδες των αρχείων."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 452
+#: NEEDS WORK
+msgid "Creates an empty file or updates the timestamp of an existing file."
+msgstr "Δημιουργεί ένα κενό αρχείο ή ενημερώνει την ημερομηνία και ώρα ενός υπάρχοντος αρχείου."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 457
+#: NEEDS WORK
+msgid "Creates multiple files at once."
+msgstr "Δημιουργεί πολλαπλά αρχεία ταυτόχρονα."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 462
+# File: usr/share/ashyterm/data/command_data.py, line: 481
+# File: usr/share/ashyterm/data/command_data.py, line: 496
+# File: usr/share/ashyterm/data/command_data.py, line: 513
+# File: usr/share/ashyterm/data/command_data.py, line: 536
+# File: usr/share/ashyterm/data/command_data.py, line: 555
+# File: usr/share/ashyterm/data/command_data.py, line: 578
+# File: usr/share/ashyterm/data/command_data.py, line: 597
+# File: usr/share/ashyterm/data/command_data.py, line: 616
+# File: usr/share/ashyterm/data/command_data.py, line: 635
+# File: usr/share/ashyterm/data/command_data.py, line: 650
+# File: usr/share/ashyterm/data/command_data.py, line: 665
+# File: usr/share/ashyterm/data/command_data.py, line: 684
+# File: usr/share/ashyterm/data/command_data.py, line: 1275
+#: NEEDS WORK
+msgid "Text Processing"
+msgstr "Επεξεργασία Κειμένου"
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 464
+#: NEEDS WORK
+msgid "Concatenates and displays file contents."
+msgstr "Συνενώνει και εμφανίζει τα περιεχόμενα αρχείων."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 468
+#: NEEDS WORK
+msgid "Displays the contents of a file."
+msgstr "Εμφανίζει το περιεχόμενο ενός αρχείου."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 472
+#: NEEDS WORK
+msgid "Concatenates and displays multiple files."
+msgstr "Συνενώνει και εμφανίζει πολλαπλά αρχεία."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 476
+#: NEEDS WORK
+msgid "Displays file contents with line numbers."
+msgstr "Εμφανίζει το περιεχόμενο του αρχείου με αριθμούς γραμμών."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 483
+#: NEEDS WORK
+msgid "Displays the beginning of files."
+msgstr "Εμφανίζει την αρχή των αρχείων."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 487
+#: NEEDS WORK
+msgid "Displays the first 10 lines of a file."
+msgstr "Εμφανίζει τις πρώτες 10 γραμμές ενός αρχείου."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 491
+#: NEEDS WORK
+msgid "Displays the first 20 lines of a file."
+msgstr "Εμφανίζει τις πρώτες 20 γραμμές ενός αρχείου."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 498
+#: NEEDS WORK
+msgid "Displays the end of files."
+msgstr "Εμφανίζει το τέλος των αρχείων."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 502
+#: NEEDS WORK
+msgid "Displays the last 10 lines of a file."
+msgstr "Εμφανίζει τις τελευταίες 10 γραμμές ενός αρχείου."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 507
+#: NEEDS WORK
+msgid "Follows the file, displaying new lines as they are added."
+msgstr "Ακολουθεί το αρχείο, εμφανίζοντας νέες γραμμές καθώς προστίθενται."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 515
+#: NEEDS WORK
+msgid "Sorts lines of text files."
+msgstr "Ταξινομεί γραμμές αρχείων κειμένου."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 519
+#: NEEDS WORK
+msgid "Sorts lines in alphabetical order."
+msgstr "Ταξινομεί τις γραμμές σε αλφαβητική σειρά."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 523
+#: NEEDS WORK
+msgid "Sorts lines numerically."
+msgstr "Ταξινομεί τις γραμμές αριθμητικά."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 527
+#: NEEDS WORK
+msgid "Sorts lines in reverse order."
+msgstr "Ταξινομεί τις γραμμές σε αντίστροφη σειρά."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 531
+#: NEEDS WORK
+msgid "Sorts by second field/column."
+msgstr "Ταξινομεί κατά το δεύτερο πεδίο/στήλη."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 538
+#: NEEDS WORK
+msgid "Removes duplicate lines from sorted files."
+msgstr "Αφαιρεί τις διπλότυπες γραμμές από ταξινομημένα αρχεία."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 542
+#: NEEDS WORK
+msgid "Removes duplicate lines after sorting."
+msgstr "Αφαιρεί τις διπλές γραμμές μετά την ταξινόμηση."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 546
+#: NEEDS WORK
+msgid "Shows count of occurrences for each line."
+msgstr "Εμφανίζει τον αριθμό των εμφανίσεων για κάθε γραμμή."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 550
+#: NEEDS WORK
+msgid "Shows only duplicate lines."
+msgstr "Εμφανίζει μόνο διπλές γραμμές."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 557
+#: NEEDS WORK
+msgid "Counts lines, words, and characters in files."
+msgstr "Μετράει γραμμές, λέξεις και χαρακτήρες σε αρχεία."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 561
+#: NEEDS WORK
+msgid "Shows lines, words, and characters count."
+msgstr "Εμφανίζει τον αριθμό γραμμών, λέξεων και χαρακτήρων."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 565
+#: NEEDS WORK
+msgid "Shows only line count."
+msgstr "Εμφανίζει μόνο τον αριθμό γραμμών."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 569
+#: NEEDS WORK
+msgid "Shows only word count."
+msgstr "Εμφανίζει μόνο τον αριθμό λέξεων."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 573
+#: NEEDS WORK
+msgid "Shows only character count."
+msgstr "Εμφανίζει μόνο τον αριθμό χαρακτήρων."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 580
+#: NEEDS WORK
+msgid "Extracts sections from lines of files."
+msgstr "Εξάγει τμήματα από γραμμές αρχείων."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 584
+#: NEEDS WORK
+msgid "Extracts first field using colon delimiter."
+msgstr "Εξάγει το πρώτο πεδίο χρησιμοποιώντας τον διαχωριστή άνω και κάτω τελεία."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 588
+#: NEEDS WORK
+msgid "Extracts first 10 characters from each line."
+msgstr "Εξάγει τους πρώτους 10 χαρακτήρες από κάθε γραμμή."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 592
+#: NEEDS WORK
+msgid "Extracts 2nd and 4th fields from CSV data."
+msgstr "Εξάγει τα 2α και 4α πεδία από δεδομένα CSV."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 599
+#: NEEDS WORK
+msgid "Merges lines from multiple files."
+msgstr "Συγχωνεύει γραμμές από πολλαπλά αρχεία."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 603
+#: NEEDS WORK
+msgid "Merges corresponding lines from two files."
+msgstr "Συγχωνεύει τις αντίστοιχες γραμμές από δύο αρχεία."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 607
+#: NEEDS WORK
+msgid "Merges lines using comma as delimiter."
+msgstr "Συγχωνεύει γραμμές χρησιμοποιώντας κόμμα ως διαχωριστικό."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 611
+#: NEEDS WORK
+msgid "Merges all lines into a single line."
+msgstr "Συγχωνεύει όλες τις γραμμές σε μία μόνο γραμμή."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 618
+#: NEEDS WORK
+msgid "Translates or deletes characters."
+msgstr "Μεταφράζει ή διαγράφει χαρακτήρες."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 622
+#: NEEDS WORK
+msgid "Converts lowercase to uppercase."
+msgstr "Μετατρέπει τα πεζά σε κεφαλαία."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 626
+#: NEEDS WORK
+msgid "Removes all newline characters."
+msgstr "Αφαιρεί όλους τους χαρακτήρες νέας γραμμής."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 630
+#: NEEDS WORK
+msgid "Squeezes multiple spaces into single space."
+msgstr "Συμπιέζει πολλαπλούς χώρους σε έναν μόνο χώρο."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 637
+#: NEEDS WORK
+msgid "Reverses lines character by character."
+msgstr "Αντιστρέφει τις γραμμές χαρακτήρα προς χαρακτήρα."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 641
+#: NEEDS WORK
+msgid "Reverses each line character by character."
+msgstr "Αντιστρέφει κάθε γραμμή χαρακτήρα προς χαρακτήρα."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 645
+#: NEEDS WORK
+msgid "Reverses a string."
+msgstr "Αντιστροφή μιας συμβολοσειράς."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 652
+#: NEEDS WORK
+msgid "Concatenates and prints files in reverse order."
+msgstr "Συνενώνει και εκτυπώνει αρχεία σε αντίστροφη σειρά."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 656
+#: NEEDS WORK
+msgid "Prints file lines in reverse order."
+msgstr "Εκτυπώνει τις γραμμές του αρχείου σε αντίστροφη σειρά."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 660
+#: NEEDS WORK
+msgid "Concatenates files in reverse order."
+msgstr "Συνενώνει αρχεία σε αντίστροφη σειρά."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 667
+#: NEEDS WORK
+msgid "Prints a sequence of numbers."
+msgstr "Εκτυπώνει μια ακολουθία αριθμών."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 671
+#: NEEDS WORK
+msgid "Prints numbers from 1 to 10."
+msgstr "Εκτυπώνει αριθμούς από 1 έως 10."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 675
+#: NEEDS WORK
+msgid "Prints numbers from 5 to 10."
+msgstr "Εκτυπώνει αριθμούς από 5 έως 10."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 679
+#: NEEDS WORK
+msgid "Prints even numbers from 0 to 20."
+msgstr "Εκτυπώνει ζυγούς αριθμούς από 0 έως 20."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 686
+#: NEEDS WORK
+msgid "Arbitrary precision calculator language."
+msgstr "Γλώσσα υπολογιστή αυθαίρετης ακρίβειας."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 690
+#: NEEDS WORK
+msgid "Performs basic arithmetic calculation."
+msgstr "Εκτελεί βασικούς αριθμητικούς υπολογισμούς."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 694
+#: NEEDS WORK
+msgid "Division with 2 decimal places precision."
+msgstr "Διαίρεση με ακρίβεια 2 δεκαδικών ψηφίων."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 698
+#: NEEDS WORK
+msgid "Starts bc with math library for advanced functions."
+msgstr "Ξεκινάει bc με τη βιβλιοθήκη μαθηματικών για προχωρημένες λειτουργίες."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 703
+# File: usr/share/ashyterm/data/command_data.py, line: 718
+# File: usr/share/ashyterm/data/command_data.py, line: 733
+# File: usr/share/ashyterm/data/command_data.py, line: 758
+# File: usr/share/ashyterm/data/command_data.py, line: 771
+# File: usr/share/ashyterm/data/command_data.py, line: 782
+# File: usr/share/ashyterm/data/command_data.py, line: 793
+# File: usr/share/ashyterm/data/command_data.py, line: 812
+#: NEEDS WORK
+msgid "System Information"
+msgstr "Πληροφορίες Συστήματος"
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 705
+#: NEEDS WORK
+msgid "Displays disk space usage."
+msgstr "Εμφανίζει τη χρήση χώρου δίσκου."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 709
+# File: usr/share/ashyterm/data/command_data.py, line: 739
+#: NEEDS WORK
+msgid "Shows disk usage in human-readable format."
+msgstr "Εμφανίζει τη χρήση δίσκου σε αναγνώσιμη μορφή από άνθρωπο."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 713
+#: NEEDS WORK
+msgid "Shows inode usage instead of block usage."
+msgstr "Εμφανίζει τη χρήση inode αντί για τη χρήση μπλοκ."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 720
+#: NEEDS WORK
+msgid "Displays memory usage information."
+msgstr "Εμφανίζει πληροφορίες χρήσης μνήμης."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 724
+#: NEEDS WORK
+msgid "Shows memory usage in human-readable format."
+msgstr "Εμφανίζει τη χρήση μνήμης σε αναγνώσιμη από άνθρωπο μορφή."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 728
+#: NEEDS WORK
+msgid "Continuously displays memory usage every 5 seconds."
+msgstr "Συνεχώς εμφανίζει τη χρήση μνήμης κάθε 5 δευτερόλεπτα."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 735
+#: NEEDS WORK
+msgid "Displays disk usage of files and directories."
+msgstr "Εμφανίζει τη χρήση δίσκου αρχείων και καταλόγων."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 743
+#: NEEDS WORK
+msgid "Shows total size of each item in current directory."
+msgstr "Εμφανίζει το συνολικό μέγεθος κάθε στοιχείου στον τρέχοντα φάκελο."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 747
+#: NEEDS WORK
+msgid "Shows disk usage one level deep."
+msgstr "Εμφανίζει τη χρήση δίσκου σε ένα επίπεδο βάθους."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 752
+#: NEEDS WORK
+msgid "Shows all files and directories with human-readable sizes."
+msgstr "Εμφανίζει όλα τα αρχεία και τους καταλόγους με αναγνώσιμα από άνθρωπο μεγέθη."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 760
+#: NEEDS WORK
+msgid "Shows how long the system has been running."
+msgstr "Δείχνει πόσο καιρό λειτουργεί το σύστημα."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 765
+#: NEEDS WORK
+msgid "Shows current time, uptime, users, and load average."
+msgstr "Εμφανίζει την τρέχουσα ώρα, τον χρόνο λειτουργίας, τους χρήστες και τον μέσο όρο φόρτου."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 773
+#: NEEDS WORK
+msgid "Displays the current username."
+msgstr "Εμφανίζει το τρέχον όνομα χρήστη."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 777
+#: NEEDS WORK
+msgid "Prints the current logged-in username."
+msgstr "Εκτυπώνει το τρέχον όνομα χρήστη που έχει συνδεθεί."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 784
+#: NEEDS WORK
+msgid "Prints the current working directory."
+msgstr "Εκτυπώνει τον τρέχοντα κατάλογο εργασίας."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 788
+#: NEEDS WORK
+msgid "Shows the full path of current directory."
+msgstr "Εμφανίζει τη πλήρη διαδρομή του τρέχοντος καταλόγου."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 795
+#: NEEDS WORK
+msgid "Displays or sets the system date and time."
+msgstr "Εμφανίζει ή ρυθμίζει την ημερομηνία και ώρα του συστήματος."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 799
+#: NEEDS WORK
+msgid "Shows current date and time."
+msgstr "Εμφανίζει την τρέχουσα ημερομηνία και ώρα."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 803
+#: NEEDS WORK
+msgid "Shows date and time in custom format."
+msgstr "Εμφανίζει την ημερομηνία και την ώρα σε προσαρμοσμένη μορφή."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 807
+#: NEEDS WORK
+msgid "Shows UTC time instead of local time."
+msgstr "Εμφανίζει την ώρα UTC αντί για την τοπική ώρα."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 814
+#: NEEDS WORK
+msgid "Displays a calendar."
+msgstr "Εμφανίζει ένα ημερολόγιο."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 818
+#: NEEDS WORK
+msgid "Shows calendar for current month."
+msgstr "Εμφανίζει το ημερολόγιο για τον τρέχοντα μήνα."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 822
+#: NEEDS WORK
+msgid "Shows calendar for entire year 2024."
+msgstr "Εμφανίζει το ημερολόγιο για ολόκληρο το έτος 2024."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 826
+#: NEEDS WORK
+msgid "Shows calendar for December 2024."
+msgstr "Εμφανίζει το ημερολόγιο για τον Δεκέμβριο του 2024."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 831
+# File: usr/share/ashyterm/data/command_data.py, line: 848
+#: NEEDS WORK
+msgid "Process Management"
+msgstr "Διαχείριση Διαδικασιών"
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 833
+#: NEEDS WORK
+msgid "Displays information about running processes."
+msgstr "Εμφανίζει πληροφορίες σχετικά με τις εκτελούμενες διεργασίες."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 838
+#: NEEDS WORK
+msgid "Shows detailed information about all running processes."
+msgstr "Εμφανίζει λεπτομερείς πληροφορίες σχετικά με όλες τις εκτελούμενες διεργασίες."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 843
+#: NEEDS WORK
+msgid "Shows all processes in a different format."
+msgstr "Εμφανίζει όλες τις διεργασίες σε διαφορετική μορφή."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 850
+#: NEEDS WORK
+msgid "Sends signals to processes."
+msgstr "Στέλνει σήματα σε διεργασίες."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 854
+#: NEEDS WORK
+msgid "Sends SIGTERM signal to process with PID 1234."
+msgstr "Αποστέλλει σήμα SIGTERM στη διαδικασία με PID 1234."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 858
+#: NEEDS WORK
+msgid "Forcefully kills process with PID 1234 (SIGKILL)."
+msgstr "Αναγκαστική τερματισμός διεργασίας με PID 1234 (SIGKILL)."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 863
+#: NEEDS WORK
+msgid "Networking"
+msgstr "Δικτύωση"
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 865
+#: NEEDS WORK
+msgid "Tests network connectivity to a host."
+msgstr "Δοκιμάζει τη συνδεσιμότητα δικτύου με έναν υπολογιστή."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 869
+#: NEEDS WORK
+msgid "Tests connectivity to google.com."
+msgstr "Δοκιμάζει τη συνδεσιμότητα με το google.com."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 873
+#: NEEDS WORK
+msgid "Sends only 4 ping packets instead of continuous."
+msgstr "Στέλνει μόνο 4 πακέτα ping αντί για συνεχή."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 878
+#: NEEDS WORK
+msgid "Archives"
+msgstr "Αρχεία"
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 880
+#: NEEDS WORK
+msgid "Creates and manipulates archive files."
+msgstr "Δημιουργεί και χειρίζεται αρχεία αρχειοθέτησης."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 884
+#: NEEDS WORK
+msgid "Creates a tar archive from a directory."
+msgstr "Δημιουργεί ένα αρχείο tar από έναν φάκελο."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 888
+#: NEEDS WORK
+msgid "Extracts files from a tar archive."
+msgstr "Εξάγει αρχεία από ένα αρχείο tar."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 892
+#: NEEDS WORK
+msgid "Creates a compressed tar archive."
+msgstr "Δημιουργεί ένα συμπιεσμένο αρχείο tar."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 897
+#: NEEDS WORK
+msgid "Bash Conditions"
+msgstr "Συνθήκες Bash"
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 899
+#: NEEDS WORK
+msgid "Conditional expressions for bash scripting."
+msgstr "Συνθήκες για scripting bash."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 903
+#: NEEDS WORK
+msgid "Check if string is empty."
+msgstr "Ελέγξτε αν η συμβολοσειρά είναι κενή."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 907
+#: NEEDS WORK
+msgid "Check if string is not empty."
+msgstr "Ελέγξτε αν η συμβολοσειρά δεν είναι κενή."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 911
+#: NEEDS WORK
+msgid "Check if strings are equal."
+msgstr "Ελέγξτε αν οι συμβολοσειρές είναι ίσες."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 915
+#: NEEDS WORK
+msgid "Check if strings are not equal."
+msgstr "Ελέγξτε αν οι συμβολοσειρές δεν είναι ίσες."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 919
+#: NEEDS WORK
+msgid "Check if numbers are equal."
+msgstr "Ελέγξτε αν οι αριθμοί είναι ίσοι."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 923
+#: NEEDS WORK
+msgid "Check if numbers are not equal."
+msgstr "Ελέγξτε αν οι αριθμοί δεν είναι ίσοι."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 927
+#: NEEDS WORK
+msgid "Check if first number is less than second."
+msgstr "Ελέγξτε αν ο πρώτος αριθμός είναι μικρότερος από τον δεύτερο."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 932
+#: NEEDS WORK
+msgid "Check if first number is less than or equal to second."
+msgstr "Ελέγξτε αν ο πρώτος αριθμός είναι μικρότερος ή ίσος με τον δεύτερο."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 937
+#: NEEDS WORK
+msgid "Check if first number is greater than second."
+msgstr "Ελέγξτε αν ο πρώτος αριθμός είναι μεγαλύτερος από τον δεύτερο."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 942
+#: NEEDS WORK
+msgid "Check if first number is greater than or equal to second."
+msgstr "Ελέγξτε αν ο πρώτος αριθμός είναι μεγαλύτερος ή ίσος με τον δεύτερο."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 947
+#: NEEDS WORK
+msgid "Check if string matches regular expression."
+msgstr "Ελέγξτε αν η συμβολοσειρά ταιριάζει με κανονική έκφραση."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 952
+#: NEEDS WORK
+msgid "Check numeric conditions with arithmetic evaluation."
+msgstr "Ελέγξτε αριθμητικές συνθήκες με αριθμητική αξιολόγηση."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 957
+#: NEEDS WORK
+msgid "Check if shell option is enabled."
+msgstr "Ελέγξτε αν η επιλογή shell είναι ενεργοποιημένη."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 961
+#: NEEDS WORK
+msgid "Logical NOT - negate a condition."
+msgstr "Λογική ΜΗ - αναιρεί μια συνθήκη."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 965
+#: NEEDS WORK
+msgid "Logical AND - both conditions must be true."
+msgstr "Λογικό ΚΑΙ - και οι δύο συνθήκες πρέπει να είναι αληθείς."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 969
+#: NEEDS WORK
+msgid "Logical OR - at least one condition must be true."
+msgstr "Λογικό Ή - τουλάχιστον μία συνθήκη πρέπει να είναι αληθής."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 973
+#: NEEDS WORK
+msgid "Check if file exists."
+msgstr "Ελέγξτε αν το αρχείο υπάρχει."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 977
+#: NEEDS WORK
+msgid "Check if file is readable."
+msgstr "Ελέγξτε αν το αρχείο είναι αναγνώσιμο."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 981
+#: NEEDS WORK
+msgid "Check if path is a symbolic link."
+msgstr "Ελέγξτε αν η διαδρομή είναι συμβολικός σύνδεσμος."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 985
+#: NEEDS WORK
+msgid "Check if path is a directory."
+msgstr "Ελέγξτε αν η διαδρομή είναι κατάλογος."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 989
+#: NEEDS WORK
+msgid "Check if file is writable."
+msgstr "Ελέγξτε αν το αρχείο είναι εγ writable."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 993
+#: NEEDS WORK
+msgid "Check if file size is greater than 0 bytes."
+msgstr "Ελέγξτε αν το μέγεθος του αρχείου είναι μεγαλύτερο από 0 byte."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 997
+#: NEEDS WORK
+msgid "Check if path is a regular file."
+msgstr "Ελέγξτε αν η διαδρομή είναι ένα κανονικό αρχείο."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1001
+#: NEEDS WORK
+msgid "Check if file is executable."
+msgstr "Ελέγξτε αν το αρχείο είναι εκτελέσιμο."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1005
+#: NEEDS WORK
+msgid "Check if first file is newer than second file."
+msgstr "Ελέγξτε αν το πρώτο αρχείο είναι πιο πρόσφατο από το δεύτερο αρχείο."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1009
+#: NEEDS WORK
+msgid "Check if first file is older than second file."
+msgstr "Ελέγξτε αν το πρώτο αρχείο είναι παλαιότερο από το δεύτερο αρχείο."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1013
+#: NEEDS WORK
+msgid "Check if both paths refer to the same file."
+msgstr "Ελέγξτε αν και οι δύο διαδρομές αναφέρονται στο ίδιο αρχείο."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1018
+#: NEEDS WORK
+msgid "Bash Arrays"
+msgstr "Πίνακες Bash"
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1020
+#: NEEDS WORK
+msgid "Array operations and manipulations in bash."
+msgstr "Λειτουργίες και χειρισμοί πινάκων στο bash."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1024
+#: NEEDS WORK
+msgid "Define array with multiple elements."
+msgstr "Ορίστε πίνακας με πολλαπλά στοιχεία."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1028
+#: NEEDS WORK
+msgid "Set specific array element by index."
+msgstr "Ορίστε συγκεκριμένο στοιχείο πίνακα κατά δείκτη."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1032
+#: NEEDS WORK
+msgid "Set another array element by index."
+msgstr "Ορίστε ένα άλλο στοιχείο πίνακα με βάση τον δείκτη."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1036
+#: NEEDS WORK
+msgid "Set third array element by index."
+msgstr "Ορίστε το τρίτο στοιχείο του πίνακα με βάση τον δείκτη."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1040
+#: NEEDS WORK
+msgid "Access first element of array."
+msgstr "Πρόσβαση στο πρώτο στοιχείο του πίνακα."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1044
+#: NEEDS WORK
+msgid "Access last element of array."
+msgstr "Πρόσβαση στο τελευταίο στοιχείο του πίνακα."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1048
+#: NEEDS WORK
+msgid "Print all elements separated by spaces."
+msgstr "Εκτύπωση όλων των στοιχείων χωρισμένων με κενά."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1052
+#: NEEDS WORK
+msgid "Get total number of elements in array."
+msgstr "Λάβετε τον συνολικό αριθμό στοιχείων στον πίνακα."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1056
+#: NEEDS WORK
+msgid "Get length of first element string."
+msgstr "Λάβετε το μήκος της πρώτης στοιχειώδους συμβολοσειράς."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1060
+#: NEEDS WORK
+msgid "Get length of specific element string."
+msgstr "Λάβετε το μήκος της συγκεκριμένης συμβολοσειράς στοιχείου."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1065
+#: NEEDS WORK
+msgid "Extract range of elements (start at index 2, length 3)."
+msgstr "Εξαγωγή εύρους στοιχείων (ξεκινώντας από τον δείκτη 2, μήκος 3)."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1070
+#: NEEDS WORK
+msgid "Get all array indices/keys."
+msgstr "Λάβετε όλους τους δείκτες/κλειδιά του πίνακα."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1074
+#: NEEDS WORK
+msgid "Add new element to end of array."
+msgstr "Προσθήκη νέου στοιχείου στο τέλος του πίνακα."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1078
+#: NEEDS WORK
+msgid "Append element using compound assignment."
+msgstr "Προσθήκη στοιχείου χρησιμοποιώντας σύνθετη ανάθεση."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1082
+#: NEEDS WORK
+msgid "Remove elements matching regex pattern."
+msgstr "Αφαίρεση στοιχείων που ταιριάζουν με το μοτίβο regex."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1086
+#: NEEDS WORK
+msgid "Remove specific element by index."
+msgstr "Αφαίρεση συγκεκριμένου στοιχείου κατά δείκτη."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1090
+#: NEEDS WORK
+msgid "Create duplicate of array."
+msgstr "Δημιουργία αντιγράφου του πίνακα."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1094
+#: NEEDS WORK
+msgid "Concatenate two arrays together."
+msgstr "Συνένωση δύο πινάκων."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1098
+#: NEEDS WORK
+msgid "Read file into array, split by IFS (whitespace)."
+msgstr "Διαβάστε το αρχείο σε πίνακα, διαχωρίστε με IFS (κενά)."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1103
+#: NEEDS WORK
+msgid "Bash Brace Expansion"
+msgstr "Επέκταση Αγκαθιών Bash"
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1105
+#: NEEDS WORK
+msgid "Generate arbitrary strings using brace expansion."
+msgstr "Δημιουργήστε αυθαίρετες συμβολοσειρές χρησιμοποιώντας επέκταση αγκύλης."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1109
+#: NEEDS WORK
+msgid "Expand to: main.py utils.py config.py"
+msgstr "Επέκταση σε: main.py utils.py config.py"
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1113
+#: NEEDS WORK
+msgid "Basic brace expansion without prefix/suffix."
+msgstr "Βασική επέκταση αγκίστρων χωρίς πρόθεμα/επίθημα."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1117
+#: NEEDS WORK
+msgid "Add file extensions to multiple base names."
+msgstr "Προσθέστε επεκτάσεις αρχείων σε πολλαπλά βασικά ονόματα."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1121
+#: NEEDS WORK
+msgid "Create numbered file names."
+msgstr "Δημιουργήστε αριθμημένα ονόματα αρχείων."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1125
+#: NEEDS WORK
+msgid "Generate sequence from 1 to 10."
+msgstr "Δημιουργία ακολουθίας από 1 έως 10."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1129
+#: NEEDS WORK
+msgid "Generate zero-padded numbers (01, 02, ..., 12)."
+msgstr "Δημιουργία αριθμών με μηδενική πλήρωση (01, 02, ..., 12)."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1133
+#: NEEDS WORK
+msgid "Generate alphabet sequence from a to z."
+msgstr "Δημιουργήστε αλφαβητική ακολουθία από το α έως το ζ."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1137
+#: NEEDS WORK
+msgid "Generate uppercase letter sequence."
+msgstr "Δημιουργία αλληλουχίας κεφαλαίων γραμμάτων."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1141
+#: NEEDS WORK
+msgid "Generate descending sequence."
+msgstr "Δημιουργία φθίνουσας ακολουθίας."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1145
+#: NEEDS WORK
+msgid "Generate zero-padded sequence with leading zeros."
+msgstr "Δημιουργία ακολουθίας με μηδενικά στο μπροστινό μέρος."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1149
+#: NEEDS WORK
+msgid "Nested braces: generates 1 2 3 7 8 9."
+msgstr "Εγκατεστημένες αγκίστρες: παράγει 1 2 3 7 8 9."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1153
+#: NEEDS WORK
+msgid "Multiple brace expansions in one expression."
+msgstr "Πολλαπλές επεκτάσεις αγκίστρων σε μία έκφραση."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1157
+#: NEEDS WORK
+msgid "Create directory paths with brace expansion."
+msgstr "Δημιουργήστε διαδρομές καταλόγων με επέκταση αγκίστρου."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1161
+#: NEEDS WORK
+msgid "Combine different sets of values."
+msgstr "Συνδυάστε διαφορετικά σύνολα τιμών."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1165
+#: NEEDS WORK
+msgid "Create multiple directories at once."
+msgstr "Δημιουργήστε πολλαπλούς καταλόγους ταυτόχρονα."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1170
+#: NEEDS WORK
+msgid "Create backup by copying file with .backup extension."
+msgstr "Δημιουργήστε αντίγραφο ασφαλείας αντιγράφοντας το αρχείο με την επέκταση .backup."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1175
+#: NEEDS WORK
+msgid "Generate platform combinations."
+msgstr "Δημιουργία συνδυασμών πλατφορμών."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1180
+#: NEEDS WORK
+msgid "File Search"
+msgstr "Αναζήτηση Αρχείων"
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1182
+#: NEEDS WORK
+msgid "Powerful file search and manipulation tool."
+msgstr "Ικανό εργαλείο αναζήτησης και επεξεργασίας αρχείων."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1187
+#: NEEDS WORK
+msgid "Find all .txt files in current directory and subdirectories."
+msgstr "Βρείτε όλα τα αρχεία .txt στον τρέχοντα φάκελο και στους υποφακέλους."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1193
+#: NEEDS WORK
+msgid "Find files starting with 'config' in user's home directory."
+msgstr "Βρείτε αρχεία που ξεκινούν με 'config' στον κατάλογο του χρήστη."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1198
+#: NEEDS WORK
+msgid "Find only regular files with .log extension."
+msgstr "Βρείτε μόνο κανονικά αρχεία με κατάληξη .log."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1202
+#: NEEDS WORK
+msgid "Find only directories starting with 'backup'."
+msgstr "Βρείτε μόνο καταλόγους που αρχίζουν με 'backup'."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1206
+#: NEEDS WORK
+msgid "Find and delete all .tmp files."
+msgstr "Βρείτε και διαγράψτε όλα τα αρχεία .tmp."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1210
+#: NEEDS WORK
+msgid "Find files modified in the last 7 days."
+msgstr "Βρείτε αρχεία που τροποποιήθηκαν τις τελευταίες 7 ημέρες."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1214
+#: NEEDS WORK
+msgid "Find files modified more than 30 days ago."
+msgstr "Βρείτε αρχεία που τροποποιήθηκαν πριν από περισσότερες από 30 ημέρες."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1218
+#: NEEDS WORK
+msgid "Find files larger than 100MB."
+msgstr "Βρείτε αρχεία μεγαλύτερα από 100MB."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1222
+#: NEEDS WORK
+msgid "Find files smaller than 1KB."
+msgstr "Βρείτε αρχεία μικρότερα από 1KB."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1226
+#: NEEDS WORK
+msgid "Find empty files and directories."
+msgstr "Βρείτε κενά αρχεία και καταλόγους."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1230
+#: NEEDS WORK
+msgid "Find files with specific permissions (755)."
+msgstr "Βρείτε αρχεία με συγκεκριμένα δικαιώματα (755)."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1234
+#: NEEDS WORK
+msgid "Find files owned by user 'bruno'."
+msgstr "Βρείτε αρχεία που ανήκουν στον χρήστη 'bruno'."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1238
+#: NEEDS WORK
+msgid "Find files owned by group 'developers'."
+msgstr "Βρείτε αρχεία που ανήκουν στην ομάδα 'developers'."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1242
+#: NEEDS WORK
+msgid "Make all Python files executable."
+msgstr "Κάντε όλα τα αρχεία Python εκτελέσιμα."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1246
+#: NEEDS WORK
+msgid "Move all JPG files to /tmp/images/ directory."
+msgstr "Μετακίνηση όλων των αρχείων JPG στον κατάλογο /tmp/images/."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1250
+#: NEEDS WORK
+msgid "Find log files containing 'ERROR' text."
+msgstr "Βρείτε αρχεία καταγραφής που περιέχουν το κείμενο 'ERROR'."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1254
+#: NEEDS WORK
+msgid "Find .conf files only 2 levels deep."
+msgstr "Βρείτε αρχεία .conf μόνο 2 επίπεδα βαθιά."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1258
+#: NEEDS WORK
+msgid "Find files with .bak OR .backup extension."
+msgstr "Βρείτε αρχεία με κατάληξη .bak Ή .backup."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1262
+#: NEEDS WORK
+msgid "Find .txt files that are also larger than 1MB."
+msgstr "Βρείτε αρχεία .txt που είναι επίσης μεγαλύτερα από 1MB."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1266
+#: NEEDS WORK
+msgid "Safely delete files with spaces in names."
+msgstr "Ασφαλής διαγραφή αρχείων με κενά στα ονόματα."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1270
+#: NEEDS WORK
+msgid "List contents of all ZIP files found."
+msgstr "Λίστα περιεχομένων όλων των αρχείων ZIP που βρέθηκαν."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1277
+#: NEEDS WORK
+msgid "Stream editor for filtering and transforming text."
+msgstr "Επεξεργαστής ροής για φιλτράρισμα και μετασχηματισμό κειμένου."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1282
+#: NEEDS WORK
+msgid "Replace all occurrences of 'old' with 'new' in file.txt."
+msgstr "Αντικαταστήστε όλες τις εμφανίσεις του 'παλιού' με 'νέου' στο file.txt."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1287
+#: NEEDS WORK
+msgid "Replace all instances of 'bruno' with 'maria'."
+msgstr "Αντικαταστήστε όλες τις περιπτώσεις του 'bruno' με 'maria'."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1292
+#: NEEDS WORK
+msgid "Case-insensitive replacement of 'error' with 'warning'."
+msgstr "Αμερόληπτη αντικατάσταση του 'error' με 'warning'."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1297
+#: NEEDS WORK
+msgid "Replace only the first occurrence per line."
+msgstr "Αντικαταστήστε μόνο την πρώτη εμφάνιση ανά γραμμή."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1302
+#: NEEDS WORK
+msgid "Replace whole word 'test' with 'exam' using word boundaries."
+msgstr "Αντικαταστήστε τη λέξη 'test' με 'exam' χρησιμοποιώντας όρια λέξεων."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1307
+#: NEEDS WORK
+msgid "Replace only on lines 2 through 5."
+msgstr "Αντικαταστήστε μόνο στις γραμμές 2 έως 5."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1311
+#: NEEDS WORK
+msgid "Delete all comment lines (starting with #)."
+msgstr "Διαγράψτε όλες τις γραμμές σχολίων (που ξεκινούν με #)."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1315
+#: NEEDS WORK
+msgid "Delete all empty lines."
+msgstr "Διαγράψτε όλες τις κενές γραμμές."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1319
+#: NEEDS WORK
+msgid "Print only lines 1 through 10."
+msgstr "Εκτύπωση μόνο των γραμμών 1 έως 10."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1323
+# File: usr/share/ashyterm/data/command_data.py, line: 1410
+#: NEEDS WORK
+msgid "Print only line number 5."
+msgstr "Εκτύπωση μόνο της γραμμής αριθμός 5."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1327
+#: NEEDS WORK
+msgid "Insert text before line 1."
+msgstr "Εισάγετε κείμενο πριν από τη γραμμή 1."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1331
+#: NEEDS WORK
+msgid "Append text after the last line."
+msgstr "Προσθέστε κείμενο μετά την τελευταία γραμμή."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1335
+# File: usr/share/ashyterm/data/command_data.py, line: 1448
+#: NEEDS WORK
+msgid "Convert all text to uppercase."
+msgstr "Μετατρέψτε όλο το κείμενο σε κεφαλαία."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1339
+# File: usr/share/ashyterm/data/command_data.py, line: 1452
+#: NEEDS WORK
+msgid "Convert all text to lowercase."
+msgstr "Μετατρέψτε όλο το κείμενο σε πεζά."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1343
+#: NEEDS WORK
+msgid "Alternative way to convert to uppercase."
+msgstr "Εναλλακτικός τρόπος μετατροπής σε κεφαλαία."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1347
+#: NEEDS WORK
+msgid "Capitalize first letter of each word."
+msgstr "Κεφαλαιοποιήστε Πρώτο Γράμμα Κάθε Λέξης."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1351
+#: NEEDS WORK
+msgid "Wrap each line in square brackets."
+msgstr "[Περίπου κάθε γραμμή σε τετράγωνα αγκύλη.]"
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1355
+#: NEEDS WORK
+msgid "Add 4 spaces indentation to each line."
+msgstr "Προσθέστε 4 κενά περιθώριο σε κάθε γραμμή."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1359
+#: NEEDS WORK
+msgid "Append ' - processed' to end of each line."
+msgstr "Προσθέστε ' - επεξεργασμένο' στο τέλος κάθε γραμμής."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1363
+#: NEEDS WORK
+msgid "Edit file in-place (modify original file)."
+msgstr "Επεξεργασία αρχείου επιτόπου (τροποποίηση του αρχικού αρχείου)."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1367
+#: NEEDS WORK
+msgid "Edit in-place and create backup file."
+msgstr "Επεξεργασία εντός θέσης και δημιουργία αρχείου αντιγράφου ασφαλείας."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1371
+#: NEEDS WORK
+msgid "Duplicate content with backreference."
+msgstr "Διπλότυπο περιεχόμενο με αναφορά."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1375
+#: NEEDS WORK
+msgid "Multiple commands on lines matching pattern."
+msgstr "Πολλές εντολές σε γραμμές που ταιριάζουν με το μοτίβο."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1379
+#: NEEDS WORK
+msgid "Execute multiple sed expressions."
+msgstr "Εκτέλεση πολλαπλών εκφράσεων sed."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1383
+#: NEEDS WORK
+msgid "Multiple address ranges with different operations."
+msgstr "Πολλαπλές διευθυνσιοδοτικές περιοχές με διαφορετικές λειτουργίες."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1388
+#: NEEDS WORK
+msgid "Awk Commands"
+msgstr "Εντολές Awk"
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1390
+#: NEEDS WORK
+msgid "Powerful text processing and pattern scanning tool."
+msgstr "Δυνατό εργαλείο επεξεργασίας κειμένου και σάρωσης προτύπων."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1394
+#: NEEDS WORK
+msgid "Print the first field (column) of each line."
+msgstr "Εκτύπωση του πρώτου πεδίου (στήλη) κάθε γραμμής."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1398
+#: NEEDS WORK
+msgid "Print the 1st and 3rd fields of each line."
+msgstr "Εκτύπωση του 1ου και 3ου πεδίου κάθε γραμμής."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1402
+#: NEEDS WORK
+msgid "Print the last field of each line."
+msgstr "Εκτύπωση του τελευταίου πεδίου κάθε γραμμής."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1406
+#: NEEDS WORK
+msgid "Print line number followed by the entire line."
+msgstr "Εκτύπωση αριθμού γραμμής ακολουθούμενη από ολόκληρη τη γραμμή."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1414
+#: NEEDS WORK
+msgid "Print lines 10 through 20."
+msgstr "Εκτύπωση γραμμών 10 έως 20."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1418
+#: NEEDS WORK
+msgid "Print lines containing 'bruno'."
+msgstr "Εκτύπωση γραμμών που περιέχουν 'bruno'."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1422
+#: NEEDS WORK
+msgid "Print name and sales where sales > 100."
+msgstr "Εκτύπωση ονόματος και πωλήσεων όπου οι πωλήσεις > 100."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1426
+#: NEEDS WORK
+msgid "Calculate sum of values in column 2."
+msgstr "Υπολογίστε το άθροισμα των τιμών στη στήλη 2."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1430
+#: NEEDS WORK
+msgid "Find the maximum value in column 2."
+msgstr "Βρείτε την μέγιστη τιμή στη στήλη 2."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1434
+#: NEEDS WORK
+msgid "Use colon as field separator for /etc/passwd."
+msgstr "Χρησιμοποιήστε άνω και κάτω τελεία ως διαχωριστικό πεδίου για το /etc/passwd."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1438
+#: NEEDS WORK
+msgid "Set output field separator to ' - '."
+msgstr "Ορίστε τον διαχωριστή πεδίου εξόδου σε ' - '."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1443
+#: NEEDS WORK
+msgid "Print lines longer than 80 characters with line numbers."
+msgstr "Εκτύπωση γραμμών μεγαλύτερων από 80 χαρακτήρες με αριθμούς γραμμών."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1456
+#: NEEDS WORK
+msgid "Add header and format output as table."
+msgstr "Προσθέστε επικεφαλίδα και μορφοποιήστε την έξοδο ως πίνακα."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1461
+#: NEEDS WORK
+msgid "Print lines with more than 3 fields and their field count."
+msgstr "Εκτύπωση γραμμών με περισσότερα από 3 πεδία και τον αριθμό των πεδίων τους."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1470
+#: NEEDS WORK
+msgid "Split first field on '-' and print both parts."
+msgstr "Διαίρεση του πρώτου πεδίου με '-' και εκτύπωση και των δύο μερών."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1474
+#: NEEDS WORK
+msgid "Count lines containing 'ERROR'."
+msgstr "Μετρήστε τις γραμμές που περιέχουν 'ERROR'."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1478
+#: NEEDS WORK
+msgid "Count occurrences of each unique value in column 1."
+msgstr "Μετρήστε τις εμφανίσεις κάθε μοναδικής τιμής στη στήλη 1."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1483
+#: NEEDS WORK
+msgid "Use BEGIN and END blocks for initialization and cleanup."
+msgstr "Χρησιμοποιήστε μπλοκ BEGIN και END για αρχικοποίηση και καθαρισμό."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1488
+#: NEEDS WORK
+msgid "Format output with specific widths and precision."
+msgstr "Μορφοποίηση εξόδου με συγκεκριμένα πλάτη και ακρίβεια."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1492
+#: NEEDS WORK
+msgid "Print lines where column 2 starts with '2024'."
+msgstr "Εκτύπωση γραμμών όπου η στήλη 2 ξεκινά με '2024'."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1496
+#: NEEDS WORK
+msgid "Remove leading whitespace from each line."
+msgstr "Αφαιρέστε τα κενά στην αρχή κάθε γραμμής."
 # 
 # File: usr/share/ashyterm/app.py, line: 333
 #: NEEDS WORK
