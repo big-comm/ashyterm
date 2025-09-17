@@ -127,7 +127,9 @@ class TabManager:
 
     def _update_tab_alignment(self):
         """Updates the tab bar alignment based on the current setting."""
-        alignment = self.terminal_manager.settings_manager.get("tab_alignment", "center")
+        alignment = self.terminal_manager.settings_manager.get(
+            "tab_alignment", "center"
+        )
         if alignment == "left":
             self.tab_bar_box.set_halign(Gtk.Align.START)
         else:  # center or any other value defaults to center
@@ -462,7 +464,7 @@ class TabManager:
     def _on_tab_clicked(self, _gesture, _n_press, _x, _y, tab_widget):
         self.set_active_tab(tab_widget)
 
-    def _on_tab_right_click(self, _gesture, _n_press, _x, _y, tab_widget):
+    def _on_tab_right_click(self, _gesture, _n_press, x, y, tab_widget):
         menu = Gio.Menu()
         menu.append(_("Detach Tab"), "win.detach-tab")
         popover = Gtk.PopoverMenu.new_from_model(menu)
@@ -481,7 +483,11 @@ class TabManager:
             action_group.add_action(action)
             popover.insert_action_group("win", action_group)
 
-        popover.popup_at_pointer()
+        rect = Gdk.Rectangle()
+        rect.x = int(x)
+        rect.y = int(y)
+        popover.set_pointing_to(rect)
+        popover.popup()
 
     def _request_detach_tab(self, page: Adw.ViewStackPage):
         if self.on_detach_tab_requested:
