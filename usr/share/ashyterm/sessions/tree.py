@@ -814,7 +814,13 @@ class SessionTreeView:
                 if popover.get_parent() is not None:
                     popover.unparent()
                 popover.set_parent(list_item.get_child())
-                popover.popup_at_pointer()
+                rect = Gdk.Rectangle()
+                rect.x = int(x)
+                rect.y = int(y)
+                rect.width = 1
+                rect.height = 1
+                popover.set_pointing_to(rect)
+                popover.popup()
 
     def _on_empty_area_right_click(
         self, _gesture: Gtk.GestureClick, _n_press: int, x: float, y: float
@@ -827,7 +833,13 @@ class SessionTreeView:
         if popover.get_parent() is not None:
             popover.unparent()
         popover.set_parent(self.column_view)
-        popover.popup_at_pointer()
+        rect = Gdk.Rectangle()
+        rect.x = int(x)
+        rect.y = int(y)
+        rect.width = 1
+        rect.height = 1
+        popover.set_pointing_to(rect)
+        popover.popup()
 
     def has_clipboard_content(self) -> bool:
         """Checks if there is a valid item in the clipboard."""
