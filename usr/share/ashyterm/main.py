@@ -66,6 +66,17 @@ def main() -> int:
             print(f"Warning: Invalid log level '{pre_args.log_level}' provided.")
             pass
 
+    logger = get_logger("ashyterm.main")
+
+    # Tries to set the process title and logs failures
+    try:
+        import setproctitle
+
+        setproctitle.setproctitle("ashyterm")
+        logger.info("Process title set to 'ashyterm'.")
+    except Exception as e:
+        logger.error(f"Failed to set process title: {e}", exc_info=True)
+
     # Main parser for the application's command-line interface
     parser = argparse.ArgumentParser(
         prog="ashyterm",
@@ -113,13 +124,16 @@ def main() -> int:
     parser.add_argument(
         "--convert-to-ssh", help=_("Convert KIO/GVFS URI path to SSH format")
     )
+    # NOVO: Adicionado o argumento --new-window
+    parser.add_argument(
+        "--new-window", action="store_true", help=_("Force opening a new window")
+    )
 
     try:
         parser.parse_known_args()
     except SystemExit:
         return 0
 
-    logger = get_logger("ashyterm.main")
     setup_signal_handlers()
 
     try:

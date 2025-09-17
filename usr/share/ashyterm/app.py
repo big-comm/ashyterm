@@ -225,6 +225,7 @@ class CommTerminalApp(Adw.Application):
             None,
             False,
         )
+        force_new_window = False
         i = 1
         while i < len(arguments):
             arg = arguments[i]
@@ -245,6 +246,8 @@ class CommTerminalApp(Adw.Application):
                 i += 1
             elif arg.startswith("--ssh="):
                 ssh_target = arg.split("=", 1)[1]
+            elif arg == "--new-window":
+                force_new_window = True
             elif not arg.startswith("-") and working_directory is None:
                 working_directory = arg
             i += 1
@@ -254,7 +257,7 @@ class CommTerminalApp(Adw.Application):
         windows = self.get_windows()
         target_window = windows[0] if windows else None
 
-        if behavior == "new_window" or not target_window:
+        if force_new_window or behavior == "new_window" or not target_window:
             self.logger.info("Creating a new window for command line arguments.")
             window = self.create_new_window(
                 initial_working_directory=working_directory,
