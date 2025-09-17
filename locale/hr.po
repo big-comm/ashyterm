@@ -1159,15 +1159,15 @@ msgstr "Dodaj prilagođenu naredbu"
 msgid "Edit Custom Command"
 msgstr "Uredi prilagođenu naredbu"
 # 
-# File: usr/share/ashyterm/ui/dialogs/command_guide_dialog.py, line: 34
-#: NEEDS WORK
-msgid "Command"
-msgstr "Naredba"
-# 
 # File: usr/share/ashyterm/ui/dialogs/command_guide_dialog.py, line: 35
 #: NEEDS WORK
 msgid "Category"
 msgstr "Kategorija"
+# 
+# File: usr/share/ashyterm/ui/dialogs/command_guide_dialog.py, line: 34
+#: NEEDS WORK
+msgid "Command"
+msgstr "Naredba"
 # 
 # File: usr/share/ashyterm/ui/dialogs/command_guide_dialog.py, line: 59
 #: NEEDS WORK
@@ -1746,13 +1746,13 @@ msgstr "Podesite prozirnost pozadine terminala"
 # 
 # File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 118
 #: NEEDS WORK
-msgid "Headerbar and File Manager Transparency"
-msgstr "Prozirnost zaglavlja i upravitelja datoteka"
+msgid "Headerbar Transparency"
+msgstr "Prozirnost zaglavlja"
 # 
 # File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 119
 #: NEEDS WORK
-msgid "Adjust headerbar and file manager background transparency"
-msgstr "Podesite prozirnost trake s naslovom i pozadine upravitelja datoteka"
+msgid "For headerbar and file manager"
+msgstr "Za traku s naslovom i upravitelja datoteka"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1065
 #: NEEDS WORK
@@ -2742,268 +2742,2003 @@ msgstr "Podijeli gornje/donje"
 # File: usr/share/ashyterm/data/command_data.py, line: 7
 # File: usr/share/ashyterm/data/command_data.py, line: 38
 #: NEEDS WORK
-msgid "Navegação e Listagem de Arquivos"
-msgstr "Navigacija i Popis Datoteka"
+msgid "File Navigation and Listing"
+msgstr "Navigacija i popis datoteka"
 # 
 # File: usr/share/ashyterm/data/command_data.py, line: 9
 #: NEEDS WORK
-msgid "Lista o conteúdo de um diretório."
-msgstr "Prikaži sadržaj direktorija."
+msgid "Lists the contents of a directory."
+msgstr "Popisuje sadržaj direktorija."
 # 
 # File: usr/share/ashyterm/data/command_data.py, line: 14
 #: NEEDS WORK
-msgid "Usa um formato de lista longa, mostrando permissões, dono, tamanho e data."
-msgstr "Koristi duguljasti format, prikazujući dozvole, vlasnika, veličinu i datum."
+msgid "Uses a long listing format, showing permissions, owner, size and date."
+msgstr "Koristi duguljični format, prikazujući dozvole, vlasnika, veličinu i datum."
 # 
 # File: usr/share/ashyterm/data/command_data.py, line: 20
 #: NEEDS WORK
-msgid "Mostra todos os arquivos, incluindo os ocultos (que começam com '.')."
-msgstr "Prikaži sve datoteke, uključujući skrivene (koje počinju s '.')."
+msgid "Shows all files, including hidden ones (that start with '.')."
+msgstr "Prikazuje sve datoteke, uključujući skrivene (koje počinju s '.')."
 # 
 # File: usr/share/ashyterm/data/command_data.py, line: 26
 #: NEEDS WORK
-msgid "Formato longo com tamanhos de arquivo legíveis para humanos (KB, MB, GB)."
-msgstr "Dugi format s veličinama datoteka čitljivim za ljude (KB, MB, GB)."
+msgid "Long format with human-readable file sizes (KB, MB, GB)."
+msgstr "Dugi format s veličinama datoteka koje su lako čitljive za ljude (KB, MB, GB)."
 # 
 # File: usr/share/ashyterm/data/command_data.py, line: 32
 #: NEEDS WORK
-msgid "Ordena os arquivos por data de modificação, os mais recentes primeiro."
-msgstr "Poredaj datoteke prema datumu izmjene, najnovije prvo."
+msgid "Sorts files by modification date, most recent first."
+msgstr "Sortira datoteke prema datumu izmjene, najnovije prvo."
 # 
 # File: usr/share/ashyterm/data/command_data.py, line: 40
 #: NEEDS WORK
-msgid "Muda o diretório de trabalho atual."
+msgid "Changes the current working directory."
 msgstr "Mijenja trenutni radni direktorij."
 # 
 # File: usr/share/ashyterm/data/command_data.py, line: 44
 #: NEEDS WORK
-msgid "Navega para um caminho absoluto específico."
-msgstr "Navigira do određenog apsolutnog puta."
+msgid "Navigates to a specific absolute path."
+msgstr "Navigira do određene apsolutne putanje."
 # 
 # File: usr/share/ashyterm/data/command_data.py, line: 48
 #: NEEDS WORK
-msgid "Sobe um nível, indo para o diretório pai."
-msgstr "Izađi jedan nivo, odlazak u roditeljski direktorij."
+msgid "Goes up one level, to the parent directory."
+msgstr "Ide ide jedan nivo više, u roditeljski direktorij."
 # 
 # File: usr/share/ashyterm/data/command_data.py, line: 53
 #: NEEDS WORK
-msgid "Vai diretamente para o seu diretório 'home'. O mesmo que 'cd' sem argumentos."
-msgstr "Ide izravno u vaš 'home' direktorij. Isto kao 'cd' bez argumenata."
+msgid "Goes directly to your 'home' directory. Same as 'cd' with no arguments."
+msgstr "Izravno ide u vaš 'home' direktorij. Isto kao 'cd' bez argumenata."
 # 
 # File: usr/share/ashyterm/data/command_data.py, line: 58
 #: NEEDS WORK
-msgid "Volta para o último diretório em que você estava."
-msgstr "Vrati se u posljednji direktorij u kojem ste bili."
+msgid "Returns to the last directory you were in."
+msgstr "Vraća se u posljednji direktorij u kojem ste bili."
 # 
 # File: usr/share/ashyterm/data/command_data.py, line: 63
 # File: usr/share/ashyterm/data/command_data.py, line: 84
-# File: usr/share/ashyterm/data/command_data.py, line: 99
+# File: usr/share/ashyterm/data/command_data.py, line: 101
+# File: usr/share/ashyterm/data/command_data.py, line: 428
+# File: usr/share/ashyterm/data/command_data.py, line: 445
 #: NEEDS WORK
-msgid "Manipulação de Arquivos"
+msgid "File Manipulation"
 msgstr "Manipulacija datotekama"
 # 
 # File: usr/share/ashyterm/data/command_data.py, line: 65
 #: NEEDS WORK
-msgid "Copia arquivos ou diretórios."
-msgstr "Kopiraj datoteke ili direktorije."
+msgid "Copies files or directories."
+msgstr "Kopira datoteke ili direktorije."
 # 
 # File: usr/share/ashyterm/data/command_data.py, line: 69
 #: NEEDS WORK
-msgid "Copia um único arquivo."
+msgid "Copies a single file."
 msgstr "Kopira jednu datoteku."
 # 
 # File: usr/share/ashyterm/data/command_data.py, line: 74
 #: NEEDS WORK
-msgid "Copia um diretório e todo o seu conteúdo recursivamente."
+msgid "Copies a directory and all its contents recursively."
 msgstr "Kopira direktorij i sav njegov sadržaj rekurzivno."
 # 
 # File: usr/share/ashyterm/data/command_data.py, line: 79
 #: NEEDS WORK
-msgid "Modo 'verbose', mostra o que está sendo copiado."
-msgstr "Način 'verbose', prikazuje što se kopira."
+msgid "Verbose mode, shows what is being copied."
+msgstr "Verbose način, prikazuje što se kopira."
 # 
 # File: usr/share/ashyterm/data/command_data.py, line: 86
 #: NEEDS WORK
-msgid "Move ou renomeia arquivos e diretórios."
-msgstr "Premjesti ili preimenuj datoteke i direktorije."
+msgid "Moves or renames files and directories."
+msgstr "Premješta ili preimenuje datoteke i direktorije."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 90
+# File: usr/share/ashyterm/data/command_data.py, line: 91
 #: NEEDS WORK
-msgid "Renomeia um arquivo ou diretório no local atual."
+msgid "Renames a file or directory in the current location."
 msgstr "Preimenuje datoteku ili direktorij u trenutnoj lokaciji."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 94
+# File: usr/share/ashyterm/data/command_data.py, line: 96
 #: NEEDS WORK
-msgid "Move um arquivo para um novo local."
-msgstr "Premjesti datoteku na novu lokaciju."
+msgid "Moves a file to a new location."
+msgstr "Premješta datoteku na novu lokaciju."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 102
+# File: usr/share/ashyterm/data/command_data.py, line: 104
 #: NEEDS WORK
-msgid "Remove (apaga) arquivos ou diretórios. CUIDADO: esta ação é permanente."
-msgstr "Ukloni datoteke ili direktorije. PAŽNJA: ova radnja je trajna."
+msgid "Removes (deletes) files or directories. CAUTION: this action is permanent."
+msgstr "Uklanja (briše) datoteke ili direktorije. PAŽNJA: ova radnja je trajna."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 105
+# File: usr/share/ashyterm/data/command_data.py, line: 107
 #: NEEDS WORK
-msgid "Remove um único arquivo."
-msgstr "Ukloni jedan datoteku."
+msgid "Removes a single file."
+msgstr "Uklanja jednu datoteku."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 108
+# File: usr/share/ashyterm/data/command_data.py, line: 110
 #: NEEDS WORK
-msgid "Remove um diretório e todo o seu conteúdo."
-msgstr "Ukloni direktorij i sav njegov sadržaj."
+msgid "Removes a directory and all its contents."
+msgstr "Uklanja direktorij i sav njegov sadržaj."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 112
+# File: usr/share/ashyterm/data/command_data.py, line: 115
 #: NEEDS WORK
-msgid "Modo interativo, pede confirmação antes de remover."
+msgid "Interactive mode, asks for confirmation before removing."
 msgstr "Interaktivni način, traži potvrdu prije uklanjanja."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 117
+# File: usr/share/ashyterm/data/command_data.py, line: 121
 #: NEEDS WORK
-msgid "Força a remoção sem pedir confirmação (usar com cautela)."
-msgstr "Prisiljava uklanjanje bez traženja potvrde (koristiti s oprezom)."
+msgid "Forces removal without asking for confirmation (use with caution)."
+msgstr "Prisiljava uklanjanje bez traženja potvrde (koristite s oprezom)."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 123
+# File: usr/share/ashyterm/data/command_data.py, line: 127
 #: NEEDS WORK
-msgid "Busca e Filtragem"
+msgid "Search and Filtering"
 msgstr "Pretraživanje i filtriranje"
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 126
+# File: usr/share/ashyterm/data/command_data.py, line: 130
 #: NEEDS WORK
-msgid "Busca por um padrão de texto dentro de arquivos ou saídas de outros comandos."
-msgstr "Pretražuje obrazac teksta unutar datoteka ili izlaza drugih naredbi."
+msgid "Searches for a text pattern within files or other command outputs."
+msgstr "Pretražuje tekstualni obrazac unutar datoteka ili drugih izlaza naredbi."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 132
+# File: usr/share/ashyterm/data/command_data.py, line: 136
 #: NEEDS WORK
-msgid "Encontra e exibe todas as linhas que contêm 'palavra' no arquivo."
-msgstr "Pronađi i prikaži sve redove koji sadrže 'riječ' u datoteci."
+msgid "Finds and displays all lines containing 'word' in the file."
+msgstr "Pronalazi i prikazuje sve retke koji sadrže 'word' u datoteci."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 138
+# File: usr/share/ashyterm/data/command_data.py, line: 142
 #: NEEDS WORK
-msgid "Busca ignorando a diferença entre maiúsculas e minúsculas."
-msgstr "Pretraživanje ignorirajući razliku između velikih i malih slova."
+msgid "Searches ignoring case differences between uppercase and lowercase."
+msgstr "Pretraživanja koja ne uzimaju u obzir razlike između velikih i malih slova."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 144
+# File: usr/share/ashyterm/data/command_data.py, line: 148
 #: NEEDS WORK
-msgid "Busca recursivamente por 'palavra' em todos os arquivos do diretório atual."
-msgstr "Pretražuje rekurzivno 'riječ' u svim datotekama u trenutnom direktoriju."
+msgid "Searches recursively for 'word' in all files in the current directory."
+msgstr "Pretražuje rekurzivno za 'riječ' u svim datotekama u trenutnom direktoriju."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 150
+# File: usr/share/ashyterm/data/command_data.py, line: 154
 #: NEEDS WORK
-msgid "Filtra a saída do comando 'ls -l' para mostrar apenas linhas que contêm 'txt'."
-msgstr "Filtrira izlaz naredbe 'ls -l' kako bi prikazao samo redove koji sadrže 'txt'."
+msgid "Filters the output of 'ls -l' to show only lines containing 'txt'."
+msgstr "Filtrira izlaz 'ls -l' kako bi prikazao samo redove koji sadrže 'txt'."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 156
-# File: usr/share/ashyterm/data/command_data.py, line: 175
-# File: usr/share/ashyterm/data/command_data.py, line: 194
-# File: usr/share/ashyterm/data/command_data.py, line: 209
+# File: usr/share/ashyterm/data/command_data.py, line: 160
+# File: usr/share/ashyterm/data/command_data.py, line: 179
+# File: usr/share/ashyterm/data/command_data.py, line: 196
+# File: usr/share/ashyterm/data/command_data.py, line: 211
 #: NEEDS WORK
-msgid "Controle de Fluxo (Shell Script)"
+msgid "Flow Control (Shell Script)"
 msgstr "Kontrola toka (Shell skripta)"
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 158
-#: NEEDS WORK
-msgid "Executa blocos de comandos condicionalmente."
-msgstr "Izvršava blokove naredbi uvjetno."
 # 
 # File: usr/share/ashyterm/data/command_data.py, line: 162
 #: NEEDS WORK
-msgid "Testa se um arquivo existe e é um arquivo regular."
-msgstr "Provjerava da li datoteka postoji i da li je redovna datoteka."
+msgid "Executes command blocks conditionally."
+msgstr "Izvršava blokove naredbi uvjetno."
 # 
 # File: usr/share/ashyterm/data/command_data.py, line: 166
 #: NEEDS WORK
-msgid "Testa se um caminho existe e é um diretório."
-msgstr "Provjeri postoji li putanja i je li direktorij."
+msgid "Tests if a file exists and is a regular file."
+msgstr "Provjerava postoji li datoteka i je li redovna datoteka."
 # 
 # File: usr/share/ashyterm/data/command_data.py, line: 170
 #: NEEDS WORK
-msgid "Testa se uma variável numérica é igual a 5."
+msgid "Tests if a path exists and is a directory."
+msgstr "Testira postoji li putanja i je li direktorij."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 174
+#: NEEDS WORK
+msgid "Tests if a numeric variable is equal to 5."
 msgstr "Testira je li numerička varijabla jednaka 5."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 178
+# File: usr/share/ashyterm/data/command_data.py, line: 181
 #: NEEDS WORK
-msgid "Cria um laço (loop) que itera sobre uma lista de itens."
-msgstr "Stvara petlju koja iterira kroz popis stavki."
+msgid "Creates a loop that iterates over a list of items."
+msgstr "Stvara petlju koja prolazi kroz popis stavki."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 183
+# File: usr/share/ashyterm/data/command_data.py, line: 185
 #: NEEDS WORK
-msgid "Itera sobre uma lista explícita de números."
-msgstr "Iterira kroz eksplicitnu listu brojeva."
+msgid "Iterates over an explicit list of numbers."
+msgstr "Iterira preko eksplicitne liste brojeva."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 188
+# File: usr/share/ashyterm/data/command_data.py, line: 190
 #: NEEDS WORK
-msgid "Itera sobre todos os arquivos que terminam com .txt no diretório."
+msgid "Iterates over all files ending with .txt in the directory."
 msgstr "Iterira kroz sve datoteke koje završavaju s .txt u direktoriju."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 197
+# File: usr/share/ashyterm/data/command_data.py, line: 199
 #: NEEDS WORK
-msgid "Cria um laço (loop) que continua enquanto uma condição for verdadeira."
-msgstr "Stvara petlju koja traje dok je uvjet istinit."
+msgid "Creates a loop that continues while a condition is true."
+msgstr "Stvara petlju koja se nastavlja dok je uvjet istinit."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 203
+# File: usr/share/ashyterm/data/command_data.py, line: 205
 #: NEEDS WORK
-msgid "Executa o bloco de código enquanto a variável COUNT for menor que 5."
+msgid "Executes the code block while the COUNT variable is less than 5."
 msgstr "Izvršava blok koda dok je varijabla COUNT manja od 5."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 212
+# File: usr/share/ashyterm/data/command_data.py, line: 214
 #: NEEDS WORK
-msgid "Cria um laço (loop) que continua enquanto uma condição for falsa."
-msgstr "Stvara petlju koja traje dok je uvjet lažan."
+msgid "Creates a loop that continues while a condition is false."
+msgstr "Stvara petlju koja se nastavlja dok je uvjet lažan."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 218
+# File: usr/share/ashyterm/data/command_data.py, line: 220
 #: NEEDS WORK
-msgid "Executa o bloco de código até que a variável COUNT seja igual a 0."
-msgstr "Izvršava blok koda dok varijabla COUNT ne postane jednaka 0."
+msgid "Executes the code block until the COUNT variable equals 0."
+msgstr "Izvršava blok koda dok varijabla COUNT ne postane 0."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 224
+# File: usr/share/ashyterm/data/command_data.py, line: 226
 #: NEEDS WORK
-msgid "Entrada do Usuário (Shell Script)"
-msgstr "Ulaz korisnika (Shell skripta)"
+msgid "User Input (Shell Script)"
+msgstr "Unos korisnika (Shell skripta)"
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 227
+# File: usr/share/ashyterm/data/command_data.py, line: 229
 #: NEEDS WORK
-msgid "Lê uma linha da entrada padrão e a armazena em uma variável."
-msgstr "Čita redak iz standardnog ulaza i pohranjuje ga u varijablu."
+msgid "Reads a line from standard input and stores it in a variable."
+msgstr "Čita redak s standardnog ulaza i pohranjuje ga u varijablu."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 233
+# File: usr/share/ashyterm/data/command_data.py, line: 235
 #: NEEDS WORK
-msgid "Espera o usuário digitar algo e pressionar Enter, salvando na variável NOME."
-msgstr "Čeka da korisnik unese nešto i pritisne Enter, spremajući u varijablu IME."
+msgid "Waits for the user to type something and press Enter, saving it in the NAME variable."
+msgstr "Čeka da korisnik nešto upiše i pritisne Enter, spremajući to u varijablu NAME."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 239
+# File: usr/share/ashyterm/data/command_data.py, line: 241
 #: NEEDS WORK
-msgid "Mostra uma mensagem (prompt) para o usuário antes de esperar a entrada."
-msgstr "Prikaži poruku (prompt) korisniku prije nego što čeka unos."
+msgid "Shows a message (prompt) to the user before waiting for input."
+msgstr "Prikazuje poruku (upit) korisniku prije nego što čeka unos."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 245
+# File: usr/share/ashyterm/data/command_data.py, line: 247
 #: NEEDS WORK
-msgid "Expansão de Parâmetros"
+msgid "Parameter Expansion"
 msgstr "Proširenje parametara"
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 248
+# File: usr/share/ashyterm/data/command_data.py, line: 250
 #: NEEDS WORK
-msgid "Mecanismos do shell para manipular o valor de variáveis."
-msgstr "Mehanizmi ljuske za manipulaciju vrijednostima varijabli."
+msgid "Advanced shell mechanisms for manipulating variable values and strings."
+msgstr "Napredni mehanizmi ljuske za manipulaciju vrijednostima varijabli i nizovima."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 254
+# File: usr/share/ashyterm/data/command_data.py, line: 255
 #: NEEDS WORK
-msgid "Substitui pelo valor da variável VAR. É o mesmo que $VAR, mas mais seguro."
-msgstr "Zamjenjuje s vrijednošću varijable VAR. To je isto kao $VAR, ali sigurnije."
+msgid "Basic variable substitution using braces."
+msgstr "Osnovna zamjena varijabli pomoću vitičastih zagrada."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 260
+# File: usr/share/ashyterm/data/command_data.py, line: 259
 #: NEEDS WORK
-msgid "Usa 'default' se VAR não estiver definida. A variável VAR não é alterada."
-msgstr "Koristi 'default' ako VAR nije definirana. Varijabla VAR se ne mijenja."
+msgid "String substitution - replaces first 'b' with 'B'."
+msgstr "Zamjena niza - zamjenjuje prvi 'b' s 'B'."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 266
+# File: usr/share/ashyterm/data/command_data.py, line: 263
 #: NEEDS WORK
-msgid "Usa e atribui 'default' a VAR se ela não estiver definida."
-msgstr "Koristi i dodijeli 'default' VAR-u ako nije definirana."
+msgid "Substring extraction - first 2 characters."
+msgstr "Izdvajanje podstringa - prva 2 znaka."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 272
+# File: usr/share/ashyterm/data/command_data.py, line: 267
 #: NEEDS WORK
-msgid "Retorna o número de caracteres no valor da variável VAR."
-msgstr "Vraća broj znakova u vrijednosti varijable VAR."
+msgid "Substring from start - first 2 characters."
+msgstr "Podniz od početka - prva 2 znaka."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 271
+#: NEEDS WORK
+msgid "Substring excluding last character."
+msgstr "Podniz bez posljednjeg znaka."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 275
+#: NEEDS WORK
+msgid "Substring from right - last character."
+msgstr "Podniz s desna - posljednji znak."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 279
+#: NEEDS WORK
+msgid "Substring from right - second to last character."
+msgstr "Podniz s desna - pretposljednji znak."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 283
+#: NEEDS WORK
+msgid "Substring using variable length parameter."
+msgstr "Podniz koristeći parametar varijabilne duljine."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 287
+#: NEEDS WORK
+msgid "Remove file extension (.py)."
+msgstr "Ukloni ekstenziju datoteke (.py)."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 291
+#: NEEDS WORK
+msgid "Replace file extension (.py to .bak)."
+msgstr "Zamijeni ekstenziju datoteke (.py u .bak)."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 295
+#: NEEDS WORK
+msgid "Remove everything after last slash (get directory)."
+msgstr "Ukloni sve nakon posljednjeg kosa crte (dobij direktorij)."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 299
+#: NEEDS WORK
+msgid "Extract file extension (longest match)."
+msgstr "Izvuci ekstenziju datoteke (najduža podudarnost)."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 303
+#: NEEDS WORK
+msgid "Extract filename from path (longest match)."
+msgstr "Izvuci naziv datoteke iz putanje (najduža podudarnost)."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 307
+#: NEEDS WORK
+msgid "Remove shortest prefix match up to first slash."
+msgstr "Ukloni najkraći prefiks koji se podudara do prvog kosa crte."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 312
+#: NEEDS WORK
+msgid "Replace first occurrence of 'project' with 'scripts'."
+msgstr "Zamijeni prvo pojavljivanje 'project' s 'scripts'."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 317
+#: NEEDS WORK
+msgid "Extract substring starting at position 6, length 5."
+msgstr "Izdvojite podniz počinjući od pozicije 6, duljina 5."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 321
+#: NEEDS WORK
+msgid "Extract last 5 characters using negative offset."
+msgstr "Izvuci posljednjih 5 znakova koristeći negativni pomak."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 325
+#: NEEDS WORK
+msgid "Extract basename (filename) from path."
+msgstr "Izvuci osnovno ime (datoteke) iz putanje."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 329
+#: NEEDS WORK
+msgid "Extract directory path by removing basename."
+msgstr "Izvuci putanju direktorija uklanjanjem osnovnog imena."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 333
+#: NEEDS WORK
+msgid "List all variable names starting with 'user_'."
+msgstr "Popis svih varijabli koje počinju s 'user_'."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 337
+#: NEEDS WORK
+msgid "Indirect variable expansion using pointer."
+msgstr "Indirektna ekspanzija varijable korištenjem pokazivača."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 341
+#: NEEDS WORK
+msgid "Remove shortest suffix match."
+msgstr "Ukloni najkraći sufiksni podudaranje."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 345
+#: NEEDS WORK
+msgid "Remove shortest prefix match."
+msgstr "Ukloni najkraći prefiksni podudaranje."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 349
+#: NEEDS WORK
+msgid "Remove longest suffix match."
+msgstr "Ukloni najduži sufiksni podudaranje."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 353
+#: NEEDS WORK
+msgid "Remove longest prefix match."
+msgstr "Ukloni najdužu podudarnost prefiksa."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 357
+#: NEEDS WORK
+msgid "Replace first occurrence of 'old' with 'new'."
+msgstr "Zamijeni prvo pojavljivanje 'old' s 'new'."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 361
+# File: usr/share/ashyterm/data/command_data.py, line: 1466
+#: NEEDS WORK
+msgid "Replace all occurrences of 'old' with 'new'."
+msgstr "Zamijeni sve pojave 'stari' s 'novi'."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 365
+#: NEEDS WORK
+msgid "Replace suffix 'old' with 'new'."
+msgstr "Zamijeni sufiks 'old' s 'new'."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 369
+#: NEEDS WORK
+msgid "Replace prefix 'old' with 'new'."
+msgstr "Zamijenite prefiks 'old' s 'new'."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 373
+#: NEEDS WORK
+msgid "Extract substring (position 0, length 3)."
+msgstr "Izvuci podniz (pozicija 0, duljina 3)."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 377
+#: NEEDS WORK
+msgid "Extract substring from right (last 3 characters)."
+msgstr "Izvuci podniz s desne strane (posljednja 3 znaka)."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 381
+#: NEEDS WORK
+msgid "Get length of variable $filename."
+msgstr "Dohvati duljinu varijable $filename."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 385
+#: NEEDS WORK
+msgid "Convert first character to lowercase."
+msgstr "Pretvori prvi znak u malo slovo."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 389
+#: NEEDS WORK
+msgid "Convert all characters to lowercase."
+msgstr "Pretvori sve znakove u mala slova."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 393
+#: NEEDS WORK
+msgid "Convert first character to uppercase."
+msgstr "Pretvori prvi znak u veliko slovo."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 397
+#: NEEDS WORK
+msgid "Convert all characters to uppercase."
+msgstr "Pretvori sve znakove u velika slova."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 401
+#: NEEDS WORK
+msgid "Use $username, or 'guest' if unset (or null)."
+msgstr "Koristite $username, ili 'gost' ako nije postavljen (ili je null)."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 406
+#: NEEDS WORK
+msgid "Set $username to 'guest' if unset (or null), then use it."
+msgstr "Postavite $username na 'guest' ako nije postavljen (ili je null), a zatim ga upotrijebite."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 411
+#: NEEDS WORK
+msgid "Use 'admin' if $username is set (and not null)."
+msgstr "Koristite 'admin' ako je $username postavljen (i nije null)."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 416
+#: NEEDS WORK
+msgid "Show error message and exit if $username is unset (or null)."
+msgstr "Prikaži poruku o pogrešci i izađi ako je $username nepostavljen (ili null)."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 422
+#: NEEDS WORK
+msgid "Use $username, or 'guest' if unset (ignores null values)."
+msgstr "Koristite $username, ili 'gost' ako nije postavljeno (zanemaruje null vrijednosti)."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 430
+#: NEEDS WORK
+msgid "Creates directories."
+msgstr "Stvara direktorije."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 434
+#: NEEDS WORK
+msgid "Creates a single directory."
+msgstr "Stvara jedan direktorij."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 439
+#: NEEDS WORK
+msgid "Creates nested directories, creating parent directories as needed."
+msgstr "Stvara ugniježdene direktorije, stvarajući nadređene direktorije po potrebi."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 447
+#: NEEDS WORK
+msgid "Creates empty files or updates file timestamps."
+msgstr "Stvara prazne datoteke ili ažurira vremenske oznake datoteka."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 452
+#: NEEDS WORK
+msgid "Creates an empty file or updates the timestamp of an existing file."
+msgstr "Stvara prazan datoteku ili ažurira vremensku oznaku postojeće datoteke."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 457
+#: NEEDS WORK
+msgid "Creates multiple files at once."
+msgstr "Stvara više datoteka odjednom."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 462
+# File: usr/share/ashyterm/data/command_data.py, line: 481
+# File: usr/share/ashyterm/data/command_data.py, line: 496
+# File: usr/share/ashyterm/data/command_data.py, line: 513
+# File: usr/share/ashyterm/data/command_data.py, line: 536
+# File: usr/share/ashyterm/data/command_data.py, line: 555
+# File: usr/share/ashyterm/data/command_data.py, line: 578
+# File: usr/share/ashyterm/data/command_data.py, line: 597
+# File: usr/share/ashyterm/data/command_data.py, line: 616
+# File: usr/share/ashyterm/data/command_data.py, line: 635
+# File: usr/share/ashyterm/data/command_data.py, line: 650
+# File: usr/share/ashyterm/data/command_data.py, line: 665
+# File: usr/share/ashyterm/data/command_data.py, line: 684
+# File: usr/share/ashyterm/data/command_data.py, line: 1275
+#: NEEDS WORK
+msgid "Text Processing"
+msgstr "Obrada teksta"
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 464
+#: NEEDS WORK
+msgid "Concatenates and displays file contents."
+msgstr "Spaja i prikazuje sadržaj datoteka."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 468
+#: NEEDS WORK
+msgid "Displays the contents of a file."
+msgstr "Prikazuje sadržaj datoteke."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 472
+#: NEEDS WORK
+msgid "Concatenates and displays multiple files."
+msgstr "Spaja i prikazuje više datoteka."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 476
+#: NEEDS WORK
+msgid "Displays file contents with line numbers."
+msgstr "Prikazuje sadržaj datoteke s brojevima redaka."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 483
+#: NEEDS WORK
+msgid "Displays the beginning of files."
+msgstr "Prikazuje početak datoteka."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 487
+#: NEEDS WORK
+msgid "Displays the first 10 lines of a file."
+msgstr "Prikazuje prvih 10 redaka datoteke."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 491
+#: NEEDS WORK
+msgid "Displays the first 20 lines of a file."
+msgstr "Prikazuje prvih 20 redaka datoteke."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 498
+#: NEEDS WORK
+msgid "Displays the end of files."
+msgstr "Prikazuje kraj datoteka."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 502
+#: NEEDS WORK
+msgid "Displays the last 10 lines of a file."
+msgstr "Prikazuje posljednjih 10 redaka datoteke."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 507
+#: NEEDS WORK
+msgid "Follows the file, displaying new lines as they are added."
+msgstr "Prati datoteku, prikazujući nove retke kako se dodaju."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 515
+#: NEEDS WORK
+msgid "Sorts lines of text files."
+msgstr "Sortira redove tekstualnih datoteka."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 519
+#: NEEDS WORK
+msgid "Sorts lines in alphabetical order."
+msgstr "Sortira redove abecednim redom."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 523
+#: NEEDS WORK
+msgid "Sorts lines numerically."
+msgstr "Sortira redove numerički."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 527
+#: NEEDS WORK
+msgid "Sorts lines in reverse order."
+msgstr "Sortira redove redoslijedom."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 531
+#: NEEDS WORK
+msgid "Sorts by second field/column."
+msgstr "Sortira po drugom polju/koloni."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 538
+#: NEEDS WORK
+msgid "Removes duplicate lines from sorted files."
+msgstr "Uklanja duplicirane retke iz sortiranih datoteka."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 542
+#: NEEDS WORK
+msgid "Removes duplicate lines after sorting."
+msgstr "Uklanja duplicirane retke nakon sortiranja."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 546
+#: NEEDS WORK
+msgid "Shows count of occurrences for each line."
+msgstr "Prikazuje broj ponavljanja za svaki redak."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 550
+#: NEEDS WORK
+msgid "Shows only duplicate lines."
+msgstr "Prikazuje samo duplicirane retke."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 557
+#: NEEDS WORK
+msgid "Counts lines, words, and characters in files."
+msgstr "Broji redove, riječi i znakove u datotekama."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 561
+#: NEEDS WORK
+msgid "Shows lines, words, and characters count."
+msgstr "Prikazuje broj redaka, riječi i znakova."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 565
+#: NEEDS WORK
+msgid "Shows only line count."
+msgstr "Prikazuje samo broj redaka."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 569
+#: NEEDS WORK
+msgid "Shows only word count."
+msgstr "Prikazuje samo broj riječi."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 573
+#: NEEDS WORK
+msgid "Shows only character count."
+msgstr "Prikazuje samo broj znakova."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 580
+#: NEEDS WORK
+msgid "Extracts sections from lines of files."
+msgstr "Izdvaja odjeljke iz redaka datoteka."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 584
+#: NEEDS WORK
+msgid "Extracts first field using colon delimiter."
+msgstr "Izdvaja prvo polje koristeći dvotočku kao razdjelnik."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 588
+#: NEEDS WORK
+msgid "Extracts first 10 characters from each line."
+msgstr "Izdvaja prvih 10 znakova iz svake linije."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 592
+#: NEEDS WORK
+msgid "Extracts 2nd and 4th fields from CSV data."
+msgstr "Izdvaja 2. i 4. polje iz CSV podataka."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 599
+#: NEEDS WORK
+msgid "Merges lines from multiple files."
+msgstr "Spaja retke iz više datoteka."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 603
+#: NEEDS WORK
+msgid "Merges corresponding lines from two files."
+msgstr "Spaja odgovarajuće retke iz dva datoteke."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 607
+#: NEEDS WORK
+msgid "Merges lines using comma as delimiter."
+msgstr "Spaja retke koristeći zarez kao razdjelnik."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 611
+#: NEEDS WORK
+msgid "Merges all lines into a single line."
+msgstr "Spaja sve retke u jedan jedini redak."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 618
+#: NEEDS WORK
+msgid "Translates or deletes characters."
+msgstr "Prevodi ili briše znakove."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 622
+#: NEEDS WORK
+msgid "Converts lowercase to uppercase."
+msgstr "Pretvara mala slova u velika slova."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 626
+#: NEEDS WORK
+msgid "Removes all newline characters."
+msgstr "Uklanja sve znakove novog reda."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 630
+#: NEEDS WORK
+msgid "Squeezes multiple spaces into single space."
+msgstr "Smanjuje više razmaka u jedan razmak."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 637
+#: NEEDS WORK
+msgid "Reverses lines character by character."
+msgstr "Obrće redove znak po znak."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 641
+#: NEEDS WORK
+msgid "Reverses each line character by character."
+msgstr "Obrće svaki redak znak po znak."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 645
+#: NEEDS WORK
+msgid "Reverses a string."
+msgstr "Obrće niz."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 652
+#: NEEDS WORK
+msgid "Concatenates and prints files in reverse order."
+msgstr "Spaja i ispisuje datoteke u obrnutom redoslijedu."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 656
+#: NEEDS WORK
+msgid "Prints file lines in reverse order."
+msgstr "Ispisuje redove datoteke u obrnutom redoslijedu."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 660
+#: NEEDS WORK
+msgid "Concatenates files in reverse order."
+msgstr "Spaja datoteke obrnutim redoslijedom."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 667
+#: NEEDS WORK
+msgid "Prints a sequence of numbers."
+msgstr "Ispisuje niz brojeva."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 671
+#: NEEDS WORK
+msgid "Prints numbers from 1 to 10."
+msgstr "Ispisuje brojeve od 1 do 10."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 675
+#: NEEDS WORK
+msgid "Prints numbers from 5 to 10."
+msgstr "Ispisuje brojeve od 5 do 10."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 679
+#: NEEDS WORK
+msgid "Prints even numbers from 0 to 20."
+msgstr "Ispisuje parne brojeve od 0 do 20."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 686
+#: NEEDS WORK
+msgid "Arbitrary precision calculator language."
+msgstr "Jezik kalkulatora s proizvoljnom preciznošću."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 690
+#: NEEDS WORK
+msgid "Performs basic arithmetic calculation."
+msgstr "Izvodi osnovne aritmetičke proračune."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 694
+#: NEEDS WORK
+msgid "Division with 2 decimal places precision."
+msgstr "Dijeljenje s preciznošću od 2 decimalna mjesta."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 698
+#: NEEDS WORK
+msgid "Starts bc with math library for advanced functions."
+msgstr "Počinje bc s matematičkom bibliotekom za napredne funkcije."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 703
+# File: usr/share/ashyterm/data/command_data.py, line: 718
+# File: usr/share/ashyterm/data/command_data.py, line: 733
+# File: usr/share/ashyterm/data/command_data.py, line: 758
+# File: usr/share/ashyterm/data/command_data.py, line: 771
+# File: usr/share/ashyterm/data/command_data.py, line: 782
+# File: usr/share/ashyterm/data/command_data.py, line: 793
+# File: usr/share/ashyterm/data/command_data.py, line: 812
+#: NEEDS WORK
+msgid "System Information"
+msgstr "Informacije o sustavu"
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 705
+#: NEEDS WORK
+msgid "Displays disk space usage."
+msgstr "Prikazuje korištenje prostora na disku."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 709
+# File: usr/share/ashyterm/data/command_data.py, line: 739
+#: NEEDS WORK
+msgid "Shows disk usage in human-readable format."
+msgstr "Prikazuje korištenje diska u formatu koji je lako čitljiv."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 713
+#: NEEDS WORK
+msgid "Shows inode usage instead of block usage."
+msgstr "Prikazuje korištenje inoda umjesto korištenja blokova."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 720
+#: NEEDS WORK
+msgid "Displays memory usage information."
+msgstr "Prikazuje informacije o korištenju memorije."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 724
+#: NEEDS WORK
+msgid "Shows memory usage in human-readable format."
+msgstr "Prikazuje korištenje memorije u formatu koji je razumljiv ljudima."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 728
+#: NEEDS WORK
+msgid "Continuously displays memory usage every 5 seconds."
+msgstr "Neprestano prikazuje korištenje memorije svake 5 sekundi."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 735
+#: NEEDS WORK
+msgid "Displays disk usage of files and directories."
+msgstr "Prikazuje korištenje diska datoteka i direktorija."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 743
+#: NEEDS WORK
+msgid "Shows total size of each item in current directory."
+msgstr "Prikazuje ukupnu veličinu svake stavke u trenutnom direktoriju."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 747
+#: NEEDS WORK
+msgid "Shows disk usage one level deep."
+msgstr "Prikazuje korištenje diska na jednoj razini."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 752
+#: NEEDS WORK
+msgid "Shows all files and directories with human-readable sizes."
+msgstr "Prikazuje sve datoteke i direktorije s veličinama koje su lako čitljive za ljude."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 760
+#: NEEDS WORK
+msgid "Shows how long the system has been running."
+msgstr "Prikazuje koliko dugo sustav radi."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 765
+#: NEEDS WORK
+msgid "Shows current time, uptime, users, and load average."
+msgstr "Prikazuje trenutno vrijeme, vrijeme rada, korisnike i prosječnu opterećenost."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 773
+#: NEEDS WORK
+msgid "Displays the current username."
+msgstr "Prikazuje trenutno korisničko ime."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 777
+#: NEEDS WORK
+msgid "Prints the current logged-in username."
+msgstr "Ispisuje trenutno prijavljenog korisnika."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 784
+#: NEEDS WORK
+msgid "Prints the current working directory."
+msgstr "Ispisuje trenutni radni direktorij."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 788
+#: NEEDS WORK
+msgid "Shows the full path of current directory."
+msgstr "Prikazuje punu putanju trenutnog direktorija."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 795
+#: NEEDS WORK
+msgid "Displays or sets the system date and time."
+msgstr "Prikazuje ili postavlja datum i vrijeme sustava."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 799
+#: NEEDS WORK
+msgid "Shows current date and time."
+msgstr "Prikazuje trenutni datum i vrijeme."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 803
+#: NEEDS WORK
+msgid "Shows date and time in custom format."
+msgstr "Prikazuje datum i vrijeme u prilagođenom formatu."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 807
+#: NEEDS WORK
+msgid "Shows UTC time instead of local time."
+msgstr "Prikazuje UTC vrijeme umjesto lokalnog vremena."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 814
+#: NEEDS WORK
+msgid "Displays a calendar."
+msgstr "Prikazuje kalendar."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 818
+#: NEEDS WORK
+msgid "Shows calendar for current month."
+msgstr "Prikazuje kalendar za trenutni mjesec."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 822
+#: NEEDS WORK
+msgid "Shows calendar for entire year 2024."
+msgstr "Prikazuje kalendar za cijelu 2024. godinu."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 826
+#: NEEDS WORK
+msgid "Shows calendar for December 2024."
+msgstr "Prikazuje kalendar za prosinac 2024."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 831
+# File: usr/share/ashyterm/data/command_data.py, line: 848
+#: NEEDS WORK
+msgid "Process Management"
+msgstr "Upravljanje procesima"
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 833
+#: NEEDS WORK
+msgid "Displays information about running processes."
+msgstr "Prikazuje informacije o aktivnim procesima."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 838
+#: NEEDS WORK
+msgid "Shows detailed information about all running processes."
+msgstr "Prikazuje detaljne informacije o svim aktivnim procesima."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 843
+#: NEEDS WORK
+msgid "Shows all processes in a different format."
+msgstr "Prikazuje sve procese u drugom formatu."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 850
+#: NEEDS WORK
+msgid "Sends signals to processes."
+msgstr "Šalje signale procesima."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 854
+#: NEEDS WORK
+msgid "Sends SIGTERM signal to process with PID 1234."
+msgstr "Šalje SIGTERM signal procesu s PID-om 1234."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 858
+#: NEEDS WORK
+msgid "Forcefully kills process with PID 1234 (SIGKILL)."
+msgstr "Prisilno ubija proces s PID-om 1234 (SIGKILL)."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 863
+#: NEEDS WORK
+msgid "Networking"
+msgstr "Umrežavanje"
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 865
+#: NEEDS WORK
+msgid "Tests network connectivity to a host."
+msgstr "Testira mrežnu povezanost s domaćinom."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 869
+#: NEEDS WORK
+msgid "Tests connectivity to google.com."
+msgstr "Testira povezanost s google.com."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 873
+#: NEEDS WORK
+msgid "Sends only 4 ping packets instead of continuous."
+msgstr "Šalje samo 4 ping paketa umjesto kontinuiranih."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 878
+#: NEEDS WORK
+msgid "Archives"
+msgstr "Arhive"
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 880
+#: NEEDS WORK
+msgid "Creates and manipulates archive files."
+msgstr "Stvara i manipulira arhivskim datotekama."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 884
+#: NEEDS WORK
+msgid "Creates a tar archive from a directory."
+msgstr "Stvara tar arhivu iz direktorija."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 888
+#: NEEDS WORK
+msgid "Extracts files from a tar archive."
+msgstr "Izdvaja datoteke iz tar arhive."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 892
+#: NEEDS WORK
+msgid "Creates a compressed tar archive."
+msgstr "Stvara komprimiranu tar arhivu."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 897
+#: NEEDS WORK
+msgid "Bash Conditions"
+msgstr "Bash uvjeti"
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 899
+#: NEEDS WORK
+msgid "Conditional expressions for bash scripting."
+msgstr "Uvjetni izrazi za bash skriptiranje."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 903
+#: NEEDS WORK
+msgid "Check if string is empty."
+msgstr "Provjerite je li niz prazan."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 907
+#: NEEDS WORK
+msgid "Check if string is not empty."
+msgstr "Provjerite je li niz prazan."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 911
+#: NEEDS WORK
+msgid "Check if strings are equal."
+msgstr "Provjerite jesu li nizovi jednaki."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 915
+#: NEEDS WORK
+msgid "Check if strings are not equal."
+msgstr "Provjerite jesu li nizovi različiti."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 919
+#: NEEDS WORK
+msgid "Check if numbers are equal."
+msgstr "Provjerite jesu li brojevi jednaki."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 923
+#: NEEDS WORK
+msgid "Check if numbers are not equal."
+msgstr "Provjerite jesu li brojevi različiti."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 927
+#: NEEDS WORK
+msgid "Check if first number is less than second."
+msgstr "Provjerite je li prvi broj manji od drugog."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 932
+#: NEEDS WORK
+msgid "Check if first number is less than or equal to second."
+msgstr "Provjerite je li prvi broj manji ili jednak drugom."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 937
+#: NEEDS WORK
+msgid "Check if first number is greater than second."
+msgstr "Provjerite je li prvi broj veći od drugog."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 942
+#: NEEDS WORK
+msgid "Check if first number is greater than or equal to second."
+msgstr "Provjerite je li prvi broj veći ili jednak drugom."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 947
+#: NEEDS WORK
+msgid "Check if string matches regular expression."
+msgstr "Provjerite odgovara li niz regularnom izrazu."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 952
+#: NEEDS WORK
+msgid "Check numeric conditions with arithmetic evaluation."
+msgstr "Provjerite numeričke uvjete s aritmetičkom evaluacijom."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 957
+#: NEEDS WORK
+msgid "Check if shell option is enabled."
+msgstr "Provjerite je li opcija ljuske omogućena."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 961
+#: NEEDS WORK
+msgid "Logical NOT - negate a condition."
+msgstr "Logička negacija - negiraj uvjet."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 965
+#: NEEDS WORK
+msgid "Logical AND - both conditions must be true."
+msgstr "Logički I - obje uvjete moraju biti točne."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 969
+#: NEEDS WORK
+msgid "Logical OR - at least one condition must be true."
+msgstr "Logički ILI - barem jedan uvjet mora biti istinit."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 973
+#: NEEDS WORK
+msgid "Check if file exists."
+msgstr "Provjerite postoji li datoteka."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 977
+#: NEEDS WORK
+msgid "Check if file is readable."
+msgstr "Provjerite je li datoteka čitljiva."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 981
+#: NEEDS WORK
+msgid "Check if path is a symbolic link."
+msgstr "Provjerite je li putanja simbolička veza."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 985
+#: NEEDS WORK
+msgid "Check if path is a directory."
+msgstr "Provjerite je li putanja direktorij."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 989
+#: NEEDS WORK
+msgid "Check if file is writable."
+msgstr "Provjerite je li datoteka zapisiva."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 993
+#: NEEDS WORK
+msgid "Check if file size is greater than 0 bytes."
+msgstr "Provjerite je li veličina datoteke veća od 0 bajta."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 997
+#: NEEDS WORK
+msgid "Check if path is a regular file."
+msgstr "Provjerite je li putanja redovna datoteka."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1001
+#: NEEDS WORK
+msgid "Check if file is executable."
+msgstr "Provjerite je li datoteka izvršna."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1005
+#: NEEDS WORK
+msgid "Check if first file is newer than second file."
+msgstr "Provjerite je li prva datoteka novija od druge datoteke."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1009
+#: NEEDS WORK
+msgid "Check if first file is older than second file."
+msgstr "Provjerite je li prva datoteka starija od druge datoteke."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1013
+#: NEEDS WORK
+msgid "Check if both paths refer to the same file."
+msgstr "Provjerite upućuju li oba puta na istu datoteku."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1018
+#: NEEDS WORK
+msgid "Bash Arrays"
+msgstr "Bash Nizovi"
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1020
+#: NEEDS WORK
+msgid "Array operations and manipulations in bash."
+msgstr "Operacije i manipulacije nizovima u bashu."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1024
+#: NEEDS WORK
+msgid "Define array with multiple elements."
+msgstr "Definirajte niz s više elemenata."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1028
+#: NEEDS WORK
+msgid "Set specific array element by index."
+msgstr "Postavi specifični element niza prema indeksu."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1032
+#: NEEDS WORK
+msgid "Set another array element by index."
+msgstr "Postavite drugi element niza prema indeksu."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1036
+#: NEEDS WORK
+msgid "Set third array element by index."
+msgstr "Postavi treći element niza prema indeksu."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1040
+#: NEEDS WORK
+msgid "Access first element of array."
+msgstr "Pristupite prvom elementu niza."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1044
+#: NEEDS WORK
+msgid "Access last element of array."
+msgstr "Pristupite posljednjem elementu niza."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1048
+#: NEEDS WORK
+msgid "Print all elements separated by spaces."
+msgstr "Ispiši sve elemente odvojene razmacima."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1052
+#: NEEDS WORK
+msgid "Get total number of elements in array."
+msgstr "Dobijte ukupni broj elemenata u nizu."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1056
+#: NEEDS WORK
+msgid "Get length of first element string."
+msgstr "Dohvati duljinu prvog elementa niza."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1060
+#: NEEDS WORK
+msgid "Get length of specific element string."
+msgstr "Dobijte duljinu specifičnog elementa niza."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1065
+#: NEEDS WORK
+msgid "Extract range of elements (start at index 2, length 3)."
+msgstr "Izvuci raspon elemenata (počnite od indeksa 2, duljina 3)."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1070
+#: NEEDS WORK
+msgid "Get all array indices/keys."
+msgstr "Dobijte sve indekse/ključeve niza."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1074
+#: NEEDS WORK
+msgid "Add new element to end of array."
+msgstr "Dodaj novi element na kraj niza."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1078
+#: NEEDS WORK
+msgid "Append element using compound assignment."
+msgstr "Dodaj element koristeći složenu dodelu."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1082
+#: NEEDS WORK
+msgid "Remove elements matching regex pattern."
+msgstr "Ukloni elemente koji odgovaraju regex obrascu."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1086
+#: NEEDS WORK
+msgid "Remove specific element by index."
+msgstr "Ukloni specifični element prema indeksu."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1090
+#: NEEDS WORK
+msgid "Create duplicate of array."
+msgstr "Kreiraj duplikat niza."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1094
+#: NEEDS WORK
+msgid "Concatenate two arrays together."
+msgstr "Spoji dva niza zajedno."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1098
+#: NEEDS WORK
+msgid "Read file into array, split by IFS (whitespace)."
+msgstr "Pročitaj datoteku u niz, podijeli prema IFS (razmak)."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1103
+#: NEEDS WORK
+msgid "Bash Brace Expansion"
+msgstr "Bash proširenje vitičastih zagrada"
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1105
+#: NEEDS WORK
+msgid "Generate arbitrary strings using brace expansion."
+msgstr "Generirajte proizvoljne nizove koristeći proširenje zagrada."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1109
+#: NEEDS WORK
+msgid "Expand to: main.py utils.py config.py"
+msgstr "Proširi na: main.py utils.py config.py"
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1113
+#: NEEDS WORK
+msgid "Basic brace expansion without prefix/suffix."
+msgstr "Osnovno proširenje vitičastih zagrada bez prefiksa/sufiksa."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1117
+#: NEEDS WORK
+msgid "Add file extensions to multiple base names."
+msgstr "Dodajte ekstenzije datoteka višestrukim osnovnim imenima."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1121
+#: NEEDS WORK
+msgid "Create numbered file names."
+msgstr "Kreirajte numerirane nazive datoteka."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1125
+#: NEEDS WORK
+msgid "Generate sequence from 1 to 10."
+msgstr "Generiraj niz od 1 do 10."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1129
+#: NEEDS WORK
+msgid "Generate zero-padded numbers (01, 02, ..., 12)."
+msgstr "Generirajte brojeve s nultim ispunjavanjem (01, 02, ..., 12)."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1133
+#: NEEDS WORK
+msgid "Generate alphabet sequence from a to z."
+msgstr "Generiraj abecedni niz od a do z."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1137
+#: NEEDS WORK
+msgid "Generate uppercase letter sequence."
+msgstr "Generiraj niz velikih slova."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1141
+#: NEEDS WORK
+msgid "Generate descending sequence."
+msgstr "Generiraj opadajuću sekvencu."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1145
+#: NEEDS WORK
+msgid "Generate zero-padded sequence with leading zeros."
+msgstr "Generiraj niz s nultim punjenjem s vodećim nulama."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1149
+#: NEEDS WORK
+msgid "Nested braces: generates 1 2 3 7 8 9."
+msgstr "Ugniježdene vitičaste zagrade: generira 1 2 3 7 8 9."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1153
+#: NEEDS WORK
+msgid "Multiple brace expansions in one expression."
+msgstr "Višestruko proširenje vitičastih zagrada u jednom izrazu."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1157
+#: NEEDS WORK
+msgid "Create directory paths with brace expansion."
+msgstr "Kreirajte putanje direktorija s proširenjem zagrada."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1161
+#: NEEDS WORK
+msgid "Combine different sets of values."
+msgstr "Kombinirajte različite skupove vrijednosti."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1165
+#: NEEDS WORK
+msgid "Create multiple directories at once."
+msgstr "Kreirajte više direktorija odjednom."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1170
+#: NEEDS WORK
+msgid "Create backup by copying file with .backup extension."
+msgstr "Izradite sigurnosnu kopiju kopiranjem datoteke s .backup ekstenzijom."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1175
+#: NEEDS WORK
+msgid "Generate platform combinations."
+msgstr "Generiraj kombinacije platformi."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1180
+#: NEEDS WORK
+msgid "File Search"
+msgstr "Pretraživanje datoteka"
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1182
+#: NEEDS WORK
+msgid "Powerful file search and manipulation tool."
+msgstr "Moćan alat za pretraživanje i manipulaciju datotekama."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1187
+#: NEEDS WORK
+msgid "Find all .txt files in current directory and subdirectories."
+msgstr "Pronađi sve .txt datoteke u trenutnom direktoriju i poddirektorijima."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1193
+#: NEEDS WORK
+msgid "Find files starting with 'config' in user's home directory."
+msgstr "Pronađi datoteke koje počinju s 'config' u korisničkom direktoriju."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1198
+#: NEEDS WORK
+msgid "Find only regular files with .log extension."
+msgstr "Pronađi samo obične datoteke s .log ekstenzijom."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1202
+#: NEEDS WORK
+msgid "Find only directories starting with 'backup'."
+msgstr "Pronađite samo direktorije koji počinju s 'backup'."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1206
+#: NEEDS WORK
+msgid "Find and delete all .tmp files."
+msgstr "Pronađite i izbrišite sve .tmp datoteke."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1210
+#: NEEDS WORK
+msgid "Find files modified in the last 7 days."
+msgstr "Pronađi datoteke modificirane u posljednjih 7 dana."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1214
+#: NEEDS WORK
+msgid "Find files modified more than 30 days ago."
+msgstr "Pronađi datoteke modificirane prije više od 30 dana."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1218
+#: NEEDS WORK
+msgid "Find files larger than 100MB."
+msgstr "Pronađi datoteke veće od 100MB."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1222
+#: NEEDS WORK
+msgid "Find files smaller than 1KB."
+msgstr "Pronađi datoteke manje od 1KB."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1226
+#: NEEDS WORK
+msgid "Find empty files and directories."
+msgstr "Pronađi prazne datoteke i direktorije."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1230
+#: NEEDS WORK
+msgid "Find files with specific permissions (755)."
+msgstr "Pronađite datoteke s određenim dozvolama (755)."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1234
+#: NEEDS WORK
+msgid "Find files owned by user 'bruno'."
+msgstr "Pronađi datoteke koje posjeduje korisnik 'bruno'."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1238
+#: NEEDS WORK
+msgid "Find files owned by group 'developers'."
+msgstr "Pronađi datoteke koje su u vlasništvu grupe 'developera'."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1242
+#: NEEDS WORK
+msgid "Make all Python files executable."
+msgstr "Učinite sve Python datoteke izvršivima."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1246
+#: NEEDS WORK
+msgid "Move all JPG files to /tmp/images/ directory."
+msgstr "Premjesti sve JPG datoteke u direktorij /tmp/images/."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1250
+#: NEEDS WORK
+msgid "Find log files containing 'ERROR' text."
+msgstr "Pronađite log datoteke koje sadrže tekst 'ERROR'."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1254
+#: NEEDS WORK
+msgid "Find .conf files only 2 levels deep."
+msgstr "Pronađi .conf datoteke samo 2 razine duboko."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1258
+#: NEEDS WORK
+msgid "Find files with .bak OR .backup extension."
+msgstr "Pronađite datoteke s .bak ILI .backup ekstenzijom."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1262
+#: NEEDS WORK
+msgid "Find .txt files that are also larger than 1MB."
+msgstr "Pronađite .txt datoteke koje su također veće od 1MB."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1266
+#: NEEDS WORK
+msgid "Safely delete files with spaces in names."
+msgstr "Sigurno izbriši datoteke s razmacima u nazivima."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1270
+#: NEEDS WORK
+msgid "List contents of all ZIP files found."
+msgstr "Prikaži sadržaj svih pronađenih ZIP datoteka."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1277
+#: NEEDS WORK
+msgid "Stream editor for filtering and transforming text."
+msgstr "Uređivač toka za filtriranje i transformaciju teksta."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1282
+#: NEEDS WORK
+msgid "Replace all occurrences of 'old' with 'new' in file.txt."
+msgstr "Zamijeni sve pojave 'stari' s 'novi' u datoteci.txt."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1287
+#: NEEDS WORK
+msgid "Replace all instances of 'bruno' with 'maria'."
+msgstr "Zamijeni sve instance 'bruno' s 'maria'."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1292
+#: NEEDS WORK
+msgid "Case-insensitive replacement of 'error' with 'warning'."
+msgstr "Zamjena 'error' s 'warning' bez obzira na velika i mala slova."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1297
+#: NEEDS WORK
+msgid "Replace only the first occurrence per line."
+msgstr "Zamijeni samo prvo pojavljivanje po retku."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1302
+#: NEEDS WORK
+msgid "Replace whole word 'test' with 'exam' using word boundaries."
+msgstr "Zamijeni cijelu riječ 'test' s 'ispit' koristeći granice riječi."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1307
+#: NEEDS WORK
+msgid "Replace only on lines 2 through 5."
+msgstr "Zamijeni samo na redovima 2 do 5."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1311
+#: NEEDS WORK
+msgid "Delete all comment lines (starting with #)."
+msgstr "Izbriši sve komentare (koji počinju s #)."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1315
+#: NEEDS WORK
+msgid "Delete all empty lines."
+msgstr "Izbriši sve prazne retke."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1319
+#: NEEDS WORK
+msgid "Print only lines 1 through 10."
+msgstr "Ispiši samo redove 1 do 10."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1323
+# File: usr/share/ashyterm/data/command_data.py, line: 1410
+#: NEEDS WORK
+msgid "Print only line number 5."
+msgstr "Ispiši samo redak broj 5."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1327
+#: NEEDS WORK
+msgid "Insert text before line 1."
+msgstr "Umetnite tekst prije retka 1."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1331
+#: NEEDS WORK
+msgid "Append text after the last line."
+msgstr "Dodaj tekst nakon posljednje linije."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1335
+# File: usr/share/ashyterm/data/command_data.py, line: 1448
+#: NEEDS WORK
+msgid "Convert all text to uppercase."
+msgstr "Pretvori sav tekst u velika slova."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1339
+# File: usr/share/ashyterm/data/command_data.py, line: 1452
+#: NEEDS WORK
+msgid "Convert all text to lowercase."
+msgstr "Pretvori sav tekst u mala slova."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1343
+#: NEEDS WORK
+msgid "Alternative way to convert to uppercase."
+msgstr "Alternativni način za pretvaranje u velika slova."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1347
+#: NEEDS WORK
+msgid "Capitalize first letter of each word."
+msgstr "Prvo Slovo Svake Riječi."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1351
+#: NEEDS WORK
+msgid "Wrap each line in square brackets."
+msgstr ""
+"[Obavijest]  \n"
+"[Završite]  \n"
+"[U redu]  \n"
+"[Otkaži]  \n"
+"[Spremi]  \n"
+"[Učitaj]  \n"
+"[Novi]  \n"
+"[Izbriši]  \n"
+"[Uredi]  \n"
+"[Postavke]  \n"
+"[Pomoć]  \n"
+"[Izlaz]  \n"
+"[Pretraži]  \n"
+"[Odaberi]  \n"
+"[Zatvori]  \n"
+"[Prijavi se]  \n"
+"[Odjavi se]  \n"
+"[Učitavanje]  \n"
+"[Greška]  \n"
+"[Uspješno]  \n"
+"[Nepoznata greška]  \n"
+"[Potvrdi]  \n"
+"[Zadano]  \n"
+"[Prikaz]  \n"
+"[Izvještaj]  \n"
+"[Podaci]  \n"
+"[Izvori]  \n"
+"[Prikazivanje]  \n"
+"[Upravitelj]  \n"
+"[Izvrši]  \n"
+"[Zadaci]  \n"
+"[Obavijesti]  \n"
+"[Upute]  \n"
+"[Prikazivanje]  \n"
+"[Uređivanje]  \n"
+"[Zadaci]  \n"
+"[Izvještavanje]  \n"
+"[Upravljanje]  \n"
+"[Pretraživanje]  \n"
+"[Odabir]  \n"
+"[Zatvaranje]  \n"
+"[Prijava]  \n"
+"[Odjava]  \n"
+"[Učitavanje]  \n"
+"[Greška]  \n"
+"[Uspješno]  \n"
+"[Nepoznata greška]  \n"
+"[Potvrda]  \n"
+"[Zadano]  \n"
+"[Prikaz]  \n"
+"[Izvještaj]  \n"
+"[Podaci]  \n"
+"[Izvori]  \n"
+"[Prikazivanje]  \n"
+"[Upravitelj]  \n"
+"[Izvrši]  \n"
+"[Zadaci]  \n"
+"[Obavijesti]  \n"
+"[Upute]  \n"
+"[Prikazivanje]  \n"
+"[Uređivanje]  \n"
+"[Zadaci]  \n"
+"[Izvještavanje]  \n"
+"[Upravljanje]  \n"
+"[Pretraživanje]  \n"
+"[Odabir]  \n"
+"[Zatvaranje]  \n"
+"[Prijava]  \n"
+"[Odjava]  \n"
+"[Učitavanje]  \n"
+"[Greška]  \n"
+"[Uspješno]  \n"
+"[Nepoznata greška]  \n"
+"[Potvrda]  \n"
+"[Zadano]  \n"
+"[Prikaz]  \n"
+"[Izvještaj]  \n"
+"[Podaci]  \n"
+"[Izvori]  \n"
+"[Prikazivanje]  \n"
+"[Upravitelj]  \n"
+"[Izvrši]  \n"
+"[Zadaci]  \n"
+"[Obavijesti]  \n"
+"[Upute]  \n"
+"[Prikazivanje]  \n"
+"[Uređivanje]  \n"
+"[Zadaci]  \n"
+"[Izvještavanje]  \n"
+"[Upravljanje]  \n"
+"[Pretraživanje]  \n"
+"[Odabir]  \n"
+"[Zatvaranje]  \n"
+"[Prijava]  \n"
+"[Odjava]  \n"
+"[Učitavanje]  \n"
+"[Greška]  \n"
+"[Uspješno]  \n"
+"[Nepoznata greška]  \n"
+"[Potvrda]  \n"
+"[Zadano]  \n"
+"[Prikaz]  \n"
+"[Izvještaj]  \n"
+"[Podaci]  \n"
+"[Izvori]  \n"
+"[Prikazivanje]  \n"
+"[Upravitelj]  \n"
+"[Izvrši]  \n"
+"[Zadaci]  \n"
+"[Obavijesti]  \n"
+"[Upute]  \n"
+"[Prikazivanje]  \n"
+"[Uređivanje]  \n"
+"[Zadaci]  \n"
+"[Izvještavanje]  \n"
+"[Upravljanje]  \n"
+"[Pretraživanje]  \n"
+"[Odabir]  \n"
+"[Zatvaranje]  \n"
+"[Prijava]  \n"
+"[Odjava]  \n"
+"[Učitavanje]  \n"
+"[Greška]  \n"
+"[Uspješno]  \n"
+"[Nepoznata greška]  \n"
+"[Potvrda]  \n"
+"[Zadano]  \n"
+"[Prikaz]  \n"
+"[Izvještaj]  \n"
+"[Podaci]  \n"
+"[Izvori]  \n"
+"[Prikazivanje]  \n"
+"[Upravitelj]  \n"
+"[Izvrši]  \n"
+"[Zadaci]  \n"
+"[Obavijesti]  \n"
+"[Upute]  \n"
+"[Prikazivanje]  \n"
+"[Uređivanje]  \n"
+"[Zadaci]  \n"
+"[Izvještavanje]  \n"
+"[Upravljanje]  \n"
+"[Pretraživanje]  \n"
+"[Odabir]  \n"
+"[Zatvaranje]  \n"
+"[Prijava]  \n"
+"[Odjava]  \n"
+"[Učitavanje]  \n"
+"[Greška]  \n"
+"[Uspješno]  \n"
+"[Nepoznata greška]  \n"
+"[Potvrda]  \n"
+"[Zadano]  \n"
+"[Prikaz]  \n"
+"[Izvještaj]  \n"
+"[Podaci]  \n"
+"[Izvori]  \n"
+"[Prikazivanje]  \n"
+"[Upravitelj]  \n"
+"[Izvrši]  \n"
+"[Zadaci]  \n"
+"[Obavijesti]  \n"
+"[Upute]  \n"
+"[Prikazivanje]  \n"
+"[Uređivanje]  \n"
+"[Zadaci]  \n"
+"[Izvještavanje]  \n"
+"[Upravljanje]  \n"
+"[Pretraživanje]  \n"
+"[Odabir]  \n"
+"[Zatvaranje]  \n"
+"[Prijava]  \n"
+"[Odjava]  \n"
+"[Učitavanje]  \n"
+"[Greška]  \n"
+"[Uspješno]  \n"
+"[Nepoznata greška]  \n"
+"[Potvrda]  \n"
+"[Zadano]  \n"
+"[Prikaz]  \n"
+"[Izvještaj]  \n"
+"[Podaci]  \n"
+"[Izvori]  \n"
+"[Prikazivanje]  \n"
+"[Upravitelj]  \n"
+"[Izvrši]  \n"
+"[Zadaci]  \n"
+"[Obavijesti]  \n"
+"[Upute]  \n"
+"[Prikazivanje]  \n"
+"[Uređivanje]  \n"
+"[Zadaci]  \n"
+"[Izvještavanje]  \n"
+"[Upravljanje]  \n"
+"[Pretraživanje]  \n"
+"[Odabir]  \n"
+"[Zatvaranje]  \n"
+"[Prijava]  \n"
+"[Odjava]  \n"
+"[Učitavanje]  \n"
+"[Greška]  \n"
+"[Uspješno]  \n"
+"[Nepoznata greška]  \n"
+"[Potvrda]  \n"
+"[Zadano]  \n"
+"[Prikaz]  \n"
+"[Izvještaj]  \n"
+"[Podaci]  \n"
+"[Izvori]  \n"
+"[Prikazivanje]  \n"
+"[Upravitelj]  \n"
+"[Izvrši]  \n"
+"[Zadaci]  \n"
+"[Obavijesti]  \n"
+"[Upute]  \n"
+"[Prikazivanje]  \n"
+"[Uređivanje]  \n"
+"[Zadaci]  \n"
+"[Izvještavanje]  \n"
+"[Upravljanje]  \n"
+"[Pretraživanje]  \n"
+"[Odabir]  \n"
+"[Zatvaranje]  \n"
+"[Prijava]  \n"
+"[Odjava]  \n"
+"[Učitavanje]  \n"
+"[Greška]  \n"
+"[Uspješno]  \n"
+"[Nepoznata greška]  \n"
+"[Potvrda]  \n"
+"[Zadano]  \n"
+"[Prikaz]  \n"
+"[Izvještaj]  \n"
+"[Podaci]  \n"
+"[Izvori]  \n"
+"[Prikazivanje]  \n"
+"[Upravitelj]  \n"
+"[Izvrši]  \n"
+"[Zadaci]  \n"
+"[Obavijesti]  \n"
+"[Upute]  \n"
+"[Prikazivanje]  \n"
+"[Uređivanje]  \n"
+"[Zadaci]  \n"
+"[Izvještavanje]  \n"
+"[Upravljanje]  \n"
+"[Pretraživanje]  \n"
+"[Odabir]  \n"
+"[Zatvaranje]  \n"
+"[Prijava]  \n"
+"[Odjava]  \n"
+"[Učitavanje]  \n"
+"[Greška]  \n"
+"[Uspješno]  \n"
+"[Nepoznata greška]  \n"
+"[Potvrda]  \n"
+"[Zadano]  \n"
+"[Prikaz]  \n"
+"[Izvještaj]  \n"
+"[Podaci]  \n"
+"[Izvori]  \n"
+"[Prikazivanje]  \n"
+"[Upravitelj]  \n"
+"[Izvrši]  \n"
+"[Zadaci]  \n"
+"[Obavijesti]  \n"
+"[Upute]  \n"
+"[Prikazivanje]  \n"
+"[Uređivanje]  \n"
+"[Zadaci]  \n"
+"[Izvještavanje]  \n"
+"[Upravljanje]  \n"
+"[Pretraživanje]  \n"
+"[Odabir]  \n"
+"[Zatvaranje]  \n"
+"[Prijava]  \n"
+"[Odjava]  \n"
+"[Učitavanje]  \n"
+"[Greška]  \n"
+"[Uspješno]  \n"
+"[Nepoznata greška]  \n"
+"[Potvrda]  \n"
+"[Zadano]  \n"
+"[Prikaz]  \n"
+"[Izvještaj]  \n"
+"[Podaci]  \n"
+"[Izvori]  \n"
+"[Prikazivanje]  \n"
+"[Upravitelj]  \n"
+"[Izvrši]  \n"
+"[Zadaci]  \n"
+"[Obavijesti]  \n"
+"[Upute]  \n"
+"[Prikazivanje]  \n"
+"[Uređivanje]  \n"
+"[Zadaci]  \n"
+"[Izvještavanje]  \n"
+"[Upravljanje]  \n"
+"[Pretraživanje]  \n"
+"[Odabir]  \n"
+"[Zatvaranje]  \n"
+"[Prijava]  \n"
+"[Odjava]  \n"
+"[Učitavanje]  \n"
+"[Greška]  \n"
+"[Uspješno]  \n"
+"[Nepoznata greška]  \n"
+"[Potvrda]  \n"
+"[Zadano]  \n"
+"[Prikaz]  \n"
+"[Izvještaj]  \n"
+"[Podaci]  \n"
+"[Izvori]  \n"
+"[Prikazivanje]  \n"
+"[Upravitelj]  \n"
+"[Izvrši]  \n"
+"[Zadaci]  \n"
+"[Obavijesti]  \n"
+"[Upute]  \n"
+"[Prikazivanje]  \n"
+"[Uređivanje]  \n"
+"[Zadaci]  \n"
+"[Izvještavanje]  \n"
+"[Upravljanje]  \n"
+"[Pretraživanje]  \n"
+"[Odabir]  \n"
+"[Zatvaranje]"
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1355
+#: NEEDS WORK
+msgid "Add 4 spaces indentation to each line."
+msgstr "Dodajte 4 razmaka uvučenja na svaki redak."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1359
+#: NEEDS WORK
+msgid "Append ' - processed' to end of each line."
+msgstr "Dodajte ' - obrađeno' na kraj svake linije."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1363
+#: NEEDS WORK
+msgid "Edit file in-place (modify original file)."
+msgstr "Uredi datoteku na licu mjesta (izmijeni izvorni datoteku)."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1367
+#: NEEDS WORK
+msgid "Edit in-place and create backup file."
+msgstr "Uredi na mjestu i stvori sigurnosnu kopiju."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1371
+#: NEEDS WORK
+msgid "Duplicate content with backreference."
+msgstr "Duplicirani sadržaj s povratnom referencom."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1375
+#: NEEDS WORK
+msgid "Multiple commands on lines matching pattern."
+msgstr "Više naredbi na redovima koji odgovaraju obrascu."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1379
+#: NEEDS WORK
+msgid "Execute multiple sed expressions."
+msgstr "Izvrši više sed izraza."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1383
+#: NEEDS WORK
+msgid "Multiple address ranges with different operations."
+msgstr "Višestruki rasponi adresa s različitim operacijama."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1388
+#: NEEDS WORK
+msgid "Awk Commands"
+msgstr "Awk naredbe"
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1390
+#: NEEDS WORK
+msgid "Powerful text processing and pattern scanning tool."
+msgstr "Moćan alat za obradu teksta i skeniranje obrazaca."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1394
+#: NEEDS WORK
+msgid "Print the first field (column) of each line."
+msgstr "Ispiši prvo polje (stupac) svake linije."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1398
+#: NEEDS WORK
+msgid "Print the 1st and 3rd fields of each line."
+msgstr "Ispiši 1. i 3. polje svake linije."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1402
+#: NEEDS WORK
+msgid "Print the last field of each line."
+msgstr "Ispiši posljednje polje svake linije."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1406
+#: NEEDS WORK
+msgid "Print line number followed by the entire line."
+msgstr "Ispiši broj retka praćen cijelim retkom."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1414
+#: NEEDS WORK
+msgid "Print lines 10 through 20."
+msgstr "Ispiši redove 10 do 20."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1418
+#: NEEDS WORK
+msgid "Print lines containing 'bruno'."
+msgstr "Ispiši retke koji sadrže 'bruno'."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1422
+#: NEEDS WORK
+msgid "Print name and sales where sales > 100."
+msgstr "Ispiši ime i prodaju gdje je prodaja > 100."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1426
+#: NEEDS WORK
+msgid "Calculate sum of values in column 2."
+msgstr "Izračunaj zbroj vrijednosti u stupcu 2."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1430
+#: NEEDS WORK
+msgid "Find the maximum value in column 2."
+msgstr "Pronađite maksimalnu vrijednost u stupcu 2."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1434
+#: NEEDS WORK
+msgid "Use colon as field separator for /etc/passwd."
+msgstr "Koristite dvotočku kao razdjelnik polja za /etc/passwd."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1438
+#: NEEDS WORK
+msgid "Set output field separator to ' - '."
+msgstr "Postavi separator polja izlaza na ' - '."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1443
+#: NEEDS WORK
+msgid "Print lines longer than 80 characters with line numbers."
+msgstr "Ispiši retke duže od 80 znakova s brojevima redaka."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1456
+#: NEEDS WORK
+msgid "Add header and format output as table."
+msgstr "Dodajte zaglavlje i formatirajte izlaz kao tablicu."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1461
+#: NEEDS WORK
+msgid "Print lines with more than 3 fields and their field count."
+msgstr "Ispiši retke s više od 3 polja i njihov broj polja."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1470
+#: NEEDS WORK
+msgid "Split first field on '-' and print both parts."
+msgstr "Podijelite prvo polje na '-' i ispišite oba dijela."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1474
+#: NEEDS WORK
+msgid "Count lines containing 'ERROR'."
+msgstr "Broj redaka koji sadrže 'ERROR'."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1478
+#: NEEDS WORK
+msgid "Count occurrences of each unique value in column 1."
+msgstr "Brojite pojavljivanja svake jedinstvene vrijednosti u stupcu 1."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1483
+#: NEEDS WORK
+msgid "Use BEGIN and END blocks for initialization and cleanup."
+msgstr "Koristite BEGIN i END blokove za inicijalizaciju i čišćenje."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1488
+#: NEEDS WORK
+msgid "Format output with specific widths and precision."
+msgstr "Formatirajte izlaz s određenim širinama i preciznošću."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1492
+#: NEEDS WORK
+msgid "Print lines where column 2 starts with '2024'."
+msgstr "Ispiši retke gdje kolona 2 počinje s '2024'."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1496
+#: NEEDS WORK
+msgid "Remove leading whitespace from each line."
+msgstr "Ukloni vodeći razmak s svakog retka."
 # 
 # File: usr/share/ashyterm/app.py, line: 333
 #: NEEDS WORK

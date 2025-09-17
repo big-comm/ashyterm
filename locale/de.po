@@ -1164,15 +1164,15 @@ msgstr "Benutzerdefinierten Befehl hinzufügen"
 msgid "Edit Custom Command"
 msgstr "Benutzerdefinierten Befehl bearbeiten"
 # 
-# File: usr/share/ashyterm/ui/dialogs/command_guide_dialog.py, line: 34
-#: NEEDS WORK
-msgid "Command"
-msgstr "Befehl"
-# 
 # File: usr/share/ashyterm/ui/dialogs/command_guide_dialog.py, line: 35
 #: NEEDS WORK
 msgid "Category"
 msgstr "Kategorie"
+# 
+# File: usr/share/ashyterm/ui/dialogs/command_guide_dialog.py, line: 34
+#: NEEDS WORK
+msgid "Command"
+msgstr "Befehl"
 # 
 # File: usr/share/ashyterm/ui/dialogs/command_guide_dialog.py, line: 59
 #: NEEDS WORK
@@ -1751,13 +1751,13 @@ msgstr "Terminal-Hintergrundtransparenz anpassen"
 # 
 # File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 118
 #: NEEDS WORK
-msgid "Headerbar and File Manager Transparency"
-msgstr "Headerleiste und Dateimanager-Transparenz"
+msgid "Headerbar Transparency"
+msgstr "Headerleisten-Transparenz"
 # 
 # File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 119
 #: NEEDS WORK
-msgid "Adjust headerbar and file manager background transparency"
-msgstr "Passen Sie die Transparenz der Kopfzeile und des Dateimanagers an."
+msgid "For headerbar and file manager"
+msgstr "Für die Kopfzeile und den Dateimanager"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1065
 #: NEEDS WORK
@@ -2661,11 +2661,6 @@ msgstr "Temporäre Dateien verwalten"
 msgid "Main Menu"
 msgstr "Hauptmenü"
 # 
-# File: usr/share/ashyterm/ui/window_ui.py, line: 350
-#: NEEDS WORK
-msgid "Search in Terminal"
-msgstr "Im Terminal suchen"
-# 
 # File: usr/share/ashyterm/window.py, line: 337
 #: NEEDS WORK
 msgid "Edit Selected"
@@ -2758,270 +2753,1678 @@ msgstr "Oben/Unten teilen"
 # File: usr/share/ashyterm/data/command_data.py, line: 7
 # File: usr/share/ashyterm/data/command_data.py, line: 38
 #: NEEDS WORK
-msgid "Navegação e Listagem de Arquivos"
-msgstr "Navigation und Dateiansicht"
+msgid "File Navigation and Listing"
+msgstr "Dateinavigation und -auflistung"
 # 
 # File: usr/share/ashyterm/data/command_data.py, line: 9
 #: NEEDS WORK
-msgid "Lista o conteúdo de um diretório."
+msgid "Lists the contents of a directory."
 msgstr "Listet den Inhalt eines Verzeichnisses."
 # 
 # File: usr/share/ashyterm/data/command_data.py, line: 14
 #: NEEDS WORK
-msgid "Usa um formato de lista longa, mostrando permissões, dono, tamanho e data."
-msgstr "Verwenden Sie ein langes Listenformat, das Berechtigungen, Eigentümer, Größe und Datum anzeigt."
+msgid "Uses a long listing format, showing permissions, owner, size and date."
+msgstr "Verwendet ein langes Listenformat, das Berechtigungen, Eigentümer, Größe und Datum anzeigt."
 # 
 # File: usr/share/ashyterm/data/command_data.py, line: 20
 #: NEEDS WORK
-msgid "Mostra todos os arquivos, incluindo os ocultos (que começam com '.')."
-msgstr "Zeige alle Dateien an, einschließlich der versteckten (die mit '.' beginnen)."
+msgid "Shows all files, including hidden ones (that start with '.')."
+msgstr "Zeigt alle Dateien an, einschließlich versteckter Dateien (die mit '.' beginnen)."
 # 
 # File: usr/share/ashyterm/data/command_data.py, line: 26
 #: NEEDS WORK
-msgid "Formato longo com tamanhos de arquivo legíveis para humanos (KB, MB, GB)."
+msgid "Long format with human-readable file sizes (KB, MB, GB)."
 msgstr "Langes Format mit menschenlesbaren Dateigrößen (KB, MB, GB)."
 # 
 # File: usr/share/ashyterm/data/command_data.py, line: 32
 #: NEEDS WORK
-msgid "Ordena os arquivos por data de modificação, os mais recentes primeiro."
-msgstr "Sortiere die Dateien nach Änderungsdatum, die neuesten zuerst."
+msgid "Sorts files by modification date, most recent first."
+msgstr "Sortiert Dateien nach Änderungsdatum, die neuesten zuerst."
 # 
 # File: usr/share/ashyterm/data/command_data.py, line: 40
 #: NEEDS WORK
-msgid "Muda o diretório de trabalho atual."
+msgid "Changes the current working directory."
 msgstr "Ändert das aktuelle Arbeitsverzeichnis."
 # 
 # File: usr/share/ashyterm/data/command_data.py, line: 44
 #: NEEDS WORK
-msgid "Navega para um caminho absoluto específico."
-msgstr "Navigiere zu einem bestimmten absoluten Pfad."
+msgid "Navigates to a specific absolute path."
+msgstr "Navigiert zu einem bestimmten absoluten Pfad."
 # 
 # File: usr/share/ashyterm/data/command_data.py, line: 48
 #: NEEDS WORK
-msgid "Sobe um nível, indo para o diretório pai."
-msgstr "Eine Ebene nach oben, zum übergeordneten Verzeichnis wechseln."
+msgid "Goes up one level, to the parent directory."
+msgstr "Geht ein Level nach oben, zum übergeordneten Verzeichnis."
 # 
 # File: usr/share/ashyterm/data/command_data.py, line: 53
 #: NEEDS WORK
-msgid "Vai diretamente para o seu diretório 'home'. O mesmo que 'cd' sem argumentos."
-msgstr "Geht direkt in Ihr 'home'-Verzeichnis. Dasselbe wie 'cd' ohne Argumente."
+msgid "Goes directly to your 'home' directory. Same as 'cd' with no arguments."
+msgstr "Geht direkt in Ihr 'Home'-Verzeichnis. Dasselbe wie 'cd' ohne Argumente."
 # 
 # File: usr/share/ashyterm/data/command_data.py, line: 58
 #: NEEDS WORK
-msgid "Volta para o último diretório em que você estava."
-msgstr "Gehe zurück zum letzten Verzeichnis, in dem du warst."
+msgid "Returns to the last directory you were in."
+msgstr "Kehrt zum letzten Verzeichnis zurück, in dem Sie sich befanden."
 # 
 # File: usr/share/ashyterm/data/command_data.py, line: 63
 # File: usr/share/ashyterm/data/command_data.py, line: 84
-# File: usr/share/ashyterm/data/command_data.py, line: 99
+# File: usr/share/ashyterm/data/command_data.py, line: 101
+# File: usr/share/ashyterm/data/command_data.py, line: 428
+# File: usr/share/ashyterm/data/command_data.py, line: 445
 #: NEEDS WORK
-msgid "Manipulação de Arquivos"
-msgstr "Dateiverwaltung"
+msgid "File Manipulation"
+msgstr "Dateimanipulation"
 # 
 # File: usr/share/ashyterm/data/command_data.py, line: 65
 #: NEEDS WORK
-msgid "Copia arquivos ou diretórios."
-msgstr "Kopiere Dateien oder Verzeichnisse."
+msgid "Copies files or directories."
+msgstr "Kopiert Dateien oder Verzeichnisse."
 # 
 # File: usr/share/ashyterm/data/command_data.py, line: 69
 #: NEEDS WORK
-msgid "Copia um único arquivo."
-msgstr "Kopiere eine einzelne Datei."
+msgid "Copies a single file."
+msgstr "Kopiert eine einzelne Datei."
 # 
 # File: usr/share/ashyterm/data/command_data.py, line: 74
 #: NEEDS WORK
-msgid "Copia um diretório e todo o seu conteúdo recursivamente."
+msgid "Copies a directory and all its contents recursively."
 msgstr "Kopiert ein Verzeichnis und dessen gesamten Inhalt rekursiv."
 # 
 # File: usr/share/ashyterm/data/command_data.py, line: 79
 #: NEEDS WORK
-msgid "Modo 'verbose', mostra o que está sendo copiado."
-msgstr "Modus 'verbose', zeigt an, was kopiert wird."
+msgid "Verbose mode, shows what is being copied."
+msgstr "Ausführlicher Modus, zeigt an, was kopiert wird."
 # 
 # File: usr/share/ashyterm/data/command_data.py, line: 86
 #: NEEDS WORK
-msgid "Move ou renomeia arquivos e diretórios."
-msgstr "Verschieben oder umbenennen von Dateien und Verzeichnissen."
+msgid "Moves or renames files and directories."
+msgstr "Verschiebt oder benennt Dateien und Verzeichnisse um."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 90
+# File: usr/share/ashyterm/data/command_data.py, line: 91
 #: NEEDS WORK
-msgid "Renomeia um arquivo ou diretório no local atual."
+msgid "Renames a file or directory in the current location."
 msgstr "Benennt eine Datei oder ein Verzeichnis am aktuellen Standort um."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 94
+# File: usr/share/ashyterm/data/command_data.py, line: 96
 #: NEEDS WORK
-msgid "Move um arquivo para um novo local."
-msgstr "Bewege eine Datei an einen neuen Speicherort."
+msgid "Moves a file to a new location."
+msgstr "Verschiebt eine Datei an einen neuen Speicherort."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 102
+# File: usr/share/ashyterm/data/command_data.py, line: 104
 #: NEEDS WORK
-msgid "Remove (apaga) arquivos ou diretórios. CUIDADO: esta ação é permanente."
-msgstr "Entfernen Sie Dateien oder Verzeichnisse. VORSICHT: Diese Aktion ist dauerhaft."
+msgid "Removes (deletes) files or directories. CAUTION: this action is permanent."
+msgstr "Entfernt (löscht) Dateien oder Verzeichnisse. VORSICHT: Diese Aktion ist dauerhaft."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 105
+# File: usr/share/ashyterm/data/command_data.py, line: 107
 #: NEEDS WORK
-msgid "Remove um único arquivo."
-msgstr "Entfernen Sie eine einzelne Datei."
+msgid "Removes a single file."
+msgstr "Entfernt eine einzelne Datei."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 108
+# File: usr/share/ashyterm/data/command_data.py, line: 110
 #: NEEDS WORK
-msgid "Remove um diretório e todo o seu conteúdo."
+msgid "Removes a directory and all its contents."
 msgstr "Entfernt ein Verzeichnis und dessen gesamten Inhalt."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 112
+# File: usr/share/ashyterm/data/command_data.py, line: 115
 #: NEEDS WORK
-msgid "Modo interativo, pede confirmação antes de remover."
-msgstr "Interaktiver Modus, fordert Bestätigung vor dem Entfernen."
+msgid "Interactive mode, asks for confirmation before removing."
+msgstr "Interaktiver Modus, fragt nach Bestätigung, bevor entfernt wird."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 117
+# File: usr/share/ashyterm/data/command_data.py, line: 121
 #: NEEDS WORK
-msgid "Força a remoção sem pedir confirmação (usar com cautela)."
+msgid "Forces removal without asking for confirmation (use with caution)."
 msgstr "Zwingt die Entfernung ohne Bestätigung (mit Vorsicht verwenden)."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 123
+# File: usr/share/ashyterm/data/command_data.py, line: 127
 #: NEEDS WORK
-msgid "Busca e Filtragem"
+msgid "Search and Filtering"
 msgstr "Suche und Filterung"
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 126
+# File: usr/share/ashyterm/data/command_data.py, line: 130
 #: NEEDS WORK
-msgid "Busca por um padrão de texto dentro de arquivos ou saídas de outros comandos."
-msgstr "Sucht nach einem Textmuster in Dateien oder Ausgaben anderer Befehle."
+msgid "Searches for a text pattern within files or other command outputs."
+msgstr "Durchsucht Dateien oder andere Befehlsausgaben nach einem Textmuster."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 132
+# File: usr/share/ashyterm/data/command_data.py, line: 136
 #: NEEDS WORK
-msgid "Encontra e exibe todas as linhas que contêm 'palavra' no arquivo."
-msgstr "Findet und zeigt alle Zeilen an, die 'Wort' in der Datei enthalten."
+msgid "Finds and displays all lines containing 'word' in the file."
+msgstr "Findet und zeigt alle Zeilen an, die 'word' in der Datei enthalten."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 138
+# File: usr/share/ashyterm/data/command_data.py, line: 142
 #: NEEDS WORK
-msgid "Busca ignorando a diferença entre maiúsculas e minúsculas."
-msgstr "Suche ohne Berücksichtigung von Groß- und Kleinschreibung."
+msgid "Searches ignoring case differences between uppercase and lowercase."
+msgstr "Suchen unter Ignorierung von Groß- und Kleinschreibung."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 144
+# File: usr/share/ashyterm/data/command_data.py, line: 148
 #: NEEDS WORK
-msgid "Busca recursivamente por 'palavra' em todos os arquivos do diretório atual."
-msgstr "Durchsucht rekursiv nach 'Wort' in allen Dateien des aktuellen Verzeichnisses."
+msgid "Searches recursively for 'word' in all files in the current directory."
+msgstr "Durchsucht rekursiv nach 'word' in allen Dateien im aktuellen Verzeichnis."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 150
+# File: usr/share/ashyterm/data/command_data.py, line: 154
 #: NEEDS WORK
-msgid "Filtra a saída do comando 'ls -l' para mostrar apenas linhas que contêm 'txt'."
-msgstr "Filtern Sie die Ausgabe des Befehls 'ls -l', um nur Zeilen anzuzeigen, die 'txt' enthalten."
+msgid "Filters the output of 'ls -l' to show only lines containing 'txt'."
+msgstr "Filtert die Ausgabe von 'ls -l', um nur Zeilen anzuzeigen, die 'txt' enthalten."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 156
-# File: usr/share/ashyterm/data/command_data.py, line: 175
-# File: usr/share/ashyterm/data/command_data.py, line: 194
-# File: usr/share/ashyterm/data/command_data.py, line: 209
+# File: usr/share/ashyterm/data/command_data.py, line: 160
+# File: usr/share/ashyterm/data/command_data.py, line: 179
+# File: usr/share/ashyterm/data/command_data.py, line: 196
+# File: usr/share/ashyterm/data/command_data.py, line: 211
 #: NEEDS WORK
-msgid "Controle de Fluxo (Shell Script)"
+msgid "Flow Control (Shell Script)"
 msgstr "Flusskontrolle (Shell-Skript)"
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 158
-#: NEEDS WORK
-msgid "Executa blocos de comandos condicionalmente."
-msgstr "Führt bedingte Befehlsblöcke aus."
 # 
 # File: usr/share/ashyterm/data/command_data.py, line: 162
 #: NEEDS WORK
-msgid "Testa se um arquivo existe e é um arquivo regular."
-msgstr "Überprüft, ob eine Datei existiert und eine reguläre Datei ist."
+msgid "Executes command blocks conditionally."
+msgstr "Führt Befehlsblöcke bedingt aus."
 # 
 # File: usr/share/ashyterm/data/command_data.py, line: 166
 #: NEEDS WORK
-msgid "Testa se um caminho existe e é um diretório."
-msgstr "Überprüft, ob ein Pfad existiert und ein Verzeichnis ist."
+msgid "Tests if a file exists and is a regular file."
+msgstr "Überprüft, ob eine Datei existiert und eine reguläre Datei ist."
 # 
 # File: usr/share/ashyterm/data/command_data.py, line: 170
 #: NEEDS WORK
-msgid "Testa se uma variável numérica é igual a 5."
+msgid "Tests if a path exists and is a directory."
+msgstr "Überprüft, ob ein Pfad existiert und ein Verzeichnis ist."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 174
+#: NEEDS WORK
+msgid "Tests if a numeric variable is equal to 5."
 msgstr "Überprüft, ob eine numerische Variable gleich 5 ist."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 178
+# File: usr/share/ashyterm/data/command_data.py, line: 181
 #: NEEDS WORK
-msgid "Cria um laço (loop) que itera sobre uma lista de itens."
+msgid "Creates a loop that iterates over a list of items."
 msgstr "Erstellt eine Schleife, die über eine Liste von Elementen iteriert."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 183
+# File: usr/share/ashyterm/data/command_data.py, line: 185
 #: NEEDS WORK
-msgid "Itera sobre uma lista explícita de números."
+msgid "Iterates over an explicit list of numbers."
 msgstr "Durchläuft eine explizite Liste von Zahlen."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 188
+# File: usr/share/ashyterm/data/command_data.py, line: 190
 #: NEEDS WORK
-msgid "Itera sobre todos os arquivos que terminam com .txt no diretório."
-msgstr "Durchläuft alle Dateien, die mit .txt im Verzeichnis enden."
+msgid "Iterates over all files ending with .txt in the directory."
+msgstr "Durchläuft alle Dateien mit der Endung .txt im Verzeichnis."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 197
+# File: usr/share/ashyterm/data/command_data.py, line: 199
 #: NEEDS WORK
-msgid "Cria um laço (loop) que continua enquanto uma condição for verdadeira."
-msgstr "Erstellt eine Schleife, die fortfährt, solange eine Bedingung wahr ist."
+msgid "Creates a loop that continues while a condition is true."
+msgstr "Erstellt eine Schleife, die fortgesetzt wird, solange eine Bedingung wahr ist."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 203
+# File: usr/share/ashyterm/data/command_data.py, line: 205
 #: NEEDS WORK
-msgid "Executa o bloco de código enquanto a variável COUNT for menor que 5."
-msgstr "Führt den Codeblock aus, solange die Variable COUNT kleiner als 5 ist."
+msgid "Executes the code block while the COUNT variable is less than 5."
+msgstr "Führt den Codeblock aus, solange die COUNT-Variable kleiner als 5 ist."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 212
+# File: usr/share/ashyterm/data/command_data.py, line: 214
 #: NEEDS WORK
-msgid "Cria um laço (loop) que continua enquanto uma condição for falsa."
-msgstr "Erstellt eine Schleife, die fortfährt, solange eine Bedingung falsch ist."
+msgid "Creates a loop that continues while a condition is false."
+msgstr "Erstellt eine Schleife, die fortgesetzt wird, solange eine Bedingung falsch ist."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 218
+# File: usr/share/ashyterm/data/command_data.py, line: 220
 #: NEEDS WORK
-msgid "Executa o bloco de código até que a variável COUNT seja igual a 0."
-msgstr "Führt den Codeblock aus, bis die Variable COUNT gleich 0 ist."
+msgid "Executes the code block until the COUNT variable equals 0."
+msgstr "Führt den Codeblock aus, bis die COUNT-Variable 0 erreicht."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 224
+# File: usr/share/ashyterm/data/command_data.py, line: 226
 #: NEEDS WORK
-msgid "Entrada do Usuário (Shell Script)"
+msgid "User Input (Shell Script)"
 msgstr "Benutzereingabe (Shell-Skript)"
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 227
+# File: usr/share/ashyterm/data/command_data.py, line: 229
 #: NEEDS WORK
-msgid "Lê uma linha da entrada padrão e a armazena em uma variável."
+msgid "Reads a line from standard input and stores it in a variable."
 msgstr "Liest eine Zeile von der Standardeingabe und speichert sie in einer Variablen."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 233
+# File: usr/share/ashyterm/data/command_data.py, line: 235
 #: NEEDS WORK
-msgid "Espera o usuário digitar algo e pressionar Enter, salvando na variável NOME."
+msgid "Waits for the user to type something and press Enter, saving it in the NAME variable."
 msgstr ""
-"Warte darauf, dass der Benutzer etwas eingibt und die Eingabetaste drückt, wobei es in der "
-"Variablen NAME gespeichert wird."
+"Wartet darauf, dass der Benutzer etwas eingibt und die Eingabetaste drückt, und speichert es in der "
+"VARIABLE NAME."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 239
+# File: usr/share/ashyterm/data/command_data.py, line: 241
 #: NEEDS WORK
-msgid "Mostra uma mensagem (prompt) para o usuário antes de esperar a entrada."
-msgstr "Zeigt eine Nachricht (Prompt) für den Benutzer an, bevor die Eingabe erwartet wird."
+msgid "Shows a message (prompt) to the user before waiting for input."
+msgstr "Zeigt dem Benutzer eine Nachricht (Eingabeaufforderung) an, bevor auf die Eingabe gewartet wird."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 245
+# File: usr/share/ashyterm/data/command_data.py, line: 247
 #: NEEDS WORK
-msgid "Expansão de Parâmetros"
+msgid "Parameter Expansion"
 msgstr "Parametererweiterung"
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 248
+# File: usr/share/ashyterm/data/command_data.py, line: 250
 #: NEEDS WORK
-msgid "Mecanismos do shell para manipular o valor de variáveis."
-msgstr "Shell-Mechanismen zur Manipulation von Variablenwerten."
+msgid "Advanced shell mechanisms for manipulating variable values and strings."
+msgstr "Erweiterte Shell-Mechanismen zum Manipulieren von Variablenwerten und Zeichenfolgen."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 254
+# File: usr/share/ashyterm/data/command_data.py, line: 255
 #: NEEDS WORK
-msgid "Substitui pelo valor da variável VAR. É o mesmo que $VAR, mas mais seguro."
-msgstr "Ersetzt durch den Wert der Variablen VAR. Es ist dasselbe wie $VAR, aber sicherer."
+msgid "Basic variable substitution using braces."
+msgstr "Einfache Variablenersetzung mit geschweiften Klammern."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 260
+# File: usr/share/ashyterm/data/command_data.py, line: 259
 #: NEEDS WORK
-msgid "Usa 'default' se VAR não estiver definida. A variável VAR não é alterada."
-msgstr "Verwende 'default', wenn VAR nicht definiert ist. Die Variable VAR wird nicht geändert."
+msgid "String substitution - replaces first 'b' with 'B'."
+msgstr "Zeichenfolgenersetzung - ersetzt das erste 'b' durch 'B'."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 266
+# File: usr/share/ashyterm/data/command_data.py, line: 263
 #: NEEDS WORK
-msgid "Usa e atribui 'default' a VAR se ela não estiver definida."
-msgstr "Verwendet und weist 'default' VAR zu, wenn es nicht definiert ist."
+msgid "Substring extraction - first 2 characters."
+msgstr "Teilstring-Extraktion - erste 2 Zeichen."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 272
+# File: usr/share/ashyterm/data/command_data.py, line: 267
 #: NEEDS WORK
-msgid "Retorna o número de caracteres no valor da variável VAR."
-msgstr "Gibt die Anzahl der Zeichen im Wert der Variablen VAR zurück."
+msgid "Substring from start - first 2 characters."
+msgstr "Teilstring vom Anfang - die ersten 2 Zeichen."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 271
+#: NEEDS WORK
+msgid "Substring excluding last character."
+msgstr "Teilstring ohne das letzte Zeichen."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 275
+#: NEEDS WORK
+msgid "Substring from right - last character."
+msgstr "Substring von rechts - letztes Zeichen."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 279
+#: NEEDS WORK
+msgid "Substring from right - second to last character."
+msgstr "Substring von rechts - vorletztes Zeichen."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 283
+#: NEEDS WORK
+msgid "Substring using variable length parameter."
+msgstr "Teilstring mit variabler Längenparameter."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 287
+#: NEEDS WORK
+msgid "Remove file extension (.py)."
+msgstr "Dateiendung (.py) entfernen."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 291
+#: NEEDS WORK
+msgid "Replace file extension (.py to .bak)."
+msgstr "Dateiendung ersetzen (.py in .bak)."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 295
+#: NEEDS WORK
+msgid "Remove everything after last slash (get directory)."
+msgstr "Entfernen Sie alles nach dem letzten Schrägstrich (Verzeichnis abrufen)."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 299
+#: NEEDS WORK
+msgid "Extract file extension (longest match)."
+msgstr "Dateiendung extrahieren (längster Treffer)."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 303
+#: NEEDS WORK
+msgid "Extract filename from path (longest match)."
+msgstr "Dateiname aus Pfad extrahieren (längste Übereinstimmung)."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 307
+#: NEEDS WORK
+msgid "Remove shortest prefix match up to first slash."
+msgstr "Entfernen Sie die kürzeste Präfixübereinstimmung bis zum ersten Schrägstrich."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 312
+#: NEEDS WORK
+msgid "Replace first occurrence of 'project' with 'scripts'."
+msgstr "Ersetze das erste Vorkommen von 'project' mit 'scripts'."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 317
+#: NEEDS WORK
+msgid "Extract substring starting at position 6, length 5."
+msgstr "Extrahiere Teilstring beginnend bei Position 6, Länge 5."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 321
+#: NEEDS WORK
+msgid "Extract last 5 characters using negative offset."
+msgstr "Extrahiere die letzten 5 Zeichen mit negativem Offset."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 325
+#: NEEDS WORK
+msgid "Extract basename (filename) from path."
+msgstr "Basisnamen (Dateinamen) aus dem Pfad extrahieren."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 329
+#: NEEDS WORK
+msgid "Extract directory path by removing basename."
+msgstr "Verzeichnis-Pfad extrahieren, indem der Basisname entfernt wird."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 333
+#: NEEDS WORK
+msgid "List all variable names starting with 'user_'."
+msgstr "Liste alle Variablen, die mit 'user_' beginnen."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 337
+#: NEEDS WORK
+msgid "Indirect variable expansion using pointer."
+msgstr "Indirekte Variablenexpansion mit Zeiger."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 341
+#: NEEDS WORK
+msgid "Remove shortest suffix match."
+msgstr "Entferne die kürzeste Suffixübereinstimmung."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 345
+#: NEEDS WORK
+msgid "Remove shortest prefix match."
+msgstr "Entferne die kürzeste Präfixübereinstimmung."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 349
+#: NEEDS WORK
+msgid "Remove longest suffix match."
+msgstr "Entferne längsten Suffixabgleich."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 353
+#: NEEDS WORK
+msgid "Remove longest prefix match."
+msgstr "Entferne längstes Präfix-Match."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 357
+#: NEEDS WORK
+msgid "Replace first occurrence of 'old' with 'new'."
+msgstr "Ersetze das erste Vorkommen von 'old' durch 'new'."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 361
+# File: usr/share/ashyterm/data/command_data.py, line: 1466
+#: NEEDS WORK
+msgid "Replace all occurrences of 'old' with 'new'."
+msgstr "Ersetzen Sie alle Vorkommen von 'alt' durch 'neu'."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 365
+#: NEEDS WORK
+msgid "Replace suffix 'old' with 'new'."
+msgstr "Ersetze das Suffix 'old' durch 'new'."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 369
+#: NEEDS WORK
+msgid "Replace prefix 'old' with 'new'."
+msgstr "Ersetze das Präfix 'alt' durch 'neu'."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 373
+#: NEEDS WORK
+msgid "Extract substring (position 0, length 3)."
+msgstr "Unterzeichenfolge extrahieren (Position 0, Länge 3)."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 377
+#: NEEDS WORK
+msgid "Extract substring from right (last 3 characters)."
+msgstr "Substring von rechts extrahieren (letzte 3 Zeichen)."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 381
+#: NEEDS WORK
+msgid "Get length of variable $filename."
+msgstr "Länge der Variablen $filename abrufen."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 385
+#: NEEDS WORK
+msgid "Convert first character to lowercase."
+msgstr "Ersten Buchstaben in Kleinbuchstaben umwandeln."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 389
+#: NEEDS WORK
+msgid "Convert all characters to lowercase."
+msgstr "Alle Zeichen in Kleinbuchstaben umwandeln."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 393
+#: NEEDS WORK
+msgid "Convert first character to uppercase."
+msgstr "Ersten Buchstaben in Großbuchstaben umwandeln."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 397
+#: NEEDS WORK
+msgid "Convert all characters to uppercase."
+msgstr "Alle Zeichen in Großbuchstaben umwandeln."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 401
+#: NEEDS WORK
+msgid "Use $username, or 'guest' if unset (or null)."
+msgstr "Verwenden Sie $username oder 'Gast', wenn nicht festgelegt (oder null)."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 406
+#: NEEDS WORK
+msgid "Set $username to 'guest' if unset (or null), then use it."
+msgstr "Setze $username auf 'gast', wenn nicht gesetzt (oder null), und verwende es dann."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 411
+#: NEEDS WORK
+msgid "Use 'admin' if $username is set (and not null)."
+msgstr "Verwenden Sie 'admin', wenn $username gesetzt ist (und nicht null)."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 416
+#: NEEDS WORK
+msgid "Show error message and exit if $username is unset (or null)."
+msgstr "Zeige Fehlermeldung an und beende, wenn $username nicht gesetzt (oder null) ist."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 422
+#: NEEDS WORK
+msgid "Use $username, or 'guest' if unset (ignores null values)."
+msgstr "Verwenden Sie $username oder 'Gast', wenn nicht festgelegt (ignoriert Nullwerte)."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 430
+#: NEEDS WORK
+msgid "Creates directories."
+msgstr "Erstellt Verzeichnisse."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 434
+#: NEEDS WORK
+msgid "Creates a single directory."
+msgstr "Erstellt ein einzelnes Verzeichnis."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 439
+#: NEEDS WORK
+msgid "Creates nested directories, creating parent directories as needed."
+msgstr "Erstellt verschachtelte Verzeichnisse und erstellt bei Bedarf übergeordnete Verzeichnisse."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 447
+#: NEEDS WORK
+msgid "Creates empty files or updates file timestamps."
+msgstr "Erstellt leere Dateien oder aktualisiert Dateizeitstempel."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 452
+#: NEEDS WORK
+msgid "Creates an empty file or updates the timestamp of an existing file."
+msgstr "Erstellt eine leere Datei oder aktualisiert den Zeitstempel einer vorhandenen Datei."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 457
+#: NEEDS WORK
+msgid "Creates multiple files at once."
+msgstr "Erstellt mehrere Dateien gleichzeitig."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 462
+# File: usr/share/ashyterm/data/command_data.py, line: 481
+# File: usr/share/ashyterm/data/command_data.py, line: 496
+# File: usr/share/ashyterm/data/command_data.py, line: 513
+# File: usr/share/ashyterm/data/command_data.py, line: 536
+# File: usr/share/ashyterm/data/command_data.py, line: 555
+# File: usr/share/ashyterm/data/command_data.py, line: 578
+# File: usr/share/ashyterm/data/command_data.py, line: 597
+# File: usr/share/ashyterm/data/command_data.py, line: 616
+# File: usr/share/ashyterm/data/command_data.py, line: 635
+# File: usr/share/ashyterm/data/command_data.py, line: 650
+# File: usr/share/ashyterm/data/command_data.py, line: 665
+# File: usr/share/ashyterm/data/command_data.py, line: 684
+# File: usr/share/ashyterm/data/command_data.py, line: 1275
+#: NEEDS WORK
+msgid "Text Processing"
+msgstr "Textverarbeitung"
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 464
+#: NEEDS WORK
+msgid "Concatenates and displays file contents."
+msgstr "Verknüpft und zeigt den Inhalt von Dateien an."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 468
+#: NEEDS WORK
+msgid "Displays the contents of a file."
+msgstr "Zeigt den Inhalt einer Datei an."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 472
+#: NEEDS WORK
+msgid "Concatenates and displays multiple files."
+msgstr "Verknüpft und zeigt mehrere Dateien an."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 476
+#: NEEDS WORK
+msgid "Displays file contents with line numbers."
+msgstr "Zeigt den Inhalt der Datei mit Zeilennummern an."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 483
+#: NEEDS WORK
+msgid "Displays the beginning of files."
+msgstr "Zeigt den Anfang von Dateien an."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 487
+#: NEEDS WORK
+msgid "Displays the first 10 lines of a file."
+msgstr "Zeigt die ersten 10 Zeilen einer Datei an."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 491
+#: NEEDS WORK
+msgid "Displays the first 20 lines of a file."
+msgstr "Zeigt die ersten 20 Zeilen einer Datei an."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 498
+#: NEEDS WORK
+msgid "Displays the end of files."
+msgstr "Zeigt das Ende von Dateien an."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 502
+#: NEEDS WORK
+msgid "Displays the last 10 lines of a file."
+msgstr "Zeigt die letzten 10 Zeilen einer Datei an."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 507
+#: NEEDS WORK
+msgid "Follows the file, displaying new lines as they are added."
+msgstr "Folgt der Datei und zeigt neue Zeilen an, während sie hinzugefügt werden."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 515
+#: NEEDS WORK
+msgid "Sorts lines of text files."
+msgstr "Sortiert Zeilen von Textdateien."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 519
+#: NEEDS WORK
+msgid "Sorts lines in alphabetical order."
+msgstr "Sortiert Zeilen in alphabetischer Reihenfolge."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 523
+#: NEEDS WORK
+msgid "Sorts lines numerically."
+msgstr "Sortiert Zeilen numerisch."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 527
+#: NEEDS WORK
+msgid "Sorts lines in reverse order."
+msgstr "Sortiert Zeilen in umgekehrter Reihenfolge."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 531
+#: NEEDS WORK
+msgid "Sorts by second field/column."
+msgstr "Sortiert nach dem zweiten Feld/Spalte."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 538
+#: NEEDS WORK
+msgid "Removes duplicate lines from sorted files."
+msgstr "Entfernt doppelte Zeilen aus sortierten Dateien."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 542
+#: NEEDS WORK
+msgid "Removes duplicate lines after sorting."
+msgstr "Entfernt doppelte Zeilen nach dem Sortieren."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 546
+#: NEEDS WORK
+msgid "Shows count of occurrences for each line."
+msgstr "Zeigt die Anzahl der Vorkommen für jede Zeile an."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 550
+#: NEEDS WORK
+msgid "Shows only duplicate lines."
+msgstr "Zeigt nur doppelte Zeilen an."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 557
+#: NEEDS WORK
+msgid "Counts lines, words, and characters in files."
+msgstr "Zählt Zeilen, Wörter und Zeichen in Dateien."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 561
+#: NEEDS WORK
+msgid "Shows lines, words, and characters count."
+msgstr "Zeigt die Anzahl der Zeilen, Wörter und Zeichen an."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 565
+#: NEEDS WORK
+msgid "Shows only line count."
+msgstr "Zeigt nur die Zeilenanzahl an."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 569
+#: NEEDS WORK
+msgid "Shows only word count."
+msgstr "Zeigt nur die Wortanzahl an."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 573
+#: NEEDS WORK
+msgid "Shows only character count."
+msgstr "Zeigt nur die Zeichenanzahl an."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 580
+#: NEEDS WORK
+msgid "Extracts sections from lines of files."
+msgstr "Extrahiert Abschnitte aus Zeilen von Dateien."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 584
+#: NEEDS WORK
+msgid "Extracts first field using colon delimiter."
+msgstr "Extrahiert das erste Feld mit Doppelpunkt-Trennzeichen."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 588
+#: NEEDS WORK
+msgid "Extracts first 10 characters from each line."
+msgstr "Extrahiert die ersten 10 Zeichen aus jeder Zeile."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 592
+#: NEEDS WORK
+msgid "Extracts 2nd and 4th fields from CSV data."
+msgstr "Extrahiert das 2. und 4. Feld aus CSV-Daten."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 599
+#: NEEDS WORK
+msgid "Merges lines from multiple files."
+msgstr "Fügt Zeilen aus mehreren Dateien zusammen."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 603
+#: NEEDS WORK
+msgid "Merges corresponding lines from two files."
+msgstr "Fügt entsprechende Zeilen aus zwei Dateien zusammen."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 607
+#: NEEDS WORK
+msgid "Merges lines using comma as delimiter."
+msgstr "Fügt Zeilen mit Komma als Trennzeichen zusammen."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 611
+#: NEEDS WORK
+msgid "Merges all lines into a single line."
+msgstr "Fügt alle Zeilen zu einer einzigen Zeile zusammen."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 618
+#: NEEDS WORK
+msgid "Translates or deletes characters."
+msgstr "Übersetzt oder löscht Zeichen."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 622
+#: NEEDS WORK
+msgid "Converts lowercase to uppercase."
+msgstr "Konvertiert Kleinbuchstaben in Großbuchstaben."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 626
+#: NEEDS WORK
+msgid "Removes all newline characters."
+msgstr "Entfernt alle Zeilenumbrüche."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 630
+#: NEEDS WORK
+msgid "Squeezes multiple spaces into single space."
+msgstr "Komprimiert mehrere Leerzeichen zu einem einzelnen Leerzeichen."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 637
+#: NEEDS WORK
+msgid "Reverses lines character by character."
+msgstr "Kehrt Zeilen Zeichen für Zeichen um."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 641
+#: NEEDS WORK
+msgid "Reverses each line character by character."
+msgstr "Kehrt jede Zeile Zeichen für Zeichen um."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 645
+#: NEEDS WORK
+msgid "Reverses a string."
+msgstr "Kehrt einen String um."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 652
+#: NEEDS WORK
+msgid "Concatenates and prints files in reverse order."
+msgstr "Verknüpft und druckt Dateien in umgekehrter Reihenfolge."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 656
+#: NEEDS WORK
+msgid "Prints file lines in reverse order."
+msgstr "Druckt Dateizeilen in umgekehrter Reihenfolge."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 660
+#: NEEDS WORK
+msgid "Concatenates files in reverse order."
+msgstr "Verknüpft Dateien in umgekehrter Reihenfolge."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 667
+#: NEEDS WORK
+msgid "Prints a sequence of numbers."
+msgstr "Druckt eine Folge von Zahlen."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 671
+#: NEEDS WORK
+msgid "Prints numbers from 1 to 10."
+msgstr "Druckt Zahlen von 1 bis 10."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 675
+#: NEEDS WORK
+msgid "Prints numbers from 5 to 10."
+msgstr "Druckt Zahlen von 5 bis 10."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 679
+#: NEEDS WORK
+msgid "Prints even numbers from 0 to 20."
+msgstr "Druckt gerade Zahlen von 0 bis 20."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 686
+#: NEEDS WORK
+msgid "Arbitrary precision calculator language."
+msgstr "Zahlensystem mit beliebiger Genauigkeit."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 690
+#: NEEDS WORK
+msgid "Performs basic arithmetic calculation."
+msgstr "Führt grundlegende arithmetische Berechnungen durch."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 694
+#: NEEDS WORK
+msgid "Division with 2 decimal places precision."
+msgstr "Division mit 2 Dezimalstellen Genauigkeit."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 698
+#: NEEDS WORK
+msgid "Starts bc with math library for advanced functions."
+msgstr "Beginnt bc mit der Mathematikbibliothek für erweiterte Funktionen."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 703
+# File: usr/share/ashyterm/data/command_data.py, line: 718
+# File: usr/share/ashyterm/data/command_data.py, line: 733
+# File: usr/share/ashyterm/data/command_data.py, line: 758
+# File: usr/share/ashyterm/data/command_data.py, line: 771
+# File: usr/share/ashyterm/data/command_data.py, line: 782
+# File: usr/share/ashyterm/data/command_data.py, line: 793
+# File: usr/share/ashyterm/data/command_data.py, line: 812
+#: NEEDS WORK
+msgid "System Information"
+msgstr "Systeminformationen"
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 705
+#: NEEDS WORK
+msgid "Displays disk space usage."
+msgstr "Zeigt die Nutzung des Speicherplatzes an."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 709
+# File: usr/share/ashyterm/data/command_data.py, line: 739
+#: NEEDS WORK
+msgid "Shows disk usage in human-readable format."
+msgstr "Zeigt den Speicherplatzverbrauch im menschenlesbaren Format an."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 713
+#: NEEDS WORK
+msgid "Shows inode usage instead of block usage."
+msgstr "Zeigt die Inode-Nutzung anstelle der Blocknutzung an."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 720
+#: NEEDS WORK
+msgid "Displays memory usage information."
+msgstr "Zeigt Informationen zur Speichernutzung an."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 724
+#: NEEDS WORK
+msgid "Shows memory usage in human-readable format."
+msgstr "Zeigt den Speicherverbrauch im menschenlesbaren Format an."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 728
+#: NEEDS WORK
+msgid "Continuously displays memory usage every 5 seconds."
+msgstr "Zeigt kontinuierlich die Speichernutzung alle 5 Sekunden an."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 735
+#: NEEDS WORK
+msgid "Displays disk usage of files and directories."
+msgstr "Zeigt die Festplattennutzung von Dateien und Verzeichnissen an."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 743
+#: NEEDS WORK
+msgid "Shows total size of each item in current directory."
+msgstr "Zeigt die Gesamtgröße jedes Elements im aktuellen Verzeichnis an."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 747
+#: NEEDS WORK
+msgid "Shows disk usage one level deep."
+msgstr "Zeigt die Festplattennutzung auf einer Ebene an."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 752
+#: NEEDS WORK
+msgid "Shows all files and directories with human-readable sizes."
+msgstr "Zeigt alle Dateien und Verzeichnisse mit menschenlesbaren Größen an."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 760
+#: NEEDS WORK
+msgid "Shows how long the system has been running."
+msgstr "Zeigt an, wie lange das System bereits läuft."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 765
+#: NEEDS WORK
+msgid "Shows current time, uptime, users, and load average."
+msgstr "Zeigt die aktuelle Uhrzeit, die Betriebszeit, die Benutzer und den durchschnittlichen Systemlast an."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 773
+#: NEEDS WORK
+msgid "Displays the current username."
+msgstr "Zeigt den aktuellen Benutzernamen an."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 777
+#: NEEDS WORK
+msgid "Prints the current logged-in username."
+msgstr "Druckt den aktuell angemeldeten Benutzernamen."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 784
+#: NEEDS WORK
+msgid "Prints the current working directory."
+msgstr "Gibt das aktuelle Arbeitsverzeichnis aus."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 788
+#: NEEDS WORK
+msgid "Shows the full path of current directory."
+msgstr "Zeigt den vollständigen Pfad des aktuellen Verzeichnisses an."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 795
+#: NEEDS WORK
+msgid "Displays or sets the system date and time."
+msgstr "Zeigt das Systemdatum und die Systemzeit an oder stellt sie ein."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 799
+#: NEEDS WORK
+msgid "Shows current date and time."
+msgstr "Zeigt das aktuelle Datum und die Uhrzeit an."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 803
+#: NEEDS WORK
+msgid "Shows date and time in custom format."
+msgstr "Zeigt Datum und Uhrzeit im benutzerdefinierten Format an."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 807
+#: NEEDS WORK
+msgid "Shows UTC time instead of local time."
+msgstr "Zeigt UTC-Zeit anstelle der lokalen Zeit an."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 814
+#: NEEDS WORK
+msgid "Displays a calendar."
+msgstr "Zeigt einen Kalender an."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 818
+#: NEEDS WORK
+msgid "Shows calendar for current month."
+msgstr "Zeigt den Kalender für den aktuellen Monat an."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 822
+#: NEEDS WORK
+msgid "Shows calendar for entire year 2024."
+msgstr "Zeigt den Kalender für das gesamte Jahr 2024 an."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 826
+#: NEEDS WORK
+msgid "Shows calendar for December 2024."
+msgstr "Zeigt den Kalender für Dezember 2024 an."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 831
+# File: usr/share/ashyterm/data/command_data.py, line: 848
+#: NEEDS WORK
+msgid "Process Management"
+msgstr "Prozessverwaltung"
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 833
+#: NEEDS WORK
+msgid "Displays information about running processes."
+msgstr "Zeigt Informationen über laufende Prozesse an."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 838
+#: NEEDS WORK
+msgid "Shows detailed information about all running processes."
+msgstr "Zeigt detaillierte Informationen über alle laufenden Prozesse an."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 843
+#: NEEDS WORK
+msgid "Shows all processes in a different format."
+msgstr "Zeigt alle Prozesse in einem anderen Format an."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 850
+#: NEEDS WORK
+msgid "Sends signals to processes."
+msgstr "Sendet Signale an Prozesse."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 854
+#: NEEDS WORK
+msgid "Sends SIGTERM signal to process with PID 1234."
+msgstr "Sendet SIGTERM-Signal an den Prozess mit der PID 1234."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 858
+#: NEEDS WORK
+msgid "Forcefully kills process with PID 1234 (SIGKILL)."
+msgstr "Zwingt den Prozess mit der PID 1234 (SIGKILL) zum Beenden."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 863
+#: NEEDS WORK
+msgid "Networking"
+msgstr "Netzwerk"
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 865
+#: NEEDS WORK
+msgid "Tests network connectivity to a host."
+msgstr "Testet die Netzwerkverbindung zu einem Host."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 869
+#: NEEDS WORK
+msgid "Tests connectivity to google.com."
+msgstr "Überprüft die Konnektivität zu google.com."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 873
+#: NEEDS WORK
+msgid "Sends only 4 ping packets instead of continuous."
+msgstr "Sendet nur 4 Ping-Pakete anstelle von kontinuierlich."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 878
+#: NEEDS WORK
+msgid "Archives"
+msgstr "Archive"
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 880
+#: NEEDS WORK
+msgid "Creates and manipulates archive files."
+msgstr "Erstellt und bearbeitet Archivdateien."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 884
+#: NEEDS WORK
+msgid "Creates a tar archive from a directory."
+msgstr "Erstellt ein tar-Archiv aus einem Verzeichnis."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 888
+#: NEEDS WORK
+msgid "Extracts files from a tar archive."
+msgstr "Extrahiert Dateien aus einem Tar-Archiv."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 892
+#: NEEDS WORK
+msgid "Creates a compressed tar archive."
+msgstr "Erstellt ein komprimiertes Tar-Archiv."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 897
+#: NEEDS WORK
+msgid "Bash Conditions"
+msgstr "Bash-Bedingungen"
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 899
+#: NEEDS WORK
+msgid "Conditional expressions for bash scripting."
+msgstr "Bedingte Ausdrücke für Bash-Skripting."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 903
+#: NEEDS WORK
+msgid "Check if string is empty."
+msgstr "Überprüfen, ob die Zeichenfolge leer ist."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 907
+#: NEEDS WORK
+msgid "Check if string is not empty."
+msgstr "Überprüfen Sie, ob die Zeichenfolge nicht leer ist."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 911
+#: NEEDS WORK
+msgid "Check if strings are equal."
+msgstr "Überprüfen Sie, ob die Zeichenfolgen gleich sind."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 915
+#: NEEDS WORK
+msgid "Check if strings are not equal."
+msgstr "Überprüfen, ob die Zeichenfolgen ungleich sind."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 919
+#: NEEDS WORK
+msgid "Check if numbers are equal."
+msgstr "Überprüfen Sie, ob die Zahlen gleich sind."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 923
+#: NEEDS WORK
+msgid "Check if numbers are not equal."
+msgstr "Überprüfen Sie, ob die Zahlen ungleich sind."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 927
+#: NEEDS WORK
+msgid "Check if first number is less than second."
+msgstr "Überprüfen Sie, ob die erste Zahl kleiner als die zweite ist."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 932
+#: NEEDS WORK
+msgid "Check if first number is less than or equal to second."
+msgstr "Überprüfen Sie, ob die erste Zahl kleiner oder gleich der zweiten ist."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 937
+#: NEEDS WORK
+msgid "Check if first number is greater than second."
+msgstr "Überprüfen Sie, ob die erste Zahl größer als die zweite ist."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 942
+#: NEEDS WORK
+msgid "Check if first number is greater than or equal to second."
+msgstr "Überprüfen Sie, ob die erste Zahl größer oder gleich der zweiten ist."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 947
+#: NEEDS WORK
+msgid "Check if string matches regular expression."
+msgstr "Überprüfen Sie, ob die Zeichenfolge mit dem regulären Ausdruck übereinstimmt."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 952
+#: NEEDS WORK
+msgid "Check numeric conditions with arithmetic evaluation."
+msgstr "Überprüfen Sie numerische Bedingungen mit arithmetischer Auswertung."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 957
+#: NEEDS WORK
+msgid "Check if shell option is enabled."
+msgstr "Überprüfen Sie, ob die Shell-Option aktiviert ist."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 961
+#: NEEDS WORK
+msgid "Logical NOT - negate a condition."
+msgstr "Logische NICHT - eine Bedingung negieren."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 965
+#: NEEDS WORK
+msgid "Logical AND - both conditions must be true."
+msgstr "Logisches UND - beide Bedingungen müssen wahr sein."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 969
+#: NEEDS WORK
+msgid "Logical OR - at least one condition must be true."
+msgstr "Logisches ODER - mindestens eine Bedingung muss wahr sein."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 973
+#: NEEDS WORK
+msgid "Check if file exists."
+msgstr "Überprüfen, ob die Datei vorhanden ist."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 977
+#: NEEDS WORK
+msgid "Check if file is readable."
+msgstr "Überprüfen Sie, ob die Datei lesbar ist."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 981
+#: NEEDS WORK
+msgid "Check if path is a symbolic link."
+msgstr "Überprüfen, ob der Pfad ein symbolischer Link ist."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 985
+#: NEEDS WORK
+msgid "Check if path is a directory."
+msgstr "Überprüfen, ob der Pfad ein Verzeichnis ist."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 989
+#: NEEDS WORK
+msgid "Check if file is writable."
+msgstr "Überprüfen Sie, ob die Datei beschreibbar ist."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 993
+#: NEEDS WORK
+msgid "Check if file size is greater than 0 bytes."
+msgstr "Überprüfen Sie, ob die Dateigröße größer als 0 Bytes ist."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 997
+#: NEEDS WORK
+msgid "Check if path is a regular file."
+msgstr "Überprüfen Sie, ob der Pfad eine reguläre Datei ist."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1001
+#: NEEDS WORK
+msgid "Check if file is executable."
+msgstr "Überprüfen Sie, ob die Datei ausführbar ist."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1005
+#: NEEDS WORK
+msgid "Check if first file is newer than second file."
+msgstr "Überprüfen Sie, ob die erste Datei neuer ist als die zweite Datei."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1009
+#: NEEDS WORK
+msgid "Check if first file is older than second file."
+msgstr "Überprüfen Sie, ob die erste Datei älter ist als die zweite Datei."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1013
+#: NEEDS WORK
+msgid "Check if both paths refer to the same file."
+msgstr "Überprüfen Sie, ob beide Pfade auf dieselbe Datei verweisen."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1018
+#: NEEDS WORK
+msgid "Bash Arrays"
+msgstr "Bash-Arrays"
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1020
+#: NEEDS WORK
+msgid "Array operations and manipulations in bash."
+msgstr "Array-Operationen und -Manipulationen in Bash."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1024
+#: NEEDS WORK
+msgid "Define array with multiple elements."
+msgstr "Array mit mehreren Elementen definieren."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1028
+#: NEEDS WORK
+msgid "Set specific array element by index."
+msgstr "Bestimmtes Array-Element nach Index festlegen."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1032
+#: NEEDS WORK
+msgid "Set another array element by index."
+msgstr "Setzen Sie ein anderes Array-Element nach Index."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1036
+#: NEEDS WORK
+msgid "Set third array element by index."
+msgstr "Setze das dritte Array-Element nach Index."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1040
+#: NEEDS WORK
+msgid "Access first element of array."
+msgstr "Zugriff auf das erste Element des Arrays."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1044
+#: NEEDS WORK
+msgid "Access last element of array."
+msgstr "Zugriff auf das letzte Element des Arrays."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1048
+#: NEEDS WORK
+msgid "Print all elements separated by spaces."
+msgstr "Drucken Sie alle Elemente, getrennt durch Leerzeichen."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1052
+#: NEEDS WORK
+msgid "Get total number of elements in array."
+msgstr "Gesamtanzahl der Elemente im Array abrufen."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1056
+#: NEEDS WORK
+msgid "Get length of first element string."
+msgstr "Länge des ersten Elementstrings abrufen."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1060
+#: NEEDS WORK
+msgid "Get length of specific element string."
+msgstr "Länge des spezifischen Elementstrings abrufen."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1065
+#: NEEDS WORK
+msgid "Extract range of elements (start at index 2, length 3)."
+msgstr "Bereich von Elementen extrahieren (beginnen bei Index 2, Länge 3)."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1070
+#: NEEDS WORK
+msgid "Get all array indices/keys."
+msgstr "Alle Array-Indizes/Schlüssel abrufen."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1074
+#: NEEDS WORK
+msgid "Add new element to end of array."
+msgstr "Neues Element am Ende des Arrays hinzufügen."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1078
+#: NEEDS WORK
+msgid "Append element using compound assignment."
+msgstr "Element mit zusammengesetzter Zuweisung hinzufügen."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1082
+#: NEEDS WORK
+msgid "Remove elements matching regex pattern."
+msgstr "Entfernen Sie Elemente, die dem Regex-Muster entsprechen."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1086
+#: NEEDS WORK
+msgid "Remove specific element by index."
+msgstr "Entfernen Sie ein bestimmtes Element nach Index."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1090
+#: NEEDS WORK
+msgid "Create duplicate of array."
+msgstr "Erstelle eine Duplikat des Arrays."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1094
+#: NEEDS WORK
+msgid "Concatenate two arrays together."
+msgstr "Verknüpfen Sie zwei Arrays miteinander."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1098
+#: NEEDS WORK
+msgid "Read file into array, split by IFS (whitespace)."
+msgstr "Datei in Array einlesen, nach IFS (Leerzeichen) aufteilen."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1103
+#: NEEDS WORK
+msgid "Bash Brace Expansion"
+msgstr "Bash-Klammererweiterung"
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1105
+#: NEEDS WORK
+msgid "Generate arbitrary strings using brace expansion."
+msgstr "Generiere beliebige Zeichenfolgen mit geschweiften Klammern."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1109
+#: NEEDS WORK
+msgid "Expand to: main.py utils.py config.py"
+msgstr "Erweitern auf: main.py utils.py config.py"
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1113
+#: NEEDS WORK
+msgid "Basic brace expansion without prefix/suffix."
+msgstr "Einfache geschweifte Klammererweiterung ohne Präfix/Nachsuffix."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1117
+#: NEEDS WORK
+msgid "Add file extensions to multiple base names."
+msgstr "Dateiendungen zu mehreren Basisnamen hinzufügen."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1121
+#: NEEDS WORK
+msgid "Create numbered file names."
+msgstr "Erstelle nummerierte Dateinamen."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1125
+#: NEEDS WORK
+msgid "Generate sequence from 1 to 10."
+msgstr "Generiere eine Sequenz von 1 bis 10."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1129
+#: NEEDS WORK
+msgid "Generate zero-padded numbers (01, 02, ..., 12)."
+msgstr "Generiere nullgefüllte Zahlen (01, 02, ..., 12)."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1133
+#: NEEDS WORK
+msgid "Generate alphabet sequence from a to z."
+msgstr "Generiere das Alphabet von a bis z."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1137
+#: NEEDS WORK
+msgid "Generate uppercase letter sequence."
+msgstr "Generiere eine Sequenz aus Großbuchstaben."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1141
+#: NEEDS WORK
+msgid "Generate descending sequence."
+msgstr "Absteigende Sequenz generieren."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1145
+#: NEEDS WORK
+msgid "Generate zero-padded sequence with leading zeros."
+msgstr "Generiere nullgefüllte Sequenz mit führenden Nullen."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1149
+#: NEEDS WORK
+msgid "Nested braces: generates 1 2 3 7 8 9."
+msgstr "Verschachtelte geschweifte Klammern: erzeugt 1 2 3 7 8 9."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1153
+#: NEEDS WORK
+msgid "Multiple brace expansions in one expression."
+msgstr "Mehrfache geschweifte Klammererweiterungen in einem Ausdruck."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1157
+#: NEEDS WORK
+msgid "Create directory paths with brace expansion."
+msgstr "Verzeichnis-Pfade mit geschweiften Klammern erstellen."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1161
+#: NEEDS WORK
+msgid "Combine different sets of values."
+msgstr "Kombinieren Sie verschiedene Wertegruppen."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1165
+#: NEEDS WORK
+msgid "Create multiple directories at once."
+msgstr "Erstellen Sie mehrere Verzeichnisse auf einmal."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1170
+#: NEEDS WORK
+msgid "Create backup by copying file with .backup extension."
+msgstr "Backup erstellen, indem Sie die Datei mit der .backup-Erweiterung kopieren."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1175
+#: NEEDS WORK
+msgid "Generate platform combinations."
+msgstr "Plattformkombinationen generieren."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1180
+#: NEEDS WORK
+msgid "File Search"
+msgstr "Dateisuche"
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1182
+#: NEEDS WORK
+msgid "Powerful file search and manipulation tool."
+msgstr "Leistungsstarkes Tool zur Dateisuche und -manipulation."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1187
+#: NEEDS WORK
+msgid "Find all .txt files in current directory and subdirectories."
+msgstr "Finde alle .txt-Dateien im aktuellen Verzeichnis und in Unterverzeichnissen."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1193
+#: NEEDS WORK
+msgid "Find files starting with 'config' in user's home directory."
+msgstr "Finde Dateien, die mit 'config' im Benutzerverzeichnis beginnen."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1198
+#: NEEDS WORK
+msgid "Find only regular files with .log extension."
+msgstr "Finde nur reguläre Dateien mit der .log-Erweiterung."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1202
+#: NEEDS WORK
+msgid "Find only directories starting with 'backup'."
+msgstr "Finde nur Verzeichnisse, die mit 'backup' beginnen."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1206
+#: NEEDS WORK
+msgid "Find and delete all .tmp files."
+msgstr "Finden und löschen Sie alle .tmp-Dateien."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1210
+#: NEEDS WORK
+msgid "Find files modified in the last 7 days."
+msgstr "Dateien anzeigen, die in den letzten 7 Tagen geändert wurden."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1214
+#: NEEDS WORK
+msgid "Find files modified more than 30 days ago."
+msgstr "Finden Sie Dateien, die vor mehr als 30 Tagen geändert wurden."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1218
+#: NEEDS WORK
+msgid "Find files larger than 100MB."
+msgstr "Finden Sie Dateien, die größer als 100 MB sind."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1222
+#: NEEDS WORK
+msgid "Find files smaller than 1KB."
+msgstr "Finde Dateien, die kleiner als 1KB sind."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1226
+#: NEEDS WORK
+msgid "Find empty files and directories."
+msgstr "Leere Dateien und Verzeichnisse finden."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1230
+#: NEEDS WORK
+msgid "Find files with specific permissions (755)."
+msgstr "Finden Sie Dateien mit bestimmten Berechtigungen (755)."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1234
+#: NEEDS WORK
+msgid "Find files owned by user 'bruno'."
+msgstr "Finde Dateien, die dem Benutzer 'bruno' gehören."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1238
+#: NEEDS WORK
+msgid "Find files owned by group 'developers'."
+msgstr "Finde Dateien, die der Gruppe 'Entwickler' gehören."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1242
+#: NEEDS WORK
+msgid "Make all Python files executable."
+msgstr "Alle Python-Dateien ausführbar machen."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1246
+#: NEEDS WORK
+msgid "Move all JPG files to /tmp/images/ directory."
+msgstr "Verschiebe alle JPG-Dateien in das Verzeichnis /tmp/images/."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1250
+#: NEEDS WORK
+msgid "Find log files containing 'ERROR' text."
+msgstr "Finde Protokolldateien, die den Text 'ERROR' enthalten."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1254
+#: NEEDS WORK
+msgid "Find .conf files only 2 levels deep."
+msgstr "Finde .conf-Dateien nur 2 Ebenen tief."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1258
+#: NEEDS WORK
+msgid "Find files with .bak OR .backup extension."
+msgstr "Finden Sie Dateien mit der Erweiterung .bak ODER .backup."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1262
+#: NEEDS WORK
+msgid "Find .txt files that are also larger than 1MB."
+msgstr "Finde .txt-Dateien, die auch größer als 1 MB sind."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1266
+#: NEEDS WORK
+msgid "Safely delete files with spaces in names."
+msgstr "Dateien mit Leerzeichen im Namen sicher löschen."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1270
+#: NEEDS WORK
+msgid "List contents of all ZIP files found."
+msgstr "Inhalt aller gefundenen ZIP-Dateien auflisten."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1277
+#: NEEDS WORK
+msgid "Stream editor for filtering and transforming text."
+msgstr "Stream-Editor zum Filtern und Transformieren von Text."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1282
+#: NEEDS WORK
+msgid "Replace all occurrences of 'old' with 'new' in file.txt."
+msgstr "Ersetze alle Vorkommen von 'alt' durch 'neu' in datei.txt."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1287
+#: NEEDS WORK
+msgid "Replace all instances of 'bruno' with 'maria'."
+msgstr "Ersetze alle Vorkommen von 'bruno' mit 'maria'."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1292
+#: NEEDS WORK
+msgid "Case-insensitive replacement of 'error' with 'warning'."
+msgstr "Groß-/Kleinschreibung ignorierende Ersetzung von 'Fehler' durch 'Warnung'."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1297
+#: NEEDS WORK
+msgid "Replace only the first occurrence per line."
+msgstr "Ersetzen Sie nur das erste Vorkommen pro Zeile."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1302
+#: NEEDS WORK
+msgid "Replace whole word 'test' with 'exam' using word boundaries."
+msgstr "Ersetze das ganze Wort 'test' durch 'exam' unter Verwendung von Wortgrenzen."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1307
+#: NEEDS WORK
+msgid "Replace only on lines 2 through 5."
+msgstr "Ersetzen Sie nur in den Zeilen 2 bis 5."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1311
+#: NEEDS WORK
+msgid "Delete all comment lines (starting with #)."
+msgstr "Alle Kommentarzeilen löschen (beginnend mit #)."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1315
+#: NEEDS WORK
+msgid "Delete all empty lines."
+msgstr "Alle leeren Zeilen löschen."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1319
+#: NEEDS WORK
+msgid "Print only lines 1 through 10."
+msgstr "Drucken Sie nur die Zeilen 1 bis 10."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1323
+# File: usr/share/ashyterm/data/command_data.py, line: 1410
+#: NEEDS WORK
+msgid "Print only line number 5."
+msgstr "Drucke nur Zeile 5."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1327
+#: NEEDS WORK
+msgid "Insert text before line 1."
+msgstr "Text vor Zeile 1 einfügen."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1331
+#: NEEDS WORK
+msgid "Append text after the last line."
+msgstr "Text nach der letzten Zeile anhängen."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1335
+# File: usr/share/ashyterm/data/command_data.py, line: 1448
+#: NEEDS WORK
+msgid "Convert all text to uppercase."
+msgstr "Konvertiere gesamten Text in Großbuchstaben."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1339
+# File: usr/share/ashyterm/data/command_data.py, line: 1452
+#: NEEDS WORK
+msgid "Convert all text to lowercase."
+msgstr "Alle Texte in Kleinbuchstaben umwandeln."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1343
+#: NEEDS WORK
+msgid "Alternative way to convert to uppercase."
+msgstr "Alternative Möglichkeit, um in Großbuchstaben umzuwandeln."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1347
+#: NEEDS WORK
+msgid "Capitalize first letter of each word."
+msgstr "Jeden Ersten Buchstaben Jedes Wortes Großschreiben."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1351
+#: NEEDS WORK
+msgid "Wrap each line in square brackets."
+msgstr "[Um jede Zeile in eckige Klammern zu setzen.]"
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1355
+#: NEEDS WORK
+msgid "Add 4 spaces indentation to each line."
+msgstr "Fügen Sie jeder Zeile 4 Leerzeichen ein."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1359
+#: NEEDS WORK
+msgid "Append ' - processed' to end of each line."
+msgstr "Fügen Sie ' - verarbeitet' am Ende jeder Zeile hinzu."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1363
+#: NEEDS WORK
+msgid "Edit file in-place (modify original file)."
+msgstr "Datei im Original bearbeiten (ursprüngliche Datei ändern)."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1367
+#: NEEDS WORK
+msgid "Edit in-place and create backup file."
+msgstr "Im Platz bearbeiten und Sicherungsdatei erstellen."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1371
+#: NEEDS WORK
+msgid "Duplicate content with backreference."
+msgstr "Doppelte Inhalte mit Rückverweis."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1375
+#: NEEDS WORK
+msgid "Multiple commands on lines matching pattern."
+msgstr "Mehrere Befehle in Zeilen, die dem Muster entsprechen."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1379
+#: NEEDS WORK
+msgid "Execute multiple sed expressions."
+msgstr "Führen Sie mehrere sed-Ausdrücke aus."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1383
+#: NEEDS WORK
+msgid "Multiple address ranges with different operations."
+msgstr "Mehrere Adressbereiche mit unterschiedlichen Operationen."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1388
+#: NEEDS WORK
+msgid "Awk Commands"
+msgstr "Awk-Befehle"
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1390
+#: NEEDS WORK
+msgid "Powerful text processing and pattern scanning tool."
+msgstr "Leistungsstarkes Textverarbeitungs- und Musterscanning-Tool."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1394
+#: NEEDS WORK
+msgid "Print the first field (column) of each line."
+msgstr "Drucken Sie das erste Feld (Spalte) jeder Zeile."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1398
+#: NEEDS WORK
+msgid "Print the 1st and 3rd fields of each line."
+msgstr "Drucken Sie das 1. und 3. Feld jeder Zeile."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1402
+#: NEEDS WORK
+msgid "Print the last field of each line."
+msgstr "Drucken Sie das letzte Feld jeder Zeile."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1406
+#: NEEDS WORK
+msgid "Print line number followed by the entire line."
+msgstr "Drucken Sie die Zeilennummer gefolgt von der gesamten Zeile."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1414
+#: NEEDS WORK
+msgid "Print lines 10 through 20."
+msgstr "Drucken Sie die Zeilen 10 bis 20."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1418
+#: NEEDS WORK
+msgid "Print lines containing 'bruno'."
+msgstr "Drucken Sie Zeilen, die 'bruno' enthalten."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1422
+#: NEEDS WORK
+msgid "Print name and sales where sales > 100."
+msgstr "Drucke Name und Umsatz, wo der Umsatz > 100 ist."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1426
+#: NEEDS WORK
+msgid "Calculate sum of values in column 2."
+msgstr "Berechne die Summe der Werte in Spalte 2."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1430
+#: NEEDS WORK
+msgid "Find the maximum value in column 2."
+msgstr "Finden Sie den maximalen Wert in Spalte 2."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1434
+#: NEEDS WORK
+msgid "Use colon as field separator for /etc/passwd."
+msgstr "Verwenden Sie einen Doppelpunkt als Feldtrennzeichen für /etc/passwd."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1438
+#: NEEDS WORK
+msgid "Set output field separator to ' - '."
+msgstr "Setze das Ausgabefeldtrennzeichen auf ' - '."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1443
+#: NEEDS WORK
+msgid "Print lines longer than 80 characters with line numbers."
+msgstr "Drucken Sie Zeilen, die länger als 80 Zeichen sind, mit Zeilennummern."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1456
+#: NEEDS WORK
+msgid "Add header and format output as table."
+msgstr "Header hinzufügen und Ausgabe als Tabelle formatieren."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1461
+#: NEEDS WORK
+msgid "Print lines with more than 3 fields and their field count."
+msgstr "Drucken Sie Zeilen mit mehr als 3 Feldern und deren Feldanzahl."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1470
+#: NEEDS WORK
+msgid "Split first field on '-' and print both parts."
+msgstr "Teile das erste Feld bei '-' und drucke beide Teile aus."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1474
+#: NEEDS WORK
+msgid "Count lines containing 'ERROR'."
+msgstr "Zähle Zeilen, die 'ERROR' enthalten."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1478
+#: NEEDS WORK
+msgid "Count occurrences of each unique value in column 1."
+msgstr "Zähle die Vorkommen jedes eindeutigen Wertes in Spalte 1."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1483
+#: NEEDS WORK
+msgid "Use BEGIN and END blocks for initialization and cleanup."
+msgstr "Verwenden Sie BEGIN- und END-Blöcke für die Initialisierung und Bereinigung."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1488
+#: NEEDS WORK
+msgid "Format output with specific widths and precision."
+msgstr "Formatieren Sie die Ausgabe mit bestimmten Breiten und Präzision."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1492
+#: NEEDS WORK
+msgid "Print lines where column 2 starts with '2024'."
+msgstr "Drucken Sie Zeilen, in denen Spalte 2 mit '2024' beginnt."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1496
+#: NEEDS WORK
+msgid "Remove leading whitespace from each line."
+msgstr "Entfernen Sie führende Leerzeichen von jeder Zeile."
 # 
 # File: usr/share/ashyterm/app.py, line: 333
 #: NEEDS WORK

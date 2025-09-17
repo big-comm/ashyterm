@@ -1159,15 +1159,15 @@ msgstr "Добавяне на персонализирана команда"
 msgid "Edit Custom Command"
 msgstr "Редактиране на персонализирана команда"
 # 
-# File: usr/share/ashyterm/ui/dialogs/command_guide_dialog.py, line: 34
-#: NEEDS WORK
-msgid "Command"
-msgstr "Команда"
-# 
 # File: usr/share/ashyterm/ui/dialogs/command_guide_dialog.py, line: 35
 #: NEEDS WORK
 msgid "Category"
 msgstr "Категория"
+# 
+# File: usr/share/ashyterm/ui/dialogs/command_guide_dialog.py, line: 34
+#: NEEDS WORK
+msgid "Command"
+msgstr "Команда"
 # 
 # File: usr/share/ashyterm/ui/dialogs/command_guide_dialog.py, line: 59
 #: NEEDS WORK
@@ -1746,13 +1746,13 @@ msgstr "Регулирайте прозрачността на фона на т�
 # 
 # File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 118
 #: NEEDS WORK
-msgid "Headerbar and File Manager Transparency"
-msgstr "Прозрачност на заглавната лента и файловия мениджър"
+msgid "Headerbar Transparency"
+msgstr "Прозрачност на заглавната лента"
 # 
 # File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 119
 #: NEEDS WORK
-msgid "Adjust headerbar and file manager background transparency"
-msgstr "Настройте прозрачността на заглавната лента и фоновото изображение на файловия мениджър"
+msgid "For headerbar and file manager"
+msgstr "За заглавната лента и файловия мениджър"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1065
 #: NEEDS WORK
@@ -2744,268 +2744,1676 @@ msgstr "Раздели горе/долу"
 # File: usr/share/ashyterm/data/command_data.py, line: 7
 # File: usr/share/ashyterm/data/command_data.py, line: 38
 #: NEEDS WORK
-msgid "Navegação e Listagem de Arquivos"
-msgstr "Навигация и Списък на Файлове"
+msgid "File Navigation and Listing"
+msgstr "Навигация и списък на файлове"
 # 
 # File: usr/share/ashyterm/data/command_data.py, line: 9
 #: NEEDS WORK
-msgid "Lista o conteúdo de um diretório."
-msgstr "Списък на съдържанието на директория."
+msgid "Lists the contents of a directory."
+msgstr "Изброява съдържанието на директория."
 # 
 # File: usr/share/ashyterm/data/command_data.py, line: 14
 #: NEEDS WORK
-msgid "Usa um formato de lista longa, mostrando permissões, dono, tamanho e data."
-msgstr "Използвайте дълъг списъчен формат, показващ разрешения, собственик, размер и дата."
+msgid "Uses a long listing format, showing permissions, owner, size and date."
+msgstr "Използва дълъг формат на списъка, показващ разрешения, собственик, размер и дата."
 # 
 # File: usr/share/ashyterm/data/command_data.py, line: 20
 #: NEEDS WORK
-msgid "Mostra todos os arquivos, incluindo os ocultos (que começam com '.')."
-msgstr "Покажи всички файлове, включително скритите (които започват с '.')."
+msgid "Shows all files, including hidden ones (that start with '.')."
+msgstr "Показва всички файлове, включително скритите (които започват с '.')."
 # 
 # File: usr/share/ashyterm/data/command_data.py, line: 26
 #: NEEDS WORK
-msgid "Formato longo com tamanhos de arquivo legíveis para humanos (KB, MB, GB)."
-msgstr "Дълъг формат с размери на файлове, четими за хора (KB, MB, GB)."
+msgid "Long format with human-readable file sizes (KB, MB, GB)."
+msgstr "Дълъг формат с четими за хора размери на файлове (KB, MB, GB)."
 # 
 # File: usr/share/ashyterm/data/command_data.py, line: 32
 #: NEEDS WORK
-msgid "Ordena os arquivos por data de modificação, os mais recentes primeiro."
-msgstr "Подреди файловете по дата на модификация, най-новите първи."
+msgid "Sorts files by modification date, most recent first."
+msgstr "Сортира файлове по дата на модификация, най-новите първи."
 # 
 # File: usr/share/ashyterm/data/command_data.py, line: 40
 #: NEEDS WORK
-msgid "Muda o diretório de trabalho atual."
+msgid "Changes the current working directory."
 msgstr "Променя текущата работна директория."
 # 
 # File: usr/share/ashyterm/data/command_data.py, line: 44
 #: NEEDS WORK
-msgid "Navega para um caminho absoluto específico."
-msgstr "Навигирайте до конкретен абсолютен път."
+msgid "Navigates to a specific absolute path."
+msgstr "Навигира до конкретен абсолютен път."
 # 
 # File: usr/share/ashyterm/data/command_data.py, line: 48
 #: NEEDS WORK
-msgid "Sobe um nível, indo para o diretório pai."
-msgstr "Изкачете се на ниво, преминавайки в родителската директория."
+msgid "Goes up one level, to the parent directory."
+msgstr "Изкачва се на едно ниво, до родителската директория."
 # 
 # File: usr/share/ashyterm/data/command_data.py, line: 53
 #: NEEDS WORK
-msgid "Vai diretamente para o seu diretório 'home'. O mesmo que 'cd' sem argumentos."
-msgstr "Отива директно в директорията 'home'. Същото като 'cd' без аргументи."
+msgid "Goes directly to your 'home' directory. Same as 'cd' with no arguments."
+msgstr "Отива директно в директорията 'home' на потребителя. Същото като 'cd' без аргументи."
 # 
 # File: usr/share/ashyterm/data/command_data.py, line: 58
 #: NEEDS WORK
-msgid "Volta para o último diretório em que você estava."
-msgstr "Върни се в последната директория, в която беше."
+msgid "Returns to the last directory you were in."
+msgstr "Връща се в последната директория, в която сте били."
 # 
 # File: usr/share/ashyterm/data/command_data.py, line: 63
 # File: usr/share/ashyterm/data/command_data.py, line: 84
-# File: usr/share/ashyterm/data/command_data.py, line: 99
+# File: usr/share/ashyterm/data/command_data.py, line: 101
+# File: usr/share/ashyterm/data/command_data.py, line: 428
+# File: usr/share/ashyterm/data/command_data.py, line: 445
 #: NEEDS WORK
-msgid "Manipulação de Arquivos"
-msgstr "Манипулиране на файлове"
+msgid "File Manipulation"
+msgstr "Манипулация на файлове"
 # 
 # File: usr/share/ashyterm/data/command_data.py, line: 65
 #: NEEDS WORK
-msgid "Copia arquivos ou diretórios."
-msgstr "Копирайте файлове или директории."
+msgid "Copies files or directories."
+msgstr "Копиране на файлове или директории."
 # 
 # File: usr/share/ashyterm/data/command_data.py, line: 69
 #: NEEDS WORK
-msgid "Copia um único arquivo."
-msgstr "Копирайте един файл."
+msgid "Copies a single file."
+msgstr "Копиране на един файл."
 # 
 # File: usr/share/ashyterm/data/command_data.py, line: 74
 #: NEEDS WORK
-msgid "Copia um diretório e todo o seu conteúdo recursivamente."
-msgstr "Копирайте директория и всичкото й съдържание рекурсивно."
+msgid "Copies a directory and all its contents recursively."
+msgstr "Копира директория и всичките й съдържание рекурсивно."
 # 
 # File: usr/share/ashyterm/data/command_data.py, line: 79
 #: NEEDS WORK
-msgid "Modo 'verbose', mostra o que está sendo copiado."
-msgstr "Режим 'verbose', показва какво се копира."
+msgid "Verbose mode, shows what is being copied."
+msgstr "Подробен режим, показва какво се копира."
 # 
 # File: usr/share/ashyterm/data/command_data.py, line: 86
 #: NEEDS WORK
-msgid "Move ou renomeia arquivos e diretórios."
-msgstr "Премести или преименувай файлове и директории."
+msgid "Moves or renames files and directories."
+msgstr "Премества или преименува файлове и директории."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 90
+# File: usr/share/ashyterm/data/command_data.py, line: 91
 #: NEEDS WORK
-msgid "Renomeia um arquivo ou diretório no local atual."
+msgid "Renames a file or directory in the current location."
 msgstr "Преименува файл или директория в текущото местоположение."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 94
+# File: usr/share/ashyterm/data/command_data.py, line: 96
 #: NEEDS WORK
-msgid "Move um arquivo para um novo local."
-msgstr "Премести файл на ново местоположение."
+msgid "Moves a file to a new location."
+msgstr "Премества файл на ново местоположение."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 102
+# File: usr/share/ashyterm/data/command_data.py, line: 104
 #: NEEDS WORK
-msgid "Remove (apaga) arquivos ou diretórios. CUIDADO: esta ação é permanente."
-msgstr "Премахнете файлове или директории. ВНИМАНИЕ: това действие е постоянно."
+msgid "Removes (deletes) files or directories. CAUTION: this action is permanent."
+msgstr "Премахва (изтрива) файлове или директории. ВНИМАНИЕ: това действие е постоянно."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 105
+# File: usr/share/ashyterm/data/command_data.py, line: 107
 #: NEEDS WORK
-msgid "Remove um único arquivo."
-msgstr "Премахнете единствен файл."
+msgid "Removes a single file."
+msgstr "Премахва един файл."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 108
+# File: usr/share/ashyterm/data/command_data.py, line: 110
 #: NEEDS WORK
-msgid "Remove um diretório e todo o seu conteúdo."
-msgstr "Премахнете директория и всичкото ѝ съдържание."
+msgid "Removes a directory and all its contents."
+msgstr "Премахва директория и всичките й съдържания."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 112
+# File: usr/share/ashyterm/data/command_data.py, line: 115
 #: NEEDS WORK
-msgid "Modo interativo, pede confirmação antes de remover."
-msgstr "Интерактивен режим, изисква потвърждение преди да премахне."
+msgid "Interactive mode, asks for confirmation before removing."
+msgstr "Интерактивен режим, иска потвърждение преди да премахне."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 117
+# File: usr/share/ashyterm/data/command_data.py, line: 121
 #: NEEDS WORK
-msgid "Força a remoção sem pedir confirmação (usar com cautela)."
-msgstr "Принудително премахване без да иска потвърждение (използвайте с внимание)."
+msgid "Forces removal without asking for confirmation (use with caution)."
+msgstr "Принудително премахване без питане за потвърждение (използвайте с внимание)."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 123
+# File: usr/share/ashyterm/data/command_data.py, line: 127
 #: NEEDS WORK
-msgid "Busca e Filtragem"
+msgid "Search and Filtering"
 msgstr "Търсене и филтриране"
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 126
+# File: usr/share/ashyterm/data/command_data.py, line: 130
 #: NEEDS WORK
-msgid "Busca por um padrão de texto dentro de arquivos ou saídas de outros comandos."
-msgstr "Търсене на текстов шаблон в файлове или изходи от други команди."
+msgid "Searches for a text pattern within files or other command outputs."
+msgstr "Търси текстов шаблон в файлове или други изходи на команди."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 132
+# File: usr/share/ashyterm/data/command_data.py, line: 136
 #: NEEDS WORK
-msgid "Encontra e exibe todas as linhas que contêm 'palavra' no arquivo."
-msgstr "Намира и показва всички редове, които съдържат 'дума' в файла."
+msgid "Finds and displays all lines containing 'word' in the file."
+msgstr "Намира и показва всички редове, съдържащи 'дума' в файла."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 138
+# File: usr/share/ashyterm/data/command_data.py, line: 142
 #: NEEDS WORK
-msgid "Busca ignorando a diferença entre maiúsculas e minúsculas."
-msgstr "Търсене, игнорирайки разликата между главни и малки букви."
+msgid "Searches ignoring case differences between uppercase and lowercase."
+msgstr "Търсения, игнориращи разликите в регистъра между главни и малки букви."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 144
+# File: usr/share/ashyterm/data/command_data.py, line: 148
 #: NEEDS WORK
-msgid "Busca recursivamente por 'palavra' em todos os arquivos do diretório atual."
+msgid "Searches recursively for 'word' in all files in the current directory."
 msgstr "Търси рекурсивно за 'дума' във всички файлове в текущата директория."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 150
+# File: usr/share/ashyterm/data/command_data.py, line: 154
 #: NEEDS WORK
-msgid "Filtra a saída do comando 'ls -l' para mostrar apenas linhas que contêm 'txt'."
-msgstr "Филтрира изхода на командата 'ls -l', за да покаже само редове, които съдържат 'txt'."
+msgid "Filters the output of 'ls -l' to show only lines containing 'txt'."
+msgstr "Филтрира изхода на 'ls -l', за да показва само редове, съдържащи 'txt'."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 156
-# File: usr/share/ashyterm/data/command_data.py, line: 175
-# File: usr/share/ashyterm/data/command_data.py, line: 194
-# File: usr/share/ashyterm/data/command_data.py, line: 209
+# File: usr/share/ashyterm/data/command_data.py, line: 160
+# File: usr/share/ashyterm/data/command_data.py, line: 179
+# File: usr/share/ashyterm/data/command_data.py, line: 196
+# File: usr/share/ashyterm/data/command_data.py, line: 211
 #: NEEDS WORK
-msgid "Controle de Fluxo (Shell Script)"
+msgid "Flow Control (Shell Script)"
 msgstr "Контрол на потока (Shell Script)"
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 158
-#: NEEDS WORK
-msgid "Executa blocos de comandos condicionalmente."
-msgstr "Изпълнява блокове от команди условно."
 # 
 # File: usr/share/ashyterm/data/command_data.py, line: 162
 #: NEEDS WORK
-msgid "Testa se um arquivo existe e é um arquivo regular."
-msgstr "Проверява дали файлът съществува и е обикновен файл."
+msgid "Executes command blocks conditionally."
+msgstr "Изпълнява командни блокове условно."
 # 
 # File: usr/share/ashyterm/data/command_data.py, line: 166
 #: NEEDS WORK
-msgid "Testa se um caminho existe e é um diretório."
-msgstr "Проверява дали пътят съществува и е директория."
+msgid "Tests if a file exists and is a regular file."
+msgstr "Тества дали файлът съществува и е обикновен файл."
 # 
 # File: usr/share/ashyterm/data/command_data.py, line: 170
 #: NEEDS WORK
-msgid "Testa se uma variável numérica é igual a 5."
-msgstr "Проверява дали числовата променлива е равна на 5."
+msgid "Tests if a path exists and is a directory."
+msgstr "Тества дали пътят съществува и е директория."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 178
+# File: usr/share/ashyterm/data/command_data.py, line: 174
 #: NEEDS WORK
-msgid "Cria um laço (loop) que itera sobre uma lista de itens."
-msgstr "Създава цикъл, който итерира върху списък от елементи."
+msgid "Tests if a numeric variable is equal to 5."
+msgstr "Тества дали числова променлива е равна на 5."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 183
+# File: usr/share/ashyterm/data/command_data.py, line: 181
 #: NEEDS WORK
-msgid "Itera sobre uma lista explícita de números."
-msgstr "Итерация върху явен списък от числа."
+msgid "Creates a loop that iterates over a list of items."
+msgstr "Създава цикъл, който преминава през списък с елементи."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 188
+# File: usr/share/ashyterm/data/command_data.py, line: 185
 #: NEEDS WORK
-msgid "Itera sobre todos os arquivos que terminam com .txt no diretório."
-msgstr "Итерация през всички файлове, които завършват с .txt в директорията."
+msgid "Iterates over an explicit list of numbers."
+msgstr "Итерации върху явен списък от числа."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 197
+# File: usr/share/ashyterm/data/command_data.py, line: 190
 #: NEEDS WORK
-msgid "Cria um laço (loop) que continua enquanto uma condição for verdadeira."
-msgstr "Създава цикъл, който продължава, докато едно условие е вярно."
+msgid "Iterates over all files ending with .txt in the directory."
+msgstr "Итерации през всички файлове, завършващи на .txt в директорията."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 203
+# File: usr/share/ashyterm/data/command_data.py, line: 199
 #: NEEDS WORK
-msgid "Executa o bloco de código enquanto a variável COUNT for menor que 5."
-msgstr "Изпълнява блока от код, докато променливата COUNT е по-малка от 5."
+msgid "Creates a loop that continues while a condition is true."
+msgstr "Създава цикъл, който продължава, докато условието е вярно."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 212
+# File: usr/share/ashyterm/data/command_data.py, line: 205
 #: NEEDS WORK
-msgid "Cria um laço (loop) que continua enquanto uma condição for falsa."
-msgstr "Създава цикъл, който продължава, докато едно условие е невярно."
+msgid "Executes the code block while the COUNT variable is less than 5."
+msgstr "Изпълнява кода, докато променливата COUNT е по-малка от 5."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 218
+# File: usr/share/ashyterm/data/command_data.py, line: 214
 #: NEEDS WORK
-msgid "Executa o bloco de código até que a variável COUNT seja igual a 0."
-msgstr "Изпълнява блока от код, докато променливата COUNT не стане равна на 0."
+msgid "Creates a loop that continues while a condition is false."
+msgstr "Създава цикъл, който продължава, докато условието е невярно."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 224
+# File: usr/share/ashyterm/data/command_data.py, line: 220
 #: NEEDS WORK
-msgid "Entrada do Usuário (Shell Script)"
-msgstr "Вход на потребителя (Shell Script)"
+msgid "Executes the code block until the COUNT variable equals 0."
+msgstr "Изпълнява блока код, докато променливата COUNT не стане 0."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 227
+# File: usr/share/ashyterm/data/command_data.py, line: 226
 #: NEEDS WORK
-msgid "Lê uma linha da entrada padrão e a armazena em uma variável."
+msgid "User Input (Shell Script)"
+msgstr "Потребителски вход (Shell скрипт)"
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 229
+#: NEEDS WORK
+msgid "Reads a line from standard input and stores it in a variable."
 msgstr "Чете ред от стандартния вход и го съхранява в променлива."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 233
+# File: usr/share/ashyterm/data/command_data.py, line: 235
 #: NEEDS WORK
-msgid "Espera o usuário digitar algo e pressionar Enter, salvando na variável NOME."
-msgstr "Изчаква потребителят да въведе нещо и да натисне Enter, запазвайки в променливата ИМЕ."
+msgid "Waits for the user to type something and press Enter, saving it in the NAME variable."
+msgstr "Изчаква потребителят да напише нещо и да натисне Enter, запазвайки го в променливата NAME."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 239
+# File: usr/share/ashyterm/data/command_data.py, line: 241
 #: NEEDS WORK
-msgid "Mostra uma mensagem (prompt) para o usuário antes de esperar a entrada."
+msgid "Shows a message (prompt) to the user before waiting for input."
 msgstr "Показва съобщение (подсказка) на потребителя, преди да изчака вход."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 245
+# File: usr/share/ashyterm/data/command_data.py, line: 247
 #: NEEDS WORK
-msgid "Expansão de Parâmetros"
+msgid "Parameter Expansion"
 msgstr "Разширение на параметри"
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 248
+# File: usr/share/ashyterm/data/command_data.py, line: 250
 #: NEEDS WORK
-msgid "Mecanismos do shell para manipular o valor de variáveis."
-msgstr "Механизми на шел за манипулиране на стойността на променливи."
+msgid "Advanced shell mechanisms for manipulating variable values and strings."
+msgstr "Разширени механизми на шел за манипулиране на стойности на променливи и низове."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 254
+# File: usr/share/ashyterm/data/command_data.py, line: 255
 #: NEEDS WORK
-msgid "Substitui pelo valor da variável VAR. É o mesmo que $VAR, mas mais seguro."
-msgstr "Заменя с стойността на променливата VAR. Същото е като $VAR, но по-сигурно."
+msgid "Basic variable substitution using braces."
+msgstr "Основна подмяна на променливи с помощта на фигурни скоби."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 260
+# File: usr/share/ashyterm/data/command_data.py, line: 259
 #: NEEDS WORK
-msgid "Usa 'default' se VAR não estiver definida. A variável VAR não é alterada."
-msgstr "Използвайте 'default', ако VAR не е дефинирана. Променливата VAR не се променя."
+msgid "String substitution - replaces first 'b' with 'B'."
+msgstr "Замяна на низ - заменя първото 'b' с 'B'."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 266
+# File: usr/share/ashyterm/data/command_data.py, line: 263
 #: NEEDS WORK
-msgid "Usa e atribui 'default' a VAR se ela não estiver definida."
-msgstr "Използва и присвоява 'default' на VAR, ако тя не е дефинирана."
+msgid "Substring extraction - first 2 characters."
+msgstr "Извличане на подниз - първите 2 символа."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 272
+# File: usr/share/ashyterm/data/command_data.py, line: 267
 #: NEEDS WORK
-msgid "Retorna o número de caracteres no valor da variável VAR."
-msgstr "Връща броя на символите в стойността на променливата VAR."
+msgid "Substring from start - first 2 characters."
+msgstr "Подниз от начало - първите 2 знака."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 271
+#: NEEDS WORK
+msgid "Substring excluding last character."
+msgstr "Подстринг, без последния символ."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 275
+#: NEEDS WORK
+msgid "Substring from right - last character."
+msgstr "Подниз отдясно - последен символ."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 279
+#: NEEDS WORK
+msgid "Substring from right - second to last character."
+msgstr "Подниз отдясно - втори от последния символ."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 283
+#: NEEDS WORK
+msgid "Substring using variable length parameter."
+msgstr "Подниз, използващ параметър с променлива дължина."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 287
+#: NEEDS WORK
+msgid "Remove file extension (.py)."
+msgstr "Премахнете разширението на файла (.py)."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 291
+#: NEEDS WORK
+msgid "Replace file extension (.py to .bak)."
+msgstr "Сменете разширението на файла (.py на .bak)."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 295
+#: NEEDS WORK
+msgid "Remove everything after last slash (get directory)."
+msgstr "Премахнете всичко след последния наклонен знак (вземете директория)."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 299
+#: NEEDS WORK
+msgid "Extract file extension (longest match)."
+msgstr "Извлечете разширението на файла (най-дълго съвпадение)."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 303
+#: NEEDS WORK
+msgid "Extract filename from path (longest match)."
+msgstr "Извлечете името на файла от пътя (най-дълго съвпадение)."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 307
+#: NEEDS WORK
+msgid "Remove shortest prefix match up to first slash."
+msgstr "Премахнете най-краткото съвпадение на префикс до първия наклонен знак."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 312
+#: NEEDS WORK
+msgid "Replace first occurrence of 'project' with 'scripts'."
+msgstr "Заменете първото срещане на 'проект' с 'скриптове'."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 317
+#: NEEDS WORK
+msgid "Extract substring starting at position 6, length 5."
+msgstr "Извлечете подниз, започвайки от позиция 6, дължина 5."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 321
+#: NEEDS WORK
+msgid "Extract last 5 characters using negative offset."
+msgstr "Извлечете последните 5 символа, използвайки отрицателен офсет."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 325
+#: NEEDS WORK
+msgid "Extract basename (filename) from path."
+msgstr "Извлечете основното име (файловото име) от пътя."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 329
+#: NEEDS WORK
+msgid "Extract directory path by removing basename."
+msgstr "Извлечете пътя на директорията, като премахнете името на файла."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 333
+#: NEEDS WORK
+msgid "List all variable names starting with 'user_'."
+msgstr "Списък на всички имена на променливи, започващи с 'user_'."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 337
+#: NEEDS WORK
+msgid "Indirect variable expansion using pointer."
+msgstr "Непряко разширяване на променлива с помощта на указател."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 341
+#: NEEDS WORK
+msgid "Remove shortest suffix match."
+msgstr "Премахнете най-краткото съвпадение на суфикс."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 345
+#: NEEDS WORK
+msgid "Remove shortest prefix match."
+msgstr "Премахнете най-краткото съвпадение на префикс."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 349
+#: NEEDS WORK
+msgid "Remove longest suffix match."
+msgstr "Премахнете най-дългото съвпадение на суфикс."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 353
+#: NEEDS WORK
+msgid "Remove longest prefix match."
+msgstr "Премахнете най-дългото съвпадение на префикс."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 357
+#: NEEDS WORK
+msgid "Replace first occurrence of 'old' with 'new'."
+msgstr "Заменете първото срещане на 'old' с 'new'."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 361
+# File: usr/share/ashyterm/data/command_data.py, line: 1466
+#: NEEDS WORK
+msgid "Replace all occurrences of 'old' with 'new'."
+msgstr "Заменете всички случаи на 'old' с 'new'."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 365
+#: NEEDS WORK
+msgid "Replace suffix 'old' with 'new'."
+msgstr "Заменете суфикса 'old' с 'new'."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 369
+#: NEEDS WORK
+msgid "Replace prefix 'old' with 'new'."
+msgstr "Заменете префикса 'old' с 'new'."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 373
+#: NEEDS WORK
+msgid "Extract substring (position 0, length 3)."
+msgstr "Извлечете подниз (позиция 0, дължина 3)."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 377
+#: NEEDS WORK
+msgid "Extract substring from right (last 3 characters)."
+msgstr "Извлечете подниз отдясно (последните 3 символа)."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 381
+#: NEEDS WORK
+msgid "Get length of variable $filename."
+msgstr "Вземете дължината на променливата $filename."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 385
+#: NEEDS WORK
+msgid "Convert first character to lowercase."
+msgstr "Преобразувайте първия символ в малка буква."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 389
+#: NEEDS WORK
+msgid "Convert all characters to lowercase."
+msgstr "Преобразувайте всички символи в малки букви."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 393
+#: NEEDS WORK
+msgid "Convert first character to uppercase."
+msgstr "Преобразувайте първия знак в главна буква."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 397
+#: NEEDS WORK
+msgid "Convert all characters to uppercase."
+msgstr "Преобразувайте всички символи в главни букви."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 401
+#: NEEDS WORK
+msgid "Use $username, or 'guest' if unset (or null)."
+msgstr "Използвайте $username, или 'гост', ако не е зададен (или е null)."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 406
+#: NEEDS WORK
+msgid "Set $username to 'guest' if unset (or null), then use it."
+msgstr "Задайте $username на 'гост' ако не е зададен (или е null), след това го използвайте."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 411
+#: NEEDS WORK
+msgid "Use 'admin' if $username is set (and not null)."
+msgstr "Използвайте 'admin', ако $username е зададен (и не е null)."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 416
+#: NEEDS WORK
+msgid "Show error message and exit if $username is unset (or null)."
+msgstr "Покажете съобщение за грешка и излезте, ако $username не е зададен (или е null)."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 422
+#: NEEDS WORK
+msgid "Use $username, or 'guest' if unset (ignores null values)."
+msgstr "Използвайте $username или 'гост', ако не е зададено (игнорира нулеви стойности)."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 430
+#: NEEDS WORK
+msgid "Creates directories."
+msgstr "Създава директории."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 434
+#: NEEDS WORK
+msgid "Creates a single directory."
+msgstr "Създава една директория."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 439
+#: NEEDS WORK
+msgid "Creates nested directories, creating parent directories as needed."
+msgstr "Създава вложени директории, създавайки родителски директории при необходимост."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 447
+#: NEEDS WORK
+msgid "Creates empty files or updates file timestamps."
+msgstr "Създава празни файлове или актуализира времевите печати на файловете."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 452
+#: NEEDS WORK
+msgid "Creates an empty file or updates the timestamp of an existing file."
+msgstr "Създава празен файл или актуализира времевия печат на съществуващ файл."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 457
+#: NEEDS WORK
+msgid "Creates multiple files at once."
+msgstr "Създава множество файлове наведнъж."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 462
+# File: usr/share/ashyterm/data/command_data.py, line: 481
+# File: usr/share/ashyterm/data/command_data.py, line: 496
+# File: usr/share/ashyterm/data/command_data.py, line: 513
+# File: usr/share/ashyterm/data/command_data.py, line: 536
+# File: usr/share/ashyterm/data/command_data.py, line: 555
+# File: usr/share/ashyterm/data/command_data.py, line: 578
+# File: usr/share/ashyterm/data/command_data.py, line: 597
+# File: usr/share/ashyterm/data/command_data.py, line: 616
+# File: usr/share/ashyterm/data/command_data.py, line: 635
+# File: usr/share/ashyterm/data/command_data.py, line: 650
+# File: usr/share/ashyterm/data/command_data.py, line: 665
+# File: usr/share/ashyterm/data/command_data.py, line: 684
+# File: usr/share/ashyterm/data/command_data.py, line: 1275
+#: NEEDS WORK
+msgid "Text Processing"
+msgstr "Обработка на текст"
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 464
+#: NEEDS WORK
+msgid "Concatenates and displays file contents."
+msgstr "Конкатенира и показва съдържанието на файловете."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 468
+#: NEEDS WORK
+msgid "Displays the contents of a file."
+msgstr "Показва съдържанието на файл."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 472
+#: NEEDS WORK
+msgid "Concatenates and displays multiple files."
+msgstr "Конкатенира и показва множество файлове."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 476
+#: NEEDS WORK
+msgid "Displays file contents with line numbers."
+msgstr "Показва съдържанието на файла с номера на редовете."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 483
+#: NEEDS WORK
+msgid "Displays the beginning of files."
+msgstr "Показва началото на файловете."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 487
+#: NEEDS WORK
+msgid "Displays the first 10 lines of a file."
+msgstr "Показва първите 10 реда на файл."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 491
+#: NEEDS WORK
+msgid "Displays the first 20 lines of a file."
+msgstr "Показва първите 20 реда на файл."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 498
+#: NEEDS WORK
+msgid "Displays the end of files."
+msgstr "Показва края на файловете."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 502
+#: NEEDS WORK
+msgid "Displays the last 10 lines of a file."
+msgstr "Показва последните 10 реда на файл."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 507
+#: NEEDS WORK
+msgid "Follows the file, displaying new lines as they are added."
+msgstr "Следи файла, показвайки нови редове, когато бъдат добавени."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 515
+#: NEEDS WORK
+msgid "Sorts lines of text files."
+msgstr "Сортира редове в текстови файлове."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 519
+#: NEEDS WORK
+msgid "Sorts lines in alphabetical order."
+msgstr "Сортира редовете в азбучен ред."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 523
+#: NEEDS WORK
+msgid "Sorts lines numerically."
+msgstr "Сортира редовете числено."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 527
+#: NEEDS WORK
+msgid "Sorts lines in reverse order."
+msgstr "Сортира редовете в обратен ред."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 531
+#: NEEDS WORK
+msgid "Sorts by second field/column."
+msgstr "Сортира по второ поле/колона."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 538
+#: NEEDS WORK
+msgid "Removes duplicate lines from sorted files."
+msgstr "Премахва дублиращи се редове от сортирани файлове."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 542
+#: NEEDS WORK
+msgid "Removes duplicate lines after sorting."
+msgstr "Премахва дублиращи се редове след сортиране."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 546
+#: NEEDS WORK
+msgid "Shows count of occurrences for each line."
+msgstr "Показва броя на появяванията за всеки ред."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 550
+#: NEEDS WORK
+msgid "Shows only duplicate lines."
+msgstr "Показва само дублиращи се редове."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 557
+#: NEEDS WORK
+msgid "Counts lines, words, and characters in files."
+msgstr "Брои редове, думи и символи в файлове."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 561
+#: NEEDS WORK
+msgid "Shows lines, words, and characters count."
+msgstr "Показва брой на редове, думи и символи."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 565
+#: NEEDS WORK
+msgid "Shows only line count."
+msgstr "Показва само брой редове."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 569
+#: NEEDS WORK
+msgid "Shows only word count."
+msgstr "Показва само брой думи."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 573
+#: NEEDS WORK
+msgid "Shows only character count."
+msgstr "Показва само брой символи."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 580
+#: NEEDS WORK
+msgid "Extracts sections from lines of files."
+msgstr "Извлича секции от редове на файлове."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 584
+#: NEEDS WORK
+msgid "Extracts first field using colon delimiter."
+msgstr "Извлича първото поле, използвайки двоеточен разделител."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 588
+#: NEEDS WORK
+msgid "Extracts first 10 characters from each line."
+msgstr "Извлича първите 10 знака от всеки ред."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 592
+#: NEEDS WORK
+msgid "Extracts 2nd and 4th fields from CSV data."
+msgstr "Извлича 2-ро и 4-то поле от CSV данни."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 599
+#: NEEDS WORK
+msgid "Merges lines from multiple files."
+msgstr "Слива редове от множество файлове."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 603
+#: NEEDS WORK
+msgid "Merges corresponding lines from two files."
+msgstr "Сливане на съответстващи редове от два файла."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 607
+#: NEEDS WORK
+msgid "Merges lines using comma as delimiter."
+msgstr "Слива редове, използвайки запетая като разделител."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 611
+#: NEEDS WORK
+msgid "Merges all lines into a single line."
+msgstr "Слива всички редове в един ред."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 618
+#: NEEDS WORK
+msgid "Translates or deletes characters."
+msgstr "Превежда или изтрива символи."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 622
+#: NEEDS WORK
+msgid "Converts lowercase to uppercase."
+msgstr "Преобразува малки букви в големи."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 626
+#: NEEDS WORK
+msgid "Removes all newline characters."
+msgstr "Премахва всички символи за нов ред."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 630
+#: NEEDS WORK
+msgid "Squeezes multiple spaces into single space."
+msgstr "Събира множество интервали в един интервал."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 637
+#: NEEDS WORK
+msgid "Reverses lines character by character."
+msgstr "Обърща редовете символ по символ."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 641
+#: NEEDS WORK
+msgid "Reverses each line character by character."
+msgstr "Обърща всеки ред символ по символ."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 645
+#: NEEDS WORK
+msgid "Reverses a string."
+msgstr "Обратен ред на низ."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 652
+#: NEEDS WORK
+msgid "Concatenates and prints files in reverse order."
+msgstr "Конкатенира и отпечатва файлове в обратен ред."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 656
+#: NEEDS WORK
+msgid "Prints file lines in reverse order."
+msgstr "Отпечатва редовете на файла в обратен ред."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 660
+#: NEEDS WORK
+msgid "Concatenates files in reverse order."
+msgstr "Конкатенира файлове в обратен ред."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 667
+#: NEEDS WORK
+msgid "Prints a sequence of numbers."
+msgstr "Отпечатва последователност от числа."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 671
+#: NEEDS WORK
+msgid "Prints numbers from 1 to 10."
+msgstr "Отпечатва числа от 1 до 10."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 675
+#: NEEDS WORK
+msgid "Prints numbers from 5 to 10."
+msgstr "Отпечатва числа от 5 до 10."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 679
+#: NEEDS WORK
+msgid "Prints even numbers from 0 to 20."
+msgstr "Отпечатва четните числа от 0 до 20."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 686
+#: NEEDS WORK
+msgid "Arbitrary precision calculator language."
+msgstr "Език за калкулатор с произволна точност."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 690
+#: NEEDS WORK
+msgid "Performs basic arithmetic calculation."
+msgstr "Извършва основни аритметични изчисления."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 694
+#: NEEDS WORK
+msgid "Division with 2 decimal places precision."
+msgstr "Деление с прецизност до 2 десетични знака."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 698
+#: NEEDS WORK
+msgid "Starts bc with math library for advanced functions."
+msgstr "Започва bc с математическа библиотека за разширени функции."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 703
+# File: usr/share/ashyterm/data/command_data.py, line: 718
+# File: usr/share/ashyterm/data/command_data.py, line: 733
+# File: usr/share/ashyterm/data/command_data.py, line: 758
+# File: usr/share/ashyterm/data/command_data.py, line: 771
+# File: usr/share/ashyterm/data/command_data.py, line: 782
+# File: usr/share/ashyterm/data/command_data.py, line: 793
+# File: usr/share/ashyterm/data/command_data.py, line: 812
+#: NEEDS WORK
+msgid "System Information"
+msgstr "Информация за системата"
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 705
+#: NEEDS WORK
+msgid "Displays disk space usage."
+msgstr "Показва използването на дисково пространство."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 709
+# File: usr/share/ashyterm/data/command_data.py, line: 739
+#: NEEDS WORK
+msgid "Shows disk usage in human-readable format."
+msgstr "Показва използването на диска в четим за хора формат."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 713
+#: NEEDS WORK
+msgid "Shows inode usage instead of block usage."
+msgstr "Показва използването на inode вместо използването на блокове."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 720
+#: NEEDS WORK
+msgid "Displays memory usage information."
+msgstr "Показва информация за използването на паметта."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 724
+#: NEEDS WORK
+msgid "Shows memory usage in human-readable format."
+msgstr "Показва използването на паметта в четим за човека формат."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 728
+#: NEEDS WORK
+msgid "Continuously displays memory usage every 5 seconds."
+msgstr "Непрекъснато показва използването на паметта на всеки 5 секунди."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 735
+#: NEEDS WORK
+msgid "Displays disk usage of files and directories."
+msgstr "Показва използването на диска от файлове и директории."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 743
+#: NEEDS WORK
+msgid "Shows total size of each item in current directory."
+msgstr "Показва общия размер на всеки елемент в текущата директория."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 747
+#: NEEDS WORK
+msgid "Shows disk usage one level deep."
+msgstr "Показва използването на диска на едно ниво дълбочина."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 752
+#: NEEDS WORK
+msgid "Shows all files and directories with human-readable sizes."
+msgstr "Показва всички файлове и директории с размери, удобни за четене от хора."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 760
+#: NEEDS WORK
+msgid "Shows how long the system has been running."
+msgstr "Показва колко дълго системата работи."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 765
+#: NEEDS WORK
+msgid "Shows current time, uptime, users, and load average."
+msgstr "Показва текущото време, времето на работа, потребителите и средното натоварване."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 773
+#: NEEDS WORK
+msgid "Displays the current username."
+msgstr "Показва текущото потребителско име."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 777
+#: NEEDS WORK
+msgid "Prints the current logged-in username."
+msgstr "Отпечатва текущото влязло в системата потребителско име."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 784
+#: NEEDS WORK
+msgid "Prints the current working directory."
+msgstr "Отпечатва текущата работна директория."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 788
+#: NEEDS WORK
+msgid "Shows the full path of current directory."
+msgstr "Показва пълния път на текущата директория."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 795
+#: NEEDS WORK
+msgid "Displays or sets the system date and time."
+msgstr "Показва или задава системната дата и час."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 799
+#: NEEDS WORK
+msgid "Shows current date and time."
+msgstr "Показва текущата дата и час."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 803
+#: NEEDS WORK
+msgid "Shows date and time in custom format."
+msgstr "Показва дата и час в потребителски формат."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 807
+#: NEEDS WORK
+msgid "Shows UTC time instead of local time."
+msgstr "Показва UTC време вместо локално време."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 814
+#: NEEDS WORK
+msgid "Displays a calendar."
+msgstr "Показва календар."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 818
+#: NEEDS WORK
+msgid "Shows calendar for current month."
+msgstr "Показва календара за текущия месец."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 822
+#: NEEDS WORK
+msgid "Shows calendar for entire year 2024."
+msgstr "Показва календар за цялата 2024 година."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 826
+#: NEEDS WORK
+msgid "Shows calendar for December 2024."
+msgstr "Показва календара за декември 2024 г."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 831
+# File: usr/share/ashyterm/data/command_data.py, line: 848
+#: NEEDS WORK
+msgid "Process Management"
+msgstr "Управление на процеси"
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 833
+#: NEEDS WORK
+msgid "Displays information about running processes."
+msgstr "Показва информация за работещите процеси."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 838
+#: NEEDS WORK
+msgid "Shows detailed information about all running processes."
+msgstr "Показва подробна информация за всички работещи процеси."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 843
+#: NEEDS WORK
+msgid "Shows all processes in a different format."
+msgstr "Показва всички процеси в различен формат."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 850
+#: NEEDS WORK
+msgid "Sends signals to processes."
+msgstr "Изпраща сигнали до процеси."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 854
+#: NEEDS WORK
+msgid "Sends SIGTERM signal to process with PID 1234."
+msgstr "Изпраща сигнал SIGTERM до процеса с PID 1234."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 858
+#: NEEDS WORK
+msgid "Forcefully kills process with PID 1234 (SIGKILL)."
+msgstr "Силово убива процеса с PID 1234 (SIGKILL)."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 863
+#: NEEDS WORK
+msgid "Networking"
+msgstr "Мрежа"
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 865
+#: NEEDS WORK
+msgid "Tests network connectivity to a host."
+msgstr "Тества свързаността на мрежата с хост."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 869
+#: NEEDS WORK
+msgid "Tests connectivity to google.com."
+msgstr "Тества свързаността с google.com."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 873
+#: NEEDS WORK
+msgid "Sends only 4 ping packets instead of continuous."
+msgstr "Изпраща само 4 пакета ping вместо непрекъснато."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 878
+#: NEEDS WORK
+msgid "Archives"
+msgstr "Архиви"
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 880
+#: NEEDS WORK
+msgid "Creates and manipulates archive files."
+msgstr "Създава и манипулира архивни файлове."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 884
+#: NEEDS WORK
+msgid "Creates a tar archive from a directory."
+msgstr "Създава tar архив от директория."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 888
+#: NEEDS WORK
+msgid "Extracts files from a tar archive."
+msgstr "Извлича файлове от tar архив."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 892
+#: NEEDS WORK
+msgid "Creates a compressed tar archive."
+msgstr "Създава компресиран tar архив."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 897
+#: NEEDS WORK
+msgid "Bash Conditions"
+msgstr "Bash условия"
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 899
+#: NEEDS WORK
+msgid "Conditional expressions for bash scripting."
+msgstr "Условни изрази за bash скриптиране."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 903
+#: NEEDS WORK
+msgid "Check if string is empty."
+msgstr "Проверете дали низът е празен."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 907
+#: NEEDS WORK
+msgid "Check if string is not empty."
+msgstr "Проверете дали низът не е празен."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 911
+#: NEEDS WORK
+msgid "Check if strings are equal."
+msgstr "Проверете дали низовете са равни."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 915
+#: NEEDS WORK
+msgid "Check if strings are not equal."
+msgstr "Проверете дали низовете не са равни."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 919
+#: NEEDS WORK
+msgid "Check if numbers are equal."
+msgstr "Проверете дали числата са равни."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 923
+#: NEEDS WORK
+msgid "Check if numbers are not equal."
+msgstr "Проверете дали числата не са равни."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 927
+#: NEEDS WORK
+msgid "Check if first number is less than second."
+msgstr "Проверете дали първото число е по-малко от второто."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 932
+#: NEEDS WORK
+msgid "Check if first number is less than or equal to second."
+msgstr "Проверете дали първото число е по-малко или равно на второто."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 937
+#: NEEDS WORK
+msgid "Check if first number is greater than second."
+msgstr "Проверете дали първото число е по-голямо от второто."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 942
+#: NEEDS WORK
+msgid "Check if first number is greater than or equal to second."
+msgstr "Проверете дали първото число е по-голямо или равно на второто."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 947
+#: NEEDS WORK
+msgid "Check if string matches regular expression."
+msgstr "Проверете дали низът съвпада с регулярното изражение."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 952
+#: NEEDS WORK
+msgid "Check numeric conditions with arithmetic evaluation."
+msgstr "Проверете числовите условия с аритметична оценка."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 957
+#: NEEDS WORK
+msgid "Check if shell option is enabled."
+msgstr "Проверете дали опцията за обвивка е активирана."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 961
+#: NEEDS WORK
+msgid "Logical NOT - negate a condition."
+msgstr "Логическо НЕ - отречете условие."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 965
+#: NEEDS WORK
+msgid "Logical AND - both conditions must be true."
+msgstr "Логическо И - и двете условия трябва да са верни."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 969
+#: NEEDS WORK
+msgid "Logical OR - at least one condition must be true."
+msgstr "Логическо ИЛИ - поне едно условие трябва да е вярно."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 973
+#: NEEDS WORK
+msgid "Check if file exists."
+msgstr "Проверете дали файлът съществува."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 977
+#: NEEDS WORK
+msgid "Check if file is readable."
+msgstr "Проверете дали файлът е четим."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 981
+#: NEEDS WORK
+msgid "Check if path is a symbolic link."
+msgstr "Проверете дали пътят е символна връзка."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 985
+#: NEEDS WORK
+msgid "Check if path is a directory."
+msgstr "Проверете дали пътят е директория."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 989
+#: NEEDS WORK
+msgid "Check if file is writable."
+msgstr "Проверете дали файлът е записваем."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 993
+#: NEEDS WORK
+msgid "Check if file size is greater than 0 bytes."
+msgstr "Проверете дали размерът на файла е по-голям от 0 байта."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 997
+#: NEEDS WORK
+msgid "Check if path is a regular file."
+msgstr "Проверете дали пътят е обикновен файл."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1001
+#: NEEDS WORK
+msgid "Check if file is executable."
+msgstr "Проверете дали файлът е изпълним."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1005
+#: NEEDS WORK
+msgid "Check if first file is newer than second file."
+msgstr "Проверете дали първият файл е по-нов от втория файл."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1009
+#: NEEDS WORK
+msgid "Check if first file is older than second file."
+msgstr "Проверете дали първият файл е по-стар от втория файл."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1013
+#: NEEDS WORK
+msgid "Check if both paths refer to the same file."
+msgstr "Проверете дали и двата пътя сочат към един и същ файл."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1018
+#: NEEDS WORK
+msgid "Bash Arrays"
+msgstr "Bash масиви"
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1020
+#: NEEDS WORK
+msgid "Array operations and manipulations in bash."
+msgstr "Операции и манипулации с масиви в bash."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1024
+#: NEEDS WORK
+msgid "Define array with multiple elements."
+msgstr "Определете масив с множество елементи."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1028
+#: NEEDS WORK
+msgid "Set specific array element by index."
+msgstr "Задайте конкретен елемент на масив по индекс."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1032
+#: NEEDS WORK
+msgid "Set another array element by index."
+msgstr "Задайте друг елемент на масив по индекс."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1036
+#: NEEDS WORK
+msgid "Set third array element by index."
+msgstr "Задайте трети елемент на масива по индекс."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1040
+#: NEEDS WORK
+msgid "Access first element of array."
+msgstr "Достъп до първия елемент на масива."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1044
+#: NEEDS WORK
+msgid "Access last element of array."
+msgstr "Достъп до последния елемент на масива."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1048
+#: NEEDS WORK
+msgid "Print all elements separated by spaces."
+msgstr "Отпечатайте всички елементи, разделени с интервали."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1052
+#: NEEDS WORK
+msgid "Get total number of elements in array."
+msgstr "Получете общия брой елементи в масива."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1056
+#: NEEDS WORK
+msgid "Get length of first element string."
+msgstr "Вземете дължината на низa на първия елемент."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1060
+#: NEEDS WORK
+msgid "Get length of specific element string."
+msgstr "Вземете дължината на конкретния елементен низ."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1065
+#: NEEDS WORK
+msgid "Extract range of elements (start at index 2, length 3)."
+msgstr "Извлечете диапазон от елементи (започнете от индекс 2, дължина 3)."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1070
+#: NEEDS WORK
+msgid "Get all array indices/keys."
+msgstr "Вземете всички индекси/ключове на масива."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1074
+#: NEEDS WORK
+msgid "Add new element to end of array."
+msgstr "Добавете нов елемент в края на масива."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1078
+#: NEEDS WORK
+msgid "Append element using compound assignment."
+msgstr "Добавяне на елемент с помощта на комбинирано присвояване."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1082
+#: NEEDS WORK
+msgid "Remove elements matching regex pattern."
+msgstr "Премахнете елементи, съвпадащи с регулярния израз."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1086
+#: NEEDS WORK
+msgid "Remove specific element by index."
+msgstr "Премахнете конкретен елемент по индекс."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1090
+#: NEEDS WORK
+msgid "Create duplicate of array."
+msgstr "Създайте дубликат на масив."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1094
+#: NEEDS WORK
+msgid "Concatenate two arrays together."
+msgstr "Съединете два масива."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1098
+#: NEEDS WORK
+msgid "Read file into array, split by IFS (whitespace)."
+msgstr "Прочетете файла в масив, разделете по IFS (бели символи)."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1103
+#: NEEDS WORK
+msgid "Bash Brace Expansion"
+msgstr "Bash разширение на фигурни скоби"
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1105
+#: NEEDS WORK
+msgid "Generate arbitrary strings using brace expansion."
+msgstr "Генерирайте произволни низове, използвайки разширение с фигурни скоби."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1109
+#: NEEDS WORK
+msgid "Expand to: main.py utils.py config.py"
+msgstr "Разширяване до: main.py utils.py config.py"
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1113
+#: NEEDS WORK
+msgid "Basic brace expansion without prefix/suffix."
+msgstr "Основно разширение на фигурни скоби без префикс/суфикс."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1117
+#: NEEDS WORK
+msgid "Add file extensions to multiple base names."
+msgstr "Добавете разширения на файлове към множество основни имена."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1121
+#: NEEDS WORK
+msgid "Create numbered file names."
+msgstr "Създайте номерирани имена на файлове."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1125
+#: NEEDS WORK
+msgid "Generate sequence from 1 to 10."
+msgstr "Генерирай последователност от 1 до 10."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1129
+#: NEEDS WORK
+msgid "Generate zero-padded numbers (01, 02, ..., 12)."
+msgstr "Генерирайте числа с водещи нули (01, 02, ..., 12)."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1133
+#: NEEDS WORK
+msgid "Generate alphabet sequence from a to z."
+msgstr "Генерирай азбучна последователност от а до я."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1137
+#: NEEDS WORK
+msgid "Generate uppercase letter sequence."
+msgstr "Генерирай последователност от главни букви."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1141
+#: NEEDS WORK
+msgid "Generate descending sequence."
+msgstr "Генерирай низходяща последователност."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1145
+#: NEEDS WORK
+msgid "Generate zero-padded sequence with leading zeros."
+msgstr "Генерирайте последователност с нули отляво."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1149
+#: NEEDS WORK
+msgid "Nested braces: generates 1 2 3 7 8 9."
+msgstr "Вложени фигурни скоби: генерира 1 2 3 7 8 9."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1153
+#: NEEDS WORK
+msgid "Multiple brace expansions in one expression."
+msgstr "Множествени разширения на фигурни скоби в едно изразяване."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1157
+#: NEEDS WORK
+msgid "Create directory paths with brace expansion."
+msgstr "Създайте директории с разширение на фигурни скоби."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1161
+#: NEEDS WORK
+msgid "Combine different sets of values."
+msgstr "Комбинирайте различни набори от стойности."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1165
+#: NEEDS WORK
+msgid "Create multiple directories at once."
+msgstr "Създайте множество директории наведнъж."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1170
+#: NEEDS WORK
+msgid "Create backup by copying file with .backup extension."
+msgstr "Създайте резервно копие, като копирате файл с разширение .backup."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1175
+#: NEEDS WORK
+msgid "Generate platform combinations."
+msgstr "Генерирайте комбинации от платформи."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1180
+#: NEEDS WORK
+msgid "File Search"
+msgstr "Търсене на файлове"
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1182
+#: NEEDS WORK
+msgid "Powerful file search and manipulation tool."
+msgstr "Мощен инструмент за търсене и манипулиране на файлове."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1187
+#: NEEDS WORK
+msgid "Find all .txt files in current directory and subdirectories."
+msgstr "Намери всички .txt файлове в текущата директория и поддиректориите."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1193
+#: NEEDS WORK
+msgid "Find files starting with 'config' in user's home directory."
+msgstr "Намери файлове, започващи с 'config' в домашната директория на потребителя."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1198
+#: NEEDS WORK
+msgid "Find only regular files with .log extension."
+msgstr "Намери само редовни файлове с разширение .log."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1202
+#: NEEDS WORK
+msgid "Find only directories starting with 'backup'."
+msgstr "Намери само директории, започващи с 'backup'."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1206
+#: NEEDS WORK
+msgid "Find and delete all .tmp files."
+msgstr "Намери и изтрий всички .tmp файлове."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1210
+#: NEEDS WORK
+msgid "Find files modified in the last 7 days."
+msgstr "Намери файлове, променени през последните 7 дни."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1214
+#: NEEDS WORK
+msgid "Find files modified more than 30 days ago."
+msgstr "Намери файлове, модифицирани преди повече от 30 дни."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1218
+#: NEEDS WORK
+msgid "Find files larger than 100MB."
+msgstr "Намери файлове по-големи от 100MB."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1222
+#: NEEDS WORK
+msgid "Find files smaller than 1KB."
+msgstr "Намери файлове по-малки от 1KB."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1226
+#: NEEDS WORK
+msgid "Find empty files and directories."
+msgstr "Намери празни файлове и директории."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1230
+#: NEEDS WORK
+msgid "Find files with specific permissions (755)."
+msgstr "Намери файлове с конкретни права (755)."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1234
+#: NEEDS WORK
+msgid "Find files owned by user 'bruno'."
+msgstr "Намери файлове, притежавани от потребител 'бруно'."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1238
+#: NEEDS WORK
+msgid "Find files owned by group 'developers'."
+msgstr "Намери файлове, притежавани от групата 'разработчици'."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1242
+#: NEEDS WORK
+msgid "Make all Python files executable."
+msgstr "Направете всички Python файлове изпълними."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1246
+#: NEEDS WORK
+msgid "Move all JPG files to /tmp/images/ directory."
+msgstr "Премести всички JPG файлове в директорията /tmp/images/."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1250
+#: NEEDS WORK
+msgid "Find log files containing 'ERROR' text."
+msgstr "Намерете лог файлове, съдържащи текста 'ERROR'."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1254
+#: NEEDS WORK
+msgid "Find .conf files only 2 levels deep."
+msgstr "Намери .conf файлове само на 2 нива дълбочина."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1258
+#: NEEDS WORK
+msgid "Find files with .bak OR .backup extension."
+msgstr "Намери файлове с разширение .bak ИЛИ .backup."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1262
+#: NEEDS WORK
+msgid "Find .txt files that are also larger than 1MB."
+msgstr "Намери .txt файлове, които са и по-големи от 1MB."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1266
+#: NEEDS WORK
+msgid "Safely delete files with spaces in names."
+msgstr "Безопасно изтриване на файлове с интервали в имената."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1270
+#: NEEDS WORK
+msgid "List contents of all ZIP files found."
+msgstr "Списък на съдържанието на всички намерени ZIP файлове."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1277
+#: NEEDS WORK
+msgid "Stream editor for filtering and transforming text."
+msgstr "Редактор на потока за филтриране и трансформиране на текст."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1282
+#: NEEDS WORK
+msgid "Replace all occurrences of 'old' with 'new' in file.txt."
+msgstr "Заменете всички срещания на 'old' с 'new' в file.txt."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1287
+#: NEEDS WORK
+msgid "Replace all instances of 'bruno' with 'maria'."
+msgstr "Заменете всички случаи на 'бруно' с 'мария'."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1292
+#: NEEDS WORK
+msgid "Case-insensitive replacement of 'error' with 'warning'."
+msgstr "Нечувствителна към регистъра замяна на 'грешка' с 'предупреждение'."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1297
+#: NEEDS WORK
+msgid "Replace only the first occurrence per line."
+msgstr "Заменете само първото появяване на реда."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1302
+#: NEEDS WORK
+msgid "Replace whole word 'test' with 'exam' using word boundaries."
+msgstr "Заменете цялата дума 'test' с 'exam', използвайки граници на думите."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1307
+#: NEEDS WORK
+msgid "Replace only on lines 2 through 5."
+msgstr "Заменете само на редове 2 до 5."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1311
+#: NEEDS WORK
+msgid "Delete all comment lines (starting with #)."
+msgstr "Изтрийте всички коментарни редове (започващи с #)."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1315
+#: NEEDS WORK
+msgid "Delete all empty lines."
+msgstr "Изтрийте всички празни редове."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1319
+#: NEEDS WORK
+msgid "Print only lines 1 through 10."
+msgstr "Отпечатайте само редове 1 до 10."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1323
+# File: usr/share/ashyterm/data/command_data.py, line: 1410
+#: NEEDS WORK
+msgid "Print only line number 5."
+msgstr "Отпечатайте само ред номер 5."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1327
+#: NEEDS WORK
+msgid "Insert text before line 1."
+msgstr "Вмъкнете текст преди ред 1."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1331
+#: NEEDS WORK
+msgid "Append text after the last line."
+msgstr "Добавете текст след последния ред."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1335
+# File: usr/share/ashyterm/data/command_data.py, line: 1448
+#: NEEDS WORK
+msgid "Convert all text to uppercase."
+msgstr "Преобразувайте целия текст в главни букви."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1339
+# File: usr/share/ashyterm/data/command_data.py, line: 1452
+#: NEEDS WORK
+msgid "Convert all text to lowercase."
+msgstr "Преобразувайте целия текст в малки букви."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1343
+#: NEEDS WORK
+msgid "Alternative way to convert to uppercase."
+msgstr "Алтернативен начин за преобразуване в главни букви."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1347
+#: NEEDS WORK
+msgid "Capitalize first letter of each word."
+msgstr "Капитализирайте Първата Буква На Всяка Дума."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1351
+#: NEEDS WORK
+msgid "Wrap each line in square brackets."
+msgstr "[Овийте всяка линия в квадратни скоби.]"
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1355
+#: NEEDS WORK
+msgid "Add 4 spaces indentation to each line."
+msgstr "Добавете 4 интервала отстъп до всеки ред."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1359
+#: NEEDS WORK
+msgid "Append ' - processed' to end of each line."
+msgstr "Добавете ' - обработено' в края на всеки ред."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1363
+#: NEEDS WORK
+msgid "Edit file in-place (modify original file)."
+msgstr "Редактиране на файла на място (модифициране на оригиналния файл)."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1367
+#: NEEDS WORK
+msgid "Edit in-place and create backup file."
+msgstr "Редактиране на място и създаване на резервно копие."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1371
+#: NEEDS WORK
+msgid "Duplicate content with backreference."
+msgstr "Дублирано съдържание с обратна препратка."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1375
+#: NEEDS WORK
+msgid "Multiple commands on lines matching pattern."
+msgstr "Множество команди на редове, съвпадащи с шаблона."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1379
+#: NEEDS WORK
+msgid "Execute multiple sed expressions."
+msgstr "Изпълнете множество sed изрази."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1383
+#: NEEDS WORK
+msgid "Multiple address ranges with different operations."
+msgstr "Няколко адресни диапазона с различни операции."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1388
+#: NEEDS WORK
+msgid "Awk Commands"
+msgstr "Awk команди"
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1390
+#: NEEDS WORK
+msgid "Powerful text processing and pattern scanning tool."
+msgstr "Мощен инструмент за обработка на текст и сканиране на шаблони."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1394
+#: NEEDS WORK
+msgid "Print the first field (column) of each line."
+msgstr "Отпечатайте първото поле (колона) на всеки ред."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1398
+#: NEEDS WORK
+msgid "Print the 1st and 3rd fields of each line."
+msgstr "Отпечатайте 1-во и 3-то поле на всеки ред."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1402
+#: NEEDS WORK
+msgid "Print the last field of each line."
+msgstr "Отпечатайте последното поле на всеки ред."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1406
+#: NEEDS WORK
+msgid "Print line number followed by the entire line."
+msgstr "Отпечатайте номера на редовете, последвани от целия ред."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1414
+#: NEEDS WORK
+msgid "Print lines 10 through 20."
+msgstr "Отпечатайте редове 10 до 20."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1418
+#: NEEDS WORK
+msgid "Print lines containing 'bruno'."
+msgstr "Отпечатайте редове, съдържащи 'бруно'."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1422
+#: NEEDS WORK
+msgid "Print name and sales where sales > 100."
+msgstr "Отпечатайте име и продажби, където продажбите > 100."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1426
+#: NEEDS WORK
+msgid "Calculate sum of values in column 2."
+msgstr "Изчислете сумата на стойностите в колона 2."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1430
+#: NEEDS WORK
+msgid "Find the maximum value in column 2."
+msgstr "Намерете максималната стойност в колона 2."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1434
+#: NEEDS WORK
+msgid "Use colon as field separator for /etc/passwd."
+msgstr "Използвайте двоеточие като разделител на полета за /etc/passwd."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1438
+#: NEEDS WORK
+msgid "Set output field separator to ' - '."
+msgstr "Задайте разделител на изходното поле на ' - '."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1443
+#: NEEDS WORK
+msgid "Print lines longer than 80 characters with line numbers."
+msgstr "Отпечатайте редове, по-дълги от 80 символа, с номера на редовете."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1456
+#: NEEDS WORK
+msgid "Add header and format output as table."
+msgstr "Добавете заглавие и форматирайте изхода като таблица."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1461
+#: NEEDS WORK
+msgid "Print lines with more than 3 fields and their field count."
+msgstr "Отпечатайте редове с повече от 3 полета и техния брой полета."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1470
+#: NEEDS WORK
+msgid "Split first field on '-' and print both parts."
+msgstr "Разделете първото поле на '-' и отпечатайте двете части."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1474
+#: NEEDS WORK
+msgid "Count lines containing 'ERROR'."
+msgstr "Брой редове, съдържащи 'ERROR'."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1478
+#: NEEDS WORK
+msgid "Count occurrences of each unique value in column 1."
+msgstr "Брой наOccurrences на всяка уникална стойност в колона 1."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1483
+#: NEEDS WORK
+msgid "Use BEGIN and END blocks for initialization and cleanup."
+msgstr "Използвайте блокове BEGIN и END за инициализация и почистване."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1488
+#: NEEDS WORK
+msgid "Format output with specific widths and precision."
+msgstr "Форматирайте изхода с конкретни ширини и прецизност."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1492
+#: NEEDS WORK
+msgid "Print lines where column 2 starts with '2024'."
+msgstr "Отпечатайте редове, където колона 2 започва с '2024'."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1496
+#: NEEDS WORK
+msgid "Remove leading whitespace from each line."
+msgstr "Премахнете водещите интервали от всеки ред."
 # 
 # File: usr/share/ashyterm/app.py, line: 333
 #: NEEDS WORK
