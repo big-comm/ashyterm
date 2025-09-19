@@ -22,7 +22,7 @@ import gi
 
 gi.require_version("Gtk", "4.0")
 gi.require_version("Vte", "3.91")
-from gi.repository import Gdk, GLib, Gtk, Vte
+from gi.repository import Gdk, GLib, GObject, Gtk, Vte
 
 from ..helpers import is_valid_url
 from ..sessions.models import SessionItem
@@ -561,7 +561,7 @@ class TerminalManager:
             terminal.set_scroll_on_keystroke(True)
             terminal.set_scroll_unit_is_pixels(True)
             # Enable search highlighting
-            if hasattr(terminal, 'set_search_highlight_enabled'):
+            if hasattr(terminal, "set_search_highlight_enabled"):
                 terminal.set_search_highlight_enabled(True)
             self.settings_manager.apply_terminal_settings(terminal, self.parent_window)
             self._setup_context_menu(terminal)
@@ -604,13 +604,23 @@ class TerminalManager:
         terminal_id: int,
     ) -> None:
         try:
-            terminal.connect(
+            # NEW: Store handler IDs and controllers for later cleanup
+            terminal.ashy_handler_ids = []
+            terminal.ashy_controllers = []
+
+            handler_id = terminal.connect(
                 "child-exited", self._on_child_exited, identifier, terminal_id
             )
-            terminal.connect("eof", self._on_eof, identifier, terminal_id)
-            terminal.connect(
+            terminal.ashy_handler_ids.append(handler_id)
+
+            handler_id = terminal.connect("eof", self._on_eof, identifier, terminal_id)
+            terminal.ashy_handler_ids.append(handler_id)
+
+            handler_id = terminal.connect(
                 "notify::current-directory-uri", self._on_directory_uri_changed
             )
+            terminal.ashy_handler_ids.append(handler_id)
+
             self.manual_ssh_tracker.track(terminal_id, terminal)
 
             # Focus controllers
@@ -619,6 +629,7 @@ class TerminalManager:
                 "enter", self._on_terminal_focus_in, terminal, terminal_id
             )
             terminal.add_controller(focus_controller)
+            terminal.ashy_controllers.append(focus_controller)
 
             # Click controller for URL handling
             click_controller = Gtk.GestureClick()
@@ -627,6 +638,7 @@ class TerminalManager:
                 "pressed", self._on_terminal_clicked, terminal, terminal_id
             )
             terminal.add_controller(click_controller)
+            terminal.ashy_controllers.append(click_controller)
 
             # Right-click controller for context menu with URL detection
             right_click_controller = Gtk.GestureClick()
@@ -635,6 +647,7 @@ class TerminalManager:
                 "pressed", self._on_terminal_right_clicked, terminal, terminal_id
             )
             terminal.add_controller(right_click_controller)
+            terminal.ashy_controllers.append(right_click_controller)
 
             terminal.terminal_id = terminal_id
         except Exception as e:
@@ -800,6 +813,18 @@ class TerminalManager:
             self.osc7_tracker.untrack_terminal(terminal)
             self.manual_ssh_tracker.untrack(terminal_id)
 
+            # NEW: Explicitly disconnect signals and remove controllers
+            if hasattr(terminal, "ashy_handler_ids"):
+                for handler_id in terminal.ashy_handler_ids:
+                    if GObject.signal_handler_is_connected(terminal, handler_id):
+                        terminal.disconnect(handler_id)
+                terminal.ashy_handler_ids.clear()
+
+            if hasattr(terminal, "ashy_controllers"):
+                for controller in terminal.ashy_controllers:
+                    terminal.remove_controller(controller)
+                terminal.ashy_controllers.clear()
+
             # Clean up OSC8 hyperlink state
             if hasattr(terminal, "_osc8_hovered_uri"):
                 try:
@@ -952,9 +977,12 @@ class TerminalManager:
         try:
             terminal.set_allow_hyperlink(True)
             if hasattr(terminal, "connect"):
-                terminal.connect(
+                handler_id = terminal.connect(
                     "hyperlink-hover-uri-changed", self._on_hyperlink_hover_changed
                 )
+                if not hasattr(terminal, "ashy_handler_ids"):
+                    terminal.ashy_handler_ids = []
+                terminal.ashy_handler_ids.append(handler_id)
 
             url_patterns = [
                 r"https?://[^\s<>()\"{}|\\^`\[\]]+[^\s<>()\"{}|\\^`\[\].,;:!?]",

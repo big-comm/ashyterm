@@ -595,7 +595,7 @@ class TabManager:
                     self.terminal_manager,
                     self.terminal_manager.settings_manager,
                 )
-                fm.connect(
+                fm.temp_files_changed_handler_id = fm.connect(
                     "temp-files-changed",
                     self.terminal_manager.parent_window._on_temp_files_changed,
                     page,
@@ -639,9 +639,10 @@ class TabManager:
             page = self.get_page_for_terminal(terminal)
             terminal_id = getattr(terminal, "terminal_id", "N/A")
 
-            pane_to_remove, parent_paned = self._find_pane_and_parent(terminal)
-            if parent_paned:
-                self._remove_pane_ui(pane_to_remove, parent_paned)
+            pane_to_remove, parent_container = self._find_pane_and_parent(terminal)
+            # MODIFIED: Only manipulate panes if the parent is a Gtk.Paned (i.e., it's a split)
+            if isinstance(parent_container, Gtk.Paned):
+                self._remove_pane_ui(pane_to_remove, parent_container)
 
             self.terminal_manager._cleanup_terminal(terminal, terminal_id)
 
@@ -677,9 +678,10 @@ class TabManager:
             if tab_to_remove in self.pages:
                 del self.pages[tab_to_remove]
 
+            # Explicitly destroy the FileManager instance
             if page in self.file_managers:
                 fm = self.file_managers.pop(page)
-                fm.shutdown(None)
+                fm.destroy()
 
             self.view_stack.remove(page.get_child())
 

@@ -15,7 +15,7 @@ from ..sessions.models import SessionItem
 from ..utils.logger import get_logger
 from ..utils.translation_utils import _
 
-# --- Kernel-level process lifecycle management ---
+# --- NEW: Kernel-level process lifecycle management ---
 # Use ctypes to access the prctl system call for robust cleanup.
 # PR_SET_PDEATHSIG: Asks the kernel to send a signal to this process
 # when its parent dies. This is the most reliable way to ensure
@@ -156,6 +156,7 @@ class FileOperations:
 
     def _start_process(self, transfer_id, command):
         """Helper to start a subprocess with robust lifecycle management."""
+        # MODIFIED: Use preexec_fn for robust cleanup
         process = subprocess.Popen(
             command,
             stdout=subprocess.PIPE,

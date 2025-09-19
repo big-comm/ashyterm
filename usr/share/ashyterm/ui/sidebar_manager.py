@@ -61,7 +61,7 @@ class SidebarManager:
 
         self.flap.connect("notify::folded", self._on_sidebar_folded_changed)
 
-        # ALTERADO: Conectar os botões a métodos intermediários nesta classe
+        # MODIFIED: Connect the buttons to intermediate methods in this class
         self.add_session_button.connect("clicked", self._on_add_session_clicked)
         self.add_folder_button.connect("clicked", self._on_add_folder_clicked)
         self.edit_button.connect("clicked", self._on_edit_selected_clicked)
@@ -78,9 +78,9 @@ class SidebarManager:
         self.window.connect("notify::default-width", self._on_window_size_changed)
         self.window.connect("notify::default-height", self._on_window_size_changed)
 
-    # NOVO: Métodos de callback que fecham o popover antes de chamar a ação
+    # NEW: Callback methods that close the popover before calling the action
     def _close_popover_if_active(self):
-        """Fecha o popover se ele estiver visível."""
+        """Closes the popover if it's visible."""
         if self.sidebar_popover and self.sidebar_popover.get_visible():
             self.sidebar_popover.popdown()
 

@@ -212,14 +212,12 @@ class FileManager(GObject.Object):
     def shutdown(self, widget):
         self.logger.info("Shutting down FileManager, cancelling active transfers.")
 
-        # **FIX START**: Disconnect signal to prevent memory leak
         if hasattr(self, "temp_files_changed_handler_id"):
             if GObject.signal_handler_is_connected(
                 self, self.temp_files_changed_handler_id
             ):
                 self.disconnect(self.temp_files_changed_handler_id)
             del self.temp_files_changed_handler_id
-        # **FIX END**
 
         if self.transfer_manager:
             for transfer_id in list(self.transfer_manager.active_transfers.keys()):
@@ -234,16 +232,30 @@ class FileManager(GObject.Object):
 
         self.unbind()
 
-        # **FIX START**: Nullify references to aid garbage collection.
+    def destroy(self):
+        """
+        Explicitly destroys the FileManager and its components to break reference cycles.
+        """
+        self.logger.info("Destroying FileManager instance to prevent memory leaks.")
+        self.shutdown(None)
+
+        # MODIFIED: Proactively clear the store and model to break cycles
+        if self.store:
+            self.store.remove_all()
+        if self.column_view:
+            self.column_view.set_model(None)
+
+        # Nullify references to break Python-side cycles
         self.parent_window = None
         self.terminal_manager = None
-        self.revealer = None
-        self.main_box = None
-        self.column_view = None
-        self.store = None
+        self.settings_manager = None
         self.operations = None
         self.transfer_manager = None
-        # **FIX END**
+        self.store = None
+        self.column_view = None
+        self.main_box = None
+        self.revealer = None
+        self.logger.info("FileManager destroyed.")
 
     def get_temp_files_info(self) -> List[Dict]:
         """Returns information about currently edited temporary files."""
