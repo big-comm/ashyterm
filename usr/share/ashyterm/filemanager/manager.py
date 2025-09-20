@@ -1452,6 +1452,20 @@ class FileManager(GObject.Object):
             dest_folder = source.select_folder_finish(result)
             if dest_folder:
                 dest_path = Path(dest_folder.get_path())
+
+                def on_download_success(local_path, remote_path):
+                    """Refreshes view if download was to the current local directory."""
+                    if not self._is_remote_session():
+                        # Check if the download destination is the current view
+                        if (
+                            Path(self.current_path).resolve()
+                            == Path(local_path).parent.resolve()
+                        ):
+                            self.logger.info(
+                                f"Download to current local directory completed. Refreshing view."
+                            )
+                            self.refresh(source="filemanager")
+
                 for item in items:
                     transfer_id = self.transfer_manager.add_transfer(
                         filename=item.name,
@@ -1466,7 +1480,7 @@ class FileManager(GObject.Object):
                         transfer_id,
                         "Downloading",
                         self._background_download_worker,
-                        on_success_callback=None,
+                        on_success_callback=on_download_success,
                     )
         except GLib.Error as e:
             if not e.matches(Gio.io_error_quark(), Gio.IOErrorEnum.CANCELLED):

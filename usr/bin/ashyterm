@@ -1,7 +1,24 @@
 #!/bin/bash
 
 cd /usr/share/ashyterm
-execute_ashy="python main.py"
+execute_ashy="/usr/bin/python3 main.py"
+kdialog --msgbox "$LD_PRELOAD"
+execute_with_memory_verification() {
+    # Changes the default memory allocator to reduce GTK4 memory leaks with verification
+    if [[ -e /usr/lib/libchildenv.so ]]; then
+        if [[ -e /usr/lib/libjemalloc.so ]]; then
+            LD_PRELOAD="libchildenv.so:libjemalloc.so" MALLOC_CONF="narenas:1" CHILD_ENV_RULES="LD_PRELOAD,MALLOC_CONF,CHILD_ENV_RULES" exec $execute_ashy "$@"
+        elif [[ -e /usr/lib/libmimalloc.so ]]; then
+            LD_PRELOAD="libchildenv.so:libmimalloc.so" MIMALLOC_PURGE_DELAY=0 CHILD_ENV_RULES="LD_PRELOAD,MIMALLOC_PURGE_DELAY,CHILD_ENV_RULES" exec $execute_ashy "$@"
+        elif [[ -e /usr/lib/libtcmalloc.so ]]; then
+            LD_PRELOAD="libchildenv.so:libtcmalloc.so" TCMALLOC_AGGRESSIVE_DECOMMIT=1 CHILD_ENV_RULES="LD_PRELOAD,TCMALLOC_AGGRESSIVE_DECOMMIT,CHILD_ENV_RULES" exec $execute_ashy "$@"
+        else
+            exec $execute_ashy "$@"
+        fi
+    else
+        exec $execute_ashy "$@"
+    fi
+}
 
 convert_to_ssh() {
     local path="$*"
@@ -16,9 +33,9 @@ convert_to_ssh() {
         if [[ $user_host_port =~ ^([^@]+@[^:]+):([0-9]+)$ ]]; then
             local user_host="${BASH_REMATCH[1]}"
             local port="${BASH_REMATCH[2]}"
-            exec $execute_ashy --ssh "$user_host:$port$kio_path"
+            execute_with_memory_verification --ssh "$user_host:$port$kio_path"
         else
-            exec $execute_ashy --ssh "$user_host_port$kio_path"
+            execute_with_memory_verification --ssh "$user_host_port$kio_path"
         fi
 
     # Detects if it is GVFS (sftp:host=,port=,user=)
@@ -27,24 +44,23 @@ convert_to_ssh() {
         local port="${BASH_REMATCH[2]}"
         local user="${BASH_REMATCH[3]}"
         local folder="${BASH_REMATCH[4]}"
-        exec $execute_ashy --ssh "$user@$host:$port/$folder"
+        execute_with_memory_verification --ssh "$user@$host:$port/$folder"
 
     # Detects if it is GVFS without a port (sftp:host=,user=)
     elif [[ $path =~ /gvfs/sftp:host=([^,]+),user=([^,/]+)/(.+) ]]; then
         local host="${BASH_REMATCH[1]}"
         local user="${BASH_REMATCH[2]}"
         local folder="${BASH_REMATCH[3]}"
-        exec $execute_ashy --ssh "$user@$host/$folder"
+        execute_with_memory_verification --ssh "$user@$host/$folder"
 
     # If it is not any of the known formats, pass the parameters directly
     else
-        exec $execute_ashy "$@"
+        execute_with_memory_verification "$@"
     fi
 }
 
-
 if [[ "$1" = "--convert-to-ssh" ]]; then
     convert_to_ssh "$*"
+else
+    execute_with_memory_verification "$@"
 fi
-
-exec $execute_ashy "$@"
