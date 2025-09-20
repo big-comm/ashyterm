@@ -1164,20 +1164,35 @@ msgstr "Özel Komut Ekle"
 msgid "Edit Custom Command"
 msgstr "Özel Komut Düzenle"
 # 
-# File: usr/share/ashyterm/ui/dialogs/command_guide_dialog.py, line: 35
-#: NEEDS WORK
-msgid "Category"
-msgstr "Kategori"
-# 
 # File: usr/share/ashyterm/ui/dialogs/command_guide_dialog.py, line: 34
 #: NEEDS WORK
 msgid "Command"
 msgstr "Komut"
 # 
+# File: usr/share/ashyterm/ui/dialogs/command_guide_dialog.py, line: 35
+#: NEEDS WORK
+msgid "Category"
+msgstr "Kategori"
+# 
+# File: usr/share/ashyterm/ui/dialogs/command_guide_dialog.py, line: 104
+#: NEEDS WORK
+msgid "Select an existing category or type a new one"
+msgstr "Mevcut bir kategori seçin veya yenisini yazın."
+# 
 # File: usr/share/ashyterm/ui/dialogs/command_guide_dialog.py, line: 59
 #: NEEDS WORK
 msgid "Description"
 msgstr "Açıklama"
+# 
+# File: usr/share/ashyterm/ui/dialogs/command_guide_dialog.py, line: 171
+#: NEEDS WORK
+msgid "Please fill in all required fields."
+msgstr "Lütfen tüm gerekli alanları doldurun."
+# 
+# File: usr/share/ashyterm/ui/dialogs/command_guide_dialog.py, line: 236
+#: NEEDS WORK
+msgid "Delete this custom command"
+msgstr "Bu özel komutu silin"
 # 
 # File: usr/share/ashyterm/ui/dialogs/command_guide_dialog.py, line: 143
 #: NEEDS WORK
@@ -1194,15 +1209,27 @@ msgstr "Arama komutları..."
 msgid "Show Only Custom Commands"
 msgstr "Sadece Özel Komutları Göster"
 # 
-# File: usr/share/ashyterm/ui/dialogs/command_guide_dialog.py, line: 216
+# File: usr/share/ashyterm/ui/dialogs/command_guide_dialog.py, line: 495
 #: NEEDS WORK
-msgid "Add New"
-msgstr "Yeni Ekle"
+msgid "Add New Command"
+msgstr "Yeni Komut Ekle"
 # 
-# File: usr/share/ashyterm/window.py, line: 343
+# File: usr/share/ashyterm/ui/dialogs/command_guide_dialog.py, line: 714
 #: NEEDS WORK
-msgid "Remove Selected"
-msgstr "Seçilenleri Kaldır"
+msgid "Delete Custom Command?"
+msgstr "Özel Komutu Sil?"
+# 
+# File: usr/share/ashyterm/ui/dialogs/command_guide_dialog.py, line: 716
+#: NEEDS WORK
+#, python-brace-format
+msgid ""
+"Are you sure you want to permanently delete the command:\n"
+"\n"
+"<b>{name}</b>"
+msgstr ""
+"Bu komutu kalıcı olarak silmek istediğinizden emin misiniz:\n"
+"\n"
+"<b>{name}</b>"
 # 
 # #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
 # 
@@ -2660,6 +2687,11 @@ msgstr "Seçili Düzenle"
 msgid "Save Current Layout"
 msgstr "Mevcut Düzeni Kaydet"
 # 
+# File: usr/share/ashyterm/window.py, line: 343
+#: NEEDS WORK
+msgid "Remove Selected"
+msgstr "Seçilenleri Kaldır"
+# 
 # File: usr/share/ashyterm/ui/window_ui.py, line: 341
 #: NEEDS WORK
 msgid "Search sessions..."
@@ -2739,717 +2771,967 @@ msgstr "Solunu Sol/sağ Ayır"
 msgid "Split Top/Bottom"
 msgstr "Üst/Aşağı Ayır"
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 7
-# File: usr/share/ashyterm/data/command_data.py, line: 38
-#: NEEDS WORK
-msgid "File Navigation and Listing"
-msgstr "Dosya Navigasyonu ve Listeleme"
-# 
 # File: usr/share/ashyterm/data/command_data.py, line: 9
+# File: usr/share/ashyterm/data/command_data.py, line: 30
+# File: usr/share/ashyterm/data/command_data.py, line: 53
+# File: usr/share/ashyterm/data/command_data.py, line: 64
+# File: usr/share/ashyterm/data/command_data.py, line: 81
+# File: usr/share/ashyterm/data/command_data.py, line: 98
+# File: usr/share/ashyterm/data/command_data.py, line: 113
 #: NEEDS WORK
-msgid "Lists the contents of a directory."
-msgstr "Bir dizinin içeriğini listeler."
+msgid "Essentials: File & Directory Navigation"
+msgstr "Temel: Dosya ve Dizin Navigasyonu"
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 14
+# File: usr/share/ashyterm/data/command_data.py, line: 12
 #: NEEDS WORK
-msgid "Uses a long listing format, showing permissions, owner, size and date."
-msgstr "Uzun bir listeleme formatı kullanır, izinleri, sahibi, boyutu ve tarihi gösterir."
+msgid "Lists the contents of a directory, like opening a folder to see what's inside."
+msgstr "Bir dizinin içeriğini listeler, tıpkı içinde ne olduğunu görmek için bir klasörü açmak gibi."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 20
+# File: usr/share/ashyterm/data/command_data.py, line: 18
 #: NEEDS WORK
-msgid "Shows all files, including hidden ones (that start with '.')."
-msgstr "Tüm dosyaları, gizli olanlar da dahil ('.' ile başlayan) gösterir."
+msgid "Shows files and directories in the current location."
+msgstr "Geçerli konumdaki dosyaları ve dizinleri gösterir."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 26
+# File: usr/share/ashyterm/data/command_data.py, line: 24
 #: NEEDS WORK
-msgid "Long format with human-readable file sizes (KB, MB, GB)."
-msgstr "Uzun format, insan tarafından okunabilir dosya boyutlarıyla (KB, MB, GB)."
+msgid "Shows a detailed list, including hidden files and human-readable sizes."
+msgstr "Ayrıntılı bir liste gösterir, gizli dosyalar ve insan tarafından okunabilir boyutlar dahil."
 # 
 # File: usr/share/ashyterm/data/command_data.py, line: 32
 #: NEEDS WORK
-msgid "Sorts files by modification date, most recent first."
-msgstr "Dosyaları değiştirilme tarihine göre sıralar, en son değiştirilenler önce."
+msgid "Changes the current directory."
+msgstr "Geçerli dizini değiştirir."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 36
+#: NEEDS WORK
+msgid "Navigates to a specific directory."
+msgstr "Belirli bir dizine gider."
 # 
 # File: usr/share/ashyterm/data/command_data.py, line: 40
 #: NEEDS WORK
-msgid "Changes the current working directory."
-msgstr "Geçerli çalışma dizinini değiştirir."
+msgid "Goes up one level to the parent directory."
+msgstr "Bir üst düzeye, ana dizine çıkar."
 # 
 # File: usr/share/ashyterm/data/command_data.py, line: 44
 #: NEEDS WORK
-msgid "Navigates to a specific absolute path."
-msgstr "Belirli bir mutlak yola gider."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 48
-#: NEEDS WORK
-msgid "Goes up one level, to the parent directory."
-msgstr "Bir üst seviyeye çıkar, ana dizine."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 53
-#: NEEDS WORK
-msgid "Goes directly to your 'home' directory. Same as 'cd' with no arguments."
-msgstr "Doğrudan 'ana dizin'inize gider. Argüman olmadan 'cd' ile aynı."
+msgid "Goes directly to your user's home directory."
+msgstr "Kullanıcınızın ana dizinine doğrudan gider."
 # 
 # File: usr/share/ashyterm/data/command_data.py, line: 58
 #: NEEDS WORK
 msgid "Returns to the last directory you were in."
 msgstr "Son bulunduğunuz dizine geri döner."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 63
-# File: usr/share/ashyterm/data/command_data.py, line: 84
-# File: usr/share/ashyterm/data/command_data.py, line: 101
-# File: usr/share/ashyterm/data/command_data.py, line: 428
-# File: usr/share/ashyterm/data/command_data.py, line: 445
+# File: usr/share/ashyterm/data/command_data.py, line: 55
 #: NEEDS WORK
-msgid "File Manipulation"
-msgstr "Dosya Manipülasyonu"
+msgid "Shows which directory you are currently in."
+msgstr "Hangi dizinde bulunduğunuzu gösterir."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 65
+# File: usr/share/ashyterm/data/command_data.py, line: 59
 #: NEEDS WORK
-msgid "Copies files or directories."
-msgstr "Dosyaları veya dizinleri kopyalar."
+msgid "Displays the full path of your current location."
+msgstr "Mevcut konumunuzun tam yolunu görüntüler."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 69
+# File: usr/share/ashyterm/data/command_data.py, line: 66
 #: NEEDS WORK
-msgid "Copies a single file."
-msgstr "Tek bir dosyayı kopyalar."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 74
-#: NEEDS WORK
-msgid "Copies a directory and all its contents recursively."
-msgstr "Bir dizini ve tüm içeriğini özyinelemeli olarak kopyalar."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 79
-#: NEEDS WORK
-msgid "Verbose mode, shows what is being copied."
-msgstr "Ayrıntılı mod, kopyalananları gösterir."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 86
-#: NEEDS WORK
-msgid "Moves or renames files and directories."
-msgstr "Dosyaları ve dizinleri taşır veya yeniden adlandırır."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 91
-#: NEEDS WORK
-msgid "Renames a file or directory in the current location."
-msgstr "Geçerli konumdaki bir dosyayı veya dizini yeniden adlandırır."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 96
-#: NEEDS WORK
-msgid "Moves a file to a new location."
-msgstr "Bir dosyayı yeni bir konuma taşır."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 104
-#: NEEDS WORK
-msgid "Removes (deletes) files or directories. CAUTION: this action is permanent."
-msgstr "Dosyaları veya dizinleri kaldırır (silinir). DİKKAT: bu işlem kalıcıdır."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 107
-#: NEEDS WORK
-msgid "Removes a single file."
-msgstr "Tek bir dosyayı kaldırır."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 110
-#: NEEDS WORK
-msgid "Removes a directory and all its contents."
-msgstr "Bir dizini ve tüm içeriğini kaldırır."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 115
-#: NEEDS WORK
-msgid "Interactive mode, asks for confirmation before removing."
-msgstr "Etkileşimli mod, kaldırmadan önce onay ister."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 121
-#: NEEDS WORK
-msgid "Forces removal without asking for confirmation (use with caution)."
-msgstr "Onay almadan kaldırmayı zorlar (dikkatli kullanın)."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 127
-#: NEEDS WORK
-msgid "Search and Filtering"
-msgstr "Arama ve Filtreleme"
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 130
-#: NEEDS WORK
-msgid "Searches for a text pattern within files or other command outputs."
-msgstr "Dosya veya diğer komut çıktılarında bir metin desenini arar."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 136
-#: NEEDS WORK
-msgid "Finds and displays all lines containing 'word' in the file."
-msgstr "Dosyadaki 'kelime' içeren tüm satırları bulur ve görüntüler."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 142
-#: NEEDS WORK
-msgid "Searches ignoring case differences between uppercase and lowercase."
-msgstr "Büyük harf ve küçük harf arasındaki farkları göz ardı ederek arama yapar."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 148
-#: NEEDS WORK
-msgid "Searches recursively for 'word' in all files in the current directory."
-msgstr "Geçerli dizindeki tüm dosyalarda 'kelime' için özyinelemeli arama yapar."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 154
-#: NEEDS WORK
-msgid "Filters the output of 'ls -l' to show only lines containing 'txt'."
-msgstr "'ls -l' çıktısını yalnızca 'txt' içeren satırları gösterecek şekilde filtreler."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 160
-# File: usr/share/ashyterm/data/command_data.py, line: 179
-# File: usr/share/ashyterm/data/command_data.py, line: 196
-# File: usr/share/ashyterm/data/command_data.py, line: 211
-#: NEEDS WORK
-msgid "Flow Control (Shell Script)"
-msgstr "Akış Kontrolü (Shell Script)"
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 162
-#: NEEDS WORK
-msgid "Executes command blocks conditionally."
-msgstr "Koşullu olarak komut bloklarını çalıştırır."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 166
-#: NEEDS WORK
-msgid "Tests if a file exists and is a regular file."
-msgstr "Bir dosyanın var olup olmadığını ve normal bir dosya olup olmadığını test eder."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 170
-#: NEEDS WORK
-msgid "Tests if a path exists and is a directory."
-msgstr "Bir yolun var olup olmadığını ve bir dizin olup olmadığını test eder."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 174
-#: NEEDS WORK
-msgid "Tests if a numeric variable is equal to 5."
-msgstr "Bir sayısal değişkenin 5'e eşit olup olmadığını test eder."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 181
-#: NEEDS WORK
-msgid "Creates a loop that iterates over a list of items."
-msgstr "Bir liste öğeleri üzerinde yineleme yapan bir döngü oluşturur."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 185
-#: NEEDS WORK
-msgid "Iterates over an explicit list of numbers."
-msgstr "Açık bir sayı listesi üzerinde yineleme yapar."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 190
-#: NEEDS WORK
-msgid "Iterates over all files ending with .txt in the directory."
-msgstr "Dizindeki .txt ile biten tüm dosyaları yinelemektedir."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 199
-#: NEEDS WORK
-msgid "Creates a loop that continues while a condition is true."
-msgstr "Bir koşul doğru olduğu sürece devam eden bir döngü oluşturur."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 205
-#: NEEDS WORK
-msgid "Executes the code block while the COUNT variable is less than 5."
-msgstr "COUNT değişkeni 5'ten küçükken kod bloğunu çalıştırır."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 214
-#: NEEDS WORK
-msgid "Creates a loop that continues while a condition is false."
-msgstr "Bir koşul yanlış olduğu sürece devam eden bir döngü oluşturur."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 220
-#: NEEDS WORK
-msgid "Executes the code block until the COUNT variable equals 0."
-msgstr "Kod bloğunu COUNT değişkeni 0'a eşit olana kadar çalıştırır."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 226
-#: NEEDS WORK
-msgid "User Input (Shell Script)"
-msgstr "Kullanıcı Girişi (Shell Script)"
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 229
-#: NEEDS WORK
-msgid "Reads a line from standard input and stores it in a variable."
-msgstr "Standart girdi akışından bir satır okur ve bir değişkende saklar."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 235
-#: NEEDS WORK
-msgid "Waits for the user to type something and press Enter, saving it in the NAME variable."
-msgstr "Kullanıcının bir şey yazmasını ve Enter tuşuna basmasını bekler, bunu NAME değişkeninde saklar."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 241
-#: NEEDS WORK
-msgid "Shows a message (prompt) to the user before waiting for input."
-msgstr "Kullanıcıdan girdi beklemeden önce bir mesaj (istek) gösterir."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 247
-#: NEEDS WORK
-msgid "Parameter Expansion"
-msgstr "Parametre Genişletmesi"
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 250
-#: NEEDS WORK
-msgid "Advanced shell mechanisms for manipulating variable values and strings."
-msgstr "Gelişmiş kabuk mekanizmaları, değişken değerlerini ve dizeleri manipüle etmek için."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 255
-#: NEEDS WORK
-msgid "Basic variable substitution using braces."
-msgstr "Küme parantezleri kullanarak temel değişken yer tutma."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 259
-#: NEEDS WORK
-msgid "String substitution - replaces first 'b' with 'B'."
-msgstr "Dize yer değiştirme - ilk 'b' harfini 'B' ile değiştirir."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 263
-#: NEEDS WORK
-msgid "Substring extraction - first 2 characters."
-msgstr "Alt dize çıkarımı - ilk 2 karakter."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 267
-#: NEEDS WORK
-msgid "Substring from start - first 2 characters."
-msgstr "Başlangıçtaki alt dize - ilk 2 karakter."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 271
-#: NEEDS WORK
-msgid "Substring excluding last character."
-msgstr "Son karakter hariç alt dize."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 275
-#: NEEDS WORK
-msgid "Substring from right - last character."
-msgstr "Sağdan alt dize - son karakter."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 279
-#: NEEDS WORK
-msgid "Substring from right - second to last character."
-msgstr "Sağdan alt alta - sondan ikinci karakter."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 283
-#: NEEDS WORK
-msgid "Substring using variable length parameter."
-msgstr "Değişken uzunlukta parametre kullanan alt dize."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 287
-#: NEEDS WORK
-msgid "Remove file extension (.py)."
-msgstr "Dosya uzantısını kaldır (.py)."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 291
-#: NEEDS WORK
-msgid "Replace file extension (.py to .bak)."
-msgstr "Dosya uzantısını değiştirin (.py'den .bak'a)."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 295
-#: NEEDS WORK
-msgid "Remove everything after last slash (get directory)."
-msgstr "Son eğ slash'tan sonrasını kaldır (dizini al)."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 299
-#: NEEDS WORK
-msgid "Extract file extension (longest match)."
-msgstr "Dosya uzantısını çıkar (en uzun eşleşme)."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 303
-#: NEEDS WORK
-msgid "Extract filename from path (longest match)."
-msgstr "Yoldan dosya adını çıkar (en uzun eşleşme)."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 307
-#: NEEDS WORK
-msgid "Remove shortest prefix match up to first slash."
-msgstr "İlk eğik çizgiye kadar en kısa ön ek eşleşmesini kaldır."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 312
-#: NEEDS WORK
-msgid "Replace first occurrence of 'project' with 'scripts'."
-msgstr "İlk 'project' kelimesini 'scripts' ile değiştir."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 317
-#: NEEDS WORK
-msgid "Extract substring starting at position 6, length 5."
-msgstr "6. konumdan başlayarak 5 uzunluğunda alt dize çıkar."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 321
-#: NEEDS WORK
-msgid "Extract last 5 characters using negative offset."
-msgstr "Son 5 karakteri negatif ofset kullanarak çıkar."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 325
-#: NEEDS WORK
-msgid "Extract basename (filename) from path."
-msgstr "Yoldan temel adı (dosya adı) çıkar."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 329
-#: NEEDS WORK
-msgid "Extract directory path by removing basename."
-msgstr "Temel adı kaldırarak dizin yolunu çıkar."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 333
-#: NEEDS WORK
-msgid "List all variable names starting with 'user_'."
-msgstr "'user_' ile başlayan tüm değişken adlarını listele."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 337
-#: NEEDS WORK
-msgid "Indirect variable expansion using pointer."
-msgstr "İşaretçi kullanarak dolaylı değişken genişletme."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 341
-#: NEEDS WORK
-msgid "Remove shortest suffix match."
-msgstr "En kısa son ek eşleşmesini kaldır."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 345
-#: NEEDS WORK
-msgid "Remove shortest prefix match."
-msgstr "En kısa ön ek eşleşmesini kaldır."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 349
-#: NEEDS WORK
-msgid "Remove longest suffix match."
-msgstr "En uzun son ek eşleşmesini kaldır."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 353
-#: NEEDS WORK
-msgid "Remove longest prefix match."
-msgstr "En uzun ön ek eşleşmesini kaldır."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 357
-#: NEEDS WORK
-msgid "Replace first occurrence of 'old' with 'new'."
-msgstr "'Eski' kelimesinin ilk geçişini 'yeni' ile değiştir."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 361
-# File: usr/share/ashyterm/data/command_data.py, line: 1466
-#: NEEDS WORK
-msgid "Replace all occurrences of 'old' with 'new'."
-msgstr "Tüm 'eski' geçişlerini 'yeni' ile değiştir."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 365
-#: NEEDS WORK
-msgid "Replace suffix 'old' with 'new'."
-msgstr "'old' son ekini 'new' ile değiştir."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 369
-#: NEEDS WORK
-msgid "Replace prefix 'old' with 'new'."
-msgstr "'old' ön ekini 'new' ile değiştir."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 373
-#: NEEDS WORK
-msgid "Extract substring (position 0, length 3)."
-msgstr "Alt dizeyi çıkar (konum 0, uzunluk 3)."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 377
-#: NEEDS WORK
-msgid "Extract substring from right (last 3 characters)."
-msgstr "Sağdan alt dize çıkar (son 3 karakter)."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 381
-#: NEEDS WORK
-msgid "Get length of variable $filename."
-msgstr "Değişken $filename'in uzunluğunu al."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 385
-#: NEEDS WORK
-msgid "Convert first character to lowercase."
-msgstr "İlk karakteri küçük harfe çevir."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 389
-#: NEEDS WORK
-msgid "Convert all characters to lowercase."
-msgstr "Tüm karakterleri küçük harfe dönüştür."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 393
-#: NEEDS WORK
-msgid "Convert first character to uppercase."
-msgstr "İlk karakteri büyük harfe çevir."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 397
-#: NEEDS WORK
-msgid "Convert all characters to uppercase."
-msgstr "Tüm karakterleri büyük harfe çevir."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 401
-#: NEEDS WORK
-msgid "Use $username, or 'guest' if unset (or null)."
-msgstr "$username'i kullanın, veya ayarlanmamışsa (veya null ise) 'misafir' kullanın."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 406
-#: NEEDS WORK
-msgid "Set $username to 'guest' if unset (or null), then use it."
-msgstr "$kullanıcıAdı'nı 'misafir' olarak ayarla eğer ayarlanmamışsa (veya null ise), sonra kullan."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 411
-#: NEEDS WORK
-msgid "Use 'admin' if $username is set (and not null)."
-msgstr "'$username' ay ayarlandığında (ve null değilse) 'admin' kullanın."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 416
-#: NEEDS WORK
-msgid "Show error message and exit if $username is unset (or null)."
-msgstr "Hata mesajını göster ve $username tanımsız (veya null) ise çık."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 422
-#: NEEDS WORK
-msgid "Use $username, or 'guest' if unset (ignores null values)."
-msgstr "$username'i kullanın, veya ayarlanmamışsa 'misafir' kullanın (null değerleri yok sayar)."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 430
-#: NEEDS WORK
-msgid "Creates directories."
-msgstr "Klasörler oluşturur."
+msgid "Creates new directories."
+msgstr "Yeni dizinler oluşturur."
 # 
 # File: usr/share/ashyterm/data/command_data.py, line: 434
 #: NEEDS WORK
 msgid "Creates a single directory."
 msgstr "Tek bir dizin oluşturur."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 439
+# File: usr/share/ashyterm/data/command_data.py, line: 75
 #: NEEDS WORK
-msgid "Creates nested directories, creating parent directories as needed."
-msgstr "İç içe dizinler oluşturur, gerektiğinde üst dizinler oluşturur."
+msgid "Creates a full path of directories, even if the parent directories don't exist."
+msgstr "Ana dizinler mevcut olmasa bile, dizinlerin tam yolunu oluşturur."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 447
+# File: usr/share/ashyterm/data/command_data.py, line: 84
 #: NEEDS WORK
-msgid "Creates empty files or updates file timestamps."
-msgstr "Boş dosyalar oluşturur veya dosya zaman damgalarını günceller."
+msgid "Copies files or directories from one place to another."
+msgstr "Dosyaları veya dizinleri bir yerden başka bir yere kopyalar."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 452
+# File: usr/share/ashyterm/data/command_data.py, line: 69
 #: NEEDS WORK
-msgid "Creates an empty file or updates the timestamp of an existing file."
-msgstr "Boş bir dosya oluşturur veya mevcut bir dosyanın zaman damgasını günceller."
+msgid "Copies a single file."
+msgstr "Tek bir dosyayı kopyalar."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 457
+# File: usr/share/ashyterm/data/command_data.py, line: 93
 #: NEEDS WORK
-msgid "Creates multiple files at once."
-msgstr "Birden fazla dosya oluşturur."
+msgid "Copies a directory and everything inside it."
+msgstr "Bir dizini ve içindeki her şeyi kopyalar."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 462
-# File: usr/share/ashyterm/data/command_data.py, line: 481
-# File: usr/share/ashyterm/data/command_data.py, line: 496
-# File: usr/share/ashyterm/data/command_data.py, line: 513
-# File: usr/share/ashyterm/data/command_data.py, line: 536
-# File: usr/share/ashyterm/data/command_data.py, line: 555
-# File: usr/share/ashyterm/data/command_data.py, line: 578
-# File: usr/share/ashyterm/data/command_data.py, line: 597
-# File: usr/share/ashyterm/data/command_data.py, line: 616
-# File: usr/share/ashyterm/data/command_data.py, line: 635
-# File: usr/share/ashyterm/data/command_data.py, line: 650
-# File: usr/share/ashyterm/data/command_data.py, line: 665
-# File: usr/share/ashyterm/data/command_data.py, line: 684
-# File: usr/share/ashyterm/data/command_data.py, line: 1275
+# File: usr/share/ashyterm/data/command_data.py, line: 86
 #: NEEDS WORK
-msgid "Text Processing"
-msgstr "Metin İşleme"
+msgid "Moves or renames files and directories."
+msgstr "Dosyaları ve dizinleri taşır veya yeniden adlandırır."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 464
+# File: usr/share/ashyterm/data/command_data.py, line: 104
 #: NEEDS WORK
-msgid "Concatenates and displays file contents."
-msgstr "Dosya içeriklerini birleştirir ve görüntüler."
+msgid "Renames a file or directory."
+msgstr "Bir dosyayı veya dizini yeniden adlandırır."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 468
+# File: usr/share/ashyterm/data/command_data.py, line: 96
 #: NEEDS WORK
-msgid "Displays the contents of a file."
-msgstr "Bir dosyanın içeriğini görüntüler."
+msgid "Moves a file to a new location."
+msgstr "Bir dosyayı yeni bir konuma taşır."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 472
+# File: usr/share/ashyterm/data/command_data.py, line: 116
 #: NEEDS WORK
-msgid "Concatenates and displays multiple files."
-msgstr "Birden fazla dosyayı birleştirir ve görüntüler."
+msgid ""
+"Deletes files and directories. CAUTION: this is permanent! Tip: Before deleting, replace 'rm' with "
+"'ls' to preview what will be removed."
+msgstr ""
+"Dosyaları ve dizinleri siler. DİKKAT: bu kalıcıdır! İpucu: Silmeden önce 'rm' komutunu 'ls' ile "
+"değiştirerek silinecekleri önizleyin."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 476
+# File: usr/share/ashyterm/data/command_data.py, line: 119
 #: NEEDS WORK
-msgid "Displays file contents with line numbers."
-msgstr "Dosya içeriğini satır numaralarıyla görüntüler."
+msgid "Deletes a single file."
+msgstr "Tek bir dosyayı siler."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 483
+# File: usr/share/ashyterm/data/command_data.py, line: 122
 #: NEEDS WORK
-msgid "Displays the beginning of files."
-msgstr "Dosyaların başlangıcını görüntüler."
+msgid "Deletes a directory and everything inside it."
+msgstr "Bir dizini ve içindeki her şeyi siler."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 487
+# File: usr/share/ashyterm/data/command_data.py, line: 126
 #: NEEDS WORK
-msgid "Displays the first 10 lines of a file."
-msgstr "Bir dosyanın ilk 10 satırını görüntüler."
+msgid "Asks for confirmation before deleting each file."
+msgstr "Her dosyayı silmeden önce onay ister."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 491
+# File: usr/share/ashyterm/data/command_data.py, line: 131
 #: NEEDS WORK
-msgid "Displays the first 20 lines of a file."
-msgstr "Bir dosyanın ilk 20 satırını görüntüler."
+msgid "Forces deletion without asking (use with extreme caution)."
+msgstr "Silmeden silmeyi zorlar (aşırı dikkatle kullanın)."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 138
+# File: usr/share/ashyterm/data/command_data.py, line: 163
+# File: usr/share/ashyterm/data/command_data.py, line: 190
+# File: usr/share/ashyterm/data/command_data.py, line: 209
+# File: usr/share/ashyterm/data/command_data.py, line: 224
+#: NEEDS WORK
+msgid "Essentials: File I/O & Pipes"
+msgstr "Temel: Dosya G/Ç ve Borular"
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 140
+#: NEEDS WORK
+msgid "Controls how data flows between commands and files."
+msgstr "Komutlar ve dosyalar arasında verinin nasıl aktığını kontrol eder."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 145
+#: NEEDS WORK
+msgid "Redirect: Puts the output of a command into a file, overwriting it if it exists."
+msgstr "Yeniden Yönlendir: Bir komutun çıktısını bir dosyaya koyar, eğer dosya mevcutsa üzerine yazar."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 151
+#: NEEDS WORK
+msgid "Append: Adds the output of a command to the end of a file."
+msgstr "Ekle: Bir komutun çıktısını bir dosyanın sonuna ekler."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 157
+#: NEEDS WORK
+msgid "Pipe: Connects the output of command1 to the input of command2, creating a workflow."
+msgstr "Borulu: command1'in çıktısını command2'nin girişiyle bağlayarak bir iş akışı oluşturur."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 165
+#: NEEDS WORK
+msgid "Displays the content of a text file on the screen."
+msgstr "Bir metin dosyasının içeriğini ekranda görüntüler."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 170
+#: NEEDS WORK
+msgid "A modern and efficient way to display a file's content."
+msgstr "Bir dosyanın içeriğini görüntülemenin modern ve verimli bir yolu."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 175
+#: NEEDS WORK
+msgid "Displays the content of a single file."
+msgstr "Tek bir dosyanın içeriğini görüntüler."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 180
+#: NEEDS WORK
+msgid "Displays the content of multiple files, one after the other."
+msgstr "Birden fazla dosyanın içeriğini, ardışık olarak görüntüler."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 185
+#: NEEDS WORK
+msgid "Displays the content with line numbers."
+msgstr "İçeriği satır numaralarıyla görüntüler."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 193
+#: NEEDS WORK
+msgid "Creates multiple empty files at once or updates a file's modification timestamp."
+msgstr "Birden fazla boş dosya oluşturur veya bir dosyanın değiştirilme zaman damgasını günceller."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 198
+#: NEEDS WORK
+msgid "Creates several empty files at once."
+msgstr "Birden fazla boş dosya oluşturur."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 203
+#: NEEDS WORK
+msgid "Updates the modification date and time of a file to the current time."
+msgstr "Bir dosyanın değiştirilme tarihini ve saatini mevcut zamana günceller."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 211
+#: NEEDS WORK
+msgid "Displays the beginning of a text file."
+msgstr "Bir metin dosyasının başlangıcını görüntüler."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 215
+#: NEEDS WORK
+msgid "Shows the first 10 lines of a file."
+msgstr "Bir dosyanın ilk 10 satırını gösterir."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 219
+#: NEEDS WORK
+msgid "Shows the first 20 lines of a file."
+msgstr "Bir dosyanın ilk 20 satırını gösterir."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 226
+#: NEEDS WORK
+msgid "Displays the end of a text file."
+msgstr "Bir metin dosyasının sonunu görüntüler."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 230
+#: NEEDS WORK
+msgid "Shows the last 10 lines of a file."
+msgstr "Bir dosyanın son 10 satırını gösterir."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 235
+#: NEEDS WORK
+msgid "Follows a file in real-time, showing new lines as they are added."
+msgstr "Bir dosyayı gerçek zamanlı olarak takip eder, yeni satırlar eklendikçe gösterir."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 242
+# File: usr/share/ashyterm/data/command_data.py, line: 265
+# File: usr/share/ashyterm/data/command_data.py, line: 296
+# File: usr/share/ashyterm/data/command_data.py, line: 307
+# File: usr/share/ashyterm/data/command_data.py, line: 319
+# File: usr/share/ashyterm/data/command_data.py, line: 332
+# File: usr/share/ashyterm/data/command_data.py, line: 345
+# File: usr/share/ashyterm/data/command_data.py, line: 366
+#: NEEDS WORK
+msgid "Essentials: Search & System Information"
+msgstr "Temel: Arama ve Sistem Bilgisi"
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 244
+#: NEEDS WORK
+msgid "Searches for a word or text pattern within files."
+msgstr "Dosyalarda bir kelime veya metin deseni arar."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 136
+#: NEEDS WORK
+msgid "Finds and displays all lines containing 'word' in the file."
+msgstr "Dosyadaki 'kelime' içeren tüm satırları bulur ve görüntüler."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 254
+#: NEEDS WORK
+msgid "Searches for the word, ignoring case differences."
+msgstr "Kelimeyi arar, büyük/küçük harf farklarını göz ardı eder."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 259
+#: NEEDS WORK
+msgid "Searches for 'word' in all files in the current directory and its subdirectories."
+msgstr "Geçerli dizindeki ve alt dizinlerindeki tüm dosyalarda 'kelime' arar."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 267
+#: NEEDS WORK
+msgid "A powerful tool for finding files and directories."
+msgstr "Dosya ve dizinleri bulmak için güçlü bir araç."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 272
+#: NEEDS WORK
+msgid "Finds all files ending with .txt in the current directory and subdirectories."
+msgstr "Geçerli dizinde ve alt dizinlerde .txt ile biten tüm dosyaları bulur."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 278
+#: NEEDS WORK
+msgid "Finds only directories whose names start with 'backup'."
+msgstr "Sadece 'backup' ile başlayan adlara sahip dizinleri bulur."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 283
+#: NEEDS WORK
+msgid "Finds files that were modified in the last 7 days."
+msgstr "Son 7 günde değiştirilen dosyaları bulur."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 287
+#: NEEDS WORK
+msgid "Finds files larger than 100MB."
+msgstr "100MB'den büyük dosyaları bulur."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 291
+#: NEEDS WORK
+msgid "Finds empty files and directories."
+msgstr "Boş dosyaları ve dizinleri bulur."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 298
+#: NEEDS WORK
+msgid "Shows the username of the currently logged-in user."
+msgstr "Şu anda oturum açmış kullanıcının kullanıcı adını gösterir."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 302
+#: NEEDS WORK
+msgid "Displays your current username."
+msgstr "Mevcut kullanıcı adınızı görüntüler."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 309
+#: NEEDS WORK
+msgid "Displays the current system date and time."
+msgstr "Mevcut sistem tarihini ve saatini görüntüler."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 311
+#: NEEDS WORK
+msgid "Shows the current date and time."
+msgstr "Geçerli tarih ve saati gösterir."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 314
+#: NEEDS WORK
+msgid "Shows the date and time in a custom format."
+msgstr "Tarihi ve saati özel bir formatta gösterir."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 321
+#: NEEDS WORK
+msgid "Shows the free and used space on storage disks."
+msgstr "Depolama disklerindeki boş ve kullanılan alanı gösterir."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 326
+#: NEEDS WORK
+msgid "Shows disk usage in a human-readable format (KB, MB, GB)."
+msgstr "Disk kullanımını insan tarafından okunabilir bir formatta gösterir (KB, MB, GB)."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 334
+#: NEEDS WORK
+msgid "Shows the amount of used and free RAM."
+msgstr "Kullanılan ve boş RAM miktarını gösterir."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 339
+#: NEEDS WORK
+msgid "Shows memory usage in a human-readable format (KB, MB, GB)."
+msgstr "Bellek kullanımını insan tarafından okunabilir bir formatta gösterir (KB, MB, GB)."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 348
+#: NEEDS WORK
+msgid "Shows the disk space that files and directories are using."
+msgstr "Dosya ve dizinlerin kullandığı disk alanını gösterir."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 354
+#: NEEDS WORK
+msgid "Shows the total size of each item in the current directory in a summary format."
+msgstr "Geçerli dizindeki her bir öğenin toplam boyutunu özet formatında gösterir."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 360
+#: NEEDS WORK
+msgid "Shows the size of each directory and subdirectory in a human-readable format."
+msgstr "Her dizinin ve alt dizinin boyutunu insan tarafından okunabilir bir formatta gösterir."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 369
+#: NEEDS WORK
+msgid "Shows how long the computer has been running without a restart."
+msgstr "Bilgisayarın yeniden başlatılmadan ne kadar süre çalıştığını gösterir."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 375
+#: NEEDS WORK
+msgid "Displays the uptime, how many users are logged in, and the system load."
+msgstr "Süreç süresini, kaç kullanıcının oturum açtığını ve sistem yükünü gösterir."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 382
+# File: usr/share/ashyterm/data/command_data.py, line: 435
+# File: usr/share/ashyterm/data/command_data.py, line: 466
+#: NEEDS WORK
+msgid "Software Management"
+msgstr "Yazılım Yönetimi"
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 385
+#: NEEDS WORK
+msgid "The primary tool for installing, updating, and removing software on Arch-based Linux systems."
+msgstr "Arch tabanlı Linux sistemlerinde yazılım yüklemek, güncellemek ve kaldırmak için birincil araç."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 391
+#: NEEDS WORK
+msgid "Synchronizes with repositories and upgrades all installed packages."
+msgstr "Depolar ile senkronize eder ve tüm yüklü paketleri günceller."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 396
+#: NEEDS WORK
+msgid "Installs a new software package."
+msgstr "Yeni bir yazılım paketi kurar."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 400
+#: NEEDS WORK
+msgid "Searches for a package in the repositories."
+msgstr "Depolarda bir paketi arar."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 404
+#: NEEDS WORK
+msgid "Searches for an already installed package."
+msgstr "Zaten kurulu bir paketi arar."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 409
+#: NEEDS WORK
+msgid "Shows detailed information about a package from the repository."
+msgstr "Depodan bir paket hakkında ayrıntılı bilgi gösterir."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 415
+#: NEEDS WORK
+msgid "Shows detailed information about an installed package."
+msgstr "Yüklenmiş bir paket hakkında ayrıntılı bilgi gösterir."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 420
+#: NEEDS WORK
+msgid "Removes a package and its unneeded dependencies."
+msgstr "Bir paketi ve gereksiz bağımlılıklarını kaldırır."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 425
+#: NEEDS WORK
+msgid "Updates the database of which package owns which file."
+msgstr "Hangi paketin hangi dosyayı sahip olduğunu gösteren veritabanını günceller."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 430
+#: NEEDS WORK
+msgid "Finds which package a specific file belongs to."
+msgstr "Belirli bir dosyanın hangi pakete ait olduğunu bulur."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 438
+#: NEEDS WORK
+msgid ""
+"An AUR helper for Arch-based systems that wraps pacman and adds support for the Arch User "
+"Repository."
+msgstr ""
+"Arch tabanlı sistemler için pacman'ı saran ve Arch Kullanıcı Deposu'na destek ekleyen bir AUR "
+"yardımcı programı."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 444
+#: NEEDS WORK
+msgid "Upgrades all packages from official repositories and the AUR."
+msgstr "Resmi depolardan ve AUR'dan tüm paketleri günceller."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 450
+#: NEEDS WORK
+msgid "Installs a package from the official repositories or the AUR."
+msgstr "Resmi depolardan veya AUR'dan bir paket kurar."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 456
+#: NEEDS WORK
+msgid "Searches for a package in both official repositories and the AUR."
+msgstr "Hem resmi depolarda hem de AUR'da bir paket arar."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 461
+#: NEEDS WORK
+msgid "Removes a package and its dependencies."
+msgstr "Bir paketi ve onun bağımlılıklarını kaldırır."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 469
+#: NEEDS WORK
+msgid ""
+"A universal system for installing and running applications that works across different Linux "
+"distributions."
+msgstr ""
+"Farklı Linux dağıtımları arasında çalışan uygulamaları yüklemek ve çalıştırmak için evrensel bir "
+"sistem."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 475
+#: NEEDS WORK
+msgid "Installs an application from a remote repository like Flathub."
+msgstr "Flathub gibi uzaktan bir depodan bir uygulama yükler."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 480
+#: NEEDS WORK
+msgid "Runs an installed Flatpak application."
+msgstr "Yüklenmiş bir Flatpak uygulamasını çalıştırır."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 484
+#: NEEDS WORK
+msgid "Updates all installed Flatpak applications."
+msgstr "Tüm yüklü Flatpak uygulamalarını günceller."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 489
+#: NEEDS WORK
+msgid "Searches for applications in the configured remotes."
+msgstr "Yapılandırılmış uzaklarda uygulamaları arar."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 494
+#: NEEDS WORK
+msgid "Lists all installed Flatpak applications."
+msgstr "Yüklenmiş tüm Flatpak uygulamalarını listeler."
 # 
 # File: usr/share/ashyterm/data/command_data.py, line: 498
 #: NEEDS WORK
-msgid "Displays the end of files."
-msgstr "Dosyaların sonunu görüntüler."
+msgid "Removes an installed Flatpak application."
+msgstr "Yüklenmiş bir Flatpak uygulamasını kaldırır."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 502
+# File: usr/share/ashyterm/data/command_data.py, line: 504
+# File: usr/share/ashyterm/data/command_data.py, line: 519
+# File: usr/share/ashyterm/data/command_data.py, line: 540
 #: NEEDS WORK
-msgid "Displays the last 10 lines of a file."
-msgstr "Bir dosyanın son 10 satırını görüntüler."
+msgid "Permissions & Ownership"
+msgstr "İzinler ve Sahiplik"
 # 
 # File: usr/share/ashyterm/data/command_data.py, line: 507
 #: NEEDS WORK
-msgid "Follows the file, displaying new lines as they are added."
-msgstr "Dosyayı takip eder, yeni satırlar eklendikçe görüntüler."
+msgid "Executes a single command with administrative (root) privileges. Use with care."
+msgstr "Tek bir komutu yönetici (root) ayrıcalıklarıyla çalıştırır. Dikkatli kullanın."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 515
+# File: usr/share/ashyterm/data/command_data.py, line: 513
 #: NEEDS WORK
-msgid "Sorts lines of text files."
-msgstr "Metin dosyası satırlarını sıralar."
+msgid "Runs the 'pacman -Syu' command as the administrator, which is required for system updates."
+msgstr "'pacman -Syu' komutunu yönetici olarak çalıştırır, bu sistem güncellemeleri için gereklidir."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 522
+#: NEEDS WORK
+msgid "Changes the permissions of files and directories (who can read, write, or execute them)."
+msgstr ""
+"Dosya ve dizinlerin izinlerini değiştirir (kimlerin okuyabileceği, yazabileceği veya "
+"çalıştırabileceği)."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 528
+#: NEEDS WORK
+msgid "Adds execute (x) permission, allowing the file to be run as a program."
+msgstr "Yürütme (x) izni ekler, dosyanın bir program olarak çalıştırılmasına izin verir."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 534
+#: NEEDS WORK
+msgid ""
+"Sets permissions using numbers: owner can read/write/execute (7), group and others can read/execute "
+"(5)."
+msgstr ""
+"İzinleri sayılarla ayarlar: sahip okuyabilir/yazabilir/çalıştırabilir (7), grup ve diğerleri "
+"okuyabilir/çalıştırabilir (5)."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 542
+#: NEEDS WORK
+msgid "Changes the owner and group of a file or directory."
+msgstr "Bir dosyanın veya dizinin sahibi ve grubunu değiştirir."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 547
+#: NEEDS WORK
+msgid "Makes 'user' the owner and 'group' the group for the file."
+msgstr "'kullanıcı'yı dosyanın sahibi ve 'grup'u dosyanın grubu yapar."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 554
+# File: usr/share/ashyterm/data/command_data.py, line: 567
+# File: usr/share/ashyterm/data/command_data.py, line: 586
+# File: usr/share/ashyterm/data/command_data.py, line: 607
+#: NEEDS WORK
+msgid "Process & Network Management"
+msgstr "Süreç ve Ağ Yönetimi"
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 557
+#: NEEDS WORK
+msgid "Shows the programs (processes) currently running on the system."
+msgstr "Sistemde şu anda çalışan programları (işlemleri) gösterir."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 562
+#: NEEDS WORK
+msgid "Shows a detailed list of all running programs."
+msgstr "Tüm çalışan programların ayrıntılı bir listesini gösterir."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 570
+#: NEEDS WORK
+msgid "Terminates a program (process) that is frozen or unresponsive."
+msgstr "Donmuş veya yanıt vermeyen bir programı (işlemi) sonlandırır."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 575
+#: NEEDS WORK
+msgid "Politely tries to close the program with ID 1234."
+msgstr "Nazik bir şekilde 1234 ID'li programı kapatmaya çalışıyor."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 580
+#: NEEDS WORK
+msgid "Forcibly terminates the program with ID 1234 (use as a last resort)."
+msgstr "ID'si 1234 olan programı zorla sonlandırır (son çare olarak kullanın)."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 589
+#: NEEDS WORK
+msgid "Terminates all processes with a specific name, like closing all windows of an app."
+msgstr "Belirli bir adı olan tüm süreçleri sonlandırır, bir uygulamanın tüm pencerelerini kapatmak gibi."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 595
+#: NEEDS WORK
+msgid "Closes all running instances of the 'firefox' program."
+msgstr "'firefox' programının tüm çalışan örneklerini kapatır."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 601
+#: NEEDS WORK
+msgid "Asks for confirmation before terminating each 'chrome' process."
+msgstr "Her 'chrome' işlemini sonlandırmadan önce onay ister."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 610
+#: NEEDS WORK
+msgid "Tests if there is a connection to another computer or website."
+msgstr "Başka bir bilgisayara veya web sitesine bağlantı olup olmadığını test eder."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 615
+#: NEEDS WORK
+msgid "Checks if you can communicate with google.com."
+msgstr "google.com ile iletişim kurup kuramayacağınızı kontrol eder."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 620
+#: NEEDS WORK
+msgid "Sends only 4 test packets instead of running continuously."
+msgstr "Sürekli çalışmak yerine yalnızca 4 test paketi gönderir."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 627
+# File: usr/share/ashyterm/data/command_data.py, line: 644
+# File: usr/share/ashyterm/data/command_data.py, line: 655
+#: NEEDS WORK
+msgid "System & User Control"
+msgstr "Sistem ve Kullanıcı Kontrolü"
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 630
+#: NEEDS WORK
+msgid "Safely turns off or schedules a shutdown for the computer."
+msgstr "Bilgisayarı güvenli bir şekilde kapatır veya kapatmayı planlar."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 635
+#: NEEDS WORK
+msgid "Shuts down the system immediately."
+msgstr "Sistemi hemen kapatır."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 639
+#: NEEDS WORK
+msgid "Schedules a shutdown for 15 minutes from now."
+msgstr "Şu andan itibaren 15 dakika içinde bir kapatma planlar."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 646
+#: NEEDS WORK
+msgid "Restarts the computer."
+msgstr "Bilgisayarı yeniden başlatır."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 650
+#: NEEDS WORK
+msgid "Restarts the system immediately."
+msgstr "Sistemi hemen yeniden başlatır."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 658
+#: NEEDS WORK
+msgid "Switches to another user account in the current terminal session."
+msgstr "Mevcut terminal oturumunda başka bir kullanıcı hesabına geçiş yapar."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 664
+#: NEEDS WORK
+msgid "Switches to the specified user's account (requires their password)."
+msgstr "Belirtilen kullanıcının hesabına geçiş yapar (şifreleri gerektirir)."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 671
+#: NEEDS WORK
+msgid "Version Control with Git"
+msgstr "Git ile Sürüm Kontrolü"
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 674
+#: NEEDS WORK
+msgid "A tool for saving the history of changes in code projects, like a 'save point' in a game."
+msgstr ""
+"Kod projelerinde değişikliklerin geçmişini kaydetmek için bir araç, bir oyundaki 'kaydetme noktası' "
+"gibi."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 680
+#: NEEDS WORK
+msgid "Initializes a new 'history album' (repository) in a directory."
+msgstr "Bir dizinde yeni bir 'geçmiş albümü' (depo) başlatır."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 686
+#: NEEDS WORK
+msgid "Downloads a copy of a project that already exists elsewhere."
+msgstr "Başka bir yerde zaten var olan bir projenin kopyasını indirir."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 692
+#: NEEDS WORK
+msgid "Shows which files have been modified, added, or deleted."
+msgstr "Hangi dosyaların değiştirildiğini, eklendiğini veya silindiğini gösterir."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 698
+#: NEEDS WORK
+msgid "Prepares a modified file to be saved in the history ('stages' the change)."
+msgstr "Değiştirilen bir dosyayı geçmişe kaydedilmek üzere hazırlar ('değişikliği' aşamalar)."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 704
+#: NEEDS WORK
+msgid "Saves the staged changes to the history with a description of what was done."
+msgstr "Aşamalı değişiklikleri, ne yapıldığını açıklayan bir tanımla birlikte geçmişe kaydeder."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 709
+#: NEEDS WORK
+msgid "Downloads the latest updates from a remote project."
+msgstr "Uzak bir projeden en son güncellemeleri indirir."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 714
+#: NEEDS WORK
+msgid "Uploads your saved changes (commits) to the remote project."
+msgstr "Kaydedilmiş değişikliklerinizi (commit'lerinizi) uzak projeye yükler."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 719
+#: NEEDS WORK
+msgid "Shows the history of all commits (saves) made."
+msgstr "Tüm yapılan commit'lerin (kaydetmelerin) geçmişini gösterir."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 724
+#: NEEDS WORK
+msgid "Lists all the 'timelines' (branches) of the project."
+msgstr "Projeye ait tüm 'zaman dilimlerini' (dal) listeler."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 730
+#: NEEDS WORK
+msgid "Switches to another 'timeline' (branch) to work on something new."
+msgstr "Başka bir 'zaman dilimine' (dal) geçerek yeni bir şey üzerinde çalışır."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 737
+# File: usr/share/ashyterm/data/command_data.py, line: 758
+# File: usr/share/ashyterm/data/command_data.py, line: 779
+#: NEEDS WORK
+msgid "Archives & Compression"
+msgstr "Arşivler ve Sıkıştırma"
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 740
+#: NEEDS WORK
+msgid "Groups multiple files and directories into a single package (.tar file) or extracts them."
+msgstr "Birden fazla dosyayı ve dizini tek bir paket (.tar dosyası) haline getirir veya çıkarır."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 745
+#: NEEDS WORK
+msgid "Creates a compressed package from a directory."
+msgstr "Bir dizinden sıkıştırılmış bir paket oluşturur."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 749
+#: NEEDS WORK
+msgid "Extracts files from a compressed package."
+msgstr "Sıkıştırılmış bir paketten dosyaları çıkarır."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 753
+#: NEEDS WORK
+msgid "Creates a package without compression."
+msgstr "Sıkıştırma olmadan bir paket oluşturur."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 761
+#: NEEDS WORK
+msgid "Creates compressed .zip files, a format widely used on all operating systems."
+msgstr ""
+"Sıkıştırılmış .zip dosyaları oluşturur, tüm işletim sistemlerinde yaygın olarak kullanılan bir "
+"formattır."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 767
+#: NEEDS WORK
+msgid "Creates a zip file containing one or more specified files."
+msgstr "Bir veya daha fazla belirtilen dosyayı içeren bir zip dosyası oluşturur."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 773
+#: NEEDS WORK
+msgid "Creates a zip file containing a directory and everything inside it."
+msgstr "Bir dizini ve içindeki her şeyi içeren bir zip dosyası oluşturur."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 781
+#: NEEDS WORK
+msgid "Extracts files from a .zip archive."
+msgstr "Bir .zip arşivinden dosyaları çıkarır."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 786
+#: NEEDS WORK
+msgid "Extracts all files from the archive into the current directory."
+msgstr "Arşivdeki tüm dosyaları mevcut dizine çıkarır."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 791
+#: NEEDS WORK
+msgid "Extracts files to a specific destination directory."
+msgstr "Belirli bir hedef dizine dosyaları çıkarır."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 797
+# File: usr/share/ashyterm/data/command_data.py, line: 812
+# File: usr/share/ashyterm/data/command_data.py, line: 827
+# File: usr/share/ashyterm/data/command_data.py, line: 840
+# File: usr/share/ashyterm/data/command_data.py, line: 851
+# File: usr/share/ashyterm/data/command_data.py, line: 866
+# File: usr/share/ashyterm/data/command_data.py, line: 879
+#: NEEDS WORK
+msgid "Useful Commands (Optional)"
+msgstr "Yararlı Komutlar (İsteğe Bağlı)"
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 800
+#: NEEDS WORK
+msgid "A visual 'Task Manager' for the terminal. (May require installation)"
+msgstr "Terminal için görsel 'Görev Yöneticisi'. (Kurulum gerektirebilir)"
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 806
+#: NEEDS WORK
+msgid "Interactively shows running programs, CPU, and memory usage."
+msgstr "Etkileşimli olarak çalışan programları, CPU ve bellek kullanımını gösterir."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 815
+#: NEEDS WORK
+msgid "Monitors the usage of video cards (GPUs), especially NVIDIA. (May require installation)"
+msgstr "Video kartlarının (GPU'lar) kullanımını, özellikle NVIDIA'yı izler. (Kurulum gerektirebilir)"
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 821
+#: NEEDS WORK
+msgid "Shows GPU usage, video memory, and temperature in real-time."
+msgstr "Gerçek zamanlı olarak GPU kullanımını, video belleğini ve sıcaklığı gösterir."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 830
+#: NEEDS WORK
+msgid "Lists all devices connected to the computer's PCI slots (graphics card, network, etc.)."
+msgstr "Bilgisayarın PCI yuvalarına (grafik kartı, ağ vb.) bağlı tüm cihazları listeleyin."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 835
+#: NEEDS WORK
+msgid "Shows a list of all PCI devices."
+msgstr "Tüm PCI aygıtlarının listesini gösterir."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 842
+#: NEEDS WORK
+msgid "Lists all devices connected to the USB ports."
+msgstr "USB portlarına bağlı tüm cihazları listeleyin."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 846
+#: NEEDS WORK
+msgid "Shows a list of all connected USB devices."
+msgstr "Bağlı tüm USB aygıtlarının listesini gösterir."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 854
+#: NEEDS WORK
+msgid "A modern and super-fast version of 'grep' for searching text. (May require installation: ripgrep)"
+msgstr "Metin aramak için 'grep'in modern ve süper hızlı bir versiyonu. (Kurulum gerektirebilir: ripgrep)"
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 860
+#: NEEDS WORK
+msgid "Recursively searches for 'word' in the current directory very quickly."
+msgstr "Mevcut dizinde 'kelime'yi çok hızlı bir şekilde özyinelemeli olarak arar."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 869
+#: NEEDS WORK
+msgid "A modern and more intuitive version of 'find' for finding files. (May require installation: fd-find)"
+msgstr ""
+"Dosya bulmak için 'find' komutunun modern ve daha sezgisel bir versiyonu. (Kurulum gerektirebilir: "
+"fd-find)"
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 874
+#: NEEDS WORK
+msgid "Finds all files containing '.txt' in their name."
+msgstr "'.txt' içeren tüm dosyaları bulur."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 882
+#: NEEDS WORK
+msgid "A tool for processing and viewing data in JSON format. (May require installation)"
+msgstr "JSON formatında verileri işlemek ve görüntülemek için bir araç. (Kurulum gerektirebilir)"
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 888
+#: NEEDS WORK
+msgid "Displays a JSON file with colors and formatting for easy reading."
+msgstr "Renkler ve biçimlendirme ile kolay okunabilir bir JSON dosyası görüntüler."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 895
+# File: usr/share/ashyterm/data/command_data.py, line: 914
+# File: usr/share/ashyterm/data/command_data.py, line: 929
+# File: usr/share/ashyterm/data/command_data.py, line: 944
+# File: usr/share/ashyterm/data/command_data.py, line: 957
+# File: usr/share/ashyterm/data/command_data.py, line: 968
+# File: usr/share/ashyterm/data/command_data.py, line: 979
+# File: usr/share/ashyterm/data/command_data.py, line: 990
+# File: usr/share/ashyterm/data/command_data.py, line: 1003
+# File: usr/share/ashyterm/data/command_data.py, line: 1015
+#: NEEDS WORK
+msgid "Text Processing (Intermediate)"
+msgstr "Metin İşleme (Orta Düzey)"
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 897
+#: NEEDS WORK
+msgid "Sorts the lines of a file."
+msgstr "Bir dosyanın satırlarını sıralar."
 # 
 # File: usr/share/ashyterm/data/command_data.py, line: 519
 #: NEEDS WORK
 msgid "Sorts lines in alphabetical order."
 msgstr "Satırları alfabetik sıraya göre sıralar."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 523
+# File: usr/share/ashyterm/data/command_data.py, line: 905
 #: NEEDS WORK
-msgid "Sorts lines numerically."
-msgstr "Satırları sayısal olarak sıralar."
+msgid "Sorts lines in numerical order."
+msgstr "Satırları sayısal sıraya göre sıralar."
 # 
 # File: usr/share/ashyterm/data/command_data.py, line: 527
 #: NEEDS WORK
 msgid "Sorts lines in reverse order."
 msgstr "Satırları ters sırayla sıralar."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 531
+# File: usr/share/ashyterm/data/command_data.py, line: 916
 #: NEEDS WORK
-msgid "Sorts by second field/column."
-msgstr "İkinci alan/sütuna göre sıralar."
+msgid "Removes adjacent duplicate lines."
+msgstr "Komşu tekrarlayan satırları kaldırır."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 538
+# File: usr/share/ashyterm/data/command_data.py, line: 920
 #: NEEDS WORK
-msgid "Removes duplicate lines from sorted files."
-msgstr "Sıralı dosyalardan yinelenen satırları kaldırır."
+msgid "First sorts the file, then removes duplicate lines."
+msgstr "Önce dosyayı sıralar, ardından tekrar eden satırları kaldırır."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 542
+# File: usr/share/ashyterm/data/command_data.py, line: 924
 #: NEEDS WORK
-msgid "Removes duplicate lines after sorting."
-msgstr "Sıraladıktan sonra tekrar eden satırları kaldırır."
+msgid "Counts how many times each line appears."
+msgstr "Her satırın kaç kez göründüğünü sayar."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 546
+# File: usr/share/ashyterm/data/command_data.py, line: 931
 #: NEEDS WORK
-msgid "Shows count of occurrences for each line."
-msgstr "Her bir satır için oluşum sayısını gösterir."
+msgid "Counts lines, words, and characters in a file."
+msgstr "Bir dosyadaki satır, kelime ve karakter sayısını hesaplar."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 550
+# File: usr/share/ashyterm/data/command_data.py, line: 935
 #: NEEDS WORK
-msgid "Shows only duplicate lines."
-msgstr "Sadece yinelenen satırları gösterir."
+msgid "Counts only the number of lines."
+msgstr "Sadece satır sayısını sayar."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 557
+# File: usr/share/ashyterm/data/command_data.py, line: 939
 #: NEEDS WORK
-msgid "Counts lines, words, and characters in files."
-msgstr "Dosyalardaki satır, kelime ve karakter sayısını hesaplar."
+msgid "Counts only the number of words."
+msgstr "Sadece kelime sayısını sayar."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 561
+# File: usr/share/ashyterm/data/command_data.py, line: 946
 #: NEEDS WORK
-msgid "Shows lines, words, and characters count."
-msgstr "Satır, kelime ve karakter sayısını gösterir."
+msgid "Cuts and extracts columns of text from a file."
+msgstr "Bir dosyadan metin sütunlarını keser ve çıkarır."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 565
+# File: usr/share/ashyterm/data/command_data.py, line: 951
 #: NEEDS WORK
-msgid "Shows only line count."
-msgstr "Sadece satır sayısını gösterir."
+msgid "Extracts the first column of text, using ':' as the separator."
+msgstr "Metinlerin ilk sütununu ':' ayırıcı olarak kullanarak çıkarır."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 569
+# File: usr/share/ashyterm/data/command_data.py, line: 959
 #: NEEDS WORK
-msgid "Shows only word count."
-msgstr "Sadece kelime sayısını gösterir."
+msgid "Merges the lines of multiple files side-by-side."
+msgstr "Birden fazla dosyanın satırlarını yan yana birleştirir."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 573
+# File: usr/share/ashyterm/data/command_data.py, line: 963
 #: NEEDS WORK
-msgid "Shows only character count."
-msgstr "Sadece karakter sayısını gösterir."
+msgid "Combines the lines of two files into columns."
+msgstr "İki dosyanın satırlarını sütunlar halinde birleştirir."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 580
+# File: usr/share/ashyterm/data/command_data.py, line: 970
 #: NEEDS WORK
-msgid "Extracts sections from lines of files."
-msgstr "Dosyalardaki satırlardan bölümleri çıkarır."
+msgid "Translates or deletes characters from text."
+msgstr "Metin içindeki karakterleri çevirir veya siler."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 584
+# File: usr/share/ashyterm/data/command_data.py, line: 974
 #: NEEDS WORK
-msgid "Extracts first field using colon delimiter."
-msgstr "İlk alanı iki nokta üst üste ayırıcı kullanarak çıkarır."
+msgid "Converts text from lowercase to uppercase."
+msgstr "Metni küçük harflerden büyük harflere dönüştürür."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 588
+# File: usr/share/ashyterm/data/command_data.py, line: 981
 #: NEEDS WORK
-msgid "Extracts first 10 characters from each line."
-msgstr "Her bir satırdan ilk 10 karakteri çıkarır."
+msgid "Reverses the order of characters in each line."
+msgstr "Her bir satırdaki karakterlerin sırasını tersine çevirir."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 592
+# File: usr/share/ashyterm/data/command_data.py, line: 985
 #: NEEDS WORK
-msgid "Extracts 2nd and 4th fields from CSV data."
-msgstr "CSV verilerinden 2. ve 4. alanları çıkarır."
+msgid "Reverses a string (result: 'stressed')."
+msgstr "Bir dizeyi tersine çevirir (sonuç: 'stressed')."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 599
+# File: usr/share/ashyterm/data/command_data.py, line: 993
 #: NEEDS WORK
-msgid "Merges lines from multiple files."
-msgstr "Birden fazla dosyadan satırları birleştirir."
+msgid "Displays the content of a file backwards (last line first)."
+msgstr "Bir dosyanın içeriğini tersine (son satır ilk) gösterir."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 603
+# File: usr/share/ashyterm/data/command_data.py, line: 998
 #: NEEDS WORK
-msgid "Merges corresponding lines from two files."
-msgstr "İki dosyadan karşılık gelen satırları birleştirir."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 607
-#: NEEDS WORK
-msgid "Merges lines using comma as delimiter."
-msgstr "Satırları virgül ile ayırarak birleştirir."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 611
-#: NEEDS WORK
-msgid "Merges all lines into a single line."
-msgstr "Tüm satırları tek bir satıra birleştirir."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 618
-#: NEEDS WORK
-msgid "Translates or deletes characters."
-msgstr "Karakterleri çevirir veya siler."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 622
-#: NEEDS WORK
-msgid "Converts lowercase to uppercase."
-msgstr "Küçük harfleri büyük harflere dönüştürür."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 626
-#: NEEDS WORK
-msgid "Removes all newline characters."
-msgstr "Tüm satır sonu karakterlerini kaldırır."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 630
-#: NEEDS WORK
-msgid "Squeezes multiple spaces into single space."
-msgstr "Birden fazla boşluğu tek bir boşluğa sıkıştırır."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 637
-#: NEEDS WORK
-msgid "Reverses lines character by character."
-msgstr "Satırları karakter karakter ters çevirir."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 641
-#: NEEDS WORK
-msgid "Reverses each line character by character."
-msgstr "Her satırı karakter karakter ters çevirir."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 645
-#: NEEDS WORK
-msgid "Reverses a string."
-msgstr "Bir dizeyi ters çevirir."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 652
-#: NEEDS WORK
-msgid "Concatenates and prints files in reverse order."
-msgstr "Dosyaları ters sırayla birleştirir ve yazdırır."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 656
-#: NEEDS WORK
-msgid "Prints file lines in reverse order."
-msgstr "Dosya satırlarını ters sırayla yazdırır."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 660
-#: NEEDS WORK
-msgid "Concatenates files in reverse order."
-msgstr "Dosyaları ters sırayla birleştirir."
+msgid "Displays the lines of a file in reverse order."
+msgstr "Bir dosyanın satırlarını ters sırayla görüntüler."
 # 
 # File: usr/share/ashyterm/data/command_data.py, line: 667
 #: NEEDS WORK
@@ -3461,957 +3743,507 @@ msgstr "Bir sayı dizisi yazdırır."
 msgid "Prints numbers from 1 to 10."
 msgstr "1'den 10'a kadar sayıları yazdırır."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 675
+# File: usr/share/ashyterm/data/command_data.py, line: 1010
 #: NEEDS WORK
-msgid "Prints numbers from 5 to 10."
-msgstr "5'ten 10'a kadar sayıları yazdırır."
+msgid "Prints numbers from 0 to 10, incrementing by 2."
+msgstr "0'dan 10'a kadar olan sayıları 2'şer artırarak yazdırır."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 679
+# File: usr/share/ashyterm/data/command_data.py, line: 1017
 #: NEEDS WORK
-msgid "Prints even numbers from 0 to 20."
-msgstr "0'dan 20'ye kadar olan çift sayıları yazdırır."
+msgid "A calculator for the terminal."
+msgstr "Terminal için bir hesap makinesi."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 686
+# File: usr/share/ashyterm/data/command_data.py, line: 1021
 #: NEEDS WORK
-msgid "Arbitrary precision calculator language."
-msgstr "Rastgele hassasiyet hesaplama dili."
+msgid "Performs a basic mathematical calculation."
+msgstr "Temel bir matematiksel hesaplama yapar."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 690
+# File: usr/share/ashyterm/data/command_data.py, line: 1025
 #: NEEDS WORK
-msgid "Performs basic arithmetic calculation."
-msgstr "Temel aritmetik hesaplama yapar."
+msgid "Performs division with 2 decimal places."
+msgstr "2 ondalık basamakla bölme işlemi yapar."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 694
-#: NEEDS WORK
-msgid "Division with 2 decimal places precision."
-msgstr "2 ondalık basamak hassasiyetiyle bölme."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 698
-#: NEEDS WORK
-msgid "Starts bc with math library for advanced functions."
-msgstr "Gelişmiş fonksiyonlar için matematik kütüphanesi ile başlar."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 703
-# File: usr/share/ashyterm/data/command_data.py, line: 718
-# File: usr/share/ashyterm/data/command_data.py, line: 733
-# File: usr/share/ashyterm/data/command_data.py, line: 758
-# File: usr/share/ashyterm/data/command_data.py, line: 771
-# File: usr/share/ashyterm/data/command_data.py, line: 782
-# File: usr/share/ashyterm/data/command_data.py, line: 793
-# File: usr/share/ashyterm/data/command_data.py, line: 812
-#: NEEDS WORK
-msgid "System Information"
-msgstr "Sistem Bilgisi"
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 705
-#: NEEDS WORK
-msgid "Displays disk space usage."
-msgstr "Disk alanı kullanımını gösterir."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 709
-# File: usr/share/ashyterm/data/command_data.py, line: 739
-#: NEEDS WORK
-msgid "Shows disk usage in human-readable format."
-msgstr "İnsan tarafından okunabilir formatta disk kullanımını gösterir."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 713
-#: NEEDS WORK
-msgid "Shows inode usage instead of block usage."
-msgstr "İnode kullanımını blok kullanımının yerine gösterir."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 720
-#: NEEDS WORK
-msgid "Displays memory usage information."
-msgstr "Bellek kullanım bilgilerini görüntüler."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 724
-#: NEEDS WORK
-msgid "Shows memory usage in human-readable format."
-msgstr "İnsan tarafından okunabilir formatta bellek kullanımını gösterir."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 728
-#: NEEDS WORK
-msgid "Continuously displays memory usage every 5 seconds."
-msgstr "Her 5 saniyede bir bellek kullanımını sürekli olarak gösterir."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 735
-#: NEEDS WORK
-msgid "Displays disk usage of files and directories."
-msgstr "Dosya ve dizinlerin disk kullanımını gösterir."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 743
-#: NEEDS WORK
-msgid "Shows total size of each item in current directory."
-msgstr "Geçerli dizindeki her bir öğenin toplam boyutunu gösterir."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 747
-#: NEEDS WORK
-msgid "Shows disk usage one level deep."
-msgstr "Disk kullanımını bir seviye derinlikte gösterir."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 752
-#: NEEDS WORK
-msgid "Shows all files and directories with human-readable sizes."
-msgstr "İnsan tarafından okunabilir boyutlara sahip tüm dosyaları ve dizinleri gösterir."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 760
-#: NEEDS WORK
-msgid "Shows how long the system has been running."
-msgstr "Sistemin ne kadar süredir çalıştığını gösterir."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 765
-#: NEEDS WORK
-msgid "Shows current time, uptime, users, and load average."
-msgstr "Mevcut zamanı, çalışma süresini, kullanıcıları ve yük ortalamasını gösterir."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 773
-#: NEEDS WORK
-msgid "Displays the current username."
-msgstr "Geçerli kullanıcı adını görüntüler."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 777
-#: NEEDS WORK
-msgid "Prints the current logged-in username."
-msgstr "Geçerli oturum açmış kullanıcı adını yazdırır."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 784
-#: NEEDS WORK
-msgid "Prints the current working directory."
-msgstr "Geçerli çalışma dizinini yazdırır."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 788
-#: NEEDS WORK
-msgid "Shows the full path of current directory."
-msgstr "Geçerli dizinin tam yolunu gösterir."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 795
-#: NEEDS WORK
-msgid "Displays or sets the system date and time."
-msgstr "Sistem tarihini ve saatini görüntüler veya ayarlar."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 799
-#: NEEDS WORK
-msgid "Shows current date and time."
-msgstr "Geçerli tarih ve saati gösterir."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 803
-#: NEEDS WORK
-msgid "Shows date and time in custom format."
-msgstr "Özel formatta tarih ve saat gösterir."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 807
-#: NEEDS WORK
-msgid "Shows UTC time instead of local time."
-msgstr "Yerel saat yerine UTC saatini gösterir."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 814
-#: NEEDS WORK
-msgid "Displays a calendar."
-msgstr "Bir takvim gösterir."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 818
-#: NEEDS WORK
-msgid "Shows calendar for current month."
-msgstr "Mevcut ayın takvimini gösterir."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 822
-#: NEEDS WORK
-msgid "Shows calendar for entire year 2024."
-msgstr "2024 yılı için takvimi gösterir."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 826
-#: NEEDS WORK
-msgid "Shows calendar for December 2024."
-msgstr "Aralık 2024 takvimini gösterir."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 831
-# File: usr/share/ashyterm/data/command_data.py, line: 848
-#: NEEDS WORK
-msgid "Process Management"
-msgstr "Süreç Yönetimi"
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 833
-#: NEEDS WORK
-msgid "Displays information about running processes."
-msgstr "Çalışan süreçler hakkında bilgi görüntüler."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 838
-#: NEEDS WORK
-msgid "Shows detailed information about all running processes."
-msgstr "Tüm çalışan süreçler hakkında ayrıntılı bilgi gösterir."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 843
-#: NEEDS WORK
-msgid "Shows all processes in a different format."
-msgstr "Tüm süreçleri farklı bir formatta gösterir."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 850
-#: NEEDS WORK
-msgid "Sends signals to processes."
-msgstr "Sinyalleri süreçlere gönderir."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 854
-#: NEEDS WORK
-msgid "Sends SIGTERM signal to process with PID 1234."
-msgstr "PID 1234 olan işleme SIGTERM sinyali gönderir."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 858
-#: NEEDS WORK
-msgid "Forcefully kills process with PID 1234 (SIGKILL)."
-msgstr "PID 1234 olan süreci zorla sonlandırır (SIGKILL)."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 863
-#: NEEDS WORK
-msgid "Networking"
-msgstr "Ağ Oluşturma"
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 865
-#: NEEDS WORK
-msgid "Tests network connectivity to a host."
-msgstr "Bir ana bilgisayara ağ bağlantısını test eder."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 869
-#: NEEDS WORK
-msgid "Tests connectivity to google.com."
-msgstr "google.com'a bağlantıyı test eder."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 873
-#: NEEDS WORK
-msgid "Sends only 4 ping packets instead of continuous."
-msgstr "Sürekli yerine yalnızca 4 ping paketi gönderir."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 878
-#: NEEDS WORK
-msgid "Archives"
-msgstr "Arşivler"
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 880
-#: NEEDS WORK
-msgid "Creates and manipulates archive files."
-msgstr "Arşiv dosyalarını oluşturur ve işler."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 884
-#: NEEDS WORK
-msgid "Creates a tar archive from a directory."
-msgstr "Bir dizinden tar arşivi oluşturur."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 888
-#: NEEDS WORK
-msgid "Extracts files from a tar archive."
-msgstr "Bir tar arşivinden dosyaları çıkarır."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 892
-#: NEEDS WORK
-msgid "Creates a compressed tar archive."
-msgstr "Sıkıştırılmış tar arşivi oluşturur."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 897
-#: NEEDS WORK
-msgid "Bash Conditions"
-msgstr "Bash Koşulları"
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 899
-#: NEEDS WORK
-msgid "Conditional expressions for bash scripting."
-msgstr "Bash betikleme için koşullu ifadeler."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 903
-#: NEEDS WORK
-msgid "Check if string is empty."
-msgstr "Dizgenin boş olup olmadığını kontrol et."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 907
-#: NEEDS WORK
-msgid "Check if string is not empty."
-msgstr "Dizgenin boş olmadığını kontrol et."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 911
-#: NEEDS WORK
-msgid "Check if strings are equal."
-msgstr "Dizelerin eşit olup olmadığını kontrol et."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 915
-#: NEEDS WORK
-msgid "Check if strings are not equal."
-msgstr "Dizelerin eşit olmadığını kontrol et."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 919
-#: NEEDS WORK
-msgid "Check if numbers are equal."
-msgstr "Sayıların eşit olup olmadığını kontrol et."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 923
-#: NEEDS WORK
-msgid "Check if numbers are not equal."
-msgstr "Sayıların eşit olmadığını kontrol et."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 927
-#: NEEDS WORK
-msgid "Check if first number is less than second."
-msgstr "İlk sayının ikinci sayıdan küçük olup olmadığını kontrol et."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 932
-#: NEEDS WORK
-msgid "Check if first number is less than or equal to second."
-msgstr "İlk sayının ikinci sayıdan küçük veya ona eşit olup olmadığını kontrol et."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 937
-#: NEEDS WORK
-msgid "Check if first number is greater than second."
-msgstr "İlk sayının ikinci sayıdan büyük olup olmadığını kontrol et."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 942
-#: NEEDS WORK
-msgid "Check if first number is greater than or equal to second."
-msgstr "İlk sayının ikinci sayıdan büyük veya ona eşit olup olmadığını kontrol et."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 947
-#: NEEDS WORK
-msgid "Check if string matches regular expression."
-msgstr "Dizgenin düzenli ifadeyle eşleşip eşleşmediğini kontrol et."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 952
-#: NEEDS WORK
-msgid "Check numeric conditions with arithmetic evaluation."
-msgstr "Aritmetik değerlendirme ile sayısal koşulları kontrol et."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 957
-#: NEEDS WORK
-msgid "Check if shell option is enabled."
-msgstr "Kabuk seçeneğinin etkin olup olmadığını kontrol et."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 961
-#: NEEDS WORK
-msgid "Logical NOT - negate a condition."
-msgstr "Mantıksal DEĞİL - bir durumu olumsuzla."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 965
-#: NEEDS WORK
-msgid "Logical AND - both conditions must be true."
-msgstr "Mantıksal VE - her iki koşul da doğru olmalıdır."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 969
-#: NEEDS WORK
-msgid "Logical OR - at least one condition must be true."
-msgstr "Mantıksal VEYA - en az bir koşul doğru olmalıdır."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 973
-#: NEEDS WORK
-msgid "Check if file exists."
-msgstr "Dosyanın var olup olmadığını kontrol et."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 977
-#: NEEDS WORK
-msgid "Check if file is readable."
-msgstr "Dosyanın okunabilir olup olmadığını kontrol et."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 981
-#: NEEDS WORK
-msgid "Check if path is a symbolic link."
-msgstr "Yolun sembolik bir bağlantı olup olmadığını kontrol et."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 985
-#: NEEDS WORK
-msgid "Check if path is a directory."
-msgstr "Yolun bir dizin olup olmadığını kontrol et."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 989
-#: NEEDS WORK
-msgid "Check if file is writable."
-msgstr "Dosyanın yazılabilir olup olmadığını kontrol et."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 993
-#: NEEDS WORK
-msgid "Check if file size is greater than 0 bytes."
-msgstr "Dosya boyutunun 0 bayttan büyük olup olmadığını kontrol et."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 997
-#: NEEDS WORK
-msgid "Check if path is a regular file."
-msgstr "Yolun normal bir dosya olup olmadığını kontrol et."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 1001
-#: NEEDS WORK
-msgid "Check if file is executable."
-msgstr "Dosyanın çalıştırılabilir olup olmadığını kontrol et."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 1005
-#: NEEDS WORK
-msgid "Check if first file is newer than second file."
-msgstr "İlk dosyanın ikinci dosyadan daha yeni olup olmadığını kontrol et."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 1009
-#: NEEDS WORK
-msgid "Check if first file is older than second file."
-msgstr "İlk dosyanın ikinci dosyadan daha eski olup olmadığını kontrol et."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 1013
-#: NEEDS WORK
-msgid "Check if both paths refer to the same file."
-msgstr "Her iki yolun da aynı dosyaya atıfta bulunup bulunmadığını kontrol edin."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 1018
-#: NEEDS WORK
-msgid "Bash Arrays"
-msgstr "Bash Dizileri"
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 1020
-#: NEEDS WORK
-msgid "Array operations and manipulations in bash."
-msgstr "Bash'ta dizi işlemleri ve manipülasyonları."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 1024
-#: NEEDS WORK
-msgid "Define array with multiple elements."
-msgstr "Birden fazla öğe içeren dizi tanımlayın."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 1028
-#: NEEDS WORK
-msgid "Set specific array element by index."
-msgstr "Belirli bir dizi elemanını indeks ile ayarla."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 1032
-#: NEEDS WORK
-msgid "Set another array element by index."
-msgstr "Dizi elemanını indeks ile ayarla."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 1036
-#: NEEDS WORK
-msgid "Set third array element by index."
-msgstr "Üçüncü dizi elemanını indeks ile ayarla."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 1040
-#: NEEDS WORK
-msgid "Access first element of array."
-msgstr "Dizinin ilk elemanına eriş."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 1044
-#: NEEDS WORK
-msgid "Access last element of array."
-msgstr "Dizinin son elemanına eriş."
-# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1031
 # File: usr/share/ashyterm/data/command_data.py, line: 1048
+# File: usr/share/ashyterm/data/command_data.py, line: 1069
+# File: usr/share/ashyterm/data/command_data.py, line: 1084
+# File: usr/share/ashyterm/data/command_data.py, line: 1099
+# File: usr/share/ashyterm/data/command_data.py, line: 1112
+# File: usr/share/ashyterm/data/command_data.py, line: 1223
+# File: usr/share/ashyterm/data/command_data.py, line: 1252
+# File: usr/share/ashyterm/data/command_data.py, line: 1271
+# File: usr/share/ashyterm/data/command_data.py, line: 1372
+# File: usr/share/ashyterm/data/command_data.py, line: 1469
+# File: usr/share/ashyterm/data/command_data.py, line: 1494
 #: NEEDS WORK
-msgid "Print all elements separated by spaces."
-msgstr "Tüm öğeleri boşluklarla ayırarak yazdır."
+msgid "Advanced: Scripting & Shell"
+msgstr "Gelişmiş: Betik ve Kabuk"
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 1052
+# File: usr/share/ashyterm/data/command_data.py, line: 1034
 #: NEEDS WORK
-msgid "Get total number of elements in array."
-msgstr "Dizideki toplam eleman sayısını al."
+msgid "Executes command blocks only if a condition is true."
+msgstr "Koşul doğruysa yalnızca komut bloklarını çalıştırır."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 1056
+# File: usr/share/ashyterm/data/command_data.py, line: 1039
 #: NEEDS WORK
-msgid "Get length of first element string."
-msgstr "İlk eleman dizisinin uzunluğunu al."
+msgid "Tests if a file exists."
+msgstr "Bir dosyanın var olup olmadığını test eder."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 1060
+# File: usr/share/ashyterm/data/command_data.py, line: 174
 #: NEEDS WORK
-msgid "Get length of specific element string."
-msgstr "Belirli bir öğe dizisinin uzunluğunu al."
+msgid "Tests if a numeric variable is equal to 5."
+msgstr "Bir sayısal değişkenin 5'e eşit olup olmadığını test eder."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 1065
+# File: usr/share/ashyterm/data/command_data.py, line: 1051
 #: NEEDS WORK
-msgid "Extract range of elements (start at index 2, length 3)."
-msgstr "Elemanların aralığını çıkar (2. indeksten başla, 3 uzunluğunda)."
+msgid "Creates a loop that repeats an action for each item in a list."
+msgstr "Bir listedeki her bir öğe için bir eylemi tekrarlayan bir döngü oluşturur."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 1070
+# File: usr/share/ashyterm/data/command_data.py, line: 1057
 #: NEEDS WORK
-msgid "Get all array indices/keys."
-msgstr "Tüm dizi indekslerini/anahtarlarını al."
+msgid "Repeats the 'echo' command for the numbers 1, 2, and 3."
+msgstr "1, 2 ve 3 sayıları için 'echo' komutunu tekrarlar."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 1074
+# File: usr/share/ashyterm/data/command_data.py, line: 1063
 #: NEEDS WORK
-msgid "Add new element to end of array."
-msgstr "Diziye yeni bir eleman ekle."
+msgid "Performs an action for every file that ends with .txt."
+msgstr ".txt ile biten her dosya için bir işlem gerçekleştirir."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1072
+#: NEEDS WORK
+msgid "Creates a loop that continues to execute as long as a condition is true."
+msgstr "Bir koşul doğru olduğu sürece devam eden bir döngü oluşturur."
 # 
 # File: usr/share/ashyterm/data/command_data.py, line: 1078
 #: NEEDS WORK
-msgid "Append element using compound assignment."
-msgstr "Bileşen ataması kullanarak öğe ekle."
+msgid "Executes the code block as long as the COUNT variable is less than 5."
+msgstr "COUNT değişkeni 5'ten küçük olduğu sürece kod bloğunu çalıştırır."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 1082
+# File: usr/share/ashyterm/data/command_data.py, line: 1087
 #: NEEDS WORK
-msgid "Remove elements matching regex pattern."
-msgstr "Regex desenine uyan öğeleri kaldır."
+msgid "Creates a loop that continues to execute until a condition becomes true."
+msgstr "Bir koşul doğru olana kadar devam eden bir döngü oluşturur."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 1086
+# File: usr/share/ashyterm/data/command_data.py, line: 1093
 #: NEEDS WORK
-msgid "Remove specific element by index."
-msgstr "Belirli bir öğeyi indeksle kaldır."
+msgid "Executes the code block until the COUNT variable is equal to 0."
+msgstr "Kod bloğunu COUNT değişkeni 0'a eşit olana kadar çalıştırır."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 1090
+# File: usr/share/ashyterm/data/command_data.py, line: 1101
 #: NEEDS WORK
-msgid "Create duplicate of array."
-msgstr "Dizinin bir kopyasını oluştur."
+msgid "Reads user input and stores it in a variable."
+msgstr "Kullanıcı girişi okur ve bir değişkende saklar."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 1094
+# File: usr/share/ashyterm/data/command_data.py, line: 1106
 #: NEEDS WORK
-msgid "Concatenate two arrays together."
-msgstr "İki diziyi birleştir."
+msgid "Displays a prompt and waits for the user to type something."
+msgstr "Bir istem görüntüler ve kullanıcının bir şey yazmasını bekler."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 1098
+# File: usr/share/ashyterm/data/command_data.py, line: 1115
 #: NEEDS WORK
-msgid "Read file into array, split by IFS (whitespace)."
-msgstr "Dosyayı diziye oku, IFS (boşluk) ile ayır."
+msgid "Checks if a condition is true or false, used for making decisions in scripts."
+msgstr "Bir koşulun doğru mu yoksa yanlış mı olduğunu kontrol eder, betiklerde karar vermek için kullanılır."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 1103
+# File: usr/share/ashyterm/data/command_data.py, line: 1120
 #: NEEDS WORK
-msgid "Bash Brace Expansion"
-msgstr "Bash Süslü Parantez Genişletmesi"
+msgid "Checks if a variable is empty."
+msgstr "Bir değişkenin boş olup olmadığını kontrol eder."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 1105
+# File: usr/share/ashyterm/data/command_data.py, line: 1124
 #: NEEDS WORK
-msgid "Generate arbitrary strings using brace expansion."
-msgstr "Küme genişletmesi kullanarak rastgele dizeler oluşturun."
+msgid "Checks if a variable is not empty."
+msgstr "Bir değişkenin boş olmadığını kontrol eder."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 1109
+# File: usr/share/ashyterm/data/command_data.py, line: 1128
 #: NEEDS WORK
-msgid "Expand to: main.py utils.py config.py"
-msgstr "Genişlet: main.py utils.py config.py"
+msgid "Checks if two pieces of text are exactly the same."
+msgstr "İki metin parçasının tam olarak aynı olup olmadığını kontrol eder."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 1113
+# File: usr/share/ashyterm/data/command_data.py, line: 1132
 #: NEEDS WORK
-msgid "Basic brace expansion without prefix/suffix."
-msgstr "Temel süslü parantez genişletmesi, önek/son ek olmadan."
+msgid "Checks if two pieces of text are different."
+msgstr "İki metin parçasının farklı olup olmadığını kontrol eder."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 1117
+# File: usr/share/ashyterm/data/command_data.py, line: 1136
 #: NEEDS WORK
-msgid "Add file extensions to multiple base names."
-msgstr "Birden fazla temel adı için dosya uzantıları ekle."
+msgid "Checks if two numbers are equal."
+msgstr "İki sayının eşit olup olmadığını kontrol eder."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 1121
+# File: usr/share/ashyterm/data/command_data.py, line: 1140
 #: NEEDS WORK
-msgid "Create numbered file names."
-msgstr "Numaralı dosya adları oluşturun."
+msgid "Checks if two numbers are not equal."
+msgstr "İki sayının eşit olmadığını kontrol eder."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 1125
+# File: usr/share/ashyterm/data/command_data.py, line: 1144
 #: NEEDS WORK
-msgid "Generate sequence from 1 to 10."
-msgstr "1'den 10'a kadar sıralama oluştur."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 1129
-#: NEEDS WORK
-msgid "Generate zero-padded numbers (01, 02, ..., 12)."
-msgstr "Sıfırla doldurulmuş sayılar oluşturun (01, 02, ..., 12)."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 1133
-#: NEEDS WORK
-msgid "Generate alphabet sequence from a to z."
-msgstr "A'dan z'ye kadar alfabe dizisi oluştur."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 1137
-#: NEEDS WORK
-msgid "Generate uppercase letter sequence."
-msgstr "Büyük harf dizisi oluştur."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 1141
-#: NEEDS WORK
-msgid "Generate descending sequence."
-msgstr "Azalan sıralama oluştur."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 1145
-#: NEEDS WORK
-msgid "Generate zero-padded sequence with leading zeros."
-msgstr "Sıfırla doldurulmuş sıralama oluşturun."
+msgid "Checks if the first number is less than the second."
+msgstr "İlk sayının ikinci sayıdan küçük olup olmadığını kontrol eder."
 # 
 # File: usr/share/ashyterm/data/command_data.py, line: 1149
 #: NEEDS WORK
-msgid "Nested braces: generates 1 2 3 7 8 9."
-msgstr "İç içe süslü parantezler: 1 2 3 7 8 9 üretir."
+msgid "Checks if the first number is less than or equal to the second."
+msgstr "İlk sayının ikinci sayıdan küçük veya ona eşit olup olmadığını kontrol eder."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 1153
+# File: usr/share/ashyterm/data/command_data.py, line: 1155
 #: NEEDS WORK
-msgid "Multiple brace expansions in one expression."
-msgstr "Bir ifadede birden fazla süslü parantez genişletmesi."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 1157
-#: NEEDS WORK
-msgid "Create directory paths with brace expansion."
-msgstr "Küme genişletmesi ile dizin yolları oluşturun."
+msgid "Checks if the first number is greater than the second."
+msgstr "İlk sayının ikinci sayıdan büyük olup olmadığını kontrol eder."
 # 
 # File: usr/share/ashyterm/data/command_data.py, line: 1161
 #: NEEDS WORK
-msgid "Combine different sets of values."
-msgstr "Farklı değer kümesini birleştir."
+msgid "Checks if the first number is greater than or equal to the second."
+msgstr "İlk sayının ikinci sayıdan büyük veya ona eşit olup olmadığını kontrol eder."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 1165
+# File: usr/share/ashyterm/data/command_data.py, line: 1167
 #: NEEDS WORK
-msgid "Create multiple directories at once."
-msgstr "Birden fazla dizini aynı anda oluştur."
+msgid "Checks if text matches a pattern (e.g., is a valid email)."
+msgstr "Metnin bir desene uyup uymadığını kontrol eder (örneğin, geçerli bir e-posta olup olmadığını)."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 1170
+# File: usr/share/ashyterm/data/command_data.py, line: 1172
 #: NEEDS WORK
-msgid "Create backup by copying file with .backup extension."
-msgstr "Yedek oluşturmak için .backup uzantılı dosyayı kopyalayın."
+msgid "NOT: Reverses the result of a check."
+msgstr "DEĞİL: Bir kontrolün sonucunu tersine çevirir."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 1175
+# File: usr/share/ashyterm/data/command_data.py, line: 1176
 #: NEEDS WORK
-msgid "Generate platform combinations."
-msgstr "Platform kombinasyonları oluştur."
+msgid "AND: Checks if both conditions are true."
+msgstr "VE: Her iki koşulun da doğru olup olmadığını kontrol eder."
 # 
 # File: usr/share/ashyterm/data/command_data.py, line: 1180
 #: NEEDS WORK
-msgid "File Search"
-msgstr "Dosya Arama"
+msgid "OR: Checks if at least one condition is true."
+msgstr "VEYA: En az bir koşulun doğru olup olmadığını kontrol eder."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 1182
+# File: usr/share/ashyterm/data/command_data.py, line: 1184
 #: NEEDS WORK
-msgid "Powerful file search and manipulation tool."
-msgstr "Güçlü dosya arama ve manipülasyon aracı."
+msgid "Checks if a file or directory exists."
+msgstr "Bir dosyanın veya dizinin var olup olmadığını kontrol eder."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 1187
+# File: usr/share/ashyterm/data/command_data.py, line: 1188
 #: NEEDS WORK
-msgid "Find all .txt files in current directory and subdirectories."
-msgstr "Geçerli dizinde ve alt dizinlerdeki tüm .txt dosyalarını bul."
+msgid "Checks if you have permission to read a file."
+msgstr "Bir dosyayı okuma iznine sahip olup olmadığınızı kontrol eder."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 1193
+# File: usr/share/ashyterm/data/command_data.py, line: 1192
 #: NEEDS WORK
-msgid "Find files starting with 'config' in user's home directory."
-msgstr "Kullanıcının ana dizininde 'config' ile başlayan dosyaları bul."
+msgid "Checks if the path is a directory."
+msgstr "Yolun bir dizin olup olmadığını kontrol eder."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 1198
+# File: usr/share/ashyterm/data/command_data.py, line: 1196
 #: NEEDS WORK
-msgid "Find only regular files with .log extension."
-msgstr "Sadece .log uzantısına sahip normal dosyaları bul."
+msgid "Checks if you have permission to write to a file."
+msgstr "Bir dosyaya yazma izninizin olup olmadığını kontrol eder."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 1202
+# File: usr/share/ashyterm/data/command_data.py, line: 1200
 #: NEEDS WORK
-msgid "Find only directories starting with 'backup'."
-msgstr "Sadece 'backup' ile başlayan dizinleri bul."
+msgid "Checks if a file is not empty."
+msgstr "Bir dosyanın boş olmadığını kontrol eder."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 1206
+# File: usr/share/ashyterm/data/command_data.py, line: 1205
 #: NEEDS WORK
-msgid "Find and delete all .tmp files."
-msgstr "Tüm .tmp dosyalarını bul ve sil."
+msgid "Checks if the path is a regular file (not a directory)."
+msgstr "Yolun bir normal dosya olup olmadığını kontrol eder (bir dizin değil)."
 # 
 # File: usr/share/ashyterm/data/command_data.py, line: 1210
 #: NEEDS WORK
-msgid "Find files modified in the last 7 days."
-msgstr "Son 7 günde değiştirilen dosyaları bul."
+msgid "Checks if you have permission to run a file."
+msgstr "Bir dosyayı çalıştırma izniniz olup olmadığını kontrol eder."
 # 
 # File: usr/share/ashyterm/data/command_data.py, line: 1214
 #: NEEDS WORK
-msgid "Find files modified more than 30 days ago."
-msgstr "30 günden daha eski değiştirilen dosyaları bul."
+msgid "Checks if the first file is newer than the second."
+msgstr "İlk dosyanın ikinci dosyadan daha yeni olup olmadığını kontrol eder."
 # 
 # File: usr/share/ashyterm/data/command_data.py, line: 1218
 #: NEEDS WORK
-msgid "Find files larger than 100MB."
-msgstr "100MB'den büyük dosyaları bul."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 1222
-#: NEEDS WORK
-msgid "Find files smaller than 1KB."
-msgstr "1KB'den daha küçük dosyaları bul."
+msgid "Checks if the first file is older than the second."
+msgstr "İlk dosyanın ikinci dosyadan daha eski olup olmadığını kontrol eder."
 # 
 # File: usr/share/ashyterm/data/command_data.py, line: 1226
 #: NEEDS WORK
-msgid "Find empty files and directories."
-msgstr "Boş dosyaları ve klasörleri bul."
+msgid "Array operations for storing multiple values in a single variable."
+msgstr "Bir değişkende birden fazla değeri saklamak için dizi işlemleri."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 1230
+# File: usr/share/ashyterm/data/command_data.py, line: 1231
 #: NEEDS WORK
-msgid "Find files with specific permissions (755)."
-msgstr "Belirli izinlere sahip dosyaları bul (755)."
+msgid "Creates a list with several items."
+msgstr "Birden fazla öğe içeren bir liste oluşturur."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 1234
+# File: usr/share/ashyterm/data/command_data.py, line: 1235
 #: NEEDS WORK
-msgid "Find files owned by user 'bruno'."
-msgstr "'bruno' kullanıcısına ait dosyaları bul."
+msgid "Accesses the first item in the list."
+msgstr "Listeki ilk öğeye erişir."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 1238
+# File: usr/share/ashyterm/data/command_data.py, line: 1239
 #: NEEDS WORK
-msgid "Find files owned by group 'developers'."
-msgstr "'Geliştiriciler' grubuna ait dosyaları bul."
+msgid "Accesses the last item in the list."
+msgstr "Listeki son öğeye erişir."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 1242
+# File: usr/share/ashyterm/data/command_data.py, line: 1243
 #: NEEDS WORK
-msgid "Make all Python files executable."
-msgstr "Tüm Python dosyalarını çalıştırılabilir hale getirin."
+msgid "Displays all items in the list."
+msgstr "Listedeki tüm öğeleri görüntüler."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 1246
+# File: usr/share/ashyterm/data/command_data.py, line: 1247
 #: NEEDS WORK
-msgid "Move all JPG files to /tmp/images/ directory."
-msgstr "Tüm JPG dosyalarını /tmp/images/ dizinine taşı."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 1250
-#: NEEDS WORK
-msgid "Find log files containing 'ERROR' text."
-msgstr "'ERROR' metnini içeren günlük dosyalarını bulun."
+msgid "Shows how many items are in the list."
+msgstr "Listeye kaç öğe eklendiğini gösterir."
 # 
 # File: usr/share/ashyterm/data/command_data.py, line: 1254
 #: NEEDS WORK
-msgid "Find .conf files only 2 levels deep."
-msgstr "Sadece 2 seviye derinlikte .conf dosyalarını bul."
+msgid "Brace expansion to quickly generate text sequences."
+msgstr "Küme genişletmesi ile metin dizilerini hızlıca oluşturma."
 # 
 # File: usr/share/ashyterm/data/command_data.py, line: 1258
 #: NEEDS WORK
-msgid "Find files with .bak OR .backup extension."
-msgstr ".bak veya .backup uzantısına sahip dosyaları bul."
+msgid "Generates: a.txt b.txt c.txt"
+msgstr "Oluşturur: a.txt b.txt c.txt"
 # 
 # File: usr/share/ashyterm/data/command_data.py, line: 1262
 #: NEEDS WORK
-msgid "Find .txt files that are also larger than 1MB."
-msgstr "1MB'den büyük .txt dosyalarını bul."
+msgid "Generates a sequence of numbers: 1 2 3 4 5."
+msgstr "Bir sayı dizisi oluşturur: 1 2 3 4 5."
 # 
 # File: usr/share/ashyterm/data/command_data.py, line: 1266
 #: NEEDS WORK
-msgid "Safely delete files with spaces in names."
-msgstr "İsimlerinde boşluk olan dosyaları güvenli bir şekilde sil."
+msgid "Creates multiple directories at once."
+msgstr "Birden fazla dizin oluşturur."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 1270
+# File: usr/share/ashyterm/data/command_data.py, line: 1274
 #: NEEDS WORK
-msgid "List contents of all ZIP files found."
-msgstr "Bulunan tüm ZIP dosyalarının içeriğini listele."
+msgid "Advanced ways to modify or get information from variables."
+msgstr "Değişkenlerden bilgi almak veya bunları değiştirmek için gelişmiş yöntemler."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 1277
+# File: usr/share/ashyterm/data/command_data.py, line: 1279
 #: NEEDS WORK
-msgid "Stream editor for filtering and transforming text."
-msgstr "Metin filtreleme ve dönüştürme için akış düzenleyici."
+msgid "Gets the length of the text in a variable."
+msgstr "Bir değişkendeki metnin uzunluğunu alır."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 1282
+# File: usr/share/ashyterm/data/command_data.py, line: 1283
 #: NEEDS WORK
-msgid "Replace all occurrences of 'old' with 'new' in file.txt."
-msgstr "file.txt dosyasındaki 'eski' kelimesinin tüm geçişlerini 'yeni' ile değiştir."
+msgid "Uses 'default' if the variable is empty or not set."
+msgstr "Değişken boşsa veya ayarlanmamışsa 'varsayılan' kullanır."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 1287
+# File: usr/share/ashyterm/data/command_data.py, line: 1288
 #: NEEDS WORK
-msgid "Replace all instances of 'bruno' with 'maria'."
-msgstr "'Tüm 'bruno' örneklerini 'maria' ile değiştirin.'"
+msgid "Uses 'default' if empty, and also sets the variable to 'default'."
+msgstr "Boşsa 'varsayılan' kullanır ve değişkeni de 'varsayılan' olarak ayarlar."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 1292
+# File: usr/share/ashyterm/data/command_data.py, line: 1294
 #: NEEDS WORK
-msgid "Case-insensitive replacement of 'error' with 'warning'."
-msgstr "'error' kelimesinin 'warning' ile büyük/küçük harf duyarsız değiştirilmesi."
+msgid "Shows an error and stops the script if the variable is empty."
+msgstr "Değişken boşsa bir hata gösterir ve betiği durdurur."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 1297
+# File: usr/share/ashyterm/data/command_data.py, line: 1300
 #: NEEDS WORK
-msgid "Replace only the first occurrence per line."
-msgstr "Anahtar (kullanım bağlamı için): Sadece her satırda ilk geçişi değiştirin."
+msgid "Uses 'value_if_set' only if the variable has content."
+msgstr "Değişken içeriğe sahipse yalnızca 'value_if_set' kullanılır."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 1302
+# File: usr/share/ashyterm/data/command_data.py, line: 1305
 #: NEEDS WORK
-msgid "Replace whole word 'test' with 'exam' using word boundaries."
-msgstr "Tam kelime 'test'i 'exam' ile kelime sınırları kullanarak değiştirin."
+msgid "Gets text starting from the 4th character."
+msgstr "4. karakterden itibaren metni alır."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 1307
+# File: usr/share/ashyterm/data/command_data.py, line: 1310
 #: NEEDS WORK
-msgid "Replace only on lines 2 through 5."
-msgstr "Sadece 2. ile 5. satırlarda değiştirin."
+msgid "Gets 5 characters of text, starting from the 4th character."
+msgstr "4. karakterden başlayarak 5 karakter metin alır."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 1311
+# File: usr/share/ashyterm/data/command_data.py, line: 1316
 #: NEEDS WORK
-msgid "Delete all comment lines (starting with #)."
-msgstr "Tüm yorum satırlarını silin (başlayan # ile)."
+msgid "Removes the shortest matching 'prefix' from the beginning."
+msgstr "Başlangıçtan en kısa eşleşen 'ön ek'i kaldırır."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 1315
+# File: usr/share/ashyterm/data/command_data.py, line: 1322
 #: NEEDS WORK
-msgid "Delete all empty lines."
-msgstr "Tüm boş satırları sil."
+msgid "Removes the longest matching 'prefix' from the beginning."
+msgstr "Başlangıçtan en uzun eşleşen 'ön ek'i kaldırır."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 1319
+# File: usr/share/ashyterm/data/command_data.py, line: 1328
 #: NEEDS WORK
-msgid "Print only lines 1 through 10."
-msgstr "Sadece 1'den 10'a kadar olan satırları yazdır."
+msgid "Removes the shortest matching 'suffix' from the end."
+msgstr "Uçtan en kısa eşleşen 'sonek'i kaldırır."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 1323
-# File: usr/share/ashyterm/data/command_data.py, line: 1410
+# File: usr/share/ashyterm/data/command_data.py, line: 1333
 #: NEEDS WORK
-msgid "Print only line number 5."
-msgstr "Sadece 5. satırı yazdır."
+msgid "Removes the longest matching 'suffix' from the end."
+msgstr "Uçtan en uzun eşleşen 'sonek'i kaldırır."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 1327
+# File: usr/share/ashyterm/data/command_data.py, line: 1337
 #: NEEDS WORK
-msgid "Insert text before line 1."
-msgstr "1. satırdan önce metin ekleyin."
+msgid "Replaces the first match of 'old' with 'new'."
+msgstr "'old' ile 'new' arasındaki ilk eşleşmeyi değiştirir."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 1331
+# File: usr/share/ashyterm/data/command_data.py, line: 1341
 #: NEEDS WORK
-msgid "Append text after the last line."
-msgstr "Son satırdan sonra metin ekle."
+msgid "Replaces all matches of 'old' with 'new'."
+msgstr "'eski' ile 'yeni' olan tüm eşleşmeleri değiştirir."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 1335
-# File: usr/share/ashyterm/data/command_data.py, line: 1448
+# File: usr/share/ashyterm/data/command_data.py, line: 1346
 #: NEEDS WORK
-msgid "Convert all text to uppercase."
-msgstr "Tüm metni büyük harfe çevir."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 1339
-# File: usr/share/ashyterm/data/command_data.py, line: 1452
-#: NEEDS WORK
-msgid "Convert all text to lowercase."
-msgstr "Tüm metni küçük harfe dönüştür."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 1343
-#: NEEDS WORK
-msgid "Alternative way to convert to uppercase."
-msgstr "Büyük harfe dönüştürmenin alternatif yolu."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 1347
-#: NEEDS WORK
-msgid "Capitalize first letter of each word."
-msgstr "Her Kelimeyi Büyük Harfle Başlat."
+msgid "Replaces 'old' with 'new' only if it's at the beginning."
+msgstr "'Eski'yi 'yeni' ile yalnızca başında ise değiştirir."
 # 
 # File: usr/share/ashyterm/data/command_data.py, line: 1351
 #: NEEDS WORK
-msgid "Wrap each line in square brackets."
-msgstr "[Her satırı köşeli parantez içine al.]"
+msgid "Replaces 'old' with 'new' only if it's at the end."
+msgstr "Sadece sonundaysa 'eski'yi 'yeni' ile değiştirir."
 # 
 # File: usr/share/ashyterm/data/command_data.py, line: 1355
 #: NEEDS WORK
-msgid "Add 4 spaces indentation to each line."
-msgstr "Her satıra 4 boşluk girintisi ekleyin."
+msgid "Changes the first letter to uppercase."
+msgstr "İlk harfi büyük yapar."
 # 
 # File: usr/share/ashyterm/data/command_data.py, line: 1359
 #: NEEDS WORK
-msgid "Append ' - processed' to end of each line."
-msgstr "Her satırın sonuna ' - işlenmiş' ekleyin."
+msgid "Changes all letters to uppercase."
+msgstr "Tüm harfleri büyük harfe dönüştürür."
 # 
 # File: usr/share/ashyterm/data/command_data.py, line: 1363
 #: NEEDS WORK
-msgid "Edit file in-place (modify original file)."
-msgstr "Dosyayı yerinde düzenle (orijinal dosyayı değiştir)."
+msgid "Changes the first letter to lowercase."
+msgstr "İlk harfi küçük harfe değiştirir."
 # 
 # File: usr/share/ashyterm/data/command_data.py, line: 1367
 #: NEEDS WORK
-msgid "Edit in-place and create backup file."
-msgstr "Yerinde düzenle ve yedek dosya oluştur."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 1371
-#: NEEDS WORK
-msgid "Duplicate content with backreference."
-msgstr "Geri referansla yinelenen içerik."
+msgid "Changes all letters to lowercase."
+msgstr "Tüm harfleri küçük harfe dönüştürür."
 # 
 # File: usr/share/ashyterm/data/command_data.py, line: 1375
 #: NEEDS WORK
-msgid "Multiple commands on lines matching pattern."
-msgstr "Desene uyan birden fazla komut."
+msgid ""
+"A 'mini-language' for finding text patterns. These are building blocks for tools like grep, sed, "
+"and awk."
+msgstr ""
+"Metin desenlerini bulmak için bir 'mini-dil'. Bunlar grep, sed ve awk gibi araçlar için yapı "
+"taşlarıdır."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 1379
+# File: usr/share/ashyterm/data/command_data.py, line: 1381
 #: NEEDS WORK
-msgid "Execute multiple sed expressions."
-msgstr "Birden fazla sed ifadesi çalıştır."
+msgid "Dot: Matches any single character. 'h.t' finds 'hot', 'hat', and 'h t'."
+msgstr "Nokta: Herhangi bir tek karakterle eşleşir. 'h.t' 'hot', 'hat' ve 'h t' bulur."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 1383
+# File: usr/share/ashyterm/data/command_data.py, line: 1387
 #: NEEDS WORK
-msgid "Multiple address ranges with different operations."
-msgstr "Farklı işlemlerle birden fazla adres aralığı."
+msgid "Asterisk: Matches zero or more repetitions of the preceding item. 'a*' finds '', 'a', 'aa'."
+msgstr "Yıldız: Önceki öğenin sıfır veya daha fazla tekrarını eşleştirir. 'a*' '', 'a', 'aa' bulur."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 1388
+# File: usr/share/ashyterm/data/command_data.py, line: 1393
 #: NEEDS WORK
-msgid "Awk Commands"
-msgstr "Awk Komutları"
+msgid "Plus: Matches one or more repetitions of the preceding item. 'a+' finds 'a', 'aa', but not ''."
+msgstr "Artı: Önceki öğenin bir veya daha fazla tekrarıyla eşleşir. 'a+' 'a' ve 'aa' bulur, ancak '' bulmaz."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 1390
+# File: usr/share/ashyterm/data/command_data.py, line: 1399
 #: NEEDS WORK
-msgid "Powerful text processing and pattern scanning tool."
-msgstr "Güçlü metin işleme ve desen tarama aracı."
+msgid ""
+"Question Mark: Matches the preceding item zero or one time (makes it optional). 'colou?r' matches "
+"'color' and 'colour'."
+msgstr ""
+"Soru İşareti: Önceki öğeyi sıfır veya bir kez eşleştirir (isteğe bağlı hale getirir). 'colou?r' "
+"'color' ve 'colour' ile eşleşir."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 1394
+# File: usr/share/ashyterm/data/command_data.py, line: 1405
 #: NEEDS WORK
-msgid "Print the first field (column) of each line."
-msgstr "Her satırın ilk alanını (sütununu) yazdır."
+msgid "Caret: Matches the beginning of a line. '^Hello' only finds lines that start with 'Hello'."
+msgstr "Caret: Bir satırın başlangıcını eşleştirir. '^Hello' yalnızca 'Hello' ile başlayan satırları bulur."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 1398
+# File: usr/share/ashyterm/data/command_data.py, line: 1411
 #: NEEDS WORK
-msgid "Print the 1st and 3rd fields of each line."
-msgstr "Her satırın 1. ve 3. alanlarını yazdır."
+msgid "Dollar Sign: Matches the end of a line. 'end$' only finds lines that end with 'end'."
+msgstr "Dolar İşareti: Bir satırın sonunu eşleştirir. 'end$' yalnızca 'end' ile biten satırları bulur."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 1402
+# File: usr/share/ashyterm/data/command_data.py, line: 1417
 #: NEEDS WORK
-msgid "Print the last field of each line."
-msgstr "Her satırın son alanını yazdır."
+msgid "Brackets: Matches any of the characters inside. '[abc]' finds 'a', 'b', or 'c'."
+msgstr ""
+"Köşeli Parantezler: İçindeki karakterlerden herhangi birini eşleştirir. '[abc]' 'a', 'b' veya 'c' "
+"bulur."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 1406
+# File: usr/share/ashyterm/data/command_data.py, line: 1423
 #: NEEDS WORK
-msgid "Print line number followed by the entire line."
-msgstr "Satır numarasını ve ardından tüm satırı yazdır."
+msgid "Negated Brackets: Matches any character NOT inside. '[^abc]' finds 'd', 'e', 'f', etc."
+msgstr ""
+"Olumsuz Parantezler: İçinde OLMAYAN herhangi bir karakterle eşleşir. '[^abc]' 'd', 'e', 'f' vb. "
+"bulur."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 1414
+# File: usr/share/ashyterm/data/command_data.py, line: 1429
 #: NEEDS WORK
-msgid "Print lines 10 through 20."
-msgstr "10'dan 20'ye kadar satırları yazdır."
+msgid "Parentheses: Groups expressions. '(ab)+' finds 'ab', 'abab', 'ababab'."
+msgstr "Parantezler: İfadeleri gruplar. '(ab)+' 'ab', 'abab', 'ababab' bulur."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 1418
+# File: usr/share/ashyterm/data/command_data.py, line: 1435
 #: NEEDS WORK
-msgid "Print lines containing 'bruno'."
-msgstr "'bruno' içeren satırları yazdır."
+msgid "Pipe: Acts as an 'OR'. 'cat|dog' finds 'cat' or 'dog'."
+msgstr "Borular: 'VEYA' olarak işlev görür. 'cat|dog' 'cat' veya 'dog' bulur."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 1422
+# File: usr/share/ashyterm/data/command_data.py, line: 1441
 #: NEEDS WORK
-msgid "Print name and sales where sales > 100."
-msgstr "Adı ve satışları yazdır, satışlar > 100 olduğu yerde."
+msgid "Curly Braces: Matches a specific number of repetitions. e.g., 'a{2,4}' finds 'aa', 'aaa', 'aaaa'."
+msgstr ""
+"Küme Parantezleri: Belirli bir tekrar sayısını eşleştirir. Örneğin, 'a{2,4}' 'aa', 'aaa', 'aaaa' "
+"bulur."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 1426
+# File: usr/share/ashyterm/data/command_data.py, line: 1446
 #: NEEDS WORK
-msgid "Calculate sum of values in column 2."
-msgstr "2. sütundaki değerlerin toplamını hesapla."
+msgid "Digit: Matches any single number from 0 to 9."
+msgstr "Rakam: 0'dan 9'a kadar herhangi bir tek sayıyı eşleştirir."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 1430
+# File: usr/share/ashyterm/data/command_data.py, line: 1451
 #: NEEDS WORK
-msgid "Find the maximum value in column 2."
-msgstr "2. sütundaki maksimum değeri bul."
+msgid "Word Character: Matches any letter, number, or underscore."
+msgstr "Kelime Karakteri: Herhangi bir harf, rakam veya alt çizgi ile eşleşir."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 1434
+# File: usr/share/ashyterm/data/command_data.py, line: 1457
 #: NEEDS WORK
-msgid "Use colon as field separator for /etc/passwd."
-msgstr "/etc/passwd için alan ayırıcı olarak iki nokta üst üste kullanın."
+msgid "Whitespace: Matches any space, tab, or newline character."
+msgstr "Boşluk: Herhangi bir boşluk, sekme veya yeni satır karakteri ile eşleşir."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 1438
+# File: usr/share/ashyterm/data/command_data.py, line: 1463
 #: NEEDS WORK
-msgid "Set output field separator to ' - '."
-msgstr "Çıktı alanı ayıracını ' - ' olarak ayarla."
+msgid "Backslash: Escapes a special character, treating it literally. '\\.' matches a literal dot."
+msgstr ""
+"Tersine eğik çizgi: Özel bir karakteri kaçırır, onu harfi harfine alır. '\\.' harfi harfine bir "
+"nokta ile eşleşir."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 1443
+# File: usr/share/ashyterm/data/command_data.py, line: 1472
 #: NEEDS WORK
-msgid "Print lines longer than 80 characters with line numbers."
-msgstr "80 karakterden uzun satırları satır numaralarıyla yazdır."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 1456
-#: NEEDS WORK
-msgid "Add header and format output as table."
-msgstr "Başlık ekle ve çıktıyı tablo olarak biçimlendir."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 1461
-#: NEEDS WORK
-msgid "Print lines with more than 3 fields and their field count."
-msgstr "3'ten fazla alan içeren satırları ve alan sayısını yazdır."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 1470
-#: NEEDS WORK
-msgid "Split first field on '-' and print both parts."
-msgstr "İlk alanı '-' ile ayır ve her iki kısmı yazdır."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 1474
-#: NEEDS WORK
-msgid "Count lines containing 'ERROR'."
-msgstr "'HATA' içeren satırları say."
+msgid "A command-line text editor, great for replacing words in files."
+msgstr "Bir komut satırı metin düzenleyicisi, dosyalardaki kelimeleri değiştirmek için harika."
 # 
 # File: usr/share/ashyterm/data/command_data.py, line: 1478
 #: NEEDS WORK
-msgid "Count occurrences of each unique value in column 1."
-msgstr "Sütun 1'deki her benzersiz değerin kaç kez tekrarlandığını sayın."
+msgid "Replaces all occurrences of 'old' with 'new' in the file."
+msgstr "Dosyadaki 'eski' kelimesinin tüm geçişlerini 'yeni' ile değiştirir."
 # 
 # File: usr/share/ashyterm/data/command_data.py, line: 1483
 #: NEEDS WORK
-msgid "Use BEGIN and END blocks for initialization and cleanup."
-msgstr "Başlatma ve temizleme için BEGIN ve END bloklarını kullanın."
+msgid "Deletes all lines that start with # (comments)."
+msgstr "# ile başlayan tüm satırları siler (yorumlar)."
 # 
 # File: usr/share/ashyterm/data/command_data.py, line: 1488
 #: NEEDS WORK
-msgid "Format output with specific widths and precision."
-msgstr "Çıktıyı belirli genişlikler ve hassasiyetle biçimlendir."
+msgid "Saves the modification directly in the original file."
+msgstr "Değişikliği doğrudan orijinal dosyada kaydeder."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 1492
+# File: usr/share/ashyterm/data/command_data.py, line: 1497
 #: NEEDS WORK
-msgid "Print lines where column 2 starts with '2024'."
-msgstr "'2024' ile başlayan 2. sütundaki satırları yazdır."
+msgid "An advanced tool for processing text, especially column-based data."
+msgstr "Metin işleme için gelişmiş bir araç, özellikle sütun tabanlı veriler için."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 1496
+# File: usr/share/ashyterm/data/command_data.py, line: 1502
 #: NEEDS WORK
-msgid "Remove leading whitespace from each line."
-msgstr "Her satırdan baştaki boşlukları kaldır."
+msgid "Displays only the first column (word) of each line."
+msgstr "Her satırın yalnızca ilk sütununu (kelime) gösterir."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1506
+#: NEEDS WORK
+msgid "Displays only the last column of each line."
+msgstr "Her satırın yalnızca son sütununu gösterir."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1511
+#: NEEDS WORK
+msgid "Displays the value of column 1 only if the value of column 3 is greater than 100."
+msgstr "Sütun 3'ün değeri 100'den büyükse yalnızca sütun 1'in değerini gösterir."
 # 
 # File: usr/share/ashyterm/app.py, line: 333
 #: NEEDS WORK

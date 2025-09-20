@@ -1164,20 +1164,35 @@ msgstr "Pridať vlastnú príkaz"
 msgid "Edit Custom Command"
 msgstr "Upraviť vlastný príkaz"
 # 
-# File: usr/share/ashyterm/ui/dialogs/command_guide_dialog.py, line: 35
-#: NEEDS WORK
-msgid "Category"
-msgstr "Kategória"
-# 
 # File: usr/share/ashyterm/ui/dialogs/command_guide_dialog.py, line: 34
 #: NEEDS WORK
 msgid "Command"
 msgstr "Príkaz"
 # 
+# File: usr/share/ashyterm/ui/dialogs/command_guide_dialog.py, line: 35
+#: NEEDS WORK
+msgid "Category"
+msgstr "Kategória"
+# 
+# File: usr/share/ashyterm/ui/dialogs/command_guide_dialog.py, line: 104
+#: NEEDS WORK
+msgid "Select an existing category or type a new one"
+msgstr "Vyberte existujúcu kategóriu alebo zadajte novú."
+# 
 # File: usr/share/ashyterm/ui/dialogs/command_guide_dialog.py, line: 59
 #: NEEDS WORK
 msgid "Description"
 msgstr "Popis"
+# 
+# File: usr/share/ashyterm/ui/dialogs/command_guide_dialog.py, line: 171
+#: NEEDS WORK
+msgid "Please fill in all required fields."
+msgstr "Prosím vyplňte všetky povinné polia."
+# 
+# File: usr/share/ashyterm/ui/dialogs/command_guide_dialog.py, line: 236
+#: NEEDS WORK
+msgid "Delete this custom command"
+msgstr "Odstrániť tento vlastný príkaz"
 # 
 # File: usr/share/ashyterm/ui/dialogs/command_guide_dialog.py, line: 143
 #: NEEDS WORK
@@ -1194,15 +1209,27 @@ msgstr "Hľadať príkazy..."
 msgid "Show Only Custom Commands"
 msgstr "Zobraziť iba vlastné príkazy"
 # 
-# File: usr/share/ashyterm/ui/dialogs/command_guide_dialog.py, line: 216
+# File: usr/share/ashyterm/ui/dialogs/command_guide_dialog.py, line: 495
 #: NEEDS WORK
-msgid "Add New"
-msgstr "Pridať nový"
+msgid "Add New Command"
+msgstr "Pridať nový príkaz"
 # 
-# File: usr/share/ashyterm/window.py, line: 343
+# File: usr/share/ashyterm/ui/dialogs/command_guide_dialog.py, line: 714
 #: NEEDS WORK
-msgid "Remove Selected"
-msgstr "Odstrániť vybrané"
+msgid "Delete Custom Command?"
+msgstr "Zmazať vlastnú príkaz?"
+# 
+# File: usr/share/ashyterm/ui/dialogs/command_guide_dialog.py, line: 716
+#: NEEDS WORK
+#, python-brace-format
+msgid ""
+"Are you sure you want to permanently delete the command:\n"
+"\n"
+"<b>{name}</b>"
+msgstr ""
+"Ste si istí, že chcete trvalo odstrániť príkaz:\n"
+"\n"
+"<b>{name}</b>"
 # 
 # #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
 # 
@@ -2667,6 +2694,11 @@ msgstr "Upraviť vybrané"
 msgid "Save Current Layout"
 msgstr "Uložiť aktuálne rozloženie"
 # 
+# File: usr/share/ashyterm/window.py, line: 343
+#: NEEDS WORK
+msgid "Remove Selected"
+msgstr "Odstrániť vybrané"
+# 
 # File: usr/share/ashyterm/window.py, line: 606
 #: NEEDS WORK
 msgid "Search sessions..."
@@ -2746,717 +2778,961 @@ msgstr "Rozdeliť vľavo/vpravo"
 msgid "Split Top/Bottom"
 msgstr "Rozdeliť hore/dole"
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 7
-# File: usr/share/ashyterm/data/command_data.py, line: 38
-#: NEEDS WORK
-msgid "File Navigation and Listing"
-msgstr "Navigácia a zoznam súborov"
-# 
 # File: usr/share/ashyterm/data/command_data.py, line: 9
+# File: usr/share/ashyterm/data/command_data.py, line: 30
+# File: usr/share/ashyterm/data/command_data.py, line: 53
+# File: usr/share/ashyterm/data/command_data.py, line: 64
+# File: usr/share/ashyterm/data/command_data.py, line: 81
+# File: usr/share/ashyterm/data/command_data.py, line: 98
+# File: usr/share/ashyterm/data/command_data.py, line: 113
 #: NEEDS WORK
-msgid "Lists the contents of a directory."
-msgstr "Zoznamuje obsah adresára."
+msgid "Essentials: File & Directory Navigation"
+msgstr "Základy: Navigácia súborov a adresárov"
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 14
+# File: usr/share/ashyterm/data/command_data.py, line: 12
 #: NEEDS WORK
-msgid "Uses a long listing format, showing permissions, owner, size and date."
-msgstr "Používa dlhý formát zoznamu, ktorý zobrazuje oprávnenia, vlastníka, veľkosť a dátum."
+msgid "Lists the contents of a directory, like opening a folder to see what's inside."
+msgstr "Zobrazuje obsah adresára, ako keď otvoríte priečinok, aby ste videli, čo je vo vnútri."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 20
+# File: usr/share/ashyterm/data/command_data.py, line: 18
 #: NEEDS WORK
-msgid "Shows all files, including hidden ones (that start with '.')."
-msgstr "Zobrazuje všetky súbory, vrátane skrytých (ktoré začínajú na '.')."
+msgid "Shows files and directories in the current location."
+msgstr "Zobrazuje súbory a adresáre v aktuálnej polohe."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 26
+# File: usr/share/ashyterm/data/command_data.py, line: 24
 #: NEEDS WORK
-msgid "Long format with human-readable file sizes (KB, MB, GB)."
-msgstr "Dlhý formát s ľahko čitateľnými veľkosťami súborov (KB, MB, GB)."
+msgid "Shows a detailed list, including hidden files and human-readable sizes."
+msgstr "Zobrazuje podrobný zoznam, vrátane skrytých súborov a veľkostí čitateľných pre človeka."
 # 
 # File: usr/share/ashyterm/data/command_data.py, line: 32
 #: NEEDS WORK
-msgid "Sorts files by modification date, most recent first."
-msgstr "Triedi súbory podľa dátumu úpravy, najnovšie najprv."
+msgid "Changes the current directory."
+msgstr "Zmení aktuálny adresár."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 36
+#: NEEDS WORK
+msgid "Navigates to a specific directory."
+msgstr "Prechádza do konkrétneho adresára."
 # 
 # File: usr/share/ashyterm/data/command_data.py, line: 40
 #: NEEDS WORK
-msgid "Changes the current working directory."
-msgstr "Zmení aktuálny pracovný adresár."
+msgid "Goes up one level to the parent directory."
+msgstr "Prejde o jednu úroveň vyššie do nadradenej zložky."
 # 
 # File: usr/share/ashyterm/data/command_data.py, line: 44
 #: NEEDS WORK
-msgid "Navigates to a specific absolute path."
-msgstr "Naviguje na konkrétnu absolútnu cestu."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 48
-#: NEEDS WORK
-msgid "Goes up one level, to the parent directory."
-msgstr "Idete o úroveň vyššie, do nadradenej zložky."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 53
-#: NEEDS WORK
-msgid "Goes directly to your 'home' directory. Same as 'cd' with no arguments."
-msgstr "Prejde priamo do vášho 'domovského' adresára. To isté ako 'cd' bez argumentov."
+msgid "Goes directly to your user's home directory."
+msgstr "Prejde priamo do domovského adresára vášho používateľa."
 # 
 # File: usr/share/ashyterm/data/command_data.py, line: 58
 #: NEEDS WORK
 msgid "Returns to the last directory you were in."
 msgstr "Vráti sa do posledného adresára, v ktorom ste boli."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 63
-# File: usr/share/ashyterm/data/command_data.py, line: 84
-# File: usr/share/ashyterm/data/command_data.py, line: 101
-# File: usr/share/ashyterm/data/command_data.py, line: 428
-# File: usr/share/ashyterm/data/command_data.py, line: 445
+# File: usr/share/ashyterm/data/command_data.py, line: 55
 #: NEEDS WORK
-msgid "File Manipulation"
-msgstr "Manipulácia súborov"
+msgid "Shows which directory you are currently in."
+msgstr "Zobrazuje, v ktorom adresári sa aktuálne nachádzate."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 65
+# File: usr/share/ashyterm/data/command_data.py, line: 59
 #: NEEDS WORK
-msgid "Copies files or directories."
-msgstr "Kopíruje súbory alebo adresáre."
+msgid "Displays the full path of your current location."
+msgstr "Zobrazuje úplnú cestu vašej aktuálnej polohy."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 69
+# File: usr/share/ashyterm/data/command_data.py, line: 66
 #: NEEDS WORK
-msgid "Copies a single file."
-msgstr "Kopíruje jeden súbor."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 74
-#: NEEDS WORK
-msgid "Copies a directory and all its contents recursively."
-msgstr "Kopíruje adresár a všetky jeho obsahy rekurzívne."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 79
-#: NEEDS WORK
-msgid "Verbose mode, shows what is being copied."
-msgstr "Verbózny režim, zobrazuje, čo sa kopíruje."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 86
-#: NEEDS WORK
-msgid "Moves or renames files and directories."
-msgstr "Presúva alebo premenováva súbory a adresáre."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 91
-#: NEEDS WORK
-msgid "Renames a file or directory in the current location."
-msgstr "Prečíta názov súboru alebo adresára v aktuálnej polohe."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 96
-#: NEEDS WORK
-msgid "Moves a file to a new location."
-msgstr "Presúva súbor na nové miesto."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 104
-#: NEEDS WORK
-msgid "Removes (deletes) files or directories. CAUTION: this action is permanent."
-msgstr "Odstráni (vymaže) súbory alebo adresáre. UPOZORNENIE: táto akcia je trvalá."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 107
-#: NEEDS WORK
-msgid "Removes a single file."
-msgstr "Odstráni jeden súbor."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 110
-#: NEEDS WORK
-msgid "Removes a directory and all its contents."
-msgstr "Odstráni adresár a všetky jeho obsahy."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 115
-#: NEEDS WORK
-msgid "Interactive mode, asks for confirmation before removing."
-msgstr "Interaktívny režim, pýta sa na potvrdenie pred odstránením."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 121
-#: NEEDS WORK
-msgid "Forces removal without asking for confirmation (use with caution)."
-msgstr "Núti odstránenie bez pýtania na potvrdenie (používajte opatrne)."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 127
-#: NEEDS WORK
-msgid "Search and Filtering"
-msgstr "Hľadanie a filtrovanie"
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 130
-#: NEEDS WORK
-msgid "Searches for a text pattern within files or other command outputs."
-msgstr "Hľadá textový vzor v súboroch alebo iných výstupoch príkazov."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 136
-#: NEEDS WORK
-msgid "Finds and displays all lines containing 'word' in the file."
-msgstr "Nájde a zobrazí všetky riadky obsahujúce 'word' v súbore."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 142
-#: NEEDS WORK
-msgid "Searches ignoring case differences between uppercase and lowercase."
-msgstr "Hľadania ignorujúce rozdiely medzi veľkými a malými písmenami."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 148
-#: NEEDS WORK
-msgid "Searches recursively for 'word' in all files in the current directory."
-msgstr "Hľadá rekurzívne 'word' vo všetkých súboroch v aktuálnom adresári."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 154
-#: NEEDS WORK
-msgid "Filters the output of 'ls -l' to show only lines containing 'txt'."
-msgstr "Filtruje výstup príkazu 'ls -l', aby zobrazil iba riadky obsahujúce 'txt'."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 160
-# File: usr/share/ashyterm/data/command_data.py, line: 179
-# File: usr/share/ashyterm/data/command_data.py, line: 196
-# File: usr/share/ashyterm/data/command_data.py, line: 211
-#: NEEDS WORK
-msgid "Flow Control (Shell Script)"
-msgstr "Ovládanie toku (Shell skript)"
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 162
-#: NEEDS WORK
-msgid "Executes command blocks conditionally."
-msgstr "Podmienene vykonáva príkazové bloky."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 166
-#: NEEDS WORK
-msgid "Tests if a file exists and is a regular file."
-msgstr "Testuje, či súbor existuje a je to bežný súbor."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 170
-#: NEEDS WORK
-msgid "Tests if a path exists and is a directory."
-msgstr "Testuje, či cesta existuje a je adresárom."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 174
-#: NEEDS WORK
-msgid "Tests if a numeric variable is equal to 5."
-msgstr "Testuje, či je číselná premenná rovná 5."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 181
-#: NEEDS WORK
-msgid "Creates a loop that iterates over a list of items."
-msgstr "Vytvára slučku, ktorá prechádza zoznamom položiek."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 185
-#: NEEDS WORK
-msgid "Iterates over an explicit list of numbers."
-msgstr "Iteruje cez explicitný zoznam čísel."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 190
-#: NEEDS WORK
-msgid "Iterates over all files ending with .txt in the directory."
-msgstr "Prechádza všetkými súbormi končiacimi na .txt v adresári."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 199
-#: NEEDS WORK
-msgid "Creates a loop that continues while a condition is true."
-msgstr "Vytvára slučku, ktorá pokračuje, kým je podmienka pravdivá."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 205
-#: NEEDS WORK
-msgid "Executes the code block while the COUNT variable is less than 5."
-msgstr "Vykonáva blok kódu, kým je premenná COUNT menšia ako 5."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 214
-#: NEEDS WORK
-msgid "Creates a loop that continues while a condition is false."
-msgstr "Vytvára slučku, ktorá pokračuje, kým je podmienka nepravdivá."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 220
-#: NEEDS WORK
-msgid "Executes the code block until the COUNT variable equals 0."
-msgstr "Vykonáva blok kódu, kým sa premenná COUNT nerovná 0."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 226
-#: NEEDS WORK
-msgid "User Input (Shell Script)"
-msgstr "Vstup používateľa (Shell skript)"
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 229
-#: NEEDS WORK
-msgid "Reads a line from standard input and stores it in a variable."
-msgstr "Prečíta riadok zo štandardného vstupu a uloží ho do premennej."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 235
-#: NEEDS WORK
-msgid "Waits for the user to type something and press Enter, saving it in the NAME variable."
-msgstr "Čaká, kým používateľ niečo napíše a stlačí Enter, pričom to uloží do premennej NAME."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 241
-#: NEEDS WORK
-msgid "Shows a message (prompt) to the user before waiting for input."
-msgstr "Zobrazí správu (výzvu) používateľovi predtým, ako čaká na vstup."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 247
-#: NEEDS WORK
-msgid "Parameter Expansion"
-msgstr "Rozšírenie parametrov"
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 250
-#: NEEDS WORK
-msgid "Advanced shell mechanisms for manipulating variable values and strings."
-msgstr "Pokročilé mechanizmy shellu na manipuláciu s hodnotami premenných a reťazcami."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 255
-#: NEEDS WORK
-msgid "Basic variable substitution using braces."
-msgstr "Základná substitúcia premenných pomocou zložených zátvoriek."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 259
-#: NEEDS WORK
-msgid "String substitution - replaces first 'b' with 'B'."
-msgstr "Nahradenie reťazca - nahrádza prvé 'b' s 'B'."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 263
-#: NEEDS WORK
-msgid "Substring extraction - first 2 characters."
-msgstr "Extrakcia podreťazca - prvé 2 znaky."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 267
-#: NEEDS WORK
-msgid "Substring from start - first 2 characters."
-msgstr "Podreť z počiatočného - prvé 2 znaky."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 271
-#: NEEDS WORK
-msgid "Substring excluding last character."
-msgstr "Podreť bez posledného znaku."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 275
-#: NEEDS WORK
-msgid "Substring from right - last character."
-msgstr "Podreť z pravej strany - posledný znak."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 279
-#: NEEDS WORK
-msgid "Substring from right - second to last character."
-msgstr "Podreťazec z pravej strany - predposledný znak."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 283
-#: NEEDS WORK
-msgid "Substring using variable length parameter."
-msgstr "Podreťazec s použitím parametra premenlivej dĺžky."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 287
-#: NEEDS WORK
-msgid "Remove file extension (.py)."
-msgstr "Odstrániť príponu súboru (.py)."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 291
-#: NEEDS WORK
-msgid "Replace file extension (.py to .bak)."
-msgstr "Zmeňte príponu súboru (.py na .bak)."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 295
-#: NEEDS WORK
-msgid "Remove everything after last slash (get directory)."
-msgstr "Odstráňte všetko po poslednom lomítku (získajte adresár)."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 299
-#: NEEDS WORK
-msgid "Extract file extension (longest match)."
-msgstr "Extrahovať príponu súboru (najdlhší zhodný)."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 303
-#: NEEDS WORK
-msgid "Extract filename from path (longest match)."
-msgstr "Extrahovať názov súboru z cesty (najdlhšie zhodovanie)."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 307
-#: NEEDS WORK
-msgid "Remove shortest prefix match up to first slash."
-msgstr "Odstrániť najkratšiu zhodu prefixu až po prvú lomku."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 312
-#: NEEDS WORK
-msgid "Replace first occurrence of 'project' with 'scripts'."
-msgstr "Nahradiť prvý výskyt 'projektu' so 'skriptmi'."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 317
-#: NEEDS WORK
-msgid "Extract substring starting at position 6, length 5."
-msgstr "Extrahujte podreťazec začínajúci na pozícii 6, dĺžka 5."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 321
-#: NEEDS WORK
-msgid "Extract last 5 characters using negative offset."
-msgstr "Extrahujte posledných 5 znakov pomocou negatívneho posunu."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 325
-#: NEEDS WORK
-msgid "Extract basename (filename) from path."
-msgstr "Extrahovať základné meno (názov súboru) z cesty."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 329
-#: NEEDS WORK
-msgid "Extract directory path by removing basename."
-msgstr "Extrahujte cestu k adresáru odstránením názvu súboru."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 333
-#: NEEDS WORK
-msgid "List all variable names starting with 'user_'."
-msgstr "Zoznam všetkých názvov premenných začínajúcich na 'user_'."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 337
-#: NEEDS WORK
-msgid "Indirect variable expansion using pointer."
-msgstr "Nepriame rozšírenie premennej pomocou ukazovateľa."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 341
-#: NEEDS WORK
-msgid "Remove shortest suffix match."
-msgstr "Odstrániť najkratšiu zhodu prípony."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 345
-#: NEEDS WORK
-msgid "Remove shortest prefix match."
-msgstr "Odstrániť najkratšiu zhodu predpony."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 349
-#: NEEDS WORK
-msgid "Remove longest suffix match."
-msgstr "Odstrániť najdlhšiu zhodu prípony."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 353
-#: NEEDS WORK
-msgid "Remove longest prefix match."
-msgstr "Odstrániť najdlhšiu zhodu predpony."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 357
-#: NEEDS WORK
-msgid "Replace first occurrence of 'old' with 'new'."
-msgstr "Nahraďte prvý výskyt 'old' s 'new'."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 361
-# File: usr/share/ashyterm/data/command_data.py, line: 1466
-#: NEEDS WORK
-msgid "Replace all occurrences of 'old' with 'new'."
-msgstr "Nahradiť všetky výskyty 'starej' 'novou'."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 365
-#: NEEDS WORK
-msgid "Replace suffix 'old' with 'new'."
-msgstr "Nahradiť príponu 'old' s 'new'."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 369
-#: NEEDS WORK
-msgid "Replace prefix 'old' with 'new'."
-msgstr "Nahradiť predponu 'old' s 'new'."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 373
-#: NEEDS WORK
-msgid "Extract substring (position 0, length 3)."
-msgstr "Extrahovať podreťazec (pozícia 0, dĺžka 3)."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 377
-#: NEEDS WORK
-msgid "Extract substring from right (last 3 characters)."
-msgstr "Extrahovať podreťazec z pravej strany (posledné 3 znaky)."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 381
-#: NEEDS WORK
-msgid "Get length of variable $filename."
-msgstr "Získajte dĺžku premennej $filename."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 385
-#: NEEDS WORK
-msgid "Convert first character to lowercase."
-msgstr "Preveďte prvý znak na malé písmeno."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 389
-#: NEEDS WORK
-msgid "Convert all characters to lowercase."
-msgstr "Preveďte všetky znaky na malé písmená."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 393
-#: NEEDS WORK
-msgid "Convert first character to uppercase."
-msgstr "Preveďte prvý znak na veľké písmeno."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 397
-#: NEEDS WORK
-msgid "Convert all characters to uppercase."
-msgstr "Preveďte všetky znaky na veľké písmená."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 401
-#: NEEDS WORK
-msgid "Use $username, or 'guest' if unset (or null)."
-msgstr "Použite $username, alebo 'návštevník', ak nie je nastavený (alebo je null)."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 406
-#: NEEDS WORK
-msgid "Set $username to 'guest' if unset (or null), then use it."
-msgstr "Nastavte $username na 'guest', ak nie je nastavený (alebo je null), potom ho použite."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 411
-#: NEEDS WORK
-msgid "Use 'admin' if $username is set (and not null)."
-msgstr "Použite 'admin', ak je $username nastavený (a nie je null)."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 416
-#: NEEDS WORK
-msgid "Show error message and exit if $username is unset (or null)."
-msgstr "Zobrazte chybovú správu a ukončite, ak je $username nevyplnený (alebo null)."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 422
-#: NEEDS WORK
-msgid "Use $username, or 'guest' if unset (ignores null values)."
-msgstr "Použite $username, alebo 'hosť', ak nie je nastavený (ignoruje null hodnoty)."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 430
-#: NEEDS WORK
-msgid "Creates directories."
-msgstr "Vytvára adresáre."
+msgid "Creates new directories."
+msgstr "Vytvára nové adresáre."
 # 
 # File: usr/share/ashyterm/data/command_data.py, line: 434
 #: NEEDS WORK
 msgid "Creates a single directory."
 msgstr "Vytvára jednu priečinok."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 439
+# File: usr/share/ashyterm/data/command_data.py, line: 75
 #: NEEDS WORK
-msgid "Creates nested directories, creating parent directories as needed."
-msgstr "Vytvára vnorené adresáre, pričom podľa potreby vytvára nadradené adresáre."
+msgid "Creates a full path of directories, even if the parent directories don't exist."
+msgstr "Vytvára úplnú cestu adresárov, aj keď nadriadené adresáre neexistujú."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 447
+# File: usr/share/ashyterm/data/command_data.py, line: 84
 #: NEEDS WORK
-msgid "Creates empty files or updates file timestamps."
-msgstr "Vytvára prázdne súbory alebo aktualizuje časové pečiatky súborov."
+msgid "Copies files or directories from one place to another."
+msgstr "Kopíruje súbory alebo adresáre z jedného miesta na druhé."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 452
+# File: usr/share/ashyterm/data/command_data.py, line: 69
 #: NEEDS WORK
-msgid "Creates an empty file or updates the timestamp of an existing file."
-msgstr "Vytvorí prázdny súbor alebo aktualizuje časovú pečiatku existujúceho súboru."
+msgid "Copies a single file."
+msgstr "Kopíruje jeden súbor."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 457
+# File: usr/share/ashyterm/data/command_data.py, line: 93
 #: NEEDS WORK
-msgid "Creates multiple files at once."
-msgstr "Vytvára viacero súborov naraz."
+msgid "Copies a directory and everything inside it."
+msgstr "Kopíruje adresár a všetko, čo je v ňom."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 462
-# File: usr/share/ashyterm/data/command_data.py, line: 481
-# File: usr/share/ashyterm/data/command_data.py, line: 496
-# File: usr/share/ashyterm/data/command_data.py, line: 513
-# File: usr/share/ashyterm/data/command_data.py, line: 536
-# File: usr/share/ashyterm/data/command_data.py, line: 555
-# File: usr/share/ashyterm/data/command_data.py, line: 578
-# File: usr/share/ashyterm/data/command_data.py, line: 597
-# File: usr/share/ashyterm/data/command_data.py, line: 616
-# File: usr/share/ashyterm/data/command_data.py, line: 635
-# File: usr/share/ashyterm/data/command_data.py, line: 650
-# File: usr/share/ashyterm/data/command_data.py, line: 665
-# File: usr/share/ashyterm/data/command_data.py, line: 684
-# File: usr/share/ashyterm/data/command_data.py, line: 1275
+# File: usr/share/ashyterm/data/command_data.py, line: 86
 #: NEEDS WORK
-msgid "Text Processing"
-msgstr "Spracovanie textu"
+msgid "Moves or renames files and directories."
+msgstr "Presúva alebo premenováva súbory a adresáre."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 464
+# File: usr/share/ashyterm/data/command_data.py, line: 104
 #: NEEDS WORK
-msgid "Concatenates and displays file contents."
-msgstr "Spojí a zobrazuje obsah súborov."
+msgid "Renames a file or directory."
+msgstr "Prečíta názov súboru alebo adresára."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 468
+# File: usr/share/ashyterm/data/command_data.py, line: 96
 #: NEEDS WORK
-msgid "Displays the contents of a file."
-msgstr "Zobrazuje obsah súboru."
+msgid "Moves a file to a new location."
+msgstr "Presúva súbor na nové miesto."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 472
+# File: usr/share/ashyterm/data/command_data.py, line: 116
 #: NEEDS WORK
-msgid "Concatenates and displays multiple files."
-msgstr "Konkatenácia a zobrazenie viacerých súborov."
+msgid ""
+"Deletes files and directories. CAUTION: this is permanent! Tip: Before deleting, replace 'rm' with "
+"'ls' to preview what will be removed."
+msgstr ""
+"Odstráni súbory a adresáre. UPOZORNENIE: toto je trvalé! Tip: Pred odstránením nahraďte 'rm' za "
+"'ls', aby ste si prehliadli, čo bude odstránené."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 476
+# File: usr/share/ashyterm/data/command_data.py, line: 119
 #: NEEDS WORK
-msgid "Displays file contents with line numbers."
-msgstr "Zobrazuje obsah súboru s číslami riadkov."
+msgid "Deletes a single file."
+msgstr "Odstrániť jeden súbor."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 483
+# File: usr/share/ashyterm/data/command_data.py, line: 122
 #: NEEDS WORK
-msgid "Displays the beginning of files."
-msgstr "Zobrazuje začiatok súborov."
+msgid "Deletes a directory and everything inside it."
+msgstr "Odstráni adresár a všetko, čo je v ňom."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 487
+# File: usr/share/ashyterm/data/command_data.py, line: 126
 #: NEEDS WORK
-msgid "Displays the first 10 lines of a file."
+msgid "Asks for confirmation before deleting each file."
+msgstr "Žiada o potvrdenie pred odstránením každého súboru."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 131
+#: NEEDS WORK
+msgid "Forces deletion without asking (use with extreme caution)."
+msgstr "Núti odstránenie bez opýtania (používajte s extrémnou opatrnosťou)."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 138
+# File: usr/share/ashyterm/data/command_data.py, line: 163
+# File: usr/share/ashyterm/data/command_data.py, line: 190
+# File: usr/share/ashyterm/data/command_data.py, line: 209
+# File: usr/share/ashyterm/data/command_data.py, line: 224
+#: NEEDS WORK
+msgid "Essentials: File I/O & Pipes"
+msgstr "Základy: Práca s súbormi a rúrkami"
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 140
+#: NEEDS WORK
+msgid "Controls how data flows between commands and files."
+msgstr "Ovláda, ako sa dáta prenášajú medzi príkazmi a súbormi."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 145
+#: NEEDS WORK
+msgid "Redirect: Puts the output of a command into a file, overwriting it if it exists."
+msgstr "Prevod: Uloží výstup príkazu do súboru, pričom ho prepíše, ak už existuje."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 151
+#: NEEDS WORK
+msgid "Append: Adds the output of a command to the end of a file."
+msgstr "Pridať: Pridáva výstup príkazu na koniec súboru."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 157
+#: NEEDS WORK
+msgid "Pipe: Connects the output of command1 to the input of command2, creating a workflow."
+msgstr "Rúra: Spojuje výstup príkazu1 so vstupom príkazu2, čím vytvára pracovný tok."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 165
+#: NEEDS WORK
+msgid "Displays the content of a text file on the screen."
+msgstr "Zobrazuje obsah textového súboru na obrazovke."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 170
+#: NEEDS WORK
+msgid "A modern and efficient way to display a file's content."
+msgstr "Moderný a efektívny spôsob zobrazenia obsahu súboru."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 175
+#: NEEDS WORK
+msgid "Displays the content of a single file."
+msgstr "Zobrazuje obsah jedného súboru."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 180
+#: NEEDS WORK
+msgid "Displays the content of multiple files, one after the other."
+msgstr "Zobrazuje obsah viacerých súborov, jeden po druhom."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 185
+#: NEEDS WORK
+msgid "Displays the content with line numbers."
+msgstr "Zobrazuje obsah s číslami riadkov."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 193
+#: NEEDS WORK
+msgid "Creates multiple empty files at once or updates a file's modification timestamp."
+msgstr "Vytvára viacero prázdnych súborov naraz alebo aktualizuje časovú pečiatku úpravy súboru."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 198
+#: NEEDS WORK
+msgid "Creates several empty files at once."
+msgstr "Vytvára niekoľko prázdnych súborov naraz."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 203
+#: NEEDS WORK
+msgid "Updates the modification date and time of a file to the current time."
+msgstr "Aktualizuje dátum a čas poslednej úpravy súboru na aktuálny čas."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 211
+#: NEEDS WORK
+msgid "Displays the beginning of a text file."
+msgstr "Zobrazuje začiatok textového súboru."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 215
+#: NEEDS WORK
+msgid "Shows the first 10 lines of a file."
 msgstr "Zobrazuje prvých 10 riadkov súboru."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 491
+# File: usr/share/ashyterm/data/command_data.py, line: 219
 #: NEEDS WORK
-msgid "Displays the first 20 lines of a file."
+msgid "Shows the first 20 lines of a file."
 msgstr "Zobrazuje prvých 20 riadkov súboru."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 226
+#: NEEDS WORK
+msgid "Displays the end of a text file."
+msgstr "Zobrazuje koniec textového súboru."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 230
+#: NEEDS WORK
+msgid "Shows the last 10 lines of a file."
+msgstr "Zobrazuje posledných 10 riadkov súboru."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 235
+#: NEEDS WORK
+msgid "Follows a file in real-time, showing new lines as they are added."
+msgstr "Sleduje súbor v reálnom čase a zobrazuje nové riadky, keď sú pridané."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 242
+# File: usr/share/ashyterm/data/command_data.py, line: 265
+# File: usr/share/ashyterm/data/command_data.py, line: 296
+# File: usr/share/ashyterm/data/command_data.py, line: 307
+# File: usr/share/ashyterm/data/command_data.py, line: 319
+# File: usr/share/ashyterm/data/command_data.py, line: 332
+# File: usr/share/ashyterm/data/command_data.py, line: 345
+# File: usr/share/ashyterm/data/command_data.py, line: 366
+#: NEEDS WORK
+msgid "Essentials: Search & System Information"
+msgstr "Základy: Hľadanie a systémové informácie"
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 244
+#: NEEDS WORK
+msgid "Searches for a word or text pattern within files."
+msgstr "Hľadá slovo alebo textový vzor v súboroch."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 136
+#: NEEDS WORK
+msgid "Finds and displays all lines containing 'word' in the file."
+msgstr "Nájde a zobrazí všetky riadky obsahujúce 'word' v súbore."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 254
+#: NEEDS WORK
+msgid "Searches for the word, ignoring case differences."
+msgstr "Hľadá slovo, pričom ignoruje rozdiely v písaní veľkých a malých písmen."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 259
+#: NEEDS WORK
+msgid "Searches for 'word' in all files in the current directory and its subdirectories."
+msgstr "Hľadá 'slovo' vo všetkých súboroch v aktuálnom adresári a jeho podadresároch."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 267
+#: NEEDS WORK
+msgid "A powerful tool for finding files and directories."
+msgstr "Silný nástroj na vyhľadávanie súborov a adresárov."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 272
+#: NEEDS WORK
+msgid "Finds all files ending with .txt in the current directory and subdirectories."
+msgstr "Nájde všetky súbory končiace na .txt v aktuálnom adresári a podadresároch."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 278
+#: NEEDS WORK
+msgid "Finds only directories whose names start with 'backup'."
+msgstr "Nájde iba adresáre, ktorých názvy začínajú na 'backup'."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 283
+#: NEEDS WORK
+msgid "Finds files that were modified in the last 7 days."
+msgstr "Nájde súbory, ktoré boli upravené v posledných 7 dňoch."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 287
+#: NEEDS WORK
+msgid "Finds files larger than 100MB."
+msgstr "Nájde súbory väčšie ako 100 MB."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 291
+#: NEEDS WORK
+msgid "Finds empty files and directories."
+msgstr "Nájde prázdne súbory a adresáre."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 298
+#: NEEDS WORK
+msgid "Shows the username of the currently logged-in user."
+msgstr "Zobrazuje používateľské meno aktuálne prihláseného používateľa."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 302
+#: NEEDS WORK
+msgid "Displays your current username."
+msgstr "Zobrazuje vaše aktuálne používateľské meno."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 309
+#: NEEDS WORK
+msgid "Displays the current system date and time."
+msgstr "Zobrazuje aktuálny systémový dátum a čas."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 311
+#: NEEDS WORK
+msgid "Shows the current date and time."
+msgstr "Zobrazuje aktuálny dátum a čas."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 314
+#: NEEDS WORK
+msgid "Shows the date and time in a custom format."
+msgstr "Zobrazuje dátum a čas v prispôsobenom formáte."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 321
+#: NEEDS WORK
+msgid "Shows the free and used space on storage disks."
+msgstr "Zobrazuje voľné a použité miesto na úložných diskoch."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 326
+#: NEEDS WORK
+msgid "Shows disk usage in a human-readable format (KB, MB, GB)."
+msgstr "Zobrazuje využitie disku v ľahko čitateľnom formáte (KB, MB, GB)."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 334
+#: NEEDS WORK
+msgid "Shows the amount of used and free RAM."
+msgstr "Zobrazuje množstvo použitej a voľnej RAM."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 339
+#: NEEDS WORK
+msgid "Shows memory usage in a human-readable format (KB, MB, GB)."
+msgstr "Zobrazuje využitie pamäte v ľahko čitateľnom formáte (KB, MB, GB)."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 348
+#: NEEDS WORK
+msgid "Shows the disk space that files and directories are using."
+msgstr "Zobrazuje diskový priestor, ktorý používajú súbory a adresáre."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 354
+#: NEEDS WORK
+msgid "Shows the total size of each item in the current directory in a summary format."
+msgstr "Zobrazuje celkovú veľkosť každého prvku v aktuálnom adresári v súhrnnom formáte."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 360
+#: NEEDS WORK
+msgid "Shows the size of each directory and subdirectory in a human-readable format."
+msgstr "Zobrazuje veľkosť každého adresára a podadresára v ľahko čitateľnom formáte."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 369
+#: NEEDS WORK
+msgid "Shows how long the computer has been running without a restart."
+msgstr "Zobrazuje, ako dlho počítač beží bez reštartu."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 375
+#: NEEDS WORK
+msgid "Displays the uptime, how many users are logged in, and the system load."
+msgstr "Zobrazuje prevádzkový čas, koľko používateľov je prihlásených a zaťaženie systému."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 382
+# File: usr/share/ashyterm/data/command_data.py, line: 435
+# File: usr/share/ashyterm/data/command_data.py, line: 466
+#: NEEDS WORK
+msgid "Software Management"
+msgstr "Správa softvéru"
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 385
+#: NEEDS WORK
+msgid "The primary tool for installing, updating, and removing software on Arch-based Linux systems."
+msgstr ""
+"Hlavný nástroj na inštaláciu, aktualizáciu a odstraňovanie softvéru na systémoch Linux založených "
+"na Arch."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 391
+#: NEEDS WORK
+msgid "Synchronizes with repositories and upgrades all installed packages."
+msgstr "Synchronizuje s repozitármi a aktualizuje všetky nainštalované balíky."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 396
+#: NEEDS WORK
+msgid "Installs a new software package."
+msgstr "Nainštaluje nový softvérový balík."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 400
+#: NEEDS WORK
+msgid "Searches for a package in the repositories."
+msgstr "Hľadá balík v repozitároch."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 404
+#: NEEDS WORK
+msgid "Searches for an already installed package."
+msgstr "Hľadá už nainštalovaný balík."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 409
+#: NEEDS WORK
+msgid "Shows detailed information about a package from the repository."
+msgstr "Zobrazuje podrobné informácie o balíku z repozitára."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 415
+#: NEEDS WORK
+msgid "Shows detailed information about an installed package."
+msgstr "Zobrazuje podrobné informácie o nainštalovanom balíku."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 420
+#: NEEDS WORK
+msgid "Removes a package and its unneeded dependencies."
+msgstr "Odstráni balík a jeho nepotrebné závislosti."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 425
+#: NEEDS WORK
+msgid "Updates the database of which package owns which file."
+msgstr "Aktualizuje databázu, ktorá určuje, ktorý balík vlastní ktorý súbor."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 430
+#: NEEDS WORK
+msgid "Finds which package a specific file belongs to."
+msgstr "Nájde, do ktorého balíka patrí konkrétny súbor."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 438
+#: NEEDS WORK
+msgid ""
+"An AUR helper for Arch-based systems that wraps pacman and adds support for the Arch User "
+"Repository."
+msgstr ""
+"AUR pomocník pre systémy založené na Arch, ktorý obalí pacman a pridáva podporu pre Arch User "
+"Repository."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 444
+#: NEEDS WORK
+msgid "Upgrades all packages from official repositories and the AUR."
+msgstr "Aktualizuje všetky balíky z oficiálnych repozitárov a AUR."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 450
+#: NEEDS WORK
+msgid "Installs a package from the official repositories or the AUR."
+msgstr "Nainštaluje balík z oficiálnych repozitárov alebo AUR."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 456
+#: NEEDS WORK
+msgid "Searches for a package in both official repositories and the AUR."
+msgstr "Hľadá balík v oficiálnych repozitároch aj v AUR."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 461
+#: NEEDS WORK
+msgid "Removes a package and its dependencies."
+msgstr "Odstráni balík a jeho závislosti."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 469
+#: NEEDS WORK
+msgid ""
+"A universal system for installing and running applications that works across different Linux "
+"distributions."
+msgstr ""
+"Univerzálny systém na inštaláciu a spúšťanie aplikácií, ktorý funguje na rôznych distribúciách "
+"Linuxu."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 475
+#: NEEDS WORK
+msgid "Installs an application from a remote repository like Flathub."
+msgstr "Nainštaluje aplikáciu z diaľkového úložiska, ako je Flathub."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 480
+#: NEEDS WORK
+msgid "Runs an installed Flatpak application."
+msgstr "Spúšťa nainštalovanú aplikáciu Flatpak."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 484
+#: NEEDS WORK
+msgid "Updates all installed Flatpak applications."
+msgstr "Aktualizuje všetky nainštalované aplikácie Flatpak."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 489
+#: NEEDS WORK
+msgid "Searches for applications in the configured remotes."
+msgstr "Hľadá aplikácie v nakonfigurovaných vzdialených prístupoch."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 494
+#: NEEDS WORK
+msgid "Lists all installed Flatpak applications."
+msgstr "Zoznam všetkých nainštalovaných aplikácií Flatpak."
 # 
 # File: usr/share/ashyterm/data/command_data.py, line: 498
 #: NEEDS WORK
-msgid "Displays the end of files."
-msgstr "Zobrazuje koniec súborov."
+msgid "Removes an installed Flatpak application."
+msgstr "Odstráni nainštalovanú aplikáciu Flatpak."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 502
+# File: usr/share/ashyterm/data/command_data.py, line: 504
+# File: usr/share/ashyterm/data/command_data.py, line: 519
+# File: usr/share/ashyterm/data/command_data.py, line: 540
 #: NEEDS WORK
-msgid "Displays the last 10 lines of a file."
-msgstr "Zobrazuje posledných 10 riadkov súboru."
+msgid "Permissions & Ownership"
+msgstr "Oprávnenia a vlastníctvo"
 # 
 # File: usr/share/ashyterm/data/command_data.py, line: 507
 #: NEEDS WORK
-msgid "Follows the file, displaying new lines as they are added."
-msgstr "Sleduje súbor a zobrazuje nové riadky, keď sú pridané."
+msgid "Executes a single command with administrative (root) privileges. Use with care."
+msgstr "Vykonáva jediný príkaz s administratívnymi (root) oprávneniami. Používajte opatrne."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 515
+# File: usr/share/ashyterm/data/command_data.py, line: 513
 #: NEEDS WORK
-msgid "Sorts lines of text files."
-msgstr "Triedi riadky textových súborov."
+msgid "Runs the 'pacman -Syu' command as the administrator, which is required for system updates."
+msgstr "Spúšťa príkaz 'pacman -Syu' ako správca, čo je potrebné na aktualizácie systému."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 522
+#: NEEDS WORK
+msgid "Changes the permissions of files and directories (who can read, write, or execute them)."
+msgstr "Zmeny oprávnení súborov a adresárov (kto ich môže čítať, zapisovať alebo vykonávať)."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 528
+#: NEEDS WORK
+msgid "Adds execute (x) permission, allowing the file to be run as a program."
+msgstr "Pridáva oprávnenie na spúšťanie (x), čo umožňuje súboru byť spustený ako program."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 534
+#: NEEDS WORK
+msgid ""
+"Sets permissions using numbers: owner can read/write/execute (7), group and others can read/execute "
+"(5)."
+msgstr ""
+"Nastavuje oprávnenia pomocou čísel: vlastník môže čítať/písať/spúšťať (7), skupina a ostatní môžu "
+"čítať/spúšťať (5)."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 542
+#: NEEDS WORK
+msgid "Changes the owner and group of a file or directory."
+msgstr "Zmení vlastníka a skupinu súboru alebo adresára."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 547
+#: NEEDS WORK
+msgid "Makes 'user' the owner and 'group' the group for the file."
+msgstr "Urobí 'user' vlastníkom a 'group' skupinou pre súbor."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 554
+# File: usr/share/ashyterm/data/command_data.py, line: 567
+# File: usr/share/ashyterm/data/command_data.py, line: 586
+# File: usr/share/ashyterm/data/command_data.py, line: 607
+#: NEEDS WORK
+msgid "Process & Network Management"
+msgstr "Správa procesov a sietí"
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 557
+#: NEEDS WORK
+msgid "Shows the programs (processes) currently running on the system."
+msgstr "Zobrazuje programy (procesy) aktuálne bežiace v systéme."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 562
+#: NEEDS WORK
+msgid "Shows a detailed list of all running programs."
+msgstr "Zobrazuje podrobný zoznam všetkých bežiacich programov."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 570
+#: NEEDS WORK
+msgid "Terminates a program (process) that is frozen or unresponsive."
+msgstr "Ukončí program (proces), ktorý je zamrznutý alebo nereaguje."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 575
+#: NEEDS WORK
+msgid "Politely tries to close the program with ID 1234."
+msgstr "Slušne sa pokúša zavrieť program s ID 1234."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 580
+#: NEEDS WORK
+msgid "Forcibly terminates the program with ID 1234 (use as a last resort)."
+msgstr "Nútene ukončí program s ID 1234 (použite ako poslednú možnosť)."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 589
+#: NEEDS WORK
+msgid "Terminates all processes with a specific name, like closing all windows of an app."
+msgstr "Ukončí všetky procesy s konkrétnym názvom, ako napríklad zatvorenie všetkých okien aplikácie."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 595
+#: NEEDS WORK
+msgid "Closes all running instances of the 'firefox' program."
+msgstr "Zatvára všetky bežiace inštancie programu 'firefox'."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 601
+#: NEEDS WORK
+msgid "Asks for confirmation before terminating each 'chrome' process."
+msgstr "Žiada o potvrdenie pred ukončením každého procesu 'chrome'."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 610
+#: NEEDS WORK
+msgid "Tests if there is a connection to another computer or website."
+msgstr "Testuje, či existuje pripojenie k inému počítaču alebo webovej stránke."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 615
+#: NEEDS WORK
+msgid "Checks if you can communicate with google.com."
+msgstr "Kontroluje, či môžete komunikovať s google.com."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 620
+#: NEEDS WORK
+msgid "Sends only 4 test packets instead of running continuously."
+msgstr "Posiela iba 4 testovacie pakety namiesto nepretržitého spúšťania."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 627
+# File: usr/share/ashyterm/data/command_data.py, line: 644
+# File: usr/share/ashyterm/data/command_data.py, line: 655
+#: NEEDS WORK
+msgid "System & User Control"
+msgstr "Systém a používateľská kontrola"
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 630
+#: NEEDS WORK
+msgid "Safely turns off or schedules a shutdown for the computer."
+msgstr "Bezpečne vypne alebo naplánuje vypnutie počítača."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 635
+#: NEEDS WORK
+msgid "Shuts down the system immediately."
+msgstr "Okamžite vypne systém."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 639
+#: NEEDS WORK
+msgid "Schedules a shutdown for 15 minutes from now."
+msgstr "Naplánuje vypnutie za 15 minút."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 646
+#: NEEDS WORK
+msgid "Restarts the computer."
+msgstr "Reštartuje počítač."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 650
+#: NEEDS WORK
+msgid "Restarts the system immediately."
+msgstr "Okamžite reštartuje systém."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 658
+#: NEEDS WORK
+msgid "Switches to another user account in the current terminal session."
+msgstr "Prepnúť na iný používateľský účet v aktuálnej terminálovej relácii."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 664
+#: NEEDS WORK
+msgid "Switches to the specified user's account (requires their password)."
+msgstr "Prepnúť na účet zadaného používateľa (vyžaduje ich heslo)."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 671
+#: NEEDS WORK
+msgid "Version Control with Git"
+msgstr "Správa verzí s Gitom"
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 674
+#: NEEDS WORK
+msgid "A tool for saving the history of changes in code projects, like a 'save point' in a game."
+msgstr "Nástroj na ukladanie histórie zmien v kódových projektoch, ako 'bod uloženia' v hre."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 680
+#: NEEDS WORK
+msgid "Initializes a new 'history album' (repository) in a directory."
+msgstr "Inicializuje nový 'historický album' (repozitár) v adresári."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 686
+#: NEEDS WORK
+msgid "Downloads a copy of a project that already exists elsewhere."
+msgstr "Stiahne kópiu projektu, ktorý už existuje inde."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 692
+#: NEEDS WORK
+msgid "Shows which files have been modified, added, or deleted."
+msgstr "Zobrazuje, ktoré súbory boli upravené, pridané alebo odstránené."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 698
+#: NEEDS WORK
+msgid "Prepares a modified file to be saved in the history ('stages' the change)."
+msgstr "Pripraví upravený súbor na uloženie do histórie ('stages' zmenu)."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 704
+#: NEEDS WORK
+msgid "Saves the staged changes to the history with a description of what was done."
+msgstr "Uloží zmeny v čakajúcom stave do histórie s popisom toho, čo bolo vykonané."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 709
+#: NEEDS WORK
+msgid "Downloads the latest updates from a remote project."
+msgstr "Sťahuje najnovšie aktualizácie z diaľkového projektu."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 714
+#: NEEDS WORK
+msgid "Uploads your saved changes (commits) to the remote project."
+msgstr "Nahraje vaše uložené zmeny (commity) do vzdialeného projektu."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 719
+#: NEEDS WORK
+msgid "Shows the history of all commits (saves) made."
+msgstr "Zobrazuje históriu všetkých vykonaných commitov (uložení)."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 724
+#: NEEDS WORK
+msgid "Lists all the 'timelines' (branches) of the project."
+msgstr "Zoznam všetkých 'časových osí' (vetiev) projektu."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 730
+#: NEEDS WORK
+msgid "Switches to another 'timeline' (branch) to work on something new."
+msgstr "Prepnúť na inú 'časovú os' (vetvu) na prácu na niečom novom."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 737
+# File: usr/share/ashyterm/data/command_data.py, line: 758
+# File: usr/share/ashyterm/data/command_data.py, line: 779
+#: NEEDS WORK
+msgid "Archives & Compression"
+msgstr "Archívy a kompresia"
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 740
+#: NEEDS WORK
+msgid "Groups multiple files and directories into a single package (.tar file) or extracts them."
+msgstr "Zoskupuje viacero súborov a adresárov do jedného balíka (.tar súbor) alebo ich extrahuje."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 745
+#: NEEDS WORK
+msgid "Creates a compressed package from a directory."
+msgstr "Vytvára komprimovaný balík z adresára."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 749
+#: NEEDS WORK
+msgid "Extracts files from a compressed package."
+msgstr "Extrahuje súbory z komprimovaného balíka."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 753
+#: NEEDS WORK
+msgid "Creates a package without compression."
+msgstr "Vytvára balík bez kompresie."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 761
+#: NEEDS WORK
+msgid "Creates compressed .zip files, a format widely used on all operating systems."
+msgstr "Vytvára komprimované .zip súbory, formát široko používaný vo všetkých operačných systémoch."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 767
+#: NEEDS WORK
+msgid "Creates a zip file containing one or more specified files."
+msgstr "Vytvorí zip súbor obsahujúci jeden alebo viac určených súborov."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 773
+#: NEEDS WORK
+msgid "Creates a zip file containing a directory and everything inside it."
+msgstr "Vytvára zip súbor obsahujúci adresár a všetko, čo je v ňom."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 781
+#: NEEDS WORK
+msgid "Extracts files from a .zip archive."
+msgstr "Extrahuje súbory z .zip archívu."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 786
+#: NEEDS WORK
+msgid "Extracts all files from the archive into the current directory."
+msgstr "Extrahuje všetky súbory z archívu do aktuálneho adresára."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 791
+#: NEEDS WORK
+msgid "Extracts files to a specific destination directory."
+msgstr "Extrahuje súbory do konkrétneho cieľového adresára."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 797
+# File: usr/share/ashyterm/data/command_data.py, line: 812
+# File: usr/share/ashyterm/data/command_data.py, line: 827
+# File: usr/share/ashyterm/data/command_data.py, line: 840
+# File: usr/share/ashyterm/data/command_data.py, line: 851
+# File: usr/share/ashyterm/data/command_data.py, line: 866
+# File: usr/share/ashyterm/data/command_data.py, line: 879
+#: NEEDS WORK
+msgid "Useful Commands (Optional)"
+msgstr "Užitočné príkazy (voliteľné)"
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 800
+#: NEEDS WORK
+msgid "A visual 'Task Manager' for the terminal. (May require installation)"
+msgstr "Vizualizátor 'Správca úloh' pre terminál. (Môže vyžadovať inštaláciu)"
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 806
+#: NEEDS WORK
+msgid "Interactively shows running programs, CPU, and memory usage."
+msgstr "Interaktívne zobrazuje bežiace programy, CPU a využitie pamäte."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 815
+#: NEEDS WORK
+msgid "Monitors the usage of video cards (GPUs), especially NVIDIA. (May require installation)"
+msgstr "Sleduje využitie grafických kariet (GPU), najmä NVIDIA. (Môže vyžadovať inštaláciu)"
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 821
+#: NEEDS WORK
+msgid "Shows GPU usage, video memory, and temperature in real-time."
+msgstr "Zobrazuje využitie GPU, video pamäť a teplotu v reálnom čase."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 830
+#: NEEDS WORK
+msgid "Lists all devices connected to the computer's PCI slots (graphics card, network, etc.)."
+msgstr "Zoznam všetkých zariadení pripojených k PCI slotom počítača (grafická karta, sieť atď.)."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 835
+#: NEEDS WORK
+msgid "Shows a list of all PCI devices."
+msgstr "Zobrazuje zoznam všetkých zariadení PCI."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 842
+#: NEEDS WORK
+msgid "Lists all devices connected to the USB ports."
+msgstr "Zoznam všetkých zariadení pripojených k USB portom."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 846
+#: NEEDS WORK
+msgid "Shows a list of all connected USB devices."
+msgstr "Zobrazuje zoznam všetkých pripojených USB zariadení."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 854
+#: NEEDS WORK
+msgid "A modern and super-fast version of 'grep' for searching text. (May require installation: ripgrep)"
+msgstr "Moderná a super-rýchla verzia 'grep' na vyhľadávanie textu. (Môže vyžadovať inštaláciu: ripgrep)"
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 860
+#: NEEDS WORK
+msgid "Recursively searches for 'word' in the current directory very quickly."
+msgstr "Rekurzívne vyhľadáva 'slovo' v aktuálnom adresári veľmi rýchlo."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 869
+#: NEEDS WORK
+msgid "A modern and more intuitive version of 'find' for finding files. (May require installation: fd-find)"
+msgstr "Moderná a intuitívnejšia verzia 'find' na vyhľadávanie súborov. (Môže vyžadovať inštaláciu: fd-find)"
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 874
+#: NEEDS WORK
+msgid "Finds all files containing '.txt' in their name."
+msgstr "Nájde všetky súbory obsahujúce '.txt' vo svojom názve."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 882
+#: NEEDS WORK
+msgid "A tool for processing and viewing data in JSON format. (May require installation)"
+msgstr "Nástroj na spracovanie a zobrazenie údajov vo formáte JSON. (Môže vyžadovať inštaláciu)"
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 888
+#: NEEDS WORK
+msgid "Displays a JSON file with colors and formatting for easy reading."
+msgstr "Zobrazuje súbor JSON s farbami a formátovaním pre jednoduché čítanie."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 895
+# File: usr/share/ashyterm/data/command_data.py, line: 914
+# File: usr/share/ashyterm/data/command_data.py, line: 929
+# File: usr/share/ashyterm/data/command_data.py, line: 944
+# File: usr/share/ashyterm/data/command_data.py, line: 957
+# File: usr/share/ashyterm/data/command_data.py, line: 968
+# File: usr/share/ashyterm/data/command_data.py, line: 979
+# File: usr/share/ashyterm/data/command_data.py, line: 990
+# File: usr/share/ashyterm/data/command_data.py, line: 1003
+# File: usr/share/ashyterm/data/command_data.py, line: 1015
+#: NEEDS WORK
+msgid "Text Processing (Intermediate)"
+msgstr "Spracovanie textu (stredne pokročilé)"
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 897
+#: NEEDS WORK
+msgid "Sorts the lines of a file."
+msgstr "Zoradí riadky súboru."
 # 
 # File: usr/share/ashyterm/data/command_data.py, line: 519
 #: NEEDS WORK
 msgid "Sorts lines in alphabetical order."
 msgstr "Zoradí riadky v abecednom poradí."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 523
+# File: usr/share/ashyterm/data/command_data.py, line: 905
 #: NEEDS WORK
-msgid "Sorts lines numerically."
-msgstr "Triedi riadky číselne."
+msgid "Sorts lines in numerical order."
+msgstr "Zoradí riadky v číselnom poradí."
 # 
 # File: usr/share/ashyterm/data/command_data.py, line: 527
 #: NEEDS WORK
 msgid "Sorts lines in reverse order."
 msgstr "Zoradí riadky v opačnom poradí."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 531
+# File: usr/share/ashyterm/data/command_data.py, line: 916
 #: NEEDS WORK
-msgid "Sorts by second field/column."
-msgstr "Triediť podľa druhého poľa/stĺpca."
+msgid "Removes adjacent duplicate lines."
+msgstr "Odstráni susedné duplicitné riadky."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 538
+# File: usr/share/ashyterm/data/command_data.py, line: 920
 #: NEEDS WORK
-msgid "Removes duplicate lines from sorted files."
-msgstr "Odstráni duplicitné riadky zo zoradených súborov."
+msgid "First sorts the file, then removes duplicate lines."
+msgstr "Najprv zoradí súbor, potom odstráni duplicitné riadky."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 542
+# File: usr/share/ashyterm/data/command_data.py, line: 924
 #: NEEDS WORK
-msgid "Removes duplicate lines after sorting."
-msgstr "Odstráni duplicitné riadky po zoradení."
+msgid "Counts how many times each line appears."
+msgstr "Počítaj, koľkokrát sa každá línia objaví."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 546
+# File: usr/share/ashyterm/data/command_data.py, line: 931
 #: NEEDS WORK
-msgid "Shows count of occurrences for each line."
-msgstr "Zobrazuje počet výskytov pre každý riadok."
+msgid "Counts lines, words, and characters in a file."
+msgstr "Počíta riadky, slová a znaky v súbore."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 550
+# File: usr/share/ashyterm/data/command_data.py, line: 935
 #: NEEDS WORK
-msgid "Shows only duplicate lines."
-msgstr "Zobrazuje iba duplicitné riadky."
+msgid "Counts only the number of lines."
+msgstr "Počíta iba počet riadkov."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 557
+# File: usr/share/ashyterm/data/command_data.py, line: 939
 #: NEEDS WORK
-msgid "Counts lines, words, and characters in files."
-msgstr "Počíta riadky, slová a znaky v súboroch."
+msgid "Counts only the number of words."
+msgstr "Počíta iba počet slov."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 561
+# File: usr/share/ashyterm/data/command_data.py, line: 946
 #: NEEDS WORK
-msgid "Shows lines, words, and characters count."
-msgstr "Zobrazuje počet riadkov, slov a znakov."
+msgid "Cuts and extracts columns of text from a file."
+msgstr "Vystrihuje a extrahuje stĺpce textu z súboru."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 565
+# File: usr/share/ashyterm/data/command_data.py, line: 951
 #: NEEDS WORK
-msgid "Shows only line count."
-msgstr "Zobrazuje iba počet riadkov."
+msgid "Extracts the first column of text, using ':' as the separator."
+msgstr "Extrahuje prvý stĺpec textu, pričom používa ':' ako oddeľovač."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 569
+# File: usr/share/ashyterm/data/command_data.py, line: 959
 #: NEEDS WORK
-msgid "Shows only word count."
-msgstr "Zobrazuje iba počet slov."
+msgid "Merges the lines of multiple files side-by-side."
+msgstr "Zlučuje riadky viacerých súborov vedľa seba."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 573
+# File: usr/share/ashyterm/data/command_data.py, line: 963
 #: NEEDS WORK
-msgid "Shows only character count."
-msgstr "Zobrazuje iba počet znakov."
+msgid "Combines the lines of two files into columns."
+msgstr "Spojí riadky dvoch súborov do stĺpcov."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 580
+# File: usr/share/ashyterm/data/command_data.py, line: 970
 #: NEEDS WORK
-msgid "Extracts sections from lines of files."
-msgstr "Extrahuje sekcie z riadkov súborov."
+msgid "Translates or deletes characters from text."
+msgstr "Prekladá alebo odstraňuje znaky z textu."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 584
+# File: usr/share/ashyterm/data/command_data.py, line: 974
 #: NEEDS WORK
-msgid "Extracts first field using colon delimiter."
-msgstr "Extrahuje prvé pole pomocou dvojbodkového oddeľovača."
+msgid "Converts text from lowercase to uppercase."
+msgstr "Prevodí text z malých písmen na veľké písmená."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 588
+# File: usr/share/ashyterm/data/command_data.py, line: 981
 #: NEEDS WORK
-msgid "Extracts first 10 characters from each line."
-msgstr "Extrahuje prvých 10 znakov z každého riadku."
+msgid "Reverses the order of characters in each line."
+msgstr "Otočí poradie znakov v každom riadku."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 592
+# File: usr/share/ashyterm/data/command_data.py, line: 985
 #: NEEDS WORK
-msgid "Extracts 2nd and 4th fields from CSV data."
-msgstr "Extrahuje 2. a 4. pole z údajov CSV."
+msgid "Reverses a string (result: 'stressed')."
+msgstr "Obráti reťazec (výsledok: 'stressed')."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 599
+# File: usr/share/ashyterm/data/command_data.py, line: 993
 #: NEEDS WORK
-msgid "Merges lines from multiple files."
-msgstr "Zlučuje riadky z viacerých súborov."
+msgid "Displays the content of a file backwards (last line first)."
+msgstr "Zobrazuje obsah súboru pozpätne (posledný riadok prvý)."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 603
+# File: usr/share/ashyterm/data/command_data.py, line: 998
 #: NEEDS WORK
-msgid "Merges corresponding lines from two files."
-msgstr "Zlučuje zodpovedajúce riadky z dvoch súborov."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 607
-#: NEEDS WORK
-msgid "Merges lines using comma as delimiter."
-msgstr "Zlučuje riadky pomocou čiarky ako oddeľovača."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 611
-#: NEEDS WORK
-msgid "Merges all lines into a single line."
-msgstr "Zlúči všetky riadky do jedného riadku."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 618
-#: NEEDS WORK
-msgid "Translates or deletes characters."
-msgstr "Prekladá alebo odstraňuje znaky."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 622
-#: NEEDS WORK
-msgid "Converts lowercase to uppercase."
-msgstr "Prevodí malé písmená na veľké."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 626
-#: NEEDS WORK
-msgid "Removes all newline characters."
-msgstr "Odstráni všetky znaky nového riadku."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 630
-#: NEEDS WORK
-msgid "Squeezes multiple spaces into single space."
-msgstr "Zlučuje viacero medzier do jednej medzery."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 637
-#: NEEDS WORK
-msgid "Reverses lines character by character."
-msgstr "Otáča riadky znak po znaku."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 641
-#: NEEDS WORK
-msgid "Reverses each line character by character."
-msgstr "Otočí každý riadok znakom po znaku."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 645
-#: NEEDS WORK
-msgid "Reverses a string."
-msgstr "Otočí reťazec."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 652
-#: NEEDS WORK
-msgid "Concatenates and prints files in reverse order."
-msgstr "Spojí a vytlačí súbory v opačnom poradí."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 656
-#: NEEDS WORK
-msgid "Prints file lines in reverse order."
-msgstr "Tlačí riadky súboru v opačnom poradí."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 660
-#: NEEDS WORK
-msgid "Concatenates files in reverse order."
-msgstr "Spojí súbory v opačnom poradí."
+msgid "Displays the lines of a file in reverse order."
+msgstr "Zobrazuje riadky súboru v opačnom poradí."
 # 
 # File: usr/share/ashyterm/data/command_data.py, line: 667
 #: NEEDS WORK
@@ -3468,957 +3744,507 @@ msgstr "Tlačí sekvenciu čísel."
 msgid "Prints numbers from 1 to 10."
 msgstr "Tlačí čísla od 1 do 10."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 675
+# File: usr/share/ashyterm/data/command_data.py, line: 1010
 #: NEEDS WORK
-msgid "Prints numbers from 5 to 10."
-msgstr "Tlačí čísla od 5 do 10."
+msgid "Prints numbers from 0 to 10, incrementing by 2."
+msgstr "Tlačí čísla od 0 do 10, zvyšujúc o 2."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 679
+# File: usr/share/ashyterm/data/command_data.py, line: 1017
 #: NEEDS WORK
-msgid "Prints even numbers from 0 to 20."
-msgstr "Tlačí párne čísla od 0 do 20."
+msgid "A calculator for the terminal."
+msgstr "Kalkulačka pre terminál."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 686
+# File: usr/share/ashyterm/data/command_data.py, line: 1021
 #: NEEDS WORK
-msgid "Arbitrary precision calculator language."
-msgstr "Jazyk kalkulačky s ľubovoľnou presnosťou."
+msgid "Performs a basic mathematical calculation."
+msgstr "Vykonáva základný matematický výpočet."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 690
+# File: usr/share/ashyterm/data/command_data.py, line: 1025
 #: NEEDS WORK
-msgid "Performs basic arithmetic calculation."
-msgstr "Vykonáva základné aritmetické výpočty."
+msgid "Performs division with 2 decimal places."
+msgstr "Vykonáva delenie s 2 desatinnými miestami."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 694
-#: NEEDS WORK
-msgid "Division with 2 decimal places precision."
-msgstr "Delenie s presnosťou na 2 desatinné miesta."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 698
-#: NEEDS WORK
-msgid "Starts bc with math library for advanced functions."
-msgstr "Začína bc s matematickou knižnicou pre pokročilé funkcie."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 703
-# File: usr/share/ashyterm/data/command_data.py, line: 718
-# File: usr/share/ashyterm/data/command_data.py, line: 733
-# File: usr/share/ashyterm/data/command_data.py, line: 758
-# File: usr/share/ashyterm/data/command_data.py, line: 771
-# File: usr/share/ashyterm/data/command_data.py, line: 782
-# File: usr/share/ashyterm/data/command_data.py, line: 793
-# File: usr/share/ashyterm/data/command_data.py, line: 812
-#: NEEDS WORK
-msgid "System Information"
-msgstr "Informácie o systéme"
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 705
-#: NEEDS WORK
-msgid "Displays disk space usage."
-msgstr "Zobrazuje využitie miesta na disku."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 709
-# File: usr/share/ashyterm/data/command_data.py, line: 739
-#: NEEDS WORK
-msgid "Shows disk usage in human-readable format."
-msgstr "Zobrazuje využitie disku v ľahko čitateľnom formáte."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 713
-#: NEEDS WORK
-msgid "Shows inode usage instead of block usage."
-msgstr "Zobrazuje využitie inód namiesto využitia blokov."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 720
-#: NEEDS WORK
-msgid "Displays memory usage information."
-msgstr "Zobrazuje informácie o využití pamäte."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 724
-#: NEEDS WORK
-msgid "Shows memory usage in human-readable format."
-msgstr "Zobrazuje využitie pamäte v ľahko čitateľnom formáte."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 728
-#: NEEDS WORK
-msgid "Continuously displays memory usage every 5 seconds."
-msgstr "Nepretržite zobrazuje využitie pamäte každých 5 sekúnd."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 735
-#: NEEDS WORK
-msgid "Displays disk usage of files and directories."
-msgstr "Zobrazuje využitie disku súborov a adresárov."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 743
-#: NEEDS WORK
-msgid "Shows total size of each item in current directory."
-msgstr "Zobrazuje celkovú veľkosť každého prvku v aktuálnom adresári."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 747
-#: NEEDS WORK
-msgid "Shows disk usage one level deep."
-msgstr "Zobrazuje využitie disku na jednej úrovni."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 752
-#: NEEDS WORK
-msgid "Shows all files and directories with human-readable sizes."
-msgstr "Zobrazuje všetky súbory a adresáre s ľahko čitateľnými veľkosťami."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 760
-#: NEEDS WORK
-msgid "Shows how long the system has been running."
-msgstr "Zobrazuje, ako dlho systém beží."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 765
-#: NEEDS WORK
-msgid "Shows current time, uptime, users, and load average."
-msgstr "Zobrazuje aktuálny čas, prevádzkový čas, používateľov a priemerné zaťaženie."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 773
-#: NEEDS WORK
-msgid "Displays the current username."
-msgstr "Zobrazuje aktuálne používateľské meno."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 777
-#: NEEDS WORK
-msgid "Prints the current logged-in username."
-msgstr "Tlačí aktuálne prihlásené používateľské meno."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 784
-#: NEEDS WORK
-msgid "Prints the current working directory."
-msgstr "Tlačí aktuálny pracovný adresár."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 788
-#: NEEDS WORK
-msgid "Shows the full path of current directory."
-msgstr "Zobrazuje úplnú cestu aktuálneho adresára."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 795
-#: NEEDS WORK
-msgid "Displays or sets the system date and time."
-msgstr "Zobrazuje alebo nastavuje systémový dátum a čas."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 799
-#: NEEDS WORK
-msgid "Shows current date and time."
-msgstr "Zobrazuje aktuálny dátum a čas."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 803
-#: NEEDS WORK
-msgid "Shows date and time in custom format."
-msgstr "Zobrazuje dátum a čas v prispôsobenom formáte."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 807
-#: NEEDS WORK
-msgid "Shows UTC time instead of local time."
-msgstr "Zobrazuje čas UTC namiesto miestneho času."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 814
-#: NEEDS WORK
-msgid "Displays a calendar."
-msgstr "Zobrazuje kalendár."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 818
-#: NEEDS WORK
-msgid "Shows calendar for current month."
-msgstr "Zobrazuje kalendár na aktuálny mesiac."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 822
-#: NEEDS WORK
-msgid "Shows calendar for entire year 2024."
-msgstr "Zobrazuje kalendár pre celý rok 2024."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 826
-#: NEEDS WORK
-msgid "Shows calendar for December 2024."
-msgstr "Zobrazuje kalendár na december 2024."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 831
-# File: usr/share/ashyterm/data/command_data.py, line: 848
-#: NEEDS WORK
-msgid "Process Management"
-msgstr "Správa procesov"
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 833
-#: NEEDS WORK
-msgid "Displays information about running processes."
-msgstr "Zobrazuje informácie o bežiacich procesoch."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 838
-#: NEEDS WORK
-msgid "Shows detailed information about all running processes."
-msgstr "Zobrazuje podrobné informácie o všetkých bežiacich procesoch."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 843
-#: NEEDS WORK
-msgid "Shows all processes in a different format."
-msgstr "Zobrazuje všetky procesy v inom formáte."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 850
-#: NEEDS WORK
-msgid "Sends signals to processes."
-msgstr "Posiela signály procesom."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 854
-#: NEEDS WORK
-msgid "Sends SIGTERM signal to process with PID 1234."
-msgstr "Posiela signál SIGTERM procesu s PID 1234."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 858
-#: NEEDS WORK
-msgid "Forcefully kills process with PID 1234 (SIGKILL)."
-msgstr "Nútene ukončí proces s PID 1234 (SIGKILL)."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 863
-#: NEEDS WORK
-msgid "Networking"
-msgstr "Siete"
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 865
-#: NEEDS WORK
-msgid "Tests network connectivity to a host."
-msgstr "Testuje sieťovú konektivitu k hostiteľovi."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 869
-#: NEEDS WORK
-msgid "Tests connectivity to google.com."
-msgstr "Testuje pripojenie na google.com."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 873
-#: NEEDS WORK
-msgid "Sends only 4 ping packets instead of continuous."
-msgstr "Posiela iba 4 pingové pakety namiesto nepretržitých."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 878
-#: NEEDS WORK
-msgid "Archives"
-msgstr "Archívy"
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 880
-#: NEEDS WORK
-msgid "Creates and manipulates archive files."
-msgstr "Vytvára a manipuluje s archívovými súbormi."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 884
-#: NEEDS WORK
-msgid "Creates a tar archive from a directory."
-msgstr "Vytvára archív tar z adresára."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 888
-#: NEEDS WORK
-msgid "Extracts files from a tar archive."
-msgstr "Extrahuje súbory z archívu tar."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 892
-#: NEEDS WORK
-msgid "Creates a compressed tar archive."
-msgstr "Vytvára skomprimovaný tar archív."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 897
-#: NEEDS WORK
-msgid "Bash Conditions"
-msgstr "Bash podmienky"
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 899
-#: NEEDS WORK
-msgid "Conditional expressions for bash scripting."
-msgstr "Podmienené výrazy pre bash skriptovanie."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 903
-#: NEEDS WORK
-msgid "Check if string is empty."
-msgstr "Skontrolujte, či je reťazec prázdny."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 907
-#: NEEDS WORK
-msgid "Check if string is not empty."
-msgstr "Skontrolujte, či reťazec nie je prázdny."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 911
-#: NEEDS WORK
-msgid "Check if strings are equal."
-msgstr "Skontrolujte, či sú reťazce rovnaké."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 915
-#: NEEDS WORK
-msgid "Check if strings are not equal."
-msgstr "Skontrolujte, či sa reťazce nerovnajú."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 919
-#: NEEDS WORK
-msgid "Check if numbers are equal."
-msgstr "Skontrolujte, či sú čísla rovnaké."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 923
-#: NEEDS WORK
-msgid "Check if numbers are not equal."
-msgstr "Skontrolujte, či sa čísla nerovnajú."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 927
-#: NEEDS WORK
-msgid "Check if first number is less than second."
-msgstr "Skontrolujte, či je prvé číslo menšie ako druhé."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 932
-#: NEEDS WORK
-msgid "Check if first number is less than or equal to second."
-msgstr "Skontrolujte, či je prvé číslo menšie alebo rovné druhému."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 937
-#: NEEDS WORK
-msgid "Check if first number is greater than second."
-msgstr "Skontrolujte, či je prvé číslo väčšie ako druhé."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 942
-#: NEEDS WORK
-msgid "Check if first number is greater than or equal to second."
-msgstr "Skontrolujte, či je prvé číslo väčšie alebo rovné druhému."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 947
-#: NEEDS WORK
-msgid "Check if string matches regular expression."
-msgstr "Skontrolujte, či reťazec zodpovedá regulárnemu výrazu."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 952
-#: NEEDS WORK
-msgid "Check numeric conditions with arithmetic evaluation."
-msgstr "Skontrolujte číselné podmienky s aritmetickým vyhodnotením."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 957
-#: NEEDS WORK
-msgid "Check if shell option is enabled."
-msgstr "Skontrolujte, či je možnosť shell povolená."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 961
-#: NEEDS WORK
-msgid "Logical NOT - negate a condition."
-msgstr "Logická negácia - negovať podmienku."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 965
-#: NEEDS WORK
-msgid "Logical AND - both conditions must be true."
-msgstr "Logický AND - obe podmienky musia byť pravdivé."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 969
-#: NEEDS WORK
-msgid "Logical OR - at least one condition must be true."
-msgstr "Logický OR - aspoň jedna podmienka musí byť pravdivá."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 973
-#: NEEDS WORK
-msgid "Check if file exists."
-msgstr "Skontrolujte, či súbor existuje."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 977
-#: NEEDS WORK
-msgid "Check if file is readable."
-msgstr "Skontrolujte, či je súbor čitateľný."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 981
-#: NEEDS WORK
-msgid "Check if path is a symbolic link."
-msgstr "Skontrolujte, či je cesta symbolický odkaz."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 985
-#: NEEDS WORK
-msgid "Check if path is a directory."
-msgstr "Skontrolujte, či je cesta adresárom."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 989
-#: NEEDS WORK
-msgid "Check if file is writable."
-msgstr "Skontrolujte, či je súbor zapisovateľný."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 993
-#: NEEDS WORK
-msgid "Check if file size is greater than 0 bytes."
-msgstr "Skontrolujte, či je veľkosť súboru väčšia ako 0 bajtov."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 997
-#: NEEDS WORK
-msgid "Check if path is a regular file."
-msgstr "Skontrolujte, či je cesta bežný súbor."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 1001
-#: NEEDS WORK
-msgid "Check if file is executable."
-msgstr "Skontrolujte, či je súbor spustiteľný."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 1005
-#: NEEDS WORK
-msgid "Check if first file is newer than second file."
-msgstr "Skontrolujte, či je prvý súbor novší ako druhý súbor."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 1009
-#: NEEDS WORK
-msgid "Check if first file is older than second file."
-msgstr "Skontrolujte, či je prvý súbor starší ako druhý súbor."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 1013
-#: NEEDS WORK
-msgid "Check if both paths refer to the same file."
-msgstr "Skontrolujte, či oba cesty odkazujú na ten istý súbor."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 1018
-#: NEEDS WORK
-msgid "Bash Arrays"
-msgstr "Bash pole"
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 1020
-#: NEEDS WORK
-msgid "Array operations and manipulations in bash."
-msgstr "Operácie a manipulácie s poľami v bash."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 1024
-#: NEEDS WORK
-msgid "Define array with multiple elements."
-msgstr "Definujte pole s viacerými prvkami."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 1028
-#: NEEDS WORK
-msgid "Set specific array element by index."
-msgstr "Nastavte konkrétny prvok poľa podľa indexu."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 1032
-#: NEEDS WORK
-msgid "Set another array element by index."
-msgstr "Nastavte ďalší prvok poľa podľa indexu."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 1036
-#: NEEDS WORK
-msgid "Set third array element by index."
-msgstr "Nastavte tretí prvok poľa podľa indexu."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 1040
-#: NEEDS WORK
-msgid "Access first element of array."
-msgstr "Prístup k prvému prvku poľa."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 1044
-#: NEEDS WORK
-msgid "Access last element of array."
-msgstr "Prístup k poslednému prvku poľa."
-# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1031
 # File: usr/share/ashyterm/data/command_data.py, line: 1048
+# File: usr/share/ashyterm/data/command_data.py, line: 1069
+# File: usr/share/ashyterm/data/command_data.py, line: 1084
+# File: usr/share/ashyterm/data/command_data.py, line: 1099
+# File: usr/share/ashyterm/data/command_data.py, line: 1112
+# File: usr/share/ashyterm/data/command_data.py, line: 1223
+# File: usr/share/ashyterm/data/command_data.py, line: 1252
+# File: usr/share/ashyterm/data/command_data.py, line: 1271
+# File: usr/share/ashyterm/data/command_data.py, line: 1372
+# File: usr/share/ashyterm/data/command_data.py, line: 1469
+# File: usr/share/ashyterm/data/command_data.py, line: 1494
 #: NEEDS WORK
-msgid "Print all elements separated by spaces."
-msgstr "Vytlačte všetky prvky oddelené medzerami."
+msgid "Advanced: Scripting & Shell"
+msgstr "Pokročilé: Skriptovanie a Shell"
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 1052
+# File: usr/share/ashyterm/data/command_data.py, line: 1034
 #: NEEDS WORK
-msgid "Get total number of elements in array."
-msgstr "Získajte celkový počet prvkov v poli."
+msgid "Executes command blocks only if a condition is true."
+msgstr "Vykonáva bloky príkazov iba v prípade, že je podmienka pravdivá."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 1056
+# File: usr/share/ashyterm/data/command_data.py, line: 1039
 #: NEEDS WORK
-msgid "Get length of first element string."
-msgstr "Získajte dĺžku reťazca prvého prvku."
+msgid "Tests if a file exists."
+msgstr "Testuje, či súbor existuje."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 1060
+# File: usr/share/ashyterm/data/command_data.py, line: 174
 #: NEEDS WORK
-msgid "Get length of specific element string."
-msgstr "Získajte dĺžku reťazca konkrétneho prvku."
+msgid "Tests if a numeric variable is equal to 5."
+msgstr "Testuje, či je číselná premenná rovná 5."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 1065
+# File: usr/share/ashyterm/data/command_data.py, line: 1051
 #: NEEDS WORK
-msgid "Extract range of elements (start at index 2, length 3)."
-msgstr "Extrahovať rozsah prvkov (začať na indexe 2, dĺžka 3)."
+msgid "Creates a loop that repeats an action for each item in a list."
+msgstr "Vytvára slučku, ktorá opakuje akciu pre každý prvok v zozname."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 1070
+# File: usr/share/ashyterm/data/command_data.py, line: 1057
 #: NEEDS WORK
-msgid "Get all array indices/keys."
-msgstr "Získajte všetky indexy/kľúče poľa."
+msgid "Repeats the 'echo' command for the numbers 1, 2, and 3."
+msgstr "Opakuje príkaz 'echo' pre čísla 1, 2 a 3."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 1074
+# File: usr/share/ashyterm/data/command_data.py, line: 1063
 #: NEEDS WORK
-msgid "Add new element to end of array."
-msgstr "Pridať nový prvok na koniec poľa."
+msgid "Performs an action for every file that ends with .txt."
+msgstr "Vykonáva akciu pre každý súbor, ktorý končí na .txt."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1072
+#: NEEDS WORK
+msgid "Creates a loop that continues to execute as long as a condition is true."
+msgstr "Vytvára slučku, ktorá sa vykonáva, pokiaľ je podmienka pravdivá."
 # 
 # File: usr/share/ashyterm/data/command_data.py, line: 1078
 #: NEEDS WORK
-msgid "Append element using compound assignment."
-msgstr "Pridať prvok pomocou zloženého priradenia."
+msgid "Executes the code block as long as the COUNT variable is less than 5."
+msgstr "Vykonáva blok kódu, pokiaľ je premenná COUNT menšia ako 5."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 1082
+# File: usr/share/ashyterm/data/command_data.py, line: 1087
 #: NEEDS WORK
-msgid "Remove elements matching regex pattern."
-msgstr "Odstrániť prvky zodpovedajúce regulárnemu výrazu."
+msgid "Creates a loop that continues to execute until a condition becomes true."
+msgstr "Vytvára slučku, ktorá sa neustále vykonáva, kým sa podmienka nestane pravdivou."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 1086
+# File: usr/share/ashyterm/data/command_data.py, line: 1093
 #: NEEDS WORK
-msgid "Remove specific element by index."
-msgstr "Odstrániť konkrétny prvok podľa indexu."
+msgid "Executes the code block until the COUNT variable is equal to 0."
+msgstr "Vykonáva blok kódu, kým nie je premenná COUNT rovná 0."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 1090
+# File: usr/share/ashyterm/data/command_data.py, line: 1101
 #: NEEDS WORK
-msgid "Create duplicate of array."
-msgstr "Vytvoriť kópiu poľa."
+msgid "Reads user input and stores it in a variable."
+msgstr "Číta vstup od používateľa a ukladá ho do premennej."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 1094
+# File: usr/share/ashyterm/data/command_data.py, line: 1106
 #: NEEDS WORK
-msgid "Concatenate two arrays together."
-msgstr "Spojiť dve polia dohromady."
+msgid "Displays a prompt and waits for the user to type something."
+msgstr "Zobrazuje výzvu a čaká, kým používateľ niečo napíše."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 1098
+# File: usr/share/ashyterm/data/command_data.py, line: 1115
 #: NEEDS WORK
-msgid "Read file into array, split by IFS (whitespace)."
-msgstr "Načítanie súboru do poľa, rozdelenie podľa IFS (biele znaky)."
+msgid "Checks if a condition is true or false, used for making decisions in scripts."
+msgstr "Kontroluje, či je podmienka pravdivá alebo nepravdivá, používa sa na rozhodovanie v skriptoch."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 1103
+# File: usr/share/ashyterm/data/command_data.py, line: 1120
 #: NEEDS WORK
-msgid "Bash Brace Expansion"
-msgstr "Bash rozšírenie zložených zátvoriek"
+msgid "Checks if a variable is empty."
+msgstr "Kontroluje, či je premenná prázdna."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 1105
+# File: usr/share/ashyterm/data/command_data.py, line: 1124
 #: NEEDS WORK
-msgid "Generate arbitrary strings using brace expansion."
-msgstr "Generujte ľubovoľné reťazce pomocou rozšírenia zložených zátvoriek."
+msgid "Checks if a variable is not empty."
+msgstr "Kontroluje, či premenná nie je prázdna."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 1109
+# File: usr/share/ashyterm/data/command_data.py, line: 1128
 #: NEEDS WORK
-msgid "Expand to: main.py utils.py config.py"
-msgstr "Rozbaliť na: main.py utils.py config.py"
+msgid "Checks if two pieces of text are exactly the same."
+msgstr "Kontroluje, či sú dva kusy textu presne rovnaké."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 1113
+# File: usr/share/ashyterm/data/command_data.py, line: 1132
 #: NEEDS WORK
-msgid "Basic brace expansion without prefix/suffix."
-msgstr "Základná expanzia zložených zátvoriek bez predpony/prípony."
+msgid "Checks if two pieces of text are different."
+msgstr "Kontroluje, či sa dva kusy textu líšia."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 1117
+# File: usr/share/ashyterm/data/command_data.py, line: 1136
 #: NEEDS WORK
-msgid "Add file extensions to multiple base names."
-msgstr "Pridať prípony súborov k viacerým základným názvom."
+msgid "Checks if two numbers are equal."
+msgstr "Kontroluje, či sú dve čísla rovné."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 1121
+# File: usr/share/ashyterm/data/command_data.py, line: 1140
 #: NEEDS WORK
-msgid "Create numbered file names."
-msgstr "Vytvorte číslované názvy súborov."
+msgid "Checks if two numbers are not equal."
+msgstr "Kontroluje, či si dve čísla nie sú rovné."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 1125
+# File: usr/share/ashyterm/data/command_data.py, line: 1144
 #: NEEDS WORK
-msgid "Generate sequence from 1 to 10."
-msgstr "Vygenerovať sekvenciu od 1 do 10."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 1129
-#: NEEDS WORK
-msgid "Generate zero-padded numbers (01, 02, ..., 12)."
-msgstr "Generujte čísla s nulovým vyplnením (01, 02, ..., 12)."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 1133
-#: NEEDS WORK
-msgid "Generate alphabet sequence from a to z."
-msgstr "Generovať abecednú sekvenciu od a po z."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 1137
-#: NEEDS WORK
-msgid "Generate uppercase letter sequence."
-msgstr "Vygenerujte sekvenciu veľkých písmen."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 1141
-#: NEEDS WORK
-msgid "Generate descending sequence."
-msgstr "Generovať zostupnú sekvenciu."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 1145
-#: NEEDS WORK
-msgid "Generate zero-padded sequence with leading zeros."
-msgstr "Generujte sekvenciu s nulovým vyplnením s vedúcimi nulami."
+msgid "Checks if the first number is less than the second."
+msgstr "Kontroluje, či je prvé číslo menšie ako druhé."
 # 
 # File: usr/share/ashyterm/data/command_data.py, line: 1149
 #: NEEDS WORK
-msgid "Nested braces: generates 1 2 3 7 8 9."
-msgstr "Vnorené zložené zátvorky: generuje 1 2 3 7 8 9."
+msgid "Checks if the first number is less than or equal to the second."
+msgstr "Kontroluje, či je prvé číslo menšie alebo rovné druhému."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 1153
+# File: usr/share/ashyterm/data/command_data.py, line: 1155
 #: NEEDS WORK
-msgid "Multiple brace expansions in one expression."
-msgstr "Viacnásobné rozšírenia zložených zátvoriek v jednom výraze."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 1157
-#: NEEDS WORK
-msgid "Create directory paths with brace expansion."
-msgstr "Vytvorte cesty k adresárom s rozšírením zložených zátvoriek."
+msgid "Checks if the first number is greater than the second."
+msgstr "Kontroluje, či je prvé číslo väčšie ako druhé."
 # 
 # File: usr/share/ashyterm/data/command_data.py, line: 1161
 #: NEEDS WORK
-msgid "Combine different sets of values."
-msgstr "Kombinujte rôzne množiny hodnôt."
+msgid "Checks if the first number is greater than or equal to the second."
+msgstr "Kontroluje, či je prvé číslo väčšie alebo rovné druhému."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 1165
+# File: usr/share/ashyterm/data/command_data.py, line: 1167
 #: NEEDS WORK
-msgid "Create multiple directories at once."
-msgstr "Vytvorte viacero adresárov naraz."
+msgid "Checks if text matches a pattern (e.g., is a valid email)."
+msgstr "Kontroluje, či text zodpovedá vzoru (napr. je platná e-mailová adresa)."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 1170
+# File: usr/share/ashyterm/data/command_data.py, line: 1172
 #: NEEDS WORK
-msgid "Create backup by copying file with .backup extension."
-msgstr "Vytvorte zálohu skopírovaním súboru s príponou .backup."
+msgid "NOT: Reverses the result of a check."
+msgstr "NIE: Otočí výsledok kontroly."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 1175
+# File: usr/share/ashyterm/data/command_data.py, line: 1176
 #: NEEDS WORK
-msgid "Generate platform combinations."
-msgstr "Generovať kombinácie platforiem."
+msgid "AND: Checks if both conditions are true."
+msgstr "A: Kontroluje, či sú obe podmienky pravdivé."
 # 
 # File: usr/share/ashyterm/data/command_data.py, line: 1180
 #: NEEDS WORK
-msgid "File Search"
-msgstr "Hľadanie súborov"
+msgid "OR: Checks if at least one condition is true."
+msgstr "ALEBO: Kontroluje, či je aspoň jedna podmienka pravdivá."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 1182
+# File: usr/share/ashyterm/data/command_data.py, line: 1184
 #: NEEDS WORK
-msgid "Powerful file search and manipulation tool."
-msgstr "Silný nástroj na vyhľadávanie a manipuláciu s súbormi."
+msgid "Checks if a file or directory exists."
+msgstr "Kontroluje, či súbor alebo adresár existuje."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 1187
+# File: usr/share/ashyterm/data/command_data.py, line: 1188
 #: NEEDS WORK
-msgid "Find all .txt files in current directory and subdirectories."
-msgstr "Nájdite všetky .txt súbory v aktuálnom adresári a podadresároch."
+msgid "Checks if you have permission to read a file."
+msgstr "Kontroluje, či máte povolenie na čítanie súboru."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 1193
+# File: usr/share/ashyterm/data/command_data.py, line: 1192
 #: NEEDS WORK
-msgid "Find files starting with 'config' in user's home directory."
-msgstr "Nájdite súbory začínajúce na 'config' v domovskom adresári používateľa."
+msgid "Checks if the path is a directory."
+msgstr "Kontroluje, či je cesta adresárom."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 1198
+# File: usr/share/ashyterm/data/command_data.py, line: 1196
 #: NEEDS WORK
-msgid "Find only regular files with .log extension."
-msgstr "Nájdite iba bežné súbory s príponou .log."
+msgid "Checks if you have permission to write to a file."
+msgstr "Kontroluje, či máte povolenie zapisovať do súboru."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 1202
+# File: usr/share/ashyterm/data/command_data.py, line: 1200
 #: NEEDS WORK
-msgid "Find only directories starting with 'backup'."
-msgstr "Nájdite iba adresáre začínajúce na 'backup'."
+msgid "Checks if a file is not empty."
+msgstr "Kontroluje, či súbor nie je prázdny."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 1206
+# File: usr/share/ashyterm/data/command_data.py, line: 1205
 #: NEEDS WORK
-msgid "Find and delete all .tmp files."
-msgstr "Nájdite a odstráňte všetky súbory .tmp."
+msgid "Checks if the path is a regular file (not a directory)."
+msgstr "Kontroluje, či je cesta bežný súbor (nie adresár)."
 # 
 # File: usr/share/ashyterm/data/command_data.py, line: 1210
 #: NEEDS WORK
-msgid "Find files modified in the last 7 days."
-msgstr "Nájdite súbory upravené v posledných 7 dňoch."
+msgid "Checks if you have permission to run a file."
+msgstr "Kontroluje, či máte povolenie na spustenie súboru."
 # 
 # File: usr/share/ashyterm/data/command_data.py, line: 1214
 #: NEEDS WORK
-msgid "Find files modified more than 30 days ago."
-msgstr "Nájdite súbory upravené pred viac ako 30 dňami."
+msgid "Checks if the first file is newer than the second."
+msgstr "Kontroluje, či je prvý súbor novší ako druhý."
 # 
 # File: usr/share/ashyterm/data/command_data.py, line: 1218
 #: NEEDS WORK
-msgid "Find files larger than 100MB."
-msgstr "Nájdite súbory väčšie ako 100 MB."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 1222
-#: NEEDS WORK
-msgid "Find files smaller than 1KB."
-msgstr "Nájdite súbory menšie ako 1KB."
+msgid "Checks if the first file is older than the second."
+msgstr "Kontroluje, či je prvý súbor starší ako druhý."
 # 
 # File: usr/share/ashyterm/data/command_data.py, line: 1226
 #: NEEDS WORK
-msgid "Find empty files and directories."
-msgstr "Nájdite prázdne súbory a adresáre."
+msgid "Array operations for storing multiple values in a single variable."
+msgstr "Operácie s poľami na ukladanie viacerých hodnôt do jednej premennej."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 1230
+# File: usr/share/ashyterm/data/command_data.py, line: 1231
 #: NEEDS WORK
-msgid "Find files with specific permissions (755)."
-msgstr "Nájdite súbory so špecifickými oprávneniami (755)."
+msgid "Creates a list with several items."
+msgstr "Vytvára zoznam s viacerými položkami."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 1234
+# File: usr/share/ashyterm/data/command_data.py, line: 1235
 #: NEEDS WORK
-msgid "Find files owned by user 'bruno'."
-msgstr "Nájdite súbory, ktoré vlastní používateľ 'bruno'."
+msgid "Accesses the first item in the list."
+msgstr "Pristupuje k prvej položke v zozname."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 1238
+# File: usr/share/ashyterm/data/command_data.py, line: 1239
 #: NEEDS WORK
-msgid "Find files owned by group 'developers'."
-msgstr "Nájdite súbory vlastnené skupinou 'vývojári'."
+msgid "Accesses the last item in the list."
+msgstr "Pristupuje k poslednej položke v zozname."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 1242
+# File: usr/share/ashyterm/data/command_data.py, line: 1243
 #: NEEDS WORK
-msgid "Make all Python files executable."
-msgstr "Urobte všetky súbory Python spustiteľné."
+msgid "Displays all items in the list."
+msgstr "Zobrazuje všetky položky v zozname."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 1246
+# File: usr/share/ashyterm/data/command_data.py, line: 1247
 #: NEEDS WORK
-msgid "Move all JPG files to /tmp/images/ directory."
-msgstr "Presuňte všetky súbory JPG do adresára /tmp/images/."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 1250
-#: NEEDS WORK
-msgid "Find log files containing 'ERROR' text."
-msgstr "Nájdite súbory protokolu obsahujúce text 'ERROR'."
+msgid "Shows how many items are in the list."
+msgstr "Zobrazuje, koľko položiek je v zozname."
 # 
 # File: usr/share/ashyterm/data/command_data.py, line: 1254
 #: NEEDS WORK
-msgid "Find .conf files only 2 levels deep."
-msgstr "Nájdite .conf súbory iba 2 úrovne hlboko."
+msgid "Brace expansion to quickly generate text sequences."
+msgstr "Rozšírenie zložených zátvoriek na rýchle generovanie textových sekvencií."
 # 
 # File: usr/share/ashyterm/data/command_data.py, line: 1258
 #: NEEDS WORK
-msgid "Find files with .bak OR .backup extension."
-msgstr "Nájdite súbory s príponou .bak alebo .backup."
+msgid "Generates: a.txt b.txt c.txt"
+msgstr "Generuje: a.txt b.txt c.txt"
 # 
 # File: usr/share/ashyterm/data/command_data.py, line: 1262
 #: NEEDS WORK
-msgid "Find .txt files that are also larger than 1MB."
-msgstr "Nájdite .txt súbory, ktoré sú väčšie ako 1 MB."
+msgid "Generates a sequence of numbers: 1 2 3 4 5."
+msgstr "Generuje sekvenciu čísel: 1 2 3 4 5."
 # 
 # File: usr/share/ashyterm/data/command_data.py, line: 1266
 #: NEEDS WORK
-msgid "Safely delete files with spaces in names."
-msgstr "Bezpečne odstráňte súbory s medzerami v názvoch."
+msgid "Creates multiple directories at once."
+msgstr "Vytvára viacero adresárov naraz."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 1270
+# File: usr/share/ashyterm/data/command_data.py, line: 1274
 #: NEEDS WORK
-msgid "List contents of all ZIP files found."
-msgstr "Zoznam obsahu všetkých nájdených ZIP súborov."
+msgid "Advanced ways to modify or get information from variables."
+msgstr "Pokročilé spôsoby, ako upravovať alebo získavať informácie z premenných."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 1277
+# File: usr/share/ashyterm/data/command_data.py, line: 1279
 #: NEEDS WORK
-msgid "Stream editor for filtering and transforming text."
-msgstr "Editor prúdu na filtrovanie a transformáciu textu."
+msgid "Gets the length of the text in a variable."
+msgstr "Získa dĺžku textu v premennej."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 1282
+# File: usr/share/ashyterm/data/command_data.py, line: 1283
 #: NEEDS WORK
-msgid "Replace all occurrences of 'old' with 'new' in file.txt."
-msgstr "Nahradiť všetky výskyty 'old' s 'new' v súbore.txt."
+msgid "Uses 'default' if the variable is empty or not set."
+msgstr "Používa 'predvolené' ak je premenná prázdna alebo nie je nastavená."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 1287
+# File: usr/share/ashyterm/data/command_data.py, line: 1288
 #: NEEDS WORK
-msgid "Replace all instances of 'bruno' with 'maria'."
-msgstr "Nahradiť všetky výskyty 'bruno' s 'maria'."
+msgid "Uses 'default' if empty, and also sets the variable to 'default'."
+msgstr "Používa 'predvolené' ak je prázdne, a tiež nastavuje premennú na 'predvolené'."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 1292
+# File: usr/share/ashyterm/data/command_data.py, line: 1294
 #: NEEDS WORK
-msgid "Case-insensitive replacement of 'error' with 'warning'."
-msgstr "Náhrada 'error' za 'warning' bez ohľadu na veľkosť písmen."
+msgid "Shows an error and stops the script if the variable is empty."
+msgstr "Zobrazí chybu a zastaví skript, ak je premenná prázdna."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 1297
+# File: usr/share/ashyterm/data/command_data.py, line: 1300
 #: NEEDS WORK
-msgid "Replace only the first occurrence per line."
-msgstr "Nahradiť iba prvý výskyt na riadku."
+msgid "Uses 'value_if_set' only if the variable has content."
+msgstr "Používa 'value_if_set' iba vtedy, ak má premenná obsah."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 1302
+# File: usr/share/ashyterm/data/command_data.py, line: 1305
 #: NEEDS WORK
-msgid "Replace whole word 'test' with 'exam' using word boundaries."
-msgstr "Nahradiť celé slovo 'test' slovom 'exam' pomocou hraníc slov."
+msgid "Gets text starting from the 4th character."
+msgstr "Získa text začínajúci od 4. znaku."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 1307
+# File: usr/share/ashyterm/data/command_data.py, line: 1310
 #: NEEDS WORK
-msgid "Replace only on lines 2 through 5."
-msgstr "Nahradiť iba na riadkoch 2 až 5."
+msgid "Gets 5 characters of text, starting from the 4th character."
+msgstr "Získa 5 znakov textu, počnúc od 4. znaku."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 1311
+# File: usr/share/ashyterm/data/command_data.py, line: 1316
 #: NEEDS WORK
-msgid "Delete all comment lines (starting with #)."
-msgstr "Odstrániť všetky komentárové riadky (začínajúce na #)."
+msgid "Removes the shortest matching 'prefix' from the beginning."
+msgstr "Odstráni najkratší zhodujúci sa 'prefix' z začiatku."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 1315
+# File: usr/share/ashyterm/data/command_data.py, line: 1322
 #: NEEDS WORK
-msgid "Delete all empty lines."
-msgstr "Odstrániť všetky prázdne riadky."
+msgid "Removes the longest matching 'prefix' from the beginning."
+msgstr "Odstráni najdlhšiu zhodujúcu sa 'predponu' z začiatku."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 1319
+# File: usr/share/ashyterm/data/command_data.py, line: 1328
 #: NEEDS WORK
-msgid "Print only lines 1 through 10."
-msgstr "Tlačte iba riadky 1 až 10."
+msgid "Removes the shortest matching 'suffix' from the end."
+msgstr "Odstráni najkratší zhodujúci sa 'sufix' z konca."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 1323
-# File: usr/share/ashyterm/data/command_data.py, line: 1410
+# File: usr/share/ashyterm/data/command_data.py, line: 1333
 #: NEEDS WORK
-msgid "Print only line number 5."
-msgstr "Vytlačte iba riadok číslo 5."
+msgid "Removes the longest matching 'suffix' from the end."
+msgstr "Odstráni najdlhšiu zhodujúcu sa 'príponu' z konca."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 1327
+# File: usr/share/ashyterm/data/command_data.py, line: 1337
 #: NEEDS WORK
-msgid "Insert text before line 1."
-msgstr "Vložte text pred riadok 1."
+msgid "Replaces the first match of 'old' with 'new'."
+msgstr "Nahrádza prvé zhodovanie 'old' s 'new'."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 1331
+# File: usr/share/ashyterm/data/command_data.py, line: 1341
 #: NEEDS WORK
-msgid "Append text after the last line."
-msgstr "Pridať text po poslednom riadku."
+msgid "Replaces all matches of 'old' with 'new'."
+msgstr "Nahrádza všetky zhodné výrazy 'old' s 'new'."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 1335
-# File: usr/share/ashyterm/data/command_data.py, line: 1448
+# File: usr/share/ashyterm/data/command_data.py, line: 1346
 #: NEEDS WORK
-msgid "Convert all text to uppercase."
-msgstr "Preveďte všetok text na veľké písmená."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 1339
-# File: usr/share/ashyterm/data/command_data.py, line: 1452
-#: NEEDS WORK
-msgid "Convert all text to lowercase."
-msgstr "Preveďte všetok text na malé písmená."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 1343
-#: NEEDS WORK
-msgid "Alternative way to convert to uppercase."
-msgstr "Alternatívny spôsob, ako previesť na veľké písmená."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 1347
-#: NEEDS WORK
-msgid "Capitalize first letter of each word."
-msgstr "Zväčši Prvé Písmeno Každého Slova."
+msgid "Replaces 'old' with 'new' only if it's at the beginning."
+msgstr "Nahrádza 'old' s 'new' iba ak je na začiatku."
 # 
 # File: usr/share/ashyterm/data/command_data.py, line: 1351
 #: NEEDS WORK
-msgid "Wrap each line in square brackets."
-msgstr "[Obal každého riadku do hranatých zátvoriek.]"
+msgid "Replaces 'old' with 'new' only if it's at the end."
+msgstr "Nahrádza 'old' s 'new' iba ak je na konci."
 # 
 # File: usr/share/ashyterm/data/command_data.py, line: 1355
 #: NEEDS WORK
-msgid "Add 4 spaces indentation to each line."
-msgstr "Pridajte 4 medzery na začiatok každého riadku."
+msgid "Changes the first letter to uppercase."
+msgstr "Zmení prvé písmeno na veľké."
 # 
 # File: usr/share/ashyterm/data/command_data.py, line: 1359
 #: NEEDS WORK
-msgid "Append ' - processed' to end of each line."
-msgstr "Pridajte ' - spracované' na koniec každého riadku."
+msgid "Changes all letters to uppercase."
+msgstr "Zmení všetky písmená na veľké."
 # 
 # File: usr/share/ashyterm/data/command_data.py, line: 1363
 #: NEEDS WORK
-msgid "Edit file in-place (modify original file)."
-msgstr "Upraviť súbor na mieste (modifikovať pôvodný súbor)."
+msgid "Changes the first letter to lowercase."
+msgstr "Zmení prvé písmeno na malé."
 # 
 # File: usr/share/ashyterm/data/command_data.py, line: 1367
 #: NEEDS WORK
-msgid "Edit in-place and create backup file."
-msgstr "Upraviť na mieste a vytvoriť záložný súbor."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 1371
-#: NEEDS WORK
-msgid "Duplicate content with backreference."
-msgstr "Duplicitný obsah s spätným odkazom."
+msgid "Changes all letters to lowercase."
+msgstr "Zmení všetky písmená na malé písmená."
 # 
 # File: usr/share/ashyterm/data/command_data.py, line: 1375
 #: NEEDS WORK
-msgid "Multiple commands on lines matching pattern."
-msgstr "Viacero príkazov na riadkoch zodpovedajúcich vzoru."
+msgid ""
+"A 'mini-language' for finding text patterns. These are building blocks for tools like grep, sed, "
+"and awk."
+msgstr ""
+"„mini-jazyk“ na vyhľadávanie textových vzorov. Tieto sú stavebné bloky pre nástroje ako grep, sed a "
+"awk."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 1379
+# File: usr/share/ashyterm/data/command_data.py, line: 1381
 #: NEEDS WORK
-msgid "Execute multiple sed expressions."
-msgstr "Spustiť viacero sed výrazov."
+msgid "Dot: Matches any single character. 'h.t' finds 'hot', 'hat', and 'h t'."
+msgstr "Bodka: Zodpovedá akémukoľvek jednému znaku. 'h.t' nájde 'hot', 'hat' a 'h t'."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 1383
+# File: usr/share/ashyterm/data/command_data.py, line: 1387
 #: NEEDS WORK
-msgid "Multiple address ranges with different operations."
-msgstr "Viacero rozsahov adries s rôznymi operáciami."
+msgid "Asterisk: Matches zero or more repetitions of the preceding item. 'a*' finds '', 'a', 'aa'."
+msgstr ""
+"Hvezdička: Zodpovedá nule alebo viacerým opakovaniam predchádzajúcej položky. 'a*' nájde '', 'a', "
+"'aa'."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 1388
+# File: usr/share/ashyterm/data/command_data.py, line: 1393
 #: NEEDS WORK
-msgid "Awk Commands"
-msgstr "Awk príkazy"
+msgid "Plus: Matches one or more repetitions of the preceding item. 'a+' finds 'a', 'aa', but not ''."
+msgstr ""
+"Plus: Zodpovedá jednej alebo viacerým opakovaniam predchádzajúcej položky. 'a+' nájde 'a', 'aa', "
+"ale nie ''."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 1390
+# File: usr/share/ashyterm/data/command_data.py, line: 1399
 #: NEEDS WORK
-msgid "Powerful text processing and pattern scanning tool."
-msgstr "Silný nástroj na spracovanie textu a skenovanie vzorov."
+msgid ""
+"Question Mark: Matches the preceding item zero or one time (makes it optional). 'colou?r' matches "
+"'color' and 'colour'."
+msgstr ""
+"Otáznik: Zodpovedá predchádzajúcej položke nula alebo raz (robí ju voliteľnou). 'colou?r' zodpovedá "
+"'color' a 'colour'."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 1394
+# File: usr/share/ashyterm/data/command_data.py, line: 1405
 #: NEEDS WORK
-msgid "Print the first field (column) of each line."
-msgstr "Vytlačte prvé pole (stĺpec) každého riadku."
+msgid "Caret: Matches the beginning of a line. '^Hello' only finds lines that start with 'Hello'."
+msgstr "Znak: Zodpovedá začiatku riadku. '^Hello' nájde iba riadky, ktoré začínajú 'Hello'."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 1398
+# File: usr/share/ashyterm/data/command_data.py, line: 1411
 #: NEEDS WORK
-msgid "Print the 1st and 3rd fields of each line."
-msgstr "Vytlačte 1. a 3. pole každého riadku."
+msgid "Dollar Sign: Matches the end of a line. 'end$' only finds lines that end with 'end'."
+msgstr "Dolarový znak: Zodpovedá koncu riadku. 'end$' nájde iba riadky, ktoré končia 'end'."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 1402
+# File: usr/share/ashyterm/data/command_data.py, line: 1417
 #: NEEDS WORK
-msgid "Print the last field of each line."
-msgstr "Vytlačte posledné pole každého riadku."
+msgid "Brackets: Matches any of the characters inside. '[abc]' finds 'a', 'b', or 'c'."
+msgstr "Zátvorky: Zodpovedá akémukoľvek znaku vo vnútri. '[abc]' nájde 'a', 'b' alebo 'c'."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 1406
+# File: usr/share/ashyterm/data/command_data.py, line: 1423
 #: NEEDS WORK
-msgid "Print line number followed by the entire line."
-msgstr "Vytlačte číslo riadku nasledované celým riadkom."
+msgid "Negated Brackets: Matches any character NOT inside. '[^abc]' finds 'd', 'e', 'f', etc."
+msgstr ""
+"Negované zátvorky: Zodpovedá akémukoľvek znaku, KTORÝ NIE JE vo vnútri. '[^abc]' nájde 'd', 'e', "
+"'f' atď."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 1414
+# File: usr/share/ashyterm/data/command_data.py, line: 1429
 #: NEEDS WORK
-msgid "Print lines 10 through 20."
-msgstr "Vytlačte riadky 10 až 20."
+msgid "Parentheses: Groups expressions. '(ab)+' finds 'ab', 'abab', 'ababab'."
+msgstr "Zátvorky: Skupiny výrazov. '(ab)+' nájde 'ab', 'abab', 'ababab'."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 1418
+# File: usr/share/ashyterm/data/command_data.py, line: 1435
 #: NEEDS WORK
-msgid "Print lines containing 'bruno'."
-msgstr "Tlačte riadky obsahujúce 'bruno'."
+msgid "Pipe: Acts as an 'OR'. 'cat|dog' finds 'cat' or 'dog'."
+msgstr "Rúra: Pôsobí ako 'ALEBO'. 'cat|dog' nájde 'cat' alebo 'dog'."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 1422
+# File: usr/share/ashyterm/data/command_data.py, line: 1441
 #: NEEDS WORK
-msgid "Print name and sales where sales > 100."
-msgstr "Vytlačte názov a predaj, kde je predaj > 100."
+msgid "Curly Braces: Matches a specific number of repetitions. e.g., 'a{2,4}' finds 'aa', 'aaa', 'aaaa'."
+msgstr "Zložené zátvorky: Zodpovedá konkrétnemu počtu opakovaní. napr. 'a{2,4}' nájde 'aa', 'aaa', 'aaaa'."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 1426
+# File: usr/share/ashyterm/data/command_data.py, line: 1446
 #: NEEDS WORK
-msgid "Calculate sum of values in column 2."
-msgstr "Vypočítajte súčet hodnôt v stĺpci 2."
+msgid "Digit: Matches any single number from 0 to 9."
+msgstr "Číslica: Zodpovedá akejkoľvek jednotlivé číslo od 0 do 9."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 1430
+# File: usr/share/ashyterm/data/command_data.py, line: 1451
 #: NEEDS WORK
-msgid "Find the maximum value in column 2."
-msgstr "Nájdite maximálnu hodnotu v stĺpci 2."
+msgid "Word Character: Matches any letter, number, or underscore."
+msgstr "Slovo znak: Zodpovedá akémukoľvek písmenu, číslu alebo podčiarkovníku."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 1434
+# File: usr/share/ashyterm/data/command_data.py, line: 1457
 #: NEEDS WORK
-msgid "Use colon as field separator for /etc/passwd."
-msgstr "Použite dvojbodku ako oddelovač polí pre /etc/passwd."
+msgid "Whitespace: Matches any space, tab, or newline character."
+msgstr "Biele miesto: Zodpovedá akémukoľvek medzery, tabulátoru alebo znaku nového riadku."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 1438
+# File: usr/share/ashyterm/data/command_data.py, line: 1463
 #: NEEDS WORK
-msgid "Set output field separator to ' - '."
-msgstr "Nastavte oddelovač výstupného poľa na ' - '."
+msgid "Backslash: Escapes a special character, treating it literally. '\\.' matches a literal dot."
+msgstr ""
+"Spätné lomítko: Únik špeciálneho znaku, ktorý sa spracováva doslovne. '\\.' zodpovedá doslovnej "
+"bodke."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 1443
+# File: usr/share/ashyterm/data/command_data.py, line: 1472
 #: NEEDS WORK
-msgid "Print lines longer than 80 characters with line numbers."
-msgstr "Tlačte riadky dlhšie ako 80 znakov s číslami riadkov."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 1456
-#: NEEDS WORK
-msgid "Add header and format output as table."
-msgstr "Pridať hlavičku a naformátovať výstup ako tabuľku."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 1461
-#: NEEDS WORK
-msgid "Print lines with more than 3 fields and their field count."
-msgstr "Vytlačte riadky s viac ako 3 poliami a ich počet polí."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 1470
-#: NEEDS WORK
-msgid "Split first field on '-' and print both parts."
-msgstr "Rozdeľte prvé pole na '-' a vytlačte obe časti."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 1474
-#: NEEDS WORK
-msgid "Count lines containing 'ERROR'."
-msgstr "Počet riadkov obsahujúcich 'ERROR'."
+msgid "A command-line text editor, great for replacing words in files."
+msgstr "Príkazový riadkový textový editor, skvelý na nahrádzanie slov v súboroch."
 # 
 # File: usr/share/ashyterm/data/command_data.py, line: 1478
 #: NEEDS WORK
-msgid "Count occurrences of each unique value in column 1."
-msgstr "Spočítajte výskyty každého jedinečného hodnoty v stĺpci 1."
+msgid "Replaces all occurrences of 'old' with 'new' in the file."
+msgstr "Nahrádza všetky výskyty 'old' s 'new' v súbore."
 # 
 # File: usr/share/ashyterm/data/command_data.py, line: 1483
 #: NEEDS WORK
-msgid "Use BEGIN and END blocks for initialization and cleanup."
-msgstr "Použite bloky BEGIN a END na inicializáciu a údržbu."
+msgid "Deletes all lines that start with # (comments)."
+msgstr "Odstráni všetky riadky, ktoré začínajú znakom # (komentáre)."
 # 
 # File: usr/share/ashyterm/data/command_data.py, line: 1488
 #: NEEDS WORK
-msgid "Format output with specific widths and precision."
-msgstr "Formátovať výstup s konkrétnymi šírkami a presnosťou."
+msgid "Saves the modification directly in the original file."
+msgstr "Uloží zmenu priamo do pôvodného súboru."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 1492
+# File: usr/share/ashyterm/data/command_data.py, line: 1497
 #: NEEDS WORK
-msgid "Print lines where column 2 starts with '2024'."
-msgstr "Vytlačte riadky, kde stĺpec 2 začína na '2024'."
+msgid "An advanced tool for processing text, especially column-based data."
+msgstr "Pokročilý nástroj na spracovanie textu, najmä údajov založených na stĺpcoch."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 1496
+# File: usr/share/ashyterm/data/command_data.py, line: 1502
 #: NEEDS WORK
-msgid "Remove leading whitespace from each line."
-msgstr "Odstrániť úvodné prázdne znaky z každého riadku."
+msgid "Displays only the first column (word) of each line."
+msgstr "Zobrazuje iba prvý stĺpec (slovo) z každého riadku."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1506
+#: NEEDS WORK
+msgid "Displays only the last column of each line."
+msgstr "Zobrazuje iba posledný stĺpec každého riadku."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1511
+#: NEEDS WORK
+msgid "Displays the value of column 1 only if the value of column 3 is greater than 100."
+msgstr "Zobrazuje hodnotu stĺpca 1 iba v prípade, že hodnota stĺpca 3 je väčšia ako 100."
 # 
 # File: usr/share/ashyterm/app.py, line: 333
 #: NEEDS WORK

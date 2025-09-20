@@ -1164,20 +1164,35 @@ msgstr "Bæta við sérsniðinni skipun"
 msgid "Edit Custom Command"
 msgstr "Breyta sérsniðið skipun"
 # 
-# File: usr/share/ashyterm/ui/dialogs/command_guide_dialog.py, line: 35
-#: NEEDS WORK
-msgid "Category"
-msgstr "Flokkur"
-# 
 # File: usr/share/ashyterm/ui/dialogs/command_guide_dialog.py, line: 34
 #: NEEDS WORK
 msgid "Command"
 msgstr "Skipta"
 # 
+# File: usr/share/ashyterm/ui/dialogs/command_guide_dialog.py, line: 35
+#: NEEDS WORK
+msgid "Category"
+msgstr "Flokkur"
+# 
+# File: usr/share/ashyterm/ui/dialogs/command_guide_dialog.py, line: 104
+#: NEEDS WORK
+msgid "Select an existing category or type a new one"
+msgstr "Veldu núverandi flokk eða sláðu inn nýjan."
+# 
 # File: usr/share/ashyterm/ui/dialogs/command_guide_dialog.py, line: 59
 #: NEEDS WORK
 msgid "Description"
 msgstr "Lýsing"
+# 
+# File: usr/share/ashyterm/ui/dialogs/command_guide_dialog.py, line: 171
+#: NEEDS WORK
+msgid "Please fill in all required fields."
+msgstr "Vinsamlegast fylltu út öll nauðsynleg reiti."
+# 
+# File: usr/share/ashyterm/ui/dialogs/command_guide_dialog.py, line: 236
+#: NEEDS WORK
+msgid "Delete this custom command"
+msgstr "Eyða þessari sérsniðnu skipun"
 # 
 # File: usr/share/ashyterm/ui/dialogs/command_guide_dialog.py, line: 143
 #: NEEDS WORK
@@ -1194,15 +1209,27 @@ msgstr "Leita að skipunum..."
 msgid "Show Only Custom Commands"
 msgstr "Sýna aðeins sérsniðnar skipanir"
 # 
-# File: usr/share/ashyterm/ui/dialogs/command_guide_dialog.py, line: 216
+# File: usr/share/ashyterm/ui/dialogs/command_guide_dialog.py, line: 495
 #: NEEDS WORK
-msgid "Add New"
-msgstr "Bæta við nýju"
+msgid "Add New Command"
+msgstr "Bæta við nýrri skipun"
 # 
-# File: usr/share/ashyterm/window.py, line: 343
+# File: usr/share/ashyterm/ui/dialogs/command_guide_dialog.py, line: 714
 #: NEEDS WORK
-msgid "Remove Selected"
-msgstr "Fjarlægðu valið"
+msgid "Delete Custom Command?"
+msgstr "Eyða sérsniðinni skipun?"
+# 
+# File: usr/share/ashyterm/ui/dialogs/command_guide_dialog.py, line: 716
+#: NEEDS WORK
+#, python-brace-format
+msgid ""
+"Are you sure you want to permanently delete the command:\n"
+"\n"
+"<b>{name}</b>"
+msgstr ""
+"Ertu viss um að þú viljir varanlega eyða skipuninni:\n"
+"\n"
+"<b>{name}</b>"
 # 
 # #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
 # 
@@ -2667,6 +2694,11 @@ msgstr "Breyta valið"
 msgid "Save Current Layout"
 msgstr "Vista núverandi uppsetningu"
 # 
+# File: usr/share/ashyterm/window.py, line: 343
+#: NEEDS WORK
+msgid "Remove Selected"
+msgstr "Fjarlægðu valið"
+# 
 # File: usr/share/ashyterm/window.py, line: 606
 #: NEEDS WORK
 msgid "Search sessions..."
@@ -2746,717 +2778,959 @@ msgstr "Skipta Vinstri/Hægri"
 msgid "Split Top/Bottom"
 msgstr "Skipta Ofan/Neðan"
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 7
-# File: usr/share/ashyterm/data/command_data.py, line: 38
-#: NEEDS WORK
-msgid "File Navigation and Listing"
-msgstr "Skráavísun og Listun"
-# 
 # File: usr/share/ashyterm/data/command_data.py, line: 9
+# File: usr/share/ashyterm/data/command_data.py, line: 30
+# File: usr/share/ashyterm/data/command_data.py, line: 53
+# File: usr/share/ashyterm/data/command_data.py, line: 64
+# File: usr/share/ashyterm/data/command_data.py, line: 81
+# File: usr/share/ashyterm/data/command_data.py, line: 98
+# File: usr/share/ashyterm/data/command_data.py, line: 113
 #: NEEDS WORK
-msgid "Lists the contents of a directory."
-msgstr "Sýnir innihald skráarsafns."
+msgid "Essentials: File & Directory Navigation"
+msgstr "Grunnþættir: Skrá- og Mappa Vöktun"
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 14
+# File: usr/share/ashyterm/data/command_data.py, line: 12
 #: NEEDS WORK
-msgid "Uses a long listing format, showing permissions, owner, size and date."
-msgstr "Notar langt skráarformati, sýnir heimildir, eiganda, stærð og dagsetningu."
+msgid "Lists the contents of a directory, like opening a folder to see what's inside."
+msgstr "Sýnir innihald skráarsafns, eins og að opna möppu til að sjá hvað er inní."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 20
+# File: usr/share/ashyterm/data/command_data.py, line: 18
 #: NEEDS WORK
-msgid "Shows all files, including hidden ones (that start with '.')."
-msgstr "Sýnir alla skrár, þar á meðal falin, sem byrja á '.'."
+msgid "Shows files and directories in the current location."
+msgstr "Sýnir skrár og möppur á núverandi staðsetningu."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 26
+# File: usr/share/ashyterm/data/command_data.py, line: 24
 #: NEEDS WORK
-msgid "Long format with human-readable file sizes (KB, MB, GB)."
-msgstr "Langt snið með mannlesanlegum skráarstærðum (KB, MB, GB)."
+msgid "Shows a detailed list, including hidden files and human-readable sizes."
+msgstr "Sýnir ítarlega lista, þar á meðal falin skrár og mannlegum lesanlegum stærðum."
 # 
 # File: usr/share/ashyterm/data/command_data.py, line: 32
 #: NEEDS WORK
-msgid "Sorts files by modification date, most recent first."
-msgstr "Skráir skrár eftir breytingardegi, nýjustu fyrst."
+msgid "Changes the current directory."
+msgstr "Breyti núverandi skráarslóð."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 36
+#: NEEDS WORK
+msgid "Navigates to a specific directory."
+msgstr "Fara í ákveðna skráarsafn."
 # 
 # File: usr/share/ashyterm/data/command_data.py, line: 40
 #: NEEDS WORK
-msgid "Changes the current working directory."
-msgstr "Breyti núverandi vinnuskrá."
+msgid "Goes up one level to the parent directory."
+msgstr "Færir sig upp eitt stig í foreldra skrá."
 # 
 # File: usr/share/ashyterm/data/command_data.py, line: 44
 #: NEEDS WORK
-msgid "Navigates to a specific absolute path."
-msgstr "Fara í ákveðna algilda slóð."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 48
-#: NEEDS WORK
-msgid "Goes up one level, to the parent directory."
-msgstr "Fara upp eitt stig, í foreldra skrá."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 53
-#: NEEDS WORK
-msgid "Goes directly to your 'home' directory. Same as 'cd' with no arguments."
-msgstr "Fara beint í 'heim' skráninguna þína. Sama og 'cd' án röksemda."
+msgid "Goes directly to your user's home directory."
+msgstr "Fara beint í heimaskrá notanda þíns."
 # 
 # File: usr/share/ashyterm/data/command_data.py, line: 58
 #: NEEDS WORK
 msgid "Returns to the last directory you were in."
 msgstr "Færir aftur í síðasta skráarsvæði sem þú varst í."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 63
-# File: usr/share/ashyterm/data/command_data.py, line: 84
-# File: usr/share/ashyterm/data/command_data.py, line: 101
-# File: usr/share/ashyterm/data/command_data.py, line: 428
-# File: usr/share/ashyterm/data/command_data.py, line: 445
+# File: usr/share/ashyterm/data/command_data.py, line: 55
 #: NEEDS WORK
-msgid "File Manipulation"
-msgstr "Skjalavinnsla"
+msgid "Shows which directory you are currently in."
+msgstr "Sýnir hvaða skráarsafn þú ert núna í."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 65
+# File: usr/share/ashyterm/data/command_data.py, line: 59
 #: NEEDS WORK
-msgid "Copies files or directories."
-msgstr "Afritar skrár eða möppur."
+msgid "Displays the full path of your current location."
+msgstr "Sýnir fulla slóð á núverandi staðsetningu þína."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 69
+# File: usr/share/ashyterm/data/command_data.py, line: 66
 #: NEEDS WORK
-msgid "Copies a single file."
-msgstr "Afritar eina skrá."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 74
-#: NEEDS WORK
-msgid "Copies a directory and all its contents recursively."
-msgstr "Kopírar skráarsafn og allt efni þess endurtekið."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 79
-#: NEEDS WORK
-msgid "Verbose mode, shows what is being copied."
-msgstr "Útfærslulíkan, sýnir hvað er verið að afrita."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 86
-#: NEEDS WORK
-msgid "Moves or renames files and directories."
-msgstr "Færir eða endurnefnir skrár og möppur."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 91
-#: NEEDS WORK
-msgid "Renames a file or directory in the current location."
-msgstr "Endurnefnir skrá eða möppu á núverandi stað."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 96
-#: NEEDS WORK
-msgid "Moves a file to a new location."
-msgstr "Færir skrá á nýja staðsetningu."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 104
-#: NEEDS WORK
-msgid "Removes (deletes) files or directories. CAUTION: this action is permanent."
-msgstr "Fjarlægir (eyðir) skrár eða skápa. VARÚÐ: þessi aðgerð er varanleg."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 107
-#: NEEDS WORK
-msgid "Removes a single file."
-msgstr "Fjarlægir eina skrá."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 110
-#: NEEDS WORK
-msgid "Removes a directory and all its contents."
-msgstr "Fjarlægir skráarsafn og allt efni þess."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 115
-#: NEEDS WORK
-msgid "Interactive mode, asks for confirmation before removing."
-msgstr "Samskipta hamur, biður um staðfestingu áður en fjarlægt er."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 121
-#: NEEDS WORK
-msgid "Forces removal without asking for confirmation (use with caution)."
-msgstr "Þvingar fjarlægingu án þess að spyrja um staðfestingu (notið með varúð)."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 127
-#: NEEDS WORK
-msgid "Search and Filtering"
-msgstr "Leit og síun"
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 130
-#: NEEDS WORK
-msgid "Searches for a text pattern within files or other command outputs."
-msgstr "Leitar að textamynstri innan skráa eða annarra úttaka skipana."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 136
-#: NEEDS WORK
-msgid "Finds and displays all lines containing 'word' in the file."
-msgstr "Finnur og sýnir allar línur sem innihalda 'word' í skrá."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 142
-#: NEEDS WORK
-msgid "Searches ignoring case differences between uppercase and lowercase."
-msgstr "Leitar án þess að taka tillit til mismunar á stórum og smáum stöfum."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 148
-#: NEEDS WORK
-msgid "Searches recursively for 'word' in all files in the current directory."
-msgstr "Leitar í gegnum allar skrár í núverandi skráarsafni fyrir 'word'."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 154
-#: NEEDS WORK
-msgid "Filters the output of 'ls -l' to show only lines containing 'txt'."
-msgstr "Filtrar útkomuna af 'ls -l' til að sýna aðeins línur sem innihalda 'txt'."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 160
-# File: usr/share/ashyterm/data/command_data.py, line: 179
-# File: usr/share/ashyterm/data/command_data.py, line: 196
-# File: usr/share/ashyterm/data/command_data.py, line: 211
-#: NEEDS WORK
-msgid "Flow Control (Shell Script)"
-msgstr "Flæðisstjórn (Shell Script)"
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 162
-#: NEEDS WORK
-msgid "Executes command blocks conditionally."
-msgstr "Keyrir skipulagsblokkana skilyrðislaust."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 166
-#: NEEDS WORK
-msgid "Tests if a file exists and is a regular file."
-msgstr "Prófar hvort skrá sé til og sé venjuleg skrá."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 170
-#: NEEDS WORK
-msgid "Tests if a path exists and is a directory."
-msgstr "Prófar hvort slóð sé til og sé skráarsafn."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 174
-#: NEEDS WORK
-msgid "Tests if a numeric variable is equal to 5."
-msgstr "Prófar hvort töluleg breyta sé jöfn 5."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 181
-#: NEEDS WORK
-msgid "Creates a loop that iterates over a list of items."
-msgstr "Býr til lykkju sem fer í gegnum lista af hlutum."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 185
-#: NEEDS WORK
-msgid "Iterates over an explicit list of numbers."
-msgstr "Fara yfir skýra lista af tölum."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 190
-#: NEEDS WORK
-msgid "Iterates over all files ending with .txt in the directory."
-msgstr "Fara yfir allar skrár sem enda á .txt í skráarsafninu."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 199
-#: NEEDS WORK
-msgid "Creates a loop that continues while a condition is true."
-msgstr "Býr til lykkju sem heldur áfram meðan skilyrði er satt."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 205
-#: NEEDS WORK
-msgid "Executes the code block while the COUNT variable is less than 5."
-msgstr "Keyrir kóðablokkinn meðan COUNT breytan er minni en 5."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 214
-#: NEEDS WORK
-msgid "Creates a loop that continues while a condition is false."
-msgstr "Býr til lykkju sem heldur áfram meðan skilyrði er ósatt."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 220
-#: NEEDS WORK
-msgid "Executes the code block until the COUNT variable equals 0."
-msgstr "Keyrir kóðablokkinn þar til COUNT breytan er jöfn 0."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 226
-#: NEEDS WORK
-msgid "User Input (Shell Script)"
-msgstr "Notandi Inntak (Skel Skrá)"
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 229
-#: NEEDS WORK
-msgid "Reads a line from standard input and stores it in a variable."
-msgstr "Lesa línu úr staðlaðri inntak og geymir hana í breytu."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 235
-#: NEEDS WORK
-msgid "Waits for the user to type something and press Enter, saving it in the NAME variable."
-msgstr "Bíðir eftir notandanum að slá inn eitthvað og ýta á Enter, og vistast í NAME breytunni."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 241
-#: NEEDS WORK
-msgid "Shows a message (prompt) to the user before waiting for input."
-msgstr "Sýnir skilaboð (fyrirspurn) til notandans áður en beðið er um inntak."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 247
-#: NEEDS WORK
-msgid "Parameter Expansion"
-msgstr "Parameter Expansion"
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 250
-#: NEEDS WORK
-msgid "Advanced shell mechanisms for manipulating variable values and strings."
-msgstr "Fyrirkomulag háþróaðra skelja til að meðhöndla breytugildi og strengi."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 255
-#: NEEDS WORK
-msgid "Basic variable substitution using braces."
-msgstr "Grunnleggende variabelsubstitusjon ved hjelp av krøllparenteser."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 259
-#: NEEDS WORK
-msgid "String substitution - replaces first 'b' with 'B'."
-msgstr "Strengjaskipti - skiptir út fyrstu 'b' fyrir 'B'."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 263
-#: NEEDS WORK
-msgid "Substring extraction - first 2 characters."
-msgstr "Undirstrengja - fyrstu 2 stafir."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 267
-#: NEEDS WORK
-msgid "Substring from start - first 2 characters."
-msgstr "Undirstrengur frá byrjun - fyrstu 2 stafir."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 271
-#: NEEDS WORK
-msgid "Substring excluding last character."
-msgstr "Undirstrengur án síðasta táknsins."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 275
-#: NEEDS WORK
-msgid "Substring from right - last character."
-msgstr "Undirstrengur frá hægri - síðasti karakter."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 279
-#: NEEDS WORK
-msgid "Substring from right - second to last character."
-msgstr "Undirstrengur frá hægri - annar síðasti karakter."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 283
-#: NEEDS WORK
-msgid "Substring using variable length parameter."
-msgstr "Undirstrengur með breytilegu lengdarparametri."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 287
-#: NEEDS WORK
-msgid "Remove file extension (.py)."
-msgstr "Fjarlægðu skráarendingu (.py)."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 291
-#: NEEDS WORK
-msgid "Replace file extension (.py to .bak)."
-msgstr "Skipta skráarendingu (.py í .bak)."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 295
-#: NEEDS WORK
-msgid "Remove everything after last slash (get directory)."
-msgstr "Fjarlægðu allt eftir síðasta skástriki (fáðu skráarslóð)."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 299
-#: NEEDS WORK
-msgid "Extract file extension (longest match)."
-msgstr "Dregðu út skráarendingu (lengsta samsvörun)."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 303
-#: NEEDS WORK
-msgid "Extract filename from path (longest match)."
-msgstr "Dregðu út skráarnafn úr slóð (lengsta samsvörun)."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 307
-#: NEEDS WORK
-msgid "Remove shortest prefix match up to first slash."
-msgstr "Fjarlægðu stystu forskeytisjafnina upp að fyrstu skástrikinu."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 312
-#: NEEDS WORK
-msgid "Replace first occurrence of 'project' with 'scripts'."
-msgstr "Skiptu fyrstu tilvik 'project' með 'scripts'."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 317
-#: NEEDS WORK
-msgid "Extract substring starting at position 6, length 5."
-msgstr "Dregið út undirstreng frá stöðu 6, lengd 5."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 321
-#: NEEDS WORK
-msgid "Extract last 5 characters using negative offset."
-msgstr "Dregið út síðustu 5 stafi með neikvæðri forskrift."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 325
-#: NEEDS WORK
-msgid "Extract basename (filename) from path."
-msgstr "Dregið út grunnheiti (skráarheiti) úr slóð."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 329
-#: NEEDS WORK
-msgid "Extract directory path by removing basename."
-msgstr "Dregið út skráarslóð með því að fjarlægja skráarnafn."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 333
-#: NEEDS WORK
-msgid "List all variable names starting with 'user_'."
-msgstr "Skráðu öll breytunöfn sem byrja á 'user_'."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 337
-#: NEEDS WORK
-msgid "Indirect variable expansion using pointer."
-msgstr "Óbeint breytuvíddun með vísara."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 341
-#: NEEDS WORK
-msgid "Remove shortest suffix match."
-msgstr "Fjarlægðu stystu viðskeytissamræmi."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 345
-#: NEEDS WORK
-msgid "Remove shortest prefix match."
-msgstr "Fjarlægðu stystu forskeytisjafn."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 349
-#: NEEDS WORK
-msgid "Remove longest suffix match."
-msgstr "Fjarlægðu lengsta viðskeyti."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 353
-#: NEEDS WORK
-msgid "Remove longest prefix match."
-msgstr "Fjarlægðu lengsta forskeyti samsvörun."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 357
-#: NEEDS WORK
-msgid "Replace first occurrence of 'old' with 'new'."
-msgstr "Skiptu fyrstu tilvik 'gammal' með 'nýr'."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 361
-# File: usr/share/ashyterm/data/command_data.py, line: 1466
-#: NEEDS WORK
-msgid "Replace all occurrences of 'old' with 'new'."
-msgstr "Skiptu öllum tilvikum 'gammal' með 'nýr'."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 365
-#: NEEDS WORK
-msgid "Replace suffix 'old' with 'new'."
-msgstr "Skipta viðskeyti 'old' með 'new'."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 369
-#: NEEDS WORK
-msgid "Replace prefix 'old' with 'new'."
-msgstr "Skipta forskeyti 'old' með 'new'."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 373
-#: NEEDS WORK
-msgid "Extract substring (position 0, length 3)."
-msgstr "Dregiðu út undirstreng (staða 0, lengd 3)."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 377
-#: NEEDS WORK
-msgid "Extract substring from right (last 3 characters)."
-msgstr "Dregið út undirstreng frá hægri (síðustu 3 stafir)."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 381
-#: NEEDS WORK
-msgid "Get length of variable $filename."
-msgstr "Fáðu lengd breytu $filename."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 385
-#: NEEDS WORK
-msgid "Convert first character to lowercase."
-msgstr "Breytðu fyrstu stafi í lágstafi."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 389
-#: NEEDS WORK
-msgid "Convert all characters to lowercase."
-msgstr "Breytðu öllum stöfum í lágstafi."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 393
-#: NEEDS WORK
-msgid "Convert first character to uppercase."
-msgstr "Breytðu fyrstu stafnum í stórt."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 397
-#: NEEDS WORK
-msgid "Convert all characters to uppercase."
-msgstr "Breytðu öllum stöfum í hástöfum."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 401
-#: NEEDS WORK
-msgid "Use $username, or 'guest' if unset (or null)."
-msgstr "Notaðu $username, eða 'gestur' ef óstillt (eða null)."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 406
-#: NEEDS WORK
-msgid "Set $username to 'guest' if unset (or null), then use it."
-msgstr "Settu $username í 'gest' ef óstillt (eða null), notaðu það síðan."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 411
-#: NEEDS WORK
-msgid "Use 'admin' if $username is set (and not null)."
-msgstr "Notaðu 'admin' ef $username er stillt (og ekki null)."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 416
-#: NEEDS WORK
-msgid "Show error message and exit if $username is unset (or null)."
-msgstr "Sýna villuskilaboð og hætta ef $username er óstillt (eða null)."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 422
-#: NEEDS WORK
-msgid "Use $username, or 'guest' if unset (ignores null values)."
-msgstr "Notaðu $username, eða 'gestur' ef ekki er stillt (sleppir null gildum)."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 430
-#: NEEDS WORK
-msgid "Creates directories."
-msgstr "Býr til möppur."
+msgid "Creates new directories."
+msgstr "Býr nýjar skálar."
 # 
 # File: usr/share/ashyterm/data/command_data.py, line: 434
 #: NEEDS WORK
 msgid "Creates a single directory."
 msgstr "Býr til eina skráarsafn."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 439
+# File: usr/share/ashyterm/data/command_data.py, line: 75
 #: NEEDS WORK
-msgid "Creates nested directories, creating parent directories as needed."
-msgstr "Býr til innri skálar, býr til foreldraskálar eftir þörfum."
+msgid "Creates a full path of directories, even if the parent directories don't exist."
+msgstr "Býr til fullan leið að skráasafni, jafnvel þó að foreldraskráarsafn séu ekki til."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 447
+# File: usr/share/ashyterm/data/command_data.py, line: 84
 #: NEEDS WORK
-msgid "Creates empty files or updates file timestamps."
-msgstr "Býr til tóma skrár eða uppfærir skráartímastimpil."
+msgid "Copies files or directories from one place to another."
+msgstr "Afritar skrár eða skráarsafn frá einum stað til annars."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 452
+# File: usr/share/ashyterm/data/command_data.py, line: 69
 #: NEEDS WORK
-msgid "Creates an empty file or updates the timestamp of an existing file."
-msgstr "Býr til tómt skjal eða uppfærir tímastimpil núverandi skjal."
+msgid "Copies a single file."
+msgstr "Afritar eina skrá."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 457
+# File: usr/share/ashyterm/data/command_data.py, line: 93
 #: NEEDS WORK
-msgid "Creates multiple files at once."
-msgstr "Býr til marga skrár í einu."
+msgid "Copies a directory and everything inside it."
+msgstr "Kopírar skráarsafn og allt inni í því."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 462
-# File: usr/share/ashyterm/data/command_data.py, line: 481
-# File: usr/share/ashyterm/data/command_data.py, line: 496
-# File: usr/share/ashyterm/data/command_data.py, line: 513
-# File: usr/share/ashyterm/data/command_data.py, line: 536
-# File: usr/share/ashyterm/data/command_data.py, line: 555
-# File: usr/share/ashyterm/data/command_data.py, line: 578
-# File: usr/share/ashyterm/data/command_data.py, line: 597
-# File: usr/share/ashyterm/data/command_data.py, line: 616
-# File: usr/share/ashyterm/data/command_data.py, line: 635
-# File: usr/share/ashyterm/data/command_data.py, line: 650
-# File: usr/share/ashyterm/data/command_data.py, line: 665
-# File: usr/share/ashyterm/data/command_data.py, line: 684
-# File: usr/share/ashyterm/data/command_data.py, line: 1275
+# File: usr/share/ashyterm/data/command_data.py, line: 86
 #: NEEDS WORK
-msgid "Text Processing"
-msgstr "Textavinnsla"
+msgid "Moves or renames files and directories."
+msgstr "Færir eða endurnefnir skrár og möppur."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 464
+# File: usr/share/ashyterm/data/command_data.py, line: 104
 #: NEEDS WORK
-msgid "Concatenates and displays file contents."
-msgstr "Sameinar og sýnir skráar innihald."
+msgid "Renames a file or directory."
+msgstr "Endurnefnir skrá eða skráarsafn."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 468
+# File: usr/share/ashyterm/data/command_data.py, line: 96
 #: NEEDS WORK
-msgid "Displays the contents of a file."
-msgstr "Sýnir innihald skráar."
+msgid "Moves a file to a new location."
+msgstr "Færir skrá á nýja staðsetningu."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 472
+# File: usr/share/ashyterm/data/command_data.py, line: 116
 #: NEEDS WORK
-msgid "Concatenates and displays multiple files."
-msgstr "Samanstæðir og sýnir mörg skrár."
+msgid ""
+"Deletes files and directories. CAUTION: this is permanent! Tip: Before deleting, replace 'rm' with "
+"'ls' to preview what will be removed."
+msgstr ""
+"Eyðir skrám og möppum. VARÚÐ: þetta er varanlegt! Ráð: Fyrir eyðingu, skiptu 'rm' út fyrir 'ls' til "
+"að skoða hvað verður fjarlægt."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 476
+# File: usr/share/ashyterm/data/command_data.py, line: 119
 #: NEEDS WORK
-msgid "Displays file contents with line numbers."
-msgstr "Sýnir skráar innihald með línunúmerum."
+msgid "Deletes a single file."
+msgstr "Eyðir einni skrá."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 483
+# File: usr/share/ashyterm/data/command_data.py, line: 122
 #: NEEDS WORK
-msgid "Displays the beginning of files."
-msgstr "Sýnir upphaf skráa."
+msgid "Deletes a directory and everything inside it."
+msgstr "Eyðir skráarsafni og öllu innihaldi þess."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 487
+# File: usr/share/ashyterm/data/command_data.py, line: 126
 #: NEEDS WORK
-msgid "Displays the first 10 lines of a file."
+msgid "Asks for confirmation before deleting each file."
+msgstr "Biður um staðfestingu áður en hverju skrá er eytt."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 131
+#: NEEDS WORK
+msgid "Forces deletion without asking (use with extreme caution)."
+msgstr "Þvingar eyðingu án þess að spyrja (notið með mikilli varúð)."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 138
+# File: usr/share/ashyterm/data/command_data.py, line: 163
+# File: usr/share/ashyterm/data/command_data.py, line: 190
+# File: usr/share/ashyterm/data/command_data.py, line: 209
+# File: usr/share/ashyterm/data/command_data.py, line: 224
+#: NEEDS WORK
+msgid "Essentials: File I/O & Pipes"
+msgstr "Grunnþættir: Skrá I/O & Rör"
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 140
+#: NEEDS WORK
+msgid "Controls how data flows between commands and files."
+msgstr "Stýrir því hvernig gögn flæða milli skipana og skráa."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 145
+#: NEEDS WORK
+msgid "Redirect: Puts the output of a command into a file, overwriting it if it exists."
+msgstr "Umferð: Setur útkomuna af skipun í skrá, skrifar yfir hana ef hún er til."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 151
+#: NEEDS WORK
+msgid "Append: Adds the output of a command to the end of a file."
+msgstr "Bæta við: Bætir útkomu skipunar við enda skráar."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 157
+#: NEEDS WORK
+msgid "Pipe: Connects the output of command1 to the input of command2, creating a workflow."
+msgstr "Rör: Tengir útgang command1 við inngang command2, og býr til vinnuflæði."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 165
+#: NEEDS WORK
+msgid "Displays the content of a text file on the screen."
+msgstr "Sýnir innihald textaskrár á skjánum."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 170
+#: NEEDS WORK
+msgid "A modern and efficient way to display a file's content."
+msgstr "Nútímaleg og skilvirk leið til að sýna innihald skráar."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 175
+#: NEEDS WORK
+msgid "Displays the content of a single file."
+msgstr "Sýnir efni einstakrar skráar."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 180
+#: NEEDS WORK
+msgid "Displays the content of multiple files, one after the other."
+msgstr "Sýnir efni margra skráa, eina á eftir annarri."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 185
+#: NEEDS WORK
+msgid "Displays the content with line numbers."
+msgstr "Sýnir efnið með línunúmerum."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 193
+#: NEEDS WORK
+msgid "Creates multiple empty files at once or updates a file's modification timestamp."
+msgstr "Býr til marga tóma skrá á einu sinni eða uppfærir breytingartímastimpil skráar."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 198
+#: NEEDS WORK
+msgid "Creates several empty files at once."
+msgstr "Býr til nokkur tóm skjal í einu."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 203
+#: NEEDS WORK
+msgid "Updates the modification date and time of a file to the current time."
+msgstr "Uppfærir breytingardagsetningu og tíma skráar í núverandi tíma."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 211
+#: NEEDS WORK
+msgid "Displays the beginning of a text file."
+msgstr "Sýnir upphaf textaskrár."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 215
+#: NEEDS WORK
+msgid "Shows the first 10 lines of a file."
 msgstr "Sýnir fyrstu 10 línurnar í skjali."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 491
+# File: usr/share/ashyterm/data/command_data.py, line: 219
 #: NEEDS WORK
-msgid "Displays the first 20 lines of a file."
+msgid "Shows the first 20 lines of a file."
 msgstr "Sýnir fyrstu 20 línurnar í skjali."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 226
+#: NEEDS WORK
+msgid "Displays the end of a text file."
+msgstr "Sýnir enda textaskrár."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 230
+#: NEEDS WORK
+msgid "Shows the last 10 lines of a file."
+msgstr "Sýnir síðustu 10 línurnar í skjali."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 235
+#: NEEDS WORK
+msgid "Follows a file in real-time, showing new lines as they are added."
+msgstr "Fylgir skrá í rauntíma, sýnir nýjar línur þegar þær eru bætt við."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 242
+# File: usr/share/ashyterm/data/command_data.py, line: 265
+# File: usr/share/ashyterm/data/command_data.py, line: 296
+# File: usr/share/ashyterm/data/command_data.py, line: 307
+# File: usr/share/ashyterm/data/command_data.py, line: 319
+# File: usr/share/ashyterm/data/command_data.py, line: 332
+# File: usr/share/ashyterm/data/command_data.py, line: 345
+# File: usr/share/ashyterm/data/command_data.py, line: 366
+#: NEEDS WORK
+msgid "Essentials: Search & System Information"
+msgstr "Grunnvall: Leita & Kerfisupplýsingar"
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 244
+#: NEEDS WORK
+msgid "Searches for a word or text pattern within files."
+msgstr "Leitar að orði eða textamynstri innan skráa."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 136
+#: NEEDS WORK
+msgid "Finds and displays all lines containing 'word' in the file."
+msgstr "Finnur og sýnir allar línur sem innihalda 'word' í skrá."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 254
+#: NEEDS WORK
+msgid "Searches for the word, ignoring case differences."
+msgstr "Leitar að orðinu, án þess að taka tillit til málfræðilegra mismuna."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 259
+#: NEEDS WORK
+msgid "Searches for 'word' in all files in the current directory and its subdirectories."
+msgstr "Leitar að 'orði' í öllum skrám í núverandi skráarsafni og undirskrám þess."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 267
+#: NEEDS WORK
+msgid "A powerful tool for finding files and directories."
+msgstr "Vöndugert tæki til að finna skrár og möppur."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 272
+#: NEEDS WORK
+msgid "Finds all files ending with .txt in the current directory and subdirectories."
+msgstr "Finnur allar skrár sem enda á .txt í núverandi skráarsafni og undirskráarsafnum."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 278
+#: NEEDS WORK
+msgid "Finds only directories whose names start with 'backup'."
+msgstr "Finnur aðeins skálar þar sem nöfnin byrja á 'backup'."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 283
+#: NEEDS WORK
+msgid "Finds files that were modified in the last 7 days."
+msgstr "Finnur skrár sem breyttust á síðustu 7 dögum."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 287
+#: NEEDS WORK
+msgid "Finds files larger than 100MB."
+msgstr "Finna skrár sem eru stærri en 100MB."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 291
+#: NEEDS WORK
+msgid "Finds empty files and directories."
+msgstr "Finnur tómar skrár og skápa."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 298
+#: NEEDS WORK
+msgid "Shows the username of the currently logged-in user."
+msgstr "Sýnir notendanafninn á núverandi innskráða notanda."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 302
+#: NEEDS WORK
+msgid "Displays your current username."
+msgstr "Sýnir núverandi notendanafn þitt."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 309
+#: NEEDS WORK
+msgid "Displays the current system date and time."
+msgstr "Sýnir núverandi kerfisdagsetningu og tíma."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 311
+#: NEEDS WORK
+msgid "Shows the current date and time."
+msgstr "Sýnir núverandi dagsetningu og tíma."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 314
+#: NEEDS WORK
+msgid "Shows the date and time in a custom format."
+msgstr "Sýnir dagsetningu og tíma í sérsniðnu sniði."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 321
+#: NEEDS WORK
+msgid "Shows the free and used space on storage disks."
+msgstr "Sýnir frjálsa og notaða plássið á geymslu diskum."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 326
+#: NEEDS WORK
+msgid "Shows disk usage in a human-readable format (KB, MB, GB)."
+msgstr "Sýnir disknotkun í mannlegu lesanlegu sniði (KB, MB, GB)."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 334
+#: NEEDS WORK
+msgid "Shows the amount of used and free RAM."
+msgstr "Sýnir magn notaðs og frjáls RAM."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 339
+#: NEEDS WORK
+msgid "Shows memory usage in a human-readable format (KB, MB, GB)."
+msgstr "Sýnir minni notkun í mannlegu lesanlegu sniði (KB, MB, GB)."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 348
+#: NEEDS WORK
+msgid "Shows the disk space that files and directories are using."
+msgstr "Sýnir diskplássið sem skrár og skálar nota."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 354
+#: NEEDS WORK
+msgid "Shows the total size of each item in the current directory in a summary format."
+msgstr "Sýnir heildarstærð hvers hlutar í núverandi skráarsafni í samantektarformi."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 360
+#: NEEDS WORK
+msgid "Shows the size of each directory and subdirectory in a human-readable format."
+msgstr "Sýnir stærð hvers skráarsafns og undirsafna í mannlegu lesanlegu sniði."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 369
+#: NEEDS WORK
+msgid "Shows how long the computer has been running without a restart."
+msgstr "Sýnir hve lengi tölvan hefur verið í notkun án þess að endurræsa."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 375
+#: NEEDS WORK
+msgid "Displays the uptime, how many users are logged in, and the system load."
+msgstr "Sýnir hve lengi kerfið hefur verið í gangi, fjölda notenda sem eru skráðir inn, og kerfisálag."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 382
+# File: usr/share/ashyterm/data/command_data.py, line: 435
+# File: usr/share/ashyterm/data/command_data.py, line: 466
+#: NEEDS WORK
+msgid "Software Management"
+msgstr "Hugbúnaðarstjórnun"
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 385
+#: NEEDS WORK
+msgid "The primary tool for installing, updating, and removing software on Arch-based Linux systems."
+msgstr "Aðalverkfærið til að setja upp, uppfæra og fjarlægja hugbúnað á Arch-bundnum Linux kerfum."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 391
+#: NEEDS WORK
+msgid "Synchronizes with repositories and upgrades all installed packages."
+msgstr "Samhentir við geymslur og uppfærir öll uppsett pakkar."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 396
+#: NEEDS WORK
+msgid "Installs a new software package."
+msgstr "Setur nýjan hugbúnaðarpakka."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 400
+#: NEEDS WORK
+msgid "Searches for a package in the repositories."
+msgstr "Leitar að pakka í geymslunum."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 404
+#: NEEDS WORK
+msgid "Searches for an already installed package."
+msgstr "Leitar að þegar pakka er þegar uppsett."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 409
+#: NEEDS WORK
+msgid "Shows detailed information about a package from the repository."
+msgstr "Sýnir ítarlegar upplýsingar um pakka frá geymslu."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 415
+#: NEEDS WORK
+msgid "Shows detailed information about an installed package."
+msgstr "Sýnir ítarlegar upplýsingar um uppsett pakka."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 420
+#: NEEDS WORK
+msgid "Removes a package and its unneeded dependencies."
+msgstr "Fjarlægir pakka og óþarfa háð."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 425
+#: NEEDS WORK
+msgid "Updates the database of which package owns which file."
+msgstr "Uppfærir gagnagrunninn um hvaða pakki á hvaða skrá."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 430
+#: NEEDS WORK
+msgid "Finds which package a specific file belongs to."
+msgstr "Finnur hvaða pakka tilheyrir ákveðin skrá."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 438
+#: NEEDS WORK
+msgid ""
+"An AUR helper for Arch-based systems that wraps pacman and adds support for the Arch User "
+"Repository."
+msgstr ""
+"AUR aðstoðarmaður fyrir Arch-bundnar kerfi sem umlykur pacman og bætir við stuðningi við Arch "
+"Notenda Gagnasafnið."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 444
+#: NEEDS WORK
+msgid "Upgrades all packages from official repositories and the AUR."
+msgstr "Uppfærir allar pakkar frá opinberum geymslum og AUR."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 450
+#: NEEDS WORK
+msgid "Installs a package from the official repositories or the AUR."
+msgstr "Setur pakka frá opinberum geymslum eða AUR."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 456
+#: NEEDS WORK
+msgid "Searches for a package in both official repositories and the AUR."
+msgstr "Leitar að pakka í bæði opinberum geymslum og AUR."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 461
+#: NEEDS WORK
+msgid "Removes a package and its dependencies."
+msgstr "Fjarlægir pakka og háðingar hans."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 469
+#: NEEDS WORK
+msgid ""
+"A universal system for installing and running applications that works across different Linux "
+"distributions."
+msgstr "Alhliða kerfi til að setja upp og keyra forrit sem virkar á mismunandi Linux dreifingum."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 475
+#: NEEDS WORK
+msgid "Installs an application from a remote repository like Flathub."
+msgstr "Setur forrit frá fjarveitu eins og Flathub."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 480
+#: NEEDS WORK
+msgid "Runs an installed Flatpak application."
+msgstr "Keyrir upp sett Flatpak forrit."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 484
+#: NEEDS WORK
+msgid "Updates all installed Flatpak applications."
+msgstr "Uppfærir allar uppsettar Flatpak forrit."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 489
+#: NEEDS WORK
+msgid "Searches for applications in the configured remotes."
+msgstr "Leitar að forritum í stilltu fjarstýringunum."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 494
+#: NEEDS WORK
+msgid "Lists all installed Flatpak applications."
+msgstr "Sýnir allar uppsettar Flatpak forrit."
 # 
 # File: usr/share/ashyterm/data/command_data.py, line: 498
 #: NEEDS WORK
-msgid "Displays the end of files."
-msgstr "Sýnir endann á skrám."
+msgid "Removes an installed Flatpak application."
+msgstr "Fjarlægir uppsetta Flatpak forrit."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 502
+# File: usr/share/ashyterm/data/command_data.py, line: 504
+# File: usr/share/ashyterm/data/command_data.py, line: 519
+# File: usr/share/ashyterm/data/command_data.py, line: 540
 #: NEEDS WORK
-msgid "Displays the last 10 lines of a file."
-msgstr "Sýnir síðustu 10 línurnar í skjali."
+msgid "Permissions & Ownership"
+msgstr "Leyfi & Eignarhald"
 # 
 # File: usr/share/ashyterm/data/command_data.py, line: 507
 #: NEEDS WORK
-msgid "Follows the file, displaying new lines as they are added."
-msgstr "Fylgir skjalinu, sýnir nýjar línur þegar þær eru bætt við."
+msgid "Executes a single command with administrative (root) privileges. Use with care."
+msgstr "Framkvæmir eina skipun með stjórnunar (rót) réttindum. Notaðu með varúð."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 515
+# File: usr/share/ashyterm/data/command_data.py, line: 513
 #: NEEDS WORK
-msgid "Sorts lines of text files."
-msgstr "Skráir línur textaskráa."
+msgid "Runs the 'pacman -Syu' command as the administrator, which is required for system updates."
+msgstr "Keyrir 'pacman -Syu' skipunina sem stjórnandi, sem er nauðsynleg fyrir kerfisuppfærslur."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 522
+#: NEEDS WORK
+msgid "Changes the permissions of files and directories (who can read, write, or execute them)."
+msgstr "Breyti heimildum skráa og skráasafna (hver getur lesið, skrifað eða keyrt þær)."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 528
+#: NEEDS WORK
+msgid "Adds execute (x) permission, allowing the file to be run as a program."
+msgstr "Bætir við keyrsluréttindum (x), sem gerir kleift að keyra skrána sem forrit."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 534
+#: NEEDS WORK
+msgid ""
+"Sets permissions using numbers: owner can read/write/execute (7), group and others can read/execute "
+"(5)."
+msgstr ""
+"Stillir heimildir með tölum: eigandi getur lesið/skrifað/framkvæmt (7), hópur og aðrir geta "
+"lesið/framkvæmt (5)."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 542
+#: NEEDS WORK
+msgid "Changes the owner and group of a file or directory."
+msgstr "Breyti eiganda og hópi skráar eða skráarsafns."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 547
+#: NEEDS WORK
+msgid "Makes 'user' the owner and 'group' the group for the file."
+msgstr "Gerir 'notanda' sem 'hópur' sem hópur fyrir skrána."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 554
+# File: usr/share/ashyterm/data/command_data.py, line: 567
+# File: usr/share/ashyterm/data/command_data.py, line: 586
+# File: usr/share/ashyterm/data/command_data.py, line: 607
+#: NEEDS WORK
+msgid "Process & Network Management"
+msgstr "Ferli- og netkerfisstjórnun"
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 557
+#: NEEDS WORK
+msgid "Shows the programs (processes) currently running on the system."
+msgstr "Sýnir forritin (ferlurnar) sem eru núna að keyra á kerfinu."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 562
+#: NEEDS WORK
+msgid "Shows a detailed list of all running programs."
+msgstr "Sýnir ítarlega lista yfir öll forrit sem eru í gangi."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 570
+#: NEEDS WORK
+msgid "Terminates a program (process) that is frozen or unresponsive."
+msgstr "Lokar forrit (ferli) sem er fryst eða óvirkt."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 575
+#: NEEDS WORK
+msgid "Politely tries to close the program with ID 1234."
+msgstr "Vinsamlegast reynir að loka forritinu með ID 1234."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 580
+#: NEEDS WORK
+msgid "Forcibly terminates the program with ID 1234 (use as a last resort)."
+msgstr "Loka forritið með ID 1234 með valdi (notaðu sem síðasta úrræði)."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 589
+#: NEEDS WORK
+msgid "Terminates all processes with a specific name, like closing all windows of an app."
+msgstr "Lokar alla ferla með ákveðnu nafni, eins og að loka öllum gluggum forrits."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 595
+#: NEEDS WORK
+msgid "Closes all running instances of the 'firefox' program."
+msgstr "Lokar allar keyrandi eintök af 'firefox' forritinu."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 601
+#: NEEDS WORK
+msgid "Asks for confirmation before terminating each 'chrome' process."
+msgstr "Biður um staðfestingu áður en hver 'chrome' ferli er lokað."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 610
+#: NEEDS WORK
+msgid "Tests if there is a connection to another computer or website."
+msgstr "Prófar hvort sé tenging við annað tölvu eða vefsíðu."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 615
+#: NEEDS WORK
+msgid "Checks if you can communicate with google.com."
+msgstr "Athugar hvort þú getir haft samskipti við google.com."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 620
+#: NEEDS WORK
+msgid "Sends only 4 test packets instead of running continuously."
+msgstr "Sendir aðeins 4 prófunarpakka í stað þess að keyra stöðugt."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 627
+# File: usr/share/ashyterm/data/command_data.py, line: 644
+# File: usr/share/ashyterm/data/command_data.py, line: 655
+#: NEEDS WORK
+msgid "System & User Control"
+msgstr "Kerfi og Notanda Stjórn"
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 630
+#: NEEDS WORK
+msgid "Safely turns off or schedules a shutdown for the computer."
+msgstr "Loka örugglega eða skipuleggur lokun á tölvunni."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 635
+#: NEEDS WORK
+msgid "Shuts down the system immediately."
+msgstr "Lokar kerfið strax."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 639
+#: NEEDS WORK
+msgid "Schedules a shutdown for 15 minutes from now."
+msgstr "Skipar lokun eftir 15 mínútur."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 646
+#: NEEDS WORK
+msgid "Restarts the computer."
+msgstr "Endurræsir tölvuna."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 650
+#: NEEDS WORK
+msgid "Restarts the system immediately."
+msgstr "Endurræsa kerfið strax."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 658
+#: NEEDS WORK
+msgid "Switches to another user account in the current terminal session."
+msgstr "Skipar yfir í aðra notendareikning í núverandi terminal sessjón."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 664
+#: NEEDS WORK
+msgid "Switches to the specified user's account (requires their password)."
+msgstr "Breyti yfir á tilgreint notendareikning (krafist er að slá inn lykilorð þeirra)."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 671
+#: NEEDS WORK
+msgid "Version Control with Git"
+msgstr "Version stjórnun með Git"
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 674
+#: NEEDS WORK
+msgid "A tool for saving the history of changes in code projects, like a 'save point' in a game."
+msgstr "Tól til að vista sögu breytinga í kóðaverkefnum, eins og 'vista punkt' í leik."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 680
+#: NEEDS WORK
+msgid "Initializes a new 'history album' (repository) in a directory."
+msgstr "Sér nýtt 'sögu albúm' (skjalasafn) í skráarsafni."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 686
+#: NEEDS WORK
+msgid "Downloads a copy of a project that already exists elsewhere."
+msgstr "Sækir afrit af verkefni sem þegar er til annars staðar."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 692
+#: NEEDS WORK
+msgid "Shows which files have been modified, added, or deleted."
+msgstr "Sýnir hvaða skrár hafa verið breyttar, bætt við eða eytt."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 698
+#: NEEDS WORK
+msgid "Prepares a modified file to be saved in the history ('stages' the change)."
+msgstr "Undirbýr breytt skrá til að vista í sögunni ('stigar' breytinguna)."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 704
+#: NEEDS WORK
+msgid "Saves the staged changes to the history with a description of what was done."
+msgstr "Sparar breytingarnar sem eru í biðstöðu í söguna með lýsingu á því sem var gert."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 709
+#: NEEDS WORK
+msgid "Downloads the latest updates from a remote project."
+msgstr "Sækir nýjustu uppfærslurnar frá fjarverkefni."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 714
+#: NEEDS WORK
+msgid "Uploads your saved changes (commits) to the remote project."
+msgstr "Hladduð breytingarnar þínar (commit) upp á fjarverkefnið."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 719
+#: NEEDS WORK
+msgid "Shows the history of all commits (saves) made."
+msgstr "Sýnir sögu allra commit-a (vista) sem gerð hafa verið."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 724
+#: NEEDS WORK
+msgid "Lists all the 'timelines' (branches) of the project."
+msgstr "Skráir allar 'tímalínur' (greinar) verkefnisins."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 730
+#: NEEDS WORK
+msgid "Switches to another 'timeline' (branch) to work on something new."
+msgstr "Færir sig yfir í aðra 'tímabil' (grein) til að vinna að nýju."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 737
+# File: usr/share/ashyterm/data/command_data.py, line: 758
+# File: usr/share/ashyterm/data/command_data.py, line: 779
+#: NEEDS WORK
+msgid "Archives & Compression"
+msgstr "Skýringar og Þjöppun"
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 740
+#: NEEDS WORK
+msgid "Groups multiple files and directories into a single package (.tar file) or extracts them."
+msgstr "Samanar fleiri skrár og möppur í eina pakka (.tar skrá) eða útdraga þær."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 745
+#: NEEDS WORK
+msgid "Creates a compressed package from a directory."
+msgstr "Býr til þjappaðan pakka úr skráarsafni."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 749
+#: NEEDS WORK
+msgid "Extracts files from a compressed package."
+msgstr "Dregur skrár úr þjappaðri pakkningu."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 753
+#: NEEDS WORK
+msgid "Creates a package without compression."
+msgstr "Býr til pakka án þjöppunar."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 761
+#: NEEDS WORK
+msgid "Creates compressed .zip files, a format widely used on all operating systems."
+msgstr "Býr til þjappaðar .zip skrár, snið sem er víða notað á öllum stýrikerfum."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 767
+#: NEEDS WORK
+msgid "Creates a zip file containing one or more specified files."
+msgstr "Býr til zip skrá sem inniheldur eina eða fleiri tilgreindar skrár."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 773
+#: NEEDS WORK
+msgid "Creates a zip file containing a directory and everything inside it."
+msgstr "Býr til zip skrá sem inniheldur möppu og allt inni í henni."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 781
+#: NEEDS WORK
+msgid "Extracts files from a .zip archive."
+msgstr "Dregur skrár úr .zip skráarsafni."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 786
+#: NEEDS WORK
+msgid "Extracts all files from the archive into the current directory."
+msgstr "Dregur öll skrár úr skjalasafninu í núverandi skráarsafn."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 791
+#: NEEDS WORK
+msgid "Extracts files to a specific destination directory."
+msgstr "Dregur skrár í tiltekna áfangaskrá."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 797
+# File: usr/share/ashyterm/data/command_data.py, line: 812
+# File: usr/share/ashyterm/data/command_data.py, line: 827
+# File: usr/share/ashyterm/data/command_data.py, line: 840
+# File: usr/share/ashyterm/data/command_data.py, line: 851
+# File: usr/share/ashyterm/data/command_data.py, line: 866
+# File: usr/share/ashyterm/data/command_data.py, line: 879
+#: NEEDS WORK
+msgid "Useful Commands (Optional)"
+msgstr "Notaðar skipanir (valfrjálst)"
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 800
+#: NEEDS WORK
+msgid "A visual 'Task Manager' for the terminal. (May require installation)"
+msgstr "Sýnilegur 'Verkaskiptir' fyrir terminalinn. (Gæti krafist uppsetningar)"
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 806
+#: NEEDS WORK
+msgid "Interactively shows running programs, CPU, and memory usage."
+msgstr "Sýnir í rauntíma keyrandi forrit, CPU og minni notkun."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 815
+#: NEEDS WORK
+msgid "Monitors the usage of video cards (GPUs), especially NVIDIA. (May require installation)"
+msgstr "Vöktun á notkun skjákorta (GPU), sérstaklega NVIDIA. (Gæti krafist uppsetningar)"
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 821
+#: NEEDS WORK
+msgid "Shows GPU usage, video memory, and temperature in real-time."
+msgstr "Sýnir GPU notkun, vídeóminni og hitastig í rauntíma."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 830
+#: NEEDS WORK
+msgid "Lists all devices connected to the computer's PCI slots (graphics card, network, etc.)."
+msgstr "Skrá yfir öll tæki tengd PCI raufum tölvunnar (grafík kort, net, o.s.frv.)."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 835
+#: NEEDS WORK
+msgid "Shows a list of all PCI devices."
+msgstr "Sýnir lista yfir öll PCI tæki."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 842
+#: NEEDS WORK
+msgid "Lists all devices connected to the USB ports."
+msgstr "Sýnir alla tæki sem tengd eru USB tengjunum."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 846
+#: NEEDS WORK
+msgid "Shows a list of all connected USB devices."
+msgstr "Sýnir lista yfir öll tengd USB tæki."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 854
+#: NEEDS WORK
+msgid "A modern and super-fast version of 'grep' for searching text. (May require installation: ripgrep)"
+msgstr "Nútíma og ofurhraður útgáfa af 'grep' til að leita að texta. (Gæti krafist uppsetningar: ripgrep)"
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 860
+#: NEEDS WORK
+msgid "Recursively searches for 'word' in the current directory very quickly."
+msgstr "Leitar aftur í 'word' í núverandi skráarsafni mjög hratt."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 869
+#: NEEDS WORK
+msgid "A modern and more intuitive version of 'find' for finding files. (May require installation: fd-find)"
+msgstr ""
+"Nútímalegri og meira innsýn útgáfa af 'find' til að finna skrár. (Gæti krafist uppsetningar: "
+"fd-find)"
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 874
+#: NEEDS WORK
+msgid "Finds all files containing '.txt' in their name."
+msgstr "Finnur öll skrár sem innihalda '.txt' í nafni sínu."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 882
+#: NEEDS WORK
+msgid "A tool for processing and viewing data in JSON format. (May require installation)"
+msgstr "Tól til að vinna úr og skoða gögn í JSON sniði. (Gæti krafist uppsetningar)"
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 888
+#: NEEDS WORK
+msgid "Displays a JSON file with colors and formatting for easy reading."
+msgstr "Sýnir JSON skrá með litum og sniði fyrir auðvelda lesningu."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 895
+# File: usr/share/ashyterm/data/command_data.py, line: 914
+# File: usr/share/ashyterm/data/command_data.py, line: 929
+# File: usr/share/ashyterm/data/command_data.py, line: 944
+# File: usr/share/ashyterm/data/command_data.py, line: 957
+# File: usr/share/ashyterm/data/command_data.py, line: 968
+# File: usr/share/ashyterm/data/command_data.py, line: 979
+# File: usr/share/ashyterm/data/command_data.py, line: 990
+# File: usr/share/ashyterm/data/command_data.py, line: 1003
+# File: usr/share/ashyterm/data/command_data.py, line: 1015
+#: NEEDS WORK
+msgid "Text Processing (Intermediate)"
+msgstr "Textaúrvun (Millistig)"
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 897
+#: NEEDS WORK
+msgid "Sorts the lines of a file."
+msgstr "Skráir línurnar í skjali."
 # 
 # File: usr/share/ashyterm/data/command_data.py, line: 519
 #: NEEDS WORK
 msgid "Sorts lines in alphabetical order."
 msgstr "Skráir línur í stafrófsröð."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 523
+# File: usr/share/ashyterm/data/command_data.py, line: 905
 #: NEEDS WORK
-msgid "Sorts lines numerically."
-msgstr "Skrá línur tölulega."
+msgid "Sorts lines in numerical order."
+msgstr "Skráir línur í tölulegu röð."
 # 
 # File: usr/share/ashyterm/data/command_data.py, line: 527
 #: NEEDS WORK
 msgid "Sorts lines in reverse order."
 msgstr "Skráir línur í öfugri röð."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 531
+# File: usr/share/ashyterm/data/command_data.py, line: 916
 #: NEEDS WORK
-msgid "Sorts by second field/column."
-msgstr "Skrá eftir öðru sviði/súlu."
+msgid "Removes adjacent duplicate lines."
+msgstr "Fjarlægir samliggjandi tvítekna línur."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 538
+# File: usr/share/ashyterm/data/command_data.py, line: 920
 #: NEEDS WORK
-msgid "Removes duplicate lines from sorted files."
-msgstr "Fjarlægir tvítekna línur úr raðaðum skrám."
+msgid "First sorts the file, then removes duplicate lines."
+msgstr "Fyrst raðar skrána, síðan fjarlægir tvítekna línur."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 542
+# File: usr/share/ashyterm/data/command_data.py, line: 924
 #: NEEDS WORK
-msgid "Removes duplicate lines after sorting."
-msgstr "Fjarlægir tvítekna línur eftir raðningu."
+msgid "Counts how many times each line appears."
+msgstr "Telur hversu oft hver lína kemur fram."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 546
+# File: usr/share/ashyterm/data/command_data.py, line: 931
 #: NEEDS WORK
-msgid "Shows count of occurrences for each line."
-msgstr "Sýnir fjölda tilvika fyrir hverja línu."
+msgid "Counts lines, words, and characters in a file."
+msgstr "Telur línur, orð og tákn í skrá."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 550
+# File: usr/share/ashyterm/data/command_data.py, line: 935
 #: NEEDS WORK
-msgid "Shows only duplicate lines."
-msgstr "Sýnir aðeins tvítekna línur."
+msgid "Counts only the number of lines."
+msgstr "Telur aðeins fjölda línanna."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 557
+# File: usr/share/ashyterm/data/command_data.py, line: 939
 #: NEEDS WORK
-msgid "Counts lines, words, and characters in files."
-msgstr "Telur línur, orð og tákn í skrám."
+msgid "Counts only the number of words."
+msgstr "Telur aðeins fjölda orða."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 561
+# File: usr/share/ashyterm/data/command_data.py, line: 946
 #: NEEDS WORK
-msgid "Shows lines, words, and characters count."
-msgstr "Sýnir línur, orð og táknatal."
+msgid "Cuts and extracts columns of text from a file."
+msgstr "Klippir og útdraga dálka af texta úr skrá."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 565
+# File: usr/share/ashyterm/data/command_data.py, line: 951
 #: NEEDS WORK
-msgid "Shows only line count."
-msgstr "Sýnir aðeins línutölu."
+msgid "Extracts the first column of text, using ':' as the separator."
+msgstr "Dregur fyrstu dálkinn af texta, með ':' sem aðskilnað."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 569
+# File: usr/share/ashyterm/data/command_data.py, line: 959
 #: NEEDS WORK
-msgid "Shows only word count."
-msgstr "Sýnir aðeins orðafjölda."
+msgid "Merges the lines of multiple files side-by-side."
+msgstr "Sameinar línur úr mörgum skrám hlið við hlið."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 573
+# File: usr/share/ashyterm/data/command_data.py, line: 963
 #: NEEDS WORK
-msgid "Shows only character count."
-msgstr "Sýnir aðeins stafsnið."
+msgid "Combines the lines of two files into columns."
+msgstr "Sameinar línur úr tveimur skrám í dálka."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 580
+# File: usr/share/ashyterm/data/command_data.py, line: 970
 #: NEEDS WORK
-msgid "Extracts sections from lines of files."
-msgstr "Dregur hluta úr línum skráa."
+msgid "Translates or deletes characters from text."
+msgstr "Þýðir eða eyðir stöfum úr texta."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 584
+# File: usr/share/ashyterm/data/command_data.py, line: 974
 #: NEEDS WORK
-msgid "Extracts first field using colon delimiter."
-msgstr "Dregur fyrsta reitinn með því að nota kolon aðgreiningu."
+msgid "Converts text from lowercase to uppercase."
+msgstr "Breytir texta úr lágstaf í hástaf."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 588
+# File: usr/share/ashyterm/data/command_data.py, line: 981
 #: NEEDS WORK
-msgid "Extracts first 10 characters from each line."
-msgstr "Dregur fyrstu 10 stafi úr hverju línu."
+msgid "Reverses the order of characters in each line."
+msgstr "Veltir röð tákna í hverju línu."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 592
+# File: usr/share/ashyterm/data/command_data.py, line: 985
 #: NEEDS WORK
-msgid "Extracts 2nd and 4th fields from CSV data."
-msgstr "Dregur 2. og 4. reit úr CSV gögnum."
+msgid "Reverses a string (result: 'stressed')."
+msgstr "Veltir streng (niðurstaða: 'stressed')."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 599
+# File: usr/share/ashyterm/data/command_data.py, line: 993
 #: NEEDS WORK
-msgid "Merges lines from multiple files."
-msgstr "Sameinar línur úr mörgum skrám."
+msgid "Displays the content of a file backwards (last line first)."
+msgstr "Sýnir innihald skráar aftur á bak (síðasta lína fyrst)."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 603
+# File: usr/share/ashyterm/data/command_data.py, line: 998
 #: NEEDS WORK
-msgid "Merges corresponding lines from two files."
-msgstr "Sameinar samsvarandi línur úr tveimur skrám."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 607
-#: NEEDS WORK
-msgid "Merges lines using comma as delimiter."
-msgstr "Sameinar línur með kommu sem aðskiljara."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 611
-#: NEEDS WORK
-msgid "Merges all lines into a single line."
-msgstr "Sameinar allar línur í eina línu."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 618
-#: NEEDS WORK
-msgid "Translates or deletes characters."
-msgstr "Þýðir eða eyðir táknum."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 622
-#: NEEDS WORK
-msgid "Converts lowercase to uppercase."
-msgstr "Breytir lágstafnum í hástafi."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 626
-#: NEEDS WORK
-msgid "Removes all newline characters."
-msgstr "Fjarlægir allar línuskil."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 630
-#: NEEDS WORK
-msgid "Squeezes multiple spaces into single space."
-msgstr "Þjappar saman mörgum bilum í eitt bil."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 637
-#: NEEDS WORK
-msgid "Reverses lines character by character."
-msgstr "Veltir línur staf fyrir staf."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 641
-#: NEEDS WORK
-msgid "Reverses each line character by character."
-msgstr "Veltir hverja línu staf fyrir staf."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 645
-#: NEEDS WORK
-msgid "Reverses a string."
-msgstr "Veltir streng."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 652
-#: NEEDS WORK
-msgid "Concatenates and prints files in reverse order."
-msgstr "Sameinar og prentar skrár í öfugri röð."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 656
-#: NEEDS WORK
-msgid "Prints file lines in reverse order."
-msgstr "Prentar línur skráar í öfugri röð."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 660
-#: NEEDS WORK
-msgid "Concatenates files in reverse order."
-msgstr "Samanfellar skrár í öfugri röð."
+msgid "Displays the lines of a file in reverse order."
+msgstr "Sýnir línurnar í skjali í öfugri röð."
 # 
 # File: usr/share/ashyterm/data/command_data.py, line: 667
 #: NEEDS WORK
@@ -3468,957 +3742,501 @@ msgstr "Prentar rað af tölum."
 msgid "Prints numbers from 1 to 10."
 msgstr "Prentar tölur frá 1 til 10."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 675
+# File: usr/share/ashyterm/data/command_data.py, line: 1010
 #: NEEDS WORK
-msgid "Prints numbers from 5 to 10."
-msgstr "Prentar tölur frá 5 til 10."
+msgid "Prints numbers from 0 to 10, incrementing by 2."
+msgstr "Prentar tölur frá 0 til 10, aukandi um 2."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 679
+# File: usr/share/ashyterm/data/command_data.py, line: 1017
 #: NEEDS WORK
-msgid "Prints even numbers from 0 to 20."
-msgstr "Prentar jafntölur frá 0 til 20."
+msgid "A calculator for the terminal."
+msgstr "Reiknivél fyrir terminalinn."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 686
+# File: usr/share/ashyterm/data/command_data.py, line: 1021
 #: NEEDS WORK
-msgid "Arbitrary precision calculator language."
-msgstr "Tungumál fyrir reiknivél með aðgerðarskilyrðum."
+msgid "Performs a basic mathematical calculation."
+msgstr "Framkvæmir grunnleggjandi stærðfræðilega útreikninga."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 690
+# File: usr/share/ashyterm/data/command_data.py, line: 1025
 #: NEEDS WORK
-msgid "Performs basic arithmetic calculation."
-msgstr "Framkvæmir grunnleggjandi reikningsskil."
+msgid "Performs division with 2 decimal places."
+msgstr "Framkvæmir deilingu með 2 aukastöfum."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 694
-#: NEEDS WORK
-msgid "Division with 2 decimal places precision."
-msgstr "Deild með 2 aukastafars nákvæmni."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 698
-#: NEEDS WORK
-msgid "Starts bc with math library for advanced functions."
-msgstr "Byrjar bc með stærðfræðibókasafni fyrir háþróaðar aðgerðir."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 703
-# File: usr/share/ashyterm/data/command_data.py, line: 718
-# File: usr/share/ashyterm/data/command_data.py, line: 733
-# File: usr/share/ashyterm/data/command_data.py, line: 758
-# File: usr/share/ashyterm/data/command_data.py, line: 771
-# File: usr/share/ashyterm/data/command_data.py, line: 782
-# File: usr/share/ashyterm/data/command_data.py, line: 793
-# File: usr/share/ashyterm/data/command_data.py, line: 812
-#: NEEDS WORK
-msgid "System Information"
-msgstr "Kerfiss upplýsingar"
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 705
-#: NEEDS WORK
-msgid "Displays disk space usage."
-msgstr "Sýnir notkun diskplásss."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 709
-# File: usr/share/ashyterm/data/command_data.py, line: 739
-#: NEEDS WORK
-msgid "Shows disk usage in human-readable format."
-msgstr "Sýnir disknotkun í mannlegu lesanlegu sniði."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 713
-#: NEEDS WORK
-msgid "Shows inode usage instead of block usage."
-msgstr "Sýnir inode notkun í stað blokk notkunar."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 720
-#: NEEDS WORK
-msgid "Displays memory usage information."
-msgstr "Sýnir upplýsingar um minni notkun."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 724
-#: NEEDS WORK
-msgid "Shows memory usage in human-readable format."
-msgstr "Sýnir minni notkun í mannlegu læsilegu sniði."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 728
-#: NEEDS WORK
-msgid "Continuously displays memory usage every 5 seconds."
-msgstr "Sýnir stöðugt minni notkun á fimm sekúndna fresti."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 735
-#: NEEDS WORK
-msgid "Displays disk usage of files and directories."
-msgstr "Sýnir disknotkun skráa og skráasafna."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 743
-#: NEEDS WORK
-msgid "Shows total size of each item in current directory."
-msgstr "Sýnir heildarstærð hvers hlutar í núverandi skráarsafni."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 747
-#: NEEDS WORK
-msgid "Shows disk usage one level deep."
-msgstr "Sýnir disknotkun á einum stigi."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 752
-#: NEEDS WORK
-msgid "Shows all files and directories with human-readable sizes."
-msgstr "Sýnir öll skrár og möppur með mannlegum lesanlegum stærðum."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 760
-#: NEEDS WORK
-msgid "Shows how long the system has been running."
-msgstr "Sýnir hve lengi kerfið hefur verið í gangi."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 765
-#: NEEDS WORK
-msgid "Shows current time, uptime, users, and load average."
-msgstr "Sýnir núverandi tíma, uppsetningu, notendur og meðaltal álag."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 773
-#: NEEDS WORK
-msgid "Displays the current username."
-msgstr "Sýnir núverandi notendanafn."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 777
-#: NEEDS WORK
-msgid "Prints the current logged-in username."
-msgstr "Prentar núverandi innskráð notendanafn."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 784
-#: NEEDS WORK
-msgid "Prints the current working directory."
-msgstr "Prentar núverandi vinnuslóð."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 788
-#: NEEDS WORK
-msgid "Shows the full path of current directory."
-msgstr "Sýnir fulla slóð núverandi skráarsviðs."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 795
-#: NEEDS WORK
-msgid "Displays or sets the system date and time."
-msgstr "Sýnir eða stillir kerfisdagsetningu og tíma."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 799
-#: NEEDS WORK
-msgid "Shows current date and time."
-msgstr "Sýnir núverandi dagsetningu og tíma."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 803
-#: NEEDS WORK
-msgid "Shows date and time in custom format."
-msgstr "Sýnir dagsetningu og tíma í sérsniðnu sniði."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 807
-#: NEEDS WORK
-msgid "Shows UTC time instead of local time."
-msgstr "Sýnir UTC tíma í stað staðartíma."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 814
-#: NEEDS WORK
-msgid "Displays a calendar."
-msgstr "Sýnir dagatal."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 818
-#: NEEDS WORK
-msgid "Shows calendar for current month."
-msgstr "Sýnir dagatal fyrir núverandi mánuð."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 822
-#: NEEDS WORK
-msgid "Shows calendar for entire year 2024."
-msgstr "Sýnir dagatal fyrir allt árið 2024."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 826
-#: NEEDS WORK
-msgid "Shows calendar for December 2024."
-msgstr "Sýnir dagatal fyrir desember 2024."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 831
-# File: usr/share/ashyterm/data/command_data.py, line: 848
-#: NEEDS WORK
-msgid "Process Management"
-msgstr "Ferli stjórnun"
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 833
-#: NEEDS WORK
-msgid "Displays information about running processes."
-msgstr "Sýnir upplýsingar um keyrandi ferla."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 838
-#: NEEDS WORK
-msgid "Shows detailed information about all running processes."
-msgstr "Sýnir ítarlegar upplýsingar um öll keyrandi ferli."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 843
-#: NEEDS WORK
-msgid "Shows all processes in a different format."
-msgstr "Sýnir alla ferla í öðru sniði."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 850
-#: NEEDS WORK
-msgid "Sends signals to processes."
-msgstr "Sendir merki til ferla."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 854
-#: NEEDS WORK
-msgid "Sends SIGTERM signal to process with PID 1234."
-msgstr "Sendir SIGTERM merki til ferlis með PID 1234."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 858
-#: NEEDS WORK
-msgid "Forcefully kills process with PID 1234 (SIGKILL)."
-msgstr "Þvingar að loka ferli með PID 1234 (SIGKILL)."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 863
-#: NEEDS WORK
-msgid "Networking"
-msgstr "Netkerfi"
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 865
-#: NEEDS WORK
-msgid "Tests network connectivity to a host."
-msgstr "Prófar tengingu netkerfis við hýsingu."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 869
-#: NEEDS WORK
-msgid "Tests connectivity to google.com."
-msgstr "Prófar tengingu við google.com."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 873
-#: NEEDS WORK
-msgid "Sends only 4 ping packets instead of continuous."
-msgstr "Sendir aðeins 4 ping pakka í staðinn fyrir stöðuga."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 878
-#: NEEDS WORK
-msgid "Archives"
-msgstr "Skrásetningar"
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 880
-#: NEEDS WORK
-msgid "Creates and manipulates archive files."
-msgstr "Býr til og vinnur með skjalasöfn."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 884
-#: NEEDS WORK
-msgid "Creates a tar archive from a directory."
-msgstr "Býr til tar skrá frá skráasafni."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 888
-#: NEEDS WORK
-msgid "Extracts files from a tar archive."
-msgstr "Dregur skrár úr tar skráarsafni."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 892
-#: NEEDS WORK
-msgid "Creates a compressed tar archive."
-msgstr "Býr til þjöppuð tar skjalasafn."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 897
-#: NEEDS WORK
-msgid "Bash Conditions"
-msgstr "Bash skilyrði"
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 899
-#: NEEDS WORK
-msgid "Conditional expressions for bash scripting."
-msgstr "Skilyrðislegar tjáningar fyrir bash skriftun."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 903
-#: NEEDS WORK
-msgid "Check if string is empty."
-msgstr "Athugaðu hvort strengurinn sé tómur."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 907
-#: NEEDS WORK
-msgid "Check if string is not empty."
-msgstr "Athugaðu hvort strengurinn sé ekki tómur."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 911
-#: NEEDS WORK
-msgid "Check if strings are equal."
-msgstr "Athugaðu hvort strengir séu jafnir."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 915
-#: NEEDS WORK
-msgid "Check if strings are not equal."
-msgstr "Athugaðu hvort strengir séu ekki jafnir."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 919
-#: NEEDS WORK
-msgid "Check if numbers are equal."
-msgstr "Athugaðu hvort tölurnar séu jafnar."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 923
-#: NEEDS WORK
-msgid "Check if numbers are not equal."
-msgstr "Athugaðu hvort tölur séu ekki jafnar."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 927
-#: NEEDS WORK
-msgid "Check if first number is less than second."
-msgstr "Athugaðu hvort fyrri tala sé minni en seinni."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 932
-#: NEEDS WORK
-msgid "Check if first number is less than or equal to second."
-msgstr "Athugaðu hvort fyrsti tölvan sé minni en eða jöfn þeirri seinni."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 937
-#: NEEDS WORK
-msgid "Check if first number is greater than second."
-msgstr "Athugaðu hvort fyrri talan sé stærri en seinni."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 942
-#: NEEDS WORK
-msgid "Check if first number is greater than or equal to second."
-msgstr "Athugaðu hvort fyrsti tölvan sé stærri en eða jöfn þeirri seinni."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 947
-#: NEEDS WORK
-msgid "Check if string matches regular expression."
-msgstr "Athugaðu hvort strengurinn passi við regluleg úrtök."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 952
-#: NEEDS WORK
-msgid "Check numeric conditions with arithmetic evaluation."
-msgstr "Athugaðu tölulegar skilyrði með reiknigreiningu."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 957
-#: NEEDS WORK
-msgid "Check if shell option is enabled."
-msgstr "Athugaðu hvort skelvalkostur sé virkur."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 961
-#: NEEDS WORK
-msgid "Logical NOT - negate a condition."
-msgstr "Rökrétt ekki - neita skilyrði."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 965
-#: NEEDS WORK
-msgid "Logical AND - both conditions must be true."
-msgstr "Rökrétt OG - báðar skilyrðin verða að vera sönn."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 969
-#: NEEDS WORK
-msgid "Logical OR - at least one condition must be true."
-msgstr "Lógískur ELLA - að minnsta kosti eitt skilyrði verður að vera satt."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 973
-#: NEEDS WORK
-msgid "Check if file exists."
-msgstr "Athugaðu hvort skráin sé til."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 977
-#: NEEDS WORK
-msgid "Check if file is readable."
-msgstr "Athugaðu hvort skráin sé læsileg."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 981
-#: NEEDS WORK
-msgid "Check if path is a symbolic link."
-msgstr "Athugaðu hvort slóðin sé táknræn tenging."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 985
-#: NEEDS WORK
-msgid "Check if path is a directory."
-msgstr "Athugaðu hvort slóðin sé skráarsafn."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 989
-#: NEEDS WORK
-msgid "Check if file is writable."
-msgstr "Athugaðu hvort skráin sé skrifanleg."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 993
-#: NEEDS WORK
-msgid "Check if file size is greater than 0 bytes."
-msgstr "Athugaðu hvort skráarstærðin sé meiri en 0 bætur."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 997
-#: NEEDS WORK
-msgid "Check if path is a regular file."
-msgstr "Athugaðu hvort slóðin sé venjuleg skrá."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 1001
-#: NEEDS WORK
-msgid "Check if file is executable."
-msgstr "Athugaðu hvort skráin sé framkvæmanleg."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 1005
-#: NEEDS WORK
-msgid "Check if first file is newer than second file."
-msgstr "Athugaðu hvort fyrsti skráin sé nýrri en önnur skráin."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 1009
-#: NEEDS WORK
-msgid "Check if first file is older than second file."
-msgstr "Athugaðu hvort fyrsti skráin sé eldri en önnur skráin."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 1013
-#: NEEDS WORK
-msgid "Check if both paths refer to the same file."
-msgstr "Athugaðu hvort báðar slóðir vísi á sama skrá."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 1018
-#: NEEDS WORK
-msgid "Bash Arrays"
-msgstr "Bash fylki"
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 1020
-#: NEEDS WORK
-msgid "Array operations and manipulations in bash."
-msgstr "Array aðgerðir og meðferðir í bash."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 1024
-#: NEEDS WORK
-msgid "Define array with multiple elements."
-msgstr "Skilgreina fylki með mörgum þáttum."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 1028
-#: NEEDS WORK
-msgid "Set specific array element by index."
-msgstr "Stilltu ákveðinn fylkisþátt með vísitölu."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 1032
-#: NEEDS WORK
-msgid "Set another array element by index."
-msgstr "Settu annan fylki þátt með vísitölu."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 1036
-#: NEEDS WORK
-msgid "Set third array element by index."
-msgstr "Settu þriðja fylkisþáttinn með vísitölu."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 1040
-#: NEEDS WORK
-msgid "Access first element of array."
-msgstr "Aðgangur að fyrsta stakinu í fylki."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 1044
-#: NEEDS WORK
-msgid "Access last element of array."
-msgstr "Aðgangur að síðasta stakinu í fylki."
-# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1031
 # File: usr/share/ashyterm/data/command_data.py, line: 1048
+# File: usr/share/ashyterm/data/command_data.py, line: 1069
+# File: usr/share/ashyterm/data/command_data.py, line: 1084
+# File: usr/share/ashyterm/data/command_data.py, line: 1099
+# File: usr/share/ashyterm/data/command_data.py, line: 1112
+# File: usr/share/ashyterm/data/command_data.py, line: 1223
+# File: usr/share/ashyterm/data/command_data.py, line: 1252
+# File: usr/share/ashyterm/data/command_data.py, line: 1271
+# File: usr/share/ashyterm/data/command_data.py, line: 1372
+# File: usr/share/ashyterm/data/command_data.py, line: 1469
+# File: usr/share/ashyterm/data/command_data.py, line: 1494
 #: NEEDS WORK
-msgid "Print all elements separated by spaces."
-msgstr "Prentaðu öll frumefni aðskilin með bilum."
+msgid "Advanced: Scripting & Shell"
+msgstr "Fyrirlestrar: Skrift og Skel"
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 1052
+# File: usr/share/ashyterm/data/command_data.py, line: 1034
 #: NEEDS WORK
-msgid "Get total number of elements in array."
-msgstr "Fáðu heildarfjölda þátta í fylki."
+msgid "Executes command blocks only if a condition is true."
+msgstr "Framkvæmir skipunarpakka aðeins ef skilyrði er satt."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 1056
+# File: usr/share/ashyterm/data/command_data.py, line: 1039
 #: NEEDS WORK
-msgid "Get length of first element string."
-msgstr "Fáðu lengd fyrsta þáttarstrengs."
+msgid "Tests if a file exists."
+msgstr "Prófar hvort skrá sé til."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 1060
+# File: usr/share/ashyterm/data/command_data.py, line: 174
 #: NEEDS WORK
-msgid "Get length of specific element string."
-msgstr "Fá lengd á sértækri frumefnisstreng."
+msgid "Tests if a numeric variable is equal to 5."
+msgstr "Prófar hvort töluleg breyta sé jöfn 5."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 1065
+# File: usr/share/ashyterm/data/command_data.py, line: 1051
 #: NEEDS WORK
-msgid "Extract range of elements (start at index 2, length 3)."
-msgstr "Dregið úr sviði þátta (byrjaðu á vísitölu 2, lengd 3)."
+msgid "Creates a loop that repeats an action for each item in a list."
+msgstr "Býr til lykkju sem endurtekur aðgerð fyrir hvern hlut í lista."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 1070
+# File: usr/share/ashyterm/data/command_data.py, line: 1057
 #: NEEDS WORK
-msgid "Get all array indices/keys."
-msgstr "Sæktu allar fylkjasnið/lyklana."
+msgid "Repeats the 'echo' command for the numbers 1, 2, and 3."
+msgstr "Endurtekur 'echo' skipunina fyrir tölurnar 1, 2 og 3."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 1074
+# File: usr/share/ashyterm/data/command_data.py, line: 1063
 #: NEEDS WORK
-msgid "Add new element to end of array."
-msgstr "Bæta nýju staki við enda fylkis."
+msgid "Performs an action for every file that ends with .txt."
+msgstr "Framkvæmir aðgerð fyrir hvert skjal sem endar á .txt."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1072
+#: NEEDS WORK
+msgid "Creates a loop that continues to execute as long as a condition is true."
+msgstr "Býr til lykkju sem heldur áfram að keyra svo framarlega sem skilyrði er satt."
 # 
 # File: usr/share/ashyterm/data/command_data.py, line: 1078
 #: NEEDS WORK
-msgid "Append element using compound assignment."
-msgstr "Bæta við stak með samsettum úthlutun."
+msgid "Executes the code block as long as the COUNT variable is less than 5."
+msgstr "Keyrir kóðablokkinn svo framarlega sem COUNT breytan er minni en 5."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 1082
+# File: usr/share/ashyterm/data/command_data.py, line: 1087
 #: NEEDS WORK
-msgid "Remove elements matching regex pattern."
-msgstr "Fjarlægðu þætti sem passa við regex mynstur."
+msgid "Creates a loop that continues to execute until a condition becomes true."
+msgstr "Býr til lykkju sem heldur áfram að keyra þar til skilyrði verður satt."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 1086
+# File: usr/share/ashyterm/data/command_data.py, line: 1093
 #: NEEDS WORK
-msgid "Remove specific element by index."
-msgstr "Fjarlægðu ákveðinn þátt eftir vísitölu."
+msgid "Executes the code block until the COUNT variable is equal to 0."
+msgstr "Keyrir kóðablokkinn þar til COUNT breytan er jöfn 0."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 1090
+# File: usr/share/ashyterm/data/command_data.py, line: 1101
 #: NEEDS WORK
-msgid "Create duplicate of array."
-msgstr "Búa til afrit af fylki."
+msgid "Reads user input and stores it in a variable."
+msgstr "Lesa notkun notanda og geymir það í breytu."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 1094
+# File: usr/share/ashyterm/data/command_data.py, line: 1106
 #: NEEDS WORK
-msgid "Concatenate two arrays together."
-msgstr "Sameina tvo fylki saman."
+msgid "Displays a prompt and waits for the user to type something."
+msgstr "Sýnir fyrirmæli og bíður eftir að notandinn slái eitthvað inn."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 1098
+# File: usr/share/ashyterm/data/command_data.py, line: 1115
 #: NEEDS WORK
-msgid "Read file into array, split by IFS (whitespace)."
-msgstr "Lesa skrá í fylki, skipta eftir IFS (bil)."
+msgid "Checks if a condition is true or false, used for making decisions in scripts."
+msgstr "Athugar hvort skilyrði sé satt eða ósatt, notað til að taka ákvarðanir í skriftum."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 1103
+# File: usr/share/ashyterm/data/command_data.py, line: 1120
 #: NEEDS WORK
-msgid "Bash Brace Expansion"
-msgstr "Bash klippa útvíkkanir"
+msgid "Checks if a variable is empty."
+msgstr "Athugar hvort breyta sé tóm."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 1105
+# File: usr/share/ashyterm/data/command_data.py, line: 1124
 #: NEEDS WORK
-msgid "Generate arbitrary strings using brace expansion."
-msgstr "Búðu til handahófskenndar strengir með því að nota krókaskiptingu."
+msgid "Checks if a variable is not empty."
+msgstr "Athugar hvort breyta sé ekki tóm."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 1109
+# File: usr/share/ashyterm/data/command_data.py, line: 1128
 #: NEEDS WORK
-msgid "Expand to: main.py utils.py config.py"
-msgstr "Vefja út í: main.py utils.py config.py"
+msgid "Checks if two pieces of text are exactly the same."
+msgstr "Athugar hvort tveir textabitar séu nákvæmlega eins."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 1113
+# File: usr/share/ashyterm/data/command_data.py, line: 1132
 #: NEEDS WORK
-msgid "Basic brace expansion without prefix/suffix."
-msgstr "Grunnleggende klammeutvidelse uten prefiks/suffiks."
+msgid "Checks if two pieces of text are different."
+msgstr "Athugar hvort tveir textar séu mismunandi."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 1117
+# File: usr/share/ashyterm/data/command_data.py, line: 1136
 #: NEEDS WORK
-msgid "Add file extensions to multiple base names."
-msgstr "Bættu við skráarendingum við marga grunnheiti."
+msgid "Checks if two numbers are equal."
+msgstr "Athugar hvort tveir tölur séu jafnar."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 1121
+# File: usr/share/ashyterm/data/command_data.py, line: 1140
 #: NEEDS WORK
-msgid "Create numbered file names."
-msgstr "Búðu til númeraða skráarheiti."
+msgid "Checks if two numbers are not equal."
+msgstr "Athugar hvort tveir tölur séu ekki jafnar."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 1125
+# File: usr/share/ashyterm/data/command_data.py, line: 1144
 #: NEEDS WORK
-msgid "Generate sequence from 1 to 10."
-msgstr "Búðu til röð frá 1 til 10."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 1129
-#: NEEDS WORK
-msgid "Generate zero-padded numbers (01, 02, ..., 12)."
-msgstr "Búðu til núllpúðaðar tölur (01, 02, ..., 12)."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 1133
-#: NEEDS WORK
-msgid "Generate alphabet sequence from a to z."
-msgstr "Búa til stafrófsröð frá a til z."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 1137
-#: NEEDS WORK
-msgid "Generate uppercase letter sequence."
-msgstr "Búa til stór stafaraðir."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 1141
-#: NEEDS WORK
-msgid "Generate descending sequence."
-msgstr "Búa til fallandi röð."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 1145
-#: NEEDS WORK
-msgid "Generate zero-padded sequence with leading zeros."
-msgstr "Búðu til núllpúðaða rað með forystunúllum."
+msgid "Checks if the first number is less than the second."
+msgstr "Athugar hvort fyrsta talan sé minni en önnur."
 # 
 # File: usr/share/ashyterm/data/command_data.py, line: 1149
 #: NEEDS WORK
-msgid "Nested braces: generates 1 2 3 7 8 9."
-msgstr "Nesting sviga: myndar 1 2 3 7 8 9."
+msgid "Checks if the first number is less than or equal to the second."
+msgstr "Athugar hvort fyrsta talan sé minni en eða jöfn þeirri seinni."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 1153
+# File: usr/share/ashyterm/data/command_data.py, line: 1155
 #: NEEDS WORK
-msgid "Multiple brace expansions in one expression."
-msgstr "Fjölmargir krókabreytingar í einni tjáningu."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 1157
-#: NEEDS WORK
-msgid "Create directory paths with brace expansion."
-msgstr "Búðu til skráarslóðir með krókastækkun."
+msgid "Checks if the first number is greater than the second."
+msgstr "Athugar hvort fyrsti tölvan sé stærri en sú önnur."
 # 
 # File: usr/share/ashyterm/data/command_data.py, line: 1161
 #: NEEDS WORK
-msgid "Combine different sets of values."
-msgstr "Sameina mismunandi gildi."
+msgid "Checks if the first number is greater than or equal to the second."
+msgstr "Athugar hvort fyrsti tölvan sé stærri en eða jöfn þeirri seinni."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 1165
+# File: usr/share/ashyterm/data/command_data.py, line: 1167
 #: NEEDS WORK
-msgid "Create multiple directories at once."
-msgstr "Búðu til margar skálar í einu."
+msgid "Checks if text matches a pattern (e.g., is a valid email)."
+msgstr "Athugar hvort texti passi við mynstur (t.d. sé gilt netfang)."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 1170
+# File: usr/share/ashyterm/data/command_data.py, line: 1172
 #: NEEDS WORK
-msgid "Create backup by copying file with .backup extension."
-msgstr "Búðu til afrit með því að afrita skrá með .backup viðbót."
+msgid "NOT: Reverses the result of a check."
+msgstr "EKKI: Snýr niðurstöðunni af athugun."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 1175
+# File: usr/share/ashyterm/data/command_data.py, line: 1176
 #: NEEDS WORK
-msgid "Generate platform combinations."
-msgstr "Búa til pallsamsetningar."
+msgid "AND: Checks if both conditions are true."
+msgstr "OG: Athugar hvort báðar skilyrðin séu sönn."
 # 
 # File: usr/share/ashyterm/data/command_data.py, line: 1180
 #: NEEDS WORK
-msgid "File Search"
-msgstr "Skráarleit"
+msgid "OR: Checks if at least one condition is true."
+msgstr "EÐA: Athugar hvort að að minnsta kosti ein skilyrði sé satt."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 1182
+# File: usr/share/ashyterm/data/command_data.py, line: 1184
 #: NEEDS WORK
-msgid "Powerful file search and manipulation tool."
-msgstr "Mighty file search and manipulation tool."
+msgid "Checks if a file or directory exists."
+msgstr "Athugar hvort skrá eða skráarsafn sé til."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 1187
+# File: usr/share/ashyterm/data/command_data.py, line: 1188
 #: NEEDS WORK
-msgid "Find all .txt files in current directory and subdirectories."
-msgstr "Finndu öll .txt skrár í núverandi skráarsafni og undirskráarsafnum."
+msgid "Checks if you have permission to read a file."
+msgstr "Athugar hvort þú hafir heimild til að lesa skrá."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 1193
+# File: usr/share/ashyterm/data/command_data.py, line: 1192
 #: NEEDS WORK
-msgid "Find files starting with 'config' in user's home directory."
-msgstr "Finndu skrár sem byrja á 'config' í heimaskrá notandans."
+msgid "Checks if the path is a directory."
+msgstr "Athugar hvort slóðin sé skráarsafn."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 1198
+# File: usr/share/ashyterm/data/command_data.py, line: 1196
 #: NEEDS WORK
-msgid "Find only regular files with .log extension."
-msgstr "Finndu aðeins venjuleg skrár með .log viðskeyti."
+msgid "Checks if you have permission to write to a file."
+msgstr "Athugar hvort þú hafir heimild til að skrifa í skrá."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 1202
+# File: usr/share/ashyterm/data/command_data.py, line: 1200
 #: NEEDS WORK
-msgid "Find only directories starting with 'backup'."
-msgstr "Finndu aðeins skálar sem byrja á 'backup'."
+msgid "Checks if a file is not empty."
+msgstr "Athugar hvort skrá sé ekki tóm."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 1206
+# File: usr/share/ashyterm/data/command_data.py, line: 1205
 #: NEEDS WORK
-msgid "Find and delete all .tmp files."
-msgstr "Finndu og eyðaðu öllum .tmp skrám."
+msgid "Checks if the path is a regular file (not a directory)."
+msgstr "Athugar hvort slóðin sé venjuleg skrá (ekki skráarsafn)."
 # 
 # File: usr/share/ashyterm/data/command_data.py, line: 1210
 #: NEEDS WORK
-msgid "Find files modified in the last 7 days."
-msgstr "Finndu skrár sem breyttust á síðustu 7 dögum."
+msgid "Checks if you have permission to run a file."
+msgstr "Athugar hvort þú hafir heimild til að keyra skrá."
 # 
 # File: usr/share/ashyterm/data/command_data.py, line: 1214
 #: NEEDS WORK
-msgid "Find files modified more than 30 days ago."
-msgstr "Finndu skrár sem breyttust fyrir meira en 30 dögum."
+msgid "Checks if the first file is newer than the second."
+msgstr "Athugar hvort fyrsti skráin sé nýrri en sú önnur."
 # 
 # File: usr/share/ashyterm/data/command_data.py, line: 1218
 #: NEEDS WORK
-msgid "Find files larger than 100MB."
-msgstr "Finndu skrár sem eru stærri en 100MB."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 1222
-#: NEEDS WORK
-msgid "Find files smaller than 1KB."
-msgstr "Finndu skrár sem eru minni en 1KB."
+msgid "Checks if the first file is older than the second."
+msgstr "Athugar hvort fyrsti skráin sé eldri en sú önnur."
 # 
 # File: usr/share/ashyterm/data/command_data.py, line: 1226
 #: NEEDS WORK
-msgid "Find empty files and directories."
-msgstr "Finndu tómar skrár og möppur."
+msgid "Array operations for storing multiple values in a single variable."
+msgstr "Array aðgerðir til að geyma margar gildi í einni breytu."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 1230
+# File: usr/share/ashyterm/data/command_data.py, line: 1231
 #: NEEDS WORK
-msgid "Find files with specific permissions (755)."
-msgstr "Finndu skrár með sérstökum heimildum (755)."
+msgid "Creates a list with several items."
+msgstr "Býr til lista með nokkrum hlutum."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 1234
+# File: usr/share/ashyterm/data/command_data.py, line: 1235
 #: NEEDS WORK
-msgid "Find files owned by user 'bruno'."
-msgstr "Finndu skrár sem eru í eigu notanda 'bruno'."
+msgid "Accesses the first item in the list."
+msgstr "Aðgangur að fyrsta atriði í listanum."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 1238
+# File: usr/share/ashyterm/data/command_data.py, line: 1239
 #: NEEDS WORK
-msgid "Find files owned by group 'developers'."
-msgstr "Finndu skrár sem eru í eigu hópsins 'developers'."
+msgid "Accesses the last item in the list."
+msgstr "Aðgangur að síðasta atriði í listanum."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 1242
+# File: usr/share/ashyterm/data/command_data.py, line: 1243
 #: NEEDS WORK
-msgid "Make all Python files executable."
-msgstr "Gerðu allar Python skrár framkvæmanlegar."
+msgid "Displays all items in the list."
+msgstr "Sýnir öll atriði á listanum."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 1246
+# File: usr/share/ashyterm/data/command_data.py, line: 1247
 #: NEEDS WORK
-msgid "Move all JPG files to /tmp/images/ directory."
-msgstr "Færa allar JPG skrár í /tmp/images/ möppuna."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 1250
-#: NEEDS WORK
-msgid "Find log files containing 'ERROR' text."
-msgstr "Finndu skráar sem innihalda 'ERROR' texta."
+msgid "Shows how many items are in the list."
+msgstr "Sýnir hversu margir hlutir eru í listanum."
 # 
 # File: usr/share/ashyterm/data/command_data.py, line: 1254
 #: NEEDS WORK
-msgid "Find .conf files only 2 levels deep."
-msgstr "Finndu .conf skrár aðeins 2 stig djúpt."
+msgid "Brace expansion to quickly generate text sequences."
+msgstr "Sniðsútvíkkun til að búa til textaöðruð fljótt."
 # 
 # File: usr/share/ashyterm/data/command_data.py, line: 1258
 #: NEEDS WORK
-msgid "Find files with .bak OR .backup extension."
-msgstr "Finndu skrár með .bak EÐA .backup viðskeyti."
+msgid "Generates: a.txt b.txt c.txt"
+msgstr "Býr til: a.txt b.txt c.txt"
 # 
 # File: usr/share/ashyterm/data/command_data.py, line: 1262
 #: NEEDS WORK
-msgid "Find .txt files that are also larger than 1MB."
-msgstr "Finndu .txt skrár sem eru einnig stærri en 1MB."
+msgid "Generates a sequence of numbers: 1 2 3 4 5."
+msgstr "Skapar en sekvens av nummer: 1 2 3 4 5."
 # 
 # File: usr/share/ashyterm/data/command_data.py, line: 1266
 #: NEEDS WORK
-msgid "Safely delete files with spaces in names."
-msgstr "Örugglega eyða skrám með bil í nöfnum."
+msgid "Creates multiple directories at once."
+msgstr "Býr til margar skálar í einu."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 1270
+# File: usr/share/ashyterm/data/command_data.py, line: 1274
 #: NEEDS WORK
-msgid "List contents of all ZIP files found."
-msgstr "Skrá efni allra ZIP skráa sem fundust."
+msgid "Advanced ways to modify or get information from variables."
+msgstr "Vandað aðferðir til að breyta eða fá upplýsingar um breytur."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 1277
+# File: usr/share/ashyterm/data/command_data.py, line: 1279
 #: NEEDS WORK
-msgid "Stream editor for filtering and transforming text."
-msgstr "Straumritari til að síu og umbreyta texta."
+msgid "Gets the length of the text in a variable."
+msgstr "Fær lengd textans í breytu."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 1282
+# File: usr/share/ashyterm/data/command_data.py, line: 1283
 #: NEEDS WORK
-msgid "Replace all occurrences of 'old' with 'new' in file.txt."
-msgstr "Skipta allar tilvik 'gammalt' með 'nýtt' í file.txt."
+msgid "Uses 'default' if the variable is empty or not set."
+msgstr "Notkun 'default' ef breytan er tóm eða ekki stillt."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 1287
+# File: usr/share/ashyterm/data/command_data.py, line: 1288
 #: NEEDS WORK
-msgid "Replace all instances of 'bruno' with 'maria'."
-msgstr "Skiptu öllum tilvikum 'bruno' með 'maria'."
+msgid "Uses 'default' if empty, and also sets the variable to 'default'."
+msgstr "Notkun 'default' ef tómt, og stillir einnig breytuna á 'default'."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 1292
+# File: usr/share/ashyterm/data/command_data.py, line: 1294
 #: NEEDS WORK
-msgid "Case-insensitive replacement of 'error' with 'warning'."
-msgstr "Stórufræðileg skiptin á 'error' með 'warning'."
+msgid "Shows an error and stops the script if the variable is empty."
+msgstr "Sýnir villu og stöðvar skriftuna ef breytan er tóm."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 1297
+# File: usr/share/ashyterm/data/command_data.py, line: 1300
 #: NEEDS WORK
-msgid "Replace only the first occurrence per line."
-msgstr "Skiptu aðeins fyrstu tilvikinu á hverju línu."
+msgid "Uses 'value_if_set' only if the variable has content."
+msgstr "Notkun 'value_if_set' aðeins ef breytan hefur innihald."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 1302
+# File: usr/share/ashyterm/data/command_data.py, line: 1305
 #: NEEDS WORK
-msgid "Replace whole word 'test' with 'exam' using word boundaries."
-msgstr "Skiptu heildarorðinu 'test' í 'exam' með því að nota orðamörk."
+msgid "Gets text starting from the 4th character."
+msgstr "Fær texta sem byrjar frá 4. staf."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 1307
+# File: usr/share/ashyterm/data/command_data.py, line: 1310
 #: NEEDS WORK
-msgid "Replace only on lines 2 through 5."
-msgstr "Skiptu aðeins á línum 2 til 5."
+msgid "Gets 5 characters of text, starting from the 4th character."
+msgstr "Fær 5 stafi af texta, byrjar frá 4. staf."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 1311
+# File: usr/share/ashyterm/data/command_data.py, line: 1316
 #: NEEDS WORK
-msgid "Delete all comment lines (starting with #)."
-msgstr "Eyða öllum athugasemdarlínum (sem byrja á #)."
+msgid "Removes the shortest matching 'prefix' from the beginning."
+msgstr "Fjarlægir stystu samsvarandi 'forskeyti' frá byrjun."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 1315
+# File: usr/share/ashyterm/data/command_data.py, line: 1322
 #: NEEDS WORK
-msgid "Delete all empty lines."
-msgstr "Eyða öllum tómu línum."
+msgid "Removes the longest matching 'prefix' from the beginning."
+msgstr "Fjarlægir lengsta samræmda 'forskeyti' frá byrjun."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 1319
+# File: usr/share/ashyterm/data/command_data.py, line: 1328
 #: NEEDS WORK
-msgid "Print only lines 1 through 10."
-msgstr "Prenta aðeins línur 1 til 10."
+msgid "Removes the shortest matching 'suffix' from the end."
+msgstr "Fjarlægir stystu samsvarandi 'viðskeyti' frá endanum."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 1323
-# File: usr/share/ashyterm/data/command_data.py, line: 1410
+# File: usr/share/ashyterm/data/command_data.py, line: 1333
 #: NEEDS WORK
-msgid "Print only line number 5."
-msgstr "Prenta aðeins línu númer 5."
+msgid "Removes the longest matching 'suffix' from the end."
+msgstr "Fjarlægir lengsta samræmda 'súffix' frá endanum."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 1327
+# File: usr/share/ashyterm/data/command_data.py, line: 1337
 #: NEEDS WORK
-msgid "Insert text before line 1."
-msgstr "Settu inn texta fyrir línu 1."
+msgid "Replaces the first match of 'old' with 'new'."
+msgstr "Skipar fyrsta samsvörun 'old' með 'new'."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 1331
+# File: usr/share/ashyterm/data/command_data.py, line: 1341
 #: NEEDS WORK
-msgid "Append text after the last line."
-msgstr "Bæta við texta eftir síðustu línu."
+msgid "Replaces all matches of 'old' with 'new'."
+msgstr "Skipar öllum samsvörunum við 'old' með 'new'."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 1335
-# File: usr/share/ashyterm/data/command_data.py, line: 1448
+# File: usr/share/ashyterm/data/command_data.py, line: 1346
 #: NEEDS WORK
-msgid "Convert all text to uppercase."
-msgstr "Breytðu öllu texta í hástafi."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 1339
-# File: usr/share/ashyterm/data/command_data.py, line: 1452
-#: NEEDS WORK
-msgid "Convert all text to lowercase."
-msgstr "Breytðu öllu texta í smáum stöfum."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 1343
-#: NEEDS WORK
-msgid "Alternative way to convert to uppercase."
-msgstr "Valkostur til að breyta í hástafi."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 1347
-#: NEEDS WORK
-msgid "Capitalize first letter of each word."
-msgstr "Breyta Fyrsta Stafinn Á Hverju Orði."
+msgid "Replaces 'old' with 'new' only if it's at the beginning."
+msgstr "Skipar 'gammalt' út með 'nýtt' aðeins ef það er í byrjun."
 # 
 # File: usr/share/ashyterm/data/command_data.py, line: 1351
 #: NEEDS WORK
-msgid "Wrap each line in square brackets."
-msgstr "[Umfella hverja línu í ferhyrning.]"
+msgid "Replaces 'old' with 'new' only if it's at the end."
+msgstr "Skipar 'gammalt' út 'nýtt' aðeins ef það er í lokin."
 # 
 # File: usr/share/ashyterm/data/command_data.py, line: 1355
 #: NEEDS WORK
-msgid "Add 4 spaces indentation to each line."
-msgstr "Bættu 4 bilum inn í hverja línu."
+msgid "Changes the first letter to uppercase."
+msgstr "Breyti fyrstu stafnum í stórt."
 # 
 # File: usr/share/ashyterm/data/command_data.py, line: 1359
 #: NEEDS WORK
-msgid "Append ' - processed' to end of each line."
-msgstr "Bættu við ' - unnið' í lok hvers línu."
+msgid "Changes all letters to uppercase."
+msgstr "Breyti öllum stöfum í hástafi."
 # 
 # File: usr/share/ashyterm/data/command_data.py, line: 1363
 #: NEEDS WORK
-msgid "Edit file in-place (modify original file)."
-msgstr "Breyta skrá á staðnum (breyta upprunalegu skránni)."
+msgid "Changes the first letter to lowercase."
+msgstr "Breytir fyrstu stafnum í lágstaf."
 # 
 # File: usr/share/ashyterm/data/command_data.py, line: 1367
 #: NEEDS WORK
-msgid "Edit in-place and create backup file."
-msgstr "Breyta á staðnum og búa til afritaskrá."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 1371
-#: NEEDS WORK
-msgid "Duplicate content with backreference."
-msgstr "Afturkvæmt efni með bakvísun."
+msgid "Changes all letters to lowercase."
+msgstr "Breyti öllum stöfum í lágstafi."
 # 
 # File: usr/share/ashyterm/data/command_data.py, line: 1375
 #: NEEDS WORK
-msgid "Multiple commands on lines matching pattern."
-msgstr "Fjölmargir skipanir á línum sem passa við mynstur."
+msgid ""
+"A 'mini-language' for finding text patterns. These are building blocks for tools like grep, sed, "
+"and awk."
+msgstr ""
+"„mini-mál“ til að finna textamynstur. Þetta eru byggingareiningar fyrir verkfæri eins og grep, sed "
+"og awk."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 1379
+# File: usr/share/ashyterm/data/command_data.py, line: 1381
 #: NEEDS WORK
-msgid "Execute multiple sed expressions."
-msgstr "Framkvæma margar sed tjáningar."
+msgid "Dot: Matches any single character. 'h.t' finds 'hot', 'hat', and 'h t'."
+msgstr "Punktur: Samræmir við hvaða einstaka tákn sem er. 'h.t' finnur 'hot', 'hat', og 'h t'."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 1383
+# File: usr/share/ashyterm/data/command_data.py, line: 1387
 #: NEEDS WORK
-msgid "Multiple address ranges with different operations."
-msgstr "Fjölmargir heimilisfangar með mismunandi aðgerðum."
+msgid "Asterisk: Matches zero or more repetitions of the preceding item. 'a*' finds '', 'a', 'aa'."
+msgstr "Stjarna: Samræmir núll eða fleiri endurtekningar á fyrri hlutnum. 'a*' finnur '', 'a', 'aa'."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 1388
+# File: usr/share/ashyterm/data/command_data.py, line: 1393
 #: NEEDS WORK
-msgid "Awk Commands"
-msgstr "Awk skipanir"
+msgid "Plus: Matches one or more repetitions of the preceding item. 'a+' finds 'a', 'aa', but not ''."
+msgstr "Plús: Samræmir eina eða fleiri endurtekningar á fyrri hlutnum. 'a+' finnur 'a', 'aa', en ekki ''."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 1390
+# File: usr/share/ashyterm/data/command_data.py, line: 1399
 #: NEEDS WORK
-msgid "Powerful text processing and pattern scanning tool."
-msgstr "Mighty texti úrvinnslu og mynsturskönnunar tól."
+msgid ""
+"Question Mark: Matches the preceding item zero or one time (makes it optional). 'colou?r' matches "
+"'color' and 'colour'."
+msgstr ""
+"Spurningamerki: Samræmir við fyrri hlutinn núll eða einu sinni (gerir það valfrjálst). 'colou?r' "
+"samræmir við 'color' og 'colour'."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 1394
+# File: usr/share/ashyterm/data/command_data.py, line: 1405
 #: NEEDS WORK
-msgid "Print the first field (column) of each line."
-msgstr "Prenta fyrsta reit (súlu) hvers línu."
+msgid "Caret: Matches the beginning of a line. '^Hello' only finds lines that start with 'Hello'."
+msgstr "Caret: Samræmir byrjun línu. '^Hello' finnur aðeins línur sem byrja á 'Hello'."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 1398
+# File: usr/share/ashyterm/data/command_data.py, line: 1411
 #: NEEDS WORK
-msgid "Print the 1st and 3rd fields of each line."
-msgstr "Prenta 1. og 3. reit hvers línu."
+msgid "Dollar Sign: Matches the end of a line. 'end$' only finds lines that end with 'end'."
+msgstr "Dollara merki: Samræmir endann á línu. 'end$' finnur aðeins línur sem enda á 'end'."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 1402
+# File: usr/share/ashyterm/data/command_data.py, line: 1417
 #: NEEDS WORK
-msgid "Print the last field of each line."
-msgstr "Prenta síðasta reitinn í hverju línu."
+msgid "Brackets: Matches any of the characters inside. '[abc]' finds 'a', 'b', or 'c'."
+msgstr "Blaðsíður: Samræmir hvaða tákn sem er innan. '[abc]' finnur 'a', 'b' eða 'c'."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 1406
+# File: usr/share/ashyterm/data/command_data.py, line: 1423
 #: NEEDS WORK
-msgid "Print line number followed by the entire line."
-msgstr "Prenta línunúmerið ásamt allri línunni."
+msgid "Negated Brackets: Matches any character NOT inside. '[^abc]' finds 'd', 'e', 'f', etc."
+msgstr "Neikvæðar hornkúlur: Passar við hvaða tákn SEM ER EKKI inni. '[^abc]' finnur 'd', 'e', 'f', o.s.frv."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 1414
+# File: usr/share/ashyterm/data/command_data.py, line: 1429
 #: NEEDS WORK
-msgid "Print lines 10 through 20."
-msgstr "Prenta línur 10 til 20."
+msgid "Parentheses: Groups expressions. '(ab)+' finds 'ab', 'abab', 'ababab'."
+msgstr "Fyrirkomulag: Safnar tjáningum. '(ab)+' finnur 'ab', 'abab', 'ababab'."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 1418
+# File: usr/share/ashyterm/data/command_data.py, line: 1435
 #: NEEDS WORK
-msgid "Print lines containing 'bruno'."
-msgstr "Prenta línur sem innihalda 'bruno'."
+msgid "Pipe: Acts as an 'OR'. 'cat|dog' finds 'cat' or 'dog'."
+msgstr "Rör: Virkar sem 'EÐA'. 'cat|dog' finnur 'cat' eða 'dog'."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 1422
+# File: usr/share/ashyterm/data/command_data.py, line: 1441
 #: NEEDS WORK
-msgid "Print name and sales where sales > 100."
-msgstr "Prenta nafn og sölu þar sem sala > 100."
+msgid "Curly Braces: Matches a specific number of repetitions. e.g., 'a{2,4}' finds 'aa', 'aaa', 'aaaa'."
+msgstr "Kúluð sviga: Samræmir ákveðið fjölda endurtekninga. t.d. 'a{2,4}' finnur 'aa', 'aaa', 'aaaa'."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 1426
+# File: usr/share/ashyterm/data/command_data.py, line: 1446
 #: NEEDS WORK
-msgid "Calculate sum of values in column 2."
-msgstr "Reikna summu gilda í dálki 2."
+msgid "Digit: Matches any single number from 0 to 9."
+msgstr "Sifur: Samræmir hvaða einstaka tölustaf frá 0 til 9."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 1430
+# File: usr/share/ashyterm/data/command_data.py, line: 1451
 #: NEEDS WORK
-msgid "Find the maximum value in column 2."
-msgstr "Finndu hámarksgildið í dálki 2."
+msgid "Word Character: Matches any letter, number, or underscore."
+msgstr "Orðamerki: Samræmist hvaða bókstaf, númer eða undirstrik sem er."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 1434
+# File: usr/share/ashyterm/data/command_data.py, line: 1457
 #: NEEDS WORK
-msgid "Use colon as field separator for /etc/passwd."
-msgstr "Notaðu strik til að aðgreina reiti fyrir /etc/passwd."
+msgid "Whitespace: Matches any space, tab, or newline character."
+msgstr "Hvítt bil: Samræmist hvaða bil, tab eða nýr línu karakter."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 1438
+# File: usr/share/ashyterm/data/command_data.py, line: 1463
 #: NEEDS WORK
-msgid "Set output field separator to ' - '."
-msgstr "Settu útgáfu reitaskiljanda í ' - '."
+msgid "Backslash: Escapes a special character, treating it literally. '\\.' matches a literal dot."
+msgstr ""
+"Bakslas: Flýtir sér fyrir sérstökum tákni, með því að meðhöndla það bókstaflega. '\\.' passar við "
+"bókstaflega punkt."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 1443
+# File: usr/share/ashyterm/data/command_data.py, line: 1472
 #: NEEDS WORK
-msgid "Print lines longer than 80 characters with line numbers."
-msgstr "Prenta línur sem eru lengri en 80 stafir með línunúmerum."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 1456
-#: NEEDS WORK
-msgid "Add header and format output as table."
-msgstr "Bættu við fyrirsagnir og stilltu úttak sem töflu."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 1461
-#: NEEDS WORK
-msgid "Print lines with more than 3 fields and their field count."
-msgstr "Prenta línur með fleiri en 3 reiti og fjölda reita þeirra."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 1470
-#: NEEDS WORK
-msgid "Split first field on '-' and print both parts."
-msgstr "Skiptu fyrsta reitnum á '-' og prentaðu báðar hluta."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 1474
-#: NEEDS WORK
-msgid "Count lines containing 'ERROR'."
-msgstr "Telja línur sem innihalda 'ERROR'."
+msgid "A command-line text editor, great for replacing words in files."
+msgstr "Skipta texta í skipanalínu, frábært til að skipta út orðum í skrám."
 # 
 # File: usr/share/ashyterm/data/command_data.py, line: 1478
 #: NEEDS WORK
-msgid "Count occurrences of each unique value in column 1."
-msgstr "Teldu fjölda tilvika hvers einstaks gildi í dálki 1."
+msgid "Replaces all occurrences of 'old' with 'new' in the file."
+msgstr "Skipar allar tilvik af 'gömlu' með 'nýju' í skrá."
 # 
 # File: usr/share/ashyterm/data/command_data.py, line: 1483
 #: NEEDS WORK
-msgid "Use BEGIN and END blocks for initialization and cleanup."
-msgstr "Notaðu BEGIN og END blokkir fyrir upphafs- og hreinsunarferli."
+msgid "Deletes all lines that start with # (comments)."
+msgstr "Eyðir öllum línum sem byrja á # (athugasemdir)."
 # 
 # File: usr/share/ashyterm/data/command_data.py, line: 1488
 #: NEEDS WORK
-msgid "Format output with specific widths and precision."
-msgstr "Snið úttak með ákveðnum breiddum og nákvæmni."
+msgid "Saves the modification directly in the original file."
+msgstr "Sparar breytinguna beint í upprunalega skrána."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 1492
+# File: usr/share/ashyterm/data/command_data.py, line: 1497
 #: NEEDS WORK
-msgid "Print lines where column 2 starts with '2024'."
-msgstr "Prenta línur þar sem dálkur 2 byrjar á '2024'."
+msgid "An advanced tool for processing text, especially column-based data."
+msgstr "Vandað verkfæri til að vinna úr texta, sérstaklega dálkaskiptum gögnum."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 1496
+# File: usr/share/ashyterm/data/command_data.py, line: 1502
 #: NEEDS WORK
-msgid "Remove leading whitespace from each line."
-msgstr "Fjarlægðu forystu bil frá hverju línu."
+msgid "Displays only the first column (word) of each line."
+msgstr "Sýnir aðeins fyrstu dálkinn (orð) á hverju línu."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1506
+#: NEEDS WORK
+msgid "Displays only the last column of each line."
+msgstr "Sýnir aðeins síðustu dálkinn í hverju línu."
+# 
+# File: usr/share/ashyterm/data/command_data.py, line: 1511
+#: NEEDS WORK
+msgid "Displays the value of column 1 only if the value of column 3 is greater than 100."
+msgstr "Sýnir gildi dálks 1 aðeins ef gildi dálks 3 er hærra en 100."
 # 
 # File: usr/share/ashyterm/app.py, line: 333
 #: NEEDS WORK
