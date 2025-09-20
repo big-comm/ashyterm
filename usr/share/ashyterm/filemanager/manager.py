@@ -1462,7 +1462,7 @@ class FileManager(GObject.Object):
                             == Path(local_path).parent.resolve()
                         ):
                             self.logger.info(
-                                f"Download to current local directory completed. Refreshing view."
+                                "Download to current local directory completed. Refreshing view."
                             )
                             self.refresh(source="filemanager")
 

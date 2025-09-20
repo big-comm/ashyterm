@@ -13,7 +13,7 @@ from ...utils.translation_utils import _
 
 
 class CommandEditDialog(Adw.Window):
-    """Dialog for adding or editing a custom command."""
+    """Dialog for adding or editing a custom command with improved UI/UX."""
 
     __gsignals__ = {
         "save-requested": (
@@ -23,69 +23,157 @@ class CommandEditDialog(Adw.Window):
         ),
     }
 
-    def __init__(self, parent, original_command: Optional[CommandItem] = None):
+    def __init__(
+        self,
+        parent,
+        all_categories: List[str],
+        original_command: Optional[CommandItem] = None,
+    ):
         super().__init__(
-            transient_for=parent, modal=True, default_width=500, default_height=400
+            transient_for=parent, modal=True, default_width=600, default_height=500
         )
         self.original_command = original_command
-        is_new = original_command is None
-        self.set_title(_("Add Custom Command") if is_new else _("Edit Custom Command"))
-
-        self.name_view = Gtk.TextView(wrap_mode=Gtk.WrapMode.WORD_CHAR, vexpand=True)
-        self.category_entry = Adw.EntryRow(title=_("Category"))
-        self.description_view = Gtk.TextView(
-            wrap_mode=Gtk.WrapMode.WORD_CHAR, vexpand=True
+        self.all_categories = all_categories
+        self.is_new = original_command is None
+        self.set_title(
+            _("Add Custom Command") if self.is_new else _("Edit Custom Command")
         )
 
-        if not is_new:
+        self._build_ui()
+
+        if not self.is_new:
             self.name_view.get_buffer().set_text(original_command.name)
             self.category_entry.set_text(original_command.category)
             self.description_view.get_buffer().set_text(original_command.description)
 
-        self._build_ui()
+        self.connect("map", self._on_map)
+
+    def _on_map(self, widget):
+        """Set focus to the name entry when the dialog is shown."""
+        self.name_view.grab_focus()
 
     def _build_ui(self):
         header = Adw.HeaderBar()
+        cancel_button = Gtk.Button(label=_("Cancel"))
+        cancel_button.connect("clicked", lambda _: self.close())
+        header.pack_start(cancel_button)
+
         save_button = Gtk.Button(label=_("Save"), css_classes=["suggested-action"])
         save_button.connect("clicked", self._on_save)
         header.pack_end(save_button)
+        self.set_default_widget(save_button)
 
-        page = Adw.PreferencesPage()
-        group = Adw.PreferencesGroup()
-        page.add(group)
+        # Use a Gtk.Box for a flexible form layout instead of Adw.PreferencesGroup
+        form_box = Gtk.Box(
+            orientation=Gtk.Orientation.VERTICAL,
+            spacing=12,
+            margin_top=12,
+            margin_bottom=12,
+            margin_start=12,
+            margin_end=12,
+        )
 
-        name_row = Adw.PreferencesRow(title=_("Command"))
-        scrolled_name = Gtk.ScrolledWindow(min_content_height=60)
+        # Command Name Field
+        command_label = Gtk.Label(
+            label=_("Command"), xalign=0.0, css_classes=["title-4"]
+        )
+        form_box.append(command_label)
+        self.name_view = Gtk.TextView(
+            wrap_mode=Gtk.WrapMode.WORD_CHAR,
+            vexpand=False,
+            pixels_above_lines=4,
+            pixels_below_lines=4,
+            left_margin=6,
+            right_margin=6,
+        )
+        self.name_view.add_css_class("monospace")
+        scrolled_name = Gtk.ScrolledWindow(
+            min_content_height=60, hscrollbar_policy=Gtk.PolicyType.NEVER
+        )
         scrolled_name.set_child(self.name_view)
-        name_row.set_child(scrolled_name)
-        group.add(name_row)
+        scrolled_name.add_css_class("card")
+        form_box.append(scrolled_name)
 
-        group.add(self.category_entry)
+        # Category Field
+        category_label = Gtk.Label(
+            label=_("Category"), xalign=0.0, css_classes=["title-4"]
+        )
+        form_box.append(category_label)
+        self.category_entry = Gtk.Entry(
+            hexpand=True,
+            placeholder_text=_("Select an existing category or type a new one"),
+        )
+        completion_model = Gtk.ListStore.new([str])
+        for category in sorted(self.all_categories):
+            completion_model.append([category])
+        completion = Gtk.EntryCompletion()
+        completion.set_model(completion_model)
+        completion.set_text_column(0)
+        self.category_entry.set_completion(completion)
+        form_box.append(self.category_entry)
 
-        desc_row = Adw.PreferencesRow(title=_("Description"))
-        scrolled_desc = Gtk.ScrolledWindow(min_content_height=100)
+        # Description Field
+        description_label = Gtk.Label(
+            label=_("Description"), xalign=0.0, css_classes=["title-4"]
+        )
+        form_box.append(description_label)
+        self.description_view = Gtk.TextView(
+            wrap_mode=Gtk.WrapMode.WORD_CHAR,
+            vexpand=True,
+            pixels_above_lines=4,
+            pixels_below_lines=4,
+            left_margin=6,
+            right_margin=6,
+        )
+        scrolled_desc = Gtk.ScrolledWindow(
+            min_content_height=100, hscrollbar_policy=Gtk.PolicyType.NEVER
+        )
         scrolled_desc.set_child(self.description_view)
-        desc_row.set_child(scrolled_desc)
-        group.add(desc_row)
+        scrolled_desc.add_css_class("card")
+        form_box.append(scrolled_desc)
+
+        scrolled_page = Gtk.ScrolledWindow(
+            hscrollbar_policy=Gtk.PolicyType.NEVER, vexpand=True
+        )
+        scrolled_page.set_child(form_box)
 
         toolbar_view = Adw.ToolbarView()
         toolbar_view.add_top_bar(header)
-        toolbar_view.set_content(page)
+        toolbar_view.set_content(scrolled_page)
         self.set_content(toolbar_view)
 
     def _on_save(self, _button):
-        buffer = self.name_view.get_buffer()
-        name = buffer.get_text(
-            buffer.get_start_iter(), buffer.get_end_iter(), True
+        # Clear previous errors
+        self.name_view.remove_css_class("error")
+        self.description_view.remove_css_class("error")
+
+        name_buffer = self.name_view.get_buffer()
+        name = name_buffer.get_text(
+            name_buffer.get_start_iter(), name_buffer.get_end_iter(), True
         ).strip()
         category = self.category_entry.get_text().strip()
-        buffer = self.description_view.get_buffer()
-        description = buffer.get_text(
-            buffer.get_start_iter(), buffer.get_end_iter(), True
+        desc_buffer = self.description_view.get_buffer()
+        description = desc_buffer.get_text(
+            desc_buffer.get_start_iter(), desc_buffer.get_end_iter(), True
         ).strip()
 
-        if not name or not description:
+        # Validation
+        validation_passed = True
+        if not name:
+            self.name_view.add_css_class("error")
+            validation_passed = False
+        if not description:
+            self.description_view.add_css_class("error")
+            validation_passed = False
+
+        if not validation_passed:
+            if hasattr(self.get_transient_for(), "toast_overlay"):
+                toast = Adw.Toast(title=_("Please fill in all required fields."))
+                self.get_transient_for().toast_overlay.add_toast(toast)
             return
+
+        if not category:
+            category = _("Custom")
 
         new_command = CommandItem(name, category, description, is_custom=True)
         self.emit("save-requested", self.original_command, new_command)
@@ -95,9 +183,10 @@ class CommandEditDialog(Adw.Window):
 class CommandRow(Gtk.ListBoxRow):
     """Custom widget for displaying a command in the ListBox."""
 
-    def __init__(self, command: CommandItem):
+    def __init__(self, command: CommandItem, on_delete_callback=None):
         super().__init__()
         self.command = command
+        self.on_delete_callback = on_delete_callback
 
         card = Gtk.Box(css_classes=["command-guide-card"], valign=Gtk.Align.CENTER)
         self.set_child(card)
@@ -138,6 +227,20 @@ class CommandRow(Gtk.ListBoxRow):
             desc_label.set_text(command.description)
             desc_label.add_css_class("command-description")
             box.append(desc_label)
+
+            # Add delete button for custom commands
+            if command.is_custom and self.on_delete_callback:
+                delete_button = Gtk.Button(
+                    icon_name="user-trash-symbolic",
+                    css_classes=["flat", "circular", "destructive-action"],
+                    tooltip_text=_("Delete this custom command"),
+                )
+                delete_button.connect("clicked", self._on_delete_clicked)
+                box.append(delete_button)
+
+    def _on_delete_clicked(self, button):
+        if self.on_delete_callback:
+            self.on_delete_callback(self.command)
 
 
 class CommandGuideDialog(Adw.Window):
@@ -389,21 +492,23 @@ class CommandGuideDialog(Adw.Window):
         switch_box.append(self.custom_only_switch)
         bottom_bar.pack_start(switch_box)
 
-        actions_box = Gtk.Box(
-            orientation=Gtk.Orientation.HORIZONTAL, css_classes=["linked"]
-        )
-        add_button = Gtk.Button(label=_("Add New"))
+        add_button = Gtk.Button(label=_("Add New Command"))
         add_button.connect("clicked", self._on_add_clicked)
-        self.remove_button = Gtk.Button(
-            label=_("Remove Selected"), css_classes=["destructive-action"]
-        )
-        self.remove_button.connect("clicked", self._on_remove_clicked)
-        actions_box.append(add_button)
-        actions_box.append(self.remove_button)
-        bottom_bar.pack_end(actions_box)
+        bottom_bar.pack_end(add_button)
 
     def _populate_list(self):
         self.all_commands = self.command_manager.get_all_commands()
+
+        # MODIFIED: Define the sorting key function
+        def sort_key(cmd: CommandItem):
+            if cmd.is_custom:
+                # Sort custom commands by category name, then by name
+                return (0, cmd.category, cmd.name)
+            else:
+                # Sort native commands by their original index
+                return (1, cmd.native_sort_index)
+
+        self.all_commands.sort(key=sort_key)
         self._filter_list()
 
     def _filter_list(self):
@@ -417,7 +522,6 @@ class CommandGuideDialog(Adw.Window):
             if custom_only and not command.is_custom:
                 continue
 
-            # Show command if no search term or if it matches search
             show = not search_term or (
                 search_term in command.name.lower()
                 or search_term in command.description.lower()
@@ -425,22 +529,21 @@ class CommandGuideDialog(Adw.Window):
             )
 
             if show:
-                row = CommandRow(command)
+                row = CommandRow(
+                    command, on_delete_callback=self._on_delete_row_clicked
+                )
                 self.list_box.append(row)
 
         self.list_box.invalidate_headers()
-        self._update_remove_button_state()
         GLib.idle_add(self._update_sticky_header)
 
     def _update_header(self, row: CommandRow, before: Optional[CommandRow]):
         if row.get_header() is None:
             command_item = row.command
 
-            # Create enhanced header with icon and better styling
             header_box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=12)
             header_box.add_css_class("category-header")
 
-            # Add category icon
             icon_label = Gtk.Label(label="📁", css_classes=["category-icon"])
             icon_label.set_tooltip_text(_("Category"))
             header_box.append(icon_label)
@@ -478,7 +581,6 @@ class CommandGuideDialog(Adw.Window):
     def _on_row_selected(self, list_box, row):
         """Handle row selection changes."""
         self._update_selection_styling(row)
-        self._update_remove_button_state()
 
     def _on_row_activated(self, _list_box, row: CommandRow):
         if not row.command.is_general_description:
@@ -495,7 +597,6 @@ class CommandGuideDialog(Adw.Window):
         ):
             self._on_row_activated(self.list_box, selected)
         else:
-            # Find first selectable command
             first_row = self._find_selectable_row(None, "next")
             if first_row:
                 self._on_row_activated(self.list_box, first_row)
@@ -563,7 +664,6 @@ class CommandGuideDialog(Adw.Window):
         ):
             return Gdk.EVENT_PROPAGATE
 
-        # Handle printable characters by focusing search
         unicode_val = Gdk.keyval_to_unicode(keyval)
         if unicode_val and chr(unicode_val).isprintable():
             self.search_entry.grab_focus()
@@ -575,25 +675,18 @@ class CommandGuideDialog(Adw.Window):
         return Gdk.EVENT_PROPAGATE
 
     def _on_destroy(self, widget):
-        """Clean up resources when dialog is destroyed to prevent memory leaks."""
         self._cleanup_resources()
 
     def _on_close_request(self, widget):
-        """Ensure cleanup happens, then allow the window to close."""
+        self.search_entry.set_text("")
         self.hide()
         return Gdk.EVENT_STOP
 
     def _cleanup_resources(self):
-        """Clean up widgets and resources to free memory."""
         try:
-            # Clear all list box children to free widget memory
             while child := self.list_box.get_first_child():
                 self.list_box.remove(child)
-
-            # Clear command data references
             self.all_commands.clear()
-
-            # Disconnect scroll event handler
             if hasattr(self, "scrolled_window") and self.scrolled_window:
                 vadjustment = self.scrolled_window.get_vadjustment()
                 if vadjustment and hasattr(self, "_scroll_handler_id"):
@@ -602,9 +695,7 @@ class CommandGuideDialog(Adw.Window):
                     ):
                         vadjustment.disconnect(self._scroll_handler_id)
                     del self._scroll_handler_id
-
         except Exception as e:
-            # Log error but don't crash during cleanup
             print(f"Warning: Error during CommandGuideDialog cleanup: {e}")
 
     def _on_active_changed(self, widget, pspec):
@@ -612,50 +703,57 @@ class CommandGuideDialog(Adw.Window):
             self.close()
 
     def _on_add_clicked(self, _button):
-        dialog = CommandEditDialog(self)
+        all_categories = list(self.command_manager.get_all_categories())
+        dialog = CommandEditDialog(self, all_categories=all_categories)
         dialog.connect("save-requested", self._on_save_new)
         dialog.present()
 
-    def _on_remove_clicked(self, _button):
-        selected_row = self.list_box.get_selected_row()
-        if selected_row:
-            command_item = selected_row.command
-            if command_item.is_custom:
-                self.command_manager.remove_custom_command(command_item)
-                self._populate_list()
+    def _on_delete_row_clicked(self, command_item: CommandItem):
+        dialog = Adw.MessageDialog(
+            transient_for=self,
+            heading=_("Delete Custom Command?"),
+            body=_(
+                "Are you sure you want to permanently delete the command:\n\n<b>{name}</b>"
+            ).format(name=GLib.markup_escape_text(command_item.name)),
+            body_use_markup=True,
+            default_response="cancel",
+            close_response="cancel",
+        )
+        dialog.add_response("cancel", _("Cancel"))
+        dialog.add_response("delete", _("Delete"))
+        dialog.set_response_appearance("delete", Adw.ResponseAppearance.DESTRUCTIVE)
+        dialog.connect("response", self._on_delete_confirm, command_item)
+        dialog.present()
+
+    def _on_delete_confirm(self, dialog, response, command_item):
+        if response == "delete":
+            self.command_manager.remove_custom_command(command_item)
+            self._populate_list()
 
     def _on_save_new(self, _dialog, _original, new_command):
         self.command_manager.add_custom_command(new_command)
         self._populate_list()
 
     def _scroll_to_row(self, row):
-        """Scroll the scrolled window to make the selected row visible."""
         if not row or not self.scrolled_window:
             return
-
         vadjustment = self.scrolled_window.get_vadjustment()
         if not vadjustment:
             return
-
         allocation = row.get_allocation()
         row_top = allocation.y
         row_bottom = allocation.y + allocation.height
         visible_top = vadjustment.get_value()
         visible_bottom = visible_top + vadjustment.get_page_size()
-
         if row_top < visible_top:
             vadjustment.set_value(row_top)
         elif row_bottom > visible_bottom:
             vadjustment.set_value(row_bottom - vadjustment.get_page_size())
 
     def _set_initial_selection(self):
-        """Set initial focus to search entry for keyboard navigation."""
-        # Set focus to the search entry so keyboard navigation works
         self.search_entry.grab_focus()
 
     def _update_selection_styling(self, selected_row):
-        """Update the visual styling for the selected row."""
-        # Remove selected class from all rows
         child = self.list_box.get_first_child()
         while child:
             if hasattr(child, "get_child"):
@@ -663,50 +761,31 @@ class CommandGuideDialog(Adw.Window):
                 if card and hasattr(card, "remove_css_class"):
                     card.remove_css_class("selected")
             child = child.get_next_sibling()
-
-        # Add selected class to the new row
         if selected_row and hasattr(selected_row, "get_child"):
             card = selected_row.get_child()
             if card and hasattr(card, "add_css_class"):
                 card.add_css_class("selected")
 
-    def _update_remove_button_state(self):
-        """Update the remove button state based on selected row."""
-        selected_row = self.list_box.get_selected_row()
-        self.remove_button.set_sensitive(
-            selected_row
-            and hasattr(selected_row, "command")
-            and selected_row.command.is_custom
-        )
-
     def _on_scroll_changed(self, adjustment):
-        """Update sticky header based on scroll position."""
         if not self.list_box.get_first_child():
             self.sticky_header.set_visible(False)
             return
-
         scroll_y = adjustment.get_value()
         page_size = adjustment.get_page_size()
         visible_top = scroll_y
-        substantial_visible_top = visible_top + (page_size * 0.1)  # 10% threshold
-
-        # Find the last scrolled category and description
+        substantial_visible_top = visible_top + (page_size * 0.1)
         last_category = None
         last_description = None
         first_header_visible = False
-
         child = self.list_box.get_first_child()
         while child:
             if isinstance(child, CommandRow):
                 child_top = child.get_allocation().y
-
                 if child_top < substantial_visible_top:
                     if child.command.is_general_description:
                         last_description = child.command
                     else:
                         last_category = child.command.category
-
-                # Check if first category header is visible
                 if (
                     child.get_header()
                     and child.get_header().get_visible()
@@ -714,17 +793,11 @@ class CommandGuideDialog(Adw.Window):
                     <= visible_top + 80
                 ):
                     first_header_visible = True
-
             child = child.get_next_sibling()
-
-        # Determine what to show in sticky header
         show_category = last_category and not first_header_visible
         show_description = last_description and not first_header_visible
-
-        # Update sticky header
         if scroll_y > 0 and (show_category or show_description):
             self.sticky_header.set_visible(True)
-
             if show_category:
                 self.sticky_category_label.set_markup(
                     f"<b>{GLib.markup_escape_text(last_category)}</b>"
@@ -732,7 +805,6 @@ class CommandGuideDialog(Adw.Window):
                 self.sticky_category_box.set_visible(True)
             else:
                 self.sticky_category_box.set_visible(False)
-
             if show_description:
                 self.sticky_description_label.set_markup(
                     f"ℹ️ <b>{GLib.markup_escape_text(last_description.name)}</b>: {GLib.markup_escape_text(last_description.description)}"
@@ -744,10 +816,8 @@ class CommandGuideDialog(Adw.Window):
             self.sticky_header.set_visible(False)
 
     def _update_sticky_header(self):
-        """Update sticky header content based on current scroll position."""
         if not self.scrolled_window:
             return
-
         vadjustment = self.scrolled_window.get_vadjustment()
         if vadjustment:
             self._on_scroll_changed(vadjustment)

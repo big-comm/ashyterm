@@ -2,7 +2,7 @@
 
 import json
 import threading
-from typing import List, Optional
+from typing import List, Optional, Set
 
 from gi.repository import GObject
 
@@ -53,6 +53,7 @@ class CommandItem(GObject.GObject):
         description: str,
         is_custom: bool = False,
         is_general_description: bool = False,
+        _native_sort_index: int = -1,
     ):
         super().__init__()
         self._name = name
@@ -60,6 +61,8 @@ class CommandItem(GObject.GObject):
         self._description = description
         self._is_custom = is_custom
         self._is_general_description = is_general_description
+        # MODIFIED: Store the original sort index for native commands
+        self._native_sort_index = _native_sort_index
 
     @property
     def name(self) -> str:
@@ -80,6 +83,10 @@ class CommandItem(GObject.GObject):
     @property
     def is_general_description(self) -> bool:
         return self._is_general_description
+
+    @property
+    def native_sort_index(self) -> int:
+        return self._native_sort_index
 
     def to_dict(self) -> dict:
         return {
@@ -107,6 +114,8 @@ class CommandManager:
     def _load_native_commands(self):
         with self._lock:
             self._native_commands = []
+            # MODIFIED: Use a simple counter to preserve the exact original order
+            native_index = 0
             for cmd_group in NATIVE_COMMANDS:
                 # Add the general description row
                 self._native_commands.append(
@@ -116,8 +125,10 @@ class CommandManager:
                         description=cmd_group["general_description"],
                         is_custom=False,
                         is_general_description=True,
+                        _native_sort_index=native_index,
                     )
                 )
+                native_index += 1
                 # Add each variation
                 for variation in cmd_group["variations"]:
                     self._native_commands.append(
@@ -127,8 +138,10 @@ class CommandManager:
                             description=variation["description"],
                             is_custom=False,
                             is_general_description=False,
+                            _native_sort_index=native_index,
                         )
                     )
+                    native_index += 1
             self.logger.info(
                 f"Loaded {len(self._native_commands)} native command items (including descriptions)."
             )
@@ -171,6 +184,15 @@ class CommandManager:
     def get_all_commands(self) -> List[CommandItem]:
         with self._lock:
             return self._native_commands + self._custom_commands
+
+    def get_all_categories(self) -> Set[str]:
+        """Returns a set of all unique category names."""
+        with self._lock:
+            return {
+                cmd.category
+                for cmd in self.get_all_commands()
+                if cmd.category and not cmd.is_general_description
+            }
 
     def add_custom_command(self, command: CommandItem):
         with self._lock:

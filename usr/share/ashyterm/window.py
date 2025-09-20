@@ -70,7 +70,7 @@ class CommTerminalWindow(Adw.ApplicationWindow):
         # Window setup
         self._setup_initial_window_size()
         self.set_title(_("Ashy Terminal"))
-        self.set_icon_name("ashyterm")
+        self.set_icon_name(None)
 
         # Component Initialization
         self._create_managers_and_ui()
@@ -1224,6 +1224,8 @@ class CommTerminalWindow(Adw.ApplicationWindow):
                 command_text += "\n"
             paste_data = b"\x1b[200~" + command_text.encode("utf-8") + b"\x1b[201~"
             terminal.feed_child(paste_data)
+            # Clear selection after pasting
+            terminal.feed_child(b"\x1b[C")  # Right arrow to deselect
             terminal.grab_focus()
         else:
             self.toast_overlay.add_toast(
