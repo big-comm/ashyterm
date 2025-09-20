@@ -2,7 +2,7 @@
 
 cd /usr/share/ashyterm
 execute_ashy="/usr/bin/python3 main.py"
-kdialog --msgbox "$LD_PRELOAD"
+
 execute_with_memory_verification() {
     # Changes the default memory allocator to reduce GTK4 memory leaks with verification
     if [[ -e /usr/lib/libchildenv.so ]]; then
