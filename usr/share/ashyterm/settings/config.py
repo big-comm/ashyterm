@@ -153,7 +153,7 @@ class DefaultSettings:
             "console_log_level": "ERROR",
             # Remote Editing
             "use_system_tmp_for_edit": False,
-            "clear_remote_edit_files_on_exit": False,
+            "clear_remote_edit_files_on_exit": True,
             # Search Settings
             "search_case_sensitive": False,
             "search_use_regex": False,
