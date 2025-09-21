@@ -110,8 +110,8 @@ class DefaultSettings:
             # General Appearance
             "gtk_theme": "terminal",
             "color_scheme": 1,
-            "transparency": 18,
-            "headerbar_transparency": 18,
+            "transparency": 12,
+            "headerbar_transparency": 12,
             "font": "Noto Mono Nerd Font 12",
             "line_spacing": 1.0,
             "bold_is_bright": False,
@@ -215,7 +215,7 @@ class ColorSchemes:
             "biglinux": {
                 "name": "BigLinux",
                 "foreground": "#e6e6e6",
-                "background": "#000000",
+                "background": "#0a0a0a",
                 "cursor": "#e6e6e6",
                 "palette": [
                     "#444444",
