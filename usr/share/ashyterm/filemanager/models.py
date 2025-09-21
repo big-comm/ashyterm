@@ -75,7 +75,6 @@ class FileItem(GObject.GObject):
         self._date = date
         self._owner = owner
         self._group = group
-        self._is_link = is_link
         self._link_target = link_target
 
     @property

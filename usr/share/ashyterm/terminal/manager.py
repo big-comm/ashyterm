@@ -40,11 +40,8 @@ from .spawner import get_spawner
 
 
 class TerminalState(Enum):
-    INITIALIZING = "initializing"
-    RUNNING = "running"
     FOCUSED = "focused"
     UNFOCUSED = "unfocused"
-    EXITING = "exiting"
     EXITED = "exited"
     SPAWN_FAILED = "spawn_failed"
 

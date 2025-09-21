@@ -1207,13 +1207,16 @@ class CommTerminalWindow(Adw.ApplicationWindow):
         return Gdk.EVENT_STOP
 
     def _show_command_guide_dialog(self):
-        """Creates and shows the command guide popover."""
+        """Creates and shows the command guide dialog, or closes it if already visible."""
         if self.command_guide_dialog is None:
             self.command_guide_dialog = CommandGuideDialog(self)
             self.command_guide_dialog.connect(
                 "command-selected", self._on_command_selected_from_guide
             )
-        self.command_guide_dialog.present()
+        if self.command_guide_dialog.get_visible():
+            self.command_guide_dialog.close()
+        else:
+            self.command_guide_dialog.present()
 
     def _on_command_selected_from_guide(self, dialog, command_text):
         """Callback for when a command is selected from the guide."""

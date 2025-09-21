@@ -390,7 +390,7 @@ class FileManager(GObject.Object):
         history_button.connect("clicked", self._on_show_transfer_history)
         self.action_bar.pack_end(history_button)
 
-        self.upload_button = Gtk.Button.new_from_icon_name("document-send-symbolic")
+        self.upload_button = Gtk.Button.new_from_icon_name("upload-symbolic")
         self.upload_button.set_tooltip_text(_("Upload Files"))
         self.upload_button.connect("clicked", self._on_upload_clicked)
         self.action_bar.pack_end(self.upload_button)
@@ -1075,50 +1075,6 @@ class FileManager(GObject.Object):
                 self._show_general_context_menu(translated_x, translated_y)
         except Exception as e:
             self.logger.error(f"Error in right-click handler: {e}")
-
-    def _on_column_view_right_click(self, gesture, n_press, x, y):
-        try:
-            widget = self.column_view.pick(x, y, Gtk.PickFlags.DEFAULT)
-            list_item = None
-            if widget and widget != self.column_view:
-                # Find the list_item
-                current = widget
-                while current and not hasattr(current, "list_item"):
-                    current = current.get_parent()
-                if current and hasattr(current, "list_item"):
-                    list_item = current.list_item
-            if list_item:
-                position = list_item.get_position()
-                self._on_item_right_click(gesture, n_press, x, y, position)
-            else:
-                # Calculate position from y coordinate
-                list_view = self.column_view.get_first_child()
-                if list_view:
-                    children = list(list_view)
-                    if children:
-                        first_child = children[0]
-                        start_position = first_child.get_position()
-                        row_height = first_child.get_allocation().height
-                        if row_height > 0:
-                            list_view_alloc = list_view.get_allocation()
-                            y_in_list = y - list_view_alloc.y
-                            row_index = int(y_in_list // row_height)
-                            position = start_position + row_index
-                            n_items = self.selection_model.get_n_items()
-                            if 0 <= position < n_items:
-                                self._on_item_right_click(
-                                    gesture, n_press, x, y, position
-                                )
-                            else:
-                                self._show_general_context_menu(x, y)
-                        else:
-                            self._show_general_context_menu(x, y)
-                    else:
-                        self._show_general_context_menu(x, y)
-                else:
-                    self._show_general_context_menu(x, y)
-        except Exception as e:
-            self.logger.error(f"Error in column view right-click handler: {e}")
 
     def _show_general_context_menu(self, x, y):
         menu = Gio.Menu()

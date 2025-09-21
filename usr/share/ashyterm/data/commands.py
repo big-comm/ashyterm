@@ -208,17 +208,6 @@ class CommandManager:
             ]
             self.save_custom_commands()
 
-    def update_custom_command(
-        self, original_command: CommandItem, updated_command: CommandItem
-    ):
-        with self._lock:
-            for i, cmd in enumerate(self._custom_commands):
-                if cmd.name == original_command.name:
-                    self._custom_commands[i] = updated_command
-                    break
-            self.save_custom_commands()
-
-
 _command_manager_instance: Optional[CommandManager] = None
 _command_manager_lock = threading.Lock()
 

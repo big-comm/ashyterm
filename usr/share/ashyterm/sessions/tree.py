@@ -735,6 +735,15 @@ class SessionTreeView:
             if hasattr(self.parent_window, "action_handler"):
                 self.parent_window.action_handler.delete_selected_items()
             return Gdk.EVENT_STOP
+        if keyval == Gdk.KEY_BackSpace:
+            # Remove last character from search entry
+            if hasattr(self.parent_window, "search_entry"):
+                current_text = self.parent_window.search_entry.get_text()
+                if current_text:
+                    new_text = current_text[:-1]
+                    self.parent_window.search_entry.set_text(new_text)
+                    self.parent_window.search_entry.set_position(-1)
+            return Gdk.EVENT_STOP
         return Gdk.EVENT_PROPAGATE
 
     def get_selected_item(

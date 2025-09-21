@@ -127,8 +127,8 @@ class WindowUIBuilder:
         paned separator { background: var(--view-bg-color); }
         popover.menu separator { background-color: color-mix(in srgb, var(--headerbar-border-color) var(--border-opacity), transparent); }
         #scrolled_tab_bar scrollbar trough { margin: 0px; }
-        #scrolled_tab_bar button { min-width:24px; margin-right: 8px; }
-        headerbar box { margin: 0px; padding-top:0px; padding-bottom:0px; }
+        #scrolled_tab_bar button { min-width:24px; margin-right: 8px; margin: 0px; padding-top: 0px; padding-bottom: 0px; }
+        .main-header-bar box { margin: 0px; padding-top: 0px; padding-bottom: 0px; }
         .custom-tab-button { padding-left: 12px; padding-right: 0px; border-radius: 10px; padding-top: 2px; padding-bottom: 2px; }
         .custom-tab-button.active { background: color-mix(in srgb, currentColor 12%, transparent); }
         .custom-tab-button:hover { background: color-mix(in srgb, currentColor 7%, transparent); }
@@ -220,23 +220,13 @@ class WindowUIBuilder:
         .sidebar-session-tree row:selected:hover {
             background-color: alpha(@accent_bg_color, 0.5);
         }
-        .top-bar {
-            background: var(--secondary-sidebar-bg-color);
-        }
         /* Sidebar toggle button styling - hover only, no active background */
         .sidebar-toggle-button:active,
         .sidebar-toggle-button:checked {
             background: transparent;
         }
         .flipped-icon { transform: scaleX(-1); }
-        /* Command Guide Dialog Card Style */
-        .command-guide-card {
-            background-color: @window_bg_color;
-            border: 1px solid @borders;
-            border-radius: 8px;
-            padding: 8px;
-            margin: 4px 0;
-        }
+        viewport, toolbarview {background-color: var(--headerbar-bg-color);}
         """
         provider = Gtk.CssProvider()
         provider.load_from_data(css.encode("utf-8"))

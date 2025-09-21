@@ -54,11 +54,11 @@ class CommandEditDialog(Adw.Window):
 
     def _build_ui(self):
         header = Adw.HeaderBar()
-        cancel_button = Gtk.Button(label=_("Cancel"))
+        cancel_button = Gtk.Button(label=_("Cancel"), valign=Gtk.Align.CENTER)
         cancel_button.connect("clicked", lambda _: self.close())
         header.pack_start(cancel_button)
 
-        save_button = Gtk.Button(label=_("Save"), css_classes=["suggested-action"])
+        save_button = Gtk.Button(label=_("Save"), css_classes=["suggested-action"], valign=Gtk.Align.CENTER)
         save_button.connect("clicked", self._on_save)
         header.pack_end(save_button)
         self.set_default_widget(save_button)
@@ -234,6 +234,7 @@ class CommandRow(Gtk.ListBoxRow):
                     icon_name="user-trash-symbolic",
                     css_classes=["flat", "circular", "destructive-action"],
                     tooltip_text=_("Delete this custom command"),
+                    valign=Gtk.Align.CENTER,
                 )
                 delete_button.connect("clicked", self._on_delete_clicked)
                 box.append(delete_button)
@@ -257,6 +258,9 @@ class CommandGuideDialog(Adw.Window):
 
         # Store references to event controllers for cleanup
         self._event_controllers = []
+        self._is_visible = False  # Track visibility state manually
+        self._allow_destroy = False  # Control destruction
+        self._presenting = False  # Flag to prevent close during present
 
         parent_width = parent_window.get_width()
         parent_height = parent_window.get_height()
@@ -266,6 +270,12 @@ class CommandGuideDialog(Adw.Window):
         self.connect("notify::is-active", self._on_active_changed)
         self.connect("destroy", self._on_destroy)
         self.connect("close-request", self._on_close_request)
+        self.connect("show", self._on_show)
+        self.connect("hide", self._on_hide)
+
+        # Connect to parent window destroy signal
+        if parent_window:
+            parent_window.connect("destroy", self._on_parent_destroyed)
 
         self._build_ui()
         self._populate_list()
@@ -279,30 +289,22 @@ class CommandGuideDialog(Adw.Window):
         self.add_controller(key_controller)
         self._event_controllers.append(key_controller)
 
+    def present(self):
+        """Override present to set flag preventing close during presentation."""
+        self._presenting = True
+        super().present()
+        GLib.idle_add(lambda: setattr(self, '_presenting', False))
+
     def _build_ui(self):
         css_provider = Gtk.CssProvider()
         css_provider.load_from_data(
             b"""
             .command-guide-card {
-                border-radius: 6px;
-                padding: 0px;
+                padding-top: 8px;
+                padding-bottom: 8px;
                 margin-right: 14px;
                 margin-left: 14px;
                 transition: all 0.2s ease;
-                border: 0px solid alpha(@borders, 0.6);
-                box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08);
-                background-color: alpha(@theme_bg_color, 0.98);
-            }
-            .command-guide-card:hover {
-                background-color: alpha(@theme_selected_bg_color, 0.08);
-                border-color: alpha(@theme_selected_bg_color, 0.4);
-                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.12);
-                transform: translateY(-1px);
-            }
-            .command-guide-card.selected {
-                background-color: alpha(@theme_selected_bg_color, 0.12);
-                border-color: alpha(@theme_selected_bg_color, 0.5);
-                box-shadow: 0 0 0 2px alpha(@theme_selected_bg_color, 0.25);
             }
             .category-header {
                 background: linear-gradient(135deg, alpha(@theme_selected_bg_color, 0.9) 0%, alpha(@theme_selected_bg_color, 0.7) 100%);
@@ -314,29 +316,17 @@ class CommandGuideDialog(Adw.Window):
                 color: @theme_selected_fg_color;
             }
             .category-separator {
-                background: linear-gradient(90deg, @accent_color 0%, @theme_selected_bg_color 50%, @accent_color 100%);
-                margin: 0px;
-                min-height: 1px;
-                border-radius: 1px;
-                opacity: 0.8;
+                margin-top: 20px;
             }
             .general-description {
-                background: linear-gradient(135deg, alpha(@theme_bg_color, 0.95) 0%, alpha(@theme_bg_color, 0.9) 100%);
+                background: @view_bg_color;
                 border-radius: 4px;
                 padding: 4px 6px;
                 margin: 2px 6px;
                 border-left: 2px solid @accent_color;
                 color: @theme_fg_color;
-                font-style: italic;
-                box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.05);
+                font-weight: bold;
                 border: 1px solid alpha(@borders, 0.4);
-                font-size: 0.85em;
-            }
-            .boxed-list {
-                background-color: alpha(@theme_bg_color, 0.98);
-                border-radius: 4px;
-                padding: 3px;
-                border: 1px solid alpha(@borders, 0.3);
             }
             .command-name {
                 font-weight: 600;
@@ -356,37 +346,14 @@ class CommandGuideDialog(Adw.Window):
                 font-weight: 500;
                 opacity: 0.95;
             }
-            .category-icon {
-                font-size: 1em;
-                color: @accent_color;
-                font-weight: bold;
+            .command-guide-background {
+                background-color: var(--headerbar-bg-color);
             }
-            .category-title {
-                font-size: 1em;
-                font-weight: bold;
-                color: @theme_selected_fg_color;
-                text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
-            }
-            .sticky-header-container {
-                background: linear-gradient(180deg, alpha(@theme_bg_color, 0.95) 0%, alpha(@theme_bg_color, 0.9) 100%);
-                margin-top: -15px;
-                margin-left: 0px;
-                padding: 2px;
-            }
-            .sticky-category-header {
-                background: linear-gradient(135deg, alpha(@theme_selected_bg_color, 0.9) 0%, alpha(@theme_selected_bg_color, 0.7) 100%);
+            .command-guide-boxed-list {
+                background-color: var(--headerbar-bg-color);
                 border-radius: 4px;
-                padding: 4px 8px;
-                margin-top: 0;
-                margin-left: -4px;
-                margin-right: 12px;
-                font-weight: bold;
-                color: @theme_selected_fg_color;
-            }
-            .sticky-general-description {
-                border-radius: 3px;
-                padding: 3px 5px;
-                color: @theme_fg_color;
+                padding: 3px;
+                border: 1px solid alpha(@borders, 0.3);
             }
             """
         )
@@ -403,7 +370,7 @@ class CommandGuideDialog(Adw.Window):
         toolbar_view.add_top_bar(header)
 
         self.search_entry = Gtk.SearchEntry(
-            hexpand=True, placeholder_text=_("Search commands...")
+            placeholder_text=_("Search commands..."), valign=Gtk.Align.CENTER
         )
         self.search_entry.connect("search-changed", lambda *_: self._filter_list())
         self.search_entry.connect("activate", self._on_search_activate)
@@ -413,11 +380,28 @@ class CommandGuideDialog(Adw.Window):
         self.search_entry.add_controller(search_key_controller)
         self._event_controllers.append(search_key_controller)
 
-        header.set_title_widget(self.search_entry)
+        header.pack_start(self.search_entry)
+
+        self.custom_only_switch = Gtk.Switch(valign=Gtk.Align.CENTER)
+        self.custom_only_switch.connect(
+            "notify::active", lambda *_: self._filter_list()
+        )
+
+        switch_box = Gtk.Box(spacing=6)
+        switch_box.append(
+            Gtk.Label(label=_("Show Only Custom Commands"), valign=Gtk.Align.CENTER)
+        )
+        switch_box.append(self.custom_only_switch)
+        header.set_title_widget(switch_box)
+
+        add_button = Gtk.Button(label=_("Add New Command"), valign=Gtk.Align.CENTER)
+        add_button.connect("clicked", self._on_add_clicked)
+        header.pack_end(add_button)
 
         scrolled_window = Gtk.ScrolledWindow(
             vexpand=True, hscrollbar_policy=Gtk.PolicyType.NEVER
         )
+        scrolled_window.add_css_class("command-guide-background")
         self.scrolled_window = scrolled_window
 
         # Create overlay for sticky headers
@@ -462,7 +446,7 @@ class CommandGuideDialog(Adw.Window):
         overlay.add_overlay(self.sticky_header)
 
         self.list_box = Gtk.ListBox(
-            selection_mode=Gtk.SelectionMode.SINGLE, css_classes=["boxed-list"]
+            selection_mode=Gtk.SelectionMode.SINGLE, css_classes=["command-guide-boxed-list"]
         )
         self.list_box.set_header_func(self._update_header)
         self.list_box.connect("row-activated", self._on_row_activated)
@@ -475,26 +459,6 @@ class CommandGuideDialog(Adw.Window):
             vadjustment.connect("value-changed", self._on_scroll_changed)
 
         toolbar_view.set_content(overlay)
-
-        bottom_bar = Adw.HeaderBar()
-        bottom_bar.set_show_end_title_buttons(False)
-        toolbar_view.add_bottom_bar(bottom_bar)
-
-        self.custom_only_switch = Gtk.Switch(valign=Gtk.Align.CENTER)
-        self.custom_only_switch.connect(
-            "notify::active", lambda *_: self._filter_list()
-        )
-
-        switch_box = Gtk.Box(spacing=6)
-        switch_box.append(
-            Gtk.Label(label=_("Show Only Custom Commands"), valign=Gtk.Align.CENTER)
-        )
-        switch_box.append(self.custom_only_switch)
-        bottom_bar.pack_start(switch_box)
-
-        add_button = Gtk.Button(label=_("Add New Command"))
-        add_button.connect("clicked", self._on_add_clicked)
-        bottom_bar.pack_end(add_button)
 
     def _populate_list(self):
         self.all_commands = self.command_manager.get_all_commands()
@@ -636,7 +600,10 @@ class CommandGuideDialog(Adw.Window):
         return None
 
     def _on_search_key_pressed(self, controller, keyval, keycode, state):
-        if keyval == Gdk.KEY_Down:
+        if keyval == Gdk.KEY_Escape:
+            self.close()
+            return Gdk.EVENT_STOP
+        elif keyval == Gdk.KEY_Down:
             selected = self.list_box.get_selected_row()
             next_row = self._find_selectable_row(selected, "next")
             if next_row:
@@ -659,9 +626,7 @@ class CommandGuideDialog(Adw.Window):
             self.close()
             return Gdk.EVENT_STOP
 
-        if self.search_entry.has_focus() or state & (
-            Gdk.ModifierType.CONTROL_MASK | Gdk.ModifierType.ALT_MASK
-        ):
+        if state & (Gdk.ModifierType.CONTROL_MASK | Gdk.ModifierType.ALT_MASK):
             return Gdk.EVENT_PROPAGATE
 
         unicode_val = Gdk.keyval_to_unicode(keyval)
@@ -676,6 +641,32 @@ class CommandGuideDialog(Adw.Window):
 
     def _on_destroy(self, widget):
         self._cleanup_resources()
+
+    def close(self):
+        """Override close to hide instead of destroy the dialog."""
+        self.hide()
+
+    def destroy(self):
+        """Override destroy to prevent accidental destruction."""
+        # Only allow destruction if explicitly requested
+        if not hasattr(self, '_allow_destroy') or not self._allow_destroy:
+            self.hide()
+            return
+        super().destroy()
+
+    def _on_parent_destroyed(self, parent_window):
+        """Handle parent window destruction by allowing dialog destruction."""
+        self._allow_destroy = True
+        self.destroy()
+
+    def _on_show(self, widget):
+        """Handle dialog show event."""
+        self._is_visible = True
+
+    def _on_hide(self, widget):
+        """Handle dialog hide event."""
+        self._is_visible = False
+        self.search_entry.set_text("")
 
     def _on_close_request(self, widget):
         self.search_entry.set_text("")
@@ -699,8 +690,13 @@ class CommandGuideDialog(Adw.Window):
             print(f"Warning: Error during CommandGuideDialog cleanup: {e}")
 
     def _on_active_changed(self, widget, pspec):
+        if not self._presenting and not self.is_active() and self.get_visible():
+            GLib.timeout_add(200, self._delayed_close)
+
+    def _delayed_close(self):
         if not self.is_active() and self.get_visible():
             self.close()
+        return False
 
     def _on_add_clicked(self, _button):
         all_categories = list(self.command_manager.get_all_categories())

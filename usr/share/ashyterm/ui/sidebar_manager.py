@@ -164,7 +164,7 @@ class SidebarManager:
                     self.sidebar_popover.unparent()
                 self.sidebar_popover.set_parent(button)
                 self.sidebar_popover.popup()
-                GLib.idle_add(self._focus_search_entry)
+                GLib.idle_add(self._focus_first_item)
             else:
                 self.sidebar_popover.popdown()
         else:
@@ -208,8 +208,22 @@ class SidebarManager:
         self.update_sidebar_sizes()
 
     def _on_search_key_pressed(self, _, keyval, *args) -> bool:
-        if keyval == Gdk.KEY_Up:
-            self.session_tree.get_widget().grab_focus()
+        if keyval == Gdk.KEY_Down:
+            tree_widget = self.session_tree.get_widget()
+            if tree_widget:
+                tree_widget.grab_focus()
+                # Select the first item
+                if self.session_tree.filter_model.get_n_items() > 0:
+                    self.session_tree.selection_model.select_item(0, True)
+            return Gdk.EVENT_STOP
+        elif keyval == Gdk.KEY_Up:
+            tree_widget = self.session_tree.get_widget()
+            if tree_widget:
+                tree_widget.grab_focus()
+                # Select the last item
+                n_items = self.session_tree.filter_model.get_n_items()
+                if n_items > 0:
+                    self.session_tree.selection_model.select_item(n_items - 1, True)
             return Gdk.EVENT_STOP
         return Gdk.EVENT_PROPAGATE
 
@@ -227,8 +241,15 @@ class SidebarManager:
             tooltip_text = _("Hide Sidebar") if is_visible else _("Show Sidebar")
             self.toggle_sidebar_button.set_tooltip_text(tooltip_text)
 
-    def _focus_search_entry(self):
-        self.search_entry.grab_focus()
+    def _focus_first_item(self):
+        """Focus on the first item in the session tree for keyboard navigation."""
+        tree_widget = self.session_tree.get_widget()
+        if tree_widget:
+            tree_widget.grab_focus()
+            # Select the first item if nothing is selected
+            if self.session_tree.selection_model.get_selection().get_size() == 0:
+                if self.session_tree.filter_model.get_n_items() > 0:
+                    self.session_tree.selection_model.select_item(0, True)
         return False
 
     def update_sidebar_sizes(self):
