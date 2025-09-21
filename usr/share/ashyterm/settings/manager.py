@@ -760,6 +760,30 @@ class SettingsManager:
         except Exception as e:
             self.logger.warning(f"Failed to apply GTK terminal theme: {e}")
 
+    # NEW: Method to remove the custom terminal theme CSS.
+    def remove_gtk_terminal_theme(self, window) -> None:
+        """Removes the custom CSS providers for the terminal theme."""
+        try:
+            if hasattr(window, "_terminal_theme_header_provider"):
+                Gtk.StyleContext.remove_provider_for_display(
+                    Gdk.Display.get_default(), window._terminal_theme_header_provider
+                )
+                del window._terminal_theme_header_provider
+                self.logger.info("Removed terminal theme header provider.")
+
+            if hasattr(window, "_terminal_theme_tabs_provider"):
+                Gtk.StyleContext.remove_provider_for_display(
+                    Gdk.Display.get_default(), window._terminal_theme_tabs_provider
+                )
+                del window._terminal_theme_tabs_provider
+                self.logger.info("Removed terminal theme tabs provider.")
+
+            # Re-apply headerbar transparency to restore default appearance
+            if hasattr(window, "header_bar"):
+                self.apply_headerbar_transparency(window.header_bar)
+        except Exception as e:
+            self.logger.warning(f"Failed to remove GTK terminal theme: {e}")
+
     def get_shortcut(self, action_name: str) -> str:
         return self.get(f"shortcuts.{action_name}", "")
 
