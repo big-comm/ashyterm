@@ -524,9 +524,9 @@ class WindowUIBuilder:
             css = """
             window {
                 border-top: 1px solid rgba(120, 120, 120, 0.5);
-                border-left: 1px solid rgba(80, 80, 80, 0.5);
-                border-right: 1px solid rgba(80, 80, 80, 0.5);
-                border-bottom: 1px solid rgba(80, 80, 80, 0.5);
+                border-left: 1px solid rgba(60, 60, 60, 0.5);
+                border-right: 1px solid rgba(60, 60, 60, 0.5);
+                border-bottom: 1px solid rgba(60, 60, 60, 0.5);
             }
             """
         self.border_provider.load_from_data(css.encode("utf-8"))
