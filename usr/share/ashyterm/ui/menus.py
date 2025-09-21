@@ -4,7 +4,7 @@ import gi
 
 gi.require_version("Gtk", "4.0")
 gi.require_version("Adw", "1")
-from gi.repository import Adw, Gio, Gtk
+from gi.repository import Adw, Gdk, Gio, Gtk
 
 from ..helpers import accelerator_to_label, is_valid_url
 from ..settings.config import DefaultSettings
@@ -15,9 +15,10 @@ from ..utils.translation_utils import _
 class ThemeSelectorWidget(Gtk.Box):
     """Custom widget for selecting the GTK color scheme."""
 
-    def __init__(self, settings_manager: SettingsManager):
+    def __init__(self, settings_manager: SettingsManager, parent_window):
         super().__init__(orientation=Gtk.Orientation.HORIZONTAL, spacing=30)
         self.settings_manager = settings_manager
+        self.parent_window = parent_window
         self.style_manager = Adw.StyleManager.get_default()
 
         self.add_css_class("themeselector")
@@ -42,9 +43,17 @@ class ThemeSelectorWidget(Gtk.Box):
         self.dark_button.add_css_class("theme-selector")
         self.dark_button.connect("toggled", self._on_theme_changed, "dark")
 
+        self.terminal_button = Gtk.CheckButton(
+            group=self.system_button, tooltip_text=_("Match Terminal Colors")
+        )
+        self.terminal_button.add_css_class("terminal")
+        self.terminal_button.add_css_class("theme-selector")
+        self.terminal_button.connect("toggled", self._on_theme_changed, "terminal")
+
         self.append(self.system_button)
         self.append(self.light_button)
         self.append(self.dark_button)
+        self.append(self.terminal_button)
 
         self._update_button_state()
 
@@ -56,8 +65,25 @@ class ThemeSelectorWidget(Gtk.Box):
             self.style_manager.set_color_scheme(Adw.ColorScheme.FORCE_LIGHT)
         elif theme == "dark":
             self.style_manager.set_color_scheme(Adw.ColorScheme.FORCE_DARK)
+        elif theme == "terminal":
+            self.style_manager.set_color_scheme(Adw.ColorScheme.FORCE_DARK)
+            self.settings_manager.apply_gtk_terminal_theme(self.parent_window)
         else:
             self.style_manager.set_color_scheme(Adw.ColorScheme.DEFAULT)
+
+        # Remove terminal theme provider if switching away
+        if theme != "terminal":
+            if hasattr(self.parent_window, '_terminal_theme_css_provider'):
+                self.parent_window.get_style_context().remove_provider(self.parent_window._terminal_theme_css_provider)
+                delattr(self.parent_window, '_terminal_theme_css_provider')
+            if hasattr(self.parent_window, '_terminal_theme_header_provider'):
+                self.parent_window.header_bar.get_style_context().remove_provider(self.parent_window._terminal_theme_header_provider)
+                delattr(self.parent_window, '_terminal_theme_header_provider')
+            if hasattr(self.parent_window, '_terminal_theme_tabs_provider'):
+                Gtk.StyleContext.remove_provider_for_display(Gdk.Display.get_default(), self.parent_window._terminal_theme_tabs_provider)
+                delattr(self.parent_window, '_terminal_theme_tabs_provider')
+            # Reapply headerbar transparency
+            self.settings_manager.apply_headerbar_transparency(self.parent_window.header_bar)
 
         self.settings_manager.set("gtk_theme", theme)
 
@@ -67,6 +93,8 @@ class ThemeSelectorWidget(Gtk.Box):
             self.light_button.set_active(True)
         elif current_theme == "dark":
             self.dark_button.set_active(True)
+        elif current_theme == "terminal":
+            self.terminal_button.set_active(True)
         else:
             self.system_button.set_active(True)
 
@@ -146,7 +174,7 @@ class MainApplicationMenu:
         main_box.add_css_class("main-menu-popover")
         popover.set_child(main_box)
 
-        theme_selector = ThemeSelectorWidget(parent_window.settings_manager)
+        theme_selector = ThemeSelectorWidget(parent_window.settings_manager, parent_window)
         font_sizer_widget = FontSizerWidget(parent_window)
 
         main_box.append(theme_selector)

@@ -108,13 +108,13 @@ class DefaultSettings:
     def get_defaults() -> Dict[str, Any]:
         return {
             # General Appearance
-            "gtk_theme": "default",
-            "color_scheme": 5,
-            "transparency": 12,
-            "headerbar_transparency": 10,
-            "font": "Monospace 12",
+            "gtk_theme": "terminal",
+            "color_scheme": 1,
+            "transparency": 18,
+            "headerbar_transparency": 18,
+            "font": "Noto Mono Nerd Font 12",
             "line_spacing": 1.0,
-            "bold_is_bright": True,
+            "bold_is_bright": False,
             "tab_alignment": "center",
             # Window State
             "window_width": 1200,
@@ -210,6 +210,30 @@ class ColorSchemes:
                     "#ad7fa8",
                     "#34e2e2",
                     "#eeeeec",
+                ],
+            },
+            "biglinux": {
+                "name": "BigLinux",
+                "foreground": "#e6e6e6",
+                "background": "#000000",
+                "cursor": "#e6e6e6",
+                "palette": [
+                    "#444444",
+                    "#ed4545",
+                    "#11d164",
+                    "#f6ca5a",
+                    "#5c7aff",
+                    "#d26cc9",
+                    "#39acf3",
+                    "#dcdfe4",
+                    "#7f8888",
+                    "#f56b66",
+                    "#4ef384",
+                    "#ffeda2",
+                    "#85a6ff",
+                    "#f48bea",
+                    "#6dccff",
+                    "#ffffff",
                 ],
             },
             "light": {
@@ -388,6 +412,7 @@ class ColorSchemeMap:
 
     SCHEME_ORDER = [
         "system_default",
+        "biglinux",
         "light",
         "dark",
         "solarized_light",

@@ -229,6 +229,10 @@ class CommTerminalWindow(Adw.ApplicationWindow):
         # Apply initial headerbar transparency
         self.settings_manager.apply_headerbar_transparency(self.header_bar)
 
+        # Apply initial GTK terminal theme if set
+        if self.settings_manager.get("gtk_theme") == "terminal":
+            self.settings_manager.apply_gtk_terminal_theme(self)
+
     def _connect_component_signals(self) -> None:
         """
         Connects signals and callbacks between the window and its managers.
@@ -444,6 +448,12 @@ class CommTerminalWindow(Adw.ApplicationWindow):
                 self._update_file_manager_transparency()
             if self.font_sizer_widget and key == "font":
                 self.font_sizer_widget.update_display()
+
+    def _on_color_scheme_changed(self, dialog, idx):
+        """Handle color scheme changes from the dialog."""
+        self.terminal_manager.apply_settings_to_all_terminals()
+        if self.settings_manager.get("gtk_theme") == "terminal":
+            self.settings_manager.apply_gtk_terminal_theme(self)
 
     def _on_session_activated(self, session: SessionItem) -> None:
         is_valid, errors = validate_session_data(session.to_dict())

@@ -563,11 +563,7 @@ class PreferencesDialog(Adw.PreferencesWindow):
         dialog = ColorSchemeDialog(self, self.settings_manager)
         main_window = self.get_transient_for()
         if main_window and hasattr(main_window, "terminal_manager"):
-            dialog.connect(
-                "scheme-changed",
-                lambda d,
-                idx: main_window.terminal_manager.apply_settings_to_all_terminals(),
-            )
+            dialog.connect("scheme-changed", main_window._on_color_scheme_changed)
         dialog.connect(
             "close-request", lambda win: self._update_color_scheme_row_subtitle()
         )

@@ -36,6 +36,9 @@ class WindowUIBuilder:
             "changed::button-layout", self._on_button_layout_changed
         )
 
+        # Connect to window maximized state changes
+        self.window.connect("notify::maximized", self._on_maximized_changed)
+
         # --- Widgets to be created and exposed ---
         self.header_bar = None
         self.flap = None
@@ -87,6 +90,7 @@ class WindowUIBuilder:
         .themeselector checkbutton.follow { background-image: linear-gradient(to bottom right, #fff 49.99%, #202020 50.01%); }
         .themeselector checkbutton.light { background-color: #fff; }
         .themeselector checkbutton.dark { background-color: #202020; }
+        .themeselector checkbutton.terminal { background: linear-gradient(45deg, #000 50%, #fff 50%); }
         .themeselector checkbutton radio {
             -gtk-icon-source: none; border: none; background: none; box-shadow: none;
             min-width: 12px; min-height: 12px; transform: translate(27px, 14px); padding: 2px;
@@ -227,11 +231,19 @@ class WindowUIBuilder:
         }
         .flipped-icon { transform: scaleX(-1); }
         viewport, toolbarview {background-color: var(--headerbar-bg-color);}
+
         """
         provider = Gtk.CssProvider()
         provider.load_from_data(css.encode("utf-8"))
         Gtk.StyleContext.add_provider_for_display(
             Gdk.Display.get_default(), provider, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION
+        )
+
+        # Separate provider for window borders (conditional on maximized state)
+        self.border_provider = Gtk.CssProvider()
+        self._update_border_css()
+        Gtk.StyleContext.add_provider_for_display(
+            Gdk.Display.get_default(), self.border_provider, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION
         )
 
     def _setup_main_structure(self) -> Gtk.Box:
@@ -298,6 +310,9 @@ class WindowUIBuilder:
     def _create_header_bar(self) -> Adw.HeaderBar:
         """Create the header bar with controls."""
         header_bar = Adw.HeaderBar(css_classes=["main-header-bar"])
+
+        # Assign to window early so menus can access it
+        self.window.header_bar = header_bar
 
         # Create buttons
         self.toggle_sidebar_button = Gtk.ToggleButton(
@@ -384,6 +399,7 @@ class WindowUIBuilder:
             propagate_natural_height=True,
             hexpand=True,
         )
+        self.scrolled_tab_bar.add_css_class("scrolled-tab-bar")
         self.scrolled_tab_bar.set_policy(Gtk.PolicyType.AUTOMATIC, Gtk.PolicyType.NEVER)
         self.scrolled_tab_bar.set_child(self.tab_manager.get_tab_bar())
 
@@ -515,3 +531,22 @@ class WindowUIBuilder:
 
         self.toast_overlay = Adw.ToastOverlay(child=view_stack)
         return self.toast_overlay
+
+    def _update_border_css(self):
+        """Update the window border CSS based on maximized state."""
+        if self.window.is_maximized():
+            css = ""
+        else:
+            css = """
+            window {
+                border-top: 1px solid rgba(60, 60, 60, 0.5);
+                border-left: 1px solid rgba(50, 50, 50, 0.5);
+                border-right: 1px solid rgba(50, 50, 50, 0.5);
+                border-bottom: 1px solid rgba(70, 70, 70, 0.7);
+            }
+            """
+        self.border_provider.load_from_data(css.encode("utf-8"))
+
+    def _on_maximized_changed(self, window, param):
+        """Handle window maximized state changes."""
+        self._update_border_css()

@@ -11,7 +11,7 @@ import gi
 gi.require_version("Gtk", "4.0")
 gi.require_version("Adw", "1")
 gi.require_version("Vte", "3.91")
-from gi.repository import Gdk, Gtk, Pango, Vte
+from gi.repository import Adw, Gdk, Gtk, Pango, Vte
 
 from ..utils.exceptions import ConfigValidationError
 from ..utils.logger import get_logger, log_error_with_context
@@ -447,14 +447,40 @@ class SettingsManager:
         all_schemes = self.get_all_schemes()
         return all_schemes.get(scheme_name, all_schemes[self.get_scheme_order()[0]])
 
+    def _calculate_adaptive_alpha(
+        self, base_color_hex: str, user_transparency: float
+    ) -> float:
+        """
+        Calculates the final alpha value based on the base color's luminance
+        to provide a perceptually more consistent transparency effect.
+        """
+        rgba = Gdk.RGBA()
+        rgba.parse(base_color_hex)
+
+        # Calculate perceptual luminance (Y in YIQ). This value ranges from 0.0 (black) to 1.0 (white).
+        luminance = 0.299 * rgba.red + 0.587 * rgba.green + 0.114 * rgba.blue
+
+        # Create a boost factor. Darker colors (lower luminance) get a bigger boost.
+        # A boost_factor of 0.3 means black (L=0) gets a 30% boost, while white (L=1) gets 0%.
+        # This value is reduced from 0.8 to make the effect more subtle and controllable.
+        boost_factor = 0.3
+        adjustment_factor = 1.0 + (boost_factor * (1.0 - luminance))
+
+        # Apply the boost to the user's desired transparency
+        adjusted_transparency = min(100.0, user_transparency * adjustment_factor)
+
+        # Apply the perceptually uniform curve to the adjusted value
+        final_alpha = max(0.0, min(1.0, 1.0 - (adjusted_transparency / 200.0)))
+        return final_alpha
+
     def apply_terminal_settings(self, terminal, window) -> None:
-        transparency = self.get("transparency", 0)
+        user_transparency = self.get("transparency", 0)
         style_context = window.get_style_context()
 
         # Handle terminal transparency
         if hasattr(window, "_transparency_css_provider"):
             style_context.remove_provider(window._transparency_css_provider)
-        if transparency > 0:
+        if user_transparency > 0:
             css_provider = Gtk.CssProvider()
             css = ".terminal-tab-view > .view { background-color: transparent; } .background { background: transparent; }"
             css_provider.load_from_data(css.encode("utf-8"))
@@ -467,7 +493,12 @@ class SettingsManager:
         fg_color, bg_color, cursor_color = Gdk.RGBA(), Gdk.RGBA(), Gdk.RGBA()
         fg_color.parse(color_scheme.get("foreground", "#FFFFFF"))
         bg_color.parse(color_scheme.get("background", "#000000"))
-        bg_color.alpha = max(0.0, min(1.0, 1.0 - (transparency / 100.0) ** 1.6))
+
+        # NEW: Use adaptive transparency calculation
+        bg_color.alpha = self._calculate_adaptive_alpha(
+            color_scheme.get("background", "#000000"), user_transparency
+        )
+
         cursor_color.parse(
             color_scheme.get("cursor", color_scheme.get("foreground", "#FFFFFF"))
         )
@@ -585,10 +616,15 @@ class SettingsManager:
     def apply_headerbar_transparency(self, headerbar) -> None:
         """Apply headerbar transparency to a headerbar widget."""
         try:
-            transparency = self.get("headerbar_transparency", 0)
-            if transparency > 0:
-                # Calculate opacity using the same formula as terminal transparency
-                alpha = max(0.0, min(1.0, 1.0 - (transparency / 100.0) ** 1.6))
+            user_transparency = self.get("headerbar_transparency", 0)
+            if user_transparency > 0:
+                # Assume an average dark theme background for calculation
+                style_manager = Adw.StyleManager.get_default()
+                is_dark = style_manager.get_dark()
+                base_color = "#303030" if is_dark else "#f0f0f0"
+
+                # NEW: Use adaptive transparency calculation
+                alpha = self._calculate_adaptive_alpha(base_color, user_transparency)
                 headerbar.set_opacity(alpha)
                 self.logger.info(f"Headerbar opacity set to {alpha}")
             else:
@@ -597,6 +633,46 @@ class SettingsManager:
                 self.logger.info("Headerbar transparency is 0, setting full opacity")
         except Exception as e:
             self.logger.warning(f"Failed to apply headerbar transparency: {e}")
+
+    def apply_gtk_terminal_theme(self, window) -> None:
+        """Apply terminal colors to GTK elements (headerbar and tabs)."""
+        try:
+            scheme = self.get_color_scheme_data()
+            bg_color = scheme.get("background", "#000000")
+            fg_color = scheme.get("foreground", "#ffffff")
+
+            # Remove old providers
+            if hasattr(window, "_terminal_theme_header_provider"):
+                window.header_bar.get_style_context().remove_provider(window._terminal_theme_header_provider)
+            if hasattr(window, "_terminal_theme_tabs_provider"):
+                Gtk.StyleContext.remove_provider_for_display(Gdk.Display.get_default(), window._terminal_theme_tabs_provider)
+
+            # For headerbar
+            css_header = f".main-header-bar {{ background-color: {bg_color}; color: {fg_color}; }}"
+            provider_header = Gtk.CssProvider()
+            provider_header.load_from_data(css_header.encode("utf-8"))
+            window.header_bar.get_style_context().add_provider(
+                provider_header, Gtk.STYLE_PROVIDER_PRIORITY_USER
+            )
+            self.apply_headerbar_transparency(window.header_bar)
+            window._terminal_theme_header_provider = provider_header
+
+            # For tabs
+            tab_bar = window.scrolled_tab_bar.get_child()
+            if tab_bar:
+                css_tabs = f"""
+                .scrolled-tab-bar viewport {{ background-color: {bg_color}; color: {fg_color}; }}
+                .scrolled-tab-bar viewport box .horizontal.active {{ background-color: color-mix(in srgb, {fg_color}, transparent 78%); }}
+                """
+                provider_tabs = Gtk.CssProvider()
+                provider_tabs.load_from_data(css_tabs.encode("utf-8"))
+                Gtk.StyleContext.add_provider_for_display(
+                    Gdk.Display.get_default(), provider_tabs, Gtk.STYLE_PROVIDER_PRIORITY_USER
+                )
+                window._terminal_theme_tabs_provider = provider_tabs
+
+        except Exception as e:
+            self.logger.warning(f"Failed to apply GTK terminal theme: {e}")
 
     def get_shortcut(self, action_name: str) -> str:
         return self.get(f"shortcuts.{action_name}", "")
