@@ -93,13 +93,16 @@ class CommTerminalApp(Adw.Application):
             self.settings_manager = SettingsManager()
             theme = self.settings_manager.get("gtk_theme", "dark")
             style_manager = Adw.StyleManager.get_default()
+
+            # MODIFIED: Use the correct Adw.ColorScheme enum for theme setting
             if theme == "light":
                 style_manager.set_color_scheme(Adw.ColorScheme.FORCE_LIGHT)
             elif theme == "dark":
                 style_manager.set_color_scheme(Adw.ColorScheme.FORCE_DARK)
-            else:
+            else:  # "default" or "terminal"
                 style_manager.set_color_scheme(Adw.ColorScheme.DEFAULT)
-            self.logger.info(f"Applied GTK theme: {theme}")
+
+            self.logger.info(f"Applied initial GTK theme: {theme}")
 
             if self.settings_manager.get("debug_mode", False):
                 enable_debug_mode()

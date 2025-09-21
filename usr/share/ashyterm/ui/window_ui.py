@@ -113,21 +113,6 @@ class WindowUIBuilder:
             background-color: @accent_bg_color;
             color: @accent_fg_color;
         }
-        .indented-session {
-            margin-left: 20px;
-        }
-        .indented-session-depth-1 {
-            margin-left: 20px;
-        }
-        .indented-session-depth-2 {
-            margin-left: 40px;
-        }
-        .indented-session-depth-3 {
-            margin-left: 60px;
-        }
-        .indented-session-depth-4 {
-            margin-left: 80px;
-        }
         paned separator { background: var(--view-bg-color); }
         popover.menu separator { background-color: color-mix(in srgb, var(--headerbar-border-color) var(--border-opacity), transparent); }
         #scrolled_tab_bar scrollbar trough { margin: 0px; }
@@ -537,8 +522,8 @@ class WindowUIBuilder:
             css = ""
         else:
             css = """
-            window.main-ashy-window {
-                border-top: 1px solid rgba(80, 80, 80, 0.5);
+            window {
+                border-top: 1px solid rgba(120, 120, 120, 0.5);
                 border-left: 1px solid rgba(80, 80, 80, 0.5);
                 border-right: 1px solid rgba(80, 80, 80, 0.5);
                 border-bottom: 1px solid rgba(80, 80, 80, 0.5);

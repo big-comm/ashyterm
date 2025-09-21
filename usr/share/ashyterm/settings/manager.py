@@ -685,7 +685,10 @@ class SettingsManager:
             self.logger.warning(f"Failed to apply headerbar transparency: {e}")
 
     def apply_gtk_terminal_theme(self, window) -> None:
-        """Apply terminal colors to GTK elements (headerbar and tabs)."""
+        """
+        Apply terminal colors to GTK elements (headerbar and tabs).
+        MODIFIED: This method no longer changes the global theme. It only applies CSS.
+        """
         try:
             scheme = self.get_color_scheme_data()
             bg_color = scheme.get("background", "#000000")
@@ -693,7 +696,7 @@ class SettingsManager:
             header_bg_color = scheme.get("headerbar_background", bg_color)
             user_transparency = self.get("headerbar_transparency", 0)
             self.logger.info(
-                f"Applying GTK terminal theme with header_bg_color: {header_bg_color}, bg_color: {bg_color}, fg_color: {fg_color}, user_transparency: {user_transparency}"
+                f"Applying GTK terminal theme CSS with header_bg_color: {header_bg_color}"
             )
 
             if hasattr(window, "_terminal_theme_header_provider"):
@@ -714,9 +717,6 @@ class SettingsManager:
                     color: {fg_color};
                 }}
                 """
-                self.logger.info(
-                    "Transparency enabled, skipping solid background color for headers"
-                )
             else:
                 css_header = f"""
                 .main-header-bar, .main-header-bar:backdrop,
@@ -726,9 +726,6 @@ class SettingsManager:
                     color: {fg_color};
                 }}
                 """
-                self.logger.info(
-                    f"Transparency disabled, applying solid header colors: {header_bg_color}"
-                )
             provider_header = Gtk.CssProvider()
             provider_header.load_from_data(css_header.encode("utf-8"))
             Gtk.StyleContext.add_provider_for_display(
@@ -746,17 +743,11 @@ class SettingsManager:
                     .scrolled-tab-bar viewport {{ color: {fg_color}; }}
                     .scrolled-tab-bar viewport box .horizontal.active {{ background-color: color-mix(in srgb, {fg_color}, transparent 78%); }}
                     """
-                    self.logger.info(
-                        "Transparency enabled, skipping solid background for tab bar"
-                    )
                 else:
                     css_tabs = f"""
                     .scrolled-tab-bar viewport {{ background-color: {header_bg_color}; color: {fg_color}; }}
                     .scrolled-tab-bar viewport box .horizontal.active {{ background-color: color-mix(in srgb, {fg_color}, transparent 78%); }}
                     """
-                    self.logger.info(
-                        f"Transparency disabled, applying solid tab bar colors: {header_bg_color}"
-                    )
                 provider_tabs = Gtk.CssProvider()
                 provider_tabs.load_from_data(css_tabs.encode("utf-8"))
                 Gtk.StyleContext.add_provider_for_display(

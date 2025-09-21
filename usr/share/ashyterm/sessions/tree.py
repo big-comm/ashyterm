@@ -295,6 +295,12 @@ class SessionTreeView:
     ) -> None:
         """Sets up the widget structure for each row in the ColumnView."""
         box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=6, hexpand=True)
+
+        # MODIFIED: Add a dedicated spacer for indentation
+        spacer = Gtk.Box()
+        spacer.set_name("indent-spacer")  # Assign a name to find it later
+        box.append(spacer)
+
         icon = Gtk.Image()
         label = Gtk.Label(xalign=0.0, hexpand=True)
         box.append(icon)
@@ -324,36 +330,26 @@ class SessionTreeView:
     ) -> None:
         """Binds data from a model item to a row widget."""
         box = list_item.get_child()
-        icon = box.get_first_child()
-        label = box.get_last_child()
+        # MODIFIED: Find widgets by their position/type
+        spacer = box.get_first_child()
+        icon = spacer.get_next_sibling()
+        label = icon.get_next_sibling()
+
         tree_list_row = list_item.get_item()
         item = tree_list_row.get_item()
         label.set_label(item.name)
-        box.remove_css_class("indented-session")
 
-        # Remove any existing indentation classes
-        for i in range(1, 5):
-            box.remove_css_class(f"indented-session-depth-{i}")
+        # MODIFIED: Dynamic indentation using the spacer widget
+        depth = tree_list_row.get_depth()
+        indent_width = depth * 20  # 20 pixels per indentation level
+        spacer.set_size_request(indent_width, -1)
 
-        if isinstance(item, SessionItem) or isinstance(item, LayoutItem):
-            depth = tree_list_row.get_depth()
-            if depth > 0:
-                # Remove any existing indentation classes
-                for i in range(1, 5):  # Support up to 4 levels of nesting
-                    box.remove_css_class(f"indented-session-depth-{i}")
-                # Add the appropriate indentation class
-                if depth <= 4:
-                    box.add_css_class(f"indented-session-depth-{depth}")
-                else:
-                    box.add_css_class("indented-session-depth-4")  # Max depth
-            if isinstance(item, SessionItem):
-                icon.set_from_icon_name(
-                    "computer-symbolic"
-                    if item.is_local()
-                    else "network-server-symbolic"
-                )
-            else:  # LayoutItem
-                icon.set_from_icon_name("view-restore-symbolic")
+        if isinstance(item, SessionItem):
+            icon.set_from_icon_name(
+                "computer-symbolic" if item.is_local() else "network-server-symbolic"
+            )
+        elif isinstance(item, LayoutItem):
+            icon.set_from_icon_name("view-restore-symbolic")
         elif isinstance(item, SessionFolder):
 
             def update_folder_icon(row: Gtk.TreeListRow, _=None) -> None:

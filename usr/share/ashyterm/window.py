@@ -438,9 +438,43 @@ class CommTerminalWindow(Adw.ApplicationWindow):
                 return Gdk.EVENT_STOP
         return Gdk.EVENT_PROPAGATE
 
+    def _update_global_theme(self):
+        """MODIFIED: Central method to update the application's global theme."""
+        theme = self.settings_manager.get("gtk_theme", "dark")
+        style_manager = Adw.StyleManager.get_default()
+
+        if theme == "light":
+            style_manager.set_color_scheme(Adw.ColorScheme.FORCE_LIGHT)
+        elif theme == "dark":
+            style_manager.set_color_scheme(Adw.ColorScheme.FORCE_DARK)
+        else:  # "default" or "terminal"
+            style_manager.set_color_scheme(Adw.ColorScheme.DEFAULT)
+
+        # If the theme is 'terminal', we need to apply custom CSS.
+        # Otherwise, we need to remove it.
+        if theme == "terminal":
+            self.settings_manager.apply_gtk_terminal_theme(self)
+        else:
+            # Remove custom providers if they exist
+            if hasattr(self, "_terminal_theme_header_provider"):
+                Gtk.StyleContext.remove_provider_for_display(
+                    Gdk.Display.get_default(), self._terminal_theme_header_provider
+                )
+                del self._terminal_theme_header_provider
+            if hasattr(self, "_terminal_theme_tabs_provider"):
+                Gtk.StyleContext.remove_provider_for_display(
+                    Gdk.Display.get_default(), self._terminal_theme_tabs_provider
+                )
+                del self._terminal_theme_tabs_provider
+
+        # Always re-apply headerbar transparency as the base color might have changed
+        self.settings_manager.apply_headerbar_transparency(self.header_bar)
+
     def _on_setting_changed(self, key: str, old_value, new_value):
         """Handle changes from the settings manager."""
-        if key == "auto_hide_sidebar":
+        if key == "gtk_theme":
+            self._update_global_theme()
+        elif key == "auto_hide_sidebar":
             self.sidebar_manager.handle_auto_hide_change(new_value)
         elif key == "tab_alignment":
             self.tab_manager._update_tab_alignment()
@@ -462,6 +496,12 @@ class CommTerminalWindow(Adw.ApplicationWindow):
             "cjk_ambiguous_width",
         ]:
             self.terminal_manager.apply_settings_to_all_terminals()
+            # MODIFIED: If color scheme changes, also update the GTK theme if needed.
+            if (
+                key == "color_scheme"
+                and self.settings_manager.get("gtk_theme") == "terminal"
+            ):
+                self.settings_manager.apply_gtk_terminal_theme(self)
             # Update file manager transparency when transparency settings change
             if key in ["transparency", "headerbar_transparency"]:
                 self._update_file_manager_transparency()

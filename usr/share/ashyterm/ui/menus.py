@@ -60,35 +60,7 @@ class ThemeSelectorWidget(Gtk.Box):
     def _on_theme_changed(self, button: Gtk.CheckButton, theme: str):
         if not button.get_active():
             return
-
-        if theme == "light":
-            self.style_manager.set_color_scheme(Adw.ColorScheme.FORCE_LIGHT)
-        elif theme == "dark":
-            self.style_manager.set_color_scheme(Adw.ColorScheme.FORCE_DARK)
-        elif theme == "terminal":
-            self.style_manager.set_color_scheme(Adw.ColorScheme.FORCE_DARK)
-            self.settings_manager.apply_gtk_terminal_theme(self.parent_window)
-        else:
-            self.style_manager.set_color_scheme(Adw.ColorScheme.DEFAULT)
-
-        # MODIFIED: Remove terminal theme provider if switching away
-        if theme != "terminal":
-            display = Gdk.Display.get_default()
-            if hasattr(self.parent_window, "_terminal_theme_header_provider"):
-                Gtk.StyleContext.remove_provider_for_display(
-                    display, self.parent_window._terminal_theme_header_provider
-                )
-                delattr(self.parent_window, "_terminal_theme_header_provider")
-            if hasattr(self.parent_window, "_terminal_theme_tabs_provider"):
-                Gtk.StyleContext.remove_provider_for_display(
-                    display, self.parent_window._terminal_theme_tabs_provider
-                )
-                delattr(self.parent_window, "_terminal_theme_tabs_provider")
-            # Reapply headerbar transparency for the new theme
-            self.settings_manager.apply_headerbar_transparency(
-                self.parent_window.header_bar
-            )
-
+        # Just set the setting. The SettingsManager will handle the theme application logic.
         self.settings_manager.set("gtk_theme", theme)
 
     def _update_button_state(self):

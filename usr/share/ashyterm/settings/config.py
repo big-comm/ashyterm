@@ -110,7 +110,7 @@ class DefaultSettings:
             # General Appearance
             "gtk_theme": "terminal",
             "color_scheme": 1,
-            "transparency": 12,
+            "transparency": 16,
             "headerbar_transparency": 12,
             "font": "Noto Mono Nerd Font 12",
             "line_spacing": 1.0,
