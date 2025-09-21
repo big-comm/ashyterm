@@ -523,7 +523,7 @@ class WindowUIBuilder:
         else:
             css = """
             window {
-                border-top: 1px solid rgba(120, 120, 120, 0.5);
+                border-top: 1px solid rgba(90, 90, 90, 0.5);
                 border-left: 1px solid rgba(60, 60, 60, 0.5);
                 border-right: 1px solid rgba(60, 60, 60, 0.5);
                 border-bottom: 1px solid rgba(60, 60, 60, 0.5);
