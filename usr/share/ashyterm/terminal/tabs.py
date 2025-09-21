@@ -15,6 +15,7 @@ from gi.repository import Adw, Gdk, Gio, GLib, Gtk, Pango, Vte
 
 from ..filemanager.manager import FileManager
 from ..sessions.models import SessionItem
+from ..settings.manager import SettingsManager as SettingsManagerType
 from ..utils.logger import get_logger
 from ..utils.translation_utils import _
 from .manager import TerminalManager
@@ -25,6 +26,7 @@ def _create_terminal_pane(
     title: str,
     on_close_callback: Callable[[Vte.Terminal], None],
     on_move_to_tab_callback: Callable[[Vte.Terminal], None],
+    settings_manager: SettingsManagerType,
 ) -> Adw.ToolbarView:
     """
     Creates a terminal pane using Adw.ToolbarView with a custom header to avoid GTK baseline warnings.
@@ -37,6 +39,9 @@ def _create_terminal_pane(
     header_box.add_css_class("header-bar")
     header_box.set_hexpand(True)
     header_box.set_valign(Gtk.Align.START)
+
+    # MODIFIED: Apply headerbar transparency settings on creation
+    settings_manager.apply_headerbar_transparency(header_box)
 
     # Title label
     title_label = Gtk.Label(label=title, ellipsize=Pango.EllipsizeMode.END, xalign=0.0)
@@ -74,6 +79,8 @@ def _create_terminal_pane(
     toolbar_view.title_label = title_label
     toolbar_view.move_button = move_to_tab_button
     toolbar_view.close_button = close_button
+    # MODIFIED: Store a reference to the header box for live updates
+    toolbar_view.header_box = header_box
 
     return toolbar_view
 
@@ -123,7 +130,42 @@ class TabManager:
         self.terminal_manager.set_terminal_exit_handler(
             self._on_terminal_process_exited
         )
+        # MODIFIED: Listen for settings changes to update pane headers live
+        self.terminal_manager.settings_manager.add_change_listener(
+            self._on_setting_changed
+        )
         self.logger.info("Tab manager initialized with custom tab bar")
+
+    def _on_setting_changed(self, key: str, old_value, new_value):
+        """Callback for settings changes to update UI elements live."""
+        if key == "headerbar_transparency" or key == "gtk_theme":
+            self._update_all_pane_headers_transparency()
+
+    def _update_all_pane_headers_transparency(self):
+        """Iterates through all panes in all tabs and reapplies transparency."""
+        for page in self.pages.values():
+            panes = []
+            self._find_panes_recursive(page.get_child(), panes)
+            for pane in panes:
+                if hasattr(pane, "header_box"):
+                    self.terminal_manager.settings_manager.apply_headerbar_transparency(
+                        pane.header_box
+                    )
+
+    def _find_panes_recursive(self, widget, panes_list: List[Adw.ToolbarView]):
+        """Recursively find all Adw.ToolbarView panes within a container."""
+        if isinstance(widget, Adw.ToolbarView) and hasattr(widget, "terminal"):
+            panes_list.append(widget)
+            return
+
+        if isinstance(widget, Gtk.Paned):
+            if start_child := widget.get_start_child():
+                self._find_panes_recursive(start_child, panes_list)
+            if end_child := widget.get_end_child():
+                self._find_panes_recursive(end_child, panes_list)
+            return
+        if hasattr(widget, "get_child") and (child := widget.get_child()):
+            self._find_panes_recursive(child, panes_list)
 
     def _update_tab_alignment(self):
         """Updates the tab bar alignment based on the current setting."""
@@ -1046,6 +1088,7 @@ class TabManager:
                 new_pane_title,
                 self.close_pane,
                 self._on_move_to_tab_callback,
+                self.terminal_manager.settings_manager,
             )
             focus_controller = Gtk.EventControllerFocus()
             focus_controller.connect("enter", self._on_pane_focus_in, new_terminal)
@@ -1076,6 +1119,7 @@ class TabManager:
                     title,
                     self.close_pane,
                     self._on_move_to_tab_callback,
+                    self.terminal_manager.settings_manager,
                 )
             else:
                 pane_being_split = pane_to_replace
@@ -1305,6 +1349,7 @@ class TabManager:
                 title,
                 self.close_pane,
                 self._on_move_to_tab_callback,
+                self.terminal_manager.settings_manager,
             )
 
             focus_controller = Gtk.EventControllerFocus()

@@ -14,6 +14,71 @@ from ..utils.logger import get_logger
 from ..utils.translation_utils import _
 
 
+# NEW: Custom widget for editing a color with a hex entry field.
+class _ColorEditRow(Adw.ActionRow):
+    """A row for editing a color, showing a swatch and a hex code entry."""
+
+    def __init__(self, title: str):
+        super().__init__(title=title)
+        self.color_button = Gtk.ColorButton(valign=Gtk.Align.CENTER)
+        self.hex_entry = Gtk.Entry(valign=Gtk.Align.CENTER, width_chars=9, max_length=9)
+        self.hex_entry.add_css_class("monospace")
+
+        box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=6)
+        box.append(self.hex_entry)
+        box.append(self.color_button)
+        self.add_suffix(box)
+        self.set_activatable_widget(self.hex_entry)
+
+        self.color_button.connect("color-set", self._on_color_set)
+        self.hex_entry.connect("changed", self._on_hex_changed)
+
+    def get_hex_color(self) -> Optional[str]:
+        """Returns the validated hex color string or None if invalid."""
+        text = self.hex_entry.get_text().lower()
+        rgba = Gdk.RGBA()
+        if rgba.parse(text) and len(text) in [7, 9]:  # #RRGGBB or #RRGGBBAA
+            return self.rgba_to_hex(rgba)
+        return None
+
+    def set_hex_color(self, hex_str: str):
+        """
+        Sets the color from a hex string. This is the single entry point for
+        programmatically setting the color.
+        """
+        # FIX: Directly set the text in the entry. The 'changed' signal handler
+        # (_on_hex_changed) will then automatically validate the text and update
+        # the color button's swatch, ensuring a consistent state.
+        self.hex_entry.get_buffer().set_text(hex_str, -1)
+
+    def rgba_to_hex(self, rgba: Gdk.RGBA) -> str:
+        """Converts a Gdk.RGBA object to a #RRGGBB hex string."""
+        return "#{:02x}{:02x}{:02x}".format(
+            int(rgba.red * 255), int(rgba.green * 255), int(rgba.blue * 255)
+        )
+
+    def _on_color_set(self, button: Gtk.ColorButton):
+        """When color is picked from chooser, update the hex entry."""
+        rgba = button.get_rgba()
+        hex_str = self.rgba_to_hex(rgba)
+        # Check if update is needed to prevent signal loops
+        if self.hex_entry.get_text() != hex_str:
+            self.hex_entry.get_buffer().set_text(hex_str, -1)
+
+    def _on_hex_changed(self, entry: Gtk.Entry):
+        """When hex entry changes, update the color button and validate."""
+        text = entry.get_text()
+        rgba = Gdk.RGBA()
+        if rgba.parse(text):
+            # Check if update is needed to prevent signal loops
+            current_hex = self.rgba_to_hex(self.color_button.get_rgba())
+            if text.lower() != current_hex.lower():
+                self.color_button.set_rgba(rgba)
+            entry.remove_css_class("error")
+        else:
+            entry.add_css_class("error")
+
+
 class _SchemeEditorDialog(Adw.Window):
     """A sub-dialog for creating or editing a single color scheme."""
 
@@ -44,13 +109,21 @@ class _SchemeEditorDialog(Adw.Window):
         self.name_entry = Adw.EntryRow(title=_("Scheme Name"))
         self.name_entry.set_text(scheme_data.get("name", scheme_key))
 
-        self.fg_button = Gtk.ColorButton()
-        self.bg_button = Gtk.ColorButton()
-        self.cursor_button = Gtk.ColorButton()
-        self.palette_buttons: list[Gtk.ColorButton] = []
+        self.fg_row = _ColorEditRow(_("Foreground"))
+        self.bg_row = _ColorEditRow(_("Background"))
+        self.headerbar_row = _ColorEditRow(_("Headerbar Background"))
+        self.cursor_row = _ColorEditRow(_("Cursor"))
+        self.palette_rows: list[_ColorEditRow] = []
 
         self._build_ui()
         self._populate_colors(scheme_data)
+
+        # Connect signals for live preview update
+        for row in [self.fg_row, self.bg_row]:
+            row.color_button.connect(
+                "color-set", lambda *_: self.preview_area.queue_draw()
+            )
+            row.hex_entry.connect("changed", lambda *_: self.preview_area.queue_draw())
 
     def _build_ui(self):
         toolbar_view = Adw.ToolbarView()
@@ -70,55 +143,77 @@ class _SchemeEditorDialog(Adw.Window):
         header.pack_end(save_button)
 
         page = Adw.PreferencesPage()
+
+        preview_group = Adw.PreferencesGroup(title=_("Live Preview"))
+        self.preview_area = Gtk.DrawingArea(
+            content_height=80, margin_top=12, margin_bottom=12
+        )
+        self.preview_area.set_draw_func(self._draw_preview, None)
+        preview_group.add(self.preview_area)
+        page.add(preview_group)
+
         main_group = Adw.PreferencesGroup(title=_("General Colors"))
         page.add(main_group)
 
         main_group.add(self.name_entry)
-
-        fg_row = Adw.ActionRow(title=_("Foreground"))
-        fg_row.add_suffix(self.fg_button)
-        main_group.add(fg_row)
-
-        bg_row = Adw.ActionRow(title=_("Background"))
-        bg_row.add_suffix(self.bg_button)
-        main_group.add(bg_row)
-
-        cursor_row = Adw.ActionRow(title=_("Cursor"))
-        cursor_row.add_suffix(self.cursor_button)
-        main_group.add(cursor_row)
+        main_group.add(self.fg_row)
+        main_group.add(self.bg_row)
+        main_group.add(self.headerbar_row)
+        main_group.add(self.cursor_row)
 
         palette_group = Adw.PreferencesGroup(title=_("16-Color Palette"))
         page.add(palette_group)
 
         grid = Gtk.Grid(
-            column_spacing=12, row_spacing=12, margin_top=12, margin_bottom=12
+            column_spacing=24, row_spacing=12, margin_top=12, margin_bottom=12
         )
         palette_group.add(grid)
 
         for i in range(16):
-            color_button = Gtk.ColorButton()
-            self.palette_buttons.append(color_button)
-            label = Gtk.Label(label=f"Color {i}", halign=Gtk.Align.START)
-            grid.attach(label, 0, i, 1, 1)
-            grid.attach(color_button, 1, i, 1, 1)
+            color_row = _ColorEditRow(f"Color {i}")
+            self.palette_rows.append(color_row)
+            grid.attach(color_row, i % 2, i // 2, 1, 1)
 
         scrolled = Gtk.ScrolledWindow(child=page, vexpand=True)
         toolbar_view.set_content(scrolled)
 
     def _populate_colors(self, scheme_data: Dict):
-        def parse_color(hex_str, button):
-            rgba = Gdk.RGBA()
-            if rgba.parse(hex_str):
-                button.set_rgba(rgba)
-
-        parse_color(scheme_data.get("foreground", "#FFFFFF"), self.fg_button)
-        parse_color(scheme_data.get("background", "#000000"), self.bg_button)
-        parse_color(scheme_data.get("cursor", "#FFFFFF"), self.cursor_button)
+        self.fg_row.set_hex_color(scheme_data.get("foreground", "#FFFFFF"))
+        self.bg_row.set_hex_color(scheme_data.get("background", "#000000"))
+        headerbar_bg = scheme_data.get(
+            "headerbar_background", scheme_data.get("background", "#000000")
+        )
+        self.headerbar_row.set_hex_color(headerbar_bg)
+        self.cursor_row.set_hex_color(scheme_data.get("cursor", "#FFFFFF"))
 
         palette = scheme_data.get("palette", [])
-        for i, button in enumerate(self.palette_buttons):
+        for i, row in enumerate(self.palette_rows):
             if i < len(palette):
-                parse_color(palette[i], button)
+                row.set_hex_color(palette[i])
+
+    def _draw_preview(self, area, cr, width, height, _user_data):
+        """Draw function for the live preview area."""
+        bg_rgba = Gdk.RGBA()
+        fg_rgba = Gdk.RGBA()
+
+        bg_hex = self.bg_row.get_hex_color() or "#000000"
+        fg_hex = self.fg_row.get_hex_color() or "#FFFFFF"
+
+        bg_rgba.parse(bg_hex)
+        fg_rgba.parse(fg_hex)
+
+        Gdk.cairo_set_source_rgba(cr, bg_rgba)
+        cr.rectangle(0, 0, width, height)
+        cr.fill()
+
+        Gdk.cairo_set_source_rgba(cr, fg_rgba)
+        layout = area.create_pango_layout(
+            "user@host:~$ ls -l\n<span weight='bold'>Bold Text</span>"
+        )
+        font_desc = Pango.FontDescription.from_string("Monospace 12")
+        layout.set_font_description(font_desc)
+        cr.move_to(10, 10)
+        PangoCairo.show_layout(cr, layout)
 
     def _show_error_dialog(self, title: str, message: str):
         dialog = Adw.MessageDialog(
@@ -163,12 +258,28 @@ class _SchemeEditorDialog(Adw.Window):
             )
             return
 
+        all_rows = [
+            self.fg_row,
+            self.bg_row,
+            self.headerbar_row,
+            self.cursor_row,
+        ] + self.palette_rows
+        all_hex_values = [row.get_hex_color() for row in all_rows]
+
+        if not all(all_hex_values):
+            self._show_error_dialog(
+                _("Invalid Color"),
+                _("One or more hex codes are invalid. Please correct them."),
+            )
+            return
+
         new_data = {
             "name": new_name,
-            "foreground": self.fg_button.get_rgba().to_string(),
-            "background": self.bg_button.get_rgba().to_string(),
-            "cursor": self.cursor_button.get_rgba().to_string(),
-            "palette": [b.get_rgba().to_string() for b in self.palette_buttons],
+            "foreground": all_hex_values[0],
+            "background": all_hex_values[1],
+            "headerbar_background": all_hex_values[2],
+            "cursor": all_hex_values[3],
+            "palette": all_hex_values[4:],
         }
 
         self.emit("save-requested", self.original_key, new_key, new_data)
@@ -218,15 +329,12 @@ class _SchemePreviewRow(Adw.ActionRow):
         fg_rgba.parse(self.scheme_data.get("foreground", "#FFFFFF"))
         cursor_rgba.parse(self.scheme_data.get("cursor", "#FFFFFF"))
 
-        # Draw main background
         Gdk.cairo_set_source_rgba(cr, bg_rgba)
         self._draw_rounded_rect(cr, 0, 0, width, height, 8)
         cr.fill()
 
-        # --- Draw Text and Cursor ---
         font_desc = Pango.FontDescription.from_string("Monospace 10")
 
-        # Normal Text
         Gdk.cairo_set_source_rgba(cr, fg_rgba)
         layout = area.create_pango_layout("Normal Text")
         layout.set_font_description(font_desc)
@@ -238,19 +346,16 @@ class _SchemePreviewRow(Adw.ActionRow):
         cursor_y = 12 + logical_rect.y
         cursor_height = logical_rect.height
 
-        # Bold Text
         font_desc.set_weight(Pango.Weight.BOLD)
         layout.set_font_description(font_desc)
         layout.set_text("Bold Text")
         cr.move_to(12, 34)
         PangoCairo.show_layout(cr, layout)
 
-        # Cursor
         Gdk.cairo_set_source_rgba(cr, cursor_rgba)
         cr.rectangle(cursor_x, cursor_y, 7, cursor_height)
         cr.fill()
 
-        # --- Draw Palette Swatches ---
         palette = self.scheme_data.get("palette", [])
         num_colors = 8
         spacing = 4

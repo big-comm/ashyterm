@@ -192,6 +192,7 @@ class ColorSchemes:
                 "name": "System Default",
                 "foreground": "#ffffff",
                 "background": "#000000",
+                "headerbar_background": "#1a1a1a",  # MODIFIED
                 "cursor": "#ffffff",
                 "palette": [
                     "#000000",
@@ -216,6 +217,7 @@ class ColorSchemes:
                 "name": "BigLinux",
                 "foreground": "#e6e6e6",
                 "background": "#0a0a0a",
+                "headerbar_background": "#1c1c1c",  # MODIFIED
                 "cursor": "#e6e6e6",
                 "palette": [
                     "#444444",
@@ -240,6 +242,7 @@ class ColorSchemes:
                 "name": "Light",
                 "foreground": "#000000",
                 "background": "#ffffff",
+                "headerbar_background": "#f0f0f0",  # MODIFIED
                 "cursor": "#000000",
                 "palette": [
                     "#000000",
@@ -264,6 +267,7 @@ class ColorSchemes:
                 "name": "Dark",
                 "foreground": "#ffffff",
                 "background": "#1c1c1c",
+                "headerbar_background": "#2a2a2a",  # MODIFIED
                 "cursor": "#ffffff",
                 "palette": [
                     "#000000",
@@ -288,6 +292,7 @@ class ColorSchemes:
                 "name": "Solarized Light",
                 "foreground": "#657b83",
                 "background": "#fdf6e3",
+                "headerbar_background": "#eee8d5",  # MODIFIED
                 "cursor": "#657b83",
                 "palette": [
                     "#073642",
@@ -312,6 +317,7 @@ class ColorSchemes:
                 "name": "Solarized Dark",
                 "foreground": "#839496",
                 "background": "#002b36",
+                "headerbar_background": "#073642",  # MODIFIED
                 "cursor": "#839496",
                 "palette": [
                     "#073642",
@@ -336,6 +342,7 @@ class ColorSchemes:
                 "name": "Monokai",
                 "foreground": "#f8f8f2",
                 "background": "#272822",
+                "headerbar_background": "#3a3b34",  # MODIFIED
                 "cursor": "#f8f8f2",
                 "palette": [
                     "#272822",
@@ -360,6 +367,7 @@ class ColorSchemes:
                 "name": "Dracula",
                 "foreground": "#f8f8f2",
                 "background": "#282a36",
+                "headerbar_background": "#3a3c4e",  # MODIFIED
                 "cursor": "#f8f8f2",
                 "palette": [
                     "#000000",
@@ -384,6 +392,7 @@ class ColorSchemes:
                 "name": "Nord",
                 "foreground": "#d8dee9",
                 "background": "#2e3440",
+                "headerbar_background": "#3b4252",  # MODIFIED
                 "cursor": "#d8dee9",
                 "palette": [
                     "#3b4252",

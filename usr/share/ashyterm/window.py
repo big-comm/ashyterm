@@ -152,7 +152,26 @@ class CommTerminalWindow(Adw.ApplicationWindow):
 
         if not self._is_for_detached_tab:
             GLib.idle_add(self._create_initial_tab_safe)
+
+        # NEW: Apply all visual settings after the window is fully constructed,
+        # especially important for detached windows.
+        GLib.idle_add(self._apply_initial_visual_settings)
+
         self.logger.info("Main window initialization completed")
+
+    # NEW: Method to apply all visual settings on window creation.
+    def _apply_initial_visual_settings(self) -> None:
+        """Applies all visual settings upon window creation."""
+        self.logger.info("Applying initial visual settings to new window.")
+        # Apply theme first, as it might affect colors used by other settings.
+        if self.settings_manager.get("gtk_theme") == "terminal":
+            self.settings_manager.apply_gtk_terminal_theme(self)
+        else:
+            # Ensure headerbar transparency is correct for non-terminal themes.
+            self.settings_manager.apply_headerbar_transparency(self.header_bar)
+
+        # Apply settings to all terminals, which handles terminal transparency.
+        self.terminal_manager.apply_settings_to_all_terminals()
 
     def _create_managers_and_ui(self) -> None:
         """

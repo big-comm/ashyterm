@@ -230,8 +230,6 @@ class WindowUIBuilder:
             background: transparent;
         }
         .flipped-icon { transform: scaleX(-1); }
-        viewport, toolbarview {background-color: var(--headerbar-bg-color);}
-
         """
         provider = Gtk.CssProvider()
         provider.load_from_data(css.encode("utf-8"))
@@ -242,8 +240,9 @@ class WindowUIBuilder:
         # Separate provider for window borders (conditional on maximized state)
         self.border_provider = Gtk.CssProvider()
         self._update_border_css()
-        Gtk.StyleContext.add_provider_for_display(
-            Gdk.Display.get_default(), self.border_provider, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION
+        # MODIFIED: Apply provider directly to the window, not globally
+        self.window.get_style_context().add_provider(
+            self.border_provider, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION
         )
 
     def _setup_main_structure(self) -> Gtk.Box:
@@ -538,11 +537,11 @@ class WindowUIBuilder:
             css = ""
         else:
             css = """
-            window {
-                border-top: 1px solid rgba(60, 60, 60, 0.5);
-                border-left: 1px solid rgba(50, 50, 50, 0.5);
-                border-right: 1px solid rgba(50, 50, 50, 0.5);
-                border-bottom: 1px solid rgba(70, 70, 70, 0.7);
+            window.main-ashy-window {
+                border-top: 1px solid rgba(80, 80, 80, 0.5);
+                border-left: 1px solid rgba(80, 80, 80, 0.5);
+                border-right: 1px solid rgba(80, 80, 80, 0.5);
+                border-bottom: 1px solid rgba(80, 80, 80, 0.5);
             }
             """
         self.border_provider.load_from_data(css.encode("utf-8"))

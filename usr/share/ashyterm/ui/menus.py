@@ -71,19 +71,23 @@ class ThemeSelectorWidget(Gtk.Box):
         else:
             self.style_manager.set_color_scheme(Adw.ColorScheme.DEFAULT)
 
-        # Remove terminal theme provider if switching away
+        # MODIFIED: Remove terminal theme provider if switching away
         if theme != "terminal":
-            if hasattr(self.parent_window, '_terminal_theme_css_provider'):
-                self.parent_window.get_style_context().remove_provider(self.parent_window._terminal_theme_css_provider)
-                delattr(self.parent_window, '_terminal_theme_css_provider')
-            if hasattr(self.parent_window, '_terminal_theme_header_provider'):
-                self.parent_window.header_bar.get_style_context().remove_provider(self.parent_window._terminal_theme_header_provider)
-                delattr(self.parent_window, '_terminal_theme_header_provider')
-            if hasattr(self.parent_window, '_terminal_theme_tabs_provider'):
-                Gtk.StyleContext.remove_provider_for_display(Gdk.Display.get_default(), self.parent_window._terminal_theme_tabs_provider)
-                delattr(self.parent_window, '_terminal_theme_tabs_provider')
-            # Reapply headerbar transparency
-            self.settings_manager.apply_headerbar_transparency(self.parent_window.header_bar)
+            display = Gdk.Display.get_default()
+            if hasattr(self.parent_window, "_terminal_theme_header_provider"):
+                Gtk.StyleContext.remove_provider_for_display(
+                    display, self.parent_window._terminal_theme_header_provider
+                )
+                delattr(self.parent_window, "_terminal_theme_header_provider")
+            if hasattr(self.parent_window, "_terminal_theme_tabs_provider"):
+                Gtk.StyleContext.remove_provider_for_display(
+                    display, self.parent_window._terminal_theme_tabs_provider
+                )
+                delattr(self.parent_window, "_terminal_theme_tabs_provider")
+            # Reapply headerbar transparency for the new theme
+            self.settings_manager.apply_headerbar_transparency(
+                self.parent_window.header_bar
+            )
 
         self.settings_manager.set("gtk_theme", theme)
 
@@ -174,7 +178,9 @@ class MainApplicationMenu:
         main_box.add_css_class("main-menu-popover")
         popover.set_child(main_box)
 
-        theme_selector = ThemeSelectorWidget(parent_window.settings_manager, parent_window)
+        theme_selector = ThemeSelectorWidget(
+            parent_window.settings_manager, parent_window
+        )
         font_sizer_widget = FontSizerWidget(parent_window)
 
         main_box.append(theme_selector)

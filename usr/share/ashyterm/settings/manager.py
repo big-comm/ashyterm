@@ -470,7 +470,7 @@ class SettingsManager:
         adjusted_transparency = min(100.0, user_transparency * adjustment_factor)
 
         # Apply the perceptually uniform curve to the adjusted value
-        final_alpha = max(0.0, min(1.0, 1.0 - (adjusted_transparency / 200.0)))
+        final_alpha = max(0.0, min(1.0, 1.0 - (adjusted_transparency / 100.0) ** 1.6))
         return final_alpha
 
     def apply_terminal_settings(self, terminal, window) -> None:
@@ -494,7 +494,6 @@ class SettingsManager:
         fg_color.parse(color_scheme.get("foreground", "#FFFFFF"))
         bg_color.parse(color_scheme.get("background", "#000000"))
 
-        # NEW: Use adaptive transparency calculation
         bg_color.alpha = self._calculate_adaptive_alpha(
             color_scheme.get("background", "#000000"), user_transparency
         )
@@ -617,20 +616,71 @@ class SettingsManager:
         """Apply headerbar transparency to a headerbar widget."""
         try:
             user_transparency = self.get("headerbar_transparency", 0)
+            self.logger.info(
+                f"Applying headerbar transparency with user_transparency: {user_transparency}"
+            )
             if user_transparency > 0:
-                # Assume an average dark theme background for calculation
-                style_manager = Adw.StyleManager.get_default()
-                is_dark = style_manager.get_dark()
-                base_color = "#303030" if is_dark else "#f0f0f0"
+                # Determine base color based on theme
+                if self.get("gtk_theme") == "terminal":
+                    # Use terminal scheme headerbar background for consistent transparency
+                    scheme = self.get_color_scheme_data()
+                    base_color_hex = scheme.get(
+                        "headerbar_background", scheme.get("background", "#000000")
+                    )
+                    self.logger.info(
+                        f"Terminal theme: using headerbar background {base_color_hex} as base color"
+                    )
+                else:
+                    # Use default theme colors
+                    style_manager = Adw.StyleManager.get_default()
+                    is_dark = style_manager.get_dark()
+                    base_color_hex = "#303030" if is_dark else "#f0f0f0"
+                    self.logger.info(
+                        f"Non-terminal theme: using default base color {base_color_hex}"
+                    )
 
-                # NEW: Use adaptive transparency calculation
-                alpha = self._calculate_adaptive_alpha(base_color, user_transparency)
-                headerbar.set_opacity(alpha)
-                self.logger.info(f"Headerbar opacity set to {alpha}")
+                # Calculate adaptive alpha
+                alpha = self._calculate_adaptive_alpha(
+                    base_color_hex, user_transparency
+                )
+                rgba_color = f"rgba({int(base_color_hex[1:3], 16)}, {int(base_color_hex[3:5], 16)}, {int(base_color_hex[5:7], 16)}, {alpha})"
+                self.logger.info(f"Calculated rgba_color: {rgba_color}")
+
+                css = f"""
+                .header-bar, .header-bar:backdrop,
+                .main-header-bar, .main-header-bar:backdrop,
+                .terminal-pane .header-bar, .terminal-pane .header-bar, .terminal-pane .top-bar:backdrop {{
+                    background-color: {rgba_color};
+                }}
+                """
+                # Remove existing provider if any
+                if hasattr(headerbar, "_transparency_provider"):
+                    Gtk.StyleContext.remove_provider_for_display(
+                        Gdk.Display.get_default(), headerbar._transparency_provider
+                    )
+                    self.logger.info("Removed existing transparency provider")
+                provider = Gtk.CssProvider()
+                provider.load_from_data(css.encode("utf-8"))
+                Gtk.StyleContext.add_provider_for_display(
+                    Gdk.Display.get_default(),
+                    provider,
+                    Gtk.STYLE_PROVIDER_PRIORITY_USER,
+                )
+                headerbar._transparency_provider = provider
+                self.logger.info(
+                    f"Headerbar transparency applied with color {rgba_color}"
+                )
             else:
                 # Reset to full opacity when transparency is 0
-                headerbar.set_opacity(1.0)
-                self.logger.info("Headerbar transparency is 0, setting full opacity")
+                if hasattr(headerbar, "_transparency_provider"):
+                    Gtk.StyleContext.remove_provider_for_display(
+                        Gdk.Display.get_default(), headerbar._transparency_provider
+                    )
+                    del headerbar._transparency_provider
+                    self.logger.info(
+                        "Removed transparency provider (transparency set to 0)"
+                    )
+                self.logger.info("Headerbar transparency is 0, no provider applied")
         except Exception as e:
             self.logger.warning(f"Failed to apply headerbar transparency: {e}")
 
@@ -640,34 +690,79 @@ class SettingsManager:
             scheme = self.get_color_scheme_data()
             bg_color = scheme.get("background", "#000000")
             fg_color = scheme.get("foreground", "#ffffff")
+            header_bg_color = scheme.get("headerbar_background", bg_color)
+            user_transparency = self.get("headerbar_transparency", 0)
+            self.logger.info(
+                f"Applying GTK terminal theme with header_bg_color: {header_bg_color}, bg_color: {bg_color}, fg_color: {fg_color}, user_transparency: {user_transparency}"
+            )
 
-            # Remove old providers
             if hasattr(window, "_terminal_theme_header_provider"):
-                window.header_bar.get_style_context().remove_provider(window._terminal_theme_header_provider)
+                Gtk.StyleContext.remove_provider_for_display(
+                    Gdk.Display.get_default(), window._terminal_theme_header_provider
+                )
             if hasattr(window, "_terminal_theme_tabs_provider"):
-                Gtk.StyleContext.remove_provider_for_display(Gdk.Display.get_default(), window._terminal_theme_tabs_provider)
+                Gtk.StyleContext.remove_provider_for_display(
+                    Gdk.Display.get_default(), window._terminal_theme_tabs_provider
+                )
 
-            # For headerbar
-            css_header = f".main-header-bar {{ background-color: {bg_color}; color: {fg_color}; }}"
+            # If transparency is enabled, don't set solid background color to avoid double layer
+            if user_transparency > 0:
+                css_header = f"""
+                .main-header-bar, .main-header-bar:backdrop,
+                .terminal-pane .header-bar, .terminal-pane .header-bar:backdrop,
+                .top-bar, .top-bar:backdrop {{
+                    color: {fg_color};
+                }}
+                """
+                self.logger.info(
+                    "Transparency enabled, skipping solid background color for headers"
+                )
+            else:
+                css_header = f"""
+                .main-header-bar, .main-header-bar:backdrop,
+                .terminal-pane .header-bar, .terminal-pane .header-bar:backdrop,
+                .top-bar, .top-bar:backdrop {{
+                    background-color: {header_bg_color};
+                    color: {fg_color};
+                }}
+                """
+                self.logger.info(
+                    f"Transparency disabled, applying solid header colors: {header_bg_color}"
+                )
             provider_header = Gtk.CssProvider()
             provider_header.load_from_data(css_header.encode("utf-8"))
-            window.header_bar.get_style_context().add_provider(
-                provider_header, Gtk.STYLE_PROVIDER_PRIORITY_USER
+            Gtk.StyleContext.add_provider_for_display(
+                Gdk.Display.get_default(),
+                provider_header,
+                Gtk.STYLE_PROVIDER_PRIORITY_USER,
             )
             self.apply_headerbar_transparency(window.header_bar)
             window._terminal_theme_header_provider = provider_header
 
-            # For tabs
             tab_bar = window.scrolled_tab_bar.get_child()
             if tab_bar:
-                css_tabs = f"""
-                .scrolled-tab-bar viewport {{ background-color: {bg_color}; color: {fg_color}; }}
-                .scrolled-tab-bar viewport box .horizontal.active {{ background-color: color-mix(in srgb, {fg_color}, transparent 78%); }}
-                """
+                if user_transparency > 0:
+                    css_tabs = f"""
+                    .scrolled-tab-bar viewport {{ color: {fg_color}; }}
+                    .scrolled-tab-bar viewport box .horizontal.active {{ background-color: color-mix(in srgb, {fg_color}, transparent 78%); }}
+                    """
+                    self.logger.info(
+                        "Transparency enabled, skipping solid background for tab bar"
+                    )
+                else:
+                    css_tabs = f"""
+                    .scrolled-tab-bar viewport {{ background-color: {header_bg_color}; color: {fg_color}; }}
+                    .scrolled-tab-bar viewport box .horizontal.active {{ background-color: color-mix(in srgb, {fg_color}, transparent 78%); }}
+                    """
+                    self.logger.info(
+                        f"Transparency disabled, applying solid tab bar colors: {header_bg_color}"
+                    )
                 provider_tabs = Gtk.CssProvider()
                 provider_tabs.load_from_data(css_tabs.encode("utf-8"))
                 Gtk.StyleContext.add_provider_for_display(
-                    Gdk.Display.get_default(), provider_tabs, Gtk.STYLE_PROVIDER_PRIORITY_USER
+                    Gdk.Display.get_default(),
+                    provider_tabs,
+                    Gtk.STYLE_PROVIDER_PRIORITY_USER,
                 )
                 window._terminal_theme_tabs_provider = provider_tabs
 
