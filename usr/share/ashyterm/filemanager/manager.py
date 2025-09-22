@@ -390,7 +390,7 @@ class FileManager(GObject.Object):
         history_button.connect("clicked", self._on_show_transfer_history)
         self.action_bar.pack_end(history_button)
 
-        self.upload_button = Gtk.Button.new_from_icon_name("cloud-upload-symbolic")
+        self.upload_button = Gtk.Button.new_from_icon_name("go-up-symbolic")
         self.upload_button.set_tooltip_text(_("Upload Files"))
         self.upload_button.connect("clicked", self._on_upload_clicked)
         self.action_bar.pack_end(self.upload_button)
