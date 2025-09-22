@@ -99,7 +99,7 @@ class _SchemeEditorDialog(Adw.Window):
         is_new: bool,
     ):
         super().__init__(
-            transient_for=parent, modal=True, default_width=500, default_height=600
+            transient_for=parent, modal=True, default_width=700, default_height=600
         )
         self.settings_manager = settings_manager
         self.original_key = scheme_key if not is_new else None
@@ -380,7 +380,7 @@ class ColorSchemeDialog(Adw.PreferencesWindow):
         "scheme-changed": (GObject.SignalFlags.RUN_FIRST, None, (int,)),
     }
 
-    def __init__(self, parent_window, settings_manager: SettingsManager):
+    def __init__(self, parent_window, settings_manager: SettingsManager, main_window):
         super().__init__(
             transient_for=parent_window,
             modal=False,
@@ -390,6 +390,7 @@ class ColorSchemeDialog(Adw.PreferencesWindow):
             search_enabled=True,
         )
         self.settings_manager = settings_manager
+        self.main_window = main_window
         self.logger = get_logger("ashyterm.ui.color_scheme_dialog")
 
         self._build_ui()
@@ -410,9 +411,7 @@ class ColorSchemeDialog(Adw.PreferencesWindow):
 
         schemes_group = Adw.PreferencesGroup(
             title=_("Available Schemes"),
-            description=_(
-                "Select a scheme to apply it instantly. Double-click to edit."
-            ),
+            description=_("Select a scheme to apply it instantly."),
         )
         page.add(schemes_group)
 
@@ -561,7 +560,27 @@ class ColorSchemeDialog(Adw.PreferencesWindow):
         self.settings_manager.custom_schemes[new_key] = new_data
         self.settings_manager.save_custom_schemes()
         self._populate_schemes_list()
-        self.emit("scheme-changed", 0)
+
+        # Find and select the newly saved row
+        new_row_to_select = None
+        for row in self.schemes_listbox:
+            if isinstance(row, _SchemePreviewRow) and row.scheme_key == new_key:
+                new_row_to_select = row
+                break
+
+        if new_row_to_select:
+            self.schemes_listbox.select_row(new_row_to_select)
+
+        # Show a modal dialog notification
+        dialog = Adw.MessageDialog(
+            transient_for=self,
+            heading=_("Theme Saved"),
+            body=_("The theme '{name}' has been created and applied.").format(
+                name=new_data["name"]
+            ),
+        )
+        dialog.add_response("ok", _("OK"))
+        dialog.present()
 
     def _on_delete_clicked(self, button):
         selected_row = self.schemes_listbox.get_selected_row()

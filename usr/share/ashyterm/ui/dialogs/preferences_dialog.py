@@ -560,8 +560,8 @@ class PreferencesDialog(Adw.PreferencesWindow):
         self.color_scheme_row.set_subtitle(scheme_data.get("name", "Unknown"))
 
     def _on_manage_schemes_clicked(self, button):
-        dialog = ColorSchemeDialog(self, self.settings_manager)
         main_window = self.get_transient_for()
+        dialog = ColorSchemeDialog(self, self.settings_manager, main_window)
         if main_window and hasattr(main_window, "terminal_manager"):
             dialog.connect("scheme-changed", main_window._on_color_scheme_changed)
         dialog.connect(
