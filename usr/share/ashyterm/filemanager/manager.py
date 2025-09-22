@@ -362,7 +362,7 @@ class FileManager(GObject.Object):
         self.action_bar.pack_start(refresh_button)
 
         self.hidden_files_toggle = Gtk.ToggleButton()
-        self.hidden_files_toggle.set_icon_name("view-reveal-symbolic")
+        self.hidden_files_toggle.set_icon_name("view-visible-symbolic")
         self.hidden_files_toggle.connect("toggled", self._on_hidden_toggle)
         self.hidden_files_toggle.set_tooltip_text(_("Show hidden files"))
         self.action_bar.pack_start(self.hidden_files_toggle)
@@ -385,12 +385,12 @@ class FileManager(GObject.Object):
         search_key_controller.set_propagation_phase(Gtk.PropagationPhase.CAPTURE)
         self.search_entry.add_controller(search_key_controller)
 
-        history_button = Gtk.Button.new_from_icon_name("folder-download-symbolic")
+        history_button = Gtk.Button.new_from_icon_name("view-history-symbolic")
         history_button.set_tooltip_text(_("Transfer History"))
         history_button.connect("clicked", self._on_show_transfer_history)
         self.action_bar.pack_end(history_button)
 
-        self.upload_button = Gtk.Button.new_from_icon_name("upload-symbolic")
+        self.upload_button = Gtk.Button.new_from_icon_name("cloud-upload-symbolic")
         self.upload_button.set_tooltip_text(_("Upload Files"))
         self.upload_button.connect("clicked", self._on_upload_clicked)
         self.action_bar.pack_end(self.upload_button)

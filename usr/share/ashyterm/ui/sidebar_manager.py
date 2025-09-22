@@ -230,7 +230,7 @@ class SidebarManager:
     def _update_sidebar_button_icon(self) -> None:
         auto_hide = self.settings_manager.get("auto_hide_sidebar", False)
         if auto_hide:
-            self.toggle_sidebar_button.set_icon_name("view-pin-symbolic")
+            self.toggle_sidebar_button.set_icon_name("pin-symbolic")
             self.toggle_sidebar_button.set_tooltip_text(_("Show Sessions"))
         else:
             is_visible = self.flap.get_reveal_flap()

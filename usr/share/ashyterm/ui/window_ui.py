@@ -300,7 +300,7 @@ class WindowUIBuilder:
 
         # Create buttons
         self.toggle_sidebar_button = Gtk.ToggleButton(
-            icon_name="view-pin-symbolic", tooltip_text=_("Toggle Sidebar")
+            icon_name="pin-symbolic", tooltip_text=_("Toggle Sidebar")
         )
         self.toggle_sidebar_button.add_css_class("sidebar-toggle-button")
 
@@ -309,7 +309,7 @@ class WindowUIBuilder:
         )
 
         self.command_guide_button = Gtk.Button(
-            icon_name="help-faq-symbolic",
+            icon_name="help-about-symbolic",
             tooltip_text=_("Command Guide (Ctrl+Shift+P)"),
         )
         self.command_guide_button.set_action_name("win.show-command-guide")
