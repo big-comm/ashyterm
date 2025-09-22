@@ -877,9 +877,6 @@ class FileManager(GObject.Object):
         # Send command
         self.bound_terminal.feed_child(f"{command_str}\n".encode("utf-8"))
 
-        # Set a safety timeout
-        self._command_timeout_id = GLib.timeout_add(5000, self._on_command_timeout)
-
         # For non-cd commands, success is confirmed by the refresh completing
         if command_type != "cd":
             GLib.timeout_add(500, lambda: self.refresh(source="filemanager"))
