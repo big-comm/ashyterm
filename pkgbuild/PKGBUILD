@@ -1,7 +1,7 @@
 #Maintainer: Leonardo Berbert <leo4berbert@gmail.com>
 #Maintainer: Tales A. Mendonça <talesam@gmail.com>
 
-pkgname=comm-ashyterm
+pkgname=ashyterm
 pkgdesc="A modern GTK4/Adwaita terminal emulator with advanced session management, SSH integration, and security features."
 # Uncomment and edit the following lines as needed
 depends=(
@@ -16,11 +16,11 @@ depends=(
     'libchildenv'
     'jemalloc'
 )
+conflicts=('comm-ashyterm')
+provides=('comm-ashyterm')
+replaces=('comm-ashyterm')
 #makedepends=('')
 #optdepends=('')
-#conflicts=('')
-#provides=('')
-#replaces=('')
 pkgver=$(date +%y.%m.%d)
 pkgrel=$(date +%H%M)
 arch=('any')
