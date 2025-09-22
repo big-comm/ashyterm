@@ -75,7 +75,8 @@ class CommTerminalWindow(Adw.ApplicationWindow):
         # Component Initialization
         self._create_managers_and_ui()
         self._connect_component_signals()
-        self._load_initial_data()
+        # MODIFIED: Data loading is now asynchronous to speed up startup.
+        # self._load_initial_data()
         self._setup_window_events()
 
         # Re-register terminals and reconnect signals for a detached tab
@@ -151,7 +152,8 @@ class CommTerminalWindow(Adw.ApplicationWindow):
                         )
 
         if not self._is_for_detached_tab:
-            GLib.idle_add(self._create_initial_tab_safe)
+            # MODIFIED: Load data and create initial tab asynchronously.
+            GLib.idle_add(self._load_initial_data_and_tab)
 
         # NEW: Apply all visual settings after the window is fully constructed,
         # especially important for detached windows.
@@ -369,6 +371,15 @@ class CommTerminalWindow(Adw.ApplicationWindow):
 
         maximized = self.is_maximized()
         self.settings_manager.set("window_maximized", maximized)
+
+    def _load_initial_data_and_tab(self) -> bool:
+        """
+        Asynchronously loads initial data and then creates the initial tab.
+        This allows the UI to show up immediately.
+        """
+        self._load_initial_data()
+        self._create_initial_tab_safe()
+        return GLib.SOURCE_REMOVE  # Run only once
 
     def _load_initial_data(self) -> None:
         """Load initial sessions, folders, and layouts data."""
