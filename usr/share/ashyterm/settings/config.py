@@ -148,6 +148,7 @@ class DefaultSettings:
             "delete_binding": 0,
             "cjk_ambiguous_width": 1,
             "word_char_exceptions": "-_.:/~",  # For word selection on double-click
+            "ssh_control_persist_duration": 60,  # Duration in seconds for SSH connection multiplexing
             # Logging Settings
             "log_to_file": False,
             "console_log_level": "ERROR",

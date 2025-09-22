@@ -412,6 +412,28 @@ class PreferencesDialog(Adw.PreferencesWindow):
         )
         remote_edit_group.add(clear_on_exit_row)
 
+        ssh_group = Adw.PreferencesGroup(
+            title=_("SSH"),
+            description=_("Settings for SSH connection management (multiplexing)."),
+        )
+        page.add(ssh_group)
+
+        persist_row = Adw.ActionRow(
+            title=_("Connection Persistence (seconds)"),
+            subtitle=_(
+                "Keep SSH connections alive in the background for faster reconnections. Set to 0 to disable."
+            ),
+        )
+        persist_spin = Gtk.SpinButton.new_with_range(0, 3600, 60)
+        persist_spin.set_valign(Gtk.Align.CENTER)
+        persist_spin.set_value(
+            self.settings_manager.get("ssh_control_persist_duration", 600)
+        )
+        persist_spin.connect("value-changed", self._on_ssh_persist_changed)
+        persist_row.add_suffix(persist_spin)
+        persist_row.set_activatable_widget(persist_spin)
+        ssh_group.add(persist_row)
+
     def _setup_advanced_page(self) -> None:
         advanced_page = Adw.PreferencesPage(
             title=_("Advanced"), icon_name="preferences-other-symbolic"
@@ -654,6 +676,10 @@ class PreferencesDialog(Adw.PreferencesWindow):
     def _on_delete_binding_changed(self, combo_row, _param) -> None:
         index = combo_row.get_selected()
         self._on_setting_changed("delete_binding", index)
+
+    def _on_ssh_persist_changed(self, spin_button) -> None:
+        value = int(spin_button.get_value())
+        self._on_setting_changed("ssh_control_persist_duration", value)
 
     def _on_setting_changed(self, key: str, value) -> None:
         self.settings_manager.set(key, value)

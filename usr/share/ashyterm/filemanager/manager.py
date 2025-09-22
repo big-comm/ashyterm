@@ -212,6 +212,12 @@ class FileManager(GObject.Object):
     def shutdown(self, widget):
         self.logger.info("Shutting down FileManager, cancelling active transfers.")
 
+        if self.settings_manager.get("clear_remote_edit_files_on_exit", True):
+            self.logger.info(
+                "Clearing all temporary remote edit files for this file manager instance."
+            )
+            self.cleanup_all_temp_files()
+
         if hasattr(self, "temp_files_changed_handler_id"):
             if GObject.signal_handler_is_connected(
                 self, self.temp_files_changed_handler_id

@@ -440,15 +440,20 @@ class ProcessSpawner:
                 session.host, f"{command_type.upper()} command not found on system"
             )
 
+        persist_duration = self.settings_manager.get(
+            "ssh_control_persist_duration", 600
+        )
         ssh_options = {
             "ConnectTimeout": "30",
             "ServerAliveInterval": "30",
             "ServerAliveCountMax": "3",
             "StrictHostKeyChecking": "ask",
             "ControlMaster": "auto",
-            "ControlPersist": "600",
             "ControlPath": self._get_ssh_control_path(session),
         }
+        if persist_duration > 0:
+            ssh_options["ControlPersist"] = str(persist_duration)
+
         cmd = self.command_builder.build_remote_command(
             command_type,
             hostname=session.host,
@@ -493,13 +498,18 @@ class ProcessSpawner:
         if not has_command("ssh"):
             raise SSHConnectionError(session.host, "SSH command not found on system")
 
+        persist_duration = self.settings_manager.get(
+            "ssh_control_persist_duration", 600
+        )
         ssh_options = {
             "ConnectTimeout": "15",
             "ControlMaster": "auto",
-            "ControlPersist": "600",
             "ControlPath": self._get_ssh_control_path(session),
             "BatchMode": "yes",  # Ensure it doesn't prompt for passwords
         }
+        if persist_duration > 0:
+            ssh_options["ControlPersist"] = str(persist_duration)
+
         cmd = self.command_builder.build_remote_command(
             "ssh",
             hostname=session.host,
