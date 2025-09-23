@@ -4850,10 +4850,39 @@ msgstr "Neue Version herunterladen"
 msgid "Could not get remote file details."
 msgstr "Konnte keine Details zur Remote-Datei abrufen."
 # 
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1763
+#: NEEDS WORK
+msgid "Permission Denied"
+msgstr "Zugriff verweigert"
+# 
 # File: usr/share/ashyterm/filemanager/manager.py, line: 1040
 #: NEEDS WORK
 msgid "Transfer cancelled."
 msgstr "Übertragung abgebrochen."
+# 
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1783
+#: NEEDS WORK
+msgid "Transfer Failed: Permission Denied"
+msgstr "Übertragung fehlgeschlagen: Berechtigung verweigert"
+# 
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1785
+#: NEEDS WORK
+#, python-brace-format
+msgid "Could not complete the transfer of '{filename}'."
+msgstr "Die Übertragung von '{filename}' konnte nicht abgeschlossen werden."
+# 
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1790
+#: NEEDS WORK
+#, python-brace-format
+msgid ""
+"Please check if you have the necessary write permissions in the destination directory:\n"
+"\n"
+"<b>{path}</b>"
+msgstr ""
+"Bitte überprüfen Sie, ob Sie über die erforderlichen Schreibberechtigungen im Zielverzeichnis "
+"verfügen:\n"
+"\n"
+"<b>{path}</b>"
 # 
 # File: usr/share/ashyterm/filemanager/manager.py, line: 1092
 #: NEEDS WORK
@@ -5083,6 +5112,16 @@ msgstr "Kein Sitzungs-Kontext für Dateioperation."
 #: NEEDS WORK
 msgid "Unsupported session type for command execution."
 msgstr "Nicht unterstützter Sitzungstyp für die Befehlsausführung."
+# 
+# File: usr/share/ashyterm/filemanager/operations.py, line: 183
+#: NEEDS WORK
+msgid "Permission Denied: Check write permissions on the destination."
+msgstr "Zugriff verweigert: Überprüfen Sie die Schreibberechtigungen für das Ziel."
+# 
+# File: usr/share/ashyterm/filemanager/operations.py, line: 187
+#: NEEDS WORK
+msgid "An unknown transfer error occurred."
+msgstr "Ein unbekannter Übertragungsfehler ist aufgetreten."
 # 
 # File: usr/share/ashyterm/window.py, line: 1466
 #: NEEDS WORK

@@ -4772,10 +4772,38 @@ msgstr "新しいバージョンをダウンロード"
 msgid "Could not get remote file details."
 msgstr "リモートファイルの詳細を取得できませんでした。"
 # 
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1763
+#: NEEDS WORK
+msgid "Permission Denied"
+msgstr "アクセスが拒否されました"
+# 
 # File: usr/share/ashyterm/filemanager/manager.py, line: 1040
 #: NEEDS WORK
 msgid "Transfer cancelled."
 msgstr "転送がキャンセルされました。"
+# 
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1783
+#: NEEDS WORK
+msgid "Transfer Failed: Permission Denied"
+msgstr "転送に失敗しました: 権限が拒否されました"
+# 
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1785
+#: NEEDS WORK
+#, python-brace-format
+msgid "Could not complete the transfer of '{filename}'."
+msgstr "'{filename}'の転送を完了できませんでした。"
+# 
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1790
+#: NEEDS WORK
+#, python-brace-format
+msgid ""
+"Please check if you have the necessary write permissions in the destination directory:\n"
+"\n"
+"<b>{path}</b>"
+msgstr ""
+"宛先ディレクトリに必要な書き込み権限があるか確認してください：\n"
+"\n"
+"<b>{path}</b>"
 # 
 # File: usr/share/ashyterm/filemanager/manager.py, line: 1092
 #: NEEDS WORK
@@ -5001,6 +5029,16 @@ msgstr "ファイル操作のためのセッションコンテキストがあり
 #: NEEDS WORK
 msgid "Unsupported session type for command execution."
 msgstr "コマンド実行のためのサポートされていないセッションタイプ。"
+# 
+# File: usr/share/ashyterm/filemanager/operations.py, line: 183
+#: NEEDS WORK
+msgid "Permission Denied: Check write permissions on the destination."
+msgstr "アクセス拒否: 宛先の書き込み権限を確認してください。"
+# 
+# File: usr/share/ashyterm/filemanager/operations.py, line: 187
+#: NEEDS WORK
+msgid "An unknown transfer error occurred."
+msgstr "不明な転送エラーが発生しました。"
 # 
 # File: usr/share/ashyterm/window.py, line: 1466
 #: NEEDS WORK

@@ -4771,10 +4771,38 @@ msgstr "새 버전 다운로드"
 msgid "Could not get remote file details."
 msgstr "원격 파일 세부정보를 가져올 수 없습니다."
 # 
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1763
+#: NEEDS WORK
+msgid "Permission Denied"
+msgstr "권한 거부"
+# 
 # File: usr/share/ashyterm/filemanager/manager.py, line: 1040
 #: NEEDS WORK
 msgid "Transfer cancelled."
 msgstr "전송이 취소되었습니다."
+# 
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1783
+#: NEEDS WORK
+msgid "Transfer Failed: Permission Denied"
+msgstr "전송 실패: 권한 거부"
+# 
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1785
+#: NEEDS WORK
+#, python-brace-format
+msgid "Could not complete the transfer of '{filename}'."
+msgstr "'{filename}' 전송을 완료할 수 없습니다."
+# 
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1790
+#: NEEDS WORK
+#, python-brace-format
+msgid ""
+"Please check if you have the necessary write permissions in the destination directory:\n"
+"\n"
+"<b>{path}</b>"
+msgstr ""
+"대상 디렉토리에 필요한 쓰기 권한이 있는지 확인하십시오:\n"
+"\n"
+"<b>{path}</b>"
 # 
 # File: usr/share/ashyterm/filemanager/manager.py, line: 1092
 #: NEEDS WORK
@@ -5000,6 +5028,16 @@ msgstr "파일 작업을 위한 세션 컨텍스트가 없습니다."
 #: NEEDS WORK
 msgid "Unsupported session type for command execution."
 msgstr "명령 실행을 위한 지원되지 않는 세션 유형입니다."
+# 
+# File: usr/share/ashyterm/filemanager/operations.py, line: 183
+#: NEEDS WORK
+msgid "Permission Denied: Check write permissions on the destination."
+msgstr "권한 거부: 대상에 대한 쓰기 권한을 확인하십시오."
+# 
+# File: usr/share/ashyterm/filemanager/operations.py, line: 187
+#: NEEDS WORK
+msgid "An unknown transfer error occurred."
+msgstr "알 수 없는 전송 오류가 발생했습니다."
 # 
 # File: usr/share/ashyterm/window.py, line: 1466
 #: NEEDS WORK

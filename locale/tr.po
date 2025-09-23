@@ -4810,10 +4810,38 @@ msgstr "Yeni Sürümü İndir"
 msgid "Could not get remote file details."
 msgstr "Uzak dosya ayrıntıları alınamadı."
 # 
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1763
+#: NEEDS WORK
+msgid "Permission Denied"
+msgstr "İzin Reddedildi"
+# 
 # File: usr/share/ashyterm/filemanager/manager.py, line: 1040
 #: NEEDS WORK
 msgid "Transfer cancelled."
 msgstr "Transfer iptali."
+# 
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1783
+#: NEEDS WORK
+msgid "Transfer Failed: Permission Denied"
+msgstr "Transfer Başarısız: İzin Reddedildi"
+# 
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1785
+#: NEEDS WORK
+#, python-brace-format
+msgid "Could not complete the transfer of '{filename}'."
+msgstr "'{filename}' dosyasının aktarımını tamamlayamadı."
+# 
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1790
+#: NEEDS WORK
+#, python-brace-format
+msgid ""
+"Please check if you have the necessary write permissions in the destination directory:\n"
+"\n"
+"<b>{path}</b>"
+msgstr ""
+"Lütfen hedef dizinde gerekli yazma izinlerinizin olup olmadığını kontrol edin:\n"
+"\n"
+"<b>{path}</b>"
 # 
 # File: usr/share/ashyterm/filemanager/manager.py, line: 1092
 #: NEEDS WORK
@@ -5043,6 +5071,16 @@ msgstr "Dosya işlemi için oturum bağlamı yok."
 #: NEEDS WORK
 msgid "Unsupported session type for command execution."
 msgstr "Komut yürütme için desteklenmeyen oturum türü."
+# 
+# File: usr/share/ashyterm/filemanager/operations.py, line: 183
+#: NEEDS WORK
+msgid "Permission Denied: Check write permissions on the destination."
+msgstr "İzin Reddedildi: Hedefteki yazma izinlerini kontrol edin."
+# 
+# File: usr/share/ashyterm/filemanager/operations.py, line: 187
+#: NEEDS WORK
+msgid "An unknown transfer error occurred."
+msgstr "Bilinmeyen bir transfer hatası oluştu."
 # 
 # File: usr/share/ashyterm/state/window_state.py, line: 91
 #: NEEDS WORK
