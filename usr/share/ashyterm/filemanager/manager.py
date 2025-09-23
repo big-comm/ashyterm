@@ -1760,11 +1760,44 @@ class FileManager(GObject.Object):
                 if transfer:
                     on_success_callback(Path(transfer.local_path), transfer.remote_path)
         else:
+            permission_denied_key = _("Permission Denied")
+            if permission_denied_key in message:
+                self._show_permission_error_dialog(transfer_id, message)
+
             self.transfer_manager.fail_transfer(transfer_id, message)
             if message == "Cancelled":
                 self.parent_window.toast_overlay.add_toast(
                     Adw.Toast(title=_("Transfer cancelled."))
                 )
+
+    def _show_permission_error_dialog(self, transfer_id: str, message: str):
+        """Shows a specific dialog for permission errors."""
+        transfer = self.transfer_manager.get_transfer(transfer_id) or next(
+            (t for t in self.transfer_manager.history if t.id == transfer_id), None
+        )
+        if not transfer:
+            return
+
+        dialog = Adw.MessageDialog(
+            transient_for=self.parent_window,
+            heading=_("Transfer Failed: Permission Denied"),
+            body=_(
+                "Could not complete the transfer of '{filename}'."
+            ).format(filename=transfer.filename),
+            close_response="ok",
+        )
+        details = _(
+            "Please check if you have the necessary write permissions in the destination directory:\n\n<b>{path}</b>"
+        ).format(
+            path=(
+                transfer.remote_path
+                if transfer.transfer_type == TransferType.UPLOAD
+                else transfer.local_path
+            )
+        )
+        dialog.set_extra_child(Gtk.Label(label=details, use_markup=True, wrap=True))
+        dialog.add_response("ok", _("OK"))
+        dialog.present()
 
     def _show_open_with_dialog(
         self,
@@ -2099,3 +2132,4 @@ class FileManager(GObject.Object):
 
         self.emit("temp-files-changed", len(self.edited_file_metadata))
         return False
+

@@ -125,3 +125,4 @@ def accelerator_to_label(accelerator: str) -> str:
         return key_name if key_name else _manual_conversion(accelerator)
     except Exception:
         return _manual_conversion(accelerator)
+

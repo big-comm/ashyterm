@@ -160,7 +160,7 @@ class FileOperations:
         process = subprocess.Popen(
             command,
             stdout=subprocess.PIPE,
-            stderr=subprocess.STDOUT,
+            stderr=subprocess.PIPE, # Capture stderr separately
             text=True,
             bufsize=1,
             universal_newlines=True,
@@ -170,6 +170,23 @@ class FileOperations:
         with self._lock:
             self._active_processes[transfer_id] = process
         return process
+
+    def _parse_transfer_error(self, output: str) -> str:
+        """Parses command output to find specific, user-friendly error messages."""
+        output_lower = output.lower()
+        permission_errors = {
+            "permission denied",
+            "permissão negada",
+            "operation not permitted",
+        }
+        if any(err in output_lower for err in permission_errors):
+            return _("Permission Denied: Check write permissions on the destination.")
+        
+        # Fallback to a generic message if output is empty but an error occurred
+        if not output.strip():
+            return _("An unknown transfer error occurred.")
+            
+        return output.strip()
 
     def start_download_with_progress(
         self,
@@ -210,19 +227,23 @@ class FileOperations:
                     ]
                     process = self._start_process(transfer_id, transfer_cmd)
 
+                    full_output = ""
                     progress_pattern = re.compile(r"(\d+)%")
                     for line in iter(process.stdout.readline, ""):
                         if cancellation_event and cancellation_event.is_set():
                             os.killpg(os.getpgid(process.pid), signal.SIGTERM)
                             raise OperationCancelledError("Download cancelled by user.")
-
+                        
+                        full_output += line
                         match = progress_pattern.search(line)
                         if match and progress_callback:
                             progress = float(match.group(1))
                             GLib.idle_add(progress_callback, transfer_id, progress)
 
+                    stderr_output = process.stderr.read()
                     process.wait()
                     exit_code = process.returncode
+                    
                     if exit_code == 0:
                         GLib.idle_add(
                             completion_callback,
@@ -231,13 +252,15 @@ class FileOperations:
                             "Download completed successfully.",
                         )
                     else:
+                        error_message = self._parse_transfer_error(full_output + stderr_output)
                         GLib.idle_add(
                             completion_callback,
                             transfer_id,
                             False,
-                            f"Download failed (code: {exit_code})",
+                            error_message,
                         )
-                else:  # Fallback for SFTP, less ideal for progress.
+                else:  # Fallback for SFTP
+                    # ... (SFTP logic remains the same, as it doesn't provide detailed stderr during run)
                     sftp_cmd_base = spawner.command_builder.build_remote_command(
                         "sftp", session
                     )
@@ -271,9 +294,7 @@ class FileOperations:
                             "Download completed successfully.",
                         )
                     else:
-                        error_msg = (
-                            stderr.strip() or f"Download failed (code: {exit_code})."
-                        )
+                        error_msg = self._parse_transfer_error(stdout + stderr)
                         GLib.idle_add(
                             completion_callback, transfer_id, False, error_msg
                         )
@@ -332,19 +353,23 @@ class FileOperations:
                     ]
                     process = self._start_process(transfer_id, transfer_cmd)
 
+                    full_output = ""
                     progress_pattern = re.compile(r"(\d+)%")
                     for line in iter(process.stdout.readline, ""):
                         if cancellation_event and cancellation_event.is_set():
                             os.killpg(os.getpgid(process.pid), signal.SIGTERM)
                             raise OperationCancelledError("Upload cancelled by user.")
-
+                        
+                        full_output += line
                         match = progress_pattern.search(line)
                         if match and progress_callback:
                             progress = float(match.group(1))
                             GLib.idle_add(progress_callback, transfer_id, progress)
 
+                    stderr_output = process.stderr.read()
                     process.wait()
                     exit_code = process.returncode
+                    
                     if exit_code == 0:
                         GLib.idle_add(
                             completion_callback,
@@ -353,13 +378,15 @@ class FileOperations:
                             "Upload completed successfully.",
                         )
                     else:
+                        error_message = self._parse_transfer_error(full_output + stderr_output)
                         GLib.idle_add(
                             completion_callback,
                             transfer_id,
                             False,
-                            f"Upload failed (code: {exit_code})",
+                            error_message,
                         )
                 else:  # SFTP fallback
+                    # ... (SFTP logic remains the same)
                     sftp_cmd_base = spawner.command_builder.build_remote_command(
                         "sftp", session
                     )
@@ -393,9 +420,7 @@ class FileOperations:
                             "Upload completed successfully.",
                         )
                     else:
-                        error_msg = (
-                            stderr.strip() or f"Upload failed (code: {exit_code})."
-                        )
+                        error_msg = self._parse_transfer_error(stdout + stderr)
                         GLib.idle_add(
                             completion_callback, transfer_id, False, error_msg
                         )
@@ -414,3 +439,4 @@ class FileOperations:
                         del self._active_processes[transfer_id]
 
         threading.Thread(target=upload_thread, daemon=True).start()
+

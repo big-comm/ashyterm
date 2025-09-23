@@ -315,3 +315,4 @@ class TransferManager(GObject.Object):
             return f"{minutes}m {seconds}s"
         hours, minutes = divmod(minutes, 60)
         return f"{hours}h {minutes}m"
+
