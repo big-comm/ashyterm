@@ -112,7 +112,7 @@ class DefaultSettings:
             "color_scheme": 1,
             "transparency": 16,
             "headerbar_transparency": 12,
-            "font": "Noto Mono Nerd Font 12",
+            "font": "Noto Mono Nerd Font Medium 12",
             "line_spacing": 1.0,
             "bold_is_bright": False,
             "tab_alignment": "center",
