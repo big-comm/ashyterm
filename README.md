@@ -12,11 +12,8 @@
 
 ## Screenshot
 
-<p align="center">
+<img width="1920" height="1042" alt="ashy" src="https://github.com/user-attachments/assets/686a01d8-87c5-482c-92e5-4cda031919eb" />
 
-   <!-- TODO: Replace this with a high-quality screenshot of the application -->
-   <img width="1322" height="822" alt="ashyterm" src="https://github.com/user-attachments/assets/e3296fab-b975-4d12-8692-41178f72fc7e" alt="Ashy Terminal" />
-</p>
 
 ## Example of use
 
