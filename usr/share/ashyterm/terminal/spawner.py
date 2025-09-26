@@ -7,6 +7,7 @@ import subprocess
 import tempfile
 import threading
 import time
+import shlex
 from pathlib import Path
 from typing import TYPE_CHECKING, Any, Callable, Dict, List, Optional, Tuple
 
@@ -519,8 +520,8 @@ class ProcessSpawner:
             options=ssh_options,
         )
 
-        # Append the actual command to be executed
-        cmd.extend(command)
+        remote_command_str = " ".join(shlex.quote(part) for part in command)
+        cmd.append(remote_command_str)
 
         if session.uses_password_auth() and session.auth_value:
             if has_command("sshpass"):
@@ -528,7 +529,6 @@ class ProcessSpawner:
             else:
                 self.logger.warning("sshpass not available for password authentication")
         return cmd
-
     def _default_spawn_callback(
         self,
         terminal: Vte.Terminal,
