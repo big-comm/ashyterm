@@ -163,3 +163,4 @@ class FileItem(GObject.GObject):
             is_link=data["perms"].startswith("l"),
             link_target=data.get("link_target", ""),
         )
+

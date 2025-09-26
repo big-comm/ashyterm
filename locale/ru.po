@@ -4814,10 +4814,38 @@ msgstr "Скачать новую версию"
 msgid "Could not get remote file details."
 msgstr "Не удалось получить данные удаленного файла."
 # 
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1763
+#: NEEDS WORK
+msgid "Permission Denied"
+msgstr "Доступ запрещён"
+# 
 # File: usr/share/ashyterm/filemanager/manager.py, line: 1040
 #: NEEDS WORK
 msgid "Transfer cancelled."
 msgstr "Передача отменена."
+# 
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1783
+#: NEEDS WORK
+msgid "Transfer Failed: Permission Denied"
+msgstr "Передача не удалась: Доступ запрещен"
+# 
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1785
+#: NEEDS WORK
+#, python-brace-format
+msgid "Could not complete the transfer of '{filename}'."
+msgstr "Не удалось завершить передачу '{filename}'."
+# 
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1790
+#: NEEDS WORK
+#, python-brace-format
+msgid ""
+"Please check if you have the necessary write permissions in the destination directory:\n"
+"\n"
+"<b>{path}</b>"
+msgstr ""
+"Пожалуйста, проверьте, есть ли у вас необходимые права на запись в целевом каталоге:\n"
+"\n"
+"<b>{path}</b>"
 # 
 # File: usr/share/ashyterm/filemanager/manager.py, line: 1092
 #: NEEDS WORK
@@ -5047,6 +5075,16 @@ msgstr "Нет контекста сеанса для операции с фай
 #: NEEDS WORK
 msgid "Unsupported session type for command execution."
 msgstr "Неподдерживаемый тип сеанса для выполнения команды."
+# 
+# File: usr/share/ashyterm/filemanager/operations.py, line: 183
+#: NEEDS WORK
+msgid "Permission Denied: Check write permissions on the destination."
+msgstr "Доступ запрещен: Проверьте права на запись в целевую папку."
+# 
+# File: usr/share/ashyterm/filemanager/operations.py, line: 187
+#: NEEDS WORK
+msgid "An unknown transfer error occurred."
+msgstr "Произошла неизвестная ошибка передачи."
 # 
 # File: usr/share/ashyterm/window.py, line: 1466
 #: NEEDS WORK

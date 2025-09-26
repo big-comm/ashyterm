@@ -4833,10 +4833,38 @@ msgstr "Descărcați versiunea nouă"
 msgid "Could not get remote file details."
 msgstr "Nu s-au putut obține detaliile fișierului la distanță."
 # 
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1763
+#: NEEDS WORK
+msgid "Permission Denied"
+msgstr "Permisiune refuzată"
+# 
 # File: usr/share/ashyterm/filemanager/manager.py, line: 1040
 #: NEEDS WORK
 msgid "Transfer cancelled."
 msgstr "Transfer anulat."
+# 
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1783
+#: NEEDS WORK
+msgid "Transfer Failed: Permission Denied"
+msgstr "Transfer eșuat: Permisiune refuzată"
+# 
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1785
+#: NEEDS WORK
+#, python-brace-format
+msgid "Could not complete the transfer of '{filename}'."
+msgstr "Nu s-a putut finaliza transferul lui '{filename}'."
+# 
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1790
+#: NEEDS WORK
+#, python-brace-format
+msgid ""
+"Please check if you have the necessary write permissions in the destination directory:\n"
+"\n"
+"<b>{path}</b>"
+msgstr ""
+"Vă rugăm să verificați dacă aveți permisiunile necesare de scriere în directorul de destinație:\n"
+"\n"
+"<b>{path}</b>"
 # 
 # File: usr/share/ashyterm/filemanager/manager.py, line: 1092
 #: NEEDS WORK
@@ -5066,6 +5094,16 @@ msgstr "Nu există context de sesiune pentru operațiunea cu fișiere."
 #: NEEDS WORK
 msgid "Unsupported session type for command execution."
 msgstr "Tip de sesiune nesuportat pentru executarea comenzii."
+# 
+# File: usr/share/ashyterm/filemanager/operations.py, line: 183
+#: NEEDS WORK
+msgid "Permission Denied: Check write permissions on the destination."
+msgstr "Permisiune refuzată: Verificați permisiunile de scriere pe destinație."
+# 
+# File: usr/share/ashyterm/filemanager/operations.py, line: 187
+#: NEEDS WORK
+msgid "An unknown transfer error occurred."
+msgstr "A apărut o eroare de transfer necunoscută."
 # 
 # File: usr/share/ashyterm/window.py, line: 1466
 #: NEEDS WORK

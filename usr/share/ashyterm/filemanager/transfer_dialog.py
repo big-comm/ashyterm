@@ -404,3 +404,4 @@ class TransferManagerDialog(Adw.Window):
             # Restore scroll position
             if vadjustment:
                 GLib.idle_add(lambda: vadjustment.set_value(current_scroll))
+

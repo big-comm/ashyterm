@@ -4813,10 +4813,38 @@ msgstr "Last ned ny versjon"
 msgid "Could not get remote file details."
 msgstr "Kunne ikke hente detaljer om fjernfilen."
 # 
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1763
+#: NEEDS WORK
+msgid "Permission Denied"
+msgstr "Tillatelse nektet"
+# 
 # File: usr/share/ashyterm/filemanager/manager.py, line: 1040
 #: NEEDS WORK
 msgid "Transfer cancelled."
 msgstr "Overføring avbrutt."
+# 
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1783
+#: NEEDS WORK
+msgid "Transfer Failed: Permission Denied"
+msgstr "Overføring mislyktes: Tillatelse nektet"
+# 
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1785
+#: NEEDS WORK
+#, python-brace-format
+msgid "Could not complete the transfer of '{filename}'."
+msgstr "Kunne ikke fullføre overføringen av '{filename}'."
+# 
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1790
+#: NEEDS WORK
+#, python-brace-format
+msgid ""
+"Please check if you have the necessary write permissions in the destination directory:\n"
+"\n"
+"<b>{path}</b>"
+msgstr ""
+"Vennligst sjekk om du har de nødvendige skrive tillatelsene i destinasjonskatalogen:\n"
+"\n"
+"<b>{path}</b>"
 # 
 # File: usr/share/ashyterm/filemanager/manager.py, line: 1092
 #: NEEDS WORK
@@ -5046,6 +5074,16 @@ msgstr "Ingen sesjonskontekst for filoperasjon."
 #: NEEDS WORK
 msgid "Unsupported session type for command execution."
 msgstr "Ustøttet sesjonstype for kommandokjøring."
+# 
+# File: usr/share/ashyterm/filemanager/operations.py, line: 183
+#: NEEDS WORK
+msgid "Permission Denied: Check write permissions on the destination."
+msgstr "Tillatelse nektet: Sjekk skrive tillatelser på destinasjonen."
+# 
+# File: usr/share/ashyterm/filemanager/operations.py, line: 187
+#: NEEDS WORK
+msgid "An unknown transfer error occurred."
+msgstr "En ukjent overføringsfeil oppstod."
 # 
 # File: usr/share/ashyterm/window.py, line: 1466
 #: NEEDS WORK
