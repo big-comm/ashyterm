@@ -17,7 +17,10 @@
 
 ## Example of use
 
-![ashy](https://github.com/user-attachments/assets/cfab5152-ca80-499d-a13d-c8087a9da6d1)
+
+https://github.com/user-attachments/assets/b5e56c63-cb9f-4228-b99b-6b5ea5a7a7cf
+
+
 
 ## Key Features
 
