@@ -955,17 +955,17 @@ msgstr ""
 "Are you sure you want to delete the scheme '{name}'? This cannot be undone."
 
 #
-# File: usr/share/ashyterm/ui/sidebar_manager.py, line: 234
+# File: usr/share/ashyterm/ui/sidebar_manager.py, line: 264
 msgid "Show Sessions"
 msgstr "Show Sessions"
 
 #
-# File: usr/share/ashyterm/ui/sidebar_manager.py, line: 241
+# File: usr/share/ashyterm/ui/sidebar_manager.py, line: 271
 msgid "Hide Sidebar"
 msgstr "Hide Sidebar"
 
 #
-# File: usr/share/ashyterm/ui/sidebar_manager.py, line: 241
+# File: usr/share/ashyterm/ui/sidebar_manager.py, line: 271
 msgid "Show Sidebar"
 msgstr "Show Sidebar"
 
@@ -5113,368 +5113,71 @@ msgstr "Preferences Error"
 #
 # File: usr/share/ashyterm/app.py, line: 333
 #, python-brace-format
-msgid "File path validation failed: {}"
-msgstr "File path validation failed: {}"
+msgid "Failed to open preferences: {}"
+msgstr "Failed to open preferences: {}"
 
 #
-# File: usr/share/ashyterm/sessions/storage.py, line: 87
-msgid "File too large (>50MB)"
-msgstr "File too large (>50MB)"
+# File: usr/share/ashyterm/app.py, line: 350
+msgid "A modern terminal emulator with session management"
+msgstr "A modern terminal emulator with session management"
 
 #
-# File: usr/share/ashyterm/sessions/storage.py, line: 96
+# File: usr/share/ashyterm/app.py, line: 363
+msgid "Save Backup As..."
+msgstr "Save Backup As..."
+
+#
+# File: usr/share/ashyterm/app.py, line: 376
+msgid "Backup Error"
+msgstr "Backup Error"
+
+#
+# File: usr/share/ashyterm/app.py, line: 382
+msgid "Set Backup Password"
+msgstr "Set Backup Password"
+
+#
+# File: usr/share/ashyterm/app.py, line: 383
+msgid "Please enter a password to encrypt the backup file."
+msgstr "Please enter a password to encrypt the backup file."
+
+#
+# File: usr/share/ashyterm/app.py, line: 391
+msgid "Confirm Password"
+msgstr "Confirm Password"
+
+#
+# File: usr/share/ashyterm/app.py, line: 407
+# File: usr/share/ashyterm/app.py, line: 412
+msgid "Password Error"
+msgstr "Password Error"
+
+#
+# File: usr/share/ashyterm/app.py, line: 407
+msgid "Password cannot be empty."
+msgstr "Password cannot be empty."
+
+#
+# File: usr/share/ashyterm/app.py, line: 412
+msgid "Passwords do not match."
+msgstr "Passwords do not match."
+
+#
+# File: usr/share/ashyterm/app.py, line: 430
+msgid "Creating backup..."
+msgstr "Creating backup..."
+
+#
+# File: usr/share/ashyterm/app.py, line: 450
+msgid "Backup Complete"
+msgstr "Backup Complete"
+
+#
+# File: usr/share/ashyterm/app.py, line: 451
 #, python-brace-format
-msgid "Invalid JSON: {}"
-msgstr "Invalid JSON: {}"
-
-#
-# File: usr/share/ashyterm/sessions/storage.py, line: 100
-#, python-brace-format
-msgid "Encoding error: {}"
-msgstr "Encoding error: {}"
-
-#
-# File: usr/share/ashyterm/sessions/storage.py, line: 105
-msgid "Root data is not a dictionary"
-msgstr "Root data is not a dictionary"
-
-#
-# File: usr/share/ashyterm/sessions/storage.py, line: 138
-#, python-brace-format
-msgid "Load failed: {}"
-msgstr "Load failed: {}"
-
-#
-# File: usr/share/ashyterm/sessions/storage.py, line: 231
-msgid "Data validation failed"
-msgstr "Data validation failed"
-
-#
-# File: usr/share/ashyterm/sessions/storage.py, line: 243
-msgid "Temporary file was not written correctly"
-msgstr "Temporary file was not written correctly"
-
-#
-# File: usr/share/ashyterm/sessions/storage.py, line: 251
-#, python-brace-format
-msgid "File write failed: {}"
-msgstr "File write failed: {}"
-
-#
-# File: usr/share/ashyterm/sessions/storage.py, line: 256
-msgid "Save verification failed"
-msgstr "Save verification failed"
-
-#
-# File: usr/share/ashyterm/sessions/storage.py, line: 277
-#, python-brace-format
-msgid "Save failed: {}"
-msgstr "Save failed: {}"
-
-#
-# File: usr/share/ashyterm/sessions/tree.py, line: 518
-# File: usr/share/ashyterm/sessions/tree.py, line: 523
-msgid "Move Error"
-msgstr "Move Error"
-
-#
-# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
-#
-# File: usr/share/ashyterm/sessions/tree.py, line: 806
-# File: usr/share/ashyterm/state/window_state.py, line: 165
-msgid "Restore Layout"
-msgstr "Restore Layout"
-
-#
-# File: usr/share/ashyterm/sessions/tree.py, line: 813
-msgid "Delete Layout"
-msgstr "Delete Layout"
-
-#
-# File: usr/share/ashyterm/sessions/tree.py, line: 890
-# File: usr/share/ashyterm/sessions/tree.py, line: 895
-msgid "Paste Error"
-msgstr "Paste Error"
-
-#
-# File: usr/share/ashyterm/sessions/validation.py, line: 18
-#, python-brace-format
-msgid "Session validation failed: {}"
-msgstr "Session validation failed: {}"
-
-#
-# File: usr/share/ashyterm/sessions/validation.py, line: 31
-#, python-brace-format
-msgid "A session with the name '{name}' already exists in this folder."
-msgstr "A session with the name '{name}' already exists in this folder."
-
-#
-# File: usr/share/ashyterm/sessions/validation.py, line: 45
-#, python-brace-format
-msgid "The target folder '{folder}' does not exist."
-msgstr "The target folder '{folder}' does not exist."
-
-#
-# File: usr/share/ashyterm/sessions/validation.py, line: 61
-#, python-brace-format
-msgid "Folder validation failed: {}"
-msgstr "Folder validation failed: {}"
-
-#
-# File: usr/share/ashyterm/sessions/validation.py, line: 69
-#, python-brace-format
-msgid "A folder with the path '{path}' already exists."
-msgstr "A folder with the path '{path}' already exists."
-
-#
-# File: usr/share/ashyterm/sessions/validation.py, line: 84
-#, python-brace-format
-msgid "The parent folder '{folder}' does not exist."
-msgstr "The parent folder '{folder}' does not exist."
-
-#
-# File: usr/share/ashyterm/sessions/operations.py, line: 51
-#, python-brace-format
-msgid "Failed to save {item_type} data."
-msgstr "Failed to save {item_type} data."
-
-#
-# File: usr/share/ashyterm/sessions/operations.py, line: 59
-#, python-brace-format
-msgid "{item_type} '{name}' added successfully."
-msgstr "{item_type} '{name}' added successfully."
-
-#
-# File: usr/share/ashyterm/sessions/operations.py, line: 82
-msgid "Item at position is not a session."
-msgstr "Item at position is not a session."
-
-#
-# File: usr/share/ashyterm/sessions/operations.py, line: 104
-msgid "Failed to save updated session data."
-msgstr "Failed to save updated session data."
-
-#
-# File: usr/share/ashyterm/sessions/operations.py, line: 109
-#, python-brace-format
-msgid "Session '{name}' updated successfully."
-msgstr "Session '{name}' updated successfully."
-
-#
-# File: usr/share/ashyterm/sessions/operations.py, line: 120
-msgid "Session not found."
-msgstr "Session not found."
-
-#
-# File: usr/share/ashyterm/sessions/operations.py, line: 126
-msgid "Failed to save after session removal."
-msgstr "Failed to save after session removal."
-
-#
-# File: usr/share/ashyterm/sessions/operations.py, line: 132
-#, python-brace-format
-msgid "Session '{name}' removed successfully."
-msgstr "Session '{name}' removed successfully."
-
-#
-# File: usr/share/ashyterm/sessions/operations.py, line: 148
-msgid "Item at position is not a folder."
-msgstr "Item at position is not a folder."
-
-#
-# File: usr/share/ashyterm/sessions/operations.py, line: 161
-msgid "Failed to save updated folder data."
-msgstr "Failed to save updated folder data."
-
-#
-# File: usr/share/ashyterm/sessions/operations.py, line: 166
-#, python-brace-format
-msgid "Folder '{name}' updated successfully."
-msgstr "Folder '{name}' updated successfully."
-
-#
-# File: usr/share/ashyterm/sessions/operations.py, line: 178
-msgid "Cannot remove a non-empty folder."
-msgstr "Cannot remove a non-empty folder."
-
-#
-# File: usr/share/ashyterm/sessions/operations.py, line: 185
-# File: usr/share/ashyterm/sessions/operations.py, line: 229
-msgid "Folder not found."
-msgstr "Folder not found."
-
-#
-# File: usr/share/ashyterm/sessions/operations.py, line: 189
-msgid "Failed to save after folder removal."
-msgstr "Failed to save after folder removal."
-
-#
-# File: usr/share/ashyterm/sessions/operations.py, line: 194
-#, python-brace-format
-msgid "Folder '{name}' removed successfully."
-msgstr "Folder '{name}' removed successfully."
-
-#
-# File: usr/share/ashyterm/sessions/operations.py, line: 210
-msgid "Failed to save after moving session."
-msgstr "Failed to save after moving session."
-
-#
-# File: usr/share/ashyterm/sessions/operations.py, line: 215
-msgid "Session moved successfully."
-msgstr "Session moved successfully."
-
-#
-# File: usr/share/ashyterm/sessions/operations.py, line: 225
-msgid "Cannot move a folder into itself."
-msgstr "Cannot move a folder into itself."
-
-#
-# File: usr/share/ashyterm/sessions/operations.py, line: 270
-msgid "Unsupported item type for paste operation."
-msgstr "Unsupported item type for paste operation."
-
-#
-# File: usr/share/ashyterm/sessions/models.py, line: 229
-msgid "Port must be a valid number between 1 and 65535"
-msgstr "Port must be a valid number between 1 and 65535"
-
-#
-# File: usr/share/ashyterm/sessions/models.py, line: 245
-msgid "Session name is required."
-msgstr "Session name is required."
-
-#
-# File: usr/share/ashyterm/sessions/models.py, line: 248
-msgid "Host is required for SSH sessions."
-msgstr "Host is required for SSH sessions."
-
-#
-# File: usr/share/ashyterm/sessions/models.py, line: 250
-msgid "Port must be between 1 and 65535."
-msgstr "Port must be between 1 and 65535."
-
-#
-# File: usr/share/ashyterm/sessions/models.py, line: 274
-msgid "Unnamed Session"
-msgstr "Unnamed Session"
-
-#
-# File: usr/share/ashyterm/sessions/models.py, line: 366
-msgid "Folder name is required."
-msgstr "Folder name is required."
-
-#
-# File: usr/share/ashyterm/sessions/models.py, line: 373
-msgid "Folder path is not consistent with its parent path."
-msgstr "Folder path is not consistent with its parent path."
-
-#
-# File: usr/share/ashyterm/sessions/models.py, line: 390
-msgid "Unnamed Folder"
-msgstr "Unnamed Folder"
-
-#
-# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 56
-msgid "Cancel transfer"
-msgstr "Cancel transfer"
-
-#
-# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 63
-msgid "Remove from history"
-msgstr "Remove from history"
-
-#
-# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 78
-msgid "Recebido"
-msgstr "Recebido"
-
-#
-# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 80
-msgid "Enviado"
-msgstr "Enviado"
-
-#
-# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 107
-msgid "Waiting..."
-msgstr "Waiting..."
-
-#
-# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 116
-msgid "in"
-msgstr "in"
-
-#
-# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 121
-msgid "Completed"
-msgstr "Completed"
-
-#
-# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 126
-msgid "Unknown error"
-msgstr "Unknown error"
-
-#
-# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 127
-msgid "Failed"
-msgstr "Failed"
-
-#
-# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 131
-msgid "Cancelled"
-msgstr "Cancelled"
-
-#
-# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 147
-msgid "Recebendo"
-msgstr "Recebendo"
-
-#
-# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 149
-msgid "Enviando"
-msgstr "Enviando"
-
-#
-# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 165
-msgid "remaining"
-msgstr "remaining"
-
-#
-# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 198
-msgid "Transfer Manager"
-msgstr "Transfer Manager"
-
-#
-# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 240
-# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 367
-msgid "Clear History"
-msgstr "Clear History"
-
-#
-# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 246
-msgid "Cancelar Tudo"
-msgstr "Cancelar Tudo"
-
-#
-# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 267
-msgid "No Transfers"
-msgstr "No Transfers"
-
-#
-# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 268
-msgid "Active and past transfers will appear here."
-msgstr "Active and past transfers will appear here."
-
-#
-# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 359
-msgid "Clear Transfer History?"
-msgstr "Clear Transfer History?"
-
-#
-# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 361
 msgid ""
-"This action cannot be undone and will remove all completed, failed, and "
-"cancelled transfers from the list."
+"Backup saved successfully to:\n"
+"{}"
 msgstr ""
 "Backup saved successfully to:\n"
 "{}"
