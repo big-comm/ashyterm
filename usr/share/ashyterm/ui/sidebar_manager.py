@@ -186,10 +186,33 @@ class SidebarManager:
         self.search_entry.set_text("")
         self.session_tree.clear_search()
 
-    def _on_sidebar_popover_key_pressed(self, _, keyval, *args) -> bool:
+    def _on_sidebar_popover_key_pressed(self, _, keyval, keycode, state) -> bool:
+        # Always allow closing with the Escape key
         if keyval == Gdk.KEY_Escape:
             self.sidebar_popover.popdown()
             return Gdk.EVENT_STOP
+
+        # Get the configured shortcut for "toggle-sidebar"
+        shortcut_string = self.settings_manager.get_shortcut("toggle-sidebar")
+        if not shortcut_string:
+            return Gdk.EVENT_PROPAGATE
+
+        # Parse the shortcut string to get the expected keyval and modifiers
+        success, parsed_keyval, parsed_mods = Gtk.accelerator_parse(shortcut_string)
+
+        if success:
+            # Get the relevant modifiers from the current key event
+            event_mods = state & Gtk.accelerator_get_default_mod_mask()
+            
+            # **THE FIX**: Convert the event's keyval to lowercase for comparison,
+            # as Gtk.accelerator_parse normalizes the key.
+            event_keyval_lower = Gdk.keyval_to_lower(keyval)
+
+            # Compare the key and modifiers from the event with the configured shortcut
+            if event_keyval_lower == parsed_keyval and event_mods == parsed_mods:
+                self.sidebar_popover.popdown()
+                return Gdk.EVENT_STOP
+
         return Gdk.EVENT_PROPAGATE
 
     def _on_window_size_changed(self, window, param):
