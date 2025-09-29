@@ -847,10 +847,13 @@ class TerminalManager:
         terminal: Vte.Terminal,
         pid: int,
         error: Optional[GLib.Error],
-        user_data_dict: dict,
+        user_data: Any,
     ) -> None:
         try:
-            user_data_tuple = user_data_dict.get("original_user_data")
+            final_user_data = (
+                user_data[0] if isinstance(user_data, tuple) else user_data
+            )
+            user_data_tuple = final_user_data.get("original_user_data")
             terminal_id, user_data = user_data_tuple
             if error:
                 self.logger.error(
