@@ -186,12 +186,6 @@ class SidebarManager:
         self.search_entry.set_text("")
         self.session_tree.clear_search()
 
-<<<<<<< Updated upstream
-    def _on_sidebar_popover_key_pressed(self, _, keyval, *args) -> bool:
-        if keyval == Gdk.KEY_Escape:
-            self.sidebar_popover.popdown()
-            return Gdk.EVENT_STOP
-=======
     def _on_sidebar_popover_key_pressed(self, _, keyval, keycode, state) -> bool:
         # Always allow closing with the Escape key
         if keyval == Gdk.KEY_Escape:
@@ -219,7 +213,6 @@ class SidebarManager:
                 self.sidebar_popover.popdown()
                 return Gdk.EVENT_STOP
 
->>>>>>> Stashed changes
         return Gdk.EVENT_PROPAGATE
 
     def _on_window_size_changed(self, window, param):
@@ -386,8 +379,4 @@ class SidebarManager:
                             folder.path, expanded_paths, depth + 1
                         )
                     )
-<<<<<<< Updated upstream
         return children
-=======
-        return children
->>>>>>> Stashed changes
