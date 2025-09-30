@@ -253,6 +253,7 @@ class CommandGuideDialog(Adw.Window):
 
     def __init__(self, parent_window):
         super().__init__(transient_for=parent_window, modal=False)
+        self.parent_window = parent_window  # Store reference to main window
         self.command_manager = get_command_manager()
         self.all_commands: List[CommandItem] = []
 
@@ -700,13 +701,13 @@ class CommandGuideDialog(Adw.Window):
 
     def _on_add_clicked(self, _button):
         all_categories = list(self.command_manager.get_all_categories())
-        dialog = CommandEditDialog(self, all_categories=all_categories)
+        dialog = CommandEditDialog(self.parent_window, all_categories=all_categories)
         dialog.connect("save-requested", self._on_save_new)
         dialog.present()
 
     def _on_delete_row_clicked(self, command_item: CommandItem):
         dialog = Adw.MessageDialog(
-            transient_for=self,
+            transient_for=self.parent_window,
             heading=_("Delete Custom Command?"),
             body=_(
                 "Are you sure you want to permanently delete the command:\n\n<b>{name}</b>"
