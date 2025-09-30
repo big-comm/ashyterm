@@ -236,7 +236,7 @@ class CommTerminalApp(Adw.Application):
                 i += 1
             elif arg.startswith("--working-directory="):
                 working_directory = arg.split("=", 1)[1]
-            elif arg in ["-e", "--execute"] and i + 1 < len(arguments):
+            elif arg in ["-e", "-x", "--execute"] and i + 1 < len(arguments):
                 execute_command = arguments[i + 1]
                 i += 1
             elif arg.startswith("--execute="):
