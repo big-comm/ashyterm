@@ -109,7 +109,11 @@ def main() -> int:
         help=_("Working directory (positional argument)"),
     )
     parser.add_argument(
-        "--execute", "-e", metavar="COMMAND", help=_("Execute command in the terminal")
+        "--execute",
+        "-e",
+        "-x",
+        metavar="COMMAND",
+        help=_("Execute command in the terminal"),
     )
     parser.add_argument(
         "--close-after-execute",
