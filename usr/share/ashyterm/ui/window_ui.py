@@ -251,7 +251,7 @@ class WindowUIBuilder:
         self.broadcast_bar = Gtk.SearchBar()
         broadcast_box = Gtk.Box(spacing=6)
         self.broadcast_entry = Gtk.Entry(
-            hexpand=True, placeholder_text=_("Send command to all terminals...")
+            hexpand=True, placeholder_text=_("Send command to all tabs")
         )
         icon = Gtk.Image.new_from_icon_name("utilities-terminal-symbolic")
         self.broadcast_entry.set_icon_from_icon_name(Gtk.EntryIconPosition.PRIMARY, "utilities-terminal-symbolic")
@@ -557,3 +557,4 @@ class WindowUIBuilder:
     def _on_maximized_changed(self, window, param):
         """Handle window maximized state changes."""
         self._update_border_css()
+

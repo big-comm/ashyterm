@@ -708,9 +708,9 @@ class CommTerminalWindow(Adw.ApplicationWindow):
         count = len(all_terminals)
         dialog = Adw.MessageDialog(
             transient_for=self,
-            heading=_("Confirm Broadcast Command"),
+            heading=_("Confirm sending of command"),
             body=_(
-                "Are you sure you want to send the following command to <b>{count}</b> open terminal(s)?"
+                "Are you sure you want to send the following command to <b>{count}</b> open terminal (s)?"
             ).format(count=count),
             body_use_markup=True,
             close_response="cancel",
