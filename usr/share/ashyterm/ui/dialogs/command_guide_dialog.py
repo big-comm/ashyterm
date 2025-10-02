@@ -48,9 +48,22 @@ class CommandEditDialog(Adw.Window):
 
         self.connect("map", self._on_map)
 
+        # Adds keyboard event handler to capture Esc key.
+        key_controller = Gtk.EventControllerKey.new()
+        key_controller.connect("key-pressed", self._on_key_pressed)
+        self.add_controller(key_controller)
+
     def _on_map(self, widget):
         """Set focus to the name entry when the dialog is shown."""
         self.name_view.grab_focus()
+
+    # Method for handling key press.
+    def _on_key_pressed(self, controller, keyval, keycode, state):
+        """Handles key press events to close the dialog on Escape."""
+        if keyval == Gdk.KEY_Escape:
+            self.close()
+            return Gdk.EVENT_STOP
+        return Gdk.EVENT_PROPAGATE
 
     def _build_ui(self):
         header = Adw.HeaderBar()
