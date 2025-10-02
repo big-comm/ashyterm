@@ -422,14 +422,26 @@ class CommTerminalWindow(Adw.ApplicationWindow):
                 self.terminal_search_entry.grab_focus()
             return True  # Use True instead of Gdk.EVENT_STOP for better compatibility
 
-        if state & Gdk.ModifierType.ALT_MASK:
-            if keyval == Gdk.KEY_Page_Down:
-                self.tab_manager.select_next_tab()
-                return Gdk.EVENT_STOP
-            if keyval == Gdk.KEY_Page_Up:
-                self.tab_manager.select_previous_tab()
-                return Gdk.EVENT_STOP
+        # *** CORREÇÃO APLICADA AQUI ***
+        # Convert the key press event into a GTK accelerator string.
+        accel_string = Gtk.accelerator_name(
+            keyval, state & Gtk.accelerator_get_default_mod_mask()
+        )
 
+        # Get the currently configured shortcuts from the settings manager.
+        next_tab_shortcut = self.settings_manager.get_shortcut("next-tab")
+        prev_tab_shortcut = self.settings_manager.get_shortcut("previous-tab")
+
+        # Check if the pressed key combination matches one of our dynamic shortcuts.
+        if accel_string and accel_string == next_tab_shortcut:
+            self.tab_manager.select_next_tab()
+            return Gdk.EVENT_STOP  # Stop the event from reaching the terminal.
+        if accel_string and accel_string == prev_tab_shortcut:
+            self.tab_manager.select_previous_tab()
+            return Gdk.EVENT_STOP  # Stop the event from reaching the terminal.
+
+        # Keep the existing Alt+Number logic for quick tab switching.
+        if state & Gdk.ModifierType.ALT_MASK:
             key_to_index = {
                 Gdk.KEY_1: 0,
                 Gdk.KEY_2: 1,
