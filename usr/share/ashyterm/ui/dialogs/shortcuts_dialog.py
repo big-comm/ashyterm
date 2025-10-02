@@ -35,6 +35,7 @@ SHORTCUT_DATA = [
             ("copy", _("Copy"), "edit-copy"),
             ("paste", _("Paste"), "edit-paste"),
             ("select-all", _("Select All"), "edit-select-all"),
+            ("toggle-broadcast", _("Toggle Broadcast"), "emblem-shared-symbolic"),
         ],
     },
     {

@@ -237,6 +237,9 @@ class CommTerminalWindow(Adw.ApplicationWindow):
         self.toast_overlay = self.ui_builder.toast_overlay
         self.search_bar = self.ui_builder.search_bar
         self.search_button = self.ui_builder.search_button
+        self.broadcast_bar = self.ui_builder.broadcast_bar
+        self.broadcast_button = self.ui_builder.broadcast_button
+        self.broadcast_entry = self.ui_builder.broadcast_entry
         # Assign the correctly named widgets
         self.terminal_search_entry = self.ui_builder.terminal_search_entry
         self.search_entry = self.ui_builder.sidebar_search_entry
@@ -261,6 +264,7 @@ class CommTerminalWindow(Adw.ApplicationWindow):
         self._setup_actions()
         self._setup_keyboard_shortcuts()
         self._setup_search()
+        self._setup_broadcast()
 
         self.session_tree.on_session_activated = self._on_session_activated
         self.session_tree.on_layout_activated = self.state_manager.restore_saved_layout
@@ -325,6 +329,19 @@ class CommTerminalWindow(Adw.ApplicationWindow):
         # Initialize switch state from settings
         self.regex_switch.set_active(
             self.settings_manager.get("search_use_regex", False)
+        )
+
+    def _setup_broadcast(self) -> None:
+        """Connects signals for the command broadcast UI."""
+        self.broadcast_button.bind_property(
+            "active",
+            self.broadcast_bar,
+            "search-mode-enabled",
+            GObject.BindingFlags.BIDIRECTIONAL,
+        )
+        self.broadcast_entry.connect("activate", self._on_broadcast_activate)
+        self.broadcast_bar.connect(
+            "notify::search-mode-enabled", self._on_broadcast_mode_changed
         )
 
     def _setup_window_events(self) -> None:
@@ -667,6 +684,80 @@ class CommTerminalWindow(Adw.ApplicationWindow):
                 self.search_active = True
         else:
             self._on_search_stop(self.terminal_search_entry)
+
+    def _on_broadcast_mode_changed(self, broadcast_bar, param):
+        if broadcast_bar.get_search_mode():
+            self.broadcast_entry.grab_focus()
+        else:
+            if terminal := self.tab_manager.get_selected_terminal():
+                terminal.grab_focus()
+
+    def _on_broadcast_activate(self, entry: Gtk.Entry):
+        """
+        Shows a confirmation dialog before broadcasting the command to all terminals.
+        """
+        command = entry.get_text().strip()
+        if not command:
+            return
+
+        all_terminals = self.tab_manager.get_all_terminals_across_tabs()
+        if not all_terminals:
+            self.toast_overlay.add_toast(Adw.Toast(title=_("No open terminals found.")))
+            return
+
+        count = len(all_terminals)
+        dialog = Adw.MessageDialog(
+            transient_for=self,
+            heading=_("Confirm Broadcast Command"),
+            body=_(
+                "Are you sure you want to send the following command to <b>{count}</b> open terminals?"
+            ).format(count=count),
+            body_use_markup=True,
+            close_response="cancel",
+        )
+
+        # Display the command for the user to review
+        command_label = Gtk.Label(
+            label=f"<tt>{GLib.markup_escape_text(command)}</tt>",
+            use_markup=True,
+            css_classes=["card"],
+            halign=Gtk.Align.CENTER,
+            margin_top=12,
+            margin_bottom=12,
+        )
+        dialog.set_extra_child(command_label)
+
+        dialog.add_response("cancel", _("Cancel"))
+        dialog.add_response("send", _("Send Command"))
+        dialog.set_default_response("send")
+        dialog.set_response_appearance("send", Adw.ResponseAppearance.SUGGESTED)
+
+        dialog.connect("response", self._on_broadcast_confirm, command, all_terminals)
+        dialog.present()
+
+    def _on_broadcast_confirm(self, dialog, response_id: str, command: str, terminals: list):
+        """
+        Callback that executes the broadcast if the user confirms.
+        """
+        dialog.close()
+
+        if response_id == "send":
+            command_bytes = command.encode("utf-8") + b"\n"
+            for terminal in terminals:
+                terminal.feed_child(command_bytes)
+
+            self.logger.info(f"Broadcasted command to {len(terminals)} terminals.")
+            #self.toast_overlay.add_toast(
+            #    Adw.Toast(
+            #        title=_("Command sent to {count} terminals.").format(
+            #            count=len(terminals)
+            #        )
+            #    )
+            #)
+
+        # Clear and hide the bar regardless of the response
+        self.broadcast_entry.set_text("")
+        self.broadcast_bar.set_search_mode(False)
 
     def _on_case_sensitive_changed(self, switch, param):
         """Handle case sensitive switch changes."""

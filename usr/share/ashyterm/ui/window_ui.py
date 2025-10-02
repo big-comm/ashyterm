@@ -55,6 +55,9 @@ class WindowUIBuilder:
         self.toast_overlay = None
         self.search_bar = None
         self.search_button = None
+        self.broadcast_bar = None
+        self.broadcast_button = None
+        self.broadcast_entry = None
         self.terminal_search_entry = None  # Renamed for clarity
         self.sidebar_search_entry = None  # Renamed for clarity
         self.search_prev_button = None
@@ -244,6 +247,18 @@ class WindowUIBuilder:
         self.search_prev_button = Gtk.Button.new_from_icon_name("go-up-symbolic")
         self.search_next_button = Gtk.Button.new_from_icon_name("go-down-symbolic")
 
+        # Create the BroadcastBar
+        self.broadcast_bar = Gtk.SearchBar()
+        broadcast_box = Gtk.Box(spacing=6)
+        self.broadcast_entry = Gtk.Entry(
+            hexpand=True, placeholder_text=_("Broadcast command to all terminals...")
+        )
+        icon = Gtk.Image.new_from_icon_name("utilities-terminal-symbolic")
+        self.broadcast_entry.set_icon_from_icon_name(Gtk.EntryIconPosition.PRIMARY, "utilities-terminal-symbolic")
+        broadcast_box.append(self.broadcast_entry)
+        self.broadcast_bar.set_child(broadcast_box)
+        main_box.append(self.broadcast_bar)
+
         # Search occurrence counter
         self.search_occurrence_label = Gtk.Label()
         self.search_occurrence_label.add_css_class("dim-label")
@@ -319,6 +334,10 @@ class WindowUIBuilder:
             icon_name="edit-find-symbolic", tooltip_text=_("Search in Terminal")
         )
 
+        # Add the new Broadcast button
+        self.broadcast_button = Gtk.ToggleButton(
+            icon_name="emblem-shared-symbolic", tooltip_text=_("Broadcast Command to All Tabs")
+        )
         self.cleanup_button = Gtk.MenuButton(
             icon_name="user-trash-symbolic",
             tooltip_text=_("Manage Temporary Files"),
@@ -357,6 +376,7 @@ class WindowUIBuilder:
             self.file_manager_button.add_css_class("flipped-icon")
             self.command_guide_button.add_css_class("flipped-icon")
             self.search_button.add_css_class("flipped-icon")
+            self.broadcast_button.add_css_class("flipped-icon")
             self.cleanup_button.add_css_class("flipped-icon")
             self.menu_button.add_css_class("flipped-icon")
             self.new_tab_button.add_css_class("flipped-icon")
@@ -365,6 +385,7 @@ class WindowUIBuilder:
             header_bar.pack_end(self.file_manager_button)
             header_bar.pack_end(self.command_guide_button)
             header_bar.pack_end(self.search_button)
+            header_bar.pack_end(self.broadcast_button)
             header_bar.pack_end(self.cleanup_button)
             header_bar.pack_start(self.menu_button)
             header_bar.pack_start(self.new_tab_button)
@@ -374,6 +395,7 @@ class WindowUIBuilder:
             header_bar.pack_start(self.file_manager_button)
             header_bar.pack_start(self.command_guide_button)
             header_bar.pack_start(self.search_button)
+            header_bar.pack_start(self.broadcast_button)
             header_bar.pack_start(self.cleanup_button)
             header_bar.pack_end(self.menu_button)
             header_bar.pack_end(self.new_tab_button)
@@ -413,6 +435,7 @@ class WindowUIBuilder:
             self.file_manager_button,
             self.command_guide_button,
             self.search_button,
+            self.broadcast_button,
             self.cleanup_button,
             self.menu_button,
             self.new_tab_button,

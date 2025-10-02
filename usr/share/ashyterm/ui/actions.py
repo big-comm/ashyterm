@@ -66,6 +66,7 @@ class WindowActions:
             "add-folder-root": self.add_folder_root,
             "toggle-sidebar": self.toggle_sidebar_action,
             "toggle-file-manager": self.toggle_file_manager,
+            "toggle-broadcast": self.toggle_broadcast,
             "show-command-guide": self.show_command_guide,
             "preferences": self.preferences,
             "shortcuts": self.shortcuts,
@@ -271,6 +272,10 @@ class WindowActions:
     def toggle_file_manager(self, *_args):
         self.window.file_manager_button.set_active(
             not self.window.file_manager_button.get_active()
+        )
+    def toggle_broadcast(self, *_args):
+        self.window.broadcast_button.set_active(
+            not self.window.broadcast_button.get_active()
         )
 
     def show_command_guide(self, *_args):

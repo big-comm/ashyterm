@@ -768,6 +768,13 @@ class TabManager:
             self._find_terminals_recursive(root_widget, terminals)
         return terminals
 
+    def get_all_terminals_across_tabs(self) -> List[Vte.Terminal]:
+        """Returns a list of all active Vte.Terminal widgets across all tabs."""
+        all_terminals = []
+        for page in self.pages.values():
+            all_terminals.extend(self.get_all_terminals_in_page(page))
+        return all_terminals
+
     def get_page_for_terminal(
         self, terminal: Vte.Terminal
     ) -> Optional[Adw.ViewStackPage]:
