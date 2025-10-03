@@ -336,7 +336,7 @@ class WindowUIBuilder:
 
         # Add the new Broadcast button
         self.broadcast_button = Gtk.ToggleButton(
-            icon_name="emblem-shared-symbolic", tooltip_text=_("Send Command to all Tabs")
+            icon_name="emblem-shared-symbolic", tooltip_text=_("Type your command here and press ENTER...")
         )
         self.cleanup_button = Gtk.MenuButton(
             icon_name="user-trash-symbolic",
