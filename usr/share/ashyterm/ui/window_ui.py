@@ -336,7 +336,8 @@ class WindowUIBuilder:
 
         # Add the new Broadcast button
         self.broadcast_button = Gtk.ToggleButton(
-            icon_name="emblem-shared-symbolic", tooltip_text=_("Send Command to All Tabs")
+            #icon_name="emblem-shared-symbolic", tooltip_text=_("Send Command to All Tabs")
+            icon_name="utilities-terminal-symbolic", tooltip_text=_("Send Command to All Tabs")
         )
         self.cleanup_button = Gtk.MenuButton(
             icon_name="user-trash-symbolic",
@@ -384,8 +385,8 @@ class WindowUIBuilder:
             header_bar.pack_end(self.toggle_sidebar_button)
             header_bar.pack_end(self.file_manager_button)
             header_bar.pack_end(self.command_guide_button)
-            header_bar.pack_end(self.search_button)
             header_bar.pack_end(self.broadcast_button)
+            header_bar.pack_end(self.search_button)
             header_bar.pack_end(self.cleanup_button)
             header_bar.pack_start(self.menu_button)
             header_bar.pack_start(self.new_tab_button)
@@ -394,8 +395,8 @@ class WindowUIBuilder:
             header_bar.pack_start(self.toggle_sidebar_button)
             header_bar.pack_start(self.file_manager_button)
             header_bar.pack_start(self.command_guide_button)
-            header_bar.pack_start(self.search_button)
             header_bar.pack_start(self.broadcast_button)
+            header_bar.pack_start(self.search_button)
             header_bar.pack_start(self.cleanup_button)
             header_bar.pack_end(self.menu_button)
             header_bar.pack_end(self.new_tab_button)
@@ -465,6 +466,7 @@ class WindowUIBuilder:
             self.header_bar.pack_end(self.toggle_sidebar_button)
             self.header_bar.pack_end(self.file_manager_button)
             self.header_bar.pack_end(self.command_guide_button)
+            self.header_bar.pack_end(self.broadcast_button)
             self.header_bar.pack_end(self.search_button)
             self.header_bar.pack_end(self.cleanup_button)
             self.header_bar.pack_start(self.menu_button)
@@ -474,6 +476,7 @@ class WindowUIBuilder:
             self.header_bar.pack_start(self.toggle_sidebar_button)
             self.header_bar.pack_start(self.file_manager_button)
             self.header_bar.pack_start(self.command_guide_button)
+            self.header_bar.pack_start(self.broadcast_button)
             self.header_bar.pack_start(self.search_button)
             self.header_bar.pack_start(self.cleanup_button)
             self.header_bar.pack_end(self.menu_button)
@@ -557,4 +560,3 @@ class WindowUIBuilder:
     def _on_maximized_changed(self, window, param):
         """Handle window maximized state changes."""
         self._update_border_css()
-
