@@ -179,6 +179,7 @@ class DefaultSettings:
                 "next-tab": "<Alt>Page_Down",
                 "previous-tab": "<Alt>Page_Up",
                 "toggle-file-manager": "<Control><Shift>e",
+                "toggle-broadcast": "<Control><Shift>b",
             },
         }
 

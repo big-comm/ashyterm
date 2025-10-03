@@ -2,6 +2,7 @@
 
 import os
 from typing import TYPE_CHECKING, List, Optional, Union
+from urllib.parse import unquote, urlparse
 
 from gi.repository import Adw, Gdk, Gio, GLib, Gtk
 
@@ -66,6 +67,7 @@ class WindowActions:
             "add-folder-root": self.add_folder_root,
             "toggle-sidebar": self.toggle_sidebar_action,
             "toggle-file-manager": self.toggle_file_manager,
+            "toggle-broadcast": self.toggle_broadcast,
             "show-command-guide": self.show_command_guide,
             "preferences": self.preferences,
             "shortcuts": self.shortcuts,
@@ -96,7 +98,27 @@ class WindowActions:
     # --- Tab and Pane Actions ---
 
     def new_local_tab(self, *_args):
-        self.window.tab_manager.create_local_tab()
+        # MODIFIED: Get current working directory from the active local terminal
+        working_dir = None
+        active_terminal = self.window.tab_manager.get_selected_terminal()
+        if active_terminal:
+            terminal_id = getattr(active_terminal, "terminal_id", None)
+            if terminal_id:
+                info = self.window.terminal_manager.registry.get_terminal_info(
+                    terminal_id
+                )
+                # Only use the CWD if the active terminal is a local one
+                if info and info.get("type") == "local":
+                    uri = active_terminal.get_current_directory_uri()
+                    if uri:
+                        parsed_uri = urlparse(uri)
+                        if parsed_uri.scheme == "file":
+                            working_dir = unquote(parsed_uri.path)
+                            self.logger.info(
+                                f"New local tab will open in directory: {working_dir}"
+                            )
+
+        self.window.tab_manager.create_local_tab(working_directory=working_dir)
 
     def close_tab(self, *_args):
         if self.window.tab_manager.active_tab:
@@ -271,6 +293,10 @@ class WindowActions:
     def toggle_file_manager(self, *_args):
         self.window.file_manager_button.set_active(
             not self.window.file_manager_button.get_active()
+        )
+    def toggle_broadcast(self, *_args):
+        self.window.broadcast_button.set_active(
+            not self.window.broadcast_button.get_active()
         )
 
     def show_command_guide(self, *_args):

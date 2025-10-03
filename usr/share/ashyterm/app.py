@@ -192,6 +192,7 @@ class CommTerminalApp(Adw.Application):
                 "close-pane",
                 "next-tab",
                 "previous-tab",
+                "toggle-broadcast",
             ]
             for action_name in shortcut_actions:
                 shortcut = self.settings_manager.get_shortcut(action_name)
