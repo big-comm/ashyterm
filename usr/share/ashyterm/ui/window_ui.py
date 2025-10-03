@@ -251,7 +251,7 @@ class WindowUIBuilder:
         self.broadcast_bar = Gtk.SearchBar()
         broadcast_box = Gtk.Box(spacing=6)
         self.broadcast_entry = Gtk.Entry(
-            hexpand=True, placeholder_text=_("Send Command to all Tabs")
+            hexpand=True, placeholder_text=_("Type your command here and press ENTER...")
         )
         icon = Gtk.Image.new_from_icon_name("utilities-terminal-symbolic")
         self.broadcast_entry.set_icon_from_icon_name(Gtk.EntryIconPosition.PRIMARY, "utilities-terminal-symbolic")
@@ -336,7 +336,7 @@ class WindowUIBuilder:
 
         # Add the new Broadcast button
         self.broadcast_button = Gtk.ToggleButton(
-            icon_name="emblem-shared-symbolic", tooltip_text=_("Type your command here and press ENTER...")
+            icon_name="emblem-shared-symbolic", tooltip_text=_("Send Command to All Tabs")
         )
         self.cleanup_button = Gtk.MenuButton(
             icon_name="user-trash-symbolic",
