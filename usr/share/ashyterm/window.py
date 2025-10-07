@@ -692,6 +692,27 @@ class CommTerminalWindow(Adw.ApplicationWindow):
             if terminal := self.tab_manager.get_selected_terminal():
                 terminal.grab_focus()
 
+    def _get_terminal_display_name(self, terminal: Vte.Terminal) -> str:
+        page = self.tab_manager.get_page_for_terminal(terminal)
+        if page and page.get_title():
+            return page.get_title()
+
+        terminal_id = getattr(terminal, "terminal_id", None)
+        if terminal_id is not None:
+            terminal_info = self.terminal_manager.registry.get_terminal_info(
+                terminal_id
+            )
+            if terminal_info:
+                identifier = terminal_info.get("identifier")
+                if isinstance(identifier, SessionItem):
+                    return identifier.name
+                if isinstance(identifier, str):
+                    return identifier
+
+        return _("Terminal {id}").format(
+            id=terminal_id if terminal_id is not None else "?"
+        )
+
     def _on_broadcast_activate(self, entry: Gtk.Entry):
         """
         Shows a confirmation dialog before broadcasting the command to all terminals.
@@ -710,7 +731,7 @@ class CommTerminalWindow(Adw.ApplicationWindow):
             transient_for=self,
             heading=_("Confirm sending of command"),
             body=_(
-                "Are you sure you want to send the following command to <b>{count}</b> open terminal's ?"
+                "Select which of the <b>{count}</b> open terminals should receive the command below."
             ).format(count=count),
             body_use_markup=True,
             close_response="cancel",
@@ -722,31 +743,97 @@ class CommTerminalWindow(Adw.ApplicationWindow):
             use_markup=True,
             css_classes=["card"],
             halign=Gtk.Align.CENTER,
+        )
+
+        instructions_label = Gtk.Label(
+            label=_("Choose the tabs that should run this command:"),
+            halign=Gtk.Align.START,
+            margin_top=6,
+        )
+        instructions_label.set_wrap(True)
+
+        flow_box = Gtk.FlowBox()
+        flow_box.set_selection_mode(Gtk.SelectionMode.NONE)
+        flow_box.set_row_spacing(6)
+        flow_box.set_column_spacing(12)
+        max_columns = 3
+        columns = max(1, min(max_columns, len(all_terminals)))
+        flow_box.set_min_children_per_line(columns)
+        flow_box.set_max_children_per_line(max_columns)
+
+        selection_controls = []
+        for terminal in all_terminals:
+            display_title = self._get_terminal_display_name(terminal)
+            check_button = Gtk.CheckButton(label=display_title)
+            check_button.set_active(True)
+            check_button.set_halign(Gtk.Align.START)
+            flow_box.insert(check_button, -1)
+            selection_controls.append((terminal, check_button))
+
+        if len(selection_controls) > 6:
+            scrolled = Gtk.ScrolledWindow(vexpand=True, hexpand=True)
+            scrolled.set_min_content_height(200)
+            scrolled.set_child(flow_box)
+            selection_container = scrolled
+        else:
+            selection_container = flow_box
+
+        content_box = Gtk.Box(
+            orientation=Gtk.Orientation.VERTICAL,
+            spacing=12,
             margin_top=12,
             margin_bottom=12,
+            margin_start=12,
+            margin_end=12,
         )
-        dialog.set_extra_child(command_label)
+        content_box.append(command_label)
+        content_box.append(instructions_label)
+        content_box.append(selection_container)
+        dialog.set_extra_child(content_box)
 
         dialog.add_response("cancel", _("Cancel"))
         dialog.add_response("send", _("Send Command"))
         dialog.set_default_response("send")
         dialog.set_response_appearance("send", Adw.ResponseAppearance.SUGGESTED)
 
-        dialog.connect("response", self._on_broadcast_confirm, command, all_terminals)
+        dialog.connect(
+            "response", self._on_broadcast_confirm, command, selection_controls
+        )
         dialog.present()
 
-    def _on_broadcast_confirm(self, dialog, response_id: str, command: str, terminals: list):
+    def _on_broadcast_confirm(
+        self,
+        dialog,
+        response_id: str,
+        command: str,
+        selection_controls: list,
+    ):
         """
         Callback that executes the broadcast if the user confirms.
         """
-        dialog.close()
-
         if response_id == "send":
+            selected_terminals = [
+                terminal
+                for terminal, control in selection_controls
+                if control.get_active()
+            ]
+
+            if not selected_terminals:
+                self.toast_overlay.add_toast(
+                    Adw.Toast(title=_("No tabs were selected to receive the command."))
+                )
+                dialog.close()
+                self.broadcast_entry.set_text("")
+                self.broadcast_bar.set_search_mode(False)
+                return
+
             command_bytes = command.encode("utf-8") + b"\n"
-            for terminal in terminals:
+            for terminal in selected_terminals:
                 terminal.feed_child(command_bytes)
 
-            self.logger.info(f"Broadcasted command to {len(terminals)} terminals.")
+            self.logger.info(
+                f"Broadcasted command to {len(selected_terminals)} terminals."
+            )
             #self.toast_overlay.add_toast(
             #    Adw.Toast(
             #        title=_("Command sent to {count} terminals.").format(
@@ -754,6 +841,7 @@ class CommTerminalWindow(Adw.ApplicationWindow):
             #        )
             #    )
             #)
+        dialog.close()
 
         # Clear and hide the bar regardless of the response
         self.broadcast_entry.set_text("")
