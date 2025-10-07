@@ -95,6 +95,12 @@ class SessionOperations:
             original_session.auth_value = updated_session.auth_value
             original_session.folder_path = updated_session.folder_path
             original_session.tab_color = updated_session.tab_color
+            original_session.post_login_command_enabled = (
+                updated_session.post_login_command_enabled
+            )
+            original_session.post_login_command = (
+                updated_session.post_login_command
+            )
 
             if not self._save_changes():
                 # Rollback changes on failure by recreating the item from original data

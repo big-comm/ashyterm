@@ -97,6 +97,8 @@ class SessionItem(BaseModel):
         folder_path: str = "",
         port: int = 22,
         tab_color: Optional[str] = None,
+        post_login_command_enabled: bool = False,
+        post_login_command: str = "",
     ):
         super().__init__()
         self.logger = get_logger("ashyterm.sessions.model")
@@ -111,6 +113,10 @@ class SessionItem(BaseModel):
         self._folder_path = str(normalize_path(folder_path)) if folder_path else ""
         self._port = port
         self._tab_color = tab_color
+        self._post_login_command_enabled = bool(post_login_command_enabled)
+        self._post_login_command = (
+            post_login_command.strip() if post_login_command else ""
+        )
 
     @property
     def children(self) -> Optional[Gio.ListStore]:
@@ -238,6 +244,28 @@ class SessionItem(BaseModel):
         self._tab_color = value
         self._mark_modified()
 
+    @property
+    def post_login_command_enabled(self) -> bool:
+        return self._post_login_command_enabled
+
+    @post_login_command_enabled.setter
+    def post_login_command_enabled(self, value: bool):
+        new_value = bool(value)
+        if self._post_login_command_enabled != new_value:
+            self._post_login_command_enabled = new_value
+            self._mark_modified()
+
+    @property
+    def post_login_command(self) -> str:
+        return self._post_login_command
+
+    @post_login_command.setter
+    def post_login_command(self, value: str):
+        new_value = value.strip() if value else ""
+        if self._post_login_command != new_value:
+            self._post_login_command = new_value
+            self._mark_modified()
+
     def get_validation_errors(self) -> List[str]:
         """Returns a list of validation error messages."""
         errors = []
@@ -248,6 +276,8 @@ class SessionItem(BaseModel):
                 errors.append(_("Host is required for SSH sessions."))
             if not (1 <= self.port <= 65535):
                 errors.append(_("Port must be between 1 and 65535."))
+            if self.post_login_command_enabled and not self.post_login_command:
+                errors.append(_("Post-login command cannot be empty when enabled."))
         return errors
 
     def to_dict(self) -> Dict[str, Any]:
@@ -263,6 +293,8 @@ class SessionItem(BaseModel):
             "folder_path": self._folder_path,
             "port": self.port,
             "tab_color": self.tab_color,
+            "post_login_command_enabled": self.post_login_command_enabled,
+            "post_login_command": self.post_login_command,
             "created_at": self._created_at,
             "modified_at": self._modified_at,
         }
@@ -278,6 +310,8 @@ class SessionItem(BaseModel):
             auth_type=data.get("auth_type", "key"),
             folder_path=data.get("folder_path", ""),
             port=data.get("port", 22),
+            post_login_command_enabled=data.get("post_login_command_enabled", False),
+            post_login_command=data.get("post_login_command", ""),
         )
         # __init__ sets default metadata; overwrite with loaded data
         session._auth_value = data.get("auth_value", "")

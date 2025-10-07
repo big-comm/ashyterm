@@ -48,6 +48,8 @@ class SessionEditDialog(BaseDialog):
         self.original_session = session_item if not self.is_new_item else None
         self._original_data = self.editing_session.to_dict()
         self.folder_paths_map: dict[str, str] = {}
+        self.post_login_switch: Optional[Adw.SwitchRow] = None
+        self.post_login_entry: Optional[Gtk.Entry] = None
         self._setup_ui()
         self.connect("map", self._on_map)
         self.logger.info(
@@ -239,6 +241,7 @@ class SessionEditDialog(BaseDialog):
         ssh_group.add(auth_row)
         self._create_ssh_key_section(ssh_group)
         self._create_password_section(ssh_group)
+        self._create_post_login_command_section(ssh_group)
         self.ssh_box = ssh_group
         parent.append(ssh_group)
 
@@ -298,6 +301,39 @@ class SessionEditDialog(BaseDialog):
         password_row.set_activatable_widget(self.password_entry)
         self.password_box = password_row
         parent.add(password_row)
+
+    def _create_post_login_command_section(
+        self, parent: Adw.PreferencesGroup
+    ) -> None:
+        toggle_row = Adw.SwitchRow(
+            title=_("Run Command After Login"),
+            subtitle=_(
+                "Execute a custom command automatically after the SSH session connects"
+            ),
+        )
+        toggle_row.set_active(self.editing_session.post_login_command_enabled)
+        parent.add(toggle_row)
+
+        command_row = Adw.ActionRow(
+            title=_("Post-Login Command"),
+            subtitle=_("Command to execute right after a successful login"),
+        )
+        self.post_login_entry = Gtk.Entry(
+            text=self.editing_session.post_login_command,
+            placeholder_text=_("Example: tmux attach -t main"),
+            hexpand=True,
+        )
+        self.post_login_entry.connect(
+            "changed", self._on_post_login_command_changed
+        )
+        self.post_login_entry.connect("activate", self._on_save_clicked)
+        command_row.add_suffix(self.post_login_entry)
+        command_row.set_activatable_widget(self.post_login_entry)
+        parent.add(command_row)
+
+        self.post_login_switch = toggle_row
+        toggle_row.connect("notify::active", self._on_post_login_toggle)
+        self._update_post_login_command_state()
 
     def _create_action_bar(self) -> Gtk.ActionBar:
         action_bar = Gtk.ActionBar()
@@ -377,18 +413,44 @@ class SessionEditDialog(BaseDialog):
     def _on_password_changed(self, entry: Gtk.PasswordEntry) -> None:
         self._mark_changed()
 
+    def _on_post_login_toggle(self, switch_row: Adw.SwitchRow, _param) -> None:
+        self._mark_changed()
+        self._update_post_login_command_state()
+        if self.post_login_entry and not switch_row.get_active():
+            self.post_login_entry.remove_css_class("error")
+
+    def _on_post_login_command_changed(self, entry: Gtk.Entry) -> None:
+        entry.remove_css_class("error")
+        self._mark_changed()
+
     def _update_ssh_visibility(self) -> None:
         if self.ssh_box and self.type_combo:
             is_ssh = self.type_combo.get_selected() == 1
             self.ssh_box.set_visible(is_ssh)
             if hasattr(self, "test_button"):
                 self.test_button.set_visible(is_ssh)
+        self._update_post_login_command_state()
 
     def _update_auth_visibility(self) -> None:
         if self.key_box and self.password_box and self.auth_combo:
             is_key = self.auth_combo.get_selected() == 0
             self.key_box.set_visible(is_key)
             self.password_box.set_visible(not is_key)
+        self._update_post_login_command_state()
+
+    def _update_post_login_command_state(self) -> None:
+        if not self.post_login_switch or not self.post_login_entry:
+            return
+        is_ssh_session = (
+            self.type_combo.get_selected() == 1 if self.type_combo else False
+        )
+        self.post_login_switch.set_sensitive(is_ssh_session)
+        is_enabled = (
+            self.post_login_switch.get_active() and is_ssh_session
+        )
+        self.post_login_entry.set_sensitive(is_enabled)
+        if not is_enabled:
+            self.post_login_entry.remove_css_class("error")
 
     def _on_browse_key_clicked(self, button) -> None:
         try:
@@ -566,6 +628,21 @@ class SessionEditDialog(BaseDialog):
                 selected_item.get_string(), ""
             )
 
+        post_login_enabled = (
+            self.post_login_switch.get_active()
+            if self.post_login_switch and self.type_combo.get_selected() == 1
+            else False
+        )
+        post_login_command = (
+            self.post_login_entry.get_text().strip()
+            if self.post_login_entry
+            else ""
+        )
+        session_data["post_login_command_enabled"] = post_login_enabled
+        session_data["post_login_command"] = (
+            post_login_command if post_login_enabled else ""
+        )
+
         raw_password = ""
         if session_data["session_type"] == "ssh":
             session_data.update({
@@ -629,6 +706,18 @@ class SessionEditDialog(BaseDialog):
                     self.key_path_entry.add_css_class("error")
                     self._validation_errors.append(e.user_message)
                     valid = False
+        if self.post_login_switch and self.post_login_entry:
+            if (
+                self.post_login_switch.get_active()
+                and not self.post_login_entry.get_text().strip()
+            ):
+                self.post_login_entry.add_css_class("error")
+                self._validation_errors.append(
+                    _("Post-login command cannot be empty when enabled.")
+                )
+                valid = False
+            else:
+                self.post_login_entry.remove_css_class("error")
         if not valid and self._validation_errors:
             self._show_error_dialog(
                 _("SSH Validation Error"),

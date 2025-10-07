@@ -541,7 +541,16 @@ class TerminalManager:
         self, session: SessionItem, initial_command: Optional[str] = None
     ) -> Optional[Vte.Terminal]:
         """Creates a new terminal and starts an SSH session in it."""
-        return self._create_remote_terminal(session, "ssh", initial_command)
+        commands: List[str] = []
+        if initial_command:
+            commands.append(initial_command)
+        if (
+            session.post_login_command_enabled
+            and session.post_login_command
+        ):
+            commands.append(session.post_login_command)
+        combined_command = "; ".join(commands) if commands else None
+        return self._create_remote_terminal(session, "ssh", combined_command)
 
     def create_sftp_terminal(self, session: SessionItem) -> Optional[Vte.Terminal]:
         """Creates a new terminal and starts an SFTP session in it."""
