@@ -4807,6 +4807,12 @@ msgstr ""
 msgid "Cannot detach the last tab."
 msgstr "最後のタブを切り離すことはできません。"
 # 
+# File: usr/share/ashyterm/window.py, line: 712
+#: NEEDS WORK
+#, python-brace-format
+msgid "Terminal {id}"
+msgstr "ターミナル {id}"
+# 
 # File: usr/share/ashyterm/window.py, line: 705
 #: NEEDS WORK
 msgid "No open terminals found."
@@ -4817,16 +4823,26 @@ msgstr "オープンなターミナルが見つかりません。"
 msgid "Confirm sending of command"
 msgstr "コマンドの送信を確認"
 # 
-# File: usr/share/ashyterm/window.py, line: 713
+# File: usr/share/ashyterm/window.py, line: 734
 #: NEEDS WORK
 #, python-brace-format
-msgid "Are you sure you want to send the following command to <b>{count}</b> open terminal's ?"
-msgstr "<b>{count}</b> のオープンターミナルに次のコマンドを送信してもよろしいですか？"
+msgid "Select which of the <b>{count}</b> open terminals should receive the command below."
+msgstr "以下の<b>{count}</b>のオープン端末のうち、どれが下のコマンドを受け取るべきか選択してください。"
+# 
+# File: usr/share/ashyterm/window.py, line: 749
+#: NEEDS WORK
+msgid "Choose the tabs that should run this command:"
+msgstr "このコマンドを実行するタブを選択してください："
 # 
 # File: usr/share/ashyterm/window.py, line: 731
 #: NEEDS WORK
 msgid "Send Command"
 msgstr "コマンドを送信"
+# 
+# File: usr/share/ashyterm/window.py, line: 823
+#: NEEDS WORK
+msgid "No tabs were selected to receive the command."
+msgstr "コマンドを受け取るために選択されたタブはありません。"
 # 
 # File: usr/share/ashyterm/window.py, line: 652
 #: NEEDS WORK
