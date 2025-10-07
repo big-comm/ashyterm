@@ -110,6 +110,7 @@ class SessionOperations:
             original_session.sftp_remote_directory = (
                 updated_session.sftp_remote_directory
             )
+            original_session.port_forwardings = updated_session.port_forwardings
 
             if not self._save_changes():
                 # Rollback changes on failure by recreating the item from original data

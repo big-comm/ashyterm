@@ -488,6 +488,12 @@ class ProcessSpawner:
         }
         if persist_duration > 0:
             ssh_options["ControlPersist"] = str(persist_duration)
+        if command_type == "ssh" and getattr(session, "port_forwardings", None):
+            # Port forwarding sessions should tear down immediately when the terminal exits.
+            ssh_options.pop("ControlPersist", None)
+            ssh_options.pop("ControlMaster", None)
+            ssh_options.pop("ControlPath", None)
+            ssh_options["ExitOnForwardFailure"] = "yes"
 
         cmd = self.command_builder.build_remote_command(
             command_type,
@@ -498,6 +504,25 @@ class ProcessSpawner:
             options=ssh_options,
             remote_path=sftp_remote_path if command_type == "sftp" else None,
         )
+
+        if command_type == "ssh" and getattr(session, "port_forwardings", None):
+            for tunnel in session.port_forwardings:
+                try:
+                    local_host = tunnel.get("local_host", "localhost") or "localhost"
+                    local_port = int(tunnel.get("local_port", 0))
+                    remote_host = tunnel.get("remote_host") or session.host
+                    remote_port = int(tunnel.get("remote_port", 0))
+                except (TypeError, ValueError):
+                    continue
+
+                if not remote_host or not (1 <= local_port <= 65535) or not (
+                    1 <= remote_port <= 65535
+                ):
+                    continue
+
+                forward_spec = f"{local_host}:{local_port}:{remote_host}:{remote_port}"
+                insertion_index = max(len(cmd) - 1, 1)
+                cmd[insertion_index:insertion_index] = ["-L", forward_spec]
 
         if command_type == "ssh":
             # This command sets up OSC7 tracking for bash/zsh and then executes the user's default shell.

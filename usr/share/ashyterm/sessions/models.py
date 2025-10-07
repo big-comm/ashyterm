@@ -1,6 +1,7 @@
 # ashyterm/sessions/models.py
 
 import time
+from copy import deepcopy
 from pathlib import Path
 from typing import Any, Dict, List, Optional
 
@@ -103,6 +104,7 @@ class SessionItem(BaseModel):
         sftp_session_enabled: bool = False,
         sftp_local_directory: str = "",
         sftp_remote_directory: str = "",
+        port_forwardings: Optional[List[Dict[str, Any]]] = None,
     ):
         super().__init__()
         self.logger = get_logger("ashyterm.sessions.model")
@@ -130,6 +132,9 @@ class SessionItem(BaseModel):
         self._sftp_remote_directory = (
             sftp_remote_directory.strip() if sftp_remote_directory else ""
         )
+        self._port_forwardings: List[Dict[str, Any]] = []
+        if port_forwardings:
+            self.port_forwardings = port_forwardings
 
     @property
     def children(self) -> Optional[Gio.ListStore]:
@@ -314,6 +319,44 @@ class SessionItem(BaseModel):
             self._sftp_remote_directory = new_value
             self._mark_modified()
 
+    @property
+    def port_forwardings(self) -> List[Dict[str, Any]]:
+        return deepcopy(self._port_forwardings)
+
+    @port_forwardings.setter
+    def port_forwardings(self, value: List[Dict[str, Any]]):
+        normalized_list: List[Dict[str, Any]] = []
+        if value:
+            for item in value:
+                normalized_list.append(self._normalize_port_forwarding(item))
+        if self._port_forwardings != normalized_list:
+            self._port_forwardings = normalized_list
+            self._mark_modified()
+
+    def _normalize_port_forwarding(self, item: Dict[str, Any]) -> Dict[str, Any]:
+        if not isinstance(item, dict):
+            raise SessionValidationError(
+                self.name, [_("Invalid port forwarding entry.")]
+            )
+        name = str(item.get("name", "")).strip() or _("Tunnel")
+        local_host = str(item.get("local_host", "localhost")).strip() or "localhost"
+        remote_host = str(item.get("remote_host", "")).strip()
+        try:
+            local_port = int(item.get("local_port", 0))
+            remote_port = int(item.get("remote_port", 0))
+        except (TypeError, ValueError):
+            raise SessionValidationError(
+                self.name, [_("Port forwarding entries must use numeric ports.")]
+            ) from None
+
+        return {
+            "name": name,
+            "local_host": local_host,
+            "local_port": local_port,
+            "remote_host": remote_host,
+            "remote_port": remote_port,
+        }
+
     def get_validation_errors(self) -> List[str]:
         """Returns a list of validation error messages."""
         errors = []
@@ -337,6 +380,21 @@ class SessionItem(BaseModel):
                     errors.append(
                         _("SFTP local directory must exist and be a directory.")
                     )
+            for tunnel in self._port_forwardings:
+                local_port = tunnel.get("local_port", 0)
+                remote_port = tunnel.get("remote_port", 0)
+                if not (1024 < int(local_port) <= 65535):
+                    errors.append(
+                        _(
+                            "Port forward '{name}' has an invalid local port (must be between 1025 and 65535)."
+                        ).format(name=tunnel.get("name", ""))
+                    )
+                if not (1 <= int(remote_port) <= 65535):
+                    errors.append(
+                        _("Port forward '{name}' has an invalid remote port.").format(
+                            name=tunnel.get("name", "")
+                        )
+                    )
         return errors
 
     def to_dict(self) -> Dict[str, Any]:
@@ -357,6 +415,7 @@ class SessionItem(BaseModel):
             "sftp_session_enabled": self.sftp_session_enabled,
             "sftp_local_directory": self.sftp_local_directory,
             "sftp_remote_directory": self.sftp_remote_directory,
+            "port_forwardings": self.port_forwardings,
             "created_at": self._created_at,
             "modified_at": self._modified_at,
         }
@@ -377,6 +436,7 @@ class SessionItem(BaseModel):
             sftp_session_enabled=data.get("sftp_session_enabled", False),
             sftp_local_directory=data.get("sftp_local_directory", ""),
             sftp_remote_directory=data.get("sftp_remote_directory", ""),
+            port_forwardings=data.get("port_forwardings", []),
         )
         # __init__ sets default metadata; overwrite with loaded data
         session._auth_value = data.get("auth_value", "")

@@ -1,5 +1,6 @@
 # ashyterm/ui/dialogs/session_edit_dialog.py
 
+import copy
 import threading
 from pathlib import Path
 from typing import Optional
@@ -55,6 +56,12 @@ class SessionEditDialog(BaseDialog):
         self.sftp_switch: Optional[Adw.SwitchRow] = None
         self.sftp_local_entry: Optional[Gtk.Entry] = None
         self.sftp_remote_entry: Optional[Gtk.Entry] = None
+        self.port_forward_group: Optional[Adw.PreferencesGroup] = None
+        self.port_forward_list: Optional[Gtk.ListBox] = None
+        self.port_forward_add_button: Optional[Gtk.Button] = None
+        self.port_forwardings: list[dict] = [
+            dict(item) for item in self.editing_session.port_forwardings
+        ]
         self._setup_ui()
         self.connect("map", self._on_map)
         self.logger.info(
@@ -81,6 +88,7 @@ class SessionEditDialog(BaseDialog):
                 self._create_folder_section(main_box)
             self._create_type_section(main_box)
             self._create_ssh_section(main_box)
+            self._create_port_forward_section(main_box)
             action_bar = self._create_action_bar()
             content_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=0)
             scrolled_window = Gtk.ScrolledWindow(vexpand=True, hexpand=True)
@@ -341,6 +349,271 @@ class SessionEditDialog(BaseDialog):
         toggle_row.connect("notify::active", self._on_post_login_toggle)
         self._update_post_login_command_state()
 
+    def _create_port_forward_section(self, parent: Gtk.Box) -> None:
+        group = Adw.PreferencesGroup(
+            title=_("Port Forwarding"),
+            description=_("Create SSH tunnels to forward local ports to remote targets"),
+        )
+        self.port_forward_group = group
+
+        container = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=6)
+
+        self.port_forward_list = Gtk.ListBox()
+        self.port_forward_list.set_selection_mode(Gtk.SelectionMode.NONE)
+        self.port_forward_list.add_css_class("boxed-list")
+        container.append(self.port_forward_list)
+
+        controls_box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=6)
+        controls_box.set_halign(Gtk.Align.START)
+        add_button = Gtk.Button(
+            icon_name="list-add-symbolic", label=_("Add Forward"), css_classes=["flat"]
+        )
+        add_button.connect("clicked", self._on_add_port_forward_clicked)
+        controls_box.append(add_button)
+        self.port_forward_add_button = add_button
+        container.append(controls_box)
+
+        group.add(container)
+        parent.append(group)
+
+        self._refresh_port_forward_list()
+
+    def _refresh_port_forward_list(self) -> None:
+        if not self.port_forward_list:
+            return
+        # Gtk4 ListBox does not expose get_children; iterate manually.
+        child = self.port_forward_list.get_first_child()
+        while child:
+            next_child = child.get_next_sibling()
+            self.port_forward_list.remove(child)
+            child = next_child
+
+        if not self.port_forwardings:
+            placeholder_row = Gtk.ListBoxRow()
+            placeholder_row.set_selectable(False)
+            placeholder_row.set_activatable(False)
+            label = Gtk.Label(
+                label=_("No port forwards configured."),
+                xalign=0,
+                margin_top=6,
+                margin_bottom=6,
+                margin_start=12,
+                margin_end=12,
+            )
+            label.add_css_class("dim-label")
+            placeholder_row.set_child(label)
+            self.port_forward_list.append(placeholder_row)
+            return
+
+        for index, tunnel in enumerate(self.port_forwardings):
+            row = Gtk.ListBoxRow()
+            row.set_selectable(False)
+            row.set_activatable(False)
+            row_box = Gtk.Box(
+                orientation=Gtk.Orientation.HORIZONTAL,
+                spacing=12,
+                margin_top=6,
+                margin_bottom=6,
+                margin_start=12,
+                margin_end=12,
+            )
+
+            labels_box = Gtk.Box(
+                orientation=Gtk.Orientation.VERTICAL,
+                spacing=2,
+                hexpand=True,
+            )
+            title = Gtk.Label(
+                label=tunnel.get("name", _("Tunnel")),
+                xalign=0,
+            )
+            remote_host_display = tunnel.get("remote_host") or _("SSH Host")
+            subtitle_text = _("{local_host}:{local_port} → {remote_host}:{remote_port}").format(
+                local_host=tunnel.get("local_host", "localhost"),
+                local_port=tunnel.get("local_port", 0),
+                remote_host=remote_host_display,
+                remote_port=tunnel.get("remote_port", 0),
+            )
+            subtitle = Gtk.Label(label=subtitle_text, xalign=0)
+            subtitle.add_css_class("dim-label")
+            labels_box.append(title)
+            labels_box.append(subtitle)
+            row_box.append(labels_box)
+
+            button_box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=6)
+            edit_button = Gtk.Button(
+                icon_name="document-edit-symbolic", css_classes=["flat"]
+            )
+            edit_button.connect("clicked", self._on_edit_port_forward_clicked, index)
+            delete_button = Gtk.Button(
+                icon_name="user-trash-symbolic", css_classes=["flat"]
+            )
+            delete_button.connect("clicked", self._on_delete_port_forward_clicked, index)
+            button_box.append(edit_button)
+            button_box.append(delete_button)
+            row_box.append(button_box)
+
+            row.set_child(row_box)
+            self.port_forward_list.append(row)
+
+    def _on_add_port_forward_clicked(self, _button) -> None:
+        new_entry = self._show_port_forward_dialog()
+        if new_entry:
+            self.port_forwardings.append(new_entry)
+            self._refresh_port_forward_list()
+            self._mark_changed()
+
+    def _on_edit_port_forward_clicked(self, _button, index: int) -> None:
+        if 0 <= index < len(self.port_forwardings):
+            existing = copy.deepcopy(self.port_forwardings[index])
+            updated = self._show_port_forward_dialog(existing)
+            if updated:
+                self.port_forwardings[index] = updated
+                self._refresh_port_forward_list()
+                self._mark_changed()
+
+    def _on_delete_port_forward_clicked(self, _button, index: int) -> None:
+        if 0 <= index < len(self.port_forwardings):
+            del self.port_forwardings[index]
+            self._refresh_port_forward_list()
+            self._mark_changed()
+
+    def _show_port_forward_dialog(self, existing: Optional[dict] = None) -> Optional[dict]:
+        is_edit = existing is not None
+        dialog = Gtk.Dialog(
+            title=_("Edit Port Forward") if is_edit else _("Add Port Forward"),
+            transient_for=self,
+            modal=True,
+        )
+        dialog.add_buttons(
+            _("Cancel"),
+            Gtk.ResponseType.CANCEL,
+            _("Save"),
+            Gtk.ResponseType.OK,
+        )
+        dialog.set_default_response(Gtk.ResponseType.OK)
+
+        content_area = dialog.get_content_area()
+        content_area.set_spacing(12)
+        content_area.set_margin_top(12)
+        content_area.set_margin_bottom(12)
+        content_area.set_margin_start(12)
+        content_area.set_margin_end(12)
+
+        grid = Gtk.Grid(column_spacing=12, row_spacing=12)
+        content_area.append(grid)
+
+        name_entry = Gtk.Entry(
+            text=existing.get("name", "") if existing else "",
+            placeholder_text=_("Tunnel name"),
+            hexpand=True,
+        )
+        grid.attach(Gtk.Label(label=_("Name"), xalign=0), 0, 0, 1, 1)
+        grid.attach(name_entry, 1, 0, 1, 1)
+
+        local_host_entry = Gtk.Entry(
+            text=existing.get("local_host", "localhost") if existing else "localhost",
+            placeholder_text="localhost",
+            hexpand=True,
+        )
+        grid.attach(Gtk.Label(label=_("Local Host"), xalign=0), 0, 1, 1, 1)
+        grid.attach(local_host_entry, 1, 1, 1, 1)
+
+        local_port_spin = Gtk.SpinButton.new_with_range(1, 65535, 1)
+        local_port_spin.set_value(existing.get("local_port", 0) if existing else 0)
+        grid.attach(Gtk.Label(label=_("Local Port"), xalign=0), 0, 2, 1, 1)
+        grid.attach(local_port_spin, 1, 2, 1, 1)
+
+        remote_host_entry = Gtk.Entry(
+            text=existing.get("remote_host", "") if existing else "",
+            placeholder_text=_("Leave blank to use the SSH host"),
+            hexpand=True,
+        )
+        use_custom_remote = bool(existing and existing.get("remote_host"))
+        remote_host_entry.set_sensitive(use_custom_remote)
+
+        remote_host_toggle = Gtk.CheckButton(
+            label=_("Connect to a different remote host"),
+            active=use_custom_remote,
+        )
+
+        def on_remote_host_toggle(button):
+            remote_host_entry.set_sensitive(button.get_active())
+
+        remote_host_toggle.connect("toggled", on_remote_host_toggle)
+
+        grid.attach(remote_host_toggle, 0, 3, 2, 1)
+        grid.attach(Gtk.Label(label=_("Remote Host"), xalign=0), 0, 4, 1, 1)
+        grid.attach(remote_host_entry, 1, 4, 1, 1)
+
+        remote_port_spin = Gtk.SpinButton.new_with_range(1, 65535, 1)
+        remote_port_spin.set_value(existing.get("remote_port", 0) if existing else 0)
+        grid.attach(Gtk.Label(label=_("Remote Port"), xalign=0), 0, 5, 1, 1)
+        grid.attach(remote_port_spin, 1, 5, 1, 1)
+
+        result: Optional[dict] = None
+
+        def run_dialog_blocking(dlg: Gtk.Dialog) -> int:
+            response_holder = {"id": Gtk.ResponseType.CANCEL}
+            loop = GLib.MainLoop()
+
+            def on_response(_dlg, response_id):
+                response_holder["id"] = response_id
+                loop.quit()
+
+            handler_id = dlg.connect("response", on_response)
+            dlg.present()
+            loop.run()
+            dlg.disconnect(handler_id)
+            dlg.hide()
+            return response_holder["id"]
+
+        while True:
+            response = run_dialog_blocking(dialog)
+            if response != Gtk.ResponseType.OK:
+                break
+
+            name = name_entry.get_text().strip() or _("Tunnel")
+            local_host = local_host_entry.get_text().strip() or "localhost"
+            local_port = int(local_port_spin.get_value())
+            remote_port = int(remote_port_spin.get_value())
+            remote_host = (
+                remote_host_entry.get_text().strip()
+                if remote_host_toggle.get_active()
+                else ""
+            )
+
+            errors = []
+            if not (1024 < local_port <= 65535):
+                errors.append(
+                    _(
+                        "Local port must be between 1025 and 65535 (ports below 1024 require administrator privileges)."
+                    )
+                )
+            if not (1 <= remote_port <= 65535):
+                errors.append(_("Remote port must be between 1 and 65535."))
+            if not local_host:
+                errors.append(_("Local host cannot be empty."))
+
+            if errors:
+                self._show_error_dialog(
+                    _("Invalid Port Forward"),
+                    "\n".join(errors),
+                )
+                continue
+
+            result = {
+                "name": name,
+                "local_host": local_host,
+                "local_port": local_port,
+                "remote_host": remote_host,
+                "remote_port": remote_port,
+            }
+            break
+
+        dialog.destroy()
+        return result
+
     def _create_sftp_section(self, parent: Gtk.Box) -> None:
         sftp_group = Adw.PreferencesGroup(
             title=_("SFTP Session"),
@@ -503,6 +776,7 @@ class SessionEditDialog(BaseDialog):
                 self.test_button.set_visible(is_ssh)
             if self.sftp_group:
                 self.sftp_group.set_visible(is_ssh)
+        self._update_port_forward_state()
         self._update_post_login_command_state()
         self._update_sftp_state()
 
@@ -511,8 +785,20 @@ class SessionEditDialog(BaseDialog):
             is_key = self.auth_combo.get_selected() == 0
             self.key_box.set_visible(is_key)
             self.password_box.set_visible(not is_key)
+        self._update_port_forward_state()
         self._update_post_login_command_state()
         self._update_sftp_state()
+
+    def _update_port_forward_state(self) -> None:
+        is_ssh_session = (
+            self.type_combo.get_selected() == 1 if self.type_combo else False
+        )
+        if self.port_forward_group:
+            self.port_forward_group.set_visible(is_ssh_session)
+        if self.port_forward_list:
+            self.port_forward_list.set_sensitive(is_ssh_session)
+        if self.port_forward_add_button:
+            self.port_forward_add_button.set_sensitive(is_ssh_session)
 
     def _update_post_login_command_state(self) -> None:
         if not self.post_login_switch or not self.post_login_entry:
@@ -754,6 +1040,11 @@ class SessionEditDialog(BaseDialog):
         session_data["sftp_session_enabled"] = sftp_enabled
         session_data["sftp_local_directory"] = local_dir
         session_data["sftp_remote_directory"] = remote_dir
+        session_data["port_forwardings"] = (
+            copy.deepcopy(self.port_forwardings)
+            if session_data["session_type"] == "ssh"
+            else []
+        )
 
         raw_password = ""
         if session_data["session_type"] == "ssh":
@@ -778,6 +1069,7 @@ class SessionEditDialog(BaseDialog):
                 "auth_value": "",
             })
             session_data["sftp_session_enabled"] = False
+            session_data["port_forwardings"] = []
 
         updated_session = SessionItem.from_dict(session_data)
         if updated_session.uses_password_auth() and raw_password:
