@@ -231,6 +231,8 @@ class ProcessSpawner:
         callback: Optional[Callable] = None,
         user_data: Any = None,
         initial_command: Optional[str] = None,
+        sftp_local_dir: Optional[str] = None,
+        sftp_remote_path: Optional[str] = None,
     ) -> None:
         """Generic method to spawn a remote (SSH/SFTP) session."""
         with self._spawn_lock:
@@ -242,7 +244,10 @@ class ProcessSpawner:
             try:
                 self._validate_ssh_session(session)
                 remote_cmd = self._build_remote_command_secure(
-                    command_type, session, initial_command
+                    command_type,
+                    session,
+                    initial_command,
+                    sftp_remote_path,
                 )
                 if not remote_cmd:
                     raise TerminalCreationError(
@@ -250,6 +255,19 @@ class ProcessSpawner:
                     )
 
                 working_dir = str(self.platform_info.home_dir)
+                if command_type == "sftp" and sftp_local_dir:
+                    try:
+                        local_path = Path(sftp_local_dir).expanduser()
+                        if local_path.exists() and local_path.is_dir():
+                            working_dir = str(local_path)
+                        else:
+                            self.logger.warning(
+                                f"SFTP local directory '{sftp_local_dir}' is invalid; falling back to home directory."
+                            )
+                    except Exception as e:
+                        self.logger.warning(
+                            f"Failed to use SFTP local directory '{sftp_local_dir}': {e}"
+                        )
                 env = self.environment_manager.get_terminal_environment()
                 env_list = [f"{k}={v}" for k, v in env.items()]
 
@@ -300,7 +318,12 @@ class ProcessSpawner:
     ) -> None:
         """Spawns an SSH session in the given terminal."""
         self._spawn_remote_session(
-            terminal, session, "ssh", callback, user_data, initial_command
+            terminal,
+            session,
+            "ssh",
+            callback,
+            user_data,
+            initial_command=initial_command,
         )
 
     def spawn_sftp_session(
@@ -309,9 +332,19 @@ class ProcessSpawner:
         session: "SessionItem",
         callback: Optional[Callable] = None,
         user_data: Any = None,
+        local_directory: Optional[str] = None,
+        remote_path: Optional[str] = None,
     ) -> None:
         """Spawns an SFTP session in the given terminal."""
-        self._spawn_remote_session(terminal, session, "sftp", callback, user_data)
+        self._spawn_remote_session(
+            terminal,
+            session,
+            "sftp",
+            callback,
+            user_data,
+            sftp_local_dir=local_directory,
+            sftp_remote_path=remote_path,
+        )
 
     def execute_remote_command_sync(
         self, session: "SessionItem", command: List[str], timeout: int = 15
@@ -434,6 +467,7 @@ class ProcessSpawner:
         command_type: str,
         session: "SessionItem",
         initial_command: Optional[str] = None,
+        sftp_remote_path: Optional[str] = None,
     ) -> Optional[List[str]]:
         """Builds an SSH/SFTP command for an INTERACTIVE session."""
         if not has_command(command_type):
@@ -462,6 +496,7 @@ class ProcessSpawner:
             username=session.user if session.user else None,
             key_file=session.auth_value if session.uses_key_auth() else None,
             options=ssh_options,
+            remote_path=sftp_remote_path if command_type == "sftp" else None,
         )
 
         if command_type == "ssh":

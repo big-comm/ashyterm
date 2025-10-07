@@ -1,6 +1,7 @@
 # ashyterm/ui/dialogs/session_edit_dialog.py
 
 import threading
+from pathlib import Path
 from typing import Optional
 
 import gi
@@ -50,6 +51,10 @@ class SessionEditDialog(BaseDialog):
         self.folder_paths_map: dict[str, str] = {}
         self.post_login_switch: Optional[Adw.SwitchRow] = None
         self.post_login_entry: Optional[Gtk.Entry] = None
+        self.sftp_group: Optional[Adw.PreferencesGroup] = None
+        self.sftp_switch: Optional[Adw.SwitchRow] = None
+        self.sftp_local_entry: Optional[Gtk.Entry] = None
+        self.sftp_remote_entry: Optional[Gtk.Entry] = None
         self._setup_ui()
         self.connect("map", self._on_map)
         self.logger.info(
@@ -244,6 +249,7 @@ class SessionEditDialog(BaseDialog):
         self._create_post_login_command_section(ssh_group)
         self.ssh_box = ssh_group
         parent.append(ssh_group)
+        self._create_sftp_section(parent)
 
     def _create_ssh_key_section(self, parent: Adw.PreferencesGroup) -> None:
         key_row = Adw.ActionRow(
@@ -335,6 +341,59 @@ class SessionEditDialog(BaseDialog):
         toggle_row.connect("notify::active", self._on_post_login_toggle)
         self._update_post_login_command_state()
 
+    def _create_sftp_section(self, parent: Gtk.Box) -> None:
+        sftp_group = Adw.PreferencesGroup(
+            title=_("SFTP Session"),
+            description=_(
+                "Configure default directories for SFTP connections (optional)"
+            ),
+        )
+
+        toggle_row = Adw.SwitchRow(
+            title=_("Enable SFTP Session"),
+            subtitle=_(
+                "Use these directories when opening an SFTP tab for this session"
+            ),
+        )
+        toggle_row.set_active(self.editing_session.sftp_session_enabled)
+        sftp_group.add(toggle_row)
+        self.sftp_switch = toggle_row
+        toggle_row.connect("notify::active", self._on_sftp_toggle)
+
+        local_row = Adw.ActionRow(
+            title=_("Local Directory"),
+            subtitle=_("Starting directory on your machine for SFTP"),
+        )
+        self.sftp_local_entry = Gtk.Entry(
+            text=self.editing_session.sftp_local_directory,
+            placeholder_text=_("Example: /home/user/projects"),
+            hexpand=True,
+        )
+        self.sftp_local_entry.connect("changed", self._on_sftp_local_changed)
+        self.sftp_local_entry.connect("activate", self._on_save_clicked)
+        local_row.add_suffix(self.sftp_local_entry)
+        local_row.set_activatable_widget(self.sftp_local_entry)
+        sftp_group.add(local_row)
+
+        remote_row = Adw.ActionRow(
+            title=_("Remote Directory"),
+            subtitle=_("Starting directory on the remote host for SFTP"),
+        )
+        self.sftp_remote_entry = Gtk.Entry(
+            text=self.editing_session.sftp_remote_directory,
+            placeholder_text=_("Example: /var/www"),
+            hexpand=True,
+        )
+        self.sftp_remote_entry.connect("changed", self._on_sftp_remote_changed)
+        self.sftp_remote_entry.connect("activate", self._on_save_clicked)
+        remote_row.add_suffix(self.sftp_remote_entry)
+        remote_row.set_activatable_widget(self.sftp_remote_entry)
+        sftp_group.add(remote_row)
+
+        parent.append(sftp_group)
+        self.sftp_group = sftp_group
+        self._update_sftp_state()
+
     def _create_action_bar(self) -> Gtk.ActionBar:
         action_bar = Gtk.ActionBar()
         cancel_button = Gtk.Button(label=_("Cancel"))
@@ -423,13 +482,29 @@ class SessionEditDialog(BaseDialog):
         entry.remove_css_class("error")
         self._mark_changed()
 
+    def _on_sftp_toggle(self, switch_row: Adw.SwitchRow, _param) -> None:
+        self._mark_changed()
+        self._update_sftp_state()
+        if self.sftp_local_entry and not switch_row.get_active():
+            self.sftp_local_entry.remove_css_class("error")
+
+    def _on_sftp_local_changed(self, entry: Gtk.Entry) -> None:
+        entry.remove_css_class("error")
+        self._mark_changed()
+
+    def _on_sftp_remote_changed(self, entry: Gtk.Entry) -> None:
+        self._mark_changed()
+
     def _update_ssh_visibility(self) -> None:
         if self.ssh_box and self.type_combo:
             is_ssh = self.type_combo.get_selected() == 1
             self.ssh_box.set_visible(is_ssh)
             if hasattr(self, "test_button"):
                 self.test_button.set_visible(is_ssh)
+            if self.sftp_group:
+                self.sftp_group.set_visible(is_ssh)
         self._update_post_login_command_state()
+        self._update_sftp_state()
 
     def _update_auth_visibility(self) -> None:
         if self.key_box and self.password_box and self.auth_combo:
@@ -437,6 +512,7 @@ class SessionEditDialog(BaseDialog):
             self.key_box.set_visible(is_key)
             self.password_box.set_visible(not is_key)
         self._update_post_login_command_state()
+        self._update_sftp_state()
 
     def _update_post_login_command_state(self) -> None:
         if not self.post_login_switch or not self.post_login_entry:
@@ -451,6 +527,23 @@ class SessionEditDialog(BaseDialog):
         self.post_login_entry.set_sensitive(is_enabled)
         if not is_enabled:
             self.post_login_entry.remove_css_class("error")
+
+    def _update_sftp_state(self) -> None:
+        if (
+            not self.sftp_switch
+            or not self.sftp_local_entry
+            or not self.sftp_remote_entry
+        ):
+            return
+        is_ssh_session = (
+            self.type_combo.get_selected() == 1 if self.type_combo else False
+        )
+        self.sftp_switch.set_sensitive(is_ssh_session)
+        is_enabled = self.sftp_switch.get_active() and is_ssh_session
+        self.sftp_local_entry.set_sensitive(is_enabled)
+        self.sftp_remote_entry.set_sensitive(is_enabled)
+        if not is_enabled:
+            self.sftp_local_entry.remove_css_class("error")
 
     def _on_browse_key_clicked(self, button) -> None:
         try:
@@ -643,6 +736,25 @@ class SessionEditDialog(BaseDialog):
             post_login_command if post_login_enabled else ""
         )
 
+        sftp_enabled = (
+            self.sftp_switch.get_active()
+            if self.sftp_switch and self.type_combo.get_selected() == 1
+            else False
+        )
+        local_dir = (
+            self.sftp_local_entry.get_text().strip()
+            if self.sftp_local_entry
+            else ""
+        )
+        remote_dir = (
+            self.sftp_remote_entry.get_text().strip()
+            if self.sftp_remote_entry
+            else ""
+        )
+        session_data["sftp_session_enabled"] = sftp_enabled
+        session_data["sftp_local_directory"] = local_dir
+        session_data["sftp_remote_directory"] = remote_dir
+
         raw_password = ""
         if session_data["session_type"] == "ssh":
             session_data.update({
@@ -665,6 +777,7 @@ class SessionEditDialog(BaseDialog):
                 "auth_type": "",
                 "auth_value": "",
             })
+            session_data["sftp_session_enabled"] = False
 
         updated_session = SessionItem.from_dict(session_data)
         if updated_session.uses_password_auth() and raw_password:
@@ -718,6 +831,28 @@ class SessionEditDialog(BaseDialog):
                 valid = False
             else:
                 self.post_login_entry.remove_css_class("error")
+        if self.sftp_switch and self.sftp_switch.get_active():
+            if self.sftp_local_entry:
+                local_dir = self.sftp_local_entry.get_text().strip()
+                if local_dir:
+                    try:
+                        local_path = Path(local_dir).expanduser()
+                        if not local_path.exists() or not local_path.is_dir():
+                            self.sftp_local_entry.add_css_class("error")
+                            self._validation_errors.append(
+                                _("SFTP local directory must exist and be a directory.")
+                            )
+                            valid = False
+                        else:
+                            self.sftp_local_entry.remove_css_class("error")
+                    except Exception:
+                        self.sftp_local_entry.add_css_class("error")
+                        self._validation_errors.append(
+                            _("SFTP local directory must exist and be a directory.")
+                        )
+                        valid = False
+                else:
+                    self.sftp_local_entry.remove_css_class("error")
         if not valid and self._validation_errors:
             self._show_error_dialog(
                 _("SSH Validation Error"),

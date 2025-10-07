@@ -418,10 +418,23 @@ class TerminalManager:
         elif terminal_info.get("type") == "sftp":
             session = terminal_info.get("identifier")
             if isinstance(session, SessionItem):
-                new_title = f"SFTP: {session.name}"
+                new_title = self._get_sftp_display_title(session, terminal)
 
         if self.tab_manager:
             self.tab_manager.update_titles_for_terminal(terminal, new_title, osc7_info)
+
+    def _get_sftp_display_title(
+        self, session: SessionItem, terminal: Vte.Terminal
+    ) -> str:
+        if self.tab_manager:
+            page = self.tab_manager.get_page_for_terminal(terminal)
+            if page:
+                for tab in self.tab_manager.tabs:
+                    if self.tab_manager.pages.get(tab) == page:
+                        return getattr(
+                            tab, "_base_title", f"SFTP-{session.name}"
+                        )
+        return f"SFTP-{session.name}"
 
     def create_local_terminal(
         self,
@@ -478,6 +491,8 @@ class TerminalManager:
         session: SessionItem,
         terminal_type: str,
         initial_command: Optional[str] = None,
+        sftp_remote_path: Optional[str] = None,
+        sftp_local_directory: Optional[str] = None,
     ) -> Optional[Vte.Terminal]:
         """Generic private method to create remote terminals (SSH/SFTP)."""
         with self._creation_lock:
@@ -516,6 +531,8 @@ class TerminalManager:
                         session,
                         callback=self._on_spawn_callback,
                         user_data=user_data_for_spawn,
+                        local_directory=sftp_local_directory,
+                        remote_path=sftp_remote_path,
                     )
                 else:
                     raise ValueError(
@@ -554,7 +571,17 @@ class TerminalManager:
 
     def create_sftp_terminal(self, session: SessionItem) -> Optional[Vte.Terminal]:
         """Creates a new terminal and starts an SFTP session in it."""
-        return self._create_remote_terminal(session, "sftp")
+        remote_path = None
+        local_directory = None
+        if session.sftp_session_enabled:
+            remote_path = session.sftp_remote_directory or None
+            local_directory = session.sftp_local_directory or None
+        return self._create_remote_terminal(
+            session,
+            "sftp",
+            sftp_remote_path=remote_path,
+            sftp_local_directory=local_directory,
+        )
 
     def _create_base_terminal(self) -> Optional[Vte.Terminal]:
         try:

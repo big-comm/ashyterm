@@ -249,9 +249,29 @@ class TabManager:
         terminal = self.terminal_manager.create_sftp_terminal(session)
         if terminal:
             sftp_session = SessionItem.from_dict(session.to_dict())
-            sftp_session.name = f"SFTP: {session.name}"
+            sftp_session.name = self._generate_unique_sftp_name(session.name)
             self._create_tab_for_terminal(terminal, sftp_session)
         return terminal
+
+    def _generate_unique_sftp_name(self, base_session_name: str) -> str:
+        base_title = f"SFTP-{base_session_name}"
+        existing_titles = []
+        for tab in self.tabs:
+            session_item = getattr(tab, "session_item", None)
+            if isinstance(session_item, SessionItem) and session_item.name.startswith(
+                base_title
+            ):
+                existing_titles.append(session_item.name)
+
+        if base_title not in existing_titles:
+            return base_title
+
+        suffix = 1
+        while True:
+            candidate = f"{base_title}({suffix})"
+            if candidate not in existing_titles:
+                return candidate
+            suffix += 1
 
     def _scroll_to_widget(self, widget: Gtk.Widget) -> bool:
         """Scrolls the tab bar to make the given widget visible."""
@@ -462,7 +482,7 @@ class TabManager:
         tab_widget.add_css_class("pill")
 
         icon_name = None
-        if session.name.startswith("SFTP:"):
+        if session.name.startswith("SFTP-"):
             icon_name = "folder-remote-symbolic"
         elif session.is_ssh():
             icon_name = "network-server-symbolic"

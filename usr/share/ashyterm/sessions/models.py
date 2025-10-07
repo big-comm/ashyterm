@@ -1,6 +1,7 @@
 # ashyterm/sessions/models.py
 
 import time
+from pathlib import Path
 from typing import Any, Dict, List, Optional
 
 from gi.repository import Gio, GObject
@@ -99,6 +100,9 @@ class SessionItem(BaseModel):
         tab_color: Optional[str] = None,
         post_login_command_enabled: bool = False,
         post_login_command: str = "",
+        sftp_session_enabled: bool = False,
+        sftp_local_directory: str = "",
+        sftp_remote_directory: str = "",
     ):
         super().__init__()
         self.logger = get_logger("ashyterm.sessions.model")
@@ -116,6 +120,15 @@ class SessionItem(BaseModel):
         self._post_login_command_enabled = bool(post_login_command_enabled)
         self._post_login_command = (
             post_login_command.strip() if post_login_command else ""
+        )
+        self._sftp_session_enabled = bool(sftp_session_enabled)
+        self._sftp_local_directory = (
+            str(normalize_path(sftp_local_directory))
+            if sftp_local_directory
+            else ""
+        )
+        self._sftp_remote_directory = (
+            sftp_remote_directory.strip() if sftp_remote_directory else ""
         )
 
     @property
@@ -266,6 +279,41 @@ class SessionItem(BaseModel):
             self._post_login_command = new_value
             self._mark_modified()
 
+    @property
+    def sftp_session_enabled(self) -> bool:
+        return self._sftp_session_enabled
+
+    @sftp_session_enabled.setter
+    def sftp_session_enabled(self, value: bool):
+        new_value = bool(value)
+        if self._sftp_session_enabled != new_value:
+            self._sftp_session_enabled = new_value
+            self._mark_modified()
+
+    @property
+    def sftp_local_directory(self) -> str:
+        return self._sftp_local_directory
+
+    @sftp_local_directory.setter
+    def sftp_local_directory(self, value: str):
+        new_value = (
+            str(normalize_path(value)) if value and value.strip() else ""
+        )
+        if self._sftp_local_directory != new_value:
+            self._sftp_local_directory = new_value
+            self._mark_modified()
+
+    @property
+    def sftp_remote_directory(self) -> str:
+        return self._sftp_remote_directory
+
+    @sftp_remote_directory.setter
+    def sftp_remote_directory(self, value: str):
+        new_value = value.strip() if value else ""
+        if self._sftp_remote_directory != new_value:
+            self._sftp_remote_directory = new_value
+            self._mark_modified()
+
     def get_validation_errors(self) -> List[str]:
         """Returns a list of validation error messages."""
         errors = []
@@ -278,6 +326,17 @@ class SessionItem(BaseModel):
                 errors.append(_("Port must be between 1 and 65535."))
             if self.post_login_command_enabled and not self.post_login_command:
                 errors.append(_("Post-login command cannot be empty when enabled."))
+            if self.sftp_session_enabled and self.sftp_local_directory:
+                try:
+                    local_path = Path(self.sftp_local_directory).expanduser()
+                    if not local_path.exists() or not local_path.is_dir():
+                        errors.append(
+                            _("SFTP local directory must exist and be a directory.")
+                        )
+                except Exception:
+                    errors.append(
+                        _("SFTP local directory must exist and be a directory.")
+                    )
         return errors
 
     def to_dict(self) -> Dict[str, Any]:
@@ -295,6 +354,9 @@ class SessionItem(BaseModel):
             "tab_color": self.tab_color,
             "post_login_command_enabled": self.post_login_command_enabled,
             "post_login_command": self.post_login_command,
+            "sftp_session_enabled": self.sftp_session_enabled,
+            "sftp_local_directory": self.sftp_local_directory,
+            "sftp_remote_directory": self.sftp_remote_directory,
             "created_at": self._created_at,
             "modified_at": self._modified_at,
         }
@@ -312,6 +374,9 @@ class SessionItem(BaseModel):
             port=data.get("port", 22),
             post_login_command_enabled=data.get("post_login_command_enabled", False),
             post_login_command=data.get("post_login_command", ""),
+            sftp_session_enabled=data.get("sftp_session_enabled", False),
+            sftp_local_directory=data.get("sftp_local_directory", ""),
+            sftp_remote_directory=data.get("sftp_remote_directory", ""),
         )
         # __init__ sets default metadata; overwrite with loaded data
         session._auth_value = data.get("auth_value", "")

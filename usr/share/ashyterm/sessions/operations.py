@@ -101,6 +101,15 @@ class SessionOperations:
             original_session.post_login_command = (
                 updated_session.post_login_command
             )
+            original_session.sftp_session_enabled = (
+                updated_session.sftp_session_enabled
+            )
+            original_session.sftp_local_directory = (
+                updated_session.sftp_local_directory
+            )
+            original_session.sftp_remote_directory = (
+                updated_session.sftp_remote_directory
+            )
 
             if not self._save_changes():
                 # Rollback changes on failure by recreating the item from original data

@@ -84,6 +84,7 @@ class CommandBuilder:
         key_file: Optional[str] = None,
         port: Optional[int] = None,
         options: Optional[Dict[str, str]] = None,
+        remote_path: Optional[str] = None,
     ) -> List[str]:
         """Builds a remote command (ssh, sftp)."""
         if not self.platform_info.has_command(command_type):
@@ -98,7 +99,10 @@ class CommandBuilder:
         if port:
             port_flag = "-P" if command_type == "sftp" else "-p"
             cmd.extend([port_flag, str(port)])
-        cmd.append(f"{username}@{hostname}" if username else hostname)
+        target = f"{username}@{hostname}" if username else hostname
+        if command_type == "sftp" and remote_path:
+            target = f"{target}:{remote_path.strip()}"
+        cmd.append(target)
         return cmd
 
 
