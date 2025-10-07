@@ -728,7 +728,7 @@ class FileManager(GObject.Object):
         if row and not hasattr(row, "right_click_gesture"):
             right_click_gesture = Gtk.GestureClick(button=Gdk.BUTTON_SECONDARY)
             right_click_gesture.connect(
-                "released", self._on_item_right_click, list_item.get_position()
+                "released", self._on_item_right_click, list_item
             )
             row.add_controller(right_click_gesture)
             row.right_click_gesture = right_click_gesture
@@ -1055,12 +1055,37 @@ class FileManager(GObject.Object):
     def _is_remote_session(self) -> bool:
         return self.session_item and not self.session_item.is_local()
 
-    def _on_item_right_click(self, gesture, n_press, x, y, position):
+    def _on_item_right_click(self, gesture, n_press, x, y, list_item):
         try:
             row = gesture.get_widget()
-            translated_x, translated_y = row.translate_coordinates(
-                self.column_view, x, y
-            )
+            if not row:
+                self._show_general_context_menu(x, y)
+                return
+
+            try:
+                translated_x, translated_y = row.translate_coordinates(
+                    self.column_view, x, y
+                )
+            except TypeError:
+                translated_x, translated_y = x, y
+
+            if not isinstance(list_item, Gtk.ListItem):
+                self._show_general_context_menu(translated_x, translated_y)
+                return
+
+            position = list_item.get_position()
+            if position == Gtk.INVALID_LIST_POSITION:
+                self._show_general_context_menu(translated_x, translated_y)
+                return
+
+            if self.selection_model is None:
+                self._show_general_context_menu(translated_x, translated_y)
+                return
+
+            if position >= self.selection_model.get_n_items():
+                self._show_general_context_menu(translated_x, translated_y)
+                return
+
             if not self.selection_model.is_selected(position):
                 self.selection_model.unselect_all()
                 self.selection_model.select_item(position, True)
@@ -2132,4 +2157,3 @@ class FileManager(GObject.Object):
 
         self.emit("temp-files-changed", len(self.edited_file_metadata))
         return False
-
