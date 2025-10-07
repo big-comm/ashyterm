@@ -1352,6 +1352,116 @@ msgstr "로그인 성공 직후 실행할 명령"
 msgid "Example: tmux attach -t main"
 msgstr "예: tmux attach -t main"
 # 
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 354
+#: NEEDS WORK
+msgid "Port Forwarding"
+msgstr "포트 포워딩"
+# 
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 355
+#: NEEDS WORK
+msgid "Create SSH tunnels to forward local ports to remote targets"
+msgstr "SSH 터널을 생성하여 로컬 포트를 원격 대상으로 포워딩합니다."
+# 
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 369
+#: NEEDS WORK
+msgid "Add Forward"
+msgstr "앞으로 추가"
+# 
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 396
+#: NEEDS WORK
+msgid "No port forwards configured."
+msgstr "포트 포워드가 구성되어 있지 않습니다."
+# 
+# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
+# 
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 427
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 576
+# File: usr/share/ashyterm/sessions/models.py, line: 341
+#: NEEDS WORK
+msgid "Tunnel"
+msgstr "터널"
+# 
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 430
+#: NEEDS WORK
+msgid "SSH Host"
+msgstr "SSH 호스트"
+# 
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 431
+#: NEEDS WORK
+#, python-brace-format
+msgid "{local_host}:{local_port} → {remote_host}:{remote_port}"
+msgstr "{로컬_호스트}:{로컬_포트} → {원격_호스트}:{원격_포트}"
+# 
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 484
+#: NEEDS WORK
+msgid "Edit Port Forward"
+msgstr "포트 포워드 편집"
+# 
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 484
+#: NEEDS WORK
+msgid "Add Port Forward"
+msgstr "포트 포워드 추가"
+# 
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 508
+#: NEEDS WORK
+msgid "Tunnel name"
+msgstr "터널 이름"
+# 
+# File: usr/share/ashyterm/filemanager/manager.py, line: 366
+#: NEEDS WORK
+msgid "Name"
+msgstr "이름"
+# 
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 519
+#: NEEDS WORK
+msgid "Local Host"
+msgstr "로컬 호스트"
+# 
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 524
+#: NEEDS WORK
+msgid "Local Port"
+msgstr "로컬 포트"
+# 
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 529
+#: NEEDS WORK
+msgid "Leave blank to use the SSH host"
+msgstr "SSH 호스트를 사용하려면 비워 두십시오."
+# 
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 536
+#: NEEDS WORK
+msgid "Connect to a different remote host"
+msgstr "다른 원격 호스트에 연결"
+# 
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 546
+#: NEEDS WORK
+msgid "Remote Host"
+msgstr "원격 호스트"
+# 
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 551
+#: NEEDS WORK
+msgid "Remote Port"
+msgstr "원격 포트"
+# 
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 590
+#: NEEDS WORK
+msgid "Local port must be between 1025 and 65535 (ports below 1024 require administrator privileges)."
+msgstr "로컬 포트는 1025와 65535 사이여야 합니다(1024 이하의 포트는 관리자 권한이 필요합니다)."
+# 
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 594
+#: NEEDS WORK
+msgid "Remote port must be between 1 and 65535."
+msgstr "원격 포트는 1과 65535 사이여야 합니다."
+# 
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 596
+#: NEEDS WORK
+msgid "Local host cannot be empty."
+msgstr "로컬 호스트는 비어 있을 수 없습니다."
+# 
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 600
+#: NEEDS WORK
+msgid "Invalid Port Forward"
+msgstr "잘못된 포트 포워드"
+# 
 # File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 346
 #: NEEDS WORK
 msgid "SFTP Session"
@@ -4196,6 +4306,16 @@ msgstr "붙여넣기 작업을 위한 지원되지 않는 항목 유형입니다
 msgid "Port must be a valid number between 1 and 65535"
 msgstr "포트는 1과 65535 사이의 유효한 숫자여야 합니다."
 # 
+# File: usr/share/ashyterm/sessions/models.py, line: 339
+#: NEEDS WORK
+msgid "Invalid port forwarding entry."
+msgstr "잘못된 포트 포워딩 항목."
+# 
+# File: usr/share/ashyterm/sessions/models.py, line: 349
+#: NEEDS WORK
+msgid "Port forwarding entries must use numeric ports."
+msgstr "포트 포워딩 항목은 숫자 포트를 사용해야 합니다."
+# 
 # File: usr/share/ashyterm/sessions/models.py, line: 198
 #: NEEDS WORK
 msgid "Session name is required."
@@ -4210,6 +4330,18 @@ msgstr "SSH 세션에 호스트가 필요합니다."
 #: NEEDS WORK
 msgid "Port must be between 1 and 65535."
 msgstr "포트는 1과 65535 사이여야 합니다."
+# 
+# File: usr/share/ashyterm/sessions/models.py, line: 389
+#: NEEDS WORK
+#, python-brace-format
+msgid "Port forward '{name}' has an invalid local port (must be between 1025 and 65535)."
+msgstr "포트 포워드 '{name}'의 로컬 포트가 유효하지 않습니다(1025와 65535 사이여야 함)."
+# 
+# File: usr/share/ashyterm/sessions/models.py, line: 394
+#: NEEDS WORK
+#, python-brace-format
+msgid "Port forward '{name}' has an invalid remote port."
+msgstr "'{name}'의 포트 포워딩에 잘못된 원격 포트가 있습니다."
 # 
 # File: usr/share/ashyterm/sessions/models.py, line: 386
 # File: usr/share/ashyterm/sessions/models.py, line: 419
@@ -4361,11 +4493,6 @@ msgstr "전송 기록"
 #: NEEDS WORK
 msgid "Upload Files"
 msgstr "파일 업로드"
-# 
-# File: usr/share/ashyterm/filemanager/manager.py, line: 366
-#: NEEDS WORK
-msgid "Name"
-msgstr "이름"
 # 
 # File: usr/share/ashyterm/filemanager/manager.py, line: 375
 #: NEEDS WORK

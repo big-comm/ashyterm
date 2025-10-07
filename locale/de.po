@@ -1358,6 +1358,118 @@ msgstr "Befehl, der unmittelbar nach einem erfolgreichen Login ausgeführt werde
 msgid "Example: tmux attach -t main"
 msgstr "Beispiel: tmux attach -t main"
 # 
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 354
+#: NEEDS WORK
+msgid "Port Forwarding"
+msgstr "Portweiterleitung"
+# 
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 355
+#: NEEDS WORK
+msgid "Create SSH tunnels to forward local ports to remote targets"
+msgstr "SSH-Tunnel erstellen, um lokale Ports an entfernte Ziele weiterzuleiten"
+# 
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 369
+#: NEEDS WORK
+msgid "Add Forward"
+msgstr "Vorwärts hinzufügen"
+# 
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 396
+#: NEEDS WORK
+msgid "No port forwards configured."
+msgstr "Keine Portweiterleitungen konfiguriert."
+# 
+# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
+# 
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 427
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 576
+# File: usr/share/ashyterm/sessions/models.py, line: 341
+#: NEEDS WORK
+msgid "Tunnel"
+msgstr "Tunnel"
+# 
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 430
+#: NEEDS WORK
+msgid "SSH Host"
+msgstr "SSH-Host"
+# 
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 431
+#: NEEDS WORK
+#, python-brace-format
+msgid "{local_host}:{local_port} → {remote_host}:{remote_port}"
+msgstr "{local_host}:{local_port} → {remote_host}:{remote_port}"
+# 
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 484
+#: NEEDS WORK
+msgid "Edit Port Forward"
+msgstr "Portweiterleitung bearbeiten"
+# 
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 484
+#: NEEDS WORK
+msgid "Add Port Forward"
+msgstr "Portweiterleitung hinzufügen"
+# 
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 508
+#: NEEDS WORK
+msgid "Tunnel name"
+msgstr "Tunnelname"
+# 
+# File: usr/share/ashyterm/filemanager/manager.py, line: 366
+#: NEEDS WORK
+msgid "Name"
+msgstr "Name"
+# 
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 519
+#: NEEDS WORK
+msgid "Local Host"
+msgstr "Lokaler Host"
+# 
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 524
+#: NEEDS WORK
+msgid "Local Port"
+msgstr "Lokaler Port"
+# 
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 529
+#: NEEDS WORK
+msgid "Leave blank to use the SSH host"
+msgstr "Leer lassen, um den SSH-Host zu verwenden."
+# 
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 536
+#: NEEDS WORK
+msgid "Connect to a different remote host"
+msgstr "Mit einem anderen Remote-Host verbinden"
+# 
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 546
+#: NEEDS WORK
+msgid "Remote Host"
+msgstr "Entfernte Host"
+# 
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 551
+#: NEEDS WORK
+msgid "Remote Port"
+msgstr "Entfernte Port"
+# 
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 590
+#: NEEDS WORK
+msgid "Local port must be between 1025 and 65535 (ports below 1024 require administrator privileges)."
+msgstr ""
+"Der lokale Port muss zwischen 1025 und 65535 liegen (Ports unter 1024 erfordern "
+"Administratorrechte)."
+# 
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 594
+#: NEEDS WORK
+msgid "Remote port must be between 1 and 65535."
+msgstr "Der Remote-Port muss zwischen 1 und 65535 liegen."
+# 
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 596
+#: NEEDS WORK
+msgid "Local host cannot be empty."
+msgstr "Der lokale Host darf nicht leer sein."
+# 
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 600
+#: NEEDS WORK
+msgid "Invalid Port Forward"
+msgstr "Ungültige Portweiterleitung"
+# 
 # File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 346
 #: NEEDS WORK
 msgid "SFTP Session"
@@ -4264,6 +4376,16 @@ msgstr "Nicht unterstützter Elementtyp für den Einfügevorgang."
 msgid "Port must be a valid number between 1 and 65535"
 msgstr "Der Port muss eine gültige Zahl zwischen 1 und 65535 sein."
 # 
+# File: usr/share/ashyterm/sessions/models.py, line: 339
+#: NEEDS WORK
+msgid "Invalid port forwarding entry."
+msgstr "Ungültiger Portweiterleitungs-Eintrag."
+# 
+# File: usr/share/ashyterm/sessions/models.py, line: 349
+#: NEEDS WORK
+msgid "Port forwarding entries must use numeric ports."
+msgstr "Portweiterleitungseinträge müssen numerische Ports verwenden."
+# 
 # File: usr/share/ashyterm/sessions/models.py, line: 198
 #: NEEDS WORK
 msgid "Session name is required."
@@ -4278,6 +4400,18 @@ msgstr "Der Host ist für SSH-Sitzungen erforderlich."
 #: NEEDS WORK
 msgid "Port must be between 1 and 65535."
 msgstr "Der Port muss zwischen 1 und 65535 liegen."
+# 
+# File: usr/share/ashyterm/sessions/models.py, line: 389
+#: NEEDS WORK
+#, python-brace-format
+msgid "Port forward '{name}' has an invalid local port (must be between 1025 and 65535)."
+msgstr "Portweiterleitung '{name}' hat einen ungültigen lokalen Port (muss zwischen 1025 und 65535 liegen)."
+# 
+# File: usr/share/ashyterm/sessions/models.py, line: 394
+#: NEEDS WORK
+#, python-brace-format
+msgid "Port forward '{name}' has an invalid remote port."
+msgstr "Portweiterleitung '{name}' hat einen ungültigen Remote-Port."
 # 
 # File: usr/share/ashyterm/sessions/models.py, line: 386
 # File: usr/share/ashyterm/sessions/models.py, line: 419
@@ -4431,11 +4565,6 @@ msgstr "Übertragungsverlauf"
 #: NEEDS WORK
 msgid "Upload Files"
 msgstr "Dateien hochladen"
-# 
-# File: usr/share/ashyterm/filemanager/manager.py, line: 366
-#: NEEDS WORK
-msgid "Name"
-msgstr "Name"
 # 
 # File: usr/share/ashyterm/filemanager/manager.py, line: 375
 #: NEEDS WORK
