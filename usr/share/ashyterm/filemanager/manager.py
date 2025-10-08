@@ -9,7 +9,7 @@ import subprocess
 import tempfile
 import threading
 from functools import partial
-from pathlib import Path
+from pathlib import Path, PurePosixPath
 from typing import Dict, List, Optional
 
 from gi.repository import Adw, Gdk, Gio, GLib, GObject, Gtk, Pango, Vte
@@ -39,6 +39,8 @@ CSS_DATA = b"""
     border-radius: 4px;
 }
 """
+
+MAX_RECURSIVE_RESULTS = 1000
 
 
 class FileManager(GObject.Object):
@@ -106,6 +108,12 @@ class FileManager(GObject.Object):
         # State for verified command execution
         self._pending_command = None
         self._command_timeout_id = 0
+
+        # Recursive search state
+        self.recursive_search_enabled = False
+        self._showing_recursive_results = False
+        self._recursive_search_generation = 0
+        self._recursive_search_in_progress = False
 
         self._build_ui()
 
@@ -281,6 +289,7 @@ class FileManager(GObject.Object):
     def _get_terminal_current_directory(self):
         if not self.bound_terminal:
             return None
+        truncated = False
         try:
             uri = self.bound_terminal.get_current_directory_uri()
             if uri:
@@ -379,11 +388,22 @@ class FileManager(GObject.Object):
         self.action_bar.pack_start(self.breadcrumb_box)
 
         self.search_entry = Gtk.SearchEntry()
-        self.search_entry.set_placeholder_text(_("Filter..."))
+        self.search_entry.set_placeholder_text(_("Filter files..."))
         self.search_entry.set_max_width_chars(12)
         self.search_entry.connect("search-changed", self._on_search_changed)
         self.search_entry.connect("activate", self._on_search_activate)
         self.search_entry.connect("delete-text", self._on_search_delete_text)
+
+        self.recursive_search_switch = Adw.SwitchRow(title=_("Recursive Search"))
+        self.recursive_search_switch.set_active(False)
+        self.recursive_search_switch.connect(
+            "notify::active", self._on_recursive_switch_toggled
+        )
+        switch_container = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=6)
+        switch_container.set_valign(Gtk.Align.CENTER)
+        switch_container.append(self.recursive_search_switch)
+        switch_container.set_margin_start(6)
+        self.action_bar.pack_end(switch_container)
         self.action_bar.pack_end(self.search_entry)
 
         search_key_controller = Gtk.EventControllerKey.new()
@@ -499,6 +519,12 @@ class FileManager(GObject.Object):
         if search_term:
             if file_item.name == "..":
                 return False
+            show_hidden = self.hidden_files_toggle.get_active()
+            if self.recursive_search_enabled and self._showing_recursive_results:
+                name_to_check = file_item.name.split("/")[-1]
+                if not show_hidden and name_to_check.startswith("."):
+                    return False
+                return True
             return search_term in file_item.name.lower()
 
         if file_item.name == "..":
@@ -567,13 +593,206 @@ class FileManager(GObject.Object):
 
     def _on_hidden_toggle(self, _toggle_button):
         self.combined_filter.changed(Gtk.FilterChange.DIFFERENT)
+    def _on_recursive_switch_toggled(self, row, _param):
+        self._on_recursive_toggle(row)
+
+    def _on_recursive_toggle(self, toggle_button: Gtk.ToggleButton):
+        self.recursive_search_enabled = toggle_button.get_active()
+        if not self.recursive_search_enabled:
+            # Invalidate any pending searches
+            self._recursive_search_generation += 1
+            self._recursive_search_in_progress = False
+        self._update_search_placeholder()
+        if hasattr(self, "search_entry"):
+            self.search_entry.set_sensitive(not self._recursive_search_in_progress)
+
+        search_term = (
+            self.search_entry.get_text().strip()
+            if hasattr(self, "search_entry")
+            else ""
+        )
+
+        if self.recursive_search_enabled:
+            if search_term:
+                self._start_recursive_search(search_term)
+            else:
+                self._showing_recursive_results = False
+                self.combined_filter.changed(Gtk.FilterChange.DIFFERENT)
+        else:
+            if self._showing_recursive_results:
+                self._showing_recursive_results = False
+                self.refresh(source="filemanager", clear_search=False)
+            else:
+                self.combined_filter.changed(Gtk.FilterChange.DIFFERENT)
 
     def _on_search_changed(self, search_entry):
+        search_term = search_entry.get_text().strip()
+        if self.recursive_search_enabled:
+            if search_term:
+                self._start_recursive_search(search_term)
+            else:
+                if self._showing_recursive_results:
+                    self._showing_recursive_results = False
+                    self.refresh(source="filemanager", clear_search=False)
+                else:
+                    self.combined_filter.changed(Gtk.FilterChange.DIFFERENT)
+            return
+        else:
+            if self._showing_recursive_results:
+                self._showing_recursive_results = False
+                self.refresh(source="filemanager", clear_search=False)
         self.combined_filter.changed(Gtk.FilterChange.DIFFERENT)
         if hasattr(self, "column_view") and self.column_view:
             if self.selection_model and self.selection_model.get_n_items() > 0:
                 self.selection_model.select_item(0, True)
                 self.column_view.scroll_to(0, None, Gtk.ListScrollFlags.NONE, None)
+
+    def _start_recursive_search(self, search_term: str) -> None:
+        if not self.operations:
+            return
+
+        base_path = self.current_path or "/"
+        self._recursive_search_generation += 1
+        generation = self._recursive_search_generation
+        self._recursive_search_in_progress = True
+        self._showing_recursive_results = True
+
+        if hasattr(self, "search_entry"):
+            if getattr(self.search_entry, "has_focus", False):
+                if hasattr(self, "column_view") and self.column_view:
+                    self.column_view.grab_focus()
+            self.search_entry.set_sensitive(False)
+            self._update_search_placeholder(_("Searching..."))
+
+        thread = threading.Thread(
+            target=self._recursive_search_thread,
+            args=(generation, base_path, search_term),
+            daemon=True,
+            name="RecursiveSearchThread",
+        )
+        thread.start()
+
+    def _recursive_search_thread(
+        self, generation: int, base_path: str, search_term: str
+    ):
+        results: List[FileItem] = []
+        error_message = ""
+        truncated = False
+        pattern = f"*{search_term}*"
+        command = [
+            "find",
+            base_path,
+            "-iname",
+            pattern,
+            "-exec",
+            "ls",
+            "-ld",
+            "--full-time",
+            "--classify",
+            "{}",
+            "+",
+        ]
+
+        try:
+            output = ""
+            if self._is_remote_session():
+                success, output = self.operations.execute_command_on_session(command)
+                if not success:
+                    error_message = output.strip()
+                    output = output if success else ""
+            else:
+                result = subprocess.run(
+                    command,
+                    shell=False,
+                    capture_output=True,
+                    text=True,
+                    timeout=60,
+                )
+                output = result.stdout or ""
+                if result.stderr and result.returncode != 0:
+                    error_message = result.stderr.strip()
+
+            lines = [
+                line
+                for line in output.splitlines()
+                if line and not line.startswith("find:")
+            ]
+
+            base_posix = PurePosixPath(base_path)
+            for line in lines:
+                file_item = FileItem.from_ls_line(line)
+                if not file_item:
+                    continue
+
+                full_path = PurePosixPath(file_item.name)
+                try:
+                    relative_path = str(full_path.relative_to(base_posix))
+                except ValueError:
+                    relative_path = str(full_path)
+
+                relative_path = relative_path.lstrip("./")
+                if not relative_path:
+                    relative_path = full_path.name
+
+                file_item._name = relative_path
+                results.append(file_item)
+                if len(results) >= MAX_RECURSIVE_RESULTS:
+                    truncated = True
+                    break
+        except Exception as exc:
+            error_message = str(exc)
+
+        GLib.idle_add(
+            self._complete_recursive_search,
+            generation,
+            results,
+            error_message,
+            truncated,
+        )
+
+    def _complete_recursive_search(
+        self,
+        generation: int,
+        file_items: List[FileItem],
+        error_message: str,
+        truncated: bool,
+    ):
+        if generation != self._recursive_search_generation:
+            return False
+
+        self._recursive_search_in_progress = False
+        self._showing_recursive_results = self.recursive_search_enabled
+
+        if hasattr(self, "search_entry"):
+            self.search_entry.set_sensitive(True)
+            self._update_search_placeholder()
+
+        if not self.recursive_search_enabled:
+            return False
+
+        if truncated and not error_message:
+            error_message = _(
+                "Showing first {count} results. Refine your search to narrow the list."
+            ).format(count=MAX_RECURSIVE_RESULTS)
+
+        if error_message:
+            self.logger.warning(f"Recursive search warning: {error_message}")
+
+        self.store.splice(0, self.store.get_n_items(), file_items)
+        self.combined_filter.changed(Gtk.FilterChange.DIFFERENT)
+
+        if (
+            self.selection_model
+            and file_items
+            and self.selection_model.get_n_items() > 0
+        ):
+            self.selection_model.select_item(0, True)
+            if hasattr(self, "column_view") and self.column_view:
+                self.column_view.scroll_to(
+                    0, None, Gtk.ListScrollFlags.NONE, None
+                )
+
+        return False
 
     def _on_search_activate(self, search_entry):
         """Handle activation (Enter key) on the search entry to open selected item."""
@@ -932,8 +1151,10 @@ class FileManager(GObject.Object):
             if self.bound_terminal:
                 self.bound_terminal.grab_focus()
 
-    def refresh(self, path: str = None, source: str = "filemanager"):
-        if hasattr(self, "search_entry"):
+    def refresh(
+        self, path: str = None, source: str = "filemanager", clear_search: bool = True
+    ):
+        if hasattr(self, "search_entry") and clear_search:
             self.search_entry.set_text("")
         if path:
             self.current_path = path
@@ -1022,6 +1243,8 @@ class FileManager(GObject.Object):
             self.logger.error(f"Error listing files: {error_message}")
 
         self.store.splice(0, self.store.get_n_items(), file_items)
+        self._showing_recursive_results = False
+        self._recursive_search_in_progress = False
 
         # If a non-cd command was pending, the completion of the refresh confirms it.
         if self._pending_command and self._pending_command["type"] != "cd":
@@ -1033,10 +1256,23 @@ class FileManager(GObject.Object):
         self._restore_search_entry(source)
         return False
 
+    def _update_search_placeholder(self, override: Optional[str] = None) -> None:
+        if not hasattr(self, "search_entry"):
+            return
+        if override is not None:
+            self.search_entry.set_placeholder_text(override)
+            return
+        if self._recursive_search_in_progress:
+            self.search_entry.set_placeholder_text(_("Searching..."))
+        elif self.recursive_search_enabled:
+            self.search_entry.set_placeholder_text(_("Recursive filter..."))
+        else:
+            self.search_entry.set_placeholder_text(_("Filter files..."))
+
     def _restore_search_entry(self, source: str = "filemanager"):
         if hasattr(self, "search_entry"):
             self.search_entry.set_sensitive(True)
-            self.search_entry.set_placeholder_text(_("Filter files..."))
+            self._update_search_placeholder()
 
         if hasattr(self, "combined_filter"):
             self.combined_filter.changed(Gtk.FilterChange.DIFFERENT)
