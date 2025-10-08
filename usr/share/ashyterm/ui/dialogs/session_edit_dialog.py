@@ -366,7 +366,7 @@ class SessionEditDialog(BaseDialog):
         controls_box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=6)
         controls_box.set_halign(Gtk.Align.START)
         add_button = Gtk.Button(
-            icon_name="list-add-symbolic", label=_("Add Forward"), css_classes=["flat"]
+            icon_name="list-add-symbolic", label=_("Add"), css_classes=["flat"]
         )
         add_button.connect("clicked", self._on_add_port_forward_clicked)
         controls_box.append(add_button)
