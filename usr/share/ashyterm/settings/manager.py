@@ -583,7 +583,9 @@ class SettingsManager:
         terminal.set_enable_sixel(self.get("sixel_enabled", True))
         terminal.set_allow_hyperlink(True)  # OSC8 hyperlinks always enabled
         terminal.set_word_char_exceptions(self.get("word_char_exceptions", "-_.:/~"))
-        terminal.set_enable_a11y(self.get("accessibility_enabled", True))
+        # VTE 0.76+ removed set_enable_a11y (accessibility is always enabled)
+        if hasattr(terminal, 'set_enable_a11y'):
+            terminal.set_enable_a11y(self.get("accessibility_enabled", True))
         terminal.set_cell_height_scale(self.get("line_spacing", 1.0))
         terminal.set_bold_is_bright(self.get("bold_is_bright", True))
 
