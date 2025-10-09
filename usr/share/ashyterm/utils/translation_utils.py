@@ -22,9 +22,9 @@ if 'APPIMAGE' in os.environ or 'APPDIR' in os.environ:
     if os.path.isdir(appimage_locale):
         locale_dir = appimage_locale
 
-# Configure the translation text domain for comm-ashyterm
-gettext.bindtextdomain("comm-ashyterm", locale_dir)
-gettext.textdomain("comm-ashyterm")
+# Configure the translation text domain for ashyterm
+gettext.bindtextdomain("ashyterm", locale_dir)
+gettext.textdomain("ashyterm")
 
 # Export _ directly as the translation function
 _ = gettext.gettext
