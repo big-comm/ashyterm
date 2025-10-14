@@ -8,6 +8,8 @@ import gi
 
 gi.require_version("Gtk", "4.0")
 gi.require_version("Adw", "1")
+gi.require_version("Pango", "1.0")
+from gi.repository import Pango
 
 try:
     from ..utils.exceptions import ConfigError, ErrorSeverity
@@ -105,6 +107,45 @@ class DefaultSettings:
     """Default application settings."""
 
     @staticmethod
+    def get_available_default_font() -> str:
+        """
+        Detects the first available monospace font on the system.
+        
+        Tests fonts in priority order and returns the first one that exists.
+        Falls back to generic 'Monospace' if none are found.
+        
+        Returns:
+            str: Font description string (e.g., "Ubuntu Mono 12")
+        """
+        # Font priority list: Nerd Fonts -> Popular distro fonts -> Universal fallback
+        font_candidates = [
+            "Noto Mono Nerd Font Medium 12",
+            "JetBrains Mono 12",
+            "Ubuntu Mono 12",
+            "DejaVu Sans Mono 12",
+            "Liberation Mono 12",
+            "Source Code Pro 12",
+            "Monospace 10",  # Generic fallback - always available
+        ]
+        
+        try:
+            for font_string in font_candidates:
+                try:
+                    font_desc = Pango.FontDescription.from_string(font_string)
+                    # Check if font family exists and is valid
+                    if font_desc and font_desc.get_family():
+                        return font_string
+                except Exception:
+                    continue
+            
+            # Ultimate fallback if all checks fail
+            return "Monospace 10"
+            
+        except Exception:
+            # If Pango import fails, return safe default
+            return "Monospace 10"
+
+    @staticmethod
     def get_defaults() -> Dict[str, Any]:
         return {
             # General Appearance
@@ -112,7 +153,7 @@ class DefaultSettings:
             "color_scheme": 1,
             "transparency": 16,
             "headerbar_transparency": 12,
-            "font": "Noto Mono Nerd Font Medium 12",
+            "font": DefaultSettings.get_available_default_font(),
             "line_spacing": 1.0,
             "bold_is_bright": False,
             "tab_alignment": "center",
