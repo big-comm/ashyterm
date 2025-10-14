@@ -4,7 +4,7 @@ import gi
 
 gi.require_version("Gtk", "4.0")
 gi.require_version("Adw", "1")
-from gi.repository import Adw, GObject, Gtk
+from gi.repository import Adw, GObject, Gtk, GLib
 
 from ...settings.manager import SettingsManager
 from ...utils.logger import get_logger
@@ -287,7 +287,10 @@ class PreferencesDialog(Adw.PreferencesWindow):
         word_chars_row.connect("changed", self._on_word_chars_changed)
         selection_group.add(word_chars_row)
 
-        shell_group = Adw.PreferencesGroup(title=_("Shell &amp; Bell"))
+        shell_group = Adw.PreferencesGroup()
+        shell_group.set_title(
+            GLib.markup_escape_text(_("Shell & Bell"))
+        )
         page.add(shell_group)
 
         login_shell_row = Adw.SwitchRow(
