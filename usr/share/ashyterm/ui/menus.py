@@ -164,6 +164,8 @@ class MainApplicationMenu:
             {"label": _("Preferences"), "action": "win.preferences"},
             {"label": _("Keyboard Shortcuts"), "action": "win.shortcuts"},
             {"label": _("About"), "action": "app.about"},
+            {"label": _("Export Sessions…"), "action": "win.export-sessions"},
+            {"label": _("Import Sessions…"), "action": "win.import-sessions"},
             "---",
             {"label": _("Quit"), "action": "app.quit"},
         ]
@@ -172,6 +174,8 @@ class MainApplicationMenu:
             "win.preferences",
             "win.shortcuts",
             "app.about",
+            "win.export-sessions",
+            "win.import-sessions",
         }
         app = parent_window.get_application()
 
