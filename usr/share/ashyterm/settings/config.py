@@ -129,12 +129,33 @@ class DefaultSettings:
         ]
         
         try:
+            # Get list of all available font families on the system
+            from gi.repository import PangoCairo
+            import cairo
+            
+            # Create a temporary surface to get font map
+            surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, 1, 1)
+            context = cairo.Context(surface)
+            pango_context = PangoCairo.create_context(context)
+            font_map = pango_context.get_font_map()
+            
+            # Get all available font families
+            available_families = set()
+            for family in font_map.list_families():
+                family_name = family.get_name().lower()
+                available_families.add(family_name)
+            
+            # Test each candidate font
             for font_string in font_candidates:
                 try:
                     font_desc = Pango.FontDescription.from_string(font_string)
-                    # Check if font family exists and is valid
-                    if font_desc and font_desc.get_family():
-                        return font_string
+                    family_name = font_desc.get_family()
+                    
+                    if family_name:
+                        # Check if font family exists in system
+                        family_lower = family_name.lower()
+                        if family_lower in available_families:
+                            return font_string
                 except Exception:
                     continue
             
@@ -142,7 +163,7 @@ class DefaultSettings:
             return "Monospace 10"
             
         except Exception:
-            # If Pango import fails, return safe default
+            # If any import/context creation fails, return safe default
             return "Monospace 10"
 
     @staticmethod
