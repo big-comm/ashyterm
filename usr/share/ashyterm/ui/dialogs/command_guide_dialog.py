@@ -499,6 +499,8 @@ class CommandGuideDialog(Adw.Window):
         for command in self.all_commands:
             if custom_only and not command.is_custom:
                 continue
+            if search_term and command.is_general_description:
+                continue
 
             show = not search_term or (
                 search_term in command.name.lower()
