@@ -12,7 +12,7 @@ class FileItem(GObject.GObject):
     """Data model for an item in the file manager."""
 
     LS_RE = re.compile(
-        r"^(?P<perms>[\w-]{10})\s+"
+        r"^(?P<perms>[-dlpscb?][rwxSsTt-]{9})(?:[.+@])?\s+"
         r"(?P<links>\d+)\s+"
         r"(?P<owner>[\w\d._-]+)\s+"
         r"(?P<group>[\w\d._-]+)\s+"
@@ -163,4 +163,3 @@ class FileItem(GObject.GObject):
             is_link=data["perms"].startswith("l"),
             link_target=data.get("link_target", ""),
         )
-
