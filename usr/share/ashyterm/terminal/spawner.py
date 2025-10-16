@@ -482,7 +482,8 @@ class ProcessSpawner:
             "ConnectTimeout": "30",
             "ServerAliveInterval": "30",
             "ServerAliveCountMax": "3",
-            "StrictHostKeyChecking": "ask",
+            "StrictHostKeyChecking": "accept-new",
+            "UpdateHostKeys": "yes",
             "ControlMaster": "auto",
             "ControlPath": self._get_ssh_control_path(session),
         }
