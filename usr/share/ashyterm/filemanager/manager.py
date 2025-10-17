@@ -1430,6 +1430,16 @@ class FileManager(GObject.Object):
                 self._navigate_up_directory()
                 return Gdk.EVENT_STOP
 
+        elif keyval in (Gdk.KEY_Delete, Gdk.KEY_KP_Delete):
+            selected_items = [
+                item
+                for item in self.get_selected_items()
+                if item.name != ".."
+            ]
+            if selected_items:
+                self._on_delete_action(None, None, selected_items)
+                return Gdk.EVENT_STOP
+
         return Gdk.EVENT_PROPAGATE
 
     def _on_column_view_key_released(self, controller, keyval, _keycode, state):
