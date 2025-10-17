@@ -129,13 +129,19 @@ class CommTerminalApp(Adw.Application):
     def _on_startup(self, app) -> None:
         """Handle application startup."""
         try:
-            # Adds a search path for custom icons. This serves as a fallback
-            # if the system's icon theme does not provide the required icons.
+            # Adds a search path for custom icons. Our icons should take precedence,
+            # falling back to the system theme only if an icon is missing locally.
             custom_icon_path = "/usr/share/ashyterm/icons"
             if os.path.isdir(custom_icon_path):
                 icon_theme = Gtk.IconTheme.get_for_display(Gdk.Display.get_default())
-                icon_theme.add_search_path(custom_icon_path)
-                self.logger.info(f"Added fallback icon search path: {custom_icon_path}")
+                existing_paths = list(icon_theme.get_search_path() or [])
+                if custom_icon_path in existing_paths:
+                    existing_paths.remove(custom_icon_path)
+                new_paths = [custom_icon_path] + existing_paths
+                icon_theme.set_search_path(new_paths)
+                self.logger.info(
+                    f"Prioritized bundled icon search path: {custom_icon_path}"
+                )
 
             self.logger.info("Application startup initiated")
             log_app_start()
