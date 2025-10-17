@@ -62,6 +62,7 @@ class SessionEditDialog(BaseDialog):
         self.port_forwardings: list[dict] = [
             dict(item) for item in self.editing_session.port_forwardings
         ]
+        self.x11_switch: Optional[Adw.SwitchRow] = None
         self._setup_ui()
         self.connect("map", self._on_map)
         self.logger.info(
@@ -255,6 +256,7 @@ class SessionEditDialog(BaseDialog):
         self._create_ssh_key_section(ssh_group)
         self._create_password_section(ssh_group)
         self._create_post_login_command_section(ssh_group)
+        self._create_x11_section(ssh_group)
         self.ssh_box = ssh_group
         parent.append(ssh_group)
         self._create_sftp_section(parent)
@@ -348,6 +350,16 @@ class SessionEditDialog(BaseDialog):
         self.post_login_switch = toggle_row
         toggle_row.connect("notify::active", self._on_post_login_toggle)
         self._update_post_login_command_state()
+
+    def _create_x11_section(self, parent: Adw.PreferencesGroup) -> None:
+        x11_row = Adw.SwitchRow(
+            title=_("Enable X11 Forwarding"),
+            subtitle=_("Allow starting programs in graphical mode (X11)"),
+        )
+        x11_row.set_active(self.editing_session.x11_forwarding)
+        x11_row.connect("notify::active", self._on_x11_toggled)
+        parent.add(x11_row)
+        self.x11_switch = x11_row
 
     def _create_port_forward_section(self, parent: Gtk.Box) -> None:
         group = Adw.PreferencesGroup(
@@ -755,6 +767,9 @@ class SessionEditDialog(BaseDialog):
         entry.remove_css_class("error")
         self._mark_changed()
 
+    def _on_x11_toggled(self, switch_row: Adw.SwitchRow, _param) -> None:
+        self._mark_changed()
+
     def _on_sftp_toggle(self, switch_row: Adw.SwitchRow, _param) -> None:
         self._mark_changed()
         self._update_sftp_state()
@@ -774,6 +789,10 @@ class SessionEditDialog(BaseDialog):
             self.ssh_box.set_visible(is_ssh)
             if hasattr(self, "test_button"):
                 self.test_button.set_visible(is_ssh)
+            if self.x11_switch:
+                self.x11_switch.set_sensitive(is_ssh)
+                if not is_ssh:
+                    self.x11_switch.set_active(False)
             if self.sftp_group:
                 self.sftp_group.set_visible(is_ssh)
         self._update_port_forward_state()
@@ -1045,6 +1064,11 @@ class SessionEditDialog(BaseDialog):
             if session_data["session_type"] == "ssh"
             else []
         )
+        session_data["x11_forwarding"] = (
+            self.x11_switch.get_active()
+            if self.x11_switch and session_data["session_type"] == "ssh"
+            else False
+        )
 
         raw_password = ""
         if session_data["session_type"] == "ssh":
@@ -1070,6 +1094,7 @@ class SessionEditDialog(BaseDialog):
             })
             session_data["sftp_session_enabled"] = False
             session_data["port_forwardings"] = []
+            session_data["x11_forwarding"] = False
 
         updated_session = SessionItem.from_dict(session_data)
         if updated_session.uses_password_auth() and raw_password:

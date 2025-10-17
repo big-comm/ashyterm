@@ -409,6 +409,9 @@ class ProcessSpawner:
                 "StrictHostKeyChecking": "no",
                 "PasswordAuthentication": "no" if session.uses_key_auth() else "yes",
             }
+            if getattr(session, "x11_forwarding", False):
+                ssh_options["ForwardX11"] = "yes"
+                ssh_options["ForwardX11Trusted"] = "yes"
 
             cmd = self.command_builder.build_remote_command(
                 "ssh",
@@ -418,6 +421,8 @@ class ProcessSpawner:
                 key_file=session.auth_value if session.uses_key_auth() else None,
                 options=ssh_options,
             )
+            if getattr(session, "x11_forwarding", False) and "-Y" not in cmd:
+                cmd.insert(1, "-Y")
             cmd.append("exit")
 
             if session.uses_password_auth() and session.auth_value:
@@ -495,6 +500,9 @@ class ProcessSpawner:
             ssh_options.pop("ControlMaster", None)
             ssh_options.pop("ControlPath", None)
             ssh_options["ExitOnForwardFailure"] = "yes"
+        if command_type == "ssh" and getattr(session, "x11_forwarding", False):
+            ssh_options["ForwardX11"] = "yes"
+            ssh_options["ForwardX11Trusted"] = "yes"
 
         cmd = self.command_builder.build_remote_command(
             command_type,
@@ -505,6 +513,11 @@ class ProcessSpawner:
             options=ssh_options,
             remote_path=sftp_remote_path if command_type == "sftp" else None,
         )
+
+        if command_type == "ssh" and getattr(session, "x11_forwarding", False):
+            if "-Y" not in cmd:
+                insertion_index = 1 if len(cmd) > 1 else len(cmd)
+                cmd.insert(insertion_index, "-Y")
 
         if command_type == "ssh" and getattr(session, "port_forwardings", None):
             for tunnel in session.port_forwardings:
@@ -571,6 +584,9 @@ class ProcessSpawner:
         }
         if persist_duration > 0:
             ssh_options["ControlPersist"] = str(persist_duration)
+        if getattr(session, "x11_forwarding", False):
+            ssh_options["ForwardX11"] = "yes"
+            ssh_options["ForwardX11Trusted"] = "yes"
 
         cmd = self.command_builder.build_remote_command(
             "ssh",
@@ -580,6 +596,10 @@ class ProcessSpawner:
             key_file=session.auth_value if session.uses_key_auth() else None,
             options=ssh_options,
         )
+
+        if getattr(session, "x11_forwarding", False) and "-Y" not in cmd:
+            insertion_index = 1 if len(cmd) > 1 else len(cmd)
+            cmd.insert(insertion_index, "-Y")
 
         remote_command_str = " ".join(shlex.quote(part) for part in command)
         cmd.append(remote_command_str)
