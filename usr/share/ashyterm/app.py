@@ -12,7 +12,7 @@ gi.require_version("Gtk", "4.0")
 gi.require_version("Adw", "1")
 from pathlib import Path
 
-from gi.repository import Adw, Gio, GLib, Gtk
+from gi.repository import Adw, Gdk, Gio, GLib, Gtk
 
 from .settings.config import (
     APP_ID,
@@ -129,6 +129,14 @@ class CommTerminalApp(Adw.Application):
     def _on_startup(self, app) -> None:
         """Handle application startup."""
         try:
+            # Adds a search path for custom icons. This serves as a fallback
+            # if the system's icon theme does not provide the required icons.
+            custom_icon_path = "/usr/share/ashyterm/icons"
+            if os.path.isdir(custom_icon_path):
+                icon_theme = Gtk.IconTheme.get_for_display(Gdk.Display.get_default())
+                icon_theme.add_search_path(custom_icon_path)
+                self.logger.info(f"Added fallback icon search path: {custom_icon_path}")
+
             self.logger.info("Application startup initiated")
             log_app_start()
             if not self._initialize_subsystems():
