@@ -528,6 +528,7 @@ class TabManager:
 
     def _on_tab_right_click(self, _gesture, _n_press, x, y, tab_widget):
         menu = Gio.Menu()
+        menu.append(_("Duplicate Tab"), "win.duplicate-tab")
         menu.append(_("Detach Tab"), "win.detach-tab")
         popover = Gtk.PopoverMenu.new_from_model(menu)
         if popover.get_parent() is not None:
@@ -537,6 +538,14 @@ class TabManager:
         page = self.pages.get(tab_widget)
         if page:
             action_group = Gio.SimpleActionGroup()
+
+            duplicate_action = Gio.SimpleAction.new("duplicate-tab", None)
+            duplicate_action.connect(
+                "activate",
+                lambda _action, _param, tab=tab_widget: self._duplicate_tab(tab),
+            )
+            action_group.add_action(duplicate_action)
+
             action = Gio.SimpleAction.new("detach-tab", None)
 
             action.connect(
@@ -554,6 +563,78 @@ class TabManager:
     def _request_detach_tab(self, page: Adw.ViewStackPage):
         if self.on_detach_tab_requested:
             self.on_detach_tab_requested(page)
+
+    def _duplicate_tab(self, tab_widget: Gtk.Box) -> None:
+        """Creates a new tab duplicating the session represented by the given tab widget."""
+        page = self.pages.get(tab_widget)
+        if not page:
+            return
+
+        terminals = self.get_all_terminals_in_page(page)
+        if not terminals:
+            self.logger.warning("Cannot duplicate tab without terminals.")
+            return
+
+        primary_terminal = terminals[0]
+        terminal_id = getattr(primary_terminal, "terminal_id", None)
+        if not terminal_id:
+            self.logger.warning("Primary terminal missing identifier; duplication aborted.")
+            return
+
+        terminal_info = self.terminal_manager.registry.get_terminal_info(terminal_id)
+        if not terminal_info:
+            self.logger.warning("Terminal info unavailable; duplication aborted.")
+            return
+
+        session = getattr(tab_widget, "session_item", None)
+        session_copy = (
+            SessionItem.from_dict(session.to_dict())
+            if isinstance(session, SessionItem)
+            else None
+        )
+
+        new_terminal = None
+        term_type = terminal_info.get("type")
+
+        try:
+            if term_type == "local":
+                working_directory = self._get_terminal_working_directory(primary_terminal)
+                new_terminal = self.create_local_tab(
+                    session=session_copy,
+                    working_directory=working_directory,
+                )
+            elif term_type == "ssh":
+                if session_copy:
+                    new_terminal = self.create_ssh_tab(session_copy)
+                else:
+                    self.logger.warning("Cannot duplicate SSH tab without session data.")
+            elif term_type == "sftp":
+                if session_copy:
+                    new_terminal = self.create_sftp_tab(session_copy)
+                else:
+                    self.logger.warning("Cannot duplicate SFTP tab without session data.")
+            else:
+                self.logger.warning(f"Unsupported terminal type for duplication: {term_type}")
+        except Exception as exc:
+            self.logger.error(
+                f"Failed to duplicate tab '{tab_widget.label_widget.get_text()}': {exc}"
+            )
+            return
+
+    def _get_terminal_working_directory(
+        self, terminal: Vte.Terminal
+    ) -> Optional[str]:
+        """Returns the terminal's current working directory path, if available."""
+        uri = terminal.get_current_directory_uri()
+        if not uri:
+            return None
+
+        try:
+            path, _ = GLib.filename_from_uri(uri)
+            return path
+        except (TypeError, ValueError) as error:
+            self.logger.debug(f"Could not resolve working directory from '{uri}': {error}")
+            return None
 
     def _is_widget_in_filemanager(self, widget: Gtk.Widget) -> bool:
         """Checks if a widget is a descendant of the FileManager's main widget."""
