@@ -735,7 +735,7 @@ msgstr ""
 # File: usr/share/ashyterm/window.py, line: 1304
 # File: usr/share/ashyterm/ui/color_scheme_dialog.py, line: 224
 # File: usr/share/ashyterm/ui/color_scheme_dialog.py, line: 582
-# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 948
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 953
 # File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 712
 # File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 739
 # File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 749
@@ -3996,7 +3996,7 @@ msgstr "Configure connection details for SSH sessions"
 
 #
 # File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 214
-# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 1118
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 1123
 msgid "Host"
 msgstr "Host"
 
@@ -4285,93 +4285,98 @@ msgid "Test Connection"
 msgstr "Test Connection"
 
 #
-# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 855
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 773
+msgid "Remote server must have X11Forwarding yes in sshd_config."
+msgstr "Remote server must have X11Forwarding yes in sshd_config."
+
+#
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 860
 msgid "Select SSH Key"
 msgstr "Select SSH Key"
 
 #
-# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 863
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 868
 msgid "File Dialog Error"
 msgstr "File Dialog Error"
 
 #
-# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 863
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 868
 msgid "Failed to open file browser"
 msgstr "Failed to open file browser"
 
 #
-# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 875
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 880
 msgid "Invalid SSH Key"
 msgstr "Invalid SSH Key"
 
 #
-# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 880
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 885
 msgid "File Selection Error"
 msgstr "File Selection Error"
 
 #
-# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 881
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 886
 #, python-brace-format
 msgid "Failed to select file: {}"
 msgstr "Failed to select file: {}"
 
 #
-# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 891
-# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 1106
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 896
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 1111
 msgid "Validation Error"
 msgstr "Validation Error"
 
 #
-# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 892
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 897
 msgid "Please fill in all required SSH fields first."
 msgstr "Please fill in all required SSH fields first."
 
 #
-# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 897
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 902
 msgid "Testing Connection..."
 msgstr "Testing Connection..."
 
 #
-# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 898
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 903
 #, python-brace-format
 msgid "Attempting to connect to {host}..."
 msgstr "Attempting to connect to {host}..."
 
 #
-# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 914
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 919
 msgid "Test Connection Error"
 msgstr "Test Connection Error"
 
 #
-# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 915
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 920
 #, python-brace-format
 msgid "Failed to start connection test: {}"
 msgstr "Failed to start connection test: {}"
 
 #
-# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 945
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 950
 msgid "Connection Successful"
 msgstr "Connection Successful"
 
 #
-# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 946
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 951
 msgid "Successfully connected to the SSH server."
 msgstr "Successfully connected to the SSH server."
 
 #
-# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 952
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 957
 msgid "Connection Failed"
 msgstr "Connection Failed"
 
 #
-# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 953
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 958
 msgid "Could not connect to the SSH server."
 msgstr "Could not connect to the SSH server."
 
 #
 # #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
 #
-# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 962
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 967
 # File: usr/share/ashyterm/ui/dialogs/folder_edit_dialog.py, line: 155
 msgid "Unsaved Changes"
 msgstr "Unsaved Changes"
@@ -4379,7 +4384,7 @@ msgstr "Unsaved Changes"
 #
 # #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
 #
-# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 963
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 968
 # File: usr/share/ashyterm/ui/dialogs/folder_edit_dialog.py, line: 156
 msgid "You have unsaved changes. Are you sure you want to cancel?"
 msgstr "You have unsaved changes. Are you sure you want to cancel?"
@@ -4387,20 +4392,20 @@ msgstr "You have unsaved changes. Are you sure you want to cancel?"
 #
 # #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
 #
-# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 992
-# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 996
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 997
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 1001
 # File: usr/share/ashyterm/ui/dialogs/folder_edit_dialog.py, line: 180
 # File: usr/share/ashyterm/ui/dialogs/folder_edit_dialog.py, line: 184
 msgid "Save Error"
 msgstr "Save Error"
 
 #
-# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 996
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 1001
 msgid "An unexpected error occurred while saving."
 msgstr "An unexpected error occurred while saving."
 
 #
-# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 1107
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 1112
 #, python-brace-format
 msgid ""
 "Session validation failed:\n"
@@ -4410,14 +4415,14 @@ msgstr ""
 "{}"
 
 #
-# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 1114
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 1119
 msgid "Session name"
 msgstr "Session name"
 
 #
 # #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
 #
-# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 1146
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 1151
 # File: usr/share/ashyterm/sessions/models.py, line: 384
 msgid "Post-login command cannot be empty when enabled."
 msgstr "Post-login command cannot be empty when enabled."
@@ -4425,20 +4430,20 @@ msgstr "Post-login command cannot be empty when enabled."
 #
 # #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
 #
-# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 1160
-# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 1168
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 1165
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 1173
 # File: usr/share/ashyterm/sessions/models.py, line: 390
 # File: usr/share/ashyterm/sessions/models.py, line: 394
 msgid "SFTP local directory must exist and be a directory."
 msgstr "SFTP local directory must exist and be a directory."
 
 #
-# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 1175
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 1180
 msgid "SSH Validation Error"
 msgstr "SSH Validation Error"
 
 #
-# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 1176
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 1181
 #, python-brace-format
 msgid ""
 "SSH configuration errors:\n"
