@@ -494,6 +494,10 @@ class ProcessSpawner:
         }
         if persist_duration > 0:
             ssh_options["ControlPersist"] = str(persist_duration)
+        if command_type == "ssh" and getattr(session, "x11_forwarding", False):
+            ssh_options.pop("ControlPersist", None)
+            ssh_options.pop("ControlMaster", None)
+            ssh_options.pop("ControlPath", None)
         if command_type == "ssh" and getattr(session, "port_forwardings", None):
             # Port forwarding sessions should tear down immediately when the terminal exits.
             ssh_options.pop("ControlPersist", None)
@@ -587,6 +591,9 @@ class ProcessSpawner:
         if getattr(session, "x11_forwarding", False):
             ssh_options["ForwardX11"] = "yes"
             ssh_options["ForwardX11Trusted"] = "yes"
+            ssh_options.pop("ControlPersist", None)
+            ssh_options.pop("ControlMaster", None)
+            ssh_options.pop("ControlPath", None)
 
         cmd = self.command_builder.build_remote_command(
             "ssh",

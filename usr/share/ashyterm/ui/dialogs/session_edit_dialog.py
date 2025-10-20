@@ -768,6 +768,11 @@ class SessionEditDialog(BaseDialog):
         self._mark_changed()
 
     def _on_x11_toggled(self, switch_row: Adw.SwitchRow, _param) -> None:
+        if switch_row.get_active() and hasattr(self.parent_window, "toast_overlay"):
+            toast = Adw.Toast(
+                title=_("Remote server must have X11Forwarding yes in sshd_config.")
+            )
+            self.parent_window.toast_overlay.add_toast(toast)
         self._mark_changed()
 
     def _on_sftp_toggle(self, switch_row: Adw.SwitchRow, _param) -> None:
