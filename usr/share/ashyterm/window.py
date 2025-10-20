@@ -736,6 +736,24 @@ class CommTerminalWindow(Adw.ApplicationWindow):
             self.toast_overlay.add_toast(Adw.Toast(title=_("No open terminals found.")))
             return
 
+        remember_choice = self.settings_manager.get("broadcast_remember_choice", False)
+        last_selection_keys = self.settings_manager.get("broadcast_last_selection", []) or []
+
+        if remember_choice and last_selection_keys:
+            selected_terminals = []
+            for terminal in all_terminals:
+                key = self._make_broadcast_terminal_key(terminal)
+                if key in last_selection_keys:
+                    selected_terminals.append(terminal)
+
+            if not selected_terminals:
+                selected_terminals = all_terminals
+
+            self._execute_broadcast(command, selected_terminals)
+            entry.set_text("")
+            self.broadcast_bar.set_search_mode(False)
+            return
+
         count = len(all_terminals)
         dialog = Adw.MessageDialog(
             transient_for=self,
@@ -788,6 +806,10 @@ class CommTerminalWindow(Adw.ApplicationWindow):
         else:
             selection_container = flow_box
 
+        remember_check = Gtk.CheckButton(label=_("Remember my choice"))
+        remember_check.set_active(remember_choice)
+        remember_check.set_halign(Gtk.Align.START)
+
         content_box = Gtk.Box(
             orientation=Gtk.Orientation.VERTICAL,
             spacing=12,
@@ -799,6 +821,7 @@ class CommTerminalWindow(Adw.ApplicationWindow):
         content_box.append(command_label)
         content_box.append(instructions_label)
         content_box.append(selection_container)
+        content_box.append(remember_check)
         dialog.set_extra_child(content_box)
 
         dialog.add_response("cancel", _("Cancel"))
@@ -807,7 +830,11 @@ class CommTerminalWindow(Adw.ApplicationWindow):
         dialog.set_response_appearance("send", Adw.ResponseAppearance.SUGGESTED)
 
         dialog.connect(
-            "response", self._on_broadcast_confirm, command, selection_controls
+            "response",
+            self._on_broadcast_confirm,
+            command,
+            selection_controls,
+            remember_check,
         )
         dialog.present()
 
@@ -817,6 +844,7 @@ class CommTerminalWindow(Adw.ApplicationWindow):
         response_id: str,
         command: str,
         selection_controls: list,
+        remember_check: Gtk.CheckButton,
     ):
         """
         Callback that executes the broadcast if the user confirms.
@@ -828,6 +856,14 @@ class CommTerminalWindow(Adw.ApplicationWindow):
                 if control.get_active()
             ]
 
+            remember = remember_check.get_active()
+            self.settings_manager.set("broadcast_remember_choice", remember)
+            if remember:
+                keys = [self._make_broadcast_terminal_key(t) for t in selected_terminals]
+                self.settings_manager.set("broadcast_last_selection", keys)
+            else:
+                self.settings_manager.set("broadcast_last_selection", [])
+
             if not selected_terminals:
                 self.toast_overlay.add_toast(
                     Adw.Toast(title=_("No tabs were selected to receive the command."))
@@ -837,25 +873,34 @@ class CommTerminalWindow(Adw.ApplicationWindow):
                 self.broadcast_bar.set_search_mode(False)
                 return
 
-            command_bytes = command.encode("utf-8") + b"\n"
-            for terminal in selected_terminals:
-                terminal.feed_child(command_bytes)
+            self._execute_broadcast(command, selected_terminals)
 
-            self.logger.info(
-                f"Broadcasted command to {len(selected_terminals)} terminals."
-            )
-            #self.toast_overlay.add_toast(
-            #    Adw.Toast(
-            #        title=_("Command sent to {count} terminals.").format(
-            #            count=len(terminals)
-            #        )
-            #    )
-            #)
         dialog.close()
 
         # Clear and hide the bar regardless of the response
         self.broadcast_entry.set_text("")
         self.broadcast_bar.set_search_mode(False)
+
+    def _execute_broadcast(self, command: str, terminals: List[Vte.Terminal]) -> None:
+        command_bytes = command.encode("utf-8") + b"\n"
+        for terminal in terminals:
+            terminal.feed_child(command_bytes)
+
+        self.logger.info(
+            f"Broadcasted command to {len(terminals)} terminals."
+        )
+
+    def _make_broadcast_terminal_key(self, terminal: Vte.Terminal) -> str:
+        page = self.tab_manager.get_page_for_terminal(terminal)
+        page_title = page.get_title() if page else ""
+        terminal_id = getattr(terminal, "terminal_id", "")
+
+        session = getattr(terminal, "ashy_session_item", None)
+        if isinstance(session, SessionItem):
+            base = f"{session.session_type}:{session.name}:{session.host}:{session.user}:{session.port}"
+        else:
+            base = page_title or str(terminal_id)
+        return base
 
     def _on_case_sensitive_changed(self, switch, param):
         """Handle case sensitive switch changes."""
