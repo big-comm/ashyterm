@@ -406,6 +406,16 @@ class CommTerminalWindow(Adw.ApplicationWindow):
             load_sessions_to_store(self.session_store, sessions_data)
             load_folders_to_store(self.folder_store, folders_data)
             self.refresh_tree()
+
+            import_result = self.session_operations.import_sessions_from_ssh_config()
+            if import_result.success:
+                self.logger.info(import_result.message)
+                self.refresh_tree()
+            elif import_result.message:
+                self.logger.debug(
+                    f"SSH config import skipped: {import_result.message}"
+                )
+
             self.logger.info(
                 f"Loaded {self.session_store.get_n_items()} sessions, "
                 f"{self.folder_store.get_n_items()} folders, "

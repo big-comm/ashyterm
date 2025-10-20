@@ -1,14 +1,17 @@
 # ashyterm/sessions/operations.py
 
+import os
 import threading
 from functools import partial
-from typing import Callable, Optional, Tuple, Union
+from pathlib import Path
+from typing import Callable, List, Optional, Tuple, Union
 
 from gi.repository import Gio
 
 from ..helpers import generate_unique_name
 from ..utils.logger import get_logger
 from ..utils.translation_utils import _
+from ..utils.ssh_config_parser import SSHConfigParser
 from .models import SessionFolder, SessionItem
 from .results import OperationResult
 from .storage import get_storage_manager
@@ -30,6 +33,8 @@ class SessionOperations:
         self.settings_manager = settings_manager
         self._operation_lock = threading.RLock()
         self.storage_manager = get_storage_manager()
+        ignored_list = self.settings_manager.get("ignored_ssh_config_hosts", []) or []
+        self._ignored_ssh_config_hosts = set(ignored_list)
 
     def _add_item(
         self,
@@ -142,6 +147,12 @@ class SessionOperations:
                 return OperationResult(
                     False, _("Failed to save after session removal.")
                 )
+
+            if getattr(session, "source", "user") == "ssh_config":
+                key = self._make_ssh_config_key(session.user, session.host, session.port)
+                if key not in self._ignored_ssh_config_hosts:
+                    self._ignored_ssh_config_hosts.add(key)
+                    self._persist_ignored_hosts()
 
             self.logger.info(f"Session removed successfully: '{session.name}'")
             return OperationResult(
@@ -262,6 +273,107 @@ class SessionOperations:
             new_item.name = generate_unique_name(new_item.name, existing_names)
             return self.add_session(new_item)
 
+    def import_sessions_from_ssh_config(
+        self, config_path: Optional[Union[str, Path]] = None
+    ) -> OperationResult:
+        """Imports SSH sessions from an OpenSSH-style config file."""
+        with self._operation_lock:
+            default_path = Path.home() / ".ssh" / "config"
+            target_path = Path(config_path).expanduser() if config_path else default_path
+
+            if not target_path.exists():
+                message = _("SSH config file not found at {path}").format(
+                    path=str(target_path)
+                )
+                self.logger.warning(message)
+                return OperationResult(False, message)
+
+            parser = SSHConfigParser()
+            try:
+                entries = parser.parse(target_path)
+            except Exception as exc:  # pragma: no cover - defensive
+                error_msg = _("Failed to parse SSH config: {error}").format(error=exc)
+                self.logger.error(error_msg)
+                return OperationResult(False, error_msg)
+
+            if not entries:
+                message = _("No host entries found in SSH config.")
+                self.logger.info(message)
+                return OperationResult(False, message)
+
+            imported_count = 0
+            warnings: List[str] = []
+            existing_names = self._get_session_names_in_folder("")
+
+            for entry in entries:
+                hostname = entry.hostname or entry.alias
+                if not hostname:
+                    warnings.append(
+                        _("Skipped host '{alias}': missing hostname.").format(
+                            alias=entry.alias
+                        )
+                    )
+                    continue
+
+                user = entry.user or ""
+                port = entry.port or 22
+                entry_key = self._make_ssh_config_key(user, hostname, port)
+
+                if entry_key in self._ignored_ssh_config_hosts:
+                    self.logger.debug(
+                        f"Skipping ignored SSH config host: {entry_key}"
+                    )
+                    continue
+
+                existing_session = self._find_existing_ssh_session(hostname, user, port)
+                if existing_session:
+                    continue
+
+                session_name = generate_unique_name(entry.alias, existing_names)
+                candidate_identity = (
+                    os.path.expanduser(entry.identity_file)
+                    if entry.identity_file
+                    else ""
+                )
+
+                session = SessionItem(
+                    name=session_name,
+                    session_type="ssh",
+                    host=hostname,
+                    user=user,
+                    port=port,
+                    auth_type="key",
+                    auth_value=candidate_identity,
+                    x11_forwarding=bool(entry.forward_x11),
+                    source="ssh_config",
+                )
+
+                result = self.add_session(session)
+                if result.success:
+                    if entry_key in self._ignored_ssh_config_hosts:
+                        self._ignored_ssh_config_hosts.remove(entry_key)
+                        self._persist_ignored_hosts()
+                    imported_count += 1
+                    existing_names.add(session_name)
+                else:
+                    warning_text = result.message or _(
+                        "Failed to import host '{alias}'."
+                    ).format(alias=entry.alias)
+                    warnings.append(warning_text)
+
+            if imported_count == 0:
+                message = _("No sessions were imported from {path}.").format(
+                    path=str(target_path)
+                )
+                self.logger.info(message)
+                return OperationResult(False, message, warnings=warnings)
+
+            success_message = _("Imported {count} session(s) from {path}.").format(
+                count=imported_count, path=str(target_path)
+            )
+            self.logger.info(success_message)
+            return OperationResult(True, success_message, warnings=warnings)
+
     def paste_item(
         self,
         item_to_paste: Union[SessionItem, SessionFolder],
@@ -380,3 +492,31 @@ class SessionOperations:
     def _get_session_names_in_folder(self, folder_path: str) -> set:
         """Gets a set of session names within a specific folder."""
         return {s.name for s in self.session_store if s.folder_path == folder_path}
+
+    def _find_existing_ssh_session(
+        self, hostname: str, user: str, port: int
+    ) -> Optional[SessionItem]:
+        for session in self.session_store:
+            if not isinstance(session, SessionItem):
+                continue
+            if not session.is_ssh():
+                continue
+            if (
+                session.host == hostname
+                and session.user == user
+                and session.port == port
+            ):
+                return session
+        return None
+
+    def _make_ssh_config_key(self, user: str, host: str, port: int) -> str:
+        user_part = user or ""
+        return f"{user_part}@{host}:{port}"
+
+    def _persist_ignored_hosts(self) -> None:
+        try:
+            self.settings_manager.set(
+                "ignored_ssh_config_hosts", sorted(self._ignored_ssh_config_hosts)
+            )
+        except Exception as exc:  # pragma: no cover - defensive
+            self.logger.warning(f"Failed to persist ignored SSH config hosts: {exc}")

@@ -294,6 +294,7 @@ class WindowActions:
         self.window.file_manager_button.set_active(
             not self.window.file_manager_button.get_active()
         )
+
     def toggle_broadcast(self, *_args):
         self.window.broadcast_button.set_active(
             not self.window.broadcast_button.get_active()

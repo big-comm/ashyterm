@@ -106,6 +106,7 @@ class SessionItem(BaseModel):
         sftp_remote_directory: str = "",
         port_forwardings: Optional[List[Dict[str, Any]]] = None,
         x11_forwarding: bool = False,
+        source: str = "user",
     ):
         super().__init__()
         self.logger = get_logger("ashyterm.sessions.model")
@@ -137,6 +138,7 @@ class SessionItem(BaseModel):
         if port_forwardings:
             self.port_forwardings = port_forwardings
         self._x11_forwarding = bool(x11_forwarding)
+        self._source = source or "user"
 
     @property
     def children(self) -> Optional[Gio.ListStore]:
@@ -370,6 +372,17 @@ class SessionItem(BaseModel):
             self._x11_forwarding = new_value
             self._mark_modified()
 
+    @property
+    def source(self) -> str:
+        return self._source
+
+    @source.setter
+    def source(self, value: str):
+        new_value = value or "user"
+        if self._source != new_value:
+            self._source = new_value
+            self._mark_modified()
+
     def get_validation_errors(self) -> List[str]:
         """Returns a list of validation error messages."""
         errors = []
@@ -432,6 +445,7 @@ class SessionItem(BaseModel):
             "x11_forwarding": self.x11_forwarding,
             "created_at": self._created_at,
             "modified_at": self._modified_at,
+            "source": self._source,
         }
 
     @classmethod
@@ -452,6 +466,7 @@ class SessionItem(BaseModel):
             sftp_remote_directory=data.get("sftp_remote_directory", ""),
             port_forwardings=data.get("port_forwardings", []),
             x11_forwarding=data.get("x11_forwarding", False),
+            source=data.get("source", "user"),
         )
         # __init__ sets default metadata; overwrite with loaded data
         session._auth_value = data.get("auth_value", "")
