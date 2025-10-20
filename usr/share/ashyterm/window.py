@@ -240,6 +240,8 @@ class CommTerminalWindow(Adw.ApplicationWindow):
         self.broadcast_bar = self.ui_builder.broadcast_bar
         self.broadcast_button = self.ui_builder.broadcast_button
         self.broadcast_entry = self.ui_builder.broadcast_entry
+        self._broadcast_remember_choice = False
+        self._broadcast_last_selection: List[str] = []
         # Assign the correctly named widgets
         self.terminal_search_entry = self.ui_builder.terminal_search_entry
         self.search_entry = self.ui_builder.sidebar_search_entry
@@ -736,8 +738,8 @@ class CommTerminalWindow(Adw.ApplicationWindow):
             self.toast_overlay.add_toast(Adw.Toast(title=_("No open terminals found.")))
             return
 
-        remember_choice = self.settings_manager.get("broadcast_remember_choice", False)
-        last_selection_keys = self.settings_manager.get("broadcast_last_selection", []) or []
+        remember_choice = self._broadcast_remember_choice
+        last_selection_keys = self._broadcast_last_selection
 
         if remember_choice and last_selection_keys:
             selected_terminals = []
@@ -857,12 +859,13 @@ class CommTerminalWindow(Adw.ApplicationWindow):
             ]
 
             remember = remember_check.get_active()
-            self.settings_manager.set("broadcast_remember_choice", remember)
+            self._broadcast_remember_choice = remember
             if remember:
-                keys = [self._make_broadcast_terminal_key(t) for t in selected_terminals]
-                self.settings_manager.set("broadcast_last_selection", keys)
+                self._broadcast_last_selection = [
+                    self._make_broadcast_terminal_key(t) for t in selected_terminals
+                ]
             else:
-                self.settings_manager.set("broadcast_last_selection", [])
+                self._broadcast_last_selection = []
 
             if not selected_terminals:
                 self.toast_overlay.add_toast(
