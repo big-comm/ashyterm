@@ -5421,6 +5421,47 @@ msgstr "セッションが正常に移動しました。"
 msgid "Cannot move a folder into itself."
 msgstr "フォルダーを自分自身に移動することはできません。"
 # 
+# File: usr/share/ashyterm/sessions/operations.py, line: 285
+#: NEEDS WORK
+#, python-brace-format
+msgid "SSH config file not found at {path}"
+msgstr "{path} に SSH 設定ファイルが見つかりませんでした。"
+# 
+# File: usr/share/ashyterm/sessions/operations.py, line: 295
+#: NEEDS WORK
+#, python-brace-format
+msgid "Failed to parse SSH config: {error}"
+msgstr "SSH設定の解析に失敗しました: {error}"
+# 
+# File: usr/share/ashyterm/sessions/operations.py, line: 300
+#: NEEDS WORK
+msgid "No host entries found in SSH config."
+msgstr "SSH設定にホストエントリが見つかりません。"
+# 
+# File: usr/share/ashyterm/sessions/operations.py, line: 312
+#: NEEDS WORK
+#, python-brace-format
+msgid "Skipped host '{alias}': missing hostname."
+msgstr "ホスト '{alias}' をスキップしました: ホスト名がありません。"
+# 
+# File: usr/share/ashyterm/sessions/operations.py, line: 360
+#: NEEDS WORK
+#, python-brace-format
+msgid "Failed to import host '{alias}'."
+msgstr "ホスト '{alias}' のインポートに失敗しました。"
+# 
+# File: usr/share/ashyterm/sessions/operations.py, line: 365
+#: NEEDS WORK
+#, python-brace-format
+msgid "No sessions were imported from {path}."
+msgstr "{path}からセッションはインポートされませんでした。"
+# 
+# File: usr/share/ashyterm/sessions/operations.py, line: 371
+#: NEEDS WORK
+#, python-brace-format
+msgid "Imported {count} session(s) from {path}."
+msgstr "{path}から{count}セッションをインポートしました。"
+# 
 # File: usr/share/ashyterm/sessions/operations.py, line: 260
 #: NEEDS WORK
 msgid "Unsupported item type for paste operation."
