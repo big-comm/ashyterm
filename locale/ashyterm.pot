@@ -437,7 +437,7 @@ msgstr  ""
 # #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
 #
 # File: usr/share/ashyterm/terminal/tabs.py, line: 54
-# File: usr/share/ashyterm/window.py, line: 141
+# File: usr/share/ashyterm/window.py, line: 130
 msgid   "Move to New Tab"
 msgstr  ""
 
@@ -448,7 +448,7 @@ msgstr  ""
 #
 # File: usr/share/ashyterm/terminal/tabs.py, line: 60
 # File: usr/share/ashyterm/ui/menus.py, line: 298
-# File: usr/share/ashyterm/window.py, line: 129
+# File: usr/share/ashyterm/window.py, line: 118
 msgid   "Close Pane"
 msgstr  ""
 
@@ -624,10 +624,10 @@ msgstr  ""
 # File: usr/share/ashyterm/ui/window_ui.py, line: 429
 # File: usr/share/ashyterm/filemanager/manager.py, line: 2166
 # File: usr/share/ashyterm/filemanager/manager.py, line: 2299
-# File: usr/share/ashyterm/window.py, line: 84
-# File: usr/share/ashyterm/window.py, line: 1833
-# File: usr/share/ashyterm/window.py, line: 1845
-# File: usr/share/ashyterm/window.py, line: 1848
+# File: usr/share/ashyterm/window.py, line: 73
+# File: usr/share/ashyterm/window.py, line: 1631
+# File: usr/share/ashyterm/window.py, line: 1643
+# File: usr/share/ashyterm/window.py, line: 1646
 msgid   "Ashy Terminal"
 msgstr  ""
 
@@ -759,11 +759,11 @@ msgstr  ""
 # File: usr/share/ashyterm/filemanager/manager.py, line: 1892
 # File: usr/share/ashyterm/filemanager/manager.py, line: 2256
 # File: usr/share/ashyterm/filemanager/manager.py, line: 2357
-# File: usr/share/ashyterm/window.py, line: 569
-# File: usr/share/ashyterm/window.py, line: 1337
-# File: usr/share/ashyterm/window.py, line: 1701
-# File: usr/share/ashyterm/window.py, line: 1738
-# File: usr/share/ashyterm/window.py, line: 2006
+# File: usr/share/ashyterm/window.py, line: 558
+# File: usr/share/ashyterm/window.py, line: 1135
+# File: usr/share/ashyterm/window.py, line: 1499
+# File: usr/share/ashyterm/window.py, line: 1536
+# File: usr/share/ashyterm/window.py, line: 1804
 # File: usr/share/ashyterm/app.py, line: 406
 # File: usr/share/ashyterm/app.py, line: 486
 # File: usr/share/ashyterm/app.py, line: 527
@@ -832,7 +832,7 @@ msgstr  ""
 # File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 883
 # File: usr/share/ashyterm/filemanager/manager.py, line: 1050
 # File: usr/share/ashyterm/filemanager/manager.py, line: 2070
-# File: usr/share/ashyterm/window.py, line: 1870
+# File: usr/share/ashyterm/window.py, line: 1668
 # File: usr/share/ashyterm/app.py, line: 575
 msgid   "OK"
 msgstr  ""
@@ -1104,11 +1104,8 @@ msgstr  ""
 #
 # #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
 #
-# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
-#
 # File: usr/share/ashyterm/ui/menus.py, line: 286
 # File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 35
-# File: usr/share/ashyterm/window.py, line: 847
 msgid   "Copy"
 msgstr  ""
 
@@ -1239,7 +1236,7 @@ msgstr  ""
 # #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
 #
 # File: usr/share/ashyterm/ui/ssh_dialogs.py, line: 43
-# File: usr/share/ashyterm/window.py, line: 684
+# File: usr/share/ashyterm/window.py, line: 655
 msgid   "Close"
 msgstr  ""
 
@@ -2429,7 +2426,7 @@ msgstr  ""
 # #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
 #
 # File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 319
-# File: usr/share/ashyterm/window.py, line: 679
+# File: usr/share/ashyterm/window.py, line: 650
 msgid   "AI Assistant"
 msgstr  ""
 
@@ -2452,7 +2449,7 @@ msgstr  ""
 # #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
 #
 # File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 339
-# File: usr/share/ashyterm/window.py, line: 546
+# File: usr/share/ashyterm/window.py, line: 535
 msgid   "Provider"
 msgstr  ""
 
@@ -2795,7 +2792,7 @@ msgstr  ""
 
 #
 # File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 781
-msgid   "Groq model identifier (for example: llama-3.1-8b-instant)."
+msgid   "Model identifier (for example: llama-3.1-8b-instant)."
 msgstr  ""
 
 #
@@ -5233,282 +5230,267 @@ msgid   "Cancel All Transfers"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/window.py, line: 444
+# File: usr/share/ashyterm/window.py, line: 433
 msgid   "Data Loading Error"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/window.py, line: 446
+# File: usr/share/ashyterm/window.py, line: 435
 msgid   "Failed to load saved sessions and folders. Starting with empty "
         "configuration."
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/window.py, line: 530
+# File: usr/share/ashyterm/window.py, line: 519
 msgid   "Enable the AI assistant in Preferences > Terminal > AI Assistant."
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/window.py, line: 539
+# File: usr/share/ashyterm/window.py, line: 528
 msgid   "No active terminal available."
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/window.py, line: 547
+# File: usr/share/ashyterm/window.py, line: 536
 msgid   "Model"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/window.py, line: 548
+# File: usr/share/ashyterm/window.py, line: 537
 msgid   "API key"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/window.py, line: 554
+# File: usr/share/ashyterm/window.py, line: 543
 #, python-brace-format
 msgid   "Configure {items} in Preferences > Terminal > AI Assistant."
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/window.py, line: 565
+# File: usr/share/ashyterm/window.py, line: 554
 msgid   "Ask the AI Assistant"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/window.py, line: 566
+# File: usr/share/ashyterm/window.py, line: 555
 msgid   "Describe the Linux task or question you need help with."
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/window.py, line: 570
+# File: usr/share/ashyterm/window.py, line: 559
 msgid   "Send"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/window.py, line: 598
+# File: usr/share/ashyterm/window.py, line: 587
 msgid   "Please enter a question for the assistant."
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/window.py, line: 604
+# File: usr/share/ashyterm/window.py, line: 593
 msgid   "AI assistant is processing, please wait..."
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/window.py, line: 680
+# File: usr/share/ashyterm/window.py, line: 651
 msgid   "Here is what I found."
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/window.py, line: 697
+# File: usr/share/ashyterm/window.py, line: 685
 msgid   "Response"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/window.py, line: 724
+# File: usr/share/ashyterm/window.py, line: 706
 msgid   "Suggested Commands"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/window.py, line: 781
+# File: usr/share/ashyterm/window.py, line: 756
 msgid   "Run"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/window.py, line: 795
-msgid   "Code Suggestions"
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/window.py, line: 813
-msgid   "Code"
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/window.py, line: 886
-msgid   "Code copied to clipboard."
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/window.py, line: 992
+# File: usr/share/ashyterm/window.py, line: 790
 msgid   "Command is empty, nothing to run."
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/window.py, line: 998
+# File: usr/share/ashyterm/window.py, line: 796
 msgid   "Command sent to the terminal."
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/window.py, line: 1004
+# File: usr/share/ashyterm/window.py, line: 802
 msgid   "Failed to execute the command."
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/window.py, line: 1073
+# File: usr/share/ashyterm/window.py, line: 871
 msgid   "Session Validation Error"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/window.py, line: 1074
+# File: usr/share/ashyterm/window.py, line: 872
 #, python-brace-format
 msgid   "Session validation failed:\n"
         "{errors}"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/window.py, line: 1130
+# File: usr/share/ashyterm/window.py, line: 928
 msgid   "Cannot detach the last tab."
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/window.py, line: 1232
+# File: usr/share/ashyterm/window.py, line: 1030
 #, python-brace-format
 msgid   "Terminal {id}"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/window.py, line: 1246
+# File: usr/share/ashyterm/window.py, line: 1044
 msgid   "No open terminals found."
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/window.py, line: 1270
+# File: usr/share/ashyterm/window.py, line: 1068
 msgid   "Confirm sending of command"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/window.py, line: 1272
+# File: usr/share/ashyterm/window.py, line: 1070
 #, python-brace-format
 msgid   "Select which of the <b>{count}</b> open terminals should receive the "
         "command below."
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/window.py, line: 1287
+# File: usr/share/ashyterm/window.py, line: 1085
 msgid   "Choose the tabs that should run this command:"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/window.py, line: 1319
+# File: usr/share/ashyterm/window.py, line: 1117
 msgid   "Remember my choice"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/window.py, line: 1338
+# File: usr/share/ashyterm/window.py, line: 1136
 msgid   "Send Command"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/window.py, line: 1380
+# File: usr/share/ashyterm/window.py, line: 1178
 msgid   "No tabs were selected to receive the command."
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/window.py, line: 1491
+# File: usr/share/ashyterm/window.py, line: 1289
 msgid   "No active terminal to search in."
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/window.py, line: 1526
-# File: usr/share/ashyterm/window.py, line: 1573
+# File: usr/share/ashyterm/window.py, line: 1324
+# File: usr/share/ashyterm/window.py, line: 1371
 msgid   "Invalid search pattern."
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/window.py, line: 1601
-# File: usr/share/ashyterm/window.py, line: 1634
+# File: usr/share/ashyterm/window.py, line: 1399
+# File: usr/share/ashyterm/window.py, line: 1432
 msgid   "No more matches found."
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/window.py, line: 1669
+# File: usr/share/ashyterm/window.py, line: 1467
 msgid   "Initialization Error"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/window.py, line: 1670
+# File: usr/share/ashyterm/window.py, line: 1468
 #, python-brace-format
 msgid   "Failed to initialize terminal: {error}"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/window.py, line: 1694
+# File: usr/share/ashyterm/window.py, line: 1492
 msgid   "Save Current Session?"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/window.py, line: 1696
+# File: usr/share/ashyterm/window.py, line: 1494
 msgid   "Do you want to restore these tabs the next time you open Ashy "
         "Terminal?"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/window.py, line: 1700
+# File: usr/share/ashyterm/window.py, line: 1498
 msgid   "Don't Save"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/window.py, line: 1702
+# File: usr/share/ashyterm/window.py, line: 1500
 msgid   "Save and Close"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/window.py, line: 1733
-# File: usr/share/ashyterm/window.py, line: 1739
+# File: usr/share/ashyterm/window.py, line: 1531
+# File: usr/share/ashyterm/window.py, line: 1537
 msgid   "Close Window"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/window.py, line: 1735
+# File: usr/share/ashyterm/window.py, line: 1533
 msgid   "This window has active SSH connections. Closing will disconnect "
         "them. Are you sure?"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/window.py, line: 1812
+# File: usr/share/ashyterm/window.py, line: 1610
 msgid   "Invalid SSH Target"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/window.py, line: 1813
+# File: usr/share/ashyterm/window.py, line: 1611
 msgid   "Could not parse the provided SSH connection string."
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/window.py, line: 1947
+# File: usr/share/ashyterm/window.py, line: 1745
 msgid   "Remove this temporary file"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/window.py, line: 1974
+# File: usr/share/ashyterm/window.py, line: 1772
 msgid   "No temporary files found."
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/window.py, line: 1977
+# File: usr/share/ashyterm/window.py, line: 1775
 msgid   "Clear All Temporary Files"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/window.py, line: 1999
+# File: usr/share/ashyterm/window.py, line: 1797
 msgid   "Clear All Temporary Files?"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/window.py, line: 2001
+# File: usr/share/ashyterm/window.py, line: 1799
 msgid   "This will remove all locally downloaded files for remote editing. "
         "Any unsaved changes in your editor will be lost. This action cannot "
         "be undone."
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/window.py, line: 2007
+# File: usr/share/ashyterm/window.py, line: 1805
 msgid   "Clear All"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/window.py, line: 2065
+# File: usr/share/ashyterm/window.py, line: 1863
 msgid   "No active terminal to send command to."
 msgstr  ""
 
