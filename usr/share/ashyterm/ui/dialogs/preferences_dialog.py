@@ -781,6 +781,13 @@ class PreferencesDialog(Adw.PreferencesWindow):
                 _("Groq model identifier (for example: llama-3.1-8b-instant).")
             )
             self.ai_api_key_row.set_subtitle(_("Groq API key."))
+        elif provider == "gemini":
+            self.ai_model_row.set_visible(True)
+            self.ai_model_entry.set_placeholder_text(_("gemini-2.5-flash"))
+            self.ai_model_row.set_subtitle(
+                _("Gemini model identifier (for example: gemini-2.5-flash).")
+            )
+            self.ai_api_key_row.set_subtitle(_("Google AI Studio API key."))
         else:
             self.ai_model_row.set_visible(True)
             self.ai_model_entry.set_placeholder_text(_("model-name"))
