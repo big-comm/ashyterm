@@ -220,7 +220,7 @@ class DefaultSettings:
             # AI Assistant
             "ai_assistant_enabled": False,
             "ai_assistant_provider": "groq",
-            "ai_assistant_model": "llama-3.3-70b-versatile",
+            "ai_assistant_model": "llama-3.1-8b-instant",
             "ai_assistant_api_key": "",
             # Search Settings
             "search_case_sensitive": False,

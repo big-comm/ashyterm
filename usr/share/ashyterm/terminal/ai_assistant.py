@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import textwrap
 import threading
 import weakref
 from typing import Any, Dict, List, Optional, Tuple
@@ -28,16 +29,16 @@ class TerminalAiAssistant:
         " Answer only questions related to Linux, system administration, networking, command-line"
         " tools, shells (bash, sh, zsh), scripts, Python, Perl, and automation tasks."
         " For any topic outside that scope, politely state that you do not have knowledge about it."
-        " Always respond in English unless the user explicitly asks for another language."
+        " Always respond in Portuguese unless the user explicitly asks for another language."
         " The response MUST be a JSON object with the fields: 'reply' (required string with the"
-        " explanation), 'commands' (optional list of objects containing 'command' and"
-        " 'description' for standalone terminal commands that do not depend on scripts) and"
-        " 'code_snippets' (optional list of objects containing 'language', 'code', and"
-        " 'description' for shell, Python, Perl, or other code snippets). Do not include any text"
-        " outside the JSON. Use 'commands' only for commands the user could run directly without"
-        " relying on a provided script. Use 'code_snippets' for any requested code. Ensure all"
-        " commands are safe and clearly explained. Remember that the BigLinux and BigCommunity"
-        " distributions are based on Manjaro and take that into account when replying."
+        " explanation) and 'commands' (optional list of objects containing 'command' and"
+        " 'description' for standalone terminal commands that do not depend on scripts). Do not"
+        " include any text outside the JSON. Use 'commands' only for commands the user could run"
+        " directly without relying on a provided script. Never provide code snippets or a"
+        " 'code_snippets' field. If the user requests code or scripts, reply with a short apology and"
+        " explain that you are not configured to generate code."
+        " Remember that the BigLinux and"
+        " BigCommunity distributions are based on Manjaro and take that into account when replying."
     )
 
     def __init__(self, window, settings_manager, terminal_manager):
@@ -134,6 +135,21 @@ class TerminalAiAssistant:
 
     def _process_request_thread(self, terminal_id: int, prompt: str) -> None:
         try:
+            if self._should_decline_code_request(prompt):
+                self._build_messages(terminal_id, prompt)
+                refusal = (
+                    "Desculpe, no momento não estou programado para gerar trechos de código."
+                )
+                self._record_assistant_message(terminal_id, refusal)
+                GLib.idle_add(
+                    self._display_assistant_reply,
+                    terminal_id,
+                    refusal,
+                    [],
+                    [],
+                )
+                return
+
             messages = self._build_messages(terminal_id, prompt)
             config = self._load_configuration()
             content = self._perform_request(config, messages)
@@ -289,9 +305,15 @@ class TerminalAiAssistant:
 
         message = choices[0].get("message") if isinstance(choices[0], dict) else None
         content = message.get("content") if isinstance(message, dict) else None
-        if not content:
+        if isinstance(content, list):
+            content = "\n".join(
+                part.get("text", "")
+                for part in content
+                if isinstance(part, dict) and part.get("text")
+            )
+        if not isinstance(content, str) or not content.strip():
             raise RuntimeError("Groq did not return any usable content.")
-        return content
+        return content.strip()
 
     def _build_gemini_conversation(
         self, messages: List[Dict[str, str]]
@@ -339,19 +361,15 @@ class TerminalAiAssistant:
 
         try:
             payload = json.loads(reply_text)
-            if isinstance(payload, dict):
-                reply_candidate = payload.get("reply")
-                if isinstance(reply_candidate, str) and reply_candidate.strip():
-                    reply_text = reply_candidate.strip()
-                code_field = payload.get("code_snippets")
-                code_snippets = self._normalize_code_snippets(code_field)
-                commands_field = payload.get("commands")
-                commands = self._normalize_commands(commands_field)
-                if code_snippets:
-                    commands = []
         except json.JSONDecodeError:
-            # Fallback to treating the raw content as the reply
-            pass
+            payload = self._extract_json_object(reply_text)
+
+        if isinstance(payload, dict):
+            reply_candidate = payload.get("reply")
+            if isinstance(reply_candidate, str) and reply_candidate.strip():
+                reply_text = reply_candidate.strip()
+            commands_field = payload.get("commands")
+            commands = self._normalize_commands(commands_field)
 
         return reply_text, commands, code_snippets
 
@@ -362,6 +380,25 @@ class TerminalAiAssistant:
             if len(lines) >= 2 and lines[-1].strip().startswith("```"):
                 clean = "\n".join(lines[1:-1]).strip()
         return clean
+
+    def _extract_json_object(self, text: str) -> Optional[Dict[str, Any]]:
+        start = text.find("{")
+        while start != -1:
+            brace_level = 0
+            for end in range(start, len(text)):
+                char = text[end]
+                if char == "{":
+                    brace_level += 1
+                elif char == "}":
+                    brace_level -= 1
+                    if brace_level == 0:
+                        candidate = text[start : end + 1]
+                        try:
+                            return json.loads(candidate)
+                        except json.JSONDecodeError:
+                            break
+            start = text.find("{", start + 1)
+        return None
 
     def _normalize_commands(self, value: Any) -> List[Dict[str, str]]:
         commands: List[Dict[str, str]] = []
@@ -394,11 +431,15 @@ class TerminalAiAssistant:
                 code = item.get("code") or ""
                 if not isinstance(code, str) or not code.strip():
                     continue
+                code = textwrap.dedent(code).strip()
+                code, fenced_language = self._strip_code_fence(code)
                 language = item.get("language") or ""
+                if not language and fenced_language:
+                    language = fenced_language
                 description = item.get("description") or ""
                 snippets.append(
                     {
-                        "code": code.strip(),
+                        "code": code,
                         "language": language.strip() if isinstance(language, str) else "",
                         "description": description.strip()
                         if isinstance(description, str)
@@ -406,14 +447,79 @@ class TerminalAiAssistant:
                     }
                 )
             elif isinstance(item, str) and item.strip():
+                code_text = textwrap.dedent(item).strip()
+                code_text, fenced_language = self._strip_code_fence(code_text)
                 snippets.append(
                     {
-                        "code": item.strip(),
-                        "language": "",
+                        "code": code_text,
+                        "language": fenced_language,
                         "description": "",
                     }
                 )
         return snippets
+
+    @staticmethod
+    def _strip_code_fence(code: str) -> Tuple[str, str]:
+        """Remove Markdown fences and return code plus detected language."""
+        trimmed = code.strip()
+        if not trimmed.startswith("```"):
+            return trimmed, ""
+        lines = trimmed.splitlines()
+        if not lines:
+            return trimmed, ""
+        first_line = lines[0]
+        language = first_line[3:].strip()
+        body_lines = lines[1:]
+        while body_lines and body_lines[-1].strip() == "```":
+            body_lines.pop()
+        stripped_code = "\n".join(body_lines).strip()
+        return stripped_code or trimmed, language
+
+    @staticmethod
+    def _should_decline_code_request(prompt: str) -> bool:
+        """Detect requests that explicitly ask for code or scripts."""
+        if not isinstance(prompt, str):
+            return False
+        lowered = prompt.lower()
+        if not lowered:
+            return False
+        code_terms = {
+            "codigo",
+            "código",
+            "code",
+            "script",
+            "shell script",
+            "programa",
+            "programação",
+            "function",
+            "função",
+            "classe",
+            "snippet",
+            "trecho de código",
+            "escreva um",
+        }
+        request_terms = {
+            "gere",
+            "gerar",
+            "crie",
+            "criar",
+            "escreva",
+            "escrever",
+            "forneça",
+            "mostrar",
+            "mostre",
+            "faça",
+            "montar",
+            "monta",
+            "me dê",
+            "me mostre",
+            "me forneça",
+            "poderia",
+            "pode",
+        }
+        has_code_term = any(term in lowered for term in code_terms) or "```" in lowered
+        has_request_term = any(term in lowered for term in request_terms)
+        return has_code_term and has_request_term
 
     def _record_assistant_message(self, terminal_id: int, message: str) -> None:
         with self._lock:

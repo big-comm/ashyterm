@@ -10,15 +10,6 @@ gi.require_version("Adw", "1")
 gi.require_version("Vte", "3.91")
 from gi.repository import Adw, Gdk, Gio, GLib, GObject, Gtk, Pango, Vte
 
-try:
-    gi.require_version("GtkSource", "5")
-    from gi.repository import GtkSource
-
-    GTK_SOURCE_AVAILABLE = True
-except (ValueError, ImportError):
-    GtkSource = None
-    GTK_SOURCE_AVAILABLE = False
-
 from .sessions.models import LayoutItem, SessionFolder, SessionItem
 from .sessions.operations import SessionOperations
 from .sessions.storage import (
@@ -62,8 +53,6 @@ class CommTerminalWindow(Adw.ApplicationWindow):
         self.layouts: List[LayoutItem] = []
         self.active_temp_files = weakref.WeakKeyDictionary()
         self.command_guide_dialog = None  # MODIFIED: For singleton dialog
-        self._code_view_css_applied = False
-        self._code_view_css_provider: Optional[Gtk.CssProvider] = None
 
         # Search state tracking
         self.current_search_terminal = None
@@ -636,9 +625,8 @@ class CommTerminalWindow(Adw.ApplicationWindow):
         terminal: Vte.Terminal,
         reply: str,
         commands: List[Dict[str, str]],
-        code_snippets: List[Dict[str, str]],
+        _code_snippets: List[Dict[str, str]],
     ) -> None:
-        self._ensure_code_view_css()
         reply_lines = reply.splitlines() or [reply]
         max_line_length = max(len(line) for line in reply_lines)
         total_lines = len(reply_lines)
@@ -651,26 +639,9 @@ class CommTerminalWindow(Adw.ApplicationWindow):
                 )
             elif isinstance(item, str):
                 max_line_length = max(max_line_length, len(item))
-        for snippet in code_snippets:
-            if not isinstance(snippet, dict):
-                continue
-            code_text = snippet.get("code", "") or ""
-            description_text = snippet.get("description", "") or ""
-            language_text = snippet.get("language", "") or ""
-            if code_text:
-                code_lines = code_text.splitlines() or [code_text]
-                total_lines += len(code_lines)
-                max_line_length = max(
-                    max_line_length,
-                    *(len(line) for line in code_lines if line),
-                )
-            max_line_length = max(
-                max_line_length, len(description_text), len(language_text)
-            )
-
         approx_width = max(780, min(1200, max_line_length * 7 + 320))
-        base_height = 560 if code_snippets else 500
-        if total_lines < 10 and not code_snippets:
+        base_height = 500
+        if total_lines < 10:
             base_height = 460
         height = min(820, max(420, base_height))
 
@@ -693,13 +664,25 @@ class CommTerminalWindow(Adw.ApplicationWindow):
             margin_end=12,
         )
 
-        reply_label = Gtk.Label(
-            label=_("Response"),
-            halign=Gtk.Align.START,
-        )
-        reply_label.add_css_class("heading")
-        content_box.append(reply_label)
+        def add_info_block(title: str, margin_top: int = 0) -> Gtk.Box:
+            frame = Gtk.Frame()
+            frame.add_css_class("card")
+            frame.set_hexpand(True)
+            if margin_top:
+                frame.set_margin_top(margin_top)
+            inner = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=6)
+            inner.set_margin_top(12)
+            inner.set_margin_bottom(12)
+            inner.set_margin_start(16)
+            inner.set_margin_end(16)
+            heading = Gtk.Label(label=title, halign=Gtk.Align.START)
+            heading.add_css_class("heading")
+            inner.append(heading)
+            frame.set_child(inner)
+            content_box.append(frame)
+            return inner
 
+        reply_box = add_info_block(_("Response"))
         reply_view = Gtk.TextView(
             editable=False,
             cursor_visible=False,
@@ -717,17 +700,10 @@ class CommTerminalWindow(Adw.ApplicationWindow):
         )
         reply_scrolled.set_min_content_height(max(140, min(300, len(reply_lines) * 20)))
         reply_scrolled.set_child(reply_view)
-        content_box.append(reply_scrolled)
+        reply_box.append(reply_scrolled)
 
         if commands:
-            commands_label = Gtk.Label(
-                label=_("Suggested Commands"),
-                halign=Gtk.Align.START,
-                margin_top=6,
-            )
-            commands_label.add_css_class("heading")
-            content_box.append(commands_label)
-
+            commands_box = add_info_block(_("Suggested Commands"), margin_top=6)
             for command_info in commands:
                 command_text = ""
                 description = ""
@@ -748,7 +724,6 @@ class CommTerminalWindow(Adw.ApplicationWindow):
                     spacing=6,
                     hexpand=True,
                 )
-
                 info_box = Gtk.Box(
                     orientation=Gtk.Orientation.VERTICAL,
                     spacing=2,
@@ -788,72 +763,7 @@ class CommTerminalWindow(Adw.ApplicationWindow):
                 )
                 row.append(run_button)
 
-                content_box.append(row)
-
-        if code_snippets:
-            code_header = Gtk.Label(
-                label=_("Code Suggestions"),
-                halign=Gtk.Align.START,
-                margin_top=12,
-            )
-            code_header.add_css_class("heading")
-            content_box.append(code_header)
-
-            for snippet in code_snippets:
-                code_text = snippet.get("code", "")
-                if not code_text:
-                    continue
-                language = snippet.get("language", "")
-                description = snippet.get("description", "")
-
-                info_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=4)
-                info_box.set_hexpand(True)
-
-                title_label = Gtk.Label(
-                    label=language if language else _("Code"),
-                    halign=Gtk.Align.START,
-                )
-                title_label.add_css_class("heading")
-                info_box.append(title_label)
-
-                if description:
-                    desc_label = Gtk.Label(
-                        label=description,
-                        halign=Gtk.Align.START,
-                        wrap=True,
-                        wrap_mode=Pango.WrapMode.WORD_CHAR,
-                    )
-                    desc_label.add_css_class("dim-label")
-                    info_box.append(desc_label)
-
-                code_view = self._create_code_view(code_text, language)
-                code_scrolled = Gtk.ScrolledWindow()
-                code_scrolled.set_hexpand(True)
-                code_scrolled.set_vexpand(False)
-                code_lines = code_text.splitlines()
-                code_min_height = max(160, min(320, max(1, len(code_lines)) * 18))
-                code_scrolled.set_min_content_height(code_min_height)
-                code_scrolled.set_policy(
-                    Gtk.PolicyType.AUTOMATIC, Gtk.PolicyType.AUTOMATIC
-                )
-                code_scrolled.set_child(code_view)
-                info_box.append(code_scrolled)
-
-                actions_row = Gtk.Box(
-                    orientation=Gtk.Orientation.HORIZONTAL,
-                    spacing=6,
-                    halign=Gtk.Align.END,
-                )
-                copy_button = Gtk.Button(label=_("Copy"))
-                copy_button.connect(
-                    "clicked",
-                    self._on_ai_code_copy_clicked,
-                    code_text,
-                )
-                actions_row.append(copy_button)
-                info_box.append(actions_row)
-
-                content_box.append(info_box)
+                commands_box.append(row)
 
         dialog.set_extra_child(content_box)
 
@@ -872,118 +782,6 @@ class CommTerminalWindow(Adw.ApplicationWindow):
     ) -> None:
         if self._execute_ai_command(terminal, command):
             dialog.destroy()
-
-    def _on_ai_code_copy_clicked(self, _button: Gtk.Button, code: str) -> None:
-        display = Gdk.Display.get_default()
-        if display:
-            clipboard = display.get_clipboard()
-            bytes_data = GLib.Bytes.new(code.encode("utf-8"))
-            provider = Gdk.ContentProvider.new_for_bytes(
-                "text/plain;charset=utf-8", bytes_data
-            )
-            clipboard.set_content(provider)
-            self.toast_overlay.add_toast(
-                Adw.Toast(title=_("Code copied to clipboard."))
-            )
-
-    def _create_code_view(self, code_text: str, language: str) -> Gtk.Widget:
-        if GTK_SOURCE_AVAILABLE and GtkSource is not None:
-            buffer = GtkSource.Buffer()
-            lang_manager = GtkSource.LanguageManager.get_default()
-            lang_id = self._map_language_id(language)
-            if lang_manager and lang_id:
-                lang = lang_manager.get_language(lang_id)
-                if lang:
-                    buffer.set_language(lang)
-            buffer.set_highlight_syntax(True)
-            scheme_manager = GtkSource.StyleSchemeManager.get_default()
-            if scheme_manager:
-                scheme = (
-                    scheme_manager.get_scheme("oblivion")
-                    or scheme_manager.get_scheme("classic-dark")
-                    or scheme_manager.get_scheme("tango")
-                )
-                if scheme:
-                    buffer.set_style_scheme(scheme)
-            buffer.set_text(code_text)
-            view = GtkSource.View.new_with_buffer(buffer)
-            view.set_editable(False)
-            view.set_cursor_visible(False)
-            view.set_wrap_mode(Gtk.WrapMode.NONE)
-            view.set_monospace(True)
-            view.set_hexpand(True)
-            view.set_vexpand(False)
-            view.set_show_line_numbers(True)
-            view.set_highlight_current_line(False)
-            view.add_css_class("code-view")
-            return view
-
-        text_view = Gtk.TextView(editable=False, cursor_visible=False)
-        text_view.set_wrap_mode(Gtk.WrapMode.NONE)
-        text_view.set_monospace(True)
-        text_view.set_hexpand(True)
-        text_view.set_vexpand(False)
-        text_buffer = text_view.get_buffer()
-        text_buffer.set_text(code_text)
-        text_view.add_css_class("code-view")
-        return text_view
-
-    def _map_language_id(self, language: str) -> Optional[str]:
-        if not language:
-            return None
-        lang = language.lower().strip()
-        mapping = {
-            "bash": "sh",
-            "shell": "sh",
-            "sh": "sh",
-            "zsh": "sh",
-            "ksh": "sh",
-            "fish": "fish",
-            "python": "python",
-            "py": "python",
-            "perl": "perl",
-            "ruby": "ruby",
-            "lua": "lua",
-            "php": "php",
-            "js": "javascript",
-            "javascript": "javascript",
-            "typescript": "typescript",
-            "json": "json",
-            "yaml": "yaml",
-            "dockerfile": "dockerfile",
-            "make": "makefile",
-        }
-        return mapping.get(lang, lang if lang else None)
-
-    def _ensure_code_view_css(self) -> None:
-        if self._code_view_css_applied:
-            return
-        css = b"""
-        .code-view {
-            background-color: #1e1e1e;
-            color: #d4d4d4;
-            border-radius: 6px;
-            padding: 8px;
-        }
-        .code-view text selection {
-            background-color: rgba(255, 255, 255, 0.15);
-            color: #ffffff;
-        }
-        """
-        provider = Gtk.CssProvider()
-        try:
-            provider.load_from_data(css)
-            display = Gdk.Display.get_default()
-            if display:
-                Gtk.StyleContext.add_provider_for_display(
-                    display,
-                    provider,
-                    Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION,
-                )
-                self._code_view_css_provider = provider
-                self._code_view_css_applied = True
-        except GLib.Error as exc:
-            self.logger.debug(f"Failed to load code view CSS: {exc}")
 
     def _execute_ai_command(self, terminal: Vte.Terminal, command: str) -> bool:
         command = (command or "").strip()
