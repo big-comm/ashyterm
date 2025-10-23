@@ -21,7 +21,8 @@ from ..utils.logger import get_logger
 class TerminalAiAssistant:
     """Coordinates conversations with an external AI service."""
 
-    DEFAULT_MODEL = "llama-3.3-70b-versatile"
+    DEFAULT_GEMINI_MODEL = "gemini-2.5-flash"
+    DEFAULT_GROQ_MODEL = "llama-3.1-8b-instant"
     _SYSTEM_PROMPT = (
         "You are the AshyTerm Assistant, a Linux specialist operating inside a terminal."
         " Answer only questions related to Linux, system administration, networking, command-line"
@@ -62,7 +63,7 @@ class TerminalAiAssistant:
         if not provider:
             missing.append("provider")
             return missing
-        if provider == "groq":
+        if provider in {"groq", "gemini"}:
             if not api_key:
                 missing.append("api_key")
         else:
@@ -181,7 +182,9 @@ class TerminalAiAssistant:
                 "Select a provider in Preferences > Terminal > AI Assistant."
             )
         if config["provider"] == "groq" and not config["model"]:
-            config["model"] = self.DEFAULT_MODEL
+            config["model"] = self.DEFAULT_GROQ_MODEL
+        elif config["provider"] == "gemini" and not config["model"]:
+            config["model"] = self.DEFAULT_GEMINI_MODEL
         return config
 
     def _perform_request(
@@ -190,9 +193,65 @@ class TerminalAiAssistant:
         provider = config["provider"]
         if provider == "groq":
             return self._perform_groq_request(config, messages)
+        if provider == "gemini":
+            return self._perform_gemini_request(config, messages)
         raise RuntimeError(
             f"Provider '{provider}' is not supported in this version."
         )
+
+    def _perform_gemini_request(
+        self, config: Dict[str, str], messages: List[Dict[str, str]]
+    ) -> str:
+        api_key = config.get("api_key", "").strip()
+        if not api_key:
+            raise RuntimeError("Configure the Gemini API key in Preferences.")
+
+        model = config.get("model", "").strip() or self.DEFAULT_GEMINI_MODEL
+
+        system_instruction, contents = self._build_gemini_conversation(messages)
+        url = f"https://generativelanguage.googleapis.com/v1beta/models/{model}:generateContent"
+        payload: Dict[str, Any] = {"contents": contents}
+        if system_instruction:
+            payload["system_instruction"] = {"parts": [{"text": system_instruction}]}
+
+        headers = {
+            "Content-Type": "application/json",
+            "x-goog-api-key": api_key,
+        }
+
+        try:
+            response = requests.post(url, headers=headers, json=payload, timeout=60)
+        except requests.RequestException as exc:
+            raise RuntimeError(f"Failed to query the Gemini service: {exc}") from exc
+
+        if response.status_code >= 400:
+            raise RuntimeError(
+                f"HTTP error {response.status_code}: {response.text.strip()}"
+            )
+
+        try:
+            response_data = response.json()
+        except ValueError as exc:
+            raise RuntimeError("Gemini returned an invalid JSON response.") from exc
+
+        candidates = response_data.get("candidates") or []
+        if not candidates:
+            raise RuntimeError("The server response did not contain any suggestions.")
+
+        collected: List[str] = []
+        for candidate in candidates:
+            content = candidate.get("content") if isinstance(candidate, dict) else None
+            parts = content.get("parts") if isinstance(content, dict) else None
+            if not parts:
+                continue
+            for part in parts:
+                if isinstance(part, dict) and part.get("text"):
+                    collected.append(part["text"])
+
+        if collected:
+            return "\n".join(collected)
+
+        raise RuntimeError("Gemini did not return any usable content.")
 
     def _perform_groq_request(
         self, config: Dict[str, str], messages: List[Dict[str, str]]
@@ -201,7 +260,7 @@ class TerminalAiAssistant:
         if not api_key:
             raise RuntimeError("Configure the Groq API key in Preferences.")
 
-        model = config.get("model", "").strip() or self.DEFAULT_MODEL
+        model = config.get("model", "").strip() or self.DEFAULT_GROQ_MODEL
 
         payload_messages = self._build_openai_messages(messages)
         url = "https://api.groq.com/openai/v1/chat/completions"
@@ -233,6 +292,28 @@ class TerminalAiAssistant:
         if not content:
             raise RuntimeError("Groq did not return any usable content.")
         return content
+
+    def _build_gemini_conversation(
+        self, messages: List[Dict[str, str]]
+    ) -> Tuple[str, List[Dict[str, Any]]]:
+        system_instruction = ""
+        contents: List[Dict[str, Any]] = []
+        for message in messages:
+            role = message.get("role", "user")
+            text = message.get("content", "")
+            if not text:
+                continue
+            if role == "system" and not system_instruction:
+                system_instruction = text
+                continue
+            mapped_role = "model" if role == "assistant" else "user"
+            contents.append({
+                "role": mapped_role,
+                "parts": [{"text": text}],
+            })
+        if not contents:
+            contents.append({"role": "user", "parts": [{"text": ""}]})
+        return system_instruction, contents
 
     def _build_openai_messages(
         self, messages: List[Dict[str, str]]

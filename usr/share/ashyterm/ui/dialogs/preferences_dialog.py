@@ -340,7 +340,8 @@ class PreferencesDialog(Adw.PreferencesWindow):
             subtitle=_("Select which AI service to use."),
         )
         self._ai_provider_options = [
-            ("groq", _("Groq (LLaMA 3)")),
+            ("groq", _("Groq")),
+            ("gemini", _("Gemini")),
         ]
         provider_model = Gtk.StringList.new(
             [label for _pid, label in self._ai_provider_options]
@@ -359,12 +360,12 @@ class PreferencesDialog(Adw.PreferencesWindow):
 
         self.ai_model_row = Adw.ActionRow(
             title=_("Model Identifier"),
-            subtitle=_("Example: llama-3.3-70b-versatile."),
+            subtitle=_("Examples: llama-3.1-8b-instant, gemini-2.5-flash."),
         )
         self.ai_model_entry = Gtk.Entry(
             text=self.settings_manager.get("ai_assistant_model", "")
         )
-        self.ai_model_entry.set_placeholder_text(_("llama-3.3-70b-versatile"))
+        self.ai_model_entry.set_placeholder_text(_("llama-3.1-8b-instant"))
         self.ai_model_entry.connect("changed", self._on_ai_model_changed)
         self.ai_model_row.add_suffix(self.ai_model_entry)
         self.ai_model_row.set_activatable_widget(self.ai_model_entry)
@@ -775,9 +776,9 @@ class PreferencesDialog(Adw.PreferencesWindow):
     def _update_ai_provider_ui(self, provider: str) -> None:
         if provider == "groq":
             self.ai_model_row.set_visible(True)
-            self.ai_model_entry.set_placeholder_text(_("llama-3.3-70b-versatile"))
+            self.ai_model_entry.set_placeholder_text(_("llama-3.1-8b-instant"))
             self.ai_model_row.set_subtitle(
-                _("Groq model identifier (for example: llama-3.3-70b-versatile).")
+                _("Groq model identifier (for example: llama-3.1-8b-instant).")
             )
             self.ai_api_key_row.set_subtitle(_("Groq API key."))
         else:
