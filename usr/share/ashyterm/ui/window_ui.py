@@ -339,6 +339,13 @@ class WindowUIBuilder:
             #icon_name="emblem-shared-symbolic", tooltip_text=_("Send Command to All Tabs")
             icon_name="utilities-terminal-symbolic", tooltip_text=_("Send Command to All Tabs")
         )
+        self.ai_assistant_button = Gtk.Button(
+            icon_name="avatar-default-symbolic",
+            tooltip_text=_("Ask AI Assistant (Ctrl+Shift+I)"),
+        )
+        self.ai_assistant_button.connect(
+            "clicked", lambda _btn: self.window._on_ai_assistant_requested()
+        )
         self.cleanup_button = Gtk.MenuButton(
             icon_name="user-trash-symbolic",
             tooltip_text=_("Manage Temporary Files"),
@@ -378,6 +385,7 @@ class WindowUIBuilder:
             self.command_guide_button.add_css_class("flipped-icon")
             self.search_button.add_css_class("flipped-icon")
             self.broadcast_button.add_css_class("flipped-icon")
+            self.ai_assistant_button.add_css_class("flipped-icon")
             self.cleanup_button.add_css_class("flipped-icon")
             self.menu_button.add_css_class("flipped-icon")
             self.new_tab_button.add_css_class("flipped-icon")
@@ -386,6 +394,7 @@ class WindowUIBuilder:
             header_bar.pack_end(self.file_manager_button)
             header_bar.pack_end(self.command_guide_button)
             header_bar.pack_end(self.broadcast_button)
+            header_bar.pack_end(self.ai_assistant_button)
             header_bar.pack_end(self.search_button)
             header_bar.pack_end(self.cleanup_button)
             header_bar.pack_start(self.menu_button)
@@ -396,6 +405,7 @@ class WindowUIBuilder:
             header_bar.pack_start(self.file_manager_button)
             header_bar.pack_start(self.command_guide_button)
             header_bar.pack_start(self.broadcast_button)
+            header_bar.pack_start(self.ai_assistant_button)
             header_bar.pack_start(self.search_button)
             header_bar.pack_start(self.cleanup_button)
             header_bar.pack_end(self.menu_button)

@@ -1,14 +1,23 @@
 # ashyterm/window.py
 
 import weakref
-from typing import List
+from typing import Dict, List, Optional
 
 import gi
 
 gi.require_version("Gtk", "4.0")
 gi.require_version("Adw", "1")
 gi.require_version("Vte", "3.91")
-from gi.repository import Adw, Gdk, Gio, GLib, GObject, Gtk, Vte
+from gi.repository import Adw, Gdk, Gio, GLib, GObject, Gtk, Pango, Vte
+
+try:
+    gi.require_version("GtkSource", "5")
+    from gi.repository import GtkSource
+
+    GTK_SOURCE_AVAILABLE = True
+except (ValueError, ImportError):
+    GtkSource = None
+    GTK_SOURCE_AVAILABLE = False
 
 from .sessions.models import LayoutItem, SessionFolder, SessionItem
 from .sessions.operations import SessionOperations
@@ -22,6 +31,7 @@ from .settings.manager import SettingsManager
 from .state.window_state import WindowStateManager
 from .terminal.manager import TerminalManager
 from .terminal.tabs import TabManager
+from .terminal.ai_assistant import TerminalAiAssistant
 from .ui.actions import WindowActions
 from .ui.dialogs.command_guide_dialog import CommandGuideDialog
 from .ui.sidebar_manager import SidebarManager
@@ -52,6 +62,8 @@ class CommTerminalWindow(Adw.ApplicationWindow):
         self.layouts: List[LayoutItem] = []
         self.active_temp_files = weakref.WeakKeyDictionary()
         self.command_guide_dialog = None  # MODIFIED: For singleton dialog
+        self._code_view_css_applied = False
+        self._code_view_css_provider: Optional[Gtk.CssProvider] = None
 
         # Search state tracking
         self.current_search_terminal = None
@@ -193,6 +205,9 @@ class CommTerminalWindow(Adw.ApplicationWindow):
 
         # UI/View-Model Layer
         self.terminal_manager = TerminalManager(self, self.settings_manager)
+        self.ai_assistant = TerminalAiAssistant(
+            self, self.settings_manager, self.terminal_manager
+        )
         self.session_tree = SessionTreeView(
             self,
             self.session_store,
@@ -461,6 +476,7 @@ class CommTerminalWindow(Adw.ApplicationWindow):
         prev_tab_shortcut = self.settings_manager.get_shortcut("previous-tab")
         split_h_shortcut = self.settings_manager.get_shortcut("split-horizontal")
         split_v_shortcut = self.settings_manager.get_shortcut("split-vertical")
+        ai_shortcut = self.settings_manager.get_shortcut("ai-assistant")
 
         # Check if the pressed key combination matches one of our dynamic shortcuts.
         if accel_string and accel_string == next_tab_shortcut:
@@ -477,6 +493,9 @@ class CommTerminalWindow(Adw.ApplicationWindow):
         if accel_string and accel_string == split_v_shortcut:
             if terminal := self.tab_manager.get_selected_terminal():
                 self.tab_manager.split_vertical(terminal)
+            return Gdk.EVENT_STOP
+        if accel_string and accel_string == ai_shortcut:
+            self._on_ai_assistant_requested()
             return Gdk.EVENT_STOP
 
         # Keep the existing Alt+Number logic for quick tab switching.
@@ -500,8 +519,497 @@ class CommTerminalWindow(Adw.ApplicationWindow):
                 return Gdk.EVENT_STOP
         return Gdk.EVENT_PROPAGATE
 
+    def _on_ai_assistant_requested(self, *_args) -> None:
+        if not getattr(self, "ai_assistant", None):
+            return
+
+        if not self.settings_manager.get("ai_assistant_enabled", False):
+            self.toast_overlay.add_toast(
+                Adw.Toast(
+                    title=_(
+                        "Enable the AI assistant in Preferences > Terminal > AI Assistant."
+                    )
+                )
+            )
+            return
+
+        terminal = self.tab_manager.get_selected_terminal()
+        if not terminal:
+            self.toast_overlay.add_toast(
+                Adw.Toast(title=_("No active terminal available."))
+            )
+            return
+
+        missing = self.ai_assistant.missing_configuration()
+        if missing:
+            labels = {
+                "provider": _("Provider"),
+                "model": _("Model"),
+                "api_key": _("API key"),
+            }
+            readable = ", ".join(labels.get(item, item) for item in missing)
+            self.toast_overlay.add_toast(
+                Adw.Toast(
+                    title=_(
+                        "Configure {items} in Preferences > Terminal > AI Assistant."
+                    ).format(items=readable)
+                )
+            )
+            return
+
+        self._show_ai_prompt_dialog(terminal)
+
+    def _show_ai_prompt_dialog(self, terminal) -> None:
+        dialog = Adw.MessageDialog(
+            transient_for=self,
+            heading=_("Ask the AI Assistant"),
+            body=_("Describe the Linux task or question you need help with."),
+            close_response="cancel",
+        )
+        dialog.add_response("cancel", _("Cancel"))
+        dialog.add_response("send", _("Send"))
+        dialog.set_default_response("send")
+        dialog.set_response_appearance("send", Adw.ResponseAppearance.SUGGESTED)
+
+        text_view = Gtk.TextView(
+            wrap_mode=Gtk.WrapMode.WORD_CHAR,
+            hexpand=True,
+            vexpand=True,
+        )
+        text_view.set_top_margin(8)
+        text_view.set_bottom_margin(8)
+        text_view.set_left_margin(8)
+        text_view.set_right_margin(8)
+
+        scrolled = Gtk.ScrolledWindow(vexpand=True, hexpand=True)
+        scrolled.set_child(text_view)
+        scrolled.set_min_content_height(180)
+        dialog.set_extra_child(scrolled)
+
+        buffer = text_view.get_buffer()
+        buffer.set_text("")
+
+        def handle_send() -> bool:
+            start_iter = buffer.get_start_iter()
+            end_iter = buffer.get_end_iter()
+            text = buffer.get_text(start_iter, end_iter, True).strip()
+            if not text:
+                self.toast_overlay.add_toast(
+                    Adw.Toast(title=_("Please enter a question for the assistant."))
+                )
+                return False
+
+            if self.ai_assistant.request_assistance(terminal, text):
+                self.toast_overlay.add_toast(
+                    Adw.Toast(title=_("AI assistant is processing, please wait..."))
+                )
+                return True
+            return False
+
+        def on_response(dlg, response_id):
+            if response_id == "send":
+                if handle_send():
+                    dlg.destroy()
+                return
+            dlg.destroy()
+
+        key_controller = Gtk.EventControllerKey.new()
+
+        def on_prompt_key_pressed(_controller, keyval, _keycode, state):
+            if keyval in (Gdk.KEY_Return, Gdk.KEY_KP_Enter) and not (
+                state & Gdk.ModifierType.SHIFT_MASK
+            ):
+                if handle_send():
+                    dialog.destroy()
+                return Gdk.EVENT_STOP
+            return Gdk.EVENT_PROPAGATE
+
+        key_controller.connect("key-pressed", on_prompt_key_pressed)
+        text_view.add_controller(key_controller)
+
+        dialog.connect("response", on_response)
+        dialog.present()
+        GLib.idle_add(lambda: (text_view.grab_focus(), False)[1])
+
+    def show_ai_response_dialog(
+        self,
+        terminal: Vte.Terminal,
+        reply: str,
+        commands: List[Dict[str, str]],
+        code_snippets: List[Dict[str, str]],
+    ) -> None:
+        self._ensure_code_view_css()
+        reply_lines = reply.splitlines() or [reply]
+        max_line_length = max(len(line) for line in reply_lines)
+        total_lines = len(reply_lines)
+        for item in commands:
+            if isinstance(item, dict):
+                command_text = (item.get("command") or "").strip()
+                description_text = (item.get("description") or "").strip()
+                max_line_length = max(
+                    max_line_length, len(command_text), len(description_text)
+                )
+            elif isinstance(item, str):
+                max_line_length = max(max_line_length, len(item))
+        for snippet in code_snippets:
+            if not isinstance(snippet, dict):
+                continue
+            code_text = snippet.get("code", "") or ""
+            description_text = snippet.get("description", "") or ""
+            language_text = snippet.get("language", "") or ""
+            if code_text:
+                code_lines = code_text.splitlines() or [code_text]
+                total_lines += len(code_lines)
+                max_line_length = max(
+                    max_line_length,
+                    *(len(line) for line in code_lines if line),
+                )
+            max_line_length = max(
+                max_line_length, len(description_text), len(language_text)
+            )
+
+        approx_width = max(780, min(1200, max_line_length * 7 + 320))
+        base_height = 560 if code_snippets else 500
+        if total_lines < 10 and not code_snippets:
+            base_height = 460
+        height = min(820, max(420, base_height))
+
+        dialog = Adw.MessageDialog(
+            transient_for=self,
+            heading=_("AI Assistant"),
+            body=_("Here is what I found."),
+            close_response="close",
+        )
+        dialog.set_default_size(int(approx_width), int(height))
+        dialog.add_response("close", _("Close"))
+        dialog.set_default_response("close")
+
+        content_box = Gtk.Box(
+            orientation=Gtk.Orientation.VERTICAL,
+            spacing=12,
+            margin_top=12,
+            margin_bottom=12,
+            margin_start=12,
+            margin_end=12,
+        )
+
+        reply_label = Gtk.Label(
+            label=_("Response"),
+            halign=Gtk.Align.START,
+        )
+        reply_label.add_css_class("heading")
+        content_box.append(reply_label)
+
+        reply_view = Gtk.TextView(
+            editable=False,
+            cursor_visible=False,
+            wrap_mode=Gtk.WrapMode.WORD_CHAR,
+            hexpand=True,
+            vexpand=True,
+        )
+        reply_view.add_css_class("monospace")
+        reply_buffer = reply_view.get_buffer()
+        reply_buffer.set_text(reply.strip())
+
+        reply_scrolled = Gtk.ScrolledWindow(
+            vexpand=True,
+            hexpand=True,
+        )
+        reply_scrolled.set_min_content_height(max(140, min(300, len(reply_lines) * 20)))
+        reply_scrolled.set_child(reply_view)
+        content_box.append(reply_scrolled)
+
+        if commands:
+            commands_label = Gtk.Label(
+                label=_("Suggested Commands"),
+                halign=Gtk.Align.START,
+                margin_top=6,
+            )
+            commands_label.add_css_class("heading")
+            content_box.append(commands_label)
+
+            for command_info in commands:
+                command_text = ""
+                description = ""
+                if isinstance(command_info, dict):
+                    command_text = command_info.get("command", "")
+                    description = command_info.get("description", "")
+                elif isinstance(command_info, str):
+                    command_text = command_info
+
+                command_text = command_text.strip()
+                description = description.strip() if isinstance(description, str) else ""
+
+                if not command_text:
+                    continue
+
+                row = Gtk.Box(
+                    orientation=Gtk.Orientation.HORIZONTAL,
+                    spacing=6,
+                    hexpand=True,
+                )
+
+                info_box = Gtk.Box(
+                    orientation=Gtk.Orientation.VERTICAL,
+                    spacing=2,
+                    hexpand=True,
+                )
+
+                command_label = Gtk.Label(
+                    label=command_text,
+                    halign=Gtk.Align.START,
+                    hexpand=True,
+                    wrap=True,
+                    wrap_mode=Pango.WrapMode.WORD_CHAR,
+                )
+                command_label.add_css_class("monospace")
+                info_box.append(command_label)
+
+                if description:
+                    desc_label = Gtk.Label(
+                        label=description,
+                        halign=Gtk.Align.START,
+                        hexpand=True,
+                        wrap=True,
+                        wrap_mode=Pango.WrapMode.WORD_CHAR,
+                    )
+                    desc_label.add_css_class("dim-label")
+                    info_box.append(desc_label)
+
+                row.append(info_box)
+
+                run_button = Gtk.Button(label=_("Run"))
+                run_button.connect(
+                    "clicked",
+                    self._on_ai_command_clicked,
+                    dialog,
+                    terminal,
+                    command_text,
+                )
+                row.append(run_button)
+
+                content_box.append(row)
+
+        if code_snippets:
+            code_header = Gtk.Label(
+                label=_("Code Suggestions"),
+                halign=Gtk.Align.START,
+                margin_top=12,
+            )
+            code_header.add_css_class("heading")
+            content_box.append(code_header)
+
+            for snippet in code_snippets:
+                code_text = snippet.get("code", "")
+                if not code_text:
+                    continue
+                language = snippet.get("language", "")
+                description = snippet.get("description", "")
+
+                info_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=4)
+                info_box.set_hexpand(True)
+
+                title_label = Gtk.Label(
+                    label=language if language else _("Code"),
+                    halign=Gtk.Align.START,
+                )
+                title_label.add_css_class("heading")
+                info_box.append(title_label)
+
+                if description:
+                    desc_label = Gtk.Label(
+                        label=description,
+                        halign=Gtk.Align.START,
+                        wrap=True,
+                        wrap_mode=Pango.WrapMode.WORD_CHAR,
+                    )
+                    desc_label.add_css_class("dim-label")
+                    info_box.append(desc_label)
+
+                code_view = self._create_code_view(code_text, language)
+                code_scrolled = Gtk.ScrolledWindow()
+                code_scrolled.set_hexpand(True)
+                code_scrolled.set_vexpand(False)
+                code_lines = code_text.splitlines()
+                code_min_height = max(160, min(320, max(1, len(code_lines)) * 18))
+                code_scrolled.set_min_content_height(code_min_height)
+                code_scrolled.set_policy(
+                    Gtk.PolicyType.AUTOMATIC, Gtk.PolicyType.AUTOMATIC
+                )
+                code_scrolled.set_child(code_view)
+                info_box.append(code_scrolled)
+
+                actions_row = Gtk.Box(
+                    orientation=Gtk.Orientation.HORIZONTAL,
+                    spacing=6,
+                    halign=Gtk.Align.END,
+                )
+                copy_button = Gtk.Button(label=_("Copy"))
+                copy_button.connect(
+                    "clicked",
+                    self._on_ai_code_copy_clicked,
+                    code_text,
+                )
+                actions_row.append(copy_button)
+                info_box.append(actions_row)
+
+                content_box.append(info_box)
+
+        dialog.set_extra_child(content_box)
+
+        def on_dialog_response(dlg, _response_id):
+            dlg.destroy()
+
+        dialog.connect("response", on_dialog_response)
+        dialog.present()
+
+    def _on_ai_command_clicked(
+        self,
+        _button: Gtk.Button,
+        dialog: Adw.MessageDialog,
+        terminal: Vte.Terminal,
+        command: str,
+    ) -> None:
+        if self._execute_ai_command(terminal, command):
+            dialog.destroy()
+
+    def _on_ai_code_copy_clicked(self, _button: Gtk.Button, code: str) -> None:
+        display = Gdk.Display.get_default()
+        if display:
+            clipboard = display.get_clipboard()
+            bytes_data = GLib.Bytes.new(code.encode("utf-8"))
+            provider = Gdk.ContentProvider.new_for_bytes(
+                "text/plain;charset=utf-8", bytes_data
+            )
+            clipboard.set_content(provider)
+            self.toast_overlay.add_toast(
+                Adw.Toast(title=_("Code copied to clipboard."))
+            )
+
+    def _create_code_view(self, code_text: str, language: str) -> Gtk.Widget:
+        if GTK_SOURCE_AVAILABLE and GtkSource is not None:
+            buffer = GtkSource.Buffer()
+            lang_manager = GtkSource.LanguageManager.get_default()
+            lang_id = self._map_language_id(language)
+            if lang_manager and lang_id:
+                lang = lang_manager.get_language(lang_id)
+                if lang:
+                    buffer.set_language(lang)
+            buffer.set_highlight_syntax(True)
+            scheme_manager = GtkSource.StyleSchemeManager.get_default()
+            if scheme_manager:
+                scheme = (
+                    scheme_manager.get_scheme("oblivion")
+                    or scheme_manager.get_scheme("classic-dark")
+                    or scheme_manager.get_scheme("tango")
+                )
+                if scheme:
+                    buffer.set_style_scheme(scheme)
+            buffer.set_text(code_text)
+            view = GtkSource.View.new_with_buffer(buffer)
+            view.set_editable(False)
+            view.set_cursor_visible(False)
+            view.set_wrap_mode(Gtk.WrapMode.NONE)
+            view.set_monospace(True)
+            view.set_hexpand(True)
+            view.set_vexpand(False)
+            view.set_show_line_numbers(True)
+            view.set_highlight_current_line(False)
+            view.add_css_class("code-view")
+            return view
+
+        text_view = Gtk.TextView(editable=False, cursor_visible=False)
+        text_view.set_wrap_mode(Gtk.WrapMode.NONE)
+        text_view.set_monospace(True)
+        text_view.set_hexpand(True)
+        text_view.set_vexpand(False)
+        text_buffer = text_view.get_buffer()
+        text_buffer.set_text(code_text)
+        text_view.add_css_class("code-view")
+        return text_view
+
+    def _map_language_id(self, language: str) -> Optional[str]:
+        if not language:
+            return None
+        lang = language.lower().strip()
+        mapping = {
+            "bash": "sh",
+            "shell": "sh",
+            "sh": "sh",
+            "zsh": "sh",
+            "ksh": "sh",
+            "fish": "fish",
+            "python": "python",
+            "py": "python",
+            "perl": "perl",
+            "ruby": "ruby",
+            "lua": "lua",
+            "php": "php",
+            "js": "javascript",
+            "javascript": "javascript",
+            "typescript": "typescript",
+            "json": "json",
+            "yaml": "yaml",
+            "dockerfile": "dockerfile",
+            "make": "makefile",
+        }
+        return mapping.get(lang, lang if lang else None)
+
+    def _ensure_code_view_css(self) -> None:
+        if self._code_view_css_applied:
+            return
+        css = b"""
+        .code-view {
+            background-color: #1e1e1e;
+            color: #d4d4d4;
+            border-radius: 6px;
+            padding: 8px;
+        }
+        .code-view text selection {
+            background-color: rgba(255, 255, 255, 0.15);
+            color: #ffffff;
+        }
+        """
+        provider = Gtk.CssProvider()
+        try:
+            provider.load_from_data(css)
+            display = Gdk.Display.get_default()
+            if display:
+                Gtk.StyleContext.add_provider_for_display(
+                    display,
+                    provider,
+                    Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION,
+                )
+                self._code_view_css_provider = provider
+                self._code_view_css_applied = True
+        except GLib.Error as exc:
+            self.logger.debug(f"Failed to load code view CSS: {exc}")
+
+    def _execute_ai_command(self, terminal: Vte.Terminal, command: str) -> bool:
+        command = (command or "").strip()
+        if not command:
+            self.toast_overlay.add_toast(
+                Adw.Toast(title=_("Command is empty, nothing to run."))
+            )
+            return False
+        try:
+            terminal.feed_child(f"{command}\n".encode("utf-8"))
+            self.toast_overlay.add_toast(
+                Adw.Toast(title=_("Command sent to the terminal."))
+            )
+            return True
+        except Exception as exc:
+            self.logger.error("Failed to execute AI command '%s': %s", command, exc)
+            self.toast_overlay.add_toast(
+                Adw.Toast(title=_("Failed to execute the command."))
+            )
+            return False
+
     def _on_setting_changed(self, key: str, old_value, new_value):
         """Handle changes from the settings manager."""
+        if getattr(self, "ai_assistant", None):
+            self.ai_assistant.handle_setting_changed(key, old_value, new_value)
+
         if key == "gtk_theme":
             # MODIFIED: This is the correct place to handle theme changes for the window.
             style_manager = Adw.StyleManager.get_default()
@@ -1363,7 +1871,8 @@ class CommTerminalWindow(Adw.ApplicationWindow):
         dialog.present()
 
     def _on_terminal_exit(self, terminal, child_status, identifier):
-        pass
+        if getattr(self, "ai_assistant", None):
+            self.ai_assistant.clear_conversation_for_terminal(terminal)
 
     def _on_quit_application_requested(self) -> None:
         """Handle quit request from tab manager."""

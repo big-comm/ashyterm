@@ -119,6 +119,7 @@ class SettingsValidator:
             "mouse_autohide",
             "bell_sound",
             "log_to_file",
+            "ai_assistant_enabled",
         ]
         for key in boolean_settings:
             if key in settings and not isinstance(settings[key], bool):

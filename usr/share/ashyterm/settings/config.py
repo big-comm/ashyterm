@@ -27,7 +27,7 @@ class AppConstants:
 
     APP_ID = "org.communitybig.ashyterm"
     APP_TITLE = "Ashy Terminal"
-    APP_VERSION = "1.4.1"
+    APP_VERSION = "1.5.0"
     DEVELOPER_NAME = "BigCommunity"
     DEVELOPER_TEAM = ["BigCommunity Team"]
     COPYRIGHT = "© 2025 BigCommunity"
@@ -217,6 +217,11 @@ class DefaultSettings:
             # Remote Editing
             "use_system_tmp_for_edit": False,
             "clear_remote_edit_files_on_exit": True,
+            # AI Assistant
+            "ai_assistant_enabled": False,
+            "ai_assistant_provider": "groq",
+            "ai_assistant_model": "llama-3.3-70b-versatile",
+            "ai_assistant_api_key": "",
             # Search Settings
             "search_case_sensitive": False,
             "search_use_regex": False,
@@ -242,6 +247,7 @@ class DefaultSettings:
                 "previous-tab": "<Alt>Page_Up",
                 "toggle-file-manager": "<Control><Shift>e",
                 "toggle-broadcast": "<Control><Shift>b",
+                "ai-assistant": "<Control><Shift>i",
             },
         }
 

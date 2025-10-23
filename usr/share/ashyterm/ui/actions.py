@@ -41,6 +41,7 @@ class WindowActions:
             "copy": self.copy,
             "paste": self.paste,
             "select-all": self.select_all,
+            "ai-assistant": self.ai_assistant,
             "split-horizontal": self.split_horizontal,
             "split-vertical": self.split_vertical,
             "close-pane": self.close_pane,
@@ -148,6 +149,9 @@ class WindowActions:
 
     def select_all(self, *_args):
         self.window.tab_manager.select_all_in_current_terminal()
+
+    def ai_assistant(self, *_args):
+        self.window._on_ai_assistant_requested()
 
     def open_url(self, *_args):
         if terminal := self.window.tab_manager.get_selected_terminal():

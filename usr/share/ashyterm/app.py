@@ -201,6 +201,7 @@ class CommTerminalApp(Adw.Application):
                 "next-tab",
                 "previous-tab",
                 "toggle-broadcast",
+                "ai-assistant",
             ]
             for action_name in shortcut_actions:
                 shortcut = self.settings_manager.get_shortcut(action_name)

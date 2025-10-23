@@ -315,6 +315,87 @@ class PreferencesDialog(Adw.PreferencesWindow):
         )
         shell_group.add(bell_row)
 
+        ai_group = Adw.PreferencesGroup(
+            title=_("AI Assistant"),
+            description=_(
+                "Configure the Linux-focused assistant available inside the terminal."
+            ),
+        )
+        page.add(ai_group)
+
+        self.ai_assistant_switch = Adw.SwitchRow(
+            title=_("Enable AI Assistant"),
+            subtitle=_("Allow Ctrl+Shift+I to ask the assistant for help."),
+        )
+        self.ai_assistant_switch.set_active(
+            self.settings_manager.get("ai_assistant_enabled", False)
+        )
+        self.ai_assistant_switch.connect(
+            "notify::active", self._on_ai_assistant_toggled
+        )
+        ai_group.add(self.ai_assistant_switch)
+
+        self.ai_provider_row = Adw.ComboRow(
+            title=_("Provider"),
+            subtitle=_("Select which AI service to use."),
+        )
+        self._ai_provider_options = [
+            ("groq", _("Groq (LLaMA 3)")),
+        ]
+        provider_model = Gtk.StringList.new(
+            [label for _pid, label in self._ai_provider_options]
+        )
+        self.ai_provider_row.set_model(provider_model)
+        current_provider = self.settings_manager.get("ai_assistant_provider", "groq")
+        try:
+            provider_index = [
+                pid for pid, _label in self._ai_provider_options
+            ].index(current_provider)
+        except ValueError:
+            provider_index = 0
+        self.ai_provider_row.set_selected(provider_index)
+        self.ai_provider_row.connect("notify::selected", self._on_ai_provider_changed)
+        ai_group.add(self.ai_provider_row)
+
+        self.ai_model_row = Adw.ActionRow(
+            title=_("Model Identifier"),
+            subtitle=_("Example: llama-3.3-70b-versatile."),
+        )
+        self.ai_model_entry = Gtk.Entry(
+            text=self.settings_manager.get("ai_assistant_model", "")
+        )
+        self.ai_model_entry.set_placeholder_text(_("llama-3.3-70b-versatile"))
+        self.ai_model_entry.connect("changed", self._on_ai_model_changed)
+        self.ai_model_row.add_suffix(self.ai_model_entry)
+        self.ai_model_row.set_activatable_widget(self.ai_model_entry)
+        ai_group.add(self.ai_model_row)
+
+        self.ai_api_key_row = Adw.ActionRow(
+            title=_("API Key"),
+            subtitle=_("Stored locally and used to authenticate requests."),
+        )
+        self.ai_api_key_entry = Gtk.PasswordEntry(
+            text=self.settings_manager.get("ai_assistant_api_key", ""),
+            placeholder_text=_("Paste your API key"),
+            show_peek_icon=True,
+            hexpand=True,
+        )
+        self.ai_api_key_entry.connect("changed", self._on_ai_api_key_changed)
+        self.ai_api_key_row.add_suffix(self.ai_api_key_entry)
+        self.ai_api_key_row.set_activatable_widget(self.ai_api_key_entry)
+        ai_group.add(self.ai_api_key_row)
+
+        self._ai_config_widgets = [
+            self.ai_model_row,
+            self.ai_model_entry,
+            self.ai_api_key_row,
+            self.ai_api_key_entry,
+        ]
+        self._update_ai_controls_sensitive(
+            self.ai_assistant_switch.get_active()
+        )
+        self._update_ai_provider_ui(self._get_selected_provider_id())
+
     def _setup_profiles_page(self) -> None:
         page = Adw.PreferencesPage(
             title=_("Profiles & Data"), icon_name="folder-saved-search-symbolic"
@@ -667,6 +748,51 @@ class PreferencesDialog(Adw.PreferencesWindow):
     def _on_word_chars_changed(self, entry_row):
         text = entry_row.get_text()
         self._on_setting_changed("word_char_exceptions", text)
+
+    def _on_ai_assistant_toggled(self, switch_row, _param) -> None:
+        enabled = switch_row.get_active()
+        self._on_setting_changed("ai_assistant_enabled", enabled)
+        self._update_ai_controls_sensitive(enabled)
+        self._update_ai_provider_ui(self._get_selected_provider_id())
+
+    def _on_ai_provider_changed(self, _combo_row, _param) -> None:
+        provider_id = self._get_selected_provider_id()
+        self._on_setting_changed("ai_assistant_provider", provider_id)
+        self._update_ai_provider_ui(provider_id)
+
+    def _on_ai_model_changed(self, entry: Gtk.Entry) -> None:
+        text = entry.get_text().strip()
+        self._on_setting_changed("ai_assistant_model", text)
+
+    def _on_ai_api_key_changed(self, entry: Gtk.PasswordEntry) -> None:
+        text = entry.get_text().strip()
+        self._on_setting_changed("ai_assistant_api_key", text)
+
+    def _update_ai_controls_sensitive(self, enabled: bool) -> None:
+        for widget in getattr(self, "_ai_config_widgets", []):
+            widget.set_sensitive(enabled)
+
+    def _update_ai_provider_ui(self, provider: str) -> None:
+        if provider == "groq":
+            self.ai_model_row.set_visible(True)
+            self.ai_model_entry.set_placeholder_text(_("llama-3.3-70b-versatile"))
+            self.ai_model_row.set_subtitle(
+                _("Groq model identifier (for example: llama-3.3-70b-versatile).")
+            )
+            self.ai_api_key_row.set_subtitle(_("Groq API key."))
+        else:
+            self.ai_model_row.set_visible(True)
+            self.ai_model_entry.set_placeholder_text(_("model-name"))
+            self.ai_model_row.set_subtitle(
+                _("Model identifier required by the selected provider.")
+            )
+            self.ai_api_key_row.set_subtitle(_("API key used to authenticate requests."))
+
+    def _get_selected_provider_id(self) -> str:
+        index = self.ai_provider_row.get_selected()
+        if 0 <= index < len(self._ai_provider_options):
+            return self._ai_provider_options[index][0]
+        return self._ai_provider_options[0][0]
 
     def _on_cjk_width_changed(self, combo_row, _param) -> None:
         value = combo_row.get_selected() + 1  # 0 -> 1 (Narrow), 1 -> 2 (Wide)
