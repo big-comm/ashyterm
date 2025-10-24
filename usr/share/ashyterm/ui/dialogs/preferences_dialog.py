@@ -340,8 +340,8 @@ class PreferencesDialog(Adw.PreferencesWindow):
             subtitle=_("Select which AI service to use."),
         )
         self._ai_provider_options = [
-            ("groq", _("Groq")),
-            ("gemini", _("Gemini")),
+            ("groq", ("Groq")),
+            ("gemini", ("Gemini")),
         ]
         provider_model = Gtk.StringList.new(
             [label for _pid, label in self._ai_provider_options]
@@ -780,7 +780,7 @@ class PreferencesDialog(Adw.PreferencesWindow):
             self.ai_model_row.set_subtitle(
                 _("Model identifier (for example: llama-3.1-8b-instant).")
             )
-            self.ai_api_key_row.set_subtitle(_("Groq API key."))
+            self.ai_api_key_row.set_subtitle(_("API key."))
         elif provider == "gemini":
             self.ai_model_row.set_visible(True)
             self.ai_model_entry.set_placeholder_text(_("gemini-2.5-flash"))
