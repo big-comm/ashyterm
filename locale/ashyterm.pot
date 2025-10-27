@@ -437,7 +437,7 @@ msgstr  ""
 # #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
 #
 # File: usr/share/ashyterm/terminal/tabs.py, line: 54
-# File: usr/share/ashyterm/window.py, line: 130
+# File: usr/share/ashyterm/window.py, line: 393
 msgid   "Move to New Tab"
 msgstr  ""
 
@@ -448,7 +448,7 @@ msgstr  ""
 #
 # File: usr/share/ashyterm/terminal/tabs.py, line: 60
 # File: usr/share/ashyterm/ui/menus.py, line: 298
-# File: usr/share/ashyterm/window.py, line: 118
+# File: usr/share/ashyterm/window.py, line: 381
 msgid   "Close Pane"
 msgstr  ""
 
@@ -624,10 +624,10 @@ msgstr  ""
 # File: usr/share/ashyterm/ui/window_ui.py, line: 429
 # File: usr/share/ashyterm/filemanager/manager.py, line: 2166
 # File: usr/share/ashyterm/filemanager/manager.py, line: 2299
-# File: usr/share/ashyterm/window.py, line: 73
-# File: usr/share/ashyterm/window.py, line: 1631
-# File: usr/share/ashyterm/window.py, line: 1643
-# File: usr/share/ashyterm/window.py, line: 1646
+# File: usr/share/ashyterm/window.py, line: 336
+# File: usr/share/ashyterm/window.py, line: 2007
+# File: usr/share/ashyterm/window.py, line: 2019
+# File: usr/share/ashyterm/window.py, line: 2022
 msgid   "Ashy Terminal"
 msgstr  ""
 
@@ -759,11 +759,11 @@ msgstr  ""
 # File: usr/share/ashyterm/filemanager/manager.py, line: 1892
 # File: usr/share/ashyterm/filemanager/manager.py, line: 2256
 # File: usr/share/ashyterm/filemanager/manager.py, line: 2357
-# File: usr/share/ashyterm/window.py, line: 558
-# File: usr/share/ashyterm/window.py, line: 1135
-# File: usr/share/ashyterm/window.py, line: 1499
-# File: usr/share/ashyterm/window.py, line: 1536
-# File: usr/share/ashyterm/window.py, line: 1804
+# File: usr/share/ashyterm/window.py, line: 821
+# File: usr/share/ashyterm/window.py, line: 1511
+# File: usr/share/ashyterm/window.py, line: 1875
+# File: usr/share/ashyterm/window.py, line: 1912
+# File: usr/share/ashyterm/window.py, line: 2180
 # File: usr/share/ashyterm/app.py, line: 406
 # File: usr/share/ashyterm/app.py, line: 486
 # File: usr/share/ashyterm/app.py, line: 527
@@ -832,7 +832,7 @@ msgstr  ""
 # File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 883
 # File: usr/share/ashyterm/filemanager/manager.py, line: 1050
 # File: usr/share/ashyterm/filemanager/manager.py, line: 2070
-# File: usr/share/ashyterm/window.py, line: 1668
+# File: usr/share/ashyterm/window.py, line: 2044
 # File: usr/share/ashyterm/app.py, line: 575
 msgid   "OK"
 msgstr  ""
@@ -1236,7 +1236,7 @@ msgstr  ""
 # #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
 #
 # File: usr/share/ashyterm/ui/ssh_dialogs.py, line: 43
-# File: usr/share/ashyterm/window.py, line: 655
+# File: usr/share/ashyterm/window.py, line: 1031
 msgid   "Close"
 msgstr  ""
 
@@ -2426,7 +2426,7 @@ msgstr  ""
 # #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
 #
 # File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 319
-# File: usr/share/ashyterm/window.py, line: 650
+# File: usr/share/ashyterm/window.py, line: 1026
 msgid   "AI Assistant"
 msgstr  ""
 
@@ -2449,7 +2449,7 @@ msgstr  ""
 # #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
 #
 # File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 339
-# File: usr/share/ashyterm/window.py, line: 535
+# File: usr/share/ashyterm/window.py, line: 798
 msgid   "Provider"
 msgstr  ""
 
@@ -5220,267 +5220,1594 @@ msgid   "Cancel All Transfers"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/window.py, line: 433
+# File: usr/share/ashyterm/window.py, line: 36
+msgid   "How can I monitor CPU and memory usage in real time?"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/window.py, line: 37
+msgid   "Which commands show the processes consuming the most memory?"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/window.py, line: 38
+msgid   "Why is my disk stuck at 100% usage and how do I investigate it?"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/window.py, line: 39
+msgid   "How can I locate large files taking up space under /?"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/window.py, line: 40
+msgid   "What steps help troubleshoot a slow SSH connection?"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/window.py, line: 41
+msgid   "How can I automate daily incremental backups with rsync?"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/window.py, line: 42
+msgid   "How do I remove orphan packages and clean the cache on BigLinux?"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/window.py, line: 43
+msgid   "How can I list services that are enabled and active on systemd?"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/window.py, line: 44
+msgid   "What should I examine when boot time is too long?"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/window.py, line: 45
+msgid   "How do I monitor temperature and fan speeds from the terminal?"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/window.py, line: 46
+msgid   "How can I configure alerts when CPU usage exceeds a threshold?"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/window.py, line: 47
+msgid   "How do I create a script that restarts a service automatically?"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/window.py, line: 48
+msgid   "How do I automatically mount a remote NFS share?"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/window.py, line: 49
+msgid   "How can I debug network issues using mtr and traceroute?"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/window.py, line: 50
+msgid   "What best practices should I follow to harden SSH?"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/window.py, line: 51
+msgid   "How do I schedule updates with pacman and log the results?"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/window.py, line: 52
+msgid   "How do I detect and terminate zombie processes?"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/window.py, line: 53
+msgid   "How do I compare two directories to find differences?"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/window.py, line: 54
+msgid   "How can I configure automatic backups of /etc with git?"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/window.py, line: 55
+msgid   "How do I troubleshoot high disk I/O usage in databases?"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/window.py, line: 56
+msgid   "How can I check available kernel versions and update safely?"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/window.py, line: 57
+msgid   "What is the best way to install proprietary GPU drivers?"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/window.py, line: 58
+msgid   "How do I configure multiple monitors on X11 and Wayland?"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/window.py, line: 59
+msgid   "How can I adjust display brightness from the terminal?"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/window.py, line: 60
+msgid   "How do I find which process is listening on a TCP port?"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/window.py, line: 61
+msgid   "How can I release an occupied port without rebooting?"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/window.py, line: 62
+msgid   "How do I identify and kill stuck SSH sessions?"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/window.py, line: 63
+msgid   "How can I configure an SSH tunnel for secure remote access?"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/window.py, line: 64
+msgid   "How do I sync folders using rsync with compression?"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/window.py, line: 65
+msgid   "How do I schedule recurring tasks with systemd timers?"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/window.py, line: 66
+msgid   "How can I configure custom log rotation with logrotate?"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/window.py, line: 67
+msgid   "How do I access the systemd journal from another host?"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/window.py, line: 68
+msgid   "How do I tail logs in real time and filter by keyword?"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/window.py, line: 69
+msgid   "How can I check which package installed a specific file?"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/window.py, line: 70
+msgid   "How do I list package dependencies before installing?"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/window.py, line: 71
+msgid   "How can I simulate a pacman upgrade without changing the system?"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/window.py, line: 72
+msgid   "How do I recover a system that fails to boot after a kernel update?"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/window.py, line: 73
+msgid   "How do I mount ISO images without burning them?"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/window.py, line: 74
+msgid   "How do I verify downloads using sha256sum?"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/window.py, line: 75
+msgid   "How can I set persistent aliases for frequent commands?"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/window.py, line: 76
+msgid   "How do I create custom shell functions in my bashrc?"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/window.py, line: 77
+msgid   "How do I share a folder with Samba and manage permissions?"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/window.py, line: 78
+msgid   "How do I mount a CIFS share securely with credentials?"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/window.py, line: 79
+msgid   "How do I find my internal and external IP address quickly?"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/window.py, line: 80
+msgid   "How can I test network speed from the command line?"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/window.py, line: 81
+msgid   "How do I scan local devices with nmap?"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/window.py, line: 82
+msgid   "How can I troubleshoot slow or failing DNS?"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/window.py, line: 83
+msgid   "How do I configure a local DNS resolver with systemd-resolved?"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/window.py, line: 84
+msgid   "How can I capture suspicious traffic with tcpdump?"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/window.py, line: 85
+msgid   "How do I limit bandwidth for a process using tc or trickle?"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/window.py, line: 86
+msgid   "How can I inspect routing tables and metrics?"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/window.py, line: 87
+msgid   "How do I configure NTP servers and sync time automatically?"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/window.py, line: 88
+msgid   "How do I manage users and groups with useradd and gpasswd?"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/window.py, line: 89
+msgid   "How do I reset the root password if I forget it?"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/window.py, line: 90
+msgid   "How can I configure sudo without granting full root access?"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/window.py, line: 91
+msgid   "How do I audit successful and failed logins on the system?"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/window.py, line: 92
+msgid   "How can I temporarily lock an account after failed attempts?"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/window.py, line: 93
+msgid   "How do I configure SSH keys and disable password authentication?"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/window.py, line: 94
+msgid   "How can I use fail2ban to protect exposed services?"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/window.py, line: 95
+msgid   "How do I enable the firewall with ufw and create basic rules?"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/window.py, line: 96
+msgid   "How can I inspect and adjust rules with nftables?"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/window.py, line: 97
+msgid   "How do I detect altered files using tripwire or aide?"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/window.py, line: 98
+msgid   "How do I configure encrypted backups automatically with borg?"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/window.py, line: 99
+msgid   "How can I sync backups to the cloud using rclone?"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/window.py, line: 100
+msgid   "How do I set up software RAID and monitor its health?"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/window.py, line: 101
+msgid   "How can I recover data from a degraded RAID array?"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/window.py, line: 102
+msgid   "How do I analyse SMART attributes to predict disk failures?"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/window.py, line: 103
+msgid   "How can I expand an LVM partition without data loss?"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/window.py, line: 104
+msgid   "How do I move the home directory to another partition?"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/window.py, line: 105
+msgid   "How do I create a swapfile and tune swappiness?"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/window.py, line: 106
+msgid   "How can I clear cached memory without rebooting?"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/window.py, line: 107
+msgid   "How do I reduce power consumption on Linux laptops?"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/window.py, line: 108
+msgid   "How can I troubleshoot frequent GNOME or KDE freezes?"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/window.py, line: 109
+msgid   "How do I reset desktop environment settings from the terminal?"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/window.py, line: 110
+msgid   "How do I install additional fonts and set them system-wide?"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/window.py, line: 111
+msgid   "How can I change keyboard layout permanently?"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/window.py, line: 112
+msgid   "How do I enable network printing support with CUPS?"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/window.py, line: 113
+msgid   "How can I troubleshoot PulseAudio or PipeWire sound issues?"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/window.py, line: 114
+msgid   "How do I detect and configure USB devices automatically?"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/window.py, line: 115
+msgid   "How can I set up a simple web server with nginx?"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/window.py, line: 116
+msgid   "How do I secure Apache with HTTPS using Let's Encrypt?"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/window.py, line: 117
+msgid   "How can I optimise PHP-FPM for high traffic?"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/window.py, line: 118
+msgid   "How do I configure a reverse proxy with caching?"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/window.py, line: 119
+msgid   "How can I monitor Docker containers and restart them automatically?"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/window.py, line: 120
+msgid   "How do I inspect container logs and limit resource usage?"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/window.py, line: 121
+msgid   "How do I build optimised multi-stage Docker images?"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/window.py, line: 122
+msgid   "How can I manage pods and deployments in a local Kubernetes cluster?"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/window.py, line: 123
+msgid   "How do I set up a basic CI/CD pipeline with GitLab Runner?"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/window.py, line: 124
+msgid   "How can I create isolated Python environments with venv?"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/window.py, line: 125
+msgid   "How do I build custom deb or rpm packages?"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/window.py, line: 126
+msgid   "How can I compile a custom kernel and install it?"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/window.py, line: 127
+msgid   "How do I measure application performance with perf and flame graphs?"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/window.py, line: 128
+msgid   "How can I use strace and ltrace to debug processes?"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/window.py, line: 129
+msgid   "How do I investigate deadlocks with gdb and core dumps?"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/window.py, line: 130
+msgid   "How can I enable SELinux or AppArmor and create simple policies?"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/window.py, line: 131
+msgid   "How do I validate security policies before applying them in "
+        "production?"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/window.py, line: 132
+msgid   "How can I configure site-to-site OpenVPN?"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/window.py, line: 133
+msgid   "How do I set up a WireGuard server with multiple users?"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/window.py, line: 134
+msgid   "How can I detect and mitigate excessive swap usage?"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/window.py, line: 135
+msgid   "How do I track why a process was killed by the OOM killer?"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/window.py, line: 136
+msgid   "How can I configure disk quotas for users and groups?"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/window.py, line: 137
+msgid   "How do I automate cleanup of /tmp and temporary directories?"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/window.py, line: 138
+msgid   "How can I refresh pacman mirrors and clean the cache?"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/window.py, line: 139
+msgid   "How do I share clipboard contents and files via sshfs?"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/window.py, line: 140
+msgid   "How can I configure email notifications for critical failures?"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/window.py, line: 141
+msgid   "How do I collect metrics with Prometheus and basic exporters?"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/window.py, line: 142
+msgid   "How can I build Grafana dashboards for Linux servers?"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/window.py, line: 143
+msgid   "How do I apply security patches automatically?"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/window.py, line: 144
+msgid   "How can I keep Ansible playbooks organised for multiple hosts?"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/window.py, line: 145
+msgid   "How do I troubleshoot slow PostgreSQL databases?"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/window.py, line: 146
+msgid   "How can I diagnose memory usage in Java applications?"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/window.py, line: 147
+msgid   "How do I integrate LDAP authentication into local services?"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/window.py, line: 148
+msgid   "How do I uninstall a program?"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/window.py, line: 149
+msgid   "How do I update my system and every application at once?"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/window.py, line: 150
+msgid   "How can I connect to a Wi-Fi network?"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/window.py, line: 151
+msgid   "How do I set up my printer?"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/window.py, line: 152
+msgid   "How can I take a screenshot of the screen?"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/window.py, line: 153
+msgid   "How do I connect a second monitor?"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/window.py, line: 154
+msgid   "What should I do if there is no sound?"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/window.py, line: 155
+msgid   "How can I change the screen resolution?"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/window.py, line: 156
+msgid   "How do I change the wallpaper and system theme?"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/window.py, line: 157
+msgid   "How can I mount and unmount a USB drive or external disk?"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/window.py, line: 158
+msgid   "How do I format a USB stick (FAT32, NTFS, ext4)?"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/window.py, line: 159
+msgid   "How do I install new software packages?"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/window.py, line: 160
+msgid   "How do I remove installed software packages?"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/window.py, line: 161
+msgid   "How do I check how much free disk space I have?"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/window.py, line: 162
+msgid   "How do I find which files are taking the most space?"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/window.py, line: 163
+msgid   "How can I search for a specific file or text?"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/window.py, line: 164
+msgid   "How do I check open ports on my machine?"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/window.py, line: 165
+msgid   "How can I view running processes and resource usage?"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/window.py, line: 166
+msgid   "How do I check recent system logs?"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/window.py, line: 167
+msgid   "How do I update the kernel safely?"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/window.py, line: 168
+msgid   "How can I enable automatic updates?"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/window.py, line: 169
+msgid   "How do I create and manage new users?"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/window.py, line: 170
+msgid   "How do I change file permissions safely?"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/window.py, line: 171
+msgid   "How can I compress or extract archive files?"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/window.py, line: 172
+msgid   "How do I verify that my network connection is working?"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/window.py, line: 173
+msgid   "How do I configure proxy settings for the system?"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/window.py, line: 174
+msgid   "How can I synchronise system time with online sources?"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/window.py, line: 175
+msgid   "How do I view detailed hardware information?"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/window.py, line: 176
+msgid   "How can I install or update device drivers?"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/window.py, line: 177
+msgid   "How do I manage startup applications?"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/window.py, line: 178
+msgid   "How can I disable unwanted services?"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/window.py, line: 179
+msgid   "How do I schedule tasks with cron?"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/window.py, line: 180
+msgid   "How can I secure SSH on a new server?"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/window.py, line: 181
+msgid   "How do I monitor system logs in real time?"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/window.py, line: 182
+msgid   "How can I back up my home directory automatically?"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/window.py, line: 183
+msgid   "How do I restore a backup safely?"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/window.py, line: 184
+msgid   "How can I encrypt files or folders?"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/window.py, line: 185
+msgid   "How do I set up remote desktop access?"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/window.py, line: 186
+msgid   "How can I configure a host-based firewall?"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/window.py, line: 187
+msgid   "How do I whitelist or blacklist IP addresses?"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/window.py, line: 188
+msgid   "How can I check disk health and SMART status?"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/window.py, line: 189
+msgid   "How do I monitor I/O usage per process?"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/window.py, line: 190
+msgid   "How can I check current RAM usage?"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/window.py, line: 191
+msgid   "How do I clear the DNS cache?"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/window.py, line: 192
+msgid   "How can I troubleshoot boot issues quickly?"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/window.py, line: 193
+msgid   "How do I recover deleted files?"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/window.py, line: 194
+msgid   "How can I set environment variables permanently?"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/window.py, line: 195
+msgid   "How do I install development tools and headers?"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/window.py, line: 196
+msgid   "How can I manage Python packages with pip?"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/window.py, line: 197
+msgid   "How do I manage Node.js packages with npm?"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/window.py, line: 198
+msgid   "How can I install Docker on my system?"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/window.py, line: 199
+msgid   "How do I remove Docker completely?"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/window.py, line: 200
+msgid   "How can I manage Docker images efficiently?"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/window.py, line: 201
+msgid   "How do I manage Docker volumes safely?"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/window.py, line: 202
+msgid   "How can I inspect Docker networks?"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/window.py, line: 203
+msgid   "How do I bootstrap a Kubernetes cluster?"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/window.py, line: 204
+msgid   "How can I install and configure a SQL database?"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/window.py, line: 205
+msgid   "How do I secure a database server?"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/window.py, line: 206
+msgid   "How can I monitor database performance metrics?"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/window.py, line: 207
+msgid   "How do I back up a database automatically?"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/window.py, line: 208
+msgid   "How can I restore a database backup?"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/window.py, line: 209
+msgid   "How do I upgrade system packages safely?"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/window.py, line: 210
+msgid   "How can I check for package updates without installing them?"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/window.py, line: 211
+msgid   "How do I set up a local repository mirror?"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/window.py, line: 212
+msgid   "How can I troubleshoot package conflicts?"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/window.py, line: 213
+msgid   "How do I configure proxy settings for package managers?"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/window.py, line: 214
+msgid   "How can I clean the package cache safely?"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/window.py, line: 215
+msgid   "How do I manage Flatpak or Snap packages?"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/window.py, line: 216
+msgid   "How can I monitor resource usage per container?"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/window.py, line: 217
+msgid   "How do I export container metrics to Prometheus?"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/window.py, line: 218
+msgid   "How can I trigger alerts when CPU exceeds 70%?"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/window.py, line: 219
+msgid   "How do I archive system logs for compliance?"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/window.py, line: 220
+msgid   "How can I set up centralised logging with Loki?"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/window.py, line: 221
+msgid   "How do I configure Grafana alerts for system metrics?"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/window.py, line: 222
+msgid   "How can I deploy applications with Helm charts?"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/window.py, line: 223
+msgid   "How do I roll back a Kubernetes deployment?"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/window.py, line: 224
+msgid   "How can I manage secrets securely on Linux?"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/window.py, line: 225
+msgid   "How do I inspect SELinux or AppArmor audit logs?"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/window.py, line: 226
+msgid   "How can I test firewall rules without disrupting traffic?"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/window.py, line: 227
+msgid   "How do I benchmark disk throughput?"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/window.py, line: 228
+msgid   "How can I track battery health on laptops?"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/window.py, line: 229
+msgid   "How do I configure automatic screen locking and idle timeouts?"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/window.py, line: 230
+msgid   "How can I share files over the network easily?"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/window.py, line: 231
+msgid   "How do I monitor GPU usage on Linux?"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/window.py, line: 232
+msgid   "How can I check for firmware updates?"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/window.py, line: 233
+msgid   "How do I enable hardware acceleration in browsers?"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/window.py, line: 234
+msgid   "How can I detect memory leaks in applications?"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/window.py, line: 235
+msgid   "How do I profile Python scripts for performance?"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/window.py, line: 236
+msgid   "How can I measure latency between servers?"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/window.py, line: 237
+msgid   "How do I configure a VPN client connection?"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/window.py, line: 238
+msgid   "How can I script repetitive maintenance tasks?"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/window.py, line: 239
+msgid   "How do I document server configuration automatically?"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/window.py, line: 240
+msgid   "How can I manage dotfiles across multiple machines?"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/window.py, line: 241
+msgid   "How do I set up passwordless sudo for automation?"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/window.py, line: 242
+msgid   "How can I monitor cron job failures?"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/window.py, line: 243
+msgid   "How do I send notifications to Slack or Matrix from scripts?"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/window.py, line: 244
+msgid   "How can I manage secrets in environment variables?"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/window.py, line: 245
+msgid   "How do I install and maintain ZFS on Linux?"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/window.py, line: 246
+msgid   "How can I create and restore Btrfs snapshots?"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/window.py, line: 247
+msgid   "How do I check ext4 filesystem health?"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/window.py, line: 248
+msgid   "How can I detect hardware errors with dmesg?"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/window.py, line: 249
+msgid   "How do I tune kernel parameters with sysctl?"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/window.py, line: 250
+msgid   "How can I configure huge pages for databases?"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/window.py, line: 251
+msgid   "How do I enable and manage cgroups v2?"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/window.py, line: 252
+msgid   "How can I collect performance data with sar?"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/window.py, line: 253
+msgid   "How do I investigate high load average values?"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/window.py, line: 254
+msgid   "How can I test backup restores automatically?"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/window.py, line: 255
+msgid   "How do I rotate SSH keys on a schedule?"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/window.py, line: 256
+msgid   "How can I enforce password policies on Linux?"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/window.py, line: 257
+msgid   "How do I audit installed packages for CVEs?"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/window.py, line: 258
+msgid   "How can I use nix-shell or direnv for reproducible dev environments?"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/window.py, line: 259
+msgid   "How do I manage multiple Python versions with pyenv?"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/window.py, line: 260
+msgid   "How can I run containers rootless with Podman?"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/window.py, line: 261
+msgid   "How do I tail Kubernetes logs with stern or kubectl?"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/window.py, line: 262
+msgid   "How can I instrument applications with OpenTelemetry?"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/window.py, line: 263
+msgid   "How do I configure single sign-on for Linux services?"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/window.py, line: 264
+msgid   "How can I export metrics from systemd services?"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/window.py, line: 265
+msgid   "How do I manage secrets with HashiCorp Vault on Linux?"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/window.py, line: 266
+msgid   "How can I secure shared desktop sessions?"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/window.py, line: 267
+msgid   "How do I offer remote assistance to another Linux user?"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/window.py, line: 268
+msgid   "How can I set up an immutable system partition?"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/window.py, line: 269
+msgid   "How do I verify package integrity with pkgfile or debsums?"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/window.py, line: 270
+msgid   "How can I preconfigure new machines with cloud-init?"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/window.py, line: 271
+msgid   "How do I use firewalld zones effectively?"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/window.py, line: 272
+msgid   "How can I configure USBGuard to control removable media?"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/window.py, line: 273
+msgid   "How do I script GUI interactions with xdotool or ydotool?"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/window.py, line: 274
+msgid   "How can I schedule notifications for maintenance windows?"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/window.py, line: 275
+msgid   "How do I run graphical apps inside containers securely?"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/window.py, line: 276
+msgid   "How can I create custom systemd targets?"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/window.py, line: 277
+msgid   "How do I instrument cron jobs with logging and alerts?"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/window.py, line: 278
+msgid   "How can I migrate user data between Linux distributions?"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/window.py, line: 279
+msgid   "How do I build automated smoke tests for servers?"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/window.py, line: 280
+msgid   "How can I monitor power consumption per process?"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/window.py, line: 281
+msgid   "How do I set up screen sharing on Wayland?"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/window.py, line: 282
+msgid   "How can I use bpftrace to inspect kernel events?"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/window.py, line: 283
+msgid   "How do I configure VPN access for contractors securely?"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/window.py, line: 284
+msgid   "How can I manage encrypted secrets in git repositories?"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/window.py, line: 285
+msgid   "How do I containerise legacy applications on Linux?"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/window.py, line: 286
+msgid   "How can I prepare a Linux workstation for developers quickly?"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/window.py, line: 287
+msgid   "How do I tune swappiness and vm.dirty ratios for workloads?"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/window.py, line: 288
+msgid   "How can I monitor NVMe SSD health?"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/window.py, line: 289
+msgid   "How do I benchmark network throughput between hosts?"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/window.py, line: 290
+msgid   "How can I secure cron and at jobs from tampering?"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/window.py, line: 291
+msgid   "How do I implement just-in-time sudo elevation?"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/window.py, line: 292
+msgid   "How can I integrate system metrics with Alertmanager?"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/window.py, line: 293
+msgid   "How do I set up maintenance mode pages on nginx?"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/window.py, line: 294
+msgid   "How can I collect audit logs required for compliance?"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/window.py, line: 295
+msgid   "How do I gracefully decommission a Linux server?"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/window.py, line: 296
+msgid   "How can I document operational runbooks efficiently?"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/window.py, line: 696
 msgid   "Data Loading Error"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/window.py, line: 435
+# File: usr/share/ashyterm/window.py, line: 698
 msgid   "Failed to load saved sessions and folders. Starting with empty "
         "configuration."
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/window.py, line: 519
+# File: usr/share/ashyterm/window.py, line: 782
 msgid   "Enable the AI assistant in Preferences > Terminal > AI Assistant."
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/window.py, line: 528
+# File: usr/share/ashyterm/window.py, line: 791
 msgid   "No active terminal available."
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/window.py, line: 536
+# File: usr/share/ashyterm/window.py, line: 799
 msgid   "Model"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/window.py, line: 537
+# File: usr/share/ashyterm/window.py, line: 800
 msgid   "API key"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/window.py, line: 543
+# File: usr/share/ashyterm/window.py, line: 806
 #, python-brace-format
 msgid   "Configure {items} in Preferences > Terminal > AI Assistant."
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/window.py, line: 554
+# File: usr/share/ashyterm/window.py, line: 817
 msgid   "Ask the AI Assistant"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/window.py, line: 555
+# File: usr/share/ashyterm/window.py, line: 818
 msgid   "Describe the Linux task or question you need help with."
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/window.py, line: 559
+# File: usr/share/ashyterm/window.py, line: 822
 msgid   "Send"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/window.py, line: 587
+# File: usr/share/ashyterm/window.py, line: 865
+msgid   "Perguntas frequentes"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/window.py, line: 938
+#, python-brace-format
+msgid   "Sugestões correspondentes: {count}"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/window.py, line: 941
+msgid   "Nenhuma sugestão encontrada."
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/window.py, line: 944
+msgid   "Digite sua pergunta ou escolha uma das sugestões."
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/window.py, line: 962
 msgid   "Please enter a question for the assistant."
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/window.py, line: 593
+# File: usr/share/ashyterm/window.py, line: 968
 msgid   "AI assistant is processing, please wait..."
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/window.py, line: 651
+# File: usr/share/ashyterm/window.py, line: 1027
 msgid   "Here is what I found."
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/window.py, line: 685
+# File: usr/share/ashyterm/window.py, line: 1061
 msgid   "Response"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/window.py, line: 706
+# File: usr/share/ashyterm/window.py, line: 1082
 msgid   "Suggested Commands"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/window.py, line: 756
+# File: usr/share/ashyterm/window.py, line: 1132
 msgid   "Run"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/window.py, line: 790
+# File: usr/share/ashyterm/window.py, line: 1166
 msgid   "Command is empty, nothing to run."
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/window.py, line: 796
+# File: usr/share/ashyterm/window.py, line: 1172
 msgid   "Command sent to the terminal."
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/window.py, line: 802
+# File: usr/share/ashyterm/window.py, line: 1178
 msgid   "Failed to execute the command."
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/window.py, line: 871
+# File: usr/share/ashyterm/window.py, line: 1247
 msgid   "Session Validation Error"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/window.py, line: 872
+# File: usr/share/ashyterm/window.py, line: 1248
 #, python-brace-format
 msgid   "Session validation failed:\n"
         "{errors}"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/window.py, line: 928
+# File: usr/share/ashyterm/window.py, line: 1304
 msgid   "Cannot detach the last tab."
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/window.py, line: 1030
+# File: usr/share/ashyterm/window.py, line: 1406
 #, python-brace-format
 msgid   "Terminal {id}"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/window.py, line: 1044
+# File: usr/share/ashyterm/window.py, line: 1420
 msgid   "No open terminals found."
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/window.py, line: 1068
+# File: usr/share/ashyterm/window.py, line: 1444
 msgid   "Confirm sending of command"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/window.py, line: 1070
+# File: usr/share/ashyterm/window.py, line: 1446
 #, python-brace-format
 msgid   "Select which of the <b>{count}</b> open terminals should receive the "
         "command below."
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/window.py, line: 1085
+# File: usr/share/ashyterm/window.py, line: 1461
 msgid   "Choose the tabs that should run this command:"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/window.py, line: 1117
+# File: usr/share/ashyterm/window.py, line: 1493
 msgid   "Remember my choice"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/window.py, line: 1136
+# File: usr/share/ashyterm/window.py, line: 1512
 msgid   "Send Command"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/window.py, line: 1178
+# File: usr/share/ashyterm/window.py, line: 1554
 msgid   "No tabs were selected to receive the command."
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/window.py, line: 1289
+# File: usr/share/ashyterm/window.py, line: 1665
 msgid   "No active terminal to search in."
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/window.py, line: 1324
-# File: usr/share/ashyterm/window.py, line: 1371
+# File: usr/share/ashyterm/window.py, line: 1700
+# File: usr/share/ashyterm/window.py, line: 1747
 msgid   "Invalid search pattern."
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/window.py, line: 1399
-# File: usr/share/ashyterm/window.py, line: 1432
+# File: usr/share/ashyterm/window.py, line: 1775
+# File: usr/share/ashyterm/window.py, line: 1808
 msgid   "No more matches found."
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/window.py, line: 1467
+# File: usr/share/ashyterm/window.py, line: 1843
 msgid   "Initialization Error"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/window.py, line: 1468
+# File: usr/share/ashyterm/window.py, line: 1844
 #, python-brace-format
 msgid   "Failed to initialize terminal: {error}"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/window.py, line: 1492
+# File: usr/share/ashyterm/window.py, line: 1868
 msgid   "Save Current Session?"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/window.py, line: 1494
+# File: usr/share/ashyterm/window.py, line: 1870
 msgid   "Do you want to restore these tabs the next time you open Ashy "
         "Terminal?"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/window.py, line: 1498
+# File: usr/share/ashyterm/window.py, line: 1874
 msgid   "Don't Save"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/window.py, line: 1500
+# File: usr/share/ashyterm/window.py, line: 1876
 msgid   "Save and Close"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/window.py, line: 1531
-# File: usr/share/ashyterm/window.py, line: 1537
+# File: usr/share/ashyterm/window.py, line: 1907
+# File: usr/share/ashyterm/window.py, line: 1913
 msgid   "Close Window"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/window.py, line: 1533
+# File: usr/share/ashyterm/window.py, line: 1909
 msgid   "This window has active SSH connections. Closing will disconnect "
         "them. Are you sure?"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/window.py, line: 1610
+# File: usr/share/ashyterm/window.py, line: 1986
 msgid   "Invalid SSH Target"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/window.py, line: 1611
+# File: usr/share/ashyterm/window.py, line: 1987
 msgid   "Could not parse the provided SSH connection string."
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/window.py, line: 1745
+# File: usr/share/ashyterm/window.py, line: 2121
 msgid   "Remove this temporary file"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/window.py, line: 1772
+# File: usr/share/ashyterm/window.py, line: 2148
 msgid   "No temporary files found."
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/window.py, line: 1775
+# File: usr/share/ashyterm/window.py, line: 2151
 msgid   "Clear All Temporary Files"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/window.py, line: 1797
+# File: usr/share/ashyterm/window.py, line: 2173
 msgid   "Clear All Temporary Files?"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/window.py, line: 1799
+# File: usr/share/ashyterm/window.py, line: 2175
 msgid   "This will remove all locally downloaded files for remote editing. "
         "Any unsaved changes in your editor will be lost. This action cannot "
         "be undone."
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/window.py, line: 1805
+# File: usr/share/ashyterm/window.py, line: 2181
 msgid   "Clear All"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/window.py, line: 1863
+# File: usr/share/ashyterm/window.py, line: 2239
 msgid   "No active terminal to send command to."
 msgstr  ""
 
