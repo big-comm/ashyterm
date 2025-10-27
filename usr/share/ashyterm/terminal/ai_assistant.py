@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import re
 import textwrap
 import threading
 import weakref
@@ -560,13 +561,51 @@ class TerminalAiAssistant:
             return False
 
         try:
-            window.show_ai_response_dialog(terminal, reply, commands, code_snippets)
+            formatted_reply = self._format_reply_for_dialog(reply)
+            window.show_ai_response_dialog(
+                terminal, formatted_reply, commands, code_snippets
+            )
         except Exception as exc:  # pylint: disable=broad-except
             self.logger.error("Failed to show AI response dialog: %s", exc)
             terminal.feed(
-                ("\n[AI Assistant] {}\n".format(reply.strip())).encode("utf-8")
+                ("\n[AI Assistant] {}\n".format(self._format_reply_for_dialog(reply))).encode("utf-8")
             )
         return False
+
+    @staticmethod
+    def _format_reply_for_dialog(text: str) -> str:
+        """Improve readability by normalizing inline code and list formatting."""
+        if not isinstance(text, str):
+            return ""
+
+        cleaned = text
+        cleaned = cleaned.replace("\r\n", "\n")
+        cleaned = cleaned.replace("\\n", "\n").replace("\\t", "\t")
+        cleaned = re.sub(r"`([^`]+)`", r"\1", cleaned)
+        cleaned = re.sub(r"\s*\+\s*", " ", cleaned)
+        cleaned = re.sub(r";\s*\n", "\n", cleaned)
+        cleaned = re.sub(r";\s*(?=[A-ZÁÀÃÂÉÊÍÓÔÕÚÜÇ0-9])", ".\n", cleaned)
+        cleaned = re.sub(r"\*\*([^*]+)\*\*", r"\1", cleaned)
+        cleaned = re.sub(r"__([^_]+)__", r"\1", cleaned)
+        cleaned = re.sub(r"(?<!\n)(\d+\.)", r"\n\1", cleaned)
+        cleaned = re.sub(r"\n\s*(\d+)\s*(?=\n\d)\n", r"\n\1", cleaned)
+        cleaned = re.sub(r"\n\s*-\s+", "\n• ", cleaned)
+        cleaned = re.sub(r"\n\s*\*\s+", "\n• ", cleaned)
+        cleaned = re.sub(r"\n{3,}", "\n\n", cleaned)
+
+        lines = []
+        previous_blank = False
+        for raw_line in cleaned.splitlines():
+            line = raw_line.strip()
+            if not line:
+                if not previous_blank:
+                    lines.append("")
+                    previous_blank = True
+                continue
+            lines.append(line)
+            previous_blank = False
+
+        return "\n".join(lines).strip()
 
     def _display_error_reply(self, terminal_id: int, message: str) -> bool:
         self._queue_toast(message)
