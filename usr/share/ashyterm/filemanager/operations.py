@@ -87,21 +87,42 @@ class FileOperations:
     def _get_session_key(self, session: SessionItem) -> str:
         return f"{session.user or ''}@{session.host}:{session.port or 22}"
 
-    def _is_command_available(self, session: SessionItem, command: str) -> bool:
+    def _is_command_available(
+        self, session: SessionItem, command: str, use_cache: bool = True
+    ) -> bool:
         session_key = self._get_session_key(session)
-        if (
-            session_key in self._command_cache
-            and command in self._command_cache[session_key]
-        ):
-            return self._command_cache[session_key][command]
+        if use_cache:
+            if (
+                session_key in self._command_cache
+                and command in self._command_cache[session_key]
+            ):
+                return self._command_cache[session_key][command]
 
         check_command = ["command", "-v", command]
-        success, _ = self.execute_command_on_session(check_command)
+        success, _ = self.execute_command_on_session(
+            check_command, session_override=session
+        )
 
         if session_key not in self._command_cache:
             self._command_cache[session_key] = {}
         self._command_cache[session_key][command] = success
         return success
+
+    def check_command_available(
+        self,
+        command: str,
+        use_cache: bool = True,
+        session_override: Optional[SessionItem] = None,
+    ) -> bool:
+        """
+        Public helper to check the availability of a command in the current or
+        overridden session. Optionally bypasses the local cache when a fresh
+        verification is required.
+        """
+        session = session_override if session_override else self.session_item
+        if not session:
+            return False
+        return self._is_command_available(session, command, use_cache=use_cache)
 
     def execute_command_on_session(
         self, command: List[str], session_override: Optional[SessionItem] = None
@@ -439,4 +460,3 @@ class FileOperations:
                         del self._active_processes[transfer_id]
 
         threading.Thread(target=upload_thread, daemon=True).start()
-

@@ -10,7 +10,7 @@ import tempfile
 import threading
 from functools import partial
 from pathlib import Path, PurePosixPath
-from typing import Dict, List, Optional
+from typing import Dict, List, Optional, Set
 
 from gi.repository import Adw, Gdk, Gio, GLib, GObject, Gtk, Pango, Vte
 
@@ -104,6 +104,9 @@ class FileManager(GObject.Object):
         self.file_monitors = {}
         self.edited_file_metadata = {}
         self._is_rebinding = False  # Flag to prevent race conditions during rebind
+        self._rsync_status: Dict[str, bool] = {}
+        self._rsync_notified_sessions: Set[str] = set()
+        self._rsync_checks_in_progress: Set[str] = set()
 
         # State for verified command execution
         self._pending_command = None
@@ -183,6 +186,7 @@ class FileManager(GObject.Object):
 
         self.operations = FileOperations(self.session_item)
         self.transfer_manager.file_operations = self.operations
+        self._check_remote_rsync_requirement()
 
         self.directory_change_handler_id = self.bound_terminal.connect(
             "notify::current-directory-uri", self._on_terminal_directory_changed
@@ -201,6 +205,79 @@ class FileManager(GObject.Object):
             self.refresh(terminal_dir, source="terminal")
 
         GLib.timeout_add(100, self._finish_rebinding)
+
+    def _get_session_identifier(self, session: SessionItem) -> str:
+        """Builds a stable identifier string for the current session."""
+        user = (session.user or "").strip()
+        host = (session.host or "").strip()
+        port = getattr(session, "port", 22) or 22
+        user_part = f"{user}@" if user else ""
+        host_part = host if host else ""
+        return f"{user_part}{host_part}:{port}"
+
+    def _show_rsync_missing_notification(self):
+        """Inform the user that rsync is required for optimized transfers."""
+        message = _(
+            "rsync is not installed on the remote host. Install the rsync package or use SFTP for transfers."
+        )
+        if hasattr(self.parent_window, "toast_overlay"):
+            toast = Adw.Toast(title=message)
+            self.parent_window.toast_overlay.add_toast(toast)
+        else:
+            self.logger.warning(message)
+
+    def _check_remote_rsync_requirement(self):
+        """Verify rsync availability for SSH sessions and warn when missing."""
+        session = self.session_item
+        operations = self.operations
+        if not session or not operations or not session.is_ssh():
+            return
+
+        session_key = self._get_session_identifier(session)
+        if session_key in self._rsync_checks_in_progress:
+            return
+
+        self._rsync_checks_in_progress.add(session_key)
+
+        def worker(session_ref: SessionItem, ops_ref: FileOperations, key: str):
+            rsync_available = True
+            try:
+                rsync_available = ops_ref.check_command_available(
+                    "rsync", use_cache=False, session_override=session_ref
+                )
+            except Exception as exc:
+                self.logger.error(
+                    f"Failed to verify rsync availability for {key}: {exc}"
+                )
+
+            def finalize():
+                self._rsync_checks_in_progress.discard(key)
+                current_session = self.session_item
+                if (
+                    not current_session
+                    or not current_session.is_ssh()
+                    or self._get_session_identifier(current_session) != key
+                ):
+                    return GLib.SOURCE_REMOVE
+
+                self._rsync_status[key] = rsync_available
+                if not rsync_available:
+                    if key not in self._rsync_notified_sessions:
+                        self.logger.info(
+                            f"rsync not detected on remote session {key}. Prompting user."
+                        )
+                        self._show_rsync_missing_notification()
+                        self._rsync_notified_sessions.add(key)
+                else:
+                    self._rsync_notified_sessions.discard(key)
+
+                return GLib.SOURCE_REMOVE
+
+            GLib.idle_add(finalize)
+
+        threading.Thread(
+            target=worker, args=(session, operations, session_key), daemon=True
+        ).start()
 
     def _finish_rebinding(self) -> bool:
         self._is_rebinding = False
