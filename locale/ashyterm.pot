@@ -429,7 +429,7 @@ msgstr  ""
 # #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
 #
 # File: usr/share/ashyterm/terminal/spawner.py, line: 385
-# File: usr/share/ashyterm/filemanager/operations.py, line: 137
+# File: usr/share/ashyterm/filemanager/operations.py, line: 158
 msgid   "Command timed out."
 msgstr  ""
 
@@ -622,8 +622,8 @@ msgstr  ""
 # #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
 #
 # File: usr/share/ashyterm/ui/window_ui.py, line: 429
-# File: usr/share/ashyterm/filemanager/manager.py, line: 2166
-# File: usr/share/ashyterm/filemanager/manager.py, line: 2299
+# File: usr/share/ashyterm/filemanager/manager.py, line: 2243
+# File: usr/share/ashyterm/filemanager/manager.py, line: 2376
 # File: usr/share/ashyterm/window.py, line: 336
 # File: usr/share/ashyterm/window.py, line: 2007
 # File: usr/share/ashyterm/window.py, line: 2019
@@ -753,12 +753,12 @@ msgstr  ""
 # File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 858
 # File: usr/share/ashyterm/ui/dialogs/move_dialogs.py, line: 64
 # File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 366
-# File: usr/share/ashyterm/filemanager/manager.py, line: 1514
-# File: usr/share/ashyterm/filemanager/manager.py, line: 1617
-# File: usr/share/ashyterm/filemanager/manager.py, line: 1826
-# File: usr/share/ashyterm/filemanager/manager.py, line: 1892
-# File: usr/share/ashyterm/filemanager/manager.py, line: 2256
-# File: usr/share/ashyterm/filemanager/manager.py, line: 2357
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1591
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1694
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1903
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1969
+# File: usr/share/ashyterm/filemanager/manager.py, line: 2333
+# File: usr/share/ashyterm/filemanager/manager.py, line: 2434
 # File: usr/share/ashyterm/window.py, line: 821
 # File: usr/share/ashyterm/window.py, line: 1511
 # File: usr/share/ashyterm/window.py, line: 1875
@@ -790,7 +790,7 @@ msgstr  ""
 # File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 692
 # File: usr/share/ashyterm/ui/dialogs/command_guide_dialog.py, line: 74
 # File: usr/share/ashyterm/ui/dialogs/folder_edit_dialog.py, line: 138
-# File: usr/share/ashyterm/filemanager/manager.py, line: 2257
+# File: usr/share/ashyterm/filemanager/manager.py, line: 2334
 # File: usr/share/ashyterm/state/window_state.py, line: 102
 msgid   "Save"
 msgstr  ""
@@ -830,8 +830,8 @@ msgstr  ""
 # File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 846
 # File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 873
 # File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 883
-# File: usr/share/ashyterm/filemanager/manager.py, line: 1050
-# File: usr/share/ashyterm/filemanager/manager.py, line: 2070
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1127
+# File: usr/share/ashyterm/filemanager/manager.py, line: 2147
 # File: usr/share/ashyterm/window.py, line: 2044
 # File: usr/share/ashyterm/app.py, line: 575
 msgid   "OK"
@@ -939,8 +939,8 @@ msgstr  ""
 # File: usr/share/ashyterm/ui/menus.py, line: 244
 # File: usr/share/ashyterm/ui/actions.py, line: 474
 # File: usr/share/ashyterm/ui/dialogs/command_guide_dialog.py, line: 735
-# File: usr/share/ashyterm/filemanager/manager.py, line: 1474
-# File: usr/share/ashyterm/filemanager/manager.py, line: 1515
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1551
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1592
 # File: usr/share/ashyterm/state/window_state.py, line: 206
 msgid   "Delete"
 msgstr  ""
@@ -1058,9 +1058,9 @@ msgstr  ""
 # File: usr/share/ashyterm/ui/menus.py, line: 219
 # File: usr/share/ashyterm/ui/menus.py, line: 239
 # File: usr/share/ashyterm/ui/actions.py, line: 397
-# File: usr/share/ashyterm/filemanager/manager.py, line: 1464
-# File: usr/share/ashyterm/filemanager/manager.py, line: 2350
-# File: usr/share/ashyterm/filemanager/manager.py, line: 2358
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1541
+# File: usr/share/ashyterm/filemanager/manager.py, line: 2427
+# File: usr/share/ashyterm/filemanager/manager.py, line: 2435
 msgid   "Rename"
 msgstr  ""
 
@@ -1564,7 +1564,7 @@ msgstr  ""
 # #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
 #
 # File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 523
-# File: usr/share/ashyterm/filemanager/manager.py, line: 869
+# File: usr/share/ashyterm/filemanager/manager.py, line: 946
 msgid   "Name"
 msgstr  ""
 
@@ -4811,121 +4811,127 @@ msgid   "This action cannot be undone and will remove all completed, failed, "
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/filemanager/manager.py, line: 376
-# File: usr/share/ashyterm/filemanager/manager.py, line: 1345
+# File: usr/share/ashyterm/filemanager/manager.py, line: 221
+msgid   "rsync is not installed on the remote host. Install the rsync package "
+        "or use SFTP for transfers."
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/filemanager/manager.py, line: 453
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1422
 msgid   "Refresh"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/filemanager/manager.py, line: 382
+# File: usr/share/ashyterm/filemanager/manager.py, line: 459
 msgid   "Show hidden files"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/filemanager/manager.py, line: 391
-# File: usr/share/ashyterm/filemanager/manager.py, line: 1270
+# File: usr/share/ashyterm/filemanager/manager.py, line: 468
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1347
 msgid   "Filter files..."
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/filemanager/manager.py, line: 397
+# File: usr/share/ashyterm/filemanager/manager.py, line: 474
 msgid   "Recursive Search"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/filemanager/manager.py, line: 415
+# File: usr/share/ashyterm/filemanager/manager.py, line: 492
 msgid   "Transfer History"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/filemanager/manager.py, line: 420
+# File: usr/share/ashyterm/filemanager/manager.py, line: 497
 msgid   "Upload Files"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/filemanager/manager.py, line: 665
-# File: usr/share/ashyterm/filemanager/manager.py, line: 1266
+# File: usr/share/ashyterm/filemanager/manager.py, line: 742
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1343
 msgid   "Searching..."
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/filemanager/manager.py, line: 775
+# File: usr/share/ashyterm/filemanager/manager.py, line: 852
 #, python-brace-format
 msgid   "Showing first {count} results. Refine your search to narrow the list."
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/filemanager/manager.py, line: 878
+# File: usr/share/ashyterm/filemanager/manager.py, line: 955
 msgid   "Size"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/filemanager/manager.py, line: 883
+# File: usr/share/ashyterm/filemanager/manager.py, line: 960
 msgid   "Date Modified"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/filemanager/manager.py, line: 891
-# File: usr/share/ashyterm/filemanager/manager.py, line: 1471
+# File: usr/share/ashyterm/filemanager/manager.py, line: 968
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1548
 msgid   "Permissions"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/filemanager/manager.py, line: 899
-# File: usr/share/ashyterm/filemanager/manager.py, line: 1554
+# File: usr/share/ashyterm/filemanager/manager.py, line: 976
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1631
 msgid   "Owner"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/filemanager/manager.py, line: 907
-# File: usr/share/ashyterm/filemanager/manager.py, line: 1568
+# File: usr/share/ashyterm/filemanager/manager.py, line: 984
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1645
 msgid   "Group"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/filemanager/manager.py, line: 1044
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1121
 msgid   "Command Failed"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/filemanager/manager.py, line: 1046
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1123
 msgid   "The command did not complete in time. The terminal may be busy or "
         "unresponsive. Your original input has been restored."
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/filemanager/manager.py, line: 1166
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1243
 msgid   "Loading..."
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/filemanager/manager.py, line: 1268
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1345
 msgid   "Recursive filter..."
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/filemanager/manager.py, line: 1459
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1536
 msgid   "Open/Edit"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/filemanager/manager.py, line: 1460
-# File: usr/share/ashyterm/filemanager/manager.py, line: 2085
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1537
+# File: usr/share/ashyterm/filemanager/manager.py, line: 2162
 msgid   "Open With..."
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/filemanager/manager.py, line: 1468
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1545
 msgid   "Download"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/filemanager/manager.py, line: 1503
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1580
 msgid   "Delete File"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/filemanager/manager.py, line: 1505
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1582
 #, python-brace-format
 msgid   "Are you sure you want to permanently delete '{name}'?\n"
         "\n"
@@ -4933,12 +4939,12 @@ msgid   "Are you sure you want to permanently delete '{name}'?\n"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/filemanager/manager.py, line: 1508
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1585
 msgid   "Delete Multiple Items"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/filemanager/manager.py, line: 1510
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1587
 #, python-brace-format
 msgid   "Are you sure you want to permanently delete these {count} items?\n"
         "\n"
@@ -4946,104 +4952,104 @@ msgid   "Are you sure you want to permanently delete these {count} items?\n"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/filemanager/manager.py, line: 1528
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1605
 msgid   "Delete command sent to terminal"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/filemanager/manager.py, line: 1537
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1614
 #, python-brace-format
 msgid   "Set Permissions for {count} Items"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/filemanager/manager.py, line: 1539
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1616
 #, python-brace-format
 msgid   "Permissions for {name}"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/filemanager/manager.py, line: 1543
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1620
 msgid   "Set new file permissions."
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/filemanager/manager.py, line: 1545
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1622
 #, python-brace-format
 msgid   "Set file permissions for: {name}\n"
         "Current: {perms}"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/filemanager/manager.py, line: 1557
-# File: usr/share/ashyterm/filemanager/manager.py, line: 1571
-# File: usr/share/ashyterm/filemanager/manager.py, line: 1585
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1634
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1648
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1662
 msgid   "Read"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/filemanager/manager.py, line: 1558
-# File: usr/share/ashyterm/filemanager/manager.py, line: 1572
-# File: usr/share/ashyterm/filemanager/manager.py, line: 1586
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1635
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1649
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1663
 msgid   "Write"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/filemanager/manager.py, line: 1559
-# File: usr/share/ashyterm/filemanager/manager.py, line: 1573
-# File: usr/share/ashyterm/filemanager/manager.py, line: 1587
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1636
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1650
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1664
 msgid   "Execute"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/filemanager/manager.py, line: 1582
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1659
 msgid   "Others"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/filemanager/manager.py, line: 1618
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1695
 msgid   "Apply"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/filemanager/manager.py, line: 1632
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1709
 msgid   "Chmod command sent to terminal"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/filemanager/manager.py, line: 1672
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1749
 msgid   "Select Destination Folder"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/filemanager/manager.py, line: 1674
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1751
 msgid   "Download Here"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/filemanager/manager.py, line: 1717
-# File: usr/share/ashyterm/filemanager/manager.py, line: 1735
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1794
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1812
 msgid   "Error"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/filemanager/manager.py, line: 1721
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1798
 msgid   "Upload File(s) to This Folder"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/filemanager/manager.py, line: 1723
-# File: usr/share/ashyterm/filemanager/manager.py, line: 1827
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1800
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1904
 msgid   "Upload"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/filemanager/manager.py, line: 1808
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1885
 msgid   "Confirm Upload"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/filemanager/manager.py, line: 1810
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1887
 #, python-brace-format
 msgid   "You are about to upload {count} item(s) to:\n"
         "<b>{dest}</b>\n"
@@ -5052,12 +5058,12 @@ msgid   "You are about to upload {count} item(s) to:\n"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/filemanager/manager.py, line: 1886
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1963
 msgid   "File Has Changed on Server"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/filemanager/manager.py, line: 1888
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1965
 #, python-brace-format
 msgid   "The file '{filename}' has been modified on the server since you last "
         "opened it. Your local changes will be lost if you download the new "
@@ -5065,43 +5071,43 @@ msgid   "The file '{filename}' has been modified on the server since you last "
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/filemanager/manager.py, line: 1893
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1970
 msgid   "Open Local Version"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/filemanager/manager.py, line: 1894
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1971
 msgid   "Download New Version"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/filemanager/manager.py, line: 1925
+# File: usr/share/ashyterm/filemanager/manager.py, line: 2002
 msgid   "Could not get remote file details."
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/filemanager/manager.py, line: 2034
+# File: usr/share/ashyterm/filemanager/manager.py, line: 2111
 msgid   "Permission Denied"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/filemanager/manager.py, line: 2041
+# File: usr/share/ashyterm/filemanager/manager.py, line: 2118
 msgid   "Transfer cancelled."
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/filemanager/manager.py, line: 2054
+# File: usr/share/ashyterm/filemanager/manager.py, line: 2131
 msgid   "Transfer Failed: Permission Denied"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/filemanager/manager.py, line: 2056
+# File: usr/share/ashyterm/filemanager/manager.py, line: 2133
 #, python-brace-format
 msgid   "Could not complete the transfer of '{filename}'."
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/filemanager/manager.py, line: 2061
+# File: usr/share/ashyterm/filemanager/manager.py, line: 2138
 #, python-brace-format
 msgid   "Please check if you have the necessary write permissions in the "
         "destination directory:\n"
@@ -5110,107 +5116,107 @@ msgid   "Please check if you have the necessary write permissions in the "
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/filemanager/manager.py, line: 2126
+# File: usr/share/ashyterm/filemanager/manager.py, line: 2203
 msgid   "Failed to open file."
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/filemanager/manager.py, line: 2168
+# File: usr/share/ashyterm/filemanager/manager.py, line: 2245
 msgid   "File is open. Saving it will upload changes back to the server."
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/filemanager/manager.py, line: 2206
+# File: usr/share/ashyterm/filemanager/manager.py, line: 2283
 msgid   "Upload failed: Could not verify remote file."
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/filemanager/manager.py, line: 2224
+# File: usr/share/ashyterm/filemanager/manager.py, line: 2301
 msgid   "File Conflict"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/filemanager/manager.py, line: 2226
+# File: usr/share/ashyterm/filemanager/manager.py, line: 2303
 #, python-brace-format
 msgid   "The file '{filename}' has been modified on the server since you "
         "started editing it. How would you like to proceed?"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/filemanager/manager.py, line: 2230
+# File: usr/share/ashyterm/filemanager/manager.py, line: 2307
 msgid   "Cancel Upload"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/filemanager/manager.py, line: 2231
+# File: usr/share/ashyterm/filemanager/manager.py, line: 2308
 msgid   "Overwrite Server File"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/filemanager/manager.py, line: 2232
+# File: usr/share/ashyterm/filemanager/manager.py, line: 2309
 msgid   "Save as New File"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/filemanager/manager.py, line: 2250
+# File: usr/share/ashyterm/filemanager/manager.py, line: 2327
 msgid   "Save As"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/filemanager/manager.py, line: 2251
+# File: usr/share/ashyterm/filemanager/manager.py, line: 2328
 msgid   "Enter a new name for the file on the server:"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/filemanager/manager.py, line: 2301
+# File: usr/share/ashyterm/filemanager/manager.py, line: 2378
 msgid   "Upload Complete"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/filemanager/manager.py, line: 2303
+# File: usr/share/ashyterm/filemanager/manager.py, line: 2380
 #, python-brace-format
 msgid   "'{filename}' has been saved to the server."
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/filemanager/manager.py, line: 2308
+# File: usr/share/ashyterm/filemanager/manager.py, line: 2385
 msgid   "Upload Failed"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/filemanager/manager.py, line: 2310
+# File: usr/share/ashyterm/filemanager/manager.py, line: 2387
 #, python-brace-format
 msgid   "Could not save '{filename}' to the server: {error}"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/filemanager/manager.py, line: 2351
+# File: usr/share/ashyterm/filemanager/manager.py, line: 2428
 #, python-brace-format
 msgid   "Enter a new name for '{name}'"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/filemanager/manager.py, line: 2373
+# File: usr/share/ashyterm/filemanager/manager.py, line: 2450
 msgid   "Rename command sent to terminal"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/filemanager/operations.py, line: 114
+# File: usr/share/ashyterm/filemanager/operations.py, line: 135
 msgid   "No session context for file operation."
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/filemanager/operations.py, line: 143
+# File: usr/share/ashyterm/filemanager/operations.py, line: 164
 msgid   "Unsupported session type for command execution."
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/filemanager/operations.py, line: 183
+# File: usr/share/ashyterm/filemanager/operations.py, line: 204
 msgid   "Permission Denied: Check write permissions on the destination."
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/filemanager/operations.py, line: 187
+# File: usr/share/ashyterm/filemanager/operations.py, line: 208
 msgid   "An unknown transfer error occurred."
 msgstr  ""
 
