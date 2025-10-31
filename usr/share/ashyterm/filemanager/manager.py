@@ -509,6 +509,13 @@ class FileManager(GObject.Object):
         drop_target.connect("drop", self._on_files_dropped, self.scrolled_window)
         self.scrolled_window.add_controller(drop_target)
 
+        scrolled_bg_click = Gtk.GestureClick.new()
+        scrolled_bg_click.set_button(Gdk.BUTTON_SECONDARY)
+        scrolled_bg_click.set_propagation_phase(Gtk.PropagationPhase.CAPTURE)
+        scrolled_bg_click.set_exclusive(True)
+        scrolled_bg_click.connect("pressed", self._on_scrolled_window_background_click)
+        self.scrolled_window.add_controller(scrolled_bg_click)
+
         self.action_bar = Gtk.ActionBar()
 
         refresh_button = Gtk.Button.new_from_icon_name("view-refresh-symbolic")
@@ -1068,6 +1075,13 @@ class FileManager(GObject.Object):
         key_controller.connect("key-released", self._on_column_view_key_released)
         col_view.add_controller(key_controller)
 
+        background_click = Gtk.GestureClick.new()
+        background_click.set_button(Gdk.BUTTON_SECONDARY)
+        background_click.set_propagation_phase(Gtk.PropagationPhase.CAPTURE)
+        background_click.set_exclusive(True)
+        background_click.connect("pressed", self._on_column_view_background_click)
+        col_view.add_controller(background_click)
+
         return col_view
 
     def _setup_name_cell(self, factory, list_item):
@@ -1479,6 +1493,56 @@ class FileManager(GObject.Object):
                 self._show_general_context_menu(translated_x, translated_y)
         except Exception as e:
             self.logger.error(f"Error in right-click handler: {e}")
+
+    def _on_column_view_background_click(self, gesture, n_press, x, y):
+        try:
+            target = self.column_view.pick(int(x), int(y), Gtk.PickFlags.DEFAULT)
+            css_name = target.get_css_name() if isinstance(target, Gtk.Widget) else None
+            self.logger.info(
+                f"ColumnView background click at ({x}, {y}) target={type(target).__name__ if target else None} css={css_name}"
+            )
+
+            is_row_target = False
+            widget = target if isinstance(target, Gtk.Widget) else None
+            while widget:
+                css = widget.get_css_name()
+                if css in {"columnviewrow", "listitem", "row"}:
+                    is_row_target = True
+                    break
+                widget = widget.get_parent()
+
+            if is_row_target:
+                gesture.set_state(Gtk.EventSequenceState.DENIED)
+                return
+
+            if self.selection_model:
+                self.selection_model.unselect_all()
+
+            gesture.set_state(Gtk.EventSequenceState.CLAIMED)
+            self._show_general_context_menu(x, y)
+        except Exception as e:
+            self.logger.error(f"Error in background right-click handler: {e}")
+
+    def _on_scrolled_window_background_click(self, gesture, n_press, x, y):
+        try:
+            widget = gesture.get_widget()
+            tx, ty = x, y
+            if widget:
+                try:
+                    translated = widget.translate_coordinates(
+                        self.column_view, x, y
+                    )
+                    if translated:
+                        tx, ty = translated
+                except Exception:
+                    pass
+
+            gesture.set_state(Gtk.EventSequenceState.CLAIMED)
+            self._on_column_view_background_click(gesture, n_press, tx, ty)
+        except Exception as e:
+            self.logger.error(
+                f"Error in scrolled window background right-click handler: {e}"
+            )
 
     def _show_general_context_menu(self, x, y):
         menu = Gio.Menu()
