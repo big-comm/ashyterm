@@ -10,7 +10,7 @@ import tempfile
 import threading
 from functools import partial
 from pathlib import Path, PurePosixPath
-from typing import Dict, List, Optional, Set
+from typing import Any, Dict, List, Optional, Set
 
 from gi.repository import Adw, Gdk, Gio, GLib, GObject, Gtk, Pango, Vte
 
@@ -111,6 +111,9 @@ class FileManager(GObject.Object):
         # State for verified command execution
         self._pending_command = None
         self._command_timeout_id = 0
+        self._clipboard_items: List[Dict[str, Any]] = []
+        self._clipboard_operation: Optional[str] = None
+        self._clipboard_session_key: Optional[str] = None
 
         # Recursive search state
         self.recursive_search_enabled = False
@@ -214,6 +217,66 @@ class FileManager(GObject.Object):
         user_part = f"{user}@" if user else ""
         host_part = host if host else ""
         return f"{user_part}{host_part}:{port}"
+
+    def _get_current_session_key(self) -> str:
+        if not self.session_item:
+            return "unknown"
+        if self.session_item.is_local():
+            return "local"
+        return self._get_session_identifier(self.session_item)
+
+    def _show_toast(self, message: str):
+        if hasattr(self.parent_window, "toast_overlay"):
+            self.parent_window.toast_overlay.add_toast(Adw.Toast(title=message))
+        else:
+            self.logger.info(message)
+
+    def _clear_clipboard(self) -> None:
+        self._clipboard_items = []
+        self._clipboard_operation = None
+        self._clipboard_session_key = None
+
+    def _can_paste(self) -> bool:
+        if not self._clipboard_items or not self._clipboard_operation:
+            return False
+        if not self.current_path:
+            return False
+        return self._clipboard_session_key == self._get_current_session_key()
+
+    def _prompt_for_new_item(
+        self,
+        heading: str,
+        body: str,
+        default_name: str,
+        confirm_label: str,
+        callback,
+    ) -> None:
+        dialog = Adw.AlertDialog(
+            heading=heading,
+            body=body,
+            close_response="cancel",
+        )
+
+        entry = Gtk.Entry(text=default_name, hexpand=True, activates_default=True)
+        entry.select_region(0, -1)
+        dialog.set_extra_child(entry)
+
+        dialog.add_response("cancel", _("Cancel"))
+        dialog.add_response("confirm", confirm_label)
+        dialog.set_response_appearance("confirm", Adw.ResponseAppearance.SUGGESTED)
+        dialog.set_default_response("confirm")
+
+        def on_response(dlg, response, *_args):
+            if response != "confirm":
+                return
+            name = InputSanitizer.sanitize_filename(entry.get_text().strip())
+            if not name:
+                self._show_toast(_("Name cannot be empty."))
+                return
+            callback(name)
+
+        dialog.connect("response", on_response)
+        dialog.present(self.parent_window)
 
     def _show_rsync_missing_notification(self):
         """Inform the user that rsync is required for optimized transfers."""
@@ -1419,11 +1482,22 @@ class FileManager(GObject.Object):
 
     def _show_general_context_menu(self, x, y):
         menu = Gio.Menu()
-        menu.append(_("Refresh"), "app.refresh")
+
+        creation_section = Gio.Menu()
+        creation_section.append(_("Create Folder"), "context.create_folder")
+        creation_section.append(_("Create File"), "context.create_file")
+        menu.append_section(None, creation_section)
+
+        if self._can_paste():
+            clipboard_section = Gio.Menu()
+            clipboard_section.append(_("Paste"), "context.paste")
+            menu.append_section(None, clipboard_section)
+
         popover = Gtk.PopoverMenu.new_from_model(menu)
         if popover.get_parent() is not None:
             popover.unparent()
         popover.set_parent(self.column_view)
+        self._setup_general_context_actions(popover)
         rect = Gdk.Rectangle()
         rect.x, rect.y = int(x), int(y)
         popover.set_pointing_to(rect)
@@ -1540,6 +1614,13 @@ class FileManager(GObject.Object):
         if num_items == 1:
             menu.append(_("Rename"), "context.rename")
 
+        clipboard_section = Gio.Menu()
+        clipboard_section.append(_("Copy"), "context.copy")
+        clipboard_section.append(_("Cut"), "context.cut")
+        if self._can_paste():
+            clipboard_section.append(_("Paste"), "context.paste")
+        menu.append_section(None, clipboard_section)
+
         if self._is_remote_session():
             menu.append_section(None, Gio.Menu())
             menu.append(_("Download"), "context.download")
@@ -1562,15 +1643,139 @@ class FileManager(GObject.Object):
             "open_edit": self._on_open_edit_action,
             "open_with": self._on_open_with_action,
             "rename": self._on_rename_action,
+            "copy": self._on_copy_action,
+            "cut": self._on_cut_action,
+            "paste": self._on_paste_action,
             "chmod": self._on_chmod_action,
             "download": self._on_download_action,
             "delete": self._on_delete_action,
         }
         for name, callback in actions.items():
             action = Gio.SimpleAction.new(name, None)
-            action.connect(
-                "activate", lambda a, _, cb=callback, itms=items: cb(a, _, itms)
-            )
+            if name == "paste":
+                action.set_enabled(self._can_paste())
+                action.connect("activate", lambda a, _, cb=callback: cb())
+            else:
+                action.connect(
+                    "activate",
+                    lambda a, _, cb=callback, itms=list(items): cb(a, _, itms),
+                )
+            action_group.add_action(action)
+        popover.insert_action_group("context", action_group)
+
+    def _on_create_folder_action(self, *_args):
+        base_path = PurePosixPath(self.current_path or "/")
+
+        def create_folder(name: str):
+            target_path = str(base_path / name)
+            command = ["mkdir", "-p", target_path]
+            self._execute_verified_command(command, command_type="mkdir")
+            self._show_toast(_("Create folder command sent to terminal"))
+
+        self._prompt_for_new_item(
+            heading=_("Create Folder"),
+            body=_("Enter a name for the new folder:"),
+            default_name=_("New Folder"),
+            confirm_label=_("Create"),
+            callback=create_folder,
+        )
+
+    def _on_create_file_action(self, *_args):
+        base_path = PurePosixPath(self.current_path or "/")
+
+        def create_file(name: str):
+            target_path = str(base_path / name)
+            command = ["touch", target_path]
+            self._execute_verified_command(command, command_type="touch")
+            self._show_toast(_("Create file command sent to terminal"))
+
+        self._prompt_for_new_item(
+            heading=_("Create File"),
+            body=_("Enter a name for the new file:"),
+            default_name=_("New File"),
+            confirm_label=_("Create"),
+            callback=create_file,
+        )
+
+    def _on_copy_action(self, _action, _param, items: List[FileItem]):
+        selectable_items = [item for item in items if item.name != ".."]
+        if not selectable_items:
+            self._show_toast(_("No items selected to copy."))
+            return
+
+        base_path = PurePosixPath(self.current_path or "/")
+        self._clipboard_items = [
+            {
+                "name": item.name,
+                "path": str(base_path / item.name),
+                "is_directory": item.is_directory,
+            }
+            for item in selectable_items
+        ]
+        self._clipboard_operation = "copy"
+        self._clipboard_session_key = self._get_current_session_key()
+        self._show_toast(_("Items copied to clipboard."))
+
+    def _on_cut_action(self, _action, _param, items: List[FileItem]):
+        selectable_items = [item for item in items if item.name != ".."]
+        if not selectable_items:
+            self._show_toast(_("No items selected to cut."))
+            return
+
+        base_path = PurePosixPath(self.current_path or "/")
+        self._clipboard_items = [
+            {
+                "name": item.name,
+                "path": str(base_path / item.name),
+                "is_directory": item.is_directory,
+            }
+            for item in selectable_items
+        ]
+        self._clipboard_operation = "cut"
+        self._clipboard_session_key = self._get_current_session_key()
+        self._show_toast(_("Items marked for move."))
+
+    def _on_paste_action(self):
+        if not self._can_paste():
+            self._show_toast(_("Nothing to paste."))
+            return
+
+        destination_dir = str(PurePosixPath(self.current_path or "/"))
+        sources = [entry["path"] for entry in self._clipboard_items]
+
+        if self._clipboard_operation == "cut":
+            if all(
+                str(PurePosixPath(source).parent) == destination_dir
+                for source in sources
+            ):
+                self._show_toast(_("Items are already in this location."))
+                return
+            command = ["mv"] + sources + [destination_dir]
+            command_type = "mv"
+            toast_message = _("Move command sent to terminal")
+            self._clear_clipboard()
+        else:
+            command = ["cp", "-a"] + sources + [destination_dir]
+            command_type = "cp"
+            toast_message = _("Copy command sent to terminal")
+
+        self._execute_verified_command(command, command_type=command_type)
+        self._show_toast(toast_message)
+
+    def _setup_general_context_actions(self, popover):
+        action_group = Gio.SimpleActionGroup()
+        actions = {
+            "create_folder": self._on_create_folder_action,
+            "create_file": self._on_create_file_action,
+            "paste": self._on_paste_action,
+        }
+        for name, callback in actions.items():
+            action = Gio.SimpleAction.new(name, None)
+            if name == "paste":
+                action.set_enabled(self._can_paste())
+                action.connect("activate", lambda a, _, cb=callback: cb())
+            else:
+                action.connect("activate", lambda a, _, cb=callback: cb())
             action_group.add_action(action)
         popover.insert_action_group("context", action_group)
 
