@@ -145,7 +145,7 @@ class SessionEditDialog(BaseDialog):
             self.color_button.set_rgba(Gdk.RGBA())  # Set to no color
 
         clear_button = Gtk.Button(
-            icon_name="edit-clear-symbolic",
+            icon_name='big-edit-clear-symbolic',
             valign=Gtk.Align.CENTER,
             tooltip_text=_("Clear Color"),
             css_classes=["flat"],
@@ -378,7 +378,7 @@ class SessionEditDialog(BaseDialog):
         controls_box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=6)
         controls_box.set_halign(Gtk.Align.START)
         add_button = Gtk.Button(
-            icon_name="list-add-symbolic", label=_("Add"), css_classes=["flat"]
+            icon_name='big-list-add-symbolic', label=_("Add"), css_classes=["flat"]
         )
         add_button.connect("clicked", self._on_add_port_forward_clicked)
         controls_box.append(add_button)
@@ -454,11 +454,11 @@ class SessionEditDialog(BaseDialog):
 
             button_box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=6)
             edit_button = Gtk.Button(
-                icon_name="document-edit-symbolic", css_classes=["flat"]
+                icon_name='big-document-edit-symbolic', css_classes=["flat"]
             )
             edit_button.connect("clicked", self._on_edit_port_forward_clicked, index)
             delete_button = Gtk.Button(
-                icon_name="user-trash-symbolic", css_classes=["flat"]
+                icon_name='big-user-trash-symbolic', css_classes=["flat"]
             )
             delete_button.connect("clicked", self._on_delete_port_forward_clicked, index)
             button_box.append(edit_button)

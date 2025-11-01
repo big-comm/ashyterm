@@ -52,14 +52,14 @@ class TransferRow(Adw.ActionRow):
 
         # Action buttons
         self.action_box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=6)
-        self.cancel_button = Gtk.Button.new_from_icon_name("process-stop-symbolic")
+        self.cancel_button = Gtk.Button.new_from_icon_name('big-process-stop-symbolic')
         self.cancel_button.set_tooltip_text(_("Cancel transfer"))
         self.cancel_button.add_css_class("flat")
         self.cancel_button.connect(
             "clicked", lambda _: self.transfer_manager.cancel_transfer(self.transfer.id)
         )
 
-        self.remove_button = Gtk.Button.new_from_icon_name("edit-delete-symbolic")
+        self.remove_button = Gtk.Button.new_from_icon_name('big-edit-delete-symbolic')
         self.remove_button.set_tooltip_text(_("Remove from history"))
         self.remove_button.add_css_class("flat")
         self.remove_button.connect(
@@ -266,7 +266,7 @@ class TransferManagerDialog(Adw.Window):
         self.status_page = Adw.StatusPage(
             title=_("No Transfers"),
             description=_("Active and past transfers will appear here."),
-            icon_name="folder-download-symbolic",
+            icon_name='big-folder-download-symbolic',
             vexpand=True,
             visible=False,
         )

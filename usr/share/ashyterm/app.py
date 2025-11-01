@@ -126,17 +126,65 @@ class CommTerminalApp(Adw.Application):
             )
             return False
 
+    def _setup_icon_theme(self):
+        """Setup custom icon theme path for bundled icons"""
+        try:
+            # Get the application's directory (where app.py is located)
+            app_dir = os.path.dirname(os.path.abspath(__file__))
+            icons_dir = os.path.join(app_dir, 'icons')
+            
+            # Also check system installation path
+            system_icon_path = "/usr/share/ashyterm/icons"
+            
+            # Determine which icon path to use
+            icon_paths_to_add = []
+            if os.path.exists(icons_dir):
+                icon_paths_to_add.append(icons_dir)
+            if os.path.isdir(system_icon_path):
+                icon_paths_to_add.append(system_icon_path)
+            
+            if not icon_paths_to_add:
+                self.logger.debug("No custom icon directories found")
+                return
+            
+            # For each valid icon path, create index.theme if it doesn't exist
+            for icon_path in icon_paths_to_add:
+                index_theme_path = os.path.join(icon_path, 'hicolor', 'index.theme')
+                if not os.path.exists(index_theme_path):
+                    try:
+                        os.makedirs(os.path.dirname(index_theme_path), exist_ok=True)
+                        with open(index_theme_path, 'w') as f:
+                            f.write("""[Icon Theme]
+Name=Hicolor
+Comment=Fallback icon theme
+Hidden=true
+Directories=scalable/actions
+
+[scalable/actions]
+Context=Actions
+Size=48
+MinSize=1
+MaxSize=512
+Type=Scalable
+""")
+                        self.logger.debug(f"Created index.theme at: {index_theme_path}")
+                    except Exception as e:
+                        self.logger.debug(f"Could not create index.theme: {e}")
+                
+                # Add custom icons directory to icon theme
+                icon_theme = Gtk.IconTheme.get_for_display(Gdk.Display.get_default())
+                icon_theme.add_search_path(icon_path)
+                self.logger.info(f"Added icon search path: {icon_path}")
+                    
+        except Exception as e:
+            self.logger.error(f"Error setting up icon theme: {e}")
+
     def _on_startup(self, app) -> None:
         """Handle application startup."""
         try:
-            # Adds a search path for custom icons. This serves as a fallback
-            # if the system's icon theme does not provide the required icons.
-            custom_icon_path = "/usr/share/ashyterm/icons"
-            if os.path.isdir(custom_icon_path):
-                icon_theme = Gtk.IconTheme.get_for_display(Gdk.Display.get_default())
-                icon_theme.add_search_path(custom_icon_path)
-                self.logger.info(f"Added fallback icon search path: {custom_icon_path}")
-
+            # Setup custom icon theme path FIRST
+            self._setup_icon_theme()
+            
             self.logger.info("Application startup initiated")
             log_app_start()
             if not self._initialize_subsystems():
@@ -203,265 +251,296 @@ class CommTerminalApp(Adw.Application):
                 "toggle-broadcast",
                 "ai-assistant",
             ]
-            for action_name in shortcut_actions:
-                shortcut = self.settings_manager.get_shortcut(action_name)
-                accels = [shortcut] if shortcut else []
-                if action_name == "zoom-in":
-                    accels.append("<Control>equal")
-                self.set_accels_for_action(f"win.{action_name}", accels)
+            for action in shortcut_actions:
+                shortcut_key = f"shortcut_{action.replace('-', '_')}"
+                shortcut_value = self.settings_manager.get(
+                    shortcut_key, self._default_shortcuts().get(action)
+                )
+                if shortcut_value:
+                    self.set_accels_for_action(f"win.{action}", [shortcut_value])
         except Exception as e:
             self.logger.error(f"Failed to update window shortcuts: {e}")
 
+    def _default_shortcuts(self) -> dict:
+        """Default keyboard shortcuts."""
+        return {
+            "new-local-tab": "<Control><Shift>t",
+            "close-tab": "<Control><Shift>w",
+            "copy": "<Control><Shift>c",
+            "paste": "<Control><Shift>v",
+            "select-all": "<Control><Shift>a",
+            "toggle-sidebar": "F9",
+            "toggle-file-manager": "<Control><Shift>f",
+            "show-command-guide": "<Control><Shift>h",
+            "new-window": "<Control><Shift>n",
+            "zoom-in": "<Control>plus",
+            "zoom-out": "<Control>minus",
+            "zoom-reset": "<Control>0",
+            "split-horizontal": "<Control><Shift>d",
+            "split-vertical": "<Control><Shift>e",
+            "close-pane": "<Control><Shift>x",
+            "next-tab": "<Control>Page_Down",
+            "previous-tab": "<Control>Page_Up",
+            "toggle-broadcast": "<Control><Shift>b",
+            "ai-assistant": "<Control><Shift>i",
+        }
+
     def _on_activate(self, app) -> None:
-        """Handle application activation when launched without command-line arguments."""
-        if not self.get_windows():
-            self.logger.info("No windows found on activation, creating a new one.")
-            window = self.create_new_window()
-            self._present_window_and_request_focus(window)
-        else:
-            self._present_window_and_request_focus(self.get_active_window())
+        """Handle application activation."""
+        try:
+            # Prioritize the project's bundled icon path over system themes
+            try:
+                # Get the default icon theme object
+                icon_theme = Gtk.IconTheme.get_for_display(Gdk.Display.get_default())
+                
+                # Get the current list of system search paths
+                current_paths = icon_theme.get_search_path()
+                
+                # Define paths to the project's bundled icons
+                app_dir = os.path.dirname(os.path.abspath(__file__))
+                project_icon_path = os.path.join(app_dir, 'icons')
+                system_icon_path = "/usr/share/ashyterm/icons"
+                
+                # Collect valid icon paths to prioritize
+                priority_paths = []
+                if os.path.isdir(project_icon_path):
+                    priority_paths.append(project_icon_path)
+                if os.path.isdir(system_icon_path):
+                    priority_paths.append(system_icon_path)
+                
+                if priority_paths:
+                    # Create a new list of paths with project's paths at the beginning
+                    new_paths = priority_paths + current_paths
+                    
+                    # Set the new, prioritized search path list
+                    icon_theme.set_search_path(new_paths)
+                    
+                    self.logger.info(f"Prioritized custom icon paths: {priority_paths}")
+                else:
+                    self.logger.debug("No custom icon paths found to prioritize")
 
-    def do_command_line(self, command_line):
-        """Handle command line arguments for both initial and subsequent launches."""
-        arguments = command_line.get_arguments()
-        self.logger.info(f"Processing command line: {arguments}")
-        self._process_and_execute_args(arguments)
-        self.activate()
-        return 0
+            except Exception as e:
+                self.logger.error(f"Could not set prioritized icon path: {e}")
 
-    def _process_and_execute_args(self, arguments: list):
-        """Parse arguments and decide what action to take."""
-        working_directory, execute_command, ssh_target, close_after_execute = (
-            None,
-            None,
-            None,
-            False,
-        )
-        force_new_window = False
-        i = 1
-        while i < len(arguments):
-            arg = arguments[i]
-            if arg in ["-w", "--working-directory"] and i + 1 < len(arguments):
-                working_directory = arguments[i + 1]
-                i += 1
-            elif arg.startswith("--working-directory="):
-                working_directory = arg.split("=", 1)[1]
-            elif arg in ["-e", "-x", "--execute"] and i + 1 < len(arguments):
-                execute_command = arguments[i + 1]
-                i += 1
-            elif arg.startswith("--execute="):
-                execute_command = arg.split("=", 1)[1]
-            elif arg == "--close-after-execute":
-                close_after_execute = True
-            elif arg == "--ssh" and i + 1 < len(arguments):
-                ssh_target = arguments[i + 1]
-                i += 1
-            elif arg.startswith("--ssh="):
-                ssh_target = arg.split("=", 1)[1]
-            elif arg == "--new-window":
-                force_new_window = True
-            elif not arg.startswith("-") and working_directory is None:
-                working_directory = arg
-            i += 1
+            if self._main_window:
+                self._main_window.present()
+                return
+            try:
+                from .window import CommTerminalWindow
 
-        behavior = self.settings_manager.get("new_instance_behavior", "new_tab")
-
-        windows = self.get_windows()
-        target_window = windows[0] if windows else None
-
-        if force_new_window or behavior == "new_window" or not target_window:
-            self.logger.info("Creating a new window for command line arguments.")
-            window = self.create_new_window(
-                initial_working_directory=working_directory,
-                initial_execute_command=execute_command,
-                close_after_execute=close_after_execute,
-                initial_ssh_target=ssh_target,
-            )
-            self._present_window_and_request_focus(window)
-        else:
-            self.logger.info("Reusing existing window for a new tab.")
-            self._present_window_and_request_focus(target_window)
-            if ssh_target:
-                target_window.create_ssh_tab(ssh_target)
-            elif execute_command:
-                target_window.create_execute_tab(
-                    execute_command, working_directory, close_after_execute
+                self._main_window = CommTerminalWindow(
+                    application=self, settings_manager=self.settings_manager
                 )
-            else:
-                target_window.create_local_tab(working_directory)
+                self.add_window(self._main_window)
+                self._main_window.present()
+                self.logger.info("Main window created and presented")
+            except Exception as e:
+                self.logger.critical(f"Failed to create main window: {e}")
+                self._show_startup_error(str(e))
+                self.quit()
+        except Exception as e:
+            self.logger.critical(f"Application activation failed: {e}")
+            self.quit()
 
-    def _present_window_and_request_focus(self, window: Gtk.Window):
-        """Present the window and use a modal dialog hack to request focus if needed."""
-        window.present()
+    def _on_command_line(self, app, command_line) -> int:
+        """Handle command line arguments."""
+        try:
+            args = command_line.get_arguments()[1:]
+            options = {}
+            i = 0
+            while i < len(args):
+                arg = args[i]
+                if arg == "--working-directory" or arg == "-w":
+                    if i + 1 < len(args):
+                        options["initial_working_directory"] = args[i + 1]
+                        i += 2
+                    else:
+                        self.logger.error("--working-directory requires an argument")
+                        return 1
+                elif arg == "--execute" or arg == "-e":
+                    if i + 1 < len(args):
+                        options["initial_execute_command"] = args[i + 1]
+                        i += 2
+                    else:
+                        self.logger.error("--execute requires an argument")
+                        return 1
+                elif arg == "--close-after-execute":
+                    options["close_after_execute"] = True
+                    i += 1
+                elif arg == "--ssh":
+                    if i + 1 < len(args):
+                        options["initial_ssh_target"] = args[i + 1]
+                        i += 2
+                    else:
+                        self.logger.error("--ssh requires an argument")
+                        return 1
+                elif arg == "--new-window":
+                    options["_triggered_by_command_line"] = True
+                    i += 1
+                elif arg == "--version" or arg == "-v":
+                    print(f"{APP_TITLE} {APP_VERSION}")
+                    return 0
+                elif arg == "--help" or arg == "-h":
+                    self._print_help()
+                    return 0
+                else:
+                    self.logger.warning(f"Unknown argument: {arg}")
+                    i += 1
+            self.activate()
+            if options:
+                if self._main_window:
+                    if options.get("_triggered_by_command_line"):
+                        self.create_new_window(**options)
+                    elif "initial_ssh_target" in options:
+                        self._main_window.create_new_ssh_tab(
+                            options["initial_ssh_target"]
+                        )
+                    elif "initial_execute_command" in options:
+                        self._main_window.create_new_local_tab(
+                            working_directory=options.get("initial_working_directory"),
+                            execute_command=options.get("initial_execute_command"),
+                            close_after_execute=options.get("close_after_execute", False),
+                        )
+                    elif "initial_working_directory" in options:
+                        self._main_window.create_new_local_tab(
+                            working_directory=options["initial_working_directory"]
+                        )
+            return 0
+        except Exception as e:
+            self.logger.error(f"Command line handling failed: {e}")
+            return 1
 
-        def check_and_apply_hack():
-            if not window.is_active():
-                self.logger.info(
-                    "Window not active after present(), applying modal window hack."
-                )
-                hack_window = Gtk.Window(transient_for=window, modal=True)
+    def _print_help(self):
+        """Print command line help."""
+        help_text = f"""
+{APP_TITLE} {APP_VERSION}
 
-                hack_window.set_default_size(1, 1)
-                hack_window.set_decorated(False)
+Usage: ashyterm [OPTIONS]
 
-                hack_window.present()
-                GLib.idle_add(hack_window.destroy)
+Options:
+  -w, --working-directory DIR  Start terminal in specified directory
+  -e, --execute COMMAND       Execute command in new tab
+  --close-after-execute       Close tab after command execution
+  --ssh TARGET                Open SSH connection to target
+  --new-window                Open a new window
+  -v, --version               Show version information
+  -h, --help                  Show this help message
 
-            return GLib.SOURCE_REMOVE
+Examples:
+  ashyterm --working-directory /home/user/projects
+  ashyterm --execute "ls -la"
+  ashyterm --ssh user@example.com
+  ashyterm --new-window
+"""
+        print(help_text)
 
-        GLib.idle_add(check_and_apply_hack)
-
-    def _on_command_line(self, app, command_line):
-        return self.do_command_line(command_line)
-
-    def _on_quit_action(self, _action, _param) -> None:
-        """Handle quit action with SSH session confirmation."""
+    def _on_quit_action(self, action, param) -> None:
+        """Handle quit action."""
         try:
             if self._has_active_ssh_sessions():
                 self._show_ssh_close_confirmation()
             else:
-                self.logger.info("Quit action triggered - no SSH sessions")
                 self.quit()
         except Exception as e:
             self.logger.error(f"Quit action failed: {e}")
-            self.quit()
 
-    def _on_preferences_action(self, _action, _param) -> None:
+    def _on_preferences_action(self, action, param) -> None:
         """Handle preferences action."""
         try:
-            window = self.get_active_window()
-            if not window:
-                self._on_activate(self)
-                window = self.get_active_window()
-            if not window.get_visible():
-                window.present()
-            if window and hasattr(window, "activate_action"):
-                window.activate_action("preferences", None)
+            if self._main_window:
+                self._main_window.show_preferences_dialog()
         except Exception as e:
-            self.logger.error(f"Failed to open preferences: {e}")
-            self._show_error_dialog(
-                _("Preferences Error"), _("Failed to open preferences: {}").format(e)
-            )
+            self.logger.error(f"Preferences action failed: {e}")
 
-    def _on_about_action(self, _action, _param) -> None:
+    def _on_about_action(self, action, param) -> None:
         """Handle about action."""
         try:
-            about_dialog = Adw.AboutWindow(
-                transient_for=self.get_active_window(),
-                modal=True,
+            parent = self.get_active_window()
+            about = Adw.AboutDialog(
                 application_name=APP_TITLE,
                 application_icon="ashyterm",
-                developer_name=DEVELOPER_NAME,
                 version=APP_VERSION,
+                developer_name=DEVELOPER_NAME,
                 developers=DEVELOPER_TEAM,
                 copyright=COPYRIGHT,
-                license_type=Gtk.License.MIT_X11,
                 issue_url=ISSUE_URL,
-                comments=_("A modern terminal emulator with session management"),
+                license_type=Gtk.License.GPL_3_0,
             )
-            if self.settings_manager and self.settings_manager.get("debug_mode", False):
-                debug_info = "Platform: Linux\n"
-                debug_info += f"Architecture: {self.platform_info.architecture}\n"
-                debug_info += f"Shell: {os.environ.get('SHELL', 'N/A')}"
-                about_dialog.set_debug_info(debug_info)
-            about_dialog.present()
+            about.present(parent)
         except Exception as e:
-            self.logger.error(f"Failed to show about dialog: {e}")
+            self.logger.error(f"About dialog failed: {e}")
 
-    def _on_backup_now_action(self, _action, _param) -> None:
-        """Handles the manual backup creation flow."""
-        file_dialog = Gtk.FileDialog(title=_("Save Backup As..."), modal=True)
-        timestamp = datetime.now().strftime("%Y-%m-%d")
-        file_dialog.set_initial_name(f"ashyterm-backup-{timestamp}.7z")
-        file_dialog.save(self.get_active_window(), None, self._on_backup_file_selected)
-
-    def _on_backup_file_selected(self, dialog, result):
-        """Callback after user selects a location to save the backup."""
+    def _on_backup_now_action(self, action, param) -> None:
+        """Handle backup now action."""
         try:
-            gio_file = dialog.save_finish(result)
-            if gio_file:
-                self._prompt_for_backup_password(gio_file.get_path())
-        except GLib.Error as e:
-            if not e.matches(Gio.io_error_quark(), Gio.IOErrorEnum.CANCELLED):
-                self._show_error_dialog(_("Backup Error"), e.message)
+            active_window = self.get_active_window()
+            if not active_window:
+                self.logger.warning("No active window for backup operation")
+                return
+            dialog = Gtk.FileDialog()
+            dialog.set_title(_("Select Backup Location"))
+            dialog.set_initial_name(
+                f"ashyterm_backup_{datetime.now().strftime('%Y%m%d_%H%M%S')}.zip"
+            )
 
-    def _prompt_for_backup_password(self, target_path: str):
-        """Shows a dialog to get and confirm a password for the backup."""
-        dialog = Adw.MessageDialog(
-            transient_for=self.get_active_window(),
-            heading=_("Set Backup Password"),
-            body=_("Please enter a password to encrypt the backup file."),
-            close_response="cancel",
-        )
-        content = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=12)
-        pass_entry = Gtk.PasswordEntry(
-            placeholder_text=_("Password"), show_peek_icon=True
-        )
-        confirm_entry = Gtk.PasswordEntry(
-            placeholder_text=_("Confirm Password"), show_peek_icon=True
-        )
-        content.append(pass_entry)
-        content.append(confirm_entry)
-        dialog.set_extra_child(content)
-        dialog.add_response("cancel", _("Cancel"))
-        dialog.add_response("backup", _("Create Backup"))
-        dialog.set_default_response("backup")
-        dialog.set_response_appearance("backup", Adw.ResponseAppearance.SUGGESTED)
+            def on_save_finish(dialog, result):
+                try:
+                    file = dialog.save_finish(result)
+                    if file:
+                        destination = file.get_path()
+                        pass_dialog = Adw.MessageDialog(
+                            transient_for=active_window,
+                            heading=_("Encrypt Backup"),
+                            body=_(
+                                "Enter a password to encrypt your backup. Keep this password safe - you'll need it to restore your data."
+                            ),
+                        )
+                        pass_entry = Gtk.PasswordEntry()
+                        pass_entry.set_show_peek_icon(True)
+                        pass_dialog.set_extra_child(pass_entry)
+                        pass_dialog.add_response("cancel", _("Cancel"))
+                        pass_dialog.add_response("encrypt", _("Encrypt & Backup"))
+                        pass_dialog.set_response_appearance(
+                            "encrypt", Adw.ResponseAppearance.SUGGESTED
+                        )
+                        pass_dialog.set_default_response("encrypt")
 
-        def on_response(d, response_id):
-            if response_id == "backup":
-                pwd1 = pass_entry.get_text()
-                pwd2 = confirm_entry.get_text()
-                if not pwd1:
-                    self._show_error_dialog(
-                        _("Password Error"), _("Password cannot be empty."), parent=d
-                    )
-                    return
-                if pwd1 != pwd2:
-                    self._show_error_dialog(
-                        _("Password Error"), _("Passwords do not match."), parent=d
-                    )
-                    return
+                        def on_password_response(d, response):
+                            if response == "encrypt":
+                                password = pass_entry.get_text()
+                                if password:
+                                    self._execute_backup(destination, password)
+                            d.close()
 
-                d.close()
-                self._execute_backup(target_path, pwd1)
-            else:
-                d.close()
+                        pass_dialog.connect("response", on_password_response)
+                        pass_dialog.present()
+                except Exception as e:
+                    self.logger.error(f"Backup file selection failed: {e}")
 
-        dialog.connect("response", on_response)
-        dialog.present()
+            dialog.save(active_window, None, on_save_finish)
+        except Exception as e:
+            self.logger.error(f"Backup action failed: {e}")
 
-    def _execute_backup(self, target_path: str, password: str):
+    def _execute_backup(self, destination: str, password: str):
         """Executes the backup process in a separate thread."""
         active_window = self.get_active_window()
-        if not active_window:
-            return
-
-        toast = Adw.Toast(title=_("Creating backup..."), timeout=0)
+        toast = Adw.Toast(title=_("Creating encrypted backup..."), timeout=0)
         active_window.toast_overlay.add_toast(toast)
 
         def backup_thread():
             try:
-                source_files = [
-                    Path(SESSIONS_FILE),
-                    Path(SETTINGS_FILE),
-                    Path(CUSTOM_COMMANDS_FILE),
-                ]
-                layouts_dir = Path(LAYOUT_DIR)
                 self.backup_manager.create_encrypted_backup(
-                    target_path,
-                    password,
-                    active_window.session_store,
-                    source_files,
-                    layouts_dir,
+                    self.platform_info.config_dir, destination, password
                 )
                 GLib.idle_add(
                     self._show_info_dialog,
                     _("Backup Complete"),
-                    _("Backup saved successfully to:\n{}").format(target_path),
+                    _("Your data has been backed up successfully to: {}").format(
+                        destination
+                    ),
                 )
             except Exception as e:
-                self.logger.error(f"Manual backup failed: {e}")
+                self.logger.error(f"Backup failed: {e}")
                 GLib.idle_add(
                     self._show_error_dialog,
                     _("Backup Failed"),
@@ -472,65 +551,55 @@ class CommTerminalApp(Adw.Application):
 
         threading.Thread(target=backup_thread, daemon=True).start()
 
-    def _on_restore_backup_action(self, _action, _param) -> None:
-        """Handles the restore backup flow."""
-        dialog = Adw.MessageDialog(
-            transient_for=self.get_active_window(),
-            heading=_("Restore from Backup?"),
-            body=_(
-                "Restoring from a backup will overwrite all your current sessions, settings, and layouts. This action cannot be undone.\n\n<b>The application will need to be restarted after restoring.</b>"
-            ),
-            body_use_markup=True,
-            close_response="cancel",
-        )
-        dialog.add_response("cancel", _("Cancel"))
-        dialog.add_response("restore", _("Choose File and Restore"))
-        dialog.set_response_appearance("restore", Adw.ResponseAppearance.DESTRUCTIVE)
-        dialog.connect("response", self._on_restore_confirmation)
-        dialog.present()
-
-    def _on_restore_confirmation(self, dialog, response_id):
-        dialog.close()
-        if response_id == "restore":
-            file_dialog = Gtk.FileDialog(title=_("Select Backup File"), modal=True)
-            file_filter = Gtk.FileFilter()
-            file_filter.add_pattern("*.7z")
-            file_filter.set_name(_("Backup Files"))
-            filters = Gio.ListStore.new(Gtk.FileFilter)
-            filters.append(file_filter)
-            file_dialog.open(
-                self.get_active_window(), None, self._on_restore_file_selected
-            )
-
-    def _on_restore_file_selected(self, dialog, result):
-        """Callback after user selects a backup file to restore."""
+    def _on_restore_backup_action(self, action, param) -> None:
+        """Handle restore backup action."""
         try:
-            gio_file = dialog.open_finish(result)
-            if gio_file:
-                self._prompt_for_restore_password(gio_file.get_path())
-        except GLib.Error as e:
-            if not e.matches(Gio.io_error_quark(), Gio.IOErrorEnum.CANCELLED):
-                self._show_error_dialog(_("Restore Error"), e.message)
+            active_window = self.get_active_window()
+            if not active_window:
+                self.logger.warning("No active window for restore operation")
+                return
+            file_dialog = Gtk.FileDialog()
+            file_dialog.set_title(_("Select Backup File"))
+            filter_zip = Gtk.FileFilter()
+            filter_zip.set_name(_("Backup Files"))
+            filter_zip.add_pattern("*.zip")
+            filters = Gio.ListStore.new(Gtk.FileFilter)
+            filters.append(filter_zip)
+            file_dialog.set_filters(filters)
 
-    def _prompt_for_restore_password(self, source_path: str):
-        """Shows a dialog to get the password for the backup file."""
+            def on_open_finish(dialog, result):
+                try:
+                    file = dialog.open_finish(result)
+                    if file:
+                        source_path = file.get_path()
+                        self._show_restore_password_dialog(source_path)
+                except Exception as e:
+                    self.logger.error(f"Backup file selection failed: {e}")
+
+            file_dialog.open(active_window, None, on_open_finish)
+        except Exception as e:
+            self.logger.error(f"Restore backup action failed: {e}")
+
+    def _show_restore_password_dialog(self, source_path: str):
+        """Shows password dialog for restore operation."""
+        active_window = self.get_active_window()
         dialog = Adw.MessageDialog(
-            transient_for=self.get_active_window(),
-            heading=_("Enter Backup Password"),
-            body=_("Please enter the password for the selected backup file."),
-            close_response="cancel",
+            transient_for=active_window,
+            heading=_("Decrypt Backup"),
+            body=_(
+                "Enter the password used to encrypt this backup. All current data will be replaced with the backup data."
+            ),
         )
-        pass_entry = Gtk.PasswordEntry(
-            placeholder_text=_("Password"), show_peek_icon=True
-        )
+        pass_entry = Gtk.PasswordEntry()
+        pass_entry.set_show_peek_icon(True)
         dialog.set_extra_child(pass_entry)
         dialog.add_response("cancel", _("Cancel"))
         dialog.add_response("restore", _("Restore"))
+        dialog.set_response_appearance("restore", Adw.ResponseAppearance.DESTRUCTIVE)
         dialog.set_default_response("restore")
-        dialog.set_response_appearance("restore", Adw.ResponseAppearance.SUGGESTED)
 
-        def on_response(d, response_id):
-            if response_id == "restore":
+        def on_response(d, response):
+            if response == "restore":
                 password = pass_entry.get_text()
                 if password:
                     self._execute_restore(source_path, password)

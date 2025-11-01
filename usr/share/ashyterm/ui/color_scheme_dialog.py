@@ -307,7 +307,7 @@ class _SchemePreviewRow(Adw.ActionRow):
         preview_area.set_draw_func(self._draw_preview, None)
         self.add_prefix(preview_area)
 
-        self.checkmark_icon = Gtk.Image.new_from_icon_name("object-select-symbolic")
+        self.checkmark_icon = Gtk.Image.new_from_icon_name('big-object-select-symbolic')
         self.add_suffix(self.checkmark_icon)
 
     def set_selected(self, selected: bool):
