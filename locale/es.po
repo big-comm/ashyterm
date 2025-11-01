@@ -6857,89 +6857,45 @@ msgstr "Borrar todo"
 msgid "No active terminal to send command to."
 msgstr "No hay un terminal activo para enviar el comando."
 # 
-# File: usr/share/ashyterm/app.py, line: 333
+# File: usr/share/ashyterm/app.py, line: 481
 #: NEEDS WORK
-msgid "Preferences Error"
-msgstr "Error de Preferencias"
+msgid "Select Backup Location"
+msgstr "Seleccionar ubicación de copia de seguridad"
 # 
-# File: usr/share/ashyterm/app.py, line: 332
-# File: usr/share/ashyterm/app.py, line: 333
+# File: usr/share/ashyterm/app.py, line: 493
 #: NEEDS WORK
-#, python-brace-format
-msgid "Failed to open preferences: {}"
-msgstr "Error al abrir las preferencias: {}"
+msgid "Encrypt Backup"
+msgstr "Cifrar Copia de Seguridad"
 # 
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
-# 
-# File: usr/share/ashyterm/__init__.py, line: 62
-# File: usr/share/ashyterm/app.py, line: 350
+# File: usr/share/ashyterm/app.py, line: 495
 #: NEEDS WORK
-msgid "A modern terminal emulator with session management"
-msgstr "Un emulador de terminal moderno con gestión de sesiones"
+msgid ""
+"Enter a password to encrypt your backup. Keep this password safe - you'll need it to restore your "
+"data."
+msgstr ""
+"Introduce una contraseña para cifrar tu copia de seguridad. Mantén esta contraseña a salvo; la "
+"necesitarás para restaurar tus datos."
 # 
-# File: usr/share/ashyterm/app.py, line: 356
+# File: usr/share/ashyterm/app.py, line: 502
 #: NEEDS WORK
-msgid "Save Backup As..."
-msgstr "Guardar copia de seguridad como..."
+msgid "Encrypt & Backup"
+msgstr "Cifrar y Copia de Seguridad"
 # 
-# File: usr/share/ashyterm/app.py, line: 368
-# File: usr/share/ashyterm/app.py, line: 379
-# File: usr/share/ashyterm/app.py, line: 392
-# File: usr/share/ashyterm/app.py, line: 396
+# File: usr/share/ashyterm/app.py, line: 527
 #: NEEDS WORK
-msgid "Backup Error"
-msgstr "Error de copia de seguridad"
-# 
-# File: usr/share/ashyterm/app.py, line: 375
-#: NEEDS WORK
-msgid "Set Backup Password"
-msgstr "Establecer contraseña de respaldo"
-# 
-# File: usr/share/ashyterm/app.py, line: 376
-#: NEEDS WORK
-msgid "Please enter a password to encrypt the backup file."
-msgstr "Por favor, introduzca una contraseña para cifrar el archivo de copia de seguridad."
-# 
-# File: usr/share/ashyterm/app.py, line: 384
-#: NEEDS WORK
-msgid "Confirm Password"
-msgstr "Confirmar contraseña"
-# 
-# File: usr/share/ashyterm/app.py, line: 400
-# File: usr/share/ashyterm/app.py, line: 405
-#: NEEDS WORK
-msgid "Password Error"
-msgstr "Error de contraseña"
-# 
-# File: usr/share/ashyterm/app.py, line: 400
-#: NEEDS WORK
-msgid "Password cannot be empty."
-msgstr "La contraseña no puede estar vacía."
-# 
-# File: usr/share/ashyterm/app.py, line: 405
-#: NEEDS WORK
-msgid "Passwords do not match."
-msgstr "Las contraseñas no coinciden."
-# 
-# File: usr/share/ashyterm/app.py, line: 423
-#: NEEDS WORK
-msgid "Creating backup..."
-msgstr "Creando copia de seguridad..."
+msgid "Creating encrypted backup..."
+msgstr "Creando copia de seguridad encriptada..."
 # 
 # File: usr/share/ashyterm/app.py, line: 390
 #: NEEDS WORK
 msgid "Backup Complete"
 msgstr "Copia de seguridad completa"
 # 
-# File: usr/share/ashyterm/app.py, line: 440
+# File: usr/share/ashyterm/app.py, line: 538
 #: NEEDS WORK
 #, python-brace-format
-msgid ""
-"Backup saved successfully to:\n"
-"{}"
-msgstr ""
-"Copia de seguridad guardada correctamente en:  \n"
-"{}"
+msgid "Your data has been backed up successfully to: {}"
+msgstr "Tus datos se han respaldado correctamente en: {}"
 # 
 # File: usr/share/ashyterm/app.py, line: 446
 #: NEEDS WORK
@@ -6952,29 +6908,6 @@ msgstr "Copia de seguridad fallida"
 msgid "Could not create backup: {}"
 msgstr "No se pudo crear la copia de seguridad: {}"
 # 
-# File: usr/share/ashyterm/app.py, line: 458
-#: NEEDS WORK
-msgid "Restore from Backup?"
-msgstr "¿Restaurar desde la copia de seguridad?"
-# 
-# File: usr/share/ashyterm/app.py, line: 460
-#: NEEDS WORK
-msgid ""
-"Restoring from a backup will overwrite all your current sessions, settings, and layouts. This "
-"action cannot be undone.\n"
-"\n"
-"<b>The application will need to be restarted after restoring.</b>"
-msgstr ""
-"Restaurar desde una copia de seguridad sobrescribirá todas tus sesiones, configuraciones y diseños "
-"actuales. Esta acción no se puede deshacer.\n"
-"\n"
-"<b>La aplicación necesitará reiniciarse después de restaurar.</b>"
-# 
-# File: usr/share/ashyterm/app.py, line: 466
-#: NEEDS WORK
-msgid "Choose File and Restore"
-msgstr "Elegir archivo y restaurar"
-# 
 # File: usr/share/ashyterm/app.py, line: 474
 #: NEEDS WORK
 msgid "Select Backup File"
@@ -6985,21 +6918,19 @@ msgstr "Seleccionar archivo de copia de seguridad"
 msgid "Backup Files"
 msgstr "Archivos de respaldo"
 # 
-# File: usr/share/ashyterm/app.py, line: 402
-# File: usr/share/ashyterm/app.py, line: 416
+# File: usr/share/ashyterm/app.py, line: 588
 #: NEEDS WORK
-msgid "Restore Error"
-msgstr "Error de restauración"
+msgid "Decrypt Backup"
+msgstr "Descifrar copia de seguridad"
 # 
-# File: usr/share/ashyterm/app.py, line: 499
+# File: usr/share/ashyterm/app.py, line: 590
 #: NEEDS WORK
-msgid "Enter Backup Password"
-msgstr "Introduzca la contraseña de respaldo"
-# 
-# File: usr/share/ashyterm/app.py, line: 500
-#: NEEDS WORK
-msgid "Please enter the password for the selected backup file."
-msgstr "Por favor, introduzca la contraseña del archivo de copia de seguridad seleccionado."
+msgid ""
+"Enter the password used to encrypt this backup. All current data will be replaced with the backup "
+"data."
+msgstr ""
+"Ingrese la contraseña utilizada para cifrar esta copia de seguridad. Todos los datos actuales serán "
+"reemplazados por los datos de la copia de seguridad."
 # 
 # File: usr/share/ashyterm/app.py, line: 508
 #: NEEDS WORK

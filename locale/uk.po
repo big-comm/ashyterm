@@ -6826,89 +6826,45 @@ msgstr "Очистити все"
 msgid "No active terminal to send command to."
 msgstr "Неактивний термінал для відправлення команди."
 # 
-# File: usr/share/ashyterm/app.py, line: 333
+# File: usr/share/ashyterm/app.py, line: 481
 #: NEEDS WORK
-msgid "Preferences Error"
-msgstr "Помилка налаштувань"
+msgid "Select Backup Location"
+msgstr "Select Backup Location"
 # 
-# File: usr/share/ashyterm/app.py, line: 332
-# File: usr/share/ashyterm/app.py, line: 333
+# File: usr/share/ashyterm/app.py, line: 493
 #: NEEDS WORK
-#, python-brace-format
-msgid "Failed to open preferences: {}"
-msgstr "Не вдалося відкрити налаштування: {}"
+msgid "Encrypt Backup"
+msgstr "Шифрувати резервну копію"
 # 
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
-# 
-# File: usr/share/ashyterm/__init__.py, line: 62
-# File: usr/share/ashyterm/app.py, line: 350
+# File: usr/share/ashyterm/app.py, line: 495
 #: NEEDS WORK
-msgid "A modern terminal emulator with session management"
-msgstr "Сучасний емулятор терміналу з управлінням сесіями"
+msgid ""
+"Enter a password to encrypt your backup. Keep this password safe - you'll need it to restore your "
+"data."
+msgstr ""
+"Введіть пароль для шифрування вашої резервної копії. Зберігайте цей пароль у безпеці - він "
+"знадобиться вам для відновлення ваших даних."
 # 
-# File: usr/share/ashyterm/app.py, line: 356
+# File: usr/share/ashyterm/app.py, line: 502
 #: NEEDS WORK
-msgid "Save Backup As..."
-msgstr "Зберегти резервну копію як..."
+msgid "Encrypt & Backup"
+msgstr "Шифрувати та резервне копіювання"
 # 
-# File: usr/share/ashyterm/app.py, line: 368
-# File: usr/share/ashyterm/app.py, line: 379
-# File: usr/share/ashyterm/app.py, line: 392
-# File: usr/share/ashyterm/app.py, line: 396
+# File: usr/share/ashyterm/app.py, line: 527
 #: NEEDS WORK
-msgid "Backup Error"
-msgstr "Розширення резервної копії"
-# 
-# File: usr/share/ashyterm/app.py, line: 375
-#: NEEDS WORK
-msgid "Set Backup Password"
-msgstr "Встановити пароль резервної копії"
-# 
-# File: usr/share/ashyterm/app.py, line: 376
-#: NEEDS WORK
-msgid "Please enter a password to encrypt the backup file."
-msgstr "Please enter a password to encrypt the backup file."
-# 
-# File: usr/share/ashyterm/app.py, line: 384
-#: NEEDS WORK
-msgid "Confirm Password"
-msgstr "Підтвердити пароль"
-# 
-# File: usr/share/ashyterm/app.py, line: 400
-# File: usr/share/ashyterm/app.py, line: 405
-#: NEEDS WORK
-msgid "Password Error"
-msgstr "Парольна помилка"
-# 
-# File: usr/share/ashyterm/app.py, line: 400
-#: NEEDS WORK
-msgid "Password cannot be empty."
-msgstr "Пароль не може бути порожнім."
-# 
-# File: usr/share/ashyterm/app.py, line: 405
-#: NEEDS WORK
-msgid "Passwords do not match."
-msgstr "Passwords do not match."
-# 
-# File: usr/share/ashyterm/app.py, line: 423
-#: NEEDS WORK
-msgid "Creating backup..."
-msgstr "Створення резервної копії..."
+msgid "Creating encrypted backup..."
+msgstr "Створення зашифрованої резервної копії..."
 # 
 # File: usr/share/ashyterm/app.py, line: 390
 #: NEEDS WORK
 msgid "Backup Complete"
 msgstr "Резервне копіювання завершено"
 # 
-# File: usr/share/ashyterm/app.py, line: 440
+# File: usr/share/ashyterm/app.py, line: 538
 #: NEEDS WORK
 #, python-brace-format
-msgid ""
-"Backup saved successfully to:\n"
-"{}"
-msgstr ""
-"Резервна копія успішно збережена в:  \n"
-"{}"
+msgid "Your data has been backed up successfully to: {}"
+msgstr "Ваші дані були успішно збережені за адресою: {}"
 # 
 # File: usr/share/ashyterm/app.py, line: 446
 #: NEEDS WORK
@@ -6921,29 +6877,6 @@ msgstr "Резервне копіювання не вдалося"
 msgid "Could not create backup: {}"
 msgstr "Не вдалося створити резервну копію: {}"
 # 
-# File: usr/share/ashyterm/app.py, line: 458
-#: NEEDS WORK
-msgid "Restore from Backup?"
-msgstr "Відновити з резервної копії?"
-# 
-# File: usr/share/ashyterm/app.py, line: 460
-#: NEEDS WORK
-msgid ""
-"Restoring from a backup will overwrite all your current sessions, settings, and layouts. This "
-"action cannot be undone.\n"
-"\n"
-"<b>The application will need to be restarted after restoring.</b>"
-msgstr ""
-"Відновлення з резервної копії перезапише всі ваші поточні сеанси, налаштування та макети. Цю дію не "
-"можна скасувати.\n"
-"\n"
-"<b>Після відновлення застосунок потрібно буде перезапустити.</b>"
-# 
-# File: usr/share/ashyterm/app.py, line: 466
-#: NEEDS WORK
-msgid "Choose File and Restore"
-msgstr "Виберіть файл та відновіть"
-# 
 # File: usr/share/ashyterm/app.py, line: 474
 #: NEEDS WORK
 msgid "Select Backup File"
@@ -6954,21 +6887,19 @@ msgstr "Виберіть файл резервної копії"
 msgid "Backup Files"
 msgstr "Backup Files"
 # 
-# File: usr/share/ashyterm/app.py, line: 402
-# File: usr/share/ashyterm/app.py, line: 416
+# File: usr/share/ashyterm/app.py, line: 588
 #: NEEDS WORK
-msgid "Restore Error"
-msgstr "Відновлення помилки"
+msgid "Decrypt Backup"
+msgstr "Дешифрувати резервну копію"
 # 
-# File: usr/share/ashyterm/app.py, line: 499
+# File: usr/share/ashyterm/app.py, line: 590
 #: NEEDS WORK
-msgid "Enter Backup Password"
-msgstr "Введіть пароль резервної копії"
-# 
-# File: usr/share/ashyterm/app.py, line: 500
-#: NEEDS WORK
-msgid "Please enter the password for the selected backup file."
-msgstr "Please enter the password for the selected backup file."
+msgid ""
+"Enter the password used to encrypt this backup. All current data will be replaced with the backup "
+"data."
+msgstr ""
+"Введіть пароль, який використовується для шифрування цього резервного копіювання. Усі поточні дані "
+"будуть замінені даними резервної копії."
 # 
 # File: usr/share/ashyterm/app.py, line: 508
 #: NEEDS WORK

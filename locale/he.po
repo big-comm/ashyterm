@@ -6795,89 +6795,43 @@ msgstr "נקה הכל"
 msgid "No active terminal to send command to."
 msgstr "אין טרמינל פעיל לשליחת פקודה."
 # 
-# File: usr/share/ashyterm/app.py, line: 333
+# File: usr/share/ashyterm/app.py, line: 481
 #: NEEDS WORK
-msgid "Preferences Error"
-msgstr "שגיאת העדפות"
+msgid "Select Backup Location"
+msgstr "בחר מיקום גיבוי"
 # 
-# File: usr/share/ashyterm/app.py, line: 332
-# File: usr/share/ashyterm/app.py, line: 333
+# File: usr/share/ashyterm/app.py, line: 493
 #: NEEDS WORK
-#, python-brace-format
-msgid "Failed to open preferences: {}"
-msgstr "נכשל בפתיחת העדפות: {}"
+msgid "Encrypt Backup"
+msgstr "הצפן גיבוי"
 # 
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
-# 
-# File: usr/share/ashyterm/__init__.py, line: 62
-# File: usr/share/ashyterm/app.py, line: 350
+# File: usr/share/ashyterm/app.py, line: 495
 #: NEEDS WORK
-msgid "A modern terminal emulator with session management"
-msgstr "מממשק מסוף מודרני עם ניהול מושבים"
+msgid ""
+"Enter a password to encrypt your backup. Keep this password safe - you'll need it to restore your "
+"data."
+msgstr "הזן סיסמה כדי להצפין את הגיבוי שלך. שמור על הסיסמה הזו בטוחה - תצטרך אותה כדי לשחזר את הנתונים שלך."
 # 
-# File: usr/share/ashyterm/app.py, line: 356
+# File: usr/share/ashyterm/app.py, line: 502
 #: NEEDS WORK
-msgid "Save Backup As..."
-msgstr "שמור גיבוי בשם..."
+msgid "Encrypt & Backup"
+msgstr "הצפנה וגיבוי"
 # 
-# File: usr/share/ashyterm/app.py, line: 368
-# File: usr/share/ashyterm/app.py, line: 379
-# File: usr/share/ashyterm/app.py, line: 392
-# File: usr/share/ashyterm/app.py, line: 396
+# File: usr/share/ashyterm/app.py, line: 527
 #: NEEDS WORK
-msgid "Backup Error"
-msgstr "שגיאת גיבוי"
-# 
-# File: usr/share/ashyterm/app.py, line: 375
-#: NEEDS WORK
-msgid "Set Backup Password"
-msgstr "הגדר סיסמת גיבוי"
-# 
-# File: usr/share/ashyterm/app.py, line: 376
-#: NEEDS WORK
-msgid "Please enter a password to encrypt the backup file."
-msgstr "אנא הזן סיסמה כדי להצפין את קובץ הגיבוי."
-# 
-# File: usr/share/ashyterm/app.py, line: 384
-#: NEEDS WORK
-msgid "Confirm Password"
-msgstr "אשר סיסמה"
-# 
-# File: usr/share/ashyterm/app.py, line: 400
-# File: usr/share/ashyterm/app.py, line: 405
-#: NEEDS WORK
-msgid "Password Error"
-msgstr "שגיאת סיסמה"
-# 
-# File: usr/share/ashyterm/app.py, line: 400
-#: NEEDS WORK
-msgid "Password cannot be empty."
-msgstr "הסיסמה לא יכולה להיות ריקה."
-# 
-# File: usr/share/ashyterm/app.py, line: 405
-#: NEEDS WORK
-msgid "Passwords do not match."
-msgstr "הסיסמאות אינן תואמות."
-# 
-# File: usr/share/ashyterm/app.py, line: 423
-#: NEEDS WORK
-msgid "Creating backup..."
-msgstr "יוצר גיבוי..."
+msgid "Creating encrypted backup..."
+msgstr "יוצרים גיבוי מוצפן..."
 # 
 # File: usr/share/ashyterm/app.py, line: 390
 #: NEEDS WORK
 msgid "Backup Complete"
 msgstr "גיבוי הושלם"
 # 
-# File: usr/share/ashyterm/app.py, line: 440
+# File: usr/share/ashyterm/app.py, line: 538
 #: NEEDS WORK
 #, python-brace-format
-msgid ""
-"Backup saved successfully to:\n"
-"{}"
-msgstr ""
-"גיבוי נשמר בהצלחה ל:  \n"
-"{}"
+msgid "Your data has been backed up successfully to: {}"
+msgstr "הנתונים שלך גובו בהצלחה ל: {}"
 # 
 # File: usr/share/ashyterm/app.py, line: 446
 #: NEEDS WORK
@@ -6890,28 +6844,6 @@ msgstr "גיבוי נכשל"
 msgid "Could not create backup: {}"
 msgstr "לא ניתן ליצור גיבוי: {}"
 # 
-# File: usr/share/ashyterm/app.py, line: 458
-#: NEEDS WORK
-msgid "Restore from Backup?"
-msgstr "שחזר מגיבוי?"
-# 
-# File: usr/share/ashyterm/app.py, line: 460
-#: NEEDS WORK
-msgid ""
-"Restoring from a backup will overwrite all your current sessions, settings, and layouts. This "
-"action cannot be undone.\n"
-"\n"
-"<b>The application will need to be restarted after restoring.</b>"
-msgstr ""
-"שחזור מגיבוי יחליף את כל הסשנים, ההגדרות והפריסות הנוכחיות שלך. פעולה זו אינה ניתנת לביטול.\n"
-"\n"
-"<b>היישום יצטרך להיסגר ולהיפתח מחדש לאחר השחזור.</b>"
-# 
-# File: usr/share/ashyterm/app.py, line: 466
-#: NEEDS WORK
-msgid "Choose File and Restore"
-msgstr "בחר קובץ ושחזר"
-# 
 # File: usr/share/ashyterm/app.py, line: 474
 #: NEEDS WORK
 msgid "Select Backup File"
@@ -6922,21 +6854,17 @@ msgstr "בחר קובץ גיבוי"
 msgid "Backup Files"
 msgstr "גיבוי קבצים"
 # 
-# File: usr/share/ashyterm/app.py, line: 402
-# File: usr/share/ashyterm/app.py, line: 416
+# File: usr/share/ashyterm/app.py, line: 588
 #: NEEDS WORK
-msgid "Restore Error"
-msgstr "שגיאת שחזור"
+msgid "Decrypt Backup"
+msgstr "פענח גיבוי"
 # 
-# File: usr/share/ashyterm/app.py, line: 499
+# File: usr/share/ashyterm/app.py, line: 590
 #: NEEDS WORK
-msgid "Enter Backup Password"
-msgstr "הזן סיסמת גיבוי"
-# 
-# File: usr/share/ashyterm/app.py, line: 500
-#: NEEDS WORK
-msgid "Please enter the password for the selected backup file."
-msgstr "אנא הזן את הסיסמה עבור קובץ הגיבוי שנבחר."
+msgid ""
+"Enter the password used to encrypt this backup. All current data will be replaced with the backup "
+"data."
+msgstr "הזן את הסיסמה שנעשה בה שימוש כדי להצפין גיבוי זה. כל הנתונים הנוכחיים יוחלפו בנתוני הגיבוי."
 # 
 # File: usr/share/ashyterm/app.py, line: 508
 #: NEEDS WORK

@@ -6855,89 +6855,45 @@ msgstr "Șterge tot"
 msgid "No active terminal to send command to."
 msgstr "Nu există un terminal activ pentru a trimite comanda."
 # 
-# File: usr/share/ashyterm/app.py, line: 333
+# File: usr/share/ashyterm/app.py, line: 481
 #: NEEDS WORK
-msgid "Preferences Error"
-msgstr "Eroare de Preferințe"
+msgid "Select Backup Location"
+msgstr "Selectați locația de backup"
 # 
-# File: usr/share/ashyterm/app.py, line: 332
-# File: usr/share/ashyterm/app.py, line: 333
+# File: usr/share/ashyterm/app.py, line: 493
 #: NEEDS WORK
-#, python-brace-format
-msgid "Failed to open preferences: {}"
-msgstr "Eșec la deschiderea preferințelor: {}"
+msgid "Encrypt Backup"
+msgstr "Criptare Backup"
 # 
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
-# 
-# File: usr/share/ashyterm/__init__.py, line: 62
-# File: usr/share/ashyterm/app.py, line: 350
+# File: usr/share/ashyterm/app.py, line: 495
 #: NEEDS WORK
-msgid "A modern terminal emulator with session management"
-msgstr "Un emulator de terminal modern cu gestionarea sesiunilor"
+msgid ""
+"Enter a password to encrypt your backup. Keep this password safe - you'll need it to restore your "
+"data."
+msgstr ""
+"Introduceți o parolă pentru a cripta backup-ul dvs. Păstrați această parolă în siguranță - veți "
+"avea nevoie de ea pentru a restaura datele dvs."
 # 
-# File: usr/share/ashyterm/app.py, line: 356
+# File: usr/share/ashyterm/app.py, line: 502
 #: NEEDS WORK
-msgid "Save Backup As..."
-msgstr "Salvează copia de rezervă ca..."
+msgid "Encrypt & Backup"
+msgstr "Criptare și Backup"
 # 
-# File: usr/share/ashyterm/app.py, line: 368
-# File: usr/share/ashyterm/app.py, line: 379
-# File: usr/share/ashyterm/app.py, line: 392
-# File: usr/share/ashyterm/app.py, line: 396
+# File: usr/share/ashyterm/app.py, line: 527
 #: NEEDS WORK
-msgid "Backup Error"
-msgstr "Eroare de backup"
-# 
-# File: usr/share/ashyterm/app.py, line: 375
-#: NEEDS WORK
-msgid "Set Backup Password"
-msgstr "Setați parola de rezervă"
-# 
-# File: usr/share/ashyterm/app.py, line: 376
-#: NEEDS WORK
-msgid "Please enter a password to encrypt the backup file."
-msgstr "Vă rugăm să introduceți o parolă pentru a cripta fișierul de backup."
-# 
-# File: usr/share/ashyterm/app.py, line: 384
-#: NEEDS WORK
-msgid "Confirm Password"
-msgstr "Confirmă parola"
-# 
-# File: usr/share/ashyterm/app.py, line: 400
-# File: usr/share/ashyterm/app.py, line: 405
-#: NEEDS WORK
-msgid "Password Error"
-msgstr "Eroare parolă"
-# 
-# File: usr/share/ashyterm/app.py, line: 400
-#: NEEDS WORK
-msgid "Password cannot be empty."
-msgstr "Parola nu poate fi goală."
-# 
-# File: usr/share/ashyterm/app.py, line: 405
-#: NEEDS WORK
-msgid "Passwords do not match."
-msgstr "Parolele nu se potrivesc."
-# 
-# File: usr/share/ashyterm/app.py, line: 423
-#: NEEDS WORK
-msgid "Creating backup..."
-msgstr "Crearea unei copii de rezervă..."
+msgid "Creating encrypted backup..."
+msgstr "Crearea unei copii de rezervă criptate..."
 # 
 # File: usr/share/ashyterm/app.py, line: 390
 #: NEEDS WORK
 msgid "Backup Complete"
 msgstr "Backup complet"
 # 
-# File: usr/share/ashyterm/app.py, line: 440
+# File: usr/share/ashyterm/app.py, line: 538
 #: NEEDS WORK
 #, python-brace-format
-msgid ""
-"Backup saved successfully to:\n"
-"{}"
-msgstr ""
-"Backup salvat cu succes în:  \n"
-"{}"
+msgid "Your data has been backed up successfully to: {}"
+msgstr "Datele dumneavoastră au fost salvate cu succes în: {}"
 # 
 # File: usr/share/ashyterm/app.py, line: 446
 #: NEEDS WORK
@@ -6950,29 +6906,6 @@ msgstr "Backup eșuat"
 msgid "Could not create backup: {}"
 msgstr "Nu s-a putut crea backup-ul: {}"
 # 
-# File: usr/share/ashyterm/app.py, line: 458
-#: NEEDS WORK
-msgid "Restore from Backup?"
-msgstr "Restaurare din backup?"
-# 
-# File: usr/share/ashyterm/app.py, line: 460
-#: NEEDS WORK
-msgid ""
-"Restoring from a backup will overwrite all your current sessions, settings, and layouts. This "
-"action cannot be undone.\n"
-"\n"
-"<b>The application will need to be restarted after restoring.</b>"
-msgstr ""
-"Restaurarea dintr-o copie de rezervă va suprascrie toate sesiunile, setările și aranjamentele "
-"curente. Această acțiune nu poate fi anulată.\n"
-"\n"
-"<b>Aplicația va trebui să fie repornită după restaurare.</b>"
-# 
-# File: usr/share/ashyterm/app.py, line: 466
-#: NEEDS WORK
-msgid "Choose File and Restore"
-msgstr "Alege Fișier și Restaurează"
-# 
 # File: usr/share/ashyterm/app.py, line: 474
 #: NEEDS WORK
 msgid "Select Backup File"
@@ -6983,21 +6916,19 @@ msgstr "Selectați fișierul de backup"
 msgid "Backup Files"
 msgstr "Fișiere de rezervă"
 # 
-# File: usr/share/ashyterm/app.py, line: 402
-# File: usr/share/ashyterm/app.py, line: 416
+# File: usr/share/ashyterm/app.py, line: 588
 #: NEEDS WORK
-msgid "Restore Error"
-msgstr "Eroare de restaurare"
+msgid "Decrypt Backup"
+msgstr "Decriptează Backup"
 # 
-# File: usr/share/ashyterm/app.py, line: 499
+# File: usr/share/ashyterm/app.py, line: 590
 #: NEEDS WORK
-msgid "Enter Backup Password"
-msgstr "Introduceți parola de rezervă"
-# 
-# File: usr/share/ashyterm/app.py, line: 500
-#: NEEDS WORK
-msgid "Please enter the password for the selected backup file."
-msgstr "Vă rugăm să introduceți parola pentru fișierul de rezervă selectat."
+msgid ""
+"Enter the password used to encrypt this backup. All current data will be replaced with the backup "
+"data."
+msgstr ""
+"Introduceți parola utilizată pentru a cripta această copie de rezervă. Toate datele curente vor fi "
+"înlocuite cu datele din copia de rezervă."
 # 
 # File: usr/share/ashyterm/app.py, line: 508
 #: NEEDS WORK

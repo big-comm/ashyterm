@@ -6822,89 +6822,45 @@ msgstr "Rensa allt"
 msgid "No active terminal to send command to."
 msgstr "Ingen aktiv terminal för att skicka kommando till."
 # 
-# File: usr/share/ashyterm/app.py, line: 333
+# File: usr/share/ashyterm/app.py, line: 481
 #: NEEDS WORK
-msgid "Preferences Error"
-msgstr "Inställningar Fel"
+msgid "Select Backup Location"
+msgstr "Välj säkerhetskopieringsplats"
 # 
-# File: usr/share/ashyterm/app.py, line: 332
-# File: usr/share/ashyterm/app.py, line: 333
+# File: usr/share/ashyterm/app.py, line: 493
 #: NEEDS WORK
-#, python-brace-format
-msgid "Failed to open preferences: {}"
-msgstr "Misslyckades med att öppna inställningar: {}"
+msgid "Encrypt Backup"
+msgstr "Kryptera säkerhetskopia"
 # 
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
-# 
-# File: usr/share/ashyterm/__init__.py, line: 62
-# File: usr/share/ashyterm/app.py, line: 350
+# File: usr/share/ashyterm/app.py, line: 495
 #: NEEDS WORK
-msgid "A modern terminal emulator with session management"
-msgstr "En modern terminalemulator med sessionshantering"
+msgid ""
+"Enter a password to encrypt your backup. Keep this password safe - you'll need it to restore your "
+"data."
+msgstr ""
+"Ange ett lösenord för att kryptera din säkerhetskopia. Håll detta lösenord säkert - du kommer att "
+"behöva det för att återställa dina data."
 # 
-# File: usr/share/ashyterm/app.py, line: 356
+# File: usr/share/ashyterm/app.py, line: 502
 #: NEEDS WORK
-msgid "Save Backup As..."
-msgstr "Spara säkerhetskopia som..."
+msgid "Encrypt & Backup"
+msgstr "Kryptera och Säkerhetskopiera"
 # 
-# File: usr/share/ashyterm/app.py, line: 368
-# File: usr/share/ashyterm/app.py, line: 379
-# File: usr/share/ashyterm/app.py, line: 392
-# File: usr/share/ashyterm/app.py, line: 396
+# File: usr/share/ashyterm/app.py, line: 527
 #: NEEDS WORK
-msgid "Backup Error"
-msgstr "Säkerhetskopieringsfel"
-# 
-# File: usr/share/ashyterm/app.py, line: 375
-#: NEEDS WORK
-msgid "Set Backup Password"
-msgstr "Ställ in säkerhetskopi lösenord"
-# 
-# File: usr/share/ashyterm/app.py, line: 376
-#: NEEDS WORK
-msgid "Please enter a password to encrypt the backup file."
-msgstr "Vänligen ange ett lösenord för att kryptera säkerhetskopian."
-# 
-# File: usr/share/ashyterm/app.py, line: 384
-#: NEEDS WORK
-msgid "Confirm Password"
-msgstr "Bekräfta lösenord"
-# 
-# File: usr/share/ashyterm/app.py, line: 400
-# File: usr/share/ashyterm/app.py, line: 405
-#: NEEDS WORK
-msgid "Password Error"
-msgstr "Lösenordsfel"
-# 
-# File: usr/share/ashyterm/app.py, line: 400
-#: NEEDS WORK
-msgid "Password cannot be empty."
-msgstr "Lösenord kan inte vara tomt."
-# 
-# File: usr/share/ashyterm/app.py, line: 405
-#: NEEDS WORK
-msgid "Passwords do not match."
-msgstr "Lösenorden matchar inte."
-# 
-# File: usr/share/ashyterm/app.py, line: 423
-#: NEEDS WORK
-msgid "Creating backup..."
-msgstr "Skapar säkerhetskopia..."
+msgid "Creating encrypted backup..."
+msgstr "Skapar krypterad säkerhetskopia..."
 # 
 # File: usr/share/ashyterm/app.py, line: 390
 #: NEEDS WORK
 msgid "Backup Complete"
 msgstr "Säkerhetskopiering slutförd"
 # 
-# File: usr/share/ashyterm/app.py, line: 440
+# File: usr/share/ashyterm/app.py, line: 538
 #: NEEDS WORK
 #, python-brace-format
-msgid ""
-"Backup saved successfully to:\n"
-"{}"
-msgstr ""
-"Säkerhetskopiering sparad framgångsrikt till:\n"
-"{}"
+msgid "Your data has been backed up successfully to: {}"
+msgstr "Dina data har säkerhetskopierats framgångsrikt till: {}"
 # 
 # File: usr/share/ashyterm/app.py, line: 446
 #: NEEDS WORK
@@ -6917,29 +6873,6 @@ msgstr "Säkerhetskopiering misslyckades"
 msgid "Could not create backup: {}"
 msgstr "Kunde inte skapa säkerhetskopia: {}"
 # 
-# File: usr/share/ashyterm/app.py, line: 458
-#: NEEDS WORK
-msgid "Restore from Backup?"
-msgstr "Återställ från säkerhetskopia?"
-# 
-# File: usr/share/ashyterm/app.py, line: 460
-#: NEEDS WORK
-msgid ""
-"Restoring from a backup will overwrite all your current sessions, settings, and layouts. This "
-"action cannot be undone.\n"
-"\n"
-"<b>The application will need to be restarted after restoring.</b>"
-msgstr ""
-"Återställning från en säkerhetskopia kommer att skriva över alla dina aktuella sessioner, "
-"inställningar och layouter. Denna åtgärd kan inte ångras.\n"
-"\n"
-"<b>Applikationen måste startas om efter återställning.</b>"
-# 
-# File: usr/share/ashyterm/app.py, line: 466
-#: NEEDS WORK
-msgid "Choose File and Restore"
-msgstr "Välj fil och återställ"
-# 
 # File: usr/share/ashyterm/app.py, line: 474
 #: NEEDS WORK
 msgid "Select Backup File"
@@ -6950,21 +6883,19 @@ msgstr "Välj säkerhetskopieringsfil"
 msgid "Backup Files"
 msgstr "Säkerhetskopieringsfiler"
 # 
-# File: usr/share/ashyterm/app.py, line: 402
-# File: usr/share/ashyterm/app.py, line: 416
+# File: usr/share/ashyterm/app.py, line: 588
 #: NEEDS WORK
-msgid "Restore Error"
-msgstr "Återställningsfel"
+msgid "Decrypt Backup"
+msgstr "Dekryptera säkerhetskopia"
 # 
-# File: usr/share/ashyterm/app.py, line: 499
+# File: usr/share/ashyterm/app.py, line: 590
 #: NEEDS WORK
-msgid "Enter Backup Password"
-msgstr "Ange säkerhetskopi lösenord"
-# 
-# File: usr/share/ashyterm/app.py, line: 500
-#: NEEDS WORK
-msgid "Please enter the password for the selected backup file."
-msgstr "Vänligen ange lösenordet för den valda säkerhetskopifilen."
+msgid ""
+"Enter the password used to encrypt this backup. All current data will be replaced with the backup "
+"data."
+msgstr ""
+"Ange lösenordet som används för att kryptera denna säkerhetskopia. All nuvarande data kommer att "
+"ersättas med säkerhetskopieringsdata."
 # 
 # File: usr/share/ashyterm/app.py, line: 508
 #: NEEDS WORK

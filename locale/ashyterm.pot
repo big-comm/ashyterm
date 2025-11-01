@@ -765,10 +765,9 @@ msgstr  ""
 # File: usr/share/ashyterm/window.py, line: 1875
 # File: usr/share/ashyterm/window.py, line: 1912
 # File: usr/share/ashyterm/window.py, line: 2180
-# File: usr/share/ashyterm/app.py, line: 406
-# File: usr/share/ashyterm/app.py, line: 486
-# File: usr/share/ashyterm/app.py, line: 527
-# File: usr/share/ashyterm/app.py, line: 609
+# File: usr/share/ashyterm/app.py, line: 501
+# File: usr/share/ashyterm/app.py, line: 596
+# File: usr/share/ashyterm/app.py, line: 678
 # File: usr/share/ashyterm/state/window_state.py, line: 101
 # File: usr/share/ashyterm/state/window_state.py, line: 164
 # File: usr/share/ashyterm/state/window_state.py, line: 205
@@ -834,7 +833,7 @@ msgstr  ""
 # File: usr/share/ashyterm/filemanager/manager.py, line: 1204
 # File: usr/share/ashyterm/filemanager/manager.py, line: 2416
 # File: usr/share/ashyterm/window.py, line: 2044
-# File: usr/share/ashyterm/app.py, line: 575
+# File: usr/share/ashyterm/app.py, line: 644
 msgid   "OK"
 msgstr  ""
 
@@ -1437,12 +1436,8 @@ msgid   "SSH Key"
 msgstr  ""
 
 #
-# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
-#
 # File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 251
 # File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 293
-# File: usr/share/ashyterm/app.py, line: 398
-# File: usr/share/ashyterm/app.py, line: 524
 msgid   "Password"
 msgstr  ""
 
@@ -2547,10 +2542,7 @@ msgid   "Create an encrypted backup of your data or restore from a previous "
 msgstr  ""
 
 #
-# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
-#
 # File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 440
-# File: usr/share/ashyterm/app.py, line: 407
 msgid   "Create Backup"
 msgstr  ""
 
@@ -6921,172 +6913,113 @@ msgid   "No active terminal to send command to."
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/app.py, line: 343
-msgid   "Preferences Error"
+# File: usr/share/ashyterm/app.py, line: 481
+msgid   "Select Backup Location"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/app.py, line: 343
-#, python-brace-format
-msgid   "Failed to open preferences: {}"
+# File: usr/share/ashyterm/app.py, line: 493
+msgid   "Encrypt Backup"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/app.py, line: 360
-msgid   "A modern terminal emulator with session management"
+# File: usr/share/ashyterm/app.py, line: 495
+msgid   "Enter a password to encrypt your backup. Keep this password safe - "
+        "you'll need it to restore your data."
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/app.py, line: 373
-msgid   "Save Backup As..."
+# File: usr/share/ashyterm/app.py, line: 502
+msgid   "Encrypt & Backup"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/app.py, line: 386
-msgid   "Backup Error"
+# File: usr/share/ashyterm/app.py, line: 527
+msgid   "Creating encrypted backup..."
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/app.py, line: 392
-msgid   "Set Backup Password"
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/app.py, line: 393
-msgid   "Please enter a password to encrypt the backup file."
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/app.py, line: 401
-msgid   "Confirm Password"
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/app.py, line: 417
-# File: usr/share/ashyterm/app.py, line: 422
-msgid   "Password Error"
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/app.py, line: 417
-msgid   "Password cannot be empty."
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/app.py, line: 422
-msgid   "Passwords do not match."
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/app.py, line: 440
-msgid   "Creating backup..."
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/app.py, line: 460
+# File: usr/share/ashyterm/app.py, line: 537
 msgid   "Backup Complete"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/app.py, line: 461
+# File: usr/share/ashyterm/app.py, line: 538
 #, python-brace-format
-msgid   "Backup saved successfully to:\n"
-        "{}"
+msgid   "Your data has been backed up successfully to: {}"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/app.py, line: 467
+# File: usr/share/ashyterm/app.py, line: 546
 msgid   "Backup Failed"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/app.py, line: 468
+# File: usr/share/ashyterm/app.py, line: 547
 #, python-brace-format
 msgid   "Could not create backup: {}"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/app.py, line: 479
-msgid   "Restore from Backup?"
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/app.py, line: 481
-msgid   "Restoring from a backup will overwrite all your current sessions, "
-        "settings, and layouts. This action cannot be undone.\n"
-        "\n"
-        "<b>The application will need to be restarted after restoring.</b>"
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/app.py, line: 487
-msgid   "Choose File and Restore"
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/app.py, line: 495
+# File: usr/share/ashyterm/app.py, line: 562
 msgid   "Select Backup File"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/app.py, line: 498
+# File: usr/share/ashyterm/app.py, line: 564
 msgid   "Backup Files"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/app.py, line: 513
-msgid   "Restore Error"
+# File: usr/share/ashyterm/app.py, line: 588
+msgid   "Decrypt Backup"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/app.py, line: 519
-msgid   "Enter Backup Password"
+# File: usr/share/ashyterm/app.py, line: 590
+msgid   "Enter the password used to encrypt this backup. All current data "
+        "will be replaced with the backup data."
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/app.py, line: 520
-msgid   "Please enter the password for the selected backup file."
-msgstr  ""
-
-#
-# File: usr/share/ashyterm/app.py, line: 528
+# File: usr/share/ashyterm/app.py, line: 597
 msgid   "Restore"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/app.py, line: 545
+# File: usr/share/ashyterm/app.py, line: 614
 msgid   "Restoring from backup..."
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/app.py, line: 558
+# File: usr/share/ashyterm/app.py, line: 627
 msgid   "Restore Failed"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/app.py, line: 559
+# File: usr/share/ashyterm/app.py, line: 628
 #, python-brace-format
 msgid   "Could not restore from backup: {}"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/app.py, line: 569
+# File: usr/share/ashyterm/app.py, line: 638
 msgid   "Restore Complete"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/app.py, line: 571
+# File: usr/share/ashyterm/app.py, line: 640
 msgid   "Data has been restored successfully. Please restart Ashy Terminal "
         "for the changes to take effect."
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/app.py, line: 604
+# File: usr/share/ashyterm/app.py, line: 673
 msgid   "Close Application"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/app.py, line: 606
+# File: usr/share/ashyterm/app.py, line: 675
 msgid   "There are active SSH connections. Closing will disconnect all "
         "sessions.\n"
         "\n"
@@ -7094,17 +7027,17 @@ msgid   "There are active SSH connections. Closing will disconnect all "
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/app.py, line: 610
+# File: usr/share/ashyterm/app.py, line: 679
 msgid   "Close All"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/app.py, line: 663
+# File: usr/share/ashyterm/app.py, line: 732
 msgid   "Startup Error"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/app.py, line: 664
+# File: usr/share/ashyterm/app.py, line: 733
 #, python-brace-format
 msgid   "Application failed to start: {}"
 msgstr  ""

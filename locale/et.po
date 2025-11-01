@@ -6822,89 +6822,45 @@ msgstr "Kustuta kõik"
 msgid "No active terminal to send command to."
 msgstr "Ei ole aktiivset terminali, kuhu käsku saata."
 # 
-# File: usr/share/ashyterm/app.py, line: 333
+# File: usr/share/ashyterm/app.py, line: 481
 #: NEEDS WORK
-msgid "Preferences Error"
-msgstr "Eelistuste viga"
+msgid "Select Backup Location"
+msgstr "Vali varukoha asukoht"
 # 
-# File: usr/share/ashyterm/app.py, line: 332
-# File: usr/share/ashyterm/app.py, line: 333
+# File: usr/share/ashyterm/app.py, line: 493
 #: NEEDS WORK
-#, python-brace-format
-msgid "Failed to open preferences: {}"
-msgstr "Eelistuste avamine ebaõnnestus: {}"
+msgid "Encrypt Backup"
+msgstr "Krüpteeri varukoopia"
 # 
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
-# 
-# File: usr/share/ashyterm/__init__.py, line: 62
-# File: usr/share/ashyterm/app.py, line: 350
+# File: usr/share/ashyterm/app.py, line: 495
 #: NEEDS WORK
-msgid "A modern terminal emulator with session management"
-msgstr "Kaasaegne terminali emulaator seansihaldusega"
+msgid ""
+"Enter a password to encrypt your backup. Keep this password safe - you'll need it to restore your "
+"data."
+msgstr ""
+"Sisestage parool oma varukoopia krüpteerimiseks. Hoidke see parool turvaliselt - teil on seda vaja "
+"oma andmete taastamiseks."
 # 
-# File: usr/share/ashyterm/app.py, line: 356
+# File: usr/share/ashyterm/app.py, line: 502
 #: NEEDS WORK
-msgid "Save Backup As..."
-msgstr "Salvesta varukoopia nimega..."
+msgid "Encrypt & Backup"
+msgstr "Krüpteeri ja varunda"
 # 
-# File: usr/share/ashyterm/app.py, line: 368
-# File: usr/share/ashyterm/app.py, line: 379
-# File: usr/share/ashyterm/app.py, line: 392
-# File: usr/share/ashyterm/app.py, line: 396
+# File: usr/share/ashyterm/app.py, line: 527
 #: NEEDS WORK
-msgid "Backup Error"
-msgstr "Varundusviga"
-# 
-# File: usr/share/ashyterm/app.py, line: 375
-#: NEEDS WORK
-msgid "Set Backup Password"
-msgstr "Seadme varukoopia parool"
-# 
-# File: usr/share/ashyterm/app.py, line: 376
-#: NEEDS WORK
-msgid "Please enter a password to encrypt the backup file."
-msgstr "Palun sisestage parool varufaili krüpteerimiseks."
-# 
-# File: usr/share/ashyterm/app.py, line: 384
-#: NEEDS WORK
-msgid "Confirm Password"
-msgstr "Kinnita parool"
-# 
-# File: usr/share/ashyterm/app.py, line: 400
-# File: usr/share/ashyterm/app.py, line: 405
-#: NEEDS WORK
-msgid "Password Error"
-msgstr "Parooli viga"
-# 
-# File: usr/share/ashyterm/app.py, line: 400
-#: NEEDS WORK
-msgid "Password cannot be empty."
-msgstr "Parool ei tohi olla tühi."
-# 
-# File: usr/share/ashyterm/app.py, line: 405
-#: NEEDS WORK
-msgid "Passwords do not match."
-msgstr "Paroolid ei ühti."
-# 
-# File: usr/share/ashyterm/app.py, line: 423
-#: NEEDS WORK
-msgid "Creating backup..."
-msgstr "Varunduse loomine..."
+msgid "Creating encrypted backup..."
+msgstr "Loome krüpteeritud varukoopia..."
 # 
 # File: usr/share/ashyterm/app.py, line: 390
 #: NEEDS WORK
 msgid "Backup Complete"
 msgstr "Varundus lõpetatud"
 # 
-# File: usr/share/ashyterm/app.py, line: 440
+# File: usr/share/ashyterm/app.py, line: 538
 #: NEEDS WORK
 #, python-brace-format
-msgid ""
-"Backup saved successfully to:\n"
-"{}"
-msgstr ""
-"Varundus salvestati edukalt siia:  \n"
-"{}"
+msgid "Your data has been backed up successfully to: {}"
+msgstr "Teie andmed on edukalt varundatud: {}"
 # 
 # File: usr/share/ashyterm/app.py, line: 446
 #: NEEDS WORK
@@ -6917,29 +6873,6 @@ msgstr "Varundus ebaõnnestus"
 msgid "Could not create backup: {}"
 msgstr "Ei saanud varukoopiat luua: {}"
 # 
-# File: usr/share/ashyterm/app.py, line: 458
-#: NEEDS WORK
-msgid "Restore from Backup?"
-msgstr "Taasta varukoopiast?"
-# 
-# File: usr/share/ashyterm/app.py, line: 460
-#: NEEDS WORK
-msgid ""
-"Restoring from a backup will overwrite all your current sessions, settings, and layouts. This "
-"action cannot be undone.\n"
-"\n"
-"<b>The application will need to be restarted after restoring.</b>"
-msgstr ""
-"Varundus varukoopiast kirjutab üle kõik teie praegused seansid, seaded ja paigutused. Seda "
-"toimingut ei saa tagasi võtta.\n"
-"\n"
-"<b>Rakendus tuleb pärast varundamist taaskäivitada.</b>"
-# 
-# File: usr/share/ashyterm/app.py, line: 466
-#: NEEDS WORK
-msgid "Choose File and Restore"
-msgstr "Vali fail ja taasta"
-# 
 # File: usr/share/ashyterm/app.py, line: 474
 #: NEEDS WORK
 msgid "Select Backup File"
@@ -6950,21 +6883,19 @@ msgstr "Vali varukoopia fail"
 msgid "Backup Files"
 msgstr "Varukoopiad"
 # 
-# File: usr/share/ashyterm/app.py, line: 402
-# File: usr/share/ashyterm/app.py, line: 416
+# File: usr/share/ashyterm/app.py, line: 588
 #: NEEDS WORK
-msgid "Restore Error"
-msgstr "Taastev viga"
+msgid "Decrypt Backup"
+msgstr "Dekrüpteeri varukoopia"
 # 
-# File: usr/share/ashyterm/app.py, line: 499
+# File: usr/share/ashyterm/app.py, line: 590
 #: NEEDS WORK
-msgid "Enter Backup Password"
-msgstr "Sisestage varukoopia parool"
-# 
-# File: usr/share/ashyterm/app.py, line: 500
-#: NEEDS WORK
-msgid "Please enter the password for the selected backup file."
-msgstr "Palun sisestage valitud varukoopia faili parool."
+msgid ""
+"Enter the password used to encrypt this backup. All current data will be replaced with the backup "
+"data."
+msgstr ""
+"Sisestage parool, mida kasutatakse selle varukoopia krüpteerimiseks. Kõik praegused andmed "
+"asendatakse varukoopia andmetega."
 # 
 # File: usr/share/ashyterm/app.py, line: 508
 #: NEEDS WORK
