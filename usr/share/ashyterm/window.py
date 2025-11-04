@@ -377,7 +377,7 @@ class CommTerminalWindow(Adw.ApplicationWindow):
                     if button_container:
                         # Create new buttons connected to the NEW tab manager
                         new_close_button = Gtk.Button(
-                            icon_name='big-window-close-symbolic',
+                            icon_name="window-close-symbolic",
                             tooltip_text=_("Close Pane"),
                         )
                         new_close_button.add_css_class("flat")
@@ -389,7 +389,7 @@ class CommTerminalWindow(Adw.ApplicationWindow):
                         )
 
                         new_move_button = Gtk.Button(
-                            icon_name='big-select-rectangular-symbolic',
+                            icon_name="select-rectangular-symbolic",
                             tooltip_text=_("Move to New Tab"),
                         )
                         new_move_button.add_css_class("flat")
@@ -1945,9 +1945,31 @@ class CommTerminalWindow(Adw.ApplicationWindow):
 
     # --- Public API & Helpers ---
 
-    def create_local_tab(self, working_directory=None):
+    def create_local_tab(
+        self,
+        working_directory: Optional[str] = None,
+        execute_command: Optional[str] = None,
+        close_after_execute: bool = False,
+    ):
         """Public method to create a local tab."""
-        self.tab_manager.create_local_tab(working_directory=working_directory)
+        return self.tab_manager.create_local_tab(
+            working_directory=working_directory,
+            execute_command=execute_command,
+            close_after_execute=close_after_execute,
+        )
+
+    def create_new_local_tab(
+        self,
+        working_directory: Optional[str] = None,
+        execute_command: Optional[str] = None,
+        close_after_execute: bool = False,
+    ):
+        """Compatibility wrapper for legacy create_new_local_tab API."""
+        return self.create_local_tab(
+            working_directory=working_directory,
+            execute_command=execute_command,
+            close_after_execute=close_after_execute,
+        )
 
     def create_ssh_tab(self, ssh_target: str):
         """Public method to parse an SSH target string and create a tab."""
@@ -1979,7 +2001,9 @@ class CommTerminalWindow(Adw.ApplicationWindow):
                 name=session_name, session_type="ssh", user=user, host=host, port=port
             )
             initial_command = f"cd '{remote_path}'" if remote_path else None
-            self.tab_manager.create_ssh_tab(session, initial_command=initial_command)
+            return self.tab_manager.create_ssh_tab(
+                session, initial_command=initial_command
+            )
         except Exception as e:
             self.logger.error(f"Failed to parse SSH target '{ssh_target}': {e}")
             self._show_error_dialog(
@@ -1987,11 +2011,15 @@ class CommTerminalWindow(Adw.ApplicationWindow):
                 _("Could not parse the provided SSH connection string."),
             )
 
+    def create_new_ssh_tab(self, ssh_target: str):
+        """Compatibility wrapper for legacy create_new_ssh_tab API."""
+        return self.create_ssh_tab(ssh_target)
+
     def create_execute_tab(
         self, command: str, working_directory: str, close_after: bool
     ):
         """Public method to create a tab that executes a command."""
-        self.tab_manager.create_local_tab(
+        return self.tab_manager.create_local_tab(
             working_directory=working_directory,
             execute_command=command,
             close_after_execute=close_after,
@@ -2116,7 +2144,7 @@ class CommTerminalWindow(Adw.ApplicationWindow):
                 )
                 row.set_title_selectable(True)
                 remove_button = Gtk.Button(
-                    icon_name='big-edit-delete-symbolic',
+                    icon_name="edit-delete-symbolic",
                     css_classes=["flat", "circular"],
                     tooltip_text=_("Remove this temporary file"),
                 )
@@ -2238,3 +2266,4 @@ class CommTerminalWindow(Adw.ApplicationWindow):
             self.toast_overlay.add_toast(
                 Adw.Toast(title=_("No active terminal to send command to."))
             )
+
