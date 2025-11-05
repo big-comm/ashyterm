@@ -80,13 +80,6 @@ class WindowUIBuilder:
         self.window.set_content(main_box)
         self.logger.info("Main window UI constructed successfully.")
 
-    def _set_button_icon(
-        self, button: Gtk.Widget, icon_name: str, pixel_size: int = 24
-    ) -> None:
-        image = Gtk.Image.new_from_icon_name(icon_name)
-        image.set_pixel_size(pixel_size)
-        button.set_child(image)
-
     def _setup_styles(self) -> None:
         """Applies application-wide CSS for various custom widgets."""
         css = """
@@ -128,34 +121,6 @@ class WindowUIBuilder:
         #scrolled_tab_bar scrollbar trough { margin: 0px; }
         #scrolled_tab_bar button { min-width:24px; margin-right: 8px; margin: 0px; padding-top: 0px; padding-bottom: 0px; }
         .main-header-bar box { margin: 0px; padding-top: 0px; padding-bottom: 0px; }
-        .main-header-bar button,
-        .main-header-bar menubutton,
-        .main-header-bar togglebutton {
-            min-width: 5px;
-            min-height: 1px;
-            padding: 3px;
-            border: none;
-            box-shadow: none;
-            background-color: transparent;
-        }
-        .main-header-bar button:hover,
-        .main-header-bar menubutton:hover,
-        .main-header-bar togglebutton:hover,
-        .main-header-bar button:active,
-        .main-header-bar menubutton:active,
-        .main-header-bar togglebutton:active,
-        .main-header-bar togglebutton:checked,
-        .main-header-bar togglebutton:checked:hover,
-        .main-header-bar togglebutton:checked:active {
-            background-color: transparent;
-            box-shadow: none;
-        }
-        .main-header-bar button image,
-        .main-header-bar menubutton image,
-        .main-header-bar togglebutton image {
-            min-width: 24px;
-            min-height: 24px;
-        }
         .custom-tab-button { padding-left: 12px; padding-right: 0px; border-radius: 10px; padding-top: 2px; padding-bottom: 2px; }
         .custom-tab-button.active { background: color-mix(in srgb, currentColor 12%, transparent); }
         .custom-tab-button:hover { background: color-mix(in srgb, currentColor 7%, transparent); }
@@ -349,67 +314,59 @@ class WindowUIBuilder:
         self.window.header_bar = header_bar
 
         # Create buttons
-        self.toggle_sidebar_button = Gtk.ToggleButton()
-        self.toggle_sidebar_button.set_tooltip_text(_("Toggle Sidebar"))
+        self.toggle_sidebar_button = Gtk.ToggleButton(
+            icon_name='big-pin-symbolic', tooltip_text=_("Toggle Sidebar")
+        )
         self.toggle_sidebar_button.add_css_class("sidebar-toggle-button")
-        self.toggle_sidebar_button.add_css_class("flat")
-        self._set_button_icon(self.toggle_sidebar_button, 'big-pin-symbolic')
 
-        self.file_manager_button = Gtk.ToggleButton()
-        self.file_manager_button.set_tooltip_text(_("File Manager"))
-        self.file_manager_button.add_css_class("flat")
-        self._set_button_icon(self.file_manager_button, 'big-folder-open-symbolic')
-
-        self.command_guide_button = Gtk.Button()
-        self.command_guide_button.set_tooltip_text(_("Command Guide (Ctrl+Shift+P)"))
-        self.command_guide_button.set_action_name("win.show-command-guide")
-        self.command_guide_button.add_css_class("flat")
-        self._set_button_icon(self.command_guide_button, 'big-help-about-symbolic')
-
-        # Add the new search button
-        self.search_button = Gtk.ToggleButton()
-        self.search_button.set_tooltip_text(_("Search in Terminal"))
-        self.search_button.add_css_class("flat")
-        self._set_button_icon(self.search_button, 'big-edit-find-symbolic')
-
-        # Add the new Broadcast button
-        self.broadcast_button = Gtk.ToggleButton()
-        self.broadcast_button.set_tooltip_text(_("Send Command to All Tabs"))
-        self.broadcast_button.add_css_class("flat")
-        self._set_button_icon(
-            self.broadcast_button, 'big-utilities-terminal-symbolic'
+        self.file_manager_button = Gtk.ToggleButton(
+            icon_name='big-folder-open-symbolic', tooltip_text=_("File Manager")
         )
 
-        self.ai_assistant_button = Gtk.Button()
-        self.ai_assistant_button.set_tooltip_text(_("Ask AI Assistant (Ctrl+Shift+I)"))
-        self.ai_assistant_button.add_css_class("flat")
-        self._set_button_icon(self.ai_assistant_button, 'big-avatar-default-symbolic')
+        self.command_guide_button = Gtk.Button(
+            icon_name='big-help-about-symbolic',
+            tooltip_text=_("Command Guide (Ctrl+Shift+P)"),
+        )
+        self.command_guide_button.set_action_name("win.show-command-guide")
+
+        # Add the new search button
+        self.search_button = Gtk.ToggleButton(
+            icon_name='big-edit-find-symbolic', tooltip_text=_("Search in Terminal")
+        )
+
+        # Add the new Broadcast button
+        self.broadcast_button = Gtk.ToggleButton(
+            #icon_name='big-emblem-shared-symbolic', tooltip_text=_("Send Command to All Tabs")
+            icon_name='big-utilities-terminal-symbolic', tooltip_text=_("Send Command to All Tabs")
+        )
+        self.ai_assistant_button = Gtk.Button(
+            icon_name='big-avatar-default-symbolic',
+            tooltip_text=_("Ask AI Assistant (Ctrl+Shift+I)"),
+        )
         self.ai_assistant_button.connect(
             "clicked", lambda _btn: self.window._on_ai_assistant_requested()
         )
-        self.cleanup_button = Gtk.MenuButton()
-        self.cleanup_button.set_tooltip_text(_("Manage Temporary Files"))
-        self.cleanup_button.set_visible(False)
-        self.cleanup_button.add_css_class("destructive-action")
-        self.cleanup_button.add_css_class("flat")
-        self._set_button_icon(self.cleanup_button, 'big-user-trash-symbolic')
+        self.cleanup_button = Gtk.MenuButton(
+            icon_name='big-user-trash-symbolic',
+            tooltip_text=_("Manage Temporary Files"),
+            visible=False,
+            css_classes=["destructive-action", "flat"],
+        )
         self.cleanup_popover = Gtk.Popover()
         self.cleanup_button.set_popover(self.cleanup_popover)
 
-        self.menu_button = Gtk.MenuButton()
-        self.menu_button.set_tooltip_text(_("Main Menu"))
-        self.menu_button.add_css_class("flat")
-        self._set_button_icon(self.menu_button, 'big-open-menu-symbolic')
+        self.menu_button = Gtk.MenuButton(
+            icon_name='big-open-menu-symbolic', tooltip_text=_("Main Menu")
+        )
         popover, self.font_sizer_widget = MainApplicationMenu.create_main_popover(
             self.window
         )
         self.menu_button.set_popover(popover)
 
-        self.new_tab_button = Gtk.Button()
+        self.new_tab_button = Gtk.Button.new_from_icon_name('big-tab-new-symbolic')
         self.new_tab_button.set_tooltip_text(_("New Tab"))
         self.new_tab_button.connect("clicked", self.window._on_new_tab_clicked)
         self.new_tab_button.add_css_class("flat")
-        self._set_button_icon(self.new_tab_button, 'big-tab-new-symbolic')
 
         # Check if window controls are on the left
         button_layout = self.wm_settings.get_string("button-layout")
