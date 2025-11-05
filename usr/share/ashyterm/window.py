@@ -1945,9 +1945,31 @@ class CommTerminalWindow(Adw.ApplicationWindow):
 
     # --- Public API & Helpers ---
 
-    def create_local_tab(self, working_directory=None):
+    def create_local_tab(
+        self,
+        working_directory: Optional[str] = None,
+        execute_command: Optional[str] = None,
+        close_after_execute: bool = False,
+    ):
         """Public method to create a local tab."""
-        self.tab_manager.create_local_tab(working_directory=working_directory)
+        return self.tab_manager.create_local_tab(
+            working_directory=working_directory,
+            execute_command=execute_command,
+            close_after_execute=close_after_execute,
+        )
+
+    def create_new_local_tab(
+        self,
+        working_directory: Optional[str] = None,
+        execute_command: Optional[str] = None,
+        close_after_execute: bool = False,
+    ):
+        """Compatibility wrapper for legacy API usage."""
+        return self.create_local_tab(
+            working_directory=working_directory,
+            execute_command=execute_command,
+            close_after_execute=close_after_execute,
+        )
 
     def create_ssh_tab(self, ssh_target: str):
         """Public method to parse an SSH target string and create a tab."""
@@ -1979,7 +2001,9 @@ class CommTerminalWindow(Adw.ApplicationWindow):
                 name=session_name, session_type="ssh", user=user, host=host, port=port
             )
             initial_command = f"cd '{remote_path}'" if remote_path else None
-            self.tab_manager.create_ssh_tab(session, initial_command=initial_command)
+            return self.tab_manager.create_ssh_tab(
+                session, initial_command=initial_command
+            )
         except Exception as e:
             self.logger.error(f"Failed to parse SSH target '{ssh_target}': {e}")
             self._show_error_dialog(
@@ -1987,11 +2011,15 @@ class CommTerminalWindow(Adw.ApplicationWindow):
                 _("Could not parse the provided SSH connection string."),
             )
 
+    def create_new_ssh_tab(self, ssh_target: str):
+        """Compatibility wrapper for legacy API usage."""
+        return self.create_ssh_tab(ssh_target)
+
     def create_execute_tab(
         self, command: str, working_directory: str, close_after: bool
     ):
         """Public method to create a tab that executes a command."""
-        self.tab_manager.create_local_tab(
+        return self.tab_manager.create_local_tab(
             working_directory=working_directory,
             execute_command=command,
             close_after_execute=close_after,
