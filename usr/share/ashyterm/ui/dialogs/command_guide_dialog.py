@@ -244,7 +244,7 @@ class CommandRow(Gtk.ListBoxRow):
             # Add delete button for custom commands
             if command.is_custom and self.on_delete_callback:
                 delete_button = Gtk.Button(
-                    icon_name='big-user-trash-symbolic',
+                    icon_name="user-trash-symbolic",
                     css_classes=["flat", "circular", "destructive-action"],
                     tooltip_text=_("Delete this custom command"),
                     valign=Gtk.Align.CENTER,

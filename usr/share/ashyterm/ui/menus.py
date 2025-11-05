@@ -86,7 +86,7 @@ class FontSizerWidget(Gtk.CenterBox):
         zoom_controls_box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=20)
         zoom_controls_box.add_css_class("navigation-sidebar")
 
-        decrement_btn = Gtk.Button.new_from_icon_name('big-zoom-out-symbolic')
+        decrement_btn = Gtk.Button.new_from_icon_name("zoom-out-symbolic")
         decrement_btn.add_css_class("flat")
         decrement_btn.connect("clicked", self._on_decrement)
 
@@ -97,7 +97,7 @@ class FontSizerWidget(Gtk.CenterBox):
         self.font_size_label.set_size_request(60, -1)
         font_size_button.set_child(self.font_size_label)
 
-        increment_btn = Gtk.Button.new_from_icon_name('big-zoom-in-symbolic')
+        increment_btn = Gtk.Button.new_from_icon_name("zoom-in-symbolic")
         increment_btn.add_css_class("flat")
         increment_btn.connect("clicked", self._on_increment)
 

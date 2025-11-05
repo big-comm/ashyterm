@@ -4678,11 +4678,6 @@ msgstr ""
 "Ta akcja nie może być cofnięta i usunie wszystkie zakończone, nieudane i anulowane transfery z "
 "listy."
 # 
-# File: usr/share/ashyterm/filemanager/manager.py, line: 274
-#: NEEDS WORK
-msgid "Name cannot be empty."
-msgstr "Nazwa nie może być pusta."
-# 
 # File: usr/share/ashyterm/filemanager/manager.py, line: 221
 #: NEEDS WORK
 msgid "rsync is not installed on the remote host. Install the rsync package or use SFTP for transfers."
@@ -4784,18 +4779,6 @@ msgstr "Ładowanie..."
 msgid "Recursive filter..."
 msgstr "Filtr rekurencyjny..."
 # 
-# File: usr/share/ashyterm/filemanager/manager.py, line: 1551
-# File: usr/share/ashyterm/filemanager/manager.py, line: 1740
-#: NEEDS WORK
-msgid "Create Folder"
-msgstr "Utwórz folder"
-# 
-# File: usr/share/ashyterm/filemanager/manager.py, line: 1552
-# File: usr/share/ashyterm/filemanager/manager.py, line: 1757
-#: NEEDS WORK
-msgid "Create File"
-msgstr "Utwórz plik"
-# 
 # File: usr/share/ashyterm/filemanager/manager.py, line: 630
 #: NEEDS WORK
 msgid "Open/Edit"
@@ -4807,86 +4790,10 @@ msgstr "Otwórz/Edytuj"
 msgid "Open With..."
 msgstr "Otwórz za pomocą..."
 # 
-# File: usr/share/ashyterm/filemanager/manager.py, line: 1683
-#: NEEDS WORK
-msgid "Cut"
-msgstr "Wytnij"
-# 
 # File: usr/share/ashyterm/filemanager/manager.py, line: 638
 #: NEEDS WORK
 msgid "Download"
 msgstr "Pobierz"
-# 
-# File: usr/share/ashyterm/filemanager/manager.py, line: 1737
-#: NEEDS WORK
-msgid "Create folder command sent to terminal"
-msgstr "Polecenie utworzenia folderu wysłane do terminala"
-# 
-# File: usr/share/ashyterm/filemanager/manager.py, line: 1741
-#: NEEDS WORK
-msgid "Enter a name for the new folder:"
-msgstr "Wprowadź nazwę dla nowego folderu:"
-# 
-# File: usr/share/ashyterm/filemanager/manager.py, line: 1743
-# File: usr/share/ashyterm/filemanager/manager.py, line: 1760
-#: NEEDS WORK
-msgid "Create"
-msgstr "Utwórz"
-# 
-# File: usr/share/ashyterm/filemanager/manager.py, line: 1754
-#: NEEDS WORK
-msgid "Create file command sent to terminal"
-msgstr "Polecenie utworzenia pliku wysłane do terminala"
-# 
-# File: usr/share/ashyterm/filemanager/manager.py, line: 1758
-#: NEEDS WORK
-msgid "Enter a name for the new file:"
-msgstr "Wprowadź nazwę dla nowego pliku:"
-# 
-# File: usr/share/ashyterm/filemanager/manager.py, line: 1759
-#: NEEDS WORK
-msgid "New File"
-msgstr "Nowy plik"
-# 
-# File: usr/share/ashyterm/filemanager/manager.py, line: 1767
-#: NEEDS WORK
-msgid "No items selected to copy."
-msgstr "Nie wybrano żadnych elementów do skopiowania."
-# 
-# File: usr/share/ashyterm/filemanager/manager.py, line: 1781
-#: NEEDS WORK
-msgid "Items copied to clipboard."
-msgstr "Elementy skopiowane do schowka."
-# 
-# File: usr/share/ashyterm/filemanager/manager.py, line: 1786
-#: NEEDS WORK
-msgid "No items selected to cut."
-msgstr "Nie wybrano żadnych elementów do wycięcia."
-# 
-# File: usr/share/ashyterm/filemanager/manager.py, line: 1800
-#: NEEDS WORK
-msgid "Items marked for move."
-msgstr "Elementy oznaczone do przeniesienia."
-# 
-# File: usr/share/ashyterm/filemanager/manager.py, line: 1804
-#: NEEDS WORK
-msgid "Nothing to paste."
-msgstr "Nic do wklejenia."
-# 
-# File: usr/share/ashyterm/filemanager/manager.py, line: 1815
-#: NEEDS WORK
-msgid "Items are already in this location."
-msgstr "Elementy są już w tej lokalizacji."
-# 
-# File: usr/share/ashyterm/filemanager/manager.py, line: 1819
-#: NEEDS WORK
-msgid "Move command sent to terminal"
-msgstr "Polecenie przeniesienia wysłane do terminala"
-# 
-# File: usr/share/ashyterm/filemanager/manager.py, line: 1824
-#: NEEDS WORK
-msgid "Copy command sent to terminal"
-msgstr "Polecenie kopiowania wysłane do terminala"
 # 
 # File: usr/share/ashyterm/filemanager/manager.py, line: 672
 #: NEEDS WORK
@@ -6829,45 +6736,89 @@ msgstr "Wyczyść wszystko"
 msgid "No active terminal to send command to."
 msgstr "Brak aktywnego terminala do wysłania polecenia."
 # 
-# File: usr/share/ashyterm/app.py, line: 481
+# File: usr/share/ashyterm/app.py, line: 333
 #: NEEDS WORK
-msgid "Select Backup Location"
-msgstr "Wybierz lokalizację kopii zapasowej"
+msgid "Preferences Error"
+msgstr "Błąd preferencji"
 # 
-# File: usr/share/ashyterm/app.py, line: 493
+# File: usr/share/ashyterm/app.py, line: 332
+# File: usr/share/ashyterm/app.py, line: 333
 #: NEEDS WORK
-msgid "Encrypt Backup"
-msgstr "Szyfruj kopię zapasową"
+#, python-brace-format
+msgid "Failed to open preferences: {}"
+msgstr "Nie udało się otworzyć preferencji: {}"
 # 
-# File: usr/share/ashyterm/app.py, line: 495
-#: NEEDS WORK
-msgid ""
-"Enter a password to encrypt your backup. Keep this password safe - you'll need it to restore your "
-"data."
-msgstr ""
-"Wprowadź hasło, aby zaszyfrować swoją kopię zapasową. Zachowaj to hasło w bezpiecznym miejscu - "
-"będziesz go potrzebować, aby przywrócić swoje dane."
+# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
 # 
-# File: usr/share/ashyterm/app.py, line: 502
+# File: usr/share/ashyterm/__init__.py, line: 62
+# File: usr/share/ashyterm/app.py, line: 350
 #: NEEDS WORK
-msgid "Encrypt & Backup"
-msgstr "Szyfruj i twórz kopie zapasowe"
+msgid "A modern terminal emulator with session management"
+msgstr "Nowoczesny emulator terminala z zarządzaniem sesjami"
 # 
-# File: usr/share/ashyterm/app.py, line: 527
+# File: usr/share/ashyterm/app.py, line: 356
 #: NEEDS WORK
-msgid "Creating encrypted backup..."
-msgstr "Tworzenie zaszyfrowanej kopii zapasowej..."
+msgid "Save Backup As..."
+msgstr "Zapisz kopię zapasową jako..."
+# 
+# File: usr/share/ashyterm/app.py, line: 368
+# File: usr/share/ashyterm/app.py, line: 379
+# File: usr/share/ashyterm/app.py, line: 392
+# File: usr/share/ashyterm/app.py, line: 396
+#: NEEDS WORK
+msgid "Backup Error"
+msgstr "Błąd kopii zapasowej"
+# 
+# File: usr/share/ashyterm/app.py, line: 375
+#: NEEDS WORK
+msgid "Set Backup Password"
+msgstr "Ustaw hasło kopii zapasowej"
+# 
+# File: usr/share/ashyterm/app.py, line: 376
+#: NEEDS WORK
+msgid "Please enter a password to encrypt the backup file."
+msgstr "Proszę wprowadzić hasło, aby zaszyfrować plik kopii zapasowej."
+# 
+# File: usr/share/ashyterm/app.py, line: 384
+#: NEEDS WORK
+msgid "Confirm Password"
+msgstr "Potwierdź hasło"
+# 
+# File: usr/share/ashyterm/app.py, line: 400
+# File: usr/share/ashyterm/app.py, line: 405
+#: NEEDS WORK
+msgid "Password Error"
+msgstr "Błąd hasła"
+# 
+# File: usr/share/ashyterm/app.py, line: 400
+#: NEEDS WORK
+msgid "Password cannot be empty."
+msgstr "Hasło nie może być puste."
+# 
+# File: usr/share/ashyterm/app.py, line: 405
+#: NEEDS WORK
+msgid "Passwords do not match."
+msgstr "Hasła nie pasują do siebie."
+# 
+# File: usr/share/ashyterm/app.py, line: 423
+#: NEEDS WORK
+msgid "Creating backup..."
+msgstr "Tworzenie kopii zapasowej..."
 # 
 # File: usr/share/ashyterm/app.py, line: 390
 #: NEEDS WORK
 msgid "Backup Complete"
 msgstr "Kopia zapasowa zakończona"
 # 
-# File: usr/share/ashyterm/app.py, line: 538
+# File: usr/share/ashyterm/app.py, line: 440
 #: NEEDS WORK
 #, python-brace-format
-msgid "Your data has been backed up successfully to: {}"
-msgstr "Twoje dane zostały pomyślnie zarchiwizowane w: {}"
+msgid ""
+"Backup saved successfully to:\n"
+"{}"
+msgstr ""
+"Kopia zapasowa została pomyślnie zapisana w:  \n"
+"{}"
 # 
 # File: usr/share/ashyterm/app.py, line: 446
 #: NEEDS WORK
@@ -6880,6 +6831,29 @@ msgstr "Kopia zapasowa nie powiodła się"
 msgid "Could not create backup: {}"
 msgstr "Nie można utworzyć kopii zapasowej: {}"
 # 
+# File: usr/share/ashyterm/app.py, line: 458
+#: NEEDS WORK
+msgid "Restore from Backup?"
+msgstr "Przywróć z kopii zapasowej?"
+# 
+# File: usr/share/ashyterm/app.py, line: 460
+#: NEEDS WORK
+msgid ""
+"Restoring from a backup will overwrite all your current sessions, settings, and layouts. This "
+"action cannot be undone.\n"
+"\n"
+"<b>The application will need to be restarted after restoring.</b>"
+msgstr ""
+"Przywracanie z kopii zapasowej spowoduje nadpisanie wszystkich bieżących sesji, ustawień i układów. "
+"Tej akcji nie można cofnąć.\n"
+"\n"
+"<b>Aplikacja będzie musiała zostać ponownie uruchomiona po przywróceniu.</b>"
+# 
+# File: usr/share/ashyterm/app.py, line: 466
+#: NEEDS WORK
+msgid "Choose File and Restore"
+msgstr "Wybierz plik i przywróć"
+# 
 # File: usr/share/ashyterm/app.py, line: 474
 #: NEEDS WORK
 msgid "Select Backup File"
@@ -6890,19 +6864,21 @@ msgstr "Wybierz plik kopii zapasowej"
 msgid "Backup Files"
 msgstr "Pliki kopii zapasowej"
 # 
-# File: usr/share/ashyterm/app.py, line: 588
+# File: usr/share/ashyterm/app.py, line: 402
+# File: usr/share/ashyterm/app.py, line: 416
 #: NEEDS WORK
-msgid "Decrypt Backup"
-msgstr "Odszyfruj kopię zapasową"
+msgid "Restore Error"
+msgstr "Błąd przywracania"
 # 
-# File: usr/share/ashyterm/app.py, line: 590
+# File: usr/share/ashyterm/app.py, line: 499
 #: NEEDS WORK
-msgid ""
-"Enter the password used to encrypt this backup. All current data will be replaced with the backup "
-"data."
-msgstr ""
-"Wprowadź hasło używane do szyfrowania tej kopii zapasowej. Wszystkie bieżące dane zostaną "
-"zastąpione danymi z kopii zapasowej."
+msgid "Enter Backup Password"
+msgstr "Wprowadź hasło kopii zapasowej"
+# 
+# File: usr/share/ashyterm/app.py, line: 500
+#: NEEDS WORK
+msgid "Please enter the password for the selected backup file."
+msgstr "Proszę wprowadzić hasło do wybranego pliku kopii zapasowej."
 # 
 # File: usr/share/ashyterm/app.py, line: 508
 #: NEEDS WORK

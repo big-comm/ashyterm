@@ -51,13 +51,13 @@ def _create_terminal_pane(
 
     # Action buttons
     move_to_tab_button = Gtk.Button(
-        icon_name='big-select-rectangular-symbolic', tooltip_text=_("Move to New Tab")
+        icon_name="select-rectangular-symbolic", tooltip_text=_("Move to New Tab")
     )
     move_to_tab_button.add_css_class("flat")
     move_to_tab_button.connect("clicked", lambda _: on_move_to_tab_callback(terminal))
 
     close_button = Gtk.Button(
-        icon_name='big-window-close-symbolic', tooltip_text=_("Close Pane")
+        icon_name="window-close-symbolic", tooltip_text=_("Close Pane")
     )
     close_button.add_css_class("flat")
     close_button.connect("clicked", lambda _: on_close_callback(terminal))
@@ -483,9 +483,9 @@ class TabManager:
 
         icon_name = None
         if session.name.startswith("SFTP-"):
-            icon_name='big-folder-remote-symbolic'
+            icon_name = "folder-remote-symbolic"
         elif session.is_ssh():
-            icon_name='big-network-server-symbolic'
+            icon_name = "network-server-symbolic"
 
         if icon_name:
             icon = Gtk.Image.new_from_icon_name(icon_name)
@@ -498,7 +498,7 @@ class TabManager:
         tab_widget.append(label)
 
         close_button = Gtk.Button(
-            icon_name='big-window-close-symbolic', css_classes=["circular", "flat"]
+            icon_name="window-close-symbolic", css_classes=["circular", "flat"]
         )
         tab_widget.append(close_button)
 

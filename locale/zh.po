@@ -4643,11 +4643,6 @@ msgid ""
 "the list."
 msgstr "此操作无法撤销，将从列表中移除所有已完成、失败和已取消的传输。"
 # 
-# File: usr/share/ashyterm/filemanager/manager.py, line: 274
-#: NEEDS WORK
-msgid "Name cannot be empty."
-msgstr "名称不能为空。"
-# 
 # File: usr/share/ashyterm/filemanager/manager.py, line: 221
 #: NEEDS WORK
 msgid "rsync is not installed on the remote host. Install the rsync package or use SFTP for transfers."
@@ -4747,18 +4742,6 @@ msgstr "加载中..."
 msgid "Recursive filter..."
 msgstr "递归过滤器..."
 # 
-# File: usr/share/ashyterm/filemanager/manager.py, line: 1551
-# File: usr/share/ashyterm/filemanager/manager.py, line: 1740
-#: NEEDS WORK
-msgid "Create Folder"
-msgstr "创建文件夹"
-# 
-# File: usr/share/ashyterm/filemanager/manager.py, line: 1552
-# File: usr/share/ashyterm/filemanager/manager.py, line: 1757
-#: NEEDS WORK
-msgid "Create File"
-msgstr "创建文件"
-# 
 # File: usr/share/ashyterm/filemanager/manager.py, line: 630
 #: NEEDS WORK
 msgid "Open/Edit"
@@ -4770,86 +4753,10 @@ msgstr "打开/编辑"
 msgid "Open With..."
 msgstr "打开方式..."
 # 
-# File: usr/share/ashyterm/filemanager/manager.py, line: 1683
-#: NEEDS WORK
-msgid "Cut"
-msgstr "剪切"
-# 
 # File: usr/share/ashyterm/filemanager/manager.py, line: 638
 #: NEEDS WORK
 msgid "Download"
 msgstr "下载"
-# 
-# File: usr/share/ashyterm/filemanager/manager.py, line: 1737
-#: NEEDS WORK
-msgid "Create folder command sent to terminal"
-msgstr "创建文件夹命令已发送到终端"
-# 
-# File: usr/share/ashyterm/filemanager/manager.py, line: 1741
-#: NEEDS WORK
-msgid "Enter a name for the new folder:"
-msgstr "输入新文件夹的名称："
-# 
-# File: usr/share/ashyterm/filemanager/manager.py, line: 1743
-# File: usr/share/ashyterm/filemanager/manager.py, line: 1760
-#: NEEDS WORK
-msgid "Create"
-msgstr "创建"
-# 
-# File: usr/share/ashyterm/filemanager/manager.py, line: 1754
-#: NEEDS WORK
-msgid "Create file command sent to terminal"
-msgstr "发送到终端的创建文件命令"
-# 
-# File: usr/share/ashyterm/filemanager/manager.py, line: 1758
-#: NEEDS WORK
-msgid "Enter a name for the new file:"
-msgstr "输入新文件的名称："
-# 
-# File: usr/share/ashyterm/filemanager/manager.py, line: 1759
-#: NEEDS WORK
-msgid "New File"
-msgstr "新建文件"
-# 
-# File: usr/share/ashyterm/filemanager/manager.py, line: 1767
-#: NEEDS WORK
-msgid "No items selected to copy."
-msgstr "没有选择要复制的项目。"
-# 
-# File: usr/share/ashyterm/filemanager/manager.py, line: 1781
-#: NEEDS WORK
-msgid "Items copied to clipboard."
-msgstr "已复制到剪贴板的项目。"
-# 
-# File: usr/share/ashyterm/filemanager/manager.py, line: 1786
-#: NEEDS WORK
-msgid "No items selected to cut."
-msgstr "没有选择要剪切的项目。"
-# 
-# File: usr/share/ashyterm/filemanager/manager.py, line: 1800
-#: NEEDS WORK
-msgid "Items marked for move."
-msgstr "标记为移动的项目。"
-# 
-# File: usr/share/ashyterm/filemanager/manager.py, line: 1804
-#: NEEDS WORK
-msgid "Nothing to paste."
-msgstr "没有内容可粘贴。"
-# 
-# File: usr/share/ashyterm/filemanager/manager.py, line: 1815
-#: NEEDS WORK
-msgid "Items are already in this location."
-msgstr "项目已经在此位置。"
-# 
-# File: usr/share/ashyterm/filemanager/manager.py, line: 1819
-#: NEEDS WORK
-msgid "Move command sent to terminal"
-msgstr "移动命令已发送到终端"
-# 
-# File: usr/share/ashyterm/filemanager/manager.py, line: 1824
-#: NEEDS WORK
-msgid "Copy command sent to terminal"
-msgstr "复制命令已发送到终端"
 # 
 # File: usr/share/ashyterm/filemanager/manager.py, line: 672
 #: NEEDS WORK
@@ -6784,43 +6691,89 @@ msgstr "清除所有"
 msgid "No active terminal to send command to."
 msgstr "没有活动终端可以发送命令。"
 # 
-# File: usr/share/ashyterm/app.py, line: 481
+# File: usr/share/ashyterm/app.py, line: 333
 #: NEEDS WORK
-msgid "Select Backup Location"
-msgstr "选择备份位置"
+msgid "Preferences Error"
+msgstr "偏好设置错误"
 # 
-# File: usr/share/ashyterm/app.py, line: 493
+# File: usr/share/ashyterm/app.py, line: 332
+# File: usr/share/ashyterm/app.py, line: 333
 #: NEEDS WORK
-msgid "Encrypt Backup"
-msgstr "加密备份"
+#, python-brace-format
+msgid "Failed to open preferences: {}"
+msgstr "无法打开首选项：{}"
 # 
-# File: usr/share/ashyterm/app.py, line: 495
-#: NEEDS WORK
-msgid ""
-"Enter a password to encrypt your backup. Keep this password safe - you'll need it to restore your "
-"data."
-msgstr "输入密码以加密您的备份。请妥善保管此密码 - 您将需要它来恢复您的数据。"
+# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
 # 
-# File: usr/share/ashyterm/app.py, line: 502
+# File: usr/share/ashyterm/__init__.py, line: 62
+# File: usr/share/ashyterm/app.py, line: 350
 #: NEEDS WORK
-msgid "Encrypt & Backup"
-msgstr "加密与备份"
+msgid "A modern terminal emulator with session management"
+msgstr "一个现代终端仿真器，具有会话管理功能"
 # 
-# File: usr/share/ashyterm/app.py, line: 527
+# File: usr/share/ashyterm/app.py, line: 356
 #: NEEDS WORK
-msgid "Creating encrypted backup..."
-msgstr "正在创建加密备份..."
+msgid "Save Backup As..."
+msgstr "保存备份为..."
+# 
+# File: usr/share/ashyterm/app.py, line: 368
+# File: usr/share/ashyterm/app.py, line: 379
+# File: usr/share/ashyterm/app.py, line: 392
+# File: usr/share/ashyterm/app.py, line: 396
+#: NEEDS WORK
+msgid "Backup Error"
+msgstr "备份错误"
+# 
+# File: usr/share/ashyterm/app.py, line: 375
+#: NEEDS WORK
+msgid "Set Backup Password"
+msgstr "设置备份密码"
+# 
+# File: usr/share/ashyterm/app.py, line: 376
+#: NEEDS WORK
+msgid "Please enter a password to encrypt the backup file."
+msgstr "请输入密码以加密备份文件。"
+# 
+# File: usr/share/ashyterm/app.py, line: 384
+#: NEEDS WORK
+msgid "Confirm Password"
+msgstr "确认密码"
+# 
+# File: usr/share/ashyterm/app.py, line: 400
+# File: usr/share/ashyterm/app.py, line: 405
+#: NEEDS WORK
+msgid "Password Error"
+msgstr "密码错误"
+# 
+# File: usr/share/ashyterm/app.py, line: 400
+#: NEEDS WORK
+msgid "Password cannot be empty."
+msgstr "密码不能为空。"
+# 
+# File: usr/share/ashyterm/app.py, line: 405
+#: NEEDS WORK
+msgid "Passwords do not match."
+msgstr "密码不匹配。"
+# 
+# File: usr/share/ashyterm/app.py, line: 423
+#: NEEDS WORK
+msgid "Creating backup..."
+msgstr "正在创建备份..."
 # 
 # File: usr/share/ashyterm/app.py, line: 390
 #: NEEDS WORK
 msgid "Backup Complete"
 msgstr "备份完成"
 # 
-# File: usr/share/ashyterm/app.py, line: 538
+# File: usr/share/ashyterm/app.py, line: 440
 #: NEEDS WORK
 #, python-brace-format
-msgid "Your data has been backed up successfully to: {}"
-msgstr "您的数据已成功备份到：{}"
+msgid ""
+"Backup saved successfully to:\n"
+"{}"
+msgstr ""
+"备份成功保存到：\n"
+"{}"
 # 
 # File: usr/share/ashyterm/app.py, line: 446
 #: NEEDS WORK
@@ -6833,6 +6786,28 @@ msgstr "备份失败"
 msgid "Could not create backup: {}"
 msgstr "无法创建备份：{}"
 # 
+# File: usr/share/ashyterm/app.py, line: 458
+#: NEEDS WORK
+msgid "Restore from Backup?"
+msgstr "从备份恢复？"
+# 
+# File: usr/share/ashyterm/app.py, line: 460
+#: NEEDS WORK
+msgid ""
+"Restoring from a backup will overwrite all your current sessions, settings, and layouts. This "
+"action cannot be undone.\n"
+"\n"
+"<b>The application will need to be restarted after restoring.</b>"
+msgstr ""
+"从备份恢复将覆盖您当前的所有会话、设置和布局。此操作无法撤消。\n"
+"\n"
+"<b>恢复后需要重新启动应用程序。</b>"
+# 
+# File: usr/share/ashyterm/app.py, line: 466
+#: NEEDS WORK
+msgid "Choose File and Restore"
+msgstr "选择文件并恢复"
+# 
 # File: usr/share/ashyterm/app.py, line: 474
 #: NEEDS WORK
 msgid "Select Backup File"
@@ -6843,17 +6818,21 @@ msgstr "选择备份文件"
 msgid "Backup Files"
 msgstr "备份文件"
 # 
-# File: usr/share/ashyterm/app.py, line: 588
+# File: usr/share/ashyterm/app.py, line: 402
+# File: usr/share/ashyterm/app.py, line: 416
 #: NEEDS WORK
-msgid "Decrypt Backup"
-msgstr "解密备份"
+msgid "Restore Error"
+msgstr "恢复错误"
 # 
-# File: usr/share/ashyterm/app.py, line: 590
+# File: usr/share/ashyterm/app.py, line: 499
 #: NEEDS WORK
-msgid ""
-"Enter the password used to encrypt this backup. All current data will be replaced with the backup "
-"data."
-msgstr "输入用于加密此备份的密码。所有当前数据将被备份数据替换。"
+msgid "Enter Backup Password"
+msgstr "输入备份密码"
+# 
+# File: usr/share/ashyterm/app.py, line: 500
+#: NEEDS WORK
+msgid "Please enter the password for the selected backup file."
+msgstr "请输入所选备份文件的密码。"
 # 
 # File: usr/share/ashyterm/app.py, line: 508
 #: NEEDS WORK

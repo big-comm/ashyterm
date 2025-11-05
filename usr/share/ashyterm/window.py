@@ -377,7 +377,7 @@ class CommTerminalWindow(Adw.ApplicationWindow):
                     if button_container:
                         # Create new buttons connected to the NEW tab manager
                         new_close_button = Gtk.Button(
-                            icon_name='big-window-close-symbolic',
+                            icon_name="window-close-symbolic",
                             tooltip_text=_("Close Pane"),
                         )
                         new_close_button.add_css_class("flat")
@@ -389,7 +389,7 @@ class CommTerminalWindow(Adw.ApplicationWindow):
                         )
 
                         new_move_button = Gtk.Button(
-                            icon_name='big-select-rectangular-symbolic',
+                            icon_name="select-rectangular-symbolic",
                             tooltip_text=_("Move to New Tab"),
                         )
                         new_move_button.add_css_class("flat")
@@ -2010,7 +2010,7 @@ class CommTerminalWindow(Adw.ApplicationWindow):
                 _("Invalid SSH Target"),
                 _("Could not parse the provided SSH connection string."),
             )
-
+    
     def create_new_ssh_tab(self, ssh_target: str):
         """Compatibility wrapper for legacy API usage."""
         return self.create_ssh_tab(ssh_target)
@@ -2144,7 +2144,7 @@ class CommTerminalWindow(Adw.ApplicationWindow):
                 )
                 row.set_title_selectable(True)
                 remove_button = Gtk.Button(
-                    icon_name='big-edit-delete-symbolic',
+                    icon_name="edit-delete-symbolic",
                     css_classes=["flat", "circular"],
                     tooltip_text=_("Remove this temporary file"),
                 )

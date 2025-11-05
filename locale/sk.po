@@ -4680,11 +4680,6 @@ msgstr ""
 "Túto akciu nie je možné vrátiť späť a odstráni všetky dokončené, zlyhané a zrušené prevody zo "
 "zoznamu."
 # 
-# File: usr/share/ashyterm/filemanager/manager.py, line: 274
-#: NEEDS WORK
-msgid "Name cannot be empty."
-msgstr "Názov nemôže byť prázdny."
-# 
 # File: usr/share/ashyterm/filemanager/manager.py, line: 221
 #: NEEDS WORK
 msgid "rsync is not installed on the remote host. Install the rsync package or use SFTP for transfers."
@@ -4788,18 +4783,6 @@ msgstr "Načítanie..."
 msgid "Recursive filter..."
 msgstr "Rekurzívny filter..."
 # 
-# File: usr/share/ashyterm/filemanager/manager.py, line: 1551
-# File: usr/share/ashyterm/filemanager/manager.py, line: 1740
-#: NEEDS WORK
-msgid "Create Folder"
-msgstr "Vytvoriť priečinok"
-# 
-# File: usr/share/ashyterm/filemanager/manager.py, line: 1552
-# File: usr/share/ashyterm/filemanager/manager.py, line: 1757
-#: NEEDS WORK
-msgid "Create File"
-msgstr "Vytvoriť súbor"
-# 
 # File: usr/share/ashyterm/filemanager/manager.py, line: 630
 #: NEEDS WORK
 msgid "Open/Edit"
@@ -4811,86 +4794,10 @@ msgstr "Otvoriť/Upraviť"
 msgid "Open With..."
 msgstr "Otvoriť s..."
 # 
-# File: usr/share/ashyterm/filemanager/manager.py, line: 1683
-#: NEEDS WORK
-msgid "Cut"
-msgstr "Rezanie"
-# 
 # File: usr/share/ashyterm/filemanager/manager.py, line: 638
 #: NEEDS WORK
 msgid "Download"
 msgstr "Stiahnuť"
-# 
-# File: usr/share/ashyterm/filemanager/manager.py, line: 1737
-#: NEEDS WORK
-msgid "Create folder command sent to terminal"
-msgstr "Príkaz na vytvorenie priečinka odoslaný do terminálu"
-# 
-# File: usr/share/ashyterm/filemanager/manager.py, line: 1741
-#: NEEDS WORK
-msgid "Enter a name for the new folder:"
-msgstr "Zadajte názov pre novú zložku:"
-# 
-# File: usr/share/ashyterm/filemanager/manager.py, line: 1743
-# File: usr/share/ashyterm/filemanager/manager.py, line: 1760
-#: NEEDS WORK
-msgid "Create"
-msgstr "Vytvoriť"
-# 
-# File: usr/share/ashyterm/filemanager/manager.py, line: 1754
-#: NEEDS WORK
-msgid "Create file command sent to terminal"
-msgstr "Príkaz na vytvorenie súboru odoslaný do terminálu"
-# 
-# File: usr/share/ashyterm/filemanager/manager.py, line: 1758
-#: NEEDS WORK
-msgid "Enter a name for the new file:"
-msgstr "Zadajte názov pre nový súbor:"
-# 
-# File: usr/share/ashyterm/filemanager/manager.py, line: 1759
-#: NEEDS WORK
-msgid "New File"
-msgstr "Nový súbor"
-# 
-# File: usr/share/ashyterm/filemanager/manager.py, line: 1767
-#: NEEDS WORK
-msgid "No items selected to copy."
-msgstr "Žiadne položky neboli vybrané na kopírovanie."
-# 
-# File: usr/share/ashyterm/filemanager/manager.py, line: 1781
-#: NEEDS WORK
-msgid "Items copied to clipboard."
-msgstr "Položky skopírované do schránky."
-# 
-# File: usr/share/ashyterm/filemanager/manager.py, line: 1786
-#: NEEDS WORK
-msgid "No items selected to cut."
-msgstr "Nie sú vybrané žiadne položky na vystrihnutie."
-# 
-# File: usr/share/ashyterm/filemanager/manager.py, line: 1800
-#: NEEDS WORK
-msgid "Items marked for move."
-msgstr "Položky označené na presun."
-# 
-# File: usr/share/ashyterm/filemanager/manager.py, line: 1804
-#: NEEDS WORK
-msgid "Nothing to paste."
-msgstr "Nič na vloženie."
-# 
-# File: usr/share/ashyterm/filemanager/manager.py, line: 1815
-#: NEEDS WORK
-msgid "Items are already in this location."
-msgstr "Položky sú už na tejto lokalite."
-# 
-# File: usr/share/ashyterm/filemanager/manager.py, line: 1819
-#: NEEDS WORK
-msgid "Move command sent to terminal"
-msgstr "Príkaz presunúť odoslaný do terminálu"
-# 
-# File: usr/share/ashyterm/filemanager/manager.py, line: 1824
-#: NEEDS WORK
-msgid "Copy command sent to terminal"
-msgstr "Príkaz na kopírovanie odoslaný do terminálu"
 # 
 # File: usr/share/ashyterm/filemanager/manager.py, line: 672
 #: NEEDS WORK
@@ -6831,45 +6738,89 @@ msgstr "Vymazať všetko"
 msgid "No active terminal to send command to."
 msgstr "Žiadny aktívny terminál na odoslanie príkazu."
 # 
-# File: usr/share/ashyterm/app.py, line: 481
+# File: usr/share/ashyterm/app.py, line: 333
 #: NEEDS WORK
-msgid "Select Backup Location"
-msgstr "Vyberte umiestnenie zálohy"
+msgid "Preferences Error"
+msgstr "Chyba nastavení"
 # 
-# File: usr/share/ashyterm/app.py, line: 493
+# File: usr/share/ashyterm/app.py, line: 332
+# File: usr/share/ashyterm/app.py, line: 333
 #: NEEDS WORK
-msgid "Encrypt Backup"
-msgstr "Šifrovať zálohu"
+#, python-brace-format
+msgid "Failed to open preferences: {}"
+msgstr "Nepodarilo sa otvoriť nastavenia: {}"
 # 
-# File: usr/share/ashyterm/app.py, line: 495
-#: NEEDS WORK
-msgid ""
-"Enter a password to encrypt your backup. Keep this password safe - you'll need it to restore your "
-"data."
-msgstr ""
-"Zadajte heslo na šifrovanie vašej zálohy. Uchovajte toto heslo v bezpečí - budete ho potrebovať na "
-"obnovenie vašich údajov."
+# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
 # 
-# File: usr/share/ashyterm/app.py, line: 502
+# File: usr/share/ashyterm/__init__.py, line: 62
+# File: usr/share/ashyterm/app.py, line: 350
 #: NEEDS WORK
-msgid "Encrypt & Backup"
-msgstr "Šifrovať a zálohovať"
+msgid "A modern terminal emulator with session management"
+msgstr "Moderný terminálový emulátor s manažmentom relácií"
 # 
-# File: usr/share/ashyterm/app.py, line: 527
+# File: usr/share/ashyterm/app.py, line: 356
 #: NEEDS WORK
-msgid "Creating encrypted backup..."
-msgstr "Vytváranie šifrovaného zálohovania..."
+msgid "Save Backup As..."
+msgstr "Uložiť zálohu ako..."
+# 
+# File: usr/share/ashyterm/app.py, line: 368
+# File: usr/share/ashyterm/app.py, line: 379
+# File: usr/share/ashyterm/app.py, line: 392
+# File: usr/share/ashyterm/app.py, line: 396
+#: NEEDS WORK
+msgid "Backup Error"
+msgstr "Chyba zálohovania"
+# 
+# File: usr/share/ashyterm/app.py, line: 375
+#: NEEDS WORK
+msgid "Set Backup Password"
+msgstr "Nastaviť záložné heslo"
+# 
+# File: usr/share/ashyterm/app.py, line: 376
+#: NEEDS WORK
+msgid "Please enter a password to encrypt the backup file."
+msgstr "Prosím, zadajte heslo na zašifrovanie záložného súboru."
+# 
+# File: usr/share/ashyterm/app.py, line: 384
+#: NEEDS WORK
+msgid "Confirm Password"
+msgstr "Potvrdiť heslo"
+# 
+# File: usr/share/ashyterm/app.py, line: 400
+# File: usr/share/ashyterm/app.py, line: 405
+#: NEEDS WORK
+msgid "Password Error"
+msgstr "Chyba hesla"
+# 
+# File: usr/share/ashyterm/app.py, line: 400
+#: NEEDS WORK
+msgid "Password cannot be empty."
+msgstr "Heslo nemôže byť prázdne."
+# 
+# File: usr/share/ashyterm/app.py, line: 405
+#: NEEDS WORK
+msgid "Passwords do not match."
+msgstr "Heslá sa nezhodujú."
+# 
+# File: usr/share/ashyterm/app.py, line: 423
+#: NEEDS WORK
+msgid "Creating backup..."
+msgstr "Vytváranie zálohy..."
 # 
 # File: usr/share/ashyterm/app.py, line: 390
 #: NEEDS WORK
 msgid "Backup Complete"
 msgstr "Zálohovanie dokončené"
 # 
-# File: usr/share/ashyterm/app.py, line: 538
+# File: usr/share/ashyterm/app.py, line: 440
 #: NEEDS WORK
 #, python-brace-format
-msgid "Your data has been backed up successfully to: {}"
-msgstr "Vaše údaje boli úspešne zálohované na: {}"
+msgid ""
+"Backup saved successfully to:\n"
+"{}"
+msgstr ""
+"Záloha bola úspešne uložená do:  \n"
+"{}"
 # 
 # File: usr/share/ashyterm/app.py, line: 446
 #: NEEDS WORK
@@ -6882,6 +6833,29 @@ msgstr "Zálohovanie zlyhalo"
 msgid "Could not create backup: {}"
 msgstr "Nepodarilo sa vytvoriť zálohu: {}"
 # 
+# File: usr/share/ashyterm/app.py, line: 458
+#: NEEDS WORK
+msgid "Restore from Backup?"
+msgstr "Obnovi zo zálohy?"
+# 
+# File: usr/share/ashyterm/app.py, line: 460
+#: NEEDS WORK
+msgid ""
+"Restoring from a backup will overwrite all your current sessions, settings, and layouts. This "
+"action cannot be undone.\n"
+"\n"
+"<b>The application will need to be restarted after restoring.</b>"
+msgstr ""
+"Obnovenie zo zálohy prepíše všetky vaše aktuálne relácie, nastavenia a rozloženia. Túto akciu nie "
+"je možné vrátiť späť.\n"
+"\n"
+"<b>Aplikáciu bude potrebné reštartovať po obnovení.</b>"
+# 
+# File: usr/share/ashyterm/app.py, line: 466
+#: NEEDS WORK
+msgid "Choose File and Restore"
+msgstr "Vyberte súbor a obnovte"
+# 
 # File: usr/share/ashyterm/app.py, line: 474
 #: NEEDS WORK
 msgid "Select Backup File"
@@ -6892,19 +6866,21 @@ msgstr "Vyberte záložný súbor"
 msgid "Backup Files"
 msgstr "Zálohované súbory"
 # 
-# File: usr/share/ashyterm/app.py, line: 588
+# File: usr/share/ashyterm/app.py, line: 402
+# File: usr/share/ashyterm/app.py, line: 416
 #: NEEDS WORK
-msgid "Decrypt Backup"
-msgstr "Dešifrovať zálohu"
+msgid "Restore Error"
+msgstr "Chyba obnovenia"
 # 
-# File: usr/share/ashyterm/app.py, line: 590
+# File: usr/share/ashyterm/app.py, line: 499
 #: NEEDS WORK
-msgid ""
-"Enter the password used to encrypt this backup. All current data will be replaced with the backup "
-"data."
-msgstr ""
-"Zadajte heslo použité na šifrovanie tejto zálohy. Všetky aktuálne údaje budú nahradené údajmi zo "
-"zálohy."
+msgid "Enter Backup Password"
+msgstr "Zadajte záložné heslo"
+# 
+# File: usr/share/ashyterm/app.py, line: 500
+#: NEEDS WORK
+msgid "Please enter the password for the selected backup file."
+msgstr "Prosím, zadajte heslo pre vybraný záložný súbor."
 # 
 # File: usr/share/ashyterm/app.py, line: 508
 #: NEEDS WORK

@@ -244,8 +244,8 @@ class WindowUIBuilder:
         search_box = Gtk.Box(spacing=6)
         self.terminal_search_entry = Gtk.SearchEntry(hexpand=True)
         self.search_bar.connect_entry(self.terminal_search_entry)
-        self.search_prev_button = Gtk.Button.new_from_icon_name('big-go-up-symbolic')
-        self.search_next_button = Gtk.Button.new_from_icon_name('big-go-down-symbolic')
+        self.search_prev_button = Gtk.Button.new_from_icon_name("go-up-symbolic")
+        self.search_next_button = Gtk.Button.new_from_icon_name("go-down-symbolic")
 
         # Create the BroadcastBar
         self.broadcast_bar = Gtk.SearchBar()
@@ -253,7 +253,7 @@ class WindowUIBuilder:
         self.broadcast_entry = Gtk.Entry(
             hexpand=True, placeholder_text=_("Type your command here and press ENTER...")
         )
-        icon = Gtk.Image.new_from_icon_name('big-utilities-terminal-symbolic')
+        icon = Gtk.Image.new_from_icon_name("utilities-terminal-symbolic")
         self.broadcast_entry.set_icon_from_icon_name(Gtk.EntryIconPosition.PRIMARY, "utilities-terminal-symbolic")
         broadcast_box.append(self.broadcast_entry)
         self.broadcast_bar.set_child(broadcast_box)
@@ -315,39 +315,39 @@ class WindowUIBuilder:
 
         # Create buttons
         self.toggle_sidebar_button = Gtk.ToggleButton(
-            icon_name='big-pin-symbolic', tooltip_text=_("Toggle Sidebar")
+            icon_name="pin-symbolic", tooltip_text=_("Toggle Sidebar")
         )
         self.toggle_sidebar_button.add_css_class("sidebar-toggle-button")
 
         self.file_manager_button = Gtk.ToggleButton(
-            icon_name='big-folder-open-symbolic', tooltip_text=_("File Manager")
+            icon_name="folder-open-symbolic", tooltip_text=_("File Manager")
         )
 
         self.command_guide_button = Gtk.Button(
-            icon_name='big-help-about-symbolic',
+            icon_name="help-about-symbolic",
             tooltip_text=_("Command Guide (Ctrl+Shift+P)"),
         )
         self.command_guide_button.set_action_name("win.show-command-guide")
 
         # Add the new search button
         self.search_button = Gtk.ToggleButton(
-            icon_name='big-edit-find-symbolic', tooltip_text=_("Search in Terminal")
+            icon_name="edit-find-symbolic", tooltip_text=_("Search in Terminal")
         )
 
         # Add the new Broadcast button
         self.broadcast_button = Gtk.ToggleButton(
-            #icon_name='big-emblem-shared-symbolic', tooltip_text=_("Send Command to All Tabs")
-            icon_name='big-utilities-terminal-symbolic', tooltip_text=_("Send Command to All Tabs")
+            #icon_name="emblem-shared-symbolic", tooltip_text=_("Send Command to All Tabs")
+            icon_name="utilities-terminal-symbolic", tooltip_text=_("Send Command to All Tabs")
         )
         self.ai_assistant_button = Gtk.Button(
-            icon_name='big-avatar-default-symbolic',
+            icon_name="avatar-default-symbolic",
             tooltip_text=_("Ask AI Assistant (Ctrl+Shift+I)"),
         )
         self.ai_assistant_button.connect(
             "clicked", lambda _btn: self.window._on_ai_assistant_requested()
         )
         self.cleanup_button = Gtk.MenuButton(
-            icon_name='big-user-trash-symbolic',
+            icon_name="user-trash-symbolic",
             tooltip_text=_("Manage Temporary Files"),
             visible=False,
             css_classes=["destructive-action", "flat"],
@@ -356,14 +356,14 @@ class WindowUIBuilder:
         self.cleanup_button.set_popover(self.cleanup_popover)
 
         self.menu_button = Gtk.MenuButton(
-            icon_name='big-open-menu-symbolic', tooltip_text=_("Main Menu")
+            icon_name="open-menu-symbolic", tooltip_text=_("Main Menu")
         )
         popover, self.font_sizer_widget = MainApplicationMenu.create_main_popover(
             self.window
         )
         self.menu_button.set_popover(popover)
 
-        self.new_tab_button = Gtk.Button.new_from_icon_name('big-tab-new-symbolic')
+        self.new_tab_button = Gtk.Button.new_from_icon_name("tab-new-symbolic")
         self.new_tab_button.set_tooltip_text(_("New Tab"))
         self.new_tab_button.connect("clicked", self.window._on_new_tab_clicked)
         self.new_tab_button.add_css_class("flat")
@@ -500,15 +500,15 @@ class WindowUIBuilder:
         toolbar = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL)
         toolbar.set_halign(Gtk.Align.CENTER)
 
-        self.add_session_button = Gtk.Button.new_from_icon_name('big-list-add-symbolic')
+        self.add_session_button = Gtk.Button.new_from_icon_name("list-add-symbolic")
         self.add_session_button.set_tooltip_text(_("Add Session"))
         toolbar.append(self.add_session_button)
 
-        self.add_folder_button = Gtk.Button.new_from_icon_name('big-folder-new-symbolic')
+        self.add_folder_button = Gtk.Button.new_from_icon_name("folder-new-symbolic")
         self.add_folder_button.set_tooltip_text(_("Add Folder"))
         toolbar.append(self.add_folder_button)
 
-        self.edit_button = Gtk.Button.new_from_icon_name('big-document-edit-symbolic')
+        self.edit_button = Gtk.Button.new_from_icon_name("document-edit-symbolic")
         self.edit_button.set_tooltip_text(_("Edit Selected"))
         toolbar.append(self.edit_button)
 
@@ -518,7 +518,7 @@ class WindowUIBuilder:
         self.save_layout_button.set_tooltip_text(_("Save Current Layout"))
         toolbar.append(self.save_layout_button)
 
-        self.remove_button = Gtk.Button.new_from_icon_name('big-user-trash-symbolic')
+        self.remove_button = Gtk.Button.new_from_icon_name("user-trash-symbolic")
         self.remove_button.set_tooltip_text(_("Remove Selected"))
         self.remove_button.add_css_class("destructive")
         toolbar.append(self.remove_button)

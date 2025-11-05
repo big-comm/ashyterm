@@ -46,7 +46,7 @@ class PreferencesDialog(Adw.PreferencesWindow):
 
     def _setup_appearance_page(self) -> None:
         page = Adw.PreferencesPage(
-            title=_("Appearance"), icon_name='big-preferences-desktop-display-symbolic'
+            title=_("Appearance"), icon_name="preferences-desktop-display-symbolic"
         )
         self.add(page)
 
@@ -184,7 +184,7 @@ class PreferencesDialog(Adw.PreferencesWindow):
 
     def _setup_terminal_page(self) -> None:
         page = Adw.PreferencesPage(
-            title=_("Terminal"), icon_name='big-utilities-terminal-symbolic'
+            title=_("Terminal"), icon_name="utilities-terminal-symbolic"
         )
         self.add(page)
 
@@ -399,7 +399,7 @@ class PreferencesDialog(Adw.PreferencesWindow):
 
     def _setup_profiles_page(self) -> None:
         page = Adw.PreferencesPage(
-            title=_("Profiles & Data"), icon_name='big-folder-saved-search-symbolic'
+            title=_("Profiles & Data"), icon_name="folder-saved-search-symbolic"
         )
         self.add(page)
 
@@ -521,7 +521,7 @@ class PreferencesDialog(Adw.PreferencesWindow):
 
     def _setup_advanced_page(self) -> None:
         advanced_page = Adw.PreferencesPage(
-            title=_("Advanced"), icon_name='big-preferences-other-symbolic'
+            title=_("Advanced"), icon_name="preferences-other-symbolic"
         )
         self.add(advanced_page)
 

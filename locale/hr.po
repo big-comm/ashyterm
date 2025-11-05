@@ -4676,11 +4676,6 @@ msgid ""
 "the list."
 msgstr "Ova radnja se ne može poništiti i uklonit će sve dovršene, neuspjele i otkazane transfere s popisa."
 # 
-# File: usr/share/ashyterm/filemanager/manager.py, line: 274
-#: NEEDS WORK
-msgid "Name cannot be empty."
-msgstr "Ime ne može biti prazno."
-# 
 # File: usr/share/ashyterm/filemanager/manager.py, line: 221
 #: NEEDS WORK
 msgid "rsync is not installed on the remote host. Install the rsync package or use SFTP for transfers."
@@ -4782,18 +4777,6 @@ msgstr "Učitavanje..."
 msgid "Recursive filter..."
 msgstr "Rekurzivni filtar..."
 # 
-# File: usr/share/ashyterm/filemanager/manager.py, line: 1551
-# File: usr/share/ashyterm/filemanager/manager.py, line: 1740
-#: NEEDS WORK
-msgid "Create Folder"
-msgstr "Kreiraj mapu"
-# 
-# File: usr/share/ashyterm/filemanager/manager.py, line: 1552
-# File: usr/share/ashyterm/filemanager/manager.py, line: 1757
-#: NEEDS WORK
-msgid "Create File"
-msgstr "Kreiraj datoteku"
-# 
 # File: usr/share/ashyterm/filemanager/manager.py, line: 630
 #: NEEDS WORK
 msgid "Open/Edit"
@@ -4805,86 +4788,10 @@ msgstr "Otvoriti/Urediti"
 msgid "Open With..."
 msgstr "Otvorite s..."
 # 
-# File: usr/share/ashyterm/filemanager/manager.py, line: 1683
-#: NEEDS WORK
-msgid "Cut"
-msgstr "Izreži"
-# 
 # File: usr/share/ashyterm/filemanager/manager.py, line: 638
 #: NEEDS WORK
 msgid "Download"
 msgstr "Preuzmi"
-# 
-# File: usr/share/ashyterm/filemanager/manager.py, line: 1737
-#: NEEDS WORK
-msgid "Create folder command sent to terminal"
-msgstr "Naredba za stvaranje mape poslana terminalu"
-# 
-# File: usr/share/ashyterm/filemanager/manager.py, line: 1741
-#: NEEDS WORK
-msgid "Enter a name for the new folder:"
-msgstr "Unesite naziv za novu mapu:"
-# 
-# File: usr/share/ashyterm/filemanager/manager.py, line: 1743
-# File: usr/share/ashyterm/filemanager/manager.py, line: 1760
-#: NEEDS WORK
-msgid "Create"
-msgstr "Stvori"
-# 
-# File: usr/share/ashyterm/filemanager/manager.py, line: 1754
-#: NEEDS WORK
-msgid "Create file command sent to terminal"
-msgstr "Naredba za stvaranje datoteke poslana terminalu"
-# 
-# File: usr/share/ashyterm/filemanager/manager.py, line: 1758
-#: NEEDS WORK
-msgid "Enter a name for the new file:"
-msgstr "Unesite ime za novu datoteku:"
-# 
-# File: usr/share/ashyterm/filemanager/manager.py, line: 1759
-#: NEEDS WORK
-msgid "New File"
-msgstr "Nova datoteka"
-# 
-# File: usr/share/ashyterm/filemanager/manager.py, line: 1767
-#: NEEDS WORK
-msgid "No items selected to copy."
-msgstr "Nema odabranih stavki za kopiranje."
-# 
-# File: usr/share/ashyterm/filemanager/manager.py, line: 1781
-#: NEEDS WORK
-msgid "Items copied to clipboard."
-msgstr "Stavke kopirane u međuspremnik."
-# 
-# File: usr/share/ashyterm/filemanager/manager.py, line: 1786
-#: NEEDS WORK
-msgid "No items selected to cut."
-msgstr "Nema odabranih stavki za rezanje."
-# 
-# File: usr/share/ashyterm/filemanager/manager.py, line: 1800
-#: NEEDS WORK
-msgid "Items marked for move."
-msgstr "Stavke označene za premještanje."
-# 
-# File: usr/share/ashyterm/filemanager/manager.py, line: 1804
-#: NEEDS WORK
-msgid "Nothing to paste."
-msgstr "Nema što zalijepiti."
-# 
-# File: usr/share/ashyterm/filemanager/manager.py, line: 1815
-#: NEEDS WORK
-msgid "Items are already in this location."
-msgstr "Stavke su već na ovoj lokaciji."
-# 
-# File: usr/share/ashyterm/filemanager/manager.py, line: 1819
-#: NEEDS WORK
-msgid "Move command sent to terminal"
-msgstr "Komanda za pomicanje poslana terminalu"
-# 
-# File: usr/share/ashyterm/filemanager/manager.py, line: 1824
-#: NEEDS WORK
-msgid "Copy command sent to terminal"
-msgstr "Naredba za kopiranje poslana terminalu"
 # 
 # File: usr/share/ashyterm/filemanager/manager.py, line: 672
 #: NEEDS WORK
@@ -6825,45 +6732,89 @@ msgstr "Izbriši sve"
 msgid "No active terminal to send command to."
 msgstr "Nema aktivnog terminala za slanje naredbe."
 # 
-# File: usr/share/ashyterm/app.py, line: 481
+# File: usr/share/ashyterm/app.py, line: 333
 #: NEEDS WORK
-msgid "Select Backup Location"
-msgstr "Odaberite lokaciju za sigurnosnu kopiju"
+msgid "Preferences Error"
+msgstr "Pogreška u postavkama"
 # 
-# File: usr/share/ashyterm/app.py, line: 493
+# File: usr/share/ashyterm/app.py, line: 332
+# File: usr/share/ashyterm/app.py, line: 333
 #: NEEDS WORK
-msgid "Encrypt Backup"
-msgstr "Šifriraj sigurnosnu kopiju"
+#, python-brace-format
+msgid "Failed to open preferences: {}"
+msgstr "Nije moguće otvoriti postavke: {}"
 # 
-# File: usr/share/ashyterm/app.py, line: 495
-#: NEEDS WORK
-msgid ""
-"Enter a password to encrypt your backup. Keep this password safe - you'll need it to restore your "
-"data."
-msgstr ""
-"Unesite lozinku za šifriranje vaše sigurnosne kopije. Čuvajte ovu lozinku na sigurnom - trebat će "
-"vam za vraćanje vaših podataka."
+# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
 # 
-# File: usr/share/ashyterm/app.py, line: 502
+# File: usr/share/ashyterm/__init__.py, line: 62
+# File: usr/share/ashyterm/app.py, line: 350
 #: NEEDS WORK
-msgid "Encrypt & Backup"
-msgstr "Šifriranje i sigurnosna kopija"
+msgid "A modern terminal emulator with session management"
+msgstr "Moderni terminal emulator s upravljanjem sesijama"
 # 
-# File: usr/share/ashyterm/app.py, line: 527
+# File: usr/share/ashyterm/app.py, line: 356
 #: NEEDS WORK
-msgid "Creating encrypted backup..."
-msgstr "Stvaranje šifrirane sigurnosne kopije..."
+msgid "Save Backup As..."
+msgstr "Spremi sigurnosnu kopiju kao..."
+# 
+# File: usr/share/ashyterm/app.py, line: 368
+# File: usr/share/ashyterm/app.py, line: 379
+# File: usr/share/ashyterm/app.py, line: 392
+# File: usr/share/ashyterm/app.py, line: 396
+#: NEEDS WORK
+msgid "Backup Error"
+msgstr "Pogreška sigurnosne kopije"
+# 
+# File: usr/share/ashyterm/app.py, line: 375
+#: NEEDS WORK
+msgid "Set Backup Password"
+msgstr "Postavi lozinku za sigurnosnu kopiju"
+# 
+# File: usr/share/ashyterm/app.py, line: 376
+#: NEEDS WORK
+msgid "Please enter a password to encrypt the backup file."
+msgstr "Molimo unesite lozinku za šifriranje datoteke sigurnosne kopije."
+# 
+# File: usr/share/ashyterm/app.py, line: 384
+#: NEEDS WORK
+msgid "Confirm Password"
+msgstr "Potvrdi lozinku"
+# 
+# File: usr/share/ashyterm/app.py, line: 400
+# File: usr/share/ashyterm/app.py, line: 405
+#: NEEDS WORK
+msgid "Password Error"
+msgstr "Pogreška lozinke"
+# 
+# File: usr/share/ashyterm/app.py, line: 400
+#: NEEDS WORK
+msgid "Password cannot be empty."
+msgstr "Lozinka ne može biti prazna."
+# 
+# File: usr/share/ashyterm/app.py, line: 405
+#: NEEDS WORK
+msgid "Passwords do not match."
+msgstr "Lozinke se ne podudaraju."
+# 
+# File: usr/share/ashyterm/app.py, line: 423
+#: NEEDS WORK
+msgid "Creating backup..."
+msgstr "Izrada sigurnosne kopije..."
 # 
 # File: usr/share/ashyterm/app.py, line: 390
 #: NEEDS WORK
 msgid "Backup Complete"
 msgstr "Sigurnosna kopija dovršena"
 # 
-# File: usr/share/ashyterm/app.py, line: 538
+# File: usr/share/ashyterm/app.py, line: 440
 #: NEEDS WORK
 #, python-brace-format
-msgid "Your data has been backed up successfully to: {}"
-msgstr "Vaši podaci su uspješno sigurnosno kopirani na: {}"
+msgid ""
+"Backup saved successfully to:\n"
+"{}"
+msgstr ""
+"Sigurnosna kopija uspješno spremljena na:  \n"
+"{}"
 # 
 # File: usr/share/ashyterm/app.py, line: 446
 #: NEEDS WORK
@@ -6876,6 +6827,29 @@ msgstr "Backup nije uspio"
 msgid "Could not create backup: {}"
 msgstr "Nije moguće stvoriti sigurnosnu kopiju: {}"
 # 
+# File: usr/share/ashyterm/app.py, line: 458
+#: NEEDS WORK
+msgid "Restore from Backup?"
+msgstr "Vrati iz sigurnosne kopije?"
+# 
+# File: usr/share/ashyterm/app.py, line: 460
+#: NEEDS WORK
+msgid ""
+"Restoring from a backup will overwrite all your current sessions, settings, and layouts. This "
+"action cannot be undone.\n"
+"\n"
+"<b>The application will need to be restarted after restoring.</b>"
+msgstr ""
+"Obnavljanje iz sigurnosne kopije će prebrisati sve vaše trenutne sesije, postavke i rasporede. Ova "
+"radnja se ne može poništiti.\n"
+"\n"
+"<b>Aplikaciju će biti potrebno ponovo pokrenuti nakon obnavljanja.</b>"
+# 
+# File: usr/share/ashyterm/app.py, line: 466
+#: NEEDS WORK
+msgid "Choose File and Restore"
+msgstr "Odaberi datoteku i vrati"
+# 
 # File: usr/share/ashyterm/app.py, line: 474
 #: NEEDS WORK
 msgid "Select Backup File"
@@ -6886,19 +6860,21 @@ msgstr "Odaberite datoteku sigurnosne kopije"
 msgid "Backup Files"
 msgstr "Sigurnosne kopije datoteka"
 # 
-# File: usr/share/ashyterm/app.py, line: 588
+# File: usr/share/ashyterm/app.py, line: 402
+# File: usr/share/ashyterm/app.py, line: 416
 #: NEEDS WORK
-msgid "Decrypt Backup"
-msgstr "Dešifriraj sigurnosnu kopiju"
+msgid "Restore Error"
+msgstr "Pogreška pri vraćanju"
 # 
-# File: usr/share/ashyterm/app.py, line: 590
+# File: usr/share/ashyterm/app.py, line: 499
 #: NEEDS WORK
-msgid ""
-"Enter the password used to encrypt this backup. All current data will be replaced with the backup "
-"data."
-msgstr ""
-"Unesite lozinku koja se koristi za šifriranje ove sigurnosne kopije. Svi trenutni podaci bit će "
-"zamijenjeni podacima iz sigurnosne kopije."
+msgid "Enter Backup Password"
+msgstr "Unesite lozinku za sigurnosnu kopiju"
+# 
+# File: usr/share/ashyterm/app.py, line: 500
+#: NEEDS WORK
+msgid "Please enter the password for the selected backup file."
+msgstr "Molimo unesite lozinku za odabranu sigurnosnu kopiju."
 # 
 # File: usr/share/ashyterm/app.py, line: 508
 #: NEEDS WORK
