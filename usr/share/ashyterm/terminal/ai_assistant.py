@@ -18,6 +18,7 @@ gi.require_version("Adw", "1")
 from gi.repository import Adw, GLib
 
 from ..utils.logger import get_logger
+from ..utils.translation_utils import _
 
 
 class TerminalAiAssistant:
@@ -259,9 +260,7 @@ class TerminalAiAssistant:
             raise RuntimeError(f"Failed to query the Gemini service: {exc}") from exc
 
         if response.status_code >= 400:
-            raise RuntimeError(
-                f"HTTP error {response.status_code}: {response.text.strip()}"
-            )
+            raise RuntimeError(self._format_openrouter_error(response))
 
         try:
             response_data = response.json()
@@ -308,9 +307,7 @@ class TerminalAiAssistant:
             raise RuntimeError(f"Failed to query the Groq service: {exc}") from exc
 
         if response.status_code >= 400:
-            raise RuntimeError(
-                f"HTTP error {response.status_code}: {response.text.strip()}"
-            )
+            raise RuntimeError(self._format_openrouter_error(response))
 
         try:
             response_data = response.json()
@@ -386,6 +383,40 @@ class TerminalAiAssistant:
         if not isinstance(content, str) or not content.strip():
             raise RuntimeError("OpenRouter did not return any usable content.")
         return content.strip()
+
+    def _format_openrouter_error(self, response: requests.Response) -> str:
+        status = response.status_code
+        fallback = response.text.strip() or _("Unknown error.")
+        try:
+            payload = response.json()
+        except ValueError:
+            return _("OpenRouter respondeu com HTTP {status}: {message}").format(
+                status=status, message=fallback
+            )
+
+        error_obj = payload.get("error")
+        if not isinstance(error_obj, dict):
+            return _("OpenRouter respondeu com HTTP {status}: {message}").format(
+                status=status, message=fallback
+            )
+
+        message = error_obj.get("message")
+        metadata = error_obj.get("metadata", {})
+        provider_name = metadata.get("provider_name")
+        raw_detail = metadata.get("raw")
+        details = []
+        if provider_name:
+            details.append(provider_name)
+        if raw_detail:
+            details.append(raw_detail)
+        extra = f" ({' | '.join(details)})" if details else ""
+
+        clean_message = message or fallback
+        return _("OpenRouter respondeu com HTTP {status}: {message}{detail}").format(
+            status=status,
+            message=clean_message,
+            detail=extra,
+        )
 
     def _build_gemini_conversation(
         self, messages: List[Dict[str, str]]
