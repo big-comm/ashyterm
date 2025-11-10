@@ -753,7 +753,7 @@ msgstr  ""
 # File: usr/share/ashyterm/ui/dialogs/base_dialog.py, line: 76
 # File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 271
 # File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 312
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 858
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 918
 # File: usr/share/ashyterm/ui/dialogs/move_dialogs.py, line: 64
 # File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 366
 # File: usr/share/ashyterm/filemanager/manager.py, line: 264
@@ -831,9 +831,9 @@ msgstr  ""
 # File: usr/share/ashyterm/ui/color_scheme_dialog.py, line: 582
 # File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 953
 # File: usr/share/ashyterm/ui/dialogs/base_dialog.py, line: 65
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 846
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 873
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 883
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 906
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 933
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 943
 # File: usr/share/ashyterm/filemanager/manager.py, line: 1204
 # File: usr/share/ashyterm/filemanager/manager.py, line: 2416
 # File: usr/share/ashyterm/window.py, line: 2081
@@ -2161,8 +2161,8 @@ msgstr  ""
 # #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
 #
 # File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 313
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 651
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 658
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 690
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 697
 msgid   "Reset"
 msgstr  ""
 
@@ -2473,78 +2473,108 @@ msgid   "Select which AI service to use."
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 362
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 363
 msgid   "Model Identifier"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 363
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 364
 msgid   "Examples: llama-3.1-8b-instant, gemini-2.5-flash."
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 368
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 779
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 369
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 824
 msgid   "llama-3.1-8b-instant"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 375
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 376
 msgid   "API Key"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 376
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 377
 msgid   "Stored locally and used to authenticate requests."
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 380
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 381
 msgid   "Paste your API key"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 402
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 391
+msgid   "Site URL (optional)"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 392
+msgid   "Used as HTTP Referer header on OpenRouter rankings."
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 396
+msgid   "https://example.com"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 408
+msgid   "Site title (optional)"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 409
+msgid   "Sent via X-Title header for OpenRouter rankings."
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 413
+msgid   "My Project"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 441
 msgid   "Profiles & Data"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 406
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 445
 msgid   "Startup"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 410
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 449
 msgid   "On Startup"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 411
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 450
 msgid   "Action to take when the application starts"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 415
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 454
 msgid   "Always restore previous session"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 416
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 455
 msgid   "Ask to restore previous session"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 417
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 456
 msgid   "Never restore previous session"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 432
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 471
 msgid   "Backup &amp; Recovery"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 434
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 473
 msgid   "Create an encrypted backup of your data or restore from a previous "
         "backup."
 msgstr  ""
@@ -2552,324 +2582,339 @@ msgstr  ""
 #
 # #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
 #
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 440
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 479
 # File: usr/share/ashyterm/app.py, line: 408
 msgid   "Create Backup"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 442
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 481
 msgid   "Save all sessions, settings, and passwords to an encrypted file."
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 445
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 484
 msgid   "Create Backup..."
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 453
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 492
 msgid   "Restore from Backup"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 454
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 493
 msgid   "Replace all current data with a backup file."
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 456
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 495
 msgid   "Restore..."
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 463
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 502
 msgid   "Remote Editing"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 467
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 506
 msgid   "Use System Temporary Directory"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 469
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 508
 msgid   "Store temporary files for remote editing in /tmp instead of the "
         "config folder"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 484
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 523
 msgid   "Clear Remote Edit Files on Exit"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 486
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 525
 msgid   "Automatically delete all temporary remote files when closing the app"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 501
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 540
 msgid   "SSH"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 502
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 541
 msgid   "Settings for SSH connection management (multiplexing)."
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 507
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 546
 msgid   "Connection Persistence (seconds)"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 509
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 548
 msgid   "Keep SSH connections alive in the background for faster "
         "reconnections. Set to 0 to disable."
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 524
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 563
 msgid   "Advanced"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 529
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 568
 msgid   "Advanced Features"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 530
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 569
 msgid   "Enable or disable advanced terminal features"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 535
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 574
 msgid   "Bidirectional Text Support"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 537
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 576
 msgid   "Enable for languages like Arabic and Hebrew (may affect performance)"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 548
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 587
 msgid   "Enable Arabic Text Shaping"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 550
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 589
 msgid   "Correctly render ligatures and contextual forms for Arabic script"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 561
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 600
 msgid   "SIXEL Graphics Support"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 562
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 601
 msgid   "Allow the terminal to display SIXEL images (experimental)"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 572
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 611
 msgid   "Compatibility"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 573
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 612
 msgid   "Settings for compatibility with older systems and tools"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 578
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 617
 msgid   "Backspace Key"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 578
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 617
 msgid   "Sequence to send for Backspace key"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 582
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 597
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 621
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 636
 msgid   "Automatic"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 583
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 622
 msgid   "ASCII BACKSPACE (^H)"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 584
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 598
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 623
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 637
 msgid   "ASCII DELETE"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 585
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 599
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 624
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 638
 msgid   "Escape Sequence"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 593
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 632
 msgid   "Delete Key"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 593
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 632
 msgid   "Sequence to send for Delete key"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 607
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 646
 msgid   "Ambiguous-width Characters"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 608
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 647
 msgid   "Set the width for ambiguous characters (e.g., CJK)"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 611
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 650
 msgid   "Narrow (single-cell)"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 611
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 650
 msgid   "Wide (double-cell)"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 620
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 659
 msgid   "Logging"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 620
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 659
 msgid   "Configure application logging behavior"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 625
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 664
 msgid   "Save Logs to File"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 626
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 665
 msgid   "Save application logs to the configuration directory"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 636
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 675
 msgid   "Console Log Level"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 637
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 676
 msgid   "Set the minimum level of messages shown in the console"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 651
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 690
 msgid   "Reset application settings to defaults"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 655
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 853
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 859
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 694
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 913
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 919
 msgid   "Reset All Settings"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 656
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 695
 msgid   "Restore all settings to their default values"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 781
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 826
 msgid   "Model identifier (for example: llama-3.1-8b-instant)."
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 783
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 828
 msgid   "API key."
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 786
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 833
 msgid   "gemini-2.5-flash"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 788
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 835
 msgid   "Gemini model identifier (for example: gemini-2.5-flash)."
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 790
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 837
 msgid   "Google AI Studio API key."
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 793
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 842
+msgid   "openrouter/polaris-alpha"
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 844
+msgid   "OpenRouter model identifier (for example: openrouter/polaris-alpha)."
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 846
+msgid   "OpenRouter API key."
+msgstr  ""
+
+#
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 851
 msgid   "model-name"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 795
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 853
 msgid   "Model identifier required by the selected provider."
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 797
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 855
 msgid   "API key used to authenticate requests."
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 840
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 900
 msgid   "Sidebar Visibility"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 842
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 902
 msgid   "The sidebar visibility change will take effect when you close and "
         "reopen the application. You can also toggle the sidebar manually "
         "using Ctrl+Shift+H."
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 855
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 915
 msgid   "Are you sure you want to reset all settings to their default values? "
         "This action cannot be undone."
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 868
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 928
 msgid   "Settings Reset"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 870
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 930
 msgid   "All settings have been reset to their default values. Please restart "
         "the application for all changes to take effect."
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 880
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 940
 msgid   "Reset Failed"
 msgstr  ""
 
 #
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 881
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 941
 #, python-brace-format
 msgid   "Failed to reset settings: {}"
 msgstr  ""
