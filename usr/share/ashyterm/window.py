@@ -612,6 +612,9 @@ class CommTerminalWindow(Adw.ApplicationWindow):
         self.broadcast_bar.connect(
             "notify::search-mode-enabled", self._on_broadcast_mode_changed
         )
+        key_controller = Gtk.EventControllerKey.new()
+        key_controller.connect("key-pressed", self._on_broadcast_key_pressed)
+        self.broadcast_entry.add_controller(key_controller)
 
     def _setup_window_events(self) -> None:
         """Set up window-level event handlers."""
@@ -1385,6 +1388,12 @@ class CommTerminalWindow(Adw.ApplicationWindow):
         else:
             if terminal := self.tab_manager.get_selected_terminal():
                 terminal.grab_focus()
+
+    def _on_broadcast_key_pressed(self, _controller, keyval, _keycode, _state):
+        if keyval == Gdk.KEY_Escape:
+            self.broadcast_bar.set_search_mode(False)
+            return True
+        return False
 
     def _get_terminal_display_name(self, terminal: Vte.Terminal) -> str:
         page = self.tab_manager.get_page_for_terminal(terminal)
