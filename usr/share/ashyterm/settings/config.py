@@ -27,7 +27,7 @@ class AppConstants:
 
     APP_ID = "org.communitybig.ashyterm"
     APP_TITLE = "Ashy Terminal"
-    APP_VERSION = "1.6.5"
+    APP_VERSION = "1.7.0"
     DEVELOPER_NAME = "BigCommunity"
     DEVELOPER_TEAM = ["BigCommunity Team"]
     COPYRIGHT = "© 2025 BigCommunity"
@@ -222,6 +222,8 @@ class DefaultSettings:
             "ai_assistant_provider": "groq",
             "ai_assistant_model": "llama-3.1-8b-instant",
             "ai_assistant_api_key": "",
+            "ai_openrouter_site_url": "",
+            "ai_openrouter_site_name": "",
             # Search Settings
             "search_case_sensitive": False,
             "search_use_regex": False,

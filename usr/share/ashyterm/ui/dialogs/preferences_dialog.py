@@ -342,6 +342,7 @@ class PreferencesDialog(Adw.PreferencesWindow):
         self._ai_provider_options = [
             ("groq", ("Groq")),
             ("gemini", ("Gemini")),
+            ("openrouter", ("OpenRouter")),
         ]
         provider_model = Gtk.StringList.new(
             [label for _pid, label in self._ai_provider_options]
@@ -386,11 +387,49 @@ class PreferencesDialog(Adw.PreferencesWindow):
         self.ai_api_key_row.set_activatable_widget(self.ai_api_key_entry)
         ai_group.add(self.ai_api_key_row)
 
+        self.ai_openrouter_site_row = Adw.ActionRow(
+            title=_("Site URL (optional)"),
+            subtitle=_("Used as HTTP Referer header on OpenRouter rankings."),
+        )
+        self.ai_openrouter_site_entry = Gtk.Entry(
+            text=self.settings_manager.get("ai_openrouter_site_url", ""),
+            placeholder_text=_("https://example.com"),
+        )
+        self.ai_openrouter_site_entry.connect(
+            "changed", self._on_openrouter_site_url_changed
+        )
+        self.ai_openrouter_site_row.add_suffix(self.ai_openrouter_site_entry)
+        self.ai_openrouter_site_row.set_activatable_widget(
+            self.ai_openrouter_site_entry
+        )
+        ai_group.add(self.ai_openrouter_site_row)
+
+        self.ai_openrouter_title_row = Adw.ActionRow(
+            title=_("Site title (optional)"),
+            subtitle=_("Sent via X-Title header for OpenRouter rankings."),
+        )
+        self.ai_openrouter_title_entry = Gtk.Entry(
+            text=self.settings_manager.get("ai_openrouter_site_name", ""),
+            placeholder_text=_("My Project"),
+        )
+        self.ai_openrouter_title_entry.connect(
+            "changed", self._on_openrouter_site_name_changed
+        )
+        self.ai_openrouter_title_row.add_suffix(self.ai_openrouter_title_entry)
+        self.ai_openrouter_title_row.set_activatable_widget(
+            self.ai_openrouter_title_entry
+        )
+        ai_group.add(self.ai_openrouter_title_row)
+
         self._ai_config_widgets = [
             self.ai_model_row,
             self.ai_model_entry,
             self.ai_api_key_row,
             self.ai_api_key_entry,
+            self.ai_openrouter_site_row,
+            self.ai_openrouter_site_entry,
+            self.ai_openrouter_title_row,
+            self.ai_openrouter_title_entry,
         ]
         self._update_ai_controls_sensitive(
             self.ai_assistant_switch.get_active()
@@ -769,6 +808,12 @@ class PreferencesDialog(Adw.PreferencesWindow):
         text = entry.get_text().strip()
         self._on_setting_changed("ai_assistant_api_key", text)
 
+    def _on_openrouter_site_url_changed(self, entry: Gtk.Entry) -> None:
+        self._on_setting_changed("ai_openrouter_site_url", entry.get_text().strip())
+
+    def _on_openrouter_site_name_changed(self, entry: Gtk.Entry) -> None:
+        self._on_setting_changed("ai_openrouter_site_name", entry.get_text().strip())
+
     def _update_ai_controls_sensitive(self, enabled: bool) -> None:
         for widget in getattr(self, "_ai_config_widgets", []):
             widget.set_sensitive(enabled)
@@ -781,6 +826,8 @@ class PreferencesDialog(Adw.PreferencesWindow):
                 _("Model identifier (for example: llama-3.1-8b-instant).")
             )
             self.ai_api_key_row.set_subtitle(_("API key."))
+            self.ai_openrouter_site_row.set_visible(False)
+            self.ai_openrouter_title_row.set_visible(False)
         elif provider == "gemini":
             self.ai_model_row.set_visible(True)
             self.ai_model_entry.set_placeholder_text(_("gemini-2.5-flash"))
@@ -788,6 +835,17 @@ class PreferencesDialog(Adw.PreferencesWindow):
                 _("Gemini model identifier (for example: gemini-2.5-flash).")
             )
             self.ai_api_key_row.set_subtitle(_("Google AI Studio API key."))
+            self.ai_openrouter_site_row.set_visible(False)
+            self.ai_openrouter_title_row.set_visible(False)
+        elif provider == "openrouter":
+            self.ai_model_row.set_visible(True)
+            self.ai_model_entry.set_placeholder_text(_("openrouter/polaris-alpha"))
+            self.ai_model_row.set_subtitle(
+                _("OpenRouter model identifier (for example: openrouter/polaris-alpha).")
+            )
+            self.ai_api_key_row.set_subtitle(_("OpenRouter API key."))
+            self.ai_openrouter_site_row.set_visible(True)
+            self.ai_openrouter_title_row.set_visible(True)
         else:
             self.ai_model_row.set_visible(True)
             self.ai_model_entry.set_placeholder_text(_("model-name"))
@@ -795,6 +853,8 @@ class PreferencesDialog(Adw.PreferencesWindow):
                 _("Model identifier required by the selected provider.")
             )
             self.ai_api_key_row.set_subtitle(_("API key used to authenticate requests."))
+            self.ai_openrouter_site_row.set_visible(False)
+            self.ai_openrouter_title_row.set_visible(False)
 
     def _get_selected_provider_id(self) -> str:
         index = self.ai_provider_row.get_selected()

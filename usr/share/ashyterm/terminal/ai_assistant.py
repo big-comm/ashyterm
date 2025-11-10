@@ -25,6 +25,7 @@ class TerminalAiAssistant:
 
     DEFAULT_GEMINI_MODEL = "gemini-2.5-flash"
     DEFAULT_GROQ_MODEL = "llama-3.1-8b-instant"
+    DEFAULT_OPENROUTER_MODEL = "openrouter/polaris-alpha"
     _SYSTEM_PROMPT = (
         "You are the AshyTerm Assistant, a Linux specialist operating inside a terminal."
         " Answer only questions related to Linux, system administration, networking, command-line"
@@ -65,7 +66,7 @@ class TerminalAiAssistant:
         if not provider:
             missing.append("provider")
             return missing
-        if provider in {"groq", "gemini"}:
+        if provider in {"groq", "gemini", "openrouter"}:
             if not api_key:
                 missing.append("api_key")
         else:
@@ -117,7 +118,13 @@ class TerminalAiAssistant:
     def handle_setting_changed(self, key: str, _old_value: Any, new_value: Any) -> None:
         if key == "ai_assistant_enabled" and not new_value:
             self.clear_all_conversations()
-        if key in {"ai_assistant_provider", "ai_assistant_api_key"}:
+        if key in {
+            "ai_assistant_provider",
+            "ai_assistant_api_key",
+            "ai_assistant_model",
+            "ai_openrouter_site_url",
+            "ai_openrouter_site_name",
+        }:
             self.clear_all_conversations()
 
     # ------------------------------------------------------------------
@@ -194,6 +201,12 @@ class TerminalAiAssistant:
             "model": self.settings_manager.get("ai_assistant_model", "").strip(),
             "api_key": self.settings_manager.get("ai_assistant_api_key", "").strip(),
         }
+        config["openrouter_site_url"] = self.settings_manager.get(
+            "ai_openrouter_site_url", ""
+        ).strip()
+        config["openrouter_site_name"] = self.settings_manager.get(
+            "ai_openrouter_site_name", ""
+        ).strip()
         if not config["provider"]:
             raise RuntimeError(
                 "Select a provider in Preferences > Terminal > AI Assistant."
@@ -202,6 +215,8 @@ class TerminalAiAssistant:
             config["model"] = self.DEFAULT_GROQ_MODEL
         elif config["provider"] == "gemini" and not config["model"]:
             config["model"] = self.DEFAULT_GEMINI_MODEL
+        elif config["provider"] == "openrouter" and not config["model"]:
+            config["model"] = self.DEFAULT_OPENROUTER_MODEL
         return config
 
     def _perform_request(
@@ -212,6 +227,8 @@ class TerminalAiAssistant:
             return self._perform_groq_request(config, messages)
         if provider == "gemini":
             return self._perform_gemini_request(config, messages)
+        if provider == "openrouter":
+            return self._perform_openrouter_request(config, messages)
         raise RuntimeError(
             f"Provider '{provider}' is not supported in this version."
         )
@@ -314,6 +331,60 @@ class TerminalAiAssistant:
             )
         if not isinstance(content, str) or not content.strip():
             raise RuntimeError("Groq did not return any usable content.")
+        return content.strip()
+
+    def _perform_openrouter_request(
+        self, config: Dict[str, str], messages: List[Dict[str, str]]
+    ) -> str:
+        api_key = config.get("api_key", "").strip()
+        if not api_key:
+            raise RuntimeError("Configure the OpenRouter API key in Preferences.")
+
+        model = config.get("model", "").strip() or self.DEFAULT_OPENROUTER_MODEL
+        payload_messages = self._build_openai_messages(messages)
+        url = "https://openrouter.ai/api/v1/chat/completions"
+        payload: Dict[str, Any] = {"model": model, "messages": payload_messages}
+
+        headers = {
+            "Content-Type": "application/json",
+            "Authorization": f"Bearer {api_key}",
+        }
+        site_url = config.get("openrouter_site_url")
+        site_name = config.get("openrouter_site_name")
+        if site_url:
+            headers["HTTP-Referer"] = site_url
+        if site_name:
+            headers["X-Title"] = site_name
+
+        try:
+            response = requests.post(url, headers=headers, json=payload, timeout=60)
+        except requests.RequestException as exc:
+            raise RuntimeError(f"Failed to query the OpenRouter service: {exc}") from exc
+
+        if response.status_code >= 400:
+            raise RuntimeError(
+                f"HTTP error {response.status_code}: {response.text.strip()}"
+            )
+
+        try:
+            response_data = response.json()
+        except ValueError as exc:
+            raise RuntimeError("OpenRouter returned an invalid JSON response.") from exc
+
+        choices = response_data.get("choices") or []
+        if not choices:
+            raise RuntimeError("The server response did not contain any suggestions.")
+
+        message = choices[0].get("message") if isinstance(choices[0], dict) else None
+        content = message.get("content") if isinstance(message, dict) else None
+        if isinstance(content, list):
+            content = "\n".join(
+                part.get("text", "")
+                for part in content
+                if isinstance(part, dict) and part.get("text")
+            )
+        if not isinstance(content, str) or not content.strip():
+            raise RuntimeError("OpenRouter did not return any usable content.")
         return content.strip()
 
     def _build_gemini_conversation(
