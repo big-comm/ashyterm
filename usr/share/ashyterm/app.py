@@ -190,6 +190,7 @@ class CommTerminalApp(Adw.Application):
                 "select-all",
                 "toggle-sidebar",
                 "toggle-file-manager",
+                "toggle-search",
                 "show-command-guide",
                 "new-window",
                 "zoom-in",

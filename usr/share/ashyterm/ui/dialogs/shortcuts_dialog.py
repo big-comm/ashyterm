@@ -35,6 +35,7 @@ SHORTCUT_DATA = [
             ("copy", _("Copy"), "edit-copy"),
             ("paste", _("Paste"), "edit-paste"),
             ("select-all", _("Select All"), "edit-select-all"),
+            ("toggle-search", _("Search in Terminal"), "edit-find"),
             ("toggle-broadcast", _("Send Command  All Tabs"), "emblem-shared-symbolic"),
             ("ai-assistant", _("Ask AI Assistant"), "system-help"),
         ],

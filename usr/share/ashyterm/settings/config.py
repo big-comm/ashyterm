@@ -27,7 +27,7 @@ class AppConstants:
 
     APP_ID = "org.communitybig.ashyterm"
     APP_TITLE = "Ashy Terminal"
-    APP_VERSION = "1.6.3.1"
+    APP_VERSION = "1.6.5"
     DEVELOPER_NAME = "BigCommunity"
     DEVELOPER_TEAM = ["BigCommunity Team"]
     COPYRIGHT = "© 2025 BigCommunity"
@@ -246,6 +246,7 @@ class DefaultSettings:
                 "next-tab": "<Alt>Page_Down",
                 "previous-tab": "<Alt>Page_Up",
                 "toggle-file-manager": "<Control><Shift>e",
+                "toggle-search": "<Control><Shift>f",
                 "toggle-broadcast": "<Control><Shift>b",
                 "ai-assistant": "<Control><Shift>i",
             },
