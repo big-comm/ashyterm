@@ -34,6 +34,20 @@ from ..utils.security import (
 )
 from ..utils.translation_utils import _
 
+OSC7_HOST_DETECTION_SNIPPET = (
+    'if [ -z "$ASHYTERM_OSC7_HOST" ]; then '
+    "if command -v hostname >/dev/null 2>&1; then "
+    'ASHYTERM_OSC7_HOST="$(hostname)"; '
+    'elif [ -n "$HOSTNAME" ]; then '
+    'ASHYTERM_OSC7_HOST="$HOSTNAME"; '
+    "elif command -v uname >/dev/null 2>&1; then "
+    'ASHYTERM_OSC7_HOST="$(uname -n)"; '
+    "else "
+    'ASHYTERM_OSC7_HOST="unknown"; '
+    "fi; "
+    "fi;"
+)
+
 
 class ProcessTracker:
     """Track spawned processes for proper cleanup."""
@@ -149,7 +163,10 @@ class ProcessSpawner:
             env["VTE_VERSION"] = str(vte_version)
 
             # OSC7 integration for CWD tracking
-            osc7_command = 'printf "\\033]7;file://%s%s\\007" "$(hostname)" "$PWD"'
+            osc7_command = (
+                f"{OSC7_HOST_DETECTION_SNIPPET} "
+                'printf "\\033]7;file://%s%s\\007" "$ASHYTERM_OSC7_HOST" "$PWD"'
+            )
 
             if shell_basename == "zsh":
                 try:
@@ -545,7 +562,10 @@ class ProcessSpawner:
         if command_type == "ssh":
             # This command sets up OSC7 tracking for bash/zsh and then executes the user's default shell.
             # It's a pragmatic approach that works for the most common shells.
-            osc7_setup = 'export PROMPT_COMMAND=\'printf "\\033]7;file://%s%s\\007" "$(hostname)" "$PWD"\''
+            osc7_setup = (
+                f"{OSC7_HOST_DETECTION_SNIPPET} "
+                'export PROMPT_COMMAND=\'printf "\\033]7;file://%s%s\\007" "$ASHYTERM_OSC7_HOST" "$PWD"\''
+            )
             shell_exec = 'exec "$SHELL" -l'
 
             remote_parts = []
