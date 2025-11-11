@@ -286,6 +286,7 @@ def create_terminal_menu(terminal, click_x=None, click_y=None) -> Gio.Menu:
     standard_section.append(_("Copy"), "win.copy")
     standard_section.append(_("Paste"), "win.paste")
     standard_section.append(_("Select All"), "win.select-all")
+    standard_section.append(_("Clear Session"), "win.clear-session")
     menu.append_section(None, standard_section)
 
     split_section = Gio.Menu()

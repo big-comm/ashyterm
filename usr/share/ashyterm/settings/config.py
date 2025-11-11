@@ -27,7 +27,7 @@ class AppConstants:
 
     APP_ID = "org.communitybig.ashyterm"
     APP_TITLE = "Ashy Terminal"
-    APP_VERSION = "1.7.2"
+    APP_VERSION = "1.8.0"
     DEVELOPER_NAME = "BigCommunity"
     DEVELOPER_TEAM = ["BigCommunity Team"]
     COPYRIGHT = "© 2025 BigCommunity"
@@ -231,9 +231,10 @@ class DefaultSettings:
             "shortcuts": {
                 "new-local-tab": "<Control><Shift>t",
                 "close-tab": "<Control><Shift>w",
-                "copy": "<Control><Shift>c",
+                "copy": "<Control><Shift>Insert",
                 "paste": "<Control><Shift>v",
                 "select-all": "<Control><Shift>a",
+                "clear-session": "<Control><Shift>l",
                 "preferences": "<Control><Shift>comma",
                 "quit": "<Control><Shift>q",
                 "new-window": "<Control><Shift>n",

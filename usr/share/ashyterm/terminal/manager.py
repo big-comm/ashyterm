@@ -1002,6 +1002,39 @@ class TerminalManager:
     def select_all(self, terminal: Vte.Terminal):
         terminal.select_all()
 
+    def clear_terminal(self, terminal: Vte.Terminal):
+        """Reset the terminal display and scrollback without restarting the shell."""
+        try:
+            terminal.reset(True, True)
+            # Send an extra newline once the terminal loop is idle so the shell redraws the prompt.
+            def _send_newline():
+                try:
+                    if hasattr(terminal, "feed_child_binary"):
+                        terminal.feed_child_binary(b"\n")
+                    else:
+                        terminal.feed_child("\n", -1)
+                except Exception as exc:
+                    self.logger.debug(f"Failed to send newline after clear: {exc}")
+                return GLib.SOURCE_REMOVE
+
+            GLib.timeout_add(120, _send_newline)
+            terminal_id = getattr(terminal, "terminal_id", None)
+            terminal_name = "terminal"
+            if terminal_id is not None:
+                info = self.registry.get_terminal_info(terminal_id) or {}
+                terminal_name = (
+                    info.get("title")
+                    or info.get("session_name")
+                    or info.get("type")
+                    or f"terminal-{terminal_id}"
+                )
+                log_terminal_event(
+                    "cleared", terminal_name, "screen and scrollback cleared"
+                )
+            self.logger.info(f"Cleared terminal output for {terminal_name}")
+        except Exception as e:
+            self.logger.error(f"Failed to clear terminal output: {e}")
+
     def cleanup_all_terminals(self):
         if self._process_check_timer_id:
             GLib.source_remove(self._process_check_timer_id)

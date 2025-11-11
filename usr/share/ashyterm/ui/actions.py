@@ -41,6 +41,7 @@ class WindowActions:
             "copy": self.copy,
             "paste": self.paste,
             "select-all": self.select_all,
+            "clear-session": self.clear_session,
             "ai-assistant": self.ai_assistant,
             "split-horizontal": self.split_horizontal,
             "split-vertical": self.split_vertical,
@@ -150,6 +151,16 @@ class WindowActions:
 
     def select_all(self, *_args):
         self.window.tab_manager.select_all_in_current_terminal()
+
+    def clear_session(self, *_args):
+        if self.window.tab_manager.clear_current_terminal():
+            self.window.toast_overlay.add_toast(
+                Adw.Toast(title=_("Terminal session cleared."))
+            )
+        else:
+            self.window.toast_overlay.add_toast(
+                Adw.Toast(title=_("No active terminal to clear."))
+            )
 
     def ai_assistant(self, *_args):
         self.window._on_ai_assistant_requested()

@@ -188,6 +188,7 @@ class CommTerminalApp(Adw.Application):
                 "copy",
                 "paste",
                 "select-all",
+                "clear-session",
                 "toggle-sidebar",
                 "toggle-file-manager",
                 "toggle-search",

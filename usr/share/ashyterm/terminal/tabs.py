@@ -199,6 +199,13 @@ class TabManager:
         if terminal := self.get_selected_terminal():
             self.terminal_manager.select_all(terminal)
 
+    def clear_current_terminal(self) -> bool:
+        """Reset the active terminal, clearing both screen and scrollback."""
+        if terminal := self.get_selected_terminal():
+            self.terminal_manager.clear_terminal(terminal)
+            return True
+        return False
+
     def create_initial_tab_if_empty(
         self,
         working_directory: Optional[str] = None,
