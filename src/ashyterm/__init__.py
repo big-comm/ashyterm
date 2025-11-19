@@ -1,5 +1,3 @@
-# ashyterm/__main__.py
-
 import argparse
 import signal
 import sys
