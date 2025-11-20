@@ -91,7 +91,7 @@ Comment[uk]=Сучасний емулятор терміналу з керува
 Comment[zh]=一个带有会话管理的现代终端模拟器
 Comment[zh_CN]=一个带有会话管理的现代终端模拟器
 
-Exec=ashyterm %F
+Exec=env GDK_BACKEND=x11 UBUNTU_MENUPROXY=0 ashyterm %F
 Terminal=false
 Icon=ashyterm
 Categories=System;Utility;TerminalEmulator;GTK;

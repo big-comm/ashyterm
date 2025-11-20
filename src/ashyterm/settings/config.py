@@ -27,7 +27,7 @@ class AppConstants:
 
     APP_ID = "org.communitybig.ashyterm"
     APP_TITLE = "Ashy Terminal"
-    APP_VERSION = "1.8.1"
+    APP_VERSION = "1.9.0"
     DEVELOPER_NAME = "BigCommunity"
     DEVELOPER_TEAM = ["BigCommunity Team"]
     COPYRIGHT = "© 2025 BigCommunity"
@@ -537,6 +537,59 @@ class ColorSchemes:
                     "#cdd6f4",
                 ],
             },
+
+            "everforest": {
+                "name": "Everforest Green",
+                "foreground": "#ffffff",
+                "background": "#2f383a",
+                "headerbar_background": "#283335",
+                "cursor": "#ffffff",
+                "palette": [
+                    "#000000",
+                    "#ed333b",
+                    "#4e9a06",
+                    "#c4a000",
+                    "#3465a4",
+                    "#7fe07b",
+                    "#06989a",
+                    "#d3d7cf",
+                    "#555753",
+                    "#f66151",
+                    "#8ae234",
+                    "#fce94f",
+                    "#57e389",
+                    "#8bbd80",
+                    "#2ec27e",
+                    "#eeeeec",
+                ],
+            },
+
+            "biglinux_darkgrey": {
+                "name": "BigLinux Dark Grey",
+                "foreground": "#e6e6e6",
+                "background": "#2a2a2a",
+                "headerbar_background": "#1c1c1c",
+                "cursor": "#e6e6e6",
+                "palette": [
+                    "#444444",
+                    "#ff7800",
+                    "#3ed6b4",
+                    "#3d5be0",
+                    "#d13dc4",
+                    "#d26cc9",
+                    "#5c7aff",
+                    "#dcdfe4",
+                    "#7f8888",
+                    "#f48bea",
+                    "#4ef384",
+                    "#ffa348",
+                    "#d13dc4",
+                    "#f48bea",
+                    "#6dccff",
+                    "#ffffff",
+                ],
+            },
+
         }
 
 
