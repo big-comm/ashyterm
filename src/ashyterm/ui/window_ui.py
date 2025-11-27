@@ -251,9 +251,9 @@ class WindowUIBuilder:
         self.broadcast_bar = Gtk.SearchBar()
         broadcast_box = Gtk.Box(spacing=6)
         self.broadcast_entry = Gtk.Entry(
-            hexpand=True, placeholder_text=_("Type your command here and press ENTER...")
+            hexpand=True,
+            placeholder_text=_("Type your command here and press ENTER..."),
         )
-        icon = Gtk.Image.new_from_icon_name("utilities-terminal-symbolic")
         self.broadcast_entry.set_icon_from_icon_name(Gtk.EntryIconPosition.PRIMARY, "utilities-terminal-symbolic")
         broadcast_box.append(self.broadcast_entry)
         self.broadcast_bar.set_child(broadcast_box)

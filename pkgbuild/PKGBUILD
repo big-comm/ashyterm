@@ -16,8 +16,8 @@ depends=(
     'sshpass'
     'rsync'
     'vte4'
-    'libchildenv'
-    'jemalloc'
+    'libchildenv' # Optional, but recommended to improve GTK memory management.
+    'mimalloc' # Optional, but recommended to improve GTK memory management.
 )
 makedepends=(
     'python-build'

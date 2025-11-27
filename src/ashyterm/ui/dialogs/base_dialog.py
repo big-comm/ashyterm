@@ -33,7 +33,6 @@ class BaseDialog(Adw.Window):
         self.config_paths = get_config_paths()
         self._validation_errors: List[str] = []
         self._has_changes = False
-        self._original_data: Optional[Dict[str, Any]] = None
 
         key_controller = Gtk.EventControllerKey()
         key_controller.connect("key-pressed", self._on_key_pressed)

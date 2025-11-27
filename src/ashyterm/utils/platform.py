@@ -18,7 +18,14 @@ class PlatformInfo:
         self.config_dir = self._get_config_directory()
         self.cache_dir = self._get_cache_directory()
         self.ssh_dir = self.home_dir / ".ssh"
+        self.architecture = self._detect_architecture()
         self._detect_commands()
+
+    def _detect_architecture(self) -> str:
+        """Detect the system architecture."""
+        import platform
+
+        return platform.machine() or "unknown"
 
     def _get_config_directory(self) -> Path:
         """Get the configuration directory for Linux."""

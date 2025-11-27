@@ -1179,36 +1179,6 @@ class FileManager(GObject.Object):
         date_str = file_item.date.strftime("%Y-%m-%d %H:%M")
         label.set_text(date_str)
 
-    def _on_command_timeout(self):
-        """
-        Handles command failure. This is one of two places where user input is restored.
-        """
-        if not self._pending_command:
-            return GLib.SOURCE_REMOVE
-
-        self.logger.warning(
-            f"Command '{self._pending_command['str']}' timed out. Assuming failure."
-        )
-
-        # Restore user's original input because the command failed
-        self.bound_terminal.feed_child(b"\x19")  # CTRL+Y (Yank)
-
-        dialog = Adw.MessageDialog(
-            transient_for=self.parent_window,
-            heading=_("Command Failed"),
-            body=_(
-                "The command did not complete in time. The terminal may be busy or unresponsive. Your original input has been restored."
-            ),
-            close_response="ok",
-        )
-        dialog.add_response("ok", _("OK"))
-        dialog.present()
-
-        # Clean up state
-        self._pending_command = None
-        self._command_timeout_id = 0
-        return GLib.SOURCE_REMOVE
-
     def _confirm_pending_command(self):
         """
         Confirms a pending command was successful and restores user input, as per the new rule.
