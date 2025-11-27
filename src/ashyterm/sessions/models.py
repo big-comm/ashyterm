@@ -7,17 +7,17 @@ from typing import Any, Dict, List, Optional
 
 from gi.repository import Gio, GObject
 
-from ..utils.crypto import (
-    clear_password,
-    is_encryption_available,
-    lookup_password,
-    store_password,
-)
 from ..utils.exceptions import SessionValidationError
 from ..utils.logger import get_logger
 from ..utils.platform import normalize_path
 from ..utils.security import InputSanitizer
 from ..utils.translation_utils import _
+
+def _get_crypto():
+    """Lazy loader for crypto module."""
+    from ..utils import crypto
+
+    return crypto
 
 
 class BaseModel(GObject.GObject):
@@ -154,10 +154,11 @@ class SessionItem(BaseModel):
         old_name = self._name
         new_name = InputSanitizer.sanitize_filename(value)
         if old_name != new_name and self.uses_password_auth():
-            password = lookup_password(old_name)
+            crypto = _get_crypto()
+            password = crypto.lookup_password(old_name)
             if password:
-                store_password(new_name, password)
-                clear_password(old_name)
+                crypto.store_password(new_name, password)
+                crypto.clear_password(old_name)
         self._name = new_name
         self._mark_modified()
 
@@ -199,7 +200,7 @@ class SessionItem(BaseModel):
         if value not in ["key", "password", ""]:
             raise SessionValidationError(self.name, [f"Invalid auth type: {value}"])
         if self._auth_type == "password" and value != "password":
-            clear_password(self.name)
+            _get_crypto().clear_password(self.name)
         self._auth_type = value
         self._mark_modified()
 
@@ -207,8 +208,9 @@ class SessionItem(BaseModel):
     def auth_value(self) -> str:
         """Returns the password from keyring or the raw key path."""
         if self.uses_password_auth():
-            if is_encryption_available():
-                return lookup_password(self.name) or ""
+            crypto = _get_crypto()
+            if crypto.is_encryption_available():
+                return crypto.lookup_password(self.name) or ""
             self.logger.warning(
                 "Encryption is not available, cannot retrieve password."
             )
@@ -219,11 +221,12 @@ class SessionItem(BaseModel):
     def auth_value(self, value: str):
         """Sets the auth value, storing it in the keyring if it's a password."""
         if self.uses_password_auth():
-            if is_encryption_available():
+            crypto = _get_crypto()
+            if crypto.is_encryption_available():
                 if value:
-                    store_password(self.name, value)
+                    crypto.store_password(self.name, value)
                 else:
-                    clear_password(self.name)
+                    crypto.clear_password(self.name)
             else:
                 self.logger.error("Cannot store password: Encryption is not available.")
             self._auth_value = ""

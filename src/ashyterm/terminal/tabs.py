@@ -3,7 +3,7 @@
 import re
 import threading
 import weakref
-from typing import Callable, List, Optional
+from typing import Callable, List, Optional, TYPE_CHECKING
 
 import gi
 
@@ -13,12 +13,14 @@ gi.require_version("Vte", "3.91")
 gi.require_version("Pango", "1.0")
 from gi.repository import Adw, Gdk, Gio, GLib, Gtk, Pango, Vte
 
-from ..filemanager.manager import FileManager
 from ..sessions.models import SessionItem
 from ..settings.manager import SettingsManager as SettingsManagerType
 from ..utils.logger import get_logger
 from ..utils.translation_utils import _
 from .manager import TerminalManager
+
+if TYPE_CHECKING:
+    from ..filemanager.manager import FileManager
 
 
 def _create_terminal_pane(
@@ -119,7 +121,7 @@ class TabManager:
             weakref.WeakKeyDictionary()
         )
         self.file_managers: weakref.WeakKeyDictionary[
-            Adw.ViewStackPage, FileManager
+            Adw.ViewStackPage, "FileManager"
         ] = weakref.WeakKeyDictionary()
         self.active_tab: Optional[Gtk.Box] = None
 
@@ -522,7 +524,6 @@ class TabManager:
 
         tab_widget.label_widget = label
         tab_widget._base_title = session.name
-        tab_widget._icon_name = icon_name
         tab_widget._is_local = session.is_local()
         tab_widget.session_item = session
 
@@ -740,6 +741,8 @@ class TabManager:
                     )
 
             if not fm:
+                # Lazy import FileManager only when needed
+                from ..filemanager.manager import FileManager
                 fm = FileManager(
                     self.terminal_manager.parent_window,
                     self.terminal_manager,
@@ -1277,7 +1280,7 @@ class TabManager:
         content: Gtk.Widget,
         title: str,
         session_type: str,
-        file_manager_instance: Optional[FileManager] = None,
+        file_manager_instance: Optional["FileManager"] = None,
     ) -> Adw.ViewStackPage:
         """Creates a new tab for a content widget that was detached from another window."""
         page_name = f"page_detached_{GLib.random_int()}"

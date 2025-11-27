@@ -29,8 +29,6 @@ from .settings.config import (
 )
 from .settings.manager import SettingsManager
 from .terminal.spawner import cleanup_spawner
-from .utils.backup import get_backup_manager
-from .utils.crypto import is_encryption_available
 from .utils.exceptions import handle_exception
 from .utils.logger import enable_debug_mode, get_logger, log_app_shutdown, log_app_start
 from .utils.platform import get_platform_info
@@ -70,6 +68,7 @@ class CommTerminalApp(Adw.Application):
     def backup_manager(self):
         if self._backup_manager is None:
             try:
+                from .utils.backup import get_backup_manager
                 self._backup_manager = get_backup_manager()
             except Exception as e:
                 self.logger.error(f"Failed to initialize backup manager on-demand: {e}")
@@ -107,14 +106,9 @@ class CommTerminalApp(Adw.Application):
                 enable_debug_mode()
                 self.logger.info("Debug mode enabled")
 
-            if is_encryption_available():
-                self.logger.info(
-                    "Secure password storage (Secret Service API) is available."
-                )
-            else:
-                self.logger.warning(
-                    "Secure password storage is not available - passwords will not be saved."
-                )
+            # Defer crypto availability check to 1 second after startup
+            # The check is just for logging, not critical for app operation
+            GLib.timeout_add(1000, self._log_crypto_status)
 
             self._initialized = True
             self.logger.info("All essential subsystems initialized successfully")
@@ -125,6 +119,20 @@ class CommTerminalApp(Adw.Application):
                 e, "application initialization", "ashyterm.app", reraise=True
             )
             return False
+
+    def _log_crypto_status(self) -> bool:
+        """Log crypto status after startup (deferred to avoid blocking startup)."""
+        from .utils.crypto import is_encryption_available
+
+        if is_encryption_available():
+            self.logger.info(
+                "Secure password storage (Secret Service API) is available."
+            )
+        else:
+            self.logger.warning(
+                "Secure password storage is not available - passwords will not be saved."
+            )
+        return False  # Don't repeat idle callback
 
     def _on_startup(self, app) -> None:
         """Handle application startup."""

@@ -9,17 +9,17 @@ from gi.repository import Adw, Gdk, Gio, GLib, Gtk
 from ..sessions.models import LayoutItem, SessionFolder, SessionItem
 from ..utils.logger import get_logger, log_session_event
 from ..utils.translation_utils import _
-from .dialogs import (
-    FolderEditDialog,
-    MoveLayoutDialog,
-    MoveSessionDialog,
-    PreferencesDialog,
-    SessionEditDialog,
-    ShortcutsDialog,
-)
 
 if TYPE_CHECKING:
     from ..window import CommTerminalWindow
+    from .dialogs import (
+        FolderEditDialog,
+        MoveLayoutDialog,
+        MoveSessionDialog,
+        PreferencesDialog,
+        SessionEditDialog,
+        ShortcutsDialog,
+    )
 
 
 class WindowActions:
@@ -237,6 +237,7 @@ class WindowActions:
         if isinstance(
             item := self.window.session_tree.get_selected_item(), SessionItem
         ):
+            from .dialogs import MoveSessionDialog
             MoveSessionDialog(
                 self.window,
                 item,
@@ -325,6 +326,7 @@ class WindowActions:
         self.window._show_command_guide_dialog()
 
     def preferences(self, *_args):
+        from .dialogs import PreferencesDialog
         dialog = PreferencesDialog(self.window, self.window.settings_manager)
         dialog.connect(
             "transparency-changed",
@@ -341,6 +343,7 @@ class WindowActions:
         dialog.present()
 
     def shortcuts(self, *_args):
+        from .dialogs import ShortcutsDialog
         dialog = ShortcutsDialog(self.window)
         dialog.present()
 
@@ -375,11 +378,13 @@ class WindowActions:
             None,
         )
         if layout:
+            from .dialogs import MoveLayoutDialog
             MoveLayoutDialog(self.window, layout, self.window.folder_store).present()
 
     # --- Helper Methods for Dialogs (Moved from CommTerminalWindow) ---
 
     def _show_session_edit_dialog(self, session: SessionItem, position: int) -> None:
+        from .dialogs import SessionEditDialog
         SessionEditDialog(
             self.window,
             session,
@@ -391,6 +396,7 @@ class WindowActions:
     def _show_folder_edit_dialog(
         self, folder: Optional[SessionFolder], position: Optional[int]
     ) -> None:
+        from .dialogs import FolderEditDialog
         FolderEditDialog(
             self.window,
             self.window.folder_store,

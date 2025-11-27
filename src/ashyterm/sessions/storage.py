@@ -120,8 +120,17 @@ class SessionStorageManager:
 
                 validated_sessions = self._validate_sessions_data(sessions)
                 validated_folders = self._validate_folders_data(folders)
+                # Defer security audit to run after startup completes
+                # Using timeout_add with 500ms delay ensures app is fully loaded first
                 if self.security_auditor:
-                    self._audit_loaded_data(validated_sessions, validated_folders)
+                    from gi.repository import GLib
+
+                    GLib.timeout_add(
+                        500,  # 500ms delay - run after startup
+                        self._audit_loaded_data,
+                        validated_sessions,
+                        validated_folders,
+                    )
 
                 self.logger.info(
                     f"Successfully loaded {len(validated_sessions)} sessions and {len(validated_folders)} folders"
@@ -196,8 +205,8 @@ class SessionStorageManager:
 
     def _audit_loaded_data(
         self, sessions: List[Dict[str, Any]], folders: List[Dict[str, Any]]
-    ) -> None:
-        """Perform security audit on loaded data."""
+    ) -> bool:
+        """Perform security audit on loaded data. Returns False to not repeat GLib.idle_add."""
         try:
             security_issues = 0
             for session_data in sessions:
@@ -216,6 +225,7 @@ class SessionStorageManager:
                 )
         except Exception as e:
             self.logger.error(f"Security audit failed: {e}")
+        return False  # Don't repeat idle callback
 
     def save_sessions_and_folders_safe(
         self,
@@ -392,16 +402,6 @@ def get_storage_manager() -> SessionStorageManager:
 def load_sessions_and_folders() -> Tuple[List[Dict[str, Any]], List[Dict[str, Any]]]:
     """Load sessions and folders from JSON file."""
     return get_storage_manager().load_sessions_and_folders_safe()
-
-
-def save_sessions_and_folders(
-    session_store: Optional[Gio.ListStore] = None,
-    folder_store: Optional[Gio.ListStore] = None,
-) -> bool:
-    """Save sessions and folders to JSON file."""
-    return get_storage_manager().save_sessions_and_folders_safe(
-        session_store, folder_store
-    )
 
 
 def load_sessions_to_store(

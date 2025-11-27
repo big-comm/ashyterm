@@ -9,15 +9,19 @@ from typing import List, Optional
 
 from gi.repository import Gio
 
-from .crypto import export_all_passwords, store_password
 from .exceptions import StorageReadError, StorageWriteError
 from .logger import get_logger
 from .platform import get_config_directory
 
-try:
-    import py7zr
-except ImportError:
-    py7zr = None
+
+def _get_py7zr():
+    """Lazy import for py7zr module. Only called when backup/restore is used."""
+    try:
+        import py7zr
+
+        return py7zr
+    except ImportError:
+        return None
 
 
 class BackupManager:
@@ -55,6 +59,7 @@ class BackupManager:
         Raises:
             StorageWriteError: If the backup process fails.
         """
+        py7zr = _get_py7zr()
         if not py7zr:
             raise StorageWriteError(
                 target_file_path,
@@ -78,7 +83,8 @@ class BackupManager:
                             layouts_dir, temp_path / "layouts", dirs_exist_ok=True
                         )
 
-                    # 3. Export and save passwords
+                    # 3. Export and save passwords (lazy import crypto)
+                    from .crypto import export_all_passwords
                     passwords = export_all_passwords(sessions_store)
                     if passwords:
                         with open(temp_path / "passwords.json", "w") as f:
@@ -111,6 +117,7 @@ class BackupManager:
         Raises:
             StorageReadError: If the restore process fails.
         """
+        py7zr = _get_py7zr()
         if not py7zr:
             raise StorageReadError(
                 source_file_path,
@@ -145,6 +152,7 @@ class BackupManager:
                         with open(passwords_file, "r") as f:
                             passwords = json.load(f)
 
+                        from .crypto import store_password
                         imported_count = 0
                         for session_name, pwd in passwords.items():
                             try:

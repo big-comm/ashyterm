@@ -1,8 +1,14 @@
-# ashyterm/__main__.py
-
 import argparse
+import os
 import signal
 import sys
+
+# Performance optimization: Use OpenGL renderer instead of Vulkan
+# GTK4's Vulkan renderer has worse startup performance than the GL renderer
+# See: https://wiki.archlinux.org/title/GTK#GTK_4_applications_are_slow
+# This must be set BEFORE importing GTK/GLib
+if "GSK_RENDERER" not in os.environ:
+    os.environ["GSK_RENDERER"] = "gl"
 
 if __package__ is None:
     import pathlib
@@ -12,8 +18,6 @@ if __package__ is None:
         sys.path.insert(0, str(parent_dir))
     __package__ = "ashyterm"
 
-from .app import CommTerminalApp
-from .settings.config import APP_VERSION
 from .utils.logger import (
     enable_debug_mode,
     get_logger,
@@ -85,8 +89,21 @@ def main() -> int:
         ),
         epilog=_("For more information, visit: https://communitybig.org/"),
     )
+
+    # Custom version action to load APP_VERSION lazily (avoids loading GTK for --version)
+    class LazyVersionAction(argparse.Action):
+        def __call__(self, parser, namespace, values, option_string=None):
+            from .settings.config import APP_VERSION
+
+            print(f"ashyterm {APP_VERSION}")
+            parser.exit()
+
     parser.add_argument(
-        "--version", "-v", action="version", version=f"%(prog)s {APP_VERSION}"
+        "--version",
+        "-v",
+        nargs=0,
+        action=LazyVersionAction,
+        help=_("Show version and exit"),
     )
     parser.add_argument(
         "--debug", "-d", action="store_true", help=_("Enable debug mode")
@@ -142,6 +159,10 @@ def main() -> int:
 
     try:
         logger.info("Creating application instance")
+
+        # Lazy import: only load the heavy GTK/Adw/VTE modules when actually running
+        from .app import CommTerminalApp
+
         app = CommTerminalApp()
         return app.run(sys.argv)
     except KeyboardInterrupt:

@@ -35,7 +35,6 @@ class FolderEditDialog(BaseDialog):
         )
         self.position = position
         self.old_path = folder_item.path if folder_item else None
-        self._original_data = self.editing_folder.to_dict()
         self.parent_paths_map: dict[str, str] = {}
         self._setup_ui()
         self.connect("map", self._on_map)

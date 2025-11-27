@@ -12,8 +12,6 @@ gi.require_version("Adw", "1")
 from gi.repository import Adw, Gdk, Gio, GLib, Gtk
 
 from ...sessions.models import SessionItem
-from ...terminal.spawner import get_spawner
-from ...utils.crypto import is_encryption_available
 from ...utils.exceptions import HostnameValidationError, SSHKeyError
 from ...utils.platform import get_ssh_directory
 from ...utils.security import (
@@ -48,7 +46,6 @@ class SessionEditDialog(BaseDialog):
             else session_item
         )
         self.original_session = session_item if not self.is_new_item else None
-        self._original_data = self.editing_session.to_dict()
         self.folder_paths_map: dict[str, str] = {}
         self.post_login_switch: Optional[Adw.SwitchRow] = None
         self.post_login_entry: Optional[Gtk.Entry] = None
@@ -289,6 +286,8 @@ class SessionEditDialog(BaseDialog):
         parent.add(key_row)
 
     def _create_password_section(self, parent: Adw.PreferencesGroup) -> None:
+        # Lazy import to avoid loading gi.repository.Secret at startup
+        from ...utils.crypto import is_encryption_available
         password_row = Adw.ActionRow(
             title=_("Password"), subtitle=_("Password for SSH authentication")
         )
@@ -937,6 +936,8 @@ class SessionEditDialog(BaseDialog):
         )
 
     def _run_test_in_thread(self, test_session: SessionItem):
+        # Lazy import to defer loading until actually testing connection
+        from ...terminal.spawner import get_spawner
         spawner = get_spawner()
         success, message = spawner.test_ssh_connection(test_session)
         GLib.idle_add(self._on_test_finished, success, message)

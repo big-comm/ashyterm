@@ -4,12 +4,9 @@ from __future__ import annotations
 
 import json
 import re
-import textwrap
 import threading
 import weakref
 from typing import Any, Dict, List, Optional, Tuple
-
-import requests
 
 import gi
 
@@ -138,7 +135,8 @@ class TerminalAiAssistant:
 
         if terminal_id not in self._terminal_refs:
             self._terminal_refs[terminal_id] = weakref.ref(
-                terminal, lambda _ref, tid=terminal_id: self._cleanup_terminal_state(tid)
+                terminal,
+                lambda _ref, tid=terminal_id: self._cleanup_terminal_state(tid),
             )
         return terminal_id
 
@@ -146,9 +144,7 @@ class TerminalAiAssistant:
         try:
             if self._should_decline_code_request(prompt):
                 self._build_messages(terminal_id, prompt)
-                refusal = (
-                    "Desculpe, no momento não estou programado para gerar trechos de código."
-                )
+                refusal = "Desculpe, no momento não estou programado para gerar trechos de código."
                 self._record_assistant_message(terminal_id, refusal)
                 GLib.idle_add(
                     self._display_assistant_reply,
@@ -173,9 +169,7 @@ class TerminalAiAssistant:
             )
         except Exception as exc:  # pylint: disable=broad-except
             self.logger.error("AI assistant request failed: %s", exc)
-            error_message = "Sorry, I couldn't complete the request: {}".format(
-                exc
-            )
+            error_message = "Sorry, I couldn't complete the request: {}".format(exc)
             self._record_assistant_message(terminal_id, error_message)
             GLib.idle_add(
                 self._display_error_reply,
@@ -230,13 +224,13 @@ class TerminalAiAssistant:
             return self._perform_gemini_request(config, messages)
         if provider == "openrouter":
             return self._perform_openrouter_request(config, messages)
-        raise RuntimeError(
-            f"Provider '{provider}' is not supported in this version."
-        )
+        raise RuntimeError(f"Provider '{provider}' is not supported in this version.")
 
     def _perform_gemini_request(
         self, config: Dict[str, str], messages: List[Dict[str, str]]
     ) -> str:
+        import requests
+
         api_key = config.get("api_key", "").strip()
         if not api_key:
             raise RuntimeError("Configure the Gemini API key in Preferences.")
@@ -289,6 +283,8 @@ class TerminalAiAssistant:
     def _perform_groq_request(
         self, config: Dict[str, str], messages: List[Dict[str, str]]
     ) -> str:
+        import requests
+
         api_key = config.get("api_key", "").strip()
         if not api_key:
             raise RuntimeError("Configure the Groq API key in Preferences.")
@@ -299,7 +295,10 @@ class TerminalAiAssistant:
         url = "https://api.groq.com/openai/v1/chat/completions"
         payload: Dict[str, Any] = {"model": model, "messages": payload_messages}
 
-        headers = {"Content-Type": "application/json", "Authorization": f"Bearer {api_key}"}
+        headers = {
+            "Content-Type": "application/json",
+            "Authorization": f"Bearer {api_key}",
+        }
 
         try:
             response = requests.post(url, headers=headers, json=payload, timeout=60)
@@ -333,6 +332,8 @@ class TerminalAiAssistant:
     def _perform_openrouter_request(
         self, config: Dict[str, str], messages: List[Dict[str, str]]
     ) -> str:
+        import requests
+
         api_key = config.get("api_key", "").strip()
         if not api_key:
             raise RuntimeError("Configure the OpenRouter API key in Preferences.")
@@ -356,7 +357,9 @@ class TerminalAiAssistant:
         try:
             response = requests.post(url, headers=headers, json=payload, timeout=60)
         except requests.RequestException as exc:
-            raise RuntimeError(f"Failed to query the OpenRouter service: {exc}") from exc
+            raise RuntimeError(
+                f"Failed to query the OpenRouter service: {exc}"
+            ) from exc
 
         if response.status_code >= 400:
             raise RuntimeError(
@@ -384,7 +387,8 @@ class TerminalAiAssistant:
             raise RuntimeError("OpenRouter did not return any usable content.")
         return content.strip()
 
-    def _format_openrouter_error(self, response: requests.Response) -> str:
+    def _format_openrouter_error(self, response: Any) -> str:
+        """Format error from HTTP response. Response type is requests.Response."""
         status = response.status_code
         fallback = response.text.strip() or _("Unknown error.")
         try:
@@ -513,70 +517,15 @@ class TerminalAiAssistant:
                     candidate = item.get("command") or item.get("cmd")
                     description = item.get("description") or ""
                     if isinstance(candidate, str) and candidate.strip():
-                        commands.append(
-                            {
-                                "command": candidate.strip(),
-                                "description": description.strip()
-                                if isinstance(description, str)
-                                else "",
-                            }
-                        )
+                        commands.append({
+                            "command": candidate.strip(),
+                            "description": description.strip()
+                            if isinstance(description, str)
+                            else "",
+                        })
         elif isinstance(value, str) and value.strip():
             commands.append({"command": value.strip(), "description": ""})
         return commands
-
-    def _normalize_code_snippets(self, value: Any) -> List[Dict[str, str]]:
-        snippets: List[Dict[str, str]] = []
-        if not isinstance(value, list):
-            return snippets
-        for item in value:
-            if isinstance(item, dict):
-                code = item.get("code") or ""
-                if not isinstance(code, str) or not code.strip():
-                    continue
-                code = textwrap.dedent(code).strip()
-                code, fenced_language = self._strip_code_fence(code)
-                language = item.get("language") or ""
-                if not language and fenced_language:
-                    language = fenced_language
-                description = item.get("description") or ""
-                snippets.append(
-                    {
-                        "code": code,
-                        "language": language.strip() if isinstance(language, str) else "",
-                        "description": description.strip()
-                        if isinstance(description, str)
-                        else "",
-                    }
-                )
-            elif isinstance(item, str) and item.strip():
-                code_text = textwrap.dedent(item).strip()
-                code_text, fenced_language = self._strip_code_fence(code_text)
-                snippets.append(
-                    {
-                        "code": code_text,
-                        "language": fenced_language,
-                        "description": "",
-                    }
-                )
-        return snippets
-
-    @staticmethod
-    def _strip_code_fence(code: str) -> Tuple[str, str]:
-        """Remove Markdown fences and return code plus detected language."""
-        trimmed = code.strip()
-        if not trimmed.startswith("```"):
-            return trimmed, ""
-        lines = trimmed.splitlines()
-        if not lines:
-            return trimmed, ""
-        first_line = lines[0]
-        language = first_line[3:].strip()
-        body_lines = lines[1:]
-        while body_lines and body_lines[-1].strip() == "```":
-            body_lines.pop()
-        stripped_code = "\n".join(body_lines).strip()
-        return stripped_code or trimmed, language
 
     @staticmethod
     def _should_decline_code_request(prompt: str) -> bool:

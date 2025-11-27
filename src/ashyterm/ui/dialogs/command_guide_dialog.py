@@ -272,7 +272,6 @@ class CommandGuideDialog(Adw.Window):
 
         # Store references to event controllers for cleanup
         self._event_controllers = []
-        self._is_visible = False  # Track visibility state manually
         self._allow_destroy = False  # Control destruction
         self._presenting = False  # Flag to prevent close during present
 
@@ -677,11 +676,10 @@ class CommandGuideDialog(Adw.Window):
 
     def _on_show(self, widget):
         """Handle dialog show event."""
-        self._is_visible = True
+        pass
 
     def _on_hide(self, widget):
         """Handle dialog hide event."""
-        self._is_visible = False
         self.search_entry.set_text("")
 
     def _on_close_request(self, widget):
