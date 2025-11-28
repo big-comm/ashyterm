@@ -187,6 +187,7 @@ class DefaultSettings:
             "sidebar_visible": False,
             "auto_hide_sidebar": True,
             "sidebar_width": 300,  # Default sidebar width in pixels
+            "file_manager_height": 250,  # Default file manager height in pixels
             "scroll_on_output": True,  # Enables smart scrolling
             "scroll_on_keystroke": True,
             "scroll_on_insert": True,  # Scroll to bottom on paste

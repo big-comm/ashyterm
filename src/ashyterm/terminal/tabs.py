@@ -22,6 +22,58 @@ from .manager import TerminalManager
 if TYPE_CHECKING:
     from ..filemanager.manager import FileManager
 
+# CSS for tab moving visual feedback
+_TAB_MOVING_CSS = b"""
+.tab-moving {
+    background-image: none;
+    background-color: @accent_bg_color;
+    border-radius: 6px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+    border: 2px dashed @theme_fg_color;
+    opacity: 0.85;
+}
+
+.tab-bar-move-mode {
+    background-color: alpha(@accent_bg_color, 0.15);
+    border-radius: 8px;
+    padding: 2px;
+}
+
+.tab-drop-target {
+    background-color: alpha(@theme_fg_color, 0.2);
+    border-radius: 6px;
+    box-shadow: inset 0 0 0 2px @accent_bg_color;
+}
+
+.tab-drop-left {
+    background-color: alpha(@theme_fg_color, 0.2);
+    border-radius: 6px;
+    box-shadow: inset 4px 0 0 0 @accent_bg_color;
+}
+
+.tab-drop-right {
+    background-color: alpha(@theme_fg_color, 0.2);
+    border-radius: 6px;
+    box-shadow: inset -4px 0 0 0 @accent_bg_color;
+}
+"""
+
+
+# Initialize the CSS provider for tab-moving class on module load
+def _init_tab_moving_css():
+    """Initialize the tab-moving CSS provider globally."""
+    css_provider = Gtk.CssProvider()
+    css_provider.load_from_data(_TAB_MOVING_CSS)
+    Gtk.StyleContext.add_provider_for_display(
+        Gdk.Display.get_default(),
+        css_provider,
+        Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION,
+    )
+
+
+# Defer CSS initialization until GTK display is available
+GLib.idle_add(_init_tab_moving_css)
+
 
 def _create_terminal_pane(
     terminal: Vte.Terminal,
@@ -124,6 +176,14 @@ class TabManager:
             Adw.ViewStackPage, "FileManager"
         ] = weakref.WeakKeyDictionary()
         self.active_tab: Optional[Gtk.Box] = None
+        self._tab_being_moved: Optional[Gtk.Box] = None  # Track tab in move mode
+        self._drop_target_tab: Optional[Gtk.Box] = None  # Tab under cursor during move
+        self._drop_side: str = (
+            "left"  # "left" or "right" - which side of target to drop
+        )
+
+        # Set up tab bar for receiving move drop events
+        self._setup_tab_bar_move_handlers()
 
         self._creation_lock = threading.Lock()
         self._cleanup_lock = threading.Lock()
@@ -168,6 +228,107 @@ class TabManager:
             return
         if hasattr(widget, "get_child") and (child := widget.get_child()):
             self._find_panes_recursive(child, panes_list)
+
+    def _setup_tab_bar_move_handlers(self):
+        """Set up event handlers on the tab bar for tab move operations."""
+        # We only need to handle motion on individual tabs, which is done via
+        # controllers added in _create_tab_widget. No tab bar level handlers needed
+        # since we handle everything at the tab level.
+        pass
+
+    def _find_tab_at_position(self, bar_x: float) -> tuple:
+        """Find which tab is at the given x position and which side (left/right).
+
+        Returns: (tab_widget, side) where side is 'left', 'right', or None if no tab found.
+        """
+        for tab in self.tabs:
+            if tab == self._tab_being_moved:
+                continue
+            # Get tab's position relative to tab_bar_box
+            tab_start = tab.get_allocation().x
+            tab_width = tab.get_width()
+            tab_end = tab_start + tab_width
+
+            if tab_start <= bar_x <= tab_end:
+                mid_x = tab_start + tab_width / 2
+                side = "left" if bar_x < mid_x else "right"
+                return (tab, side)
+        return (None, None)
+
+    def _update_move_highlight(self, target_tab: Gtk.Box, side: str):
+        """Update the visual highlight for the drop target."""
+        self._clear_tab_drop_highlights()
+        if target_tab and side:
+            self._drop_target_tab = target_tab
+            self._drop_side = side
+            if side == "left":
+                target_tab.add_css_class("tab-drop-left")
+            else:
+                target_tab.add_css_class("tab-drop-right")
+
+    def _clear_tab_drop_highlights(self):
+        """Remove drop target highlights from all tabs."""
+        self._drop_target_tab = None
+        for tab in self.tabs:
+            tab.remove_css_class("tab-drop-target")
+            tab.remove_css_class("tab-drop-left")
+            tab.remove_css_class("tab-drop-right")
+
+    def _perform_tab_move(self):
+        """Perform the actual tab move based on current drop target and side."""
+        if not self._tab_being_moved or not self._drop_target_tab:
+            return
+
+        moving_tab = self._tab_being_moved
+        target_tab = self._drop_target_tab
+        side = self._drop_side
+
+        if moving_tab == target_tab:
+            return
+
+        # Get current indices
+        moving_idx = self.tabs.index(moving_tab)
+        target_idx = self.tabs.index(target_tab)
+
+        # Calculate final position
+        if side == "left":
+            # Insert before target
+            new_idx = target_idx
+        else:
+            # Insert after target
+            new_idx = target_idx + 1
+
+        # Adjust if moving from before the target
+        if moving_idx < new_idx:
+            new_idx -= 1
+
+        # Only move if position actually changes
+        if moving_idx == new_idx:
+            return
+
+        # Remove from old position
+        self.tabs.remove(moving_tab)
+
+        # Insert at new position
+        self.tabs.insert(new_idx, moving_tab)
+
+        # Rebuild visual order
+        self._rebuild_tab_bar_order()
+
+        self.logger.info(
+            f"Tab '{moving_tab.label_widget.get_text()}' moved from {moving_idx} to {new_idx}"
+        )
+
+    def is_in_tab_move_mode(self) -> bool:
+        """Returns True if a tab is currently being moved."""
+        return self._tab_being_moved is not None
+
+    def cancel_tab_move_if_active(self) -> bool:
+        """Cancel the tab move operation if one is active. Returns True if cancelled."""
+        if self._tab_being_moved is not None:
+            self._cancel_tab_move()
+            return True
+        return False
 
     def _update_tab_alignment(self):
         """Updates the tab bar alignment based on the current setting."""
@@ -520,9 +681,16 @@ class TabManager:
         right_click.connect("pressed", self._on_tab_right_click, tab_widget)
         tab_widget.add_controller(right_click)
 
+        # Motion controller for hover highlighting during tab move
+        motion_controller = Gtk.EventControllerMotion()
+        motion_controller.connect("motion", self._on_tab_motion, tab_widget)
+        motion_controller.connect("leave", self._on_tab_leave, tab_widget)
+        tab_widget.add_controller(motion_controller)
+
         close_button.connect("clicked", self._on_tab_close_button_clicked, tab_widget)
 
         tab_widget.label_widget = label
+        tab_widget.close_button = close_button  # Store direct reference
         tab_widget._base_title = session.name
         tab_widget._is_local = session.is_local()
         tab_widget.session_item = session
@@ -531,11 +699,48 @@ class TabManager:
 
         return tab_widget
 
-    def _on_tab_clicked(self, _gesture, _n_press, _x, _y, tab_widget):
+    def _on_tab_motion(self, controller, x, y, tab_widget):
+        """Handle mouse motion over a tab during move mode."""
+        if self._tab_being_moved is None or tab_widget == self._tab_being_moved:
+            return
+
+        # Determine which half of the tab we're over
+        tab_width = tab_widget.get_width()
+        side = "left" if x < tab_width / 2 else "right"
+
+        # Update highlight
+        self._update_move_highlight(tab_widget, side)
+
+    def _on_tab_leave(self, controller, tab_widget):
+        """Handle mouse leaving a tab during move mode."""
+        if self._tab_being_moved is None:
+            return
+        # Clear highlight when leaving a tab
+        self._clear_tab_drop_highlights()
+
+    def _on_tab_clicked(self, gesture, _n_press, x, _y, tab_widget):
+        # If we're in move mode, handle the drop
+        if self._tab_being_moved is not None:
+            if self._tab_being_moved != tab_widget:
+                # Determine which half of the tab was clicked
+                tab_width = tab_widget.get_width()
+                side = "left" if x < tab_width / 2 else "right"
+
+                # Update the drop target and perform the move
+                self._drop_target_tab = tab_widget
+                self._drop_side = side
+                self._perform_tab_move()
+            self._cancel_tab_move()
+            return
         self.set_active_tab(tab_widget)
 
     def _on_tab_right_click(self, _gesture, _n_press, x, y, tab_widget):
+        # Cancel any ongoing move operation when right-clicking
+        if self._tab_being_moved is not None:
+            self._cancel_tab_move()
+
         menu = Gio.Menu()
+        menu.append(_("Move Tab"), "win.move-tab")
         menu.append(_("Duplicate Tab"), "win.duplicate-tab")
         menu.append(_("Detach Tab"), "win.detach-tab")
         popover = Gtk.PopoverMenu.new_from_model(menu)
@@ -546,6 +751,13 @@ class TabManager:
         page = self.pages.get(tab_widget)
         if page:
             action_group = Gio.SimpleActionGroup()
+
+            move_action = Gio.SimpleAction.new("move-tab", None)
+            move_action.connect(
+                "activate",
+                lambda _action, _param, tab=tab_widget: self._start_tab_move(tab),
+            )
+            action_group.add_action(move_action)
 
             duplicate_action = Gio.SimpleAction.new("duplicate-tab", None)
             duplicate_action.connect(
@@ -571,6 +783,127 @@ class TabManager:
     def _request_detach_tab(self, page: Adw.ViewStackPage):
         if self.on_detach_tab_requested:
             self.on_detach_tab_requested(page)
+
+    def _start_tab_move(self, tab_widget: Gtk.Box) -> None:
+        """Starts the tab move mode for the given tab widget."""
+        if len(self.tabs) < 2:
+            self.logger.debug("Cannot move tab: only one tab exists.")
+            return
+
+        self._tab_being_moved = tab_widget
+        self._current_drop_index = -1
+        tab_widget.add_css_class("tab-moving")
+        self.tab_bar_box.add_css_class("tab-bar-move-mode")
+
+        # Hide and disable all close buttons during move mode to prevent accidental closing
+        for tab in self.tabs:
+            close_btn = self._get_tab_close_button(tab)
+            if close_btn:
+                close_btn.set_visible(False)
+                close_btn.set_sensitive(False)
+
+        self.logger.info(f"Tab move started for: {tab_widget.label_widget.get_text()}")
+
+    def _cancel_tab_move(self) -> None:
+        """Cancels the current tab move operation."""
+        if self._tab_being_moved is not None:
+            self._tab_being_moved.remove_css_class("tab-moving")
+            self.tab_bar_box.remove_css_class("tab-bar-move-mode")
+            self._clear_tab_drop_highlights()
+
+            # Restore all close buttons
+            for tab in self.tabs:
+                close_btn = self._get_tab_close_button(tab)
+                if close_btn:
+                    close_btn.set_visible(True)
+                    close_btn.set_sensitive(True)
+
+            self.logger.debug("Tab move cancelled.")
+            self._tab_being_moved = None
+
+    def _get_tab_close_button(self, tab_widget: Gtk.Box) -> Optional[Gtk.Button]:
+        """Get the close button from a tab widget."""
+        # Try direct reference first (for newly created tabs)
+        if hasattr(tab_widget, "close_button") and tab_widget.close_button:
+            return tab_widget.close_button
+        # Fallback: iterate through all children to find the close button
+        child = tab_widget.get_first_child()
+        while child is not None:
+            if isinstance(child, Gtk.Button):
+                return child
+            child = child.get_next_sibling()
+        return None
+
+    def _move_tab_to_index(self, tab_to_move: Gtk.Box, target_index: int) -> None:
+        """Moves a tab to a specific index position."""
+        if tab_to_move not in self.tabs:
+            self.logger.warning("Move failed: tab not found in list.")
+            return
+
+        old_index = self.tabs.index(tab_to_move)
+
+        # Clamp target index to valid range
+        target_index = max(0, min(target_index, len(self.tabs) - 1))
+
+        if old_index == target_index:
+            return
+
+        # Remove from old position in list
+        self.tabs.remove(tab_to_move)
+
+        # Adjust index if moving forward (since we just removed an element)
+        if target_index > old_index:
+            target_index -= 1
+
+        # Insert at new position
+        self.tabs.insert(target_index, tab_to_move)
+
+        # Rebuild the visual tab bar order
+        self._rebuild_tab_bar_order()
+
+        self.logger.info(
+            f"Tab '{tab_to_move.label_widget.get_text()}' moved from position "
+            f"{old_index} to {target_index}"
+        )
+
+    def _move_tab_to_position(self, tab_to_move: Gtk.Box, target_tab: Gtk.Box) -> None:
+        """Moves a tab to the position of another tab (before the target)."""
+        if tab_to_move not in self.tabs or target_tab not in self.tabs:
+            self.logger.warning("Move failed: tab not found in list.")
+            return
+
+        old_index = self.tabs.index(tab_to_move)
+        new_index = self.tabs.index(target_tab)
+
+        if old_index == new_index:
+            return
+
+        # Remove from old position in list
+        self.tabs.remove(tab_to_move)
+
+        # Recalculate target index after removal
+        new_index = self.tabs.index(target_tab)
+
+        # Insert at new position (before the target)
+        self.tabs.insert(new_index, tab_to_move)
+
+        # Rebuild the visual tab bar order
+        self._rebuild_tab_bar_order()
+
+        self.logger.info(
+            f"Tab '{tab_to_move.label_widget.get_text()}' moved from position "
+            f"{old_index} to {new_index}"
+        )
+
+    def _rebuild_tab_bar_order(self) -> None:
+        """Rebuilds the tab bar widget order to match self.tabs list."""
+        # Remove all tabs from the box
+        for tab in self.tabs:
+            self.tab_bar_box.remove(tab)
+
+        # Re-add them in the correct order
+        for tab in self.tabs:
+            self.tab_bar_box.append(tab)
 
     def _duplicate_tab(self, tab_widget: Gtk.Box) -> None:
         """Creates a new tab duplicating the session represented by the given tab widget."""
@@ -757,19 +1090,55 @@ class TabManager:
 
             fm.rebind_terminal(active_terminal)
             paned.set_end_child(fm.get_main_widget())
-            last_pos = getattr(
-                page,
-                "_fm_paned_pos",
-                self.terminal_manager.parent_window.get_height() - 250,
+
+            # Use saved file manager height from settings if available, otherwise use page-specific or default
+            window_height = self.terminal_manager.parent_window.get_height()
+            saved_fm_height = self.terminal_manager.settings_manager.get(
+                "file_manager_height", 250
             )
+            # Enforce minimum height constraint (100px)
+            min_fm_height = 240
+            saved_fm_height = max(min_fm_height, saved_fm_height)
+            self.logger.debug(
+                f"File manager: window_height={window_height}, saved_fm_height={saved_fm_height}"
+            )
+            # Calculate default position from saved height
+            default_pos = window_height - saved_fm_height
+            last_pos = getattr(page, "_fm_paned_pos", default_pos)
+            # Ensure the position respects minimum file manager height
+            max_pos = window_height - min_fm_height
+            last_pos = min(last_pos, max_pos)
+            self.logger.debug(
+                f"File manager: default_pos={default_pos}, last_pos={last_pos}, "
+                f"has_page_pos={hasattr(page, '_fm_paned_pos')}"
+            )
+
             paned.set_position(last_pos)
             fm.set_visibility(True, source="filemanager")
         elif fm:
             page._fm_paned_pos = paned.get_position()
+            # Save file manager height to settings for new tabs/windows
+            window_height = self.terminal_manager.parent_window.get_height()
+            fm_height = window_height - paned.get_position()
+            # Enforce minimum height constraint (100px)
+            min_fm_height = 240
+            fm_height = max(min_fm_height, fm_height)
+            self.logger.debug(
+                f"File manager closing: window_height={window_height}, "
+                f"paned_pos={paned.get_position()}, fm_height={fm_height}"
+            )
+            # Save immediately to ensure persistence across sessions
+            self.terminal_manager.settings_manager.set(
+                "file_manager_height", fm_height, save_immediately=True
+            )
             fm.set_visibility(False, source="filemanager")
             paned.set_end_child(None)
 
     def _on_tab_close_button_clicked(self, button: Gtk.Button, tab_widget: Gtk.Box):
+        # If in move mode, ignore close button clicks entirely
+        if self._tab_being_moved is not None:
+            return
+
         self.logger.debug(
             f"Close button clicked for tab: {tab_widget.label_widget.get_text()}"
         )
@@ -834,6 +1203,9 @@ class TabManager:
             # Explicitly destroy the FileManager instance
             if page in self.file_managers:
                 fm = self.file_managers.pop(page)
+                # Detach the file manager widget from the paned before destroying
+                if hasattr(page, "content_paned") and page.content_paned:
+                    page.content_paned.set_end_child(None)
                 fm.destroy()
 
             self.view_stack.remove(page.get_child())

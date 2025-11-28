@@ -716,6 +716,11 @@ class CommTerminalWindow(Adw.ApplicationWindow):
 
     def _on_key_pressed(self, _controller, keyval, _keycode, state):
         """Handles key press events for tab navigation and search."""
+        # Handle Escape key to cancel tab move mode
+        if keyval == Gdk.KEY_Escape:
+            if self.tab_manager.cancel_tab_move_if_active():
+                return Gdk.EVENT_STOP
+
         # Check for Ctrl+Shift+F for search - use uppercase F key
         if (
             state & Gdk.ModifierType.CONTROL_MASK

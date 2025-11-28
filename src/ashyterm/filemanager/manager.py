@@ -8,16 +8,19 @@ import os
 import subprocess
 import tempfile
 import threading
+import weakref
+from concurrent.futures import ThreadPoolExecutor
 from functools import partial
 from pathlib import Path, PurePosixPath
 from typing import Any, Dict, List, Optional, Set
 
-from gi.repository import Adw, Gdk, Gio, GLib, GObject, Gtk, Pango, Vte
+from gi.repository import Adw, Gdk, Gio, GLib, GObject, Graphene, Gtk, Vte
 
 from ..sessions.models import SessionItem
 from ..terminal.manager import TerminalManager as TerminalManagerType
 from ..utils.logger import get_logger
 from ..utils.security import InputSanitizer, ensure_secure_directory_permissions
+from ..utils.tooltip_helper import TooltipHelper
 from ..utils.translation_utils import _
 from .models import FileItem
 from .operations import FileOperations
@@ -37,6 +40,14 @@ CSS_DATA = b"""
     background-image: none;
     background-color: @accent_bg_color;
     border-radius: 4px;
+}
+
+.search-entry-no-icon > image:first-child {
+    -gtk-icon-size: 1px;
+    min-width: 0px;
+    min-height: 0px;
+    margin: -1px;
+    padding: 0px;
 }
 """
 
@@ -65,10 +76,15 @@ class FileManager(GObject.Object):
         """
         super().__init__()
         self.logger = get_logger("ashyterm.filemanager.manager")
-        self.parent_window = parent_window
-        self.terminal_manager = terminal_manager
+        # Task 1: Store as weakrefs to prevent circular reference memory leaks
+        self._parent_window_ref = weakref.ref(parent_window)
+        self._terminal_manager_ref = weakref.ref(terminal_manager)
         self.settings_manager = settings_manager
+        # Task 5: Thread pool for efficient background operations
+        self._executor = ThreadPoolExecutor(max_workers=1)
         self.transfer_history_window = None
+        self.tooltip_helper = TooltipHelper()
+        self._is_destroyed = False  # Flag to prevent callbacks after destroy
 
         css_provider = Gtk.CssProvider()
         css_provider.load_from_data(CSS_DATA)
@@ -130,11 +146,21 @@ class FileManager(GObject.Object):
 
         self.logger.info("FileManager instance created, awaiting terminal binding.")
 
+    @property
+    def parent_window(self):
+        """Dereference weakref to get parent window."""
+        return self._parent_window_ref()
+
+    @property
+    def terminal_manager(self):
+        """Dereference weakref to get terminal manager."""
+        return self._terminal_manager_ref()
+
     def reparent(self, new_parent_window, new_terminal_manager):
         """Updates internal references when moved to a new window."""
         self.logger.info("Reparenting FileManager to a new window.")
-        self.parent_window = new_parent_window
-        self.terminal_manager = new_terminal_manager
+        self._parent_window_ref = weakref.ref(new_parent_window)
+        self._terminal_manager_ref = weakref.ref(new_terminal_manager)
 
     def rebind_terminal(self, new_terminal: Vte.Terminal):
         """
@@ -197,11 +223,17 @@ class FileManager(GObject.Object):
         self._fm_initiated_cd = False
 
         self._update_action_bar_for_session_type()
-        terminal_dir = self._get_terminal_current_directory() or "/"
+        terminal_dir = self._get_terminal_current_directory()
+
+        # If OSC7 directory is not available, use a sensible default
+        if not terminal_dir:
+            terminal_dir = self._get_default_directory_for_session()
 
         terminal_dir_path = Path(terminal_dir).resolve()
-        current_path_path = Path(self.current_path).resolve()
-        if terminal_dir_path != current_path_path:
+        current_path_path = (
+            Path(self.current_path).resolve() if self.current_path else None
+        )
+        if current_path_path is None or terminal_dir_path != current_path_path:
             self.logger.info(
                 f"Terminal directory changed from {self.current_path} to {terminal_dir}, refreshing."
             )
@@ -360,7 +392,9 @@ class FileManager(GObject.Object):
     def shutdown(self, widget):
         self.logger.info("Shutting down FileManager, cancelling active transfers.")
 
-        if self.settings_manager.get("clear_remote_edit_files_on_exit", True):
+        if self.settings_manager is not None and self.settings_manager.get(
+            "clear_remote_edit_files_on_exit", True
+        ):
             self.logger.info(
                 "Clearing all temporary remote edit files for this file manager instance."
             )
@@ -390,25 +424,61 @@ class FileManager(GObject.Object):
         """
         Explicitly destroys the FileManager and its components to break reference cycles.
         """
+        if self._is_destroyed:
+            return
+        self._is_destroyed = True
         self.logger.info("Destroying FileManager instance to prevent memory leaks.")
         self.shutdown(None)
 
-        # MODIFIED: Proactively clear the store and model to break cycles
-        if self.store:
-            self.store.remove_all()
-        if self.column_view:
+        # Task 5: Shutdown the thread pool executor
+        if hasattr(self, "_executor") and self._executor:
+            self._executor.shutdown(wait=False)
+            self._executor = None
+
+        # Cancel and clear all file monitors
+        if hasattr(self, "file_monitors") and self.file_monitors:
+            for monitor in self.file_monitors.values():
+                if monitor:
+                    monitor.cancel()
+            self.file_monitors.clear()
+
+        # Clear edited file metadata
+        if hasattr(self, "edited_file_metadata"):
+            self.edited_file_metadata.clear()
+
+        # Task 2: CRITICAL - Detach model from View BEFORE clearing to release GTK references
+        if hasattr(self, "column_view") and self.column_view:
             self.column_view.set_model(None)
 
+        # Task 2: Clear model wrappers in correct order
+        if hasattr(self, "selection_model"):
+            self.selection_model = None
+        if hasattr(self, "sorted_store"):
+            self.sorted_store = None
+        if hasattr(self, "filtered_store"):
+            self.filtered_store = None
+
+        # Task 2: Clear data store last
+        if hasattr(self, "store") and self.store:
+            self.store.remove_all()
+            self.store = None
+
+        # Clear scrolled window
+        if hasattr(self, "scrolled_window") and self.scrolled_window:
+            self.scrolled_window = None
+
         # Nullify references to break Python-side cycles
-        self.parent_window = None
-        self.terminal_manager = None
+        # Note: parent_window and terminal_manager are now weakref properties
+        self._parent_window_ref = None
+        self._terminal_manager_ref = None
         self.settings_manager = None
         self.operations = None
         self.transfer_manager = None
-        self.store = None
         self.column_view = None
         self.main_box = None
         self.revealer = None
+        self.bound_terminal = None
+        self.session_item = None
         self.logger.info("FileManager destroyed.")
 
     def get_temp_files_info(self) -> List[Dict]:
@@ -429,7 +499,6 @@ class FileManager(GObject.Object):
     def _get_terminal_current_directory(self):
         if not self.bound_terminal:
             return None
-        truncated = False
         try:
             uri = self.bound_terminal.get_current_directory_uri()
             if uri:
@@ -441,6 +510,29 @@ class FileManager(GObject.Object):
         except Exception:
             pass
         return None
+
+    def _get_default_directory_for_session(self) -> str:
+        """
+        Returns a sensible default directory when OSC7 tracking is not available.
+        For local sessions, returns the user's home directory.
+        For SSH sessions, queries the remote home directory.
+        """
+        if not self.session_item:
+            return os.path.expanduser("~")
+
+        if self.session_item.is_local():
+            return os.path.expanduser("~")
+        else:
+            # For SSH sessions, query the remote home directory
+            if self.operations:
+                success, output = self.operations.execute_command_on_session([
+                    "echo",
+                    "$HOME",
+                ])
+                if success and output.strip():
+                    return output.strip()
+            # Fallback to root if we can't determine the home directory
+            return "/"
 
     def _on_terminal_directory_changed(self, _terminal, _param_spec):
         if self._is_rebinding:
@@ -520,13 +612,15 @@ class FileManager(GObject.Object):
 
         refresh_button = Gtk.Button.new_from_icon_name("view-refresh-symbolic")
         refresh_button.connect("clicked", lambda _: self.refresh(source="filemanager"))
-        refresh_button.set_tooltip_text(_("Refresh"))
+        self.tooltip_helper.add_tooltip(refresh_button, _("Refresh"))
         self.action_bar.pack_start(refresh_button)
 
         self.hidden_files_toggle = Gtk.ToggleButton()
         self.hidden_files_toggle.set_icon_name("view-visible-symbolic")
         self.hidden_files_toggle.connect("toggled", self._on_hidden_toggle)
-        self.hidden_files_toggle.set_tooltip_text(_("Show hidden files"))
+        self.tooltip_helper.add_tooltip(
+            self.hidden_files_toggle, _("Show hidden files")
+        )
         self.action_bar.pack_start(self.hidden_files_toggle)
 
         self.breadcrumb_box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=0)
@@ -541,16 +635,65 @@ class FileManager(GObject.Object):
         self.search_entry.connect("activate", self._on_search_activate)
         self.search_entry.connect("delete-text", self._on_search_delete_text)
 
-        self.recursive_search_switch = Adw.SwitchRow(title=_("Recursive Search"))
+        # Search button for recursive search (visible when recursive mode is on)
+        self.recursive_search_button = Gtk.Button.new_from_icon_name(
+            "system-search-symbolic"
+        )
+        self.tooltip_helper.add_tooltip(
+            self.recursive_search_button, _("Start Recursive Search")
+        )
+        self.recursive_search_button.set_valign(Gtk.Align.CENTER)
+        self.recursive_search_button.connect(
+            "clicked", self._on_recursive_search_button_clicked
+        )
+        self.recursive_search_button.set_visible(False)
+
+        # Cancel button with spinner for ongoing recursive search
+        self.recursive_search_cancel_box = Gtk.Box(
+            orientation=Gtk.Orientation.HORIZONTAL, spacing=4
+        )
+        self.recursive_search_cancel_box.set_valign(Gtk.Align.CENTER)
+
+        self.recursive_search_spinner = Gtk.Spinner()
+        self.recursive_search_spinner.set_size_request(16, 16)
+        self.recursive_search_cancel_box.append(self.recursive_search_spinner)
+
+        self.recursive_search_cancel_button = Gtk.Button.new_from_icon_name(
+            "process-stop-symbolic"
+        )
+        self.tooltip_helper.add_tooltip(
+            self.recursive_search_cancel_button, _("Cancel Search")
+        )
+        self.recursive_search_cancel_button.add_css_class("destructive-action")
+        self.recursive_search_cancel_button.connect(
+            "clicked", self._on_cancel_recursive_search
+        )
+        self.recursive_search_cancel_box.append(self.recursive_search_cancel_button)
+        self.recursive_search_cancel_box.set_visible(False)
+
+        # Recursive search toggle - using a compact Switch instead of SwitchRow
+        self.recursive_search_switch = Gtk.Switch()
         self.recursive_search_switch.set_active(False)
+        self.recursive_search_switch.set_valign(Gtk.Align.CENTER)
+        self.tooltip_helper.add_tooltip(
+            self.recursive_search_switch, _("Search in subfolders")
+        )
         self.recursive_search_switch.connect(
             "notify::active", self._on_recursive_switch_toggled
         )
+
+        recursive_label = Gtk.Label(label=_("Recursive"))
+        recursive_label.set_valign(Gtk.Align.CENTER)
+        recursive_label.add_css_class("dim-label")
+
         switch_container = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=6)
         switch_container.set_valign(Gtk.Align.CENTER)
+        switch_container.append(recursive_label)
         switch_container.append(self.recursive_search_switch)
         switch_container.set_margin_start(6)
         self.action_bar.pack_end(switch_container)
+        self.action_bar.pack_end(self.recursive_search_cancel_box)
+        self.action_bar.pack_end(self.recursive_search_button)
         self.action_bar.pack_end(self.search_entry)
 
         search_key_controller = Gtk.EventControllerKey.new()
@@ -559,12 +702,12 @@ class FileManager(GObject.Object):
         self.search_entry.add_controller(search_key_controller)
 
         history_button = Gtk.Button.new_from_icon_name("view-history-symbolic")
-        history_button.set_tooltip_text(_("Transfer History"))
+        self.tooltip_helper.add_tooltip(history_button, _("Transfer History"))
         history_button.connect("clicked", self._on_show_transfer_history)
         self.action_bar.pack_end(history_button)
 
         self.upload_button = Gtk.Button.new_from_icon_name("go-up-symbolic")
-        self.upload_button.set_tooltip_text(_("Upload Files"))
+        self.tooltip_helper.add_tooltip(self.upload_button, _("Send Files"))
         self.upload_button.connect("clicked", self._on_upload_clicked)
         self.action_bar.pack_end(self.upload_button)
 
@@ -740,31 +883,34 @@ class FileManager(GObject.Object):
 
     def _on_hidden_toggle(self, _toggle_button):
         self.combined_filter.changed(Gtk.FilterChange.DIFFERENT)
-    def _on_recursive_switch_toggled(self, row, _param):
-        self._on_recursive_toggle(row)
 
-    def _on_recursive_toggle(self, toggle_button: Gtk.ToggleButton):
-        self.recursive_search_enabled = toggle_button.get_active()
+    def _on_recursive_switch_toggled(self, switch, _param):
+        self._on_recursive_toggle(switch)
+
+    def _on_recursive_toggle(self, toggle_widget):
+        self.recursive_search_enabled = toggle_widget.get_active()
         if not self.recursive_search_enabled:
-            # Invalidate any pending searches
+            # Invalidate any pending searches and cancel any in-progress search
             self._recursive_search_generation += 1
             self._recursive_search_in_progress = False
+            self._update_recursive_search_ui_state()
         self._update_search_placeholder()
         if hasattr(self, "search_entry"):
-            self.search_entry.set_sensitive(not self._recursive_search_in_progress)
+            self.search_entry.set_sensitive(True)
+            # Hide/show the magnifying glass icon in the search entry using CSS
+            # (when recursive mode is on, we have an external search button)
+            if self.recursive_search_enabled:
+                self.search_entry.add_css_class("search-entry-no-icon")
+            else:
+                self.search_entry.remove_css_class("search-entry-no-icon")
 
-        search_term = (
-            self.search_entry.get_text().strip()
-            if hasattr(self, "search_entry")
-            else ""
-        )
+        # Show/hide the search button based on recursive mode
+        self.recursive_search_button.set_visible(self.recursive_search_enabled)
 
         if self.recursive_search_enabled:
-            if search_term:
-                self._start_recursive_search(search_term)
-            else:
-                self._showing_recursive_results = False
-                self.combined_filter.changed(Gtk.FilterChange.DIFFERENT)
+            # Don't auto-start search when toggling recursive mode
+            self._showing_recursive_results = False
+            self.combined_filter.changed(Gtk.FilterChange.DIFFERENT)
         else:
             if self._showing_recursive_results:
                 self._showing_recursive_results = False
@@ -772,17 +918,51 @@ class FileManager(GObject.Object):
             else:
                 self.combined_filter.changed(Gtk.FilterChange.DIFFERENT)
 
+    def _on_recursive_search_button_clicked(self, button):
+        """Handle click on the recursive search button."""
+        search_term = (
+            self.search_entry.get_text().strip()
+            if hasattr(self, "search_entry")
+            else ""
+        )
+        if search_term and self.recursive_search_enabled:
+            self._start_recursive_search(search_term)
+
+    def _on_cancel_recursive_search(self, button):
+        """Cancel an ongoing recursive search."""
+        self._recursive_search_generation += 1
+        self._recursive_search_in_progress = False
+        self._update_recursive_search_ui_state()
+        self._update_search_placeholder()
+        if hasattr(self, "search_entry"):
+            self.search_entry.set_sensitive(True)
+        self._show_toast(_("Search cancelled"))
+
+    def _update_recursive_search_ui_state(self):
+        """Update UI elements based on recursive search state."""
+        is_searching = self._recursive_search_in_progress
+
+        # Show spinner and cancel button during search
+        self.recursive_search_cancel_box.set_visible(is_searching)
+        if is_searching:
+            self.recursive_search_spinner.start()
+        else:
+            self.recursive_search_spinner.stop()
+
+        # Hide search button during active search, show when recursive enabled
+        self.recursive_search_button.set_visible(
+            self.recursive_search_enabled and not is_searching
+        )
+
     def _on_search_changed(self, search_entry):
         search_term = search_entry.get_text().strip()
         if self.recursive_search_enabled:
-            if search_term:
-                self._start_recursive_search(search_term)
-            else:
+            # In recursive mode, don't auto-start search on typing
+            # User must press Enter or click the search button
+            if not search_term:
                 if self._showing_recursive_results:
                     self._showing_recursive_results = False
                     self.refresh(source="filemanager", clear_search=False)
-                else:
-                    self.combined_filter.changed(Gtk.FilterChange.DIFFERENT)
             return
         else:
             if self._showing_recursive_results:
@@ -804,6 +984,16 @@ class FileManager(GObject.Object):
         self._recursive_search_in_progress = True
         self._showing_recursive_results = True
 
+        # Capture show_hidden setting from main thread (GTK widget)
+        show_hidden = (
+            self.hidden_files_toggle.get_active()
+            if hasattr(self, "hidden_files_toggle")
+            else False
+        )
+
+        # Update UI to show searching state
+        self._update_recursive_search_ui_state()
+
         if hasattr(self, "search_entry"):
             if getattr(self.search_entry, "has_focus", False):
                 if hasattr(self, "column_view") and self.column_view:
@@ -813,79 +1003,95 @@ class FileManager(GObject.Object):
 
         thread = threading.Thread(
             target=self._recursive_search_thread,
-            args=(generation, base_path, search_term),
+            args=(generation, base_path, search_term, show_hidden),
             daemon=True,
             name="RecursiveSearchThread",
         )
         thread.start()
 
     def _recursive_search_thread(
-        self, generation: int, base_path: str, search_term: str
+        self, generation: int, base_path: str, search_term: str, show_hidden: bool
     ):
+        """Task 6: Memory-efficient recursive search using line-by-line processing.
+
+        Uses subprocess.Popen to read stdout line-by-line instead of loading
+        the entire output into memory at once. This keeps RAM usage stable
+        even for directories with many files.
+        """
         results: List[FileItem] = []
         error_message = ""
         truncated = False
-        pattern = f"*{search_term}*"
-        command = [
-            "find",
-            base_path,
-            "-iname",
-            pattern,
-            "-exec",
-            "ls",
-            "-ld",
-            "--full-time",
-            "--classify",
-            "{}",
-            "+",
-        ]
+
+        # Check if fd (or fdfind) is available for faster search
+        use_fd = self._check_fd_available()
+
+        if use_fd:
+            # fd command - faster and more user-friendly
+            command = self._build_fd_command(base_path, search_term, show_hidden)
+        else:
+            # Fallback to find command
+            command = self._build_find_command(base_path, search_term, show_hidden)
+
+        base_posix = PurePosixPath(base_path)
 
         try:
-            output = ""
             if self._is_remote_session():
+                # For remote sessions, we still need to use execute_command_on_session
+                # which returns full output, but this is unavoidable for SSH
                 success, output = self.operations.execute_command_on_session(command)
                 if not success:
                     error_message = output.strip()
-                    output = output if success else ""
+                    output = ""
+
+                # Process lines from remote output
+                for line in output.splitlines():
+                    if self._recursive_search_generation != generation:
+                        return  # Abort if search cancelled
+
+                    if not line or (not use_fd and line.startswith("find:")):
+                        continue
+
+                    file_item = self._process_search_result_line(line, base_posix)
+                    if file_item:
+                        results.append(file_item)
+                        if len(results) >= MAX_RECURSIVE_RESULTS:
+                            truncated = True
+                            break
             else:
-                result = subprocess.run(
+                # Task 6: For local sessions, use Popen for memory-efficient line-by-line reading
+                with subprocess.Popen(
                     command,
-                    shell=False,
-                    capture_output=True,
+                    stdout=subprocess.PIPE,
+                    stderr=subprocess.PIPE,
                     text=True,
-                    timeout=60,
-                )
-                output = result.stdout or ""
-                if result.stderr and result.returncode != 0:
-                    error_message = result.stderr.strip()
+                    bufsize=1,  # Line buffered
+                ) as proc:
+                    for line in proc.stdout:
+                        # Check for cancellation on each line
+                        if self._recursive_search_generation != generation:
+                            proc.terminate()
+                            return  # Abort if search cancelled
 
-            lines = [
-                line
-                for line in output.splitlines()
-                if line and not line.startswith("find:")
-            ]
+                        line = line.rstrip("\n")
+                        if not line or (not use_fd and line.startswith("find:")):
+                            continue
 
-            base_posix = PurePosixPath(base_path)
-            for line in lines:
-                file_item = FileItem.from_ls_line(line)
-                if not file_item:
-                    continue
+                        file_item = self._process_search_result_line(line, base_posix)
+                        if file_item:
+                            results.append(file_item)
+                            if len(results) >= MAX_RECURSIVE_RESULTS:
+                                truncated = True
+                                proc.terminate()
+                                break
 
-                full_path = PurePosixPath(file_item.name)
-                try:
-                    relative_path = str(full_path.relative_to(base_posix))
-                except ValueError:
-                    relative_path = str(full_path)
+                    # Check for errors if process didn't complete normally
+                    if proc.returncode and proc.returncode != 0:
+                        stderr_output = proc.stderr.read() if proc.stderr else ""
+                        if stderr_output:
+                            error_message = stderr_output.strip()
 
-                relative_path = relative_path.lstrip("./")
-                if not relative_path:
-                    relative_path = full_path.name
-
-                file_item._name = relative_path
-                results.append(file_item)
-                if len(results) >= MAX_RECURSIVE_RESULTS:
-                    truncated = True
-                    break
+        except subprocess.TimeoutExpired:
+            error_message = "Search timed out"
         except Exception as exc:
             error_message = str(exc)
 
@@ -896,6 +1102,126 @@ class FileManager(GObject.Object):
             error_message,
             truncated,
         )
+
+    def _process_search_result_line(
+        self, line: str, base_posix: PurePosixPath
+    ) -> Optional[FileItem]:
+        """Process a single line from search output and return a FileItem."""
+        file_item = FileItem.from_ls_line(line)
+        if not file_item:
+            return None
+
+        full_path = PurePosixPath(file_item.name)
+        try:
+            relative_path = str(full_path.relative_to(base_posix))
+        except ValueError:
+            relative_path = str(full_path)
+
+        relative_path = relative_path.lstrip("./")
+        if not relative_path:
+            relative_path = full_path.name
+
+        file_item._name = relative_path
+        return file_item
+
+    def _check_fd_available(self) -> bool:
+        """Check if fd or fdfind command is available locally or on remote session."""
+        import shutil
+
+        # Check for fd (common name) or fdfind (Debian/Ubuntu name)
+        for cmd_name in ["fd", "fdfind"]:
+            if self._is_remote_session():
+                # For remote sessions, use 'command -v' which works via SSH shell
+                if self.operations:
+                    success, _ = self.operations.execute_command_on_session([
+                        "command",
+                        "-v",
+                        cmd_name,
+                    ])
+                    if success:
+                        self._fd_command_name = cmd_name
+                        return True
+            else:
+                # For local, use shutil.which() which is reliable
+                if shutil.which(cmd_name):
+                    self._fd_command_name = cmd_name
+                    return True
+        return False
+
+    def _build_fd_command(
+        self, base_path: str, search_term: str, show_hidden: bool
+    ) -> List[str]:
+        """Build fd command for recursive search.
+
+        Uses fd for fast searching, then pipes through xargs ls to get
+        consistent output format that FileItem.from_ls_line can parse.
+
+        Args:
+            base_path: Directory to search in
+            search_term: Pattern to search for
+            show_hidden: Whether to include hidden files/directories
+        """
+        fd_cmd = getattr(self, "_fd_command_name", "fd")
+        # fd options:
+        # -i: case-insensitive
+        # -H: include hidden files (only if show_hidden is True)
+        # -0: null-separated output for safe xargs
+        # --color=never: no color codes
+        #
+        # We use a shell to pipe fd output through xargs ls for consistent format
+        hidden_flag = "-H" if show_hidden else ""
+        return [
+            "sh",
+            "-c",
+            f'{fd_cmd} -i {hidden_flag} -0 --color=never "{search_term}" "{base_path}" | xargs -0 ls -ld --full-time --classify 2>/dev/null',
+        ]
+
+    def _build_find_command(
+        self, base_path: str, search_term: str, show_hidden: bool
+    ) -> List[str]:
+        """Build find command for recursive search (fallback).
+
+        Args:
+            base_path: Directory to search in
+            search_term: Pattern to search for
+            show_hidden: Whether to include hidden files/directories
+        """
+        pattern = f"*{search_term}*"
+
+        if show_hidden:
+            # Include all files
+            return [
+                "find",
+                base_path,
+                "-iname",
+                pattern,
+                "-exec",
+                "ls",
+                "-ld",
+                "--full-time",
+                "--classify",
+                "{}",
+                "+",
+            ]
+        else:
+            # Exclude hidden files and directories (those starting with .)
+            # -not -path '*/.*' excludes anything inside hidden directories
+            return [
+                "find",
+                base_path,
+                "-not",
+                "-path",
+                "*/.*",
+                "-iname",
+                pattern,
+                "-exec",
+                "ls",
+                "-ld",
+                "--full-time",
+                "--classify",
+                "{}",
+                "+",
+            ]
 
     def _complete_recursive_search(
         self,
@@ -909,6 +1235,9 @@ class FileManager(GObject.Object):
 
         self._recursive_search_in_progress = False
         self._showing_recursive_results = self.recursive_search_enabled
+
+        # Update UI to hide spinner and show search button again
+        self._update_recursive_search_ui_state()
 
         if hasattr(self, "search_entry"):
             self.search_entry.set_sensitive(True)
@@ -942,7 +1271,29 @@ class FileManager(GObject.Object):
         return False
 
     def _on_search_activate(self, search_entry):
-        """Handle activation (Enter key) on the search entry to open selected item."""
+        """Handle activation (Enter key) on the search entry."""
+        search_term = search_entry.get_text().strip()
+
+        # In recursive mode, Enter has dual behavior:
+        # - If we're showing results and have a selection, activate the selection
+        # - Otherwise, start/restart the search
+        if self.recursive_search_enabled:
+            # If we have results showing and something is selected, navigate to it
+            if (
+                self._showing_recursive_results
+                and self.selection_model
+                and self.selection_model.get_selection().get_size() > 0
+            ):
+                position = self.selection_model.get_selection().get_nth(0)
+                GLib.idle_add(self._deferred_activate_row, self.column_view, position)
+                return
+
+            # Otherwise, start the search if there's a search term
+            if search_term and not self._recursive_search_in_progress:
+                self._start_recursive_search(search_term)
+            return
+
+        # In normal mode, Enter opens the selected item
         if self.selection_model and self.selection_model.get_selection().get_size() > 0:
             position = self.selection_model.get_selection().get_nth(0)
             GLib.idle_add(self._deferred_activate_row, self.column_view, position)
@@ -955,6 +1306,8 @@ class FileManager(GObject.Object):
 
     def _navigate_up_directory(self):
         """Navigate up one directory level, preserving user input."""
+        if self._is_destroyed:
+            return False
         if self.current_path == "/":
             return False
 
@@ -971,6 +1324,8 @@ class FileManager(GObject.Object):
 
     def _deferred_activate_row(self, col_view, position):
         """Deferred row activation to allow focus events to be processed properly."""
+        if self._is_destroyed:
+            return False
         self._on_row_activated(col_view, position)
         return False
 
@@ -1088,7 +1443,6 @@ class FileManager(GObject.Object):
         box = Gtk.Box(spacing=6, orientation=Gtk.Orientation.HORIZONTAL)
         box.append(Gtk.Image())
         label = Gtk.Label(xalign=0.0)
-        label.set_ellipsize(Pango.EllipsizeMode.END)
         box.append(label)
         link_icon = Gtk.Image()
         link_icon.set_visible(False)
@@ -1228,7 +1582,7 @@ class FileManager(GObject.Object):
 
         # For non-cd commands, success is confirmed by the refresh completing
         if command_type != "cd":
-            GLib.timeout_add(500, lambda: self.refresh(source="filemanager"))
+            GLib.timeout_add(15, lambda: self.refresh(source="filemanager"))
 
     def _on_row_activated(self, col_view, position):
         item: FileItem = col_view.get_model().get_item(position)
@@ -1289,15 +1643,21 @@ class FileManager(GObject.Object):
             self.search_entry.set_sensitive(False)
             self.search_entry.set_placeholder_text(_("Loading..."))
 
-        thread = threading.Thread(
-            target=self._list_files_thread,
-            args=(self.current_path, source),
-            daemon=True,
-            name="FileListingThread",
-        )
-        thread.start()
+        # Task 5: Use ThreadPoolExecutor instead of creating new threads
+        if hasattr(self, "_executor") and self._executor:
+            self._executor.submit(self._list_files_thread, self.current_path, source)
+        else:
+            # Fallback if executor not available
+            thread = threading.Thread(
+                target=self._list_files_thread,
+                args=(self.current_path, source),
+                daemon=True,
+                name="FileListingThread",
+            )
+            thread.start()
 
     def _list_files_thread(self, requested_path: str, source: str = "filemanager"):
+        """Task 1: UI Batching - Process files in batches to avoid UI freezing."""
         try:
             if not self.operations:
                 self.logger.warning("File operations not available. Cannot list files.")
@@ -1317,38 +1677,88 @@ class FileManager(GObject.Object):
             command = ["ls", "-la", "--classify", "--full-time", path_for_ls]
             success, output = self.operations.execute_command_on_session(command)
 
-            file_items = []
+            if not success:
+                GLib.idle_add(
+                    self._update_store_with_files,
+                    requested_path,
+                    [],
+                    output,
+                    source,
+                )
+                return
+
+            lines = output.strip().split("\n")[1:]  # Skip total line
+            batch = []
             parent_item = None
-            if success:
-                lines = output.strip().split("\n")[1:]
-                for line in lines:
-                    file_item = FileItem.from_ls_line(line)
-                    if file_item:
-                        if file_item.name == "..":
-                            parent_item = file_item
-                        elif file_item.name not in [".", ".."]:
-                            if file_item.is_link and file_item._link_target:
-                                if not file_item._link_target.startswith("/"):
-                                    file_item._link_target = f"{requested_path.rstrip('/')}/{file_item._link_target}"
-                            file_items.append(file_item)
+            BATCH_SIZE = 50
 
-            if requested_path != "/":
-                if parent_item:
-                    file_items.insert(0, parent_item)
+            # Task 1: Clear the store immediately on main thread
+            GLib.idle_add(self._clear_store_for_batch)
 
-            GLib.idle_add(
-                self._update_store_with_files,
-                requested_path,
-                file_items,
-                output if not success else "",
-                source,
-            )
+            for line in lines:
+                # Safety check to stop processing if user switched folders
+                if self._is_destroyed or requested_path != self.current_path:
+                    return
+
+                file_item = FileItem.from_ls_line(line)
+                if file_item:
+                    if file_item.name == "..":
+                        parent_item = file_item
+                    elif file_item.name not in [".", ".."]:
+                        if file_item.is_link and file_item._link_target:
+                            if not file_item._link_target.startswith("/"):
+                                file_item._link_target = f"{requested_path.rstrip('/')}/{file_item._link_target}"
+                        batch.append(file_item)
+
+                # Task 1: BATCHING - Send to UI every BATCH_SIZE items
+                if len(batch) >= BATCH_SIZE:
+                    items_to_add = batch[:]
+                    GLib.idle_add(self._append_batch_to_store, items_to_add)
+                    batch = []
+
+            # Add parent ".." item at the beginning if needed
+            if requested_path != "/" and parent_item:
+                GLib.idle_add(self._prepend_parent_item, parent_item)
+
+            # Task 1: Add remaining items
+            if batch:
+                GLib.idle_add(self._append_batch_to_store, batch)
+
+            # Signal completion
+            GLib.idle_add(self._finalize_file_listing, requested_path, source)
 
         except Exception as e:
             self.logger.error(f"Error in background file listing: {e}")
             GLib.idle_add(
                 self._update_store_with_files, requested_path, [], str(e), source
             )
+
+    def _clear_store_for_batch(self):
+        """Clear the store for batch loading."""
+        if self.store is not None:
+            self.store.remove_all()
+        return False
+
+    def _append_batch_to_store(self, items):
+        """Append a batch of items to the store."""
+        if self.store is not None and not self._is_destroyed:
+            self.store.splice(self.store.get_n_items(), 0, items)
+        return False
+
+    def _prepend_parent_item(self, parent_item):
+        """Prepend the parent '..' item to the store."""
+        if self.store is not None and not self._is_destroyed:
+            self.store.insert(0, parent_item)
+        return False
+
+    def _finalize_file_listing(self, requested_path, source):
+        """Finalize file listing after all batches are added."""
+        if self._is_destroyed:
+            return False
+        self._showing_recursive_results = False
+        self._recursive_search_in_progress = False
+        self._restore_search_entry(source)
+        return False
 
     def _update_store_with_files(
         self,
@@ -1357,6 +1767,10 @@ class FileManager(GObject.Object):
         error_message,
         source: str = "filemanager",
     ):
+        # Skip if destroyed
+        if self._is_destroyed:
+            return False
+
         if requested_path != self.current_path:
             self.logger.info(
                 f"Discarding stale file list for '{requested_path}'. Current path is '{self.current_path}'."
@@ -1366,7 +1780,8 @@ class FileManager(GObject.Object):
         if error_message:
             self.logger.error(f"Error listing files: {error_message}")
 
-        self.store.splice(0, self.store.get_n_items(), file_items)
+        if self.store is not None:
+            self.store.splice(0, self.store.get_n_items(), file_items)
         self._showing_recursive_results = False
         self._recursive_search_in_progress = False
 
@@ -1389,7 +1804,7 @@ class FileManager(GObject.Object):
         if self._recursive_search_in_progress:
             self.search_entry.set_placeholder_text(_("Searching..."))
         elif self.recursive_search_enabled:
-            self.search_entry.set_placeholder_text(_("Recursive filter..."))
+            self.search_entry.set_placeholder_text(_("Type and press Enter..."))
         else:
             self.search_entry.set_placeholder_text(_("Filter files..."))
 
@@ -1528,27 +1943,65 @@ class FileManager(GObject.Object):
             menu.append_section(None, clipboard_section)
 
         popover = Gtk.PopoverMenu.new_from_model(menu)
+        popover.set_autohide(True)
+        popover.set_has_arrow(False)
+
+        # Parent to main_box (outside ScrolledWindow) to avoid clipping constraints
         if popover.get_parent() is not None:
             popover.unparent()
-        popover.set_parent(self.column_view)
+        popover.set_parent(self.main_box)
+
         self._setup_general_context_actions(popover)
-        rect = Gdk.Rectangle()
-        rect.x, rect.y = int(x), int(y)
-        popover.set_pointing_to(rect)
-        popover.set_has_arrow(False)
+
+        # Translate coordinates from column_view to main_box
+        point = Graphene.Point()
+        point.x, point.y = x, y
+        success, translated = self.column_view.compute_point(self.main_box, point)
+        if success:
+            rect = Gdk.Rectangle()
+            rect.x, rect.y, rect.width, rect.height = (
+                int(translated.x),
+                int(translated.y),
+                1,
+                1,
+            )
+            popover.set_pointing_to(rect)
+        else:
+            rect = Gdk.Rectangle()
+            rect.x, rect.y, rect.width, rect.height = int(x), int(y), 1, 1
+            popover.set_pointing_to(rect)
         popover.popup()
 
     def _show_context_menu(self, items: List[FileItem], x, y):
         menu_model = self._create_context_menu_model(items)
         popover = Gtk.PopoverMenu.new_from_model(menu_model)
+        popover.set_autohide(True)
+        popover.set_has_arrow(False)
+
+        # Parent to main_box (outside ScrolledWindow) to avoid clipping constraints
         if popover.get_parent() is not None:
             popover.unparent()
-        popover.set_parent(self.column_view)
+        popover.set_parent(self.main_box)
+
         self._setup_context_actions(popover, items)
-        rect = Gdk.Rectangle()
-        rect.x, rect.y = int(x), int(y)
-        popover.set_pointing_to(rect)
-        popover.set_has_arrow(False)
+
+        # Translate coordinates from column_view to main_box
+        point = Graphene.Point()
+        point.x, point.y = x, y
+        success, translated = self.column_view.compute_point(self.main_box, point)
+        if success:
+            rect = Gdk.Rectangle()
+            rect.x, rect.y, rect.width, rect.height = (
+                int(translated.x),
+                int(translated.y),
+                1,
+                1,
+            )
+            popover.set_pointing_to(rect)
+        else:
+            rect = Gdk.Rectangle()
+            rect.x, rect.y, rect.width, rect.height = int(x), int(y), 1, 1
+            popover.set_pointing_to(rect)
         popover.popup()
 
     def _on_search_key_pressed(self, controller, keyval, _keycode, state):
@@ -1578,6 +2031,12 @@ class FileManager(GObject.Object):
             return Gdk.EVENT_STOP
 
         elif keyval in (Gdk.KEY_Return, Gdk.KEY_KP_Enter):
+            # In recursive mode: Enter should start the search (let activate handler deal with it)
+            if self.recursive_search_enabled and not self._showing_recursive_results:
+                # Let the event propagate to trigger _on_search_activate
+                return Gdk.EVENT_PROPAGATE
+
+            # In normal mode or when showing recursive results: activate the selected item
             if current_pos != Gtk.INVALID_LIST_POSITION:
                 self._on_row_activated(self.column_view, current_pos)
             return Gdk.EVENT_STOP
@@ -1640,14 +2099,20 @@ class FileManager(GObject.Object):
         menu = Gio.Menu()
         num_items = len(items)
 
+        # Open/Edit section for single files
         if num_items == 1 and not items[0].is_directory:
-            menu.append(_("Open/Edit"), "context.open_edit")
-            menu.append(_("Open With..."), "context.open_with")
-            menu.append_section(None, Gio.Menu())
+            open_section = Gio.Menu()
+            open_section.append(_("Open/Edit"), "context.open_edit")
+            open_section.append(_("Open With..."), "context.open_with")
+            menu.append_section(None, open_section)
 
+        # Rename section for single items
         if num_items == 1:
-            menu.append(_("Rename"), "context.rename")
+            rename_section = Gio.Menu()
+            rename_section.append(_("Rename"), "context.rename")
+            menu.append_section(None, rename_section)
 
+        # Clipboard section
         clipboard_section = Gio.Menu()
         clipboard_section.append(_("Copy"), "context.copy")
         clipboard_section.append(_("Cut"), "context.cut")
@@ -1655,19 +2120,25 @@ class FileManager(GObject.Object):
             clipboard_section.append(_("Paste"), "context.paste")
         menu.append_section(None, clipboard_section)
 
+        # Download section for remote sessions
         if self._is_remote_session():
-            menu.append_section(None, Gio.Menu())
-            menu.append(_("Download"), "context.download")
+            download_section = Gio.Menu()
+            download_section.append(_("Download"), "context.download")
+            menu.append_section(None, download_section)
 
-        menu.append_section(None, Gio.Menu())
-        menu.append(_("Permissions"), "context.chmod")
+        # Permissions section
+        permissions_section = Gio.Menu()
+        permissions_section.append(_("Permissions"), "context.chmod")
+        menu.append_section(None, permissions_section)
 
-        menu.append_section(None, Gio.Menu())
+        # Delete section
+        delete_section = Gio.Menu()
         delete_item = Gio.MenuItem.new(_("Delete"), "context.delete")
         delete_item.set_attribute_value(
             "class", GLib.Variant("s", "destructive-action")
         )
-        menu.append_item(delete_item)
+        delete_section.append_item(delete_item)
+        menu.append_section(None, delete_section)
 
         return menu
 

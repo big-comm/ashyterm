@@ -76,6 +76,8 @@ class FileItem(GObject.GObject):
         self._owner = owner
         self._group = group
         self._link_target = link_target
+        # Task 4: Calculate icon name once and cache it to avoid repeated Gio.content_type_guess calls
+        self._cached_icon_name = self._resolve_icon_name()
 
     @property
     def name(self) -> str:
@@ -116,19 +118,23 @@ class FileItem(GObject.GObject):
             self.is_link and self._link_target and self._link_target.endswith("/")
         )
 
-    @property
-    def icon_name(self) -> str:
+    def _resolve_icon_name(self) -> str:
+        """Task 4: Calculate icon name once during initialization."""
         # For links to directories, always use the folder icon.
         # This relies on the `ls --classify` command appending a '/' to the link target.
-        if self.is_link and self._link_target and self._link_target.endswith("/"):
+        if (
+            self._permissions.startswith("l")
+            and self._link_target
+            and self._link_target.endswith("/")
+        ):
             return "folder-symbolic"
 
         # For actual directories.
-        if self.is_directory:
+        if self._permissions.startswith("d"):
             return "folder-symbolic"
 
         # For all other cases (files and links to files), guess the icon from the name.
-        mime_type, _ = Gio.content_type_guess(self.name, None)
+        mime_type, _ = Gio.content_type_guess(self._name, None)
         if mime_type:
             gicon = Gio.content_type_get_icon(mime_type)
             if isinstance(gicon, Gio.ThemedIcon) and gicon.get_names():
@@ -136,22 +142,75 @@ class FileItem(GObject.GObject):
 
         return "text-x-generic-symbolic"
 
+    @property
+    def icon_name(self) -> str:
+        """Task 4: Return cached icon name for performance."""
+        return self._cached_icon_name
+
     @classmethod
     def from_ls_line(cls, line: str):
+        """Task 2: Optimized parsing using str.split instead of regex.
+
+        str.split is orders of magnitude faster than regex for columnar data.
+        We expect 9 parts: perms, links, owner, group, size, date, time, timezone, name
+        """
+        try:
+            # Task 2: Fast path using str.split
+            parts = line.split(maxsplit=8)
+            if len(parts) < 9:
+                # Fallback to regex for edge cases
+                return cls._from_ls_line_regex(line)
+
+            perms, links, owner, group, size, date_ymd, time_hms, time_zone, name = (
+                parts
+            )
+
+            # Fast datetime parsing
+            # Expected format: 2024-01-15 10:30:00.000000000
+            date_str = f"{date_ymd} {time_hms.split('.')[0]}"
+            try:
+                date_obj = datetime.strptime(date_str, "%Y-%m-%d %H:%M:%S")
+            except ValueError:
+                date_obj = datetime.now()
+
+            # Fast name cleanup - handle symlinks and type indicators
+            link_target = ""
+            if " -> " in name:
+                name, link_target = name.split(" -> ", 1)
+
+            # Remove file type indicators added by --classify
+            if name and name[-1] in "/@=*|>":
+                name = name[:-1]
+
+            return cls(
+                name=name,
+                perms=perms,
+                size=int(size),
+                date=date_obj,
+                owner=owner,
+                group=group,
+                is_link=perms.startswith("l"),
+                link_target=link_target,
+            )
+
+        except (ValueError, IndexError):
+            # Fallback to Regex for edge cases
+            return cls._from_ls_line_regex(line)
+
+    @classmethod
+    def _from_ls_line_regex(cls, line: str):
+        """Fallback regex parser for edge cases."""
         match = cls.LS_RE.match(line)
         if not match:
             return None
         data = match.groupdict()
         try:
-            # Parse the datetime string (format: 2024-01-15 10:30:00.000000000 +0000)
             datetime_str = data["datetime"]
-            # Extract just the date and time part, ignoring microseconds and timezone
             date_part = datetime_str.split(".")[0]
             date_obj = datetime.strptime(date_part, "%Y-%m-%d %H:%M:%S")
         except ValueError:
             date_obj = datetime.now()
         name = data["name"]
-        # Remove file type indicators added by --file-type
         name = name.rstrip("/@=*|>")
         return cls(
             name=name,

@@ -8,6 +8,7 @@ gi.require_version("Adw", "1")
 from gi.repository import Adw, Gdk, Gio, Gtk
 
 from ..utils.logger import get_logger
+from ..utils.tooltip_helper import TooltipHelper
 from ..utils.translation_utils import _
 from .menus import MainApplicationMenu
 
@@ -29,6 +30,9 @@ class WindowUIBuilder:
         self.settings_manager = window.settings_manager
         self.tab_manager = window.tab_manager
         self.session_tree = window.session_tree
+
+        # Initialize tooltip helper for custom tooltips
+        self.tooltip_helper = TooltipHelper(self.settings_manager)
 
         # WM settings for dynamic button layout
         self.wm_settings = Gio.Settings.new("org.gnome.desktop.wm.preferences")
@@ -262,11 +266,15 @@ class WindowUIBuilder:
         # Search occurrence counter
         self.search_occurrence_label = Gtk.Label()
         self.search_occurrence_label.add_css_class("dim-label")
-        self.search_occurrence_label.set_tooltip_text(_("Current occurrence"))
+        self.tooltip_helper.add_tooltip(
+            self.search_occurrence_label, _("Current occurrence")
+        )
 
         # Case sensitive switch
         self.case_sensitive_switch = Gtk.Switch()
-        self.case_sensitive_switch.set_tooltip_text(_("Case sensitive search"))
+        self.tooltip_helper.add_tooltip(
+            self.case_sensitive_switch, _("Case sensitive search")
+        )
         case_sensitive_box = Gtk.Box(spacing=6)
         case_sensitive_label = Gtk.Label(label=_("Case sensitive"))
         case_sensitive_box.append(case_sensitive_label)
@@ -274,7 +282,7 @@ class WindowUIBuilder:
 
         # Regex switch
         self.regex_switch = Gtk.Switch()
-        self.regex_switch.set_tooltip_text(_("Use regular expressions"))
+        self.tooltip_helper.add_tooltip(self.regex_switch, _("Use regular expressions"))
         regex_box = Gtk.Box(spacing=6)
         regex_label = Gtk.Label(label=_("Regex"))
         regex_box.append(regex_label)
@@ -313,60 +321,63 @@ class WindowUIBuilder:
         # Assign to window early so menus can access it
         self.window.header_bar = header_bar
 
-        # Create buttons
-        self.toggle_sidebar_button = Gtk.ToggleButton(
-            icon_name="pin-symbolic", tooltip_text=_("Toggle Sidebar")
-        )
+        # Create buttons (tooltips are added via tooltip_helper below)
+        self.toggle_sidebar_button = Gtk.ToggleButton(icon_name="pin-symbolic")
         self.toggle_sidebar_button.add_css_class("sidebar-toggle-button")
 
-        self.file_manager_button = Gtk.ToggleButton(
-            icon_name="folder-open-symbolic", tooltip_text=_("File Manager")
-        )
+        self.file_manager_button = Gtk.ToggleButton(icon_name="folder-open-symbolic")
 
-        self.command_guide_button = Gtk.Button(
-            icon_name="help-about-symbolic",
-            tooltip_text=_("Command Guide (Ctrl+Shift+P)"),
-        )
+        self.command_guide_button = Gtk.Button(icon_name="help-about-symbolic")
         self.command_guide_button.set_action_name("win.show-command-guide")
 
         # Add the new search button
-        self.search_button = Gtk.ToggleButton(
-            icon_name="edit-find-symbolic", tooltip_text=_("Search in Terminal")
-        )
+        self.search_button = Gtk.ToggleButton(icon_name="edit-find-symbolic")
 
         # Add the new Broadcast button
         self.broadcast_button = Gtk.ToggleButton(
-            #icon_name="emblem-shared-symbolic", tooltip_text=_("Send Command to All Tabs")
-            icon_name="utilities-terminal-symbolic", tooltip_text=_("Send Command to All Tabs")
+            icon_name="utilities-terminal-symbolic"
         )
-        self.ai_assistant_button = Gtk.Button(
-            icon_name="avatar-default-symbolic",
-            tooltip_text=_("Ask AI Assistant (Ctrl+Shift+I)"),
-        )
+
+        self.ai_assistant_button = Gtk.Button(icon_name="avatar-default-symbolic")
         self.ai_assistant_button.connect(
             "clicked", lambda _btn: self.window._on_ai_assistant_requested()
         )
         self.cleanup_button = Gtk.MenuButton(
             icon_name="user-trash-symbolic",
-            tooltip_text=_("Manage Temporary Files"),
             visible=False,
             css_classes=["destructive-action", "flat"],
         )
         self.cleanup_popover = Gtk.Popover()
         self.cleanup_button.set_popover(self.cleanup_popover)
 
-        self.menu_button = Gtk.MenuButton(
-            icon_name="open-menu-symbolic", tooltip_text=_("Main Menu")
-        )
+        self.menu_button = Gtk.MenuButton(icon_name="open-menu-symbolic")
         popover, self.font_sizer_widget = MainApplicationMenu.create_main_popover(
             self.window
         )
         self.menu_button.set_popover(popover)
 
         self.new_tab_button = Gtk.Button.new_from_icon_name("tab-new-symbolic")
-        self.new_tab_button.set_tooltip_text(_("New Tab"))
         self.new_tab_button.connect("clicked", self.window._on_new_tab_clicked)
         self.new_tab_button.add_css_class("flat")
+
+        # Add custom tooltips to header bar buttons
+        self.tooltip_helper.add_tooltip(self.toggle_sidebar_button, _("Toggle Sidebar"))
+        self.tooltip_helper.add_tooltip(self.file_manager_button, _("File Manager"))
+        self.tooltip_helper.add_tooltip(
+            self.command_guide_button, _("Command Guide (Ctrl+Shift+P)")
+        )
+        self.tooltip_helper.add_tooltip(self.search_button, _("Search in Terminal"))
+        self.tooltip_helper.add_tooltip(
+            self.broadcast_button, _("Send Command to All Tabs")
+        )
+        self.tooltip_helper.add_tooltip(
+            self.ai_assistant_button, _("Ask AI Assistant (Ctrl+Shift+I)")
+        )
+        self.tooltip_helper.add_tooltip(
+            self.cleanup_button, _("Manage Temporary Files")
+        )
+        self.tooltip_helper.add_tooltip(self.menu_button, _("Main Menu"))
+        self.tooltip_helper.add_tooltip(self.new_tab_button, _("New Tab"))
 
         # Check if window controls are on the left
         button_layout = self.wm_settings.get_string("button-layout")
@@ -501,25 +512,27 @@ class WindowUIBuilder:
         toolbar.set_halign(Gtk.Align.CENTER)
 
         self.add_session_button = Gtk.Button.new_from_icon_name("list-add-symbolic")
-        self.add_session_button.set_tooltip_text(_("Add Session"))
+        self.tooltip_helper.add_tooltip(self.add_session_button, _("Add Session"))
         toolbar.append(self.add_session_button)
 
         self.add_folder_button = Gtk.Button.new_from_icon_name("folder-new-symbolic")
-        self.add_folder_button.set_tooltip_text(_("Add Folder"))
+        self.tooltip_helper.add_tooltip(self.add_folder_button, _("Add Folder"))
         toolbar.append(self.add_folder_button)
 
         self.edit_button = Gtk.Button.new_from_icon_name("document-edit-symbolic")
-        self.edit_button.set_tooltip_text(_("Edit Selected"))
+        self.tooltip_helper.add_tooltip(self.edit_button, _("Edit Selected"))
         toolbar.append(self.edit_button)
 
         self.save_layout_button = Gtk.Button.new_from_icon_name(
             "document-save-symbolic"
         )
-        self.save_layout_button.set_tooltip_text(_("Save Current Layout"))
+        self.tooltip_helper.add_tooltip(
+            self.save_layout_button, _("Save Current Layout")
+        )
         toolbar.append(self.save_layout_button)
 
         self.remove_button = Gtk.Button.new_from_icon_name("user-trash-symbolic")
-        self.remove_button.set_tooltip_text(_("Remove Selected"))
+        self.tooltip_helper.add_tooltip(self.remove_button, _("Remove Selected"))
         self.remove_button.add_css_class("destructive")
         toolbar.append(self.remove_button)
 

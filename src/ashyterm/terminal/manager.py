@@ -83,6 +83,8 @@ class ManualSSHTracker:
         self.on_state_changed = on_state_changed_callback
         self._tracked_terminals = {}
         self._lock = threading.Lock()
+        # Task 4: Child count cache for smart polling optimization
+        self._last_child_count = {}
 
     def track(self, terminal_id: int, terminal: Vte.Terminal):
         with self._lock:
@@ -96,6 +98,8 @@ class ManualSSHTracker:
     def untrack(self, terminal_id: int):
         with self._lock:
             self._tracked_terminals.pop(terminal_id, None)
+            # Task 4: Clean up cache when untracking
+            self._last_child_count.pop(terminal_id, None)
 
     def get_ssh_target(self, terminal_id: int) -> Optional[str]:
         with self._lock:
@@ -105,6 +109,7 @@ class ManualSSHTracker:
             return None
 
     def check_process_tree(self, terminal_id: int):
+        """Task 4: Smart polling - skip heavy recursive scan if child count unchanged."""
         if not PSUTIL_AVAILABLE:
             return
         with self._lock:
@@ -119,6 +124,19 @@ class ManualSSHTracker:
                 return
             try:
                 parent_proc = psutil.Process(pid)
+
+                # Task 4: OPTIMIZATION - Check immediate child count first
+                # If the number of children hasn't changed, skip the heavy recursive scan
+                current_children_count = len(parent_proc.children())
+
+                # If count matches and we aren't currently tracking an SSH session, skip
+                if self._last_child_count.get(terminal_id) == current_children_count:
+                    if not state["in_ssh"]:
+                        return
+
+                # Update cache and proceed to heavy recursive check
+                self._last_child_count[terminal_id] = current_children_count
+
                 children = parent_proc.children(recursive=True)
                 ssh_proc = next(
                     (p for p in children if p.name().lower() == "ssh"), None
@@ -309,11 +327,23 @@ class TerminalManager:
         self.terminal_exit_handler = handler
 
     def _periodic_process_check(self) -> bool:
+        """Task 3: Only check the currently focused terminal for SSH process detection.
+
+        This optimization reduces CPU overhead by avoiding psutil checks on background tabs.
+        Background tabs do not need real-time title updates for SSH detection.
+        """
         try:
-            for terminal_id in self.registry.get_all_terminal_ids():
-                self.manual_ssh_tracker.check_process_tree(terminal_id)
+            # Task 3: Only check the currently focused/active terminal
+            if self.parent_window and hasattr(self.parent_window, "tab_manager"):
+                active_terminal = self.parent_window.tab_manager.get_selected_terminal()
+
+                if active_terminal:
+                    terminal_id = getattr(active_terminal, "terminal_id", None)
+                    if terminal_id is not None:
+                        # Only check the active terminal, not all terminals
+                        self.manual_ssh_tracker.check_process_tree(terminal_id)
         except Exception as e:
-            self.logger.error(f"Periodic process check failed: {e}")
+            self.logger.debug(f"Periodic check error: {e}")
         return True
 
     def _on_manual_ssh_state_changed(self, terminal: Vte.Terminal):
