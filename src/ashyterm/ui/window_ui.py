@@ -1,6 +1,6 @@
 # ashyterm/ui/window_ui.py
 
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Optional
 
 import gi
 
@@ -76,6 +76,9 @@ class WindowUIBuilder:
         self.remove_button = None
         self.menu_button = None
         self.new_tab_button = None
+        self.ai_assistant_button = None
+        self.ai_chat_panel = None
+        self.ai_paned = None
 
     def build_ui(self):
         """Constructs the entire UI and sets it on the parent window."""
@@ -339,9 +342,14 @@ class WindowUIBuilder:
         )
 
         self.ai_assistant_button = Gtk.Button(icon_name="avatar-default-symbolic")
+        self.ai_assistant_button.add_css_class("flat")
         self.ai_assistant_button.connect(
             "clicked", lambda _btn: self.window._on_ai_assistant_requested()
         )
+        # Set initial visibility based on settings
+        ai_enabled = self.settings_manager.get("ai_assistant_enabled", False)
+        self.ai_assistant_button.set_visible(ai_enabled)
+
         self.cleanup_button = Gtk.MenuButton(
             icon_name="user-trash-symbolic",
             visible=False,
@@ -558,12 +566,123 @@ class WindowUIBuilder:
         return toolbar_view
 
     def _create_content_area(self) -> Gtk.Widget:
-        """Create the main content area with tabs and file manager placeholder."""
+        """Create the main content area with tabs, file manager, and AI panel."""
         view_stack = self.tab_manager.get_view_stack()
         view_stack.add_css_class("terminal-tab-view")
 
         self.toast_overlay = Adw.ToastOverlay(child=view_stack)
-        return self.toast_overlay
+        self.toast_overlay.set_vexpand(True)
+
+        # Use Paned for AI panel resize capability
+        self.ai_paned = Gtk.Paned(orientation=Gtk.Orientation.VERTICAL)
+        self.ai_paned.set_start_child(self.toast_overlay)
+        self.ai_paned.set_resize_start_child(True)
+        self.ai_paned.set_shrink_start_child(False)
+
+        # AI panel will be added dynamically when needed
+        self.ai_paned.set_end_child(None)
+        self.ai_paned.set_resize_end_child(True)
+        self.ai_paned.set_shrink_end_child(False)
+
+        # Panel will be created on first use
+        self.ai_chat_panel = None
+        self._ai_panel_visible = False
+
+        return self.ai_paned
+
+    def _create_ai_chat_panel(self) -> None:
+        """Create the AI chat panel widget (lazy initialization)."""
+        if self.ai_chat_panel is not None:
+            return
+
+        from .widgets.ai_chat_panel import AIChatPanel
+
+        self.ai_chat_panel = AIChatPanel(
+            self.window.ai_assistant,
+            self.tooltip_helper,
+            self.settings_manager,
+        )
+        self.ai_chat_panel.connect("close-requested", self._on_ai_panel_close)
+        self.ai_chat_panel.connect("execute-command", self._on_ai_execute_command)
+        self.ai_chat_panel.connect("run-command", self._on_ai_run_command)
+
+    def _on_ai_panel_close(self, panel) -> None:
+        """Handle AI panel close request."""
+        self.hide_ai_panel()
+
+    def _on_ai_execute_command(self, panel, command: str) -> None:
+        """Handle command execution request from AI panel - insert into terminal."""
+        # Get current terminal and insert command (without newline - user must press Enter)
+        terminal = self.tab_manager.get_selected_terminal()
+        if terminal:
+            # Feed the command to the terminal without executing (no newline)
+            terminal.feed_child(command.encode("utf-8"))
+
+    def _on_ai_run_command(self, panel, command: str) -> None:
+        """Handle run command request from AI panel - insert and execute in terminal."""
+        # Get current terminal, insert command and send Ctrl+J (newline) to execute
+        terminal = self.tab_manager.get_selected_terminal()
+        if terminal:
+            # Feed the command followed by newline (Ctrl+J = 0x0a = \n)
+            terminal.feed_child(command.encode("utf-8"))
+            terminal.feed_child(b"\n")  # Ctrl+J or Enter to execute
+
+    def show_ai_panel(self, initial_text: Optional[str] = None) -> None:
+        """Show the AI chat panel."""
+        # Lazy create the panel
+        self._create_ai_chat_panel()
+
+        if initial_text:
+            self.ai_chat_panel.set_initial_text(initial_text)
+
+        if not self._ai_panel_visible:
+            # Add AI panel directly to paned
+            self.ai_chat_panel.set_vexpand(True)
+            self.ai_chat_panel.set_size_request(-1, 200)  # Minimum height
+            self.ai_paned.set_end_child(self.ai_chat_panel)
+
+            # Set position for AI panel (saved height from settings)
+            window_height = self.window.get_height()
+            saved_height = self.settings_manager.get("ai_panel_height", 350)
+            min_height = 200
+            saved_height = max(min_height, saved_height)
+            target_pos = window_height - saved_height
+            self.ai_paned.set_position(target_pos)
+
+            self._ai_panel_visible = True
+
+    def hide_ai_panel(self) -> None:
+        """Hide the AI chat panel."""
+        if self._ai_panel_visible and self.ai_chat_panel:
+            # Save current height to settings
+            window_height = self.window.get_height()
+            ai_height = window_height - self.ai_paned.get_position()
+            min_height = 200
+            ai_height = max(min_height, ai_height)
+            self.settings_manager.set(
+                "ai_panel_height", ai_height, save_immediately=True
+            )
+
+            # Remove panel
+            self.ai_paned.set_end_child(None)
+            self._ai_panel_visible = False
+
+    def toggle_ai_panel(self) -> None:
+        """Toggle the AI chat panel visibility."""
+        if self._ai_panel_visible:
+            self.hide_ai_panel()
+        else:
+            self.show_ai_panel()
+
+    def is_ai_panel_visible(self) -> bool:
+        """Check if the AI panel is currently visible."""
+        return self._ai_panel_visible
+
+    def update_ai_button_visibility(self) -> None:
+        """Update AI button visibility based on settings."""
+        if self.ai_assistant_button:
+            enabled = self.settings_manager.get("ai_assistant_enabled", False)
+            self.ai_assistant_button.set_visible(enabled)
 
     def _update_border_css(self):
         """Update the window border CSS based on maximized state."""

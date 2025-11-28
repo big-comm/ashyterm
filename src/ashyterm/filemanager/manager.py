@@ -117,6 +117,9 @@ class FileManager(GObject.Object):
         ensure_secure_directory_permissions(str(self.remote_edit_dir))
 
         self.current_path = ""
+        self._last_successful_path = (
+            ""  # Track last successfully listed path for fallback
+        )
         self.file_monitors = {}
         self.edited_file_metadata = {}
         self._is_rebinding = False  # Flag to prevent race conditions during rebind
@@ -576,16 +579,23 @@ class FileManager(GObject.Object):
         return self.revealer
 
     def _build_ui(self):
+        # Use NONE transition for instant show/hide
+        # Note: GTK4 Revealer transitions reveal content within allocated space,
+        # they don't slide the widget itself from screen edge
         self.revealer = Gtk.Revealer(
-            transition_type=Gtk.RevealerTransitionType.SLIDE_UP
+            transition_type=Gtk.RevealerTransitionType.NONE,
         )
         self.revealer.set_size_request(-1, 200)
 
         self.main_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
         self.main_box.set_size_request(-1, 200)
         self.main_box.add_css_class("file-manager-main-box")
+        # Add background class to ensure solid background while loading
+        self.main_box.add_css_class("background")
 
         self.scrolled_window = Gtk.ScrolledWindow(vexpand=True)
+        # Also add background to scrolled window to prevent transparency during load
+        self.scrolled_window.add_css_class("background")
 
         self.store = Gio.ListStore.new(FileItem)
         self.filtered_store = Gtk.FilterListModel(model=self.store)
@@ -1678,6 +1688,24 @@ class FileManager(GObject.Object):
             success, output = self.operations.execute_command_on_session(command)
 
             if not success:
+                # ls command failed - revert to last successful path
+                self.logger.warning(
+                    f"Failed to list '{requested_path}': {output}. Reverting to last successful path."
+                )
+                if (
+                    self._last_successful_path
+                    and self._last_successful_path != requested_path
+                ):
+                    self.logger.info(
+                        f"Reverting to last successful path: '{self._last_successful_path}'."
+                    )
+                    GLib.idle_add(
+                        self._fallback_to_accessible_path,
+                        self._last_successful_path,
+                        source,
+                    )
+                    return
+                # If no fallback available, show empty list with error
                 GLib.idle_add(
                     self._update_store_with_files,
                     requested_path,
@@ -1688,13 +1716,11 @@ class FileManager(GObject.Object):
                 return
 
             lines = output.strip().split("\n")[1:]  # Skip total line
-            batch = []
+            directories = []
+            files = []
             parent_item = None
-            BATCH_SIZE = 50
 
-            # Task 1: Clear the store immediately on main thread
-            GLib.idle_add(self._clear_store_for_batch)
-
+            # Parse all files in one pass, separating directories from files
             for line in lines:
                 # Safety check to stop processing if user switched folders
                 if self._is_destroyed or requested_path != self.current_path:
@@ -1708,24 +1734,26 @@ class FileManager(GObject.Object):
                         if file_item.is_link and file_item._link_target:
                             if not file_item._link_target.startswith("/"):
                                 file_item._link_target = f"{requested_path.rstrip('/')}/{file_item._link_target}"
-                        batch.append(file_item)
+                        # Separate directories from files
+                        if file_item.is_directory_like:
+                            directories.append(file_item)
+                        else:
+                            files.append(file_item)
 
-                # Task 1: BATCHING - Send to UI every BATCH_SIZE items
-                if len(batch) >= BATCH_SIZE:
-                    items_to_add = batch[:]
-                    GLib.idle_add(self._append_batch_to_store, items_to_add)
-                    batch = []
+            # Sort directories and files alphabetically (case-insensitive)
+            directories.sort(key=lambda x: x.name.lower())
+            files.sort(key=lambda x: x.name.lower())
 
-            # Add parent ".." item at the beginning if needed
+            # Build the complete sorted list: parent -> directories -> files
+            all_items = []
             if requested_path != "/" and parent_item:
-                GLib.idle_add(self._prepend_parent_item, parent_item)
+                all_items.append(parent_item)
+            all_items.extend(directories)
+            all_items.extend(files)
 
-            # Task 1: Add remaining items
-            if batch:
-                GLib.idle_add(self._append_batch_to_store, batch)
-
-            # Signal completion
-            GLib.idle_add(self._finalize_file_listing, requested_path, source)
+            # Add all items in a single operation for better performance
+            # GTK4's ColumnView uses virtual scrolling, so only visible items render
+            GLib.idle_add(self._set_store_items, all_items, requested_path, source)
 
         except Exception as e:
             self.logger.error(f"Error in background file listing: {e}")
@@ -1733,28 +1761,29 @@ class FileManager(GObject.Object):
                 self._update_store_with_files, requested_path, [], str(e), source
             )
 
-    def _clear_store_for_batch(self):
-        """Clear the store for batch loading."""
-        if self.store is not None:
-            self.store.remove_all()
-        return False
+    def _set_store_items(self, items, requested_path, source):
+        """Set all store items in a single operation for optimal performance.
 
-    def _append_batch_to_store(self, items):
-        """Append a batch of items to the store."""
-        if self.store is not None and not self._is_destroyed:
-            self.store.splice(self.store.get_n_items(), 0, items)
-        return False
-
-    def _prepend_parent_item(self, parent_item):
-        """Prepend the parent '..' item to the store."""
-        if self.store is not None and not self._is_destroyed:
-            self.store.insert(0, parent_item)
-        return False
-
-    def _finalize_file_listing(self, requested_path, source):
-        """Finalize file listing after all batches are added."""
+        GTK4's ColumnView uses virtual scrolling (only visible rows are rendered),
+        so adding all items at once is more efficient than batching.
+        """
         if self._is_destroyed:
             return False
+
+        # Verify we're still on the same path
+        if requested_path != self.current_path:
+            self.logger.info(
+                f"Discarding stale file list for '{requested_path}'. Current path is '{self.current_path}'."
+            )
+            return False
+
+        if self.store is not None:
+            # Single splice replaces all items - more efficient than multiple operations
+            self.store.splice(0, self.store.get_n_items(), items)
+
+        # Track this as the last successfully listed path (for permission denied fallback)
+        self._last_successful_path = requested_path
+
         self._showing_recursive_results = False
         self._recursive_search_in_progress = False
         self._restore_search_entry(source)
@@ -1793,6 +1822,18 @@ class FileManager(GObject.Object):
             self._confirm_pending_command()
 
         self._restore_search_entry(source)
+        return False
+
+    def _fallback_to_accessible_path(self, fallback_path: str, source: str):
+        """Navigate to an accessible fallback path when permission denied on current path."""
+        if self._is_destroyed:
+            return False
+        self.logger.info(f"Switching file manager to accessible path: {fallback_path}")
+        self.current_path = fallback_path
+        self._update_breadcrumb()
+        # Re-list the fallback directory
+        if hasattr(self, "_executor") and self._executor:
+            self._executor.submit(self._list_files_thread, fallback_path, source)
         return False
 
     def _update_search_placeholder(self, override: Optional[str] = None) -> None:

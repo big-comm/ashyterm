@@ -803,31 +803,26 @@ class CommTerminalWindow(Adw.ApplicationWindow):
             )
             return
 
-        terminal = self.tab_manager.get_selected_terminal()
-        if not terminal:
-            self.toast_overlay.add_toast(
-                Adw.Toast(title=_("No active terminal available."))
-            )
-            return
-
         missing = self.ai_assistant.missing_configuration()
         if missing:
             labels = {
                 "provider": _("Provider"),
                 "model": _("Model"),
                 "api_key": _("API key"),
+                "base_url": _("Base URL"),
             }
             readable = ", ".join(labels.get(item, item) for item in missing)
             self.toast_overlay.add_toast(
                 Adw.Toast(
-                    title=_(
-                        "Configure {items} in Preferences > Terminal > AI Assistant."
-                    ).format(items=readable)
+                    title=_("Configure {items} in AI Assistant settings.").format(
+                        items=readable
+                    )
                 )
             )
             return
 
-        self._show_ai_prompt_dialog(terminal)
+        # Toggle AI overlay panel instead of showing dialog
+        self.ui_builder.toggle_ai_panel()
 
     def _show_ai_prompt_dialog(self, terminal) -> None:
         dialog = Adw.MessageDialog(
@@ -1204,6 +1199,13 @@ class CommTerminalWindow(Adw.ApplicationWindow):
         """Handle changes from the settings manager."""
         if getattr(self, "ai_assistant", None):
             self.ai_assistant.handle_setting_changed(key, old_value, new_value)
+
+        if key == "ai_assistant_enabled":
+            # Update AI button visibility immediately
+            self.ui_builder.update_ai_button_visibility()
+            # Hide AI panel if disabled
+            if not new_value and self.ui_builder.is_ai_panel_visible():
+                self.ui_builder.hide_ai_panel()
 
         if key == "gtk_theme":
             # MODIFIED: This is the correct place to handle theme changes for the window.
@@ -2094,7 +2096,7 @@ class CommTerminalWindow(Adw.ApplicationWindow):
             self.destroy()
 
     def _update_file_manager_transparency(self):
-        """Update transparency for all file managers when settings change."""
+        """Update transparency for all file managers and AI panel when settings change."""
         # Apply headerbar transparency to main window
         if hasattr(self, "header_bar"):
             self.settings_manager.apply_headerbar_transparency(self.header_bar)
@@ -2112,6 +2114,13 @@ class CommTerminalWindow(Adw.ApplicationWindow):
                     )
             except Exception as e:
                 self.logger.warning(f"Failed to update file manager transparency: {e}")
+
+        # Update AI chat panel transparency
+        if hasattr(self, "ui_builder") and self.ui_builder.ai_chat_panel:
+            try:
+                self.ui_builder.ai_chat_panel.update_transparency()
+            except Exception as e:
+                self.logger.warning(f"Failed to update AI chat panel transparency: {e}")
 
     def _on_new_tab_clicked(self, _button) -> None:
         self.action_handler.new_local_tab(None, None)

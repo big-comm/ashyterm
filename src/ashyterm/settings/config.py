@@ -225,6 +225,8 @@ class DefaultSettings:
             "ai_assistant_api_key": "",
             "ai_openrouter_site_url": "",
             "ai_openrouter_site_name": "",
+            "ai_local_base_url": "http://localhost:11434/v1",
+            "ai_custom_quick_prompts": [],  # List of {"emoji": "🔧", "text": "prompt"}
             # Search Settings
             "search_case_sensitive": False,
             "search_use_regex": False,

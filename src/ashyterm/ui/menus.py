@@ -162,6 +162,7 @@ class MainApplicationMenu:
         menu_items = [
             {"label": _("New Window"), "action": "win.new-window"},
             {"label": _("Preferences"), "action": "win.preferences"},
+            {"label": _("Configure AI Assistant"), "action": "win.configure-ai"},
             {"label": _("Keyboard Shortcuts"), "action": "win.shortcuts"},
             {"label": _("About"), "action": "app.about"},
             "---",
@@ -170,6 +171,7 @@ class MainApplicationMenu:
         actions_that_close_menu = {
             "win.new-window",
             "win.preferences",
+            "win.configure-ai",
             "win.shortcuts",
             "app.about",
         }
@@ -256,7 +258,9 @@ def create_root_menu(clipboard_has_content=False) -> Gio.Menu:
     return menu
 
 
-def create_terminal_menu(terminal, click_x=None, click_y=None) -> Gio.Menu:
+def create_terminal_menu(
+    terminal, click_x=None, click_y=None, settings_manager=None
+) -> Gio.Menu:
     """Factory function to create a terminal context menu model."""
     menu = Gio.Menu()
     url_at_click = None
@@ -288,6 +292,21 @@ def create_terminal_menu(terminal, click_x=None, click_y=None) -> Gio.Menu:
     standard_section.append(_("Select All"), "win.select-all")
     standard_section.append(_("Clear Session"), "win.clear-session")
     menu.append_section(None, standard_section)
+
+    # AI Assistant section - only show if enabled and text is selected
+    if settings_manager and settings_manager.get("ai_assistant_enabled", False):
+        # Check if there's selected text
+        has_selection = (
+            terminal.get_has_selection()
+            if hasattr(terminal, "get_has_selection")
+            else False
+        )
+        if has_selection:
+            ai_section = Gio.Menu()
+            ai_item = Gio.MenuItem.new(_("Ask AI"), "win.ask-ai-selection")
+            ai_item.set_icon(Gio.ThemedIcon.new("avatar-default-symbolic"))
+            ai_section.append_item(ai_item)
+            menu.append_section(None, ai_section)
 
     split_section = Gio.Menu()
     split_h_item = Gio.MenuItem.new(_("Split Left/Right"), "win.split-horizontal")

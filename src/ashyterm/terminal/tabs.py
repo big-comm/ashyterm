@@ -1102,19 +1102,20 @@ class TabManager:
             self.logger.debug(
                 f"File manager: window_height={window_height}, saved_fm_height={saved_fm_height}"
             )
-            # Calculate default position from saved height
-            default_pos = window_height - saved_fm_height
-            last_pos = getattr(page, "_fm_paned_pos", default_pos)
+            # Calculate target position from saved height
+            target_pos = window_height - saved_fm_height
+            last_pos = getattr(page, "_fm_paned_pos", target_pos)
             # Ensure the position respects minimum file manager height
             max_pos = window_height - min_fm_height
-            last_pos = min(last_pos, max_pos)
+            target_pos = min(last_pos, max_pos)
             self.logger.debug(
-                f"File manager: default_pos={default_pos}, last_pos={last_pos}, "
+                f"File manager: target_pos={target_pos}, last_pos={last_pos}, "
                 f"has_page_pos={hasattr(page, '_fm_paned_pos')}"
             )
 
-            paned.set_position(last_pos)
+            paned.set_position(target_pos)
             fm.set_visibility(True, source="filemanager")
+
         elif fm:
             page._fm_paned_pos = paned.get_position()
             # Save file manager height to settings for new tabs/windows

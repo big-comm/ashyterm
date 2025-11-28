@@ -175,16 +175,12 @@ def main() -> int:
         gi.require_version("Gtk", "4.0")
         from gi.repository import Gtk
 
-        dialog = Gtk.MessageDialog(
-            transient_for=None,
-            modal=True,
-            message_type=Gtk.MessageType.ERROR,
-            buttons=Gtk.ButtonsType.OK,
-            text="Fatal Application Error",
-            secondary_text=f"Could not start Ashy Terminal.\n\nError: {e}",
-        )
-        dialog.run()
-        dialog.destroy()
+        # GTK4 uses GtkAlertDialog instead of GtkMessageDialog.run() (GTK3 pattern)
+        alert = Gtk.AlertDialog()
+        alert.set_message(_("Fatal Application Error"))
+        alert.set_detail(_("Could not start Ashy Terminal.\n\nError: {}").format(e))
+        alert.set_modal(True)
+        alert.show(None)
         return 1
 
 

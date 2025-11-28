@@ -178,6 +178,11 @@ class TooltipHelper:
         # The popover is initially transparent due to .tooltip-popover class
         # The "map" signal will trigger the animation by adding .visible class
         self.label.set_text(tooltip_text)
+
+        # Ensure popover is unparented before setting new parent
+        if self.popover.get_parent():
+            self.popover.unparent()
+
         self.popover.set_parent(self.active_widget)
         self.popover.popup()
 
@@ -195,14 +200,26 @@ class TooltipHelper:
             return
 
         if not self.popover.is_visible():
+            # Still ensure unparenting even if not visible
+            if self.popover.get_parent():
+                try:
+                    self.popover.unparent()
+                except Exception:
+                    pass
             return
 
         def do_cleanup():
             if self._is_cleaning_up:
                 return GLib.SOURCE_REMOVE
-            self.popover.popdown()
+            try:
+                self.popover.popdown()
+            except Exception:
+                pass
             if self.popover.get_parent():
-                self.popover.unparent()
+                try:
+                    self.popover.unparent()
+                except Exception:
+                    pass
             return GLib.SOURCE_REMOVE
 
         # Trigger fade-out animation by removing .visible class
@@ -213,6 +230,15 @@ class TooltipHelper:
             GLib.timeout_add(200, do_cleanup)
         else:
             do_cleanup()
+
+    def hide(self):
+        """
+        Force hide any visible tooltip immediately.
+        Useful when a button is clicked and the tooltip should disappear.
+        """
+        self._clear_timer()
+        self._hide_tooltip(animate=False)
+        self.active_widget = None
 
     def cleanup(self):
         """

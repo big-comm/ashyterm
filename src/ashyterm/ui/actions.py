@@ -43,6 +43,8 @@ class WindowActions:
             "select-all": self.select_all,
             "clear-session": self.clear_session,
             "ai-assistant": self.ai_assistant,
+            "configure-ai": self.configure_ai,
+            "ask-ai-selection": self.ask_ai_selection,
             "split-horizontal": self.split_horizontal,
             "split-vertical": self.split_vertical,
             "close-pane": self.close_pane,
@@ -164,6 +166,48 @@ class WindowActions:
 
     def ai_assistant(self, *_args):
         self.window._on_ai_assistant_requested()
+
+    def configure_ai(self, *_args):
+        """Open the AI Assistant configuration dialog."""
+        from .dialogs.ai_config_dialog import AIConfigDialog
+
+        dialog = AIConfigDialog(self.window, self.window.settings_manager)
+        dialog.connect("setting-changed", self._on_ai_setting_changed)
+        dialog.present()
+
+    def _on_ai_setting_changed(self, dialog, key, value):
+        """Handle AI setting changes from the config dialog."""
+        if key == "ai_assistant_enabled":
+            # Update button visibility
+            self.window.ui_builder.update_ai_button_visibility()
+
+    def ask_ai_selection(self, *_args):
+        """Ask AI about the selected text in the terminal."""
+        terminal = self.window.tab_manager.get_selected_terminal()
+        if not terminal:
+            return
+
+        # Get selected text from terminal
+        if hasattr(terminal, "get_text_selected"):
+            selected_text = terminal.get_text_selected()
+        elif hasattr(terminal, "copy_clipboard"):
+            # Fallback: copy to clipboard and get from there
+            terminal.copy_clipboard()
+            clipboard = Gdk.Display.get_default().get_clipboard()
+            selected_text = None  # Would need async handling
+        else:
+            selected_text = None
+
+        if selected_text:
+            # Open AI panel with the selected text
+            self.window.ui_builder.show_ai_panel()
+            if self.window.ui_builder.ai_chat_panel:
+                self.window.ui_builder.ai_chat_panel.send_with_context(
+                    selected_text, _("Explain this code or command:")
+                )
+        else:
+            # Just open the panel
+            self.window.ui_builder.show_ai_panel()
 
     def open_url(self, *_args):
         if terminal := self.window.tab_manager.get_selected_terminal():
