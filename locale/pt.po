@@ -16,35 +16,6 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: attranslate\n"
 # 
-# File: usr/share/nautilus-python/extensions/ashyterm.py, line: 129
-#: NEEDS WORK
-msgid "Open in Ashy Terminal (SSH)"
-msgstr "Abrir no Ashy Terminal (SSH)"
-# 
-# File: usr/share/nautilus-python/extensions/ashyterm.py, line: 130
-#: NEEDS WORK
-#, python-brace-format
-msgid "Connect to {} via a new SSH session"
-msgstr "Conectar a {} através de uma nova sessão SSH"
-# 
-# File: usr/share/nautilus-python/extensions/ashyterm.py, line: 139
-# File: usr/share/nautilus-python/extensions/ashyterm.py, line: 149
-#: NEEDS WORK
-msgid "Open in Ashy Terminal"
-msgstr "Abrir no Terminal Ashy"
-# 
-# File: usr/share/nautilus-python/extensions/ashyterm.py, line: 140
-#: NEEDS WORK
-#, python-brace-format
-msgid "Open the local mount point {}"
-msgstr "Abra o ponto de montagem local {}"
-# 
-# File: usr/share/nautilus-python/extensions/ashyterm.py, line: 150
-#: NEEDS WORK
-#, python-brace-format
-msgid "Open {} in Ashy Terminal"
-msgstr "Abrir {} no Terminal Ashy"
-# 
 # File: usr/share/ashyterm/utils/exceptions.py, line: 65
 #: NEEDS WORK
 msgid "A terminal error occurred"
@@ -462,6 +433,59 @@ msgstr "Caminho de pasta inválido ou inseguro"
 msgid "Validation error: {}"
 msgstr "Erro de validação: {}"
 # 
+# File: usr/share/ashyterm/terminal/ai_assistant.py, line: 389
+#: NEEDS WORK
+msgid "Unknown error."
+msgstr "Erro desconhecido."
+# 
+# File: usr/share/ashyterm/terminal/ai_assistant.py, line: 393
+# File: usr/share/ashyterm/terminal/ai_assistant.py, line: 399
+#: NEEDS WORK
+#, python-brace-format
+msgid "OpenRouter respondeu com HTTP {status}: {message}"
+msgstr "OpenRouter responded with HTTP {status}: {message}"
+# 
+# File: usr/share/ashyterm/terminal/ai_assistant.py, line: 415
+#: NEEDS WORK
+#, python-brace-format
+msgid "OpenRouter respondeu com HTTP {status}: {message}{detail}"
+msgstr "OpenRouter responded with HTTP {status}: {message}{detail}"
+# 
+# File: usr/share/ashyterm/terminal/spawner.py, line: 295
+#: NEEDS WORK
+msgid "Not an SSH session."
+msgstr "Não é uma sessão SSH."
+# 
+# File: usr/share/ashyterm/filemanager/operations.py, line: 146
+#: NEEDS WORK
+msgid "Command timed out."
+msgstr "O comando expirou."
+# 
+# File: usr/share/ashyterm/terminal/tabs.py, line: 43
+#: NEEDS WORK
+msgid "Move to New Tab"
+msgstr "Mover para Nova Aba"
+# 
+# File: usr/share/ashyterm/ui/menus.py, line: 214
+#: NEEDS WORK
+msgid "Close Pane"
+msgstr "Fechar Painel"
+# 
+# File: usr/share/ashyterm/terminal/tabs.py, line: 531
+#: NEEDS WORK
+msgid "Duplicate Tab"
+msgstr "Duplicar Aba"
+# 
+# File: usr/share/ashyterm/terminal/tabs.py, line: 237
+#: NEEDS WORK
+msgid "Detach Tab"
+msgstr "Desanexar Aba"
+# 
+# File: usr/share/ashyterm/terminal/tabs.py, line: 585
+#: NEEDS WORK
+msgid "This is the only pane in the tab."
+msgstr "Este é o único painel na aba."
+# 
 # File: usr/share/ashyterm/main.py, line: 86
 #: NEEDS WORK
 #, python-brace-format
@@ -531,283 +555,86 @@ msgstr "Converter caminho URI KIO/GVFS para formato SSH"
 msgid "Force opening a new window"
 msgstr "Forçar a abertura de uma nova janela"
 # 
-# File: usr/share/ashyterm/sessions/models.py, line: 174
+# File: usr/share/ashyterm/ui/window_ui.py, line: 339
 #: NEEDS WORK
-msgid "Port must be a valid number between 1 and 65535"
-msgstr "A porta deve ser um número válido entre 1 e 65535."
+msgid "Type your command here and press ENTER..."
+msgstr "Digite seu comando aqui e pressione ENTER..."
 # 
-# File: usr/share/ashyterm/sessions/models.py, line: 198
+# File: usr/share/ashyterm/ui/window_ui.py, line: 264
 #: NEEDS WORK
-msgid "Session name is required."
-msgstr "O nome da sessão é obrigatório."
+msgid "Current occurrence"
+msgstr "Ocorrência atual"
 # 
-# File: usr/share/ashyterm/sessions/models.py, line: 201
+# File: usr/share/ashyterm/ui/window_ui.py, line: 268
 #: NEEDS WORK
-msgid "Host is required for SSH sessions."
-msgstr "O host é necessário para sessões SSH."
+msgid "Case sensitive search"
+msgstr "Busca sensível a maiúsculas e minúsculas"
 # 
-# File: usr/share/ashyterm/sessions/models.py, line: 203
+# File: usr/share/ashyterm/ui/window_ui.py, line: 270
 #: NEEDS WORK
-msgid "Port must be between 1 and 65535."
-msgstr "A porta deve estar entre 1 e 65535."
+msgid "Case sensitive"
+msgstr "Diferencia entre maiúsculas e minúsculas"
 # 
-# File: usr/share/ashyterm/sessions/models.py, line: 386
-# File: usr/share/ashyterm/sessions/models.py, line: 419
+# File: usr/share/ashyterm/ui/window_ui.py, line: 276
 #: NEEDS WORK
-msgid "Unnamed Session"
-msgstr "Sessão Sem Nome"
+msgid "Use regular expressions"
+msgstr "Use expressões regulares"
+# 
+# File: usr/share/ashyterm/ui/window_ui.py, line: 278
+#: NEEDS WORK
+msgid "Regex"
+msgstr "Expressão regular"
 # 
 # #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 406
-# File: usr/share/ashyterm/sessions/models.py, line: 511
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1606
+# File: usr/share/ashyterm/window.py, line: 248
 #: NEEDS WORK
-msgid "Local Terminal"
-msgstr "Terminal Local"
+msgid "Toggle Sidebar"
+msgstr "Alternar Barra Lateral"
 # 
-# File: usr/share/ashyterm/sessions/models.py, line: 346
+# File: usr/share/ashyterm/window.py, line: 344
 #: NEEDS WORK
-msgid "Folder name is required."
-msgstr "O nome da pasta é obrigatório."
+msgid "File Manager"
+msgstr "Gerenciador de Arquivos"
 # 
-# File: usr/share/ashyterm/sessions/models.py, line: 352
+# File: usr/share/ashyterm/ui/window_ui.py, line: 324
 #: NEEDS WORK
-msgid "Folder path is not consistent with its parent path."
-msgstr "O caminho da pasta não é consistente com o caminho do seu pai."
+msgid "Command Guide (Ctrl+Shift+P)"
+msgstr "Guia de Comandos (Ctrl+Shift+P)"
 # 
-# File: usr/share/ashyterm/sessions/models.py, line: 727
-# File: usr/share/ashyterm/sessions/models.py, line: 752
+# File: usr/share/ashyterm/ui/window_ui.py, line: 350
 #: NEEDS WORK
-msgid "Unnamed Folder"
-msgstr "Pasta Sem Nome"
+msgid "Search in Terminal"
+msgstr "Pesquisar no Terminal"
 # 
-# File: usr/share/ashyterm/sessions/tree.py, line: 298
-# File: usr/share/ashyterm/sessions/tree.py, line: 302
+# File: usr/share/ashyterm/ui/window_ui.py, line: 339
 #: NEEDS WORK
-msgid "Move Error"
-msgstr "Erro de Movimento"
+msgid "Send Command to All Tabs"
+msgstr "Enviar Comando para Todas as Abas"
+# 
+# File: usr/share/ashyterm/ui/window_ui.py, line: 344
+#: NEEDS WORK
+msgid "Ask AI Assistant (Ctrl+Shift+I)"
+msgstr "Perguntar ao Assistente de IA (Ctrl+Shift+I)"
+# 
+# File: usr/share/ashyterm/ui/window_ui.py, line: 259
+#: NEEDS WORK
+msgid "Manage Temporary Files"
+msgstr "Gerenciar Arquivos Temporários"
+# 
+# File: usr/share/ashyterm/window.py, line: 268
+#: NEEDS WORK
+msgid "Main Menu"
+msgstr "Menu Principal"
 # 
 # #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
 # 
-# File: usr/share/ashyterm/sessions/tree.py, line: 801
-# File: usr/share/ashyterm/state/window_state.py, line: 165
+# File: usr/share/ashyterm/ui/menus.py, line: 144
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1596
 #: NEEDS WORK
-msgid "Restore Layout"
-msgstr "Restaurar Layout"
-# 
-# File: usr/share/ashyterm/ui/menus.py, line: 203
-#: NEEDS WORK
-msgid "Move to Folder..."
-msgstr "Mover para a Pasta..."
-# 
-# File: usr/share/ashyterm/sessions/tree.py, line: 808
-#: NEEDS WORK
-msgid "Delete Layout"
-msgstr "Excluir Layout"
-# 
-# File: usr/share/ashyterm/sessions/tree.py, line: 618
-# File: usr/share/ashyterm/sessions/tree.py, line: 623
-#: NEEDS WORK
-msgid "Paste Error"
-msgstr "Erro ao Colar"
-# 
-# File: usr/share/ashyterm/sessions/validation.py, line: 18
-#: NEEDS WORK
-#, python-brace-format
-msgid "Session validation failed: {}"
-msgstr "Validação de sessão falhou: {}"
-# 
-# File: usr/share/ashyterm/sessions/validation.py, line: 31
-#: NEEDS WORK
-#, python-brace-format
-msgid "A session with the name '{name}' already exists in this folder."
-msgstr "Uma sessão com o nome '{name}' já existe nesta pasta."
-# 
-# File: usr/share/ashyterm/sessions/validation.py, line: 45
-#: NEEDS WORK
-#, python-brace-format
-msgid "The target folder '{folder}' does not exist."
-msgstr "A pasta de destino '{folder}' não existe."
-# 
-# File: usr/share/ashyterm/sessions/validation.py, line: 61
-#: NEEDS WORK
-#, python-brace-format
-msgid "Folder validation failed: {}"
-msgstr "Validação da pasta falhou: {}"
-# 
-# File: usr/share/ashyterm/sessions/validation.py, line: 69
-#: NEEDS WORK
-#, python-brace-format
-msgid "A folder with the path '{path}' already exists."
-msgstr "Uma pasta com o caminho '{path}' já existe."
-# 
-# File: usr/share/ashyterm/sessions/validation.py, line: 84
-#: NEEDS WORK
-#, python-brace-format
-msgid "The parent folder '{folder}' does not exist."
-msgstr "A pasta pai '{folder}' não existe."
-# 
-# File: usr/share/ashyterm/sessions/storage.py, line: 125
-#: NEEDS WORK
-#, python-brace-format
-msgid "File path validation failed: {}"
-msgstr "Validação do caminho do arquivo falhou: {}"
-# 
-# File: usr/share/ashyterm/sessions/storage.py, line: 134
-#: NEEDS WORK
-msgid "File too large (>50MB)"
-msgstr "Arquivo muito grande (>50MB)"
-# 
-# File: usr/share/ashyterm/sessions/storage.py, line: 148
-#: NEEDS WORK
-#, python-brace-format
-msgid "Invalid JSON: {}"
-msgstr "JSON inválido: {}"
-# 
-# File: usr/share/ashyterm/sessions/storage.py, line: 151
-#: NEEDS WORK
-#, python-brace-format
-msgid "Encoding error: {}"
-msgstr "Erro de codificação: {}"
-# 
-# File: usr/share/ashyterm/sessions/storage.py, line: 155
-#: NEEDS WORK
-msgid "Root data is not a dictionary"
-msgstr "Os dados raiz não são um dicionário."
-# 
-# File: usr/share/ashyterm/sessions/storage.py, line: 198
-#: NEEDS WORK
-#, python-brace-format
-msgid "Load failed: {}"
-msgstr "Falha ao carregar: {}"
-# 
-# File: usr/share/ashyterm/sessions/storage.py, line: 395
-#: NEEDS WORK
-msgid "Data validation failed"
-msgstr "Validação de dados falhou"
-# 
-# File: usr/share/ashyterm/sessions/storage.py, line: 410
-#: NEEDS WORK
-msgid "Temporary file was not written correctly"
-msgstr "O arquivo temporário não foi gravado corretamente."
-# 
-# File: usr/share/ashyterm/sessions/storage.py, line: 427
-#: NEEDS WORK
-#, python-brace-format
-msgid "File write failed: {}"
-msgstr "Falha ao gravar o arquivo: {}"
-# 
-# File: usr/share/ashyterm/sessions/storage.py, line: 439
-#: NEEDS WORK
-msgid "Save verification failed"
-msgstr "Falha na verificação de salvamento"
-# 
-# File: usr/share/ashyterm/sessions/storage.py, line: 463
-#: NEEDS WORK
-#, python-brace-format
-msgid "Save failed: {}"
-msgstr "Falha ao salvar: {}"
-# 
-# File: usr/share/ashyterm/sessions/operations.py, line: 51
-#: NEEDS WORK
-#, python-brace-format
-msgid "Failed to save {item_type} data."
-msgstr "Falha ao salvar dados de {item_type}."
-# 
-# File: usr/share/ashyterm/sessions/operations.py, line: 59
-#: NEEDS WORK
-#, python-brace-format
-msgid "{item_type} '{name}' added successfully."
-msgstr "{item_type} '{name}' adicionado com sucesso."
-# 
-# File: usr/share/ashyterm/sessions/operations.py, line: 62
-#: NEEDS WORK
-msgid "Item at position is not a session."
-msgstr "O item na posição não é uma sessão."
-# 
-# File: usr/share/ashyterm/sessions/operations.py, line: 74
-#: NEEDS WORK
-msgid "Failed to save updated session data."
-msgstr "Falha ao salvar os dados da sessão atualizados."
-# 
-# File: usr/share/ashyterm/sessions/operations.py, line: 79
-#: NEEDS WORK
-#, python-brace-format
-msgid "Session '{name}' updated successfully."
-msgstr "Sessão '{name}' atualizada com sucesso."
-# 
-# File: usr/share/ashyterm/sessions/operations.py, line: 90
-#: NEEDS WORK
-msgid "Session not found."
-msgstr "Sessão não encontrada."
-# 
-# File: usr/share/ashyterm/sessions/operations.py, line: 96
-#: NEEDS WORK
-msgid "Failed to save after session removal."
-msgstr "Falha ao salvar após a remoção da sessão."
-# 
-# File: usr/share/ashyterm/sessions/operations.py, line: 102
-#: NEEDS WORK
-#, python-brace-format
-msgid "Session '{name}' removed successfully."
-msgstr "Sessão '{name}' removida com sucesso."
-# 
-# File: usr/share/ashyterm/sessions/operations.py, line: 131
-#: NEEDS WORK
-msgid "Item at position is not a folder."
-msgstr "O item na posição não é uma pasta."
-# 
-# File: usr/share/ashyterm/sessions/operations.py, line: 144
-#: NEEDS WORK
-msgid "Failed to save updated folder data."
-msgstr "Falha ao salvar os dados da pasta atualizada."
-# 
-# File: usr/share/ashyterm/sessions/operations.py, line: 149
-#: NEEDS WORK
-#, python-brace-format
-msgid "Folder '{name}' updated successfully."
-msgstr "Pasta '{name}' atualizada com sucesso."
-# 
-# File: usr/share/ashyterm/sessions/operations.py, line: 161
-#: NEEDS WORK
-msgid "Cannot remove a non-empty folder."
-msgstr "Não é possível remover uma pasta não vazia."
-# 
-# File: usr/share/ashyterm/sessions/operations.py, line: 168
-#: NEEDS WORK
-msgid "Folder not found."
-msgstr "Pasta não encontrada."
-# 
-# File: usr/share/ashyterm/sessions/operations.py, line: 172
-#: NEEDS WORK
-msgid "Failed to save after folder removal."
-msgstr "Falha ao salvar após a remoção da pasta."
-# 
-# File: usr/share/ashyterm/sessions/operations.py, line: 177
-#: NEEDS WORK
-#, python-brace-format
-msgid "Folder '{name}' removed successfully."
-msgstr "Pasta '{name}' removida com sucesso."
-# 
-# File: usr/share/ashyterm/sessions/operations.py, line: 190
-#: NEEDS WORK
-msgid "Failed to save after moving session."
-msgstr "Falha ao salvar após mover a sessão."
-# 
-# File: usr/share/ashyterm/sessions/operations.py, line: 195
-#: NEEDS WORK
-msgid "Session moved successfully."
-msgstr "Sessão movida com sucesso."
-# 
-# File: usr/share/ashyterm/sessions/operations.py, line: 209
-#: NEEDS WORK
-msgid "Cannot move a folder into itself."
-msgstr "Não é possível mover uma pasta para dentro dela mesma."
-# 
-# File: usr/share/ashyterm/sessions/operations.py, line: 260
-#: NEEDS WORK
-msgid "Unsupported item type for paste operation."
-msgstr "Tipo de item não suportado para a operação de colagem."
+msgid "New Tab"
+msgstr "Nova Aba"
 # 
 # File: usr/share/ashyterm/filemanager/manager.py, line: 1165
 # File: usr/share/ashyterm/filemanager/manager.py, line: 1202
@@ -815,178 +642,48 @@ msgstr "Tipo de item não suportado para a operação de colagem."
 msgid "Ashy Terminal"
 msgstr "Terminal Ashy"
 # 
-# File: usr/share/ashyterm/ui/menus.py, line: 214
-#: NEEDS WORK
-msgid "Close Pane"
-msgstr "Fechar Painel"
-# 
-# File: usr/share/ashyterm/terminal/tabs.py, line: 43
-#: NEEDS WORK
-msgid "Move to New Tab"
-msgstr "Mover para Nova Aba"
-# 
-# File: usr/share/ashyterm/window.py, line: 424
-#: NEEDS WORK
-msgid "Data Loading Error"
-msgstr "Erro de Carregamento de Dados"
-# 
-# File: usr/share/ashyterm/window.py, line: 425
-#: NEEDS WORK
-msgid "Failed to load saved sessions and folders. Starting with empty configuration."
-msgstr "Falha ao carregar sessões e pastas salvas. Iniciando com configuração vazia."
-# 
-# File: usr/share/ashyterm/window.py, line: 551
-#: NEEDS WORK
-msgid "Session Validation Error"
-msgstr "Erro de Validação da Sessão"
-# 
-# File: usr/share/ashyterm/window.py, line: 550
-#: NEEDS WORK
-#, python-brace-format
-msgid ""
-"Session validation failed:\n"
-"{errors}"
-msgstr ""
-"Validação da sessão falhou:  \n"
-"{errors}"
-# 
-# File: usr/share/ashyterm/window.py, line: 958
-#: NEEDS WORK
-msgid "Cannot detach the last tab."
-msgstr "Não é possível desanexar a última aba."
-# 
-# File: usr/share/ashyterm/window.py, line: 652
-#: NEEDS WORK
-msgid "No active terminal to search in."
-msgstr "Nenhum terminal ativo para pesquisar."
-# 
-# File: usr/share/ashyterm/window.py, line: 687
-# File: usr/share/ashyterm/window.py, line: 734
-#: NEEDS WORK
-msgid "Invalid search pattern."
-msgstr "Padrão de pesquisa inválido."
-# 
-# File: usr/share/ashyterm/window.py, line: 762
-# File: usr/share/ashyterm/window.py, line: 795
-#: NEEDS WORK
-msgid "No more matches found."
-msgstr "Nenhuma correspondência encontrada."
-# 
-# File: usr/share/ashyterm/window.py, line: 145
-#: NEEDS WORK
-msgid "Initialization Error"
-msgstr "Erro de Inicialização"
-# 
-# File: usr/share/ashyterm/window.py, line: 146
-#: NEEDS WORK
-#, python-brace-format
-msgid "Failed to initialize terminal: {error}"
-msgstr "Falha ao inicializar o terminal: {error}"
-# 
-# File: usr/share/ashyterm/window.py, line: 422
-#: NEEDS WORK
-msgid "Save Current Session?"
-msgstr "Salvar Sessão Atual?"
-# 
-# File: usr/share/ashyterm/window.py, line: 424
-#: NEEDS WORK
-msgid "Do you want to restore these tabs the next time you open Ashy Terminal?"
-msgstr "Você deseja restaurar essas abas na próxima vez que abrir o Ashy Terminal?"
-# 
-# File: usr/share/ashyterm/window.py, line: 428
-#: NEEDS WORK
-msgid "Don't Save"
-msgstr "Não Salvar"
+# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
 # 
 # #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 163
-# File: usr/share/ashyterm/ui/dialogs.py, line: 575
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1213
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1957
-# File: usr/share/ashyterm/ui/dialogs.py, line: 2006
-# File: usr/share/ashyterm/window.py, line: 953
-# File: usr/share/ashyterm/window.py, line: 1013
+# File: usr/share/ashyterm/ui/menus.py, line: 60
+# File: usr/share/ashyterm/ui/menus.py, line: 92
+# File: usr/share/ashyterm/ui/dialogs.py, line: 223
+# File: usr/share/ashyterm/window.py, line: 325
 #: NEEDS WORK
-msgid "Cancel"
-msgstr "Cancelar"
-# 
-# File: usr/share/ashyterm/window.py, line: 430
-#: NEEDS WORK
-msgid "Save and Close"
-msgstr "Salvar e Fechar"
-# 
-# File: usr/share/ashyterm/window.py, line: 528
-# File: usr/share/ashyterm/window.py, line: 533
-#: NEEDS WORK
-msgid "Close Window"
-msgstr "Fechar Janela"
-# 
-# File: usr/share/ashyterm/window.py, line: 463
-#: NEEDS WORK
-msgid "This window has active SSH connections. Closing will disconnect them. Are you sure?"
-msgstr "Esta janela tem conexões SSH ativas. Fechar desconectará elas. Você tem certeza?"
-# 
-# File: usr/share/ashyterm/window.py, line: 553
-#: NEEDS WORK
-msgid "Invalid SSH Target"
-msgstr "Alvo SSH inválido"
-# 
-# File: usr/share/ashyterm/window.py, line: 554
-#: NEEDS WORK
-msgid "Could not parse the provided SSH connection string."
-msgstr "Não foi possível analisar a string de conexão SSH fornecida."
+msgid "Add Session"
+msgstr "Adicionar Sessão"
 # 
 # #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 136
-# File: usr/share/ashyterm/ui/dialogs.py, line: 784
-# File: usr/share/ashyterm/ui/dialogs.py, line: 2021
-# File: usr/share/ashyterm/ui/dialogs.py, line: 2033
-# File: usr/share/ashyterm/window.py, line: 1055
-# File: usr/share/ashyterm/window.py, line: 1070
-#: NEEDS WORK
-msgid "OK"
-msgstr "OK"
+# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
 # 
-# File: usr/share/ashyterm/window.py, line: 612
+# File: usr/share/ashyterm/ui/menus.py, line: 93
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1056
+# File: usr/share/ashyterm/window.py, line: 331
 #: NEEDS WORK
-msgid "Remove this temporary file"
-msgstr "Remover este arquivo temporário"
+msgid "Add Folder"
+msgstr "Adicionar Pasta"
 # 
-# File: usr/share/ashyterm/window.py, line: 627
+# File: usr/share/ashyterm/window.py, line: 337
 #: NEEDS WORK
-msgid "No temporary files found."
-msgstr "Nenhum arquivo temporário encontrado."
+msgid "Edit Selected"
+msgstr "Editar Selecionado"
 # 
-# File: usr/share/ashyterm/window.py, line: 630
+# File: usr/share/ashyterm/ui/window_ui.py, line: 322
 #: NEEDS WORK
-msgid "Clear All Temporary Files"
-msgstr "Limpar Todos os Arquivos Temporários"
+msgid "Save Current Layout"
+msgstr "Salvar Layout Atual"
 # 
-# File: usr/share/ashyterm/window.py, line: 652
+# File: usr/share/ashyterm/window.py, line: 343
 #: NEEDS WORK
-msgid "Clear All Temporary Files?"
-msgstr "Limpar todos os arquivos temporários?"
+msgid "Remove Selected"
+msgstr "Remover Selecionado"
 # 
-# File: usr/share/ashyterm/window.py, line: 654
+# File: usr/share/ashyterm/ui/window_ui.py, line: 341
 #: NEEDS WORK
-msgid ""
-"This will remove all locally downloaded files for remote editing. Any unsaved changes in your "
-"editor will be lost. This action cannot be undone."
-msgstr ""
-"Isso removerá todos os arquivos baixados localmente para edição remota. Quaisquer alterações não "
-"salvas no seu editor serão perdidas. Esta ação não pode ser desfeita."
-# 
-# File: usr/share/ashyterm/window.py, line: 660
-#: NEEDS WORK
-msgid "Clear All"
-msgstr "Limpar Tudo"
-# 
-# File: usr/share/ashyterm/window.py, line: 1193
-#: NEEDS WORK
-msgid "No active terminal to send command to."
-msgstr "Nenhum terminal ativo para enviar o comando."
+msgid "Search sessions..."
+msgstr "Pesquisar sessões..."
 # 
 # File: usr/share/ashyterm/ui/color_scheme_dialog.py, line: 42
 #: NEEDS WORK
@@ -1023,6 +720,19 @@ msgstr "Fundo da Barra de Cabeçalho"
 msgid "Cursor"
 msgstr "Cursor"
 # 
+# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 163
+# File: usr/share/ashyterm/ui/dialogs.py, line: 575
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1213
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1957
+# File: usr/share/ashyterm/ui/dialogs.py, line: 2006
+# File: usr/share/ashyterm/window.py, line: 953
+# File: usr/share/ashyterm/window.py, line: 1013
+#: NEEDS WORK
+msgid "Cancel"
+msgstr "Cancelar"
+# 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 589
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1219
 #: NEEDS WORK
@@ -1043,6 +753,18 @@ msgstr "Cores Gerais"
 #: NEEDS WORK
 msgid "16-Color Palette"
 msgstr "Paleta de 16 Cores"
+# 
+# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 136
+# File: usr/share/ashyterm/ui/dialogs.py, line: 784
+# File: usr/share/ashyterm/ui/dialogs.py, line: 2021
+# File: usr/share/ashyterm/ui/dialogs.py, line: 2033
+# File: usr/share/ashyterm/window.py, line: 1055
+# File: usr/share/ashyterm/window.py, line: 1070
+#: NEEDS WORK
+msgid "OK"
+msgstr "OK"
 # 
 # File: usr/share/ashyterm/ui/color_scheme_dialog.py, line: 135
 #: NEEDS WORK
@@ -1172,6 +894,261 @@ msgstr "Ocultar Barra Lateral"
 msgid "Show Sidebar"
 msgstr "Mostrar Barra Lateral"
 # 
+# File: usr/share/ashyterm/ui/menus.py, line: 24
+#: NEEDS WORK
+msgid "Follow System Style"
+msgstr "Seguir o Estilo do Sistema"
+# 
+# File: usr/share/ashyterm/ui/menus.py, line: 29
+#: NEEDS WORK
+msgid "Light Style"
+msgstr "Estilo Claro"
+# 
+# File: usr/share/ashyterm/ui/menus.py, line: 34
+#: NEEDS WORK
+msgid "Dark Style"
+msgstr "Estilo Escuro"
+# 
+# File: usr/share/ashyterm/ui/menus.py, line: 47
+#: NEEDS WORK
+msgid "Match Terminal Colors"
+msgstr "Combinar Cores do Terminal"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1607
+#: NEEDS WORK
+msgid "New Window"
+msgstr "Nova Janela"
+# 
+# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
+# 
+# File: usr/share/ashyterm/ui/menus.py, line: 157
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1390
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1604
+#: NEEDS WORK
+msgid "Preferences"
+msgstr "Preferências"
+# 
+# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
+# 
+# File: usr/share/ashyterm/ui/menus.py, line: 211
+# File: usr/share/ashyterm/window.py, line: 909
+# File: usr/share/ashyterm/window.py, line: 960
+#: NEEDS WORK
+msgid "Keyboard Shortcuts"
+msgstr "Atalhos de Teclado"
+# 
+# File: usr/share/ashyterm/ui/menus.py, line: 216
+#: NEEDS WORK
+msgid "About"
+msgstr "Sobre"
+# 
+# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
+# 
+# File: usr/share/ashyterm/ui/menus.py, line: 217
+# File: usr/share/ashyterm/window.py, line: 942
+#: NEEDS WORK
+msgid "Quit"
+msgstr "Sair"
+# 
+# File: usr/share/ashyterm/ui/menus.py, line: 119
+#: NEEDS WORK
+msgid "Connect with SFTP"
+msgstr "Conectar com SFTP"
+# 
+# File: usr/share/ashyterm/ui/menus.py, line: 24
+#: NEEDS WORK
+msgid "Duplicate"
+msgstr "Duplicar"
+# 
+# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
+# 
+# File: usr/share/ashyterm/ui/menus.py, line: 25
+# File: usr/share/ashyterm/ui/menus.py, line: 61
+# File: usr/share/ashyterm/window.py, line: 954
+#: NEEDS WORK
+msgid "Rename"
+msgstr "Renomear"
+# 
+# File: usr/share/ashyterm/ui/menus.py, line: 203
+#: NEEDS WORK
+msgid "Move to Folder..."
+msgstr "Mover para a Pasta..."
+# 
+# File: usr/share/ashyterm/ui/menus.py, line: 220
+#: NEEDS WORK
+msgid "Add Session Here"
+msgstr "Adicionar Sessão Aqui"
+# 
+# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
+# 
+# File: usr/share/ashyterm/ui/menus.py, line: 69
+# File: usr/share/ashyterm/ui/menus.py, line: 118
+# File: usr/share/ashyterm/ui/menus.py, line: 154
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1599
+#: NEEDS WORK
+msgid "Paste"
+msgstr "Colar"
+# 
+# File: usr/share/ashyterm/ui/menus.py, line: 98
+#: NEEDS WORK
+msgid "Paste to Root"
+msgstr "Colar na Raiz"
+# 
+# File: usr/share/ashyterm/ui/menus.py, line: 227
+#: NEEDS WORK
+msgid "Open Link"
+msgstr "Abrir Link"
+# 
+# File: usr/share/ashyterm/ui/menus.py, line: 228
+#: NEEDS WORK
+msgid "Copy Link"
+msgstr "Copiar Link"
+# 
+# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
+# 
+# File: usr/share/ashyterm/ui/menus.py, line: 30
+# File: usr/share/ashyterm/ui/menus.py, line: 66
+# File: usr/share/ashyterm/ui/menus.py, line: 117
+# File: usr/share/ashyterm/ui/menus.py, line: 153
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1598
+#: NEEDS WORK
+msgid "Copy"
+msgstr "Copiar"
+# 
+# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
+# 
+# File: usr/share/ashyterm/ui/menus.py, line: 119
+# File: usr/share/ashyterm/ui/menus.py, line: 155
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1600
+#: NEEDS WORK
+msgid "Select All"
+msgstr "Selecionar Tudo"
+# 
+# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
+# 
+# File: usr/share/ashyterm/ui/menus.py, line: 289
+# File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 38
+#: NEEDS WORK
+msgid "Clear Session"
+msgstr "Limpar Sessão"
+# 
+# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
+# 
+# File: usr/share/ashyterm/ui/menus.py, line: 276
+# File: usr/share/ashyterm/filemanager/menus.py, line: 276
+#: NEEDS WORK
+msgid "Split Left/Right"
+msgstr "Dividir Esquerda/Direita"
+# 
+# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
+# 
+# File: usr/share/ashyterm/ui/menus.py, line: 279
+# File: usr/share/ashyterm/filemanager/menus.py, line: 279
+#: NEEDS WORK
+msgid "Split Top/Bottom"
+msgstr "Dividir Superior/Inferior"
+# 
+# File: usr/share/ashyterm/ui/actions.py, line: 158
+#: NEEDS WORK
+msgid "Terminal session cleared."
+msgstr "Sessão do terminal limpa."
+# 
+# File: usr/share/ashyterm/ui/actions.py, line: 162
+#: NEEDS WORK
+msgid "No active terminal to clear."
+msgstr "Nenhum terminal ativo para limpar."
+# 
+# File: usr/share/ashyterm/ui/actions.py, line: 168
+#: NEEDS WORK
+msgid "Please select an SSH session to connect with SFTP."
+msgstr "Por favor, selecione uma sessão SSH para se conectar com SFTP."
+# 
+# File: usr/share/ashyterm/window.py, line: 758
+# File: usr/share/ashyterm/window.py, line: 875
+#: NEEDS WORK
+msgid "New Session"
+msgstr "Nova Sessão"
+# 
+# File: usr/share/ashyterm/window.py, line: 885
+#: NEEDS WORK
+msgid "New Folder"
+msgstr "Nova Pasta"
+# 
+# File: usr/share/ashyterm/window.py, line: 944
+# File: usr/share/ashyterm/window.py, line: 999
+#: NEEDS WORK
+msgid "Session"
+msgstr "Sessão"
+# 
+# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 351
+# File: usr/share/ashyterm/window.py, line: 944
+# File: usr/share/ashyterm/window.py, line: 999
+#: NEEDS WORK
+msgid "Folder"
+msgstr "Pasta"
+# 
+# File: usr/share/ashyterm/window.py, line: 947
+#: NEEDS WORK
+#, python-brace-format
+msgid "Rename {type}"
+msgstr "Renomear {type}"
+# 
+# File: usr/share/ashyterm/window.py, line: 948
+#: NEEDS WORK
+#, python-brace-format
+msgid "Enter new name for \"{name}\":"
+msgstr "Digite um novo nome para \"{name}\":"
+# 
+# File: usr/share/ashyterm/window.py, line: 1450
+#: NEEDS WORK
+msgid "Delete Item"
+msgstr "Excluir Item"
+# 
+# File: usr/share/ashyterm/window.py, line: 1450
+#: NEEDS WORK
+msgid "Delete Items"
+msgstr "Excluir Itens"
+# 
+# File: usr/share/ashyterm/ui/actions.py, line: 375
+#: NEEDS WORK
+msgid "Layout"
+msgstr "Layout"
+# 
+# File: usr/share/ashyterm/window.py, line: 1009
+#: NEEDS WORK
+#, python-brace-format
+msgid "Delete {type}"
+msgstr "Excluir {type}"
+# 
+# File: usr/share/ashyterm/window.py, line: 1003
+#: NEEDS WORK
+#, python-brace-format
+msgid ""
+"The folder \"{name}\" is not empty. Are you sure you want to permanently delete it and all its "
+"contents?"
+msgstr ""
+"A pasta \"{name}\" não está vazia. Você tem certeza de que deseja excluí-la permanentemente e todos "
+"os seus conteúdos?"
+# 
+# File: usr/share/ashyterm/window.py, line: 1005
+#: NEEDS WORK
+#, python-brace-format
+msgid "Are you sure you want to delete \"{name}\"?"
+msgstr "Você tem certeza de que deseja excluir \"{name}\"?"
+# 
+# File: usr/share/ashyterm/window.py, line: 1464
+#: NEEDS WORK
+#, python-brace-format
+msgid "Are you sure you want to permanently delete these {count} items?"
+msgstr "Você tem certeza de que deseja excluir permanentemente estes {count} itens?"
+# 
+# File: usr/share/ashyterm/window.py, line: 1466
+#: NEEDS WORK
+msgid "This will also delete all contents of any selected folders."
+msgstr "Isso também excluirá todo o conteúdo de quaisquer pastas selecionadas."
+# 
 # File: usr/share/ashyterm/ui/ssh_dialogs.py, line: 206
 #: NEEDS WORK
 msgid "SSH Connection Failed"
@@ -1189,98 +1166,10 @@ msgstr "Não foi possível conectar à sessão '{session_name}'."
 msgid "Close"
 msgstr "Fechar"
 # 
-# File: usr/share/ashyterm/ui/dialogs/command_guide_dialog.py, line: 32
+# File: usr/share/ashyterm/ui/dialogs.py, line: 223
 #: NEEDS WORK
-msgid "Add Custom Command"
-msgstr "Adicionar Comando Personalizado"
-# 
-# File: usr/share/ashyterm/ui/dialogs/command_guide_dialog.py, line: 32
-#: NEEDS WORK
-msgid "Edit Custom Command"
-msgstr "Editar Comando Personalizado"
-# 
-# File: usr/share/ashyterm/ui/dialogs/command_guide_dialog.py, line: 34
-#: NEEDS WORK
-msgid "Command"
-msgstr "Comando"
-# 
-# File: usr/share/ashyterm/ui/dialogs/command_guide_dialog.py, line: 35
-#: NEEDS WORK
-msgid "Category"
-msgstr "Categoria"
-# 
-# File: usr/share/ashyterm/ui/dialogs/command_guide_dialog.py, line: 104
-#: NEEDS WORK
-msgid "Select an existing category or type a new one"
-msgstr "Selecione uma categoria existente ou digite uma nova."
-# 
-# File: usr/share/ashyterm/ui/dialogs/command_guide_dialog.py, line: 59
-#: NEEDS WORK
-msgid "Description"
-msgstr "Descrição"
-# 
-# File: usr/share/ashyterm/ui/dialogs/command_guide_dialog.py, line: 171
-#: NEEDS WORK
-msgid "Please fill in all required fields."
-msgstr "Por favor, preencha todos os campos obrigatórios."
-# 
-# File: usr/share/ashyterm/ui/dialogs/command_guide_dialog.py, line: 236
-#: NEEDS WORK
-msgid "Delete this custom command"
-msgstr "Excluir este comando personalizado"
-# 
-# File: usr/share/ashyterm/ui/dialogs/command_guide_dialog.py, line: 143
-#: NEEDS WORK
-msgid "Command Guide"
-msgstr "Guia de Comandos"
-# 
-# File: usr/share/ashyterm/ui/dialogs/command_guide_dialog.py, line: 165
-#: NEEDS WORK
-msgid "Search commands..."
-msgstr "Pesquisar comandos..."
-# 
-# File: usr/share/ashyterm/ui/dialogs/command_guide_dialog.py, line: 208
-#: NEEDS WORK
-msgid "Show Only Custom Commands"
-msgstr "Mostrar Apenas Comandos Personalizados"
-# 
-# File: usr/share/ashyterm/ui/dialogs/command_guide_dialog.py, line: 495
-#: NEEDS WORK
-msgid "Add New Command"
-msgstr "Adicionar Novo Comando"
-# 
-# File: usr/share/ashyterm/ui/dialogs/command_guide_dialog.py, line: 714
-#: NEEDS WORK
-msgid "Delete Custom Command?"
-msgstr "Excluir Comando Personalizado?"
-# 
-# File: usr/share/ashyterm/ui/dialogs/command_guide_dialog.py, line: 716
-#: NEEDS WORK
-#, python-brace-format
-msgid ""
-"Are you sure you want to permanently delete the command:\n"
-"\n"
-"<b>{name}</b>"
-msgstr ""
-"Você tem certeza de que deseja excluir permanentemente o comando:\n"
-"\n"
-"<b>{name}</b>"
-# 
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
-# 
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
-# 
-# File: usr/share/ashyterm/ui/menus.py, line: 93
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1056
-# File: usr/share/ashyterm/window.py, line: 331
-#: NEEDS WORK
-msgid "Add Folder"
-msgstr "Adicionar Pasta"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1056
-#: NEEDS WORK
-msgid "Edit Folder"
-msgstr "Editar Pasta"
+msgid "Edit Session"
+msgstr "Editar Sessão"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 313
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1128
@@ -1293,144 +1182,6 @@ msgstr "Erro de UI"
 #: NEEDS WORK
 msgid "Failed to initialize dialog interface"
 msgstr "Falha ao inicializar a interface de diálogo"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1100
-#: NEEDS WORK
-msgid "Folder Information"
-msgstr "Informações da Pasta"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 347
-#: NEEDS WORK
-msgid "Organization"
-msgstr "Organização"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1135
-#: NEEDS WORK
-msgid "Folder Name"
-msgstr "Nome da Pasta"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1136
-#: NEEDS WORK
-msgid "A descriptive name for organizing sessions"
-msgstr "Um nome descritivo para organizar sessões"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1141
-#: NEEDS WORK
-msgid "Enter folder name..."
-msgstr "Digite o nome da pasta..."
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1158
-#: NEEDS WORK
-msgid "Parent Folder"
-msgstr "Pasta Pai"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1159
-#: NEEDS WORK
-msgid "Choose a parent folder for organization"
-msgstr "Escolha uma pasta pai para organização"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 357
-# File: usr/share/ashyterm/ui/dialogs.py, line: 358
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1164
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1165
-#: NEEDS WORK
-msgid "Root"
-msgstr "Raiz"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 796
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1252
-#: NEEDS WORK
-msgid "Unsaved Changes"
-msgstr "Alterações Não Salvas"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 797
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1253
-#: NEEDS WORK
-msgid "You have unsaved changes. Are you sure you want to cancel?"
-msgstr "Você tem alterações não salvas. Tem certeza de que deseja cancelar?"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 833
-# File: usr/share/ashyterm/ui/dialogs.py, line: 837
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1288
-#: NEEDS WORK
-msgid "Save Error"
-msgstr "Erro ao Salvar"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1288
-#: NEEDS WORK
-#, python-brace-format
-msgid "Failed to save folder: {}"
-msgstr "Falha ao salvar a pasta: {}"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1296
-#: NEEDS WORK
-msgid "Folder name"
-msgstr "Nome da pasta"
-# 
-# File: usr/share/ashyterm/ui/dialogs/move_dialogs.py, line: 28
-#: NEEDS WORK
-#, python-brace-format
-msgid "Move {item_type}"
-msgstr "Mover {item_type}"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 2183
-#: NEEDS WORK
-msgid "Select Destination"
-msgstr "Selecionar Destino"
-# 
-# File: usr/share/ashyterm/ui/dialogs/move_dialogs.py, line: 50
-#: NEEDS WORK
-#, python-brace-format
-msgid "Choose the folder to move the {item_type} '{name}' to."
-msgstr "Escolha a pasta para mover o {item_type} '{name}'."
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 2190
-#: NEEDS WORK
-msgid "Destination Folder"
-msgstr "Pasta de Destino"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 2191
-#: NEEDS WORK
-msgid "Select a folder or 'Root' for the top level"
-msgstr "Selecione uma pasta ou 'Raiz' para o nível superior"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 2205
-#: NEEDS WORK
-msgid "Move"
-msgstr "Mover"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 2265
-#: NEEDS WORK
-msgid "Move Failed"
-msgstr "Movimento Falhou"
-# 
-# File: usr/share/ashyterm/window.py, line: 944
-# File: usr/share/ashyterm/window.py, line: 999
-#: NEEDS WORK
-msgid "Session"
-msgstr "Sessão"
-# 
-# File: usr/share/ashyterm/ui/actions.py, line: 375
-#: NEEDS WORK
-msgid "Layout"
-msgstr "Layout"
-# 
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
-# 
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
-# 
-# File: usr/share/ashyterm/ui/menus.py, line: 60
-# File: usr/share/ashyterm/ui/menus.py, line: 92
-# File: usr/share/ashyterm/ui/dialogs.py, line: 223
-# File: usr/share/ashyterm/window.py, line: 325
-#: NEEDS WORK
-msgid "Add Session"
-msgstr "Adicionar Sessão"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 223
-#: NEEDS WORK
-msgid "Edit Session"
-msgstr "Editar Sessão"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 319
 #: NEEDS WORK
@@ -1472,19 +1223,23 @@ msgstr "Escolha uma cor para identificar a aba desta sessão"
 msgid "Clear Color"
 msgstr "Cor Clara"
 # 
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 351
-# File: usr/share/ashyterm/window.py, line: 944
-# File: usr/share/ashyterm/window.py, line: 999
+# File: usr/share/ashyterm/ui/dialogs.py, line: 347
 #: NEEDS WORK
-msgid "Folder"
-msgstr "Pasta"
+msgid "Organization"
+msgstr "Organização"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 352
 #: NEEDS WORK
 msgid "Choose a folder to organize this session"
 msgstr "Escolha uma pasta para organizar esta sessão"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 357
+# File: usr/share/ashyterm/ui/dialogs.py, line: 358
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1164
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1165
+#: NEEDS WORK
+msgid "Root"
+msgstr "Raiz"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 398
 #: NEEDS WORK
@@ -1500,6 +1255,14 @@ msgstr "Tipo de Sessão"
 #: NEEDS WORK
 msgid "Choose between local terminal or SSH connection"
 msgstr "Escolha entre terminal local ou conexão SSH"
+# 
+# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 406
+# File: usr/share/ashyterm/sessions/models.py, line: 511
+#: NEEDS WORK
+msgid "Local Terminal"
+msgstr "Terminal Local"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 406
 #: NEEDS WORK
@@ -1613,10 +1376,212 @@ msgstr "Senha para autenticação SSH (cofre de chaves não disponível)"
 msgid "Enter password..."
 msgstr "Digite a senha..."
 # 
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 309
+#: NEEDS WORK
+msgid "Run Command After Login"
+msgstr "Executar Comando Após Login"
+# 
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 311
+#: NEEDS WORK
+msgid "Execute a custom command automatically after the SSH session connects"
+msgstr "Execute um comando personalizado automaticamente após a conexão da sessão SSH."
+# 
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 318
+#: NEEDS WORK
+msgid "Post-Login Command"
+msgstr "Comando Pós-Login"
+# 
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 319
+#: NEEDS WORK
+msgid "Command to execute right after a successful login"
+msgstr "Comando a ser executado logo após um login bem-sucedido"
+# 
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 323
+#: NEEDS WORK
+msgid "Example: tmux attach -t main"
+msgstr "Exemplo: tmux attach -t main"
+# 
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 356
+#: NEEDS WORK
+msgid "Enable X11 Forwarding"
+msgstr "Ativar o Encaminhamento X11"
+# 
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 357
+#: NEEDS WORK
+msgid "Allow starting programs in graphical mode (X11)"
+msgstr "Permitir iniciar programas em modo gráfico (X11)"
+# 
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 354
+#: NEEDS WORK
+msgid "Port Forwarding"
+msgstr "Encaminhamento de Porta"
+# 
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 355
+#: NEEDS WORK
+msgid "Create SSH tunnels to forward local ports to remote targets"
+msgstr "Criar túneis SSH para encaminhar portas locais para destinos remotos"
+# 
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 369
+#: NEEDS WORK
+msgid "Add"
+msgstr "Adicionar"
+# 
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 396
+#: NEEDS WORK
+msgid "No port forwards configured."
+msgstr "Nenhum encaminhamento de porta configurado."
+# 
+# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
+# 
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 427
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 576
+# File: usr/share/ashyterm/sessions/models.py, line: 341
+#: NEEDS WORK
+msgid "Tunnel"
+msgstr "Túnel"
+# 
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 430
+#: NEEDS WORK
+msgid "SSH Host"
+msgstr "Host SSH"
+# 
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 431
+#: NEEDS WORK
+#, python-brace-format
+msgid "{local_host}:{local_port} → {remote_host}:{remote_port}"
+msgstr "{local_host}:{local_port} → {remote_host}:{remote_port}"
+# 
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 484
+#: NEEDS WORK
+msgid "Edit Port Forward"
+msgstr "Editar Redirecionamento de Porta"
+# 
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 484
+#: NEEDS WORK
+msgid "Add Port Forward"
+msgstr "Adicionar Encaminhamento de Porta"
+# 
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 508
+#: NEEDS WORK
+msgid "Tunnel name"
+msgstr "Nome do túnel"
+# 
+# File: usr/share/ashyterm/filemanager/manager.py, line: 366
+#: NEEDS WORK
+msgid "Name"
+msgstr "Nome"
+# 
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 519
+#: NEEDS WORK
+msgid "Local Host"
+msgstr "Host Local"
+# 
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 524
+#: NEEDS WORK
+msgid "Local Port"
+msgstr "Porta Local"
+# 
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 529
+#: NEEDS WORK
+msgid "Leave blank to use the SSH host"
+msgstr "Deixe em branco para usar o host SSH"
+# 
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 536
+#: NEEDS WORK
+msgid "Connect to a different remote host"
+msgstr "Conectar a um host remoto diferente"
+# 
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 546
+#: NEEDS WORK
+msgid "Remote Host"
+msgstr "Host Remoto"
+# 
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 551
+#: NEEDS WORK
+msgid "Remote Port"
+msgstr "Porta Remota"
+# 
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 590
+#: NEEDS WORK
+msgid "Local port must be between 1025 and 65535 (ports below 1024 require administrator privileges)."
+msgstr ""
+"A porta local deve estar entre 1025 e 65535 (as portas abaixo de 1024 requerem privilégios de "
+"administrador)."
+# 
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 594
+#: NEEDS WORK
+msgid "Remote port must be between 1 and 65535."
+msgstr "A porta remota deve estar entre 1 e 65535."
+# 
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 596
+#: NEEDS WORK
+msgid "Local host cannot be empty."
+msgstr "O host local não pode estar vazio."
+# 
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 600
+#: NEEDS WORK
+msgid "Invalid Port Forward"
+msgstr "Encaminhamento de Porta Inválido"
+# 
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 346
+#: NEEDS WORK
+msgid "SFTP Session"
+msgstr "Sessão SFTP"
+# 
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 348
+#: NEEDS WORK
+msgid "Configure default directories for SFTP connections (optional)"
+msgstr "Configurar diretórios padrão para conexões SFTP (opcional)"
+# 
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 353
+#: NEEDS WORK
+msgid "Enable SFTP Session"
+msgstr "Ativar Sessão SFTP"
+# 
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 355
+#: NEEDS WORK
+msgid "Use these directories when opening an SFTP tab for this session"
+msgstr "Use estes diretórios ao abrir uma aba SFTP para esta sessão"
+# 
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 364
+#: NEEDS WORK
+msgid "Local Directory"
+msgstr "Diretório Local"
+# 
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 365
+#: NEEDS WORK
+msgid "Starting directory on your machine for SFTP"
+msgstr "Diretório inicial em sua máquina para SFTP"
+# 
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 369
+#: NEEDS WORK
+msgid "Example: /home/user/projects"
+msgstr "/exemplo/usuario/projetos"
+# 
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 379
+#: NEEDS WORK
+msgid "Remote Directory"
+msgstr "Diretório Remoto"
+# 
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 380
+#: NEEDS WORK
+msgid "Starting directory on the remote host for SFTP"
+msgstr "Diretório inicial no host remoto para SFTP"
+# 
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 384
+#: NEEDS WORK
+msgid "Example: /var/www"
+msgstr "Exemplo: /var/www"
+# 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 581
 #: NEEDS WORK
 msgid "Test Connection"
 msgstr "Testar Conexão"
+# 
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 773
+#: NEEDS WORK
+msgid "Remote server must have X11Forwarding yes in sshd_config."
+msgstr "O servidor remoto deve ter X11Forwarding yes no sshd_config."
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 707
 #: NEEDS WORK
@@ -1704,6 +1669,25 @@ msgstr "Conexão Falhou"
 msgid "Could not connect to the SSH server."
 msgstr "Não foi possível conectar ao servidor SSH."
 # 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 796
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1252
+#: NEEDS WORK
+msgid "Unsaved Changes"
+msgstr "Alterações Não Salvas"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 797
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1253
+#: NEEDS WORK
+msgid "You have unsaved changes. Are you sure you want to cancel?"
+msgstr "Você tem alterações não salvas. Tem certeza de que deseja cancelar?"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 833
+# File: usr/share/ashyterm/ui/dialogs.py, line: 837
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1288
+#: NEEDS WORK
+msgid "Save Error"
+msgstr "Erro ao Salvar"
+# 
 # File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 537
 #: NEEDS WORK
 msgid "An unexpected error occurred while saving."
@@ -1724,6 +1708,24 @@ msgstr ""
 msgid "Session name"
 msgstr "Nome da sessão"
 # 
+# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
+# 
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 716
+# File: usr/share/ashyterm/sessions/models.py, line: 280
+#: NEEDS WORK
+msgid "Post-login command cannot be empty when enabled."
+msgstr "O comando pós-login não pode estar vazio quando ativado."
+# 
+# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
+# 
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 843
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 851
+# File: usr/share/ashyterm/sessions/models.py, line: 334
+# File: usr/share/ashyterm/sessions/models.py, line: 338
+#: NEEDS WORK
+msgid "SFTP local directory must exist and be a directory."
+msgstr "O diretório local SFTP deve existir e ser um diretório."
+# 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 921
 #: NEEDS WORK
 msgid "SSH Validation Error"
@@ -1739,14 +1741,332 @@ msgstr ""
 "Erros de configuração do SSH:  \n"
 "{}"
 # 
+# File: usr/share/ashyterm/ui/dialogs/command_guide_dialog.py, line: 32
+#: NEEDS WORK
+msgid "Add Custom Command"
+msgstr "Adicionar Comando Personalizado"
+# 
+# File: usr/share/ashyterm/ui/dialogs/command_guide_dialog.py, line: 32
+#: NEEDS WORK
+msgid "Edit Custom Command"
+msgstr "Editar Comando Personalizado"
+# 
+# File: usr/share/ashyterm/ui/dialogs/command_guide_dialog.py, line: 34
+#: NEEDS WORK
+msgid "Command"
+msgstr "Comando"
+# 
+# File: usr/share/ashyterm/ui/dialogs/command_guide_dialog.py, line: 35
+#: NEEDS WORK
+msgid "Category"
+msgstr "Categoria"
+# 
+# File: usr/share/ashyterm/ui/dialogs/command_guide_dialog.py, line: 104
+#: NEEDS WORK
+msgid "Select an existing category or type a new one"
+msgstr "Selecione uma categoria existente ou digite uma nova."
+# 
+# File: usr/share/ashyterm/ui/dialogs/command_guide_dialog.py, line: 59
+#: NEEDS WORK
+msgid "Description"
+msgstr "Descrição"
+# 
+# File: usr/share/ashyterm/ui/dialogs/command_guide_dialog.py, line: 171
+#: NEEDS WORK
+msgid "Please fill in all required fields."
+msgstr "Por favor, preencha todos os campos obrigatórios."
+# 
+# File: usr/share/ashyterm/ui/dialogs/command_guide_dialog.py, line: 236
+#: NEEDS WORK
+msgid "Delete this custom command"
+msgstr "Excluir este comando personalizado"
+# 
+# File: usr/share/ashyterm/ui/dialogs/command_guide_dialog.py, line: 143
+#: NEEDS WORK
+msgid "Command Guide"
+msgstr "Guia de Comandos"
+# 
+# File: usr/share/ashyterm/ui/dialogs/command_guide_dialog.py, line: 165
+#: NEEDS WORK
+msgid "Search commands..."
+msgstr "Pesquisar comandos..."
+# 
+# File: usr/share/ashyterm/ui/dialogs/command_guide_dialog.py, line: 208
+#: NEEDS WORK
+msgid "Show Only Custom Commands"
+msgstr "Mostrar Apenas Comandos Personalizados"
+# 
+# File: usr/share/ashyterm/ui/dialogs/command_guide_dialog.py, line: 495
+#: NEEDS WORK
+msgid "Add New Command"
+msgstr "Adicionar Novo Comando"
+# 
+# File: usr/share/ashyterm/ui/dialogs/command_guide_dialog.py, line: 714
+#: NEEDS WORK
+msgid "Delete Custom Command?"
+msgstr "Excluir Comando Personalizado?"
+# 
+# File: usr/share/ashyterm/ui/dialogs/command_guide_dialog.py, line: 716
+#: NEEDS WORK
+#, python-brace-format
+msgid ""
+"Are you sure you want to permanently delete the command:\n"
+"\n"
+"<b>{name}</b>"
+msgstr ""
+"Você tem certeza de que deseja excluir permanentemente o comando:\n"
+"\n"
+"<b>{name}</b>"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1056
+#: NEEDS WORK
+msgid "Edit Folder"
+msgstr "Editar Pasta"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1100
+#: NEEDS WORK
+msgid "Folder Information"
+msgstr "Informações da Pasta"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1135
+#: NEEDS WORK
+msgid "Folder Name"
+msgstr "Nome da Pasta"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1136
+#: NEEDS WORK
+msgid "A descriptive name for organizing sessions"
+msgstr "Um nome descritivo para organizar sessões"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1141
+#: NEEDS WORK
+msgid "Enter folder name..."
+msgstr "Digite o nome da pasta..."
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1158
+#: NEEDS WORK
+msgid "Parent Folder"
+msgstr "Pasta Pai"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1159
+#: NEEDS WORK
+msgid "Choose a parent folder for organization"
+msgstr "Escolha uma pasta pai para organização"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1288
+#: NEEDS WORK
+#, python-brace-format
+msgid "Failed to save folder: {}"
+msgstr "Falha ao salvar a pasta: {}"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1296
+#: NEEDS WORK
+msgid "Folder name"
+msgstr "Nome da pasta"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 164
+#: NEEDS WORK
+msgid "Continue"
+msgstr "Continuar"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 192
+#: NEEDS WORK
+#, python-brace-format
+msgid "{} is required"
+msgstr "{} é obrigatório"
+# 
+# File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 17
+#: NEEDS WORK
+msgid "Tab &amp; Pane Management"
+msgstr "Gerenciamento de Abas e Painéis"
+# 
 # #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
 # 
-# File: usr/share/ashyterm/ui/menus.py, line: 157
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1390
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1604
+# File: usr/share/ashyterm/ui/menus.py, line: 145
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1597
 #: NEEDS WORK
-msgid "Preferences"
-msgstr "Preferências"
+msgid "Close Tab"
+msgstr "Fechar Aba"
+# 
+# File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 21
+#: NEEDS WORK
+msgid "Next Tab"
+msgstr "Próxima Aba"
+# 
+# File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 22
+#: NEEDS WORK
+msgid "Previous Tab"
+msgstr "Aba Anterior"
+# 
+# File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 26
+#: NEEDS WORK
+msgid "Splitting"
+msgstr "Divisão"
+# 
+# File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 28
+#: NEEDS WORK
+msgid "Split Horizontally"
+msgstr "Dividir Horizontalmente"
+# 
+# File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 29
+#: NEEDS WORK
+msgid "Split Vertically"
+msgstr "Dividir Verticalmente"
+# 
+# File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 30
+#: NEEDS WORK
+msgid "Close Active Pane"
+msgstr "Fechar Painel Ativo"
+# 
+# File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 34
+#: NEEDS WORK
+msgid "Terminal Interaction"
+msgstr "Interação do Terminal"
+# 
+# File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 38
+#: NEEDS WORK
+msgid "Send Command  All Tabs"
+msgstr "Enviar Comando  Todas as Abas"
+# 
+# File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 39
+#: NEEDS WORK
+msgid "Ask AI Assistant"
+msgstr "Perguntar ao Assistente de IA"
+# 
+# File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 42
+#: NEEDS WORK
+msgid "Zoom"
+msgstr "Zoom"
+# 
+# File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 44
+#: NEEDS WORK
+msgid "Zoom In"
+msgstr "Aproximar"
+# 
+# File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 45
+#: NEEDS WORK
+msgid "Zoom Out"
+msgstr "Reduzir Zoom"
+# 
+# File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 46
+#: NEEDS WORK
+msgid "Reset Zoom"
+msgstr "Redefinir Zoom"
+# 
+# File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 50
+#: NEEDS WORK
+msgid "Application &amp; Window"
+msgstr "Aplicativo e Janela"
+# 
+# File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 53
+#: NEEDS WORK
+msgid "Toggle File Manager"
+msgstr "Alternar Gerenciador de Arquivos"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1605
+#: NEEDS WORK
+msgid "Quit Application"
+msgstr "Sair do Aplicativo"
+# 
+# File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 93
+#: NEEDS WORK
+msgid "Reset All"
+msgstr "Redefinir Tudo"
+# 
+# File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 94
+#: NEEDS WORK
+msgid "Reset all shortcuts to default values"
+msgstr "Redefinir todos os atalhos para os valores padrão"
+# 
+# File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 128
+#: NEEDS WORK
+msgid "Reset all shortcuts to defaults"
+msgstr "Redefinir todos os atalhos para os padrões"
+# 
+# File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 186
+# File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 213
+# File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 294
+# File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 334
+#: NEEDS WORK
+msgid "Not set"
+msgstr "Não definido"
+# 
+# File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 191
+#: NEEDS WORK
+msgid "Shortcut for: "
+msgstr "Atalho para:"
+# 
+# File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 195
+#: NEEDS WORK
+msgid "Click to change the keyboard shortcut for this action"
+msgstr "Clique para alterar o atalho de teclado para esta ação"
+# 
+# File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 205
+#: NEEDS WORK
+msgid "Set New Shortcut"
+msgstr "Definir Novo Atalho"
+# 
+# File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 206
+#: NEEDS WORK
+#, python-brace-format
+msgid "Press the new key combination for '{}', or Esc to cancel."
+msgstr "Pressione a nova combinação de teclas para '{}', ou Esc para cancelar."
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1914
+#: NEEDS WORK
+#, python-brace-format
+msgid ""
+"Current: {}\n"
+"New: (press keys)"
+msgstr ""
+"Atual: {}\n"
+"Novo: (pressione as teclas)"
+# 
+# File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 257
+#: NEEDS WORK
+#, python-brace-format
+msgid ""
+"Current: {}\n"
+"New: {} (Conflicts with {})"
+msgstr ""
+"Atual: {}\n"
+"Novo: {} (Conflita com {})"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1945
+#: NEEDS WORK
+#, python-brace-format
+msgid ""
+"Current: {}\n"
+"New: {}"
+msgstr ""
+"Atual: {}\n"
+"Novo: {}"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1958
+#: NEEDS WORK
+msgid "Clear"
+msgstr "Limpar"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1959
+#: NEEDS WORK
+msgid "Set Shortcut"
+msgstr "Definir Atalho"
+# 
+# File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 306
+#: NEEDS WORK
+msgid "Reset All Shortcuts"
+msgstr "Redefinir Todos os Atalhos"
+# 
+# File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 307
+#: NEEDS WORK
+msgid "This will reset all keyboard shortcuts to their default values. Continue?"
+msgstr "Isto irá redefinir todos os atalhos de teclado para seus valores padrão. Continuar?"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1831
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1843
+#: NEEDS WORK
+msgid "Reset"
+msgstr "Redefinir"
 # 
 # File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 56
 #: NEEDS WORK
@@ -1993,9 +2313,9 @@ msgstr "Caracteres extras para seleção de palavras (por exemplo, -_.:/~)"
 msgid "Word Characters"
 msgstr "Caracteres de Palavra"
 # 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 260
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 292
 #: NEEDS WORK
-msgid "Shell &amp; Bell"
+msgid "Shell & Bell"
 msgstr "Shell & Bell"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1107
@@ -2017,6 +2337,103 @@ msgstr "Sino Audível"
 #: NEEDS WORK
 msgid "Emit a sound for the terminal bell character"
 msgstr "Emita um som para o caractere de campainha do terminal"
+# 
+# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 319
+# File: usr/share/ashyterm/window.py, line: 679
+#: NEEDS WORK
+msgid "AI Assistant"
+msgstr "Assistente de IA"
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 321
+#: NEEDS WORK
+msgid "Configure the Linux-focused assistant available inside the terminal."
+msgstr "Configurar o assistente focado em Linux disponível dentro do terminal."
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 327
+#: NEEDS WORK
+msgid "Enable AI Assistant"
+msgstr "Ativar Assistente de IA"
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 328
+#: NEEDS WORK
+msgid "Allow Ctrl+Shift+I to ask the assistant for help."
+msgstr "Permitir Ctrl+Shift+I para pedir ajuda ao assistente."
+# 
+# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 339
+# File: usr/share/ashyterm/window.py, line: 546
+#: NEEDS WORK
+msgid "Provider"
+msgstr "Fornecedor"
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 340
+#: NEEDS WORK
+msgid "Select which AI service to use."
+msgstr "Selecione qual serviço de IA usar."
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 361
+#: NEEDS WORK
+msgid "Model Identifier"
+msgstr "Identificador do Modelo"
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 363
+#: NEEDS WORK
+msgid "Examples: llama-3.1-8b-instant, gemini-2.5-flash."
+msgstr "exemplos: llama-3.1-8b-instant, gemini-2.5-flash."
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 368
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 779
+#: NEEDS WORK
+msgid "llama-3.1-8b-instant"
+msgstr "llama-3.1-8b-instant"
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 374
+#: NEEDS WORK
+msgid "API Key"
+msgstr "Chave da API"
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 375
+#: NEEDS WORK
+msgid "Stored locally and used to authenticate requests."
+msgstr "Armazenado localmente e usado para autenticar solicitações."
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 379
+#: NEEDS WORK
+msgid "Paste your API key"
+msgstr "Cole seu chave de API"
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 391
+#: NEEDS WORK
+msgid "Site URL (optional)"
+msgstr "URL do site (opcional)"
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 392
+#: NEEDS WORK
+msgid "Used as HTTP Referer header on OpenRouter rankings."
+msgstr "Usado como cabeçalho Referer HTTP nas classificações do OpenRouter."
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 396
+#: NEEDS WORK
+msgid "https://example.com"
+msgstr "https://example.com"
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 408
+#: NEEDS WORK
+msgid "Site title (optional)"
+msgstr "Título do site (opcional)"
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 409
+#: NEEDS WORK
+msgid "Sent via X-Title header for OpenRouter rankings."
+msgstr "Enviado via cabeçalho X-Title para classificações do OpenRouter."
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 413
+#: NEEDS WORK
+msgid "My Project"
+msgstr "Meu Projeto"
 # 
 # File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 287
 #: NEEDS WORK
@@ -2291,12 +2708,6 @@ msgstr "Nível de Log do Console"
 msgid "Set the minimum level of messages shown in the console"
 msgstr "Defina o nível mínimo de mensagens exibidas no console"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1831
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1843
-#: NEEDS WORK
-msgid "Reset"
-msgstr "Redefinir"
-# 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1832
 #: NEEDS WORK
 msgid "Reset application settings to defaults"
@@ -2313,6 +2724,61 @@ msgstr "Redefinir Todas as Configurações"
 #: NEEDS WORK
 msgid "Restore all settings to their default values"
 msgstr "Restaurar todas as configurações para seus valores padrão"
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 781
+#: NEEDS WORK
+msgid "Model identifier (for example: llama-3.1-8b-instant)."
+msgstr "Identificador do modelo (por exemplo: llama-3.1-8b-instant)."
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 783
+#: NEEDS WORK
+msgid "API key."
+msgstr "chave da API."
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 786
+#: NEEDS WORK
+msgid "gemini-2.5-flash"
+msgstr "gemini-2.5-flash"
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 788
+#: NEEDS WORK
+msgid "Gemini model identifier (for example: gemini-2.5-flash)."
+msgstr "Identificador do modelo Gemini (por exemplo: gemini-2.5-flash)."
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 790
+#: NEEDS WORK
+msgid "Google AI Studio API key."
+msgstr "Chave da API do Google AI Studio."
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 842
+#: NEEDS WORK
+msgid "openrouter/polaris-alpha"
+msgstr "openrouter/polaris-alpha"
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 844
+#: NEEDS WORK
+msgid "OpenRouter model identifier (for example: openrouter/polaris-alpha)."
+msgstr "Identificador do modelo OpenRouter (por exemplo: openrouter/polaris-alpha)."
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 846
+#: NEEDS WORK
+msgid "OpenRouter API key."
+msgstr "Chave da API do OpenRouter."
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 785
+#: NEEDS WORK
+msgid "model-name"
+msgstr "nome-do-modelo"
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 787
+#: NEEDS WORK
+msgid "Model identifier required by the selected provider."
+msgstr "Identificador do modelo necessário pelo provedor selecionado."
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 789
+#: NEEDS WORK
+msgid "API key used to authenticate requests."
+msgstr "Chave da API usada para autenticar solicitações."
 # 
 # File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 652
 #: NEEDS WORK
@@ -2360,482 +2826,42 @@ msgstr "Redefinição Falhou"
 msgid "Failed to reset settings: {}"
 msgstr "Falha ao redefinir configurações: {}"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 164
-#: NEEDS WORK
-msgid "Continue"
-msgstr "Continuar"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 192
+# File: usr/share/ashyterm/ui/dialogs/move_dialogs.py, line: 28
 #: NEEDS WORK
 #, python-brace-format
-msgid "{} is required"
-msgstr "{} é obrigatório"
+msgid "Move {item_type}"
+msgstr "Mover {item_type}"
 # 
-# File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 17
+# File: usr/share/ashyterm/ui/dialogs.py, line: 2183
 #: NEEDS WORK
-msgid "Tab &amp; Pane Management"
-msgstr "Gerenciamento de Abas e Painéis"
+msgid "Select Destination"
+msgstr "Selecionar Destino"
 # 
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
-# 
-# File: usr/share/ashyterm/ui/menus.py, line: 144
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1596
-#: NEEDS WORK
-msgid "New Tab"
-msgstr "Nova Aba"
-# 
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
-# 
-# File: usr/share/ashyterm/ui/menus.py, line: 145
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1597
-#: NEEDS WORK
-msgid "Close Tab"
-msgstr "Fechar Aba"
-# 
-# File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 21
-#: NEEDS WORK
-msgid "Next Tab"
-msgstr "Próxima Aba"
-# 
-# File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 22
-#: NEEDS WORK
-msgid "Previous Tab"
-msgstr "Aba Anterior"
-# 
-# File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 26
-#: NEEDS WORK
-msgid "Splitting"
-msgstr "Divisão"
-# 
-# File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 28
-#: NEEDS WORK
-msgid "Split Horizontally"
-msgstr "Dividir Horizontalmente"
-# 
-# File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 29
-#: NEEDS WORK
-msgid "Split Vertically"
-msgstr "Dividir Verticalmente"
-# 
-# File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 30
-#: NEEDS WORK
-msgid "Close Active Pane"
-msgstr "Fechar Painel Ativo"
-# 
-# File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 34
-#: NEEDS WORK
-msgid "Terminal Interaction"
-msgstr "Interação do Terminal"
-# 
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
-# 
-# File: usr/share/ashyterm/ui/menus.py, line: 30
-# File: usr/share/ashyterm/ui/menus.py, line: 66
-# File: usr/share/ashyterm/ui/menus.py, line: 117
-# File: usr/share/ashyterm/ui/menus.py, line: 153
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1598
-#: NEEDS WORK
-msgid "Copy"
-msgstr "Copiar"
-# 
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
-# 
-# File: usr/share/ashyterm/ui/menus.py, line: 69
-# File: usr/share/ashyterm/ui/menus.py, line: 118
-# File: usr/share/ashyterm/ui/menus.py, line: 154
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1599
-#: NEEDS WORK
-msgid "Paste"
-msgstr "Colar"
-# 
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
-# 
-# File: usr/share/ashyterm/ui/menus.py, line: 119
-# File: usr/share/ashyterm/ui/menus.py, line: 155
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1600
-#: NEEDS WORK
-msgid "Select All"
-msgstr "Selecionar Tudo"
-# 
-# File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 42
-#: NEEDS WORK
-msgid "Zoom"
-msgstr "Zoom"
-# 
-# File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 44
-#: NEEDS WORK
-msgid "Zoom In"
-msgstr "Aproximar"
-# 
-# File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 45
-#: NEEDS WORK
-msgid "Zoom Out"
-msgstr "Reduzir Zoom"
-# 
-# File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 46
-#: NEEDS WORK
-msgid "Reset Zoom"
-msgstr "Redefinir Zoom"
-# 
-# File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 50
-#: NEEDS WORK
-msgid "Application &amp; Window"
-msgstr "Aplicativo e Janela"
-# 
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1606
-# File: usr/share/ashyterm/window.py, line: 248
-#: NEEDS WORK
-msgid "Toggle Sidebar"
-msgstr "Alternar Barra Lateral"
-# 
-# File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 53
-#: NEEDS WORK
-msgid "Toggle File Manager"
-msgstr "Alternar Gerenciador de Arquivos"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1607
-#: NEEDS WORK
-msgid "New Window"
-msgstr "Nova Janela"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1605
-#: NEEDS WORK
-msgid "Quit Application"
-msgstr "Sair do Aplicativo"
-# 
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
-# 
-# File: usr/share/ashyterm/ui/menus.py, line: 211
-# File: usr/share/ashyterm/window.py, line: 909
-# File: usr/share/ashyterm/window.py, line: 960
-#: NEEDS WORK
-msgid "Keyboard Shortcuts"
-msgstr "Atalhos de Teclado"
-# 
-# File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 93
-#: NEEDS WORK
-msgid "Reset All"
-msgstr "Redefinir Tudo"
-# 
-# File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 94
-#: NEEDS WORK
-msgid "Reset all shortcuts to default values"
-msgstr "Redefinir todos os atalhos para os valores padrão"
-# 
-# File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 128
-#: NEEDS WORK
-msgid "Reset all shortcuts to defaults"
-msgstr "Redefinir todos os atalhos para os padrões"
-# 
-# File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 186
-# File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 213
-# File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 294
-# File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 334
-#: NEEDS WORK
-msgid "Not set"
-msgstr "Não definido"
-# 
-# File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 191
-#: NEEDS WORK
-msgid "Shortcut for: "
-msgstr "Atalho para:"
-# 
-# File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 195
-#: NEEDS WORK
-msgid "Click to change the keyboard shortcut for this action"
-msgstr "Clique para alterar o atalho de teclado para esta ação"
-# 
-# File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 205
-#: NEEDS WORK
-msgid "Set New Shortcut"
-msgstr "Definir Novo Atalho"
-# 
-# File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 206
+# File: usr/share/ashyterm/ui/dialogs/move_dialogs.py, line: 50
 #: NEEDS WORK
 #, python-brace-format
-msgid "Press the new key combination for '{}', or Esc to cancel."
-msgstr "Pressione a nova combinação de teclas para '{}', ou Esc para cancelar."
+msgid "Choose the folder to move the {item_type} '{name}' to."
+msgstr "Escolha a pasta para mover o {item_type} '{name}'."
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1914
+# File: usr/share/ashyterm/ui/dialogs.py, line: 2190
 #: NEEDS WORK
-#, python-brace-format
-msgid ""
-"Current: {}\n"
-"New: (press keys)"
-msgstr ""
-"Atual: {}\n"
-"Novo: (pressione as teclas)"
+msgid "Destination Folder"
+msgstr "Pasta de Destino"
 # 
-# File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 257
+# File: usr/share/ashyterm/ui/dialogs.py, line: 2191
 #: NEEDS WORK
-#, python-brace-format
-msgid ""
-"Current: {}\n"
-"New: {} (Conflicts with {})"
-msgstr ""
-"Atual: {}\n"
-"Novo: {} (Conflita com {})"
+msgid "Select a folder or 'Root' for the top level"
+msgstr "Selecione uma pasta ou 'Raiz' para o nível superior"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1945
+# File: usr/share/ashyterm/ui/dialogs.py, line: 2205
 #: NEEDS WORK
-#, python-brace-format
-msgid ""
-"Current: {}\n"
-"New: {}"
-msgstr ""
-"Atual: {}\n"
-"Novo: {}"
+msgid "Move"
+msgstr "Mover"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1958
+# File: usr/share/ashyterm/ui/dialogs.py, line: 2265
 #: NEEDS WORK
-msgid "Clear"
-msgstr "Limpar"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1959
-#: NEEDS WORK
-msgid "Set Shortcut"
-msgstr "Definir Atalho"
-# 
-# File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 306
-#: NEEDS WORK
-msgid "Reset All Shortcuts"
-msgstr "Redefinir Todos os Atalhos"
-# 
-# File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 307
-#: NEEDS WORK
-msgid "This will reset all keyboard shortcuts to their default values. Continue?"
-msgstr "Isto irá redefinir todos os atalhos de teclado para seus valores padrão. Continuar?"
-# 
-# File: usr/share/ashyterm/ui/actions.py, line: 168
-#: NEEDS WORK
-msgid "Please select an SSH session to connect with SFTP."
-msgstr "Por favor, selecione uma sessão SSH para se conectar com SFTP."
-# 
-# File: usr/share/ashyterm/window.py, line: 758
-# File: usr/share/ashyterm/window.py, line: 875
-#: NEEDS WORK
-msgid "New Session"
-msgstr "Nova Sessão"
-# 
-# File: usr/share/ashyterm/window.py, line: 885
-#: NEEDS WORK
-msgid "New Folder"
-msgstr "Nova Pasta"
-# 
-# File: usr/share/ashyterm/window.py, line: 947
-#: NEEDS WORK
-#, python-brace-format
-msgid "Rename {type}"
-msgstr "Renomear {type}"
-# 
-# File: usr/share/ashyterm/window.py, line: 948
-#: NEEDS WORK
-#, python-brace-format
-msgid "Enter new name for \"{name}\":"
-msgstr "Digite um novo nome para \"{name}\":"
-# 
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
-# 
-# File: usr/share/ashyterm/ui/menus.py, line: 25
-# File: usr/share/ashyterm/ui/menus.py, line: 61
-# File: usr/share/ashyterm/window.py, line: 954
-#: NEEDS WORK
-msgid "Rename"
-msgstr "Renomear"
-# 
-# File: usr/share/ashyterm/window.py, line: 1450
-#: NEEDS WORK
-msgid "Delete Item"
-msgstr "Excluir Item"
-# 
-# File: usr/share/ashyterm/window.py, line: 1450
-#: NEEDS WORK
-msgid "Delete Items"
-msgstr "Excluir Itens"
-# 
-# File: usr/share/ashyterm/window.py, line: 1009
-#: NEEDS WORK
-#, python-brace-format
-msgid "Delete {type}"
-msgstr "Excluir {type}"
-# 
-# File: usr/share/ashyterm/window.py, line: 1003
-#: NEEDS WORK
-#, python-brace-format
-msgid ""
-"The folder \"{name}\" is not empty. Are you sure you want to permanently delete it and all its "
-"contents?"
-msgstr ""
-"A pasta \"{name}\" não está vazia. Você tem certeza de que deseja excluí-la permanentemente e todos "
-"os seus conteúdos?"
-# 
-# File: usr/share/ashyterm/window.py, line: 1005
-#: NEEDS WORK
-#, python-brace-format
-msgid "Are you sure you want to delete \"{name}\"?"
-msgstr "Você tem certeza de que deseja excluir \"{name}\"?"
-# 
-# File: usr/share/ashyterm/window.py, line: 1464
-#: NEEDS WORK
-#, python-brace-format
-msgid "Are you sure you want to permanently delete these {count} items?"
-msgstr "Você tem certeza de que deseja excluir permanentemente estes {count} itens?"
-# 
-# File: usr/share/ashyterm/window.py, line: 1466
-#: NEEDS WORK
-msgid "This will also delete all contents of any selected folders."
-msgstr "Isso também excluirá todo o conteúdo de quaisquer pastas selecionadas."
-# 
-# File: usr/share/ashyterm/ui/window_ui.py, line: 264
-#: NEEDS WORK
-msgid "Current occurrence"
-msgstr "Ocorrência atual"
-# 
-# File: usr/share/ashyterm/ui/window_ui.py, line: 268
-#: NEEDS WORK
-msgid "Case sensitive search"
-msgstr "Busca sensível a maiúsculas e minúsculas"
-# 
-# File: usr/share/ashyterm/ui/window_ui.py, line: 270
-#: NEEDS WORK
-msgid "Case sensitive"
-msgstr "Diferencia entre maiúsculas e minúsculas"
-# 
-# File: usr/share/ashyterm/ui/window_ui.py, line: 276
-#: NEEDS WORK
-msgid "Use regular expressions"
-msgstr "Use expressões regulares"
-# 
-# File: usr/share/ashyterm/ui/window_ui.py, line: 278
-#: NEEDS WORK
-msgid "Regex"
-msgstr "Expressão regular"
-# 
-# File: usr/share/ashyterm/window.py, line: 344
-#: NEEDS WORK
-msgid "File Manager"
-msgstr "Gerenciador de Arquivos"
-# 
-# File: usr/share/ashyterm/ui/window_ui.py, line: 324
-#: NEEDS WORK
-msgid "Command Guide (Ctrl+Shift+P)"
-msgstr "Guia de Comandos (Ctrl+Shift+P)"
-# 
-# File: usr/share/ashyterm/ui/window_ui.py, line: 350
-#: NEEDS WORK
-msgid "Search in Terminal"
-msgstr "Pesquisar no Terminal"
-# 
-# File: usr/share/ashyterm/ui/window_ui.py, line: 259
-#: NEEDS WORK
-msgid "Manage Temporary Files"
-msgstr "Gerenciar Arquivos Temporários"
-# 
-# File: usr/share/ashyterm/window.py, line: 268
-#: NEEDS WORK
-msgid "Main Menu"
-msgstr "Menu Principal"
-# 
-# File: usr/share/ashyterm/window.py, line: 337
-#: NEEDS WORK
-msgid "Edit Selected"
-msgstr "Editar Selecionado"
-# 
-# File: usr/share/ashyterm/ui/window_ui.py, line: 322
-#: NEEDS WORK
-msgid "Save Current Layout"
-msgstr "Salvar Layout Atual"
-# 
-# File: usr/share/ashyterm/window.py, line: 343
-#: NEEDS WORK
-msgid "Remove Selected"
-msgstr "Remover Selecionado"
-# 
-# File: usr/share/ashyterm/ui/window_ui.py, line: 341
-#: NEEDS WORK
-msgid "Search sessions..."
-msgstr "Pesquisar sessões..."
-# 
-# File: usr/share/ashyterm/ui/menus.py, line: 24
-#: NEEDS WORK
-msgid "Follow System Style"
-msgstr "Seguir o Estilo do Sistema"
-# 
-# File: usr/share/ashyterm/ui/menus.py, line: 29
-#: NEEDS WORK
-msgid "Light Style"
-msgstr "Estilo Claro"
-# 
-# File: usr/share/ashyterm/ui/menus.py, line: 34
-#: NEEDS WORK
-msgid "Dark Style"
-msgstr "Estilo Escuro"
-# 
-# File: usr/share/ashyterm/ui/menus.py, line: 47
-#: NEEDS WORK
-msgid "Match Terminal Colors"
-msgstr "Combinar Cores do Terminal"
-# 
-# File: usr/share/ashyterm/ui/menus.py, line: 216
-#: NEEDS WORK
-msgid "About"
-msgstr "Sobre"
-# 
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
-# 
-# File: usr/share/ashyterm/ui/menus.py, line: 217
-# File: usr/share/ashyterm/window.py, line: 942
-#: NEEDS WORK
-msgid "Quit"
-msgstr "Sair"
-# 
-# File: usr/share/ashyterm/ui/menus.py, line: 119
-#: NEEDS WORK
-msgid "Connect with SFTP"
-msgstr "Conectar com SFTP"
-# 
-# File: usr/share/ashyterm/ui/menus.py, line: 24
-#: NEEDS WORK
-msgid "Duplicate"
-msgstr "Duplicar"
-# 
-# File: usr/share/ashyterm/ui/menus.py, line: 220
-#: NEEDS WORK
-msgid "Add Session Here"
-msgstr "Adicionar Sessão Aqui"
-# 
-# File: usr/share/ashyterm/ui/menus.py, line: 98
-#: NEEDS WORK
-msgid "Paste to Root"
-msgstr "Colar na Raiz"
-# 
-# File: usr/share/ashyterm/ui/menus.py, line: 227
-#: NEEDS WORK
-msgid "Open Link"
-msgstr "Abrir Link"
-# 
-# File: usr/share/ashyterm/ui/menus.py, line: 228
-#: NEEDS WORK
-msgid "Copy Link"
-msgstr "Copiar Link"
-# 
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
-# 
-# File: usr/share/ashyterm/ui/menus.py, line: 276
-# File: usr/share/ashyterm/filemanager/menus.py, line: 276
-#: NEEDS WORK
-msgid "Split Left/Right"
-msgstr "Dividir Esquerda/Direita"
-# 
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
-# 
-# File: usr/share/ashyterm/ui/menus.py, line: 279
-# File: usr/share/ashyterm/filemanager/menus.py, line: 279
-#: NEEDS WORK
-msgid "Split Top/Bottom"
-msgstr "Dividir Superior/Inferior"
+msgid "Move Failed"
+msgstr "Movimento Falhou"
 # 
 # File: usr/share/ashyterm/data/command_data.py, line: 9
 # File: usr/share/ashyterm/data/command_data.py, line: 30
@@ -4307,234 +4333,448 @@ msgstr "Exibe apenas a última coluna de cada linha."
 msgid "Displays the value of column 1 only if the value of column 3 is greater than 100."
 msgstr "Exibe o valor da coluna 1 apenas se o valor da coluna 3 for maior que 100."
 # 
-# File: usr/share/ashyterm/app.py, line: 333
-#: NEEDS WORK
-msgid "Preferences Error"
-msgstr "Erro de Preferências"
-# 
-# File: usr/share/ashyterm/app.py, line: 332
-# File: usr/share/ashyterm/app.py, line: 333
+# File: usr/share/ashyterm/sessions/storage.py, line: 125
 #: NEEDS WORK
 #, python-brace-format
-msgid "Failed to open preferences: {}"
-msgstr "Falha ao abrir preferências: {}"
+msgid "File path validation failed: {}"
+msgstr "Validação do caminho do arquivo falhou: {}"
+# 
+# File: usr/share/ashyterm/sessions/storage.py, line: 134
+#: NEEDS WORK
+msgid "File too large (>50MB)"
+msgstr "Arquivo muito grande (>50MB)"
+# 
+# File: usr/share/ashyterm/sessions/storage.py, line: 148
+#: NEEDS WORK
+#, python-brace-format
+msgid "Invalid JSON: {}"
+msgstr "JSON inválido: {}"
+# 
+# File: usr/share/ashyterm/sessions/storage.py, line: 151
+#: NEEDS WORK
+#, python-brace-format
+msgid "Encoding error: {}"
+msgstr "Erro de codificação: {}"
+# 
+# File: usr/share/ashyterm/sessions/storage.py, line: 155
+#: NEEDS WORK
+msgid "Root data is not a dictionary"
+msgstr "Os dados raiz não são um dicionário."
+# 
+# File: usr/share/ashyterm/sessions/storage.py, line: 198
+#: NEEDS WORK
+#, python-brace-format
+msgid "Load failed: {}"
+msgstr "Falha ao carregar: {}"
+# 
+# File: usr/share/ashyterm/sessions/storage.py, line: 395
+#: NEEDS WORK
+msgid "Data validation failed"
+msgstr "Validação de dados falhou"
+# 
+# File: usr/share/ashyterm/sessions/storage.py, line: 410
+#: NEEDS WORK
+msgid "Temporary file was not written correctly"
+msgstr "O arquivo temporário não foi gravado corretamente."
+# 
+# File: usr/share/ashyterm/sessions/storage.py, line: 427
+#: NEEDS WORK
+#, python-brace-format
+msgid "File write failed: {}"
+msgstr "Falha ao gravar o arquivo: {}"
+# 
+# File: usr/share/ashyterm/sessions/storage.py, line: 439
+#: NEEDS WORK
+msgid "Save verification failed"
+msgstr "Falha na verificação de salvamento"
+# 
+# File: usr/share/ashyterm/sessions/storage.py, line: 463
+#: NEEDS WORK
+#, python-brace-format
+msgid "Save failed: {}"
+msgstr "Falha ao salvar: {}"
+# 
+# File: usr/share/ashyterm/sessions/tree.py, line: 298
+# File: usr/share/ashyterm/sessions/tree.py, line: 302
+#: NEEDS WORK
+msgid "Move Error"
+msgstr "Erro de Movimento"
 # 
 # #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
 # 
-# File: usr/share/ashyterm/__init__.py, line: 62
-# File: usr/share/ashyterm/app.py, line: 350
+# File: usr/share/ashyterm/sessions/tree.py, line: 801
+# File: usr/share/ashyterm/state/window_state.py, line: 165
 #: NEEDS WORK
-msgid "A modern terminal emulator with session management"
-msgstr "Um emulador de terminal moderno com gerenciamento de sessões"
+msgid "Restore Layout"
+msgstr "Restaurar Layout"
 # 
-# File: usr/share/ashyterm/app.py, line: 356
+# File: usr/share/ashyterm/sessions/tree.py, line: 808
 #: NEEDS WORK
-msgid "Save Backup As..."
-msgstr "Salvar Backup Como..."
+msgid "Delete Layout"
+msgstr "Excluir Layout"
 # 
-# File: usr/share/ashyterm/app.py, line: 368
-# File: usr/share/ashyterm/app.py, line: 379
-# File: usr/share/ashyterm/app.py, line: 392
-# File: usr/share/ashyterm/app.py, line: 396
+# File: usr/share/ashyterm/sessions/tree.py, line: 618
+# File: usr/share/ashyterm/sessions/tree.py, line: 623
 #: NEEDS WORK
-msgid "Backup Error"
-msgstr "Erro de Backup"
+msgid "Paste Error"
+msgstr "Erro ao Colar"
 # 
-# File: usr/share/ashyterm/app.py, line: 375
-#: NEEDS WORK
-msgid "Set Backup Password"
-msgstr "Definir Senha de Backup"
-# 
-# File: usr/share/ashyterm/app.py, line: 376
-#: NEEDS WORK
-msgid "Please enter a password to encrypt the backup file."
-msgstr "Por favor, insira uma senha para criptografar o arquivo de backup."
-# 
-# File: usr/share/ashyterm/app.py, line: 384
-#: NEEDS WORK
-msgid "Confirm Password"
-msgstr "Confirmar Senha"
-# 
-# File: usr/share/ashyterm/app.py, line: 400
-# File: usr/share/ashyterm/app.py, line: 405
-#: NEEDS WORK
-msgid "Password Error"
-msgstr "Erro de Senha"
-# 
-# File: usr/share/ashyterm/app.py, line: 400
-#: NEEDS WORK
-msgid "Password cannot be empty."
-msgstr "A senha não pode estar vazia."
-# 
-# File: usr/share/ashyterm/app.py, line: 405
-#: NEEDS WORK
-msgid "Passwords do not match."
-msgstr "As senhas não coincidem."
-# 
-# File: usr/share/ashyterm/app.py, line: 423
-#: NEEDS WORK
-msgid "Creating backup..."
-msgstr "Criando backup..."
-# 
-# File: usr/share/ashyterm/app.py, line: 390
-#: NEEDS WORK
-msgid "Backup Complete"
-msgstr "Backup Completo"
-# 
-# File: usr/share/ashyterm/app.py, line: 440
+# File: usr/share/ashyterm/sessions/validation.py, line: 18
 #: NEEDS WORK
 #, python-brace-format
+msgid "Session validation failed: {}"
+msgstr "Validação de sessão falhou: {}"
+# 
+# File: usr/share/ashyterm/sessions/validation.py, line: 31
+#: NEEDS WORK
+#, python-brace-format
+msgid "A session with the name '{name}' already exists in this folder."
+msgstr "Uma sessão com o nome '{name}' já existe nesta pasta."
+# 
+# File: usr/share/ashyterm/sessions/validation.py, line: 45
+#: NEEDS WORK
+#, python-brace-format
+msgid "The target folder '{folder}' does not exist."
+msgstr "A pasta de destino '{folder}' não existe."
+# 
+# File: usr/share/ashyterm/sessions/validation.py, line: 61
+#: NEEDS WORK
+#, python-brace-format
+msgid "Folder validation failed: {}"
+msgstr "Validação da pasta falhou: {}"
+# 
+# File: usr/share/ashyterm/sessions/validation.py, line: 69
+#: NEEDS WORK
+#, python-brace-format
+msgid "A folder with the path '{path}' already exists."
+msgstr "Uma pasta com o caminho '{path}' já existe."
+# 
+# File: usr/share/ashyterm/sessions/validation.py, line: 84
+#: NEEDS WORK
+#, python-brace-format
+msgid "The parent folder '{folder}' does not exist."
+msgstr "A pasta pai '{folder}' não existe."
+# 
+# File: usr/share/ashyterm/sessions/operations.py, line: 51
+#: NEEDS WORK
+#, python-brace-format
+msgid "Failed to save {item_type} data."
+msgstr "Falha ao salvar dados de {item_type}."
+# 
+# File: usr/share/ashyterm/sessions/operations.py, line: 59
+#: NEEDS WORK
+#, python-brace-format
+msgid "{item_type} '{name}' added successfully."
+msgstr "{item_type} '{name}' adicionado com sucesso."
+# 
+# File: usr/share/ashyterm/sessions/operations.py, line: 62
+#: NEEDS WORK
+msgid "Item at position is not a session."
+msgstr "O item na posição não é uma sessão."
+# 
+# File: usr/share/ashyterm/sessions/operations.py, line: 74
+#: NEEDS WORK
+msgid "Failed to save updated session data."
+msgstr "Falha ao salvar os dados da sessão atualizados."
+# 
+# File: usr/share/ashyterm/sessions/operations.py, line: 79
+#: NEEDS WORK
+#, python-brace-format
+msgid "Session '{name}' updated successfully."
+msgstr "Sessão '{name}' atualizada com sucesso."
+# 
+# File: usr/share/ashyterm/sessions/operations.py, line: 90
+#: NEEDS WORK
+msgid "Session not found."
+msgstr "Sessão não encontrada."
+# 
+# File: usr/share/ashyterm/sessions/operations.py, line: 96
+#: NEEDS WORK
+msgid "Failed to save after session removal."
+msgstr "Falha ao salvar após a remoção da sessão."
+# 
+# File: usr/share/ashyterm/sessions/operations.py, line: 102
+#: NEEDS WORK
+#, python-brace-format
+msgid "Session '{name}' removed successfully."
+msgstr "Sessão '{name}' removida com sucesso."
+# 
+# File: usr/share/ashyterm/sessions/operations.py, line: 131
+#: NEEDS WORK
+msgid "Item at position is not a folder."
+msgstr "O item na posição não é uma pasta."
+# 
+# File: usr/share/ashyterm/sessions/operations.py, line: 144
+#: NEEDS WORK
+msgid "Failed to save updated folder data."
+msgstr "Falha ao salvar os dados da pasta atualizada."
+# 
+# File: usr/share/ashyterm/sessions/operations.py, line: 149
+#: NEEDS WORK
+#, python-brace-format
+msgid "Folder '{name}' updated successfully."
+msgstr "Pasta '{name}' atualizada com sucesso."
+# 
+# File: usr/share/ashyterm/sessions/operations.py, line: 161
+#: NEEDS WORK
+msgid "Cannot remove a non-empty folder."
+msgstr "Não é possível remover uma pasta não vazia."
+# 
+# File: usr/share/ashyterm/sessions/operations.py, line: 168
+#: NEEDS WORK
+msgid "Folder not found."
+msgstr "Pasta não encontrada."
+# 
+# File: usr/share/ashyterm/sessions/operations.py, line: 172
+#: NEEDS WORK
+msgid "Failed to save after folder removal."
+msgstr "Falha ao salvar após a remoção da pasta."
+# 
+# File: usr/share/ashyterm/sessions/operations.py, line: 177
+#: NEEDS WORK
+#, python-brace-format
+msgid "Folder '{name}' removed successfully."
+msgstr "Pasta '{name}' removida com sucesso."
+# 
+# File: usr/share/ashyterm/sessions/operations.py, line: 190
+#: NEEDS WORK
+msgid "Failed to save after moving session."
+msgstr "Falha ao salvar após mover a sessão."
+# 
+# File: usr/share/ashyterm/sessions/operations.py, line: 195
+#: NEEDS WORK
+msgid "Session moved successfully."
+msgstr "Sessão movida com sucesso."
+# 
+# File: usr/share/ashyterm/sessions/operations.py, line: 209
+#: NEEDS WORK
+msgid "Cannot move a folder into itself."
+msgstr "Não é possível mover uma pasta para dentro dela mesma."
+# 
+# File: usr/share/ashyterm/sessions/operations.py, line: 285
+#: NEEDS WORK
+#, python-brace-format
+msgid "SSH config file not found at {path}"
+msgstr "Arquivo de configuração SSH não encontrado em {path}"
+# 
+# File: usr/share/ashyterm/sessions/operations.py, line: 295
+#: NEEDS WORK
+#, python-brace-format
+msgid "Failed to parse SSH config: {error}"
+msgstr "Falha ao analisar a configuração SSH: {error}"
+# 
+# File: usr/share/ashyterm/sessions/operations.py, line: 300
+#: NEEDS WORK
+msgid "No host entries found in SSH config."
+msgstr "Nenhuma entrada de host encontrada na configuração SSH."
+# 
+# File: usr/share/ashyterm/sessions/operations.py, line: 312
+#: NEEDS WORK
+#, python-brace-format
+msgid "Skipped host '{alias}': missing hostname."
+msgstr "Host '{alias}' ignorado: nome do host ausente."
+# 
+# File: usr/share/ashyterm/sessions/operations.py, line: 360
+#: NEEDS WORK
+#, python-brace-format
+msgid "Failed to import host '{alias}'."
+msgstr "Falha ao importar o host '{alias}'."
+# 
+# File: usr/share/ashyterm/sessions/operations.py, line: 365
+#: NEEDS WORK
+#, python-brace-format
+msgid "No sessions were imported from {path}."
+msgstr "Nenhuma sessão foi importada de {path}."
+# 
+# File: usr/share/ashyterm/sessions/operations.py, line: 371
+#: NEEDS WORK
+#, python-brace-format
+msgid "Imported {count} session(s) from {path}."
+msgstr "Importado {count} sessão(ões) de {path}."
+# 
+# File: usr/share/ashyterm/sessions/operations.py, line: 260
+#: NEEDS WORK
+msgid "Unsupported item type for paste operation."
+msgstr "Tipo de item não suportado para a operação de colagem."
+# 
+# File: usr/share/ashyterm/sessions/models.py, line: 174
+#: NEEDS WORK
+msgid "Port must be a valid number between 1 and 65535"
+msgstr "A porta deve ser um número válido entre 1 e 65535."
+# 
+# File: usr/share/ashyterm/sessions/models.py, line: 339
+#: NEEDS WORK
+msgid "Invalid port forwarding entry."
+msgstr "Entrada de encaminhamento de porta inválida."
+# 
+# File: usr/share/ashyterm/sessions/models.py, line: 349
+#: NEEDS WORK
+msgid "Port forwarding entries must use numeric ports."
+msgstr "As entradas de encaminhamento de porta devem usar portas numéricas."
+# 
+# File: usr/share/ashyterm/sessions/models.py, line: 198
+#: NEEDS WORK
+msgid "Session name is required."
+msgstr "O nome da sessão é obrigatório."
+# 
+# File: usr/share/ashyterm/sessions/models.py, line: 201
+#: NEEDS WORK
+msgid "Host is required for SSH sessions."
+msgstr "O host é necessário para sessões SSH."
+# 
+# File: usr/share/ashyterm/sessions/models.py, line: 203
+#: NEEDS WORK
+msgid "Port must be between 1 and 65535."
+msgstr "A porta deve estar entre 1 e 65535."
+# 
+# File: usr/share/ashyterm/sessions/models.py, line: 389
+#: NEEDS WORK
+#, python-brace-format
+msgid "Port forward '{name}' has an invalid local port (must be between 1025 and 65535)."
+msgstr "O encaminhamento de porta '{name}' tem uma porta local inválida (deve estar entre 1025 e 65535)."
+# 
+# File: usr/share/ashyterm/sessions/models.py, line: 394
+#: NEEDS WORK
+#, python-brace-format
+msgid "Port forward '{name}' has an invalid remote port."
+msgstr "O encaminhamento de porta '{name}' tem uma porta remota inválida."
+# 
+# File: usr/share/ashyterm/sessions/models.py, line: 386
+# File: usr/share/ashyterm/sessions/models.py, line: 419
+#: NEEDS WORK
+msgid "Unnamed Session"
+msgstr "Sessão Sem Nome"
+# 
+# File: usr/share/ashyterm/sessions/models.py, line: 346
+#: NEEDS WORK
+msgid "Folder name is required."
+msgstr "O nome da pasta é obrigatório."
+# 
+# File: usr/share/ashyterm/sessions/models.py, line: 352
+#: NEEDS WORK
+msgid "Folder path is not consistent with its parent path."
+msgstr "O caminho da pasta não é consistente com o caminho do seu pai."
+# 
+# File: usr/share/ashyterm/sessions/models.py, line: 727
+# File: usr/share/ashyterm/sessions/models.py, line: 752
+#: NEEDS WORK
+msgid "Unnamed Folder"
+msgstr "Pasta Sem Nome"
+# 
+# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 69
+#: NEEDS WORK
+msgid "Cancel transfer"
+msgstr "Cancelar transferência"
+# 
+# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 63
+#: NEEDS WORK
+msgid "Remove from history"
+msgstr "Remover do histórico"
+# 
+# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 78
+#: NEEDS WORK
+msgid "Recebido"
+msgstr "Recebido"
+# 
+# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 80
+#: NEEDS WORK
+msgid "Enviado"
+msgstr "Enviado"
+# 
+# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 107
+#: NEEDS WORK
+msgid "Waiting..."
+msgstr "Aguardando..."
+# 
+# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 116
+#: NEEDS WORK
+msgid "in"
+msgstr "em"
+# 
+# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 121
+#: NEEDS WORK
+msgid "Completed"
+msgstr "Concluído"
+# 
+# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 126
+#: NEEDS WORK
+msgid "Unknown error"
+msgstr "Erro desconhecido"
+# 
+# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 127
+#: NEEDS WORK
+msgid "Failed"
+msgstr "Falhou"
+# 
+# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 131
+#: NEEDS WORK
+msgid "Cancelled"
+msgstr "Cancelado"
+# 
+# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 147
+#: NEEDS WORK
+msgid "Recebendo"
+msgstr "Recebendo"
+# 
+# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 149
+#: NEEDS WORK
+msgid "Enviando"
+msgstr "Enviando"
+# 
+# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 165
+#: NEEDS WORK
+msgid "remaining"
+msgstr "restante"
+# 
+# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 216
+#: NEEDS WORK
+msgid "Transfer Manager"
+msgstr "Gerenciador de Transferências"
+# 
+# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 239
+# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 348
+#: NEEDS WORK
+msgid "Clear History"
+msgstr "Limpar Histórico"
+# 
+# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 231
+#: NEEDS WORK
+msgid "Cancelar Tudo"
+msgstr "Cancelar Tudo"
+# 
+# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 257
+#: NEEDS WORK
+msgid "No Transfers"
+msgstr "Sem Transferências"
+# 
+# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 258
+#: NEEDS WORK
+msgid "Active and past transfers will appear here."
+msgstr "Transferências ativas e passadas aparecerão aqui."
+# 
+# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 340
+#: NEEDS WORK
+msgid "Clear Transfer History?"
+msgstr "Limpar Histórico de Transferência?"
+# 
+# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 342
+#: NEEDS WORK
 msgid ""
-"Backup saved successfully to:\n"
-"{}"
+"This action cannot be undone and will remove all completed, failed, and cancelled transfers from "
+"the list."
 msgstr ""
-"Backup salvo com sucesso em:  \n"
-"{}"
+"Esta ação não pode ser desfeita e removerá todas as transferências concluídas, falhadas e "
+"canceladas da lista."
 # 
-# File: usr/share/ashyterm/app.py, line: 446
+# File: usr/share/ashyterm/filemanager/manager.py, line: 274
 #: NEEDS WORK
-msgid "Backup Failed"
-msgstr "Backup Falhou"
+msgid "Name cannot be empty."
+msgstr "O nome não pode estar vazio."
 # 
-# File: usr/share/ashyterm/app.py, line: 447
+# File: usr/share/ashyterm/filemanager/manager.py, line: 221
 #: NEEDS WORK
-#, python-brace-format
-msgid "Could not create backup: {}"
-msgstr "Não foi possível criar o backup: {}"
-# 
-# File: usr/share/ashyterm/app.py, line: 458
-#: NEEDS WORK
-msgid "Restore from Backup?"
-msgstr "Restaurar a partir do Backup?"
-# 
-# File: usr/share/ashyterm/app.py, line: 460
-#: NEEDS WORK
-msgid ""
-"Restoring from a backup will overwrite all your current sessions, settings, and layouts. This "
-"action cannot be undone.\n"
-"\n"
-"<b>The application will need to be restarted after restoring.</b>"
-msgstr ""
-"Restaurar a partir de um backup substituirá todas as suas sessões, configurações e layouts atuais. "
-"Esta ação não pode ser desfeita.\n"
-"\n"
-"<b>O aplicativo precisará ser reiniciado após a restauração.</b>"
-# 
-# File: usr/share/ashyterm/app.py, line: 466
-#: NEEDS WORK
-msgid "Choose File and Restore"
-msgstr "Escolher Arquivo e Restaurar"
-# 
-# File: usr/share/ashyterm/app.py, line: 474
-#: NEEDS WORK
-msgid "Select Backup File"
-msgstr "Selecionar Arquivo de Backup"
-# 
-# File: usr/share/ashyterm/app.py, line: 477
-#: NEEDS WORK
-msgid "Backup Files"
-msgstr "Arquivos de Backup"
-# 
-# File: usr/share/ashyterm/app.py, line: 402
-# File: usr/share/ashyterm/app.py, line: 416
-#: NEEDS WORK
-msgid "Restore Error"
-msgstr "Erro de Restauração"
-# 
-# File: usr/share/ashyterm/app.py, line: 499
-#: NEEDS WORK
-msgid "Enter Backup Password"
-msgstr "Digite a Senha de Backup"
-# 
-# File: usr/share/ashyterm/app.py, line: 500
-#: NEEDS WORK
-msgid "Please enter the password for the selected backup file."
-msgstr "Por favor, insira a senha para o arquivo de backup selecionado."
-# 
-# File: usr/share/ashyterm/app.py, line: 508
-#: NEEDS WORK
-msgid "Restore"
-msgstr "Restaurar"
-# 
-# File: usr/share/ashyterm/app.py, line: 525
-#: NEEDS WORK
-msgid "Restoring from backup..."
-msgstr "Restaurando a partir do backup..."
-# 
-# File: usr/share/ashyterm/app.py, line: 538
-#: NEEDS WORK
-msgid "Restore Failed"
-msgstr "Restauração Falhou"
-# 
-# File: usr/share/ashyterm/app.py, line: 539
-#: NEEDS WORK
-#, python-brace-format
-msgid "Could not restore from backup: {}"
-msgstr "Não foi possível restaurar do backup: {}"
-# 
-# File: usr/share/ashyterm/app.py, line: 549
-#: NEEDS WORK
-msgid "Restore Complete"
-msgstr "Restauração Completa"
-# 
-# File: usr/share/ashyterm/app.py, line: 551
-#: NEEDS WORK
-msgid "Data has been restored successfully. Please restart Ashy Terminal for the changes to take effect."
-msgstr ""
-"Os dados foram restaurados com sucesso. Por favor, reinicie o Ashy Terminal para que as alterações "
-"tenham efeito."
-# 
-# File: usr/share/ashyterm/app.py, line: 498
-#: NEEDS WORK
-msgid "Close Application"
-msgstr "Fechar Aplicativo"
-# 
-# File: usr/share/ashyterm/app.py, line: 499
-#: NEEDS WORK
-msgid ""
-"There are active SSH connections. Closing will disconnect all sessions.\n"
-"\n"
-"Are you sure you want to close the application?"
-msgstr ""
-"Existem conexões SSH ativas. Fechar desconectará todas as sessões.\n"
-"\n"
-"Você tem certeza de que deseja fechar o aplicativo?"
-# 
-# File: usr/share/ashyterm/app.py, line: 503
-#: NEEDS WORK
-msgid "Close All"
-msgstr "Fechar Tudo"
-# 
-# File: usr/share/ashyterm/app.py, line: 530
-#: NEEDS WORK
-msgid "Startup Error"
-msgstr "Erro de Inicialização"
-# 
-# File: usr/share/ashyterm/app.py, line: 531
-#: NEEDS WORK
-#, python-brace-format
-msgid "Application failed to start: {}"
-msgstr "Aplicativo falhou ao iniciar: {}"
-# 
-# File: usr/share/ashyterm/terminal/tabs.py, line: 237
-#: NEEDS WORK
-msgid "Detach Tab"
-msgstr "Desanexar Aba"
-# 
-# File: usr/share/ashyterm/terminal/tabs.py, line: 585
-#: NEEDS WORK
-msgid "This is the only pane in the tab."
-msgstr "Este é o único painel na aba."
-# 
-# File: usr/share/ashyterm/terminal/spawner.py, line: 295
-#: NEEDS WORK
-msgid "Not an SSH session."
-msgstr "Não é uma sessão SSH."
-# 
-# File: usr/share/ashyterm/filemanager/operations.py, line: 146
-#: NEEDS WORK
-msgid "Command timed out."
-msgstr "O comando expirou."
+msgid "rsync is not installed on the remote host. Install the rsync package or use SFTP for transfers."
+msgstr "o rsync não está instalado no host remoto. Instale o pacote rsync ou use SFTP para transferências."
 # 
 # File: usr/share/ashyterm/filemanager/manager.py, line: 182
 # File: usr/share/ashyterm/filemanager/manager.py, line: 608
@@ -4547,10 +4787,15 @@ msgstr "Atualizar"
 msgid "Show hidden files"
 msgstr "Mostrar arquivos ocultos"
 # 
-# File: usr/share/ashyterm/filemanager/manager.py, line: 197
+# File: usr/share/ashyterm/filemanager/manager.py, line: 577
 #: NEEDS WORK
-msgid "Filter..."
-msgstr "Filtro..."
+msgid "Filter files..."
+msgstr "Filtrar arquivos..."
+# 
+# File: usr/share/ashyterm/filemanager/manager.py, line: 397
+#: NEEDS WORK
+msgid "Recursive Search"
+msgstr "Busca Recursiva"
 # 
 # File: usr/share/ashyterm/filemanager/manager.py, line: 203
 #: NEEDS WORK
@@ -4562,10 +4807,17 @@ msgstr "Histórico de Transferência"
 msgid "Upload Files"
 msgstr "Carregar Arquivos"
 # 
-# File: usr/share/ashyterm/filemanager/manager.py, line: 366
+# File: usr/share/ashyterm/filemanager/manager.py, line: 665
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1266
 #: NEEDS WORK
-msgid "Name"
-msgstr "Nome"
+msgid "Searching..."
+msgstr "Buscando..."
+# 
+# File: usr/share/ashyterm/filemanager/manager.py, line: 775
+#: NEEDS WORK
+#, python-brace-format
+msgid "Showing first {count} results. Refine your search to narrow the list."
+msgstr "Mostrando os primeiros {count} resultados. Refine sua busca para restringir a lista."
 # 
 # File: usr/share/ashyterm/filemanager/manager.py, line: 375
 #: NEEDS WORK
@@ -4615,10 +4867,22 @@ msgstr ""
 msgid "Loading..."
 msgstr "Carregando..."
 # 
-# File: usr/share/ashyterm/filemanager/manager.py, line: 577
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1268
 #: NEEDS WORK
-msgid "Filter files..."
-msgstr "Filtrar arquivos..."
+msgid "Recursive filter..."
+msgstr "Filtro recursivo..."
+# 
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1551
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1740
+#: NEEDS WORK
+msgid "Create Folder"
+msgstr "Criar Pasta"
+# 
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1552
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1757
+#: NEEDS WORK
+msgid "Create File"
+msgstr "Criar Arquivo"
 # 
 # File: usr/share/ashyterm/filemanager/manager.py, line: 630
 #: NEEDS WORK
@@ -4631,10 +4895,86 @@ msgstr "Abrir/Editar"
 msgid "Open With..."
 msgstr "Abrir com..."
 # 
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1683
+#: NEEDS WORK
+msgid "Cut"
+msgstr "Cortar"
+# 
 # File: usr/share/ashyterm/filemanager/manager.py, line: 638
 #: NEEDS WORK
 msgid "Download"
 msgstr "Baixar"
+# 
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1737
+#: NEEDS WORK
+msgid "Create folder command sent to terminal"
+msgstr "Comando de criar pasta enviado ao terminal"
+# 
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1741
+#: NEEDS WORK
+msgid "Enter a name for the new folder:"
+msgstr "Digite um nome para a nova pasta:"
+# 
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1743
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1760
+#: NEEDS WORK
+msgid "Create"
+msgstr "Criar"
+# 
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1754
+#: NEEDS WORK
+msgid "Create file command sent to terminal"
+msgstr "Comando de criação de arquivo enviado ao terminal"
+# 
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1758
+#: NEEDS WORK
+msgid "Enter a name for the new file:"
+msgstr "Digite um nome para o novo arquivo:"
+# 
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1759
+#: NEEDS WORK
+msgid "New File"
+msgstr "Novo Arquivo"
+# 
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1767
+#: NEEDS WORK
+msgid "No items selected to copy."
+msgstr "Nenhum item selecionado para copiar."
+# 
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1781
+#: NEEDS WORK
+msgid "Items copied to clipboard."
+msgstr "Itens copiados para a área de transferência."
+# 
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1786
+#: NEEDS WORK
+msgid "No items selected to cut."
+msgstr "Nenhum item selecionado para recortar."
+# 
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1800
+#: NEEDS WORK
+msgid "Items marked for move."
+msgstr "Itens marcados para mover."
+# 
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1804
+#: NEEDS WORK
+msgid "Nothing to paste."
+msgstr "Nada para colar."
+# 
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1815
+#: NEEDS WORK
+msgid "Items are already in this location."
+msgstr "Os itens já estão neste local."
+# 
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1819
+#: NEEDS WORK
+msgid "Move command sent to terminal"
+msgstr "Comando de mover enviado ao terminal"
+# 
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1824
+#: NEEDS WORK
+msgid "Copy command sent to terminal"
+msgstr "Comando de cópia enviado ao terminal"
 # 
 # File: usr/share/ashyterm/filemanager/manager.py, line: 672
 #: NEEDS WORK
@@ -4958,116 +5298,6 @@ msgstr "Digite um novo nome para '{name}'"
 msgid "Rename command sent to terminal"
 msgstr "Comando de renomear enviado ao terminal"
 # 
-# File: usr/share/ashyterm/filemanager/transfer_manager.py, line: 273
-#: NEEDS WORK
-msgid "Cancel All Transfers"
-msgstr "Cancelar Todas as Transferências"
-# 
-# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 69
-#: NEEDS WORK
-msgid "Cancel transfer"
-msgstr "Cancelar transferência"
-# 
-# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 63
-#: NEEDS WORK
-msgid "Remove from history"
-msgstr "Remover do histórico"
-# 
-# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 78
-#: NEEDS WORK
-msgid "Recebido"
-msgstr "Recebido"
-# 
-# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 80
-#: NEEDS WORK
-msgid "Enviado"
-msgstr "Enviado"
-# 
-# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 107
-#: NEEDS WORK
-msgid "Waiting..."
-msgstr "Aguardando..."
-# 
-# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 116
-#: NEEDS WORK
-msgid "in"
-msgstr "em"
-# 
-# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 121
-#: NEEDS WORK
-msgid "Completed"
-msgstr "Concluído"
-# 
-# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 126
-#: NEEDS WORK
-msgid "Unknown error"
-msgstr "Erro desconhecido"
-# 
-# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 127
-#: NEEDS WORK
-msgid "Failed"
-msgstr "Falhou"
-# 
-# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 131
-#: NEEDS WORK
-msgid "Cancelled"
-msgstr "Cancelado"
-# 
-# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 147
-#: NEEDS WORK
-msgid "Recebendo"
-msgstr "Recebendo"
-# 
-# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 149
-#: NEEDS WORK
-msgid "Enviando"
-msgstr "Enviando"
-# 
-# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 165
-#: NEEDS WORK
-msgid "remaining"
-msgstr "restante"
-# 
-# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 216
-#: NEEDS WORK
-msgid "Transfer Manager"
-msgstr "Gerenciador de Transferências"
-# 
-# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 239
-# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 348
-#: NEEDS WORK
-msgid "Clear History"
-msgstr "Limpar Histórico"
-# 
-# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 231
-#: NEEDS WORK
-msgid "Cancelar Tudo"
-msgstr "Cancelar Tudo"
-# 
-# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 257
-#: NEEDS WORK
-msgid "No Transfers"
-msgstr "Sem Transferências"
-# 
-# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 258
-#: NEEDS WORK
-msgid "Active and past transfers will appear here."
-msgstr "Transferências ativas e passadas aparecerão aqui."
-# 
-# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 340
-#: NEEDS WORK
-msgid "Clear Transfer History?"
-msgstr "Limpar Histórico de Transferência?"
-# 
-# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 342
-#: NEEDS WORK
-msgid ""
-"This action cannot be undone and will remove all completed, failed, and cancelled transfers from "
-"the list."
-msgstr ""
-"Esta ação não pode ser desfeita e removerá todas as transferências concluídas, falhadas e "
-"canceladas da lista."
-# 
 # File: usr/share/ashyterm/filemanager/operations.py, line: 113
 #: NEEDS WORK
 msgid "No session context for file operation."
@@ -5087,6 +5317,1812 @@ msgstr "Permissão Negada: Verifique as permissões de gravação no destino."
 #: NEEDS WORK
 msgid "An unknown transfer error occurred."
 msgstr "Ocorreu um erro de transferência desconhecido."
+# 
+# File: usr/share/ashyterm/filemanager/transfer_manager.py, line: 273
+#: NEEDS WORK
+msgid "Cancel All Transfers"
+msgstr "Cancelar Todas as Transferências"
+# 
+# File: usr/share/ashyterm/window.py, line: 36
+#: NEEDS WORK
+msgid "How can I monitor CPU and memory usage in real time?"
+msgstr "Como posso monitorar o uso de CPU e memória em tempo real?"
+# 
+# File: usr/share/ashyterm/window.py, line: 37
+#: NEEDS WORK
+msgid "Which commands show the processes consuming the most memory?"
+msgstr "Quais comandos mostram os processos que consomem mais memória?"
+# 
+# File: usr/share/ashyterm/window.py, line: 38
+#: NEEDS WORK
+msgid "Why is my disk stuck at 100% usage and how do I investigate it?"
+msgstr "Por que meu disco está preso a 100% de uso e como posso investigá-lo?"
+# 
+# File: usr/share/ashyterm/window.py, line: 39
+#: NEEDS WORK
+msgid "How can I locate large files taking up space under /?"
+msgstr "Como posso localizar arquivos grandes ocupando espaço em /?"
+# 
+# File: usr/share/ashyterm/window.py, line: 40
+#: NEEDS WORK
+msgid "What steps help troubleshoot a slow SSH connection?"
+msgstr "Quais etapas ajudam a solucionar uma conexão SSH lenta?"
+# 
+# File: usr/share/ashyterm/window.py, line: 41
+#: NEEDS WORK
+msgid "How can I automate daily incremental backups with rsync?"
+msgstr "Como posso automatizar backups incrementais diários com rsync?"
+# 
+# File: usr/share/ashyterm/window.py, line: 42
+#: NEEDS WORK
+msgid "How do I remove orphan packages and clean the cache on BigLinux?"
+msgstr "Como faço para remover pacotes órfãos e limpar o cache no BigLinux?"
+# 
+# File: usr/share/ashyterm/window.py, line: 43
+#: NEEDS WORK
+msgid "How can I list services that are enabled and active on systemd?"
+msgstr "Como posso listar os serviços que estão habilitados e ativos no systemd?"
+# 
+# File: usr/share/ashyterm/window.py, line: 44
+#: NEEDS WORK
+msgid "What should I examine when boot time is too long?"
+msgstr "O que devo examinar quando o tempo de inicialização é muito longo?"
+# 
+# File: usr/share/ashyterm/window.py, line: 45
+#: NEEDS WORK
+msgid "How do I monitor temperature and fan speeds from the terminal?"
+msgstr "Como faço para monitorar a temperatura e as velocidades do ventilador a partir do terminal?"
+# 
+# File: usr/share/ashyterm/window.py, line: 46
+#: NEEDS WORK
+msgid "How can I configure alerts when CPU usage exceeds a threshold?"
+msgstr "Como posso configurar alertas quando o uso da CPU excede um limite?"
+# 
+# File: usr/share/ashyterm/window.py, line: 47
+#: NEEDS WORK
+msgid "How do I create a script that restarts a service automatically?"
+msgstr "Como posso criar um script que reinicie um serviço automaticamente?"
+# 
+# File: usr/share/ashyterm/window.py, line: 48
+#: NEEDS WORK
+msgid "How do I automatically mount a remote NFS share?"
+msgstr "Como faço para montar automaticamente um compartilhamento NFS remoto?"
+# 
+# File: usr/share/ashyterm/window.py, line: 49
+#: NEEDS WORK
+msgid "How can I debug network issues using mtr and traceroute?"
+msgstr "Como posso depurar problemas de rede usando mtr e traceroute?"
+# 
+# File: usr/share/ashyterm/window.py, line: 50
+#: NEEDS WORK
+msgid "What best practices should I follow to harden SSH?"
+msgstr "Quais melhores práticas devo seguir para fortalecer o SSH?"
+# 
+# File: usr/share/ashyterm/window.py, line: 51
+#: NEEDS WORK
+msgid "How do I schedule updates with pacman and log the results?"
+msgstr "Como agendo atualizações com o pacman e registro os resultados?"
+# 
+# File: usr/share/ashyterm/window.py, line: 52
+#: NEEDS WORK
+msgid "How do I detect and terminate zombie processes?"
+msgstr "Como posso detectar e encerrar processos zumbis?"
+# 
+# File: usr/share/ashyterm/window.py, line: 53
+#: NEEDS WORK
+msgid "How do I compare two directories to find differences?"
+msgstr "Como comparo dois diretórios para encontrar diferenças?"
+# 
+# File: usr/share/ashyterm/window.py, line: 54
+#: NEEDS WORK
+msgid "How can I configure automatic backups of /etc with git?"
+msgstr "Como posso configurar backups automáticos de /etc com git?"
+# 
+# File: usr/share/ashyterm/window.py, line: 55
+#: NEEDS WORK
+msgid "How do I troubleshoot high disk I/O usage in databases?"
+msgstr "Como faço para solucionar problemas de alto uso de I/O de disco em bancos de dados?"
+# 
+# File: usr/share/ashyterm/window.py, line: 56
+#: NEEDS WORK
+msgid "How can I check available kernel versions and update safely?"
+msgstr "Como posso verificar as versões de kernel disponíveis e atualizar com segurança?"
+# 
+# File: usr/share/ashyterm/window.py, line: 57
+#: NEEDS WORK
+msgid "What is the best way to install proprietary GPU drivers?"
+msgstr "Qual é a melhor maneira de instalar drivers de GPU proprietários?"
+# 
+# File: usr/share/ashyterm/window.py, line: 58
+#: NEEDS WORK
+msgid "How do I configure multiple monitors on X11 and Wayland?"
+msgstr "Como configuro vários monitores no X11 e no Wayland?"
+# 
+# File: usr/share/ashyterm/window.py, line: 59
+#: NEEDS WORK
+msgid "How can I adjust display brightness from the terminal?"
+msgstr "Como posso ajustar o brilho da tela pelo terminal?"
+# 
+# File: usr/share/ashyterm/window.py, line: 60
+#: NEEDS WORK
+msgid "How do I find which process is listening on a TCP port?"
+msgstr "Como posso descobrir qual processo está escutando em uma porta TCP?"
+# 
+# File: usr/share/ashyterm/window.py, line: 61
+#: NEEDS WORK
+msgid "How can I release an occupied port without rebooting?"
+msgstr "Como posso liberar uma porta ocupada sem reiniciar?"
+# 
+# File: usr/share/ashyterm/window.py, line: 62
+#: NEEDS WORK
+msgid "How do I identify and kill stuck SSH sessions?"
+msgstr "Como posso identificar e encerrar sessões SSH travadas?"
+# 
+# File: usr/share/ashyterm/window.py, line: 63
+#: NEEDS WORK
+msgid "How can I configure an SSH tunnel for secure remote access?"
+msgstr "Como posso configurar um túnel SSH para acesso remoto seguro?"
+# 
+# File: usr/share/ashyterm/window.py, line: 64
+#: NEEDS WORK
+msgid "How do I sync folders using rsync with compression?"
+msgstr "Como faço para sincronizar pastas usando rsync com compressão?"
+# 
+# File: usr/share/ashyterm/window.py, line: 65
+#: NEEDS WORK
+msgid "How do I schedule recurring tasks with systemd timers?"
+msgstr "Como agendo tarefas recorrentes com temporizadores systemd?"
+# 
+# File: usr/share/ashyterm/window.py, line: 66
+#: NEEDS WORK
+msgid "How can I configure custom log rotation with logrotate?"
+msgstr "Como posso configurar a rotação de logs personalizada com o logrotate?"
+# 
+# File: usr/share/ashyterm/window.py, line: 67
+#: NEEDS WORK
+msgid "How do I access the systemd journal from another host?"
+msgstr "Como faço para acessar o journal do systemd de outro host?"
+# 
+# File: usr/share/ashyterm/window.py, line: 68
+#: NEEDS WORK
+msgid "How do I tail logs in real time and filter by keyword?"
+msgstr "Como faço para acompanhar logs em tempo real e filtrar por palavra-chave?"
+# 
+# File: usr/share/ashyterm/window.py, line: 69
+#: NEEDS WORK
+msgid "How can I check which package installed a specific file?"
+msgstr "Como posso verificar qual pacote instalou um arquivo específico?"
+# 
+# File: usr/share/ashyterm/window.py, line: 70
+#: NEEDS WORK
+msgid "How do I list package dependencies before installing?"
+msgstr "Como faço para listar as dependências do pacote antes de instalar?"
+# 
+# File: usr/share/ashyterm/window.py, line: 71
+#: NEEDS WORK
+msgid "How can I simulate a pacman upgrade without changing the system?"
+msgstr "Como posso simular uma atualização do pacman sem alterar o sistema?"
+# 
+# File: usr/share/ashyterm/window.py, line: 72
+#: NEEDS WORK
+msgid "How do I recover a system that fails to boot after a kernel update?"
+msgstr "Como posso recuperar um sistema que não inicializa após uma atualização do kernel?"
+# 
+# File: usr/share/ashyterm/window.py, line: 73
+#: NEEDS WORK
+msgid "How do I mount ISO images without burning them?"
+msgstr "Como faço para montar imagens ISO sem gravá-las?"
+# 
+# File: usr/share/ashyterm/window.py, line: 74
+#: NEEDS WORK
+msgid "How do I verify downloads using sha256sum?"
+msgstr "Como faço para verificar downloads usando sha256sum?"
+# 
+# File: usr/share/ashyterm/window.py, line: 75
+#: NEEDS WORK
+msgid "How can I set persistent aliases for frequent commands?"
+msgstr "Como posso definir aliases persistentes para comandos frequentes?"
+# 
+# File: usr/share/ashyterm/window.py, line: 76
+#: NEEDS WORK
+msgid "How do I create custom shell functions in my bashrc?"
+msgstr "Como eu crio funções de shell personalizadas no meu bashrc?"
+# 
+# File: usr/share/ashyterm/window.py, line: 77
+#: NEEDS WORK
+msgid "How do I share a folder with Samba and manage permissions?"
+msgstr "Como compartilho uma pasta com Samba e gerencio permissões?"
+# 
+# File: usr/share/ashyterm/window.py, line: 78
+#: NEEDS WORK
+msgid "How do I mount a CIFS share securely with credentials?"
+msgstr "Como faço para montar um compartilhamento CIFS de forma segura com credenciais?"
+# 
+# File: usr/share/ashyterm/window.py, line: 79
+#: NEEDS WORK
+msgid "How do I find my internal and external IP address quickly?"
+msgstr "Como posso encontrar meu endereço IP interno e externo rapidamente?"
+# 
+# File: usr/share/ashyterm/window.py, line: 80
+#: NEEDS WORK
+msgid "How can I test network speed from the command line?"
+msgstr "Como posso testar a velocidade da rede a partir da linha de comando?"
+# 
+# File: usr/share/ashyterm/window.py, line: 81
+#: NEEDS WORK
+msgid "How do I scan local devices with nmap?"
+msgstr "Como faço para escanear dispositivos locais com nmap?"
+# 
+# File: usr/share/ashyterm/window.py, line: 82
+#: NEEDS WORK
+msgid "How can I troubleshoot slow or failing DNS?"
+msgstr "Como posso solucionar problemas de DNS lento ou com falhas?"
+# 
+# File: usr/share/ashyterm/window.py, line: 83
+#: NEEDS WORK
+msgid "How do I configure a local DNS resolver with systemd-resolved?"
+msgstr "Como configuro um resolvedor DNS local com systemd-resolved?"
+# 
+# File: usr/share/ashyterm/window.py, line: 84
+#: NEEDS WORK
+msgid "How can I capture suspicious traffic with tcpdump?"
+msgstr "Como posso capturar tráfego suspeito com tcpdump?"
+# 
+# File: usr/share/ashyterm/window.py, line: 85
+#: NEEDS WORK
+msgid "How do I limit bandwidth for a process using tc or trickle?"
+msgstr "Como faço para limitar a largura de banda de um processo usando tc ou trickle?"
+# 
+# File: usr/share/ashyterm/window.py, line: 86
+#: NEEDS WORK
+msgid "How can I inspect routing tables and metrics?"
+msgstr "Como posso inspecionar tabelas de roteamento e métricas?"
+# 
+# File: usr/share/ashyterm/window.py, line: 87
+#: NEEDS WORK
+msgid "How do I configure NTP servers and sync time automatically?"
+msgstr "Como configuro servidores NTP e sincronizo o tempo automaticamente?"
+# 
+# File: usr/share/ashyterm/window.py, line: 88
+#: NEEDS WORK
+msgid "How do I manage users and groups with useradd and gpasswd?"
+msgstr "Como faço para gerenciar usuários e grupos com useradd e gpasswd?"
+# 
+# File: usr/share/ashyterm/window.py, line: 89
+#: NEEDS WORK
+msgid "How do I reset the root password if I forget it?"
+msgstr "Como faço para redefinir a senha de root se eu a esquecer?"
+# 
+# File: usr/share/ashyterm/window.py, line: 90
+#: NEEDS WORK
+msgid "How can I configure sudo without granting full root access?"
+msgstr "Como posso configurar o sudo sem conceder acesso total de root?"
+# 
+# File: usr/share/ashyterm/window.py, line: 91
+#: NEEDS WORK
+msgid "How do I audit successful and failed logins on the system?"
+msgstr "Como faço para auditar logins bem-sucedidos e falhados no sistema?"
+# 
+# File: usr/share/ashyterm/window.py, line: 92
+#: NEEDS WORK
+msgid "How can I temporarily lock an account after failed attempts?"
+msgstr "Como posso bloquear temporariamente uma conta após tentativas falhadas?"
+# 
+# File: usr/share/ashyterm/window.py, line: 93
+#: NEEDS WORK
+msgid "How do I configure SSH keys and disable password authentication?"
+msgstr "Como configuro chaves SSH e desativo a autenticação por senha?"
+# 
+# File: usr/share/ashyterm/window.py, line: 94
+#: NEEDS WORK
+msgid "How can I use fail2ban to protect exposed services?"
+msgstr "Como posso usar o fail2ban para proteger serviços expostos?"
+# 
+# File: usr/share/ashyterm/window.py, line: 95
+#: NEEDS WORK
+msgid "How do I enable the firewall with ufw and create basic rules?"
+msgstr "Como habilito o firewall com o ufw e crio regras básicas?"
+# 
+# File: usr/share/ashyterm/window.py, line: 96
+#: NEEDS WORK
+msgid "How can I inspect and adjust rules with nftables?"
+msgstr "Como posso inspecionar e ajustar regras com nftables?"
+# 
+# File: usr/share/ashyterm/window.py, line: 97
+#: NEEDS WORK
+msgid "How do I detect altered files using tripwire or aide?"
+msgstr "Como posso detectar arquivos alterados usando o tripwire ou o aide?"
+# 
+# File: usr/share/ashyterm/window.py, line: 98
+#: NEEDS WORK
+msgid "How do I configure encrypted backups automatically with borg?"
+msgstr "Como configuro backups criptografados automaticamente com o borg?"
+# 
+# File: usr/share/ashyterm/window.py, line: 99
+#: NEEDS WORK
+msgid "How can I sync backups to the cloud using rclone?"
+msgstr "Como posso sincronizar backups para a nuvem usando rclone?"
+# 
+# File: usr/share/ashyterm/window.py, line: 100
+#: NEEDS WORK
+msgid "How do I set up software RAID and monitor its health?"
+msgstr "Como configuro o RAID de software e monitoro sua saúde?"
+# 
+# File: usr/share/ashyterm/window.py, line: 101
+#: NEEDS WORK
+msgid "How can I recover data from a degraded RAID array?"
+msgstr "Como posso recuperar dados de um array RAID degradado?"
+# 
+# File: usr/share/ashyterm/window.py, line: 102
+#: NEEDS WORK
+msgid "How do I analyse SMART attributes to predict disk failures?"
+msgstr "Como analiso os atributos SMART para prever falhas no disco?"
+# 
+# File: usr/share/ashyterm/window.py, line: 103
+#: NEEDS WORK
+msgid "How can I expand an LVM partition without data loss?"
+msgstr "Como posso expandir uma partição LVM sem perda de dados?"
+# 
+# File: usr/share/ashyterm/window.py, line: 104
+#: NEEDS WORK
+msgid "How do I move the home directory to another partition?"
+msgstr "Como faço para mover o diretório home para outra partição?"
+# 
+# File: usr/share/ashyterm/window.py, line: 105
+#: NEEDS WORK
+msgid "How do I create a swapfile and tune swappiness?"
+msgstr "Como eu crio um arquivo de troca e ajusto a swappiness?"
+# 
+# File: usr/share/ashyterm/window.py, line: 106
+#: NEEDS WORK
+msgid "How can I clear cached memory without rebooting?"
+msgstr "Como posso limpar a memória cache sem reiniciar?"
+# 
+# File: usr/share/ashyterm/window.py, line: 107
+#: NEEDS WORK
+msgid "How do I reduce power consumption on Linux laptops?"
+msgstr "Como posso reduzir o consumo de energia em laptops Linux?"
+# 
+# File: usr/share/ashyterm/window.py, line: 108
+#: NEEDS WORK
+msgid "How can I troubleshoot frequent GNOME or KDE freezes?"
+msgstr "Como posso solucionar congelamentos frequentes do GNOME ou KDE?"
+# 
+# File: usr/share/ashyterm/window.py, line: 109
+#: NEEDS WORK
+msgid "How do I reset desktop environment settings from the terminal?"
+msgstr "Como faço para redefinir as configurações do ambiente de desktop a partir do terminal?"
+# 
+# File: usr/share/ashyterm/window.py, line: 110
+#: NEEDS WORK
+msgid "How do I install additional fonts and set them system-wide?"
+msgstr "Como faço para instalar fontes adicionais e configurá-las para todo o sistema?"
+# 
+# File: usr/share/ashyterm/window.py, line: 111
+#: NEEDS WORK
+msgid "How can I change keyboard layout permanently?"
+msgstr "Como posso mudar o layout do teclado permanentemente?"
+# 
+# File: usr/share/ashyterm/window.py, line: 112
+#: NEEDS WORK
+msgid "How do I enable network printing support with CUPS?"
+msgstr "Como habilito o suporte à impressão em rede com o CUPS?"
+# 
+# File: usr/share/ashyterm/window.py, line: 113
+#: NEEDS WORK
+msgid "How can I troubleshoot PulseAudio or PipeWire sound issues?"
+msgstr "Como posso solucionar problemas de som do PulseAudio ou PipeWire?"
+# 
+# File: usr/share/ashyterm/window.py, line: 114
+#: NEEDS WORK
+msgid "How do I detect and configure USB devices automatically?"
+msgstr "Como posso detectar e configurar dispositivos USB automaticamente?"
+# 
+# File: usr/share/ashyterm/window.py, line: 115
+#: NEEDS WORK
+msgid "How can I set up a simple web server with nginx?"
+msgstr "Como posso configurar um servidor web simples com nginx?"
+# 
+# File: usr/share/ashyterm/window.py, line: 116
+#: NEEDS WORK
+msgid "How do I secure Apache with HTTPS using Let's Encrypt?"
+msgstr "Como faço para proteger o Apache com HTTPS usando o Let's Encrypt?"
+# 
+# File: usr/share/ashyterm/window.py, line: 117
+#: NEEDS WORK
+msgid "How can I optimise PHP-FPM for high traffic?"
+msgstr "Como posso optimizar o PHP-FPM para alto tráfego?"
+# 
+# File: usr/share/ashyterm/window.py, line: 118
+#: NEEDS WORK
+msgid "How do I configure a reverse proxy with caching?"
+msgstr "Como configuro um proxy reverso com cache?"
+# 
+# File: usr/share/ashyterm/window.py, line: 119
+#: NEEDS WORK
+msgid "How can I monitor Docker containers and restart them automatically?"
+msgstr "Como posso monitorar contêineres Docker e reiniciá-los automaticamente?"
+# 
+# File: usr/share/ashyterm/window.py, line: 120
+#: NEEDS WORK
+msgid "How do I inspect container logs and limit resource usage?"
+msgstr "Como faço para inspecionar os logs do contêiner e limitar o uso de recursos?"
+# 
+# File: usr/share/ashyterm/window.py, line: 121
+#: NEEDS WORK
+msgid "How do I build optimised multi-stage Docker images?"
+msgstr "Como faço para construir imagens Docker multi-stage otimizadas?"
+# 
+# File: usr/share/ashyterm/window.py, line: 122
+#: NEEDS WORK
+msgid "How can I manage pods and deployments in a local Kubernetes cluster?"
+msgstr "Como posso gerenciar pods e implantações em um cluster Kubernetes local?"
+# 
+# File: usr/share/ashyterm/window.py, line: 123
+#: NEEDS WORK
+msgid "How do I set up a basic CI/CD pipeline with GitLab Runner?"
+msgstr "Como configuro um pipeline básico de CI/CD com o GitLab Runner?"
+# 
+# File: usr/share/ashyterm/window.py, line: 124
+#: NEEDS WORK
+msgid "How can I create isolated Python environments with venv?"
+msgstr "Como posso criar ambientes Python isolados com venv?"
+# 
+# File: usr/share/ashyterm/window.py, line: 125
+#: NEEDS WORK
+msgid "How do I build custom deb or rpm packages?"
+msgstr "Como faço para criar pacotes deb ou rpm personalizados?"
+# 
+# File: usr/share/ashyterm/window.py, line: 126
+#: NEEDS WORK
+msgid "How can I compile a custom kernel and install it?"
+msgstr "Como posso compilar um kernel personalizado e instalá-lo?"
+# 
+# File: usr/share/ashyterm/window.py, line: 127
+#: NEEDS WORK
+msgid "How do I measure application performance with perf and flame graphs?"
+msgstr "Como faço para medir o desempenho da aplicação com perf e gráficos de chama?"
+# 
+# File: usr/share/ashyterm/window.py, line: 128
+#: NEEDS WORK
+msgid "How can I use strace and ltrace to debug processes?"
+msgstr "Como posso usar strace e ltrace para depurar processos?"
+# 
+# File: usr/share/ashyterm/window.py, line: 129
+#: NEEDS WORK
+msgid "How do I investigate deadlocks with gdb and core dumps?"
+msgstr "Como posso investigar deadlocks com gdb e dumps de núcleo?"
+# 
+# File: usr/share/ashyterm/window.py, line: 130
+#: NEEDS WORK
+msgid "How can I enable SELinux or AppArmor and create simple policies?"
+msgstr "Como posso habilitar o SELinux ou o AppArmor e criar políticas simples?"
+# 
+# File: usr/share/ashyterm/window.py, line: 131
+#: NEEDS WORK
+msgid "How do I validate security policies before applying them in production?"
+msgstr "Como valido as políticas de segurança antes de aplicá-las em produção?"
+# 
+# File: usr/share/ashyterm/window.py, line: 132
+#: NEEDS WORK
+msgid "How can I configure site-to-site OpenVPN?"
+msgstr "Como posso configurar o OpenVPN site-a-site?"
+# 
+# File: usr/share/ashyterm/window.py, line: 133
+#: NEEDS WORK
+msgid "How do I set up a WireGuard server with multiple users?"
+msgstr "Como configuro um servidor WireGuard com múltiplos usuários?"
+# 
+# File: usr/share/ashyterm/window.py, line: 134
+#: NEEDS WORK
+msgid "How can I detect and mitigate excessive swap usage?"
+msgstr "Como posso detectar e mitigar o uso excessivo de swap?"
+# 
+# File: usr/share/ashyterm/window.py, line: 135
+#: NEEDS WORK
+msgid "How do I track why a process was killed by the OOM killer?"
+msgstr "Como posso rastrear por que um processo foi finalizado pelo OOM killer?"
+# 
+# File: usr/share/ashyterm/window.py, line: 136
+#: NEEDS WORK
+msgid "How can I configure disk quotas for users and groups?"
+msgstr "Como posso configurar cotas de disco para usuários e grupos?"
+# 
+# File: usr/share/ashyterm/window.py, line: 137
+#: NEEDS WORK
+msgid "How do I automate cleanup of /tmp and temporary directories?"
+msgstr "Como posso automatizar a limpeza de /tmp e diretórios temporários?"
+# 
+# File: usr/share/ashyterm/window.py, line: 138
+#: NEEDS WORK
+msgid "How can I refresh pacman mirrors and clean the cache?"
+msgstr "Como posso atualizar os espelhos do pacman e limpar o cache?"
+# 
+# File: usr/share/ashyterm/window.py, line: 139
+#: NEEDS WORK
+msgid "How do I share clipboard contents and files via sshfs?"
+msgstr "Como compartilho o conteúdo da área de transferência e arquivos via sshfs?"
+# 
+# File: usr/share/ashyterm/window.py, line: 140
+#: NEEDS WORK
+msgid "How can I configure email notifications for critical failures?"
+msgstr "Como posso configurar notificações por e-mail para falhas críticas?"
+# 
+# File: usr/share/ashyterm/window.py, line: 141
+#: NEEDS WORK
+msgid "How do I collect metrics with Prometheus and basic exporters?"
+msgstr "Como faço para coletar métricas com o Prometheus e exportadores básicos?"
+# 
+# File: usr/share/ashyterm/window.py, line: 142
+#: NEEDS WORK
+msgid "How can I build Grafana dashboards for Linux servers?"
+msgstr "Como posso criar painéis do Grafana para servidores Linux?"
+# 
+# File: usr/share/ashyterm/window.py, line: 143
+#: NEEDS WORK
+msgid "How do I apply security patches automatically?"
+msgstr "Como aplico patches de segurança automaticamente?"
+# 
+# File: usr/share/ashyterm/window.py, line: 144
+#: NEEDS WORK
+msgid "How can I keep Ansible playbooks organised for multiple hosts?"
+msgstr "Como posso manter os playbooks do Ansible organizados para múltiplos hosts?"
+# 
+# File: usr/share/ashyterm/window.py, line: 145
+#: NEEDS WORK
+msgid "How do I troubleshoot slow PostgreSQL databases?"
+msgstr "Como faço para solucionar problemas de bancos de dados PostgreSQL lentos?"
+# 
+# File: usr/share/ashyterm/window.py, line: 146
+#: NEEDS WORK
+msgid "How can I diagnose memory usage in Java applications?"
+msgstr "Como posso diagnosticar o uso de memória em aplicações Java?"
+# 
+# File: usr/share/ashyterm/window.py, line: 147
+#: NEEDS WORK
+msgid "How do I integrate LDAP authentication into local services?"
+msgstr "Como faço para integrar a autenticação LDAP aos serviços locais?"
+# 
+# File: usr/share/ashyterm/window.py, line: 148
+#: NEEDS WORK
+msgid "How do I uninstall a program?"
+msgstr "Como desinstalo um programa?"
+# 
+# File: usr/share/ashyterm/window.py, line: 149
+#: NEEDS WORK
+msgid "How do I update my system and every application at once?"
+msgstr "Como faço para atualizar meu sistema e todos os aplicativos de uma vez?"
+# 
+# File: usr/share/ashyterm/window.py, line: 150
+#: NEEDS WORK
+msgid "How can I connect to a Wi-Fi network?"
+msgstr "Como posso me conectar a uma rede Wi-Fi?"
+# 
+# File: usr/share/ashyterm/window.py, line: 151
+#: NEEDS WORK
+msgid "How do I set up my printer?"
+msgstr "Como configuro minha impressora?"
+# 
+# File: usr/share/ashyterm/window.py, line: 152
+#: NEEDS WORK
+msgid "How can I take a screenshot of the screen?"
+msgstr "Como posso tirar uma captura de tela?"
+# 
+# File: usr/share/ashyterm/window.py, line: 153
+#: NEEDS WORK
+msgid "How do I connect a second monitor?"
+msgstr "Como conecto um segundo monitor?"
+# 
+# File: usr/share/ashyterm/window.py, line: 154
+#: NEEDS WORK
+msgid "What should I do if there is no sound?"
+msgstr "O que devo fazer se não houver som?"
+# 
+# File: usr/share/ashyterm/window.py, line: 155
+#: NEEDS WORK
+msgid "How can I change the screen resolution?"
+msgstr "Como posso mudar a resolução da tela?"
+# 
+# File: usr/share/ashyterm/window.py, line: 156
+#: NEEDS WORK
+msgid "How do I change the wallpaper and system theme?"
+msgstr "Como faço para mudar o papel de parede e o tema do sistema?"
+# 
+# File: usr/share/ashyterm/window.py, line: 157
+#: NEEDS WORK
+msgid "How can I mount and unmount a USB drive or external disk?"
+msgstr "Como posso montar e desmontar um pen drive ou disco externo?"
+# 
+# File: usr/share/ashyterm/window.py, line: 158
+#: NEEDS WORK
+msgid "How do I format a USB stick (FAT32, NTFS, ext4)?"
+msgstr "Como formatar um pen drive (FAT32, NTFS, ext4)?"
+# 
+# File: usr/share/ashyterm/window.py, line: 159
+#: NEEDS WORK
+msgid "How do I install new software packages?"
+msgstr "Como faço para instalar novos pacotes de software?"
+# 
+# File: usr/share/ashyterm/window.py, line: 160
+#: NEEDS WORK
+msgid "How do I remove installed software packages?"
+msgstr "Como faço para remover pacotes de software instalados?"
+# 
+# File: usr/share/ashyterm/window.py, line: 161
+#: NEEDS WORK
+msgid "How do I check how much free disk space I have?"
+msgstr "Como posso verificar quanto espaço livre em disco eu tenho?"
+# 
+# File: usr/share/ashyterm/window.py, line: 162
+#: NEEDS WORK
+msgid "How do I find which files are taking the most space?"
+msgstr "Como posso descobrir quais arquivos estão ocupando mais espaço?"
+# 
+# File: usr/share/ashyterm/window.py, line: 163
+#: NEEDS WORK
+msgid "How can I search for a specific file or text?"
+msgstr "Como posso procurar um arquivo ou texto específico?"
+# 
+# File: usr/share/ashyterm/window.py, line: 164
+#: NEEDS WORK
+msgid "How do I check open ports on my machine?"
+msgstr "Como faço para verificar as portas abertas na minha máquina?"
+# 
+# File: usr/share/ashyterm/window.py, line: 165
+#: NEEDS WORK
+msgid "How can I view running processes and resource usage?"
+msgstr "Como posso visualizar os processos em execução e o uso de recursos?"
+# 
+# File: usr/share/ashyterm/window.py, line: 166
+#: NEEDS WORK
+msgid "How do I check recent system logs?"
+msgstr "Como faço para verificar os logs do sistema recentes?"
+# 
+# File: usr/share/ashyterm/window.py, line: 167
+#: NEEDS WORK
+msgid "How do I update the kernel safely?"
+msgstr "Como faço para atualizar o kernel com segurança?"
+# 
+# File: usr/share/ashyterm/window.py, line: 168
+#: NEEDS WORK
+msgid "How can I enable automatic updates?"
+msgstr "Como posso ativar as atualizações automáticas?"
+# 
+# File: usr/share/ashyterm/window.py, line: 169
+#: NEEDS WORK
+msgid "How do I create and manage new users?"
+msgstr "Como posso criar e gerenciar novos usuários?"
+# 
+# File: usr/share/ashyterm/window.py, line: 170
+#: NEEDS WORK
+msgid "How do I change file permissions safely?"
+msgstr "Como faço para alterar permissões de arquivo com segurança?"
+# 
+# File: usr/share/ashyterm/window.py, line: 171
+#: NEEDS WORK
+msgid "How can I compress or extract archive files?"
+msgstr "Como posso compactar ou extrair arquivos de arquivo?"
+# 
+# File: usr/share/ashyterm/window.py, line: 172
+#: NEEDS WORK
+msgid "How do I verify that my network connection is working?"
+msgstr "Como posso verificar se minha conexão de rede está funcionando?"
+# 
+# File: usr/share/ashyterm/window.py, line: 173
+#: NEEDS WORK
+msgid "How do I configure proxy settings for the system?"
+msgstr "Como configuro as configurações de proxy para o sistema?"
+# 
+# File: usr/share/ashyterm/window.py, line: 174
+#: NEEDS WORK
+msgid "How can I synchronise system time with online sources?"
+msgstr "Como posso sincronizar o horário do sistema com fontes online?"
+# 
+# File: usr/share/ashyterm/window.py, line: 175
+#: NEEDS WORK
+msgid "How do I view detailed hardware information?"
+msgstr "Como posso ver informações detalhadas sobre o hardware?"
+# 
+# File: usr/share/ashyterm/window.py, line: 176
+#: NEEDS WORK
+msgid "How can I install or update device drivers?"
+msgstr "Como posso instalar ou atualizar drivers de dispositivo?"
+# 
+# File: usr/share/ashyterm/window.py, line: 177
+#: NEEDS WORK
+msgid "How do I manage startup applications?"
+msgstr "Como faço para gerenciar aplicativos de inicialização?"
+# 
+# File: usr/share/ashyterm/window.py, line: 178
+#: NEEDS WORK
+msgid "How can I disable unwanted services?"
+msgstr "Como posso desativar serviços indesejados?"
+# 
+# File: usr/share/ashyterm/window.py, line: 179
+#: NEEDS WORK
+msgid "How do I schedule tasks with cron?"
+msgstr "Como agendo tarefas com cron?"
+# 
+# File: usr/share/ashyterm/window.py, line: 180
+#: NEEDS WORK
+msgid "How can I secure SSH on a new server?"
+msgstr "Como posso proteger o SSH em um novo servidor?"
+# 
+# File: usr/share/ashyterm/window.py, line: 181
+#: NEEDS WORK
+msgid "How do I monitor system logs in real time?"
+msgstr "Como faço para monitorar os logs do sistema em tempo real?"
+# 
+# File: usr/share/ashyterm/window.py, line: 182
+#: NEEDS WORK
+msgid "How can I back up my home directory automatically?"
+msgstr "Como posso fazer backup do meu diretório pessoal automaticamente?"
+# 
+# File: usr/share/ashyterm/window.py, line: 183
+#: NEEDS WORK
+msgid "How do I restore a backup safely?"
+msgstr "Como faço para restaurar um backup com segurança?"
+# 
+# File: usr/share/ashyterm/window.py, line: 184
+#: NEEDS WORK
+msgid "How can I encrypt files or folders?"
+msgstr "Como posso criptografar arquivos ou pastas?"
+# 
+# File: usr/share/ashyterm/window.py, line: 185
+#: NEEDS WORK
+msgid "How do I set up remote desktop access?"
+msgstr "Como configuro o acesso remoto à área de trabalho?"
+# 
+# File: usr/share/ashyterm/window.py, line: 186
+#: NEEDS WORK
+msgid "How can I configure a host-based firewall?"
+msgstr "Como posso configurar um firewall baseado em host?"
+# 
+# File: usr/share/ashyterm/window.py, line: 187
+#: NEEDS WORK
+msgid "How do I whitelist or blacklist IP addresses?"
+msgstr "Como faço para adicionar ou remover endereços IP da lista de permissões ou da lista de bloqueio?"
+# 
+# File: usr/share/ashyterm/window.py, line: 188
+#: NEEDS WORK
+msgid "How can I check disk health and SMART status?"
+msgstr "Como posso verificar a saúde do disco e o status SMART?"
+# 
+# File: usr/share/ashyterm/window.py, line: 189
+#: NEEDS WORK
+msgid "How do I monitor I/O usage per process?"
+msgstr "Como faço para monitorar o uso de I/O por processo?"
+# 
+# File: usr/share/ashyterm/window.py, line: 190
+#: NEEDS WORK
+msgid "How can I check current RAM usage?"
+msgstr "Como posso verificar o uso atual de RAM?"
+# 
+# File: usr/share/ashyterm/window.py, line: 191
+#: NEEDS WORK
+msgid "How do I clear the DNS cache?"
+msgstr "Como faço para limpar o cache DNS?"
+# 
+# File: usr/share/ashyterm/window.py, line: 192
+#: NEEDS WORK
+msgid "How can I troubleshoot boot issues quickly?"
+msgstr "Como posso solucionar rapidamente problemas de inicialização?"
+# 
+# File: usr/share/ashyterm/window.py, line: 193
+#: NEEDS WORK
+msgid "How do I recover deleted files?"
+msgstr "Como posso recuperar arquivos excluídos?"
+# 
+# File: usr/share/ashyterm/window.py, line: 194
+#: NEEDS WORK
+msgid "How can I set environment variables permanently?"
+msgstr "Como posso definir variáveis de ambiente permanentemente?"
+# 
+# File: usr/share/ashyterm/window.py, line: 195
+#: NEEDS WORK
+msgid "How do I install development tools and headers?"
+msgstr "Como faço para instalar ferramentas de desenvolvimento e cabeçalhos?"
+# 
+# File: usr/share/ashyterm/window.py, line: 196
+#: NEEDS WORK
+msgid "How can I manage Python packages with pip?"
+msgstr "Como posso gerenciar pacotes Python com pip?"
+# 
+# File: usr/share/ashyterm/window.py, line: 197
+#: NEEDS WORK
+msgid "How do I manage Node.js packages with npm?"
+msgstr "Como faço para gerenciar pacotes Node.js com npm?"
+# 
+# File: usr/share/ashyterm/window.py, line: 198
+#: NEEDS WORK
+msgid "How can I install Docker on my system?"
+msgstr "Como posso instalar o Docker no meu sistema?"
+# 
+# File: usr/share/ashyterm/window.py, line: 199
+#: NEEDS WORK
+msgid "How do I remove Docker completely?"
+msgstr "Como faço para remover o Docker completamente?"
+# 
+# File: usr/share/ashyterm/window.py, line: 200
+#: NEEDS WORK
+msgid "How can I manage Docker images efficiently?"
+msgstr "Como posso gerenciar imagens Docker de forma eficiente?"
+# 
+# File: usr/share/ashyterm/window.py, line: 201
+#: NEEDS WORK
+msgid "How do I manage Docker volumes safely?"
+msgstr "Como faço para gerenciar volumes do Docker com segurança?"
+# 
+# File: usr/share/ashyterm/window.py, line: 202
+#: NEEDS WORK
+msgid "How can I inspect Docker networks?"
+msgstr "Como posso inspecionar redes Docker?"
+# 
+# File: usr/share/ashyterm/window.py, line: 203
+#: NEEDS WORK
+msgid "How do I bootstrap a Kubernetes cluster?"
+msgstr "Como faço para inicializar um cluster Kubernetes?"
+# 
+# File: usr/share/ashyterm/window.py, line: 204
+#: NEEDS WORK
+msgid "How can I install and configure a SQL database?"
+msgstr "Como posso instalar e configurar um banco de dados SQL?"
+# 
+# File: usr/share/ashyterm/window.py, line: 205
+#: NEEDS WORK
+msgid "How do I secure a database server?"
+msgstr "Como faço para proteger um servidor de banco de dados?"
+# 
+# File: usr/share/ashyterm/window.py, line: 206
+#: NEEDS WORK
+msgid "How can I monitor database performance metrics?"
+msgstr "Como posso monitorar métricas de desempenho do banco de dados?"
+# 
+# File: usr/share/ashyterm/window.py, line: 207
+#: NEEDS WORK
+msgid "How do I back up a database automatically?"
+msgstr "Como faço para fazer backup de um banco de dados automaticamente?"
+# 
+# File: usr/share/ashyterm/window.py, line: 208
+#: NEEDS WORK
+msgid "How can I restore a database backup?"
+msgstr "Como posso restaurar um backup de banco de dados?"
+# 
+# File: usr/share/ashyterm/window.py, line: 209
+#: NEEDS WORK
+msgid "How do I upgrade system packages safely?"
+msgstr "Como faço para atualizar os pacotes do sistema com segurança?"
+# 
+# File: usr/share/ashyterm/window.py, line: 210
+#: NEEDS WORK
+msgid "How can I check for package updates without installing them?"
+msgstr "Como posso verificar se há atualizações de pacotes sem instalá-las?"
+# 
+# File: usr/share/ashyterm/window.py, line: 211
+#: NEEDS WORK
+msgid "How do I set up a local repository mirror?"
+msgstr "Como faço para configurar um espelho de repositório local?"
+# 
+# File: usr/share/ashyterm/window.py, line: 212
+#: NEEDS WORK
+msgid "How can I troubleshoot package conflicts?"
+msgstr "Como posso solucionar conflitos de pacotes?"
+# 
+# File: usr/share/ashyterm/window.py, line: 213
+#: NEEDS WORK
+msgid "How do I configure proxy settings for package managers?"
+msgstr "Como configuro as configurações de proxy para gerenciadores de pacotes?"
+# 
+# File: usr/share/ashyterm/window.py, line: 214
+#: NEEDS WORK
+msgid "How can I clean the package cache safely?"
+msgstr "Como posso limpar o cache de pacotes com segurança?"
+# 
+# File: usr/share/ashyterm/window.py, line: 215
+#: NEEDS WORK
+msgid "How do I manage Flatpak or Snap packages?"
+msgstr "Como gerencio pacotes Flatpak ou Snap?"
+# 
+# File: usr/share/ashyterm/window.py, line: 216
+#: NEEDS WORK
+msgid "How can I monitor resource usage per container?"
+msgstr "Como posso monitorar o uso de recursos por contêiner?"
+# 
+# File: usr/share/ashyterm/window.py, line: 217
+#: NEEDS WORK
+msgid "How do I export container metrics to Prometheus?"
+msgstr "Como exporto métricas de contêiner para o Prometheus?"
+# 
+# File: usr/share/ashyterm/window.py, line: 218
+#: NEEDS WORK
+msgid "How can I trigger alerts when CPU exceeds 70%?"
+msgstr "Como posso acionar alertas quando a CPU excede 70%?"
+# 
+# File: usr/share/ashyterm/window.py, line: 219
+#: NEEDS WORK
+msgid "How do I archive system logs for compliance?"
+msgstr "Como faço para arquivar logs do sistema para conformidade?"
+# 
+# File: usr/share/ashyterm/window.py, line: 220
+#: NEEDS WORK
+msgid "How can I set up centralised logging with Loki?"
+msgstr "Como posso configurar o registro centralizado com o Loki?"
+# 
+# File: usr/share/ashyterm/window.py, line: 221
+#: NEEDS WORK
+msgid "How do I configure Grafana alerts for system metrics?"
+msgstr "Como configuro alertas do Grafana para métricas do sistema?"
+# 
+# File: usr/share/ashyterm/window.py, line: 222
+#: NEEDS WORK
+msgid "How can I deploy applications with Helm charts?"
+msgstr "Como posso implantar aplicativos com gráficos Helm?"
+# 
+# File: usr/share/ashyterm/window.py, line: 223
+#: NEEDS WORK
+msgid "How do I roll back a Kubernetes deployment?"
+msgstr "Como faço para reverter um deployment do Kubernetes?"
+# 
+# File: usr/share/ashyterm/window.py, line: 224
+#: NEEDS WORK
+msgid "How can I manage secrets securely on Linux?"
+msgstr "Como posso gerenciar segredos de forma segura no Linux?"
+# 
+# File: usr/share/ashyterm/window.py, line: 225
+#: NEEDS WORK
+msgid "How do I inspect SELinux or AppArmor audit logs?"
+msgstr "Como faço para inspecionar os logs de auditoria do SELinux ou do AppArmor?"
+# 
+# File: usr/share/ashyterm/window.py, line: 226
+#: NEEDS WORK
+msgid "How can I test firewall rules without disrupting traffic?"
+msgstr "Como posso testar regras de firewall sem interromper o tráfego?"
+# 
+# File: usr/share/ashyterm/window.py, line: 227
+#: NEEDS WORK
+msgid "How do I benchmark disk throughput?"
+msgstr "Como faço para medir a taxa de transferência do disco?"
+# 
+# File: usr/share/ashyterm/window.py, line: 228
+#: NEEDS WORK
+msgid "How can I track battery health on laptops?"
+msgstr "Como posso acompanhar a saúde da bateria em laptops?"
+# 
+# File: usr/share/ashyterm/window.py, line: 229
+#: NEEDS WORK
+msgid "How do I configure automatic screen locking and idle timeouts?"
+msgstr "Como configuro o bloqueio automático de tela e os tempos de inatividade?"
+# 
+# File: usr/share/ashyterm/window.py, line: 230
+#: NEEDS WORK
+msgid "How can I share files over the network easily?"
+msgstr "Como posso compartilhar arquivos pela rede facilmente?"
+# 
+# File: usr/share/ashyterm/window.py, line: 231
+#: NEEDS WORK
+msgid "How do I monitor GPU usage on Linux?"
+msgstr "Como faço para monitorar o uso da GPU no Linux?"
+# 
+# File: usr/share/ashyterm/window.py, line: 232
+#: NEEDS WORK
+msgid "How can I check for firmware updates?"
+msgstr "Como posso verificar se há atualizações de firmware?"
+# 
+# File: usr/share/ashyterm/window.py, line: 233
+#: NEEDS WORK
+msgid "How do I enable hardware acceleration in browsers?"
+msgstr "Como habilito a aceleração de hardware nos navegadores?"
+# 
+# File: usr/share/ashyterm/window.py, line: 234
+#: NEEDS WORK
+msgid "How can I detect memory leaks in applications?"
+msgstr "Como posso detectar vazamentos de memória em aplicativos?"
+# 
+# File: usr/share/ashyterm/window.py, line: 235
+#: NEEDS WORK
+msgid "How do I profile Python scripts for performance?"
+msgstr "Como faço para analisar o desempenho de scripts Python?"
+# 
+# File: usr/share/ashyterm/window.py, line: 236
+#: NEEDS WORK
+msgid "How can I measure latency between servers?"
+msgstr "Como posso medir a latência entre servidores?"
+# 
+# File: usr/share/ashyterm/window.py, line: 237
+#: NEEDS WORK
+msgid "How do I configure a VPN client connection?"
+msgstr "Como configuro uma conexão de cliente VPN?"
+# 
+# File: usr/share/ashyterm/window.py, line: 238
+#: NEEDS WORK
+msgid "How can I script repetitive maintenance tasks?"
+msgstr "Como posso scriptar tarefas de manutenção repetitivas?"
+# 
+# File: usr/share/ashyterm/window.py, line: 239
+#: NEEDS WORK
+msgid "How do I document server configuration automatically?"
+msgstr "Como documento a configuração do servidor automaticamente?"
+# 
+# File: usr/share/ashyterm/window.py, line: 240
+#: NEEDS WORK
+msgid "How can I manage dotfiles across multiple machines?"
+msgstr "Como posso gerenciar dotfiles em várias máquinas?"
+# 
+# File: usr/share/ashyterm/window.py, line: 241
+#: NEEDS WORK
+msgid "How do I set up passwordless sudo for automation?"
+msgstr "Como configuro o sudo sem senha para automação?"
+# 
+# File: usr/share/ashyterm/window.py, line: 242
+#: NEEDS WORK
+msgid "How can I monitor cron job failures?"
+msgstr "Como posso monitorar falhas de tarefas cron?"
+# 
+# File: usr/share/ashyterm/window.py, line: 243
+#: NEEDS WORK
+msgid "How do I send notifications to Slack or Matrix from scripts?"
+msgstr "Como envio notificações para Slack ou Matrix a partir de scripts?"
+# 
+# File: usr/share/ashyterm/window.py, line: 244
+#: NEEDS WORK
+msgid "How can I manage secrets in environment variables?"
+msgstr "Como posso gerenciar segredos em variáveis de ambiente?"
+# 
+# File: usr/share/ashyterm/window.py, line: 245
+#: NEEDS WORK
+msgid "How do I install and maintain ZFS on Linux?"
+msgstr "Como faço para instalar e manter o ZFS no Linux?"
+# 
+# File: usr/share/ashyterm/window.py, line: 246
+#: NEEDS WORK
+msgid "How can I create and restore Btrfs snapshots?"
+msgstr "Como posso criar e restaurar snapshots Btrfs?"
+# 
+# File: usr/share/ashyterm/window.py, line: 247
+#: NEEDS WORK
+msgid "How do I check ext4 filesystem health?"
+msgstr "Como faço para verificar a saúde do sistema de arquivos ext4?"
+# 
+# File: usr/share/ashyterm/window.py, line: 248
+#: NEEDS WORK
+msgid "How can I detect hardware errors with dmesg?"
+msgstr "Como posso detectar erros de hardware com dmesg?"
+# 
+# File: usr/share/ashyterm/window.py, line: 249
+#: NEEDS WORK
+msgid "How do I tune kernel parameters with sysctl?"
+msgstr "Como faço para ajustar os parâmetros do kernel com sysctl?"
+# 
+# File: usr/share/ashyterm/window.py, line: 250
+#: NEEDS WORK
+msgid "How can I configure huge pages for databases?"
+msgstr "Como posso configurar páginas grandes para bancos de dados?"
+# 
+# File: usr/share/ashyterm/window.py, line: 251
+#: NEEDS WORK
+msgid "How do I enable and manage cgroups v2?"
+msgstr "Como habilito e gerencio cgroups v2?"
+# 
+# File: usr/share/ashyterm/window.py, line: 252
+#: NEEDS WORK
+msgid "How can I collect performance data with sar?"
+msgstr "Como posso coletar dados de desempenho com sar?"
+# 
+# File: usr/share/ashyterm/window.py, line: 253
+#: NEEDS WORK
+msgid "How do I investigate high load average values?"
+msgstr "Como posso investigar valores altos de carga média?"
+# 
+# File: usr/share/ashyterm/window.py, line: 254
+#: NEEDS WORK
+msgid "How can I test backup restores automatically?"
+msgstr "Como posso testar restaurações de backup automaticamente?"
+# 
+# File: usr/share/ashyterm/window.py, line: 255
+#: NEEDS WORK
+msgid "How do I rotate SSH keys on a schedule?"
+msgstr "Como faço para girar chaves SSH em um cronograma?"
+# 
+# File: usr/share/ashyterm/window.py, line: 256
+#: NEEDS WORK
+msgid "How can I enforce password policies on Linux?"
+msgstr "Como posso aplicar políticas de senha no Linux?"
+# 
+# File: usr/share/ashyterm/window.py, line: 257
+#: NEEDS WORK
+msgid "How do I audit installed packages for CVEs?"
+msgstr "Como faço para auditar pacotes instalados em busca de CVEs?"
+# 
+# File: usr/share/ashyterm/window.py, line: 258
+#: NEEDS WORK
+msgid "How can I use nix-shell or direnv for reproducible dev environments?"
+msgstr "Como posso usar nix-shell ou direnv para ambientes de desenvolvimento reproduzíveis?"
+# 
+# File: usr/share/ashyterm/window.py, line: 259
+#: NEEDS WORK
+msgid "How do I manage multiple Python versions with pyenv?"
+msgstr "Como faço para gerenciar várias versões do Python com o pyenv?"
+# 
+# File: usr/share/ashyterm/window.py, line: 260
+#: NEEDS WORK
+msgid "How can I run containers rootless with Podman?"
+msgstr "Como posso executar contêineres sem privilégios com o Podman?"
+# 
+# File: usr/share/ashyterm/window.py, line: 261
+#: NEEDS WORK
+msgid "How do I tail Kubernetes logs with stern or kubectl?"
+msgstr "Como faço para acompanhar os logs do Kubernetes com stern ou kubectl?"
+# 
+# File: usr/share/ashyterm/window.py, line: 262
+#: NEEDS WORK
+msgid "How can I instrument applications with OpenTelemetry?"
+msgstr "Como posso instrumentar aplicações com OpenTelemetry?"
+# 
+# File: usr/share/ashyterm/window.py, line: 263
+#: NEEDS WORK
+msgid "How do I configure single sign-on for Linux services?"
+msgstr "Como configuro o login único para serviços Linux?"
+# 
+# File: usr/share/ashyterm/window.py, line: 264
+#: NEEDS WORK
+msgid "How can I export metrics from systemd services?"
+msgstr "Como posso exportar métricas dos serviços systemd?"
+# 
+# File: usr/share/ashyterm/window.py, line: 265
+#: NEEDS WORK
+msgid "How do I manage secrets with HashiCorp Vault on Linux?"
+msgstr "Como gerencio segredos com o HashiCorp Vault no Linux?"
+# 
+# File: usr/share/ashyterm/window.py, line: 266
+#: NEEDS WORK
+msgid "How can I secure shared desktop sessions?"
+msgstr "Como posso proteger sessões de desktop compartilhadas?"
+# 
+# File: usr/share/ashyterm/window.py, line: 267
+#: NEEDS WORK
+msgid "How do I offer remote assistance to another Linux user?"
+msgstr "Como ofereço assistência remota a outro usuário do Linux?"
+# 
+# File: usr/share/ashyterm/window.py, line: 268
+#: NEEDS WORK
+msgid "How can I set up an immutable system partition?"
+msgstr "Como posso configurar uma partição de sistema imutável?"
+# 
+# File: usr/share/ashyterm/window.py, line: 269
+#: NEEDS WORK
+msgid "How do I verify package integrity with pkgfile or debsums?"
+msgstr "Como faço para verificar a integridade do pacote com pkgfile ou debsums?"
+# 
+# File: usr/share/ashyterm/window.py, line: 270
+#: NEEDS WORK
+msgid "How can I preconfigure new machines with cloud-init?"
+msgstr "Como posso pré-configurar novas máquinas com cloud-init?"
+# 
+# File: usr/share/ashyterm/window.py, line: 271
+#: NEEDS WORK
+msgid "How do I use firewalld zones effectively?"
+msgstr "Como uso as zonas do firewalld de forma eficaz?"
+# 
+# File: usr/share/ashyterm/window.py, line: 272
+#: NEEDS WORK
+msgid "How can I configure USBGuard to control removable media?"
+msgstr "Como posso configurar o USBGuard para controlar mídias removíveis?"
+# 
+# File: usr/share/ashyterm/window.py, line: 273
+#: NEEDS WORK
+msgid "How do I script GUI interactions with xdotool or ydotool?"
+msgstr "Como faço para scriptar interações de GUI com xdotool ou ydotool?"
+# 
+# File: usr/share/ashyterm/window.py, line: 274
+#: NEEDS WORK
+msgid "How can I schedule notifications for maintenance windows?"
+msgstr "Como posso agendar notificações para janelas de manutenção?"
+# 
+# File: usr/share/ashyterm/window.py, line: 275
+#: NEEDS WORK
+msgid "How do I run graphical apps inside containers securely?"
+msgstr "Como faço para executar aplicativos gráficos dentro de contêineres de forma segura?"
+# 
+# File: usr/share/ashyterm/window.py, line: 276
+#: NEEDS WORK
+msgid "How can I create custom systemd targets?"
+msgstr "Como posso criar alvos personalizados do systemd?"
+# 
+# File: usr/share/ashyterm/window.py, line: 277
+#: NEEDS WORK
+msgid "How do I instrument cron jobs with logging and alerts?"
+msgstr "Como faço para instrumentar trabalhos cron com registro e alertas?"
+# 
+# File: usr/share/ashyterm/window.py, line: 278
+#: NEEDS WORK
+msgid "How can I migrate user data between Linux distributions?"
+msgstr "Como posso migrar dados de usuário entre distribuições Linux?"
+# 
+# File: usr/share/ashyterm/window.py, line: 279
+#: NEEDS WORK
+msgid "How do I build automated smoke tests for servers?"
+msgstr "Como faço para construir testes de fumaça automatizados para servidores?"
+# 
+# File: usr/share/ashyterm/window.py, line: 280
+#: NEEDS WORK
+msgid "How can I monitor power consumption per process?"
+msgstr "Como posso monitorar o consumo de energia por processo?"
+# 
+# File: usr/share/ashyterm/window.py, line: 281
+#: NEEDS WORK
+msgid "How do I set up screen sharing on Wayland?"
+msgstr "Como faço para configurar o compartilhamento de tela no Wayland?"
+# 
+# File: usr/share/ashyterm/window.py, line: 282
+#: NEEDS WORK
+msgid "How can I use bpftrace to inspect kernel events?"
+msgstr "Como posso usar o bpftrace para inspecionar eventos do kernel?"
+# 
+# File: usr/share/ashyterm/window.py, line: 283
+#: NEEDS WORK
+msgid "How do I configure VPN access for contractors securely?"
+msgstr "Como configuro o acesso VPN para contratados de forma segura?"
+# 
+# File: usr/share/ashyterm/window.py, line: 284
+#: NEEDS WORK
+msgid "How can I manage encrypted secrets in git repositories?"
+msgstr "Como posso gerenciar segredos criptografados em repositórios git?"
+# 
+# File: usr/share/ashyterm/window.py, line: 285
+#: NEEDS WORK
+msgid "How do I containerise legacy applications on Linux?"
+msgstr "Como faço para containerizar aplicações legadas no Linux?"
+# 
+# File: usr/share/ashyterm/window.py, line: 286
+#: NEEDS WORK
+msgid "How can I prepare a Linux workstation for developers quickly?"
+msgstr "Como posso preparar rapidamente uma estação de trabalho Linux para desenvolvedores?"
+# 
+# File: usr/share/ashyterm/window.py, line: 287
+#: NEEDS WORK
+msgid "How do I tune swappiness and vm.dirty ratios for workloads?"
+msgstr "Como faço para ajustar a swappiness e as proporções de vm.dirty para cargas de trabalho?"
+# 
+# File: usr/share/ashyterm/window.py, line: 288
+#: NEEDS WORK
+msgid "How can I monitor NVMe SSD health?"
+msgstr "Como posso monitorar a saúde do SSD NVMe?"
+# 
+# File: usr/share/ashyterm/window.py, line: 289
+#: NEEDS WORK
+msgid "How do I benchmark network throughput between hosts?"
+msgstr "Como faço para medir a largura de banda da rede entre hosts?"
+# 
+# File: usr/share/ashyterm/window.py, line: 290
+#: NEEDS WORK
+msgid "How can I secure cron and at jobs from tampering?"
+msgstr "Como posso proteger os trabalhos cron e at de adulterações?"
+# 
+# File: usr/share/ashyterm/window.py, line: 291
+#: NEEDS WORK
+msgid "How do I implement just-in-time sudo elevation?"
+msgstr "Como implemento a elevação sudo sob demanda?"
+# 
+# File: usr/share/ashyterm/window.py, line: 292
+#: NEEDS WORK
+msgid "How can I integrate system metrics with Alertmanager?"
+msgstr "Como posso integrar métricas do sistema com o Alertmanager?"
+# 
+# File: usr/share/ashyterm/window.py, line: 293
+#: NEEDS WORK
+msgid "How do I set up maintenance mode pages on nginx?"
+msgstr "Como configuro páginas de modo de manutenção no nginx?"
+# 
+# File: usr/share/ashyterm/window.py, line: 294
+#: NEEDS WORK
+msgid "How can I collect audit logs required for compliance?"
+msgstr "Como posso coletar os logs de auditoria necessários para conformidade?"
+# 
+# File: usr/share/ashyterm/window.py, line: 295
+#: NEEDS WORK
+msgid "How do I gracefully decommission a Linux server?"
+msgstr "Como faço para descomissionar um servidor Linux de forma elegante?"
+# 
+# File: usr/share/ashyterm/window.py, line: 296
+#: NEEDS WORK
+msgid "How can I document operational runbooks efficiently?"
+msgstr "Como posso documentar runbooks operacionais de forma eficiente?"
+# 
+# File: usr/share/ashyterm/window.py, line: 424
+#: NEEDS WORK
+msgid "Data Loading Error"
+msgstr "Erro de Carregamento de Dados"
+# 
+# File: usr/share/ashyterm/window.py, line: 425
+#: NEEDS WORK
+msgid "Failed to load saved sessions and folders. Starting with empty configuration."
+msgstr "Falha ao carregar sessões e pastas salvas. Iniciando com configuração vazia."
+# 
+# File: usr/share/ashyterm/window.py, line: 530
+#: NEEDS WORK
+msgid "Enable the AI assistant in Preferences > Terminal > AI Assistant."
+msgstr "Ativar o assistente de IA em Preferências > Terminal > Assistente de IA."
+# 
+# File: usr/share/ashyterm/window.py, line: 539
+#: NEEDS WORK
+msgid "No active terminal available."
+msgstr "Nenhum terminal ativo disponível."
+# 
+# File: usr/share/ashyterm/window.py, line: 547
+#: NEEDS WORK
+msgid "Model"
+msgstr "Modelo"
+# 
+# File: usr/share/ashyterm/window.py, line: 548
+#: NEEDS WORK
+msgid "API key"
+msgstr "chave da API"
+# 
+# File: usr/share/ashyterm/window.py, line: 554
+#: NEEDS WORK
+#, python-brace-format
+msgid "Configure {items} in Preferences > Terminal > AI Assistant."
+msgstr "Configurar {items} em Preferências > Terminal > Assistente de IA."
+# 
+# File: usr/share/ashyterm/window.py, line: 565
+#: NEEDS WORK
+msgid "Ask the AI Assistant"
+msgstr "Pergunte ao Assistente de IA"
+# 
+# File: usr/share/ashyterm/window.py, line: 566
+#: NEEDS WORK
+msgid "Describe the Linux task or question you need help with."
+msgstr "Descreva a tarefa ou pergunta do Linux com a qual você precisa de ajuda."
+# 
+# File: usr/share/ashyterm/window.py, line: 570
+#: NEEDS WORK
+msgid "Send"
+msgstr "Enviar"
+# 
+# File: usr/share/ashyterm/window.py, line: 865
+#: NEEDS WORK
+msgid "Perguntas frequentes"
+msgstr "Perguntas frequentes"
+# 
+# File: usr/share/ashyterm/window.py, line: 938
+#: NEEDS WORK
+#, python-brace-format
+msgid "Sugestões correspondentes: {count}"
+msgstr "Sugestões correspondentes: {count}"
+# 
+# File: usr/share/ashyterm/window.py, line: 941
+#: NEEDS WORK
+msgid "Nenhuma sugestão encontrada."
+msgstr "Nenhuma sugestão encontrada."
+# 
+# File: usr/share/ashyterm/window.py, line: 944
+#: NEEDS WORK
+msgid "Digite sua pergunta ou escolha uma das sugestões."
+msgstr "Digite sua pergunta ou escolha uma das sugestões."
+# 
+# File: usr/share/ashyterm/window.py, line: 598
+#: NEEDS WORK
+msgid "Please enter a question for the assistant."
+msgstr "Por favor, insira uma pergunta para o assistente."
+# 
+# File: usr/share/ashyterm/window.py, line: 604
+#: NEEDS WORK
+msgid "AI assistant is processing, please wait..."
+msgstr "Assistente de IA está processando, por favor aguarde..."
+# 
+# File: usr/share/ashyterm/window.py, line: 680
+#: NEEDS WORK
+msgid "Here is what I found."
+msgstr "Aqui está o que eu encontrei."
+# 
+# File: usr/share/ashyterm/window.py, line: 697
+#: NEEDS WORK
+msgid "Response"
+msgstr "Resposta"
+# 
+# File: usr/share/ashyterm/window.py, line: 724
+#: NEEDS WORK
+msgid "Suggested Commands"
+msgstr "Comandos Sugeridos"
+# 
+# File: usr/share/ashyterm/window.py, line: 781
+#: NEEDS WORK
+msgid "Run"
+msgstr "Executar"
+# 
+# File: usr/share/ashyterm/window.py, line: 992
+#: NEEDS WORK
+msgid "Command is empty, nothing to run."
+msgstr "O comando está vazio, nada para executar."
+# 
+# File: usr/share/ashyterm/window.py, line: 998
+#: NEEDS WORK
+msgid "Command sent to the terminal."
+msgstr "Comando enviado para o terminal."
+# 
+# File: usr/share/ashyterm/window.py, line: 1004
+#: NEEDS WORK
+msgid "Failed to execute the command."
+msgstr "Falha ao executar o comando."
+# 
+# File: usr/share/ashyterm/window.py, line: 551
+#: NEEDS WORK
+msgid "Session Validation Error"
+msgstr "Erro de Validação da Sessão"
+# 
+# File: usr/share/ashyterm/window.py, line: 550
+#: NEEDS WORK
+#, python-brace-format
+msgid ""
+"Session validation failed:\n"
+"{errors}"
+msgstr ""
+"Validação da sessão falhou:  \n"
+"{errors}"
+# 
+# File: usr/share/ashyterm/window.py, line: 958
+#: NEEDS WORK
+msgid "Cannot detach the last tab."
+msgstr "Não é possível desanexar a última aba."
+# 
+# File: usr/share/ashyterm/window.py, line: 712
+#: NEEDS WORK
+#, python-brace-format
+msgid "Terminal {id}"
+msgstr "Terminal {id}"
+# 
+# File: usr/share/ashyterm/window.py, line: 705
+#: NEEDS WORK
+msgid "No open terminals found."
+msgstr "Nenhum terminal aberto encontrado."
+# 
+# File: usr/share/ashyterm/window.py, line: 711
+#: NEEDS WORK
+msgid "Confirm sending of command"
+msgstr "Confirmar envio do comando"
+# 
+# File: usr/share/ashyterm/window.py, line: 734
+#: NEEDS WORK
+#, python-brace-format
+msgid "Select which of the <b>{count}</b> open terminals should receive the command below."
+msgstr "Selecione qual dos <b>{count}</b> terminais abertos deve receber o comando abaixo."
+# 
+# File: usr/share/ashyterm/window.py, line: 749
+#: NEEDS WORK
+msgid "Choose the tabs that should run this command:"
+msgstr "Escolha as abas que devem executar este comando:"
+# 
+# File: usr/share/ashyterm/window.py, line: 809
+#: NEEDS WORK
+msgid "Remember my choice"
+msgstr "Lembre-se da minha escolha"
+# 
+# File: usr/share/ashyterm/window.py, line: 731
+#: NEEDS WORK
+msgid "Send Command"
+msgstr "Enviar Comando"
+# 
+# File: usr/share/ashyterm/window.py, line: 823
+#: NEEDS WORK
+msgid "No tabs were selected to receive the command."
+msgstr "Nenhuma guia foi selecionada para receber o comando."
+# 
+# File: usr/share/ashyterm/window.py, line: 652
+#: NEEDS WORK
+msgid "No active terminal to search in."
+msgstr "Nenhum terminal ativo para pesquisar."
+# 
+# File: usr/share/ashyterm/window.py, line: 687
+# File: usr/share/ashyterm/window.py, line: 734
+#: NEEDS WORK
+msgid "Invalid search pattern."
+msgstr "Padrão de pesquisa inválido."
+# 
+# File: usr/share/ashyterm/window.py, line: 762
+# File: usr/share/ashyterm/window.py, line: 795
+#: NEEDS WORK
+msgid "No more matches found."
+msgstr "Nenhuma correspondência encontrada."
+# 
+# File: usr/share/ashyterm/window.py, line: 145
+#: NEEDS WORK
+msgid "Initialization Error"
+msgstr "Erro de Inicialização"
+# 
+# File: usr/share/ashyterm/window.py, line: 146
+#: NEEDS WORK
+#, python-brace-format
+msgid "Failed to initialize terminal: {error}"
+msgstr "Falha ao inicializar o terminal: {error}"
+# 
+# File: usr/share/ashyterm/window.py, line: 422
+#: NEEDS WORK
+msgid "Save Current Session?"
+msgstr "Salvar Sessão Atual?"
+# 
+# File: usr/share/ashyterm/window.py, line: 424
+#: NEEDS WORK
+msgid "Do you want to restore these tabs the next time you open Ashy Terminal?"
+msgstr "Você deseja restaurar essas abas na próxima vez que abrir o Ashy Terminal?"
+# 
+# File: usr/share/ashyterm/window.py, line: 428
+#: NEEDS WORK
+msgid "Don't Save"
+msgstr "Não Salvar"
+# 
+# File: usr/share/ashyterm/window.py, line: 430
+#: NEEDS WORK
+msgid "Save and Close"
+msgstr "Salvar e Fechar"
+# 
+# File: usr/share/ashyterm/window.py, line: 528
+# File: usr/share/ashyterm/window.py, line: 533
+#: NEEDS WORK
+msgid "Close Window"
+msgstr "Fechar Janela"
+# 
+# File: usr/share/ashyterm/window.py, line: 463
+#: NEEDS WORK
+msgid "This window has active SSH connections. Closing will disconnect them. Are you sure?"
+msgstr "Esta janela tem conexões SSH ativas. Fechar desconectará elas. Você tem certeza?"
+# 
+# File: usr/share/ashyterm/window.py, line: 553
+#: NEEDS WORK
+msgid "Invalid SSH Target"
+msgstr "Alvo SSH inválido"
+# 
+# File: usr/share/ashyterm/window.py, line: 554
+#: NEEDS WORK
+msgid "Could not parse the provided SSH connection string."
+msgstr "Não foi possível analisar a string de conexão SSH fornecida."
+# 
+# File: usr/share/ashyterm/window.py, line: 612
+#: NEEDS WORK
+msgid "Remove this temporary file"
+msgstr "Remover este arquivo temporário"
+# 
+# File: usr/share/ashyterm/window.py, line: 627
+#: NEEDS WORK
+msgid "No temporary files found."
+msgstr "Nenhum arquivo temporário encontrado."
+# 
+# File: usr/share/ashyterm/window.py, line: 630
+#: NEEDS WORK
+msgid "Clear All Temporary Files"
+msgstr "Limpar Todos os Arquivos Temporários"
+# 
+# File: usr/share/ashyterm/window.py, line: 652
+#: NEEDS WORK
+msgid "Clear All Temporary Files?"
+msgstr "Limpar todos os arquivos temporários?"
+# 
+# File: usr/share/ashyterm/window.py, line: 654
+#: NEEDS WORK
+msgid ""
+"This will remove all locally downloaded files for remote editing. Any unsaved changes in your "
+"editor will be lost. This action cannot be undone."
+msgstr ""
+"Isso removerá todos os arquivos baixados localmente para edição remota. Quaisquer alterações não "
+"salvas no seu editor serão perdidas. Esta ação não pode ser desfeita."
+# 
+# File: usr/share/ashyterm/window.py, line: 660
+#: NEEDS WORK
+msgid "Clear All"
+msgstr "Limpar Tudo"
+# 
+# File: usr/share/ashyterm/window.py, line: 1193
+#: NEEDS WORK
+msgid "No active terminal to send command to."
+msgstr "Nenhum terminal ativo para enviar o comando."
+# 
+# File: usr/share/ashyterm/app.py, line: 333
+#: NEEDS WORK
+msgid "Preferences Error"
+msgstr "Erro de Preferências"
+# 
+# File: usr/share/ashyterm/app.py, line: 332
+# File: usr/share/ashyterm/app.py, line: 333
+#: NEEDS WORK
+#, python-brace-format
+msgid "Failed to open preferences: {}"
+msgstr "Falha ao abrir preferências: {}"
+# 
+# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
+# 
+# File: usr/share/ashyterm/__init__.py, line: 62
+# File: usr/share/ashyterm/app.py, line: 350
+#: NEEDS WORK
+msgid "A modern terminal emulator with session management"
+msgstr "Um emulador de terminal moderno com gerenciamento de sessões"
+# 
+# File: usr/share/ashyterm/app.py, line: 356
+#: NEEDS WORK
+msgid "Save Backup As..."
+msgstr "Salvar Backup Como..."
+# 
+# File: usr/share/ashyterm/app.py, line: 368
+# File: usr/share/ashyterm/app.py, line: 379
+# File: usr/share/ashyterm/app.py, line: 392
+# File: usr/share/ashyterm/app.py, line: 396
+#: NEEDS WORK
+msgid "Backup Error"
+msgstr "Erro de Backup"
+# 
+# File: usr/share/ashyterm/app.py, line: 375
+#: NEEDS WORK
+msgid "Set Backup Password"
+msgstr "Definir Senha de Backup"
+# 
+# File: usr/share/ashyterm/app.py, line: 376
+#: NEEDS WORK
+msgid "Please enter a password to encrypt the backup file."
+msgstr "Por favor, insira uma senha para criptografar o arquivo de backup."
+# 
+# File: usr/share/ashyterm/app.py, line: 384
+#: NEEDS WORK
+msgid "Confirm Password"
+msgstr "Confirmar Senha"
+# 
+# File: usr/share/ashyterm/app.py, line: 400
+# File: usr/share/ashyterm/app.py, line: 405
+#: NEEDS WORK
+msgid "Password Error"
+msgstr "Erro de Senha"
+# 
+# File: usr/share/ashyterm/app.py, line: 400
+#: NEEDS WORK
+msgid "Password cannot be empty."
+msgstr "A senha não pode estar vazia."
+# 
+# File: usr/share/ashyterm/app.py, line: 405
+#: NEEDS WORK
+msgid "Passwords do not match."
+msgstr "As senhas não coincidem."
+# 
+# File: usr/share/ashyterm/app.py, line: 423
+#: NEEDS WORK
+msgid "Creating backup..."
+msgstr "Criando backup..."
+# 
+# File: usr/share/ashyterm/app.py, line: 390
+#: NEEDS WORK
+msgid "Backup Complete"
+msgstr "Backup Completo"
+# 
+# File: usr/share/ashyterm/app.py, line: 440
+#: NEEDS WORK
+#, python-brace-format
+msgid ""
+"Backup saved successfully to:\n"
+"{}"
+msgstr ""
+"Backup salvo com sucesso em:  \n"
+"{}"
+# 
+# File: usr/share/ashyterm/app.py, line: 446
+#: NEEDS WORK
+msgid "Backup Failed"
+msgstr "Backup Falhou"
+# 
+# File: usr/share/ashyterm/app.py, line: 447
+#: NEEDS WORK
+#, python-brace-format
+msgid "Could not create backup: {}"
+msgstr "Não foi possível criar o backup: {}"
+# 
+# File: usr/share/ashyterm/app.py, line: 458
+#: NEEDS WORK
+msgid "Restore from Backup?"
+msgstr "Restaurar a partir do Backup?"
+# 
+# File: usr/share/ashyterm/app.py, line: 460
+#: NEEDS WORK
+msgid ""
+"Restoring from a backup will overwrite all your current sessions, settings, and layouts. This "
+"action cannot be undone.\n"
+"\n"
+"<b>The application will need to be restarted after restoring.</b>"
+msgstr ""
+"Restaurar a partir de um backup substituirá todas as suas sessões, configurações e layouts atuais. "
+"Esta ação não pode ser desfeita.\n"
+"\n"
+"<b>O aplicativo precisará ser reiniciado após a restauração.</b>"
+# 
+# File: usr/share/ashyterm/app.py, line: 466
+#: NEEDS WORK
+msgid "Choose File and Restore"
+msgstr "Escolher Arquivo e Restaurar"
+# 
+# File: usr/share/ashyterm/app.py, line: 474
+#: NEEDS WORK
+msgid "Select Backup File"
+msgstr "Selecionar Arquivo de Backup"
+# 
+# File: usr/share/ashyterm/app.py, line: 477
+#: NEEDS WORK
+msgid "Backup Files"
+msgstr "Arquivos de Backup"
+# 
+# File: usr/share/ashyterm/app.py, line: 402
+# File: usr/share/ashyterm/app.py, line: 416
+#: NEEDS WORK
+msgid "Restore Error"
+msgstr "Erro de Restauração"
+# 
+# File: usr/share/ashyterm/app.py, line: 499
+#: NEEDS WORK
+msgid "Enter Backup Password"
+msgstr "Digite a Senha de Backup"
+# 
+# File: usr/share/ashyterm/app.py, line: 500
+#: NEEDS WORK
+msgid "Please enter the password for the selected backup file."
+msgstr "Por favor, insira a senha para o arquivo de backup selecionado."
+# 
+# File: usr/share/ashyterm/app.py, line: 508
+#: NEEDS WORK
+msgid "Restore"
+msgstr "Restaurar"
+# 
+# File: usr/share/ashyterm/app.py, line: 525
+#: NEEDS WORK
+msgid "Restoring from backup..."
+msgstr "Restaurando a partir do backup..."
+# 
+# File: usr/share/ashyterm/app.py, line: 538
+#: NEEDS WORK
+msgid "Restore Failed"
+msgstr "Restauração Falhou"
+# 
+# File: usr/share/ashyterm/app.py, line: 539
+#: NEEDS WORK
+#, python-brace-format
+msgid "Could not restore from backup: {}"
+msgstr "Não foi possível restaurar do backup: {}"
+# 
+# File: usr/share/ashyterm/app.py, line: 549
+#: NEEDS WORK
+msgid "Restore Complete"
+msgstr "Restauração Completa"
+# 
+# File: usr/share/ashyterm/app.py, line: 551
+#: NEEDS WORK
+msgid "Data has been restored successfully. Please restart Ashy Terminal for the changes to take effect."
+msgstr ""
+"Os dados foram restaurados com sucesso. Por favor, reinicie o Ashy Terminal para que as alterações "
+"tenham efeito."
+# 
+# File: usr/share/ashyterm/app.py, line: 498
+#: NEEDS WORK
+msgid "Close Application"
+msgstr "Fechar Aplicativo"
+# 
+# File: usr/share/ashyterm/app.py, line: 499
+#: NEEDS WORK
+msgid ""
+"There are active SSH connections. Closing will disconnect all sessions.\n"
+"\n"
+"Are you sure you want to close the application?"
+msgstr ""
+"Existem conexões SSH ativas. Fechar desconectará todas as sessões.\n"
+"\n"
+"Você tem certeza de que deseja fechar o aplicativo?"
+# 
+# File: usr/share/ashyterm/app.py, line: 503
+#: NEEDS WORK
+msgid "Close All"
+msgstr "Fechar Tudo"
+# 
+# File: usr/share/ashyterm/app.py, line: 530
+#: NEEDS WORK
+msgid "Startup Error"
+msgstr "Erro de Inicialização"
+# 
+# File: usr/share/ashyterm/app.py, line: 531
+#: NEEDS WORK
+#, python-brace-format
+msgid "Application failed to start: {}"
+msgstr "Aplicativo falhou ao iniciar: {}"
 # 
 # File: usr/share/ashyterm/state/window_state.py, line: 91
 #: NEEDS WORK
@@ -5164,3 +7200,32 @@ msgstr "Erro ao Deletar Layout"
 #: NEEDS WORK
 msgid "Error Moving Layout"
 msgstr "Erro ao Mover Layout"
+# 
+# File: usr/share/nautilus-python/extensions/ashyterm.py, line: 129
+#: NEEDS WORK
+msgid "Open in Ashy Terminal (SSH)"
+msgstr "Abrir no Ashy Terminal (SSH)"
+# 
+# File: usr/share/nautilus-python/extensions/ashyterm.py, line: 130
+#: NEEDS WORK
+#, python-brace-format
+msgid "Connect to {} via a new SSH session"
+msgstr "Conectar a {} através de uma nova sessão SSH"
+# 
+# File: usr/share/nautilus-python/extensions/ashyterm.py, line: 139
+# File: usr/share/nautilus-python/extensions/ashyterm.py, line: 149
+#: NEEDS WORK
+msgid "Open in Ashy Terminal"
+msgstr "Abrir no Terminal Ashy"
+# 
+# File: usr/share/nautilus-python/extensions/ashyterm.py, line: 140
+#: NEEDS WORK
+#, python-brace-format
+msgid "Open the local mount point {}"
+msgstr "Abra o ponto de montagem local {}"
+# 
+# File: usr/share/nautilus-python/extensions/ashyterm.py, line: 150
+#: NEEDS WORK
+#, python-brace-format
+msgid "Open {} in Ashy Terminal"
+msgstr "Abrir {} no Terminal Ashy"

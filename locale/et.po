@@ -16,35 +16,6 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: attranslate\n"
 # 
-# File: usr/share/nautilus-python/extensions/ashyterm.py, line: 129
-#: NEEDS WORK
-msgid "Open in Ashy Terminal (SSH)"
-msgstr "Ava Ashy terminalis (SSH)"
-# 
-# File: usr/share/nautilus-python/extensions/ashyterm.py, line: 130
-#: NEEDS WORK
-#, python-brace-format
-msgid "Connect to {} via a new SSH session"
-msgstr "Ühenda {} uue SSH seansi kaudu"
-# 
-# File: usr/share/nautilus-python/extensions/ashyterm.py, line: 139
-# File: usr/share/nautilus-python/extensions/ashyterm.py, line: 149
-#: NEEDS WORK
-msgid "Open in Ashy Terminal"
-msgstr "Ava Ashy terminalis"
-# 
-# File: usr/share/nautilus-python/extensions/ashyterm.py, line: 140
-#: NEEDS WORK
-#, python-brace-format
-msgid "Open the local mount point {}"
-msgstr "Ava kohaliku mount-punkti {}"
-# 
-# File: usr/share/nautilus-python/extensions/ashyterm.py, line: 150
-#: NEEDS WORK
-#, python-brace-format
-msgid "Open {} in Ashy Terminal"
-msgstr "Ava {} Ashy Terminalis"
-# 
 # File: usr/share/ashyterm/utils/exceptions.py, line: 65
 #: NEEDS WORK
 msgid "A terminal error occurred"
@@ -460,6 +431,59 @@ msgstr "Kehtetu või ohtlik kaustatee"
 msgid "Validation error: {}"
 msgstr "Keeramisviga: {}"
 # 
+# File: usr/share/ashyterm/terminal/ai_assistant.py, line: 389
+#: NEEDS WORK
+msgid "Unknown error."
+msgstr "Tundmatu viga."
+# 
+# File: usr/share/ashyterm/terminal/ai_assistant.py, line: 393
+# File: usr/share/ashyterm/terminal/ai_assistant.py, line: 399
+#: NEEDS WORK
+#, python-brace-format
+msgid "OpenRouter respondeu com HTTP {status}: {message}"
+msgstr "OpenRouter vastas HTTP {status}: {message}"
+# 
+# File: usr/share/ashyterm/terminal/ai_assistant.py, line: 415
+#: NEEDS WORK
+#, python-brace-format
+msgid "OpenRouter respondeu com HTTP {status}: {message}{detail}"
+msgstr "OpenRouter vastas HTTP {status}: {message}{detail}"
+# 
+# File: usr/share/ashyterm/terminal/spawner.py, line: 295
+#: NEEDS WORK
+msgid "Not an SSH session."
+msgstr "Ei ole SSH seanss."
+# 
+# File: usr/share/ashyterm/filemanager/operations.py, line: 146
+#: NEEDS WORK
+msgid "Command timed out."
+msgstr "Käsk aegus."
+# 
+# File: usr/share/ashyterm/terminal/tabs.py, line: 43
+#: NEEDS WORK
+msgid "Move to New Tab"
+msgstr "Liiguta uude vahekaardile"
+# 
+# File: usr/share/ashyterm/ui/menus.py, line: 214
+#: NEEDS WORK
+msgid "Close Pane"
+msgstr "Sulge paneel"
+# 
+# File: usr/share/ashyterm/terminal/tabs.py, line: 531
+#: NEEDS WORK
+msgid "Duplicate Tab"
+msgstr "Kopeeri vahekaart"
+# 
+# File: usr/share/ashyterm/terminal/tabs.py, line: 237
+#: NEEDS WORK
+msgid "Detach Tab"
+msgstr "Eemalda vahekaart"
+# 
+# File: usr/share/ashyterm/terminal/tabs.py, line: 585
+#: NEEDS WORK
+msgid "This is the only pane in the tab."
+msgstr "See on ainus paneel vahekaardil."
+# 
 # File: usr/share/ashyterm/main.py, line: 86
 #: NEEDS WORK
 #, python-brace-format
@@ -529,283 +553,86 @@ msgstr "Muuda KIO/GVFS URI tee SSH formaati"
 msgid "Force opening a new window"
 msgstr "Sunnivi avamine uues aknas"
 # 
-# File: usr/share/ashyterm/sessions/models.py, line: 174
+# File: usr/share/ashyterm/ui/window_ui.py, line: 339
 #: NEEDS WORK
-msgid "Port must be a valid number between 1 and 65535"
-msgstr "Port peab olema kehtiv number vahemikus 1 kuni 65535"
+msgid "Type your command here and press ENTER..."
+msgstr "Sisestage oma käsk siia ja vajutage ENTER..."
 # 
-# File: usr/share/ashyterm/sessions/models.py, line: 198
+# File: usr/share/ashyterm/ui/window_ui.py, line: 264
 #: NEEDS WORK
-msgid "Session name is required."
-msgstr "Seansi nimi on kohustuslik."
+msgid "Current occurrence"
+msgstr "Praegune esinemine"
 # 
-# File: usr/share/ashyterm/sessions/models.py, line: 201
+# File: usr/share/ashyterm/ui/window_ui.py, line: 268
 #: NEEDS WORK
-msgid "Host is required for SSH sessions."
-msgstr "Host on vajalik SSH seansside jaoks."
+msgid "Case sensitive search"
+msgstr "Suurtäheline otsing"
 # 
-# File: usr/share/ashyterm/sessions/models.py, line: 203
+# File: usr/share/ashyterm/ui/window_ui.py, line: 270
 #: NEEDS WORK
-msgid "Port must be between 1 and 65535."
-msgstr "Port peab olema vahemikus 1 kuni 65535."
+msgid "Case sensitive"
+msgstr "Tähtede tundlik"
 # 
-# File: usr/share/ashyterm/sessions/models.py, line: 386
-# File: usr/share/ashyterm/sessions/models.py, line: 419
+# File: usr/share/ashyterm/ui/window_ui.py, line: 276
 #: NEEDS WORK
-msgid "Unnamed Session"
-msgstr "Nimetu seanss"
+msgid "Use regular expressions"
+msgstr "Kasutage regulaaravaldisi"
+# 
+# File: usr/share/ashyterm/ui/window_ui.py, line: 278
+#: NEEDS WORK
+msgid "Regex"
+msgstr "Regex"
 # 
 # #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 406
-# File: usr/share/ashyterm/sessions/models.py, line: 511
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1606
+# File: usr/share/ashyterm/window.py, line: 248
 #: NEEDS WORK
-msgid "Local Terminal"
-msgstr "Kohalik terminal"
+msgid "Toggle Sidebar"
+msgstr "Vaheta külgriba"
 # 
-# File: usr/share/ashyterm/sessions/models.py, line: 346
+# File: usr/share/ashyterm/window.py, line: 344
 #: NEEDS WORK
-msgid "Folder name is required."
-msgstr "Kausta nime on nõutav."
+msgid "File Manager"
+msgstr "Failihaldur"
 # 
-# File: usr/share/ashyterm/sessions/models.py, line: 352
+# File: usr/share/ashyterm/ui/window_ui.py, line: 324
 #: NEEDS WORK
-msgid "Folder path is not consistent with its parent path."
-msgstr "Kausta tee ei ühti oma vanema teega."
+msgid "Command Guide (Ctrl+Shift+P)"
+msgstr "Käskude juhend (Ctrl+Shift+P)"
 # 
-# File: usr/share/ashyterm/sessions/models.py, line: 727
-# File: usr/share/ashyterm/sessions/models.py, line: 752
+# File: usr/share/ashyterm/ui/window_ui.py, line: 350
 #: NEEDS WORK
-msgid "Unnamed Folder"
-msgstr "Nimetu kaust"
+msgid "Search in Terminal"
+msgstr "Otsi terminalis"
 # 
-# File: usr/share/ashyterm/sessions/tree.py, line: 298
-# File: usr/share/ashyterm/sessions/tree.py, line: 302
+# File: usr/share/ashyterm/ui/window_ui.py, line: 339
 #: NEEDS WORK
-msgid "Move Error"
-msgstr "Liikumise viga"
+msgid "Send Command to All Tabs"
+msgstr "Saada käsk kõikidesse vahekaartidesse"
+# 
+# File: usr/share/ashyterm/ui/window_ui.py, line: 344
+#: NEEDS WORK
+msgid "Ask AI Assistant (Ctrl+Shift+I)"
+msgstr "Küsi AI assistendilt (Ctrl+Shift+I)"
+# 
+# File: usr/share/ashyterm/ui/window_ui.py, line: 259
+#: NEEDS WORK
+msgid "Manage Temporary Files"
+msgstr "Haldage ajutiste failide haldamine"
+# 
+# File: usr/share/ashyterm/window.py, line: 268
+#: NEEDS WORK
+msgid "Main Menu"
+msgstr "Peamenüü"
 # 
 # #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
 # 
-# File: usr/share/ashyterm/sessions/tree.py, line: 801
-# File: usr/share/ashyterm/window.py, line: 1544
+# File: usr/share/ashyterm/ui/menus.py, line: 144
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1596
 #: NEEDS WORK
-msgid "Restore Layout"
-msgstr "Taasta paigutus"
-# 
-# File: usr/share/ashyterm/ui/menus.py, line: 203
-#: NEEDS WORK
-msgid "Move to Folder..."
-msgstr "Liiguta kausta..."
-# 
-# File: usr/share/ashyterm/sessions/tree.py, line: 808
-#: NEEDS WORK
-msgid "Delete Layout"
-msgstr "Kustuta paigutus"
-# 
-# File: usr/share/ashyterm/sessions/tree.py, line: 618
-# File: usr/share/ashyterm/sessions/tree.py, line: 623
-#: NEEDS WORK
-msgid "Paste Error"
-msgstr "Kopeerimise viga"
-# 
-# File: usr/share/ashyterm/sessions/validation.py, line: 18
-#: NEEDS WORK
-#, python-brace-format
-msgid "Session validation failed: {}"
-msgstr "Seansi valideerimine ebaõnnestus: {}"
-# 
-# File: usr/share/ashyterm/sessions/validation.py, line: 31
-#: NEEDS WORK
-#, python-brace-format
-msgid "A session with the name '{name}' already exists in this folder."
-msgstr "Selles kaustas on juba olemas seanss nimega '{name}'."
-# 
-# File: usr/share/ashyterm/sessions/validation.py, line: 45
-#: NEEDS WORK
-#, python-brace-format
-msgid "The target folder '{folder}' does not exist."
-msgstr "Sihtkaust '{folder}' ei eksisteeri."
-# 
-# File: usr/share/ashyterm/sessions/validation.py, line: 61
-#: NEEDS WORK
-#, python-brace-format
-msgid "Folder validation failed: {}"
-msgstr "Katalooge valideerimine ebaõnnestus: {}"
-# 
-# File: usr/share/ashyterm/sessions/validation.py, line: 69
-#: NEEDS WORK
-#, python-brace-format
-msgid "A folder with the path '{path}' already exists."
-msgstr "Kaustikuga '{path}' on juba olemas."
-# 
-# File: usr/share/ashyterm/sessions/validation.py, line: 84
-#: NEEDS WORK
-#, python-brace-format
-msgid "The parent folder '{folder}' does not exist."
-msgstr "Vanem kaust '{folder}' ei eksisteeri."
-# 
-# File: usr/share/ashyterm/sessions/storage.py, line: 125
-#: NEEDS WORK
-#, python-brace-format
-msgid "File path validation failed: {}"
-msgstr "Faili tee valideerimine ebaõnnestus: {}"
-# 
-# File: usr/share/ashyterm/sessions/storage.py, line: 134
-#: NEEDS WORK
-msgid "File too large (>50MB)"
-msgstr "Fail on liiga suur (>50MB)"
-# 
-# File: usr/share/ashyterm/sessions/storage.py, line: 148
-#: NEEDS WORK
-#, python-brace-format
-msgid "Invalid JSON: {}"
-msgstr "Kehtetu JSON: {}"
-# 
-# File: usr/share/ashyterm/sessions/storage.py, line: 151
-#: NEEDS WORK
-#, python-brace-format
-msgid "Encoding error: {}"
-msgstr "Kodeerimisviga: {}"
-# 
-# File: usr/share/ashyterm/sessions/storage.py, line: 155
-#: NEEDS WORK
-msgid "Root data is not a dictionary"
-msgstr "Juurtandmed ei ole sõnastik."
-# 
-# File: usr/share/ashyterm/sessions/storage.py, line: 198
-#: NEEDS WORK
-#, python-brace-format
-msgid "Load failed: {}"
-msgstr "Laadimine ebaõnnestus: {}"
-# 
-# File: usr/share/ashyterm/sessions/storage.py, line: 395
-#: NEEDS WORK
-msgid "Data validation failed"
-msgstr "Andmete valideerimine ebaõnnestus"
-# 
-# File: usr/share/ashyterm/sessions/storage.py, line: 410
-#: NEEDS WORK
-msgid "Temporary file was not written correctly"
-msgstr "Ajutine fail ei olnud õigesti kirjutatud"
-# 
-# File: usr/share/ashyterm/sessions/storage.py, line: 427
-#: NEEDS WORK
-#, python-brace-format
-msgid "File write failed: {}"
-msgstr "Faili kirjutamine ebaõnnestus: {}"
-# 
-# File: usr/share/ashyterm/sessions/storage.py, line: 439
-#: NEEDS WORK
-msgid "Save verification failed"
-msgstr "Salvestamise kontrollimine ebaõnnestus"
-# 
-# File: usr/share/ashyterm/sessions/storage.py, line: 463
-#: NEEDS WORK
-#, python-brace-format
-msgid "Save failed: {}"
-msgstr "Salvestamine ebaõnnestus: {}"
-# 
-# File: usr/share/ashyterm/sessions/operations.py, line: 51
-#: NEEDS WORK
-#, python-brace-format
-msgid "Failed to save {item_type} data."
-msgstr "{item_type} andmete salvestamine ebaõnnestus."
-# 
-# File: usr/share/ashyterm/sessions/operations.py, line: 59
-#: NEEDS WORK
-#, python-brace-format
-msgid "{item_type} '{name}' added successfully."
-msgstr "{item_type} '{name}' lisatud edukalt."
-# 
-# File: usr/share/ashyterm/sessions/operations.py, line: 62
-#: NEEDS WORK
-msgid "Item at position is not a session."
-msgstr "Element positsioonil ei ole seanss."
-# 
-# File: usr/share/ashyterm/sessions/operations.py, line: 74
-#: NEEDS WORK
-msgid "Failed to save updated session data."
-msgstr "Eba updated sessiooni andmete salvestamine."
-# 
-# File: usr/share/ashyterm/sessions/operations.py, line: 79
-#: NEEDS WORK
-#, python-brace-format
-msgid "Session '{name}' updated successfully."
-msgstr "Seans '{name}' uuendatud edukalt."
-# 
-# File: usr/share/ashyterm/sessions/operations.py, line: 90
-#: NEEDS WORK
-msgid "Session not found."
-msgstr "Seansit ei leitud."
-# 
-# File: usr/share/ashyterm/sessions/operations.py, line: 96
-#: NEEDS WORK
-msgid "Failed to save after session removal."
-msgstr "Salvestamine ebaõnnestus seansi eemaldamise järel."
-# 
-# File: usr/share/ashyterm/sessions/operations.py, line: 102
-#: NEEDS WORK
-#, python-brace-format
-msgid "Session '{name}' removed successfully."
-msgstr "Seans '{name}' eemaldati edukalt."
-# 
-# File: usr/share/ashyterm/sessions/operations.py, line: 131
-#: NEEDS WORK
-msgid "Item at position is not a folder."
-msgstr "Element positsioonil ei ole kaust."
-# 
-# File: usr/share/ashyterm/sessions/operations.py, line: 144
-#: NEEDS WORK
-msgid "Failed to save updated folder data."
-msgstr "Kausta andmete uuendamine ebaõnnestus."
-# 
-# File: usr/share/ashyterm/sessions/operations.py, line: 149
-#: NEEDS WORK
-#, python-brace-format
-msgid "Folder '{name}' updated successfully."
-msgstr "Kaust '{name}' uuendatud edukalt."
-# 
-# File: usr/share/ashyterm/sessions/operations.py, line: 161
-#: NEEDS WORK
-msgid "Cannot remove a non-empty folder."
-msgstr "Ei saa eemaldada mitte-tühja kausta."
-# 
-# File: usr/share/ashyterm/sessions/operations.py, line: 168
-#: NEEDS WORK
-msgid "Folder not found."
-msgstr "Kaust ei leitud."
-# 
-# File: usr/share/ashyterm/sessions/operations.py, line: 172
-#: NEEDS WORK
-msgid "Failed to save after folder removal."
-msgstr "Salvestamine ebaõnnestus pärast kausta eemaldamist."
-# 
-# File: usr/share/ashyterm/sessions/operations.py, line: 177
-#: NEEDS WORK
-#, python-brace-format
-msgid "Folder '{name}' removed successfully."
-msgstr "Kaust '{name}' eemaldati edukalt."
-# 
-# File: usr/share/ashyterm/sessions/operations.py, line: 190
-#: NEEDS WORK
-msgid "Failed to save after moving session."
-msgstr "Seansi liigutamisel salvestamine ebaõnnestus."
-# 
-# File: usr/share/ashyterm/sessions/operations.py, line: 195
-#: NEEDS WORK
-msgid "Session moved successfully."
-msgstr "Seans liikus edukalt."
-# 
-# File: usr/share/ashyterm/sessions/operations.py, line: 209
-#: NEEDS WORK
-msgid "Cannot move a folder into itself."
-msgstr "Ei saa kausta iseendasse liigutada."
-# 
-# File: usr/share/ashyterm/sessions/operations.py, line: 260
-#: NEEDS WORK
-msgid "Unsupported item type for paste operation."
-msgstr "Toetamata tüüp kleepimise toimingu jaoks."
+msgid "New Tab"
+msgstr "Uus vahekaart"
 # 
 # File: usr/share/ashyterm/filemanager/manager.py, line: 1165
 # File: usr/share/ashyterm/filemanager/manager.py, line: 1202
@@ -813,178 +640,48 @@ msgstr "Toetamata tüüp kleepimise toimingu jaoks."
 msgid "Ashy Terminal"
 msgstr "Ashy Terminal"
 # 
-# File: usr/share/ashyterm/ui/menus.py, line: 214
-#: NEEDS WORK
-msgid "Close Pane"
-msgstr "Sulge paneel"
-# 
-# File: usr/share/ashyterm/terminal/tabs.py, line: 43
-#: NEEDS WORK
-msgid "Move to New Tab"
-msgstr "Liiguta uude vahekaardile"
-# 
-# File: usr/share/ashyterm/window.py, line: 424
-#: NEEDS WORK
-msgid "Data Loading Error"
-msgstr "Andmete laadimise viga"
-# 
-# File: usr/share/ashyterm/window.py, line: 425
-#: NEEDS WORK
-msgid "Failed to load saved sessions and folders. Starting with empty configuration."
-msgstr "Salvestatud seansside ja kaustade laadimine ebaõnnestus. Alustamine tühja konfiguratsiooniga."
-# 
-# File: usr/share/ashyterm/window.py, line: 551
-#: NEEDS WORK
-msgid "Session Validation Error"
-msgstr "Seansi valideerimise viga"
-# 
-# File: usr/share/ashyterm/window.py, line: 550
-#: NEEDS WORK
-#, python-brace-format
-msgid ""
-"Session validation failed:\n"
-"{errors}"
-msgstr ""
-"Seansi valideerimine ebaõnnestus:\n"
-"{errors}"
-# 
-# File: usr/share/ashyterm/window.py, line: 958
-#: NEEDS WORK
-msgid "Cannot detach the last tab."
-msgstr "Viimast vahekaarti ei saa eraldada."
-# 
-# File: usr/share/ashyterm/window.py, line: 652
-#: NEEDS WORK
-msgid "No active terminal to search in."
-msgstr "Ei ole aktiivset terminali, kus otsida."
-# 
-# File: usr/share/ashyterm/window.py, line: 687
-# File: usr/share/ashyterm/window.py, line: 734
-#: NEEDS WORK
-msgid "Invalid search pattern."
-msgstr "Kehtetu otsingumuster."
-# 
-# File: usr/share/ashyterm/window.py, line: 762
-# File: usr/share/ashyterm/window.py, line: 795
-#: NEEDS WORK
-msgid "No more matches found."
-msgstr "Ei leitud rohkem vasteid."
-# 
-# File: usr/share/ashyterm/window.py, line: 145
-#: NEEDS WORK
-msgid "Initialization Error"
-msgstr "Algatuse viga"
-# 
-# File: usr/share/ashyterm/window.py, line: 146
-#: NEEDS WORK
-#, python-brace-format
-msgid "Failed to initialize terminal: {error}"
-msgstr "Terminali initsialiseerimine ebaõnnestus: {error}"
-# 
-# File: usr/share/ashyterm/window.py, line: 1080
-#: NEEDS WORK
-msgid "Save Current Session?"
-msgstr "Salvesta praegune seanss?"
-# 
-# File: usr/share/ashyterm/window.py, line: 1082
-#: NEEDS WORK
-msgid "Do you want to restore these tabs the next time you open Ashy Terminal?"
-msgstr "Kas soovite need vahekaardid taastada järgmine kord, kui avate Ashy Terminali?"
-# 
-# File: usr/share/ashyterm/window.py, line: 1086
-#: NEEDS WORK
-msgid "Don't Save"
-msgstr "Ära salvesta"
+# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
 # 
 # #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 163
-# File: usr/share/ashyterm/ui/dialogs.py, line: 575
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1213
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1957
-# File: usr/share/ashyterm/ui/dialogs.py, line: 2006
-# File: usr/share/ashyterm/window.py, line: 953
-# File: usr/share/ashyterm/window.py, line: 1013
+# File: usr/share/ashyterm/ui/menus.py, line: 60
+# File: usr/share/ashyterm/ui/menus.py, line: 92
+# File: usr/share/ashyterm/ui/dialogs.py, line: 223
+# File: usr/share/ashyterm/window.py, line: 325
 #: NEEDS WORK
-msgid "Cancel"
-msgstr "Tühista"
-# 
-# File: usr/share/ashyterm/window.py, line: 1088
-#: NEEDS WORK
-msgid "Save and Close"
-msgstr "Salvesta ja sulge"
-# 
-# File: usr/share/ashyterm/window.py, line: 528
-# File: usr/share/ashyterm/window.py, line: 533
-#: NEEDS WORK
-msgid "Close Window"
-msgstr "Sulge aken"
-# 
-# File: usr/share/ashyterm/window.py, line: 463
-#: NEEDS WORK
-msgid "This window has active SSH connections. Closing will disconnect them. Are you sure?"
-msgstr "See aken on aktiivsed SSH-ühendused. Sulgemine katkestab need. Kas olete kindel?"
-# 
-# File: usr/share/ashyterm/window.py, line: 553
-#: NEEDS WORK
-msgid "Invalid SSH Target"
-msgstr "Kehtetu SSH sihtkoht"
-# 
-# File: usr/share/ashyterm/window.py, line: 554
-#: NEEDS WORK
-msgid "Could not parse the provided SSH connection string."
-msgstr "Ei suutnud analüüsida antud SSH ühenduse stringi."
+msgid "Add Session"
+msgstr "Lisa seanss"
 # 
 # #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 136
-# File: usr/share/ashyterm/ui/dialogs.py, line: 784
-# File: usr/share/ashyterm/ui/dialogs.py, line: 2021
-# File: usr/share/ashyterm/ui/dialogs.py, line: 2033
-# File: usr/share/ashyterm/window.py, line: 1055
-# File: usr/share/ashyterm/window.py, line: 1070
-#: NEEDS WORK
-msgid "OK"
-msgstr "OK"
+# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
 # 
-# File: usr/share/ashyterm/window.py, line: 612
+# File: usr/share/ashyterm/ui/menus.py, line: 93
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1056
+# File: usr/share/ashyterm/window.py, line: 331
 #: NEEDS WORK
-msgid "Remove this temporary file"
-msgstr "Eemalda see ajutine fail"
+msgid "Add Folder"
+msgstr "Lisa kaust"
 # 
-# File: usr/share/ashyterm/window.py, line: 627
+# File: usr/share/ashyterm/window.py, line: 337
 #: NEEDS WORK
-msgid "No temporary files found."
-msgstr "Ajutisi faile ei leitud."
+msgid "Edit Selected"
+msgstr "Muuda valitud"
 # 
-# File: usr/share/ashyterm/window.py, line: 630
+# File: usr/share/ashyterm/window.py, line: 585
 #: NEEDS WORK
-msgid "Clear All Temporary Files"
-msgstr "Kustuta kõik ajutised failid"
+msgid "Save Current Layout"
+msgstr "Salvesta praegune paigutus"
 # 
-# File: usr/share/ashyterm/window.py, line: 652
+# File: usr/share/ashyterm/window.py, line: 343
 #: NEEDS WORK
-msgid "Clear All Temporary Files?"
-msgstr "Kustuta kõik ajutised failid?"
+msgid "Remove Selected"
+msgstr "Eemalda valitud"
 # 
-# File: usr/share/ashyterm/window.py, line: 654
+# File: usr/share/ashyterm/window.py, line: 606
 #: NEEDS WORK
-msgid ""
-"This will remove all locally downloaded files for remote editing. Any unsaved changes in your "
-"editor will be lost. This action cannot be undone."
-msgstr ""
-"See eemaldab kõik kohalikult allalaaditud failid kaugredigeerimiseks. Kõik salvestamata muudatused "
-"teie redigeerijas kaovad. Seda toimingut ei saa tagasi võtta."
-# 
-# File: usr/share/ashyterm/window.py, line: 660
-#: NEEDS WORK
-msgid "Clear All"
-msgstr "Kustuta kõik"
-# 
-# File: usr/share/ashyterm/window.py, line: 1193
-#: NEEDS WORK
-msgid "No active terminal to send command to."
-msgstr "Ei ole aktiivset terminali, kuhu käsku saata."
+msgid "Search sessions..."
+msgstr "Otsingu seansid..."
 # 
 # File: usr/share/ashyterm/ui/color_scheme_dialog.py, line: 42
 #: NEEDS WORK
@@ -1021,6 +718,19 @@ msgstr "Pealkirja riba taust"
 msgid "Cursor"
 msgstr "Kursor"
 # 
+# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 163
+# File: usr/share/ashyterm/ui/dialogs.py, line: 575
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1213
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1957
+# File: usr/share/ashyterm/ui/dialogs.py, line: 2006
+# File: usr/share/ashyterm/window.py, line: 953
+# File: usr/share/ashyterm/window.py, line: 1013
+#: NEEDS WORK
+msgid "Cancel"
+msgstr "Tühista"
+# 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 589
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1219
 #: NEEDS WORK
@@ -1041,6 +751,18 @@ msgstr "Üldised värvid"
 #: NEEDS WORK
 msgid "16-Color Palette"
 msgstr "16-värvi palett"
+# 
+# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 136
+# File: usr/share/ashyterm/ui/dialogs.py, line: 784
+# File: usr/share/ashyterm/ui/dialogs.py, line: 2021
+# File: usr/share/ashyterm/ui/dialogs.py, line: 2033
+# File: usr/share/ashyterm/window.py, line: 1055
+# File: usr/share/ashyterm/window.py, line: 1070
+#: NEEDS WORK
+msgid "OK"
+msgstr "OK"
 # 
 # File: usr/share/ashyterm/ui/color_scheme_dialog.py, line: 135
 #: NEEDS WORK
@@ -1168,6 +890,261 @@ msgstr "Peida külgmenüü"
 msgid "Show Sidebar"
 msgstr "Näita külgriba"
 # 
+# File: usr/share/ashyterm/ui/menus.py, line: 24
+#: NEEDS WORK
+msgid "Follow System Style"
+msgstr "Järgi süsteemi stiili"
+# 
+# File: usr/share/ashyterm/ui/menus.py, line: 29
+#: NEEDS WORK
+msgid "Light Style"
+msgstr "Kerge stiil"
+# 
+# File: usr/share/ashyterm/ui/menus.py, line: 34
+#: NEEDS WORK
+msgid "Dark Style"
+msgstr "Tume stiil"
+# 
+# File: usr/share/ashyterm/ui/menus.py, line: 47
+#: NEEDS WORK
+msgid "Match Terminal Colors"
+msgstr "Vasta terminali värvid"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1607
+#: NEEDS WORK
+msgid "New Window"
+msgstr "Uus aken"
+# 
+# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
+# 
+# File: usr/share/ashyterm/ui/menus.py, line: 157
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1390
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1604
+#: NEEDS WORK
+msgid "Preferences"
+msgstr "Eelistused"
+# 
+# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
+# 
+# File: usr/share/ashyterm/ui/menus.py, line: 211
+# File: usr/share/ashyterm/window.py, line: 909
+# File: usr/share/ashyterm/window.py, line: 960
+#: NEEDS WORK
+msgid "Keyboard Shortcuts"
+msgstr "Klaviatuuri otseteed"
+# 
+# File: usr/share/ashyterm/ui/menus.py, line: 216
+#: NEEDS WORK
+msgid "About"
+msgstr "Teave"
+# 
+# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
+# 
+# File: usr/share/ashyterm/ui/menus.py, line: 217
+# File: usr/share/ashyterm/window.py, line: 942
+#: NEEDS WORK
+msgid "Quit"
+msgstr "Välja"
+# 
+# File: usr/share/ashyterm/ui/menus.py, line: 119
+#: NEEDS WORK
+msgid "Connect with SFTP"
+msgstr "Ühenda SFTP-ga"
+# 
+# File: usr/share/ashyterm/ui/menus.py, line: 24
+#: NEEDS WORK
+msgid "Duplicate"
+msgstr "Kopeeri"
+# 
+# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
+# 
+# File: usr/share/ashyterm/ui/menus.py, line: 25
+# File: usr/share/ashyterm/ui/menus.py, line: 61
+# File: usr/share/ashyterm/window.py, line: 954
+#: NEEDS WORK
+msgid "Rename"
+msgstr "Nimeta"
+# 
+# File: usr/share/ashyterm/ui/menus.py, line: 203
+#: NEEDS WORK
+msgid "Move to Folder..."
+msgstr "Liiguta kausta..."
+# 
+# File: usr/share/ashyterm/ui/menus.py, line: 220
+#: NEEDS WORK
+msgid "Add Session Here"
+msgstr "Lisa seanssi siia"
+# 
+# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
+# 
+# File: usr/share/ashyterm/ui/menus.py, line: 69
+# File: usr/share/ashyterm/ui/menus.py, line: 118
+# File: usr/share/ashyterm/ui/menus.py, line: 154
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1599
+#: NEEDS WORK
+msgid "Paste"
+msgstr "Kleebi"
+# 
+# File: usr/share/ashyterm/ui/menus.py, line: 98
+#: NEEDS WORK
+msgid "Paste to Root"
+msgstr "Kleebi juurele"
+# 
+# File: usr/share/ashyterm/ui/menus.py, line: 227
+#: NEEDS WORK
+msgid "Open Link"
+msgstr "Ava link"
+# 
+# File: usr/share/ashyterm/ui/menus.py, line: 228
+#: NEEDS WORK
+msgid "Copy Link"
+msgstr "Kopeeri link"
+# 
+# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
+# 
+# File: usr/share/ashyterm/ui/menus.py, line: 30
+# File: usr/share/ashyterm/ui/menus.py, line: 66
+# File: usr/share/ashyterm/ui/menus.py, line: 117
+# File: usr/share/ashyterm/ui/menus.py, line: 153
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1598
+#: NEEDS WORK
+msgid "Copy"
+msgstr "Kopeeri"
+# 
+# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
+# 
+# File: usr/share/ashyterm/ui/menus.py, line: 119
+# File: usr/share/ashyterm/ui/menus.py, line: 155
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1600
+#: NEEDS WORK
+msgid "Select All"
+msgstr "Vali kõik"
+# 
+# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
+# 
+# File: usr/share/ashyterm/ui/menus.py, line: 289
+# File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 38
+#: NEEDS WORK
+msgid "Clear Session"
+msgstr "Selge seans"
+# 
+# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
+# 
+# File: usr/share/ashyterm/ui/menus.py, line: 276
+# File: usr/share/ashyterm/filemanager/menus.py, line: 276
+#: NEEDS WORK
+msgid "Split Left/Right"
+msgstr "Jagada vasakule/paremale"
+# 
+# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
+# 
+# File: usr/share/ashyterm/ui/menus.py, line: 279
+# File: usr/share/ashyterm/filemanager/menus.py, line: 279
+#: NEEDS WORK
+msgid "Split Top/Bottom"
+msgstr "Jagage Üles/Alla"
+# 
+# File: usr/share/ashyterm/ui/actions.py, line: 158
+#: NEEDS WORK
+msgid "Terminal session cleared."
+msgstr "Terminali seans on kustutatud."
+# 
+# File: usr/share/ashyterm/ui/actions.py, line: 162
+#: NEEDS WORK
+msgid "No active terminal to clear."
+msgstr "Ei ole aktiivset terminali, mida puhastada."
+# 
+# File: usr/share/ashyterm/ui/actions.py, line: 168
+#: NEEDS WORK
+msgid "Please select an SSH session to connect with SFTP."
+msgstr "Palun valige SSH seanss, millega SFTP-ga ühenduda."
+# 
+# File: usr/share/ashyterm/window.py, line: 758
+# File: usr/share/ashyterm/window.py, line: 875
+#: NEEDS WORK
+msgid "New Session"
+msgstr "Uus seanss"
+# 
+# File: usr/share/ashyterm/window.py, line: 885
+#: NEEDS WORK
+msgid "New Folder"
+msgstr "Uus kaust"
+# 
+# File: usr/share/ashyterm/window.py, line: 944
+# File: usr/share/ashyterm/window.py, line: 999
+#: NEEDS WORK
+msgid "Session"
+msgstr "Seanss"
+# 
+# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 351
+# File: usr/share/ashyterm/window.py, line: 944
+# File: usr/share/ashyterm/window.py, line: 999
+#: NEEDS WORK
+msgid "Folder"
+msgstr "Kaustik"
+# 
+# File: usr/share/ashyterm/window.py, line: 947
+#: NEEDS WORK
+#, python-brace-format
+msgid "Rename {type}"
+msgstr "Nimeta {type}"
+# 
+# File: usr/share/ashyterm/window.py, line: 948
+#: NEEDS WORK
+#, python-brace-format
+msgid "Enter new name for \"{name}\":"
+msgstr "Sisestage uus nimi \"{name}\":"
+# 
+# File: usr/share/ashyterm/window.py, line: 1450
+#: NEEDS WORK
+msgid "Delete Item"
+msgstr "Kustuta ese"
+# 
+# File: usr/share/ashyterm/window.py, line: 1450
+#: NEEDS WORK
+msgid "Delete Items"
+msgstr "Kustuta esemed"
+# 
+# File: usr/share/ashyterm/ui/actions.py, line: 415
+#: NEEDS WORK
+msgid "Layout"
+msgstr "Paigutus"
+# 
+# File: usr/share/ashyterm/window.py, line: 1009
+#: NEEDS WORK
+#, python-brace-format
+msgid "Delete {type}"
+msgstr "Kustuta {type}"
+# 
+# File: usr/share/ashyterm/window.py, line: 1003
+#: NEEDS WORK
+#, python-brace-format
+msgid ""
+"The folder \"{name}\" is not empty. Are you sure you want to permanently delete it and all its "
+"contents?"
+msgstr ""
+"Kaust \"{name}\" ei ole tühi. Kas olete kindel, et soovite selle ja kõik selle sisu püsivalt "
+"kustutada?"
+# 
+# File: usr/share/ashyterm/window.py, line: 1005
+#: NEEDS WORK
+#, python-brace-format
+msgid "Are you sure you want to delete \"{name}\"?"
+msgstr "Kas olete kindel, et soovite \"{name}\" kustutada?"
+# 
+# File: usr/share/ashyterm/window.py, line: 1464
+#: NEEDS WORK
+#, python-brace-format
+msgid "Are you sure you want to permanently delete these {count} items?"
+msgstr "Kas olete kindel, et soovite need {count} elementi püsivalt kustutada?"
+# 
+# File: usr/share/ashyterm/window.py, line: 1466
+#: NEEDS WORK
+msgid "This will also delete all contents of any selected folders."
+msgstr "See kustutab ka kõik valitud kaustade sisu."
+# 
 # File: usr/share/ashyterm/ui/ssh_dialogs.py, line: 206
 #: NEEDS WORK
 msgid "SSH Connection Failed"
@@ -1185,98 +1162,10 @@ msgstr "Ei saanud seansiga '{session_name}' ühendust luua."
 msgid "Close"
 msgstr "Sulge"
 # 
-# File: usr/share/ashyterm/ui/dialogs/command_guide_dialog.py, line: 32
+# File: usr/share/ashyterm/ui/dialogs.py, line: 223
 #: NEEDS WORK
-msgid "Add Custom Command"
-msgstr "Lisa kohandatud käsk"
-# 
-# File: usr/share/ashyterm/ui/dialogs/command_guide_dialog.py, line: 32
-#: NEEDS WORK
-msgid "Edit Custom Command"
-msgstr "Muuda kohandatud käsku"
-# 
-# File: usr/share/ashyterm/ui/dialogs/command_guide_dialog.py, line: 34
-#: NEEDS WORK
-msgid "Command"
-msgstr "Käsk"
-# 
-# File: usr/share/ashyterm/ui/dialogs/command_guide_dialog.py, line: 35
-#: NEEDS WORK
-msgid "Category"
-msgstr "Kategooria"
-# 
-# File: usr/share/ashyterm/ui/dialogs/command_guide_dialog.py, line: 104
-#: NEEDS WORK
-msgid "Select an existing category or type a new one"
-msgstr "Vali olemasolev kategooria või sisesta uus."
-# 
-# File: usr/share/ashyterm/ui/dialogs/command_guide_dialog.py, line: 59
-#: NEEDS WORK
-msgid "Description"
-msgstr "Kirjeldus"
-# 
-# File: usr/share/ashyterm/ui/dialogs/command_guide_dialog.py, line: 171
-#: NEEDS WORK
-msgid "Please fill in all required fields."
-msgstr "Palun täitke kõik kohustuslikud väljad."
-# 
-# File: usr/share/ashyterm/ui/dialogs/command_guide_dialog.py, line: 236
-#: NEEDS WORK
-msgid "Delete this custom command"
-msgstr "Kustuta see kohandatud käsk"
-# 
-# File: usr/share/ashyterm/ui/dialogs/command_guide_dialog.py, line: 143
-#: NEEDS WORK
-msgid "Command Guide"
-msgstr "Käskude juhend"
-# 
-# File: usr/share/ashyterm/ui/dialogs/command_guide_dialog.py, line: 165
-#: NEEDS WORK
-msgid "Search commands..."
-msgstr "Otsi käske..."
-# 
-# File: usr/share/ashyterm/ui/dialogs/command_guide_dialog.py, line: 208
-#: NEEDS WORK
-msgid "Show Only Custom Commands"
-msgstr "Kuva ainult kohandatud käske"
-# 
-# File: usr/share/ashyterm/ui/dialogs/command_guide_dialog.py, line: 495
-#: NEEDS WORK
-msgid "Add New Command"
-msgstr "Lisa uus käsk"
-# 
-# File: usr/share/ashyterm/ui/dialogs/command_guide_dialog.py, line: 714
-#: NEEDS WORK
-msgid "Delete Custom Command?"
-msgstr "Kustuta kohandatud käsk?"
-# 
-# File: usr/share/ashyterm/ui/dialogs/command_guide_dialog.py, line: 716
-#: NEEDS WORK
-#, python-brace-format
-msgid ""
-"Are you sure you want to permanently delete the command:\n"
-"\n"
-"<b>{name}</b>"
-msgstr ""
-"Kas olete kindel, et soovite käsu püsivalt kustutada:\n"
-"\n"
-"<b>{name}</b>"
-# 
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
-# 
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
-# 
-# File: usr/share/ashyterm/ui/menus.py, line: 93
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1056
-# File: usr/share/ashyterm/window.py, line: 331
-#: NEEDS WORK
-msgid "Add Folder"
-msgstr "Lisa kaust"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1056
-#: NEEDS WORK
-msgid "Edit Folder"
-msgstr "Kausta redigeerimine"
+msgid "Edit Session"
+msgstr "Redigeeri seanss"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 313
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1128
@@ -1289,144 +1178,6 @@ msgstr "Kasutajaliidese viga"
 #: NEEDS WORK
 msgid "Failed to initialize dialog interface"
 msgstr "Dialooge liidese algatamine ebaõnnestus"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1100
-#: NEEDS WORK
-msgid "Folder Information"
-msgstr "Kausta teave"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 347
-#: NEEDS WORK
-msgid "Organization"
-msgstr "Organisatsioon"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1135
-#: NEEDS WORK
-msgid "Folder Name"
-msgstr "Kausta nimi"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1136
-#: NEEDS WORK
-msgid "A descriptive name for organizing sessions"
-msgstr "Seansside korraldamiseks kirjeldav nimi"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1141
-#: NEEDS WORK
-msgid "Enter folder name..."
-msgstr "Sisestage kausta nimi..."
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1158
-#: NEEDS WORK
-msgid "Parent Folder"
-msgstr "Vanem kaust"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1159
-#: NEEDS WORK
-msgid "Choose a parent folder for organization"
-msgstr "Vali organisatsiooniks vanemkaust"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 357
-# File: usr/share/ashyterm/ui/dialogs.py, line: 358
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1164
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1165
-#: NEEDS WORK
-msgid "Root"
-msgstr "Juurt"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 796
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1252
-#: NEEDS WORK
-msgid "Unsaved Changes"
-msgstr "Salvestamata muudatused"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 797
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1253
-#: NEEDS WORK
-msgid "You have unsaved changes. Are you sure you want to cancel?"
-msgstr "Teil on salvestamata muudatused. Kas olete kindel, et soovite tühistada?"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 833
-# File: usr/share/ashyterm/ui/dialogs.py, line: 837
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1288
-#: NEEDS WORK
-msgid "Save Error"
-msgstr "Salvestamise viga"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1288
-#: NEEDS WORK
-#, python-brace-format
-msgid "Failed to save folder: {}"
-msgstr "Kausta salvestamine ebaõnnestus: {}"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1296
-#: NEEDS WORK
-msgid "Folder name"
-msgstr "Kausta nimi"
-# 
-# File: usr/share/ashyterm/ui/dialogs/move_dialogs.py, line: 28
-#: NEEDS WORK
-#, python-brace-format
-msgid "Move {item_type}"
-msgstr "Liiguta {item_type}"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 2183
-#: NEEDS WORK
-msgid "Select Destination"
-msgstr "Vali sihtkoht"
-# 
-# File: usr/share/ashyterm/ui/dialogs/move_dialogs.py, line: 50
-#: NEEDS WORK
-#, python-brace-format
-msgid "Choose the folder to move the {item_type} '{name}' to."
-msgstr "Vali kaust, kuhu {item_type} '{name}' liigutada."
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 2190
-#: NEEDS WORK
-msgid "Destination Folder"
-msgstr "Sihtkoha kaust"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 2191
-#: NEEDS WORK
-msgid "Select a folder or 'Root' for the top level"
-msgstr "Vali kaust või 'Juurtasand' ülemise taseme jaoks"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 2205
-#: NEEDS WORK
-msgid "Move"
-msgstr "Liiguta"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 2265
-#: NEEDS WORK
-msgid "Move Failed"
-msgstr "Liikumine ebaõnnestus"
-# 
-# File: usr/share/ashyterm/window.py, line: 944
-# File: usr/share/ashyterm/window.py, line: 999
-#: NEEDS WORK
-msgid "Session"
-msgstr "Seanss"
-# 
-# File: usr/share/ashyterm/ui/actions.py, line: 415
-#: NEEDS WORK
-msgid "Layout"
-msgstr "Paigutus"
-# 
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
-# 
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
-# 
-# File: usr/share/ashyterm/ui/menus.py, line: 60
-# File: usr/share/ashyterm/ui/menus.py, line: 92
-# File: usr/share/ashyterm/ui/dialogs.py, line: 223
-# File: usr/share/ashyterm/window.py, line: 325
-#: NEEDS WORK
-msgid "Add Session"
-msgstr "Lisa seanss"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 223
-#: NEEDS WORK
-msgid "Edit Session"
-msgstr "Redigeeri seanss"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 319
 #: NEEDS WORK
@@ -1468,19 +1219,23 @@ msgstr "Vali värv, et tuvastada selle seansi vahekaart."
 msgid "Clear Color"
 msgstr "Selge Värv"
 # 
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 351
-# File: usr/share/ashyterm/window.py, line: 944
-# File: usr/share/ashyterm/window.py, line: 999
+# File: usr/share/ashyterm/ui/dialogs.py, line: 347
 #: NEEDS WORK
-msgid "Folder"
-msgstr "Kaustik"
+msgid "Organization"
+msgstr "Organisatsioon"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 352
 #: NEEDS WORK
 msgid "Choose a folder to organize this session"
 msgstr "Vali kaust, et korraldada seda seanssi"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 357
+# File: usr/share/ashyterm/ui/dialogs.py, line: 358
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1164
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1165
+#: NEEDS WORK
+msgid "Root"
+msgstr "Juurt"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 398
 #: NEEDS WORK
@@ -1496,6 +1251,14 @@ msgstr "Seansi tüüp"
 #: NEEDS WORK
 msgid "Choose between local terminal or SSH connection"
 msgstr "Vali kohaliku terminali või SSH-ühenduse vahel"
+# 
+# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 406
+# File: usr/share/ashyterm/sessions/models.py, line: 511
+#: NEEDS WORK
+msgid "Local Terminal"
+msgstr "Kohalik terminal"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 406
 #: NEEDS WORK
@@ -1609,10 +1372,212 @@ msgstr "SSH autentimise parool (võtmehoidja ei ole saadaval)"
 msgid "Enter password..."
 msgstr "Sisestage parool..."
 # 
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 309
+#: NEEDS WORK
+msgid "Run Command After Login"
+msgstr "Käivita käsk pärast sisselogimist"
+# 
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 311
+#: NEEDS WORK
+msgid "Execute a custom command automatically after the SSH session connects"
+msgstr "Käivita kohandatud käsk automaatselt pärast SSH seansi ühendamist"
+# 
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 318
+#: NEEDS WORK
+msgid "Post-Login Command"
+msgstr "Sisselogimise käsk"
+# 
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 319
+#: NEEDS WORK
+msgid "Command to execute right after a successful login"
+msgstr "Käsk, mida täita kohe pärast eduka sisselogimise."
+# 
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 323
+#: NEEDS WORK
+msgid "Example: tmux attach -t main"
+msgstr "tmux attach -t main"
+# 
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 356
+#: NEEDS WORK
+msgid "Enable X11 Forwarding"
+msgstr "Luba X11 edastamine"
+# 
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 357
+#: NEEDS WORK
+msgid "Allow starting programs in graphical mode (X11)"
+msgstr "Luba programmide käivitamine graafilises režiimis (X11)"
+# 
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 354
+#: NEEDS WORK
+msgid "Port Forwarding"
+msgstr "Pordi edastamine"
+# 
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 355
+#: NEEDS WORK
+msgid "Create SSH tunnels to forward local ports to remote targets"
+msgstr "Loo SSH tunnelid, et edastada kohalikke porte kaugsihtkohtadesse"
+# 
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 369
+#: NEEDS WORK
+msgid "Add"
+msgstr "Lisa"
+# 
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 396
+#: NEEDS WORK
+msgid "No port forwards configured."
+msgstr "Porti edastusi ei ole konfigureeritud."
+# 
+# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
+# 
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 427
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 576
+# File: usr/share/ashyterm/sessions/models.py, line: 341
+#: NEEDS WORK
+msgid "Tunnel"
+msgstr "Tunnel"
+# 
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 430
+#: NEEDS WORK
+msgid "SSH Host"
+msgstr "SSH Host"
+# 
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 431
+#: NEEDS WORK
+#, python-brace-format
+msgid "{local_host}:{local_port} → {remote_host}:{remote_port}"
+msgstr "{local_host}:{local_port} → {remote_host}:{remote_port}"
+# 
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 484
+#: NEEDS WORK
+msgid "Edit Port Forward"
+msgstr "Muuda sadama edasiviimist"
+# 
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 484
+#: NEEDS WORK
+msgid "Add Port Forward"
+msgstr "Lisa pordi edastamine"
+# 
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 508
+#: NEEDS WORK
+msgid "Tunnel name"
+msgstr "Tunnelin nimi"
+# 
+# File: usr/share/ashyterm/filemanager/manager.py, line: 366
+#: NEEDS WORK
+msgid "Name"
+msgstr "Nimi"
+# 
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 519
+#: NEEDS WORK
+msgid "Local Host"
+msgstr "Kohalik host"
+# 
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 524
+#: NEEDS WORK
+msgid "Local Port"
+msgstr "Kohalik port"
+# 
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 529
+#: NEEDS WORK
+msgid "Leave blank to use the SSH host"
+msgstr "Jätke tühi, et kasutada SSH hosti."
+# 
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 536
+#: NEEDS WORK
+msgid "Connect to a different remote host"
+msgstr "Ühenda teise kaugserveriga"
+# 
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 546
+#: NEEDS WORK
+msgid "Remote Host"
+msgstr "Kaugjuhtimisseade"
+# 
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 551
+#: NEEDS WORK
+msgid "Remote Port"
+msgstr "Kaugport"
+# 
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 590
+#: NEEDS WORK
+msgid "Local port must be between 1025 and 65535 (ports below 1024 require administrator privileges)."
+msgstr ""
+"Kohalik port peab olema vahemikus 1025 kuni 65535 (portide, mis on alla 1024, jaoks on vajalikud "
+"administraatori õigused)."
+# 
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 594
+#: NEEDS WORK
+msgid "Remote port must be between 1 and 65535."
+msgstr "Kaugport peab olema vahemikus 1 kuni 65535."
+# 
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 596
+#: NEEDS WORK
+msgid "Local host cannot be empty."
+msgstr "Kohalik host ei tohi olla tühi."
+# 
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 600
+#: NEEDS WORK
+msgid "Invalid Port Forward"
+msgstr "Keeruline Port Edasi"
+# 
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 346
+#: NEEDS WORK
+msgid "SFTP Session"
+msgstr "SFTP seanss"
+# 
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 348
+#: NEEDS WORK
+msgid "Configure default directories for SFTP connections (optional)"
+msgstr "Konfigureeri SFTP-ühenduste vaikekaustad (valikuline)"
+# 
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 353
+#: NEEDS WORK
+msgid "Enable SFTP Session"
+msgstr "Luba SFTP seans"
+# 
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 355
+#: NEEDS WORK
+msgid "Use these directories when opening an SFTP tab for this session"
+msgstr "Kasutage neid kaustu SFTP vahekaartide avamisel selle seansi jaoks."
+# 
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 364
+#: NEEDS WORK
+msgid "Local Directory"
+msgstr "Kohalik kataloog"
+# 
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 365
+#: NEEDS WORK
+msgid "Starting directory on your machine for SFTP"
+msgstr "SFTP jaoks teie masina alguskaust"
+# 
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 369
+#: NEEDS WORK
+msgid "Example: /home/user/projects"
+msgstr "/ko home/kasutaja/projektid"
+# 
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 379
+#: NEEDS WORK
+msgid "Remote Directory"
+msgstr "Kaugkaust"
+# 
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 380
+#: NEEDS WORK
+msgid "Starting directory on the remote host for SFTP"
+msgstr "Kaugjuhtme alguskaust SFTP jaoks"
+# 
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 384
+#: NEEDS WORK
+msgid "Example: /var/www"
+msgstr "/var/www"
+# 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 581
 #: NEEDS WORK
 msgid "Test Connection"
 msgstr "Testi ühendus"
+# 
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 773
+#: NEEDS WORK
+msgid "Remote server must have X11Forwarding yes in sshd_config."
+msgstr "Kaugserver peab sshd_config failis olema X11Forwarding jah."
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 707
 #: NEEDS WORK
@@ -1700,6 +1665,25 @@ msgstr "Ühendus ebaõnnestus"
 msgid "Could not connect to the SSH server."
 msgstr "Ei õnnestunud SSH serveriga ühendust luua."
 # 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 796
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1252
+#: NEEDS WORK
+msgid "Unsaved Changes"
+msgstr "Salvestamata muudatused"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 797
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1253
+#: NEEDS WORK
+msgid "You have unsaved changes. Are you sure you want to cancel?"
+msgstr "Teil on salvestamata muudatused. Kas olete kindel, et soovite tühistada?"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 833
+# File: usr/share/ashyterm/ui/dialogs.py, line: 837
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1288
+#: NEEDS WORK
+msgid "Save Error"
+msgstr "Salvestamise viga"
+# 
 # File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 537
 #: NEEDS WORK
 msgid "An unexpected error occurred while saving."
@@ -1720,6 +1704,24 @@ msgstr ""
 msgid "Session name"
 msgstr "Seansi nimi"
 # 
+# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
+# 
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 716
+# File: usr/share/ashyterm/sessions/models.py, line: 280
+#: NEEDS WORK
+msgid "Post-login command cannot be empty when enabled."
+msgstr "Post-login käsk ei tohi olla tühi, kui see on lubatud."
+# 
+# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
+# 
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 843
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 851
+# File: usr/share/ashyterm/sessions/models.py, line: 334
+# File: usr/share/ashyterm/sessions/models.py, line: 338
+#: NEEDS WORK
+msgid "SFTP local directory must exist and be a directory."
+msgstr "SFTP kohalik kataloog peab eksisteerima ja olema kataloog."
+# 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 921
 #: NEEDS WORK
 msgid "SSH Validation Error"
@@ -1735,14 +1737,332 @@ msgstr ""
 "SSH konfiguratsiooni vead:  \n"
 "{}"
 # 
+# File: usr/share/ashyterm/ui/dialogs/command_guide_dialog.py, line: 32
+#: NEEDS WORK
+msgid "Add Custom Command"
+msgstr "Lisa kohandatud käsk"
+# 
+# File: usr/share/ashyterm/ui/dialogs/command_guide_dialog.py, line: 32
+#: NEEDS WORK
+msgid "Edit Custom Command"
+msgstr "Muuda kohandatud käsku"
+# 
+# File: usr/share/ashyterm/ui/dialogs/command_guide_dialog.py, line: 34
+#: NEEDS WORK
+msgid "Command"
+msgstr "Käsk"
+# 
+# File: usr/share/ashyterm/ui/dialogs/command_guide_dialog.py, line: 35
+#: NEEDS WORK
+msgid "Category"
+msgstr "Kategooria"
+# 
+# File: usr/share/ashyterm/ui/dialogs/command_guide_dialog.py, line: 104
+#: NEEDS WORK
+msgid "Select an existing category or type a new one"
+msgstr "Vali olemasolev kategooria või sisesta uus."
+# 
+# File: usr/share/ashyterm/ui/dialogs/command_guide_dialog.py, line: 59
+#: NEEDS WORK
+msgid "Description"
+msgstr "Kirjeldus"
+# 
+# File: usr/share/ashyterm/ui/dialogs/command_guide_dialog.py, line: 171
+#: NEEDS WORK
+msgid "Please fill in all required fields."
+msgstr "Palun täitke kõik kohustuslikud väljad."
+# 
+# File: usr/share/ashyterm/ui/dialogs/command_guide_dialog.py, line: 236
+#: NEEDS WORK
+msgid "Delete this custom command"
+msgstr "Kustuta see kohandatud käsk"
+# 
+# File: usr/share/ashyterm/ui/dialogs/command_guide_dialog.py, line: 143
+#: NEEDS WORK
+msgid "Command Guide"
+msgstr "Käskude juhend"
+# 
+# File: usr/share/ashyterm/ui/dialogs/command_guide_dialog.py, line: 165
+#: NEEDS WORK
+msgid "Search commands..."
+msgstr "Otsi käske..."
+# 
+# File: usr/share/ashyterm/ui/dialogs/command_guide_dialog.py, line: 208
+#: NEEDS WORK
+msgid "Show Only Custom Commands"
+msgstr "Kuva ainult kohandatud käske"
+# 
+# File: usr/share/ashyterm/ui/dialogs/command_guide_dialog.py, line: 495
+#: NEEDS WORK
+msgid "Add New Command"
+msgstr "Lisa uus käsk"
+# 
+# File: usr/share/ashyterm/ui/dialogs/command_guide_dialog.py, line: 714
+#: NEEDS WORK
+msgid "Delete Custom Command?"
+msgstr "Kustuta kohandatud käsk?"
+# 
+# File: usr/share/ashyterm/ui/dialogs/command_guide_dialog.py, line: 716
+#: NEEDS WORK
+#, python-brace-format
+msgid ""
+"Are you sure you want to permanently delete the command:\n"
+"\n"
+"<b>{name}</b>"
+msgstr ""
+"Kas olete kindel, et soovite käsu püsivalt kustutada:\n"
+"\n"
+"<b>{name}</b>"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1056
+#: NEEDS WORK
+msgid "Edit Folder"
+msgstr "Kausta redigeerimine"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1100
+#: NEEDS WORK
+msgid "Folder Information"
+msgstr "Kausta teave"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1135
+#: NEEDS WORK
+msgid "Folder Name"
+msgstr "Kausta nimi"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1136
+#: NEEDS WORK
+msgid "A descriptive name for organizing sessions"
+msgstr "Seansside korraldamiseks kirjeldav nimi"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1141
+#: NEEDS WORK
+msgid "Enter folder name..."
+msgstr "Sisestage kausta nimi..."
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1158
+#: NEEDS WORK
+msgid "Parent Folder"
+msgstr "Vanem kaust"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1159
+#: NEEDS WORK
+msgid "Choose a parent folder for organization"
+msgstr "Vali organisatsiooniks vanemkaust"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1288
+#: NEEDS WORK
+#, python-brace-format
+msgid "Failed to save folder: {}"
+msgstr "Kausta salvestamine ebaõnnestus: {}"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1296
+#: NEEDS WORK
+msgid "Folder name"
+msgstr "Kausta nimi"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 164
+#: NEEDS WORK
+msgid "Continue"
+msgstr "Jätka"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 192
+#: NEEDS WORK
+#, python-brace-format
+msgid "{} is required"
+msgstr "{} on vajalik"
+# 
+# File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 17
+#: NEEDS WORK
+msgid "Tab &amp; Pane Management"
+msgstr "Vahe ja paneeli haldamine"
+# 
 # #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
 # 
-# File: usr/share/ashyterm/ui/menus.py, line: 157
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1390
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1604
+# File: usr/share/ashyterm/ui/menus.py, line: 145
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1597
 #: NEEDS WORK
-msgid "Preferences"
-msgstr "Eelistused"
+msgid "Close Tab"
+msgstr "Sulge vahekaart"
+# 
+# File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 21
+#: NEEDS WORK
+msgid "Next Tab"
+msgstr "Järgmine vahekaart"
+# 
+# File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 22
+#: NEEDS WORK
+msgid "Previous Tab"
+msgstr "Eelmine vahekaart"
+# 
+# File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 26
+#: NEEDS WORK
+msgid "Splitting"
+msgstr "Jagamine"
+# 
+# File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 28
+#: NEEDS WORK
+msgid "Split Horizontally"
+msgstr "Jaga horisontaalselt"
+# 
+# File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 29
+#: NEEDS WORK
+msgid "Split Vertically"
+msgstr "Jagada vertikaalselt"
+# 
+# File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 30
+#: NEEDS WORK
+msgid "Close Active Pane"
+msgstr "Sulge aktiivne paneel"
+# 
+# File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 34
+#: NEEDS WORK
+msgid "Terminal Interaction"
+msgstr "Terminali interaktsioon"
+# 
+# File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 38
+#: NEEDS WORK
+msgid "Send Command  All Tabs"
+msgstr "Saada käsk  Kõik vahekaardid"
+# 
+# File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 39
+#: NEEDS WORK
+msgid "Ask AI Assistant"
+msgstr "Küsi AI assistendilt"
+# 
+# File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 42
+#: NEEDS WORK
+msgid "Zoom"
+msgstr "Zoom"
+# 
+# File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 44
+#: NEEDS WORK
+msgid "Zoom In"
+msgstr "Suurenda"
+# 
+# File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 45
+#: NEEDS WORK
+msgid "Zoom Out"
+msgstr "Suumi välja"
+# 
+# File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 46
+#: NEEDS WORK
+msgid "Reset Zoom"
+msgstr "Lähtesta suurus"
+# 
+# File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 50
+#: NEEDS WORK
+msgid "Application &amp; Window"
+msgstr "Rakendus ja aken"
+# 
+# File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 53
+#: NEEDS WORK
+msgid "Toggle File Manager"
+msgstr "Lülita failihaldur"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1605
+#: NEEDS WORK
+msgid "Quit Application"
+msgstr "Välja rakendus"
+# 
+# File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 93
+#: NEEDS WORK
+msgid "Reset All"
+msgstr "Resetige kõik"
+# 
+# File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 94
+#: NEEDS WORK
+msgid "Reset all shortcuts to default values"
+msgstr "Lähtesta kõik otseteed vaikeseadetele"
+# 
+# File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 128
+#: NEEDS WORK
+msgid "Reset all shortcuts to defaults"
+msgstr "Lähtesta kõik otseteed vaikeseadetele"
+# 
+# File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 186
+# File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 213
+# File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 294
+# File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 334
+#: NEEDS WORK
+msgid "Not set"
+msgstr "Mitte ei ole seadistatud"
+# 
+# File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 191
+#: NEEDS WORK
+msgid "Shortcut for: "
+msgstr "Kiirusklahv:"
+# 
+# File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 195
+#: NEEDS WORK
+msgid "Click to change the keyboard shortcut for this action"
+msgstr "Klõpsa, et muuta selle toimingu klaviatuuri otseteed."
+# 
+# File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 205
+#: NEEDS WORK
+msgid "Set New Shortcut"
+msgstr "Seadke uus otsetee"
+# 
+# File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 206
+#: NEEDS WORK
+#, python-brace-format
+msgid "Press the new key combination for '{}', or Esc to cancel."
+msgstr "Pühi uus klahvikombinatsioon '{}', või vajuta Esc, et tühistada."
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1914
+#: NEEDS WORK
+#, python-brace-format
+msgid ""
+"Current: {}\n"
+"New: (press keys)"
+msgstr ""
+"Praegune: {}\n"
+"Uus: (vajutage klahve)"
+# 
+# File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 257
+#: NEEDS WORK
+#, python-brace-format
+msgid ""
+"Current: {}\n"
+"New: {} (Conflicts with {})"
+msgstr ""
+"Praegune: {}\n"
+"Uus: {} (Konflikt {}-ga)"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1945
+#: NEEDS WORK
+#, python-brace-format
+msgid ""
+"Current: {}\n"
+"New: {}"
+msgstr ""
+"Praegune: {}\n"
+"Uus: {}"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1958
+#: NEEDS WORK
+msgid "Clear"
+msgstr "Selge"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1959
+#: NEEDS WORK
+msgid "Set Shortcut"
+msgstr "Seadista otsetee"
+# 
+# File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 306
+#: NEEDS WORK
+msgid "Reset All Shortcuts"
+msgstr "Lähtesta kõik otseteed"
+# 
+# File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 307
+#: NEEDS WORK
+msgid "This will reset all keyboard shortcuts to their default values. Continue?"
+msgstr "See lähtestab kõik klaviatuuri otseteed nende vaikeväärtustele. Jätka?"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1831
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1843
+#: NEEDS WORK
+msgid "Reset"
+msgstr "Taasta"
 # 
 # File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 56
 #: NEEDS WORK
@@ -1989,10 +2309,10 @@ msgstr "Lisandid sõnade valimiseks (nt -_.:/~)"
 msgid "Word Characters"
 msgstr "Sõna tähemärgid"
 # 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 223
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 292
 #: NEEDS WORK
-msgid "Shell &amp; Bell"
-msgstr "Shell &amp; Bell"
+msgid "Shell & Bell"
+msgstr "Koor & Kell"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1107
 #: NEEDS WORK
@@ -2013,6 +2333,103 @@ msgstr "Kuuldav kell"
 #: NEEDS WORK
 msgid "Emit a sound for the terminal bell character"
 msgstr "Käivita heli terminali kellatähe jaoks"
+# 
+# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 319
+# File: usr/share/ashyterm/window.py, line: 679
+#: NEEDS WORK
+msgid "AI Assistant"
+msgstr "AI assistent"
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 321
+#: NEEDS WORK
+msgid "Configure the Linux-focused assistant available inside the terminal."
+msgstr "Konfigureeri terminalis saadaval olev Linuxile keskendunud abiline."
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 327
+#: NEEDS WORK
+msgid "Enable AI Assistant"
+msgstr "Luba AI assistent"
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 328
+#: NEEDS WORK
+msgid "Allow Ctrl+Shift+I to ask the assistant for help."
+msgstr "Luba Ctrl+Shift+I, et küsige assistendilt abi."
+# 
+# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 339
+# File: usr/share/ashyterm/window.py, line: 546
+#: NEEDS WORK
+msgid "Provider"
+msgstr "Pakkuja"
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 340
+#: NEEDS WORK
+msgid "Select which AI service to use."
+msgstr "Vali, millist tehisintellekti teenust kasutada."
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 361
+#: NEEDS WORK
+msgid "Model Identifier"
+msgstr "Mudelidentifikaator"
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 363
+#: NEEDS WORK
+msgid "Examples: llama-3.1-8b-instant, gemini-2.5-flash."
+msgstr "lama-3.1-8b-instant, gemini-2.5-flash."
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 368
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 779
+#: NEEDS WORK
+msgid "llama-3.1-8b-instant"
+msgstr "llama-3.1-8b-instant"
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 374
+#: NEEDS WORK
+msgid "API Key"
+msgstr "API võti"
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 375
+#: NEEDS WORK
+msgid "Stored locally and used to authenticate requests."
+msgstr "Salvestatud kohapeal ja kasutatakse päringute autentimiseks."
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 379
+#: NEEDS WORK
+msgid "Paste your API key"
+msgstr "Kleebi kleepimine"
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 391
+#: NEEDS WORK
+msgid "Site URL (optional)"
+msgstr "Saidin URL (valikuline)"
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 392
+#: NEEDS WORK
+msgid "Used as HTTP Referer header on OpenRouter rankings."
+msgstr "Kasutatakse HTTP Referer päisena OpenRouteri edetabelites."
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 396
+#: NEEDS WORK
+msgid "https://example.com"
+msgstr "https://example.com"
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 408
+#: NEEDS WORK
+msgid "Site title (optional)"
+msgstr "Saidinimi (valikuline)"
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 409
+#: NEEDS WORK
+msgid "Sent via X-Title header for OpenRouter rankings."
+msgstr "Saadetud X-Title päise kaudu OpenRouteri edetabelite jaoks."
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 413
+#: NEEDS WORK
+msgid "My Project"
+msgstr "Minu projekt"
 # 
 # File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 250
 #: NEEDS WORK
@@ -2285,12 +2702,6 @@ msgstr "Konsoli logi tase"
 msgid "Set the minimum level of messages shown in the console"
 msgstr "Seadke konsoolis kuvatavate sõnumite minimaalne tase."
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1831
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1843
-#: NEEDS WORK
-msgid "Reset"
-msgstr "Taasta"
-# 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1832
 #: NEEDS WORK
 msgid "Reset application settings to defaults"
@@ -2307,6 +2718,61 @@ msgstr "Lähtesta kõik seaded"
 #: NEEDS WORK
 msgid "Restore all settings to their default values"
 msgstr "Taasta kõik seaded nende vaikeseisundisse."
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 781
+#: NEEDS WORK
+msgid "Model identifier (for example: llama-3.1-8b-instant)."
+msgstr "Mudeli tuvastaja (näiteks: llama-3.1-8b-instant)."
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 783
+#: NEEDS WORK
+msgid "API key."
+msgstr "API võti."
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 786
+#: NEEDS WORK
+msgid "gemini-2.5-flash"
+msgstr "gemini-2.5-flash"
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 788
+#: NEEDS WORK
+msgid "Gemini model identifier (for example: gemini-2.5-flash)."
+msgstr "Gemini mudeli tuvastaja (näiteks: gemini-2.5-flash)."
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 790
+#: NEEDS WORK
+msgid "Google AI Studio API key."
+msgstr "Google AI Studio API võti."
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 842
+#: NEEDS WORK
+msgid "openrouter/polaris-alpha"
+msgstr "openrouter/polaris-alpha"
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 844
+#: NEEDS WORK
+msgid "OpenRouter model identifier (for example: openrouter/polaris-alpha)."
+msgstr "OpenRouteri mudeli tuvastaja (näiteks: openrouter/polaris-alpha)."
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 846
+#: NEEDS WORK
+msgid "OpenRouter API key."
+msgstr "OpenRouteri API võti."
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 785
+#: NEEDS WORK
+msgid "model-name"
+msgstr "mudeli-nimi"
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 787
+#: NEEDS WORK
+msgid "Model identifier required by the selected provider."
+msgstr "Valiku pakkuja poolt nõutav mudeli tuvastaja."
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 789
+#: NEEDS WORK
+msgid "API key used to authenticate requests."
+msgstr "API võti, mida kasutatakse päringute autentimiseks."
 # 
 # File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 652
 #: NEEDS WORK
@@ -2354,482 +2820,42 @@ msgstr "Reset ebaõnnestus"
 msgid "Failed to reset settings: {}"
 msgstr "Seadete lähtestamine ebaõnnestus: {}"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 164
-#: NEEDS WORK
-msgid "Continue"
-msgstr "Jätka"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 192
+# File: usr/share/ashyterm/ui/dialogs/move_dialogs.py, line: 28
 #: NEEDS WORK
 #, python-brace-format
-msgid "{} is required"
-msgstr "{} on vajalik"
+msgid "Move {item_type}"
+msgstr "Liiguta {item_type}"
 # 
-# File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 17
+# File: usr/share/ashyterm/ui/dialogs.py, line: 2183
 #: NEEDS WORK
-msgid "Tab &amp; Pane Management"
-msgstr "Vahe ja paneeli haldamine"
+msgid "Select Destination"
+msgstr "Vali sihtkoht"
 # 
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
-# 
-# File: usr/share/ashyterm/ui/menus.py, line: 144
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1596
-#: NEEDS WORK
-msgid "New Tab"
-msgstr "Uus vahekaart"
-# 
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
-# 
-# File: usr/share/ashyterm/ui/menus.py, line: 145
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1597
-#: NEEDS WORK
-msgid "Close Tab"
-msgstr "Sulge vahekaart"
-# 
-# File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 21
-#: NEEDS WORK
-msgid "Next Tab"
-msgstr "Järgmine vahekaart"
-# 
-# File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 22
-#: NEEDS WORK
-msgid "Previous Tab"
-msgstr "Eelmine vahekaart"
-# 
-# File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 26
-#: NEEDS WORK
-msgid "Splitting"
-msgstr "Jagamine"
-# 
-# File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 28
-#: NEEDS WORK
-msgid "Split Horizontally"
-msgstr "Jaga horisontaalselt"
-# 
-# File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 29
-#: NEEDS WORK
-msgid "Split Vertically"
-msgstr "Jagada vertikaalselt"
-# 
-# File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 30
-#: NEEDS WORK
-msgid "Close Active Pane"
-msgstr "Sulge aktiivne paneel"
-# 
-# File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 34
-#: NEEDS WORK
-msgid "Terminal Interaction"
-msgstr "Terminali interaktsioon"
-# 
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
-# 
-# File: usr/share/ashyterm/ui/menus.py, line: 30
-# File: usr/share/ashyterm/ui/menus.py, line: 66
-# File: usr/share/ashyterm/ui/menus.py, line: 117
-# File: usr/share/ashyterm/ui/menus.py, line: 153
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1598
-#: NEEDS WORK
-msgid "Copy"
-msgstr "Kopeeri"
-# 
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
-# 
-# File: usr/share/ashyterm/ui/menus.py, line: 69
-# File: usr/share/ashyterm/ui/menus.py, line: 118
-# File: usr/share/ashyterm/ui/menus.py, line: 154
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1599
-#: NEEDS WORK
-msgid "Paste"
-msgstr "Kleebi"
-# 
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
-# 
-# File: usr/share/ashyterm/ui/menus.py, line: 119
-# File: usr/share/ashyterm/ui/menus.py, line: 155
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1600
-#: NEEDS WORK
-msgid "Select All"
-msgstr "Vali kõik"
-# 
-# File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 42
-#: NEEDS WORK
-msgid "Zoom"
-msgstr "Zoom"
-# 
-# File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 44
-#: NEEDS WORK
-msgid "Zoom In"
-msgstr "Suurenda"
-# 
-# File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 45
-#: NEEDS WORK
-msgid "Zoom Out"
-msgstr "Suumi välja"
-# 
-# File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 46
-#: NEEDS WORK
-msgid "Reset Zoom"
-msgstr "Lähtesta suurus"
-# 
-# File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 50
-#: NEEDS WORK
-msgid "Application &amp; Window"
-msgstr "Rakendus ja aken"
-# 
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1606
-# File: usr/share/ashyterm/window.py, line: 248
-#: NEEDS WORK
-msgid "Toggle Sidebar"
-msgstr "Vaheta külgriba"
-# 
-# File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 53
-#: NEEDS WORK
-msgid "Toggle File Manager"
-msgstr "Lülita failihaldur"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1607
-#: NEEDS WORK
-msgid "New Window"
-msgstr "Uus aken"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1605
-#: NEEDS WORK
-msgid "Quit Application"
-msgstr "Välja rakendus"
-# 
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
-# 
-# File: usr/share/ashyterm/ui/menus.py, line: 211
-# File: usr/share/ashyterm/window.py, line: 909
-# File: usr/share/ashyterm/window.py, line: 960
-#: NEEDS WORK
-msgid "Keyboard Shortcuts"
-msgstr "Klaviatuuri otseteed"
-# 
-# File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 93
-#: NEEDS WORK
-msgid "Reset All"
-msgstr "Resetige kõik"
-# 
-# File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 94
-#: NEEDS WORK
-msgid "Reset all shortcuts to default values"
-msgstr "Lähtesta kõik otseteed vaikeseadetele"
-# 
-# File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 128
-#: NEEDS WORK
-msgid "Reset all shortcuts to defaults"
-msgstr "Lähtesta kõik otseteed vaikeseadetele"
-# 
-# File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 186
-# File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 213
-# File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 294
-# File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 334
-#: NEEDS WORK
-msgid "Not set"
-msgstr "Mitte ei ole seadistatud"
-# 
-# File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 191
-#: NEEDS WORK
-msgid "Shortcut for: "
-msgstr "Kiirusklahv:"
-# 
-# File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 195
-#: NEEDS WORK
-msgid "Click to change the keyboard shortcut for this action"
-msgstr "Klõpsa, et muuta selle toimingu klaviatuuri otseteed."
-# 
-# File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 205
-#: NEEDS WORK
-msgid "Set New Shortcut"
-msgstr "Seadke uus otsetee"
-# 
-# File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 206
+# File: usr/share/ashyterm/ui/dialogs/move_dialogs.py, line: 50
 #: NEEDS WORK
 #, python-brace-format
-msgid "Press the new key combination for '{}', or Esc to cancel."
-msgstr "Pühi uus klahvikombinatsioon '{}', või vajuta Esc, et tühistada."
+msgid "Choose the folder to move the {item_type} '{name}' to."
+msgstr "Vali kaust, kuhu {item_type} '{name}' liigutada."
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1914
+# File: usr/share/ashyterm/ui/dialogs.py, line: 2190
 #: NEEDS WORK
-#, python-brace-format
-msgid ""
-"Current: {}\n"
-"New: (press keys)"
-msgstr ""
-"Praegune: {}\n"
-"Uus: (vajutage klahve)"
+msgid "Destination Folder"
+msgstr "Sihtkoha kaust"
 # 
-# File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 257
+# File: usr/share/ashyterm/ui/dialogs.py, line: 2191
 #: NEEDS WORK
-#, python-brace-format
-msgid ""
-"Current: {}\n"
-"New: {} (Conflicts with {})"
-msgstr ""
-"Praegune: {}\n"
-"Uus: {} (Konflikt {}-ga)"
+msgid "Select a folder or 'Root' for the top level"
+msgstr "Vali kaust või 'Juurtasand' ülemise taseme jaoks"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1945
+# File: usr/share/ashyterm/ui/dialogs.py, line: 2205
 #: NEEDS WORK
-#, python-brace-format
-msgid ""
-"Current: {}\n"
-"New: {}"
-msgstr ""
-"Praegune: {}\n"
-"Uus: {}"
+msgid "Move"
+msgstr "Liiguta"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1958
+# File: usr/share/ashyterm/ui/dialogs.py, line: 2265
 #: NEEDS WORK
-msgid "Clear"
-msgstr "Selge"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1959
-#: NEEDS WORK
-msgid "Set Shortcut"
-msgstr "Seadista otsetee"
-# 
-# File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 306
-#: NEEDS WORK
-msgid "Reset All Shortcuts"
-msgstr "Lähtesta kõik otseteed"
-# 
-# File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 307
-#: NEEDS WORK
-msgid "This will reset all keyboard shortcuts to their default values. Continue?"
-msgstr "See lähtestab kõik klaviatuuri otseteed nende vaikeväärtustele. Jätka?"
-# 
-# File: usr/share/ashyterm/ui/actions.py, line: 168
-#: NEEDS WORK
-msgid "Please select an SSH session to connect with SFTP."
-msgstr "Palun valige SSH seanss, millega SFTP-ga ühenduda."
-# 
-# File: usr/share/ashyterm/window.py, line: 758
-# File: usr/share/ashyterm/window.py, line: 875
-#: NEEDS WORK
-msgid "New Session"
-msgstr "Uus seanss"
-# 
-# File: usr/share/ashyterm/window.py, line: 885
-#: NEEDS WORK
-msgid "New Folder"
-msgstr "Uus kaust"
-# 
-# File: usr/share/ashyterm/window.py, line: 947
-#: NEEDS WORK
-#, python-brace-format
-msgid "Rename {type}"
-msgstr "Nimeta {type}"
-# 
-# File: usr/share/ashyterm/window.py, line: 948
-#: NEEDS WORK
-#, python-brace-format
-msgid "Enter new name for \"{name}\":"
-msgstr "Sisestage uus nimi \"{name}\":"
-# 
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
-# 
-# File: usr/share/ashyterm/ui/menus.py, line: 25
-# File: usr/share/ashyterm/ui/menus.py, line: 61
-# File: usr/share/ashyterm/window.py, line: 954
-#: NEEDS WORK
-msgid "Rename"
-msgstr "Nimeta"
-# 
-# File: usr/share/ashyterm/window.py, line: 1450
-#: NEEDS WORK
-msgid "Delete Item"
-msgstr "Kustuta ese"
-# 
-# File: usr/share/ashyterm/window.py, line: 1450
-#: NEEDS WORK
-msgid "Delete Items"
-msgstr "Kustuta esemed"
-# 
-# File: usr/share/ashyterm/window.py, line: 1009
-#: NEEDS WORK
-#, python-brace-format
-msgid "Delete {type}"
-msgstr "Kustuta {type}"
-# 
-# File: usr/share/ashyterm/window.py, line: 1003
-#: NEEDS WORK
-#, python-brace-format
-msgid ""
-"The folder \"{name}\" is not empty. Are you sure you want to permanently delete it and all its "
-"contents?"
-msgstr ""
-"Kaust \"{name}\" ei ole tühi. Kas olete kindel, et soovite selle ja kõik selle sisu püsivalt "
-"kustutada?"
-# 
-# File: usr/share/ashyterm/window.py, line: 1005
-#: NEEDS WORK
-#, python-brace-format
-msgid "Are you sure you want to delete \"{name}\"?"
-msgstr "Kas olete kindel, et soovite \"{name}\" kustutada?"
-# 
-# File: usr/share/ashyterm/window.py, line: 1464
-#: NEEDS WORK
-#, python-brace-format
-msgid "Are you sure you want to permanently delete these {count} items?"
-msgstr "Kas olete kindel, et soovite need {count} elementi püsivalt kustutada?"
-# 
-# File: usr/share/ashyterm/window.py, line: 1466
-#: NEEDS WORK
-msgid "This will also delete all contents of any selected folders."
-msgstr "See kustutab ka kõik valitud kaustade sisu."
-# 
-# File: usr/share/ashyterm/ui/window_ui.py, line: 264
-#: NEEDS WORK
-msgid "Current occurrence"
-msgstr "Praegune esinemine"
-# 
-# File: usr/share/ashyterm/ui/window_ui.py, line: 268
-#: NEEDS WORK
-msgid "Case sensitive search"
-msgstr "Suurtäheline otsing"
-# 
-# File: usr/share/ashyterm/ui/window_ui.py, line: 270
-#: NEEDS WORK
-msgid "Case sensitive"
-msgstr "Tähtede tundlik"
-# 
-# File: usr/share/ashyterm/ui/window_ui.py, line: 276
-#: NEEDS WORK
-msgid "Use regular expressions"
-msgstr "Kasutage regulaaravaldisi"
-# 
-# File: usr/share/ashyterm/ui/window_ui.py, line: 278
-#: NEEDS WORK
-msgid "Regex"
-msgstr "Regex"
-# 
-# File: usr/share/ashyterm/window.py, line: 344
-#: NEEDS WORK
-msgid "File Manager"
-msgstr "Failihaldur"
-# 
-# File: usr/share/ashyterm/ui/window_ui.py, line: 324
-#: NEEDS WORK
-msgid "Command Guide (Ctrl+Shift+P)"
-msgstr "Käskude juhend (Ctrl+Shift+P)"
-# 
-# File: usr/share/ashyterm/ui/window_ui.py, line: 350
-#: NEEDS WORK
-msgid "Search in Terminal"
-msgstr "Otsi terminalis"
-# 
-# File: usr/share/ashyterm/ui/window_ui.py, line: 259
-#: NEEDS WORK
-msgid "Manage Temporary Files"
-msgstr "Haldage ajutiste failide haldamine"
-# 
-# File: usr/share/ashyterm/window.py, line: 268
-#: NEEDS WORK
-msgid "Main Menu"
-msgstr "Peamenüü"
-# 
-# File: usr/share/ashyterm/window.py, line: 337
-#: NEEDS WORK
-msgid "Edit Selected"
-msgstr "Muuda valitud"
-# 
-# File: usr/share/ashyterm/window.py, line: 585
-#: NEEDS WORK
-msgid "Save Current Layout"
-msgstr "Salvesta praegune paigutus"
-# 
-# File: usr/share/ashyterm/window.py, line: 343
-#: NEEDS WORK
-msgid "Remove Selected"
-msgstr "Eemalda valitud"
-# 
-# File: usr/share/ashyterm/window.py, line: 606
-#: NEEDS WORK
-msgid "Search sessions..."
-msgstr "Otsingu seansid..."
-# 
-# File: usr/share/ashyterm/ui/menus.py, line: 24
-#: NEEDS WORK
-msgid "Follow System Style"
-msgstr "Järgi süsteemi stiili"
-# 
-# File: usr/share/ashyterm/ui/menus.py, line: 29
-#: NEEDS WORK
-msgid "Light Style"
-msgstr "Kerge stiil"
-# 
-# File: usr/share/ashyterm/ui/menus.py, line: 34
-#: NEEDS WORK
-msgid "Dark Style"
-msgstr "Tume stiil"
-# 
-# File: usr/share/ashyterm/ui/menus.py, line: 47
-#: NEEDS WORK
-msgid "Match Terminal Colors"
-msgstr "Vasta terminali värvid"
-# 
-# File: usr/share/ashyterm/ui/menus.py, line: 216
-#: NEEDS WORK
-msgid "About"
-msgstr "Teave"
-# 
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
-# 
-# File: usr/share/ashyterm/ui/menus.py, line: 217
-# File: usr/share/ashyterm/window.py, line: 942
-#: NEEDS WORK
-msgid "Quit"
-msgstr "Välja"
-# 
-# File: usr/share/ashyterm/ui/menus.py, line: 119
-#: NEEDS WORK
-msgid "Connect with SFTP"
-msgstr "Ühenda SFTP-ga"
-# 
-# File: usr/share/ashyterm/ui/menus.py, line: 24
-#: NEEDS WORK
-msgid "Duplicate"
-msgstr "Kopeeri"
-# 
-# File: usr/share/ashyterm/ui/menus.py, line: 220
-#: NEEDS WORK
-msgid "Add Session Here"
-msgstr "Lisa seanssi siia"
-# 
-# File: usr/share/ashyterm/ui/menus.py, line: 98
-#: NEEDS WORK
-msgid "Paste to Root"
-msgstr "Kleebi juurele"
-# 
-# File: usr/share/ashyterm/ui/menus.py, line: 227
-#: NEEDS WORK
-msgid "Open Link"
-msgstr "Ava link"
-# 
-# File: usr/share/ashyterm/ui/menus.py, line: 228
-#: NEEDS WORK
-msgid "Copy Link"
-msgstr "Kopeeri link"
-# 
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
-# 
-# File: usr/share/ashyterm/ui/menus.py, line: 276
-# File: usr/share/ashyterm/filemanager/menus.py, line: 276
-#: NEEDS WORK
-msgid "Split Left/Right"
-msgstr "Jagada vasakule/paremale"
-# 
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
-# 
-# File: usr/share/ashyterm/ui/menus.py, line: 279
-# File: usr/share/ashyterm/filemanager/menus.py, line: 279
-#: NEEDS WORK
-msgid "Split Top/Bottom"
-msgstr "Jagage Üles/Alla"
+msgid "Move Failed"
+msgstr "Liikumine ebaõnnestus"
 # 
 # File: usr/share/ashyterm/data/command_data.py, line: 9
 # File: usr/share/ashyterm/data/command_data.py, line: 30
@@ -4295,232 +4321,448 @@ msgstr "Kuvab ainult iga rea viimast veergu."
 msgid "Displays the value of column 1 only if the value of column 3 is greater than 100."
 msgstr "Kuvab veeru 1 väärtuse ainult siis, kui veeru 3 väärtus on suurem kui 100."
 # 
-# File: usr/share/ashyterm/app.py, line: 333
-#: NEEDS WORK
-msgid "Preferences Error"
-msgstr "Eelistuste viga"
-# 
-# File: usr/share/ashyterm/app.py, line: 332
-# File: usr/share/ashyterm/app.py, line: 333
+# File: usr/share/ashyterm/sessions/storage.py, line: 125
 #: NEEDS WORK
 #, python-brace-format
-msgid "Failed to open preferences: {}"
-msgstr "Eelistuste avamine ebaõnnestus: {}"
+msgid "File path validation failed: {}"
+msgstr "Faili tee valideerimine ebaõnnestus: {}"
+# 
+# File: usr/share/ashyterm/sessions/storage.py, line: 134
+#: NEEDS WORK
+msgid "File too large (>50MB)"
+msgstr "Fail on liiga suur (>50MB)"
+# 
+# File: usr/share/ashyterm/sessions/storage.py, line: 148
+#: NEEDS WORK
+#, python-brace-format
+msgid "Invalid JSON: {}"
+msgstr "Kehtetu JSON: {}"
+# 
+# File: usr/share/ashyterm/sessions/storage.py, line: 151
+#: NEEDS WORK
+#, python-brace-format
+msgid "Encoding error: {}"
+msgstr "Kodeerimisviga: {}"
+# 
+# File: usr/share/ashyterm/sessions/storage.py, line: 155
+#: NEEDS WORK
+msgid "Root data is not a dictionary"
+msgstr "Juurtandmed ei ole sõnastik."
+# 
+# File: usr/share/ashyterm/sessions/storage.py, line: 198
+#: NEEDS WORK
+#, python-brace-format
+msgid "Load failed: {}"
+msgstr "Laadimine ebaõnnestus: {}"
+# 
+# File: usr/share/ashyterm/sessions/storage.py, line: 395
+#: NEEDS WORK
+msgid "Data validation failed"
+msgstr "Andmete valideerimine ebaõnnestus"
+# 
+# File: usr/share/ashyterm/sessions/storage.py, line: 410
+#: NEEDS WORK
+msgid "Temporary file was not written correctly"
+msgstr "Ajutine fail ei olnud õigesti kirjutatud"
+# 
+# File: usr/share/ashyterm/sessions/storage.py, line: 427
+#: NEEDS WORK
+#, python-brace-format
+msgid "File write failed: {}"
+msgstr "Faili kirjutamine ebaõnnestus: {}"
+# 
+# File: usr/share/ashyterm/sessions/storage.py, line: 439
+#: NEEDS WORK
+msgid "Save verification failed"
+msgstr "Salvestamise kontrollimine ebaõnnestus"
+# 
+# File: usr/share/ashyterm/sessions/storage.py, line: 463
+#: NEEDS WORK
+#, python-brace-format
+msgid "Save failed: {}"
+msgstr "Salvestamine ebaõnnestus: {}"
+# 
+# File: usr/share/ashyterm/sessions/tree.py, line: 298
+# File: usr/share/ashyterm/sessions/tree.py, line: 302
+#: NEEDS WORK
+msgid "Move Error"
+msgstr "Liikumise viga"
 # 
 # #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
 # 
-# File: usr/share/ashyterm/__init__.py, line: 62
-# File: usr/share/ashyterm/app.py, line: 350
+# File: usr/share/ashyterm/sessions/tree.py, line: 801
+# File: usr/share/ashyterm/window.py, line: 1544
 #: NEEDS WORK
-msgid "A modern terminal emulator with session management"
-msgstr "Kaasaegne terminali emulaator seansihaldusega"
+msgid "Restore Layout"
+msgstr "Taasta paigutus"
 # 
-# File: usr/share/ashyterm/app.py, line: 356
+# File: usr/share/ashyterm/sessions/tree.py, line: 808
 #: NEEDS WORK
-msgid "Save Backup As..."
-msgstr "Salvesta varukoopia nimega..."
+msgid "Delete Layout"
+msgstr "Kustuta paigutus"
 # 
-# File: usr/share/ashyterm/app.py, line: 368
-# File: usr/share/ashyterm/app.py, line: 379
-# File: usr/share/ashyterm/app.py, line: 392
-# File: usr/share/ashyterm/app.py, line: 396
+# File: usr/share/ashyterm/sessions/tree.py, line: 618
+# File: usr/share/ashyterm/sessions/tree.py, line: 623
 #: NEEDS WORK
-msgid "Backup Error"
-msgstr "Varundusviga"
+msgid "Paste Error"
+msgstr "Kopeerimise viga"
 # 
-# File: usr/share/ashyterm/app.py, line: 375
-#: NEEDS WORK
-msgid "Set Backup Password"
-msgstr "Seadme varukoopia parool"
-# 
-# File: usr/share/ashyterm/app.py, line: 376
-#: NEEDS WORK
-msgid "Please enter a password to encrypt the backup file."
-msgstr "Palun sisestage parool varufaili krüpteerimiseks."
-# 
-# File: usr/share/ashyterm/app.py, line: 384
-#: NEEDS WORK
-msgid "Confirm Password"
-msgstr "Kinnita parool"
-# 
-# File: usr/share/ashyterm/app.py, line: 400
-# File: usr/share/ashyterm/app.py, line: 405
-#: NEEDS WORK
-msgid "Password Error"
-msgstr "Parooli viga"
-# 
-# File: usr/share/ashyterm/app.py, line: 400
-#: NEEDS WORK
-msgid "Password cannot be empty."
-msgstr "Parool ei tohi olla tühi."
-# 
-# File: usr/share/ashyterm/app.py, line: 405
-#: NEEDS WORK
-msgid "Passwords do not match."
-msgstr "Paroolid ei ühti."
-# 
-# File: usr/share/ashyterm/app.py, line: 423
-#: NEEDS WORK
-msgid "Creating backup..."
-msgstr "Varunduse loomine..."
-# 
-# File: usr/share/ashyterm/app.py, line: 390
-#: NEEDS WORK
-msgid "Backup Complete"
-msgstr "Varundus lõpetatud"
-# 
-# File: usr/share/ashyterm/app.py, line: 440
+# File: usr/share/ashyterm/sessions/validation.py, line: 18
 #: NEEDS WORK
 #, python-brace-format
+msgid "Session validation failed: {}"
+msgstr "Seansi valideerimine ebaõnnestus: {}"
+# 
+# File: usr/share/ashyterm/sessions/validation.py, line: 31
+#: NEEDS WORK
+#, python-brace-format
+msgid "A session with the name '{name}' already exists in this folder."
+msgstr "Selles kaustas on juba olemas seanss nimega '{name}'."
+# 
+# File: usr/share/ashyterm/sessions/validation.py, line: 45
+#: NEEDS WORK
+#, python-brace-format
+msgid "The target folder '{folder}' does not exist."
+msgstr "Sihtkaust '{folder}' ei eksisteeri."
+# 
+# File: usr/share/ashyterm/sessions/validation.py, line: 61
+#: NEEDS WORK
+#, python-brace-format
+msgid "Folder validation failed: {}"
+msgstr "Katalooge valideerimine ebaõnnestus: {}"
+# 
+# File: usr/share/ashyterm/sessions/validation.py, line: 69
+#: NEEDS WORK
+#, python-brace-format
+msgid "A folder with the path '{path}' already exists."
+msgstr "Kaustikuga '{path}' on juba olemas."
+# 
+# File: usr/share/ashyterm/sessions/validation.py, line: 84
+#: NEEDS WORK
+#, python-brace-format
+msgid "The parent folder '{folder}' does not exist."
+msgstr "Vanem kaust '{folder}' ei eksisteeri."
+# 
+# File: usr/share/ashyterm/sessions/operations.py, line: 51
+#: NEEDS WORK
+#, python-brace-format
+msgid "Failed to save {item_type} data."
+msgstr "{item_type} andmete salvestamine ebaõnnestus."
+# 
+# File: usr/share/ashyterm/sessions/operations.py, line: 59
+#: NEEDS WORK
+#, python-brace-format
+msgid "{item_type} '{name}' added successfully."
+msgstr "{item_type} '{name}' lisatud edukalt."
+# 
+# File: usr/share/ashyterm/sessions/operations.py, line: 62
+#: NEEDS WORK
+msgid "Item at position is not a session."
+msgstr "Element positsioonil ei ole seanss."
+# 
+# File: usr/share/ashyterm/sessions/operations.py, line: 74
+#: NEEDS WORK
+msgid "Failed to save updated session data."
+msgstr "Eba updated sessiooni andmete salvestamine."
+# 
+# File: usr/share/ashyterm/sessions/operations.py, line: 79
+#: NEEDS WORK
+#, python-brace-format
+msgid "Session '{name}' updated successfully."
+msgstr "Seans '{name}' uuendatud edukalt."
+# 
+# File: usr/share/ashyterm/sessions/operations.py, line: 90
+#: NEEDS WORK
+msgid "Session not found."
+msgstr "Seansit ei leitud."
+# 
+# File: usr/share/ashyterm/sessions/operations.py, line: 96
+#: NEEDS WORK
+msgid "Failed to save after session removal."
+msgstr "Salvestamine ebaõnnestus seansi eemaldamise järel."
+# 
+# File: usr/share/ashyterm/sessions/operations.py, line: 102
+#: NEEDS WORK
+#, python-brace-format
+msgid "Session '{name}' removed successfully."
+msgstr "Seans '{name}' eemaldati edukalt."
+# 
+# File: usr/share/ashyterm/sessions/operations.py, line: 131
+#: NEEDS WORK
+msgid "Item at position is not a folder."
+msgstr "Element positsioonil ei ole kaust."
+# 
+# File: usr/share/ashyterm/sessions/operations.py, line: 144
+#: NEEDS WORK
+msgid "Failed to save updated folder data."
+msgstr "Kausta andmete uuendamine ebaõnnestus."
+# 
+# File: usr/share/ashyterm/sessions/operations.py, line: 149
+#: NEEDS WORK
+#, python-brace-format
+msgid "Folder '{name}' updated successfully."
+msgstr "Kaust '{name}' uuendatud edukalt."
+# 
+# File: usr/share/ashyterm/sessions/operations.py, line: 161
+#: NEEDS WORK
+msgid "Cannot remove a non-empty folder."
+msgstr "Ei saa eemaldada mitte-tühja kausta."
+# 
+# File: usr/share/ashyterm/sessions/operations.py, line: 168
+#: NEEDS WORK
+msgid "Folder not found."
+msgstr "Kaust ei leitud."
+# 
+# File: usr/share/ashyterm/sessions/operations.py, line: 172
+#: NEEDS WORK
+msgid "Failed to save after folder removal."
+msgstr "Salvestamine ebaõnnestus pärast kausta eemaldamist."
+# 
+# File: usr/share/ashyterm/sessions/operations.py, line: 177
+#: NEEDS WORK
+#, python-brace-format
+msgid "Folder '{name}' removed successfully."
+msgstr "Kaust '{name}' eemaldati edukalt."
+# 
+# File: usr/share/ashyterm/sessions/operations.py, line: 190
+#: NEEDS WORK
+msgid "Failed to save after moving session."
+msgstr "Seansi liigutamisel salvestamine ebaõnnestus."
+# 
+# File: usr/share/ashyterm/sessions/operations.py, line: 195
+#: NEEDS WORK
+msgid "Session moved successfully."
+msgstr "Seans liikus edukalt."
+# 
+# File: usr/share/ashyterm/sessions/operations.py, line: 209
+#: NEEDS WORK
+msgid "Cannot move a folder into itself."
+msgstr "Ei saa kausta iseendasse liigutada."
+# 
+# File: usr/share/ashyterm/sessions/operations.py, line: 285
+#: NEEDS WORK
+#, python-brace-format
+msgid "SSH config file not found at {path}"
+msgstr "SSH konfiguratsioonifaili ei leitud asukohast {path}"
+# 
+# File: usr/share/ashyterm/sessions/operations.py, line: 295
+#: NEEDS WORK
+#, python-brace-format
+msgid "Failed to parse SSH config: {error}"
+msgstr "Eba SSH konfiguratsiooni analüüsimine: {error}"
+# 
+# File: usr/share/ashyterm/sessions/operations.py, line: 300
+#: NEEDS WORK
+msgid "No host entries found in SSH config."
+msgstr "SSH konfiguratsioonis ei leitud ühtegi hosti sissekannet."
+# 
+# File: usr/share/ashyterm/sessions/operations.py, line: 312
+#: NEEDS WORK
+#, python-brace-format
+msgid "Skipped host '{alias}': missing hostname."
+msgstr "Jätan vahepealse hosti '{alias}': puudu hostinimi."
+# 
+# File: usr/share/ashyterm/sessions/operations.py, line: 360
+#: NEEDS WORK
+#, python-brace-format
+msgid "Failed to import host '{alias}'."
+msgstr "Eba hosti '{alias}' importimine ebaõnnestus."
+# 
+# File: usr/share/ashyterm/sessions/operations.py, line: 365
+#: NEEDS WORK
+#, python-brace-format
+msgid "No sessions were imported from {path}."
+msgstr "Seansse ei imporditud {path} kaudu."
+# 
+# File: usr/share/ashyterm/sessions/operations.py, line: 371
+#: NEEDS WORK
+#, python-brace-format
+msgid "Imported {count} session(s) from {path}."
+msgstr "Imporditud {count} seanssi(d) {path} asukohast."
+# 
+# File: usr/share/ashyterm/sessions/operations.py, line: 260
+#: NEEDS WORK
+msgid "Unsupported item type for paste operation."
+msgstr "Toetamata tüüp kleepimise toimingu jaoks."
+# 
+# File: usr/share/ashyterm/sessions/models.py, line: 174
+#: NEEDS WORK
+msgid "Port must be a valid number between 1 and 65535"
+msgstr "Port peab olema kehtiv number vahemikus 1 kuni 65535"
+# 
+# File: usr/share/ashyterm/sessions/models.py, line: 339
+#: NEEDS WORK
+msgid "Invalid port forwarding entry."
+msgstr "Kehtetu porti edastamise kirje."
+# 
+# File: usr/share/ashyterm/sessions/models.py, line: 349
+#: NEEDS WORK
+msgid "Port forwarding entries must use numeric ports."
+msgstr "Port edastamise kirjed peavad kasutama numbrilisi porte."
+# 
+# File: usr/share/ashyterm/sessions/models.py, line: 198
+#: NEEDS WORK
+msgid "Session name is required."
+msgstr "Seansi nimi on kohustuslik."
+# 
+# File: usr/share/ashyterm/sessions/models.py, line: 201
+#: NEEDS WORK
+msgid "Host is required for SSH sessions."
+msgstr "Host on vajalik SSH seansside jaoks."
+# 
+# File: usr/share/ashyterm/sessions/models.py, line: 203
+#: NEEDS WORK
+msgid "Port must be between 1 and 65535."
+msgstr "Port peab olema vahemikus 1 kuni 65535."
+# 
+# File: usr/share/ashyterm/sessions/models.py, line: 389
+#: NEEDS WORK
+#, python-brace-format
+msgid "Port forward '{name}' has an invalid local port (must be between 1025 and 65535)."
+msgstr "Port edastamine '{name}' sisaldab kehtetut kohalikku porti (peab olema vahemikus 1025 kuni 65535)."
+# 
+# File: usr/share/ashyterm/sessions/models.py, line: 394
+#: NEEDS WORK
+#, python-brace-format
+msgid "Port forward '{name}' has an invalid remote port."
+msgstr "Port edastus '{name}' sisaldab kehtetut kaugporti."
+# 
+# File: usr/share/ashyterm/sessions/models.py, line: 386
+# File: usr/share/ashyterm/sessions/models.py, line: 419
+#: NEEDS WORK
+msgid "Unnamed Session"
+msgstr "Nimetu seanss"
+# 
+# File: usr/share/ashyterm/sessions/models.py, line: 346
+#: NEEDS WORK
+msgid "Folder name is required."
+msgstr "Kausta nime on nõutav."
+# 
+# File: usr/share/ashyterm/sessions/models.py, line: 352
+#: NEEDS WORK
+msgid "Folder path is not consistent with its parent path."
+msgstr "Kausta tee ei ühti oma vanema teega."
+# 
+# File: usr/share/ashyterm/sessions/models.py, line: 727
+# File: usr/share/ashyterm/sessions/models.py, line: 752
+#: NEEDS WORK
+msgid "Unnamed Folder"
+msgstr "Nimetu kaust"
+# 
+# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 69
+#: NEEDS WORK
+msgid "Cancel transfer"
+msgstr "Tühista ülekande"
+# 
+# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 63
+#: NEEDS WORK
+msgid "Remove from history"
+msgstr "Eemalda ajaloost"
+# 
+# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 78
+#: NEEDS WORK
+msgid "Recebido"
+msgstr "Saadud"
+# 
+# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 80
+#: NEEDS WORK
+msgid "Enviado"
+msgstr "Saadetud"
+# 
+# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 107
+#: NEEDS WORK
+msgid "Waiting..."
+msgstr "Ootab..."
+# 
+# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 116
+#: NEEDS WORK
+msgid "in"
+msgstr "sisse"
+# 
+# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 121
+#: NEEDS WORK
+msgid "Completed"
+msgstr "Lõpetatud"
+# 
+# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 126
+#: NEEDS WORK
+msgid "Unknown error"
+msgstr "Tundmatu viga"
+# 
+# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 127
+#: NEEDS WORK
+msgid "Failed"
+msgstr "Ebaõnnestus"
+# 
+# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 131
+#: NEEDS WORK
+msgid "Cancelled"
+msgstr "Tühistatud"
+# 
+# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 147
+#: NEEDS WORK
+msgid "Recebendo"
+msgstr "Saabumine"
+# 
+# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 149
+#: NEEDS WORK
+msgid "Enviando"
+msgstr "Saatmine"
+# 
+# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 165
+#: NEEDS WORK
+msgid "remaining"
+msgstr "jäänud"
+# 
+# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 216
+#: NEEDS WORK
+msgid "Transfer Manager"
+msgstr "Ülekandehaldur"
+# 
+# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 239
+# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 348
+#: NEEDS WORK
+msgid "Clear History"
+msgstr "Kustuta ajalugu"
+# 
+# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 231
+#: NEEDS WORK
+msgid "Cancelar Tudo"
+msgstr "Tühista kõik"
+# 
+# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 257
+#: NEEDS WORK
+msgid "No Transfers"
+msgstr "Ei ülekandeid"
+# 
+# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 258
+#: NEEDS WORK
+msgid "Active and past transfers will appear here."
+msgstr "Siin kuvatakse aktiivsed ja varasemad ülekanded."
+# 
+# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 340
+#: NEEDS WORK
+msgid "Clear Transfer History?"
+msgstr "Kustuta ülekande ajalugu?"
+# 
+# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 342
+#: NEEDS WORK
 msgid ""
-"Backup saved successfully to:\n"
-"{}"
+"This action cannot be undone and will remove all completed, failed, and cancelled transfers from "
+"the list."
 msgstr ""
-"Varundus salvestati edukalt siia:  \n"
-"{}"
+"Seda toimingut ei saa tagasi võtta ja see eemaldab loendist kõik lõpetatud, ebaõnnestunud ja "
+"tühistatud ülekanded."
 # 
-# File: usr/share/ashyterm/app.py, line: 446
+# File: usr/share/ashyterm/filemanager/manager.py, line: 274
 #: NEEDS WORK
-msgid "Backup Failed"
-msgstr "Varundus ebaõnnestus"
+msgid "Name cannot be empty."
+msgstr "Nimi ei tohi olla tühi."
 # 
-# File: usr/share/ashyterm/app.py, line: 447
+# File: usr/share/ashyterm/filemanager/manager.py, line: 221
 #: NEEDS WORK
-#, python-brace-format
-msgid "Could not create backup: {}"
-msgstr "Ei saanud varukoopiat luua: {}"
-# 
-# File: usr/share/ashyterm/app.py, line: 458
-#: NEEDS WORK
-msgid "Restore from Backup?"
-msgstr "Taasta varukoopiast?"
-# 
-# File: usr/share/ashyterm/app.py, line: 460
-#: NEEDS WORK
-msgid ""
-"Restoring from a backup will overwrite all your current sessions, settings, and layouts. This "
-"action cannot be undone.\n"
-"\n"
-"<b>The application will need to be restarted after restoring.</b>"
-msgstr ""
-"Varundus varukoopiast kirjutab üle kõik teie praegused seansid, seaded ja paigutused. Seda "
-"toimingut ei saa tagasi võtta.\n"
-"\n"
-"<b>Rakendus tuleb pärast varundamist taaskäivitada.</b>"
-# 
-# File: usr/share/ashyterm/app.py, line: 466
-#: NEEDS WORK
-msgid "Choose File and Restore"
-msgstr "Vali fail ja taasta"
-# 
-# File: usr/share/ashyterm/app.py, line: 474
-#: NEEDS WORK
-msgid "Select Backup File"
-msgstr "Vali varukoopia fail"
-# 
-# File: usr/share/ashyterm/app.py, line: 477
-#: NEEDS WORK
-msgid "Backup Files"
-msgstr "Varukoopiad"
-# 
-# File: usr/share/ashyterm/app.py, line: 402
-# File: usr/share/ashyterm/app.py, line: 416
-#: NEEDS WORK
-msgid "Restore Error"
-msgstr "Taastev viga"
-# 
-# File: usr/share/ashyterm/app.py, line: 499
-#: NEEDS WORK
-msgid "Enter Backup Password"
-msgstr "Sisestage varukoopia parool"
-# 
-# File: usr/share/ashyterm/app.py, line: 500
-#: NEEDS WORK
-msgid "Please enter the password for the selected backup file."
-msgstr "Palun sisestage valitud varukoopia faili parool."
-# 
-# File: usr/share/ashyterm/app.py, line: 508
-#: NEEDS WORK
-msgid "Restore"
-msgstr "Taasta"
-# 
-# File: usr/share/ashyterm/app.py, line: 525
-#: NEEDS WORK
-msgid "Restoring from backup..."
-msgstr "Taasteb varundusest..."
-# 
-# File: usr/share/ashyterm/app.py, line: 538
-#: NEEDS WORK
-msgid "Restore Failed"
-msgstr "Taaste ebaõnnestus"
-# 
-# File: usr/share/ashyterm/app.py, line: 539
-#: NEEDS WORK
-#, python-brace-format
-msgid "Could not restore from backup: {}"
-msgstr "Ei saanud varukoopiast taastada: {}"
-# 
-# File: usr/share/ashyterm/app.py, line: 549
-#: NEEDS WORK
-msgid "Restore Complete"
-msgstr "Taastamine lõpetatud"
-# 
-# File: usr/share/ashyterm/app.py, line: 551
-#: NEEDS WORK
-msgid "Data has been restored successfully. Please restart Ashy Terminal for the changes to take effect."
-msgstr "Andmed on edukalt taastatud. Palun taaskäivitage Ashy Terminal, et muudatused jõustuksid."
-# 
-# File: usr/share/ashyterm/app.py, line: 498
-#: NEEDS WORK
-msgid "Close Application"
-msgstr "Sulge rakendus"
-# 
-# File: usr/share/ashyterm/app.py, line: 499
-#: NEEDS WORK
-msgid ""
-"There are active SSH connections. Closing will disconnect all sessions.\n"
-"\n"
-"Are you sure you want to close the application?"
-msgstr ""
-"Seal on aktiivsed SSH-ühendused. Sulgemine katkestab kõik seansid.\n"
-"\n"
-"Kas olete kindel, et soovite rakenduse sulgeda?"
-# 
-# File: usr/share/ashyterm/app.py, line: 503
-#: NEEDS WORK
-msgid "Close All"
-msgstr "Sulge kõik"
-# 
-# File: usr/share/ashyterm/app.py, line: 530
-#: NEEDS WORK
-msgid "Startup Error"
-msgstr "Käivitamise viga"
-# 
-# File: usr/share/ashyterm/app.py, line: 531
-#: NEEDS WORK
-#, python-brace-format
-msgid "Application failed to start: {}"
-msgstr "Rakendus ei suutnud käivituda: {}"
-# 
-# File: usr/share/ashyterm/terminal/tabs.py, line: 237
-#: NEEDS WORK
-msgid "Detach Tab"
-msgstr "Eemalda vahekaart"
-# 
-# File: usr/share/ashyterm/terminal/tabs.py, line: 585
-#: NEEDS WORK
-msgid "This is the only pane in the tab."
-msgstr "See on ainus paneel vahekaardil."
-# 
-# File: usr/share/ashyterm/terminal/spawner.py, line: 295
-#: NEEDS WORK
-msgid "Not an SSH session."
-msgstr "Ei ole SSH seanss."
-# 
-# File: usr/share/ashyterm/filemanager/operations.py, line: 146
-#: NEEDS WORK
-msgid "Command timed out."
-msgstr "Käsk aegus."
+msgid "rsync is not installed on the remote host. Install the rsync package or use SFTP for transfers."
+msgstr "rsync ei ole kaugserveris installitud. Installige rsync pakett või kasutage edastamiseks SFTP-d."
 # 
 # File: usr/share/ashyterm/filemanager/manager.py, line: 182
 # File: usr/share/ashyterm/filemanager/manager.py, line: 608
@@ -4533,10 +4775,15 @@ msgstr "Värskenda"
 msgid "Show hidden files"
 msgstr "Kuvaa peidetud faile"
 # 
-# File: usr/share/ashyterm/filemanager/manager.py, line: 197
+# File: usr/share/ashyterm/filemanager/manager.py, line: 577
 #: NEEDS WORK
-msgid "Filter..."
-msgstr "Filtre..."
+msgid "Filter files..."
+msgstr "Filtreeri faile..."
+# 
+# File: usr/share/ashyterm/filemanager/manager.py, line: 397
+#: NEEDS WORK
+msgid "Recursive Search"
+msgstr "Rekursiivne Otsing"
 # 
 # File: usr/share/ashyterm/filemanager/manager.py, line: 203
 #: NEEDS WORK
@@ -4548,10 +4795,17 @@ msgstr "Ülekande ajalugu"
 msgid "Upload Files"
 msgstr "Laadi failid üles"
 # 
-# File: usr/share/ashyterm/filemanager/manager.py, line: 366
+# File: usr/share/ashyterm/filemanager/manager.py, line: 665
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1266
 #: NEEDS WORK
-msgid "Name"
-msgstr "Nimi"
+msgid "Searching..."
+msgstr "Otsimine..."
+# 
+# File: usr/share/ashyterm/filemanager/manager.py, line: 775
+#: NEEDS WORK
+#, python-brace-format
+msgid "Showing first {count} results. Refine your search to narrow the list."
+msgstr "Kuvatakse esimesed {count} tulemust. Täpsustage oma otsingut, et nimekirja kitsendada."
 # 
 # File: usr/share/ashyterm/filemanager/manager.py, line: 375
 #: NEEDS WORK
@@ -4601,10 +4855,22 @@ msgstr ""
 msgid "Loading..."
 msgstr "Laadimine..."
 # 
-# File: usr/share/ashyterm/filemanager/manager.py, line: 577
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1268
 #: NEEDS WORK
-msgid "Filter files..."
-msgstr "Filtreeri faile..."
+msgid "Recursive filter..."
+msgstr "Rekursiivne filter..."
+# 
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1551
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1740
+#: NEEDS WORK
+msgid "Create Folder"
+msgstr "Loo kaust"
+# 
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1552
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1757
+#: NEEDS WORK
+msgid "Create File"
+msgstr "Loo fail"
 # 
 # File: usr/share/ashyterm/filemanager/manager.py, line: 630
 #: NEEDS WORK
@@ -4617,10 +4883,86 @@ msgstr "Ava/Redigeeri"
 msgid "Open With..."
 msgstr "Ava valik..."
 # 
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1683
+#: NEEDS WORK
+msgid "Cut"
+msgstr "Lõika"
+# 
 # File: usr/share/ashyterm/filemanager/manager.py, line: 638
 #: NEEDS WORK
 msgid "Download"
 msgstr "Laadi alla"
+# 
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1737
+#: NEEDS WORK
+msgid "Create folder command sent to terminal"
+msgstr "Kausta loomise käsk saadetud terminalile"
+# 
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1741
+#: NEEDS WORK
+msgid "Enter a name for the new folder:"
+msgstr "Sisestage uue kausta nimi:"
+# 
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1743
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1760
+#: NEEDS WORK
+msgid "Create"
+msgstr "Loo"
+# 
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1754
+#: NEEDS WORK
+msgid "Create file command sent to terminal"
+msgstr "Loo faili käsk saadetud terminalile"
+# 
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1758
+#: NEEDS WORK
+msgid "Enter a name for the new file:"
+msgstr "Sisestage uue faili nimi:"
+# 
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1759
+#: NEEDS WORK
+msgid "New File"
+msgstr "Uus fail"
+# 
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1767
+#: NEEDS WORK
+msgid "No items selected to copy."
+msgstr "Ühtegi elementi ei ole valitud kopeerimiseks."
+# 
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1781
+#: NEEDS WORK
+msgid "Items copied to clipboard."
+msgstr "Objektid on kopeeritud lõikelauale."
+# 
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1786
+#: NEEDS WORK
+msgid "No items selected to cut."
+msgstr "Ühtegi elementi ei ole lõikamiseks valitud."
+# 
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1800
+#: NEEDS WORK
+msgid "Items marked for move."
+msgstr "Liigutamiseks märgitud esemed."
+# 
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1804
+#: NEEDS WORK
+msgid "Nothing to paste."
+msgstr "Midagi ei ole kleepimiseks."
+# 
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1815
+#: NEEDS WORK
+msgid "Items are already in this location."
+msgstr "Esemed on juba selles asukohas."
+# 
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1819
+#: NEEDS WORK
+msgid "Move command sent to terminal"
+msgstr "Liikumiskäsk saadetud terminalile"
+# 
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1824
+#: NEEDS WORK
+msgid "Copy command sent to terminal"
+msgstr "Kopeeri käsk saadetud terminalile"
 # 
 # File: usr/share/ashyterm/filemanager/manager.py, line: 672
 #: NEEDS WORK
@@ -4944,116 +5286,6 @@ msgstr "Sisestage uus nimi '{name}' jaoks"
 msgid "Rename command sent to terminal"
 msgstr "Käsku ümbernimetamiseks saadetud terminalile"
 # 
-# File: usr/share/ashyterm/filemanager/transfer_manager.py, line: 273
-#: NEEDS WORK
-msgid "Cancel All Transfers"
-msgstr "Tühista kõik ülekanded"
-# 
-# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 69
-#: NEEDS WORK
-msgid "Cancel transfer"
-msgstr "Tühista ülekande"
-# 
-# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 63
-#: NEEDS WORK
-msgid "Remove from history"
-msgstr "Eemalda ajaloost"
-# 
-# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 78
-#: NEEDS WORK
-msgid "Recebido"
-msgstr "Saadud"
-# 
-# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 80
-#: NEEDS WORK
-msgid "Enviado"
-msgstr "Saadetud"
-# 
-# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 107
-#: NEEDS WORK
-msgid "Waiting..."
-msgstr "Ootab..."
-# 
-# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 116
-#: NEEDS WORK
-msgid "in"
-msgstr "sisse"
-# 
-# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 121
-#: NEEDS WORK
-msgid "Completed"
-msgstr "Lõpetatud"
-# 
-# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 126
-#: NEEDS WORK
-msgid "Unknown error"
-msgstr "Tundmatu viga"
-# 
-# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 127
-#: NEEDS WORK
-msgid "Failed"
-msgstr "Ebaõnnestus"
-# 
-# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 131
-#: NEEDS WORK
-msgid "Cancelled"
-msgstr "Tühistatud"
-# 
-# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 147
-#: NEEDS WORK
-msgid "Recebendo"
-msgstr "Saabumine"
-# 
-# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 149
-#: NEEDS WORK
-msgid "Enviando"
-msgstr "Saatmine"
-# 
-# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 165
-#: NEEDS WORK
-msgid "remaining"
-msgstr "jäänud"
-# 
-# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 216
-#: NEEDS WORK
-msgid "Transfer Manager"
-msgstr "Ülekandehaldur"
-# 
-# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 239
-# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 348
-#: NEEDS WORK
-msgid "Clear History"
-msgstr "Kustuta ajalugu"
-# 
-# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 231
-#: NEEDS WORK
-msgid "Cancelar Tudo"
-msgstr "Tühista kõik"
-# 
-# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 257
-#: NEEDS WORK
-msgid "No Transfers"
-msgstr "Ei ülekandeid"
-# 
-# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 258
-#: NEEDS WORK
-msgid "Active and past transfers will appear here."
-msgstr "Siin kuvatakse aktiivsed ja varasemad ülekanded."
-# 
-# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 340
-#: NEEDS WORK
-msgid "Clear Transfer History?"
-msgstr "Kustuta ülekande ajalugu?"
-# 
-# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 342
-#: NEEDS WORK
-msgid ""
-"This action cannot be undone and will remove all completed, failed, and cancelled transfers from "
-"the list."
-msgstr ""
-"Seda toimingut ei saa tagasi võtta ja see eemaldab loendist kõik lõpetatud, ebaõnnestunud ja "
-"tühistatud ülekanded."
-# 
 # File: usr/share/ashyterm/filemanager/operations.py, line: 113
 #: NEEDS WORK
 msgid "No session context for file operation."
@@ -5073,6 +5305,1810 @@ msgstr "Luba keelatud: Kontrollige kirjutamisõigusi sihtkohas."
 #: NEEDS WORK
 msgid "An unknown transfer error occurred."
 msgstr "Tekkis tundmatu edastamise viga."
+# 
+# File: usr/share/ashyterm/filemanager/transfer_manager.py, line: 273
+#: NEEDS WORK
+msgid "Cancel All Transfers"
+msgstr "Tühista kõik ülekanded"
+# 
+# File: usr/share/ashyterm/window.py, line: 36
+#: NEEDS WORK
+msgid "How can I monitor CPU and memory usage in real time?"
+msgstr "Kuidas saan jälgida CPU ja mälu kasutust reaalajas?"
+# 
+# File: usr/share/ashyterm/window.py, line: 37
+#: NEEDS WORK
+msgid "Which commands show the processes consuming the most memory?"
+msgstr "Millised käsud näitavad protsesse, mis tarbivad kõige rohkem mälu?"
+# 
+# File: usr/share/ashyterm/window.py, line: 38
+#: NEEDS WORK
+msgid "Why is my disk stuck at 100% usage and how do I investigate it?"
+msgstr "Miks on mu ketas 100% kasutuses ja kuidas ma seda uurin?"
+# 
+# File: usr/share/ashyterm/window.py, line: 39
+#: NEEDS WORK
+msgid "How can I locate large files taking up space under /?"
+msgstr "Kuidas leida suuri faile, mis võtavad ruumi kaustas /?"
+# 
+# File: usr/share/ashyterm/window.py, line: 40
+#: NEEDS WORK
+msgid "What steps help troubleshoot a slow SSH connection?"
+msgstr "Millised sammud aitavad lahendada aeglast SSH-ühendust?"
+# 
+# File: usr/share/ashyterm/window.py, line: 41
+#: NEEDS WORK
+msgid "How can I automate daily incremental backups with rsync?"
+msgstr "Kuidas saan automatiseerida igapäevaseid inkrementaalseid varukoopiaid rsynciga?"
+# 
+# File: usr/share/ashyterm/window.py, line: 42
+#: NEEDS WORK
+msgid "How do I remove orphan packages and clean the cache on BigLinux?"
+msgstr "Kuidas eemaldada orvupakette ja puhastada vahemälu BigLinuxis?"
+# 
+# File: usr/share/ashyterm/window.py, line: 43
+#: NEEDS WORK
+msgid "How can I list services that are enabled and active on systemd?"
+msgstr "Kuidas saan loetleda teenuseid, mis on systemd-s lubatud ja aktiivsed?"
+# 
+# File: usr/share/ashyterm/window.py, line: 44
+#: NEEDS WORK
+msgid "What should I examine when boot time is too long?"
+msgstr "Mida peaksin uurima, kui käivitusaeg on liiga pikk?"
+# 
+# File: usr/share/ashyterm/window.py, line: 45
+#: NEEDS WORK
+msgid "How do I monitor temperature and fan speeds from the terminal?"
+msgstr "Kuidas ma jälgin temperatuuri ja ventilaatori kiirusid terminalist?"
+# 
+# File: usr/share/ashyterm/window.py, line: 46
+#: NEEDS WORK
+msgid "How can I configure alerts when CPU usage exceeds a threshold?"
+msgstr "Kuidas saan seadistada teateid, kui CPU kasutus ületab künnise?"
+# 
+# File: usr/share/ashyterm/window.py, line: 47
+#: NEEDS WORK
+msgid "How do I create a script that restarts a service automatically?"
+msgstr "Kuidas ma loon skripti, mis taaskäivitab teenuse automaatselt?"
+# 
+# File: usr/share/ashyterm/window.py, line: 48
+#: NEEDS WORK
+msgid "How do I automatically mount a remote NFS share?"
+msgstr "Kuidas ma automaatselt kaug-NFS jagamist mountin?"
+# 
+# File: usr/share/ashyterm/window.py, line: 49
+#: NEEDS WORK
+msgid "How can I debug network issues using mtr and traceroute?"
+msgstr "Kuidas saan võrguprobleeme tõrkeotsingu abil mtr ja traceroute kasutada?"
+# 
+# File: usr/share/ashyterm/window.py, line: 50
+#: NEEDS WORK
+msgid "What best practices should I follow to harden SSH?"
+msgstr "Milliseid parimaid tavasid peaksin järgima SSH-i tugevdamiseks?"
+# 
+# File: usr/share/ashyterm/window.py, line: 51
+#: NEEDS WORK
+msgid "How do I schedule updates with pacman and log the results?"
+msgstr "Kuidas ma saan pacmaniga uuendusi ajastada ja tulemusi logida?"
+# 
+# File: usr/share/ashyterm/window.py, line: 52
+#: NEEDS WORK
+msgid "How do I detect and terminate zombie processes?"
+msgstr "Kuidas ma tuvastan ja lõpetan zombie-protsessid?"
+# 
+# File: usr/share/ashyterm/window.py, line: 53
+#: NEEDS WORK
+msgid "How do I compare two directories to find differences?"
+msgstr "Kuidas ma võrdlen kahte katalooge, et leida erinevusi?"
+# 
+# File: usr/share/ashyterm/window.py, line: 54
+#: NEEDS WORK
+msgid "How can I configure automatic backups of /etc with git?"
+msgstr "Kuidas saan seadistada automaatseid varukoopiaid /etc kaustast gitiga?"
+# 
+# File: usr/share/ashyterm/window.py, line: 55
+#: NEEDS WORK
+msgid "How do I troubleshoot high disk I/O usage in databases?"
+msgstr "Kuidas ma lahendan andmebaasides kõrge ketas I/O kasutuse probleeme?"
+# 
+# File: usr/share/ashyterm/window.py, line: 56
+#: NEEDS WORK
+msgid "How can I check available kernel versions and update safely?"
+msgstr "Kuidas ma saan kontrollida saadaval olevaid kerneliversioone ja turvaliselt uuendada?"
+# 
+# File: usr/share/ashyterm/window.py, line: 57
+#: NEEDS WORK
+msgid "What is the best way to install proprietary GPU drivers?"
+msgstr "Mis on parim viis patenteeritud GPU draiverite installimiseks?"
+# 
+# File: usr/share/ashyterm/window.py, line: 58
+#: NEEDS WORK
+msgid "How do I configure multiple monitors on X11 and Wayland?"
+msgstr "Kuidas seadistada mitut monitori X11 ja Waylandis?"
+# 
+# File: usr/share/ashyterm/window.py, line: 59
+#: NEEDS WORK
+msgid "How can I adjust display brightness from the terminal?"
+msgstr "Kuidas saan terminalist ekraani heledust reguleerida?"
+# 
+# File: usr/share/ashyterm/window.py, line: 60
+#: NEEDS WORK
+msgid "How do I find which process is listening on a TCP port?"
+msgstr "Kuidas leida, milline protsess kuulab TCP pordil?"
+# 
+# File: usr/share/ashyterm/window.py, line: 61
+#: NEEDS WORK
+msgid "How can I release an occupied port without rebooting?"
+msgstr "Kuidas saan ma vabastada hõivatud pordi ilma taaskäivitamiseta?"
+# 
+# File: usr/share/ashyterm/window.py, line: 62
+#: NEEDS WORK
+msgid "How do I identify and kill stuck SSH sessions?"
+msgstr "Kuidas ma tuvastan ja lõpetan kinni jäänud SSH seansid?"
+# 
+# File: usr/share/ashyterm/window.py, line: 63
+#: NEEDS WORK
+msgid "How can I configure an SSH tunnel for secure remote access?"
+msgstr "Kuidas saan konfigureerida SSH tunnelit turvaliseks kaugjuurdepääsuks?"
+# 
+# File: usr/share/ashyterm/window.py, line: 64
+#: NEEDS WORK
+msgid "How do I sync folders using rsync with compression?"
+msgstr "Kuidas sünkroonida kaustu rsynci abil koos tihendamisega?"
+# 
+# File: usr/share/ashyterm/window.py, line: 65
+#: NEEDS WORK
+msgid "How do I schedule recurring tasks with systemd timers?"
+msgstr "Kuidas ma saan ajastada korduvaid ülesandeid systemd ajastitega?"
+# 
+# File: usr/share/ashyterm/window.py, line: 66
+#: NEEDS WORK
+msgid "How can I configure custom log rotation with logrotate?"
+msgstr "Kuidas saan logrotate'iga kohandatud logifailide pööramist seadistada?"
+# 
+# File: usr/share/ashyterm/window.py, line: 67
+#: NEEDS WORK
+msgid "How do I access the systemd journal from another host?"
+msgstr "Kuidas pääsen teise hosti systemd ajakirjale?"
+# 
+# File: usr/share/ashyterm/window.py, line: 68
+#: NEEDS WORK
+msgid "How do I tail logs in real time and filter by keyword?"
+msgstr "Kuidas ma jälgin logisid reaalajas ja filtreerin märksõna järgi?"
+# 
+# File: usr/share/ashyterm/window.py, line: 69
+#: NEEDS WORK
+msgid "How can I check which package installed a specific file?"
+msgstr "Kuidas ma saan kontrollida, milline pakett installis konkreetse faili?"
+# 
+# File: usr/share/ashyterm/window.py, line: 70
+#: NEEDS WORK
+msgid "How do I list package dependencies before installing?"
+msgstr "Kuidas ma loetlen paketi sõltuvusi enne installimist?"
+# 
+# File: usr/share/ashyterm/window.py, line: 71
+#: NEEDS WORK
+msgid "How can I simulate a pacman upgrade without changing the system?"
+msgstr "Kuidas ma saan simuleerida pacman'i uuendust ilma süsteemi muutmata?"
+# 
+# File: usr/share/ashyterm/window.py, line: 72
+#: NEEDS WORK
+msgid "How do I recover a system that fails to boot after a kernel update?"
+msgstr "Kuidas taastada süsteem, mis ei käivitu pärast kernel'i uuendamist?"
+# 
+# File: usr/share/ashyterm/window.py, line: 73
+#: NEEDS WORK
+msgid "How do I mount ISO images without burning them?"
+msgstr "Kuidas ma saan ISO-pilte monteerida ilma neid põletamata?"
+# 
+# File: usr/share/ashyterm/window.py, line: 74
+#: NEEDS WORK
+msgid "How do I verify downloads using sha256sum?"
+msgstr "Kuidas ma verifitseerin allalaadimisi, kasutades sha256sum?"
+# 
+# File: usr/share/ashyterm/window.py, line: 75
+#: NEEDS WORK
+msgid "How can I set persistent aliases for frequent commands?"
+msgstr "Kuidas saan seada püsivaid alias'e sagedaste käskude jaoks?"
+# 
+# File: usr/share/ashyterm/window.py, line: 76
+#: NEEDS WORK
+msgid "How do I create custom shell functions in my bashrc?"
+msgstr "Kuidas luua oma bashrc-s kohandatud shelli funktsioone?"
+# 
+# File: usr/share/ashyterm/window.py, line: 77
+#: NEEDS WORK
+msgid "How do I share a folder with Samba and manage permissions?"
+msgstr "Kuidas jagada kausta Samba abil ja hallata õigusi?"
+# 
+# File: usr/share/ashyterm/window.py, line: 78
+#: NEEDS WORK
+msgid "How do I mount a CIFS share securely with credentials?"
+msgstr "Kuidas ma saan CIFS jagamise turvaliselt autentimisandmetega monteerida?"
+# 
+# File: usr/share/ashyterm/window.py, line: 79
+#: NEEDS WORK
+msgid "How do I find my internal and external IP address quickly?"
+msgstr "Kuidas ma leian oma sise- ja välise IP-aadressi kiiresti?"
+# 
+# File: usr/share/ashyterm/window.py, line: 80
+#: NEEDS WORK
+msgid "How can I test network speed from the command line?"
+msgstr "Kuidas ma saan käsurealt võrgu kiirusetesti teha?"
+# 
+# File: usr/share/ashyterm/window.py, line: 81
+#: NEEDS WORK
+msgid "How do I scan local devices with nmap?"
+msgstr "Kuidas skaneerida kohalikke seadmeid nmapiga?"
+# 
+# File: usr/share/ashyterm/window.py, line: 82
+#: NEEDS WORK
+msgid "How can I troubleshoot slow or failing DNS?"
+msgstr "Kuidas saan lahendada aeglase või ebaõnnestuva DNS-i probleeme?"
+# 
+# File: usr/share/ashyterm/window.py, line: 83
+#: NEEDS WORK
+msgid "How do I configure a local DNS resolver with systemd-resolved?"
+msgstr "Kuidas seadistada kohalikku DNS-i lahendajat systemd-resolvediga?"
+# 
+# File: usr/share/ashyterm/window.py, line: 84
+#: NEEDS WORK
+msgid "How can I capture suspicious traffic with tcpdump?"
+msgstr "Kuidas ma saan tcpdump'iga kahtlast liiklust salvestada?"
+# 
+# File: usr/share/ashyterm/window.py, line: 85
+#: NEEDS WORK
+msgid "How do I limit bandwidth for a process using tc or trickle?"
+msgstr "Kuidas ma piirata ribalaiust protsessile, kasutades tc-d või trickle'it?"
+# 
+# File: usr/share/ashyterm/window.py, line: 86
+#: NEEDS WORK
+msgid "How can I inspect routing tables and metrics?"
+msgstr "Kuidas saan ma kontrollida marsruutimistabeleid ja mõõdikuid?"
+# 
+# File: usr/share/ashyterm/window.py, line: 87
+#: NEEDS WORK
+msgid "How do I configure NTP servers and sync time automatically?"
+msgstr "Kuidas ma konfigureerin NTP-servereid ja sünkroonin aega automaatselt?"
+# 
+# File: usr/share/ashyterm/window.py, line: 88
+#: NEEDS WORK
+msgid "How do I manage users and groups with useradd and gpasswd?"
+msgstr "Kuidas hallata kasutajaid ja gruppe useradd ja gpasswd abil?"
+# 
+# File: usr/share/ashyterm/window.py, line: 89
+#: NEEDS WORK
+msgid "How do I reset the root password if I forget it?"
+msgstr "Kuidas ma saan taastada juurparooli, kui ma unustan selle?"
+# 
+# File: usr/share/ashyterm/window.py, line: 90
+#: NEEDS WORK
+msgid "How can I configure sudo without granting full root access?"
+msgstr "Kuidas ma saan sudo-d konfigureerida, andmata täielikku juurdepääsu?"
+# 
+# File: usr/share/ashyterm/window.py, line: 91
+#: NEEDS WORK
+msgid "How do I audit successful and failed logins on the system?"
+msgstr "Kuidas ma auditeerin süsteemis edukaid ja ebaõnnestunud sisselogimisi?"
+# 
+# File: usr/share/ashyterm/window.py, line: 92
+#: NEEDS WORK
+msgid "How can I temporarily lock an account after failed attempts?"
+msgstr "Kuidas saan ma ajutiselt lukustada konto pärast ebaõnnestunud katseid?"
+# 
+# File: usr/share/ashyterm/window.py, line: 93
+#: NEEDS WORK
+msgid "How do I configure SSH keys and disable password authentication?"
+msgstr "Kuidas ma konfigureerin SSH võtmed ja keelata parooli autentimine?"
+# 
+# File: usr/share/ashyterm/window.py, line: 94
+#: NEEDS WORK
+msgid "How can I use fail2ban to protect exposed services?"
+msgstr "Kuidas saan kasutada fail2ban'i, et kaitsta avatud teenuseid?"
+# 
+# File: usr/share/ashyterm/window.py, line: 95
+#: NEEDS WORK
+msgid "How do I enable the firewall with ufw and create basic rules?"
+msgstr "Kuidas ma lülitan tulemüüri sisse ufw ja loon põhireeglid?"
+# 
+# File: usr/share/ashyterm/window.py, line: 96
+#: NEEDS WORK
+msgid "How can I inspect and adjust rules with nftables?"
+msgstr "Kuidas saan ma nftables'iga reegleid kontrollida ja kohandada?"
+# 
+# File: usr/share/ashyterm/window.py, line: 97
+#: NEEDS WORK
+msgid "How do I detect altered files using tripwire or aide?"
+msgstr "Kuidas ma tuvastan muudetud faile tripwire'i või aide'i abil?"
+# 
+# File: usr/share/ashyterm/window.py, line: 98
+#: NEEDS WORK
+msgid "How do I configure encrypted backups automatically with borg?"
+msgstr "Kuidas ma konfigureerin automaatselt krüpteeritud varukoopiaid borgiga?"
+# 
+# File: usr/share/ashyterm/window.py, line: 99
+#: NEEDS WORK
+msgid "How can I sync backups to the cloud using rclone?"
+msgstr "Kuidas saan varukoopiad sünkroonida pilve, kasutades rclone'i?"
+# 
+# File: usr/share/ashyterm/window.py, line: 100
+#: NEEDS WORK
+msgid "How do I set up software RAID and monitor its health?"
+msgstr "Kuidas seadistada tarkvara RAID-i ja jälgida selle tervist?"
+# 
+# File: usr/share/ashyterm/window.py, line: 101
+#: NEEDS WORK
+msgid "How can I recover data from a degraded RAID array?"
+msgstr "Kuidas saan andmeid taastada halvenenud RAID-massiivist?"
+# 
+# File: usr/share/ashyterm/window.py, line: 102
+#: NEEDS WORK
+msgid "How do I analyse SMART attributes to predict disk failures?"
+msgstr "Kuidas analüüsida SMART atribuute, et ennustada ketta rikkeid?"
+# 
+# File: usr/share/ashyterm/window.py, line: 103
+#: NEEDS WORK
+msgid "How can I expand an LVM partition without data loss?"
+msgstr "Kuidas saan LVM-i partitsiooni laiendada ilma andmete kaota?"
+# 
+# File: usr/share/ashyterm/window.py, line: 104
+#: NEEDS WORK
+msgid "How do I move the home directory to another partition?"
+msgstr "Kuidas ma liigutan kodu katalooge teisele partitsioonile?"
+# 
+# File: usr/share/ashyterm/window.py, line: 105
+#: NEEDS WORK
+msgid "How do I create a swapfile and tune swappiness?"
+msgstr "Kuidas luua vahetusfaili ja kohandada vahetusmälu?"
+# 
+# File: usr/share/ashyterm/window.py, line: 106
+#: NEEDS WORK
+msgid "How can I clear cached memory without rebooting?"
+msgstr "Kuidas ma saan vahemälu mälu tühjendada ilma taaskäivitamiseta?"
+# 
+# File: usr/share/ashyterm/window.py, line: 107
+#: NEEDS WORK
+msgid "How do I reduce power consumption on Linux laptops?"
+msgstr "Kuidas vähendada energia tarbimist Linuxi sülearvutites?"
+# 
+# File: usr/share/ashyterm/window.py, line: 108
+#: NEEDS WORK
+msgid "How can I troubleshoot frequent GNOME or KDE freezes?"
+msgstr "Kuidas saan lahendada sagedasi GNOME või KDE külmumisi?"
+# 
+# File: usr/share/ashyterm/window.py, line: 109
+#: NEEDS WORK
+msgid "How do I reset desktop environment settings from the terminal?"
+msgstr "Kuidas ma lähtestan töölaua keskkonna seadeid terminalist?"
+# 
+# File: usr/share/ashyterm/window.py, line: 110
+#: NEEDS WORK
+msgid "How do I install additional fonts and set them system-wide?"
+msgstr "Kuidas ma installin täiendavaid fonte ja seadistan need süsteemi ulatuses?"
+# 
+# File: usr/share/ashyterm/window.py, line: 111
+#: NEEDS WORK
+msgid "How can I change keyboard layout permanently?"
+msgstr "Kuidas ma saan klaviatuuri paigutust püsivalt muuta?"
+# 
+# File: usr/share/ashyterm/window.py, line: 112
+#: NEEDS WORK
+msgid "How do I enable network printing support with CUPS?"
+msgstr "Kuidas lubada võrgu printimise tuge CUPS-iga?"
+# 
+# File: usr/share/ashyterm/window.py, line: 113
+#: NEEDS WORK
+msgid "How can I troubleshoot PulseAudio or PipeWire sound issues?"
+msgstr "Kuidas saan PulseAudio või PipeWire heliprobleeme tõrkeotsinguga lahendada?"
+# 
+# File: usr/share/ashyterm/window.py, line: 114
+#: NEEDS WORK
+msgid "How do I detect and configure USB devices automatically?"
+msgstr "Kuidas ma tuvastan ja konfigureerin USB-seadmeid automaatselt?"
+# 
+# File: usr/share/ashyterm/window.py, line: 115
+#: NEEDS WORK
+msgid "How can I set up a simple web server with nginx?"
+msgstr "Kuidas ma saan seadistada lihtsa veebiserveri nginx-iga?"
+# 
+# File: usr/share/ashyterm/window.py, line: 116
+#: NEEDS WORK
+msgid "How do I secure Apache with HTTPS using Let's Encrypt?"
+msgstr "Kuidas ma saan Apache'i HTTPS-iga turvata, kasutades Let's Encrypt'i?"
+# 
+# File: usr/share/ashyterm/window.py, line: 117
+#: NEEDS WORK
+msgid "How can I optimise PHP-FPM for high traffic?"
+msgstr "Kuidas saan PHP-FPM-i optimeerida suure liikluse jaoks?"
+# 
+# File: usr/share/ashyterm/window.py, line: 118
+#: NEEDS WORK
+msgid "How do I configure a reverse proxy with caching?"
+msgstr "Kuidas seadistada pöördproksiga vahemälu?"
+# 
+# File: usr/share/ashyterm/window.py, line: 119
+#: NEEDS WORK
+msgid "How can I monitor Docker containers and restart them automatically?"
+msgstr "Kuidas ma saan jälgida Docker konteinerite tööd ja taaskäivitada neid automaatselt?"
+# 
+# File: usr/share/ashyterm/window.py, line: 120
+#: NEEDS WORK
+msgid "How do I inspect container logs and limit resource usage?"
+msgstr "Kuidas ma saan konteineri logisid vaadata ja ressursikasutust piirata?"
+# 
+# File: usr/share/ashyterm/window.py, line: 121
+#: NEEDS WORK
+msgid "How do I build optimised multi-stage Docker images?"
+msgstr "Kuidas ma ehitan optimeeritud mitme etapi Docker'i pilte?"
+# 
+# File: usr/share/ashyterm/window.py, line: 122
+#: NEEDS WORK
+msgid "How can I manage pods and deployments in a local Kubernetes cluster?"
+msgstr "Kuidas saan hallata pod'e ja juurutusi kohalikus Kubernetes'i klastris?"
+# 
+# File: usr/share/ashyterm/window.py, line: 123
+#: NEEDS WORK
+msgid "How do I set up a basic CI/CD pipeline with GitLab Runner?"
+msgstr "Kuidas seadistada põhiline CI/CD torujuhe GitLab Runneriga?"
+# 
+# File: usr/share/ashyterm/window.py, line: 124
+#: NEEDS WORK
+msgid "How can I create isolated Python environments with venv?"
+msgstr "Kuidas saan luua isoleeritud Python'i keskkondi venv abil?"
+# 
+# File: usr/share/ashyterm/window.py, line: 125
+#: NEEDS WORK
+msgid "How do I build custom deb or rpm packages?"
+msgstr "Kuidas ma loon kohandatud deb või rpm pakette?"
+# 
+# File: usr/share/ashyterm/window.py, line: 126
+#: NEEDS WORK
+msgid "How can I compile a custom kernel and install it?"
+msgstr "Kuidas ma saan koostada kohandatud tuuma ja selle installida?"
+# 
+# File: usr/share/ashyterm/window.py, line: 127
+#: NEEDS WORK
+msgid "How do I measure application performance with perf and flame graphs?"
+msgstr "Kuidas ma mõõdan rakenduse jõudlust perf ja leekgraafikute abil?"
+# 
+# File: usr/share/ashyterm/window.py, line: 128
+#: NEEDS WORK
+msgid "How can I use strace and ltrace to debug processes?"
+msgstr "Kuidas ma saan kasutada strace'i ja ltrace'i protsesside tõrkeotsimiseks?"
+# 
+# File: usr/share/ashyterm/window.py, line: 129
+#: NEEDS WORK
+msgid "How do I investigate deadlocks with gdb and core dumps?"
+msgstr "Kuidas uurida ummikseise gdb ja core dump'ide abil?"
+# 
+# File: usr/share/ashyterm/window.py, line: 130
+#: NEEDS WORK
+msgid "How can I enable SELinux or AppArmor and create simple policies?"
+msgstr "Kuidas ma saan lubada SELinuxi või AppArmorit ja luua lihtsaid poliitikaid?"
+# 
+# File: usr/share/ashyterm/window.py, line: 131
+#: NEEDS WORK
+msgid "How do I validate security policies before applying them in production?"
+msgstr "Kuidas ma valideerin turvapoliitikaid enne nende rakendamist tootmises?"
+# 
+# File: usr/share/ashyterm/window.py, line: 132
+#: NEEDS WORK
+msgid "How can I configure site-to-site OpenVPN?"
+msgstr "Kuidas saan konfigureerida site-to-site OpenVPN-i?"
+# 
+# File: usr/share/ashyterm/window.py, line: 133
+#: NEEDS WORK
+msgid "How do I set up a WireGuard server with multiple users?"
+msgstr "Kuidas seadistada WireGuard serverit mitme kasutajaga?"
+# 
+# File: usr/share/ashyterm/window.py, line: 134
+#: NEEDS WORK
+msgid "How can I detect and mitigate excessive swap usage?"
+msgstr "Kuidas ma saan tuvastada ja leevendada liigset vahetuse kasutamist?"
+# 
+# File: usr/share/ashyterm/window.py, line: 135
+#: NEEDS WORK
+msgid "How do I track why a process was killed by the OOM killer?"
+msgstr "Kuidas ma jälgin, miks protsess OOM tapja poolt tapeti?"
+# 
+# File: usr/share/ashyterm/window.py, line: 136
+#: NEEDS WORK
+msgid "How can I configure disk quotas for users and groups?"
+msgstr "Kuidas saan seadistada kettakvoote kasutajatele ja rühmadele?"
+# 
+# File: usr/share/ashyterm/window.py, line: 137
+#: NEEDS WORK
+msgid "How do I automate cleanup of /tmp and temporary directories?"
+msgstr "Kuidas automatiseerida /tmp ja ajutiste kataloogide puhastamist?"
+# 
+# File: usr/share/ashyterm/window.py, line: 138
+#: NEEDS WORK
+msgid "How can I refresh pacman mirrors and clean the cache?"
+msgstr "Kuidas saan pacman'i peegleid värskendada ja vahemälu puhastada?"
+# 
+# File: usr/share/ashyterm/window.py, line: 139
+#: NEEDS WORK
+msgid "How do I share clipboard contents and files via sshfs?"
+msgstr "Kuidas jagada lõikepuhvri sisu ja faile sshfs-i kaudu?"
+# 
+# File: usr/share/ashyterm/window.py, line: 140
+#: NEEDS WORK
+msgid "How can I configure email notifications for critical failures?"
+msgstr "Kuidas saan konfigureerida e-posti teateid kriitiliste tõrgete jaoks?"
+# 
+# File: usr/share/ashyterm/window.py, line: 141
+#: NEEDS WORK
+msgid "How do I collect metrics with Prometheus and basic exporters?"
+msgstr "Kuidas koguda mõõdikuid Prometheuse ja põhieksportijate abil?"
+# 
+# File: usr/share/ashyterm/window.py, line: 142
+#: NEEDS WORK
+msgid "How can I build Grafana dashboards for Linux servers?"
+msgstr "Kuidas ma saan luua Grafana armatuurlaudu Linuxi serverite jaoks?"
+# 
+# File: usr/share/ashyterm/window.py, line: 143
+#: NEEDS WORK
+msgid "How do I apply security patches automatically?"
+msgstr "Kuidas ma rakendan turvapaiku automaatselt?"
+# 
+# File: usr/share/ashyterm/window.py, line: 144
+#: NEEDS WORK
+msgid "How can I keep Ansible playbooks organised for multiple hosts?"
+msgstr "Kuidas saan hoida Ansible'i mänguraamatud mitme hosti jaoks organiseerituna?"
+# 
+# File: usr/share/ashyterm/window.py, line: 145
+#: NEEDS WORK
+msgid "How do I troubleshoot slow PostgreSQL databases?"
+msgstr "Kuidas ma lahendan aeglaste PostgreSQL andmebaaside probleeme?"
+# 
+# File: usr/share/ashyterm/window.py, line: 146
+#: NEEDS WORK
+msgid "How can I diagnose memory usage in Java applications?"
+msgstr "Kuidas saan diagnoosida mälu kasutust Java rakendustes?"
+# 
+# File: usr/share/ashyterm/window.py, line: 147
+#: NEEDS WORK
+msgid "How do I integrate LDAP authentication into local services?"
+msgstr "Kuidas integreerida LDAP autentimine kohalike teenustega?"
+# 
+# File: usr/share/ashyterm/window.py, line: 148
+#: NEEDS WORK
+msgid "How do I uninstall a program?"
+msgstr "Kuidas ma programmi eemaldan?"
+# 
+# File: usr/share/ashyterm/window.py, line: 149
+#: NEEDS WORK
+msgid "How do I update my system and every application at once?"
+msgstr "Kuidas ma saan oma süsteemi ja kõiki rakendusi korraga uuendada?"
+# 
+# File: usr/share/ashyterm/window.py, line: 150
+#: NEEDS WORK
+msgid "How can I connect to a Wi-Fi network?"
+msgstr "Kuidas ma saan Wi-Fi võrku ühendada?"
+# 
+# File: usr/share/ashyterm/window.py, line: 151
+#: NEEDS WORK
+msgid "How do I set up my printer?"
+msgstr "Kuidas ma oma printeri seadistan?"
+# 
+# File: usr/share/ashyterm/window.py, line: 152
+#: NEEDS WORK
+msgid "How can I take a screenshot of the screen?"
+msgstr "Kuidas ma saan ekraanipilti teha?"
+# 
+# File: usr/share/ashyterm/window.py, line: 153
+#: NEEDS WORK
+msgid "How do I connect a second monitor?"
+msgstr "Kuidas ma ühendan teise monitori?"
+# 
+# File: usr/share/ashyterm/window.py, line: 154
+#: NEEDS WORK
+msgid "What should I do if there is no sound?"
+msgstr "Mida ma peaksin tegema, kui heli puudub?"
+# 
+# File: usr/share/ashyterm/window.py, line: 155
+#: NEEDS WORK
+msgid "How can I change the screen resolution?"
+msgstr "Kuidas ma saan ekraani eraldusvõimet muuta?"
+# 
+# File: usr/share/ashyterm/window.py, line: 156
+#: NEEDS WORK
+msgid "How do I change the wallpaper and system theme?"
+msgstr "Kuidas ma vahetan taustapildi ja süsteemi teema?"
+# 
+# File: usr/share/ashyterm/window.py, line: 157
+#: NEEDS WORK
+msgid "How can I mount and unmount a USB drive or external disk?"
+msgstr "Kuidas saan USB-draivi või välist ketast monteerida ja demonteerida?"
+# 
+# File: usr/share/ashyterm/window.py, line: 158
+#: NEEDS WORK
+msgid "How do I format a USB stick (FAT32, NTFS, ext4)?"
+msgstr "Kuidas ma vormindan USB-mälupulga (FAT32, NTFS, ext4)?"
+# 
+# File: usr/share/ashyterm/window.py, line: 159
+#: NEEDS WORK
+msgid "How do I install new software packages?"
+msgstr "Kuidas ma installin uusi tarkvarapakette?"
+# 
+# File: usr/share/ashyterm/window.py, line: 160
+#: NEEDS WORK
+msgid "How do I remove installed software packages?"
+msgstr "Kuidas ma eemaldan installitud tarkvarapakette?"
+# 
+# File: usr/share/ashyterm/window.py, line: 161
+#: NEEDS WORK
+msgid "How do I check how much free disk space I have?"
+msgstr "Kuidas ma saan kontrollida, kui palju vaba kettaruumi mul on?"
+# 
+# File: usr/share/ashyterm/window.py, line: 162
+#: NEEDS WORK
+msgid "How do I find which files are taking the most space?"
+msgstr "Kuidas leida, millised failid võtavad kõige rohkem ruumi?"
+# 
+# File: usr/share/ashyterm/window.py, line: 163
+#: NEEDS WORK
+msgid "How can I search for a specific file or text?"
+msgstr "Kuidas ma saan otsida konkreetset faili või teksti?"
+# 
+# File: usr/share/ashyterm/window.py, line: 164
+#: NEEDS WORK
+msgid "How do I check open ports on my machine?"
+msgstr "Kuidas ma saan oma masinal avatud porte kontrollida?"
+# 
+# File: usr/share/ashyterm/window.py, line: 165
+#: NEEDS WORK
+msgid "How can I view running processes and resource usage?"
+msgstr "Kuidas ma saan vaadata käimasolevaid protsesse ja ressursikasutust?"
+# 
+# File: usr/share/ashyterm/window.py, line: 166
+#: NEEDS WORK
+msgid "How do I check recent system logs?"
+msgstr "Kuidas ma saan kontrollida hiljutisi süsteemilogisid?"
+# 
+# File: usr/share/ashyterm/window.py, line: 167
+#: NEEDS WORK
+msgid "How do I update the kernel safely?"
+msgstr "Kuidas ma saan kernelit ohutult uuendada?"
+# 
+# File: usr/share/ashyterm/window.py, line: 168
+#: NEEDS WORK
+msgid "How can I enable automatic updates?"
+msgstr "Kuidas ma saan automaatsed uuendused lubada?"
+# 
+# File: usr/share/ashyterm/window.py, line: 169
+#: NEEDS WORK
+msgid "How do I create and manage new users?"
+msgstr "Kuidas luua ja hallata uusi kasutajaid?"
+# 
+# File: usr/share/ashyterm/window.py, line: 170
+#: NEEDS WORK
+msgid "How do I change file permissions safely?"
+msgstr "Kuidas ma saan failide õigusi ohutult muuta?"
+# 
+# File: usr/share/ashyterm/window.py, line: 171
+#: NEEDS WORK
+msgid "How can I compress or extract archive files?"
+msgstr "Kuidas ma saan arhiveeritud faile kokku pakkida või välja võtta?"
+# 
+# File: usr/share/ashyterm/window.py, line: 172
+#: NEEDS WORK
+msgid "How do I verify that my network connection is working?"
+msgstr "Kuidas ma saan kontrollida, kas minu võrguühendus töötab?"
+# 
+# File: usr/share/ashyterm/window.py, line: 173
+#: NEEDS WORK
+msgid "How do I configure proxy settings for the system?"
+msgstr "Kuidas seadistada süsteemi jaoks proksi seadeid?"
+# 
+# File: usr/share/ashyterm/window.py, line: 174
+#: NEEDS WORK
+msgid "How can I synchronise system time with online sources?"
+msgstr "Kuidas saan süsteemi aega sünkroonida veebiallikatega?"
+# 
+# File: usr/share/ashyterm/window.py, line: 175
+#: NEEDS WORK
+msgid "How do I view detailed hardware information?"
+msgstr "Kuidas ma saan vaadata üksikasjalikku riistvara teavet?"
+# 
+# File: usr/share/ashyterm/window.py, line: 176
+#: NEEDS WORK
+msgid "How can I install or update device drivers?"
+msgstr "Kuidas ma saan seadme draivereid installida või uuendada?"
+# 
+# File: usr/share/ashyterm/window.py, line: 177
+#: NEEDS WORK
+msgid "How do I manage startup applications?"
+msgstr "Kuidas ma hallata käivitusrakendusi?"
+# 
+# File: usr/share/ashyterm/window.py, line: 178
+#: NEEDS WORK
+msgid "How can I disable unwanted services?"
+msgstr "Kuidas ma saan keelata soovimatud teenused?"
+# 
+# File: usr/share/ashyterm/window.py, line: 179
+#: NEEDS WORK
+msgid "How do I schedule tasks with cron?"
+msgstr "Kuidas ma saan ülesandeid croniga ajastada?"
+# 
+# File: usr/share/ashyterm/window.py, line: 180
+#: NEEDS WORK
+msgid "How can I secure SSH on a new server?"
+msgstr "Kuidas saan SSH-d uuel serveril turvata?"
+# 
+# File: usr/share/ashyterm/window.py, line: 181
+#: NEEDS WORK
+msgid "How do I monitor system logs in real time?"
+msgstr "Kuidas ma jälgin süsteemilogisid reaalajas?"
+# 
+# File: usr/share/ashyterm/window.py, line: 182
+#: NEEDS WORK
+msgid "How can I back up my home directory automatically?"
+msgstr "Kuidas saan oma kodu katalooge automaatselt varundada?"
+# 
+# File: usr/share/ashyterm/window.py, line: 183
+#: NEEDS WORK
+msgid "How do I restore a backup safely?"
+msgstr "Kuidas taastada varukoopia ohutult?"
+# 
+# File: usr/share/ashyterm/window.py, line: 184
+#: NEEDS WORK
+msgid "How can I encrypt files or folders?"
+msgstr "Kuidas ma saan faile või kaustu krüpteerida?"
+# 
+# File: usr/share/ashyterm/window.py, line: 185
+#: NEEDS WORK
+msgid "How do I set up remote desktop access?"
+msgstr "Kuidas seadistada kaugjuurdepääsu?"
+# 
+# File: usr/share/ashyterm/window.py, line: 186
+#: NEEDS WORK
+msgid "How can I configure a host-based firewall?"
+msgstr "Kuidas saan konfigureerida hostipõhist tulemüüri?"
+# 
+# File: usr/share/ashyterm/window.py, line: 187
+#: NEEDS WORK
+msgid "How do I whitelist or blacklist IP addresses?"
+msgstr "Kuidas ma saan IP-aadresse valge- või musta nimekirja lisada?"
+# 
+# File: usr/share/ashyterm/window.py, line: 188
+#: NEEDS WORK
+msgid "How can I check disk health and SMART status?"
+msgstr "Kuidas ma saan kontrollida ketta tervist ja SMART-i olekut?"
+# 
+# File: usr/share/ashyterm/window.py, line: 189
+#: NEEDS WORK
+msgid "How do I monitor I/O usage per process?"
+msgstr "Kuidas ma jälgin I/O kasutust protsessi kaupa?"
+# 
+# File: usr/share/ashyterm/window.py, line: 190
+#: NEEDS WORK
+msgid "How can I check current RAM usage?"
+msgstr "Kuidas ma saan kontrollida praegust RAM-i kasutust?"
+# 
+# File: usr/share/ashyterm/window.py, line: 191
+#: NEEDS WORK
+msgid "How do I clear the DNS cache?"
+msgstr "Kuidas ma saan DNS vahemälu tühjendada?"
+# 
+# File: usr/share/ashyterm/window.py, line: 192
+#: NEEDS WORK
+msgid "How can I troubleshoot boot issues quickly?"
+msgstr "Kuidas saan ma kiiresti käivitamisprobleeme tõrkeotsida?"
+# 
+# File: usr/share/ashyterm/window.py, line: 193
+#: NEEDS WORK
+msgid "How do I recover deleted files?"
+msgstr "Kuidas ma saan kustutatud faile taastada?"
+# 
+# File: usr/share/ashyterm/window.py, line: 194
+#: NEEDS WORK
+msgid "How can I set environment variables permanently?"
+msgstr "Kuidas saan keskkonnamuutujad püsivalt seadistada?"
+# 
+# File: usr/share/ashyterm/window.py, line: 195
+#: NEEDS WORK
+msgid "How do I install development tools and headers?"
+msgstr "Kuidas ma installin arendustööriistu ja päiseid?"
+# 
+# File: usr/share/ashyterm/window.py, line: 196
+#: NEEDS WORK
+msgid "How can I manage Python packages with pip?"
+msgstr "Kuidas saan hallata Python'i pakette pip'iga?"
+# 
+# File: usr/share/ashyterm/window.py, line: 197
+#: NEEDS WORK
+msgid "How do I manage Node.js packages with npm?"
+msgstr "Kuidas hallata Node.js pakette npm-iga?"
+# 
+# File: usr/share/ashyterm/window.py, line: 198
+#: NEEDS WORK
+msgid "How can I install Docker on my system?"
+msgstr "Kuidas ma saan Dockerit oma süsteemi installida?"
+# 
+# File: usr/share/ashyterm/window.py, line: 199
+#: NEEDS WORK
+msgid "How do I remove Docker completely?"
+msgstr "Kuidas ma eemaldan Dockeri täielikult?"
+# 
+# File: usr/share/ashyterm/window.py, line: 200
+#: NEEDS WORK
+msgid "How can I manage Docker images efficiently?"
+msgstr "Kuidas saan Docker'i pilte tõhusalt hallata?"
+# 
+# File: usr/share/ashyterm/window.py, line: 201
+#: NEEDS WORK
+msgid "How do I manage Docker volumes safely?"
+msgstr "Kuidas hallata Docker'i mahuteid ohutult?"
+# 
+# File: usr/share/ashyterm/window.py, line: 202
+#: NEEDS WORK
+msgid "How can I inspect Docker networks?"
+msgstr "Kuidas saan Docker võrgustikke kontrollida?"
+# 
+# File: usr/share/ashyterm/window.py, line: 203
+#: NEEDS WORK
+msgid "How do I bootstrap a Kubernetes cluster?"
+msgstr "Kuidas ma käivitan Kubernetes klastrit?"
+# 
+# File: usr/share/ashyterm/window.py, line: 204
+#: NEEDS WORK
+msgid "How can I install and configure a SQL database?"
+msgstr "Kuidas ma saan SQL andmebaasi installida ja konfigureerida?"
+# 
+# File: usr/share/ashyterm/window.py, line: 205
+#: NEEDS WORK
+msgid "How do I secure a database server?"
+msgstr "Kuidas ma kaitsen andmebaasi serverit?"
+# 
+# File: usr/share/ashyterm/window.py, line: 206
+#: NEEDS WORK
+msgid "How can I monitor database performance metrics?"
+msgstr "Kuidas saan jälgida andmebaasi jõudluse mõõdikuid?"
+# 
+# File: usr/share/ashyterm/window.py, line: 207
+#: NEEDS WORK
+msgid "How do I back up a database automatically?"
+msgstr "Kuidas ma saan andmebaasi automaatselt varundada?"
+# 
+# File: usr/share/ashyterm/window.py, line: 208
+#: NEEDS WORK
+msgid "How can I restore a database backup?"
+msgstr "Kuidas saan ma andmebaasi varukoopia taastada?"
+# 
+# File: usr/share/ashyterm/window.py, line: 209
+#: NEEDS WORK
+msgid "How do I upgrade system packages safely?"
+msgstr "Kuidas ma saan süsteemipakette ohutult uuendada?"
+# 
+# File: usr/share/ashyterm/window.py, line: 210
+#: NEEDS WORK
+msgid "How can I check for package updates without installing them?"
+msgstr "Kuidas ma saan pakettide uuendusi kontrollida ilma neid installimata?"
+# 
+# File: usr/share/ashyterm/window.py, line: 211
+#: NEEDS WORK
+msgid "How do I set up a local repository mirror?"
+msgstr "Kuidas ma seadistan kohaliku hoidla peegli?"
+# 
+# File: usr/share/ashyterm/window.py, line: 212
+#: NEEDS WORK
+msgid "How can I troubleshoot package conflicts?"
+msgstr "Kuidas saan pakettide konflikte lahendada?"
+# 
+# File: usr/share/ashyterm/window.py, line: 213
+#: NEEDS WORK
+msgid "How do I configure proxy settings for package managers?"
+msgstr "Kuidas seadistada proksi seadeid pakihalduritele?"
+# 
+# File: usr/share/ashyterm/window.py, line: 214
+#: NEEDS WORK
+msgid "How can I clean the package cache safely?"
+msgstr "Kuidas saan paketi vahemälu ohutult puhastada?"
+# 
+# File: usr/share/ashyterm/window.py, line: 215
+#: NEEDS WORK
+msgid "How do I manage Flatpak or Snap packages?"
+msgstr "Kuidas hallata Flatpak või Snap pakette?"
+# 
+# File: usr/share/ashyterm/window.py, line: 216
+#: NEEDS WORK
+msgid "How can I monitor resource usage per container?"
+msgstr "Kuidas ma saan jälgida ressursikasutust konteineri kaupa?"
+# 
+# File: usr/share/ashyterm/window.py, line: 217
+#: NEEDS WORK
+msgid "How do I export container metrics to Prometheus?"
+msgstr "Kuidas eksportida konteineri mõõdikud Prometheusesse?"
+# 
+# File: usr/share/ashyterm/window.py, line: 218
+#: NEEDS WORK
+msgid "How can I trigger alerts when CPU exceeds 70%?"
+msgstr "Kuidas saan ma aktiveerida teateid, kui CPU ületab 70%?"
+# 
+# File: usr/share/ashyterm/window.py, line: 219
+#: NEEDS WORK
+msgid "How do I archive system logs for compliance?"
+msgstr "Kuidas ma arhiveerin süsteemilogid vastavuse tagamiseks?"
+# 
+# File: usr/share/ashyterm/window.py, line: 220
+#: NEEDS WORK
+msgid "How can I set up centralised logging with Loki?"
+msgstr "Kuidas ma saan seadistada tsentraliseeritud logimist Loki abil?"
+# 
+# File: usr/share/ashyterm/window.py, line: 221
+#: NEEDS WORK
+msgid "How do I configure Grafana alerts for system metrics?"
+msgstr "Kuidas seadistada Grafana häireid süsteemi mõõdikute jaoks?"
+# 
+# File: usr/share/ashyterm/window.py, line: 222
+#: NEEDS WORK
+msgid "How can I deploy applications with Helm charts?"
+msgstr "Kuidas saan rakendusi Helm diagrammide abil juurutada?"
+# 
+# File: usr/share/ashyterm/window.py, line: 223
+#: NEEDS WORK
+msgid "How do I roll back a Kubernetes deployment?"
+msgstr "Kuidas ma saan Kubernetes'i juurutuse tagasi pöörata?"
+# 
+# File: usr/share/ashyterm/window.py, line: 224
+#: NEEDS WORK
+msgid "How can I manage secrets securely on Linux?"
+msgstr "Kuidas saan ma salajasi turvaliselt hallata Linuxis?"
+# 
+# File: usr/share/ashyterm/window.py, line: 225
+#: NEEDS WORK
+msgid "How do I inspect SELinux or AppArmor audit logs?"
+msgstr "Kuidas ma saan kontrollida SELinuxi või AppArmori auditiloge?"
+# 
+# File: usr/share/ashyterm/window.py, line: 226
+#: NEEDS WORK
+msgid "How can I test firewall rules without disrupting traffic?"
+msgstr "Kuidas ma saan tulemüürireegleid testida, ilma et liiklust katkestaks?"
+# 
+# File: usr/share/ashyterm/window.py, line: 227
+#: NEEDS WORK
+msgid "How do I benchmark disk throughput?"
+msgstr "Kuidas ma saan mõõta ketta läbilaskevõimet?"
+# 
+# File: usr/share/ashyterm/window.py, line: 228
+#: NEEDS WORK
+msgid "How can I track battery health on laptops?"
+msgstr "Kuidas saan jälgida sülearvutite aku seisukorda?"
+# 
+# File: usr/share/ashyterm/window.py, line: 229
+#: NEEDS WORK
+msgid "How do I configure automatic screen locking and idle timeouts?"
+msgstr "Kuidas seadistada automaatset ekraani lukustamist ja ootetähtaegu?"
+# 
+# File: usr/share/ashyterm/window.py, line: 230
+#: NEEDS WORK
+msgid "How can I share files over the network easily?"
+msgstr "Kuidas ma saan faile võrgu kaudu lihtsalt jagada?"
+# 
+# File: usr/share/ashyterm/window.py, line: 231
+#: NEEDS WORK
+msgid "How do I monitor GPU usage on Linux?"
+msgstr "Kuidas ma jälgin GPU kasutust Linuxis?"
+# 
+# File: usr/share/ashyterm/window.py, line: 232
+#: NEEDS WORK
+msgid "How can I check for firmware updates?"
+msgstr "Kuidas ma saan kontrollida püsivara uuendusi?"
+# 
+# File: usr/share/ashyterm/window.py, line: 233
+#: NEEDS WORK
+msgid "How do I enable hardware acceleration in browsers?"
+msgstr "Kuidas ma saan brauserites riistvarakiirenduse lubada?"
+# 
+# File: usr/share/ashyterm/window.py, line: 234
+#: NEEDS WORK
+msgid "How can I detect memory leaks in applications?"
+msgstr "Kuidas saan rakendustes mälu leke tuvastada?"
+# 
+# File: usr/share/ashyterm/window.py, line: 235
+#: NEEDS WORK
+msgid "How do I profile Python scripts for performance?"
+msgstr "Kuidas ma saan Python'i skripte jõudluse jaoks profileerida?"
+# 
+# File: usr/share/ashyterm/window.py, line: 236
+#: NEEDS WORK
+msgid "How can I measure latency between servers?"
+msgstr "Kuidas ma saan mõõta latentsust serverite vahel?"
+# 
+# File: usr/share/ashyterm/window.py, line: 237
+#: NEEDS WORK
+msgid "How do I configure a VPN client connection?"
+msgstr "Kuidas ma konfigureerin VPN-i kliendiühenduse?"
+# 
+# File: usr/share/ashyterm/window.py, line: 238
+#: NEEDS WORK
+msgid "How can I script repetitive maintenance tasks?"
+msgstr "Kuidas ma saan skriptida korduvaid hooldustöid?"
+# 
+# File: usr/share/ashyterm/window.py, line: 239
+#: NEEDS WORK
+msgid "How do I document server configuration automatically?"
+msgstr "Kuidas ma dokumenteerin serveri konfiguratsiooni automaatselt?"
+# 
+# File: usr/share/ashyterm/window.py, line: 240
+#: NEEDS WORK
+msgid "How can I manage dotfiles across multiple machines?"
+msgstr "Kuidas saan hallata dotfile'e mitme masina vahel?"
+# 
+# File: usr/share/ashyterm/window.py, line: 241
+#: NEEDS WORK
+msgid "How do I set up passwordless sudo for automation?"
+msgstr "Kuidas seadistada paroolivaba sudo automatiseerimiseks?"
+# 
+# File: usr/share/ashyterm/window.py, line: 242
+#: NEEDS WORK
+msgid "How can I monitor cron job failures?"
+msgstr "Kuidas saan jälgida cron-töö ebaõnnestumisi?"
+# 
+# File: usr/share/ashyterm/window.py, line: 243
+#: NEEDS WORK
+msgid "How do I send notifications to Slack or Matrix from scripts?"
+msgstr "Kuidas saadan teateid Slacki või Matrixi skriptidest?"
+# 
+# File: usr/share/ashyterm/window.py, line: 244
+#: NEEDS WORK
+msgid "How can I manage secrets in environment variables?"
+msgstr "Kuidas saan hallata saladusi keskkonnamuutujates?"
+# 
+# File: usr/share/ashyterm/window.py, line: 245
+#: NEEDS WORK
+msgid "How do I install and maintain ZFS on Linux?"
+msgstr "Kuidas ma installin ja hooldan ZFS-i Linuxis?"
+# 
+# File: usr/share/ashyterm/window.py, line: 246
+#: NEEDS WORK
+msgid "How can I create and restore Btrfs snapshots?"
+msgstr "Kuidas ma saan luua ja taastada Btrfs'i snapshotsid?"
+# 
+# File: usr/share/ashyterm/window.py, line: 247
+#: NEEDS WORK
+msgid "How do I check ext4 filesystem health?"
+msgstr "Kuidas ma kontrollin ext4 failisüsteemi tervist?"
+# 
+# File: usr/share/ashyterm/window.py, line: 248
+#: NEEDS WORK
+msgid "How can I detect hardware errors with dmesg?"
+msgstr "Kuidas ma saan dmesg'i abil riistvaravigu tuvastada?"
+# 
+# File: usr/share/ashyterm/window.py, line: 249
+#: NEEDS WORK
+msgid "How do I tune kernel parameters with sysctl?"
+msgstr "Kuidas ma seadistan kernel'i parameetreid sysctl'i abil?"
+# 
+# File: usr/share/ashyterm/window.py, line: 250
+#: NEEDS WORK
+msgid "How can I configure huge pages for databases?"
+msgstr "Kuidas saan konfigureerida suuri lehti andmebaaside jaoks?"
+# 
+# File: usr/share/ashyterm/window.py, line: 251
+#: NEEDS WORK
+msgid "How do I enable and manage cgroups v2?"
+msgstr "Kuidas ma lülitan sisse ja haldan cgroups v2?"
+# 
+# File: usr/share/ashyterm/window.py, line: 252
+#: NEEDS WORK
+msgid "How can I collect performance data with sar?"
+msgstr "Kuidas saan ma koguda jõudluse andmeid sar-iga?"
+# 
+# File: usr/share/ashyterm/window.py, line: 253
+#: NEEDS WORK
+msgid "How do I investigate high load average values?"
+msgstr "Kuidas ma uurin kõrge koormuse keskmisi väärtusi?"
+# 
+# File: usr/share/ashyterm/window.py, line: 254
+#: NEEDS WORK
+msgid "How can I test backup restores automatically?"
+msgstr "Kuidas saan ma varukoopiate taastamisi automaatselt testida?"
+# 
+# File: usr/share/ashyterm/window.py, line: 255
+#: NEEDS WORK
+msgid "How do I rotate SSH keys on a schedule?"
+msgstr "Kuidas ma saan SSH võtmeid ajakava järgi vahetada?"
+# 
+# File: usr/share/ashyterm/window.py, line: 256
+#: NEEDS WORK
+msgid "How can I enforce password policies on Linux?"
+msgstr "Kuidas saan Linuxis paroolipoliitikaid rakendada?"
+# 
+# File: usr/share/ashyterm/window.py, line: 257
+#: NEEDS WORK
+msgid "How do I audit installed packages for CVEs?"
+msgstr "Kuidas ma auditeerin installitud pakette CVE-de jaoks?"
+# 
+# File: usr/share/ashyterm/window.py, line: 258
+#: NEEDS WORK
+msgid "How can I use nix-shell or direnv for reproducible dev environments?"
+msgstr "Kuidas saan kasutada nix-shelli või direnv'i reprodutseeritavate arenduskeskkondade jaoks?"
+# 
+# File: usr/share/ashyterm/window.py, line: 259
+#: NEEDS WORK
+msgid "How do I manage multiple Python versions with pyenv?"
+msgstr "Kuidas hallata mitut Python'i versiooni pyenv'iga?"
+# 
+# File: usr/share/ashyterm/window.py, line: 260
+#: NEEDS WORK
+msgid "How can I run containers rootless with Podman?"
+msgstr "Kuidas saan Podmaniga konteinerid juurdepääsuta käivitada?"
+# 
+# File: usr/share/ashyterm/window.py, line: 261
+#: NEEDS WORK
+msgid "How do I tail Kubernetes logs with stern or kubectl?"
+msgstr "Kuidas ma saan Kubernetes'i logisid jälgida sterni või kubectl'iga?"
+# 
+# File: usr/share/ashyterm/window.py, line: 262
+#: NEEDS WORK
+msgid "How can I instrument applications with OpenTelemetry?"
+msgstr "Kuidas saan rakendusi OpenTelemetry'ga instrumenteerida?"
+# 
+# File: usr/share/ashyterm/window.py, line: 263
+#: NEEDS WORK
+msgid "How do I configure single sign-on for Linux services?"
+msgstr "Kuidas seadistada ühte sisselogimist Linuxi teenustele?"
+# 
+# File: usr/share/ashyterm/window.py, line: 264
+#: NEEDS WORK
+msgid "How can I export metrics from systemd services?"
+msgstr "Kuidas saan eksportida mõõdikud systemd teenustest?"
+# 
+# File: usr/share/ashyterm/window.py, line: 265
+#: NEEDS WORK
+msgid "How do I manage secrets with HashiCorp Vault on Linux?"
+msgstr "Kuidas hallata saladusi HashiCorp Vaultiga Linuxis?"
+# 
+# File: usr/share/ashyterm/window.py, line: 266
+#: NEEDS WORK
+msgid "How can I secure shared desktop sessions?"
+msgstr "Kuidas saan jagatud töölauaseansse turvata?"
+# 
+# File: usr/share/ashyterm/window.py, line: 267
+#: NEEDS WORK
+msgid "How do I offer remote assistance to another Linux user?"
+msgstr "Kuidas pakkuda kaugabi teisele Linuxi kasutajale?"
+# 
+# File: usr/share/ashyterm/window.py, line: 268
+#: NEEDS WORK
+msgid "How can I set up an immutable system partition?"
+msgstr "Kuidas saan seadistada muutumatut süsteemipartiiti?"
+# 
+# File: usr/share/ashyterm/window.py, line: 269
+#: NEEDS WORK
+msgid "How do I verify package integrity with pkgfile or debsums?"
+msgstr "Kuidas ma kontrollin paketi terviklikkust pkgfile'i või debsumsiga?"
+# 
+# File: usr/share/ashyterm/window.py, line: 270
+#: NEEDS WORK
+msgid "How can I preconfigure new machines with cloud-init?"
+msgstr "Kuidas saan eelkonfigureerida uusi masinaid cloud-init'iga?"
+# 
+# File: usr/share/ashyterm/window.py, line: 271
+#: NEEDS WORK
+msgid "How do I use firewalld zones effectively?"
+msgstr "Kuidas kasutada firewalld tsoone tõhusalt?"
+# 
+# File: usr/share/ashyterm/window.py, line: 272
+#: NEEDS WORK
+msgid "How can I configure USBGuard to control removable media?"
+msgstr "Kuidas saan USBGuard'i konfigureerida eemaldatava meedia kontrollimiseks?"
+# 
+# File: usr/share/ashyterm/window.py, line: 273
+#: NEEDS WORK
+msgid "How do I script GUI interactions with xdotool or ydotool?"
+msgstr "Kuidas ma skripteerin GUI interaktsioone xdotooli või ydotooliga?"
+# 
+# File: usr/share/ashyterm/window.py, line: 274
+#: NEEDS WORK
+msgid "How can I schedule notifications for maintenance windows?"
+msgstr "Kuidas saan ma planeerida teateid hooldusakende jaoks?"
+# 
+# File: usr/share/ashyterm/window.py, line: 275
+#: NEEDS WORK
+msgid "How do I run graphical apps inside containers securely?"
+msgstr "Kuidas käivitada graafilisi rakendusi konteinerites turvaliselt?"
+# 
+# File: usr/share/ashyterm/window.py, line: 276
+#: NEEDS WORK
+msgid "How can I create custom systemd targets?"
+msgstr "Kuidas ma saan luua kohandatud systemd sihtmärke?"
+# 
+# File: usr/share/ashyterm/window.py, line: 277
+#: NEEDS WORK
+msgid "How do I instrument cron jobs with logging and alerts?"
+msgstr "Kuidas instrumenteerida cron-töid logimise ja häiretega?"
+# 
+# File: usr/share/ashyterm/window.py, line: 278
+#: NEEDS WORK
+msgid "How can I migrate user data between Linux distributions?"
+msgstr "Kuidas saan kasutajaandmeid Linuxi distributsioonide vahel migreerida?"
+# 
+# File: usr/share/ashyterm/window.py, line: 279
+#: NEEDS WORK
+msgid "How do I build automated smoke tests for servers?"
+msgstr "Kuidas ma ehitan automatiseeritud suitsuteste serverite jaoks?"
+# 
+# File: usr/share/ashyterm/window.py, line: 280
+#: NEEDS WORK
+msgid "How can I monitor power consumption per process?"
+msgstr "Kuidas saan jälgida energiatarbimist protsessi kohta?"
+# 
+# File: usr/share/ashyterm/window.py, line: 281
+#: NEEDS WORK
+msgid "How do I set up screen sharing on Wayland?"
+msgstr "Kuidas ma seadistan ekraani jagamise Waylandis?"
+# 
+# File: usr/share/ashyterm/window.py, line: 282
+#: NEEDS WORK
+msgid "How can I use bpftrace to inspect kernel events?"
+msgstr "Kuidas ma saan bpftrace'i kasutada kernelisündmuste uurimiseks?"
+# 
+# File: usr/share/ashyterm/window.py, line: 283
+#: NEEDS WORK
+msgid "How do I configure VPN access for contractors securely?"
+msgstr "Kuidas seadistada VPN-juurdepääs alltöövõtjatele turvaliselt?"
+# 
+# File: usr/share/ashyterm/window.py, line: 284
+#: NEEDS WORK
+msgid "How can I manage encrypted secrets in git repositories?"
+msgstr "Kuidas saan hallata krüpteeritud saladusi git-repositooriumites?"
+# 
+# File: usr/share/ashyterm/window.py, line: 285
+#: NEEDS WORK
+msgid "How do I containerise legacy applications on Linux?"
+msgstr "Kuidas ma konteineriseeriksin pärandrakendusi Linuxis?"
+# 
+# File: usr/share/ashyterm/window.py, line: 286
+#: NEEDS WORK
+msgid "How can I prepare a Linux workstation for developers quickly?"
+msgstr "Kuidas ma saan kiiresti ette valmistada Linuxi tööjaama arendajatele?"
+# 
+# File: usr/share/ashyterm/window.py, line: 287
+#: NEEDS WORK
+msgid "How do I tune swappiness and vm.dirty ratios for workloads?"
+msgstr "Kuidas ma saan seadistada swappiness ja vm.dirty suhteid töökoormuste jaoks?"
+# 
+# File: usr/share/ashyterm/window.py, line: 288
+#: NEEDS WORK
+msgid "How can I monitor NVMe SSD health?"
+msgstr "Kuidas saan jälgida NVMe SSD tervist?"
+# 
+# File: usr/share/ashyterm/window.py, line: 289
+#: NEEDS WORK
+msgid "How do I benchmark network throughput between hosts?"
+msgstr "Kuidas ma mõõdan võrgu läbilaskevõimet hostide vahel?"
+# 
+# File: usr/share/ashyterm/window.py, line: 290
+#: NEEDS WORK
+msgid "How can I secure cron and at jobs from tampering?"
+msgstr "Kuidas saan cron ja at tööde turvalisuse tagamiseks vältida manipuleerimist?"
+# 
+# File: usr/share/ashyterm/window.py, line: 291
+#: NEEDS WORK
+msgid "How do I implement just-in-time sudo elevation?"
+msgstr "Kuidas ma rakendan just-in-time sudo tõstmist?"
+# 
+# File: usr/share/ashyterm/window.py, line: 292
+#: NEEDS WORK
+msgid "How can I integrate system metrics with Alertmanager?"
+msgstr "Kuidas saan süsteemi mõõdikud Alertmanageriga integreerida?"
+# 
+# File: usr/share/ashyterm/window.py, line: 293
+#: NEEDS WORK
+msgid "How do I set up maintenance mode pages on nginx?"
+msgstr "Kuidas seadistada hooldusrežiimi lehti nginx-is?"
+# 
+# File: usr/share/ashyterm/window.py, line: 294
+#: NEEDS WORK
+msgid "How can I collect audit logs required for compliance?"
+msgstr "Kuidas saan koguda auditi logisid, mis on vajalikud vastavuse tagamiseks?"
+# 
+# File: usr/share/ashyterm/window.py, line: 295
+#: NEEDS WORK
+msgid "How do I gracefully decommission a Linux server?"
+msgstr "Kuidas ma dekomisjonin Linuxi serveri sujuvalt?"
+# 
+# File: usr/share/ashyterm/window.py, line: 296
+#: NEEDS WORK
+msgid "How can I document operational runbooks efficiently?"
+msgstr "Kuidas saan ma operatiivsete tööjuhendite dokumenteerimist tõhusalt teha?"
+# 
+# File: usr/share/ashyterm/window.py, line: 424
+#: NEEDS WORK
+msgid "Data Loading Error"
+msgstr "Andmete laadimise viga"
+# 
+# File: usr/share/ashyterm/window.py, line: 425
+#: NEEDS WORK
+msgid "Failed to load saved sessions and folders. Starting with empty configuration."
+msgstr "Salvestatud seansside ja kaustade laadimine ebaõnnestus. Alustamine tühja konfiguratsiooniga."
+# 
+# File: usr/share/ashyterm/window.py, line: 530
+#: NEEDS WORK
+msgid "Enable the AI assistant in Preferences > Terminal > AI Assistant."
+msgstr "Luba AI assistendi lubamine eelistustes > Terminal > AI assistent."
+# 
+# File: usr/share/ashyterm/window.py, line: 539
+#: NEEDS WORK
+msgid "No active terminal available."
+msgstr "Ei ole aktiivset terminali saadaval."
+# 
+# File: usr/share/ashyterm/window.py, line: 547
+#: NEEDS WORK
+msgid "Model"
+msgstr "Mudel"
+# 
+# File: usr/share/ashyterm/window.py, line: 548
+#: NEEDS WORK
+msgid "API key"
+msgstr "API võti"
+# 
+# File: usr/share/ashyterm/window.py, line: 554
+#: NEEDS WORK
+#, python-brace-format
+msgid "Configure {items} in Preferences > Terminal > AI Assistant."
+msgstr "Konfigureeri {items} eelistustes > Terminal > AI Assistendi all."
+# 
+# File: usr/share/ashyterm/window.py, line: 565
+#: NEEDS WORK
+msgid "Ask the AI Assistant"
+msgstr "Küsi AI assistendilt"
+# 
+# File: usr/share/ashyterm/window.py, line: 566
+#: NEEDS WORK
+msgid "Describe the Linux task or question you need help with."
+msgstr "Kirjeldage Linuxi ülesannet või küsimust, millega vajate abi."
+# 
+# File: usr/share/ashyterm/window.py, line: 570
+#: NEEDS WORK
+msgid "Send"
+msgstr "Saada"
+# 
+# File: usr/share/ashyterm/window.py, line: 865
+#: NEEDS WORK
+msgid "Perguntas frequentes"
+msgstr "Korduma kippuvad küsimused"
+# 
+# File: usr/share/ashyterm/window.py, line: 938
+#: NEEDS WORK
+#, python-brace-format
+msgid "Sugestões correspondentes: {count}"
+msgstr "Vastavad soovitused: {count}"
+# 
+# File: usr/share/ashyterm/window.py, line: 941
+#: NEEDS WORK
+msgid "Nenhuma sugestão encontrada."
+msgstr "Ei midagi ettepanekut leitud."
+# 
+# File: usr/share/ashyterm/window.py, line: 944
+#: NEEDS WORK
+msgid "Digite sua pergunta ou escolha uma das sugestões."
+msgstr "Sisestage oma küsimus või valige üks ettepanekutest."
+# 
+# File: usr/share/ashyterm/window.py, line: 598
+#: NEEDS WORK
+msgid "Please enter a question for the assistant."
+msgstr "Palun esitage assistendile küsimus."
+# 
+# File: usr/share/ashyterm/window.py, line: 604
+#: NEEDS WORK
+msgid "AI assistant is processing, please wait..."
+msgstr "AI assistent töötleb, palun oota..."
+# 
+# File: usr/share/ashyterm/window.py, line: 680
+#: NEEDS WORK
+msgid "Here is what I found."
+msgstr "Siin on see, mida ma leidsin."
+# 
+# File: usr/share/ashyterm/window.py, line: 697
+#: NEEDS WORK
+msgid "Response"
+msgstr "Vastus"
+# 
+# File: usr/share/ashyterm/window.py, line: 724
+#: NEEDS WORK
+msgid "Suggested Commands"
+msgstr "Soovitatud käsud"
+# 
+# File: usr/share/ashyterm/window.py, line: 781
+#: NEEDS WORK
+msgid "Run"
+msgstr "Käivita"
+# 
+# File: usr/share/ashyterm/window.py, line: 992
+#: NEEDS WORK
+msgid "Command is empty, nothing to run."
+msgstr "Käsk on tühi, midagi ei ole käivitada."
+# 
+# File: usr/share/ashyterm/window.py, line: 998
+#: NEEDS WORK
+msgid "Command sent to the terminal."
+msgstr "Käsk saadetud terminalile."
+# 
+# File: usr/share/ashyterm/window.py, line: 1004
+#: NEEDS WORK
+msgid "Failed to execute the command."
+msgstr "Käsk ebaõnnestus."
+# 
+# File: usr/share/ashyterm/window.py, line: 551
+#: NEEDS WORK
+msgid "Session Validation Error"
+msgstr "Seansi valideerimise viga"
+# 
+# File: usr/share/ashyterm/window.py, line: 550
+#: NEEDS WORK
+#, python-brace-format
+msgid ""
+"Session validation failed:\n"
+"{errors}"
+msgstr ""
+"Seansi valideerimine ebaõnnestus:\n"
+"{errors}"
+# 
+# File: usr/share/ashyterm/window.py, line: 958
+#: NEEDS WORK
+msgid "Cannot detach the last tab."
+msgstr "Viimast vahekaarti ei saa eraldada."
+# 
+# File: usr/share/ashyterm/window.py, line: 712
+#: NEEDS WORK
+#, python-brace-format
+msgid "Terminal {id}"
+msgstr "Terminal {id}"
+# 
+# File: usr/share/ashyterm/window.py, line: 705
+#: NEEDS WORK
+msgid "No open terminals found."
+msgstr "Avatud terminale ei leitud."
+# 
+# File: usr/share/ashyterm/window.py, line: 711
+#: NEEDS WORK
+msgid "Confirm sending of command"
+msgstr "Kinnita käsu saatmine"
+# 
+# File: usr/share/ashyterm/window.py, line: 734
+#: NEEDS WORK
+#, python-brace-format
+msgid "Select which of the <b>{count}</b> open terminals should receive the command below."
+msgstr "Vali, millised <b>{count}</b> avatud terminalidest peaksid saama alloleva käsu."
+# 
+# File: usr/share/ashyterm/window.py, line: 749
+#: NEEDS WORK
+msgid "Choose the tabs that should run this command:"
+msgstr "Valige vahekaartide, mis peaksid seda käsku käivitama:"
+# 
+# File: usr/share/ashyterm/window.py, line: 809
+#: NEEDS WORK
+msgid "Remember my choice"
+msgstr "Mäleta minu valikut"
+# 
+# File: usr/share/ashyterm/window.py, line: 731
+#: NEEDS WORK
+msgid "Send Command"
+msgstr "Saada käsk"
+# 
+# File: usr/share/ashyterm/window.py, line: 823
+#: NEEDS WORK
+msgid "No tabs were selected to receive the command."
+msgstr "Ühtegi vahekaarti ei olnud valitud käsu vastuvõtmiseks."
+# 
+# File: usr/share/ashyterm/window.py, line: 652
+#: NEEDS WORK
+msgid "No active terminal to search in."
+msgstr "Ei ole aktiivset terminali, kus otsida."
+# 
+# File: usr/share/ashyterm/window.py, line: 687
+# File: usr/share/ashyterm/window.py, line: 734
+#: NEEDS WORK
+msgid "Invalid search pattern."
+msgstr "Kehtetu otsingumuster."
+# 
+# File: usr/share/ashyterm/window.py, line: 762
+# File: usr/share/ashyterm/window.py, line: 795
+#: NEEDS WORK
+msgid "No more matches found."
+msgstr "Ei leitud rohkem vasteid."
+# 
+# File: usr/share/ashyterm/window.py, line: 145
+#: NEEDS WORK
+msgid "Initialization Error"
+msgstr "Algatuse viga"
+# 
+# File: usr/share/ashyterm/window.py, line: 146
+#: NEEDS WORK
+#, python-brace-format
+msgid "Failed to initialize terminal: {error}"
+msgstr "Terminali initsialiseerimine ebaõnnestus: {error}"
+# 
+# File: usr/share/ashyterm/window.py, line: 1080
+#: NEEDS WORK
+msgid "Save Current Session?"
+msgstr "Salvesta praegune seanss?"
+# 
+# File: usr/share/ashyterm/window.py, line: 1082
+#: NEEDS WORK
+msgid "Do you want to restore these tabs the next time you open Ashy Terminal?"
+msgstr "Kas soovite need vahekaardid taastada järgmine kord, kui avate Ashy Terminali?"
+# 
+# File: usr/share/ashyterm/window.py, line: 1086
+#: NEEDS WORK
+msgid "Don't Save"
+msgstr "Ära salvesta"
+# 
+# File: usr/share/ashyterm/window.py, line: 1088
+#: NEEDS WORK
+msgid "Save and Close"
+msgstr "Salvesta ja sulge"
+# 
+# File: usr/share/ashyterm/window.py, line: 528
+# File: usr/share/ashyterm/window.py, line: 533
+#: NEEDS WORK
+msgid "Close Window"
+msgstr "Sulge aken"
+# 
+# File: usr/share/ashyterm/window.py, line: 463
+#: NEEDS WORK
+msgid "This window has active SSH connections. Closing will disconnect them. Are you sure?"
+msgstr "See aken on aktiivsed SSH-ühendused. Sulgemine katkestab need. Kas olete kindel?"
+# 
+# File: usr/share/ashyterm/window.py, line: 553
+#: NEEDS WORK
+msgid "Invalid SSH Target"
+msgstr "Kehtetu SSH sihtkoht"
+# 
+# File: usr/share/ashyterm/window.py, line: 554
+#: NEEDS WORK
+msgid "Could not parse the provided SSH connection string."
+msgstr "Ei suutnud analüüsida antud SSH ühenduse stringi."
+# 
+# File: usr/share/ashyterm/window.py, line: 612
+#: NEEDS WORK
+msgid "Remove this temporary file"
+msgstr "Eemalda see ajutine fail"
+# 
+# File: usr/share/ashyterm/window.py, line: 627
+#: NEEDS WORK
+msgid "No temporary files found."
+msgstr "Ajutisi faile ei leitud."
+# 
+# File: usr/share/ashyterm/window.py, line: 630
+#: NEEDS WORK
+msgid "Clear All Temporary Files"
+msgstr "Kustuta kõik ajutised failid"
+# 
+# File: usr/share/ashyterm/window.py, line: 652
+#: NEEDS WORK
+msgid "Clear All Temporary Files?"
+msgstr "Kustuta kõik ajutised failid?"
+# 
+# File: usr/share/ashyterm/window.py, line: 654
+#: NEEDS WORK
+msgid ""
+"This will remove all locally downloaded files for remote editing. Any unsaved changes in your "
+"editor will be lost. This action cannot be undone."
+msgstr ""
+"See eemaldab kõik kohalikult allalaaditud failid kaugredigeerimiseks. Kõik salvestamata muudatused "
+"teie redigeerijas kaovad. Seda toimingut ei saa tagasi võtta."
+# 
+# File: usr/share/ashyterm/window.py, line: 660
+#: NEEDS WORK
+msgid "Clear All"
+msgstr "Kustuta kõik"
+# 
+# File: usr/share/ashyterm/window.py, line: 1193
+#: NEEDS WORK
+msgid "No active terminal to send command to."
+msgstr "Ei ole aktiivset terminali, kuhu käsku saata."
+# 
+# File: usr/share/ashyterm/app.py, line: 333
+#: NEEDS WORK
+msgid "Preferences Error"
+msgstr "Eelistuste viga"
+# 
+# File: usr/share/ashyterm/app.py, line: 332
+# File: usr/share/ashyterm/app.py, line: 333
+#: NEEDS WORK
+#, python-brace-format
+msgid "Failed to open preferences: {}"
+msgstr "Eelistuste avamine ebaõnnestus: {}"
+# 
+# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
+# 
+# File: usr/share/ashyterm/__init__.py, line: 62
+# File: usr/share/ashyterm/app.py, line: 350
+#: NEEDS WORK
+msgid "A modern terminal emulator with session management"
+msgstr "Kaasaegne terminali emulaator seansihaldusega"
+# 
+# File: usr/share/ashyterm/app.py, line: 356
+#: NEEDS WORK
+msgid "Save Backup As..."
+msgstr "Salvesta varukoopia nimega..."
+# 
+# File: usr/share/ashyterm/app.py, line: 368
+# File: usr/share/ashyterm/app.py, line: 379
+# File: usr/share/ashyterm/app.py, line: 392
+# File: usr/share/ashyterm/app.py, line: 396
+#: NEEDS WORK
+msgid "Backup Error"
+msgstr "Varundusviga"
+# 
+# File: usr/share/ashyterm/app.py, line: 375
+#: NEEDS WORK
+msgid "Set Backup Password"
+msgstr "Seadme varukoopia parool"
+# 
+# File: usr/share/ashyterm/app.py, line: 376
+#: NEEDS WORK
+msgid "Please enter a password to encrypt the backup file."
+msgstr "Palun sisestage parool varufaili krüpteerimiseks."
+# 
+# File: usr/share/ashyterm/app.py, line: 384
+#: NEEDS WORK
+msgid "Confirm Password"
+msgstr "Kinnita parool"
+# 
+# File: usr/share/ashyterm/app.py, line: 400
+# File: usr/share/ashyterm/app.py, line: 405
+#: NEEDS WORK
+msgid "Password Error"
+msgstr "Parooli viga"
+# 
+# File: usr/share/ashyterm/app.py, line: 400
+#: NEEDS WORK
+msgid "Password cannot be empty."
+msgstr "Parool ei tohi olla tühi."
+# 
+# File: usr/share/ashyterm/app.py, line: 405
+#: NEEDS WORK
+msgid "Passwords do not match."
+msgstr "Paroolid ei ühti."
+# 
+# File: usr/share/ashyterm/app.py, line: 423
+#: NEEDS WORK
+msgid "Creating backup..."
+msgstr "Varunduse loomine..."
+# 
+# File: usr/share/ashyterm/app.py, line: 390
+#: NEEDS WORK
+msgid "Backup Complete"
+msgstr "Varundus lõpetatud"
+# 
+# File: usr/share/ashyterm/app.py, line: 440
+#: NEEDS WORK
+#, python-brace-format
+msgid ""
+"Backup saved successfully to:\n"
+"{}"
+msgstr ""
+"Varundus salvestati edukalt siia:  \n"
+"{}"
+# 
+# File: usr/share/ashyterm/app.py, line: 446
+#: NEEDS WORK
+msgid "Backup Failed"
+msgstr "Varundus ebaõnnestus"
+# 
+# File: usr/share/ashyterm/app.py, line: 447
+#: NEEDS WORK
+#, python-brace-format
+msgid "Could not create backup: {}"
+msgstr "Ei saanud varukoopiat luua: {}"
+# 
+# File: usr/share/ashyterm/app.py, line: 458
+#: NEEDS WORK
+msgid "Restore from Backup?"
+msgstr "Taasta varukoopiast?"
+# 
+# File: usr/share/ashyterm/app.py, line: 460
+#: NEEDS WORK
+msgid ""
+"Restoring from a backup will overwrite all your current sessions, settings, and layouts. This "
+"action cannot be undone.\n"
+"\n"
+"<b>The application will need to be restarted after restoring.</b>"
+msgstr ""
+"Varundus varukoopiast kirjutab üle kõik teie praegused seansid, seaded ja paigutused. Seda "
+"toimingut ei saa tagasi võtta.\n"
+"\n"
+"<b>Rakendus tuleb pärast varundamist taaskäivitada.</b>"
+# 
+# File: usr/share/ashyterm/app.py, line: 466
+#: NEEDS WORK
+msgid "Choose File and Restore"
+msgstr "Vali fail ja taasta"
+# 
+# File: usr/share/ashyterm/app.py, line: 474
+#: NEEDS WORK
+msgid "Select Backup File"
+msgstr "Vali varukoopia fail"
+# 
+# File: usr/share/ashyterm/app.py, line: 477
+#: NEEDS WORK
+msgid "Backup Files"
+msgstr "Varukoopiad"
+# 
+# File: usr/share/ashyterm/app.py, line: 402
+# File: usr/share/ashyterm/app.py, line: 416
+#: NEEDS WORK
+msgid "Restore Error"
+msgstr "Taastev viga"
+# 
+# File: usr/share/ashyterm/app.py, line: 499
+#: NEEDS WORK
+msgid "Enter Backup Password"
+msgstr "Sisestage varukoopia parool"
+# 
+# File: usr/share/ashyterm/app.py, line: 500
+#: NEEDS WORK
+msgid "Please enter the password for the selected backup file."
+msgstr "Palun sisestage valitud varukoopia faili parool."
+# 
+# File: usr/share/ashyterm/app.py, line: 508
+#: NEEDS WORK
+msgid "Restore"
+msgstr "Taasta"
+# 
+# File: usr/share/ashyterm/app.py, line: 525
+#: NEEDS WORK
+msgid "Restoring from backup..."
+msgstr "Taasteb varundusest..."
+# 
+# File: usr/share/ashyterm/app.py, line: 538
+#: NEEDS WORK
+msgid "Restore Failed"
+msgstr "Taaste ebaõnnestus"
+# 
+# File: usr/share/ashyterm/app.py, line: 539
+#: NEEDS WORK
+#, python-brace-format
+msgid "Could not restore from backup: {}"
+msgstr "Ei saanud varukoopiast taastada: {}"
+# 
+# File: usr/share/ashyterm/app.py, line: 549
+#: NEEDS WORK
+msgid "Restore Complete"
+msgstr "Taastamine lõpetatud"
+# 
+# File: usr/share/ashyterm/app.py, line: 551
+#: NEEDS WORK
+msgid "Data has been restored successfully. Please restart Ashy Terminal for the changes to take effect."
+msgstr "Andmed on edukalt taastatud. Palun taaskäivitage Ashy Terminal, et muudatused jõustuksid."
+# 
+# File: usr/share/ashyterm/app.py, line: 498
+#: NEEDS WORK
+msgid "Close Application"
+msgstr "Sulge rakendus"
+# 
+# File: usr/share/ashyterm/app.py, line: 499
+#: NEEDS WORK
+msgid ""
+"There are active SSH connections. Closing will disconnect all sessions.\n"
+"\n"
+"Are you sure you want to close the application?"
+msgstr ""
+"Seal on aktiivsed SSH-ühendused. Sulgemine katkestab kõik seansid.\n"
+"\n"
+"Kas olete kindel, et soovite rakenduse sulgeda?"
+# 
+# File: usr/share/ashyterm/app.py, line: 503
+#: NEEDS WORK
+msgid "Close All"
+msgstr "Sulge kõik"
+# 
+# File: usr/share/ashyterm/app.py, line: 530
+#: NEEDS WORK
+msgid "Startup Error"
+msgstr "Käivitamise viga"
+# 
+# File: usr/share/ashyterm/app.py, line: 531
+#: NEEDS WORK
+#, python-brace-format
+msgid "Application failed to start: {}"
+msgstr "Rakendus ei suutnud käivituda: {}"
 # 
 # File: usr/share/ashyterm/window.py, line: 1466
 #: NEEDS WORK
@@ -5150,3 +7186,32 @@ msgstr "Viga paigutuse kustutamisel"
 #: NEEDS WORK
 msgid "Error Moving Layout"
 msgstr "Viga paigutuse liigutamisel"
+# 
+# File: usr/share/nautilus-python/extensions/ashyterm.py, line: 129
+#: NEEDS WORK
+msgid "Open in Ashy Terminal (SSH)"
+msgstr "Ava Ashy terminalis (SSH)"
+# 
+# File: usr/share/nautilus-python/extensions/ashyterm.py, line: 130
+#: NEEDS WORK
+#, python-brace-format
+msgid "Connect to {} via a new SSH session"
+msgstr "Ühenda {} uue SSH seansi kaudu"
+# 
+# File: usr/share/nautilus-python/extensions/ashyterm.py, line: 139
+# File: usr/share/nautilus-python/extensions/ashyterm.py, line: 149
+#: NEEDS WORK
+msgid "Open in Ashy Terminal"
+msgstr "Ava Ashy terminalis"
+# 
+# File: usr/share/nautilus-python/extensions/ashyterm.py, line: 140
+#: NEEDS WORK
+#, python-brace-format
+msgid "Open the local mount point {}"
+msgstr "Ava kohaliku mount-punkti {}"
+# 
+# File: usr/share/nautilus-python/extensions/ashyterm.py, line: 150
+#: NEEDS WORK
+#, python-brace-format
+msgid "Open {} in Ashy Terminal"
+msgstr "Ava {} Ashy Terminalis"

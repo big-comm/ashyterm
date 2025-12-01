@@ -3,74 +3,55 @@
 
 pkgname=ashyterm
 pkgdesc="A modern GTK4/Adwaita terminal emulator with advanced session management, SSH integration, and security features."
-# Uncomment and edit the following lines as needed
+
 depends=(
     'gtk4'
     'libadwaita'
+    'libsecret'
     'python'
     'python-py7zr'
     'python-gobject'
     'python-setproctitle'
+    'python-requests'
     'sshpass'
+    'rsync'
     'vte4'
-    'libchildenv'
-    'jemalloc'
+    'libchildenv' # Optional, but recommended to improve GTK memory management.
+    'mimalloc' # Optional, but recommended to improve GTK memory management.
 )
+makedepends=(
+    'python-build'
+    'python-installer'
+    'python-uv-build'
+    'python-wheel'
+)
+#optdepends=('')
+
 conflicts=('comm-ashyterm')
 provides=('comm-ashyterm')
 replaces=('comm-ashyterm')
-#makedepends=('')
-#optdepends=('')
-pkgver=$(date +%y.%m.%d)
-pkgrel=$(date +%H%M)
+
+pkgver="0.1.0"
+pkgrel="1"
+
 arch=('any')
 license=('MIT')
 url="https://github.com/big-comm/${pkgname}"
 source=("git+${url}.git")
 md5sums=('SKIP')
 
-# Automatically detect and use the correct install file
-if [ -e "${pkgname}.install" ]; then
-    install=${pkgname}.install
-elif [ -e "pkgbuild.install" ]; then
-    install=pkgbuild.install
-fi
-
-prepare() {
-    cd "${srcdir}/${pkgname}"
-    # Add any preparation steps here, if needed
-    # For example: patch -p1 < "${srcdir}/patch-file.patch"
-}
-
 build() {
     cd "${srcdir}/${pkgname}"
-    # Add build steps here, if needed
-    # For example: make
-}
-
-check() {
-    cd "${srcdir}/${pkgname}"
-    # Add check/test steps here, if needed
-    # For example: make check
+    python -m build --wheel --no-isolation --skip-dependency-check
 }
 
 package() {
     cd "${srcdir}/${pkgname}"
 
-    # Determine the correct source directory
-    if [ -d "${pkgname}" ]; then
-        srcdir="${srcdir}/${pkgname}/${pkgname}"
-    else
-        srcdir="${srcdir}/${pkgname}"
-    fi
+    python -m installer --destdir="$pkgdir" dist/*.whl
 
     # Install files
-    local dirs=("usr" "etc" "opt")
-    for dir in "${dirs[@]}"; do
-        if [ -d "${srcdir}/${dir}" ]; then
-            cp -a "${srcdir}/${dir}" "${pkgdir}/"
-        fi
-    done
+    cp -a usr/share "${pkgdir}/usr/share"
 
     # Install license file if present
     if [ -f "LICENSE" ]; then

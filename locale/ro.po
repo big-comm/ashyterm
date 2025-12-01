@@ -16,35 +16,6 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: attranslate\n"
 # 
-# File: usr/share/nautilus-python/extensions/ashyterm.py, line: 129
-#: NEEDS WORK
-msgid "Open in Ashy Terminal (SSH)"
-msgstr "Deschide în Ashy Terminal (SSH)"
-# 
-# File: usr/share/nautilus-python/extensions/ashyterm.py, line: 130
-#: NEEDS WORK
-#, python-brace-format
-msgid "Connect to {} via a new SSH session"
-msgstr "Conectează-te la {} printr-o nouă sesiune SSH"
-# 
-# File: usr/share/nautilus-python/extensions/ashyterm.py, line: 139
-# File: usr/share/nautilus-python/extensions/ashyterm.py, line: 149
-#: NEEDS WORK
-msgid "Open in Ashy Terminal"
-msgstr "Deschide în Ashy Terminal"
-# 
-# File: usr/share/nautilus-python/extensions/ashyterm.py, line: 140
-#: NEEDS WORK
-#, python-brace-format
-msgid "Open the local mount point {}"
-msgstr "Deschideți punctul de montare local {}"
-# 
-# File: usr/share/nautilus-python/extensions/ashyterm.py, line: 150
-#: NEEDS WORK
-#, python-brace-format
-msgid "Open {} in Ashy Terminal"
-msgstr "Deschide {} în Ashy Terminal"
-# 
 # File: usr/share/ashyterm/utils/exceptions.py, line: 65
 #: NEEDS WORK
 msgid "A terminal error occurred"
@@ -460,6 +431,59 @@ msgstr "Cale de folder invalidă sau nesigură"
 msgid "Validation error: {}"
 msgstr "Eroare de validare: {}"
 # 
+# File: usr/share/ashyterm/terminal/ai_assistant.py, line: 389
+#: NEEDS WORK
+msgid "Unknown error."
+msgstr "Eroare necunoscută."
+# 
+# File: usr/share/ashyterm/terminal/ai_assistant.py, line: 393
+# File: usr/share/ashyterm/terminal/ai_assistant.py, line: 399
+#: NEEDS WORK
+#, python-brace-format
+msgid "OpenRouter respondeu com HTTP {status}: {message}"
+msgstr "OpenRouter a răspuns cu HTTP {status}: {message}"
+# 
+# File: usr/share/ashyterm/terminal/ai_assistant.py, line: 415
+#: NEEDS WORK
+#, python-brace-format
+msgid "OpenRouter respondeu com HTTP {status}: {message}{detail}"
+msgstr "OpenRouter a răspuns cu HTTP {status}: {message}{detail}"
+# 
+# File: usr/share/ashyterm/terminal/spawner.py, line: 295
+#: NEEDS WORK
+msgid "Not an SSH session."
+msgstr "Nu este o sesiune SSH."
+# 
+# File: usr/share/ashyterm/filemanager/operations.py, line: 146
+#: NEEDS WORK
+msgid "Command timed out."
+msgstr "Comanda a expirat."
+# 
+# File: usr/share/ashyterm/terminal/tabs.py, line: 43
+#: NEEDS WORK
+msgid "Move to New Tab"
+msgstr "Mută în tab nou"
+# 
+# File: usr/share/ashyterm/ui/menus.py, line: 214
+#: NEEDS WORK
+msgid "Close Pane"
+msgstr "Închide Panoul"
+# 
+# File: usr/share/ashyterm/terminal/tabs.py, line: 531
+#: NEEDS WORK
+msgid "Duplicate Tab"
+msgstr "Tab duplicat"
+# 
+# File: usr/share/ashyterm/terminal/tabs.py, line: 237
+#: NEEDS WORK
+msgid "Detach Tab"
+msgstr "Desprinde Tab-ul"
+# 
+# File: usr/share/ashyterm/terminal/tabs.py, line: 585
+#: NEEDS WORK
+msgid "This is the only pane in the tab."
+msgstr "Acesta este singurul panou din tab."
+# 
 # File: usr/share/ashyterm/main.py, line: 86
 #: NEEDS WORK
 #, python-brace-format
@@ -529,283 +553,86 @@ msgstr "Convertiți calea URI KIO/GVFS în format SSH"
 msgid "Force opening a new window"
 msgstr "Forțează deschiderea unei feronete noi"
 # 
-# File: usr/share/ashyterm/sessions/models.py, line: 174
+# File: usr/share/ashyterm/ui/window_ui.py, line: 339
 #: NEEDS WORK
-msgid "Port must be a valid number between 1 and 65535"
-msgstr "Portul trebuie să fie un număr valid între 1 și 65535."
+msgid "Type your command here and press ENTER..."
+msgstr "Introduceți comanda dvs. aici și apăsați ENTER..."
 # 
-# File: usr/share/ashyterm/sessions/models.py, line: 198
+# File: usr/share/ashyterm/ui/window_ui.py, line: 264
 #: NEEDS WORK
-msgid "Session name is required."
-msgstr "Numele sesiunii este necesar."
+msgid "Current occurrence"
+msgstr "Ocazie curentă"
 # 
-# File: usr/share/ashyterm/sessions/models.py, line: 201
+# File: usr/share/ashyterm/ui/window_ui.py, line: 268
 #: NEEDS WORK
-msgid "Host is required for SSH sessions."
-msgstr "Hostul este necesar pentru sesiunile SSH."
+msgid "Case sensitive search"
+msgstr "Căutare cu distincție între majuscule și minuscule"
 # 
-# File: usr/share/ashyterm/sessions/models.py, line: 203
+# File: usr/share/ashyterm/ui/window_ui.py, line: 270
 #: NEEDS WORK
-msgid "Port must be between 1 and 65535."
-msgstr "Portul trebuie să fie între 1 și 65535."
+msgid "Case sensitive"
+msgstr "Senzitiv la majuscule/minuscule"
 # 
-# File: usr/share/ashyterm/sessions/models.py, line: 386
-# File: usr/share/ashyterm/sessions/models.py, line: 419
+# File: usr/share/ashyterm/ui/window_ui.py, line: 276
 #: NEEDS WORK
-msgid "Unnamed Session"
-msgstr "Sesiune Fără Nume"
+msgid "Use regular expressions"
+msgstr "Utilizați expresii regulate"
+# 
+# File: usr/share/ashyterm/ui/window_ui.py, line: 278
+#: NEEDS WORK
+msgid "Regex"
+msgstr "Regex"
 # 
 # #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 406
-# File: usr/share/ashyterm/sessions/models.py, line: 511
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1606
+# File: usr/share/ashyterm/window.py, line: 248
 #: NEEDS WORK
-msgid "Local Terminal"
-msgstr "Terminal Local"
+msgid "Toggle Sidebar"
+msgstr "Comutare bara laterală"
 # 
-# File: usr/share/ashyterm/sessions/models.py, line: 346
+# File: usr/share/ashyterm/window.py, line: 344
 #: NEEDS WORK
-msgid "Folder name is required."
-msgstr "Numele folderului este obligatoriu."
+msgid "File Manager"
+msgstr "Manager de fișiere"
 # 
-# File: usr/share/ashyterm/sessions/models.py, line: 352
+# File: usr/share/ashyterm/ui/window_ui.py, line: 324
 #: NEEDS WORK
-msgid "Folder path is not consistent with its parent path."
-msgstr "Calea folderului nu este consistentă cu calea părintelui său."
+msgid "Command Guide (Ctrl+Shift+P)"
+msgstr "Ghid de comenzi (Ctrl+Shift+P)"
 # 
-# File: usr/share/ashyterm/sessions/models.py, line: 727
-# File: usr/share/ashyterm/sessions/models.py, line: 752
+# File: usr/share/ashyterm/ui/window_ui.py, line: 350
 #: NEEDS WORK
-msgid "Unnamed Folder"
-msgstr "Folder Nenumit"
+msgid "Search in Terminal"
+msgstr "Caută în Terminal"
 # 
-# File: usr/share/ashyterm/sessions/tree.py, line: 298
-# File: usr/share/ashyterm/sessions/tree.py, line: 302
+# File: usr/share/ashyterm/ui/window_ui.py, line: 339
 #: NEEDS WORK
-msgid "Move Error"
-msgstr "Eroare de mutare"
+msgid "Send Command to All Tabs"
+msgstr "Trimite comanda către toate tab-urile"
+# 
+# File: usr/share/ashyterm/ui/window_ui.py, line: 344
+#: NEEDS WORK
+msgid "Ask AI Assistant (Ctrl+Shift+I)"
+msgstr "Întreabă Asistentul AI (Ctrl+Shift+I)"
+# 
+# File: usr/share/ashyterm/ui/window_ui.py, line: 259
+#: NEEDS WORK
+msgid "Manage Temporary Files"
+msgstr "Gestionați fișierele temporare"
+# 
+# File: usr/share/ashyterm/window.py, line: 268
+#: NEEDS WORK
+msgid "Main Menu"
+msgstr "Meniu Principal"
 # 
 # #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
 # 
-# File: usr/share/ashyterm/sessions/tree.py, line: 801
-# File: usr/share/ashyterm/window.py, line: 1544
+# File: usr/share/ashyterm/ui/menus.py, line: 144
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1596
 #: NEEDS WORK
-msgid "Restore Layout"
-msgstr "Restaurare aspectul"
-# 
-# File: usr/share/ashyterm/ui/menus.py, line: 203
-#: NEEDS WORK
-msgid "Move to Folder..."
-msgstr "Mută în dosar..."
-# 
-# File: usr/share/ashyterm/sessions/tree.py, line: 808
-#: NEEDS WORK
-msgid "Delete Layout"
-msgstr "Șterge Layout-ul"
-# 
-# File: usr/share/ashyterm/sessions/tree.py, line: 618
-# File: usr/share/ashyterm/sessions/tree.py, line: 623
-#: NEEDS WORK
-msgid "Paste Error"
-msgstr "Eroare la lipire"
-# 
-# File: usr/share/ashyterm/sessions/validation.py, line: 18
-#: NEEDS WORK
-#, python-brace-format
-msgid "Session validation failed: {}"
-msgstr "Validarea sesiunii a eșuat: {}"
-# 
-# File: usr/share/ashyterm/sessions/validation.py, line: 31
-#: NEEDS WORK
-#, python-brace-format
-msgid "A session with the name '{name}' already exists in this folder."
-msgstr "O sesiune cu numele '{name}' există deja în acest folder."
-# 
-# File: usr/share/ashyterm/sessions/validation.py, line: 45
-#: NEEDS WORK
-#, python-brace-format
-msgid "The target folder '{folder}' does not exist."
-msgstr "Folderul țintă '{folder}' nu există."
-# 
-# File: usr/share/ashyterm/sessions/validation.py, line: 61
-#: NEEDS WORK
-#, python-brace-format
-msgid "Folder validation failed: {}"
-msgstr "Validarea folderului a eșuat: {}"
-# 
-# File: usr/share/ashyterm/sessions/validation.py, line: 69
-#: NEEDS WORK
-#, python-brace-format
-msgid "A folder with the path '{path}' already exists."
-msgstr "Un folder cu calea '{path}' există deja."
-# 
-# File: usr/share/ashyterm/sessions/validation.py, line: 84
-#: NEEDS WORK
-#, python-brace-format
-msgid "The parent folder '{folder}' does not exist."
-msgstr "Folderul părinte '{folder}' nu există."
-# 
-# File: usr/share/ashyterm/sessions/storage.py, line: 125
-#: NEEDS WORK
-#, python-brace-format
-msgid "File path validation failed: {}"
-msgstr "Validarea căii fișierului a eșuat: {}"
-# 
-# File: usr/share/ashyterm/sessions/storage.py, line: 134
-#: NEEDS WORK
-msgid "File too large (>50MB)"
-msgstr "Fișierul este prea mare (>50MB)"
-# 
-# File: usr/share/ashyterm/sessions/storage.py, line: 148
-#: NEEDS WORK
-#, python-brace-format
-msgid "Invalid JSON: {}"
-msgstr "JSON invalid: {}"
-# 
-# File: usr/share/ashyterm/sessions/storage.py, line: 151
-#: NEEDS WORK
-#, python-brace-format
-msgid "Encoding error: {}"
-msgstr "Eroare de codare: {}"
-# 
-# File: usr/share/ashyterm/sessions/storage.py, line: 155
-#: NEEDS WORK
-msgid "Root data is not a dictionary"
-msgstr "Datele rădăcină nu sunt un dicționar"
-# 
-# File: usr/share/ashyterm/sessions/storage.py, line: 198
-#: NEEDS WORK
-#, python-brace-format
-msgid "Load failed: {}"
-msgstr "Încărcare eșuată: {}"
-# 
-# File: usr/share/ashyterm/sessions/storage.py, line: 395
-#: NEEDS WORK
-msgid "Data validation failed"
-msgstr "Validarea datelor a eșuat"
-# 
-# File: usr/share/ashyterm/sessions/storage.py, line: 410
-#: NEEDS WORK
-msgid "Temporary file was not written correctly"
-msgstr "Fișierul temporar nu a fost scris corect."
-# 
-# File: usr/share/ashyterm/sessions/storage.py, line: 427
-#: NEEDS WORK
-#, python-brace-format
-msgid "File write failed: {}"
-msgstr "Scrierea fișierului a eșuat: {}"
-# 
-# File: usr/share/ashyterm/sessions/storage.py, line: 439
-#: NEEDS WORK
-msgid "Save verification failed"
-msgstr "Verificarea salvării a eșuat"
-# 
-# File: usr/share/ashyterm/sessions/storage.py, line: 463
-#: NEEDS WORK
-#, python-brace-format
-msgid "Save failed: {}"
-msgstr "Salvarea a eșuat: {}"
-# 
-# File: usr/share/ashyterm/sessions/operations.py, line: 51
-#: NEEDS WORK
-#, python-brace-format
-msgid "Failed to save {item_type} data."
-msgstr "Nu s-a reușit salvarea datelor {item_type}."
-# 
-# File: usr/share/ashyterm/sessions/operations.py, line: 59
-#: NEEDS WORK
-#, python-brace-format
-msgid "{item_type} '{name}' added successfully."
-msgstr "{item_type} '{name}' a fost adăugat cu succes."
-# 
-# File: usr/share/ashyterm/sessions/operations.py, line: 62
-#: NEEDS WORK
-msgid "Item at position is not a session."
-msgstr "Elementul de la poziția nu este o sesiune."
-# 
-# File: usr/share/ashyterm/sessions/operations.py, line: 74
-#: NEEDS WORK
-msgid "Failed to save updated session data."
-msgstr "Nu s-a reușit salvarea datelor actualizate ale sesiunii."
-# 
-# File: usr/share/ashyterm/sessions/operations.py, line: 79
-#: NEEDS WORK
-#, python-brace-format
-msgid "Session '{name}' updated successfully."
-msgstr "Sesiunea '{name}' a fost actualizată cu succes."
-# 
-# File: usr/share/ashyterm/sessions/operations.py, line: 90
-#: NEEDS WORK
-msgid "Session not found."
-msgstr "Sesiune negăsită."
-# 
-# File: usr/share/ashyterm/sessions/operations.py, line: 96
-#: NEEDS WORK
-msgid "Failed to save after session removal."
-msgstr "Salvare eșuată după eliminarea sesiunii."
-# 
-# File: usr/share/ashyterm/sessions/operations.py, line: 102
-#: NEEDS WORK
-#, python-brace-format
-msgid "Session '{name}' removed successfully."
-msgstr "Sesiunea '{name}' a fost eliminată cu succes."
-# 
-# File: usr/share/ashyterm/sessions/operations.py, line: 131
-#: NEEDS WORK
-msgid "Item at position is not a folder."
-msgstr "Elementul de la poziția respectivă nu este un folder."
-# 
-# File: usr/share/ashyterm/sessions/operations.py, line: 144
-#: NEEDS WORK
-msgid "Failed to save updated folder data."
-msgstr "Nu s-a reușit salvarea datelor actualizate ale folderului."
-# 
-# File: usr/share/ashyterm/sessions/operations.py, line: 149
-#: NEEDS WORK
-#, python-brace-format
-msgid "Folder '{name}' updated successfully."
-msgstr "Folder '{name}' actualizată cu succes."
-# 
-# File: usr/share/ashyterm/sessions/operations.py, line: 161
-#: NEEDS WORK
-msgid "Cannot remove a non-empty folder."
-msgstr "Nu se poate șterge un folder care nu este gol."
-# 
-# File: usr/share/ashyterm/sessions/operations.py, line: 168
-#: NEEDS WORK
-msgid "Folder not found."
-msgstr "Folderul nu a fost găsit."
-# 
-# File: usr/share/ashyterm/sessions/operations.py, line: 172
-#: NEEDS WORK
-msgid "Failed to save after folder removal."
-msgstr "Salvare eșuată după eliminarea folderului."
-# 
-# File: usr/share/ashyterm/sessions/operations.py, line: 177
-#: NEEDS WORK
-#, python-brace-format
-msgid "Folder '{name}' removed successfully."
-msgstr "Folder '{name}' a fost eliminat cu succes."
-# 
-# File: usr/share/ashyterm/sessions/operations.py, line: 190
-#: NEEDS WORK
-msgid "Failed to save after moving session."
-msgstr "Salvarea a eșuat după mutarea sesiunii."
-# 
-# File: usr/share/ashyterm/sessions/operations.py, line: 195
-#: NEEDS WORK
-msgid "Session moved successfully."
-msgstr "Sesiune mutată cu succes."
-# 
-# File: usr/share/ashyterm/sessions/operations.py, line: 209
-#: NEEDS WORK
-msgid "Cannot move a folder into itself."
-msgstr "Nu se poate muta un folder în sine."
-# 
-# File: usr/share/ashyterm/sessions/operations.py, line: 260
-#: NEEDS WORK
-msgid "Unsupported item type for paste operation."
-msgstr "Tip de element nesuportat pentru operațiunea de lipire."
+msgid "New Tab"
+msgstr "Tab nou"
 # 
 # File: usr/share/ashyterm/filemanager/manager.py, line: 1165
 # File: usr/share/ashyterm/filemanager/manager.py, line: 1202
@@ -813,178 +640,48 @@ msgstr "Tip de element nesuportat pentru operațiunea de lipire."
 msgid "Ashy Terminal"
 msgstr "Ashy Terminal"
 # 
-# File: usr/share/ashyterm/ui/menus.py, line: 214
-#: NEEDS WORK
-msgid "Close Pane"
-msgstr "Închide Panoul"
-# 
-# File: usr/share/ashyterm/terminal/tabs.py, line: 43
-#: NEEDS WORK
-msgid "Move to New Tab"
-msgstr "Mută în tab nou"
-# 
-# File: usr/share/ashyterm/window.py, line: 424
-#: NEEDS WORK
-msgid "Data Loading Error"
-msgstr "Eroare la încărcarea datelor"
-# 
-# File: usr/share/ashyterm/window.py, line: 425
-#: NEEDS WORK
-msgid "Failed to load saved sessions and folders. Starting with empty configuration."
-msgstr "Nu s-au putut încărca sesiunile și folderele salvate. Începem cu o configurație goală."
-# 
-# File: usr/share/ashyterm/window.py, line: 551
-#: NEEDS WORK
-msgid "Session Validation Error"
-msgstr "Eroare de validare a sesiunii"
-# 
-# File: usr/share/ashyterm/window.py, line: 550
-#: NEEDS WORK
-#, python-brace-format
-msgid ""
-"Session validation failed:\n"
-"{errors}"
-msgstr ""
-"Validarea sesiunii a eșuat:  \n"
-"{errors}"
-# 
-# File: usr/share/ashyterm/window.py, line: 958
-#: NEEDS WORK
-msgid "Cannot detach the last tab."
-msgstr "Nu se poate detașa ultima filă."
-# 
-# File: usr/share/ashyterm/window.py, line: 652
-#: NEEDS WORK
-msgid "No active terminal to search in."
-msgstr "Nu există un terminal activ pentru a căuta."
-# 
-# File: usr/share/ashyterm/window.py, line: 687
-# File: usr/share/ashyterm/window.py, line: 734
-#: NEEDS WORK
-msgid "Invalid search pattern."
-msgstr "Model de căutare invalid."
-# 
-# File: usr/share/ashyterm/window.py, line: 762
-# File: usr/share/ashyterm/window.py, line: 795
-#: NEEDS WORK
-msgid "No more matches found."
-msgstr "Nu s-au găsit alte potriviri."
-# 
-# File: usr/share/ashyterm/window.py, line: 145
-#: NEEDS WORK
-msgid "Initialization Error"
-msgstr "Eroare de inițializare"
-# 
-# File: usr/share/ashyterm/window.py, line: 146
-#: NEEDS WORK
-#, python-brace-format
-msgid "Failed to initialize terminal: {error}"
-msgstr "Eșec la inițializarea terminalului: {error}"
-# 
-# File: usr/share/ashyterm/window.py, line: 1080
-#: NEEDS WORK
-msgid "Save Current Session?"
-msgstr "Salvează sesiunea curentă?"
-# 
-# File: usr/share/ashyterm/window.py, line: 1082
-#: NEEDS WORK
-msgid "Do you want to restore these tabs the next time you open Ashy Terminal?"
-msgstr "Vrei să restaurezi aceste tab-uri data viitoare când deschizi Ashy Terminal?"
-# 
-# File: usr/share/ashyterm/window.py, line: 1086
-#: NEEDS WORK
-msgid "Don't Save"
-msgstr "Nu salva"
+# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
 # 
 # #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 163
-# File: usr/share/ashyterm/ui/dialogs.py, line: 575
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1213
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1957
-# File: usr/share/ashyterm/ui/dialogs.py, line: 2006
-# File: usr/share/ashyterm/window.py, line: 953
-# File: usr/share/ashyterm/window.py, line: 1013
+# File: usr/share/ashyterm/ui/menus.py, line: 60
+# File: usr/share/ashyterm/ui/menus.py, line: 92
+# File: usr/share/ashyterm/ui/dialogs.py, line: 223
+# File: usr/share/ashyterm/window.py, line: 325
 #: NEEDS WORK
-msgid "Cancel"
-msgstr "Anulează"
-# 
-# File: usr/share/ashyterm/window.py, line: 1088
-#: NEEDS WORK
-msgid "Save and Close"
-msgstr "Salvează și Închide"
-# 
-# File: usr/share/ashyterm/window.py, line: 528
-# File: usr/share/ashyterm/window.py, line: 533
-#: NEEDS WORK
-msgid "Close Window"
-msgstr "Închide fereastra"
-# 
-# File: usr/share/ashyterm/window.py, line: 463
-#: NEEDS WORK
-msgid "This window has active SSH connections. Closing will disconnect them. Are you sure?"
-msgstr "Această fereastră are conexiuni SSH active. Închiderea va deconecta aceste conexiuni. Ești sigur?"
-# 
-# File: usr/share/ashyterm/window.py, line: 553
-#: NEEDS WORK
-msgid "Invalid SSH Target"
-msgstr "Țintă SSH invalidă"
-# 
-# File: usr/share/ashyterm/window.py, line: 554
-#: NEEDS WORK
-msgid "Could not parse the provided SSH connection string."
-msgstr "Nu s-a putut analiza șirul de conexiune SSH furnizat."
+msgid "Add Session"
+msgstr "Adaugă sesiune"
 # 
 # #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 136
-# File: usr/share/ashyterm/ui/dialogs.py, line: 784
-# File: usr/share/ashyterm/ui/dialogs.py, line: 2021
-# File: usr/share/ashyterm/ui/dialogs.py, line: 2033
-# File: usr/share/ashyterm/window.py, line: 1055
-# File: usr/share/ashyterm/window.py, line: 1070
-#: NEEDS WORK
-msgid "OK"
-msgstr "OK"
+# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
 # 
-# File: usr/share/ashyterm/window.py, line: 612
+# File: usr/share/ashyterm/ui/menus.py, line: 93
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1056
+# File: usr/share/ashyterm/window.py, line: 331
 #: NEEDS WORK
-msgid "Remove this temporary file"
-msgstr "Elimină acest fișier temporar"
+msgid "Add Folder"
+msgstr "Adaugă folder"
 # 
-# File: usr/share/ashyterm/window.py, line: 627
+# File: usr/share/ashyterm/window.py, line: 337
 #: NEEDS WORK
-msgid "No temporary files found."
-msgstr "Nu au fost găsite fișiere temporare."
+msgid "Edit Selected"
+msgstr "Editează selectat"
 # 
-# File: usr/share/ashyterm/window.py, line: 630
+# File: usr/share/ashyterm/window.py, line: 585
 #: NEEDS WORK
-msgid "Clear All Temporary Files"
-msgstr "Șterge toate fișierele temporare"
+msgid "Save Current Layout"
+msgstr "Salvează aranjamentul curent"
 # 
-# File: usr/share/ashyterm/window.py, line: 652
+# File: usr/share/ashyterm/window.py, line: 343
 #: NEEDS WORK
-msgid "Clear All Temporary Files?"
-msgstr "Ștergeți toate fișierele temporare?"
+msgid "Remove Selected"
+msgstr "Elimină selectat"
 # 
-# File: usr/share/ashyterm/window.py, line: 654
+# File: usr/share/ashyterm/window.py, line: 606
 #: NEEDS WORK
-msgid ""
-"This will remove all locally downloaded files for remote editing. Any unsaved changes in your "
-"editor will be lost. This action cannot be undone."
-msgstr ""
-"Aceasta va elimina toate fișierele descărcate local pentru editare de la distanță. Orice modificări "
-"nesalvate în editorul dumneavoastră vor fi pierdute. Această acțiune nu poate fi anulată."
-# 
-# File: usr/share/ashyterm/window.py, line: 660
-#: NEEDS WORK
-msgid "Clear All"
-msgstr "Șterge tot"
-# 
-# File: usr/share/ashyterm/window.py, line: 1193
-#: NEEDS WORK
-msgid "No active terminal to send command to."
-msgstr "Nu există un terminal activ pentru a trimite comanda."
+msgid "Search sessions..."
+msgstr "Căutare sesiuni..."
 # 
 # File: usr/share/ashyterm/ui/color_scheme_dialog.py, line: 42
 #: NEEDS WORK
@@ -1021,6 +718,19 @@ msgstr "Fundal Bara de Titlu"
 msgid "Cursor"
 msgstr "Cursor"
 # 
+# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 163
+# File: usr/share/ashyterm/ui/dialogs.py, line: 575
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1213
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1957
+# File: usr/share/ashyterm/ui/dialogs.py, line: 2006
+# File: usr/share/ashyterm/window.py, line: 953
+# File: usr/share/ashyterm/window.py, line: 1013
+#: NEEDS WORK
+msgid "Cancel"
+msgstr "Anulează"
+# 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 589
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1219
 #: NEEDS WORK
@@ -1041,6 +751,18 @@ msgstr "Culori generale"
 #: NEEDS WORK
 msgid "16-Color Palette"
 msgstr "Paletă de 16 culori"
+# 
+# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 136
+# File: usr/share/ashyterm/ui/dialogs.py, line: 784
+# File: usr/share/ashyterm/ui/dialogs.py, line: 2021
+# File: usr/share/ashyterm/ui/dialogs.py, line: 2033
+# File: usr/share/ashyterm/window.py, line: 1055
+# File: usr/share/ashyterm/window.py, line: 1070
+#: NEEDS WORK
+msgid "OK"
+msgstr "OK"
 # 
 # File: usr/share/ashyterm/ui/color_scheme_dialog.py, line: 135
 #: NEEDS WORK
@@ -1168,6 +890,264 @@ msgstr "Ascunde Bara Laterală"
 msgid "Show Sidebar"
 msgstr "Afișează bara laterală"
 # 
+# File: usr/share/ashyterm/ui/menus.py, line: 24
+#: NEEDS WORK
+msgid "Follow System Style"
+msgstr "Urmăriți Stilul Sistemului"
+# 
+# File: usr/share/ashyterm/ui/menus.py, line: 29
+#: NEEDS WORK
+msgid "Light Style"
+msgstr "Stil Ușor"
+# 
+# File: usr/share/ashyterm/ui/menus.py, line: 34
+#: NEEDS WORK
+msgid "Dark Style"
+msgstr "Stil Întunecat"
+# 
+# File: usr/share/ashyterm/ui/menus.py, line: 47
+#: NEEDS WORK
+msgid "Match Terminal Colors"
+msgstr "Potrivește culorile terminalului"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1607
+#: NEEDS WORK
+msgid "New Window"
+msgstr "Fereastră nouă"
+# 
+# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
+# 
+# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
+# 
+# File: usr/share/ashyterm/ui/menus.py, line: 157
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1390
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1604
+# File: usr/share/ashyterm/window.py, line: 261
+#: NEEDS WORK
+msgid "Preferences"
+msgstr "Preferințe"
+# 
+# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
+# 
+# File: usr/share/ashyterm/ui/menus.py, line: 211
+# File: usr/share/ashyterm/window.py, line: 909
+# File: usr/share/ashyterm/window.py, line: 960
+#: NEEDS WORK
+msgid "Keyboard Shortcuts"
+msgstr "Comenzi rapide de la tastatură"
+# 
+# File: usr/share/ashyterm/ui/menus.py, line: 216
+#: NEEDS WORK
+msgid "About"
+msgstr "Despre"
+# 
+# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
+# 
+# File: usr/share/ashyterm/ui/menus.py, line: 217
+# File: usr/share/ashyterm/window.py, line: 942
+#: NEEDS WORK
+msgid "Quit"
+msgstr "Ieșire"
+# 
+# File: usr/share/ashyterm/ui/menus.py, line: 119
+#: NEEDS WORK
+msgid "Connect with SFTP"
+msgstr "Conectare cu SFTP"
+# 
+# File: usr/share/ashyterm/ui/menus.py, line: 24
+#: NEEDS WORK
+msgid "Duplicate"
+msgstr "Duplicat"
+# 
+# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
+# 
+# File: usr/share/ashyterm/ui/menus.py, line: 25
+# File: usr/share/ashyterm/ui/menus.py, line: 61
+# File: usr/share/ashyterm/window.py, line: 954
+#: NEEDS WORK
+msgid "Rename"
+msgstr "Renumește"
+# 
+# File: usr/share/ashyterm/ui/menus.py, line: 203
+#: NEEDS WORK
+msgid "Move to Folder..."
+msgstr "Mută în dosar..."
+# 
+# File: usr/share/ashyterm/ui/menus.py, line: 220
+#: NEEDS WORK
+msgid "Add Session Here"
+msgstr "Adăugați sesiunea aici"
+# 
+# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
+# 
+# File: usr/share/ashyterm/ui/menus.py, line: 69
+# File: usr/share/ashyterm/ui/menus.py, line: 118
+# File: usr/share/ashyterm/ui/menus.py, line: 154
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1599
+#: NEEDS WORK
+msgid "Paste"
+msgstr "Lipire"
+# 
+# File: usr/share/ashyterm/ui/menus.py, line: 98
+#: NEEDS WORK
+msgid "Paste to Root"
+msgstr "Lipește în Rădăcină"
+# 
+# File: usr/share/ashyterm/ui/menus.py, line: 227
+#: NEEDS WORK
+msgid "Open Link"
+msgstr "Deschide linkul"
+# 
+# File: usr/share/ashyterm/ui/menus.py, line: 228
+#: NEEDS WORK
+msgid "Copy Link"
+msgstr "Copiază linkul"
+# 
+# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
+# 
+# File: usr/share/ashyterm/ui/menus.py, line: 30
+# File: usr/share/ashyterm/ui/menus.py, line: 66
+# File: usr/share/ashyterm/ui/menus.py, line: 117
+# File: usr/share/ashyterm/ui/menus.py, line: 153
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1598
+#: NEEDS WORK
+msgid "Copy"
+msgstr "Copiază"
+# 
+# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
+# 
+# File: usr/share/ashyterm/ui/menus.py, line: 119
+# File: usr/share/ashyterm/ui/menus.py, line: 155
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1600
+#: NEEDS WORK
+msgid "Select All"
+msgstr "Selectați tot"
+# 
+# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
+# 
+# File: usr/share/ashyterm/ui/menus.py, line: 289
+# File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 38
+#: NEEDS WORK
+msgid "Clear Session"
+msgstr "Șterge sesiunea"
+# 
+# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
+# 
+# File: usr/share/ashyterm/ui/menus.py, line: 276
+# File: usr/share/ashyterm/filemanager/menus.py, line: 276
+#: NEEDS WORK
+msgid "Split Left/Right"
+msgstr "Împărțiți Stânga/Dreapta"
+# 
+# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
+# 
+# File: usr/share/ashyterm/ui/menus.py, line: 279
+# File: usr/share/ashyterm/filemanager/menus.py, line: 279
+#: NEEDS WORK
+msgid "Split Top/Bottom"
+msgstr "Împărțiți Sus/Jos"
+# 
+# File: usr/share/ashyterm/ui/actions.py, line: 158
+#: NEEDS WORK
+msgid "Terminal session cleared."
+msgstr "Sesiune terminal ștearsă."
+# 
+# File: usr/share/ashyterm/ui/actions.py, line: 162
+#: NEEDS WORK
+msgid "No active terminal to clear."
+msgstr "Nu există un terminal activ de șters."
+# 
+# File: usr/share/ashyterm/ui/actions.py, line: 168
+#: NEEDS WORK
+msgid "Please select an SSH session to connect with SFTP."
+msgstr "Vă rugăm să selectați o sesiune SSH pentru a vă conecta cu SFTP."
+# 
+# File: usr/share/ashyterm/window.py, line: 758
+# File: usr/share/ashyterm/window.py, line: 875
+#: NEEDS WORK
+msgid "New Session"
+msgstr "Sesiune nouă"
+# 
+# File: usr/share/ashyterm/window.py, line: 885
+#: NEEDS WORK
+msgid "New Folder"
+msgstr "Folder Nouă"
+# 
+# File: usr/share/ashyterm/window.py, line: 944
+# File: usr/share/ashyterm/window.py, line: 999
+#: NEEDS WORK
+msgid "Session"
+msgstr "Sesiune"
+# 
+# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 351
+# File: usr/share/ashyterm/window.py, line: 944
+# File: usr/share/ashyterm/window.py, line: 999
+#: NEEDS WORK
+msgid "Folder"
+msgstr "Dosar"
+# 
+# File: usr/share/ashyterm/window.py, line: 947
+#: NEEDS WORK
+#, python-brace-format
+msgid "Rename {type}"
+msgstr "Renumește {type}"
+# 
+# File: usr/share/ashyterm/window.py, line: 948
+#: NEEDS WORK
+#, python-brace-format
+msgid "Enter new name for \"{name}\":"
+msgstr "Introduceți un nou nume pentru \"{name}\":"
+# 
+# File: usr/share/ashyterm/window.py, line: 1450
+#: NEEDS WORK
+msgid "Delete Item"
+msgstr "Șterge elementul"
+# 
+# File: usr/share/ashyterm/window.py, line: 1450
+#: NEEDS WORK
+msgid "Delete Items"
+msgstr "Șterge elemente"
+# 
+# File: usr/share/ashyterm/ui/actions.py, line: 415
+#: NEEDS WORK
+msgid "Layout"
+msgstr "Aspect."
+# 
+# File: usr/share/ashyterm/window.py, line: 1009
+#: NEEDS WORK
+#, python-brace-format
+msgid "Delete {type}"
+msgstr "Șterge {type}"
+# 
+# File: usr/share/ashyterm/window.py, line: 1003
+#: NEEDS WORK
+#, python-brace-format
+msgid ""
+"The folder \"{name}\" is not empty. Are you sure you want to permanently delete it and all its "
+"contents?"
+msgstr ""
+"Folderul \"{name}\" nu este gol. Ești sigur că vrei să-l ștergi permanent și să ștergi tot "
+"conținutul său?"
+# 
+# File: usr/share/ashyterm/window.py, line: 1005
+#: NEEDS WORK
+#, python-brace-format
+msgid "Are you sure you want to delete \"{name}\"?"
+msgstr "Ești sigur că vrei să ștergi \"{name}\"?"
+# 
+# File: usr/share/ashyterm/window.py, line: 1464
+#: NEEDS WORK
+#, python-brace-format
+msgid "Are you sure you want to permanently delete these {count} items?"
+msgstr "Ești sigur că vrei să ștergi permanent aceste {count} elemente?"
+# 
+# File: usr/share/ashyterm/window.py, line: 1466
+#: NEEDS WORK
+msgid "This will also delete all contents of any selected folders."
+msgstr "Aceasta va șterge, de asemenea, toate conținuturile oricăror foldere selectate."
+# 
 # File: usr/share/ashyterm/ui/ssh_dialogs.py, line: 206
 #: NEEDS WORK
 msgid "SSH Connection Failed"
@@ -1185,98 +1165,10 @@ msgstr "Nu s-a putut conecta la sesiunea '{session_name}'."
 msgid "Close"
 msgstr "Închide"
 # 
-# File: usr/share/ashyterm/ui/dialogs/command_guide_dialog.py, line: 32
+# File: usr/share/ashyterm/ui/dialogs.py, line: 223
 #: NEEDS WORK
-msgid "Add Custom Command"
-msgstr "Adaugă comandă personalizată"
-# 
-# File: usr/share/ashyterm/ui/dialogs/command_guide_dialog.py, line: 32
-#: NEEDS WORK
-msgid "Edit Custom Command"
-msgstr "Editare comandă personalizată"
-# 
-# File: usr/share/ashyterm/ui/dialogs/command_guide_dialog.py, line: 34
-#: NEEDS WORK
-msgid "Command"
-msgstr "Comandă"
-# 
-# File: usr/share/ashyterm/ui/dialogs/command_guide_dialog.py, line: 35
-#: NEEDS WORK
-msgid "Category"
-msgstr "Categorie"
-# 
-# File: usr/share/ashyterm/ui/dialogs/command_guide_dialog.py, line: 104
-#: NEEDS WORK
-msgid "Select an existing category or type a new one"
-msgstr "Selectați o categorie existentă sau tastați una nouă"
-# 
-# File: usr/share/ashyterm/ui/dialogs/command_guide_dialog.py, line: 59
-#: NEEDS WORK
-msgid "Description"
-msgstr "Descriere"
-# 
-# File: usr/share/ashyterm/ui/dialogs/command_guide_dialog.py, line: 171
-#: NEEDS WORK
-msgid "Please fill in all required fields."
-msgstr "Vă rugăm să completați toate câmpurile obligatorii."
-# 
-# File: usr/share/ashyterm/ui/dialogs/command_guide_dialog.py, line: 236
-#: NEEDS WORK
-msgid "Delete this custom command"
-msgstr "Șterge această comandă personalizată"
-# 
-# File: usr/share/ashyterm/ui/dialogs/command_guide_dialog.py, line: 143
-#: NEEDS WORK
-msgid "Command Guide"
-msgstr "Ghid de Comenzi"
-# 
-# File: usr/share/ashyterm/ui/dialogs/command_guide_dialog.py, line: 165
-#: NEEDS WORK
-msgid "Search commands..."
-msgstr "Căutare comenzi..."
-# 
-# File: usr/share/ashyterm/ui/dialogs/command_guide_dialog.py, line: 208
-#: NEEDS WORK
-msgid "Show Only Custom Commands"
-msgstr "Afișați doar comenzile personalizate"
-# 
-# File: usr/share/ashyterm/ui/dialogs/command_guide_dialog.py, line: 495
-#: NEEDS WORK
-msgid "Add New Command"
-msgstr "Adaugă Comandă Nouă"
-# 
-# File: usr/share/ashyterm/ui/dialogs/command_guide_dialog.py, line: 714
-#: NEEDS WORK
-msgid "Delete Custom Command?"
-msgstr "Șterge comanda personalizată?"
-# 
-# File: usr/share/ashyterm/ui/dialogs/command_guide_dialog.py, line: 716
-#: NEEDS WORK
-#, python-brace-format
-msgid ""
-"Are you sure you want to permanently delete the command:\n"
-"\n"
-"<b>{name}</b>"
-msgstr ""
-"Ești sigur că vrei să ștergi permanent comanda:\n"
-"\n"
-"<b>{name}</b>"
-# 
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
-# 
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
-# 
-# File: usr/share/ashyterm/ui/menus.py, line: 93
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1056
-# File: usr/share/ashyterm/window.py, line: 331
-#: NEEDS WORK
-msgid "Add Folder"
-msgstr "Adaugă folder"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1056
-#: NEEDS WORK
-msgid "Edit Folder"
-msgstr "Editare dosar"
+msgid "Edit Session"
+msgstr "Editare sesiune"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 313
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1128
@@ -1289,144 +1181,6 @@ msgstr "Eroare UI"
 #: NEEDS WORK
 msgid "Failed to initialize dialog interface"
 msgstr "Eșec la inițializarea interfeței de dialog"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1100
-#: NEEDS WORK
-msgid "Folder Information"
-msgstr "Informații despre folder"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 347
-#: NEEDS WORK
-msgid "Organization"
-msgstr "Organizație"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1135
-#: NEEDS WORK
-msgid "Folder Name"
-msgstr "Nume folder"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1136
-#: NEEDS WORK
-msgid "A descriptive name for organizing sessions"
-msgstr "Un nume descriptiv pentru organizarea sesiunilor"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1141
-#: NEEDS WORK
-msgid "Enter folder name..."
-msgstr "Introduceți numele folderului..."
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1158
-#: NEEDS WORK
-msgid "Parent Folder"
-msgstr "Folder Părinte"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1159
-#: NEEDS WORK
-msgid "Choose a parent folder for organization"
-msgstr "Alegeți un folder părinte pentru organizare"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 357
-# File: usr/share/ashyterm/ui/dialogs.py, line: 358
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1164
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1165
-#: NEEDS WORK
-msgid "Root"
-msgstr "Rădăcină"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 796
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1252
-#: NEEDS WORK
-msgid "Unsaved Changes"
-msgstr "Modificări nesalvate"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 797
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1253
-#: NEEDS WORK
-msgid "You have unsaved changes. Are you sure you want to cancel?"
-msgstr "Aveți modificări nesalvate. Sunteți sigur că doriți să anulați?"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 833
-# File: usr/share/ashyterm/ui/dialogs.py, line: 837
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1288
-#: NEEDS WORK
-msgid "Save Error"
-msgstr "Eroare la salvare"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1288
-#: NEEDS WORK
-#, python-brace-format
-msgid "Failed to save folder: {}"
-msgstr "Nu s-a reușit salvarea folderului: {}"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1296
-#: NEEDS WORK
-msgid "Folder name"
-msgstr "Nume folder"
-# 
-# File: usr/share/ashyterm/ui/dialogs/move_dialogs.py, line: 28
-#: NEEDS WORK
-#, python-brace-format
-msgid "Move {item_type}"
-msgstr "Mută {item_type}"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 2183
-#: NEEDS WORK
-msgid "Select Destination"
-msgstr "Selectați destinația"
-# 
-# File: usr/share/ashyterm/ui/dialogs/move_dialogs.py, line: 50
-#: NEEDS WORK
-#, python-brace-format
-msgid "Choose the folder to move the {item_type} '{name}' to."
-msgstr "Alegeți folderul în care doriți să mutați {item_type} '{name}'."
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 2190
-#: NEEDS WORK
-msgid "Destination Folder"
-msgstr "Folder de destinație"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 2191
-#: NEEDS WORK
-msgid "Select a folder or 'Root' for the top level"
-msgstr "Selectați un folder sau 'Rădăcină' pentru nivelul superior"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 2205
-#: NEEDS WORK
-msgid "Move"
-msgstr "Mutare"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 2265
-#: NEEDS WORK
-msgid "Move Failed"
-msgstr "Mutare eșuată"
-# 
-# File: usr/share/ashyterm/window.py, line: 944
-# File: usr/share/ashyterm/window.py, line: 999
-#: NEEDS WORK
-msgid "Session"
-msgstr "Sesiune"
-# 
-# File: usr/share/ashyterm/ui/actions.py, line: 415
-#: NEEDS WORK
-msgid "Layout"
-msgstr "Aspect."
-# 
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
-# 
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
-# 
-# File: usr/share/ashyterm/ui/menus.py, line: 60
-# File: usr/share/ashyterm/ui/menus.py, line: 92
-# File: usr/share/ashyterm/ui/dialogs.py, line: 223
-# File: usr/share/ashyterm/window.py, line: 325
-#: NEEDS WORK
-msgid "Add Session"
-msgstr "Adaugă sesiune"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 223
-#: NEEDS WORK
-msgid "Edit Session"
-msgstr "Editare sesiune"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 319
 #: NEEDS WORK
@@ -1468,19 +1222,23 @@ msgstr "Alege o culoare pentru a identifica fila acestei sesiuni"
 msgid "Clear Color"
 msgstr "Culoare clară"
 # 
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 351
-# File: usr/share/ashyterm/window.py, line: 944
-# File: usr/share/ashyterm/window.py, line: 999
+# File: usr/share/ashyterm/ui/dialogs.py, line: 347
 #: NEEDS WORK
-msgid "Folder"
-msgstr "Dosar"
+msgid "Organization"
+msgstr "Organizație"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 352
 #: NEEDS WORK
 msgid "Choose a folder to organize this session"
 msgstr "Alege un folder pentru a organiza această sesiune"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 357
+# File: usr/share/ashyterm/ui/dialogs.py, line: 358
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1164
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1165
+#: NEEDS WORK
+msgid "Root"
+msgstr "Rădăcină"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 398
 #: NEEDS WORK
@@ -1496,6 +1254,14 @@ msgstr "Tip sesiune"
 #: NEEDS WORK
 msgid "Choose between local terminal or SSH connection"
 msgstr "Alege între terminalul local sau conexiunea SSH"
+# 
+# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 406
+# File: usr/share/ashyterm/sessions/models.py, line: 511
+#: NEEDS WORK
+msgid "Local Terminal"
+msgstr "Terminal Local"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 406
 #: NEEDS WORK
@@ -1609,10 +1375,212 @@ msgstr "Parola pentru autentificarea SSH (keyring indisponibil)"
 msgid "Enter password..."
 msgstr "Introduceți parola..."
 # 
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 309
+#: NEEDS WORK
+msgid "Run Command After Login"
+msgstr "Execută comanda după autentificare"
+# 
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 311
+#: NEEDS WORK
+msgid "Execute a custom command automatically after the SSH session connects"
+msgstr "Executați o comandă personalizată automat după ce sesiunea SSH se conectează"
+# 
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 318
+#: NEEDS WORK
+msgid "Post-Login Command"
+msgstr "Comandă după autentificare"
+# 
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 319
+#: NEEDS WORK
+msgid "Command to execute right after a successful login"
+msgstr "Comandă de executat imediat după un login reușit"
+# 
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 323
+#: NEEDS WORK
+msgid "Example: tmux attach -t main"
+msgstr "Exemplu: tmux attach -t main"
+# 
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 356
+#: NEEDS WORK
+msgid "Enable X11 Forwarding"
+msgstr "Activare redirecționare X11"
+# 
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 357
+#: NEEDS WORK
+msgid "Allow starting programs in graphical mode (X11)"
+msgstr "Permite pornirea programelor în modul grafic (X11)"
+# 
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 354
+#: NEEDS WORK
+msgid "Port Forwarding"
+msgstr "Redirecționare porturi"
+# 
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 355
+#: NEEDS WORK
+msgid "Create SSH tunnels to forward local ports to remote targets"
+msgstr "Creează tuneluri SSH pentru a redirecționa porturile locale către ținte remote"
+# 
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 369
+#: NEEDS WORK
+msgid "Add"
+msgstr "Adaugă"
+# 
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 396
+#: NEEDS WORK
+msgid "No port forwards configured."
+msgstr "Nu sunt configurate redirecționări de porturi."
+# 
+# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
+# 
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 427
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 576
+# File: usr/share/ashyterm/sessions/models.py, line: 341
+#: NEEDS WORK
+msgid "Tunnel"
+msgstr "Tunel"
+# 
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 430
+#: NEEDS WORK
+msgid "SSH Host"
+msgstr "Gazdă SSH"
+# 
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 431
+#: NEEDS WORK
+#, python-brace-format
+msgid "{local_host}:{local_port} → {remote_host}:{remote_port}"
+msgstr "{local_host}:{local_port} → {remote_host}:{remote_port}"
+# 
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 484
+#: NEEDS WORK
+msgid "Edit Port Forward"
+msgstr "Editare Redirecționare Port"
+# 
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 484
+#: NEEDS WORK
+msgid "Add Port Forward"
+msgstr "Adaugă Redirecționare Port"
+# 
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 508
+#: NEEDS WORK
+msgid "Tunnel name"
+msgstr "Nume tunel"
+# 
+# File: usr/share/ashyterm/filemanager/manager.py, line: 366
+#: NEEDS WORK
+msgid "Name"
+msgstr "Nume"
+# 
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 519
+#: NEEDS WORK
+msgid "Local Host"
+msgstr "Gazdă Locală"
+# 
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 524
+#: NEEDS WORK
+msgid "Local Port"
+msgstr "Port local"
+# 
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 529
+#: NEEDS WORK
+msgid "Leave blank to use the SSH host"
+msgstr "Lăsați gol pentru a folosi gazda SSH"
+# 
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 536
+#: NEEDS WORK
+msgid "Connect to a different remote host"
+msgstr "Conectează-te la un alt gazdă remote"
+# 
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 546
+#: NEEDS WORK
+msgid "Remote Host"
+msgstr "Gazdă la distanță"
+# 
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 551
+#: NEEDS WORK
+msgid "Remote Port"
+msgstr "Portă Remote"
+# 
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 590
+#: NEEDS WORK
+msgid "Local port must be between 1025 and 65535 (ports below 1024 require administrator privileges)."
+msgstr ""
+"Porta locală trebuie să fie între 1025 și 65535 (porturile sub 1024 necesită privilegii de "
+"administrator)."
+# 
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 594
+#: NEEDS WORK
+msgid "Remote port must be between 1 and 65535."
+msgstr "Porta remote trebuie să fie între 1 și 65535."
+# 
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 596
+#: NEEDS WORK
+msgid "Local host cannot be empty."
+msgstr "Gazda locală nu poate fi goală."
+# 
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 600
+#: NEEDS WORK
+msgid "Invalid Port Forward"
+msgstr "Port Forward invalid"
+# 
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 346
+#: NEEDS WORK
+msgid "SFTP Session"
+msgstr "Sesiune SFTP"
+# 
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 348
+#: NEEDS WORK
+msgid "Configure default directories for SFTP connections (optional)"
+msgstr "Configurează directoarele implicite pentru conexiunile SFTP (opțional)"
+# 
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 353
+#: NEEDS WORK
+msgid "Enable SFTP Session"
+msgstr "Activare sesiune SFTP"
+# 
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 355
+#: NEEDS WORK
+msgid "Use these directories when opening an SFTP tab for this session"
+msgstr "Utilizați aceste directoare atunci când deschideți un tab SFTP pentru această sesiune"
+# 
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 364
+#: NEEDS WORK
+msgid "Local Directory"
+msgstr "Director local"
+# 
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 365
+#: NEEDS WORK
+msgid "Starting directory on your machine for SFTP"
+msgstr "Directorul de început pe mașina ta pentru SFTP"
+# 
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 369
+#: NEEDS WORK
+msgid "Example: /home/user/projects"
+msgstr "Exemplu: /acasa/utilizator/proiecte"
+# 
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 379
+#: NEEDS WORK
+msgid "Remote Directory"
+msgstr "Directorul la distanță"
+# 
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 380
+#: NEEDS WORK
+msgid "Starting directory on the remote host for SFTP"
+msgstr "Directorul de început pe gazda la distanță pentru SFTP"
+# 
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 384
+#: NEEDS WORK
+msgid "Example: /var/www"
+msgstr "Exemplu: /var/www"
+# 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 581
 #: NEEDS WORK
 msgid "Test Connection"
 msgstr "Testează conexiunea"
+# 
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 773
+#: NEEDS WORK
+msgid "Remote server must have X11Forwarding yes in sshd_config."
+msgstr "Serverul la distanță trebuie să aibă X11Forwarding yes în sshd_config."
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 707
 #: NEEDS WORK
@@ -1700,6 +1668,25 @@ msgstr "Conexiune eșuată"
 msgid "Could not connect to the SSH server."
 msgstr "Nu s-a putut conecta la serverul SSH."
 # 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 796
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1252
+#: NEEDS WORK
+msgid "Unsaved Changes"
+msgstr "Modificări nesalvate"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 797
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1253
+#: NEEDS WORK
+msgid "You have unsaved changes. Are you sure you want to cancel?"
+msgstr "Aveți modificări nesalvate. Sunteți sigur că doriți să anulați?"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 833
+# File: usr/share/ashyterm/ui/dialogs.py, line: 837
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1288
+#: NEEDS WORK
+msgid "Save Error"
+msgstr "Eroare la salvare"
+# 
 # File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 537
 #: NEEDS WORK
 msgid "An unexpected error occurred while saving."
@@ -1720,6 +1707,24 @@ msgstr ""
 msgid "Session name"
 msgstr "Nume sesiune"
 # 
+# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
+# 
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 716
+# File: usr/share/ashyterm/sessions/models.py, line: 280
+#: NEEDS WORK
+msgid "Post-login command cannot be empty when enabled."
+msgstr "Comanda post-autentificare nu poate fi goală când este activată."
+# 
+# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
+# 
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 843
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 851
+# File: usr/share/ashyterm/sessions/models.py, line: 334
+# File: usr/share/ashyterm/sessions/models.py, line: 338
+#: NEEDS WORK
+msgid "SFTP local directory must exist and be a directory."
+msgstr "Directorul local SFTP trebuie să existe și să fie un director."
+# 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 921
 #: NEEDS WORK
 msgid "SSH Validation Error"
@@ -1735,17 +1740,332 @@ msgstr ""
 "Erori de configurare SSH:\n"
 "{}"
 # 
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
-# 
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
-# 
-# File: usr/share/ashyterm/ui/menus.py, line: 157
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1390
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1604
-# File: usr/share/ashyterm/window.py, line: 261
+# File: usr/share/ashyterm/ui/dialogs/command_guide_dialog.py, line: 32
 #: NEEDS WORK
-msgid "Preferences"
-msgstr "Preferințe"
+msgid "Add Custom Command"
+msgstr "Adaugă comandă personalizată"
+# 
+# File: usr/share/ashyterm/ui/dialogs/command_guide_dialog.py, line: 32
+#: NEEDS WORK
+msgid "Edit Custom Command"
+msgstr "Editare comandă personalizată"
+# 
+# File: usr/share/ashyterm/ui/dialogs/command_guide_dialog.py, line: 34
+#: NEEDS WORK
+msgid "Command"
+msgstr "Comandă"
+# 
+# File: usr/share/ashyterm/ui/dialogs/command_guide_dialog.py, line: 35
+#: NEEDS WORK
+msgid "Category"
+msgstr "Categorie"
+# 
+# File: usr/share/ashyterm/ui/dialogs/command_guide_dialog.py, line: 104
+#: NEEDS WORK
+msgid "Select an existing category or type a new one"
+msgstr "Selectați o categorie existentă sau tastați una nouă"
+# 
+# File: usr/share/ashyterm/ui/dialogs/command_guide_dialog.py, line: 59
+#: NEEDS WORK
+msgid "Description"
+msgstr "Descriere"
+# 
+# File: usr/share/ashyterm/ui/dialogs/command_guide_dialog.py, line: 171
+#: NEEDS WORK
+msgid "Please fill in all required fields."
+msgstr "Vă rugăm să completați toate câmpurile obligatorii."
+# 
+# File: usr/share/ashyterm/ui/dialogs/command_guide_dialog.py, line: 236
+#: NEEDS WORK
+msgid "Delete this custom command"
+msgstr "Șterge această comandă personalizată"
+# 
+# File: usr/share/ashyterm/ui/dialogs/command_guide_dialog.py, line: 143
+#: NEEDS WORK
+msgid "Command Guide"
+msgstr "Ghid de Comenzi"
+# 
+# File: usr/share/ashyterm/ui/dialogs/command_guide_dialog.py, line: 165
+#: NEEDS WORK
+msgid "Search commands..."
+msgstr "Căutare comenzi..."
+# 
+# File: usr/share/ashyterm/ui/dialogs/command_guide_dialog.py, line: 208
+#: NEEDS WORK
+msgid "Show Only Custom Commands"
+msgstr "Afișați doar comenzile personalizate"
+# 
+# File: usr/share/ashyterm/ui/dialogs/command_guide_dialog.py, line: 495
+#: NEEDS WORK
+msgid "Add New Command"
+msgstr "Adaugă Comandă Nouă"
+# 
+# File: usr/share/ashyterm/ui/dialogs/command_guide_dialog.py, line: 714
+#: NEEDS WORK
+msgid "Delete Custom Command?"
+msgstr "Șterge comanda personalizată?"
+# 
+# File: usr/share/ashyterm/ui/dialogs/command_guide_dialog.py, line: 716
+#: NEEDS WORK
+#, python-brace-format
+msgid ""
+"Are you sure you want to permanently delete the command:\n"
+"\n"
+"<b>{name}</b>"
+msgstr ""
+"Ești sigur că vrei să ștergi permanent comanda:\n"
+"\n"
+"<b>{name}</b>"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1056
+#: NEEDS WORK
+msgid "Edit Folder"
+msgstr "Editare dosar"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1100
+#: NEEDS WORK
+msgid "Folder Information"
+msgstr "Informații despre folder"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1135
+#: NEEDS WORK
+msgid "Folder Name"
+msgstr "Nume folder"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1136
+#: NEEDS WORK
+msgid "A descriptive name for organizing sessions"
+msgstr "Un nume descriptiv pentru organizarea sesiunilor"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1141
+#: NEEDS WORK
+msgid "Enter folder name..."
+msgstr "Introduceți numele folderului..."
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1158
+#: NEEDS WORK
+msgid "Parent Folder"
+msgstr "Folder Părinte"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1159
+#: NEEDS WORK
+msgid "Choose a parent folder for organization"
+msgstr "Alegeți un folder părinte pentru organizare"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1288
+#: NEEDS WORK
+#, python-brace-format
+msgid "Failed to save folder: {}"
+msgstr "Nu s-a reușit salvarea folderului: {}"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1296
+#: NEEDS WORK
+msgid "Folder name"
+msgstr "Nume folder"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 164
+#: NEEDS WORK
+msgid "Continue"
+msgstr "Continuare"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 192
+#: NEEDS WORK
+#, python-brace-format
+msgid "{} is required"
+msgstr "{} este necesar"
+# 
+# File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 17
+#: NEEDS WORK
+msgid "Tab &amp; Pane Management"
+msgstr "Gestionarea tab-urilor și panourilor"
+# 
+# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
+# 
+# File: usr/share/ashyterm/ui/menus.py, line: 145
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1597
+#: NEEDS WORK
+msgid "Close Tab"
+msgstr "Închide fila"
+# 
+# File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 21
+#: NEEDS WORK
+msgid "Next Tab"
+msgstr "Tab următor"
+# 
+# File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 22
+#: NEEDS WORK
+msgid "Previous Tab"
+msgstr "Tab anterior"
+# 
+# File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 26
+#: NEEDS WORK
+msgid "Splitting"
+msgstr "Împărțire"
+# 
+# File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 28
+#: NEEDS WORK
+msgid "Split Horizontally"
+msgstr "Împărțiți orizontal"
+# 
+# File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 29
+#: NEEDS WORK
+msgid "Split Vertically"
+msgstr "Împărțiți vertical"
+# 
+# File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 30
+#: NEEDS WORK
+msgid "Close Active Pane"
+msgstr "Închide Panoul Activ"
+# 
+# File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 34
+#: NEEDS WORK
+msgid "Terminal Interaction"
+msgstr "Interacțiune cu terminalul"
+# 
+# File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 38
+#: NEEDS WORK
+msgid "Send Command  All Tabs"
+msgstr "Trimite comanda  Toate filele"
+# 
+# File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 39
+#: NEEDS WORK
+msgid "Ask AI Assistant"
+msgstr "Întreabă Asistentul AI"
+# 
+# File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 42
+#: NEEDS WORK
+msgid "Zoom"
+msgstr "Zoom"
+# 
+# File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 44
+#: NEEDS WORK
+msgid "Zoom In"
+msgstr "Mărire"
+# 
+# File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 45
+#: NEEDS WORK
+msgid "Zoom Out"
+msgstr "Micșorați zoomul"
+# 
+# File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 46
+#: NEEDS WORK
+msgid "Reset Zoom"
+msgstr "Resetare zoom"
+# 
+# File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 50
+#: NEEDS WORK
+msgid "Application &amp; Window"
+msgstr "Aplicație & Fereastră"
+# 
+# File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 53
+#: NEEDS WORK
+msgid "Toggle File Manager"
+msgstr "Comutare Manager Fișiere"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1605
+#: NEEDS WORK
+msgid "Quit Application"
+msgstr "Ieșire din aplicație"
+# 
+# File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 93
+#: NEEDS WORK
+msgid "Reset All"
+msgstr "Resetare tot"
+# 
+# File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 94
+#: NEEDS WORK
+msgid "Reset all shortcuts to default values"
+msgstr "Resetare toate comenzile rapide la valorile implicite"
+# 
+# File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 128
+#: NEEDS WORK
+msgid "Reset all shortcuts to defaults"
+msgstr "Resetare toate comenzile rapide la valorile implicite"
+# 
+# File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 186
+# File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 213
+# File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 294
+# File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 334
+#: NEEDS WORK
+msgid "Not set"
+msgstr "Nesetat"
+# 
+# File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 191
+#: NEEDS WORK
+msgid "Shortcut for: "
+msgstr "Scurtătură pentru:"
+# 
+# File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 195
+#: NEEDS WORK
+msgid "Click to change the keyboard shortcut for this action"
+msgstr "Faceți clic pentru a schimba combinația de taste pentru această acțiune"
+# 
+# File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 205
+#: NEEDS WORK
+msgid "Set New Shortcut"
+msgstr "Setare nouă combinație de taste"
+# 
+# File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 206
+#: NEEDS WORK
+#, python-brace-format
+msgid "Press the new key combination for '{}', or Esc to cancel."
+msgstr "Apăsați noua combinație de taste pentru '{}', sau Esc pentru a anula."
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1914
+#: NEEDS WORK
+#, python-brace-format
+msgid ""
+"Current: {}\n"
+"New: (press keys)"
+msgstr ""
+"Curent: {}\n"
+"Nou: (apăsați tastele)"
+# 
+# File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 257
+#: NEEDS WORK
+#, python-brace-format
+msgid ""
+"Current: {}\n"
+"New: {} (Conflicts with {})"
+msgstr ""
+"Curent: {}\n"
+"Nou: {} (Conflictează cu {})"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1945
+#: NEEDS WORK
+#, python-brace-format
+msgid ""
+"Current: {}\n"
+"New: {}"
+msgstr ""
+"Curent: {}\n"
+"Nou: {}"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1958
+#: NEEDS WORK
+msgid "Clear"
+msgstr "Șterge"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1959
+#: NEEDS WORK
+msgid "Set Shortcut"
+msgstr "Setare Comandă Rapidă"
+# 
+# File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 306
+#: NEEDS WORK
+msgid "Reset All Shortcuts"
+msgstr "Resetează toate comenzile rapide"
+# 
+# File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 307
+#: NEEDS WORK
+msgid "This will reset all keyboard shortcuts to their default values. Continue?"
+msgstr "Aceasta va reseta toate comenzile rapide de la tastatură la valorile lor implicite. Continuare?"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1831
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1843
+#: NEEDS WORK
+msgid "Reset"
+msgstr "Resetare"
 # 
 # File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 56
 #: NEEDS WORK
@@ -1992,10 +2312,10 @@ msgstr "Caractere suplimentare pentru selecția cuvintelor (de exemplu, -_.:/~)"
 msgid "Word Characters"
 msgstr "Caractere Word"
 # 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 223
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 292
 #: NEEDS WORK
-msgid "Shell &amp; Bell"
-msgstr "Shell & Bell"
+msgid "Shell & Bell"
+msgstr "Coajă și Clopot"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1107
 #: NEEDS WORK
@@ -2016,6 +2336,103 @@ msgstr "Clopot sonor"
 #: NEEDS WORK
 msgid "Emit a sound for the terminal bell character"
 msgstr "Emite un sunet pentru caracterul de sonerie al terminalului"
+# 
+# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 319
+# File: usr/share/ashyterm/window.py, line: 679
+#: NEEDS WORK
+msgid "AI Assistant"
+msgstr "Asistent AI"
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 321
+#: NEEDS WORK
+msgid "Configure the Linux-focused assistant available inside the terminal."
+msgstr "Configurează asistentul axat pe Linux disponibil în terminal."
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 327
+#: NEEDS WORK
+msgid "Enable AI Assistant"
+msgstr "Activează Asistentul AI"
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 328
+#: NEEDS WORK
+msgid "Allow Ctrl+Shift+I to ask the assistant for help."
+msgstr "Permite Ctrl+Shift+I pentru a cere ajutor asistentului."
+# 
+# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 339
+# File: usr/share/ashyterm/window.py, line: 546
+#: NEEDS WORK
+msgid "Provider"
+msgstr "Furnizor"
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 340
+#: NEEDS WORK
+msgid "Select which AI service to use."
+msgstr "Selectați ce serviciu AI doriți să utilizați."
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 361
+#: NEEDS WORK
+msgid "Model Identifier"
+msgstr "Identificator model"
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 363
+#: NEEDS WORK
+msgid "Examples: llama-3.1-8b-instant, gemini-2.5-flash."
+msgstr "exemplu: llama-3.1-8b-instant, gemini-2.5-flash."
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 368
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 779
+#: NEEDS WORK
+msgid "llama-3.1-8b-instant"
+msgstr "llama-3.1-8b-instant"
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 374
+#: NEEDS WORK
+msgid "API Key"
+msgstr "Cheie API"
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 375
+#: NEEDS WORK
+msgid "Stored locally and used to authenticate requests."
+msgstr "Stocat local și folosit pentru a autentifica cererile."
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 379
+#: NEEDS WORK
+msgid "Paste your API key"
+msgstr "Introduceți cheia API-ului dvs."
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 391
+#: NEEDS WORK
+msgid "Site URL (optional)"
+msgstr "URL-ul site-ului (opțional)"
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 392
+#: NEEDS WORK
+msgid "Used as HTTP Referer header on OpenRouter rankings."
+msgstr "Utilizat ca antet HTTP Referer în clasamentele OpenRouter."
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 396
+#: NEEDS WORK
+msgid "https://example.com"
+msgstr "https://example.com"
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 408
+#: NEEDS WORK
+msgid "Site title (optional)"
+msgstr "Titlu site (opțional)"
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 409
+#: NEEDS WORK
+msgid "Sent via X-Title header for OpenRouter rankings."
+msgstr "Trimis prin antetul X-Title pentru clasamentele OpenRouter."
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 413
+#: NEEDS WORK
+msgid "My Project"
+msgstr "Proiectul Meu"
 # 
 # File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 250
 #: NEEDS WORK
@@ -2290,12 +2707,6 @@ msgstr "Nivel de jurnalizare a consolei"
 msgid "Set the minimum level of messages shown in the console"
 msgstr "Setați nivelul minim al mesajelor afișate în consolă"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1831
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1843
-#: NEEDS WORK
-msgid "Reset"
-msgstr "Resetare"
-# 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1832
 #: NEEDS WORK
 msgid "Reset application settings to defaults"
@@ -2312,6 +2723,61 @@ msgstr "Resetare toate setările"
 #: NEEDS WORK
 msgid "Restore all settings to their default values"
 msgstr "Restabiliți toate setările la valorile lor implicite"
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 781
+#: NEEDS WORK
+msgid "Model identifier (for example: llama-3.1-8b-instant)."
+msgstr "Identificator de model (de exemplu: llama-3.1-8b-instant)."
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 783
+#: NEEDS WORK
+msgid "API key."
+msgstr "cheie API."
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 786
+#: NEEDS WORK
+msgid "gemini-2.5-flash"
+msgstr "gemini-2.5-flash"
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 788
+#: NEEDS WORK
+msgid "Gemini model identifier (for example: gemini-2.5-flash)."
+msgstr "Identificatorul modelului Gemini (de exemplu: gemini-2.5-flash)."
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 790
+#: NEEDS WORK
+msgid "Google AI Studio API key."
+msgstr "Cheia API Google AI Studio."
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 842
+#: NEEDS WORK
+msgid "openrouter/polaris-alpha"
+msgstr "openrouter/polaris-alpha"
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 844
+#: NEEDS WORK
+msgid "OpenRouter model identifier (for example: openrouter/polaris-alpha)."
+msgstr "Identificatorul modelului OpenRouter (de exemplu: openrouter/polaris-alpha)."
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 846
+#: NEEDS WORK
+msgid "OpenRouter API key."
+msgstr "Cheia API OpenRouter."
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 785
+#: NEEDS WORK
+msgid "model-name"
+msgstr "nume-model"
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 787
+#: NEEDS WORK
+msgid "Model identifier required by the selected provider."
+msgstr "Identificatorul modelului este necesar de către furnizorul selectat."
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 789
+#: NEEDS WORK
+msgid "API key used to authenticate requests."
+msgstr "Cheie API utilizată pentru a autentifica cererile."
 # 
 # File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 652
 #: NEEDS WORK
@@ -2359,482 +2825,42 @@ msgstr "Reset eșuat"
 msgid "Failed to reset settings: {}"
 msgstr "Eșec la resetarea setărilor: {}"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 164
-#: NEEDS WORK
-msgid "Continue"
-msgstr "Continuare"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 192
+# File: usr/share/ashyterm/ui/dialogs/move_dialogs.py, line: 28
 #: NEEDS WORK
 #, python-brace-format
-msgid "{} is required"
-msgstr "{} este necesar"
+msgid "Move {item_type}"
+msgstr "Mută {item_type}"
 # 
-# File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 17
+# File: usr/share/ashyterm/ui/dialogs.py, line: 2183
 #: NEEDS WORK
-msgid "Tab &amp; Pane Management"
-msgstr "Gestionarea tab-urilor și panourilor"
+msgid "Select Destination"
+msgstr "Selectați destinația"
 # 
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
-# 
-# File: usr/share/ashyterm/ui/menus.py, line: 144
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1596
-#: NEEDS WORK
-msgid "New Tab"
-msgstr "Tab nou"
-# 
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
-# 
-# File: usr/share/ashyterm/ui/menus.py, line: 145
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1597
-#: NEEDS WORK
-msgid "Close Tab"
-msgstr "Închide fila"
-# 
-# File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 21
-#: NEEDS WORK
-msgid "Next Tab"
-msgstr "Tab următor"
-# 
-# File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 22
-#: NEEDS WORK
-msgid "Previous Tab"
-msgstr "Tab anterior"
-# 
-# File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 26
-#: NEEDS WORK
-msgid "Splitting"
-msgstr "Împărțire"
-# 
-# File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 28
-#: NEEDS WORK
-msgid "Split Horizontally"
-msgstr "Împărțiți orizontal"
-# 
-# File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 29
-#: NEEDS WORK
-msgid "Split Vertically"
-msgstr "Împărțiți vertical"
-# 
-# File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 30
-#: NEEDS WORK
-msgid "Close Active Pane"
-msgstr "Închide Panoul Activ"
-# 
-# File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 34
-#: NEEDS WORK
-msgid "Terminal Interaction"
-msgstr "Interacțiune cu terminalul"
-# 
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
-# 
-# File: usr/share/ashyterm/ui/menus.py, line: 30
-# File: usr/share/ashyterm/ui/menus.py, line: 66
-# File: usr/share/ashyterm/ui/menus.py, line: 117
-# File: usr/share/ashyterm/ui/menus.py, line: 153
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1598
-#: NEEDS WORK
-msgid "Copy"
-msgstr "Copiază"
-# 
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
-# 
-# File: usr/share/ashyterm/ui/menus.py, line: 69
-# File: usr/share/ashyterm/ui/menus.py, line: 118
-# File: usr/share/ashyterm/ui/menus.py, line: 154
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1599
-#: NEEDS WORK
-msgid "Paste"
-msgstr "Lipire"
-# 
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
-# 
-# File: usr/share/ashyterm/ui/menus.py, line: 119
-# File: usr/share/ashyterm/ui/menus.py, line: 155
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1600
-#: NEEDS WORK
-msgid "Select All"
-msgstr "Selectați tot"
-# 
-# File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 42
-#: NEEDS WORK
-msgid "Zoom"
-msgstr "Zoom"
-# 
-# File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 44
-#: NEEDS WORK
-msgid "Zoom In"
-msgstr "Mărire"
-# 
-# File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 45
-#: NEEDS WORK
-msgid "Zoom Out"
-msgstr "Micșorați zoomul"
-# 
-# File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 46
-#: NEEDS WORK
-msgid "Reset Zoom"
-msgstr "Resetare zoom"
-# 
-# File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 50
-#: NEEDS WORK
-msgid "Application &amp; Window"
-msgstr "Aplicație & Fereastră"
-# 
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1606
-# File: usr/share/ashyterm/window.py, line: 248
-#: NEEDS WORK
-msgid "Toggle Sidebar"
-msgstr "Comutare bara laterală"
-# 
-# File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 53
-#: NEEDS WORK
-msgid "Toggle File Manager"
-msgstr "Comutare Manager Fișiere"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1607
-#: NEEDS WORK
-msgid "New Window"
-msgstr "Fereastră nouă"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1605
-#: NEEDS WORK
-msgid "Quit Application"
-msgstr "Ieșire din aplicație"
-# 
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
-# 
-# File: usr/share/ashyterm/ui/menus.py, line: 211
-# File: usr/share/ashyterm/window.py, line: 909
-# File: usr/share/ashyterm/window.py, line: 960
-#: NEEDS WORK
-msgid "Keyboard Shortcuts"
-msgstr "Comenzi rapide de la tastatură"
-# 
-# File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 93
-#: NEEDS WORK
-msgid "Reset All"
-msgstr "Resetare tot"
-# 
-# File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 94
-#: NEEDS WORK
-msgid "Reset all shortcuts to default values"
-msgstr "Resetare toate comenzile rapide la valorile implicite"
-# 
-# File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 128
-#: NEEDS WORK
-msgid "Reset all shortcuts to defaults"
-msgstr "Resetare toate comenzile rapide la valorile implicite"
-# 
-# File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 186
-# File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 213
-# File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 294
-# File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 334
-#: NEEDS WORK
-msgid "Not set"
-msgstr "Nesetat"
-# 
-# File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 191
-#: NEEDS WORK
-msgid "Shortcut for: "
-msgstr "Scurtătură pentru:"
-# 
-# File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 195
-#: NEEDS WORK
-msgid "Click to change the keyboard shortcut for this action"
-msgstr "Faceți clic pentru a schimba combinația de taste pentru această acțiune"
-# 
-# File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 205
-#: NEEDS WORK
-msgid "Set New Shortcut"
-msgstr "Setare nouă combinație de taste"
-# 
-# File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 206
+# File: usr/share/ashyterm/ui/dialogs/move_dialogs.py, line: 50
 #: NEEDS WORK
 #, python-brace-format
-msgid "Press the new key combination for '{}', or Esc to cancel."
-msgstr "Apăsați noua combinație de taste pentru '{}', sau Esc pentru a anula."
+msgid "Choose the folder to move the {item_type} '{name}' to."
+msgstr "Alegeți folderul în care doriți să mutați {item_type} '{name}'."
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1914
+# File: usr/share/ashyterm/ui/dialogs.py, line: 2190
 #: NEEDS WORK
-#, python-brace-format
-msgid ""
-"Current: {}\n"
-"New: (press keys)"
-msgstr ""
-"Curent: {}\n"
-"Nou: (apăsați tastele)"
+msgid "Destination Folder"
+msgstr "Folder de destinație"
 # 
-# File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 257
+# File: usr/share/ashyterm/ui/dialogs.py, line: 2191
 #: NEEDS WORK
-#, python-brace-format
-msgid ""
-"Current: {}\n"
-"New: {} (Conflicts with {})"
-msgstr ""
-"Curent: {}\n"
-"Nou: {} (Conflictează cu {})"
+msgid "Select a folder or 'Root' for the top level"
+msgstr "Selectați un folder sau 'Rădăcină' pentru nivelul superior"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1945
+# File: usr/share/ashyterm/ui/dialogs.py, line: 2205
 #: NEEDS WORK
-#, python-brace-format
-msgid ""
-"Current: {}\n"
-"New: {}"
-msgstr ""
-"Curent: {}\n"
-"Nou: {}"
+msgid "Move"
+msgstr "Mutare"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1958
+# File: usr/share/ashyterm/ui/dialogs.py, line: 2265
 #: NEEDS WORK
-msgid "Clear"
-msgstr "Șterge"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1959
-#: NEEDS WORK
-msgid "Set Shortcut"
-msgstr "Setare Comandă Rapidă"
-# 
-# File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 306
-#: NEEDS WORK
-msgid "Reset All Shortcuts"
-msgstr "Resetează toate comenzile rapide"
-# 
-# File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 307
-#: NEEDS WORK
-msgid "This will reset all keyboard shortcuts to their default values. Continue?"
-msgstr "Aceasta va reseta toate comenzile rapide de la tastatură la valorile lor implicite. Continuare?"
-# 
-# File: usr/share/ashyterm/ui/actions.py, line: 168
-#: NEEDS WORK
-msgid "Please select an SSH session to connect with SFTP."
-msgstr "Vă rugăm să selectați o sesiune SSH pentru a vă conecta cu SFTP."
-# 
-# File: usr/share/ashyterm/window.py, line: 758
-# File: usr/share/ashyterm/window.py, line: 875
-#: NEEDS WORK
-msgid "New Session"
-msgstr "Sesiune nouă"
-# 
-# File: usr/share/ashyterm/window.py, line: 885
-#: NEEDS WORK
-msgid "New Folder"
-msgstr "Folder Nouă"
-# 
-# File: usr/share/ashyterm/window.py, line: 947
-#: NEEDS WORK
-#, python-brace-format
-msgid "Rename {type}"
-msgstr "Renumește {type}"
-# 
-# File: usr/share/ashyterm/window.py, line: 948
-#: NEEDS WORK
-#, python-brace-format
-msgid "Enter new name for \"{name}\":"
-msgstr "Introduceți un nou nume pentru \"{name}\":"
-# 
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
-# 
-# File: usr/share/ashyterm/ui/menus.py, line: 25
-# File: usr/share/ashyterm/ui/menus.py, line: 61
-# File: usr/share/ashyterm/window.py, line: 954
-#: NEEDS WORK
-msgid "Rename"
-msgstr "Renumește"
-# 
-# File: usr/share/ashyterm/window.py, line: 1450
-#: NEEDS WORK
-msgid "Delete Item"
-msgstr "Șterge elementul"
-# 
-# File: usr/share/ashyterm/window.py, line: 1450
-#: NEEDS WORK
-msgid "Delete Items"
-msgstr "Șterge elemente"
-# 
-# File: usr/share/ashyterm/window.py, line: 1009
-#: NEEDS WORK
-#, python-brace-format
-msgid "Delete {type}"
-msgstr "Șterge {type}"
-# 
-# File: usr/share/ashyterm/window.py, line: 1003
-#: NEEDS WORK
-#, python-brace-format
-msgid ""
-"The folder \"{name}\" is not empty. Are you sure you want to permanently delete it and all its "
-"contents?"
-msgstr ""
-"Folderul \"{name}\" nu este gol. Ești sigur că vrei să-l ștergi permanent și să ștergi tot "
-"conținutul său?"
-# 
-# File: usr/share/ashyterm/window.py, line: 1005
-#: NEEDS WORK
-#, python-brace-format
-msgid "Are you sure you want to delete \"{name}\"?"
-msgstr "Ești sigur că vrei să ștergi \"{name}\"?"
-# 
-# File: usr/share/ashyterm/window.py, line: 1464
-#: NEEDS WORK
-#, python-brace-format
-msgid "Are you sure you want to permanently delete these {count} items?"
-msgstr "Ești sigur că vrei să ștergi permanent aceste {count} elemente?"
-# 
-# File: usr/share/ashyterm/window.py, line: 1466
-#: NEEDS WORK
-msgid "This will also delete all contents of any selected folders."
-msgstr "Aceasta va șterge, de asemenea, toate conținuturile oricăror foldere selectate."
-# 
-# File: usr/share/ashyterm/ui/window_ui.py, line: 264
-#: NEEDS WORK
-msgid "Current occurrence"
-msgstr "Ocazie curentă"
-# 
-# File: usr/share/ashyterm/ui/window_ui.py, line: 268
-#: NEEDS WORK
-msgid "Case sensitive search"
-msgstr "Căutare cu distincție între majuscule și minuscule"
-# 
-# File: usr/share/ashyterm/ui/window_ui.py, line: 270
-#: NEEDS WORK
-msgid "Case sensitive"
-msgstr "Senzitiv la majuscule/minuscule"
-# 
-# File: usr/share/ashyterm/ui/window_ui.py, line: 276
-#: NEEDS WORK
-msgid "Use regular expressions"
-msgstr "Utilizați expresii regulate"
-# 
-# File: usr/share/ashyterm/ui/window_ui.py, line: 278
-#: NEEDS WORK
-msgid "Regex"
-msgstr "Regex"
-# 
-# File: usr/share/ashyterm/window.py, line: 344
-#: NEEDS WORK
-msgid "File Manager"
-msgstr "Manager de fișiere"
-# 
-# File: usr/share/ashyterm/ui/window_ui.py, line: 324
-#: NEEDS WORK
-msgid "Command Guide (Ctrl+Shift+P)"
-msgstr "Ghid de comenzi (Ctrl+Shift+P)"
-# 
-# File: usr/share/ashyterm/ui/window_ui.py, line: 350
-#: NEEDS WORK
-msgid "Search in Terminal"
-msgstr "Caută în Terminal"
-# 
-# File: usr/share/ashyterm/ui/window_ui.py, line: 259
-#: NEEDS WORK
-msgid "Manage Temporary Files"
-msgstr "Gestionați fișierele temporare"
-# 
-# File: usr/share/ashyterm/window.py, line: 268
-#: NEEDS WORK
-msgid "Main Menu"
-msgstr "Meniu Principal"
-# 
-# File: usr/share/ashyterm/window.py, line: 337
-#: NEEDS WORK
-msgid "Edit Selected"
-msgstr "Editează selectat"
-# 
-# File: usr/share/ashyterm/window.py, line: 585
-#: NEEDS WORK
-msgid "Save Current Layout"
-msgstr "Salvează aranjamentul curent"
-# 
-# File: usr/share/ashyterm/window.py, line: 343
-#: NEEDS WORK
-msgid "Remove Selected"
-msgstr "Elimină selectat"
-# 
-# File: usr/share/ashyterm/window.py, line: 606
-#: NEEDS WORK
-msgid "Search sessions..."
-msgstr "Căutare sesiuni..."
-# 
-# File: usr/share/ashyterm/ui/menus.py, line: 24
-#: NEEDS WORK
-msgid "Follow System Style"
-msgstr "Urmăriți Stilul Sistemului"
-# 
-# File: usr/share/ashyterm/ui/menus.py, line: 29
-#: NEEDS WORK
-msgid "Light Style"
-msgstr "Stil Ușor"
-# 
-# File: usr/share/ashyterm/ui/menus.py, line: 34
-#: NEEDS WORK
-msgid "Dark Style"
-msgstr "Stil Întunecat"
-# 
-# File: usr/share/ashyterm/ui/menus.py, line: 47
-#: NEEDS WORK
-msgid "Match Terminal Colors"
-msgstr "Potrivește culorile terminalului"
-# 
-# File: usr/share/ashyterm/ui/menus.py, line: 216
-#: NEEDS WORK
-msgid "About"
-msgstr "Despre"
-# 
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
-# 
-# File: usr/share/ashyterm/ui/menus.py, line: 217
-# File: usr/share/ashyterm/window.py, line: 942
-#: NEEDS WORK
-msgid "Quit"
-msgstr "Ieșire"
-# 
-# File: usr/share/ashyterm/ui/menus.py, line: 119
-#: NEEDS WORK
-msgid "Connect with SFTP"
-msgstr "Conectare cu SFTP"
-# 
-# File: usr/share/ashyterm/ui/menus.py, line: 24
-#: NEEDS WORK
-msgid "Duplicate"
-msgstr "Duplicat"
-# 
-# File: usr/share/ashyterm/ui/menus.py, line: 220
-#: NEEDS WORK
-msgid "Add Session Here"
-msgstr "Adăugați sesiunea aici"
-# 
-# File: usr/share/ashyterm/ui/menus.py, line: 98
-#: NEEDS WORK
-msgid "Paste to Root"
-msgstr "Lipește în Rădăcină"
-# 
-# File: usr/share/ashyterm/ui/menus.py, line: 227
-#: NEEDS WORK
-msgid "Open Link"
-msgstr "Deschide linkul"
-# 
-# File: usr/share/ashyterm/ui/menus.py, line: 228
-#: NEEDS WORK
-msgid "Copy Link"
-msgstr "Copiază linkul"
-# 
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
-# 
-# File: usr/share/ashyterm/ui/menus.py, line: 276
-# File: usr/share/ashyterm/filemanager/menus.py, line: 276
-#: NEEDS WORK
-msgid "Split Left/Right"
-msgstr "Împărțiți Stânga/Dreapta"
-# 
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
-# 
-# File: usr/share/ashyterm/ui/menus.py, line: 279
-# File: usr/share/ashyterm/filemanager/menus.py, line: 279
-#: NEEDS WORK
-msgid "Split Top/Bottom"
-msgstr "Împărțiți Sus/Jos"
+msgid "Move Failed"
+msgstr "Mutare eșuată"
 # 
 # File: usr/share/ashyterm/data/command_data.py, line: 9
 # File: usr/share/ashyterm/data/command_data.py, line: 30
@@ -4324,234 +4350,450 @@ msgstr "Afișează doar ultima coloană a fiecărei linii."
 msgid "Displays the value of column 1 only if the value of column 3 is greater than 100."
 msgstr "Afișează valoarea coloanei 1 doar dacă valoarea coloanei 3 este mai mare de 100."
 # 
-# File: usr/share/ashyterm/app.py, line: 333
-#: NEEDS WORK
-msgid "Preferences Error"
-msgstr "Eroare de Preferințe"
-# 
-# File: usr/share/ashyterm/app.py, line: 332
-# File: usr/share/ashyterm/app.py, line: 333
+# File: usr/share/ashyterm/sessions/storage.py, line: 125
 #: NEEDS WORK
 #, python-brace-format
-msgid "Failed to open preferences: {}"
-msgstr "Eșec la deschiderea preferințelor: {}"
+msgid "File path validation failed: {}"
+msgstr "Validarea căii fișierului a eșuat: {}"
+# 
+# File: usr/share/ashyterm/sessions/storage.py, line: 134
+#: NEEDS WORK
+msgid "File too large (>50MB)"
+msgstr "Fișierul este prea mare (>50MB)"
+# 
+# File: usr/share/ashyterm/sessions/storage.py, line: 148
+#: NEEDS WORK
+#, python-brace-format
+msgid "Invalid JSON: {}"
+msgstr "JSON invalid: {}"
+# 
+# File: usr/share/ashyterm/sessions/storage.py, line: 151
+#: NEEDS WORK
+#, python-brace-format
+msgid "Encoding error: {}"
+msgstr "Eroare de codare: {}"
+# 
+# File: usr/share/ashyterm/sessions/storage.py, line: 155
+#: NEEDS WORK
+msgid "Root data is not a dictionary"
+msgstr "Datele rădăcină nu sunt un dicționar"
+# 
+# File: usr/share/ashyterm/sessions/storage.py, line: 198
+#: NEEDS WORK
+#, python-brace-format
+msgid "Load failed: {}"
+msgstr "Încărcare eșuată: {}"
+# 
+# File: usr/share/ashyterm/sessions/storage.py, line: 395
+#: NEEDS WORK
+msgid "Data validation failed"
+msgstr "Validarea datelor a eșuat"
+# 
+# File: usr/share/ashyterm/sessions/storage.py, line: 410
+#: NEEDS WORK
+msgid "Temporary file was not written correctly"
+msgstr "Fișierul temporar nu a fost scris corect."
+# 
+# File: usr/share/ashyterm/sessions/storage.py, line: 427
+#: NEEDS WORK
+#, python-brace-format
+msgid "File write failed: {}"
+msgstr "Scrierea fișierului a eșuat: {}"
+# 
+# File: usr/share/ashyterm/sessions/storage.py, line: 439
+#: NEEDS WORK
+msgid "Save verification failed"
+msgstr "Verificarea salvării a eșuat"
+# 
+# File: usr/share/ashyterm/sessions/storage.py, line: 463
+#: NEEDS WORK
+#, python-brace-format
+msgid "Save failed: {}"
+msgstr "Salvarea a eșuat: {}"
+# 
+# File: usr/share/ashyterm/sessions/tree.py, line: 298
+# File: usr/share/ashyterm/sessions/tree.py, line: 302
+#: NEEDS WORK
+msgid "Move Error"
+msgstr "Eroare de mutare"
 # 
 # #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
 # 
-# File: usr/share/ashyterm/__init__.py, line: 62
-# File: usr/share/ashyterm/app.py, line: 350
+# File: usr/share/ashyterm/sessions/tree.py, line: 801
+# File: usr/share/ashyterm/window.py, line: 1544
 #: NEEDS WORK
-msgid "A modern terminal emulator with session management"
-msgstr "Un emulator de terminal modern cu gestionarea sesiunilor"
+msgid "Restore Layout"
+msgstr "Restaurare aspectul"
 # 
-# File: usr/share/ashyterm/app.py, line: 356
+# File: usr/share/ashyterm/sessions/tree.py, line: 808
 #: NEEDS WORK
-msgid "Save Backup As..."
-msgstr "Salvează copia de rezervă ca..."
+msgid "Delete Layout"
+msgstr "Șterge Layout-ul"
 # 
-# File: usr/share/ashyterm/app.py, line: 368
-# File: usr/share/ashyterm/app.py, line: 379
-# File: usr/share/ashyterm/app.py, line: 392
-# File: usr/share/ashyterm/app.py, line: 396
+# File: usr/share/ashyterm/sessions/tree.py, line: 618
+# File: usr/share/ashyterm/sessions/tree.py, line: 623
 #: NEEDS WORK
-msgid "Backup Error"
-msgstr "Eroare de backup"
+msgid "Paste Error"
+msgstr "Eroare la lipire"
 # 
-# File: usr/share/ashyterm/app.py, line: 375
-#: NEEDS WORK
-msgid "Set Backup Password"
-msgstr "Setați parola de rezervă"
-# 
-# File: usr/share/ashyterm/app.py, line: 376
-#: NEEDS WORK
-msgid "Please enter a password to encrypt the backup file."
-msgstr "Vă rugăm să introduceți o parolă pentru a cripta fișierul de backup."
-# 
-# File: usr/share/ashyterm/app.py, line: 384
-#: NEEDS WORK
-msgid "Confirm Password"
-msgstr "Confirmă parola"
-# 
-# File: usr/share/ashyterm/app.py, line: 400
-# File: usr/share/ashyterm/app.py, line: 405
-#: NEEDS WORK
-msgid "Password Error"
-msgstr "Eroare parolă"
-# 
-# File: usr/share/ashyterm/app.py, line: 400
-#: NEEDS WORK
-msgid "Password cannot be empty."
-msgstr "Parola nu poate fi goală."
-# 
-# File: usr/share/ashyterm/app.py, line: 405
-#: NEEDS WORK
-msgid "Passwords do not match."
-msgstr "Parolele nu se potrivesc."
-# 
-# File: usr/share/ashyterm/app.py, line: 423
-#: NEEDS WORK
-msgid "Creating backup..."
-msgstr "Crearea unei copii de rezervă..."
-# 
-# File: usr/share/ashyterm/app.py, line: 390
-#: NEEDS WORK
-msgid "Backup Complete"
-msgstr "Backup complet"
-# 
-# File: usr/share/ashyterm/app.py, line: 440
+# File: usr/share/ashyterm/sessions/validation.py, line: 18
 #: NEEDS WORK
 #, python-brace-format
+msgid "Session validation failed: {}"
+msgstr "Validarea sesiunii a eșuat: {}"
+# 
+# File: usr/share/ashyterm/sessions/validation.py, line: 31
+#: NEEDS WORK
+#, python-brace-format
+msgid "A session with the name '{name}' already exists in this folder."
+msgstr "O sesiune cu numele '{name}' există deja în acest folder."
+# 
+# File: usr/share/ashyterm/sessions/validation.py, line: 45
+#: NEEDS WORK
+#, python-brace-format
+msgid "The target folder '{folder}' does not exist."
+msgstr "Folderul țintă '{folder}' nu există."
+# 
+# File: usr/share/ashyterm/sessions/validation.py, line: 61
+#: NEEDS WORK
+#, python-brace-format
+msgid "Folder validation failed: {}"
+msgstr "Validarea folderului a eșuat: {}"
+# 
+# File: usr/share/ashyterm/sessions/validation.py, line: 69
+#: NEEDS WORK
+#, python-brace-format
+msgid "A folder with the path '{path}' already exists."
+msgstr "Un folder cu calea '{path}' există deja."
+# 
+# File: usr/share/ashyterm/sessions/validation.py, line: 84
+#: NEEDS WORK
+#, python-brace-format
+msgid "The parent folder '{folder}' does not exist."
+msgstr "Folderul părinte '{folder}' nu există."
+# 
+# File: usr/share/ashyterm/sessions/operations.py, line: 51
+#: NEEDS WORK
+#, python-brace-format
+msgid "Failed to save {item_type} data."
+msgstr "Nu s-a reușit salvarea datelor {item_type}."
+# 
+# File: usr/share/ashyterm/sessions/operations.py, line: 59
+#: NEEDS WORK
+#, python-brace-format
+msgid "{item_type} '{name}' added successfully."
+msgstr "{item_type} '{name}' a fost adăugat cu succes."
+# 
+# File: usr/share/ashyterm/sessions/operations.py, line: 62
+#: NEEDS WORK
+msgid "Item at position is not a session."
+msgstr "Elementul de la poziția nu este o sesiune."
+# 
+# File: usr/share/ashyterm/sessions/operations.py, line: 74
+#: NEEDS WORK
+msgid "Failed to save updated session data."
+msgstr "Nu s-a reușit salvarea datelor actualizate ale sesiunii."
+# 
+# File: usr/share/ashyterm/sessions/operations.py, line: 79
+#: NEEDS WORK
+#, python-brace-format
+msgid "Session '{name}' updated successfully."
+msgstr "Sesiunea '{name}' a fost actualizată cu succes."
+# 
+# File: usr/share/ashyterm/sessions/operations.py, line: 90
+#: NEEDS WORK
+msgid "Session not found."
+msgstr "Sesiune negăsită."
+# 
+# File: usr/share/ashyterm/sessions/operations.py, line: 96
+#: NEEDS WORK
+msgid "Failed to save after session removal."
+msgstr "Salvare eșuată după eliminarea sesiunii."
+# 
+# File: usr/share/ashyterm/sessions/operations.py, line: 102
+#: NEEDS WORK
+#, python-brace-format
+msgid "Session '{name}' removed successfully."
+msgstr "Sesiunea '{name}' a fost eliminată cu succes."
+# 
+# File: usr/share/ashyterm/sessions/operations.py, line: 131
+#: NEEDS WORK
+msgid "Item at position is not a folder."
+msgstr "Elementul de la poziția respectivă nu este un folder."
+# 
+# File: usr/share/ashyterm/sessions/operations.py, line: 144
+#: NEEDS WORK
+msgid "Failed to save updated folder data."
+msgstr "Nu s-a reușit salvarea datelor actualizate ale folderului."
+# 
+# File: usr/share/ashyterm/sessions/operations.py, line: 149
+#: NEEDS WORK
+#, python-brace-format
+msgid "Folder '{name}' updated successfully."
+msgstr "Folder '{name}' actualizată cu succes."
+# 
+# File: usr/share/ashyterm/sessions/operations.py, line: 161
+#: NEEDS WORK
+msgid "Cannot remove a non-empty folder."
+msgstr "Nu se poate șterge un folder care nu este gol."
+# 
+# File: usr/share/ashyterm/sessions/operations.py, line: 168
+#: NEEDS WORK
+msgid "Folder not found."
+msgstr "Folderul nu a fost găsit."
+# 
+# File: usr/share/ashyterm/sessions/operations.py, line: 172
+#: NEEDS WORK
+msgid "Failed to save after folder removal."
+msgstr "Salvare eșuată după eliminarea folderului."
+# 
+# File: usr/share/ashyterm/sessions/operations.py, line: 177
+#: NEEDS WORK
+#, python-brace-format
+msgid "Folder '{name}' removed successfully."
+msgstr "Folder '{name}' a fost eliminat cu succes."
+# 
+# File: usr/share/ashyterm/sessions/operations.py, line: 190
+#: NEEDS WORK
+msgid "Failed to save after moving session."
+msgstr "Salvarea a eșuat după mutarea sesiunii."
+# 
+# File: usr/share/ashyterm/sessions/operations.py, line: 195
+#: NEEDS WORK
+msgid "Session moved successfully."
+msgstr "Sesiune mutată cu succes."
+# 
+# File: usr/share/ashyterm/sessions/operations.py, line: 209
+#: NEEDS WORK
+msgid "Cannot move a folder into itself."
+msgstr "Nu se poate muta un folder în sine."
+# 
+# File: usr/share/ashyterm/sessions/operations.py, line: 285
+#: NEEDS WORK
+#, python-brace-format
+msgid "SSH config file not found at {path}"
+msgstr "Fișierul de configurare SSH nu a fost găsit la {path}"
+# 
+# File: usr/share/ashyterm/sessions/operations.py, line: 295
+#: NEEDS WORK
+#, python-brace-format
+msgid "Failed to parse SSH config: {error}"
+msgstr "Nu s-a reușit analizarea configurației SSH: {error}"
+# 
+# File: usr/share/ashyterm/sessions/operations.py, line: 300
+#: NEEDS WORK
+msgid "No host entries found in SSH config."
+msgstr "Nu au fost găsite intrări de gazdă în configurația SSH."
+# 
+# File: usr/share/ashyterm/sessions/operations.py, line: 312
+#: NEEDS WORK
+#, python-brace-format
+msgid "Skipped host '{alias}': missing hostname."
+msgstr "Gazda omisă '{alias}': nume gazdă lipsă."
+# 
+# File: usr/share/ashyterm/sessions/operations.py, line: 360
+#: NEEDS WORK
+#, python-brace-format
+msgid "Failed to import host '{alias}'."
+msgstr "Importul gazdei '{alias}' a eșuat."
+# 
+# File: usr/share/ashyterm/sessions/operations.py, line: 365
+#: NEEDS WORK
+#, python-brace-format
+msgid "No sessions were imported from {path}."
+msgstr "Nu au fost importate sesiuni din {path}."
+# 
+# File: usr/share/ashyterm/sessions/operations.py, line: 371
+#: NEEDS WORK
+#, python-brace-format
+msgid "Imported {count} session(s) from {path}."
+msgstr "Importat {count} sesiune(e) din {path}."
+# 
+# File: usr/share/ashyterm/sessions/operations.py, line: 260
+#: NEEDS WORK
+msgid "Unsupported item type for paste operation."
+msgstr "Tip de element nesuportat pentru operațiunea de lipire."
+# 
+# File: usr/share/ashyterm/sessions/models.py, line: 174
+#: NEEDS WORK
+msgid "Port must be a valid number between 1 and 65535"
+msgstr "Portul trebuie să fie un număr valid între 1 și 65535."
+# 
+# File: usr/share/ashyterm/sessions/models.py, line: 339
+#: NEEDS WORK
+msgid "Invalid port forwarding entry."
+msgstr "Intrare invalidă de redirecționare a portului."
+# 
+# File: usr/share/ashyterm/sessions/models.py, line: 349
+#: NEEDS WORK
+msgid "Port forwarding entries must use numeric ports."
+msgstr "Intrările de redirecționare a porturilor trebuie să folosească porturi numerice."
+# 
+# File: usr/share/ashyterm/sessions/models.py, line: 198
+#: NEEDS WORK
+msgid "Session name is required."
+msgstr "Numele sesiunii este necesar."
+# 
+# File: usr/share/ashyterm/sessions/models.py, line: 201
+#: NEEDS WORK
+msgid "Host is required for SSH sessions."
+msgstr "Hostul este necesar pentru sesiunile SSH."
+# 
+# File: usr/share/ashyterm/sessions/models.py, line: 203
+#: NEEDS WORK
+msgid "Port must be between 1 and 65535."
+msgstr "Portul trebuie să fie între 1 și 65535."
+# 
+# File: usr/share/ashyterm/sessions/models.py, line: 389
+#: NEEDS WORK
+#, python-brace-format
+msgid "Port forward '{name}' has an invalid local port (must be between 1025 and 65535)."
+msgstr "Redirecționarea portului '{name}' are un port local invalid (trebuie să fie între 1025 și 65535)."
+# 
+# File: usr/share/ashyterm/sessions/models.py, line: 394
+#: NEEDS WORK
+#, python-brace-format
+msgid "Port forward '{name}' has an invalid remote port."
+msgstr "Redirecționarea portului '{name}' are un port remote invalid."
+# 
+# File: usr/share/ashyterm/sessions/models.py, line: 386
+# File: usr/share/ashyterm/sessions/models.py, line: 419
+#: NEEDS WORK
+msgid "Unnamed Session"
+msgstr "Sesiune Fără Nume"
+# 
+# File: usr/share/ashyterm/sessions/models.py, line: 346
+#: NEEDS WORK
+msgid "Folder name is required."
+msgstr "Numele folderului este obligatoriu."
+# 
+# File: usr/share/ashyterm/sessions/models.py, line: 352
+#: NEEDS WORK
+msgid "Folder path is not consistent with its parent path."
+msgstr "Calea folderului nu este consistentă cu calea părintelui său."
+# 
+# File: usr/share/ashyterm/sessions/models.py, line: 727
+# File: usr/share/ashyterm/sessions/models.py, line: 752
+#: NEEDS WORK
+msgid "Unnamed Folder"
+msgstr "Folder Nenumit"
+# 
+# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 69
+#: NEEDS WORK
+msgid "Cancel transfer"
+msgstr "Anulează transferul"
+# 
+# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 63
+#: NEEDS WORK
+msgid "Remove from history"
+msgstr "Elimină din istoric"
+# 
+# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 78
+#: NEEDS WORK
+msgid "Recebido"
+msgstr "Receput"
+# 
+# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 80
+#: NEEDS WORK
+msgid "Enviado"
+msgstr "Trimis"
+# 
+# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 107
+#: NEEDS WORK
+msgid "Waiting..."
+msgstr "Aștept..."
+# 
+# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 116
+#: NEEDS WORK
+msgid "in"
+msgstr "în"
+# 
+# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 121
+#: NEEDS WORK
+msgid "Completed"
+msgstr "Finalizat"
+# 
+# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 126
+#: NEEDS WORK
+msgid "Unknown error"
+msgstr "Eroare necunoscută"
+# 
+# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 127
+#: NEEDS WORK
+msgid "Failed"
+msgstr "Eșuat"
+# 
+# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 131
+#: NEEDS WORK
+msgid "Cancelled"
+msgstr "Anulat"
+# 
+# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 147
+#: NEEDS WORK
+msgid "Recebendo"
+msgstr "Recepționare"
+# 
+# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 149
+#: NEEDS WORK
+msgid "Enviando"
+msgstr "Trimitere"
+# 
+# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 165
+#: NEEDS WORK
+msgid "remaining"
+msgstr "rămase"
+# 
+# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 216
+#: NEEDS WORK
+msgid "Transfer Manager"
+msgstr "Manager de Transferuri"
+# 
+# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 239
+# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 348
+#: NEEDS WORK
+msgid "Clear History"
+msgstr "Șterge Istoricul"
+# 
+# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 231
+#: NEEDS WORK
+msgid "Cancelar Tudo"
+msgstr "Anulați totul"
+# 
+# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 257
+#: NEEDS WORK
+msgid "No Transfers"
+msgstr "Fără transferuri"
+# 
+# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 258
+#: NEEDS WORK
+msgid "Active and past transfers will appear here."
+msgstr "Transferurile active și anterioare vor apărea aici."
+# 
+# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 340
+#: NEEDS WORK
+msgid "Clear Transfer History?"
+msgstr "Șterge istoricul transferurilor?"
+# 
+# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 342
+#: NEEDS WORK
 msgid ""
-"Backup saved successfully to:\n"
-"{}"
+"This action cannot be undone and will remove all completed, failed, and cancelled transfers from "
+"the list."
 msgstr ""
-"Backup salvat cu succes în:  \n"
-"{}"
+"Această acțiune nu poate fi anulată și va elimina toate transferurile finalizate, eșuate și anulate "
+"din listă."
 # 
-# File: usr/share/ashyterm/app.py, line: 446
+# File: usr/share/ashyterm/filemanager/manager.py, line: 274
 #: NEEDS WORK
-msgid "Backup Failed"
-msgstr "Backup eșuat"
+msgid "Name cannot be empty."
+msgstr "Numele nu poate fi gol."
 # 
-# File: usr/share/ashyterm/app.py, line: 447
+# File: usr/share/ashyterm/filemanager/manager.py, line: 221
 #: NEEDS WORK
-#, python-brace-format
-msgid "Could not create backup: {}"
-msgstr "Nu s-a putut crea backup-ul: {}"
-# 
-# File: usr/share/ashyterm/app.py, line: 458
-#: NEEDS WORK
-msgid "Restore from Backup?"
-msgstr "Restaurare din backup?"
-# 
-# File: usr/share/ashyterm/app.py, line: 460
-#: NEEDS WORK
-msgid ""
-"Restoring from a backup will overwrite all your current sessions, settings, and layouts. This "
-"action cannot be undone.\n"
-"\n"
-"<b>The application will need to be restarted after restoring.</b>"
+msgid "rsync is not installed on the remote host. Install the rsync package or use SFTP for transfers."
 msgstr ""
-"Restaurarea dintr-o copie de rezervă va suprascrie toate sesiunile, setările și aranjamentele "
-"curente. Această acțiune nu poate fi anulată.\n"
-"\n"
-"<b>Aplicația va trebui să fie repornită după restaurare.</b>"
-# 
-# File: usr/share/ashyterm/app.py, line: 466
-#: NEEDS WORK
-msgid "Choose File and Restore"
-msgstr "Alege Fișier și Restaurează"
-# 
-# File: usr/share/ashyterm/app.py, line: 474
-#: NEEDS WORK
-msgid "Select Backup File"
-msgstr "Selectați fișierul de backup"
-# 
-# File: usr/share/ashyterm/app.py, line: 477
-#: NEEDS WORK
-msgid "Backup Files"
-msgstr "Fișiere de rezervă"
-# 
-# File: usr/share/ashyterm/app.py, line: 402
-# File: usr/share/ashyterm/app.py, line: 416
-#: NEEDS WORK
-msgid "Restore Error"
-msgstr "Eroare de restaurare"
-# 
-# File: usr/share/ashyterm/app.py, line: 499
-#: NEEDS WORK
-msgid "Enter Backup Password"
-msgstr "Introduceți parola de rezervă"
-# 
-# File: usr/share/ashyterm/app.py, line: 500
-#: NEEDS WORK
-msgid "Please enter the password for the selected backup file."
-msgstr "Vă rugăm să introduceți parola pentru fișierul de rezervă selectat."
-# 
-# File: usr/share/ashyterm/app.py, line: 508
-#: NEEDS WORK
-msgid "Restore"
-msgstr "Restaurare"
-# 
-# File: usr/share/ashyterm/app.py, line: 525
-#: NEEDS WORK
-msgid "Restoring from backup..."
-msgstr "Restaurare din backup..."
-# 
-# File: usr/share/ashyterm/app.py, line: 538
-#: NEEDS WORK
-msgid "Restore Failed"
-msgstr "Restaurare eșuată"
-# 
-# File: usr/share/ashyterm/app.py, line: 539
-#: NEEDS WORK
-#, python-brace-format
-msgid "Could not restore from backup: {}"
-msgstr "Nu s-a putut restaura din backup: {}"
-# 
-# File: usr/share/ashyterm/app.py, line: 549
-#: NEEDS WORK
-msgid "Restore Complete"
-msgstr "Restaurare completă"
-# 
-# File: usr/share/ashyterm/app.py, line: 551
-#: NEEDS WORK
-msgid "Data has been restored successfully. Please restart Ashy Terminal for the changes to take effect."
-msgstr ""
-"Datele au fost restaurate cu succes. Vă rugăm să reporniți Ashy Terminal pentru ca modificările să "
-"aibă efect."
-# 
-# File: usr/share/ashyterm/app.py, line: 498
-#: NEEDS WORK
-msgid "Close Application"
-msgstr "Închide aplicația"
-# 
-# File: usr/share/ashyterm/app.py, line: 499
-#: NEEDS WORK
-msgid ""
-"There are active SSH connections. Closing will disconnect all sessions.\n"
-"\n"
-"Are you sure you want to close the application?"
-msgstr ""
-"Există conexiuni SSH active. Închiderea va deconecta toate sesiunile.\n"
-"\n"
-"Ești sigur că vrei să închizi aplicația?"
-# 
-# File: usr/share/ashyterm/app.py, line: 503
-#: NEEDS WORK
-msgid "Close All"
-msgstr "Închide tot"
-# 
-# File: usr/share/ashyterm/app.py, line: 530
-#: NEEDS WORK
-msgid "Startup Error"
-msgstr "Eroare la pornire"
-# 
-# File: usr/share/ashyterm/app.py, line: 531
-#: NEEDS WORK
-#, python-brace-format
-msgid "Application failed to start: {}"
-msgstr "Aplicația nu a reușit să pornească: {}"
-# 
-# File: usr/share/ashyterm/terminal/tabs.py, line: 237
-#: NEEDS WORK
-msgid "Detach Tab"
-msgstr "Desprinde Tab-ul"
-# 
-# File: usr/share/ashyterm/terminal/tabs.py, line: 585
-#: NEEDS WORK
-msgid "This is the only pane in the tab."
-msgstr "Acesta este singurul panou din tab."
-# 
-# File: usr/share/ashyterm/terminal/spawner.py, line: 295
-#: NEEDS WORK
-msgid "Not an SSH session."
-msgstr "Nu este o sesiune SSH."
-# 
-# File: usr/share/ashyterm/filemanager/operations.py, line: 146
-#: NEEDS WORK
-msgid "Command timed out."
-msgstr "Comanda a expirat."
+"rsync nu este instalat pe gazda la distanță. Instalați pachetul rsync sau folosiți SFTP pentru "
+"transferuri."
 # 
 # File: usr/share/ashyterm/filemanager/manager.py, line: 182
 # File: usr/share/ashyterm/filemanager/manager.py, line: 608
@@ -4564,10 +4806,15 @@ msgstr "Actualizare"
 msgid "Show hidden files"
 msgstr "Afișează fișierele ascunse"
 # 
-# File: usr/share/ashyterm/filemanager/manager.py, line: 197
+# File: usr/share/ashyterm/filemanager/manager.py, line: 577
 #: NEEDS WORK
-msgid "Filter..."
-msgstr "Filtru..."
+msgid "Filter files..."
+msgstr "Filtrează fișierele..."
+# 
+# File: usr/share/ashyterm/filemanager/manager.py, line: 397
+#: NEEDS WORK
+msgid "Recursive Search"
+msgstr "Căutare Recursivă"
 # 
 # File: usr/share/ashyterm/filemanager/manager.py, line: 203
 #: NEEDS WORK
@@ -4579,10 +4826,17 @@ msgstr "Istoric Transferuri"
 msgid "Upload Files"
 msgstr "Încărcați fișiere"
 # 
-# File: usr/share/ashyterm/filemanager/manager.py, line: 366
+# File: usr/share/ashyterm/filemanager/manager.py, line: 665
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1266
 #: NEEDS WORK
-msgid "Name"
-msgstr "Nume"
+msgid "Searching..."
+msgstr "Căutare..."
+# 
+# File: usr/share/ashyterm/filemanager/manager.py, line: 775
+#: NEEDS WORK
+#, python-brace-format
+msgid "Showing first {count} results. Refine your search to narrow the list."
+msgstr "Afișarea primelor {count} rezultate. Rafinare căutării pentru a restrânge lista."
 # 
 # File: usr/share/ashyterm/filemanager/manager.py, line: 375
 #: NEEDS WORK
@@ -4632,10 +4886,22 @@ msgstr ""
 msgid "Loading..."
 msgstr "Încărcare..."
 # 
-# File: usr/share/ashyterm/filemanager/manager.py, line: 577
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1268
 #: NEEDS WORK
-msgid "Filter files..."
-msgstr "Filtrează fișierele..."
+msgid "Recursive filter..."
+msgstr "Filtru recursiv..."
+# 
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1551
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1740
+#: NEEDS WORK
+msgid "Create Folder"
+msgstr "Creează folder"
+# 
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1552
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1757
+#: NEEDS WORK
+msgid "Create File"
+msgstr "Creează fișier"
 # 
 # File: usr/share/ashyterm/filemanager/manager.py, line: 630
 #: NEEDS WORK
@@ -4648,10 +4914,86 @@ msgstr "Deschide/Editează"
 msgid "Open With..."
 msgstr "Deschide cu..."
 # 
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1683
+#: NEEDS WORK
+msgid "Cut"
+msgstr "Tăiați"
+# 
 # File: usr/share/ashyterm/filemanager/manager.py, line: 638
 #: NEEDS WORK
 msgid "Download"
 msgstr "Descărcare"
+# 
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1737
+#: NEEDS WORK
+msgid "Create folder command sent to terminal"
+msgstr "Comandă de creare a folderului trimisă la terminal"
+# 
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1741
+#: NEEDS WORK
+msgid "Enter a name for the new folder:"
+msgstr "Introduceți un nume pentru noul folder:"
+# 
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1743
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1760
+#: NEEDS WORK
+msgid "Create"
+msgstr "Creează"
+# 
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1754
+#: NEEDS WORK
+msgid "Create file command sent to terminal"
+msgstr "Comandă de creare a fișierului trimisă la terminal"
+# 
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1758
+#: NEEDS WORK
+msgid "Enter a name for the new file:"
+msgstr "Introduceți un nume pentru fișierul nou:"
+# 
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1759
+#: NEEDS WORK
+msgid "New File"
+msgstr "Fișier Nou"
+# 
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1767
+#: NEEDS WORK
+msgid "No items selected to copy."
+msgstr "Nu sunt elemente selectate pentru a fi copiate."
+# 
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1781
+#: NEEDS WORK
+msgid "Items copied to clipboard."
+msgstr "Elemente copiate în clipboard."
+# 
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1786
+#: NEEDS WORK
+msgid "No items selected to cut."
+msgstr "Nu sunt elemente selectate pentru a fi tăiate."
+# 
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1800
+#: NEEDS WORK
+msgid "Items marked for move."
+msgstr "Elemente marcate pentru mutare."
+# 
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1804
+#: NEEDS WORK
+msgid "Nothing to paste."
+msgstr "Nimic de lipit."
+# 
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1815
+#: NEEDS WORK
+msgid "Items are already in this location."
+msgstr "Elementele sunt deja în această locație."
+# 
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1819
+#: NEEDS WORK
+msgid "Move command sent to terminal"
+msgstr "Comandă de mutare trimisă la terminal"
+# 
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1824
+#: NEEDS WORK
+msgid "Copy command sent to terminal"
+msgstr "Comandă de copiere trimisă la terminal"
 # 
 # File: usr/share/ashyterm/filemanager/manager.py, line: 672
 #: NEEDS WORK
@@ -4975,116 +5317,6 @@ msgstr "Introduceți un nou nume pentru '{name}'"
 msgid "Rename command sent to terminal"
 msgstr "Comandă de redenumire trimisă la terminal"
 # 
-# File: usr/share/ashyterm/filemanager/transfer_manager.py, line: 273
-#: NEEDS WORK
-msgid "Cancel All Transfers"
-msgstr "Anulează toate transferurile"
-# 
-# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 69
-#: NEEDS WORK
-msgid "Cancel transfer"
-msgstr "Anulează transferul"
-# 
-# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 63
-#: NEEDS WORK
-msgid "Remove from history"
-msgstr "Elimină din istoric"
-# 
-# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 78
-#: NEEDS WORK
-msgid "Recebido"
-msgstr "Receput"
-# 
-# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 80
-#: NEEDS WORK
-msgid "Enviado"
-msgstr "Trimis"
-# 
-# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 107
-#: NEEDS WORK
-msgid "Waiting..."
-msgstr "Aștept..."
-# 
-# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 116
-#: NEEDS WORK
-msgid "in"
-msgstr "în"
-# 
-# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 121
-#: NEEDS WORK
-msgid "Completed"
-msgstr "Finalizat"
-# 
-# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 126
-#: NEEDS WORK
-msgid "Unknown error"
-msgstr "Eroare necunoscută"
-# 
-# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 127
-#: NEEDS WORK
-msgid "Failed"
-msgstr "Eșuat"
-# 
-# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 131
-#: NEEDS WORK
-msgid "Cancelled"
-msgstr "Anulat"
-# 
-# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 147
-#: NEEDS WORK
-msgid "Recebendo"
-msgstr "Recepționare"
-# 
-# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 149
-#: NEEDS WORK
-msgid "Enviando"
-msgstr "Trimitere"
-# 
-# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 165
-#: NEEDS WORK
-msgid "remaining"
-msgstr "rămase"
-# 
-# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 216
-#: NEEDS WORK
-msgid "Transfer Manager"
-msgstr "Manager de Transferuri"
-# 
-# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 239
-# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 348
-#: NEEDS WORK
-msgid "Clear History"
-msgstr "Șterge Istoricul"
-# 
-# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 231
-#: NEEDS WORK
-msgid "Cancelar Tudo"
-msgstr "Anulați totul"
-# 
-# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 257
-#: NEEDS WORK
-msgid "No Transfers"
-msgstr "Fără transferuri"
-# 
-# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 258
-#: NEEDS WORK
-msgid "Active and past transfers will appear here."
-msgstr "Transferurile active și anterioare vor apărea aici."
-# 
-# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 340
-#: NEEDS WORK
-msgid "Clear Transfer History?"
-msgstr "Șterge istoricul transferurilor?"
-# 
-# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 342
-#: NEEDS WORK
-msgid ""
-"This action cannot be undone and will remove all completed, failed, and cancelled transfers from "
-"the list."
-msgstr ""
-"Această acțiune nu poate fi anulată și va elimina toate transferurile finalizate, eșuate și anulate "
-"din listă."
-# 
 # File: usr/share/ashyterm/filemanager/operations.py, line: 113
 #: NEEDS WORK
 msgid "No session context for file operation."
@@ -5104,6 +5336,1814 @@ msgstr "Permisiune refuzată: Verificați permisiunile de scriere pe destinație
 #: NEEDS WORK
 msgid "An unknown transfer error occurred."
 msgstr "A apărut o eroare de transfer necunoscută."
+# 
+# File: usr/share/ashyterm/filemanager/transfer_manager.py, line: 273
+#: NEEDS WORK
+msgid "Cancel All Transfers"
+msgstr "Anulează toate transferurile"
+# 
+# File: usr/share/ashyterm/window.py, line: 36
+#: NEEDS WORK
+msgid "How can I monitor CPU and memory usage in real time?"
+msgstr "Cum pot monitoriza utilizarea CPU-ului și a memoriei în timp real?"
+# 
+# File: usr/share/ashyterm/window.py, line: 37
+#: NEEDS WORK
+msgid "Which commands show the processes consuming the most memory?"
+msgstr "Care comenzi arată procesele care consumă cea mai mare memorie?"
+# 
+# File: usr/share/ashyterm/window.py, line: 38
+#: NEEDS WORK
+msgid "Why is my disk stuck at 100% usage and how do I investigate it?"
+msgstr "De ce discul meu este blocat la 100% utilizare și cum pot să investighez acest lucru?"
+# 
+# File: usr/share/ashyterm/window.py, line: 39
+#: NEEDS WORK
+msgid "How can I locate large files taking up space under /?"
+msgstr "Cum pot localiza fișiere mari care ocupă spațiu sub /?"
+# 
+# File: usr/share/ashyterm/window.py, line: 40
+#: NEEDS WORK
+msgid "What steps help troubleshoot a slow SSH connection?"
+msgstr "Ce pași ajută la depanarea unei conexiuni SSH lente?"
+# 
+# File: usr/share/ashyterm/window.py, line: 41
+#: NEEDS WORK
+msgid "How can I automate daily incremental backups with rsync?"
+msgstr "Cum pot automatiza backup-urile incrementale zilnice cu rsync?"
+# 
+# File: usr/share/ashyterm/window.py, line: 42
+#: NEEDS WORK
+msgid "How do I remove orphan packages and clean the cache on BigLinux?"
+msgstr "Cum pot să elimin pachetele orphan și să curăț cache-ul pe BigLinux?"
+# 
+# File: usr/share/ashyterm/window.py, line: 43
+#: NEEDS WORK
+msgid "How can I list services that are enabled and active on systemd?"
+msgstr "Cum pot lista serviciile care sunt activate și active pe systemd?"
+# 
+# File: usr/share/ashyterm/window.py, line: 44
+#: NEEDS WORK
+msgid "What should I examine when boot time is too long?"
+msgstr "Ce ar trebui să examinez când timpul de pornire este prea lung?"
+# 
+# File: usr/share/ashyterm/window.py, line: 45
+#: NEEDS WORK
+msgid "How do I monitor temperature and fan speeds from the terminal?"
+msgstr "Cum pot monitoriza temperatura și vitezele ventilatoarelor din terminal?"
+# 
+# File: usr/share/ashyterm/window.py, line: 46
+#: NEEDS WORK
+msgid "How can I configure alerts when CPU usage exceeds a threshold?"
+msgstr "Cum pot configura alerte când utilizarea CPU depășește un prag?"
+# 
+# File: usr/share/ashyterm/window.py, line: 47
+#: NEEDS WORK
+msgid "How do I create a script that restarts a service automatically?"
+msgstr "Cum pot crea un script care repornește automat un serviciu?"
+# 
+# File: usr/share/ashyterm/window.py, line: 48
+#: NEEDS WORK
+msgid "How do I automatically mount a remote NFS share?"
+msgstr "Cum pot monta automat un share NFS remote?"
+# 
+# File: usr/share/ashyterm/window.py, line: 49
+#: NEEDS WORK
+msgid "How can I debug network issues using mtr and traceroute?"
+msgstr "Cum pot să depanez problemele de rețea folosind mtr și traceroute?"
+# 
+# File: usr/share/ashyterm/window.py, line: 50
+#: NEEDS WORK
+msgid "What best practices should I follow to harden SSH?"
+msgstr "Ce bune practici ar trebui să urmez pentru a întări SSH?"
+# 
+# File: usr/share/ashyterm/window.py, line: 51
+#: NEEDS WORK
+msgid "How do I schedule updates with pacman and log the results?"
+msgstr "Cum pot programa actualizările cu pacman și înregistra rezultatele?"
+# 
+# File: usr/share/ashyterm/window.py, line: 52
+#: NEEDS WORK
+msgid "How do I detect and terminate zombie processes?"
+msgstr "Cum pot detecta și termina procesele zombie?"
+# 
+# File: usr/share/ashyterm/window.py, line: 53
+#: NEEDS WORK
+msgid "How do I compare two directories to find differences?"
+msgstr "Cum compar două directoare pentru a găsi diferențe?"
+# 
+# File: usr/share/ashyterm/window.py, line: 54
+#: NEEDS WORK
+msgid "How can I configure automatic backups of /etc with git?"
+msgstr "Cum pot configura copii de rezervă automate ale /etc cu git?"
+# 
+# File: usr/share/ashyterm/window.py, line: 55
+#: NEEDS WORK
+msgid "How do I troubleshoot high disk I/O usage in databases?"
+msgstr "Cum pot să depanez utilizarea ridicată a I/O-ului pe disc în baze de date?"
+# 
+# File: usr/share/ashyterm/window.py, line: 56
+#: NEEDS WORK
+msgid "How can I check available kernel versions and update safely?"
+msgstr "Cum pot verifica versiunile de kernel disponibile și actualiza în siguranță?"
+# 
+# File: usr/share/ashyterm/window.py, line: 57
+#: NEEDS WORK
+msgid "What is the best way to install proprietary GPU drivers?"
+msgstr "Care este cea mai bună modalitate de a instala driverele GPU proprietare?"
+# 
+# File: usr/share/ashyterm/window.py, line: 58
+#: NEEDS WORK
+msgid "How do I configure multiple monitors on X11 and Wayland?"
+msgstr "Cum configurez mai multe monitoare pe X11 și Wayland?"
+# 
+# File: usr/share/ashyterm/window.py, line: 59
+#: NEEDS WORK
+msgid "How can I adjust display brightness from the terminal?"
+msgstr "Cum pot ajusta luminozitatea ecranului din terminal?"
+# 
+# File: usr/share/ashyterm/window.py, line: 60
+#: NEEDS WORK
+msgid "How do I find which process is listening on a TCP port?"
+msgstr "Cum pot să aflu ce proces ascultă pe un port TCP?"
+# 
+# File: usr/share/ashyterm/window.py, line: 61
+#: NEEDS WORK
+msgid "How can I release an occupied port without rebooting?"
+msgstr "Cum pot elibera un port ocupat fără a reporni?"
+# 
+# File: usr/share/ashyterm/window.py, line: 62
+#: NEEDS WORK
+msgid "How do I identify and kill stuck SSH sessions?"
+msgstr "Cum pot identifica și închide sesiuni SSH blocate?"
+# 
+# File: usr/share/ashyterm/window.py, line: 63
+#: NEEDS WORK
+msgid "How can I configure an SSH tunnel for secure remote access?"
+msgstr "Cum pot configura un tunel SSH pentru acces de la distanță în siguranță?"
+# 
+# File: usr/share/ashyterm/window.py, line: 64
+#: NEEDS WORK
+msgid "How do I sync folders using rsync with compression?"
+msgstr "Cum pot să sincronizez foldere folosind rsync cu compresie?"
+# 
+# File: usr/share/ashyterm/window.py, line: 65
+#: NEEDS WORK
+msgid "How do I schedule recurring tasks with systemd timers?"
+msgstr "Cum pot programa sarcini recurente cu temporizatoarele systemd?"
+# 
+# File: usr/share/ashyterm/window.py, line: 66
+#: NEEDS WORK
+msgid "How can I configure custom log rotation with logrotate?"
+msgstr "Cum pot configura rotația personalizată a jurnalelor cu logrotate?"
+# 
+# File: usr/share/ashyterm/window.py, line: 67
+#: NEEDS WORK
+msgid "How do I access the systemd journal from another host?"
+msgstr "Cum pot accesa jurnalul systemd de pe un alt gazdă?"
+# 
+# File: usr/share/ashyterm/window.py, line: 68
+#: NEEDS WORK
+msgid "How do I tail logs in real time and filter by keyword?"
+msgstr "Cum pot să urmăresc jurnalele în timp real și să filtrez după cuvânt cheie?"
+# 
+# File: usr/share/ashyterm/window.py, line: 69
+#: NEEDS WORK
+msgid "How can I check which package installed a specific file?"
+msgstr "Cum pot verifica ce pachet a instalat un fișier specific?"
+# 
+# File: usr/share/ashyterm/window.py, line: 70
+#: NEEDS WORK
+msgid "How do I list package dependencies before installing?"
+msgstr "Cum pot lista dependențele pachetului înainte de instalare?"
+# 
+# File: usr/share/ashyterm/window.py, line: 71
+#: NEEDS WORK
+msgid "How can I simulate a pacman upgrade without changing the system?"
+msgstr "Cum pot simula o actualizare pacman fără a schimba sistemul?"
+# 
+# File: usr/share/ashyterm/window.py, line: 72
+#: NEEDS WORK
+msgid "How do I recover a system that fails to boot after a kernel update?"
+msgstr "Cum pot să recuperez un sistem care nu pornește după o actualizare a kernel-ului?"
+# 
+# File: usr/share/ashyterm/window.py, line: 73
+#: NEEDS WORK
+msgid "How do I mount ISO images without burning them?"
+msgstr "Cum pot monta imagini ISO fără a le grava?"
+# 
+# File: usr/share/ashyterm/window.py, line: 74
+#: NEEDS WORK
+msgid "How do I verify downloads using sha256sum?"
+msgstr "Cum verific descărcările folosind sha256sum?"
+# 
+# File: usr/share/ashyterm/window.py, line: 75
+#: NEEDS WORK
+msgid "How can I set persistent aliases for frequent commands?"
+msgstr "Cum pot seta aliasuri persistente pentru comenzi frecvente?"
+# 
+# File: usr/share/ashyterm/window.py, line: 76
+#: NEEDS WORK
+msgid "How do I create custom shell functions in my bashrc?"
+msgstr "Cum pot crea funcții shell personalizate în bashrc-ul meu?"
+# 
+# File: usr/share/ashyterm/window.py, line: 77
+#: NEEDS WORK
+msgid "How do I share a folder with Samba and manage permissions?"
+msgstr "Cum pot să partajez un folder cu Samba și să gestionez permisiunile?"
+# 
+# File: usr/share/ashyterm/window.py, line: 78
+#: NEEDS WORK
+msgid "How do I mount a CIFS share securely with credentials?"
+msgstr "Cum pot monta un share CIFS în siguranță cu acreditive?"
+# 
+# File: usr/share/ashyterm/window.py, line: 79
+#: NEEDS WORK
+msgid "How do I find my internal and external IP address quickly?"
+msgstr "Cum pot găsi rapid adresa mea IP internă și externă?"
+# 
+# File: usr/share/ashyterm/window.py, line: 80
+#: NEEDS WORK
+msgid "How can I test network speed from the command line?"
+msgstr "Cum pot testa viteza rețelei din linia de comandă?"
+# 
+# File: usr/share/ashyterm/window.py, line: 81
+#: NEEDS WORK
+msgid "How do I scan local devices with nmap?"
+msgstr "Cum pot să scanez dispozitivele locale cu nmap?"
+# 
+# File: usr/share/ashyterm/window.py, line: 82
+#: NEEDS WORK
+msgid "How can I troubleshoot slow or failing DNS?"
+msgstr "Cum pot să depanez DNS-ul lent sau care nu funcționează?"
+# 
+# File: usr/share/ashyterm/window.py, line: 83
+#: NEEDS WORK
+msgid "How do I configure a local DNS resolver with systemd-resolved?"
+msgstr "Cum configurez un rezolvator DNS local cu systemd-resolved?"
+# 
+# File: usr/share/ashyterm/window.py, line: 84
+#: NEEDS WORK
+msgid "How can I capture suspicious traffic with tcpdump?"
+msgstr "Cum pot captura trafic suspect cu tcpdump?"
+# 
+# File: usr/share/ashyterm/window.py, line: 85
+#: NEEDS WORK
+msgid "How do I limit bandwidth for a process using tc or trickle?"
+msgstr "Cum pot limita lățimea de bandă pentru un proces folosind tc sau trickle?"
+# 
+# File: usr/share/ashyterm/window.py, line: 86
+#: NEEDS WORK
+msgid "How can I inspect routing tables and metrics?"
+msgstr "Cum pot inspecta tabelele de rutare și metricile?"
+# 
+# File: usr/share/ashyterm/window.py, line: 87
+#: NEEDS WORK
+msgid "How do I configure NTP servers and sync time automatically?"
+msgstr "Cum configurez serverele NTP și sincronizez automat timpul?"
+# 
+# File: usr/share/ashyterm/window.py, line: 88
+#: NEEDS WORK
+msgid "How do I manage users and groups with useradd and gpasswd?"
+msgstr "Cum gestionez utilizatorii și grupurile cu useradd și gpasswd?"
+# 
+# File: usr/share/ashyterm/window.py, line: 89
+#: NEEDS WORK
+msgid "How do I reset the root password if I forget it?"
+msgstr "Cum pot reseta parola de root dacă o uit?"
+# 
+# File: usr/share/ashyterm/window.py, line: 90
+#: NEEDS WORK
+msgid "How can I configure sudo without granting full root access?"
+msgstr "Cum pot configura sudo fără a acorda acces complet la root?"
+# 
+# File: usr/share/ashyterm/window.py, line: 91
+#: NEEDS WORK
+msgid "How do I audit successful and failed logins on the system?"
+msgstr "Cum pot audita autentificările reușite și eșuate pe sistem?"
+# 
+# File: usr/share/ashyterm/window.py, line: 92
+#: NEEDS WORK
+msgid "How can I temporarily lock an account after failed attempts?"
+msgstr "Cum pot bloca temporar un cont după încercări eșuate?"
+# 
+# File: usr/share/ashyterm/window.py, line: 93
+#: NEEDS WORK
+msgid "How do I configure SSH keys and disable password authentication?"
+msgstr "Cum configurez cheile SSH și dezactivez autentificarea prin parolă?"
+# 
+# File: usr/share/ashyterm/window.py, line: 94
+#: NEEDS WORK
+msgid "How can I use fail2ban to protect exposed services?"
+msgstr "Cum pot folosi fail2ban pentru a proteja serviciile expuse?"
+# 
+# File: usr/share/ashyterm/window.py, line: 95
+#: NEEDS WORK
+msgid "How do I enable the firewall with ufw and create basic rules?"
+msgstr "Cum activez firewall-ul cu ufw și creez reguli de bază?"
+# 
+# File: usr/share/ashyterm/window.py, line: 96
+#: NEEDS WORK
+msgid "How can I inspect and adjust rules with nftables?"
+msgstr "Cum pot inspecta și ajusta regulile cu nftables?"
+# 
+# File: usr/share/ashyterm/window.py, line: 97
+#: NEEDS WORK
+msgid "How do I detect altered files using tripwire or aide?"
+msgstr "Cum pot detecta fișierele modificate folosind tripwire sau aide?"
+# 
+# File: usr/share/ashyterm/window.py, line: 98
+#: NEEDS WORK
+msgid "How do I configure encrypted backups automatically with borg?"
+msgstr "Cum configurez backup-uri criptate automat cu borg?"
+# 
+# File: usr/share/ashyterm/window.py, line: 99
+#: NEEDS WORK
+msgid "How can I sync backups to the cloud using rclone?"
+msgstr "Cum pot sincroniza copiile de rezervă în cloud folosind rclone?"
+# 
+# File: usr/share/ashyterm/window.py, line: 100
+#: NEEDS WORK
+msgid "How do I set up software RAID and monitor its health?"
+msgstr "Cum îmi configurez RAID software și monitorizez starea acestuia?"
+# 
+# File: usr/share/ashyterm/window.py, line: 101
+#: NEEDS WORK
+msgid "How can I recover data from a degraded RAID array?"
+msgstr "Cum pot recupera datele dintr-un array RAID degradat?"
+# 
+# File: usr/share/ashyterm/window.py, line: 102
+#: NEEDS WORK
+msgid "How do I analyse SMART attributes to predict disk failures?"
+msgstr "Cum analizez atributele SMART pentru a prezice defectele discurilor?"
+# 
+# File: usr/share/ashyterm/window.py, line: 103
+#: NEEDS WORK
+msgid "How can I expand an LVM partition without data loss?"
+msgstr "Cum pot extinde o partiție LVM fără pierderi de date?"
+# 
+# File: usr/share/ashyterm/window.py, line: 104
+#: NEEDS WORK
+msgid "How do I move the home directory to another partition?"
+msgstr "Cum pot muta directorul home pe o altă partiție?"
+# 
+# File: usr/share/ashyterm/window.py, line: 105
+#: NEEDS WORK
+msgid "How do I create a swapfile and tune swappiness?"
+msgstr "Cum pot crea un fișier de swap și ajusta swappiness?"
+# 
+# File: usr/share/ashyterm/window.py, line: 106
+#: NEEDS WORK
+msgid "How can I clear cached memory without rebooting?"
+msgstr "Cum pot să șterg memoria cache fără a reporni?"
+# 
+# File: usr/share/ashyterm/window.py, line: 107
+#: NEEDS WORK
+msgid "How do I reduce power consumption on Linux laptops?"
+msgstr "Cum pot reduce consumul de energie pe laptopurile cu Linux?"
+# 
+# File: usr/share/ashyterm/window.py, line: 108
+#: NEEDS WORK
+msgid "How can I troubleshoot frequent GNOME or KDE freezes?"
+msgstr "Cum pot să depanez blocările frecvente ale GNOME sau KDE?"
+# 
+# File: usr/share/ashyterm/window.py, line: 109
+#: NEEDS WORK
+msgid "How do I reset desktop environment settings from the terminal?"
+msgstr "Cum pot reseta setările mediului desktop din terminal?"
+# 
+# File: usr/share/ashyterm/window.py, line: 110
+#: NEEDS WORK
+msgid "How do I install additional fonts and set them system-wide?"
+msgstr "Cum pot instala fonturi suplimentare și le pot seta la nivel de sistem?"
+# 
+# File: usr/share/ashyterm/window.py, line: 111
+#: NEEDS WORK
+msgid "How can I change keyboard layout permanently?"
+msgstr "Cum pot schimba permanent layout-ul tastaturii?"
+# 
+# File: usr/share/ashyterm/window.py, line: 112
+#: NEEDS WORK
+msgid "How do I enable network printing support with CUPS?"
+msgstr "Cum activez suportul pentru imprimarea în rețea cu CUPS?"
+# 
+# File: usr/share/ashyterm/window.py, line: 113
+#: NEEDS WORK
+msgid "How can I troubleshoot PulseAudio or PipeWire sound issues?"
+msgstr "Cum pot să depanez problemele de sunet cu PulseAudio sau PipeWire?"
+# 
+# File: usr/share/ashyterm/window.py, line: 114
+#: NEEDS WORK
+msgid "How do I detect and configure USB devices automatically?"
+msgstr "Cum pot detecta și configura automat dispozitivele USB?"
+# 
+# File: usr/share/ashyterm/window.py, line: 115
+#: NEEDS WORK
+msgid "How can I set up a simple web server with nginx?"
+msgstr "Cum pot să configurez un server web simplu cu nginx?"
+# 
+# File: usr/share/ashyterm/window.py, line: 116
+#: NEEDS WORK
+msgid "How do I secure Apache with HTTPS using Let's Encrypt?"
+msgstr "Cum îmi securizez Apache cu HTTPS folosind Let's Encrypt?"
+# 
+# File: usr/share/ashyterm/window.py, line: 117
+#: NEEDS WORK
+msgid "How can I optimise PHP-FPM for high traffic?"
+msgstr "Cum pot optimiza PHP-FPM pentru trafic ridicat?"
+# 
+# File: usr/share/ashyterm/window.py, line: 118
+#: NEEDS WORK
+msgid "How do I configure a reverse proxy with caching?"
+msgstr "Cum configurez un proxy invers cu caching?"
+# 
+# File: usr/share/ashyterm/window.py, line: 119
+#: NEEDS WORK
+msgid "How can I monitor Docker containers and restart them automatically?"
+msgstr "Cum pot monitoriza containerele Docker și le pot reporni automat?"
+# 
+# File: usr/share/ashyterm/window.py, line: 120
+#: NEEDS WORK
+msgid "How do I inspect container logs and limit resource usage?"
+msgstr "Cum pot inspecta jurnalele containerului și limita utilizarea resurselor?"
+# 
+# File: usr/share/ashyterm/window.py, line: 121
+#: NEEDS WORK
+msgid "How do I build optimised multi-stage Docker images?"
+msgstr "Cum construiesc imagini Docker optimizate în mai multe etape?"
+# 
+# File: usr/share/ashyterm/window.py, line: 122
+#: NEEDS WORK
+msgid "How can I manage pods and deployments in a local Kubernetes cluster?"
+msgstr "Cum pot gestiona module și desfășurări într-un cluster Kubernetes local?"
+# 
+# File: usr/share/ashyterm/window.py, line: 123
+#: NEEDS WORK
+msgid "How do I set up a basic CI/CD pipeline with GitLab Runner?"
+msgstr "Cum îmi configurez un pipeline CI/CD de bază cu GitLab Runner?"
+# 
+# File: usr/share/ashyterm/window.py, line: 124
+#: NEEDS WORK
+msgid "How can I create isolated Python environments with venv?"
+msgstr "Cum pot crea medii izolate Python cu venv?"
+# 
+# File: usr/share/ashyterm/window.py, line: 125
+#: NEEDS WORK
+msgid "How do I build custom deb or rpm packages?"
+msgstr "Cum construiesc pachete deb sau rpm personalizate?"
+# 
+# File: usr/share/ashyterm/window.py, line: 126
+#: NEEDS WORK
+msgid "How can I compile a custom kernel and install it?"
+msgstr "Cum pot să compilez un kernel personalizat și să-l instalez?"
+# 
+# File: usr/share/ashyterm/window.py, line: 127
+#: NEEDS WORK
+msgid "How do I measure application performance with perf and flame graphs?"
+msgstr "Cum măsor performanța aplicației cu perf și grafice de flacără?"
+# 
+# File: usr/share/ashyterm/window.py, line: 128
+#: NEEDS WORK
+msgid "How can I use strace and ltrace to debug processes?"
+msgstr "Cum pot folosi strace și ltrace pentru a depana procese?"
+# 
+# File: usr/share/ashyterm/window.py, line: 129
+#: NEEDS WORK
+msgid "How do I investigate deadlocks with gdb and core dumps?"
+msgstr "Cum investighez blocajele cu gdb și dump-uri de core?"
+# 
+# File: usr/share/ashyterm/window.py, line: 130
+#: NEEDS WORK
+msgid "How can I enable SELinux or AppArmor and create simple policies?"
+msgstr "Cum pot activa SELinux sau AppArmor și crea politici simple?"
+# 
+# File: usr/share/ashyterm/window.py, line: 131
+#: NEEDS WORK
+msgid "How do I validate security policies before applying them in production?"
+msgstr "Cum pot valida politicile de securitate înainte de a le aplica în producție?"
+# 
+# File: usr/share/ashyterm/window.py, line: 132
+#: NEEDS WORK
+msgid "How can I configure site-to-site OpenVPN?"
+msgstr "Cum pot configura OpenVPN site-to-site?"
+# 
+# File: usr/share/ashyterm/window.py, line: 133
+#: NEEDS WORK
+msgid "How do I set up a WireGuard server with multiple users?"
+msgstr "Cum îmi configurez un server WireGuard cu mai mulți utilizatori?"
+# 
+# File: usr/share/ashyterm/window.py, line: 134
+#: NEEDS WORK
+msgid "How can I detect and mitigate excessive swap usage?"
+msgstr "Cum pot detecta și atenua utilizarea excesivă a swap-ului?"
+# 
+# File: usr/share/ashyterm/window.py, line: 135
+#: NEEDS WORK
+msgid "How do I track why a process was killed by the OOM killer?"
+msgstr "Cum pot urmări de ce un proces a fost oprit de OOM killer?"
+# 
+# File: usr/share/ashyterm/window.py, line: 136
+#: NEEDS WORK
+msgid "How can I configure disk quotas for users and groups?"
+msgstr "Cum pot configura cotele de disc pentru utilizatori și grupuri?"
+# 
+# File: usr/share/ashyterm/window.py, line: 137
+#: NEEDS WORK
+msgid "How do I automate cleanup of /tmp and temporary directories?"
+msgstr "Cum pot automatiza curățarea directorului /tmp și a directorilor temporari?"
+# 
+# File: usr/share/ashyterm/window.py, line: 138
+#: NEEDS WORK
+msgid "How can I refresh pacman mirrors and clean the cache?"
+msgstr "Cum pot să actualizez oglinzile pacman și să curăț memoria cache?"
+# 
+# File: usr/share/ashyterm/window.py, line: 139
+#: NEEDS WORK
+msgid "How do I share clipboard contents and files via sshfs?"
+msgstr "Cum pot să partajez conținutul clipboard-ului și fișierele prin sshfs?"
+# 
+# File: usr/share/ashyterm/window.py, line: 140
+#: NEEDS WORK
+msgid "How can I configure email notifications for critical failures?"
+msgstr "Cum pot configura notificările prin email pentru erori critice?"
+# 
+# File: usr/share/ashyterm/window.py, line: 141
+#: NEEDS WORK
+msgid "How do I collect metrics with Prometheus and basic exporters?"
+msgstr "Cum pot colecta metrici cu Prometheus și exportatori de bază?"
+# 
+# File: usr/share/ashyterm/window.py, line: 142
+#: NEEDS WORK
+msgid "How can I build Grafana dashboards for Linux servers?"
+msgstr "Cum pot construi tablouri de bord Grafana pentru servere Linux?"
+# 
+# File: usr/share/ashyterm/window.py, line: 143
+#: NEEDS WORK
+msgid "How do I apply security patches automatically?"
+msgstr "Cum aplic automat actualizările de securitate?"
+# 
+# File: usr/share/ashyterm/window.py, line: 144
+#: NEEDS WORK
+msgid "How can I keep Ansible playbooks organised for multiple hosts?"
+msgstr "Cum pot să îmi organizez playbook-urile Ansible pentru mai multe gazde?"
+# 
+# File: usr/share/ashyterm/window.py, line: 145
+#: NEEDS WORK
+msgid "How do I troubleshoot slow PostgreSQL databases?"
+msgstr "Cum pot depana baze de date PostgreSQL lente?"
+# 
+# File: usr/share/ashyterm/window.py, line: 146
+#: NEEDS WORK
+msgid "How can I diagnose memory usage in Java applications?"
+msgstr "Cum pot diagnostica utilizarea memoriei în aplicațiile Java?"
+# 
+# File: usr/share/ashyterm/window.py, line: 147
+#: NEEDS WORK
+msgid "How do I integrate LDAP authentication into local services?"
+msgstr "Cum integrez autentificarea LDAP în serviciile locale?"
+# 
+# File: usr/share/ashyterm/window.py, line: 148
+#: NEEDS WORK
+msgid "How do I uninstall a program?"
+msgstr "Cum dezinstalez un program?"
+# 
+# File: usr/share/ashyterm/window.py, line: 149
+#: NEEDS WORK
+msgid "How do I update my system and every application at once?"
+msgstr "Cum îmi actualizez sistemul și fiecare aplicație deodată?"
+# 
+# File: usr/share/ashyterm/window.py, line: 150
+#: NEEDS WORK
+msgid "How can I connect to a Wi-Fi network?"
+msgstr "Cum pot să mă conectez la o rețea Wi-Fi?"
+# 
+# File: usr/share/ashyterm/window.py, line: 151
+#: NEEDS WORK
+msgid "How do I set up my printer?"
+msgstr "Cum îmi configurez imprimanta?"
+# 
+# File: usr/share/ashyterm/window.py, line: 152
+#: NEEDS WORK
+msgid "How can I take a screenshot of the screen?"
+msgstr "Cum pot să fac o captură de ecran?"
+# 
+# File: usr/share/ashyterm/window.py, line: 153
+#: NEEDS WORK
+msgid "How do I connect a second monitor?"
+msgstr "Cum conectez un al doilea monitor?"
+# 
+# File: usr/share/ashyterm/window.py, line: 154
+#: NEEDS WORK
+msgid "What should I do if there is no sound?"
+msgstr "Ce ar trebui să fac dacă nu există sunet?"
+# 
+# File: usr/share/ashyterm/window.py, line: 155
+#: NEEDS WORK
+msgid "How can I change the screen resolution?"
+msgstr "Cum pot schimba rezoluția ecranului?"
+# 
+# File: usr/share/ashyterm/window.py, line: 156
+#: NEEDS WORK
+msgid "How do I change the wallpaper and system theme?"
+msgstr "Cum pot schimba fundalul de ecran și tema sistemului?"
+# 
+# File: usr/share/ashyterm/window.py, line: 157
+#: NEEDS WORK
+msgid "How can I mount and unmount a USB drive or external disk?"
+msgstr "Cum pot monta și demonta un dispozitiv USB sau un disc extern?"
+# 
+# File: usr/share/ashyterm/window.py, line: 158
+#: NEEDS WORK
+msgid "How do I format a USB stick (FAT32, NTFS, ext4)?"
+msgstr "Cum formatez un stick USB (FAT32, NTFS, ext4)?"
+# 
+# File: usr/share/ashyterm/window.py, line: 159
+#: NEEDS WORK
+msgid "How do I install new software packages?"
+msgstr "Cum instalez pachete noi de software?"
+# 
+# File: usr/share/ashyterm/window.py, line: 160
+#: NEEDS WORK
+msgid "How do I remove installed software packages?"
+msgstr "Cum pot să elimin pachetele de software instalate?"
+# 
+# File: usr/share/ashyterm/window.py, line: 161
+#: NEEDS WORK
+msgid "How do I check how much free disk space I have?"
+msgstr "Cum pot verifica cât spațiu liber pe disc am?"
+# 
+# File: usr/share/ashyterm/window.py, line: 162
+#: NEEDS WORK
+msgid "How do I find which files are taking the most space?"
+msgstr "Cum pot să găsesc ce fișiere ocupă cel mai mult spațiu?"
+# 
+# File: usr/share/ashyterm/window.py, line: 163
+#: NEEDS WORK
+msgid "How can I search for a specific file or text?"
+msgstr "Cum pot căuta un fișier sau un text specific?"
+# 
+# File: usr/share/ashyterm/window.py, line: 164
+#: NEEDS WORK
+msgid "How do I check open ports on my machine?"
+msgstr "Cum verific porturile deschise pe mașina mea?"
+# 
+# File: usr/share/ashyterm/window.py, line: 165
+#: NEEDS WORK
+msgid "How can I view running processes and resource usage?"
+msgstr "Cum pot vizualiza procesele în execuție și utilizarea resurselor?"
+# 
+# File: usr/share/ashyterm/window.py, line: 166
+#: NEEDS WORK
+msgid "How do I check recent system logs?"
+msgstr "Cum pot verifica jurnalele de sistem recente?"
+# 
+# File: usr/share/ashyterm/window.py, line: 167
+#: NEEDS WORK
+msgid "How do I update the kernel safely?"
+msgstr "Cum pot actualiza kernelul în siguranță?"
+# 
+# File: usr/share/ashyterm/window.py, line: 168
+#: NEEDS WORK
+msgid "How can I enable automatic updates?"
+msgstr "Cum pot activa actualizările automate?"
+# 
+# File: usr/share/ashyterm/window.py, line: 169
+#: NEEDS WORK
+msgid "How do I create and manage new users?"
+msgstr "Cum pot crea și gestiona utilizatori noi?"
+# 
+# File: usr/share/ashyterm/window.py, line: 170
+#: NEEDS WORK
+msgid "How do I change file permissions safely?"
+msgstr "Cum pot schimba în mod sigur permisiunile fișierelor?"
+# 
+# File: usr/share/ashyterm/window.py, line: 171
+#: NEEDS WORK
+msgid "How can I compress or extract archive files?"
+msgstr "Cum pot să comprima sau să extrag fișiere arhivă?"
+# 
+# File: usr/share/ashyterm/window.py, line: 172
+#: NEEDS WORK
+msgid "How do I verify that my network connection is working?"
+msgstr "Cum pot verifica dacă conexiunea mea de rețea funcționează?"
+# 
+# File: usr/share/ashyterm/window.py, line: 173
+#: NEEDS WORK
+msgid "How do I configure proxy settings for the system?"
+msgstr "Cum configurez setările proxy pentru sistem?"
+# 
+# File: usr/share/ashyterm/window.py, line: 174
+#: NEEDS WORK
+msgid "How can I synchronise system time with online sources?"
+msgstr "Cum pot sincroniza timpul sistemului cu surse online?"
+# 
+# File: usr/share/ashyterm/window.py, line: 175
+#: NEEDS WORK
+msgid "How do I view detailed hardware information?"
+msgstr "Cum pot vizualiza informații detaliate despre hardware?"
+# 
+# File: usr/share/ashyterm/window.py, line: 176
+#: NEEDS WORK
+msgid "How can I install or update device drivers?"
+msgstr "Cum pot instala sau actualiza driverele dispozitivului?"
+# 
+# File: usr/share/ashyterm/window.py, line: 177
+#: NEEDS WORK
+msgid "How do I manage startup applications?"
+msgstr "Cum îmi gestionez aplicațiile de pornire?"
+# 
+# File: usr/share/ashyterm/window.py, line: 178
+#: NEEDS WORK
+msgid "How can I disable unwanted services?"
+msgstr "Cum pot dezactiva serviciile nedorite?"
+# 
+# File: usr/share/ashyterm/window.py, line: 179
+#: NEEDS WORK
+msgid "How do I schedule tasks with cron?"
+msgstr "Cum îmi programez sarcinile cu cron?"
+# 
+# File: usr/share/ashyterm/window.py, line: 180
+#: NEEDS WORK
+msgid "How can I secure SSH on a new server?"
+msgstr "Cum pot să securizez SSH pe un nou server?"
+# 
+# File: usr/share/ashyterm/window.py, line: 181
+#: NEEDS WORK
+msgid "How do I monitor system logs in real time?"
+msgstr "Cum pot monitoriza jurnalele de sistem în timp real?"
+# 
+# File: usr/share/ashyterm/window.py, line: 182
+#: NEEDS WORK
+msgid "How can I back up my home directory automatically?"
+msgstr "Cum pot să fac backup automat pentru directorul meu personal?"
+# 
+# File: usr/share/ashyterm/window.py, line: 183
+#: NEEDS WORK
+msgid "How do I restore a backup safely?"
+msgstr "Cum pot restaura o copie de rezervă în siguranță?"
+# 
+# File: usr/share/ashyterm/window.py, line: 184
+#: NEEDS WORK
+msgid "How can I encrypt files or folders?"
+msgstr "Cum pot să criptez fișiere sau foldere?"
+# 
+# File: usr/share/ashyterm/window.py, line: 185
+#: NEEDS WORK
+msgid "How do I set up remote desktop access?"
+msgstr "Cum îmi configurez accesul la desktopul la distanță?"
+# 
+# File: usr/share/ashyterm/window.py, line: 186
+#: NEEDS WORK
+msgid "How can I configure a host-based firewall?"
+msgstr "Cum pot configura un firewall bazat pe gazdă?"
+# 
+# File: usr/share/ashyterm/window.py, line: 187
+#: NEEDS WORK
+msgid "How do I whitelist or blacklist IP addresses?"
+msgstr "Cum pot să adaug sau să elimin adrese IP din lista albă sau lista neagră?"
+# 
+# File: usr/share/ashyterm/window.py, line: 188
+#: NEEDS WORK
+msgid "How can I check disk health and SMART status?"
+msgstr "Cum pot verifica starea de sănătate a discului și statutul SMART?"
+# 
+# File: usr/share/ashyterm/window.py, line: 189
+#: NEEDS WORK
+msgid "How do I monitor I/O usage per process?"
+msgstr "Cum pot monitoriza utilizarea I/O pe proces?"
+# 
+# File: usr/share/ashyterm/window.py, line: 190
+#: NEEDS WORK
+msgid "How can I check current RAM usage?"
+msgstr "Cum pot verifica utilizarea curentă a RAM-ului?"
+# 
+# File: usr/share/ashyterm/window.py, line: 191
+#: NEEDS WORK
+msgid "How do I clear the DNS cache?"
+msgstr "Cum pot să șterg memoria cache DNS?"
+# 
+# File: usr/share/ashyterm/window.py, line: 192
+#: NEEDS WORK
+msgid "How can I troubleshoot boot issues quickly?"
+msgstr "Cum pot să depanez rapid problemele de boot?"
+# 
+# File: usr/share/ashyterm/window.py, line: 193
+#: NEEDS WORK
+msgid "How do I recover deleted files?"
+msgstr "Cum pot recupera fișierele șterse?"
+# 
+# File: usr/share/ashyterm/window.py, line: 194
+#: NEEDS WORK
+msgid "How can I set environment variables permanently?"
+msgstr "Cum pot seta variabilele de mediu în mod permanent?"
+# 
+# File: usr/share/ashyterm/window.py, line: 195
+#: NEEDS WORK
+msgid "How do I install development tools and headers?"
+msgstr "Cum instalez uneltele de dezvoltare și anteturile?"
+# 
+# File: usr/share/ashyterm/window.py, line: 196
+#: NEEDS WORK
+msgid "How can I manage Python packages with pip?"
+msgstr "Cum pot gestiona pachetele Python cu pip?"
+# 
+# File: usr/share/ashyterm/window.py, line: 197
+#: NEEDS WORK
+msgid "How do I manage Node.js packages with npm?"
+msgstr "Cum îmi gestionez pachetele Node.js cu npm?"
+# 
+# File: usr/share/ashyterm/window.py, line: 198
+#: NEEDS WORK
+msgid "How can I install Docker on my system?"
+msgstr "Cum pot instala Docker pe sistemul meu?"
+# 
+# File: usr/share/ashyterm/window.py, line: 199
+#: NEEDS WORK
+msgid "How do I remove Docker completely?"
+msgstr "Cum pot să elimin complet Docker?"
+# 
+# File: usr/share/ashyterm/window.py, line: 200
+#: NEEDS WORK
+msgid "How can I manage Docker images efficiently?"
+msgstr "Cum pot gestiona eficient imaginile Docker?"
+# 
+# File: usr/share/ashyterm/window.py, line: 201
+#: NEEDS WORK
+msgid "How do I manage Docker volumes safely?"
+msgstr "Cum pot gestiona volumele Docker în siguranță?"
+# 
+# File: usr/share/ashyterm/window.py, line: 202
+#: NEEDS WORK
+msgid "How can I inspect Docker networks?"
+msgstr "Cum pot inspecta rețelele Docker?"
+# 
+# File: usr/share/ashyterm/window.py, line: 203
+#: NEEDS WORK
+msgid "How do I bootstrap a Kubernetes cluster?"
+msgstr "Cum îmi bootstrap un cluster Kubernetes?"
+# 
+# File: usr/share/ashyterm/window.py, line: 204
+#: NEEDS WORK
+msgid "How can I install and configure a SQL database?"
+msgstr "Cum pot instala și configura o bază de date SQL?"
+# 
+# File: usr/share/ashyterm/window.py, line: 205
+#: NEEDS WORK
+msgid "How do I secure a database server?"
+msgstr "Cum îmi securizez un server de baze de date?"
+# 
+# File: usr/share/ashyterm/window.py, line: 206
+#: NEEDS WORK
+msgid "How can I monitor database performance metrics?"
+msgstr "Cum pot monitoriza metricile de performanță ale bazei de date?"
+# 
+# File: usr/share/ashyterm/window.py, line: 207
+#: NEEDS WORK
+msgid "How do I back up a database automatically?"
+msgstr "Cum pot să fac o copie de rezervă a unei baze de date automat?"
+# 
+# File: usr/share/ashyterm/window.py, line: 208
+#: NEEDS WORK
+msgid "How can I restore a database backup?"
+msgstr "Cum pot restaura o copie de rezervă a bazei de date?"
+# 
+# File: usr/share/ashyterm/window.py, line: 209
+#: NEEDS WORK
+msgid "How do I upgrade system packages safely?"
+msgstr "Cum pot să actualizez pachetele de sistem în siguranță?"
+# 
+# File: usr/share/ashyterm/window.py, line: 210
+#: NEEDS WORK
+msgid "How can I check for package updates without installing them?"
+msgstr "Cum pot verifica actualizările pachetului fără a le instala?"
+# 
+# File: usr/share/ashyterm/window.py, line: 211
+#: NEEDS WORK
+msgid "How do I set up a local repository mirror?"
+msgstr "Cum îmi configurez un mirror local al repository-ului?"
+# 
+# File: usr/share/ashyterm/window.py, line: 212
+#: NEEDS WORK
+msgid "How can I troubleshoot package conflicts?"
+msgstr "Cum pot să depanez conflictele de pachete?"
+# 
+# File: usr/share/ashyterm/window.py, line: 213
+#: NEEDS WORK
+msgid "How do I configure proxy settings for package managers?"
+msgstr "Cum configurez setările proxy pentru managerii de pachete?"
+# 
+# File: usr/share/ashyterm/window.py, line: 214
+#: NEEDS WORK
+msgid "How can I clean the package cache safely?"
+msgstr "Cum pot curăța în siguranță cache-ul pachetului?"
+# 
+# File: usr/share/ashyterm/window.py, line: 215
+#: NEEDS WORK
+msgid "How do I manage Flatpak or Snap packages?"
+msgstr "Cum gestionez pachetele Flatpak sau Snap?"
+# 
+# File: usr/share/ashyterm/window.py, line: 216
+#: NEEDS WORK
+msgid "How can I monitor resource usage per container?"
+msgstr "Cum pot monitoriza utilizarea resurselor pe container?"
+# 
+# File: usr/share/ashyterm/window.py, line: 217
+#: NEEDS WORK
+msgid "How do I export container metrics to Prometheus?"
+msgstr "Cum pot exporta metricile containerului în Prometheus?"
+# 
+# File: usr/share/ashyterm/window.py, line: 218
+#: NEEDS WORK
+msgid "How can I trigger alerts when CPU exceeds 70%?"
+msgstr "Cum pot să declanșez alerte când CPU-ul depășește 70%?"
+# 
+# File: usr/share/ashyterm/window.py, line: 219
+#: NEEDS WORK
+msgid "How do I archive system logs for compliance?"
+msgstr "Cum arhivez jurnalele de sistem pentru conformitate?"
+# 
+# File: usr/share/ashyterm/window.py, line: 220
+#: NEEDS WORK
+msgid "How can I set up centralised logging with Loki?"
+msgstr "Cum pot configura jurnalizarea centralizată cu Loki?"
+# 
+# File: usr/share/ashyterm/window.py, line: 221
+#: NEEDS WORK
+msgid "How do I configure Grafana alerts for system metrics?"
+msgstr "Cum configurez alertele Grafana pentru metrici de sistem?"
+# 
+# File: usr/share/ashyterm/window.py, line: 222
+#: NEEDS WORK
+msgid "How can I deploy applications with Helm charts?"
+msgstr "Cum pot să implementez aplicații cu grafice Helm?"
+# 
+# File: usr/share/ashyterm/window.py, line: 223
+#: NEEDS WORK
+msgid "How do I roll back a Kubernetes deployment?"
+msgstr "Cum pot să revin la o implementare Kubernetes?"
+# 
+# File: usr/share/ashyterm/window.py, line: 224
+#: NEEDS WORK
+msgid "How can I manage secrets securely on Linux?"
+msgstr "Cum pot gestiona secretele în siguranță pe Linux?"
+# 
+# File: usr/share/ashyterm/window.py, line: 225
+#: NEEDS WORK
+msgid "How do I inspect SELinux or AppArmor audit logs?"
+msgstr "Cum pot inspecta jurnalele de audit SELinux sau AppArmor?"
+# 
+# File: usr/share/ashyterm/window.py, line: 226
+#: NEEDS WORK
+msgid "How can I test firewall rules without disrupting traffic?"
+msgstr "Cum pot testa regulile firewall-ului fără a perturba traficul?"
+# 
+# File: usr/share/ashyterm/window.py, line: 227
+#: NEEDS WORK
+msgid "How do I benchmark disk throughput?"
+msgstr "Cum pot să evaluez lățimea de bandă a discului?"
+# 
+# File: usr/share/ashyterm/window.py, line: 228
+#: NEEDS WORK
+msgid "How can I track battery health on laptops?"
+msgstr "Cum pot urmări starea bateriei pe laptopuri?"
+# 
+# File: usr/share/ashyterm/window.py, line: 229
+#: NEEDS WORK
+msgid "How do I configure automatic screen locking and idle timeouts?"
+msgstr "Cum configurez blocarea automată a ecranului și timpii de așteptare?"
+# 
+# File: usr/share/ashyterm/window.py, line: 230
+#: NEEDS WORK
+msgid "How can I share files over the network easily?"
+msgstr "Cum pot să partajez fișiere peste rețea cu ușurință?"
+# 
+# File: usr/share/ashyterm/window.py, line: 231
+#: NEEDS WORK
+msgid "How do I monitor GPU usage on Linux?"
+msgstr "Cum pot monitoriza utilizarea GPU-ului pe Linux?"
+# 
+# File: usr/share/ashyterm/window.py, line: 232
+#: NEEDS WORK
+msgid "How can I check for firmware updates?"
+msgstr "Cum pot verifica actualizările de firmware?"
+# 
+# File: usr/share/ashyterm/window.py, line: 233
+#: NEEDS WORK
+msgid "How do I enable hardware acceleration in browsers?"
+msgstr "Cum activez accelerarea hardware în browsere?"
+# 
+# File: usr/share/ashyterm/window.py, line: 234
+#: NEEDS WORK
+msgid "How can I detect memory leaks in applications?"
+msgstr "Cum pot detecta scurgerile de memorie în aplicații?"
+# 
+# File: usr/share/ashyterm/window.py, line: 235
+#: NEEDS WORK
+msgid "How do I profile Python scripts for performance?"
+msgstr "Cum pot profila scripturi Python pentru performanță?"
+# 
+# File: usr/share/ashyterm/window.py, line: 236
+#: NEEDS WORK
+msgid "How can I measure latency between servers?"
+msgstr "Cum pot măsura latența între servere?"
+# 
+# File: usr/share/ashyterm/window.py, line: 237
+#: NEEDS WORK
+msgid "How do I configure a VPN client connection?"
+msgstr "Cum configurez o conexiune client VPN?"
+# 
+# File: usr/share/ashyterm/window.py, line: 238
+#: NEEDS WORK
+msgid "How can I script repetitive maintenance tasks?"
+msgstr "Cum pot să scriu scripturi pentru sarcini de întreținere repetitive?"
+# 
+# File: usr/share/ashyterm/window.py, line: 239
+#: NEEDS WORK
+msgid "How do I document server configuration automatically?"
+msgstr "Cum documentez automat configurația serverului?"
+# 
+# File: usr/share/ashyterm/window.py, line: 240
+#: NEEDS WORK
+msgid "How can I manage dotfiles across multiple machines?"
+msgstr "Cum pot gestiona fișierele dot pe mai multe mașini?"
+# 
+# File: usr/share/ashyterm/window.py, line: 241
+#: NEEDS WORK
+msgid "How do I set up passwordless sudo for automation?"
+msgstr "Cum configurez sudo fără parolă pentru automatizare?"
+# 
+# File: usr/share/ashyterm/window.py, line: 242
+#: NEEDS WORK
+msgid "How can I monitor cron job failures?"
+msgstr "Cum pot monitoriza eșecurile sarcinilor cron?"
+# 
+# File: usr/share/ashyterm/window.py, line: 243
+#: NEEDS WORK
+msgid "How do I send notifications to Slack or Matrix from scripts?"
+msgstr "Cum pot trimite notificări către Slack sau Matrix din scripturi?"
+# 
+# File: usr/share/ashyterm/window.py, line: 244
+#: NEEDS WORK
+msgid "How can I manage secrets in environment variables?"
+msgstr "Cum pot gestiona secretele în variabilele de mediu?"
+# 
+# File: usr/share/ashyterm/window.py, line: 245
+#: NEEDS WORK
+msgid "How do I install and maintain ZFS on Linux?"
+msgstr "Cum pot instala și întreține ZFS pe Linux?"
+# 
+# File: usr/share/ashyterm/window.py, line: 246
+#: NEEDS WORK
+msgid "How can I create and restore Btrfs snapshots?"
+msgstr "Cum pot crea și restaura instantanee Btrfs?"
+# 
+# File: usr/share/ashyterm/window.py, line: 247
+#: NEEDS WORK
+msgid "How do I check ext4 filesystem health?"
+msgstr "Cum verific sănătatea sistemului de fișiere ext4?"
+# 
+# File: usr/share/ashyterm/window.py, line: 248
+#: NEEDS WORK
+msgid "How can I detect hardware errors with dmesg?"
+msgstr "Cum pot detecta erorile hardware cu dmesg?"
+# 
+# File: usr/share/ashyterm/window.py, line: 249
+#: NEEDS WORK
+msgid "How do I tune kernel parameters with sysctl?"
+msgstr "Cum îmi ajustează parametrii kernel-ului cu sysctl?"
+# 
+# File: usr/share/ashyterm/window.py, line: 250
+#: NEEDS WORK
+msgid "How can I configure huge pages for databases?"
+msgstr "Cum pot configura pagini mari pentru baze de date?"
+# 
+# File: usr/share/ashyterm/window.py, line: 251
+#: NEEDS WORK
+msgid "How do I enable and manage cgroups v2?"
+msgstr "Cum activez și gestionez cgroups v2?"
+# 
+# File: usr/share/ashyterm/window.py, line: 252
+#: NEEDS WORK
+msgid "How can I collect performance data with sar?"
+msgstr "Cum pot colecta date de performanță cu sar?"
+# 
+# File: usr/share/ashyterm/window.py, line: 253
+#: NEEDS WORK
+msgid "How do I investigate high load average values?"
+msgstr "Cum pot investiga valori mari ale mediei de încărcare?"
+# 
+# File: usr/share/ashyterm/window.py, line: 254
+#: NEEDS WORK
+msgid "How can I test backup restores automatically?"
+msgstr "Cum pot testa automat restaurările de backup?"
+# 
+# File: usr/share/ashyterm/window.py, line: 255
+#: NEEDS WORK
+msgid "How do I rotate SSH keys on a schedule?"
+msgstr "Cum pot roti cheile SSH conform unui program?"
+# 
+# File: usr/share/ashyterm/window.py, line: 256
+#: NEEDS WORK
+msgid "How can I enforce password policies on Linux?"
+msgstr "Cum pot impune politici de parole pe Linux?"
+# 
+# File: usr/share/ashyterm/window.py, line: 257
+#: NEEDS WORK
+msgid "How do I audit installed packages for CVEs?"
+msgstr "Cum auditez pachetele instalate pentru CVE-uri?"
+# 
+# File: usr/share/ashyterm/window.py, line: 258
+#: NEEDS WORK
+msgid "How can I use nix-shell or direnv for reproducible dev environments?"
+msgstr "Cum pot folosi nix-shell sau direnv pentru medii de dezvoltare reproducibile?"
+# 
+# File: usr/share/ashyterm/window.py, line: 259
+#: NEEDS WORK
+msgid "How do I manage multiple Python versions with pyenv?"
+msgstr "Cum gestionez mai multe versiuni de Python cu pyenv?"
+# 
+# File: usr/share/ashyterm/window.py, line: 260
+#: NEEDS WORK
+msgid "How can I run containers rootless with Podman?"
+msgstr "Cum pot rula containere fără privilegii de root cu Podman?"
+# 
+# File: usr/share/ashyterm/window.py, line: 261
+#: NEEDS WORK
+msgid "How do I tail Kubernetes logs with stern or kubectl?"
+msgstr "Cum pot să urmăresc jurnalele Kubernetes cu stern sau kubectl?"
+# 
+# File: usr/share/ashyterm/window.py, line: 262
+#: NEEDS WORK
+msgid "How can I instrument applications with OpenTelemetry?"
+msgstr "Cum pot instrumenta aplicațiile cu OpenTelemetry?"
+# 
+# File: usr/share/ashyterm/window.py, line: 263
+#: NEEDS WORK
+msgid "How do I configure single sign-on for Linux services?"
+msgstr "Cum configurez autentificarea unică pentru serviciile Linux?"
+# 
+# File: usr/share/ashyterm/window.py, line: 264
+#: NEEDS WORK
+msgid "How can I export metrics from systemd services?"
+msgstr "Cum pot exporta metrici din serviciile systemd?"
+# 
+# File: usr/share/ashyterm/window.py, line: 265
+#: NEEDS WORK
+msgid "How do I manage secrets with HashiCorp Vault on Linux?"
+msgstr "Cum îmi gestionez secretele cu HashiCorp Vault pe Linux?"
+# 
+# File: usr/share/ashyterm/window.py, line: 266
+#: NEEDS WORK
+msgid "How can I secure shared desktop sessions?"
+msgstr "Cum pot să securizez sesiunile de desktop partajate?"
+# 
+# File: usr/share/ashyterm/window.py, line: 267
+#: NEEDS WORK
+msgid "How do I offer remote assistance to another Linux user?"
+msgstr "Cum pot oferi asistență la distanță unui alt utilizator Linux?"
+# 
+# File: usr/share/ashyterm/window.py, line: 268
+#: NEEDS WORK
+msgid "How can I set up an immutable system partition?"
+msgstr "Cum pot configura o partiție de sistem imutabilă?"
+# 
+# File: usr/share/ashyterm/window.py, line: 269
+#: NEEDS WORK
+msgid "How do I verify package integrity with pkgfile or debsums?"
+msgstr "Cum verific integritatea pachetului cu pkgfile sau debsums?"
+# 
+# File: usr/share/ashyterm/window.py, line: 270
+#: NEEDS WORK
+msgid "How can I preconfigure new machines with cloud-init?"
+msgstr "Cum pot preconfigura noi mașini cu cloud-init?"
+# 
+# File: usr/share/ashyterm/window.py, line: 271
+#: NEEDS WORK
+msgid "How do I use firewalld zones effectively?"
+msgstr "Cum pot folosi zonele firewalld în mod eficient?"
+# 
+# File: usr/share/ashyterm/window.py, line: 272
+#: NEEDS WORK
+msgid "How can I configure USBGuard to control removable media?"
+msgstr "Cum pot configura USBGuard pentru a controla media removabilă?"
+# 
+# File: usr/share/ashyterm/window.py, line: 273
+#: NEEDS WORK
+msgid "How do I script GUI interactions with xdotool or ydotool?"
+msgstr "Cum pot să scriu scripturi pentru interacțiuni GUI cu xdotool sau ydotool?"
+# 
+# File: usr/share/ashyterm/window.py, line: 274
+#: NEEDS WORK
+msgid "How can I schedule notifications for maintenance windows?"
+msgstr "Cum pot programa notificări pentru feronerie de întreținere?"
+# 
+# File: usr/share/ashyterm/window.py, line: 275
+#: NEEDS WORK
+msgid "How do I run graphical apps inside containers securely?"
+msgstr "Cum pot rula aplicații grafice în interiorul containerelor în siguranță?"
+# 
+# File: usr/share/ashyterm/window.py, line: 276
+#: NEEDS WORK
+msgid "How can I create custom systemd targets?"
+msgstr "Cum pot crea ținte systemd personalizate?"
+# 
+# File: usr/share/ashyterm/window.py, line: 277
+#: NEEDS WORK
+msgid "How do I instrument cron jobs with logging and alerts?"
+msgstr "Cum instrumentez sarcinile cron cu jurnalizare și alerte?"
+# 
+# File: usr/share/ashyterm/window.py, line: 278
+#: NEEDS WORK
+msgid "How can I migrate user data between Linux distributions?"
+msgstr "Cum pot migra datele utilizatorului între distribuțiile Linux?"
+# 
+# File: usr/share/ashyterm/window.py, line: 279
+#: NEEDS WORK
+msgid "How do I build automated smoke tests for servers?"
+msgstr "Cum construiesc teste automate de tip smoke pentru servere?"
+# 
+# File: usr/share/ashyterm/window.py, line: 280
+#: NEEDS WORK
+msgid "How can I monitor power consumption per process?"
+msgstr "Cum pot monitoriza consumul de energie pe proces?"
+# 
+# File: usr/share/ashyterm/window.py, line: 281
+#: NEEDS WORK
+msgid "How do I set up screen sharing on Wayland?"
+msgstr "Cum îmi configurez partajarea ecranului pe Wayland?"
+# 
+# File: usr/share/ashyterm/window.py, line: 282
+#: NEEDS WORK
+msgid "How can I use bpftrace to inspect kernel events?"
+msgstr "Cum pot folosi bpftrace pentru a inspecta evenimentele kernel?"
+# 
+# File: usr/share/ashyterm/window.py, line: 283
+#: NEEDS WORK
+msgid "How do I configure VPN access for contractors securely?"
+msgstr "Cum configurez accesul VPN pentru contractori în siguranță?"
+# 
+# File: usr/share/ashyterm/window.py, line: 284
+#: NEEDS WORK
+msgid "How can I manage encrypted secrets in git repositories?"
+msgstr "Cum pot gestiona secretele criptate în repositoare git?"
+# 
+# File: usr/share/ashyterm/window.py, line: 285
+#: NEEDS WORK
+msgid "How do I containerise legacy applications on Linux?"
+msgstr "Cum pot containeriza aplicațiile moștenite pe Linux?"
+# 
+# File: usr/share/ashyterm/window.py, line: 286
+#: NEEDS WORK
+msgid "How can I prepare a Linux workstation for developers quickly?"
+msgstr "Cum pot pregăti rapid o stație de lucru Linux pentru dezvoltatori?"
+# 
+# File: usr/share/ashyterm/window.py, line: 287
+#: NEEDS WORK
+msgid "How do I tune swappiness and vm.dirty ratios for workloads?"
+msgstr "Cum pot ajusta swappiness și raporturile vm.dirty pentru sarcini de lucru?"
+# 
+# File: usr/share/ashyterm/window.py, line: 288
+#: NEEDS WORK
+msgid "How can I monitor NVMe SSD health?"
+msgstr "Cum pot monitoriza starea de sănătate a SSD-ului NVMe?"
+# 
+# File: usr/share/ashyterm/window.py, line: 289
+#: NEEDS WORK
+msgid "How do I benchmark network throughput between hosts?"
+msgstr "Cum pot să evaluez lățimea de bandă a rețelei între gazde?"
+# 
+# File: usr/share/ashyterm/window.py, line: 290
+#: NEEDS WORK
+msgid "How can I secure cron and at jobs from tampering?"
+msgstr "Cum pot să securizez lucrările cron și at de manipulare?"
+# 
+# File: usr/share/ashyterm/window.py, line: 291
+#: NEEDS WORK
+msgid "How do I implement just-in-time sudo elevation?"
+msgstr "Cum implementez elevarea sudo just-in-time?"
+# 
+# File: usr/share/ashyterm/window.py, line: 292
+#: NEEDS WORK
+msgid "How can I integrate system metrics with Alertmanager?"
+msgstr "Cum pot integra metricile sistemului cu Alertmanager?"
+# 
+# File: usr/share/ashyterm/window.py, line: 293
+#: NEEDS WORK
+msgid "How do I set up maintenance mode pages on nginx?"
+msgstr "Cum configurez paginile de modul de întreținere pe nginx?"
+# 
+# File: usr/share/ashyterm/window.py, line: 294
+#: NEEDS WORK
+msgid "How can I collect audit logs required for compliance?"
+msgstr "Cum pot colecta jurnalele de audit necesare pentru conformitate?"
+# 
+# File: usr/share/ashyterm/window.py, line: 295
+#: NEEDS WORK
+msgid "How do I gracefully decommission a Linux server?"
+msgstr "Cum pot să decomisionez cu grație un server Linux?"
+# 
+# File: usr/share/ashyterm/window.py, line: 296
+#: NEEDS WORK
+msgid "How can I document operational runbooks efficiently?"
+msgstr "Cum pot documenta eficient manualele operaționale?"
+# 
+# File: usr/share/ashyterm/window.py, line: 424
+#: NEEDS WORK
+msgid "Data Loading Error"
+msgstr "Eroare la încărcarea datelor"
+# 
+# File: usr/share/ashyterm/window.py, line: 425
+#: NEEDS WORK
+msgid "Failed to load saved sessions and folders. Starting with empty configuration."
+msgstr "Nu s-au putut încărca sesiunile și folderele salvate. Începem cu o configurație goală."
+# 
+# File: usr/share/ashyterm/window.py, line: 530
+#: NEEDS WORK
+msgid "Enable the AI assistant in Preferences > Terminal > AI Assistant."
+msgstr "Activare asistentului AI în Preferințe > Terminal > Asistent AI."
+# 
+# File: usr/share/ashyterm/window.py, line: 539
+#: NEEDS WORK
+msgid "No active terminal available."
+msgstr "Nu există terminal activ disponibil."
+# 
+# File: usr/share/ashyterm/window.py, line: 547
+#: NEEDS WORK
+msgid "Model"
+msgstr "Model"
+# 
+# File: usr/share/ashyterm/window.py, line: 548
+#: NEEDS WORK
+msgid "API key"
+msgstr "cheie API"
+# 
+# File: usr/share/ashyterm/window.py, line: 554
+#: NEEDS WORK
+#, python-brace-format
+msgid "Configure {items} in Preferences > Terminal > AI Assistant."
+msgstr "Configurează {items} în Preferințe > Terminal > Asistent AI."
+# 
+# File: usr/share/ashyterm/window.py, line: 565
+#: NEEDS WORK
+msgid "Ask the AI Assistant"
+msgstr "Întreabă Asistentul AI"
+# 
+# File: usr/share/ashyterm/window.py, line: 566
+#: NEEDS WORK
+msgid "Describe the Linux task or question you need help with."
+msgstr "Descrie sarcina sau întrebarea Linux cu care ai nevoie de ajutor."
+# 
+# File: usr/share/ashyterm/window.py, line: 570
+#: NEEDS WORK
+msgid "Send"
+msgstr "Trimite"
+# 
+# File: usr/share/ashyterm/window.py, line: 865
+#: NEEDS WORK
+msgid "Perguntas frequentes"
+msgstr "Întrebări frecvente"
+# 
+# File: usr/share/ashyterm/window.py, line: 938
+#: NEEDS WORK
+#, python-brace-format
+msgid "Sugestões correspondentes: {count}"
+msgstr "Sugestii corespunzătoare: {count}"
+# 
+# File: usr/share/ashyterm/window.py, line: 941
+#: NEEDS WORK
+msgid "Nenhuma sugestão encontrada."
+msgstr "Nicio sugestie găsită."
+# 
+# File: usr/share/ashyterm/window.py, line: 944
+#: NEEDS WORK
+msgid "Digite sua pergunta ou escolha uma das sugestões."
+msgstr "Introduceți întrebarea dvs. sau alegeți una dintre sugestii."
+# 
+# File: usr/share/ashyterm/window.py, line: 598
+#: NEEDS WORK
+msgid "Please enter a question for the assistant."
+msgstr "Vă rugăm să introduceți o întrebare pentru asistent."
+# 
+# File: usr/share/ashyterm/window.py, line: 604
+#: NEEDS WORK
+msgid "AI assistant is processing, please wait..."
+msgstr "Asistentul AI procesează, vă rugăm să așteptați..."
+# 
+# File: usr/share/ashyterm/window.py, line: 680
+#: NEEDS WORK
+msgid "Here is what I found."
+msgstr "Iată ce am găsit."
+# 
+# File: usr/share/ashyterm/window.py, line: 697
+#: NEEDS WORK
+msgid "Response"
+msgstr "Răspuns"
+# 
+# File: usr/share/ashyterm/window.py, line: 724
+#: NEEDS WORK
+msgid "Suggested Commands"
+msgstr "Comenzi sugerate"
+# 
+# File: usr/share/ashyterm/window.py, line: 781
+#: NEEDS WORK
+msgid "Run"
+msgstr "Rulare"
+# 
+# File: usr/share/ashyterm/window.py, line: 992
+#: NEEDS WORK
+msgid "Command is empty, nothing to run."
+msgstr "Comanda este goală, nimic de rulat."
+# 
+# File: usr/share/ashyterm/window.py, line: 998
+#: NEEDS WORK
+msgid "Command sent to the terminal."
+msgstr "Comandă trimisă terminalului."
+# 
+# File: usr/share/ashyterm/window.py, line: 1004
+#: NEEDS WORK
+msgid "Failed to execute the command."
+msgstr "Eșec la executarea comenzii."
+# 
+# File: usr/share/ashyterm/window.py, line: 551
+#: NEEDS WORK
+msgid "Session Validation Error"
+msgstr "Eroare de validare a sesiunii"
+# 
+# File: usr/share/ashyterm/window.py, line: 550
+#: NEEDS WORK
+#, python-brace-format
+msgid ""
+"Session validation failed:\n"
+"{errors}"
+msgstr ""
+"Validarea sesiunii a eșuat:  \n"
+"{errors}"
+# 
+# File: usr/share/ashyterm/window.py, line: 958
+#: NEEDS WORK
+msgid "Cannot detach the last tab."
+msgstr "Nu se poate detașa ultima filă."
+# 
+# File: usr/share/ashyterm/window.py, line: 712
+#: NEEDS WORK
+#, python-brace-format
+msgid "Terminal {id}"
+msgstr "Terminal {id}"
+# 
+# File: usr/share/ashyterm/window.py, line: 705
+#: NEEDS WORK
+msgid "No open terminals found."
+msgstr "Nu au fost găsite terminale deschise."
+# 
+# File: usr/share/ashyterm/window.py, line: 711
+#: NEEDS WORK
+msgid "Confirm sending of command"
+msgstr "Confirmare trimitere a comenzii"
+# 
+# File: usr/share/ashyterm/window.py, line: 734
+#: NEEDS WORK
+#, python-brace-format
+msgid "Select which of the <b>{count}</b> open terminals should receive the command below."
+msgstr ""
+"Selectați care dintre cele <b>{count}</b> terminale deschise ar trebui să primească comanda de mai "
+"jos."
+# 
+# File: usr/share/ashyterm/window.py, line: 749
+#: NEEDS WORK
+msgid "Choose the tabs that should run this command:"
+msgstr "Alegeți tab-urile care ar trebui să execute acest comandament:"
+# 
+# File: usr/share/ashyterm/window.py, line: 809
+#: NEEDS WORK
+msgid "Remember my choice"
+msgstr "Amintește-ți alegerea mea"
+# 
+# File: usr/share/ashyterm/window.py, line: 731
+#: NEEDS WORK
+msgid "Send Command"
+msgstr "Trimite Comandă"
+# 
+# File: usr/share/ashyterm/window.py, line: 823
+#: NEEDS WORK
+msgid "No tabs were selected to receive the command."
+msgstr "Nu au fost selectate tab-uri pentru a primi comanda."
+# 
+# File: usr/share/ashyterm/window.py, line: 652
+#: NEEDS WORK
+msgid "No active terminal to search in."
+msgstr "Nu există un terminal activ pentru a căuta."
+# 
+# File: usr/share/ashyterm/window.py, line: 687
+# File: usr/share/ashyterm/window.py, line: 734
+#: NEEDS WORK
+msgid "Invalid search pattern."
+msgstr "Model de căutare invalid."
+# 
+# File: usr/share/ashyterm/window.py, line: 762
+# File: usr/share/ashyterm/window.py, line: 795
+#: NEEDS WORK
+msgid "No more matches found."
+msgstr "Nu s-au găsit alte potriviri."
+# 
+# File: usr/share/ashyterm/window.py, line: 145
+#: NEEDS WORK
+msgid "Initialization Error"
+msgstr "Eroare de inițializare"
+# 
+# File: usr/share/ashyterm/window.py, line: 146
+#: NEEDS WORK
+#, python-brace-format
+msgid "Failed to initialize terminal: {error}"
+msgstr "Eșec la inițializarea terminalului: {error}"
+# 
+# File: usr/share/ashyterm/window.py, line: 1080
+#: NEEDS WORK
+msgid "Save Current Session?"
+msgstr "Salvează sesiunea curentă?"
+# 
+# File: usr/share/ashyterm/window.py, line: 1082
+#: NEEDS WORK
+msgid "Do you want to restore these tabs the next time you open Ashy Terminal?"
+msgstr "Vrei să restaurezi aceste tab-uri data viitoare când deschizi Ashy Terminal?"
+# 
+# File: usr/share/ashyterm/window.py, line: 1086
+#: NEEDS WORK
+msgid "Don't Save"
+msgstr "Nu salva"
+# 
+# File: usr/share/ashyterm/window.py, line: 1088
+#: NEEDS WORK
+msgid "Save and Close"
+msgstr "Salvează și Închide"
+# 
+# File: usr/share/ashyterm/window.py, line: 528
+# File: usr/share/ashyterm/window.py, line: 533
+#: NEEDS WORK
+msgid "Close Window"
+msgstr "Închide fereastra"
+# 
+# File: usr/share/ashyterm/window.py, line: 463
+#: NEEDS WORK
+msgid "This window has active SSH connections. Closing will disconnect them. Are you sure?"
+msgstr "Această fereastră are conexiuni SSH active. Închiderea va deconecta aceste conexiuni. Ești sigur?"
+# 
+# File: usr/share/ashyterm/window.py, line: 553
+#: NEEDS WORK
+msgid "Invalid SSH Target"
+msgstr "Țintă SSH invalidă"
+# 
+# File: usr/share/ashyterm/window.py, line: 554
+#: NEEDS WORK
+msgid "Could not parse the provided SSH connection string."
+msgstr "Nu s-a putut analiza șirul de conexiune SSH furnizat."
+# 
+# File: usr/share/ashyterm/window.py, line: 612
+#: NEEDS WORK
+msgid "Remove this temporary file"
+msgstr "Elimină acest fișier temporar"
+# 
+# File: usr/share/ashyterm/window.py, line: 627
+#: NEEDS WORK
+msgid "No temporary files found."
+msgstr "Nu au fost găsite fișiere temporare."
+# 
+# File: usr/share/ashyterm/window.py, line: 630
+#: NEEDS WORK
+msgid "Clear All Temporary Files"
+msgstr "Șterge toate fișierele temporare"
+# 
+# File: usr/share/ashyterm/window.py, line: 652
+#: NEEDS WORK
+msgid "Clear All Temporary Files?"
+msgstr "Ștergeți toate fișierele temporare?"
+# 
+# File: usr/share/ashyterm/window.py, line: 654
+#: NEEDS WORK
+msgid ""
+"This will remove all locally downloaded files for remote editing. Any unsaved changes in your "
+"editor will be lost. This action cannot be undone."
+msgstr ""
+"Aceasta va elimina toate fișierele descărcate local pentru editare de la distanță. Orice modificări "
+"nesalvate în editorul dumneavoastră vor fi pierdute. Această acțiune nu poate fi anulată."
+# 
+# File: usr/share/ashyterm/window.py, line: 660
+#: NEEDS WORK
+msgid "Clear All"
+msgstr "Șterge tot"
+# 
+# File: usr/share/ashyterm/window.py, line: 1193
+#: NEEDS WORK
+msgid "No active terminal to send command to."
+msgstr "Nu există un terminal activ pentru a trimite comanda."
+# 
+# File: usr/share/ashyterm/app.py, line: 333
+#: NEEDS WORK
+msgid "Preferences Error"
+msgstr "Eroare de Preferințe"
+# 
+# File: usr/share/ashyterm/app.py, line: 332
+# File: usr/share/ashyterm/app.py, line: 333
+#: NEEDS WORK
+#, python-brace-format
+msgid "Failed to open preferences: {}"
+msgstr "Eșec la deschiderea preferințelor: {}"
+# 
+# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
+# 
+# File: usr/share/ashyterm/__init__.py, line: 62
+# File: usr/share/ashyterm/app.py, line: 350
+#: NEEDS WORK
+msgid "A modern terminal emulator with session management"
+msgstr "Un emulator de terminal modern cu gestionarea sesiunilor"
+# 
+# File: usr/share/ashyterm/app.py, line: 356
+#: NEEDS WORK
+msgid "Save Backup As..."
+msgstr "Salvează copia de rezervă ca..."
+# 
+# File: usr/share/ashyterm/app.py, line: 368
+# File: usr/share/ashyterm/app.py, line: 379
+# File: usr/share/ashyterm/app.py, line: 392
+# File: usr/share/ashyterm/app.py, line: 396
+#: NEEDS WORK
+msgid "Backup Error"
+msgstr "Eroare de backup"
+# 
+# File: usr/share/ashyterm/app.py, line: 375
+#: NEEDS WORK
+msgid "Set Backup Password"
+msgstr "Setați parola de rezervă"
+# 
+# File: usr/share/ashyterm/app.py, line: 376
+#: NEEDS WORK
+msgid "Please enter a password to encrypt the backup file."
+msgstr "Vă rugăm să introduceți o parolă pentru a cripta fișierul de backup."
+# 
+# File: usr/share/ashyterm/app.py, line: 384
+#: NEEDS WORK
+msgid "Confirm Password"
+msgstr "Confirmă parola"
+# 
+# File: usr/share/ashyterm/app.py, line: 400
+# File: usr/share/ashyterm/app.py, line: 405
+#: NEEDS WORK
+msgid "Password Error"
+msgstr "Eroare parolă"
+# 
+# File: usr/share/ashyterm/app.py, line: 400
+#: NEEDS WORK
+msgid "Password cannot be empty."
+msgstr "Parola nu poate fi goală."
+# 
+# File: usr/share/ashyterm/app.py, line: 405
+#: NEEDS WORK
+msgid "Passwords do not match."
+msgstr "Parolele nu se potrivesc."
+# 
+# File: usr/share/ashyterm/app.py, line: 423
+#: NEEDS WORK
+msgid "Creating backup..."
+msgstr "Crearea unei copii de rezervă..."
+# 
+# File: usr/share/ashyterm/app.py, line: 390
+#: NEEDS WORK
+msgid "Backup Complete"
+msgstr "Backup complet"
+# 
+# File: usr/share/ashyterm/app.py, line: 440
+#: NEEDS WORK
+#, python-brace-format
+msgid ""
+"Backup saved successfully to:\n"
+"{}"
+msgstr ""
+"Backup salvat cu succes în:  \n"
+"{}"
+# 
+# File: usr/share/ashyterm/app.py, line: 446
+#: NEEDS WORK
+msgid "Backup Failed"
+msgstr "Backup eșuat"
+# 
+# File: usr/share/ashyterm/app.py, line: 447
+#: NEEDS WORK
+#, python-brace-format
+msgid "Could not create backup: {}"
+msgstr "Nu s-a putut crea backup-ul: {}"
+# 
+# File: usr/share/ashyterm/app.py, line: 458
+#: NEEDS WORK
+msgid "Restore from Backup?"
+msgstr "Restaurare din backup?"
+# 
+# File: usr/share/ashyterm/app.py, line: 460
+#: NEEDS WORK
+msgid ""
+"Restoring from a backup will overwrite all your current sessions, settings, and layouts. This "
+"action cannot be undone.\n"
+"\n"
+"<b>The application will need to be restarted after restoring.</b>"
+msgstr ""
+"Restaurarea dintr-o copie de rezervă va suprascrie toate sesiunile, setările și aranjamentele "
+"curente. Această acțiune nu poate fi anulată.\n"
+"\n"
+"<b>Aplicația va trebui să fie repornită după restaurare.</b>"
+# 
+# File: usr/share/ashyterm/app.py, line: 466
+#: NEEDS WORK
+msgid "Choose File and Restore"
+msgstr "Alege Fișier și Restaurează"
+# 
+# File: usr/share/ashyterm/app.py, line: 474
+#: NEEDS WORK
+msgid "Select Backup File"
+msgstr "Selectați fișierul de backup"
+# 
+# File: usr/share/ashyterm/app.py, line: 477
+#: NEEDS WORK
+msgid "Backup Files"
+msgstr "Fișiere de rezervă"
+# 
+# File: usr/share/ashyterm/app.py, line: 402
+# File: usr/share/ashyterm/app.py, line: 416
+#: NEEDS WORK
+msgid "Restore Error"
+msgstr "Eroare de restaurare"
+# 
+# File: usr/share/ashyterm/app.py, line: 499
+#: NEEDS WORK
+msgid "Enter Backup Password"
+msgstr "Introduceți parola de rezervă"
+# 
+# File: usr/share/ashyterm/app.py, line: 500
+#: NEEDS WORK
+msgid "Please enter the password for the selected backup file."
+msgstr "Vă rugăm să introduceți parola pentru fișierul de rezervă selectat."
+# 
+# File: usr/share/ashyterm/app.py, line: 508
+#: NEEDS WORK
+msgid "Restore"
+msgstr "Restaurare"
+# 
+# File: usr/share/ashyterm/app.py, line: 525
+#: NEEDS WORK
+msgid "Restoring from backup..."
+msgstr "Restaurare din backup..."
+# 
+# File: usr/share/ashyterm/app.py, line: 538
+#: NEEDS WORK
+msgid "Restore Failed"
+msgstr "Restaurare eșuată"
+# 
+# File: usr/share/ashyterm/app.py, line: 539
+#: NEEDS WORK
+#, python-brace-format
+msgid "Could not restore from backup: {}"
+msgstr "Nu s-a putut restaura din backup: {}"
+# 
+# File: usr/share/ashyterm/app.py, line: 549
+#: NEEDS WORK
+msgid "Restore Complete"
+msgstr "Restaurare completă"
+# 
+# File: usr/share/ashyterm/app.py, line: 551
+#: NEEDS WORK
+msgid "Data has been restored successfully. Please restart Ashy Terminal for the changes to take effect."
+msgstr ""
+"Datele au fost restaurate cu succes. Vă rugăm să reporniți Ashy Terminal pentru ca modificările să "
+"aibă efect."
+# 
+# File: usr/share/ashyterm/app.py, line: 498
+#: NEEDS WORK
+msgid "Close Application"
+msgstr "Închide aplicația"
+# 
+# File: usr/share/ashyterm/app.py, line: 499
+#: NEEDS WORK
+msgid ""
+"There are active SSH connections. Closing will disconnect all sessions.\n"
+"\n"
+"Are you sure you want to close the application?"
+msgstr ""
+"Există conexiuni SSH active. Închiderea va deconecta toate sesiunile.\n"
+"\n"
+"Ești sigur că vrei să închizi aplicația?"
+# 
+# File: usr/share/ashyterm/app.py, line: 503
+#: NEEDS WORK
+msgid "Close All"
+msgstr "Închide tot"
+# 
+# File: usr/share/ashyterm/app.py, line: 530
+#: NEEDS WORK
+msgid "Startup Error"
+msgstr "Eroare la pornire"
+# 
+# File: usr/share/ashyterm/app.py, line: 531
+#: NEEDS WORK
+#, python-brace-format
+msgid "Application failed to start: {}"
+msgstr "Aplicația nu a reușit să pornească: {}"
 # 
 # File: usr/share/ashyterm/window.py, line: 1466
 #: NEEDS WORK
@@ -5181,3 +7221,32 @@ msgstr "Eroare la ștergerea layout-ului"
 #: NEEDS WORK
 msgid "Error Moving Layout"
 msgstr "Eroare la mutarea layout-ului"
+# 
+# File: usr/share/nautilus-python/extensions/ashyterm.py, line: 129
+#: NEEDS WORK
+msgid "Open in Ashy Terminal (SSH)"
+msgstr "Deschide în Ashy Terminal (SSH)"
+# 
+# File: usr/share/nautilus-python/extensions/ashyterm.py, line: 130
+#: NEEDS WORK
+#, python-brace-format
+msgid "Connect to {} via a new SSH session"
+msgstr "Conectează-te la {} printr-o nouă sesiune SSH"
+# 
+# File: usr/share/nautilus-python/extensions/ashyterm.py, line: 139
+# File: usr/share/nautilus-python/extensions/ashyterm.py, line: 149
+#: NEEDS WORK
+msgid "Open in Ashy Terminal"
+msgstr "Deschide în Ashy Terminal"
+# 
+# File: usr/share/nautilus-python/extensions/ashyterm.py, line: 140
+#: NEEDS WORK
+#, python-brace-format
+msgid "Open the local mount point {}"
+msgstr "Deschideți punctul de montare local {}"
+# 
+# File: usr/share/nautilus-python/extensions/ashyterm.py, line: 150
+#: NEEDS WORK
+#, python-brace-format
+msgid "Open {} in Ashy Terminal"
+msgstr "Deschide {} în Ashy Terminal"

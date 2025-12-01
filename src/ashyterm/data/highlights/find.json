@@ -1,0 +1,48 @@
+{
+    "name": "find",
+    "description": "Highlights for find command output",
+    "triggers": [
+        "find"
+    ],
+    "enabled": true,
+    "rules": [
+        {
+            "name": "Directories",
+            "pattern": "^(.*/)?([^/]+/)$",
+            "colors": [
+                "white",
+                "cyan"
+            ],
+            "enabled": true,
+            "description": "Highlights directory paths"
+        },
+        {
+            "name": "Permission Denied",
+            "pattern": "(Permission denied)",
+            "colors": [
+                "red"
+            ],
+            "enabled": true,
+            "description": "Highlights permission errors"
+        },
+        {
+            "name": "Hidden Files",
+            "pattern": "/(\\.\\w+)$",
+            "colors": [
+                "white"
+            ],
+            "enabled": true,
+            "description": "Highlights hidden files/directories"
+        },
+        {
+            "name": "File Path",
+            "pattern": "^(.*/)?([^/]+)$",
+            "colors": [
+                "white",
+                "white"
+            ],
+            "enabled": true,
+            "description": "Highlights regular file paths"
+        }
+    ]
+}
