@@ -30,7 +30,7 @@ def setup_signal_handlers():
     """Set up signal handlers for graceful shutdown on Linux."""
 
     def signal_handler(sig, frame):
-        print(_("\nReceived signal {}, shutting down gracefully...").format(sig))
+        print("\n" + _("Received signal {}, shutting down gracefully...").format(sig))
         try:
             import gi
 
