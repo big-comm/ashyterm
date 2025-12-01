@@ -14,7 +14,7 @@ execute_ashy="python3 __init__.py"
 execute_with_memory_verification() {
     # Changes the default memory allocator to reduce GTK4 memory leaks with verification
     if [[ -e /usr/lib/libchildenv.so ]]; then
-        elif [[ -e /usr/lib/libmimalloc.so ]]; then
+        if [[ -e /usr/lib/libmimalloc.so ]]; then
             LD_PRELOAD="libchildenv.so:libmimalloc.so" MIMALLOC_PURGE_DELAY=0 CHILD_ENV_RULES="LD_PRELOAD,MIMALLOC_PURGE_DELAY,CHILD_ENV_RULES" exec $execute_ashy "$@"
         elif [[ -e /usr/lib/libjemalloc.so ]]; then
             LD_PRELOAD="libchildenv.so:libjemalloc.so" MALLOC_CONF="narenas:1" CHILD_ENV_RULES="LD_PRELOAD,MALLOC_CONF,CHILD_ENV_RULES" exec $execute_ashy "$@"
