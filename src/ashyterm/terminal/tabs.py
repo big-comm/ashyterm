@@ -3,7 +3,7 @@
 import re
 import threading
 import weakref
-from typing import Callable, List, Optional, TYPE_CHECKING
+from typing import TYPE_CHECKING, Callable, List, Optional
 
 import gi
 
@@ -234,26 +234,6 @@ class TabManager:
         # We only need to handle motion on individual tabs, which is done via
         # controllers added in _create_tab_widget. No tab bar level handlers needed
         # since we handle everything at the tab level.
-        pass
-
-    def _find_tab_at_position(self, bar_x: float) -> tuple:
-        """Find which tab is at the given x position and which side (left/right).
-
-        Returns: (tab_widget, side) where side is 'left', 'right', or None if no tab found.
-        """
-        for tab in self.tabs:
-            if tab == self._tab_being_moved:
-                continue
-            # Get tab's position relative to tab_bar_box
-            tab_start = tab.get_allocation().x
-            tab_width = tab.get_width()
-            tab_end = tab_start + tab_width
-
-            if tab_start <= bar_x <= tab_end:
-                mid_x = tab_start + tab_width / 2
-                side = "left" if bar_x < mid_x else "right"
-                return (tab, side)
-        return (None, None)
 
     def _update_move_highlight(self, target_tab: Gtk.Box, side: str):
         """Update the visual highlight for the drop target."""
@@ -319,7 +299,7 @@ class TabManager:
             f"Tab '{moving_tab.label_widget.get_text()}' moved from {moving_idx} to {new_idx}"
         )
 
-    def is_in_tab_move_mode(self) -> bool:
+    def is_in_tab_move_mode(self) -> bool:  # vulture: ignore
         """Returns True if a tab is currently being moved."""
         return self._tab_being_moved is not None
 
@@ -833,67 +813,6 @@ class TabManager:
                 return child
             child = child.get_next_sibling()
         return None
-
-    def _move_tab_to_index(self, tab_to_move: Gtk.Box, target_index: int) -> None:
-        """Moves a tab to a specific index position."""
-        if tab_to_move not in self.tabs:
-            self.logger.warning("Move failed: tab not found in list.")
-            return
-
-        old_index = self.tabs.index(tab_to_move)
-
-        # Clamp target index to valid range
-        target_index = max(0, min(target_index, len(self.tabs) - 1))
-
-        if old_index == target_index:
-            return
-
-        # Remove from old position in list
-        self.tabs.remove(tab_to_move)
-
-        # Adjust index if moving forward (since we just removed an element)
-        if target_index > old_index:
-            target_index -= 1
-
-        # Insert at new position
-        self.tabs.insert(target_index, tab_to_move)
-
-        # Rebuild the visual tab bar order
-        self._rebuild_tab_bar_order()
-
-        self.logger.info(
-            f"Tab '{tab_to_move.label_widget.get_text()}' moved from position "
-            f"{old_index} to {target_index}"
-        )
-
-    def _move_tab_to_position(self, tab_to_move: Gtk.Box, target_tab: Gtk.Box) -> None:
-        """Moves a tab to the position of another tab (before the target)."""
-        if tab_to_move not in self.tabs or target_tab not in self.tabs:
-            self.logger.warning("Move failed: tab not found in list.")
-            return
-
-        old_index = self.tabs.index(tab_to_move)
-        new_index = self.tabs.index(target_tab)
-
-        if old_index == new_index:
-            return
-
-        # Remove from old position in list
-        self.tabs.remove(tab_to_move)
-
-        # Recalculate target index after removal
-        new_index = self.tabs.index(target_tab)
-
-        # Insert at new position (before the target)
-        self.tabs.insert(new_index, tab_to_move)
-
-        # Rebuild the visual tab bar order
-        self._rebuild_tab_bar_order()
-
-        self.logger.info(
-            f"Tab '{tab_to_move.label_widget.get_text()}' moved from position "
-            f"{old_index} to {new_index}"
-        )
 
     def _rebuild_tab_bar_order(self) -> None:
         """Rebuilds the tab bar widget order to match self.tabs list."""

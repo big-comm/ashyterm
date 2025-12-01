@@ -244,7 +244,9 @@ class AIHistoryManager:
         self._save_history()
         self.logger.info("Cleared all AI chat history")
 
-    def get_context_messages(self, max_messages: int = 20) -> List[Dict[str, str]]:
+    def get_context_messages(
+        self, max_messages: int = 20
+    ) -> List[Dict[str, str]]:  # vulture: ignore
         """
         Get recent messages formatted for API context.
         
@@ -257,11 +259,11 @@ class AIHistoryManager:
         recent = self.get_recent_history(max_messages)
         return [{"role": msg["role"], "content": msg["content"]} for msg in recent]
 
-    def get_message_count(self) -> int:
+    def get_message_count(self) -> int:  # vulture: ignore
         """Get the total number of messages in current conversation."""
         return len(self.get_history())
 
-    def search_history(self, query: str) -> List[Dict[str, Any]]:
+    def search_history(self, query: str) -> List[Dict[str, Any]]:  # vulture: ignore
         """
         Search all conversations for messages containing the query.
         

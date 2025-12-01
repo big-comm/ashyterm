@@ -68,7 +68,6 @@ def main() -> int:
             set_console_log_level(pre_args.log_level)
         except KeyError:
             print(f"Warning: Invalid log level '{pre_args.log_level}' provided.")
-            pass
 
     logger = get_logger("ashyterm.main")
 

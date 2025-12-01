@@ -5,6 +5,7 @@ from __future__ import annotations
 import json
 import random
 import re
+from pathlib import Path
 from typing import TYPE_CHECKING
 
 import gi
@@ -23,6 +24,9 @@ if TYPE_CHECKING:
 
 logger = get_logger(__name__)
 
+# Path to CSS styles directory
+_STYLES_DIR = Path(__file__).parent.parent.parent / "data" / "styles"
+
 # Lazy-loaded pygments module (optional dependency)
 _pygments_module = None
 _pygments_available = None  # None = not checked yet, True/False = result
@@ -35,7 +39,7 @@ def _get_pygments():
     if _pygments_available is None:
         try:
             import pygments
-            from pygments.lexers import get_lexer_by_name, TextLexer
+            from pygments.lexers import TextLexer, get_lexer_by_name
             from pygments.util import ClassNotFound
             
             _pygments_module = {
@@ -1319,145 +1323,15 @@ class AIChatPanel(Gtk.Box):
         self._apply_transparency()
     
     def _apply_css(self):
-        """Apply custom CSS for the chat panel - simple style like file manager."""
+        """Apply custom CSS for the chat panel from external file."""
         css_provider = Gtk.CssProvider()
-        css_provider.load_from_string("""
-            /* Main chat panel - simple border like file manager */
-            .ai-chat-panel {
-                background-color: @window_bg_color;
-                border-top: 1px solid alpha(@borders, 0.5);
-            }
-            
-            /* User message bubble */
-            .ai-message-user {
-                background: linear-gradient(135deg, @accent_bg_color, shade(@accent_bg_color, 0.95));
-                color: @accent_fg_color;
-                border-radius: 16px 16px 4px 16px;
-                padding: 10px 14px;
-                box-shadow: 0 2px 8px alpha(black, 0.1);
-            }
-            
-            /* Assistant message bubble */
-            .ai-message-assistant {
-                background-color: @card_bg_color;
-                border: 1px solid alpha(@borders, 0.3);
-                border-radius: 16px 16px 16px 4px;
-                padding: 10px 14px;
-                box-shadow: 0 1px 4px alpha(black, 0.05);
-            }
-            
-            /* Section header styling */
-            .ai-section-icon {
-                color: @success_color;
-                opacity: 0.9;
-            }
-            .ai-section-title {
-                font-weight: 600;
-                font-size: 0.85em;
-                color: @view_fg_color;
-                opacity: 0.8;
-                letter-spacing: 0.3px;
-            }
-            
-            /* Command block - works for both light and dark themes */
-            .ai-command-block {
-                background-color: mix(@card_bg_color, @view_bg_color, 0.5);
-                border: 1px solid alpha(@borders, 0.4);
-                border-radius: 10px;
-                padding: 12px 14px;
-                transition: all 200ms ease;
-            }
-            .ai-command-block:hover {
-                background-color: mix(@card_bg_color, @view_bg_color, 0.3);
-                border-color: alpha(@accent_color, 0.4);
-                box-shadow: 0 2px 8px alpha(@accent_color, 0.1);
-            }
-            
-            /* Command text styling */
-            .ai-command-text {
-                font-family: "JetBrains Mono", "Fira Code", "Source Code Pro", "Cascadia Code", monospace;
-                font-size: 1.05em;
-                font-weight: 500;
-                letter-spacing: -0.2px;
-                line-height: 1.4;
-            }
-            
-            /* Command buttons container */
-            .ai-cmd-buttons {
-                margin-left: 8px;
-                opacity: 0.7;
-                transition: opacity 150ms ease;
-            }
-            .ai-command-block:hover .ai-cmd-buttons {
-                opacity: 1;
-            }
-            
-            /* Command action buttons */
-            .ai-cmd-btn {
-                min-width: 32px;
-                min-height: 32px;
-                padding: 6px;
-                border-radius: 8px;
-                transition: all 150ms ease;
-            }
-            .ai-cmd-btn:hover {
-                background-color: alpha(@view_fg_color, 0.1);
-            }
-            .ai-cmd-btn:active {
-                background-color: alpha(@view_fg_color, 0.15);
-            }
-            
-            /* Run button - special green accent */
-            .ai-cmd-btn-run {
-                min-width: 32px;
-                min-height: 32px;
-                padding: 6px;
-                border-radius: 8px;
-                color: @success_color;
-                transition: all 150ms ease;
-            }
-            .ai-cmd-btn-run:hover {
-                background-color: alpha(@success_color, 0.15);
-            }
-            .ai-cmd-btn-run:active {
-                background-color: alpha(@success_color, 0.25);
-            }
-            
-            /* Input area styling */
-            .ai-input-box {
-                background-color: @card_bg_color;
-                border: 1px solid alpha(@borders, 0.3);
-                border-radius: 14px;
-                padding: 6px 10px;
-                transition: border-color 200ms ease;
-            }
-            .ai-input-box:focus-within {
-                border-color: @accent_color;
-                box-shadow: 0 0 0 2px alpha(@accent_color, 0.2);
-            }
-            .ai-input-textview {
-                background-color: transparent;
-                padding: 4px;
-                min-height: 24px;
-            }
-            .ai-input-textview text {
-                background-color: transparent;
-            }
-            
-            /* Loading indicator */
-            .ai-loading-indicator {
-                padding: 8px;
-            }
+        css_file = _STYLES_DIR / "ai_chat_panel.css"
 
-            headerbar  {
-                min-height: 26px;
-            }
-
-            headerbar button  {
-            min-height: 0px;
-            margin: 0px;
-            }
-        """)
+        if css_file.exists():
+            css_provider.load_from_path(str(css_file))
+            logger.debug(f"Loaded AI chat panel CSS from {css_file}")
+        else:
+            logger.warning(f"AI chat panel CSS file not found: {css_file}")
         
         Gtk.StyleContext.add_provider_for_display(
             self.get_display(),

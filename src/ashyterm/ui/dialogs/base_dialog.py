@@ -1,6 +1,6 @@
 # ashyterm/ui/dialogs/base_dialog.py
 
-from typing import Any, Callable, Dict, List, Optional
+from typing import Callable, List, Optional
 
 import gi
 

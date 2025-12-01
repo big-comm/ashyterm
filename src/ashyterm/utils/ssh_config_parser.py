@@ -2,11 +2,10 @@
 
 import glob
 import os
+import shlex
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Dict, Iterable, List, Optional, Set
-
-import shlex
 
 from .logger import get_logger
 

@@ -676,7 +676,6 @@ class CommandGuideDialog(Adw.Window):
 
     def _on_show(self, widget):
         """Handle dialog show event."""
-        pass
 
     def _on_hide(self, widget):
         """Handle dialog hide event."""

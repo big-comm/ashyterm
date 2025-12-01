@@ -1,6 +1,7 @@
 # ashyterm/settings/config.py
 
 import os
+import re
 from pathlib import Path
 from typing import Any, Dict, List
 
@@ -20,6 +21,13 @@ try:
 except ImportError:
     UTILS_AVAILABLE = False
     get_config_directory = None
+
+
+# Regex pattern for detecting common shell prompt terminators.
+# Used to split the prompt from the user's command in VTE screen scraping.
+# Includes: $ # % > ➜ ❯ ❮ › » ▶ λ ∴ ⟩ ⟫ ⮞ → ➤ ➔ ⇒
+# These cover bash, zsh, fish, Oh My Zsh, Starship, Powerlevel10k, etc.
+PROMPT_TERMINATOR_PATTERN = re.compile(r"[\$#%>➜❯ᐅ❮›»▶λ∴⟩⟫⮞→➤➔⇒]\s?")
 
 
 class AppConstants:
@@ -130,9 +138,9 @@ class DefaultSettings:
         
         try:
             # Get list of all available font families on the system
-            from gi.repository import PangoCairo
             import cairo
-            
+            from gi.repository import PangoCairo
+
             # Create a temporary surface to get font map
             surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, 1, 1)
             context = cairo.Context(surface)
@@ -230,6 +238,37 @@ class DefaultSettings:
             # Search Settings
             "search_case_sensitive": False,
             "search_use_regex": False,
+            # Highlighting Settings
+            "ignored_highlight_commands": [
+                "grep",
+                "egrep",
+                "fgrep",
+                "rg",
+                "rga",
+                "awk",
+                "sed",
+                "sd",
+                "bat",
+                "ls",
+                "git",
+                "vim",
+                "nano",
+                "nvim",
+                "emacs",
+                "htop",
+                "btop",
+                "top",
+                "less",
+                "more",
+                "man",
+                "info",
+                "diff",
+                "colordiff",
+                "delta",
+                "jq",
+                "yq",
+                "grc",
+            ],
             # Shortcuts
             "shortcuts": {
                 "new-local-tab": "<Control><Shift>t",

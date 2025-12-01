@@ -44,7 +44,6 @@ def set_pdeathsig_kill():
 class OperationCancelledError(Exception):
     """Custom exception to indicate that an operation was cancelled by the user."""
 
-    pass
 
 
 class FileOperations:

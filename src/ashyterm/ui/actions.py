@@ -12,14 +12,6 @@ from ..utils.translation_utils import _
 
 if TYPE_CHECKING:
     from ..window import CommTerminalWindow
-    from .dialogs import (
-        FolderEditDialog,
-        MoveLayoutDialog,
-        MoveSessionDialog,
-        PreferencesDialog,
-        SessionEditDialog,
-        ShortcutsDialog,
-    )
 
 
 class WindowActions:
@@ -44,6 +36,7 @@ class WindowActions:
             "clear-session": self.clear_session,
             "ai-assistant": self.ai_assistant,
             "configure-ai": self.configure_ai,
+            "highlight-settings": self.highlight_settings,
             "ask-ai-selection": self.ask_ai_selection,
             "split-horizontal": self.split_horizontal,
             "split-vertical": self.split_vertical,
@@ -99,6 +92,13 @@ class WindowActions:
         """Helper to close the sidebar popover if it's active."""
         if hasattr(self.window, "sidebar_manager"):
             self.window.sidebar_manager._close_popover_if_active()
+
+    def _hide_tooltip(self):
+        """Helper to hide any visible tooltip before showing a dialog."""
+        if hasattr(self.window, "ui_builder") and hasattr(
+            self.window.ui_builder, "tooltip_helper"
+        ):
+            self.window.ui_builder.tooltip_helper.hide()
 
     # --- Tab and Pane Actions ---
 
@@ -169,6 +169,7 @@ class WindowActions:
 
     def configure_ai(self, *_args):
         """Open the AI Assistant configuration dialog."""
+        self._hide_tooltip()
         from .dialogs.ai_config_dialog import AIConfigDialog
 
         dialog = AIConfigDialog(self.window, self.window.settings_manager)
@@ -180,6 +181,14 @@ class WindowActions:
         if key == "ai_assistant_enabled":
             # Update button visibility
             self.window.ui_builder.update_ai_button_visibility()
+
+    def highlight_settings(self, *_args):
+        """Open the Highlight Colors settings dialog."""
+        self._hide_tooltip()
+        from .dialogs.highlight_dialog import HighlightDialog
+
+        dialog = HighlightDialog(self.window)
+        dialog.present()
 
     def ask_ai_selection(self, *_args):
         """Ask AI about the selected text in the terminal."""
@@ -367,9 +376,11 @@ class WindowActions:
         )
 
     def show_command_guide(self, *_args):
+        self._hide_tooltip()
         self.window._show_command_guide_dialog()
 
     def preferences(self, *_args):
+        self._hide_tooltip()
         from .dialogs import PreferencesDialog
         dialog = PreferencesDialog(self.window, self.window.settings_manager)
         dialog.connect(
@@ -387,6 +398,7 @@ class WindowActions:
         dialog.present()
 
     def shortcuts(self, *_args):
+        self._hide_tooltip()
         from .dialogs import ShortcutsDialog
         dialog = ShortcutsDialog(self.window)
         dialog.present()

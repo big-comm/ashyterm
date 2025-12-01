@@ -162,7 +162,12 @@ class MainApplicationMenu:
         menu_items = [
             {"label": _("New Window"), "action": "win.new-window"},
             {"label": _("Preferences"), "action": "win.preferences"},
-            {"label": _("Configure AI Assistant"), "action": "win.configure-ai"},
+            {
+                "label": _("Highlight Colors"),
+                "action": "win.highlight-settings",
+                "icon": "format-text-highlight-symbolic",
+            },
+            {"label": _("AI Assistant"), "action": "win.configure-ai"},
             {"label": _("Keyboard Shortcuts"), "action": "win.shortcuts"},
             {"label": _("About"), "action": "app.about"},
             "---",
@@ -171,6 +176,7 @@ class MainApplicationMenu:
         actions_that_close_menu = {
             "win.new-window",
             "win.preferences",
+            "win.highlight-settings",
             "win.configure-ai",
             "win.shortcuts",
             "app.about",

@@ -10,8 +10,8 @@ from gi.repository import Gio
 
 from ..helpers import generate_unique_name
 from ..utils.logger import get_logger
-from ..utils.translation_utils import _
 from ..utils.ssh_config_parser import SSHConfigParser
+from ..utils.translation_utils import _
 from .models import SessionFolder, SessionItem
 from .results import OperationResult
 from .storage import get_storage_manager

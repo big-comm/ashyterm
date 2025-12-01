@@ -13,6 +13,7 @@ from ..utils.platform import normalize_path
 from ..utils.security import InputSanitizer
 from ..utils.translation_utils import _
 
+
 def _get_crypto():
     """Lazy loader for crypto module."""
     from ..utils import crypto

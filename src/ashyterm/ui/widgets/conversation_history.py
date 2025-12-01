@@ -411,7 +411,7 @@ class ConversationHistoryPanel(Gtk.Box):
         # Close the dialog after creating new conversation
         self.emit("close-requested")
 
-    def set_current_conversation(self, conv_id: str):
+    def set_current_conversation(self, conv_id: str):  # vulture: ignore
         """Set the currently active conversation."""
         self._current_conv_id = conv_id
         self.refresh()

@@ -256,11 +256,11 @@ class TerminalAiAssistant(GObject.Object):
         worker.start()
         return True
 
-    def get_chat_history(self) -> List[Dict[str, Any]]:
+    def get_chat_history(self) -> List[Dict[str, Any]]:  # vulture: ignore
         """Get chat history from the history manager."""
         return self._history_manager.get_history()
 
-    def clear_chat_history(self) -> None:
+    def clear_chat_history(self) -> None:  # vulture: ignore
         """Clear all chat history."""
         self._history_manager.clear_history()
 

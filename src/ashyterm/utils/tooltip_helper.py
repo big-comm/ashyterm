@@ -11,8 +11,6 @@ gi.require_version("Gtk", "4.0")
 gi.require_version("Gdk", "4.0")
 from gi.repository import Gdk, GLib, Gtk
 
-from .translation_utils import _
-
 
 class TooltipHelper:
     """
@@ -40,6 +38,7 @@ class TooltipHelper:
         self.active_widget = None
         self.show_timer_id = None
         self._is_cleaning_up = False
+        self._suppressed = False  # When True, tooltips are temporarily suppressed
 
         # The single, reusable popover
         self.popover = Gtk.Popover()
@@ -117,7 +116,7 @@ class TooltipHelper:
         motion_controller.connect("leave", self._on_leave)
         widget.add_controller(motion_controller)
 
-    def replace_tooltip(self, widget: Gtk.Widget) -> None:
+    def replace_tooltip(self, widget: Gtk.Widget) -> None:  # vulture: ignore
         """
         Replace an existing set_tooltip_text with custom tooltip.
 
@@ -142,14 +141,21 @@ class TooltipHelper:
         if self._is_cleaning_up:
             return
 
-        if not self.is_enabled() or self.active_widget == widget:
+        if not self.is_enabled():
+            return
+
+        # If suppressed, ignore this enter event
+        if self._suppressed:
+            return
+
+        if self.active_widget == widget:
             return
 
         self._clear_timer()
         self._hide_tooltip()
 
         self.active_widget = widget
-        # Show tooltip after 350ms delay (same as audio-converter)
+        # Show tooltip after 350ms delay
         self.show_timer_id = GLib.timeout_add(350, self._show_tooltip)
 
     def _on_leave(self, controller):
@@ -158,6 +164,10 @@ class TooltipHelper:
             return
 
         self._clear_timer()
+
+        # Clear suppression when mouse leaves
+        self._suppressed = False
+
         if self.active_widget:
             self._hide_tooltip(animate=True)
             self.active_widget = None
@@ -165,6 +175,11 @@ class TooltipHelper:
     def _show_tooltip(self) -> bool:
         """Show the tooltip popover for the active widget."""
         if self._is_cleaning_up:
+            return GLib.SOURCE_REMOVE
+
+        # Don't show if suppressed
+        if self._suppressed:
+            self.show_timer_id = None
             return GLib.SOURCE_REMOVE
 
         if not self.active_widget:
@@ -175,8 +190,6 @@ class TooltipHelper:
             return GLib.SOURCE_REMOVE
 
         # Configure and show the popover
-        # The popover is initially transparent due to .tooltip-popover class
-        # The "map" signal will trigger the animation by adding .visible class
         self.label.set_text(tooltip_text)
 
         # Ensure popover is unparented before setting new parent
@@ -234,13 +247,14 @@ class TooltipHelper:
     def hide(self):
         """
         Force hide any visible tooltip immediately.
-        Useful when a button is clicked and the tooltip should disappear.
+        Also suppresses the tooltip from reappearing until mouse leaves.
         """
         self._clear_timer()
+        self._suppressed = True
         self._hide_tooltip(animate=False)
         self.active_widget = None
 
-    def cleanup(self):
+    def cleanup(self):  # vulture: ignore
         """
         Call this when the application is shutting down.
         Cleans up resources and prevents further tooltip operations.

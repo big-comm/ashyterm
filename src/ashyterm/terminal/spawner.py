@@ -1,13 +1,15 @@
 # ashyterm/terminal/spawner.py
 
+import fcntl
 import os
+import shlex
 import shutil
 import signal
 import subprocess
 import tempfile
+import termios
 import threading
 import time
-import shlex
 from pathlib import Path
 from typing import TYPE_CHECKING, Any, Callable, Dict, List, Optional, Tuple
 
@@ -18,6 +20,7 @@ from gi.repository import GLib, Vte
 
 if TYPE_CHECKING:
     from ..sessions.models import SessionItem
+    from .highlighter import HighlightedTerminalProxy
 
 from ..settings.manager import get_settings_manager
 from ..utils.exceptions import SSHConnectionError, SSHKeyError, TerminalCreationError
@@ -80,6 +83,23 @@ class ProcessTracker:
                         )
                 return True
             return False
+
+    def terminate_process(self, pid: int) -> None:
+        """
+        Terminate a specific process ID safely.
+        Used by window managers to clean up only their own children.
+        """
+        with self._lock:
+            if pid in self._processes:
+                self.logger.info(f"Terminating specific process {pid}")
+                try:
+                    # Try graceful termination first
+                    os.kill(pid, signal.SIGTERM)
+                except (OSError, ProcessLookupError):
+                    pass
+                finally:
+                    # Ensure cleanup happens immediately
+                    self.unregister_process(pid)
 
     def terminate_all(self) -> None:
         """Terminate all tracked processes robustly on Linux."""
@@ -363,6 +383,275 @@ class ProcessSpawner:
             sftp_remote_path=remote_path,
         )
 
+    def spawn_highlighted_local_terminal(
+        self,
+        terminal: Vte.Terminal,
+        callback: Optional[Callable] = None,
+        user_data: Any = None,
+        working_directory: Optional[str] = None,
+    ) -> Optional["HighlightedTerminalProxy"]:
+        """
+        Spawn a local terminal with output highlighting support.
+        """
+        from .highlighter import HighlightedTerminalProxy
+
+        with self._spawn_lock:
+            shell = Vte.get_user_shell()
+            shell_basename = os.path.basename(shell)
+            temp_dir_path_for_zsh = None
+
+            working_dir = self._resolve_and_validate_working_directory(
+                working_directory
+            )
+            if working_directory and not working_dir:
+                self.logger.warning(
+                    f"Invalid working directory '{working_directory}', using home directory."
+                )
+            if not working_dir:
+                working_dir = str(self.platform_info.home_dir)
+
+            env = self.environment_manager.get_terminal_environment()
+            vte_version = (
+                Vte.get_major_version() * 10000
+                + Vte.get_minor_version() * 100
+                + Vte.get_micro_version()
+            )
+            env["VTE_VERSION"] = str(vte_version)
+
+            # OSC7 integration
+            osc7_command = (
+                f"{OSC7_HOST_DETECTION_SNIPPET} "
+                'printf "\\033]7;file://%s%s\\007" "$ASHYTERM_OSC7_HOST" "$PWD"'
+            )
+
+            if shell_basename == "zsh":
+                try:
+                    temp_dir_path_for_zsh = tempfile.mkdtemp(prefix="ashyterm_zsh_")
+                    zshrc_path = os.path.join(temp_dir_path_for_zsh, ".zshrc")
+                    zshrc_content = (
+                        f"_ashyterm_update_cwd() {{ {osc7_command}; }}\n"
+                        'if [[ -z "$precmd_functions" ]]; then\n'
+                        "  typeset -a precmd_functions\n"
+                        "fi\n"
+                        "precmd_functions+=(_ashyterm_update_cwd)\n"
+                        'if [ -f "$HOME/.zshrc" ]; then . "$HOME/.zshrc"; fi\n'
+                    )
+                    with open(zshrc_path, "w", encoding="utf-8") as f:
+                        f.write(zshrc_content)
+                    env["ZDOTDIR"] = temp_dir_path_for_zsh
+                except Exception as e:
+                    self.logger.error(f"Failed to set up zsh OSC7 integration: {e}")
+                    if temp_dir_path_for_zsh:
+                        shutil.rmtree(temp_dir_path_for_zsh, ignore_errors=True)
+                    temp_dir_path_for_zsh = None
+            else:
+                existing_prompt_command = env.get("PROMPT_COMMAND", "")
+                if existing_prompt_command:
+                    env["PROMPT_COMMAND"] = f"{osc7_command};{existing_prompt_command}"
+                else:
+                    env["PROMPT_COMMAND"] = osc7_command
+
+            if self.settings_manager.get("use_login_shell", False):
+                cmd = [shell, "-l"]
+            else:
+                cmd = [shell]
+
+            proxy = HighlightedTerminalProxy(terminal, "local")
+
+            try:
+                master_fd, slave_fd = proxy.create_pty()
+                rows = terminal.get_row_count() or 24
+                cols = terminal.get_column_count() or 80
+                proxy.set_window_size(rows, cols)
+
+                pid = os.fork()
+
+                if pid == 0:
+                    # Child process
+                    try:
+                        os.setsid()
+                        import fcntl
+
+                        fcntl.ioctl(slave_fd, termios.TIOCSCTTY, 0)
+
+                        os.dup2(slave_fd, 0)
+                        os.dup2(slave_fd, 1)
+                        os.dup2(slave_fd, 2)
+
+                        if slave_fd > 2:
+                            os.close(slave_fd)
+                        os.close(master_fd)
+
+                        os.chdir(working_dir)
+                        for key, value in env.items():
+                            os.environ[key] = value
+
+                        os.execvp(cmd[0], cmd)
+                    except Exception:
+                        os._exit(1)
+                else:
+                    # Parent process
+                    if not proxy.start(pid):
+                        self.logger.error("Failed to start highlight proxy")
+                        os.close(master_fd)
+                        return None
+
+                    # Register process
+                    process_info = {
+                        "name": str(user_data) if user_data else "Terminal",
+                        "type": "local",
+                        "terminal": terminal,
+                        "temp_dir_path": temp_dir_path_for_zsh,
+                        "highlight_proxy": proxy,
+                    }
+                    self.process_tracker.register_process(pid, process_info)
+
+                    if callback:
+                        final_user_data = {
+                            "original_user_data": user_data,
+                            "temp_dir_path": temp_dir_path_for_zsh,
+                        }
+                        GLib.idle_add(callback, terminal, pid, None, (final_user_data,))
+
+                    self.logger.info(
+                        f"Highlighted local terminal spawned with PID {pid}"
+                    )
+                    log_terminal_event(
+                        "spawn_initiated",
+                        str(user_data),
+                        f"highlighted shell: {' '.join(cmd)}",
+                    )
+
+                    return proxy
+
+            except Exception as e:
+                self.logger.error(f"Highlighted spawn failed: {e}")
+                proxy.stop()
+                if callback:
+                    error = GLib.Error.new_literal(
+                        GLib.quark_from_string("spawn-error"),
+                        str(e),
+                        0,
+                    )
+                    final_user_data = {
+                        "original_user_data": user_data,
+                        "temp_dir_path": temp_dir_path_for_zsh,
+                    }
+                    GLib.idle_add(callback, terminal, -1, error, (final_user_data,))
+                return None
+
+    def spawn_highlighted_ssh_session(
+        self,
+        terminal: Vte.Terminal,
+        session: "SessionItem",
+        callback: Optional[Callable] = None,
+        user_data: Any = None,
+        initial_command: Optional[str] = None,
+    ) -> Optional["HighlightedTerminalProxy"]:
+        """
+        Spawn an SSH session with output highlighting support.
+        """
+        from .highlighter import HighlightedTerminalProxy
+
+        with self._spawn_lock:
+            if not session.is_ssh():
+                raise TerminalCreationError("Session is not configured for SSH", "ssh")
+
+            try:
+                self._validate_ssh_session(session)
+                remote_cmd = self._build_remote_command_secure(
+                    "ssh",
+                    session,
+                    initial_command,
+                    None,
+                )
+                if not remote_cmd:
+                    raise TerminalCreationError("Failed to build SSH command", "ssh")
+
+                working_dir = str(self.platform_info.home_dir)
+                env = self.environment_manager.get_terminal_environment()
+
+                proxy = HighlightedTerminalProxy(terminal, "ssh")
+                master_fd, slave_fd = proxy.create_pty()
+
+                rows = terminal.get_row_count() or 24
+                cols = terminal.get_column_count() or 80
+                proxy.set_window_size(rows, cols)
+
+                pid = os.fork()
+
+                if pid == 0:
+                    # Child process
+                    try:
+                        os.setsid()
+                        fcntl.ioctl(slave_fd, termios.TIOCSCTTY, 0)
+
+                        os.dup2(slave_fd, 0)
+                        os.dup2(slave_fd, 1)
+                        os.dup2(slave_fd, 2)
+
+                        if slave_fd > 2:
+                            os.close(slave_fd)
+                        os.close(master_fd)
+
+                        os.chdir(working_dir)
+                        for key, value in env.items():
+                            os.environ[key] = value
+
+                        os.execvp(remote_cmd[0], remote_cmd)
+                    except Exception:
+                        os._exit(1)
+                else:
+                    # Parent process
+                    if not proxy.start(pid):
+                        self.logger.error("Failed to start highlight proxy for SSH")
+                        os.close(master_fd)
+                        return None
+
+                    process_info = {
+                        "name": session.name,
+                        "type": "ssh",
+                        "terminal": terminal,
+                        "session": session,
+                        "highlight_proxy": proxy,
+                    }
+                    self.process_tracker.register_process(pid, process_info)
+
+                    if callback:
+                        final_user_data = {
+                            "original_user_data": user_data,
+                            "temp_dir_path": None,
+                        }
+                        GLib.idle_add(callback, terminal, pid, None, (final_user_data,))
+
+                    self.logger.info(
+                        f"Highlighted SSH session spawned with PID {pid} for {session.name}"
+                    )
+                    log_terminal_event(
+                        "spawn_initiated",
+                        session.name,
+                        f"highlighted SSH to {session.get_connection_string()}",
+                    )
+
+                    return proxy
+
+            except Exception as e:
+                self.logger.error(f"Highlighted SSH spawn failed: {e}")
+                if "proxy" in locals():
+                    proxy.stop()
+                if callback:
+                    error = GLib.Error.new_literal(
+                        GLib.quark_from_string("spawn-error"),
+                        str(e),
+                        0,
+                    )
+                    final_user_data = {
+                        "original_user_data": user_data,
+                        "temp_dir_path": None,
+                    }
+                    GLib.idle_add(callback, terminal, -1, error, (final_user_data,))
+                return None
+
     def execute_remote_command_sync(
         self, session: "SessionItem", command: List[str], timeout: int = 15
     ) -> Tuple[bool, str]:
@@ -550,8 +839,10 @@ class ProcessSpawner:
                 except (TypeError, ValueError):
                     continue
 
-                if not remote_host or not (1 <= local_port <= 65535) or not (
-                    1 <= remote_port <= 65535
+                if (
+                    not remote_host
+                    or not (1 <= local_port <= 65535)
+                    or not (1 <= remote_port <= 65535)
                 ):
                     continue
 
@@ -560,8 +851,6 @@ class ProcessSpawner:
                 cmd[insertion_index:insertion_index] = ["-L", forward_spec]
 
         if command_type == "ssh":
-            # This command sets up OSC7 tracking for bash/zsh and then executes the user's default shell.
-            # It's a pragmatic approach that works for the most common shells.
             osc7_setup = (
                 f"{OSC7_HOST_DETECTION_SNIPPET} "
                 'export PROMPT_COMMAND=\'printf "\\033]7;file://%s%s\\007" "$ASHYTERM_OSC7_HOST" "$PWD"\''
@@ -576,12 +865,9 @@ class ProcessSpawner:
 
             full_remote_command = "; ".join(remote_parts)
 
-            # Force TTY allocation for interactive sessions
             if "-t" not in cmd:
                 cmd.insert(1, "-t")
             cmd.append(full_remote_command)
-
-        # For SFTP, no extra remote command is needed for an interactive session.
 
         if session.uses_password_auth() and session.auth_value:
             if has_command("sshpass"):
@@ -593,7 +879,7 @@ class ProcessSpawner:
     def _build_non_interactive_ssh_command(
         self, session: "SessionItem", command: List[str]
     ) -> Optional[List[str]]:
-        """Builds an SSH command for a NON-INTERACTIVE session, without TTY allocation."""
+        """Builds an SSH command for a NON-INTERACTIVE session."""
         if not has_command("ssh"):
             raise SSHConnectionError(session.host, "SSH command not found on system")
 
@@ -604,7 +890,7 @@ class ProcessSpawner:
             "ConnectTimeout": "15",
             "ControlMaster": "auto",
             "ControlPath": self._get_ssh_control_path(session),
-            "BatchMode": "yes",  # Ensure it doesn't prompt for passwords
+            "BatchMode": "yes",
         }
         if persist_duration > 0:
             ssh_options["ControlPersist"] = str(persist_duration)
@@ -637,6 +923,7 @@ class ProcessSpawner:
             else:
                 self.logger.warning("sshpass not available for password authentication")
         return cmd
+
     def _default_spawn_callback(
         self,
         terminal: Vte.Terminal,
@@ -663,7 +950,6 @@ class ProcessSpawner:
                 log_terminal_event(
                     "spawn_failed", terminal_name, f"error: {error.message}"
                 )
-                # Use Unix-style newlines (\n) for terminal output
                 error_msg = f"\nFailed to start {terminal_name}:\nError: {error.message}\nPlease check your system configuration.\n\n"
                 if terminal.get_realized():
                     terminal.feed(error_msg.encode("utf-8"))
@@ -710,7 +996,6 @@ class ProcessSpawner:
                     "ssh_spawn_failed", session_name, f"error: {error.message}"
                 )
                 error_guidance = self._get_ssh_error_guidance(error.message)
-                # Use Unix-style newlines (\n) for terminal output
                 error_msg = f"\nSSH Connection Failed:\nSession: {session_name}\nHost: {getattr(actual_data, 'get_connection_string', lambda: 'unknown')()}\nError: {error.message}\n"
                 if error_guidance:
                     error_msg += f"Suggestion: {error_guidance}\n"

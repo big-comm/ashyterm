@@ -13,6 +13,7 @@ from urllib.parse import urlparse
 
 try:
     import psutil
+
     PSUTIL_AVAILABLE = True
 except ImportError:
     psutil = None
@@ -26,6 +27,8 @@ from gi.repository import Gdk, GLib, GObject, Gtk, Vte
 
 from ..helpers import is_valid_url
 from ..sessions.models import SessionItem
+from ..settings.config import PROMPT_TERMINATOR_PATTERN
+from ..settings.highlights import get_highlight_manager
 from ..settings.manager import SettingsManager
 from ..ui.menus import create_terminal_menu
 from ..ui.ssh_dialogs import create_generic_ssh_error_dialog
@@ -36,6 +39,7 @@ from ..utils.logger import get_logger, log_terminal_event
 from ..utils.osc7_tracker import OSC7Info, get_osc7_tracker
 from ..utils.platform import get_environment_manager, get_platform_info
 from ..utils.security import validate_session_data
+from .highlighter import HighlightedTerminalProxy, get_output_highlighter
 from .spawner import get_spawner
 
 
@@ -83,7 +87,6 @@ class ManualSSHTracker:
         self.on_state_changed = on_state_changed_callback
         self._tracked_terminals = {}
         self._lock = threading.Lock()
-        # Task 4: Child count cache for smart polling optimization
         self._last_child_count = {}
 
     def track(self, terminal_id: int, terminal: Vte.Terminal):
@@ -98,7 +101,6 @@ class ManualSSHTracker:
     def untrack(self, terminal_id: int):
         with self._lock:
             self._tracked_terminals.pop(terminal_id, None)
-            # Task 4: Clean up cache when untracking
             self._last_child_count.pop(terminal_id, None)
 
     def get_ssh_target(self, terminal_id: int) -> Optional[str]:
@@ -109,7 +111,6 @@ class ManualSSHTracker:
             return None
 
     def check_process_tree(self, terminal_id: int):
-        """Task 4: Smart polling - skip heavy recursive scan if child count unchanged."""
         if not PSUTIL_AVAILABLE:
             return
         with self._lock:
@@ -124,17 +125,12 @@ class ManualSSHTracker:
                 return
             try:
                 parent_proc = psutil.Process(pid)
-
-                # Task 4: OPTIMIZATION - Check immediate child count first
-                # If the number of children hasn't changed, skip the heavy recursive scan
                 current_children_count = len(parent_proc.children())
 
-                # If count matches and we aren't currently tracking an SSH session, skip
                 if self._last_child_count.get(terminal_id) == current_children_count:
                     if not state["in_ssh"]:
                         return
 
-                # Update cache and proceed to heavy recursive check
                 self._last_child_count[terminal_id] = current_children_count
 
                 children = parent_proc.children(recursive=True)
@@ -214,7 +210,6 @@ class TerminalRegistry:
             self._terminal_refs[terminal_id] = weakref.ref(
                 terminal, lambda ref: self._cleanup_terminal_ref(terminal_id)
             )
-            # Ensure the next ID is higher than any existing ID to prevent collisions
             self._next_id = max(self._next_id, terminal_id + 1)
             self.logger.info(f"Re-registered terminal {terminal_id} in new window.")
 
@@ -301,10 +296,30 @@ class TerminalManager:
             "terminals_failed": 0,
             "terminals_closed": 0,
         }
+        self._highlight_proxies: Dict[int, HighlightedTerminalProxy] = {}
+        self._highlight_manager = None
+        # Process check timer runs every 1 second for responsive context detection
         self._process_check_timer_id = GLib.timeout_add_seconds(
-            2, self._periodic_process_check
+            1, self._periodic_process_check
         )
         self.logger.info("Terminal manager initialized")
+
+    def _get_highlight_manager(self):
+        if self._highlight_manager is None:
+            self._highlight_manager = get_highlight_manager()
+        return self._highlight_manager
+
+    def _cleanup_highlight_proxy(self, terminal_id: int):
+        proxy = self._highlight_proxies.pop(terminal_id, None)
+        if proxy:
+            try:
+                # Pass from_destroy=False by default as we don't know if it's from destroy here.
+                # But usually this is called from cleanup logic, so widget might be dying.
+                # Safe to just call stop(), it handles internal state.
+                proxy.stop()
+                self.logger.debug(f"Stopped highlight proxy for terminal {terminal_id}")
+            except Exception as e:
+                self.logger.error(f"Error stopping highlight proxy: {e}")
 
     def apply_settings_to_all_terminals(self):
         self.logger.info("Applying settings to all active terminals.")
@@ -327,20 +342,21 @@ class TerminalManager:
         self.terminal_exit_handler = handler
 
     def _periodic_process_check(self) -> bool:
-        """Task 3: Only check the currently focused terminal for SSH process detection.
+        """
+        Periodic check to detect manual SSH sessions in local terminals.
 
-        This optimization reduces CPU overhead by avoiding psutil checks on background tabs.
-        Background tabs do not need real-time title updates for SSH detection.
+        This runs every 2 seconds and checks for manual SSH sessions.
+        Note: Context-aware highlighting is now handled by CommandDetector
+        which parses the terminal output stream in real-time.
         """
         try:
-            # Task 3: Only check the currently focused/active terminal
             if self.parent_window and hasattr(self.parent_window, "tab_manager"):
                 active_terminal = self.parent_window.tab_manager.get_selected_terminal()
 
                 if active_terminal:
                     terminal_id = getattr(active_terminal, "terminal_id", None)
                     if terminal_id is not None:
-                        # Only check the active terminal, not all terminals
+                        # Check for manual SSH sessions
                         self.manual_ssh_tracker.check_process_tree(terminal_id)
         except Exception as e:
             self.logger.debug(f"Periodic check error: {e}")
@@ -461,9 +477,7 @@ class TerminalManager:
             if page:
                 for tab in self.tab_manager.tabs:
                     if self.tab_manager.pages.get(tab) == page:
-                        return getattr(
-                            tab, "_base_title", f"SFTP-{session.name}"
-                        )
+                        return getattr(tab, "_base_title", f"SFTP-{session.name}")
         return f"SFTP-{session.name}"
 
     def create_local_terminal(
@@ -497,12 +511,36 @@ class TerminalManager:
                 },
             )
 
-            self.spawner.spawn_local_terminal(
-                terminal,
-                callback=self._on_spawn_callback,
-                user_data=user_data_for_spawn,
-                working_directory=resolved_working_dir,
-            )
+            highlight_manager = self._get_highlight_manager()
+            if highlight_manager.enabled_for_local:
+                proxy = self.spawner.spawn_highlighted_local_terminal(
+                    terminal,
+                    callback=self._on_spawn_callback,
+                    user_data=user_data_for_spawn,
+                    working_directory=resolved_working_dir,
+                )
+                if proxy:
+                    self._highlight_proxies[terminal_id] = proxy
+                    self.logger.info(
+                        f"Highlighted local terminal spawned (ID: {terminal_id})"
+                    )
+                else:
+                    self.logger.warning(
+                        "Highlighted spawn failed, falling back to standard spawning"
+                    )
+                    self.spawner.spawn_local_terminal(
+                        terminal,
+                        callback=self._on_spawn_callback,
+                        user_data=user_data_for_spawn,
+                        working_directory=resolved_working_dir,
+                    )
+            else:
+                self.spawner.spawn_local_terminal(
+                    terminal,
+                    callback=self._on_spawn_callback,
+                    user_data=user_data_for_spawn,
+                    working_directory=resolved_working_dir,
+                )
 
             log_title = session.name if session else title
             self.logger.info(
@@ -513,6 +551,7 @@ class TerminalManager:
             return terminal
         except TerminalCreationError:
             self.registry.unregister_terminal(terminal_id)
+            self._cleanup_highlight_proxy(terminal_id)
             self._stats["terminals_failed"] += 1
             raise
 
@@ -524,7 +563,6 @@ class TerminalManager:
         sftp_remote_path: Optional[str] = None,
         sftp_local_directory: Optional[str] = None,
     ) -> Optional[Vte.Terminal]:
-        """Generic private method to create remote terminals (SSH/SFTP)."""
         with self._creation_lock:
             session_data = session.to_dict()
             is_valid, errors = validate_session_data(session_data)
@@ -547,13 +585,39 @@ class TerminalManager:
 
             try:
                 if terminal_type == "ssh":
-                    self.spawner.spawn_ssh_session(
-                        terminal,
-                        session,
-                        callback=self._on_spawn_callback,
-                        user_data=user_data_for_spawn,
-                        initial_command=initial_command,
-                    )
+                    highlight_manager = self._get_highlight_manager()
+                    if highlight_manager.enabled_for_ssh:
+                        proxy = self.spawner.spawn_highlighted_ssh_session(
+                            terminal,
+                            session,
+                            callback=self._on_spawn_callback,
+                            user_data=user_data_for_spawn,
+                            initial_command=initial_command,
+                        )
+                        if proxy:
+                            self._highlight_proxies[terminal_id] = proxy
+                            self.logger.info(
+                                f"Highlighted SSH terminal spawned (ID: {terminal_id})"
+                            )
+                        else:
+                            self.logger.warning(
+                                "Highlighted SSH spawn failed, falling back to standard spawning"
+                            )
+                            self.spawner.spawn_ssh_session(
+                                terminal,
+                                session,
+                                callback=self._on_spawn_callback,
+                                user_data=user_data_for_spawn,
+                                initial_command=initial_command,
+                            )
+                    else:
+                        self.spawner.spawn_ssh_session(
+                            terminal,
+                            session,
+                            callback=self._on_spawn_callback,
+                            user_data=user_data_for_spawn,
+                            initial_command=initial_command,
+                        )
                 elif terminal_type == "sftp":
                     self._setup_sftp_drag_and_drop(terminal)
                     self.spawner.spawn_sftp_session(
@@ -581,26 +645,22 @@ class TerminalManager:
                 return terminal
             except TerminalCreationError:
                 self.registry.unregister_terminal(terminal_id)
+                self._cleanup_highlight_proxy(terminal_id)
                 self._stats["terminals_failed"] += 1
                 raise
 
     def create_ssh_terminal(
         self, session: SessionItem, initial_command: Optional[str] = None
     ) -> Optional[Vte.Terminal]:
-        """Creates a new terminal and starts an SSH session in it."""
         commands: List[str] = []
         if initial_command:
             commands.append(initial_command)
-        if (
-            session.post_login_command_enabled
-            and session.post_login_command
-        ):
+        if session.post_login_command_enabled and session.post_login_command:
             commands.append(session.post_login_command)
         combined_command = "; ".join(commands) if commands else None
         return self._create_remote_terminal(session, "ssh", combined_command)
 
     def create_sftp_terminal(self, session: SessionItem) -> Optional[Vte.Terminal]:
-        """Creates a new terminal and starts an SFTP session in it."""
         remote_path = None
         local_directory = None
         if session.sftp_session_enabled:
@@ -623,12 +683,10 @@ class TerminalManager:
             terminal.set_scroll_on_output(False)
             terminal.set_scroll_on_keystroke(True)
             terminal.set_scroll_unit_is_pixels(True)
-            # Enable search highlighting
             if hasattr(terminal, "set_search_highlight_enabled"):
                 terminal.set_search_highlight_enabled(True)
             self.settings_manager.apply_terminal_settings(terminal, self.parent_window)
             self._setup_context_menu(terminal)
-            # Setup URL pattern detection and hyperlink support
             self._setup_url_patterns(terminal)
             return terminal
         except Exception as e:
@@ -636,20 +694,16 @@ class TerminalManager:
             return None
 
     def _setup_sftp_drag_and_drop(self, terminal: Vte.Terminal):
-        """Sets up drag-and-drop for an SFTP terminal to handle uploads."""
         drop_target = Gtk.DropTarget.new(Gdk.FileList, Gdk.DragAction.COPY)
         drop_target.connect("drop", self._on_file_drop, terminal)
         terminal.add_controller(drop_target)
 
     def _on_file_drop(self, drop_target, value, x, y, terminal: Vte.Terminal) -> bool:
-        """Callback for when files are dropped onto an SFTP terminal."""
         try:
             files = value.get_files()
             for file in files:
                 local_path = file.get_path()
                 if local_path:
-                    # The `put` command in sftp handles both files and (with -r) directories.
-                    # We add quotes to handle paths with spaces.
                     command_to_send = f'put -r "{local_path}"\n'
                     self.logger.info(
                         f"File dropped on SFTP terminal. Sending command: {command_to_send.strip()}"
@@ -667,7 +721,6 @@ class TerminalManager:
         terminal_id: int,
     ) -> None:
         try:
-            # NEW: Store handler IDs and controllers for later cleanup
             terminal.ashy_handler_ids = []
             terminal.ashy_controllers = []
 
@@ -686,7 +739,6 @@ class TerminalManager:
 
             self.manual_ssh_tracker.track(terminal_id, terminal)
 
-            # Focus controllers
             focus_controller = Gtk.EventControllerFocus()
             focus_controller.connect(
                 "enter", self._on_terminal_focus_in, terminal, terminal_id
@@ -694,23 +746,34 @@ class TerminalManager:
             terminal.add_controller(focus_controller)
             terminal.ashy_controllers.append(focus_controller)
 
-            # Click controller for URL handling
             click_controller = Gtk.GestureClick()
-            click_controller.set_button(1)  # Left mouse button
+            click_controller.set_button(1)
             click_controller.connect(
                 "pressed", self._on_terminal_clicked, terminal, terminal_id
             )
             terminal.add_controller(click_controller)
             terminal.ashy_controllers.append(click_controller)
 
-            # Right-click controller for context menu with URL detection
             right_click_controller = Gtk.GestureClick()
-            right_click_controller.set_button(3)  # Right mouse button
+            right_click_controller.set_button(3)
             right_click_controller.connect(
                 "pressed", self._on_terminal_right_clicked, terminal, terminal_id
             )
             terminal.add_controller(right_click_controller)
             terminal.ashy_controllers.append(right_click_controller)
+
+            # Key event controller for command detection via screen scraping
+            # Captures Enter key press to read the current command line from VTE
+            key_controller = Gtk.EventControllerKey()
+            key_controller.set_propagation_phase(Gtk.PropagationPhase.CAPTURE)
+            key_controller.connect(
+                "key-pressed",
+                self._on_terminal_key_pressed_for_detection,
+                terminal,
+                terminal_id,
+            )
+            terminal.add_controller(key_controller)
+            terminal.ashy_controllers.append(key_controller)
 
             terminal.terminal_id = terminal_id
         except Exception as e:
@@ -720,7 +783,6 @@ class TerminalManager:
 
     def _setup_context_menu(self, terminal: Vte.Terminal) -> None:
         try:
-            # Initial context menu without URL detection
             menu_model = create_terminal_menu(terminal)
             terminal.set_context_menu_model(menu_model)
         except Exception as e:
@@ -729,7 +791,6 @@ class TerminalManager:
     def _update_context_menu_with_url(
         self, terminal: Vte.Terminal, x: float, y: float
     ) -> None:
-        """Update terminal context menu with URL detection at click position."""
         try:
             menu_model = create_terminal_menu(terminal, x, y)
             terminal.set_context_menu_model(menu_model)
@@ -861,6 +922,10 @@ class TerminalManager:
             if not self.registry.get_terminal_info(terminal_id):
                 return
             terminal_info = self.registry.get_terminal_info(terminal_id)
+
+            # Clean up highlight proxy FIRST to stop GLib watches
+            self._cleanup_highlight_proxy(terminal_id)
+
             pid = terminal_info.get("process_id")
             if pid:
                 self.spawner.process_tracker.unregister_process(pid)
@@ -876,7 +941,6 @@ class TerminalManager:
             self.osc7_tracker.untrack_terminal(terminal)
             self.manual_ssh_tracker.untrack(terminal_id)
 
-            # NEW: Explicitly disconnect signals and remove controllers
             if hasattr(terminal, "ashy_handler_ids"):
                 for handler_id in terminal.ashy_handler_ids:
                     if GObject.signal_handler_is_connected(terminal, handler_id):
@@ -888,7 +952,6 @@ class TerminalManager:
                     terminal.remove_controller(controller)
                 terminal.ashy_controllers.clear()
 
-            # Clean up OSC8 hyperlink state
             if hasattr(terminal, "_osc8_hovered_uri"):
                 try:
                     delattr(terminal, "_osc8_hovered_uri")
@@ -1033,10 +1096,9 @@ class TerminalManager:
         terminal.select_all()
 
     def clear_terminal(self, terminal: Vte.Terminal):
-        """Reset the terminal display and scrollback without restarting the shell."""
         try:
             terminal.reset(True, True)
-            # Send an extra newline once the terminal loop is idle so the shell redraws the prompt.
+
             def _send_newline():
                 try:
                     if hasattr(terminal, "feed_child_binary"):
@@ -1066,13 +1128,36 @@ class TerminalManager:
             self.logger.error(f"Failed to clear terminal output: {e}")
 
     def cleanup_all_terminals(self):
+        """
+        Force closes all terminals managed by this window instance.
+        Corrected to only kill processes owned by this window, avoiding global app shutdown.
+        """
         if self._process_check_timer_id:
             GLib.source_remove(self._process_check_timer_id)
             self._process_check_timer_id = None
-        get_spawner().process_tracker.terminate_all()
+
+        # Clean up all highlight proxies
+        for terminal_id in list(self._highlight_proxies.keys()):
+            self._cleanup_highlight_proxy(terminal_id)
+
+        # KILL ONLY LOCAL PROCESSES BELONGING TO THIS WINDOW
+        spawner = get_spawner()
+        all_ids = self.registry.get_all_terminal_ids()
+
+        count_killed = 0
+        for t_id in all_ids:
+            info = self.registry.get_terminal_info(t_id)
+            if info and info.get("process_id"):
+                pid = info["process_id"]
+                # Use the new targeted kill method
+                spawner.process_tracker.terminate_process(pid)
+                count_killed += 1
+
+        self.logger.info(
+            f"cleanup_all_terminals: Terminated {count_killed} processes for this window."
+        )
 
     def _setup_url_patterns(self, terminal: Vte.Terminal) -> None:
-        """Configure URL detection patterns for the terminal."""
         try:
             terminal.set_allow_hyperlink(True)
             if hasattr(terminal, "connect"):
@@ -1092,7 +1177,6 @@ class TerminalManager:
             patterns_added = 0
             if hasattr(terminal, "match_add_regex") and hasattr(Vte, "Regex"):
                 self.logger.debug("Using Vte.Regex for URL pattern matching")
-
                 vte_flags = 1024
 
                 for pattern in url_patterns:
@@ -1121,34 +1205,28 @@ class TerminalManager:
             self.logger.error(f"Failed to setup URL patterns: {e}")
 
     def _on_hyperlink_hover_changed(self, terminal, uri, _bbox):
-        """Handle OSC8 hyperlink hover events."""
         try:
             terminal_id = getattr(terminal, "terminal_id", None)
             if terminal_id is not None:
                 if uri:
-                    # Store the currently hovered OSC8 hyperlink
                     terminal._osc8_hovered_uri = uri
                     self.logger.debug(
                         f"OSC8 hyperlink hovered in terminal {terminal_id}: {uri}"
                     )
                 else:
-                    # Clear hovered OSC8 hyperlink when mouse leaves
                     if hasattr(terminal, "_osc8_hovered_uri"):
                         delattr(terminal, "_osc8_hovered_uri")
-                        self.logger.debug(
-                            f"OSC8 hyperlink hover cleared in terminal {terminal_id}"
-                        )
+                    self.logger.debug(
+                        f"OSC8 hyperlink hover cleared in terminal {terminal_id}"
+                    )
         except Exception as e:
             self.logger.error(f"OSC8 hyperlink hover handling failed: {e}")
 
     def _on_terminal_clicked(self, gesture, _n_press, x, y, terminal, terminal_id):
-        """Handle terminal clicks for URL opening (Ctrl+click only) and focus."""
         try:
-            # Check if Ctrl key is pressed
             modifiers = gesture.get_current_event_state()
             ctrl_pressed = bool(modifiers & Gdk.ModifierType.CONTROL_MASK)
 
-            # Only open URLs on Ctrl+click
             if ctrl_pressed:
                 url_to_open = self._get_url_at_position(terminal, x, y)
                 if url_to_open:
@@ -1157,7 +1235,6 @@ class TerminalManager:
                         self.logger.info(f"URL opened from Ctrl+click: {url_to_open}")
                         return Gdk.EVENT_STOP
 
-            # Normal focus handling for regular clicks
             terminal.grab_focus()
             self.registry.update_terminal_status(terminal_id, "focused")
             if self.on_terminal_focus_changed:
@@ -1174,30 +1251,240 @@ class TerminalManager:
     def _on_terminal_right_clicked(
         self, gesture, _n_press, x, y, terminal, terminal_id
     ):
-        """Handle right-click for context menu with URL detection."""
         try:
-            # Update context menu to include URL options if URL is at click position
             self._update_context_menu_with_url(terminal, x, y)
-
-            # Let the default context menu handling proceed
             return Gdk.EVENT_PROPAGATE
-
         except Exception as e:
             self.logger.error(
                 f"Terminal right-click handling failed for terminal {terminal_id}: {e}"
             )
             return Gdk.EVENT_PROPAGATE
 
+    def _on_terminal_key_pressed_for_detection(
+        self,
+        controller: Gtk.EventControllerKey,
+        keyval: int,
+        keycode: int,
+        state: Gdk.ModifierType,
+        terminal: Vte.Terminal,
+        terminal_id: int,
+    ) -> bool:
+        """
+        Handle key press events to detect command execution via screen scraping.
+
+        This method intercepts the Enter key press (before VTE processes it),
+        reads the current line from the terminal using VTE's text extraction,
+        and analyzes it to detect the command being executed.
+
+        This approach works reliably for SSH sessions and Docker containers
+        where process sniffing is impossible.
+
+        Args:
+            controller: The key event controller.
+            keyval: The key value (GDK key constant).
+            keycode: The hardware keycode.
+            state: Modifier state (Shift, Ctrl, etc.).
+            terminal: The VTE terminal widget.
+            terminal_id: The terminal's registry ID.
+
+        Returns:
+            Gdk.EVENT_PROPAGATE to allow VTE to process the key normally.
+        """
+        try:
+            # Only trigger on Enter or KP_Enter, ignore if modifiers are pressed
+            if keyval not in (Gdk.KEY_Return, Gdk.KEY_KP_Enter):
+                return Gdk.EVENT_PROPAGATE
+
+            # Ignore if Shift, Ctrl, or Alt is pressed (might be a different action)
+            if state & (
+                Gdk.ModifierType.SHIFT_MASK
+                | Gdk.ModifierType.CONTROL_MASK
+                | Gdk.ModifierType.ALT_MASK
+            ):
+                return Gdk.EVENT_PROPAGATE
+
+            # Get cursor position to read the current line
+            col, row = terminal.get_cursor_position()
+
+            # Extract the text of the current line using get_text_range_format
+            # This is the modern VTE API that doesn't use deprecated callbacks
+            # Signature: get_text_range_format(format, start_row, start_col, end_row, end_col)
+            # Returns: tuple[Optional[str], int] - (text, length)
+            try:
+                # Get column count for the full line width
+                col_count = terminal.get_column_count()
+
+                # Use Vte.Format.TEXT for plain text extraction
+                text_result = terminal.get_text_range_format(
+                    Vte.Format.TEXT, row, 0, row, col_count
+                )
+
+                # get_text_range_format returns (text, length)
+                if isinstance(text_result, tuple) and len(text_result) >= 1:
+                    line_text = text_result[0] if text_result[0] else ""
+                else:
+                    line_text = ""
+
+            except Exception as e:
+                self.logger.debug(
+                    f"get_text_range_format failed for terminal {terminal_id}: {e}"
+                )
+                return Gdk.EVENT_PROPAGATE
+
+            # Strip whitespace and analyze the command
+            line_text = line_text.strip() if line_text else ""
+            if line_text:
+                self._analyze_command_from_line(line_text, terminal, terminal_id)
+
+        except Exception as e:
+            self.logger.error(
+                f"Key press detection failed for terminal {terminal_id}: {e}"
+            )
+
+        # CRUCIAL: Always propagate the event so VTE processes the newline
+        return Gdk.EVENT_PROPAGATE
+
+    def _analyze_command_from_line(
+        self, line: str, terminal: Vte.Terminal, terminal_id: int
+    ) -> None:
+        """
+        Analyze a terminal line to extract and set the command context.
+
+        Uses a priority-based detection system:
+        1. Ignored commands (tools with native coloring): set context and disable highlighting
+        2. Known triggers (from HighlightManager): set context for command-specific rules
+        3. Fallback: use first valid non-flag token
+
+        This parses the raw line to separate the shell prompt from the user's
+        command using common prompt terminators ($, #, %, >, ➜).
+
+        Args:
+            line: The raw line text from the terminal.
+            terminal: The VTE terminal widget.
+            terminal_id: The terminal's registry ID.
+        """
+        try:
+            if not line:
+                return
+
+            # Find the last occurrence of a prompt separator
+            # The pattern matches: $ # % > ➜ followed by a space
+            matches = list(PROMPT_TERMINATOR_PATTERN.finditer(line))
+
+            if matches:
+                # Get the last match - everything after it is the command
+                last_match = matches[-1]
+                command_part = line[last_match.end() :].strip()
+            else:
+                # No prompt found - the whole line might be the command
+                # (e.g., if prompt was on a previous line or uses unusual format)
+                command_part = line.strip()
+
+            if not command_part:
+                return
+
+            # Get settings and highlight manager
+            from ..settings.highlights import get_highlight_manager
+            from ..settings.manager import get_settings_manager
+
+            settings_manager = get_settings_manager()
+            highlight_manager = get_highlight_manager()
+
+            ignored_commands = set(
+                settings_manager.get("ignored_highlight_commands", [])
+            )
+            known_triggers = highlight_manager.get_all_triggers()
+
+            # For pipelines, analyze the LAST command in the chain since
+            # that's what produces the visible output
+            # Split by | and ; and && and || to find pipeline segments
+            pipeline_parts = []
+            current_part = []
+            for char in command_part:
+                if char in '|;&':
+                    if current_part:
+                        pipeline_parts.append(''.join(current_part).strip())
+                        current_part = []
+                else:
+                    current_part.append(char)
+            if current_part:
+                pipeline_parts.append(''.join(current_part).strip())
+            
+            # Get the last non-empty part of the pipeline
+            last_command_part = ""
+            for part in reversed(pipeline_parts):
+                if part:
+                    last_command_part = part
+                    break
+            
+            if not last_command_part:
+                last_command_part = command_part
+
+            # Parse tokens from the last pipeline segment
+            tokens = last_command_part.split()
+            detected_command = None
+            fallback_command = None
+
+            for token in tokens:
+                # Skip flags (start with -)
+                if token.startswith("-"):
+                    continue
+
+                # Skip variable assignments (contain = without being a path)
+                if "=" in token and "/" not in token:
+                    continue
+
+                # Clean the token: remove path prefixes and leading dots
+                clean_token = token
+                if "/" in clean_token:
+                    clean_token = clean_token.split("/")[-1]
+                clean_token = clean_token.lstrip(".")
+
+                if not clean_token:
+                    continue
+
+                clean_token_lower = clean_token.lower()
+
+                # Priority 1: Check if it's an ignored command (native coloring)
+                if clean_token_lower in ignored_commands:
+                    detected_command = clean_token
+                    break
+
+                # Priority 2: Check if it's a known trigger
+                if clean_token_lower in known_triggers:
+                    detected_command = clean_token
+                    break
+
+                # Save first valid token as fallback
+                if fallback_command is None:
+                    fallback_command = clean_token
+
+            # Use detected command or fallback
+            program_name = detected_command or fallback_command
+
+            if not program_name:
+                return
+
+            # Update the syntax highlighting context
+            highlighter = get_output_highlighter()
+            highlighter.set_context(program_name, terminal_id)
+
+            self.logger.debug(
+                f"Terminal {terminal_id}: detected command '{program_name}' from line: {line[:50]}..."
+            )
+
+        except Exception as e:
+            self.logger.error(
+                f"Command analysis failed for terminal {terminal_id}: {e}"
+            )
+
     def _get_url_at_position(
         self, terminal: Vte.Terminal, x: float, y: float
     ) -> Optional[str]:
-        """Get URL at the specified position if any."""
         try:
-            # First, check for OSC8 hyperlinks (priority over regex matches)
             if hasattr(terminal, "_osc8_hovered_uri") and terminal._osc8_hovered_uri:
                 return terminal._osc8_hovered_uri
 
-            # Fallback: Try VTE's current hyperlink detection at position
             if hasattr(terminal, "get_hyperlink_hover_uri"):
                 try:
                     hover_uri = terminal.get_hyperlink_hover_uri()
@@ -1206,7 +1493,6 @@ class TerminalManager:
                 except Exception as e:
                     self.logger.debug(f"VTE hyperlink detection failed: {e}")
 
-            # Fallback: Try VTE's match detection at position for regex-based URLs
             if hasattr(terminal, "match_check"):
                 try:
                     char_width = terminal.get_char_width()
@@ -1220,14 +1506,8 @@ class TerminalManager:
 
                         if match_result and len(match_result) >= 2:
                             matched_text = match_result[0]
-
-                            self.logger.debug(
-                                f"Regex match found at ({col}, {row}): '{matched_text}'"
-                            )
-
                             if matched_text and is_valid_url(matched_text):
                                 return matched_text
-
                 except Exception as e:
                     self.logger.debug(f"Regex match check failed: {e}")
 
@@ -1238,7 +1518,6 @@ class TerminalManager:
             return None
 
     def _open_hyperlink(self, uri: str) -> bool:
-        """Open hyperlink using system default handler."""
         try:
             if not uri or not uri.strip():
                 self.logger.warning("Empty or invalid URI provided")
@@ -1246,17 +1525,15 @@ class TerminalManager:
 
             uri = uri.strip()
 
-            # Handle email addresses by adding mailto: prefix
             if "@" in uri and not uri.startswith((
                 "http://",
                 "https://",
                 "ftp://",
                 "mailto:",
             )):
-                if "." in uri.split("@")[-1]:  # Basic email validation
+                if "." in uri.split("@")[-1]:
                     uri = f"mailto:{uri}"
 
-            # Basic URI validation
             try:
                 parsed = urlparse(uri)
                 if not parsed.scheme:

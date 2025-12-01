@@ -4,7 +4,7 @@ import gi
 
 gi.require_version("Gtk", "4.0")
 gi.require_version("Adw", "1")
-from gi.repository import Adw, GObject, Gtk, GLib
+from gi.repository import Adw, GLib, GObject, Gtk
 
 from ...settings.manager import SettingsManager
 from ...utils.logger import get_logger
@@ -43,6 +43,32 @@ class PreferencesDialog(Adw.PreferencesWindow):
         self._setup_profiles_page()
         self._setup_advanced_page()
         self.logger.info("Preferences dialog initialized")
+
+    def _create_switch_row(
+        self,
+        title: str,
+        subtitle: str,
+        setting_key: str,
+        default_value: bool = False,
+    ) -> Adw.SwitchRow:
+        """Create a standard switch row bound to a setting.
+
+        Args:
+            title: Row title
+            subtitle: Row subtitle/description
+            setting_key: Settings key to bind to
+            default_value: Default value if setting not found
+
+        Returns:
+            Configured Adw.SwitchRow
+        """
+        row = Adw.SwitchRow(title=title, subtitle=subtitle)
+        row.set_active(self.settings_manager.get(setting_key, default_value))
+        row.connect(
+            "notify::active",
+            lambda r, _: self._on_setting_changed(setting_key, r.get_active()),
+        )
+        return row
 
     def _setup_appearance_page(self) -> None:
         page = Adw.PreferencesPage(
@@ -136,14 +162,11 @@ class PreferencesDialog(Adw.PreferencesWindow):
         )
         misc_group.add(headerbar_transparency_row)
 
-        bold_bright_row = Adw.SwitchRow(
-            title=_("Use Bright Colors for Bold Text"),
-            subtitle=_("Render bold text with the brighter version of the base color"),
-        )
-        bold_bright_row.set_active(self.settings_manager.get("bold_is_bright", True))
-        bold_bright_row.connect(
-            "notify::active",
-            lambda r, _: self._on_setting_changed("bold_is_bright", r.get_active()),
+        bold_bright_row = self._create_switch_row(
+            _("Use Bright Colors for Bold Text"),
+            _("Render bold text with the brighter version of the base color"),
+            "bold_is_bright",
+            default_value=True,
         )
         misc_group.add(bold_bright_row)
 
@@ -259,16 +282,11 @@ class PreferencesDialog(Adw.PreferencesWindow):
         touchpad_scroll_row.set_activatable_widget(touchpad_scroll_spin)
         scrolling_group.add(touchpad_scroll_row)
 
-        scroll_on_insert_row = Adw.SwitchRow(
-            title=_("Scroll on Paste"),
-            subtitle=_("Automatically scroll to the bottom when pasting text"),
-        )
-        scroll_on_insert_row.set_active(
-            self.settings_manager.get("scroll_on_insert", True)
-        )
-        scroll_on_insert_row.connect(
-            "notify::active",
-            lambda r, _: self._on_setting_changed("scroll_on_insert", r.get_active()),
+        scroll_on_insert_row = self._create_switch_row(
+            _("Scroll on Paste"),
+            _("Automatically scroll to the bottom when pasting text"),
+            "scroll_on_insert",
+            default_value=True,
         )
         scrolling_group.add(scroll_on_insert_row)
 
@@ -293,25 +311,19 @@ class PreferencesDialog(Adw.PreferencesWindow):
         )
         page.add(shell_group)
 
-        login_shell_row = Adw.SwitchRow(
-            title=_("Run Command as a Login Shell"),
-            subtitle=_("Sources /etc/profile and ~/.profile on startup"),
-        )
-        login_shell_row.set_active(self.settings_manager.get("use_login_shell", False))
-        login_shell_row.connect(
-            "notify::active",
-            lambda r, _: self._on_setting_changed("use_login_shell", r.get_active()),
+        login_shell_row = self._create_switch_row(
+            _("Run Command as a Login Shell"),
+            _("Sources /etc/profile and ~/.profile on startup"),
+            "use_login_shell",
+            default_value=False,
         )
         shell_group.add(login_shell_row)
 
-        bell_row = Adw.SwitchRow(
-            title=_("Audible Bell"),
-            subtitle=_("Emit a sound for the terminal bell character"),
-        )
-        bell_row.set_active(self.settings_manager.get("bell_sound", False))
-        bell_row.connect(
-            "notify::active",
-            lambda r, _: self._on_setting_changed("bell_sound", r.get_active()),
+        bell_row = self._create_switch_row(
+            _("Audible Bell"),
+            _("Emit a sound for the terminal bell character"),
+            "bell_sound",
+            default_value=False,
         )
         shell_group.add(bell_row)
 
@@ -381,37 +393,21 @@ class PreferencesDialog(Adw.PreferencesWindow):
         remote_edit_group = Adw.PreferencesGroup(title=_("Remote Editing"))
         page.add(remote_edit_group)
 
-        use_tmp_dir_row = Adw.SwitchRow(
-            title=_("Use System Temporary Directory"),
-            subtitle=_(
+        use_tmp_dir_row = self._create_switch_row(
+            _("Use System Temporary Directory"),
+            _(
                 "Store temporary files for remote editing in /tmp instead of the config folder"
             ),
-        )
-        use_tmp_dir_row.set_active(
-            self.settings_manager.get("use_system_tmp_for_edit", False)
-        )
-        use_tmp_dir_row.connect(
-            "notify::active",
-            lambda r, _: self._on_setting_changed(
-                "use_system_tmp_for_edit", r.get_active()
-            ),
+            "use_system_tmp_for_edit",
+            default_value=False,
         )
         remote_edit_group.add(use_tmp_dir_row)
 
-        clear_on_exit_row = Adw.SwitchRow(
-            title=_("Clear Remote Edit Files on Exit"),
-            subtitle=_(
-                "Automatically delete all temporary remote files when closing the app"
-            ),
-        )
-        clear_on_exit_row.set_active(
-            self.settings_manager.get("clear_remote_edit_files_on_exit", False)
-        )
-        clear_on_exit_row.connect(
-            "notify::active",
-            lambda r, _: self._on_setting_changed(
-                "clear_remote_edit_files_on_exit", r.get_active()
-            ),
+        clear_on_exit_row = self._create_switch_row(
+            _("Clear Remote Edit Files on Exit"),
+            _("Automatically delete all temporary remote files when closing the app"),
+            "clear_remote_edit_files_on_exit",
+            default_value=False,
         )
         remote_edit_group.add(clear_on_exit_row)
 
@@ -449,40 +445,27 @@ class PreferencesDialog(Adw.PreferencesWindow):
         )
         advanced_page.add(features_group)
 
-        bidi_row = Adw.SwitchRow(
-            title=_("Bidirectional Text Support"),
-            subtitle=_(
-                "Enable for languages like Arabic and Hebrew (may affect performance)"
-            ),
-        )
-        bidi_row.set_active(self.settings_manager.get("bidi_enabled", False))
-        bidi_row.connect(
-            "notify::active",
-            lambda r, _: self._on_setting_changed("bidi_enabled", r.get_active()),
+        bidi_row = self._create_switch_row(
+            _("Bidirectional Text Support"),
+            _("Enable for languages like Arabic and Hebrew (may affect performance)"),
+            "bidi_enabled",
+            default_value=False,
         )
         features_group.add(bidi_row)
 
-        shaping_row = Adw.SwitchRow(
-            title=_("Enable Arabic Text Shaping"),
-            subtitle=_(
-                "Correctly render ligatures and contextual forms for Arabic script"
-            ),
-        )
-        shaping_row.set_active(self.settings_manager.get("enable_shaping", False))
-        shaping_row.connect(
-            "notify::active",
-            lambda r, _: self._on_setting_changed("enable_shaping", r.get_active()),
+        shaping_row = self._create_switch_row(
+            _("Enable Arabic Text Shaping"),
+            _("Correctly render ligatures and contextual forms for Arabic script"),
+            "enable_shaping",
+            default_value=False,
         )
         features_group.add(shaping_row)
 
-        sixel_row = Adw.SwitchRow(
-            title=_("SIXEL Graphics Support"),
-            subtitle=_("Allow the terminal to display SIXEL images (experimental)"),
-        )
-        sixel_row.set_active(self.settings_manager.get("sixel_enabled", True))
-        sixel_row.connect(
-            "notify::active",
-            lambda r, _: self._on_setting_changed("sixel_enabled", r.get_active()),
+        sixel_row = self._create_switch_row(
+            _("SIXEL Graphics Support"),
+            _("Allow the terminal to display SIXEL images (experimental)"),
+            "sixel_enabled",
+            default_value=True,
         )
         features_group.add(sixel_row)
 
@@ -539,14 +522,11 @@ class PreferencesDialog(Adw.PreferencesWindow):
         )
         advanced_page.add(log_group)
 
-        log_to_file_row = Adw.SwitchRow(
-            title=_("Save Logs to File"),
-            subtitle=_("Save application logs to the configuration directory"),
-        )
-        log_to_file_row.set_active(self.settings_manager.get("log_to_file", False))
-        log_to_file_row.connect(
-            "notify::active",
-            lambda r, _: self._on_setting_changed("log_to_file", r.get_active()),
+        log_to_file_row = self._create_switch_row(
+            _("Save Logs to File"),
+            _("Save application logs to the configuration directory"),
+            "log_to_file",
+            default_value=False,
         )
         log_group.add(log_to_file_row)
 

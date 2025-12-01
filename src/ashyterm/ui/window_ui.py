@@ -1,5 +1,6 @@
 # ashyterm/ui/window_ui.py
 
+from pathlib import Path
 from typing import TYPE_CHECKING, Optional
 
 import gi
@@ -14,6 +15,9 @@ from .menus import MainApplicationMenu
 
 if TYPE_CHECKING:
     from ..window import CommTerminalWindow
+
+# Path to CSS styles directory
+_STYLES_DIR = Path(__file__).parent.parent / "data" / "styles"
 
 
 class WindowUIBuilder:
@@ -89,145 +93,15 @@ class WindowUIBuilder:
 
     def _setup_styles(self) -> None:
         """Applies application-wide CSS for various custom widgets."""
-        css = """
-        .themeselector { margin: 9px; }
-        .themeselector checkbutton {
-            padding: 1px; min-height: 44px; min-width: 44px;
-            background-clip: content-box; border-radius: 9999px;
-            box-shadow: inset 0 0 0 1px @borders;
-        }
-        .themeselector checkbutton:checked { box-shadow: inset 0 0 0 2px @accent_bg_color; }
-        .themeselector checkbutton.follow { background-image: linear-gradient(to bottom right, #fff 49.99%, #202020 50.01%); }
-        .themeselector checkbutton.light { background-color: #fff; }
-        .themeselector checkbutton.dark { background-color: #202020; }
-        .themeselector checkbutton.terminal { background: linear-gradient(45deg, #000 50%, #fff 50%); }
-        .themeselector checkbutton radio {
-            -gtk-icon-source: none; border: none; background: none; box-shadow: none;
-            min-width: 12px; min-height: 12px; transform: translate(27px, 14px); padding: 2px;
-        }
-        .themeselector checkbutton radio:checked {
-            -gtk-icon-source: -gtk-icontheme("object-select-symbolic");
-            background-color: @accent_bg_color; color: @accent_fg_color;
-        }
-        headerbar.main-header-bar { min-height: 0; padding: 0; border: none; box-shadow: none; }
-        .drop-target { background-color: alpha(@theme_selected_bg_color, 0.5); }
-        .sessions-tree .card {
-            margin: 2px 4px;
-            padding: 6px;
-            border-radius: 6px;
-        }
-        .sessions-tree .card:hover {
-            background-color: @theme_bg_color;
-        }
-        .sessions-tree row:selected .card {
-            background-color: @accent_bg_color;
-            color: @accent_fg_color;
-        }
-        paned separator { background: var(--view-bg-color); }
-        popover.menu separator { background-color: color-mix(in srgb, var(--headerbar-border-color) var(--border-opacity), transparent); }
-        #scrolled_tab_bar scrollbar trough { margin: 0px; }
-        #scrolled_tab_bar button { min-width:24px; margin-right: 8px; margin: 0px; padding-top: 0px; padding-bottom: 0px; }
-        .main-header-bar box { margin: 0px; padding-top: 0px; padding-bottom: 0px; }
-        .custom-tab-button { padding-left: 12px; padding-right: 0px; border-radius: 10px; padding-top: 2px; padding-bottom: 2px; }
-        .custom-tab-button.active { background: color-mix(in srgb, currentColor 12%, transparent); }
-        .custom-tab-button:hover { background: color-mix(in srgb, currentColor 7%, transparent); }
-        .sidebar-toolbar-view button {
-            min-width: 28px;
-            min-height: 28px;
-            padding: 4px;
-            margin: 0;
-            border-radius: 4px;
-            transition: all 200ms ease;
-            border: none;
-            background: transparent;
-        }
-        .sidebar-toolbar-view button:hover {
-            background-color: alpha(@accent_bg_color, 0.1);
-            transform: scale(1.05);
-        }
-        .sidebar-toolbar-view button:active {
-            background-color: alpha(@accent_bg_color, 0.2);
-            transform: scale(0.95);
-        }
-        .sidebar-toolbar-view button.destructive:hover {
-            background-color: alpha(@destructive_color, 0.1);
-        }
-        .sidebar-search {
-            padding: 8px 12px;
-        }
-        .sidebar-session-tree row:hover {
-            background-color: alpha(@theme_selected_bg_color, 0.4);
-            transition: background-color 150ms ease;
-        }
-        .sidebar-session-tree row:selected {
-            background-color: @accent_bg_color;
-            color: @accent_fg_color;
-            font-weight: 500;
-        }
-        .sidebar-session-tree row:selected:hover {
-            background-color: alpha(@accent_bg_color, 0.9);
-        }
-        .sidebar-session-tree row:active {
-            background-color: alpha(@accent_bg_color, 0.6);
-            transition: background-color 100ms ease;
-        }
-        /* Enhanced button feedback */
-        .sidebar-toolbar-view button {
-            transition: all 200ms cubic-bezier(0.4, 0, 0.2, 1);
-        }
-        .sidebar-toolbar-view button:hover {
-            background-color: alpha(@accent_bg_color, 0.12);
-            transform: scale(1.02);
-            box-shadow: 0 1px 3px alpha(@accent_bg_color, 0.2);
-        }
-        .sidebar-toolbar-view button:active {
-            background-color: alpha(@accent_bg_color, 0.18);
-            transform: scale(0.98);
-            transition-duration: 100ms;
-        }
-        .sidebar-toolbar-view button.destructive:hover {
-            background-color: alpha(@destructive_color, 0.12);
-            box-shadow: 0 1px 3px alpha(@destructive_color, 0.2);
-        }
-        .sidebar-toolbar-view button.destructive:active {
-            background-color: alpha(@destructive_color, 0.18);
-        }
-        /* Responsive design improvements */
-            .sidebar-toolbar-view {
-                min-width: 350px;
-            }
-        /* Enhanced toolbar view styling */
-        .sidebar-toolbar-view {
-            background: @sidebar_bg_color;
-            border-right: 1px solid var(--border-color, @borders);
-            border-left: 1px solid var(--border-color, @borders);
-        }
-
-        .sidebar-session-tree row {
-            padding: 4px 12px;
-            margin: 1px 8px;
-            border-radius: 4px;
-            transition: background-color 150ms ease;
-        }
-        .sidebar-session-tree row:hover {
-            background-color: alpha(@theme_selected_bg_color, 0.3);
-        }
-        .sidebar-session-tree row:selected {
-            background-color: @accent_bg_color;
-            color: @accent_fg_color;
-        }
-        .sidebar-session-tree row:selected:hover {
-            background-color: alpha(@accent_bg_color, 0.5);
-        }
-        /* Sidebar toggle button styling - hover only, no active background */
-        .sidebar-toggle-button:active,
-        .sidebar-toggle-button:checked {
-            background: transparent;
-        }
-        .flipped-icon { transform: scaleX(-1); }
-        """
         provider = Gtk.CssProvider()
-        provider.load_from_data(css.encode("utf-8"))
+        css_file = _STYLES_DIR / "window.css"
+
+        if css_file.exists():
+            provider.load_from_path(str(css_file))
+            self.logger.debug(f"Loaded CSS styles from {css_file}")
+        else:
+            self.logger.warning(f"CSS file not found: {css_file}")
+
         Gtk.StyleContext.add_provider_for_display(
             Gdk.Display.get_default(), provider, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION
         )
@@ -358,11 +232,17 @@ class WindowUIBuilder:
         self.cleanup_popover = Gtk.Popover()
         self.cleanup_button.set_popover(self.cleanup_popover)
 
+        # Hide tooltip when cleanup popover is shown
+        self.cleanup_popover.connect("show", lambda p: self.tooltip_helper.hide())
+
         self.menu_button = Gtk.MenuButton(icon_name="open-menu-symbolic")
         popover, self.font_sizer_widget = MainApplicationMenu.create_main_popover(
             self.window
         )
         self.menu_button.set_popover(popover)
+
+        # Hide tooltip when menu popover is shown
+        popover.connect("show", lambda p: self.tooltip_helper.hide())
 
         self.new_tab_button = Gtk.Button.new_from_icon_name("tab-new-symbolic")
         self.new_tab_button.connect("clicked", self.window._on_new_tab_clicked)
