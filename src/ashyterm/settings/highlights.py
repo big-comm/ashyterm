@@ -730,51 +730,78 @@ class HighlightManager(GObject.GObject):
     def resolve_color_to_ansi(self, color_name: str) -> str:
         """
         Resolve a logical color name to ANSI escape sequence.
-        
+
         Uses standard ANSI color indices (30-37, 90-97) so the terminal
         automatically applies the active color scheme's palette.
-        
-        Supports modifiers: "bold red", "underline green", etc.
-        
+
+        Supports:
+        - Modifiers: "bold red", "underline green", etc.
+        - Background colors: "on_red", "on_bright_blue", etc.
+        - Combined: "bold red on_yellow" (bold red text on yellow background)
+
         Args:
-            color_name: Logical name like "red", "bold green", "bright_cyan"
-        
+            color_name: Logical name like "red", "bold green on_blue", "bright_cyan"
+
         Returns:
-            ANSI escape sequence like "\033[1;31m" (bold red)
+            ANSI escape sequence like "\033[1;31;42m" (bold red on green)
         """
         if not color_name:
             return ""
-        
-        # Parse modifiers and base color
+
+        # Parse modifiers, foreground color, and background color
         parts = color_name.lower().split()
         modifiers = []
         base_color = "white"
+        bg_color = None
         
         for part in parts:
             if part in ANSI_MODIFIERS:
                 modifiers.append(ANSI_MODIFIERS[part])
+            elif part.startswith("on_"):
+                # Background color (e.g., "on_red", "on_bright_blue")
+                bg_color = part[3:]  # Strip "on_" prefix
             else:
                 base_color = part
-        
-        # Map color name to ANSI color code
+
+        # Map foreground color name to ANSI color code
         # Standard colors: 30-37, Bright colors: 90-97
+        fg_code = None
         if base_color in ANSI_COLOR_MAP:
             color_index = ANSI_COLOR_MAP[base_color]
             if color_index < 8:
                 # Standard colors: 30-37
-                color_code = str(30 + color_index)
+                fg_code = str(30 + color_index)
             else:
                 # Bright colors: 90-97
-                color_code = str(90 + (color_index - 8))
-        elif base_color in ("foreground", "background", "cursor"):
-            # Theme colors - use default white
-            color_code = "37"
-        else:
-            # Unknown color - use default
-            color_code = "37"
-        
-        # Build ANSI sequence
-        ansi_parts = modifiers + [color_code]
+                fg_code = str(90 + (color_index - 8))
+        elif base_color not in (
+            "foreground",
+            "background",
+            "cursor",
+            "none",
+            "default",
+        ):
+            # Unknown color - use default white
+            fg_code = "37"
+
+        # Map background color name to ANSI color code
+        # Standard colors: 40-47, Bright colors: 100-107
+        bg_code = None
+        if bg_color and bg_color in ANSI_COLOR_MAP:
+            color_index = ANSI_COLOR_MAP[bg_color]
+            if color_index < 8:
+                # Standard background colors: 40-47
+                bg_code = str(40 + color_index)
+            else:
+                # Bright background colors: 100-107
+                bg_code = str(100 + (color_index - 8))
+
+        # Build ANSI sequence: modifiers + foreground + background
+        ansi_parts = modifiers.copy()
+        if fg_code:
+            ansi_parts.append(fg_code)
+        if bg_code:
+            ansi_parts.append(bg_code)
         
         if ansi_parts:
             return f"\033[{';'.join(ansi_parts)}m"

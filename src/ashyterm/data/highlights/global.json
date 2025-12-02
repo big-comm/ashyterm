@@ -6,7 +6,7 @@
       "name": "Critical/Error",
       "pattern": "\\b(error|fail(?:ure|ed)?|fatal|critical|exception|crash)\\b",
       "colors": [
-        "red"
+        "bold red"
       ],
       "enabled": true,
       "description": "Highlights error messages and critical failures"
@@ -15,7 +15,7 @@
       "name": "Warning",
       "pattern": "\\b(warn(?:ing)?|deprecated|alert|caution)\\b",
       "colors": [
-        "yellow"
+        "bold yellow"
       ],
       "enabled": true,
       "description": "Highlights warnings and deprecation notices"
@@ -24,7 +24,7 @@
       "name": "Success",
       "pattern": "\\b(success|ok|passed|complete(?:d)?|done)\\b",
       "colors": [
-        "green"
+        "bold green"
       ],
       "enabled": true,
       "description": "Highlights success messages and completion notices"
@@ -51,7 +51,7 @@
       "name": "IPv4 Address",
       "pattern": "\\b\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\b",
       "colors": [
-        "magenta"
+        "bold yellow"
       ],
       "enabled": true,
       "description": "Highlights IPv4 addresses"
@@ -60,16 +60,16 @@
       "name": "IPv6 and MAC Address",
       "pattern": "\\b[a-f0-9]{1,4}(?::[a-f0-9]{1,4}){2,}:[a-f0-9:]{1,}\\b|\\b.*::.*",
       "colors": [
-        "cyan"
+        "yellow"
       ],
       "enabled": true,
-      "description": "Highlights IPv6 addresses"
+      "description": "Highlights IPv6 and MAC addresses"
     },
     {
       "name": "URL (HTTP/S)",
       "pattern": "https?://[^\\s]+",
       "colors": [
-        "magenta"
+        "underline cyan"
       ],
       "enabled": true,
       "description": "Highlights HTTP and HTTPS URLs"

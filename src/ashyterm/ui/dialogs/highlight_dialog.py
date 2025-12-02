@@ -26,7 +26,8 @@ from ...settings.manager import get_settings_manager
 from ...utils.logger import get_logger
 from ...utils.translation_utils import _
 
-# Available logical color names for selection
+# Available logical color names for selection (base colors only)
+# Text effects (bold, italic, underline, etc.) are now separate toggles
 LOGICAL_COLOR_OPTIONS = [
     # Standard ANSI
     ("black", _("Black")),
@@ -48,106 +49,293 @@ LOGICAL_COLOR_OPTIONS = [
     ("bright_white", _("Bright White")),
     # Theme colors
     ("foreground", _("Foreground")),
-    # Modifiers (bold variants)
-    ("bold red", _("Bold Red")),
-    ("bold green", _("Bold Green")),
-    ("bold yellow", _("Bold Yellow")),
-    ("bold blue", _("Bold Blue")),
-    ("bold cyan", _("Bold Cyan")),
-    ("bold white", _("Bold White")),
+]
+
+# Available text effects (ANSI SGR codes) as toggleable options
+TEXT_EFFECT_OPTIONS = [
+    ("bold", _("Bold"), "format-text-bold-symbolic"),
+    ("italic", _("Italic"), "format-text-italic-symbolic"),
+    ("underline", _("Underline"), "format-text-underline-symbolic"),
+    ("strikethrough", _("Strikethrough"), "format-text-strikethrough-symbolic"),
+    ("dim", _("Dim/Faint"), "weather-clear-night-symbolic"),
+    ("blink", _("Blink"), "alarm-symbolic"),
+]
+
+# Available background color options (with on_ prefix for ANSI mapping)
+BACKGROUND_COLOR_OPTIONS = [
+    ("", _("Default")),
+    ("on_black", _("Black")),
+    ("on_red", _("Red")),
+    ("on_green", _("Green")),
+    ("on_yellow", _("Yellow")),
+    ("on_blue", _("Blue")),
+    ("on_magenta", _("Magenta")),
+    ("on_cyan", _("Cyan")),
+    ("on_white", _("White")),
+    ("on_bright_black", _("Bright Black")),
+    ("on_bright_red", _("Bright Red")),
+    ("on_bright_green", _("Bright Green")),
+    ("on_bright_yellow", _("Bright Yellow")),
+    ("on_bright_blue", _("Bright Blue")),
+    ("on_bright_magenta", _("Bright Magenta")),
+    ("on_bright_cyan", _("Bright Cyan")),
+    ("on_bright_white", _("Bright White")),
 ]
 
 
 class ColorEntryRow(Adw.ActionRow):
     """
     A row for editing a single color in the colors list.
-    
-    Provides a dropdown to select a logical color name.
+
+    Provides:
+    - Dropdown to select base foreground color
+    - Toggle buttons for text effects (bold, italic, underline, etc.)
+    - Dropdown to select background color (optional)
+    - Delete button to remove the row
+
+    The color string is composed from base color + active effects + background.
+    Example: "bold italic red on_blue"
     """
-    
+
     __gsignals__ = {
         "color-changed": (GObject.SignalFlags.RUN_FIRST, None, ()),
         "remove-requested": (GObject.SignalFlags.RUN_FIRST, None, ()),
     }
-    
+
     def __init__(self, group_index: int, color_name: str = "white"):
         """
         Initialize the color entry row.
-        
+
         Args:
             group_index: The capture group index (1-based for display)
-            color_name: Initial logical color name
+            color_name: Initial logical color name (may include modifiers and bg color)
         """
         super().__init__()
         self._group_index = group_index
-        self._color_name = color_name or "white"
+
+        # Parse initial color string into components
+        self._fg_color, self._bg_color, self._effects = self._parse_color_string(
+            color_name or "white"
+        )
         
         self.set_title(_("Group {}").format(group_index))
-        self.set_subtitle(_("Color for capture group {}").format(group_index))
-        
+        # Subtitle removed to save horizontal space
+
+        self._effect_toggles: dict[str, Gtk.ToggleButton] = {}
         self._setup_ui()
         self._load_color()
-    
+
+    def _parse_color_string(self, color_string: str) -> tuple:
+        """
+        Parse a color string into foreground color, background color, and effects.
+
+        Args:
+            color_string: e.g., "bold italic red on_blue", "green", "underline white"
+
+        Returns:
+            Tuple of (foreground_color, background_color, set of effects)
+        """
+        parts = color_string.lower().split()
+        fg_color = "white"
+        bg_color = ""
+        effects = set()
+
+        # Known effects from TEXT_EFFECT_OPTIONS
+        known_effects = {opt[0] for opt in TEXT_EFFECT_OPTIONS}
+
+        for part in parts:
+            if part.startswith("on_"):
+                bg_color = part
+            elif part in known_effects:
+                effects.add(part)
+            else:
+                # It's the base color (last non-effect, non-bg part wins)
+                fg_color = part
+
+        return fg_color, bg_color, effects
+
     def _setup_ui(self) -> None:
-        """Setup the row UI components."""
-        # Color dropdown
-        self._color_dropdown = Gtk.DropDown()
-        self._color_model = Gtk.StringList()
-        
-        # Add color options
+        """Setup the row UI components with horizontal toolbar layout."""
+        # Main horizontal container for all controls
+        main_box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=8)
+        main_box.set_valign(Gtk.Align.CENTER)
+
+        # === Color Preview Box (prefix) ===
+        self._color_box = Gtk.Box()
+        self._color_box.set_size_request(28, 28)
+        self._color_box.set_valign(Gtk.Align.CENTER)
+        self._color_box.add_css_class("circular")
+        self.add_prefix(self._color_box)
+
+        # === Foreground Color Dropdown ===
+        fg_box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=4)
+        fg_label = Gtk.Label(label=_("Color:"))
+        fg_label.add_css_class("dim-label")
+        fg_box.append(fg_label)
+
+        self._fg_dropdown = Gtk.DropDown()
+        self._fg_model = Gtk.StringList()
         for color_id, color_label in LOGICAL_COLOR_OPTIONS:
-            self._color_model.append(color_label)
-        
-        self._color_dropdown.set_model(self._color_model)
-        self._color_dropdown.set_valign(Gtk.Align.CENTER)
-        self._color_dropdown.connect("notify::selected", self._on_color_selected)
-        self.add_suffix(self._color_dropdown)
-        
-        # Remove button
+            self._fg_model.append(color_label)
+        self._fg_dropdown.set_model(self._fg_model)
+        self._fg_dropdown.connect("notify::selected", self._on_fg_color_selected)
+        fg_box.append(self._fg_dropdown)
+        main_box.append(fg_box)
+
+        # === Vertical Separator ===
+        sep1 = Gtk.Separator(orientation=Gtk.Orientation.VERTICAL)
+        sep1.set_margin_start(4)
+        sep1.set_margin_end(4)
+        main_box.append(sep1)
+
+        # === Effect Toggle Buttons (linked box) ===
+        effects_box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=0)
+        effects_box.add_css_class("linked")
+
+        for effect_id, effect_label, icon_name in TEXT_EFFECT_OPTIONS:
+            toggle = Gtk.ToggleButton()
+            toggle.set_icon_name(icon_name)
+            toggle.set_tooltip_text(effect_label)
+            toggle.set_valign(Gtk.Align.CENTER)
+            toggle.connect("toggled", self._on_effect_toggled, effect_id)
+            effects_box.append(toggle)
+            self._effect_toggles[effect_id] = toggle
+
+        main_box.append(effects_box)
+
+        # === Vertical Separator ===
+        sep2 = Gtk.Separator(orientation=Gtk.Orientation.VERTICAL)
+        sep2.set_margin_start(4)
+        sep2.set_margin_end(4)
+        main_box.append(sep2)
+
+        # === Background Color Dropdown ===
+        bg_box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=4)
+        bg_label = Gtk.Label(label=_("Bg:"))
+        bg_label.add_css_class("dim-label")
+        bg_box.append(bg_label)
+
+        self._bg_dropdown = Gtk.DropDown()
+        self._bg_model = Gtk.StringList()
+        for color_id, color_label in BACKGROUND_COLOR_OPTIONS:
+            self._bg_model.append(color_label)
+        self._bg_dropdown.set_model(self._bg_model)
+        self._bg_dropdown.connect("notify::selected", self._on_bg_color_selected)
+        bg_box.append(self._bg_dropdown)
+        main_box.append(bg_box)
+
+        self.add_suffix(main_box)
+
+        # === Remove Button ===
         remove_btn = Gtk.Button(icon_name="user-trash-symbolic")
         remove_btn.set_valign(Gtk.Align.CENTER)
         remove_btn.add_css_class("flat")
         remove_btn.set_tooltip_text(_("Remove"))
         remove_btn.connect("clicked", lambda b: self.emit("remove-requested"))
         self.add_suffix(remove_btn)
-        
-        # Color preview box
-        self._color_box = Gtk.Box()
-        self._color_box.set_size_request(24, 24)
-        self._color_box.set_valign(Gtk.Align.CENTER)
-        self._color_box.add_css_class("circular")
-        self.add_prefix(self._color_box)
-    
+
     def _load_color(self) -> None:
-        """Load the initial color into the dropdown."""
-        # Find the color in options
-        color_lower = self._color_name.lower()
-        for idx, (color_id, _) in enumerate(LOGICAL_COLOR_OPTIONS):
-            if color_id == color_lower:
-                self._color_dropdown.set_selected(idx)
+        """Load the initial colors and effects into the UI controls."""
+        # Find and select foreground color
+        fg_lower = self._fg_color.lower()
+        for idx, (color_id, color_label) in enumerate(LOGICAL_COLOR_OPTIONS):
+            if color_id == fg_lower:
+                self._fg_dropdown.set_selected(idx)
                 break
-        
+        else:
+            # Default to white if not found
+            for idx, (color_id, _label) in enumerate(LOGICAL_COLOR_OPTIONS):
+                if color_id == "white":
+                    self._fg_dropdown.set_selected(idx)
+                    break
+
+        # Find and select background color
+        bg_lower = self._bg_color.lower()
+        for idx, (color_id, color_label) in enumerate(BACKGROUND_COLOR_OPTIONS):
+            if color_id == bg_lower:
+                self._bg_dropdown.set_selected(idx)
+                break
+
+        # Set effect toggles
+        for effect_id, toggle in self._effect_toggles.items():
+            toggle.set_active(effect_id in self._effects)
+
         self._update_color_preview()
-    
-    def _on_color_selected(self, dropdown: Gtk.DropDown, _pspec) -> None:
-        """Handle color selection change."""
+
+    def _on_fg_color_selected(self, dropdown: Gtk.DropDown, _pspec) -> None:
+        """Handle foreground color selection change."""
         idx = dropdown.get_selected()
         if idx != Gtk.INVALID_LIST_POSITION and idx < len(LOGICAL_COLOR_OPTIONS):
-            self._color_name = LOGICAL_COLOR_OPTIONS[idx][0]
+            self._fg_color = LOGICAL_COLOR_OPTIONS[idx][0]
             self._update_color_preview()
             self.emit("color-changed")
+
+    def _on_bg_color_selected(self, dropdown: Gtk.DropDown, _pspec) -> None:
+        """Handle background color selection change."""
+        idx = dropdown.get_selected()
+        if idx != Gtk.INVALID_LIST_POSITION and idx < len(BACKGROUND_COLOR_OPTIONS):
+            self._bg_color = BACKGROUND_COLOR_OPTIONS[idx][0]
+            self._update_color_preview()
+            self.emit("color-changed")
+
+    def _on_effect_toggled(self, toggle: Gtk.ToggleButton, effect_id: str) -> None:
+        """Handle text effect toggle."""
+        if toggle.get_active():
+            self._effects.add(effect_id)
+        else:
+            self._effects.discard(effect_id)
+        self._update_color_preview()
+        self.emit("color-changed")
     
     def _update_color_preview(self) -> None:
-        """Update the color preview box."""
+        """Update the color preview box showing foreground, background, and effects.
+
+        The preview shows:
+        - Foreground color as the circle fill (center)
+        - Background color as the circle border (around)
+        """
         manager = get_highlight_manager()
-        hex_color = manager.resolve_color(self._color_name)
+
+        # Get foreground hex color for display (shown as fill)
+        fg_hex = manager.resolve_color(self._fg_color)
+
+        # Get background hex color if set (shown as border)
+        bg_hex = None
+        if self._bg_color:
+            # Strip "on_" prefix to resolve color
+            bg_color_name = (
+                self._bg_color[3:]
+                if self._bg_color.startswith("on_")
+                else self._bg_color
+            )
+            bg_hex = manager.resolve_color(bg_color_name)
+
+        # Build CSS for preview:
+        # - Fill (center) = foreground color
+        # - Border (around) = background color (or transparent outline if no bg)
+        fill_style = f"background-color: {fg_hex};"
+
+        if bg_hex:
+            border_style_value = f"4px solid {bg_hex}"
+        else:
+            # Subtle border when no background is set
+            border_style_value = "2px solid alpha(currentColor, 0.3)"
+
+        # Adjust border based on text effects for visual feedback
+        border_width = 5 if "bold" in self._effects else 4 if bg_hex else 2
+        line_style = "dashed" if "italic" in self._effects else "solid"
+
+        if bg_hex:
+            border_style_value = f"{border_width}px {line_style} {bg_hex}"
+        else:
+            border_style_value = f"2px {line_style} alpha(currentColor, 0.3)"
         
         css_provider = Gtk.CssProvider()
         css = f"""
         .color-preview {{
-            background-color: {hex_color};
+            {fill_style}
             border-radius: 50%;
-            border: 1px solid alpha(currentColor, 0.3);
+            border: {border_style_value};
         }}
         """
         css_provider.load_from_data(css.encode("utf-8"))
@@ -162,8 +350,27 @@ class ColorEntryRow(Adw.ActionRow):
     
     @property
     def color_name(self) -> str:
-        """Get the selected color name."""
-        return self._color_name
+        """
+        Get the combined color name (effects + foreground + optional background).
+
+        Returns a string like "bold italic red on_blue" that can be passed
+        to resolve_color_to_ansi() for rendering.
+        """
+        parts = []
+
+        # Add active effects first (in consistent order)
+        for effect_id, _label, _icon in TEXT_EFFECT_OPTIONS:
+            if effect_id in self._effects:
+                parts.append(effect_id)
+
+        # Add foreground color
+        parts.append(self._fg_color)
+
+        # Add background color if set
+        if self._bg_color:
+            parts.append(self._bg_color)
+
+        return " ".join(parts)
     
     @property
     def group_index(self) -> int:
@@ -171,18 +378,26 @@ class ColorEntryRow(Adw.ActionRow):
         return self._group_index
 
 
-class RuleEditDialog(Adw.Dialog):
+class RuleEditDialog(Adw.Window):
     """
     Dialog for creating or editing a highlight rule.
-    
+
     Provides form fields for rule name, regex pattern, and multi-group
     color selection with theme-aware logical color names.
+
+    Uses Adw.Window for full resize/maximize support with size persistence.
     """
     
     __gsignals__ = {
         "rule-saved": (GObject.SignalFlags.RUN_FIRST, None, (object,)),
     }
-    
+
+    # Settings keys for window size persistence
+    _SIZE_KEY_WIDTH = "rule_edit_dialog_width"
+    _SIZE_KEY_HEIGHT = "rule_edit_dialog_height"
+    _DEFAULT_WIDTH = 850
+    _DEFAULT_HEIGHT = 600
+
     def __init__(
         self,
         parent: Gtk.Widget,
@@ -197,6 +412,11 @@ class RuleEditDialog(Adw.Dialog):
             rule: Existing rule to edit, or None to create new.
             is_new: Whether this is a new rule or editing existing.
         """
+        # Load saved dimensions
+        settings = get_settings_manager()
+        saved_width = settings.get(self._SIZE_KEY_WIDTH, self._DEFAULT_WIDTH)
+        saved_height = settings.get(self._SIZE_KEY_HEIGHT, self._DEFAULT_HEIGHT)
+
         super().__init__()
         self.logger = get_logger("ashyterm.ui.dialogs.rule_edit")
         self._parent = parent
@@ -206,23 +426,61 @@ class RuleEditDialog(Adw.Dialog):
         
         # Color entry rows
         self._color_rows: list[ColorEntryRow] = []
-        
+
+        # Window configuration
         self.set_title(_("New Rule") if is_new else _("Edit Rule"))
-        self.set_content_width(600)
-        self.set_content_height(700)
+        self.set_default_size(saved_width, saved_height)
+        self.set_modal(True)
+
+        # Get the actual parent window
+        if isinstance(parent, Gtk.Window):
+            self.set_transient_for(parent)
+        elif hasattr(parent, "get_root"):
+            root = parent.get_root()
+            if isinstance(root, Gtk.Window):
+                self.set_transient_for(root)
+
+        # Connect close event for size persistence
+        self.connect("close-request", self._on_close_request)
         
         self._setup_ui()
         self._load_rule_data()
-    
+
+    def _on_close_request(self, window) -> bool:
+        """Save window size when closing."""
+        settings = get_settings_manager()
+        width = self.get_width()
+        height = self.get_height()
+
+        if (
+            settings.get(self._SIZE_KEY_WIDTH, 0) != width
+            or settings.get(self._SIZE_KEY_HEIGHT, 0) != height
+        ):
+            settings.set(self._SIZE_KEY_WIDTH, width)
+            settings.set(self._SIZE_KEY_HEIGHT, height)
+
+        return False  # Allow default close behavior
+
+    def present(self, parent=None):
+        """Present the dialog, optionally setting a parent window."""
+        if parent is not None:
+            if isinstance(parent, Gtk.Window):
+                self.set_transient_for(parent)
+            elif hasattr(parent, "get_root"):
+                root = parent.get_root()
+                if isinstance(root, Gtk.Window):
+                    self.set_transient_for(root)
+        super().present()
+
     def _setup_ui(self) -> None:
         """Setup the dialog UI components."""
         # Main container with toolbar view
         toolbar_view = Adw.ToolbarView()
-        self.set_child(toolbar_view)
-        
-        # Header bar
+        self.set_content(toolbar_view)
+
+        # Header bar with window controls (minimize, maximize, close)
         header = Adw.HeaderBar()
-        header.set_show_end_title_buttons(False)
+        header.set_show_end_title_buttons(True)  # Show close/maximize buttons
         header.set_show_start_title_buttons(False)
         
         # Cancel button
@@ -289,8 +547,11 @@ class RuleEditDialog(Adw.Dialog):
         
         # Colors group
         self._colors_group = Adw.PreferencesGroup(
-            title=_("Colors"),
-            description=_("Assign colors to capture groups. First color applies to entire match if no groups."),
+            title=_("Colors & Effects"),
+            description=_(
+                "Select a base color and toggle text effects (bold, italic, underline, etc.) for each capture group. "
+                "First color applies to entire match if no groups."
+            ),
         )
         content_box.append(self._colors_group)
         
@@ -445,8 +706,8 @@ class RuleEditDialog(Adw.Dialog):
         """Show regex reference dialog."""
         dialog = Adw.Dialog()
         dialog.set_title(_("Regex Reference"))
-        dialog.set_content_width(500)
-        dialog.set_content_height(500)
+        dialog.set_content_width(600)
+        dialog.set_content_height(600)
         
         toolbar_view = Adw.ToolbarView()
         dialog.set_child(toolbar_view)
@@ -556,18 +817,26 @@ class RuleEditDialog(Adw.Dialog):
         self.close()
 
 
-class ContextRulesDialog(Adw.Dialog):
+class ContextRulesDialog(Adw.Window):
     """
     Dialog for editing rules of a specific command context.
-    
+
     Opens when user clicks on a context row, providing a focused
     interface for managing context-specific highlighting rules.
+
+    Uses Adw.Window for full resize/maximize support with size persistence.
     """
     
     __gsignals__ = {
         "context-updated": (GObject.SignalFlags.RUN_FIRST, None, ()),
     }
-    
+
+    # Settings keys for window size persistence
+    _SIZE_KEY_WIDTH = "context_rules_dialog_width"
+    _SIZE_KEY_HEIGHT = "context_rules_dialog_height"
+    _DEFAULT_WIDTH = 850
+    _DEFAULT_HEIGHT = 600
+
     def __init__(self, parent: Gtk.Widget, context_name: str):
         """
         Initialize the context rules dialog.
@@ -576,27 +845,70 @@ class ContextRulesDialog(Adw.Dialog):
             parent: Parent widget for the dialog.
             context_name: Name of the context to edit.
         """
+        # Load saved dimensions
+        settings = get_settings_manager()
+        saved_width = settings.get(self._SIZE_KEY_WIDTH, self._DEFAULT_WIDTH)
+        saved_height = settings.get(self._SIZE_KEY_HEIGHT, self._DEFAULT_HEIGHT)
+
         super().__init__()
         self.logger = get_logger("ashyterm.ui.dialogs.context_rules")
         self._parent = parent
         self._context_name = context_name
         self._manager = get_highlight_manager()
         self._context_rule_rows: list[Adw.ActionRow] = []
-        
+
+        # Window configuration
         self.set_title(_("Context: {}").format(context_name))
-        self.set_content_width(700)
-        self.set_content_height(600)
+        self.set_default_size(saved_width, saved_height)
+        self.set_modal(True)
+
+        # Get the actual parent window
+        if isinstance(parent, Gtk.Window):
+            self.set_transient_for(parent)
+        elif hasattr(parent, "get_root"):
+            root = parent.get_root()
+            if isinstance(root, Gtk.Window):
+                self.set_transient_for(root)
+
+        # Connect close event for size persistence
+        self.connect("close-request", self._on_close_request)
         
         self._setup_ui()
         self._load_context_data()
-    
+
+    def _on_close_request(self, window) -> bool:
+        """Save window size when closing."""
+        settings = get_settings_manager()
+        width = self.get_width()
+        height = self.get_height()
+
+        if (
+            settings.get(self._SIZE_KEY_WIDTH, 0) != width
+            or settings.get(self._SIZE_KEY_HEIGHT, 0) != height
+        ):
+            settings.set(self._SIZE_KEY_WIDTH, width)
+            settings.set(self._SIZE_KEY_HEIGHT, height)
+
+        return False  # Allow default close behavior
+
+    def present(self, parent=None):
+        """Present the dialog, optionally setting a parent window."""
+        if parent is not None:
+            if isinstance(parent, Gtk.Window):
+                self.set_transient_for(parent)
+            elif hasattr(parent, "get_root"):
+                root = parent.get_root()
+                if isinstance(root, Gtk.Window):
+                    self.set_transient_for(root)
+        super().present()
+
     def _setup_ui(self) -> None:
         """Setup the dialog UI components."""
         # Main container with toolbar view
         toolbar_view = Adw.ToolbarView()
-        self.set_child(toolbar_view)
-        
-        # Header bar with standard close button
+        self.set_content(toolbar_view)
+
+        # Header bar with window controls (close, maximize)
         header = Adw.HeaderBar()
         header.set_show_end_title_buttons(True)
         header.set_show_start_title_buttons(False)
@@ -1070,16 +1382,24 @@ class ContextRulesDialog(Adw.Dialog):
 class HighlightDialog(Adw.PreferencesWindow):
     """
     Main dialog for managing syntax highlighting settings.
-    
+
     Provides controls for global activation settings, a list of
     customizable highlight rules, and context-aware highlighting
     with command-specific rule sets.
+
+    Window size is persisted between sessions.
     """
     
     __gsignals__ = {
         "settings-changed": (GObject.SignalFlags.RUN_FIRST, None, ()),
     }
-    
+
+    # Settings keys for window size persistence
+    _SIZE_KEY_WIDTH = "highlight_dialog_width"
+    _SIZE_KEY_HEIGHT = "highlight_dialog_height"
+    _DEFAULT_WIDTH = 900
+    _DEFAULT_HEIGHT = 700
+
     def __init__(self, parent_window: Gtk.Window):
         """
         Initialize the highlight dialog.
@@ -1087,13 +1407,18 @@ class HighlightDialog(Adw.PreferencesWindow):
         Args:
             parent_window: Parent window for the dialog.
         """
+        # Load saved dimensions
+        settings = get_settings_manager()
+        saved_width = settings.get(self._SIZE_KEY_WIDTH, self._DEFAULT_WIDTH)
+        saved_height = settings.get(self._SIZE_KEY_HEIGHT, self._DEFAULT_HEIGHT)
+
         super().__init__(
             title=_("Highlight Colors"),
             transient_for=parent_window,
             modal=False,
             hide_on_close=True,
-            default_width=800,
-            default_height=700,
+            default_width=saved_width,
+            default_height=saved_height,
             search_enabled=True,
         )
         self.logger = get_logger("ashyterm.ui.dialogs.highlight")
@@ -1102,12 +1427,35 @@ class HighlightDialog(Adw.PreferencesWindow):
         self._rule_rows: list[Adw.ExpanderRow] = []
         self._context_rule_rows: list[Adw.ExpanderRow] = []
         self._selected_context: str = ""
-        
+
+        # Connect to window state events for size persistence
+        self.connect("close-request", self._on_close_request)
+
         self._setup_ui()
         self._load_settings()
         
         self.logger.info("HighlightDialog initialized")
-    
+
+    def _on_close_request(self, window) -> bool:
+        """Save window size when closing."""
+        self._save_window_size()
+        return False  # Allow default close behavior
+
+    def _save_window_size(self) -> None:
+        """Save the current window size to settings."""
+        settings = get_settings_manager()
+        width = self.get_width()
+        height = self.get_height()
+
+        # Only save if different from current saved values
+        if (
+            settings.get(self._SIZE_KEY_WIDTH, 0) != width
+            or settings.get(self._SIZE_KEY_HEIGHT, 0) != height
+        ):
+            settings.set(self._SIZE_KEY_WIDTH, width)
+            settings.set(self._SIZE_KEY_HEIGHT, height)
+            self.logger.debug(f"Saved highlight dialog size: {width}x{height}")
+
     def _setup_ui(self) -> None:
         """Setup the dialog UI components."""
         # Create main page for Global Rules
