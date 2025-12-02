@@ -1,11 +1,11 @@
 # Ashy Terminal
 
 <p align="center">
-  <a href="https://github.com/big-comm/comm-ashyterm/releases"><img src="https://img.shields.io/badge/Version-1.1.0-blue.svg" alt="Version"/></a>
+  <a href="https://github.com/big-comm/ashyterm/releases"><img src="https://img.shields.io/badge/Version-1.9.0-blue.svg" alt="Version"/></a>
   <a href="https://bigcommunity.com">
   <img src="https://img.shields.io/badge/BigCommunity-Platform-blue" alt="BigCommunity Platform">
 </a>
-  <a href="https://github.com/big-comm/comm-ashyterm/blob/main/LICENSE"><img src="https://img.shields.io/badge/License-MIT-green.svg" alt="License"/></a>
+  <a href="https://github.com/big-comm/ashyterm/blob/main/LICENSE"><img src="https://img.shields.io/badge/License-MIT-green.svg" alt="License"/></a>
 </p>
 
 **Ashy Terminal** is a modern, feature-rich terminal emulator built with GTK4 and Adwaita, designed for developers and power users. Developed by the **BigCommunity** team, it offers advanced session management, a highly customizable interface, and robust security features, making it a powerful companion for any workflow on Manjaro-based distributions like BigLinux.
@@ -71,15 +71,15 @@ sudo pacman -S python python-gobject vte4 python-cryptography python-psutil
 If a package is available for your distribution, install it using your package manager. For example:
 
 ```bash
-sudo pacman -U comm-ashyterm-*-x86_64.pkg.tar.zst
+sudo pacman -U ashyterm-*-x86_64.pkg.tar.zst
 ```
 
 #### From Source
 
 1.  Clone the repository:
     ```bash
-    git clone https://github.com/big-comm/comm-ashyterm.git
-    cd comm-ashyterm
+    git clone https://github.com/big-comm/ashyterm.git
+    cd ashyterm
     ```
 
 2.  Run the application directly:
@@ -108,7 +108,7 @@ ashyterm
 Ashy Terminal supports several command-line arguments for convenience:
 
 ```
-Usage: comm-ashyterm [options] [directory]
+Usage: ashyterm [options] [directory]
 
 Options:
   -h, --help                 Show this help message and exit
@@ -170,7 +170,7 @@ Ashy Terminal stores all its configuration files in the standard XDG config dire
 │       ├── platform.py
 │       └── ...
 └── data/
-    ├── comm-ashyterm.desktop # Desktop entry
+    ├── ashyterm.desktop # Desktop entry
     └── icons/                # Application icons
 ```
 

@@ -58,7 +58,7 @@ def name(self, value: str):
 sudo pacman -S python python-gobject vte4 python-cryptography python-psutil
 
 # Run from source
-cd /path/to/comm-ashyterm/usr/share/ashyterm
+cd /path/to/ashyterm/usr/share/ashyterm
 python -m ashyterm.main
 ```
 
@@ -68,7 +68,7 @@ python -m ashyterm.main
 makepkg -si
 
 # Install built package
-sudo pacman -U comm-ashyterm-*-x86_64.pkg.tar.zst
+sudo pacman -U ashyterm-*-x86_64.pkg.tar.zst
 ```
 
 ### Testing Commands

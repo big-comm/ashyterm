@@ -36,12 +36,12 @@ class AppConstants:
 
     APP_ID = "org.communitybig.ashyterm"
     APP_TITLE = "Ashy Terminal"
-    APP_VERSION = "1.8.1"
+    APP_VERSION = "1.9.1"
     DEVELOPER_NAME = "BigCommunity"
     DEVELOPER_TEAM = ["BigCommunity Team"]
     COPYRIGHT = "© 2025 BigCommunity"
     WEBSITE = "https://communitybig.org/"
-    ISSUE_URL = "https://github.com/big-comm/comm-ashyterm/issues"
+    ISSUE_URL = "https://github.com/big-comm/ashyterm/issues"
 
 
 class ConfigPaths:
