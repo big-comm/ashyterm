@@ -1035,6 +1035,14 @@ class TabManager:
             paned.set_position(target_pos)
             fm.set_visibility(True, source="filemanager")
 
+            # Connect handler to save file manager height on resize (if not already connected)
+            if not hasattr(paned, "_fm_position_handler_id"):
+                paned._fm_position_handler_id = paned.connect(
+                    "notify::position",
+                    self._on_file_manager_paned_position_changed,
+                    page,
+                )
+
         elif fm:
             page._fm_paned_pos = paned.get_position()
             # Save file manager height to settings for new tabs/windows
@@ -1053,6 +1061,28 @@ class TabManager:
             )
             fm.set_visibility(False, source="filemanager")
             paned.set_end_child(None)
+
+    def _on_file_manager_paned_position_changed(self, paned, param_spec, page):
+        """Save file manager height when the pane is resized by the user."""
+        # Only save if the file manager is actually visible
+        fm = self.file_managers.get(page)
+        if not fm or not fm.revealer.get_reveal_child():
+            return
+
+        window_height = self.terminal_manager.parent_window.get_height()
+        fm_height = window_height - paned.get_position()
+
+        # Enforce minimum height constraint
+        min_fm_height = 240
+        fm_height = max(min_fm_height, fm_height)
+
+        # Store in page for session consistency
+        page._fm_paned_pos = paned.get_position()
+
+        # Save to settings immediately so it persists across sessions
+        self.terminal_manager.settings_manager.set(
+            "file_manager_height", fm_height, save_immediately=True
+        )
 
     def _on_tab_close_button_clicked(self, button: Gtk.Button, tab_widget: Gtk.Box):
         # If in move mode, ignore close button clicks entirely

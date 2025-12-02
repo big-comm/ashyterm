@@ -217,8 +217,8 @@ class HighlightContext:
 @dataclass
 class HighlightConfig:
     """Configuration for the highlighting system."""
-    
-    enabled_for_local: bool = False
+
+    enabled_for_local: bool = True
     enabled_for_ssh: bool = True
     context_aware_enabled: bool = True
     global_rules: List[HighlightRule] = field(default_factory=list)
@@ -248,7 +248,7 @@ class HighlightConfig:
             for name, ctx_data in data.get("contexts", {}).items()
         }
         return cls(
-            enabled_for_local=data.get("enabled_for_local", False),
+            enabled_for_local=data.get("enabled_for_local", True),
             enabled_for_ssh=data.get("enabled_for_ssh", True),
             context_aware_enabled=data.get("context_aware_enabled", True),
             global_rules=rules,
@@ -357,7 +357,13 @@ class HighlightManager(GObject.GObject):
                     for rule in self._config.global_rules:
                         if rule.name in self._disabled_global_rules:
                             rule.enabled = False
-                
+
+                # 6b. Apply disabled states to contexts from user settings
+                if hasattr(self, "_disabled_contexts") and self._disabled_contexts:
+                    for ctx_name in self._disabled_contexts:
+                        if ctx_name in self._config.contexts:
+                            self._config.contexts[ctx_name].enabled = False
+
                 # 7. Build trigger map
                 self._build_trigger_map()
                 
@@ -373,17 +379,20 @@ class HighlightManager(GObject.GObject):
                 self._create_default_config()
     
     def _load_user_settings(self) -> None:
-        """Load user settings (enabled flags and disabled global rules)."""
+        """Load user settings (enabled flags, disabled global rules, and disabled contexts)."""
         self._disabled_global_rules: set = set()  # Store for applying after rules load
+        self._disabled_contexts: set = set()  # Store for applying after contexts load
         try:
             if self._user_config_file.exists():
                 with open(self._user_config_file, "r", encoding="utf-8") as f:
                     data = json.load(f)
-                self._config.enabled_for_local = data.get("enabled_for_local", False)
+                self._config.enabled_for_local = data.get("enabled_for_local", True)
                 self._config.enabled_for_ssh = data.get("enabled_for_ssh", True)
                 self._config.context_aware_enabled = data.get("context_aware_enabled", True)
                 # Store disabled global rule names for later application
                 self._disabled_global_rules = set(data.get("disabled_global_rules", []))
+                # Store disabled context names for later application
+                self._disabled_contexts = set(data.get("disabled_contexts", []))
         except Exception as e:
             self.logger.warning(f"Failed to load user settings: {e}")
     
@@ -454,7 +463,7 @@ class HighlightManager(GObject.GObject):
     def _create_default_config(self) -> None:
         """Create minimal default configuration if all loading fails."""
         self._config = HighlightConfig(
-            enabled_for_local=False,
+            enabled_for_local=True,
             enabled_for_ssh=True,
             context_aware_enabled=True,
             global_rules=[],
@@ -475,7 +484,7 @@ class HighlightManager(GObject.GObject):
                 log_error_with_context(e, "saving highlight config", "ashyterm.highlights")
     
     def _save_user_settings(self) -> None:
-        """Save user settings (enabled flags and disabled global rules)."""
+        """Save user settings (enabled flags, disabled global rules, and disabled contexts)."""
         try:
             self._user_config_file.parent.mkdir(parents=True, exist_ok=True)
             
@@ -484,12 +493,20 @@ class HighlightManager(GObject.GObject):
                 rule.name for rule in self._config.global_rules 
                 if not rule.enabled
             ]
-            
+
+            # Collect names of disabled contexts
+            disabled_contexts = [
+                ctx_name
+                for ctx_name, ctx in self._config.contexts.items()
+                if not ctx.enabled
+            ]
+
             settings = {
                 "enabled_for_local": self._config.enabled_for_local,
                 "enabled_for_ssh": self._config.enabled_for_ssh,
                 "context_aware_enabled": self._config.context_aware_enabled,
                 "disabled_global_rules": disabled_global_rules,
+                "disabled_contexts": disabled_contexts,
             }
             
             temp_file = self._user_config_file.with_suffix(".tmp")
@@ -534,7 +551,50 @@ class HighlightManager(GObject.GObject):
                 
             except Exception as e:
                 self.logger.error(f"Failed to save context {context.command_name}: {e}")
-    
+
+    def save_global_rules_to_user(self) -> None:
+        """
+        Save global rules to user highlights directory as global.json.
+
+        This creates a user override for the system global.json file,
+        persisting any modifications made to global rules.
+        """
+        with self._lock:
+            try:
+                self._user_highlights_dir.mkdir(parents=True, exist_ok=True)
+
+                file_path = self._user_highlights_dir / "global.json"
+                temp_file = file_path.with_suffix(".tmp")
+
+                # Create a context-like structure for global rules
+                global_data = {
+                    "name": "global",
+                    "triggers": [],
+                    "rules": [rule.to_dict() for rule in self._config.global_rules],
+                    "enabled": True,
+                    "description": "Global highlight rules applied to all terminal output",
+                    "use_global_rules": False,
+                }
+
+                with open(temp_file, "w", encoding="utf-8") as f:
+                    json.dump(global_data, f, indent=2, ensure_ascii=False)
+
+                temp_file.replace(file_path)
+
+                try:
+                    ensure_secure_file_permissions(str(file_path))
+                except Exception as e:
+                    self.logger.warning(f"Failed to set secure permissions: {e}")
+
+                self._pattern_dirty = True
+                self.logger.info(
+                    f"Saved {len(self._config.global_rules)} global rules to user directory"
+                )
+
+            except Exception as e:
+                self.logger.error(f"Failed to save global rules: {e}")
+                log_error_with_context(e, "saving global rules", "ashyterm.highlights")
+
     def delete_user_context(self, command_name: str) -> bool:
         """Delete a user context override (reverts to system version if exists)."""
         with self._lock:
@@ -1027,7 +1087,43 @@ class HighlightManager(GObject.GObject):
             self._load_layered_config()
             self._pattern_dirty = True
         self.emit("rules-changed")
-    
+
+    def reset_global_rules(self) -> None:
+        """Reset only global rules to system defaults (keeps context customizations)."""
+        with self._lock:
+            # Only delete global.json from user directory
+            if self._user_highlights_dir.exists():
+                global_file = self._user_highlights_dir / "global.json"
+                if global_file.exists():
+                    try:
+                        global_file.unlink()
+                        self.logger.info("Deleted user global.json")
+                    except Exception as e:
+                        self.logger.warning(f"Failed to delete global.json: {e}")
+
+            # Reload from system
+            self._load_layered_config()
+            self._pattern_dirty = True
+        self.emit("rules-changed")
+
+    def reset_all_contexts(self) -> None:
+        """Reset all context customizations to system defaults (keeps global rules)."""
+        with self._lock:
+            # Delete all user context files except global.json
+            if self._user_highlights_dir.exists():
+                for json_file in self._user_highlights_dir.glob("*.json"):
+                    if json_file.name != "global.json":
+                        try:
+                            json_file.unlink()
+                            self.logger.info(f"Deleted user context: {json_file.name}")
+                        except Exception as e:
+                            self.logger.warning(f"Failed to delete {json_file}: {e}")
+
+            # Reload from system
+            self._load_layered_config()
+            self._pattern_dirty = True
+        self.emit("rules-changed")
+
     def validate_pattern(self, pattern: str) -> Tuple[bool, str]:
         """Validate a regex pattern."""
         if not pattern:

@@ -8,7 +8,7 @@ import gi
 gi.require_version("Adw", "1")
 from gi.repository import Adw, Gdk, Gio, Gtk
 
-from ..utils.icons import icon_button, icon_image, set_image_from_icon
+from ..utils.icons import icon_button, icon_image
 from ..utils.logger import get_logger
 from ..utils.tooltip_helper import TooltipHelper
 from ..utils.translation_utils import _

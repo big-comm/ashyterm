@@ -990,7 +990,10 @@ class ContextRulesDialog(Adw.Dialog):
     def _on_rule_toggle(self, switch: Gtk.Switch, _pspec, index: int) -> None:
         """Handle rule enable/disable toggle."""
         self._manager.set_context_rule_enabled(self._context_name, index, switch.get_active())
-        self._manager.save_config()
+        # Save context to user directory to persist rule enabled state
+        context = self._manager.get_context(self._context_name)
+        if context:
+            self._manager.save_context_to_user(context)
         self.emit("context-updated")
     
     def _on_move_rule_up(self, button: Gtk.Button, index: int) -> None:
@@ -998,7 +1001,10 @@ class ContextRulesDialog(Adw.Dialog):
         if index <= 0:
             return
         self._manager.move_context_rule(self._context_name, index, index - 1)
-        self._manager.save_config()
+        # Save context to user directory to persist rule order
+        context = self._manager.get_context(self._context_name)
+        if context:
+            self._manager.save_context_to_user(context)
         self._populate_rules()
         self.emit("context-updated")
     
@@ -1008,7 +1014,10 @@ class ContextRulesDialog(Adw.Dialog):
         if not ctx or index >= len(ctx.rules) - 1:
             return
         self._manager.move_context_rule(self._context_name, index, index + 1)
-        self._manager.save_config()
+        # Save context to user directory to persist rule order
+        context = self._manager.get_context(self._context_name)
+        if context:
+            self._manager.save_context_to_user(context)
         self._populate_rules()
         self.emit("context-updated")
     
@@ -1420,7 +1429,21 @@ class HighlightDialog(Adw.PreferencesWindow):
         bulk_actions_row.add_suffix(disable_all_btn)
         
         self._context_selector_group.add(bulk_actions_row)
-        
+
+        # Reset all contexts button
+        reset_contexts_row = Adw.ActionRow(
+            title=_("Reset All Contexts"),
+            subtitle=_("Restore all contexts to system defaults"),
+        )
+        reset_contexts_row.set_activatable(True)
+        reset_contexts_btn = Gtk.Button(icon_name="view-refresh-symbolic")
+        reset_contexts_btn.set_valign(Gtk.Align.CENTER)
+        reset_contexts_btn.add_css_class("flat")
+        reset_contexts_row.add_suffix(reset_contexts_btn)
+        reset_contexts_row.set_activatable_widget(reset_contexts_btn)
+        reset_contexts_btn.connect("clicked", self._on_reset_all_contexts_clicked)
+        self._context_selector_group.add(reset_contexts_row)
+
         # Scrolled container for context list
         self._context_list_group = Adw.PreferencesGroup(
             title=_("Available Contexts"),
@@ -1525,11 +1548,11 @@ class HighlightDialog(Adw.PreferencesWindow):
         add_row.set_activatable_widget(add_btn)
         add_btn.connect("clicked", self._on_add_rule_clicked)
         self._rules_group.add(add_row)
-        
-        # Reset to defaults button
+
+        # Reset global rules button
         reset_row = Adw.ActionRow(
-            title=_("Reset to Defaults"),
-            subtitle=_("Restore all default rules and contexts"),
+            title=_("Reset Global Rules"),
+            subtitle=_("Restore global rules to system defaults"),
         )
         reset_row.set_activatable(True)
         reset_btn = Gtk.Button(icon_name="view-refresh-symbolic")
@@ -1537,7 +1560,7 @@ class HighlightDialog(Adw.PreferencesWindow):
         reset_btn.add_css_class("flat")
         reset_row.add_suffix(reset_btn)
         reset_row.set_activatable_widget(reset_btn)
-        reset_btn.connect("clicked", self._on_reset_clicked)
+        reset_btn.connect("clicked", self._on_reset_global_rules_clicked)
         self._rules_group.add(reset_row)
     
     def _load_settings(self) -> None:
@@ -2096,15 +2119,33 @@ class HighlightDialog(Adw.PreferencesWindow):
     
     def _on_local_toggled(self, switch: Adw.SwitchRow, _pspec) -> None:
         """Handle local terminals toggle."""
-        self._manager.enabled_for_local = switch.get_active()
+        is_active = switch.get_active()
+        self._manager.enabled_for_local = is_active
         self._manager.save_config()
         self.emit("settings-changed")
+        # Only show restart dialog when activating, not when deactivating
+        if is_active:
+            self._show_restart_required_dialog()
     
     def _on_ssh_toggled(self, switch: Adw.SwitchRow, _pspec) -> None:
         """Handle SSH terminals toggle."""
-        self._manager.enabled_for_ssh = switch.get_active()
+        is_active = switch.get_active()
+        self._manager.enabled_for_ssh = is_active
         self._manager.save_config()
         self.emit("settings-changed")
+        # Only show restart dialog when activating, not when deactivating
+        if is_active:
+            self._show_restart_required_dialog()
+
+    def _show_restart_required_dialog(self) -> None:
+        """Show a dialog informing user that restart is required for changes to take effect."""
+        dialog = Adw.AlertDialog(
+            heading=_("Restart Required"),
+            body=_("Restart the program for the colors to be applied to the terminal."),
+        )
+        dialog.add_response("ok", _("OK"))
+        dialog.set_default_response("ok")
+        dialog.present(self)
     
     def _populate_rules(self) -> None:
         """Populate the global rules list from the manager."""
@@ -2203,6 +2244,7 @@ class HighlightDialog(Adw.PreferencesWindow):
     def _on_rule_switch_toggled(self, switch: Gtk.Switch, _pspec, index: int) -> None:
         """Handle rule enable/disable toggle."""
         self._manager.set_rule_enabled(index, switch.get_active())
+        self._manager.save_global_rules_to_user()  # Save full rules to user file
         self._manager.save_config()
         self.emit("settings-changed")
     
@@ -2215,6 +2257,7 @@ class HighlightDialog(Adw.PreferencesWindow):
     def _on_new_rule_saved(self, dialog: RuleEditDialog, rule: HighlightRule) -> None:
         """Handle saving a new rule."""
         self._manager.add_rule(rule)
+        self._manager.save_global_rules_to_user()  # Save full rules to user file
         self._manager.save_config()
         self._populate_rules()
         self.emit("settings-changed")
@@ -2232,6 +2275,7 @@ class HighlightDialog(Adw.PreferencesWindow):
     def _on_rule_edited(self, dialog: RuleEditDialog, rule: HighlightRule, index: int) -> None:
         """Handle saving an edited rule."""
         self._manager.update_rule(index, rule)
+        self._manager.save_global_rules_to_user()  # Save full rules to user file
         self._manager.save_config()
         self._populate_rules()
         self.emit("settings-changed")
@@ -2266,36 +2310,68 @@ class HighlightDialog(Adw.PreferencesWindow):
         dialog.close()
         if response == "delete":
             self._manager.remove_rule(index)
+            self._manager.save_global_rules_to_user()  # Save full rules to user file
             self._manager.save_config()
             self._populate_rules()
             self.emit("settings-changed")
             
             self.add_toast(Adw.Toast(title=_("Rule deleted: {}").format(rule_name)))
-    
-    def _on_reset_clicked(self, button: Gtk.Button) -> None:
-        """Handle reset to defaults button click."""
+
+    def _on_reset_global_rules_clicked(self, button: Gtk.Button) -> None:
+        """Handle reset global rules button click."""
         dialog = Adw.MessageDialog(
             transient_for=self,
-            heading=_("Reset to Defaults?"),
-            body=_("This will remove all user customizations and revert to system defaults. This cannot be undone."),
+            heading=_("Reset Global Rules?"),
+            body=_(
+                "This will restore global rules to system defaults. Context customizations will be preserved."
+            ),
         )
         dialog.add_response("cancel", _("Cancel"))
         dialog.add_response("reset", _("Reset"))
         dialog.set_response_appearance("reset", Adw.ResponseAppearance.DESTRUCTIVE)
-        dialog.connect("response", self._on_reset_confirmed)
+        dialog.connect("response", self._on_reset_global_rules_confirmed)
         dialog.present()
-    
-    def _on_reset_confirmed(self, dialog: Adw.MessageDialog, response: str) -> None:
-        """Handle reset confirmation response."""
+
+    def _on_reset_global_rules_confirmed(
+        self, dialog: Adw.MessageDialog, response: str
+    ) -> None:
+        """Handle reset global rules confirmation response."""
         dialog.close()
         if response == "reset":
-            self._manager.reset_to_defaults()
+            self._manager.reset_global_rules()
             self._manager.save_config()
             self._populate_rules()
+            self.emit("settings-changed")
+
+            self.add_toast(Adw.Toast(title=_("Global rules reset to defaults")))
+
+    def _on_reset_all_contexts_clicked(self, button: Gtk.Button) -> None:
+        """Handle reset all contexts button click."""
+        dialog = Adw.MessageDialog(
+            transient_for=self,
+            heading=_("Reset All Contexts?"),
+            body=_(
+                "This will restore all contexts to system defaults. Global rules will be preserved."
+            ),
+        )
+        dialog.add_response("cancel", _("Cancel"))
+        dialog.add_response("reset", _("Reset"))
+        dialog.set_response_appearance("reset", Adw.ResponseAppearance.DESTRUCTIVE)
+        dialog.connect("response", self._on_reset_all_contexts_confirmed)
+        dialog.present()
+
+    def _on_reset_all_contexts_confirmed(
+        self, dialog: Adw.MessageDialog, response: str
+    ) -> None:
+        """Handle reset all contexts confirmation response."""
+        dialog.close()
+        if response == "reset":
+            self._manager.reset_all_contexts()
+            self._manager.save_config()
             self._populate_contexts()
             self.emit("settings-changed")
-            
-            self.add_toast(Adw.Toast(title=_("Reset to system defaults")))
+
+            self.add_toast(Adw.Toast(title=_("All contexts reset to defaults")))
 
 
 class ContextNameDialog(Adw.Dialog):
