@@ -2266,10 +2266,21 @@ msgstr "Terminálová relace byla vymazána."
 msgid "No active terminal to clear."
 msgstr "Žádný aktivní terminál k vymazání."
 # 
-# File: src/ashyterm/ui/actions.py, line: 215
+# File: src/ashyterm/ui/actions.py, line: 233
 #: NEEDS WORK
-msgid "Explain this code or command:"
-msgstr "Vysvětlete tento kód nebo příkaz:"
+#, python-brace-format
+msgid ""
+"Explain this code or command:\n"
+"\n"
+"```\n"
+"{text}\n"
+"```"
+msgstr ""
+"Vysvětlete tento kód nebo příkaz:\n"
+"\n"
+"```\n"
+"{text}\n"
+"```"
 # 
 # File: usr/share/ashyterm/ui/actions.py, line: 168
 #: NEEDS WORK
@@ -2376,6 +2387,26 @@ msgstr "Nelze se připojit k relaci '{session_name}'."
 msgid "Configure AI Assistant"
 msgstr "Nastavit AI asistenta"
 # 
+# File: src/ashyterm/ui/dialogs/ai_config_dialog.py, line: 178
+#: NEEDS WORK
+msgid "Status"
+msgstr "Stav"
+# 
+# File: src/ashyterm/ui/dialogs/ai_config_dialog.py, line: 66
+#: NEEDS WORK
+msgid "Enable or disable the AI Assistant feature."
+msgstr "Povolit nebo zakázat funkci asistenta AI."
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 327
+#: NEEDS WORK
+msgid "Enable AI Assistant"
+msgstr "Povolit AI asistenta"
+# 
+# File: src/ashyterm/ui/dialogs/ai_config_dialog.py, line: 184
+#: NEEDS WORK
+msgid "Show the AI Assistant button in the header bar."
+msgstr "Zobrazit tlačítko AI asistenta v horním panelu."
+# 
 # #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
 # 
 # File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 339
@@ -2478,21 +2509,6 @@ msgstr "URL webové stránky (volitelné)"
 #: NEEDS WORK
 msgid "Site Name (optional)"
 msgstr "Název webu (volitelné)"
-# 
-# File: src/ashyterm/ui/dialogs/ai_config_dialog.py, line: 178
-#: NEEDS WORK
-msgid "Status"
-msgstr "Stav"
-# 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 327
-#: NEEDS WORK
-msgid "Enable AI Assistant"
-msgstr "Povolit AI asistenta"
-# 
-# File: src/ashyterm/ui/dialogs/ai_config_dialog.py, line: 184
-#: NEEDS WORK
-msgid "Show the AI Assistant button in the header bar."
-msgstr "Zobrazit tlačítko AI asistenta v horním panelu."
 # 
 # File: src/ashyterm/ui/dialogs/ai_config_dialog.py, line: 236
 #: NEEDS WORK
@@ -4643,6 +4659,26 @@ msgstr "Levé"
 msgid "Center"
 msgstr "Střed"
 # 
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 212
+#: NEEDS WORK
+msgid "Icon Theme"
+msgstr "Ikonová téma"
+# 
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 214
+#: NEEDS WORK
+msgid "Ashy Icons (bundled) speeds up startup. System Icons follows your desktop theme."
+msgstr "Ashy ikony (soubory) zrychlují spuštění. Systémové ikony následují téma vaší plochy."
+# 
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 218
+#: NEEDS WORK
+msgid "Ashy Icons (Bundled)"
+msgstr "Ashy Ikony (Sada)"
+# 
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 218
+#: NEEDS WORK
+msgid "System Icons"
+msgstr "Systémové ikony"
+# 
 # File: usr/share/ashyterm/window.py, line: 857
 #: NEEDS WORK
 msgid "Terminal"
@@ -5072,6 +5108,16 @@ msgstr "Obnovit všechna nastavení"
 #: NEEDS WORK
 msgid "Restore all settings to their default values"
 msgstr "Obnovit všechna nastavení na jejich výchozí hodnoty"
+# 
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 681
+#: NEEDS WORK
+msgid "Icon Theme Changed"
+msgstr "Téma ikony změněno"
+# 
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 683
+#: NEEDS WORK
+msgid "The icon theme change will take effect after restarting the application."
+msgstr "Změna motivu ikon se projeví po restartování aplikace."
 # 
 # File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 652
 #: NEEDS WORK

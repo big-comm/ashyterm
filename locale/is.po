@@ -2264,10 +2264,21 @@ msgstr "Terminal sessjón hreinsað."
 msgid "No active terminal to clear."
 msgstr "Engin virkni til að hreinsa."
 # 
-# File: src/ashyterm/ui/actions.py, line: 215
+# File: src/ashyterm/ui/actions.py, line: 233
 #: NEEDS WORK
-msgid "Explain this code or command:"
-msgstr "Útskýra þennan kóða eða skipun:"
+#, python-brace-format
+msgid ""
+"Explain this code or command:\n"
+"\n"
+"```\n"
+"{text}\n"
+"```"
+msgstr ""
+"Útskýra þennan kóða eða skipun: \n"
+"\n"
+"```\n"
+"{text}\n"
+"```"
 # 
 # File: usr/share/ashyterm/ui/actions.py, line: 168
 #: NEEDS WORK
@@ -2376,6 +2387,26 @@ msgstr "Gat ekki tengingu við sess '{session_name}'."
 msgid "Configure AI Assistant"
 msgstr "Stillir AI aðstoðarmann"
 # 
+# File: src/ashyterm/ui/dialogs/ai_config_dialog.py, line: 178
+#: NEEDS WORK
+msgid "Status"
+msgstr "Staða"
+# 
+# File: src/ashyterm/ui/dialogs/ai_config_dialog.py, line: 66
+#: NEEDS WORK
+msgid "Enable or disable the AI Assistant feature."
+msgstr "Virkja eða slökkva á AI aðstoðarmanninum."
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 327
+#: NEEDS WORK
+msgid "Enable AI Assistant"
+msgstr "Virkja AI aðstoðarmann"
+# 
+# File: src/ashyterm/ui/dialogs/ai_config_dialog.py, line: 184
+#: NEEDS WORK
+msgid "Show the AI Assistant button in the header bar."
+msgstr "Sýna AI aðstoðarmanninn hnappinn í fyrirsagnarlínu."
+# 
 # #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
 # 
 # File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 339
@@ -2478,21 +2509,6 @@ msgstr "Vefslóð (valfrjálst)"
 #: NEEDS WORK
 msgid "Site Name (optional)"
 msgstr "Vefsvæðiheiti (valfrjálst)"
-# 
-# File: src/ashyterm/ui/dialogs/ai_config_dialog.py, line: 178
-#: NEEDS WORK
-msgid "Status"
-msgstr "Staða"
-# 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 327
-#: NEEDS WORK
-msgid "Enable AI Assistant"
-msgstr "Virkja AI aðstoðarmann"
-# 
-# File: src/ashyterm/ui/dialogs/ai_config_dialog.py, line: 184
-#: NEEDS WORK
-msgid "Show the AI Assistant button in the header bar."
-msgstr "Sýna AI aðstoðarmanninn hnappinn í fyrirsagnarlínu."
 # 
 # File: src/ashyterm/ui/dialogs/ai_config_dialog.py, line: 236
 #: NEEDS WORK
@@ -4643,6 +4659,26 @@ msgstr "Vinstri"
 msgid "Center"
 msgstr "Miðja"
 # 
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 212
+#: NEEDS WORK
+msgid "Icon Theme"
+msgstr "Tenging táknmynda"
+# 
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 214
+#: NEEDS WORK
+msgid "Ashy Icons (bundled) speeds up startup. System Icons follows your desktop theme."
+msgstr "Ashy Icons (bundled) flýtir upphafinu. Kerfissymbólin fylgja skrifborðsþemanu þínu."
+# 
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 218
+#: NEEDS WORK
+msgid "Ashy Icons (Bundled)"
+msgstr "Ashy tákn (Pakkað)"
+# 
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 218
+#: NEEDS WORK
+msgid "System Icons"
+msgstr "Kerfiskur"
+# 
 # File: usr/share/ashyterm/window.py, line: 857
 #: NEEDS WORK
 msgid "Terminal"
@@ -5072,6 +5108,16 @@ msgstr "Endurstillu allar stillingar"
 #: NEEDS WORK
 msgid "Restore all settings to their default values"
 msgstr "Endurðu allar stillingar í þeirra sjálfgefnar gildi."
+# 
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 681
+#: NEEDS WORK
+msgid "Icon Theme Changed"
+msgstr "Tímaskipti táknmyndar"
+# 
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 683
+#: NEEDS WORK
+msgid "The icon theme change will take effect after restarting the application."
+msgstr "Breytingin á táknasniði mun taka gildi eftir að forritinu hefur verið endurræst."
 # 
 # File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 652
 #: NEEDS WORK

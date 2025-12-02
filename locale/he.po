@@ -2264,10 +2264,21 @@ msgstr "הסשן של הטרמינל נוקה."
 msgid "No active terminal to clear."
 msgstr "אין מסוף פעיל לנקות."
 # 
-# File: src/ashyterm/ui/actions.py, line: 215
+# File: src/ashyterm/ui/actions.py, line: 233
 #: NEEDS WORK
-msgid "Explain this code or command:"
-msgstr "הסבר קוד או פקודה זו:"
+#, python-brace-format
+msgid ""
+"Explain this code or command:\n"
+"\n"
+"```\n"
+"{text}\n"
+"```"
+msgstr ""
+"הסבר קוד או פקודה זו:\n"
+"\n"
+"```\n"
+"{text}\n"
+"```"
 # 
 # File: usr/share/ashyterm/ui/actions.py, line: 168
 #: NEEDS WORK
@@ -2374,6 +2385,26 @@ msgstr "לא ניתן להתחבר לסשן '{session_name}'."
 msgid "Configure AI Assistant"
 msgstr "הגדר את העוזר הווירטואלי"
 # 
+# File: src/ashyterm/ui/dialogs/ai_config_dialog.py, line: 178
+#: NEEDS WORK
+msgid "Status"
+msgstr "סטטוס"
+# 
+# File: src/ashyterm/ui/dialogs/ai_config_dialog.py, line: 66
+#: NEEDS WORK
+msgid "Enable or disable the AI Assistant feature."
+msgstr "אפשר או לבטל את תכונת העוזר הבינה המלאכותית."
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 327
+#: NEEDS WORK
+msgid "Enable AI Assistant"
+msgstr "אפשר עוזר בינה מלאכותית"
+# 
+# File: src/ashyterm/ui/dialogs/ai_config_dialog.py, line: 184
+#: NEEDS WORK
+msgid "Show the AI Assistant button in the header bar."
+msgstr "הצג את כפתור העוזר הווירטואלי בשורת הכותרת."
+# 
 # #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
 # 
 # File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 339
@@ -2476,21 +2507,6 @@ msgstr "כתובת אתר (אופציונלי)"
 #: NEEDS WORK
 msgid "Site Name (optional)"
 msgstr "שם האתר (אופציונלי)"
-# 
-# File: src/ashyterm/ui/dialogs/ai_config_dialog.py, line: 178
-#: NEEDS WORK
-msgid "Status"
-msgstr "סטטוס"
-# 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 327
-#: NEEDS WORK
-msgid "Enable AI Assistant"
-msgstr "אפשר עוזר בינה מלאכותית"
-# 
-# File: src/ashyterm/ui/dialogs/ai_config_dialog.py, line: 184
-#: NEEDS WORK
-msgid "Show the AI Assistant button in the header bar."
-msgstr "הצג את כפתור העוזר הווירטואלי בשורת הכותרת."
 # 
 # File: src/ashyterm/ui/dialogs/ai_config_dialog.py, line: 236
 #: NEEDS WORK
@@ -4634,6 +4650,26 @@ msgstr "שמאל"
 msgid "Center"
 msgstr "מרכז"
 # 
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 212
+#: NEEDS WORK
+msgid "Icon Theme"
+msgstr "נושא אייקון"
+# 
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 214
+#: NEEDS WORK
+msgid "Ashy Icons (bundled) speeds up startup. System Icons follows your desktop theme."
+msgstr "אייקונים אפרפרים (כלולים) מאיצים את ההפעלה. אייקוני מערכת עוקבים אחרי נושא שולחן העבודה שלך."
+# 
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 218
+#: NEEDS WORK
+msgid "Ashy Icons (Bundled)"
+msgstr "אייקונים אפרפרים (מוכללים)"
+# 
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 218
+#: NEEDS WORK
+msgid "System Icons"
+msgstr "אייקונים של מערכת"
+# 
 # File: usr/share/ashyterm/window.py, line: 857
 #: NEEDS WORK
 msgid "Terminal"
@@ -5061,6 +5097,16 @@ msgstr "איפוס כל ההגדרות"
 #: NEEDS WORK
 msgid "Restore all settings to their default values"
 msgstr "שחזר את כל ההגדרות לערכים ברירת המחדל שלהן"
+# 
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 681
+#: NEEDS WORK
+msgid "Icon Theme Changed"
+msgstr "נושא האייקונים שונה"
+# 
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 683
+#: NEEDS WORK
+msgid "The icon theme change will take effect after restarting the application."
+msgstr "שינוי נושא האייקונים ייכנס לתוקף לאחר הפעלת מחדש של היישום."
 # 
 # File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 652
 #: NEEDS WORK

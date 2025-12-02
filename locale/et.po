@@ -2261,10 +2261,21 @@ msgstr "Terminali seans on kustutatud."
 msgid "No active terminal to clear."
 msgstr "Ei ole aktiivset terminali, mida puhastada."
 # 
-# File: src/ashyterm/ui/actions.py, line: 215
+# File: src/ashyterm/ui/actions.py, line: 233
 #: NEEDS WORK
-msgid "Explain this code or command:"
-msgstr "Selg see kood või käsk:"
+#, python-brace-format
+msgid ""
+"Explain this code or command:\n"
+"\n"
+"```\n"
+"{text}\n"
+"```"
+msgstr ""
+"Selgita seda koodi või käsku:\n"
+"\n"
+"```\n"
+"{text}\n"
+"```"
 # 
 # File: usr/share/ashyterm/ui/actions.py, line: 168
 #: NEEDS WORK
@@ -2373,6 +2384,26 @@ msgstr "Ei saanud seansiga '{session_name}' ühendust luua."
 msgid "Configure AI Assistant"
 msgstr "Konfigureeri AI assistent"
 # 
+# File: src/ashyterm/ui/dialogs/ai_config_dialog.py, line: 178
+#: NEEDS WORK
+msgid "Status"
+msgstr "Olekord"
+# 
+# File: src/ashyterm/ui/dialogs/ai_config_dialog.py, line: 66
+#: NEEDS WORK
+msgid "Enable or disable the AI Assistant feature."
+msgstr "Luba või keeldu AI assistendi funktsiooni."
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 327
+#: NEEDS WORK
+msgid "Enable AI Assistant"
+msgstr "Luba AI assistent"
+# 
+# File: src/ashyterm/ui/dialogs/ai_config_dialog.py, line: 184
+#: NEEDS WORK
+msgid "Show the AI Assistant button in the header bar."
+msgstr "Kuvaa AI assistendi nupp ülemises menüüs."
+# 
 # #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
 # 
 # File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 339
@@ -2475,21 +2506,6 @@ msgstr "Saidin URL (valikuline)"
 #: NEEDS WORK
 msgid "Site Name (optional)"
 msgstr "Saidinimi (valikuline)"
-# 
-# File: src/ashyterm/ui/dialogs/ai_config_dialog.py, line: 178
-#: NEEDS WORK
-msgid "Status"
-msgstr "Olekord"
-# 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 327
-#: NEEDS WORK
-msgid "Enable AI Assistant"
-msgstr "Luba AI assistent"
-# 
-# File: src/ashyterm/ui/dialogs/ai_config_dialog.py, line: 184
-#: NEEDS WORK
-msgid "Show the AI Assistant button in the header bar."
-msgstr "Kuvaa AI assistendi nupp ülemises menüüs."
 # 
 # File: src/ashyterm/ui/dialogs/ai_config_dialog.py, line: 236
 #: NEEDS WORK
@@ -4635,6 +4651,26 @@ msgstr "Vasak"
 msgid "Center"
 msgstr "Keskus"
 # 
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 212
+#: NEEDS WORK
+msgid "Icon Theme"
+msgstr "Ikoni teema"
+# 
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 214
+#: NEEDS WORK
+msgid "Ashy Icons (bundled) speeds up startup. System Icons follows your desktop theme."
+msgstr "Ashy ikoonid (komplektis) kiirendavad käivitamist. Süsteemi ikoonid järgivad teie töölaua teemat."
+# 
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 218
+#: NEEDS WORK
+msgid "Ashy Icons (Bundled)"
+msgstr "Ashy ikoonid (komplekt)"
+# 
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 218
+#: NEEDS WORK
+msgid "System Icons"
+msgstr "Süsteemi ikoonid"
+# 
 # File: usr/share/ashyterm/window.py, line: 857
 #: NEEDS WORK
 msgid "Terminal"
@@ -5062,6 +5098,16 @@ msgstr "Lähtesta kõik seaded"
 #: NEEDS WORK
 msgid "Restore all settings to their default values"
 msgstr "Taasta kõik seaded nende vaikeseisundisse."
+# 
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 681
+#: NEEDS WORK
+msgid "Icon Theme Changed"
+msgstr "Ikoni teema muudetud"
+# 
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 683
+#: NEEDS WORK
+msgid "The icon theme change will take effect after restarting the application."
+msgstr "Ikoni teema muutmine hakkab kehtima pärast rakenduse taaskäivitamist."
 # 
 # File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 652
 #: NEEDS WORK

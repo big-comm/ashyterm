@@ -2266,10 +2266,21 @@ msgstr "Η συνεδρία τερματικού καθαρίστηκε."
 msgid "No active terminal to clear."
 msgstr "Δεν υπάρχει ενεργό τερματικό για εκκαθάριση."
 # 
-# File: src/ashyterm/ui/actions.py, line: 215
+# File: src/ashyterm/ui/actions.py, line: 233
 #: NEEDS WORK
-msgid "Explain this code or command:"
-msgstr "Εξήγησε αυτόν τον κώδικα ή την εντολή:"
+#, python-brace-format
+msgid ""
+"Explain this code or command:\n"
+"\n"
+"```\n"
+"{text}\n"
+"```"
+msgstr ""
+"Εξήγησε αυτόν τον κώδικα ή την εντολή:\n"
+"\n"
+"```\n"
+"{text}\n"
+"```"
 # 
 # File: usr/share/ashyterm/ui/actions.py, line: 168
 #: NEEDS WORK
@@ -2378,6 +2389,26 @@ msgstr "Δεν ήταν δυνατή η σύνδεση στη συνεδρία '
 msgid "Configure AI Assistant"
 msgstr "Ρυθμίστε τον Βοηθό Τεχνητής Νοημοσύνης"
 # 
+# File: src/ashyterm/ui/dialogs/ai_config_dialog.py, line: 178
+#: NEEDS WORK
+msgid "Status"
+msgstr "Κατάσταση"
+# 
+# File: src/ashyterm/ui/dialogs/ai_config_dialog.py, line: 66
+#: NEEDS WORK
+msgid "Enable or disable the AI Assistant feature."
+msgstr "Ενεργοποιήστε ή απενεργοποιήστε τη δυνατότητα Βοηθού AI."
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 327
+#: NEEDS WORK
+msgid "Enable AI Assistant"
+msgstr "Ενεργοποίηση Βοηθού Τεχνητής Νοημοσύνης"
+# 
+# File: src/ashyterm/ui/dialogs/ai_config_dialog.py, line: 184
+#: NEEDS WORK
+msgid "Show the AI Assistant button in the header bar."
+msgstr "Εμφάνιση του κουμπιού Βοηθού AI στη γραμμή κεφαλίδας."
+# 
 # #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
 # 
 # File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 339
@@ -2480,21 +2511,6 @@ msgstr "Διεύθυνση URL ιστότοπου (προαιρετικό)"
 #: NEEDS WORK
 msgid "Site Name (optional)"
 msgstr "Όνομα Ιστοσελίδας (προαιρετικό)"
-# 
-# File: src/ashyterm/ui/dialogs/ai_config_dialog.py, line: 178
-#: NEEDS WORK
-msgid "Status"
-msgstr "Κατάσταση"
-# 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 327
-#: NEEDS WORK
-msgid "Enable AI Assistant"
-msgstr "Ενεργοποίηση Βοηθού Τεχνητής Νοημοσύνης"
-# 
-# File: src/ashyterm/ui/dialogs/ai_config_dialog.py, line: 184
-#: NEEDS WORK
-msgid "Show the AI Assistant button in the header bar."
-msgstr "Εμφάνιση του κουμπιού Βοηθού AI στη γραμμή κεφαλίδας."
 # 
 # File: src/ashyterm/ui/dialogs/ai_config_dialog.py, line: 236
 #: NEEDS WORK
@@ -4659,6 +4675,28 @@ msgstr "Αριστερά"
 msgid "Center"
 msgstr "Κέντρο"
 # 
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 212
+#: NEEDS WORK
+msgid "Icon Theme"
+msgstr "Θέμα Εικονιδίων"
+# 
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 214
+#: NEEDS WORK
+msgid "Ashy Icons (bundled) speeds up startup. System Icons follows your desktop theme."
+msgstr ""
+"Οι εικονίδες Ashy (συμπεριλαμβάνονται) επιταχύνουν την εκκίνηση. Οι εικονίδες συστήματος ακολουθούν "
+"το θέμα της επιφάνειας εργασίας σας."
+# 
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 218
+#: NEEDS WORK
+msgid "Ashy Icons (Bundled)"
+msgstr "Αχνά Εικονίδια (Συσκευασμένα)"
+# 
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 218
+#: NEEDS WORK
+msgid "System Icons"
+msgstr "Εικονίδια Συστήματος"
+# 
 # File: usr/share/ashyterm/window.py, line: 857
 #: NEEDS WORK
 msgid "Terminal"
@@ -5090,6 +5128,16 @@ msgstr "Επαναφορά όλων των ρυθμίσεων"
 #: NEEDS WORK
 msgid "Restore all settings to their default values"
 msgstr "Επαναφορά όλων των ρυθμίσεων στις προεπιλεγμένες τιμές τους"
+# 
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 681
+#: NEEDS WORK
+msgid "Icon Theme Changed"
+msgstr "Θέμα Εικονιδίων Αλλαγμένο"
+# 
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 683
+#: NEEDS WORK
+msgid "The icon theme change will take effect after restarting the application."
+msgstr "Η αλλαγή του θέματος εικονιδίων θα ισχύσει μετά την επανεκκίνηση της εφαρμογής."
 # 
 # File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 652
 #: NEEDS WORK
