@@ -205,6 +205,22 @@ class PreferencesDialog(Adw.PreferencesWindow):
         tab_alignment_row.connect("notify::selected", self._on_tab_alignment_changed)
         misc_group.add(tab_alignment_row)
 
+        # Icon Theme Strategy - Performance optimization for GTK4 startup
+        icon_theme_row = Adw.ComboRow(
+            title=_("Icon Theme"),
+            subtitle=_(
+                "Ashy Icons (bundled) speeds up startup. System Icons follows your desktop theme."
+            ),
+        )
+        icon_theme_row.set_model(
+            Gtk.StringList.new([_("Ashy Icons (Bundled)"), _("System Icons")])
+        )
+        current_strategy = self.settings_manager.get("icon_theme_strategy", "ashy")
+        icon_strategy_index = 0 if current_strategy == "ashy" else 1
+        icon_theme_row.set_selected(icon_strategy_index)
+        icon_theme_row.connect("notify::selected", self._on_icon_theme_changed)
+        misc_group.add(icon_theme_row)
+
     def _setup_terminal_page(self) -> None:
         page = Adw.PreferencesPage(
             title=_("Terminal"), icon_name="utilities-terminal-symbolic"
@@ -643,6 +659,34 @@ class PreferencesDialog(Adw.PreferencesWindow):
         index = combo_row.get_selected()
         alignment = "left" if index == 0 else "center"
         self._on_setting_changed("tab_alignment", alignment)
+
+    def _on_icon_theme_changed(self, combo_row, _param) -> None:
+        """Handle icon theme strategy change.
+
+        Note: This change requires application restart to take full effect
+        since icon paths are configured at startup for performance.
+        """
+        index = combo_row.get_selected()
+        strategy = "ashy" if index == 0 else "system"
+        self._on_setting_changed("icon_theme_strategy", strategy)
+        # Show restart notice
+        self._show_restart_required_dialog(
+            _("Icon Theme Changed"),
+            _(
+                "The icon theme change will take effect after restarting the application."
+            ),
+        )
+
+    def _show_restart_required_dialog(self, title: str, message: str) -> None:
+        """Show a dialog informing the user that a restart is required."""
+        dialog = Adw.MessageDialog(
+            transient_for=self,
+            heading=title,
+            body=message,
+        )
+        dialog.add_response("ok", _("OK"))
+        dialog.set_default_response("ok")
+        dialog.present()
 
     def _on_word_chars_changed(self, entry_row):
         text = entry_row.get_text()

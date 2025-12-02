@@ -48,7 +48,7 @@
         },
         {
             "name": "IPv6 Address",
-            "pattern": "\\b(?:[a-f\\d]{1,4}:){7}[a-f\\d]{1,4}\\b|\\b(?:[a-f\\d]{1,4}:){1,6}:[a-f\\d]{1,4}\\b|\\b::(?:[a-f\\d]{1,4}:){0,5}[a-f\\d]{1,4}\\b",
+            "pattern": "(?:[a-f0-9]{1,4}:|:)+[a-f0-9]{1,4}",
             "colors": ["cyan"],
             "enabled": true,
             "description": "Highlights IPv6 addresses"

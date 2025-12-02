@@ -1,111 +1,107 @@
 {
-    "name": "wget",
-    "description": "Highlights for wget download output",
-    "triggers": [
-        "wget"
-    ],
-    "enabled": true,
-    "rules": [
-        {
-            "name": "HTTP 200 OK",
-            "pattern": "\\b(200)\\s+(OK)\\b",
-            "colors": [
-                "green",
-                "bold green"
-            ],
-            "enabled": true,
-            "description": "Highlights successful HTTP response"
-        },
-        {
-            "name": "HTTP Redirect",
-            "pattern": "\\b(3\\d{2})\\s+(\\w+)",
-            "colors": [
-                "yellow",
-                "yellow"
-            ],
-            "enabled": true,
-            "description": "Highlights HTTP redirect responses"
-        },
-        {
-            "name": "HTTP Client Error",
-            "pattern": "\\b(4\\d{2})\\s+(\\w+)",
-            "colors": [
-                "red",
-                "red"
-            ],
-            "enabled": true,
-            "description": "Highlights HTTP client error responses"
-        },
-        {
-            "name": "HTTP Server Error",
-            "pattern": "\\b(5\\d{2})\\s+(\\w+)",
-            "colors": [
-                "bold red",
-                "red"
-            ],
-            "enabled": true,
-            "description": "Highlights HTTP server error responses"
-        },
-        {
-            "name": "Progress Percentage",
-            "pattern": "(\\d+)(%)",
-            "colors": [
-                "cyan",
-                "cyan"
-            ],
-            "enabled": true,
-            "description": "Highlights download progress"
-        },
-        {
-            "name": "Download Speed",
-            "pattern": "(\\d+(?:\\.\\d+)?)\\s*([KMG]?B/s)",
-            "colors": [
-                "magenta",
-                "magenta"
-            ],
-            "enabled": true,
-            "description": "Highlights download speed"
-        },
-        {
-            "name": "File Saved",
-            "pattern": "['`](.+)['’]\\s+(saved)",
-            "colors": [
-                "cyan",
-                "green"
-            ],
-            "enabled": true,
-            "description": "Highlights saved file messages"
-        },
-        {
-            "name": "Connecting",
-            "pattern": "(Connecting to)\\s+(\\S+)",
-            "colors": [
-                "white",
-                "cyan"
-            ],
-            "enabled": true,
-            "description": "Highlights connection target"
-        },
-        {
-            "name": "Resolving",
-            "pattern": "(Resolving)\\s+(\\S+)",
-            "colors": [
-                "white",
-                "cyan"
-            ],
-            "enabled": true,
-            "description": "Highlights DNS resolution"
-        },
-        {
-            "name": "Length",
-            "pattern": "(Length:)\\s+(\\d+)\\s*(\\([^)]+\\))?",
-            "colors": [
-                "white",
-                "yellow",
-                "white"
-            ],
-            "enabled": true,
-            "description": "Highlights file length"
-        }
-    ]
+  "name": "wget",
+  "triggers": [
+    "wget"
+  ],
+  "rules": [
+    {
+      "name": "Progress Percentage",
+      "pattern": "(\\d+)(%)",
+      "colors": [
+        "cyan",
+        "cyan"
+      ],
+      "enabled": true,
+      "description": "Highlights download progress"
+    },
+    {
+      "name": "Download Speed",
+      "pattern": "(\\d+[.,]\\d+)\\s*([KMG]?B/s)",
+      "colors": [
+        "yellow",
+        "yellow"
+      ],
+      "enabled": true,
+      "description": "Highlights download speed"
+    },
+    {
+      "name": "File Saved",
+      "pattern": "['`](.+)['’]\\s+(saved)",
+      "colors": [
+        "cyan",
+        "green"
+      ],
+      "enabled": true,
+      "description": "Highlights saved file messages"
+    },
+    {
+      "name": "Connecting",
+      "pattern": "(Connecting to)\\s+(\\S+)",
+      "colors": [
+        "white",
+        "cyan"
+      ],
+      "enabled": true,
+      "description": "Highlights connection target"
+    },
+    {
+      "name": "Resolving",
+      "pattern": "(Resolving)\\s+(\\S+)",
+      "colors": [
+        "white",
+        "cyan"
+      ],
+      "enabled": true,
+      "description": "Highlights DNS resolution"
+    },
+    {
+      "name": "Length",
+      "pattern": "(Length:)\\s+(\\d+)\\s*(\\([^)]+\\))?",
+      "colors": [
+        "white",
+        "yellow",
+        "white"
+      ],
+      "enabled": true,
+      "description": "Highlights file length"
+    },
+    {
+      "name": "403",
+      "pattern": "\\b(4\\d\\d):?\\b\\s+(\\w+)",
+      "colors": [
+        "red"
+      ],
+      "enabled": true
+    },
+    {
+      "name": "200",
+      "pattern": "\\b(2\\d\\d):?\\b\\s+(\\w+)",
+      "colors": [
+        "green",
+        "green"
+      ],
+      "enabled": true
+    },
+    {
+      "name": "300",
+      "pattern": "\\b(3\\d\\d):?\\b\\s+(\\w+)",
+      "colors": [
+        "yellow",
+        "yellow"
+      ],
+      "enabled": true
+    },
+    {
+      "name": "500",
+      "pattern": "\\b(5\\d\\d):?\\b\\s+(\\w+)",
+      "colors": [
+        "bold red",
+        "bold red"
+      ],
+      "enabled": true
+    }
+  ],
+  "enabled": true,
+  "description": "Highlights for wget download output",
+  "use_global_rules": true
 }

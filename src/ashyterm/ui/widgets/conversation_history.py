@@ -17,6 +17,7 @@ gi.require_version("Adw", "1")
 gi.require_version("Gtk", "4.0")
 from gi.repository import Adw, GObject, Gtk
 
+from ...utils.icons import icon_button
 from ...utils.translation_utils import _
 
 if TYPE_CHECKING:
@@ -130,21 +131,21 @@ class ConversationHistoryPanel(Gtk.Box):
         header.set_title_widget(title)
         
         # Close button
-        close_btn = Gtk.Button.new_from_icon_name("window-close-symbolic")
+        close_btn = icon_button("window-close-symbolic")
         close_btn.add_css_class("flat")
         close_btn.set_tooltip_text(_("Close"))
         close_btn.connect("clicked", lambda b: self.emit("close-requested"))
         header.pack_end(close_btn)
         
         # Clear all button (trash icon)
-        self._clear_all_btn = Gtk.Button.new_from_icon_name("user-trash-symbolic")
+        self._clear_all_btn = icon_button("user-trash-symbolic")
         self._clear_all_btn.add_css_class("flat")
         self._clear_all_btn.set_tooltip_text(_("Delete All Conversations"))
         self._clear_all_btn.connect("clicked", self._on_clear_all)
         header.pack_end(self._clear_all_btn)
         
         # New conversation button
-        new_btn = Gtk.Button.new_from_icon_name("list-add-symbolic")
+        new_btn = icon_button("list-add-symbolic")
         new_btn.add_css_class("flat")
         new_btn.set_tooltip_text(_("New Conversation"))
         new_btn.connect("clicked", self._on_new_conversation)

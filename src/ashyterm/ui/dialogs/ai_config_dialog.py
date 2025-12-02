@@ -60,6 +60,23 @@ class AIConfigDialog(Adw.PreferencesWindow):
         page = Adw.PreferencesPage(title=_("AI Assistant"))
         self.add(page)
 
+        # Enable/Disable group - MUST be first element user sees
+        enable_group = Adw.PreferencesGroup(
+            title=_("Status"),
+            description=_("Enable or disable the AI Assistant feature."),
+        )
+        page.add(enable_group)
+
+        self.enable_switch = Adw.SwitchRow(
+            title=_("Enable AI Assistant"),
+            subtitle=_("Show the AI Assistant button in the header bar."),
+        )
+        self.enable_switch.set_active(
+            self.settings_manager.get("ai_assistant_enabled", False)
+        )
+        self.enable_switch.connect("notify::active", self._on_enable_changed)
+        enable_group.add(self.enable_switch)
+
         # Provider selection group
         provider_group = Adw.PreferencesGroup(
             title=_("Provider"),
@@ -172,22 +189,6 @@ class AIConfigDialog(Adw.PreferencesWindow):
         )
         self.site_name_row.connect("changed", self._on_site_name_changed)
         self.openrouter_group.add(self.site_name_row)
-
-        # Enable/Disable group
-        enable_group = Adw.PreferencesGroup(
-            title=_("Status"),
-        )
-        page.add(enable_group)
-
-        self.enable_switch = Adw.SwitchRow(
-            title=_("Enable AI Assistant"),
-            subtitle=_("Show the AI Assistant button in the header bar."),
-        )
-        self.enable_switch.set_active(
-            self.settings_manager.get("ai_assistant_enabled", False)
-        )
-        self.enable_switch.connect("notify::active", self._on_enable_changed)
-        enable_group.add(self.enable_switch)
 
         # Update UI based on current provider
         self._update_ui_for_provider(current_provider)

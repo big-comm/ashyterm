@@ -13,6 +13,7 @@ gi.require_version("Gtk", "4.0")
 gi.require_version("Adw", "1")
 from gi.repository import Adw, GLib, GObject, Gtk
 
+from ..utils.icons import icon_button
 from ..utils.logger import get_logger
 from ..utils.translation_utils import _
 
@@ -271,7 +272,7 @@ class TransferManager(GObject.Object):
         self.progress_bar = Gtk.ProgressBar(valign=Gtk.Align.CENTER, hexpand=True)
         self.progress_row.add_prefix(self.progress_bar)
 
-        self.cancel_button = Gtk.Button.new_from_icon_name("process-stop-symbolic")
+        self.cancel_button = icon_button("process-stop-symbolic")
         self.cancel_button.set_tooltip_text(_("Cancel All Transfers"))
         self.cancel_button.set_valign(Gtk.Align.CENTER)
         self.cancel_button.add_css_class("flat")

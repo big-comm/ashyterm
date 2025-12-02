@@ -3,7 +3,6 @@
 import atexit
 import os
 import threading
-from datetime import datetime
 from typing import TYPE_CHECKING, Optional
 
 import gi
@@ -28,12 +27,14 @@ from .settings.config import (
     SETTINGS_FILE,
 )
 from .settings.manager import SettingsManager
-from .terminal.spawner import cleanup_spawner
+# Lazy import: from .terminal.spawner import cleanup_spawner  # Only needed at shutdown
 from .utils.exceptions import handle_exception
 from .utils.logger import enable_debug_mode, get_logger, log_app_shutdown, log_app_start
-from .utils.platform import get_platform_info
-from .utils.security import create_security_auditor
 from .utils.translation_utils import _
+
+# Lazy imports for startup performance - these are used infrequently
+# from .utils.platform import get_platform_info  # Loaded on first access via property
+# from .utils.security import create_security_auditor  # Loaded on first access via property
 
 if TYPE_CHECKING:
     from .window import CommTerminalWindow
@@ -54,7 +55,7 @@ class CommTerminalApp(Adw.Application):
         self._main_window: Optional["CommTerminalWindow"] = None
         self._backup_manager = None
         self._security_auditor = None
-        self.platform_info = get_platform_info()
+        self._platform_info = None  # Lazy loaded via property
         self._initialized = False
         self._shutting_down = False
 
@@ -63,6 +64,15 @@ class CommTerminalApp(Adw.Application):
         self.connect("shutdown", self._on_shutdown)
         self.connect("command-line", self._on_command_line)
         atexit.register(self._cleanup_on_exit)
+
+    @property
+    def platform_info(self):
+        """Lazy-load platform info on first access."""
+        if self._platform_info is None:
+            from .utils.platform import get_platform_info
+
+            self._platform_info = get_platform_info()
+        return self._platform_info
 
     @property
     def backup_manager(self):
@@ -78,6 +88,7 @@ class CommTerminalApp(Adw.Application):
     def security_auditor(self):
         if self._security_auditor is None:
             try:
+                from .utils.security import create_security_auditor
                 self._security_auditor = create_security_auditor()
             except Exception as e:
                 self.logger.warning(
@@ -137,13 +148,9 @@ class CommTerminalApp(Adw.Application):
     def _on_startup(self, app) -> None:
         """Handle application startup."""
         try:
-            # Adds a search path for custom icons. This serves as a fallback
-            # if the system's icon theme does not provide the required icons.
-            custom_icon_path = "/usr/share/ashyterm/icons"
-            if os.path.isdir(custom_icon_path):
-                icon_theme = Gtk.IconTheme.get_for_display(Gdk.Display.get_default())
-                icon_theme.add_search_path(custom_icon_path)
-                self.logger.info(f"Added fallback icon search path: {custom_icon_path}")
+            # EARLY icon path configuration for performance
+            # Must happen before any UI is built
+            self._configure_icon_theme()
 
             self.logger.info("Application startup initiated")
             log_app_start()
@@ -158,6 +165,48 @@ class CommTerminalApp(Adw.Application):
             self.logger.critical(f"Application startup failed: {e}")
             self._show_startup_error(str(e))
             self.quit()
+
+    def _configure_icon_theme(self) -> None:
+        """Configure icon theme strategy based on settings.
+
+        When 'ashy' strategy is selected, icons are loaded directly from
+        bundled SVG files. When 'system' is selected, icons come from the
+        GTK IconTheme (follows desktop theme).
+
+        Note: FileManager uses MIME-type icons from system theme regardless
+        of this setting (see filemanager/manager.py).
+        """
+        try:
+            # Read setting directly from file since SettingsManager not yet initialized
+            import json
+            from pathlib import Path
+
+            settings_file = Path.home() / ".config" / "ashyterm" / "settings.json"
+            icon_strategy = "ashy"  # Default value
+
+            if settings_file.exists():
+                try:
+                    with open(settings_file, "r") as f:
+                        settings_data = json.load(f)
+                        # Settings are nested under "settings" key (with "metadata" at root)
+                        actual_settings = settings_data.get("settings", settings_data)
+                        icon_strategy = actual_settings.get(
+                            "icon_theme_strategy", "ashy"
+                        )
+                except Exception:
+                    pass  # Use default on any error
+
+            # Configure icons module based on strategy
+            from .utils import icons
+
+            icons._use_bundled_icons = icon_strategy == "ashy"
+
+            self.logger.info(
+                f"Icon strategy: {'Ashy (bundled SVGs)' if icon_strategy == 'ashy' else 'System icons'}"
+            )
+
+        except Exception as e:
+            self.logger.warning(f"Failed to configure icon theme: {e}")
 
     def _setup_actions(self) -> None:
         """Set up application-level actions."""
@@ -224,6 +273,11 @@ class CommTerminalApp(Adw.Application):
 
     def _on_activate(self, app) -> None:
         """Handle application activation when launched without command-line arguments."""
+        # Skip if we already presented the window during command-line processing
+        if getattr(self, "_window_already_presented", False):
+            self._window_already_presented = False
+            return
+
         if not self.get_windows():
             self.logger.info("No windows found on activation, creating a new one.")
             window = self.create_new_window()
@@ -236,6 +290,8 @@ class CommTerminalApp(Adw.Application):
         arguments = command_line.get_arguments()
         self.logger.info(f"Processing command line: {arguments}")
         self._process_and_execute_args(arguments)
+        # Mark that we've already presented window to avoid duplicate present() in _on_activate
+        self._window_already_presented = True
         self.activate()
         return 0
 
@@ -301,7 +357,11 @@ class CommTerminalApp(Adw.Application):
                 target_window.create_local_tab(working_directory)
 
     def _present_window_and_request_focus(self, window: Gtk.Window):
-        """Present the window and use a modal dialog hack to request focus if needed."""
+        """Present the window and use a modal dialog hack to request focus if needed.
+
+        The hack is deferred to run at low priority, allowing the main window
+        to render and become interactive first. This improves perceived startup time.
+        """
         window.present()
 
         def check_and_apply_hack():
@@ -319,7 +379,8 @@ class CommTerminalApp(Adw.Application):
 
             return GLib.SOURCE_REMOVE
 
-        GLib.idle_add(check_and_apply_hack)
+        # Run at low priority so it doesn't block the initial render
+        GLib.idle_add(check_and_apply_hack, priority=GLib.PRIORITY_LOW)
 
     def _on_command_line(self, app, command_line):
         return self.do_command_line(command_line)
@@ -380,6 +441,7 @@ class CommTerminalApp(Adw.Application):
 
     def _on_backup_now_action(self, _action, _param) -> None:
         """Handles the manual backup creation flow."""
+        from datetime import datetime
         file_dialog = Gtk.FileDialog(title=_("Save Backup As..."), modal=True)
         timestamp = datetime.now().strftime("%Y-%m-%d")
         file_dialog.set_initial_name(f"ashyterm-backup-{timestamp}.7z")
@@ -640,6 +702,8 @@ class CommTerminalApp(Adw.Application):
     def _on_shutdown(self, app) -> None:
         """Handle application shutdown."""
         self.logger.info("Application shutdown initiated")
+        # Lazy import - only needed at shutdown
+        from .terminal.spawner import cleanup_spawner
         cleanup_spawner()
         self._shutdown_gracefully()
 

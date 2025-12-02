@@ -2,6 +2,7 @@
 
 import os
 import re
+from functools import lru_cache
 from pathlib import Path
 from typing import Any, Dict, List
 
@@ -115,6 +116,7 @@ class DefaultSettings:
     """Default application settings."""
 
     @staticmethod
+    @lru_cache(maxsize=1)
     def get_available_default_font() -> str:
         """
         Detects the first available monospace font on the system.
@@ -269,6 +271,9 @@ class DefaultSettings:
                 "yq",
                 "grc",
             ],
+            # Icon Theme Strategy: "ashy" (bundled) or "system"
+            # Using Ashy Icons by default speeds up GTK4 startup
+            "icon_theme_strategy": "ashy",
             # Shortcuts
             "shortcuts": {
                 "new-local-tab": "<Control><Shift>t",
