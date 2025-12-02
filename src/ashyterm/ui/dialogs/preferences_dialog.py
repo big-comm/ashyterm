@@ -102,6 +102,8 @@ class PreferencesDialog(Adw.PreferencesWindow):
         font_button = Gtk.FontButton()
         font_button.set_valign(Gtk.Align.CENTER)
         font_button.set_font(self.settings_manager.get("font", "Monospace 10"))
+        # Filter to show only monospace fonts
+        font_button.set_filter_func(self._font_filter_func)
         font_button.connect("font-set", self._on_font_changed)
         font_row.add_suffix(font_button)
         font_row.set_activatable_widget(font_button)
@@ -594,6 +596,11 @@ class PreferencesDialog(Adw.PreferencesWindow):
         font = font_button.get_font()
         self.settings_manager.set("font", font)
         self.emit("font-changed", font)
+
+    @staticmethod
+    def _font_filter_func(family, face):
+        """Filter function to show only monospace fonts."""
+        return family.is_monospace()
 
     def _on_line_spacing_changed(self, spin_button) -> None:
         value = spin_button.get_value()
