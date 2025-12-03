@@ -548,23 +548,23 @@ msgstr "Kasutage regulaaravaldisi"
 msgid "Regex"
 msgstr "Regex"
 # 
-# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
+# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1606
-# File: usr/share/ashyterm/window.py, line: 248
+# File: src/ashyterm/ui/window_ui.py, line: 262
+# File: src/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 56
 #: NEEDS WORK
-msgid "Toggle Sidebar"
-msgstr "Vaheta külgriba"
+msgid "Sessions Panel"
+msgstr "Seanside paneel"
 # 
 # File: usr/share/ashyterm/window.py, line: 344
 #: NEEDS WORK
 msgid "File Manager"
 msgstr "Failihaldur"
 # 
-# File: usr/share/ashyterm/ui/window_ui.py, line: 324
+# File: usr/share/ashyterm/ui/dialogs/command_guide_dialog.py, line: 143
 #: NEEDS WORK
-msgid "Command Guide (Ctrl+Shift+P)"
-msgstr "Käskude juhend (Ctrl+Shift+P)"
+msgid "Command Guide"
+msgstr "Käskude juhend"
 # 
 # File: usr/share/ashyterm/ui/window_ui.py, line: 350
 #: NEEDS WORK
@@ -576,10 +576,10 @@ msgstr "Otsi terminalis"
 msgid "Send Command to All Tabs"
 msgstr "Saada käsk kõikidesse vahekaartidesse"
 # 
-# File: usr/share/ashyterm/ui/window_ui.py, line: 344
+# File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 39
 #: NEEDS WORK
-msgid "Ask AI Assistant (Ctrl+Shift+I)"
-msgstr "Küsi AI assistendilt (Ctrl+Shift+I)"
+msgid "Ask AI Assistant"
+msgstr "Küsi AI assistendilt"
 # 
 # File: usr/share/ashyterm/ui/window_ui.py, line: 259
 #: NEEDS WORK
@@ -2074,15 +2074,15 @@ msgstr "Kustuta kõik"
 msgid "Show Sessions"
 msgstr "Kuvaa seanssejä"
 # 
-# File: usr/share/ashyterm/ui/sidebar_manager.py, line: 227
+# File: src/ashyterm/ui/sidebar_manager.py, line: 292
 #: NEEDS WORK
-msgid "Hide Sidebar"
-msgstr "Peida külgmenüü"
+msgid "Hide Sessions Panel"
+msgstr "Peida seanside paneel"
 # 
-# File: usr/share/ashyterm/ui/sidebar_manager.py, line: 227
+# File: src/ashyterm/ui/sidebar_manager.py, line: 292
 #: NEEDS WORK
-msgid "Show Sidebar"
-msgstr "Näita külgriba"
+msgid "Show Sessions Panel"
+msgstr "Kuva sessioonide paneel"
 # 
 # File: usr/share/ashyterm/ui/menus.py, line: 24
 #: NEEDS WORK
@@ -2384,16 +2384,6 @@ msgstr "Ei saanud seansiga '{session_name}' ühendust luua."
 msgid "Configure AI Assistant"
 msgstr "Konfigureeri AI assistent"
 # 
-# File: src/ashyterm/ui/dialogs/ai_config_dialog.py, line: 178
-#: NEEDS WORK
-msgid "Status"
-msgstr "Olekord"
-# 
-# File: src/ashyterm/ui/dialogs/ai_config_dialog.py, line: 66
-#: NEEDS WORK
-msgid "Enable or disable the AI Assistant feature."
-msgstr "Luba või keeldu AI assistendi funktsiooni."
-# 
 # File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 327
 #: NEEDS WORK
 msgid "Enable AI Assistant"
@@ -2412,11 +2402,6 @@ msgstr "Kuvaa AI assistendi nupp ülemises menüüs."
 msgid "Provider"
 msgstr "Pakkuja"
 # 
-# File: src/ashyterm/ui/dialogs/ai_config_dialog.py, line: 66
-#: NEEDS WORK
-msgid "Select the AI service provider to use."
-msgstr "Valige kasutamiseks AI teenusepakkuja."
-# 
 # File: src/ashyterm/ui/dialogs/ai_config_dialog.py, line: 73
 #: NEEDS WORK
 msgid "Choose between cloud providers or local models."
@@ -2430,62 +2415,30 @@ msgstr "Vali pilveteenuste või kohalike mudelite vahel."
 msgid "Base URL"
 msgstr "Põhi-URL"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 463
-#: NEEDS WORK
-msgid "Authentication"
-msgstr "Autentimine"
-# 
-# File: src/ashyterm/ui/dialogs/ai_config_dialog.py, line: 98
-#: NEEDS WORK
-msgid "API credentials for the selected provider."
-msgstr "Valideerimise andmed valitud pakkuja jaoks."
-# 
 # File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 374
 #: NEEDS WORK
 msgid "API Key"
 msgstr "API võti"
-# 
-# File: usr/share/ashyterm/window.py, line: 547
-#: NEEDS WORK
-msgid "Model"
-msgstr "Mudel"
-# 
-# File: src/ashyterm/ui/dialogs/ai_config_dialog.py, line: 115
-#: NEEDS WORK
-msgid "Select or specify the AI model to use."
-msgstr "Valige või määrake kasutamiseks AI mudel."
 # 
 # File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 361
 #: NEEDS WORK
 msgid "Model Identifier"
 msgstr "Mudelidentifikaator"
 # 
-# File: src/ashyterm/ui/dialogs/ai_config_dialog.py, line: 131
-#: NEEDS WORK
-msgid "Fetch Available Models"
-msgstr "Fetch Available Models"
-# 
-# File: src/ashyterm/ui/dialogs/ai_config_dialog.py, line: 132
-#: NEEDS WORK
-msgid "Query OpenRouter for a list of available models."
-msgstr "Küsi OpenRouterilt saadaval mudelite loendit."
-# 
 # File: src/ashyterm/ui/dialogs/ai_config_dialog.py, line: 134
-# File: src/ashyterm/ui/dialogs/ai_config_dialog.py, line: 361
-# File: src/ashyterm/ui/dialogs/ai_config_dialog.py, line: 378
 #: NEEDS WORK
-msgid "Fetch Models"
-msgstr "Tõmba mudelid"
+msgid "Browse Available Models"
+msgstr "Sirvi saadaval mudeleid"
 # 
-# File: src/ashyterm/ui/dialogs/ai_config_dialog.py, line: 143
+# File: src/ashyterm/ui/dialogs/ai_config_dialog.py, line: 135
 #: NEEDS WORK
-msgid "Available Models"
-msgstr "Saadaval mudelid"
+msgid "Search and select from available OpenRouter models."
+msgstr "Otsi ja vali saadaval olevate OpenRouter mudelite hulgast."
 # 
-# File: src/ashyterm/ui/dialogs/ai_config_dialog.py, line: 144
+# File: src/ashyterm/ui/dialogs/ai_config_dialog.py, line: 137
 #: NEEDS WORK
-msgid "Select a model from the fetched list."
-msgstr "Vali mudel toimetatud loendist."
+msgid "Browse Models"
+msgstr "Sirvi mudelid"
 # 
 # File: src/ashyterm/ui/dialogs/ai_config_dialog.py, line: 151
 #: NEEDS WORK
@@ -2537,27 +2490,43 @@ msgstr "API võti (kui vajalik)"
 msgid "Please enter an API key first."
 msgstr "Palun sisestage esmalt API võti."
 # 
-# File: src/ashyterm/ui/dialogs/ai_config_dialog.py, line: 309
+# File: src/ashyterm/ui/dialogs/ai_config_dialog.py, line: 300
 #: NEEDS WORK
-msgid "Fetching..."
-msgstr "Laadimine..."
+msgid "Select OpenRouter Model"
+msgstr "Vali OpenRouter mudel"
 # 
-# File: src/ashyterm/ui/dialogs/ai_config_dialog.py, line: 370
+# File: src/ashyterm/ui/dialogs/ai_config_dialog.py, line: 344
+#: NEEDS WORK
+msgid "Search models by name or ID..."
+msgstr "Otsi mudeleid nime või ID järgi..."
+# 
+# File: src/ashyterm/ui/dialogs/ai_config_dialog.py, line: 358
+#: NEEDS WORK
+msgid "Loading models..."
+msgstr "Laadimine mudeleid..."
+# 
+# File: src/ashyterm/ui/dialogs/ai_config_dialog.py, line: 457
 #: NEEDS WORK
 #, python-brace-format
-msgid "Fetched {count} models."
-msgstr "Toodud {count} mudelit."
+msgid "Failed to load models: {error}"
+msgstr "Mudelite laadimine ebaõnnestus: {error}"
 # 
-# File: src/ashyterm/ui/dialogs/ai_config_dialog.py, line: 372
-#: NEEDS WORK
-msgid "No models found."
-msgstr "Mudeleid ei leitud."
-# 
-# File: src/ashyterm/ui/dialogs/ai_config_dialog.py, line: 379
+# File: src/ashyterm/ui/dialogs/ai_config_dialog.py, line: 489
 #: NEEDS WORK
 #, python-brace-format
-msgid "Failed to fetch models: {error}"
-msgstr "Mudelite toomine ebaõnnestus: {error}"
+msgid "{count} models available"
+msgstr "{count} mudelit saadaval"
+# 
+# File: src/ashyterm/ui/dialogs/ai_config_dialog.py, line: 492
+#: NEEDS WORK
+#, python-brace-format
+msgid "Showing {shown} of {total} models"
+msgstr "Kuvatakse {shown} {total} mudelist"
+# 
+# File: src/ashyterm/ui/dialogs/ai_config_dialog.py, line: 503
+#: NEEDS WORK
+msgid "Showing first 100 results. Refine your search to see more."
+msgstr "Kuvatakse esimesed 100 tulemust. Täpsustage oma otsingut, et näha rohkem."
 # 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 32
 #: NEEDS WORK
@@ -2639,35 +2608,40 @@ msgstr "Heled tsüaan"
 msgid "Bright White"
 msgstr "Heled Valge"
 # 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 52
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 58
 #: NEEDS WORK
-msgid "Bold Red"
-msgstr "Rasvane Punane"
+msgid "Bold"
+msgstr "Rasvane"
 # 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 53
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 59
 #: NEEDS WORK
-msgid "Bold Green"
-msgstr "Rohke roheline"
+msgid "Italic"
+msgstr "Kaldkursiiv"
 # 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 54
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1141
 #: NEEDS WORK
-msgid "Bold Yellow"
-msgstr "Rasvane Kollane"
+msgid "Underline"
+msgstr "Allakriip."
 # 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 55
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 61
 #: NEEDS WORK
-msgid "Bold Blue"
-msgstr "Rasvane Sinine"
+msgid "Strikethrough"
+msgstr "Läbivajutamine"
 # 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 56
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 62
 #: NEEDS WORK
-msgid "Bold Cyan"
-msgstr "Rasvane Sinine"
+msgid "Dim/Faint"
+msgstr "Hämar/Heled"
 # 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 57
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 63
 #: NEEDS WORK
-msgid "Bold White"
-msgstr "Rasvane Valge"
+msgid "Blink"
+msgstr "Vilku"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 68
+#: NEEDS WORK
+msgid "Default"
+msgstr "Vaikimisi"
 # 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 85
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 375
@@ -2676,11 +2650,15 @@ msgstr "Rasvane Valge"
 msgid "Group {}"
 msgstr "Rühm {}"
 # 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 86
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 174
 #: NEEDS WORK
-#, python-brace-format
-msgid "Color for capture group {}"
-msgstr "Värv haaramisgrupi jaoks {}"
+msgid "Color:"
+msgstr "Värv:"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 216
+#: NEEDS WORK
+msgid "Bg:"
+msgstr "Bg:"
 # 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 110
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 817
@@ -2709,10 +2687,10 @@ msgstr "Reegli nimi"
 msgid "Pattern"
 msgstr "Muster"
 # 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 264
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 525
 #: NEEDS WORK
-msgid "Use Python regular expression syntax. Capture groups () can have individual colors."
-msgstr "Kasutage Pythoni regulaaravaldiste süntaksit. Püüdmisgruppidel () võivad olla individuaalsed värvid."
+msgid "Python regex syntax. Capture groups () can have individual colors."
+msgstr "Pythoni regex süntaks. Püüdmisgrupid () võivad omada individuaalseid värve."
 # 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 268
 #: NEEDS WORK
@@ -2724,15 +2702,15 @@ msgstr "Regex mustri"
 msgid "Regex reference"
 msgstr "Regex viide"
 # 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 292
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 554
 #: NEEDS WORK
-msgid "Colors"
-msgstr "Värvid"
+msgid "Colors & Effects"
+msgstr "Värvid ja Efektid"
 # 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 293
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 555
 #: NEEDS WORK
-msgid "Assign colors to capture groups. First color applies to entire match if no groups."
-msgstr "Määrake värvid haaramisrühmadele. Esimene värv kehtib kogu vastele, kui rühmi pole."
+msgid "First color applies to entire match if no groups."
+msgstr "Esimene värv kehtib kogu vastele, kui gruppe ei ole."
 # 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 298
 #: NEEDS WORK
@@ -2921,28 +2899,17 @@ msgstr "Võti=väärtuse paarid (2 rühma)"
 msgid "Comment lines"
 msgstr "Kommentaari read"
 # 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 586
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 862
 #: NEEDS WORK
 #, python-brace-format
-msgid "Context: {}"
-msgstr "Kontekst: {}"
+msgid "Command: {}"
+msgstr "Käsk: {}"
 # 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 621
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 938
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1790
 #: NEEDS WORK
-msgid "Context Settings"
-msgstr "Konteksti seaded"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 627
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1451
-#: NEEDS WORK
-msgid "Enable Context"
-msgstr "Luba konteksti"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 628
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1452
-#: NEEDS WORK
-msgid "Apply rules when this command is detected"
-msgstr "Rakenda reeglid, kui seda käsku tuvastatakse"
+msgid "Enable Command Rules"
+msgstr "Luba käskureeglid"
 # 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 635
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1459
@@ -2950,72 +2917,31 @@ msgstr "Rakenda reeglid, kui seda käsku tuvastatakse"
 msgid "Include Global Rules"
 msgstr "Kaasuta globaalreegleid"
 # 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 636
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1460
-#: NEEDS WORK
-msgid "Also apply global rules alongside context-specific rules"
-msgstr "Kohaldage ka globaalseid reegleid koos kontekstispetsiifiliste reeglitega."
-# 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 643
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1467
 #: NEEDS WORK
 msgid "Reset to System Default"
 msgstr "Lähtestama süsteemi vaikeväärtused"
 # 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 644
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1468
-#: NEEDS WORK
-msgid "Remove user customization and revert to system rules"
-msgstr "Eemalda kasutaja kohandamine ja naase süsteemi reeglite juurde"
-# 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 657
 #: NEEDS WORK
 msgid "Triggers"
 msgstr "Käivitajad"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 658
-#: NEEDS WORK
-msgid ""
-"Commands that activate this context. Add, edit or remove triggers to customize when this context "
-"applies."
-msgstr ""
-"Käsklused, mis aktiveerivad seda konteksti. Lisage, redigeerige või eemaldage käivitajad, et "
-"kohandada, millal see kontekst kehtib."
 # 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 664
 #: NEEDS WORK
 msgid "➕ Add Trigger"
 msgstr "➕ Lisa käivitaja"
 # 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 665
-#: NEEDS WORK
-msgid "Add another command that activates this context"
-msgstr "Lisa veel üks käsk, mis aktiveerib selle konteksti."
-# 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 682
 #: NEEDS WORK
 msgid "Highlight Rules"
 msgstr "Esiletõste reeglid"
 # 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 683
-#: NEEDS WORK
-msgid "Use arrows to reorder. Rules are matched from top to bottom."
-msgstr "Kasutage nooli ümberkorraldamiseks. Reeglid sobitatakse üksteise alla."
-# 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 689
 #: NEEDS WORK
 msgid "➕ Add New Rule"
 msgstr "➕ Lisa uus reegel"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 690
-#: NEEDS WORK
-msgid "Create a new highlighting pattern for this context"
-msgstr "Loo uus esiletõstmise mustri selle konteksti jaoks"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 742
-#: NEEDS WORK
-msgid "Activates this context"
-msgstr "Aktiveerib selle konteksti"
 # 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 753
 #: NEEDS WORK
@@ -3106,67 +3032,40 @@ msgstr "Kas olete kindel, et soovite \"{}\" kustutada?"
 msgid "Global Rules"
 msgstr "Globaalreeglid"
 # 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1125
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1437
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1475
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1776
 #: NEEDS WORK
-msgid "Context Rules"
-msgstr "Konteksti reeglid"
+msgid "Command Rules"
+msgstr "Käskureeglid"
 # 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1140
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1490
 #: NEEDS WORK
 msgid ""
-"Syntax highlighting enhances terminal output readability by colorizing patterns like errors, "
-"warnings, IP addresses, and more.\n"
-"* Many highlight rules can slow down display of large outputs.."
+"Colorizes terminal output patterns like errors, warnings, and IPs. Many rules can slow down large "
+"outputs."
 msgstr ""
-"Süntaksihighlighting parandab terminali väljundi loetavust, värvides mustreid nagu vead, hoiatused, "
-"IP-aadressid ja palju muud.  \n"
-"* Paljud esiletõstmise reeglid võivad suurte väljundite kuvamist aeglustada."
+"Värvib terminali väljundi mustreid, nagu vead, hoiatused ja IP-d. Paljud reeglid võivad aeglustada "
+"suuri väljundeid."
 # 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1151
 #: NEEDS WORK
 msgid "Activation"
 msgstr "Aktiveerimine"
 # 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1153
-#: NEEDS WORK
-msgid "Control when syntax highlighting is applied to terminal output."
-msgstr "Kontrolli, millal süntaksi esiletõstmine rakendatakse terminali väljundile."
-# 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1160
 #: NEEDS WORK
 msgid "Local Terminals"
 msgstr "Kohalikud terminalid"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1161
-#: NEEDS WORK
-msgid "Apply highlighting to local shell sessions"
-msgstr "Rakenda esiletõstmine kohalikele shell-seanssidele"
 # 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1169
 #: NEEDS WORK
 msgid "SSH Sessions"
 msgstr "SSH seansid"
 # 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1170
-#: NEEDS WORK
-msgid "Apply highlighting to SSH remote sessions"
-msgstr "Kanna SSH kaugseanssidele esiletõstmine"
-# 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1179
 #: NEEDS WORK
 msgid "Ignored Commands"
 msgstr "Ignoreeritud käsud"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1185
-#: NEEDS WORK
-msgid "Highlighting disabled for these commands"
-msgstr "Käskude esiletõstmine on keelatud"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1186
-#: NEEDS WORK
-msgid "Click to expand"
-msgstr "Klõpsa, et avada"
 # 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1200
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1335
@@ -3174,31 +3073,16 @@ msgstr "Klõpsa, et avada"
 msgid "Restore Defaults"
 msgstr "Taasta vaikeseaded"
 # 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1201
-#: NEEDS WORK
-msgid "Reset to the default ignored commands list"
-msgstr "Lähtestage vaikeväärtuste ignoreeritud käskude loend"
-# 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1214
 #: NEEDS WORK
 msgid "➕ Add Ignored Command"
 msgstr "➕ Lisa ignoreeritud käsk"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1215
-#: NEEDS WORK
-msgid "Add a command that should preserve its native colors"
-msgstr "Lisa käsk, mis peaks säilitama oma algsed värvid."
 # 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1253
 #: NEEDS WORK
 #, python-brace-format
 msgid "{count} command(s) • Click to expand/collapse"
 msgstr "{count} käsku • Klõpsa, et avada/sulgeda"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1259
-#: NEEDS WORK
-msgid "Native coloring preserved"
-msgstr "Kohandatud värv säilitati"
 # 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1265
 #: NEEDS WORK
@@ -3247,59 +3131,30 @@ msgstr ""
 msgid "Restored default ignored commands"
 msgstr "Taastatud vaikeseaded, millele ei pöörata tähelepanu"
 # 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1361
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1698
 #: NEEDS WORK
-msgid "Context-Aware Highlighting"
-msgstr "Kontekstiteadlik esiletõstmine"
+msgid "Per-Command Highlighting"
+msgstr "Käskude rõhutamine"
 # 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1363
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1704
 #: NEEDS WORK
-msgid "Automatically apply command-specific rules when certain commands are detected."
-msgstr "Automaatne käsk-spetsiifiliste reeglite rakendamine, kui tuvastatakse teatud käsud."
+msgid "Enable Command Detection"
+msgstr "Käsku tuvastamise lubamine"
 # 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1370
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1713
 #: NEEDS WORK
-msgid "Enable Context Detection"
-msgstr "Luba konteksti tuvastamine"
+msgid "Commands"
+msgstr "Käskud"
 # 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1371
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1719
 #: NEEDS WORK
-msgid "Detect running commands and apply specific highlight rules"
-msgstr "Tuvasta käimasolevad käsud ja rakenda spetsiifilisi esiletõstmise reegleid"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1380
-#: NEEDS WORK
-msgid "Command Contexts"
-msgstr "Käskude kontekstid"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1382
-#: NEEDS WORK
-msgid ""
-"Context rules apply only when a specific command is running (e.g., ping, docker, git). Toggle "
-"contexts on/off or click a row to edit its rules."
-msgstr ""
-"Konteksti reeglid kehtivad ainult siis, kui konkreetne käsk on käimas (nt ping, docker, git). "
-"Lülitage kontekstid sisse/välja või klõpsake rida, et redigeerida selle reegleid."
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1390
-#: NEEDS WORK
-msgid "➕ Create New Context"
-msgstr "➕ Loo uue konteksti"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1391
-#: NEEDS WORK
-msgid "Add custom highlighting rules for a specific command"
-msgstr "Lisa kohandatud esiletõstmise reeglid konkreetse käsu jaoks"
+msgid "➕ Add Command"
+msgstr "➕ Lisa käsk"
 # 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1406
 #: NEEDS WORK
 msgid "Bulk Actions"
 msgstr "Hulgitegevused"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1407
-#: NEEDS WORK
-msgid "Quickly enable or disable all contexts"
-msgstr "Kiirelt lülita sisse või välja kõik kontekstid"
 # 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1410
 #: NEEDS WORK
@@ -3311,32 +3166,49 @@ msgstr "Luba kõik"
 msgid "Disable All"
 msgstr "Keela kõik"
 # 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1426
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1753
 #: NEEDS WORK
-msgid "Available Contexts"
-msgstr "Saadaval kontekstid"
+msgid "Reset All Commands"
+msgstr "Resetige kõik käsud"
 # 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1427
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1766
 #: NEEDS WORK
-msgid "Click a context to select it, then scroll down to customize its rules"
-msgstr "Klõpsa konteksti, et see valida, seejärel kerige alla, et kohandada selle reegleid."
+msgid "Available Commands"
+msgstr "Saadaval käsud"
 # 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1438
 #: NEEDS WORK
 msgid "Rules specific to the selected command. Order matters!"
 msgstr "Valikud, mis on spetsiifilised valitud käsule. Järjekord on oluline!"
 # 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1444
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1745
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1783
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2081
 #: NEEDS WORK
-msgid "No context selected"
-msgstr "Konteksti pole valitud"
+msgid "No command selected"
+msgstr "Ühtegi käsku ei ole valitud"
 # 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1445
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1746
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1784
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2083
 #: NEEDS WORK
-msgid "Select a context from the list above"
-msgstr "Valige kontekst ülaltoodud loendist"
+msgid "Select a command from the list above"
+msgstr "Valige ülaltoodud loendist käsk."
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 628
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1452
+#: NEEDS WORK
+msgid "Apply rules when this command is detected"
+msgstr "Rakenda reeglid, kui seda käsku tuvastatakse"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1799
+#: NEEDS WORK
+msgid "Also apply global rules alongside command-specific rules"
+msgstr "Kohaldage ka globaalseid reegleid koos käsuspetsiifiliste reeglitega."
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 644
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1468
+#: NEEDS WORK
+msgid "Remove user customization and revert to system rules"
+msgstr "Eemalda kasutaja kohandamine ja naase süsteemi reeglite juurde"
 # 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1482
 #: NEEDS WORK
@@ -3348,10 +3220,10 @@ msgstr "Reeglid (täitmise järjekorras)"
 msgid "Use arrows to reorder rules. Rules are matched from top to bottom."
 msgstr "Kasutage nooli reeglite ümberjärjestamiseks. Reeglid sobitatakse üksteise alla."
 # 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1489
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1828
 #: NEEDS WORK
-msgid "➕ Add Rule to This Context"
-msgstr "➕ Lisa reegel sellele kontekstile"
+msgid "➕ Add Rule to This Command"
+msgstr "➕ Lisa reegel sellele käsule"
 # 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1490
 #: NEEDS WORK
@@ -3363,40 +3235,22 @@ msgstr "Loo uus esiletõstmise muster valitud käsu jaoks"
 msgid "Global Highlight Rules"
 msgstr "Globaalne esiletõstmise reeglid"
 # 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1507
-#: NEEDS WORK
-msgid ""
-"These rules apply to ALL terminal output, regardless of which command is running. Use for patterns "
-"you always want highlighted (errors, warnings, IP addresses, etc.). \n"
-"For command-specific rules, use the Context Rules tab."
-msgstr "Need to translate the string."
-# 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1517
 #: NEEDS WORK
 msgid "➕ Add New Global Rule"
 msgstr "➕ Lisa uus globaalne reegel"
 # 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1518
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1863
 #: NEEDS WORK
-msgid "Create a new pattern to highlight in all terminal output"
-msgstr "Loo uus muster, et esile tõsta kogu terminali väljundis"
+msgid "Reset Global Rules"
+msgstr "Lähtesta globaalreegleid"
 # 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1531
-#: NEEDS WORK
-msgid "Reset to Defaults"
-msgstr "Lähtestama vaikeseaded"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1532
-#: NEEDS WORK
-msgid "Restore all default rules and contexts"
-msgstr "Taasta kõik vaikeseaded ja kontekstid"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1569
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1670
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1900
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2006
 #: NEEDS WORK
 #, python-brace-format
-msgid "{total} context(s), {enabled} enabled"
-msgstr "{total} konteksti, {enabled} lubatud"
+msgid "{total} command(s), {enabled} enabled"
+msgstr "{total} käsku, {enabled} lubatud"
 # 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1590
 #: NEEDS WORK
@@ -3404,20 +3258,20 @@ msgstr "{total} konteksti, {enabled} lubatud"
 msgid "{count} rules"
 msgstr "{count} reeglit"
 # 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1603
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1935
 #: NEEDS WORK
-msgid "Edit context rules"
-msgstr "Muuda konteksti reegleid"
+msgid "Edit command rules"
+msgstr "Muuda käsu reegleid"
 # 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1612
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1944
 #: NEEDS WORK
-msgid "Delete context"
-msgstr "Kustuta kontekst"
+msgid "Delete command"
+msgstr "Kustuta käsk"
 # 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1640
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1972
 #: NEEDS WORK
-msgid "Delete Context?"
-msgstr "Kustuta kontekst?"
+msgid "Delete Command?"
+msgstr "Kustuta käsk?"
 # 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1641
 #: NEEDS WORK
@@ -3425,21 +3279,21 @@ msgstr "Kustuta kontekst?"
 msgid "Are you sure you want to delete \"{}\"? This will remove all custom rules for this command."
 msgstr "Kas olete kindel, et soovite \"{}\" kustutada? See eemaldab kõik selle käsu kohandatud reeglid."
 # 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1656
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1991
 #: NEEDS WORK
 #, python-brace-format
-msgid "Context deleted: {}"
-msgstr "Kontext kustutatud: {}"
+msgid "Command deleted: {}"
+msgstr "Käsk kustutatud: {}"
 # 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1747
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2086
 #: NEEDS WORK
-msgid "Select a context to view its rules"
-msgstr "Vali kontekst, et vaadata selle reegleid"
+msgid "Select a command to view its rules"
+msgstr "Vali käsk, et vaadata selle reegleid"
 # 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1759
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2099
 #: NEEDS WORK
-msgid "Context not found"
-msgstr "Konteksti ei leitud"
+msgid "Command not found"
+msgstr "Käsku ei leitud"
 # 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1767
 #: NEEDS WORK
@@ -3475,23 +3329,23 @@ msgstr "{} värvid"
 msgid "Actions"
 msgstr "Tegevused"
 # 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1932
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2275
 #: NEEDS WORK
 #, python-brace-format
-msgid "{total} context(s), {enabled} enabled. Click to toggle, select to edit."
-msgstr "{total} konteksti, {enabled} lubatud. Klõpsake vahetamiseks, valige redigeerimiseks."
+msgid "{total} command(s), {enabled} enabled. Click to toggle, select to edit."
+msgstr "{total} käsku, {enabled} lubatud. Klõpsake vahetamiseks, valige redigeerimiseks."
 # 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1975
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2317
 #: NEEDS WORK
 #, python-brace-format
-msgid "Context created: {}"
-msgstr "Kontekst loodud: {}"
+msgid "Command created: {}"
+msgstr "Käsk loodud: {}"
 # 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2006
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2348
 #: NEEDS WORK
 #, python-brace-format
-msgid "Context reset: {}"
-msgstr "Konteksti lähtestamine: {}"
+msgid "Command reset: {}"
+msgstr "Käsk lähtestamine: {}"
 # 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2008
 #: NEEDS WORK
@@ -3519,25 +3373,50 @@ msgstr "Reegel uuendatud: {}"
 msgid "Rule deleted: {}"
 msgstr "Reegel kustutatud: {}"
 # 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2279
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2462
 #: NEEDS WORK
-msgid "Reset to Defaults?"
-msgstr "Lähtestada vaikeseaded?"
+msgid "Restart Required"
+msgstr "Taaskäivitamine vajalik"
 # 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2280
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2463
 #: NEEDS WORK
-msgid "This will remove all user customizations and revert to system defaults. This cannot be undone."
-msgstr "See eemaldab kõik kasutaja kohandused ja taastab süsteemi vaikeväärtused. Seda ei saa tagasi võtta."
+msgid "Restart the program for the colors to be applied to the terminal."
+msgstr "Taaskäivita programm, et värvid saaksid terminalile rakenduda."
 # 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2298
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2645
 #: NEEDS WORK
-msgid "Reset to system defaults"
-msgstr "Lähtesta süsteemi vaikeväärtused"
+msgid "Reset Global Rules?"
+msgstr "Lähtesta globaalreegleid?"
 # 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2324
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2647
 #: NEEDS WORK
-msgid "New Context"
-msgstr "Uus kontekst"
+msgid "This will restore global rules to system defaults. Context customizations will be preserved."
+msgstr "See taastab globaalreeglid süsteemi vaikeväärtustele. Konteksti kohandused säilitatakse."
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2667
+#: NEEDS WORK
+msgid "Global rules reset to defaults"
+msgstr "Globaalreeglid lähteseadetele taastatud"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2673
+#: NEEDS WORK
+msgid "Reset All Commands?"
+msgstr "Kustuta kõik käsud?"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2675
+#: NEEDS WORK
+msgid "This will restore all commands to system defaults. Global rules will be preserved."
+msgstr "See taastab kõik käsud süsteemi vaikeväärtustele. Globaalreeglid säilitatakse."
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2695
+#: NEEDS WORK
+msgid "All commands reset to defaults"
+msgstr "Kõik käsud lähtestatakse vaikeseadetele."
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2721
+#: NEEDS WORK
+msgid "New Command"
+msgstr "Uus käsk"
 # 
 # File: usr/share/ashyterm/filemanager/manager.py, line: 1743
 # File: usr/share/ashyterm/filemanager/manager.py, line: 1760
@@ -3563,10 +3442,10 @@ msgstr "Käskude nimi"
 msgid "Enter a command name"
 msgstr "Sisestage käsu nimi"
 # 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2390
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2787
 #: NEEDS WORK
-msgid "Context already exists"
-msgstr "Kontekst juba eksisteerib"
+msgid "Command already exists"
+msgstr "Käsk on juba olemas"
 # 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2397
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2621
@@ -3594,11 +3473,11 @@ msgstr "Lisa käivitaja"
 msgid "Add"
 msgstr "Lisa"
 # 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2481
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2879
 #: NEEDS WORK
 #, python-brace-format
-msgid "Enter a command name that should activate the '{}' context."
-msgstr "Sisestage käsu nimi, mis peaks aktiveerima '{}' konteksti."
+msgid "Enter a command name that should activate the '{}' command rules."
+msgstr "Sisestage käsu nimi, mis peaks aktiveerima '{}' käsureeglid."
 # 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2483
 #: NEEDS WORK
@@ -3640,6 +3519,16 @@ msgstr "✓ Kehtiv käsu nimi"
 msgid "Edit Session"
 msgstr "Redigeeri seanss"
 # 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 581
+#: NEEDS WORK
+msgid "Test Connection"
+msgstr "Testi ühendus"
+# 
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 100
+#: NEEDS WORK
+msgid "Test SSH connection"
+msgstr "Testi SSH-ühendust"
+# 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 313
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1128
 #: NEEDS WORK
@@ -3652,68 +3541,10 @@ msgstr "Kasutajaliidese viga"
 msgid "Failed to initialize dialog interface"
 msgstr "Dialooge liidese algatamine ebaõnnestus"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 319
-#: NEEDS WORK
-msgid "Session Information"
-msgstr "Seansi teave"
-# 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 323
 #: NEEDS WORK
 msgid "Session Name"
 msgstr "Seansi nimi"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 324
-#: NEEDS WORK
-msgid "A descriptive name for this session"
-msgstr "Selle seansi kirjeldav nimi"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 329
-#: NEEDS WORK
-msgid "Enter session name..."
-msgstr "Sisestage seansi nimi..."
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1421
-#: NEEDS WORK
-msgid "Appearance"
-msgstr "Välimus"
-# 
-# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 115
-#: NEEDS WORK
-msgid "Tab Color"
-msgstr "Vahevärv"
-# 
-# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 116
-#: NEEDS WORK
-msgid "Choose a color to identify this session's tab"
-msgstr "Vali värv, et tuvastada selle seansi vahekaart."
-# 
-# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 135
-#: NEEDS WORK
-msgid "Clear Color"
-msgstr "Selge Värv"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 347
-#: NEEDS WORK
-msgid "Organization"
-msgstr "Organisatsioon"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 352
-#: NEEDS WORK
-msgid "Choose a folder to organize this session"
-msgstr "Vali kaust, et korraldada seda seanssi"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 357
-# File: usr/share/ashyterm/ui/dialogs.py, line: 358
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1164
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1165
-#: NEEDS WORK
-msgid "Root"
-msgstr "Juurt"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 398
-#: NEEDS WORK
-msgid "Connection Type"
-msgstr "Ühenduse tüüp"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 402
 #: NEEDS WORK
@@ -3738,15 +3569,87 @@ msgstr "Kohalik terminal"
 msgid "SSH Connection"
 msgstr "SSH Ühendus"
 # 
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 115
+#: NEEDS WORK
+msgid "Tab Color"
+msgstr "Vahevärv"
+# 
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 116
+#: NEEDS WORK
+msgid "Choose a color to identify this session's tab"
+msgstr "Vali värv, et tuvastada selle seansi vahekaart."
+# 
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 135
+#: NEEDS WORK
+msgid "Clear Color"
+msgstr "Selge Värv"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 347
+#: NEEDS WORK
+msgid "Organization"
+msgstr "Organisatsioon"
+# 
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 196
+#: NEEDS WORK
+msgid "Choose where to store this session"
+msgstr "Vali, kuhu salvestada see seanss"
+# 
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 201
+#: NEEDS WORK
+msgid "Select a folder to organize this session"
+msgstr "Vali kaust, et korraldada seda seanssi"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 357
+# File: usr/share/ashyterm/ui/dialogs.py, line: 358
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1164
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1165
+#: NEEDS WORK
+msgid "Root"
+msgstr "Juurt"
+# 
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 237
+#: NEEDS WORK
+msgid "Local Terminal Options"
+msgstr "Kohalikud terminali valikud"
+# 
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 242
+#: NEEDS WORK
+msgid "Working Directory"
+msgstr "Töökataloog"
+# 
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 243
+#: NEEDS WORK
+msgid "Start the terminal in this folder"
+msgstr "Käivita terminal selles kaustas"
+# 
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 252
+#: NEEDS WORK
+msgid "Default (Home directory)"
+msgstr "Vaikimisi (Kodu kataloog)"
+# 
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 262
+#: NEEDS WORK
+msgid "Browse for folder"
+msgstr "Sirvi kausta"
+# 
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 285
+#: NEEDS WORK
+msgid "Startup Commands"
+msgstr "Käivitamis käsud"
+# 
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 293
+#: NEEDS WORK
+msgid ""
+"Commands executed when the terminal starts (one per line). You can write multiple commands like a "
+"small script."
+msgstr ""
+"Käskud, mis täidetakse terminali käivitamisel (üks rida kaupa). Saate kirjutada mitu käsku nagu "
+"väike skript."
+# 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 423
 #: NEEDS WORK
 msgid "SSH Configuration"
 msgstr "SSH konfiguratsioon"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 424
-#: NEEDS WORK
-msgid "Configure connection details for SSH sessions"
-msgstr "Konfigureeri SSH seansside ühenduse üksikasjad"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 429
 # File: usr/share/ashyterm/ui/dialogs.py, line: 894
@@ -3754,45 +3657,25 @@ msgstr "Konfigureeri SSH seansside ühenduse üksikasjad"
 msgid "Host"
 msgstr "Host"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 430
-#: NEEDS WORK
-msgid "Hostname or IP address of the remote server"
-msgstr "Kaugniku hostinimi või IP-aadress kaugserverile"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 435
-#: NEEDS WORK
-msgid "example.com or 192.168.1.100"
-msgstr "example.com või 192.168.1.100"
-# 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 446
 #: NEEDS WORK
 msgid "Username"
 msgstr "Kasutajanimi"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 447
-#: NEEDS WORK
-msgid "Username for SSH authentication (optional)"
-msgstr "SSH autentimiseks kasutatav kasutajanimi (valikuline)"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 452
-#: NEEDS WORK
-msgid "username"
-msgstr "kasutajanimi"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 464
 #: NEEDS WORK
 msgid "Port"
 msgstr "Port"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 465
+# File: usr/share/ashyterm/ui/dialogs.py, line: 463
 #: NEEDS WORK
-msgid "SSH port number (default: 22)"
-msgstr "SSH pordi number (vaikimisi: 22)"
+msgid "Authentication"
+msgstr "Autentimine"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 464
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 369
 #: NEEDS WORK
-msgid "Choose authentication method"
-msgstr "Vali autentimise meetod"
+msgid "Choose how to authenticate with the server"
+msgstr "Valige, kuidas serveriga autentida."
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 467
 #: NEEDS WORK
@@ -3810,80 +3693,95 @@ msgstr "Parool"
 msgid "SSH Key Path"
 msgstr "SSH võtme tee"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 495
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 384
 #: NEEDS WORK
-msgid "Path to private SSH key file"
-msgstr "Privaatse SSH võtme faili tee"
+msgid "Path to your private key file"
+msgstr "Teie privaatvõtme faili tee"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 510
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 401
 #: NEEDS WORK
-msgid "Browse..."
-msgstr "Sirvi..."
+msgid "Browse for SSH key file"
+msgstr "Sirvi SSH võtme faili leidmiseks"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 534
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 434
 #: NEEDS WORK
-msgid "Password for SSH authentication"
-msgstr "SSH autentimise parool"
+msgid "Password Storage"
+msgstr "Paroolide salvestamine"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 342
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 436
 #: NEEDS WORK
-msgid "Password for SSH authentication (stored in system keyring)"
-msgstr "SSH autentimise parool (salvestatud süsteemi võtmehoidlas)"
+msgid "System keyring not available - password will be stored in plain text"
+msgstr "Süsteemi võtmehoidja pole saadaval - parool salvestatakse selges tekstis"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 346
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 453
 #: NEEDS WORK
-msgid "Password for SSH authentication (keyring not available)"
-msgstr "SSH autentimise parool (võtmehoidja ei ole saadaval)"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 553
-#: NEEDS WORK
-msgid "Enter password..."
-msgstr "Sisestage parool..."
+msgid "SSH Options"
+msgstr "SSH valikud"
 # 
 # File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 309
 #: NEEDS WORK
 msgid "Run Command After Login"
 msgstr "Käivita käsk pärast sisselogimist"
 # 
-# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 311
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 459
 #: NEEDS WORK
-msgid "Execute a custom command automatically after the SSH session connects"
-msgstr "Käivita kohandatud käsk automaatselt pärast SSH seansi ühendamist"
+msgid "Execute a command automatically after SSH connects"
+msgstr "Käivita käsk automaatselt pärast SSH-ühenduse loomist"
 # 
 # File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 318
 #: NEEDS WORK
 msgid "Post-Login Command"
 msgstr "Sisselogimise käsk"
 # 
-# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 319
-#: NEEDS WORK
-msgid "Command to execute right after a successful login"
-msgstr "Käsk, mida täita kohe pärast eduka sisselogimise."
-# 
-# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 323
-#: NEEDS WORK
-msgid "Example: tmux attach -t main"
-msgstr "tmux attach -t main"
-# 
 # File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 356
 #: NEEDS WORK
 msgid "Enable X11 Forwarding"
 msgstr "Luba X11 edastamine"
 # 
-# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 357
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 479
 #: NEEDS WORK
-msgid "Allow starting programs in graphical mode (X11)"
-msgstr "Luba programmide käivitamine graafilises režiimis (X11)"
+msgid "Allow graphical applications from remote server"
+msgstr "Luba graafilisi rakendusi kaugserverist"
+# 
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 353
+#: NEEDS WORK
+msgid "Enable SFTP Session"
+msgstr "Luba SFTP seans"
+# 
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 488
+#: NEEDS WORK
+msgid "Use default directories when opening SFTP"
+msgstr "Kasuta vaikimisi kaustu SFTP avamisel"
+# 
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 496
+#: NEEDS WORK
+msgid "SFTP Local Directory"
+msgstr "SFTP kohaliku katalooge"
+# 
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 505
+#: NEEDS WORK
+msgid "SFTP Remote Directory"
+msgstr "SFTP kaugjuhtimise kataloog"
 # 
 # File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 354
 #: NEEDS WORK
 msgid "Port Forwarding"
 msgstr "Pordi edastamine"
 # 
-# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 355
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 529
 #: NEEDS WORK
-msgid "Create SSH tunnels to forward local ports to remote targets"
-msgstr "Loo SSH tunnelid, et edastada kohalikke porte kaugsihtkohtadesse"
+msgid "Create SSH tunnels to forward ports"
+msgstr "Loo SSH tunnelid portide edastamiseks"
+# 
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 484
+#: NEEDS WORK
+msgid "Add Port Forward"
+msgstr "Lisa pordi edastamine"
+# 
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 537
+#: NEEDS WORK
+msgid "Create a new SSH tunnel"
+msgstr "Loo uus SSH tunnel"
 # 
 # File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 396
 #: NEEDS WORK
@@ -3915,20 +3813,15 @@ msgstr "{local_host}:{local_port} → {remote_host}:{remote_port}"
 msgid "Edit Port Forward"
 msgstr "Muuda sadama edasiviimist"
 # 
-# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 484
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 712
 #: NEEDS WORK
-msgid "Add Port Forward"
-msgstr "Lisa pordi edastamine"
+msgid "Tunnel Name"
+msgstr "Tunnel Nimi"
 # 
-# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 508
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 718
 #: NEEDS WORK
-msgid "Tunnel name"
-msgstr "Tunnelin nimi"
-# 
-# File: usr/share/ashyterm/filemanager/manager.py, line: 366
-#: NEEDS WORK
-msgid "Name"
-msgstr "Nimi"
+msgid "Local Settings"
+msgstr "Kohalikud seaded"
 # 
 # File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 519
 #: NEEDS WORK
@@ -3940,15 +3833,25 @@ msgstr "Kohalik host"
 msgid "Local Port"
 msgstr "Kohalik port"
 # 
-# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 529
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 732
 #: NEEDS WORK
-msgid "Leave blank to use the SSH host"
-msgstr "Jätke tühi, et kasutada SSH hosti."
+msgid "Port on your machine (1025-65535 recommended)"
+msgstr "Pord teie masinas (soovitatav 1025-65535)"
 # 
-# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 536
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 738
 #: NEEDS WORK
-msgid "Connect to a different remote host"
-msgstr "Ühenda teise kaugserveriga"
+msgid "Remote Settings"
+msgstr "Kaugseaded"
+# 
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 745
+#: NEEDS WORK
+msgid "Use Custom Remote Host"
+msgstr "Kasutage kohandatud kaugserverit"
+# 
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 746
+#: NEEDS WORK
+msgid "Leave off to use the SSH server as target"
+msgstr "Jäta välja, et kasutada SSH-serverit sihtmärgina."
 # 
 # File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 546
 #: NEEDS WORK
@@ -3959,6 +3862,11 @@ msgstr "Kaugjuhtimisseade"
 #: NEEDS WORK
 msgid "Remote Port"
 msgstr "Kaugport"
+# 
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 765
+#: NEEDS WORK
+msgid "Port on the remote host (1-65535)"
+msgstr "Pordid kaugemas hostis (1-65535)"
 # 
 # File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 590
 #: NEEDS WORK
@@ -3982,75 +3890,41 @@ msgstr "Kohalik host ei tohi olla tühi."
 msgid "Invalid Port Forward"
 msgstr "Keeruline Port Edasi"
 # 
-# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 346
-#: NEEDS WORK
-msgid "SFTP Session"
-msgstr "SFTP seanss"
-# 
-# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 348
-#: NEEDS WORK
-msgid "Configure default directories for SFTP connections (optional)"
-msgstr "Konfigureeri SFTP-ühenduste vaikekaustad (valikuline)"
-# 
-# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 353
-#: NEEDS WORK
-msgid "Enable SFTP Session"
-msgstr "Luba SFTP seans"
-# 
-# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 355
-#: NEEDS WORK
-msgid "Use these directories when opening an SFTP tab for this session"
-msgstr "Kasutage neid kaustu SFTP vahekaartide avamisel selle seansi jaoks."
-# 
-# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 364
-#: NEEDS WORK
-msgid "Local Directory"
-msgstr "Kohalik kataloog"
-# 
-# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 365
-#: NEEDS WORK
-msgid "Starting directory on your machine for SFTP"
-msgstr "SFTP jaoks teie masina alguskaust"
-# 
-# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 369
-#: NEEDS WORK
-msgid "Example: /home/user/projects"
-msgstr "/ko home/kasutaja/projektid"
-# 
-# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 379
-#: NEEDS WORK
-msgid "Remote Directory"
-msgstr "Kaugkaust"
-# 
-# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 380
-#: NEEDS WORK
-msgid "Starting directory on the remote host for SFTP"
-msgstr "Kaugjuhtme alguskaust SFTP jaoks"
-# 
-# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 384
-#: NEEDS WORK
-msgid "Example: /var/www"
-msgstr "/var/www"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 581
-#: NEEDS WORK
-msgid "Test Connection"
-msgstr "Testi ühendus"
-# 
 # File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 773
 #: NEEDS WORK
 msgid "Remote server must have X11Forwarding yes in sshd_config."
 msgstr "Kaugserver peab sshd_config failis olema X11Forwarding jah."
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 707
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 1030
 #: NEEDS WORK
-msgid "Select SSH Key"
-msgstr "Vali SSH võti"
+msgid "Select Working Directory"
+msgstr "Vali töökaust"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 720
 #: NEEDS WORK
 msgid "File Dialog Error"
 msgstr "Faili dialooge viga"
+# 
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 1051
+#: NEEDS WORK
+msgid "Failed to open folder browser"
+msgstr "Kausta sirvijat ei õnnestunud avada"
+# 
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 1065
+#: NEEDS WORK
+msgid "Folder Selection Error"
+msgstr "Katalooge valimise viga"
+# 
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 1066
+#: NEEDS WORK
+#, python-brace-format
+msgid "Failed to select folder: {}"
+msgstr "Kausta valimine ebaõnnestus: {}"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 707
+#: NEEDS WORK
+msgid "Select SSH Key"
+msgstr "Vali SSH võti"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 720
 #: NEEDS WORK
@@ -4167,6 +4041,16 @@ msgstr ""
 msgid "Session name"
 msgstr "Seansi nimi"
 # 
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 1367
+#: NEEDS WORK
+msgid "Working directory must exist and be a folder."
+msgstr "Töökataloog peab eksisteerima ja olema kaust."
+# 
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 1374
+#: NEEDS WORK
+msgid "Invalid working directory path."
+msgstr "Kehtetu töökausta tee."
+# 
 # #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
 # 
 # File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 716
@@ -4239,11 +4123,6 @@ msgstr "Palun täitke kõik kohustuslikud väljad."
 #: NEEDS WORK
 msgid "Delete this custom command"
 msgstr "Kustuta see kohandatud käsk"
-# 
-# File: usr/share/ashyterm/ui/dialogs/command_guide_dialog.py, line: 143
-#: NEEDS WORK
-msgid "Command Guide"
-msgstr "Käskude juhend"
 # 
 # File: usr/share/ashyterm/ui/dialogs/command_guide_dialog.py, line: 165
 #: NEEDS WORK
@@ -4382,16 +4261,6 @@ msgstr "Sulge aktiivne paneel"
 msgid "Terminal Interaction"
 msgstr "Terminali interaktsioon"
 # 
-# File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 38
-#: NEEDS WORK
-msgid "Send Command  All Tabs"
-msgstr "Saada käsk  Kõik vahekaardid"
-# 
-# File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 39
-#: NEEDS WORK
-msgid "Ask AI Assistant"
-msgstr "Küsi AI assistendilt"
-# 
 # File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 42
 #: NEEDS WORK
 msgid "Zoom"
@@ -4416,11 +4285,6 @@ msgstr "Lähtesta suurus"
 #: NEEDS WORK
 msgid "Application &amp; Window"
 msgstr "Rakendus ja aken"
-# 
-# File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 53
-#: NEEDS WORK
-msgid "Toggle File Manager"
-msgstr "Lülita failihaldur"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1605
 #: NEEDS WORK
@@ -4521,105 +4385,60 @@ msgstr "Lähtesta kõik otseteed"
 msgid "This will reset all keyboard shortcuts to their default values. Continue?"
 msgstr "See lähtestab kõik klaviatuuri otseteed nende vaikeväärtustele. Jätka?"
 # 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1421
+#: NEEDS WORK
+msgid "Appearance"
+msgstr "Välimus"
+# 
 # File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 56
 #: NEEDS WORK
 msgid "Color Scheme"
 msgstr "Värviskeem"
-# 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 59
-#: NEEDS WORK
-msgid "Current Scheme"
-msgstr "Praegune skeem"
 # 
 # File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 62
 #: NEEDS WORK
 msgid "Manage Schemes..."
 msgstr "Halda skeeme..."
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1016
-#: NEEDS WORK
-msgid "Typography"
-msgstr "Tüpograafia"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1017
-#: NEEDS WORK
-msgid "Configure fonts and spacing"
-msgstr "Konfigureeri fondid ja vahemaa"
-# 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1465
 #: NEEDS WORK
 msgid "Terminal Font"
 msgstr "Terminali font"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1466
-#: NEEDS WORK
-msgid "Select font family and size for terminal text"
-msgstr "Vali terminali teksti jaoks fondi perekond ja suurus"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1033
 #: NEEDS WORK
 msgid "Line Spacing"
 msgstr "Reavahe kaugus"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1034
-#: NEEDS WORK
-msgid "Adjust the vertical space between lines"
-msgstr "Reguleeri vertikaalset ruumi ridade vahel"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1045
-#: NEEDS WORK
-msgid "Miscellaneous"
-msgstr "Mitmesuguseid"
-# 
 # File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 102
 #: NEEDS WORK
 msgid "Terminal Transparency"
 msgstr "Terminali läbipaistvus"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1449
-#: NEEDS WORK
-msgid "Adjust terminal background transparency"
-msgstr "Reguleeri terminali tausta läbipaistvust"
 # 
 # File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 118
 #: NEEDS WORK
 msgid "Headerbar Transparency"
 msgstr "Pealkirja riba läbipaistvus"
 # 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 119
-#: NEEDS WORK
-msgid "For headerbar and file manager"
-msgstr "Pealkirja ja failihalduri jaoks"
-# 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1065
 #: NEEDS WORK
 msgid "Use Bright Colors for Bold Text"
 msgstr "Kasutage eredaid värve julgete tekstide jaoks"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1066
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 169
 #: NEEDS WORK
-msgid "Render bold text with the brighter version of the base color"
-msgstr "Renderi julge teksti põhivärvi heledama versiooniga"
+msgid "Auto-Hide Sessions Panel"
+msgstr "Automaatne peitmine seansipaneel"
 # 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 132
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 170
 #: NEEDS WORK
-msgid "Auto-Hide Sidebar"
-msgstr "Automaatne peitmine külgriba"
-# 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 134
-#: NEEDS WORK
-msgid "Automatically hide the sidebar when activating sessions or layouts"
-msgstr "Automaatne külgriba peitmine seansside või paigutuste aktiveerimisel"
+msgid "Hide panel when activating sessions"
+msgstr "Peida paneel seanside aktiveerimisel"
 # 
 # File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 147
 #: NEEDS WORK
 msgid "Blinking Text"
 msgstr "Vilkuv tekst"
-# 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 148
-#: NEEDS WORK
-msgid "Control how the terminal handles blinking text"
-msgstr "Kontrolli, kuidas terminal käsitleb vilkuvat teksti"
 # 
 # File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 150
 #: NEEDS WORK
@@ -4636,11 +4455,6 @@ msgstr "Alati"
 msgid "Tab Alignment"
 msgstr "Vaheline joondus"
 # 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 176
-#: NEEDS WORK
-msgid "Align tabs to the left or center of the tab bar"
-msgstr "Joonda vahekaartide vasakule või keskele vahekaardi riba."
-# 
 # File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 178
 #: NEEDS WORK
 msgid "Left"
@@ -4655,11 +4469,6 @@ msgstr "Keskus"
 #: NEEDS WORK
 msgid "Icon Theme"
 msgstr "Ikoni teema"
-# 
-# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 214
-#: NEEDS WORK
-msgid "Ashy Icons (bundled) speeds up startup. System Icons follows your desktop theme."
-msgstr "Ashy ikoonid (komplektis) kiirendavad käivitamist. Süsteemi ikoonid järgivad teie töölaua teemat."
 # 
 # File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 218
 #: NEEDS WORK
@@ -4681,11 +4490,6 @@ msgstr "Terminal"
 msgid "Cursor Shape"
 msgstr "Kursori kuju"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1138
-#: NEEDS WORK
-msgid "Select the shape of the terminal cursor"
-msgstr "Vali terminali kursorite kuju"
-# 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1141
 #: NEEDS WORK
 msgid "Block"
@@ -4696,20 +4500,10 @@ msgstr "Blokk"
 msgid "I-Beam"
 msgstr "I-säde"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1141
-#: NEEDS WORK
-msgid "Underline"
-msgstr "Allakriip."
-# 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1148
 #: NEEDS WORK
 msgid "Cursor Blinking"
 msgstr "Kursori vilkumine"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1148
-#: NEEDS WORK
-msgid "Control cursor blinking behavior"
-msgstr "Kontrolli kursori vilkumise käitumist"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1151
 #: NEEDS WORK
@@ -4726,110 +4520,56 @@ msgstr "Käesolev"
 msgid "Off"
 msgstr "Väljas"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1118
-#: NEEDS WORK
-msgid "Scrolling"
-msgstr "Kerimine"
-# 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1123
 #: NEEDS WORK
 msgid "Scrollback Lines"
 msgstr "Kerimisread"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1124
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 246
 #: NEEDS WORK
-msgid "Number of lines to keep in history (0 for unlimited)"
-msgstr "Ajalugu hoidmiseks säilitamise ridade arv (0 piiramatu jaoks)"
+msgid "0 for unlimited"
+msgstr "0 piiramatuks"
 # 
 # File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 192
 #: NEEDS WORK
 msgid "Mouse Scroll Sensitivity"
 msgstr "Hiire kerimise tundlikkus"
 # 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 193
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 258
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 274
 #: NEEDS WORK
-msgid "Controls the scroll speed for a mouse wheel. Lower is slower."
-msgstr "Kontrollib hiire ratta kerimise kiirus. Madalam on aeglasem."
+msgid "Lower is slower"
+msgstr "Madalam on aeglasem"
 # 
 # File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 208
 #: NEEDS WORK
 msgid "Touchpad Scroll Sensitivity"
 msgstr "Puuteplaadi kerimise tundlikkus"
 # 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 209
-#: NEEDS WORK
-msgid "Controls the scroll speed for a touchpad. Lower is slower."
-msgstr "Kontrollib puuteplaadi kerimise kiirus. Madalam on aeglasem."
-# 
 # File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 233
 #: NEEDS WORK
 msgid "Scroll on Paste"
 msgstr "Keri kopeerimisel"
-# 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 234
-#: NEEDS WORK
-msgid "Automatically scroll to the bottom when pasting text"
-msgstr "Kleebi automaatselt alla, kui kleepite teksti."
-# 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 246
-#: NEEDS WORK
-msgid "Selection"
-msgstr "Valik"
-# 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 247
-#: NEEDS WORK
-msgid "Extra characters for word selection (e.g., -_.:/~)"
-msgstr "Lisandid sõnade valimiseks (nt -_.:/~)"
-# 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 252
-#: NEEDS WORK
-msgid "Word Characters"
-msgstr "Sõna tähemärgid"
-# 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 292
-#: NEEDS WORK
-msgid "Shell & Bell"
-msgstr "Koor & Kell"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1107
 #: NEEDS WORK
 msgid "Run Command as a Login Shell"
 msgstr "Käivita käsk sisselogimise kestana"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1108
-#: NEEDS WORK
-msgid "Sources /etc/profile and ~/.profile on startup"
-msgstr "Allika /etc/profile ja ~/.profile käivitamisel"
-# 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1161
 #: NEEDS WORK
 msgid "Audible Bell"
 msgstr "Kuuldav kell"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1162
-#: NEEDS WORK
-msgid "Emit a sound for the terminal bell character"
-msgstr "Käivita heli terminali kellatähe jaoks"
 # 
 # File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 250
 #: NEEDS WORK
 msgid "Profiles & Data"
 msgstr "Profiilid ja andmed"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1082
-#: NEEDS WORK
-msgid "Startup"
-msgstr "Käivitamine"
-# 
 # File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 258
 #: NEEDS WORK
 msgid "On Startup"
 msgstr "Käivitamisel"
-# 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 259
-#: NEEDS WORK
-msgid "Action to take when the application starts"
-msgstr "Tegevus, mida teha rakenduse käivitamisel"
 # 
 # File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 263
 #: NEEDS WORK
@@ -4846,16 +4586,6 @@ msgstr "Küsi eelmise seansi taastamist"
 msgid "Never restore previous session"
 msgstr "Ära taasta eelmist seanssi"
 # 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 280
-#: NEEDS WORK
-msgid "Backup &amp; Recovery"
-msgstr "Varundus ja taastamine"
-# 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 319
-#: NEEDS WORK
-msgid "Create an encrypted backup of your data or restore from a previous backup."
-msgstr "Looge oma andmete krüpteeritud varukoopia või taastage eelmisest varukoopiast."
-# 
 # #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
 # 
 # File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 325
@@ -4864,10 +4594,10 @@ msgstr "Looge oma andmete krüpteeritud varukoopia või taastage eelmisest varuk
 msgid "Create Backup"
 msgstr "Loo varukoopia"
 # 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 327
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 350
 #: NEEDS WORK
-msgid "Save all sessions, settings, and passwords to an encrypted file."
-msgstr "Salvesta kõik seansid, seaded ja paroolid krüpteeritud faili."
+msgid "Encrypted backup of sessions and settings"
+msgstr "Krüpteeritud varukoopia seanssidest ja seadistustest"
 # 
 # File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 330
 #: NEEDS WORK
@@ -4879,125 +4609,75 @@ msgstr "Loo varukoopia..."
 msgid "Restore from Backup"
 msgstr "Taasta varukoopiast"
 # 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 339
-#: NEEDS WORK
-msgid "Replace all current data with a backup file."
-msgstr "Asenda kõik praegused andmed varukoopia failiga."
-# 
 # File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 341
 #: NEEDS WORK
 msgid "Restore..."
 msgstr "Taasta..."
-# 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 348
-#: NEEDS WORK
-msgid "Remote Editing"
-msgstr "Kaugredigeerimine"
 # 
 # File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 352
 #: NEEDS WORK
 msgid "Use System Temporary Directory"
 msgstr "Kasutage süsteemi ajutist katalooge"
 # 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 354
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 374
 #: NEEDS WORK
-msgid "Store temporary files for remote editing in /tmp instead of the config folder"
-msgstr "Salvesta ajutfailid kaugredigeerimiseks kaustas /tmp, mitte konfiguratsioonikaustas."
+msgid "Use /tmp for remote editing files"
+msgstr "Kasutage /tmp kaugredigeerimise failide jaoks"
 # 
 # File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 369
 #: NEEDS WORK
 msgid "Clear Remote Edit Files on Exit"
 msgstr "Kustuta kaugredigeerimise failid väljumisel"
 # 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 371
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 392
 #: NEEDS WORK
-msgid "Automatically delete all temporary remote files when closing the app"
-msgstr "Kustuta automaatselt kõik ajutised kaugfailid rakenduse sulgemisel."
+msgid "SSH Connection Persistence"
+msgstr "SSH ühenduse püsimine"
 # 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 416
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 393
 #: NEEDS WORK
-msgid "SSH"
-msgstr "SSH"
-# 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 417
-#: NEEDS WORK
-msgid "Settings for SSH connection management (multiplexing)."
-msgstr "SSH ühenduse haldamise seaded (multipleximine)."
-# 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 422
-#: NEEDS WORK
-msgid "Connection Persistence (seconds)"
-msgstr "Ühenduse püsimine (sekundid)"
-# 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 424
-#: NEEDS WORK
-msgid "Keep SSH connections alive in the background for faster reconnections. Set to 0 to disable."
-msgstr "Hoia SSH-ühendused taustal elus kiiremate uuesti ühenduste jaoks. Keela, seades väärtuseks 0."
+msgid "Seconds to keep connections alive (0 to disable)"
+msgstr "Sekundid ühenduste elus hoidmiseks (0 keelamiseks)"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1790
 #: NEEDS WORK
 msgid "Advanced"
 msgstr "Täpsem"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1276
-#: NEEDS WORK
-msgid "Advanced Features"
-msgstr "Täpsemad funktsioonid"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1277
-#: NEEDS WORK
-msgid "Enable or disable advanced terminal features"
-msgstr "Luba või keela täiustatud terminali funktsioonid"
-# 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1282
 #: NEEDS WORK
 msgid "Bidirectional Text Support"
 msgstr "Kaksisuunaline teksti tugi"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1284
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 416
 #: NEEDS WORK
-msgid "Enable for languages like Arabic and Hebrew (may affect performance)"
-msgstr "Luba araabia ja heebrea keelede jaoks (võib mõjutada jõudlust)"
+msgid "For Arabic and Hebrew (affects performance)"
+msgstr "Araabia ja heebrea (mõjutab jõudlust)"
 # 
 # File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 411
 #: NEEDS WORK
 msgid "Enable Arabic Text Shaping"
 msgstr "Luba araabia teksti kujundamine"
 # 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 413
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 424
 #: NEEDS WORK
-msgid "Correctly render ligatures and contextual forms for Arabic script"
-msgstr "Korrektselt renderdada ligatuure ja kontekstuaalseid vorme araabia skripti jaoks"
+msgid "Render ligatures for Arabic script"
+msgstr "Render ligatuure araabia skripti jaoks"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1295
 #: NEEDS WORK
 msgid "SIXEL Graphics Support"
 msgstr "SIXEL graafika tugi"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1296
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 432
 #: NEEDS WORK
-msgid "Allow the terminal to display SIXEL images (experimental)"
-msgstr "Luba terminalil kuvada SIXEL pilte (eksperimentaalne)"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1172
-#: NEEDS WORK
-msgid "Compatibility"
-msgstr "Ühilduvus"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1173
-#: NEEDS WORK
-msgid "Settings for compatibility with older systems and tools"
-msgstr "Seaded vanemate süsteemide ja tööriistadega ühilduvuse jaoks"
+msgid "Display SIXEL images (experimental)"
+msgstr "Kuva SIXEL pilte (eksperimentaalne)"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1178
 #: NEEDS WORK
 msgid "Backspace Key"
 msgstr "Tagasi ruumi klahv"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1178
-#: NEEDS WORK
-msgid "Sequence to send for Backspace key"
-msgstr "Tagastusklahvi jaoks saadetav järjestus"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1182
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1197
@@ -5027,20 +4707,10 @@ msgstr "Põgenemisjärjestus"
 msgid "Delete Key"
 msgstr "Kustuta klahv"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1193
-#: NEEDS WORK
-msgid "Sequence to send for Delete key"
-msgstr "Käik, mida saata Kustuta klahvi jaoks"
-# 
 # File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 481
 #: NEEDS WORK
 msgid "Ambiguous-width Characters"
 msgstr "Ambiguus laius tähemärgid"
-# 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 482
-#: NEEDS WORK
-msgid "Set the width for ambiguous characters (e.g., CJK)"
-msgstr "Seadke ebamugavate märkide laius (nt CJK)"
 # 
 # File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 485
 #: NEEDS WORK
@@ -5052,40 +4722,20 @@ msgstr "Kitsas (ühe rakuga)"
 msgid "Wide (double-cell)"
 msgstr "Lai (topeltlahter)"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1071
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 252
 #: NEEDS WORK
-msgid "Logging"
-msgstr "Logimine"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1071
-#: NEEDS WORK
-msgid "Configure application logging behavior"
-msgstr "Konfigureeri rakenduse logimise käitumine"
+msgid "Word Characters"
+msgstr "Sõna tähemärgid"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1076
 #: NEEDS WORK
 msgid "Save Logs to File"
 msgstr "Salvesta logid faili"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1077
-#: NEEDS WORK
-msgid "Save application logs to the configuration directory"
-msgstr "Salvesta rakenduse logid konfiguratsioonikausta"
-# 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1087
 #: NEEDS WORK
 msgid "Console Log Level"
 msgstr "Konsoli logi tase"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1088
-#: NEEDS WORK
-msgid "Set the minimum level of messages shown in the console"
-msgstr "Seadke konsoolis kuvatavate sõnumite minimaalne tase."
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1832
-#: NEEDS WORK
-msgid "Reset application settings to defaults"
-msgstr "Taasta rakenduse seaded vaikeseadetele"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1838
 # File: usr/share/ashyterm/ui/dialogs.py, line: 2002
@@ -5093,11 +4743,6 @@ msgstr "Taasta rakenduse seaded vaikeseadetele"
 #: NEEDS WORK
 msgid "Reset All Settings"
 msgstr "Lähtesta kõik seaded"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1839
-#: NEEDS WORK
-msgid "Restore all settings to their default values"
-msgstr "Taasta kõik seaded nende vaikeseisundisse."
 # 
 # File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 681
 #: NEEDS WORK
@@ -5109,19 +4754,19 @@ msgstr "Ikoni teema muudetud"
 msgid "The icon theme change will take effect after restarting the application."
 msgstr "Ikoni teema muutmine hakkab kehtima pärast rakenduse taaskäivitamist."
 # 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 652
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 687
 #: NEEDS WORK
-msgid "Sidebar Visibility"
-msgstr "Külgmenüü nähtavus"
+msgid "Sessions Panel Visibility"
+msgstr "Seanside paneeli nähtavus"
 # 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 654
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 689
 #: NEEDS WORK
 msgid ""
-"The sidebar visibility change will take effect when you close and reopen the application. You can "
-"also toggle the sidebar manually using Ctrl+Shift+H."
+"The sessions panel visibility change will take effect when you close and reopen the application. "
+"You can also toggle the sessions panel manually using Ctrl+Shift+H."
 msgstr ""
-"Külgmenüü nähtavuse muutmine hakkab kehtima, kui sulgete ja avate rakenduse uuesti. Samuti saate "
-"külgmenüüd käsitsi vahetada, kasutades Ctrl+Shift+H."
+"Seanside paneeli nähtavuse muutmine hakkab kehtima, kui sulgete ja avate rakenduse uuesti. Samuti "
+"saate seansside paneeli käsitsi vahetada, kasutades Ctrl+Shift+H."
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 2003
 #: NEEDS WORK
@@ -7162,6 +6807,11 @@ msgstr "Otsimine..."
 msgid "Showing first {count} results. Refine your search to narrow the list."
 msgstr "Kuvatakse esimesed {count} tulemust. Täpsustage oma otsingut, et nimekirja kitsendada."
 # 
+# File: usr/share/ashyterm/filemanager/manager.py, line: 366
+#: NEEDS WORK
+msgid "Name"
+msgstr "Nimi"
+# 
 # File: usr/share/ashyterm/filemanager/manager.py, line: 375
 #: NEEDS WORK
 msgid "Size"
@@ -8966,6 +8616,11 @@ msgstr "Salvestatud seansside ja kaustade laadimine ebaõnnestus. Alustamine tü
 msgid "Enable the AI assistant in Preferences > Terminal > AI Assistant."
 msgstr "Luba AI assistendi lubamine eelistustes > Terminal > AI assistent."
 # 
+# File: usr/share/ashyterm/window.py, line: 547
+#: NEEDS WORK
+msgid "Model"
+msgstr "Mudel"
+# 
 # File: usr/share/ashyterm/window.py, line: 548
 #: NEEDS WORK
 msgid "API key"
@@ -9431,10 +9086,10 @@ msgstr "Seadke algterminali töökaust."
 msgid "Working directory (positional argument)"
 msgstr "Töökataloog (positsiooniline argument)"
 # 
-# File: usr/share/ashyterm/main.py, line: 105
+# File: src/ashyterm/__init__.py, line: 133
 #: NEEDS WORK
-msgid "Execute command in the terminal"
-msgstr "Käsku täitma terminalis"
+msgid "Execute command in the terminal (takes all remaining arguments)"
+msgstr "Käivita käsk terminalis (võtab kõik ülejäänud argumendid)"
 # 
 # File: usr/share/ashyterm/main.py, line: 110
 #: NEEDS WORK

@@ -548,23 +548,23 @@ msgstr "Használj reguláris kifejezéseket"
 msgid "Regex"
 msgstr "Reguláris kifejezés"
 # 
-# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
+# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1606
-# File: usr/share/ashyterm/window.py, line: 248
+# File: src/ashyterm/ui/window_ui.py, line: 262
+# File: src/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 56
 #: NEEDS WORK
-msgid "Toggle Sidebar"
-msgstr "Oldalsáv váltása"
+msgid "Sessions Panel"
+msgstr "Ülések panel"
 # 
 # File: usr/share/ashyterm/window.py, line: 344
 #: NEEDS WORK
 msgid "File Manager"
 msgstr "Fájlkezelő"
 # 
-# File: usr/share/ashyterm/ui/window_ui.py, line: 324
+# File: usr/share/ashyterm/ui/dialogs/command_guide_dialog.py, line: 143
 #: NEEDS WORK
-msgid "Command Guide (Ctrl+Shift+P)"
-msgstr "Parancs útmutató (Ctrl+Shift+P)"
+msgid "Command Guide"
+msgstr "Parancs Útmutató"
 # 
 # File: usr/share/ashyterm/ui/window_ui.py, line: 350
 #: NEEDS WORK
@@ -576,10 +576,10 @@ msgstr "Keresés a Terminálban"
 msgid "Send Command to All Tabs"
 msgstr "Parancs küldése az összes fülnek"
 # 
-# File: usr/share/ashyterm/ui/window_ui.py, line: 344
+# File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 39
 #: NEEDS WORK
-msgid "Ask AI Assistant (Ctrl+Shift+I)"
-msgstr "Kérdezd az AI Asszisztenst (Ctrl+Shift+I)"
+msgid "Ask AI Assistant"
+msgstr "Kérdezd az AI Asszisztenst"
 # 
 # File: usr/share/ashyterm/ui/window_ui.py, line: 259
 #: NEEDS WORK
@@ -2076,15 +2076,15 @@ msgstr "Összes törlése"
 msgid "Show Sessions"
 msgstr "Ülések megjelenítése"
 # 
-# File: usr/share/ashyterm/ui/sidebar_manager.py, line: 227
+# File: src/ashyterm/ui/sidebar_manager.py, line: 292
 #: NEEDS WORK
-msgid "Hide Sidebar"
-msgstr "Oldd el a mellékpanelt"
+msgid "Hide Sessions Panel"
+msgstr "Ülések panel elrejtése"
 # 
-# File: usr/share/ashyterm/ui/sidebar_manager.py, line: 227
+# File: src/ashyterm/ui/sidebar_manager.py, line: 292
 #: NEEDS WORK
-msgid "Show Sidebar"
-msgstr "Oldalpanel megjelenítése"
+msgid "Show Sessions Panel"
+msgstr "Ülések panel megjelenítése"
 # 
 # File: usr/share/ashyterm/ui/menus.py, line: 24
 #: NEEDS WORK
@@ -2387,16 +2387,6 @@ msgstr "Nem sikerült csatlakozni a '{session_name}' munkamenethez."
 msgid "Configure AI Assistant"
 msgstr "AI Asszisztens konfigurálása"
 # 
-# File: src/ashyterm/ui/dialogs/ai_config_dialog.py, line: 178
-#: NEEDS WORK
-msgid "Status"
-msgstr "Állapot"
-# 
-# File: src/ashyterm/ui/dialogs/ai_config_dialog.py, line: 66
-#: NEEDS WORK
-msgid "Enable or disable the AI Assistant feature."
-msgstr "Az AI Asszisztens funkció engedélyezése vagy letiltása."
-# 
 # File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 327
 #: NEEDS WORK
 msgid "Enable AI Assistant"
@@ -2415,11 +2405,6 @@ msgstr "Mutassa a mesterséges intelligencia asszisztens gombot a fejléc sávba
 msgid "Provider"
 msgstr "Szolgáltató"
 # 
-# File: src/ashyterm/ui/dialogs/ai_config_dialog.py, line: 66
-#: NEEDS WORK
-msgid "Select the AI service provider to use."
-msgstr "Válaszd ki a használni kívánt AI szolgáltató céget."
-# 
 # File: src/ashyterm/ui/dialogs/ai_config_dialog.py, line: 73
 #: NEEDS WORK
 msgid "Choose between cloud providers or local models."
@@ -2433,62 +2418,30 @@ msgstr "Válasszon a felhőszolgáltatók vagy a helyi modellek között."
 msgid "Base URL"
 msgstr "Alap URL"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 463
-#: NEEDS WORK
-msgid "Authentication"
-msgstr "Hitelesítés"
-# 
-# File: src/ashyterm/ui/dialogs/ai_config_dialog.py, line: 98
-#: NEEDS WORK
-msgid "API credentials for the selected provider."
-msgstr "API hitelesítő adatok a kiválasztott szolgáltatóhoz."
-# 
 # File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 374
 #: NEEDS WORK
 msgid "API Key"
 msgstr "API kulcs"
-# 
-# File: usr/share/ashyterm/window.py, line: 547
-#: NEEDS WORK
-msgid "Model"
-msgstr "Modell"
-# 
-# File: src/ashyterm/ui/dialogs/ai_config_dialog.py, line: 115
-#: NEEDS WORK
-msgid "Select or specify the AI model to use."
-msgstr "Válassza ki vagy adja meg a használni kívánt AI modellt."
 # 
 # File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 361
 #: NEEDS WORK
 msgid "Model Identifier"
 msgstr "Modellazonosító"
 # 
-# File: src/ashyterm/ui/dialogs/ai_config_dialog.py, line: 131
-#: NEEDS WORK
-msgid "Fetch Available Models"
-msgstr "Elérhető modellek lekérése"
-# 
-# File: src/ashyterm/ui/dialogs/ai_config_dialog.py, line: 132
-#: NEEDS WORK
-msgid "Query OpenRouter for a list of available models."
-msgstr "Kérje az OpenRouter-t egy elérhető modellek listájáért."
-# 
 # File: src/ashyterm/ui/dialogs/ai_config_dialog.py, line: 134
-# File: src/ashyterm/ui/dialogs/ai_config_dialog.py, line: 361
-# File: src/ashyterm/ui/dialogs/ai_config_dialog.py, line: 378
 #: NEEDS WORK
-msgid "Fetch Models"
-msgstr "Modellek lekérése"
+msgid "Browse Available Models"
+msgstr "Elérhető modellek böngészése"
 # 
-# File: src/ashyterm/ui/dialogs/ai_config_dialog.py, line: 143
+# File: src/ashyterm/ui/dialogs/ai_config_dialog.py, line: 135
 #: NEEDS WORK
-msgid "Available Models"
-msgstr "Elérhető modellek"
+msgid "Search and select from available OpenRouter models."
+msgstr "Keresés és választás a rendelkezésre álló OpenRouter modellek közül."
 # 
-# File: src/ashyterm/ui/dialogs/ai_config_dialog.py, line: 144
+# File: src/ashyterm/ui/dialogs/ai_config_dialog.py, line: 137
 #: NEEDS WORK
-msgid "Select a model from the fetched list."
-msgstr "Válasszon egy modellt a lekért listából."
+msgid "Browse Models"
+msgstr "Modellek böngészése"
 # 
 # File: src/ashyterm/ui/dialogs/ai_config_dialog.py, line: 151
 #: NEEDS WORK
@@ -2540,27 +2493,43 @@ msgstr "API kulcs (ha szükséges)"
 msgid "Please enter an API key first."
 msgstr "Kérjük, először adja meg az API kulcsot."
 # 
-# File: src/ashyterm/ui/dialogs/ai_config_dialog.py, line: 309
+# File: src/ashyterm/ui/dialogs/ai_config_dialog.py, line: 300
 #: NEEDS WORK
-msgid "Fetching..."
-msgstr "Lekérés..."
+msgid "Select OpenRouter Model"
+msgstr "Válassza ki az OpenRouter modellt"
 # 
-# File: src/ashyterm/ui/dialogs/ai_config_dialog.py, line: 370
+# File: src/ashyterm/ui/dialogs/ai_config_dialog.py, line: 344
+#: NEEDS WORK
+msgid "Search models by name or ID..."
+msgstr "Modellek keresése név vagy azonosító alapján..."
+# 
+# File: src/ashyterm/ui/dialogs/ai_config_dialog.py, line: 358
+#: NEEDS WORK
+msgid "Loading models..."
+msgstr "Modellek betöltése..."
+# 
+# File: src/ashyterm/ui/dialogs/ai_config_dialog.py, line: 457
 #: NEEDS WORK
 #, python-brace-format
-msgid "Fetched {count} models."
-msgstr "Lekért {count} modell."
+msgid "Failed to load models: {error}"
+msgstr "A modellek betöltése nem sikerült: {error}"
 # 
-# File: src/ashyterm/ui/dialogs/ai_config_dialog.py, line: 372
-#: NEEDS WORK
-msgid "No models found."
-msgstr "Nincsenek modellek."
-# 
-# File: src/ashyterm/ui/dialogs/ai_config_dialog.py, line: 379
+# File: src/ashyterm/ui/dialogs/ai_config_dialog.py, line: 489
 #: NEEDS WORK
 #, python-brace-format
-msgid "Failed to fetch models: {error}"
-msgstr "A modellek lekérése nem sikerült: {error}"
+msgid "{count} models available"
+msgstr "{count} modell elérhető"
+# 
+# File: src/ashyterm/ui/dialogs/ai_config_dialog.py, line: 492
+#: NEEDS WORK
+#, python-brace-format
+msgid "Showing {shown} of {total} models"
+msgstr "{shown} / {total} modell megjelenítése"
+# 
+# File: src/ashyterm/ui/dialogs/ai_config_dialog.py, line: 503
+#: NEEDS WORK
+msgid "Showing first 100 results. Refine your search to see more."
+msgstr "Az első 100 eredmény megjelenítése. Finomítsa a keresését, hogy többet lásson."
 # 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 32
 #: NEEDS WORK
@@ -2642,35 +2611,40 @@ msgstr "Fényes cián"
 msgid "Bright White"
 msgstr "Fényes Fehér"
 # 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 52
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 58
 #: NEEDS WORK
-msgid "Bold Red"
-msgstr "Félkövér Piros"
+msgid "Bold"
+msgstr "Félkövér"
 # 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 53
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 59
 #: NEEDS WORK
-msgid "Bold Green"
-msgstr "Félkövér Zöld"
+msgid "Italic"
+msgstr "Dőlt"
 # 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 54
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1141
 #: NEEDS WORK
-msgid "Bold Yellow"
-msgstr "Félkövér Sárga"
+msgid "Underline"
+msgstr "Aláhúzás"
 # 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 55
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 61
 #: NEEDS WORK
-msgid "Bold Blue"
-msgstr "Félkövér Kék"
+msgid "Strikethrough"
+msgstr "Áthúzás"
 # 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 56
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 62
 #: NEEDS WORK
-msgid "Bold Cyan"
-msgstr "Félkövér Cián"
+msgid "Dim/Faint"
+msgstr "Halvány"
 # 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 57
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 63
 #: NEEDS WORK
-msgid "Bold White"
-msgstr "Félkövér Fehér"
+msgid "Blink"
+msgstr "Blink"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 68
+#: NEEDS WORK
+msgid "Default"
+msgstr "Alapértelmezett"
 # 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 85
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 375
@@ -2679,11 +2653,15 @@ msgstr "Félkövér Fehér"
 msgid "Group {}"
 msgstr "Csoport {}"
 # 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 86
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 174
 #: NEEDS WORK
-#, python-brace-format
-msgid "Color for capture group {}"
-msgstr "Szín a rögzítési csoporthoz {}"
+msgid "Color:"
+msgstr "Szín:"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 216
+#: NEEDS WORK
+msgid "Bg:"
+msgstr "Bg:"
 # 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 110
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 817
@@ -2712,10 +2690,10 @@ msgstr "Szabály neve"
 msgid "Pattern"
 msgstr "Minta"
 # 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 264
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 525
 #: NEEDS WORK
-msgid "Use Python regular expression syntax. Capture groups () can have individual colors."
-msgstr "Használj Python reguláris kifejezés szintaxist. A csoportosítások () egyedi színeket kaphatnak."
+msgid "Python regex syntax. Capture groups () can have individual colors."
+msgstr "Python regex szintaxis. A csoportosítások () egyedi színeket kaphatnak."
 # 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 268
 #: NEEDS WORK
@@ -2727,17 +2705,15 @@ msgstr "Reguláris kifejezés minta"
 msgid "Regex reference"
 msgstr "Regex hivatkozás"
 # 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 292
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 554
 #: NEEDS WORK
-msgid "Colors"
-msgstr "Színek"
+msgid "Colors & Effects"
+msgstr "Színek és Effektek"
 # 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 293
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 555
 #: NEEDS WORK
-msgid "Assign colors to capture groups. First color applies to entire match if no groups."
-msgstr ""
-"Színek hozzárendelése a rögzítési csoportokhoz. Az első szín az egész egyezésre vonatkozik, ha "
-"nincsenek csoportok."
+msgid "First color applies to entire match if no groups."
+msgstr "Az első szín az egész egyezésre vonatkozik, ha nincsenek csoportok."
 # 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 298
 #: NEEDS WORK
@@ -2926,28 +2902,17 @@ msgstr "Kulcs=érték párok (2 csoport)"
 msgid "Comment lines"
 msgstr "Megjegyzés sorok"
 # 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 586
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 862
 #: NEEDS WORK
 #, python-brace-format
-msgid "Context: {}"
-msgstr "Kulcs"
+msgid "Command: {}"
+msgstr "Parancs: {}"
 # 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 621
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 938
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1790
 #: NEEDS WORK
-msgid "Context Settings"
-msgstr "Környezeti beállítások"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 627
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1451
-#: NEEDS WORK
-msgid "Enable Context"
-msgstr "Környezet engedélyezése"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 628
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1452
-#: NEEDS WORK
-msgid "Apply rules when this command is detected"
-msgstr "Alkalmazza a szabályokat, amikor ezt a parancsot észlelik"
+msgid "Enable Command Rules"
+msgstr "Parancs Szabályok Engedélyezése"
 # 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 635
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1459
@@ -2955,72 +2920,31 @@ msgstr "Alkalmazza a szabályokat, amikor ezt a parancsot észlelik"
 msgid "Include Global Rules"
 msgstr "Globális Szabályok Beillesztése"
 # 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 636
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1460
-#: NEEDS WORK
-msgid "Also apply global rules alongside context-specific rules"
-msgstr "Globális szabályokat is alkalmazzon a kontextus-specifikus szabályok mellett."
-# 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 643
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1467
 #: NEEDS WORK
 msgid "Reset to System Default"
 msgstr "Visszaállítás gyári beállításokra"
 # 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 644
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1468
-#: NEEDS WORK
-msgid "Remove user customization and revert to system rules"
-msgstr "Távolítsa el a felhasználói testreszabást, és térjen vissza a rendszer szabályaihoz."
-# 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 657
 #: NEEDS WORK
 msgid "Triggers"
 msgstr "Kiváltók"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 658
-#: NEEDS WORK
-msgid ""
-"Commands that activate this context. Add, edit or remove triggers to customize when this context "
-"applies."
-msgstr ""
-"Parancsok, amelyek aktiválják ezt a kontextust. Indítók hozzáadása, szerkesztése vagy eltávolítása "
-"a kontextus alkalmazásának testreszabásához."
 # 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 664
 #: NEEDS WORK
 msgid "➕ Add Trigger"
 msgstr "➕ Trigger hozzáadása"
 # 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 665
-#: NEEDS WORK
-msgid "Add another command that activates this context"
-msgstr "Adjon hozzá egy másik parancsot, amely aktiválja ezt a kontextust."
-# 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 682
 #: NEEDS WORK
 msgid "Highlight Rules"
 msgstr "Kiemelési Szabályok"
 # 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 683
-#: NEEDS WORK
-msgid "Use arrows to reorder. Rules are matched from top to bottom."
-msgstr "Használja a nyilakat az átrendezéshez. A szabályok felülről lefelé vannak párosítva."
-# 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 689
 #: NEEDS WORK
 msgid "➕ Add New Rule"
 msgstr "➕ Új szabály hozzáadása"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 690
-#: NEEDS WORK
-msgid "Create a new highlighting pattern for this context"
-msgstr "Hozzon létre egy új kiemelési mintát ehhez a kontextushoz."
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 742
-#: NEEDS WORK
-msgid "Activates this context"
-msgstr "Aktiválja ezt a kontextust"
 # 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 753
 #: NEEDS WORK
@@ -3111,67 +3035,40 @@ msgstr "Biztos benne, hogy törölni szeretné a \"{}\"-t?"
 msgid "Global Rules"
 msgstr "Globális Szabályok"
 # 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1125
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1437
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1475
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1776
 #: NEEDS WORK
-msgid "Context Rules"
-msgstr "Kontektszabályok"
+msgid "Command Rules"
+msgstr "Parancs Szabályok"
 # 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1140
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1490
 #: NEEDS WORK
 msgid ""
-"Syntax highlighting enhances terminal output readability by colorizing patterns like errors, "
-"warnings, IP addresses, and more.\n"
-"* Many highlight rules can slow down display of large outputs.."
+"Colorizes terminal output patterns like errors, warnings, and IPs. Many rules can slow down large "
+"outputs."
 msgstr ""
-"A szintaxis kiemelés javítja a terminál kimenetének olvashatóságát azáltal, hogy színezi a "
-"mintákat, mint például a hibák, figyelmeztetések, IP-címek és még sok más.\n"
-"* Sok kiemelési szabály lelassíthatja a nagy kimenetek megjelenítését."
+"Színesíti a terminál kimeneti mintákat, mint például hibák, figyelmeztetések és IP-címek. Sok "
+"szabály lelassíthatja a nagy kimeneteket."
 # 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1151
 #: NEEDS WORK
 msgid "Activation"
 msgstr "Aktiválás"
 # 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1153
-#: NEEDS WORK
-msgid "Control when syntax highlighting is applied to terminal output."
-msgstr "Irányítsa, mikor alkalmazzák a szintaxis kiemelést a terminál kimenetére."
-# 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1160
 #: NEEDS WORK
 msgid "Local Terminals"
 msgstr "Helyi terminálok"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1161
-#: NEEDS WORK
-msgid "Apply highlighting to local shell sessions"
-msgstr "Alkalmazza a kiemelést a helyi shell munkamenetekre"
 # 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1169
 #: NEEDS WORK
 msgid "SSH Sessions"
 msgstr "SSH munkamenetek"
 # 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1170
-#: NEEDS WORK
-msgid "Apply highlighting to SSH remote sessions"
-msgstr "Alkalmazzon kiemelést az SSH távoli munkamenetekre"
-# 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1179
 #: NEEDS WORK
 msgid "Ignored Commands"
 msgstr "Figyelmen kívül hagyott parancsok"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1185
-#: NEEDS WORK
-msgid "Highlighting disabled for these commands"
-msgstr "A kiemelés letiltva ezekhez a parancsokhoz"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1186
-#: NEEDS WORK
-msgid "Click to expand"
-msgstr "Kattintson a kibővítéshez"
 # 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1200
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1335
@@ -3179,31 +3076,16 @@ msgstr "Kattintson a kibővítéshez"
 msgid "Restore Defaults"
 msgstr "Alapértelmezett visszaállítása"
 # 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1201
-#: NEEDS WORK
-msgid "Reset to the default ignored commands list"
-msgstr "Állítsa vissza az alapértelmezett figyelmen kívül hagyott parancsok listáját"
-# 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1214
 #: NEEDS WORK
 msgid "➕ Add Ignored Command"
 msgstr "➕ Figyelmen kívül hagyott parancs hozzáadása"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1215
-#: NEEDS WORK
-msgid "Add a command that should preserve its native colors"
-msgstr "Adjon hozzá egy parancsot, amely megőrzi a natív színeit."
 # 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1253
 #: NEEDS WORK
 #, python-brace-format
 msgid "{count} command(s) • Click to expand/collapse"
 msgstr "{count} parancs • Kattintson a kibővítéshez/összehúzáshoz"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1259
-#: NEEDS WORK
-msgid "Native coloring preserved"
-msgstr "A natív színezés megőrizve"
 # 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1265
 #: NEEDS WORK
@@ -3254,59 +3136,30 @@ msgstr ""
 msgid "Restored default ignored commands"
 msgstr "Visszaállított alapértelmezett figyelmen kívül hagyott parancsok"
 # 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1361
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1698
 #: NEEDS WORK
-msgid "Context-Aware Highlighting"
-msgstr "Kontekstuális kiemelés"
+msgid "Per-Command Highlighting"
+msgstr "Parancs alapú kiemelés"
 # 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1363
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1704
 #: NEEDS WORK
-msgid "Automatically apply command-specific rules when certain commands are detected."
-msgstr "Automatikusan alkalmazza a parancs-specifikus szabályokat, amikor bizonyos parancsokat észlelnek."
+msgid "Enable Command Detection"
+msgstr "Parancsészlelés engedélyezése"
 # 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1370
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1713
 #: NEEDS WORK
-msgid "Enable Context Detection"
-msgstr "Környezetérzékelés engedélyezése"
+msgid "Commands"
+msgstr "Parancsok"
 # 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1371
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1719
 #: NEEDS WORK
-msgid "Detect running commands and apply specific highlight rules"
-msgstr "Futtató parancsok és specifikus kiemelési szabályok alkalmazása"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1380
-#: NEEDS WORK
-msgid "Command Contexts"
-msgstr "Parancs Kontextusok"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1382
-#: NEEDS WORK
-msgid ""
-"Context rules apply only when a specific command is running (e.g., ping, docker, git). Toggle "
-"contexts on/off or click a row to edit its rules."
-msgstr ""
-"A kontextus szabályai csak akkor érvényesek, amikor egy adott parancs fut (pl. ping, docker, git). "
-"A kontextusok be- és kikapcsolásához kattintson a sorra a szabályok szerkesztéséhez."
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1390
-#: NEEDS WORK
-msgid "➕ Create New Context"
-msgstr "➕ Új Kontextus Létrehozása"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1391
-#: NEEDS WORK
-msgid "Add custom highlighting rules for a specific command"
-msgstr "Adjon hozzá egyedi kiemelési szabályokat egy adott parancshoz"
+msgid "➕ Add Command"
+msgstr "➕ Parancs hozzáadása"
 # 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1406
 #: NEEDS WORK
 msgid "Bulk Actions"
 msgstr "Tömeges műveletek"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1407
-#: NEEDS WORK
-msgid "Quickly enable or disable all contexts"
-msgstr "Gyorsan engedélyezheti vagy letilthatja az összes kontextust"
 # 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1410
 #: NEEDS WORK
@@ -3318,32 +3171,49 @@ msgstr "Összes engedélyezése"
 msgid "Disable All"
 msgstr "Mindent letilt"
 # 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1426
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1753
 #: NEEDS WORK
-msgid "Available Contexts"
-msgstr "Elérhető kontextusok"
+msgid "Reset All Commands"
+msgstr "Minden parancs visszaállítása"
 # 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1427
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1766
 #: NEEDS WORK
-msgid "Click a context to select it, then scroll down to customize its rules"
-msgstr "Kattints egy kontextusra a kiválasztásához, majd görgess le a szabályainak testreszabásához."
+msgid "Available Commands"
+msgstr "Elérhető parancsok"
 # 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1438
 #: NEEDS WORK
 msgid "Rules specific to the selected command. Order matters!"
 msgstr "A kiválasztott parancsra vonatkozó szabályok. A sorrend fontos!"
 # 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1444
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1745
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1783
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2081
 #: NEEDS WORK
-msgid "No context selected"
-msgstr "Nincs kiválasztva kontextus"
+msgid "No command selected"
+msgstr "Nincs parancs kiválasztva"
 # 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1445
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1746
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1784
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2083
 #: NEEDS WORK
-msgid "Select a context from the list above"
-msgstr "Válasszon egy kontextust a fenti listából"
+msgid "Select a command from the list above"
+msgstr "Válasszon egy parancsot a fenti listából"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 628
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1452
+#: NEEDS WORK
+msgid "Apply rules when this command is detected"
+msgstr "Alkalmazza a szabályokat, amikor ezt a parancsot észlelik"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1799
+#: NEEDS WORK
+msgid "Also apply global rules alongside command-specific rules"
+msgstr "Globális szabályok alkalmazása a parancs-specifikus szabályok mellett"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 644
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1468
+#: NEEDS WORK
+msgid "Remove user customization and revert to system rules"
+msgstr "Távolítsa el a felhasználói testreszabást, és térjen vissza a rendszer szabályaihoz."
 # 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1482
 #: NEEDS WORK
@@ -3355,10 +3225,10 @@ msgstr "Szabályok (végrehajtási sorrendben)"
 msgid "Use arrows to reorder rules. Rules are matched from top to bottom."
 msgstr "Használja a nyilakat a szabályok átrendezéséhez. A szabályok felülről lefelé vannak párosítva."
 # 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1489
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1828
 #: NEEDS WORK
-msgid "➕ Add Rule to This Context"
-msgstr "➕ Szabály hozzáadása ehhez a kontextushoz"
+msgid "➕ Add Rule to This Command"
+msgstr "➕ Szabály hozzáadása ehhez a parancshoz"
 # 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1490
 #: NEEDS WORK
@@ -3370,43 +3240,22 @@ msgstr "Hozzon létre egy új kiemelési mintát a kiválasztott parancshoz."
 msgid "Global Highlight Rules"
 msgstr "Globális kiemelési szabályok"
 # 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1507
-#: NEEDS WORK
-msgid ""
-"These rules apply to ALL terminal output, regardless of which command is running. Use for patterns "
-"you always want highlighted (errors, warnings, IP addresses, etc.). \n"
-"For command-specific rules, use the Context Rules tab."
-msgstr ""
-"Ezek a szabályok MINDEN terminálkimenetre vonatkoznak, függetlenül attól, hogy melyik parancs fut. "
-"Használja azokat a mintákhoz, amelyeket mindig ki szeretne emelni (hibák, figyelmeztetések, "
-"IP-címek stb.). Parancs-specifikus szabályokhoz használja a Kontextus Szabályok lapot."
-# 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1517
 #: NEEDS WORK
 msgid "➕ Add New Global Rule"
 msgstr "➕ Új globális szabály hozzáadása"
 # 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1518
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1863
 #: NEEDS WORK
-msgid "Create a new pattern to highlight in all terminal output"
-msgstr "Hozzon létre egy új mintát, amelyet kiemel a terminál összes kimenetében."
+msgid "Reset Global Rules"
+msgstr "Globális Szabályok Visszaállítása"
 # 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1531
-#: NEEDS WORK
-msgid "Reset to Defaults"
-msgstr "Alapértelmezett értékek visszaállítása"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1532
-#: NEEDS WORK
-msgid "Restore all default rules and contexts"
-msgstr "Az összes alapértelmezett szabály és kontextus visszaállítása"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1569
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1670
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1900
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2006
 #: NEEDS WORK
 #, python-brace-format
-msgid "{total} context(s), {enabled} enabled"
-msgstr "{total} kontext(ek), {enabled} engedélyezve"
+msgid "{total} command(s), {enabled} enabled"
+msgstr "{total} parancs(ok), {enabled} engedélyezve"
 # 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1590
 #: NEEDS WORK
@@ -3414,20 +3263,20 @@ msgstr "{total} kontext(ek), {enabled} engedélyezve"
 msgid "{count} rules"
 msgstr "{count} szabály"
 # 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1603
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1935
 #: NEEDS WORK
-msgid "Edit context rules"
-msgstr "Kontektszabályok szerkesztése"
+msgid "Edit command rules"
+msgstr "Parancs szabályok szerkesztése"
 # 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1612
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1944
 #: NEEDS WORK
-msgid "Delete context"
-msgstr "Kontextus törlése"
+msgid "Delete command"
+msgstr "Törlés parancs"
 # 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1640
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1972
 #: NEEDS WORK
-msgid "Delete Context?"
-msgstr "Kontextus törlése?"
+msgid "Delete Command?"
+msgstr "Törlés parancs?"
 # 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1641
 #: NEEDS WORK
@@ -3437,21 +3286,21 @@ msgstr ""
 "Biztos benne, hogy törölni szeretné a \"{}\"-t? Ez eltávolítja az összes egyedi szabályt ehhez a "
 "parancshoz."
 # 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1656
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1991
 #: NEEDS WORK
 #, python-brace-format
-msgid "Context deleted: {}"
-msgstr "Kulcs"
+msgid "Command deleted: {}"
+msgstr "Parancs törölve: {}"
 # 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1747
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2086
 #: NEEDS WORK
-msgid "Select a context to view its rules"
-msgstr "Válasszon ki egy kontextust a szabályainak megtekintéséhez"
+msgid "Select a command to view its rules"
+msgstr "Válasszon egy parancsot a szabályainak megtekintéséhez"
 # 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1759
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2099
 #: NEEDS WORK
-msgid "Context not found"
-msgstr "A kontextus nem található"
+msgid "Command not found"
+msgstr "A parancs nem található"
 # 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1767
 #: NEEDS WORK
@@ -3487,23 +3336,23 @@ msgstr "{} színek"
 msgid "Actions"
 msgstr "Műveletek"
 # 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1932
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2275
 #: NEEDS WORK
 #, python-brace-format
-msgid "{total} context(s), {enabled} enabled. Click to toggle, select to edit."
-msgstr "{total} kontext(ek), {enabled} engedélyezve. Kattintson a váltáshoz, válassza a szerkesztést."
+msgid "{total} command(s), {enabled} enabled. Click to toggle, select to edit."
+msgstr "{total} parancs(ok), {enabled} engedélyezve. Kattintson a váltáshoz, válassza a szerkesztést."
 # 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1975
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2317
 #: NEEDS WORK
 #, python-brace-format
-msgid "Context created: {}"
-msgstr "Környezet létrehozva: {}"
+msgid "Command created: {}"
+msgstr "Parancs létrehozva: {}"
 # 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2006
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2348
 #: NEEDS WORK
 #, python-brace-format
-msgid "Context reset: {}"
-msgstr "Környezet visszaállítva: {}"
+msgid "Command reset: {}"
+msgstr "Parancs visszaállítása: {}"
 # 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2008
 #: NEEDS WORK
@@ -3531,27 +3380,54 @@ msgstr "Szabály frissítve: {}"
 msgid "Rule deleted: {}"
 msgstr "Szabály törölve: {}"
 # 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2279
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2462
 #: NEEDS WORK
-msgid "Reset to Defaults?"
-msgstr "Alapértelmezett értékek visszaállítása?"
+msgid "Restart Required"
+msgstr "Újraindítás szükséges"
 # 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2280
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2463
 #: NEEDS WORK
-msgid "This will remove all user customizations and revert to system defaults. This cannot be undone."
+msgid "Restart the program for the colors to be applied to the terminal."
+msgstr "Indítsa újra a programot, hogy a színek alkalmazva legyenek a terminálra."
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2645
+#: NEEDS WORK
+msgid "Reset Global Rules?"
+msgstr "Globális szabályok visszaállítása?"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2647
+#: NEEDS WORK
+msgid "This will restore global rules to system defaults. Context customizations will be preserved."
 msgstr ""
-"Ez eltávolítja az összes felhasználói testreszabást, és visszaállítja a rendszer alapértelmezett "
-"beállításaira. Ezt nem lehet visszavonni."
+"Ez visszaállítja a globális szabályokat a rendszer alapértelmezett értékeire. A kontextus "
+"testreszabásai megmaradnak."
 # 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2298
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2667
 #: NEEDS WORK
-msgid "Reset to system defaults"
-msgstr "Visszaállítás a rendszer alapértelmezett értékeire"
+msgid "Global rules reset to defaults"
+msgstr "Globális szabályok visszaállítva az alapértelmezett értékekre"
 # 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2324
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2673
 #: NEEDS WORK
-msgid "New Context"
-msgstr "Új Kontextus"
+msgid "Reset All Commands?"
+msgstr "Minden parancs visszaállítása?"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2675
+#: NEEDS WORK
+msgid "This will restore all commands to system defaults. Global rules will be preserved."
+msgstr ""
+"Ez visszaállítja az összes parancsot a rendszer alapértelmezett értékeire. A globális szabályok "
+"megmaradnak."
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2695
+#: NEEDS WORK
+msgid "All commands reset to defaults"
+msgstr "Minden parancs alapértelmezett értékre állítva"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2721
+#: NEEDS WORK
+msgid "New Command"
+msgstr "Új parancs"
 # 
 # File: usr/share/ashyterm/filemanager/manager.py, line: 1743
 # File: usr/share/ashyterm/filemanager/manager.py, line: 1760
@@ -3577,10 +3453,10 @@ msgstr "Parancs neve"
 msgid "Enter a command name"
 msgstr "Adjon meg egy parancsnevet"
 # 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2390
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2787
 #: NEEDS WORK
-msgid "Context already exists"
-msgstr "A kontextus már létezik"
+msgid "Command already exists"
+msgstr "A parancs már létezik"
 # 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2397
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2621
@@ -3608,11 +3484,11 @@ msgstr "Trigger hozzáadása"
 msgid "Add"
 msgstr "Hozzáadás"
 # 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2481
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2879
 #: NEEDS WORK
 #, python-brace-format
-msgid "Enter a command name that should activate the '{}' context."
-msgstr "Adjon meg egy parancsnevet, amely aktiválnia kell a '{}' kontextust."
+msgid "Enter a command name that should activate the '{}' command rules."
+msgstr "Írjon be egy parancsnevet, amely aktiválnia kell a '{}' parancs szabályait."
 # 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2483
 #: NEEDS WORK
@@ -3654,6 +3530,16 @@ msgstr "✓ Érvényes parancsnév"
 msgid "Edit Session"
 msgstr "Szerkesztési munkamenet"
 # 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 581
+#: NEEDS WORK
+msgid "Test Connection"
+msgstr "Kapcsolat tesztelése"
+# 
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 100
+#: NEEDS WORK
+msgid "Test SSH connection"
+msgstr "SSH kapcsolat tesztelése"
+# 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 313
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1128
 #: NEEDS WORK
@@ -3666,68 +3552,10 @@ msgstr "UI Hiba"
 msgid "Failed to initialize dialog interface"
 msgstr "A párbeszédfelület inicializálása nem sikerült"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 319
-#: NEEDS WORK
-msgid "Session Information"
-msgstr "Munkamenet Információ"
-# 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 323
 #: NEEDS WORK
 msgid "Session Name"
 msgstr "Munkamenet neve"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 324
-#: NEEDS WORK
-msgid "A descriptive name for this session"
-msgstr "Egy leíró név erre az ülésre"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 329
-#: NEEDS WORK
-msgid "Enter session name..."
-msgstr "Adja meg a munkamenet nevét..."
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1421
-#: NEEDS WORK
-msgid "Appearance"
-msgstr "Megjelenés"
-# 
-# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 115
-#: NEEDS WORK
-msgid "Tab Color"
-msgstr "Füle Szín"
-# 
-# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 116
-#: NEEDS WORK
-msgid "Choose a color to identify this session's tab"
-msgstr "Válassz egy színt, hogy azonosítsd ennek a munkamenetnek a lapját."
-# 
-# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 135
-#: NEEDS WORK
-msgid "Clear Color"
-msgstr "Tiszta szín"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 347
-#: NEEDS WORK
-msgid "Organization"
-msgstr "Szervezet"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 352
-#: NEEDS WORK
-msgid "Choose a folder to organize this session"
-msgstr "Válasszon egy mappát az ülés rendezéséhez"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 357
-# File: usr/share/ashyterm/ui/dialogs.py, line: 358
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1164
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1165
-#: NEEDS WORK
-msgid "Root"
-msgstr "Gyökér"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 398
-#: NEEDS WORK
-msgid "Connection Type"
-msgstr "Kapcsolat típusa"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 402
 #: NEEDS WORK
@@ -3752,15 +3580,87 @@ msgstr "Helyi terminál"
 msgid "SSH Connection"
 msgstr "SSH Kapcsolat"
 # 
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 115
+#: NEEDS WORK
+msgid "Tab Color"
+msgstr "Füle Szín"
+# 
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 116
+#: NEEDS WORK
+msgid "Choose a color to identify this session's tab"
+msgstr "Válassz egy színt, hogy azonosítsd ennek a munkamenetnek a lapját."
+# 
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 135
+#: NEEDS WORK
+msgid "Clear Color"
+msgstr "Tiszta szín"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 347
+#: NEEDS WORK
+msgid "Organization"
+msgstr "Szervezet"
+# 
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 196
+#: NEEDS WORK
+msgid "Choose where to store this session"
+msgstr "Válaszd ki, hová szeretnéd menteni ezt a munkamenetet"
+# 
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 201
+#: NEEDS WORK
+msgid "Select a folder to organize this session"
+msgstr "Válasszon ki egy mappát az aktuális munkamenet rendezéséhez"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 357
+# File: usr/share/ashyterm/ui/dialogs.py, line: 358
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1164
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1165
+#: NEEDS WORK
+msgid "Root"
+msgstr "Gyökér"
+# 
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 237
+#: NEEDS WORK
+msgid "Local Terminal Options"
+msgstr "Helyi terminál beállítások"
+# 
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 242
+#: NEEDS WORK
+msgid "Working Directory"
+msgstr "Munkakönyvtár"
+# 
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 243
+#: NEEDS WORK
+msgid "Start the terminal in this folder"
+msgstr "Indítsa el a terminált ebben a mappában"
+# 
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 252
+#: NEEDS WORK
+msgid "Default (Home directory)"
+msgstr "Alapértelmezett (Kezdőkönyvtár)"
+# 
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 262
+#: NEEDS WORK
+msgid "Browse for folder"
+msgstr "Mappa kiválasztása"
+# 
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 285
+#: NEEDS WORK
+msgid "Startup Commands"
+msgstr "Indító Parancsok"
+# 
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 293
+#: NEEDS WORK
+msgid ""
+"Commands executed when the terminal starts (one per line). You can write multiple commands like a "
+"small script."
+msgstr ""
+"A terminál indításakor végrehajtott parancsok (soronként egy). Több parancsot is írhat, mint egy "
+"kis szkript."
+# 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 423
 #: NEEDS WORK
 msgid "SSH Configuration"
 msgstr "SSH konfiguráció"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 424
-#: NEEDS WORK
-msgid "Configure connection details for SSH sessions"
-msgstr "SSH kapcsolatok részleteinek konfigurálása"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 429
 # File: usr/share/ashyterm/ui/dialogs.py, line: 894
@@ -3768,45 +3668,25 @@ msgstr "SSH kapcsolatok részleteinek konfigurálása"
 msgid "Host"
 msgstr "Gazda"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 430
-#: NEEDS WORK
-msgid "Hostname or IP address of the remote server"
-msgstr "A távoli szerver hosztneve vagy IP-címe"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 435
-#: NEEDS WORK
-msgid "example.com or 192.168.1.100"
-msgstr "example.com vagy 192.168.1.100"
-# 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 446
 #: NEEDS WORK
 msgid "Username"
 msgstr "Felhasználónév"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 447
-#: NEEDS WORK
-msgid "Username for SSH authentication (optional)"
-msgstr "Felhasználónév SSH hitelesítéshez (opcionális)"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 452
-#: NEEDS WORK
-msgid "username"
-msgstr "felhasználónév"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 464
 #: NEEDS WORK
 msgid "Port"
 msgstr "Port"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 465
+# File: usr/share/ashyterm/ui/dialogs.py, line: 463
 #: NEEDS WORK
-msgid "SSH port number (default: 22)"
-msgstr "SSH port szám (alapértelmezett: 22)"
+msgid "Authentication"
+msgstr "Hitelesítés"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 464
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 369
 #: NEEDS WORK
-msgid "Choose authentication method"
-msgstr "Válassza ki az azonosítási módszert"
+msgid "Choose how to authenticate with the server"
+msgstr "Válassza ki, hogyan hitelesítse magát a szerverrel."
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 467
 #: NEEDS WORK
@@ -3824,80 +3704,95 @@ msgstr "Jelszó"
 msgid "SSH Key Path"
 msgstr "SSH kulcs elérési útja"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 495
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 384
 #: NEEDS WORK
-msgid "Path to private SSH key file"
-msgstr "A magán SSH kulcsfájl elérési útja"
+msgid "Path to your private key file"
+msgstr "A privát kulcs fájlod elérési útja"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 510
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 401
 #: NEEDS WORK
-msgid "Browse..."
-msgstr "Böngészés..."
+msgid "Browse for SSH key file"
+msgstr "SSH kulcsfájl keresése"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 534
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 434
 #: NEEDS WORK
-msgid "Password for SSH authentication"
-msgstr "Jelszó SSH hitelesítéshez"
+msgid "Password Storage"
+msgstr "Jelszó tárolás"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 342
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 436
 #: NEEDS WORK
-msgid "Password for SSH authentication (stored in system keyring)"
-msgstr "Jelszó SSH hitelesítéshez (a rendszer kulcstartójában tárolva)"
+msgid "System keyring not available - password will be stored in plain text"
+msgstr "A rendszer kulcstartó nem elérhető - a jelszó sima szövegben lesz tárolva"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 346
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 453
 #: NEEDS WORK
-msgid "Password for SSH authentication (keyring not available)"
-msgstr "Jelszó SSH hitelesítéshez (kulcstartó nem elérhető)"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 553
-#: NEEDS WORK
-msgid "Enter password..."
-msgstr "Írja be a jelszót..."
+msgid "SSH Options"
+msgstr "SSH Beállítások"
 # 
 # File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 309
 #: NEEDS WORK
 msgid "Run Command After Login"
 msgstr "Parancs futtatása bejelentkezés után"
 # 
-# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 311
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 459
 #: NEEDS WORK
-msgid "Execute a custom command automatically after the SSH session connects"
-msgstr "Futtasson egy egyedi parancsot automatikusan az SSH kapcsolat létrejötte után."
+msgid "Execute a command automatically after SSH connects"
+msgstr "Parancs végrehajtása automatikusan az SSH kapcsolódása után"
 # 
 # File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 318
 #: NEEDS WORK
 msgid "Post-Login Command"
 msgstr "Bejelentkezés utáni parancs"
 # 
-# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 319
-#: NEEDS WORK
-msgid "Command to execute right after a successful login"
-msgstr "Parancs a sikeres bejelentkezés után végrehajtandó"
-# 
-# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 323
-#: NEEDS WORK
-msgid "Example: tmux attach -t main"
-msgstr "Példa: tmux attach -t main"
-# 
 # File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 356
 #: NEEDS WORK
 msgid "Enable X11 Forwarding"
 msgstr "X11 továbbítás engedélyezése"
 # 
-# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 357
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 479
 #: NEEDS WORK
-msgid "Allow starting programs in graphical mode (X11)"
-msgstr "Programok indítása grafikus módban (X11) engedélyezve"
+msgid "Allow graphical applications from remote server"
+msgstr "Engedélyezze a grafikus alkalmazásokat távoli szerverről"
+# 
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 353
+#: NEEDS WORK
+msgid "Enable SFTP Session"
+msgstr "SFTP munkamenet engedélyezése"
+# 
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 488
+#: NEEDS WORK
+msgid "Use default directories when opening SFTP"
+msgstr "Alapértelmezett könyvtárak használata SFTP megnyitásakor"
+# 
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 496
+#: NEEDS WORK
+msgid "SFTP Local Directory"
+msgstr "SFTP Helyi Könyvtár"
+# 
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 505
+#: NEEDS WORK
+msgid "SFTP Remote Directory"
+msgstr "SFTP Távoli Könyvtár"
 # 
 # File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 354
 #: NEEDS WORK
 msgid "Port Forwarding"
 msgstr "Port Továbbítás"
 # 
-# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 355
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 529
 #: NEEDS WORK
-msgid "Create SSH tunnels to forward local ports to remote targets"
-msgstr "Hozzon létre SSH alagutakat a helyi portok távoli célpontokra történő továbbításához."
+msgid "Create SSH tunnels to forward ports"
+msgstr "SSH alagút létrehozása a portok továbbításához"
+# 
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 484
+#: NEEDS WORK
+msgid "Add Port Forward"
+msgstr "Port továbbítás hozzáadása"
+# 
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 537
+#: NEEDS WORK
+msgid "Create a new SSH tunnel"
+msgstr "Hozzon létre egy új SSH alagutat"
 # 
 # File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 396
 #: NEEDS WORK
@@ -3929,20 +3824,15 @@ msgstr "{helyi_gép}:{helyi_port} → {távoli_gép}:{távoli_port}"
 msgid "Edit Port Forward"
 msgstr "Port továbbítás szerkesztése"
 # 
-# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 484
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 712
 #: NEEDS WORK
-msgid "Add Port Forward"
-msgstr "Port továbbítás hozzáadása"
-# 
-# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 508
-#: NEEDS WORK
-msgid "Tunnel name"
+msgid "Tunnel Name"
 msgstr "Alagút neve"
 # 
-# File: usr/share/ashyterm/filemanager/manager.py, line: 366
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 718
 #: NEEDS WORK
-msgid "Name"
-msgstr "Név"
+msgid "Local Settings"
+msgstr "Helyi beállítások"
 # 
 # File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 519
 #: NEEDS WORK
@@ -3954,15 +3844,25 @@ msgstr "Helyi gép"
 msgid "Local Port"
 msgstr "Helyi port"
 # 
-# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 529
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 732
 #: NEEDS WORK
-msgid "Leave blank to use the SSH host"
-msgstr "Hagyja üresen az SSH gazda használatához."
+msgid "Port on your machine (1025-65535 recommended)"
+msgstr "Port a gépeden (ajánlott: 1025-65535)"
 # 
-# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 536
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 738
 #: NEEDS WORK
-msgid "Connect to a different remote host"
-msgstr "Csatlakozás egy másik távoli gazdagéphez"
+msgid "Remote Settings"
+msgstr "Távbeállítások"
+# 
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 745
+#: NEEDS WORK
+msgid "Use Custom Remote Host"
+msgstr "Használj egyedi távoli hosztot"
+# 
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 746
+#: NEEDS WORK
+msgid "Leave off to use the SSH server as target"
+msgstr "Hagyja üresen az SSH szerver célként való használatához."
 # 
 # File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 546
 #: NEEDS WORK
@@ -3973,6 +3873,11 @@ msgstr "Távoli gazda"
 #: NEEDS WORK
 msgid "Remote Port"
 msgstr "Távoli port"
+# 
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 765
+#: NEEDS WORK
+msgid "Port on the remote host (1-65535)"
+msgstr "Port a távoli gazdán (1-65535)"
 # 
 # File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 590
 #: NEEDS WORK
@@ -3996,75 +3901,41 @@ msgstr "A helyi gazda nem lehet üres."
 msgid "Invalid Port Forward"
 msgstr "Érvénytelen Port Továbbítás"
 # 
-# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 346
-#: NEEDS WORK
-msgid "SFTP Session"
-msgstr "SFTP munkamenet"
-# 
-# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 348
-#: NEEDS WORK
-msgid "Configure default directories for SFTP connections (optional)"
-msgstr "SFTP kapcsolatok alapértelmezett könyvtárainak beállítása (opcionális)"
-# 
-# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 353
-#: NEEDS WORK
-msgid "Enable SFTP Session"
-msgstr "SFTP munkamenet engedélyezése"
-# 
-# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 355
-#: NEEDS WORK
-msgid "Use these directories when opening an SFTP tab for this session"
-msgstr "Használja ezeket a könyvtárakat, amikor SFTP lapot nyit meg ehhez a munkamenethez."
-# 
-# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 364
-#: NEEDS WORK
-msgid "Local Directory"
-msgstr "Helyi könyvtár"
-# 
-# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 365
-#: NEEDS WORK
-msgid "Starting directory on your machine for SFTP"
-msgstr "A SFTP-hez használt kezdőkönyvtár a gépeden"
-# 
-# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 369
-#: NEEDS WORK
-msgid "Example: /home/user/projects"
-msgstr "/példány/felhasználó/projektek"
-# 
-# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 379
-#: NEEDS WORK
-msgid "Remote Directory"
-msgstr "Távoli Könyvtár"
-# 
-# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 380
-#: NEEDS WORK
-msgid "Starting directory on the remote host for SFTP"
-msgstr "A távoli gazdagépen található kezdőkönyvtár SFTP-hez"
-# 
-# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 384
-#: NEEDS WORK
-msgid "Example: /var/www"
-msgstr "Példa: /var/www"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 581
-#: NEEDS WORK
-msgid "Test Connection"
-msgstr "Kapcsolat tesztelése"
-# 
 # File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 773
 #: NEEDS WORK
 msgid "Remote server must have X11Forwarding yes in sshd_config."
 msgstr "A távoli szervernek X11Forwarding yes-t kell tartalmaznia az sshd_config fájlban."
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 707
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 1030
 #: NEEDS WORK
-msgid "Select SSH Key"
-msgstr "SSH kulcs kiválasztása"
+msgid "Select Working Directory"
+msgstr "Válassza ki a munkakönyvtárat"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 720
 #: NEEDS WORK
 msgid "File Dialog Error"
 msgstr "Fájl párbeszédablak hiba"
+# 
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 1051
+#: NEEDS WORK
+msgid "Failed to open folder browser"
+msgstr "A mappa böngésző megnyitása nem sikerült"
+# 
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 1065
+#: NEEDS WORK
+msgid "Folder Selection Error"
+msgstr "Mappa kiválasztási hiba"
+# 
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 1066
+#: NEEDS WORK
+#, python-brace-format
+msgid "Failed to select folder: {}"
+msgstr "A mappa kiválasztása nem sikerült: {}"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 707
+#: NEEDS WORK
+msgid "Select SSH Key"
+msgstr "SSH kulcs kiválasztása"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 720
 #: NEEDS WORK
@@ -4181,6 +4052,16 @@ msgstr ""
 msgid "Session name"
 msgstr "Munkamenet neve"
 # 
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 1367
+#: NEEDS WORK
+msgid "Working directory must exist and be a folder."
+msgstr "A munkakönyvtárnak léteznie kell és mappának kell lennie."
+# 
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 1374
+#: NEEDS WORK
+msgid "Invalid working directory path."
+msgstr "Érvénytelen munkakönyvtár-útvonal."
+# 
 # #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
 # 
 # File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 716
@@ -4253,11 +4134,6 @@ msgstr "Kérjük, töltse ki az összes kötelező mezőt."
 #: NEEDS WORK
 msgid "Delete this custom command"
 msgstr "Törölje ezt a testreszabott parancsot"
-# 
-# File: usr/share/ashyterm/ui/dialogs/command_guide_dialog.py, line: 143
-#: NEEDS WORK
-msgid "Command Guide"
-msgstr "Parancs Útmutató"
 # 
 # File: usr/share/ashyterm/ui/dialogs/command_guide_dialog.py, line: 165
 #: NEEDS WORK
@@ -4396,16 +4272,6 @@ msgstr "Aktív panel bezárása"
 msgid "Terminal Interaction"
 msgstr "Terminál Interakció"
 # 
-# File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 38
-#: NEEDS WORK
-msgid "Send Command  All Tabs"
-msgstr "Parancs küldése  Minden fül"
-# 
-# File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 39
-#: NEEDS WORK
-msgid "Ask AI Assistant"
-msgstr "Kérdezd az AI Asszisztenst"
-# 
 # File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 42
 #: NEEDS WORK
 msgid "Zoom"
@@ -4430,11 +4296,6 @@ msgstr "Zoom visszaállítása"
 #: NEEDS WORK
 msgid "Application &amp; Window"
 msgstr "Alkalmazás & Ablak"
-# 
-# File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 53
-#: NEEDS WORK
-msgid "Toggle File Manager"
-msgstr "Fájlkezelő váltása"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1605
 #: NEEDS WORK
@@ -4535,105 +4396,60 @@ msgstr "Minden parancsikon visszaállítása"
 msgid "This will reset all keyboard shortcuts to their default values. Continue?"
 msgstr "Ez visszaállítja az összes billentyűparancsot az alapértelmezett értékeikre. Folytatni?"
 # 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1421
+#: NEEDS WORK
+msgid "Appearance"
+msgstr "Megjelenés"
+# 
 # File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 56
 #: NEEDS WORK
 msgid "Color Scheme"
 msgstr "Színpaletta"
-# 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 59
-#: NEEDS WORK
-msgid "Current Scheme"
-msgstr "Jelenlegi séma"
 # 
 # File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 62
 #: NEEDS WORK
 msgid "Manage Schemes..."
 msgstr "Sémák kezelése..."
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1016
-#: NEEDS WORK
-msgid "Typography"
-msgstr "Tipográfia"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1017
-#: NEEDS WORK
-msgid "Configure fonts and spacing"
-msgstr "Betűtípusok és térközök beállítása"
-# 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1465
 #: NEEDS WORK
 msgid "Terminal Font"
 msgstr "Terminál betűtípus"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1466
-#: NEEDS WORK
-msgid "Select font family and size for terminal text"
-msgstr "Válassza ki a betűtípus családot és méretet a terminál szövegéhez"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1033
 #: NEEDS WORK
 msgid "Line Spacing"
 msgstr "Sorköz"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1034
-#: NEEDS WORK
-msgid "Adjust the vertical space between lines"
-msgstr "Állítsa be a sorok közötti függőleges távolságot"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1045
-#: NEEDS WORK
-msgid "Miscellaneous"
-msgstr "Vegyes"
-# 
 # File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 102
 #: NEEDS WORK
 msgid "Terminal Transparency"
 msgstr "Terminál átlátszóság"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1449
-#: NEEDS WORK
-msgid "Adjust terminal background transparency"
-msgstr "Állítsa be a terminál háttér átlátszóságát"
 # 
 # File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 118
 #: NEEDS WORK
 msgid "Headerbar Transparency"
 msgstr "Fejlécsáv átlátszósága"
 # 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 119
-#: NEEDS WORK
-msgid "For headerbar and file manager"
-msgstr "Fejlécsorhoz és fájlkezelőhöz"
-# 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1065
 #: NEEDS WORK
 msgid "Use Bright Colors for Bold Text"
 msgstr "Használj élénk színeket a vastag szöveghez"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1066
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 169
 #: NEEDS WORK
-msgid "Render bold text with the brighter version of the base color"
-msgstr "Rajzoljon ki vastag szöveget az alap szín világosabb változatával."
+msgid "Auto-Hide Sessions Panel"
+msgstr "Automatikus elrejtés ülések panel"
 # 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 132
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 170
 #: NEEDS WORK
-msgid "Auto-Hide Sidebar"
-msgstr "Automatikus elrejtés oldalsáv"
-# 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 134
-#: NEEDS WORK
-msgid "Automatically hide the sidebar when activating sessions or layouts"
-msgstr "Automatikusan elrejti az oldalsávot, amikor üléseket vagy elrendezéseket aktivál."
+msgid "Hide panel when activating sessions"
+msgstr "Panel elrejtése munkamenetek aktiválásakor"
 # 
 # File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 147
 #: NEEDS WORK
 msgid "Blinking Text"
 msgstr "Villogó szöveg"
-# 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 148
-#: NEEDS WORK
-msgid "Control how the terminal handles blinking text"
-msgstr "Irányítsa, hogyan kezeli a terminál a villogó szöveget"
 # 
 # File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 150
 #: NEEDS WORK
@@ -4650,11 +4466,6 @@ msgstr "Mindig"
 msgid "Tab Alignment"
 msgstr "Tab igazítás"
 # 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 176
-#: NEEDS WORK
-msgid "Align tabs to the left or center of the tab bar"
-msgstr "Igazítsa a füleket balra vagy a fülcsík közepére"
-# 
 # File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 178
 #: NEEDS WORK
 msgid "Left"
@@ -4669,13 +4480,6 @@ msgstr "Középpont"
 #: NEEDS WORK
 msgid "Icon Theme"
 msgstr "Ikon téma"
-# 
-# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 214
-#: NEEDS WORK
-msgid "Ashy Icons (bundled) speeds up startup. System Icons follows your desktop theme."
-msgstr ""
-"Ashy Ikonok (csomagolt) felgyorsítja a rendszerindítást. A Rendszerikonok követik az asztali "
-"témádat."
 # 
 # File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 218
 #: NEEDS WORK
@@ -4697,11 +4501,6 @@ msgstr "Terminál"
 msgid "Cursor Shape"
 msgstr "Kurzor alakja"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1138
-#: NEEDS WORK
-msgid "Select the shape of the terminal cursor"
-msgstr "Válaszd ki a terminál kurzorának alakját"
-# 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1141
 #: NEEDS WORK
 msgid "Block"
@@ -4712,20 +4511,10 @@ msgstr "Blokk"
 msgid "I-Beam"
 msgstr "I-beam"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1141
-#: NEEDS WORK
-msgid "Underline"
-msgstr "Aláhúzás"
-# 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1148
 #: NEEDS WORK
 msgid "Cursor Blinking"
 msgstr "Kurzor villogás"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1148
-#: NEEDS WORK
-msgid "Control cursor blinking behavior"
-msgstr "Irányítsa a kurzor villogási viselkedését"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1151
 #: NEEDS WORK
@@ -4742,110 +4531,56 @@ msgstr "Bekapcsolva"
 msgid "Off"
 msgstr "Ki."
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1118
-#: NEEDS WORK
-msgid "Scrolling"
-msgstr "Görgetés"
-# 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1123
 #: NEEDS WORK
 msgid "Scrollback Lines"
 msgstr "Visszagörgetési sorok"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1124
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 246
 #: NEEDS WORK
-msgid "Number of lines to keep in history (0 for unlimited)"
-msgstr "A megőrzendő sorok száma a történelemben (0 a korlátlanhoz)"
+msgid "0 for unlimited"
+msgstr "0 a korlátlanhoz"
 # 
 # File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 192
 #: NEEDS WORK
 msgid "Mouse Scroll Sensitivity"
 msgstr "Egér Görgetési Érzékenység"
 # 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 193
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 258
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 274
 #: NEEDS WORK
-msgid "Controls the scroll speed for a mouse wheel. Lower is slower."
-msgstr "Irányítja az egérkerék görgetési sebességét. Alacsonyabb érték lassabb."
+msgid "Lower is slower"
+msgstr "Alacsonyabb a lassabb"
 # 
 # File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 208
 #: NEEDS WORK
 msgid "Touchpad Scroll Sensitivity"
 msgstr "Touchpad görgetési érzékenység"
 # 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 209
-#: NEEDS WORK
-msgid "Controls the scroll speed for a touchpad. Lower is slower."
-msgstr "Irányítja a görgetési sebességet egy érintőpadon. Alacsonyabb érték lassabb."
-# 
 # File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 233
 #: NEEDS WORK
 msgid "Scroll on Paste"
 msgstr "Görgetés beillesztéskor"
-# 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 234
-#: NEEDS WORK
-msgid "Automatically scroll to the bottom when pasting text"
-msgstr "Automatikusan görgessen a végére, amikor szöveget illeszt be"
-# 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 246
-#: NEEDS WORK
-msgid "Selection"
-msgstr "Kiválasztás"
-# 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 247
-#: NEEDS WORK
-msgid "Extra characters for word selection (e.g., -_.:/~)"
-msgstr "További karakterek a szavak kiválasztásához (pl.: -_.:/~)"
-# 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 252
-#: NEEDS WORK
-msgid "Word Characters"
-msgstr "Word karakterek"
-# 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 292
-#: NEEDS WORK
-msgid "Shell & Bell"
-msgstr "Shell & Bell"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1107
 #: NEEDS WORK
 msgid "Run Command as a Login Shell"
 msgstr "Futtassa a parancsot bejelentkezési héjként"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1108
-#: NEEDS WORK
-msgid "Sources /etc/profile and ~/.profile on startup"
-msgstr "Források /etc/profile és ~/.profile indításkor"
-# 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1161
 #: NEEDS WORK
 msgid "Audible Bell"
 msgstr "Hallható Harang"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1162
-#: NEEDS WORK
-msgid "Emit a sound for the terminal bell character"
-msgstr "Jelentést ad ki a terminál harang karakterének hangjára"
 # 
 # File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 250
 #: NEEDS WORK
 msgid "Profiles & Data"
 msgstr "Profilok és Adatok"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1082
-#: NEEDS WORK
-msgid "Startup"
-msgstr "Indítás"
-# 
 # File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 258
 #: NEEDS WORK
 msgid "On Startup"
 msgstr "Indításkor"
-# 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 259
-#: NEEDS WORK
-msgid "Action to take when the application starts"
-msgstr "Művelet, amelyet az alkalmazás indításakor kell végrehajtani"
 # 
 # File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 263
 #: NEEDS WORK
@@ -4862,18 +4597,6 @@ msgstr "Kérjük, állítsa vissza az előző munkamenetet"
 msgid "Never restore previous session"
 msgstr "Soha ne állítsa vissza az előző munkamenetet"
 # 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 280
-#: NEEDS WORK
-msgid "Backup &amp; Recovery"
-msgstr "Biztonsági mentés és helyreállítás"
-# 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 319
-#: NEEDS WORK
-msgid "Create an encrypted backup of your data or restore from a previous backup."
-msgstr ""
-"Hozzon létre egy titkosított biztonsági másolatot az adatairól, vagy állítson vissza egy korábbi "
-"biztonsági másolatot."
-# 
 # #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
 # 
 # File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 325
@@ -4882,10 +4605,10 @@ msgstr ""
 msgid "Create Backup"
 msgstr "Biztonsági mentés készítése"
 # 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 327
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 350
 #: NEEDS WORK
-msgid "Save all sessions, settings, and passwords to an encrypted file."
-msgstr "Minden munkamenetet, beállítást és jelszót egy titkosított fájlba ment."
+msgid "Encrypted backup of sessions and settings"
+msgstr "Titkosított biztonsági mentés a munkamenetekről és beállításokról"
 # 
 # File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 330
 #: NEEDS WORK
@@ -4897,127 +4620,75 @@ msgstr "Biztonsági mentés létrehozása..."
 msgid "Restore from Backup"
 msgstr "Visszaállítás biztonsági mentésből"
 # 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 339
-#: NEEDS WORK
-msgid "Replace all current data with a backup file."
-msgstr "Cserélje le az összes aktuális adatot egy biztonsági másolattal."
-# 
 # File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 341
 #: NEEDS WORK
 msgid "Restore..."
 msgstr "Visszaállítás..."
-# 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 348
-#: NEEDS WORK
-msgid "Remote Editing"
-msgstr "Távszerkesztés"
 # 
 # File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 352
 #: NEEDS WORK
 msgid "Use System Temporary Directory"
 msgstr "Használja a rendszer ideiglenes könyvtárat"
 # 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 354
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 374
 #: NEEDS WORK
-msgid "Store temporary files for remote editing in /tmp instead of the config folder"
-msgstr "Ideiglenes fájlok tárolása távoli szerkesztéshez a /tmp mappában a konfigurációs mappa helyett"
+msgid "Use /tmp for remote editing files"
+msgstr "Használja a /tmp mappát távoli fájlok szerkesztéséhez"
 # 
 # File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 369
 #: NEEDS WORK
 msgid "Clear Remote Edit Files on Exit"
 msgstr "Távoli szerkesztési fájlok törlése kilépéskor"
 # 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 371
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 392
 #: NEEDS WORK
-msgid "Automatically delete all temporary remote files when closing the app"
-msgstr "Automatikusan törölje az összes ideiglenes távoli fájlt az alkalmazás bezárásakor"
+msgid "SSH Connection Persistence"
+msgstr "SSH Kapcsolat Megtartás"
 # 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 416
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 393
 #: NEEDS WORK
-msgid "SSH"
-msgstr "SSH"
-# 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 417
-#: NEEDS WORK
-msgid "Settings for SSH connection management (multiplexing)."
-msgstr "SSH kapcsolatkezelési beállítások (multiplexelés)."
-# 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 422
-#: NEEDS WORK
-msgid "Connection Persistence (seconds)"
-msgstr "Kapcsolat Megtartás (másodperc)"
-# 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 424
-#: NEEDS WORK
-msgid "Keep SSH connections alive in the background for faster reconnections. Set to 0 to disable."
-msgstr ""
-"Tartsa életben az SSH kapcsolatokat a háttérben a gyorsabb újracsatlakozások érdekében. Állítsa "
-"0-ra a letiltáshoz."
+msgid "Seconds to keep connections alive (0 to disable)"
+msgstr "Kapcsolatok életben tartásához szükséges másodpercek (0 a letiltáshoz)"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1790
 #: NEEDS WORK
 msgid "Advanced"
 msgstr "Haladó"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1276
-#: NEEDS WORK
-msgid "Advanced Features"
-msgstr "Fejlett funkciók"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1277
-#: NEEDS WORK
-msgid "Enable or disable advanced terminal features"
-msgstr "Fejlett terminálszolgáltatások engedélyezése vagy letiltása"
-# 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1282
 #: NEEDS WORK
 msgid "Bidirectional Text Support"
 msgstr "Kétirányú Szöveg Támogatás"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1284
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 416
 #: NEEDS WORK
-msgid "Enable for languages like Arabic and Hebrew (may affect performance)"
-msgstr "Engedélyezze az olyan nyelvekhez, mint az arab és a héber (hatással lehet a teljesítményre)"
+msgid "For Arabic and Hebrew (affects performance)"
+msgstr "Arab és héber (hatással van a teljesítményre)"
 # 
 # File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 411
 #: NEEDS WORK
 msgid "Enable Arabic Text Shaping"
 msgstr "Arab szövegformázás engedélyezése"
 # 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 413
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 424
 #: NEEDS WORK
-msgid "Correctly render ligatures and contextual forms for Arabic script"
-msgstr "Helyesen jelenítse meg a ligatúrákat és a kontextuális formákat az arab írás számára"
+msgid "Render ligatures for Arabic script"
+msgstr "Render ligatúrák arab írás számára"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1295
 #: NEEDS WORK
 msgid "SIXEL Graphics Support"
 msgstr "SIXEL Grafika Támogatás"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1296
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 432
 #: NEEDS WORK
-msgid "Allow the terminal to display SIXEL images (experimental)"
-msgstr "Engedélyezze a terminál számára a SIXEL képek megjelenítését (kísérleti)"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1172
-#: NEEDS WORK
-msgid "Compatibility"
-msgstr "Kompatibilitás"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1173
-#: NEEDS WORK
-msgid "Settings for compatibility with older systems and tools"
-msgstr "Beállítások a régebbi rendszerekkel és eszközökkel való kompatibilitás érdekében"
+msgid "Display SIXEL images (experimental)"
+msgstr "SIXEL képek megjelenítése (kísérleti)"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1178
 #: NEEDS WORK
 msgid "Backspace Key"
 msgstr "Visszavonás billentyű"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1178
-#: NEEDS WORK
-msgid "Sequence to send for Backspace key"
-msgstr "Sorozat a Backspace billentyű elküldéséhez"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1182
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1197
@@ -5047,20 +4718,10 @@ msgstr "Escape szekvencia"
 msgid "Delete Key"
 msgstr "Törlés gomb"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1193
-#: NEEDS WORK
-msgid "Sequence to send for Delete key"
-msgstr "Törlés gombhoz küldendő szekvencia"
-# 
 # File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 481
 #: NEEDS WORK
 msgid "Ambiguous-width Characters"
 msgstr "Kétértelmű szélességű karakterek"
-# 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 482
-#: NEEDS WORK
-msgid "Set the width for ambiguous characters (e.g., CJK)"
-msgstr "Állítsa be a szélességet a kétértelmű karakterekhez (pl. CJK)"
 # 
 # File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 485
 #: NEEDS WORK
@@ -5072,40 +4733,20 @@ msgstr "Keskeny (egysejtes)"
 msgid "Wide (double-cell)"
 msgstr "Széles (dupla cella)"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1071
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 252
 #: NEEDS WORK
-msgid "Logging"
-msgstr "Naplózás"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1071
-#: NEEDS WORK
-msgid "Configure application logging behavior"
-msgstr "Alkalmazásnaplózási viselkedés konfigurálása"
+msgid "Word Characters"
+msgstr "Word karakterek"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1076
 #: NEEDS WORK
 msgid "Save Logs to File"
 msgstr "Mentés naplók fájlba"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1077
-#: NEEDS WORK
-msgid "Save application logs to the configuration directory"
-msgstr "Mentse az alkalmazásnaplókat a konfigurációs könyvtárba"
-# 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1087
 #: NEEDS WORK
 msgid "Console Log Level"
 msgstr "Konzol Napló Szint"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1088
-#: NEEDS WORK
-msgid "Set the minimum level of messages shown in the console"
-msgstr "Állítsa be a konzolon megjelenített üzenetek minimális szintjét."
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1832
-#: NEEDS WORK
-msgid "Reset application settings to defaults"
-msgstr "Alkalmazásbeállítások visszaállítása az alapértelmezett értékekre"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1838
 # File: usr/share/ashyterm/ui/dialogs.py, line: 2002
@@ -5113,11 +4754,6 @@ msgstr "Alkalmazásbeállítások visszaállítása az alapértelmezett értéke
 #: NEEDS WORK
 msgid "Reset All Settings"
 msgstr "Minden beállítás visszaállítása"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1839
-#: NEEDS WORK
-msgid "Restore all settings to their default values"
-msgstr "Állítsa vissza az összes beállítást az alapértelmezett értékekre."
 # 
 # File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 681
 #: NEEDS WORK
@@ -5129,19 +4765,20 @@ msgstr "Ikon téma megváltozott"
 msgid "The icon theme change will take effect after restarting the application."
 msgstr "Az ikon téma változtatás a alkalmazás újraindítása után lép érvénybe."
 # 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 652
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 687
 #: NEEDS WORK
-msgid "Sidebar Visibility"
-msgstr "Oldalsáv láthatósága"
+msgid "Sessions Panel Visibility"
+msgstr "Ülések panel láthatósága"
 # 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 654
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 689
 #: NEEDS WORK
 msgid ""
-"The sidebar visibility change will take effect when you close and reopen the application. You can "
-"also toggle the sidebar manually using Ctrl+Shift+H."
+"The sessions panel visibility change will take effect when you close and reopen the application. "
+"You can also toggle the sessions panel manually using Ctrl+Shift+H."
 msgstr ""
-"A sidebar láthatóságának megváltoztatása akkor lép érvénybe, amikor bezárod és újra megnyitod az "
-"alkalmazást. A sidebar-t manuálisan is átkapcsolhatod a Ctrl+Shift+H billentyűkombinációval."
+"A munkamenetek panel láthatóságának megváltoztatása akkor lép érvénybe, amikor bezárod és újra "
+"megnyitod az alkalmazást. A munkamenetek panelt manuálisan is átkapcsolhatod a Ctrl+Shift+H "
+"billentyűkombinációval."
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 2003
 #: NEEDS WORK
@@ -7202,6 +6839,11 @@ msgstr "Keresés..."
 msgid "Showing first {count} results. Refine your search to narrow the list."
 msgstr "Az első {count} eredmény megjelenítése. Finomítsa a keresést a lista szűkítéséhez."
 # 
+# File: usr/share/ashyterm/filemanager/manager.py, line: 366
+#: NEEDS WORK
+msgid "Name"
+msgstr "Név"
+# 
 # File: usr/share/ashyterm/filemanager/manager.py, line: 375
 #: NEEDS WORK
 msgid "Size"
@@ -9006,6 +8648,11 @@ msgstr "A mentett munkamenetek és mappák betöltése nem sikerült. Üres konf
 msgid "Enable the AI assistant in Preferences > Terminal > AI Assistant."
 msgstr "Engedélyezze az AI asszisztenst a Beállítások > Terminál > AI Asszisztens menüpontban."
 # 
+# File: usr/share/ashyterm/window.py, line: 547
+#: NEEDS WORK
+msgid "Model"
+msgstr "Modell"
+# 
 # File: usr/share/ashyterm/window.py, line: 548
 #: NEEDS WORK
 msgid "API key"
@@ -9473,10 +9120,10 @@ msgstr "Állítsa be a munkakönyvtárat a kezdeti terminálhoz"
 msgid "Working directory (positional argument)"
 msgstr "Munkakönyvtár (pozicionális argumentum)"
 # 
-# File: usr/share/ashyterm/main.py, line: 105
+# File: src/ashyterm/__init__.py, line: 133
 #: NEEDS WORK
-msgid "Execute command in the terminal"
-msgstr "Parancs végrehajtása a terminálban"
+msgid "Execute command in the terminal (takes all remaining arguments)"
+msgstr "Parancs végrehajtása a terminálban (minden hátralévő argumentumot figyelembe véve)"
 # 
 # File: usr/share/ashyterm/main.py, line: 110
 #: NEEDS WORK

@@ -548,23 +548,23 @@ msgstr "Χρησιμοποιήστε κανονικές εκφράσεις"
 msgid "Regex"
 msgstr "Κανονική έκφραση"
 # 
-# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
+# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1606
-# File: usr/share/ashyterm/window.py, line: 248
+# File: src/ashyterm/ui/window_ui.py, line: 262
+# File: src/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 56
 #: NEEDS WORK
-msgid "Toggle Sidebar"
-msgstr "Εναλλαγή Πλευρικής Στήλης"
+msgid "Sessions Panel"
+msgstr "Πίνακας Συνεδριών"
 # 
 # File: usr/share/ashyterm/window.py, line: 344
 #: NEEDS WORK
 msgid "File Manager"
 msgstr "Διαχειριστής Αρχείων"
 # 
-# File: usr/share/ashyterm/ui/window_ui.py, line: 324
+# File: usr/share/ashyterm/ui/dialogs/command_guide_dialog.py, line: 143
 #: NEEDS WORK
-msgid "Command Guide (Ctrl+Shift+P)"
-msgstr "Οδηγός Εντολών (Ctrl+Shift+P)"
+msgid "Command Guide"
+msgstr "Οδηγός Εντολών"
 # 
 # File: usr/share/ashyterm/ui/window_ui.py, line: 350
 #: NEEDS WORK
@@ -576,10 +576,10 @@ msgstr "Αναζήτηση στο Τερματικό"
 msgid "Send Command to All Tabs"
 msgstr "Αποστολή εντολής σε όλες τις καρτέλες"
 # 
-# File: usr/share/ashyterm/ui/window_ui.py, line: 344
+# File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 39
 #: NEEDS WORK
-msgid "Ask AI Assistant (Ctrl+Shift+I)"
-msgstr "Ρώτησε τον Βοηθό AI (Ctrl+Shift+I)"
+msgid "Ask AI Assistant"
+msgstr "Ρώτησε τον Βοηθό AI"
 # 
 # File: usr/share/ashyterm/ui/window_ui.py, line: 259
 #: NEEDS WORK
@@ -2076,15 +2076,15 @@ msgstr "Διαγραφή Όλων"
 msgid "Show Sessions"
 msgstr "Εμφάνιση Συνεδριών"
 # 
-# File: usr/share/ashyterm/ui/sidebar_manager.py, line: 227
+# File: src/ashyterm/ui/sidebar_manager.py, line: 292
 #: NEEDS WORK
-msgid "Hide Sidebar"
-msgstr "Απόκρυψη Πλευρικής Στήλης"
+msgid "Hide Sessions Panel"
+msgstr "Απόκρυψη Πίνακα Συνεδριών"
 # 
-# File: usr/share/ashyterm/ui/sidebar_manager.py, line: 227
+# File: src/ashyterm/ui/sidebar_manager.py, line: 292
 #: NEEDS WORK
-msgid "Show Sidebar"
-msgstr "Εμφάνιση Πλευρικής Στήλης"
+msgid "Show Sessions Panel"
+msgstr "Εμφάνιση Πίνακα Συνεδριών"
 # 
 # File: usr/share/ashyterm/ui/menus.py, line: 24
 #: NEEDS WORK
@@ -2389,16 +2389,6 @@ msgstr "Δεν ήταν δυνατή η σύνδεση στη συνεδρία '
 msgid "Configure AI Assistant"
 msgstr "Ρυθμίστε τον Βοηθό Τεχνητής Νοημοσύνης"
 # 
-# File: src/ashyterm/ui/dialogs/ai_config_dialog.py, line: 178
-#: NEEDS WORK
-msgid "Status"
-msgstr "Κατάσταση"
-# 
-# File: src/ashyterm/ui/dialogs/ai_config_dialog.py, line: 66
-#: NEEDS WORK
-msgid "Enable or disable the AI Assistant feature."
-msgstr "Ενεργοποιήστε ή απενεργοποιήστε τη δυνατότητα Βοηθού AI."
-# 
 # File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 327
 #: NEEDS WORK
 msgid "Enable AI Assistant"
@@ -2417,11 +2407,6 @@ msgstr "Εμφάνιση του κουμπιού Βοηθού AI στη γραμ
 msgid "Provider"
 msgstr "Πάροχος"
 # 
-# File: src/ashyterm/ui/dialogs/ai_config_dialog.py, line: 66
-#: NEEDS WORK
-msgid "Select the AI service provider to use."
-msgstr "Επιλέξτε τον πάροχο υπηρεσιών AI που θα χρησιμοποιήσετε."
-# 
 # File: src/ashyterm/ui/dialogs/ai_config_dialog.py, line: 73
 #: NEEDS WORK
 msgid "Choose between cloud providers or local models."
@@ -2435,62 +2420,30 @@ msgstr "Επιλέξτε ανάμεσα σε παρόχους cloud ή τοπι�
 msgid "Base URL"
 msgstr "Βασική Διεύθυνση URL"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 463
-#: NEEDS WORK
-msgid "Authentication"
-msgstr "Αυθεντικοποίηση"
-# 
-# File: src/ashyterm/ui/dialogs/ai_config_dialog.py, line: 98
-#: NEEDS WORK
-msgid "API credentials for the selected provider."
-msgstr "Διαπιστευτήρια API για τον επιλεγμένο πάροχο."
-# 
 # File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 374
 #: NEEDS WORK
 msgid "API Key"
 msgstr "Κλειδί API"
-# 
-# File: usr/share/ashyterm/window.py, line: 547
-#: NEEDS WORK
-msgid "Model"
-msgstr "Μοντέλο"
-# 
-# File: src/ashyterm/ui/dialogs/ai_config_dialog.py, line: 115
-#: NEEDS WORK
-msgid "Select or specify the AI model to use."
-msgstr "Επιλέξτε ή καθορίστε το μοντέλο AI που θα χρησιμοποιήσετε."
 # 
 # File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 361
 #: NEEDS WORK
 msgid "Model Identifier"
 msgstr "Ταυτότητα Μοντέλου"
 # 
-# File: src/ashyterm/ui/dialogs/ai_config_dialog.py, line: 131
-#: NEEDS WORK
-msgid "Fetch Available Models"
-msgstr "Ανάκτηση Διαθέσιμων Μοντέλων"
-# 
-# File: src/ashyterm/ui/dialogs/ai_config_dialog.py, line: 132
-#: NEEDS WORK
-msgid "Query OpenRouter for a list of available models."
-msgstr "Ερώτηση OpenRouter για μια λίστα διαθέσιμων μοντέλων."
-# 
 # File: src/ashyterm/ui/dialogs/ai_config_dialog.py, line: 134
-# File: src/ashyterm/ui/dialogs/ai_config_dialog.py, line: 361
-# File: src/ashyterm/ui/dialogs/ai_config_dialog.py, line: 378
 #: NEEDS WORK
-msgid "Fetch Models"
-msgstr "Ανάκτηση Μοντέλων"
+msgid "Browse Available Models"
+msgstr "Προβολή Διαθέσιμων Μοντέλων"
 # 
-# File: src/ashyterm/ui/dialogs/ai_config_dialog.py, line: 143
+# File: src/ashyterm/ui/dialogs/ai_config_dialog.py, line: 135
 #: NEEDS WORK
-msgid "Available Models"
-msgstr "Διαθέσιμα Μοντέλα"
+msgid "Search and select from available OpenRouter models."
+msgstr "Αναζητήστε και επιλέξτε από τα διαθέσιμα μοντέλα OpenRouter."
 # 
-# File: src/ashyterm/ui/dialogs/ai_config_dialog.py, line: 144
+# File: src/ashyterm/ui/dialogs/ai_config_dialog.py, line: 137
 #: NEEDS WORK
-msgid "Select a model from the fetched list."
-msgstr "Επιλέξτε ένα μοντέλο από τη ληφθείσα λίστα."
+msgid "Browse Models"
+msgstr "Προβολή Μοντέλων"
 # 
 # File: src/ashyterm/ui/dialogs/ai_config_dialog.py, line: 151
 #: NEEDS WORK
@@ -2542,27 +2495,43 @@ msgstr "Κλειδί API (αν απαιτείται)"
 msgid "Please enter an API key first."
 msgstr "Παρακαλώ εισάγετε πρώτα ένα κλειδί API."
 # 
-# File: src/ashyterm/ui/dialogs/ai_config_dialog.py, line: 309
+# File: src/ashyterm/ui/dialogs/ai_config_dialog.py, line: 300
 #: NEEDS WORK
-msgid "Fetching..."
-msgstr "Ανάκτηση..."
+msgid "Select OpenRouter Model"
+msgstr "Επιλέξτε Μοντέλο OpenRouter"
 # 
-# File: src/ashyterm/ui/dialogs/ai_config_dialog.py, line: 370
+# File: src/ashyterm/ui/dialogs/ai_config_dialog.py, line: 344
+#: NEEDS WORK
+msgid "Search models by name or ID..."
+msgstr "Αναζήτηση μοντέλων κατά όνομα ή ID..."
+# 
+# File: src/ashyterm/ui/dialogs/ai_config_dialog.py, line: 358
+#: NEEDS WORK
+msgid "Loading models..."
+msgstr "Φόρτωση μοντέλων..."
+# 
+# File: src/ashyterm/ui/dialogs/ai_config_dialog.py, line: 457
 #: NEEDS WORK
 #, python-brace-format
-msgid "Fetched {count} models."
-msgstr "Ανακτήθηκαν {count} μοντέλα."
+msgid "Failed to load models: {error}"
+msgstr "Αποτυχία φόρτωσης μοντέλων: {error}"
 # 
-# File: src/ashyterm/ui/dialogs/ai_config_dialog.py, line: 372
-#: NEEDS WORK
-msgid "No models found."
-msgstr "Δεν βρέθηκαν μοντέλα."
-# 
-# File: src/ashyterm/ui/dialogs/ai_config_dialog.py, line: 379
+# File: src/ashyterm/ui/dialogs/ai_config_dialog.py, line: 489
 #: NEEDS WORK
 #, python-brace-format
-msgid "Failed to fetch models: {error}"
-msgstr "Αποτυχία λήψης μοντέλων: {error}"
+msgid "{count} models available"
+msgstr "{count} διαθέσιμα μοντέλα"
+# 
+# File: src/ashyterm/ui/dialogs/ai_config_dialog.py, line: 492
+#: NEEDS WORK
+#, python-brace-format
+msgid "Showing {shown} of {total} models"
+msgstr "Εμφάνιση {shown} από {total} μοντέλα"
+# 
+# File: src/ashyterm/ui/dialogs/ai_config_dialog.py, line: 503
+#: NEEDS WORK
+msgid "Showing first 100 results. Refine your search to see more."
+msgstr "Εμφάνιση πρώτων 100 αποτελεσμάτων. Εξευγενίστε την αναζήτησή σας για να δείτε περισσότερα."
 # 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 32
 #: NEEDS WORK
@@ -2644,35 +2613,40 @@ msgstr "Φωτεινό Κυανό"
 msgid "Bright White"
 msgstr "Φωτεινό Λευκό"
 # 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 52
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 58
 #: NEEDS WORK
-msgid "Bold Red"
-msgstr "Έντονο Κόκκινο"
+msgid "Bold"
+msgstr "Έντονη"
 # 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 53
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 59
 #: NEEDS WORK
-msgid "Bold Green"
-msgstr "Έντονο Πράσινο"
+msgid "Italic"
+msgstr "Πλάγιο"
 # 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 54
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1141
 #: NEEDS WORK
-msgid "Bold Yellow"
-msgstr "Έντονο Κίτρινο"
+msgid "Underline"
+msgstr "Υπογράμμιση"
 # 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 55
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 61
 #: NEEDS WORK
-msgid "Bold Blue"
-msgstr "Έντονο Μπλε"
+msgid "Strikethrough"
+msgstr "Διαγραφή μέσω γραμμής"
 # 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 56
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 62
 #: NEEDS WORK
-msgid "Bold Cyan"
-msgstr "Έντονο Κυανό"
+msgid "Dim/Faint"
+msgstr "Αχνό/Αμυδρό"
 # 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 57
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 63
 #: NEEDS WORK
-msgid "Bold White"
-msgstr "Έντονο Λευκό"
+msgid "Blink"
+msgstr "Αναλαμπή"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 68
+#: NEEDS WORK
+msgid "Default"
+msgstr "Προεπιλογή"
 # 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 85
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 375
@@ -2681,11 +2655,15 @@ msgstr "Έντονο Λευκό"
 msgid "Group {}"
 msgstr "Ομάδα {}"
 # 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 86
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 174
 #: NEEDS WORK
-#, python-brace-format
-msgid "Color for capture group {}"
-msgstr "Χρώμα για την ομάδα σύλληψης {}"
+msgid "Color:"
+msgstr "Χρώμα:"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 216
+#: NEEDS WORK
+msgid "Bg:"
+msgstr "Bg:"
 # 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 110
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 817
@@ -2714,12 +2692,10 @@ msgstr "Όνομα Κανόνα"
 msgid "Pattern"
 msgstr "Μοτίβο"
 # 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 264
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 525
 #: NEEDS WORK
-msgid "Use Python regular expression syntax. Capture groups () can have individual colors."
-msgstr ""
-"Χρησιμοποιήστε τη σύνταξη κανονικών εκφράσεων Python. Οι ομάδες σύλληψης () μπορούν να έχουν "
-"ατομικά χρώματα."
+msgid "Python regex syntax. Capture groups () can have individual colors."
+msgstr "Σύνταξη κανονικών εκφράσεων Python. Οι ομάδες σύλληψης () μπορούν να έχουν ατομικά χρώματα."
 # 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 268
 #: NEEDS WORK
@@ -2731,17 +2707,15 @@ msgstr "Μοτίβο Regex"
 msgid "Regex reference"
 msgstr "Αναφορά Regex"
 # 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 292
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 554
 #: NEEDS WORK
-msgid "Colors"
-msgstr "Χρώματα"
+msgid "Colors & Effects"
+msgstr "Χρώματα & Εφέ"
 # 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 293
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 555
 #: NEEDS WORK
-msgid "Assign colors to capture groups. First color applies to entire match if no groups."
-msgstr ""
-"Αναθέστε χρώματα σε ομάδες σύλληψης. Το πρώτο χρώμα εφαρμόζεται σε ολόκληρη την αντιστοίχιση αν δεν "
-"υπάρχουν ομάδες."
+msgid "First color applies to entire match if no groups."
+msgstr "Το πρώτο χρώμα εφαρμόζεται σε ολόκληρη την αντιστοίχιση αν δεν υπάρχουν ομάδες."
 # 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 298
 #: NEEDS WORK
@@ -2930,28 +2904,17 @@ msgstr "Κλειδί=ζεύγη τιμών (2 ομάδες)"
 msgid "Comment lines"
 msgstr "Γραμμές σχολίων"
 # 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 586
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 862
 #: NEEDS WORK
 #, python-brace-format
-msgid "Context: {}"
-msgstr "Κλειδί (χρησιμοποιείται για το πλαίσιο): Πλαίσιο: {}"
+msgid "Command: {}"
+msgstr "Εντολή: {}"
 # 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 621
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 938
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1790
 #: NEEDS WORK
-msgid "Context Settings"
-msgstr "Ρυθμίσεις Πλαισίου"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 627
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1451
-#: NEEDS WORK
-msgid "Enable Context"
-msgstr "Ενεργοποίηση Πλαισίου"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 628
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1452
-#: NEEDS WORK
-msgid "Apply rules when this command is detected"
-msgstr "Εφαρμόστε κανόνες όταν ανιχνευθεί αυτή η εντολή"
+msgid "Enable Command Rules"
+msgstr "Ενεργοποίηση Κανόνων Εντολών"
 # 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 635
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1459
@@ -2959,72 +2922,31 @@ msgstr "Εφαρμόστε κανόνες όταν ανιχνευθεί αυτή
 msgid "Include Global Rules"
 msgstr "Συμπερίληψη Παγκόσμιων Κανόνων"
 # 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 636
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1460
-#: NEEDS WORK
-msgid "Also apply global rules alongside context-specific rules"
-msgstr "Επίσης, εφαρμόστε παγκόσμιους κανόνες παράλληλα με κανόνες συγκεκριμένου πλαισίου."
-# 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 643
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1467
 #: NEEDS WORK
 msgid "Reset to System Default"
 msgstr "Επαναφορά στις εργοστασιακές ρυθμίσεις"
 # 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 644
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1468
-#: NEEDS WORK
-msgid "Remove user customization and revert to system rules"
-msgstr "Αφαίρεση προσαρμογής χρήστη και επαναφορά στους κανόνες του συστήματος"
-# 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 657
 #: NEEDS WORK
 msgid "Triggers"
 msgstr "Ενεργοποιήσεις"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 658
-#: NEEDS WORK
-msgid ""
-"Commands that activate this context. Add, edit or remove triggers to customize when this context "
-"applies."
-msgstr ""
-"Εντολές που ενεργοποιούν αυτό το πλαίσιο. Προσθέστε, επεξεργαστείτε ή αφαιρέστε ενεργοποιητές για "
-"να προσαρμόσετε πότε ισχύει αυτό το πλαίσιο."
 # 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 664
 #: NEEDS WORK
 msgid "➕ Add Trigger"
 msgstr "➕ Προσθήκη Ενεργοποίησης"
 # 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 665
-#: NEEDS WORK
-msgid "Add another command that activates this context"
-msgstr "Προσθέστε μια άλλη εντολή που ενεργοποιεί αυτό το πλαίσιο."
-# 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 682
 #: NEEDS WORK
 msgid "Highlight Rules"
 msgstr "Κανόνες Επισήμανσης"
 # 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 683
-#: NEEDS WORK
-msgid "Use arrows to reorder. Rules are matched from top to bottom."
-msgstr "Χρησιμοποιήστε τα βέλη για να αλλάξετε τη σειρά. Οι κανόνες αντιστοιχίζονται από πάνω προς τα κάτω."
-# 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 689
 #: NEEDS WORK
 msgid "➕ Add New Rule"
 msgstr "➕ Προσθήκη Νέου Κανόνα"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 690
-#: NEEDS WORK
-msgid "Create a new highlighting pattern for this context"
-msgstr "Δημιουργήστε ένα νέο μοτίβο επισήμανσης για αυτό το πλαίσιο."
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 742
-#: NEEDS WORK
-msgid "Activates this context"
-msgstr "Ενεργοποιεί αυτό το πλαίσιο."
 # 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 753
 #: NEEDS WORK
@@ -3115,67 +3037,40 @@ msgstr "Είστε σίγουροι ότι θέλετε να διαγράψετ�
 msgid "Global Rules"
 msgstr "Παγκοσμίοι Κανόνες"
 # 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1125
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1437
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1475
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1776
 #: NEEDS WORK
-msgid "Context Rules"
-msgstr "Κανόνες Πλαισίου"
+msgid "Command Rules"
+msgstr "Κανόνες Εντολών"
 # 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1140
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1490
 #: NEEDS WORK
 msgid ""
-"Syntax highlighting enhances terminal output readability by colorizing patterns like errors, "
-"warnings, IP addresses, and more.\n"
-"* Many highlight rules can slow down display of large outputs.."
+"Colorizes terminal output patterns like errors, warnings, and IPs. Many rules can slow down large "
+"outputs."
 msgstr ""
-"Η σύνταξη χρωματισμού βελτιώνει την αναγνωσιμότητα της εξόδου του τερματικού χρωματίζοντας μοτίβα "
-"όπως σφάλματα, προειδοποιήσεις, διευθύνσεις IP και άλλα.  \n"
-"* Πολλοί κανόνες χρωματισμού μπορούν να επιβραδύνουν την εμφάνιση μεγάλων εξόδων."
+"Χρωματίζει τα πρότυπα εξόδου τερματικού όπως σφάλματα, προειδοποιήσεις και διευθύνσεις IP. Πολλοί "
+"κανόνες μπορούν να επιβραδύνουν μεγάλες εξόδους."
 # 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1151
 #: NEEDS WORK
 msgid "Activation"
 msgstr "Ενεργοποίηση"
 # 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1153
-#: NEEDS WORK
-msgid "Control when syntax highlighting is applied to terminal output."
-msgstr "Ελέγξτε πότε εφαρμόζεται η σύνταξη χρωματισμού στην έξοδο του τερματικού."
-# 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1160
 #: NEEDS WORK
 msgid "Local Terminals"
 msgstr "Τοπικοί Τερματικοί Σταθμοί"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1161
-#: NEEDS WORK
-msgid "Apply highlighting to local shell sessions"
-msgstr "Εφαρμογή επισήμανσης σε τοπικές συνεδρίες κελύφους"
 # 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1169
 #: NEEDS WORK
 msgid "SSH Sessions"
 msgstr "Συνεδρίες SSH"
 # 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1170
-#: NEEDS WORK
-msgid "Apply highlighting to SSH remote sessions"
-msgstr "Εφαρμογή επισήμανσης σε απομακρυσμένες συνεδρίες SSH"
-# 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1179
 #: NEEDS WORK
 msgid "Ignored Commands"
 msgstr "Αγνοημένες Εντολές"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1185
-#: NEEDS WORK
-msgid "Highlighting disabled for these commands"
-msgstr "Η επισήμανση είναι απενεργοποιημένη για αυτές τις εντολές"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1186
-#: NEEDS WORK
-msgid "Click to expand"
-msgstr "Κάντε κλικ για να επεκτείνετε"
 # 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1200
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1335
@@ -3183,31 +3078,16 @@ msgstr "Κάντε κλικ για να επεκτείνετε"
 msgid "Restore Defaults"
 msgstr "Επαναφορά προεπιλογών"
 # 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1201
-#: NEEDS WORK
-msgid "Reset to the default ignored commands list"
-msgstr "Επαναφορά στη λίστα προεπιλεγμένων αγνοημένων εντολών"
-# 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1214
 #: NEEDS WORK
 msgid "➕ Add Ignored Command"
 msgstr "➕ Προσθήκη Αγνοημένης Εντολής"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1215
-#: NEEDS WORK
-msgid "Add a command that should preserve its native colors"
-msgstr "Προσθέστε μια εντολή που θα πρέπει να διατηρεί τα εγγενή της χρώματα"
 # 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1253
 #: NEEDS WORK
 #, python-brace-format
 msgid "{count} command(s) • Click to expand/collapse"
 msgstr "{count} εντολή(ές) • Κάντε κλικ για επέκταση/σύμπτυξη"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1259
-#: NEEDS WORK
-msgid "Native coloring preserved"
-msgstr "Διατηρήθηκε η εγγενής χρωματική απεικόνιση"
 # 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1265
 #: NEEDS WORK
@@ -3258,60 +3138,30 @@ msgstr ""
 msgid "Restored default ignored commands"
 msgstr "Αποκατεστημένες προεπιλεγμένες αγνοημένες εντολές"
 # 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1361
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1698
 #: NEEDS WORK
-msgid "Context-Aware Highlighting"
-msgstr "Επισημάνσεις με Επίγνωση Πλαισίου"
+msgid "Per-Command Highlighting"
+msgstr "Επισήμανση ανά εντολή"
 # 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1363
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1704
 #: NEEDS WORK
-msgid "Automatically apply command-specific rules when certain commands are detected."
-msgstr "Αυτόματα εφαρμόστε κανόνες συγκεκριμένων εντολών όταν ανιχνεύονται ορισμένες εντολές."
+msgid "Enable Command Detection"
+msgstr "Ενεργοποίηση Ανίχνευσης Εντολών"
 # 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1370
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1713
 #: NEEDS WORK
-msgid "Enable Context Detection"
-msgstr "Ενεργοποίηση Ανίχνευσης Πλαισίου"
+msgid "Commands"
+msgstr "Εντολές"
 # 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1371
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1719
 #: NEEDS WORK
-msgid "Detect running commands and apply specific highlight rules"
-msgstr "Ανίχνευση εκτελούμενων εντολών και εφαρμογή συγκεκριμένων κανόνων επισήμανσης"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1380
-#: NEEDS WORK
-msgid "Command Contexts"
-msgstr "Συγκείμενα Εντολών"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1382
-#: NEEDS WORK
-msgid ""
-"Context rules apply only when a specific command is running (e.g., ping, docker, git). Toggle "
-"contexts on/off or click a row to edit its rules."
-msgstr ""
-"Οι κανόνες συμφραζομένων ισχύουν μόνο όταν εκτελείται μια συγκεκριμένη εντολή (π.χ., ping, docker, "
-"git). Εναλλάξτε τα συμφραζόμενα ενεργά/ανενεργά ή κάντε κλικ σε μια γραμμή για να επεξεργαστείτε "
-"τους κανόνες της."
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1390
-#: NEEDS WORK
-msgid "➕ Create New Context"
-msgstr "➕ Δημιουργία Νέου Πλαισίου"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1391
-#: NEEDS WORK
-msgid "Add custom highlighting rules for a specific command"
-msgstr "Προσθέστε προσαρμοσμένους κανόνες επισήμανσης για μια συγκεκριμένη εντολή"
+msgid "➕ Add Command"
+msgstr "➕ Προσθήκη Εντολής"
 # 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1406
 #: NEEDS WORK
 msgid "Bulk Actions"
 msgstr "Μαζικές Ενέργειες"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1407
-#: NEEDS WORK
-msgid "Quickly enable or disable all contexts"
-msgstr "Γρήγορα ενεργοποιήστε ή απενεργοποιήστε όλα τα συμφραζόμενα"
 # 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1410
 #: NEEDS WORK
@@ -3323,34 +3173,49 @@ msgstr "Ενεργοποίηση Όλων"
 msgid "Disable All"
 msgstr "Απενεργοποίηση Όλων"
 # 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1426
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1753
 #: NEEDS WORK
-msgid "Available Contexts"
-msgstr "Διαθέσιμα Πλαίσια"
+msgid "Reset All Commands"
+msgstr "Επαναφορά Όλων των Εντολών"
 # 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1427
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1766
 #: NEEDS WORK
-msgid "Click a context to select it, then scroll down to customize its rules"
-msgstr ""
-"Κάντε κλικ σε ένα πλαίσιο για να το επιλέξετε, στη συνέχεια, μετακινηθείτε προς τα κάτω για να "
-"προσαρμόσετε τους κανόνες του."
+msgid "Available Commands"
+msgstr "Διαθέσιμες Εντολές"
 # 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1438
 #: NEEDS WORK
 msgid "Rules specific to the selected command. Order matters!"
 msgstr "Κανόνες συγκεκριμένοι για την επιλεγμένη εντολή. Η σειρά έχει σημασία!"
 # 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1444
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1745
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1783
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2081
 #: NEEDS WORK
-msgid "No context selected"
-msgstr "Δεν έχει επιλεγεί κανένα πλαίσιο."
+msgid "No command selected"
+msgstr "Δεν έχει επιλεγεί καμία εντολή"
 # 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1445
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1746
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1784
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2083
 #: NEEDS WORK
-msgid "Select a context from the list above"
-msgstr "Επιλέξτε ένα πλαίσιο από τη λίστα παραπάνω"
+msgid "Select a command from the list above"
+msgstr "Επιλέξτε μια εντολή από τη λίστα παραπάνω"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 628
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1452
+#: NEEDS WORK
+msgid "Apply rules when this command is detected"
+msgstr "Εφαρμόστε κανόνες όταν ανιχνευθεί αυτή η εντολή"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1799
+#: NEEDS WORK
+msgid "Also apply global rules alongside command-specific rules"
+msgstr "Επίσης, εφαρμόστε παγκόσμιους κανόνες παράλληλα με κανόνες συγκεκριμένων εντολών."
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 644
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1468
+#: NEEDS WORK
+msgid "Remove user customization and revert to system rules"
+msgstr "Αφαίρεση προσαρμογής χρήστη και επαναφορά στους κανόνες του συστήματος"
 # 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1482
 #: NEEDS WORK
@@ -3364,10 +3229,10 @@ msgstr ""
 "Χρησιμοποιήστε βέλη για να αλλάξετε τη σειρά των κανόνων. Οι κανόνες αντιστοιχίζονται από πάνω προς "
 "τα κάτω."
 # 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1489
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1828
 #: NEEDS WORK
-msgid "➕ Add Rule to This Context"
-msgstr "➕ Προσθήκη Κανόνα σε Αυτό το Πλαίσιο"
+msgid "➕ Add Rule to This Command"
+msgstr "➕ Προσθήκη Κανόνα σε αυτήν την Εντολή"
 # 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1490
 #: NEEDS WORK
@@ -3379,44 +3244,22 @@ msgstr "Δημιουργήστε ένα νέο μοτίβο επισήμανση
 msgid "Global Highlight Rules"
 msgstr "Παγκοσμίοι Κανόνες Επισήμανσης"
 # 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1507
-#: NEEDS WORK
-msgid ""
-"These rules apply to ALL terminal output, regardless of which command is running. Use for patterns "
-"you always want highlighted (errors, warnings, IP addresses, etc.). \n"
-"For command-specific rules, use the Context Rules tab."
-msgstr ""
-"Αυτοί οι κανόνες ισχύουν για ΟΛΗ την έξοδο του τερματικού, ανεξαρτήτως της εντολής που εκτελείται. "
-"Χρησιμοποιήστε τους για πρότυπα που θέλετε πάντα να επισημαίνονται (σφάλματα, προειδοποιήσεις, "
-"διευθύνσεις IP κ.λπ.). Για κανόνες που σχετίζονται με συγκεκριμένες εντολές, χρησιμοποιήστε την "
-"καρτέλα Κανόνες Πλαισίου."
-# 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1517
 #: NEEDS WORK
 msgid "➕ Add New Global Rule"
 msgstr "➕ Προσθήκη Νέου Παγκόσμιου Κανόνα"
 # 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1518
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1863
 #: NEEDS WORK
-msgid "Create a new pattern to highlight in all terminal output"
-msgstr "Δημιουργήστε ένα νέο μοτίβο για να επισημάνετε σε όλη την έξοδο του τερματικού"
+msgid "Reset Global Rules"
+msgstr "Επαναφορά Παγκόσμιων Κανόνων"
 # 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1531
-#: NEEDS WORK
-msgid "Reset to Defaults"
-msgstr "Επαναφορά στις προεπιλογές"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1532
-#: NEEDS WORK
-msgid "Restore all default rules and contexts"
-msgstr "Επαναφορά όλων των προεπιλεγμένων κανόνων και συμφραζομένων"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1569
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1670
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1900
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2006
 #: NEEDS WORK
 #, python-brace-format
-msgid "{total} context(s), {enabled} enabled"
-msgstr "{total} συμφραζόμενα, {enabled} ενεργοποιημένα"
+msgid "{total} command(s), {enabled} enabled"
+msgstr "{total} εντολή(ες), {enabled} ενεργοποιημένη"
 # 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1590
 #: NEEDS WORK
@@ -3424,20 +3267,20 @@ msgstr "{total} συμφραζόμενα, {enabled} ενεργοποιημένα
 msgid "{count} rules"
 msgstr "{count} κανόνες"
 # 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1603
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1935
 #: NEEDS WORK
-msgid "Edit context rules"
-msgstr "Επεξεργασία κανόνων συμφραζομένων"
+msgid "Edit command rules"
+msgstr "Επεξεργασία κανόνων εντολών"
 # 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1612
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1944
 #: NEEDS WORK
-msgid "Delete context"
-msgstr "Διαγραφή πλαισίου"
+msgid "Delete command"
+msgstr "Διαγραφή εντολής"
 # 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1640
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1972
 #: NEEDS WORK
-msgid "Delete Context?"
-msgstr "Διαγραφή Πλαισίου;"
+msgid "Delete Command?"
+msgstr "Διαγραφή εντολής;"
 # 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1641
 #: NEEDS WORK
@@ -3447,21 +3290,21 @@ msgstr ""
 "Είστε σίγουροι ότι θέλετε να διαγράψετε \"{}\"; Αυτό θα αφαιρέσει όλους τους προσαρμοσμένους "
 "κανόνες για αυτήν την εντολή."
 # 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1656
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1991
 #: NEEDS WORK
 #, python-brace-format
-msgid "Context deleted: {}"
-msgstr "κλειδί"
+msgid "Command deleted: {}"
+msgstr "Η εντολή διαγράφηκε: {}"
 # 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1747
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2086
 #: NEEDS WORK
-msgid "Select a context to view its rules"
-msgstr "Επιλέξτε ένα πλαίσιο για να δείτε τους κανόνες του."
+msgid "Select a command to view its rules"
+msgstr "Επιλέξτε μια εντολή για να δείτε τους κανόνες της."
 # 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1759
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2099
 #: NEEDS WORK
-msgid "Context not found"
-msgstr "Δεν βρέθηκε το πλαίσιο"
+msgid "Command not found"
+msgstr "Η εντολή δεν βρέθηκε"
 # 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1767
 #: NEEDS WORK
@@ -3497,23 +3340,23 @@ msgstr "{} χρώματα"
 msgid "Actions"
 msgstr "Ενέργειες"
 # 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1932
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2275
 #: NEEDS WORK
 #, python-brace-format
-msgid "{total} context(s), {enabled} enabled. Click to toggle, select to edit."
-msgstr "{total} συμφραζόμενα, {enabled} ενεργοποιημένα. Κάντε κλικ για εναλλαγή, επιλέξτε για επεξεργασία."
+msgid "{total} command(s), {enabled} enabled. Click to toggle, select to edit."
+msgstr "{total} εντολή(ές), {enabled} ενεργοποιημένες. Κάντε κλικ για εναλλαγή, επιλέξτε για επεξεργασία."
 # 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1975
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2317
 #: NEEDS WORK
 #, python-brace-format
-msgid "Context created: {}"
-msgstr "Δημιουργήθηκε συμφραζόμενο: {}"
+msgid "Command created: {}"
+msgstr "Εντολή δημιουργήθηκε: {}"
 # 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2006
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2348
 #: NEEDS WORK
 #, python-brace-format
-msgid "Context reset: {}"
-msgstr "Επαναφορά συμφραζομένων: {}"
+msgid "Command reset: {}"
+msgstr "Επαναφορά εντολής: {}"
 # 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2008
 #: NEEDS WORK
@@ -3541,27 +3384,54 @@ msgstr "Κανόνας ενημερώθηκε: {}"
 msgid "Rule deleted: {}"
 msgstr "Κανόνας διαγράφηκε: {}"
 # 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2279
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2462
 #: NEEDS WORK
-msgid "Reset to Defaults?"
-msgstr "Επαναφορά στις προεπιλογές;"
+msgid "Restart Required"
+msgstr "Απαιτείται Επανεκκίνηση"
 # 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2280
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2463
 #: NEEDS WORK
-msgid "This will remove all user customizations and revert to system defaults. This cannot be undone."
+msgid "Restart the program for the colors to be applied to the terminal."
+msgstr "Επανεκκινήστε το πρόγραμμα για να εφαρμοστούν τα χρώματα στο τερματικό."
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2645
+#: NEEDS WORK
+msgid "Reset Global Rules?"
+msgstr "Επαναφορά Παγκόσμιων Κανόνων;"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2647
+#: NEEDS WORK
+msgid "This will restore global rules to system defaults. Context customizations will be preserved."
 msgstr ""
-"Αυτό θα αφαιρέσει όλες τις προσαρμογές του χρήστη και θα επαναφέρει τις προεπιλεγμένες ρυθμίσεις "
-"του συστήματος. Αυτό δεν μπορεί να αναιρεθεί."
+"Αυτό θα επαναφέρει τους παγκόσμιους κανόνες στις προεπιλεγμένες ρυθμίσεις του συστήματος. Οι "
+"προσαρμογές του περιβάλλοντος θα διατηρηθούν."
 # 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2298
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2667
 #: NEEDS WORK
-msgid "Reset to system defaults"
-msgstr "Επαναφορά στις εργοστασιακές ρυθμίσεις"
+msgid "Global rules reset to defaults"
+msgstr "Παγκοσμίοι κανόνες επαναφέρονται στις προεπιλογές"
 # 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2324
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2673
 #: NEEDS WORK
-msgid "New Context"
-msgstr "Νέο Πλαίσιο"
+msgid "Reset All Commands?"
+msgstr "Επαναφορά Όλων των Εντολών;"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2675
+#: NEEDS WORK
+msgid "This will restore all commands to system defaults. Global rules will be preserved."
+msgstr ""
+"Αυτό θα επαναφέρει όλες τις εντολές στις προεπιλεγμένες ρυθμίσεις του συστήματος. Οι παγκόσμιοι "
+"κανόνες θα διατηρηθούν."
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2695
+#: NEEDS WORK
+msgid "All commands reset to defaults"
+msgstr "Όλες οι εντολές επαναφέρονται στις προεπιλεγμένες ρυθμίσεις"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2721
+#: NEEDS WORK
+msgid "New Command"
+msgstr "Νέα Εντολή"
 # 
 # File: usr/share/ashyterm/filemanager/manager.py, line: 1743
 # File: usr/share/ashyterm/filemanager/manager.py, line: 1760
@@ -3587,10 +3457,10 @@ msgstr "Όνομα Εντολής"
 msgid "Enter a command name"
 msgstr "Εισάγετε ένα όνομα εντολής"
 # 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2390
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2787
 #: NEEDS WORK
-msgid "Context already exists"
-msgstr "Ορισμένο πλαίσιο υπάρχει ήδη"
+msgid "Command already exists"
+msgstr "Η εντολή υπάρχει ήδη"
 # 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2397
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2621
@@ -3618,11 +3488,11 @@ msgstr "Προσθήκη Ενεργοποίησης"
 msgid "Add"
 msgstr "Προσθήκη"
 # 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2481
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2879
 #: NEEDS WORK
 #, python-brace-format
-msgid "Enter a command name that should activate the '{}' context."
-msgstr "Εισάγετε ένα όνομα εντολής που θα πρέπει να ενεργοποιήσει το '{}' πλαίσιο."
+msgid "Enter a command name that should activate the '{}' command rules."
+msgstr "Εισάγετε ένα όνομα εντολής που θα πρέπει να ενεργοποιήσει τους κανόνες εντολής '{}'."
 # 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2483
 #: NEEDS WORK
@@ -3664,6 +3534,16 @@ msgstr "✓ Έγκυρο όνομα εντολής"
 msgid "Edit Session"
 msgstr "Επεξεργασία Συνεδρίας"
 # 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 581
+#: NEEDS WORK
+msgid "Test Connection"
+msgstr "Δοκιμή Σύνδεσης"
+# 
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 100
+#: NEEDS WORK
+msgid "Test SSH connection"
+msgstr "Δοκιμή σύνδεσης SSH"
+# 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 313
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1128
 #: NEEDS WORK
@@ -3676,68 +3556,10 @@ msgstr "Σφάλμα διεπαφής χρήστη"
 msgid "Failed to initialize dialog interface"
 msgstr "Αποτυχία στην αρχικοποίηση της διεπαφής διαλόγου"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 319
-#: NEEDS WORK
-msgid "Session Information"
-msgstr "Πληροφορίες Συνεδρίας"
-# 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 323
 #: NEEDS WORK
 msgid "Session Name"
 msgstr "Όνομα Συνεδρίας"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 324
-#: NEEDS WORK
-msgid "A descriptive name for this session"
-msgstr "Ένα περιγραφικό όνομα για αυτή τη συνεδρία"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 329
-#: NEEDS WORK
-msgid "Enter session name..."
-msgstr "Εισάγετε το όνομα της συνεδρίας..."
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1421
-#: NEEDS WORK
-msgid "Appearance"
-msgstr "Εμφάνιση"
-# 
-# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 115
-#: NEEDS WORK
-msgid "Tab Color"
-msgstr "Χρώμα Καρτέλας"
-# 
-# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 116
-#: NEEDS WORK
-msgid "Choose a color to identify this session's tab"
-msgstr "Επιλέξτε ένα χρώμα για να προσδιορίσετε την καρτέλα αυτής της συνεδρίας"
-# 
-# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 135
-#: NEEDS WORK
-msgid "Clear Color"
-msgstr "Καθαρό Χρώμα"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 347
-#: NEEDS WORK
-msgid "Organization"
-msgstr "Οργάνωση"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 352
-#: NEEDS WORK
-msgid "Choose a folder to organize this session"
-msgstr "Επιλέξτε έναν φάκελο για να οργανώσετε αυτή τη συνεδρία"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 357
-# File: usr/share/ashyterm/ui/dialogs.py, line: 358
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1164
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1165
-#: NEEDS WORK
-msgid "Root"
-msgstr "Ρίζα"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 398
-#: NEEDS WORK
-msgid "Connection Type"
-msgstr "Τύπος Σύνδεσης"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 402
 #: NEEDS WORK
@@ -3762,15 +3584,87 @@ msgstr "Τοπικό Τερματικό"
 msgid "SSH Connection"
 msgstr "Σύνδεση SSH"
 # 
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 115
+#: NEEDS WORK
+msgid "Tab Color"
+msgstr "Χρώμα Καρτέλας"
+# 
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 116
+#: NEEDS WORK
+msgid "Choose a color to identify this session's tab"
+msgstr "Επιλέξτε ένα χρώμα για να προσδιορίσετε την καρτέλα αυτής της συνεδρίας"
+# 
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 135
+#: NEEDS WORK
+msgid "Clear Color"
+msgstr "Καθαρό Χρώμα"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 347
+#: NEEDS WORK
+msgid "Organization"
+msgstr "Οργάνωση"
+# 
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 196
+#: NEEDS WORK
+msgid "Choose where to store this session"
+msgstr "Επιλέξτε πού να αποθηκεύσετε αυτή τη συνεδρία"
+# 
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 201
+#: NEEDS WORK
+msgid "Select a folder to organize this session"
+msgstr "Επιλέξτε έναν φάκελο για να οργανώσετε αυτή τη συνεδρία"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 357
+# File: usr/share/ashyterm/ui/dialogs.py, line: 358
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1164
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1165
+#: NEEDS WORK
+msgid "Root"
+msgstr "Ρίζα"
+# 
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 237
+#: NEEDS WORK
+msgid "Local Terminal Options"
+msgstr "Τοπικές Επιλογές Τερματικού"
+# 
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 242
+#: NEEDS WORK
+msgid "Working Directory"
+msgstr "Κατάλογος Εργασίας"
+# 
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 243
+#: NEEDS WORK
+msgid "Start the terminal in this folder"
+msgstr "Ξεκινήστε το τερματικό σε αυτόν τον φάκελο"
+# 
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 252
+#: NEEDS WORK
+msgid "Default (Home directory)"
+msgstr "Προεπιλογή (Κατάλογος αρχικής τοποθεσίας)"
+# 
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 262
+#: NEEDS WORK
+msgid "Browse for folder"
+msgstr "Επιλέξτε φάκελο"
+# 
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 285
+#: NEEDS WORK
+msgid "Startup Commands"
+msgstr "Εντολές Εκκίνησης"
+# 
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 293
+#: NEEDS WORK
+msgid ""
+"Commands executed when the terminal starts (one per line). You can write multiple commands like a "
+"small script."
+msgstr ""
+"Εντολές που εκτελούνται όταν ξεκινά ο τερματικός (μία ανά γραμμή). Μπορείτε να γράψετε πολλές "
+"εντολές όπως ένα μικρό σενάριο."
+# 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 423
 #: NEEDS WORK
 msgid "SSH Configuration"
 msgstr "Διαμόρφωση SSH"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 424
-#: NEEDS WORK
-msgid "Configure connection details for SSH sessions"
-msgstr "Ρυθμίστε τις λεπτομέρειες σύνδεσης για τις συνεδρίες SSH"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 429
 # File: usr/share/ashyterm/ui/dialogs.py, line: 894
@@ -3778,45 +3672,25 @@ msgstr "Ρυθμίστε τις λεπτομέρειες σύνδεσης για
 msgid "Host"
 msgstr "Φιλοξενούμενος"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 430
-#: NEEDS WORK
-msgid "Hostname or IP address of the remote server"
-msgstr "Όνομα υπολογιστή ή διεύθυνση IP του απομακρυσμένου διακομιστή"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 435
-#: NEEDS WORK
-msgid "example.com or 192.168.1.100"
-msgstr "example.com ή 192.168.1.100"
-# 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 446
 #: NEEDS WORK
 msgid "Username"
 msgstr "Όνομα χρήστη"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 447
-#: NEEDS WORK
-msgid "Username for SSH authentication (optional)"
-msgstr "Όνομα χρήστη για την αυθεντικοποίηση SSH (προαιρετικό)"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 452
-#: NEEDS WORK
-msgid "username"
-msgstr "όνομα χρήστη"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 464
 #: NEEDS WORK
 msgid "Port"
 msgstr "Θύρα"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 465
+# File: usr/share/ashyterm/ui/dialogs.py, line: 463
 #: NEEDS WORK
-msgid "SSH port number (default: 22)"
-msgstr "Αριθμός θύρας SSH (προεπιλογή: 22)"
+msgid "Authentication"
+msgstr "Αυθεντικοποίηση"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 464
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 369
 #: NEEDS WORK
-msgid "Choose authentication method"
-msgstr "Επιλέξτε μέθοδο αυθεντικοποίησης"
+msgid "Choose how to authenticate with the server"
+msgstr "Επιλέξτε πώς να αυθεντικοποιηθείτε με τον διακομιστή"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 467
 #: NEEDS WORK
@@ -3834,80 +3708,95 @@ msgstr "Κωδικός πρόσβασης"
 msgid "SSH Key Path"
 msgstr "Διαδρομή Κλειδιού SSH"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 495
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 384
 #: NEEDS WORK
-msgid "Path to private SSH key file"
-msgstr "Διαδρομή προς το ιδιωτικό αρχείο κλειδιού SSH"
+msgid "Path to your private key file"
+msgstr "Διαδρομή προς το ιδιωτικό σας αρχείο κλειδιού"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 510
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 401
 #: NEEDS WORK
-msgid "Browse..."
-msgstr "Περιήγηση..."
+msgid "Browse for SSH key file"
+msgstr "Επιλέξτε αρχείο κλειδιού SSH"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 534
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 434
 #: NEEDS WORK
-msgid "Password for SSH authentication"
-msgstr "Κωδικός πρόσβασης για την αυθεντικοποίηση SSH"
+msgid "Password Storage"
+msgstr "Αποθήκευση Κωδικών Πρόσβασης"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 342
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 436
 #: NEEDS WORK
-msgid "Password for SSH authentication (stored in system keyring)"
-msgstr "Κωδικός πρόσβασης για την αυθεντικοποίηση SSH (αποθηκευμένος στο σύστημα κλειδιών)"
+msgid "System keyring not available - password will be stored in plain text"
+msgstr "Το σύστημα κλειδώματος δεν είναι διαθέσιμο - ο κωδικός πρόσβασης θα αποθηκευτεί σε απλό κείμενο"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 346
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 453
 #: NEEDS WORK
-msgid "Password for SSH authentication (keyring not available)"
-msgstr "Κωδικός πρόσβασης για την αυθεντικοποίηση SSH (δεν είναι διαθέσιμο το keyring)"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 553
-#: NEEDS WORK
-msgid "Enter password..."
-msgstr "Εισάγετε τον κωδικό πρόσβασης..."
+msgid "SSH Options"
+msgstr "Επιλογές SSH"
 # 
 # File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 309
 #: NEEDS WORK
 msgid "Run Command After Login"
 msgstr "Εκτέλεση εντολής μετά την είσοδο"
 # 
-# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 311
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 459
 #: NEEDS WORK
-msgid "Execute a custom command automatically after the SSH session connects"
-msgstr "Εκτελέστε μια προσαρμοσμένη εντολή αυτόματα μετά τη σύνδεση της συνεδρίας SSH"
+msgid "Execute a command automatically after SSH connects"
+msgstr "Εκτέλεση μιας εντολής αυτόματα μετά τη σύνδεση SSH"
 # 
 # File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 318
 #: NEEDS WORK
 msgid "Post-Login Command"
 msgstr "Εντολή Μετά την Είσοδο"
 # 
-# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 319
-#: NEEDS WORK
-msgid "Command to execute right after a successful login"
-msgstr "Εντολή προς εκτέλεση αμέσως μετά από επιτυχημένη σύνδεση"
-# 
-# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 323
-#: NEEDS WORK
-msgid "Example: tmux attach -t main"
-msgstr "Παράδειγμα: tmux attach -t main"
-# 
 # File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 356
 #: NEEDS WORK
 msgid "Enable X11 Forwarding"
 msgstr "Ενεργοποίηση προώθησης X11"
 # 
-# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 357
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 479
 #: NEEDS WORK
-msgid "Allow starting programs in graphical mode (X11)"
-msgstr "Επιτρέψτε την εκκίνηση προγραμμάτων σε γραφικό περιβάλλον (X11)"
+msgid "Allow graphical applications from remote server"
+msgstr "Επιτρέψτε γραφικές εφαρμογές από απομακρυσμένο διακομιστή"
+# 
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 353
+#: NEEDS WORK
+msgid "Enable SFTP Session"
+msgstr "Ενεργοποίηση συνεδρίας SFTP"
+# 
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 488
+#: NEEDS WORK
+msgid "Use default directories when opening SFTP"
+msgstr "Χρησιμοποιήστε προεπιλεγμένους καταλόγους κατά το άνοιγμα SFTP"
+# 
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 496
+#: NEEDS WORK
+msgid "SFTP Local Directory"
+msgstr "Τοπικός Κατάλογος SFTP"
+# 
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 505
+#: NEEDS WORK
+msgid "SFTP Remote Directory"
+msgstr "Απομακρυσμένος Κατάλογος SFTP"
 # 
 # File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 354
 #: NEEDS WORK
 msgid "Port Forwarding"
 msgstr "Προώθηση Θυρών"
 # 
-# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 355
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 529
 #: NEEDS WORK
-msgid "Create SSH tunnels to forward local ports to remote targets"
-msgstr "Δημιουργήστε SSH σήραγγες για να προωθήσετε τοπικές θύρες σε απομακρυσμένους στόχους"
+msgid "Create SSH tunnels to forward ports"
+msgstr "Δημιουργήστε SSH σήραγγες για να προωθήσετε θύρες"
+# 
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 484
+#: NEEDS WORK
+msgid "Add Port Forward"
+msgstr "Προσθήκη Προώθησης Θύρας"
+# 
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 537
+#: NEEDS WORK
+msgid "Create a new SSH tunnel"
+msgstr "Δημιουργία νέου SSH τούνελ"
 # 
 # File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 396
 #: NEEDS WORK
@@ -3939,20 +3828,15 @@ msgstr "{τοπικός_υπολογιστής}:{τοπική_θύρα} → {α�
 msgid "Edit Port Forward"
 msgstr "Επεξεργασία Προώθησης Θύρας"
 # 
-# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 484
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 712
 #: NEEDS WORK
-msgid "Add Port Forward"
-msgstr "Προσθήκη Προώθησης Θύρας"
+msgid "Tunnel Name"
+msgstr "Όνομα Σήραγγας"
 # 
-# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 508
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 718
 #: NEEDS WORK
-msgid "Tunnel name"
-msgstr "Όνομα τούνελ"
-# 
-# File: usr/share/ashyterm/filemanager/manager.py, line: 366
-#: NEEDS WORK
-msgid "Name"
-msgstr "Όνομα"
+msgid "Local Settings"
+msgstr "Τοπικές Ρυθμίσεις"
 # 
 # File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 519
 #: NEEDS WORK
@@ -3964,15 +3848,25 @@ msgstr "Τοπικός Υπολογιστής"
 msgid "Local Port"
 msgstr "Τοπική Θύρα"
 # 
-# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 529
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 732
 #: NEEDS WORK
-msgid "Leave blank to use the SSH host"
-msgstr "Αφήστε κενό για να χρησιμοποιήσετε τον SSH διακομιστή"
+msgid "Port on your machine (1025-65535 recommended)"
+msgstr "Θύρα στον υπολογιστή σας (συνιστάται 1025-65535)"
 # 
-# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 536
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 738
 #: NEEDS WORK
-msgid "Connect to a different remote host"
-msgstr "Συνδεθείτε σε έναν διαφορετικό απομακρυσμένο υπολογιστή"
+msgid "Remote Settings"
+msgstr "Απομακρυσμένες Ρυθμίσεις"
+# 
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 745
+#: NEEDS WORK
+msgid "Use Custom Remote Host"
+msgstr "Χρησιμοποιήστε Προσαρμοσμένο Απομακρυσμένο Φιλοξενούμενο"
+# 
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 746
+#: NEEDS WORK
+msgid "Leave off to use the SSH server as target"
+msgstr "Αφήστε το κενό για να χρησιμοποιήσετε τον διακομιστή SSH ως στόχο"
 # 
 # File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 546
 #: NEEDS WORK
@@ -3983,6 +3877,11 @@ msgstr "Απομακρυσμένος Φιλοξενητής"
 #: NEEDS WORK
 msgid "Remote Port"
 msgstr "Απομακρυσμένη Θύρα"
+# 
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 765
+#: NEEDS WORK
+msgid "Port on the remote host (1-65535)"
+msgstr "Θύρα στον απομακρυσμένο υπολογιστή (1-65535)"
 # 
 # File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 590
 #: NEEDS WORK
@@ -4006,75 +3905,41 @@ msgstr "Ο τοπικός διακομιστής δεν μπορεί να είν
 msgid "Invalid Port Forward"
 msgstr "Μη έγκυρη προώθηση θύρας"
 # 
-# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 346
-#: NEEDS WORK
-msgid "SFTP Session"
-msgstr "Σύνοδος SFTP"
-# 
-# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 348
-#: NEEDS WORK
-msgid "Configure default directories for SFTP connections (optional)"
-msgstr "Ρυθμίστε προεπιλεγμένους καταλόγους για συνδέσεις SFTP (προαιρετικό)"
-# 
-# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 353
-#: NEEDS WORK
-msgid "Enable SFTP Session"
-msgstr "Ενεργοποίηση συνεδρίας SFTP"
-# 
-# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 355
-#: NEEDS WORK
-msgid "Use these directories when opening an SFTP tab for this session"
-msgstr "Χρησιμοποιήστε αυτούς τους καταλόγους κατά το άνοιγμα μιας καρτέλας SFTP για αυτή τη συνεδρία"
-# 
-# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 364
-#: NEEDS WORK
-msgid "Local Directory"
-msgstr "Τοπικός Κατάλογος"
-# 
-# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 365
-#: NEEDS WORK
-msgid "Starting directory on your machine for SFTP"
-msgstr "Αρχικός κατάλογος στον υπολογιστή σας για SFTP"
-# 
-# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 369
-#: NEEDS WORK
-msgid "Example: /home/user/projects"
-msgstr "/σπίτι/χρήστη/έργα"
-# 
-# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 379
-#: NEEDS WORK
-msgid "Remote Directory"
-msgstr "Απομακρυσμένος Κατάλογος"
-# 
-# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 380
-#: NEEDS WORK
-msgid "Starting directory on the remote host for SFTP"
-msgstr "Αρχικός κατάλογος στον απομακρυσμένο υπολογιστή για SFTP"
-# 
-# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 384
-#: NEEDS WORK
-msgid "Example: /var/www"
-msgstr "/var/www"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 581
-#: NEEDS WORK
-msgid "Test Connection"
-msgstr "Δοκιμή Σύνδεσης"
-# 
 # File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 773
 #: NEEDS WORK
 msgid "Remote server must have X11Forwarding yes in sshd_config."
 msgstr "Ο απομακρυσμένος διακομιστής πρέπει να έχει X11Forwarding yes στο sshd_config."
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 707
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 1030
 #: NEEDS WORK
-msgid "Select SSH Key"
-msgstr "Επιλέξτε το κλειδί SSH"
+msgid "Select Working Directory"
+msgstr "Επιλέξτε Κατάλογο Εργασίας"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 720
 #: NEEDS WORK
 msgid "File Dialog Error"
 msgstr "Σφάλμα διαλόγου αρχείου"
+# 
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 1051
+#: NEEDS WORK
+msgid "Failed to open folder browser"
+msgstr "Αποτυχία ανοίγματος του προγράμματος περιήγησης φακέλων"
+# 
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 1065
+#: NEEDS WORK
+msgid "Folder Selection Error"
+msgstr "Σφάλμα Επιλογής Φακέλου"
+# 
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 1066
+#: NEEDS WORK
+#, python-brace-format
+msgid "Failed to select folder: {}"
+msgstr "Αποτυχία επιλογής φακέλου: {}"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 707
+#: NEEDS WORK
+msgid "Select SSH Key"
+msgstr "Επιλέξτε το κλειδί SSH"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 720
 #: NEEDS WORK
@@ -4191,6 +4056,16 @@ msgstr ""
 msgid "Session name"
 msgstr "Όνομα συνεδρίας"
 # 
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 1367
+#: NEEDS WORK
+msgid "Working directory must exist and be a folder."
+msgstr "Ο κατάλογος εργασίας πρέπει να υπάρχει και να είναι φάκελος."
+# 
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 1374
+#: NEEDS WORK
+msgid "Invalid working directory path."
+msgstr "Μη έγκυρη διαδρομή καταλόγου εργασίας."
+# 
 # #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
 # 
 # File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 716
@@ -4263,11 +4138,6 @@ msgstr "Παρακαλώ συμπληρώστε όλα τα υποχρεωτικ
 #: NEEDS WORK
 msgid "Delete this custom command"
 msgstr "Διαγράψτε αυτήν την προσαρμοσμένη εντολή"
-# 
-# File: usr/share/ashyterm/ui/dialogs/command_guide_dialog.py, line: 143
-#: NEEDS WORK
-msgid "Command Guide"
-msgstr "Οδηγός Εντολών"
 # 
 # File: usr/share/ashyterm/ui/dialogs/command_guide_dialog.py, line: 165
 #: NEEDS WORK
@@ -4406,16 +4276,6 @@ msgstr "Κλείσιμο Ενεργού Πλαισίου"
 msgid "Terminal Interaction"
 msgstr "Αλληλεπίδραση Τερματικού"
 # 
-# File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 38
-#: NEEDS WORK
-msgid "Send Command  All Tabs"
-msgstr "Αποστολή Εντολής  Όλες οι Καρτέλες"
-# 
-# File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 39
-#: NEEDS WORK
-msgid "Ask AI Assistant"
-msgstr "Ρώτησε τον Βοηθό AI"
-# 
 # File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 42
 #: NEEDS WORK
 msgid "Zoom"
@@ -4440,11 +4300,6 @@ msgstr "Επαναφορά Ζουμ"
 #: NEEDS WORK
 msgid "Application &amp; Window"
 msgstr "Εφαρμογή &amp; Παράθυρο"
-# 
-# File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 53
-#: NEEDS WORK
-msgid "Toggle File Manager"
-msgstr "Εναλλαγή Διαχειριστή Αρχείων"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1605
 #: NEEDS WORK
@@ -4545,105 +4400,60 @@ msgstr "Επαναφορά Όλων των Συντομεύσεων"
 msgid "This will reset all keyboard shortcuts to their default values. Continue?"
 msgstr "Αυτό θα επαναφέρει όλες τις συντομεύσεις πληκτρολογίου στις προεπιλεγμένες τιμές τους. Συνεχίσετε;"
 # 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1421
+#: NEEDS WORK
+msgid "Appearance"
+msgstr "Εμφάνιση"
+# 
 # File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 56
 #: NEEDS WORK
 msgid "Color Scheme"
 msgstr "Χρωματική Διάταξη"
-# 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 59
-#: NEEDS WORK
-msgid "Current Scheme"
-msgstr "Τρέχουσα Διάταξη"
 # 
 # File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 62
 #: NEEDS WORK
 msgid "Manage Schemes..."
 msgstr "Διαχείριση Σχεδίων..."
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1016
-#: NEEDS WORK
-msgid "Typography"
-msgstr "Τυπογραφία"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1017
-#: NEEDS WORK
-msgid "Configure fonts and spacing"
-msgstr "Ρυθμίστε τις γραμματοσειρές και την απόσταση"
-# 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1465
 #: NEEDS WORK
 msgid "Terminal Font"
 msgstr "Γραμματοσειρά Τερματικού"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1466
-#: NEEDS WORK
-msgid "Select font family and size for terminal text"
-msgstr "Επιλέξτε οικογένεια γραμματοσειράς και μέγεθος για το κείμενο του τερματικού"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1033
 #: NEEDS WORK
 msgid "Line Spacing"
 msgstr "Διάστιχο γραμμής"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1034
-#: NEEDS WORK
-msgid "Adjust the vertical space between lines"
-msgstr "Ρυθμίστε τον κατακόρυφο χώρο μεταξύ των γραμμών"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1045
-#: NEEDS WORK
-msgid "Miscellaneous"
-msgstr "Διάφορα"
-# 
 # File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 102
 #: NEEDS WORK
 msgid "Terminal Transparency"
 msgstr "Διαφάνεια Τερματικού"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1449
-#: NEEDS WORK
-msgid "Adjust terminal background transparency"
-msgstr "Ρυθμίστε τη διαφάνεια του φόντου του τερματικού"
 # 
 # File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 118
 #: NEEDS WORK
 msgid "Headerbar Transparency"
 msgstr "Διαφάνεια Επικεφαλίδας"
 # 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 119
-#: NEEDS WORK
-msgid "For headerbar and file manager"
-msgstr "Για τη γραμμή τίτλου και τον διαχειριστή αρχείων"
-# 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1065
 #: NEEDS WORK
 msgid "Use Bright Colors for Bold Text"
 msgstr "Χρησιμοποιήστε φωτεινά χρώματα για έντονο κείμενο"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1066
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 169
 #: NEEDS WORK
-msgid "Render bold text with the brighter version of the base color"
-msgstr "Απόδοση έντονου κειμένου με την πιο φωτεινή έκδοση του βασικού χρώματος"
+msgid "Auto-Hide Sessions Panel"
+msgstr "Αυτόματη Απόκρυψη Πίνακα Συνεδριών"
 # 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 132
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 170
 #: NEEDS WORK
-msgid "Auto-Hide Sidebar"
-msgstr "Αυτόματη Απόκρυψη Πλευρικής Στήλης"
-# 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 134
-#: NEEDS WORK
-msgid "Automatically hide the sidebar when activating sessions or layouts"
-msgstr "Αυτόματα απόκρυψη της πλαϊνής γραμμής κατά την ενεργοποίηση συνεδριών ή διατάξεων"
+msgid "Hide panel when activating sessions"
+msgstr "Απόκρυψη πίνακα κατά την ενεργοποίηση συνεδριών"
 # 
 # File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 147
 #: NEEDS WORK
 msgid "Blinking Text"
 msgstr "Κείμενο που αναβοσβήνει"
-# 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 148
-#: NEEDS WORK
-msgid "Control how the terminal handles blinking text"
-msgstr "Ελέγξτε πώς ο τερματικός χειριστής διαχειρίζεται το αναβοσβήσιμο κείμενο"
 # 
 # File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 150
 #: NEEDS WORK
@@ -4660,11 +4470,6 @@ msgstr "Πάντα"
 msgid "Tab Alignment"
 msgstr "Στοίχιση Καρτέλας"
 # 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 176
-#: NEEDS WORK
-msgid "Align tabs to the left or center of the tab bar"
-msgstr "Ευθυγράμμιση των καρτελών στα αριστερά ή στο κέντρο της γραμμής καρτελών"
-# 
 # File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 178
 #: NEEDS WORK
 msgid "Left"
@@ -4679,13 +4484,6 @@ msgstr "Κέντρο"
 #: NEEDS WORK
 msgid "Icon Theme"
 msgstr "Θέμα Εικονιδίων"
-# 
-# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 214
-#: NEEDS WORK
-msgid "Ashy Icons (bundled) speeds up startup. System Icons follows your desktop theme."
-msgstr ""
-"Οι εικονίδες Ashy (συμπεριλαμβάνονται) επιταχύνουν την εκκίνηση. Οι εικονίδες συστήματος ακολουθούν "
-"το θέμα της επιφάνειας εργασίας σας."
 # 
 # File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 218
 #: NEEDS WORK
@@ -4707,11 +4505,6 @@ msgstr "Τερματικός"
 msgid "Cursor Shape"
 msgstr "Σχήμα Κέρσορα"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1138
-#: NEEDS WORK
-msgid "Select the shape of the terminal cursor"
-msgstr "Επιλέξτε το σχήμα του κέρσορα τερματικού"
-# 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1141
 #: NEEDS WORK
 msgid "Block"
@@ -4722,20 +4515,10 @@ msgstr "Μπλοκ"
 msgid "I-Beam"
 msgstr "I-Beam"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1141
-#: NEEDS WORK
-msgid "Underline"
-msgstr "Υπογράμμιση"
-# 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1148
 #: NEEDS WORK
 msgid "Cursor Blinking"
 msgstr "Κεφαλή Δείκτη"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1148
-#: NEEDS WORK
-msgid "Control cursor blinking behavior"
-msgstr "Έλεγχος συμπεριφοράς αναλαμπής κέρσορα"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1151
 #: NEEDS WORK
@@ -4752,110 +4535,56 @@ msgstr "Ενεργό"
 msgid "Off"
 msgstr "Απενεργοποιημένο"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1118
-#: NEEDS WORK
-msgid "Scrolling"
-msgstr "Κύλιση"
-# 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1123
 #: NEEDS WORK
 msgid "Scrollback Lines"
 msgstr "Γραμμές κύλισης"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1124
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 246
 #: NEEDS WORK
-msgid "Number of lines to keep in history (0 for unlimited)"
-msgstr "Αριθμός γραμμών που θα διατηρηθούν στην ιστορία (0 για απεριόριστο)"
+msgid "0 for unlimited"
+msgstr "0 για απεριόριστο"
 # 
 # File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 192
 #: NEEDS WORK
 msgid "Mouse Scroll Sensitivity"
 msgstr "ευαισθησία κύλισης ποντικιού"
 # 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 193
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 258
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 274
 #: NEEDS WORK
-msgid "Controls the scroll speed for a mouse wheel. Lower is slower."
-msgstr "Ελέγχει την ταχύτητα κύλισης για ένα τροχό ποντικιού. Χαμηλότερα είναι πιο αργά."
+msgid "Lower is slower"
+msgstr "Χαμηλότερα είναι πιο αργά"
 # 
 # File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 208
 #: NEEDS WORK
 msgid "Touchpad Scroll Sensitivity"
 msgstr "Ευαισθησία κύλισης επιφάνειας αφής"
 # 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 209
-#: NEEDS WORK
-msgid "Controls the scroll speed for a touchpad. Lower is slower."
-msgstr "Ελέγχει την ταχύτητα κύλισης για ένα touchpad. Χαμηλότερα είναι πιο αργά."
-# 
 # File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 233
 #: NEEDS WORK
 msgid "Scroll on Paste"
 msgstr "Κύλιση κατά την Επικόλληση"
-# 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 234
-#: NEEDS WORK
-msgid "Automatically scroll to the bottom when pasting text"
-msgstr "Αυτόματη κύλιση στο κάτω μέρος κατά την επικόλληση κειμένου"
-# 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 246
-#: NEEDS WORK
-msgid "Selection"
-msgstr "Επιλογή"
-# 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 247
-#: NEEDS WORK
-msgid "Extra characters for word selection (e.g., -_.:/~)"
-msgstr "Επιπλέον χαρακτήρες για επιλογή λέξεων (π.χ., -_.:/~)"
-# 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 252
-#: NEEDS WORK
-msgid "Word Characters"
-msgstr "Χαρακτήρες Λέξεων"
-# 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 292
-#: NEEDS WORK
-msgid "Shell & Bell"
-msgstr "Κέλυφος & Καμπάνα"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1107
 #: NEEDS WORK
 msgid "Run Command as a Login Shell"
 msgstr "Εκτέλεση εντολής ως κέλυφος σύνδεσης"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1108
-#: NEEDS WORK
-msgid "Sources /etc/profile and ~/.profile on startup"
-msgstr "Πηγές /etc/profile και ~/.profile κατά την εκκίνηση"
-# 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1161
 #: NEEDS WORK
 msgid "Audible Bell"
 msgstr "Ακουστικό Κουδούνι"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1162
-#: NEEDS WORK
-msgid "Emit a sound for the terminal bell character"
-msgstr "Εκπομπή ήχου για τον χαρακτήρα κουδουνιού τερματικού"
 # 
 # File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 250
 #: NEEDS WORK
 msgid "Profiles & Data"
 msgstr "Προφίλ & Δεδομένα"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1082
-#: NEEDS WORK
-msgid "Startup"
-msgstr "Εκκίνηση"
-# 
 # File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 258
 #: NEEDS WORK
 msgid "On Startup"
 msgstr "Κατά την εκκίνηση"
-# 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 259
-#: NEEDS WORK
-msgid "Action to take when the application starts"
-msgstr "Ενέργεια που πρέπει να εκτελεστεί κατά την εκκίνηση της εφαρμογής"
 # 
 # File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 263
 #: NEEDS WORK
@@ -4872,18 +4601,6 @@ msgstr "Ζητήστε να επαναφέρετε την προηγούμενη
 msgid "Never restore previous session"
 msgstr "Ποτέ μην επαναφέρετε την προηγούμενη συνεδρία"
 # 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 280
-#: NEEDS WORK
-msgid "Backup &amp; Recovery"
-msgstr "Αντίγραφο ασφαλείας &amp; Ανάκτηση"
-# 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 319
-#: NEEDS WORK
-msgid "Create an encrypted backup of your data or restore from a previous backup."
-msgstr ""
-"Δημιουργήστε ένα κρυπτογραφημένο αντίγραφο ασφαλείας των δεδομένων σας ή επαναφέρετε από ένα "
-"προηγούμενο αντίγραφο ασφαλείας."
-# 
 # #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
 # 
 # File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 325
@@ -4892,10 +4609,10 @@ msgstr ""
 msgid "Create Backup"
 msgstr "Δημιουργία Αντιγράφου Ασφαλείας"
 # 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 327
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 350
 #: NEEDS WORK
-msgid "Save all sessions, settings, and passwords to an encrypted file."
-msgstr "Αποθήκευση όλων των συνεδριών, ρυθμίσεων και κωδικών πρόσβασης σε ένα κρυπτογραφημένο αρχείο."
+msgid "Encrypted backup of sessions and settings"
+msgstr "Κρυπτογραφημένο αντίγραφο ασφαλείας των συνεδριών και ρυθμίσεων"
 # 
 # File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 330
 #: NEEDS WORK
@@ -4907,127 +4624,75 @@ msgstr "Δημιουργία Αντιγράφου Ασφαλείας..."
 msgid "Restore from Backup"
 msgstr "Ανάκτηση από Αντίγραφο Ασφαλείας"
 # 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 339
-#: NEEDS WORK
-msgid "Replace all current data with a backup file."
-msgstr "Αντικαταστήστε όλα τα τρέχοντα δεδομένα με ένα αρχείο αντιγράφου ασφαλείας."
-# 
 # File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 341
 #: NEEDS WORK
 msgid "Restore..."
 msgstr "Ανάκτηση..."
-# 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 348
-#: NEEDS WORK
-msgid "Remote Editing"
-msgstr "Απομακρυσμένη Επεξεργασία"
 # 
 # File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 352
 #: NEEDS WORK
 msgid "Use System Temporary Directory"
 msgstr "Χρησιμοποιήστε τον προσωρινό φάκελο του συστήματος"
 # 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 354
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 374
 #: NEEDS WORK
-msgid "Store temporary files for remote editing in /tmp instead of the config folder"
-msgstr "Αποθηκεύστε προσωρινά αρχεία για απομακρυσμένη επεξεργασία στο /tmp αντί για τον φάκελο ρυθμίσεων."
+msgid "Use /tmp for remote editing files"
+msgstr "Χρησιμοποιήστε το /tmp για απομακρυσμένη επεξεργασία αρχείων"
 # 
 # File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 369
 #: NEEDS WORK
 msgid "Clear Remote Edit Files on Exit"
 msgstr "Καθαρισμός Απομακρυσμένων Αρχείων Επεξεργασίας κατά Έξοδο"
 # 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 371
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 392
 #: NEEDS WORK
-msgid "Automatically delete all temporary remote files when closing the app"
-msgstr "Αυτόματα διαγράψτε όλα τα προσωρινά απομακρυσμένα αρχεία κατά το κλείσιμο της εφαρμογής"
+msgid "SSH Connection Persistence"
+msgstr "Διατήρηση Σύνδεσης SSH"
 # 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 416
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 393
 #: NEEDS WORK
-msgid "SSH"
-msgstr "SSH"
-# 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 417
-#: NEEDS WORK
-msgid "Settings for SSH connection management (multiplexing)."
-msgstr "Ρυθμίσεις για τη διαχείριση σύνδεσης SSH (πολυπλεξία)."
-# 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 422
-#: NEEDS WORK
-msgid "Connection Persistence (seconds)"
-msgstr "Διαρκεια Σύνδεσης (δευτερόλεπτα)"
-# 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 424
-#: NEEDS WORK
-msgid "Keep SSH connections alive in the background for faster reconnections. Set to 0 to disable."
-msgstr ""
-"Διατηρήστε τις συνδέσεις SSH ενεργές στο παρασκήνιο για ταχύτερες επανασυνδέσεις. Ορίστε σε 0 για "
-"να απενεργοποιήσετε."
+msgid "Seconds to keep connections alive (0 to disable)"
+msgstr "Δευτερόλεπτα για να διατηρούνται οι συνδέσεις ενεργές (0 για απενεργοποίηση)"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1790
 #: NEEDS WORK
 msgid "Advanced"
 msgstr "Προηγμένος"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1276
-#: NEEDS WORK
-msgid "Advanced Features"
-msgstr "Προηγμένες Λειτουργίες"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1277
-#: NEEDS WORK
-msgid "Enable or disable advanced terminal features"
-msgstr "Ενεργοποιήστε ή απενεργοποιήστε τις προηγμένες δυνατότητες τερματικού"
-# 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1282
 #: NEEDS WORK
 msgid "Bidirectional Text Support"
 msgstr "Υποστήριξη Δισδιάστατου Κειμένου"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1284
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 416
 #: NEEDS WORK
-msgid "Enable for languages like Arabic and Hebrew (may affect performance)"
-msgstr "Ενεργοποιήστε για γλώσσες όπως τα Αραβικά και τα Εβραϊκά (μπορεί να επηρεάσει την απόδοση)"
+msgid "For Arabic and Hebrew (affects performance)"
+msgstr "Για τα Αραβικά και τα Εβραϊκά (επηρεάζει την απόδοση)"
 # 
 # File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 411
 #: NEEDS WORK
 msgid "Enable Arabic Text Shaping"
 msgstr "Ενεργοποίηση Σχηματισμού Αραβικού Κειμένου"
 # 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 413
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 424
 #: NEEDS WORK
-msgid "Correctly render ligatures and contextual forms for Arabic script"
-msgstr "Δημιουργήστε σωστά τις λυγισμένες και τις συμφραζόμενες μορφές για το αραβικό σενάριο"
+msgid "Render ligatures for Arabic script"
+msgstr "Απόδοση λυγισμάτων για το αραβικό σενάριο"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1295
 #: NEEDS WORK
 msgid "SIXEL Graphics Support"
 msgstr "Υποστήριξη γραφικών SIXEL"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1296
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 432
 #: NEEDS WORK
-msgid "Allow the terminal to display SIXEL images (experimental)"
-msgstr "Επιτρέψτε στο τερματικό να εμφανίζει εικόνες SIXEL (πειραματικό)"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1172
-#: NEEDS WORK
-msgid "Compatibility"
-msgstr "Συμβατότητα"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1173
-#: NEEDS WORK
-msgid "Settings for compatibility with older systems and tools"
-msgstr "Ρυθμίσεις για συμβατότητα με παλαιότερα συστήματα και εργαλεία"
+msgid "Display SIXEL images (experimental)"
+msgstr "Εμφάνιση εικόνων SIXEL (πειραματικό)"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1178
 #: NEEDS WORK
 msgid "Backspace Key"
 msgstr "Πλήκτρο Διαγραφής"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1178
-#: NEEDS WORK
-msgid "Sequence to send for Backspace key"
-msgstr "Ακολουθία που θα σταλεί για το πλήκτρο Backspace"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1182
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1197
@@ -5057,20 +4722,10 @@ msgstr "Ακολουθία Διαφυγής"
 msgid "Delete Key"
 msgstr "Κλειδί Διαγραφής"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1193
-#: NEEDS WORK
-msgid "Sequence to send for Delete key"
-msgstr "Ακολουθία που θα σταλεί για το πλήκτρο Διαγραφή"
-# 
 # File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 481
 #: NEEDS WORK
 msgid "Ambiguous-width Characters"
 msgstr "Ασαφή πλάτη χαρακτήρες"
-# 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 482
-#: NEEDS WORK
-msgid "Set the width for ambiguous characters (e.g., CJK)"
-msgstr "Ορίστε το πλάτος για ασαφείς χαρακτήρες (π.χ. CJK)"
 # 
 # File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 485
 #: NEEDS WORK
@@ -5082,40 +4737,20 @@ msgstr "Στενός (μονοκυτταρικός)"
 msgid "Wide (double-cell)"
 msgstr "Πλατύ (διπλό κελί)"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1071
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 252
 #: NEEDS WORK
-msgid "Logging"
-msgstr "Καταγραφή"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1071
-#: NEEDS WORK
-msgid "Configure application logging behavior"
-msgstr "Ρυθμίστε τη συμπεριφορά καταγραφής εφαρμογής"
+msgid "Word Characters"
+msgstr "Χαρακτήρες Λέξεων"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1076
 #: NEEDS WORK
 msgid "Save Logs to File"
 msgstr "Αποθήκευση Καταγραφών σε Αρχείο"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1077
-#: NEEDS WORK
-msgid "Save application logs to the configuration directory"
-msgstr "Αποθήκευση καταγραφών εφαρμογής στον κατάλογο ρυθμίσεων"
-# 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1087
 #: NEEDS WORK
 msgid "Console Log Level"
 msgstr "Επίπεδο Καταγραφής Κονσόλας"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1088
-#: NEEDS WORK
-msgid "Set the minimum level of messages shown in the console"
-msgstr "Ορίστε το ελάχιστο επίπεδο μηνυμάτων που εμφανίζονται στην κονσόλα"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1832
-#: NEEDS WORK
-msgid "Reset application settings to defaults"
-msgstr "Επαναφορά ρυθμίσεων εφαρμογής στις προεπιλογές"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1838
 # File: usr/share/ashyterm/ui/dialogs.py, line: 2002
@@ -5123,11 +4758,6 @@ msgstr "Επαναφορά ρυθμίσεων εφαρμογής στις προ
 #: NEEDS WORK
 msgid "Reset All Settings"
 msgstr "Επαναφορά όλων των ρυθμίσεων"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1839
-#: NEEDS WORK
-msgid "Restore all settings to their default values"
-msgstr "Επαναφορά όλων των ρυθμίσεων στις προεπιλεγμένες τιμές τους"
 # 
 # File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 681
 #: NEEDS WORK
@@ -5139,19 +4769,19 @@ msgstr "Θέμα Εικονιδίων Αλλαγμένο"
 msgid "The icon theme change will take effect after restarting the application."
 msgstr "Η αλλαγή του θέματος εικονιδίων θα ισχύσει μετά την επανεκκίνηση της εφαρμογής."
 # 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 652
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 687
 #: NEEDS WORK
-msgid "Sidebar Visibility"
-msgstr "Ορατότητα Πλευρικής Στήλης"
+msgid "Sessions Panel Visibility"
+msgstr "Ορατότητα Πίνακα Συνεδριών"
 # 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 654
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 689
 #: NEEDS WORK
 msgid ""
-"The sidebar visibility change will take effect when you close and reopen the application. You can "
-"also toggle the sidebar manually using Ctrl+Shift+H."
+"The sessions panel visibility change will take effect when you close and reopen the application. "
+"You can also toggle the sessions panel manually using Ctrl+Shift+H."
 msgstr ""
-"Η αλλαγή ορατότητας της πλαϊνής μπάρας θα ισχύσει όταν κλείσετε και ξανανοίξετε την εφαρμογή. "
-"Μπορείτε επίσης να εναλλάσσετε την πλαϊνή μπάρα χειροκίνητα χρησιμοποιώντας Ctrl+Shift+H."
+"Η αλλαγή ορατότητας του πίνακα συνεδριών θα ισχύσει όταν κλείσετε και ξανανοίξετε την εφαρμογή. "
+"Μπορείτε επίσης να εναλλάσσετε τον πίνακα συνεδριών χειροκίνητα χρησιμοποιώντας Ctrl+Shift+H."
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 2003
 #: NEEDS WORK
@@ -7224,6 +6854,11 @@ msgstr ""
 "Εμφάνιση των πρώτων {count} αποτελεσμάτων. Εξευγενίστε την αναζήτησή σας για να περιορίσετε τη "
 "λίστα."
 # 
+# File: usr/share/ashyterm/filemanager/manager.py, line: 366
+#: NEEDS WORK
+msgid "Name"
+msgstr "Όνομα"
+# 
 # File: usr/share/ashyterm/filemanager/manager.py, line: 375
 #: NEEDS WORK
 msgid "Size"
@@ -9030,6 +8665,11 @@ msgstr "Αποτυχία φόρτωσης αποθηκευμένων συνεδ�
 msgid "Enable the AI assistant in Preferences > Terminal > AI Assistant."
 msgstr "Ενεργοποιήστε τον βοηθό AI στις Προτιμήσεις > Τερματικό > Βοηθός AI."
 # 
+# File: usr/share/ashyterm/window.py, line: 547
+#: NEEDS WORK
+msgid "Model"
+msgstr "Μοντέλο"
+# 
 # File: usr/share/ashyterm/window.py, line: 548
 #: NEEDS WORK
 msgid "API key"
@@ -9497,10 +9137,10 @@ msgstr "Ορίστε τον κατάλογο εργασίας για το αρχ
 msgid "Working directory (positional argument)"
 msgstr "Κατάλογος εργασίας (θέση παραμέτρου)"
 # 
-# File: usr/share/ashyterm/main.py, line: 105
+# File: src/ashyterm/__init__.py, line: 133
 #: NEEDS WORK
-msgid "Execute command in the terminal"
-msgstr "Εκτέλεση εντολής στο τερματικό"
+msgid "Execute command in the terminal (takes all remaining arguments)"
+msgstr "Εκτέλεση εντολής στο τερματικό (λαμβάνει όλα τα υπόλοιπα επιχειρήματα)"
 # 
 # File: usr/share/ashyterm/main.py, line: 110
 #: NEEDS WORK
