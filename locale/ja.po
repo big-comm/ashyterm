@@ -1,12 +1,12 @@
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the comm-ashyterm package.
+# This file is distributed under the same license as the ashyterm package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 # 
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: comm-ashyterm\n"
+"Project-Id-Version: ashyterm\n"
 "Report-Msgid-Bugs-To: \n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -15,6 +15,35 @@ msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: attranslate\n"
+# 
+# File: usr/share/nautilus-python/extensions/ashyterm.py, line: 129
+#: NEEDS WORK
+msgid "Open in Ashy Terminal (SSH)"
+msgstr "Ashy Terminal (SSH)で開く"
+# 
+# File: usr/share/nautilus-python/extensions/ashyterm.py, line: 130
+#: NEEDS WORK
+#, python-brace-format
+msgid "Connect to {} via a new SSH session"
+msgstr "新しいSSHセッションを介して{}に接続する"
+# 
+# File: usr/share/nautilus-python/extensions/ashyterm.py, line: 139
+# File: usr/share/nautilus-python/extensions/ashyterm.py, line: 149
+#: NEEDS WORK
+msgid "Open in Ashy Terminal"
+msgstr "Ashy Terminalで開く"
+# 
+# File: usr/share/nautilus-python/extensions/ashyterm.py, line: 140
+#: NEEDS WORK
+#, python-brace-format
+msgid "Open the local mount point {}"
+msgstr "ローカルマウントポイント {} を開く"
+# 
+# File: usr/share/nautilus-python/extensions/ashyterm.py, line: 150
+#: NEEDS WORK
+#, python-brace-format
+msgid "Open {} in Ashy Terminal"
+msgstr "Ashy Terminalで{}を開く"
 # 
 # File: usr/share/ashyterm/utils/exceptions.py, line: 65
 #: NEEDS WORK
@@ -287,7 +316,7 @@ msgstr "キー ファイルは読み取れません。"
 msgid "Error accessing key file: {}"
 msgstr "キー ファイルにアクセス中にエラーが発生しました: {}"
 # 
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
+# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
 # 
 # File: usr/share/ashyterm/utils/security.py, line: 508
 # File: usr/share/ashyterm/utils/security.py, line: 796
@@ -371,9 +400,9 @@ msgstr "パスに安全でない要素が含まれています"
 msgid "set secure permissions"
 msgstr "セキュアな権限を設定する"
 # 
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
+# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
 # 
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
+# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
 # 
 # File: usr/share/ashyterm/utils/security.py, line: 786
 # File: usr/share/ashyterm/utils.py, line: 438
@@ -469,6 +498,11 @@ msgstr "新しいタブに移動"
 msgid "Close Pane"
 msgstr "パネルを閉じる"
 # 
+# File: src/ashyterm/terminal/tabs.py, line: 723
+#: NEEDS WORK
+msgid "Move Tab"
+msgstr "タブを移動"
+# 
 # File: usr/share/ashyterm/terminal/tabs.py, line: 531
 #: NEEDS WORK
 msgid "Duplicate Tab"
@@ -483,75 +517,6 @@ msgstr "タブを切り離す"
 #: NEEDS WORK
 msgid "This is the only pane in the tab."
 msgstr "これはタブ内の唯一のペインです。"
-# 
-# File: usr/share/ashyterm/main.py, line: 86
-#: NEEDS WORK
-#, python-brace-format
-msgid ""
-"\n"
-"Received signal {}, shutting down gracefully..."
-msgstr "信号{}を受信しました。正常にシャットダウンしています..."
-# 
-# File: usr/share/ashyterm/main.py, line: 97
-#: NEEDS WORK
-#, python-brace-format
-msgid "Warning: Could not set up signal handlers: {}"
-msgstr "警告: シグナルハンドラを設定できませんでした: {}"
-# 
-# File: usr/share/ashyterm/main.py, line: 109
-#: NEEDS WORK
-msgid "Ashy Terminal - A modern terminal emulator with session management"
-msgstr "Ashy Terminal - セッション管理機能を備えたモダンなターミナルエミュレーター"
-# 
-# File: usr/share/ashyterm/main.py, line: 110
-#: NEEDS WORK
-msgid "For more information, visit: https://communitybig.org/"
-msgstr "詳細については、次のサイトをご覧ください: https://communitybig.org/"
-# 
-# File: usr/share/ashyterm/main.py, line: 73
-#: NEEDS WORK
-msgid "Enable debug mode"
-msgstr "デバッグモードを有効にする"
-# 
-# File: usr/share/ashyterm/main.py, line: 79
-#: NEEDS WORK
-msgid "Set logging level"
-msgstr "ログレベルを設定"
-# 
-# File: usr/share/ashyterm/main.py, line: 84
-#: NEEDS WORK
-msgid "Set the working directory for the initial terminal"
-msgstr "初期ターミナルの作業ディレクトリを設定する"
-# 
-# File: usr/share/ashyterm/main.py, line: 92
-#: NEEDS WORK
-msgid "Working directory (positional argument)"
-msgstr "作業ディレクトリ（位置引数）"
-# 
-# File: usr/share/ashyterm/main.py, line: 105
-#: NEEDS WORK
-msgid "Execute command in the terminal"
-msgstr "ターミナルでコマンドを実行する"
-# 
-# File: usr/share/ashyterm/main.py, line: 110
-#: NEEDS WORK
-msgid "Close terminal after executing command (only with --execute)"
-msgstr "コマンド実行後にターミナルを閉じる（--executeオプションのみ）"
-# 
-# File: usr/share/ashyterm/main.py, line: 115
-#: NEEDS WORK
-msgid "Connect to SSH host with optional user, port, and remote path"
-msgstr "SSHホストにオプションのユーザー、ポート、およびリモートパスで接続する"
-# 
-# File: usr/share/ashyterm/main.py, line: 119
-#: NEEDS WORK
-msgid "Convert KIO/GVFS URI path to SSH format"
-msgstr "KIO/GVFS URIパスをSSH形式に変換"
-# 
-# File: usr/share/ashyterm/main.py, line: 129
-#: NEEDS WORK
-msgid "Force opening a new window"
-msgstr "新しいウィンドウを強制的に開く"
 # 
 # File: usr/share/ashyterm/ui/window_ui.py, line: 339
 #: NEEDS WORK
@@ -585,21 +550,21 @@ msgstr "正規表現"
 # 
 # #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1606
-# File: usr/share/ashyterm/window.py, line: 248
+# File: src/ashyterm/ui/window_ui.py, line: 262
+# File: src/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 56
 #: NEEDS WORK
-msgid "Toggle Sidebar"
-msgstr "サイドバーの切り替え"
+msgid "Sessions Panel"
+msgstr "セッションパネル"
 # 
 # File: usr/share/ashyterm/window.py, line: 344
 #: NEEDS WORK
 msgid "File Manager"
 msgstr "ファイルマネージャー"
 # 
-# File: usr/share/ashyterm/ui/window_ui.py, line: 324
+# File: usr/share/ashyterm/ui/dialogs/command_guide_dialog.py, line: 143
 #: NEEDS WORK
-msgid "Command Guide (Ctrl+Shift+P)"
-msgstr "コマンドガイド (Ctrl+Shift+P)"
+msgid "Command Guide"
+msgstr "コマンドガイド"
 # 
 # File: usr/share/ashyterm/ui/window_ui.py, line: 350
 #: NEEDS WORK
@@ -611,10 +576,10 @@ msgstr "ターミナルで検索"
 msgid "Send Command to All Tabs"
 msgstr "すべてのタブにコマンドを送信"
 # 
-# File: usr/share/ashyterm/ui/window_ui.py, line: 344
+# File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 39
 #: NEEDS WORK
-msgid "Ask AI Assistant (Ctrl+Shift+I)"
-msgstr "AIアシスタントに聞く (Ctrl+Shift+I)"
+msgid "Ask AI Assistant"
+msgstr "AIアシスタントに聞く"
 # 
 # File: usr/share/ashyterm/ui/window_ui.py, line: 259
 #: NEEDS WORK
@@ -626,7 +591,7 @@ msgstr "一時ファイルを管理する"
 msgid "Main Menu"
 msgstr "メインメニュー"
 # 
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
+# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
 # 
 # File: usr/share/ashyterm/ui/menus.py, line: 144
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1596
@@ -640,9 +605,9 @@ msgstr "新しいタブ"
 msgid "Ashy Terminal"
 msgstr "アシーターミナル"
 # 
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
+# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
 # 
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
+# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
 # 
 # File: usr/share/ashyterm/ui/menus.py, line: 60
 # File: usr/share/ashyterm/ui/menus.py, line: 92
@@ -652,9 +617,9 @@ msgstr "アシーターミナル"
 msgid "Add Session"
 msgstr "セッションを追加"
 # 
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
+# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
 # 
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
+# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
 # 
 # File: usr/share/ashyterm/ui/menus.py, line: 93
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1056
@@ -718,7 +683,7 @@ msgstr "ヘッダーバーの背景"
 msgid "Cursor"
 msgstr "カーソル"
 # 
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
+# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 163
 # File: usr/share/ashyterm/ui/dialogs.py, line: 575
@@ -752,7 +717,7 @@ msgstr "一般的な色"
 msgid "16-Color Palette"
 msgstr "16色パレット"
 # 
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
+# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 136
 # File: usr/share/ashyterm/ui/dialogs.py, line: 784
@@ -834,7 +799,7 @@ msgstr "スキームを選択して、即座に適用します。"
 msgid "New"
 msgstr "新規"
 # 
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
+# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
 # 
 # File: usr/share/ashyterm/ui/menus.py, line: 23
 # File: usr/share/ashyterm/ui/menus.py, line: 59
@@ -844,7 +809,7 @@ msgstr "新規"
 msgid "Edit"
 msgstr "編集"
 # 
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
+# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
 # 
 # File: usr/share/ashyterm/ui/menus.py, line: 39
 # File: usr/share/ashyterm/ui/menus.py, line: 73
@@ -875,20 +840,1249 @@ msgstr "スキームを削除しますか？"
 msgid "Are you sure you want to delete the scheme '{name}'? This cannot be undone."
 msgstr "'{name}'を削除してもよろしいですか？これは元に戻すことはできません。"
 # 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 220
+#: NEEDS WORK
+msgid "How do I navigate directories?"
+msgstr "ディレクトリを移動するにはどうすればよいですか？"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 221
+#: NEEDS WORK
+msgid "How do I find files by name?"
+msgstr "名前でファイルを見つけるにはどうすればよいですか？"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 222
+#: NEEDS WORK
+msgid "How do I edit files in terminal?"
+msgstr "ターミナルでファイルを編集するにはどうすればよいですか？"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 223
+#: NEEDS WORK
+msgid "How do I view disk usage?"
+msgstr "ディスク使用量をどのように表示しますか？"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 224
+#: NEEDS WORK
+msgid "How do I change file permissions?"
+msgstr "ファイルのアクセス権を変更するにはどうすればよいですか？"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 225
+#: NEEDS WORK
+msgid "How do I compress files?"
+msgstr "ファイルを圧縮するにはどうすればよいですか？"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 226
+#: NEEDS WORK
+msgid "How do I check my IP address?"
+msgstr "IPアドレスを確認するにはどうすればよいですか？"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 227
+#: NEEDS WORK
+msgid "How do I view running processes?"
+msgstr "実行中のプロセスを表示するにはどうすればよいですか？"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 228
+#: NEEDS WORK
+msgid "How do I check memory usage?"
+msgstr "メモリ使用量を確認するにはどうすればよいですか？"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 229
+#: NEEDS WORK
+msgid "How do I restart a service?"
+msgstr "サービスを再起動するにはどうすればよいですか？"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 231
+#: NEEDS WORK
+msgid "How do I create a new branch?"
+msgstr "新しいブランチを作成するにはどうすればよいですか？"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 232
+#: NEEDS WORK
+msgid "How do I merge branches?"
+msgstr "ブランチをマージするにはどうすればよいですか？"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 233
+#: NEEDS WORK
+msgid "How do I push to remote?"
+msgstr "リモートにプッシュするにはどうすればよいですか？"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 234
+#: NEEDS WORK
+msgid "How do I pull changes?"
+msgstr "変更を取得するにはどうすればよいですか？"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 235
+#: NEEDS WORK
+msgid "How do I undo last commit?"
+msgstr "最後のコミットを元に戻すにはどうすればよいですか？"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 236
+#: NEEDS WORK
+msgid "How do I view commit history?"
+msgstr "コミット履歴を表示するにはどうすればよいですか？"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 237
+#: NEEDS WORK
+msgid "How do I create a tag?"
+msgstr "タグを作成するにはどうすればよいですか？"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 238
+#: NEEDS WORK
+msgid "How do I find who changed a line?"
+msgstr "行を変更した人をどのように見つけますか？"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 239
+#: NEEDS WORK
+msgid "How do I delete a branch?"
+msgstr "ブランチを削除するにはどうすればよいですか？"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 240
+#: NEEDS WORK
+msgid "How do I stash changes?"
+msgstr "変更をスタッシュするにはどうすればよいですか？"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 242
+#: NEEDS WORK
+msgid "How do I list Docker containers?"
+msgstr "Dockerコンテナを一覧表示するにはどうすればよいですか？"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 243
+#: NEEDS WORK
+msgid "How do I run a Docker container?"
+msgstr "Dockerコンテナをどのように実行しますか？"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 244
+#: NEEDS WORK
+msgid "How do I stop a container?"
+msgstr "コンテナを停止するにはどうすればよいですか？"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 245
+#: NEEDS WORK
+msgid "How do I list Docker images?"
+msgstr "Docker イメージを一覧表示するにはどうすればよいですか？"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 246
+#: NEEDS WORK
+msgid "How do I clean Docker resources?"
+msgstr "Dockerリソースをクリーンアップするにはどうすればよいですか？"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 247
+#: NEEDS WORK
+msgid "How do I view container logs?"
+msgstr "コンテナのログを表示するにはどうすればよいですか？"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 248
+#: NEEDS WORK
+msgid "How do I create Docker network?"
+msgstr "Dockerネットワークを作成するにはどうすればよいですか？"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 249
+#: NEEDS WORK
+msgid "How do I manage Docker volumes?"
+msgstr "Dockerボリュームをどのように管理しますか？"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 250
+#: NEEDS WORK
+msgid "How do I build a Docker image?"
+msgstr "Dockerイメージをどのようにビルドしますか？"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 251
+#: NEEDS WORK
+msgid "How do I restart a container?"
+msgstr "コンテナを再起動するにはどうすればよいですか？"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 253
+#: NEEDS WORK
+msgid "How do I generate SSH keys?"
+msgstr "SSHキーを生成するにはどうすればよいですか？"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 254
+#: NEEDS WORK
+msgid "How do I copy SSH key to server?"
+msgstr "サーバーにSSHキーをコピーするにはどうすればよいですか？"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 255
+#: NEEDS WORK
+msgid "How do I check open ports?"
+msgstr "オープンポートを確認するにはどうすればよいですか？"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 256
+#: NEEDS WORK
+msgid "How do I test network connectivity?"
+msgstr "ネットワーク接続をテストするにはどうすればよいですか？"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 257
+#: NEEDS WORK
+msgid "How do I DNS lookup?"
+msgstr "DNSルックアップはどうやって行いますか？"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 258
+#: NEEDS WORK
+msgid "How do I monitor network traffic?"
+msgstr "ネットワークトラフィックを監視するにはどうすればよいですか？"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 259
+#: NEEDS WORK
+msgid "How do I configure firewall?"
+msgstr "ファイアウォールをどのように設定しますか？"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 260
+#: NEEDS WORK
+msgid "How do I create SSH tunnel?"
+msgstr "SSHトンネルを作成するにはどうすればよいですか？"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 261
+#: NEEDS WORK
+msgid "How do I copy files via SSH?"
+msgstr "SSHを使用してファイルをコピーするにはどうすればよいですか？"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 262
+#: NEEDS WORK
+msgid "How do I speed up SSH connections?"
+msgstr "SSH接続を速くするにはどうすればよいですか？"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 264
+#: NEEDS WORK
+msgid "How do I create empty file?"
+msgstr "空のファイルを作成するにはどうすればよいですか？"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 265
+#: NEEDS WORK
+msgid "How do I create directory?"
+msgstr "ディレクトリを作成するにはどうすればよいですか？"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 266
+#: NEEDS WORK
+msgid "How do I delete files safely?"
+msgstr "ファイルを安全に削除するにはどうすればよいですか？"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 267
+#: NEEDS WORK
+msgid "How do I copy files?"
+msgstr "ファイルをコピーするにはどうすればよいですか？"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 268
+#: NEEDS WORK
+msgid "How do I move files?"
+msgstr "ファイルを移動するにはどうすればよいですか？"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 269
+#: NEEDS WORK
+msgid "How do I create symbolic link?"
+msgstr "シンボリックリンクを作成するにはどうすればよいですか？"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 270
+#: NEEDS WORK
+msgid "How do I search file contents?"
+msgstr "ファイルの内容を検索するにはどうすればよいですか？"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 271
+#: NEEDS WORK
+msgid "How do I compare files?"
+msgstr "ファイルをどのように比較しますか？"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 272
+#: NEEDS WORK
+msgid "How do I sync directories?"
+msgstr "ディレクトリを同期するにはどうすればよいですか？"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 273
+#: NEEDS WORK
+msgid "How do I append to file?"
+msgstr "ファイルに追加するにはどうすればよいですか？"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 275
+#: NEEDS WORK
+msgid "How do I use grep?"
+msgstr "grepの使い方は？"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 276
+#: NEEDS WORK
+msgid "How do I use awk?"
+msgstr "awkの使い方は？"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 277
+#: NEEDS WORK
+msgid "How do I use sed?"
+msgstr "sedの使い方は？"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 278
+#: NEEDS WORK
+msgid "How do I count lines?"
+msgstr "行数をカウントするにはどうすればよいですか？"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 279
+#: NEEDS WORK
+msgid "How do I sort text?"
+msgstr "テキストをどのようにソートしますか？"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 280
+#: NEEDS WORK
+msgid "How do I join files?"
+msgstr "ファイルを結合するにはどうすればよいですか？"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 281
+#: NEEDS WORK
+msgid "How do I extract columns?"
+msgstr "列を抽出するにはどうすればよいですか？"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 282
+#: NEEDS WORK
+msgid "How do I remove duplicates?"
+msgstr "重複を削除するにはどうすればよいですか？"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 283
+#: NEEDS WORK
+msgid "How do I format JSON?"
+msgstr "JSONをどのようにフォーマットしますか？"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 284
+#: NEEDS WORK
+msgid "How do I search and replace?"
+msgstr "検索と置換はどうすればよいですか？"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 286
+#: NEEDS WORK
+msgid "How do I add a user?"
+msgstr "ユーザーを追加するにはどうすればよいですか？"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 287
+#: NEEDS WORK
+msgid "How do I manage groups?"
+msgstr "グループを管理するにはどうすればよいですか？"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 288
+#: NEEDS WORK
+msgid "How do I change password?"
+msgstr "パスワードを変更するにはどうすればよいですか？"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 289
+#: NEEDS WORK
+msgid "How do I check system load?"
+msgstr "システム負荷を確認するにはどうすればよいですか？"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 290
+#: NEEDS WORK
+msgid "How do I mount a drive?"
+msgstr "ドライブをマウントするにはどうすればよいですか？"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 291
+#: NEEDS WORK
+msgid "How do I install packages?"
+msgstr "パッケージをどのようにインストールしますか？"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 292
+#: NEEDS WORK
+msgid "How do I update system?"
+msgstr "システムを更新するにはどうすればよいですか？"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 293
+#: NEEDS WORK
+msgid "How do I configure cron jobs?"
+msgstr "cronジョブをどのように設定しますか？"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 294
+#: NEEDS WORK
+msgid "How do I view system logs?"
+msgstr "システムログを表示するにはどうすればよいですか？"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 295
+#: NEEDS WORK
+msgid "How do I find large files?"
+msgstr "大きなファイルを見つけるにはどうすればよいですか？"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 297
+#: NEEDS WORK
+msgid "How do I create virtualenv?"
+msgstr "仮想環境をどのように作成しますか？"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 298
+#: NEEDS WORK
+msgid "How do I install pip packages?"
+msgstr "pipパッケージをどのようにインストールしますか？"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 299
+#: NEEDS WORK
+msgid "How do I find Python package?"
+msgstr "Pythonパッケージはどのように見つけますか？"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 300
+#: NEEDS WORK
+msgid "How do I list installed packages?"
+msgstr "インストールされたパッケージを一覧表示するにはどうすればよいですか？"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 301
+#: NEEDS WORK
+msgid "How do I run Python tests?"
+msgstr "Pythonテストをどのように実行しますか？"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 302
+#: NEEDS WORK
+msgid "How do I profile Python code?"
+msgstr "Pythonコードのプロファイリングはどのように行いますか？"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 303
+#: NEEDS WORK
+msgid "How do I format Python code?"
+msgstr "Pythonコードをどのようにフォーマットしますか？"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 304
+#: NEEDS WORK
+msgid "How do I create requirements.txt?"
+msgstr "requirements.txtをどのように作成しますか？"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 305
+#: NEEDS WORK
+msgid "How do I run Python script?"
+msgstr "Pythonスクリプトを実行するにはどうすればよいですか？"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 306
+#: NEEDS WORK
+msgid "How do I debug Python?"
+msgstr "Pythonをデバッグするにはどうすればよいですか？"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 308
+#: NEEDS WORK
+msgid "How do I initialize npm project?"
+msgstr "npmプロジェクトを初期化するにはどうすればよいですか？"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 309
+#: NEEDS WORK
+msgid "How do I install npm packages?"
+msgstr "npm パッケージをどのようにインストールしますか？"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 310
+#: NEEDS WORK
+msgid "How do I run npm scripts?"
+msgstr "npmスクリプトを実行するにはどうすればよいですか？"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 311
+#: NEEDS WORK
+msgid "How do I list npm packages?"
+msgstr "npmパッケージを一覧表示するにはどうすればよいですか？"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 312
+#: NEEDS WORK
+msgid "How do I update npm packages?"
+msgstr "npmパッケージをどのように更新しますか？"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 313
+#: NEEDS WORK
+msgid "How do I clean npm cache?"
+msgstr "npm キャッシュをクリーンするにはどうすればよいですか？"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 314
+#: NEEDS WORK
+msgid "How do I link npm package?"
+msgstr "npmパッケージをリンクするにはどうすればよいですか？"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 315
+#: NEEDS WORK
+msgid "How do I audit npm packages?"
+msgstr "npmパッケージをどのように監査しますか？"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 316
+#: NEEDS WORK
+msgid "How do I find npm package?"
+msgstr "npmパッケージはどのように見つけますか？"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 317
+#: NEEDS WORK
+msgid "How do I use npx?"
+msgstr "npxをどのように使いますか？"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 319
+#: NEEDS WORK
+msgid "How do I write a bash script?"
+msgstr "bashスクリプトはどのように書きますか？"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 320
+#: NEEDS WORK
+msgid "How do I use loops in bash?"
+msgstr "bashでループをどのように使用しますか？"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 321
+#: NEEDS WORK
+msgid "How do I use conditionals?"
+msgstr "条件文はどのように使用しますか？"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 322
+#: NEEDS WORK
+msgid "How do I read user input?"
+msgstr "ユーザー入力をどのように読み取りますか？"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 323
+#: NEEDS WORK
+msgid "How do I read from file?"
+msgstr "ファイルから読み取るにはどうすればよいですか？"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 324
+#: NEEDS WORK
+msgid "How do I write to file?"
+msgstr "ファイルに書き込むにはどうすればよいですか？"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 325
+#: NEEDS WORK
+msgid "How do I use functions?"
+msgstr "関数はどのように使いますか？"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 326
+#: NEEDS WORK
+msgid "How do I parse arguments?"
+msgstr "引数をどのように解析しますか？"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 327
+#: NEEDS WORK
+msgid "How do I handle errors?"
+msgstr "エラーをどのように処理しますか？"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 328
+#: NEEDS WORK
+msgid "How do I debug bash script?"
+msgstr "bashスクリプトをデバッグするにはどうすればよいですか？"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 330
+#: NEEDS WORK
+msgid "How do I get pods?"
+msgstr "ポッドを取得するにはどうすればよいですか？"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 331
+#: NEEDS WORK
+msgid "How do I view pod logs?"
+msgstr "ポッドのログをどのように表示しますか？"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 332
+#: NEEDS WORK
+msgid "How do I deploy to k8s?"
+msgstr "k8sにデプロイするにはどうすればよいですか？"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 333
+#: NEEDS WORK
+msgid "How do I scale deployment?"
+msgstr "デプロイメントをスケールするにはどうすればよいですか？"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 334
+#: NEEDS WORK
+msgid "How do I describe pod?"
+msgstr "ポッドをどのように説明しますか？"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 335
+#: NEEDS WORK
+msgid "How do I get services?"
+msgstr "サービスを取得するにはどうすればよいですか？"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 336
+#: NEEDS WORK
+msgid "How do I create configmap?"
+msgstr "ConfigMapを作成するにはどうすればよいですか？"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 337
+#: NEEDS WORK
+msgid "How do I create secret?"
+msgstr "秘密を作成するにはどうすればよいですか？"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 338
+#: NEEDS WORK
+msgid "How do I exec into pod?"
+msgstr "ポッドにexecするにはどうすればよいですか？"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 339
+#: NEEDS WORK
+msgid "How do I port forward?"
+msgstr "ポートフォワードはどうやって行いますか？"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 341
+#: NEEDS WORK
+msgid "How do I connect to PostgreSQL?"
+msgstr "PostgreSQLに接続するにはどうすればよいですか？"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 342
+#: NEEDS WORK
+msgid "How do I backup database?"
+msgstr "データベースをバックアップするにはどうすればよいですか？"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 343
+#: NEEDS WORK
+msgid "How do I restore database?"
+msgstr "データベースを復元するにはどうすればよいですか？"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 344
+#: NEEDS WORK
+msgid "How do I list databases?"
+msgstr "データベースを一覧表示するにはどうすればよいですか？"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 345
+#: NEEDS WORK
+msgid "How do I query from terminal?"
+msgstr "ターミナルからクエリを実行するにはどうすればよいですか？"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 346
+#: NEEDS WORK
+msgid "How do I export to CSV?"
+msgstr "CSVにエクスポートするにはどうすればよいですか？"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 347
+#: NEEDS WORK
+msgid "How do I import from CSV?"
+msgstr "CSVからインポートするにはどうすればよいですか？"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 348
+#: NEEDS WORK
+msgid "How do I create database user?"
+msgstr "データベースユーザーを作成するにはどうすればよいですか？"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 349
+#: NEEDS WORK
+msgid "How do I grant permissions?"
+msgstr "権限を付与するにはどうすればよいですか？"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 350
+#: NEEDS WORK
+msgid "How do I check database size?"
+msgstr "データベースのサイズを確認するにはどうすればよいですか？"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 352
+#: NEEDS WORK
+msgid "How do I monitor CPU usage?"
+msgstr "CPU使用率をどのように監視しますか？"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 353
+#: NEEDS WORK
+msgid "How do I monitor memory?"
+msgstr "メモリをどのように監視しますか？"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 354
+#: NEEDS WORK
+msgid "How do I monitor disk I/O?"
+msgstr "ディスクI/Oをどのように監視しますか？"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 355
+#: NEEDS WORK
+msgid "How do I monitor network?"
+msgstr "ネットワークを監視するにはどうすればよいですか？"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 356
+#: NEEDS WORK
+msgid "How do I benchmark command?"
+msgstr "コマンドのベンチマークをどのように行いますか？"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 357
+#: NEEDS WORK
+msgid "How do I trace system calls?"
+msgstr "システムコールをトレースするにはどうすればよいですか？"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 358
+#: NEEDS WORK
+msgid "How do I view process tree?"
+msgstr "プロセスツリーを表示するにはどうすればよいですか？"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 359
+#: NEEDS WORK
+msgid "How do I find bottlenecks?"
+msgstr "ボトルネックをどのように見つけますか？"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 360
+#: NEEDS WORK
+msgid "How do I list open files?"
+msgstr "オープンファイルを一覧表示するにはどうすればよいですか？"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 361
+#: NEEDS WORK
+msgid "How do I view thread info?"
+msgstr "スレッド情報を表示するにはどうすればよいですか？"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 363
+#: NEEDS WORK
+msgid "How do I create tar archive?"
+msgstr "tarアーカイブを作成するにはどうすればよいですか？"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 364
+#: NEEDS WORK
+msgid "How do I extract tar.gz?"
+msgstr "tar.gzをどうやって解凍しますか？"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 365
+#: NEEDS WORK
+msgid "How do I use gzip?"
+msgstr "gzipの使い方は？"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 366
+#: NEEDS WORK
+msgid "How do I list archive contents?"
+msgstr "アーカイブの内容を一覧表示するにはどうすればよいですか？"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 367
+#: NEEDS WORK
+msgid "How do I add to archive?"
+msgstr "アーカイブに追加するにはどうすればよいですか？"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 368
+#: NEEDS WORK
+msgid "How do I create zip file?"
+msgstr "ZIPファイルを作成するにはどうすればよいですか？"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 369
+#: NEEDS WORK
+msgid "How do I extract zip?"
+msgstr "ZIPファイルをどうやって解凍しますか？"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 370
+#: NEEDS WORK
+msgid "How do I encrypt archive?"
+msgstr "アーカイブを暗号化するにはどうすればよいですか？"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 371
+#: NEEDS WORK
+msgid "How do I split archive?"
+msgstr "アーカイブを分割するにはどうすればよいですか？"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 372
+#: NEEDS WORK
+msgid "How do I merge archives?"
+msgstr "アーカイブをマージするにはどうすればよいですか？"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 374
+#: NEEDS WORK
+msgid "How do I encrypt file?"
+msgstr "ファイルをどのように暗号化しますか？"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 375
+#: NEEDS WORK
+msgid "How do I decrypt file?"
+msgstr "ファイルをどのように復号化しますか？"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 376
+#: NEEDS WORK
+msgid "How do I generate password?"
+msgstr "パスワードを生成するにはどうすればよいですか？"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 377
+#: NEEDS WORK
+msgid "How do I verify checksum?"
+msgstr "チェックサムをどのように確認しますか？"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 378
+#: NEEDS WORK
+msgid "How do I list certificates?"
+msgstr "証明書を一覧表示するにはどうすればよいですか？"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 379
+#: NEEDS WORK
+msgid "How do I sign file?"
+msgstr "ファイルに署名するにはどうすればよいですか？"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 380
+#: NEEDS WORK
+msgid "How do I scan for vulnerabilities?"
+msgstr "脆弱性をスキャンするにはどうすればよいですか？"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 381
+#: NEEDS WORK
+msgid "How do I secure file permissions?"
+msgstr "ファイルのアクセス権をどのように保護しますか？"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 382
+#: NEEDS WORK
+msgid "How do I audit system?"
+msgstr "システムを監査するにはどうすればよいですか？"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 383
+#: NEEDS WORK
+msgid "How do I use GPG?"
+msgstr "GPGの使い方は？"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 385
+#: NEEDS WORK
+msgid "How do I start tmux session?"
+msgstr "tmuxセッションを開始するにはどうすればよいですか？"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 386
+#: NEEDS WORK
+msgid "How do I list tmux sessions?"
+msgstr "tmuxセッションを一覧表示するにはどうすればよいですか？"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 387
+#: NEEDS WORK
+msgid "How do I attach to session?"
+msgstr "セッションに接続するにはどうすればよいですか？"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 388
+#: NEEDS WORK
+msgid "How do I split tmux pane?"
+msgstr "tmuxペインを分割するにはどうすればよいですか？"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 389
+#: NEEDS WORK
+msgid "How do I switch panes?"
+msgstr "パネルを切り替えるにはどうすればよいですか？"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 390
+#: NEEDS WORK
+msgid "How do I rename window?"
+msgstr "ウィンドウの名前を変更するにはどうすればよいですか？"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 391
+#: NEEDS WORK
+msgid "How do I kill session?"
+msgstr "セッションを終了するにはどうすればよいですか？"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 392
+#: NEEDS WORK
+msgid "How do I detach from session?"
+msgstr "セッションから切り離すにはどうすればよいですか？"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 393
+#: NEEDS WORK
+msgid "How do I copy in tmux?"
+msgstr "tmuxでコピーするにはどうすればよいですか？"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 394
+#: NEEDS WORK
+msgid "How do I configure tmux?"
+msgstr "tmuxをどのように設定しますか？"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 396
+#: NEEDS WORK
+msgid "How do I save in vim?"
+msgstr "vimでどうやって保存しますか？"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 397
+#: NEEDS WORK
+msgid "How do I quit vim?"
+msgstr "vimを終了するにはどうすればいいですか？"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 398
+#: NEEDS WORK
+msgid "How do I search in vim?"
+msgstr "vimで検索するにはどうすればよいですか？"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 399
+#: NEEDS WORK
+msgid "How do I replace in vim?"
+msgstr "vimで置換するにはどうすればよいですか？"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 400
+#: NEEDS WORK
+msgid "How do I copy line in vim?"
+msgstr "vimで行をコピーするにはどうすればよいですか？"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 401
+#: NEEDS WORK
+msgid "How do I delete line in vim?"
+msgstr "vimで行を削除するにはどうすればよいですか？"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 402
+#: NEEDS WORK
+msgid "How do I undo in vim?"
+msgstr "vimで元に戻すにはどうすればいいですか？"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 403
+#: NEEDS WORK
+msgid "How do I go to line in vim?"
+msgstr "vimで行に移動するにはどうすればよいですか？"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 404
+#: NEEDS WORK
+msgid "How do I split in vim?"
+msgstr "vimでどうやって分割しますか？"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 405
+#: NEEDS WORK
+msgid "How do I open file in vim?"
+msgstr "vimでファイルを開くにはどうすればよいですか？"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 407
+#: NEEDS WORK
+msgid "How do I set environment variable?"
+msgstr "環境変数をどのように設定しますか？"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 408
+#: NEEDS WORK
+msgid "How do I list env variables?"
+msgstr "環境変数を一覧表示するにはどうすればよいですか？"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 409
+#: NEEDS WORK
+msgid "How do I edit bashrc?"
+msgstr "bashrcをどのように編集しますか？"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 410
+#: NEEDS WORK
+msgid "How do I reload bashrc?"
+msgstr "bashrcを再読み込みするにはどうすればよいですか？"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 411
+#: NEEDS WORK
+msgid "How do I view PATH?"
+msgstr "PATHをどのように表示しますか？"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 412
+#: NEEDS WORK
+msgid "How do I add to PATH?"
+msgstr "PATHに追加するにはどうすればよいですか？"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 413
+#: NEEDS WORK
+msgid "How do I find config file?"
+msgstr "設定ファイルはどのように見つけますか？"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 414
+#: NEEDS WORK
+msgid "How do I export variable?"
+msgstr "変数をエクスポートするにはどうすればよいですか？"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 415
+#: NEEDS WORK
+msgid "How do I use .env file?"
+msgstr ".envファイルはどのように使用しますか？"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 416
+#: NEEDS WORK
+msgid "How do I set alias?"
+msgstr "エイリアスを設定するにはどうすればよいですか？"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 418
+#: NEEDS WORK
+msgid "How do I use xargs?"
+msgstr "xargsの使い方は？"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 419
+#: NEEDS WORK
+msgid "How do I use find with exec?"
+msgstr "execを使ってfindをどのように使用しますか？"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 420
+#: NEEDS WORK
+msgid "How do I use parallel?"
+msgstr "並列をどのように使用しますか？"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 421
+#: NEEDS WORK
+msgid "How do I use tee?"
+msgstr "teeの使い方は？"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 422
+#: NEEDS WORK
+msgid "How do I use watch?"
+msgstr "ウォッチの使い方は？"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 423
+#: NEEDS WORK
+msgid "How do I use htop?"
+msgstr "htopの使い方は？"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 424
+#: NEEDS WORK
+msgid "How do I use fzf?"
+msgstr "fzfをどのように使いますか？"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 425
+#: NEEDS WORK
+msgid "How do I use heredoc?"
+msgstr "heredocの使い方は？"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 426
+#: NEEDS WORK
+msgid "How do I use subshell?"
+msgstr "サブシェルをどのように使用しますか？"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 427
+#: NEEDS WORK
+msgid "How do I use command substitution?"
+msgstr "コマンド置換をどのように使用しますか？"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 429
+#: NEEDS WORK
+msgid "How do I format date?"
+msgstr "日付をどのようにフォーマットしますか？"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 430
+#: NEEDS WORK
+msgid "How do I calculate in terminal?"
+msgstr "ターミナルで計算するにはどうすればよいですか？"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 431
+#: NEEDS WORK
+msgid "How do I use colors in terminal?"
+msgstr "ターミナルで色を使うにはどうすればよいですか？"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 432
+#: NEEDS WORK
+msgid "How do I create histogram?"
+msgstr "ヒストグラムを作成するにはどうすればよいですか？"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 433
+#: NEEDS WORK
+msgid "How do I send notification?"
+msgstr "通知を送信するにはどうすればよいですか？"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 434
+#: NEEDS WORK
+msgid "How do I use clipboard?"
+msgstr "クリップボードはどのように使いますか？"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 435
+#: NEEDS WORK
+msgid "How do I view image in terminal?"
+msgstr "ターミナルで画像を表示するにはどうすればよいですか？"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 436
+#: NEEDS WORK
+msgid "How do I plot in terminal?"
+msgstr "ターミナルでプロットするにはどうすればよいですか？"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 437
+#: NEEDS WORK
+msgid "How do I play sound?"
+msgstr "音を再生するにはどうすればよいですか？"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 438
+#: NEEDS WORK
+msgid "How do I schedule task?"
+msgstr "タスクをどのようにスケジュールしますか？"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 458
+#: NEEDS WORK
+msgid "AI is thinking..."
+msgstr "AIが考えています..."
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 506
+#: NEEDS WORK
+msgid "You"
+msgstr "あなた"
+# 
+# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 319
+# File: usr/share/ashyterm/window.py, line: 679
+#: NEEDS WORK
+msgid "AI Assistant"
+msgstr "AIアシスタント"
+# 
+# File: usr/share/ashyterm/window.py, line: 724
+#: NEEDS WORK
+msgid "Suggested Commands"
+msgstr "提案されたコマンド"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 955
+#: NEEDS WORK
+msgid "Run command"
+msgstr "コマンドを実行"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 965
+#: NEEDS WORK
+msgid "Insert into terminal"
+msgstr "ターミナルに挿入"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 975
+#: NEEDS WORK
+msgid "Copy to clipboard"
+msgstr "クリップボードにコピー"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 1100
+#: NEEDS WORK
+msgid "New conversation"
+msgstr "新しい会話"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 1108
+#: NEEDS WORK
+msgid "View history"
+msgstr "履歴を表示"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 1116
+#: NEEDS WORK
+msgid "Close panel"
+msgstr "パネルを閉じる"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 1153
+#: NEEDS WORK
+msgid "Quick Prompts"
+msgstr "クイックプロンプト"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 1164
+#: NEEDS WORK
+msgid "Customize quick prompts"
+msgstr "クイックプロンプトをカスタマイズ"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 1239
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 1642
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 1665
+#: NEEDS WORK
+msgid "Send message"
+msgstr "メッセージを送信"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 1702
+#: NEEDS WORK
+msgid "Retry"
+msgstr "再試行"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 1707
+#: NEEDS WORK
+msgid "Retry the last request"
+msgstr "最後のリクエストを再試行"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 1753
+#: NEEDS WORK
+msgid "Customize Quick Prompts"
+msgstr "クイックプロンプトをカスタマイズ"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 1812
+#: NEEDS WORK
+msgid "Emoji icon (optional)"
+msgstr "絵文字アイコン（オプション）"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 1817
+#: NEEDS WORK
+msgid "Enter prompt text..."
+msgstr "プロンプトテキストを入力してください..."
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 1827
+#: NEEDS WORK
+msgid "Remove this prompt"
+msgstr "このプロンプトを削除"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 1858
+#: NEEDS WORK
+msgid "Add Prompt"
+msgstr "プロンプトを追加"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 1870
+#: NEEDS WORK
+msgid "Use Defaults"
+msgstr "デフォルトを使用"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 1874
+#: NEEDS WORK
+msgid "Clear custom prompts and use random defaults"
+msgstr "カスタムプロンプトをクリアし、ランダムなデフォルトを使用する"
+# 
+# File: src/ashyterm/ui/widgets/conversation_history.py, line: 46
+#: NEEDS WORK
+msgid "Just now"
+msgstr "たった今"
+# 
+# File: src/ashyterm/ui/widgets/conversation_history.py, line: 47
+#: NEEDS WORK
+#, python-brace-format
+msgid "{} min"
+msgstr "{} 分"
+# 
+# File: src/ashyterm/ui/widgets/conversation_history.py, line: 48
+#: NEEDS WORK
+#, python-brace-format
+msgid "{} hr"
+msgstr "{} 時間"
+# 
+# File: src/ashyterm/ui/widgets/conversation_history.py, line: 50
+# File: src/ashyterm/ui/widgets/conversation_history.py, line: 77
+#: NEEDS WORK
+msgid "Yesterday"
+msgstr "昨日"
+# 
+# File: src/ashyterm/ui/widgets/conversation_history.py, line: 52
+#: NEEDS WORK
+#, python-brace-format
+msgid "{} days"
+msgstr "{} 日"
+# 
+# File: src/ashyterm/ui/widgets/conversation_history.py, line: 62
+# File: src/ashyterm/ui/widgets/conversation_history.py, line: 83
+# File: src/ashyterm/ui/widgets/conversation_history.py, line: 85
+#: NEEDS WORK
+msgid "Older"
+msgstr "古い"
+# 
+# File: src/ashyterm/ui/widgets/conversation_history.py, line: 75
+#: NEEDS WORK
+msgid "Today"
+msgstr "今日"
+# 
+# File: src/ashyterm/ui/widgets/conversation_history.py, line: 79
+#: NEEDS WORK
+msgid "Last 7 Days"
+msgstr "過去7日間"
+# 
+# File: src/ashyterm/ui/widgets/conversation_history.py, line: 81
+#: NEEDS WORK
+msgid "This Month"
+msgstr "今月"
+# 
+# File: src/ashyterm/ui/widgets/conversation_history.py, line: 129
+#: NEEDS WORK
+msgid "Conversation History"
+msgstr "会話履歴"
+# 
+# File: usr/share/ashyterm/ui/ssh_dialogs.py, line: 83
+# File: usr/share/ashyterm/ui/ssh_dialogs.py, line: 239
+#: NEEDS WORK
+msgid "Close"
+msgstr "閉じる"
+# 
+# File: src/ashyterm/ui/widgets/conversation_history.py, line: 142
+#: NEEDS WORK
+msgid "Delete All Conversations"
+msgstr "すべての会話を削除"
+# 
+# File: src/ashyterm/ui/widgets/conversation_history.py, line: 149
+# File: src/ashyterm/ui/widgets/conversation_history.py, line: 277
+#: NEEDS WORK
+msgid "New Conversation"
+msgstr "新しい会話"
+# 
+# File: src/ashyterm/ui/widgets/conversation_history.py, line: 163
+#: NEEDS WORK
+msgid "Search…"
+msgstr "検索…"
+# 
+# File: src/ashyterm/ui/widgets/conversation_history.py, line: 191
+#: NEEDS WORK
+msgid "No Conversations"
+msgstr "会話はありません"
+# 
+# File: src/ashyterm/ui/widgets/conversation_history.py, line: 192
+#: NEEDS WORK
+msgid "Start chatting to create your first conversation"
+msgstr "最初の会話を作成するためにチャットを開始します"
+# 
+# File: src/ashyterm/ui/widgets/conversation_history.py, line: 345
+#: NEEDS WORK
+msgid "Delete Conversation?"
+msgstr "会話を削除しますか？"
+# 
+# File: src/ashyterm/ui/widgets/conversation_history.py, line: 346
+#: NEEDS WORK
+msgid "This conversation will be permanently deleted."
+msgstr "この会話は永久に削除されます。"
+# 
+# File: src/ashyterm/ui/widgets/conversation_history.py, line: 377
+#: NEEDS WORK
+msgid "Delete All Conversations?"
+msgstr "すべての会話を削除しますか？"
+# 
+# File: src/ashyterm/ui/widgets/conversation_history.py, line: 379
+#: NEEDS WORK
+#, python-brace-format
+msgid "This will permanently delete all {} conversations. This action cannot be undone."
+msgstr "この操作はすべての{}会話を永久に削除します。このアクションは元に戻すことができません。"
+# 
+# File: src/ashyterm/ui/widgets/conversation_history.py, line: 382
+#: NEEDS WORK
+msgid "Delete All"
+msgstr "すべて削除"
+# 
 # File: usr/share/ashyterm/ui/sidebar_manager.py, line: 220
 #: NEEDS WORK
 msgid "Show Sessions"
 msgstr "セッションを表示"
 # 
-# File: usr/share/ashyterm/ui/sidebar_manager.py, line: 227
+# File: src/ashyterm/ui/sidebar_manager.py, line: 292
 #: NEEDS WORK
-msgid "Hide Sidebar"
-msgstr "サイドバーを隠す"
+msgid "Hide Sessions Panel"
+msgstr "セッションパネルを非表示にする"
 # 
-# File: usr/share/ashyterm/ui/sidebar_manager.py, line: 227
+# File: src/ashyterm/ui/sidebar_manager.py, line: 292
 #: NEEDS WORK
-msgid "Show Sidebar"
-msgstr "サイドバーを表示"
+msgid "Show Sessions Panel"
+msgstr "セッションパネルを表示"
 # 
 # File: usr/share/ashyterm/ui/menus.py, line: 24
 #: NEEDS WORK
@@ -915,9 +2109,9 @@ msgstr "ターミナルの色を一致させる"
 msgid "New Window"
 msgstr "新しいウィンドウ"
 # 
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
+# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
 # 
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
+# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
 # 
 # File: usr/share/ashyterm/ui/menus.py, line: 157
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1390
@@ -927,7 +2121,15 @@ msgstr "新しいウィンドウ"
 msgid "Preferences"
 msgstr "設定"
 # 
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
+# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
+# 
+# File: src/ashyterm/ui/menus.py, line: 166
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1082
+#: NEEDS WORK
+msgid "Highlight Colors"
+msgstr "ハイライトカラー"
+# 
+# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
 # 
 # File: usr/share/ashyterm/ui/menus.py, line: 211
 # File: usr/share/ashyterm/window.py, line: 909
@@ -941,7 +2143,7 @@ msgstr "キーボードショートカット"
 msgid "About"
 msgstr "情報"
 # 
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
+# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
 # 
 # File: usr/share/ashyterm/ui/menus.py, line: 217
 # File: usr/share/ashyterm/window.py, line: 942
@@ -959,7 +2161,7 @@ msgstr "SFTPで接続"
 msgid "Duplicate"
 msgstr "重複"
 # 
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
+# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
 # 
 # File: usr/share/ashyterm/ui/menus.py, line: 25
 # File: usr/share/ashyterm/ui/menus.py, line: 61
@@ -978,7 +2180,7 @@ msgstr "フォルダーに移動..."
 msgid "Add Session Here"
 msgstr "セッションをここに追加"
 # 
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
+# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
 # 
 # File: usr/share/ashyterm/ui/menus.py, line: 69
 # File: usr/share/ashyterm/ui/menus.py, line: 118
@@ -1003,7 +2205,7 @@ msgstr "リンクを開く"
 msgid "Copy Link"
 msgstr "リンクをコピー"
 # 
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
+# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
 # 
 # File: usr/share/ashyterm/ui/menus.py, line: 30
 # File: usr/share/ashyterm/ui/menus.py, line: 66
@@ -1014,7 +2216,7 @@ msgstr "リンクをコピー"
 msgid "Copy"
 msgstr "コピー"
 # 
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
+# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
 # 
 # File: usr/share/ashyterm/ui/menus.py, line: 119
 # File: usr/share/ashyterm/ui/menus.py, line: 155
@@ -1031,7 +2233,12 @@ msgstr "すべて選択"
 msgid "Clear Session"
 msgstr "セッションをクリア"
 # 
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
+# File: src/ashyterm/ui/menus.py, line: 312
+#: NEEDS WORK
+msgid "Ask AI"
+msgstr "AIに尋ねる"
+# 
+# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
 # 
 # File: usr/share/ashyterm/ui/menus.py, line: 276
 # File: usr/share/ashyterm/filemanager/menus.py, line: 276
@@ -1039,7 +2246,7 @@ msgstr "セッションをクリア"
 msgid "Split Left/Right"
 msgstr "左右分割"
 # 
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
+# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
 # 
 # File: usr/share/ashyterm/ui/menus.py, line: 279
 # File: usr/share/ashyterm/filemanager/menus.py, line: 279
@@ -1056,6 +2263,22 @@ msgstr "ターミナルセッションがクリアされました。"
 #: NEEDS WORK
 msgid "No active terminal to clear."
 msgstr "クリアするアクティブなターミナルはありません。"
+# 
+# File: src/ashyterm/ui/actions.py, line: 233
+#: NEEDS WORK
+#, python-brace-format
+msgid ""
+"Explain this code or command:\n"
+"\n"
+"```\n"
+"{text}\n"
+"```"
+msgstr ""
+"このコードまたはコマンドを説明します：\n"
+"\n"
+"```\n"
+"{text}\n"
+"```"
 # 
 # File: usr/share/ashyterm/ui/actions.py, line: 168
 #: NEEDS WORK
@@ -1079,7 +2302,7 @@ msgstr "新しいフォルダー"
 msgid "Session"
 msgstr "セッション"
 # 
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
+# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 351
 # File: usr/share/ashyterm/window.py, line: 944
@@ -1157,16 +2380,1153 @@ msgstr "SSH接続に失敗しました"
 msgid "Could not connect to session '{session_name}'."
 msgstr "セッション '{session_name}' に接続できませんでした。"
 # 
-# File: usr/share/ashyterm/ui/ssh_dialogs.py, line: 83
-# File: usr/share/ashyterm/ui/ssh_dialogs.py, line: 239
+# File: src/ashyterm/ui/dialogs/ai_config_dialog.py, line: 43
 #: NEEDS WORK
-msgid "Close"
-msgstr "閉じる"
+msgid "Configure AI Assistant"
+msgstr "AIアシスタントを設定する"
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 327
+#: NEEDS WORK
+msgid "Enable AI Assistant"
+msgstr "AIアシスタントを有効にする"
+# 
+# File: src/ashyterm/ui/dialogs/ai_config_dialog.py, line: 184
+#: NEEDS WORK
+msgid "Show the AI Assistant button in the header bar."
+msgstr "ヘッダーバーにAIアシスタントボタンを表示します。"
+# 
+# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 339
+# File: usr/share/ashyterm/window.py, line: 546
+#: NEEDS WORK
+msgid "Provider"
+msgstr "プロバイダー"
+# 
+# File: src/ashyterm/ui/dialogs/ai_config_dialog.py, line: 73
+#: NEEDS WORK
+msgid "Choose between cloud providers or local models."
+msgstr "クラウドプロバイダーまたはローカルモデルのいずれかを選択してください。"
+# 
+# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
+# 
+# File: src/ashyterm/ui/dialogs/ai_config_dialog.py, line: 87
+# File: src/ashyterm/window.py, line: 812
+#: NEEDS WORK
+msgid "Base URL"
+msgstr "ベースURL"
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 374
+#: NEEDS WORK
+msgid "API Key"
+msgstr "APIキー"
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 361
+#: NEEDS WORK
+msgid "Model Identifier"
+msgstr "モデル識別子"
+# 
+# File: src/ashyterm/ui/dialogs/ai_config_dialog.py, line: 134
+#: NEEDS WORK
+msgid "Browse Available Models"
+msgstr "利用可能なモデルを参照してください"
+# 
+# File: src/ashyterm/ui/dialogs/ai_config_dialog.py, line: 135
+#: NEEDS WORK
+msgid "Search and select from available OpenRouter models."
+msgstr "利用可能なOpenRouterモデルから検索して選択します。"
+# 
+# File: src/ashyterm/ui/dialogs/ai_config_dialog.py, line: 137
+#: NEEDS WORK
+msgid "Browse Models"
+msgstr "モデルを参照"
+# 
+# File: src/ashyterm/ui/dialogs/ai_config_dialog.py, line: 151
+#: NEEDS WORK
+msgid "OpenRouter Settings"
+msgstr "オープンルーター設定"
+# 
+# File: src/ashyterm/ui/dialogs/ai_config_dialog.py, line: 152
+#: NEEDS WORK
+msgid "Additional settings for OpenRouter API rankings."
+msgstr "OpenRouter APIランキングの追加設定。"
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 391
+#: NEEDS WORK
+msgid "Site URL (optional)"
+msgstr "サイトのURL（オプション）"
+# 
+# File: src/ashyterm/ui/dialogs/ai_config_dialog.py, line: 168
+#: NEEDS WORK
+msgid "Site Name (optional)"
+msgstr "サイト名（オプション）"
+# 
+# File: src/ashyterm/ui/dialogs/ai_config_dialog.py, line: 236
+#: NEEDS WORK
+msgid "Groq API Key"
+msgstr "Groq APIキー"
+# 
+# File: src/ashyterm/ui/dialogs/ai_config_dialog.py, line: 239
+#: NEEDS WORK
+msgid "Google AI Studio API Key"
+msgstr "Google AI Studio APIキー"
+# 
+# File: src/ashyterm/ui/dialogs/ai_config_dialog.py, line: 242
+#: NEEDS WORK
+msgid "OpenRouter API Key"
+msgstr "OpenRouter APIキー"
+# 
+# File: src/ashyterm/ui/dialogs/ai_config_dialog.py, line: 244
+#: NEEDS WORK
+msgid "Model Name"
+msgstr "モデル名"
+# 
+# File: src/ashyterm/ui/dialogs/ai_config_dialog.py, line: 245
+#: NEEDS WORK
+msgid "API Key (if required)"
+msgstr "APIキー（必要な場合）"
+# 
+# File: src/ashyterm/ui/dialogs/ai_config_dialog.py, line: 304
+#: NEEDS WORK
+msgid "Please enter an API key first."
+msgstr "最初にAPIキーを入力してください。"
+# 
+# File: src/ashyterm/ui/dialogs/ai_config_dialog.py, line: 300
+#: NEEDS WORK
+msgid "Select OpenRouter Model"
+msgstr "オープンルーターモデルを選択"
+# 
+# File: src/ashyterm/ui/dialogs/ai_config_dialog.py, line: 344
+#: NEEDS WORK
+msgid "Search models by name or ID..."
+msgstr "名前またはIDでモデルを検索..."
+# 
+# File: src/ashyterm/ui/dialogs/ai_config_dialog.py, line: 358
+#: NEEDS WORK
+msgid "Loading models..."
+msgstr "モデルを読み込んでいます..."
+# 
+# File: src/ashyterm/ui/dialogs/ai_config_dialog.py, line: 457
+#: NEEDS WORK
+#, python-brace-format
+msgid "Failed to load models: {error}"
+msgstr "モデルの読み込みに失敗しました: {error}"
+# 
+# File: src/ashyterm/ui/dialogs/ai_config_dialog.py, line: 489
+#: NEEDS WORK
+#, python-brace-format
+msgid "{count} models available"
+msgstr "{count} モデルが利用可能"
+# 
+# File: src/ashyterm/ui/dialogs/ai_config_dialog.py, line: 492
+#: NEEDS WORK
+#, python-brace-format
+msgid "Showing {shown} of {total} models"
+msgstr "{total}モデル中{shown}を表示中"
+# 
+# File: src/ashyterm/ui/dialogs/ai_config_dialog.py, line: 503
+#: NEEDS WORK
+msgid "Showing first 100 results. Refine your search to see more."
+msgstr "最初の100件の結果を表示しています。さらに表示するには検索を絞り込んでください。"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 32
+#: NEEDS WORK
+msgid "Black"
+msgstr "黒"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 33
+#: NEEDS WORK
+msgid "Red"
+msgstr "赤"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 34
+#: NEEDS WORK
+msgid "Green"
+msgstr "緑"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 35
+#: NEEDS WORK
+msgid "Yellow"
+msgstr "黄色"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 36
+#: NEEDS WORK
+msgid "Blue"
+msgstr "青"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 37
+#: NEEDS WORK
+msgid "Magenta"
+msgstr "マゼンタ"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 38
+#: NEEDS WORK
+msgid "Cyan"
+msgstr "シアン"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 39
+#: NEEDS WORK
+msgid "White"
+msgstr "ホワイト"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 41
+#: NEEDS WORK
+msgid "Bright Black"
+msgstr "明るい黒"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 42
+#: NEEDS WORK
+msgid "Bright Red"
+msgstr "明るい赤"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 43
+#: NEEDS WORK
+msgid "Bright Green"
+msgstr "明るい緑"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 44
+#: NEEDS WORK
+msgid "Bright Yellow"
+msgstr "明るい黄色"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 45
+#: NEEDS WORK
+msgid "Bright Blue"
+msgstr "明るい青"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 46
+#: NEEDS WORK
+msgid "Bright Magenta"
+msgstr "明るいマゼンタ"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 47
+#: NEEDS WORK
+msgid "Bright Cyan"
+msgstr "明るいシアン"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 48
+#: NEEDS WORK
+msgid "Bright White"
+msgstr "明るい白"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 58
+#: NEEDS WORK
+msgid "Bold"
+msgstr "太字"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 59
+#: NEEDS WORK
+msgid "Italic"
+msgstr "イタリック"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1141
+#: NEEDS WORK
+msgid "Underline"
+msgstr "下線"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 61
+#: NEEDS WORK
+msgid "Strikethrough"
+msgstr "打ち消し線"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 62
+#: NEEDS WORK
+msgid "Dim/Faint"
+msgstr "薄暗い/かすか"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 63
+#: NEEDS WORK
+msgid "Blink"
+msgstr "ブリンク"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 68
+#: NEEDS WORK
+msgid "Default"
+msgstr "デフォルト"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 85
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 375
+#: NEEDS WORK
+#, python-brace-format
+msgid "Group {}"
+msgstr "グループ {}"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 174
+#: NEEDS WORK
+msgid "Color:"
+msgstr "色:"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 216
+#: NEEDS WORK
+msgid "Bg:"
+msgstr "Bg:"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 110
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 817
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1303
+#: NEEDS WORK
+msgid "Remove"
+msgstr "削除"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 210
+#: NEEDS WORK
+msgid "New Rule"
+msgstr "新しいルール"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 210
+#: NEEDS WORK
+msgid "Edit Rule"
+msgstr "ルールを編集"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 256
+#: NEEDS WORK
+msgid "Rule Name"
+msgstr "ルール名"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 263
+#: NEEDS WORK
+msgid "Pattern"
+msgstr "パターン"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 525
+#: NEEDS WORK
+msgid "Python regex syntax. Capture groups () can have individual colors."
+msgstr "Pythonの正規表現構文。キャプチャグループ（）は個別の色を持つことができます。"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 268
+#: NEEDS WORK
+msgid "Regex Pattern"
+msgstr "正規表現パターン"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 276
+#: NEEDS WORK
+msgid "Regex reference"
+msgstr "正規表現リファレンス"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 554
+#: NEEDS WORK
+msgid "Colors & Effects"
+msgstr "色と効果"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 555
+#: NEEDS WORK
+msgid "First color applies to entire match if no groups."
+msgstr "最初の色は、グループがない場合、全体の一致に適用されます。"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 298
+#: NEEDS WORK
+msgid "Add Color"
+msgstr "色を追加"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 311
+#: NEEDS WORK
+msgid "Description (optional)"
+msgstr "説明（オプション）"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 403
+#: NEEDS WORK
+#, python-brace-format
+msgid "Pattern has {} capture group(s). Add colors for each group."
+msgstr "パターンには {} キャプチャグループがあります。各グループに色を追加してください。"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 407
+#: NEEDS WORK
+msgid "Pattern has no capture groups. First color applies to entire match."
+msgstr "パターンにはキャプチャグループがありません。最初の色は全体の一致に適用されます。"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 419
+#: NEEDS WORK
+msgid "Rule name is required"
+msgstr "ルール名は必須です"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 425
+#: NEEDS WORK
+msgid "Pattern is required"
+msgstr "パターンは必須です"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 434
+#: NEEDS WORK
+#, python-brace-format
+msgid "Invalid regex: {}"
+msgstr "無効な正規表現: {}"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 439
+#: NEEDS WORK
+msgid "✓ Valid pattern"
+msgstr "✓ 有効なパターン"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 447
+#: NEEDS WORK
+msgid "Regex Reference"
+msgstr "正規表現リファレンス"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 470
+#: NEEDS WORK
+msgid "Basic Patterns"
+msgstr "基本パターン"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 472
+#: NEEDS WORK
+msgid "Any character except newline"
+msgstr "任意の文字（改行を除く）"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 473
+#: NEEDS WORK
+msgid "Any digit [0-9]"
+msgstr "任意の数字 [0-9]"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 474
+#: NEEDS WORK
+msgid "Word character [a-zA-Z0-9_]"
+msgstr "単語文字 [a-zA-Z0-9_]"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 475
+#: NEEDS WORK
+msgid "Whitespace character"
+msgstr "空白文字"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 476
+#: NEEDS WORK
+msgid "Negations of above"
+msgstr "上記の否定"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 477
+#: NEEDS WORK
+msgid "Start of line"
+msgstr "行の開始"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 478
+#: NEEDS WORK
+msgid "End of line"
+msgstr "行の終わり"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 479
+#: NEEDS WORK
+msgid "Word boundary"
+msgstr "単語境界"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 488
+#: NEEDS WORK
+msgid "Quantifiers"
+msgstr "量子化子"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 490
+#: NEEDS WORK
+msgid "0 or more times"
+msgstr ""
+"0回またはそれ以上  \n"
+"0回またはそれ以上"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 491
+#: NEEDS WORK
+msgid "1 or more times"
+msgstr "1回以上"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 492
+#: NEEDS WORK
+msgid "0 or 1 time"
+msgstr "0回または1回"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 493
+#: NEEDS WORK
+msgid "Exactly n times"
+msgstr "ちょうどn回"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 494
+#: NEEDS WORK
+msgid "Between n and m times"
+msgstr "n回からm回まで"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 495
+#: NEEDS WORK
+msgid "Non-greedy versions"
+msgstr "非貪欲バージョン"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 504
+#: NEEDS WORK
+msgid "Groups & Alternatives"
+msgstr "グループと代替案"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 506
+#: NEEDS WORK
+msgid "Capture group (gets a color)"
+msgstr "キャプチャグループ（色を取得）"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 507
+#: NEEDS WORK
+msgid "Non-capturing group"
+msgstr "非捕捉グループ"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 508
+#: NEEDS WORK
+msgid "Alternation (a or b)"
+msgstr "選択肢 (a または b)"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 509
+#: NEEDS WORK
+msgid "Character class (a, b, or c)"
+msgstr "キャラクタークラス（a、b、またはc）"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 510
+#: NEEDS WORK
+msgid "Negated class (not a, b, c)"
+msgstr "否定クラス（a、b、cではない）"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 511
+#: NEEDS WORK
+msgid "Character range"
+msgstr "文字範囲"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 520
+#: NEEDS WORK
+msgid "Examples"
+msgstr "例示"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 522
+#: NEEDS WORK
+msgid "IPv4 address"
+msgstr "IPv4アドレス"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 523
+#: NEEDS WORK
+msgid "Match error keywords"
+msgstr "一致しないエラーキーワード"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 524
+#: NEEDS WORK
+msgid "Key=value pairs (2 groups)"
+msgstr "キー=値ペア（2グループ）"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 525
+#: NEEDS WORK
+msgid "Comment lines"
+msgstr "コメント行"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 862
+#: NEEDS WORK
+#, python-brace-format
+msgid "Command: {}"
+msgstr "コマンド: {}"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 938
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1790
+#: NEEDS WORK
+msgid "Enable Command Rules"
+msgstr "コマンドルールを有効にする"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 635
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1459
+#: NEEDS WORK
+msgid "Include Global Rules"
+msgstr "グローバルルールを含める"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 643
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1467
+#: NEEDS WORK
+msgid "Reset to System Default"
+msgstr "システムデフォルトにリセット"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 657
+#: NEEDS WORK
+msgid "Triggers"
+msgstr "トリガー"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 664
+#: NEEDS WORK
+msgid "➕ Add Trigger"
+msgstr "➕ トリガーを追加"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 682
+#: NEEDS WORK
+msgid "Highlight Rules"
+msgstr "ハイライトルール"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 689
+#: NEEDS WORK
+msgid "➕ Add New Rule"
+msgstr "➕ 新しいルールを追加"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 753
+#: NEEDS WORK
+msgid "Edit trigger"
+msgstr "トリガーを編集"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 761
+#: NEEDS WORK
+msgid "Remove trigger"
+msgstr "トリガーを削除"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 767
+#: NEEDS WORK
+msgid "Cannot remove the last trigger"
+msgstr "最後のトリガーを削除できません"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 813
+#: NEEDS WORK
+msgid "Remove Trigger?"
+msgstr "トリガーを削除しますか？"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 814
+#: NEEDS WORK
+#, python-brace-format
+msgid "Remove \"{}\" from the triggers list?"
+msgstr "トリガーリストから \"{}\" を削除しますか？"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 872
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1824
+#: NEEDS WORK
+msgid "Move up"
+msgstr "上に移動"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 881
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1833
+#: NEEDS WORK
+msgid "Move down"
+msgstr "下に移動"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 901
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2156
+#: NEEDS WORK
+msgid "Edit rule"
+msgstr "ルールを編集"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 909
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2164
+#: NEEDS WORK
+msgid "Delete rule"
+msgstr "ルールを削除"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 957
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1987
+#: NEEDS WORK
+msgid "Reset to System Default?"
+msgstr "システムデフォルトにリセットしますか？"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 958
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1988
+#: NEEDS WORK
+#, python-brace-format
+msgid "This will remove your customizations for \"{}\" and revert to system rules."
+msgstr "これは「{}」のカスタマイズを削除し、システムルールに戻します。"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1831
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1843
+#: NEEDS WORK
+msgid "Reset"
+msgstr "リセット"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1041
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2069
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2249
+#: NEEDS WORK
+msgid "Delete Rule?"
+msgstr "ルールを削除しますか？"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1042
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2070
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2250
+#: NEEDS WORK
+#, python-brace-format
+msgid "Are you sure you want to delete \"{}\"?"
+msgstr "\"{}\"を削除してもよろしいですか？"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1106
+#: NEEDS WORK
+msgid "Global Rules"
+msgstr "グローバルルール"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1475
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1776
+#: NEEDS WORK
+msgid "Command Rules"
+msgstr "コマンドルール"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1490
+#: NEEDS WORK
+msgid ""
+"Colorizes terminal output patterns like errors, warnings, and IPs. Many rules can slow down large "
+"outputs."
+msgstr "ターミナル出力のパターンを色付けします（エラー、警告、IPなど）。多くのルールは大きな出力を遅くする可能性があります。"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1151
+#: NEEDS WORK
+msgid "Activation"
+msgstr "アクティベーション"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1160
+#: NEEDS WORK
+msgid "Local Terminals"
+msgstr "ローカルターミナル"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1169
+#: NEEDS WORK
+msgid "SSH Sessions"
+msgstr "SSHセッション"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1179
+#: NEEDS WORK
+msgid "Ignored Commands"
+msgstr "無視されたコマンド"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1200
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1335
+#: NEEDS WORK
+msgid "Restore Defaults"
+msgstr "デフォルトに戻す"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1214
+#: NEEDS WORK
+msgid "➕ Add Ignored Command"
+msgstr "➕ 無視されたコマンドを追加"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1253
+#: NEEDS WORK
+#, python-brace-format
+msgid "{count} command(s) • Click to expand/collapse"
+msgstr "{count} コマンド • クリックして展開/折りたたむ"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1265
+#: NEEDS WORK
+msgid "Remove from ignored list"
+msgstr "無視リストから削除"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1293
+#: NEEDS WORK
+#, python-brace-format
+msgid "Command added: {}"
+msgstr "コマンドが追加されました: {}"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1299
+#: NEEDS WORK
+msgid "Remove Ignored Command?"
+msgstr "無視されたコマンドを削除しますか？"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1300
+#: NEEDS WORK
+#, python-brace-format
+msgid "Remove \"{}\" from the ignored commands list? Highlighting will be applied to this command's output."
+msgstr "\"{}\"を無視されたコマンドのリストから削除しますか？このコマンドの出力にハイライトが適用されます。"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1325
+#: NEEDS WORK
+#, python-brace-format
+msgid "Command removed: {}"
+msgstr "コマンドが削除されました: {}"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1331
+#: NEEDS WORK
+msgid "Restore Default Ignored Commands?"
+msgstr "デフォルトの無視されたコマンドを復元しますか？"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1332
+#: NEEDS WORK
+msgid ""
+"This will replace your current ignored commands list with the system defaults. Custom additions "
+"will be lost."
+msgstr "これにより、現在の無視されたコマンドリストがシステムのデフォルトに置き換えられます。カスタム追加は失われます。"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1356
+#: NEEDS WORK
+msgid "Restored default ignored commands"
+msgstr "デフォルトの無視されたコマンドが復元されました"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1698
+#: NEEDS WORK
+msgid "Per-Command Highlighting"
+msgstr "コマンドごとのハイライト"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1704
+#: NEEDS WORK
+msgid "Enable Command Detection"
+msgstr "コマンド検出を有効にする"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1713
+#: NEEDS WORK
+msgid "Commands"
+msgstr "コマンド"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1719
+#: NEEDS WORK
+msgid "➕ Add Command"
+msgstr "➕ コマンドを追加"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1406
+#: NEEDS WORK
+msgid "Bulk Actions"
+msgstr "一括操作"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1410
+#: NEEDS WORK
+msgid "Enable All"
+msgstr "すべて有効化"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1416
+#: NEEDS WORK
+msgid "Disable All"
+msgstr "すべて無効化"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1753
+#: NEEDS WORK
+msgid "Reset All Commands"
+msgstr "すべてのコマンドをリセット"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1766
+#: NEEDS WORK
+msgid "Available Commands"
+msgstr "利用可能なコマンド"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1438
+#: NEEDS WORK
+msgid "Rules specific to the selected command. Order matters!"
+msgstr "選択したコマンドに特有のルール。順序が重要です！"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1783
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2081
+#: NEEDS WORK
+msgid "No command selected"
+msgstr "コマンドが選択されていません"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1784
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2083
+#: NEEDS WORK
+msgid "Select a command from the list above"
+msgstr "上のリストからコマンドを選択してください"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 628
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1452
+#: NEEDS WORK
+msgid "Apply rules when this command is detected"
+msgstr "このコマンドが検出されたときにルールを適用する"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1799
+#: NEEDS WORK
+msgid "Also apply global rules alongside command-specific rules"
+msgstr "コマンド固有のルールと一緒にグローバルルールも適用します"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 644
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1468
+#: NEEDS WORK
+msgid "Remove user customization and revert to system rules"
+msgstr "ユーザーのカスタマイズを削除し、システムのルールに戻す"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1482
+#: NEEDS WORK
+msgid "Rules (in execution order)"
+msgstr "実行順序のルール"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1483
+#: NEEDS WORK
+msgid "Use arrows to reorder rules. Rules are matched from top to bottom."
+msgstr "矢印を使ってルールの順序を変更します。ルールは上から下にマッチします。"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1828
+#: NEEDS WORK
+msgid "➕ Add Rule to This Command"
+msgstr "➕ このコマンドにルールを追加"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1490
+#: NEEDS WORK
+msgid "Create a new highlighting pattern for the selected command"
+msgstr "選択したコマンドの新しいハイライトパターンを作成する"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1505
+#: NEEDS WORK
+msgid "Global Highlight Rules"
+msgstr "グローバルハイライトルール"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1517
+#: NEEDS WORK
+msgid "➕ Add New Global Rule"
+msgstr "➕ 新しいグローバルルールを追加"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1863
+#: NEEDS WORK
+msgid "Reset Global Rules"
+msgstr "グローバルルールをリセット"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1900
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2006
+#: NEEDS WORK
+#, python-brace-format
+msgid "{total} command(s), {enabled} enabled"
+msgstr "{total} コマンド、{enabled} 有効"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1590
+#: NEEDS WORK
+#, python-brace-format
+msgid "{count} rules"
+msgstr "{count} ルール"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1935
+#: NEEDS WORK
+msgid "Edit command rules"
+msgstr "コマンドルールの編集"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1944
+#: NEEDS WORK
+msgid "Delete command"
+msgstr "削除コマンド"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1972
+#: NEEDS WORK
+msgid "Delete Command?"
+msgstr "削除コマンドですか？"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1641
+#: NEEDS WORK
+#, python-brace-format
+msgid "Are you sure you want to delete \"{}\"? This will remove all custom rules for this command."
+msgstr "\"{}\"を削除してもよろしいですか？これにより、このコマンドのすべてのカスタムルールが削除されます。"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1991
+#: NEEDS WORK
+#, python-brace-format
+msgid "Command deleted: {}"
+msgstr "コマンドが削除されました: {}"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2086
+#: NEEDS WORK
+msgid "Select a command to view its rules"
+msgstr "コマンドを選択して、そのルールを表示します"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2099
+#: NEEDS WORK
+msgid "Command not found"
+msgstr "コマンドが見つかりません"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1767
+#: NEEDS WORK
+#, python-brace-format
+msgid "Triggers: {triggers}"
+msgstr "トリガー: {triggers}"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1770
+#: NEEDS WORK
+msgid "Enabled"
+msgstr "有効"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1770
+#: NEEDS WORK
+msgid "Disabled"
+msgstr "無効"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1773
+#: NEEDS WORK
+#, python-brace-format
+msgid "{count} rule(s) • {status} • Use arrows to reorder"
+msgstr "{count} ルール • {status} • 矢印を使って並べ替え"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1852
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2149
+#: NEEDS WORK
+#, python-brace-format
+msgid "{} colors"
+msgstr "{} 色"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1863
+#: NEEDS WORK
+msgid "Actions"
+msgstr "アクション"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2275
+#: NEEDS WORK
+#, python-brace-format
+msgid "{total} command(s), {enabled} enabled. Click to toggle, select to edit."
+msgstr "{total} コマンド、{enabled} 有効。クリックして切り替え、選択して編集。"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2317
+#: NEEDS WORK
+#, python-brace-format
+msgid "Command created: {}"
+msgstr "コマンドが作成されました: {}"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2348
+#: NEEDS WORK
+#, python-brace-format
+msgid "Command reset: {}"
+msgstr "コマンドリセット: {}"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2008
+#: NEEDS WORK
+msgid "No user customization to reset"
+msgstr "リセットするユーザーのカスタマイズはありません"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2029
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2222
+#: NEEDS WORK
+#, python-brace-format
+msgid "Rule added: {}"
+msgstr "ルールが追加されました: {}"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2055
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2239
+#: NEEDS WORK
+#, python-brace-format
+msgid "Rule updated: {}"
+msgstr "ルールが更新されました: {}"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2095
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2273
+#: NEEDS WORK
+#, python-brace-format
+msgid "Rule deleted: {}"
+msgstr "ルールが削除されました: {}"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2462
+#: NEEDS WORK
+msgid "Restart Required"
+msgstr "再起動が必要です"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2463
+#: NEEDS WORK
+msgid "Restart the program for the colors to be applied to the terminal."
+msgstr "プログラムを再起動して、色をターミナルに適用します。"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2645
+#: NEEDS WORK
+msgid "Reset Global Rules?"
+msgstr "グローバルルールをリセットしますか？"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2647
+#: NEEDS WORK
+msgid "This will restore global rules to system defaults. Context customizations will be preserved."
+msgstr "これにより、グローバルルールがシステムのデフォルトに復元されます。コンテキストのカスタマイズは保持されます。"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2667
+#: NEEDS WORK
+msgid "Global rules reset to defaults"
+msgstr "グローバルルールがデフォルトにリセットされました"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2673
+#: NEEDS WORK
+msgid "Reset All Commands?"
+msgstr "すべてのコマンドをリセットしますか？"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2675
+#: NEEDS WORK
+msgid "This will restore all commands to system defaults. Global rules will be preserved."
+msgstr "これにより、すべてのコマンドがシステムのデフォルトに復元されます。グローバルルールは保持されます。"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2695
+#: NEEDS WORK
+msgid "All commands reset to defaults"
+msgstr "すべてのコマンドがデフォルトにリセットされました"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2721
+#: NEEDS WORK
+msgid "New Command"
+msgstr "新しいコマンド"
+# 
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1743
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1760
+#: NEEDS WORK
+msgid "Create"
+msgstr "作成"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2365
+#: NEEDS WORK
+msgid "Enter the command name (e.g., ping, docker, git)"
+msgstr "コマンド名を入力してください（例：ping、docker、git）"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2367
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2589
+#: NEEDS WORK
+msgid "Command Name"
+msgstr "コマンド名"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2383
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2498
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2605
+#: NEEDS WORK
+msgid "Enter a command name"
+msgstr "コマンド名を入力してください"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2787
+#: NEEDS WORK
+msgid "Command already exists"
+msgstr "コマンドはすでに存在します"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2397
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2621
+#: NEEDS WORK
+msgid "Use only letters, numbers, - and _"
+msgstr "文字、数字、- および _ のみを使用してください"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2402
+#: NEEDS WORK
+msgid "✓ Valid name"
+msgstr "✓ 有効な名前"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2441
+#: NEEDS WORK
+msgid "Edit Trigger"
+msgstr "トリガーを編集"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2441
+#: NEEDS WORK
+msgid "Add Trigger"
+msgstr "トリガーを追加"
+# 
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 369
+#: NEEDS WORK
+msgid "Add"
+msgstr "追加"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2879
+#: NEEDS WORK
+#, python-brace-format
+msgid "Enter a command name that should activate the '{}' command rules."
+msgstr "'{}' コマンドルールを有効にするコマンド名を入力してください。"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2483
+#: NEEDS WORK
+msgid "Trigger Command"
+msgstr "トリガーコマンド"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2506
+#: NEEDS WORK
+msgid "Trigger already exists"
+msgstr "トリガーはすでに存在します"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2511
+#: NEEDS WORK
+msgid "✓ Valid trigger"
+msgstr "✓ 有効なトリガー"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2546
+#: NEEDS WORK
+msgid "Add Ignored Command"
+msgstr "無視されたコマンドを追加"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2587
+#: NEEDS WORK
+msgid "Commands with native coloring (grep, ls, git, etc.) should be added here."
+msgstr "ネイティブカラーリングを持つコマンド（grep、ls、gitなど）はここに追加する必要があります。"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2614
+#: NEEDS WORK
+msgid "Command already in list"
+msgstr "リストにコマンドが既に存在します"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2626
+#: NEEDS WORK
+msgid "✓ Valid command name"
+msgstr "✓ 有効なコマンド名"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 223
 #: NEEDS WORK
 msgid "Edit Session"
 msgstr "セッションを編集"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 581
+#: NEEDS WORK
+msgid "Test Connection"
+msgstr "接続テスト"
+# 
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 100
+#: NEEDS WORK
+msgid "Test SSH connection"
+msgstr "SSH接続をテスト"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 313
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1128
@@ -1180,30 +3540,33 @@ msgstr "UIエラー"
 msgid "Failed to initialize dialog interface"
 msgstr "ダイアログインターフェースの初期化に失敗しました"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 319
-#: NEEDS WORK
-msgid "Session Information"
-msgstr "セッション情報"
-# 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 323
 #: NEEDS WORK
 msgid "Session Name"
 msgstr "セッション名"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 324
+# File: usr/share/ashyterm/ui/dialogs.py, line: 402
 #: NEEDS WORK
-msgid "A descriptive name for this session"
-msgstr "このセッションの説明的な名前"
+msgid "Session Type"
+msgstr "セッションタイプ"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 329
+# File: usr/share/ashyterm/ui/dialogs.py, line: 403
 #: NEEDS WORK
-msgid "Enter session name..."
-msgstr "セッション名を入力してください..."
+msgid "Choose between local terminal or SSH connection"
+msgstr "ローカルターミナルまたはSSH接続のいずれかを選択してください"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1421
+# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 406
+# File: usr/share/ashyterm/sessions/models.py, line: 511
 #: NEEDS WORK
-msgid "Appearance"
-msgstr "外観"
+msgid "Local Terminal"
+msgstr "ローカルターミナル"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 406
+#: NEEDS WORK
+msgid "SSH Connection"
+msgstr "SSH接続"
 # 
 # File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 115
 #: NEEDS WORK
@@ -1225,9 +3588,14 @@ msgstr "クリアカラー"
 msgid "Organization"
 msgstr "組織"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 352
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 196
 #: NEEDS WORK
-msgid "Choose a folder to organize this session"
+msgid "Choose where to store this session"
+msgstr "このセッションを保存する場所を選択してください"
+# 
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 201
+#: NEEDS WORK
+msgid "Select a folder to organize this session"
 msgstr "このセッションを整理するフォルダーを選択してください"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 357
@@ -1238,43 +3606,47 @@ msgstr "このセッションを整理するフォルダーを選択してくだ
 msgid "Root"
 msgstr "ルート"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 398
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 237
 #: NEEDS WORK
-msgid "Connection Type"
-msgstr "接続タイプ"
+msgid "Local Terminal Options"
+msgstr "ローカルターミナルオプション"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 402
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 242
 #: NEEDS WORK
-msgid "Session Type"
-msgstr "セッションタイプ"
+msgid "Working Directory"
+msgstr "作業ディレクトリ"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 403
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 243
 #: NEEDS WORK
-msgid "Choose between local terminal or SSH connection"
-msgstr "ローカルターミナルまたはSSH接続のいずれかを選択してください"
+msgid "Start the terminal in this folder"
+msgstr "このフォルダーでターミナルを起動"
 # 
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 406
-# File: usr/share/ashyterm/sessions/models.py, line: 511
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 252
 #: NEEDS WORK
-msgid "Local Terminal"
-msgstr "ローカルターミナル"
+msgid "Default (Home directory)"
+msgstr "デフォルト（ホームディレクトリ）"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 406
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 262
 #: NEEDS WORK
-msgid "SSH Connection"
-msgstr "SSH接続"
+msgid "Browse for folder"
+msgstr "フォルダーを参照"
+# 
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 285
+#: NEEDS WORK
+msgid "Startup Commands"
+msgstr "スタートアップコマンド"
+# 
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 293
+#: NEEDS WORK
+msgid ""
+"Commands executed when the terminal starts (one per line). You can write multiple commands like a "
+"small script."
+msgstr "ターミナルが起動するときに実行されるコマンド（1行ごと）。小さなスクリプトのように複数のコマンドを書くことができます。"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 423
 #: NEEDS WORK
 msgid "SSH Configuration"
 msgstr "SSH構成"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 424
-#: NEEDS WORK
-msgid "Configure connection details for SSH sessions"
-msgstr "SSHセッションの接続詳細を構成する"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 429
 # File: usr/share/ashyterm/ui/dialogs.py, line: 894
@@ -1282,29 +3654,9 @@ msgstr "SSHセッションの接続詳細を構成する"
 msgid "Host"
 msgstr "ホスト"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 430
-#: NEEDS WORK
-msgid "Hostname or IP address of the remote server"
-msgstr "リモートサーバーのホスト名またはIPアドレス"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 435
-#: NEEDS WORK
-msgid "example.com or 192.168.1.100"
-msgstr "example.com または 192.168.1.100"
-# 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 446
 #: NEEDS WORK
 msgid "Username"
-msgstr "ユーザー名"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 447
-#: NEEDS WORK
-msgid "Username for SSH authentication (optional)"
-msgstr "SSH認証用のユーザー名（オプション）"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 452
-#: NEEDS WORK
-msgid "username"
 msgstr "ユーザー名"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 464
@@ -1312,20 +3664,15 @@ msgstr "ユーザー名"
 msgid "Port"
 msgstr "ポート"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 465
-#: NEEDS WORK
-msgid "SSH port number (default: 22)"
-msgstr "SSHポート番号（デフォルト：22）"
-# 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 463
 #: NEEDS WORK
 msgid "Authentication"
 msgstr "認証"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 464
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 369
 #: NEEDS WORK
-msgid "Choose authentication method"
-msgstr "認証方法を選択してください"
+msgid "Choose how to authenticate with the server"
+msgstr "サーバーへの認証方法を選択してください"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 467
 #: NEEDS WORK
@@ -1343,85 +3690,95 @@ msgstr "パスワード"
 msgid "SSH Key Path"
 msgstr "SSHキーのパス"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 495
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 384
 #: NEEDS WORK
-msgid "Path to private SSH key file"
-msgstr "プライベートSSHキーファイルへのパス"
+msgid "Path to your private key file"
+msgstr "プライベートキー ファイルへのパス"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 510
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 401
 #: NEEDS WORK
-msgid "Browse..."
-msgstr "ブラウズ..."
+msgid "Browse for SSH key file"
+msgstr "SSHキーファイルを参照してください"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 534
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 434
 #: NEEDS WORK
-msgid "Password for SSH authentication"
-msgstr "SSH認証用パスワード"
+msgid "Password Storage"
+msgstr "パスワードストレージ"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 342
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 436
 #: NEEDS WORK
-msgid "Password for SSH authentication (stored in system keyring)"
-msgstr "SSH認証用のパスワード（システムキーチェーンに保存）"
+msgid "System keyring not available - password will be stored in plain text"
+msgstr "システムキーチェーンが利用できません - パスワードはプレーンテキストで保存されます"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 346
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 453
 #: NEEDS WORK
-msgid "Password for SSH authentication (keyring not available)"
-msgstr "SSH認証用のパスワード（キーチェーンは利用できません）"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 553
-#: NEEDS WORK
-msgid "Enter password..."
-msgstr "パスワードを入力してください..."
+msgid "SSH Options"
+msgstr "SSHオプション"
 # 
 # File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 309
 #: NEEDS WORK
 msgid "Run Command After Login"
 msgstr "ログイン後にコマンドを実行"
 # 
-# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 311
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 459
 #: NEEDS WORK
-msgid "Execute a custom command automatically after the SSH session connects"
-msgstr "SSHセッションが接続された後にカスタムコマンドを自動的に実行する"
+msgid "Execute a command automatically after SSH connects"
+msgstr "SSH接続後にコマンドを自動的に実行する"
 # 
 # File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 318
 #: NEEDS WORK
 msgid "Post-Login Command"
 msgstr "ログイン後コマンド"
 # 
-# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 319
-#: NEEDS WORK
-msgid "Command to execute right after a successful login"
-msgstr "ログイン成功後に実行するコマンド"
-# 
-# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 323
-#: NEEDS WORK
-msgid "Example: tmux attach -t main"
-msgstr "例: tmux attach -t main"
-# 
 # File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 356
 #: NEEDS WORK
 msgid "Enable X11 Forwarding"
 msgstr "X11フォワーディングを有効にする"
 # 
-# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 357
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 479
 #: NEEDS WORK
-msgid "Allow starting programs in graphical mode (X11)"
-msgstr "グラフィカルモード（X11）でプログラムを起動できるようにする"
+msgid "Allow graphical applications from remote server"
+msgstr "リモートサーバーからのグラフィカルアプリケーションを許可する"
+# 
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 353
+#: NEEDS WORK
+msgid "Enable SFTP Session"
+msgstr "SFTPセッションを有効にする"
+# 
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 488
+#: NEEDS WORK
+msgid "Use default directories when opening SFTP"
+msgstr "SFTPを開くときにデフォルトのディレクトリを使用する"
+# 
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 496
+#: NEEDS WORK
+msgid "SFTP Local Directory"
+msgstr "SFTPローカルディレクトリ"
+# 
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 505
+#: NEEDS WORK
+msgid "SFTP Remote Directory"
+msgstr "SFTPリモートディレクトリ"
 # 
 # File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 354
 #: NEEDS WORK
 msgid "Port Forwarding"
 msgstr "ポートフォワーディング"
 # 
-# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 355
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 529
 #: NEEDS WORK
-msgid "Create SSH tunnels to forward local ports to remote targets"
-msgstr "リモートターゲットにローカルポートを転送するためのSSHトンネルを作成する"
+msgid "Create SSH tunnels to forward ports"
+msgstr "ポートを転送するためのSSHトンネルを作成する"
 # 
-# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 369
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 484
 #: NEEDS WORK
-msgid "Add"
-msgstr "追加"
+msgid "Add Port Forward"
+msgstr "ポートフォワードを追加"
+# 
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 537
+#: NEEDS WORK
+msgid "Create a new SSH tunnel"
+msgstr "新しいSSHトンネルを作成"
 # 
 # File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 396
 #: NEEDS WORK
@@ -1453,20 +3810,15 @@ msgstr "{local_host}:{local_port} → {remote_host}:{remote_port}"
 msgid "Edit Port Forward"
 msgstr "ポートフォワードの編集"
 # 
-# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 484
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 712
 #: NEEDS WORK
-msgid "Add Port Forward"
-msgstr "ポートフォワードを追加"
-# 
-# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 508
-#: NEEDS WORK
-msgid "Tunnel name"
+msgid "Tunnel Name"
 msgstr "トンネル名"
 # 
-# File: usr/share/ashyterm/filemanager/manager.py, line: 366
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 718
 #: NEEDS WORK
-msgid "Name"
-msgstr "名前"
+msgid "Local Settings"
+msgstr "ローカル設定"
 # 
 # File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 519
 #: NEEDS WORK
@@ -1478,15 +3830,25 @@ msgstr "ローカルホスト"
 msgid "Local Port"
 msgstr "ローカルポート"
 # 
-# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 529
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 732
 #: NEEDS WORK
-msgid "Leave blank to use the SSH host"
-msgstr "SSHホストを使用するには空白のままにしてください"
+msgid "Port on your machine (1025-65535 recommended)"
+msgstr "マシンのポート（推奨範囲：1025-65535）"
 # 
-# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 536
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 738
 #: NEEDS WORK
-msgid "Connect to a different remote host"
-msgstr "異なるリモートホストに接続"
+msgid "Remote Settings"
+msgstr "リモート設定"
+# 
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 745
+#: NEEDS WORK
+msgid "Use Custom Remote Host"
+msgstr "カスタムリモートホストを使用する"
+# 
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 746
+#: NEEDS WORK
+msgid "Leave off to use the SSH server as target"
+msgstr "ターゲットとしてSSHサーバーを使用するにはオフにしてください"
 # 
 # File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 546
 #: NEEDS WORK
@@ -1497,6 +3859,11 @@ msgstr "リモートホスト"
 #: NEEDS WORK
 msgid "Remote Port"
 msgstr "リモートポート"
+# 
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 765
+#: NEEDS WORK
+msgid "Port on the remote host (1-65535)"
+msgstr "リモートホストのポート (1-65535)"
 # 
 # File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 590
 #: NEEDS WORK
@@ -1518,75 +3885,41 @@ msgstr "ローカルホストは空にできません。"
 msgid "Invalid Port Forward"
 msgstr "無効なポートフォワード"
 # 
-# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 346
-#: NEEDS WORK
-msgid "SFTP Session"
-msgstr "SFTPセッション"
-# 
-# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 348
-#: NEEDS WORK
-msgid "Configure default directories for SFTP connections (optional)"
-msgstr "SFTP接続のデフォルトディレクトリを設定する（オプション）"
-# 
-# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 353
-#: NEEDS WORK
-msgid "Enable SFTP Session"
-msgstr "SFTPセッションを有効にする"
-# 
-# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 355
-#: NEEDS WORK
-msgid "Use these directories when opening an SFTP tab for this session"
-msgstr "このセッションのSFTPタブを開くときは、これらのディレクトリを使用してください。"
-# 
-# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 364
-#: NEEDS WORK
-msgid "Local Directory"
-msgstr "ローカルディレクトリ"
-# 
-# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 365
-#: NEEDS WORK
-msgid "Starting directory on your machine for SFTP"
-msgstr "SFTP用のマシン上の開始ディレクトリ"
-# 
-# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 369
-#: NEEDS WORK
-msgid "Example: /home/user/projects"
-msgstr "例: /home/user/projects"
-# 
-# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 379
-#: NEEDS WORK
-msgid "Remote Directory"
-msgstr "リモートディレクトリ"
-# 
-# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 380
-#: NEEDS WORK
-msgid "Starting directory on the remote host for SFTP"
-msgstr "リモートホストのSFTP用の開始ディレクトリ"
-# 
-# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 384
-#: NEEDS WORK
-msgid "Example: /var/www"
-msgstr "例: /var/www"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 581
-#: NEEDS WORK
-msgid "Test Connection"
-msgstr "接続テスト"
-# 
 # File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 773
 #: NEEDS WORK
 msgid "Remote server must have X11Forwarding yes in sshd_config."
 msgstr "リモートサーバーはsshd_configでX11Forwarding yesを設定する必要があります。"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 707
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 1030
 #: NEEDS WORK
-msgid "Select SSH Key"
-msgstr "SSHキーを選択"
+msgid "Select Working Directory"
+msgstr "作業ディレクトリを選択"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 720
 #: NEEDS WORK
 msgid "File Dialog Error"
 msgstr "ファイルダイアログエラー"
+# 
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 1051
+#: NEEDS WORK
+msgid "Failed to open folder browser"
+msgstr "フォルダブラウザを開けませんでした"
+# 
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 1065
+#: NEEDS WORK
+msgid "Folder Selection Error"
+msgstr "フォルダー選択エラー"
+# 
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 1066
+#: NEEDS WORK
+#, python-brace-format
+msgid "Failed to select folder: {}"
+msgstr "フォルダーの選択に失敗しました: {}"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 707
+#: NEEDS WORK
+msgid "Select SSH Key"
+msgstr "SSHキーを選択"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 720
 #: NEEDS WORK
@@ -1703,6 +4036,16 @@ msgstr ""
 msgid "Session name"
 msgstr "セッション名"
 # 
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 1367
+#: NEEDS WORK
+msgid "Working directory must exist and be a folder."
+msgstr "作業ディレクトリは存在し、フォルダーでなければなりません。"
+# 
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 1374
+#: NEEDS WORK
+msgid "Invalid working directory path."
+msgstr "無効な作業ディレクトリパス。"
+# 
 # #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
 # 
 # File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 716
@@ -1775,11 +4118,6 @@ msgstr "すべての必須フィールドに入力してください。"
 #: NEEDS WORK
 msgid "Delete this custom command"
 msgstr "このカスタムコマンドを削除"
-# 
-# File: usr/share/ashyterm/ui/dialogs/command_guide_dialog.py, line: 143
-#: NEEDS WORK
-msgid "Command Guide"
-msgstr "コマンドガイド"
 # 
 # File: usr/share/ashyterm/ui/dialogs/command_guide_dialog.py, line: 165
 #: NEEDS WORK
@@ -1875,7 +4213,7 @@ msgstr "{} は必須です"
 msgid "Tab &amp; Pane Management"
 msgstr "タブとペインの管理"
 # 
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
+# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
 # 
 # File: usr/share/ashyterm/ui/menus.py, line: 145
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1597
@@ -1918,16 +4256,6 @@ msgstr "アクティブペインを閉じる"
 msgid "Terminal Interaction"
 msgstr "ターミナルインタラクション"
 # 
-# File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 38
-#: NEEDS WORK
-msgid "Send Command  All Tabs"
-msgstr "コマンドを送信  すべてのタブ"
-# 
-# File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 39
-#: NEEDS WORK
-msgid "Ask AI Assistant"
-msgstr "AIアシスタントに聞く"
-# 
 # File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 42
 #: NEEDS WORK
 msgid "Zoom"
@@ -1952,11 +4280,6 @@ msgstr "ズームをリセット"
 #: NEEDS WORK
 msgid "Application &amp; Window"
 msgstr "アプリケーション & ウィンドウ"
-# 
-# File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 53
-#: NEEDS WORK
-msgid "Toggle File Manager"
-msgstr "ファイルマネージャーの切り替え"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1605
 #: NEEDS WORK
@@ -2057,111 +4380,60 @@ msgstr "すべてのショートカットをリセット"
 msgid "This will reset all keyboard shortcuts to their default values. Continue?"
 msgstr "これにより、すべてのキーボードショートカットがデフォルト値にリセットされます。続行しますか？"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1831
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1843
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1421
 #: NEEDS WORK
-msgid "Reset"
-msgstr "リセット"
+msgid "Appearance"
+msgstr "外観"
 # 
 # File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 56
 #: NEEDS WORK
 msgid "Color Scheme"
 msgstr "カラースキーム"
 # 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 59
-#: NEEDS WORK
-msgid "Current Scheme"
-msgstr "現在のスキーム"
-# 
 # File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 62
 #: NEEDS WORK
 msgid "Manage Schemes..."
 msgstr "スキームを管理..."
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1016
-#: NEEDS WORK
-msgid "Typography"
-msgstr "タイポグラフィ"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1017
-#: NEEDS WORK
-msgid "Configure fonts and spacing"
-msgstr "フォントと間隔を設定する"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1465
 #: NEEDS WORK
 msgid "Terminal Font"
 msgstr "ターミナルフォント"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1466
-#: NEEDS WORK
-msgid "Select font family and size for terminal text"
-msgstr "ターミナルテキストのフォントファミリーとサイズを選択"
-# 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1033
 #: NEEDS WORK
 msgid "Line Spacing"
 msgstr "行間隔"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1034
-#: NEEDS WORK
-msgid "Adjust the vertical space between lines"
-msgstr "行間の垂直スペースを調整する"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1045
-#: NEEDS WORK
-msgid "Miscellaneous"
-msgstr "雑多な"
 # 
 # File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 102
 #: NEEDS WORK
 msgid "Terminal Transparency"
 msgstr "ターミナルの透明度"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1449
-#: NEEDS WORK
-msgid "Adjust terminal background transparency"
-msgstr "ターミナルの背景透明度を調整"
-# 
 # File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 118
 #: NEEDS WORK
 msgid "Headerbar Transparency"
 msgstr "ヘッダーバーの透明度"
-# 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 119
-#: NEEDS WORK
-msgid "For headerbar and file manager"
-msgstr "ヘッダーバーとファイルマネージャー用"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1065
 #: NEEDS WORK
 msgid "Use Bright Colors for Bold Text"
 msgstr "太字のテキストに明るい色を使用する"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1066
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 169
 #: NEEDS WORK
-msgid "Render bold text with the brighter version of the base color"
-msgstr "ベースカラーの明るいバージョンで太字のテキストをレンダリングする"
+msgid "Auto-Hide Sessions Panel"
+msgstr "自動非表示セッションパネル"
 # 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 132
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 170
 #: NEEDS WORK
-msgid "Auto-Hide Sidebar"
-msgstr "自動非表示サイドバー"
-# 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 134
-#: NEEDS WORK
-msgid "Automatically hide the sidebar when activating sessions or layouts"
-msgstr "セッションやレイアウトをアクティブにするときにサイドバーを自動的に隠す"
+msgid "Hide panel when activating sessions"
+msgstr "セッションをアクティブにするときにパネルを非表示にする"
 # 
 # File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 147
 #: NEEDS WORK
 msgid "Blinking Text"
 msgstr "点滅テキスト"
-# 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 148
-#: NEEDS WORK
-msgid "Control how the terminal handles blinking text"
-msgstr "ターミナルが点滅テキストをどのように処理するかを制御する"
 # 
 # File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 150
 #: NEEDS WORK
@@ -2178,11 +4450,6 @@ msgstr "常に"
 msgid "Tab Alignment"
 msgstr "タブの配置"
 # 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 176
-#: NEEDS WORK
-msgid "Align tabs to the left or center of the tab bar"
-msgstr "タブをタブバーの左または中央に揃える"
-# 
 # File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 178
 #: NEEDS WORK
 msgid "Left"
@@ -2192,6 +4459,21 @@ msgstr "左"
 #: NEEDS WORK
 msgid "Center"
 msgstr "センター"
+# 
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 212
+#: NEEDS WORK
+msgid "Icon Theme"
+msgstr "アイコンテーマ"
+# 
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 218
+#: NEEDS WORK
+msgid "Ashy Icons (Bundled)"
+msgstr "アシーアイコン（バンドル版）"
+# 
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 218
+#: NEEDS WORK
+msgid "System Icons"
+msgstr "システムアイコン"
 # 
 # File: usr/share/ashyterm/window.py, line: 857
 #: NEEDS WORK
@@ -2203,11 +4485,6 @@ msgstr "ターミナル"
 msgid "Cursor Shape"
 msgstr "カーソルの形状"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1138
-#: NEEDS WORK
-msgid "Select the shape of the terminal cursor"
-msgstr "ターミナルカーソルの形を選択してください"
-# 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1141
 #: NEEDS WORK
 msgid "Block"
@@ -2218,20 +4495,10 @@ msgstr "ブロック"
 msgid "I-Beam"
 msgstr "アイビーム"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1141
-#: NEEDS WORK
-msgid "Underline"
-msgstr "下線"
-# 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1148
 #: NEEDS WORK
 msgid "Cursor Blinking"
 msgstr "カーソルの点滅"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1148
-#: NEEDS WORK
-msgid "Control cursor blinking behavior"
-msgstr "カーソルの点滅動作を制御する"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1151
 #: NEEDS WORK
@@ -2248,207 +4515,56 @@ msgstr "オン"
 msgid "Off"
 msgstr "オフ"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1118
-#: NEEDS WORK
-msgid "Scrolling"
-msgstr "スクロール"
-# 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1123
 #: NEEDS WORK
 msgid "Scrollback Lines"
 msgstr "スクロールバック行"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1124
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 246
 #: NEEDS WORK
-msgid "Number of lines to keep in history (0 for unlimited)"
-msgstr "履歴に保持する行数 (無制限の場合は0)"
+msgid "0 for unlimited"
+msgstr "無制限のための0"
 # 
 # File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 192
 #: NEEDS WORK
 msgid "Mouse Scroll Sensitivity"
 msgstr "マウススクロール感度"
 # 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 193
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 258
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 274
 #: NEEDS WORK
-msgid "Controls the scroll speed for a mouse wheel. Lower is slower."
-msgstr "マウスホイールのスクロール速度を制御します。低いほど遅くなります。"
+msgid "Lower is slower"
+msgstr "下げるほど遅くなる"
 # 
 # File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 208
 #: NEEDS WORK
 msgid "Touchpad Scroll Sensitivity"
 msgstr "タッチパッドスクロール感度"
 # 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 209
-#: NEEDS WORK
-msgid "Controls the scroll speed for a touchpad. Lower is slower."
-msgstr "タッチパッドのスクロール速度を制御します。低いほど遅くなります。"
-# 
 # File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 233
 #: NEEDS WORK
 msgid "Scroll on Paste"
 msgstr "ペースト時にスクロール"
-# 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 234
-#: NEEDS WORK
-msgid "Automatically scroll to the bottom when pasting text"
-msgstr "テキストを貼り付けると自動的に下にスクロールする"
-# 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 246
-#: NEEDS WORK
-msgid "Selection"
-msgstr "選択"
-# 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 247
-#: NEEDS WORK
-msgid "Extra characters for word selection (e.g., -_.:/~)"
-msgstr "単語選択のための追加文字（例：-_.:/~）"
-# 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 252
-#: NEEDS WORK
-msgid "Word Characters"
-msgstr "ワード文字"
-# 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 292
-#: NEEDS WORK
-msgid "Shell & Bell"
-msgstr "シェル＆ベル"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1107
 #: NEEDS WORK
 msgid "Run Command as a Login Shell"
 msgstr "ログインシェルとしてコマンドを実行"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1108
-#: NEEDS WORK
-msgid "Sources /etc/profile and ~/.profile on startup"
-msgstr "起動時に /etc/profile と ~/.profile を読み込む"
-# 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1161
 #: NEEDS WORK
 msgid "Audible Bell"
 msgstr "音声ベル"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1162
-#: NEEDS WORK
-msgid "Emit a sound for the terminal bell character"
-msgstr "端末ベル文字のために音を出す"
-# 
-# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
-# 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 319
-# File: usr/share/ashyterm/window.py, line: 679
-#: NEEDS WORK
-msgid "AI Assistant"
-msgstr "AIアシスタント"
-# 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 321
-#: NEEDS WORK
-msgid "Configure the Linux-focused assistant available inside the terminal."
-msgstr "ターミナル内で利用可能なLinuxに特化したアシスタントを設定します。"
-# 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 327
-#: NEEDS WORK
-msgid "Enable AI Assistant"
-msgstr "AIアシスタントを有効にする"
-# 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 328
-#: NEEDS WORK
-msgid "Allow Ctrl+Shift+I to ask the assistant for help."
-msgstr "Ctrl+Shift+Iを使用してアシスタントにヘルプを求めることを許可します。"
-# 
-# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
-# 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 339
-# File: usr/share/ashyterm/window.py, line: 546
-#: NEEDS WORK
-msgid "Provider"
-msgstr "プロバイダー"
-# 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 340
-#: NEEDS WORK
-msgid "Select which AI service to use."
-msgstr "使用するAIサービスを選択してください。"
-# 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 361
-#: NEEDS WORK
-msgid "Model Identifier"
-msgstr "モデル識別子"
-# 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 363
-#: NEEDS WORK
-msgid "Examples: llama-3.1-8b-instant, gemini-2.5-flash."
-msgstr "例: llama-3.1-8b-インスタント, gemini-2.5-フラッシュ。"
-# 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 368
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 779
-#: NEEDS WORK
-msgid "llama-3.1-8b-instant"
-msgstr "ラマ-3.1-8b-インスタント"
-# 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 374
-#: NEEDS WORK
-msgid "API Key"
-msgstr "APIキー"
-# 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 375
-#: NEEDS WORK
-msgid "Stored locally and used to authenticate requests."
-msgstr "ローカルに保存され、リクエストの認証に使用されます。"
-# 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 379
-#: NEEDS WORK
-msgid "Paste your API key"
-msgstr "APIキーを貼り付けてください"
-# 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 391
-#: NEEDS WORK
-msgid "Site URL (optional)"
-msgstr "サイトのURL（オプション）"
-# 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 392
-#: NEEDS WORK
-msgid "Used as HTTP Referer header on OpenRouter rankings."
-msgstr "OpenRouterのランキングでHTTP Refererヘッダーとして使用されます。"
-# 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 396
-#: NEEDS WORK
-msgid "https://example.com"
-msgstr "https://example.com"
-# 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 408
-#: NEEDS WORK
-msgid "Site title (optional)"
-msgstr "サイトタイトル（オプション）"
-# 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 409
-#: NEEDS WORK
-msgid "Sent via X-Title header for OpenRouter rankings."
-msgstr "OpenRouterランキングのためにX-Titleヘッダー経由で送信されました。"
-# 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 413
-#: NEEDS WORK
-msgid "My Project"
-msgstr "私のプロジェクト"
 # 
 # File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 250
 #: NEEDS WORK
 msgid "Profiles & Data"
 msgstr "プロファイルとデータ"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1082
-#: NEEDS WORK
-msgid "Startup"
-msgstr "スタートアップ"
-# 
 # File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 258
 #: NEEDS WORK
 msgid "On Startup"
 msgstr "起動時"
-# 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 259
-#: NEEDS WORK
-msgid "Action to take when the application starts"
-msgstr "アプリケーションが起動したときに実行するアクション"
 # 
 # File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 263
 #: NEEDS WORK
@@ -2465,17 +4581,7 @@ msgstr "前のセッションを復元するように求める"
 msgid "Never restore previous session"
 msgstr "前のセッションを復元しない"
 # 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 280
-#: NEEDS WORK
-msgid "Backup &amp; Recovery"
-msgstr "バックアップと復元"
-# 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 319
-#: NEEDS WORK
-msgid "Create an encrypted backup of your data or restore from a previous backup."
-msgstr "データの暗号化されたバックアップを作成するか、以前のバックアップから復元します。"
-# 
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
+# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
 # 
 # File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 325
 # File: usr/share/ashyterm/app.py, line: 390
@@ -2483,10 +4589,10 @@ msgstr "データの暗号化されたバックアップを作成するか、以
 msgid "Create Backup"
 msgstr "バックアップを作成"
 # 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 327
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 350
 #: NEEDS WORK
-msgid "Save all sessions, settings, and passwords to an encrypted file."
-msgstr "すべてのセッション、設定、およびパスワードを暗号化されたファイルに保存します。"
+msgid "Encrypted backup of sessions and settings"
+msgstr "セッションと設定の暗号化バックアップ"
 # 
 # File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 330
 #: NEEDS WORK
@@ -2498,125 +4604,75 @@ msgstr "バックアップを作成..."
 msgid "Restore from Backup"
 msgstr "バックアップから復元"
 # 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 339
-#: NEEDS WORK
-msgid "Replace all current data with a backup file."
-msgstr "すべての現在のデータをバックアップファイルで置き換えます。"
-# 
 # File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 341
 #: NEEDS WORK
 msgid "Restore..."
 msgstr "復元..."
-# 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 348
-#: NEEDS WORK
-msgid "Remote Editing"
-msgstr "リモート編集"
 # 
 # File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 352
 #: NEEDS WORK
 msgid "Use System Temporary Directory"
 msgstr "システム一時ディレクトリを使用する"
 # 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 354
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 374
 #: NEEDS WORK
-msgid "Store temporary files for remote editing in /tmp instead of the config folder"
-msgstr "リモート編集のための一時ファイルを設定フォルダーの代わりに/tmpに保存します"
+msgid "Use /tmp for remote editing files"
+msgstr "リモート編集ファイルには/tmpを使用してください"
 # 
 # File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 369
 #: NEEDS WORK
 msgid "Clear Remote Edit Files on Exit"
 msgstr "終了時にリモート編集ファイルをクリア"
 # 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 371
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 392
 #: NEEDS WORK
-msgid "Automatically delete all temporary remote files when closing the app"
-msgstr "アプリを閉じるときにすべての一時リモートファイルを自動的に削除する"
+msgid "SSH Connection Persistence"
+msgstr "SSH接続の持続性"
 # 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 416
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 393
 #: NEEDS WORK
-msgid "SSH"
-msgstr "SSH"
-# 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 417
-#: NEEDS WORK
-msgid "Settings for SSH connection management (multiplexing)."
-msgstr "SSH接続管理（マルチプレクシング）の設定。"
-# 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 422
-#: NEEDS WORK
-msgid "Connection Persistence (seconds)"
-msgstr "接続持続時間（秒）"
-# 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 424
-#: NEEDS WORK
-msgid "Keep SSH connections alive in the background for faster reconnections. Set to 0 to disable."
-msgstr "バックグラウンドでSSH接続を維持し、再接続を迅速化します。無効にするには0に設定してください。"
+msgid "Seconds to keep connections alive (0 to disable)"
+msgstr "接続を維持する秒数 (0で無効)"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1790
 #: NEEDS WORK
 msgid "Advanced"
 msgstr "高度な"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1276
-#: NEEDS WORK
-msgid "Advanced Features"
-msgstr "高度な機能"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1277
-#: NEEDS WORK
-msgid "Enable or disable advanced terminal features"
-msgstr "高度なターミナル機能を有効または無効にする"
-# 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1282
 #: NEEDS WORK
 msgid "Bidirectional Text Support"
 msgstr "双方向テキストサポート"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1284
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 416
 #: NEEDS WORK
-msgid "Enable for languages like Arabic and Hebrew (may affect performance)"
-msgstr "アラビア語やヘブライ語のような言語を有効にする（パフォーマンスに影響を与える可能性があります）"
+msgid "For Arabic and Hebrew (affects performance)"
+msgstr "アラビア語とヘブライ語用（パフォーマンスに影響）"
 # 
 # File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 411
 #: NEEDS WORK
 msgid "Enable Arabic Text Shaping"
 msgstr "アラビア語テキストの整形を有効にする"
 # 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 413
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 424
 #: NEEDS WORK
-msgid "Correctly render ligatures and contextual forms for Arabic script"
-msgstr "アラビア文字のリガチャと文脈に応じた形を正しく表示する"
+msgid "Render ligatures for Arabic script"
+msgstr "アラビア文字のリガチャをレンダリングする"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1295
 #: NEEDS WORK
 msgid "SIXEL Graphics Support"
 msgstr "SIXELグラフィックスサポート"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1296
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 432
 #: NEEDS WORK
-msgid "Allow the terminal to display SIXEL images (experimental)"
-msgstr "ターミナルがSIXEL画像を表示できるようにする（実験的）"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1172
-#: NEEDS WORK
-msgid "Compatibility"
-msgstr "互換性"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1173
-#: NEEDS WORK
-msgid "Settings for compatibility with older systems and tools"
-msgstr "古いシステムやツールとの互換性のための設定"
+msgid "Display SIXEL images (experimental)"
+msgstr "SIXEL画像を表示（実験的）"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1178
 #: NEEDS WORK
 msgid "Backspace Key"
 msgstr "バックスペースキー"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1178
-#: NEEDS WORK
-msgid "Sequence to send for Backspace key"
-msgstr "バックスペースキーに送信するシーケンス"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1182
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1197
@@ -2646,20 +4702,10 @@ msgstr "エスケープシーケンス"
 msgid "Delete Key"
 msgstr "削除キー"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1193
-#: NEEDS WORK
-msgid "Sequence to send for Delete key"
-msgstr "削除キー用の送信シーケンス"
-# 
 # File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 481
 #: NEEDS WORK
 msgid "Ambiguous-width Characters"
 msgstr "曖昧幅文字"
-# 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 482
-#: NEEDS WORK
-msgid "Set the width for ambiguous characters (e.g., CJK)"
-msgstr "あいまいな文字の幅を設定します（例：CJK）"
 # 
 # File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 485
 #: NEEDS WORK
@@ -2671,40 +4717,20 @@ msgstr "狭い（単一セル）"
 msgid "Wide (double-cell)"
 msgstr "ワイド（ダブルセル）"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1071
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 252
 #: NEEDS WORK
-msgid "Logging"
-msgstr "ログ記録"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1071
-#: NEEDS WORK
-msgid "Configure application logging behavior"
-msgstr "アプリケーションのログ記録動作を構成する"
+msgid "Word Characters"
+msgstr "ワード文字"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1076
 #: NEEDS WORK
 msgid "Save Logs to File"
 msgstr "ファイルにログを保存"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1077
-#: NEEDS WORK
-msgid "Save application logs to the configuration directory"
-msgstr "アプリケーションログを設定ディレクトリに保存"
-# 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1087
 #: NEEDS WORK
 msgid "Console Log Level"
 msgstr "コンソールログレベル"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1088
-#: NEEDS WORK
-msgid "Set the minimum level of messages shown in the console"
-msgstr "コンソールに表示されるメッセージの最小レベルを設定する"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1832
-#: NEEDS WORK
-msgid "Reset application settings to defaults"
-msgstr "アプリケーション設定をデフォルトにリセット"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1838
 # File: usr/share/ashyterm/ui/dialogs.py, line: 2002
@@ -2713,77 +4739,27 @@ msgstr "アプリケーション設定をデフォルトにリセット"
 msgid "Reset All Settings"
 msgstr "すべての設定をリセット"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1839
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 681
 #: NEEDS WORK
-msgid "Restore all settings to their default values"
-msgstr "すべての設定をデフォルト値にリセットする"
+msgid "Icon Theme Changed"
+msgstr "アイコンテーマが変更されました"
 # 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 781
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 683
 #: NEEDS WORK
-msgid "Model identifier (for example: llama-3.1-8b-instant)."
-msgstr "モデル識別子（例：llama-3.1-8b-instant）。"
+msgid "The icon theme change will take effect after restarting the application."
+msgstr "アイコンテーマの変更は、アプリケーションを再起動した後に適用されます。"
 # 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 783
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 687
 #: NEEDS WORK
-msgid "API key."
-msgstr "APIキー。"
+msgid "Sessions Panel Visibility"
+msgstr "セッションパネルの表示"
 # 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 786
-#: NEEDS WORK
-msgid "gemini-2.5-flash"
-msgstr "gemini-2.5-フラッシュ"
-# 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 788
-#: NEEDS WORK
-msgid "Gemini model identifier (for example: gemini-2.5-flash)."
-msgstr "Geminiモデル識別子（例：gemini-2.5-flash）。"
-# 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 790
-#: NEEDS WORK
-msgid "Google AI Studio API key."
-msgstr "Google AI Studio APIキー。"
-# 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 842
-#: NEEDS WORK
-msgid "openrouter/polaris-alpha"
-msgstr "オープンルーター/ポラリスアルファ"
-# 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 844
-#: NEEDS WORK
-msgid "OpenRouter model identifier (for example: openrouter/polaris-alpha)."
-msgstr "OpenRouterモデル識別子（例：openrouter/polaris-alpha）。"
-# 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 846
-#: NEEDS WORK
-msgid "OpenRouter API key."
-msgstr "OpenRouter APIキー。"
-# 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 785
-#: NEEDS WORK
-msgid "model-name"
-msgstr "モデル名"
-# 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 787
-#: NEEDS WORK
-msgid "Model identifier required by the selected provider."
-msgstr "選択したプロバイダーによって必要なモデル識別子。"
-# 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 789
-#: NEEDS WORK
-msgid "API key used to authenticate requests."
-msgstr "APIキーはリクエストを認証するために使用されます。"
-# 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 652
-#: NEEDS WORK
-msgid "Sidebar Visibility"
-msgstr "サイドバーの表示"
-# 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 654
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 689
 #: NEEDS WORK
 msgid ""
-"The sidebar visibility change will take effect when you close and reopen the application. You can "
-"also toggle the sidebar manually using Ctrl+Shift+H."
-msgstr "サイドバーの表示変更は、アプリケーションを閉じて再度開くと反映されます。また、Ctrl+Shift+Hを使用してサイドバーを手動で切り替えることもできます。"
+"The sessions panel visibility change will take effect when you close and reopen the application. "
+"You can also toggle the sessions panel manually using Ctrl+Shift+H."
+msgstr "セッションパネルの表示変更は、アプリケーションを閉じて再度開いたときに適用されます。また、Ctrl+Shift+Hを使用してセッションパネルを手動で切り替えることもできます。"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 2003
 #: NEEDS WORK
@@ -4363,7 +6339,7 @@ msgstr "保存に失敗しました: {}"
 msgid "Move Error"
 msgstr "移動エラー"
 # 
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
+# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
 # 
 # File: usr/share/ashyterm/sessions/tree.py, line: 801
 # File: usr/share/ashyterm/window.py, line: 1544
@@ -4753,20 +6729,40 @@ msgstr "隠しファイルを表示"
 msgid "Filter files..."
 msgstr "ファイルをフィルタリング..."
 # 
-# File: usr/share/ashyterm/filemanager/manager.py, line: 397
+# File: src/ashyterm/filemanager/manager.py, line: 653
 #: NEEDS WORK
-msgid "Recursive Search"
-msgstr "再帰検索"
+msgid "Start Recursive Search"
+msgstr "再帰検索を開始"
+# 
+# File: src/ashyterm/filemanager/manager.py, line: 675
+#: NEEDS WORK
+msgid "Cancel Search"
+msgstr "検索をキャンセル"
+# 
+# File: src/ashyterm/filemanager/manager.py, line: 689
+#: NEEDS WORK
+msgid "Search in subfolders"
+msgstr "サブフォルダー内を検索"
+# 
+# File: src/ashyterm/filemanager/manager.py, line: 695
+#: NEEDS WORK
+msgid "Recursive"
+msgstr "再帰的"
 # 
 # File: usr/share/ashyterm/filemanager/manager.py, line: 203
 #: NEEDS WORK
 msgid "Transfer History"
 msgstr "転送履歴"
 # 
-# File: usr/share/ashyterm/filemanager/manager.py, line: 209
+# File: src/ashyterm/filemanager/manager.py, line: 720
 #: NEEDS WORK
-msgid "Upload Files"
-msgstr "ファイルをアップロード"
+msgid "Send Files"
+msgstr "ファイルを送信"
+# 
+# File: src/ashyterm/filemanager/manager.py, line: 949
+#: NEEDS WORK
+msgid "Search cancelled"
+msgstr "検索がキャンセルされました"
 # 
 # File: usr/share/ashyterm/filemanager/manager.py, line: 665
 # File: usr/share/ashyterm/filemanager/manager.py, line: 1266
@@ -4779,6 +6775,11 @@ msgstr "検索中..."
 #, python-brace-format
 msgid "Showing first {count} results. Refine your search to narrow the list."
 msgstr "最初の {count} 件の結果を表示しています。リストを絞り込むには検索を絞り込んでください。"
+# 
+# File: usr/share/ashyterm/filemanager/manager.py, line: 366
+#: NEEDS WORK
+msgid "Name"
+msgstr "名前"
 # 
 # File: usr/share/ashyterm/filemanager/manager.py, line: 375
 #: NEEDS WORK
@@ -4809,27 +6810,15 @@ msgstr "オーナー"
 msgid "Group"
 msgstr "グループ"
 # 
-# File: usr/share/ashyterm/filemanager/manager.py, line: 697
-#: NEEDS WORK
-msgid "Command Failed"
-msgstr "コマンドが失敗しました"
-# 
-# File: usr/share/ashyterm/filemanager/manager.py, line: 699
-#: NEEDS WORK
-msgid ""
-"The command did not complete in time. The terminal may be busy or unresponsive. Your original input "
-"has been restored."
-msgstr "コマンドは時間内に完了しませんでした。ターミナルはビジー状態または応答しない可能性があります。元の入力が復元されました。"
-# 
 # File: usr/share/ashyterm/filemanager/manager.py, line: 532
 #: NEEDS WORK
 msgid "Loading..."
 msgstr "読み込み中..."
 # 
-# File: usr/share/ashyterm/filemanager/manager.py, line: 1268
+# File: src/ashyterm/filemanager/manager.py, line: 1848
 #: NEEDS WORK
-msgid "Recursive filter..."
-msgstr "再帰フィルター..."
+msgid "Type and press Enter..."
+msgstr "入力してEnterを押してください..."
 # 
 # File: usr/share/ashyterm/filemanager/manager.py, line: 1551
 # File: usr/share/ashyterm/filemanager/manager.py, line: 1740
@@ -4873,12 +6862,6 @@ msgstr "ターミナルに送信されたフォルダー作成コマンド"
 #: NEEDS WORK
 msgid "Enter a name for the new folder:"
 msgstr "新しいフォルダーの名前を入力してください:"
-# 
-# File: usr/share/ashyterm/filemanager/manager.py, line: 1743
-# File: usr/share/ashyterm/filemanager/manager.py, line: 1760
-#: NEEDS WORK
-msgid "Create"
-msgstr "作成"
 # 
 # File: usr/share/ashyterm/filemanager/manager.py, line: 1754
 #: NEEDS WORK
@@ -5105,7 +7088,7 @@ msgstr "ローカルバージョンを開く"
 msgid "Download New Version"
 msgstr "新しいバージョンをダウンロード"
 # 
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
+# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
 # 
 # File: usr/share/ashyterm/sessions/remotefile.py, line: 41
 # File: usr/share/ashyterm/filemanager/manager.py, line: 1255
@@ -5161,7 +7144,7 @@ msgstr "ファイルは開いています。保存すると、変更がサーバ
 msgid "Upload failed: Could not verify remote file."
 msgstr "アップロードに失敗しました: リモートファイルを確認できませんでした。"
 # 
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
+# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
 # 
 # File: usr/share/ashyterm/sessions/remotefile.py, line: 129
 # File: usr/share/ashyterm/filemanager/manager.py, line: 1519
@@ -5169,7 +7152,7 @@ msgstr "アップロードに失敗しました: リモートファイルを確�
 msgid "File Conflict"
 msgstr "ファイルの競合"
 # 
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
+# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
 # 
 # File: usr/share/ashyterm/sessions/remotefile.py, line: 131
 # File: usr/share/ashyterm/filemanager/manager.py, line: 1521
@@ -5180,7 +7163,7 @@ msgid ""
 "like to proceed?"
 msgstr "ファイル '{filename}' は、編集を開始してからサーバー上で変更されました。どのように進めますか？"
 # 
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
+# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
 # 
 # File: usr/share/ashyterm/sessions/remotefile.py, line: 135
 # File: usr/share/ashyterm/filemanager/manager.py, line: 1525
@@ -5188,7 +7171,7 @@ msgstr "ファイル '{filename}' は、編集を開始してからサーバー�
 msgid "Cancel Upload"
 msgstr "アップロードをキャンセル"
 # 
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
+# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
 # 
 # File: usr/share/ashyterm/sessions/remotefile.py, line: 136
 # File: usr/share/ashyterm/filemanager/manager.py, line: 1526
@@ -5196,7 +7179,7 @@ msgstr "アップロードをキャンセル"
 msgid "Overwrite Server File"
 msgstr "サーバーファイルを上書き"
 # 
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
+# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
 # 
 # File: usr/share/ashyterm/sessions/remotefile.py, line: 137
 # File: usr/share/ashyterm/filemanager/manager.py, line: 1527
@@ -5204,7 +7187,7 @@ msgstr "サーバーファイルを上書き"
 msgid "Save as New File"
 msgstr "新しいファイルとして保存"
 # 
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
+# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
 # 
 # File: usr/share/ashyterm/sessions/remotefile.py, line: 158
 # File: usr/share/ashyterm/filemanager/manager.py, line: 1545
@@ -5212,7 +7195,7 @@ msgstr "新しいファイルとして保存"
 msgid "Save As"
 msgstr "名前を付けて保存"
 # 
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
+# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
 # 
 # File: usr/share/ashyterm/sessions/remotefile.py, line: 159
 # File: usr/share/ashyterm/filemanager/manager.py, line: 1546
@@ -6598,11 +8581,6 @@ msgstr "保存されたセッションとフォルダーの読み込みに失敗
 msgid "Enable the AI assistant in Preferences > Terminal > AI Assistant."
 msgstr "設定 > ターミナル > AIアシスタントでAIアシスタントを有効にします。"
 # 
-# File: usr/share/ashyterm/window.py, line: 539
-#: NEEDS WORK
-msgid "No active terminal available."
-msgstr "アクティブなターミナルが利用できません。"
-# 
 # File: usr/share/ashyterm/window.py, line: 547
 #: NEEDS WORK
 msgid "Model"
@@ -6613,57 +8591,11 @@ msgstr "モデル"
 msgid "API key"
 msgstr "APIキー"
 # 
-# File: usr/share/ashyterm/window.py, line: 554
+# File: src/ashyterm/window.py, line: 817
 #: NEEDS WORK
 #, python-brace-format
-msgid "Configure {items} in Preferences > Terminal > AI Assistant."
-msgstr "設定 > 環境設定 > ターミナル > AI アシスタントで {items} を構成します。"
-# 
-# File: usr/share/ashyterm/window.py, line: 565
-#: NEEDS WORK
-msgid "Ask the AI Assistant"
-msgstr "AIアシスタントに尋ねる"
-# 
-# File: usr/share/ashyterm/window.py, line: 566
-#: NEEDS WORK
-msgid "Describe the Linux task or question you need help with."
-msgstr "Linuxのタスクや質問について、助けが必要なことを説明してください。"
-# 
-# File: usr/share/ashyterm/window.py, line: 570
-#: NEEDS WORK
-msgid "Send"
-msgstr "送信"
-# 
-# File: usr/share/ashyterm/window.py, line: 865
-#: NEEDS WORK
-msgid "Perguntas frequentes"
-msgstr "よくある質問"
-# 
-# File: usr/share/ashyterm/window.py, line: 938
-#: NEEDS WORK
-#, python-brace-format
-msgid "Sugestões correspondentes: {count}"
-msgstr "一致する提案: {count}"
-# 
-# File: usr/share/ashyterm/window.py, line: 941
-#: NEEDS WORK
-msgid "Nenhuma sugestão encontrada."
-msgstr "提案は見つかりませんでした。"
-# 
-# File: usr/share/ashyterm/window.py, line: 944
-#: NEEDS WORK
-msgid "Digite sua pergunta ou escolha uma das sugestões."
-msgstr "質問を入力するか、提案のいずれかを選択してください。"
-# 
-# File: usr/share/ashyterm/window.py, line: 598
-#: NEEDS WORK
-msgid "Please enter a question for the assistant."
-msgstr "アシスタントに質問を入力してください。"
-# 
-# File: usr/share/ashyterm/window.py, line: 604
-#: NEEDS WORK
-msgid "AI assistant is processing, please wait..."
-msgstr "AIアシスタントが処理中です。お待ちください..."
+msgid "Configure {items} in AI Assistant settings."
+msgstr "AIアシスタントの設定で{items}を構成します。"
 # 
 # File: usr/share/ashyterm/window.py, line: 680
 #: NEEDS WORK
@@ -6674,11 +8606,6 @@ msgstr "ここに私が見つけたものがあります。"
 #: NEEDS WORK
 msgid "Response"
 msgstr "応答"
-# 
-# File: usr/share/ashyterm/window.py, line: 724
-#: NEEDS WORK
-msgid "Suggested Commands"
-msgstr "提案されたコマンド"
 # 
 # File: usr/share/ashyterm/window.py, line: 781
 #: NEEDS WORK
@@ -6880,7 +8807,7 @@ msgstr "設定エラー"
 msgid "Failed to open preferences: {}"
 msgstr "設定を開けませんでした: {}"
 # 
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
+# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
 # 
 # File: usr/share/ashyterm/__init__.py, line: 62
 # File: usr/share/ashyterm/app.py, line: 350
@@ -7074,6 +9001,95 @@ msgstr "起動エラー"
 msgid "Application failed to start: {}"
 msgstr "アプリケーションの起動に失敗しました: {}"
 # 
+# File: src/ashyterm/__init__.py, line: 33
+#: NEEDS WORK
+#, python-brace-format
+msgid "Received signal {}, shutting down gracefully..."
+msgstr "信号 {} を受信しました。正常にシャットダウンしています..."
+# 
+# File: usr/share/ashyterm/main.py, line: 97
+#: NEEDS WORK
+#, python-brace-format
+msgid "Warning: Could not set up signal handlers: {}"
+msgstr "警告: シグナルハンドラを設定できませんでした: {}"
+# 
+# File: usr/share/ashyterm/main.py, line: 109
+#: NEEDS WORK
+msgid "Ashy Terminal - A modern terminal emulator with session management"
+msgstr "Ashy Terminal - セッション管理機能を備えたモダンなターミナルエミュレーター"
+# 
+# File: usr/share/ashyterm/main.py, line: 110
+#: NEEDS WORK
+msgid "For more information, visit: https://communitybig.org/"
+msgstr "詳細については、次のサイトをご覧ください: https://communitybig.org/"
+# 
+# File: src/ashyterm/__init__.py, line: 105
+#: NEEDS WORK
+msgid "Show version and exit"
+msgstr "バージョンを表示して終了"
+# 
+# File: usr/share/ashyterm/main.py, line: 73
+#: NEEDS WORK
+msgid "Enable debug mode"
+msgstr "デバッグモードを有効にする"
+# 
+# File: usr/share/ashyterm/main.py, line: 79
+#: NEEDS WORK
+msgid "Set logging level"
+msgstr "ログレベルを設定"
+# 
+# File: usr/share/ashyterm/main.py, line: 84
+#: NEEDS WORK
+msgid "Set the working directory for the initial terminal"
+msgstr "初期ターミナルの作業ディレクトリを設定する"
+# 
+# File: usr/share/ashyterm/main.py, line: 92
+#: NEEDS WORK
+msgid "Working directory (positional argument)"
+msgstr "作業ディレクトリ（位置引数）"
+# 
+# File: src/ashyterm/__init__.py, line: 133
+#: NEEDS WORK
+msgid "Execute command in the terminal (takes all remaining arguments)"
+msgstr "ターミナルでコマンドを実行する（残りのすべての引数を取ります）"
+# 
+# File: usr/share/ashyterm/main.py, line: 110
+#: NEEDS WORK
+msgid "Close terminal after executing command (only with --execute)"
+msgstr "コマンド実行後にターミナルを閉じる（--executeオプションのみ）"
+# 
+# File: usr/share/ashyterm/main.py, line: 115
+#: NEEDS WORK
+msgid "Connect to SSH host with optional user, port, and remote path"
+msgstr "SSHホストにオプションのユーザー、ポート、およびリモートパスで接続する"
+# 
+# File: usr/share/ashyterm/main.py, line: 119
+#: NEEDS WORK
+msgid "Convert KIO/GVFS URI path to SSH format"
+msgstr "KIO/GVFS URIパスをSSH形式に変換"
+# 
+# File: usr/share/ashyterm/main.py, line: 129
+#: NEEDS WORK
+msgid "Force opening a new window"
+msgstr "新しいウィンドウを強制的に開く"
+# 
+# File: src/ashyterm/__init__.py, line: 179
+#: NEEDS WORK
+msgid "Fatal Application Error"
+msgstr "致命的なアプリケーションエラー"
+# 
+# File: src/ashyterm/__init__.py, line: 180
+#: NEEDS WORK
+#, python-brace-format
+msgid ""
+"Could not start Ashy Terminal.\n"
+"\n"
+"Error: {}"
+msgstr ""
+"Ashy Terminalを起動できませんでした。\n"
+"\n"
+"エラー: {}"
+# 
 # File: usr/share/ashyterm/window.py, line: 1466
 #: NEEDS WORK
 msgid "Save Layout"
@@ -7150,32 +9166,3 @@ msgstr "レイアウトの削除中にエラーが発生しました"
 #: NEEDS WORK
 msgid "Error Moving Layout"
 msgstr "レイアウトの移動エラー"
-# 
-# File: usr/share/nautilus-python/extensions/ashyterm.py, line: 129
-#: NEEDS WORK
-msgid "Open in Ashy Terminal (SSH)"
-msgstr "Ashy Terminal (SSH)で開く"
-# 
-# File: usr/share/nautilus-python/extensions/ashyterm.py, line: 130
-#: NEEDS WORK
-#, python-brace-format
-msgid "Connect to {} via a new SSH session"
-msgstr "新しいSSHセッションを介して{}に接続する"
-# 
-# File: usr/share/nautilus-python/extensions/ashyterm.py, line: 139
-# File: usr/share/nautilus-python/extensions/ashyterm.py, line: 149
-#: NEEDS WORK
-msgid "Open in Ashy Terminal"
-msgstr "Ashy Terminalで開く"
-# 
-# File: usr/share/nautilus-python/extensions/ashyterm.py, line: 140
-#: NEEDS WORK
-#, python-brace-format
-msgid "Open the local mount point {}"
-msgstr "ローカルマウントポイント {} を開く"
-# 
-# File: usr/share/nautilus-python/extensions/ashyterm.py, line: 150
-#: NEEDS WORK
-#, python-brace-format
-msgid "Open {} in Ashy Terminal"
-msgstr "Ashy Terminalで{}を開く"

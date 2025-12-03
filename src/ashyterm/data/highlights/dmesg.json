@@ -25,17 +25,6 @@
             "description": "Highlights kernel warnings"
         },
         {
-            "name": "Timestamps",
-            "pattern": "^(\\[)\\s*(\\d+\\.\\d+)(\\])",
-            "colors": [
-                "white",
-                "white",
-                "white"
-            ],
-            "enabled": true,
-            "description": "Highlights kernel timestamps [seconds.microseconds]"
-        },
-        {
             "name": "Device Names",
             "pattern": "\\b(sd[a-z]\\d*|nvme\\d+n\\d+p?\\d*|loop\\d+|dm-\\d+)\\b",
             "colors": [

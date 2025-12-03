@@ -14,7 +14,7 @@
         {
             "name": "Adapter",
             "pattern": "(Adapter:)(\\s.+)",
-            "colors": ["white", "yellow"],
+            "colors": [null, "yellow"],
             "enabled": true,
             "description": "Highlights adapter name"
         },
@@ -28,7 +28,7 @@
         {
             "name": "Extra Info",
             "pattern": "(\\([^)]+\\))",
-            "colors": ["bright_black"],
+            "colors": ["magenta"],
             "enabled": true,
             "description": "Dims extra info in parentheses (high/crit values)"
         },

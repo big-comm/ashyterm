@@ -1,12 +1,12 @@
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the comm-ashyterm package.
+# This file is distributed under the same license as the ashyterm package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 # 
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: comm-ashyterm\n"
+"Project-Id-Version: ashyterm\n"
 "Report-Msgid-Bugs-To: \n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -15,6 +15,35 @@ msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: attranslate\n"
+# 
+# File: usr/share/nautilus-python/extensions/ashyterm.py, line: 129
+#: NEEDS WORK
+msgid "Open in Ashy Terminal (SSH)"
+msgstr "Abrir no Ashy Terminal (SSH)"
+# 
+# File: usr/share/nautilus-python/extensions/ashyterm.py, line: 130
+#: NEEDS WORK
+#, python-brace-format
+msgid "Connect to {} via a new SSH session"
+msgstr "Conectar a {} através de uma nova sessão SSH"
+# 
+# File: usr/share/nautilus-python/extensions/ashyterm.py, line: 139
+# File: usr/share/nautilus-python/extensions/ashyterm.py, line: 149
+#: NEEDS WORK
+msgid "Open in Ashy Terminal"
+msgstr "Abrir no Terminal Ashy"
+# 
+# File: usr/share/nautilus-python/extensions/ashyterm.py, line: 140
+#: NEEDS WORK
+#, python-brace-format
+msgid "Open the local mount point {}"
+msgstr "Abra o ponto de montagem local {}"
+# 
+# File: usr/share/nautilus-python/extensions/ashyterm.py, line: 150
+#: NEEDS WORK
+#, python-brace-format
+msgid "Open {} in Ashy Terminal"
+msgstr "Abrir {} no Terminal Ashy"
 # 
 # File: usr/share/ashyterm/utils/exceptions.py, line: 65
 #: NEEDS WORK
@@ -289,7 +318,7 @@ msgstr "O arquivo de chave não é legível"
 msgid "Error accessing key file: {}"
 msgstr "Erro ao acessar o arquivo de chave: {}"
 # 
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
+# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
 # 
 # File: usr/share/ashyterm/utils/security.py, line: 508
 # File: usr/share/ashyterm/utils/security.py, line: 796
@@ -373,9 +402,9 @@ msgstr "O caminho contém elementos inseguros"
 msgid "set secure permissions"
 msgstr "definir permissões seguras"
 # 
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
+# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
 # 
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
+# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
 # 
 # File: usr/share/ashyterm/utils/security.py, line: 786
 # File: usr/share/ashyterm/utils.py, line: 438
@@ -471,6 +500,11 @@ msgstr "Mover para Nova Aba"
 msgid "Close Pane"
 msgstr "Fechar Painel"
 # 
+# File: src/ashyterm/terminal/tabs.py, line: 723
+#: NEEDS WORK
+msgid "Move Tab"
+msgstr "Mover Aba"
+# 
 # File: usr/share/ashyterm/terminal/tabs.py, line: 531
 #: NEEDS WORK
 msgid "Duplicate Tab"
@@ -485,75 +519,6 @@ msgstr "Desanexar Aba"
 #: NEEDS WORK
 msgid "This is the only pane in the tab."
 msgstr "Este é o único painel na aba."
-# 
-# File: usr/share/ashyterm/main.py, line: 86
-#: NEEDS WORK
-#, python-brace-format
-msgid ""
-"\n"
-"Received signal {}, shutting down gracefully..."
-msgstr "Sinal recebido {}, desligando graciosamente..."
-# 
-# File: usr/share/ashyterm/main.py, line: 97
-#: NEEDS WORK
-#, python-brace-format
-msgid "Warning: Could not set up signal handlers: {}"
-msgstr "Aviso: Não foi possível configurar os manipuladores de sinal: {}"
-# 
-# File: usr/share/ashyterm/main.py, line: 109
-#: NEEDS WORK
-msgid "Ashy Terminal - A modern terminal emulator with session management"
-msgstr "Ashy Terminal - Um emulador de terminal moderno com gerenciamento de sessões"
-# 
-# File: usr/share/ashyterm/main.py, line: 110
-#: NEEDS WORK
-msgid "For more information, visit: https://communitybig.org/"
-msgstr "Para mais informações, visite: https://communitybig.org/"
-# 
-# File: usr/share/ashyterm/main.py, line: 73
-#: NEEDS WORK
-msgid "Enable debug mode"
-msgstr "Ativar modo de depuração"
-# 
-# File: usr/share/ashyterm/main.py, line: 79
-#: NEEDS WORK
-msgid "Set logging level"
-msgstr "Definir nível de registro"
-# 
-# File: usr/share/ashyterm/main.py, line: 84
-#: NEEDS WORK
-msgid "Set the working directory for the initial terminal"
-msgstr "Defina o diretório de trabalho para o terminal inicial"
-# 
-# File: usr/share/ashyterm/main.py, line: 92
-#: NEEDS WORK
-msgid "Working directory (positional argument)"
-msgstr "Diretório de trabalho (argumento posicional)"
-# 
-# File: usr/share/ashyterm/main.py, line: 105
-#: NEEDS WORK
-msgid "Execute command in the terminal"
-msgstr "Executar comando no terminal"
-# 
-# File: usr/share/ashyterm/main.py, line: 110
-#: NEEDS WORK
-msgid "Close terminal after executing command (only with --execute)"
-msgstr "Fechar terminal após executar comando (apenas com --execute)"
-# 
-# File: usr/share/ashyterm/main.py, line: 115
-#: NEEDS WORK
-msgid "Connect to SSH host with optional user, port, and remote path"
-msgstr "Conectar ao host SSH com usuário, porta e caminho remoto opcionais"
-# 
-# File: usr/share/ashyterm/main.py, line: 119
-#: NEEDS WORK
-msgid "Convert KIO/GVFS URI path to SSH format"
-msgstr "Converter caminho URI KIO/GVFS para formato SSH"
-# 
-# File: usr/share/ashyterm/main.py, line: 129
-#: NEEDS WORK
-msgid "Force opening a new window"
-msgstr "Forçar a abertura de uma nova janela"
 # 
 # File: usr/share/ashyterm/ui/window_ui.py, line: 339
 #: NEEDS WORK
@@ -587,21 +552,21 @@ msgstr "Expressão regular"
 # 
 # #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1606
-# File: usr/share/ashyterm/window.py, line: 248
+# File: src/ashyterm/ui/window_ui.py, line: 262
+# File: src/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 56
 #: NEEDS WORK
-msgid "Toggle Sidebar"
-msgstr "Alternar Barra Lateral"
+msgid "Sessions Panel"
+msgstr "Painel de Sessões"
 # 
 # File: usr/share/ashyterm/window.py, line: 344
 #: NEEDS WORK
 msgid "File Manager"
 msgstr "Gerenciador de Arquivos"
 # 
-# File: usr/share/ashyterm/ui/window_ui.py, line: 324
+# File: usr/share/ashyterm/ui/dialogs/command_guide_dialog.py, line: 143
 #: NEEDS WORK
-msgid "Command Guide (Ctrl+Shift+P)"
-msgstr "Guia de Comandos (Ctrl+Shift+P)"
+msgid "Command Guide"
+msgstr "Guia de Comandos"
 # 
 # File: usr/share/ashyterm/ui/window_ui.py, line: 350
 #: NEEDS WORK
@@ -613,10 +578,10 @@ msgstr "Pesquisar no Terminal"
 msgid "Send Command to All Tabs"
 msgstr "Enviar Comando para Todas as Abas"
 # 
-# File: usr/share/ashyterm/ui/window_ui.py, line: 344
+# File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 39
 #: NEEDS WORK
-msgid "Ask AI Assistant (Ctrl+Shift+I)"
-msgstr "Perguntar ao Assistente de IA (Ctrl+Shift+I)"
+msgid "Ask AI Assistant"
+msgstr "Perguntar ao Assistente de IA"
 # 
 # File: usr/share/ashyterm/ui/window_ui.py, line: 259
 #: NEEDS WORK
@@ -628,7 +593,7 @@ msgstr "Gerenciar Arquivos Temporários"
 msgid "Main Menu"
 msgstr "Menu Principal"
 # 
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
+# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
 # 
 # File: usr/share/ashyterm/ui/menus.py, line: 144
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1596
@@ -642,9 +607,9 @@ msgstr "Nova Aba"
 msgid "Ashy Terminal"
 msgstr "Terminal Ashy"
 # 
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
+# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
 # 
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
+# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
 # 
 # File: usr/share/ashyterm/ui/menus.py, line: 60
 # File: usr/share/ashyterm/ui/menus.py, line: 92
@@ -654,9 +619,9 @@ msgstr "Terminal Ashy"
 msgid "Add Session"
 msgstr "Adicionar Sessão"
 # 
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
+# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
 # 
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
+# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
 # 
 # File: usr/share/ashyterm/ui/menus.py, line: 93
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1056
@@ -720,7 +685,7 @@ msgstr "Fundo da Barra de Cabeçalho"
 msgid "Cursor"
 msgstr "Cursor"
 # 
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
+# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 163
 # File: usr/share/ashyterm/ui/dialogs.py, line: 575
@@ -754,7 +719,7 @@ msgstr "Cores Gerais"
 msgid "16-Color Palette"
 msgstr "Paleta de 16 Cores"
 # 
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
+# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 136
 # File: usr/share/ashyterm/ui/dialogs.py, line: 784
@@ -838,7 +803,7 @@ msgstr "Selecione um esquema para aplicá-lo instantaneamente."
 msgid "New"
 msgstr "Novo"
 # 
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
+# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
 # 
 # File: usr/share/ashyterm/ui/menus.py, line: 23
 # File: usr/share/ashyterm/ui/menus.py, line: 59
@@ -848,7 +813,7 @@ msgstr "Novo"
 msgid "Edit"
 msgstr "Editar"
 # 
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
+# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
 # 
 # File: usr/share/ashyterm/ui/menus.py, line: 39
 # File: usr/share/ashyterm/ui/menus.py, line: 73
@@ -879,20 +844,1249 @@ msgstr "Excluir Esquema?"
 msgid "Are you sure you want to delete the scheme '{name}'? This cannot be undone."
 msgstr "Você tem certeza de que deseja excluir o esquema '{name}'? Isso não pode ser desfeito."
 # 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 220
+#: NEEDS WORK
+msgid "How do I navigate directories?"
+msgstr "Como navego nas pastas?"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 221
+#: NEEDS WORK
+msgid "How do I find files by name?"
+msgstr "Como encontro arquivos pelo nome?"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 222
+#: NEEDS WORK
+msgid "How do I edit files in terminal?"
+msgstr "Como edito arquivos no terminal?"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 223
+#: NEEDS WORK
+msgid "How do I view disk usage?"
+msgstr "Como posso ver o uso do disco?"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 224
+#: NEEDS WORK
+msgid "How do I change file permissions?"
+msgstr "Como faço para alterar as permissões de arquivo?"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 225
+#: NEEDS WORK
+msgid "How do I compress files?"
+msgstr "Como faço para compactar arquivos?"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 226
+#: NEEDS WORK
+msgid "How do I check my IP address?"
+msgstr "Como faço para verificar meu endereço IP?"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 227
+#: NEEDS WORK
+msgid "How do I view running processes?"
+msgstr "Como posso ver os processos em execução?"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 228
+#: NEEDS WORK
+msgid "How do I check memory usage?"
+msgstr "Como faço para verificar o uso de memória?"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 229
+#: NEEDS WORK
+msgid "How do I restart a service?"
+msgstr "Como reinicio um serviço?"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 231
+#: NEEDS WORK
+msgid "How do I create a new branch?"
+msgstr "Como faço para criar um novo branch?"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 232
+#: NEEDS WORK
+msgid "How do I merge branches?"
+msgstr "Como faço para mesclar ramificações?"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 233
+#: NEEDS WORK
+msgid "How do I push to remote?"
+msgstr "Como faço para enviar para o remoto?"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 234
+#: NEEDS WORK
+msgid "How do I pull changes?"
+msgstr "Como faço para puxar alterações?"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 235
+#: NEEDS WORK
+msgid "How do I undo last commit?"
+msgstr "Como faço para desfazer o último commit?"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 236
+#: NEEDS WORK
+msgid "How do I view commit history?"
+msgstr "Como posso ver o histórico de commits?"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 237
+#: NEEDS WORK
+msgid "How do I create a tag?"
+msgstr "Como eu crio uma tag?"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 238
+#: NEEDS WORK
+msgid "How do I find who changed a line?"
+msgstr "Como posso descobrir quem mudou uma linha?"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 239
+#: NEEDS WORK
+msgid "How do I delete a branch?"
+msgstr "Como faço para excluir um branch?"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 240
+#: NEEDS WORK
+msgid "How do I stash changes?"
+msgstr "Como faço para armazenar alterações?"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 242
+#: NEEDS WORK
+msgid "How do I list Docker containers?"
+msgstr "Como faço para listar contêineres Docker?"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 243
+#: NEEDS WORK
+msgid "How do I run a Docker container?"
+msgstr "Como faço para executar um contêiner Docker?"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 244
+#: NEEDS WORK
+msgid "How do I stop a container?"
+msgstr "Como faço para parar um contêiner?"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 245
+#: NEEDS WORK
+msgid "How do I list Docker images?"
+msgstr "Como faço para listar imagens do Docker?"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 246
+#: NEEDS WORK
+msgid "How do I clean Docker resources?"
+msgstr "Como faço para limpar os recursos do Docker?"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 247
+#: NEEDS WORK
+msgid "How do I view container logs?"
+msgstr "Como posso visualizar os logs do contêiner?"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 248
+#: NEEDS WORK
+msgid "How do I create Docker network?"
+msgstr "Como eu crio uma rede Docker?"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 249
+#: NEEDS WORK
+msgid "How do I manage Docker volumes?"
+msgstr "Como gerencio volumes do Docker?"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 250
+#: NEEDS WORK
+msgid "How do I build a Docker image?"
+msgstr "Como faço para construir uma imagem Docker?"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 251
+#: NEEDS WORK
+msgid "How do I restart a container?"
+msgstr "Como reinicio um contêiner?"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 253
+#: NEEDS WORK
+msgid "How do I generate SSH keys?"
+msgstr "Como eu gero chaves SSH?"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 254
+#: NEEDS WORK
+msgid "How do I copy SSH key to server?"
+msgstr "Como faço para copiar a chave SSH para o servidor?"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 255
+#: NEEDS WORK
+msgid "How do I check open ports?"
+msgstr "Como faço para verificar portas abertas?"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 256
+#: NEEDS WORK
+msgid "How do I test network connectivity?"
+msgstr "Como faço para testar a conectividade de rede?"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 257
+#: NEEDS WORK
+msgid "How do I DNS lookup?"
+msgstr "Como faço uma consulta DNS?"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 258
+#: NEEDS WORK
+msgid "How do I monitor network traffic?"
+msgstr "Como faço para monitorar o tráfego de rede?"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 259
+#: NEEDS WORK
+msgid "How do I configure firewall?"
+msgstr "Como configuro o firewall?"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 260
+#: NEEDS WORK
+msgid "How do I create SSH tunnel?"
+msgstr "Como eu crio um túnel SSH?"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 261
+#: NEEDS WORK
+msgid "How do I copy files via SSH?"
+msgstr "Como faço para copiar arquivos via SSH?"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 262
+#: NEEDS WORK
+msgid "How do I speed up SSH connections?"
+msgstr "Como posso acelerar conexões SSH?"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 264
+#: NEEDS WORK
+msgid "How do I create empty file?"
+msgstr "Como eu crio um arquivo vazio?"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 265
+#: NEEDS WORK
+msgid "How do I create directory?"
+msgstr "Como eu crio um diretório?"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 266
+#: NEEDS WORK
+msgid "How do I delete files safely?"
+msgstr "Como faço para excluir arquivos com segurança?"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 267
+#: NEEDS WORK
+msgid "How do I copy files?"
+msgstr "Como faço para copiar arquivos?"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 268
+#: NEEDS WORK
+msgid "How do I move files?"
+msgstr "Como faço para mover arquivos?"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 269
+#: NEEDS WORK
+msgid "How do I create symbolic link?"
+msgstr "Como eu crio um link simbólico?"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 270
+#: NEEDS WORK
+msgid "How do I search file contents?"
+msgstr "Como faço para pesquisar o conteúdo de arquivos?"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 271
+#: NEEDS WORK
+msgid "How do I compare files?"
+msgstr "Como faço para comparar arquivos?"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 272
+#: NEEDS WORK
+msgid "How do I sync directories?"
+msgstr "Como faço para sincronizar diretórios?"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 273
+#: NEEDS WORK
+msgid "How do I append to file?"
+msgstr "Como faço para adicionar ao arquivo?"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 275
+#: NEEDS WORK
+msgid "How do I use grep?"
+msgstr "Como eu uso o grep?"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 276
+#: NEEDS WORK
+msgid "How do I use awk?"
+msgstr "Como eu uso awk?"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 277
+#: NEEDS WORK
+msgid "How do I use sed?"
+msgstr "Como eu uso o sed?"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 278
+#: NEEDS WORK
+msgid "How do I count lines?"
+msgstr "Como conto linhas?"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 279
+#: NEEDS WORK
+msgid "How do I sort text?"
+msgstr "Como faço para classificar texto?"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 280
+#: NEEDS WORK
+msgid "How do I join files?"
+msgstr "Como faço para juntar arquivos?"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 281
+#: NEEDS WORK
+msgid "How do I extract columns?"
+msgstr "Como faço para extrair colunas?"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 282
+#: NEEDS WORK
+msgid "How do I remove duplicates?"
+msgstr "Como faço para remover duplicatas?"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 283
+#: NEEDS WORK
+msgid "How do I format JSON?"
+msgstr "Como formatar JSON?"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 284
+#: NEEDS WORK
+msgid "How do I search and replace?"
+msgstr "Como faço para pesquisar e substituir?"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 286
+#: NEEDS WORK
+msgid "How do I add a user?"
+msgstr "Como adiciono um usuário?"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 287
+#: NEEDS WORK
+msgid "How do I manage groups?"
+msgstr "Como faço para gerenciar grupos?"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 288
+#: NEEDS WORK
+msgid "How do I change password?"
+msgstr "Como faço para mudar a senha?"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 289
+#: NEEDS WORK
+msgid "How do I check system load?"
+msgstr "Como faço para verificar a carga do sistema?"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 290
+#: NEEDS WORK
+msgid "How do I mount a drive?"
+msgstr "Como faço para montar uma unidade?"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 291
+#: NEEDS WORK
+msgid "How do I install packages?"
+msgstr "Como faço para instalar pacotes?"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 292
+#: NEEDS WORK
+msgid "How do I update system?"
+msgstr "Como faço para atualizar o sistema?"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 293
+#: NEEDS WORK
+msgid "How do I configure cron jobs?"
+msgstr "Como configuro trabalhos cron?"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 294
+#: NEEDS WORK
+msgid "How do I view system logs?"
+msgstr "Como posso visualizar os logs do sistema?"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 295
+#: NEEDS WORK
+msgid "How do I find large files?"
+msgstr "Como encontro arquivos grandes?"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 297
+#: NEEDS WORK
+msgid "How do I create virtualenv?"
+msgstr "Como eu crio um virtualenv?"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 298
+#: NEEDS WORK
+msgid "How do I install pip packages?"
+msgstr "Como faço para instalar pacotes pip?"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 299
+#: NEEDS WORK
+msgid "How do I find Python package?"
+msgstr "Como encontro o pacote Python?"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 300
+#: NEEDS WORK
+msgid "How do I list installed packages?"
+msgstr "Como faço para listar os pacotes instalados?"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 301
+#: NEEDS WORK
+msgid "How do I run Python tests?"
+msgstr "Como faço para executar testes em Python?"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 302
+#: NEEDS WORK
+msgid "How do I profile Python code?"
+msgstr "Como faço para perfilar código Python?"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 303
+#: NEEDS WORK
+msgid "How do I format Python code?"
+msgstr "Como formatar o código Python?"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 304
+#: NEEDS WORK
+msgid "How do I create requirements.txt?"
+msgstr "Como eu crio requirements.txt?"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 305
+#: NEEDS WORK
+msgid "How do I run Python script?"
+msgstr "Como eu executo um script Python?"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 306
+#: NEEDS WORK
+msgid "How do I debug Python?"
+msgstr "Como faço para depurar o Python?"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 308
+#: NEEDS WORK
+msgid "How do I initialize npm project?"
+msgstr "Como faço para inicializar um projeto npm?"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 309
+#: NEEDS WORK
+msgid "How do I install npm packages?"
+msgstr "Como faço para instalar pacotes npm?"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 310
+#: NEEDS WORK
+msgid "How do I run npm scripts?"
+msgstr "Como faço para executar scripts npm?"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 311
+#: NEEDS WORK
+msgid "How do I list npm packages?"
+msgstr "Como faço para listar pacotes npm?"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 312
+#: NEEDS WORK
+msgid "How do I update npm packages?"
+msgstr "Como faço para atualizar pacotes npm?"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 313
+#: NEEDS WORK
+msgid "How do I clean npm cache?"
+msgstr "Como faço para limpar o cache do npm?"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 314
+#: NEEDS WORK
+msgid "How do I link npm package?"
+msgstr "Como faço para vincular o pacote npm?"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 315
+#: NEEDS WORK
+msgid "How do I audit npm packages?"
+msgstr "Como faço para auditar pacotes npm?"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 316
+#: NEEDS WORK
+msgid "How do I find npm package?"
+msgstr "Como encontro o pacote npm?"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 317
+#: NEEDS WORK
+msgid "How do I use npx?"
+msgstr "Como eu uso npx?"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 319
+#: NEEDS WORK
+msgid "How do I write a bash script?"
+msgstr "Como eu escrevo um script bash?"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 320
+#: NEEDS WORK
+msgid "How do I use loops in bash?"
+msgstr "Como eu uso loops no bash?"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 321
+#: NEEDS WORK
+msgid "How do I use conditionals?"
+msgstr "Como eu uso condicionais?"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 322
+#: NEEDS WORK
+msgid "How do I read user input?"
+msgstr "Como faço para ler a entrada do usuário?"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 323
+#: NEEDS WORK
+msgid "How do I read from file?"
+msgstr "Como faço para ler de um arquivo?"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 324
+#: NEEDS WORK
+msgid "How do I write to file?"
+msgstr "Como faço para escrever em um arquivo?"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 325
+#: NEEDS WORK
+msgid "How do I use functions?"
+msgstr "Como eu uso funções?"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 326
+#: NEEDS WORK
+msgid "How do I parse arguments?"
+msgstr "Como faço para analisar argumentos?"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 327
+#: NEEDS WORK
+msgid "How do I handle errors?"
+msgstr "Como faço para lidar com erros?"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 328
+#: NEEDS WORK
+msgid "How do I debug bash script?"
+msgstr "Como faço para depurar um script bash?"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 330
+#: NEEDS WORK
+msgid "How do I get pods?"
+msgstr "Como eu obtenho pods?"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 331
+#: NEEDS WORK
+msgid "How do I view pod logs?"
+msgstr "Como posso visualizar os logs do pod?"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 332
+#: NEEDS WORK
+msgid "How do I deploy to k8s?"
+msgstr "Como faço para implantar no k8s?"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 333
+#: NEEDS WORK
+msgid "How do I scale deployment?"
+msgstr "Como faço para escalar a implantação?"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 334
+#: NEEDS WORK
+msgid "How do I describe pod?"
+msgstr "Como descrevo o pod?"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 335
+#: NEEDS WORK
+msgid "How do I get services?"
+msgstr "Como eu obtenho serviços?"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 336
+#: NEEDS WORK
+msgid "How do I create configmap?"
+msgstr "Como eu crio um configmap?"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 337
+#: NEEDS WORK
+msgid "How do I create secret?"
+msgstr "Como eu crio um segredo?"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 338
+#: NEEDS WORK
+msgid "How do I exec into pod?"
+msgstr "Como faço para executar dentro do pod?"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 339
+#: NEEDS WORK
+msgid "How do I port forward?"
+msgstr "Como faço para encaminhar portas?"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 341
+#: NEEDS WORK
+msgid "How do I connect to PostgreSQL?"
+msgstr "Como faço para me conectar ao PostgreSQL?"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 342
+#: NEEDS WORK
+msgid "How do I backup database?"
+msgstr "Como faço para fazer backup do banco de dados?"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 343
+#: NEEDS WORK
+msgid "How do I restore database?"
+msgstr "Como faço para restaurar o banco de dados?"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 344
+#: NEEDS WORK
+msgid "How do I list databases?"
+msgstr "Como faço para listar bancos de dados?"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 345
+#: NEEDS WORK
+msgid "How do I query from terminal?"
+msgstr "Como faço para consultar a partir do terminal?"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 346
+#: NEEDS WORK
+msgid "How do I export to CSV?"
+msgstr "Como faço para exportar para CSV?"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 347
+#: NEEDS WORK
+msgid "How do I import from CSV?"
+msgstr "Como faço para importar de CSV?"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 348
+#: NEEDS WORK
+msgid "How do I create database user?"
+msgstr "Como eu crio um usuário de banco de dados?"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 349
+#: NEEDS WORK
+msgid "How do I grant permissions?"
+msgstr "Como concedo permissões?"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 350
+#: NEEDS WORK
+msgid "How do I check database size?"
+msgstr "Como faço para verificar o tamanho do banco de dados?"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 352
+#: NEEDS WORK
+msgid "How do I monitor CPU usage?"
+msgstr "Como faço para monitorar o uso da CPU?"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 353
+#: NEEDS WORK
+msgid "How do I monitor memory?"
+msgstr "Como faço para monitorar a memória?"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 354
+#: NEEDS WORK
+msgid "How do I monitor disk I/O?"
+msgstr "Como faço para monitorar I/O de disco?"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 355
+#: NEEDS WORK
+msgid "How do I monitor network?"
+msgstr "Como faço para monitorar a rede?"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 356
+#: NEEDS WORK
+msgid "How do I benchmark command?"
+msgstr "Como faço para medir o desempenho do comando?"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 357
+#: NEEDS WORK
+msgid "How do I trace system calls?"
+msgstr "Como faço para rastrear chamadas de sistema?"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 358
+#: NEEDS WORK
+msgid "How do I view process tree?"
+msgstr "Como posso visualizar a árvore de processos?"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 359
+#: NEEDS WORK
+msgid "How do I find bottlenecks?"
+msgstr "Como encontro gargalos?"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 360
+#: NEEDS WORK
+msgid "How do I list open files?"
+msgstr "Como faço para listar arquivos abertos?"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 361
+#: NEEDS WORK
+msgid "How do I view thread info?"
+msgstr "Como posso visualizar as informações da thread?"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 363
+#: NEEDS WORK
+msgid "How do I create tar archive?"
+msgstr "Como eu crio um arquivo tar?"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 364
+#: NEEDS WORK
+msgid "How do I extract tar.gz?"
+msgstr "Como faço para extrair tar.gz?"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 365
+#: NEEDS WORK
+msgid "How do I use gzip?"
+msgstr "Como eu uso o gzip?"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 366
+#: NEEDS WORK
+msgid "How do I list archive contents?"
+msgstr "Como faço para listar o conteúdo do arquivo?"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 367
+#: NEEDS WORK
+msgid "How do I add to archive?"
+msgstr "Como faço para adicionar ao arquivo?"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 368
+#: NEEDS WORK
+msgid "How do I create zip file?"
+msgstr "Como eu crio um arquivo zip?"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 369
+#: NEEDS WORK
+msgid "How do I extract zip?"
+msgstr "Como faço para extrair zip?"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 370
+#: NEEDS WORK
+msgid "How do I encrypt archive?"
+msgstr "Como faço para criptografar o arquivo?"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 371
+#: NEEDS WORK
+msgid "How do I split archive?"
+msgstr "Como faço para dividir o arquivo?"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 372
+#: NEEDS WORK
+msgid "How do I merge archives?"
+msgstr "Como faço para mesclar arquivos?"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 374
+#: NEEDS WORK
+msgid "How do I encrypt file?"
+msgstr "Como faço para criptografar o arquivo?"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 375
+#: NEEDS WORK
+msgid "How do I decrypt file?"
+msgstr "Como faço para descriptografar o arquivo?"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 376
+#: NEEDS WORK
+msgid "How do I generate password?"
+msgstr "Como eu gero uma senha?"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 377
+#: NEEDS WORK
+msgid "How do I verify checksum?"
+msgstr "Como faço para verificar a soma de verificação?"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 378
+#: NEEDS WORK
+msgid "How do I list certificates?"
+msgstr "Como faço para listar certificados?"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 379
+#: NEEDS WORK
+msgid "How do I sign file?"
+msgstr "Como faço para assinar o arquivo?"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 380
+#: NEEDS WORK
+msgid "How do I scan for vulnerabilities?"
+msgstr "Como faço para escanear vulnerabilidades?"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 381
+#: NEEDS WORK
+msgid "How do I secure file permissions?"
+msgstr "Como faço para proteger as permissões de arquivo?"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 382
+#: NEEDS WORK
+msgid "How do I audit system?"
+msgstr "Como faço para auditar o sistema?"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 383
+#: NEEDS WORK
+msgid "How do I use GPG?"
+msgstr "Como eu uso o GPG?"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 385
+#: NEEDS WORK
+msgid "How do I start tmux session?"
+msgstr "Como inicio uma sessão tmux?"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 386
+#: NEEDS WORK
+msgid "How do I list tmux sessions?"
+msgstr "Como faço para listar sessões tmux?"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 387
+#: NEEDS WORK
+msgid "How do I attach to session?"
+msgstr "Como faço para me conectar à sessão?"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 388
+#: NEEDS WORK
+msgid "How do I split tmux pane?"
+msgstr "Como faço para dividir o painel do tmux?"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 389
+#: NEEDS WORK
+msgid "How do I switch panes?"
+msgstr "Como faço para alternar painéis?"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 390
+#: NEEDS WORK
+msgid "How do I rename window?"
+msgstr "Como renomeio a janela?"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 391
+#: NEEDS WORK
+msgid "How do I kill session?"
+msgstr "Como faço para encerrar a sessão?"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 392
+#: NEEDS WORK
+msgid "How do I detach from session?"
+msgstr "Como faço para me desconectar da sessão?"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 393
+#: NEEDS WORK
+msgid "How do I copy in tmux?"
+msgstr "Como faço para copiar no tmux?"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 394
+#: NEEDS WORK
+msgid "How do I configure tmux?"
+msgstr "Como configuro o tmux?"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 396
+#: NEEDS WORK
+msgid "How do I save in vim?"
+msgstr "Como faço para salvar no vim?"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 397
+#: NEEDS WORK
+msgid "How do I quit vim?"
+msgstr "Como faço para sair do vim?"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 398
+#: NEEDS WORK
+msgid "How do I search in vim?"
+msgstr "Como faço para pesquisar no vim?"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 399
+#: NEEDS WORK
+msgid "How do I replace in vim?"
+msgstr "Como faço para substituir no vim?"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 400
+#: NEEDS WORK
+msgid "How do I copy line in vim?"
+msgstr "Como faço para copiar uma linha no vim?"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 401
+#: NEEDS WORK
+msgid "How do I delete line in vim?"
+msgstr "Como faço para deletar uma linha no vim?"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 402
+#: NEEDS WORK
+msgid "How do I undo in vim?"
+msgstr "Como faço para desfazer no vim?"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 403
+#: NEEDS WORK
+msgid "How do I go to line in vim?"
+msgstr "Como faço para ir para a linha no vim?"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 404
+#: NEEDS WORK
+msgid "How do I split in vim?"
+msgstr "Como faço para dividir no vim?"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 405
+#: NEEDS WORK
+msgid "How do I open file in vim?"
+msgstr "Como faço para abrir um arquivo no vim?"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 407
+#: NEEDS WORK
+msgid "How do I set environment variable?"
+msgstr "Como faço para definir a variável de ambiente?"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 408
+#: NEEDS WORK
+msgid "How do I list env variables?"
+msgstr "Como faço para listar variáveis de ambiente?"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 409
+#: NEEDS WORK
+msgid "How do I edit bashrc?"
+msgstr "Como edito o bashrc?"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 410
+#: NEEDS WORK
+msgid "How do I reload bashrc?"
+msgstr "Como faço para recarregar o bashrc?"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 411
+#: NEEDS WORK
+msgid "How do I view PATH?"
+msgstr "Como posso visualizar o PATH?"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 412
+#: NEEDS WORK
+msgid "How do I add to PATH?"
+msgstr "Como faço para adicionar ao PATH?"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 413
+#: NEEDS WORK
+msgid "How do I find config file?"
+msgstr "Como encontro o arquivo de configuração?"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 414
+#: NEEDS WORK
+msgid "How do I export variable?"
+msgstr "Como faço para exportar variável?"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 415
+#: NEEDS WORK
+msgid "How do I use .env file?"
+msgstr "Como eu uso o arquivo .env?"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 416
+#: NEEDS WORK
+msgid "How do I set alias?"
+msgstr "Como faço para definir um alias?"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 418
+#: NEEDS WORK
+msgid "How do I use xargs?"
+msgstr "Como eu uso xargs?"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 419
+#: NEEDS WORK
+msgid "How do I use find with exec?"
+msgstr "Como eu uso o find com exec?"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 420
+#: NEEDS WORK
+msgid "How do I use parallel?"
+msgstr "Como eu uso o paralelo?"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 421
+#: NEEDS WORK
+msgid "How do I use tee?"
+msgstr "Como eu uso o tee?"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 422
+#: NEEDS WORK
+msgid "How do I use watch?"
+msgstr "Como eu uso o watch?"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 423
+#: NEEDS WORK
+msgid "How do I use htop?"
+msgstr "Como eu uso o htop?"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 424
+#: NEEDS WORK
+msgid "How do I use fzf?"
+msgstr "Como eu uso fzf?"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 425
+#: NEEDS WORK
+msgid "How do I use heredoc?"
+msgstr "Como eu uso heredoc?"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 426
+#: NEEDS WORK
+msgid "How do I use subshell?"
+msgstr "Como eu uso subshell?"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 427
+#: NEEDS WORK
+msgid "How do I use command substitution?"
+msgstr "Como eu uso a substituição de comandos?"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 429
+#: NEEDS WORK
+msgid "How do I format date?"
+msgstr "Como formatar a data?"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 430
+#: NEEDS WORK
+msgid "How do I calculate in terminal?"
+msgstr "Como faço para calcular no terminal?"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 431
+#: NEEDS WORK
+msgid "How do I use colors in terminal?"
+msgstr "Como eu uso cores no terminal?"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 432
+#: NEEDS WORK
+msgid "How do I create histogram?"
+msgstr "Como eu crio um histograma?"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 433
+#: NEEDS WORK
+msgid "How do I send notification?"
+msgstr "Como envio uma notificação?"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 434
+#: NEEDS WORK
+msgid "How do I use clipboard?"
+msgstr "Como eu uso a área de transferência?"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 435
+#: NEEDS WORK
+msgid "How do I view image in terminal?"
+msgstr "Como faço para visualizar a imagem no terminal?"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 436
+#: NEEDS WORK
+msgid "How do I plot in terminal?"
+msgstr "Como faço para plotar no terminal?"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 437
+#: NEEDS WORK
+msgid "How do I play sound?"
+msgstr "Como reproduzo som?"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 438
+#: NEEDS WORK
+msgid "How do I schedule task?"
+msgstr "Como agendo uma tarefa?"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 458
+#: NEEDS WORK
+msgid "AI is thinking..."
+msgstr "A IA está pensando..."
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 506
+#: NEEDS WORK
+msgid "You"
+msgstr "Você"
+# 
+# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 319
+# File: usr/share/ashyterm/window.py, line: 679
+#: NEEDS WORK
+msgid "AI Assistant"
+msgstr "Assistente de IA"
+# 
+# File: usr/share/ashyterm/window.py, line: 724
+#: NEEDS WORK
+msgid "Suggested Commands"
+msgstr "Comandos Sugeridos"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 955
+#: NEEDS WORK
+msgid "Run command"
+msgstr "Executar comando"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 965
+#: NEEDS WORK
+msgid "Insert into terminal"
+msgstr "Inserir no terminal"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 975
+#: NEEDS WORK
+msgid "Copy to clipboard"
+msgstr "Copiar para a área de transferência"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 1100
+#: NEEDS WORK
+msgid "New conversation"
+msgstr "Nova conversa"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 1108
+#: NEEDS WORK
+msgid "View history"
+msgstr "Ver histórico"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 1116
+#: NEEDS WORK
+msgid "Close panel"
+msgstr "Fechar painel"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 1153
+#: NEEDS WORK
+msgid "Quick Prompts"
+msgstr "Prompts Rápidos"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 1164
+#: NEEDS WORK
+msgid "Customize quick prompts"
+msgstr "Personalizar prompts rápidos"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 1239
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 1642
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 1665
+#: NEEDS WORK
+msgid "Send message"
+msgstr "Enviar mensagem"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 1702
+#: NEEDS WORK
+msgid "Retry"
+msgstr "Tentar novamente"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 1707
+#: NEEDS WORK
+msgid "Retry the last request"
+msgstr "Tente novamente a última solicitação"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 1753
+#: NEEDS WORK
+msgid "Customize Quick Prompts"
+msgstr "Personalizar Sugestões Rápidas"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 1812
+#: NEEDS WORK
+msgid "Emoji icon (optional)"
+msgstr "Ícone de emoji (opcional)"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 1817
+#: NEEDS WORK
+msgid "Enter prompt text..."
+msgstr "Digite o texto do prompt..."
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 1827
+#: NEEDS WORK
+msgid "Remove this prompt"
+msgstr "Remova este prompt"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 1858
+#: NEEDS WORK
+msgid "Add Prompt"
+msgstr "Adicionar Prompt"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 1870
+#: NEEDS WORK
+msgid "Use Defaults"
+msgstr "Usar Padrões"
+# 
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 1874
+#: NEEDS WORK
+msgid "Clear custom prompts and use random defaults"
+msgstr "Limpar prompts personalizados e usar padrões aleatórios"
+# 
+# File: src/ashyterm/ui/widgets/conversation_history.py, line: 46
+#: NEEDS WORK
+msgid "Just now"
+msgstr "Agora mesmo"
+# 
+# File: src/ashyterm/ui/widgets/conversation_history.py, line: 47
+#: NEEDS WORK
+#, python-brace-format
+msgid "{} min"
+msgstr "{} min"
+# 
+# File: src/ashyterm/ui/widgets/conversation_history.py, line: 48
+#: NEEDS WORK
+#, python-brace-format
+msgid "{} hr"
+msgstr "{} hr"
+# 
+# File: src/ashyterm/ui/widgets/conversation_history.py, line: 50
+# File: src/ashyterm/ui/widgets/conversation_history.py, line: 77
+#: NEEDS WORK
+msgid "Yesterday"
+msgstr "Ontem"
+# 
+# File: src/ashyterm/ui/widgets/conversation_history.py, line: 52
+#: NEEDS WORK
+#, python-brace-format
+msgid "{} days"
+msgstr "{} dias"
+# 
+# File: src/ashyterm/ui/widgets/conversation_history.py, line: 62
+# File: src/ashyterm/ui/widgets/conversation_history.py, line: 83
+# File: src/ashyterm/ui/widgets/conversation_history.py, line: 85
+#: NEEDS WORK
+msgid "Older"
+msgstr "Mais velho"
+# 
+# File: src/ashyterm/ui/widgets/conversation_history.py, line: 75
+#: NEEDS WORK
+msgid "Today"
+msgstr "Hoje"
+# 
+# File: src/ashyterm/ui/widgets/conversation_history.py, line: 79
+#: NEEDS WORK
+msgid "Last 7 Days"
+msgstr "Últimos 7 Dias"
+# 
+# File: src/ashyterm/ui/widgets/conversation_history.py, line: 81
+#: NEEDS WORK
+msgid "This Month"
+msgstr "Este Mês"
+# 
+# File: src/ashyterm/ui/widgets/conversation_history.py, line: 129
+#: NEEDS WORK
+msgid "Conversation History"
+msgstr "Histórico de Conversa"
+# 
+# File: usr/share/ashyterm/ui/ssh_dialogs.py, line: 83
+# File: usr/share/ashyterm/ui/ssh_dialogs.py, line: 239
+#: NEEDS WORK
+msgid "Close"
+msgstr "Fechar"
+# 
+# File: src/ashyterm/ui/widgets/conversation_history.py, line: 142
+#: NEEDS WORK
+msgid "Delete All Conversations"
+msgstr "Excluir Todas as Conversas"
+# 
+# File: src/ashyterm/ui/widgets/conversation_history.py, line: 149
+# File: src/ashyterm/ui/widgets/conversation_history.py, line: 277
+#: NEEDS WORK
+msgid "New Conversation"
+msgstr "Nova Conversa"
+# 
+# File: src/ashyterm/ui/widgets/conversation_history.py, line: 163
+#: NEEDS WORK
+msgid "Search…"
+msgstr "Pesquisar…"
+# 
+# File: src/ashyterm/ui/widgets/conversation_history.py, line: 191
+#: NEEDS WORK
+msgid "No Conversations"
+msgstr "Sem Conversas"
+# 
+# File: src/ashyterm/ui/widgets/conversation_history.py, line: 192
+#: NEEDS WORK
+msgid "Start chatting to create your first conversation"
+msgstr "Comece a conversar para criar sua primeira conversa"
+# 
+# File: src/ashyterm/ui/widgets/conversation_history.py, line: 345
+#: NEEDS WORK
+msgid "Delete Conversation?"
+msgstr "Excluir Conversa?"
+# 
+# File: src/ashyterm/ui/widgets/conversation_history.py, line: 346
+#: NEEDS WORK
+msgid "This conversation will be permanently deleted."
+msgstr "Esta conversa será permanentemente excluída."
+# 
+# File: src/ashyterm/ui/widgets/conversation_history.py, line: 377
+#: NEEDS WORK
+msgid "Delete All Conversations?"
+msgstr "Excluir Todas as Conversas?"
+# 
+# File: src/ashyterm/ui/widgets/conversation_history.py, line: 379
+#: NEEDS WORK
+#, python-brace-format
+msgid "This will permanently delete all {} conversations. This action cannot be undone."
+msgstr "Isso excluirá permanentemente todas as conversas {}. Esta ação não pode ser desfeita."
+# 
+# File: src/ashyterm/ui/widgets/conversation_history.py, line: 382
+#: NEEDS WORK
+msgid "Delete All"
+msgstr "Excluir Tudo"
+# 
 # File: usr/share/ashyterm/ui/sidebar_manager.py, line: 220
 #: NEEDS WORK
 msgid "Show Sessions"
 msgstr "Mostrar Sessões"
 # 
-# File: usr/share/ashyterm/ui/sidebar_manager.py, line: 227
+# File: src/ashyterm/ui/sidebar_manager.py, line: 292
 #: NEEDS WORK
-msgid "Hide Sidebar"
-msgstr "Ocultar Barra Lateral"
+msgid "Hide Sessions Panel"
+msgstr "Ocultar Painel de Sessões"
 # 
-# File: usr/share/ashyterm/ui/sidebar_manager.py, line: 227
+# File: src/ashyterm/ui/sidebar_manager.py, line: 292
 #: NEEDS WORK
-msgid "Show Sidebar"
-msgstr "Mostrar Barra Lateral"
+msgid "Show Sessions Panel"
+msgstr "Mostrar Painel de Sessões"
 # 
 # File: usr/share/ashyterm/ui/menus.py, line: 24
 #: NEEDS WORK
@@ -919,7 +2113,7 @@ msgstr "Combinar Cores do Terminal"
 msgid "New Window"
 msgstr "Nova Janela"
 # 
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
+# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
 # 
 # File: usr/share/ashyterm/ui/menus.py, line: 157
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1390
@@ -928,7 +2122,15 @@ msgstr "Nova Janela"
 msgid "Preferences"
 msgstr "Preferências"
 # 
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
+# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
+# 
+# File: src/ashyterm/ui/menus.py, line: 166
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1082
+#: NEEDS WORK
+msgid "Highlight Colors"
+msgstr "Cores de Destaque"
+# 
+# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
 # 
 # File: usr/share/ashyterm/ui/menus.py, line: 211
 # File: usr/share/ashyterm/window.py, line: 909
@@ -942,7 +2144,7 @@ msgstr "Atalhos de Teclado"
 msgid "About"
 msgstr "Sobre"
 # 
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
+# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
 # 
 # File: usr/share/ashyterm/ui/menus.py, line: 217
 # File: usr/share/ashyterm/window.py, line: 942
@@ -960,7 +2162,7 @@ msgstr "Conectar com SFTP"
 msgid "Duplicate"
 msgstr "Duplicar"
 # 
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
+# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
 # 
 # File: usr/share/ashyterm/ui/menus.py, line: 25
 # File: usr/share/ashyterm/ui/menus.py, line: 61
@@ -979,7 +2181,7 @@ msgstr "Mover para a Pasta..."
 msgid "Add Session Here"
 msgstr "Adicionar Sessão Aqui"
 # 
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
+# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
 # 
 # File: usr/share/ashyterm/ui/menus.py, line: 69
 # File: usr/share/ashyterm/ui/menus.py, line: 118
@@ -1004,7 +2206,7 @@ msgstr "Abrir Link"
 msgid "Copy Link"
 msgstr "Copiar Link"
 # 
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
+# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
 # 
 # File: usr/share/ashyterm/ui/menus.py, line: 30
 # File: usr/share/ashyterm/ui/menus.py, line: 66
@@ -1015,7 +2217,7 @@ msgstr "Copiar Link"
 msgid "Copy"
 msgstr "Copiar"
 # 
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
+# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
 # 
 # File: usr/share/ashyterm/ui/menus.py, line: 119
 # File: usr/share/ashyterm/ui/menus.py, line: 155
@@ -1032,7 +2234,12 @@ msgstr "Selecionar Tudo"
 msgid "Clear Session"
 msgstr "Limpar Sessão"
 # 
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
+# File: src/ashyterm/ui/menus.py, line: 312
+#: NEEDS WORK
+msgid "Ask AI"
+msgstr "Pergunte à IA"
+# 
+# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
 # 
 # File: usr/share/ashyterm/ui/menus.py, line: 276
 # File: usr/share/ashyterm/filemanager/menus.py, line: 276
@@ -1040,7 +2247,7 @@ msgstr "Limpar Sessão"
 msgid "Split Left/Right"
 msgstr "Dividir Esquerda/Direita"
 # 
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
+# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
 # 
 # File: usr/share/ashyterm/ui/menus.py, line: 279
 # File: usr/share/ashyterm/filemanager/menus.py, line: 279
@@ -1057,6 +2264,22 @@ msgstr "Sessão do terminal limpa."
 #: NEEDS WORK
 msgid "No active terminal to clear."
 msgstr "Nenhum terminal ativo para limpar."
+# 
+# File: src/ashyterm/ui/actions.py, line: 233
+#: NEEDS WORK
+#, python-brace-format
+msgid ""
+"Explain this code or command:\n"
+"\n"
+"```\n"
+"{text}\n"
+"```"
+msgstr ""
+"Explique este código ou comando:\n"
+"\n"
+"```\n"
+"{text}\n"
+"```"
 # 
 # File: usr/share/ashyterm/ui/actions.py, line: 168
 #: NEEDS WORK
@@ -1080,7 +2303,7 @@ msgstr "Nova Pasta"
 msgid "Session"
 msgstr "Sessão"
 # 
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
+# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 351
 # File: usr/share/ashyterm/window.py, line: 944
@@ -1160,16 +2383,1159 @@ msgstr "Falha na Conexão SSH"
 msgid "Could not connect to session '{session_name}'."
 msgstr "Não foi possível conectar à sessão '{session_name}'."
 # 
-# File: usr/share/ashyterm/ui/ssh_dialogs.py, line: 83
-# File: usr/share/ashyterm/ui/ssh_dialogs.py, line: 239
+# File: src/ashyterm/ui/dialogs/ai_config_dialog.py, line: 43
 #: NEEDS WORK
-msgid "Close"
-msgstr "Fechar"
+msgid "Configure AI Assistant"
+msgstr "Configurar Assistente de IA"
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 327
+#: NEEDS WORK
+msgid "Enable AI Assistant"
+msgstr "Ativar Assistente de IA"
+# 
+# File: src/ashyterm/ui/dialogs/ai_config_dialog.py, line: 184
+#: NEEDS WORK
+msgid "Show the AI Assistant button in the header bar."
+msgstr "Mostrar o botão do Assistente de IA na barra de cabeçalho."
+# 
+# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 339
+# File: usr/share/ashyterm/window.py, line: 546
+#: NEEDS WORK
+msgid "Provider"
+msgstr "Fornecedor"
+# 
+# File: src/ashyterm/ui/dialogs/ai_config_dialog.py, line: 73
+#: NEEDS WORK
+msgid "Choose between cloud providers or local models."
+msgstr "Escolha entre provedores de nuvem ou modelos locais."
+# 
+# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
+# 
+# File: src/ashyterm/ui/dialogs/ai_config_dialog.py, line: 87
+# File: src/ashyterm/window.py, line: 812
+#: NEEDS WORK
+msgid "Base URL"
+msgstr "URL base"
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 374
+#: NEEDS WORK
+msgid "API Key"
+msgstr "Chave da API"
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 361
+#: NEEDS WORK
+msgid "Model Identifier"
+msgstr "Identificador do Modelo"
+# 
+# File: src/ashyterm/ui/dialogs/ai_config_dialog.py, line: 134
+#: NEEDS WORK
+msgid "Browse Available Models"
+msgstr "Navegar Modelos Disponíveis"
+# 
+# File: src/ashyterm/ui/dialogs/ai_config_dialog.py, line: 135
+#: NEEDS WORK
+msgid "Search and select from available OpenRouter models."
+msgstr "Pesquise e selecione entre os modelos OpenRouter disponíveis."
+# 
+# File: src/ashyterm/ui/dialogs/ai_config_dialog.py, line: 137
+#: NEEDS WORK
+msgid "Browse Models"
+msgstr "Navegar por Modelos"
+# 
+# File: src/ashyterm/ui/dialogs/ai_config_dialog.py, line: 151
+#: NEEDS WORK
+msgid "OpenRouter Settings"
+msgstr "Configurações do OpenRouter"
+# 
+# File: src/ashyterm/ui/dialogs/ai_config_dialog.py, line: 152
+#: NEEDS WORK
+msgid "Additional settings for OpenRouter API rankings."
+msgstr "Configurações adicionais para classificações da API OpenRouter."
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 391
+#: NEEDS WORK
+msgid "Site URL (optional)"
+msgstr "URL do site (opcional)"
+# 
+# File: src/ashyterm/ui/dialogs/ai_config_dialog.py, line: 168
+#: NEEDS WORK
+msgid "Site Name (optional)"
+msgstr "Nome do Site (opcional)"
+# 
+# File: src/ashyterm/ui/dialogs/ai_config_dialog.py, line: 236
+#: NEEDS WORK
+msgid "Groq API Key"
+msgstr "Chave da API Groq"
+# 
+# File: src/ashyterm/ui/dialogs/ai_config_dialog.py, line: 239
+#: NEEDS WORK
+msgid "Google AI Studio API Key"
+msgstr "Chave da API do Google AI Studio"
+# 
+# File: src/ashyterm/ui/dialogs/ai_config_dialog.py, line: 242
+#: NEEDS WORK
+msgid "OpenRouter API Key"
+msgstr "Chave da API do OpenRouter"
+# 
+# File: src/ashyterm/ui/dialogs/ai_config_dialog.py, line: 244
+#: NEEDS WORK
+msgid "Model Name"
+msgstr "Nome do Modelo"
+# 
+# File: src/ashyterm/ui/dialogs/ai_config_dialog.py, line: 245
+#: NEEDS WORK
+msgid "API Key (if required)"
+msgstr "Chave da API (se necessário)"
+# 
+# File: src/ashyterm/ui/dialogs/ai_config_dialog.py, line: 304
+#: NEEDS WORK
+msgid "Please enter an API key first."
+msgstr "Por favor, insira uma chave de API primeiro."
+# 
+# File: src/ashyterm/ui/dialogs/ai_config_dialog.py, line: 300
+#: NEEDS WORK
+msgid "Select OpenRouter Model"
+msgstr "Selecionar Modelo OpenRouter"
+# 
+# File: src/ashyterm/ui/dialogs/ai_config_dialog.py, line: 344
+#: NEEDS WORK
+msgid "Search models by name or ID..."
+msgstr "Pesquisar modelos pelo nome ou ID..."
+# 
+# File: src/ashyterm/ui/dialogs/ai_config_dialog.py, line: 358
+#: NEEDS WORK
+msgid "Loading models..."
+msgstr "Carregando modelos..."
+# 
+# File: src/ashyterm/ui/dialogs/ai_config_dialog.py, line: 457
+#: NEEDS WORK
+#, python-brace-format
+msgid "Failed to load models: {error}"
+msgstr "Falha ao carregar modelos: {error}"
+# 
+# File: src/ashyterm/ui/dialogs/ai_config_dialog.py, line: 489
+#: NEEDS WORK
+#, python-brace-format
+msgid "{count} models available"
+msgstr "{count} modelos disponíveis"
+# 
+# File: src/ashyterm/ui/dialogs/ai_config_dialog.py, line: 492
+#: NEEDS WORK
+#, python-brace-format
+msgid "Showing {shown} of {total} models"
+msgstr "Mostrando {shown} de {total} modelos"
+# 
+# File: src/ashyterm/ui/dialogs/ai_config_dialog.py, line: 503
+#: NEEDS WORK
+msgid "Showing first 100 results. Refine your search to see more."
+msgstr "Mostrando os primeiros 100 resultados. Refine sua busca para ver mais."
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 32
+#: NEEDS WORK
+msgid "Black"
+msgstr "Preto"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 33
+#: NEEDS WORK
+msgid "Red"
+msgstr "Vermelho"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 34
+#: NEEDS WORK
+msgid "Green"
+msgstr "Verde"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 35
+#: NEEDS WORK
+msgid "Yellow"
+msgstr "Amarelo"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 36
+#: NEEDS WORK
+msgid "Blue"
+msgstr "Azul"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 37
+#: NEEDS WORK
+msgid "Magenta"
+msgstr "Magenta"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 38
+#: NEEDS WORK
+msgid "Cyan"
+msgstr "Ciano"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 39
+#: NEEDS WORK
+msgid "White"
+msgstr "Branco"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 41
+#: NEEDS WORK
+msgid "Bright Black"
+msgstr "Preto Brilhante"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 42
+#: NEEDS WORK
+msgid "Bright Red"
+msgstr "Vermelho Brilhante"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 43
+#: NEEDS WORK
+msgid "Bright Green"
+msgstr "Verde Brilhante"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 44
+#: NEEDS WORK
+msgid "Bright Yellow"
+msgstr "Amarelo Brilhante"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 45
+#: NEEDS WORK
+msgid "Bright Blue"
+msgstr "Azul Brilhante"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 46
+#: NEEDS WORK
+msgid "Bright Magenta"
+msgstr "Magenta Brilhante"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 47
+#: NEEDS WORK
+msgid "Bright Cyan"
+msgstr "Ciano Brilhante"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 48
+#: NEEDS WORK
+msgid "Bright White"
+msgstr "Branco Brilhante"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 58
+#: NEEDS WORK
+msgid "Bold"
+msgstr "Negrito"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 59
+#: NEEDS WORK
+msgid "Italic"
+msgstr "Itálico"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1141
+#: NEEDS WORK
+msgid "Underline"
+msgstr "Sublinhado"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 61
+#: NEEDS WORK
+msgid "Strikethrough"
+msgstr "Tachado"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 62
+#: NEEDS WORK
+msgid "Dim/Faint"
+msgstr "Fraco/Desbotado"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 63
+#: NEEDS WORK
+msgid "Blink"
+msgstr "Piscar"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 68
+#: NEEDS WORK
+msgid "Default"
+msgstr "Padrão"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 85
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 375
+#: NEEDS WORK
+#, python-brace-format
+msgid "Group {}"
+msgstr "Grupo {}"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 174
+#: NEEDS WORK
+msgid "Color:"
+msgstr "Cor:"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 216
+#: NEEDS WORK
+msgid "Bg:"
+msgstr "Bg:"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 110
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 817
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1303
+#: NEEDS WORK
+msgid "Remove"
+msgstr "Remover"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 210
+#: NEEDS WORK
+msgid "New Rule"
+msgstr "Nova Regra"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 210
+#: NEEDS WORK
+msgid "Edit Rule"
+msgstr "Editar Regra"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 256
+#: NEEDS WORK
+msgid "Rule Name"
+msgstr "Nome da Regra"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 263
+#: NEEDS WORK
+msgid "Pattern"
+msgstr "Padrão"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 525
+#: NEEDS WORK
+msgid "Python regex syntax. Capture groups () can have individual colors."
+msgstr "Sintaxe de regex do Python. Grupos de captura () podem ter cores individuais."
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 268
+#: NEEDS WORK
+msgid "Regex Pattern"
+msgstr "Padrão Regex"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 276
+#: NEEDS WORK
+msgid "Regex reference"
+msgstr "Referência de Regex"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 554
+#: NEEDS WORK
+msgid "Colors & Effects"
+msgstr "Cores e Efeitos"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 555
+#: NEEDS WORK
+msgid "First color applies to entire match if no groups."
+msgstr "A primeira cor se aplica a toda a correspondência se não houver grupos."
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 298
+#: NEEDS WORK
+msgid "Add Color"
+msgstr "Adicionar Cor"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 311
+#: NEEDS WORK
+msgid "Description (optional)"
+msgstr "Descrição (opcional)"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 403
+#: NEEDS WORK
+#, python-brace-format
+msgid "Pattern has {} capture group(s). Add colors for each group."
+msgstr "O padrão tem {} grupo(s) de captura. Adicione cores para cada grupo."
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 407
+#: NEEDS WORK
+msgid "Pattern has no capture groups. First color applies to entire match."
+msgstr "O padrão não possui grupos de captura. A primeira cor se aplica a toda a correspondência."
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 419
+#: NEEDS WORK
+msgid "Rule name is required"
+msgstr "O nome da regra é obrigatório"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 425
+#: NEEDS WORK
+msgid "Pattern is required"
+msgstr "O padrão é obrigatório"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 434
+#: NEEDS WORK
+#, python-brace-format
+msgid "Invalid regex: {}"
+msgstr "Expressão regular inválida: {}"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 439
+#: NEEDS WORK
+msgid "✓ Valid pattern"
+msgstr "✓ Padrão válido"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 447
+#: NEEDS WORK
+msgid "Regex Reference"
+msgstr "Referência de Regex"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 470
+#: NEEDS WORK
+msgid "Basic Patterns"
+msgstr "Padrões Básicos"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 472
+#: NEEDS WORK
+msgid "Any character except newline"
+msgstr "Qualquer caractere, exceto nova linha"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 473
+#: NEEDS WORK
+msgid "Any digit [0-9]"
+msgstr "Qualquer dígito [0-9]"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 474
+#: NEEDS WORK
+msgid "Word character [a-zA-Z0-9_]"
+msgstr "Caractere de palavra [a-zA-Z0-9_]"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 475
+#: NEEDS WORK
+msgid "Whitespace character"
+msgstr "Caractere em branco"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 476
+#: NEEDS WORK
+msgid "Negations of above"
+msgstr "Negativas do acima"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 477
+#: NEEDS WORK
+msgid "Start of line"
+msgstr "Início da linha"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 478
+#: NEEDS WORK
+msgid "End of line"
+msgstr "Fim de linha"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 479
+#: NEEDS WORK
+msgid "Word boundary"
+msgstr "Limite de palavra"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 488
+#: NEEDS WORK
+msgid "Quantifiers"
+msgstr "Quantificadores"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 490
+#: NEEDS WORK
+msgid "0 or more times"
+msgstr "0 ou mais vezes"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 491
+#: NEEDS WORK
+msgid "1 or more times"
+msgstr "1 ou mais vezes"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 492
+#: NEEDS WORK
+msgid "0 or 1 time"
+msgstr "0 ou 1 vez"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 493
+#: NEEDS WORK
+msgid "Exactly n times"
+msgstr "Exatamente n vezes"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 494
+#: NEEDS WORK
+msgid "Between n and m times"
+msgstr "Entre n e m vezes"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 495
+#: NEEDS WORK
+msgid "Non-greedy versions"
+msgstr "Versões não gananciosas"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 504
+#: NEEDS WORK
+msgid "Groups & Alternatives"
+msgstr "Grupos e Alternativas"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 506
+#: NEEDS WORK
+msgid "Capture group (gets a color)"
+msgstr "Grupo de captura (obtém uma cor)"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 507
+#: NEEDS WORK
+msgid "Non-capturing group"
+msgstr "Grupo não capturante"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 508
+#: NEEDS WORK
+msgid "Alternation (a or b)"
+msgstr "Alternância (a ou b)"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 509
+#: NEEDS WORK
+msgid "Character class (a, b, or c)"
+msgstr "Classe de caractere (a, b ou c)"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 510
+#: NEEDS WORK
+msgid "Negated class (not a, b, c)"
+msgstr "Classe negada (não a, b, c)"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 511
+#: NEEDS WORK
+msgid "Character range"
+msgstr "Intervalo de caracteres"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 520
+#: NEEDS WORK
+msgid "Examples"
+msgstr "Exemplos"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 522
+#: NEEDS WORK
+msgid "IPv4 address"
+msgstr "endereço IPv4"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 523
+#: NEEDS WORK
+msgid "Match error keywords"
+msgstr "Palavras-chave de erro de correspondência"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 524
+#: NEEDS WORK
+msgid "Key=value pairs (2 groups)"
+msgstr "Par de chave=valor (2 grupos)"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 525
+#: NEEDS WORK
+msgid "Comment lines"
+msgstr "Linhas de comentário"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 862
+#: NEEDS WORK
+#, python-brace-format
+msgid "Command: {}"
+msgstr "Comando: {}"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 938
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1790
+#: NEEDS WORK
+msgid "Enable Command Rules"
+msgstr "Ativar Regras de Comando"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 635
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1459
+#: NEEDS WORK
+msgid "Include Global Rules"
+msgstr "Incluir Regras Globais"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 643
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1467
+#: NEEDS WORK
+msgid "Reset to System Default"
+msgstr "Redefinir para o Padrão do Sistema"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 657
+#: NEEDS WORK
+msgid "Triggers"
+msgstr "Gatilhos"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 664
+#: NEEDS WORK
+msgid "➕ Add Trigger"
+msgstr "➕ Adicionar Gatilho"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 682
+#: NEEDS WORK
+msgid "Highlight Rules"
+msgstr "Regras de Destaque"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 689
+#: NEEDS WORK
+msgid "➕ Add New Rule"
+msgstr "➕ Adicionar Nova Regra"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 753
+#: NEEDS WORK
+msgid "Edit trigger"
+msgstr "Editar gatilho"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 761
+#: NEEDS WORK
+msgid "Remove trigger"
+msgstr "Remover gatilho"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 767
+#: NEEDS WORK
+msgid "Cannot remove the last trigger"
+msgstr "Não é possível remover o último gatilho"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 813
+#: NEEDS WORK
+msgid "Remove Trigger?"
+msgstr "Remover Gatilho?"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 814
+#: NEEDS WORK
+#, python-brace-format
+msgid "Remove \"{}\" from the triggers list?"
+msgstr "Remover \"{}\" da lista de gatilhos?"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 872
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1824
+#: NEEDS WORK
+msgid "Move up"
+msgstr "Mover para cima"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 881
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1833
+#: NEEDS WORK
+msgid "Move down"
+msgstr "Mover para baixo"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 901
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2156
+#: NEEDS WORK
+msgid "Edit rule"
+msgstr "Editar regra"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 909
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2164
+#: NEEDS WORK
+msgid "Delete rule"
+msgstr "Excluir regra"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 957
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1987
+#: NEEDS WORK
+msgid "Reset to System Default?"
+msgstr "Redefinir para o padrão do sistema?"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 958
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1988
+#: NEEDS WORK
+#, python-brace-format
+msgid "This will remove your customizations for \"{}\" and revert to system rules."
+msgstr "Isto removerá suas personalizações para \"{}\" e reverterá para as regras do sistema."
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1831
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1843
+#: NEEDS WORK
+msgid "Reset"
+msgstr "Redefinir"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1041
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2069
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2249
+#: NEEDS WORK
+msgid "Delete Rule?"
+msgstr "Excluir Regra?"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1042
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2070
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2250
+#: NEEDS WORK
+#, python-brace-format
+msgid "Are you sure you want to delete \"{}\"?"
+msgstr "Você tem certeza de que deseja excluir \"{}\"?"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1106
+#: NEEDS WORK
+msgid "Global Rules"
+msgstr "Regras Globais"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1475
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1776
+#: NEEDS WORK
+msgid "Command Rules"
+msgstr "Regras de Comando"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1490
+#: NEEDS WORK
+msgid ""
+"Colorizes terminal output patterns like errors, warnings, and IPs. Many rules can slow down large "
+"outputs."
+msgstr ""
+"Coloriza padrões de saída do terminal, como erros, avisos e IPs. Muitas regras podem desacelerar "
+"saídas grandes."
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1151
+#: NEEDS WORK
+msgid "Activation"
+msgstr "Ativação"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1160
+#: NEEDS WORK
+msgid "Local Terminals"
+msgstr "Terminais Locais"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1169
+#: NEEDS WORK
+msgid "SSH Sessions"
+msgstr "Sessões SSH"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1179
+#: NEEDS WORK
+msgid "Ignored Commands"
+msgstr "Comandos Ignorados"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1200
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1335
+#: NEEDS WORK
+msgid "Restore Defaults"
+msgstr "Restaurar Padrões"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1214
+#: NEEDS WORK
+msgid "➕ Add Ignored Command"
+msgstr "➕ Adicionar Comando Ignorado"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1253
+#: NEEDS WORK
+#, python-brace-format
+msgid "{count} command(s) • Click to expand/collapse"
+msgstr "{count} comando(s) • Clique para expandir/recolher"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1265
+#: NEEDS WORK
+msgid "Remove from ignored list"
+msgstr "Remover da lista de ignorados"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1293
+#: NEEDS WORK
+#, python-brace-format
+msgid "Command added: {}"
+msgstr "Comando adicionado: {}"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1299
+#: NEEDS WORK
+msgid "Remove Ignored Command?"
+msgstr "Remover Comando Ignorado?"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1300
+#: NEEDS WORK
+#, python-brace-format
+msgid "Remove \"{}\" from the ignored commands list? Highlighting will be applied to this command's output."
+msgstr "Remover \"{}\" da lista de comandos ignorados? A realce será aplicado à saída deste comando."
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1325
+#: NEEDS WORK
+#, python-brace-format
+msgid "Command removed: {}"
+msgstr "Comando removido: {}"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1331
+#: NEEDS WORK
+msgid "Restore Default Ignored Commands?"
+msgstr "Restaurar Comandos Ignorados Padrão?"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1332
+#: NEEDS WORK
+msgid ""
+"This will replace your current ignored commands list with the system defaults. Custom additions "
+"will be lost."
+msgstr ""
+"Isso substituirá sua lista atual de comandos ignorados pelos padrões do sistema. Adições "
+"personalizadas serão perdidas."
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1356
+#: NEEDS WORK
+msgid "Restored default ignored commands"
+msgstr "Restaurou os comandos ignorados padrão"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1698
+#: NEEDS WORK
+msgid "Per-Command Highlighting"
+msgstr "Destaque por Comando"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1704
+#: NEEDS WORK
+msgid "Enable Command Detection"
+msgstr "Ativar Detecção de Comando"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1713
+#: NEEDS WORK
+msgid "Commands"
+msgstr "Comandos"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1719
+#: NEEDS WORK
+msgid "➕ Add Command"
+msgstr "➕ Adicionar Comando"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1406
+#: NEEDS WORK
+msgid "Bulk Actions"
+msgstr "Ações em Massa"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1410
+#: NEEDS WORK
+msgid "Enable All"
+msgstr "Ativar Tudo"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1416
+#: NEEDS WORK
+msgid "Disable All"
+msgstr "Desativar Tudo"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1753
+#: NEEDS WORK
+msgid "Reset All Commands"
+msgstr "Redefinir Todos os Comandos"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1766
+#: NEEDS WORK
+msgid "Available Commands"
+msgstr "Comandos Disponíveis"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1438
+#: NEEDS WORK
+msgid "Rules specific to the selected command. Order matters!"
+msgstr "Regras específicas para o comando selecionado. A ordem importa!"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1783
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2081
+#: NEEDS WORK
+msgid "No command selected"
+msgstr "Nenhum comando selecionado"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1784
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2083
+#: NEEDS WORK
+msgid "Select a command from the list above"
+msgstr "Selecione um comando da lista acima"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 628
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1452
+#: NEEDS WORK
+msgid "Apply rules when this command is detected"
+msgstr "Aplique regras quando este comando for detectado"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1799
+#: NEEDS WORK
+msgid "Also apply global rules alongside command-specific rules"
+msgstr "Também aplique regras globais juntamente com regras específicas de comando"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 644
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1468
+#: NEEDS WORK
+msgid "Remove user customization and revert to system rules"
+msgstr "Remover personalização do usuário e reverter para as regras do sistema"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1482
+#: NEEDS WORK
+msgid "Rules (in execution order)"
+msgstr "Regras (na ordem de execução)"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1483
+#: NEEDS WORK
+msgid "Use arrows to reorder rules. Rules are matched from top to bottom."
+msgstr "Use setas para reorganizar regras. As regras são correspondidas de cima para baixo."
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1828
+#: NEEDS WORK
+msgid "➕ Add Rule to This Command"
+msgstr "➕ Adicionar Regra a Este Comando"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1490
+#: NEEDS WORK
+msgid "Create a new highlighting pattern for the selected command"
+msgstr "Crie um novo padrão de destaque para o comando selecionado"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1505
+#: NEEDS WORK
+msgid "Global Highlight Rules"
+msgstr "Regras de Destaque Global"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1517
+#: NEEDS WORK
+msgid "➕ Add New Global Rule"
+msgstr "➕ Adicionar Nova Regra Global"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1863
+#: NEEDS WORK
+msgid "Reset Global Rules"
+msgstr "Redefinir Regras Globais"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1900
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2006
+#: NEEDS WORK
+#, python-brace-format
+msgid "{total} command(s), {enabled} enabled"
+msgstr "{total} comando(s), {enabled} habilitado(s)"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1590
+#: NEEDS WORK
+#, python-brace-format
+msgid "{count} rules"
+msgstr "{count} regras"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1935
+#: NEEDS WORK
+msgid "Edit command rules"
+msgstr "Editar regras de comando"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1944
+#: NEEDS WORK
+msgid "Delete command"
+msgstr "Comando de exclusão"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1972
+#: NEEDS WORK
+msgid "Delete Command?"
+msgstr "Excluir Comando?"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1641
+#: NEEDS WORK
+#, python-brace-format
+msgid "Are you sure you want to delete \"{}\"? This will remove all custom rules for this command."
+msgstr ""
+"Você tem certeza de que deseja excluir \"{}\"? Isso removerá todas as regras personalizadas para "
+"este comando."
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1991
+#: NEEDS WORK
+#, python-brace-format
+msgid "Command deleted: {}"
+msgstr "Comando excluído: {}"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2086
+#: NEEDS WORK
+msgid "Select a command to view its rules"
+msgstr "Selecione um comando para ver suas regras"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2099
+#: NEEDS WORK
+msgid "Command not found"
+msgstr "Comando não encontrado"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1767
+#: NEEDS WORK
+#, python-brace-format
+msgid "Triggers: {triggers}"
+msgstr "Gatilhos: {triggers}"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1770
+#: NEEDS WORK
+msgid "Enabled"
+msgstr "Ativado"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1770
+#: NEEDS WORK
+msgid "Disabled"
+msgstr "Desativado"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1773
+#: NEEDS WORK
+#, python-brace-format
+msgid "{count} rule(s) • {status} • Use arrows to reorder"
+msgstr "{count} regra(s) • {status} • Use setas para reordenar"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1852
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2149
+#: NEEDS WORK
+#, python-brace-format
+msgid "{} colors"
+msgstr "{} cores"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1863
+#: NEEDS WORK
+msgid "Actions"
+msgstr "Ações"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2275
+#: NEEDS WORK
+#, python-brace-format
+msgid "{total} command(s), {enabled} enabled. Click to toggle, select to edit."
+msgstr "{total} comando(s), {enabled} ativado(s). Clique para alternar, selecione para editar."
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2317
+#: NEEDS WORK
+#, python-brace-format
+msgid "Command created: {}"
+msgstr "Comando criado: {}"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2348
+#: NEEDS WORK
+#, python-brace-format
+msgid "Command reset: {}"
+msgstr "Redefinir comando: {}"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2008
+#: NEEDS WORK
+msgid "No user customization to reset"
+msgstr "Nenhuma personalização do usuário para redefinir"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2029
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2222
+#: NEEDS WORK
+#, python-brace-format
+msgid "Rule added: {}"
+msgstr "Regra adicionada: {}"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2055
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2239
+#: NEEDS WORK
+#, python-brace-format
+msgid "Rule updated: {}"
+msgstr "Regra atualizada: {}"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2095
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2273
+#: NEEDS WORK
+#, python-brace-format
+msgid "Rule deleted: {}"
+msgstr "Regra excluída: {}"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2462
+#: NEEDS WORK
+msgid "Restart Required"
+msgstr "Reinício Necessário"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2463
+#: NEEDS WORK
+msgid "Restart the program for the colors to be applied to the terminal."
+msgstr "Reinicie o programa para que as cores sejam aplicadas ao terminal."
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2645
+#: NEEDS WORK
+msgid "Reset Global Rules?"
+msgstr "Redefinir Regras Globais?"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2647
+#: NEEDS WORK
+msgid "This will restore global rules to system defaults. Context customizations will be preserved."
+msgstr ""
+"Isto restaurará as regras globais para os padrões do sistema. As personalizações de contexto serão "
+"preservadas."
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2667
+#: NEEDS WORK
+msgid "Global rules reset to defaults"
+msgstr "Regras globais redefinidas para os padrões."
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2673
+#: NEEDS WORK
+msgid "Reset All Commands?"
+msgstr "Redefinir Todos os Comandos?"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2675
+#: NEEDS WORK
+msgid "This will restore all commands to system defaults. Global rules will be preserved."
+msgstr "Isto restaurará todos os comandos para os padrões do sistema. As regras globais serão preservadas."
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2695
+#: NEEDS WORK
+msgid "All commands reset to defaults"
+msgstr "Todos os comandos redefinidos para os padrões."
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2721
+#: NEEDS WORK
+msgid "New Command"
+msgstr "Novo Comando"
+# 
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1743
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1760
+#: NEEDS WORK
+msgid "Create"
+msgstr "Criar"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2365
+#: NEEDS WORK
+msgid "Enter the command name (e.g., ping, docker, git)"
+msgstr "Digite o nome do comando (por exemplo, ping, docker, git)"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2367
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2589
+#: NEEDS WORK
+msgid "Command Name"
+msgstr "Nome do Comando"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2383
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2498
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2605
+#: NEEDS WORK
+msgid "Enter a command name"
+msgstr "Digite um nome de comando"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2787
+#: NEEDS WORK
+msgid "Command already exists"
+msgstr "O comando já existe"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2397
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2621
+#: NEEDS WORK
+msgid "Use only letters, numbers, - and _"
+msgstr "Use apenas letras, números, - e _"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2402
+#: NEEDS WORK
+msgid "✓ Valid name"
+msgstr "✓ Nome válido"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2441
+#: NEEDS WORK
+msgid "Edit Trigger"
+msgstr "Editar Gatilho"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2441
+#: NEEDS WORK
+msgid "Add Trigger"
+msgstr "Adicionar Gatilho"
+# 
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 369
+#: NEEDS WORK
+msgid "Add"
+msgstr "Adicionar"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2879
+#: NEEDS WORK
+#, python-brace-format
+msgid "Enter a command name that should activate the '{}' command rules."
+msgstr "Digite um nome de comando que deve ativar as regras do comando '{}'."
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2483
+#: NEEDS WORK
+msgid "Trigger Command"
+msgstr "Comando de Gatilho"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2506
+#: NEEDS WORK
+msgid "Trigger already exists"
+msgstr "O gatilho já existe"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2511
+#: NEEDS WORK
+msgid "✓ Valid trigger"
+msgstr "✓ Gatilho válido"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2546
+#: NEEDS WORK
+msgid "Add Ignored Command"
+msgstr "Adicionar Comando Ignorado"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2587
+#: NEEDS WORK
+msgid "Commands with native coloring (grep, ls, git, etc.) should be added here."
+msgstr "Os comandos com coloração nativa (grep, ls, git, etc.) devem ser adicionados aqui."
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2614
+#: NEEDS WORK
+msgid "Command already in list"
+msgstr "Comando já na lista"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2626
+#: NEEDS WORK
+msgid "✓ Valid command name"
+msgstr "✓ Nome de comando válido"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 223
 #: NEEDS WORK
 msgid "Edit Session"
 msgstr "Editar Sessão"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 581
+#: NEEDS WORK
+msgid "Test Connection"
+msgstr "Testar Conexão"
+# 
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 100
+#: NEEDS WORK
+msgid "Test SSH connection"
+msgstr "Testar conexão SSH"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 313
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1128
@@ -1183,30 +3549,33 @@ msgstr "Erro de UI"
 msgid "Failed to initialize dialog interface"
 msgstr "Falha ao inicializar a interface de diálogo"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 319
-#: NEEDS WORK
-msgid "Session Information"
-msgstr "Informações da Sessão"
-# 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 323
 #: NEEDS WORK
 msgid "Session Name"
 msgstr "Nome da Sessão"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 324
+# File: usr/share/ashyterm/ui/dialogs.py, line: 402
 #: NEEDS WORK
-msgid "A descriptive name for this session"
-msgstr "Um nome descritivo para esta sessão"
+msgid "Session Type"
+msgstr "Tipo de Sessão"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 329
+# File: usr/share/ashyterm/ui/dialogs.py, line: 403
 #: NEEDS WORK
-msgid "Enter session name..."
-msgstr "Digite o nome da sessão..."
+msgid "Choose between local terminal or SSH connection"
+msgstr "Escolha entre terminal local ou conexão SSH"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1421
+# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 406
+# File: usr/share/ashyterm/sessions/models.py, line: 511
 #: NEEDS WORK
-msgid "Appearance"
-msgstr "Aparência"
+msgid "Local Terminal"
+msgstr "Terminal Local"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 406
+#: NEEDS WORK
+msgid "SSH Connection"
+msgstr "Conexão SSH"
 # 
 # File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 115
 #: NEEDS WORK
@@ -1228,10 +3597,15 @@ msgstr "Cor Clara"
 msgid "Organization"
 msgstr "Organização"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 352
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 196
 #: NEEDS WORK
-msgid "Choose a folder to organize this session"
-msgstr "Escolha uma pasta para organizar esta sessão"
+msgid "Choose where to store this session"
+msgstr "Escolha onde armazenar esta sessão"
+# 
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 201
+#: NEEDS WORK
+msgid "Select a folder to organize this session"
+msgstr "Selecione uma pasta para organizar esta sessão"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 357
 # File: usr/share/ashyterm/ui/dialogs.py, line: 358
@@ -1241,43 +3615,49 @@ msgstr "Escolha uma pasta para organizar esta sessão"
 msgid "Root"
 msgstr "Raiz"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 398
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 237
 #: NEEDS WORK
-msgid "Connection Type"
-msgstr "Tipo de Conexão"
+msgid "Local Terminal Options"
+msgstr "Opções de Terminal Local"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 402
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 242
 #: NEEDS WORK
-msgid "Session Type"
-msgstr "Tipo de Sessão"
+msgid "Working Directory"
+msgstr "Diretório de Trabalho"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 403
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 243
 #: NEEDS WORK
-msgid "Choose between local terminal or SSH connection"
-msgstr "Escolha entre terminal local ou conexão SSH"
+msgid "Start the terminal in this folder"
+msgstr "Iniciar o terminal nesta pasta"
 # 
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 406
-# File: usr/share/ashyterm/sessions/models.py, line: 511
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 252
 #: NEEDS WORK
-msgid "Local Terminal"
-msgstr "Terminal Local"
+msgid "Default (Home directory)"
+msgstr "Padrão (Diretório inicial)"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 406
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 262
 #: NEEDS WORK
-msgid "SSH Connection"
-msgstr "Conexão SSH"
+msgid "Browse for folder"
+msgstr "Procurar pasta"
+# 
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 285
+#: NEEDS WORK
+msgid "Startup Commands"
+msgstr "Comandos de Inicialização"
+# 
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 293
+#: NEEDS WORK
+msgid ""
+"Commands executed when the terminal starts (one per line). You can write multiple commands like a "
+"small script."
+msgstr ""
+"Comandos executados quando o terminal inicia (um por linha). Você pode escrever múltiplos comandos "
+"como um pequeno script."
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 423
 #: NEEDS WORK
 msgid "SSH Configuration"
 msgstr "Configuração SSH"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 424
-#: NEEDS WORK
-msgid "Configure connection details for SSH sessions"
-msgstr "Configurar detalhes de conexão para sessões SSH"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 429
 # File: usr/share/ashyterm/ui/dialogs.py, line: 894
@@ -1285,50 +3665,25 @@ msgstr "Configurar detalhes de conexão para sessões SSH"
 msgid "Host"
 msgstr "Anfitrião"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 430
-#: NEEDS WORK
-msgid "Hostname or IP address of the remote server"
-msgstr "Nome do host ou endereço IP do servidor remoto"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 435
-#: NEEDS WORK
-msgid "example.com or 192.168.1.100"
-msgstr "example.com ou 192.168.1.100"
-# 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 446
 #: NEEDS WORK
 msgid "Username"
 msgstr "Nome de usuário"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 447
-#: NEEDS WORK
-msgid "Username for SSH authentication (optional)"
-msgstr "Nome de usuário para autenticação SSH (opcional)"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 452
-#: NEEDS WORK
-msgid "username"
-msgstr "nome de usuário"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 464
 #: NEEDS WORK
 msgid "Port"
 msgstr "Porta"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 465
-#: NEEDS WORK
-msgid "SSH port number (default: 22)"
-msgstr "Número da porta SSH (padrão: 22)"
-# 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 463
 #: NEEDS WORK
 msgid "Authentication"
 msgstr "Autenticação"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 464
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 369
 #: NEEDS WORK
-msgid "Choose authentication method"
-msgstr "Escolha o método de autenticação"
+msgid "Choose how to authenticate with the server"
+msgstr "Escolha como se autenticar com o servidor"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 467
 #: NEEDS WORK
@@ -1346,85 +3701,95 @@ msgstr "Senha"
 msgid "SSH Key Path"
 msgstr "Caminho da Chave SSH"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 495
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 384
 #: NEEDS WORK
-msgid "Path to private SSH key file"
-msgstr "Caminho para o arquivo de chave SSH privada"
+msgid "Path to your private key file"
+msgstr "Caminho para o seu arquivo de chave privada"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 510
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 401
 #: NEEDS WORK
-msgid "Browse..."
-msgstr "Navegar..."
+msgid "Browse for SSH key file"
+msgstr "Procurar arquivo de chave SSH"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 534
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 434
 #: NEEDS WORK
-msgid "Password for SSH authentication"
-msgstr "Senha para autenticação SSH"
+msgid "Password Storage"
+msgstr "Armazenamento de Senhas"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 342
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 436
 #: NEEDS WORK
-msgid "Password for SSH authentication (stored in system keyring)"
-msgstr "Senha para autenticação SSH (armazenada no cofre do sistema)"
+msgid "System keyring not available - password will be stored in plain text"
+msgstr "O chaveiro do sistema não está disponível - a senha será armazenada em texto simples"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 346
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 453
 #: NEEDS WORK
-msgid "Password for SSH authentication (keyring not available)"
-msgstr "Senha para autenticação SSH (cofre de chaves não disponível)"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 553
-#: NEEDS WORK
-msgid "Enter password..."
-msgstr "Digite a senha..."
+msgid "SSH Options"
+msgstr "Opções SSH"
 # 
 # File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 309
 #: NEEDS WORK
 msgid "Run Command After Login"
 msgstr "Executar Comando Após Login"
 # 
-# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 311
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 459
 #: NEEDS WORK
-msgid "Execute a custom command automatically after the SSH session connects"
-msgstr "Execute um comando personalizado automaticamente após a conexão da sessão SSH."
+msgid "Execute a command automatically after SSH connects"
+msgstr "Executar um comando automaticamente após a conexão SSH"
 # 
 # File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 318
 #: NEEDS WORK
 msgid "Post-Login Command"
 msgstr "Comando Pós-Login"
 # 
-# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 319
-#: NEEDS WORK
-msgid "Command to execute right after a successful login"
-msgstr "Comando a ser executado logo após um login bem-sucedido"
-# 
-# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 323
-#: NEEDS WORK
-msgid "Example: tmux attach -t main"
-msgstr "Exemplo: tmux attach -t main"
-# 
 # File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 356
 #: NEEDS WORK
 msgid "Enable X11 Forwarding"
 msgstr "Ativar o Encaminhamento X11"
 # 
-# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 357
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 479
 #: NEEDS WORK
-msgid "Allow starting programs in graphical mode (X11)"
-msgstr "Permitir iniciar programas em modo gráfico (X11)"
+msgid "Allow graphical applications from remote server"
+msgstr "Permitir aplicações gráficas de servidor remoto"
+# 
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 353
+#: NEEDS WORK
+msgid "Enable SFTP Session"
+msgstr "Ativar Sessão SFTP"
+# 
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 488
+#: NEEDS WORK
+msgid "Use default directories when opening SFTP"
+msgstr "Usar diretórios padrão ao abrir SFTP"
+# 
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 496
+#: NEEDS WORK
+msgid "SFTP Local Directory"
+msgstr "Diretório Local SFTP"
+# 
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 505
+#: NEEDS WORK
+msgid "SFTP Remote Directory"
+msgstr "Diretório Remoto SFTP"
 # 
 # File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 354
 #: NEEDS WORK
 msgid "Port Forwarding"
 msgstr "Encaminhamento de Porta"
 # 
-# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 355
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 529
 #: NEEDS WORK
-msgid "Create SSH tunnels to forward local ports to remote targets"
-msgstr "Criar túneis SSH para encaminhar portas locais para destinos remotos"
+msgid "Create SSH tunnels to forward ports"
+msgstr "Criar túneis SSH para encaminhar portas"
 # 
-# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 369
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 484
 #: NEEDS WORK
-msgid "Add"
-msgstr "Adicionar"
+msgid "Add Port Forward"
+msgstr "Adicionar Encaminhamento de Porta"
+# 
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 537
+#: NEEDS WORK
+msgid "Create a new SSH tunnel"
+msgstr "Criar um novo túnel SSH"
 # 
 # File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 396
 #: NEEDS WORK
@@ -1456,20 +3821,15 @@ msgstr "{local_host}:{local_port} → {remote_host}:{remote_port}"
 msgid "Edit Port Forward"
 msgstr "Editar Redirecionamento de Porta"
 # 
-# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 484
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 712
 #: NEEDS WORK
-msgid "Add Port Forward"
-msgstr "Adicionar Encaminhamento de Porta"
+msgid "Tunnel Name"
+msgstr "Nome do Túnel"
 # 
-# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 508
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 718
 #: NEEDS WORK
-msgid "Tunnel name"
-msgstr "Nome do túnel"
-# 
-# File: usr/share/ashyterm/filemanager/manager.py, line: 366
-#: NEEDS WORK
-msgid "Name"
-msgstr "Nome"
+msgid "Local Settings"
+msgstr "Configurações Locais"
 # 
 # File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 519
 #: NEEDS WORK
@@ -1481,15 +3841,25 @@ msgstr "Host Local"
 msgid "Local Port"
 msgstr "Porta Local"
 # 
-# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 529
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 732
 #: NEEDS WORK
-msgid "Leave blank to use the SSH host"
-msgstr "Deixe em branco para usar o host SSH"
+msgid "Port on your machine (1025-65535 recommended)"
+msgstr "Porta na sua máquina (1025-65535 recomendado)"
 # 
-# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 536
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 738
 #: NEEDS WORK
-msgid "Connect to a different remote host"
-msgstr "Conectar a um host remoto diferente"
+msgid "Remote Settings"
+msgstr "Configurações Remotas"
+# 
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 745
+#: NEEDS WORK
+msgid "Use Custom Remote Host"
+msgstr "Usar Host Remoto Personalizado"
+# 
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 746
+#: NEEDS WORK
+msgid "Leave off to use the SSH server as target"
+msgstr "Deixe de fora para usar o servidor SSH como destino"
 # 
 # File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 546
 #: NEEDS WORK
@@ -1500,6 +3870,11 @@ msgstr "Host Remoto"
 #: NEEDS WORK
 msgid "Remote Port"
 msgstr "Porta Remota"
+# 
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 765
+#: NEEDS WORK
+msgid "Port on the remote host (1-65535)"
+msgstr "Porta no host remoto (1-65535)"
 # 
 # File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 590
 #: NEEDS WORK
@@ -1523,75 +3898,41 @@ msgstr "O host local não pode estar vazio."
 msgid "Invalid Port Forward"
 msgstr "Encaminhamento de Porta Inválido"
 # 
-# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 346
-#: NEEDS WORK
-msgid "SFTP Session"
-msgstr "Sessão SFTP"
-# 
-# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 348
-#: NEEDS WORK
-msgid "Configure default directories for SFTP connections (optional)"
-msgstr "Configurar diretórios padrão para conexões SFTP (opcional)"
-# 
-# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 353
-#: NEEDS WORK
-msgid "Enable SFTP Session"
-msgstr "Ativar Sessão SFTP"
-# 
-# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 355
-#: NEEDS WORK
-msgid "Use these directories when opening an SFTP tab for this session"
-msgstr "Use estes diretórios ao abrir uma aba SFTP para esta sessão"
-# 
-# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 364
-#: NEEDS WORK
-msgid "Local Directory"
-msgstr "Diretório Local"
-# 
-# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 365
-#: NEEDS WORK
-msgid "Starting directory on your machine for SFTP"
-msgstr "Diretório inicial em sua máquina para SFTP"
-# 
-# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 369
-#: NEEDS WORK
-msgid "Example: /home/user/projects"
-msgstr "/exemplo/usuario/projetos"
-# 
-# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 379
-#: NEEDS WORK
-msgid "Remote Directory"
-msgstr "Diretório Remoto"
-# 
-# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 380
-#: NEEDS WORK
-msgid "Starting directory on the remote host for SFTP"
-msgstr "Diretório inicial no host remoto para SFTP"
-# 
-# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 384
-#: NEEDS WORK
-msgid "Example: /var/www"
-msgstr "Exemplo: /var/www"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 581
-#: NEEDS WORK
-msgid "Test Connection"
-msgstr "Testar Conexão"
-# 
 # File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 773
 #: NEEDS WORK
 msgid "Remote server must have X11Forwarding yes in sshd_config."
 msgstr "O servidor remoto deve ter X11Forwarding yes no sshd_config."
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 707
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 1030
 #: NEEDS WORK
-msgid "Select SSH Key"
-msgstr "Selecionar Chave SSH"
+msgid "Select Working Directory"
+msgstr "Selecionar Diretório de Trabalho"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 720
 #: NEEDS WORK
 msgid "File Dialog Error"
 msgstr "Erro de Diálogo de Arquivo"
+# 
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 1051
+#: NEEDS WORK
+msgid "Failed to open folder browser"
+msgstr "Falha ao abrir o navegador de pastas"
+# 
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 1065
+#: NEEDS WORK
+msgid "Folder Selection Error"
+msgstr "Erro na Seleção da Pasta"
+# 
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 1066
+#: NEEDS WORK
+#, python-brace-format
+msgid "Failed to select folder: {}"
+msgstr "Falha ao selecionar a pasta: {}"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 707
+#: NEEDS WORK
+msgid "Select SSH Key"
+msgstr "Selecionar Chave SSH"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 720
 #: NEEDS WORK
@@ -1708,6 +4049,16 @@ msgstr ""
 msgid "Session name"
 msgstr "Nome da sessão"
 # 
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 1367
+#: NEEDS WORK
+msgid "Working directory must exist and be a folder."
+msgstr "O diretório de trabalho deve existir e ser uma pasta."
+# 
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 1374
+#: NEEDS WORK
+msgid "Invalid working directory path."
+msgstr "Caminho do diretório de trabalho inválido."
+# 
 # #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
 # 
 # File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 716
@@ -1780,11 +4131,6 @@ msgstr "Por favor, preencha todos os campos obrigatórios."
 #: NEEDS WORK
 msgid "Delete this custom command"
 msgstr "Excluir este comando personalizado"
-# 
-# File: usr/share/ashyterm/ui/dialogs/command_guide_dialog.py, line: 143
-#: NEEDS WORK
-msgid "Command Guide"
-msgstr "Guia de Comandos"
 # 
 # File: usr/share/ashyterm/ui/dialogs/command_guide_dialog.py, line: 165
 #: NEEDS WORK
@@ -1880,7 +4226,7 @@ msgstr "{} é obrigatório"
 msgid "Tab &amp; Pane Management"
 msgstr "Gerenciamento de Abas e Painéis"
 # 
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
+# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
 # 
 # File: usr/share/ashyterm/ui/menus.py, line: 145
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1597
@@ -1923,16 +4269,6 @@ msgstr "Fechar Painel Ativo"
 msgid "Terminal Interaction"
 msgstr "Interação do Terminal"
 # 
-# File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 38
-#: NEEDS WORK
-msgid "Send Command  All Tabs"
-msgstr "Enviar Comando  Todas as Abas"
-# 
-# File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 39
-#: NEEDS WORK
-msgid "Ask AI Assistant"
-msgstr "Perguntar ao Assistente de IA"
-# 
 # File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 42
 #: NEEDS WORK
 msgid "Zoom"
@@ -1957,11 +4293,6 @@ msgstr "Redefinir Zoom"
 #: NEEDS WORK
 msgid "Application &amp; Window"
 msgstr "Aplicativo e Janela"
-# 
-# File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 53
-#: NEEDS WORK
-msgid "Toggle File Manager"
-msgstr "Alternar Gerenciador de Arquivos"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1605
 #: NEEDS WORK
@@ -2062,111 +4393,60 @@ msgstr "Redefinir Todos os Atalhos"
 msgid "This will reset all keyboard shortcuts to their default values. Continue?"
 msgstr "Isto irá redefinir todos os atalhos de teclado para seus valores padrão. Continuar?"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1831
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1843
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1421
 #: NEEDS WORK
-msgid "Reset"
-msgstr "Redefinir"
+msgid "Appearance"
+msgstr "Aparência"
 # 
 # File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 56
 #: NEEDS WORK
 msgid "Color Scheme"
 msgstr "Esquema de Cores"
 # 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 59
-#: NEEDS WORK
-msgid "Current Scheme"
-msgstr "Esquema Atual"
-# 
 # File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 62
 #: NEEDS WORK
 msgid "Manage Schemes..."
 msgstr "Gerenciar Esquemas..."
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1016
-#: NEEDS WORK
-msgid "Typography"
-msgstr "Tipografia"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1017
-#: NEEDS WORK
-msgid "Configure fonts and spacing"
-msgstr "Configurar fontes e espaçamento"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1465
 #: NEEDS WORK
 msgid "Terminal Font"
 msgstr "Fonte do Terminal"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1466
-#: NEEDS WORK
-msgid "Select font family and size for terminal text"
-msgstr "Selecione a família de fontes e o tamanho para o texto do terminal"
-# 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1033
 #: NEEDS WORK
 msgid "Line Spacing"
 msgstr "Espaçamento entre linhas"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1034
-#: NEEDS WORK
-msgid "Adjust the vertical space between lines"
-msgstr "Ajustar o espaço vertical entre linhas"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1045
-#: NEEDS WORK
-msgid "Miscellaneous"
-msgstr "Diversos"
 # 
 # File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 102
 #: NEEDS WORK
 msgid "Terminal Transparency"
 msgstr "Transparência do Terminal"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1449
-#: NEEDS WORK
-msgid "Adjust terminal background transparency"
-msgstr "Ajustar a transparência do fundo do terminal"
-# 
 # File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 118
 #: NEEDS WORK
 msgid "Headerbar Transparency"
 msgstr "Transparência da Barra de Cabeçalho"
-# 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 119
-#: NEEDS WORK
-msgid "For headerbar and file manager"
-msgstr "Para barra de cabeçalho e gerenciador de arquivos"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1065
 #: NEEDS WORK
 msgid "Use Bright Colors for Bold Text"
 msgstr "Use Cores Brilhantes para Texto em Negrito"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1066
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 169
 #: NEEDS WORK
-msgid "Render bold text with the brighter version of the base color"
-msgstr "Renderizar texto em negrito com a versão mais clara da cor base"
+msgid "Auto-Hide Sessions Panel"
+msgstr "Painel de Sessões com Ocultação Automática"
 # 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 132
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 170
 #: NEEDS WORK
-msgid "Auto-Hide Sidebar"
-msgstr "Ocultar Barra Lateral Automaticamente"
-# 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 134
-#: NEEDS WORK
-msgid "Automatically hide the sidebar when activating sessions or layouts"
-msgstr "Ocultar automaticamente a barra lateral ao ativar sessões ou layouts"
+msgid "Hide panel when activating sessions"
+msgstr "Ocultar painel ao ativar sessões"
 # 
 # File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 147
 #: NEEDS WORK
 msgid "Blinking Text"
 msgstr "Texto Piscante"
-# 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 148
-#: NEEDS WORK
-msgid "Control how the terminal handles blinking text"
-msgstr "Controle como o terminal lida com texto piscante"
 # 
 # File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 150
 #: NEEDS WORK
@@ -2183,11 +4463,6 @@ msgstr "Sempre"
 msgid "Tab Alignment"
 msgstr "Alinhamento de Guia"
 # 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 176
-#: NEEDS WORK
-msgid "Align tabs to the left or center of the tab bar"
-msgstr "Alinhar abas à esquerda ou ao centro da barra de abas"
-# 
 # File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 178
 #: NEEDS WORK
 msgid "Left"
@@ -2197,6 +4472,21 @@ msgstr "Esquerda"
 #: NEEDS WORK
 msgid "Center"
 msgstr "Centro"
+# 
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 212
+#: NEEDS WORK
+msgid "Icon Theme"
+msgstr "Tema de Ícone"
+# 
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 218
+#: NEEDS WORK
+msgid "Ashy Icons (Bundled)"
+msgstr "Ícones Ashy (Agrupados)"
+# 
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 218
+#: NEEDS WORK
+msgid "System Icons"
+msgstr "Ícones do Sistema"
 # 
 # File: usr/share/ashyterm/window.py, line: 857
 #: NEEDS WORK
@@ -2208,11 +4498,6 @@ msgstr "Terminal"
 msgid "Cursor Shape"
 msgstr "Forma do Cursor"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1138
-#: NEEDS WORK
-msgid "Select the shape of the terminal cursor"
-msgstr "Selecione a forma do cursor do terminal"
-# 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1141
 #: NEEDS WORK
 msgid "Block"
@@ -2223,20 +4508,10 @@ msgstr "Bloco"
 msgid "I-Beam"
 msgstr "I-Beam"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1141
-#: NEEDS WORK
-msgid "Underline"
-msgstr "Sublinhado"
-# 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1148
 #: NEEDS WORK
 msgid "Cursor Blinking"
 msgstr "Cursor Piscando"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1148
-#: NEEDS WORK
-msgid "Control cursor blinking behavior"
-msgstr "Controlar o comportamento de piscar do cursor"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1151
 #: NEEDS WORK
@@ -2253,207 +4528,56 @@ msgstr "Ativado"
 msgid "Off"
 msgstr "Desligado"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1118
-#: NEEDS WORK
-msgid "Scrolling"
-msgstr "Rolagem"
-# 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1123
 #: NEEDS WORK
 msgid "Scrollback Lines"
 msgstr "Linhas de Rolagem"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1124
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 246
 #: NEEDS WORK
-msgid "Number of lines to keep in history (0 for unlimited)"
-msgstr "Número de linhas a manter no histórico (0 para ilimitado)"
+msgid "0 for unlimited"
+msgstr "0 para ilimitado"
 # 
 # File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 201
 #: NEEDS WORK
 msgid "Mouse Scroll Sensitivity"
 msgstr "Sensibilidade de Rolagem do Mouse"
 # 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 202
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 258
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 274
 #: NEEDS WORK
-msgid "Controls the scroll speed for a mouse wheel. Lower is slower."
-msgstr "Controla a velocidade de rolagem para uma roda de mouse. Menor é mais lento."
+msgid "Lower is slower"
+msgstr "Mais baixo é mais lento"
 # 
 # File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 217
 #: NEEDS WORK
 msgid "Touchpad Scroll Sensitivity"
 msgstr "Sensibilidade de Rolagem do Touchpad"
 # 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 218
-#: NEEDS WORK
-msgid "Controls the scroll speed for a touchpad. Lower is slower."
-msgstr "Controla a velocidade de rolagem de um touchpad. Menor é mais lento."
-# 
 # File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 233
 #: NEEDS WORK
 msgid "Scroll on Paste"
 msgstr "Rolagem ao Colar"
-# 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 234
-#: NEEDS WORK
-msgid "Automatically scroll to the bottom when pasting text"
-msgstr "Role automaticamente para o final ao colar texto"
-# 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 246
-#: NEEDS WORK
-msgid "Selection"
-msgstr "Seleção"
-# 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 247
-#: NEEDS WORK
-msgid "Extra characters for word selection (e.g., -_.:/~)"
-msgstr "Caracteres extras para seleção de palavras (por exemplo, -_.:/~)"
-# 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 252
-#: NEEDS WORK
-msgid "Word Characters"
-msgstr "Caracteres de Palavra"
-# 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 292
-#: NEEDS WORK
-msgid "Shell & Bell"
-msgstr "Shell & Bell"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1107
 #: NEEDS WORK
 msgid "Run Command as a Login Shell"
 msgstr "Executar Comando como um Shell de Login"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1108
-#: NEEDS WORK
-msgid "Sources /etc/profile and ~/.profile on startup"
-msgstr "Fontes /etc/profile e ~/.profile na inicialização"
-# 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1161
 #: NEEDS WORK
 msgid "Audible Bell"
 msgstr "Sino Audível"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1162
-#: NEEDS WORK
-msgid "Emit a sound for the terminal bell character"
-msgstr "Emita um som para o caractere de campainha do terminal"
-# 
-# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
-# 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 319
-# File: usr/share/ashyterm/window.py, line: 679
-#: NEEDS WORK
-msgid "AI Assistant"
-msgstr "Assistente de IA"
-# 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 321
-#: NEEDS WORK
-msgid "Configure the Linux-focused assistant available inside the terminal."
-msgstr "Configurar o assistente focado em Linux disponível dentro do terminal."
-# 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 327
-#: NEEDS WORK
-msgid "Enable AI Assistant"
-msgstr "Ativar Assistente de IA"
-# 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 328
-#: NEEDS WORK
-msgid "Allow Ctrl+Shift+I to ask the assistant for help."
-msgstr "Permitir Ctrl+Shift+I para pedir ajuda ao assistente."
-# 
-# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
-# 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 339
-# File: usr/share/ashyterm/window.py, line: 546
-#: NEEDS WORK
-msgid "Provider"
-msgstr "Fornecedor"
-# 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 340
-#: NEEDS WORK
-msgid "Select which AI service to use."
-msgstr "Selecione qual serviço de IA usar."
-# 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 361
-#: NEEDS WORK
-msgid "Model Identifier"
-msgstr "Identificador do Modelo"
-# 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 363
-#: NEEDS WORK
-msgid "Examples: llama-3.1-8b-instant, gemini-2.5-flash."
-msgstr "exemplos: llama-3.1-8b-instant, gemini-2.5-flash."
-# 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 368
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 779
-#: NEEDS WORK
-msgid "llama-3.1-8b-instant"
-msgstr "llama-3.1-8b-instant"
-# 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 374
-#: NEEDS WORK
-msgid "API Key"
-msgstr "Chave da API"
-# 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 375
-#: NEEDS WORK
-msgid "Stored locally and used to authenticate requests."
-msgstr "Armazenado localmente e usado para autenticar solicitações."
-# 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 379
-#: NEEDS WORK
-msgid "Paste your API key"
-msgstr "Cole seu chave de API"
-# 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 391
-#: NEEDS WORK
-msgid "Site URL (optional)"
-msgstr "URL do site (opcional)"
-# 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 392
-#: NEEDS WORK
-msgid "Used as HTTP Referer header on OpenRouter rankings."
-msgstr "Usado como cabeçalho Referer HTTP nas classificações do OpenRouter."
-# 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 396
-#: NEEDS WORK
-msgid "https://example.com"
-msgstr "https://example.com"
-# 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 408
-#: NEEDS WORK
-msgid "Site title (optional)"
-msgstr "Título do site (opcional)"
-# 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 409
-#: NEEDS WORK
-msgid "Sent via X-Title header for OpenRouter rankings."
-msgstr "Enviado via cabeçalho X-Title para classificações do OpenRouter."
-# 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 413
-#: NEEDS WORK
-msgid "My Project"
-msgstr "Meu Projeto"
 # 
 # File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 287
 #: NEEDS WORK
 msgid "Profiles & Data"
 msgstr "Perfis e Dados"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1082
-#: NEEDS WORK
-msgid "Startup"
-msgstr "Inicialização"
-# 
 # File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 295
 #: NEEDS WORK
 msgid "On Startup"
 msgstr "Na Inicialização"
-# 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 296
-#: NEEDS WORK
-msgid "Action to take when the application starts"
-msgstr "Ação a ser tomada quando o aplicativo é iniciado"
 # 
 # File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 300
 #: NEEDS WORK
@@ -2470,17 +4594,7 @@ msgstr "Perguntar para restaurar a sessão anterior"
 msgid "Never restore previous session"
 msgstr "Nunca restaurar a sessão anterior"
 # 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 317
-#: NEEDS WORK
-msgid "Backup &amp; Recovery"
-msgstr "Backup e Recuperação"
-# 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 319
-#: NEEDS WORK
-msgid "Create an encrypted backup of your data or restore from a previous backup."
-msgstr "Crie um backup criptografado dos seus dados ou restaure a partir de um backup anterior."
-# 
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
+# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
 # 
 # File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 325
 # File: usr/share/ashyterm/app.py, line: 390
@@ -2488,10 +4602,10 @@ msgstr "Crie um backup criptografado dos seus dados ou restaure a partir de um b
 msgid "Create Backup"
 msgstr "Criar Backup"
 # 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 327
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 350
 #: NEEDS WORK
-msgid "Save all sessions, settings, and passwords to an encrypted file."
-msgstr "Salvar todas as sessões, configurações e senhas em um arquivo criptografado."
+msgid "Encrypted backup of sessions and settings"
+msgstr "Backup criptografado de sessões e configurações"
 # 
 # File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 330
 #: NEEDS WORK
@@ -2503,127 +4617,75 @@ msgstr "Criar Backup..."
 msgid "Restore from Backup"
 msgstr "Restaurar a partir do Backup"
 # 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 339
-#: NEEDS WORK
-msgid "Replace all current data with a backup file."
-msgstr "Substitua todos os dados atuais por um arquivo de backup."
-# 
 # File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 341
 #: NEEDS WORK
 msgid "Restore..."
 msgstr "Restaurar..."
-# 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 348
-#: NEEDS WORK
-msgid "Remote Editing"
-msgstr "Edição Remota"
 # 
 # File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 352
 #: NEEDS WORK
 msgid "Use System Temporary Directory"
 msgstr "Usar Diretório Temporário do Sistema"
 # 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 354
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 374
 #: NEEDS WORK
-msgid "Store temporary files for remote editing in /tmp instead of the config folder"
-msgstr "Armazene arquivos temporários para edição remota em /tmp em vez da pasta de configuração"
+msgid "Use /tmp for remote editing files"
+msgstr "Use /tmp para edição remota de arquivos"
 # 
 # File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 369
 #: NEEDS WORK
 msgid "Clear Remote Edit Files on Exit"
 msgstr "Limpar Arquivos de Edição Remota ao Sair"
 # 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 371
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 392
 #: NEEDS WORK
-msgid "Automatically delete all temporary remote files when closing the app"
-msgstr "Excluir automaticamente todos os arquivos temporários remotos ao fechar o aplicativo."
+msgid "SSH Connection Persistence"
+msgstr "Persistência de Conexão SSH"
 # 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 416
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 393
 #: NEEDS WORK
-msgid "SSH"
-msgstr "SSH"
-# 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 417
-#: NEEDS WORK
-msgid "Settings for SSH connection management (multiplexing)."
-msgstr "Configurações para gerenciamento de conexão SSH (multiplexação)."
-# 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 422
-#: NEEDS WORK
-msgid "Connection Persistence (seconds)"
-msgstr "Persistência de Conexão (segundos)"
-# 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 424
-#: NEEDS WORK
-msgid "Keep SSH connections alive in the background for faster reconnections. Set to 0 to disable."
-msgstr ""
-"Mantenha as conexões SSH ativas em segundo plano para reconexões mais rápidas. Defina como 0 para "
-"desativar."
+msgid "Seconds to keep connections alive (0 to disable)"
+msgstr "Segundos para manter as conexões ativas (0 para desativar)"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1790
 #: NEEDS WORK
 msgid "Advanced"
 msgstr "Avançado"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1276
-#: NEEDS WORK
-msgid "Advanced Features"
-msgstr "Recursos Avançados"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1277
-#: NEEDS WORK
-msgid "Enable or disable advanced terminal features"
-msgstr "Ativar ou desativar recursos avançados do terminal"
-# 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1282
 #: NEEDS WORK
 msgid "Bidirectional Text Support"
 msgstr "Suporte a Texto Bidirecional"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1284
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 416
 #: NEEDS WORK
-msgid "Enable for languages like Arabic and Hebrew (may affect performance)"
-msgstr "Ativar para idiomas como árabe e hebraico (pode afetar o desempenho)"
+msgid "For Arabic and Hebrew (affects performance)"
+msgstr "Para árabe e hebraico (afeta o desempenho)"
 # 
 # File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 411
 #: NEEDS WORK
 msgid "Enable Arabic Text Shaping"
 msgstr "Ativar Formatação de Texto em Árabe"
 # 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 413
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 424
 #: NEEDS WORK
-msgid "Correctly render ligatures and contextual forms for Arabic script"
-msgstr "Render corretamente ligaduras e formas contextuais para o script árabe"
+msgid "Render ligatures for Arabic script"
+msgstr "Render ligaduras para o script árabe"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1295
 #: NEEDS WORK
 msgid "SIXEL Graphics Support"
 msgstr "Suporte a Gráficos SIXEL"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1296
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 432
 #: NEEDS WORK
-msgid "Allow the terminal to display SIXEL images (experimental)"
-msgstr "Permitir que o terminal exiba imagens SIXEL (experimental)"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1172
-#: NEEDS WORK
-msgid "Compatibility"
-msgstr "Compatibilidade"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1173
-#: NEEDS WORK
-msgid "Settings for compatibility with older systems and tools"
-msgstr "Configurações para compatibilidade com sistemas e ferramentas mais antigos"
+msgid "Display SIXEL images (experimental)"
+msgstr "Exibir imagens SIXEL (experimental)"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1178
 #: NEEDS WORK
 msgid "Backspace Key"
 msgstr "Tecla Backspace"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1178
-#: NEEDS WORK
-msgid "Sequence to send for Backspace key"
-msgstr "Sequência a ser enviada para a tecla Backspace"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1182
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1197
@@ -2653,20 +4715,10 @@ msgstr "Sequência de Escape"
 msgid "Delete Key"
 msgstr "Tecla Delete"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1193
-#: NEEDS WORK
-msgid "Sequence to send for Delete key"
-msgstr "Sequência a enviar para a tecla Delete"
-# 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1207
 #: NEEDS WORK
 msgid "Ambiguous-width Characters"
 msgstr "Caracteres de largura ambígua"
-# 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 482
-#: NEEDS WORK
-msgid "Set the width for ambiguous characters (e.g., CJK)"
-msgstr "Defina a largura para caracteres ambíguos (por exemplo, CJK)"
 # 
 # File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 485
 #: NEEDS WORK
@@ -2678,40 +4730,20 @@ msgstr "Estreito (célula única)"
 msgid "Wide (double-cell)"
 msgstr "Largo (célula dupla)"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1071
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 252
 #: NEEDS WORK
-msgid "Logging"
-msgstr "Registro"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1071
-#: NEEDS WORK
-msgid "Configure application logging behavior"
-msgstr "Configurar o comportamento de registro da aplicação"
+msgid "Word Characters"
+msgstr "Caracteres de Palavra"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1076
 #: NEEDS WORK
 msgid "Save Logs to File"
 msgstr "Salvar Logs em Arquivo"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1077
-#: NEEDS WORK
-msgid "Save application logs to the configuration directory"
-msgstr "Salvar logs da aplicação no diretório de configuração"
-# 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1087
 #: NEEDS WORK
 msgid "Console Log Level"
 msgstr "Nível de Log do Console"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1088
-#: NEEDS WORK
-msgid "Set the minimum level of messages shown in the console"
-msgstr "Defina o nível mínimo de mensagens exibidas no console"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1832
-#: NEEDS WORK
-msgid "Reset application settings to defaults"
-msgstr "Redefinir as configurações do aplicativo para os padrões."
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1838
 # File: usr/share/ashyterm/ui/dialogs.py, line: 2002
@@ -2720,79 +4752,29 @@ msgstr "Redefinir as configurações do aplicativo para os padrões."
 msgid "Reset All Settings"
 msgstr "Redefinir Todas as Configurações"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1839
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 681
 #: NEEDS WORK
-msgid "Restore all settings to their default values"
-msgstr "Restaurar todas as configurações para seus valores padrão"
+msgid "Icon Theme Changed"
+msgstr "Tema de Ícone Alterado"
 # 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 781
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 683
 #: NEEDS WORK
-msgid "Model identifier (for example: llama-3.1-8b-instant)."
-msgstr "Identificador do modelo (por exemplo: llama-3.1-8b-instant)."
+msgid "The icon theme change will take effect after restarting the application."
+msgstr "A mudança do tema do ícone terá efeito após reiniciar o aplicativo."
 # 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 783
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 687
 #: NEEDS WORK
-msgid "API key."
-msgstr "chave da API."
+msgid "Sessions Panel Visibility"
+msgstr "Visibilidade do Painel de Sessões"
 # 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 786
-#: NEEDS WORK
-msgid "gemini-2.5-flash"
-msgstr "gemini-2.5-flash"
-# 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 788
-#: NEEDS WORK
-msgid "Gemini model identifier (for example: gemini-2.5-flash)."
-msgstr "Identificador do modelo Gemini (por exemplo: gemini-2.5-flash)."
-# 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 790
-#: NEEDS WORK
-msgid "Google AI Studio API key."
-msgstr "Chave da API do Google AI Studio."
-# 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 842
-#: NEEDS WORK
-msgid "openrouter/polaris-alpha"
-msgstr "openrouter/polaris-alpha"
-# 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 844
-#: NEEDS WORK
-msgid "OpenRouter model identifier (for example: openrouter/polaris-alpha)."
-msgstr "Identificador do modelo OpenRouter (por exemplo: openrouter/polaris-alpha)."
-# 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 846
-#: NEEDS WORK
-msgid "OpenRouter API key."
-msgstr "Chave da API do OpenRouter."
-# 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 785
-#: NEEDS WORK
-msgid "model-name"
-msgstr "nome-do-modelo"
-# 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 787
-#: NEEDS WORK
-msgid "Model identifier required by the selected provider."
-msgstr "Identificador do modelo necessário pelo provedor selecionado."
-# 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 789
-#: NEEDS WORK
-msgid "API key used to authenticate requests."
-msgstr "Chave da API usada para autenticar solicitações."
-# 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 652
-#: NEEDS WORK
-msgid "Sidebar Visibility"
-msgstr "Visibilidade da Barra Lateral"
-# 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 654
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 689
 #: NEEDS WORK
 msgid ""
-"The sidebar visibility change will take effect when you close and reopen the application. You can "
-"also toggle the sidebar manually using Ctrl+Shift+H."
+"The sessions panel visibility change will take effect when you close and reopen the application. "
+"You can also toggle the sessions panel manually using Ctrl+Shift+H."
 msgstr ""
-"A alteração na visibilidade da barra lateral terá efeito quando você fechar e reabrir o aplicativo. "
-"Você também pode alternar a barra lateral manualmente usando Ctrl+Shift+H."
+"A alteração na visibilidade do painel de sessões terá efeito quando você fechar e reabrir o "
+"aplicativo. Você também pode alternar o painel de sessões manualmente usando Ctrl+Shift+H."
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 2003
 #: NEEDS WORK
@@ -4400,7 +6382,7 @@ msgstr "Falha ao salvar: {}"
 msgid "Move Error"
 msgstr "Erro de Movimento"
 # 
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
+# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
 # 
 # File: usr/share/ashyterm/sessions/tree.py, line: 801
 # File: usr/share/ashyterm/state/window_state.py, line: 165
@@ -4792,20 +6774,40 @@ msgstr "Mostrar arquivos ocultos"
 msgid "Filter files..."
 msgstr "Filtrar arquivos..."
 # 
-# File: usr/share/ashyterm/filemanager/manager.py, line: 397
+# File: src/ashyterm/filemanager/manager.py, line: 653
 #: NEEDS WORK
-msgid "Recursive Search"
-msgstr "Busca Recursiva"
+msgid "Start Recursive Search"
+msgstr "Iniciar Busca Recursiva"
+# 
+# File: src/ashyterm/filemanager/manager.py, line: 675
+#: NEEDS WORK
+msgid "Cancel Search"
+msgstr "Cancelar Pesquisa"
+# 
+# File: src/ashyterm/filemanager/manager.py, line: 689
+#: NEEDS WORK
+msgid "Search in subfolders"
+msgstr "Pesquisar em subpastas"
+# 
+# File: src/ashyterm/filemanager/manager.py, line: 695
+#: NEEDS WORK
+msgid "Recursive"
+msgstr "Recursivo"
 # 
 # File: usr/share/ashyterm/filemanager/manager.py, line: 203
 #: NEEDS WORK
 msgid "Transfer History"
 msgstr "Histórico de Transferência"
 # 
-# File: usr/share/ashyterm/filemanager/manager.py, line: 209
+# File: src/ashyterm/filemanager/manager.py, line: 720
 #: NEEDS WORK
-msgid "Upload Files"
-msgstr "Carregar Arquivos"
+msgid "Send Files"
+msgstr "Enviar Arquivos"
+# 
+# File: src/ashyterm/filemanager/manager.py, line: 949
+#: NEEDS WORK
+msgid "Search cancelled"
+msgstr "Busca cancelada"
 # 
 # File: usr/share/ashyterm/filemanager/manager.py, line: 665
 # File: usr/share/ashyterm/filemanager/manager.py, line: 1266
@@ -4818,6 +6820,11 @@ msgstr "Buscando..."
 #, python-brace-format
 msgid "Showing first {count} results. Refine your search to narrow the list."
 msgstr "Mostrando os primeiros {count} resultados. Refine sua busca para restringir a lista."
+# 
+# File: usr/share/ashyterm/filemanager/manager.py, line: 366
+#: NEEDS WORK
+msgid "Name"
+msgstr "Nome"
 # 
 # File: usr/share/ashyterm/filemanager/manager.py, line: 375
 #: NEEDS WORK
@@ -4848,29 +6855,15 @@ msgstr "Proprietário"
 msgid "Group"
 msgstr "Grupo"
 # 
-# File: usr/share/ashyterm/filemanager/manager.py, line: 697
-#: NEEDS WORK
-msgid "Command Failed"
-msgstr "Comando Falhou"
-# 
-# File: usr/share/ashyterm/filemanager/manager.py, line: 699
-#: NEEDS WORK
-msgid ""
-"The command did not complete in time. The terminal may be busy or unresponsive. Your original input "
-"has been restored."
-msgstr ""
-"O comando não foi concluído a tempo. O terminal pode estar ocupado ou não responsivo. Sua entrada "
-"original foi restaurada."
-# 
 # File: usr/share/ashyterm/filemanager/manager.py, line: 532
 #: NEEDS WORK
 msgid "Loading..."
 msgstr "Carregando..."
 # 
-# File: usr/share/ashyterm/filemanager/manager.py, line: 1268
+# File: src/ashyterm/filemanager/manager.py, line: 1848
 #: NEEDS WORK
-msgid "Recursive filter..."
-msgstr "Filtro recursivo..."
+msgid "Type and press Enter..."
+msgstr "Digite e pressione Enter..."
 # 
 # File: usr/share/ashyterm/filemanager/manager.py, line: 1551
 # File: usr/share/ashyterm/filemanager/manager.py, line: 1740
@@ -4914,12 +6907,6 @@ msgstr "Comando de criar pasta enviado ao terminal"
 #: NEEDS WORK
 msgid "Enter a name for the new folder:"
 msgstr "Digite um nome para a nova pasta:"
-# 
-# File: usr/share/ashyterm/filemanager/manager.py, line: 1743
-# File: usr/share/ashyterm/filemanager/manager.py, line: 1760
-#: NEEDS WORK
-msgid "Create"
-msgstr "Criar"
 # 
 # File: usr/share/ashyterm/filemanager/manager.py, line: 1754
 #: NEEDS WORK
@@ -5148,7 +7135,7 @@ msgstr "Abrir Versão Local"
 msgid "Download New Version"
 msgstr "Baixar Nova Versão"
 # 
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
+# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
 # 
 # File: usr/share/ashyterm/sessions/remotefile.py, line: 41
 # File: usr/share/ashyterm/filemanager/manager.py, line: 1255
@@ -5204,7 +7191,7 @@ msgstr "O arquivo está aberto. Salvá-lo enviará as alterações de volta para
 msgid "Upload failed: Could not verify remote file."
 msgstr "Falha no upload: Não foi possível verificar o arquivo remoto."
 # 
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
+# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
 # 
 # File: usr/share/ashyterm/sessions/remotefile.py, line: 129
 # File: usr/share/ashyterm/filemanager/manager.py, line: 1519
@@ -5212,7 +7199,7 @@ msgstr "Falha no upload: Não foi possível verificar o arquivo remoto."
 msgid "File Conflict"
 msgstr "Conflito de Arquivo"
 # 
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
+# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
 # 
 # File: usr/share/ashyterm/sessions/remotefile.py, line: 131
 # File: usr/share/ashyterm/filemanager/manager.py, line: 1521
@@ -5225,7 +7212,7 @@ msgstr ""
 "O arquivo '{filename}' foi modificado no servidor desde que você começou a editá-lo. Como você "
 "gostaria de prosseguir?"
 # 
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
+# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
 # 
 # File: usr/share/ashyterm/sessions/remotefile.py, line: 135
 # File: usr/share/ashyterm/filemanager/manager.py, line: 1525
@@ -5233,7 +7220,7 @@ msgstr ""
 msgid "Cancel Upload"
 msgstr "Cancelar Upload"
 # 
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
+# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
 # 
 # File: usr/share/ashyterm/sessions/remotefile.py, line: 136
 # File: usr/share/ashyterm/filemanager/manager.py, line: 1526
@@ -5241,7 +7228,7 @@ msgstr "Cancelar Upload"
 msgid "Overwrite Server File"
 msgstr "Substituir Arquivo do Servidor"
 # 
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
+# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
 # 
 # File: usr/share/ashyterm/sessions/remotefile.py, line: 137
 # File: usr/share/ashyterm/filemanager/manager.py, line: 1527
@@ -5249,7 +7236,7 @@ msgstr "Substituir Arquivo do Servidor"
 msgid "Save as New File"
 msgstr "Salvar como Novo Arquivo"
 # 
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
+# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
 # 
 # File: usr/share/ashyterm/sessions/remotefile.py, line: 158
 # File: usr/share/ashyterm/filemanager/manager.py, line: 1545
@@ -5257,7 +7244,7 @@ msgstr "Salvar como Novo Arquivo"
 msgid "Save As"
 msgstr "Salvar Como"
 # 
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
+# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
 # 
 # File: usr/share/ashyterm/sessions/remotefile.py, line: 159
 # File: usr/share/ashyterm/filemanager/manager.py, line: 1546
@@ -6643,11 +8630,6 @@ msgstr "Falha ao carregar sessões e pastas salvas. Iniciando com configuração
 msgid "Enable the AI assistant in Preferences > Terminal > AI Assistant."
 msgstr "Ativar o assistente de IA em Preferências > Terminal > Assistente de IA."
 # 
-# File: usr/share/ashyterm/window.py, line: 539
-#: NEEDS WORK
-msgid "No active terminal available."
-msgstr "Nenhum terminal ativo disponível."
-# 
 # File: usr/share/ashyterm/window.py, line: 547
 #: NEEDS WORK
 msgid "Model"
@@ -6658,57 +8640,11 @@ msgstr "Modelo"
 msgid "API key"
 msgstr "chave da API"
 # 
-# File: usr/share/ashyterm/window.py, line: 554
+# File: src/ashyterm/window.py, line: 817
 #: NEEDS WORK
 #, python-brace-format
-msgid "Configure {items} in Preferences > Terminal > AI Assistant."
-msgstr "Configurar {items} em Preferências > Terminal > Assistente de IA."
-# 
-# File: usr/share/ashyterm/window.py, line: 565
-#: NEEDS WORK
-msgid "Ask the AI Assistant"
-msgstr "Pergunte ao Assistente de IA"
-# 
-# File: usr/share/ashyterm/window.py, line: 566
-#: NEEDS WORK
-msgid "Describe the Linux task or question you need help with."
-msgstr "Descreva a tarefa ou pergunta do Linux com a qual você precisa de ajuda."
-# 
-# File: usr/share/ashyterm/window.py, line: 570
-#: NEEDS WORK
-msgid "Send"
-msgstr "Enviar"
-# 
-# File: usr/share/ashyterm/window.py, line: 865
-#: NEEDS WORK
-msgid "Perguntas frequentes"
-msgstr "Perguntas frequentes"
-# 
-# File: usr/share/ashyterm/window.py, line: 938
-#: NEEDS WORK
-#, python-brace-format
-msgid "Sugestões correspondentes: {count}"
-msgstr "Sugestões correspondentes: {count}"
-# 
-# File: usr/share/ashyterm/window.py, line: 941
-#: NEEDS WORK
-msgid "Nenhuma sugestão encontrada."
-msgstr "Nenhuma sugestão encontrada."
-# 
-# File: usr/share/ashyterm/window.py, line: 944
-#: NEEDS WORK
-msgid "Digite sua pergunta ou escolha uma das sugestões."
-msgstr "Digite sua pergunta ou escolha uma das sugestões."
-# 
-# File: usr/share/ashyterm/window.py, line: 598
-#: NEEDS WORK
-msgid "Please enter a question for the assistant."
-msgstr "Por favor, insira uma pergunta para o assistente."
-# 
-# File: usr/share/ashyterm/window.py, line: 604
-#: NEEDS WORK
-msgid "AI assistant is processing, please wait..."
-msgstr "Assistente de IA está processando, por favor aguarde..."
+msgid "Configure {items} in AI Assistant settings."
+msgstr "Configurar {items} nas configurações do Assistente de IA."
 # 
 # File: usr/share/ashyterm/window.py, line: 680
 #: NEEDS WORK
@@ -6719,11 +8655,6 @@ msgstr "Aqui está o que eu encontrei."
 #: NEEDS WORK
 msgid "Response"
 msgstr "Resposta"
-# 
-# File: usr/share/ashyterm/window.py, line: 724
-#: NEEDS WORK
-msgid "Suggested Commands"
-msgstr "Comandos Sugeridos"
 # 
 # File: usr/share/ashyterm/window.py, line: 781
 #: NEEDS WORK
@@ -6927,7 +8858,7 @@ msgstr "Erro de Preferências"
 msgid "Failed to open preferences: {}"
 msgstr "Falha ao abrir preferências: {}"
 # 
-# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
+# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
 # 
 # File: usr/share/ashyterm/__init__.py, line: 62
 # File: usr/share/ashyterm/app.py, line: 350
@@ -7124,6 +9055,95 @@ msgstr "Erro de Inicialização"
 msgid "Application failed to start: {}"
 msgstr "Aplicativo falhou ao iniciar: {}"
 # 
+# File: src/ashyterm/__init__.py, line: 33
+#: NEEDS WORK
+#, python-brace-format
+msgid "Received signal {}, shutting down gracefully..."
+msgstr "Sinal recebido {}, encerrando graciosamente..."
+# 
+# File: usr/share/ashyterm/main.py, line: 97
+#: NEEDS WORK
+#, python-brace-format
+msgid "Warning: Could not set up signal handlers: {}"
+msgstr "Aviso: Não foi possível configurar os manipuladores de sinal: {}"
+# 
+# File: usr/share/ashyterm/main.py, line: 109
+#: NEEDS WORK
+msgid "Ashy Terminal - A modern terminal emulator with session management"
+msgstr "Ashy Terminal - Um emulador de terminal moderno com gerenciamento de sessões"
+# 
+# File: usr/share/ashyterm/main.py, line: 110
+#: NEEDS WORK
+msgid "For more information, visit: https://communitybig.org/"
+msgstr "Para mais informações, visite: https://communitybig.org/"
+# 
+# File: src/ashyterm/__init__.py, line: 105
+#: NEEDS WORK
+msgid "Show version and exit"
+msgstr "Mostrar versão e sair"
+# 
+# File: usr/share/ashyterm/main.py, line: 73
+#: NEEDS WORK
+msgid "Enable debug mode"
+msgstr "Ativar modo de depuração"
+# 
+# File: usr/share/ashyterm/main.py, line: 79
+#: NEEDS WORK
+msgid "Set logging level"
+msgstr "Definir nível de registro"
+# 
+# File: usr/share/ashyterm/main.py, line: 84
+#: NEEDS WORK
+msgid "Set the working directory for the initial terminal"
+msgstr "Defina o diretório de trabalho para o terminal inicial"
+# 
+# File: usr/share/ashyterm/main.py, line: 92
+#: NEEDS WORK
+msgid "Working directory (positional argument)"
+msgstr "Diretório de trabalho (argumento posicional)"
+# 
+# File: src/ashyterm/__init__.py, line: 133
+#: NEEDS WORK
+msgid "Execute command in the terminal (takes all remaining arguments)"
+msgstr "Executar comando no terminal (leva todos os argumentos restantes)"
+# 
+# File: usr/share/ashyterm/main.py, line: 110
+#: NEEDS WORK
+msgid "Close terminal after executing command (only with --execute)"
+msgstr "Fechar terminal após executar comando (apenas com --execute)"
+# 
+# File: usr/share/ashyterm/main.py, line: 115
+#: NEEDS WORK
+msgid "Connect to SSH host with optional user, port, and remote path"
+msgstr "Conectar ao host SSH com usuário, porta e caminho remoto opcionais"
+# 
+# File: usr/share/ashyterm/main.py, line: 119
+#: NEEDS WORK
+msgid "Convert KIO/GVFS URI path to SSH format"
+msgstr "Converter caminho URI KIO/GVFS para formato SSH"
+# 
+# File: usr/share/ashyterm/main.py, line: 129
+#: NEEDS WORK
+msgid "Force opening a new window"
+msgstr "Forçar a abertura de uma nova janela"
+# 
+# File: src/ashyterm/__init__.py, line: 179
+#: NEEDS WORK
+msgid "Fatal Application Error"
+msgstr "Erro Fatal de Aplicativo"
+# 
+# File: src/ashyterm/__init__.py, line: 180
+#: NEEDS WORK
+#, python-brace-format
+msgid ""
+"Could not start Ashy Terminal.\n"
+"\n"
+"Error: {}"
+msgstr ""
+"Não foi possível iniciar o Ashy Terminal.\n"
+"\n"
+"Erro: {}"
+# 
 # File: usr/share/ashyterm/state/window_state.py, line: 91
 #: NEEDS WORK
 msgid "Save Layout"
@@ -7200,32 +9220,3 @@ msgstr "Erro ao Deletar Layout"
 #: NEEDS WORK
 msgid "Error Moving Layout"
 msgstr "Erro ao Mover Layout"
-# 
-# File: usr/share/nautilus-python/extensions/ashyterm.py, line: 129
-#: NEEDS WORK
-msgid "Open in Ashy Terminal (SSH)"
-msgstr "Abrir no Ashy Terminal (SSH)"
-# 
-# File: usr/share/nautilus-python/extensions/ashyterm.py, line: 130
-#: NEEDS WORK
-#, python-brace-format
-msgid "Connect to {} via a new SSH session"
-msgstr "Conectar a {} através de uma nova sessão SSH"
-# 
-# File: usr/share/nautilus-python/extensions/ashyterm.py, line: 139
-# File: usr/share/nautilus-python/extensions/ashyterm.py, line: 149
-#: NEEDS WORK
-msgid "Open in Ashy Terminal"
-msgstr "Abrir no Terminal Ashy"
-# 
-# File: usr/share/nautilus-python/extensions/ashyterm.py, line: 140
-#: NEEDS WORK
-#, python-brace-format
-msgid "Open the local mount point {}"
-msgstr "Abra o ponto de montagem local {}"
-# 
-# File: usr/share/nautilus-python/extensions/ashyterm.py, line: 150
-#: NEEDS WORK
-#, python-brace-format
-msgid "Open {} in Ashy Terminal"
-msgstr "Abrir {} no Terminal Ashy"

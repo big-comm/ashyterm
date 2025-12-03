@@ -12,7 +12,7 @@
             "colors": [
                 "bold green",
                 "cyan",
-                "white"
+                null
             ],
             "enabled": true,
             "description": "Highlights compiling crates"
@@ -32,7 +32,7 @@
             "pattern": "\\s*(Running)\\s+(.+)",
             "colors": [
                 "magenta",
-                "white"
+                null
             ],
             "enabled": true,
             "description": "Highlights running binaries"
@@ -42,7 +42,7 @@
             "pattern": "(warning)(\\[.+?\\])?(:)",
             "colors": [
                 "bold yellow",
-                "white",
+                null,
                 "yellow"
             ],
             "enabled": true,
@@ -53,7 +53,7 @@
             "pattern": "(error)(\\[.+?\\])?(:)",
             "colors": [
                 "bold red",
-                "white",
+                null,
                 "red"
             ],
             "enabled": true,
@@ -64,7 +64,7 @@
             "pattern": "\\s*(Downloading|Updating)\\s+(.+)",
             "colors": [
                 "cyan",
-                "white"
+                null
             ],
             "enabled": true,
             "description": "Highlights downloading/updating crates"

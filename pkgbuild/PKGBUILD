@@ -13,11 +13,14 @@ depends=(
     'python-gobject'
     'python-setproctitle'
     'python-requests'
+    'python-psutil'
     'sshpass'
     'rsync'
     'vte4'
     'libchildenv' # Optional, but recommended to improve GTK memory management.
     'mimalloc' # Optional, but recommended to improve GTK memory management.
+    'python-regex' # Optional, Improved syntax highlighting performance'
+    'python-pygments' # Optional, Enhanced syntax highlighting in AI chat'
 )
 makedepends=(
     'python-build'
@@ -25,13 +28,12 @@ makedepends=(
     'python-uv-build'
     'python-wheel'
 )
-#optdepends=('')
 
 conflicts=('comm-ashyterm')
 provides=('comm-ashyterm')
 replaces=('comm-ashyterm')
 
-pkgver="0.1.0"
+pkgver="1.9.0"
 pkgrel="1"
 
 arch=('any')

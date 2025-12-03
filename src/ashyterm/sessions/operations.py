@@ -117,6 +117,13 @@ class SessionOperations:
             )
             original_session.port_forwardings = updated_session.port_forwardings
             original_session.x11_forwarding = updated_session.x11_forwarding
+            # Local terminal options
+            original_session.local_working_directory = (
+                updated_session.local_working_directory
+            )
+            original_session.local_startup_command = (
+                updated_session.local_startup_command
+            )
 
             if not self._save_changes():
                 # Rollback changes on failure by recreating the item from original data

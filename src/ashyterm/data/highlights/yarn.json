@@ -20,8 +20,8 @@
             "name": "Warning",
             "pattern": "(warning)\\s+(.+)",
             "colors": [
-                "yellow",
-                "yellow"
+                "bold yellow",
+                "bold yellow"
             ],
             "enabled": true,
             "description": "Highlights warnings"
@@ -30,8 +30,8 @@
             "name": "Error",
             "pattern": "(error)\\s+(.+)",
             "colors": [
-                "red",
-                "red"
+                "bold red",
+                "bold red"
             ],
             "enabled": true,
             "description": "Highlights errors"
@@ -46,15 +46,6 @@
             ],
             "enabled": true,
             "description": "Highlights package names with versions"
-        },
-        {
-            "name": "Time Duration",
-            "pattern": "(\\d+(?:\\.\\d+)?)s\\b",
-            "colors": [
-                "white"
-            ],
-            "enabled": true,
-            "description": "Highlights timing information"
         },
         {
             "name": "Info Label",
@@ -79,7 +70,7 @@
             "name": "Fetching",
             "pattern": "(Fetching)\\s+(\\S+)",
             "colors": [
-                "white",
+                null,
                 "cyan"
             ],
             "enabled": true,

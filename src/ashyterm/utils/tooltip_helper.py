@@ -5,11 +5,54 @@ Provides a simple way to add custom tooltips with fade animation to any GTK widg
 Replaces the default GTK tooltip system with a more visually appealing popover-based approach.
 """
 
+from typing import TYPE_CHECKING
+
 import gi
 
 gi.require_version("Gtk", "4.0")
 gi.require_version("Gdk", "4.0")
 from gi.repository import Gdk, GLib, Gtk
+
+if TYPE_CHECKING:
+    from ..settings.manager import SettingsManager
+
+# Singleton instance
+_tooltip_helper_instance: "TooltipHelper | None" = None
+_app_instance = None
+
+
+def get_tooltip_helper() -> "TooltipHelper":
+    """
+    Get the global TooltipHelper instance.
+
+    Returns:
+        The singleton TooltipHelper instance.
+    """
+    global _tooltip_helper_instance
+    if _tooltip_helper_instance is None:
+        _tooltip_helper_instance = TooltipHelper()
+    return _tooltip_helper_instance
+
+
+def init_tooltip_helper(
+    settings_manager: "SettingsManager" = None, app=None
+) -> "TooltipHelper":
+    """
+    Initialize the global TooltipHelper with a settings manager.
+
+    Should be called once during application startup with the settings manager.
+
+    Args:
+        settings_manager: The settings manager for checking tooltip preferences.
+        app: The Gtk.Application instance for looking up keyboard shortcuts.
+
+    Returns:
+        The initialized TooltipHelper instance.
+    """
+    global _tooltip_helper_instance, _app_instance
+    _app_instance = app
+    _tooltip_helper_instance = TooltipHelper(settings_manager, app)
+    return _tooltip_helper_instance
 
 
 class TooltipHelper:
@@ -25,14 +68,16 @@ class TooltipHelper:
         tooltip_helper.add_tooltip(widget, "My tooltip text")
     """
 
-    def __init__(self, settings_manager=None):
+    def __init__(self, settings_manager=None, app=None):
         """
         Initialize the tooltip helper.
 
         Args:
             settings_manager: Optional settings manager to check if tooltips are enabled.
+            app: Optional Gtk.Application for looking up keyboard shortcuts.
         """
         self.settings_manager = settings_manager
+        self.app = app
 
         # State machine variables
         self.active_widget = None
@@ -89,6 +134,70 @@ class TooltipHelper:
         if self.settings_manager is None:
             return True
         return self.settings_manager.get("show_tooltips", True)
+
+    def _get_shortcut_label(self, action_name: str) -> str | None:
+        """
+        Get the human-readable label for a keyboard shortcut.
+
+        Args:
+            action_name: The action name (e.g., "toggle-search", "new-local-tab")
+
+        Returns:
+            The shortcut label (e.g., "Ctrl+Shift+F") or None if no shortcut.
+        """
+        if not self.app:
+            return None
+
+        # Import here to avoid circular dependency
+        from ..helpers import accelerator_to_label
+
+        # Try both win. and app. prefixes
+        for prefix in ("win", "app"):
+            full_action = f"{prefix}.{action_name}"
+            accels = self.app.get_accels_for_action(full_action)
+            if accels:
+                return accelerator_to_label(accels[0])
+        return None
+
+    def add_tooltip_with_shortcut(
+        self,
+        widget: Gtk.Widget,
+        tooltip_text: str,
+        action_name: str,
+    ) -> None:
+        """
+        Add a tooltip that includes the keyboard shortcut for an action.
+
+        The shortcut is dynamically looked up, so if the user changes it,
+        the tooltip will automatically reflect the new shortcut.
+
+        Args:
+            widget: The GTK widget to add the tooltip to.
+            tooltip_text: The base tooltip text.
+            action_name: The action name to look up shortcut for (e.g., "toggle-search").
+        """
+        if not tooltip_text:
+            return
+
+        # Store base text and action name for dynamic lookup
+        widget._custom_tooltip_base_text = tooltip_text
+        widget._custom_tooltip_action = action_name
+
+        # Build initial tooltip text with shortcut
+        shortcut = self._get_shortcut_label(action_name)
+        if shortcut:
+            widget._custom_tooltip_text = f"{tooltip_text} ({shortcut})"
+        else:
+            widget._custom_tooltip_text = tooltip_text
+
+        # Clear any existing default tooltip
+        widget.set_tooltip_text(None)
+
+        # Add motion controller for enter/leave events
+        motion_controller = Gtk.EventControllerMotion.new()
+        motion_controller.connect("enter", self._on_enter_with_shortcut, widget)
+        motion_controller.connect("leave", self._on_leave)
+        widget.add_controller(motion_controller)
 
     def add_tooltip(self, widget: Gtk.Widget, tooltip_text: str) -> None:
         """
@@ -150,6 +259,39 @@ class TooltipHelper:
 
         if self.active_widget == widget:
             return
+
+        self._clear_timer()
+        self._hide_tooltip()
+
+        self.active_widget = widget
+        # Show tooltip after 350ms delay
+        self.show_timer_id = GLib.timeout_add(350, self._show_tooltip)
+
+    def _on_enter_with_shortcut(self, controller, x, y, widget):
+        """Handle mouse entering a widget with a dynamic shortcut tooltip."""
+        if self._is_cleaning_up:
+            return
+
+        if not self.is_enabled():
+            return
+
+        # If suppressed, ignore this enter event
+        if self._suppressed:
+            return
+
+        if self.active_widget == widget:
+            return
+
+        # Update tooltip text with current shortcut before showing
+        base_text = getattr(widget, "_custom_tooltip_base_text", "")
+        action_name = getattr(widget, "_custom_tooltip_action", None)
+
+        if base_text and action_name:
+            shortcut = self._get_shortcut_label(action_name)
+            if shortcut:
+                widget._custom_tooltip_text = f"{base_text} ({shortcut})"
+            else:
+                widget._custom_tooltip_text = base_text
 
         self._clear_timer()
         self._hide_tooltip()

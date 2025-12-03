@@ -9,7 +9,9 @@ gi.require_version("Adw", "1")
 from gi.repository import Adw, Gdk, GLib, Gtk
 
 from ..sessions.models import SessionFolder, SessionItem
+from ..utils.icons import set_button_icon
 from ..utils.logger import get_logger
+from ..utils.tooltip_helper import get_tooltip_helper
 from ..utils.translation_utils import _
 
 if TYPE_CHECKING:
@@ -276,16 +278,20 @@ class SidebarManager:
     def _update_sidebar_button_icon(self) -> None:
         auto_hide = self.settings_manager.get("auto_hide_sidebar", False)
         if auto_hide:
-            self.toggle_sidebar_button.set_icon_name("pin-symbolic")
-            self.toggle_sidebar_button.set_tooltip_text(_("Show Sessions"))
+            set_button_icon(self.toggle_sidebar_button, "pin-symbolic")
+            get_tooltip_helper().add_tooltip(
+                self.toggle_sidebar_button, _("Show Sessions")
+            )
         else:
             is_visible = self.flap.get_reveal_flap()
             icon_name = (
                 "sidebar-hide-symbolic" if is_visible else "sidebar-show-symbolic"
             )
-            self.toggle_sidebar_button.set_icon_name(icon_name)
-            tooltip_text = _("Hide Sidebar") if is_visible else _("Show Sidebar")
-            self.toggle_sidebar_button.set_tooltip_text(tooltip_text)
+            set_button_icon(self.toggle_sidebar_button, icon_name)
+            tooltip_text = (
+                _("Hide Sessions Panel") if is_visible else _("Show Sessions Panel")
+            )
+            get_tooltip_helper().add_tooltip(self.toggle_sidebar_button, tooltip_text)
 
     def _focus_first_item(self):
         """Focus on the first item in the session tree for keyboard navigation."""

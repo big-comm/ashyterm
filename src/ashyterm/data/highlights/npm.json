@@ -13,7 +13,7 @@
             "name": "NPM WARN",
             "pattern": "(npm)\\s+(WARN)\\b",
             "colors": [
-                "white",
+                null,
                 "yellow"
             ],
             "enabled": true,
@@ -23,7 +23,7 @@
             "name": "NPM ERR!",
             "pattern": "(npm)\\s+(ERR!)\\b",
             "colors": [
-                "white",
+                null,
                 "bold red"
             ],
             "enabled": true,
@@ -44,7 +44,7 @@
             "name": "Package Names",
             "pattern": "(@[\\w-]+/)?([\\w.-]+)@(\\d+\\.\\d+\\.\\d+)",
             "colors": [
-                "white",
+                null,
                 "cyan",
                 "yellow"
             ],
@@ -80,16 +80,6 @@
             ],
             "enabled": true,
             "description": "Highlights success messages"
-        },
-        {
-            "name": "Time",
-            "pattern": "(\\d+(?:\\.\\d+)?)(s)\\b",
-            "colors": [
-                "white",
-                "white"
-            ],
-            "enabled": true,
-            "description": "Highlights timing information"
         }
     ]
 }

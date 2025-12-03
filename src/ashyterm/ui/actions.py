@@ -196,27 +196,43 @@ class WindowActions:
         if not terminal:
             return
 
-        # Get selected text from terminal
-        if hasattr(terminal, "get_text_selected"):
-            selected_text = terminal.get_text_selected()
-        elif hasattr(terminal, "copy_clipboard"):
-            # Fallback: copy to clipboard and get from there
-            terminal.copy_clipboard()
-            clipboard = Gdk.Display.get_default().get_clipboard()
-            selected_text = None  # Would need async handling
-        else:
-            selected_text = None
+        selected_text = None
 
-        if selected_text:
-            # Open AI panel with the selected text
-            self.window.ui_builder.show_ai_panel()
-            if self.window.ui_builder.ai_chat_panel:
-                self.window.ui_builder.ai_chat_panel.send_with_context(
-                    selected_text, _("Explain this code or command:")
-                )
-        else:
-            # Just open the panel
-            self.window.ui_builder.show_ai_panel()
+        # Null-safe: Check if selection exists first
+        has_selection = (
+            terminal.get_has_selection()
+            if hasattr(terminal, "get_has_selection")
+            else False
+        )
+
+        if has_selection:
+            try:
+                # Import Vte to access Format enum
+                import gi
+
+                gi.require_version("Vte", "3.91")
+                from gi.repository import Vte
+
+                # Use VTE4's get_text_selected with Format.TEXT parameter
+                if hasattr(terminal, "get_text_selected"):
+                    selected_text = terminal.get_text_selected(Vte.Format.TEXT)
+            except Exception as e:
+                self.logger.debug(f"Error getting selected text: {e}")
+
+        # Open AI panel
+        self.window.ui_builder.show_ai_panel()
+
+        # If we have selected text, set it as initial text
+        if (
+            selected_text
+            and selected_text.strip()
+            and self.window.ui_builder.ai_chat_panel
+        ):
+            # Format the text with a helpful prompt prefix
+            initial_text = _(
+                "Explain this code or command:\n\n```\n{text}\n```"
+            ).format(text=selected_text.strip())
+            self.window.ui_builder.ai_chat_panel.set_initial_text(initial_text)
 
     def open_url(self, *_args):
         if terminal := self.window.tab_manager.get_selected_terminal():

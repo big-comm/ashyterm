@@ -30,7 +30,7 @@ def setup_signal_handlers():
     """Set up signal handlers for graceful shutdown on Linux."""
 
     def signal_handler(sig, frame):
-        print(_("\nReceived signal {}, shutting down gracefully...").format(sig))
+        print("\n" + _("Received signal {}, shutting down gracefully...").format(sig))
         try:
             import gi
 
@@ -129,7 +129,8 @@ def main() -> int:
         "-e",
         "-x",
         metavar="COMMAND",
-        help=_("Execute command in the terminal"),
+        nargs=argparse.REMAINDER,
+        help=_("Execute command in the terminal (takes all remaining arguments)"),
     )
     parser.add_argument(
         "--close-after-execute",

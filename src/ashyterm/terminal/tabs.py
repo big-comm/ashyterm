@@ -15,6 +15,7 @@ from gi.repository import Adw, Gdk, Gio, GLib, Gtk, Pango, Vte
 
 from ..sessions.models import SessionItem
 from ..settings.manager import SettingsManager as SettingsManagerType
+from ..utils.icons import icon_button, icon_image
 from ..utils.logger import get_logger
 from ..utils.translation_utils import _
 from .manager import TerminalManager
@@ -103,16 +104,14 @@ def _create_terminal_pane(
     title_label.set_halign(Gtk.Align.START)
     header_box.append(title_label)
 
-    # Action buttons
-    move_to_tab_button = Gtk.Button(
-        icon_name="select-rectangular-symbolic", tooltip_text=_("Move to New Tab")
+    # Action buttons (using bundled icons)
+    move_to_tab_button = icon_button(
+        "select-rectangular-symbolic", tooltip=_("Move to New Tab")
     )
     move_to_tab_button.add_css_class("flat")
     move_to_tab_button.connect("clicked", lambda _: on_move_to_tab_callback(terminal))
 
-    close_button = Gtk.Button(
-        icon_name="window-close-symbolic", tooltip_text=_("Close Pane")
-    )
+    close_button = icon_button("window-close-symbolic", tooltip=_("Close Pane"))
     close_button.add_css_class("flat")
     close_button.connect("clicked", lambda _: on_close_callback(terminal))
 
@@ -373,11 +372,23 @@ class TabManager:
         if session is None:
             session = SessionItem(name=title, session_type="local")
 
+        # Use session's local_working_directory if not overridden
+        effective_working_dir = working_directory
+        if effective_working_dir is None and hasattr(
+            session, "local_working_directory"
+        ):
+            effective_working_dir = session.local_working_directory or None
+
+        # Use session's local_startup_command if not overridden
+        effective_command = execute_command
+        if effective_command is None and hasattr(session, "local_startup_command"):
+            effective_command = session.local_startup_command or None
+
         terminal = self.terminal_manager.create_local_terminal(
             session=session,
             title=session.name,
-            working_directory=working_directory,
-            execute_command=execute_command,
+            working_directory=effective_working_dir,
+            execute_command=effective_command,
             close_after_execute=close_after_execute,
         )
         if terminal:
@@ -604,20 +615,11 @@ class TabManager:
 
         if color_string:
             provider = Gtk.CssProvider()
-            text_color = self._get_contrasting_text_color(color_string)
 
-            # This CSS is more robust. It overrides theme gradients and sets the color.
+            # Apply color only to the top part of the tab (top border)
             css = f"""
                 .custom-tab-button {{
-                    background-image: none;
-                    background-color: {color_string};
-                    border-color: transparent;
-                    color: {text_color};
-                }}
-                .custom-tab-button.active {{
-                    background-image: none;
-                    background-color: mix({color_string}, @theme_selected_bg_color, 0.7);
-                    color: {text_color};
+                    border: 1px solid {color_string};
                 }}
             """
             provider.load_from_data(css.encode("utf-8"))
@@ -629,7 +631,7 @@ class TabManager:
     ) -> Gtk.Box:
         tab_widget = Gtk.Box(spacing=6)
         tab_widget.add_css_class("custom-tab-button")
-        tab_widget.add_css_class("pill")
+        tab_widget.add_css_class("raised")
 
         icon_name = None
         if session.name.startswith("SFTP-"):
@@ -638,7 +640,7 @@ class TabManager:
             icon_name = "network-server-symbolic"
 
         if icon_name:
-            icon = Gtk.Image.new_from_icon_name(icon_name)
+            icon = icon_image(icon_name)
             tab_widget.append(icon)
 
         label = Gtk.Label(
@@ -647,8 +649,8 @@ class TabManager:
         label.set_width_chars(8)
         tab_widget.append(label)
 
-        close_button = Gtk.Button(
-            icon_name="window-close-symbolic", css_classes=["circular", "flat"]
+        close_button = icon_button(
+            "window-close-symbolic", css_classes=["circular", "flat"]
         )
         tab_widget.append(close_button)
 
@@ -865,12 +867,12 @@ class TabManager:
                 )
             elif term_type == "ssh":
                 if session_copy:
-                    new_terminal = self.create_ssh_tab(session_copy)
+                    self.create_ssh_tab(session_copy)
                 else:
                     self.logger.warning("Cannot duplicate SSH tab without session data.")
             elif term_type == "sftp":
                 if session_copy:
-                    new_terminal = self.create_sftp_tab(session_copy)
+                    self.create_sftp_tab(session_copy)
                 else:
                     self.logger.warning("Cannot duplicate SFTP tab without session data.")
             else:
@@ -1035,6 +1037,14 @@ class TabManager:
             paned.set_position(target_pos)
             fm.set_visibility(True, source="filemanager")
 
+            # Connect handler to save file manager height on resize (if not already connected)
+            if not hasattr(paned, "_fm_position_handler_id"):
+                paned._fm_position_handler_id = paned.connect(
+                    "notify::position",
+                    self._on_file_manager_paned_position_changed,
+                    page,
+                )
+
         elif fm:
             page._fm_paned_pos = paned.get_position()
             # Save file manager height to settings for new tabs/windows
@@ -1053,6 +1063,28 @@ class TabManager:
             )
             fm.set_visibility(False, source="filemanager")
             paned.set_end_child(None)
+
+    def _on_file_manager_paned_position_changed(self, paned, param_spec, page):
+        """Save file manager height when the pane is resized by the user."""
+        # Only save if the file manager is actually visible
+        fm = self.file_managers.get(page)
+        if not fm or not fm.revealer.get_reveal_child():
+            return
+
+        window_height = self.terminal_manager.parent_window.get_height()
+        fm_height = window_height - paned.get_position()
+
+        # Enforce minimum height constraint
+        min_fm_height = 240
+        fm_height = max(min_fm_height, fm_height)
+
+        # Store in page for session consistency
+        page._fm_paned_pos = paned.get_position()
+
+        # Save to settings immediately so it persists across sessions
+        self.terminal_manager.settings_manager.set(
+            "file_manager_height", fm_height, save_immediately=True
+        )
 
     def _on_tab_close_button_clicked(self, button: Gtk.Button, tab_widget: Gtk.Box):
         # If in move mode, ignore close button clicks entirely
@@ -1477,11 +1509,21 @@ class TabManager:
             new_pane_title = "Terminal"
             if isinstance(identifier, SessionItem):
                 new_pane_title = identifier.name
-                new_terminal = (
-                    self.terminal_manager.create_ssh_terminal(identifier)
-                    if identifier.is_ssh()
-                    else self.terminal_manager.create_local_terminal(session=identifier)
-                )
+                if identifier.is_ssh():
+                    new_terminal = self.terminal_manager.create_ssh_terminal(identifier)
+                else:
+                    # Use session's local settings when splitting
+                    effective_working_dir = (
+                        getattr(identifier, "local_working_directory", None) or None
+                    )
+                    effective_command = (
+                        getattr(identifier, "local_startup_command", None) or None
+                    )
+                    new_terminal = self.terminal_manager.create_local_terminal(
+                        session=identifier,
+                        working_directory=effective_working_dir,
+                        execute_command=effective_command,
+                    )
             else:
                 new_pane_title = "Local"
                 new_terminal = self.terminal_manager.create_local_terminal(
