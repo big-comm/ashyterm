@@ -129,7 +129,8 @@ def main() -> int:
         "-e",
         "-x",
         metavar="COMMAND",
-        help=_("Execute command in the terminal"),
+        nargs=argparse.REMAINDER,
+        help=_("Execute command in the terminal (takes all remaining arguments)"),
     )
     parser.add_argument(
         "--close-after-execute",

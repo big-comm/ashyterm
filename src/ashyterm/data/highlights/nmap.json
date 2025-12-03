@@ -10,7 +10,7 @@
             "name": "Scan Report Header",
             "pattern": "(Nmap scan report for)\\s+(\\S+)\\s*(\\(([^)]+)\\))?",
             "colors": [
-                "white",
+                null,
                 "bold green",
                 null,
                 "bold magenta"
@@ -22,7 +22,7 @@
             "name": "Host Up",
             "pattern": "(Host is)\\s+(up)",
             "colors": [
-                "white",
+                null,
                 "bold green"
             ],
             "enabled": true,
@@ -32,7 +32,7 @@
             "name": "Host Down",
             "pattern": "(Host is)\\s+(down)",
             "colors": [
-                "white",
+                null,
                 "bold red"
             ],
             "enabled": true,
@@ -57,7 +57,7 @@
                 "red",
                 "magenta",
                 "red",
-                "white"
+                null
             ],
             "enabled": true,
             "description": "Highlights closed ports"
@@ -69,7 +69,7 @@
                 "yellow",
                 "magenta",
                 "yellow",
-                "white"
+                null
             ],
             "enabled": true,
             "description": "Highlights filtered ports"
@@ -78,10 +78,10 @@
             "name": "Not Shown",
             "pattern": "(Not shown:)\\s+(\\d+)\\s+(closed|filtered)\\s+(ports?)",
             "colors": [
-                "white",
+                null,
                 "bright_red",
                 "red",
-                "white"
+                null
             ],
             "enabled": true,
             "description": "Highlights hidden ports summary"
@@ -97,15 +97,6 @@
             "description": "Highlights DNS resolution failures"
         },
         {
-            "name": "Service Info",
-            "pattern": "^\\|_?\\s*(.+)",
-            "colors": [
-                "white"
-            ],
-            "enabled": true,
-            "description": "Highlights service detail lines"
-        },
-        {
             "name": "Column Headers",
             "pattern": "^(PORT\\s+STATE\\s+SERVICE|HOP\\s+RTT\\s+ADDRESS)",
             "colors": [
@@ -118,9 +109,9 @@
             "name": "Network Distance",
             "pattern": "(Network Distance:)\\s+(\\d+)\\s+(hops?)",
             "colors": [
-                "white",
+                null,
                 "bold green",
-                "white"
+                null
             ],
             "enabled": true,
             "description": "Highlights network distance"
@@ -131,7 +122,7 @@
             "colors": [
                 "cyan",
                 "green",
-                "white",
+                null,
                 "magenta"
             ],
             "enabled": true,

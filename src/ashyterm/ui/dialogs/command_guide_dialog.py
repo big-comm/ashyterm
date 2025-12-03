@@ -9,6 +9,7 @@ gi.require_version("Adw", "1")
 from gi.repository import Adw, Gdk, GLib, GObject, Gtk, Pango
 
 from ...data.commands import CommandItem, get_command_manager
+from ...utils.tooltip_helper import get_tooltip_helper
 from ...utils.translation_utils import _
 
 
@@ -194,7 +195,7 @@ class CommandEditDialog(Adw.Window):
 
 
 class CommandRow(Gtk.ListBoxRow):
-    """Custom widget for displaying a command in the ListBox."""
+    """Custom widget for displaying a command in the ListBox with improved visual design."""
 
     def __init__(self, command: CommandItem, on_delete_callback=None):
         super().__init__()
@@ -208,38 +209,66 @@ class CommandRow(Gtk.ListBoxRow):
             self.set_activatable(False)
             self.set_selectable(False)
             self.set_focusable(False)
+
+            # Info box with icon and description
+            info_box = Gtk.Box(
+                orientation=Gtk.Orientation.HORIZONTAL,
+                spacing=10,
+                hexpand=True,
+            )
+            info_box.add_css_class("general-description")
+
+            # Info icon
+            info_icon = Gtk.Label(label="ℹ️")
+            info_icon.add_css_class("info-icon")
+            info_box.append(info_icon)
+
+            # Description text
+            desc_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, hexpand=True)
+            title_label = Gtk.Label(xalign=0.0, use_markup=True)
+            title_label.set_markup(f"<b>{GLib.markup_escape_text(command.name)}</b>")
+            title_label.add_css_class("info-title")
+            desc_box.append(title_label)
+
             desc_label = Gtk.Label(
                 xalign=0.0, wrap=True, wrap_mode=Pango.WrapMode.WORD_CHAR
             )
-            desc_label.set_markup(
-                f"ℹ️ <b>{GLib.markup_escape_text(command.name)}</b>: {GLib.markup_escape_text(command.description)}"
-            )
-            desc_label.add_css_class("general-description")
-            card.append(desc_label)
+            desc_label.set_text(command.description)
+            desc_label.add_css_class("info-description")
+            desc_box.append(desc_label)
+
+            info_box.append(desc_box)
+            card.append(info_box)
         else:
             self.set_activatable(True)
-            box = Gtk.Box(
-                orientation=Gtk.Orientation.HORIZONTAL, spacing=12, hexpand=True
-            )
-            card.append(box)
 
-            # Command name
-            name_label = Gtk.Label(xalign=0.0, use_markup=True)
+            # Main vertical layout for better stacking on narrow windows
+            main_box = Gtk.Box(
+                orientation=Gtk.Orientation.VERTICAL,
+                spacing=6,
+                hexpand=True,
+            )
+            card.append(main_box)
+
+            # Top row: command name with optional delete button
+            top_row = Gtk.Box(
+                orientation=Gtk.Orientation.HORIZONTAL,
+                spacing=8,
+            )
+            main_box.append(top_row)
+
+            # Command name in a code-style box
+            name_frame = Gtk.Box(hexpand=True)
+            name_frame.add_css_class("command-name-frame")
+
+            name_label = Gtk.Label(xalign=0.0, use_markup=True, selectable=False)
             name_label.set_markup(f"<tt>{GLib.markup_escape_text(command.name)}</tt>")
             name_label.set_wrap(True)
-            name_label.set_wrap_mode(Pango.WrapMode.WORD_CHAR)
-            name_label.set_width_chars(25)
-            name_label.set_hexpand(False)
+            name_label.set_wrap_mode(Pango.WrapMode.CHAR)
+            name_label.set_hexpand(True)
             name_label.add_css_class("command-name")
-            box.append(name_label)
-
-            # Command description
-            desc_label = Gtk.Label(
-                xalign=0.0, wrap=True, wrap_mode=Pango.WrapMode.WORD_CHAR, hexpand=True
-            )
-            desc_label.set_text(command.description)
-            desc_label.add_css_class("command-description")
-            box.append(desc_label)
+            name_frame.append(name_label)
+            top_row.append(name_frame)
 
             # Add delete button for custom commands
             if command.is_custom and self.on_delete_callback:
@@ -250,7 +279,18 @@ class CommandRow(Gtk.ListBoxRow):
                     valign=Gtk.Align.CENTER,
                 )
                 delete_button.connect("clicked", self._on_delete_clicked)
-                box.append(delete_button)
+                top_row.append(delete_button)
+
+            # Bottom row: description
+            desc_label = Gtk.Label(
+                xalign=0.0,
+                wrap=True,
+                wrap_mode=Pango.WrapMode.WORD_CHAR,
+                hexpand=True,
+            )
+            desc_label.set_text(command.description)
+            desc_label.add_css_class("command-description")
+            main_box.append(desc_label)
 
     def _on_delete_clicked(self, button):
         if self.on_delete_callback:
@@ -313,10 +353,8 @@ class CommandGuideDialog(Adw.Window):
         css_provider.load_from_data(
             b"""
             .command-guide-card {
-                padding-top: 8px;
-                padding-bottom: 8px;
-                margin-right: 14px;
-                margin-left: 14px;
+                padding: 12px 14px;
+                margin: 4px 14px;
                 transition: all 0.2s ease;
             }
             .category-header {
@@ -332,32 +370,41 @@ class CommandGuideDialog(Adw.Window):
                 margin-top: 20px;
             }
             .general-description {
-                background: @view_bg_color;
-                border-radius: 4px;
-                padding: 4px 6px;
-                margin: 2px 6px;
-                border-left: 2px solid @accent_color;
+                background: alpha(@theme_selected_bg_color, 0.08);
+                border-radius: 8px;
+                padding: 12px 14px;
+                margin: 2px 0;
+                border-left: 4px solid @accent_color;
+            }
+            .info-icon {
+                font-size: 1.3em;
+            }
+            .info-title {
+                font-size: 1.05em;
                 color: @theme_fg_color;
-                font-weight: bold;
-                border: 1px solid alpha(@borders, 0.4);
+            }
+            .info-description {
+                font-size: 0.95em;
+                color: alpha(@theme_fg_color, 0.85);
+                margin-top: 4px;
+            }
+            .command-name-frame {
+                background-color: alpha(@theme_fg_color, 0.06);
+                border-radius: 6px;
+                padding: 8px 12px;
+                border: 1px solid alpha(@theme_fg_color, 0.12);
             }
             .command-name {
                 font-weight: 600;
                 color: @theme_fg_color;
                 font-family: 'Monospace';
-                font-size: 0.9em;
-                background-color: alpha(@theme_selected_bg_color, 0.1);
-                padding: 1px 4px;
-                border-radius: 2px;
-                border: 1px solid alpha(@theme_selected_bg_color, 0.3);
+                font-size: 0.95em;
             }
             .command-description {
-                color: @theme_fg_color;
-                margin-left: 6px;
-                font-size: 1em;
-                line-height: 1.4;
-                font-weight: 500;
-                opacity: 0.95;
+                color: alpha(@theme_fg_color, 0.9);
+                font-size: 0.95em;
+                line-height: 1.5;
+                padding-left: 4px;
             }
             .command-guide-background {
                 background-color: var(--headerbar-bg-color);
@@ -367,6 +414,15 @@ class CommandGuideDialog(Adw.Window):
                 border-radius: 4px;
                 padding: 3px;
                 border: 1px solid alpha(@borders, 0.3);
+            }
+            .command-guide-boxed-list > row:hover .command-guide-card {
+                background-color: alpha(@theme_selected_bg_color, 0.15);
+                border-radius: 8px;
+            }
+            .command-guide-boxed-list > row:selected .command-guide-card,
+            .command-guide-card.selected {
+                background-color: alpha(@theme_selected_bg_color, 0.25);
+                border-radius: 8px;
             }
             """
         )
@@ -524,7 +580,7 @@ class CommandGuideDialog(Adw.Window):
             header_box.add_css_class("category-header")
 
             icon_label = Gtk.Label(label="📁", css_classes=["category-icon"])
-            icon_label.set_tooltip_text(_("Category"))
+            get_tooltip_helper().add_tooltip(icon_label, _("Category"))
             header_box.append(icon_label)
 
             header_label = Gtk.Label(

@@ -10,7 +10,7 @@ from gi.repository import Adw, Gdk, Gio, Gtk
 
 from ..utils.icons import icon_button, icon_image
 from ..utils.logger import get_logger
-from ..utils.tooltip_helper import TooltipHelper
+from ..utils.tooltip_helper import init_tooltip_helper
 from ..utils.translation_utils import _
 
 # Lazy import for menus - only loaded when main menu is first shown
@@ -38,8 +38,11 @@ class WindowUIBuilder:
         self.tab_manager = window.tab_manager
         self.session_tree = window.session_tree
 
-        # Initialize tooltip helper for custom tooltips
-        self.tooltip_helper = TooltipHelper(self.settings_manager)
+        # Get the application for shortcut lookups
+        app = window.get_application()
+
+        # Initialize tooltip helper for custom tooltips (global singleton)
+        self.tooltip_helper = init_tooltip_helper(self.settings_manager, app)
 
         # WM settings for dynamic button layout
         self.wm_settings = Gio.Settings.new("org.gnome.desktop.wm.preferences")
@@ -254,24 +257,32 @@ class WindowUIBuilder:
         self.new_tab_button.connect("clicked", self.window._on_new_tab_clicked)
         self.new_tab_button.add_css_class("flat")
 
-        # Add custom tooltips to header bar buttons
-        self.tooltip_helper.add_tooltip(self.toggle_sidebar_button, _("Toggle Sidebar"))
-        self.tooltip_helper.add_tooltip(self.file_manager_button, _("File Manager"))
-        self.tooltip_helper.add_tooltip(
-            self.command_guide_button, _("Command Guide (Ctrl+Shift+P)")
+        # Add custom tooltips to header bar buttons (with dynamic shortcuts where applicable)
+        self.tooltip_helper.add_tooltip_with_shortcut(
+            self.toggle_sidebar_button, _("Sessions Panel"), "toggle-sidebar"
         )
-        self.tooltip_helper.add_tooltip(self.search_button, _("Search in Terminal"))
-        self.tooltip_helper.add_tooltip(
-            self.broadcast_button, _("Send Command to All Tabs")
+        self.tooltip_helper.add_tooltip_with_shortcut(
+            self.file_manager_button, _("File Manager"), "toggle-file-manager"
         )
-        self.tooltip_helper.add_tooltip(
-            self.ai_assistant_button, _("Ask AI Assistant (Ctrl+Shift+I)")
+        self.tooltip_helper.add_tooltip_with_shortcut(
+            self.command_guide_button, _("Command Guide"), "show-command-guide"
+        )
+        self.tooltip_helper.add_tooltip_with_shortcut(
+            self.search_button, _("Search in Terminal"), "toggle-search"
+        )
+        self.tooltip_helper.add_tooltip_with_shortcut(
+            self.broadcast_button, _("Send Command to All Tabs"), "toggle-broadcast"
+        )
+        self.tooltip_helper.add_tooltip_with_shortcut(
+            self.ai_assistant_button, _("Ask AI Assistant"), "ai-assistant"
         )
         self.tooltip_helper.add_tooltip(
             self.cleanup_button, _("Manage Temporary Files")
         )
         self.tooltip_helper.add_tooltip(self.menu_button, _("Main Menu"))
-        self.tooltip_helper.add_tooltip(self.new_tab_button, _("New Tab"))
+        self.tooltip_helper.add_tooltip_with_shortcut(
+            self.new_tab_button, _("New Tab"), "new-local-tab"
+        )
 
         # Check if window controls are on the left
         button_layout = self.wm_settings.get_string("button-layout")
@@ -402,8 +413,17 @@ class WindowUIBuilder:
         toolbar_view = Adw.ToolbarView(
             css_classes=["background", "sidebar-toolbar-view"]
         )
-        toolbar = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL)
-        toolbar.set_halign(Gtk.Align.CENTER)
+
+        # Header with title and toolbar
+        header_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
+
+        # Toolbar with action buttons
+        toolbar = Gtk.Box(
+            orientation=Gtk.Orientation.HORIZONTAL,
+            spacing=4,
+            halign=Gtk.Align.CENTER,
+            margin_bottom=4,
+        )
 
         self.add_session_button = icon_button("list-add-symbolic")
         self.tooltip_helper.add_tooltip(self.add_session_button, _("Add Session"))
@@ -428,7 +448,8 @@ class WindowUIBuilder:
         self.remove_button.add_css_class("destructive")
         toolbar.append(self.remove_button)
 
-        toolbar_view.add_top_bar(toolbar)
+        header_box.append(toolbar)
+        toolbar_view.add_top_bar(header_box)
 
         scrolled_window = Gtk.ScrolledWindow(vexpand=True)
         scrolled_window.set_policy(Gtk.PolicyType.AUTOMATIC, Gtk.PolicyType.AUTOMATIC)

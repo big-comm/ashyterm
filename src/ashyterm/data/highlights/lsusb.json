@@ -10,9 +10,9 @@
             "name": "Bus and Device",
             "pattern": "(Bus)\\s+(\\d{3})\\s+(Device)\\s+(\\d{3}):",
             "colors": [
-                "white",
+                null,
                 "cyan",
-                "white",
+                null,
                 "cyan"
             ],
             "enabled": true,
@@ -22,7 +22,7 @@
             "name": "USB ID",
             "pattern": "(ID)\\s+([0-9a-f]{4}):([0-9a-f]{4})",
             "colors": [
-                "white",
+                null,
                 "magenta",
                 "magenta"
             ],
@@ -37,15 +37,6 @@
             ],
             "enabled": true,
             "description": "Highlights USB hubs"
-        },
-        {
-            "name": "Root Hub",
-            "pattern": "(root hub)",
-            "colors": [
-                "white"
-            ],
-            "enabled": true,
-            "description": "Highlights root hubs"
         },
         {
             "name": "Mass Storage",

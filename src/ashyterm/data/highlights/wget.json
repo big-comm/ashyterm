@@ -38,7 +38,7 @@
       "name": "Connecting",
       "pattern": "(Connecting to)\\s+(\\S+)",
       "colors": [
-        "white",
+        null,
         "cyan"
       ],
       "enabled": true,
@@ -48,7 +48,7 @@
       "name": "Resolving",
       "pattern": "(Resolving)\\s+(\\S+)",
       "colors": [
-        "white",
+        null,
         "cyan"
       ],
       "enabled": true,
@@ -58,9 +58,9 @@
       "name": "Length",
       "pattern": "(Length:)\\s+(\\d+)\\s*(\\([^)]+\\))?",
       "colors": [
-        "white",
+        null,
         "yellow",
-        "white"
+        null
       ],
       "enabled": true,
       "description": "Highlights file length"

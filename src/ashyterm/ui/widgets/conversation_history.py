@@ -18,6 +18,7 @@ gi.require_version("Gtk", "4.0")
 from gi.repository import Adw, GObject, Gtk
 
 from ...utils.icons import icon_button
+from ...utils.tooltip_helper import get_tooltip_helper
 from ...utils.translation_utils import _
 
 if TYPE_CHECKING:
@@ -133,21 +134,23 @@ class ConversationHistoryPanel(Gtk.Box):
         # Close button
         close_btn = icon_button("window-close-symbolic")
         close_btn.add_css_class("flat")
-        close_btn.set_tooltip_text(_("Close"))
+        get_tooltip_helper().add_tooltip(close_btn, _("Close"))
         close_btn.connect("clicked", lambda b: self.emit("close-requested"))
         header.pack_end(close_btn)
         
         # Clear all button (trash icon)
         self._clear_all_btn = icon_button("user-trash-symbolic")
         self._clear_all_btn.add_css_class("flat")
-        self._clear_all_btn.set_tooltip_text(_("Delete All Conversations"))
+        get_tooltip_helper().add_tooltip(
+            self._clear_all_btn, _("Delete All Conversations")
+        )
         self._clear_all_btn.connect("clicked", self._on_clear_all)
         header.pack_end(self._clear_all_btn)
         
         # New conversation button
         new_btn = icon_button("list-add-symbolic")
         new_btn.add_css_class("flat")
-        new_btn.set_tooltip_text(_("New Conversation"))
+        get_tooltip_helper().add_tooltip(new_btn, _("New Conversation"))
         new_btn.connect("clicked", self._on_new_conversation)
         header.pack_start(new_btn)
         
@@ -317,13 +320,13 @@ class ConversationHistoryPanel(Gtk.Box):
             count_label.add_css_class("dim-label") 
             count_label.set_valign(Gtk.Align.CENTER)
             row.add_suffix(count_label)
-        
-        # Add delete button
-        delete_btn = Gtk.Button.new_from_icon_name("user-trash-symbolic")
-        delete_btn.add_css_class("flat")
-        delete_btn.add_css_class("circular")
+
+        # Add delete button (uses bundled icon)
+        delete_btn = icon_button(
+            "user-trash-symbolic", css_classes=["flat", "circular"]
+        )
         delete_btn.set_valign(Gtk.Align.CENTER)
-        delete_btn.set_tooltip_text(_("Delete"))
+        get_tooltip_helper().add_tooltip(delete_btn, _("Delete"))
         delete_btn.connect("clicked", self._on_delete_clicked, conv_id)
         row.add_suffix(delete_btn)
         

@@ -14,7 +14,7 @@
         {
             "name": "IPv4 Address",
             "pattern": "\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}",
-            "colors": ["bold yellow"],
+            "colors": ["bold magenta"],
             "enabled": true,
             "description": "Highlights IPv4 addresses"
         },
@@ -49,7 +49,7 @@
         {
             "name": "MTU",
             "pattern": "(?i)(mtu)(\\s|:)(\\d+)",
-            "colors": ["cyan", "white", "green"],
+            "colors": ["cyan", null, "green"],
             "enabled": true,
             "description": "Highlights MTU value"
         },
@@ -84,7 +84,7 @@
         {
             "name": "Carrier",
             "pattern": "(carrier)(\\s|:)(\\d+)",
-            "colors": ["cyan", "white", "cyan"],
+            "colors": ["cyan", null, "cyan"],
             "enabled": true,
             "description": "Highlights carrier counts"
         },

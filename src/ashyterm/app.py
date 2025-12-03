@@ -304,17 +304,22 @@ class CommTerminalApp(Adw.Application):
             False,
         )
         force_new_window = False
+
+        # First pass: find flags that don't consume remaining args
         i = 1
+        execute_index = None
         while i < len(arguments):
             arg = arguments[i]
             if arg in ["-w", "--working-directory"] and i + 1 < len(arguments):
                 working_directory = arguments[i + 1]
-                i += 1
+                i += 2
+                continue
             elif arg.startswith("--working-directory="):
                 working_directory = arg.split("=", 1)[1]
-            elif arg in ["-e", "-x", "--execute"] and i + 1 < len(arguments):
-                execute_command = arguments[i + 1]
-                i += 1
+            elif arg in ["-e", "-x", "--execute"]:
+                # Mark where the execute command starts - capture all remaining args
+                execute_index = i + 1
+                break  # Stop here, remaining args are the command
             elif arg.startswith("--execute="):
                 execute_command = arg.split("=", 1)[1]
             elif arg == "--close-after-execute":
@@ -329,6 +334,12 @@ class CommTerminalApp(Adw.Application):
             elif not arg.startswith("-") and working_directory is None:
                 working_directory = arg
             i += 1
+
+        # If we found -e/-x/--execute, capture all remaining arguments as the command
+        if execute_index is not None and execute_index < len(arguments):
+            remaining = arguments[execute_index:]
+            if remaining:
+                execute_command = " ".join(remaining)
 
         behavior = self.settings_manager.get("new_instance_behavior", "new_tab")
 

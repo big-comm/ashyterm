@@ -48,15 +48,6 @@
             "description": "Highlights package names with versions"
         },
         {
-            "name": "Time Duration",
-            "pattern": "(\\d+(?:\\.\\d+)?)s\\b",
-            "colors": [
-                "white"
-            ],
-            "enabled": true,
-            "description": "Highlights timing information"
-        },
-        {
             "name": "Info Label",
             "pattern": "(info)\\s+",
             "colors": [
@@ -79,7 +70,7 @@
             "name": "Fetching",
             "pattern": "(Fetching)\\s+(\\S+)",
             "colors": [
-                "white",
+                null,
                 "cyan"
             ],
             "enabled": true,

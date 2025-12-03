@@ -11,6 +11,7 @@ from gi.repository import Adw, GLib, GObject, Gtk
 
 from ..utils.icons import icon_button, icon_image
 from ..utils.logger import get_logger
+from ..utils.tooltip_helper import get_tooltip_helper
 from ..utils.translation_utils import _
 from .transfer_manager import TransferItem, TransferStatus, TransferType
 
@@ -54,14 +55,14 @@ class TransferRow(Adw.ActionRow):
         # Action buttons
         self.action_box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=6)
         self.cancel_button = icon_button("process-stop-symbolic")
-        self.cancel_button.set_tooltip_text(_("Cancel transfer"))
+        get_tooltip_helper().add_tooltip(self.cancel_button, _("Cancel transfer"))
         self.cancel_button.add_css_class("flat")
         self.cancel_button.connect(
             "clicked", lambda _: self.transfer_manager.cancel_transfer(self.transfer.id)
         )
 
         self.remove_button = icon_button("edit-delete-symbolic")
-        self.remove_button.set_tooltip_text(_("Remove from history"))
+        get_tooltip_helper().add_tooltip(self.remove_button, _("Remove from history"))
         self.remove_button.add_css_class("flat")
         self.remove_button.connect(
             "clicked", lambda _: self.on_remove_callback(self.transfer.id)

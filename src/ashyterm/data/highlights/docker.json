@@ -91,7 +91,7 @@
         {
             "name": "Port Numbers",
             "pattern": "(\\d{1,5})(-\\d{1,5})?(->)(\\d{1,5})(-\\d{1,5})?(/)(tcp|udp)",
-            "colors": ["bright_green", "bright_green", "white", "bright_green", "bright_green", "white", "cyan"],
+            "colors": ["bright_green", "bright_green", null, "bright_green", "bright_green", null, "cyan"],
             "enabled": true,
             "description": "Highlights port mappings"
         },

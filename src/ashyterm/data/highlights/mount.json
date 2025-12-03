@@ -11,9 +11,9 @@
             "pattern": "^(\\S+)\\s+(on)\\s+(\\S+)\\s+(type)\\s+(\\S+)\\s+\\(([^)]+)\\)",
             "colors": [
                 "green",
-                "white",
+                null,
                 "yellow",
-                "white",
+                null,
                 "blue",
                 "magenta"
             ],
@@ -56,15 +56,7 @@
             "enabled": true,
             "description": "Highlights read-only mount"
         },
-        {
-            "name": "Tmpfs/Cgroup",
-            "pattern": "^(cgroup|tmpfs|sysfs|proc|devpts|securityfs).*",
-            "colors": [
-                "white"
-            ],
-            "enabled": true,
-            "description": "Highlights virtual filesystems (dimmed)"
-        },
+
         {
             "name": "FS Types",
             "pattern": "type\\s+(ext[234]|xfs|btrfs|ntfs|vfat|fuseblk|nfs\\d?|cifs|overlay)",

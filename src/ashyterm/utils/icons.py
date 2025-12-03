@@ -20,8 +20,10 @@ from typing import Optional
 
 import gi
 
+from .tooltip_helper import get_tooltip_helper
+
 gi.require_version("Gtk", "4.0")
-from gi.repository import Gtk, Gdk, Gio, GdkPixbuf
+from gi.repository import Gtk, Gio, GdkPixbuf
 
 
 # Icon directory paths (in order of priority)
@@ -202,7 +204,11 @@ def create_icon_button(
             child.set_pixel_size(size)
 
     if tooltip:
-        button.set_tooltip_text(tooltip)
+        helper = get_tooltip_helper()
+        if helper:
+            helper.add_tooltip(button, tooltip)
+        else:
+            button.set_tooltip_text(tooltip)
 
     if css_classes:
         for css_class in css_classes:
@@ -248,6 +254,36 @@ def set_image_from_icon(
     # Fall back to system icon
     image.set_from_icon_name(icon_name)
     image.set_pixel_size(size)
+
+
+def set_button_icon(
+    button: Gtk.Button,
+    icon_name: str,
+    size: int = 16,
+    use_bundled: Optional[bool] = None,
+) -> None:
+    """Set a Gtk.Button's icon from an icon name.
+
+    When use_bundled=True, loads directly from bundled SVG files.
+    When use_bundled=False, uses system icons via GTK IconTheme.
+
+    This function properly handles bundled icons, unlike button.set_icon_name()
+    which only works with system icons.
+
+    Args:
+        button: Existing Gtk.Button widget to update
+        icon_name: Icon name (e.g., "folder-symbolic")
+        size: Icon size in pixels (default: 16)
+        use_bundled: Try bundled icons first (None = use global setting)
+    """
+    # Check if button already has an image child we can update
+    child = button.get_child()
+    if isinstance(child, Gtk.Image):
+        set_image_from_icon(child, icon_name, size, use_bundled)
+    else:
+        # Create new image and set as button child
+        image = create_icon_image(icon_name, size, use_bundled)
+        button.set_child(image)
 
 
 # Convenience aliases for cleaner imports

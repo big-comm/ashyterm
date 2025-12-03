@@ -1096,8 +1096,20 @@ class TerminalManager:
         try:
             if not terminal or not command:
                 return False
-            command_to_run = f"({command}); exit" if close_after_execute else command
-            terminal.feed_child(f"{command_to_run}\n".encode("utf-8"))
+
+            # Handle multi-line commands - split and execute each line
+            lines = command.strip().split("\n")
+            lines = [line for line in lines if line.strip()]  # Remove empty lines
+
+            if close_after_execute:
+                # Execute all commands and then exit
+                for line in lines:
+                    terminal.feed_child(f"{line}\n".encode("utf-8"))
+                terminal.feed_child(b"exit\n")
+            else:
+                # Execute each command line
+                for line in lines:
+                    terminal.feed_child(f"{line}\n".encode("utf-8"))
             return True
         except Exception as e:
             self.logger.error(f"Failed to execute command '{command}': {e}")

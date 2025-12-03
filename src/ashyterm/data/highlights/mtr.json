@@ -10,7 +10,7 @@
             "name": "IPv4 Address",
             "pattern": "(\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3})",
             "colors": [
-                "green"
+                "bold magenta"
             ],
             "enabled": true,
             "description": "Highlights IP addresses"
@@ -18,7 +18,7 @@
         {
             "name": "Statistics Line",
             "pattern": "(\\d+\\.\\d%)\\s+(\\d+)\\s+(\\d+\\.\\d)\\s+(\\d+\\.\\d)\\s+(\\d+\\.\\d)\\s+(\\d+\\.\\d)\\s+(\\d+\\.\\d)$",
-            "colors": ["yellow", "white", "white", "blue", "green", "red", "white"],
+            "colors": ["yellow", null, null, "blue", "green", "red", null],
             "enabled": true,
             "description": "Highlights statistics: Loss%, Snt, Last, Avg, Best, Worst, StDev"
         },

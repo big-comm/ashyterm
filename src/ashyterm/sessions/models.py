@@ -92,7 +92,7 @@ class SessionItem(BaseModel):
     def __init__(
         self,
         name: str,
-        session_type: str = "local",
+        session_type: str = "ssh",
         host: str = "",
         user: str = "",
         auth_type: str = "key",
@@ -108,6 +108,8 @@ class SessionItem(BaseModel):
         port_forwardings: Optional[List[Dict[str, Any]]] = None,
         x11_forwarding: bool = False,
         source: str = "user",
+        local_working_directory: str = "",
+        local_startup_command: str = "",
     ):
         super().__init__()
         self.logger = get_logger("ashyterm.sessions.model")
@@ -140,6 +142,15 @@ class SessionItem(BaseModel):
             self.port_forwardings = port_forwardings
         self._x11_forwarding = bool(x11_forwarding)
         self._source = source or "user"
+        # Local terminal specific properties
+        self._local_working_directory = (
+            str(normalize_path(local_working_directory))
+            if local_working_directory
+            else ""
+        )
+        self._local_startup_command = (
+            local_startup_command.strip() if local_startup_command else ""
+        )
 
     @property
     def children(self) -> Optional[Gio.ListStore]:
@@ -387,6 +398,28 @@ class SessionItem(BaseModel):
             self._source = new_value
             self._mark_modified()
 
+    @property
+    def local_working_directory(self) -> str:
+        return self._local_working_directory
+
+    @local_working_directory.setter
+    def local_working_directory(self, value: str):
+        new_value = str(normalize_path(value)) if value and value.strip() else ""
+        if self._local_working_directory != new_value:
+            self._local_working_directory = new_value
+            self._mark_modified()
+
+    @property
+    def local_startup_command(self) -> str:
+        return self._local_startup_command
+
+    @local_startup_command.setter
+    def local_startup_command(self, value: str):
+        new_value = value.strip() if value else ""
+        if self._local_startup_command != new_value:
+            self._local_startup_command = new_value
+            self._mark_modified()
+
     def get_validation_errors(self) -> List[str]:
         """Returns a list of validation error messages."""
         errors = []
@@ -447,6 +480,8 @@ class SessionItem(BaseModel):
             "sftp_remote_directory": self.sftp_remote_directory,
             "port_forwardings": self.port_forwardings,
             "x11_forwarding": self.x11_forwarding,
+            "local_working_directory": self.local_working_directory,
+            "local_startup_command": self.local_startup_command,
             "created_at": self._created_at,
             "modified_at": self._modified_at,
             "source": self._source,
@@ -457,7 +492,7 @@ class SessionItem(BaseModel):
         """Deserializes a dictionary into a SessionItem instance."""
         session = cls(
             name=data.get("name", _("Unnamed Session")),
-            session_type=data.get("session_type", "local"),
+            session_type=data.get("session_type", "ssh"),
             host=data.get("host", ""),
             user=data.get("user", ""),
             auth_type=data.get("auth_type", "key"),
@@ -471,6 +506,8 @@ class SessionItem(BaseModel):
             port_forwardings=data.get("port_forwardings", []),
             x11_forwarding=data.get("x11_forwarding", False),
             source=data.get("source", "user"),
+            local_working_directory=data.get("local_working_directory", ""),
+            local_startup_command=data.get("local_startup_command", ""),
         )
         # __init__ sets default metadata; overwrite with loaded data
         session._auth_value = data.get("auth_value", "")

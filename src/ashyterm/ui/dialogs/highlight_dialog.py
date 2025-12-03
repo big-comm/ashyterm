@@ -23,7 +23,9 @@ from ...settings.highlights import (
     get_highlight_manager,
 )
 from ...settings.manager import get_settings_manager
+from ...utils.icons import icon_image
 from ...utils.logger import get_logger
+from ...utils.tooltip_helper import get_tooltip_helper
 from ...utils.translation_utils import _
 
 # Available logical color names for selection (base colors only)
@@ -195,7 +197,7 @@ class ColorEntryRow(Adw.ActionRow):
         for effect_id, effect_label, icon_name in TEXT_EFFECT_OPTIONS:
             toggle = Gtk.ToggleButton()
             toggle.set_icon_name(icon_name)
-            toggle.set_tooltip_text(effect_label)
+            get_tooltip_helper().add_tooltip(toggle, effect_label)
             toggle.set_valign(Gtk.Align.CENTER)
             toggle.connect("toggled", self._on_effect_toggled, effect_id)
             effects_box.append(toggle)
@@ -230,7 +232,7 @@ class ColorEntryRow(Adw.ActionRow):
         remove_btn = Gtk.Button(icon_name="user-trash-symbolic")
         remove_btn.set_valign(Gtk.Align.CENTER)
         remove_btn.add_css_class("flat")
-        remove_btn.set_tooltip_text(_("Remove"))
+        get_tooltip_helper().add_tooltip(remove_btn, _("Remove"))
         remove_btn.connect("clicked", lambda b: self.emit("remove-requested"))
         self.add_suffix(remove_btn)
 
@@ -519,7 +521,9 @@ class RuleEditDialog(Adw.Window):
         # Pattern entry with regex help
         pattern_group = Adw.PreferencesGroup(
             title=_("Pattern"),
-            description=_("Use Python regular expression syntax. Capture groups () can have individual colors."),
+            description=_(
+                "Python regex syntax. Capture groups () can have individual colors."
+            ),
         )
         
         # Pattern row with help button
@@ -531,7 +535,7 @@ class RuleEditDialog(Adw.Window):
         help_btn = Gtk.Button(icon_name="help-about-symbolic")
         help_btn.add_css_class("flat")
         help_btn.set_valign(Gtk.Align.CENTER)
-        help_btn.set_tooltip_text(_("Regex reference"))
+        get_tooltip_helper().add_tooltip(help_btn, _("Regex reference"))
         help_btn.connect("clicked", self._on_regex_help_clicked)
         self._pattern_row.add_suffix(help_btn)
         
@@ -548,10 +552,7 @@ class RuleEditDialog(Adw.Window):
         # Colors group
         self._colors_group = Adw.PreferencesGroup(
             title=_("Colors & Effects"),
-            description=_(
-                "Select a base color and toggle text effects (bold, italic, underline, etc.) for each capture group. "
-                "First color applies to entire match if no groups."
-            ),
+            description=_("First color applies to entire match if no groups."),
         )
         content_box.append(self._colors_group)
         
@@ -858,7 +859,7 @@ class ContextRulesDialog(Adw.Window):
         self._context_rule_rows: list[Adw.ActionRow] = []
 
         # Window configuration
-        self.set_title(_("Context: {}").format(context_name))
+        self.set_title(_("Command: {}").format(context_name))
         self.set_default_size(saved_width, saved_height)
         self.set_modal(True)
 
@@ -929,15 +930,12 @@ class ContextRulesDialog(Adw.Window):
         content_box.append(self._prefs_page)
         
         # Context settings group
-        settings_group = Adw.PreferencesGroup(
-            title=_("Context Settings"),
-        )
+        settings_group = Adw.PreferencesGroup()
         self._prefs_page.add(settings_group)
         
         # Enable toggle
         self._enable_row = Adw.SwitchRow(
-            title=_("Enable Context"),
-            subtitle=_("Apply rules when this command is detected"),
+            title=_("Enable Command Rules"),
         )
         self._enable_row.connect("notify::active", self._on_enable_toggled)
         settings_group.add(self._enable_row)
@@ -945,7 +943,6 @@ class ContextRulesDialog(Adw.Window):
         # Use global rules toggle
         self._use_global_row = Adw.SwitchRow(
             title=_("Include Global Rules"),
-            subtitle=_("Also apply global rules alongside context-specific rules"),
         )
         self._use_global_row.connect("notify::active", self._on_use_global_toggled)
         settings_group.add(self._use_global_row)
@@ -953,7 +950,6 @@ class ContextRulesDialog(Adw.Window):
         # Reset button
         reset_row = Adw.ActionRow(
             title=_("Reset to System Default"),
-            subtitle=_("Remove user customization and revert to system rules"),
         )
         reset_row.set_activatable(True)
         reset_btn = Gtk.Button(icon_name="edit-undo-symbolic")
@@ -967,14 +963,12 @@ class ContextRulesDialog(Adw.Window):
         # Triggers group
         self._triggers_group = Adw.PreferencesGroup(
             title=_("Triggers"),
-            description=_("Commands that activate this context. Add, edit or remove triggers to customize when this context applies."),
         )
         self._prefs_page.add(self._triggers_group)
         
         # Add trigger button
         add_trigger_row = Adw.ActionRow(
             title=_("➕ Add Trigger"),
-            subtitle=_("Add another command that activates this context"),
         )
         add_trigger_row.set_activatable(True)
         add_trigger_btn = Gtk.Button(icon_name="list-add-symbolic")
@@ -992,14 +986,12 @@ class ContextRulesDialog(Adw.Window):
         # Rules group
         self._rules_group = Adw.PreferencesGroup(
             title=_("Highlight Rules"),
-            description=_("Use arrows to reorder. Rules are matched from top to bottom."),
         )
         self._prefs_page.add(self._rules_group)
         
         # Add rule button - first and prominent
         add_row = Adw.ActionRow(
             title=_("➕ Add New Rule"),
-            subtitle=_("Create a new highlighting pattern for this context"),
         )
         add_row.set_activatable(True)
         add_btn = Gtk.Button(icon_name="list-add-symbolic")
@@ -1051,10 +1043,9 @@ class ContextRulesDialog(Adw.Window):
     def _create_trigger_row(self, trigger: str) -> Adw.ActionRow:
         """Create an action row for a trigger with edit and delete buttons."""
         row = Adw.ActionRow(title=trigger)
-        row.set_subtitle(_("Activates this context"))
-        
-        # Terminal icon prefix
-        icon = Gtk.Image.new_from_icon_name("utilities-terminal-symbolic")
+
+        # Terminal icon prefix (uses bundled icon)
+        icon = icon_image("utilities-terminal-symbolic")
         icon.set_opacity(0.6)
         row.add_prefix(icon)
         
@@ -1062,7 +1053,7 @@ class ContextRulesDialog(Adw.Window):
         edit_btn = Gtk.Button(icon_name="document-edit-symbolic")
         edit_btn.add_css_class("flat")
         edit_btn.set_valign(Gtk.Align.CENTER)
-        edit_btn.set_tooltip_text(_("Edit trigger"))
+        get_tooltip_helper().add_tooltip(edit_btn, _("Edit trigger"))
         edit_btn.connect("clicked", self._on_edit_trigger_clicked, trigger)
         row.add_suffix(edit_btn)
         
@@ -1070,13 +1061,15 @@ class ContextRulesDialog(Adw.Window):
         delete_btn = Gtk.Button(icon_name="user-trash-symbolic")
         delete_btn.add_css_class("flat")
         delete_btn.set_valign(Gtk.Align.CENTER)
-        delete_btn.set_tooltip_text(_("Remove trigger"))
+        get_tooltip_helper().add_tooltip(delete_btn, _("Remove trigger"))
         delete_btn.connect("clicked", self._on_delete_trigger_clicked, trigger)
         
         context = self._manager.get_context(self._context_name)
         if context and len(context.triggers) <= 1:
             delete_btn.set_sensitive(False)
-            delete_btn.set_tooltip_text(_("Cannot remove the last trigger"))
+            get_tooltip_helper().add_tooltip(
+                delete_btn, _("Cannot remove the last trigger")
+            )
         
         row.add_suffix(delete_btn)
         
@@ -1181,7 +1174,7 @@ class ContextRulesDialog(Adw.Window):
         up_btn.set_size_request(24, 24)
         up_btn.set_sensitive(index > 0)
         up_btn.connect("clicked", self._on_move_rule_up, index)
-        up_btn.set_tooltip_text(_("Move up"))
+        get_tooltip_helper().add_tooltip(up_btn, _("Move up"))
         reorder_box.append(up_btn)
         
         down_btn = Gtk.Button(icon_name="go-down-symbolic")
@@ -1190,7 +1183,7 @@ class ContextRulesDialog(Adw.Window):
         down_btn.set_size_request(24, 24)
         down_btn.set_sensitive(index < total - 1)
         down_btn.connect("clicked", self._on_move_rule_down, index)
-        down_btn.set_tooltip_text(_("Move down"))
+        get_tooltip_helper().add_tooltip(down_btn, _("Move down"))
         reorder_box.append(down_btn)
         
         row.add_prefix(reorder_box)
@@ -1210,7 +1203,7 @@ class ContextRulesDialog(Adw.Window):
         edit_btn = Gtk.Button(icon_name="document-edit-symbolic")
         edit_btn.add_css_class("flat")
         edit_btn.set_valign(Gtk.Align.CENTER)
-        edit_btn.set_tooltip_text(_("Edit rule"))
+        get_tooltip_helper().add_tooltip(edit_btn, _("Edit rule"))
         edit_btn.connect("clicked", self._on_edit_rule, index)
         row.add_suffix(edit_btn)
         
@@ -1218,7 +1211,7 @@ class ContextRulesDialog(Adw.Window):
         delete_btn = Gtk.Button(icon_name="user-trash-symbolic")
         delete_btn.add_css_class("flat")
         delete_btn.set_valign(Gtk.Align.CENTER)
-        delete_btn.set_tooltip_text(_("Delete rule"))
+        get_tooltip_helper().add_tooltip(delete_btn, _("Delete rule"))
         delete_btn.connect("clicked", self._on_delete_rule, index)
         row.add_suffix(delete_btn)
         
@@ -1479,7 +1472,7 @@ class HighlightDialog(Adw.PreferencesWindow):
         
         # Create second page for Context-Aware Rules
         self._context_page = Adw.PreferencesPage(
-            title=_("Context Rules"),
+            title=_("Command Rules"),
             icon_name="utilities-terminal-symbolic",
         )
         self.add(self._context_page)
@@ -1494,10 +1487,8 @@ class HighlightDialog(Adw.PreferencesWindow):
         """Setup the welcome/explanation text at the top."""
         welcome_group = Adw.PreferencesGroup(
             description=_(
-                "Syntax highlighting enhances terminal output readability by colorizing patterns "
-                "like errors, warnings, IP addresses, and more."
-                "\n"
-                "* Many highlight rules can slow down display of large outputs.."
+                "Colorizes terminal output patterns like errors, warnings, and IPs. "
+                "Many rules can slow down large outputs."
             ),
         )
         page.add(welcome_group)
@@ -1506,16 +1497,12 @@ class HighlightDialog(Adw.PreferencesWindow):
         """Setup the activation settings group."""
         activation_group = Adw.PreferencesGroup(
             title=_("Activation"),
-            description=_(
-                "Control when syntax highlighting is applied to terminal output."
-            ),
         )
         page.add(activation_group)
         
         # Enable for local terminals toggle
         self._local_toggle = Adw.SwitchRow(
             title=_("Local Terminals"),
-            subtitle=_("Apply highlighting to local shell sessions"),
         )
         self._local_toggle.set_active(self._manager.enabled_for_local)
         self._local_toggle.connect("notify::active", self._on_local_toggled)
@@ -1524,7 +1511,6 @@ class HighlightDialog(Adw.PreferencesWindow):
         # Enable for SSH terminals toggle
         self._ssh_toggle = Adw.SwitchRow(
             title=_("SSH Sessions"),
-            subtitle=_("Apply highlighting to SSH remote sessions"),
         )
         self._ssh_toggle.set_active(self._manager.enabled_for_ssh)
         self._ssh_toggle.connect("notify::active", self._on_ssh_toggled)
@@ -1532,15 +1518,12 @@ class HighlightDialog(Adw.PreferencesWindow):
     
     def _setup_ignored_commands_group(self, page: Adw.PreferencesPage) -> None:
         """Setup the ignored commands group as a collapsible section."""
-        self._ignored_commands_group = Adw.PreferencesGroup(
-            title=_("Ignored Commands"),
-        )
+        self._ignored_commands_group = Adw.PreferencesGroup()
         page.add(self._ignored_commands_group)
         
         # Main expander row that contains all ignored commands
         self._ignored_expander = Adw.ExpanderRow(
-            title=_("Highlighting disabled for these commands"),
-            subtitle=_("Click to expand"),
+            title=_("Ignored Commands"),
         )
         self._ignored_expander.set_enable_expansion(True)
         self._ignored_expander.set_expanded(False)  # Collapsed by default
@@ -1555,7 +1538,6 @@ class HighlightDialog(Adw.PreferencesWindow):
         # Restore defaults row (inside expander, at the top)
         restore_row = Adw.ActionRow(
             title=_("Restore Defaults"),
-            subtitle=_("Reset to the default ignored commands list"),
         )
         restore_row.set_activatable(True)
         restore_btn = Gtk.Button(icon_name="view-refresh-symbolic")
@@ -1569,7 +1551,6 @@ class HighlightDialog(Adw.PreferencesWindow):
         # Add command button (inside expander) - prominent style
         add_cmd_row = Adw.ActionRow(
             title=_("➕ Add Ignored Command"),
-            subtitle=_("Add a command that should preserve its native colors"),
         )
         add_cmd_row.set_activatable(True)
         add_btn = Gtk.Button(icon_name="list-add-symbolic")
@@ -1613,13 +1594,12 @@ class HighlightDialog(Adw.PreferencesWindow):
     def _create_ignored_command_row(self, cmd: str) -> Adw.ActionRow:
         """Create a row for an ignored command with remove button."""
         row = Adw.ActionRow(title=cmd)
-        row.set_subtitle(_("Native coloring preserved"))
         
         # Remove button
         remove_btn = Gtk.Button(icon_name="user-trash-symbolic")
         remove_btn.set_valign(Gtk.Align.CENTER)
         remove_btn.add_css_class("flat")
-        remove_btn.set_tooltip_text(_("Remove from ignored list"))
+        get_tooltip_helper().add_tooltip(remove_btn, _("Remove from ignored list"))
         remove_btn.connect("clicked", self._on_remove_ignored_command, cmd)
         row.add_suffix(remove_btn)
         
@@ -1715,17 +1695,13 @@ class HighlightDialog(Adw.PreferencesWindow):
     def _setup_context_settings_group(self, page: Adw.PreferencesPage) -> None:
         """Setup the context-aware settings group."""
         context_settings_group = Adw.PreferencesGroup(
-            title=_("Context-Aware Highlighting"),
-            description=_(
-                "Automatically apply command-specific rules when certain commands are detected."
-            ),
+            title=_("Per-Command Highlighting"),
         )
         page.add(context_settings_group)
         
         # Enable context-aware highlighting toggle
         self._context_aware_toggle = Adw.SwitchRow(
-            title=_("Enable Context Detection"),
-            subtitle=_("Detect running commands and apply specific highlight rules"),
+            title=_("Enable Command Detection"),
         )
         self._context_aware_toggle.set_active(self._manager.context_aware_enabled)
         self._context_aware_toggle.connect("notify::active", self._on_context_aware_toggled)
@@ -1734,18 +1710,13 @@ class HighlightDialog(Adw.PreferencesWindow):
     def _setup_context_selector_group(self, page: Adw.PreferencesPage) -> None:
         """Setup the context selector group with bulk actions."""
         self._context_selector_group = Adw.PreferencesGroup(
-            title=_("Command Contexts"),
-            description=_(
-                "Context rules apply only when a specific command is running (e.g., ping, docker, git). "
-                "Toggle contexts on/off or click a row to edit its rules."
-            ),
+            title=_("Commands"),
         )
         page.add(self._context_selector_group)
         
         # ADD NEW CONTEXT - prominent at the top
         add_context_row = Adw.ActionRow(
-            title=_("➕ Create New Context"),
-            subtitle=_("Add custom highlighting rules for a specific command"),
+            title=_("➕ Add Command"),
         )
         add_context_row.set_activatable(True)
         add_context_row.add_css_class("suggested-action")
@@ -1761,7 +1732,6 @@ class HighlightDialog(Adw.PreferencesWindow):
         # Bulk action buttons
         bulk_actions_row = Adw.ActionRow(
             title=_("Bulk Actions"),
-            subtitle=_("Quickly enable or disable all contexts"),
         )
         
         enable_all_btn = Gtk.Button(label=_("Enable All"))
@@ -1780,8 +1750,7 @@ class HighlightDialog(Adw.PreferencesWindow):
 
         # Reset all contexts button
         reset_contexts_row = Adw.ActionRow(
-            title=_("Reset All Contexts"),
-            subtitle=_("Restore all contexts to system defaults"),
+            title=_("Reset All Commands"),
         )
         reset_contexts_row.set_activatable(True)
         reset_contexts_btn = Gtk.Button(icon_name="view-refresh-symbolic")
@@ -1794,8 +1763,7 @@ class HighlightDialog(Adw.PreferencesWindow):
 
         # Scrolled container for context list
         self._context_list_group = Adw.PreferencesGroup(
-            title=_("Available Contexts"),
-            description=_("Click a context to select it, then scroll down to customize its rules"),
+            title=_("Available Commands"),
         )
         page.add(self._context_list_group)
         
@@ -1805,21 +1773,21 @@ class HighlightDialog(Adw.PreferencesWindow):
     def _setup_context_rules_group(self, page: Adw.PreferencesPage) -> None:
         """Setup the context rules list group with reorder support."""
         self._context_rules_group = Adw.PreferencesGroup(
-            title=_("Context Rules"),
+            title=_("Command Rules"),
             description=_("Rules specific to the selected command. Order matters!"),
         )
         page.add(self._context_rules_group)
         
         # Context header with enable/settings
         self._context_header_row = Adw.ActionRow(
-            title=_("No context selected"),
-            subtitle=_("Select a context from the list above"),
+            title=_("No command selected"),
+            subtitle=_("Select a command from the list above"),
         )
         self._context_rules_group.add(self._context_header_row)
         
         # Context enable toggle
         self._context_enable_row = Adw.SwitchRow(
-            title=_("Enable Context"),
+            title=_("Enable Command Rules"),
             subtitle=_("Apply rules when this command is detected"),
         )
         self._context_enable_row.connect("notify::active", self._on_context_enable_toggled)
@@ -1828,7 +1796,7 @@ class HighlightDialog(Adw.PreferencesWindow):
         # Use global rules toggle
         self._use_global_rules_row = Adw.SwitchRow(
             title=_("Include Global Rules"),
-            subtitle=_("Also apply global rules alongside context-specific rules"),
+            subtitle=_("Also apply global rules alongside command-specific rules"),
         )
         self._use_global_rules_row.connect("notify::active", self._on_use_global_rules_toggled)
         self._context_rules_group.add(self._use_global_rules_row)
@@ -1857,7 +1825,7 @@ class HighlightDialog(Adw.PreferencesWindow):
         
         # Add rule to context button - make it prominent
         add_rule_row = Adw.ActionRow(
-            title=_("➕ Add Rule to This Context"),
+            title=_("➕ Add Rule to This Command"),
             subtitle=_("Create a new highlighting pattern for the selected command"),
         )
         add_rule_row.set_activatable(True)
@@ -1874,19 +1842,12 @@ class HighlightDialog(Adw.PreferencesWindow):
         """Setup the global rules list group."""
         self._rules_group = Adw.PreferencesGroup(
             title=_("Global Highlight Rules"),
-            description=_(
-                "These rules apply to ALL terminal output, regardless of which command is running. "
-                "Use for patterns you always want highlighted (errors, warnings, IP addresses, etc.). "
-                "\n"
-                "For command-specific rules, use the Context Rules tab."
-            ),
         )
         page.add(self._rules_group)
         
         # Add rule button - make it more prominent
         add_row = Adw.ActionRow(
             title=_("➕ Add New Global Rule"),
-            subtitle=_("Create a new pattern to highlight in all terminal output"),
         )
         add_row.set_activatable(True)
         add_btn = Gtk.Button(icon_name="list-add-symbolic")
@@ -1900,7 +1861,6 @@ class HighlightDialog(Adw.PreferencesWindow):
         # Reset global rules button
         reset_row = Adw.ActionRow(
             title=_("Reset Global Rules"),
-            subtitle=_("Restore global rules to system defaults"),
         )
         reset_row.set_activatable(True)
         reset_btn = Gtk.Button(icon_name="view-refresh-symbolic")
@@ -1937,7 +1897,7 @@ class HighlightDialog(Adw.PreferencesWindow):
         
         # Update selector group description
         self._context_selector_group.set_description(
-            _("{total} context(s), {enabled} enabled").format(
+            _("{total} command(s), {enabled} enabled").format(
                 total=len(context_names), enabled=enabled_count
             )
         )
@@ -1955,15 +1915,16 @@ class HighlightDialog(Adw.PreferencesWindow):
     def _create_context_list_row(self, name: str, ctx) -> Adw.ActionRow:
         """Create a row for a context in the list with inline edit, delete, switch buttons."""
         rule_count = len(ctx.rules)
-        
+
+        trigger_info = ", ".join(ctx.triggers)
         row = Adw.ActionRow(
-            title=name,
+            title=trigger_info,
             subtitle=_("{count} rules").format(count=rule_count),
         )
         row.set_activatable(False)  # Not clickable as full row
-        
-        # Terminal icon prefix
-        icon = Gtk.Image.new_from_icon_name("utilities-terminal-symbolic")
+
+        # Terminal icon prefix (uses bundled icon)
+        icon = icon_image("utilities-terminal-symbolic")
         icon.set_opacity(0.6)
         row.add_prefix(icon)
         
@@ -1971,7 +1932,7 @@ class HighlightDialog(Adw.PreferencesWindow):
         edit_btn = Gtk.Button(icon_name="document-edit-symbolic")
         edit_btn.add_css_class("flat")
         edit_btn.set_valign(Gtk.Align.CENTER)
-        edit_btn.set_tooltip_text(_("Edit context rules"))
+        get_tooltip_helper().add_tooltip(edit_btn, _("Edit command rules"))
         edit_btn.connect("clicked", self._on_edit_context_clicked, name)
         row.add_suffix(edit_btn)
         
@@ -1980,7 +1941,7 @@ class HighlightDialog(Adw.PreferencesWindow):
             delete_btn = Gtk.Button(icon_name="user-trash-symbolic")
             delete_btn.add_css_class("flat")
             delete_btn.set_valign(Gtk.Align.CENTER)
-            delete_btn.set_tooltip_text(_("Delete context"))
+            get_tooltip_helper().add_tooltip(delete_btn, _("Delete command"))
             delete_btn.connect("clicked", self._on_delete_context_clicked, name)
             row.add_suffix(delete_btn)
         
@@ -2008,8 +1969,10 @@ class HighlightDialog(Adw.PreferencesWindow):
         
         dialog = Adw.MessageDialog(
             transient_for=self,
-            heading=_("Delete Context?"),
-            body=_('Are you sure you want to delete "{}"? This will remove all custom rules for this command.').format(context_name),
+            heading=_("Delete Command?"),
+            body=_(
+                'Are you sure you want to delete "{}"? This will remove all custom rules for this command.'
+            ).format(context_name),
         )
         dialog.add_response("cancel", _("Cancel"))
         dialog.add_response("delete", _("Delete"))
@@ -2024,7 +1987,9 @@ class HighlightDialog(Adw.PreferencesWindow):
             if self._manager.delete_user_context(context_name):
                 self._populate_contexts()
                 self.emit("settings-changed")
-                self.add_toast(Adw.Toast(title=_("Context deleted: {}").format(context_name)))
+                self.add_toast(
+                    Adw.Toast(title=_("Command deleted: {}").format(context_name))
+                )
     
     def _on_context_toggle(self, switch: Gtk.Switch, state: bool, context_name: str) -> bool:
         """Handle context toggle from the list."""
@@ -2038,7 +2003,7 @@ class HighlightDialog(Adw.PreferencesWindow):
             if self._manager.get_context(name) and self._manager.get_context(name).enabled
         )
         self._context_selector_group.set_description(
-            _("{total} context(s), {enabled} enabled").format(
+            _("{total} command(s), {enabled} enabled").format(
                 total=len(context_names), enabled=enabled_count
             )
         )
@@ -2113,9 +2078,13 @@ class HighlightDialog(Adw.PreferencesWindow):
             self._add_context_rule_row.set_sensitive(False)
             self._reset_context_row.set_sensitive(False)
             # Update header
-            self._context_header_row.set_title(_("No context selected"))
-            self._context_header_row.set_subtitle(_("Select a context from the list above"))
-            self._context_rules_list_group.set_description(_("Select a context to view its rules"))
+            self._context_header_row.set_title(_("No command selected"))
+            self._context_header_row.set_subtitle(
+                _("Select a command from the list above")
+            )
+            self._context_rules_list_group.set_description(
+                _("Select a command to view its rules")
+            )
             return
         
         self._context_enable_row.set_sensitive(True)
@@ -2127,7 +2096,7 @@ class HighlightDialog(Adw.PreferencesWindow):
         context = self._manager.get_context(self._selected_context)
         if not context:
             self._context_header_row.set_title(self._selected_context)
-            self._context_header_row.set_subtitle(_("Context not found"))
+            self._context_header_row.set_subtitle(_("Command not found"))
             return
         
         # Update header with context info
@@ -2192,7 +2161,7 @@ class HighlightDialog(Adw.PreferencesWindow):
         up_btn.set_size_request(24, 24)
         up_btn.set_sensitive(index > 0)
         up_btn.connect("clicked", self._on_move_rule_up, index)
-        up_btn.set_tooltip_text(_("Move up"))
+        get_tooltip_helper().add_tooltip(up_btn, _("Move up"))
         reorder_box.append(up_btn)
         
         down_btn = Gtk.Button(icon_name="go-down-symbolic")
@@ -2201,7 +2170,7 @@ class HighlightDialog(Adw.PreferencesWindow):
         down_btn.set_size_request(24, 24)
         down_btn.set_sensitive(index < total_rules - 1)
         down_btn.connect("clicked", self._on_move_rule_down, index)
-        down_btn.set_tooltip_text(_("Move down"))
+        get_tooltip_helper().add_tooltip(down_btn, _("Move down"))
         reorder_box.append(down_btn)
         
         row.add_prefix(reorder_box)
@@ -2220,7 +2189,9 @@ class HighlightDialog(Adw.PreferencesWindow):
             colors_badge = Gtk.Label(label=f"{len(rule.colors)}")
             colors_badge.add_css_class("dim-label")
             colors_badge.set_valign(Gtk.Align.CENTER)
-            colors_badge.set_tooltip_text(_("{} colors").format(len(rule.colors)))
+            get_tooltip_helper().add_tooltip(
+                colors_badge, _("{} colors").format(len(rule.colors))
+            )
             row.add_suffix(colors_badge)
         
         # Enable/disable switch suffix
@@ -2300,9 +2271,9 @@ class HighlightDialog(Adw.PreferencesWindow):
                 if self._manager.get_context(name) and self._manager.get_context(name).enabled
             )
             self._context_selector_group.set_description(
-                _("{total} context(s), {enabled} enabled. Click to toggle, select to edit.").format(
-                    total=len(context_names), enabled=enabled_count
-                )
+                _(
+                    "{total} command(s), {enabled} enabled. Click to toggle, select to edit."
+                ).format(total=len(context_names), enabled=enabled_count)
             )
             
             self.emit("settings-changed")
@@ -2343,7 +2314,7 @@ class HighlightDialog(Adw.PreferencesWindow):
         self._populate_contexts()
         
         self.emit("settings-changed")
-        self.add_toast(Adw.Toast(title=_("Context created: {}").format(context_name)))
+        self.add_toast(Adw.Toast(title=_("Command created: {}").format(context_name)))
         
         # Open the dialog for the new context so user can add rules
         self._open_context_dialog(context_name)
@@ -2374,7 +2345,7 @@ class HighlightDialog(Adw.PreferencesWindow):
             if self._manager.delete_user_context(name):
                 self._populate_contexts()
                 self.emit("settings-changed")
-                self.add_toast(Adw.Toast(title=_("Context reset: {}").format(name)))
+                self.add_toast(Adw.Toast(title=_("Command reset: {}").format(name)))
             else:
                 self.add_toast(Adw.Toast(title=_("No user customization to reset")))
     
@@ -2535,14 +2506,16 @@ class HighlightDialog(Adw.PreferencesWindow):
             colors_badge = Gtk.Label(label=f"{len(rule.colors)}")
             colors_badge.add_css_class("dim-label")
             colors_badge.set_valign(Gtk.Align.CENTER)
-            colors_badge.set_tooltip_text(_("{} colors").format(len(rule.colors)))
+            get_tooltip_helper().add_tooltip(
+                colors_badge, _("{} colors").format(len(rule.colors))
+            )
             row.add_suffix(colors_badge)
         
         # Edit button (icon)
         edit_btn = Gtk.Button(icon_name="document-edit-symbolic")
         edit_btn.add_css_class("flat")
         edit_btn.set_valign(Gtk.Align.CENTER)
-        edit_btn.set_tooltip_text(_("Edit rule"))
+        get_tooltip_helper().add_tooltip(edit_btn, _("Edit rule"))
         edit_btn.connect("clicked", self._on_edit_rule_clicked, index)
         row.add_suffix(edit_btn)
         
@@ -2550,7 +2523,7 @@ class HighlightDialog(Adw.PreferencesWindow):
         delete_btn = Gtk.Button(icon_name="user-trash-symbolic")
         delete_btn.add_css_class("flat")
         delete_btn.set_valign(Gtk.Align.CENTER)
-        delete_btn.set_tooltip_text(_("Delete rule"))
+        get_tooltip_helper().add_tooltip(delete_btn, _("Delete rule"))
         delete_btn.connect("clicked", self._on_delete_rule_clicked, index)
         row.add_suffix(delete_btn)
         
@@ -2697,9 +2670,9 @@ class HighlightDialog(Adw.PreferencesWindow):
         """Handle reset all contexts button click."""
         dialog = Adw.MessageDialog(
             transient_for=self,
-            heading=_("Reset All Contexts?"),
+            heading=_("Reset All Commands?"),
             body=_(
-                "This will restore all contexts to system defaults. Global rules will be preserved."
+                "This will restore all commands to system defaults. Global rules will be preserved."
             ),
         )
         dialog.add_response("cancel", _("Cancel"))
@@ -2719,7 +2692,7 @@ class HighlightDialog(Adw.PreferencesWindow):
             self._populate_contexts()
             self.emit("settings-changed")
 
-            self.add_toast(Adw.Toast(title=_("All contexts reset to defaults")))
+            self.add_toast(Adw.Toast(title=_("All commands reset to defaults")))
 
 
 class ContextNameDialog(Adw.Dialog):
@@ -2744,8 +2717,8 @@ class ContextNameDialog(Adw.Dialog):
         self.logger = get_logger("ashyterm.ui.dialogs.context_name")
         self._parent = parent
         self._manager = get_highlight_manager()
-        
-        self.set_title(_("New Context"))
+
+        self.set_title(_("New Command"))
         self.set_content_width(350)
         self.set_content_height(200)
         
@@ -2811,7 +2784,7 @@ class ContextNameDialog(Adw.Dialog):
         
         # Check if context already exists
         if name in self._manager.get_context_names():
-            self._validation_label.set_text(_("Context already exists"))
+            self._validation_label.set_text(_("Command already exists"))
             self._validation_label.add_css_class("error")
             self._create_btn.set_sensitive(False)
             return
@@ -2902,7 +2875,9 @@ class AddTriggerDialog(Adw.Dialog):
         toolbar_view.set_content(content_box)
         
         name_group = Adw.PreferencesGroup(
-            description=_("Enter a command name that should activate the '{}' context.").format(self._context_name)
+            description=_(
+                "Enter a command name that should activate the '{}' command rules."
+            ).format(self._context_name)
         )
         self._name_row = Adw.EntryRow(title=_("Trigger Command"))
         self._name_row.connect("changed", self._on_name_changed)

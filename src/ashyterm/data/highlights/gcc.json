@@ -14,9 +14,9 @@
             "name": "Error",
             "pattern": "(:\\s*)(error)(:\\s*)",
             "colors": [
-                "white",
+                null,
                 "bold red",
-                "white"
+                null
             ],
             "enabled": true,
             "description": "Highlights compilation errors"
@@ -25,9 +25,9 @@
             "name": "Warning",
             "pattern": "(:\\s*)(warning)(:\\s*)",
             "colors": [
-                "white",
+                null,
                 "yellow",
-                "white"
+                null
             ],
             "enabled": true,
             "description": "Highlights compilation warnings"
@@ -36,9 +36,9 @@
             "name": "Note",
             "pattern": "(:\\s*)(note)(:\\s*)",
             "colors": [
-                "white",
+                null,
                 "cyan",
-                "white"
+                null
             ],
             "enabled": true,
             "description": "Highlights compiler notes"
@@ -58,7 +58,7 @@
             "name": "In Function",
             "pattern": "(In function)\\s+['‘]([\\w:~<>,\\s*&]+)['’]",
             "colors": [
-                "white",
+                null,
                 "yellow"
             ],
             "enabled": true,
@@ -68,7 +68,7 @@
             "name": "In File Included",
             "pattern": "(In file included from)\\s+(.+)",
             "colors": [
-                "white",
+                null,
                 "magenta"
             ],
             "enabled": true,
@@ -89,7 +89,7 @@
             "pattern": "(fatal error)(:\\s*)",
             "colors": [
                 "bold red",
-                "white"
+                null
             ],
             "enabled": true,
             "description": "Highlights fatal errors"

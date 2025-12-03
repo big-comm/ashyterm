@@ -21,7 +21,7 @@ from ..terminal.manager import TerminalManager as TerminalManagerType
 from ..utils.icons import icon_button, icon_image, set_image_from_icon
 from ..utils.logger import get_logger
 from ..utils.security import InputSanitizer, ensure_secure_directory_permissions
-from ..utils.tooltip_helper import TooltipHelper
+from ..utils.tooltip_helper import get_tooltip_helper
 from ..utils.translation_utils import _
 from .models import FileItem
 from .operations import FileOperations
@@ -84,7 +84,7 @@ class FileManager(GObject.Object):
         # Task 5: Thread pool for efficient background operations
         self._executor = ThreadPoolExecutor(max_workers=1)
         self.transfer_history_window = None
-        self.tooltip_helper = TooltipHelper()
+        self.tooltip_helper = get_tooltip_helper()
         self._is_destroyed = False  # Flag to prevent callbacks after destroy
 
         css_provider = Gtk.CssProvider()
@@ -828,6 +828,9 @@ class FileManager(GObject.Object):
                 if not show_hidden and name_to_check.startswith("."):
                     return False
                 return True
+            # For non-recursive search, check both hidden status and search term
+            if not show_hidden and file_item.name.startswith("."):
+                return False
             return search_term in file_item.name.lower()
 
         if file_item.name == "..":
