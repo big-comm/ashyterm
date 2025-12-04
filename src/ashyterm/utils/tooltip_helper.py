@@ -225,20 +225,6 @@ class TooltipHelper:
         motion_controller.connect("leave", self._on_leave)
         widget.add_controller(motion_controller)
 
-    def replace_tooltip(self, widget: Gtk.Widget) -> None:  # vulture: ignore
-        """
-        Replace an existing set_tooltip_text with custom tooltip.
-
-        If the widget already has tooltip_text set, this converts it to
-        use the custom tooltip system instead.
-
-        Args:
-            widget: The GTK widget whose tooltip to replace.
-        """
-        existing_tooltip = widget.get_tooltip_text()
-        if existing_tooltip:
-            self.add_tooltip(widget, existing_tooltip)
-
     def _clear_timer(self):
         """Clear any pending show timer."""
         if self.show_timer_id:
@@ -395,13 +381,3 @@ class TooltipHelper:
         self._suppressed = True
         self._hide_tooltip(animate=False)
         self.active_widget = None
-
-    def cleanup(self):  # vulture: ignore
-        """
-        Call this when the application is shutting down.
-        Cleans up resources and prevents further tooltip operations.
-        """
-        self._is_cleaning_up = True
-        self._clear_timer()
-        if self.popover.get_parent():
-            self.popover.unparent()

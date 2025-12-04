@@ -1213,17 +1213,6 @@ class AIChatPanel(Gtk.Box):
         key_controller.connect("key-pressed", self._on_key_pressed)
         self._text_view.add_controller(key_controller)
 
-        # Handle focus for placeholder
-        focus_controller = Gtk.EventControllerFocus()
-        focus_controller.connect("enter", self._on_focus_enter)
-        focus_controller.connect("leave", self._on_focus_leave)
-        self._text_view.add_controller(focus_controller)
-
-        # Also handle click to clear placeholder (backup for focus issues)
-        click_controller = Gtk.GestureClick()
-        click_controller.connect("pressed", self._on_text_view_clicked)
-        self._text_view.add_controller(click_controller)
-
         # Auto-resize based on content
         self._text_buffer.connect("changed", self._on_text_changed)
 
@@ -1243,18 +1232,6 @@ class AIChatPanel(Gtk.Box):
         input_box.append(self._send_btn)
 
         self.append(input_box)
-
-    def _on_focus_enter(self, controller):
-        """Handle focus entering the text view."""
-        pass  # No longer needed for placeholder
-
-    def _on_text_view_clicked(self, gesture, n_press, x, y):
-        """Handle click on text view."""
-        pass  # No longer needed for placeholder
-
-    def _on_focus_leave(self, controller):
-        """Handle focus leaving the text view."""
-        pass  # No longer needed for placeholder
 
     def _on_text_changed(self, buffer):
         """Handle text buffer changes for auto-resize."""

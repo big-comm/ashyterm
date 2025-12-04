@@ -581,6 +581,7 @@ class CommTerminalApp(Adw.Application):
             file_filter.set_name(_("Backup Files"))
             filters = Gio.ListStore.new(Gtk.FileFilter)
             filters.append(file_filter)
+            file_dialog.set_filters(filters)
             file_dialog.open(
                 self.get_active_window(), None, self._on_restore_file_selected
             )
@@ -744,15 +745,13 @@ class CommTerminalApp(Adw.Application):
     def _show_startup_error(self, error_message: str) -> None:
         """Show startup error dialog."""
         try:
-            dialog = Gtk.MessageDialog(
-                text=_("Startup Error"),
-                secondary_text=_("Application failed to start: {}").format(
-                    error_message
-                ),
+            dialog = Adw.MessageDialog(
+                transient_for=self.get_active_window(),
+                heading=_("Startup Error"),
+                body=_("Application failed to start: {}").format(error_message),
             )
-            dialog.add_button("_OK", Gtk.ResponseType.OK)
-            dialog.run()
-            dialog.destroy()
+            dialog.add_response("ok", "OK")
+            dialog.present()
         except Exception:
             print(f"STARTUP ERROR: {error_message}")
 
@@ -818,6 +817,3 @@ class CommTerminalApp(Adw.Application):
         except Exception as e:
             self.logger.error(f"Failed to create new window: {e}")
             raise
-
-    def get_backup_manager(self):
-        return self.backup_manager

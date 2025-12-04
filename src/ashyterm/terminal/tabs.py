@@ -298,10 +298,6 @@ class TabManager:
             f"Tab '{moving_tab.label_widget.get_text()}' moved from {moving_idx} to {new_idx}"
         )
 
-    def is_in_tab_move_mode(self) -> bool:  # vulture: ignore
-        """Returns True if a tab is currently being moved."""
-        return self._tab_being_moved is not None
-
     def cancel_tab_move_if_active(self) -> bool:
         """Cancel the tab move operation if one is active. Returns True if cancelled."""
         if self._tab_being_moved is not None:

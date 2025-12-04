@@ -66,7 +66,6 @@ _highlight_manager = None
 _output_highlighter = None
 _terminal_menu_creator = None
 _ssh_error_dialog_creator = None
-_highlighted_terminal_proxy = None
 
 
 def _get_highlight_manager():
@@ -107,16 +106,6 @@ def _create_ssh_error_dialog(*args, **kwargs):
 
         _ssh_error_dialog_creator = create_generic_ssh_error_dialog
     return _ssh_error_dialog_creator(*args, **kwargs)
-
-
-def _get_highlighted_terminal_proxy():
-    """Lazy import HighlightedTerminalProxy class."""
-    global _highlighted_terminal_proxy
-    if _highlighted_terminal_proxy is None:
-        from .highlighter import HighlightedTerminalProxy
-
-        _highlighted_terminal_proxy = HighlightedTerminalProxy
-    return _highlighted_terminal_proxy
 
 
 class TerminalState(Enum):
