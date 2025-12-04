@@ -211,7 +211,7 @@ class SidebarManager:
         except Exception as e:
             self.logger.error(f"Failed to transfer focus to terminal: {e}")
 
-    def _on_sidebar_popover_key_pressed(self, _, keyval, keycode, state) -> bool:
+    def _on_sidebar_popover_key_pressed(self, _, keyval, _keycode, state) -> bool:
         # Always allow closing with the Escape key
         if keyval == Gdk.KEY_Escape:
             self.sidebar_popover.popdown()
@@ -228,7 +228,7 @@ class SidebarManager:
         if success:
             # Get the relevant modifiers from the current key event
             event_mods = state & Gtk.accelerator_get_default_mod_mask()
-            
+
             # **THE FIX**: Convert the event's keyval to lowercase for comparison,
             # as Gtk.accelerator_parse normalizes the key.
             event_keyval_lower = Gdk.keyval_to_lower(keyval)

@@ -151,9 +151,16 @@ class TerminalAiAssistant(GObject.Object):
         self._terminal_refs: Dict[int, weakref.ReferenceType] = {}
         self._inflight: Dict[int, bool] = {}
         self._lock = threading.RLock()
-        self._history_manager = get_ai_history_manager()
+        self._history_manager_instance = None  # Lazy loaded via property
         # Callbacks for streaming updates
         self._streaming_callback: Optional[Callable[[str, bool], None]] = None
+
+    @property
+    def _history_manager(self):
+        """Lazy load the AI history manager on first access."""
+        if self._history_manager_instance is None:
+            self._history_manager_instance = get_ai_history_manager()
+        return self._history_manager_instance
 
     # ------------------------------------------------------------------
     # Public API

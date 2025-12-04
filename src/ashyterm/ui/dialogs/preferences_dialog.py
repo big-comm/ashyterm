@@ -4,7 +4,7 @@ import gi
 
 gi.require_version("Gtk", "4.0")
 gi.require_version("Adw", "1")
-from gi.repository import Adw, GLib, GObject, Gtk
+from gi.repository import Adw, GObject, Gtk
 
 from ...settings.manager import SettingsManager
 from ...utils.logger import get_logger
@@ -538,7 +538,7 @@ class PreferencesDialog(Adw.PreferencesWindow):
         if main_window and hasattr(main_window, "terminal_manager"):
             dialog.connect("scheme-changed", main_window._on_color_scheme_changed)
         dialog.connect(
-            "close-request", lambda win: self._update_color_scheme_row_subtitle()
+            "close-request", lambda _win: self._update_color_scheme_row_subtitle()
         )
         dialog.present()
 
@@ -548,7 +548,7 @@ class PreferencesDialog(Adw.PreferencesWindow):
         self.emit("font-changed", font)
 
     @staticmethod
-    def _font_filter_func(family, face):
+    def _font_filter_func(family, _face):
         """Filter function to show only monospace fonts."""
         return family.is_monospace()
 

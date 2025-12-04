@@ -36,12 +36,12 @@ class AppConstants:
 
     APP_ID = "org.communitybig.ashyterm"
     APP_TITLE = "Ashy Terminal"
-    APP_VERSION = "1.8.1"
+    APP_VERSION = "1.8.2"
     DEVELOPER_NAME = "BigCommunity"
     DEVELOPER_TEAM = ["BigCommunity Team"]
     COPYRIGHT = "© 2025 BigCommunity"
     WEBSITE = "https://communitybig.org/"
-    ISSUE_URL = "https://github.com/big-comm/comm-ashyterm/issues"
+    ISSUE_URL = "https://github.com/big-comm/ashyterm/issues"
 
 
 class ConfigPaths:
@@ -120,10 +120,10 @@ class DefaultSettings:
     def get_available_default_font() -> str:
         """
         Detects the first available monospace font on the system.
-        
+
         Tests fonts in priority order and returns the first one that exists.
         Falls back to generic 'Monospace' if none are found.
-        
+
         Returns:
             str: Font description string (e.g., "Ubuntu Mono 12")
         """
@@ -137,7 +137,7 @@ class DefaultSettings:
             "Source Code Pro 12",
             "Monospace 10",  # Generic fallback - always available
         ]
-        
+
         try:
             # Get list of all available font families on the system
             import cairo
@@ -148,19 +148,19 @@ class DefaultSettings:
             context = cairo.Context(surface)
             pango_context = PangoCairo.create_context(context)
             font_map = pango_context.get_font_map()
-            
+
             # Get all available font families
             available_families = set()
             for family in font_map.list_families():
                 family_name = family.get_name().lower()
                 available_families.add(family_name)
-            
+
             # Test each candidate font
             for font_string in font_candidates:
                 try:
                     font_desc = Pango.FontDescription.from_string(font_string)
                     family_name = font_desc.get_family()
-                    
+
                     if family_name:
                         # Check if font family exists in system
                         family_lower = family_name.lower()
@@ -168,10 +168,10 @@ class DefaultSettings:
                             return font_string
                 except Exception:
                     continue
-            
+
             # Ultimate fallback if all checks fail
             return "Monospace 10"
-            
+
         except Exception:
             # If any import/context creation fails, return safe default
             return "Monospace 10"
@@ -271,6 +271,9 @@ class DefaultSettings:
                 "yq",
                 "grc",
             ],
+            # Shell Input Syntax Highlighting (experimental)
+            # When enabled, applies Pygments syntax highlighting to shell commands as you type
+            "shell_input_highlighting_enabled": False,
             # Icon Theme Strategy: "ashy" (bundled) or "system"
             # Using Ashy Icons by default speeds up GTK4 startup
             "icon_theme_strategy": "ashy",

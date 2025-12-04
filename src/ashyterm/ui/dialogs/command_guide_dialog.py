@@ -59,7 +59,7 @@ class CommandEditDialog(Adw.Window):
         self.name_view.grab_focus()
 
     # Method for handling key press.
-    def _on_key_pressed(self, controller, keyval, keycode, state):
+    def _on_key_pressed(self, controller, keyval, _keycode, state):
         """Handles key press events to close the dialog on Escape."""
         if keyval == Gdk.KEY_Escape:
             self.close()
@@ -670,7 +670,7 @@ class CommandGuideDialog(Adw.Window):
                 current = current.get_prev_sibling()
         return None
 
-    def _on_search_key_pressed(self, controller, keyval, keycode, state):
+    def _on_search_key_pressed(self, controller, keyval, _keycode, state):
         if keyval == Gdk.KEY_Escape:
             self.close()
             return Gdk.EVENT_STOP
@@ -692,7 +692,7 @@ class CommandGuideDialog(Adw.Window):
             return Gdk.EVENT_STOP
         return Gdk.EVENT_PROPAGATE
 
-    def _on_window_key_pressed(self, controller, keyval, keycode, state):
+    def _on_window_key_pressed(self, controller, keyval, _keycode, state):
         if keyval == Gdk.KEY_Escape:
             self.close()
             return Gdk.EVENT_STOP
@@ -758,7 +758,7 @@ class CommandGuideDialog(Adw.Window):
         except Exception as e:
             print(f"Warning: Error during CommandGuideDialog cleanup: {e}")
 
-    def _on_active_changed(self, widget, pspec):
+    def _on_active_changed(self, widget, _pspec):
         if not self._presenting and not self.is_active() and self.get_visible():
             GLib.timeout_add(200, self._delayed_close)
 

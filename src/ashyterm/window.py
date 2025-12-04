@@ -648,7 +648,7 @@ class CommTerminalWindow(Adw.ApplicationWindow):
         else:
             self.set_default_size(1200, 700)
 
-    def _on_window_size_changed(self, window, param_spec) -> None:
+    def _on_window_size_changed(self, window, _param_spec) -> None:
         """Handle window size changes to save to settings."""
         if not self.settings_manager.get("remember_window_state", True):
             return
@@ -662,7 +662,7 @@ class CommTerminalWindow(Adw.ApplicationWindow):
                 self.settings_manager.set("window_width", width)
                 self.settings_manager.set("window_height", height)
 
-    def _on_window_maximized_changed(self, window, param_spec) -> None:
+    def _on_window_maximized_changed(self, window, _param_spec) -> None:
         """Handle window maximized state changes to save to settings."""
         if not self.settings_manager.get("remember_window_state", True):
             return
@@ -761,7 +761,7 @@ class CommTerminalWindow(Adw.ApplicationWindow):
         if accel_string and accel_string == prev_tab_shortcut:
             self.tab_manager.select_previous_tab()
             return Gdk.EVENT_STOP  # Stop the event from reaching the terminal.
-        
+
         if accel_string and accel_string == split_h_shortcut:
             if terminal := self.tab_manager.get_selected_terminal():
                 self.tab_manager.split_horizontal(terminal)

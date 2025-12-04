@@ -201,11 +201,11 @@ class FileOperations:
         }
         if any(err in output_lower for err in permission_errors):
             return _("Permission Denied: Check write permissions on the destination.")
-        
+
         # Fallback to a generic message if output is empty but an error occurred
         if not output.strip():
             return _("An unknown transfer error occurred.")
-            
+
         return output.strip()
 
     def start_download_with_progress(
@@ -253,7 +253,7 @@ class FileOperations:
                         if cancellation_event and cancellation_event.is_set():
                             os.killpg(os.getpgid(process.pid), signal.SIGTERM)
                             raise OperationCancelledError("Download cancelled by user.")
-                        
+
                         full_output += line
                         match = progress_pattern.search(line)
                         if match and progress_callback:
@@ -263,7 +263,7 @@ class FileOperations:
                     stderr_output = process.stderr.read()
                     process.wait()
                     exit_code = process.returncode
-                    
+
                     if exit_code == 0:
                         GLib.idle_add(
                             completion_callback,
@@ -379,7 +379,7 @@ class FileOperations:
                         if cancellation_event and cancellation_event.is_set():
                             os.killpg(os.getpgid(process.pid), signal.SIGTERM)
                             raise OperationCancelledError("Upload cancelled by user.")
-                        
+
                         full_output += line
                         match = progress_pattern.search(line)
                         if match and progress_callback:
@@ -389,7 +389,7 @@ class FileOperations:
                     stderr_output = process.stderr.read()
                     process.wait()
                     exit_code = process.returncode
-                    
+
                     if exit_code == 0:
                         GLib.idle_add(
                             completion_callback,

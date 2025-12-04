@@ -89,7 +89,7 @@ class ShortcutsDialog(Adw.PreferencesWindow):
             reset_button, _("Reset all shortcuts to default values")
         )
         reset_button.connect("clicked", self._on_reset_all_clicked)
-        
+
         # Try to add button to existing header bar
         header_bar = self.get_titlebar()
         if header_bar:
@@ -279,19 +279,19 @@ class ShortcutsDialog(Adw.PreferencesWindow):
             if response_id == "reset":
                 # Reset all shortcuts to defaults
                 self.settings_manager.reset_to_defaults(["shortcuts"])
-                
+
                 # Update all rows and accelerators immediately using stored references
                 for action_name in self.shortcut_rows:
                     # Get the reset shortcut from settings
                     current_shortcut = self.settings_manager.get_shortcut(action_name)
-                    
+
                     # Update the app accelerators
                     action_prefix = "app" if action_name in ["quit"] else "win"
                     full_action_name = f"{action_prefix}.{action_name}"
                     self.app.set_accels_for_action(
                         full_action_name, [current_shortcut] if current_shortcut else []
                     )
-                    
+
                     # Update the corresponding row in the UI directly
                     row = self.shortcut_rows[action_name]
                     row.set_subtitle(accelerator_to_label(current_shortcut) or _("Not set"))

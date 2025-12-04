@@ -38,7 +38,7 @@ class BaseDialog(Adw.Window):
         key_controller.connect("key-pressed", self._on_key_pressed)
         self.add_controller(key_controller)
 
-    def _on_key_pressed(self, controller, keyval, keycode, state):
+    def _on_key_pressed(self, controller, keyval, _keycode, state):
         if keyval == Gdk.KEY_Escape:
             self._on_cancel_clicked(None)
             return Gdk.EVENT_STOP

@@ -91,7 +91,7 @@ def main() -> int:
 
     # Custom version action to load APP_VERSION lazily (avoids loading GTK for --version)
     class LazyVersionAction(argparse.Action):
-        def __call__(self, parser, namespace, values, option_string=None):
+        def __call__(self, parser, _namespace, values, _option_string=None):
             from .settings.config import APP_VERSION
 
             print(f"ashyterm {APP_VERSION}")

@@ -89,7 +89,7 @@ def has_bundled_icon(icon_name: str) -> bool:
 @lru_cache(maxsize=128)
 def _load_pixbuf(icon_path: str, size: int) -> Optional[GdkPixbuf.Pixbuf]:
     """Load and cache a pixbuf from SVG file.
-    
+
     Note: This creates a static bitmap. For symbolic icons that need
     theme color adaptation, use _create_symbolic_image instead.
     """
@@ -101,7 +101,7 @@ def _load_pixbuf(icon_path: str, size: int) -> Optional[GdkPixbuf.Pixbuf]:
 
 def _create_image_from_file(icon_path: str, size: int) -> Gtk.Image:
     """Create a Gtk.Image from a file path using GIcon.
-    
+
     Uses Gio.FileIcon which GTK can render with symbolic styling
     when the image has the 'symbolic' CSS class.
     """

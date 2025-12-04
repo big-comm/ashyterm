@@ -18,7 +18,7 @@ if 'APPIMAGE' in os.environ or 'APPDIR' in os.environ:
     app_dir = os.path.dirname(script_dir)                    # usr/share/ashyterm
     share_dir = os.path.dirname(app_dir)                     # usr/share
     appimage_locale = os.path.join(share_dir, 'locale')      # usr/share/locale
-    
+
     if os.path.isdir(appimage_locale):
         locale_dir = appimage_locale
 

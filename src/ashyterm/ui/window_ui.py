@@ -548,11 +548,11 @@ class WindowUIBuilder:
         self.ai_chat_panel.connect("execute-command", self._on_ai_execute_command)
         self.ai_chat_panel.connect("run-command", self._on_ai_run_command)
 
-    def _on_ai_panel_close(self, panel) -> None:
+    def _on_ai_panel_close(self, _panel) -> None:
         """Handle AI panel close request."""
         self.hide_ai_panel()
 
-    def _on_ai_execute_command(self, panel, command: str) -> None:
+    def _on_ai_execute_command(self, _panel, command: str) -> None:
         """Handle command execution request from AI panel - insert into terminal."""
         # Get current terminal and insert command (without newline - user must press Enter)
         terminal = self.tab_manager.get_selected_terminal()
@@ -560,7 +560,7 @@ class WindowUIBuilder:
             # Feed the command to the terminal without executing (no newline)
             terminal.feed_child(command.encode("utf-8"))
 
-    def _on_ai_run_command(self, panel, command: str) -> None:
+    def _on_ai_run_command(self, _panel, command: str) -> None:
         """Handle run command request from AI panel - insert and execute in terminal."""
         # Get current terminal, insert command and send Ctrl+J (newline) to execute
         terminal = self.tab_manager.get_selected_terminal()

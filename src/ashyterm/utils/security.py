@@ -167,8 +167,19 @@ class SecurityAuditor:
     def __init__(self):
         self.logger = get_logger("ashyterm.security.audit")
 
-    def audit_ssh_session(self, session_data: Dict[str, Any]) -> List[Dict[str, Any]]:
-        """Audit SSH session configuration for security issues."""
+    def audit_ssh_session(
+        self, session_data: Dict[str, Any], resolve_dns: bool = False
+    ) -> List[Dict[str, Any]]:
+        """Audit SSH session configuration for security issues.
+
+        Args:
+            session_data: Session configuration dictionary
+            resolve_dns: Whether to perform DNS resolution (can be slow/blocking).
+                         Should only be True when explicitly testing connection.
+
+        Returns:
+            List of security findings
+        """
         findings = []
         hostname = session_data.get("host", "")
         if hostname:
@@ -179,15 +190,18 @@ class SecurityAuditor:
                     "message": _("Invalid hostname format: {}").format(hostname),
                     "recommendation": _("Use a valid hostname or IP address"),
                 })
-            elif (
-                ip := HostnameValidator.resolve_hostname(hostname)
-            ) and HostnameValidator.is_private_ip(ip):
-                findings.append({
-                    "severity": "low",
-                    "type": "private_ip",
-                    "message": _("Connecting to private IP: {}").format(ip),
-                    "recommendation": _("Ensure this is intentional"),
-                })
+            elif resolve_dns:
+                # Only resolve hostname when explicitly requested (e.g., test connection)
+                # to avoid blocking the UI during startup
+                if (
+                    ip := HostnameValidator.resolve_hostname(hostname)
+                ) and HostnameValidator.is_private_ip(ip):
+                    findings.append({
+                        "severity": "low",
+                        "type": "private_ip",
+                        "message": _("Connecting to private IP: {}").format(ip),
+                        "recommendation": _("Ensure this is intentional"),
+                    })
 
         auth_type = session_data.get("auth_type", "")
         auth_value = session_data.get("auth_value", "")

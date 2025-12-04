@@ -49,7 +49,7 @@ class AIConfigDialog(Adw.PreferencesWindow):
         )
         self.logger = get_logger("ashyterm.ui.dialogs.ai_config")
         self.settings_manager = settings_manager
-        
+
         self._setup_ui()
         self.logger.info("AI config dialog initialized")
 
@@ -83,7 +83,7 @@ class AIConfigDialog(Adw.PreferencesWindow):
         )
         provider_model = Gtk.StringList.new([label for _, label, _ in self.PROVIDERS])
         self.provider_row.set_model(provider_model)
-        
+
         # Set current provider
         current_provider = self.settings_manager.get("ai_assistant_provider", "groq")
         provider_index = self._get_provider_index(current_provider)

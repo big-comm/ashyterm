@@ -855,13 +855,12 @@ class TabManager:
             else None
         )
 
-        new_terminal = None
         term_type = terminal_info.get("type")
 
         try:
             if term_type == "local":
                 working_directory = self._get_terminal_working_directory(primary_terminal)
-                new_terminal = self.create_local_tab(
+                self.create_local_tab(
                     session=session_copy,
                     working_directory=working_directory,
                 )
@@ -1064,7 +1063,7 @@ class TabManager:
             fm.set_visibility(False, source="filemanager")
             paned.set_end_child(None)
 
-    def _on_file_manager_paned_position_changed(self, paned, param_spec, page):
+    def _on_file_manager_paned_position_changed(self, paned, _param_spec, page):
         """Save file manager height when the pane is resized by the user."""
         # Only save if the file manager is actually visible
         fm = self.file_managers.get(page)

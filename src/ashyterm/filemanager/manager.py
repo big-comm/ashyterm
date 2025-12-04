@@ -18,7 +18,7 @@ from gi.repository import Adw, Gdk, Gio, GLib, GObject, Graphene, Gtk, Vte
 
 from ..sessions.models import SessionItem
 from ..terminal.manager import TerminalManager as TerminalManagerType
-from ..utils.icons import icon_button, icon_image, set_image_from_icon
+from ..utils.icons import icon_button, icon_image
 from ..utils.logger import get_logger
 from ..utils.security import InputSanitizer, ensure_secure_directory_permissions
 from ..utils.tooltip_helper import get_tooltip_helper
@@ -2637,7 +2637,7 @@ class FileManager(GObject.Object):
         )
         self.transfer_history_window.present()
 
-    def _on_drop_accept(self, target, drop):
+    def _on_drop_accept(self, target, _drop):
         return self._is_remote_session()
 
     def _on_drop_enter(self, target, x, y, scrolled_window):

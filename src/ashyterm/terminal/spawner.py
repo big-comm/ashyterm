@@ -389,9 +389,18 @@ class ProcessSpawner:
         callback: Optional[Callable] = None,
         user_data: Any = None,
         working_directory: Optional[str] = None,
+        terminal_id: Optional[int] = None,
     ) -> Optional["HighlightedTerminalProxy"]:
         """
         Spawn a local terminal with output highlighting support.
+
+        Args:
+            terminal: The VTE terminal widget.
+            callback: Callback function for spawn completion.
+            user_data: User data to pass to callback.
+            working_directory: Directory to start the shell in.
+            terminal_id: The terminal ID from registry. This ID is used for context
+                        detection and must match what the TerminalManager uses.
         """
         from .highlighter import HighlightedTerminalProxy
 
@@ -456,7 +465,7 @@ class ProcessSpawner:
             else:
                 cmd = [shell]
 
-            proxy = HighlightedTerminalProxy(terminal, "local")
+            proxy = HighlightedTerminalProxy(terminal, "local", proxy_id=terminal_id)
 
             try:
                 master_fd, slave_fd = proxy.create_pty()
@@ -547,9 +556,19 @@ class ProcessSpawner:
         callback: Optional[Callable] = None,
         user_data: Any = None,
         initial_command: Optional[str] = None,
+        terminal_id: Optional[int] = None,
     ) -> Optional["HighlightedTerminalProxy"]:
         """
         Spawn an SSH session with output highlighting support.
+
+        Args:
+            terminal: The VTE terminal widget.
+            session: SSH session configuration.
+            callback: Callback function for spawn completion.
+            user_data: User data to pass to callback.
+            initial_command: Command to run after SSH connection.
+            terminal_id: The terminal ID from registry. This ID is used for context
+                        detection and must match what the TerminalManager uses.
         """
         from .highlighter import HighlightedTerminalProxy
 
@@ -571,7 +590,7 @@ class ProcessSpawner:
                 working_dir = str(self.platform_info.home_dir)
                 env = self.environment_manager.get_terminal_environment()
 
-                proxy = HighlightedTerminalProxy(terminal, "ssh")
+                proxy = HighlightedTerminalProxy(terminal, "ssh", proxy_id=terminal_id)
                 master_fd, slave_fd = proxy.create_pty()
 
                 rows = terminal.get_row_count() or 24

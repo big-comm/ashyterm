@@ -8,7 +8,7 @@ import threading
 import time
 import weakref
 from enum import Enum
-from typing import TYPE_CHECKING, Any, Callable, Dict, List, Optional, Union
+from typing import Any, Callable, Dict, List, Optional, Union
 from urllib.parse import urlparse
 
 # Lazy import psutil - only when actually needed for process info
@@ -1359,7 +1359,7 @@ class TerminalManager:
         self,
         controller: Gtk.EventControllerKey,
         keyval: int,
-        keycode: int,
+        _keycode: int,
         state: Gdk.ModifierType,
         terminal: Vte.Terminal,
         terminal_id: int,
@@ -1462,18 +1462,33 @@ class TerminalManager:
             if not line:
                 return
 
+            # Strip ANSI escape sequences and terminal control codes from the line
+            # This handles cases where cursor movement codes get mixed in (e.g., [K, [[[ )
+            import re
+
+            # Pattern to match ANSI escape sequences:
+            # 1. Standard CSI: ESC [ params letter
+            # 2. OSC sequences: ESC ] ... BEL
+            # 3. Malformed CSI (ESC lost): one or more [ followed by CSI command letter
+            #    Common CSI commands: A-H (cursor), J-K (erase), P (delete), S-T (scroll)
+            #    f,m,n,s,u (other control sequences)
+            ansi_escape = re.compile(
+                r"\x1b\[[0-9;]*[A-Za-z]|\x1b\].*?\x07|\[+(?:\d*[;]?)*[ABCDEFGHJKPSTfmnsu]"
+            )
+            clean_line = ansi_escape.sub("", line)
+
             # Find the last occurrence of a prompt separator
             # The pattern matches: $ # % > ➜ followed by a space
-            matches = list(PROMPT_TERMINATOR_PATTERN.finditer(line))
+            matches = list(PROMPT_TERMINATOR_PATTERN.finditer(clean_line))
 
             if matches:
                 # Get the last match - everything after it is the command
                 last_match = matches[-1]
-                command_part = line[last_match.end() :].strip()
+                command_part = clean_line[last_match.end() :].strip()
             else:
                 # No prompt found - the whole line might be the command
                 # (e.g., if prompt was on a previous line or uses unusual format)
-                command_part = line.strip()
+                command_part = clean_line.strip()
 
             if not command_part:
                 return
@@ -1495,22 +1510,22 @@ class TerminalManager:
             pipeline_parts = []
             current_part = []
             for char in command_part:
-                if char in '|;&':
+                if char in "|;&":
                     if current_part:
-                        pipeline_parts.append(''.join(current_part).strip())
+                        pipeline_parts.append("".join(current_part).strip())
                         current_part = []
                 else:
                     current_part.append(char)
             if current_part:
-                pipeline_parts.append(''.join(current_part).strip())
-            
+                pipeline_parts.append("".join(current_part).strip())
+
             # Get the last non-empty part of the pipeline
             last_command_part = ""
             for part in reversed(pipeline_parts):
                 if part:
                     last_command_part = part
                     break
-            
+
             if not last_command_part:
                 last_command_part = command_part
 
@@ -1559,13 +1574,35 @@ class TerminalManager:
             if not program_name:
                 return
 
-            # Update the syntax highlighting context
-            highlighter = _get_output_highlighter()
-            highlighter.set_context(program_name, terminal_id)
+            # Check if this is a help command (--help, -h, help builtin, man)
+            # If so, set context to "help" for help output highlighting
+            command_tokens = command_part.lower().split()
+            is_help_command = False
 
-            self.logger.debug(
-                f"Terminal {terminal_id}: detected command '{program_name}' from line: {line[:50]}..."
-            )
+            # Check for --help or -h flags anywhere in the command
+            if "--help" in command_tokens or "-h" in command_tokens:
+                is_help_command = True
+            # Check if first token is "help" (bash builtin) or "man"
+            elif command_tokens and command_tokens[0] in ("help", "man"):
+                is_help_command = True
+
+            # Update the syntax highlighting context
+            # Pass the full command (command_part) so cat can extract the filename
+            highlighter = _get_output_highlighter()
+
+            if is_help_command:
+                # For help output, use the "help" context for highlighting
+                highlighter.set_context("help", terminal_id, full_command=command_part)
+                self.logger.debug(
+                    f"Terminal {terminal_id}: help command detected, using 'help' context for: {clean_line[:50]}..."
+                )
+            else:
+                highlighter.set_context(
+                    program_name, terminal_id, full_command=command_part
+                )
+                self.logger.debug(
+                    f"Terminal {terminal_id}: detected command '{program_name}' from line: {clean_line[:50]}..."
+                )
 
         except Exception as e:
             self.logger.error(

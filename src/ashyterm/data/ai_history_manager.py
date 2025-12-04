@@ -32,7 +32,7 @@ class AIHistoryManager:
             if self._history_file.exists():
                 with open(self._history_file, "r", encoding="utf-8") as f:
                     data = json.load(f)
-                    
+
                     # Support both old and new format
                     if "conversations" in data:
                         self._conversations = data.get("conversations", [])
@@ -51,7 +51,7 @@ class AIHistoryManager:
                         else:
                             self._conversations = []
                             self._current_conversation_id = None
-                    
+
                     self.logger.info(
                         f"Loaded {len(self._conversations)} AI conversations from history"
                     )
@@ -73,27 +73,27 @@ class AIHistoryManager:
         try:
             # Ensure config directory exists
             self._config_paths.CONFIG_DIR.mkdir(parents=True, exist_ok=True)
-            
+
             # Trim conversations if too many
             if len(self._conversations) > self._max_conversations:
                 self._conversations = self._conversations[-self._max_conversations:]
-            
+
             data = {
                 "conversations": self._conversations,
                 "current_conversation_id": self._current_conversation_id
             }
-            
+
             # Write atomically using a temp file
             temp_file = self._history_file.with_suffix(".json.tmp")
             with open(temp_file, "w", encoding="utf-8") as f:
                 json.dump(data, f, ensure_ascii=False, indent=2)
-            
+
             # Move temp file to final location
             temp_file.replace(self._history_file)
-            
+
             # Set secure permissions
             os.chmod(self._history_file, 0o600)
-            
+
             self.logger.debug(f"Saved {len(self._conversations)} AI conversations to history")
         except Exception as e:
             self.logger.error(f"Failed to save AI history: {e}")
@@ -151,7 +151,7 @@ class AIHistoryManager:
     ) -> None:
         """
         Add a message to the current conversation.
-        
+
         Args:
             role: Either "user" or "assistant"
             content: The message content
@@ -159,9 +159,9 @@ class AIHistoryManager:
         """
         if not content or not content.strip():
             return
-        
+
         conv = self._ensure_current_conversation()
-        
+
         entry = {
             "timestamp": datetime.now().isoformat(),
             "role": role,
@@ -169,7 +169,7 @@ class AIHistoryManager:
         }
         if commands:
             entry["commands"] = commands
-        
+
         conv["messages"].append(entry)
         self._save_history()
 
@@ -186,7 +186,7 @@ class AIHistoryManager:
     def get_history(self) -> List[Dict[str, Any]]:
         """
         Get the current conversation's messages.
-        
+
         Returns:
             List of message dictionaries with timestamp, role, and content
         """
@@ -198,10 +198,10 @@ class AIHistoryManager:
     def get_recent_history(self, count: int = 50) -> List[Dict[str, Any]]:
         """
         Get the most recent messages from current conversation.
-        
+
         Args:
             count: Number of messages to retrieve
-            
+
         Returns:
             List of recent message dictionaries
         """
@@ -219,10 +219,10 @@ class AIHistoryManager:
     def delete_conversation(self, conv_id: str) -> bool:
         """
         Delete a specific conversation by ID.
-        
+
         Args:
             conv_id: The ID of the conversation to delete
-            
+
         Returns:
             True if deleted, False if not found
         """
@@ -249,10 +249,10 @@ class AIHistoryManager:
     ) -> List[Dict[str, str]]:  # vulture: ignore
         """
         Get recent messages formatted for API context.
-        
+
         Args:
             max_messages: Maximum number of messages to include
-            
+
         Returns:
             List of messages with 'role' and 'content' keys only
         """
@@ -266,10 +266,10 @@ class AIHistoryManager:
     def search_history(self, query: str) -> List[Dict[str, Any]]:  # vulture: ignore
         """
         Search all conversations for messages containing the query.
-        
+
         Args:
             query: Text to search for (case-insensitive)
-            
+
         Returns:
             List of matching messages
         """
