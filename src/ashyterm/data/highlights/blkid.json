@@ -108,11 +108,22 @@
       "name": "PTTYPE",
       "pattern": "(PTTYPE)=\"([^\"]+)\"",
       "colors": [
-        null,
+        "white",
         "yellow"
       ],
       "enabled": true,
       "description": "Highlights partition table type"
+    },
+    {
+      "name": "BLOCK_SIZE",
+      "pattern": "(BLOCK_SIZE)=\"([^\"]+)\"",
+      "colors": [
+        "white",
+        "white"
+      ],
+      "enabled": true,
+      "description": "Highlights block size",
+      "comment": "Block size attribute"
     }
   ],
   "enabled": true,

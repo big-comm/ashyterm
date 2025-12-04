@@ -14,7 +14,7 @@
         {
             "name": "Requirement Satisfied",
             "pattern": "(Requirement already satisfied):\\s+(.+)",
-            "colors": ["cyan", null],
+            "colors": ["cyan", "white"],
             "enabled": true,
             "description": "Highlights already satisfied requirements"
         },
@@ -42,14 +42,14 @@
         {
             "name": "Downloading",
             "pattern": "(Downloading)\\s+(\\S+)",
-            "colors": ["cyan", null],
+            "colors": ["cyan", "white"],
             "enabled": true,
             "description": "Highlights downloading progress"
         },
         {
             "name": "Collecting",
             "pattern": "(Collecting)\\s+(\\S+)",
-            "colors": ["cyan", null],
+            "colors": ["cyan", "white"],
             "enabled": true,
             "description": "Highlights package collection"
         }

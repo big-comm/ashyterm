@@ -76,10 +76,10 @@ class PreferencesDialog(Adw.PreferencesWindow):
         )
         self.add(page)
 
-        palette_group = Adw.PreferencesGroup()
+        palette_group = Adw.PreferencesGroup(title=_("Color Scheme"))
         page.add(palette_group)
 
-        self.color_scheme_row = Adw.ActionRow(title=_("Color Scheme"))
+        self.color_scheme_row = Adw.ActionRow(title=_("Current Scheme"))
         self._update_color_scheme_row_subtitle()
 
         manage_button = Gtk.Button(label=_("Manage Schemes..."))
@@ -89,17 +89,19 @@ class PreferencesDialog(Adw.PreferencesWindow):
         self.color_scheme_row.set_activatable_widget(manage_button)
         palette_group.add(self.color_scheme_row)
 
-        font_group = Adw.PreferencesGroup()
+        font_group = Adw.PreferencesGroup(
+            title=_("Typography"),
+            description=_("Configure fonts and spacing"),
+        )
         page.add(font_group)
 
         font_row = Adw.ActionRow(
             title=_("Terminal Font"),
+            subtitle=_("Select font family and size for terminal text"),
         )
         font_button = Gtk.FontButton()
         font_button.set_valign(Gtk.Align.CENTER)
         font_button.set_font(self.settings_manager.get("font", "Monospace 10"))
-        # Filter to show only monospace fonts
-        font_button.set_filter_func(self._font_filter_func)
         font_button.connect("font-set", self._on_font_changed)
         font_row.add_suffix(font_button)
         font_row.set_activatable_widget(font_button)
@@ -107,6 +109,7 @@ class PreferencesDialog(Adw.PreferencesWindow):
 
         line_spacing_row = Adw.ActionRow(
             title=_("Line Spacing"),
+            subtitle=_("Adjust the vertical space between lines"),
         )
         spacing_box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=6)
         self.spacing_spin = Gtk.SpinButton.new_with_range(0.8, 2.0, 0.05)
@@ -118,11 +121,12 @@ class PreferencesDialog(Adw.PreferencesWindow):
         line_spacing_row.set_activatable_widget(self.spacing_spin)
         font_group.add(line_spacing_row)
 
-        misc_group = Adw.PreferencesGroup()
+        misc_group = Adw.PreferencesGroup(title=_("Miscellaneous"))
         page.add(misc_group)
 
         transparency_row = Adw.ActionRow(
             title=_("Terminal Transparency"),
+            subtitle=_("Adjust terminal background transparency"),
         )
         self.transparency_scale = Gtk.Scale.new_with_range(
             Gtk.Orientation.HORIZONTAL, 0, 100, 1
@@ -138,6 +142,7 @@ class PreferencesDialog(Adw.PreferencesWindow):
 
         headerbar_transparency_row = Adw.ActionRow(
             title=_("Headerbar Transparency"),
+            subtitle=_("For headerbar and file manager"),
         )
         self.headerbar_transparency_scale = Gtk.Scale.new_with_range(
             Gtk.Orientation.HORIZONTAL, 0, 100, 1
@@ -159,15 +164,17 @@ class PreferencesDialog(Adw.PreferencesWindow):
 
         bold_bright_row = self._create_switch_row(
             _("Use Bright Colors for Bold Text"),
-            "",
+            _("Render bold text with the brighter version of the base color"),
             "bold_is_bright",
             default_value=True,
         )
         misc_group.add(bold_bright_row)
 
         auto_hide_sidebar_row = Adw.SwitchRow(
-            title=_("Auto-Hide Sessions Panel"),
-            subtitle=_("Hide panel when activating sessions"),
+            title=_("Auto-Hide Sidebar"),
+            subtitle=_(
+                "Automatically hide the sidebar when activating sessions or layouts"
+            ),
         )
         auto_hide_sidebar_row.set_active(
             self.settings_manager.get("auto_hide_sidebar", False)
@@ -180,6 +187,7 @@ class PreferencesDialog(Adw.PreferencesWindow):
 
         text_blink_row = Adw.ComboRow(
             title=_("Blinking Text"),
+            subtitle=_("Control how the terminal handles blinking text"),
         )
         text_blink_row.set_model(Gtk.StringList.new([_("When focused"), _("Always")]))
         text_blink_row.set_selected(self.settings_manager.get("text_blink_mode", 0))
@@ -188,6 +196,7 @@ class PreferencesDialog(Adw.PreferencesWindow):
 
         tab_alignment_row = Adw.ComboRow(
             title=_("Tab Alignment"),
+            subtitle=_("Align tabs to the left or center of the tab bar"),
         )
         tab_alignment_row.set_model(Gtk.StringList.new([_("Left"), _("Center")]))
         current_alignment = self.settings_manager.get("tab_alignment", "center")
@@ -196,30 +205,18 @@ class PreferencesDialog(Adw.PreferencesWindow):
         tab_alignment_row.connect("notify::selected", self._on_tab_alignment_changed)
         misc_group.add(tab_alignment_row)
 
-        # Icon Theme Strategy - Performance optimization for GTK4 startup
-        icon_theme_row = Adw.ComboRow(
-            title=_("Icon Theme"),
-        )
-        icon_theme_row.set_model(
-            Gtk.StringList.new([_("Ashy Icons (Bundled)"), _("System Icons")])
-        )
-        current_strategy = self.settings_manager.get("icon_theme_strategy", "ashy")
-        icon_strategy_index = 0 if current_strategy == "ashy" else 1
-        icon_theme_row.set_selected(icon_strategy_index)
-        icon_theme_row.connect("notify::selected", self._on_icon_theme_changed)
-        misc_group.add(icon_theme_row)
-
     def _setup_terminal_page(self) -> None:
         page = Adw.PreferencesPage(
             title=_("Terminal"), icon_name="utilities-terminal-symbolic"
         )
         self.add(page)
 
-        cursor_group = Adw.PreferencesGroup()
+        cursor_group = Adw.PreferencesGroup(title=_("Cursor"))
         page.add(cursor_group)
 
         cursor_shape_row = Adw.ComboRow(
             title=_("Cursor Shape"),
+            subtitle=_("Select the shape of the terminal cursor"),
         )
         cursor_shape_row.set_model(
             Gtk.StringList.new([_("Block"), _("I-Beam"), _("Underline")])
@@ -229,7 +226,7 @@ class PreferencesDialog(Adw.PreferencesWindow):
         cursor_group.add(cursor_shape_row)
 
         cursor_blink_row = Adw.ComboRow(
-            title=_("Cursor Blinking"),
+            title=_("Cursor Blinking"), subtitle=_("Control cursor blinking behavior")
         )
         cursor_blink_row.set_model(
             Gtk.StringList.new([_("Follow System"), _("On"), _("Off")])
@@ -238,12 +235,12 @@ class PreferencesDialog(Adw.PreferencesWindow):
         cursor_blink_row.connect("notify::selected", self._on_cursor_blink_changed)
         cursor_group.add(cursor_blink_row)
 
-        scrolling_group = Adw.PreferencesGroup()
+        scrolling_group = Adw.PreferencesGroup(title=_("Scrolling"))
         page.add(scrolling_group)
 
         scrollback_row = Adw.ActionRow(
             title=_("Scrollback Lines"),
-            subtitle=_("0 for unlimited"),
+            subtitle=_("Number of lines to keep in history (0 for unlimited)"),
         )
         scrollback_spin = Gtk.SpinButton.new_with_range(0, 1000000, 1000)
         scrollback_spin.set_valign(Gtk.Align.CENTER)
@@ -255,7 +252,7 @@ class PreferencesDialog(Adw.PreferencesWindow):
 
         mouse_scroll_row = Adw.ActionRow(
             title=_("Mouse Scroll Sensitivity"),
-            subtitle=_("Lower is slower"),
+            subtitle=_("Controls the scroll speed for a mouse wheel. Lower is slower."),
         )
         mouse_scroll_spin = Gtk.SpinButton.new_with_range(1, 500, 1)
         mouse_scroll_spin.set_valign(Gtk.Align.CENTER)
@@ -271,7 +268,7 @@ class PreferencesDialog(Adw.PreferencesWindow):
 
         touchpad_scroll_row = Adw.ActionRow(
             title=_("Touchpad Scroll Sensitivity"),
-            subtitle=_("Lower is slower"),
+            subtitle=_("Controls the scroll speed for a touchpad. Lower is slower."),
         )
         touchpad_scroll_spin = Gtk.SpinButton.new_with_range(1, 500, 1)
         touchpad_scroll_spin.set_valign(Gtk.Align.CENTER)
@@ -287,18 +284,36 @@ class PreferencesDialog(Adw.PreferencesWindow):
 
         scroll_on_insert_row = self._create_switch_row(
             _("Scroll on Paste"),
-            "",
+            _("Automatically scroll to the bottom when pasting text"),
             "scroll_on_insert",
             default_value=True,
         )
         scrolling_group.add(scroll_on_insert_row)
 
+        selection_group = Adw.PreferencesGroup(
+            title=_("Selection"),
+            description=_("Extra characters for word selection (e.g., -_.:/~)"),
+        )
+        page.add(selection_group)
+
+        word_chars_row = Adw.EntryRow(
+            title=_("Word Characters"),
+        )
+        word_chars_row.set_text(
+            self.settings_manager.get("word_char_exceptions", "-_.:/~")
+        )
+        word_chars_row.connect("changed", self._on_word_chars_changed)
+        selection_group.add(word_chars_row)
+
         shell_group = Adw.PreferencesGroup()
+        shell_group.set_title(
+            GLib.markup_escape_text(_("Shell & Bell"))
+        )
         page.add(shell_group)
 
         login_shell_row = self._create_switch_row(
             _("Run Command as a Login Shell"),
-            "",
+            _("Sources /etc/profile and ~/.profile on startup"),
             "use_login_shell",
             default_value=False,
         )
@@ -306,7 +321,7 @@ class PreferencesDialog(Adw.PreferencesWindow):
 
         bell_row = self._create_switch_row(
             _("Audible Bell"),
-            "",
+            _("Emit a sound for the terminal bell character"),
             "bell_sound",
             default_value=False,
         )
@@ -318,11 +333,12 @@ class PreferencesDialog(Adw.PreferencesWindow):
         )
         self.add(page)
 
-        startup_group = Adw.PreferencesGroup()
+        startup_group = Adw.PreferencesGroup(title=_("Startup"))
         page.add(startup_group)
 
         restore_policy_row = Adw.ComboRow(
             title=_("On Startup"),
+            subtitle=_("Action to take when the application starts"),
         )
         policy_map = ["always", "ask", "never"]
         policy_strings = [
@@ -342,12 +358,19 @@ class PreferencesDialog(Adw.PreferencesWindow):
         )
         startup_group.add(restore_policy_row)
 
-        backup_group = Adw.PreferencesGroup()
+        backup_group = Adw.PreferencesGroup(
+            title=_("Backup &amp; Recovery"),
+            description=_(
+                "Create an encrypted backup of your data or restore from a previous backup."
+            ),
+        )
         page.add(backup_group)
 
         backup_now_row = Adw.ActionRow(
             title=_("Create Backup"),
-            subtitle=_("Encrypted backup of sessions and settings"),
+            subtitle=_(
+                "Save all sessions, settings, and passwords to an encrypted file."
+            ),
         )
         backup_now_button = Gtk.Button(label=_("Create Backup..."))
         backup_now_button.set_valign(Gtk.Align.CENTER)
@@ -358,6 +381,7 @@ class PreferencesDialog(Adw.PreferencesWindow):
 
         restore_row = Adw.ActionRow(
             title=_("Restore from Backup"),
+            subtitle=_("Replace all current data with a backup file."),
         )
         restore_button = Gtk.Button(label=_("Restore..."))
         restore_button.set_valign(Gtk.Align.CENTER)
@@ -366,12 +390,14 @@ class PreferencesDialog(Adw.PreferencesWindow):
         restore_row.set_activatable_widget(restore_button)
         backup_group.add(restore_row)
 
-        remote_edit_group = Adw.PreferencesGroup()
+        remote_edit_group = Adw.PreferencesGroup(title=_("Remote Editing"))
         page.add(remote_edit_group)
 
         use_tmp_dir_row = self._create_switch_row(
             _("Use System Temporary Directory"),
-            _("Use /tmp for remote editing files"),
+            _(
+                "Store temporary files for remote editing in /tmp instead of the config folder"
+            ),
             "use_system_tmp_for_edit",
             default_value=False,
         )
@@ -379,18 +405,23 @@ class PreferencesDialog(Adw.PreferencesWindow):
 
         clear_on_exit_row = self._create_switch_row(
             _("Clear Remote Edit Files on Exit"),
-            "",
+            _("Automatically delete all temporary remote files when closing the app"),
             "clear_remote_edit_files_on_exit",
             default_value=False,
         )
         remote_edit_group.add(clear_on_exit_row)
 
-        ssh_group = Adw.PreferencesGroup()
+        ssh_group = Adw.PreferencesGroup(
+            title=_("SSH"),
+            description=_("Settings for SSH connection management (multiplexing)."),
+        )
         page.add(ssh_group)
 
         persist_row = Adw.ActionRow(
-            title=_("SSH Connection Persistence"),
-            subtitle=_("Seconds to keep connections alive (0 to disable)"),
+            title=_("Connection Persistence (seconds)"),
+            subtitle=_(
+                "Keep SSH connections alive in the background for faster reconnections. Set to 0 to disable."
+            ),
         )
         persist_spin = Gtk.SpinButton.new_with_range(0, 3600, 60)
         persist_spin.set_valign(Gtk.Align.CENTER)
@@ -408,12 +439,15 @@ class PreferencesDialog(Adw.PreferencesWindow):
         )
         self.add(advanced_page)
 
-        features_group = Adw.PreferencesGroup()
+        features_group = Adw.PreferencesGroup(
+            title=_("Advanced Features"),
+            description=_("Enable or disable advanced terminal features"),
+        )
         advanced_page.add(features_group)
 
         bidi_row = self._create_switch_row(
             _("Bidirectional Text Support"),
-            _("For Arabic and Hebrew (affects performance)"),
+            _("Enable for languages like Arabic and Hebrew (may affect performance)"),
             "bidi_enabled",
             default_value=False,
         )
@@ -421,7 +455,7 @@ class PreferencesDialog(Adw.PreferencesWindow):
 
         shaping_row = self._create_switch_row(
             _("Enable Arabic Text Shaping"),
-            _("Render ligatures for Arabic script"),
+            _("Correctly render ligatures and contextual forms for Arabic script"),
             "enable_shaping",
             default_value=False,
         )
@@ -429,17 +463,20 @@ class PreferencesDialog(Adw.PreferencesWindow):
 
         sixel_row = self._create_switch_row(
             _("SIXEL Graphics Support"),
-            _("Display SIXEL images (experimental)"),
+            _("Allow the terminal to display SIXEL images (experimental)"),
             "sixel_enabled",
             default_value=True,
         )
         features_group.add(sixel_row)
 
-        compatibility_group = Adw.PreferencesGroup()
+        compatibility_group = Adw.PreferencesGroup(
+            title=_("Compatibility"),
+            description=_("Settings for compatibility with older systems and tools"),
+        )
         advanced_page.add(compatibility_group)
 
         backspace_row = Adw.ComboRow(
-            title=_("Backspace Key"),
+            title=_("Backspace Key"), subtitle=_("Sequence to send for Backspace key")
         )
         backspace_row.set_model(
             Gtk.StringList.new([
@@ -454,7 +491,7 @@ class PreferencesDialog(Adw.PreferencesWindow):
         compatibility_group.add(backspace_row)
 
         delete_row = Adw.ComboRow(
-            title=_("Delete Key"),
+            title=_("Delete Key"), subtitle=_("Sequence to send for Delete key")
         )
         delete_row.set_model(
             Gtk.StringList.new([
@@ -469,6 +506,7 @@ class PreferencesDialog(Adw.PreferencesWindow):
 
         cjk_width_row = Adw.ComboRow(
             title=_("Ambiguous-width Characters"),
+            subtitle=_("Set the width for ambiguous characters (e.g., CJK)"),
         )
         cjk_width_row.set_model(
             Gtk.StringList.new([_("Narrow (single-cell)"), _("Wide (double-cell)")])
@@ -479,24 +517,14 @@ class PreferencesDialog(Adw.PreferencesWindow):
         cjk_width_row.connect("notify::selected", self._on_cjk_width_changed)
         compatibility_group.add(cjk_width_row)
 
-        selection_group = Adw.PreferencesGroup()
-        advanced_page.add(selection_group)
-
-        word_chars_row = Adw.EntryRow(
-            title=_("Word Characters"),
+        log_group = Adw.PreferencesGroup(
+            title=_("Logging"), description=_("Configure application logging behavior")
         )
-        word_chars_row.set_text(
-            self.settings_manager.get("word_char_exceptions", "-_.:/~")
-        )
-        word_chars_row.connect("changed", self._on_word_chars_changed)
-        selection_group.add(word_chars_row)
-
-        log_group = Adw.PreferencesGroup()
         advanced_page.add(log_group)
 
         log_to_file_row = self._create_switch_row(
             _("Save Logs to File"),
-            "",
+            _("Save application logs to the configuration directory"),
             "log_to_file",
             default_value=False,
         )
@@ -504,6 +532,7 @@ class PreferencesDialog(Adw.PreferencesWindow):
 
         log_level_row = Adw.ComboRow(
             title=_("Console Log Level"),
+            subtitle=_("Set the minimum level of messages shown in the console"),
         )
         log_levels = ["DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"]
         log_level_row.set_model(Gtk.StringList.new(log_levels))
@@ -516,10 +545,13 @@ class PreferencesDialog(Adw.PreferencesWindow):
         log_level_row.connect("notify::selected", self._on_log_level_changed)
         log_group.add(log_level_row)
 
-        reset_group = Adw.PreferencesGroup()
+        reset_group = Adw.PreferencesGroup(
+            title=_("Reset"), description=_("Reset application settings to defaults")
+        )
         advanced_page.add(reset_group)
         reset_row = Adw.ActionRow(
             title=_("Reset All Settings"),
+            subtitle=_("Restore all settings to their default values"),
         )
         reset_button = Gtk.Button(label=_("Reset"), css_classes=["destructive-action"])
         reset_button.set_valign(Gtk.Align.CENTER)
@@ -546,11 +578,6 @@ class PreferencesDialog(Adw.PreferencesWindow):
         font = font_button.get_font()
         self.settings_manager.set("font", font)
         self.emit("font-changed", font)
-
-    @staticmethod
-    def _font_filter_func(family, face):
-        """Filter function to show only monospace fonts."""
-        return family.is_monospace()
 
     def _on_line_spacing_changed(self, spin_button) -> None:
         value = spin_button.get_value()
@@ -617,34 +644,6 @@ class PreferencesDialog(Adw.PreferencesWindow):
         alignment = "left" if index == 0 else "center"
         self._on_setting_changed("tab_alignment", alignment)
 
-    def _on_icon_theme_changed(self, combo_row, _param) -> None:
-        """Handle icon theme strategy change.
-
-        Note: This change requires application restart to take full effect
-        since icon paths are configured at startup for performance.
-        """
-        index = combo_row.get_selected()
-        strategy = "ashy" if index == 0 else "system"
-        self._on_setting_changed("icon_theme_strategy", strategy)
-        # Show restart notice
-        self._show_restart_required_dialog(
-            _("Icon Theme Changed"),
-            _(
-                "The icon theme change will take effect after restarting the application."
-            ),
-        )
-
-    def _show_restart_required_dialog(self, title: str, message: str) -> None:
-        """Show a dialog informing the user that a restart is required."""
-        dialog = Adw.MessageDialog(
-            transient_for=self,
-            heading=title,
-            body=message,
-        )
-        dialog.add_response("ok", _("OK"))
-        dialog.set_default_response("ok")
-        dialog.present()
-
     def _on_word_chars_changed(self, entry_row):
         text = entry_row.get_text()
         self._on_setting_changed("word_char_exceptions", text)
@@ -684,10 +683,10 @@ class PreferencesDialog(Adw.PreferencesWindow):
         """Show informational dialog about sidebar visibility changes."""
         dialog = Adw.MessageDialog(
             transient_for=self,
-            heading=_("Sessions Panel Visibility"),
+            heading=_("Sidebar Visibility"),
             body=_(
-                "The sessions panel visibility change will take effect when you close and reopen the application. "
-                "You can also toggle the sessions panel manually using Ctrl+Shift+H."
+                "The sidebar visibility change will take effect when you close and reopen the application. "
+                "You can also toggle the sidebar manually using Ctrl+Shift+H."
             ),
         )
         dialog.add_response("ok", _("OK"))

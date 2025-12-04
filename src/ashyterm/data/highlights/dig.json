@@ -33,7 +33,7 @@
             "pattern": "^(;;)\\s+(.+)$",
             "colors": [
                 "yellow",
-                null
+                "white"
             ],
             "enabled": true,
             "description": "Highlights comment lines starting with ;;"
@@ -42,7 +42,7 @@
             "name": "Status NOERROR",
             "pattern": "(status:)\\s*(NOERROR)",
             "colors": [
-                null,
+                "white",
                 "bold green"
             ],
             "enabled": true,
@@ -52,7 +52,7 @@
             "name": "Status Error",
             "pattern": "(status:)\\s*(NXDOMAIN|SERVFAIL|REFUSED|FORMERR)",
             "colors": [
-                null,
+                "white",
                 "bold red"
             ],
             "enabled": true,
@@ -62,7 +62,7 @@
             "name": "IPv4 Address",
             "pattern": "(\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3})",
             "colors": [
-                "bold magenta"
+                "green"
             ],
             "enabled": true,
             "description": "Highlights IPv4 addresses"
@@ -99,7 +99,7 @@
             "pattern": "\\s(\\d+)\\s+(IN)\\b",
             "colors": [
                 "yellow",
-                null
+                "white"
             ],
             "enabled": true,
             "description": "Highlights TTL and class"
@@ -108,9 +108,9 @@
             "name": "Query Time",
             "pattern": "(Query time:)\\s*(\\d+)\\s*(msec)",
             "colors": [
-                null,
+                "white",
                 "bold yellow",
-                null
+                "white"
             ],
             "enabled": true,
             "description": "Highlights query time"
@@ -119,7 +119,7 @@
             "name": "Server",
             "pattern": "(SERVER:)\\s*(\\S+)",
             "colors": [
-                null,
+                "white",
                 "cyan"
             ],
             "enabled": true,
@@ -129,8 +129,8 @@
             "name": "When",
             "pattern": "(WHEN:)\\s*(.+)$",
             "colors": [
-                null,
-                "magenta"
+                "white",
+                "bright_black"
             ],
             "enabled": true,
             "description": "Highlights query timestamp"
@@ -139,7 +139,7 @@
             "name": "Flags",
             "pattern": "(flags:)\\s*([^;]+)",
             "colors": [
-                null,
+                "white",
                 "magenta"
             ],
             "enabled": true,
@@ -149,8 +149,8 @@
             "name": "MSG SIZE",
             "pattern": "(MSG SIZE)\\s+(rcvd|sent):?\\s*(\\d+)",
             "colors": [
-                null,
-                null,
+                "white",
+                "white",
                 "yellow"
             ],
             "enabled": true,
@@ -161,7 +161,7 @@
             "pattern": "^(;)\\s+(EDNS:.+)$",
             "colors": [
                 "yellow",
-                null
+                "white"
             ],
             "enabled": true,
             "description": "Highlights EDNS options line"

@@ -7,7 +7,6 @@ gi.require_version("Adw", "1")
 from gi.repository import Adw, Gdk, Gtk
 
 from ...helpers import accelerator_to_label
-from ...utils.tooltip_helper import get_tooltip_helper
 from ...utils.translation_utils import _
 
 # Centralized data structure for shortcuts.
@@ -16,58 +15,60 @@ SHORTCUT_DATA = [
     {
         "group_title": _("Tab &amp; Pane Management"),
         "shortcuts": [
-            ("new-local-tab", _("New Tab")),
-            ("close-tab", _("Close Tab")),
-            ("next-tab", _("Next Tab")),
-            ("previous-tab", _("Previous Tab")),
+            ("new-local-tab", _("New Tab"), "tab-new"),
+            ("close-tab", _("Close Tab"), "window-close"),
+            ("next-tab", _("Next Tab"), "go-next"),
+            ("previous-tab", _("Previous Tab"), "go-previous"),
         ],
     },
     {
         "group_title": _("Splitting"),
         "shortcuts": [
-            ("split-horizontal", _("Split Horizontally")),
-            ("split-vertical", _("Split Vertically")),
-            ("close-pane", _("Close Active Pane")),
+            ("split-horizontal", _("Split Horizontally"), "view-dual"),
+            ("split-vertical", _("Split Vertically"), "view-grid"),
+            ("close-pane", _("Close Active Pane"), "window-close"),
         ],
     },
     {
         "group_title": _("Terminal Interaction"),
         "shortcuts": [
-            ("copy", _("Copy")),
-            ("paste", _("Paste")),
-            ("select-all", _("Select All")),
-            ("clear-session", _("Clear Session")),
-            ("toggle-search", _("Search in Terminal")),
-            ("toggle-broadcast", _("Send Command to All Tabs")),
-            ("ai-assistant", _("Ask AI Assistant")),
+            ("copy", _("Copy"), "edit-copy"),
+            ("paste", _("Paste"), "edit-paste"),
+            ("select-all", _("Select All"), "edit-select-all"),
+            ("clear-session", _("Clear Session"), "edit-clear"),
+            ("toggle-search", _("Search in Terminal"), "edit-find"),
+            ("toggle-broadcast", _("Send Command  All Tabs"), "emblem-shared-symbolic"),
+            ("ai-assistant", _("Ask AI Assistant"), "system-help"),
         ],
     },
     {
         "group_title": _("Zoom"),
         "shortcuts": [
-            ("zoom-in", _("Zoom In")),
-            ("zoom-out", _("Zoom Out")),
-            ("zoom-reset", _("Reset Zoom")),
+            ("zoom-in", _("Zoom In"), "zoom-in"),
+            ("zoom-out", _("Zoom Out"), "zoom-out"),
+            ("zoom-reset", _("Reset Zoom"), "zoom-original"),
         ],
     },
     {
         "group_title": _("Application &amp; Window"),
         "shortcuts": [
-            ("toggle-sidebar", _("Sessions Panel")),
-            ("toggle-file-manager", _("File Manager")),
-            ("show-command-guide", _("Command Guide")),
-            ("new-window", _("New Window")),
-            ("preferences", _("Preferences")),
-            ("quit", _("Quit Application")),
+            ("toggle-sidebar", _("Toggle Sidebar"), "view-sidebar"),
+            ("toggle-file-manager", _("Toggle File Manager"), "folder"),
+            ("new-window", _("New Window"), "window-new"),
+            ("preferences", _("Preferences"), "preferences-system"),
+            ("quit", _("Quit Application"), "application-exit"),
         ],
     },
 ]
 
+# Breakpoint for switching between single and dual column layout
+LAYOUT_BREAKPOINT = 720
+
 
 class ShortcutsDialog(Adw.PreferencesWindow):
     """
-    A dialog for viewing and editing keyboard shortcuts.
-    Uses native PreferencesWindow scrolling for a clean UI.
+    A dialog for viewing and editing keyboard shortcuts, using a responsive
+    two-column grid layout.
     """
 
     def __init__(self, parent_window):
@@ -75,19 +76,25 @@ class ShortcutsDialog(Adw.PreferencesWindow):
             transient_for=parent_window,
             title=_("Keyboard Shortcuts"),
             search_enabled=False,
-            default_width=700,
-            default_height=600,
+            default_width=900,
+            default_height=700,
         )
         self.app = parent_window.get_application()
         self.settings_manager = parent_window.settings_manager
         self.shortcut_groups = []
         self.shortcut_rows = {}  # Store row references by action_name
+        self.grid = Gtk.Grid(
+            column_spacing=32,
+            row_spacing=16,
+            margin_top=16,
+            margin_bottom=16,
+            margin_start=16,
+            margin_end=16,
+        )
 
         # Add reset button to header bar
         reset_button = Gtk.Button(label=_("Reset All"))
-        get_tooltip_helper().add_tooltip(
-            reset_button, _("Reset all shortcuts to default values")
-        )
+        reset_button.set_tooltip_text(_("Reset all shortcuts to default values"))
         reset_button.connect("clicked", self._on_reset_all_clicked)
         
         # Try to add button to existing header bar
@@ -106,6 +113,8 @@ class ShortcutsDialog(Adw.PreferencesWindow):
             self._add_reset_button_as_group(reset_button)
 
         self._build_ui()
+        self.connect("notify::default-width", self._update_layout)
+        self._update_layout(self, None)  # Initial layout setup
 
     def _add_reset_button_as_group(self, reset_button):
         """Add reset button as a preferences group when header bar modification fails."""
@@ -124,19 +133,51 @@ class ShortcutsDialog(Adw.PreferencesWindow):
             reset_group.add(reset_row)
             page.add(reset_group)
 
-        # Create all shortcut groups directly on the preferences page
-        # The PreferencesWindow handles scrolling natively
+        # Create a single group to act as a container for our custom layout
+        container_group = Adw.PreferencesGroup()
+        page.add(container_group)
+
+        scrolled_window = Gtk.ScrolledWindow(
+            vexpand=True,
+            hscrollbar_policy=Gtk.PolicyType.NEVER,
+            vscrollbar_policy=Gtk.PolicyType.AUTOMATIC,
+        )
+        scrolled_window.set_child(self.grid)
+
+        # Add the custom layout widget to the container group.
+        container_group.add(scrolled_window)
+
+        # Create all group widgets first and store them
         for group_data in SHORTCUT_DATA:
             group = Adw.PreferencesGroup(title=group_data["group_title"])
-            for action_name, title in group_data["shortcuts"]:
-                row = self._create_shortcut_row(action_name, title)
+            for action_name, title, icon in group_data["shortcuts"]:
+                row = self._create_shortcut_row(action_name, title, icon)
                 group.add(row)
                 # Store row reference for direct access during reset
                 self.shortcut_rows[action_name] = row
             self.shortcut_groups.append(group)
-            page.add(group)
 
-    def _create_shortcut_row(self, action_name: str, title: str) -> Adw.ActionRow:
+    def _update_layout(self, window, _param):
+        """Rearranges the grid layout based on the window width."""
+        width = self.get_width()
+        is_narrow = width < LAYOUT_BREAKPOINT
+
+        # Detach all children before re-attaching to avoid parenting issues
+        while child := self.grid.get_first_child():
+            self.grid.remove(child)
+
+        if is_narrow:
+            # Single column layout for narrow windows
+            for i, group in enumerate(self.shortcut_groups):
+                self.grid.attach(group, 0, i, 1, 1)
+        else:
+            # Two column layout for wider windows
+            for i, group in enumerate(self.shortcut_groups):
+                col = i % 2
+                row = i // 2
+                self.grid.attach(group, col, row, 1, 1)
+
+    def _create_shortcut_row(self, action_name: str, title: str, icon: str) -> Adw.ActionRow:
         """Creates a single row for a shortcut with an edit button."""
         action_prefix = "app" if action_name in ["quit"] else "win"
         full_action_name = f"{action_prefix}.{action_name}"
@@ -148,14 +189,13 @@ class ShortcutsDialog(Adw.PreferencesWindow):
             subtitle=accelerator_to_label(current_accel) or _("Not set"),
             activatable=False,
         )
+        row.set_icon_name(icon)
         row.set_title_selectable(False)
-        get_tooltip_helper().add_tooltip(row, _("Shortcut for: ") + title)
+        row.set_tooltip_text(_("Shortcut for: ") + title)
 
         button = Gtk.Button(label=_("Edit"))
         button.set_valign(Gtk.Align.CENTER)
-        get_tooltip_helper().add_tooltip(
-            button, _("Click to change the keyboard shortcut for this action")
-        )
+        button.set_tooltip_text(_("Click to change the keyboard shortcut for this action"))
         button.connect("clicked", self._on_edit_clicked, action_name, row)
         row.add_suffix(button)
 

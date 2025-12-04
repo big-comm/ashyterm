@@ -19,9 +19,9 @@
             "name": "Entering/Leaving Directory",
             "pattern": "(make\\[\\d+\\]:)\\s+(Entering|Leaving)\\s+(directory)\\s+'([^']+)'",
             "colors": [
-                null,
+                "white",
                 "cyan",
-                null,
+                "white",
                 "magenta"
             ],
             "enabled": true,
@@ -32,7 +32,7 @@
             "pattern": "^\\s*(CC|CXX|LD|AR)\\s+(.+)",
             "colors": [
                 "cyan",
-                null
+                "white"
             ],
             "enabled": true,
             "description": "Highlights compilation steps"
@@ -53,9 +53,9 @@
             "name": "Compiler Error",
             "pattern": "(:)\\s*(error)(:)",
             "colors": [
-                null,
+                "white",
                 "bold red",
-                null
+                "white"
             ],
             "enabled": true,
             "description": "Highlights compilation errors"
@@ -64,9 +64,9 @@
             "name": "Compiler Warning",
             "pattern": "(:)\\s*(warning)(:)",
             "colors": [
-                null,
+                "white",
                 "bold yellow",
-                null
+                "white"
             ],
             "enabled": true,
             "description": "Highlights compilation warnings"
@@ -75,9 +75,9 @@
             "name": "Compiler Note",
             "pattern": "(:)\\s*(note)(:)",
             "colors": [
-                null,
+                "white",
                 "cyan",
-                null
+                "white"
             ],
             "enabled": true,
             "description": "Highlights compiler notes"
@@ -97,7 +97,7 @@
             "name": "In function",
             "pattern": "(In function)\\s+['\\u2018]([\\w:~]+)['\\u2019]",
             "colors": [
-                null,
+                "white",
                 "cyan"
             ],
             "enabled": true,
@@ -108,7 +108,7 @@
             "pattern": "(Nothing to be done for)\\s+'([^']+)'",
             "colors": [
                 "green",
-                null
+                "white"
             ],
             "enabled": true,
             "description": "Highlights up-to-date targets"

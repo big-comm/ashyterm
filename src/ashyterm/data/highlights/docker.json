@@ -14,7 +14,7 @@
         {
             "name": "Container ID",
             "pattern": "\\b([0-9a-f]{12})\\b",
-            "colors": ["magenta"],
+            "colors": ["bright_black"],
             "enabled": true,
             "description": "Highlights short container IDs"
         },
@@ -91,7 +91,7 @@
         {
             "name": "Port Numbers",
             "pattern": "(\\d{1,5})(-\\d{1,5})?(->)(\\d{1,5})(-\\d{1,5})?(/)(tcp|udp)",
-            "colors": ["bright_green", "bright_green", null, "bright_green", "bright_green", null, "cyan"],
+            "colors": ["bright_green", "bright_green", "white", "bright_green", "bright_green", "white", "cyan"],
             "enabled": true,
             "description": "Highlights port mappings"
         },

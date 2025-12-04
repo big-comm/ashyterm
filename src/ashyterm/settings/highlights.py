@@ -217,8 +217,8 @@ class HighlightContext:
 @dataclass
 class HighlightConfig:
     """Configuration for the highlighting system."""
-
-    enabled_for_local: bool = True
+    
+    enabled_for_local: bool = False
     enabled_for_ssh: bool = True
     context_aware_enabled: bool = True
     global_rules: List[HighlightRule] = field(default_factory=list)
@@ -248,7 +248,7 @@ class HighlightConfig:
             for name, ctx_data in data.get("contexts", {}).items()
         }
         return cls(
-            enabled_for_local=data.get("enabled_for_local", True),
+            enabled_for_local=data.get("enabled_for_local", False),
             enabled_for_ssh=data.get("enabled_for_ssh", True),
             context_aware_enabled=data.get("context_aware_enabled", True),
             global_rules=rules,
@@ -357,13 +357,7 @@ class HighlightManager(GObject.GObject):
                     for rule in self._config.global_rules:
                         if rule.name in self._disabled_global_rules:
                             rule.enabled = False
-
-                # 6b. Apply disabled states to contexts from user settings
-                if hasattr(self, "_disabled_contexts") and self._disabled_contexts:
-                    for ctx_name in self._disabled_contexts:
-                        if ctx_name in self._config.contexts:
-                            self._config.contexts[ctx_name].enabled = False
-
+                
                 # 7. Build trigger map
                 self._build_trigger_map()
                 
@@ -379,20 +373,17 @@ class HighlightManager(GObject.GObject):
                 self._create_default_config()
     
     def _load_user_settings(self) -> None:
-        """Load user settings (enabled flags, disabled global rules, and disabled contexts)."""
+        """Load user settings (enabled flags and disabled global rules)."""
         self._disabled_global_rules: set = set()  # Store for applying after rules load
-        self._disabled_contexts: set = set()  # Store for applying after contexts load
         try:
             if self._user_config_file.exists():
                 with open(self._user_config_file, "r", encoding="utf-8") as f:
                     data = json.load(f)
-                self._config.enabled_for_local = data.get("enabled_for_local", True)
+                self._config.enabled_for_local = data.get("enabled_for_local", False)
                 self._config.enabled_for_ssh = data.get("enabled_for_ssh", True)
                 self._config.context_aware_enabled = data.get("context_aware_enabled", True)
                 # Store disabled global rule names for later application
                 self._disabled_global_rules = set(data.get("disabled_global_rules", []))
-                # Store disabled context names for later application
-                self._disabled_contexts = set(data.get("disabled_contexts", []))
         except Exception as e:
             self.logger.warning(f"Failed to load user settings: {e}")
     
@@ -463,7 +454,7 @@ class HighlightManager(GObject.GObject):
     def _create_default_config(self) -> None:
         """Create minimal default configuration if all loading fails."""
         self._config = HighlightConfig(
-            enabled_for_local=True,
+            enabled_for_local=False,
             enabled_for_ssh=True,
             context_aware_enabled=True,
             global_rules=[],
@@ -484,7 +475,7 @@ class HighlightManager(GObject.GObject):
                 log_error_with_context(e, "saving highlight config", "ashyterm.highlights")
     
     def _save_user_settings(self) -> None:
-        """Save user settings (enabled flags, disabled global rules, and disabled contexts)."""
+        """Save user settings (enabled flags and disabled global rules)."""
         try:
             self._user_config_file.parent.mkdir(parents=True, exist_ok=True)
             
@@ -493,20 +484,12 @@ class HighlightManager(GObject.GObject):
                 rule.name for rule in self._config.global_rules 
                 if not rule.enabled
             ]
-
-            # Collect names of disabled contexts
-            disabled_contexts = [
-                ctx_name
-                for ctx_name, ctx in self._config.contexts.items()
-                if not ctx.enabled
-            ]
-
+            
             settings = {
                 "enabled_for_local": self._config.enabled_for_local,
                 "enabled_for_ssh": self._config.enabled_for_ssh,
                 "context_aware_enabled": self._config.context_aware_enabled,
                 "disabled_global_rules": disabled_global_rules,
-                "disabled_contexts": disabled_contexts,
             }
             
             temp_file = self._user_config_file.with_suffix(".tmp")
@@ -551,50 +534,7 @@ class HighlightManager(GObject.GObject):
                 
             except Exception as e:
                 self.logger.error(f"Failed to save context {context.command_name}: {e}")
-
-    def save_global_rules_to_user(self) -> None:
-        """
-        Save global rules to user highlights directory as global.json.
-
-        This creates a user override for the system global.json file,
-        persisting any modifications made to global rules.
-        """
-        with self._lock:
-            try:
-                self._user_highlights_dir.mkdir(parents=True, exist_ok=True)
-
-                file_path = self._user_highlights_dir / "global.json"
-                temp_file = file_path.with_suffix(".tmp")
-
-                # Create a context-like structure for global rules
-                global_data = {
-                    "name": "global",
-                    "triggers": [],
-                    "rules": [rule.to_dict() for rule in self._config.global_rules],
-                    "enabled": True,
-                    "description": "Global highlight rules applied to all terminal output",
-                    "use_global_rules": False,
-                }
-
-                with open(temp_file, "w", encoding="utf-8") as f:
-                    json.dump(global_data, f, indent=2, ensure_ascii=False)
-
-                temp_file.replace(file_path)
-
-                try:
-                    ensure_secure_file_permissions(str(file_path))
-                except Exception as e:
-                    self.logger.warning(f"Failed to set secure permissions: {e}")
-
-                self._pattern_dirty = True
-                self.logger.info(
-                    f"Saved {len(self._config.global_rules)} global rules to user directory"
-                )
-
-            except Exception as e:
-                self.logger.error(f"Failed to save global rules: {e}")
-                log_error_with_context(e, "saving global rules", "ashyterm.highlights")
-
+    
     def delete_user_context(self, command_name: str) -> bool:
         """Delete a user context override (reverts to system version if exists)."""
         with self._lock:
@@ -730,78 +670,51 @@ class HighlightManager(GObject.GObject):
     def resolve_color_to_ansi(self, color_name: str) -> str:
         """
         Resolve a logical color name to ANSI escape sequence.
-
+        
         Uses standard ANSI color indices (30-37, 90-97) so the terminal
         automatically applies the active color scheme's palette.
-
-        Supports:
-        - Modifiers: "bold red", "underline green", etc.
-        - Background colors: "on_red", "on_bright_blue", etc.
-        - Combined: "bold red on_yellow" (bold red text on yellow background)
-
+        
+        Supports modifiers: "bold red", "underline green", etc.
+        
         Args:
-            color_name: Logical name like "red", "bold green on_blue", "bright_cyan"
-
+            color_name: Logical name like "red", "bold green", "bright_cyan"
+        
         Returns:
-            ANSI escape sequence like "\033[1;31;42m" (bold red on green)
+            ANSI escape sequence like "\033[1;31m" (bold red)
         """
         if not color_name:
             return ""
-
-        # Parse modifiers, foreground color, and background color
+        
+        # Parse modifiers and base color
         parts = color_name.lower().split()
         modifiers = []
         base_color = "white"
-        bg_color = None
         
         for part in parts:
             if part in ANSI_MODIFIERS:
                 modifiers.append(ANSI_MODIFIERS[part])
-            elif part.startswith("on_"):
-                # Background color (e.g., "on_red", "on_bright_blue")
-                bg_color = part[3:]  # Strip "on_" prefix
             else:
                 base_color = part
-
-        # Map foreground color name to ANSI color code
+        
+        # Map color name to ANSI color code
         # Standard colors: 30-37, Bright colors: 90-97
-        fg_code = None
         if base_color in ANSI_COLOR_MAP:
             color_index = ANSI_COLOR_MAP[base_color]
             if color_index < 8:
                 # Standard colors: 30-37
-                fg_code = str(30 + color_index)
+                color_code = str(30 + color_index)
             else:
                 # Bright colors: 90-97
-                fg_code = str(90 + (color_index - 8))
-        elif base_color not in (
-            "foreground",
-            "background",
-            "cursor",
-            "none",
-            "default",
-        ):
-            # Unknown color - use default white
-            fg_code = "37"
-
-        # Map background color name to ANSI color code
-        # Standard colors: 40-47, Bright colors: 100-107
-        bg_code = None
-        if bg_color and bg_color in ANSI_COLOR_MAP:
-            color_index = ANSI_COLOR_MAP[bg_color]
-            if color_index < 8:
-                # Standard background colors: 40-47
-                bg_code = str(40 + color_index)
-            else:
-                # Bright background colors: 100-107
-                bg_code = str(100 + (color_index - 8))
-
-        # Build ANSI sequence: modifiers + foreground + background
-        ansi_parts = modifiers.copy()
-        if fg_code:
-            ansi_parts.append(fg_code)
-        if bg_code:
-            ansi_parts.append(bg_code)
+                color_code = str(90 + (color_index - 8))
+        elif base_color in ("foreground", "background", "cursor"):
+            # Theme colors - use default white
+            color_code = "37"
+        else:
+            # Unknown color - use default
+            color_code = "37"
+        
+        # Build ANSI sequence
+        ansi_parts = modifiers + [color_code]
         
         if ansi_parts:
             return f"\033[{';'.join(ansi_parts)}m"
@@ -1114,43 +1027,7 @@ class HighlightManager(GObject.GObject):
             self._load_layered_config()
             self._pattern_dirty = True
         self.emit("rules-changed")
-
-    def reset_global_rules(self) -> None:
-        """Reset only global rules to system defaults (keeps context customizations)."""
-        with self._lock:
-            # Only delete global.json from user directory
-            if self._user_highlights_dir.exists():
-                global_file = self._user_highlights_dir / "global.json"
-                if global_file.exists():
-                    try:
-                        global_file.unlink()
-                        self.logger.info("Deleted user global.json")
-                    except Exception as e:
-                        self.logger.warning(f"Failed to delete global.json: {e}")
-
-            # Reload from system
-            self._load_layered_config()
-            self._pattern_dirty = True
-        self.emit("rules-changed")
-
-    def reset_all_contexts(self) -> None:
-        """Reset all context customizations to system defaults (keeps global rules)."""
-        with self._lock:
-            # Delete all user context files except global.json
-            if self._user_highlights_dir.exists():
-                for json_file in self._user_highlights_dir.glob("*.json"):
-                    if json_file.name != "global.json":
-                        try:
-                            json_file.unlink()
-                            self.logger.info(f"Deleted user context: {json_file.name}")
-                        except Exception as e:
-                            self.logger.warning(f"Failed to delete {json_file}: {e}")
-
-            # Reload from system
-            self._load_layered_config()
-            self._pattern_dirty = True
-        self.emit("rules-changed")
-
+    
     def validate_pattern(self, pattern: str) -> Tuple[bool, str]:
         """Validate a regex pattern."""
         if not pattern:

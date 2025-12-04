@@ -1,12 +1,12 @@
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the ashyterm package.
+# This file is distributed under the same license as the comm-ashyterm package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 # 
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: ashyterm\n"
+"Project-Id-Version: comm-ashyterm\n"
 "Report-Msgid-Bugs-To: \n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -15,35 +15,6 @@ msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: attranslate\n"
-# 
-# File: usr/share/nautilus-python/extensions/ashyterm.py, line: 129
-#: NEEDS WORK
-msgid "Open in Ashy Terminal (SSH)"
-msgstr "在 Ashy Terminal 中打开 (SSH)"
-# 
-# File: usr/share/nautilus-python/extensions/ashyterm.py, line: 130
-#: NEEDS WORK
-#, python-brace-format
-msgid "Connect to {} via a new SSH session"
-msgstr "通过新的 SSH 会话连接到 {}"
-# 
-# File: usr/share/nautilus-python/extensions/ashyterm.py, line: 139
-# File: usr/share/nautilus-python/extensions/ashyterm.py, line: 149
-#: NEEDS WORK
-msgid "Open in Ashy Terminal"
-msgstr "在 Ashy Terminal 中打开"
-# 
-# File: usr/share/nautilus-python/extensions/ashyterm.py, line: 140
-#: NEEDS WORK
-#, python-brace-format
-msgid "Open the local mount point {}"
-msgstr "打开本地挂载点 {}"
-# 
-# File: usr/share/nautilus-python/extensions/ashyterm.py, line: 150
-#: NEEDS WORK
-#, python-brace-format
-msgid "Open {} in Ashy Terminal"
-msgstr "在 Ashy Terminal 中打开 {}"
 # 
 # File: usr/share/ashyterm/utils/exceptions.py, line: 65
 #: NEEDS WORK
@@ -316,7 +287,7 @@ msgstr "密钥文件不可读"
 msgid "Error accessing key file: {}"
 msgstr "访问密钥文件时出错：{}"
 # 
-# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
+# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
 # 
 # File: usr/share/ashyterm/utils/security.py, line: 508
 # File: usr/share/ashyterm/utils/security.py, line: 796
@@ -400,9 +371,9 @@ msgstr "路径包含不安全的元素"
 msgid "set secure permissions"
 msgstr "设置安全权限"
 # 
-# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
+# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
 # 
-# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
+# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
 # 
 # File: usr/share/ashyterm/utils/security.py, line: 786
 # File: usr/share/ashyterm/utils.py, line: 438
@@ -498,11 +469,6 @@ msgstr "移动到新标签页"
 msgid "Close Pane"
 msgstr "关闭面板"
 # 
-# File: src/ashyterm/terminal/tabs.py, line: 723
-#: NEEDS WORK
-msgid "Move Tab"
-msgstr "移动标签"
-# 
 # File: usr/share/ashyterm/terminal/tabs.py, line: 531
 #: NEEDS WORK
 msgid "Duplicate Tab"
@@ -517,6 +483,75 @@ msgstr "分离标签"
 #: NEEDS WORK
 msgid "This is the only pane in the tab."
 msgstr "这是选项卡中唯一的窗格。"
+# 
+# File: usr/share/ashyterm/main.py, line: 86
+#: NEEDS WORK
+#, python-brace-format
+msgid ""
+"\n"
+"Received signal {}, shutting down gracefully..."
+msgstr "接收到信号{}，正在优雅地关闭..."
+# 
+# File: usr/share/ashyterm/main.py, line: 97
+#: NEEDS WORK
+#, python-brace-format
+msgid "Warning: Could not set up signal handlers: {}"
+msgstr "警告：无法设置信号处理程序：{}"
+# 
+# File: usr/share/ashyterm/main.py, line: 109
+#: NEEDS WORK
+msgid "Ashy Terminal - A modern terminal emulator with session management"
+msgstr "Ashy Terminal - 一款具有会话管理功能的现代终端仿真器"
+# 
+# File: usr/share/ashyterm/main.py, line: 110
+#: NEEDS WORK
+msgid "For more information, visit: https://communitybig.org/"
+msgstr "有关更多信息，请访问：https://communitybig.org/"
+# 
+# File: usr/share/ashyterm/main.py, line: 73
+#: NEEDS WORK
+msgid "Enable debug mode"
+msgstr "启用调试模式"
+# 
+# File: usr/share/ashyterm/main.py, line: 79
+#: NEEDS WORK
+msgid "Set logging level"
+msgstr "设置日志级别"
+# 
+# File: usr/share/ashyterm/main.py, line: 84
+#: NEEDS WORK
+msgid "Set the working directory for the initial terminal"
+msgstr "设置初始终端的工作目录"
+# 
+# File: usr/share/ashyterm/main.py, line: 92
+#: NEEDS WORK
+msgid "Working directory (positional argument)"
+msgstr "工作目录（位置参数）"
+# 
+# File: usr/share/ashyterm/main.py, line: 105
+#: NEEDS WORK
+msgid "Execute command in the terminal"
+msgstr "在终端中执行命令"
+# 
+# File: usr/share/ashyterm/main.py, line: 110
+#: NEEDS WORK
+msgid "Close terminal after executing command (only with --execute)"
+msgstr "执行命令后关闭终端（仅适用于 --execute）"
+# 
+# File: usr/share/ashyterm/main.py, line: 115
+#: NEEDS WORK
+msgid "Connect to SSH host with optional user, port, and remote path"
+msgstr "连接到SSH主机，支持可选的用户、端口和远程路径"
+# 
+# File: usr/share/ashyterm/main.py, line: 119
+#: NEEDS WORK
+msgid "Convert KIO/GVFS URI path to SSH format"
+msgstr "将 KIO/GVFS URI 路径转换为 SSH 格式"
+# 
+# File: usr/share/ashyterm/main.py, line: 129
+#: NEEDS WORK
+msgid "Force opening a new window"
+msgstr "强制打开新窗口"
 # 
 # File: usr/share/ashyterm/ui/window_ui.py, line: 339
 #: NEEDS WORK
@@ -550,21 +585,21 @@ msgstr "正则表达式"
 # 
 # #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
 # 
-# File: src/ashyterm/ui/window_ui.py, line: 262
-# File: src/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 56
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1606
+# File: usr/share/ashyterm/window.py, line: 248
 #: NEEDS WORK
-msgid "Sessions Panel"
-msgstr "会话面板"
+msgid "Toggle Sidebar"
+msgstr "切换侧边栏"
 # 
 # File: usr/share/ashyterm/window.py, line: 344
 #: NEEDS WORK
 msgid "File Manager"
 msgstr "文件管理器"
 # 
-# File: usr/share/ashyterm/ui/dialogs/command_guide_dialog.py, line: 143
+# File: usr/share/ashyterm/ui/window_ui.py, line: 324
 #: NEEDS WORK
-msgid "Command Guide"
-msgstr "命令指南"
+msgid "Command Guide (Ctrl+Shift+P)"
+msgstr "命令指南 (Ctrl+Shift+P)"
 # 
 # File: usr/share/ashyterm/ui/window_ui.py, line: 350
 #: NEEDS WORK
@@ -576,10 +611,10 @@ msgstr "在终端中搜索"
 msgid "Send Command to All Tabs"
 msgstr "发送命令到所有标签页"
 # 
-# File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 39
+# File: usr/share/ashyterm/ui/window_ui.py, line: 344
 #: NEEDS WORK
-msgid "Ask AI Assistant"
-msgstr "询问AI助手"
+msgid "Ask AI Assistant (Ctrl+Shift+I)"
+msgstr "询问 AI 助手 (Ctrl+Shift+I)"
 # 
 # File: usr/share/ashyterm/ui/window_ui.py, line: 259
 #: NEEDS WORK
@@ -591,7 +626,7 @@ msgstr "管理临时文件"
 msgid "Main Menu"
 msgstr "主菜单"
 # 
-# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
+# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
 # 
 # File: usr/share/ashyterm/ui/menus.py, line: 144
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1596
@@ -605,9 +640,9 @@ msgstr "新标签页"
 msgid "Ashy Terminal"
 msgstr "灰色终端"
 # 
-# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
+# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
 # 
-# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
+# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
 # 
 # File: usr/share/ashyterm/ui/menus.py, line: 60
 # File: usr/share/ashyterm/ui/menus.py, line: 92
@@ -617,9 +652,9 @@ msgstr "灰色终端"
 msgid "Add Session"
 msgstr "添加会话"
 # 
-# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
+# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
 # 
-# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
+# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
 # 
 # File: usr/share/ashyterm/ui/menus.py, line: 93
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1056
@@ -683,7 +718,7 @@ msgstr "标题栏背景"
 msgid "Cursor"
 msgstr "光标"
 # 
-# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
+# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 163
 # File: usr/share/ashyterm/ui/dialogs.py, line: 575
@@ -717,7 +752,7 @@ msgstr "通用颜色"
 msgid "16-Color Palette"
 msgstr "16色调色板"
 # 
-# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
+# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 136
 # File: usr/share/ashyterm/ui/dialogs.py, line: 784
@@ -799,7 +834,7 @@ msgstr "选择一个方案以立即应用。"
 msgid "New"
 msgstr "新"
 # 
-# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
+# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
 # 
 # File: usr/share/ashyterm/ui/menus.py, line: 23
 # File: usr/share/ashyterm/ui/menus.py, line: 59
@@ -809,7 +844,7 @@ msgstr "新"
 msgid "Edit"
 msgstr "编辑"
 # 
-# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
+# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
 # 
 # File: usr/share/ashyterm/ui/menus.py, line: 39
 # File: usr/share/ashyterm/ui/menus.py, line: 73
@@ -840,1249 +875,20 @@ msgstr "删除方案？"
 msgid "Are you sure you want to delete the scheme '{name}'? This cannot be undone."
 msgstr "您确定要删除方案“{name}”吗？此操作无法撤销。"
 # 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 220
-#: NEEDS WORK
-msgid "How do I navigate directories?"
-msgstr "我如何浏览目录？"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 221
-#: NEEDS WORK
-msgid "How do I find files by name?"
-msgstr "我如何通过名称查找文件？"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 222
-#: NEEDS WORK
-msgid "How do I edit files in terminal?"
-msgstr "如何在终端中编辑文件？"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 223
-#: NEEDS WORK
-msgid "How do I view disk usage?"
-msgstr "我如何查看磁盘使用情况？"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 224
-#: NEEDS WORK
-msgid "How do I change file permissions?"
-msgstr "我如何更改文件权限？"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 225
-#: NEEDS WORK
-msgid "How do I compress files?"
-msgstr "我该如何压缩文件？"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 226
-#: NEEDS WORK
-msgid "How do I check my IP address?"
-msgstr "我如何检查我的IP地址？"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 227
-#: NEEDS WORK
-msgid "How do I view running processes?"
-msgstr "我如何查看正在运行的进程？"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 228
-#: NEEDS WORK
-msgid "How do I check memory usage?"
-msgstr "我如何检查内存使用情况？"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 229
-#: NEEDS WORK
-msgid "How do I restart a service?"
-msgstr "我该如何重启服务？"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 231
-#: NEEDS WORK
-msgid "How do I create a new branch?"
-msgstr "我该如何创建一个新分支？"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 232
-#: NEEDS WORK
-msgid "How do I merge branches?"
-msgstr "我该如何合并分支？"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 233
-#: NEEDS WORK
-msgid "How do I push to remote?"
-msgstr "如何推送到远程？"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 234
-#: NEEDS WORK
-msgid "How do I pull changes?"
-msgstr "我该如何拉取更改？"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 235
-#: NEEDS WORK
-msgid "How do I undo last commit?"
-msgstr "如何撤销上一个提交？"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 236
-#: NEEDS WORK
-msgid "How do I view commit history?"
-msgstr "我如何查看提交历史？"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 237
-#: NEEDS WORK
-msgid "How do I create a tag?"
-msgstr "我该如何创建标签？"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 238
-#: NEEDS WORK
-msgid "How do I find who changed a line?"
-msgstr "我如何找到是谁更改了某一行？"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 239
-#: NEEDS WORK
-msgid "How do I delete a branch?"
-msgstr "我该如何删除一个分支？"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 240
-#: NEEDS WORK
-msgid "How do I stash changes?"
-msgstr "我该如何暂存更改？"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 242
-#: NEEDS WORK
-msgid "How do I list Docker containers?"
-msgstr "我如何列出Docker容器？"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 243
-#: NEEDS WORK
-msgid "How do I run a Docker container?"
-msgstr "我如何运行一个Docker容器？"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 244
-#: NEEDS WORK
-msgid "How do I stop a container?"
-msgstr "我该如何停止一个容器？"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 245
-#: NEEDS WORK
-msgid "How do I list Docker images?"
-msgstr "我如何列出 Docker 镜像？"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 246
-#: NEEDS WORK
-msgid "How do I clean Docker resources?"
-msgstr "我该如何清理 Docker 资源？"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 247
-#: NEEDS WORK
-msgid "How do I view container logs?"
-msgstr "我如何查看容器日志？"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 248
-#: NEEDS WORK
-msgid "How do I create Docker network?"
-msgstr "我该如何创建 Docker 网络？"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 249
-#: NEEDS WORK
-msgid "How do I manage Docker volumes?"
-msgstr "我如何管理Docker卷？"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 250
-#: NEEDS WORK
-msgid "How do I build a Docker image?"
-msgstr "我该如何构建 Docker 镜像？"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 251
-#: NEEDS WORK
-msgid "How do I restart a container?"
-msgstr "我该如何重启容器？"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 253
-#: NEEDS WORK
-msgid "How do I generate SSH keys?"
-msgstr "我该如何生成SSH密钥？"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 254
-#: NEEDS WORK
-msgid "How do I copy SSH key to server?"
-msgstr "我该如何将SSH密钥复制到服务器？"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 255
-#: NEEDS WORK
-msgid "How do I check open ports?"
-msgstr "我如何检查开放端口？"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 256
-#: NEEDS WORK
-msgid "How do I test network connectivity?"
-msgstr "我该如何测试网络连接？"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 257
-#: NEEDS WORK
-msgid "How do I DNS lookup?"
-msgstr "我该如何进行DNS查询？"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 258
-#: NEEDS WORK
-msgid "How do I monitor network traffic?"
-msgstr "我如何监控网络流量？"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 259
-#: NEEDS WORK
-msgid "How do I configure firewall?"
-msgstr "我该如何配置防火墙？"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 260
-#: NEEDS WORK
-msgid "How do I create SSH tunnel?"
-msgstr "我该如何创建SSH隧道？"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 261
-#: NEEDS WORK
-msgid "How do I copy files via SSH?"
-msgstr "我如何通过SSH复制文件？"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 262
-#: NEEDS WORK
-msgid "How do I speed up SSH connections?"
-msgstr "我如何加快SSH连接速度？"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 264
-#: NEEDS WORK
-msgid "How do I create empty file?"
-msgstr "我该如何创建空文件？"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 265
-#: NEEDS WORK
-msgid "How do I create directory?"
-msgstr "我该如何创建目录？"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 266
-#: NEEDS WORK
-msgid "How do I delete files safely?"
-msgstr "我该如何安全地删除文件？"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 267
-#: NEEDS WORK
-msgid "How do I copy files?"
-msgstr "我该如何复制文件？"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 268
-#: NEEDS WORK
-msgid "How do I move files?"
-msgstr "我如何移动文件？"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 269
-#: NEEDS WORK
-msgid "How do I create symbolic link?"
-msgstr "如何创建符号链接？"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 270
-#: NEEDS WORK
-msgid "How do I search file contents?"
-msgstr "我如何搜索文件内容？"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 271
-#: NEEDS WORK
-msgid "How do I compare files?"
-msgstr "我该如何比较文件？"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 272
-#: NEEDS WORK
-msgid "How do I sync directories?"
-msgstr "我如何同步目录？"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 273
-#: NEEDS WORK
-msgid "How do I append to file?"
-msgstr "如何向文件追加内容？"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 275
-#: NEEDS WORK
-msgid "How do I use grep?"
-msgstr "我该如何使用grep？"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 276
-#: NEEDS WORK
-msgid "How do I use awk?"
-msgstr "我该如何使用awk？"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 277
-#: NEEDS WORK
-msgid "How do I use sed?"
-msgstr "我该如何使用sed？"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 278
-#: NEEDS WORK
-msgid "How do I count lines?"
-msgstr "我该如何计算行数？"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 279
-#: NEEDS WORK
-msgid "How do I sort text?"
-msgstr "我该如何对文本进行排序？"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 280
-#: NEEDS WORK
-msgid "How do I join files?"
-msgstr "我该如何合并文件？"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 281
-#: NEEDS WORK
-msgid "How do I extract columns?"
-msgstr "我该如何提取列？"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 282
-#: NEEDS WORK
-msgid "How do I remove duplicates?"
-msgstr "如何删除重复项？"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 283
-#: NEEDS WORK
-msgid "How do I format JSON?"
-msgstr "我如何格式化 JSON？"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 284
-#: NEEDS WORK
-msgid "How do I search and replace?"
-msgstr "如何进行搜索和替换？"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 286
-#: NEEDS WORK
-msgid "How do I add a user?"
-msgstr "我该如何添加用户？"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 287
-#: NEEDS WORK
-msgid "How do I manage groups?"
-msgstr "我该如何管理组？"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 288
-#: NEEDS WORK
-msgid "How do I change password?"
-msgstr "我该如何更改密码？"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 289
-#: NEEDS WORK
-msgid "How do I check system load?"
-msgstr "我如何检查系统负载？"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 290
-#: NEEDS WORK
-msgid "How do I mount a drive?"
-msgstr "我该如何挂载驱动器？"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 291
-#: NEEDS WORK
-msgid "How do I install packages?"
-msgstr "我该如何安装软件包？"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 292
-#: NEEDS WORK
-msgid "How do I update system?"
-msgstr "如何更新系统？"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 293
-#: NEEDS WORK
-msgid "How do I configure cron jobs?"
-msgstr "我该如何配置 cron 作业？"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 294
-#: NEEDS WORK
-msgid "How do I view system logs?"
-msgstr "我如何查看系统日志？"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 295
-#: NEEDS WORK
-msgid "How do I find large files?"
-msgstr "我如何找到大文件？"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 297
-#: NEEDS WORK
-msgid "How do I create virtualenv?"
-msgstr "我该如何创建virtualenv？"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 298
-#: NEEDS WORK
-msgid "How do I install pip packages?"
-msgstr "我该如何安装 pip 包？"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 299
-#: NEEDS WORK
-msgid "How do I find Python package?"
-msgstr "我该如何找到Python包？"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 300
-#: NEEDS WORK
-msgid "How do I list installed packages?"
-msgstr "如何列出已安装的软件包？"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 301
-#: NEEDS WORK
-msgid "How do I run Python tests?"
-msgstr "我该如何运行 Python 测试？"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 302
-#: NEEDS WORK
-msgid "How do I profile Python code?"
-msgstr "如何对 Python 代码进行性能分析？"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 303
-#: NEEDS WORK
-msgid "How do I format Python code?"
-msgstr "我如何格式化Python代码？"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 304
-#: NEEDS WORK
-msgid "How do I create requirements.txt?"
-msgstr "我该如何创建 requirements.txt？"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 305
-#: NEEDS WORK
-msgid "How do I run Python script?"
-msgstr "我该如何运行 Python 脚本？"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 306
-#: NEEDS WORK
-msgid "How do I debug Python?"
-msgstr "我该如何调试Python？"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 308
-#: NEEDS WORK
-msgid "How do I initialize npm project?"
-msgstr "我该如何初始化 npm 项目？"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 309
-#: NEEDS WORK
-msgid "How do I install npm packages?"
-msgstr "我该如何安装 npm 包？"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 310
-#: NEEDS WORK
-msgid "How do I run npm scripts?"
-msgstr "我该如何运行 npm 脚本？"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 311
-#: NEEDS WORK
-msgid "How do I list npm packages?"
-msgstr "我如何列出 npm 包？"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 312
-#: NEEDS WORK
-msgid "How do I update npm packages?"
-msgstr "我该如何更新npm包？"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 313
-#: NEEDS WORK
-msgid "How do I clean npm cache?"
-msgstr "我该如何清理 npm 缓存？"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 314
-#: NEEDS WORK
-msgid "How do I link npm package?"
-msgstr "我该如何链接 npm 包？"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 315
-#: NEEDS WORK
-msgid "How do I audit npm packages?"
-msgstr "我该如何审计 npm 包？"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 316
-#: NEEDS WORK
-msgid "How do I find npm package?"
-msgstr "我该如何找到 npm 包？"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 317
-#: NEEDS WORK
-msgid "How do I use npx?"
-msgstr "我该如何使用 npx？"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 319
-#: NEEDS WORK
-msgid "How do I write a bash script?"
-msgstr "我该如何编写一个bash脚本？"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 320
-#: NEEDS WORK
-msgid "How do I use loops in bash?"
-msgstr "我如何在bash中使用循环？"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 321
-#: NEEDS WORK
-msgid "How do I use conditionals?"
-msgstr "我该如何使用条件语句？"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 322
-#: NEEDS WORK
-msgid "How do I read user input?"
-msgstr "我该如何读取用户输入？"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 323
-#: NEEDS WORK
-msgid "How do I read from file?"
-msgstr "我该如何从文件中读取？"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 324
-#: NEEDS WORK
-msgid "How do I write to file?"
-msgstr "我该如何写入文件？"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 325
-#: NEEDS WORK
-msgid "How do I use functions?"
-msgstr "我该如何使用函数？"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 326
-#: NEEDS WORK
-msgid "How do I parse arguments?"
-msgstr "我该如何解析参数？"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 327
-#: NEEDS WORK
-msgid "How do I handle errors?"
-msgstr "我该如何处理错误？"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 328
-#: NEEDS WORK
-msgid "How do I debug bash script?"
-msgstr "我该如何调试bash脚本？"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 330
-#: NEEDS WORK
-msgid "How do I get pods?"
-msgstr "我该如何获取 Pods？"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 331
-#: NEEDS WORK
-msgid "How do I view pod logs?"
-msgstr "我如何查看 pod 日志？"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 332
-#: NEEDS WORK
-msgid "How do I deploy to k8s?"
-msgstr "我该如何部署到k8s？"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 333
-#: NEEDS WORK
-msgid "How do I scale deployment?"
-msgstr "我该如何扩展部署？"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 334
-#: NEEDS WORK
-msgid "How do I describe pod?"
-msgstr "我该如何描述 pod？"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 335
-#: NEEDS WORK
-msgid "How do I get services?"
-msgstr "我该如何获取服务？"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 336
-#: NEEDS WORK
-msgid "How do I create configmap?"
-msgstr "我该如何创建 configmap？"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 337
-#: NEEDS WORK
-msgid "How do I create secret?"
-msgstr "我该如何创建秘密？"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 338
-#: NEEDS WORK
-msgid "How do I exec into pod?"
-msgstr "我如何进入 pod？"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 339
-#: NEEDS WORK
-msgid "How do I port forward?"
-msgstr "如何进行端口转发？"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 341
-#: NEEDS WORK
-msgid "How do I connect to PostgreSQL?"
-msgstr "我该如何连接到 PostgreSQL？"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 342
-#: NEEDS WORK
-msgid "How do I backup database?"
-msgstr "我该如何备份数据库？"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 343
-#: NEEDS WORK
-msgid "How do I restore database?"
-msgstr "我该如何恢复数据库？"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 344
-#: NEEDS WORK
-msgid "How do I list databases?"
-msgstr "我该如何列出数据库？"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 345
-#: NEEDS WORK
-msgid "How do I query from terminal?"
-msgstr "如何从终端查询？"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 346
-#: NEEDS WORK
-msgid "How do I export to CSV?"
-msgstr "如何导出为CSV？"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 347
-#: NEEDS WORK
-msgid "How do I import from CSV?"
-msgstr "我该如何从CSV导入？"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 348
-#: NEEDS WORK
-msgid "How do I create database user?"
-msgstr "我该如何创建数据库用户？"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 349
-#: NEEDS WORK
-msgid "How do I grant permissions?"
-msgstr "我该如何授予权限？"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 350
-#: NEEDS WORK
-msgid "How do I check database size?"
-msgstr "我如何检查数据库大小？"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 352
-#: NEEDS WORK
-msgid "How do I monitor CPU usage?"
-msgstr "我如何监控CPU使用率？"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 353
-#: NEEDS WORK
-msgid "How do I monitor memory?"
-msgstr "我如何监控内存？"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 354
-#: NEEDS WORK
-msgid "How do I monitor disk I/O?"
-msgstr "我如何监控磁盘 I/O？"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 355
-#: NEEDS WORK
-msgid "How do I monitor network?"
-msgstr "我如何监控网络？"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 356
-#: NEEDS WORK
-msgid "How do I benchmark command?"
-msgstr "我该如何基准测试命令？"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 357
-#: NEEDS WORK
-msgid "How do I trace system calls?"
-msgstr "我该如何跟踪系统调用？"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 358
-#: NEEDS WORK
-msgid "How do I view process tree?"
-msgstr "如何查看进程树？"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 359
-#: NEEDS WORK
-msgid "How do I find bottlenecks?"
-msgstr "我如何找到瓶颈？"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 360
-#: NEEDS WORK
-msgid "How do I list open files?"
-msgstr "如何列出打开的文件？"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 361
-#: NEEDS WORK
-msgid "How do I view thread info?"
-msgstr "我如何查看线程信息？"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 363
-#: NEEDS WORK
-msgid "How do I create tar archive?"
-msgstr "我该如何创建 tar 归档？"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 364
-#: NEEDS WORK
-msgid "How do I extract tar.gz?"
-msgstr "如何提取 tar.gz？"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 365
-#: NEEDS WORK
-msgid "How do I use gzip?"
-msgstr "我该如何使用gzip？"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 366
-#: NEEDS WORK
-msgid "How do I list archive contents?"
-msgstr "如何列出归档内容？"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 367
-#: NEEDS WORK
-msgid "How do I add to archive?"
-msgstr "如何将文件添加到归档？"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 368
-#: NEEDS WORK
-msgid "How do I create zip file?"
-msgstr "我该如何创建zip文件？"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 369
-#: NEEDS WORK
-msgid "How do I extract zip?"
-msgstr "我该如何解压缩zip文件？"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 370
-#: NEEDS WORK
-msgid "How do I encrypt archive?"
-msgstr "我该如何加密档案？"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 371
-#: NEEDS WORK
-msgid "How do I split archive?"
-msgstr "如何拆分档案？"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 372
-#: NEEDS WORK
-msgid "How do I merge archives?"
-msgstr "我该如何合并档案？"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 374
-#: NEEDS WORK
-msgid "How do I encrypt file?"
-msgstr "我该如何加密文件？"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 375
-#: NEEDS WORK
-msgid "How do I decrypt file?"
-msgstr "我该如何解密文件？"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 376
-#: NEEDS WORK
-msgid "How do I generate password?"
-msgstr "我该如何生成密码？"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 377
-#: NEEDS WORK
-msgid "How do I verify checksum?"
-msgstr "我如何验证校验和？"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 378
-#: NEEDS WORK
-msgid "How do I list certificates?"
-msgstr "我如何列出证书？"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 379
-#: NEEDS WORK
-msgid "How do I sign file?"
-msgstr "我该如何签署文件？"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 380
-#: NEEDS WORK
-msgid "How do I scan for vulnerabilities?"
-msgstr "我该如何扫描漏洞？"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 381
-#: NEEDS WORK
-msgid "How do I secure file permissions?"
-msgstr "我如何保护文件权限？"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 382
-#: NEEDS WORK
-msgid "How do I audit system?"
-msgstr "我该如何审计系统？"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 383
-#: NEEDS WORK
-msgid "How do I use GPG?"
-msgstr "我该如何使用 GPG？"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 385
-#: NEEDS WORK
-msgid "How do I start tmux session?"
-msgstr "我如何开始tmux会话？"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 386
-#: NEEDS WORK
-msgid "How do I list tmux sessions?"
-msgstr "如何列出tmux会话？"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 387
-#: NEEDS WORK
-msgid "How do I attach to session?"
-msgstr "我该如何附加到会话？"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 388
-#: NEEDS WORK
-msgid "How do I split tmux pane?"
-msgstr "如何拆分tmux窗格？"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 389
-#: NEEDS WORK
-msgid "How do I switch panes?"
-msgstr "如何切换窗格？"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 390
-#: NEEDS WORK
-msgid "How do I rename window?"
-msgstr "如何重命名窗口？"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 391
-#: NEEDS WORK
-msgid "How do I kill session?"
-msgstr "如何终止会话？"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 392
-#: NEEDS WORK
-msgid "How do I detach from session?"
-msgstr "我该如何从会话中分离？"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 393
-#: NEEDS WORK
-msgid "How do I copy in tmux?"
-msgstr "我该如何在tmux中复制？"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 394
-#: NEEDS WORK
-msgid "How do I configure tmux?"
-msgstr "我该如何配置tmux？"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 396
-#: NEEDS WORK
-msgid "How do I save in vim?"
-msgstr "我该如何在vim中保存？"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 397
-#: NEEDS WORK
-msgid "How do I quit vim?"
-msgstr "我该如何退出vim？"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 398
-#: NEEDS WORK
-msgid "How do I search in vim?"
-msgstr "我该如何在vim中搜索？"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 399
-#: NEEDS WORK
-msgid "How do I replace in vim?"
-msgstr "如何在vim中替换？"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 400
-#: NEEDS WORK
-msgid "How do I copy line in vim?"
-msgstr "如何在vim中复制行？"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 401
-#: NEEDS WORK
-msgid "How do I delete line in vim?"
-msgstr "如何在vim中删除行？"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 402
-#: NEEDS WORK
-msgid "How do I undo in vim?"
-msgstr "在vim中如何撤销？"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 403
-#: NEEDS WORK
-msgid "How do I go to line in vim?"
-msgstr "如何在vim中跳转到行？"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 404
-#: NEEDS WORK
-msgid "How do I split in vim?"
-msgstr "如何在vim中分屏？"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 405
-#: NEEDS WORK
-msgid "How do I open file in vim?"
-msgstr "我如何在vim中打开文件？"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 407
-#: NEEDS WORK
-msgid "How do I set environment variable?"
-msgstr "我如何设置环境变量？"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 408
-#: NEEDS WORK
-msgid "How do I list env variables?"
-msgstr "我如何列出环境变量？"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 409
-#: NEEDS WORK
-msgid "How do I edit bashrc?"
-msgstr "我该如何编辑bashrc？"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 410
-#: NEEDS WORK
-msgid "How do I reload bashrc?"
-msgstr "如何重新加载bashrc？"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 411
-#: NEEDS WORK
-msgid "How do I view PATH?"
-msgstr "如何查看 PATH？"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 412
-#: NEEDS WORK
-msgid "How do I add to PATH?"
-msgstr "如何将其添加到 PATH？"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 413
-#: NEEDS WORK
-msgid "How do I find config file?"
-msgstr "我该如何找到配置文件？"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 414
-#: NEEDS WORK
-msgid "How do I export variable?"
-msgstr "我该如何导出变量？"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 415
-#: NEEDS WORK
-msgid "How do I use .env file?"
-msgstr "我该如何使用 .env 文件？"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 416
-#: NEEDS WORK
-msgid "How do I set alias?"
-msgstr "我该如何设置别名？"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 418
-#: NEEDS WORK
-msgid "How do I use xargs?"
-msgstr "我该如何使用xargs？"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 419
-#: NEEDS WORK
-msgid "How do I use find with exec?"
-msgstr "我如何使用 find 和 exec？"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 420
-#: NEEDS WORK
-msgid "How do I use parallel?"
-msgstr "我如何使用并行？"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 421
-#: NEEDS WORK
-msgid "How do I use tee?"
-msgstr "我该如何使用tee？"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 422
-#: NEEDS WORK
-msgid "How do I use watch?"
-msgstr "我该如何使用手表？"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 423
-#: NEEDS WORK
-msgid "How do I use htop?"
-msgstr "我该如何使用htop？"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 424
-#: NEEDS WORK
-msgid "How do I use fzf?"
-msgstr "我该如何使用 fzf？"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 425
-#: NEEDS WORK
-msgid "How do I use heredoc?"
-msgstr "我该如何使用 heredoc？"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 426
-#: NEEDS WORK
-msgid "How do I use subshell?"
-msgstr "我该如何使用子shell？"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 427
-#: NEEDS WORK
-msgid "How do I use command substitution?"
-msgstr "我该如何使用命令替换？"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 429
-#: NEEDS WORK
-msgid "How do I format date?"
-msgstr "我该如何格式化日期？"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 430
-#: NEEDS WORK
-msgid "How do I calculate in terminal?"
-msgstr "如何在终端中计算？"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 431
-#: NEEDS WORK
-msgid "How do I use colors in terminal?"
-msgstr "我如何在终端中使用颜色？"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 432
-#: NEEDS WORK
-msgid "How do I create histogram?"
-msgstr "我该如何创建直方图？"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 433
-#: NEEDS WORK
-msgid "How do I send notification?"
-msgstr "我该如何发送通知？"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 434
-#: NEEDS WORK
-msgid "How do I use clipboard?"
-msgstr "我该如何使用剪贴板？"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 435
-#: NEEDS WORK
-msgid "How do I view image in terminal?"
-msgstr "如何在终端中查看图像？"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 436
-#: NEEDS WORK
-msgid "How do I plot in terminal?"
-msgstr "如何在终端中绘图？"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 437
-#: NEEDS WORK
-msgid "How do I play sound?"
-msgstr "我该如何播放声音？"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 438
-#: NEEDS WORK
-msgid "How do I schedule task?"
-msgstr "我该如何安排任务？"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 458
-#: NEEDS WORK
-msgid "AI is thinking..."
-msgstr "AI正在思考..."
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 506
-#: NEEDS WORK
-msgid "You"
-msgstr "你"
-# 
-# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
-# 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 319
-# File: usr/share/ashyterm/window.py, line: 679
-#: NEEDS WORK
-msgid "AI Assistant"
-msgstr "人工智能助手"
-# 
-# File: usr/share/ashyterm/window.py, line: 724
-#: NEEDS WORK
-msgid "Suggested Commands"
-msgstr "建议的命令"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 955
-#: NEEDS WORK
-msgid "Run command"
-msgstr "运行命令"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 965
-#: NEEDS WORK
-msgid "Insert into terminal"
-msgstr "插入到终端"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 975
-#: NEEDS WORK
-msgid "Copy to clipboard"
-msgstr "复制到剪贴板"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 1100
-#: NEEDS WORK
-msgid "New conversation"
-msgstr "新对话"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 1108
-#: NEEDS WORK
-msgid "View history"
-msgstr "查看历史记录"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 1116
-#: NEEDS WORK
-msgid "Close panel"
-msgstr "关闭面板"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 1153
-#: NEEDS WORK
-msgid "Quick Prompts"
-msgstr "快速提示"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 1164
-#: NEEDS WORK
-msgid "Customize quick prompts"
-msgstr "自定义快速提示"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 1239
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 1642
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 1665
-#: NEEDS WORK
-msgid "Send message"
-msgstr "发送消息"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 1702
-#: NEEDS WORK
-msgid "Retry"
-msgstr "重试"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 1707
-#: NEEDS WORK
-msgid "Retry the last request"
-msgstr "重试上一个请求"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 1753
-#: NEEDS WORK
-msgid "Customize Quick Prompts"
-msgstr "自定义快速提示"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 1812
-#: NEEDS WORK
-msgid "Emoji icon (optional)"
-msgstr "表情符号图标（可选）"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 1817
-#: NEEDS WORK
-msgid "Enter prompt text..."
-msgstr "输入提示文本..."
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 1827
-#: NEEDS WORK
-msgid "Remove this prompt"
-msgstr "移除此提示"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 1858
-#: NEEDS WORK
-msgid "Add Prompt"
-msgstr "添加提示"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 1870
-#: NEEDS WORK
-msgid "Use Defaults"
-msgstr "使用默认值"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 1874
-#: NEEDS WORK
-msgid "Clear custom prompts and use random defaults"
-msgstr "清除自定义提示并使用随机默认值"
-# 
-# File: src/ashyterm/ui/widgets/conversation_history.py, line: 47
-#: NEEDS WORK
-msgid "Just now"
-msgstr "刚刚"
-# 
-# File: src/ashyterm/ui/widgets/conversation_history.py, line: 48
-#: NEEDS WORK
-#, python-brace-format
-msgid "{} min"
-msgstr "{} 分钟"
-# 
-# File: src/ashyterm/ui/widgets/conversation_history.py, line: 49
-#: NEEDS WORK
-#, python-brace-format
-msgid "{} hr"
-msgstr "{} 小时"
-# 
-# File: src/ashyterm/ui/widgets/conversation_history.py, line: 51
-# File: src/ashyterm/ui/widgets/conversation_history.py, line: 78
-#: NEEDS WORK
-msgid "Yesterday"
-msgstr "昨天"
-# 
-# File: src/ashyterm/ui/widgets/conversation_history.py, line: 53
-#: NEEDS WORK
-#, python-brace-format
-msgid "{} days"
-msgstr "{} 天"
-# 
-# File: src/ashyterm/ui/widgets/conversation_history.py, line: 63
-# File: src/ashyterm/ui/widgets/conversation_history.py, line: 84
-# File: src/ashyterm/ui/widgets/conversation_history.py, line: 86
-#: NEEDS WORK
-msgid "Older"
-msgstr "旧版"
-# 
-# File: src/ashyterm/ui/widgets/conversation_history.py, line: 76
-#: NEEDS WORK
-msgid "Today"
-msgstr "今天"
-# 
-# File: src/ashyterm/ui/widgets/conversation_history.py, line: 80
-#: NEEDS WORK
-msgid "Last 7 Days"
-msgstr "过去7天"
-# 
-# File: src/ashyterm/ui/widgets/conversation_history.py, line: 82
-#: NEEDS WORK
-msgid "This Month"
-msgstr "本月"
-# 
-# File: src/ashyterm/ui/widgets/conversation_history.py, line: 130
-#: NEEDS WORK
-msgid "Conversation History"
-msgstr "对话历史"
-# 
-# File: usr/share/ashyterm/ui/ssh_dialogs.py, line: 83
-# File: usr/share/ashyterm/ui/ssh_dialogs.py, line: 239
-#: NEEDS WORK
-msgid "Close"
-msgstr "关闭"
-# 
-# File: src/ashyterm/ui/widgets/conversation_history.py, line: 143
-#: NEEDS WORK
-msgid "Delete All Conversations"
-msgstr "删除所有对话"
-# 
-# File: src/ashyterm/ui/widgets/conversation_history.py, line: 150
-# File: src/ashyterm/ui/widgets/conversation_history.py, line: 278
-#: NEEDS WORK
-msgid "New Conversation"
-msgstr "新对话"
-# 
-# File: src/ashyterm/ui/widgets/conversation_history.py, line: 164
-#: NEEDS WORK
-msgid "Search…"
-msgstr "搜索…"
-# 
-# File: src/ashyterm/ui/widgets/conversation_history.py, line: 192
-#: NEEDS WORK
-msgid "No Conversations"
-msgstr "没有对话"
-# 
-# File: src/ashyterm/ui/widgets/conversation_history.py, line: 193
-#: NEEDS WORK
-msgid "Start chatting to create your first conversation"
-msgstr "开始聊天以创建您的第一次对话"
-# 
-# File: src/ashyterm/ui/widgets/conversation_history.py, line: 346
-#: NEEDS WORK
-msgid "Delete Conversation?"
-msgstr "删除对话？"
-# 
-# File: src/ashyterm/ui/widgets/conversation_history.py, line: 347
-#: NEEDS WORK
-msgid "This conversation will be permanently deleted."
-msgstr "此对话将被永久删除。"
-# 
-# File: src/ashyterm/ui/widgets/conversation_history.py, line: 378
-#: NEEDS WORK
-msgid "Delete All Conversations?"
-msgstr "删除所有对话？"
-# 
-# File: src/ashyterm/ui/widgets/conversation_history.py, line: 380
-#: NEEDS WORK
-#, python-brace-format
-msgid "This will permanently delete all {} conversations. This action cannot be undone."
-msgstr "这将永久删除所有{}对话。此操作无法撤消。"
-# 
-# File: src/ashyterm/ui/widgets/conversation_history.py, line: 383
-#: NEEDS WORK
-msgid "Delete All"
-msgstr "删除所有"
-# 
 # File: usr/share/ashyterm/ui/sidebar_manager.py, line: 220
 #: NEEDS WORK
 msgid "Show Sessions"
 msgstr "显示会话"
 # 
-# File: src/ashyterm/ui/sidebar_manager.py, line: 292
+# File: usr/share/ashyterm/ui/sidebar_manager.py, line: 227
 #: NEEDS WORK
-msgid "Hide Sessions Panel"
-msgstr "隐藏会话面板"
+msgid "Hide Sidebar"
+msgstr "隐藏侧边栏"
 # 
-# File: src/ashyterm/ui/sidebar_manager.py, line: 292
+# File: usr/share/ashyterm/ui/sidebar_manager.py, line: 227
 #: NEEDS WORK
-msgid "Show Sessions Panel"
-msgstr "显示会话面板"
+msgid "Show Sidebar"
+msgstr "显示侧边栏"
 # 
 # File: usr/share/ashyterm/ui/menus.py, line: 24
 #: NEEDS WORK
@@ -2109,7 +915,7 @@ msgstr "匹配终端颜色"
 msgid "New Window"
 msgstr "新窗口"
 # 
-# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
+# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
 # 
 # File: usr/share/ashyterm/ui/menus.py, line: 157
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1390
@@ -2118,15 +924,7 @@ msgstr "新窗口"
 msgid "Preferences"
 msgstr "偏好设置"
 # 
-# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
-# 
-# File: src/ashyterm/ui/menus.py, line: 167
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1082
-#: NEEDS WORK
-msgid "Highlight Colors"
-msgstr "高亮颜色"
-# 
-# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
+# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
 # 
 # File: usr/share/ashyterm/ui/menus.py, line: 211
 # File: usr/share/ashyterm/window.py, line: 909
@@ -2140,7 +938,7 @@ msgstr "键盘快捷键"
 msgid "About"
 msgstr "关于"
 # 
-# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
+# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
 # 
 # File: usr/share/ashyterm/ui/menus.py, line: 217
 # File: usr/share/ashyterm/window.py, line: 942
@@ -2158,7 +956,7 @@ msgstr "使用SFTP连接"
 msgid "Duplicate"
 msgstr "重复"
 # 
-# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
+# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
 # 
 # File: usr/share/ashyterm/ui/menus.py, line: 25
 # File: usr/share/ashyterm/ui/menus.py, line: 61
@@ -2177,7 +975,7 @@ msgstr "移动到文件夹..."
 msgid "Add Session Here"
 msgstr "在此添加会话"
 # 
-# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
+# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
 # 
 # File: usr/share/ashyterm/ui/menus.py, line: 69
 # File: usr/share/ashyterm/ui/menus.py, line: 118
@@ -2202,7 +1000,7 @@ msgstr "打开链接"
 msgid "Copy Link"
 msgstr "复制链接"
 # 
-# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
+# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
 # 
 # File: usr/share/ashyterm/ui/menus.py, line: 30
 # File: usr/share/ashyterm/ui/menus.py, line: 66
@@ -2213,7 +1011,7 @@ msgstr "复制链接"
 msgid "Copy"
 msgstr "复制"
 # 
-# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
+# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
 # 
 # File: usr/share/ashyterm/ui/menus.py, line: 119
 # File: usr/share/ashyterm/ui/menus.py, line: 155
@@ -2230,12 +1028,7 @@ msgstr "全选"
 msgid "Clear Session"
 msgstr "清除会话"
 # 
-# File: src/ashyterm/ui/menus.py, line: 313
-#: NEEDS WORK
-msgid "Ask AI"
-msgstr "询问AI"
-# 
-# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
+# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
 # 
 # File: usr/share/ashyterm/ui/menus.py, line: 276
 # File: usr/share/ashyterm/filemanager/menus.py, line: 276
@@ -2243,7 +1036,7 @@ msgstr "询问AI"
 msgid "Split Left/Right"
 msgstr "左右拆分"
 # 
-# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
+# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
 # 
 # File: usr/share/ashyterm/ui/menus.py, line: 279
 # File: usr/share/ashyterm/filemanager/menus.py, line: 279
@@ -2260,22 +1053,6 @@ msgstr "终端会话已清除。"
 #: NEEDS WORK
 msgid "No active terminal to clear."
 msgstr "没有活动终端可清除。"
-# 
-# File: src/ashyterm/ui/actions.py, line: 233
-#: NEEDS WORK
-#, python-brace-format
-msgid ""
-"Explain this code or command:\n"
-"\n"
-"```\n"
-"{text}\n"
-"```"
-msgstr ""
-"解释此代码或命令：\n"
-"\n"
-"```\n"
-"{text}\n"
-"```"
 # 
 # File: usr/share/ashyterm/ui/actions.py, line: 168
 #: NEEDS WORK
@@ -2299,7 +1076,7 @@ msgstr "新建文件夹"
 msgid "Session"
 msgstr "会话"
 # 
-# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
+# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 351
 # File: usr/share/ashyterm/window.py, line: 944
@@ -2377,1151 +1154,16 @@ msgstr "SSH连接失败"
 msgid "Could not connect to session '{session_name}'."
 msgstr "无法连接到会话 '{session_name}'。"
 # 
-# File: src/ashyterm/ui/dialogs/ai_config_dialog.py, line: 43
-#: NEEDS WORK
-msgid "Configure AI Assistant"
-msgstr "配置AI助手"
-# 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 327
-#: NEEDS WORK
-msgid "Enable AI Assistant"
-msgstr "启用AI助手"
-# 
-# File: src/ashyterm/ui/dialogs/ai_config_dialog.py, line: 72
-#: NEEDS WORK
-msgid "Show the AI Assistant button in the header bar."
-msgstr "在标题栏中显示AI助手按钮。"
-# 
-# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
-# 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 339
-# File: usr/share/ashyterm/window.py, line: 546
-#: NEEDS WORK
-msgid "Provider"
-msgstr "提供者"
-# 
-# File: src/ashyterm/ui/dialogs/ai_config_dialog.py, line: 90
-#: NEEDS WORK
-msgid "Choose between cloud providers or local models."
-msgstr "选择云服务提供商或本地模型。"
-# 
-# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
-# 
-# File: src/ashyterm/ui/dialogs/ai_config_dialog.py, line: 104
-# File: src/ashyterm/window.py, line: 818
-#: NEEDS WORK
-msgid "Base URL"
-msgstr "基础 URL"
-# 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 374
-#: NEEDS WORK
-msgid "API Key"
-msgstr "API 密钥"
-# 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 361
-#: NEEDS WORK
-msgid "Model Identifier"
-msgstr "模型标识符"
-# 
-# File: src/ashyterm/ui/dialogs/ai_config_dialog.py, line: 134
-#: NEEDS WORK
-msgid "Browse Available Models"
-msgstr "浏览可用模型"
-# 
-# File: src/ashyterm/ui/dialogs/ai_config_dialog.py, line: 135
-#: NEEDS WORK
-msgid "Search and select from available OpenRouter models."
-msgstr "搜索并选择可用的OpenRouter模型。"
-# 
-# File: src/ashyterm/ui/dialogs/ai_config_dialog.py, line: 137
-#: NEEDS WORK
-msgid "Browse Models"
-msgstr "浏览模型"
-# 
-# File: src/ashyterm/ui/dialogs/ai_config_dialog.py, line: 168
-#: NEEDS WORK
-msgid "OpenRouter Settings"
-msgstr "OpenRouter 设置"
-# 
-# File: src/ashyterm/ui/dialogs/ai_config_dialog.py, line: 169
-#: NEEDS WORK
-msgid "Additional settings for OpenRouter API rankings."
-msgstr "OpenRouter API 排名的附加设置。"
-# 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 391
-#: NEEDS WORK
-msgid "Site URL (optional)"
-msgstr "网站 URL（可选）"
-# 
-# File: src/ashyterm/ui/dialogs/ai_config_dialog.py, line: 185
-#: NEEDS WORK
-msgid "Site Name (optional)"
-msgstr "站点名称（可选）"
-# 
-# File: src/ashyterm/ui/dialogs/ai_config_dialog.py, line: 237
-#: NEEDS WORK
-msgid "Groq API Key"
-msgstr "Groq API 密钥"
-# 
-# File: src/ashyterm/ui/dialogs/ai_config_dialog.py, line: 240
-#: NEEDS WORK
-msgid "Google AI Studio API Key"
-msgstr "谷歌 AI Studio API 密钥"
-# 
-# File: src/ashyterm/ui/dialogs/ai_config_dialog.py, line: 243
-#: NEEDS WORK
-msgid "OpenRouter API Key"
-msgstr "OpenRouter API 密钥"
-# 
-# File: src/ashyterm/ui/dialogs/ai_config_dialog.py, line: 245
-#: NEEDS WORK
-msgid "Model Name"
-msgstr "模型名称"
-# 
-# File: src/ashyterm/ui/dialogs/ai_config_dialog.py, line: 246
-#: NEEDS WORK
-msgid "API Key (if required)"
-msgstr "API 密钥（如果需要）"
-# 
-# File: src/ashyterm/ui/dialogs/ai_config_dialog.py, line: 305
-#: NEEDS WORK
-msgid "Please enter an API key first."
-msgstr "请先输入API密钥。"
-# 
-# File: src/ashyterm/ui/dialogs/ai_config_dialog.py, line: 300
-#: NEEDS WORK
-msgid "Select OpenRouter Model"
-msgstr "选择 OpenRouter 模型"
-# 
-# File: src/ashyterm/ui/dialogs/ai_config_dialog.py, line: 344
-#: NEEDS WORK
-msgid "Search models by name or ID..."
-msgstr "按名称或ID搜索模型..."
-# 
-# File: src/ashyterm/ui/dialogs/ai_config_dialog.py, line: 358
-#: NEEDS WORK
-msgid "Loading models..."
-msgstr "加载模型..."
-# 
-# File: src/ashyterm/ui/dialogs/ai_config_dialog.py, line: 457
-#: NEEDS WORK
-#, python-brace-format
-msgid "Failed to load models: {error}"
-msgstr "加载模型失败：{error}"
-# 
-# File: src/ashyterm/ui/dialogs/ai_config_dialog.py, line: 489
-#: NEEDS WORK
-#, python-brace-format
-msgid "{count} models available"
-msgstr "{count} 个可用模型"
-# 
-# File: src/ashyterm/ui/dialogs/ai_config_dialog.py, line: 492
-#: NEEDS WORK
-#, python-brace-format
-msgid "Showing {shown} of {total} models"
-msgstr "显示 {shown} 个，共 {total} 个模型"
-# 
-# File: src/ashyterm/ui/dialogs/ai_config_dialog.py, line: 503
-#: NEEDS WORK
-msgid "Showing first 100 results. Refine your search to see more."
-msgstr "显示前 100 个结果。优化您的搜索以查看更多。"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 32
-#: NEEDS WORK
-msgid "Black"
-msgstr "黑色"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 33
-#: NEEDS WORK
-msgid "Red"
-msgstr "红色"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 34
-#: NEEDS WORK
-msgid "Green"
-msgstr "绿色"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 35
-#: NEEDS WORK
-msgid "Yellow"
-msgstr "黄色"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 36
-#: NEEDS WORK
-msgid "Blue"
-msgstr "蓝色"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 37
-#: NEEDS WORK
-msgid "Magenta"
-msgstr "品红"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 38
-#: NEEDS WORK
-msgid "Cyan"
-msgstr "青色"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 39
-#: NEEDS WORK
-msgid "White"
-msgstr "白色"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 41
-#: NEEDS WORK
-msgid "Bright Black"
-msgstr "亮黑"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 42
-#: NEEDS WORK
-msgid "Bright Red"
-msgstr "亮红色"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 43
-#: NEEDS WORK
-msgid "Bright Green"
-msgstr "亮绿色"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 44
-#: NEEDS WORK
-msgid "Bright Yellow"
-msgstr "明亮的黄色"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 45
-#: NEEDS WORK
-msgid "Bright Blue"
-msgstr "亮蓝"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 46
-#: NEEDS WORK
-msgid "Bright Magenta"
-msgstr "亮品红"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 47
-#: NEEDS WORK
-msgid "Bright Cyan"
-msgstr "亮青色"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 48
-#: NEEDS WORK
-msgid "Bright White"
-msgstr "明亮白色"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 58
-#: NEEDS WORK
-msgid "Bold"
-msgstr "粗体"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 59
-#: NEEDS WORK
-msgid "Italic"
-msgstr "斜体"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1141
-#: NEEDS WORK
-msgid "Underline"
-msgstr "下划线"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 61
-#: NEEDS WORK
-msgid "Strikethrough"
-msgstr "删除线"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 62
-#: NEEDS WORK
-msgid "Dim/Faint"
-msgstr "暗淡/微弱"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 63
-#: NEEDS WORK
-msgid "Blink"
-msgstr "闪烁"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 68
-#: NEEDS WORK
-msgid "Default"
-msgstr "默认"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 85
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 375
-#: NEEDS WORK
-#, python-brace-format
-msgid "Group {}"
-msgstr "组 {}"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 174
-#: NEEDS WORK
-msgid "Color:"
-msgstr "颜色："
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 216
-#: NEEDS WORK
-msgid "Bg:"
-msgstr "背景:"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 110
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 817
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1303
-#: NEEDS WORK
-msgid "Remove"
-msgstr "移除"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 210
-#: NEEDS WORK
-msgid "New Rule"
-msgstr "新规则"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 210
-#: NEEDS WORK
-msgid "Edit Rule"
-msgstr "编辑规则"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 256
-#: NEEDS WORK
-msgid "Rule Name"
-msgstr "规则名称"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 263
-#: NEEDS WORK
-msgid "Pattern"
-msgstr "模式"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 525
-#: NEEDS WORK
-msgid "Python regex syntax. Capture groups () can have individual colors."
-msgstr "Python 正则表达式语法。捕获组 () 可以具有单独的颜色。"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 268
-#: NEEDS WORK
-msgid "Regex Pattern"
-msgstr "正则表达式模式"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 276
-#: NEEDS WORK
-msgid "Regex reference"
-msgstr "正则表达式参考"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 554
-#: NEEDS WORK
-msgid "Colors & Effects"
-msgstr "颜色与效果"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 555
-#: NEEDS WORK
-msgid "First color applies to entire match if no groups."
-msgstr "第一个颜色适用于整个匹配，如果没有分组。"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 298
-#: NEEDS WORK
-msgid "Add Color"
-msgstr "添加颜色"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 311
-#: NEEDS WORK
-msgid "Description (optional)"
-msgstr "描述（可选）"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 403
-#: NEEDS WORK
-#, python-brace-format
-msgid "Pattern has {} capture group(s). Add colors for each group."
-msgstr "模式有 {} 个捕获组。为每个组添加颜色。"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 407
-#: NEEDS WORK
-msgid "Pattern has no capture groups. First color applies to entire match."
-msgstr "模式没有捕获组。第一个颜色应用于整个匹配。"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 419
-#: NEEDS WORK
-msgid "Rule name is required"
-msgstr "规则名称是必需的"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 425
-#: NEEDS WORK
-msgid "Pattern is required"
-msgstr "模式是必需的"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 434
-#: NEEDS WORK
-#, python-brace-format
-msgid "Invalid regex: {}"
-msgstr "无效的正则表达式：{}"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 439
-#: NEEDS WORK
-msgid "✓ Valid pattern"
-msgstr "✓ 有效模式"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 447
-#: NEEDS WORK
-msgid "Regex Reference"
-msgstr "正则表达式参考"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 470
-#: NEEDS WORK
-msgid "Basic Patterns"
-msgstr "基本模式"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 472
-#: NEEDS WORK
-msgid "Any character except newline"
-msgstr "任何字符（不包括换行符）"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 473
-#: NEEDS WORK
-msgid "Any digit [0-9]"
-msgstr "任何数字 [0-9]"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 474
-#: NEEDS WORK
-msgid "Word character [a-zA-Z0-9_]"
-msgstr "单词字符 [a-zA-Z0-9_]"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 475
-#: NEEDS WORK
-msgid "Whitespace character"
-msgstr "空白字符"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 476
-#: NEEDS WORK
-msgid "Negations of above"
-msgstr "上述的否定"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 477
-#: NEEDS WORK
-msgid "Start of line"
-msgstr "行首"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 478
-#: NEEDS WORK
-msgid "End of line"
-msgstr "行尾"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 479
-#: NEEDS WORK
-msgid "Word boundary"
-msgstr "词边界"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 488
-#: NEEDS WORK
-msgid "Quantifiers"
-msgstr "量词"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 490
-#: NEEDS WORK
-msgid "0 or more times"
-msgstr "0或更多次"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 491
-#: NEEDS WORK
-msgid "1 or more times"
-msgstr "1 或更多次"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 492
-#: NEEDS WORK
-msgid "0 or 1 time"
-msgstr "0 或 1 次"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 493
-#: NEEDS WORK
-msgid "Exactly n times"
-msgstr "正好 n 次"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 494
-#: NEEDS WORK
-msgid "Between n and m times"
-msgstr "介于 n 和 m 次之间"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 495
-#: NEEDS WORK
-msgid "Non-greedy versions"
-msgstr "非贪婪版本"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 504
-#: NEEDS WORK
-msgid "Groups & Alternatives"
-msgstr "组和替代方案"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 506
-#: NEEDS WORK
-msgid "Capture group (gets a color)"
-msgstr "捕获组（获取颜色）"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 507
-#: NEEDS WORK
-msgid "Non-capturing group"
-msgstr "非捕获组"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 508
-#: NEEDS WORK
-msgid "Alternation (a or b)"
-msgstr "交替（a 或 b）"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 509
-#: NEEDS WORK
-msgid "Character class (a, b, or c)"
-msgstr "字符类（a、b或c）"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 510
-#: NEEDS WORK
-msgid "Negated class (not a, b, c)"
-msgstr "否定类（不是 a、b、c）"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 511
-#: NEEDS WORK
-msgid "Character range"
-msgstr "字符范围"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 520
-#: NEEDS WORK
-msgid "Examples"
-msgstr "示例"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 522
-#: NEEDS WORK
-msgid "IPv4 address"
-msgstr "IPv4 地址"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 523
-#: NEEDS WORK
-msgid "Match error keywords"
-msgstr "匹配错误关键字"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 524
-#: NEEDS WORK
-msgid "Key=value pairs (2 groups)"
-msgstr "键=值对（2组）"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 525
-#: NEEDS WORK
-msgid "Comment lines"
-msgstr "注释行"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 862
-#: NEEDS WORK
-#, python-brace-format
-msgid "Command: {}"
-msgstr "命令：{}"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 938
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1790
-#: NEEDS WORK
-msgid "Enable Command Rules"
-msgstr "启用命令规则"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 635
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1459
-#: NEEDS WORK
-msgid "Include Global Rules"
-msgstr "包含全局规则"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 643
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1467
-#: NEEDS WORK
-msgid "Reset to System Default"
-msgstr "重置为系统默认值"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 657
-#: NEEDS WORK
-msgid "Triggers"
-msgstr "触发器"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 664
-#: NEEDS WORK
-msgid "➕ Add Trigger"
-msgstr "➕ 添加触发器"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 682
-#: NEEDS WORK
-msgid "Highlight Rules"
-msgstr "高亮规则"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 689
-#: NEEDS WORK
-msgid "➕ Add New Rule"
-msgstr "➕ 添加新规则"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 753
-#: NEEDS WORK
-msgid "Edit trigger"
-msgstr "编辑触发器"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 761
-#: NEEDS WORK
-msgid "Remove trigger"
-msgstr "移除触发器"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 767
-#: NEEDS WORK
-msgid "Cannot remove the last trigger"
-msgstr "无法移除最后一个触发器"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 813
-#: NEEDS WORK
-msgid "Remove Trigger?"
-msgstr "移除触发器？"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 814
-#: NEEDS WORK
-#, python-brace-format
-msgid "Remove \"{}\" from the triggers list?"
-msgstr "从触发器列表中移除“{}”？"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 872
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1824
-#: NEEDS WORK
-msgid "Move up"
-msgstr "向上移动"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 881
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1833
-#: NEEDS WORK
-msgid "Move down"
-msgstr "向下移动"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 901
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2156
-#: NEEDS WORK
-msgid "Edit rule"
-msgstr "编辑规则"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 909
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2164
-#: NEEDS WORK
-msgid "Delete rule"
-msgstr "删除规则"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 957
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1987
-#: NEEDS WORK
-msgid "Reset to System Default?"
-msgstr "重置为系统默认值？"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 958
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1988
-#: NEEDS WORK
-#, python-brace-format
-msgid "This will remove your customizations for \"{}\" and revert to system rules."
-msgstr "这将删除您对“{}”的自定义设置并恢复为系统规则。"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1831
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1843
-#: NEEDS WORK
-msgid "Reset"
-msgstr "重置"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1041
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2069
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2249
-#: NEEDS WORK
-msgid "Delete Rule?"
-msgstr "删除规则？"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1042
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2070
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2250
-#: NEEDS WORK
-#, python-brace-format
-msgid "Are you sure you want to delete \"{}\"?"
-msgstr "您确定要删除“{}”吗？"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1106
-#: NEEDS WORK
-msgid "Global Rules"
-msgstr "全局规则"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1475
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1776
-#: NEEDS WORK
-msgid "Command Rules"
-msgstr "命令规则"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1490
-#: NEEDS WORK
-msgid ""
-"Colorizes terminal output patterns like errors, warnings, and IPs. Many rules can slow down large "
-"outputs."
-msgstr "为终端输出模式着色，例如错误、警告和IP。许多规则可能会减慢大输出的速度。"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1151
-#: NEEDS WORK
-msgid "Activation"
-msgstr "激活"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1160
-#: NEEDS WORK
-msgid "Local Terminals"
-msgstr "本地终端"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1169
-#: NEEDS WORK
-msgid "SSH Sessions"
-msgstr "SSH 会话"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1179
-#: NEEDS WORK
-msgid "Ignored Commands"
-msgstr "忽略的命令"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1200
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1335
-#: NEEDS WORK
-msgid "Restore Defaults"
-msgstr "恢复默认设置"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1214
-#: NEEDS WORK
-msgid "➕ Add Ignored Command"
-msgstr "➕ 添加忽略的命令"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1253
-#: NEEDS WORK
-#, python-brace-format
-msgid "{count} command(s) • Click to expand/collapse"
-msgstr "{count} 个命令 • 点击以展开/收起"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1265
-#: NEEDS WORK
-msgid "Remove from ignored list"
-msgstr "从忽略列表中移除"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1293
-#: NEEDS WORK
-#, python-brace-format
-msgid "Command added: {}"
-msgstr "命令已添加：{}"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1299
-#: NEEDS WORK
-msgid "Remove Ignored Command?"
-msgstr "移除被忽略的命令？"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1300
-#: NEEDS WORK
-#, python-brace-format
-msgid "Remove \"{}\" from the ignored commands list? Highlighting will be applied to this command's output."
-msgstr "从忽略命令列表中移除“{}”？将对该命令的输出应用高亮。"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1325
-#: NEEDS WORK
-#, python-brace-format
-msgid "Command removed: {}"
-msgstr "命令已移除：{}"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1331
-#: NEEDS WORK
-msgid "Restore Default Ignored Commands?"
-msgstr "恢复默认忽略的命令？"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1332
-#: NEEDS WORK
-msgid ""
-"This will replace your current ignored commands list with the system defaults. Custom additions "
-"will be lost."
-msgstr "这将用系统默认值替换您当前的忽略命令列表。自定义添加将丢失。"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1356
-#: NEEDS WORK
-msgid "Restored default ignored commands"
-msgstr "恢复默认忽略的命令"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1698
-#: NEEDS WORK
-msgid "Per-Command Highlighting"
-msgstr "按命令高亮显示"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1704
-#: NEEDS WORK
-msgid "Enable Command Detection"
-msgstr "启用命令检测"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1713
-#: NEEDS WORK
-msgid "Commands"
-msgstr "命令"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1719
-#: NEEDS WORK
-msgid "➕ Add Command"
-msgstr "➕ 添加命令"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1406
-#: NEEDS WORK
-msgid "Bulk Actions"
-msgstr "批量操作"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1410
-#: NEEDS WORK
-msgid "Enable All"
-msgstr "启用全部"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1416
-#: NEEDS WORK
-msgid "Disable All"
-msgstr "禁用所有"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1753
-#: NEEDS WORK
-msgid "Reset All Commands"
-msgstr "重置所有命令"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1766
-#: NEEDS WORK
-msgid "Available Commands"
-msgstr "可用命令"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1438
-#: NEEDS WORK
-msgid "Rules specific to the selected command. Order matters!"
-msgstr "与所选命令相关的规则。顺序很重要！"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1783
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2081
-#: NEEDS WORK
-msgid "No command selected"
-msgstr "未选择任何命令"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1784
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2083
-#: NEEDS WORK
-msgid "Select a command from the list above"
-msgstr "从上面的列表中选择一个命令"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 628
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1452
-#: NEEDS WORK
-msgid "Apply rules when this command is detected"
-msgstr "当检测到此命令时应用规则"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1799
-#: NEEDS WORK
-msgid "Also apply global rules alongside command-specific rules"
-msgstr "还要应用全局规则和命令特定规则。"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 644
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1468
-#: NEEDS WORK
-msgid "Remove user customization and revert to system rules"
-msgstr "移除用户自定义并恢复系统规则"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1482
-#: NEEDS WORK
-msgid "Rules (in execution order)"
-msgstr "规则（按执行顺序）"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1483
-#: NEEDS WORK
-msgid "Use arrows to reorder rules. Rules are matched from top to bottom."
-msgstr "使用箭头重新排序规则。规则从上到下匹配。"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1828
-#: NEEDS WORK
-msgid "➕ Add Rule to This Command"
-msgstr "➕ 将规则添加到此命令"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1490
-#: NEEDS WORK
-msgid "Create a new highlighting pattern for the selected command"
-msgstr "为选定的命令创建一个新的高亮模式"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1505
-#: NEEDS WORK
-msgid "Global Highlight Rules"
-msgstr "全局高亮规则"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1517
-#: NEEDS WORK
-msgid "➕ Add New Global Rule"
-msgstr "➕ 添加新全局规则"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1863
-#: NEEDS WORK
-msgid "Reset Global Rules"
-msgstr "重置全局规则"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1900
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2006
-#: NEEDS WORK
-#, python-brace-format
-msgid "{total} command(s), {enabled} enabled"
-msgstr "{total} 个命令，{enabled} 已启用"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1590
-#: NEEDS WORK
-#, python-brace-format
-msgid "{count} rules"
-msgstr "{count} 条规则"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1935
-#: NEEDS WORK
-msgid "Edit command rules"
-msgstr "编辑命令规则"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1944
-#: NEEDS WORK
-msgid "Delete command"
-msgstr "删除命令"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1972
-#: NEEDS WORK
-msgid "Delete Command?"
-msgstr "删除命令？"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1641
-#: NEEDS WORK
-#, python-brace-format
-msgid "Are you sure you want to delete \"{}\"? This will remove all custom rules for this command."
-msgstr "您确定要删除“{}”吗？这将删除此命令的所有自定义规则。"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1991
-#: NEEDS WORK
-#, python-brace-format
-msgid "Command deleted: {}"
-msgstr "命令已删除：{}"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2086
-#: NEEDS WORK
-msgid "Select a command to view its rules"
-msgstr "选择一个命令以查看其规则"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2099
-#: NEEDS WORK
-msgid "Command not found"
-msgstr "找不到命令"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1767
-#: NEEDS WORK
-#, python-brace-format
-msgid "Triggers: {triggers}"
-msgstr "触发器: {triggers}"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1770
-#: NEEDS WORK
-msgid "Enabled"
-msgstr "已启用"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1770
-#: NEEDS WORK
-msgid "Disabled"
-msgstr "禁用"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1773
-#: NEEDS WORK
-#, python-brace-format
-msgid "{count} rule(s) • {status} • Use arrows to reorder"
-msgstr "{count} 条规则 • {status} • 使用箭头重新排序"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1852
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2149
-#: NEEDS WORK
-#, python-brace-format
-msgid "{} colors"
-msgstr "{} 颜色"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1863
-#: NEEDS WORK
-msgid "Actions"
-msgstr "操作"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2275
-#: NEEDS WORK
-#, python-brace-format
-msgid "{total} command(s), {enabled} enabled. Click to toggle, select to edit."
-msgstr "{total} 个命令，{enabled} 已启用。点击切换，选择编辑。"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2317
-#: NEEDS WORK
-#, python-brace-format
-msgid "Command created: {}"
-msgstr "命令已创建：{}"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2348
-#: NEEDS WORK
-#, python-brace-format
-msgid "Command reset: {}"
-msgstr "命令重置：{}"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2008
-#: NEEDS WORK
-msgid "No user customization to reset"
-msgstr "没有用户自定义可重置"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2029
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2222
-#: NEEDS WORK
-#, python-brace-format
-msgid "Rule added: {}"
-msgstr "规则已添加：{}"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2055
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2239
-#: NEEDS WORK
-#, python-brace-format
-msgid "Rule updated: {}"
-msgstr "规则已更新：{}"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2095
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2273
-#: NEEDS WORK
-#, python-brace-format
-msgid "Rule deleted: {}"
-msgstr "规则已删除：{}"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2462
-#: NEEDS WORK
-msgid "Restart Required"
-msgstr "需要重启"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2463
-#: NEEDS WORK
-msgid "Restart the program for the colors to be applied to the terminal."
-msgstr "重新启动程序以使颜色应用于终端。"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2645
-#: NEEDS WORK
-msgid "Reset Global Rules?"
-msgstr "重置全局规则？"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2647
-#: NEEDS WORK
-msgid "This will restore global rules to system defaults. Context customizations will be preserved."
-msgstr "这将恢复全局规则为系统默认设置。上下文自定义将被保留。"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2667
-#: NEEDS WORK
-msgid "Global rules reset to defaults"
-msgstr "全局规则重置为默认值"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2673
-#: NEEDS WORK
-msgid "Reset All Commands?"
-msgstr "重置所有命令？"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2675
-#: NEEDS WORK
-msgid "This will restore all commands to system defaults. Global rules will be preserved."
-msgstr "这将恢复所有命令为系统默认值。全局规则将被保留。"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2695
-#: NEEDS WORK
-msgid "All commands reset to defaults"
-msgstr "所有命令重置为默认值"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2721
-#: NEEDS WORK
-msgid "New Command"
-msgstr "新命令"
-# 
-# File: usr/share/ashyterm/filemanager/manager.py, line: 1743
-# File: usr/share/ashyterm/filemanager/manager.py, line: 1760
-#: NEEDS WORK
-msgid "Create"
-msgstr "创建"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2365
-#: NEEDS WORK
-msgid "Enter the command name (e.g., ping, docker, git)"
-msgstr "输入命令名称（例如，ping、docker、git）"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2367
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2589
-#: NEEDS WORK
-msgid "Command Name"
-msgstr "命令名称"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2383
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2498
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2605
-#: NEEDS WORK
-msgid "Enter a command name"
-msgstr "输入命令名称"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2787
-#: NEEDS WORK
-msgid "Command already exists"
-msgstr "命令已存在"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2397
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2621
-#: NEEDS WORK
-msgid "Use only letters, numbers, - and _"
-msgstr "仅使用字母、数字、- 和 _"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2402
-#: NEEDS WORK
-msgid "✓ Valid name"
-msgstr "✓ 有效名称"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2441
-#: NEEDS WORK
-msgid "Edit Trigger"
-msgstr "编辑触发器"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2441
-#: NEEDS WORK
-msgid "Add Trigger"
-msgstr "添加触发器"
-# 
-# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 369
-#: NEEDS WORK
-msgid "Add"
-msgstr "添加"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2879
-#: NEEDS WORK
-#, python-brace-format
-msgid "Enter a command name that should activate the '{}' command rules."
-msgstr "输入一个命令名称，以激活'{}'命令规则。"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2483
-#: NEEDS WORK
-msgid "Trigger Command"
-msgstr "触发命令"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2506
-#: NEEDS WORK
-msgid "Trigger already exists"
-msgstr "触发器已存在"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2511
-#: NEEDS WORK
-msgid "✓ Valid trigger"
-msgstr "✓ 有效触发器"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2546
-#: NEEDS WORK
-msgid "Add Ignored Command"
-msgstr "添加忽略命令"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2587
-#: NEEDS WORK
-msgid "Commands with native coloring (grep, ls, git, etc.) should be added here."
-msgstr "带有本机着色的命令（grep、ls、git 等）应在此处添加。"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2614
-#: NEEDS WORK
-msgid "Command already in list"
-msgstr "命令已在列表中"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2626
-#: NEEDS WORK
-msgid "✓ Valid command name"
-msgstr "✓ 有效的命令名称"
+# File: usr/share/ashyterm/ui/ssh_dialogs.py, line: 83
+# File: usr/share/ashyterm/ui/ssh_dialogs.py, line: 239
+#: NEEDS WORK
+msgid "Close"
+msgstr "关闭"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 223
 #: NEEDS WORK
 msgid "Edit Session"
 msgstr "编辑会话"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 581
-#: NEEDS WORK
-msgid "Test Connection"
-msgstr "测试连接"
-# 
-# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 100
-#: NEEDS WORK
-msgid "Test SSH connection"
-msgstr "测试 SSH 连接"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 313
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1128
@@ -3535,33 +1177,30 @@ msgstr "用户界面错误"
 msgid "Failed to initialize dialog interface"
 msgstr "初始化对话界面失败"
 # 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 319
+#: NEEDS WORK
+msgid "Session Information"
+msgstr "会话信息"
+# 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 323
 #: NEEDS WORK
 msgid "Session Name"
 msgstr "会话名称"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 402
+# File: usr/share/ashyterm/ui/dialogs.py, line: 324
 #: NEEDS WORK
-msgid "Session Type"
-msgstr "会话类型"
+msgid "A descriptive name for this session"
+msgstr "此会话的描述性名称"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 403
+# File: usr/share/ashyterm/ui/dialogs.py, line: 329
 #: NEEDS WORK
-msgid "Choose between local terminal or SSH connection"
-msgstr "在本地终端或SSH连接之间进行选择"
+msgid "Enter session name..."
+msgstr "输入会话名称..."
 # 
-# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 406
-# File: usr/share/ashyterm/sessions/models.py, line: 511
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1421
 #: NEEDS WORK
-msgid "Local Terminal"
-msgstr "本地终端"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 406
-#: NEEDS WORK
-msgid "SSH Connection"
-msgstr "SSH 连接"
+msgid "Appearance"
+msgstr "外观"
 # 
 # File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 115
 #: NEEDS WORK
@@ -3583,14 +1222,9 @@ msgstr "清除颜色"
 msgid "Organization"
 msgstr "组织"
 # 
-# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 196
+# File: usr/share/ashyterm/ui/dialogs.py, line: 352
 #: NEEDS WORK
-msgid "Choose where to store this session"
-msgstr "选择存储此会话的位置"
-# 
-# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 201
-#: NEEDS WORK
-msgid "Select a folder to organize this session"
+msgid "Choose a folder to organize this session"
 msgstr "选择一个文件夹以组织此会话"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 357
@@ -3601,47 +1235,43 @@ msgstr "选择一个文件夹以组织此会话"
 msgid "Root"
 msgstr "根"
 # 
-# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 237
+# File: usr/share/ashyterm/ui/dialogs.py, line: 398
 #: NEEDS WORK
-msgid "Local Terminal Options"
-msgstr "本地终端选项"
+msgid "Connection Type"
+msgstr "连接类型"
 # 
-# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 242
+# File: usr/share/ashyterm/ui/dialogs.py, line: 402
 #: NEEDS WORK
-msgid "Working Directory"
-msgstr "工作目录"
+msgid "Session Type"
+msgstr "会话类型"
 # 
-# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 243
+# File: usr/share/ashyterm/ui/dialogs.py, line: 403
 #: NEEDS WORK
-msgid "Start the terminal in this folder"
-msgstr "在此文件夹中启动终端"
+msgid "Choose between local terminal or SSH connection"
+msgstr "在本地终端或SSH连接之间进行选择"
 # 
-# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 252
-#: NEEDS WORK
-msgid "Default (Home directory)"
-msgstr "默认（主目录）"
+# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
 # 
-# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 262
+# File: usr/share/ashyterm/ui/dialogs.py, line: 406
+# File: usr/share/ashyterm/sessions/models.py, line: 511
 #: NEEDS WORK
-msgid "Browse for folder"
-msgstr "浏览文件夹"
+msgid "Local Terminal"
+msgstr "本地终端"
 # 
-# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 285
+# File: usr/share/ashyterm/ui/dialogs.py, line: 406
 #: NEEDS WORK
-msgid "Startup Commands"
-msgstr "启动命令"
-# 
-# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 293
-#: NEEDS WORK
-msgid ""
-"Commands executed when the terminal starts (one per line). You can write multiple commands like a "
-"small script."
-msgstr "终端启动时执行的命令（每行一个）。您可以像编写小脚本一样编写多个命令。"
+msgid "SSH Connection"
+msgstr "SSH 连接"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 423
 #: NEEDS WORK
 msgid "SSH Configuration"
 msgstr "SSH 配置"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 424
+#: NEEDS WORK
+msgid "Configure connection details for SSH sessions"
+msgstr "配置SSH会话的连接详细信息"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 429
 # File: usr/share/ashyterm/ui/dialogs.py, line: 894
@@ -3649,9 +1279,29 @@ msgstr "SSH 配置"
 msgid "Host"
 msgstr "主机"
 # 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 430
+#: NEEDS WORK
+msgid "Hostname or IP address of the remote server"
+msgstr "远程服务器的主机名或IP地址"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 435
+#: NEEDS WORK
+msgid "example.com or 192.168.1.100"
+msgstr "example.com 或 192.168.1.100"
+# 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 446
 #: NEEDS WORK
 msgid "Username"
+msgstr "用户名"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 447
+#: NEEDS WORK
+msgid "Username for SSH authentication (optional)"
+msgstr "SSH认证用户名（可选）"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 452
+#: NEEDS WORK
+msgid "username"
 msgstr "用户名"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 464
@@ -3659,15 +1309,20 @@ msgstr "用户名"
 msgid "Port"
 msgstr "端口"
 # 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 465
+#: NEEDS WORK
+msgid "SSH port number (default: 22)"
+msgstr "SSH 端口号（默认：22）"
+# 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 463
 #: NEEDS WORK
 msgid "Authentication"
 msgstr "身份验证"
 # 
-# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 369
+# File: usr/share/ashyterm/ui/dialogs.py, line: 464
 #: NEEDS WORK
-msgid "Choose how to authenticate with the server"
-msgstr "选择如何与服务器进行身份验证"
+msgid "Choose authentication method"
+msgstr "选择认证方法"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 467
 #: NEEDS WORK
@@ -3685,95 +1340,85 @@ msgstr "密码"
 msgid "SSH Key Path"
 msgstr "SSH 密钥路径"
 # 
-# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 384
+# File: usr/share/ashyterm/ui/dialogs.py, line: 495
 #: NEEDS WORK
-msgid "Path to your private key file"
-msgstr "私钥文件的路径"
+msgid "Path to private SSH key file"
+msgstr "私有 SSH 密钥文件的路径"
 # 
-# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 401
+# File: usr/share/ashyterm/ui/dialogs.py, line: 510
 #: NEEDS WORK
-msgid "Browse for SSH key file"
-msgstr "浏览 SSH 密钥文件"
+msgid "Browse..."
+msgstr "浏览..."
 # 
-# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 434
+# File: usr/share/ashyterm/ui/dialogs.py, line: 534
 #: NEEDS WORK
-msgid "Password Storage"
-msgstr "密码存储"
+msgid "Password for SSH authentication"
+msgstr "SSH认证密码"
 # 
-# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 436
+# File: usr/share/ashyterm/ui/dialogs.py, line: 342
 #: NEEDS WORK
-msgid "System keyring not available - password will be stored in plain text"
-msgstr "系统密钥环不可用 - 密码将以明文存储"
+msgid "Password for SSH authentication (stored in system keyring)"
+msgstr "SSH认证密码（存储在系统密钥环中）"
 # 
-# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 453
+# File: usr/share/ashyterm/ui/dialogs.py, line: 346
 #: NEEDS WORK
-msgid "SSH Options"
-msgstr "SSH 选项"
+msgid "Password for SSH authentication (keyring not available)"
+msgstr "SSH认证密码（密钥环不可用）"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 553
+#: NEEDS WORK
+msgid "Enter password..."
+msgstr "输入密码..."
 # 
 # File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 309
 #: NEEDS WORK
 msgid "Run Command After Login"
 msgstr "登录后运行命令"
 # 
-# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 459
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 311
 #: NEEDS WORK
-msgid "Execute a command automatically after SSH connects"
-msgstr "在SSH连接后自动执行命令"
+msgid "Execute a custom command automatically after the SSH session connects"
+msgstr "在SSH会话连接后自动执行自定义命令"
 # 
 # File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 318
 #: NEEDS WORK
 msgid "Post-Login Command"
 msgstr "登录后命令"
 # 
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 319
+#: NEEDS WORK
+msgid "Command to execute right after a successful login"
+msgstr "成功登录后执行的命令"
+# 
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 323
+#: NEEDS WORK
+msgid "Example: tmux attach -t main"
+msgstr "示例：tmux attach -t main"
+# 
 # File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 356
 #: NEEDS WORK
 msgid "Enable X11 Forwarding"
 msgstr "启用 X11 转发"
 # 
-# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 479
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 357
 #: NEEDS WORK
-msgid "Allow graphical applications from remote server"
-msgstr "允许来自远程服务器的图形应用程序"
-# 
-# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 353
-#: NEEDS WORK
-msgid "Enable SFTP Session"
-msgstr "启用 SFTP 会话"
-# 
-# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 488
-#: NEEDS WORK
-msgid "Use default directories when opening SFTP"
-msgstr "打开 SFTP 时使用默认目录"
-# 
-# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 496
-#: NEEDS WORK
-msgid "SFTP Local Directory"
-msgstr "SFTP本地目录"
-# 
-# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 505
-#: NEEDS WORK
-msgid "SFTP Remote Directory"
-msgstr "SFTP远程目录"
+msgid "Allow starting programs in graphical mode (X11)"
+msgstr "允许以图形模式（X11）启动程序"
 # 
 # File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 354
 #: NEEDS WORK
 msgid "Port Forwarding"
 msgstr "端口转发"
 # 
-# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 529
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 355
 #: NEEDS WORK
-msgid "Create SSH tunnels to forward ports"
-msgstr "创建 SSH 隧道以转发端口"
+msgid "Create SSH tunnels to forward local ports to remote targets"
+msgstr "创建 SSH 隧道以将本地端口转发到远程目标"
 # 
-# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 484
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 369
 #: NEEDS WORK
-msgid "Add Port Forward"
-msgstr "添加端口转发"
-# 
-# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 537
-#: NEEDS WORK
-msgid "Create a new SSH tunnel"
-msgstr "创建一个新的SSH隧道"
+msgid "Add"
+msgstr "添加"
 # 
 # File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 396
 #: NEEDS WORK
@@ -3805,15 +1450,20 @@ msgstr "{local_host}:{local_port} → {remote_host}:{remote_port}"
 msgid "Edit Port Forward"
 msgstr "编辑端口转发"
 # 
-# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 712
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 484
 #: NEEDS WORK
-msgid "Tunnel Name"
+msgid "Add Port Forward"
+msgstr "添加端口转发"
+# 
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 508
+#: NEEDS WORK
+msgid "Tunnel name"
 msgstr "隧道名称"
 # 
-# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 718
+# File: usr/share/ashyterm/filemanager/manager.py, line: 366
 #: NEEDS WORK
-msgid "Local Settings"
-msgstr "本地设置"
+msgid "Name"
+msgstr "名称"
 # 
 # File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 519
 #: NEEDS WORK
@@ -3825,25 +1475,15 @@ msgstr "本地主机"
 msgid "Local Port"
 msgstr "本地端口"
 # 
-# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 732
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 529
 #: NEEDS WORK
-msgid "Port on your machine (1025-65535 recommended)"
-msgstr "您机器上的端口（推荐使用1025-65535）"
+msgid "Leave blank to use the SSH host"
+msgstr "留空以使用 SSH 主机"
 # 
-# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 738
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 536
 #: NEEDS WORK
-msgid "Remote Settings"
-msgstr "远程设置"
-# 
-# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 745
-#: NEEDS WORK
-msgid "Use Custom Remote Host"
-msgstr "使用自定义远程主机"
-# 
-# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 746
-#: NEEDS WORK
-msgid "Leave off to use the SSH server as target"
-msgstr "留空以使用SSH服务器作为目标"
+msgid "Connect to a different remote host"
+msgstr "连接到其他远程主机"
 # 
 # File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 546
 #: NEEDS WORK
@@ -3854,11 +1494,6 @@ msgstr "远程主机"
 #: NEEDS WORK
 msgid "Remote Port"
 msgstr "远程端口"
-# 
-# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 765
-#: NEEDS WORK
-msgid "Port on the remote host (1-65535)"
-msgstr "远程主机上的端口 (1-65535)"
 # 
 # File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 590
 #: NEEDS WORK
@@ -3880,41 +1515,75 @@ msgstr "本地主机不能为空。"
 msgid "Invalid Port Forward"
 msgstr "无效的端口转发"
 # 
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 346
+#: NEEDS WORK
+msgid "SFTP Session"
+msgstr "SFTP 会话"
+# 
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 348
+#: NEEDS WORK
+msgid "Configure default directories for SFTP connections (optional)"
+msgstr "配置 SFTP 连接的默认目录（可选）"
+# 
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 353
+#: NEEDS WORK
+msgid "Enable SFTP Session"
+msgstr "启用 SFTP 会话"
+# 
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 355
+#: NEEDS WORK
+msgid "Use these directories when opening an SFTP tab for this session"
+msgstr "在本次会话中打开 SFTP 选项卡时使用这些目录"
+# 
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 364
+#: NEEDS WORK
+msgid "Local Directory"
+msgstr "本地目录"
+# 
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 365
+#: NEEDS WORK
+msgid "Starting directory on your machine for SFTP"
+msgstr "您机器上用于 SFTP 的起始目录"
+# 
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 369
+#: NEEDS WORK
+msgid "Example: /home/user/projects"
+msgstr "示例：/home/user/projects"
+# 
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 379
+#: NEEDS WORK
+msgid "Remote Directory"
+msgstr "远程目录"
+# 
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 380
+#: NEEDS WORK
+msgid "Starting directory on the remote host for SFTP"
+msgstr "远程主机的 SFTP 启动目录"
+# 
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 384
+#: NEEDS WORK
+msgid "Example: /var/www"
+msgstr "示例：/var/www"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 581
+#: NEEDS WORK
+msgid "Test Connection"
+msgstr "测试连接"
+# 
 # File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 773
 #: NEEDS WORK
 msgid "Remote server must have X11Forwarding yes in sshd_config."
 msgstr "远程服务器的sshd_config中必须设置X11Forwarding为yes。"
 # 
-# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 1030
+# File: usr/share/ashyterm/ui/dialogs.py, line: 707
 #: NEEDS WORK
-msgid "Select Working Directory"
-msgstr "选择工作目录"
+msgid "Select SSH Key"
+msgstr "选择 SSH 密钥"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 720
 #: NEEDS WORK
 msgid "File Dialog Error"
 msgstr "文件对话框错误"
-# 
-# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 1051
-#: NEEDS WORK
-msgid "Failed to open folder browser"
-msgstr "无法打开文件夹浏览器"
-# 
-# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 1065
-#: NEEDS WORK
-msgid "Folder Selection Error"
-msgstr "文件夹选择错误"
-# 
-# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 1066
-#: NEEDS WORK
-#, python-brace-format
-msgid "Failed to select folder: {}"
-msgstr "无法选择文件夹：{}"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 707
-#: NEEDS WORK
-msgid "Select SSH Key"
-msgstr "选择 SSH 密钥"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 720
 #: NEEDS WORK
@@ -4031,16 +1700,6 @@ msgstr ""
 msgid "Session name"
 msgstr "会话名称"
 # 
-# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 1367
-#: NEEDS WORK
-msgid "Working directory must exist and be a folder."
-msgstr "工作目录必须存在并且是一个文件夹。"
-# 
-# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 1374
-#: NEEDS WORK
-msgid "Invalid working directory path."
-msgstr "无效的工作目录路径。"
-# 
 # #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
 # 
 # File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 716
@@ -4113,6 +1772,11 @@ msgstr "请填写所有必填字段。"
 #: NEEDS WORK
 msgid "Delete this custom command"
 msgstr "删除此自定义命令"
+# 
+# File: usr/share/ashyterm/ui/dialogs/command_guide_dialog.py, line: 143
+#: NEEDS WORK
+msgid "Command Guide"
+msgstr "命令指南"
 # 
 # File: usr/share/ashyterm/ui/dialogs/command_guide_dialog.py, line: 165
 #: NEEDS WORK
@@ -4208,7 +1872,7 @@ msgstr "{} 是必需的"
 msgid "Tab &amp; Pane Management"
 msgstr "选项卡和面板管理"
 # 
-# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
+# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
 # 
 # File: usr/share/ashyterm/ui/menus.py, line: 145
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1597
@@ -4251,6 +1915,16 @@ msgstr "关闭活动窗格"
 msgid "Terminal Interaction"
 msgstr "终端交互"
 # 
+# File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 38
+#: NEEDS WORK
+msgid "Send Command  All Tabs"
+msgstr "发送命令  所有标签"
+# 
+# File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 39
+#: NEEDS WORK
+msgid "Ask AI Assistant"
+msgstr "询问AI助手"
+# 
 # File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 42
 #: NEEDS WORK
 msgid "Zoom"
@@ -4275,6 +1949,11 @@ msgstr "重置缩放"
 #: NEEDS WORK
 msgid "Application &amp; Window"
 msgstr "应用程序与窗口"
+# 
+# File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 53
+#: NEEDS WORK
+msgid "Toggle File Manager"
+msgstr "切换文件管理器"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1605
 #: NEEDS WORK
@@ -4375,60 +2054,111 @@ msgstr "重置所有快捷键"
 msgid "This will reset all keyboard shortcuts to their default values. Continue?"
 msgstr "这将重置所有键盘快捷键为默认值。继续吗？"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1421
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1831
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1843
 #: NEEDS WORK
-msgid "Appearance"
-msgstr "外观"
+msgid "Reset"
+msgstr "重置"
 # 
 # File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 56
 #: NEEDS WORK
 msgid "Color Scheme"
 msgstr "配色方案"
 # 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 59
+#: NEEDS WORK
+msgid "Current Scheme"
+msgstr "当前方案"
+# 
 # File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 62
 #: NEEDS WORK
 msgid "Manage Schemes..."
 msgstr "管理方案..."
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1016
+#: NEEDS WORK
+msgid "Typography"
+msgstr "排版"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1017
+#: NEEDS WORK
+msgid "Configure fonts and spacing"
+msgstr "配置字体和间距"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1465
 #: NEEDS WORK
 msgid "Terminal Font"
 msgstr "终端字体"
 # 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1466
+#: NEEDS WORK
+msgid "Select font family and size for terminal text"
+msgstr "选择终端文本的字体系列和大小"
+# 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1033
 #: NEEDS WORK
 msgid "Line Spacing"
 msgstr "行距"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1034
+#: NEEDS WORK
+msgid "Adjust the vertical space between lines"
+msgstr "调整行间的垂直间距"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1045
+#: NEEDS WORK
+msgid "Miscellaneous"
+msgstr "杂项"
 # 
 # File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 102
 #: NEEDS WORK
 msgid "Terminal Transparency"
 msgstr "终端透明度"
 # 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1449
+#: NEEDS WORK
+msgid "Adjust terminal background transparency"
+msgstr "调整终端背景透明度"
+# 
 # File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 118
 #: NEEDS WORK
 msgid "Headerbar Transparency"
 msgstr "标题栏透明度"
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 119
+#: NEEDS WORK
+msgid "For headerbar and file manager"
+msgstr "用于标题栏和文件管理器"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1065
 #: NEEDS WORK
 msgid "Use Bright Colors for Bold Text"
 msgstr "使用鲜艳的颜色来突出文本"
 # 
-# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 169
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1066
 #: NEEDS WORK
-msgid "Auto-Hide Sessions Panel"
-msgstr "自动隐藏会话面板"
+msgid "Render bold text with the brighter version of the base color"
+msgstr "使用基色的更亮版本渲染粗体文本"
 # 
-# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 170
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 132
 #: NEEDS WORK
-msgid "Hide panel when activating sessions"
-msgstr "激活会话时隐藏面板"
+msgid "Auto-Hide Sidebar"
+msgstr "自动隐藏侧边栏"
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 134
+#: NEEDS WORK
+msgid "Automatically hide the sidebar when activating sessions or layouts"
+msgstr "自动隐藏侧边栏，当激活会话或布局时"
 # 
 # File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 147
 #: NEEDS WORK
 msgid "Blinking Text"
 msgstr "闪烁文本"
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 148
+#: NEEDS WORK
+msgid "Control how the terminal handles blinking text"
+msgstr "控制终端如何处理闪烁文本"
 # 
 # File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 150
 #: NEEDS WORK
@@ -4445,6 +2175,11 @@ msgstr "始终"
 msgid "Tab Alignment"
 msgstr "选项卡对齐"
 # 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 176
+#: NEEDS WORK
+msgid "Align tabs to the left or center of the tab bar"
+msgstr "将选项卡对齐到选项卡栏的左侧或中间"
+# 
 # File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 178
 #: NEEDS WORK
 msgid "Left"
@@ -4454,21 +2189,6 @@ msgstr "左"
 #: NEEDS WORK
 msgid "Center"
 msgstr "中心"
-# 
-# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 212
-#: NEEDS WORK
-msgid "Icon Theme"
-msgstr "图标主题"
-# 
-# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 218
-#: NEEDS WORK
-msgid "Ashy Icons (Bundled)"
-msgstr "灰色图标（捆绑）"
-# 
-# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 218
-#: NEEDS WORK
-msgid "System Icons"
-msgstr "系统图标"
 # 
 # File: usr/share/ashyterm/window.py, line: 857
 #: NEEDS WORK
@@ -4480,6 +2200,11 @@ msgstr "终端"
 msgid "Cursor Shape"
 msgstr "光标形状"
 # 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1138
+#: NEEDS WORK
+msgid "Select the shape of the terminal cursor"
+msgstr "选择终端光标的形状"
+# 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1141
 #: NEEDS WORK
 msgid "Block"
@@ -4490,10 +2215,20 @@ msgstr "块"
 msgid "I-Beam"
 msgstr "I-Beam"
 # 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1141
+#: NEEDS WORK
+msgid "Underline"
+msgstr "下划线"
+# 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1148
 #: NEEDS WORK
 msgid "Cursor Blinking"
 msgstr "光标闪烁"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1148
+#: NEEDS WORK
+msgid "Control cursor blinking behavior"
+msgstr "控制光标闪烁行为"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1151
 #: NEEDS WORK
@@ -4510,56 +2245,207 @@ msgstr "开启"
 msgid "Off"
 msgstr "关闭"
 # 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1118
+#: NEEDS WORK
+msgid "Scrolling"
+msgstr "滚动"
+# 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1123
 #: NEEDS WORK
 msgid "Scrollback Lines"
 msgstr "滚动回溯行"
 # 
-# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 246
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1124
 #: NEEDS WORK
-msgid "0 for unlimited"
-msgstr "0表示无限制"
+msgid "Number of lines to keep in history (0 for unlimited)"
+msgstr "保留历史记录的行数（0表示无限制）"
 # 
 # File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 192
 #: NEEDS WORK
 msgid "Mouse Scroll Sensitivity"
 msgstr "鼠标滚动灵敏度"
 # 
-# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 258
-# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 274
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 193
 #: NEEDS WORK
-msgid "Lower is slower"
-msgstr "更低更慢"
+msgid "Controls the scroll speed for a mouse wheel. Lower is slower."
+msgstr "控制鼠标滚轮的滚动速度。数值越低，速度越慢。"
 # 
 # File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 208
 #: NEEDS WORK
 msgid "Touchpad Scroll Sensitivity"
 msgstr "触控板滚动灵敏度"
 # 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 209
+#: NEEDS WORK
+msgid "Controls the scroll speed for a touchpad. Lower is slower."
+msgstr "控制触控板的滚动速度。数值越低，滚动越慢。"
+# 
 # File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 233
 #: NEEDS WORK
 msgid "Scroll on Paste"
 msgstr "粘贴时滚动"
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 234
+#: NEEDS WORK
+msgid "Automatically scroll to the bottom when pasting text"
+msgstr "粘贴文本时自动滚动到底部"
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 246
+#: NEEDS WORK
+msgid "Selection"
+msgstr "选择"
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 247
+#: NEEDS WORK
+msgid "Extra characters for word selection (e.g., -_.:/~)"
+msgstr "用于单词选择的额外字符（例如，-_.:/~）"
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 252
+#: NEEDS WORK
+msgid "Word Characters"
+msgstr "字母字符"
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 292
+#: NEEDS WORK
+msgid "Shell & Bell"
+msgstr "壳与铃"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1107
 #: NEEDS WORK
 msgid "Run Command as a Login Shell"
 msgstr "以登录外壳运行命令"
 # 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1108
+#: NEEDS WORK
+msgid "Sources /etc/profile and ~/.profile on startup"
+msgstr "启动时源 /etc/profile 和 ~/.profile"
+# 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1161
 #: NEEDS WORK
 msgid "Audible Bell"
 msgstr "可听铃声"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1162
+#: NEEDS WORK
+msgid "Emit a sound for the terminal bell character"
+msgstr "为终端铃声字符发出声音"
+# 
+# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 319
+# File: usr/share/ashyterm/window.py, line: 679
+#: NEEDS WORK
+msgid "AI Assistant"
+msgstr "人工智能助手"
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 321
+#: NEEDS WORK
+msgid "Configure the Linux-focused assistant available inside the terminal."
+msgstr "配置可在终端内使用的Linux专注助手。"
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 327
+#: NEEDS WORK
+msgid "Enable AI Assistant"
+msgstr "启用AI助手"
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 328
+#: NEEDS WORK
+msgid "Allow Ctrl+Shift+I to ask the assistant for help."
+msgstr "允许使用 Ctrl+Shift+I 向助手请求帮助。"
+# 
+# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 339
+# File: usr/share/ashyterm/window.py, line: 546
+#: NEEDS WORK
+msgid "Provider"
+msgstr "提供者"
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 340
+#: NEEDS WORK
+msgid "Select which AI service to use."
+msgstr "选择要使用的AI服务。"
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 361
+#: NEEDS WORK
+msgid "Model Identifier"
+msgstr "模型标识符"
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 363
+#: NEEDS WORK
+msgid "Examples: llama-3.1-8b-instant, gemini-2.5-flash."
+msgstr "示例：llama-3.1-8b-即时，gemini-2.5-闪电。"
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 368
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 779
+#: NEEDS WORK
+msgid "llama-3.1-8b-instant"
+msgstr "llama-3.1-8b-即时"
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 374
+#: NEEDS WORK
+msgid "API Key"
+msgstr "API 密钥"
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 375
+#: NEEDS WORK
+msgid "Stored locally and used to authenticate requests."
+msgstr "本地存储并用于验证请求。"
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 379
+#: NEEDS WORK
+msgid "Paste your API key"
+msgstr "粘贴您的 API 密钥"
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 391
+#: NEEDS WORK
+msgid "Site URL (optional)"
+msgstr "网站 URL（可选）"
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 392
+#: NEEDS WORK
+msgid "Used as HTTP Referer header on OpenRouter rankings."
+msgstr "在 OpenRouter 排名中用作 HTTP Referer 头部。"
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 396
+#: NEEDS WORK
+msgid "https://example.com"
+msgstr "https://example.com"
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 408
+#: NEEDS WORK
+msgid "Site title (optional)"
+msgstr "网站标题（可选）"
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 409
+#: NEEDS WORK
+msgid "Sent via X-Title header for OpenRouter rankings."
+msgstr "通过 X-Title 标头发送，用于 OpenRouter 排名。"
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 413
+#: NEEDS WORK
+msgid "My Project"
+msgstr "我的项目"
 # 
 # File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 250
 #: NEEDS WORK
 msgid "Profiles & Data"
 msgstr "配置文件与数据"
 # 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1082
+#: NEEDS WORK
+msgid "Startup"
+msgstr "启动"
+# 
 # File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 258
 #: NEEDS WORK
 msgid "On Startup"
 msgstr "启动时"
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 259
+#: NEEDS WORK
+msgid "Action to take when the application starts"
+msgstr "应用程序启动时采取的操作"
 # 
 # File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 263
 #: NEEDS WORK
@@ -4576,7 +2462,17 @@ msgstr "询问是否恢复上一个会话"
 msgid "Never restore previous session"
 msgstr "永不恢复上一个会话"
 # 
-# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 280
+#: NEEDS WORK
+msgid "Backup &amp; Recovery"
+msgstr "备份与恢复"
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 319
+#: NEEDS WORK
+msgid "Create an encrypted backup of your data or restore from a previous backup."
+msgstr "创建数据的加密备份或从以前的备份中恢复。"
+# 
+# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
 # 
 # File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 325
 # File: usr/share/ashyterm/app.py, line: 390
@@ -4584,10 +2480,10 @@ msgstr "永不恢复上一个会话"
 msgid "Create Backup"
 msgstr "创建备份"
 # 
-# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 350
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 327
 #: NEEDS WORK
-msgid "Encrypted backup of sessions and settings"
-msgstr "会话和设置的加密备份"
+msgid "Save all sessions, settings, and passwords to an encrypted file."
+msgstr "将所有会话、设置和密码保存到加密文件中。"
 # 
 # File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 330
 #: NEEDS WORK
@@ -4599,75 +2495,125 @@ msgstr "创建备份..."
 msgid "Restore from Backup"
 msgstr "从备份恢复"
 # 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 339
+#: NEEDS WORK
+msgid "Replace all current data with a backup file."
+msgstr "用备份文件替换所有当前数据。"
+# 
 # File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 341
 #: NEEDS WORK
 msgid "Restore..."
 msgstr "恢复..."
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 348
+#: NEEDS WORK
+msgid "Remote Editing"
+msgstr "远程编辑"
 # 
 # File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 352
 #: NEEDS WORK
 msgid "Use System Temporary Directory"
 msgstr "使用系统临时目录"
 # 
-# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 374
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 354
 #: NEEDS WORK
-msgid "Use /tmp for remote editing files"
-msgstr "使用 /tmp 进行远程编辑文件"
+msgid "Store temporary files for remote editing in /tmp instead of the config folder"
+msgstr "在 /tmp 中存储远程编辑的临时文件，而不是配置文件夹中"
 # 
 # File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 369
 #: NEEDS WORK
 msgid "Clear Remote Edit Files on Exit"
 msgstr "退出时清除远程编辑文件"
 # 
-# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 392
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 371
 #: NEEDS WORK
-msgid "SSH Connection Persistence"
-msgstr "SSH连接持久性"
+msgid "Automatically delete all temporary remote files when closing the app"
+msgstr "关闭应用时自动删除所有临时远程文件"
 # 
-# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 393
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 416
 #: NEEDS WORK
-msgid "Seconds to keep connections alive (0 to disable)"
-msgstr "保持连接活跃的秒数（0表示禁用）"
+msgid "SSH"
+msgstr "SSH"
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 417
+#: NEEDS WORK
+msgid "Settings for SSH connection management (multiplexing)."
+msgstr "SSH连接管理（复用）的设置。"
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 422
+#: NEEDS WORK
+msgid "Connection Persistence (seconds)"
+msgstr "连接持久性（秒）"
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 424
+#: NEEDS WORK
+msgid "Keep SSH connections alive in the background for faster reconnections. Set to 0 to disable."
+msgstr "在后台保持SSH连接活跃以便更快地重新连接。设置为0以禁用。"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1790
 #: NEEDS WORK
 msgid "Advanced"
 msgstr "高级"
 # 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1276
+#: NEEDS WORK
+msgid "Advanced Features"
+msgstr "高级功能"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1277
+#: NEEDS WORK
+msgid "Enable or disable advanced terminal features"
+msgstr "启用或禁用高级终端功能"
+# 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1282
 #: NEEDS WORK
 msgid "Bidirectional Text Support"
 msgstr "双向文本支持"
 # 
-# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 416
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1284
 #: NEEDS WORK
-msgid "For Arabic and Hebrew (affects performance)"
-msgstr "对于阿拉伯语和希伯来语（影响性能）"
+msgid "Enable for languages like Arabic and Hebrew (may affect performance)"
+msgstr "为阿拉伯语和希伯来语等语言启用（可能会影响性能）"
 # 
 # File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 411
 #: NEEDS WORK
 msgid "Enable Arabic Text Shaping"
 msgstr "启用阿拉伯文排版"
 # 
-# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 424
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 413
 #: NEEDS WORK
-msgid "Render ligatures for Arabic script"
-msgstr "为阿拉伯文脚本渲染连字"
+msgid "Correctly render ligatures and contextual forms for Arabic script"
+msgstr "正确渲染阿拉伯文的连字和上下文形式"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1295
 #: NEEDS WORK
 msgid "SIXEL Graphics Support"
 msgstr "SIXEL图形支持"
 # 
-# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 432
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1296
 #: NEEDS WORK
-msgid "Display SIXEL images (experimental)"
-msgstr "显示SIXEL图像（实验性）"
+msgid "Allow the terminal to display SIXEL images (experimental)"
+msgstr "允许终端显示SIXEL图像（实验性）"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1172
+#: NEEDS WORK
+msgid "Compatibility"
+msgstr "兼容性"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1173
+#: NEEDS WORK
+msgid "Settings for compatibility with older systems and tools"
+msgstr "与旧系统和工具兼容的设置"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1178
 #: NEEDS WORK
 msgid "Backspace Key"
 msgstr "退格键"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1178
+#: NEEDS WORK
+msgid "Sequence to send for Backspace key"
+msgstr "发送用于退格键的序列"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1182
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1197
@@ -4697,10 +2643,20 @@ msgstr "转义序列"
 msgid "Delete Key"
 msgstr "删除键"
 # 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1193
+#: NEEDS WORK
+msgid "Sequence to send for Delete key"
+msgstr "删除键发送的序列"
+# 
 # File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 481
 #: NEEDS WORK
 msgid "Ambiguous-width Characters"
 msgstr "模糊宽度字符"
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 482
+#: NEEDS WORK
+msgid "Set the width for ambiguous characters (e.g., CJK)"
+msgstr "设置模糊字符的宽度（例如，CJK）"
 # 
 # File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 485
 #: NEEDS WORK
@@ -4712,20 +2668,40 @@ msgstr "狭窄（单元格）"
 msgid "Wide (double-cell)"
 msgstr "宽（双元格）"
 # 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 252
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1071
 #: NEEDS WORK
-msgid "Word Characters"
-msgstr "字母字符"
+msgid "Logging"
+msgstr "日志"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1071
+#: NEEDS WORK
+msgid "Configure application logging behavior"
+msgstr "配置应用程序日志记录行为"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1076
 #: NEEDS WORK
 msgid "Save Logs to File"
 msgstr "将日志保存到文件"
 # 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1077
+#: NEEDS WORK
+msgid "Save application logs to the configuration directory"
+msgstr "将应用程序日志保存到配置目录"
+# 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1087
 #: NEEDS WORK
 msgid "Console Log Level"
 msgstr "控制台日志级别"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1088
+#: NEEDS WORK
+msgid "Set the minimum level of messages shown in the console"
+msgstr "设置控制台中显示的最低消息级别"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1832
+#: NEEDS WORK
+msgid "Reset application settings to defaults"
+msgstr "重置应用程序设置为默认值"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1838
 # File: usr/share/ashyterm/ui/dialogs.py, line: 2002
@@ -4734,27 +2710,77 @@ msgstr "控制台日志级别"
 msgid "Reset All Settings"
 msgstr "重置所有设置"
 # 
-# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 681
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1839
 #: NEEDS WORK
-msgid "Icon Theme Changed"
-msgstr "图标主题已更改"
+msgid "Restore all settings to their default values"
+msgstr "将所有设置恢复为默认值"
 # 
-# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 683
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 781
 #: NEEDS WORK
-msgid "The icon theme change will take effect after restarting the application."
-msgstr "图标主题更改将在重新启动应用程序后生效。"
+msgid "Model identifier (for example: llama-3.1-8b-instant)."
+msgstr "模型标识符（例如：llama-3.1-8b-instant）。"
 # 
-# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 687
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 783
 #: NEEDS WORK
-msgid "Sessions Panel Visibility"
-msgstr "会话面板可见性"
+msgid "API key."
+msgstr "API 密钥。"
 # 
-# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 689
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 786
+#: NEEDS WORK
+msgid "gemini-2.5-flash"
+msgstr "双子座-2.5-闪光"
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 788
+#: NEEDS WORK
+msgid "Gemini model identifier (for example: gemini-2.5-flash)."
+msgstr "Gemini模型标识符（例如：gemini-2.5-flash）。"
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 790
+#: NEEDS WORK
+msgid "Google AI Studio API key."
+msgstr "Google AI Studio API 密钥。"
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 842
+#: NEEDS WORK
+msgid "openrouter/polaris-alpha"
+msgstr "openrouter/polaris-alpha"
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 844
+#: NEEDS WORK
+msgid "OpenRouter model identifier (for example: openrouter/polaris-alpha)."
+msgstr "OpenRouter 模型标识符（例如：openrouter/polaris-alpha）。"
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 846
+#: NEEDS WORK
+msgid "OpenRouter API key."
+msgstr "OpenRouter API 密钥。"
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 785
+#: NEEDS WORK
+msgid "model-name"
+msgstr "模型名称"
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 787
+#: NEEDS WORK
+msgid "Model identifier required by the selected provider."
+msgstr "所选提供者需要的模型标识符。"
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 789
+#: NEEDS WORK
+msgid "API key used to authenticate requests."
+msgstr "用于验证请求的API密钥。"
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 652
+#: NEEDS WORK
+msgid "Sidebar Visibility"
+msgstr "侧边栏可见性"
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 654
 #: NEEDS WORK
 msgid ""
-"The sessions panel visibility change will take effect when you close and reopen the application. "
-"You can also toggle the sessions panel manually using Ctrl+Shift+H."
-msgstr "会话面板的可见性更改将在您关闭并重新打开应用程序时生效。您还可以使用 Ctrl+Shift+H 手动切换会话面板。"
+"The sidebar visibility change will take effect when you close and reopen the application. You can "
+"also toggle the sidebar manually using Ctrl+Shift+H."
+msgstr "侧边栏可见性更改将在您关闭并重新打开应用程序时生效。您还可以使用 Ctrl+Shift+H 手动切换侧边栏。"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 2003
 #: NEEDS WORK
@@ -6334,7 +4360,7 @@ msgstr "保存失败：{}"
 msgid "Move Error"
 msgstr "移动错误"
 # 
-# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
+# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
 # 
 # File: usr/share/ashyterm/sessions/tree.py, line: 801
 # File: usr/share/ashyterm/window.py, line: 1544
@@ -6724,40 +4750,20 @@ msgstr "显示隐藏的文件"
 msgid "Filter files..."
 msgstr "过滤文件..."
 # 
-# File: src/ashyterm/filemanager/manager.py, line: 658
+# File: usr/share/ashyterm/filemanager/manager.py, line: 397
 #: NEEDS WORK
-msgid "Start Recursive Search"
-msgstr "开始递归搜索"
-# 
-# File: src/ashyterm/filemanager/manager.py, line: 678
-#: NEEDS WORK
-msgid "Cancel Search"
-msgstr "取消搜索"
-# 
-# File: src/ashyterm/filemanager/manager.py, line: 692
-#: NEEDS WORK
-msgid "Search in subfolders"
-msgstr "在子文件夹中搜索"
-# 
-# File: src/ashyterm/filemanager/manager.py, line: 698
-#: NEEDS WORK
-msgid "Recursive"
-msgstr "递归"
+msgid "Recursive Search"
+msgstr "递归搜索"
 # 
 # File: usr/share/ashyterm/filemanager/manager.py, line: 203
 #: NEEDS WORK
 msgid "Transfer History"
 msgstr "转账历史"
 # 
-# File: src/ashyterm/filemanager/manager.py, line: 723
+# File: usr/share/ashyterm/filemanager/manager.py, line: 209
 #: NEEDS WORK
-msgid "Send Files"
-msgstr "发送文件"
-# 
-# File: src/ashyterm/filemanager/manager.py, line: 952
-#: NEEDS WORK
-msgid "Search cancelled"
-msgstr "搜索已取消"
+msgid "Upload Files"
+msgstr "上传文件"
 # 
 # File: usr/share/ashyterm/filemanager/manager.py, line: 665
 # File: usr/share/ashyterm/filemanager/manager.py, line: 1266
@@ -6770,11 +4776,6 @@ msgstr "搜索中..."
 #, python-brace-format
 msgid "Showing first {count} results. Refine your search to narrow the list."
 msgstr "显示前 {count} 个结果。精炼您的搜索以缩小列表。"
-# 
-# File: usr/share/ashyterm/filemanager/manager.py, line: 366
-#: NEEDS WORK
-msgid "Name"
-msgstr "名称"
 # 
 # File: usr/share/ashyterm/filemanager/manager.py, line: 375
 #: NEEDS WORK
@@ -6805,15 +4806,27 @@ msgstr "所有者"
 msgid "Group"
 msgstr "组"
 # 
+# File: usr/share/ashyterm/filemanager/manager.py, line: 697
+#: NEEDS WORK
+msgid "Command Failed"
+msgstr "命令失败"
+# 
+# File: usr/share/ashyterm/filemanager/manager.py, line: 699
+#: NEEDS WORK
+msgid ""
+"The command did not complete in time. The terminal may be busy or unresponsive. Your original input "
+"has been restored."
+msgstr "命令未能及时完成。终端可能忙碌或无响应。您的原始输入已被恢复。"
+# 
 # File: usr/share/ashyterm/filemanager/manager.py, line: 532
 #: NEEDS WORK
 msgid "Loading..."
 msgstr "加载中..."
 # 
-# File: src/ashyterm/filemanager/manager.py, line: 1879
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1268
 #: NEEDS WORK
-msgid "Type and press Enter..."
-msgstr "输入并按回车..."
+msgid "Recursive filter..."
+msgstr "递归过滤器..."
 # 
 # File: usr/share/ashyterm/filemanager/manager.py, line: 1551
 # File: usr/share/ashyterm/filemanager/manager.py, line: 1740
@@ -6857,6 +4870,12 @@ msgstr "创建文件夹命令已发送到终端"
 #: NEEDS WORK
 msgid "Enter a name for the new folder:"
 msgstr "输入新文件夹的名称："
+# 
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1743
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1760
+#: NEEDS WORK
+msgid "Create"
+msgstr "创建"
 # 
 # File: usr/share/ashyterm/filemanager/manager.py, line: 1754
 #: NEEDS WORK
@@ -7083,7 +5102,7 @@ msgstr "打开本地版本"
 msgid "Download New Version"
 msgstr "下载新版本"
 # 
-# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
+# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
 # 
 # File: usr/share/ashyterm/sessions/remotefile.py, line: 41
 # File: usr/share/ashyterm/filemanager/manager.py, line: 1255
@@ -7139,7 +5158,7 @@ msgstr "文件已打开。保存将把更改上传回服务器。"
 msgid "Upload failed: Could not verify remote file."
 msgstr "上传失败：无法验证远程文件。"
 # 
-# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
+# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
 # 
 # File: usr/share/ashyterm/sessions/remotefile.py, line: 129
 # File: usr/share/ashyterm/filemanager/manager.py, line: 1519
@@ -7147,7 +5166,7 @@ msgstr "上传失败：无法验证远程文件。"
 msgid "File Conflict"
 msgstr "文件冲突"
 # 
-# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
+# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
 # 
 # File: usr/share/ashyterm/sessions/remotefile.py, line: 131
 # File: usr/share/ashyterm/filemanager/manager.py, line: 1521
@@ -7158,7 +5177,7 @@ msgid ""
 "like to proceed?"
 msgstr "文件 '{filename}' 自您开始编辑以来已在服务器上被修改。您希望如何继续？"
 # 
-# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
+# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
 # 
 # File: usr/share/ashyterm/sessions/remotefile.py, line: 135
 # File: usr/share/ashyterm/filemanager/manager.py, line: 1525
@@ -7166,7 +5185,7 @@ msgstr "文件 '{filename}' 自您开始编辑以来已在服务器上被修改�
 msgid "Cancel Upload"
 msgstr "取消上传"
 # 
-# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
+# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
 # 
 # File: usr/share/ashyterm/sessions/remotefile.py, line: 136
 # File: usr/share/ashyterm/filemanager/manager.py, line: 1526
@@ -7174,7 +5193,7 @@ msgstr "取消上传"
 msgid "Overwrite Server File"
 msgstr "覆盖服务器文件"
 # 
-# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
+# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
 # 
 # File: usr/share/ashyterm/sessions/remotefile.py, line: 137
 # File: usr/share/ashyterm/filemanager/manager.py, line: 1527
@@ -7182,7 +5201,7 @@ msgstr "覆盖服务器文件"
 msgid "Save as New File"
 msgstr "另存为新文件"
 # 
-# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
+# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
 # 
 # File: usr/share/ashyterm/sessions/remotefile.py, line: 158
 # File: usr/share/ashyterm/filemanager/manager.py, line: 1545
@@ -7190,7 +5209,7 @@ msgstr "另存为新文件"
 msgid "Save As"
 msgstr "另存为"
 # 
-# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
+# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
 # 
 # File: usr/share/ashyterm/sessions/remotefile.py, line: 159
 # File: usr/share/ashyterm/filemanager/manager.py, line: 1546
@@ -8576,6 +6595,11 @@ msgstr "无法加载保存的会话和文件夹。将以空配置启动。"
 msgid "Enable the AI assistant in Preferences > Terminal > AI Assistant."
 msgstr "在“偏好设置” > “终端” > “AI助手”中启用AI助手。"
 # 
+# File: usr/share/ashyterm/window.py, line: 539
+#: NEEDS WORK
+msgid "No active terminal available."
+msgstr "没有可用的活动终端。"
+# 
 # File: usr/share/ashyterm/window.py, line: 547
 #: NEEDS WORK
 msgid "Model"
@@ -8586,11 +6610,57 @@ msgstr "模型"
 msgid "API key"
 msgstr "API 密钥"
 # 
-# File: src/ashyterm/window.py, line: 823
+# File: usr/share/ashyterm/window.py, line: 554
 #: NEEDS WORK
 #, python-brace-format
-msgid "Configure {items} in AI Assistant settings."
-msgstr "在AI助手设置中配置{items}。"
+msgid "Configure {items} in Preferences > Terminal > AI Assistant."
+msgstr "在“首选项” > “终端” > “AI 助手”中配置 {items}。"
+# 
+# File: usr/share/ashyterm/window.py, line: 565
+#: NEEDS WORK
+msgid "Ask the AI Assistant"
+msgstr "询问AI助手"
+# 
+# File: usr/share/ashyterm/window.py, line: 566
+#: NEEDS WORK
+msgid "Describe the Linux task or question you need help with."
+msgstr "描述您需要帮助的 Linux 任务或问题。"
+# 
+# File: usr/share/ashyterm/window.py, line: 570
+#: NEEDS WORK
+msgid "Send"
+msgstr "发送"
+# 
+# File: usr/share/ashyterm/window.py, line: 865
+#: NEEDS WORK
+msgid "Perguntas frequentes"
+msgstr "常见问题"
+# 
+# File: usr/share/ashyterm/window.py, line: 938
+#: NEEDS WORK
+#, python-brace-format
+msgid "Sugestões correspondentes: {count}"
+msgstr "相关建议：{count}"
+# 
+# File: usr/share/ashyterm/window.py, line: 941
+#: NEEDS WORK
+msgid "Nenhuma sugestão encontrada."
+msgstr "未找到任何建议。"
+# 
+# File: usr/share/ashyterm/window.py, line: 944
+#: NEEDS WORK
+msgid "Digite sua pergunta ou escolha uma das sugestões."
+msgstr "输入您的问题或选择其中一个建议。"
+# 
+# File: usr/share/ashyterm/window.py, line: 598
+#: NEEDS WORK
+msgid "Please enter a question for the assistant."
+msgstr "请输入您对助手的问题。"
+# 
+# File: usr/share/ashyterm/window.py, line: 604
+#: NEEDS WORK
+msgid "AI assistant is processing, please wait..."
+msgstr "AI助手正在处理，请稍候..."
 # 
 # File: usr/share/ashyterm/window.py, line: 680
 #: NEEDS WORK
@@ -8601,6 +6671,11 @@ msgstr "这是我找到的内容。"
 #: NEEDS WORK
 msgid "Response"
 msgstr "响应"
+# 
+# File: usr/share/ashyterm/window.py, line: 724
+#: NEEDS WORK
+msgid "Suggested Commands"
+msgstr "建议的命令"
 # 
 # File: usr/share/ashyterm/window.py, line: 781
 #: NEEDS WORK
@@ -8802,7 +6877,7 @@ msgstr "偏好设置错误"
 msgid "Failed to open preferences: {}"
 msgstr "无法打开首选项：{}"
 # 
-# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
+# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
 # 
 # File: usr/share/ashyterm/__init__.py, line: 62
 # File: usr/share/ashyterm/app.py, line: 350
@@ -8996,95 +7071,6 @@ msgstr "启动错误"
 msgid "Application failed to start: {}"
 msgstr "应用程序启动失败：{}"
 # 
-# File: src/ashyterm/__init__.py, line: 33
-#: NEEDS WORK
-#, python-brace-format
-msgid "Received signal {}, shutting down gracefully..."
-msgstr "接收到信号{}，正在优雅地关闭..."
-# 
-# File: usr/share/ashyterm/main.py, line: 97
-#: NEEDS WORK
-#, python-brace-format
-msgid "Warning: Could not set up signal handlers: {}"
-msgstr "警告：无法设置信号处理程序：{}"
-# 
-# File: usr/share/ashyterm/main.py, line: 109
-#: NEEDS WORK
-msgid "Ashy Terminal - A modern terminal emulator with session management"
-msgstr "Ashy Terminal - 一款具有会话管理功能的现代终端仿真器"
-# 
-# File: usr/share/ashyterm/main.py, line: 110
-#: NEEDS WORK
-msgid "For more information, visit: https://communitybig.org/"
-msgstr "有关更多信息，请访问：https://communitybig.org/"
-# 
-# File: src/ashyterm/__init__.py, line: 105
-#: NEEDS WORK
-msgid "Show version and exit"
-msgstr "显示版本并退出"
-# 
-# File: usr/share/ashyterm/main.py, line: 73
-#: NEEDS WORK
-msgid "Enable debug mode"
-msgstr "启用调试模式"
-# 
-# File: usr/share/ashyterm/main.py, line: 79
-#: NEEDS WORK
-msgid "Set logging level"
-msgstr "设置日志级别"
-# 
-# File: usr/share/ashyterm/main.py, line: 84
-#: NEEDS WORK
-msgid "Set the working directory for the initial terminal"
-msgstr "设置初始终端的工作目录"
-# 
-# File: usr/share/ashyterm/main.py, line: 92
-#: NEEDS WORK
-msgid "Working directory (positional argument)"
-msgstr "工作目录（位置参数）"
-# 
-# File: src/ashyterm/__init__.py, line: 133
-#: NEEDS WORK
-msgid "Execute command in the terminal (takes all remaining arguments)"
-msgstr "在终端中执行命令（接受所有剩余参数）"
-# 
-# File: usr/share/ashyterm/main.py, line: 110
-#: NEEDS WORK
-msgid "Close terminal after executing command (only with --execute)"
-msgstr "执行命令后关闭终端（仅适用于 --execute）"
-# 
-# File: usr/share/ashyterm/main.py, line: 115
-#: NEEDS WORK
-msgid "Connect to SSH host with optional user, port, and remote path"
-msgstr "连接到SSH主机，支持可选的用户、端口和远程路径"
-# 
-# File: usr/share/ashyterm/main.py, line: 119
-#: NEEDS WORK
-msgid "Convert KIO/GVFS URI path to SSH format"
-msgstr "将 KIO/GVFS URI 路径转换为 SSH 格式"
-# 
-# File: usr/share/ashyterm/main.py, line: 129
-#: NEEDS WORK
-msgid "Force opening a new window"
-msgstr "强制打开新窗口"
-# 
-# File: src/ashyterm/__init__.py, line: 179
-#: NEEDS WORK
-msgid "Fatal Application Error"
-msgstr "致命应用程序错误"
-# 
-# File: src/ashyterm/__init__.py, line: 180
-#: NEEDS WORK
-#, python-brace-format
-msgid ""
-"Could not start Ashy Terminal.\n"
-"\n"
-"Error: {}"
-msgstr ""
-"无法启动 Ashy Terminal。\n"
-"\n"
-"错误：{}"
-# 
 # File: usr/share/ashyterm/window.py, line: 1466
 #: NEEDS WORK
 msgid "Save Layout"
@@ -9161,3 +7147,32 @@ msgstr "删除布局时出错"
 #: NEEDS WORK
 msgid "Error Moving Layout"
 msgstr "移动布局时出错"
+# 
+# File: usr/share/nautilus-python/extensions/ashyterm.py, line: 129
+#: NEEDS WORK
+msgid "Open in Ashy Terminal (SSH)"
+msgstr "在 Ashy Terminal 中打开 (SSH)"
+# 
+# File: usr/share/nautilus-python/extensions/ashyterm.py, line: 130
+#: NEEDS WORK
+#, python-brace-format
+msgid "Connect to {} via a new SSH session"
+msgstr "通过新的 SSH 会话连接到 {}"
+# 
+# File: usr/share/nautilus-python/extensions/ashyterm.py, line: 139
+# File: usr/share/nautilus-python/extensions/ashyterm.py, line: 149
+#: NEEDS WORK
+msgid "Open in Ashy Terminal"
+msgstr "在 Ashy Terminal 中打开"
+# 
+# File: usr/share/nautilus-python/extensions/ashyterm.py, line: 140
+#: NEEDS WORK
+#, python-brace-format
+msgid "Open the local mount point {}"
+msgstr "打开本地挂载点 {}"
+# 
+# File: usr/share/nautilus-python/extensions/ashyterm.py, line: 150
+#: NEEDS WORK
+#, python-brace-format
+msgid "Open {} in Ashy Terminal"
+msgstr "在 Ashy Terminal 中打开 {}"

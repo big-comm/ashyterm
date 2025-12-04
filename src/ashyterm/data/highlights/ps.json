@@ -40,6 +40,13 @@
             "description": "Highlights running process state"
         },
         {
+            "name": "Sleeping State",
+            "pattern": "\\b([Ss][s+<l]*)\\b",
+            "colors": ["white"],
+            "enabled": true,
+            "description": "Highlights sleeping process state"
+        },
+        {
             "name": "Zombie State",
             "pattern": "\\b([Zz][s+<l]*)\\b",
             "colors": ["bold red"],

@@ -18,10 +18,9 @@ from gi.repository import Adw, Gdk, Gio, GLib, GObject, Graphene, Gtk, Vte
 
 from ..sessions.models import SessionItem
 from ..terminal.manager import TerminalManager as TerminalManagerType
-from ..utils.icons import icon_button, icon_image, set_image_from_icon
 from ..utils.logger import get_logger
 from ..utils.security import InputSanitizer, ensure_secure_directory_permissions
-from ..utils.tooltip_helper import get_tooltip_helper
+from ..utils.tooltip_helper import TooltipHelper
 from ..utils.translation_utils import _
 from .models import FileItem
 from .operations import FileOperations
@@ -84,7 +83,7 @@ class FileManager(GObject.Object):
         # Task 5: Thread pool for efficient background operations
         self._executor = ThreadPoolExecutor(max_workers=1)
         self.transfer_history_window = None
-        self.tooltip_helper = get_tooltip_helper()
+        self.tooltip_helper = TooltipHelper()
         self._is_destroyed = False  # Flag to prevent callbacks after destroy
 
         css_provider = Gtk.CssProvider()
@@ -434,13 +433,9 @@ class FileManager(GObject.Object):
         self.logger.info("Destroying FileManager instance to prevent memory leaks.")
         self.shutdown(None)
 
-        # Task 5: Shutdown the thread pool executor with proper cancellation
+        # Task 5: Shutdown the thread pool executor
         if hasattr(self, "_executor") and self._executor:
-            try:
-                self._executor.shutdown(wait=False, cancel_futures=True)
-            except TypeError:
-                # Python < 3.9 doesn't support cancel_futures
-                self._executor.shutdown(wait=False)
+            self._executor.shutdown(wait=False)
             self._executor = None
 
         # Cancel and clear all file monitors
@@ -515,8 +510,8 @@ class FileManager(GObject.Object):
                 parsed_uri = urlparse(uri)
                 if parsed_uri.scheme == "file":
                     return unquote(parsed_uri.path)
-        except Exception as e:
-            self.logger.debug(f"Could not get terminal directory URI: {e}")
+        except Exception:
+            pass
         return None
 
     def _get_default_directory_for_session(self) -> str:
@@ -625,13 +620,13 @@ class FileManager(GObject.Object):
 
         self.action_bar = Gtk.ActionBar()
 
-        refresh_button = icon_button("view-refresh-symbolic")
+        refresh_button = Gtk.Button.new_from_icon_name("view-refresh-symbolic")
         refresh_button.connect("clicked", lambda _: self.refresh(source="filemanager"))
         self.tooltip_helper.add_tooltip(refresh_button, _("Refresh"))
         self.action_bar.pack_start(refresh_button)
 
         self.hidden_files_toggle = Gtk.ToggleButton()
-        self.hidden_files_toggle.set_child(icon_image("view-visible-symbolic"))
+        self.hidden_files_toggle.set_icon_name("view-visible-symbolic")
         self.hidden_files_toggle.connect("toggled", self._on_hidden_toggle)
         self.tooltip_helper.add_tooltip(
             self.hidden_files_toggle, _("Show hidden files")
@@ -651,9 +646,9 @@ class FileManager(GObject.Object):
         self.search_entry.connect("delete-text", self._on_search_delete_text)
 
         # Search button for recursive search (visible when recursive mode is on)
-        self.recursive_search_button = icon_button(
-            "system-search-symbolic", use_bundled=False
-        )  # System icon
+        self.recursive_search_button = Gtk.Button.new_from_icon_name(
+            "system-search-symbolic"
+        )
         self.tooltip_helper.add_tooltip(
             self.recursive_search_button, _("Start Recursive Search")
         )
@@ -673,7 +668,9 @@ class FileManager(GObject.Object):
         self.recursive_search_spinner.set_size_request(16, 16)
         self.recursive_search_cancel_box.append(self.recursive_search_spinner)
 
-        self.recursive_search_cancel_button = icon_button("process-stop-symbolic")
+        self.recursive_search_cancel_button = Gtk.Button.new_from_icon_name(
+            "process-stop-symbolic"
+        )
         self.tooltip_helper.add_tooltip(
             self.recursive_search_cancel_button, _("Cancel Search")
         )
@@ -714,12 +711,12 @@ class FileManager(GObject.Object):
         search_key_controller.set_propagation_phase(Gtk.PropagationPhase.CAPTURE)
         self.search_entry.add_controller(search_key_controller)
 
-        history_button = icon_button("view-history-symbolic")
+        history_button = Gtk.Button.new_from_icon_name("view-history-symbolic")
         self.tooltip_helper.add_tooltip(history_button, _("Transfer History"))
         history_button.connect("clicked", self._on_show_transfer_history)
         self.action_bar.pack_end(history_button)
 
-        self.upload_button = icon_button("go-up-symbolic")
+        self.upload_button = Gtk.Button.new_from_icon_name("go-up-symbolic")
         self.tooltip_helper.add_tooltip(self.upload_button, _("Send Files"))
         self.upload_button.connect("clicked", self._on_upload_clicked)
         self.action_bar.pack_end(self.upload_button)
@@ -828,9 +825,6 @@ class FileManager(GObject.Object):
                 if not show_hidden and name_to_check.startswith("."):
                     return False
                 return True
-            # For non-recursive search, check both hidden status and search term
-            if not show_hidden and file_item.name.startswith("."):
-                return False
             return search_term in file_item.name.lower()
 
         if file_item.name == "..":
@@ -1038,20 +1032,8 @@ class FileManager(GObject.Object):
         error_message = ""
         truncated = False
 
-        # Capture operations reference locally to prevent race with destroy()
-        operations = self.operations
-        if self._is_destroyed or not operations:
-            GLib.idle_add(
-                self._complete_recursive_search,
-                generation,
-                [],
-                "Search cancelled - file manager closing",
-                False,
-            )
-            return
-
         # Check if fd (or fdfind) is available for faster search
-        use_fd = self._check_fd_available(operations)
+        use_fd = self._check_fd_available()
 
         if use_fd:
             # fd command - faster and more user-friendly
@@ -1066,7 +1048,7 @@ class FileManager(GObject.Object):
             if self._is_remote_session():
                 # For remote sessions, we still need to use execute_command_on_session
                 # which returns full output, but this is unavoidable for SSH
-                success, output = operations.execute_command_on_session(command)
+                success, output = self.operations.execute_command_on_session(command)
                 if not success:
                     error_message = output.strip()
                     output = ""
@@ -1152,26 +1134,16 @@ class FileManager(GObject.Object):
         file_item._name = relative_path
         return file_item
 
-    def _check_fd_available(
-        self, operations: Optional["FileOperations"] = None
-    ) -> bool:
-        """Check if fd or fdfind command is available locally or on remote session.
-
-        Args:
-            operations: Optional FileOperations instance for thread-safe access.
-                       If None, uses self.operations (not thread-safe).
-        """
+    def _check_fd_available(self) -> bool:
+        """Check if fd or fdfind command is available locally or on remote session."""
         import shutil
-
-        # Use provided operations or fall back to instance attribute
-        ops = operations if operations is not None else self.operations
 
         # Check for fd (common name) or fdfind (Debian/Ubuntu name)
         for cmd_name in ["fd", "fdfind"]:
             if self._is_remote_session():
                 # For remote sessions, use 'command -v' which works via SSH shell
-                if ops:
-                    success, _ = ops.execute_command_on_session([
+                if self.operations:
+                    success, _ = self.operations.execute_command_on_session([
                         "command",
                         "-v",
                         cmd_name,
@@ -1697,13 +1669,7 @@ class FileManager(GObject.Object):
     def _list_files_thread(self, requested_path: str, source: str = "filemanager"):
         """Task 1: UI Batching - Process files in batches to avoid UI freezing."""
         try:
-            # Check for destruction/invalid state before any operations
-            if self._is_destroyed:
-                return
-
-            # Capture operations reference locally to prevent race with destroy()
-            operations = self.operations
-            if not operations:
+            if not self.operations:
                 self.logger.warning("File operations not available. Cannot list files.")
                 GLib.idle_add(
                     self._update_store_with_files,
@@ -1719,7 +1685,7 @@ class FileManager(GObject.Object):
                 path_for_ls += "/"
 
             command = ["ls", "-la", "--classify", "--full-time", path_for_ls]
-            success, output = operations.execute_command_on_session(command)
+            success, output = self.operations.execute_command_on_session(command)
 
             if not success:
                 # ls command failed - revert to last successful path

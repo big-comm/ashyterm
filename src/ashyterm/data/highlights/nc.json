@@ -12,7 +12,7 @@
             "name": "Connection Success",
             "pattern": "(Connection to)\\s+(\\S+)\\s+(\\S+)\\s+port\\s+(\\[\\S+\\])\\s+(succeeded!)",
             "colors": [
-                null,
+                "white",
                 "cyan",
                 null,
                 "magenta",
@@ -25,7 +25,7 @@
             "name": "Connection Refused",
             "pattern": "(Connection refused|Connection timed out)",
             "colors": [
-                "bold red"
+                "red"
             ],
             "enabled": true,
             "description": "Highlights connection failures"
@@ -43,7 +43,7 @@
             "name": "Listening",
             "pattern": "(Listening on)\\s+(\\S+)\\s+(\\d+)",
             "colors": [
-                null,
+                "white",
                 "cyan",
                 "magenta"
             ],

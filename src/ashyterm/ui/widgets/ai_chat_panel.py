@@ -15,13 +15,12 @@ gi.require_version("Adw", "1")
 
 from gi.repository import Adw, Gdk, GLib, GObject, Gtk, Pango
 
-from ...utils.icons import icon_image, set_button_icon
 from ...utils.logger import get_logger
-from ...utils.tooltip_helper import get_tooltip_helper
 from .conversation_history import ConversationHistoryPanel
 
 if TYPE_CHECKING:
     from ...terminal.ai_assistant import AIAssistant
+    from ...utils.tooltip_helper import TooltipHelper
 
 logger = get_logger(__name__)
 
@@ -474,19 +473,19 @@ class LoadingIndicator(Gtk.Box):
 class MessageBubble(Gtk.Box):
     """A chat message bubble widget with role indicator."""
 
-    def __init__(self, role: str, content: str, commands: list[str] | None = None):
+    def __init__(self, role: str, content: str, commands: list[str] | None = None, tooltip_helper=None):
         super().__init__(orientation=Gtk.Orientation.VERTICAL, spacing=4)
         self._role = role
         self._content = content
         self._commands = commands or []
+        self._tooltip_helper = tooltip_helper
         
         self._setup_ui()
     
     def _add_tooltip(self, widget: Gtk.Widget, text: str):
         """Add tooltip to widget using custom helper or fallback to standard."""
-        helper = get_tooltip_helper()
-        if helper:
-            helper.add_tooltip(widget, text)
+        if self._tooltip_helper:
+            self._tooltip_helper.add_tooltip(widget, text)
         else:
             widget.set_tooltip_text(text)
     
@@ -911,7 +910,7 @@ class MessageBubble(Gtk.Box):
         
         # Section header
         section_header = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=8)
-        terminal_icon = icon_image("utilities-terminal-symbolic")
+        terminal_icon = Gtk.Image.new_from_icon_name("utilities-terminal-symbolic")
         terminal_icon.add_css_class("ai-section-icon")
         section_header.append(terminal_icon)
         
@@ -1043,12 +1042,11 @@ class AIChatPanel(Gtk.Box):
         "close-requested": (GObject.SignalFlags.RUN_LAST, None, ()),
     }
 
-    def __init__(
-        self, ai_assistant: AIAssistant, tooltip_helper=None, settings_manager=None
-    ):
+    def __init__(self, ai_assistant: AIAssistant, tooltip_helper: TooltipHelper | None = None, settings_manager=None):
         super().__init__(orientation=Gtk.Orientation.VERTICAL)
         self._ai_assistant = ai_assistant
         self._history_manager = ai_assistant._history_manager
+        self._tooltip_helper = tooltip_helper
         self._settings_manager = settings_manager
         self._current_assistant_bubble: MessageBubble | None = None
         self._quick_prompts = get_random_quick_prompts(6)
@@ -1074,9 +1072,8 @@ class AIChatPanel(Gtk.Box):
         """Add tooltip to widget using custom helper or fallback to standard."""
         # Ensure tooltip is enabled (may have been disabled to force-close popup)
         widget.set_has_tooltip(True)
-        helper = get_tooltip_helper()
-        if helper:
-            helper.add_tooltip(widget, text)
+        if self._tooltip_helper:
+            self._tooltip_helper.add_tooltip(widget, text)
         else:
             widget.set_tooltip_text(text)
 
@@ -1094,26 +1091,26 @@ class AIChatPanel(Gtk.Box):
         title_box.append(title_label)
         
         header.set_title_widget(title_box)
-
-        # New chat button (document-new-symbolic not in bundled icons, use system)
+        
+        # New chat button
         new_chat_btn = Gtk.Button()
         new_chat_btn.set_icon_name("document-new-symbolic")
         new_chat_btn.add_css_class("flat")
         new_chat_btn.connect("clicked", self._on_new_chat)
         self._add_tooltip(new_chat_btn, _("New conversation"))
         header.pack_start(new_chat_btn)
-
-        # History button (document-open-recent-symbolic not in bundled icons, use system)
+        
+        # History button
         history_btn = Gtk.Button()
         history_btn.set_icon_name("document-open-recent-symbolic")
         history_btn.add_css_class("flat")
         history_btn.connect("clicked", self._on_show_history)
         self._add_tooltip(history_btn, _("View history"))
         header.pack_start(history_btn)
-
-        # Close button (uses bundled icon)
+        
+        # Close button
         close_btn = Gtk.Button()
-        close_btn.set_child(icon_image("window-close-symbolic"))
+        close_btn.set_icon_name("window-close-symbolic")
         close_btn.add_css_class("flat")
         close_btn.connect("clicked", lambda b: self.emit("close-requested"))
         self._add_tooltip(close_btn, _("Close panel"))
@@ -1234,7 +1231,7 @@ class AIChatPanel(Gtk.Box):
         self._text_scroll = text_scroll
         
         self._send_btn = Gtk.Button()
-        self._send_btn.set_child(icon_image("go-up-symbolic"))
+        self._send_btn.set_icon_name("go-up-symbolic")
         self._send_btn.add_css_class("suggested-action")
         self._send_btn.add_css_class("circular")
         self._send_btn.set_valign(Gtk.Align.CENTER)  # Vertically center aligned
@@ -1517,7 +1514,7 @@ class AIChatPanel(Gtk.Box):
         """Add a message bubble to the chat."""
         # Normalize commands to list of strings
         normalized_commands = _normalize_commands(commands)
-        bubble = MessageBubble(role, content, normalized_commands)
+        bubble = MessageBubble(role, content, normalized_commands, self._tooltip_helper)
         bubble.connect("execute-command", self._on_bubble_execute)
         bubble.connect("run-command", self._on_bubble_run)
         self._messages_box.append(bubble)
@@ -1559,9 +1556,8 @@ class AIChatPanel(Gtk.Box):
             return
         
         # Hide any visible tooltip on the send button immediately
-        helper = get_tooltip_helper()
-        if helper:
-            helper.hide()
+        if self._tooltip_helper:
+            self._tooltip_helper.hide()
         
         # Store message for retry support
         self._last_request_message = text
@@ -1701,7 +1697,7 @@ class AIChatPanel(Gtk.Box):
             
             retry_btn = Gtk.Button()
             retry_btn_content = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=6)
-            retry_icon = icon_image("view-refresh-symbolic")
+            retry_icon = Gtk.Image.new_from_icon_name("view-refresh-symbolic")
             retry_btn_content.append(retry_icon)
             retry_label = Gtk.Label(label=_("Retry"))
             retry_btn_content.append(retry_label)
@@ -1822,10 +1818,10 @@ class AIChatPanel(Gtk.Box):
             text_entry.set_text(text)
             text_entry.set_hexpand(True)
             row_box.append(text_entry)
-
-            # Delete button (uses bundled icon)
+            
+            # Delete button
             delete_btn = Gtk.Button()
-            delete_btn.set_child(icon_image("user-trash-symbolic"))
+            delete_btn.set_icon_name("user-trash-symbolic")
             delete_btn.add_css_class("flat")
             delete_btn.add_css_class("destructive-action")
             self._add_tooltip(delete_btn, _("Remove this prompt"))
@@ -1857,7 +1853,7 @@ class AIChatPanel(Gtk.Box):
         
         add_btn = Gtk.Button()
         add_btn_content = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=6)
-        add_icon = icon_image("list-add-symbolic")
+        add_icon = Gtk.Image.new_from_icon_name("list-add-symbolic")
         add_btn_content.append(add_icon)
         add_label = Gtk.Label(label=_("Add Prompt"))
         add_btn_content.append(add_label)

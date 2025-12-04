@@ -8,13 +8,10 @@ import gi
 gi.require_version("Adw", "1")
 from gi.repository import Adw, Gdk, Gio, Gtk
 
-from ..utils.icons import icon_button, icon_image
 from ..utils.logger import get_logger
-from ..utils.tooltip_helper import init_tooltip_helper
+from ..utils.tooltip_helper import TooltipHelper
 from ..utils.translation_utils import _
-
-# Lazy import for menus - only loaded when main menu is first shown
-# from .menus import MainApplicationMenu
+from .menus import MainApplicationMenu
 
 if TYPE_CHECKING:
     from ..window import CommTerminalWindow
@@ -38,11 +35,8 @@ class WindowUIBuilder:
         self.tab_manager = window.tab_manager
         self.session_tree = window.session_tree
 
-        # Get the application for shortcut lookups
-        app = window.get_application()
-
-        # Initialize tooltip helper for custom tooltips (global singleton)
-        self.tooltip_helper = init_tooltip_helper(self.settings_manager, app)
+        # Initialize tooltip helper for custom tooltips
+        self.tooltip_helper = TooltipHelper(self.settings_manager)
 
         # WM settings for dynamic button layout
         self.wm_settings = Gio.Settings.new("org.gnome.desktop.wm.preferences")
@@ -131,8 +125,8 @@ class WindowUIBuilder:
         search_box = Gtk.Box(spacing=6)
         self.terminal_search_entry = Gtk.SearchEntry(hexpand=True)
         self.search_bar.connect_entry(self.terminal_search_entry)
-        self.search_prev_button = icon_button("go-up-symbolic")
-        self.search_next_button = icon_button("go-down-symbolic")
+        self.search_prev_button = Gtk.Button.new_from_icon_name("go-up-symbolic")
+        self.search_next_button = Gtk.Button.new_from_icon_name("go-down-symbolic")
 
         # Create the BroadcastBar
         self.broadcast_bar = Gtk.SearchBar()
@@ -205,29 +199,23 @@ class WindowUIBuilder:
         self.window.header_bar = header_bar
 
         # Create buttons (tooltips are added via tooltip_helper below)
-        self.toggle_sidebar_button = Gtk.ToggleButton()
-        self.toggle_sidebar_button.set_child(icon_image("pin-symbolic"))
+        self.toggle_sidebar_button = Gtk.ToggleButton(icon_name="pin-symbolic")
         self.toggle_sidebar_button.add_css_class("sidebar-toggle-button")
 
-        self.file_manager_button = Gtk.ToggleButton()
-        self.file_manager_button.set_child(icon_image("folder-open-symbolic"))
+        self.file_manager_button = Gtk.ToggleButton(icon_name="folder-open-symbolic")
 
-        self.command_guide_button = Gtk.Button()
-        self.command_guide_button.set_child(icon_image("help-about-symbolic"))
+        self.command_guide_button = Gtk.Button(icon_name="help-about-symbolic")
         self.command_guide_button.set_action_name("win.show-command-guide")
 
         # Add the new search button
-        self.search_button = Gtk.ToggleButton()
-        self.search_button.set_child(icon_image("edit-find-symbolic"))
+        self.search_button = Gtk.ToggleButton(icon_name="edit-find-symbolic")
 
         # Add the new Broadcast button
-        self.broadcast_button = Gtk.ToggleButton()
-        self.broadcast_button.set_child(icon_image("utilities-terminal-symbolic"))
+        self.broadcast_button = Gtk.ToggleButton(
+            icon_name="utilities-terminal-symbolic"
+        )
 
-        self.ai_assistant_button = Gtk.Button()
-        self.ai_assistant_button.set_child(
-            icon_image("avatar-default-symbolic", use_bundled=False)
-        )  # System icon
+        self.ai_assistant_button = Gtk.Button(icon_name="avatar-default-symbolic")
         self.ai_assistant_button.add_css_class("flat")
         self.ai_assistant_button.connect(
             "clicked", lambda _btn: self.window._on_ai_assistant_requested()
@@ -236,53 +224,48 @@ class WindowUIBuilder:
         ai_enabled = self.settings_manager.get("ai_assistant_enabled", False)
         self.ai_assistant_button.set_visible(ai_enabled)
 
-        self.cleanup_button = Gtk.MenuButton(visible=False)
-        self.cleanup_button.set_child(icon_image("user-trash-symbolic"))
-        self.cleanup_button.add_css_class("destructive-action")
-        self.cleanup_button.add_css_class("flat")
+        self.cleanup_button = Gtk.MenuButton(
+            icon_name="user-trash-symbolic",
+            visible=False,
+            css_classes=["destructive-action", "flat"],
+        )
         self.cleanup_popover = Gtk.Popover()
         self.cleanup_button.set_popover(self.cleanup_popover)
 
         # Hide tooltip when cleanup popover is shown
         self.cleanup_popover.connect("show", lambda p: self.tooltip_helper.hide())
 
-        self.menu_button = Gtk.MenuButton()
-        self.menu_button.set_child(icon_image("open-menu-symbolic"))
-        self.menu_button.add_css_class("flat")
-        # Lazy initialization: popover is created on first activation
-        self._main_menu_popover = None
-        self._setup_lazy_menu_popover()
+        self.menu_button = Gtk.MenuButton(icon_name="open-menu-symbolic")
+        popover, self.font_sizer_widget = MainApplicationMenu.create_main_popover(
+            self.window
+        )
+        self.menu_button.set_popover(popover)
 
-        self.new_tab_button = icon_button("tab-new-symbolic")
+        # Hide tooltip when menu popover is shown
+        popover.connect("show", lambda p: self.tooltip_helper.hide())
+
+        self.new_tab_button = Gtk.Button.new_from_icon_name("tab-new-symbolic")
         self.new_tab_button.connect("clicked", self.window._on_new_tab_clicked)
         self.new_tab_button.add_css_class("flat")
 
-        # Add custom tooltips to header bar buttons (with dynamic shortcuts where applicable)
-        self.tooltip_helper.add_tooltip_with_shortcut(
-            self.toggle_sidebar_button, _("Sessions Panel"), "toggle-sidebar"
+        # Add custom tooltips to header bar buttons
+        self.tooltip_helper.add_tooltip(self.toggle_sidebar_button, _("Toggle Sidebar"))
+        self.tooltip_helper.add_tooltip(self.file_manager_button, _("File Manager"))
+        self.tooltip_helper.add_tooltip(
+            self.command_guide_button, _("Command Guide (Ctrl+Shift+P)")
         )
-        self.tooltip_helper.add_tooltip_with_shortcut(
-            self.file_manager_button, _("File Manager"), "toggle-file-manager"
+        self.tooltip_helper.add_tooltip(self.search_button, _("Search in Terminal"))
+        self.tooltip_helper.add_tooltip(
+            self.broadcast_button, _("Send Command to All Tabs")
         )
-        self.tooltip_helper.add_tooltip_with_shortcut(
-            self.command_guide_button, _("Command Guide"), "show-command-guide"
-        )
-        self.tooltip_helper.add_tooltip_with_shortcut(
-            self.search_button, _("Search in Terminal"), "toggle-search"
-        )
-        self.tooltip_helper.add_tooltip_with_shortcut(
-            self.broadcast_button, _("Send Command to All Tabs"), "toggle-broadcast"
-        )
-        self.tooltip_helper.add_tooltip_with_shortcut(
-            self.ai_assistant_button, _("Ask AI Assistant"), "ai-assistant"
+        self.tooltip_helper.add_tooltip(
+            self.ai_assistant_button, _("Ask AI Assistant (Ctrl+Shift+I)")
         )
         self.tooltip_helper.add_tooltip(
             self.cleanup_button, _("Manage Temporary Files")
         )
         self.tooltip_helper.add_tooltip(self.menu_button, _("Main Menu"))
-        self.tooltip_helper.add_tooltip_with_shortcut(
-            self.new_tab_button, _("New Tab"), "new-local-tab"
-        )
+        self.tooltip_helper.add_tooltip(self.new_tab_button, _("New Tab"))
 
         # Check if window controls are on the left
         button_layout = self.wm_settings.get_string("button-layout")
@@ -413,43 +396,35 @@ class WindowUIBuilder:
         toolbar_view = Adw.ToolbarView(
             css_classes=["background", "sidebar-toolbar-view"]
         )
+        toolbar = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL)
+        toolbar.set_halign(Gtk.Align.CENTER)
 
-        # Header with title and toolbar
-        header_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
-
-        # Toolbar with action buttons
-        toolbar = Gtk.Box(
-            orientation=Gtk.Orientation.HORIZONTAL,
-            spacing=4,
-            halign=Gtk.Align.CENTER,
-            margin_bottom=4,
-        )
-
-        self.add_session_button = icon_button("list-add-symbolic")
+        self.add_session_button = Gtk.Button.new_from_icon_name("list-add-symbolic")
         self.tooltip_helper.add_tooltip(self.add_session_button, _("Add Session"))
         toolbar.append(self.add_session_button)
 
-        self.add_folder_button = icon_button("folder-new-symbolic")
+        self.add_folder_button = Gtk.Button.new_from_icon_name("folder-new-symbolic")
         self.tooltip_helper.add_tooltip(self.add_folder_button, _("Add Folder"))
         toolbar.append(self.add_folder_button)
 
-        self.edit_button = icon_button("document-edit-symbolic")
+        self.edit_button = Gtk.Button.new_from_icon_name("document-edit-symbolic")
         self.tooltip_helper.add_tooltip(self.edit_button, _("Edit Selected"))
         toolbar.append(self.edit_button)
 
-        self.save_layout_button = icon_button("document-save-symbolic")
+        self.save_layout_button = Gtk.Button.new_from_icon_name(
+            "document-save-symbolic"
+        )
         self.tooltip_helper.add_tooltip(
             self.save_layout_button, _("Save Current Layout")
         )
         toolbar.append(self.save_layout_button)
 
-        self.remove_button = icon_button("user-trash-symbolic")
+        self.remove_button = Gtk.Button.new_from_icon_name("user-trash-symbolic")
         self.tooltip_helper.add_tooltip(self.remove_button, _("Remove Selected"))
         self.remove_button.add_css_class("destructive")
         toolbar.append(self.remove_button)
 
-        header_box.append(toolbar)
-        toolbar_view.add_top_bar(header_box)
+        toolbar_view.add_top_bar(toolbar)
 
         scrolled_window = Gtk.ScrolledWindow(vexpand=True)
         scrolled_window.set_policy(Gtk.PolicyType.AUTOMATIC, Gtk.PolicyType.AUTOMATIC)
@@ -494,43 +469,6 @@ class WindowUIBuilder:
         self._ai_panel_visible = False
 
         return self.ai_paned
-
-    def _setup_lazy_menu_popover(self) -> None:
-        """Set up lazy loading for the main menu popover using a lightweight placeholder."""
-        # Create an empty placeholder popover
-        placeholder = Gtk.Popover()
-        placeholder.connect("show", self._on_menu_popover_show)
-        self.menu_button.set_popover(placeholder)
-
-    def _on_menu_popover_show(self, popover: Gtk.Popover) -> None:
-        """Replace placeholder popover with real menu on first show."""
-        if self._main_menu_popover is not None:
-            return  # Already initialized
-
-        from .menus import MainApplicationMenu
-
-        real_popover, self.font_sizer_widget = MainApplicationMenu.create_main_popover(
-            self.window
-        )
-        real_popover.connect("show", lambda p: self.tooltip_helper.hide())
-        self._main_menu_popover = real_popover
-        self.menu_button.set_popover(real_popover)
-
-        # Show the real popover now
-        real_popover.popup()
-
-    def _ensure_main_menu_popover(self, button: Gtk.MenuButton) -> None:
-        """Lazily create and attach the main menu popover on first click."""
-        if self._main_menu_popover is None:
-            from .menus import MainApplicationMenu
-
-            popover, self.font_sizer_widget = MainApplicationMenu.create_main_popover(
-                self.window
-            )
-            popover.connect("show", lambda p: self.tooltip_helper.hide())
-            self._main_menu_popover = popover
-            self.menu_button.set_popover(popover)
-        # Popover will be shown automatically by MenuButton
 
     def _create_ai_chat_panel(self) -> None:
         """Create the AI chat panel widget (lazy initialization)."""

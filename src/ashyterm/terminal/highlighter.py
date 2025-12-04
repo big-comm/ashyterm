@@ -794,10 +794,7 @@ class OutputHighlighter:
                 if rule_matched and rule.action == "stop":
                     should_stop = True
 
-            except Exception as e:
-                # Log at debug level to help diagnose pattern issues without flooding logs
-                if hasattr(self, "logger"):
-                    self.logger.debug(f"Rule pattern matching failed: {e}")
+            except Exception:
                 continue
 
         if not matches:
@@ -1048,19 +1045,6 @@ class HighlightedTerminalProxy:
 
         except Exception as e:
             self.logger.error(f"Failed to start highlight proxy: {e}")
-            # Clean up FDs that weren't transferred to VTE on failure
-            if self._master_fd is not None:
-                try:
-                    os.close(self._master_fd)
-                except OSError:
-                    pass
-                self._master_fd = None
-            if self._slave_fd is not None:
-                try:
-                    os.close(self._slave_fd)
-                except OSError:
-                    pass
-                self._slave_fd = None
             self.stop()
             return False
 

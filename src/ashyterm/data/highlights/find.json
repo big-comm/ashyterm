@@ -10,7 +10,7 @@
             "name": "Directories",
             "pattern": "^(.*/)?([^/]+/)$",
             "colors": [
-                null,
+                "white",
                 "cyan"
             ],
             "enabled": true,
@@ -20,10 +20,29 @@
             "name": "Permission Denied",
             "pattern": "(Permission denied)",
             "colors": [
-                "bold red"
+                "red"
             ],
             "enabled": true,
             "description": "Highlights permission errors"
+        },
+        {
+            "name": "Hidden Files",
+            "pattern": "/(\\.\\w+)$",
+            "colors": [
+                "white"
+            ],
+            "enabled": true,
+            "description": "Highlights hidden files/directories"
+        },
+        {
+            "name": "File Path",
+            "pattern": "^(.*/)?([^/]+)$",
+            "colors": [
+                "white",
+                "white"
+            ],
+            "enabled": true,
+            "description": "Highlights regular file paths"
         }
     ]
 }

@@ -8,26 +8,16 @@ import threading
 import time
 import weakref
 from enum import Enum
-from typing import TYPE_CHECKING, Any, Callable, Dict, List, Optional, Union
+from typing import Any, Callable, Dict, List, Optional, Union
 from urllib.parse import urlparse
 
-# Lazy import psutil - only when actually needed for process info
-PSUTIL_AVAILABLE: Optional[bool] = None
-psutil = None
+try:
+    import psutil
 
-
-def _get_psutil():
-    """Lazy import psutil module."""
-    global psutil, PSUTIL_AVAILABLE
-    if PSUTIL_AVAILABLE is None:
-        try:
-            import psutil as _psutil
-
-            psutil = _psutil
-            PSUTIL_AVAILABLE = True
-        except ImportError:
-            PSUTIL_AVAILABLE = False
-    return psutil
+    PSUTIL_AVAILABLE = True
+except ImportError:
+    psutil = None
+    PSUTIL_AVAILABLE = False
 
 import gi
 
@@ -38,7 +28,10 @@ from gi.repository import Gdk, GLib, GObject, Gtk, Vte
 from ..helpers import is_valid_url
 from ..sessions.models import SessionItem
 from ..settings.config import PROMPT_TERMINATOR_PATTERN
+from ..settings.highlights import get_highlight_manager
 from ..settings.manager import SettingsManager
+from ..ui.menus import create_terminal_menu
+from ..ui.ssh_dialogs import create_generic_ssh_error_dialog
 from ..utils.exceptions import (
     TerminalCreationError,
 )
@@ -46,77 +39,8 @@ from ..utils.logger import get_logger, log_terminal_event
 from ..utils.osc7_tracker import OSC7Info, get_osc7_tracker
 from ..utils.platform import get_environment_manager, get_platform_info
 from ..utils.security import validate_session_data
-
-# Lazy import for spawner - loaded on first use
-_spawner = None
-
-
-def _get_spawner():
-    """Lazy import spawner module."""
-    global _spawner
-    if _spawner is None:
-        from .spawner import get_spawner
-
-        _spawner = get_spawner
-    return _spawner()
-
-
-# Lazy imports for heavy modules - loaded on first use
-_highlight_manager = None
-_output_highlighter = None
-_terminal_menu_creator = None
-_ssh_error_dialog_creator = None
-_highlighted_terminal_proxy = None
-
-
-def _get_highlight_manager():
-    """Lazy import highlight manager."""
-    global _highlight_manager
-    if _highlight_manager is None:
-        from ..settings.highlights import get_highlight_manager
-
-        _highlight_manager = get_highlight_manager
-    return _highlight_manager()
-
-
-def _get_output_highlighter():
-    """Lazy import output highlighter."""
-    global _output_highlighter
-    if _output_highlighter is None:
-        from .highlighter import get_output_highlighter
-
-        _output_highlighter = get_output_highlighter
-    return _output_highlighter()
-
-
-def _create_terminal_menu(*args, **kwargs):
-    """Lazy import terminal menu creator."""
-    global _terminal_menu_creator
-    if _terminal_menu_creator is None:
-        from ..ui.menus import create_terminal_menu
-
-        _terminal_menu_creator = create_terminal_menu
-    return _terminal_menu_creator(*args, **kwargs)
-
-
-def _create_ssh_error_dialog(*args, **kwargs):
-    """Lazy import SSH error dialog creator."""
-    global _ssh_error_dialog_creator
-    if _ssh_error_dialog_creator is None:
-        from ..ui.ssh_dialogs import create_generic_ssh_error_dialog
-
-        _ssh_error_dialog_creator = create_generic_ssh_error_dialog
-    return _ssh_error_dialog_creator(*args, **kwargs)
-
-
-def _get_highlighted_terminal_proxy():
-    """Lazy import HighlightedTerminalProxy class."""
-    global _highlighted_terminal_proxy
-    if _highlighted_terminal_proxy is None:
-        from .highlighter import HighlightedTerminalProxy
-
-        _highlighted_terminal_proxy = HighlightedTerminalProxy
-    return _highlighted_terminal_proxy
+from .highlighter import HighlightedTerminalProxy, get_output_highlighter
+from .spawner import get_spawner
 
 
 class TerminalState(Enum):
@@ -187,8 +111,7 @@ class ManualSSHTracker:
             return None
 
     def check_process_tree(self, terminal_id: int):
-        psutil_mod = _get_psutil()
-        if not psutil_mod:
+        if not PSUTIL_AVAILABLE:
             return
         with self._lock:
             if terminal_id not in self._tracked_terminals:
@@ -201,7 +124,7 @@ class ManualSSHTracker:
             if not pid:
                 return
             try:
-                parent_proc = psutil_mod.Process(pid)
+                parent_proc = psutil.Process(pid)
                 current_children_count = len(parent_proc.children())
 
                 if self._last_child_count.get(terminal_id) == current_children_count:
@@ -234,7 +157,7 @@ class ManualSSHTracker:
                     terminal = state["terminal_ref"]()
                     if terminal and self.on_state_changed:
                         GLib.idle_add(self.on_state_changed, terminal)
-            except psutil_mod.NoSuchProcess:
+            except psutil.NoSuchProcess:
                 if state["in_ssh"]:
                     state["in_ssh"] = False
                     state["ssh_target"] = None
@@ -356,7 +279,7 @@ class TerminalManager:
         self.platform_info = get_platform_info()
         self.environment_manager = get_environment_manager()
         self.registry = TerminalRegistry()
-        self.spawner = _get_spawner()
+        self.spawner = get_spawner()
         self.lifecycle_manager = TerminalLifecycleManager(self.registry, self.logger)
         self.osc7_tracker = get_osc7_tracker(settings_manager)
         self.manual_ssh_tracker = ManualSSHTracker(
@@ -373,9 +296,7 @@ class TerminalManager:
             "terminals_failed": 0,
             "terminals_closed": 0,
         }
-        self._highlight_proxies: Dict[
-            int, Any
-        ] = {}  # Dict[int, HighlightedTerminalProxy]
+        self._highlight_proxies: Dict[int, HighlightedTerminalProxy] = {}
         self._highlight_manager = None
         # Process check timer runs every 1 second for responsive context detection
         self._process_check_timer_id = GLib.timeout_add_seconds(
@@ -385,7 +306,7 @@ class TerminalManager:
 
     def _get_highlight_manager(self):
         if self._highlight_manager is None:
-            self._highlight_manager = _get_highlight_manager()
+            self._highlight_manager = get_highlight_manager()
         return self._highlight_manager
 
     def _cleanup_highlight_proxy(self, terminal_id: int):
@@ -862,9 +783,7 @@ class TerminalManager:
 
     def _setup_context_menu(self, terminal: Vte.Terminal) -> None:
         try:
-            menu_model = _create_terminal_menu(
-                terminal, settings_manager=self.settings_manager
-            )
+            menu_model = create_terminal_menu(terminal)
             terminal.set_context_menu_model(menu_model)
         except Exception as e:
             self.logger.error(f"Context menu setup failed: {e}")
@@ -873,9 +792,7 @@ class TerminalManager:
         self, terminal: Vte.Terminal, x: float, y: float
     ) -> None:
         try:
-            menu_model = _create_terminal_menu(
-                terminal, x, y, settings_manager=self.settings_manager
-            )
+            menu_model = create_terminal_menu(terminal, x, y)
             terminal.set_context_menu_model(menu_model)
         except Exception as e:
             self.logger.error(f"Context menu URL update failed: {e}")
@@ -957,7 +874,7 @@ class TerminalManager:
                 if isinstance(identifier, SessionItem)
                 else ""
             )
-            dialog = _create_ssh_error_dialog(
+            dialog = create_generic_ssh_error_dialog(
                 self.parent_window, session_name, connection_string
             )
 
@@ -1038,14 +955,14 @@ class TerminalManager:
             if hasattr(terminal, "_osc8_hovered_uri"):
                 try:
                     delattr(terminal, "_osc8_hovered_uri")
-                except Exception as e:
-                    self.logger.debug(f"Could not delete _osc8_hovered_uri attr: {e}")
+                except Exception:
+                    pass
 
             if hasattr(terminal, "_closed_by_user"):
                 try:
                     delattr(terminal, "_closed_by_user")
-                except Exception as e:
-                    self.logger.debug(f"Could not delete _closed_by_user attr: {e}")
+                except Exception:
+                    pass
             if self.registry.unregister_terminal(terminal_id):
                 self._stats["terminals_closed"] += 1
                 log_terminal_event(
@@ -1096,20 +1013,8 @@ class TerminalManager:
         try:
             if not terminal or not command:
                 return False
-
-            # Handle multi-line commands - split and execute each line
-            lines = command.strip().split("\n")
-            lines = [line for line in lines if line.strip()]  # Remove empty lines
-
-            if close_after_execute:
-                # Execute all commands and then exit
-                for line in lines:
-                    terminal.feed_child(f"{line}\n".encode("utf-8"))
-                terminal.feed_child(b"exit\n")
-            else:
-                # Execute each command line
-                for line in lines:
-                    terminal.feed_child(f"{line}\n".encode("utf-8"))
+            command_to_run = f"({command}); exit" if close_after_execute else command
+            terminal.feed_child(f"{command_to_run}\n".encode("utf-8"))
             return True
         except Exception as e:
             self.logger.error(f"Failed to execute command '{command}': {e}")
@@ -1236,7 +1141,7 @@ class TerminalManager:
             self._cleanup_highlight_proxy(terminal_id)
 
         # KILL ONLY LOCAL PROCESSES BELONGING TO THIS WINDOW
-        spawner = _get_spawner()
+        spawner = get_spawner()
         all_ids = self.registry.get_all_terminal_ids()
 
         count_killed = 0
@@ -1479,10 +1384,11 @@ class TerminalManager:
                 return
 
             # Get settings and highlight manager
+            from ..settings.highlights import get_highlight_manager
             from ..settings.manager import get_settings_manager
 
             settings_manager = get_settings_manager()
-            highlight_manager = _get_highlight_manager()
+            highlight_manager = get_highlight_manager()
 
             ignored_commands = set(
                 settings_manager.get("ignored_highlight_commands", [])
@@ -1560,7 +1466,7 @@ class TerminalManager:
                 return
 
             # Update the syntax highlighting context
-            highlighter = _get_output_highlighter()
+            highlighter = get_output_highlighter()
             highlighter.set_context(program_name, terminal_id)
 
             self.logger.debug(

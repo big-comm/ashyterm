@@ -88,8 +88,7 @@ class BaseDialog(Adw.Window):
         except Exception as e:
             self.logger.error(f"Failed to show warning dialog: {e}")
 
-    def _validate_required_field(self, entry, field_name: str) -> bool:
-        """Validate a required field. Works with both Gtk.Entry and Adw.EntryRow."""
+    def _validate_required_field(self, entry: Gtk.Entry, field_name: str) -> bool:
         value = entry.get_text().strip()
         if not value:
             entry.add_css_class("error")

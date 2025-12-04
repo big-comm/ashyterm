@@ -1,12 +1,12 @@
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the ashyterm package.
+# This file is distributed under the same license as the comm-ashyterm package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 # 
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: ashyterm\n"
+"Project-Id-Version: comm-ashyterm\n"
 "Report-Msgid-Bugs-To: \n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -15,35 +15,6 @@ msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: attranslate\n"
-# 
-# File: usr/share/nautilus-python/extensions/ashyterm.py, line: 129
-#: NEEDS WORK
-msgid "Open in Ashy Terminal (SSH)"
-msgstr "Öppna i Ashy Terminal (SSH)"
-# 
-# File: usr/share/nautilus-python/extensions/ashyterm.py, line: 130
-#: NEEDS WORK
-#, python-brace-format
-msgid "Connect to {} via a new SSH session"
-msgstr "Anslut till {} via en ny SSH-session"
-# 
-# File: usr/share/nautilus-python/extensions/ashyterm.py, line: 139
-# File: usr/share/nautilus-python/extensions/ashyterm.py, line: 149
-#: NEEDS WORK
-msgid "Open in Ashy Terminal"
-msgstr "Öppna i Ashy Terminal"
-# 
-# File: usr/share/nautilus-python/extensions/ashyterm.py, line: 140
-#: NEEDS WORK
-#, python-brace-format
-msgid "Open the local mount point {}"
-msgstr "Öppna den lokala monteringspunkten {}"
-# 
-# File: usr/share/nautilus-python/extensions/ashyterm.py, line: 150
-#: NEEDS WORK
-#, python-brace-format
-msgid "Open {} in Ashy Terminal"
-msgstr "Öppna {} i Ashy Terminal"
 # 
 # File: usr/share/ashyterm/utils/exceptions.py, line: 65
 #: NEEDS WORK
@@ -316,7 +287,7 @@ msgstr "Nyckelfilen är inte läsbar"
 msgid "Error accessing key file: {}"
 msgstr "Fel vid åtkomst av nyckelfil: {}"
 # 
-# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
+# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
 # 
 # File: usr/share/ashyterm/utils/security.py, line: 508
 # File: usr/share/ashyterm/utils/security.py, line: 796
@@ -400,9 +371,9 @@ msgstr "Sökvägen innehåller osäkra element"
 msgid "set secure permissions"
 msgstr "ställ in säkra behörigheter"
 # 
-# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
+# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
 # 
-# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
+# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
 # 
 # File: usr/share/ashyterm/utils/security.py, line: 786
 # File: usr/share/ashyterm/utils.py, line: 438
@@ -498,11 +469,6 @@ msgstr "Flytta till ny flik"
 msgid "Close Pane"
 msgstr "Stäng panel"
 # 
-# File: src/ashyterm/terminal/tabs.py, line: 723
-#: NEEDS WORK
-msgid "Move Tab"
-msgstr "Flytta flik"
-# 
 # File: usr/share/ashyterm/terminal/tabs.py, line: 531
 #: NEEDS WORK
 msgid "Duplicate Tab"
@@ -517,6 +483,75 @@ msgstr "Lossa flik"
 #: NEEDS WORK
 msgid "This is the only pane in the tab."
 msgstr "Detta är den enda rutan i fliken."
+# 
+# File: usr/share/ashyterm/main.py, line: 86
+#: NEEDS WORK
+#, python-brace-format
+msgid ""
+"\n"
+"Received signal {}, shutting down gracefully..."
+msgstr "Mottagen signal {}, stänger ner på ett smidigt sätt..."
+# 
+# File: usr/share/ashyterm/main.py, line: 97
+#: NEEDS WORK
+#, python-brace-format
+msgid "Warning: Could not set up signal handlers: {}"
+msgstr "Varning: Kunde inte ställa in signalhanterare: {}"
+# 
+# File: usr/share/ashyterm/main.py, line: 109
+#: NEEDS WORK
+msgid "Ashy Terminal - A modern terminal emulator with session management"
+msgstr "Ashy Terminal - En modern terminalemulator med sessionshantering"
+# 
+# File: usr/share/ashyterm/main.py, line: 110
+#: NEEDS WORK
+msgid "For more information, visit: https://communitybig.org/"
+msgstr "För mer information, besök: https://communitybig.org/"
+# 
+# File: usr/share/ashyterm/main.py, line: 73
+#: NEEDS WORK
+msgid "Enable debug mode"
+msgstr "Aktivera felsökningsläge"
+# 
+# File: usr/share/ashyterm/main.py, line: 79
+#: NEEDS WORK
+msgid "Set logging level"
+msgstr "Ställ in loggnivå"
+# 
+# File: usr/share/ashyterm/main.py, line: 84
+#: NEEDS WORK
+msgid "Set the working directory for the initial terminal"
+msgstr "Ställ in arbetskatalogen för den initiala terminalen"
+# 
+# File: usr/share/ashyterm/main.py, line: 92
+#: NEEDS WORK
+msgid "Working directory (positional argument)"
+msgstr "Arbetskatalog (positionsargument)"
+# 
+# File: usr/share/ashyterm/main.py, line: 105
+#: NEEDS WORK
+msgid "Execute command in the terminal"
+msgstr "Kör kommando i terminalen"
+# 
+# File: usr/share/ashyterm/main.py, line: 110
+#: NEEDS WORK
+msgid "Close terminal after executing command (only with --execute)"
+msgstr "Stäng terminalen efter att ha kört kommandot (endast med --execute)"
+# 
+# File: usr/share/ashyterm/main.py, line: 115
+#: NEEDS WORK
+msgid "Connect to SSH host with optional user, port, and remote path"
+msgstr "Anslut till SSH-värd med valfri användare, port och fjärrsökväg"
+# 
+# File: usr/share/ashyterm/main.py, line: 119
+#: NEEDS WORK
+msgid "Convert KIO/GVFS URI path to SSH format"
+msgstr "Konvertera KIO/GVFS URI-sökväg till SSH-format"
+# 
+# File: usr/share/ashyterm/main.py, line: 129
+#: NEEDS WORK
+msgid "Force opening a new window"
+msgstr "Tvinga att öppna ett nytt fönster"
 # 
 # File: usr/share/ashyterm/ui/window_ui.py, line: 339
 #: NEEDS WORK
@@ -550,21 +585,21 @@ msgstr "Reguljärt uttryck"
 # 
 # #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
 # 
-# File: src/ashyterm/ui/window_ui.py, line: 262
-# File: src/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 56
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1606
+# File: usr/share/ashyterm/window.py, line: 248
 #: NEEDS WORK
-msgid "Sessions Panel"
-msgstr "Sessionspanel"
+msgid "Toggle Sidebar"
+msgstr "Växla sidofält"
 # 
 # File: usr/share/ashyterm/window.py, line: 344
 #: NEEDS WORK
 msgid "File Manager"
 msgstr "Filhanterare"
 # 
-# File: usr/share/ashyterm/ui/dialogs/command_guide_dialog.py, line: 143
+# File: usr/share/ashyterm/ui/window_ui.py, line: 324
 #: NEEDS WORK
-msgid "Command Guide"
-msgstr "Kommandoguide"
+msgid "Command Guide (Ctrl+Shift+P)"
+msgstr "Kommandoguide (Ctrl+Shift+P)"
 # 
 # File: usr/share/ashyterm/ui/window_ui.py, line: 350
 #: NEEDS WORK
@@ -576,10 +611,10 @@ msgstr "Sök i Terminal"
 msgid "Send Command to All Tabs"
 msgstr "Skicka kommando till alla flikar"
 # 
-# File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 39
+# File: usr/share/ashyterm/ui/window_ui.py, line: 344
 #: NEEDS WORK
-msgid "Ask AI Assistant"
-msgstr "Fråga AI-assistenten"
+msgid "Ask AI Assistant (Ctrl+Shift+I)"
+msgstr "Fråga AI-assistent (Ctrl+Shift+I)"
 # 
 # File: usr/share/ashyterm/ui/window_ui.py, line: 259
 #: NEEDS WORK
@@ -591,7 +626,7 @@ msgstr "Hantera temporära filer"
 msgid "Main Menu"
 msgstr "Huvudmeny"
 # 
-# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
+# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
 # 
 # File: usr/share/ashyterm/ui/menus.py, line: 144
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1596
@@ -605,9 +640,9 @@ msgstr "Ny flik"
 msgid "Ashy Terminal"
 msgstr "Ashy Terminal"
 # 
-# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
+# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
 # 
-# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
+# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
 # 
 # File: usr/share/ashyterm/ui/menus.py, line: 60
 # File: usr/share/ashyterm/ui/menus.py, line: 92
@@ -617,9 +652,9 @@ msgstr "Ashy Terminal"
 msgid "Add Session"
 msgstr "Lägg till session"
 # 
-# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
+# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
 # 
-# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
+# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
 # 
 # File: usr/share/ashyterm/ui/menus.py, line: 93
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1056
@@ -683,7 +718,7 @@ msgstr "Headerbar Bakgrund"
 msgid "Cursor"
 msgstr "Markör"
 # 
-# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
+# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 163
 # File: usr/share/ashyterm/ui/dialogs.py, line: 575
@@ -717,7 +752,7 @@ msgstr "Allmänna färger"
 msgid "16-Color Palette"
 msgstr "16-färgs palett"
 # 
-# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
+# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 136
 # File: usr/share/ashyterm/ui/dialogs.py, line: 784
@@ -799,7 +834,7 @@ msgstr "Välj ett schema för att tillämpa det omedelbart."
 msgid "New"
 msgstr "Ny"
 # 
-# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
+# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
 # 
 # File: usr/share/ashyterm/ui/menus.py, line: 23
 # File: usr/share/ashyterm/ui/menus.py, line: 59
@@ -809,7 +844,7 @@ msgstr "Ny"
 msgid "Edit"
 msgstr "Redigera"
 # 
-# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
+# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
 # 
 # File: usr/share/ashyterm/ui/menus.py, line: 39
 # File: usr/share/ashyterm/ui/menus.py, line: 73
@@ -840,1249 +875,20 @@ msgstr "Ta bort schema?"
 msgid "Are you sure you want to delete the scheme '{name}'? This cannot be undone."
 msgstr "Är du säker på att du vill ta bort schemat '{name}'? Detta kan inte ångras."
 # 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 220
-#: NEEDS WORK
-msgid "How do I navigate directories?"
-msgstr "Hur navigerar jag i kataloger?"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 221
-#: NEEDS WORK
-msgid "How do I find files by name?"
-msgstr "Hur hittar jag filer efter namn?"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 222
-#: NEEDS WORK
-msgid "How do I edit files in terminal?"
-msgstr "Hur redigerar jag filer i terminalen?"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 223
-#: NEEDS WORK
-msgid "How do I view disk usage?"
-msgstr "Hur visar jag diskutnyttjande?"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 224
-#: NEEDS WORK
-msgid "How do I change file permissions?"
-msgstr "Hur ändrar jag filbehörigheter?"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 225
-#: NEEDS WORK
-msgid "How do I compress files?"
-msgstr "Hur komprimerar jag filer?"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 226
-#: NEEDS WORK
-msgid "How do I check my IP address?"
-msgstr "Hur kontrollerar jag min IP-adress?"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 227
-#: NEEDS WORK
-msgid "How do I view running processes?"
-msgstr "Hur visar jag aktiva processer?"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 228
-#: NEEDS WORK
-msgid "How do I check memory usage?"
-msgstr "Hur kontrollerar jag minnesanvändning?"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 229
-#: NEEDS WORK
-msgid "How do I restart a service?"
-msgstr "Hur startar jag om en tjänst?"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 231
-#: NEEDS WORK
-msgid "How do I create a new branch?"
-msgstr "Hur skapar jag en ny gren?"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 232
-#: NEEDS WORK
-msgid "How do I merge branches?"
-msgstr "Hur slår jag samman grenar?"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 233
-#: NEEDS WORK
-msgid "How do I push to remote?"
-msgstr "Hur pushar jag till fjärr?"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 234
-#: NEEDS WORK
-msgid "How do I pull changes?"
-msgstr "Hur drar jag ändringar?"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 235
-#: NEEDS WORK
-msgid "How do I undo last commit?"
-msgstr "Hur ångrar jag den senaste commit?"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 236
-#: NEEDS WORK
-msgid "How do I view commit history?"
-msgstr "Hur visar jag commit-historik?"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 237
-#: NEEDS WORK
-msgid "How do I create a tag?"
-msgstr "Hur skapar jag en tagg?"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 238
-#: NEEDS WORK
-msgid "How do I find who changed a line?"
-msgstr "Hur hittar jag vem som ändrade en rad?"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 239
-#: NEEDS WORK
-msgid "How do I delete a branch?"
-msgstr "Hur tar jag bort en gren?"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 240
-#: NEEDS WORK
-msgid "How do I stash changes?"
-msgstr "Hur stasar jag ändringar?"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 242
-#: NEEDS WORK
-msgid "How do I list Docker containers?"
-msgstr "Hur listar jag Docker-containrar?"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 243
-#: NEEDS WORK
-msgid "How do I run a Docker container?"
-msgstr "Hur kör jag en Docker-behållare?"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 244
-#: NEEDS WORK
-msgid "How do I stop a container?"
-msgstr "Hur stoppar jag en container?"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 245
-#: NEEDS WORK
-msgid "How do I list Docker images?"
-msgstr "Hur listar jag Docker-bilder?"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 246
-#: NEEDS WORK
-msgid "How do I clean Docker resources?"
-msgstr "Hur rengör jag Docker-resurser?"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 247
-#: NEEDS WORK
-msgid "How do I view container logs?"
-msgstr "Hur visar jag loggar för containrar?"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 248
-#: NEEDS WORK
-msgid "How do I create Docker network?"
-msgstr "Hur skapar jag ett Docker-nätverk?"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 249
-#: NEEDS WORK
-msgid "How do I manage Docker volumes?"
-msgstr "Hur hanterar jag Docker-volymer?"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 250
-#: NEEDS WORK
-msgid "How do I build a Docker image?"
-msgstr "Hur bygger jag en Docker-bild?"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 251
-#: NEEDS WORK
-msgid "How do I restart a container?"
-msgstr "Hur startar jag om en container?"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 253
-#: NEEDS WORK
-msgid "How do I generate SSH keys?"
-msgstr "Hur genererar jag SSH-nycklar?"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 254
-#: NEEDS WORK
-msgid "How do I copy SSH key to server?"
-msgstr "Hur kopierar jag SSH-nyckeln till servern?"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 255
-#: NEEDS WORK
-msgid "How do I check open ports?"
-msgstr "Hur kontrollerar jag öppna portar?"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 256
-#: NEEDS WORK
-msgid "How do I test network connectivity?"
-msgstr "Hur testar jag nätverksanslutning?"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 257
-#: NEEDS WORK
-msgid "How do I DNS lookup?"
-msgstr "Hur gör jag en DNS-uppslagning?"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 258
-#: NEEDS WORK
-msgid "How do I monitor network traffic?"
-msgstr "Hur övervakar jag nätverkstrafik?"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 259
-#: NEEDS WORK
-msgid "How do I configure firewall?"
-msgstr "Hur konfigurerar jag brandväggen?"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 260
-#: NEEDS WORK
-msgid "How do I create SSH tunnel?"
-msgstr "Hur skapar jag en SSH-tunnel?"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 261
-#: NEEDS WORK
-msgid "How do I copy files via SSH?"
-msgstr "Hur kopierar jag filer via SSH?"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 262
-#: NEEDS WORK
-msgid "How do I speed up SSH connections?"
-msgstr "Hur kan jag snabba upp SSH-anslutningar?"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 264
-#: NEEDS WORK
-msgid "How do I create empty file?"
-msgstr "Hur skapar jag en tom fil?"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 265
-#: NEEDS WORK
-msgid "How do I create directory?"
-msgstr "Hur skapar jag en katalog?"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 266
-#: NEEDS WORK
-msgid "How do I delete files safely?"
-msgstr "Hur raderar jag filer på ett säkert sätt?"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 267
-#: NEEDS WORK
-msgid "How do I copy files?"
-msgstr "Hur kopierar jag filer?"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 268
-#: NEEDS WORK
-msgid "How do I move files?"
-msgstr "Hur flyttar jag filer?"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 269
-#: NEEDS WORK
-msgid "How do I create symbolic link?"
-msgstr "Hur skapar jag en symbolisk länk?"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 270
-#: NEEDS WORK
-msgid "How do I search file contents?"
-msgstr "Hur söker jag i filinnehåll?"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 271
-#: NEEDS WORK
-msgid "How do I compare files?"
-msgstr "Hur jämför jag filer?"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 272
-#: NEEDS WORK
-msgid "How do I sync directories?"
-msgstr "Hur synkroniserar jag mappar?"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 273
-#: NEEDS WORK
-msgid "How do I append to file?"
-msgstr "Hur lägger jag till i filen?"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 275
-#: NEEDS WORK
-msgid "How do I use grep?"
-msgstr "Hur använder jag grep?"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 276
-#: NEEDS WORK
-msgid "How do I use awk?"
-msgstr "Hur använder jag awk?"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 277
-#: NEEDS WORK
-msgid "How do I use sed?"
-msgstr "Hur använder jag sed?"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 278
-#: NEEDS WORK
-msgid "How do I count lines?"
-msgstr "Hur räknar jag rader?"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 279
-#: NEEDS WORK
-msgid "How do I sort text?"
-msgstr "Hur sorterar jag text?"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 280
-#: NEEDS WORK
-msgid "How do I join files?"
-msgstr "Hur går jag med filer?"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 281
-#: NEEDS WORK
-msgid "How do I extract columns?"
-msgstr "Hur extraherar jag kolumner?"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 282
-#: NEEDS WORK
-msgid "How do I remove duplicates?"
-msgstr "Hur tar jag bort dubbletter?"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 283
-#: NEEDS WORK
-msgid "How do I format JSON?"
-msgstr "Hur formaterar jag JSON?"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 284
-#: NEEDS WORK
-msgid "How do I search and replace?"
-msgstr "Hur söker och ersätter jag?"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 286
-#: NEEDS WORK
-msgid "How do I add a user?"
-msgstr "Hur lägger jag till en användare?"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 287
-#: NEEDS WORK
-msgid "How do I manage groups?"
-msgstr "Hur hanterar jag grupper?"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 288
-#: NEEDS WORK
-msgid "How do I change password?"
-msgstr "Hur ändrar jag lösenord?"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 289
-#: NEEDS WORK
-msgid "How do I check system load?"
-msgstr "Hur kontrollerar jag systembelastningen?"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 290
-#: NEEDS WORK
-msgid "How do I mount a drive?"
-msgstr "Hur monterar jag en enhet?"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 291
-#: NEEDS WORK
-msgid "How do I install packages?"
-msgstr "Hur installerar jag paket?"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 292
-#: NEEDS WORK
-msgid "How do I update system?"
-msgstr "Hur uppdaterar jag systemet?"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 293
-#: NEEDS WORK
-msgid "How do I configure cron jobs?"
-msgstr "Hur konfigurerar jag cron-jobb?"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 294
-#: NEEDS WORK
-msgid "How do I view system logs?"
-msgstr "Hur visar jag systemloggar?"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 295
-#: NEEDS WORK
-msgid "How do I find large files?"
-msgstr "Hur hittar jag stora filer?"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 297
-#: NEEDS WORK
-msgid "How do I create virtualenv?"
-msgstr "Hur skapar jag virtualenv?"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 298
-#: NEEDS WORK
-msgid "How do I install pip packages?"
-msgstr "Hur installerar jag pip-paket?"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 299
-#: NEEDS WORK
-msgid "How do I find Python package?"
-msgstr "Hur hittar jag Python-paket?"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 300
-#: NEEDS WORK
-msgid "How do I list installed packages?"
-msgstr "Hur listar jag installerade paket?"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 301
-#: NEEDS WORK
-msgid "How do I run Python tests?"
-msgstr "Hur kör jag Python-tester?"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 302
-#: NEEDS WORK
-msgid "How do I profile Python code?"
-msgstr "Hur profilerar jag Python-kod?"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 303
-#: NEEDS WORK
-msgid "How do I format Python code?"
-msgstr "Hur formaterar jag Python-kod?"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 304
-#: NEEDS WORK
-msgid "How do I create requirements.txt?"
-msgstr "Hur skapar jag requirements.txt?"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 305
-#: NEEDS WORK
-msgid "How do I run Python script?"
-msgstr "Hur kör jag ett Python-skript?"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 306
-#: NEEDS WORK
-msgid "How do I debug Python?"
-msgstr "Hur debuggar jag Python?"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 308
-#: NEEDS WORK
-msgid "How do I initialize npm project?"
-msgstr "Hur initierar jag ett npm-projekt?"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 309
-#: NEEDS WORK
-msgid "How do I install npm packages?"
-msgstr "Hur installerar jag npm-paket?"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 310
-#: NEEDS WORK
-msgid "How do I run npm scripts?"
-msgstr "Hur kör jag npm-skript?"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 311
-#: NEEDS WORK
-msgid "How do I list npm packages?"
-msgstr "Hur listar jag npm-paket?"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 312
-#: NEEDS WORK
-msgid "How do I update npm packages?"
-msgstr "Hur uppdaterar jag npm-paket?"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 313
-#: NEEDS WORK
-msgid "How do I clean npm cache?"
-msgstr "Hur rensar jag npm-cache?"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 314
-#: NEEDS WORK
-msgid "How do I link npm package?"
-msgstr "Hur kopplar jag npm-paket?"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 315
-#: NEEDS WORK
-msgid "How do I audit npm packages?"
-msgstr "Hur auditerar jag npm-paket?"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 316
-#: NEEDS WORK
-msgid "How do I find npm package?"
-msgstr "Hur hittar jag npm-paket?"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 317
-#: NEEDS WORK
-msgid "How do I use npx?"
-msgstr "Hur använder jag npx?"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 319
-#: NEEDS WORK
-msgid "How do I write a bash script?"
-msgstr "Hur skriver jag ett bash-skript?"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 320
-#: NEEDS WORK
-msgid "How do I use loops in bash?"
-msgstr "Hur använder jag loopar i bash?"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 321
-#: NEEDS WORK
-msgid "How do I use conditionals?"
-msgstr "Hur använder jag villkor?"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 322
-#: NEEDS WORK
-msgid "How do I read user input?"
-msgstr "Hur läser jag användarinmatning?"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 323
-#: NEEDS WORK
-msgid "How do I read from file?"
-msgstr "Hur läser jag från fil?"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 324
-#: NEEDS WORK
-msgid "How do I write to file?"
-msgstr "Hur skriver jag till fil?"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 325
-#: NEEDS WORK
-msgid "How do I use functions?"
-msgstr "Hur använder jag funktioner?"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 326
-#: NEEDS WORK
-msgid "How do I parse arguments?"
-msgstr "Hur parserar jag argument?"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 327
-#: NEEDS WORK
-msgid "How do I handle errors?"
-msgstr "Hur hanterar jag fel?"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 328
-#: NEEDS WORK
-msgid "How do I debug bash script?"
-msgstr "Hur debuggar jag ett bash-skript?"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 330
-#: NEEDS WORK
-msgid "How do I get pods?"
-msgstr "Hur får jag pods?"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 331
-#: NEEDS WORK
-msgid "How do I view pod logs?"
-msgstr "Hur visar jag pod-loggar?"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 332
-#: NEEDS WORK
-msgid "How do I deploy to k8s?"
-msgstr "Hur distribuerar jag till k8s?"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 333
-#: NEEDS WORK
-msgid "How do I scale deployment?"
-msgstr "Hur skalar jag distribution?"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 334
-#: NEEDS WORK
-msgid "How do I describe pod?"
-msgstr "Hur beskriver jag en pod?"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 335
-#: NEEDS WORK
-msgid "How do I get services?"
-msgstr "Hur får jag tjänster?"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 336
-#: NEEDS WORK
-msgid "How do I create configmap?"
-msgstr "Hur skapar jag en configmap?"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 337
-#: NEEDS WORK
-msgid "How do I create secret?"
-msgstr "Hur skapar jag en hemlighet?"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 338
-#: NEEDS WORK
-msgid "How do I exec into pod?"
-msgstr "Hur gör jag för att execa in i podden?"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 339
-#: NEEDS WORK
-msgid "How do I port forward?"
-msgstr "Hur gör jag för att vidarebefordra portar?"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 341
-#: NEEDS WORK
-msgid "How do I connect to PostgreSQL?"
-msgstr "Hur ansluter jag till PostgreSQL?"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 342
-#: NEEDS WORK
-msgid "How do I backup database?"
-msgstr "Hur gör jag en säkerhetskopia av databasen?"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 343
-#: NEEDS WORK
-msgid "How do I restore database?"
-msgstr "Hur återställer jag databasen?"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 344
-#: NEEDS WORK
-msgid "How do I list databases?"
-msgstr "Hur listar jag databaser?"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 345
-#: NEEDS WORK
-msgid "How do I query from terminal?"
-msgstr "Hur frågar jag från terminalen?"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 346
-#: NEEDS WORK
-msgid "How do I export to CSV?"
-msgstr "Hur exporterar jag till CSV?"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 347
-#: NEEDS WORK
-msgid "How do I import from CSV?"
-msgstr "Hur importerar jag från CSV?"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 348
-#: NEEDS WORK
-msgid "How do I create database user?"
-msgstr "Hur skapar jag en databas-användare?"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 349
-#: NEEDS WORK
-msgid "How do I grant permissions?"
-msgstr "Hur ger jag behörigheter?"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 350
-#: NEEDS WORK
-msgid "How do I check database size?"
-msgstr "Hur kontrollerar jag databasens storlek?"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 352
-#: NEEDS WORK
-msgid "How do I monitor CPU usage?"
-msgstr "Hur övervakar jag CPU-användning?"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 353
-#: NEEDS WORK
-msgid "How do I monitor memory?"
-msgstr "Hur övervakar jag minne?"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 354
-#: NEEDS WORK
-msgid "How do I monitor disk I/O?"
-msgstr "Hur övervakar jag disk I/O?"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 355
-#: NEEDS WORK
-msgid "How do I monitor network?"
-msgstr "Hur övervakar jag nätverket?"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 356
-#: NEEDS WORK
-msgid "How do I benchmark command?"
-msgstr "Hur benchmarkar jag kommandot?"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 357
-#: NEEDS WORK
-msgid "How do I trace system calls?"
-msgstr "Hur spårar jag systemanrop?"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 358
-#: NEEDS WORK
-msgid "How do I view process tree?"
-msgstr "Hur visar jag processträdet?"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 359
-#: NEEDS WORK
-msgid "How do I find bottlenecks?"
-msgstr "Hur hittar jag flaskhalsar?"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 360
-#: NEEDS WORK
-msgid "How do I list open files?"
-msgstr "Hur listar jag öppna filer?"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 361
-#: NEEDS WORK
-msgid "How do I view thread info?"
-msgstr "Hur visar jag trådinfo?"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 363
-#: NEEDS WORK
-msgid "How do I create tar archive?"
-msgstr "Hur skapar jag en tar-arkiv?"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 364
-#: NEEDS WORK
-msgid "How do I extract tar.gz?"
-msgstr "Hur extraherar jag tar.gz?"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 365
-#: NEEDS WORK
-msgid "How do I use gzip?"
-msgstr "Hur använder jag gzip?"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 366
-#: NEEDS WORK
-msgid "How do I list archive contents?"
-msgstr "Hur listar jag innehållet i arkivet?"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 367
-#: NEEDS WORK
-msgid "How do I add to archive?"
-msgstr "Hur lägger jag till i arkivet?"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 368
-#: NEEDS WORK
-msgid "How do I create zip file?"
-msgstr "Hur skapar jag en zip-fil?"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 369
-#: NEEDS WORK
-msgid "How do I extract zip?"
-msgstr "Hur extraherar jag zip?"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 370
-#: NEEDS WORK
-msgid "How do I encrypt archive?"
-msgstr "Hur krypterar jag arkivet?"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 371
-#: NEEDS WORK
-msgid "How do I split archive?"
-msgstr "Hur delar jag upp arkivet?"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 372
-#: NEEDS WORK
-msgid "How do I merge archives?"
-msgstr "Hur slår jag samman arkiv?"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 374
-#: NEEDS WORK
-msgid "How do I encrypt file?"
-msgstr "Hur krypterar jag fil?"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 375
-#: NEEDS WORK
-msgid "How do I decrypt file?"
-msgstr "Hur dekrypterar jag filen?"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 376
-#: NEEDS WORK
-msgid "How do I generate password?"
-msgstr "Hur genererar jag ett lösenord?"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 377
-#: NEEDS WORK
-msgid "How do I verify checksum?"
-msgstr "Hur verifierar jag kontrollsumman?"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 378
-#: NEEDS WORK
-msgid "How do I list certificates?"
-msgstr "Hur listar jag certifikat?"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 379
-#: NEEDS WORK
-msgid "How do I sign file?"
-msgstr "Hur signerar jag filen?"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 380
-#: NEEDS WORK
-msgid "How do I scan for vulnerabilities?"
-msgstr "Hur skannar jag efter sårbarheter?"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 381
-#: NEEDS WORK
-msgid "How do I secure file permissions?"
-msgstr "Hur säkrar jag filbehörigheter?"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 382
-#: NEEDS WORK
-msgid "How do I audit system?"
-msgstr "Hur auditerar jag systemet?"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 383
-#: NEEDS WORK
-msgid "How do I use GPG?"
-msgstr "Hur använder jag GPG?"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 385
-#: NEEDS WORK
-msgid "How do I start tmux session?"
-msgstr "Hur startar jag en tmux-session?"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 386
-#: NEEDS WORK
-msgid "How do I list tmux sessions?"
-msgstr "Hur listar jag tmux-sessioner?"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 387
-#: NEEDS WORK
-msgid "How do I attach to session?"
-msgstr "Hur kopplar jag till sessionen?"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 388
-#: NEEDS WORK
-msgid "How do I split tmux pane?"
-msgstr "Hur delar jag en tmux-panel?"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 389
-#: NEEDS WORK
-msgid "How do I switch panes?"
-msgstr "Hur byter jag paneler?"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 390
-#: NEEDS WORK
-msgid "How do I rename window?"
-msgstr "Hur döper jag om fönstret?"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 391
-#: NEEDS WORK
-msgid "How do I kill session?"
-msgstr "Hur dödar jag sessionen?"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 392
-#: NEEDS WORK
-msgid "How do I detach from session?"
-msgstr "Hur kopplar jag bort från sessionen?"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 393
-#: NEEDS WORK
-msgid "How do I copy in tmux?"
-msgstr "Hur kopierar jag i tmux?"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 394
-#: NEEDS WORK
-msgid "How do I configure tmux?"
-msgstr "Hur konfigurerar jag tmux?"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 396
-#: NEEDS WORK
-msgid "How do I save in vim?"
-msgstr "Hur sparar jag i vim?"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 397
-#: NEEDS WORK
-msgid "How do I quit vim?"
-msgstr "Hur avslutar jag vim?"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 398
-#: NEEDS WORK
-msgid "How do I search in vim?"
-msgstr "Hur söker jag i vim?"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 399
-#: NEEDS WORK
-msgid "How do I replace in vim?"
-msgstr "Hur ersätter jag i vim?"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 400
-#: NEEDS WORK
-msgid "How do I copy line in vim?"
-msgstr "Hur kopierar jag en rad i vim?"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 401
-#: NEEDS WORK
-msgid "How do I delete line in vim?"
-msgstr "Hur tar jag bort en rad i vim?"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 402
-#: NEEDS WORK
-msgid "How do I undo in vim?"
-msgstr "Hur ångrar jag i vim?"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 403
-#: NEEDS WORK
-msgid "How do I go to line in vim?"
-msgstr "Hur går jag till rad i vim?"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 404
-#: NEEDS WORK
-msgid "How do I split in vim?"
-msgstr "Hur delar jag i vim?"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 405
-#: NEEDS WORK
-msgid "How do I open file in vim?"
-msgstr "Hur öppnar jag en fil i vim?"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 407
-#: NEEDS WORK
-msgid "How do I set environment variable?"
-msgstr "Hur ställer jag in miljövariabel?"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 408
-#: NEEDS WORK
-msgid "How do I list env variables?"
-msgstr "Hur listar jag miljövariabler?"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 409
-#: NEEDS WORK
-msgid "How do I edit bashrc?"
-msgstr "Hur redigerar jag bashrc?"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 410
-#: NEEDS WORK
-msgid "How do I reload bashrc?"
-msgstr "Hur laddar jag om bashrc?"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 411
-#: NEEDS WORK
-msgid "How do I view PATH?"
-msgstr "Hur visar jag PATH?"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 412
-#: NEEDS WORK
-msgid "How do I add to PATH?"
-msgstr "Hur lägger jag till i PATH?"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 413
-#: NEEDS WORK
-msgid "How do I find config file?"
-msgstr "Hur hittar jag konfigurationsfilen?"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 414
-#: NEEDS WORK
-msgid "How do I export variable?"
-msgstr "Hur exporterar jag variabel?"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 415
-#: NEEDS WORK
-msgid "How do I use .env file?"
-msgstr "Hur använder jag .env-filen?"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 416
-#: NEEDS WORK
-msgid "How do I set alias?"
-msgstr "Hur ställer jag in alias?"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 418
-#: NEEDS WORK
-msgid "How do I use xargs?"
-msgstr "Hur använder jag xargs?"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 419
-#: NEEDS WORK
-msgid "How do I use find with exec?"
-msgstr "Hur använder jag find med exec?"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 420
-#: NEEDS WORK
-msgid "How do I use parallel?"
-msgstr "Hur använder jag parallell?"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 421
-#: NEEDS WORK
-msgid "How do I use tee?"
-msgstr "Hur använder jag tee?"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 422
-#: NEEDS WORK
-msgid "How do I use watch?"
-msgstr "Hur använder jag klockan?"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 423
-#: NEEDS WORK
-msgid "How do I use htop?"
-msgstr "Hur använder jag htop?"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 424
-#: NEEDS WORK
-msgid "How do I use fzf?"
-msgstr "Hur använder jag fzf?"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 425
-#: NEEDS WORK
-msgid "How do I use heredoc?"
-msgstr "Hur använder jag heredoc?"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 426
-#: NEEDS WORK
-msgid "How do I use subshell?"
-msgstr "Hur använder jag subshell?"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 427
-#: NEEDS WORK
-msgid "How do I use command substitution?"
-msgstr "Hur använder jag kommandosubstitution?"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 429
-#: NEEDS WORK
-msgid "How do I format date?"
-msgstr "Hur formaterar jag datum?"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 430
-#: NEEDS WORK
-msgid "How do I calculate in terminal?"
-msgstr "Hur beräknar jag i terminalen?"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 431
-#: NEEDS WORK
-msgid "How do I use colors in terminal?"
-msgstr "Hur använder jag färger i terminalen?"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 432
-#: NEEDS WORK
-msgid "How do I create histogram?"
-msgstr "Hur skapar jag ett histogram?"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 433
-#: NEEDS WORK
-msgid "How do I send notification?"
-msgstr "Hur skickar jag en avisering?"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 434
-#: NEEDS WORK
-msgid "How do I use clipboard?"
-msgstr "Hur använder jag urklipp?"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 435
-#: NEEDS WORK
-msgid "How do I view image in terminal?"
-msgstr "Hur visar jag en bild i terminalen?"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 436
-#: NEEDS WORK
-msgid "How do I plot in terminal?"
-msgstr "Hur plottar jag i terminalen?"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 437
-#: NEEDS WORK
-msgid "How do I play sound?"
-msgstr "Hur spelar jag ljud?"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 438
-#: NEEDS WORK
-msgid "How do I schedule task?"
-msgstr "Hur schemalägger jag en uppgift?"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 458
-#: NEEDS WORK
-msgid "AI is thinking..."
-msgstr "AI tänker..."
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 506
-#: NEEDS WORK
-msgid "You"
-msgstr "Du"
-# 
-# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
-# 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 319
-# File: usr/share/ashyterm/window.py, line: 679
-#: NEEDS WORK
-msgid "AI Assistant"
-msgstr "AI-assistent"
-# 
-# File: usr/share/ashyterm/window.py, line: 724
-#: NEEDS WORK
-msgid "Suggested Commands"
-msgstr "Föreslagna kommandon"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 955
-#: NEEDS WORK
-msgid "Run command"
-msgstr "Kör kommando"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 965
-#: NEEDS WORK
-msgid "Insert into terminal"
-msgstr "Infoga i terminalen"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 975
-#: NEEDS WORK
-msgid "Copy to clipboard"
-msgstr "Kopiera till urklipp"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 1100
-#: NEEDS WORK
-msgid "New conversation"
-msgstr "Ny konversation"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 1108
-#: NEEDS WORK
-msgid "View history"
-msgstr "Visa historik"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 1116
-#: NEEDS WORK
-msgid "Close panel"
-msgstr "Stäng panel"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 1153
-#: NEEDS WORK
-msgid "Quick Prompts"
-msgstr "Snabba uppmaningar"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 1164
-#: NEEDS WORK
-msgid "Customize quick prompts"
-msgstr "Anpassa snabba uppmaningar"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 1239
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 1642
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 1665
-#: NEEDS WORK
-msgid "Send message"
-msgstr "Skicka meddelande"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 1702
-#: NEEDS WORK
-msgid "Retry"
-msgstr "Försök igen"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 1707
-#: NEEDS WORK
-msgid "Retry the last request"
-msgstr "Försök igen med den senaste begäran"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 1753
-#: NEEDS WORK
-msgid "Customize Quick Prompts"
-msgstr "Anpassa snabba uppmaningar"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 1812
-#: NEEDS WORK
-msgid "Emoji icon (optional)"
-msgstr "Emoji-ikon (valfritt)"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 1817
-#: NEEDS WORK
-msgid "Enter prompt text..."
-msgstr "Ange uppmaningstext..."
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 1827
-#: NEEDS WORK
-msgid "Remove this prompt"
-msgstr "Ta bort denna uppmaning"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 1858
-#: NEEDS WORK
-msgid "Add Prompt"
-msgstr "Lägg till uppmaning"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 1870
-#: NEEDS WORK
-msgid "Use Defaults"
-msgstr "Använd standardinställningar"
-# 
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 1874
-#: NEEDS WORK
-msgid "Clear custom prompts and use random defaults"
-msgstr "Rensa anpassade uppmaningar och använd slumpmässiga standardinställningar"
-# 
-# File: src/ashyterm/ui/widgets/conversation_history.py, line: 47
-#: NEEDS WORK
-msgid "Just now"
-msgstr "Nyss"
-# 
-# File: src/ashyterm/ui/widgets/conversation_history.py, line: 48
-#: NEEDS WORK
-#, python-brace-format
-msgid "{} min"
-msgstr "{} min"
-# 
-# File: src/ashyterm/ui/widgets/conversation_history.py, line: 49
-#: NEEDS WORK
-#, python-brace-format
-msgid "{} hr"
-msgstr "{} hr"
-# 
-# File: src/ashyterm/ui/widgets/conversation_history.py, line: 51
-# File: src/ashyterm/ui/widgets/conversation_history.py, line: 78
-#: NEEDS WORK
-msgid "Yesterday"
-msgstr "Igår"
-# 
-# File: src/ashyterm/ui/widgets/conversation_history.py, line: 53
-#: NEEDS WORK
-#, python-brace-format
-msgid "{} days"
-msgstr "{} dagar"
-# 
-# File: src/ashyterm/ui/widgets/conversation_history.py, line: 63
-# File: src/ashyterm/ui/widgets/conversation_history.py, line: 84
-# File: src/ashyterm/ui/widgets/conversation_history.py, line: 86
-#: NEEDS WORK
-msgid "Older"
-msgstr "Äldre"
-# 
-# File: src/ashyterm/ui/widgets/conversation_history.py, line: 76
-#: NEEDS WORK
-msgid "Today"
-msgstr "Idag"
-# 
-# File: src/ashyterm/ui/widgets/conversation_history.py, line: 80
-#: NEEDS WORK
-msgid "Last 7 Days"
-msgstr "Senaste 7 dagarna"
-# 
-# File: src/ashyterm/ui/widgets/conversation_history.py, line: 82
-#: NEEDS WORK
-msgid "This Month"
-msgstr "Denna månad"
-# 
-# File: src/ashyterm/ui/widgets/conversation_history.py, line: 130
-#: NEEDS WORK
-msgid "Conversation History"
-msgstr "Konversationshistorik"
-# 
-# File: usr/share/ashyterm/ui/ssh_dialogs.py, line: 83
-# File: usr/share/ashyterm/ui/ssh_dialogs.py, line: 239
-#: NEEDS WORK
-msgid "Close"
-msgstr "Stäng"
-# 
-# File: src/ashyterm/ui/widgets/conversation_history.py, line: 143
-#: NEEDS WORK
-msgid "Delete All Conversations"
-msgstr "Ta bort alla konversationer"
-# 
-# File: src/ashyterm/ui/widgets/conversation_history.py, line: 150
-# File: src/ashyterm/ui/widgets/conversation_history.py, line: 278
-#: NEEDS WORK
-msgid "New Conversation"
-msgstr "Ny konversation"
-# 
-# File: src/ashyterm/ui/widgets/conversation_history.py, line: 164
-#: NEEDS WORK
-msgid "Search…"
-msgstr "Sök…"
-# 
-# File: src/ashyterm/ui/widgets/conversation_history.py, line: 192
-#: NEEDS WORK
-msgid "No Conversations"
-msgstr "Inga konversationer"
-# 
-# File: src/ashyterm/ui/widgets/conversation_history.py, line: 193
-#: NEEDS WORK
-msgid "Start chatting to create your first conversation"
-msgstr "Börja chatta för att skapa din första konversation"
-# 
-# File: src/ashyterm/ui/widgets/conversation_history.py, line: 346
-#: NEEDS WORK
-msgid "Delete Conversation?"
-msgstr "Ta bort konversation?"
-# 
-# File: src/ashyterm/ui/widgets/conversation_history.py, line: 347
-#: NEEDS WORK
-msgid "This conversation will be permanently deleted."
-msgstr "Denna konversation kommer att raderas permanent."
-# 
-# File: src/ashyterm/ui/widgets/conversation_history.py, line: 378
-#: NEEDS WORK
-msgid "Delete All Conversations?"
-msgstr "Radera alla konversationer?"
-# 
-# File: src/ashyterm/ui/widgets/conversation_history.py, line: 380
-#: NEEDS WORK
-#, python-brace-format
-msgid "This will permanently delete all {} conversations. This action cannot be undone."
-msgstr "Detta kommer permanent att radera alla {} konversationer. Denna åtgärd kan inte ångras."
-# 
-# File: src/ashyterm/ui/widgets/conversation_history.py, line: 383
-#: NEEDS WORK
-msgid "Delete All"
-msgstr "Ta bort allt"
-# 
 # File: usr/share/ashyterm/ui/sidebar_manager.py, line: 220
 #: NEEDS WORK
 msgid "Show Sessions"
 msgstr "Visa sessioner"
 # 
-# File: src/ashyterm/ui/sidebar_manager.py, line: 292
+# File: usr/share/ashyterm/ui/sidebar_manager.py, line: 227
 #: NEEDS WORK
-msgid "Hide Sessions Panel"
-msgstr "Dölj sessionspanel"
+msgid "Hide Sidebar"
+msgstr "Dölj sidofält"
 # 
-# File: src/ashyterm/ui/sidebar_manager.py, line: 292
+# File: usr/share/ashyterm/ui/sidebar_manager.py, line: 227
 #: NEEDS WORK
-msgid "Show Sessions Panel"
-msgstr "Visa sessionspanel"
+msgid "Show Sidebar"
+msgstr "Visa sidofält"
 # 
 # File: usr/share/ashyterm/ui/menus.py, line: 24
 #: NEEDS WORK
@@ -2109,7 +915,7 @@ msgstr "Matcha terminalfärger"
 msgid "New Window"
 msgstr "Nytt fönster"
 # 
-# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
+# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
 # 
 # File: usr/share/ashyterm/ui/menus.py, line: 157
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1390
@@ -2118,15 +924,7 @@ msgstr "Nytt fönster"
 msgid "Preferences"
 msgstr "Inställningar"
 # 
-# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
-# 
-# File: src/ashyterm/ui/menus.py, line: 167
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1082
-#: NEEDS WORK
-msgid "Highlight Colors"
-msgstr "Markera färger"
-# 
-# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
+# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
 # 
 # File: usr/share/ashyterm/ui/menus.py, line: 211
 # File: usr/share/ashyterm/window.py, line: 909
@@ -2140,7 +938,7 @@ msgstr "Tangentbordsgenvägar"
 msgid "About"
 msgstr "Om"
 # 
-# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
+# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
 # 
 # File: usr/share/ashyterm/ui/menus.py, line: 217
 # File: usr/share/ashyterm/window.py, line: 942
@@ -2158,7 +956,7 @@ msgstr "Anslut med SFTP"
 msgid "Duplicate"
 msgstr "Duplicera"
 # 
-# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
+# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
 # 
 # File: usr/share/ashyterm/ui/menus.py, line: 25
 # File: usr/share/ashyterm/ui/menus.py, line: 61
@@ -2177,7 +975,7 @@ msgstr "Flytta till mapp..."
 msgid "Add Session Here"
 msgstr "Lägg till session här"
 # 
-# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
+# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
 # 
 # File: usr/share/ashyterm/ui/menus.py, line: 69
 # File: usr/share/ashyterm/ui/menus.py, line: 118
@@ -2202,7 +1000,7 @@ msgstr "Öppna länk"
 msgid "Copy Link"
 msgstr "Kopiera länk"
 # 
-# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
+# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
 # 
 # File: usr/share/ashyterm/ui/menus.py, line: 30
 # File: usr/share/ashyterm/ui/menus.py, line: 66
@@ -2213,7 +1011,7 @@ msgstr "Kopiera länk"
 msgid "Copy"
 msgstr "Kopiera"
 # 
-# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
+# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
 # 
 # File: usr/share/ashyterm/ui/menus.py, line: 119
 # File: usr/share/ashyterm/ui/menus.py, line: 155
@@ -2230,12 +1028,7 @@ msgstr "Välj alla"
 msgid "Clear Session"
 msgstr "Rensa session"
 # 
-# File: src/ashyterm/ui/menus.py, line: 313
-#: NEEDS WORK
-msgid "Ask AI"
-msgstr "Fråga AI"
-# 
-# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
+# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
 # 
 # File: usr/share/ashyterm/ui/menus.py, line: 276
 # File: usr/share/ashyterm/filemanager/menus.py, line: 276
@@ -2243,7 +1036,7 @@ msgstr "Fråga AI"
 msgid "Split Left/Right"
 msgstr "Dela Vänster/Höger"
 # 
-# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
+# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
 # 
 # File: usr/share/ashyterm/ui/menus.py, line: 279
 # File: usr/share/ashyterm/filemanager/menus.py, line: 279
@@ -2260,22 +1053,6 @@ msgstr "Terminalsession rensad."
 #: NEEDS WORK
 msgid "No active terminal to clear."
 msgstr "Ingen aktiv terminal att rensa."
-# 
-# File: src/ashyterm/ui/actions.py, line: 233
-#: NEEDS WORK
-#, python-brace-format
-msgid ""
-"Explain this code or command:\n"
-"\n"
-"```\n"
-"{text}\n"
-"```"
-msgstr ""
-"Förklara denna kod eller kommando:\n"
-"\n"
-"```\n"
-"{text}\n"
-"```"
 # 
 # File: usr/share/ashyterm/ui/actions.py, line: 168
 #: NEEDS WORK
@@ -2299,7 +1076,7 @@ msgstr "Ny mapp"
 msgid "Session"
 msgstr "Session"
 # 
-# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
+# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 351
 # File: usr/share/ashyterm/window.py, line: 944
@@ -2379,1161 +1156,16 @@ msgstr "SSH-anslutning misslyckades"
 msgid "Could not connect to session '{session_name}'."
 msgstr "Kunde inte ansluta till session '{session_name}'."
 # 
-# File: src/ashyterm/ui/dialogs/ai_config_dialog.py, line: 43
-#: NEEDS WORK
-msgid "Configure AI Assistant"
-msgstr "Konfigurera AI-assistent"
-# 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 327
-#: NEEDS WORK
-msgid "Enable AI Assistant"
-msgstr "Aktivera AI-assistent"
-# 
-# File: src/ashyterm/ui/dialogs/ai_config_dialog.py, line: 72
-#: NEEDS WORK
-msgid "Show the AI Assistant button in the header bar."
-msgstr "Visa AI-assistentknappen i headerfältet."
-# 
-# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
-# 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 339
-# File: usr/share/ashyterm/window.py, line: 546
-#: NEEDS WORK
-msgid "Provider"
-msgstr "Leverantör"
-# 
-# File: src/ashyterm/ui/dialogs/ai_config_dialog.py, line: 90
-#: NEEDS WORK
-msgid "Choose between cloud providers or local models."
-msgstr "Välj mellan molnleverantörer eller lokala modeller."
-# 
-# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
-# 
-# File: src/ashyterm/ui/dialogs/ai_config_dialog.py, line: 104
-# File: src/ashyterm/window.py, line: 818
-#: NEEDS WORK
-msgid "Base URL"
-msgstr "Bas-URL"
-# 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 374
-#: NEEDS WORK
-msgid "API Key"
-msgstr "API-nyckel"
-# 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 361
-#: NEEDS WORK
-msgid "Model Identifier"
-msgstr "Modellidentifierare"
-# 
-# File: src/ashyterm/ui/dialogs/ai_config_dialog.py, line: 134
-#: NEEDS WORK
-msgid "Browse Available Models"
-msgstr "Bläddra bland tillgängliga modeller"
-# 
-# File: src/ashyterm/ui/dialogs/ai_config_dialog.py, line: 135
-#: NEEDS WORK
-msgid "Search and select from available OpenRouter models."
-msgstr "Sök och välj bland tillgängliga OpenRouter-modeller."
-# 
-# File: src/ashyterm/ui/dialogs/ai_config_dialog.py, line: 137
-#: NEEDS WORK
-msgid "Browse Models"
-msgstr "Bläddra bland modeller"
-# 
-# File: src/ashyterm/ui/dialogs/ai_config_dialog.py, line: 168
-#: NEEDS WORK
-msgid "OpenRouter Settings"
-msgstr "OpenRouter-inställningar"
-# 
-# File: src/ashyterm/ui/dialogs/ai_config_dialog.py, line: 169
-#: NEEDS WORK
-msgid "Additional settings for OpenRouter API rankings."
-msgstr "Ytterligare inställningar för OpenRouter API-rankningar."
-# 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 391
-#: NEEDS WORK
-msgid "Site URL (optional)"
-msgstr "Webbplats-URL (valfritt)"
-# 
-# File: src/ashyterm/ui/dialogs/ai_config_dialog.py, line: 185
-#: NEEDS WORK
-msgid "Site Name (optional)"
-msgstr "Webbplatsnamn (valfritt)"
-# 
-# File: src/ashyterm/ui/dialogs/ai_config_dialog.py, line: 237
-#: NEEDS WORK
-msgid "Groq API Key"
-msgstr "Groq API-nyckel"
-# 
-# File: src/ashyterm/ui/dialogs/ai_config_dialog.py, line: 240
-#: NEEDS WORK
-msgid "Google AI Studio API Key"
-msgstr "Google AI Studio API-nyckel"
-# 
-# File: src/ashyterm/ui/dialogs/ai_config_dialog.py, line: 243
-#: NEEDS WORK
-msgid "OpenRouter API Key"
-msgstr "OpenRouter API-nyckel"
-# 
-# File: src/ashyterm/ui/dialogs/ai_config_dialog.py, line: 245
-#: NEEDS WORK
-msgid "Model Name"
-msgstr "Modellnamn"
-# 
-# File: src/ashyterm/ui/dialogs/ai_config_dialog.py, line: 246
-#: NEEDS WORK
-msgid "API Key (if required)"
-msgstr "API-nyckel (om det krävs)"
-# 
-# File: src/ashyterm/ui/dialogs/ai_config_dialog.py, line: 305
-#: NEEDS WORK
-msgid "Please enter an API key first."
-msgstr "Vänligen ange en API-nyckel först."
-# 
-# File: src/ashyterm/ui/dialogs/ai_config_dialog.py, line: 300
-#: NEEDS WORK
-msgid "Select OpenRouter Model"
-msgstr "Välj OpenRouter-modell"
-# 
-# File: src/ashyterm/ui/dialogs/ai_config_dialog.py, line: 344
-#: NEEDS WORK
-msgid "Search models by name or ID..."
-msgstr "Sök modeller efter namn eller ID..."
-# 
-# File: src/ashyterm/ui/dialogs/ai_config_dialog.py, line: 358
-#: NEEDS WORK
-msgid "Loading models..."
-msgstr "Laddar modeller..."
-# 
-# File: src/ashyterm/ui/dialogs/ai_config_dialog.py, line: 457
-#: NEEDS WORK
-#, python-brace-format
-msgid "Failed to load models: {error}"
-msgstr "Misslyckades med att ladda modeller: {error}"
-# 
-# File: src/ashyterm/ui/dialogs/ai_config_dialog.py, line: 489
-#: NEEDS WORK
-#, python-brace-format
-msgid "{count} models available"
-msgstr "{count} modeller tillgängliga"
-# 
-# File: src/ashyterm/ui/dialogs/ai_config_dialog.py, line: 492
-#: NEEDS WORK
-#, python-brace-format
-msgid "Showing {shown} of {total} models"
-msgstr "Visar {shown} av {total} modeller"
-# 
-# File: src/ashyterm/ui/dialogs/ai_config_dialog.py, line: 503
-#: NEEDS WORK
-msgid "Showing first 100 results. Refine your search to see more."
-msgstr "Visar de första 100 resultaten. Förfina din sökning för att se fler."
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 32
-#: NEEDS WORK
-msgid "Black"
-msgstr "Svart"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 33
-#: NEEDS WORK
-msgid "Red"
-msgstr "Röd"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 34
-#: NEEDS WORK
-msgid "Green"
-msgstr "Grön"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 35
-#: NEEDS WORK
-msgid "Yellow"
-msgstr "Gul"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 36
-#: NEEDS WORK
-msgid "Blue"
-msgstr "Blå"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 37
-#: NEEDS WORK
-msgid "Magenta"
-msgstr "Magenta"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 38
-#: NEEDS WORK
-msgid "Cyan"
-msgstr "Cyan"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 39
-#: NEEDS WORK
-msgid "White"
-msgstr "Vit"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 41
-#: NEEDS WORK
-msgid "Bright Black"
-msgstr "Ljus Svart"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 42
-#: NEEDS WORK
-msgid "Bright Red"
-msgstr "Ljus Röd"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 43
-#: NEEDS WORK
-msgid "Bright Green"
-msgstr "Ljusgrön"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 44
-#: NEEDS WORK
-msgid "Bright Yellow"
-msgstr "Ljusgul"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 45
-#: NEEDS WORK
-msgid "Bright Blue"
-msgstr "Ljusblå"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 46
-#: NEEDS WORK
-msgid "Bright Magenta"
-msgstr "Ljus Magenta"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 47
-#: NEEDS WORK
-msgid "Bright Cyan"
-msgstr "Ljus Cyan"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 48
-#: NEEDS WORK
-msgid "Bright White"
-msgstr "Ljus Vit"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 58
-#: NEEDS WORK
-msgid "Bold"
-msgstr "Fet"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 59
-#: NEEDS WORK
-msgid "Italic"
-msgstr "Kursiv"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1141
-#: NEEDS WORK
-msgid "Underline"
-msgstr "Understrykning"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 61
-#: NEEDS WORK
-msgid "Strikethrough"
-msgstr "Genomstruken"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 62
-#: NEEDS WORK
-msgid "Dim/Faint"
-msgstr "Dämpad/Avsvagad"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 63
-#: NEEDS WORK
-msgid "Blink"
-msgstr "Blink"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 68
-#: NEEDS WORK
-msgid "Default"
-msgstr "Standardinställning"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 85
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 375
-#: NEEDS WORK
-#, python-brace-format
-msgid "Group {}"
-msgstr "Grupp {}"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 174
-#: NEEDS WORK
-msgid "Color:"
-msgstr "Färg:"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 216
-#: NEEDS WORK
-msgid "Bg:"
-msgstr "Bg:"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 110
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 817
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1303
-#: NEEDS WORK
-msgid "Remove"
-msgstr "Ta bort"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 210
-#: NEEDS WORK
-msgid "New Rule"
-msgstr "Ny regel"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 210
-#: NEEDS WORK
-msgid "Edit Rule"
-msgstr "Redigera regel"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 256
-#: NEEDS WORK
-msgid "Rule Name"
-msgstr "Regelnamn"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 263
-#: NEEDS WORK
-msgid "Pattern"
-msgstr "Mönster"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 525
-#: NEEDS WORK
-msgid "Python regex syntax. Capture groups () can have individual colors."
-msgstr "Python regex-syntax. Fångstgrupper () kan ha individuella färger."
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 268
-#: NEEDS WORK
-msgid "Regex Pattern"
-msgstr "Reguljärt uttryck"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 276
-#: NEEDS WORK
-msgid "Regex reference"
-msgstr "Regex-referens"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 554
-#: NEEDS WORK
-msgid "Colors & Effects"
-msgstr "Färger och effekter"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 555
-#: NEEDS WORK
-msgid "First color applies to entire match if no groups."
-msgstr "Första färgen tillämpas på hela matchen om inga grupper finns."
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 298
-#: NEEDS WORK
-msgid "Add Color"
-msgstr "Lägg till färg"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 311
-#: NEEDS WORK
-msgid "Description (optional)"
-msgstr "Beskrivning (valfritt)"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 403
-#: NEEDS WORK
-#, python-brace-format
-msgid "Pattern has {} capture group(s). Add colors for each group."
-msgstr "Mönster har {} fångstgrupp(er). Lägg till färger för varje grupp."
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 407
-#: NEEDS WORK
-msgid "Pattern has no capture groups. First color applies to entire match."
-msgstr "Mönstret har inga fångstgrupper. Första färgen tillämpas på hela matchningen."
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 419
-#: NEEDS WORK
-msgid "Rule name is required"
-msgstr "Regelnamn krävs"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 425
-#: NEEDS WORK
-msgid "Pattern is required"
-msgstr "Mönster krävs"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 434
-#: NEEDS WORK
-#, python-brace-format
-msgid "Invalid regex: {}"
-msgstr "Ogiltigt regex: {}"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 439
-#: NEEDS WORK
-msgid "✓ Valid pattern"
-msgstr "✓ Giltigt mönster"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 447
-#: NEEDS WORK
-msgid "Regex Reference"
-msgstr "Regex-referens"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 470
-#: NEEDS WORK
-msgid "Basic Patterns"
-msgstr "Grundläggande mönster"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 472
-#: NEEDS WORK
-msgid "Any character except newline"
-msgstr "Vilken tecken som helst förutom radbrytning"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 473
-#: NEEDS WORK
-msgid "Any digit [0-9]"
-msgstr "Valfri siffra [0-9]"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 474
-#: NEEDS WORK
-msgid "Word character [a-zA-Z0-9_]"
-msgstr "Ordtecken [a-zA-Z0-9_]"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 475
-#: NEEDS WORK
-msgid "Whitespace character"
-msgstr "Vitrymdstecken"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 476
-#: NEEDS WORK
-msgid "Negations of above"
-msgstr "Negationer av ovanstående"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 477
-#: NEEDS WORK
-msgid "Start of line"
-msgstr "Radens början"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 478
-#: NEEDS WORK
-msgid "End of line"
-msgstr "Radslut"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 479
-#: NEEDS WORK
-msgid "Word boundary"
-msgstr "Ordboundary"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 488
-#: NEEDS WORK
-msgid "Quantifiers"
-msgstr "Kvantifierare"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 490
-#: NEEDS WORK
-msgid "0 or more times"
-msgstr "0 eller fler gånger"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 491
-#: NEEDS WORK
-msgid "1 or more times"
-msgstr "1 eller flera gånger"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 492
-#: NEEDS WORK
-msgid "0 or 1 time"
-msgstr "0 eller 1 gång"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 493
-#: NEEDS WORK
-msgid "Exactly n times"
-msgstr "Exakt n gånger"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 494
-#: NEEDS WORK
-msgid "Between n and m times"
-msgstr "Mellan n och m gånger"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 495
-#: NEEDS WORK
-msgid "Non-greedy versions"
-msgstr "Icke-grådiga versioner"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 504
-#: NEEDS WORK
-msgid "Groups & Alternatives"
-msgstr "Grupper och alternativ"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 506
-#: NEEDS WORK
-msgid "Capture group (gets a color)"
-msgstr "Fångstgrupp (får en färg)"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 507
-#: NEEDS WORK
-msgid "Non-capturing group"
-msgstr "Icke-fångande grupp"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 508
-#: NEEDS WORK
-msgid "Alternation (a or b)"
-msgstr "Alternativ (a eller b)"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 509
-#: NEEDS WORK
-msgid "Character class (a, b, or c)"
-msgstr "Teckenkategori (a, b eller c)"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 510
-#: NEEDS WORK
-msgid "Negated class (not a, b, c)"
-msgstr "Negerad klass (inte a, b, c)"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 511
-#: NEEDS WORK
-msgid "Character range"
-msgstr "Teckenintervall"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 520
-#: NEEDS WORK
-msgid "Examples"
-msgstr "Exempel"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 522
-#: NEEDS WORK
-msgid "IPv4 address"
-msgstr "IPv4-adress"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 523
-#: NEEDS WORK
-msgid "Match error keywords"
-msgstr "Matchfel nyckelord"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 524
-#: NEEDS WORK
-msgid "Key=value pairs (2 groups)"
-msgstr "Nyckel=värdepar (2 grupper)"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 525
-#: NEEDS WORK
-msgid "Comment lines"
-msgstr "Kommentarer"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 862
-#: NEEDS WORK
-#, python-brace-format
-msgid "Command: {}"
-msgstr "Kommando: {}"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 938
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1790
-#: NEEDS WORK
-msgid "Enable Command Rules"
-msgstr "Aktivera kommandoregler"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 635
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1459
-#: NEEDS WORK
-msgid "Include Global Rules"
-msgstr "Inkludera globala regler"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 643
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1467
-#: NEEDS WORK
-msgid "Reset to System Default"
-msgstr "Återställ till systemstandard"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 657
-#: NEEDS WORK
-msgid "Triggers"
-msgstr "Utlösare"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 664
-#: NEEDS WORK
-msgid "➕ Add Trigger"
-msgstr "➕ Lägg till utlösare"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 682
-#: NEEDS WORK
-msgid "Highlight Rules"
-msgstr "Markera regler"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 689
-#: NEEDS WORK
-msgid "➕ Add New Rule"
-msgstr "➕ Lägg till ny regel"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 753
-#: NEEDS WORK
-msgid "Edit trigger"
-msgstr "Redigera utlösare"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 761
-#: NEEDS WORK
-msgid "Remove trigger"
-msgstr "Ta bort utlösare"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 767
-#: NEEDS WORK
-msgid "Cannot remove the last trigger"
-msgstr "Kan inte ta bort den sista utlösaren"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 813
-#: NEEDS WORK
-msgid "Remove Trigger?"
-msgstr "Ta bort utlösare?"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 814
-#: NEEDS WORK
-#, python-brace-format
-msgid "Remove \"{}\" from the triggers list?"
-msgstr "Ta bort \"{}\" från listan över utlösare?"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 872
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1824
-#: NEEDS WORK
-msgid "Move up"
-msgstr "Flytta upp"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 881
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1833
-#: NEEDS WORK
-msgid "Move down"
-msgstr "Flytta ner"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 901
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2156
-#: NEEDS WORK
-msgid "Edit rule"
-msgstr "Redigera regel"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 909
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2164
-#: NEEDS WORK
-msgid "Delete rule"
-msgstr "Ta bort regel"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 957
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1987
-#: NEEDS WORK
-msgid "Reset to System Default?"
-msgstr "Återställ till systemstandard?"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 958
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1988
-#: NEEDS WORK
-#, python-brace-format
-msgid "This will remove your customizations for \"{}\" and revert to system rules."
-msgstr "Detta kommer att ta bort dina anpassningar för \"{}\" och återgå till systemregler."
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1831
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1843
-#: NEEDS WORK
-msgid "Reset"
-msgstr "Återställ"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1041
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2069
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2249
-#: NEEDS WORK
-msgid "Delete Rule?"
-msgstr "Ta bort regel?"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1042
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2070
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2250
-#: NEEDS WORK
-#, python-brace-format
-msgid "Are you sure you want to delete \"{}\"?"
-msgstr "Är du säker på att du vill ta bort \"{}\"?"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1106
-#: NEEDS WORK
-msgid "Global Rules"
-msgstr "Globala regler"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1475
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1776
-#: NEEDS WORK
-msgid "Command Rules"
-msgstr "Kommandoregler"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1490
-#: NEEDS WORK
-msgid ""
-"Colorizes terminal output patterns like errors, warnings, and IPs. Many rules can slow down large "
-"outputs."
-msgstr ""
-"Färgar terminalutdata mönster som fel, varningar och IP-adresser. Många regler kan sakta ner stora "
-"utdata."
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1151
-#: NEEDS WORK
-msgid "Activation"
-msgstr "Aktivering"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1160
-#: NEEDS WORK
-msgid "Local Terminals"
-msgstr "Lokala terminaler"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1169
-#: NEEDS WORK
-msgid "SSH Sessions"
-msgstr "SSH-sessioner"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1179
-#: NEEDS WORK
-msgid "Ignored Commands"
-msgstr "Ignorerade kommandon"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1200
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1335
-#: NEEDS WORK
-msgid "Restore Defaults"
-msgstr "Återställ standardinställningar"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1214
-#: NEEDS WORK
-msgid "➕ Add Ignored Command"
-msgstr "➕ Lägg till ignorerad kommando"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1253
-#: NEEDS WORK
-#, python-brace-format
-msgid "{count} command(s) • Click to expand/collapse"
-msgstr "{count} kommando(s) • Klicka för att expandera/minimera"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1265
-#: NEEDS WORK
-msgid "Remove from ignored list"
-msgstr "Ta bort från ignorerad lista"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1293
-#: NEEDS WORK
-#, python-brace-format
-msgid "Command added: {}"
-msgstr "Kommandot har lagts till: {}"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1299
-#: NEEDS WORK
-msgid "Remove Ignored Command?"
-msgstr "Ta bort ignorerat kommando?"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1300
-#: NEEDS WORK
-#, python-brace-format
-msgid "Remove \"{}\" from the ignored commands list? Highlighting will be applied to this command's output."
-msgstr ""
-"Ta bort \"{}\" från listan över ignorerade kommandon? Markering kommer att tillämpas på detta "
-"kommandoresultat."
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1325
-#: NEEDS WORK
-#, python-brace-format
-msgid "Command removed: {}"
-msgstr "Kommandot har tagits bort: {}"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1331
-#: NEEDS WORK
-msgid "Restore Default Ignored Commands?"
-msgstr "Återställ standard ignorerade kommandon?"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1332
-#: NEEDS WORK
-msgid ""
-"This will replace your current ignored commands list with the system defaults. Custom additions "
-"will be lost."
-msgstr ""
-"Detta kommer att ersätta din nuvarande lista över ignorerade kommandon med systemets "
-"standardinställningar. Anpassade tillägg kommer att gå förlorade."
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1356
-#: NEEDS WORK
-msgid "Restored default ignored commands"
-msgstr "Återställda standard ignorerade kommandon"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1698
-#: NEEDS WORK
-msgid "Per-Command Highlighting"
-msgstr "Per-kommandobelysning"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1704
-#: NEEDS WORK
-msgid "Enable Command Detection"
-msgstr "Aktivera kommandodetektering"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1713
-#: NEEDS WORK
-msgid "Commands"
-msgstr "Kommandon"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1719
-#: NEEDS WORK
-msgid "➕ Add Command"
-msgstr "➕ Lägg till kommando"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1406
-#: NEEDS WORK
-msgid "Bulk Actions"
-msgstr "Massåtgärder"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1410
-#: NEEDS WORK
-msgid "Enable All"
-msgstr "Aktivera alla"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1416
-#: NEEDS WORK
-msgid "Disable All"
-msgstr "Inaktivera alla"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1753
-#: NEEDS WORK
-msgid "Reset All Commands"
-msgstr "Återställ alla kommandon"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1766
-#: NEEDS WORK
-msgid "Available Commands"
-msgstr "Tillgängliga kommandon"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1438
-#: NEEDS WORK
-msgid "Rules specific to the selected command. Order matters!"
-msgstr "Regler specifika för det valda kommandot. Ordningen är viktig!"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1783
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2081
-#: NEEDS WORK
-msgid "No command selected"
-msgstr "Ingen kommando vald"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1784
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2083
-#: NEEDS WORK
-msgid "Select a command from the list above"
-msgstr "Välj ett kommando från listan ovan"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 628
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1452
-#: NEEDS WORK
-msgid "Apply rules when this command is detected"
-msgstr "Tillämpa regler när detta kommando upptäcks"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1799
-#: NEEDS WORK
-msgid "Also apply global rules alongside command-specific rules"
-msgstr "Tillämpa även globala regler tillsammans med kommandospecifika regler"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 644
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1468
-#: NEEDS WORK
-msgid "Remove user customization and revert to system rules"
-msgstr "Ta bort användaranpassning och återställ till systemregler."
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1482
-#: NEEDS WORK
-msgid "Rules (in execution order)"
-msgstr "Regler (i exekveringsordning)"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1483
-#: NEEDS WORK
-msgid "Use arrows to reorder rules. Rules are matched from top to bottom."
-msgstr "Använd pilar för att omordna regler. Regler matchas från topp till botten."
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1828
-#: NEEDS WORK
-msgid "➕ Add Rule to This Command"
-msgstr "➕ Lägg till regel för detta kommando"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1490
-#: NEEDS WORK
-msgid "Create a new highlighting pattern for the selected command"
-msgstr "Skapa ett nytt markeringsmönster för det valda kommandot"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1505
-#: NEEDS WORK
-msgid "Global Highlight Rules"
-msgstr "Globala markeringsregler"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1517
-#: NEEDS WORK
-msgid "➕ Add New Global Rule"
-msgstr "➕ Lägg till ny global regel"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1863
-#: NEEDS WORK
-msgid "Reset Global Rules"
-msgstr "Återställ globala regler"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1900
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2006
-#: NEEDS WORK
-#, python-brace-format
-msgid "{total} command(s), {enabled} enabled"
-msgstr "{total} kommando(n), {enabled} aktiverad"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1590
-#: NEEDS WORK
-#, python-brace-format
-msgid "{count} rules"
-msgstr "{count} regler"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1935
-#: NEEDS WORK
-msgid "Edit command rules"
-msgstr "Redigera kommandoregler"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1944
-#: NEEDS WORK
-msgid "Delete command"
-msgstr "Ta bort kommando"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1972
-#: NEEDS WORK
-msgid "Delete Command?"
-msgstr "Ta bort kommando?"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1641
-#: NEEDS WORK
-#, python-brace-format
-msgid "Are you sure you want to delete \"{}\"? This will remove all custom rules for this command."
-msgstr ""
-"Är du säker på att du vill ta bort \"{}\"? Detta kommer att ta bort alla anpassade regler för det "
-"här kommandot."
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1991
-#: NEEDS WORK
-#, python-brace-format
-msgid "Command deleted: {}"
-msgstr "Kommandot raderat: {}"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2086
-#: NEEDS WORK
-msgid "Select a command to view its rules"
-msgstr "Välj ett kommando för att visa dess regler"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2099
-#: NEEDS WORK
-msgid "Command not found"
-msgstr "Kommandot hittades inte"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1767
-#: NEEDS WORK
-#, python-brace-format
-msgid "Triggers: {triggers}"
-msgstr "Utlösare: {triggers}"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1770
-#: NEEDS WORK
-msgid "Enabled"
-msgstr "Aktiverad"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1770
-#: NEEDS WORK
-msgid "Disabled"
-msgstr "Inaktiverad"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1773
-#: NEEDS WORK
-#, python-brace-format
-msgid "{count} rule(s) • {status} • Use arrows to reorder"
-msgstr "{count} regel(ar) • {status} • Använd pilar för att omordna"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1852
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2149
-#: NEEDS WORK
-#, python-brace-format
-msgid "{} colors"
-msgstr "{} färger"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1863
-#: NEEDS WORK
-msgid "Actions"
-msgstr "Åtgärder"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2275
-#: NEEDS WORK
-#, python-brace-format
-msgid "{total} command(s), {enabled} enabled. Click to toggle, select to edit."
-msgstr "{total} kommando(n), {enabled} aktiverad. Klicka för att växla, välj för att redigera."
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2317
-#: NEEDS WORK
-#, python-brace-format
-msgid "Command created: {}"
-msgstr "Kommandot skapat: {}"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2348
-#: NEEDS WORK
-#, python-brace-format
-msgid "Command reset: {}"
-msgstr "Återställning av kommando: {}"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2008
-#: NEEDS WORK
-msgid "No user customization to reset"
-msgstr "Ingen användaranpassning att återställa"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2029
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2222
-#: NEEDS WORK
-#, python-brace-format
-msgid "Rule added: {}"
-msgstr "Regel tillagd: {}"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2055
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2239
-#: NEEDS WORK
-#, python-brace-format
-msgid "Rule updated: {}"
-msgstr "Regel uppdaterad: {}"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2095
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2273
-#: NEEDS WORK
-#, python-brace-format
-msgid "Rule deleted: {}"
-msgstr "Regel raderad: {}"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2462
-#: NEEDS WORK
-msgid "Restart Required"
-msgstr "Omstart krävs"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2463
-#: NEEDS WORK
-msgid "Restart the program for the colors to be applied to the terminal."
-msgstr "Starta om programmet för att färgerna ska tillämpas på terminalen."
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2645
-#: NEEDS WORK
-msgid "Reset Global Rules?"
-msgstr "Återställ globala regler?"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2647
-#: NEEDS WORK
-msgid "This will restore global rules to system defaults. Context customizations will be preserved."
-msgstr ""
-"Detta kommer att återställa globala regler till systemstandarder. Kontextanpassningar kommer att "
-"bevaras."
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2667
-#: NEEDS WORK
-msgid "Global rules reset to defaults"
-msgstr "Globala regler återställs till standardinställningar"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2673
-#: NEEDS WORK
-msgid "Reset All Commands?"
-msgstr "Återställ alla kommandon?"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2675
-#: NEEDS WORK
-msgid "This will restore all commands to system defaults. Global rules will be preserved."
-msgstr "Detta kommer att återställa alla kommandon till systemstandarder. Globala regler kommer att bevaras."
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2695
-#: NEEDS WORK
-msgid "All commands reset to defaults"
-msgstr "Alla kommandon återställs till standardinställningar"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2721
-#: NEEDS WORK
-msgid "New Command"
-msgstr "Ny kommandot"
-# 
-# File: usr/share/ashyterm/filemanager/manager.py, line: 1743
-# File: usr/share/ashyterm/filemanager/manager.py, line: 1760
-#: NEEDS WORK
-msgid "Create"
-msgstr "Skapa"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2365
-#: NEEDS WORK
-msgid "Enter the command name (e.g., ping, docker, git)"
-msgstr "Ange kommandonamnet (t.ex. ping, docker, git)"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2367
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2589
-#: NEEDS WORK
-msgid "Command Name"
-msgstr "Kommandonamn"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2383
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2498
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2605
-#: NEEDS WORK
-msgid "Enter a command name"
-msgstr "Ange ett kommandonamn"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2787
-#: NEEDS WORK
-msgid "Command already exists"
-msgstr "Kommandot finns redan"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2397
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2621
-#: NEEDS WORK
-msgid "Use only letters, numbers, - and _"
-msgstr "Använd endast bokstäver, siffror, - och _"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2402
-#: NEEDS WORK
-msgid "✓ Valid name"
-msgstr "✓ Giltigt namn"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2441
-#: NEEDS WORK
-msgid "Edit Trigger"
-msgstr "Redigera utlösare"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2441
-#: NEEDS WORK
-msgid "Add Trigger"
-msgstr "Lägg till utlösare"
-# 
-# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 369
-#: NEEDS WORK
-msgid "Add"
-msgstr "Lägg till"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2879
-#: NEEDS WORK
-#, python-brace-format
-msgid "Enter a command name that should activate the '{}' command rules."
-msgstr "Ange ett kommandonamn som ska aktivera '{}' kommandoregler."
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2483
-#: NEEDS WORK
-msgid "Trigger Command"
-msgstr "Utlösningskommando"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2506
-#: NEEDS WORK
-msgid "Trigger already exists"
-msgstr "Triggern finns redan"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2511
-#: NEEDS WORK
-msgid "✓ Valid trigger"
-msgstr "✓ Giltig utlösare"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2546
-#: NEEDS WORK
-msgid "Add Ignored Command"
-msgstr "Lägg till ignorerad kommando"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2587
-#: NEEDS WORK
-msgid "Commands with native coloring (grep, ls, git, etc.) should be added here."
-msgstr "Kommandon med inbyggd färgkodning (grep, ls, git, etc.) bör läggas till här."
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2614
-#: NEEDS WORK
-msgid "Command already in list"
-msgstr "Kommandot finns redan i listan"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2626
-#: NEEDS WORK
-msgid "✓ Valid command name"
-msgstr "✓ Giltigt kommandonamn"
+# File: usr/share/ashyterm/ui/ssh_dialogs.py, line: 83
+# File: usr/share/ashyterm/ui/ssh_dialogs.py, line: 239
+#: NEEDS WORK
+msgid "Close"
+msgstr "Stäng"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 223
 #: NEEDS WORK
 msgid "Edit Session"
 msgstr "Redigera session"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 581
-#: NEEDS WORK
-msgid "Test Connection"
-msgstr "Testa anslutning"
-# 
-# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 100
-#: NEEDS WORK
-msgid "Test SSH connection"
-msgstr "Testa SSH-anslutning"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 313
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1128
@@ -3547,33 +1179,30 @@ msgstr "UI-fel"
 msgid "Failed to initialize dialog interface"
 msgstr "Misslyckades med att initiera dialoggränssnittet"
 # 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 319
+#: NEEDS WORK
+msgid "Session Information"
+msgstr "Sessionsinformation"
+# 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 323
 #: NEEDS WORK
 msgid "Session Name"
 msgstr "Sessionsnamn"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 402
+# File: usr/share/ashyterm/ui/dialogs.py, line: 324
 #: NEEDS WORK
-msgid "Session Type"
-msgstr "Sessionstyp"
+msgid "A descriptive name for this session"
+msgstr "Ett beskrivande namn för denna session"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 403
+# File: usr/share/ashyterm/ui/dialogs.py, line: 329
 #: NEEDS WORK
-msgid "Choose between local terminal or SSH connection"
-msgstr "Välj mellan lokal terminal eller SSH-anslutning"
+msgid "Enter session name..."
+msgstr "Ange sessionsnamn..."
 # 
-# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 406
-# File: usr/share/ashyterm/sessions/models.py, line: 511
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1421
 #: NEEDS WORK
-msgid "Local Terminal"
-msgstr "Lokal terminal"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 406
-#: NEEDS WORK
-msgid "SSH Connection"
-msgstr "SSH-anslutning"
+msgid "Appearance"
+msgstr "Utseende"
 # 
 # File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 115
 #: NEEDS WORK
@@ -3595,15 +1224,10 @@ msgstr "Rensa färg"
 msgid "Organization"
 msgstr "Organisation"
 # 
-# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 196
+# File: usr/share/ashyterm/ui/dialogs.py, line: 352
 #: NEEDS WORK
-msgid "Choose where to store this session"
-msgstr "Välj var du vill spara den här sessionen"
-# 
-# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 201
-#: NEEDS WORK
-msgid "Select a folder to organize this session"
-msgstr "Välj en mapp för att organisera denna session"
+msgid "Choose a folder to organize this session"
+msgstr "Välj en mapp för att organisera den här sessionen"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 357
 # File: usr/share/ashyterm/ui/dialogs.py, line: 358
@@ -3613,49 +1237,43 @@ msgstr "Välj en mapp för att organisera denna session"
 msgid "Root"
 msgstr "Rot"
 # 
-# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 237
+# File: usr/share/ashyterm/ui/dialogs.py, line: 398
 #: NEEDS WORK
-msgid "Local Terminal Options"
-msgstr "Lokala terminalalternativ"
+msgid "Connection Type"
+msgstr "Anslutningstyp"
 # 
-# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 242
+# File: usr/share/ashyterm/ui/dialogs.py, line: 402
 #: NEEDS WORK
-msgid "Working Directory"
-msgstr "Arbetskatalog"
+msgid "Session Type"
+msgstr "Sessionstyp"
 # 
-# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 243
+# File: usr/share/ashyterm/ui/dialogs.py, line: 403
 #: NEEDS WORK
-msgid "Start the terminal in this folder"
-msgstr "Öppna terminalen i den här mappen"
+msgid "Choose between local terminal or SSH connection"
+msgstr "Välj mellan lokal terminal eller SSH-anslutning"
 # 
-# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 252
-#: NEEDS WORK
-msgid "Default (Home directory)"
-msgstr "Standard (Hemkatalog)"
+# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
 # 
-# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 262
+# File: usr/share/ashyterm/ui/dialogs.py, line: 406
+# File: usr/share/ashyterm/sessions/models.py, line: 511
 #: NEEDS WORK
-msgid "Browse for folder"
-msgstr "Bläddra efter mapp"
+msgid "Local Terminal"
+msgstr "Lokal terminal"
 # 
-# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 285
+# File: usr/share/ashyterm/ui/dialogs.py, line: 406
 #: NEEDS WORK
-msgid "Startup Commands"
-msgstr "Startkommandon"
-# 
-# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 293
-#: NEEDS WORK
-msgid ""
-"Commands executed when the terminal starts (one per line). You can write multiple commands like a "
-"small script."
-msgstr ""
-"Kommandon som körs när terminalen startar (ett per rad). Du kan skriva flera kommandon som ett "
-"litet skript."
+msgid "SSH Connection"
+msgstr "SSH-anslutning"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 423
 #: NEEDS WORK
 msgid "SSH Configuration"
 msgstr "SSH-konfiguration"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 424
+#: NEEDS WORK
+msgid "Configure connection details for SSH sessions"
+msgstr "Konfigurera anslutningsdetaljer för SSH-sessioner"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 429
 # File: usr/share/ashyterm/ui/dialogs.py, line: 894
@@ -3663,25 +1281,50 @@ msgstr "SSH-konfiguration"
 msgid "Host"
 msgstr "Värd"
 # 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 430
+#: NEEDS WORK
+msgid "Hostname or IP address of the remote server"
+msgstr "Värdnamn eller IP-adress till den fjärranslutna servern"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 435
+#: NEEDS WORK
+msgid "example.com or 192.168.1.100"
+msgstr "example.com eller 192.168.1.100"
+# 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 446
 #: NEEDS WORK
 msgid "Username"
 msgstr "Användarnamn"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 447
+#: NEEDS WORK
+msgid "Username for SSH authentication (optional)"
+msgstr "Användarnamn för SSH-autentisering (valfritt)"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 452
+#: NEEDS WORK
+msgid "username"
+msgstr "användarnamn"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 464
 #: NEEDS WORK
 msgid "Port"
 msgstr "Port"
 # 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 465
+#: NEEDS WORK
+msgid "SSH port number (default: 22)"
+msgstr "SSH-portnummer (standard: 22)"
+# 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 463
 #: NEEDS WORK
 msgid "Authentication"
 msgstr "Autentisering"
 # 
-# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 369
+# File: usr/share/ashyterm/ui/dialogs.py, line: 464
 #: NEEDS WORK
-msgid "Choose how to authenticate with the server"
-msgstr "Välj hur du vill autentisera dig mot servern"
+msgid "Choose authentication method"
+msgstr "Välj autentiseringsmetod"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 467
 #: NEEDS WORK
@@ -3699,95 +1342,85 @@ msgstr "Lösenord"
 msgid "SSH Key Path"
 msgstr "SSH-nyckelväg"
 # 
-# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 384
+# File: usr/share/ashyterm/ui/dialogs.py, line: 495
 #: NEEDS WORK
-msgid "Path to your private key file"
-msgstr "Sökväg till din privata nyckelfil"
+msgid "Path to private SSH key file"
+msgstr "Sökväg till privat SSH-nyckelfil"
 # 
-# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 401
+# File: usr/share/ashyterm/ui/dialogs.py, line: 510
 #: NEEDS WORK
-msgid "Browse for SSH key file"
-msgstr "Bläddra efter SSH-nyckelfil"
+msgid "Browse..."
+msgstr "Bläddra..."
 # 
-# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 434
+# File: usr/share/ashyterm/ui/dialogs.py, line: 534
 #: NEEDS WORK
-msgid "Password Storage"
-msgstr "Lösenordshantering"
+msgid "Password for SSH authentication"
+msgstr "Lösenord för SSH-autentisering"
 # 
-# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 436
+# File: usr/share/ashyterm/ui/dialogs.py, line: 342
 #: NEEDS WORK
-msgid "System keyring not available - password will be stored in plain text"
-msgstr "Systemnyckelring är inte tillgänglig - lösenordet kommer att lagras i klartext"
+msgid "Password for SSH authentication (stored in system keyring)"
+msgstr "Lösenord för SSH-autentisering (lagrat i systemnyckelringen)"
 # 
-# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 453
+# File: usr/share/ashyterm/ui/dialogs.py, line: 346
 #: NEEDS WORK
-msgid "SSH Options"
-msgstr "SSH-alternativ"
+msgid "Password for SSH authentication (keyring not available)"
+msgstr "Lösenord för SSH-autentisering (nyckelring inte tillgänglig)"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 553
+#: NEEDS WORK
+msgid "Enter password..."
+msgstr "Ange lösenord..."
 # 
 # File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 309
 #: NEEDS WORK
 msgid "Run Command After Login"
 msgstr "Kör kommando efter inloggning"
 # 
-# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 459
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 311
 #: NEEDS WORK
-msgid "Execute a command automatically after SSH connects"
-msgstr "Kör ett kommando automatiskt efter att SSH har anslutit"
+msgid "Execute a custom command automatically after the SSH session connects"
+msgstr "Kör ett anpassat kommando automatiskt efter att SSH-sessionen har anslutits"
 # 
 # File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 318
 #: NEEDS WORK
 msgid "Post-Login Command"
 msgstr "Post-Login Kommando"
 # 
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 319
+#: NEEDS WORK
+msgid "Command to execute right after a successful login"
+msgstr "Kommando att utföra direkt efter en lyckad inloggning"
+# 
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 323
+#: NEEDS WORK
+msgid "Example: tmux attach -t main"
+msgstr "Exempel: tmux attach -t huvud"
+# 
 # File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 356
 #: NEEDS WORK
 msgid "Enable X11 Forwarding"
 msgstr "Aktivera X11 vidarebefordran"
 # 
-# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 479
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 357
 #: NEEDS WORK
-msgid "Allow graphical applications from remote server"
-msgstr "Tillåt grafiska applikationer från fjärrserver"
-# 
-# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 353
-#: NEEDS WORK
-msgid "Enable SFTP Session"
-msgstr "Aktivera SFTP-session"
-# 
-# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 488
-#: NEEDS WORK
-msgid "Use default directories when opening SFTP"
-msgstr "Använd standardkataloger när du öppnar SFTP"
-# 
-# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 496
-#: NEEDS WORK
-msgid "SFTP Local Directory"
-msgstr "SFTP Lokal Katalog"
-# 
-# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 505
-#: NEEDS WORK
-msgid "SFTP Remote Directory"
-msgstr "SFTP Fjärrkatalog"
+msgid "Allow starting programs in graphical mode (X11)"
+msgstr "Tillåt att starta program i grafiskt läge (X11)"
 # 
 # File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 354
 #: NEEDS WORK
 msgid "Port Forwarding"
 msgstr "Portvidare"
 # 
-# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 529
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 355
 #: NEEDS WORK
-msgid "Create SSH tunnels to forward ports"
-msgstr "Skapa SSH-tunnlar för att vidarebefordra portar"
+msgid "Create SSH tunnels to forward local ports to remote targets"
+msgstr "Skapa SSH-tunnlar för att vidarebefordra lokala portar till fjärrmål"
 # 
-# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 484
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 369
 #: NEEDS WORK
-msgid "Add Port Forward"
-msgstr "Lägg till port vidarebefordran"
-# 
-# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 537
-#: NEEDS WORK
-msgid "Create a new SSH tunnel"
-msgstr "Skapa en ny SSH-tunnel"
+msgid "Add"
+msgstr "Lägg till"
 # 
 # File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 396
 #: NEEDS WORK
@@ -3819,15 +1452,20 @@ msgstr "{lokal_värd}:{lokal_port} → {fjärr_värd}:{fjärr_port}"
 msgid "Edit Port Forward"
 msgstr "Redigera Portvidare"
 # 
-# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 712
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 484
 #: NEEDS WORK
-msgid "Tunnel Name"
-msgstr "Tunnelens namn"
+msgid "Add Port Forward"
+msgstr "Lägg till port vidarebefordran"
 # 
-# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 718
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 508
 #: NEEDS WORK
-msgid "Local Settings"
-msgstr "Lokala inställningar"
+msgid "Tunnel name"
+msgstr "Tunnel namn"
+# 
+# File: usr/share/ashyterm/filemanager/manager.py, line: 366
+#: NEEDS WORK
+msgid "Name"
+msgstr "Namn"
 # 
 # File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 519
 #: NEEDS WORK
@@ -3839,25 +1477,15 @@ msgstr "Lokal värd"
 msgid "Local Port"
 msgstr "Lokal port"
 # 
-# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 732
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 529
 #: NEEDS WORK
-msgid "Port on your machine (1025-65535 recommended)"
-msgstr "Port på din maskin (1025-65535 rekommenderas)"
+msgid "Leave blank to use the SSH host"
+msgstr "Lämna tomt för att använda SSH-värden."
 # 
-# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 738
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 536
 #: NEEDS WORK
-msgid "Remote Settings"
-msgstr "Fjärrinställningar"
-# 
-# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 745
-#: NEEDS WORK
-msgid "Use Custom Remote Host"
-msgstr "Använd anpassad fjärrvärd"
-# 
-# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 746
-#: NEEDS WORK
-msgid "Leave off to use the SSH server as target"
-msgstr "Lämna av för att använda SSH-servern som mål"
+msgid "Connect to a different remote host"
+msgstr "Anslut till en annan fjärrvärd"
 # 
 # File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 546
 #: NEEDS WORK
@@ -3868,11 +1496,6 @@ msgstr "Fjärrvärd"
 #: NEEDS WORK
 msgid "Remote Port"
 msgstr "Fjärrport"
-# 
-# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 765
-#: NEEDS WORK
-msgid "Port on the remote host (1-65535)"
-msgstr "Port på den fjärranslutna värden (1-65535)"
 # 
 # File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 590
 #: NEEDS WORK
@@ -3894,41 +1517,75 @@ msgstr "Lokalt värd får inte vara tomt."
 msgid "Invalid Port Forward"
 msgstr "Ogiltig port vidarebefordran"
 # 
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 346
+#: NEEDS WORK
+msgid "SFTP Session"
+msgstr "SFTP-session"
+# 
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 348
+#: NEEDS WORK
+msgid "Configure default directories for SFTP connections (optional)"
+msgstr "Konfigurera standardkataloger för SFTP-anslutningar (valfritt)"
+# 
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 353
+#: NEEDS WORK
+msgid "Enable SFTP Session"
+msgstr "Aktivera SFTP-session"
+# 
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 355
+#: NEEDS WORK
+msgid "Use these directories when opening an SFTP tab for this session"
+msgstr "Använd dessa kataloger när du öppnar en SFTP-flik för den här sessionen"
+# 
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 364
+#: NEEDS WORK
+msgid "Local Directory"
+msgstr "Lokal katalog"
+# 
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 365
+#: NEEDS WORK
+msgid "Starting directory on your machine for SFTP"
+msgstr "Startkatalog på din maskin för SFTP"
+# 
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 369
+#: NEEDS WORK
+msgid "Example: /home/user/projects"
+msgstr "Exempel: /hem/användare/projekt"
+# 
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 379
+#: NEEDS WORK
+msgid "Remote Directory"
+msgstr "Fjärrkatalog"
+# 
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 380
+#: NEEDS WORK
+msgid "Starting directory on the remote host for SFTP"
+msgstr "Startkatalog på den fjärrvärd för SFTP"
+# 
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 384
+#: NEEDS WORK
+msgid "Example: /var/www"
+msgstr "Exempel: /var/www"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 581
+#: NEEDS WORK
+msgid "Test Connection"
+msgstr "Testa anslutning"
+# 
 # File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 773
 #: NEEDS WORK
 msgid "Remote server must have X11Forwarding yes in sshd_config."
 msgstr "Fjärrservern måste ha X11Forwarding ja i sshd_config."
 # 
-# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 1030
+# File: usr/share/ashyterm/ui/dialogs.py, line: 707
 #: NEEDS WORK
-msgid "Select Working Directory"
-msgstr "Välj arbetskatalog"
+msgid "Select SSH Key"
+msgstr "Välj SSH-nyckel"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 720
 #: NEEDS WORK
 msgid "File Dialog Error"
 msgstr "Fildialogfel"
-# 
-# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 1051
-#: NEEDS WORK
-msgid "Failed to open folder browser"
-msgstr "Misslyckades med att öppna mappbläddraren"
-# 
-# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 1065
-#: NEEDS WORK
-msgid "Folder Selection Error"
-msgstr "Mappvalsfel"
-# 
-# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 1066
-#: NEEDS WORK
-#, python-brace-format
-msgid "Failed to select folder: {}"
-msgstr "Misslyckades med att välja mapp: {}"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 707
-#: NEEDS WORK
-msgid "Select SSH Key"
-msgstr "Välj SSH-nyckel"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 720
 #: NEEDS WORK
@@ -4045,16 +1702,6 @@ msgstr ""
 msgid "Session name"
 msgstr "Sessionsnamn"
 # 
-# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 1367
-#: NEEDS WORK
-msgid "Working directory must exist and be a folder."
-msgstr "Arbetskatalogen måste finnas och vara en mapp."
-# 
-# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 1374
-#: NEEDS WORK
-msgid "Invalid working directory path."
-msgstr "Ogiltig arbetskatalogsökväg."
-# 
 # #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
 # 
 # File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 716
@@ -4127,6 +1774,11 @@ msgstr "Vänligen fyll i alla obligatoriska fält."
 #: NEEDS WORK
 msgid "Delete this custom command"
 msgstr "Ta bort denna anpassade kommando"
+# 
+# File: usr/share/ashyterm/ui/dialogs/command_guide_dialog.py, line: 143
+#: NEEDS WORK
+msgid "Command Guide"
+msgstr "Kommandoguide"
 # 
 # File: usr/share/ashyterm/ui/dialogs/command_guide_dialog.py, line: 165
 #: NEEDS WORK
@@ -4222,7 +1874,7 @@ msgstr "{} är obligatoriskt"
 msgid "Tab &amp; Pane Management"
 msgstr "Flik- och panelhantering"
 # 
-# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
+# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
 # 
 # File: usr/share/ashyterm/ui/menus.py, line: 145
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1597
@@ -4265,6 +1917,16 @@ msgstr "Stäng aktiv panel"
 msgid "Terminal Interaction"
 msgstr "Terminalinteraktion"
 # 
+# File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 38
+#: NEEDS WORK
+msgid "Send Command  All Tabs"
+msgstr "Skicka kommando  Alla flikar"
+# 
+# File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 39
+#: NEEDS WORK
+msgid "Ask AI Assistant"
+msgstr "Fråga AI-assistenten"
+# 
 # File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 42
 #: NEEDS WORK
 msgid "Zoom"
@@ -4289,6 +1951,11 @@ msgstr "Återställ zoom"
 #: NEEDS WORK
 msgid "Application &amp; Window"
 msgstr "Applikation &amp; Fönster"
+# 
+# File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 53
+#: NEEDS WORK
+msgid "Toggle File Manager"
+msgstr "Växla filhanterare"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1605
 #: NEEDS WORK
@@ -4389,60 +2056,111 @@ msgstr "Återställ alla genvägar"
 msgid "This will reset all keyboard shortcuts to their default values. Continue?"
 msgstr "Detta kommer att återställa alla tangentbordsgenvägar till deras standardvärden. Fortsätta?"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1421
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1831
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1843
 #: NEEDS WORK
-msgid "Appearance"
-msgstr "Utseende"
+msgid "Reset"
+msgstr "Återställ"
 # 
 # File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 56
 #: NEEDS WORK
 msgid "Color Scheme"
 msgstr "Färgschema"
 # 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 59
+#: NEEDS WORK
+msgid "Current Scheme"
+msgstr "Aktuell schema"
+# 
 # File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 62
 #: NEEDS WORK
 msgid "Manage Schemes..."
 msgstr "Hantera scheman..."
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1016
+#: NEEDS WORK
+msgid "Typography"
+msgstr "Typografi"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1017
+#: NEEDS WORK
+msgid "Configure fonts and spacing"
+msgstr "Konfigurera typsnitt och avstånd"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1465
 #: NEEDS WORK
 msgid "Terminal Font"
 msgstr "Terminaltypsnitt"
 # 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1466
+#: NEEDS WORK
+msgid "Select font family and size for terminal text"
+msgstr "Välj typsnitt och storlek för terminaltext"
+# 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1033
 #: NEEDS WORK
 msgid "Line Spacing"
 msgstr "Radavstånd"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1034
+#: NEEDS WORK
+msgid "Adjust the vertical space between lines"
+msgstr "Justera det vertikala avståndet mellan rader."
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1045
+#: NEEDS WORK
+msgid "Miscellaneous"
+msgstr "Diverse"
 # 
 # File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 102
 #: NEEDS WORK
 msgid "Terminal Transparency"
 msgstr "Terminal Transparens"
 # 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1449
+#: NEEDS WORK
+msgid "Adjust terminal background transparency"
+msgstr "Justera terminalens bakgrundstransparens"
+# 
 # File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 118
 #: NEEDS WORK
 msgid "Headerbar Transparency"
 msgstr "Headerbar Transparens"
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 119
+#: NEEDS WORK
+msgid "For headerbar and file manager"
+msgstr "För headerfält och filhanterare"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1065
 #: NEEDS WORK
 msgid "Use Bright Colors for Bold Text"
 msgstr "Använd ljusa färger för fet text"
 # 
-# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 169
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1066
 #: NEEDS WORK
-msgid "Auto-Hide Sessions Panel"
-msgstr "Automatiskt dölja sessionspanel"
+msgid "Render bold text with the brighter version of the base color"
+msgstr "Rendera fet text med den ljusare versionen av basfärgen"
 # 
-# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 170
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 132
 #: NEEDS WORK
-msgid "Hide panel when activating sessions"
-msgstr "Dölj panelen när sessioner aktiveras"
+msgid "Auto-Hide Sidebar"
+msgstr "Automatiskt dölja sidofält"
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 134
+#: NEEDS WORK
+msgid "Automatically hide the sidebar when activating sessions or layouts"
+msgstr "Dölj automatiskt sidofältet när sessioner eller layouter aktiveras"
 # 
 # File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 147
 #: NEEDS WORK
 msgid "Blinking Text"
 msgstr "Blinkande text"
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 148
+#: NEEDS WORK
+msgid "Control how the terminal handles blinking text"
+msgstr "Kontrollera hur terminalen hanterar blinkande text"
 # 
 # File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 150
 #: NEEDS WORK
@@ -4459,6 +2177,11 @@ msgstr "Alltid"
 msgid "Tab Alignment"
 msgstr "Flikjustering"
 # 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 176
+#: NEEDS WORK
+msgid "Align tabs to the left or center of the tab bar"
+msgstr "Justera flikar till vänster eller i mitten av flikfältet"
+# 
 # File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 178
 #: NEEDS WORK
 msgid "Left"
@@ -4468,21 +2191,6 @@ msgstr "Vänster"
 #: NEEDS WORK
 msgid "Center"
 msgstr "Center"
-# 
-# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 212
-#: NEEDS WORK
-msgid "Icon Theme"
-msgstr "Ikontema"
-# 
-# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 218
-#: NEEDS WORK
-msgid "Ashy Icons (Bundled)"
-msgstr "Ashy Ikoner (Bundlade)"
-# 
-# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 218
-#: NEEDS WORK
-msgid "System Icons"
-msgstr "Systemikoner"
 # 
 # File: usr/share/ashyterm/window.py, line: 857
 #: NEEDS WORK
@@ -4494,6 +2202,11 @@ msgstr "Terminal"
 msgid "Cursor Shape"
 msgstr "Muspekarsform"
 # 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1138
+#: NEEDS WORK
+msgid "Select the shape of the terminal cursor"
+msgstr "Välj formen på terminalmarkören"
+# 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1141
 #: NEEDS WORK
 msgid "Block"
@@ -4504,10 +2217,20 @@ msgstr "Block"
 msgid "I-Beam"
 msgstr "I-balk"
 # 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1141
+#: NEEDS WORK
+msgid "Underline"
+msgstr "Understrykning"
+# 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1148
 #: NEEDS WORK
 msgid "Cursor Blinking"
 msgstr "Markörblinkning"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1148
+#: NEEDS WORK
+msgid "Control cursor blinking behavior"
+msgstr "Kontrollera markörens blinkbeteende"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1151
 #: NEEDS WORK
@@ -4524,56 +2247,207 @@ msgstr "På"
 msgid "Off"
 msgstr "Avstängd"
 # 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1118
+#: NEEDS WORK
+msgid "Scrolling"
+msgstr "Rullning"
+# 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1123
 #: NEEDS WORK
 msgid "Scrollback Lines"
 msgstr "Scrollback-rader"
 # 
-# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 246
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1124
 #: NEEDS WORK
-msgid "0 for unlimited"
-msgstr "0 för obegränsad"
+msgid "Number of lines to keep in history (0 for unlimited)"
+msgstr "Antal rader att behålla i historik (0 för obegränsat)"
 # 
 # File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 192
 #: NEEDS WORK
 msgid "Mouse Scroll Sensitivity"
 msgstr "Muspekarrullningskänslighet"
 # 
-# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 258
-# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 274
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 193
 #: NEEDS WORK
-msgid "Lower is slower"
-msgstr "Lägre är långsammare"
+msgid "Controls the scroll speed for a mouse wheel. Lower is slower."
+msgstr "Styr hastigheten på rullningen för en musens hjul. Långsammare är lägre."
 # 
 # File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 208
 #: NEEDS WORK
 msgid "Touchpad Scroll Sensitivity"
 msgstr "Touchpad Rullningskänslighet"
 # 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 209
+#: NEEDS WORK
+msgid "Controls the scroll speed for a touchpad. Lower is slower."
+msgstr "Styr hastigheten för rullning på en pekplatta. Långsammare är lägre."
+# 
 # File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 233
 #: NEEDS WORK
 msgid "Scroll on Paste"
 msgstr "Rulla vid klippning"
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 234
+#: NEEDS WORK
+msgid "Automatically scroll to the bottom when pasting text"
+msgstr "Rulla automatiskt till botten när du klistrar in text"
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 246
+#: NEEDS WORK
+msgid "Selection"
+msgstr "Urval"
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 247
+#: NEEDS WORK
+msgid "Extra characters for word selection (e.g., -_.:/~)"
+msgstr "Extra tecken för ordval (t.ex. -_.:/~)"
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 252
+#: NEEDS WORK
+msgid "Word Characters"
+msgstr "Ordtecken"
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 292
+#: NEEDS WORK
+msgid "Shell & Bell"
+msgstr "Skal & Klocka"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1107
 #: NEEDS WORK
 msgid "Run Command as a Login Shell"
 msgstr "Kör kommando som inloggningsskal"
 # 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1108
+#: NEEDS WORK
+msgid "Sources /etc/profile and ~/.profile on startup"
+msgstr "Källor /etc/profile och ~/.profile vid uppstart"
+# 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1161
 #: NEEDS WORK
 msgid "Audible Bell"
 msgstr "Ljudlig klocka"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1162
+#: NEEDS WORK
+msgid "Emit a sound for the terminal bell character"
+msgstr "Avge ett ljud för terminalens ringsignal."
+# 
+# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 319
+# File: usr/share/ashyterm/window.py, line: 679
+#: NEEDS WORK
+msgid "AI Assistant"
+msgstr "AI-assistent"
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 321
+#: NEEDS WORK
+msgid "Configure the Linux-focused assistant available inside the terminal."
+msgstr "Konfigurera den Linux-fokuserade assistenten som är tillgänglig i terminalen."
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 327
+#: NEEDS WORK
+msgid "Enable AI Assistant"
+msgstr "Aktivera AI-assistent"
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 328
+#: NEEDS WORK
+msgid "Allow Ctrl+Shift+I to ask the assistant for help."
+msgstr "Tillåt Ctrl+Shift+I att be assistenten om hjälp."
+# 
+# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 339
+# File: usr/share/ashyterm/window.py, line: 546
+#: NEEDS WORK
+msgid "Provider"
+msgstr "Leverantör"
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 340
+#: NEEDS WORK
+msgid "Select which AI service to use."
+msgstr "Välj vilken AI-tjänst som ska användas."
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 361
+#: NEEDS WORK
+msgid "Model Identifier"
+msgstr "Modellidentifierare"
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 363
+#: NEEDS WORK
+msgid "Examples: llama-3.1-8b-instant, gemini-2.5-flash."
+msgstr "exempel: llama-3.1-8b-ögonblick, gemini-2.5-blix."
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 368
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 779
+#: NEEDS WORK
+msgid "llama-3.1-8b-instant"
+msgstr "llama-3.1-8b-instant"
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 374
+#: NEEDS WORK
+msgid "API Key"
+msgstr "API-nyckel"
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 375
+#: NEEDS WORK
+msgid "Stored locally and used to authenticate requests."
+msgstr "Lagrad lokalt och används för att autentisera förfrågningar."
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 379
+#: NEEDS WORK
+msgid "Paste your API key"
+msgstr "Klistra in din API-nyckel"
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 391
+#: NEEDS WORK
+msgid "Site URL (optional)"
+msgstr "Webbplats-URL (valfritt)"
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 392
+#: NEEDS WORK
+msgid "Used as HTTP Referer header on OpenRouter rankings."
+msgstr "Används som HTTP Referer-header på OpenRouter-rankningar."
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 396
+#: NEEDS WORK
+msgid "https://example.com"
+msgstr "https://example.com"
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 408
+#: NEEDS WORK
+msgid "Site title (optional)"
+msgstr "Sajtens titel (valfritt)"
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 409
+#: NEEDS WORK
+msgid "Sent via X-Title header for OpenRouter rankings."
+msgstr "Skickat via X-Title-header för OpenRouter-rankningar."
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 413
+#: NEEDS WORK
+msgid "My Project"
+msgstr "Mitt projekt"
 # 
 # File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 250
 #: NEEDS WORK
 msgid "Profiles & Data"
 msgstr "Profiler och Data"
 # 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1082
+#: NEEDS WORK
+msgid "Startup"
+msgstr "Starta"
+# 
 # File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 258
 #: NEEDS WORK
 msgid "On Startup"
 msgstr "Vid start"
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 259
+#: NEEDS WORK
+msgid "Action to take when the application starts"
+msgstr "Åtgärd att vidta när applikationen startar"
 # 
 # File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 263
 #: NEEDS WORK
@@ -4590,7 +2464,17 @@ msgstr "Fråga om att återställa föregående session"
 msgid "Never restore previous session"
 msgstr "Återställ aldrig föregående session"
 # 
-# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 280
+#: NEEDS WORK
+msgid "Backup &amp; Recovery"
+msgstr "Säkerhetskopiering och återställning"
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 319
+#: NEEDS WORK
+msgid "Create an encrypted backup of your data or restore from a previous backup."
+msgstr "Skapa en krypterad säkerhetskopia av dina data eller återställ från en tidigare säkerhetskopia."
+# 
+# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
 # 
 # File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 325
 # File: usr/share/ashyterm/app.py, line: 390
@@ -4598,10 +2482,10 @@ msgstr "Återställ aldrig föregående session"
 msgid "Create Backup"
 msgstr "Skapa säkerhetskopia"
 # 
-# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 350
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 327
 #: NEEDS WORK
-msgid "Encrypted backup of sessions and settings"
-msgstr "Krypterad säkerhetskopia av sessioner och inställningar"
+msgid "Save all sessions, settings, and passwords to an encrypted file."
+msgstr "Spara alla sessioner, inställningar och lösenord till en krypterad fil."
 # 
 # File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 330
 #: NEEDS WORK
@@ -4613,75 +2497,127 @@ msgstr "Skapa säkerhetskopia..."
 msgid "Restore from Backup"
 msgstr "Återställ från säkerhetskopia"
 # 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 339
+#: NEEDS WORK
+msgid "Replace all current data with a backup file."
+msgstr "Ersätt all nuvarande data med en säkerhetskopia."
+# 
 # File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 341
 #: NEEDS WORK
 msgid "Restore..."
 msgstr "Återställ..."
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 348
+#: NEEDS WORK
+msgid "Remote Editing"
+msgstr "Fjärrredigering"
 # 
 # File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 352
 #: NEEDS WORK
 msgid "Use System Temporary Directory"
 msgstr "Använd systemets temporära katalog"
 # 
-# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 374
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 354
 #: NEEDS WORK
-msgid "Use /tmp for remote editing files"
-msgstr "Använd /tmp för att redigera filer på distans"
+msgid "Store temporary files for remote editing in /tmp instead of the config folder"
+msgstr "Spara temporära filer för fjärrredigering i /tmp istället för konfigurationsmappen"
 # 
 # File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 369
 #: NEEDS WORK
 msgid "Clear Remote Edit Files on Exit"
 msgstr "Rensa fjärrredigeringsfiler vid utgång"
 # 
-# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 392
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 371
 #: NEEDS WORK
-msgid "SSH Connection Persistence"
-msgstr "SSH-anslutningsbeständighet"
+msgid "Automatically delete all temporary remote files when closing the app"
+msgstr "Automatiskt ta bort alla temporära fjärrfiler när appen stängs"
 # 
-# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 393
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 416
 #: NEEDS WORK
-msgid "Seconds to keep connections alive (0 to disable)"
-msgstr "Sekunder för att hålla anslutningar aktiva (0 för att inaktivera)"
+msgid "SSH"
+msgstr "SSH"
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 417
+#: NEEDS WORK
+msgid "Settings for SSH connection management (multiplexing)."
+msgstr "Inställningar för SSH-anslutningshantering (multiplexering)."
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 422
+#: NEEDS WORK
+msgid "Connection Persistence (seconds)"
+msgstr "Anslutningsbeständighet (sekunder)"
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 424
+#: NEEDS WORK
+msgid "Keep SSH connections alive in the background for faster reconnections. Set to 0 to disable."
+msgstr ""
+"Håll SSH-anslutningar aktiva i bakgrunden för snabbare återanslutningar. Ställ in på 0 för att "
+"inaktivera."
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1790
 #: NEEDS WORK
 msgid "Advanced"
 msgstr "Avancerad"
 # 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1276
+#: NEEDS WORK
+msgid "Advanced Features"
+msgstr "Avancerade funktioner"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1277
+#: NEEDS WORK
+msgid "Enable or disable advanced terminal features"
+msgstr "Aktivera eller inaktivera avancerade terminalfunktioner"
+# 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1282
 #: NEEDS WORK
 msgid "Bidirectional Text Support"
 msgstr "Stöd för tvåvägstext"
 # 
-# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 416
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1284
 #: NEEDS WORK
-msgid "For Arabic and Hebrew (affects performance)"
-msgstr "För arabiska och hebreiska (påverkar prestanda)"
+msgid "Enable for languages like Arabic and Hebrew (may affect performance)"
+msgstr "Aktivera för språk som arabiska och hebreiska (kan påverka prestanda)"
 # 
 # File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 411
 #: NEEDS WORK
 msgid "Enable Arabic Text Shaping"
 msgstr "Aktivera arabisk textformatering"
 # 
-# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 424
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 413
 #: NEEDS WORK
-msgid "Render ligatures for Arabic script"
-msgstr "Rendera ligaturer för arabiskt skript"
+msgid "Correctly render ligatures and contextual forms for Arabic script"
+msgstr "Korrekt återge ligaturer och kontextuella former för arabiskt skript"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1295
 #: NEEDS WORK
 msgid "SIXEL Graphics Support"
 msgstr "SIXEL-grafikstöd"
 # 
-# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 432
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1296
 #: NEEDS WORK
-msgid "Display SIXEL images (experimental)"
-msgstr "Visa SIXEL-bilder (experimentell)"
+msgid "Allow the terminal to display SIXEL images (experimental)"
+msgstr "Tillåt terminalen att visa SIXEL-bilder (experimentell)"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1172
+#: NEEDS WORK
+msgid "Compatibility"
+msgstr "Kompatibilitet"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1173
+#: NEEDS WORK
+msgid "Settings for compatibility with older systems and tools"
+msgstr "Inställningar för kompatibilitet med äldre system och verktyg"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1178
 #: NEEDS WORK
 msgid "Backspace Key"
 msgstr "Backstegstangent"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1178
+#: NEEDS WORK
+msgid "Sequence to send for Backspace key"
+msgstr "Sekvens att skicka för Backspace-tangenten"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1182
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1197
@@ -4711,10 +2647,20 @@ msgstr "Escape-sekvens"
 msgid "Delete Key"
 msgstr "Ta bort-tangent"
 # 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1193
+#: NEEDS WORK
+msgid "Sequence to send for Delete key"
+msgstr "Sekvens att skicka för Delete-tangenten"
+# 
 # File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 481
 #: NEEDS WORK
 msgid "Ambiguous-width Characters"
 msgstr "Otydliga breddtecken"
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 482
+#: NEEDS WORK
+msgid "Set the width for ambiguous characters (e.g., CJK)"
+msgstr "Ställ in bredden för tvetydiga tecken (t.ex. CJK)"
 # 
 # File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 485
 #: NEEDS WORK
@@ -4726,20 +2672,40 @@ msgstr "Smal (enkelcell)"
 msgid "Wide (double-cell)"
 msgstr "Bred (dubbelcell)"
 # 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 252
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1071
 #: NEEDS WORK
-msgid "Word Characters"
-msgstr "Ordtecken"
+msgid "Logging"
+msgstr "Loggning"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1071
+#: NEEDS WORK
+msgid "Configure application logging behavior"
+msgstr "Konfigurera applikationens loggningbeteende"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1076
 #: NEEDS WORK
 msgid "Save Logs to File"
 msgstr "Spara loggar till fil"
 # 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1077
+#: NEEDS WORK
+msgid "Save application logs to the configuration directory"
+msgstr "Spara applikationsloggar till konfigurationskatalogen"
+# 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1087
 #: NEEDS WORK
 msgid "Console Log Level"
 msgstr "Konsolens loggnivå"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1088
+#: NEEDS WORK
+msgid "Set the minimum level of messages shown in the console"
+msgstr "Ställ in den minimi nivån av meddelanden som visas i konsolen"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1832
+#: NEEDS WORK
+msgid "Reset application settings to defaults"
+msgstr "Återställ applikationsinställningar till standardvärden"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1838
 # File: usr/share/ashyterm/ui/dialogs.py, line: 2002
@@ -4748,29 +2714,79 @@ msgstr "Konsolens loggnivå"
 msgid "Reset All Settings"
 msgstr "Återställ alla inställningar"
 # 
-# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 681
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1839
 #: NEEDS WORK
-msgid "Icon Theme Changed"
-msgstr "Ikontema ändrat"
+msgid "Restore all settings to their default values"
+msgstr "Återställ alla inställningar till deras standardvärden"
 # 
-# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 683
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 781
 #: NEEDS WORK
-msgid "The icon theme change will take effect after restarting the application."
-msgstr "Ändringen av ikontemat kommer att träda i kraft efter att applikationen har startats om."
+msgid "Model identifier (for example: llama-3.1-8b-instant)."
+msgstr "Modellidentifierare (till exempel: llama-3.1-8b-instant)."
 # 
-# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 687
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 783
 #: NEEDS WORK
-msgid "Sessions Panel Visibility"
-msgstr "Sessionspanelens synlighet"
+msgid "API key."
+msgstr "API-nyckel."
 # 
-# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 689
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 786
+#: NEEDS WORK
+msgid "gemini-2.5-flash"
+msgstr "gemini-2.5-blink"
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 788
+#: NEEDS WORK
+msgid "Gemini model identifier (for example: gemini-2.5-flash)."
+msgstr "Gemini-modellidentifierare (till exempel: gemini-2.5-flash)."
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 790
+#: NEEDS WORK
+msgid "Google AI Studio API key."
+msgstr "Google AI Studio API-nyckel."
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 842
+#: NEEDS WORK
+msgid "openrouter/polaris-alpha"
+msgstr "öppenrouter/polaris-alpha"
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 844
+#: NEEDS WORK
+msgid "OpenRouter model identifier (for example: openrouter/polaris-alpha)."
+msgstr "OpenRouter-modellidentifierare (till exempel: openrouter/polaris-alpha)."
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 846
+#: NEEDS WORK
+msgid "OpenRouter API key."
+msgstr "OpenRouter API-nyckel."
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 785
+#: NEEDS WORK
+msgid "model-name"
+msgstr "modellnamn"
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 787
+#: NEEDS WORK
+msgid "Model identifier required by the selected provider."
+msgstr "Modellidentifierare krävs av den valda leverantören."
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 789
+#: NEEDS WORK
+msgid "API key used to authenticate requests."
+msgstr "API-nyckel som används för att autentisera förfrågningar."
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 652
+#: NEEDS WORK
+msgid "Sidebar Visibility"
+msgstr "Sidofältets synlighet"
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 654
 #: NEEDS WORK
 msgid ""
-"The sessions panel visibility change will take effect when you close and reopen the application. "
-"You can also toggle the sessions panel manually using Ctrl+Shift+H."
+"The sidebar visibility change will take effect when you close and reopen the application. You can "
+"also toggle the sidebar manually using Ctrl+Shift+H."
 msgstr ""
-"Ändringen av synligheten för sessionspanelen träder i kraft när du stänger och öppnar applikationen "
-"igen. Du kan också växla sessionspanelen manuellt med Ctrl+Shift+H."
+"Ändringen av sidofältets synlighet träder i kraft när du stänger och öppnar applikationen igen. Du "
+"kan också växla sidofältet manuellt med Ctrl+Shift+H."
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 2003
 #: NEEDS WORK
@@ -6372,7 +4388,7 @@ msgstr "Sparande misslyckades: {}"
 msgid "Move Error"
 msgstr "Flyttningsfel"
 # 
-# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
+# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
 # 
 # File: usr/share/ashyterm/sessions/tree.py, line: 801
 # File: usr/share/ashyterm/window.py, line: 1544
@@ -6766,40 +4782,20 @@ msgstr "Visa dolda filer"
 msgid "Filter files..."
 msgstr "Filtrera filer..."
 # 
-# File: src/ashyterm/filemanager/manager.py, line: 658
+# File: usr/share/ashyterm/filemanager/manager.py, line: 397
 #: NEEDS WORK
-msgid "Start Recursive Search"
-msgstr "Starta rekursiv sökning"
-# 
-# File: src/ashyterm/filemanager/manager.py, line: 678
-#: NEEDS WORK
-msgid "Cancel Search"
-msgstr "Avbryt sökning"
-# 
-# File: src/ashyterm/filemanager/manager.py, line: 692
-#: NEEDS WORK
-msgid "Search in subfolders"
-msgstr "Sök i undermappar"
-# 
-# File: src/ashyterm/filemanager/manager.py, line: 698
-#: NEEDS WORK
-msgid "Recursive"
-msgstr "Rekursiv"
+msgid "Recursive Search"
+msgstr "Rekursiv sökning"
 # 
 # File: usr/share/ashyterm/filemanager/manager.py, line: 203
 #: NEEDS WORK
 msgid "Transfer History"
 msgstr "Överföringshistorik"
 # 
-# File: src/ashyterm/filemanager/manager.py, line: 723
+# File: usr/share/ashyterm/filemanager/manager.py, line: 209
 #: NEEDS WORK
-msgid "Send Files"
-msgstr "Skicka filer"
-# 
-# File: src/ashyterm/filemanager/manager.py, line: 952
-#: NEEDS WORK
-msgid "Search cancelled"
-msgstr "Sökning avbruten"
+msgid "Upload Files"
+msgstr "Ladda upp filer"
 # 
 # File: usr/share/ashyterm/filemanager/manager.py, line: 665
 # File: usr/share/ashyterm/filemanager/manager.py, line: 1266
@@ -6812,11 +4808,6 @@ msgstr "Söker..."
 #, python-brace-format
 msgid "Showing first {count} results. Refine your search to narrow the list."
 msgstr "Visar de första {count} resultaten. Förfina din sökning för att smalna av listan."
-# 
-# File: usr/share/ashyterm/filemanager/manager.py, line: 366
-#: NEEDS WORK
-msgid "Name"
-msgstr "Namn"
 # 
 # File: usr/share/ashyterm/filemanager/manager.py, line: 375
 #: NEEDS WORK
@@ -6847,15 +4838,29 @@ msgstr "Ägare"
 msgid "Group"
 msgstr "Grupp"
 # 
+# File: usr/share/ashyterm/filemanager/manager.py, line: 697
+#: NEEDS WORK
+msgid "Command Failed"
+msgstr "Kommandot misslyckades"
+# 
+# File: usr/share/ashyterm/filemanager/manager.py, line: 699
+#: NEEDS WORK
+msgid ""
+"The command did not complete in time. The terminal may be busy or unresponsive. Your original input "
+"has been restored."
+msgstr ""
+"Kommandot slutfördes inte i tid. Terminalen kan vara upptagen eller svarar inte. Din ursprungliga "
+"inmatning har återställts."
+# 
 # File: usr/share/ashyterm/filemanager/manager.py, line: 532
 #: NEEDS WORK
 msgid "Loading..."
 msgstr "Laddar..."
 # 
-# File: src/ashyterm/filemanager/manager.py, line: 1879
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1268
 #: NEEDS WORK
-msgid "Type and press Enter..."
-msgstr "Skriv och tryck på Enter..."
+msgid "Recursive filter..."
+msgstr "Rekursiv filter..."
 # 
 # File: usr/share/ashyterm/filemanager/manager.py, line: 1551
 # File: usr/share/ashyterm/filemanager/manager.py, line: 1740
@@ -6899,6 +4904,12 @@ msgstr "Skapa mappkommando skickat till terminalen"
 #: NEEDS WORK
 msgid "Enter a name for the new folder:"
 msgstr "Ange ett namn för den nya mappen:"
+# 
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1743
+# File: usr/share/ashyterm/filemanager/manager.py, line: 1760
+#: NEEDS WORK
+msgid "Create"
+msgstr "Skapa"
 # 
 # File: usr/share/ashyterm/filemanager/manager.py, line: 1754
 #: NEEDS WORK
@@ -7127,7 +5138,7 @@ msgstr "Öppna lokal version"
 msgid "Download New Version"
 msgstr "Ladda ner ny version"
 # 
-# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
+# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
 # 
 # File: usr/share/ashyterm/sessions/remotefile.py, line: 41
 # File: usr/share/ashyterm/filemanager/manager.py, line: 1255
@@ -7183,7 +5194,7 @@ msgstr "Filen är öppen. Att spara den kommer att ladda upp ändringar tillbaka
 msgid "Upload failed: Could not verify remote file."
 msgstr "Uppladdning misslyckades: Kunde inte verifiera fjärrfil."
 # 
-# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
+# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
 # 
 # File: usr/share/ashyterm/sessions/remotefile.py, line: 129
 # File: usr/share/ashyterm/filemanager/manager.py, line: 1519
@@ -7191,7 +5202,7 @@ msgstr "Uppladdning misslyckades: Kunde inte verifiera fjärrfil."
 msgid "File Conflict"
 msgstr "Filkonflikt"
 # 
-# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
+# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
 # 
 # File: usr/share/ashyterm/sessions/remotefile.py, line: 131
 # File: usr/share/ashyterm/filemanager/manager.py, line: 1521
@@ -7202,7 +5213,7 @@ msgid ""
 "like to proceed?"
 msgstr "Filen '{filename}' har ändrats på servern sedan du började redigera den. Hur vill du gå vidare?"
 # 
-# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
+# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
 # 
 # File: usr/share/ashyterm/sessions/remotefile.py, line: 135
 # File: usr/share/ashyterm/filemanager/manager.py, line: 1525
@@ -7210,7 +5221,7 @@ msgstr "Filen '{filename}' har ändrats på servern sedan du började redigera d
 msgid "Cancel Upload"
 msgstr "Avbryt uppladdning"
 # 
-# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
+# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
 # 
 # File: usr/share/ashyterm/sessions/remotefile.py, line: 136
 # File: usr/share/ashyterm/filemanager/manager.py, line: 1526
@@ -7218,7 +5229,7 @@ msgstr "Avbryt uppladdning"
 msgid "Overwrite Server File"
 msgstr "Överskriv serverfil"
 # 
-# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
+# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
 # 
 # File: usr/share/ashyterm/sessions/remotefile.py, line: 137
 # File: usr/share/ashyterm/filemanager/manager.py, line: 1527
@@ -7226,7 +5237,7 @@ msgstr "Överskriv serverfil"
 msgid "Save as New File"
 msgstr "Spara som ny fil"
 # 
-# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
+# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
 # 
 # File: usr/share/ashyterm/sessions/remotefile.py, line: 158
 # File: usr/share/ashyterm/filemanager/manager.py, line: 1545
@@ -7234,7 +5245,7 @@ msgstr "Spara som ny fil"
 msgid "Save As"
 msgstr "Spara som"
 # 
-# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
+# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
 # 
 # File: usr/share/ashyterm/sessions/remotefile.py, line: 159
 # File: usr/share/ashyterm/filemanager/manager.py, line: 1546
@@ -8620,6 +6631,11 @@ msgstr "Misslyckades med att ladda sparade sessioner och mappar. Startar med tom
 msgid "Enable the AI assistant in Preferences > Terminal > AI Assistant."
 msgstr "Aktivera AI-assistenten i Inställningar > Terminal > AI-assistent."
 # 
+# File: usr/share/ashyterm/window.py, line: 539
+#: NEEDS WORK
+msgid "No active terminal available."
+msgstr "Ingen aktiv terminal tillgänglig."
+# 
 # File: usr/share/ashyterm/window.py, line: 547
 #: NEEDS WORK
 msgid "Model"
@@ -8630,11 +6646,57 @@ msgstr "Modell"
 msgid "API key"
 msgstr "API-nyckel"
 # 
-# File: src/ashyterm/window.py, line: 823
+# File: usr/share/ashyterm/window.py, line: 554
 #: NEEDS WORK
 #, python-brace-format
-msgid "Configure {items} in AI Assistant settings."
-msgstr "Konfigurera {items} i AI-assistentens inställningar."
+msgid "Configure {items} in Preferences > Terminal > AI Assistant."
+msgstr "Konfigurera {items} i Inställningar > Terminal > AI-assistent."
+# 
+# File: usr/share/ashyterm/window.py, line: 565
+#: NEEDS WORK
+msgid "Ask the AI Assistant"
+msgstr "Fråga AI-assistenten"
+# 
+# File: usr/share/ashyterm/window.py, line: 566
+#: NEEDS WORK
+msgid "Describe the Linux task or question you need help with."
+msgstr "Beskriv den Linux-uppgift eller fråga du behöver hjälp med."
+# 
+# File: usr/share/ashyterm/window.py, line: 570
+#: NEEDS WORK
+msgid "Send"
+msgstr "Skicka"
+# 
+# File: usr/share/ashyterm/window.py, line: 865
+#: NEEDS WORK
+msgid "Perguntas frequentes"
+msgstr "Vanliga frågor"
+# 
+# File: usr/share/ashyterm/window.py, line: 938
+#: NEEDS WORK
+#, python-brace-format
+msgid "Sugestões correspondentes: {count}"
+msgstr "Förslag som matchar: {count}"
+# 
+# File: usr/share/ashyterm/window.py, line: 941
+#: NEEDS WORK
+msgid "Nenhuma sugestão encontrada."
+msgstr "Inga förslag hittades."
+# 
+# File: usr/share/ashyterm/window.py, line: 944
+#: NEEDS WORK
+msgid "Digite sua pergunta ou escolha uma das sugestões."
+msgstr "Skriv din fråga eller välj ett av förslagen."
+# 
+# File: usr/share/ashyterm/window.py, line: 598
+#: NEEDS WORK
+msgid "Please enter a question for the assistant."
+msgstr "Vänligen ange en fråga till assistenten."
+# 
+# File: usr/share/ashyterm/window.py, line: 604
+#: NEEDS WORK
+msgid "AI assistant is processing, please wait..."
+msgstr "AI-assistenten bearbetar, vänligen vänta..."
 # 
 # File: usr/share/ashyterm/window.py, line: 680
 #: NEEDS WORK
@@ -8645,6 +6707,11 @@ msgstr "Här är vad jag hittade."
 #: NEEDS WORK
 msgid "Response"
 msgstr "Svar"
+# 
+# File: usr/share/ashyterm/window.py, line: 724
+#: NEEDS WORK
+msgid "Suggested Commands"
+msgstr "Föreslagna kommandon"
 # 
 # File: usr/share/ashyterm/window.py, line: 781
 #: NEEDS WORK
@@ -8848,7 +6915,7 @@ msgstr "Inställningar Fel"
 msgid "Failed to open preferences: {}"
 msgstr "Misslyckades med att öppna inställningar: {}"
 # 
-# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
+# #-#-#-#-#  comm-ashyterm.pot (comm-ashyterm)  #-#-#-#-#
 # 
 # File: usr/share/ashyterm/__init__.py, line: 62
 # File: usr/share/ashyterm/app.py, line: 350
@@ -9045,95 +7112,6 @@ msgstr "Startfel"
 msgid "Application failed to start: {}"
 msgstr "Applikationen kunde inte starta: {}"
 # 
-# File: src/ashyterm/__init__.py, line: 33
-#: NEEDS WORK
-#, python-brace-format
-msgid "Received signal {}, shutting down gracefully..."
-msgstr "Mottagen signal {}, stänger ner på ett kontrollerat sätt..."
-# 
-# File: usr/share/ashyterm/main.py, line: 97
-#: NEEDS WORK
-#, python-brace-format
-msgid "Warning: Could not set up signal handlers: {}"
-msgstr "Varning: Kunde inte ställa in signalhanterare: {}"
-# 
-# File: usr/share/ashyterm/main.py, line: 109
-#: NEEDS WORK
-msgid "Ashy Terminal - A modern terminal emulator with session management"
-msgstr "Ashy Terminal - En modern terminalemulator med sessionshantering"
-# 
-# File: usr/share/ashyterm/main.py, line: 110
-#: NEEDS WORK
-msgid "For more information, visit: https://communitybig.org/"
-msgstr "För mer information, besök: https://communitybig.org/"
-# 
-# File: src/ashyterm/__init__.py, line: 105
-#: NEEDS WORK
-msgid "Show version and exit"
-msgstr "Visa version och avsluta"
-# 
-# File: usr/share/ashyterm/main.py, line: 73
-#: NEEDS WORK
-msgid "Enable debug mode"
-msgstr "Aktivera felsökningsläge"
-# 
-# File: usr/share/ashyterm/main.py, line: 79
-#: NEEDS WORK
-msgid "Set logging level"
-msgstr "Ställ in loggnivå"
-# 
-# File: usr/share/ashyterm/main.py, line: 84
-#: NEEDS WORK
-msgid "Set the working directory for the initial terminal"
-msgstr "Ställ in arbetskatalogen för den initiala terminalen"
-# 
-# File: usr/share/ashyterm/main.py, line: 92
-#: NEEDS WORK
-msgid "Working directory (positional argument)"
-msgstr "Arbetskatalog (positionsargument)"
-# 
-# File: src/ashyterm/__init__.py, line: 133
-#: NEEDS WORK
-msgid "Execute command in the terminal (takes all remaining arguments)"
-msgstr "Kör kommando i terminalen (tar alla återstående argument)"
-# 
-# File: usr/share/ashyterm/main.py, line: 110
-#: NEEDS WORK
-msgid "Close terminal after executing command (only with --execute)"
-msgstr "Stäng terminalen efter att ha kört kommandot (endast med --execute)"
-# 
-# File: usr/share/ashyterm/main.py, line: 115
-#: NEEDS WORK
-msgid "Connect to SSH host with optional user, port, and remote path"
-msgstr "Anslut till SSH-värd med valfri användare, port och fjärrsökväg"
-# 
-# File: usr/share/ashyterm/main.py, line: 119
-#: NEEDS WORK
-msgid "Convert KIO/GVFS URI path to SSH format"
-msgstr "Konvertera KIO/GVFS URI-sökväg till SSH-format"
-# 
-# File: usr/share/ashyterm/main.py, line: 129
-#: NEEDS WORK
-msgid "Force opening a new window"
-msgstr "Tvinga att öppna ett nytt fönster"
-# 
-# File: src/ashyterm/__init__.py, line: 179
-#: NEEDS WORK
-msgid "Fatal Application Error"
-msgstr "Kritiskt applikationsfel"
-# 
-# File: src/ashyterm/__init__.py, line: 180
-#: NEEDS WORK
-#, python-brace-format
-msgid ""
-"Could not start Ashy Terminal.\n"
-"\n"
-"Error: {}"
-msgstr ""
-"Kunde inte starta Ashy Terminal.\n"
-"\n"
-"Fel: {}"
-# 
 # File: usr/share/ashyterm/window.py, line: 1466
 #: NEEDS WORK
 msgid "Save Layout"
@@ -9210,3 +7188,32 @@ msgstr "Fel vid radering av layout"
 #: NEEDS WORK
 msgid "Error Moving Layout"
 msgstr "Fel vid flytt av layout"
+# 
+# File: usr/share/nautilus-python/extensions/ashyterm.py, line: 129
+#: NEEDS WORK
+msgid "Open in Ashy Terminal (SSH)"
+msgstr "Öppna i Ashy Terminal (SSH)"
+# 
+# File: usr/share/nautilus-python/extensions/ashyterm.py, line: 130
+#: NEEDS WORK
+#, python-brace-format
+msgid "Connect to {} via a new SSH session"
+msgstr "Anslut till {} via en ny SSH-session"
+# 
+# File: usr/share/nautilus-python/extensions/ashyterm.py, line: 139
+# File: usr/share/nautilus-python/extensions/ashyterm.py, line: 149
+#: NEEDS WORK
+msgid "Open in Ashy Terminal"
+msgstr "Öppna i Ashy Terminal"
+# 
+# File: usr/share/nautilus-python/extensions/ashyterm.py, line: 140
+#: NEEDS WORK
+#, python-brace-format
+msgid "Open the local mount point {}"
+msgstr "Öppna den lokala monteringspunkten {}"
+# 
+# File: usr/share/nautilus-python/extensions/ashyterm.py, line: 150
+#: NEEDS WORK
+#, python-brace-format
+msgid "Open {} in Ashy Terminal"
+msgstr "Öppna {} i Ashy Terminal"

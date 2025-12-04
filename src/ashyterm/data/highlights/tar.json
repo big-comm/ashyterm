@@ -28,8 +28,8 @@
             "name": "Error",
             "pattern": "(tar:.*Error|Cannot)(.+)",
             "colors": [
-                "bold red",
-                "bold red"
+                "red",
+                "red"
             ],
             "enabled": true,
             "description": "Highlights tar errors"
@@ -38,8 +38,8 @@
             "name": "Warning",
             "pattern": "(tar:.*Warning|warning):?\\s*(.+)",
             "colors": [
-                "bold yellow",
-                "bold yellow"
+                "yellow",
+                "yellow"
             ],
             "enabled": true,
             "description": "Highlights tar warnings"
@@ -48,10 +48,19 @@
             "name": "Permission Denied",
             "pattern": "(Permission denied|Cannot open)",
             "colors": [
-                "bold red"
+                "red"
             ],
             "enabled": true,
             "description": "Highlights permission errors"
+        },
+        {
+            "name": "File Path",
+            "pattern": "([\\w\\-./]+/)",
+            "colors": [
+                "white"
+            ],
+            "enabled": true,
+            "description": "Highlights directory paths"
         },
         {
             "name": "Removing Leading Slash",

@@ -9,31 +9,8 @@ gi.require_version("Adw", "1")
 gi.require_version("Gdk", "4.0")
 from gi.repository import Gdk, Gio, GLib, GObject, Gtk
 
-# Lazy imports for menus - only loaded when context menus are actually needed
-# from ..ui.menus import create_folder_menu, create_root_menu, create_session_menu
+from ..ui.menus import create_folder_menu, create_root_menu, create_session_menu
 from ..utils.logger import get_logger
-
-
-# Lazy menu creation functions
-def _get_create_session_menu():
-    """Lazy import for create_session_menu."""
-    from ..ui.menus import create_session_menu
-
-    return create_session_menu
-
-
-def _get_create_folder_menu():
-    """Lazy import for create_folder_menu."""
-    from ..ui.menus import create_folder_menu
-
-    return create_folder_menu
-
-
-def _get_create_root_menu():
-    """Lazy import for create_root_menu."""
-    from ..ui.menus import create_root_menu
-
-    return create_root_menu
 from ..utils.translation_utils import _
 from .models import LayoutItem, SessionFolder, SessionItem
 from .operations import SessionOperations
@@ -806,7 +783,7 @@ class SessionTreeView:
             if isinstance(item, SessionItem):
                 found, position = self.session_store.find(item)
                 if found:
-                    menu_model = _get_create_session_menu()(
+                    menu_model = create_session_menu(
                         item,
                         self.session_store,
                         position,
@@ -816,7 +793,7 @@ class SessionTreeView:
             elif isinstance(item, SessionFolder):
                 found, position = self.folder_store.find(item)
                 if found:
-                    menu_model = _get_create_folder_menu()(
+                    menu_model = create_folder_menu(
                         item,
                         self.folder_store,
                         position,
@@ -855,7 +832,7 @@ class SessionTreeView:
     ) -> None:
         """Shows a context menu for the empty area (root)."""
         self.selection_model.unselect_all()
-        menu_model = _get_create_root_menu()(self.has_clipboard_content())
+        menu_model = create_root_menu(self.has_clipboard_content())
         popover = Gtk.PopoverMenu.new_from_model(menu_model)
         # Ensure popover is not already parented
         if popover.get_parent() is not None:

@@ -120,7 +120,7 @@ popover.menu separator {
 }
 
 .custom-tab-button.active {
-    background: color-mix(in srgb, currentColor 10%, transparent);
+    background: color-mix(in srgb, currentColor 12%, transparent);
 }
 
 .custom-tab-button:hover {
@@ -136,11 +136,11 @@ popover.menu separator {
 }
 
 .sidebar-toolbar-view button {
-    min-width: 32px;
-        min-height: 32px;
-        padding: 6px;
-        margin: 2px;
-        border-radius: 6px;
+    min-width: 28px;
+    min-height: 28px;
+    padding: 4px;
+    margin: 0;
+    border-radius: 4px;
     transition: all 200ms cubic-bezier(0.4, 0, 0.2, 1);
     border: none;
     background: transparent;

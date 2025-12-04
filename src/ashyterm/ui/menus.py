@@ -9,7 +9,6 @@ from gi.repository import Adw, Gio, Gtk
 from ..helpers import accelerator_to_label, is_valid_url
 from ..settings.config import DefaultSettings
 from ..settings.manager import SettingsManager
-from ..utils.icons import icon_button
 from ..utils.translation_utils import _
 
 
@@ -87,7 +86,7 @@ class FontSizerWidget(Gtk.CenterBox):
         zoom_controls_box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=20)
         zoom_controls_box.add_css_class("navigation-sidebar")
 
-        decrement_btn = icon_button("zoom-out-symbolic")
+        decrement_btn = Gtk.Button.new_from_icon_name("zoom-out-symbolic")
         decrement_btn.add_css_class("flat")
         decrement_btn.connect("clicked", self._on_decrement)
 
@@ -98,7 +97,7 @@ class FontSizerWidget(Gtk.CenterBox):
         self.font_size_label.set_size_request(60, -1)
         font_size_button.set_child(self.font_size_label)
 
-        increment_btn = icon_button("zoom-in-symbolic")
+        increment_btn = Gtk.Button.new_from_icon_name("zoom-in-symbolic")
         increment_btn.add_css_class("flat")
         increment_btn.connect("clicked", self._on_increment)
 

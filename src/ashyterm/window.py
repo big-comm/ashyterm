@@ -12,7 +12,11 @@ from gi.repository import Adw, Gdk, Gio, GLib, GObject, Gtk, Pango, Vte
 
 from .sessions.models import LayoutItem, SessionFolder, SessionItem
 from .sessions.operations import SessionOperations
-# Lazy import: from .sessions.storage import load_folders_to_store, load_sessions_and_folders, load_sessions_to_store
+from .sessions.storage import (
+    load_folders_to_store,
+    load_sessions_and_folders,
+    load_sessions_to_store,
+)
 from .sessions.tree import SessionTreeView
 from .settings.manager import SettingsManager
 from .state.window_state import WindowStateManager
@@ -23,7 +27,6 @@ from .ui.actions import WindowActions
 from .ui.sidebar_manager import SidebarManager
 from .ui.window_ui import WindowUIBuilder
 from .utils.exceptions import UIError
-from .utils.icons import icon_image
 from .utils.logger import get_logger
 from .utils.security import validate_session_data
 from .utils.translation_utils import _
@@ -384,9 +387,9 @@ class CommTerminalWindow(Adw.ApplicationWindow):
                     if button_container:
                         # Create new buttons connected to the NEW tab manager
                         new_close_button = Gtk.Button(
+                            icon_name="window-close-symbolic",
                             tooltip_text=_("Close Pane"),
                         )
-                        new_close_button.set_child(icon_image("window-close-symbolic"))
                         new_close_button.add_css_class("flat")
                         new_close_button.connect(
                             "clicked",
@@ -396,10 +399,8 @@ class CommTerminalWindow(Adw.ApplicationWindow):
                         )
 
                         new_move_button = Gtk.Button(
+                            icon_name="select-rectangular-symbolic",
                             tooltip_text=_("Move to New Tab"),
-                        )
-                        new_move_button.set_child(
-                            icon_image("select-rectangular-symbolic")
                         )
                         new_move_button.add_css_class("flat")
                         new_move_button.connect(
@@ -682,13 +683,6 @@ class CommTerminalWindow(Adw.ApplicationWindow):
     def _load_initial_data(self) -> None:
         """Load initial sessions, folders, and layouts data."""
         try:
-            # Lazy import - these are only needed during data loading
-            from .sessions.storage import (
-                load_folders_to_store,
-                load_sessions_and_folders,
-                load_sessions_to_store,
-            )
-
             self.state_manager.load_layouts()
             sessions_data, folders_data = load_sessions_and_folders()
             load_sessions_to_store(self.session_store, sessions_data)
@@ -1981,10 +1975,10 @@ class CommTerminalWindow(Adw.ApplicationWindow):
                 )
                 row.set_title_selectable(True)
                 remove_button = Gtk.Button(
+                    icon_name="edit-delete-symbolic",
                     css_classes=["flat", "circular"],
                     tooltip_text=_("Remove this temporary file"),
                 )
-                remove_button.set_child(icon_image("edit-delete-symbolic"))
 
                 # Find the correct file manager instance to call cleanup on
                 fm_to_call = next(

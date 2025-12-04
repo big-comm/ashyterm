@@ -33,6 +33,13 @@
             "description": "Highlights sizes in kilobytes (small)"
         },
         {
+            "name": "Raw Byte Sizes",
+            "pattern": "^\\s*(\\d+)\\s+",
+            "colors": ["white"],
+            "enabled": true,
+            "description": "Highlights raw byte counts"
+        },
+        {
             "name": "Total Line",
             "pattern": "(.+)\\s+(total)$",
             "colors": ["bold yellow", "bold yellow"],
@@ -42,7 +49,7 @@
         {
             "name": "Paths",
             "pattern": "\\s+([\\.\\/]+)([\\w\\s\\-\\_\\.]+)(\\/.*)?$",
-            "colors": [null, "bold blue", "blue"],
+            "colors": ["white", "bold blue", "blue"],
             "enabled": true,
             "description": "Highlights file/directory paths"
         }

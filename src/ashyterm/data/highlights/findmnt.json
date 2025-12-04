@@ -7,6 +7,15 @@
     "enabled": true,
     "rules": [
         {
+            "name": "Tree Structure",
+            "pattern": "([└│├─]+)",
+            "colors": [
+                "white"
+            ],
+            "enabled": true,
+            "description": "Highlights tree characters"
+        },
+        {
             "name": "Device Path",
             "pattern": "(/dev/[\\w/-]+)",
             "colors": [
@@ -59,6 +68,15 @@
             ],
             "enabled": true,
             "description": "Highlights Windows/FAT filesystem types"
+        },
+        {
+            "name": "Virtual FS Types",
+            "pattern": "\\b(tmpfs|sysfs|proc|devpts|cgroup\\d?|squashfs|overlay)\\b",
+            "colors": [
+                "white"
+            ],
+            "enabled": true,
+            "description": "Highlights virtual filesystem types"
         },
         {
             "name": "Headers",

@@ -14,21 +14,21 @@
         {
             "name": "IPv4 Address",
             "pattern": "\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}",
-            "colors": ["bold magenta"],
+            "colors": ["bold green"],
             "enabled": true,
             "description": "Highlights IPv4 addresses"
         },
         {
             "name": "IPv6 Address",
             "pattern": "\\b[0-9a-fA-F]{1,4}(::?[0-9a-fA-F]{1,4})+",
-            "colors": ["yellow"],
+            "colors": ["bold green"],
             "enabled": true,
             "description": "Highlights IPv6 addresses"
         },
         {
             "name": "MAC Address",
             "pattern": "([0-9a-f]{2}:){5}[0-9a-f]{2}",
-            "colors": ["blue"],
+            "colors": ["yellow"],
             "enabled": true,
             "description": "Highlights MAC addresses"
         },
@@ -49,42 +49,42 @@
         {
             "name": "MTU",
             "pattern": "(?i)(mtu)(\\s|:)(\\d+)",
-            "colors": ["cyan", null, "green"],
+            "colors": ["cyan", "white", "green"],
             "enabled": true,
             "description": "Highlights MTU value"
         },
         {
             "name": "Errors",
             "pattern": "(errors)(\\s|:)(\\d+)",
-            "colors": ["bold red", null, "bold red"],
+            "colors": ["red", "white", "red"],
             "enabled": true,
             "description": "Highlights error counts"
         },
         {
             "name": "Dropped",
             "pattern": "(dropped)(\\s|:)(\\d+)",
-            "colors": ["bold yellow", null, "bold yellow"],
+            "colors": ["yellow", "white", "yellow"],
             "enabled": true,
             "description": "Highlights dropped packet counts"
         },
         {
             "name": "Overruns",
             "pattern": "(overruns)(\\s|:)(\\d+)",
-            "colors": ["bold yellow", null, "bold yellow"],
+            "colors": ["yellow", "white", "yellow"],
             "enabled": true,
             "description": "Highlights overrun counts"
         },
         {
             "name": "Collisions",
             "pattern": "(collisions)(\\s|:)(\\d+)",
-            "colors": ["bold red", null, "bold red"],
+            "colors": ["red", "white", "red"],
             "enabled": true,
             "description": "Highlights collision counts"
         },
         {
             "name": "Carrier",
             "pattern": "(carrier)(\\s|:)(\\d+)",
-            "colors": ["cyan", null, "cyan"],
+            "colors": ["cyan", "white", "cyan"],
             "enabled": true,
             "description": "Highlights carrier counts"
         },
