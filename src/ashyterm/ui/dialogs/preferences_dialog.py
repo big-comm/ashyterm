@@ -215,6 +215,33 @@ class PreferencesDialog(Adw.PreferencesWindow):
         )
         self.add(page)
 
+        # Behavior group at the top of Terminal page
+        behavior_group = Adw.PreferencesGroup()
+        page.add(behavior_group)
+
+        # New instance behavior setting
+        instance_behavior_row = Adw.ComboRow(
+            title=_("When Already Running"),
+            subtitle=_("Action when the application is launched while already open"),
+        )
+        behavior_map = ["new_tab", "new_window", "focus_existing"]
+        behavior_strings = [
+            _("Open a new tab"),
+            _("Open a new window"),
+            _("Focus existing window"),
+        ]
+        instance_behavior_row.set_model(Gtk.StringList.new(behavior_strings))
+        current_behavior = self.settings_manager.get("new_instance_behavior", "new_tab")
+        try:
+            behavior_index = behavior_map.index(current_behavior)
+        except ValueError:
+            behavior_index = 0
+        instance_behavior_row.set_selected(behavior_index)
+        instance_behavior_row.connect(
+            "notify::selected", self._on_instance_behavior_changed, behavior_map
+        )
+        behavior_group.add(instance_behavior_row)
+
         cursor_group = Adw.PreferencesGroup()
         page.add(cursor_group)
 
@@ -571,6 +598,12 @@ class PreferencesDialog(Adw.PreferencesWindow):
         if 0 <= index < len(policy_map):
             policy = policy_map[index]
             self._on_setting_changed("session_restore_policy", policy)
+
+    def _on_instance_behavior_changed(self, combo_row, _param, behavior_map):
+        index = combo_row.get_selected()
+        if 0 <= index < len(behavior_map):
+            behavior = behavior_map[index]
+            self._on_setting_changed("new_instance_behavior", behavior)
 
     def _on_backup_now_clicked(self, button):
         app = self.get_transient_for().get_application()

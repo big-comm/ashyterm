@@ -346,6 +346,9 @@ class CommTerminalApp(Adw.Application):
         windows = self.get_windows()
         target_window = windows[0] if windows else None
 
+        # Check if there are explicit commands to run - these should always create tabs/windows
+        has_explicit_command = ssh_target or execute_command or working_directory
+
         if force_new_window or behavior == "new_window" or not target_window:
             self.logger.info("Creating a new window for command line arguments.")
             window = self.create_new_window(
@@ -355,7 +358,12 @@ class CommTerminalApp(Adw.Application):
                 initial_ssh_target=ssh_target,
             )
             self._present_window_and_request_focus(window)
+        elif behavior == "focus_existing" and not has_explicit_command:
+            # Only focus existing window without creating new tabs
+            self.logger.info("Focusing existing window without creating new tab.")
+            self._present_window_and_request_focus(target_window)
         else:
+            # Default: new_tab behavior or explicit command with focus_existing
             self.logger.info("Reusing existing window for a new tab.")
             self._present_window_and_request_focus(target_window)
             if ssh_target:

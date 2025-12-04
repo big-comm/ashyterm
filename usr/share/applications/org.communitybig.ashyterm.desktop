@@ -97,12 +97,45 @@ Icon=ashyterm
 Categories=System;Utility;TerminalEmulator;GTK;
 StartupNotify=true
 StartupWMClass=org.communitybig.ashyterm
+X-KDE-Shortcuts=Ctrl+Alt+T
 
 Keywords=terminal;emulator;console;shell;command;prompt;ssh;session;manager;ashy;ashyterminal;ssh;bash;konsole;
 Keywords[zh_CN]=终端;模拟器;控制台;命令行;外壳;命令;提示符;ssh;会话;管理器;管理;ashy;ashyterminal;bash;konsole;
 Keywords[ru]=терминал;эмулятор;консоль;оболочка;команда;приглашение;ssh;сессия;менеджер;ashy;ashyterminal;bash;konsole;
 
-Actions=NewWindow;
+Actions=NewTab;NewWindow;
+
+[Desktop Action NewTab]
+Name=New Tab
+Name[bg]=Нов раздел
+Name[cs]=Nová karta
+Name[da]=Ny fane
+Name[de]=Neuer Reiter
+Name[el]=Νέα καρτέλα
+Name[es]=Nueva pestaña
+Name[et]=Uus kaart
+Name[fi]=Uusi välilehti
+Name[fr]=Nouvel onglet
+Name[he]=כרטיסייה חדשה
+Name[hr]=Nova kartica
+Name[hu]=Új lap
+Name[is]=Nýr flipi
+Name[it]=Nuova scheda
+Name[ja]=新しいタブ
+Name[ko]=새 탭
+Name[nl]=Nieuw tabblad
+Name[no]=Ny fane
+Name[pl]=Nowa karta
+Name[pt]=Nova Aba
+Name[ro]=Filă nouă
+Name[ru]=Новая вкладка
+Name[sk]=Nová karta
+Name[sv]=Ny flik
+Name[tr]=Yeni Sekme
+Name[uk]=Нова вкладка
+Name[zh]=新标签页
+Name[zh_CN]=新建标签页
+Exec=ashyterm %F
 
 [Desktop Action NewWindow]
 Name=New Window
