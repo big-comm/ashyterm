@@ -1523,6 +1523,23 @@ class TerminalManager:
             detected_command = None
             fallback_command = None
 
+            # Prefix commands that should be skipped to find the real command
+            # These take another command as their argument
+            PREFIX_COMMANDS = {
+                "sudo",
+                "time",
+                "env",
+                "nice",
+                "nohup",
+                "strace",
+                "ltrace",
+                "doas",
+                "pkexec",
+                "command",
+                "builtin",
+                "exec",
+            }
+
             for token in tokens:
                 # Skip flags (start with -)
                 if token.startswith("-"):
@@ -1542,6 +1559,10 @@ class TerminalManager:
                     continue
 
                 clean_token_lower = clean_token.lower()
+
+                # Skip prefix commands (sudo, time, env, etc.) to find the real command
+                if clean_token_lower in PREFIX_COMMANDS:
+                    continue
 
                 # Priority 1: Check if it's an ignored command (native coloring)
                 if clean_token_lower in ignored_commands:

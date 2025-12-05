@@ -1321,6 +1321,9 @@ class HighlightedTerminalProxy:
         # Will be set to False when command is executed (Enter pressed)
         # Will be set to True again when OSC7 prompt is detected
         self._at_shell_prompt = True
+        # Flag to reset terminal colors when starting new input after output
+        # This prevents color leakage from prompt/output into input highlighting
+        self._need_color_reset = False
 
         if terminal:
             self._destroy_handler_id = terminal.connect(
@@ -1720,7 +1723,31 @@ class HighlightedTerminalProxy:
         """
         try:
             text = data.decode("utf-8", errors="replace")
+            self.logger.debug(
+                f"CAT: _process_cat_output called, data len={len(data)}, text[:100]={text[:100]!r}"
+            )
             if not text:
+                term.feed(data)
+                return
+
+            # Check if this looks like shell input control sequences rather than file content
+            # Backspace sequences (\x08\x1b[K or \x08 \x08) indicate user is editing at shell prompt
+            # This means cat has finished and user is typing a new command
+            stripped_text = text.replace("\x00", "")
+            if stripped_text in ("\x08\x1b[K", "\x08 \x08") or (
+                stripped_text.startswith("\x08") and len(stripped_text) <= 5
+            ):
+                self.logger.debug(
+                    f"CAT: Detected shell input control sequence (backspace), exiting cat mode"
+                )
+                # Clear cat context - we're now at shell prompt
+                self._highlighter.clear_context(self._proxy_id)
+                self._reset_cat_state()
+                # Clear input buffer for clean start
+                self._input_highlight_buffer = ""
+                self._prev_shell_input_token_type = None
+                self._prev_shell_input_token_len = 0
+                # Feed the backspace directly to terminal
                 term.feed(data)
                 return
 
@@ -1730,11 +1757,15 @@ class HighlightedTerminalProxy:
 
             # Reset state if filename changed
             if new_filename != self._cat_filename:
+                self.logger.debug(
+                    f"CAT: Filename changed from {self._cat_filename!r} to {new_filename!r}"
+                )
                 self._cat_filename = new_filename
                 self._pygments_lexer = None
                 self._content_buffer = []
                 self._cat_lines_processed = 0
                 self._pending_lines = []
+                self._php_in_multiline_comment = False  # Reset PHP comment tracking
 
                 # Check if we need content-based detection
                 import os.path
@@ -1762,14 +1793,28 @@ class HighlightedTerminalProxy:
                 content, ending = self._split_line_ending(line)
 
                 # Check for shell prompt (command finished)
+                # Do this BEFORE checking for ANSI sequences, as prompt may contain control codes
                 lines_done = getattr(self, "_cat_lines_processed", 0)
-                if lines_done > 0 and self._is_shell_prompt(content):
+                # Check for prompt if we've processed lines OR if this looks like a standalone prompt
+                # (short line with prompt pattern, not file content)
+                is_potential_prompt = lines_done > 0 or (
+                    len(content) < 30 and "$" in content
+                )
+                if is_potential_prompt and self._is_shell_prompt(content):
+                    self.logger.debug(
+                        f"CAT: Shell prompt detected after {lines_done} lines: {content[:50]!r}"
+                    )
                     self._cat_queue.append(line.encode("utf-8", errors="replace"))
                     self._cat_queue.append(b"__PROMPT_DETECTED__")  # Marker
                     continue
 
-                # Skip ANSI control sequences
-                if content.startswith("\x1b") and not content.startswith("#!"):
+                # Skip pure ANSI control sequences (not prompts or file content)
+                # Only skip if content is ONLY escape sequences with no text after cleaning
+                import re
+
+                clean_content = re.sub(r"\x1b\[\??[0-9;]*[a-zA-Z]", "", content)
+                clean_content = clean_content.replace("\x00", "").strip()
+                if not clean_content and content.startswith("\x1b"):
                     self._cat_queue.append(line.encode("utf-8", errors="replace"))
                     continue
 
@@ -1851,22 +1896,85 @@ class HighlightedTerminalProxy:
         # Primary detection: OSC7 escape sequence
         # Format: \x1b]7; (ESC ] 7 ;) followed by file:// URI
         # This sequence is sent AFTER the command completes, not during echo
-        if "\x1b]7;" in line or "\033]7;" in line:
-            # Verify it's a proper OSC7 sequence with file://
-            if "file://" in line:
+        #
+        # IMPORTANT: Only consider this as a prompt if the line STARTS with OSC7
+        # or only contains control sequences before OSC7. This prevents false positives
+        # when file content and prompt are sent in the same buffer.
+        osc7_pos = -1
+        if "\x1b]7;" in line:
+            osc7_pos = line.find("\x1b]7;")
+        elif "\033]7;" in line:
+            osc7_pos = line.find("\033]7;")
+
+        if osc7_pos >= 0 and "file://" in line:
+            # Check what's before the OSC7
+            prefix = line[:osc7_pos]
+            # Only accept as prompt if prefix is empty or only contains
+            # control characters (\x00, \r, \n) and ANSI sequences
+            import re
+
+            # Remove ANSI color/control sequences
+            clean_prefix = re.sub(r"\x1b\[[0-9;]*[a-zA-Z]", "", prefix)
+            clean_prefix = re.sub(r"\x1b\][0-9]+;[^\x07\x1b]*[\x07]", "", clean_prefix)
+            clean_prefix = (
+                clean_prefix.replace("\x00", "").replace("\r", "").replace("\n", "")
+            )
+
+            if not clean_prefix.strip():
+                self.logger.debug(
+                    f"_is_shell_prompt: OSC7 detected at start/clean position in line: {line[:80]!r}"
+                )
                 return True
+            else:
+                self.logger.debug(
+                    f"_is_shell_prompt: OSC7 found but has content before it ({clean_prefix[:30]!r}), ignoring"
+                )
+                return False
 
         # Also check for OSC0 (title setting), often sent with prompt
         # Format: \x1b]0; (ESC ] 0 ;) - sets window title
-        if "\x1b]0;" in line or "\033]0;" in line:
-            return True
+        # Apply same logic - only accept if at start
+        osc0_pos = -1
+        if "\x1b]0;" in line:
+            osc0_pos = line.find("\x1b]0;")
+        elif "\033]0;" in line:
+            osc0_pos = line.find("\033]0;")
+
+        if osc0_pos >= 0:
+            import re
+
+            prefix = line[:osc0_pos]
+            clean_prefix = re.sub(r"\x1b\[[0-9;]*[a-zA-Z]", "", prefix)
+            clean_prefix = re.sub(r"\x1b\][0-9]+;[^\x07\x1b]*[\x07]", "", clean_prefix)
+            clean_prefix = (
+                clean_prefix.replace("\x00", "").replace("\r", "").replace("\n", "")
+            )
+
+            if not clean_prefix.strip():
+                self.logger.debug(
+                    f"_is_shell_prompt: OSC0 detected at start/clean position in line: {line[:80]!r}"
+                )
+                return True
+            else:
+                self.logger.debug(
+                    f"_is_shell_prompt: OSC0 found but has content before it, ignoring"
+                )
+                return False
 
         # Fallback: Traditional prompt detection
-        # Strip ANSI color codes to get clean text
+        # Strip ANSI escape sequences to get clean text
         import re
 
-        clean_line = re.sub(r"\x1b\[[0-9;]*m", "", line)
-        clean_line = clean_line.strip()
+        # Remove various ANSI sequences:
+        # - Color codes: \x1b[...m
+        # - Mode changes: \x1b[?...h, \x1b[?...l
+        # - Cursor/erase: \x1b[...A, \x1b[...B, etc.
+        clean_line = re.sub(r"\x1b\[\??[0-9;]*[a-zA-Z]", "", line)
+        # Also remove NULL bytes
+        clean_line = clean_line.replace("\x00", "")
+        # Only strip leading whitespace to preserve trailing space in prompts like "sh-5.3$ "
+        clean_line_stripped = clean_line.strip()
+        clean_line = clean_line.lstrip()
 
         # Check if line ends with common prompt terminators WITH trailing space
         # This is the most reliable pattern: "user@host:path$ " or "# "
@@ -1875,28 +1983,40 @@ class HighlightedTerminalProxy:
             or clean_line.endswith("# ")
             or clean_line.endswith("% ")
         ):
+            self.logger.debug(
+                f"_is_shell_prompt: Traditional prompt with space detected: {clean_line[:60]!r}"
+            )
             return True
 
         # Check prompt terminators WITHOUT trailing space, but require @
         # This handles prompts like "user@host:path$" without space
         # The @ requirement helps avoid false positives from file content
-        if clean_line.endswith("$") or clean_line.endswith("%"):
-            if "@" in clean_line:
+        if clean_line_stripped.endswith("$") or clean_line_stripped.endswith("%"):
+            if "@" in clean_line_stripped:
+                self.logger.debug(
+                    f"_is_shell_prompt: Traditional prompt with @ detected: {clean_line_stripped[:60]!r}"
+                )
                 return True
 
         # For # without space, be VERY strict - require user@host pattern
         # to avoid matching shell comments
-        if clean_line.endswith("#") and "@" in clean_line:
+        if clean_line_stripped.endswith("#") and "@" in clean_line_stripped:
             # Extra check: should have pattern like "user@host" before #
             import re
 
-            if re.search(r"\w+@\w+.*#$", clean_line):
+            if re.search(r"\w+@\w+.*#$", clean_line_stripped):
+                self.logger.debug(
+                    f"_is_shell_prompt: Root prompt with user@host detected: {clean_line_stripped[:60]!r}"
+                )
                 return True
 
         # PowerLine prompts: only match specific Unicode characters at end
         # Do NOT match > alone as it's too common in file content
         stripped = clean_line.rstrip()
         if stripped and stripped[-1] in ("➜", "❯", "»"):
+            self.logger.debug(
+                f"_is_shell_prompt: Powerline prompt detected: {clean_line[:60]!r}"
+            )
             return True
 
         # For > character, require it to be preceded by a space or prompt-like pattern
@@ -1904,6 +2024,9 @@ class HighlightedTerminalProxy:
         if stripped and stripped.endswith("> "):
             # Only if preceded by typical prompt structure (path, git branch, etc.)
             if any(c in stripped for c in ["~", "/"]):
+                self.logger.debug(
+                    f"_is_shell_prompt: > prompt with path detected: {clean_line[:60]!r}"
+                )
                 return True
 
         return False
@@ -1965,6 +2088,9 @@ class HighlightedTerminalProxy:
         """
         Highlight a single line using Pygments.
 
+        For PHP files, we track multi-line comment state manually to ensure
+        lines inside /* ... */ blocks are highlighted as comments.
+
         Args:
             line: Single line of text (without line ending)
             filename: Filename for lexer detection
@@ -1989,6 +2115,7 @@ class HighlightedTerminalProxy:
             needs_content_detection = getattr(
                 self, "_pygments_needs_content_detection", False
             )
+            is_php = filename and filename.lower().endswith(".php")
 
             # Detect lexer if we don't have one
             if current_lexer is None:
@@ -1999,6 +2126,15 @@ class HighlightedTerminalProxy:
                     try:
                         self._pygments_lexer = get_lexer_for_filename(filename)
                         lexer_found = True
+
+                        # For PHP, use startinline=True so code is recognized without <?php
+                        if is_php:
+                            from pygments.lexers import PhpLexer
+
+                            self._pygments_lexer = PhpLexer(startinline=True)
+                            # Initialize multi-line comment tracking for PHP
+                            self._php_in_multiline_comment = False
+
                     except ClassNotFound:
                         # Unknown extension - enable content detection as fallback
                         self._pygments_needs_content_detection = True
@@ -2089,7 +2225,45 @@ class HighlightedTerminalProxy:
                 self._pygments_formatter = Terminal256Formatter(style=style)
                 formatter = self._pygments_formatter
 
-            # Highlight
+            # For PHP: Track multi-line comments manually
+            # Pygments with startinline=True doesn't track state between lines
+            is_php = filename and filename.lower().endswith(".php")
+            if is_php:
+                in_comment = getattr(self, "_php_in_multiline_comment", False)
+
+                # Check if line opens or closes a multi-line comment
+                # Strip the line for checking, but preserve original for highlighting
+                stripped = line.strip()
+
+                if in_comment:
+                    # We're inside a comment - check if it closes
+                    if "*/" in line:
+                        # Comment closes on this line
+                        self._php_in_multiline_comment = False
+                        # Let Pygments try to highlight - it may do partial job
+                    else:
+                        # Still inside comment - apply comment color directly
+                        # Get comment color from the style (usually gray/green)
+                        comment_color = "\x1b[38;5;245m"  # Gray (monokai comment color)
+                        reset = "\x1b[39m"
+                        return f"{comment_color}{line}{reset}"
+                else:
+                    # Not in comment - check if one starts
+                    if "/*" in line:
+                        # Check if it also closes on this line
+                        start_pos = line.find("/*")
+                        end_pos = line.find("*/", start_pos + 2)
+                        if end_pos == -1:
+                            # Comment starts but doesn't close - track it
+                            self._php_in_multiline_comment = True
+                    # Also check for /** docblock
+                    elif "/**" in line:
+                        start_pos = line.find("/**")
+                        end_pos = line.find("*/", start_pos + 3)
+                        if end_pos == -1:
+                            self._php_in_multiline_comment = True
+
+            # Highlight using Pygments
             return highlight(line, current_lexer, formatter).rstrip("\n")
 
         except Exception as e:
@@ -2118,6 +2292,7 @@ class HighlightedTerminalProxy:
 
         lines_to_feed = []
         prompt_detected = False
+        remaining_after_prompt = []
 
         for _ in range(batch_size):
             if not queue:
@@ -2128,19 +2303,29 @@ class HighlightedTerminalProxy:
                 # Check for prompt marker
                 if line_data == b"__PROMPT_DETECTED__":
                     prompt_detected = True
-                    break
+                    self.logger.debug(
+                        f"CAT QUEUE: Prompt marker found, clearing context"
+                    )
+                    # Don't break - continue to collect any remaining lines (prompt lines)
+                    # that came in the same chunk after the marker was added
+                    continue
 
-                lines_to_feed.append(line_data)
+                if prompt_detected:
+                    # Lines after marker are prompt/control lines - collect them
+                    remaining_after_prompt.append(line_data)
+                else:
+                    lines_to_feed.append(line_data)
             except IndexError:
                 break
 
         # Feed batch to terminal
         if lines_to_feed:
             term.feed(b"".join(lines_to_feed))
+            self.logger.debug(f"CAT QUEUE: Fed {len(lines_to_feed)} lines to terminal")
 
         # Handle prompt detection - clear context
         if prompt_detected:
-            # Flush remaining pending lines
+            # Flush remaining pending lines (content that was buffered)
             pending = getattr(self, "_pending_lines", [])
             for pending_content, pending_ending in pending:
                 term.feed(
@@ -2148,8 +2333,35 @@ class HighlightedTerminalProxy:
                 )
             self._pending_lines = []
 
+            # Feed any lines that came after the prompt marker
+            # These are prompt lines (OSC7, PS1, etc.) that need to be displayed
+            if remaining_after_prompt:
+                term.feed(b"".join(remaining_after_prompt))
+                self.logger.debug(
+                    f"CAT QUEUE: Fed {len(remaining_after_prompt)} prompt lines to terminal"
+                )
+
+            # Drain any remaining lines in the queue (could be prompt data from next chunk)
+            drain_lines = []
+            while queue:
+                try:
+                    line_data = queue.popleft()
+                    if line_data != b"__PROMPT_DETECTED__":
+                        drain_lines.append(line_data)
+                except IndexError:
+                    break
+            if drain_lines:
+                term.feed(b"".join(drain_lines))
+                self.logger.debug(
+                    f"CAT QUEUE: Drained {len(drain_lines)} remaining lines to terminal"
+                )
+
             self._highlighter.clear_context(self._proxy_id)
             self._reset_cat_state()
+            # Clear shell input buffer - we're back at prompt for a new command
+            self._input_highlight_buffer = ""
+            self._prev_shell_input_token_type = None
+            self._prev_shell_input_token_len = 0
 
         return prompt_detected
 
@@ -2246,8 +2458,15 @@ class HighlightedTerminalProxy:
         Producer: This method adds highlighted lines to the queue
         Consumer: _process_line_queue processes one line, yields to GTK, repeats
 
-        Also handles shell input highlighting when at a shell prompt and no
-        command context is active.
+        Input vs Output Detection via \\x00\\ marker:
+        When the repr of data shows patterns like '\\x00\\r', '\\x00\\n', etc.,
+        this indicates interactive mode (user at shell prompt).
+        The backslash after \\x00 indicates an escape sequence follows.
+
+        State machine:
+        - \\x00\\ detected → interactive mode (at_shell_prompt = True)
+        - Enter pressed (manager.py) → at_shell_prompt = False
+        - \\x00\\ detected again → reactivate interactive mode
         """
         try:
             # Decode to text
@@ -2256,23 +2475,82 @@ class HighlightedTerminalProxy:
             if not text:
                 return
 
-            # Debug: log all incoming data to trace flow
+            # ===== CHECK FOR INTERACTIVE MARKER =====
+            # Input from user keyboard comes as small chunks: \x00 + single char (2 bytes)
+            # Output from commands comes as larger chunks
+            #
+            # Detection strategy:
+            # - Small chunks (2-3 bytes) starting with \x00 = user typing
+            # - Chunks with \x00 followed by \r or \n = Enter pressed
+            # - Chunks with \x00 + backspace (0x08 or 0x7F) = user deleting
+
+            has_interactive_marker = False
+            is_likely_user_input = False
+            has_newline_marker = False
+
+            # Check for small chunk starting with NULL (user typing)
+            if len(data) >= 2 and data[0] == 0x00:
+                next_byte = data[1]
+
+                # Check for newline/carriage return (Enter key)
+                if len(data) <= 15 and (b"\r" in data or b"\n" in data):
+                    has_interactive_marker = True
+                    has_newline_marker = True
+                # Check for backspace (may come with \x1b[K erase sequence)
+                elif next_byte == 0x08 or next_byte == 0x7F:  # BS or DEL
+                    has_interactive_marker = True
+                    is_likely_user_input = True
+                # Check for small single-char input (2-3 bytes)
+                elif len(data) <= 3:
+                    # Verify second byte is printable or space
+                    if next_byte >= 0x20 and next_byte <= 0x7E:  # Printable ASCII
+                        has_interactive_marker = True
+                        is_likely_user_input = True
+
+            # Debug: log incoming data with marker detection
             if self._shell_input_highlighter.enabled:
-                # Log short version for single chars, full for longer
                 text_preview = repr(text[:100]) if len(text) > 100 else repr(text)
                 has_osc7 = "\x1b]7;" in text or "\033]7;" in text
                 self.logger.debug(
-                    f"Proxy {self._proxy_id}: Data received (len={len(text)}, has_osc7={has_osc7}): {text_preview}"
+                    f"Proxy {self._proxy_id}: Data received (len={len(text)}, marker={has_interactive_marker}, user_input={is_likely_user_input}, newline={has_newline_marker}, osc7={has_osc7}): {text_preview}"
                 )
+
+            # ===== INTERACTIVE MODE HANDLING =====
+            if has_interactive_marker:
+                if has_newline_marker:
+                    # Enter pressed - deactivate interactive mode (output will follow)
+                    if self._at_shell_prompt:
+                        self._at_shell_prompt = False
+                        self._shell_input_highlighter.set_at_prompt(
+                            self._proxy_id, False
+                        )
+                        self.logger.debug(
+                            f"Proxy {self._proxy_id}: Interactive mode DEACTIVATED (Enter pressed)"
+                        )
+                elif is_likely_user_input:
+                    # Single char input from user - activate interactive mode
+                    if not self._at_shell_prompt:
+                        self._at_shell_prompt = True
+                        self._shell_input_highlighter.set_at_prompt(
+                            self._proxy_id, True
+                        )
+                        # Clear buffer for new input
+                        self._input_highlight_buffer = ""
+                        self._prev_shell_input_token_type = None
+                        self._prev_shell_input_token_len = 0
+                        self._need_color_reset = True
+                        self.logger.debug(
+                            f"Proxy {self._proxy_id}: Interactive mode ACTIVATED (user input detected)"
+                        )
 
             # Get rules with single lock acquisition
             rules = None
+            context = ""
             with self._highlighter._lock:
                 context = self._highlighter._proxy_contexts.get(self._proxy_id, "")
                 rules = self._highlighter._get_active_rules(context)
 
             # Check for shell prompt detection (OSC7 or traditional prompt)
-            # This signals that we're back at the prompt and can highlight input
             prompt_detected = self._check_and_update_prompt_state(text)
             if prompt_detected:
                 self.logger.debug(
@@ -2332,6 +2610,21 @@ class HighlightedTerminalProxy:
                     self._line_queue.append(line.encode("utf-8"))
                     continue
 
+                # Skip highlighting for lines containing:
+                # - OSC7 sequences (directory tracking)
+                # - Prompt-like patterns ($ # %)
+                # - ANSI color reset followed by prompt chars
+                # These are shell prompt lines, not command output
+                if "\x1b]7;" in line or "\033]7;" in line:
+                    self._line_queue.append(line.encode("utf-8", errors="replace"))
+                    continue
+
+                # Skip lines that look like shell prompts (contain colors + $ or # at end)
+                # This prevents highlighting from interfering with prompt colors
+                if "\x1b[" in line and ("$ " in line or "# " in line or "% " in line):
+                    self._line_queue.append(line.encode("utf-8", errors="replace"))
+                    continue
+
                 # Extract content and ending
                 if line[-1] == "\n":
                     if len(line) > 1 and line[-2] == "\r":
@@ -2365,22 +2658,34 @@ class HighlightedTerminalProxy:
         Check if text contains a shell prompt and update state.
 
         Returns True if a shell prompt was detected.
+
+        NOTE: This function now ONLY handles:
+        1. Continuation prompts ("> ") - for multi-line commands
+        2. OSC7 tracking for directory changes
+
+        Interactive mode activation is handled by the marker detection
+        in _process_data_streaming when a single printable char arrives with \\x00.
+        This prevents false positives from OSC7 in large output chunks.
         """
         import re
 
-        # Check for OSC7 FIRST (most reliable indicator of being at NEW prompt)
-        # This takes priority over continuation prompt detection
+        # Track OSC7 for directory changes
+        # OSC7 indicates command completed and we're back at the prompt
+        # This is the right time to RESET the input buffer for the next command
         if "\x1b]7;" in text or "\033]7;" in text:
             if "file://" in text:
-                self._at_shell_prompt = True
-                self._shell_input_highlighter.set_at_prompt(self._proxy_id, True)
-                self._input_highlight_buffer = ""  # Clear buffer for new command
-                self._prev_shell_input_token_type = None  # Reset token tracking
-                self._prev_shell_input_token_len = 0
                 self.logger.debug(
-                    f"Proxy {self._proxy_id}: Shell prompt detected (OSC7)"
+                    f"Proxy {self._proxy_id}: OSC7 detected (len={len(text)}), but not activating prompt mode"
                 )
-                return True
+                # Reset input buffer - command has completed
+                # This ensures next command starts with clean buffer
+                if self._input_highlight_buffer:
+                    self.logger.debug(
+                        f"Proxy {self._proxy_id}: Clearing input buffer (was {len(self._input_highlight_buffer)} chars) due to OSC7"
+                    )
+                    self._input_highlight_buffer = ""
+                    self._prev_shell_input_token_type = None
+                    self._prev_shell_input_token_len = 0
 
         # Check for continuation prompt ("> " at start of line or after escape sequences)
         # This indicates we're still in a multi-line command
@@ -2390,26 +2695,49 @@ class HighlightedTerminalProxy:
         stripped_text = re.sub(r"\x1b\[[^a-zA-Z]*[a-zA-Z]|\x1b\].*?\x07", "", text)
         stripped_text = stripped_text.replace("\x00", "")  # Also strip NULL bytes
         if stripped_text.strip() == ">":
-            # Continuation prompt - keep at_prompt True but DON'T clear buffer
+            # Continuation prompt - keep at_prompt True and add newline to buffer
+            # This separates the continuation line from the previous line
             self._at_shell_prompt = True
             self._shell_input_highlighter.set_at_prompt(self._proxy_id, True)
+            # Add newline to buffer to separate lines in multi-line command
+            if (
+                self._input_highlight_buffer
+                and not self._input_highlight_buffer.endswith("\n")
+            ):
+                self._input_highlight_buffer += "\n"
+                self.logger.debug(
+                    f"Proxy {self._proxy_id}: Added newline to buffer for continuation"
+                )
+            # Reset token tracking for new line
+            self._prev_shell_input_token_type = None
+            self._prev_shell_input_token_len = 0
             self.logger.debug(
-                f"Proxy {self._proxy_id}: Continuation prompt detected, keeping buffer"
+                f"Proxy {self._proxy_id}: Continuation prompt detected, buffer: {repr(self._input_highlight_buffer)}"
             )
             return True
 
-        # Check each line for traditional prompt patterns ($ # %)
-        for line in text.split("\n"):
-            if self._is_shell_prompt(line):
-                self._at_shell_prompt = True
-                self._shell_input_highlighter.set_at_prompt(self._proxy_id, True)
-                self._input_highlight_buffer = ""  # Clear buffer for new command
-                self._prev_shell_input_token_type = None  # Reset token tracking
-                self._prev_shell_input_token_len = 0
-                self.logger.debug(
-                    f"Proxy {self._proxy_id}: Shell prompt detected (traditional)"
-                )
-                return True
+        # Detect traditional shell prompts that indicate command completion
+        # This handles shells that don't send OSC7 (like sh, dash)
+        # Look for patterns like "$ ", "# ", "% " at end of line (after stripping escape sequences)
+        # Also detect prompts like "sh-5.3$ " or "user@host:~$ "
+        if stripped_text:
+            # Check if text ends with a shell prompt pattern
+            prompt_patterns = ["$ ", "# ", "% "]
+            for pattern in prompt_patterns:
+                if stripped_text.rstrip().endswith(pattern.rstrip()):
+                    # This looks like a shell prompt - clear the input buffer
+                    # But only if we have content in the buffer (command was executed)
+                    if self._input_highlight_buffer:
+                        self.logger.debug(
+                            f"Proxy {self._proxy_id}: Traditional prompt detected ('{pattern.strip()}'), clearing input buffer (was {len(self._input_highlight_buffer)} chars)"
+                        )
+                        self._input_highlight_buffer = ""
+                        self._prev_shell_input_token_type = None
+                        self._prev_shell_input_token_len = 0
+                    return False  # Don't activate prompt mode here, let marker detection do it
+
+        # NOTE: Interactive mode is activated by single-char input detection
+        # in _process_data_streaming when \x00 + printable char arrives
 
         return False
 
@@ -2443,9 +2771,75 @@ class HighlightedTerminalProxy:
         if not text:
             return None
 
-        # Don't highlight control sequences
+        # Don't highlight control sequences or chunks containing them
+        # This prevents interference with prompt colors and escape sequences
         if text.startswith("\x1b"):
             return None
+
+        # Handle backspace FIRST (before rejecting escape sequences)
+        # Backspace may come with erase sequence: \x08\x1b[K or \x7f\x1b[K
+        # Or in sh/dash shell: \x08 \x08 (backspace, space overwrite, backspace)
+        #
+        # The pattern "\x08 \x08" is ONE logical deletion (move back, overwrite with space, move back)
+        # We need to count logical deletions, not individual \x08 bytes
+        #
+        # Count logical backspaces:
+        # - "\x08 \x08" pattern = 1 deletion (sh/dash style)
+        # - "\x08\x1b[K" pattern = 1 deletion (bash style with erase to end of line)
+        # - single "\x08" or "\x7f" = 1 deletion
+
+        backspace_count = 0
+        temp_text = text
+
+        # First, count and remove "\x08 \x08" patterns (sh/dash style)
+        while "\x08 \x08" in temp_text:
+            backspace_count += 1
+            temp_text = temp_text.replace("\x08 \x08", "", 1)
+
+        # Then count remaining individual backspaces
+        backspace_count += temp_text.count("\x7f") + temp_text.count("\x08")
+
+        if backspace_count > 0:
+            if self._input_highlight_buffer:
+                # Remove up to backspace_count characters from the end
+                chars_to_remove = min(
+                    backspace_count, len(self._input_highlight_buffer)
+                )
+                self._input_highlight_buffer = (
+                    self._input_highlight_buffer[:-chars_to_remove]
+                    if chars_to_remove > 0
+                    else self._input_highlight_buffer
+                )
+                self.logger.debug(
+                    f"Proxy {self._proxy_id}: Backspace: removed {chars_to_remove} chars (pattern detected), buffer now: '{self._input_highlight_buffer[-20:]}'..."
+                )
+            # Reset token tracking after backspace to prevent incorrect retroactive recolor
+            # The next character will be tokenized fresh against the updated buffer
+            self._prev_shell_input_token_type = None
+            self._prev_shell_input_token_len = 0
+            return None  # Let terminal handle the backspace display
+
+        # Don't process chunks that contain escape sequences (like OSC7, colors, etc.)
+        # These are command output or prompt rendering, not user input
+        if "\x1b" in text or "\033" in text:
+            return None
+
+        # Don't process large chunks - user input comes one character at a time
+        # Large chunks are likely command output
+        # Exception: autocomplete may send small completions (e.g., "e.php " to complete "test" to "teste.php ")
+        if len(text) > 10:
+            return None
+
+        # Check if we need to send a color reset before starting input highlighting
+        # This happens when prompt was detected (OSC7/traditional) after command output
+        # and ensures prompt colors don't leak into input highlighting
+        if self._need_color_reset and text and text[0].isprintable():
+            # Send SGR reset to clear any active terminal attributes
+            term.feed(b"\x1b[0m")
+            self._need_color_reset = False
+            self.logger.debug(
+                f"Proxy {self._proxy_id}: Sent color reset before input highlighting"
+            )
 
         # Check for special characters that indicate we're leaving prompt
         # Newline means command line is being submitted OR continuation
@@ -2487,27 +2881,27 @@ class HighlightedTerminalProxy:
                     )
             return None
 
-        # Handle backspace (delete chars from buffer)
-        # Count all backspace characters and remove that many from buffer
-        backspace_count = text.count("\x7f") + text.count("\x08")
-        if backspace_count > 0:
-            if self._input_highlight_buffer:
-                # Remove up to backspace_count characters from the end
-                chars_to_remove = min(
-                    backspace_count, len(self._input_highlight_buffer)
-                )
-                self._input_highlight_buffer = (
-                    self._input_highlight_buffer[:-chars_to_remove]
-                    if chars_to_remove > 0
-                    else self._input_highlight_buffer
-                )
-                self.logger.debug(
-                    f"Proxy {self._proxy_id}: Removed {chars_to_remove} chars from buffer, now: '{self._input_highlight_buffer}'"
-                )
-            return None  # Let terminal handle the backspace display
+        # NOTE: Backspace handling moved to earlier in the function (before escape sequence check)
 
         # Only process printable characters
         if not text or not all(c.isprintable() or c == " " for c in text):
+            return None
+
+        # Filter out literal escape sequences shown by simple shells (sh/dash)
+        # When ^[[D appears as text (arrow key not handled by shell), skip it
+        # These patterns indicate the shell doesn't support this key
+        # ^[ is the visual representation of ESC that some shells show
+        # [A, [B, [C, [D are arrow keys shown literally when shell doesn't handle them
+        if "^[" in text:
+            self.logger.debug(
+                f"Proxy {self._proxy_id}: Skipping literal escape sequence (^[): {repr(text)}"
+            )
+            return None
+        # Check for arrow key sequences shown as literal text: [A, [B, [C, [D
+        if text in ("[A", "[B", "[C", "[D", "[H", "[F"):
+            self.logger.debug(
+                f"Proxy {self._proxy_id}: Skipping literal arrow/nav key: {repr(text)}"
+            )
             return None
 
         # Append to buffer (strip leading newlines if buffer was empty)
@@ -2599,6 +2993,22 @@ class HighlightedTerminalProxy:
             # Get the current line being typed (last line of buffer)
             current_line = self._input_highlight_buffer.split("\n")[-1].strip()
 
+            # Define prefix commands that should be treated specially
+            # These commands take other commands as arguments
+            PREFIX_COMMANDS = {
+                "sudo",
+                "time",
+                "env",
+                "nice",
+                "nohup",
+                "strace",
+                "ltrace",
+                "doas",
+                "pkexec",
+            }
+            # Commands that should be highlighted in red as warnings
+            WARNING_COMMANDS = {"sudo", "doas", "pkexec", "rm", "dd"}
+
             # Check if this is an option (starts with - or --)
             if actual_token_value and (
                 actual_token_value.startswith("--")
@@ -2612,15 +3022,15 @@ class HighlightedTerminalProxy:
                 )
 
             # Check if this is the first word on the line (command position)
-            # A command is the first word, or word after pipe |, semicolon ;, &&, ||
+            # A command is the first word, or word after pipe |, semicolon ;, &&, ||, or prefix command
             elif actual_token_type in (Token.Text, Token.Name):
                 if actual_token_value:
                     # Find position of current token in the line
                     words_before = current_line.rsplit(actual_token_value, 1)[
                         0
                     ].rstrip()
-                    # If nothing before, or ends with control character, it's a command
-                    if not words_before or words_before.endswith((
+                    # Check if nothing before, or ends with control character, or follows a prefix command
+                    is_command_position = not words_before or words_before.endswith((
                         "|",
                         ";",
                         "&&",
@@ -2628,18 +3038,38 @@ class HighlightedTerminalProxy:
                         "(",
                         "`",
                         "$(",
-                    )):
-                        enhanced_token_type = (
-                            Token.Name.Function
-                        )  # Commands as functions (green)
-                        self.logger.debug(
-                            f"Proxy {self._proxy_id}: Enhanced as command: {actual_token_value}"
+                    ))
+
+                    # Also check if last word was a prefix command (sudo, time, env, etc.)
+                    if not is_command_position and words_before:
+                        last_word = (
+                            words_before.split()[-1] if words_before.split() else ""
                         )
+                        if last_word in PREFIX_COMMANDS:
+                            is_command_position = True
+
+                    if is_command_position:
+                        # Check if this is a warning command (sudo, rm, dd, etc.)
+                        if actual_token_value in WARNING_COMMANDS:
+                            # Warning commands: use red/orange color to alert user
+                            custom_ansi_color = "\x1b[38;5;196m"  # Bright red (196)
+                            enhanced_token_type = Token.Name.Exception  # For tracking
+                            self.logger.debug(
+                                f"Proxy {self._proxy_id}: Enhanced as WARNING command: {actual_token_value}"
+                            )
+                        else:
+                            enhanced_token_type = (
+                                Token.Name.Function
+                            )  # Commands as functions (green)
+                            self.logger.debug(
+                                f"Proxy {self._proxy_id}: Enhanced as command: {actual_token_value}"
+                            )
 
             # Check if we need to do retroactive highlighting
             # This happens when the token type changes and includes previous characters
             # e.g., 'i' is Token.Text, but 'if' is Token.Keyword - we need to go back and recolor 'i'
             prev_token_type = getattr(self, "_prev_shell_input_token_type", None)
+            prev_token_len = getattr(self, "_prev_shell_input_token_len", 0)
 
             # Store current state for next comparison (using enhanced type)
             self._prev_shell_input_token_type = enhanced_token_type
@@ -2691,11 +3121,20 @@ class HighlightedTerminalProxy:
 
                     if need_retroactive:
                         # Calculate how many chars to go back and rewrite
-                        # We need to rewrite the entire token except the char we just typed
-                        chars_to_rewrite = len(actual_token_value) - len(text)
+                        # We need to go back to where the previous token started
+                        # and rewrite with the new token
+                        # Note: prev_token_len was captured BEFORE updating _prev_shell_input_token_len
+                        # Use the previous token length if available, otherwise calculate
+                        # This handles autocomplete where text is larger than 1 char
+                        if prev_token_len > 0:
+                            chars_to_rewrite = prev_token_len
+                        else:
+                            # Fallback: characters to rewrite is current token minus new text
+                            chars_to_rewrite = len(actual_token_value) - len(text)
+
                         if chars_to_rewrite > 0:
                             self.logger.debug(
-                                f"Proxy {self._proxy_id}: Retroactive recolor: going back {chars_to_rewrite} chars"
+                                f"Proxy {self._proxy_id}: Retroactive recolor: going back {chars_to_rewrite} chars (prev_len={prev_token_len})"
                             )
                             # ANSI: move cursor back N chars, then output the full token colored
                             # \x1b[{n}D = move cursor left n positions
