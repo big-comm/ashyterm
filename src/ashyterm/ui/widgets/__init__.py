@@ -4,5 +4,6 @@
 
 from .ai_chat_panel import AIChatPanel
 from .conversation_history import ConversationHistoryPanel
+from .inline_context_menu import InlineContextMenu
 
-__all__ = ["AIChatPanel", "ConversationHistoryPanel"]
+__all__ = ["AIChatPanel", "ConversationHistoryPanel", "InlineContextMenu"]

@@ -26,6 +26,9 @@ class BaseDialog(Adw.Window):
         default_props.update(kwargs)
         super().__init__(**default_props)
 
+        # Add CSS class for theming
+        self.add_css_class("ashyterm-dialog")
+
         self.logger = get_logger(
             f"ashyterm.ui.dialogs.{self.__class__.__name__.lower()}"
         )

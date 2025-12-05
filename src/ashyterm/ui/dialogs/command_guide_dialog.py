@@ -33,6 +33,7 @@ class CommandEditDialog(Adw.Window):
         super().__init__(
             transient_for=parent, modal=True, default_width=600, default_height=500
         )
+        self.add_css_class("ashyterm-dialog")
         self.original_command = original_command
         self.all_categories = all_categories
         self.is_new = original_command is None
@@ -306,6 +307,7 @@ class CommandGuideDialog(Adw.Window):
 
     def __init__(self, parent_window):
         super().__init__(transient_for=parent_window, modal=False)
+        self.add_css_class("ashyterm-dialog")
         self.parent_window = parent_window  # Store reference to main window
         self.command_manager = get_command_manager()
         self.all_commands: List[CommandItem] = []
@@ -352,77 +354,134 @@ class CommandGuideDialog(Adw.Window):
         css_provider = Gtk.CssProvider()
         css_provider.load_from_data(
             b"""
-            .command-guide-card {
-                padding: 12px 14px;
-                margin: 4px 14px;
-                transition: all 0.2s ease;
-            }
-            .category-header {
-                background: linear-gradient(135deg, alpha(@theme_selected_bg_color, 0.9) 0%, alpha(@theme_selected_bg_color, 0.7) 100%);
-                border-radius: 4px;
-                padding: 4px 8px;
-                margin-left: 0;
-                margin-right: 12px;
-                font-weight: bold;
-                color: @theme_selected_fg_color;
-            }
-            .category-separator {
-                margin-top: 20px;
-            }
-            .general-description {
-                background: alpha(@theme_selected_bg_color, 0.08);
-                border-radius: 8px;
-                padding: 12px 14px;
-                margin: 2px 0;
-                border-left: 4px solid @accent_color;
-            }
-            .info-icon {
-                font-size: 1.3em;
-            }
-            .info-title {
-                font-size: 1.05em;
-                color: @theme_fg_color;
-            }
-            .info-description {
-                font-size: 0.95em;
-                color: alpha(@theme_fg_color, 0.85);
-                margin-top: 4px;
-            }
-            .command-name-frame {
-                background-color: alpha(@theme_fg_color, 0.06);
-                border-radius: 6px;
-                padding: 8px 12px;
-                border: 1px solid alpha(@theme_fg_color, 0.12);
-            }
-            .command-name {
-                font-weight: 600;
-                color: @theme_fg_color;
-                font-family: 'Monospace';
-                font-size: 0.95em;
-            }
-            .command-description {
-                color: alpha(@theme_fg_color, 0.9);
-                font-size: 0.95em;
-                line-height: 1.5;
-                padding-left: 4px;
-            }
-            .command-guide-background {
-                background-color: var(--headerbar-bg-color);
-            }
+            /* Command Guide Dialog - Modern UI/UX styling */
+            
+            /* Main list container */
             .command-guide-boxed-list {
-                background-color: var(--headerbar-bg-color);
-                border-radius: 4px;
-                padding: 3px;
-                border: 1px solid alpha(@borders, 0.3);
+                background: transparent;
+                border-radius: 12px;
+                padding: 8px 12px;
             }
+            
+            /* Remove default row selection styling */
+            .command-guide-boxed-list > row {
+                background: transparent;
+                border-radius: 0;
+                outline: none;
+                box-shadow: none;
+            }
+            .command-guide-boxed-list > row:selected {
+                background: transparent;
+                outline: none;
+            }
+            .command-guide-boxed-list > row:focus {
+                outline: none;
+                box-shadow: none;
+            }
+            
+            /* Individual command card - add subtle background for grouping */
+            .command-guide-card {
+                padding: 14px 16px;
+                margin: 6px 8px;
+                border-radius: 12px;
+                transition: all 200ms ease;
+                background-color: alpha(currentColor, 0.03);
+                border: 1px solid alpha(currentColor, 0.06);
+            }
+            
+            /* Hover and selection states - apply to card only */
             .command-guide-boxed-list > row:hover .command-guide-card {
-                background-color: alpha(@theme_selected_bg_color, 0.15);
-                border-radius: 8px;
+                background-color: alpha(@accent_bg_color, 0.1);
+                border-color: alpha(@accent_bg_color, 0.2);
             }
             .command-guide-boxed-list > row:selected .command-guide-card,
             .command-guide-card.selected {
-                background-color: alpha(@theme_selected_bg_color, 0.25);
+                background-color: alpha(@accent_bg_color, 0.14);
+                border-color: alpha(@accent_bg_color, 0.25);
+            }
+            .command-guide-boxed-list > row:selected:hover .command-guide-card {
+                background-color: alpha(@accent_bg_color, 0.18);
+            }
+            
+            /* Category header - modern pill style */
+            .category-header {
+                background: alpha(@accent_bg_color, 0.85);
+                border-radius: 20px;
+                padding: 6px 14px;
+                margin: 8px 12px 4px 8px;
+                font-weight: 600;
+                font-size: 0.9em;
+                color: @accent_fg_color;
+                letter-spacing: 0.3px;
+            }
+            .category-separator {
+                margin-top: 24px;
+                opacity: 0.3;
+            }
+            .category-icon {
+                font-size: 1em;
+                margin-right: 4px;
+            }
+            
+            /* General description info box */
+            .general-description {
+                background: alpha(@accent_bg_color, 0.06);
+                border-radius: 10px;
+                padding: 14px 16px;
+                margin: 4px 8px;
+                border-left: 3px solid alpha(@accent_bg_color, 0.5);
+            }
+            .info-icon {
+                font-size: 1.4em;
+                opacity: 0.8;
+            }
+            .info-title {
+                font-size: 1em;
+                font-weight: 600;
+            }
+            .info-description {
+                font-size: 0.92em;
+                opacity: 0.75;
+                margin-top: 6px;
+                line-height: 1.5;
+            }
+            
+            /* Command name - code block style */
+            .command-name-frame {
+                background-color: alpha(currentColor, 0.05);
                 border-radius: 8px;
+                padding: 10px 14px;
+                border: 1px solid alpha(currentColor, 0.08);
+            }
+            .command-name {
+                font-weight: 500;
+                font-family: 'JetBrains Mono', 'Fira Code', 'Source Code Pro', 'Monospace';
+                font-size: 0.92em;
+                letter-spacing: 0.2px;
+            }
+            
+            /* Command description */
+            .command-description {
+                font-size: 0.92em;
+                line-height: 1.6;
+                padding: 8px 6px 0 6px;
+                opacity: 0.8;
+                margin-top: 6px;
+            }
+            
+            /* Sticky header styling */
+            .sticky-header-container {
+                background: alpha(@window_bg_color, 0.95);
+                border-radius: 12px;
+                padding: 8px 12px;
+                margin: 8px;
+                box-shadow: 0 2px 8px alpha(black, 0.15);
+            }
+            .sticky-category-header {
+                padding: 4px 8px;
+            }
+            .sticky-general-description {
+                margin-top: 6px;
             }
             """
         )
@@ -470,7 +529,6 @@ class CommandGuideDialog(Adw.Window):
         scrolled_window = Gtk.ScrolledWindow(
             vexpand=True, hscrollbar_policy=Gtk.PolicyType.NEVER
         )
-        scrolled_window.add_css_class("command-guide-background")
         self.scrolled_window = scrolled_window
 
         # Create overlay for sticky headers

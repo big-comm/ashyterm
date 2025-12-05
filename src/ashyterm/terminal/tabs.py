@@ -13,6 +13,7 @@ gi.require_version("Vte", "3.91")
 gi.require_version("Pango", "1.0")
 from gi.repository import Adw, Gdk, Gio, GLib, Gtk, Pango, Vte
 
+from ..helpers import create_themed_popover_menu
 from ..sessions.models import SessionItem
 from ..settings.manager import SettingsManager as SettingsManagerType
 from ..utils.icons import icon_button, icon_image
@@ -558,6 +559,7 @@ class TabManager:
         terminal_area.set_child(scrolled_window)
 
         content_paned = Gtk.Paned(orientation=Gtk.Orientation.VERTICAL)
+        content_paned.add_css_class("terminal-content-paned")
         content_paned.set_start_child(terminal_area)
         content_paned.set_resize_start_child(True)
         content_paned.set_shrink_start_child(False)
@@ -721,10 +723,7 @@ class TabManager:
         menu.append(_("Move Tab"), "win.move-tab")
         menu.append(_("Duplicate Tab"), "win.duplicate-tab")
         menu.append(_("Detach Tab"), "win.detach-tab")
-        popover = Gtk.PopoverMenu.new_from_model(menu)
-        if popover.get_parent() is not None:
-            popover.unparent()
-        popover.set_parent(tab_widget)
+        popover = create_themed_popover_menu(menu, tab_widget)
 
         page = self.pages.get(tab_widget)
         if page:
@@ -1690,6 +1689,7 @@ class TabManager:
         terminal_area.set_child(terminal_area_content)
 
         content_paned = Gtk.Paned(orientation=Gtk.Orientation.VERTICAL)
+        content_paned.add_css_class("terminal-content-paned")
         content_paned.set_start_child(terminal_area)
         content_paned.set_resize_start_child(True)
         content_paned.set_shrink_start_child(False)

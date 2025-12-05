@@ -420,6 +420,7 @@ class RuleEditDialog(Adw.Window):
         saved_height = settings.get(self._SIZE_KEY_HEIGHT, self._DEFAULT_HEIGHT)
 
         super().__init__()
+        self.add_css_class("ashyterm-dialog")
         self.logger = get_logger("ashyterm.ui.dialogs.rule_edit")
         self._parent = parent
         self._rule = rule or HighlightRule(name="", pattern="", colors=["white"])
@@ -865,6 +866,7 @@ class ContextRulesDialog(Adw.Window):
         saved_height = settings.get(self._SIZE_KEY_HEIGHT, self._DEFAULT_HEIGHT)
 
         super().__init__()
+        self.add_css_class("ashyterm-dialog")
         self.logger = get_logger("ashyterm.ui.dialogs.context_rules")
         self._parent = parent
         self._context_name = context_name
@@ -976,6 +978,10 @@ class ContextRulesDialog(Adw.Window):
         # Triggers group
         self._triggers_group = Adw.PreferencesGroup(
             title=_("Triggers"),
+            description=_(
+                "Command names or patterns that activate this rule set. "
+                "When a command starting with a trigger is detected, these highlighting rules are applied."
+            ),
         )
         self._prefs_page.add(self._triggers_group)
 
@@ -1441,6 +1447,7 @@ class HighlightDialog(Adw.PreferencesWindow):
             default_height=saved_height,
             search_enabled=True,
         )
+        self.add_css_class("ashyterm-dialog")
         self.logger = get_logger("ashyterm.ui.dialogs.highlight")
         self._parent_window = parent_window
         self._manager = get_highlight_manager()
@@ -1557,10 +1564,12 @@ class HighlightDialog(Adw.PreferencesWindow):
         pygments_available = importlib.util.find_spec("pygments") is not None
 
         cat_group = Adw.PreferencesGroup(
-            title=_("File Viewer Colorization"),
-            description=_("Syntax highlighting for cat output using Pygments")
+            title=_('"cat" Command Colorization'),
+            description=_(
+                'Syntax highlighting for "cat" command output (using Pygments)'
+            )
             if pygments_available
-            else _("Pygments is not installed - cat output will not be colorized"),
+            else _('Pygments is not installed - "cat" output will not be colorized'),
         )
         page.add(cat_group)
 
@@ -1568,8 +1577,8 @@ class HighlightDialog(Adw.PreferencesWindow):
 
         # Enable cat colorization toggle (first item)
         self._cat_colorization_toggle = Adw.SwitchRow(
-            title=_("Enable Cat Colorization"),
-            subtitle=_("Apply syntax highlighting to cat command output"),
+            title=_('Enable "cat" Colorization'),
+            subtitle=_('Apply syntax highlighting to "cat" command output'),
         )
         current_enabled = settings.get("cat_colorization_enabled", True)
         self._cat_colorization_toggle.set_active(current_enabled)
@@ -1582,7 +1591,7 @@ class HighlightDialog(Adw.PreferencesWindow):
         if pygments_available:
             self._cat_theme_row = Adw.ComboRow(
                 title=_("Color Theme"),
-                subtitle=_("Pygments theme for syntax highlighting cat output"),
+                subtitle=_('Pygments theme for "cat" output highlighting'),
             )
 
             # Get available Pygments styles
@@ -1625,8 +1634,8 @@ class HighlightDialog(Adw.PreferencesWindow):
             self._cat_theme_names = theme_names
             cat_group.add(self._cat_theme_row)
 
-            # Update theme row sensitivity based on toggle
-            self._cat_theme_row.set_sensitive(current_enabled)
+            # Update theme row visibility based on toggle
+            self._cat_theme_row.set_visible(current_enabled)
         else:
             self._cat_theme_row = None
             self._cat_theme_names = []
@@ -1674,14 +1683,70 @@ class HighlightDialog(Adw.PreferencesWindow):
         )
         shell_input_group.add(self._shell_input_toggle)
 
-        # Add a note about experimental feature and theme sharing
+        # Color theme dropdown (only if Pygments is available)
+        if pygments_available:
+            self._shell_input_theme_row = Adw.ComboRow(
+                title=_("Color Theme"),
+                subtitle=_("Pygments theme for shell input highlighting"),
+            )
+
+            # Get available Pygments styles
+            from pygments.styles import get_all_styles
+
+            themes = Gtk.StringList()
+            theme_names = sorted(list(get_all_styles()))
+
+            # Put common ones first
+            preferred = [
+                "monokai",
+                "dracula",
+                "nord",
+                "gruvbox-dark",
+                "one-dark",
+                "solarized-dark",
+            ]
+            ordered_themes = []
+            for theme in preferred:
+                if theme in theme_names:
+                    ordered_themes.append(theme)
+                    theme_names.remove(theme)
+            ordered_themes.extend(theme_names)
+            theme_names = ordered_themes
+
+            for theme in theme_names:
+                themes.append(theme)
+
+            self._shell_input_theme_row.set_model(themes)
+
+            # Set current theme selection
+            current_theme = settings.get(
+                "shell_input_pygments_theme", "monokai"
+            ).lower()
+            try:
+                theme_index = theme_names.index(current_theme)
+                self._shell_input_theme_row.set_selected(theme_index)
+            except ValueError:
+                self._shell_input_theme_row.set_selected(0)  # Default to first theme
+
+            self._shell_input_theme_row.connect(
+                "notify::selected", self._on_shell_input_theme_changed
+            )
+            self._shell_input_theme_names = theme_names
+            shell_input_group.add(self._shell_input_theme_row)
+
+            # Update theme row visibility based on toggle
+            self._shell_input_theme_row.set_visible(current_enabled)
+        else:
+            self._shell_input_theme_row = None
+            self._shell_input_theme_names = []
+
+        # Add a note about experimental feature
         if pygments_available:
             note_row = Adw.ActionRow(
                 title=_("⚠️ Experimental Feature"),
                 subtitle=_(
                     "This feature applies highlighting to echoed shell input. "
-                    "It may not work perfectly with all prompts or shells. "
-                    "Uses the same Pygments theme as 'File Content Highlighting (cat)' above."
+                    "It may not work perfectly with all prompts or shells."
                 ),
             )
             note_row.add_css_class("dim-label")
@@ -1695,6 +1760,10 @@ class HighlightDialog(Adw.PreferencesWindow):
         settings = get_settings_manager()
         settings.set("shell_input_highlighting_enabled", enabled)
 
+        # Update theme row visibility
+        if self._shell_input_theme_row:
+            self._shell_input_theme_row.set_visible(enabled)
+
         # Refresh the shell input highlighter
         try:
             from ...terminal.highlighter import get_shell_input_highlighter
@@ -1707,6 +1776,31 @@ class HighlightDialog(Adw.PreferencesWindow):
         self.logger.debug(
             f"Shell input highlighting {'enabled' if enabled else 'disabled'}"
         )
+
+    def _on_shell_input_theme_changed(self, combo_row: Adw.ComboRow, _pspec) -> None:
+        """Handle shell input color theme changes."""
+        idx = combo_row.get_selected()
+        if idx != Gtk.INVALID_LIST_POSITION and hasattr(
+            self, "_shell_input_theme_names"
+        ):
+            theme_names = self._shell_input_theme_names
+            if idx < len(theme_names):
+                theme = theme_names[idx]
+                settings = get_settings_manager()
+                settings.set("shell_input_pygments_theme", theme)
+
+                # Refresh the shell input highlighter with new theme
+                try:
+                    from ...terminal.highlighter import get_shell_input_highlighter
+
+                    highlighter = get_shell_input_highlighter()
+                    highlighter.refresh_settings()
+                except Exception as e:
+                    self.logger.warning(
+                        f"Failed to refresh shell input highlighter: {e}"
+                    )
+
+                self.logger.debug(f"Shell input theme changed to: {theme}")
 
     def _setup_ignored_commands_group(self, page: Adw.PreferencesPage) -> None:
         """Setup the ignored commands group as a collapsible section."""
@@ -2716,14 +2810,14 @@ class HighlightDialog(Adw.PreferencesWindow):
         settings = get_settings_manager()
         settings.set("cat_colorization_enabled", is_active)
 
-        # Update theme dropdown sensitivity
+        # Update theme dropdown visibility
         if self._cat_theme_row is not None:
-            self._cat_theme_row.set_sensitive(is_active)
+            self._cat_theme_row.set_visible(is_active)
 
         self.emit("settings-changed")
 
         status = _("enabled") if is_active else _("disabled")
-        self.add_toast(Adw.Toast(title=_("Cat colorization {}").format(status)))
+        self.add_toast(Adw.Toast(title=_('"cat" colorization {}').format(status)))
 
     def _show_restart_required_dialog(self) -> None:
         """Show a dialog informing user that restart is required for changes to take effect."""
@@ -2985,6 +3079,7 @@ class ContextNameDialog(Adw.Dialog):
             parent: Parent widget for the dialog.
         """
         super().__init__()
+        self.add_css_class("ashyterm-dialog")
         self.logger = get_logger("ashyterm.ui.dialogs.context_name")
         self._parent = parent
         self._manager = get_highlight_manager()
@@ -3100,6 +3195,7 @@ class AddTriggerDialog(Adw.Dialog):
             existing_trigger: If editing, the current trigger name.
         """
         super().__init__()
+        self.add_css_class("ashyterm-dialog")
         self.logger = get_logger("ashyterm.ui.dialogs.add_trigger")
         self._parent = parent
         self._context_name = context_name
@@ -3210,6 +3306,7 @@ class AddIgnoredCommandDialog(Adw.Dialog):
             parent: Parent widget for the dialog.
         """
         super().__init__()
+        self.add_css_class("ashyterm-dialog")
         self.logger = get_logger("ashyterm.ui.dialogs.add_ignored_cmd")
         self._parent = parent
 

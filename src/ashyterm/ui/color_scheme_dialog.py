@@ -101,6 +101,9 @@ class _SchemeEditorDialog(Adw.Window):
         super().__init__(
             transient_for=parent, modal=True, default_width=700, default_height=600
         )
+        # Add CSS class for theming
+        self.add_css_class("ashyterm-dialog")
+
         self.settings_manager = settings_manager
         self.original_key = scheme_key if not is_new else None
         self.is_new = is_new
@@ -389,6 +392,9 @@ class ColorSchemeDialog(Adw.PreferencesWindow):
             default_height=720,
             search_enabled=True,
         )
+        # Add CSS class for theming
+        self.add_css_class("ashyterm-dialog")
+
         self.settings_manager = settings_manager
         self.main_window = main_window
         self.logger = get_logger("ashyterm.ui.color_scheme_dialog")
@@ -398,13 +404,7 @@ class ColorSchemeDialog(Adw.PreferencesWindow):
         self._update_button_sensitivity()
 
     def _build_ui(self):
-        css_provider = Gtk.CssProvider()
-        css_provider.load_from_data(
-            b".scheme-preview-canvas { background-color: transparent; }"
-        )
-        Gtk.StyleContext.add_provider_for_display(
-            self.get_display(), css_provider, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION
-        )
+        # CSS for .scheme-preview-canvas is now in window.css
 
         page = Adw.PreferencesPage()
         self.add(page)

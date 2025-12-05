@@ -994,7 +994,8 @@ class ShellInputHighlighter:
 
             settings = get_settings_manager()
             self._enabled = settings.get("shell_input_highlighting_enabled", False)
-            self._theme = settings.get("pygments_theme", "monokai")
+            # Use separate theme setting for shell input highlighting
+            self._theme = settings.get("shell_input_pygments_theme", "monokai")
 
             if self._enabled:
                 self._init_lexer()

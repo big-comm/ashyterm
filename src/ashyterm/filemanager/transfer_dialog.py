@@ -197,6 +197,9 @@ class TransferManagerDialog(Adw.Window):
         self.transfer_rows: Dict[str, TransferRow] = {}
         self.handler_ids = []
 
+        # Add CSS class for theming
+        self.add_css_class("ashyterm-dialog")
+
         self.set_title(_("Transfer Manager"))
         self.set_default_size(600, 500)
         self.set_modal(False)

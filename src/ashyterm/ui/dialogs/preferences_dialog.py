@@ -36,6 +36,7 @@ class PreferencesDialog(Adw.PreferencesWindow):
             default_height=680,
             search_enabled=True,
         )
+        self.add_css_class("ashyterm-dialog")
         self.logger = get_logger("ashyterm.ui.dialogs.preferences")
         self.settings_manager = settings_manager
         self._setup_appearance_page()

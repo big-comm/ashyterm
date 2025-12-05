@@ -642,18 +642,25 @@ class SettingsManager:
                         f"Non-terminal theme: using default base color {base_color_hex}"
                     )
 
-                # Calculate adaptive alpha
-                alpha = self._calculate_adaptive_alpha(
-                    base_color_hex, user_transparency
-                )
-                rgba_color = f"rgba({int(base_color_hex[1:3], 16)}, {int(base_color_hex[3:5], 16)}, {int(base_color_hex[5:7], 16)}, {alpha})"
-                self.logger.info(f"Calculated rgba_color: {rgba_color}")
+                # Convert user_transparency (0-100) to percentage for color-mix
+                # Higher transparency = more transparent, so we use (100 - transparency)% solid color
+                opacity_percent = 100 - user_transparency
+                color_mix_css = f"color-mix(in srgb, {base_color_hex} {opacity_percent}%, transparent)"
+                self.logger.info(f"Calculated color_mix_css: {color_mix_css}")
 
                 css = f"""
                 .header-bar, .header-bar:backdrop,
                 .main-header-bar, .main-header-bar:backdrop,
-                .terminal-pane .header-bar, .terminal-pane .header-bar, .terminal-pane .top-bar:backdrop {{
-                    background-color: {rgba_color};
+                .terminal-pane .header-bar, .terminal-pane .header-bar, .terminal-pane .top-bar:backdrop,
+                searchbar, searchbar > box,
+                searchbar.broadcast-bar, searchbar.broadcast-bar > box {{
+                    background-color: {color_mix_css};
+                }}
+                searchbar > revealer,
+                searchbar > revealer > box,
+                searchbar.broadcast-bar > revealer,
+                searchbar.broadcast-bar > revealer > box {{
+                    background-color: transparent;
                 }}
                 """
                 # Remove existing provider if any
@@ -671,7 +678,7 @@ class SettingsManager:
                 )
                 headerbar._transparency_provider = provider
                 self.logger.info(
-                    f"Headerbar transparency applied with color {rgba_color}"
+                    f"Headerbar transparency applied with color {color_mix_css}"
                 )
             else:
                 # Reset to full opacity when transparency is 0
@@ -689,8 +696,8 @@ class SettingsManager:
 
     def apply_gtk_terminal_theme(self, window) -> None:
         """
-        Apply terminal colors to GTK elements (headerbar and tabs).
-        MODIFIED: This method no longer changes the global theme. It only applies CSS.
+        Apply terminal colors to GTK elements when gtk_theme is 'terminal'.
+        This includes headerbar, tabs, sidebar, popovers, file manager, and dialogs.
         """
         try:
             scheme = self.get_color_scheme_data()
@@ -698,88 +705,593 @@ class SettingsManager:
             fg_color = scheme.get("foreground", "#ffffff")
             header_bg_color = scheme.get("headerbar_background", bg_color)
             user_transparency = self.get("headerbar_transparency", 0)
+
+            # Determine if theme is dark or light based on background luminance
+            r = int(bg_color[1:3], 16) / 255
+            g = int(bg_color[3:5], 16) / 255
+            b = int(bg_color[5:7], 16) / 255
+            luminance = 0.299 * r + 0.587 * g + 0.114 * b
+            is_dark_theme = luminance < 0.5
+
+            # Hover/selected alpha values based on theme
+            hover_alpha = "10%" if is_dark_theme else "8%"
+            selected_alpha = "15%" if is_dark_theme else "12%"
+
             self.logger.info(
-                f"Applying GTK terminal theme CSS with header_bg_color: {header_bg_color}"
+                f"Applying GTK terminal theme CSS - BG: {bg_color}, FG: {fg_color}, "
+                f"Header: {header_bg_color}, Dark: {is_dark_theme}"
             )
 
-            if hasattr(window, "_terminal_theme_header_provider"):
+            # Remove existing providers
+            if hasattr(window, "_terminal_theme_provider"):
                 Gtk.StyleContext.remove_provider_for_display(
-                    Gdk.Display.get_default(), window._terminal_theme_header_provider
-                )
-            if hasattr(window, "_terminal_theme_tabs_provider"):
-                Gtk.StyleContext.remove_provider_for_display(
-                    Gdk.Display.get_default(), window._terminal_theme_tabs_provider
+                    Gdk.Display.get_default(), window._terminal_theme_provider
                 )
 
-            # If transparency is enabled, don't set solid background color to avoid double layer
+            # Build comprehensive CSS
+            css_parts = []
+
+            # === HEADERBAR ===
             if user_transparency > 0:
-                css_header = f"""
+                css_parts.append(f"""
                 .main-header-bar, .main-header-bar:backdrop,
                 .terminal-pane .header-bar, .terminal-pane .header-bar:backdrop,
                 .top-bar, .top-bar:backdrop {{
                     color: {fg_color};
                 }}
-                """
+                headerbar.main-header-bar button,
+                headerbar.main-header-bar button:hover,
+                headerbar.main-header-bar button:active,
+                headerbar.main-header-bar button:checked,
+                headerbar.main-header-bar togglebutton,
+                headerbar.main-header-bar togglebutton:hover,
+                headerbar.main-header-bar togglebutton:active,
+                headerbar.main-header-bar togglebutton:checked,
+                .terminal-pane headerbar button {{
+                    color: {fg_color};
+                }}
+                headerbar.main-header-bar button image,
+                headerbar.main-header-bar togglebutton image,
+                headerbar.main-header-bar image.icon-symbolic,
+                .terminal-pane headerbar button image {{
+                    color: {fg_color};
+                    -gtk-icon-style: symbolic;
+                }}
+                """)
             else:
-                css_header = f"""
+                css_parts.append(f"""
                 .main-header-bar, .main-header-bar:backdrop,
                 .terminal-pane .header-bar, .terminal-pane .header-bar:backdrop,
                 .top-bar, .top-bar:backdrop {{
                     background-color: {header_bg_color};
                     color: {fg_color};
                 }}
-                """
-            provider_header = Gtk.CssProvider()
-            provider_header.load_from_data(css_header.encode("utf-8"))
+                headerbar.main-header-bar button,
+                headerbar.main-header-bar button:hover,
+                headerbar.main-header-bar button:active,
+                headerbar.main-header-bar button:checked,
+                headerbar.main-header-bar togglebutton,
+                headerbar.main-header-bar togglebutton:hover,
+                headerbar.main-header-bar togglebutton:active,
+                headerbar.main-header-bar togglebutton:checked,
+                .terminal-pane headerbar button {{
+                    color: {fg_color};
+                }}
+                headerbar.main-header-bar button image,
+                headerbar.main-header-bar togglebutton image,
+                headerbar.main-header-bar image.icon-symbolic,
+                .terminal-pane headerbar button image {{
+                    color: {fg_color};
+                    -gtk-icon-style: symbolic;
+                }}
+                """)
+
+            # === TABS ===
+            if user_transparency > 0:
+                css_parts.append(f"""
+                .scrolled-tab-bar viewport {{ color: {fg_color}; }}
+                .scrolled-tab-bar viewport box .horizontal.active {{ 
+                    background-color: color-mix(in srgb, {fg_color}, transparent 78%); 
+                }}
+                """)
+            else:
+                css_parts.append(f"""
+                .scrolled-tab-bar viewport {{ 
+                    background-color: {header_bg_color}; 
+                    color: {fg_color}; 
+                }}
+                .scrolled-tab-bar viewport box .horizontal.active {{ 
+                    background-color: color-mix(in srgb, {fg_color}, transparent 78%); 
+                }}
+                """)
+
+            # === SEARCH BAR AND BROADCAST BAR ===
+            # When transparency > 0, background is handled by apply_headerbar_transparency
+            # When transparency == 0, we need to set solid background here
+            if user_transparency > 0:
+                # Only set color and other styles, background is set by apply_headerbar_transparency
+                css_parts.append(f"""
+                searchbar,
+                searchbar > box,
+                searchbar.broadcast-bar,
+                searchbar.broadcast-bar > box {{
+                    color: {fg_color};
+                }}
+                searchbar > revealer,
+                searchbar > revealer > box,
+                searchbar.broadcast-bar > revealer,
+                searchbar.broadcast-bar > revealer > box {{
+                    background-color: transparent;
+                }}
+                searchbar entry,
+                searchbar.broadcast-bar entry {{
+                    background-color: {bg_color};
+                    color: {fg_color};
+                }}
+                searchbar button,
+                searchbar.broadcast-bar button,
+                searchbar label,
+                searchbar.broadcast-bar label,
+                searchbar switch {{
+                    color: {fg_color};
+                }}
+                searchbar button image,
+                searchbar.broadcast-bar button image {{
+                    color: {fg_color};
+                    -gtk-icon-style: symbolic;
+                }}
+                """)
+            else:
+                css_parts.append(f"""
+                searchbar,
+                searchbar > box,
+                searchbar.broadcast-bar,
+                searchbar.broadcast-bar > box {{
+                    background-color: {header_bg_color};
+                    color: {fg_color};
+                }}
+                searchbar > revealer,
+                searchbar > revealer > box,
+                searchbar.broadcast-bar > revealer,
+                searchbar.broadcast-bar > revealer > box {{
+                    background-color: transparent;
+                }}
+                searchbar entry,
+                searchbar.broadcast-bar entry {{
+                    background-color: {bg_color};
+                    color: {fg_color};
+                }}
+                searchbar button,
+                searchbar.broadcast-bar button,
+                searchbar label,
+                searchbar.broadcast-bar label,
+                searchbar switch {{
+                    color: {fg_color};
+                }}
+                searchbar button image,
+                searchbar.broadcast-bar button image {{
+                    color: {fg_color};
+                    -gtk-icon-style: symbolic;
+                }}
+                """)
+
+            # === SIDEBAR ===
+            # Simple box-based sidebar structure
+            # Only apply if luminance >= 5% to avoid very dark backgrounds
+            if luminance >= 0.05:
+                css_parts.append(f"""
+                .sidebar-container {{
+                    background: {bg_color};
+                    background-color: {bg_color};
+                    color: {fg_color};
+                }}
+                .sidebar-toolbar {{
+                    background: {bg_color};
+                    background-color: {bg_color};
+                    color: {fg_color};
+                    padding-top: 2px;
+                }}
+                .sidebar-session-tree,
+                .sidebar-session-tree viewport {{
+                    background-color: {bg_color};
+                    color: {fg_color};
+                }}
+                .sidebar-search {{
+                    background-color: {bg_color};
+                    color: {fg_color};
+                    padding: 8px 12px 12px 12px;
+                }}
+                .sidebar-session-tree list,
+                .sidebar-session-tree listview {{
+                    background: {bg_color};
+                    background-color: {bg_color};
+                }}
+                .sidebar-session-tree list > row,
+                .sidebar-session-tree listview > row {{
+                    background: {bg_color};
+                    background-color: {bg_color};
+                    color: {fg_color};
+                }}
+                .sidebar-session-tree list > row:hover,
+                .sidebar-session-tree listview > row:hover {{
+                    background-color: color-mix(in srgb, {fg_color} {hover_alpha}, {bg_color});
+                }}
+                .sidebar-session-tree list > row:selected,
+                .sidebar-session-tree listview > row:selected {{
+                    background-color: color-mix(in srgb, {fg_color} {selected_alpha}, {bg_color});
+                }}
+                .sidebar-session-tree list > row:selected:hover,
+                .sidebar-session-tree listview > row:selected:hover {{
+                    background-color: color-mix(in srgb, {fg_color} 18%, {bg_color});
+                }}
+                .inline-context-menu {{
+                    background: {bg_color};
+                    background-color: {bg_color};
+                    color: {fg_color};
+                }}
+                .inline-context-menu label {{
+                    color: {fg_color};
+                }}
+                .inline-context-menu button {{
+                    color: {fg_color};
+                    background: transparent;
+                }}
+                .inline-context-menu button:hover {{
+                    background-color: color-mix(in srgb, {fg_color} {hover_alpha}, {bg_color});
+                }}
+                .inline-context-menu button:active {{
+                    background-color: color-mix(in srgb, {fg_color} {selected_alpha}, {bg_color});
+                }}
+                .inline-context-menu button.destructive-action {{
+                    color: @destructive_color;
+                }}
+                .inline-context-menu button.destructive-action:hover {{
+                    background-color: alpha(@destructive_color, 0.1);
+                }}
+                """)
+
+                # === SIDEBAR POPOVER ===
+                # Simple box-based sidebar in popover
+                css_parts.append(f"""
+                popover.sidebar-popover.ashyterm-popover > contents,
+                popover.sidebar-popover > contents {{
+                    background-color: {bg_color};
+                    padding: 0;
+                }}
+                popover.sidebar-popover.ashyterm-popover > arrow,
+                popover.sidebar-popover > arrow {{
+                    background-color: {bg_color};
+                }}
+                popover.sidebar-popover .sidebar-container {{
+                    background: {bg_color};
+                    background-color: {bg_color};
+                    color: {fg_color};
+                }}
+                popover.sidebar-popover .sidebar-toolbar {{
+                    background: {bg_color};
+                    background-color: {bg_color};
+                    color: {fg_color};
+                    padding-top: 2px;
+                }}
+                popover.sidebar-popover .sidebar-session-tree,
+                popover.sidebar-popover .sidebar-session-tree viewport {{
+                    background-color: {bg_color};
+                    color: {fg_color};
+                }}
+                popover.sidebar-popover .sidebar-search {{
+                    background-color: {bg_color};
+                    color: {fg_color};
+                    padding: 8px 12px 12px 12px;
+                }}
+                popover.sidebar-popover .sidebar-session-tree list,
+                popover.sidebar-popover .sidebar-session-tree listview {{
+                    background: {bg_color};
+                    background-color: {bg_color};
+                }}
+                popover.sidebar-popover .sidebar-session-tree list > row,
+                popover.sidebar-popover .sidebar-session-tree listview > row {{
+                    background: {bg_color};
+                    background-color: {bg_color};
+                }}
+                popover.sidebar-popover .sidebar-session-tree list > row:hover,
+                popover.sidebar-popover .sidebar-session-tree listview > row:hover {{
+                    background-color: color-mix(in srgb, {fg_color} {hover_alpha}, {bg_color});
+                }}
+                popover.sidebar-popover .sidebar-session-tree list > row:selected,
+                popover.sidebar-popover .sidebar-session-tree listview > row:selected {{
+                    background-color: color-mix(in srgb, {fg_color} {selected_alpha}, {bg_color});
+                }}
+                popover.sidebar-popover .sidebar-session-tree list > row:selected:hover,
+                popover.sidebar-popover .sidebar-session-tree listview > row:selected:hover {{
+                    background-color: color-mix(in srgb, {fg_color} 18%, {bg_color});
+                }}
+                popover.sidebar-popover label,
+                popover.sidebar-popover button {{
+                    color: {fg_color};
+                }}
+                popover.sidebar-popover button {{
+                    background: transparent;
+                }}
+                popover.sidebar-popover button:hover {{
+                    background-color: alpha({fg_color}, 0.1);
+                }}
+                popover.sidebar-popover .sidebar-search entry {{
+                    background-color: alpha({fg_color}, 0.1);
+                    color: {fg_color};
+                }}
+                popover.sidebar-popover .inline-context-menu {{
+                    background: {bg_color};
+                    background-color: {bg_color};
+                    color: {fg_color};
+                }}
+                popover.sidebar-popover .inline-context-menu label {{
+                    color: {fg_color};
+                }}
+                popover.sidebar-popover .inline-context-menu button {{
+                    color: {fg_color};
+                    background: transparent;
+                }}
+                popover.sidebar-popover .inline-context-menu button:hover {{
+                    background-color: color-mix(in srgb, {fg_color} {hover_alpha}, {bg_color});
+                }}
+                popover.sidebar-popover .inline-context-menu button:active {{
+                    background-color: color-mix(in srgb, {fg_color} {selected_alpha}, {bg_color});
+                }}
+                popover.sidebar-popover .inline-context-menu button.destructive-action {{
+                    color: @destructive_color;
+                }}
+                popover.sidebar-popover .inline-context-menu button.destructive-action:hover {{
+                    background-color: alpha(@destructive_color, 0.1);
+                }}
+                """)
+            else:
+                self.logger.info(
+                    f"Skipping sidebar and popover background styling - luminance {luminance:.2%} is below 5% threshold"
+                )
+
+            # === POPOVERS AND CONTEXT MENUS ===
+            # Only apply if luminance >= 5% to avoid very dark backgrounds
+            if luminance >= 0.05:
+                css_parts.append(f"""
+                popover.ashyterm-popover > contents,
+                popover.context-menu > contents {{
+                    background-color: {header_bg_color};
+                    color: {fg_color};
+                }}
+                popover.ashyterm-popover > arrow,
+                popover.context-menu > arrow {{
+                    background: {header_bg_color};
+                }}
+                popover.ashyterm-popover modelbutton,
+                popover.ashyterm-popover modelbutton label,
+                popover.ashyterm-popover label,
+                popover.context-menu modelbutton,
+                popover.context-menu modelbutton label,
+                popover.context-menu label {{
+                    color: {fg_color};
+                }}
+                popover.ashyterm-popover > contents > box,
+                popover.context-menu > contents > box {{
+                    background-color: {header_bg_color};
+                    color: {fg_color};
+                }}
+                """)
+
+                # === TOOLTIPS ===
+                css_parts.append(f"""
+                .tooltip-popover > contents {{
+                    background-color: {header_bg_color};
+                    color: {fg_color};
+                }}
+                popover.tooltip-popover arrow {{
+                    background: {header_bg_color};
+                }}
+                .tooltip-popover label {{
+                    color: {fg_color};
+                }}
+                """)
+
+                # === FILE MANAGER ===
+                css_parts.append(f"""
+                .file-manager-main-box {{
+                    background-color: {bg_color};
+                    color: {fg_color};
+                }}
+                .file-manager-main-box > actionbar,
+                .file-manager-main-box > actionbar > revealer > box {{
+                    background-color: {header_bg_color};
+                    color: {fg_color};
+                }}
+                .file-manager-main-box scrolledwindow,
+                .file-manager-main-box columnview,
+                .file-manager-main-box columnview row {{
+                    background-color: {bg_color};
+                    color: {fg_color};
+                }}
+                .file-manager-main-box columnview row:hover {{
+                    background-color: color-mix(in srgb, {fg_color} {hover_alpha}, {bg_color});
+                }}
+                .file-manager-main-box columnview row:selected {{
+                    background-color: color-mix(in srgb, {fg_color} {selected_alpha}, {bg_color});
+                }}
+                .file-manager-main-box columnview row:selected:hover {{
+                    background-color: color-mix(in srgb, {fg_color} 18%, {bg_color});
+                }}
+                .file-manager-main-box label,
+                .file-manager-main-box button:not(.suggested-action):not(.destructive-action),
+                .file-manager-main-box .breadcrumb-trail button {{
+                    color: {fg_color};
+                }}
+                .file-manager-main-box entry {{
+                    color: {fg_color};
+                    background-color: {header_bg_color};
+                }}
+                .file-manager-filter {{
+                    background-color: {bg_color};
+                    color: {fg_color};
+                }}
+                """)
+
+            # === DIALOGS ===
+            # Get accent color from palette for command guide styling
+            palette = scheme.get("palette", [])
+            accent_color = palette[4] if len(palette) > 4 else "#3584e4"
+
+            # Only apply dialog background colors if luminance >= 5%
+            # Very dark themes (< 5% luminance) can cause readability issues
+            apply_dialog_bg = luminance >= 0.05
+
+            if apply_dialog_bg:
+                css_parts.append(f"""
+                .ashyterm-dialog,
+                messagedialog {{
+                    background-color: {bg_color};
+                    color: {fg_color};
+                }}
+                .ashyterm-dialog > toolbarview {{
+                    background-color: {bg_color};
+                }}
+                .ashyterm-dialog > toolbarview > contents {{
+                    background-color: {bg_color};
+                }}
+                .ashyterm-dialog scrolledwindow {{
+                    background-color: {bg_color};
+                }}
+                .ashyterm-dialog scrolledwindow > viewport {{
+                    background-color: {bg_color};
+                }}
+                .ashyterm-dialog .navigation-view,
+                .ashyterm-dialog .preferences-page {{
+                    background-color: {bg_color};
+                    color: {fg_color};
+                }}
+                .ashyterm-dialog .preferences-group {{
+                    background-color: {header_bg_color};
+                    color: {fg_color};
+                }}
+                .ashyterm-dialog > toolbarview label,
+                .ashyterm-dialog .preferences-page label,
+                .ashyterm-dialog row label,
+                .ashyterm-dialog .title,
+                .ashyterm-dialog .subtitle,
+                .ashyterm-dialog button:not(.suggested-action):not(.destructive-action),
+                .ashyterm-dialog entry,
+                .ashyterm-dialog row,
+                .ashyterm-dialog switch,
+                .ashyterm-dialog spinbutton,
+                .ashyterm-dialog dropdown,
+                .ashyterm-dialog checkbutton,
+                messagedialog > box label,
+                messagedialog .title,
+                messagedialog .subtitle,
+                messagedialog button:not(.suggested-action):not(.destructive-action),
+                messagedialog entry,
+                messagedialog row {{
+                    color: {fg_color};
+                }}
+                messagedialog > contents {{
+                    background-color: {bg_color};
+                    color: {fg_color};
+                }}
+                .ashyterm-dialog actionbar,
+                .ashyterm-dialog actionbar > revealer,
+                .ashyterm-dialog actionbar > revealer > box {{
+                    background: {header_bg_color};
+                    background-color: {header_bg_color};
+                    color: {fg_color};
+                }}
+                /* Command Guide specific styles */
+                .ashyterm-dialog .command-guide-boxed-list {{
+                    background-color: {bg_color};
+                }}
+                .ashyterm-dialog .command-guide-boxed-list row {{
+                    background-color: {bg_color};
+                }}
+                .ashyterm-dialog .category-header {{
+                    background: color-mix(in srgb, {accent_color} 85%, {bg_color});
+                    color: {bg_color};
+                }}
+                .ashyterm-dialog .general-description {{
+                    background: color-mix(in srgb, {accent_color} 10%, {bg_color});
+                    border-left-color: {accent_color};
+                }}
+                .ashyterm-dialog .command-name-frame {{
+                    background-color: color-mix(in srgb, {fg_color} 6%, {bg_color});
+                    border-color: color-mix(in srgb, {fg_color} 12%, {bg_color});
+                }}
+                .ashyterm-dialog .command-guide-boxed-list > row:hover .command-guide-card {{
+                    background-color: color-mix(in srgb, {accent_color} 10%, {bg_color});
+                }}
+                .ashyterm-dialog .command-guide-boxed-list > row:selected .command-guide-card {{
+                    background-color: color-mix(in srgb, {accent_color} 15%, {bg_color});
+                }}
+                """)
+            else:
+                self.logger.info(
+                    f"Skipping dialog background styling - luminance {luminance:.2%} is below 5% threshold"
+                )
+
+            # === PANED SEPARATORS ===
+            # Use a subtle color based on the theme colors
+            separator_color = f"color-mix(in srgb, {fg_color} 20%, {bg_color})"
+            css_parts.append(f"""
+            paned > separator {{
+                background-color: {separator_color};
+                min-width: 1px;
+                min-height: 1px;
+            }}
+            /* File manager internal separators and borders */
+            .file-manager-main-box separator {{
+                background-color: {separator_color};
+            }}
+            .file-manager-main-box actionbar {{
+                border-top: 1px solid {separator_color};
+                border-color: {separator_color};
+            }}
+            /* ActionBar internal structure */
+            .file-manager-main-box actionbar > revealer > box {{
+                border-color: {separator_color};
+            }}
+            """)
+
+            # Combine and apply
+            css = "".join(css_parts)
+            provider = Gtk.CssProvider()
+            provider.load_from_data(css.encode("utf-8"))
             Gtk.StyleContext.add_provider_for_display(
                 Gdk.Display.get_default(),
-                provider_header,
+                provider,
                 Gtk.STYLE_PROVIDER_PRIORITY_USER,
             )
-            self.apply_headerbar_transparency(window.header_bar)
-            window._terminal_theme_header_provider = provider_header
+            window._terminal_theme_provider = provider
 
-            tab_bar = window.scrolled_tab_bar.get_child()
-            if tab_bar:
-                if user_transparency > 0:
-                    css_tabs = f"""
-                    .scrolled-tab-bar viewport {{ color: {fg_color}; }}
-                    .scrolled-tab-bar viewport box .horizontal.active {{ background-color: color-mix(in srgb, {fg_color}, transparent 78%); }}
-                    """
-                else:
-                    css_tabs = f"""
-                    .scrolled-tab-bar viewport {{ background-color: {header_bg_color}; color: {fg_color}; }}
-                    .scrolled-tab-bar viewport box .horizontal.active {{ background-color: color-mix(in srgb, {fg_color}, transparent 78%); }}
-                    """
-                provider_tabs = Gtk.CssProvider()
-                provider_tabs.load_from_data(css_tabs.encode("utf-8"))
-                Gtk.StyleContext.add_provider_for_display(
-                    Gdk.Display.get_default(),
-                    provider_tabs,
-                    Gtk.STYLE_PROVIDER_PRIORITY_USER,
-                )
-                window._terminal_theme_tabs_provider = provider_tabs
+            self.apply_headerbar_transparency(window.header_bar)
 
         except Exception as e:
             self.logger.warning(f"Failed to apply GTK terminal theme: {e}")
 
-    # NEW: Method to remove the custom terminal theme CSS.
     def remove_gtk_terminal_theme(self, window) -> None:
-        """Removes the custom CSS providers for the terminal theme."""
+        """Removes the custom CSS provider for the terminal theme."""
         try:
+            if hasattr(window, "_terminal_theme_provider"):
+                Gtk.StyleContext.remove_provider_for_display(
+                    Gdk.Display.get_default(), window._terminal_theme_provider
+                )
+                delattr(window, "_terminal_theme_provider")
+                self.logger.info("Removed terminal theme provider.")
+
+            # Also clean up old-style providers if they exist
             if hasattr(window, "_terminal_theme_header_provider"):
                 Gtk.StyleContext.remove_provider_for_display(
                     Gdk.Display.get_default(), window._terminal_theme_header_provider
                 )
-                del window._terminal_theme_header_provider
-                self.logger.info("Removed terminal theme header provider.")
+                delattr(window, "_terminal_theme_header_provider")
 
             if hasattr(window, "_terminal_theme_tabs_provider"):
                 Gtk.StyleContext.remove_provider_for_display(
                     Gdk.Display.get_default(), window._terminal_theme_tabs_provider
                 )
-                del window._terminal_theme_tabs_provider
-                self.logger.info("Removed terminal theme tabs provider.")
+                delattr(window, "_terminal_theme_tabs_provider")
 
             # Re-apply headerbar transparency to restore default appearance
             if hasattr(window, "header_bar"):

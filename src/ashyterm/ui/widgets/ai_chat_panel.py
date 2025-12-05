@@ -1084,6 +1084,7 @@ class AIChatPanel(Gtk.Box):
         """Build the chat panel UI."""
         # Header bar
         header = Adw.HeaderBar()
+        header.add_css_class("ai-panel-header")
         header.set_show_end_title_buttons(False)
         header.set_show_start_title_buttons(False)
 
@@ -1342,8 +1343,18 @@ class AIChatPanel(Gtk.Box):
             if gtk_theme == "terminal":
                 scheme = self._settings_manager.get_color_scheme_data()
                 base_color_hex = scheme.get("background", "#000000" if is_dark else "#ffffff")
+                fg_color_hex = scheme.get(
+                    "foreground", "#ffffff" if is_dark else "#000000"
+                )
+                header_bg = scheme.get("headerbar_background", base_color_hex)
+                # Get accent color from palette (typically blue at index 4)
+                palette = scheme.get("palette", [])
+                accent_color = palette[4] if len(palette) > 4 else "#3584e4"
             else:
                 base_color_hex = "#1e1e1e" if is_dark else "#f6f5f4"
+                fg_color_hex = "#ffffff" if is_dark else "#000000"
+                header_bg = base_color_hex
+                accent_color = "#3584e4"
 
             # Parse hex color for panel background
             r = int(base_color_hex[1:3], 16)
@@ -1357,8 +1368,33 @@ class AIChatPanel(Gtk.Box):
             else:
                 rgba_bg = f"rgb({r}, {g}, {b})"
 
+            # Command blocks always use dark background for code highlighting consistency
+            command_bg_dark = "#1e1e1e"
+            command_border_dark = "rgba(255, 255, 255, 0.1)"
+            command_hover_bg_dark = "#2d2d2d"
+            command_fg_dark = "#e0e0e0"
+
             # Define solid opaque colors for content areas based on theme
-            if is_dark:
+            if gtk_theme == "terminal":
+                # Terminal theme - use colors from terminal scheme
+                bubble_user_bg = accent_color
+                # For user bubble text, check if accent is dark enough for white text
+                ar = int(accent_color[1:3], 16)
+                ag = int(accent_color[3:5], 16)
+                ab = int(accent_color[5:7], 16)
+                accent_luminance = (0.299 * ar + 0.587 * ag + 0.114 * ab) / 255
+                bubble_user_fg = "#ffffff" if accent_luminance < 0.5 else "#000000"
+                bubble_assistant_bg = header_bg
+                bubble_assistant_border = (
+                    f"color-mix(in srgb, {fg_color_hex} 10%, transparent)"
+                )
+                input_bg = header_bg
+                input_border = f"color-mix(in srgb, {fg_color_hex} 10%, transparent)"
+                scroll_bg = (
+                    f"rgba({r}, {g}, {b}, 0.3)" if transparency > 0 else "transparent"
+                )
+                content_fg = fg_color_hex
+            elif is_dark:
                 # Dark theme colors - Modern dark palette
                 bubble_user_bg = "#3584e4"  # Accent blue for user
                 bubble_user_fg = "#ffffff"
@@ -1366,10 +1402,8 @@ class AIChatPanel(Gtk.Box):
                 bubble_assistant_border = "rgba(255, 255, 255, 0.1)"
                 input_bg = "#2d2d2d"
                 input_border = "rgba(255, 255, 255, 0.1)"
-                command_bg = "#252525"
-                command_border = "rgba(255, 255, 255, 0.08)"
-                command_hover_bg = "#333333"
                 scroll_bg = f"rgba({r}, {g}, {b}, 0.3)" if transparency > 0 else "transparent"
+                content_fg = "#ffffff"
             else:
                 # Light theme colors - Clean light palette
                 bubble_user_bg = "#3584e4"  # Same accent blue
@@ -1378,16 +1412,15 @@ class AIChatPanel(Gtk.Box):
                 bubble_assistant_border = "rgba(0, 0, 0, 0.08)"
                 input_bg = "#ffffff"
                 input_border = "rgba(0, 0, 0, 0.12)"
-                command_bg = "#f8f8f8"
-                command_border = "rgba(0, 0, 0, 0.08)"
-                command_hover_bg = "#f0f0f0"
                 scroll_bg = f"rgba({r}, {g}, {b}, 0.3)" if transparency > 0 else "transparent"
+                content_fg = "#000000"
 
             # Build comprehensive CSS for transparent panel with solid content
             css = f"""
             /* Panel background - transparent or opaque based on setting */
             .ai-chat-panel {{
                 background-color: {rgba_bg};
+                color: {content_fg};
             }}
 
             /* Scrolled area - subtle background for depth */
@@ -1408,29 +1441,35 @@ class AIChatPanel(Gtk.Box):
             /* Assistant message bubble - always solid */
             .ai-message-assistant {{
                 background-color: {bubble_assistant_bg};
+                color: {content_fg};
                 border: 1px solid {bubble_assistant_border};
                 border-radius: 16px 16px 16px 4px;
                 padding: 10px 14px;
                 box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
             }}
 
-            /* Command block - solid background */
+            /* Command block - always dark for code highlighting */
             .ai-command-block {{
-                background-color: {command_bg};
-                border: 1px solid {command_border};
+                background-color: {command_bg_dark};
+                color: {command_fg_dark};
+                border: 1px solid {command_border_dark};
                 border-radius: 10px;
                 padding: 12px 14px;
                 transition: all 200ms ease;
             }}
             .ai-command-block:hover {{
-                background-color: {command_hover_bg};
+                background-color: {command_hover_bg_dark};
                 border-color: alpha(@accent_color, 0.4);
                 box-shadow: 0 2px 8px alpha(@accent_color, 0.1);
+            }}
+            .ai-command-text {{
+                color: {command_fg_dark};
             }}
 
             /* Input area - solid background for visibility */
             .ai-input-box {{
                 background-color: {input_bg};
+                color: {content_fg};
                 border: 1px solid {input_border};
                 border-radius: 14px;
                 padding: 6px 10px;
@@ -1442,11 +1481,28 @@ class AIChatPanel(Gtk.Box):
             }}
             .ai-input-textview {{
                 background-color: transparent;
+                color: {content_fg};
                 padding: 4px;
                 min-height: 24px;
             }}
             .ai-input-textview text {{
                 background-color: transparent;
+                color: {content_fg};
+            }}
+            
+            /* AI Panel HeaderBar */
+            .ai-panel-header {{
+                background-color: {input_bg};
+                color: {content_fg};
+            }}
+            .ai-panel-header .title {{
+                color: {content_fg};
+            }}
+            .ai-panel-header button {{
+                color: {content_fg};
+            }}
+            .ai-panel-header button image {{
+                color: {content_fg};
             }}
             """
 

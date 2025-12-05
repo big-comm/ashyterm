@@ -169,34 +169,44 @@ popover.menu separator {
 
 /* Sidebar search */
 .sidebar-search {
-    padding: 8px 12px;
+    padding: 8px 12px 12px 12px;
+        background: @window_bg_color;
+    }
+    
+    .sidebar-search entry {
+        border-radius: 6px;
 }
 
 /* Sidebar session tree */
+.sidebar-session-tree {
+    background: @window_bg_color;
+}
+
+.sidebar-session-tree viewport {
+    background: @window_bg_color;
+}
+
+.sidebar-session-tree listview {
+    background: @window_bg_color;
+}
 .sidebar-session-tree row {
     padding: 4px 12px;
     margin: 1px 8px;
     border-radius: 4px;
     transition: background-color 150ms ease;
+    background: @window_bg_color;
 }
 
 .sidebar-session-tree row:hover {
-    background-color: alpha(@theme_selected_bg_color, 0.3);
+    background-color: color-mix(in srgb, currentColor 10%, @window_bg_color);
 }
 
 .sidebar-session-tree row:selected {
-    background-color: @accent_bg_color;
-    color: @accent_fg_color;
-    font-weight: 500;
+    background-color: color-mix(in srgb, currentColor 15%, @window_bg_color);
 }
 
 .sidebar-session-tree row:selected:hover {
-    background-color: alpha(@accent_bg_color, 0.5);
-}
-
-.sidebar-session-tree row:active {
-    background-color: alpha(@accent_bg_color, 0.6);
-    transition: background-color 100ms ease;
+    background-color: color-mix(in srgb, currentColor 18%, @window_bg_color);
 }
 
 /* Sidebar toggle button styling - hover only, no active background */
@@ -205,7 +215,110 @@ popover.menu separator {
     background: transparent;
 }
 
+/* Sidebar container - simple box layout */
+.sidebar-container {
+    min-width: 350px;
+    background: @window_bg_color;
+}
+
+/* Sidebar toolbar */
+.sidebar-toolbar {
+    background: @window_bg_color;
+    padding-top: 2px;
+}
+
+.sidebar-toolbar button {
+    min-width: 32px;
+    min-height: 32px;
+    padding: 6px;
+    margin: 2px;
+    border-radius: 4px;
+    transition: background-color 150ms ease;
+    border: none;
+    background: transparent;
+}
+
+.sidebar-toolbar button:hover {
+    background-color: alpha(currentColor, 0.1);
+}
+
+.sidebar-toolbar button:active {
+    background-color: alpha(currentColor, 0.15);
+}
+
+.sidebar-toolbar button.destructive:hover {
+    background-color: alpha(@destructive_color, 0.1);
+}
+
+.sidebar-toolbar button.destructive:active {
+    background-color: alpha(@destructive_color, 0.15);
+}
+
+/* Sidebar popover specific styles */
+popover.sidebar-popover>contents {
+    background: @window_bg_color;
+}
+
+popover.sidebar-popover .sidebar-container {
+    background: @window_bg_color;
+}
+
+popover.sidebar-popover .sidebar-toolbar {
+    background: @window_bg_color;
+    padding-top: 2px;
+}
+
+popover.sidebar-popover .sidebar-search {
+    padding: 8px 12px 12px 12px;
+    background: @window_bg_color;
+}
 /* Flipped icon utility */
 .flipped-icon {
     transform: scaleX(-1);
+}
+
+/* Dialog action bar styling for consistent theming */
+window.ashyterm-dialog actionbar {
+    background: none;
+    background-color: @headerbar_bg_color;
+}
+
+window.ashyterm-dialog actionbar>revealer>box {
+    background: none;
+    background-color: @headerbar_bg_color;
+}
+
+/* Inline context menu styles */
+.inline-context-menu {
+    background: @window_bg_color;
+}
+
+.inline-context-menu .title-3 {
+    font-size: 1em;
+}
+
+.inline-context-menu button {
+    border-radius: 6px;
+    margin: 1px 0;
+    min-height: 32px;
+}
+
+.inline-context-menu button:hover {
+    background-color: alpha(currentColor, 0.08);
+}
+
+.inline-context-menu button:active {
+    background-color: alpha(currentColor, 0.12);
+}
+
+.inline-context-menu button.destructive-action {
+    color: @destructive_color;
+}
+
+.inline-context-menu button.destructive-action:hover {
+    background-color: alpha(@destructive_color, 0.08);
+}
+
+.inline-context-menu button.destructive-action:active {
+    background-color: alpha(@destructive_color, 0.12);
 }

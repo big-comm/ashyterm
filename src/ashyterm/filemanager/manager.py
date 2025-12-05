@@ -16,6 +16,7 @@ from typing import Any, Dict, List, Optional, Set
 
 from gi.repository import Adw, Gdk, Gio, GLib, GObject, Graphene, Gtk, Vte
 
+from ..helpers import create_themed_popover_menu
 from ..sessions.models import SessionItem
 from ..terminal.manager import TerminalManager as TerminalManagerType
 from ..utils.icons import icon_button, icon_image
@@ -644,6 +645,7 @@ class FileManager(GObject.Object):
         self.action_bar.pack_start(self.breadcrumb_box)
 
         self.search_entry = Gtk.SearchEntry()
+        self.search_entry.add_css_class("file-manager-filter")
         self.search_entry.set_placeholder_text(_("Filter files..."))
         self.search_entry.set_max_width_chars(12)
         self.search_entry.connect("search-changed", self._on_search_changed)
@@ -2017,14 +2019,7 @@ class FileManager(GObject.Object):
             clipboard_section.append(_("Paste"), "context.paste")
             menu.append_section(None, clipboard_section)
 
-        popover = Gtk.PopoverMenu.new_from_model(menu)
-        popover.set_autohide(True)
-        popover.set_has_arrow(False)
-
-        # Parent to main_box (outside ScrolledWindow) to avoid clipping constraints
-        if popover.get_parent() is not None:
-            popover.unparent()
-        popover.set_parent(self.main_box)
+        popover = create_themed_popover_menu(menu, self.main_box)
 
         self._setup_general_context_actions(popover)
 
@@ -2049,14 +2044,7 @@ class FileManager(GObject.Object):
 
     def _show_context_menu(self, items: List[FileItem], x, y):
         menu_model = self._create_context_menu_model(items)
-        popover = Gtk.PopoverMenu.new_from_model(menu_model)
-        popover.set_autohide(True)
-        popover.set_has_arrow(False)
-
-        # Parent to main_box (outside ScrolledWindow) to avoid clipping constraints
-        if popover.get_parent() is not None:
-            popover.unparent()
-        popover.set_parent(self.main_box)
+        popover = create_themed_popover_menu(menu_model, self.main_box)
 
         self._setup_context_actions(popover, items)
 

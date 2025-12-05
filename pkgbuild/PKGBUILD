@@ -33,8 +33,8 @@ conflicts=('comm-ashyterm')
 provides=('comm-ashyterm')
 replaces=('comm-ashyterm')
 
-pkgver="1.9.1"
-pkgrel="1"
+pkgver=$(date +%y.%m.%d)
+pkgrel=$(date +%H%M)
 
 arch=('any')
 license=('MIT')

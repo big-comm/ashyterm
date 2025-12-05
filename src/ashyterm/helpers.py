@@ -126,3 +126,29 @@ def accelerator_to_label(accelerator: str) -> str:
     except Exception:
         return _manual_conversion(accelerator)
 
+
+def create_themed_popover_menu(menu_model, parent_widget=None):
+    """
+    Create a PopoverMenu with the ashyterm-popover CSS class for theming.
+
+    Use this helper instead of Gtk.PopoverMenu.new_from_model() directly
+    to ensure consistent theming across the application.
+
+    Args:
+        menu_model: Gio.MenuModel for the popover
+        parent_widget: Optional widget to set as parent
+
+    Returns:
+        Gtk.PopoverMenu with CSS class applied
+    """
+    popover = Gtk.PopoverMenu.new_from_model(menu_model)
+    popover.add_css_class("ashyterm-popover")
+    popover.set_autohide(True)
+    popover.set_has_arrow(False)
+
+    if parent_widget is not None:
+        if popover.get_parent() is not None:
+            popover.unparent()
+        popover.set_parent(parent_widget)
+
+    return popover

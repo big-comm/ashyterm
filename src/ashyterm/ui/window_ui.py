@@ -58,6 +58,8 @@ class WindowUIBuilder:
         self.flap = None
         self.sidebar_box = None
         self.sidebar_popover = None
+        self.sidebar_content_stack = None
+        self.inline_context_menu_box = None
         self.toggle_sidebar_button = None
         self.file_manager_button = None
         self.command_guide_button = None
@@ -136,11 +138,13 @@ class WindowUIBuilder:
 
         # Create the BroadcastBar
         self.broadcast_bar = Gtk.SearchBar()
+        self.broadcast_bar.add_css_class("broadcast-bar")
         broadcast_box = Gtk.Box(spacing=6)
         self.broadcast_entry = Gtk.Entry(
             hexpand=True,
             placeholder_text=_("Type your command here and press ENTER..."),
         )
+        self.broadcast_entry.add_css_class("broadcast-entry")
         self.broadcast_entry.set_icon_from_icon_name(Gtk.EntryIconPosition.PRIMARY, "utilities-terminal-symbolic")
         broadcast_box.append(self.broadcast_entry)
         self.broadcast_bar.set_child(broadcast_box)
@@ -186,8 +190,12 @@ class WindowUIBuilder:
         self.flap.set_flap(self.sidebar_box)
 
         self.sidebar_popover = Gtk.Popover(
-            position=Gtk.PositionType.BOTTOM, has_arrow=True
+            position=Gtk.PositionType.BOTTOM, has_arrow=True, autohide=True
         )
+        self.sidebar_popover.add_css_class("ashyterm-popover")
+        self.sidebar_popover.add_css_class(
+            "sidebar-popover"
+        )  # Specific class for sidebar
         self.sidebar_popover.set_size_request(200, 800)
 
         content_area = self._create_content_area()
@@ -241,6 +249,7 @@ class WindowUIBuilder:
         self.cleanup_button.add_css_class("destructive-action")
         self.cleanup_button.add_css_class("flat")
         self.cleanup_popover = Gtk.Popover()
+        self.cleanup_popover.add_css_class("ashyterm-popover")
         self.cleanup_button.set_popover(self.cleanup_popover)
 
         # Hide tooltip when cleanup popover is shown
@@ -409,20 +418,31 @@ class WindowUIBuilder:
             self.header_bar.pack_end(self.new_tab_button)
 
     def _create_sidebar(self) -> Gtk.Widget:
-        """Create the sidebar with session tree."""
-        toolbar_view = Adw.ToolbarView(
-            css_classes=["background", "sidebar-toolbar-view"]
+        """Create the sidebar with session tree using a simple Box layout."""
+        # Main container for sidebar
+        sidebar_box = Gtk.Box(
+            orientation=Gtk.Orientation.VERTICAL, css_classes=["sidebar-container"]
         )
 
-        # Header with title and toolbar
-        header_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
+        # Create a main stack to switch between normal view and context menu
+        self.sidebar_main_stack = Gtk.Stack()
+        self.sidebar_main_stack.set_transition_type(
+            Gtk.StackTransitionType.SLIDE_LEFT_RIGHT
+        )
+        self.sidebar_main_stack.set_transition_duration(150)
+        self.sidebar_main_stack.set_vexpand(True)
 
-        # Toolbar with action buttons
+        # Normal view: toolbar + session list + search
+        normal_view = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
+
+        # Toolbar with action buttons at the top
         toolbar = Gtk.Box(
             orientation=Gtk.Orientation.HORIZONTAL,
             spacing=4,
             halign=Gtk.Align.CENTER,
-            margin_bottom=4,
+            margin_top=6,
+            margin_bottom=6,
+            css_classes=["sidebar-toolbar"],
         )
 
         self.add_session_button = icon_button("list-add-symbolic")
@@ -448,15 +468,16 @@ class WindowUIBuilder:
         self.remove_button.add_css_class("destructive")
         toolbar.append(self.remove_button)
 
-        header_box.append(toolbar)
-        toolbar_view.add_top_bar(header_box)
+        normal_view.append(toolbar)
 
+        # Session tree in scrolled window (main content)
         scrolled_window = Gtk.ScrolledWindow(vexpand=True)
         scrolled_window.set_policy(Gtk.PolicyType.AUTOMATIC, Gtk.PolicyType.AUTOMATIC)
         scrolled_window.set_child(self.session_tree.get_widget())
         scrolled_window.add_css_class("sidebar-session-tree")
-        toolbar_view.set_content(scrolled_window)
+        normal_view.append(scrolled_window)
 
+        # Search entry at the bottom
         search_container = Gtk.Box(
             orientation=Gtk.Orientation.VERTICAL, css_classes=["sidebar-search"]
         )
@@ -466,9 +487,23 @@ class WindowUIBuilder:
         self.sidebar_search_entry.set_margin_start(6)
         self.sidebar_search_entry.set_margin_end(6)
         search_container.append(self.sidebar_search_entry)
-        toolbar_view.add_bottom_bar(search_container)
+        normal_view.append(search_container)
 
-        return toolbar_view
+        self.sidebar_main_stack.add_named(normal_view, "normal")
+
+        # Context menu view: placeholder box that will be populated dynamically
+        self.inline_context_menu_box = Gtk.Box(
+            orientation=Gtk.Orientation.VERTICAL, spacing=0, vexpand=True
+        )
+        self.inline_context_menu_box.add_css_class("inline-context-menu")
+        self.sidebar_main_stack.add_named(self.inline_context_menu_box, "context-menu")
+
+        sidebar_box.append(self.sidebar_main_stack)
+
+        # Store reference to the stack for switching (keeping old name for compatibility)
+        self.sidebar_content_stack = self.sidebar_main_stack
+
+        return sidebar_box
 
     def _create_content_area(self) -> Gtk.Widget:
         """Create the main content area with tabs, file manager, and AI panel."""

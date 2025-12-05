@@ -274,6 +274,8 @@ class DefaultSettings:
             # Shell Input Syntax Highlighting (experimental)
             # When enabled, applies Pygments syntax highlighting to shell commands as you type
             "shell_input_highlighting_enabled": False,
+            # Pygments theme for shell input highlighting (separate from cat colorization)
+            "shell_input_pygments_theme": "monokai",
             # Icon Theme Strategy: "ashy" (bundled) or "system"
             # Using Ashy Icons by default speeds up GTK4 startup
             "icon_theme_strategy": "ashy",
@@ -587,6 +589,56 @@ class ColorSchemes:
                     "#cdd6f4",
                 ],
             },
+            "rose_pine": {
+                "name": "Rosé Pine",
+                "foreground": "#e0def4",
+                "background": "#191724",
+                "headerbar_background": "#1f1d2e",
+                "cursor": "#ebbcba",
+                "palette": [
+                    "#26233a",
+                    "#eb6f92",
+                    "#9ccfd8",
+                    "#f6c177",
+                    "#31748f",
+                    "#c4a7e7",
+                    "#ebbcba",
+                    "#e0def4",
+                    "#6e6a86",
+                    "#eb6f92",
+                    "#9ccfd8",
+                    "#f6c177",
+                    "#31748f",
+                    "#c4a7e7",
+                    "#ebbcba",
+                    "#e0def4",
+                ],
+            },
+            "pink_light": {
+                "name": "Pink Light",
+                "foreground": "#4a2040",
+                "background": "#ffe4ec",
+                "headerbar_background": "#ffd0dd",
+                "cursor": "#d63384",
+                "palette": [
+                    "#4a2040",
+                    "#d63384",
+                    "#198754",
+                    "#cc7a00",
+                    "#0d6efd",
+                    "#8b5cf6",
+                    "#0dcaf0",
+                    "#6c757d",
+                    "#5c3d52",
+                    "#e83e8c",
+                    "#20c997",
+                    "#ffc107",
+                    "#6ea8fe",
+                    "#a78bfa",
+                    "#6edff6",
+                    "#495057",
+                ],
+            },
         }
 
 
@@ -605,6 +657,8 @@ class ColorSchemeMap:
         "nord",
         "tokyonight",
         "catppuccin",
+        "rose_pine",
+        "pink_light",
     ]
 
     @classmethod

@@ -84,8 +84,9 @@ class FontSizerWidget(Gtk.CenterBox):
         self.parent_window = parent_window
         self.settings_manager = parent_window.settings_manager
 
+        self.add_css_class("font-sizer")
+
         zoom_controls_box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=20)
-        zoom_controls_box.add_css_class("navigation-sidebar")
 
         decrement_btn = icon_button("zoom-out-symbolic")
         decrement_btn.add_css_class("flat")
@@ -124,6 +125,7 @@ class FontSizerWidget(Gtk.CenterBox):
         new_size = max(6, min(72, size + delta))
         new_font_string = f"{family} {new_size}"
         self.settings_manager.set("font", new_font_string)
+        self.update_display()
 
     def _on_decrement(self, button):
         self._change_font_size(-1)
@@ -134,6 +136,7 @@ class FontSizerWidget(Gtk.CenterBox):
     def _on_reset(self, button):
         default_font = DefaultSettings.get_defaults()["font"]
         self.settings_manager.set("font", default_font)
+        self.update_display()
 
     def update_display(self):
         font_string = self.settings_manager.get("font")
@@ -147,6 +150,7 @@ class MainApplicationMenu:
     @staticmethod
     def create_main_popover(parent_window) -> tuple[Gtk.Popover, FontSizerWidget]:
         popover = Gtk.Popover()
+        popover.add_css_class("ashyterm-popover")
         main_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=0)
         main_box.add_css_class("main-menu-popover")
         popover.set_child(main_box)

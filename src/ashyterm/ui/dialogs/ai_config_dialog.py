@@ -47,6 +47,7 @@ class AIConfigDialog(Adw.PreferencesWindow):
             default_height=600,
             search_enabled=False,
         )
+        self.add_css_class("ashyterm-dialog")
         self.logger = get_logger("ashyterm.ui.dialogs.ai_config")
         self.settings_manager = settings_manager
 
@@ -303,6 +304,7 @@ class OpenRouterModelBrowserDialog(Adw.Window):
             default_width=800,
             default_height=600,
         )
+        self.add_css_class("ashyterm-dialog")
         self.api_key = api_key
         self.logger = get_logger("ashyterm.ui.dialogs.model_browser")
         self._all_models: List[Tuple[str, str]] = []

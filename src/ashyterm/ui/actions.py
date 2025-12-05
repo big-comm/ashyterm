@@ -71,7 +71,6 @@ class WindowActions:
             "shortcuts": self.shortcuts,
             "new-window": self.new_window,
             "save-layout": self.save_layout,
-            "move-layout-to-folder": self.move_layout_to_folder,
         }
         for name, callback in actions_map.items():
             action = Gio.SimpleAction.new(name, None)
@@ -87,6 +86,12 @@ class WindowActions:
         delete_action = Gio.SimpleAction.new("delete_layout", GLib.VariantType.new("s"))
         delete_action.connect("activate", self.delete_layout)
         self.window.add_action(delete_action)
+
+        move_layout_action = Gio.SimpleAction.new(
+            "move-layout-to-folder", GLib.VariantType.new("s")
+        )
+        move_layout_action.connect("activate", self.move_layout_to_folder)
+        self.window.add_action(move_layout_action)
 
     def _close_sidebar_popover_if_active(self):
         """Helper to close the sidebar popover if it's active."""

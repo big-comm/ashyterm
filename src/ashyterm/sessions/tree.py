@@ -7,8 +7,9 @@ import gi
 gi.require_version("Gtk", "4.0")
 gi.require_version("Adw", "1")
 gi.require_version("Gdk", "4.0")
-from gi.repository import Gdk, Gio, GLib, GObject, Gtk
+from gi.repository import Gdk, Gio, GLib, GObject, Graphene, Gtk
 
+from ..helpers import create_themed_popover_menu
 # Lazy imports for menus - only loaded when context menus are actually needed
 # from ..ui.menus import create_folder_menu, create_root_menu, create_session_menu
 from ..utils.logger import get_logger
@@ -34,6 +35,15 @@ def _get_create_root_menu():
     from ..ui.menus import create_root_menu
 
     return create_root_menu
+
+
+def _get_inline_context_menu():
+    """Lazy import for InlineContextMenu."""
+    from ..ui.widgets.inline_context_menu import InlineContextMenu
+
+    return InlineContextMenu
+
+
 from ..utils.translation_utils import _
 from .models import LayoutItem, SessionFolder, SessionItem
 from .operations import SessionOperations
@@ -788,7 +798,7 @@ class SessionTreeView:
 
     def _on_item_right_click(
         self,
-        _gesture: Gtk.GestureClick,
+        gesture: Gtk.GestureClick,
         _n_press: int,
         x: float,
         y: float,
@@ -796,74 +806,234 @@ class SessionTreeView:
     ) -> None:
         """Shows a context menu for a specific item."""
         pos = list_item.get_position()
+        self.logger.debug(f"_on_item_right_click called for position: {pos}")
         if not self.selection_model.is_selected(pos):
             self.selection_model.unselect_all()
             self.selection_model.select_item(pos, True)
         tree_list_row = self.filter_model.get_item(pos)
-        if tree_list_row:
-            item = tree_list_row.get_item()
-            menu_model = None
-            if isinstance(item, SessionItem):
-                found, position = self.session_store.find(item)
-                if found:
-                    menu_model = _get_create_session_menu()(
-                        item,
-                        self.session_store,
-                        position,
-                        self.folder_store,
-                        self.has_clipboard_content(),
-                    )
-            elif isinstance(item, SessionFolder):
-                found, position = self.folder_store.find(item)
-                if found:
-                    menu_model = _get_create_folder_menu()(
-                        item,
-                        self.folder_store,
-                        position,
-                        self.session_store,
-                        self.has_clipboard_content(),
-                    )
-            elif isinstance(item, LayoutItem):
-                menu_model = Gio.Menu()
-                menu_model.append(
-                    _("Restore Layout"), f"win.restore_layout('{item.name}')"
-                )
-                menu_model.append(
-                    _("Move to Folder..."), f"win.move-layout-to-folder('{item.name}')"
-                )
-                menu_model.append_section(None, Gio.Menu())
-                menu_model.append(
-                    _("Delete Layout"), f"win.delete_layout('{item.name}')"
-                )
+        if not tree_list_row:
+            self.logger.debug("tree_list_row is None, returning")
+            return
 
-            if menu_model:
-                popover = Gtk.PopoverMenu.new_from_model(menu_model)
-                # Ensure popover is not already parented
-                if popover.get_parent() is not None:
-                    popover.unparent()
-                popover.set_parent(list_item.get_child())
-                rect = Gdk.Rectangle()
+        item = tree_list_row.get_item()
+        self.logger.debug(
+            f"Item type: {type(item).__name__}, name: {getattr(item, 'name', 'N/A')}"
+        )
+
+        # Check if sidebar popover is visible - use inline context menu if so
+        sidebar_popover = getattr(
+            getattr(self.parent_window, "ui_builder", None), "sidebar_popover", None
+        )
+
+        popover_visible = sidebar_popover and sidebar_popover.get_visible()
+        self.logger.debug(f"Sidebar popover visible: {popover_visible}")
+
+        if popover_visible:
+            # Show inline context menu within the popover
+            self.logger.debug("Showing inline context menu")
+            self._show_inline_context_menu(item)
+        else:
+            # Show traditional popover menu (for non-popover sidebar mode)
+            self.logger.debug("Showing traditional popover context menu")
+            self._show_popover_context_menu(item, list_item, x, y)
+
+        # Stop event propagation to prevent the empty area handler from being triggered
+        gesture.set_state(Gtk.EventSequenceState.CLAIMED)
+
+    def _show_inline_context_menu(
+        self, item: Union[SessionItem, SessionFolder, LayoutItem]
+    ) -> None:
+        """Show the inline context menu within the sidebar popover."""
+        self.logger.debug(
+            f"_show_inline_context_menu called with item: {type(item).__name__}"
+        )
+        ui_builder = getattr(self.parent_window, "ui_builder", None)
+        if not ui_builder:
+            self.logger.debug("ui_builder is None")
+            return
+
+        content_stack = getattr(ui_builder, "sidebar_content_stack", None)
+        inline_menu_box = getattr(ui_builder, "inline_context_menu_box", None)
+
+        self.logger.debug(
+            f"content_stack: {content_stack}, inline_menu_box: {inline_menu_box}"
+        )
+
+        if not content_stack or not inline_menu_box:
+            self.logger.debug("content_stack or inline_menu_box is None")
+            return
+
+        # Clear previous inline menu content
+        while (child := inline_menu_box.get_first_child()) is not None:
+            inline_menu_box.remove(child)
+
+        # Create inline context menu widget
+        InlineContextMenu = _get_inline_context_menu()
+        inline_menu = InlineContextMenu(self.parent_window)
+
+        # Set up go back callback
+        def go_back():
+            content_stack.set_visible_child_name("normal")
+
+        inline_menu.set_go_back_callback(go_back)
+
+        # Show menu for the specific item type
+        if isinstance(item, SessionItem):
+            self.logger.debug("Showing menu for SessionItem")
+            inline_menu.show_for_session(
+                item, self.folder_store, self.has_clipboard_content()
+            )
+        elif isinstance(item, SessionFolder):
+            self.logger.debug("Showing menu for SessionFolder")
+            inline_menu.show_for_folder(item, self.has_clipboard_content())
+        elif isinstance(item, LayoutItem):
+            self.logger.debug("Showing menu for LayoutItem")
+            inline_menu.show_for_layout(item)
+        else:
+            self.logger.debug(f"Unknown item type: {type(item)}")
+
+        inline_menu_box.append(inline_menu)
+
+        # Switch to context menu view
+        self.logger.debug("Switching to context-menu view")
+        content_stack.set_visible_child_name("context-menu")
+
+    def _show_popover_context_menu(
+        self,
+        item: Union[SessionItem, SessionFolder, LayoutItem],
+        list_item: Gtk.ListItem,
+        x: float,
+        y: float,
+    ) -> None:
+        """Show the traditional popover context menu."""
+        menu_model = None
+        if isinstance(item, SessionItem):
+            found, position = self.session_store.find(item)
+            if found:
+                menu_model = _get_create_session_menu()(
+                    item,
+                    self.session_store,
+                    position,
+                    self.folder_store,
+                    self.has_clipboard_content(),
+                )
+        elif isinstance(item, SessionFolder):
+            found, position = self.folder_store.find(item)
+            if found:
+                menu_model = _get_create_folder_menu()(
+                    item,
+                    self.folder_store,
+                    position,
+                    self.session_store,
+                    self.has_clipboard_content(),
+                )
+        elif isinstance(item, LayoutItem):
+            menu_model = Gio.Menu()
+            menu_model.append(_("Restore Layout"), f"win.restore_layout('{item.name}')")
+            menu_model.append(
+                _("Move to Folder..."), f"win.move-layout-to-folder('{item.name}')"
+            )
+            menu_model.append_section(None, Gio.Menu())
+            menu_model.append(_("Delete Layout"), f"win.delete_layout('{item.name}')")
+
+        if menu_model:
+            anchor_widget = list_item.get_child()
+            popover = create_themed_popover_menu(menu_model, self.parent_window)
+
+            point = Graphene.Point()
+            point.x = x
+            point.y = y
+
+            rect = Gdk.Rectangle()
+            success, translated = anchor_widget.compute_point(self.parent_window, point)
+
+            if success:
+                rect.x = int(translated.x)
+                rect.y = int(translated.y)
+            else:
                 rect.x = int(x)
                 rect.y = int(y)
-                rect.width = 1
-                rect.height = 1
-                popover.set_pointing_to(rect)
-                popover.popup()
+
+            rect.width = 1
+            rect.height = 1
+            popover.set_pointing_to(rect)
+            popover.popup()
 
     def _on_empty_area_right_click(
         self, _gesture: Gtk.GestureClick, _n_press: int, x: float, y: float
     ) -> None:
         """Shows a context menu for the empty area (root)."""
+        self.logger.debug(f"_on_empty_area_right_click called at x={x}, y={y}")
         self.selection_model.unselect_all()
+
+        # Check if sidebar popover is visible - use inline context menu if so
+        sidebar_popover = getattr(
+            getattr(self.parent_window, "ui_builder", None), "sidebar_popover", None
+        )
+
+        popover_visible = sidebar_popover and sidebar_popover.get_visible()
+        self.logger.debug(f"Sidebar popover visible: {popover_visible}")
+
+        if popover_visible:
+            # Show inline context menu within the popover
+            self.logger.debug("Showing inline root context menu")
+            self._show_inline_root_context_menu()
+        else:
+            # Show traditional popover menu (for non-popover sidebar mode)
+            self.logger.debug("Showing traditional popover root context menu")
+            self._show_popover_root_context_menu(x, y)
+
+    def _show_inline_root_context_menu(self) -> None:
+        """Show the inline context menu for root (empty area) within the sidebar popover."""
+        ui_builder = getattr(self.parent_window, "ui_builder", None)
+        if not ui_builder:
+            return
+
+        content_stack = getattr(ui_builder, "sidebar_content_stack", None)
+        inline_menu_box = getattr(ui_builder, "inline_context_menu_box", None)
+
+        if not content_stack or not inline_menu_box:
+            return
+
+        # Clear previous inline menu content
+        while (child := inline_menu_box.get_first_child()) is not None:
+            inline_menu_box.remove(child)
+
+        # Create inline context menu widget
+        InlineContextMenu = _get_inline_context_menu()
+        inline_menu = InlineContextMenu(self.parent_window)
+
+        # Set up go back callback
+        def go_back():
+            content_stack.set_visible_child_name("normal")
+
+        inline_menu.set_go_back_callback(go_back)
+        inline_menu.show_for_root(self.has_clipboard_content())
+
+        inline_menu_box.append(inline_menu)
+
+        # Switch to context menu view
+        content_stack.set_visible_child_name("context-menu")
+
+    def _show_popover_root_context_menu(self, x: float, y: float) -> None:
+        """Show the traditional popover context menu for root."""
         menu_model = _get_create_root_menu()(self.has_clipboard_content())
-        popover = Gtk.PopoverMenu.new_from_model(menu_model)
-        # Ensure popover is not already parented
-        if popover.get_parent() is not None:
-            popover.unparent()
-        popover.set_parent(self.column_view)
+        popover = create_themed_popover_menu(menu_model, self.parent_window)
+
+        point = Graphene.Point()
+        point.x = x
+        point.y = y
+
         rect = Gdk.Rectangle()
-        rect.x = int(x)
-        rect.y = int(y)
+        success, translated = self.column_view.compute_point(self.parent_window, point)
+
+        if success:
+            rect.x = int(translated.x)
+            rect.y = int(translated.y)
+        else:
+            rect.x = int(x)
+            rect.y = int(y)
+
         rect.width = 1
         rect.height = 1
         popover.set_pointing_to(rect)

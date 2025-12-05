@@ -78,6 +78,7 @@ class ShortcutsDialog(Adw.PreferencesWindow):
             default_width=700,
             default_height=600,
         )
+        self.add_css_class("ashyterm-dialog")
         self.app = parent_window.get_application()
         self.settings_manager = parent_window.settings_manager
         self.shortcut_groups = []
