@@ -2069,6 +2069,73 @@ msgstr "この操作はすべての{}会話を永久に削除します。この�
 msgid "Delete All"
 msgstr "すべて削除"
 # 
+# File: src/ashyterm/ui/widgets/inline_context_menu.py, line: 55
+#: NEEDS WORK
+msgid "Back"
+msgstr "戻る"
+# 
+# File: usr/share/ashyterm/ui/menus.py, line: 119
+#: NEEDS WORK
+msgid "Connect with SFTP"
+msgstr "SFTPで接続"
+# 
+# File: usr/share/ashyterm/ui/menus.py, line: 24
+#: NEEDS WORK
+msgid "Duplicate"
+msgstr "重複"
+# 
+# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
+# 
+# File: usr/share/ashyterm/ui/menus.py, line: 25
+# File: usr/share/ashyterm/ui/menus.py, line: 61
+# File: usr/share/ashyterm/window.py, line: 954
+#: NEEDS WORK
+msgid "Rename"
+msgstr "名前を変更"
+# 
+# File: usr/share/ashyterm/ui/menus.py, line: 203
+#: NEEDS WORK
+msgid "Move to Folder..."
+msgstr "フォルダーに移動..."
+# 
+# File: usr/share/ashyterm/ui/menus.py, line: 220
+#: NEEDS WORK
+msgid "Add Session Here"
+msgstr "セッションをここに追加"
+# 
+# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
+# 
+# File: usr/share/ashyterm/ui/menus.py, line: 69
+# File: usr/share/ashyterm/ui/menus.py, line: 118
+# File: usr/share/ashyterm/ui/menus.py, line: 154
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1599
+#: NEEDS WORK
+msgid "Paste"
+msgstr "貼り付け"
+# 
+# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
+# 
+# File: usr/share/ashyterm/sessions/tree.py, line: 801
+# File: usr/share/ashyterm/window.py, line: 1544
+#: NEEDS WORK
+msgid "Restore Layout"
+msgstr "レイアウトを復元"
+# 
+# File: usr/share/ashyterm/sessions/tree.py, line: 808
+#: NEEDS WORK
+msgid "Delete Layout"
+msgstr "レイアウトを削除"
+# 
+# File: src/ashyterm/ui/widgets/inline_context_menu.py, line: 225
+#: NEEDS WORK
+msgid "Sessions"
+msgstr "セッション"
+# 
+# File: usr/share/ashyterm/ui/menus.py, line: 98
+#: NEEDS WORK
+msgid "Paste to Root"
+msgstr "ルートに貼り付け"
+# 
 # File: usr/share/ashyterm/ui/sidebar_manager.py, line: 220
 #: NEEDS WORK
 msgid "Show Sessions"
@@ -2150,50 +2217,6 @@ msgstr "情報"
 #: NEEDS WORK
 msgid "Quit"
 msgstr "終了"
-# 
-# File: usr/share/ashyterm/ui/menus.py, line: 119
-#: NEEDS WORK
-msgid "Connect with SFTP"
-msgstr "SFTPで接続"
-# 
-# File: usr/share/ashyterm/ui/menus.py, line: 24
-#: NEEDS WORK
-msgid "Duplicate"
-msgstr "重複"
-# 
-# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
-# 
-# File: usr/share/ashyterm/ui/menus.py, line: 25
-# File: usr/share/ashyterm/ui/menus.py, line: 61
-# File: usr/share/ashyterm/window.py, line: 954
-#: NEEDS WORK
-msgid "Rename"
-msgstr "名前を変更"
-# 
-# File: usr/share/ashyterm/ui/menus.py, line: 203
-#: NEEDS WORK
-msgid "Move to Folder..."
-msgstr "フォルダーに移動..."
-# 
-# File: usr/share/ashyterm/ui/menus.py, line: 220
-#: NEEDS WORK
-msgid "Add Session Here"
-msgstr "セッションをここに追加"
-# 
-# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
-# 
-# File: usr/share/ashyterm/ui/menus.py, line: 69
-# File: usr/share/ashyterm/ui/menus.py, line: 118
-# File: usr/share/ashyterm/ui/menus.py, line: 154
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1599
-#: NEEDS WORK
-msgid "Paste"
-msgstr "貼り付け"
-# 
-# File: usr/share/ashyterm/ui/menus.py, line: 98
-#: NEEDS WORK
-msgid "Paste to Root"
-msgstr "ルートに貼り付け"
 # 
 # File: usr/share/ashyterm/ui/menus.py, line: 227
 #: NEEDS WORK
@@ -2931,6 +2954,13 @@ msgstr "システムデフォルトにリセット"
 msgid "Triggers"
 msgstr "トリガー"
 # 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 982
+#: NEEDS WORK
+msgid ""
+"Command names or patterns that activate this rule set. When a command starting with a trigger is "
+"detected, these highlighting rules are applied."
+msgstr "ルールセットをアクティブにするコマンド名またはパターン。トリガーで始まるコマンドが検出されると、これらのハイライトルールが適用されます。"
+# 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 664
 #: NEEDS WORK
 msgid "➕ Add Trigger"
@@ -3063,40 +3093,40 @@ msgstr "ローカルターミナル"
 msgid "SSH Sessions"
 msgstr "SSHセッション"
 # 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1560
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1567
 #: NEEDS WORK
-msgid "File Viewer Colorization"
-msgstr "ファイルビューアのカラリゼーション"
+msgid "\"cat\" Command Colorization"
+msgstr "「cat」コマンドの色付け"
 # 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1561
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1569
 #: NEEDS WORK
-msgid "Syntax highlighting for cat output using Pygments"
-msgstr "Pygmentsを使用したcat出力の構文ハイライト"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1563
-#: NEEDS WORK
-msgid "Pygments is not installed - cat output will not be colorized"
-msgstr "Pygmentsがインストールされていません - catの出力は色付けされません"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1571
-#: NEEDS WORK
-msgid "Enable Cat Colorization"
-msgstr "猫のカラー化を有効にする"
+msgid "Syntax highlighting for \"cat\" command output (using Pygments)"
+msgstr "\"cat\"コマンドの出力に対する構文ハイライト（Pygmentsを使用）"
 # 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1572
 #: NEEDS WORK
-msgid "Apply syntax highlighting to cat command output"
-msgstr "catコマンドの出力に構文ハイライトを適用する"
+msgid "Pygments is not installed - \"cat\" output will not be colorized"
+msgstr "Pygmentsがインストールされていません - \"cat\"の出力は色付けされません"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1580
+#: NEEDS WORK
+msgid "Enable \"cat\" Colorization"
+msgstr "「cat」カラー化を有効にする"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1581
+#: NEEDS WORK
+msgid "Apply syntax highlighting to \"cat\" command output"
+msgstr "\"cat\"コマンドの出力に構文ハイライトを適用する"
 # 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1584
 #: NEEDS WORK
 msgid "Color Theme"
 msgstr "カラー テーマ"
 # 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1585
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1594
 #: NEEDS WORK
-msgid "Pygments theme for syntax highlighting cat output"
-msgstr "Pygmentsのテーマ（構文ハイライト用）cat出力"
+msgid "Pygments theme for \"cat\" output highlighting"
+msgstr "\"cat\"出力ハイライト用のPygmentsテーマ"
 # 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1636
 #: NEEDS WORK
@@ -3135,19 +3165,22 @@ msgid ""
 "configuration cannot be changed."
 msgstr "入力したコマンドに色を付けます。シェルの設定を変更できないSSHセッションやDockerコンテナで便利です。"
 # 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1690
+#: NEEDS WORK
+msgid "Pygments theme for shell input highlighting"
+msgstr "シェル入力ハイライト用のPygmentsテーマ"
+# 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1680
 #: NEEDS WORK
 msgid "⚠️ Experimental Feature"
 msgstr "⚠️ 実験的機能"
 # 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1682
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1748
 #: NEEDS WORK
 msgid ""
 "This feature applies highlighting to echoed shell input. It may not work perfectly with all prompts "
-"or shells. Uses the same Pygments theme as 'File Content Highlighting (cat)' above."
-msgstr ""
-"この機能は、エコーされたシェル入力にハイライトを適用します。すべてのプロンプトやシェルで完璧に動作するわけではありません。上記の「ファイルコンテンツハイライト（cat）」と同じPygmentsテーマを"
-"使用します。"
+"or shells."
+msgstr "この機能は、エコーされたシェル入力にハイライトを適用します。すべてのプロンプトやシェルで完璧に動作するわけではありません。"
 # 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1179
 #: NEEDS WORK
@@ -3474,11 +3507,11 @@ msgstr "有効"
 msgid "disabled"
 msgstr "無効"
 # 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2726
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2820
 #: NEEDS WORK
 #, python-brace-format
-msgid "Cat colorization {}"
-msgstr "猫のカラー化 {}"
+msgid "\"cat\" colorization {}"
+msgstr "\"猫\" カラリゼーション {}"
 # 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2462
 #: NEEDS WORK
@@ -4587,6 +4620,31 @@ msgstr "システムアイコン"
 #: NEEDS WORK
 msgid "Terminal"
 msgstr "ターミナル"
+# 
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 225
+#: NEEDS WORK
+msgid "When Already Running"
+msgstr "実行中の場合"
+# 
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 226
+#: NEEDS WORK
+msgid "Action when the application is launched while already open"
+msgstr "アプリケーションが既に開いている状態で起動されたときのアクション"
+# 
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 230
+#: NEEDS WORK
+msgid "Open a new tab"
+msgstr "新しいタブを開く"
+# 
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 231
+#: NEEDS WORK
+msgid "Open a new window"
+msgstr "新しいウィンドウを開く"
+# 
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 232
+#: NEEDS WORK
+msgid "Focus existing window"
+msgstr "既存のウィンドウにフォーカス"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1137
 #: NEEDS WORK
@@ -6446,19 +6504,6 @@ msgstr "保存に失敗しました: {}"
 #: NEEDS WORK
 msgid "Move Error"
 msgstr "移動エラー"
-# 
-# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
-# 
-# File: usr/share/ashyterm/sessions/tree.py, line: 801
-# File: usr/share/ashyterm/window.py, line: 1544
-#: NEEDS WORK
-msgid "Restore Layout"
-msgstr "レイアウトを復元"
-# 
-# File: usr/share/ashyterm/sessions/tree.py, line: 808
-#: NEEDS WORK
-msgid "Delete Layout"
-msgstr "レイアウトを削除"
 # 
 # File: usr/share/ashyterm/sessions/tree.py, line: 618
 # File: usr/share/ashyterm/sessions/tree.py, line: 623
