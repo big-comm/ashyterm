@@ -2069,6 +2069,73 @@ msgstr "Ovo će trajno izbrisati sve {} razgovore. Ova radnja se ne može poniš
 msgid "Delete All"
 msgstr "Izbriši sve"
 # 
+# File: src/ashyterm/ui/widgets/inline_context_menu.py, line: 55
+#: NEEDS WORK
+msgid "Back"
+msgstr "Natrag"
+# 
+# File: usr/share/ashyterm/ui/menus.py, line: 119
+#: NEEDS WORK
+msgid "Connect with SFTP"
+msgstr "Poveži se s SFTP-om"
+# 
+# File: usr/share/ashyterm/ui/menus.py, line: 24
+#: NEEDS WORK
+msgid "Duplicate"
+msgstr "Dupliciraj"
+# 
+# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
+# 
+# File: usr/share/ashyterm/ui/menus.py, line: 25
+# File: usr/share/ashyterm/ui/menus.py, line: 61
+# File: usr/share/ashyterm/window.py, line: 954
+#: NEEDS WORK
+msgid "Rename"
+msgstr "Preimenuj"
+# 
+# File: usr/share/ashyterm/ui/menus.py, line: 203
+#: NEEDS WORK
+msgid "Move to Folder..."
+msgstr "Premjesti u mapu..."
+# 
+# File: usr/share/ashyterm/ui/menus.py, line: 220
+#: NEEDS WORK
+msgid "Add Session Here"
+msgstr "Dodaj sesiju ovdje"
+# 
+# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
+# 
+# File: usr/share/ashyterm/ui/menus.py, line: 69
+# File: usr/share/ashyterm/ui/menus.py, line: 118
+# File: usr/share/ashyterm/ui/menus.py, line: 154
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1599
+#: NEEDS WORK
+msgid "Paste"
+msgstr "Zalijepi"
+# 
+# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
+# 
+# File: usr/share/ashyterm/sessions/tree.py, line: 801
+# File: usr/share/ashyterm/window.py, line: 1544
+#: NEEDS WORK
+msgid "Restore Layout"
+msgstr "Vrati raspored"
+# 
+# File: usr/share/ashyterm/sessions/tree.py, line: 808
+#: NEEDS WORK
+msgid "Delete Layout"
+msgstr "Izbriši raspored"
+# 
+# File: src/ashyterm/ui/widgets/inline_context_menu.py, line: 225
+#: NEEDS WORK
+msgid "Sessions"
+msgstr "Sesije"
+# 
+# File: usr/share/ashyterm/ui/menus.py, line: 98
+#: NEEDS WORK
+msgid "Paste to Root"
+msgstr "Zalijepi u korijen"
+# 
 # File: usr/share/ashyterm/ui/sidebar_manager.py, line: 220
 #: NEEDS WORK
 msgid "Show Sessions"
@@ -2150,50 +2217,6 @@ msgstr "O programu"
 #: NEEDS WORK
 msgid "Quit"
 msgstr "Izlaz"
-# 
-# File: usr/share/ashyterm/ui/menus.py, line: 119
-#: NEEDS WORK
-msgid "Connect with SFTP"
-msgstr "Poveži se s SFTP-om"
-# 
-# File: usr/share/ashyterm/ui/menus.py, line: 24
-#: NEEDS WORK
-msgid "Duplicate"
-msgstr "Dupliciraj"
-# 
-# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
-# 
-# File: usr/share/ashyterm/ui/menus.py, line: 25
-# File: usr/share/ashyterm/ui/menus.py, line: 61
-# File: usr/share/ashyterm/window.py, line: 954
-#: NEEDS WORK
-msgid "Rename"
-msgstr "Preimenuj"
-# 
-# File: usr/share/ashyterm/ui/menus.py, line: 203
-#: NEEDS WORK
-msgid "Move to Folder..."
-msgstr "Premjesti u mapu..."
-# 
-# File: usr/share/ashyterm/ui/menus.py, line: 220
-#: NEEDS WORK
-msgid "Add Session Here"
-msgstr "Dodaj sesiju ovdje"
-# 
-# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
-# 
-# File: usr/share/ashyterm/ui/menus.py, line: 69
-# File: usr/share/ashyterm/ui/menus.py, line: 118
-# File: usr/share/ashyterm/ui/menus.py, line: 154
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1599
-#: NEEDS WORK
-msgid "Paste"
-msgstr "Zalijepi"
-# 
-# File: usr/share/ashyterm/ui/menus.py, line: 98
-#: NEEDS WORK
-msgid "Paste to Root"
-msgstr "Zalijepi u korijen"
 # 
 # File: usr/share/ashyterm/ui/menus.py, line: 227
 #: NEEDS WORK
@@ -2929,6 +2952,15 @@ msgstr "Vrati na zadane postavke sustava"
 msgid "Triggers"
 msgstr "Okidači"
 # 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 982
+#: NEEDS WORK
+msgid ""
+"Command names or patterns that activate this rule set. When a command starting with a trigger is "
+"detected, these highlighting rules are applied."
+msgstr ""
+"Nazivi naredbi ili obrasci koji aktiviraju ovaj skup pravila. Kada se otkrije naredba koja počinje "
+"s okidačem, ova pravila isticanja se primjenjuju."
+# 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 664
 #: NEEDS WORK
 msgid "➕ Add Trigger"
@@ -3063,40 +3095,40 @@ msgstr "Lokalni terminali"
 msgid "SSH Sessions"
 msgstr "SSH sesije"
 # 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1560
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1567
 #: NEEDS WORK
-msgid "File Viewer Colorization"
-msgstr "Boja datoteka preglednika"
+msgid "\"cat\" Command Colorization"
+msgstr "\"cat\" naredba bojenje"
 # 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1561
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1569
 #: NEEDS WORK
-msgid "Syntax highlighting for cat output using Pygments"
-msgstr "Isticanje sintakse za cat izlaz koristeći Pygments"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1563
-#: NEEDS WORK
-msgid "Pygments is not installed - cat output will not be colorized"
-msgstr "Pygments nije instaliran - cat izlaz neće biti obojen"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1571
-#: NEEDS WORK
-msgid "Enable Cat Colorization"
-msgstr "Omogući bojenje mačaka"
+msgid "Syntax highlighting for \"cat\" command output (using Pygments)"
+msgstr "Isticanje sintakse za izlaz \"cat\" naredbe (koristeći Pygments)"
 # 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1572
 #: NEEDS WORK
-msgid "Apply syntax highlighting to cat command output"
-msgstr "Primijeni sintaktičko isticanje na izlaz naredbe cat"
+msgid "Pygments is not installed - \"cat\" output will not be colorized"
+msgstr "Pygments nije instaliran - \"cat\" izlaz neće biti obojen"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1580
+#: NEEDS WORK
+msgid "Enable \"cat\" Colorization"
+msgstr "Omogući \"cat\" obojenje"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1581
+#: NEEDS WORK
+msgid "Apply syntax highlighting to \"cat\" command output"
+msgstr "Primijeni sintaktičko isticanje na izlaz \"cat\" naredbe"
 # 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1584
 #: NEEDS WORK
 msgid "Color Theme"
 msgstr "Tema boje"
 # 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1585
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1594
 #: NEEDS WORK
-msgid "Pygments theme for syntax highlighting cat output"
-msgstr "Pygments tema za sintaktičko isticanje cat izlaza"
+msgid "Pygments theme for \"cat\" output highlighting"
+msgstr "Pygments tema za isticanje \"cat\" izlaza"
 # 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1636
 #: NEEDS WORK
@@ -3137,19 +3169,24 @@ msgstr ""
 "Obojite shell naredbe dok ih upisujete. Korisno za SSH sesije i Docker kontejnere gdje se "
 "konfiguracija shella ne može promijeniti."
 # 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1690
+#: NEEDS WORK
+msgid "Pygments theme for shell input highlighting"
+msgstr "Pygments tema za isticanje unosa u ljusci"
+# 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1680
 #: NEEDS WORK
 msgid "⚠️ Experimental Feature"
 msgstr "⚠️ Eksperimentalna značajka"
 # 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1682
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1748
 #: NEEDS WORK
 msgid ""
 "This feature applies highlighting to echoed shell input. It may not work perfectly with all prompts "
-"or shells. Uses the same Pygments theme as 'File Content Highlighting (cat)' above."
+"or shells."
 msgstr ""
-"Ova funkcija primjenjuje isticanje na eho ulaz u ljusci. Možda neće savršeno raditi sa svim "
-"pozivima ili ljuskama. Koristi istu Pygments temu kao 'Isticanje sadržaja datoteke (cat)' iznad."
+"Ova funkcija primjenjuje isticanje na eho ulaz ljuske. Možda neće savršeno raditi sa svim pozivima "
+"ili ljuskama."
 # 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1179
 #: NEEDS WORK
@@ -3478,11 +3515,11 @@ msgstr "omogućeno"
 msgid "disabled"
 msgstr "onemogućen"
 # 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2726
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2820
 #: NEEDS WORK
 #, python-brace-format
-msgid "Cat colorization {}"
-msgstr "Boja mačke {}"
+msgid "\"cat\" colorization {}"
+msgstr "\"mačka\" koloracija {}"
 # 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2462
 #: NEEDS WORK
@@ -4595,6 +4632,31 @@ msgstr "Sustavni ikone"
 #: NEEDS WORK
 msgid "Terminal"
 msgstr "Terminal"
+# 
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 225
+#: NEEDS WORK
+msgid "When Already Running"
+msgstr "Kada već radi"
+# 
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 226
+#: NEEDS WORK
+msgid "Action when the application is launched while already open"
+msgstr "Radnja kada se aplikacija pokrene dok je već otvorena"
+# 
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 230
+#: NEEDS WORK
+msgid "Open a new tab"
+msgstr "Otvorite novu karticu"
+# 
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 231
+#: NEEDS WORK
+msgid "Open a new window"
+msgstr "Otvorite novi prozor"
+# 
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 232
+#: NEEDS WORK
+msgid "Focus existing window"
+msgstr "Fokusiraj postojeći prozor"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1137
 #: NEEDS WORK
@@ -6482,19 +6544,6 @@ msgstr "Spremanje nije uspjelo: {}"
 #: NEEDS WORK
 msgid "Move Error"
 msgstr "Pogreška pri premještanju"
-# 
-# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
-# 
-# File: usr/share/ashyterm/sessions/tree.py, line: 801
-# File: usr/share/ashyterm/window.py, line: 1544
-#: NEEDS WORK
-msgid "Restore Layout"
-msgstr "Vrati raspored"
-# 
-# File: usr/share/ashyterm/sessions/tree.py, line: 808
-#: NEEDS WORK
-msgid "Delete Layout"
-msgstr "Izbriši raspored"
 # 
 # File: usr/share/ashyterm/sessions/tree.py, line: 618
 # File: usr/share/ashyterm/sessions/tree.py, line: 623
