@@ -211,7 +211,7 @@ class _SchemeEditorDialog(Adw.Window):
 
         Gdk.cairo_set_source_rgba(cr, fg_rgba)
         layout = area.create_pango_layout(
-            "user@host:~$ ls -l\n<span weight='bold'>Bold Text</span>"
+            _("user@host:~$ ls -l\n<span weight='bold'>Bold Text</span>")
         )
         font_desc = Pango.FontDescription.from_string("Monospace 12")
         layout.set_font_description(font_desc)
@@ -372,7 +372,7 @@ class _SchemePreviewRow(Adw.ActionRow):
         Gdk.cairo_set_source_rgba(cr, bold_rgba)
         font_desc.set_weight(Pango.Weight.BOLD)
         layout.set_font_description(font_desc)
-        layout.set_text("Bold Text")
+        layout.set_text(_("Bold Text"))
         cr.move_to(12, 34)
         PangoCairo.show_layout(cr, layout)
 
