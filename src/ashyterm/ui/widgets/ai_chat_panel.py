@@ -474,11 +474,24 @@ class LoadingIndicator(Gtk.Box):
 class MessageBubble(Gtk.Box):
     """A chat message bubble widget with role indicator."""
 
-    def __init__(self, role: str, content: str, commands: list[str] | None = None):
+    def __init__(
+        self,
+        role: str,
+        content: str,
+        commands: list[str] | None = None,
+        settings_manager=None,
+    ):
         super().__init__(orientation=Gtk.Orientation.VERTICAL, spacing=4)
         self._role = role
         self._content = content
         self._commands = commands or []
+        self._settings_manager = settings_manager
+        self._palette = None
+
+        # Get terminal palette if using terminal theme
+        if settings_manager and settings_manager.get("gtk_theme", "") == "terminal":
+            scheme = settings_manager.get_color_scheme_data()
+            self._palette = scheme.get("palette", [])
 
         self._setup_ui()
 
@@ -658,61 +671,215 @@ class MessageBubble(Gtk.Box):
         except ClassNotFound:
             lexer = TextLexer()
 
-        # Dracula color scheme (includes both Token.String and Token.Literal.String variants)
-        colors = {
-            "Token.Keyword": "#ff79c6",
-            "Token.Keyword.Namespace": "#ff79c6",
-            "Token.Keyword.Constant": "#ff79c6",
-            "Token.Keyword.Declaration": "#ff79c6",
-            "Token.Keyword.Pseudo": "#ff79c6",
-            "Token.Keyword.Reserved": "#ff79c6",
-            "Token.Keyword.Type": "#8be9fd",
-            "Token.Name.Builtin": "#50fa7b",
-            "Token.Name.Function": "#50fa7b",
-            "Token.Name.Class": "#50fa7b",
-            "Token.Name.Decorator": "#50fa7b",
-            "Token.Name.Variable": "#8be9fd",
-            "Token.Name.Variable.Global": "#8be9fd",
-            "Token.Name.Variable.Instance": "#8be9fd",
-            # String tokens (various pygments token paths)
-            "Token.String": "#f1fa8c",
-            "Token.String.Doc": "#f1fa8c",
-            "Token.String.Double": "#f1fa8c",
-            "Token.String.Single": "#f1fa8c",
-            "Token.String.Backtick": "#f1fa8c",
-            "Token.String.Interpol": "#f1fa8c",
-            "Token.String.Escape": "#ffb86c",
-            # Literal tokens (pygments often uses Token.Literal.* for strings/numbers)
-            "Token.Literal": "#f1fa8c",
-            "Token.Literal.String": "#f1fa8c",
-            "Token.Literal.String.Double": "#f1fa8c",
-            "Token.Literal.String.Single": "#f1fa8c",
-            "Token.Literal.String.Backtick": "#f1fa8c",
-            "Token.Literal.String.Doc": "#f1fa8c",
-            "Token.Literal.String.Escape": "#ffb86c",
-            "Token.Literal.String.Interpol": "#f1fa8c",
-            "Token.Literal.String.Heredoc": "#f1fa8c",
-            "Token.Literal.Number": "#bd93f9",
-            "Token.Literal.Number.Integer": "#bd93f9",
-            "Token.Literal.Number.Float": "#bd93f9",
-            "Token.Literal.Number.Hex": "#bd93f9",
-            "Token.Literal.Number.Oct": "#bd93f9",
-            "Token.Literal.Number.Bin": "#bd93f9",
-            # Number tokens
-            "Token.Number": "#bd93f9",
-            "Token.Number.Integer": "#bd93f9",
-            "Token.Number.Float": "#bd93f9",
-            # Comment tokens
-            "Token.Comment": "#6272a4",
-            "Token.Comment.Single": "#6272a4",
-            "Token.Comment.Multiline": "#6272a4",
-            "Token.Comment.Hashbang": "#6272a4",
-            "Token.Comment.Preproc": "#6272a4",
-            # Operator tokens
-            "Token.Operator": "#ff79c6",
-            "Token.Operator.Word": "#ff79c6",
-            "Token.Punctuation": "#f8f8f2",
-        }
+        # Use terminal palette colors if available, otherwise use Dracula
+        if self._palette and len(self._palette) >= 8:
+            # Map terminal palette to Pygments tokens
+            # 0=black, 1=red, 2=green, 3=yellow, 4=blue, 5=magenta, 6=cyan, 7=white
+            # 8-15 are bright variants
+            colors = {
+                "Token.Keyword": self._palette[5]
+                if len(self._palette) > 5
+                else "#ff79c6",  # Magenta
+                "Token.Keyword.Namespace": self._palette[5]
+                if len(self._palette) > 5
+                else "#ff79c6",
+                "Token.Keyword.Constant": self._palette[5]
+                if len(self._palette) > 5
+                else "#ff79c6",
+                "Token.Keyword.Declaration": self._palette[5]
+                if len(self._palette) > 5
+                else "#ff79c6",
+                "Token.Keyword.Pseudo": self._palette[5]
+                if len(self._palette) > 5
+                else "#ff79c6",
+                "Token.Keyword.Reserved": self._palette[5]
+                if len(self._palette) > 5
+                else "#ff79c6",
+                "Token.Keyword.Type": self._palette[6]
+                if len(self._palette) > 6
+                else "#8be9fd",  # Cyan
+                "Token.Name.Builtin": self._palette[2]
+                if len(self._palette) > 2
+                else "#50fa7b",  # Green
+                "Token.Name.Function": self._palette[2]
+                if len(self._palette) > 2
+                else "#50fa7b",
+                "Token.Name.Class": self._palette[2]
+                if len(self._palette) > 2
+                else "#50fa7b",
+                "Token.Name.Decorator": self._palette[2]
+                if len(self._palette) > 2
+                else "#50fa7b",
+                "Token.Name.Variable": self._palette[6]
+                if len(self._palette) > 6
+                else "#8be9fd",  # Cyan
+                "Token.Name.Variable.Global": self._palette[6]
+                if len(self._palette) > 6
+                else "#8be9fd",
+                "Token.Name.Variable.Instance": self._palette[6]
+                if len(self._palette) > 6
+                else "#8be9fd",
+                # String tokens
+                "Token.String": self._palette[3]
+                if len(self._palette) > 3
+                else "#f1fa8c",  # Yellow
+                "Token.String.Doc": self._palette[3]
+                if len(self._palette) > 3
+                else "#f1fa8c",
+                "Token.String.Double": self._palette[3]
+                if len(self._palette) > 3
+                else "#f1fa8c",
+                "Token.String.Single": self._palette[3]
+                if len(self._palette) > 3
+                else "#f1fa8c",
+                "Token.String.Backtick": self._palette[3]
+                if len(self._palette) > 3
+                else "#f1fa8c",
+                "Token.String.Interpol": self._palette[3]
+                if len(self._palette) > 3
+                else "#f1fa8c",
+                "Token.String.Escape": self._palette[11]
+                if len(self._palette) > 11
+                else "#ffb86c",  # Bright yellow
+                # Literal tokens
+                "Token.Literal": self._palette[3]
+                if len(self._palette) > 3
+                else "#f1fa8c",
+                "Token.Literal.String": self._palette[3]
+                if len(self._palette) > 3
+                else "#f1fa8c",
+                "Token.Literal.String.Double": self._palette[3]
+                if len(self._palette) > 3
+                else "#f1fa8c",
+                "Token.Literal.String.Single": self._palette[3]
+                if len(self._palette) > 3
+                else "#f1fa8c",
+                "Token.Literal.String.Backtick": self._palette[3]
+                if len(self._palette) > 3
+                else "#f1fa8c",
+                "Token.Literal.String.Doc": self._palette[3]
+                if len(self._palette) > 3
+                else "#f1fa8c",
+                "Token.Literal.String.Escape": self._palette[11]
+                if len(self._palette) > 11
+                else "#ffb86c",
+                "Token.Literal.String.Interpol": self._palette[3]
+                if len(self._palette) > 3
+                else "#f1fa8c",
+                "Token.Literal.String.Heredoc": self._palette[3]
+                if len(self._palette) > 3
+                else "#f1fa8c",
+                "Token.Literal.Number": self._palette[5]
+                if len(self._palette) > 5
+                else "#bd93f9",  # Magenta
+                "Token.Literal.Number.Integer": self._palette[5]
+                if len(self._palette) > 5
+                else "#bd93f9",
+                "Token.Literal.Number.Float": self._palette[5]
+                if len(self._palette) > 5
+                else "#bd93f9",
+                "Token.Literal.Number.Hex": self._palette[5]
+                if len(self._palette) > 5
+                else "#bd93f9",
+                "Token.Literal.Number.Oct": self._palette[5]
+                if len(self._palette) > 5
+                else "#bd93f9",
+                "Token.Literal.Number.Bin": self._palette[5]
+                if len(self._palette) > 5
+                else "#bd93f9",
+                # Number tokens
+                "Token.Number": self._palette[5]
+                if len(self._palette) > 5
+                else "#bd93f9",
+                "Token.Number.Integer": self._palette[5]
+                if len(self._palette) > 5
+                else "#bd93f9",
+                "Token.Number.Float": self._palette[5]
+                if len(self._palette) > 5
+                else "#bd93f9",
+                # Comment tokens
+                "Token.Comment": self._palette[8]
+                if len(self._palette) > 8
+                else "#6272a4",  # Bright black (gray)
+                "Token.Comment.Single": self._palette[8]
+                if len(self._palette) > 8
+                else "#6272a4",
+                "Token.Comment.Multiline": self._palette[8]
+                if len(self._palette) > 8
+                else "#6272a4",
+                "Token.Comment.Hashbang": self._palette[8]
+                if len(self._palette) > 8
+                else "#6272a4",
+                "Token.Comment.Preproc": self._palette[8]
+                if len(self._palette) > 8
+                else "#6272a4",
+                # Operator tokens
+                "Token.Operator": self._palette[5]
+                if len(self._palette) > 5
+                else "#ff79c6",  # Magenta
+                "Token.Operator.Word": self._palette[5]
+                if len(self._palette) > 5
+                else "#ff79c6",
+                "Token.Punctuation": self._palette[7]
+                if len(self._palette) > 7
+                else "#f8f8f2",  # White
+            }
+        else:
+            # Default Dracula color scheme
+            colors = {
+                "Token.Keyword": "#ff79c6",
+                "Token.Keyword.Namespace": "#ff79c6",
+                "Token.Keyword.Constant": "#ff79c6",
+                "Token.Keyword.Declaration": "#ff79c6",
+                "Token.Keyword.Pseudo": "#ff79c6",
+                "Token.Keyword.Reserved": "#ff79c6",
+                "Token.Keyword.Type": "#8be9fd",
+                "Token.Name.Builtin": "#50fa7b",
+                "Token.Name.Function": "#50fa7b",
+                "Token.Name.Class": "#50fa7b",
+                "Token.Name.Decorator": "#50fa7b",
+                "Token.Name.Variable": "#8be9fd",
+                "Token.Name.Variable.Global": "#8be9fd",
+                "Token.Name.Variable.Instance": "#8be9fd",
+                # String tokens (various pygments token paths)
+                "Token.String": "#f1fa8c",
+                "Token.String.Doc": "#f1fa8c",
+                "Token.String.Double": "#f1fa8c",
+                "Token.String.Single": "#f1fa8c",
+                "Token.String.Backtick": "#f1fa8c",
+                "Token.String.Interpol": "#f1fa8c",
+                "Token.String.Escape": "#ffb86c",
+                # Literal tokens (pygments often uses Token.Literal.* for strings/numbers)
+                "Token.Literal": "#f1fa8c",
+                "Token.Literal.String": "#f1fa8c",
+                "Token.Literal.String.Double": "#f1fa8c",
+                "Token.Literal.String.Single": "#f1fa8c",
+                "Token.Literal.String.Backtick": "#f1fa8c",
+                "Token.Literal.String.Doc": "#f1fa8c",
+                "Token.Literal.String.Escape": "#ffb86c",
+                "Token.Literal.String.Interpol": "#f1fa8c",
+                "Token.Literal.String.Heredoc": "#f1fa8c",
+                "Token.Literal.Number": "#bd93f9",
+                "Token.Literal.Number.Integer": "#bd93f9",
+                "Token.Literal.Number.Float": "#bd93f9",
+                "Token.Literal.Number.Hex": "#bd93f9",
+                "Token.Literal.Number.Oct": "#bd93f9",
+                "Token.Literal.Number.Bin": "#bd93f9",
+                # Number tokens
+                "Token.Number": "#bd93f9",
+                "Token.Number.Integer": "#bd93f9",
+                "Token.Number.Float": "#bd93f9",
+                # Comment tokens
+                "Token.Comment": "#6272a4",
+                "Token.Comment.Single": "#6272a4",
+                "Token.Comment.Multiline": "#6272a4",
+                "Token.Comment.Hashbang": "#6272a4",
+                "Token.Comment.Preproc": "#6272a4",
+                # Operator tokens
+                "Token.Operator": "#ff79c6",
+                "Token.Operator.Word": "#ff79c6",
+                "Token.Punctuation": "#f8f8f2",
+            }
 
         # Tokenize and build Pango markup
         # Use the already lazy-loaded pygments module
@@ -1550,7 +1717,9 @@ class AIChatPanel(Gtk.Box):
         """Add a message bubble to the chat."""
         # Normalize commands to list of strings
         normalized_commands = _normalize_commands(commands)
-        bubble = MessageBubble(role, content, normalized_commands)
+        bubble = MessageBubble(
+            role, content, normalized_commands, settings_manager=self._settings_manager
+        )
         bubble.connect("execute-command", self._on_bubble_execute)
         bubble.connect("run-command", self._on_bubble_run)
         self._messages_box.append(bubble)

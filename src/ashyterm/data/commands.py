@@ -8,7 +8,6 @@ from gi.repository import GObject
 
 from ..settings.config import get_config_paths
 from ..utils.logger import get_logger
-from .command_data import NATIVE_COMMANDS
 
 
 class CommandItem(GObject.GObject):
@@ -96,6 +95,7 @@ class CommandItem(GObject.GObject):
         }
 
 
+# Legacy CommandManager - kept for compatibility but disabled
 class CommandManager:
     """Manages loading, saving, and accessing built-in and custom commands."""
 
@@ -114,37 +114,7 @@ class CommandManager:
     def _load_native_commands(self):
         with self._lock:
             self._native_commands = []
-            # MODIFIED: Use a simple counter to preserve the exact original order
-            native_index = 0
-            for cmd_group in NATIVE_COMMANDS:
-                # Add the general description row
-                self._native_commands.append(
-                    CommandItem(
-                        name=cmd_group["command"],
-                        category=cmd_group["category"],
-                        description=cmd_group["general_description"],
-                        is_custom=False,
-                        is_general_description=True,
-                        _native_sort_index=native_index,
-                    )
-                )
-                native_index += 1
-                # Add each variation
-                for variation in cmd_group["variations"]:
-                    self._native_commands.append(
-                        CommandItem(
-                            name=variation["name"],
-                            category=cmd_group["category"],
-                            description=variation["description"],
-                            is_custom=False,
-                            is_general_description=False,
-                            _native_sort_index=native_index,
-                        )
-                    )
-                    native_index += 1
-            self.logger.info(
-                f"Loaded {len(self._native_commands)} native command items (including descriptions)."
-            )
+            self.logger.info("Native commands loading disabled (command guide removed)")
 
     def _load_custom_commands(self):
         with self._lock:

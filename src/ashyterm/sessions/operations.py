@@ -8,6 +8,7 @@ from typing import Callable, List, Optional, Tuple, Union
 
 from gi.repository import Gio
 
+from ..core.signals import AppSignals
 from ..helpers import generate_unique_name
 from ..utils.logger import get_logger
 from ..utils.ssh_config_parser import SSHConfigParser
@@ -75,7 +76,10 @@ class SessionOperations:
                 session_store=self.session_store,
                 folder_store=self.folder_store,
             )
-            return self._add_item(session, self.session_store, validator, "session")
+            result = self._add_item(session, self.session_store, validator, "session")
+            if result.success:
+                AppSignals.get().emit("session-created", session)
+            return result
 
     def update_session(
         self, position: int, updated_session: SessionItem
@@ -133,17 +137,20 @@ class SessionOperations:
                 return OperationResult(False, _("Failed to save updated session data."))
 
             self.logger.info(f"Session updated successfully: '{original_session.name}'")
-            return OperationResult(
+            result = OperationResult(
                 True,
                 _("Session '{name}' updated successfully.").format(
                     name=original_session.name
                 ),
                 original_session,
             )
+            AppSignals.get().emit("session-updated", original_session.name)
+            return result
 
     def remove_session(self, session: SessionItem) -> OperationResult:
         """Removes a session from the store."""
         with self._operation_lock:
+            session_name = session.name  # Capture name before removal
             position = self._find_item_position(session)
             if position == -1:
                 return OperationResult(False, _("Session not found."))
@@ -161,17 +168,22 @@ class SessionOperations:
                     self._ignored_ssh_config_hosts.add(key)
                     self._persist_ignored_hosts()
 
-            self.logger.info(f"Session removed successfully: '{session.name}'")
-            return OperationResult(
+            self.logger.info(f"Session removed successfully: '{session_name}'")
+            result = OperationResult(
                 True,
-                _("Session '{name}' removed successfully.").format(name=session.name),
+                _("Session '{name}' removed successfully.").format(name=session_name),
             )
+            AppSignals.get().emit("session-deleted", session_name)
+            return result
 
     def add_folder(self, folder: SessionFolder) -> OperationResult:
         """Adds a new folder to the store."""
         with self._operation_lock:
             validator = partial(validate_folder_for_add, folder_store=self.folder_store)
-            return self._add_item(folder, self.folder_store, validator, "folder")
+            result = self._add_item(folder, self.folder_store, validator, "folder")
+            if result.success:
+                AppSignals.get().emit("folder-created", folder)
+            return result
 
     def update_folder(
         self, position: int, updated_folder: SessionFolder
@@ -196,19 +208,22 @@ class SessionOperations:
                 return OperationResult(False, _("Failed to save updated folder data."))
 
             self.logger.info(f"Folder updated successfully: '{original_folder.name}'")
-            return OperationResult(
+            result = OperationResult(
                 True,
                 _("Folder '{name}' updated successfully.").format(
                     name=original_folder.name
                 ),
                 original_folder,
             )
+            AppSignals.get().emit("folder-updated", original_folder.name)
+            return result
 
     def remove_folder(
         self, folder: SessionFolder, force: bool = False
     ) -> OperationResult:
         """Removes a folder, and optionally its contents."""
         with self._operation_lock:
+            folder_name = folder.name  # Capture name before removal
             if not force and self._folder_has_children(folder.path):
                 return OperationResult(False, _("Cannot remove a non-empty folder."))
 
@@ -223,11 +238,13 @@ class SessionOperations:
             if not self._save_changes():
                 return OperationResult(False, _("Failed to save after folder removal."))
 
-            self.logger.info(f"Folder removed successfully: '{folder.name}'")
-            return OperationResult(
+            self.logger.info(f"Folder removed successfully: '{folder_name}'")
+            result = OperationResult(
                 True,
-                _("Folder '{name}' removed successfully.").format(name=folder.name),
+                _("Folder '{name}' removed successfully.").format(name=folder_name),
             )
+            AppSignals.get().emit("folder-deleted", folder_name)
+            return result
 
     def move_session_to_folder(
         self, session: SessionItem, target_folder_path: str
@@ -247,7 +264,9 @@ class SessionOperations:
             self.logger.info(
                 f"Session '{session.name}' moved to '{target_folder_path or 'root'}'"
             )
-            return OperationResult(True, _("Session moved successfully."), session)
+            result = OperationResult(True, _("Session moved successfully."), session)
+            AppSignals.get().emit("session-updated", session.name)
+            return result
 
     def move_folder(
         self, folder: SessionFolder, target_parent_path: str

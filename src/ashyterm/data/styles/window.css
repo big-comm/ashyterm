@@ -322,3 +322,23 @@ window.ashyterm-dialog actionbar>revealer>box {
 .inline-context-menu button.destructive-action:active {
     background-color: alpha(@destructive_color, 0.12);
 }
+/* Command toolbar styles */
+.command-toolbar {
+    background: @headerbar_bg_color;
+    padding: 4px 12px;
+    min-height: 32px;
+}
+
+.toolbar-command-button {
+    padding: 4px 10px;
+    border-radius: 6px;
+    min-height: 24px;
+}
+
+.toolbar-command-button:hover {
+    background-color: alpha(currentColor, 0.08);
+}
+
+.toolbar-command-button:active {
+    background-color: alpha(currentColor, 0.12);
+}

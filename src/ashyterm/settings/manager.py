@@ -170,7 +170,18 @@ class SettingsManager:
             with open(self.custom_schemes_file, "r", encoding="utf-8") as f:
                 data = json.load(f)
             if isinstance(data, dict):
-                return data
+                # Validate each scheme - must be a dict with required keys
+                valid_schemes = {}
+                for key, value in data.items():
+                    if (
+                        isinstance(value, dict)
+                        and "foreground" in value
+                        and "background" in value
+                    ):
+                        valid_schemes[key] = value
+                    else:
+                        self.logger.warning(f"Invalid custom scheme '{key}', skipping")
+                return valid_schemes
             self.logger.warning("Custom schemes file is not a valid dictionary.")
             return {}
         except Exception as e:
@@ -653,7 +664,8 @@ class SettingsManager:
                 .main-header-bar, .main-header-bar:backdrop,
                 .terminal-pane .header-bar, .terminal-pane .header-bar, .terminal-pane .top-bar:backdrop,
                 searchbar, searchbar > box,
-                searchbar.broadcast-bar, searchbar.broadcast-bar > box {{
+                searchbar.broadcast-bar, searchbar.broadcast-bar > box,
+                .command-toolbar {{
                     background-color: {color_mix_css};
                 }}
                 searchbar > revealer,
@@ -875,6 +887,39 @@ class SettingsManager:
                 }}
                 """)
 
+            # === COMMAND TOOLBAR ===
+            # Toolbar buttons below headerbar for quick command access
+            if user_transparency > 0:
+                # Background handled by apply_headerbar_transparency
+                css_parts.append(f"""
+                .command-toolbar {{
+                    color: {fg_color};
+                }}
+                .command-toolbar button,
+                .command-toolbar button label,
+                .command-toolbar button image {{
+                    color: {fg_color};
+                }}
+                .command-toolbar button image {{
+                    -gtk-icon-style: symbolic;
+                }}
+                """)
+            else:
+                css_parts.append(f"""
+                .command-toolbar {{
+                    background-color: {header_bg_color};
+                    color: {fg_color};
+                }}
+                .command-toolbar button,
+                .command-toolbar button label,
+                .command-toolbar button image {{
+                    color: {fg_color};
+                }}
+                .command-toolbar button image {{
+                    -gtk-icon-style: symbolic;
+                }}
+                """)
+
             # === SIDEBAR ===
             # Simple box-based sidebar structure
             # Only apply if luminance >= 5% to avoid very dark backgrounds
@@ -1052,7 +1097,88 @@ class SettingsManager:
             # === POPOVERS AND CONTEXT MENUS ===
             # Only apply if luminance >= 5% to avoid very dark backgrounds
             if luminance >= 0.05:
+                # Global popover styling - applies to ALL popovers including right-click menus
                 css_parts.append(f"""
+                /* Global popover styling - fixes right-click context menus everywhere */
+                popover > contents {{
+                    background-color: {header_bg_color};
+                    color: {fg_color};
+                }}
+                popover > arrow {{
+                    background: {header_bg_color};
+                }}
+                popover > contents > box {{
+                    background-color: {header_bg_color};
+                    color: {fg_color};
+                }}
+                popover label {{
+                    color: {fg_color};
+                }}
+                popover button:not(.suggested-action):not(.destructive-action) {{
+                    color: {fg_color};
+                    background: transparent;
+                }}
+                popover button:not(.suggested-action):not(.destructive-action):hover {{
+                    background-color: color-mix(in srgb, {fg_color} {hover_alpha}, {header_bg_color});
+                }}
+                popover entry,
+                popover entry text {{
+                    color: {fg_color};
+                    background-color: color-mix(in srgb, {fg_color} 8%, {header_bg_color});
+                }}
+                
+                /* Menu and menuitem styling - GtkMenu used in context menus */
+                popover menu,
+                popover menubox {{
+                    background-color: {header_bg_color};
+                    color: {fg_color};
+                }}
+                popover menuitem,
+                popover modelbutton {{
+                    color: {fg_color};
+                    background: transparent;
+                }}
+                popover menuitem label,
+                popover modelbutton label,
+                popover menuitem > box > label {{
+                    color: {fg_color};
+                }}
+                popover menuitem:hover,
+                popover modelbutton:hover {{
+                    background-color: color-mix(in srgb, {fg_color} {hover_alpha}, {header_bg_color});
+                }}
+                popover menuitem:active,
+                popover modelbutton:active {{
+                    background-color: color-mix(in srgb, {fg_color} {selected_alpha}, {header_bg_color});
+                }}
+                
+                /* Dropdown popover styling - fixes dropdowns in dialogs */
+                dropdown > popover {{
+                    background-color: {header_bg_color};
+                }}
+                dropdown > popover > contents {{
+                    background-color: {header_bg_color};
+                    color: {fg_color};
+                }}
+                dropdown > popover listview {{
+                    background-color: {header_bg_color};
+                    color: {fg_color};
+                }}
+                dropdown > popover row {{
+                    color: {fg_color};
+                }}
+                dropdown > popover row label,
+                dropdown > popover cell label {{
+                    color: {fg_color};
+                }}
+                dropdown > popover row:selected {{
+                    background-color: color-mix(in srgb, {fg_color} {selected_alpha}, {header_bg_color});
+                }}
+                dropdown > popover row:hover {{
+                    background-color: color-mix(in srgb, {fg_color} {hover_alpha}, {header_bg_color});
+                }}
+                
+                /* Specific ashyterm classes for backward compatibility */
                 popover.ashyterm-popover > contents,
                 popover.context-menu > contents {{
                     background-color: {header_bg_color};
@@ -1062,20 +1188,8 @@ class SettingsManager:
                 popover.context-menu > arrow {{
                     background: {header_bg_color};
                 }}
-                popover.ashyterm-popover modelbutton,
-                popover.ashyterm-popover modelbutton label,
-                popover.ashyterm-popover label,
-                popover.context-menu modelbutton,
-                popover.context-menu modelbutton label,
-                popover.context-menu label {{
-                    color: {fg_color};
-                }}
-                popover.ashyterm-popover > contents > box,
-                popover.context-menu > contents > box {{
-                    background-color: {header_bg_color};
-                    color: {fg_color};
-                }}
                 """)
+
 
                 # === TOOLTIPS ===
                 css_parts.append(f"""
@@ -1193,6 +1307,27 @@ class SettingsManager:
                     background-color: {bg_color};
                     color: {fg_color};
                 }}
+                /* Adw.AlertDialog styling */
+                dialog.alert,
+                dialog.alert .dialog-contents,
+                dialog.alert .heading,
+                dialog.alert .body,
+                dialog.alert label,
+                dialog.alert label.heading,
+                dialog.alert label.body {{
+                    color: {fg_color};
+                }}
+                dialog.alert,
+                dialog.alert .dialog-contents,
+                dialog.alert box.dialog-contents {{
+                    background-color: {bg_color};
+                }}
+                dialog.alert .response-area {{
+                    background-color: {header_bg_color};
+                }}
+                dialog.alert button:not(.suggested-action):not(.destructive-action) {{
+                    color: {fg_color};
+                }}
                 .ashyterm-dialog actionbar,
                 .ashyterm-dialog actionbar > revealer,
                 .ashyterm-dialog actionbar > revealer > box {{
@@ -1200,30 +1335,83 @@ class SettingsManager:
                     background-color: {header_bg_color};
                     color: {fg_color};
                 }}
-                /* Command Guide specific styles */
-                .ashyterm-dialog .command-guide-boxed-list {{
-                    background-color: {bg_color};
+                /* Command Manager specific styling */
+                .command-manager-dialog entry,
+                .command-manager-dialog entry text {{
+                    background-color: color-mix(in srgb, {fg_color} 8%, {bg_color});
+                    color: {fg_color};
+                    caret-color: {fg_color};
                 }}
-                .ashyterm-dialog .command-guide-boxed-list row {{
-                    background-color: {bg_color};
+                /* Execute button - now uses suggested-action class */
+                .command-manager-dialog button.suggested-action {{
+                    background-color: {accent_color};
+                    color: #ffffff;
                 }}
-                .ashyterm-dialog .category-header {{
-                    background: color-mix(in srgb, {accent_color} 85%, {bg_color});
-                    color: {bg_color};
+                .command-manager-dialog button.suggested-action:hover {{
+                    background-color: color-mix(in srgb, {accent_color} 85%, white);
                 }}
-                .ashyterm-dialog .general-description {{
-                    background: color-mix(in srgb, {accent_color} 10%, {bg_color});
-                    border-left-color: {accent_color};
+                .command-manager-dialog flowboxchild,
+                .command-manager-dialog .command-button {{
+                    background-color: {header_bg_color};
+                    color: {fg_color};
                 }}
-                .ashyterm-dialog .command-name-frame {{
-                    background-color: color-mix(in srgb, {fg_color} 6%, {bg_color});
-                    border-color: color-mix(in srgb, {fg_color} 12%, {bg_color});
+                .command-manager-dialog .command-button label {{
+                    color: {fg_color};
                 }}
-                .ashyterm-dialog .command-guide-boxed-list > row:hover .command-guide-card {{
-                    background-color: color-mix(in srgb, {accent_color} 10%, {bg_color});
+                .command-manager-dialog .search-entry {{
+                    background-color: color-mix(in srgb, {fg_color} 8%, {bg_color});
+                    color: {fg_color};
                 }}
-                .ashyterm-dialog .command-guide-boxed-list > row:selected .command-guide-card {{
-                    background-color: color-mix(in srgb, {accent_color} 15%, {bg_color});
+                
+                /* Highlight dialog button styling - destructive action */
+                .ashyterm-dialog button.destructive-action {{
+                    background-color: #c01c28;
+                    background-image: none;
+                    color: #ffffff;
+                    border: none;
+                }}
+                .ashyterm-dialog button.destructive-action:hover {{
+                    background-color: #a51d2d;
+                }}
+                .ashyterm-dialog button.destructive-action label {{
+                    color: #ffffff;
+                }}
+                
+                /* Flat button styling */
+                .ashyterm-dialog button.flat {{
+                    color: {fg_color};
+                }}
+                .ashyterm-dialog button.flat:hover {{
+                    background-color: color-mix(in srgb, {fg_color} {hover_alpha}, {bg_color});
+                }}
+                
+                /* Command Form Dialog - form fields and preview contrast */
+                .command-form-dialog entry,
+                .command-form-dialog entry text {{
+                    background-color: color-mix(in srgb, {fg_color} 8%, {bg_color});
+                    color: {fg_color};
+                    caret-color: {fg_color};
+                }}
+                .command-form-dialog spinbutton,
+                .command-form-dialog spinbutton text,
+                .command-form-dialog spinbutton entry {{
+                    background-color: color-mix(in srgb, {fg_color} 8%, {bg_color});
+                    color: {fg_color};
+                }}
+                .command-form-dialog .command-preview {{
+                    background-color: color-mix(in srgb, {fg_color} 5%, {bg_color}) !important;
+                    color: {fg_color} !important;
+                }}
+                .command-form-dialog .command-preview label {{
+                    color: {fg_color};
+                }}
+                .command-form-dialog textview,
+                .command-form-dialog textview text {{
+                    background-color: color-mix(in srgb, {fg_color} 5%, {bg_color});
+                    color: {fg_color};
+                }}
+                .command-form-dialog row label {{
+                    color: {fg_color};
                 }}
                 """)
             else:
@@ -1269,6 +1457,275 @@ class SettingsManager:
 
         except Exception as e:
             self.logger.warning(f"Failed to apply GTK terminal theme: {e}")
+
+    def generate_dynamic_theme_css(
+        self, css_class: str, transparency: int = 0, headerbar_transparency: int = 0
+    ) -> str:
+        """
+        Generate dynamic theme CSS for dialogs and panels.
+
+        This centralizes the CSS generation logic that was previously duplicated
+        across CommandFormDialog, CommandEditorDialog, and other components.
+
+        Args:
+            css_class: The CSS class name to scope styles (e.g., 'command-form-dialog')
+            transparency: Background transparency percentage (0-100)
+            headerbar_transparency: Headerbar transparency percentage (0-100)
+
+        Returns:
+            CSS string ready to be loaded into a CssProvider
+        """
+        scheme = self.get_color_scheme_data()
+        bg_color = scheme.get("background", "#000000")
+        fg_color = scheme.get("foreground", "#ffffff")
+        header_bg = scheme.get("headerbar_background", bg_color)
+        palette = scheme.get("palette", [])
+        accent_color = palette[4] if len(palette) > 4 else "#3584e4"
+
+        # Parse RGB values
+        r = int(bg_color[1:3], 16)
+        g = int(bg_color[3:5], 16)
+        b = int(bg_color[5:7], 16)
+
+        # Calculate background with transparency
+        if transparency > 0:
+            alpha = max(0.0, min(1.0, 1.0 - (transparency / 100.0) ** 1.6))
+            rgba_bg = f"rgba({r}, {g}, {b}, {alpha})"
+        else:
+            rgba_bg = f"rgb({r}, {g}, {b})"
+
+        # Calculate luminance to detect if theme is dark or light
+        bg_luminance = 0.299 * r / 255 + 0.587 * g / 255 + 0.114 * b / 255
+        is_dark_theme = bg_luminance < 0.5
+
+        # Derived colors
+        input_bg = f"color-mix(in srgb, {fg_color} 10%, transparent)"
+        border_color = f"color-mix(in srgb, {fg_color} 15%, transparent)"
+
+        # Dim/subtitle colors based on theme
+        if is_dark_theme:
+            dim_fg = f"color-mix(in srgb, {fg_color} 70%, transparent)"
+            subtitle_fg = f"color-mix(in srgb, {fg_color} 65%, transparent)"
+        else:
+            dim_fg = f"color-mix(in srgb, {fg_color} 90%, transparent)"
+            subtitle_fg = f"color-mix(in srgb, {fg_color} 85%, transparent)"
+
+        # Build CSS
+        css = f"""
+        /* Main dialog background */
+        .{css_class} {{
+            background-color: {rgba_bg};
+            color: {fg_color};
+        }}
+        
+        /* Headerbar */
+        .{css_class} headerbar {{
+            background-color: {header_bg};
+            color: {fg_color};
+        }}
+        
+        /* All labels in dialog */
+        .{css_class} label {{
+            color: {fg_color};
+        }}
+        
+        /* Subtitle/description labels - need to be visible */
+        .{css_class} .subtitle,
+        .{css_class} label.subtitle {{
+            color: {subtitle_fg};
+        }}
+        
+        /* Dim labels and caption */
+        .{css_class} .dim-label,
+        .{css_class} .caption {{
+            color: {dim_fg};
+        }}
+        
+        /* Adw preferences group titles */
+        .{css_class} .preferences-group > header > box > label {{
+            color: {fg_color};
+        }}
+        
+        /* Adw entry row, switch row, combo row specific selectors */
+        .{css_class} .entry-row > box > box > label.title,
+        .{css_class} .switch-row > box > box > label.title,
+        .{css_class} .combo-row > box > box > label.title,
+        .{css_class} .action-row > box > box > label.title,
+        .{css_class} .expander-row > box > box > label.title {{
+            color: {fg_color};
+        }}
+        .{css_class} .entry-row > box > box > label.subtitle,
+        .{css_class} .switch-row > box > box > label.subtitle,
+        .{css_class} .combo-row > box > box > label.subtitle,
+        .{css_class} .action-row > box > box > label.subtitle,
+        .{css_class} .expander-row > box > box > label.subtitle,
+        .{css_class} .password-entry-row > box > box > label.subtitle {{
+            color: {subtitle_fg};
+        }}
+        
+        /* PreferencesGroup descriptions */
+        .{css_class} .preferences-group > header > box > label.description,
+        .{css_class} .preferences-group description,
+        .{css_class} .preferences-group > header > .body {{
+            color: {subtitle_fg};
+        }}
+        
+        /* Adw.PreferencesGroup set_description text */
+        .{css_class} .preferences-group > header > box > box > label {{
+            color: {subtitle_fg};
+        }}
+        
+        /* Row titles and subtitles (generic) */
+        .{css_class} row label.title,
+        .{css_class} row .title {{
+            color: {fg_color};
+        }}
+        .{css_class} row label.subtitle,
+        .{css_class} row .subtitle,
+        .{css_class} row .body {{
+            color: {subtitle_fg};
+        }}
+        
+        /* Entry fields - match border to row border */
+        .{css_class} entry,
+        .{css_class} entry text,
+        .{css_class} spinbutton,
+        .{css_class} spinbutton text {{
+            background: {input_bg};
+            color: {fg_color};
+            border-color: {border_color};
+            outline-color: {border_color};
+        }}
+        .{css_class} entry:focus,
+        .{css_class} entry:focus-within {{
+            border-color: {accent_color};
+            outline-color: {accent_color};
+        }}
+        
+        /* Text views */
+        .{css_class} textview,
+        .{css_class} textview text {{
+            background: {input_bg};
+            color: {fg_color};
+        }}
+        
+        /* Dropdown/combo box */
+        .{css_class} dropdown > button,
+        .{css_class} dropdown > button label {{
+            color: {fg_color};
+        }}
+        .{css_class} dropdown > popover contents {{
+            background: {bg_color};
+            color: {fg_color};
+        }}
+        .{css_class} dropdown > popover contents row label {{
+            color: {fg_color};
+        }}
+        
+        /* Radio and check buttons - comprehensive selectors */
+        .{css_class} checkbutton,
+        .{css_class} checkbutton label,
+        .{css_class} check,
+        .{css_class} check label,
+        .{css_class} radiobutton,
+        .{css_class} radiobutton label,
+        .{css_class} radio,
+        .{css_class} radio label,
+        .{css_class} .radiobutton-list label,
+        .{css_class} box.vertical > checkbutton label,
+        .{css_class} box.vertical > radiobutton label {{
+            color: {fg_color};
+        }}
+        
+        /* Row borders - unified style */
+        .{css_class} row,
+        .{css_class} .entry-row,
+        .{css_class} .action-row,
+        .{css_class} .switch-row,
+        .{css_class} .combo-row,
+        .{css_class} .expander-row {{
+            border-color: {border_color};
+        }}
+        
+        /* Card elements */
+        .{css_class} .card {{
+            background: {input_bg};
+            color: {fg_color};
+            border-color: {border_color};
+        }}
+        
+        /* Command preview */
+        .{css_class} .command-preview {{
+            background: {input_bg};
+            color: {fg_color};
+        }}
+        
+        /* Monospace text */
+        .{css_class} .monospace {{
+            color: {fg_color};
+        }}
+        
+        /* Action row and similar */
+        .{css_class} .action-row .title,
+        .{css_class} .action-row .subtitle {{
+            color: {fg_color};
+        }}
+        
+        /* Listbox and row backgrounds */
+        .{css_class} list,
+        .{css_class} listbox,
+        .{css_class} row {{
+            background: transparent;
+        }}
+        
+        /* Suggested action button */
+        .{css_class} .suggested-action {{
+            background: {accent_color};
+            color: #ffffff;
+        }}
+        
+        /* Execute button - accent styling */
+        .{css_class} .execute-button {{
+            background: {accent_color};
+            color: #ffffff;
+        }}
+        .{css_class} .execute-button label {{
+            color: #ffffff;
+        }}
+        
+        /* Command buttons with proper foreground */
+        .{css_class} .command-button {{
+            color: {fg_color};
+        }}
+        .{css_class} .command-button label {{
+            color: {fg_color};
+        }}
+        
+        /* Command input area */
+        .{css_class} .command-input-frame {{
+            background: {input_bg};
+            border-color: {border_color};
+        }}
+        .{css_class} .command-input-frame:focus-within {{
+            border-color: {accent_color};
+        }}
+        
+        /* Bash text view */
+        .{css_class} .bash-textview {{
+            color: {fg_color};
+        }}
+        .{css_class} .bash-textview text {{
+            background: transparent;
+            color: {fg_color};
+        }}
+        
+        /* Images/icons in dialog */
+        .{css_class} image {{
+            color: {fg_color};
+        }}
+        """
+
+        return css
 
     def remove_gtk_terminal_theme(self, window) -> None:
         """Removes the custom CSS provider for the terminal theme."""

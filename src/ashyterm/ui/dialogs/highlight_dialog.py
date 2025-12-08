@@ -27,62 +27,17 @@ from ...utils.icons import icon_image
 from ...utils.logger import get_logger
 from ...utils.tooltip_helper import get_tooltip_helper
 from ...utils.translation_utils import _
+from ..colors import (
+    get_background_color_options,
+    get_foreground_color_options,
+    get_text_effect_options,
+)
+from ..widgets.regex_text_view import RegexTextView
 
-# Available logical color names for selection (base colors only)
-# Text effects (bold, italic, underline, etc.) are now separate toggles
-LOGICAL_COLOR_OPTIONS = [
-    # Standard ANSI
-    ("black", _("Black")),
-    ("red", _("Red")),
-    ("green", _("Green")),
-    ("yellow", _("Yellow")),
-    ("blue", _("Blue")),
-    ("magenta", _("Magenta")),
-    ("cyan", _("Cyan")),
-    ("white", _("White")),
-    # Bright variants
-    ("bright_black", _("Bright Black")),
-    ("bright_red", _("Bright Red")),
-    ("bright_green", _("Bright Green")),
-    ("bright_yellow", _("Bright Yellow")),
-    ("bright_blue", _("Bright Blue")),
-    ("bright_magenta", _("Bright Magenta")),
-    ("bright_cyan", _("Bright Cyan")),
-    ("bright_white", _("Bright White")),
-    # Theme colors
-    ("foreground", _("Foreground")),
-]
-
-# Available text effects (ANSI SGR codes) as toggleable options
-TEXT_EFFECT_OPTIONS = [
-    ("bold", _("Bold"), "format-text-bold-symbolic"),
-    ("italic", _("Italic"), "format-text-italic-symbolic"),
-    ("underline", _("Underline"), "format-text-underline-symbolic"),
-    ("strikethrough", _("Strikethrough"), "format-text-strikethrough-symbolic"),
-    ("dim", _("Dim/Faint"), "weather-clear-night-symbolic"),
-    ("blink", _("Blink"), "alarm-symbolic"),
-]
-
-# Available background color options (with on_ prefix for ANSI mapping)
-BACKGROUND_COLOR_OPTIONS = [
-    ("", _("Default")),
-    ("on_black", _("Black")),
-    ("on_red", _("Red")),
-    ("on_green", _("Green")),
-    ("on_yellow", _("Yellow")),
-    ("on_blue", _("Blue")),
-    ("on_magenta", _("Magenta")),
-    ("on_cyan", _("Cyan")),
-    ("on_white", _("White")),
-    ("on_bright_black", _("Bright Black")),
-    ("on_bright_red", _("Bright Red")),
-    ("on_bright_green", _("Bright Green")),
-    ("on_bright_yellow", _("Bright Yellow")),
-    ("on_bright_blue", _("Bright Blue")),
-    ("on_bright_magenta", _("Bright Magenta")),
-    ("on_bright_cyan", _("Bright Cyan")),
-    ("on_bright_white", _("Bright White")),
-]
+# Get color options from centralized module
+LOGICAL_COLOR_OPTIONS = get_foreground_color_options()
+TEXT_EFFECT_OPTIONS = get_text_effect_options()
+BACKGROUND_COLOR_OPTIONS = get_background_color_options()
 
 
 class ColorEntryRow(Adw.ActionRow):
@@ -519,7 +474,7 @@ class RuleEditDialog(Adw.Window):
         name_group.add(self._name_row)
         content_box.append(name_group)
 
-        # Pattern entry with regex help
+        # Pattern entry with regex syntax highlighting
         pattern_group = Adw.PreferencesGroup(
             title=_("Pattern"),
             description=_(
@@ -527,10 +482,28 @@ class RuleEditDialog(Adw.Window):
             ),
         )
 
-        # Pattern row with help button
-        self._pattern_row = Adw.EntryRow(title=_("Regex Pattern"))
-        self._pattern_row.add_css_class("monospace")
-        self._pattern_row.connect("changed", self._on_pattern_changed)
+        # Create a custom row for the regex pattern with syntax highlighting
+        pattern_action_row = Adw.ActionRow(title=_("Regex Pattern"))
+        pattern_action_row.set_subtitle(_("Syntax highlighted"))
+
+        # Create container for the regex text view
+        pattern_container = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=8)
+        pattern_container.set_valign(Gtk.Align.CENTER)
+        pattern_container.set_hexpand(True)
+
+        # Create the syntax-highlighted regex text view
+        self._pattern_text_view = RegexTextView(single_line=True)
+        self._pattern_text_view.set_hexpand(True)
+        self._pattern_text_view.set_size_request(300, 32)
+        self._pattern_text_view.add_css_class("card")
+        self._pattern_text_view.connect_changed(self._on_pattern_changed)
+
+        # Frame for the text view to give it a proper border
+        pattern_frame = Gtk.Frame()
+        pattern_frame.set_child(self._pattern_text_view)
+        pattern_frame.set_hexpand(True)
+        pattern_frame.add_css_class("view")
+        pattern_container.append(pattern_frame)
 
         # Regex help button
         help_btn = Gtk.Button(icon_name="help-about-symbolic")
@@ -538,9 +511,10 @@ class RuleEditDialog(Adw.Window):
         help_btn.set_valign(Gtk.Align.CENTER)
         get_tooltip_helper().add_tooltip(help_btn, _("Regex reference"))
         help_btn.connect("clicked", self._on_regex_help_clicked)
-        self._pattern_row.add_suffix(help_btn)
+        pattern_container.append(help_btn)
 
-        pattern_group.add(self._pattern_row)
+        pattern_action_row.add_suffix(pattern_container)
+        pattern_group.add(pattern_action_row)
         content_box.append(pattern_group)
 
         # Validation status
@@ -575,28 +549,21 @@ class RuleEditDialog(Adw.Window):
         desc_group.add(self._desc_row)
         content_box.append(desc_group)
 
-        # Apply monospace CSS to pattern entry
-        self._apply_monospace_css()
+        # Apply CSS for regex text view styling
+        self._apply_regex_textview_css()
 
-    def _apply_monospace_css(self) -> None:
-        """Apply monospace font CSS to the pattern entry."""
-        css_provider = Gtk.CssProvider()
-        css = """
-        .monospace {
-            font-family: monospace;
-        }
+    def _apply_regex_textview_css(self) -> None:
+        """Regex textview CSS is now loaded globally from components.css.
+
+        The .regex-textview class styles are defined in:
+        data/styles/components.css (loaded by window_ui.py at startup)
         """
-        css_provider.load_from_data(css.encode("utf-8"))
-        Gtk.StyleContext.add_provider_for_display(
-            Gdk.Display.get_default(),
-            css_provider,
-            Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION,
-        )
+        pass  # CSS is loaded globally
 
     def _load_rule_data(self) -> None:
         """Load existing rule data into form fields."""
         self._name_row.set_text(self._rule.name)
-        self._pattern_row.set_text(self._rule.pattern)
+        self._pattern_text_view.set_text(self._rule.pattern)
         self._desc_row.set_text(self._rule.description)
 
         # Load colors
@@ -651,7 +618,7 @@ class RuleEditDialog(Adw.Window):
         self._validate_input()
 
         # Suggest number of color rows based on capture groups
-        pattern = self._pattern_row.get_text().strip()
+        pattern = self._pattern_text_view.get_text().strip()
         if pattern:
             is_valid, _ = self._manager.validate_pattern(pattern)
             if is_valid:
@@ -680,7 +647,7 @@ class RuleEditDialog(Adw.Window):
     def _validate_input(self) -> None:
         """Validate the current input and update UI accordingly."""
         name = self._name_row.get_text().strip()
-        pattern = self._pattern_row.get_text().strip()
+        pattern = self._pattern_text_view.get_text().strip()
 
         # Check for required fields
         if not name:
@@ -812,7 +779,7 @@ class RuleEditDialog(Adw.Window):
     def _on_save_clicked(self, button: Gtk.Button) -> None:
         """Handle save button click."""
         name = self._name_row.get_text().strip()
-        pattern = self._pattern_row.get_text().strip()
+        pattern = self._pattern_text_view.get_text().strip()
         description = self._desc_row.get_text().strip()
 
         # Collect colors from rows
@@ -1485,17 +1452,27 @@ class HighlightDialog(Adw.PreferencesWindow):
 
     def _setup_ui(self) -> None:
         """Setup the dialog UI components."""
-        # Create main page for Global Rules
+        # Create first page for Terminal Colors (primary, fundamental settings)
+        self._terminal_colors_page = Adw.PreferencesPage(
+            title=_("Terminal Colors"),
+            icon_name="preferences-color-symbolic",
+        )
+        self.add(self._terminal_colors_page)
+
+        # Color Scheme group - the most important terminal color setting
+        self._setup_color_scheme_page(self._terminal_colors_page)
+
+        # Create second page for Output Highlighting (Global Rules)
         self._global_page = Adw.PreferencesPage(
-            title=_("Global Rules"),
-            icon_name="emblem-default-symbolic",
+            title=_("Output Highlighting"),
+            icon_name="view-list-symbolic",
         )
         self.add(self._global_page)
 
         # Welcome/explanation text
         self._setup_welcome_banner(self._global_page)
 
-        # Activation group
+        # Activation group with performance warning
         self._setup_activation_group(self._global_page)
 
         # Cat colorization group (Pygments-based syntax highlighting)
@@ -1510,9 +1487,9 @@ class HighlightDialog(Adw.PreferencesWindow):
         # Global rules group (last, as it can be a longer list)
         self._setup_rules_group(self._global_page)
 
-        # Create second page for Context-Aware Rules
+        # Create third page for Command-Specific Rules
         self._context_page = Adw.PreferencesPage(
-            title=_("Command Rules"),
+            title=_("Command-Specific"),
             icon_name="utilities-terminal-symbolic",
         )
         self.add(self._context_page)
@@ -1522,6 +1499,375 @@ class HighlightDialog(Adw.PreferencesWindow):
 
         # Context selector group (clicking a context opens a dialog)
         self._setup_context_selector_group(self._context_page)
+
+    def _setup_color_scheme_page(self, page: Adw.PreferencesPage) -> None:
+        """Setup the Terminal Colors page with integrated Color Scheme selector."""
+        # Color Scheme group
+        scheme_group = Adw.PreferencesGroup(
+            title=_("Color Scheme"),
+        )
+        page.add(scheme_group)
+
+        # Create the scheme list
+        self._scheme_listbox = Gtk.ListBox()
+        self._scheme_listbox.set_selection_mode(Gtk.SelectionMode.SINGLE)
+        self._scheme_listbox.add_css_class("boxed-list")
+        self._scheme_listbox.connect("row-selected", self._on_scheme_row_selected)
+
+        # Populate schemes
+        self._scheme_rows: dict = {}
+        self._populate_color_schemes()
+
+        scheme_group.add(self._scheme_listbox)
+
+        # Actions group (New, Edit, Delete)
+        actions_group = Adw.PreferencesGroup()
+        page.add(actions_group)
+
+        # New scheme button
+        new_row = Adw.ActionRow(
+            title=_("Create New Scheme"),
+            subtitle=_("Create a custom color scheme based on existing"),
+        )
+        new_row.set_activatable(True)
+        new_btn = Gtk.Button(icon_name="list-add-symbolic")
+        new_btn.set_valign(Gtk.Align.CENTER)
+        new_btn.add_css_class("flat")
+        new_btn.connect("clicked", self._on_new_scheme_clicked)
+        new_row.add_suffix(new_btn)
+        new_row.set_activatable_widget(new_btn)
+        actions_group.add(new_row)
+
+    def _populate_color_schemes(self) -> None:
+        """Populate the color scheme list."""
+        settings = get_settings_manager()
+        all_schemes = settings.get_all_schemes()
+        scheme_order = settings.get_scheme_order()
+        current_scheme = settings.get_color_scheme_name()
+
+        # Clear existing rows
+        while True:
+            row = self._scheme_listbox.get_first_child()
+            if row is None:
+                break
+            self._scheme_listbox.remove(row)
+        self._scheme_rows.clear()
+
+        for scheme_key in scheme_order:
+            if scheme_key not in all_schemes:
+                continue
+
+            scheme_data = all_schemes[scheme_key]
+            is_custom = scheme_key.startswith("custom_")
+
+            row = self._create_scheme_row(scheme_key, scheme_data, is_custom)
+            self._scheme_listbox.append(row)
+            self._scheme_rows[scheme_key] = row
+
+            # Select current scheme
+            if scheme_key == current_scheme:
+                self._scheme_listbox.select_row(row)
+
+    def _create_scheme_row(
+        self, scheme_key: str, scheme_data: dict, is_custom: bool
+    ) -> Adw.ActionRow:
+        """Create a row for a color scheme with preview."""
+        row = Adw.ActionRow(
+            title=scheme_data.get("name", scheme_key),
+        )
+        row.scheme_key = scheme_key
+        row.scheme_data = scheme_data
+        row.is_custom = is_custom
+
+        # Color preview using DrawingArea for better visual representation
+        preview = Gtk.DrawingArea()
+        preview.set_size_request(120, 32)
+        preview.set_valign(Gtk.Align.CENTER)
+        preview.set_margin_end(12)
+
+        def draw_preview(area, cr, width, height):
+            # Draw background
+            bg_color = scheme_data.get("background", "#000000")
+            self._set_color_from_hex(cr, bg_color)
+            cr.rectangle(0, 0, width * 0.3, height)
+            cr.fill()
+
+            # Draw foreground
+            fg_color = scheme_data.get("foreground", "#ffffff")
+            self._set_color_from_hex(cr, fg_color)
+            cr.rectangle(width * 0.3, 0, width * 0.15, height)
+            cr.fill()
+
+            # Draw palette colors
+            palette = scheme_data.get("palette", [])
+            num_colors = min(len(palette), 8)
+            if num_colors > 0:
+                color_width = (width * 0.55) / num_colors
+                x_offset = width * 0.45
+                for i, color in enumerate(palette[:num_colors]):
+                    self._set_color_from_hex(cr, color)
+                    cr.rectangle(x_offset + i * color_width, 0, color_width, height)
+                    cr.fill()
+
+            # Draw subtle border
+            cr.set_source_rgba(0.5, 0.5, 0.5, 0.3)
+            cr.set_line_width(1)
+            cr.rectangle(0.5, 0.5, width - 1, height - 1)
+            cr.stroke()
+
+        preview.set_draw_func(draw_preview)
+        row.add_prefix(preview)
+
+        # Edit button - available for ALL schemes (built-in creates a copy)
+        edit_btn = Gtk.Button(icon_name="document-edit-symbolic")
+        edit_btn.set_valign(Gtk.Align.CENTER)
+        edit_btn.add_css_class("flat")
+        if is_custom:
+            edit_btn.set_tooltip_text(_("Edit scheme"))
+        else:
+            edit_btn.set_tooltip_text(_("Customize (creates a copy)"))
+        edit_btn.connect("clicked", lambda b, r=row: self._on_edit_scheme_clicked(r))
+        row.add_suffix(edit_btn)
+
+        # Delete button only for custom schemes
+        if is_custom:
+            delete_btn = Gtk.Button(icon_name="user-trash-symbolic")
+            delete_btn.set_valign(Gtk.Align.CENTER)
+            delete_btn.add_css_class("flat")
+            delete_btn.set_tooltip_text(_("Delete scheme"))
+            delete_btn.connect(
+                "clicked", lambda b, r=row: self._on_delete_scheme_clicked(r)
+            )
+            row.add_suffix(delete_btn)
+
+        # Checkmark for selected scheme
+        check_icon = Gtk.Image.new_from_icon_name("emblem-ok-symbolic")
+        check_icon.set_visible(False)
+        row.check_icon = check_icon
+        row.add_suffix(check_icon)
+
+        return row
+
+    def _set_color_from_hex(self, cr, hex_color: str) -> None:
+        """Set cairo source color from hex string."""
+        try:
+            hex_val = hex_color.lstrip("#")
+            r = int(hex_val[0:2], 16) / 255.0
+            g = int(hex_val[2:4], 16) / 255.0
+            b = int(hex_val[4:6], 16) / 255.0
+            cr.set_source_rgb(r, g, b)
+        except (ValueError, IndexError):
+            cr.set_source_rgb(0.5, 0.5, 0.5)
+
+    def _on_scheme_row_selected(self, listbox, row) -> None:
+        """Handle color scheme selection."""
+        if row is None:
+            return
+
+        # Update visual selection (checkmarks)
+        for scheme_row in self._scheme_rows.values():
+            scheme_row.check_icon.set_visible(scheme_row == row)
+
+        # Apply the scheme
+        settings = get_settings_manager()
+        scheme_order = settings.get_scheme_order()
+        selected_index = scheme_order.index(row.scheme_key)
+        settings.set("color_scheme", selected_index)
+
+        self.logger.info(f"Color scheme changed to: {row.scheme_key}")
+
+        # Apply to terminals
+        if self._parent_window and hasattr(self._parent_window, "terminal_manager"):
+            self._parent_window.terminal_manager.apply_settings_to_all_terminals()
+
+        # Apply to GTK theme if using terminal theme
+        if settings.get("gtk_theme") == "terminal" and self._parent_window:
+            settings.apply_gtk_terminal_theme(self._parent_window)
+
+        # Refresh shell input highlighter
+        try:
+            from ...terminal.highlighter import get_shell_input_highlighter
+
+            highlighter = get_shell_input_highlighter()
+            highlighter.refresh_settings()
+        except Exception:
+            pass
+
+    def _on_new_scheme_clicked(self, button) -> None:
+        """Create a new color scheme based on selected."""
+        from ..color_scheme_dialog import _SchemeEditorDialog
+
+        settings = get_settings_manager()
+        selected_row = self._scheme_listbox.get_selected_row()
+        template_scheme = (
+            selected_row.scheme_data
+            if selected_row
+            else settings.get_all_schemes()["dark"]
+        )
+
+        all_names = [s["name"] for s in settings.get_all_schemes().values()]
+
+        def generate_unique_name(base_name: str, existing: set) -> str:
+            if base_name not in existing:
+                return base_name
+            counter = 1
+            while f"{base_name} ({counter})" in existing:
+                counter += 1
+            return f"{base_name} ({counter})"
+
+        new_name = generate_unique_name(
+            f"Copy of {template_scheme['name']}", set(all_names)
+        )
+
+        new_scheme_data = template_scheme.copy()
+        new_scheme_data["name"] = new_name
+
+        editor = _SchemeEditorDialog(
+            self, settings, new_name, new_scheme_data, is_new=True
+        )
+        editor.connect("save-requested", self._on_editor_save)
+        editor.present()
+
+    def _on_edit_scheme_clicked(self, row) -> None:
+        """Edit a color scheme. Built-in schemes create a copy when saved."""
+        from ..color_scheme_dialog import _SchemeEditorDialog
+
+        settings = get_settings_manager()
+
+        # For built-in schemes, we'll create a new scheme (is_new=True)
+        # For custom schemes, we edit in place (is_new=False)
+        is_builtin = not row.is_custom
+
+        if is_builtin:
+            # Generate unique name for the copy
+            all_names = [s["name"] for s in settings.get_all_schemes().values()]
+
+            def generate_unique_name(base_name: str, existing: set) -> str:
+                if base_name not in existing:
+                    return base_name
+                counter = 1
+                while f"{base_name} ({counter})" in existing:
+                    counter += 1
+                return f"{base_name} ({counter})"
+
+            new_name = generate_unique_name(
+                f"{row.scheme_data.get('name', row.scheme_key)} (Custom)",
+                set(all_names),
+            )
+            scheme_data = row.scheme_data.copy()
+            scheme_data["name"] = new_name
+
+            editor = _SchemeEditorDialog(self, settings, None, scheme_data, is_new=True)
+        else:
+            editor = _SchemeEditorDialog(
+                self, settings, row.scheme_key, row.scheme_data.copy(), is_new=False
+            )
+
+        editor.connect("save-requested", self._on_editor_save)
+        editor.present()
+
+    def _on_delete_scheme_clicked(self, row) -> None:
+        """Delete a custom color scheme."""
+        dialog = Adw.AlertDialog(
+            heading=_("Delete Scheme?"),
+            body=_("Are you sure you want to delete '{}'?").format(
+                row.scheme_data.get("name", row.scheme_key)
+            ),
+        )
+        dialog.add_response("cancel", _("Cancel"))
+        dialog.add_response("delete", _("Delete"))
+        dialog.set_response_appearance("delete", Adw.ResponseAppearance.DESTRUCTIVE)
+        dialog.set_default_response("cancel")
+        dialog.connect(
+            "response",
+            lambda d, r: self._handle_delete_scheme_response(r, row.scheme_key),
+        )
+        dialog.present(self)
+
+    def _handle_delete_scheme_response(self, response: str, scheme_key: str) -> None:
+        """Handle delete scheme confirmation."""
+        if response != "delete":
+            return
+
+        settings = get_settings_manager()
+        if scheme_key in settings.custom_schemes:
+            del settings.custom_schemes[scheme_key]
+            settings.save_custom_schemes()
+
+            # If deleted scheme was selected, switch to first scheme
+            if settings.get_color_scheme_name() == scheme_key:
+                settings.set("color_scheme", 0)
+                if self._parent_window and hasattr(
+                    self._parent_window, "terminal_manager"
+                ):
+                    self._parent_window.terminal_manager.apply_settings_to_all_terminals()
+
+            self._populate_color_schemes()
+            self.add_toast(Adw.Toast(title=_("Scheme deleted")))
+
+    def _on_editor_save(
+        self, editor, original_key: str, new_key: str, scheme_data: dict
+    ) -> None:
+        """Handle save from scheme editor."""
+        settings = get_settings_manager()
+
+        # Determine if this is a new scheme or edit of existing
+        is_new = (
+            original_key is None
+            or original_key == ""
+            or not original_key.startswith("custom_")
+        )
+
+        if is_new:
+            # Generate unique key for new scheme
+            import time
+
+            unique_key = f"custom_{int(time.time() * 1000)}"
+            settings.custom_schemes[unique_key] = scheme_data
+        else:
+            # Update existing custom scheme
+            if original_key in settings.custom_schemes:
+                del settings.custom_schemes[original_key]
+            settings.custom_schemes[new_key if new_key else original_key] = scheme_data
+
+        settings.save_custom_schemes()
+        self._populate_color_schemes()
+
+        # If this is a new scheme, automatically select it
+        if is_new:
+            scheme_order = settings.get_scheme_order()
+            try:
+                new_scheme_index = scheme_order.index(unique_key)
+                settings.set("color_scheme", new_scheme_index)
+                # Update visual selection
+                for scheme_row in self._scheme_rows.values():
+                    if scheme_row.scheme_key == unique_key:
+                        self._scheme_listbox.select_row(scheme_row)
+                        # Update checkmarks
+                        for other_row in self._scheme_rows.values():
+                            other_row.check_icon.set_visible(other_row == scheme_row)
+                        break
+            except ValueError:
+                pass  # Should not happen, but just in case
+
+        # Reapply settings to terminals
+        if self._parent_window and hasattr(self._parent_window, "terminal_manager"):
+            self._parent_window.terminal_manager.apply_settings_to_all_terminals()
+
+        # Apply to GTK theme if using terminal theme
+        if settings.get("gtk_theme") == "terminal" and self._parent_window:
+            settings.apply_gtk_terminal_theme(self._parent_window)
+
+        # Refresh shell input highlighter
+        try:
+            from ...terminal.highlighter import get_shell_input_highlighter
+
+            highlighter = get_shell_input_highlighter()
+            highlighter.refresh_settings()
+        except Exception:
+            pass
+
+        self.add_toast(Adw.Toast(title=_("Scheme saved")))
 
     def _setup_welcome_banner(self, page: Adw.PreferencesPage) -> None:
         """Setup the welcome/explanation text at the top."""
@@ -1534,15 +1880,20 @@ class HighlightDialog(Adw.PreferencesWindow):
         page.add(welcome_group)
 
     def _setup_activation_group(self, page: Adw.PreferencesPage) -> None:
-        """Setup the activation settings group."""
+        """Setup the activation settings group with performance warning."""
         activation_group = Adw.PreferencesGroup(
             title=_("Activation"),
+            description=_(
+                "⚠️ On slower computers, enabling output highlighting may slightly "
+                "reduce terminal responsiveness, as all displayed content is processed for color patterns."
+            ),
         )
         page.add(activation_group)
 
         # Enable for local terminals toggle
         self._local_toggle = Adw.SwitchRow(
             title=_("Local Terminals"),
+            subtitle=_("Apply output highlighting to local terminal sessions"),
         )
         self._local_toggle.set_active(self._manager.enabled_for_local)
         self._local_toggle.connect("notify::active", self._on_local_toggled)
@@ -1551,6 +1902,7 @@ class HighlightDialog(Adw.PreferencesWindow):
         # Enable for SSH terminals toggle
         self._ssh_toggle = Adw.SwitchRow(
             title=_("SSH Sessions"),
+            subtitle=_("Apply output highlighting to SSH connections"),
         )
         self._ssh_toggle.set_active(self._manager.enabled_for_ssh)
         self._ssh_toggle.connect("notify::active", self._on_ssh_toggled)
@@ -1589,56 +1941,192 @@ class HighlightDialog(Adw.PreferencesWindow):
 
         # Color theme dropdown (only if Pygments is available)
         if pygments_available:
-            self._cat_theme_row = Adw.ComboRow(
-                title=_("Color Theme"),
-                subtitle=_('Pygments theme for "cat" output highlighting'),
-            )
-
             # Get available Pygments styles
             from pygments.styles import get_all_styles
 
-            themes = Gtk.StringList()
-            theme_names = sorted(list(get_all_styles()))
+            all_themes = sorted(list(get_all_styles()))
 
-            # Put common ones first
-            preferred = [
-                "monokai",
+            # Theme mode selector (Auto/Manual)
+            self._cat_theme_mode_row = Adw.ComboRow(
+                title=_("Theme Mode"),
+                subtitle=_("Auto: adapts to background color. Manual: single theme."),
+            )
+            mode_model = Gtk.StringList()
+            mode_model.append(_("Auto"))
+            mode_model.append(_("Manual"))
+            self._cat_theme_mode_row.set_model(mode_model)
+            current_mode = settings.get("cat_theme_mode", "auto")
+            self._cat_theme_mode_row.set_selected(0 if current_mode == "auto" else 1)
+            self._cat_theme_mode_row.connect(
+                "notify::selected", self._on_cat_theme_mode_changed
+            )
+            cat_group.add(self._cat_theme_mode_row)
+
+            # Dark themes (background luminance <= 0.5) - based on actual Pygments style analysis
+            dark_only_themes = [
+                "a11y-dark",
+                "a11y-high-contrast-dark",
+                "blinds-dark",
+                "coffee",
                 "dracula",
-                "nord",
+                "fruity",
+                "github-dark",
+                "github-dark-colorblind",
+                "github-dark-high-contrast",
+                "gotthard-dark",
+                "greative",
                 "gruvbox-dark",
+                "inkpot",
+                "lightbulb",
+                "material",
+                "monokai",
+                "native",
+                "nord",
+                "nord-darker",
                 "one-dark",
+                "paraiso-dark",
+                "pitaya-smoothie",
+                "rrt",
                 "solarized-dark",
+                "stata-dark",
+                "vim",
+                "zenburn",
             ]
-            ordered_themes = []
-            for theme in preferred:
-                if theme in theme_names:
-                    ordered_themes.append(theme)
-                    theme_names.remove(theme)
-            ordered_themes.extend(theme_names)
-            theme_names = ordered_themes
 
-            for theme in theme_names:
-                themes.append(theme)
+            # Light themes (background luminance > 0.5) - based on actual Pygments style analysis
+            light_only_themes = [
+                "a11y-high-contrast-light",
+                "a11y-light",
+                "abap",
+                "algol",
+                "algol_nu",
+                "arduino",
+                "autumn",
+                "blinds-light",
+                "borland",
+                "bw",
+                "colorful",
+                "default",
+                "emacs",
+                "friendly",
+                "friendly_grayscale",
+                "github-light",
+                "github-light-colorblind",
+                "github-light-high-contrast",
+                "gotthard-light",
+                "gruvbox-light",
+                "igor",
+                "lilypond",
+                "lovelace",
+                "manni",
+                "murphy",
+                "paraiso-light",
+                "pastie",
+                "perldoc",
+                "rainbow_dash",
+                "sas",
+                "solarized-light",
+                "staroffice",
+                "stata-light",
+                "tango",
+                "trac",
+                "vs",
+                "xcode",
+            ]
 
-            self._cat_theme_row.set_model(themes)
+            # Dark theme selector - show only dark themes
+            self._cat_dark_theme_row = Adw.ComboRow(
+                title=_("Dark Background Theme"),
+                subtitle=_("Theme used when background is dark"),
+            )
+            dark_themes_model = Gtk.StringList()
+            dark_themes = []
+            for theme in dark_only_themes:
+                if theme in all_themes:
+                    dark_themes.append(theme)
+            for theme in all_themes:
+                if theme not in dark_themes and theme not in light_only_themes:
+                    dark_themes.append(theme)
+            for theme in dark_themes:
+                dark_themes_model.append(theme)
+            self._cat_dark_theme_row.set_model(dark_themes_model)
+            self._cat_dark_theme_names = dark_themes
 
-            # Set current theme selection
+            current_dark = settings.get("cat_dark_theme", "monokai")
+            try:
+                dark_idx = dark_themes.index(current_dark)
+                self._cat_dark_theme_row.set_selected(dark_idx)
+            except ValueError:
+                self._cat_dark_theme_row.set_selected(0)
+            self._cat_dark_theme_row.connect(
+                "notify::selected", self._on_cat_dark_theme_changed
+            )
+            cat_group.add(self._cat_dark_theme_row)
+
+            # Light theme selector - show only light themes
+            self._cat_light_theme_row = Adw.ComboRow(
+                title=_("Light Background Theme"),
+                subtitle=_("Theme used when background is light"),
+            )
+            light_themes_model = Gtk.StringList()
+            light_themes = []
+            for theme in light_only_themes:
+                if theme in all_themes:
+                    light_themes.append(theme)
+            for theme in all_themes:
+                if theme not in light_themes and theme not in dark_only_themes:
+                    light_themes.append(theme)
+            for theme in light_themes:
+                light_themes_model.append(theme)
+            self._cat_light_theme_row.set_model(light_themes_model)
+            self._cat_light_theme_names = light_themes
+
+            current_light = settings.get("cat_light_theme", "solarized-light")
+            try:
+                light_idx = light_themes.index(current_light)
+                self._cat_light_theme_row.set_selected(light_idx)
+            except ValueError:
+                self._cat_light_theme_row.set_selected(0)
+            self._cat_light_theme_row.connect(
+                "notify::selected", self._on_cat_light_theme_changed
+            )
+            cat_group.add(self._cat_light_theme_row)
+
+            # Manual theme selector (legacy, shown when mode is Manual)
+            self._cat_theme_row = Adw.ComboRow(
+                title=_("Manual Theme"),
+                subtitle=_("Single theme to use in manual mode"),
+            )
+            manual_themes_model = Gtk.StringList()
+            for theme in all_themes:
+                manual_themes_model.append(theme)
+            self._cat_theme_row.set_model(manual_themes_model)
+            self._cat_theme_names = all_themes
+
             current_theme = settings.get("pygments_theme", "monokai").lower()
             try:
-                theme_index = theme_names.index(current_theme)
+                theme_index = all_themes.index(current_theme)
                 self._cat_theme_row.set_selected(theme_index)
             except ValueError:
-                self._cat_theme_row.set_selected(0)  # Default to first theme
+                self._cat_theme_row.set_selected(0)
 
             self._cat_theme_row.connect("notify::selected", self._on_cat_theme_changed)
-            self._cat_theme_names = theme_names
             cat_group.add(self._cat_theme_row)
 
-            # Update theme row visibility based on toggle
-            self._cat_theme_row.set_visible(current_enabled)
+            # Update visibility based on current mode and enabled state
+            is_auto_mode = current_mode == "auto"
+            self._cat_theme_mode_row.set_visible(current_enabled)
+            self._cat_dark_theme_row.set_visible(current_enabled and is_auto_mode)
+            self._cat_light_theme_row.set_visible(current_enabled and is_auto_mode)
+            self._cat_theme_row.set_visible(current_enabled and not is_auto_mode)
         else:
             self._cat_theme_row = None
             self._cat_theme_names = []
+            self._cat_theme_mode_row = None
+            self._cat_dark_theme_row = None
+            self._cat_dark_theme_names = []
+            self._cat_light_theme_row = None
+            self._cat_light_theme_names = []
 
             # Show install hint
             install_row = Adw.ActionRow(
@@ -1685,60 +2173,199 @@ class HighlightDialog(Adw.PreferencesWindow):
 
         # Color theme dropdown (only if Pygments is available)
         if pygments_available:
-            self._shell_input_theme_row = Adw.ComboRow(
-                title=_("Color Theme"),
-                subtitle=_("Pygments theme for shell input highlighting"),
+            # Theme Mode selector (auto/manual)
+            self._theme_mode_row = Adw.ComboRow(
+                title=_("Theme Mode"),
+                subtitle=_("Auto detects background, Manual uses selected theme"),
             )
+            mode_model = Gtk.StringList()
+            mode_model.append(_("Auto"))
+            mode_model.append(_("Manual"))
+            self._theme_mode_row.set_model(mode_model)
+
+            current_mode = settings.get("shell_input_theme_mode", "auto")
+            self._theme_mode_row.set_selected(0 if current_mode == "auto" else 1)
+            self._theme_mode_row.connect(
+                "notify::selected", self._on_shell_input_mode_changed
+            )
+            shell_input_group.add(self._theme_mode_row)
 
             # Get available Pygments styles
             from pygments.styles import get_all_styles
 
-            themes = Gtk.StringList()
-            theme_names = sorted(list(get_all_styles()))
+            all_themes = sorted(list(get_all_styles()))
 
-            # Put common ones first
-            preferred = [
-                "monokai",
+            # Dark themes (background luminance <= 0.5) - based on actual Pygments style analysis
+            dark_only_themes = [
+                "a11y-dark",
+                "a11y-high-contrast-dark",
+                "blinds-dark",
+                "coffee",
                 "dracula",
-                "nord",
+                "fruity",
+                "github-dark",
+                "github-dark-colorblind",
+                "github-dark-high-contrast",
+                "gotthard-dark",
+                "greative",
                 "gruvbox-dark",
+                "inkpot",
+                "lightbulb",
+                "material",
+                "monokai",
+                "native",
+                "nord",
+                "nord-darker",
                 "one-dark",
+                "paraiso-dark",
+                "pitaya-smoothie",
+                "rrt",
                 "solarized-dark",
+                "stata-dark",
+                "vim",
+                "zenburn",
             ]
-            ordered_themes = []
-            for theme in preferred:
-                if theme in theme_names:
-                    ordered_themes.append(theme)
-                    theme_names.remove(theme)
-            ordered_themes.extend(theme_names)
-            theme_names = ordered_themes
 
-            for theme in theme_names:
-                themes.append(theme)
+            # Light themes (background luminance > 0.5) - based on actual Pygments style analysis
+            light_only_themes = [
+                "a11y-high-contrast-light",
+                "a11y-light",
+                "abap",
+                "algol",
+                "algol_nu",
+                "arduino",
+                "autumn",
+                "blinds-light",
+                "borland",
+                "bw",
+                "colorful",
+                "default",
+                "emacs",
+                "friendly",
+                "friendly_grayscale",
+                "github-light",
+                "github-light-colorblind",
+                "github-light-high-contrast",
+                "gotthard-light",
+                "gruvbox-light",
+                "igor",
+                "lilypond",
+                "lovelace",
+                "manni",
+                "murphy",
+                "paraiso-light",
+                "pastie",
+                "perldoc",
+                "rainbow_dash",
+                "sas",
+                "solarized-light",
+                "staroffice",
+                "stata-light",
+                "tango",
+                "trac",
+                "vs",
+                "xcode",
+            ]
 
-            self._shell_input_theme_row.set_model(themes)
+            # Dark theme selector - show only dark themes
+            self._dark_theme_row = Adw.ComboRow(
+                title=_("Dark Background Theme"),
+                subtitle=_("Theme used when background is dark"),
+            )
+            dark_themes_model = Gtk.StringList()
+            dark_themes = []
+            # First add known dark themes
+            for theme in dark_only_themes:
+                if theme in all_themes:
+                    dark_themes.append(theme)
+            # Then add any remaining themes not in either list
+            for theme in all_themes:
+                if theme not in dark_themes and theme not in light_only_themes:
+                    dark_themes.append(theme)
+            for theme in dark_themes:
+                dark_themes_model.append(theme)
+            self._dark_theme_row.set_model(dark_themes_model)
+            self._dark_theme_names = dark_themes
 
-            # Set current theme selection
+            current_dark = settings.get("shell_input_dark_theme", "monokai")
+            try:
+                dark_idx = dark_themes.index(current_dark)
+                self._dark_theme_row.set_selected(dark_idx)
+            except ValueError:
+                self._dark_theme_row.set_selected(0)
+            self._dark_theme_row.connect(
+                "notify::selected", self._on_dark_theme_changed
+            )
+            shell_input_group.add(self._dark_theme_row)
+
+            # Light theme selector - show only light themes
+            self._light_theme_row = Adw.ComboRow(
+                title=_("Light Background Theme"),
+                subtitle=_("Theme used when background is light"),
+            )
+            light_themes_model = Gtk.StringList()
+            light_themes = []
+            # First add known light themes
+            for theme in light_only_themes:
+                if theme in all_themes:
+                    light_themes.append(theme)
+            # Then add any remaining themes not in either list
+            for theme in all_themes:
+                if theme not in light_themes and theme not in dark_only_themes:
+                    light_themes.append(theme)
+            for theme in light_themes:
+                light_themes_model.append(theme)
+            self._light_theme_row.set_model(light_themes_model)
+            self._light_theme_names = light_themes
+
+            current_light = settings.get("shell_input_light_theme", "solarized-light")
+            try:
+                light_idx = light_themes.index(current_light)
+                self._light_theme_row.set_selected(light_idx)
+            except ValueError:
+                self._light_theme_row.set_selected(0)
+            self._light_theme_row.connect(
+                "notify::selected", self._on_light_theme_changed
+            )
+            shell_input_group.add(self._light_theme_row)
+
+            # Manual theme selector (legacy, shown when mode is Manual)
+            self._shell_input_theme_row = Adw.ComboRow(
+                title=_("Manual Theme"),
+                subtitle=_("Single theme to use in manual mode"),
+            )
+            manual_themes_model = Gtk.StringList()
+            for theme in all_themes:
+                manual_themes_model.append(theme)
+            self._shell_input_theme_row.set_model(manual_themes_model)
+            self._shell_input_theme_names = all_themes
+
             current_theme = settings.get(
                 "shell_input_pygments_theme", "monokai"
             ).lower()
             try:
-                theme_index = theme_names.index(current_theme)
+                theme_index = all_themes.index(current_theme)
                 self._shell_input_theme_row.set_selected(theme_index)
             except ValueError:
-                self._shell_input_theme_row.set_selected(0)  # Default to first theme
+                self._shell_input_theme_row.set_selected(0)
 
             self._shell_input_theme_row.connect(
                 "notify::selected", self._on_shell_input_theme_changed
             )
-            self._shell_input_theme_names = theme_names
             shell_input_group.add(self._shell_input_theme_row)
 
-            # Update theme row visibility based on toggle
-            self._shell_input_theme_row.set_visible(current_enabled)
+            # Update visibility based on current settings
+            is_auto = current_mode == "auto"
+            self._dark_theme_row.set_visible(current_enabled and is_auto)
+            self._light_theme_row.set_visible(current_enabled and is_auto)
+            self._shell_input_theme_row.set_visible(current_enabled and not is_auto)
+            self._theme_mode_row.set_visible(current_enabled)
         else:
             self._shell_input_theme_row = None
             self._shell_input_theme_names = []
+            self._theme_mode_row = None
+            self._dark_theme_row = None
+            self._light_theme_row = None
 
         # Add a note about experimental feature
         if pygments_available:
@@ -1760,9 +2387,16 @@ class HighlightDialog(Adw.PreferencesWindow):
         settings = get_settings_manager()
         settings.set("shell_input_highlighting_enabled", enabled)
 
-        # Update theme row visibility
+        # Update all related row visibility
+        is_auto = settings.get("shell_input_theme_mode", "auto") == "auto"
+        if self._theme_mode_row:
+            self._theme_mode_row.set_visible(enabled)
+        if self._dark_theme_row:
+            self._dark_theme_row.set_visible(enabled and is_auto)
+        if self._light_theme_row:
+            self._light_theme_row.set_visible(enabled and is_auto)
         if self._shell_input_theme_row:
-            self._shell_input_theme_row.set_visible(enabled)
+            self._shell_input_theme_row.set_visible(enabled and not is_auto)
 
         # Refresh the shell input highlighter
         try:
@@ -1777,8 +2411,80 @@ class HighlightDialog(Adw.PreferencesWindow):
             f"Shell input highlighting {'enabled' if enabled else 'disabled'}"
         )
 
+    def _on_shell_input_mode_changed(self, combo_row: Adw.ComboRow, _pspec) -> None:
+        """Handle theme mode changes (auto/manual)."""
+        idx = combo_row.get_selected()
+        is_auto = idx == 0
+        mode = "auto" if is_auto else "manual"
+
+        settings = get_settings_manager()
+        settings.set("shell_input_theme_mode", mode)
+
+        # Update row visibility
+        if self._dark_theme_row:
+            self._dark_theme_row.set_visible(is_auto)
+        if self._light_theme_row:
+            self._light_theme_row.set_visible(is_auto)
+        if self._shell_input_theme_row:
+            self._shell_input_theme_row.set_visible(not is_auto)
+
+        # Refresh highlighter
+        try:
+            from ...terminal.highlighter import get_shell_input_highlighter
+
+            highlighter = get_shell_input_highlighter()
+            highlighter.refresh_settings()
+        except Exception as e:
+            self.logger.warning(f"Failed to refresh shell input highlighter: {e}")
+
+        self.logger.debug(f"Shell input theme mode changed to: {mode}")
+
+    def _on_dark_theme_changed(self, combo_row: Adw.ComboRow, _pspec) -> None:
+        """Handle dark theme selection changes."""
+        idx = combo_row.get_selected()
+        if idx != Gtk.INVALID_LIST_POSITION and hasattr(self, "_dark_theme_names"):
+            if idx < len(self._dark_theme_names):
+                theme = self._dark_theme_names[idx]
+                settings = get_settings_manager()
+                settings.set("shell_input_dark_theme", theme)
+
+                # Refresh highlighter
+                try:
+                    from ...terminal.highlighter import get_shell_input_highlighter
+
+                    highlighter = get_shell_input_highlighter()
+                    highlighter.refresh_settings()
+                except Exception as e:
+                    self.logger.warning(
+                        f"Failed to refresh shell input highlighter: {e}"
+                    )
+
+                self.logger.debug(f"Shell input dark theme changed to: {theme}")
+
+    def _on_light_theme_changed(self, combo_row: Adw.ComboRow, _pspec) -> None:
+        """Handle light theme selection changes."""
+        idx = combo_row.get_selected()
+        if idx != Gtk.INVALID_LIST_POSITION and hasattr(self, "_light_theme_names"):
+            if idx < len(self._light_theme_names):
+                theme = self._light_theme_names[idx]
+                settings = get_settings_manager()
+                settings.set("shell_input_light_theme", theme)
+
+                # Refresh highlighter
+                try:
+                    from ...terminal.highlighter import get_shell_input_highlighter
+
+                    highlighter = get_shell_input_highlighter()
+                    highlighter.refresh_settings()
+                except Exception as e:
+                    self.logger.warning(
+                        f"Failed to refresh shell input highlighter: {e}"
+                    )
+
+                self.logger.debug(f"Shell input light theme changed to: {theme}")
+
     def _on_shell_input_theme_changed(self, combo_row: Adw.ComboRow, _pspec) -> None:
-        """Handle shell input color theme changes."""
+        """Handle shell input color theme changes (manual mode)."""
         idx = combo_row.get_selected()
         if idx != Gtk.INVALID_LIST_POSITION and hasattr(
             self, "_shell_input_theme_names"
@@ -2182,7 +2888,44 @@ class HighlightDialog(Adw.PreferencesWindow):
         cat_enabled = settings.get("cat_colorization_enabled", True)
         self._cat_colorization_toggle.set_active(cat_enabled)
 
-        if self._cat_theme_row is not None:
+        # Load cat theme mode
+        if self._cat_theme_mode_row is not None:
+            current_mode = settings.get("cat_theme_mode", "auto")
+            self._cat_theme_mode_row.set_selected(0 if current_mode == "auto" else 1)
+            is_auto_mode = current_mode == "auto"
+
+            # Update dark theme selection
+            if self._cat_dark_theme_row is not None:
+                current_dark = settings.get("cat_dark_theme", "monokai")
+                try:
+                    dark_idx = self._cat_dark_theme_names.index(current_dark)
+                    self._cat_dark_theme_row.set_selected(dark_idx)
+                except ValueError:
+                    self._cat_dark_theme_row.set_selected(0)
+                self._cat_dark_theme_row.set_visible(cat_enabled and is_auto_mode)
+
+            # Update light theme selection
+            if self._cat_light_theme_row is not None:
+                current_light = settings.get("cat_light_theme", "solarized-light")
+                try:
+                    light_idx = self._cat_light_theme_names.index(current_light)
+                    self._cat_light_theme_row.set_selected(light_idx)
+                except ValueError:
+                    self._cat_light_theme_row.set_selected(0)
+                self._cat_light_theme_row.set_visible(cat_enabled and is_auto_mode)
+
+            # Update manual theme selection
+            if self._cat_theme_row is not None:
+                current_theme = settings.get("pygments_theme", "monokai").lower()
+                try:
+                    theme_index = self._cat_theme_names.index(current_theme)
+                    self._cat_theme_row.set_selected(theme_index)
+                except ValueError:
+                    self._cat_theme_row.set_selected(0)
+                self._cat_theme_row.set_visible(cat_enabled and not is_auto_mode)
+
+            self._cat_theme_mode_row.set_visible(cat_enabled)
+        elif self._cat_theme_row is not None:
             current_theme = settings.get("pygments_theme", "monokai").lower()
             try:
                 theme_index = self._cat_theme_names.index(current_theme)
@@ -2810,14 +3553,64 @@ class HighlightDialog(Adw.PreferencesWindow):
         settings = get_settings_manager()
         settings.set("cat_colorization_enabled", is_active)
 
-        # Update theme dropdown visibility
-        if self._cat_theme_row is not None:
+        # Update visibility based on mode and enabled state
+        if self._cat_theme_mode_row is not None:
+            self._cat_theme_mode_row.set_visible(is_active)
+            is_auto_mode = self._cat_theme_mode_row.get_selected() == 0
+            if self._cat_dark_theme_row is not None:
+                self._cat_dark_theme_row.set_visible(is_active and is_auto_mode)
+            if self._cat_light_theme_row is not None:
+                self._cat_light_theme_row.set_visible(is_active and is_auto_mode)
+            if self._cat_theme_row is not None:
+                self._cat_theme_row.set_visible(is_active and not is_auto_mode)
+        elif self._cat_theme_row is not None:
             self._cat_theme_row.set_visible(is_active)
 
         self.emit("settings-changed")
 
         status = _("enabled") if is_active else _("disabled")
         self.add_toast(Adw.Toast(title=_('"cat" colorization {}').format(status)))
+
+    def _on_cat_theme_mode_changed(self, combo: Adw.ComboRow, _pspec) -> None:
+        """Handle cat theme mode change (auto/manual)."""
+        selected_index = combo.get_selected()
+        is_auto_mode = selected_index == 0
+        mode = "auto" if is_auto_mode else "manual"
+
+        settings = get_settings_manager()
+        settings.set("cat_theme_mode", mode)
+
+        # Update visibility of theme dropdowns
+        if self._cat_dark_theme_row is not None:
+            self._cat_dark_theme_row.set_visible(is_auto_mode)
+        if self._cat_light_theme_row is not None:
+            self._cat_light_theme_row.set_visible(is_auto_mode)
+        if self._cat_theme_row is not None:
+            self._cat_theme_row.set_visible(not is_auto_mode)
+
+        self.emit("settings-changed")
+        mode_name = _("Auto") if is_auto_mode else _("Manual")
+        self.add_toast(Adw.Toast(title=_("Cat theme mode: {}").format(mode_name)))
+
+    def _on_cat_dark_theme_changed(self, combo: Adw.ComboRow, _pspec) -> None:
+        """Handle cat dark theme selection change."""
+        selected_index = combo.get_selected()
+        if selected_index >= 0 and selected_index < len(self._cat_dark_theme_names):
+            theme = self._cat_dark_theme_names[selected_index]
+            settings = get_settings_manager()
+            settings.set("cat_dark_theme", theme)
+            self.emit("settings-changed")
+            self.add_toast(Adw.Toast(title=_("Dark theme: {}").format(theme)))
+
+    def _on_cat_light_theme_changed(self, combo: Adw.ComboRow, _pspec) -> None:
+        """Handle cat light theme selection change."""
+        selected_index = combo.get_selected()
+        if selected_index >= 0 and selected_index < len(self._cat_light_theme_names):
+            theme = self._cat_light_theme_names[selected_index]
+            settings = get_settings_manager()
+            settings.set("cat_light_theme", theme)
+            self.emit("settings-changed")
+            self.add_toast(Adw.Toast(title=_("Light theme: {}").format(theme)))
 
     def _show_restart_required_dialog(self) -> None:
         """Show a dialog informing user that restart is required for changes to take effect."""

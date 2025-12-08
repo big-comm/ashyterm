@@ -145,6 +145,92 @@ class ProcessSpawner:
         self._spawn_lock = threading.Lock()
         self.logger.info("Process spawner initialized on Linux")
 
+    def _prepare_shell_environment(
+        self, working_directory: Optional[str] = None
+    ) -> Tuple[List[str], Dict[str, str], Optional[str]]:
+        """
+        Prepare the shell environment for local terminal spawning.
+
+        This method handles:
+        - User shell detection
+        - VTE version environment variable
+        - OSC7 integration for directory tracking (zsh via ZDOTDIR, bash via PROMPT_COMMAND)
+        - Login shell configuration
+
+        Args:
+            working_directory: Optional directory to start the shell in.
+
+        Returns:
+            A tuple of (command_list, environment_dict, temp_dir_path).
+            temp_dir_path is the path to the temporary ZDOTDIR for zsh, or None.
+        """
+        shell = Vte.get_user_shell()
+        shell_basename = os.path.basename(shell)
+        temp_dir_path: Optional[str] = None
+
+        env = self.environment_manager.get_terminal_environment()
+        vte_version = (
+            Vte.get_major_version() * 10000
+            + Vte.get_minor_version() * 100
+            + Vte.get_micro_version()
+        )
+        env["VTE_VERSION"] = str(vte_version)
+
+        # OSC7 integration for CWD tracking
+        osc7_command = (
+            f"{OSC7_HOST_DETECTION_SNIPPET} "
+            'printf "\\033]7;file://%s%s\\007" "$ASHYTERM_OSC7_HOST" "$PWD"'
+        )
+
+        if shell_basename == "zsh":
+            try:
+                # Create a temporary directory that we will manage for cleanup
+                temp_dir_path = tempfile.mkdtemp(prefix="ashyterm_zsh_")
+                zshrc_path = os.path.join(temp_dir_path, ".zshrc")
+
+                # This zshrc adds our hook, then sources the user's real .zshrc
+                zshrc_content = (
+                    f"_ashyterm_update_cwd() {{ {osc7_command}; }}\n"
+                    'if [[ -z "$precmd_functions" ]]; then\n'
+                    "  typeset -a precmd_functions\n"
+                    "fi\n"
+                    "precmd_functions+=(_ashyterm_update_cwd)\n"
+                    'if [ -f "$HOME/.zshrc" ]; then . "$HOME/.zshrc"; fi\n'
+                )
+
+                with open(zshrc_path, "w", encoding="utf-8") as f:
+                    f.write(zshrc_content)
+
+                env["ZDOTDIR"] = temp_dir_path
+                self.logger.info(
+                    f"Using temporary ZDOTDIR for zsh OSC7 integration: {temp_dir_path}"
+                )
+
+            except Exception as e:
+                self.logger.error(f"Failed to set up zsh OSC7 integration: {e}")
+                if temp_dir_path:
+                    shutil.rmtree(temp_dir_path, ignore_errors=True)
+                temp_dir_path = None
+        else:  # Bash and other compatible shells
+            existing_prompt_command = env.get("PROMPT_COMMAND", "")
+            if existing_prompt_command:
+                # Prepend our command to ensure it runs, then the user's
+                env["PROMPT_COMMAND"] = f"{osc7_command};{existing_prompt_command}"
+            else:
+                env["PROMPT_COMMAND"] = osc7_command
+            self.logger.info(
+                "Injected PROMPT_COMMAND for bash/compatible shell OSC7 integration."
+            )
+
+        # Build command based on login shell preference
+        if self.settings_manager.get("use_login_shell", False):
+            cmd = [shell, "-l"]
+            self.logger.info(f"Spawning '{shell} -l' as a login shell.")
+        else:
+            cmd = [shell]
+
+        return cmd, env, temp_dir_path
+
     def _get_ssh_control_path(self, session: "SessionItem") -> str:
         user = session.user or os.getlogin()
         port = session.port or 22
@@ -162,10 +248,6 @@ class ProcessSpawner:
     ) -> None:
         """Spawn a local terminal session. Raises TerminalCreationError on setup failure."""
         with self._spawn_lock:
-            shell = Vte.get_user_shell()
-            shell_basename = os.path.basename(shell)
-            temp_dir_path_for_zsh = None
-
             working_dir = self._resolve_and_validate_working_directory(
                 working_directory
             )
@@ -174,72 +256,14 @@ class ProcessSpawner:
                     f"Invalid working directory '{working_directory}', using home directory."
                 )
 
-            env = self.environment_manager.get_terminal_environment()
-            vte_version = (
-                Vte.get_major_version() * 10000
-                + Vte.get_minor_version() * 100
-                + Vte.get_micro_version()
-            )
-            env["VTE_VERSION"] = str(vte_version)
-
-            # OSC7 integration for CWD tracking
-            osc7_command = (
-                f"{OSC7_HOST_DETECTION_SNIPPET} "
-                'printf "\\033]7;file://%s%s\\007" "$ASHYTERM_OSC7_HOST" "$PWD"'
-            )
-
-            if shell_basename == "zsh":
-                try:
-                    # Create a temporary directory that we will manage for cleanup
-                    temp_dir_path_for_zsh = tempfile.mkdtemp(prefix="ashyterm_zsh_")
-                    zshrc_path = os.path.join(temp_dir_path_for_zsh, ".zshrc")
-
-                    # This zshrc adds our hook, then sources the user's real .zshrc
-                    zshrc_content = (
-                        f"_ashyterm_update_cwd() {{ {osc7_command}; }}\n"
-                        'if [[ -z "$precmd_functions" ]]; then\n'
-                        "  typeset -a precmd_functions\n"
-                        "fi\n"
-                        "precmd_functions+=(_ashyterm_update_cwd)\n"
-                        'if [ -f "$HOME/.zshrc" ]; then . "$HOME/.zshrc"; fi\n'
-                    )
-
-                    with open(zshrc_path, "w", encoding="utf-8") as f:
-                        f.write(zshrc_content)
-
-                    env["ZDOTDIR"] = temp_dir_path_for_zsh
-                    self.logger.info(
-                        f"Using temporary ZDOTDIR for zsh OSC7 integration: {temp_dir_path_for_zsh}"
-                    )
-
-                except Exception as e:
-                    self.logger.error(f"Failed to set up zsh OSC7 integration: {e}")
-                    if temp_dir_path_for_zsh:
-                        shutil.rmtree(temp_dir_path_for_zsh, ignore_errors=True)
-                    temp_dir_path_for_zsh = None  # Ensure it's not registered
-            else:  # Bash and other compatible shells
-                existing_prompt_command = env.get("PROMPT_COMMAND", "")
-                if existing_prompt_command:
-                    # Prepend our command to ensure it runs, then the user's
-                    env["PROMPT_COMMAND"] = f"{osc7_command};{existing_prompt_command}"
-                else:
-                    env["PROMPT_COMMAND"] = osc7_command
-                self.logger.info(
-                    "Injected PROMPT_COMMAND for bash/compatible shell OSC7 integration."
-                )
-
-            if self.settings_manager.get("use_login_shell", False):
-                cmd = [shell, "-l"]
-                self.logger.info(f"Spawning '{shell} -l' as a login shell.")
-            else:
-                cmd = [shell]
-
+            # Use centralized shell environment preparation
+            cmd, env, temp_dir_path = self._prepare_shell_environment(working_directory)
             env_list = [f"{k}={v}" for k, v in env.items()]
 
             # Wrap user_data to include the temp dir path for zsh cleanup
             final_user_data = {
                 "original_user_data": user_data,
-                "temp_dir_path": temp_dir_path_for_zsh,
+                "temp_dir_path": temp_dir_path,
             }
 
             terminal.spawn_async(
@@ -405,10 +429,6 @@ class ProcessSpawner:
         from .highlighter import HighlightedTerminalProxy
 
         with self._spawn_lock:
-            shell = Vte.get_user_shell()
-            shell_basename = os.path.basename(shell)
-            temp_dir_path_for_zsh = None
-
             working_dir = self._resolve_and_validate_working_directory(
                 working_directory
             )
@@ -419,51 +439,8 @@ class ProcessSpawner:
             if not working_dir:
                 working_dir = str(self.platform_info.home_dir)
 
-            env = self.environment_manager.get_terminal_environment()
-            vte_version = (
-                Vte.get_major_version() * 10000
-                + Vte.get_minor_version() * 100
-                + Vte.get_micro_version()
-            )
-            env["VTE_VERSION"] = str(vte_version)
-
-            # OSC7 integration
-            osc7_command = (
-                f"{OSC7_HOST_DETECTION_SNIPPET} "
-                'printf "\\033]7;file://%s%s\\007" "$ASHYTERM_OSC7_HOST" "$PWD"'
-            )
-
-            if shell_basename == "zsh":
-                try:
-                    temp_dir_path_for_zsh = tempfile.mkdtemp(prefix="ashyterm_zsh_")
-                    zshrc_path = os.path.join(temp_dir_path_for_zsh, ".zshrc")
-                    zshrc_content = (
-                        f"_ashyterm_update_cwd() {{ {osc7_command}; }}\n"
-                        'if [[ -z "$precmd_functions" ]]; then\n'
-                        "  typeset -a precmd_functions\n"
-                        "fi\n"
-                        "precmd_functions+=(_ashyterm_update_cwd)\n"
-                        'if [ -f "$HOME/.zshrc" ]; then . "$HOME/.zshrc"; fi\n'
-                    )
-                    with open(zshrc_path, "w", encoding="utf-8") as f:
-                        f.write(zshrc_content)
-                    env["ZDOTDIR"] = temp_dir_path_for_zsh
-                except Exception as e:
-                    self.logger.error(f"Failed to set up zsh OSC7 integration: {e}")
-                    if temp_dir_path_for_zsh:
-                        shutil.rmtree(temp_dir_path_for_zsh, ignore_errors=True)
-                    temp_dir_path_for_zsh = None
-            else:
-                existing_prompt_command = env.get("PROMPT_COMMAND", "")
-                if existing_prompt_command:
-                    env["PROMPT_COMMAND"] = f"{osc7_command};{existing_prompt_command}"
-                else:
-                    env["PROMPT_COMMAND"] = osc7_command
-
-            if self.settings_manager.get("use_login_shell", False):
-                cmd = [shell, "-l"]
-            else:
-                cmd = [shell]
+            # Use centralized shell environment preparation
+            cmd, env, temp_dir_path = self._prepare_shell_environment(working_directory)
 
             proxy = HighlightedTerminalProxy(terminal, "local", proxy_id=terminal_id)
 
@@ -479,8 +456,6 @@ class ProcessSpawner:
                     # Child process
                     try:
                         os.setsid()
-                        import fcntl
-
                         fcntl.ioctl(slave_fd, termios.TIOCSCTTY, 0)
 
                         os.dup2(slave_fd, 0)
@@ -510,7 +485,7 @@ class ProcessSpawner:
                         "name": str(user_data) if user_data else "Terminal",
                         "type": "local",
                         "terminal": terminal,
-                        "temp_dir_path": temp_dir_path_for_zsh,
+                        "temp_dir_path": temp_dir_path,
                         "highlight_proxy": proxy,
                     }
                     self.process_tracker.register_process(pid, process_info)
@@ -518,7 +493,7 @@ class ProcessSpawner:
                     if callback:
                         final_user_data = {
                             "original_user_data": user_data,
-                            "temp_dir_path": temp_dir_path_for_zsh,
+                            "temp_dir_path": temp_dir_path,
                         }
                         GLib.idle_add(callback, terminal, pid, None, (final_user_data,))
 
@@ -544,7 +519,7 @@ class ProcessSpawner:
                     )
                     final_user_data = {
                         "original_user_data": user_data,
-                        "temp_dir_path": temp_dir_path_for_zsh,
+                        "temp_dir_path": temp_dir_path,
                     }
                     GLib.idle_add(callback, terminal, -1, error, (final_user_data,))
                 return None
@@ -943,13 +918,24 @@ class ProcessSpawner:
                 self.logger.warning("sshpass not available for password authentication")
         return cmd
 
-    def _default_spawn_callback(
+    def _generic_spawn_callback(
         self,
         terminal: Vte.Terminal,
         pid: int,
         error: Optional[GLib.Error],
         user_data: Any = None,
+        spawn_type: str = "local",
     ) -> None:
+        """
+        Generic spawn callback for both local and SSH terminals.
+
+        Args:
+            terminal: The VTE terminal widget
+            pid: Process ID of spawned process
+            error: GLib.Error if spawn failed, None otherwise
+            user_data: User data containing original_user_data and temp_dir_path
+            spawn_type: Type of spawn - "local" or "ssh"
+        """
         try:
             final_user_data = (
                 user_data[0] if isinstance(user_data, tuple) else user_data
@@ -957,37 +943,78 @@ class ProcessSpawner:
             original_user_data = final_user_data.get("original_user_data")
             temp_dir_path = final_user_data.get("temp_dir_path")
 
-            terminal_name = (
-                str(original_user_data[0])
-                if isinstance(original_user_data, tuple) and original_user_data
-                else "Terminal"
-            )
+            # Extract name based on spawn type
+            if spawn_type == "ssh":
+                actual_data = (
+                    original_user_data[0]
+                    if isinstance(original_user_data, tuple) and original_user_data
+                    else original_user_data
+                )
+                name = getattr(actual_data, "name", "SSH Session")
+            else:
+                actual_data = None
+                name = (
+                    str(original_user_data[0])
+                    if isinstance(original_user_data, tuple) and original_user_data
+                    else "Terminal"
+                )
+
             if error:
-                self.logger.error(
-                    f"Process spawn failed for {terminal_name}: {error.message}"
+                event_type = (
+                    f"{spawn_type}_spawn_failed"
+                    if spawn_type == "ssh"
+                    else "spawn_failed"
                 )
-                log_terminal_event(
-                    "spawn_failed", terminal_name, f"error: {error.message}"
-                )
-                error_msg = f"\nFailed to start {terminal_name}:\nError: {error.message}\nPlease check your system configuration.\n\n"
+                self.logger.error(f"Process spawn failed for {name}: {error.message}")
+                log_terminal_event(event_type, name, f"error: {error.message}")
+
+                # Build error message based on spawn type
+                if spawn_type == "ssh" and actual_data:
+                    error_guidance = self._get_ssh_error_guidance(error.message)
+                    connection_str = getattr(
+                        actual_data, "get_connection_string", lambda: "unknown"
+                    )()
+                    error_msg = f"\nSSH Connection Failed:\nSession: {name}\nHost: {connection_str}\nError: {error.message}\n"
+                    if error_guidance:
+                        error_msg += f"Suggestion: {error_guidance}\n"
+                    error_msg += "\n"
+                else:
+                    error_msg = f"\nFailed to start {name}:\nError: {error.message}\nPlease check your system configuration.\n\n"
+
                 if terminal.get_realized():
                     terminal.feed(error_msg.encode("utf-8"))
             else:
                 self.logger.info(
-                    f"Process spawned successfully for {terminal_name} with PID {pid}"
+                    f"Process spawned successfully for {name} with PID {pid}"
                 )
-                log_terminal_event("spawned", terminal_name, f"PID {pid}")
+                log_terminal_event("spawned", name, f"PID {pid}")
+
                 if pid > 0:
                     process_info = {
-                        "name": terminal_name,
-                        "type": "local",
+                        "name": name,
+                        "type": spawn_type,
                         "terminal": terminal,
                     }
                     if temp_dir_path:
                         process_info["temp_dir_path"] = temp_dir_path
+                    if spawn_type == "ssh" and actual_data:
+                        process_info["session"] = actual_data
                     self.process_tracker.register_process(pid, process_info)
+
         except Exception as e:
             self.logger.error(f"Spawn callback handling failed: {e}")
+
+    def _default_spawn_callback(
+        self,
+        terminal: Vte.Terminal,
+        pid: int,
+        error: Optional[GLib.Error],
+        user_data: Any = None,
+    ) -> None:
+        """Spawn callback for local terminals."""
+        self._generic_spawn_callback(
+            terminal, pid, error, user_data, spawn_type="local"
+        )
 
     def _ssh_spawn_callback(
         self,
@@ -996,47 +1023,8 @@ class ProcessSpawner:
         error: Optional[GLib.Error],
         user_data: Any = None,
     ) -> None:
-        try:
-            final_user_data = (
-                user_data[0] if isinstance(user_data, tuple) else user_data
-            )
-            original_user_data = final_user_data.get("original_user_data")
-            actual_data = (
-                original_user_data[0]
-                if isinstance(original_user_data, tuple) and original_user_data
-                else original_user_data
-            )
-            session_name = getattr(actual_data, "name", "SSH Session")
-            if error:
-                self.logger.error(
-                    f"SSH spawn failed for {session_name}: {error.message}"
-                )
-                log_terminal_event(
-                    "ssh_spawn_failed", session_name, f"error: {error.message}"
-                )
-                error_guidance = self._get_ssh_error_guidance(error.message)
-                error_msg = f"\nSSH Connection Failed:\nSession: {session_name}\nHost: {getattr(actual_data, 'get_connection_string', lambda: 'unknown')()}\nError: {error.message}\n"
-                if error_guidance:
-                    error_msg += f"Suggestion: {error_guidance}\n"
-                error_msg += "\n"
-                if terminal.get_realized():
-                    terminal.feed(error_msg.encode("utf-8"))
-            else:
-                self.logger.info(
-                    f"SSH process spawned successfully for {session_name} with PID {pid}"
-                )
-                if pid > 0:
-                    self.process_tracker.register_process(
-                        pid,
-                        {
-                            "name": session_name,
-                            "type": "ssh",
-                            "terminal": terminal,
-                            "session": actual_data,
-                        },
-                    )
-        except Exception as e:
-            self.logger.error(f"SSH spawn callback handling failed: {e}")
+        """Spawn callback for SSH terminals."""
+        self._generic_spawn_callback(terminal, pid, error, user_data, spawn_type="ssh")
 
     def _get_ssh_error_guidance(self, error_message: str) -> str:
         error_lower = error_message.lower()

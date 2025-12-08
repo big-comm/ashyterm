@@ -9,7 +9,6 @@ from gi.repository import Adw, GObject, Gtk
 from ...settings.manager import SettingsManager
 from ...utils.logger import get_logger
 from ...utils.translation_utils import _
-from ..color_scheme_dialog import ColorSchemeDialog
 
 
 class PreferencesDialog(Adw.PreferencesWindow):
@@ -76,19 +75,6 @@ class PreferencesDialog(Adw.PreferencesWindow):
             title=_("Appearance"), icon_name="preferences-desktop-display-symbolic"
         )
         self.add(page)
-
-        palette_group = Adw.PreferencesGroup()
-        page.add(palette_group)
-
-        self.color_scheme_row = Adw.ActionRow(title=_("Color Scheme"))
-        self._update_color_scheme_row_subtitle()
-
-        manage_button = Gtk.Button(label=_("Manage Schemes..."))
-        manage_button.set_valign(Gtk.Align.CENTER)
-        manage_button.connect("clicked", self._on_manage_schemes_clicked)
-        self.color_scheme_row.add_suffix(manage_button)
-        self.color_scheme_row.set_activatable_widget(manage_button)
-        palette_group.add(self.color_scheme_row)
 
         font_group = Adw.PreferencesGroup()
         page.add(font_group)
@@ -555,20 +541,6 @@ class PreferencesDialog(Adw.PreferencesWindow):
         reset_row.add_suffix(reset_button)
         reset_row.set_activatable_widget(reset_button)
         reset_group.add(reset_row)
-
-    def _update_color_scheme_row_subtitle(self):
-        scheme_data = self.settings_manager.get_color_scheme_data()
-        self.color_scheme_row.set_subtitle(scheme_data.get("name", "Unknown"))
-
-    def _on_manage_schemes_clicked(self, button):
-        main_window = self.get_transient_for()
-        dialog = ColorSchemeDialog(self, self.settings_manager, main_window)
-        if main_window and hasattr(main_window, "terminal_manager"):
-            dialog.connect("scheme-changed", main_window._on_color_scheme_changed)
-        dialog.connect(
-            "close-request", lambda _win: self._update_color_scheme_row_subtitle()
-        )
-        dialog.present()
 
     def _on_font_changed(self, font_button) -> None:
         font = font_button.get_font()

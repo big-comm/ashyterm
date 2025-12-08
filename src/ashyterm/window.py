@@ -21,6 +21,7 @@ from .terminal.manager import TerminalManager
 from .terminal.tabs import TabManager
 from .ui.actions import WindowActions
 from .ui.sidebar_manager import SidebarManager
+from .utils.syntax_utils import get_bash_pango_markup
 from .ui.window_ui import WindowUIBuilder
 from .utils.exceptions import UIError
 from .utils.icons import icon_image
@@ -48,7 +49,7 @@ class CommTerminalWindow(Adw.ApplicationWindow):
         self._force_closing = False
         self.layouts: List[LayoutItem] = []
         self.active_temp_files = weakref.WeakKeyDictionary()
-        self.command_guide_dialog = None  # MODIFIED: For singleton dialog
+        self.command_manager_dialog = None  # For Command Manager dialog
 
         # Search state tracking
         self.current_search_terminal = None
@@ -174,6 +175,9 @@ class CommTerminalWindow(Adw.ApplicationWindow):
         # Apply settings to all terminals, which handles terminal transparency.
         self.terminal_manager.apply_settings_to_all_terminals()
 
+        # Update tooltip colors based on current theme
+        self._update_tooltip_colors()
+
     def _create_managers_and_ui(self) -> None:
         """
         Centralize Component Creation and UI Building.
@@ -229,7 +233,6 @@ class CommTerminalWindow(Adw.ApplicationWindow):
         self.sidebar_popover = self.ui_builder.sidebar_popover
         self.toggle_sidebar_button = self.ui_builder.toggle_sidebar_button
         self.file_manager_button = self.ui_builder.file_manager_button
-        self.command_guide_button = self.ui_builder.command_guide_button
         self.cleanup_button = self.ui_builder.cleanup_button
         self.cleanup_popover = self.ui_builder.cleanup_popover
         self.font_sizer_widget = self.ui_builder.font_sizer_widget
@@ -252,6 +255,7 @@ class CommTerminalWindow(Adw.ApplicationWindow):
         self.search_occurrence_label = self.ui_builder.search_occurrence_label
         self.case_sensitive_switch = self.ui_builder.case_sensitive_switch
         self.regex_switch = self.ui_builder.regex_switch
+        self.command_toolbar = self.ui_builder.command_toolbar
         self.tab_manager.scrolled_tab_bar = self.scrolled_tab_bar
 
         # Apply initial headerbar transparency
@@ -666,14 +670,16 @@ class CommTerminalWindow(Adw.ApplicationWindow):
                     hexpand=True,
                 )
 
+                # Apply syntax highlighting to command
+                highlighted_cmd = get_bash_pango_markup(command_text)
                 command_label = Gtk.Label(
-                    label=command_text,
+                    label=f"<tt>{highlighted_cmd}</tt>",
+                    use_markup=True,
                     halign=Gtk.Align.START,
                     hexpand=True,
                     wrap=True,
                     wrap_mode=Pango.WrapMode.WORD_CHAR,
                 )
-                command_label.add_css_class("monospace")
                 info_box.append(command_label)
 
                 if description:
@@ -769,6 +775,9 @@ class CommTerminalWindow(Adw.ApplicationWindow):
             # Always re-apply headerbar transparency as the base theme might have changed
             self.settings_manager.apply_headerbar_transparency(self.header_bar)
 
+            # Update tooltip colors for terminal theme
+            self._update_tooltip_colors()
+
         elif key == "auto_hide_sidebar":
             self.sidebar_manager.handle_auto_hide_change(new_value)
         elif key == "tab_alignment":
@@ -796,16 +805,34 @@ class CommTerminalWindow(Adw.ApplicationWindow):
                 and self.settings_manager.get("gtk_theme") == "terminal"
             ):
                 self.settings_manager.apply_gtk_terminal_theme(self)
+                # Update tooltip colors when color scheme changes with terminal theme
+                self._update_tooltip_colors()
             if key in ["transparency", "headerbar_transparency"]:
                 self._update_file_manager_transparency()
             if self.font_sizer_widget and key == "font":
                 self.font_sizer_widget.update_display()
+
+    def _update_tooltip_colors(self):
+        """Update tooltip colors based on current theme settings."""
+        from .utils.tooltip_helper import get_tooltip_helper
+
+        tooltip_helper = get_tooltip_helper()
+        tooltip_helper.update_colors(use_terminal_theme=True)
 
     def _on_color_scheme_changed(self, dialog, idx):
         """Handle color scheme changes from the dialog."""
         self.terminal_manager.apply_settings_to_all_terminals()
         if self.settings_manager.get("gtk_theme") == "terminal":
             self.settings_manager.apply_gtk_terminal_theme(self)
+
+        # Refresh shell input highlighter to use new color scheme palette
+        try:
+            from .terminal.highlighter import get_shell_input_highlighter
+
+            highlighter = get_shell_input_highlighter()
+            highlighter.refresh_settings()
+        except Exception as e:
+            self.logger.warning(f"Failed to refresh shell input highlighter: {e}")
 
     def _on_session_activated(self, session: SessionItem) -> None:
         is_valid, errors = validate_session_data(session.to_dict())
@@ -1022,12 +1049,17 @@ class CommTerminalWindow(Adw.ApplicationWindow):
             close_response="cancel",
         )
 
-        # Display the command for the user to review
+        # Display the command for the user to review with syntax highlighting
+        highlighted_cmd = get_bash_pango_markup(command)
         command_label = Gtk.Label(
-            label=f"<tt>{GLib.markup_escape_text(command)}</tt>",
+            label=f"<tt>{highlighted_cmd}</tt>",
             use_markup=True,
             css_classes=["card"],
             halign=Gtk.Align.CENTER,
+            margin_start=8,
+            margin_end=8,
+            margin_top=6,
+            margin_bottom=6,
         )
 
         instructions_label = Gtk.Label(
@@ -1801,36 +1833,63 @@ class CommTerminalWindow(Adw.ApplicationWindow):
 
         return Gdk.EVENT_STOP
 
-    def _show_command_guide_dialog(self):
-        """Creates and shows the command guide dialog, or closes it if already visible."""
-        if self.command_guide_dialog is None:
+    def _show_command_manager_dialog(self):
+        """Creates and shows the Command Manager dialog, or closes it if already visible."""
+        if self.command_manager_dialog is None:
             # Lazy import - only load when the dialog is first opened
-            from .ui.dialogs.command_guide_dialog import CommandGuideDialog
-            self.command_guide_dialog = CommandGuideDialog(self)
-            self.command_guide_dialog.connect(
-                "command-selected", self._on_command_selected_from_guide
-            )
-        if self.command_guide_dialog.get_visible():
-            self.command_guide_dialog.close()
-        else:
-            self.command_guide_dialog.present()
+            from .ui.dialogs.command_manager_dialog import CommandManagerDialog
 
-    def _on_command_selected_from_guide(self, dialog, command_text):
-        """Callback for when a command is selected from the guide."""
+            self.command_manager_dialog = CommandManagerDialog(
+                self, self.settings_manager
+            )
+            self.command_manager_dialog.connect(
+                "command-selected", self._on_command_selected_from_manager
+            )
+        if self.command_manager_dialog.get_visible():
+            self.command_manager_dialog.close()
+        else:
+            self.command_manager_dialog.present()
+
+    def _on_command_selected_from_manager(
+        self, dialog, command_text: str, execute: bool
+    ):
+        """Callback for when a command is selected from the Command Manager."""
         terminal = self.tab_manager.get_selected_terminal()
         if terminal:
-            # Use bracketed paste to insert command without auto-executing
-            if "\n" in command_text:
-                command_text += "\n"
-            paste_data = b"\x1b[200~" + command_text.encode("utf-8") + b"\x1b[201~"
-            terminal.feed_child(paste_data)
-            # Clear selection after pasting
-            terminal.feed_child(b"\x1b[C")  # Right arrow to deselect
+            if execute:
+                # Execute the command (add newline)
+                command_bytes = command_text.encode("utf-8") + b"\n"
+                terminal.feed_child(command_bytes)
+            else:
+                # Use bracketed paste to insert command without auto-executing
+                paste_data = b"\x1b[200~" + command_text.encode("utf-8") + b"\x1b[201~"
+                terminal.feed_child(paste_data)
             terminal.grab_focus()
         else:
             self.toast_overlay.add_toast(
                 Adw.Toast(title=_("No active terminal to send command to."))
             )
+
+    def _broadcast_command_to_all(self, command_text: str):
+        """Send a command to all open terminals."""
+        all_terminals = self.tab_manager.get_all_terminals_across_tabs()
+        if not all_terminals:
+            self.toast_overlay.add_toast(Adw.Toast(title=_("No open terminals found.")))
+            return
+
+        command_bytes = command_text.encode("utf-8")
+        # If command doesn't end with newline and doesn't contain one, just insert it
+        if not command_text.endswith("\n"):
+            # Use bracketed paste for insertion without execution
+            for terminal in all_terminals:
+                paste_data = b"\x1b[200~" + command_bytes + b"\x1b[201~"
+                terminal.feed_child(paste_data)
+        else:
+            # Execute on all terminals
+            for terminal in all_terminals:
+                terminal.feed_child(command_bytes)
+
+        self.logger.info(f"Broadcasted command to {len(all_terminals)} terminals.")
 
     def move_layout(self, layout_name: str, old_folder: str, new_folder: str) -> None:
         """Delegate layout move operation to state manager.
@@ -1841,3 +1900,74 @@ class CommTerminalWindow(Adw.ApplicationWindow):
             new_folder: Target folder path for the layout.
         """
         self.state_manager.move_layout(layout_name, old_folder, new_folder)
+
+    # ─── Command Toolbar Methods ────────────────────────────────────────────
+
+    def refresh_command_toolbar(self) -> None:
+        """Refresh the command toolbar with current pinned commands."""
+        if hasattr(self.ui_builder, "_populate_command_toolbar"):
+            self.ui_builder._populate_command_toolbar(self.ui_builder._toolbar_inner)
+
+    def execute_toolbar_command(self, command) -> None:
+        """Execute a command from the toolbar.
+
+        Args:
+            command: CommandButton object to execute.
+        """
+        from .data.command_manager_models import ExecutionMode
+        from .ui.dialogs.command_manager_dialog import CommandFormDialog
+
+        terminal = self.tab_manager.get_selected_terminal()
+
+        if command.execution_mode == ExecutionMode.SHOW_DIALOG:
+            # Show form dialog first
+            dialog = CommandFormDialog(
+                self, command, send_to_all=False, settings_manager=self.settings_manager
+            )
+            dialog.connect("command-ready", self._on_toolbar_form_command_ready)
+            dialog.present()
+        else:
+            # Build command directly
+            cmd_text = command.command_template
+            execute = command.execution_mode == ExecutionMode.INSERT_AND_EXECUTE
+
+            if terminal:
+                if execute:
+                    command_bytes = cmd_text.encode("utf-8") + b"\n"
+                    terminal.feed_child(command_bytes)
+                else:
+                    paste_data = b"\x1b[200~" + cmd_text.encode("utf-8") + b"\x1b[201~"
+                    terminal.feed_child(paste_data)
+                terminal.grab_focus()
+            else:
+                self.toast_overlay.add_toast(
+                    Adw.Toast(title=_("No active terminal to send command to."))
+                )
+
+    def _on_toolbar_form_command_ready(
+        self, dialog, command: str, execute: bool, send_to_all: bool
+    ):
+        """Handle command ready from toolbar form dialog."""
+        if send_to_all:
+            all_terminals = self.tab_manager.get_all_terminals_across_tabs()
+            for terminal in all_terminals:
+                if execute:
+                    terminal.feed_child(command.encode("utf-8") + b"\n")
+                else:
+                    paste_data = b"\x1b[200~" + command.encode("utf-8") + b"\x1b[201~"
+                    terminal.feed_child(paste_data)
+            if all_terminals:
+                all_terminals[-1].grab_focus()
+        else:
+            terminal = self.tab_manager.get_selected_terminal()
+            if terminal:
+                if execute:
+                    terminal.feed_child(command.encode("utf-8") + b"\n")
+                else:
+                    paste_data = b"\x1b[200~" + command.encode("utf-8") + b"\x1b[201~"
+                    terminal.feed_child(paste_data)
+                terminal.grab_focus()
+            else:
+                self.toast_overlay.add_toast(
+                    Adw.Toast(title=_("No active terminal to send command to."))
+                )

@@ -9,6 +9,7 @@ gi.require_version("Adw", "1")
 gi.require_version("Gdk", "4.0")
 from gi.repository import Gdk, Gio, GLib, GObject, Graphene, Gtk
 
+from ..core.signals import AppSignals
 from ..helpers import create_themed_popover_menu
 # Lazy imports for menus - only loaded when context menus are actually needed
 # from ..ui.menus import create_folder_menu, create_root_menu, create_session_menu
@@ -102,6 +103,17 @@ class SessionTreeView:
         self.on_session_activated: Optional[Callable[[SessionItem], None]] = None
         self.on_layout_activated: Optional[Callable[[str], None]] = None
         self.on_folder_expansion_changed: Optional[Callable[[], None]] = None
+
+        # Subscribe to AppSignals for decoupled updates
+        signals = AppSignals.get()
+        signals.connect("session-created", self._on_session_signal)
+        signals.connect("session-updated", self._on_session_signal)
+        signals.connect("session-deleted", self._on_session_signal)
+        signals.connect("folder-created", self._on_folder_signal)
+        signals.connect("folder-updated", self._on_folder_signal)
+        signals.connect("folder-deleted", self._on_folder_signal)
+        signals.connect("request-tree-refresh", self._on_request_tree_refresh)
+
         self.refresh_tree()
         self.logger.info("SessionTreeView (ColumnView) initialized")
 
@@ -591,6 +603,18 @@ class SessionTreeView:
             self.root_store.append(item)
 
         GLib.idle_add(self._apply_expansion_state)
+
+    def _on_session_signal(self, signals, data):
+        """Handle session-related signals from AppSignals."""
+        self.refresh_tree()
+
+    def _on_folder_signal(self, signals, data):
+        """Handle folder-related signals from AppSignals."""
+        self.refresh_tree()
+
+    def _on_request_tree_refresh(self, signals):
+        """Handle explicit tree refresh request."""
+        self.refresh_tree()
 
     def _populate_folder_children(self, folder: SessionFolder):
         """Populates the children of a specific folder on-demand."""

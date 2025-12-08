@@ -26,7 +26,7 @@ from .settings.config import (
     SESSIONS_FILE,
     SETTINGS_FILE,
 )
-from .settings.manager import SettingsManager
+from .settings.manager import SettingsManager, get_settings_manager
 # Lazy import: from .terminal.spawner import cleanup_spawner  # Only needed at shutdown
 from .utils.exceptions import handle_exception
 from .utils.logger import enable_debug_mode, get_logger, log_app_shutdown, log_app_start
@@ -100,7 +100,7 @@ class CommTerminalApp(Adw.Application):
         """Initialize all application subsystems."""
         try:
             self.logger.info("Initializing application subsystems")
-            self.settings_manager = SettingsManager()
+            self.settings_manager = get_settings_manager()
             theme = self.settings_manager.get("gtk_theme", "dark")
             style_manager = Adw.StyleManager.get_default()
 
@@ -249,7 +249,7 @@ class CommTerminalApp(Adw.Application):
                 "toggle-sidebar",
                 "toggle-file-manager",
                 "toggle-search",
-                "show-command-guide",
+                "show-command-manager",
                 "new-window",
                 "zoom-in",
                 "zoom-out",
@@ -724,7 +724,16 @@ class CommTerminalApp(Adw.Application):
         self.logger.info("Application shutdown initiated")
         # Lazy import - only needed at shutdown
         from .terminal.spawner import cleanup_spawner
+        from .core.tasks import AsyncTaskManager
+
         cleanup_spawner()
+
+        # Shutdown global task manager to terminate all background threads
+        try:
+            AsyncTaskManager.get().shutdown(wait=False)
+        except Exception as e:
+            self.logger.error(f"Error shutting down AsyncTaskManager: {e}")
+
         self._shutdown_gracefully()
 
     def _shutdown_gracefully(self) -> None:

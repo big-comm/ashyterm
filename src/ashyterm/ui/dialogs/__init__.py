@@ -1,5 +1,5 @@
 from .base_dialog import BaseDialog
-from .command_guide_dialog import CommandGuideDialog
+from .command_manager_dialog import CommandManagerDialog
 from .folder_edit_dialog import FolderEditDialog
 from .highlight_dialog import HighlightDialog, RuleEditDialog
 from .move_dialogs import MoveLayoutDialog, MoveSessionDialog
@@ -9,7 +9,7 @@ from .shortcuts_dialog import ShortcutsDialog
 
 __all__ = [
     "BaseDialog",
-    "CommandGuideDialog",
+    "CommandManagerDialog",
     "FolderEditDialog",
     "HighlightDialog",
     "RuleEditDialog",

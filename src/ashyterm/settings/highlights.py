@@ -38,6 +38,7 @@ from .config import ColorSchemeMap, ColorSchemes, get_config_paths
 
 # Mapping of logical color names to ANSI color indices (0-15)
 # Standard ANSI: 0-7, Bright: 8-15
+# NOTE: Also defined in ui/colors.py for UI components
 ANSI_COLOR_MAP = {
     "black": 0,
     "red": 1,

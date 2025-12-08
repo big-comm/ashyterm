@@ -168,7 +168,7 @@ class MainApplicationMenu:
             {"label": _("New Window"), "action": "win.new-window"},
             {"label": _("Preferences"), "action": "win.preferences"},
             {
-                "label": _("Highlight Colors"),
+                "label": _("Colors"),
                 "action": "win.highlight-settings",
                 "icon": "format-text-highlight-symbolic",
             },

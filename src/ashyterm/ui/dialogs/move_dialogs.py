@@ -129,7 +129,7 @@ class MoveSessionDialog(MoveItemDialog):
             result = operations.move_session_to_folder(item, target_path)
             if result.success:
                 self.logger.info(f"Session '{item.name}' moved to '{target_path}'")
-                parent_window.refresh_tree()
+                # Tree refresh is handled automatically via AppSignals
             else:
                 self._show_error_dialog(_("Move Failed"), result.message)
 

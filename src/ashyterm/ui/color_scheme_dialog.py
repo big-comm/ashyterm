@@ -294,7 +294,9 @@ class _SchemePreviewRow(Adw.ActionRow):
     A custom row for the ListBox showing a rich, well-designed theme preview.
     """
 
-    def __init__(self, scheme_key: str, scheme_data: Dict, is_custom: bool):
+    def __init__(
+        self, scheme_key: str, scheme_data: Dict, is_custom: bool, settings_manager=None
+    ):
         super().__init__(
             title=scheme_data.get("name", scheme_key),
             subtitle=_("Custom") if is_custom else _("Built-in"),
@@ -302,6 +304,7 @@ class _SchemePreviewRow(Adw.ActionRow):
         self.scheme_key = scheme_key
         self.scheme_data = scheme_data
         self.is_custom = is_custom
+        self._settings_manager = settings_manager
 
         preview_area = Gtk.DrawingArea(
             content_width=200, content_height=80, margin_end=12
@@ -328,9 +331,25 @@ class _SchemePreviewRow(Adw.ActionRow):
         bg_rgba = Gdk.RGBA()
         fg_rgba = Gdk.RGBA()
         cursor_rgba = Gdk.RGBA()
+        bold_rgba = Gdk.RGBA()
         bg_rgba.parse(self.scheme_data.get("background", "#000000"))
         fg_rgba.parse(self.scheme_data.get("foreground", "#FFFFFF"))
         cursor_rgba.parse(self.scheme_data.get("cursor", "#FFFFFF"))
+
+        # Determine bold text color based on bold_is_bright setting
+        bold_is_bright = (
+            self._settings_manager.get("bold_is_bright", False)
+            if self._settings_manager
+            else False
+        )
+        palette = self.scheme_data.get("palette", [])
+
+        if bold_is_bright and len(palette) > 15:
+            # Use bright white (palette[15]) for bold text when bold_is_bright is enabled
+            bold_rgba.parse(palette[15])
+        else:
+            # Use regular foreground color for bold
+            bold_rgba.parse(self.scheme_data.get("foreground", "#FFFFFF"))
 
         Gdk.cairo_set_source_rgba(cr, bg_rgba)
         self._draw_rounded_rect(cr, 0, 0, width, height, 8)
@@ -349,6 +368,8 @@ class _SchemePreviewRow(Adw.ActionRow):
         cursor_y = 12 + logical_rect.y
         cursor_height = logical_rect.height
 
+        # Draw bold text with appropriate color
+        Gdk.cairo_set_source_rgba(cr, bold_rgba)
         font_desc.set_weight(Pango.Weight.BOLD)
         layout.set_font_description(font_desc)
         layout.set_text("Bold Text")
@@ -359,7 +380,6 @@ class _SchemePreviewRow(Adw.ActionRow):
         cr.rectangle(cursor_x, cursor_y, 7, cursor_height)
         cr.fill()
 
-        palette = self.scheme_data.get("palette", [])
         num_colors = 8
         spacing = 4
         y_pos = height - 28
@@ -465,7 +485,12 @@ class ColorSchemeDialog(Adw.PreferencesWindow):
             if scheme_key in all_schemes:
                 scheme_data = all_schemes[scheme_key]
                 is_custom = scheme_key in custom_schemes
-                row = _SchemePreviewRow(scheme_key, scheme_data, is_custom)
+                row = _SchemePreviewRow(
+                    scheme_key,
+                    scheme_data,
+                    is_custom,
+                    settings_manager=self.settings_manager,
+                )
                 self.schemes_listbox.append(row)
                 if scheme_key == current_scheme_key:
                     self.schemes_listbox.select_row(row)
