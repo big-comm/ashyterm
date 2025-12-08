@@ -27,7 +27,6 @@ import termios
 import threading
 import weakref
 from collections import deque
-from concurrent.futures import ThreadPoolExecutor
 from dataclasses import dataclass
 from typing import TYPE_CHECKING, Any, Callable, Dict, List, Optional, Tuple, Union
 
@@ -984,6 +983,10 @@ class ShellInputHighlighter:
         # Key: proxy_id, Value: True if at prompt
         self._at_prompt: Dict[int, bool] = {}
 
+        # Color palette from terminal color scheme
+        self._palette: Optional[List[str]] = None
+        self._foreground: str = "#ffffff"
+
         self._lock = threading.Lock()
         self._refresh_settings()
 
@@ -994,8 +997,26 @@ class ShellInputHighlighter:
 
             settings = get_settings_manager()
             self._enabled = settings.get("shell_input_highlighting_enabled", False)
-            # Use separate theme setting for shell input highlighting
+
+            # Get theme mode: "auto" or "manual"
+            self._theme_mode = settings.get("shell_input_theme_mode", "auto")
+            # Legacy theme (used when mode is "manual")
             self._theme = settings.get("shell_input_pygments_theme", "monokai")
+            # Themes for auto mode
+            self._dark_theme = settings.get("shell_input_dark_theme", "blinds-dark")
+            self._light_theme = settings.get("shell_input_light_theme", "blinds-light")
+
+            # Get terminal color scheme for background detection
+            gtk_theme = settings.get("gtk_theme", "")
+            if gtk_theme == "terminal":
+                scheme = settings.get_color_scheme_data()
+                self._palette = scheme.get("palette", [])
+                self._foreground = scheme.get("foreground", "#ffffff")
+                self._background = scheme.get("background", "#000000")
+            else:
+                self._palette = None
+                self._foreground = "#ffffff"
+                self._background = "#000000"
 
             if self._enabled:
                 self._init_lexer()
@@ -1017,14 +1038,33 @@ class ShellInputHighlighter:
 
             self._lexer = BashLexer()
 
+            # Determine which theme to use based on mode
+            if self._theme_mode == "auto":
+                # Auto mode: select theme based on background luminance
+                is_light_bg = self._is_light_color(self._background)
+                selected_theme = self._light_theme if is_light_bg else self._dark_theme
+                self.logger.debug(
+                    f"Auto mode: bg={self._background}, light={is_light_bg}, "
+                    f"using theme={selected_theme}"
+                )
+            else:
+                # Manual mode: use the legacy single theme setting
+                selected_theme = self._theme
+
+            # Create formatter with selected theme
             try:
-                style = get_style_by_name(self._theme)
+                style = get_style_by_name(selected_theme)
             except ClassNotFound:
+                # Fallback to monokai if theme not found
                 style = get_style_by_name("monokai")
+                self.logger.warning(
+                    f"Theme '{selected_theme}' not found, falling back to monokai"
+                )
 
             self._formatter = Terminal256Formatter(style=style)
+
             self.logger.debug(
-                f"Shell input highlighter initialized with theme: {self._theme}"
+                f"Shell input highlighter initialized with theme: {selected_theme}"
             )
         except ImportError as e:
             self.logger.warning(
@@ -1033,6 +1073,88 @@ class ShellInputHighlighter:
             self._enabled = False
             self._lexer = None
             self._formatter = None
+        except ImportError as e:
+            self.logger.warning(
+                f"Pygments not available for shell input highlighting: {e}"
+            )
+            self._enabled = False
+            self._lexer = None
+            self._formatter = None
+
+    def _create_palette_formatter(self):
+        """Create a formatter that uses terminal palette colors.
+
+        Automatically selects colors with better contrast based on whether
+        the terminal background is light or dark.
+
+        Uses Terminal256Formatter with a custom style for compatibility with
+        the highlighting code that expects style_string attribute.
+        """
+        from pygments.formatters import Terminal256Formatter
+        from pygments.style import Style
+        from pygments import token
+
+        # Determine if background is light or dark
+        # If foreground is light, background is likely dark
+        is_dark_bg = self._is_light_color(self._foreground)
+
+        if is_dark_bg:
+            # Dark background - use lighter/brighter ANSI colors (256 color palette)
+            # Using 256-color indices that map well to standard terminal colors
+            class DarkBgStyle(Style):
+                styles = {
+                    token.Comment: "ansibrightblack",  # Gray
+                    token.Comment.Preproc: "ansicyan",
+                    token.Keyword: "ansiblue",
+                    token.Keyword.Type: "ansiblue",
+                    token.Name.Builtin: "ansigreen",
+                    token.Name.Function: "ansigreen",
+                    token.Name.Variable: "ansimagenta",
+                    token.String: "ansicyan",
+                    token.String.Backtick: "ansicyan",
+                    token.String.Double: "ansicyan",
+                    token.String.Single: "ansicyan",
+                    token.Number: "ansimagenta",
+                    token.Operator: "ansired",
+                    token.Punctuation: "ansiwhite",
+                }
+
+            return Terminal256Formatter(style=DarkBgStyle)
+        else:
+            # Light background - use darker ANSI colors for contrast
+            class LightBgStyle(Style):
+                styles = {
+                    token.Comment: "#586e75",  # Solarized base01 (dark gray)
+                    token.Comment.Preproc: "#2aa198",  # Solarized cyan
+                    token.Keyword: "#268bd2",  # Solarized blue
+                    token.Keyword.Type: "#268bd2",
+                    token.Name.Builtin: "#859900",  # Solarized green
+                    token.Name.Function: "#859900",
+                    token.Name.Variable: "#d33682",  # Solarized magenta
+                    token.String: "#2aa198",  # Solarized cyan
+                    token.String.Backtick: "#2aa198",
+                    token.String.Double: "#2aa198",
+                    token.String.Single: "#2aa198",
+                    token.Number: "#d33682",  # Solarized magenta
+                    token.Operator: "#cb4b16",  # Solarized orange (darker red)
+                    token.Punctuation: "#073642",  # Solarized base02 (very dark)
+                }
+
+            return Terminal256Formatter(style=LightBgStyle)
+
+    def _is_light_color(self, hex_color: str) -> bool:
+        """Determine if a color is light based on its luminance."""
+        try:
+            hex_val = hex_color.lstrip("#")
+            r = int(hex_val[0:2], 16) / 255
+            g = int(hex_val[2:4], 16) / 255
+            b = int(hex_val[4:6], 16) / 255
+
+            # Calculate relative luminance (simplified)
+            luminance = 0.2126 * r + 0.7152 * g + 0.0722 * b
+            return luminance > 0.5
+        except (ValueError, IndexError):
+            return False
 
     def refresh_settings(self) -> None:
         """Public method to refresh settings (called when settings change)."""
@@ -1298,9 +1420,6 @@ class HighlightedTerminalProxy:
         self._is_alt_screen = False
         self._child_pid: Optional[int] = None
 
-        # Multi-threaded highlighting support
-        # Thread pool for CPU-bound highlighting work
-        self._highlight_executor: Optional[ThreadPoolExecutor] = None
         # Sequence counter for ordered output delivery
         self._sequence_counter = 0
         self._pending_outputs: Dict[int, bytes] = {}
@@ -1442,11 +1561,7 @@ class HighlightedTerminalProxy:
             else:
                 return False
 
-            # Initialize thread pool for multi-threaded highlighting
-            # Use 4 workers for better parallelism on multi-core systems
-            self._highlight_executor = ThreadPoolExecutor(
-                max_workers=4, thread_name_prefix="highlight"
-            )
+            # Reset sequence counters
             self._sequence_counter = 0
             self._pending_outputs = {}
             self._next_sequence_to_feed = 0
@@ -1509,15 +1624,7 @@ class HighlightedTerminalProxy:
         # 1. Stop reading immediately.
         self._cleanup_io_watch()
 
-        # 2. Shutdown thread pool
-        if self._highlight_executor is not None:
-            try:
-                self._highlight_executor.shutdown(wait=False, cancel_futures=True)
-            except Exception:
-                pass
-            self._highlight_executor = None
-
-        # Clear pending outputs and line queue
+        # 2. Clear pending outputs and line queue
         with self._output_lock:
             self._pending_outputs.clear()
         self._line_queue.clear()
@@ -2041,15 +2148,46 @@ class HighlightedTerminalProxy:
             return line[:-1], "\r"
         return line, ""
 
+    def _is_light_background(self) -> bool:
+        """Check if the terminal background is light using luminance calculation."""
+        try:
+            terminal = self._terminal
+            if terminal is None:
+                return False
+
+            # Get background color
+            bg_rgba = terminal.get_color_background_for_draw()
+            if bg_rgba is None:
+                return False
+
+            # Calculate luminance using standard formula
+            r = bg_rgba.red
+            g = bg_rgba.green
+            b = bg_rgba.blue
+            luminance = 0.2126 * r + 0.7152 * g + 0.0722 * b
+            return luminance > 0.5
+        except Exception:
+            return False
+
     def _get_pygments_theme(self) -> str:
-        """Get the configured Pygments theme from settings."""
+        """Get the configured Pygments theme from settings, with auto mode support."""
         try:
             from ..settings.manager import get_settings_manager
 
             settings = get_settings_manager()
-            return settings.get("pygments_theme", "monokai").lower()
+            mode = settings.get("cat_theme_mode", "auto")
+
+            if mode == "auto":
+                # Auto mode: select theme based on background luminance
+                if self._is_light_background():
+                    return settings.get("cat_light_theme", "blinds-light").lower()
+                else:
+                    return settings.get("cat_dark_theme", "blinds-dark").lower()
+            else:
+                # Manual mode: use the single selected theme
+                return settings.get("pygments_theme", "monokai").lower()
         except Exception:
-            return "monokai"
+            return "blinds-dark"
 
     def _detect_lexer_from_shebang(self, content: str):
         """
@@ -2214,15 +2352,18 @@ class HighlightedTerminalProxy:
             if current_lexer is None:
                 return line
 
-            # Get or create formatter
+            # Get or create formatter - also recreate if theme changed
             formatter = getattr(self, "_pygments_formatter", None)
-            if formatter is None:
-                theme = self._get_pygments_theme()
+            current_theme = self._get_pygments_theme()
+            cached_theme = getattr(self, "_pygments_cached_theme", None)
+
+            if formatter is None or cached_theme != current_theme:
                 try:
-                    style = get_style_by_name(theme)
+                    style = get_style_by_name(current_theme)
                 except ClassNotFound:
                     style = get_style_by_name("monokai")
                 self._pygments_formatter = Terminal256Formatter(style=style)
+                self._pygments_cached_theme = current_theme
                 formatter = self._pygments_formatter
 
             # For PHP: Track multi-line comments manually
@@ -2916,31 +3057,20 @@ class HighlightedTerminalProxy:
         # Get highlighted version of the current buffer
         try:
             from pygments.lexers import BashLexer
-            from pygments.formatters import Terminal256Formatter
-            from pygments.styles import get_style_by_name
-            from pygments.util import ClassNotFound
+            from pygments import lex
 
-            # Get or create lexer/formatter
-            lexer = getattr(self, "_shell_input_lexer", None)
-            formatter = getattr(self, "_shell_input_formatter", None)
+            # Always use lexer/formatter from the global singleton
+            # This ensures theme changes are applied immediately
+            highlighter = self._shell_input_highlighter
+            lexer = highlighter._lexer
+            formatter = highlighter._formatter
 
+            # Fallback if singleton not initialized
             if lexer is None:
-                self._shell_input_lexer = BashLexer()
-                lexer = self._shell_input_lexer
-
-            if formatter is None:
-                theme = self._shell_input_highlighter._theme
-                try:
-                    style = get_style_by_name(theme)
-                except ClassNotFound:
-                    style = get_style_by_name("monokai")
-                self._shell_input_formatter = Terminal256Formatter(style=style)
-                formatter = self._shell_input_formatter
+                lexer = BashLexer()
 
             # Tokenize to find the color of the last character
             # We use lex() to get token types and then map to colors
-            from pygments import lex
-
             tokens = list(lex(self._input_highlight_buffer, lexer))
 
             if not tokens:
@@ -2986,9 +3116,6 @@ class HighlightedTerminalProxy:
             from pygments.token import Token
 
             enhanced_token_type = actual_token_type
-            custom_ansi_color = (
-                None  # For tokens we want to color independently of style
-            )
 
             # Get the current line being typed (last line of buffer)
             current_line = self._input_highlight_buffer.split("\n")[-1].strip()
@@ -3006,7 +3133,7 @@ class HighlightedTerminalProxy:
                 "doas",
                 "pkexec",
             }
-            # Commands that should be highlighted in red as warnings
+            # Commands that should be highlighted with Token.Name.Exception
             WARNING_COMMANDS = {"sudo", "doas", "pkexec", "rm", "dd"}
 
             # Check if this is an option (starts with - or --)
@@ -3014,9 +3141,9 @@ class HighlightedTerminalProxy:
                 actual_token_value.startswith("--")
                 or (actual_token_value.startswith("-") and len(actual_token_value) > 1)
             ):
-                # Options: use cyan color (117) - distinct from commands (green 84)
-                custom_ansi_color = "\x1b[38;5;117m"  # Cyan like Token.Keyword.Type
-                enhanced_token_type = Token.Name.Attribute  # For tracking purposes
+                # Options: use Token.Name.Attribute which most themes style nicely
+                # Don't set custom_ansi_color - let the formatter provide the color
+                enhanced_token_type = Token.Name.Attribute
                 self.logger.debug(
                     f"Proxy {self._proxy_id}: Enhanced as option: {actual_token_value}"
                 )
@@ -3051,16 +3178,16 @@ class HighlightedTerminalProxy:
                     if is_command_position:
                         # Check if this is a warning command (sudo, rm, dd, etc.)
                         if actual_token_value in WARNING_COMMANDS:
-                            # Warning commands: use red/orange color to alert user
-                            custom_ansi_color = "\x1b[38;5;196m"  # Bright red (196)
-                            enhanced_token_type = Token.Name.Exception  # For tracking
+                            # Warning commands: use Token.Name.Exception for visual distinction
+                            # Most themes style this prominently (often in red/orange tones)
+                            enhanced_token_type = Token.Name.Exception
                             self.logger.debug(
                                 f"Proxy {self._proxy_id}: Enhanced as WARNING command: {actual_token_value}"
                             )
                         else:
                             enhanced_token_type = (
                                 Token.Name.Function
-                            )  # Commands as functions (green)
+                            )  # Commands as functions (green in most themes)
                             self.logger.debug(
                                 f"Proxy {self._proxy_id}: Enhanced as command: {actual_token_value}"
                             )
@@ -3080,21 +3207,14 @@ class HighlightedTerminalProxy:
             # Get the ANSI code for this token type from style_string
             # style_string is a dict mapping "Token.Type.Name" -> (start_ansi, end_ansi)
             if hasattr(formatter, "style_string"):
-                # Use custom ANSI color if set (for options, etc.)
-                if custom_ansi_color:
-                    ansi_start = custom_ansi_color
-                    ansi_end = "\x1b[39m"  # Reset foreground color
-                    style_codes = (ansi_start, ansi_end)
-                    token_str = str(enhanced_token_type)
-                else:
-                    # Use enhanced token type for better command/option coloring
-                    token_str = str(enhanced_token_type)
-                    style_codes = formatter.style_string.get(token_str)
+                # Use enhanced token type for better command/option coloring
+                token_str = str(enhanced_token_type)
+                style_codes = formatter.style_string.get(token_str)
 
-                    # Fallback to original Pygments token type if enhanced type has no style
-                    if not style_codes:
-                        token_str = str(actual_token_type)
-                        style_codes = formatter.style_string.get(token_str)
+                # Fallback to original Pygments token type if enhanced type has no style
+                if not style_codes:
+                    token_str = str(actual_token_type)
+                    style_codes = formatter.style_string.get(token_str)
 
                 self.logger.debug(
                     f"Proxy {self._proxy_id}: Token str: '{token_str}', style_codes: {style_codes}"

@@ -102,32 +102,120 @@ class TooltipHelper:
         )
         self.popover.set_child(self.label)
 
-        # CSS for class-based animation
-        self.css_provider = Gtk.CssProvider()
-        css = b"""
-        .tooltip-popover {
-            opacity: 0;
-            transition: opacity 200ms ease-in-out;
-        }
-        .tooltip-popover.visible {
-            opacity: 1;
-        }
-        """
-        self.css_provider.load_from_data(css)
+        # CSS for tooltip animation is now loaded globally from components.css
+        # Classes: .tooltip-popover, .tooltip-popover.visible
         self.popover.add_css_class("tooltip-popover")
 
-        Gtk.StyleContext.add_provider_for_display(
-            Gdk.Display.get_default(),
-            self.css_provider,
-            Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION,
-        )
+        # Separate provider for color styling (can be updated dynamically)
+        self._color_css_provider = None
 
         # Connect to the "map" signal to trigger the fade-in animation
         self.popover.connect("map", self._on_popover_map)
 
+    def update_colors(
+        self,
+        bg_color: str = None,
+        fg_color: str = None,
+        use_terminal_theme: bool = False,
+    ):
+        """
+        Update tooltip colors to match the application theme.
+
+        Uses the same luminance check as manager.py: the main terminal background
+        color is used for the luminance check, but headerbar_background is used
+        for the actual tooltip background color (if luminance check passes).
+
+        Args:
+            bg_color: Background color hex (e.g., "#1e1e1e")
+            fg_color: Foreground/text color hex (e.g., "#ffffff")
+            use_terminal_theme: If True and settings_manager is available,
+                               use terminal color scheme colors.
+        """
+        # Color used for luminance check (same as manager.py)
+        luminance_check_color = None
+
+        if use_terminal_theme and self.settings_manager:
+            gtk_theme = self.settings_manager.get("gtk_theme", "")
+            if gtk_theme == "terminal":
+                scheme = self.settings_manager.get_color_scheme_data()
+                # Use main background for luminance check (same as manager.py)
+                luminance_check_color = scheme.get("background", "#000000")
+                # Use headerbar_background for the actual tooltip color
+                bg_color = scheme.get(
+                    "headerbar_background", scheme.get("background", "#1e1e1e")
+                )
+                fg_color = scheme.get("foreground", "#ffffff")
+
+        # Skip if no colors specified
+        if not bg_color and not fg_color:
+            return
+
+        # Check luminance using the same color as manager.py (main background)
+        # Skip custom styling if too dark (< 5%) to avoid readability issues
+        check_color = luminance_check_color or bg_color
+        if check_color:
+            try:
+                hex_val = check_color.lstrip("#")
+                r, g, b = (
+                    int(hex_val[0:2], 16) / 255,
+                    int(hex_val[2:4], 16) / 255,
+                    int(hex_val[4:6], 16) / 255,
+                )
+                luminance = 0.299 * r + 0.587 * g + 0.114 * b
+                if luminance < 0.05:
+                    # Too dark - remove any existing custom styling and use Adwaita defaults
+                    if self._color_css_provider:
+                        try:
+                            Gtk.StyleContext.remove_provider_for_display(
+                                Gdk.Display.get_default(), self._color_css_provider
+                            )
+                            self._color_css_provider = None
+                        except Exception:
+                            pass
+                    return
+            except (ValueError, IndexError):
+                pass
+
+        # Build CSS with higher specificity selectors
+        css_parts = ["popover.tooltip-popover > contents {"]
+        if bg_color:
+            css_parts.append(f"    background-color: {bg_color};")
+        if fg_color:
+            css_parts.append(f"    color: {fg_color};")
+        css_parts.append("}")
+
+        # Also style the label with high specificity
+        if fg_color:
+            css_parts.append(f"popover.tooltip-popover label {{ color: {fg_color}; }}")
+
+        css = "\n".join(css_parts)
+
+        # Remove existing color provider if any
+        if self._color_css_provider:
+            try:
+                Gtk.StyleContext.remove_provider_for_display(
+                    Gdk.Display.get_default(), self._color_css_provider
+                )
+            except Exception:
+                pass
+
+        # Add new color provider
+        provider = Gtk.CssProvider()
+        provider.load_from_data(css.encode("utf-8"))
+        Gtk.StyleContext.add_provider_for_display(
+            Gdk.Display.get_default(),
+            provider,
+            Gtk.STYLE_PROVIDER_PRIORITY_USER,
+        )
+        self._color_css_provider = provider
+
     def _on_popover_map(self, popover):
-        """Called when the popover is drawn. Adds the .visible class to fade in."""
-        self.popover.add_css_class("visible")
+        """
+        Triggered when the popover is mapped (shown).
+        Adds the 'visible' CSS class to initiate the fade-in animation.
+        """
+        # A small delay ensures the CSS transition triggers correctly
+        GLib.timeout_add(10, lambda: popover.add_css_class("visible") or False)
 
     def is_enabled(self) -> bool:
         """Check if tooltips are enabled in settings."""

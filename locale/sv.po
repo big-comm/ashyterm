@@ -561,20 +561,21 @@ msgstr "Sessionspanel"
 msgid "File Manager"
 msgstr "Filhanterare"
 # 
-# File: usr/share/ashyterm/ui/dialogs/command_guide_dialog.py, line: 143
+# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
+# 
+# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
+# 
+# File: src/ashyterm/ui/window_ui.py, line: 319
+# File: src/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 58
+# File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 2455
 #: NEEDS WORK
-msgid "Command Guide"
-msgstr "Kommandoguide"
+msgid "Command Manager"
+msgstr "Kommandochef"
 # 
 # File: usr/share/ashyterm/ui/window_ui.py, line: 350
 #: NEEDS WORK
 msgid "Search in Terminal"
 msgstr "Sök i Terminal"
-# 
-# File: usr/share/ashyterm/ui/window_ui.py, line: 339
-#: NEEDS WORK
-msgid "Send Command to All Tabs"
-msgstr "Skicka kommando till alla flikar"
 # 
 # File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 39
 #: NEEDS WORK
@@ -604,6 +605,46 @@ msgstr "Ny flik"
 #: NEEDS WORK
 msgid "Ashy Terminal"
 msgstr "Ashy Terminal"
+# 
+# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
+# 
+# File: src/ashyterm/ui/window_ui.py, line: 564
+# File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 1075
+# File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 1166
+#: NEEDS WORK
+msgid "Icon Only"
+msgstr "Endast ikon"
+# 
+# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
+# 
+# File: src/ashyterm/ui/window_ui.py, line: 565
+# File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 1075
+# File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 1166
+#: NEEDS WORK
+msgid "Text Only"
+msgstr "Endast text"
+# 
+# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
+# 
+# File: src/ashyterm/ui/window_ui.py, line: 566
+# File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 1075
+# File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 1166
+#: NEEDS WORK
+msgid "Icon and Text"
+msgstr "Ikon och Text"
+# 
+# File: src/ashyterm/ui/window_ui.py, line: 567
+#: NEEDS WORK
+msgid "Display"
+msgstr "Visa"
+# 
+# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
+# 
+# File: src/ashyterm/ui/window_ui.py, line: 570
+# File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 700
+#: NEEDS WORK
+msgid "Unpin from Toolbar"
+msgstr "Ta bort från verktygsfältet"
 # 
 # #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
 # 
@@ -717,6 +758,15 @@ msgstr "Allmänna färger"
 msgid "16-Color Palette"
 msgstr "16-färgs palett"
 # 
+# File: src/ashyterm/ui/color_scheme_dialog.py, line: 214
+#: NEEDS WORK
+msgid ""
+"user@host:~$ ls -l\n"
+"<span weight='bold'>Bold Text</span>"
+msgstr ""
+"user@host:~$ ls -l  \n"
+"<span weight='bold'>Fet text</span>"
+# 
 # #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 136
@@ -779,6 +829,11 @@ msgstr "Anpassad"
 msgid "Built-in"
 msgstr "Inbyggd"
 # 
+# File: src/ashyterm/ui/color_scheme_dialog.py, line: 375
+#: NEEDS WORK
+msgid "Bold Text"
+msgstr "Fet text"
+# 
 # File: usr/share/ashyterm/ui/color_scheme_dialog.py, line: 282
 #: NEEDS WORK
 msgid "Color Schemes"
@@ -839,6 +894,121 @@ msgstr "Ta bort schema?"
 #, python-brace-format
 msgid "Are you sure you want to delete the scheme '{name}'? This cannot be undone."
 msgstr "Är du säker på att du vill ta bort schemat '{name}'? Detta kan inte ångras."
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 32
+#: NEEDS WORK
+msgid "Black"
+msgstr "Svart"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 33
+#: NEEDS WORK
+msgid "Red"
+msgstr "Röd"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 34
+#: NEEDS WORK
+msgid "Green"
+msgstr "Grön"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 35
+#: NEEDS WORK
+msgid "Yellow"
+msgstr "Gul"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 36
+#: NEEDS WORK
+msgid "Blue"
+msgstr "Blå"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 37
+#: NEEDS WORK
+msgid "Magenta"
+msgstr "Magenta"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 38
+#: NEEDS WORK
+msgid "Cyan"
+msgstr "Cyan"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 39
+#: NEEDS WORK
+msgid "White"
+msgstr "Vit"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 41
+#: NEEDS WORK
+msgid "Bright Black"
+msgstr "Ljus Svart"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 42
+#: NEEDS WORK
+msgid "Bright Red"
+msgstr "Ljus Röd"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 43
+#: NEEDS WORK
+msgid "Bright Green"
+msgstr "Ljusgrön"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 44
+#: NEEDS WORK
+msgid "Bright Yellow"
+msgstr "Ljusgul"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 45
+#: NEEDS WORK
+msgid "Bright Blue"
+msgstr "Ljusblå"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 46
+#: NEEDS WORK
+msgid "Bright Magenta"
+msgstr "Ljus Magenta"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 47
+#: NEEDS WORK
+msgid "Bright Cyan"
+msgstr "Ljus Cyan"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 48
+#: NEEDS WORK
+msgid "Bright White"
+msgstr "Ljus Vit"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 68
+#: NEEDS WORK
+msgid "Default"
+msgstr "Standardinställning"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 58
+#: NEEDS WORK
+msgid "Bold"
+msgstr "Fet"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 59
+#: NEEDS WORK
+msgid "Italic"
+msgstr "Kursiv"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1141
+#: NEEDS WORK
+msgid "Underline"
+msgstr "Understrykning"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 61
+#: NEEDS WORK
+msgid "Strikethrough"
+msgstr "Genomstruken"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 62
+#: NEEDS WORK
+msgid "Dim/Faint"
+msgstr "Dämpad/Avsvagad"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 63
+#: NEEDS WORK
+msgid "Blink"
+msgstr "Blink"
 # 
 # File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 220
 #: NEEDS WORK
@@ -1955,6 +2125,35 @@ msgstr "Använd standardinställningar"
 msgid "Clear custom prompts and use random defaults"
 msgstr "Rensa anpassade uppmaningar och använd slumpmässiga standardinställningar"
 # 
+# File: src/ashyterm/ui/widgets/form_widget_builder.py, line: 160
+#: NEEDS WORK
+msgid "Enter password..."
+msgstr "Ange lösenord..."
+# 
+# File: src/ashyterm/ui/widgets/form_widget_builder.py, line: 327
+# File: src/ashyterm/ui/widgets/form_widget_builder.py, line: 382
+# File: src/ashyterm/ui/widgets/form_widget_builder.py, line: 419
+#: NEEDS WORK
+msgid "No options defined"
+msgstr "Inga alternativ definierade"
+# 
+# File: src/ashyterm/ui/widgets/form_widget_builder.py, line: 435
+#: NEEDS WORK
+msgid "Select file..."
+msgstr "Välj fil..."
+# 
+# File: src/ashyterm/ui/widgets/form_widget_builder.py, line: 471
+#: NEEDS WORK
+msgid "Select folder..."
+msgstr "Välj mapp..."
+# 
+# File: src/ashyterm/ui/widgets/form_widget_builder.py, line: 507
+# File: src/ashyterm/ui/widgets/form_widget_builder.py, line: 532
+#: NEEDS WORK
+#, python-brace-format
+msgid "Format: {}"
+msgstr "Format: {}"
+# 
 # File: src/ashyterm/ui/widgets/conversation_history.py, line: 47
 #: NEEDS WORK
 msgid "Just now"
@@ -2185,13 +2384,10 @@ msgstr "Nytt fönster"
 msgid "Preferences"
 msgstr "Inställningar"
 # 
-# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
-# 
-# File: src/ashyterm/ui/menus.py, line: 167
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1082
+# File: src/ashyterm/ui/menus.py, line: 171
 #: NEEDS WORK
-msgid "Highlight Colors"
-msgstr "Markera färger"
+msgid "Colors"
+msgstr "Färger"
 # 
 # #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
 # 
@@ -2551,121 +2747,6 @@ msgstr "Visar {shown} av {total} modeller"
 msgid "Showing first 100 results. Refine your search to see more."
 msgstr "Visar de första 100 resultaten. Förfina din sökning för att se fler."
 # 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 32
-#: NEEDS WORK
-msgid "Black"
-msgstr "Svart"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 33
-#: NEEDS WORK
-msgid "Red"
-msgstr "Röd"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 34
-#: NEEDS WORK
-msgid "Green"
-msgstr "Grön"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 35
-#: NEEDS WORK
-msgid "Yellow"
-msgstr "Gul"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 36
-#: NEEDS WORK
-msgid "Blue"
-msgstr "Blå"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 37
-#: NEEDS WORK
-msgid "Magenta"
-msgstr "Magenta"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 38
-#: NEEDS WORK
-msgid "Cyan"
-msgstr "Cyan"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 39
-#: NEEDS WORK
-msgid "White"
-msgstr "Vit"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 41
-#: NEEDS WORK
-msgid "Bright Black"
-msgstr "Ljus Svart"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 42
-#: NEEDS WORK
-msgid "Bright Red"
-msgstr "Ljus Röd"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 43
-#: NEEDS WORK
-msgid "Bright Green"
-msgstr "Ljusgrön"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 44
-#: NEEDS WORK
-msgid "Bright Yellow"
-msgstr "Ljusgul"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 45
-#: NEEDS WORK
-msgid "Bright Blue"
-msgstr "Ljusblå"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 46
-#: NEEDS WORK
-msgid "Bright Magenta"
-msgstr "Ljus Magenta"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 47
-#: NEEDS WORK
-msgid "Bright Cyan"
-msgstr "Ljus Cyan"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 48
-#: NEEDS WORK
-msgid "Bright White"
-msgstr "Ljus Vit"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 58
-#: NEEDS WORK
-msgid "Bold"
-msgstr "Fet"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 59
-#: NEEDS WORK
-msgid "Italic"
-msgstr "Kursiv"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1141
-#: NEEDS WORK
-msgid "Underline"
-msgstr "Understrykning"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 61
-#: NEEDS WORK
-msgid "Strikethrough"
-msgstr "Genomstruken"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 62
-#: NEEDS WORK
-msgid "Dim/Faint"
-msgstr "Dämpad/Avsvagad"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 63
-#: NEEDS WORK
-msgid "Blink"
-msgstr "Blink"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 68
-#: NEEDS WORK
-msgid "Default"
-msgstr "Standardinställning"
-# 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 85
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 375
 #: NEEDS WORK
@@ -2719,6 +2800,11 @@ msgstr "Python regex-syntax. Fångstgrupper () kan ha individuella färger."
 #: NEEDS WORK
 msgid "Regex Pattern"
 msgstr "Reguljärt uttryck"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 487
+#: NEEDS WORK
+msgid "Syntax highlighted"
+msgstr "Syntax markerad"
 # 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 276
 #: NEEDS WORK
@@ -3059,16 +3145,74 @@ msgstr "Ta bort regel?"
 msgid "Are you sure you want to delete \"{}\"?"
 msgstr "Är du säker på att du vill ta bort \"{}\"?"
 # 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1106
-#: NEEDS WORK
-msgid "Global Rules"
-msgstr "Globala regler"
+# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
 # 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1475
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1776
+# File: src/ashyterm/ui/menus.py, line: 167
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1082
 #: NEEDS WORK
-msgid "Command Rules"
-msgstr "Kommandoregler"
+msgid "Highlight Colors"
+msgstr "Markera färger"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1457
+#: NEEDS WORK
+msgid "Terminal Colors"
+msgstr "Terminalfärger"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1467
+#: NEEDS WORK
+msgid "Output Highlighting"
+msgstr "Utdata Markering"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1492
+#: NEEDS WORK
+msgid "Command-Specific"
+msgstr "Kommandospecifik"
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 56
+#: NEEDS WORK
+msgid "Color Scheme"
+msgstr "Färgschema"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1529
+#: NEEDS WORK
+msgid "Create New Scheme"
+msgstr "Skapa nytt schema"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1530
+#: NEEDS WORK
+msgid "Create a custom color scheme based on existing"
+msgstr "Skapa ett anpassat färgschema baserat på befintliga"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1626
+#: NEEDS WORK
+msgid "Edit scheme"
+msgstr "Redigera schema"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1628
+#: NEEDS WORK
+msgid "Customize (creates a copy)"
+msgstr "Anpassa (skapar en kopia)"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1637
+#: NEEDS WORK
+msgid "Delete scheme"
+msgstr "Ta bort schema"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1773
+#: NEEDS WORK
+#, python-brace-format
+msgid "Are you sure you want to delete '{}'?"
+msgstr "Är du säker på att du vill ta bort '{}' ?"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1806
+#: NEEDS WORK
+msgid "Scheme deleted"
+msgstr "Schema raderad"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1870
+#: NEEDS WORK
+msgid "Scheme saved"
+msgstr "Schema sparad"
 # 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1490
 #: NEEDS WORK
@@ -3084,15 +3228,34 @@ msgstr ""
 msgid "Activation"
 msgstr "Aktivering"
 # 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1887
+#: NEEDS WORK
+msgid ""
+"⚠️ On slower computers, enabling output highlighting may slightly reduce terminal responsiveness, "
+"as all displayed content is processed for color patterns."
+msgstr ""
+"⚠️ På långsammare datorer kan aktivering av utdataframhävning något minska terminalens "
+"responsivitet, eftersom allt visat innehåll bearbetas för färgmönster."
+# 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1160
 #: NEEDS WORK
 msgid "Local Terminals"
 msgstr "Lokala terminaler"
 # 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1896
+#: NEEDS WORK
+msgid "Apply output highlighting to local terminal sessions"
+msgstr "Tillämpa utdataframhävning på lokala terminalsessioner"
+# 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1169
 #: NEEDS WORK
 msgid "SSH Sessions"
 msgstr "SSH-sessioner"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1905
+#: NEEDS WORK
+msgid "Apply output highlighting to SSH connections"
+msgstr "Tillämpa utdataframhävning på SSH-anslutningar"
 # 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1567
 #: NEEDS WORK
@@ -3119,15 +3282,66 @@ msgstr "Aktivera \"katt\" färgsättning"
 msgid "Apply syntax highlighting to \"cat\" command output"
 msgstr "Tillämpa syntaxmarkering på \"cat\" kommandots utdata"
 # 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1584
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1951
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2178
 #: NEEDS WORK
-msgid "Color Theme"
-msgstr "Färgtema"
+msgid "Theme Mode"
+msgstr "Tema-läge"
 # 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1594
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1952
 #: NEEDS WORK
-msgid "Pygments theme for \"cat\" output highlighting"
-msgstr "Pygments-tema för \"cat\"-utdataframhävning"
+msgid "Auto: adapts to background color. Manual: single theme."
+msgstr "Automatisk: anpassar sig till bakgrundsfärg. Manuell: enstaka tema."
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1955
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2182
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 3592
+#: NEEDS WORK
+msgid "Auto"
+msgstr "Automatisk"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1956
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2183
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 3592
+#: NEEDS WORK
+msgid "Manual"
+msgstr "Handbok"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2039
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2272
+#: NEEDS WORK
+msgid "Dark Background Theme"
+msgstr "Mörkt bakgrundstema"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2040
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2273
+#: NEEDS WORK
+msgid "Theme used when background is dark"
+msgstr "Tema som används när bakgrunden är mörk"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2068
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2303
+#: NEEDS WORK
+msgid "Light Background Theme"
+msgstr "Ljust bakgrundstema"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2069
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2304
+#: NEEDS WORK
+msgid "Theme used when background is light"
+msgstr "Tema som används när bakgrunden är ljus"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2097
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2334
+#: NEEDS WORK
+msgid "Manual Theme"
+msgstr "Manuell Tema"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2098
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2335
+#: NEEDS WORK
+msgid "Single theme to use in manual mode"
+msgstr "Enkel tema att använda i manuellt läge"
 # 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1636
 #: NEEDS WORK
@@ -3168,10 +3382,10 @@ msgstr ""
 "Färga skalkommandon medan du skriver dem. Användbart för SSH-sessioner och Docker-containrar där "
 "skalkonfigurationen inte kan ändras."
 # 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1690
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2179
 #: NEEDS WORK
-msgid "Pygments theme for shell input highlighting"
-msgstr "Pygments-tema för markering av shell-inmatning"
+msgid "Auto detects background, Manual uses selected theme"
+msgstr "Automatiskt upptäckter bakgrund, Manuell använder valt tema"
 # 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1680
 #: NEEDS WORK
@@ -3302,6 +3516,12 @@ msgstr "Återställ alla kommandon"
 #: NEEDS WORK
 msgid "Available Commands"
 msgstr "Tillgängliga kommandon"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1475
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1776
+#: NEEDS WORK
+msgid "Command Rules"
+msgstr "Kommandoregler"
 # 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1438
 #: NEEDS WORK
@@ -3523,6 +3743,24 @@ msgstr "inaktiverad"
 #, python-brace-format
 msgid "\"cat\" colorization {}"
 msgstr "\" katt\" färgning {}"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 3593
+#: NEEDS WORK
+#, python-brace-format
+msgid "Cat theme mode: {}"
+msgstr "Katt-temaläge: {}"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 3603
+#: NEEDS WORK
+#, python-brace-format
+msgid "Dark theme: {}"
+msgstr "Mörkt tema: {}"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 3613
+#: NEEDS WORK
+#, python-brace-format
+msgid "Light theme: {}"
+msgstr "Ljustema: {}"
 # 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2462
 #: NEEDS WORK
@@ -3876,15 +4114,10 @@ msgstr "SSH-alternativ"
 msgid "Run Command After Login"
 msgstr "Kör kommando efter inloggning"
 # 
-# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 459
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 497
 #: NEEDS WORK
-msgid "Execute a command automatically after SSH connects"
-msgstr "Kör ett kommando automatiskt efter att SSH har anslutit"
-# 
-# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 318
-#: NEEDS WORK
-msgid "Post-Login Command"
-msgstr "Post-Login Kommando"
+msgid "Execute commands automatically after SSH connects"
+msgstr "Kör kommandon automatiskt efter att SSH har anslutit"
 # 
 # File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 356
 #: NEEDS WORK
@@ -4235,78 +4468,6 @@ msgstr ""
 "SSH-konfigurationsfel:  \n"
 "{}"
 # 
-# File: usr/share/ashyterm/ui/dialogs/command_guide_dialog.py, line: 32
-#: NEEDS WORK
-msgid "Add Custom Command"
-msgstr "Lägg till anpassad kommando"
-# 
-# File: usr/share/ashyterm/ui/dialogs/command_guide_dialog.py, line: 32
-#: NEEDS WORK
-msgid "Edit Custom Command"
-msgstr "Redigera anpassad kommando"
-# 
-# File: usr/share/ashyterm/ui/dialogs/command_guide_dialog.py, line: 34
-#: NEEDS WORK
-msgid "Command"
-msgstr "Kommando"
-# 
-# File: usr/share/ashyterm/ui/dialogs/command_guide_dialog.py, line: 35
-#: NEEDS WORK
-msgid "Category"
-msgstr "Kategori"
-# 
-# File: usr/share/ashyterm/ui/dialogs/command_guide_dialog.py, line: 104
-#: NEEDS WORK
-msgid "Select an existing category or type a new one"
-msgstr "Välj en befintlig kategori eller skriv en ny."
-# 
-# File: usr/share/ashyterm/ui/dialogs/command_guide_dialog.py, line: 59
-#: NEEDS WORK
-msgid "Description"
-msgstr "Beskrivning"
-# 
-# File: usr/share/ashyterm/ui/dialogs/command_guide_dialog.py, line: 171
-#: NEEDS WORK
-msgid "Please fill in all required fields."
-msgstr "Vänligen fyll i alla obligatoriska fält."
-# 
-# File: usr/share/ashyterm/ui/dialogs/command_guide_dialog.py, line: 236
-#: NEEDS WORK
-msgid "Delete this custom command"
-msgstr "Ta bort denna anpassade kommando"
-# 
-# File: usr/share/ashyterm/ui/dialogs/command_guide_dialog.py, line: 165
-#: NEEDS WORK
-msgid "Search commands..."
-msgstr "Sökkommandon..."
-# 
-# File: usr/share/ashyterm/ui/dialogs/command_guide_dialog.py, line: 208
-#: NEEDS WORK
-msgid "Show Only Custom Commands"
-msgstr "Visa endast anpassade kommandon"
-# 
-# File: usr/share/ashyterm/ui/dialogs/command_guide_dialog.py, line: 495
-#: NEEDS WORK
-msgid "Add New Command"
-msgstr "Lägg till nytt kommando"
-# 
-# File: usr/share/ashyterm/ui/dialogs/command_guide_dialog.py, line: 714
-#: NEEDS WORK
-msgid "Delete Custom Command?"
-msgstr "Ta bort anpassad kommando?"
-# 
-# File: usr/share/ashyterm/ui/dialogs/command_guide_dialog.py, line: 716
-#: NEEDS WORK
-#, python-brace-format
-msgid ""
-"Are you sure you want to permanently delete the command:\n"
-"\n"
-"<b>{name}</b>"
-msgstr ""
-"Är du säker på att du vill permanent ta bort kommandot:\n"
-"\n"
-"<b>{name}</b>"
-# 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1056
 #: NEEDS WORK
 msgid "Edit Folder"
@@ -4411,6 +4572,11 @@ msgstr "Stäng aktiv panel"
 #: NEEDS WORK
 msgid "Terminal Interaction"
 msgstr "Terminalinteraktion"
+# 
+# File: usr/share/ashyterm/ui/window_ui.py, line: 339
+#: NEEDS WORK
+msgid "Send Command to All Tabs"
+msgstr "Skicka kommando till alla flikar"
 # 
 # File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 42
 #: NEEDS WORK
@@ -4536,20 +4702,560 @@ msgstr "Återställ alla genvägar"
 msgid "This will reset all keyboard shortcuts to their default values. Continue?"
 msgstr "Detta kommer att återställa alla tangentbordsgenvägar till deras standardvärden. Fortsätta?"
 # 
+# File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 166
+#: NEEDS WORK
+msgid "Insert"
+msgstr "Infoga"
+# 
+# File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 167
+#: NEEDS WORK
+msgid "Insert command into terminal without executing"
+msgstr "Infoga kommando i terminalen utan att köra den"
+# 
+# File: usr/share/ashyterm/filemanager/manager.py, line: 714
+# File: usr/share/ashyterm/filemanager/manager.py, line: 728
+# File: usr/share/ashyterm/filemanager/manager.py, line: 742
+#: NEEDS WORK
+msgid "Execute"
+msgstr "Kör"
+# 
+# File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 172
+#: NEEDS WORK
+msgid "Insert and execute command (Ctrl+Enter)"
+msgstr "Infoga och kör kommando (Ctrl+Enter)"
+# 
+# File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 195
+# File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 1275
+#: NEEDS WORK
+msgid "Command Preview"
+msgstr "Kommandoförhandsgranskning"
+# 
+# File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 295
+#: NEEDS WORK
+msgid "Select Path"
+msgstr "Välj sökväg"
+# 
+# File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 298
+# File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 1392
+#: NEEDS WORK
+msgid "Select"
+msgstr "Välj"
+# 
+# File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 687
+#: NEEDS WORK
+msgid "Execute in All Terminals"
+msgstr "Kör i alla terminaler"
+# 
+# File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 702
+#: NEEDS WORK
+msgid "Pin to Toolbar"
+msgstr "Fäst i verktygsfältet"
+# 
+# File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 707
+# File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 2977
+#: NEEDS WORK
+msgid "Restore Default"
+msgstr "Återställ standardinställningar"
+# 
+# File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 708
+# File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 3013
+#: NEEDS WORK
+msgid "Hide"
+msgstr "Dölj"
+# 
+# File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 799
+#: NEEDS WORK
+msgid "Edit Command"
+msgstr "Redigera kommando"
+# 
+# File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 932
+#: NEEDS WORK
+msgid "What type of command do you want to create?"
+msgstr "Vilken typ av kommando vill du skapa?"
+# 
+# File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 956
+#: NEEDS WORK
+msgid "Simple Command"
+msgstr "Enkel kommando"
+# 
+# File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 959
+#: NEEDS WORK
+msgid "A button that runs a command directly"
+msgstr "En knapp som kör ett kommando direkt"
+# 
+# File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 981
+#: NEEDS WORK
+msgid "Command with Form"
+msgstr "Kommando med formulär"
+# 
+# File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 984
+#: NEEDS WORK
+msgid "A button that shows a form to configure the command"
+msgstr "En knapp som visar ett formulär för att konfigurera kommandot"
+# 
+# File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 1039
+# File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 1130
+#: NEEDS WORK
+msgid "Basic Information"
+msgstr "Grundläggande information"
+# 
+# File: usr/share/ashyterm/filemanager/manager.py, line: 366
+#: NEEDS WORK
+msgid "Name"
+msgstr "Namn"
+# 
+# File: usr/share/ashyterm/ui/dialogs/command_guide_dialog.py, line: 59
+#: NEEDS WORK
+msgid "Description"
+msgstr "Beskrivning"
+# 
+# File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 1048
+# File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 1139
+#: NEEDS WORK
+msgid "Icon"
+msgstr "Ikon"
+# 
+# File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 1058
+# File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 1149
+#: NEEDS WORK
+msgid "Choose icon"
+msgstr "Välj ikon"
+# 
+# File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 1073
+# File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 1164
+#: NEEDS WORK
+msgid "Display Mode"
+msgstr "Visningsläge"
+# 
+# File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 1081
+#: NEEDS WORK
+msgid "Execution Mode"
+msgstr "Körningsläge"
+# 
+# File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 1083
+#: NEEDS WORK
+msgid "Insert Only"
+msgstr "Infoga endast"
+# 
+# File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 1083
+#: NEEDS WORK
+msgid "Insert and Execute"
+msgstr "Infoga och kör"
+# 
+# File: usr/share/ashyterm/ui/dialogs/command_guide_dialog.py, line: 34
+#: NEEDS WORK
+msgid "Command"
+msgstr "Kommando"
+# 
+# File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 1095
+#: NEEDS WORK
+msgid "Enter the bash command to execute:"
+msgstr "Ange bash-kommandot som ska köras:"
+# 
+# File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 1197
+#: NEEDS WORK
+msgid "Add command parts"
+msgstr "Lägg till kommandodelar"
+# 
+# File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 1207
+#: NEEDS WORK
+msgid "Add part"
+msgstr "Lägg till del"
+# 
+# File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 1212
+#: NEEDS WORK
+msgid "📝 Command Text"
+msgstr "📝 Kommandotext"
+# 
+# File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 1213
+#: NEEDS WORK
+msgid "⌨️ Text Input"
+msgstr "⌨️ Textinmatning"
+# 
+# File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 1214
+#: NEEDS WORK
+msgid "📝 Text Area"
+msgstr "📝 Textområde"
+# 
+# File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 1215
+#: NEEDS WORK
+msgid "🔑 Password"
+msgstr "🔑 Lösenord"
+# 
+# File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 1216
+#: NEEDS WORK
+msgid "Text"
+msgstr "Text"
+# 
+# File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 1220
+#: NEEDS WORK
+msgid "🔢 Number"
+msgstr "🔢 Nummer"
+# 
+# File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 1221
+#: NEEDS WORK
+msgid "📊 Slider"
+msgstr "📊 Regler"
+# 
+# File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 1222
+#: NEEDS WORK
+msgid "Numbers"
+msgstr "Nummer"
+# 
+# File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 1226
+#: NEEDS WORK
+msgid "🔘 Switch"
+msgstr "🔘 Växla"
+# 
+# File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 1227
+#: NEEDS WORK
+msgid "📋 Dropdown"
+msgstr "📋 Rullgardin"
+# 
+# File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 1228
+#: NEEDS WORK
+msgid "⚪ Radio Buttons"
+msgstr "⚪ Radioknappar"
+# 
+# File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 1229
+#: NEEDS WORK
+msgid "☑️ Multi-Select"
+msgstr "☑️ Flerval"
+# 
+# File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 1230
+#: NEEDS WORK
+msgid "Selection"
+msgstr "Urval"
+# 
+# File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 1234
+#: NEEDS WORK
+msgid "📄 File Path"
+msgstr "📄 Filväg"
+# 
+# File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 1235
+#: NEEDS WORK
+msgid "📁 Directory Path"
+msgstr "📁 Katalogväg"
+# 
+# File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 1236
+#: NEEDS WORK
+msgid "Files"
+msgstr "Filer"
+# 
+# File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 1240
+#: NEEDS WORK
+msgid "📅 Date/Time"
+msgstr "📅 Datum/Tid"
+# 
+# File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 1241
+#: NEEDS WORK
+msgid "🎨 Color"
+msgstr "🎨 Färg"
+# 
+# File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 1242
+#: NEEDS WORK
+msgid "Special"
+msgstr "Speciell"
+# 
+# File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 1286
+# File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 1454
+# File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 1585
+# File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 1636
+#: NEEDS WORK
+msgid "(empty)"
+msgstr "(ingen text att översätta)"
+# 
+# File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 1292
+#: NEEDS WORK
+msgid "Form Preview"
+msgstr "Formförhandsvisning"
+# 
+# File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 1343
+#: NEEDS WORK
+msgid "Choose Icon"
+msgstr "Välj ikon"
+# 
+# File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 1344
+#: NEEDS WORK
+msgid "Enter icon name or select from common icons:"
+msgstr "Ange ikonens namn eller välj från vanliga ikoner:"
+# 
+# File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 1563
+#: NEEDS WORK
+msgid "Command Text"
+msgstr "Kommandotext"
+# 
+# File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 1564
+#: NEEDS WORK
+msgid "Text Input"
+msgstr "Textinmatning"
+# 
+# File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 1565
+#: NEEDS WORK
+msgid "Text Area"
+msgstr "Textområde"
+# 
+# File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 1567
+#: NEEDS WORK
+msgid "Switch"
+msgstr "Växla"
+# 
+# File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 1568
+#: NEEDS WORK
+msgid "Dropdown"
+msgstr "Rullgardin"
+# 
+# File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 1569
+#: NEEDS WORK
+msgid "Radio Buttons"
+msgstr "Radioknappar"
+# 
+# File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 1570
+#: NEEDS WORK
+msgid "Multi-Select"
+msgstr "Multi-val"
+# 
+# File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 1571
+#: NEEDS WORK
+msgid "Number"
+msgstr "Nummer"
+# 
+# File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 1572
+#: NEEDS WORK
+msgid "Slider"
+msgstr "Reglage"
+# 
+# File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 1573
+#: NEEDS WORK
+msgid "File"
+msgstr "Fil"
+# 
+# File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 1574
+#: NEEDS WORK
+msgid "Directory"
+msgstr "Katalog"
+# 
+# File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 1575
+#: NEEDS WORK
+msgid "Date/Time"
+msgstr "Datum/Tid"
+# 
+# File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 1576
+#: NEEDS WORK
+msgid "Color"
+msgstr "Färg"
+# 
+# File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 1591
+#: NEEDS WORK
+msgid "Field"
+msgstr "Fält"
+# 
+# File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 1630
+#: NEEDS WORK
+msgid "Command text"
+msgstr "Kommandotext"
+# 
+# File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 1643
+#: NEEDS WORK
+msgid "ID"
+msgstr "ID"
+# 
+# File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 1655
+# File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 1763
+# File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 2005
+#: NEEDS WORK
+msgid "Label"
+msgstr "Etikett"
+# 
+# File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 1668
+# File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 1877
+# File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 1886
+#: NEEDS WORK
+msgid "Placeholder"
+msgstr "Platshållare"
+# 
+# File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 1696
+#: NEEDS WORK
+msgid "On value"
+msgstr "På värde"
+# 
+# File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 1704
+#: NEEDS WORK
+msgid "Off value"
+msgstr "Avstängd värde"
+# 
+# File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 1712
+#: NEEDS WORK
+msgid "Default on"
+msgstr "Standard på"
+# 
+# File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 1722
+# File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 1966
+#: NEEDS WORK
+msgid "Options"
+msgstr "Alternativ"
+# 
+# File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 1729
+# File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 1973
+#: NEEDS WORK
+msgid "Add option"
+msgstr "Lägg till alternativ"
+# 
+# File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 1755
+# File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 1997
+#: NEEDS WORK
+msgid "Value"
+msgstr "Värde"
+# 
+# File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 1904
+#: NEEDS WORK
+msgid "Rows"
+msgstr "Rader"
+# 
+# File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 1913
+#: NEEDS WORK
+msgid "Minimum"
+msgstr "Minimi"
+# 
+# File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 1926
+#: NEEDS WORK
+msgid "Maximum"
+msgstr "Maximalt"
+# 
+# File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 1939
+#: NEEDS WORK
+msgid "Step"
+msgstr "Steg"
+# 
+# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
+# 
+# File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 2105
+# File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 2124
+# File: src/ashyterm/data/command_manager_models.py, line: 329
+#: NEEDS WORK
+msgid "Format"
+msgstr "Format"
+# 
+# File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 2115
+#: NEEDS WORK
+msgid "Common: %Y-%m-%d %H:%M:%S, %d/%m/%Y, %H:%M"
+msgstr "Vanlig: %Y-%m-%d %H:%M:%S, %d/%m/%Y, %H:%M"
+# 
+# File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 2126
+#: NEEDS WORK
+msgid "Hex (#RRGGBB)"
+msgstr "Hex (#RRGGBB)"
+# 
+# File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 2126
+#: NEEDS WORK
+msgid "RGB (r,g,b)"
+msgstr "RGB (r,g,b)"
+# 
+# File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 2511
+#: NEEDS WORK
+msgid "Search..."
+msgstr "Sök..."
+# 
+# File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 2521
+#: NEEDS WORK
+msgid "Restore hidden commands"
+msgstr "Återställ dolda kommandon"
+# 
+# File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 2541
+#: NEEDS WORK
+msgid "Send to all terminals"
+msgstr "Skicka till alla terminaler"
+# 
+# File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 2634
+#: NEEDS WORK
+msgid "Add Command"
+msgstr "Lägg till kommando"
+# 
+# File: usr/share/ashyterm/window.py, line: 705
+#: NEEDS WORK
+msgid "No open terminals found."
+msgstr "Inga öppna terminaler hittades."
+# 
+# File: usr/share/ashyterm/window.py, line: 711
+#: NEEDS WORK
+msgid "Confirm sending of command"
+msgstr "Bekräfta sändning av kommando"
+# 
+# File: usr/share/ashyterm/window.py, line: 734
+#: NEEDS WORK
+#, python-brace-format
+msgid "Select which of the <b>{count}</b> open terminals should receive the command below."
+msgstr "Välj vilken av de <b>{count}</b> öppna terminalerna som ska ta emot kommandot nedan."
+# 
+# File: usr/share/ashyterm/window.py, line: 749
+#: NEEDS WORK
+msgid "Choose the tabs that should run this command:"
+msgstr "Välj de flikar som ska köra det här kommandot:"
+# 
+# File: usr/share/ashyterm/window.py, line: 731
+#: NEEDS WORK
+msgid "Send Command"
+msgstr "Skicka kommando"
+# 
+# File: usr/share/ashyterm/window.py, line: 857
+#: NEEDS WORK
+msgid "Terminal"
+msgstr "Terminal"
+# 
+# File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 2952
+#: NEEDS WORK
+#, python-brace-format
+msgid "Are you sure you want to delete '{name}'?"
+msgstr "Är du säker på att du vill ta bort '{name}'?"
+# 
+# File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 2971
+#: NEEDS WORK
+msgid "Restore Default?"
+msgstr "Återställ standard?"
+# 
+# File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 2972
+#: NEEDS WORK
+#, python-brace-format
+msgid "This will restore '{name}' to its original default configuration. Your customizations will be lost."
+msgstr ""
+"Detta kommer att återställa '{name}' till dess ursprungliga standardkonfiguration. Dina "
+"anpassningar kommer att gå förlorade."
+# 
+# File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 3007
+#: NEEDS WORK
+msgid "Hide Command?"
+msgstr "Dölj kommando?"
+# 
+# File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 3008
+#: NEEDS WORK
+#, python-brace-format
+msgid "Hide '{name}' from the command list? You can restore it later from settings."
+msgstr "Dölja '{name}' från kommandolistan? Du kan återställa det senare från inställningarna."
+# 
+# File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 3040
+#: NEEDS WORK
+msgid "Restore Hidden Commands"
+msgstr "Återställ dolda kommandon"
+# 
+# File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 3063
+#: NEEDS WORK
+msgid "Click on a command to restore it:"
+msgstr "Klicka på ett kommando för att återställa det:"
+# 
+# File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 3102
+#: NEEDS WORK
+msgid "Restore All"
+msgstr "Återställ allt"
+# 
+# File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 3141
+#: NEEDS WORK
+msgid "(Copy)"
+msgstr "(Kopiera)"
+# 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1421
 #: NEEDS WORK
 msgid "Appearance"
 msgstr "Utseende"
-# 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 56
-#: NEEDS WORK
-msgid "Color Scheme"
-msgstr "Färgschema"
-# 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 62
-#: NEEDS WORK
-msgid "Manage Schemes..."
-msgstr "Hantera scheman..."
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1465
 #: NEEDS WORK
@@ -4630,11 +5336,6 @@ msgstr "Ashy Ikoner (Bundlade)"
 #: NEEDS WORK
 msgid "System Icons"
 msgstr "Systemikoner"
-# 
-# File: usr/share/ashyterm/window.py, line: 857
-#: NEEDS WORK
-msgid "Terminal"
-msgstr "Terminal"
 # 
 # File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 225
 #: NEEDS WORK
@@ -5013,1469 +5714,642 @@ msgstr "Flytta"
 msgid "Move Failed"
 msgstr "Flytt misslyckades"
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 9
-# File: usr/share/ashyterm/data/command_data.py, line: 30
-# File: usr/share/ashyterm/data/command_data.py, line: 53
-# File: usr/share/ashyterm/data/command_data.py, line: 64
-# File: usr/share/ashyterm/data/command_data.py, line: 81
-# File: usr/share/ashyterm/data/command_data.py, line: 98
-# File: usr/share/ashyterm/data/command_data.py, line: 113
+# File: src/ashyterm/data/command_manager_models.py, line: 205
 #: NEEDS WORK
-msgid "Essentials: File & Directory Navigation"
-msgstr "Väsentligt: Fil- och katalognavigering"
+msgid "Find Files"
+msgstr "Hitta filer"
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 12
+# File: src/ashyterm/data/command_manager_models.py, line: 206
 #: NEEDS WORK
-msgid "Lists the contents of a directory, like opening a folder to see what's inside."
-msgstr "Visar innehållet i en katalog, som att öppna en mapp för att se vad som finns inuti."
+msgid "Search for files and directories with various filters"
+msgstr "Sök efter filer och kataloger med olika filter"
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 18
+# File: src/ashyterm/data/command_manager_models.py, line: 212
+# File: src/ashyterm/data/command_manager_models.py, line: 311
+# File: src/ashyterm/data/command_manager_models.py, line: 324
+# File: src/ashyterm/data/command_manager_models.py, line: 375
 #: NEEDS WORK
-msgid "Shows files and directories in the current location."
-msgstr "Visar filer och kataloger i den aktuella platsen."
+msgid "File Operations"
+msgstr "Filoperationer"
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 24
+# File: src/ashyterm/data/command_manager_models.py, line: 217
 #: NEEDS WORK
-msgid "Shows a detailed list, including hidden files and human-readable sizes."
-msgstr "Visar en detaljerad lista, inklusive dolda filer och läsbara storlekar."
+msgid "Search Path"
+msgstr "Sökväg"
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 32
+# File: src/ashyterm/data/command_manager_models.py, line: 220
 #: NEEDS WORK
-msgid "Changes the current directory."
-msgstr "Ändrar den aktuella katalogen."
+msgid "Directory to search in"
+msgstr "Katalog att söka i"
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 36
+# File: src/ashyterm/data/command_manager_models.py, line: 221
 #: NEEDS WORK
-msgid "Navigates to a specific directory."
-msgstr "Navigerar till en specifik katalog."
+msgid "Starting directory for the search"
+msgstr "Startkatalog för sökningen"
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 40
+# File: src/ashyterm/data/command_manager_models.py, line: 227
 #: NEEDS WORK
-msgid "Goes up one level to the parent directory."
-msgstr "Går upp en nivå till föräldramappen."
+msgid "File Name Pattern"
+msgstr "Filnamnsmönster"
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 44
+# File: src/ashyterm/data/command_manager_models.py, line: 230
 #: NEEDS WORK
-msgid "Goes directly to your user's home directory."
-msgstr "Går direkt till användarens hemkatalog."
+msgid "e.g., *.txt or report*"
+msgstr "*.txt eller rapport*"
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 58
+# File: src/ashyterm/data/command_manager_models.py, line: 231
 #: NEEDS WORK
-msgid "Returns to the last directory you were in."
-msgstr "Återgår till den senaste katalogen du var i."
+msgid "Pattern to match file names (supports wildcards)"
+msgstr "Mönster för att matcha filnamn (stöder jokertecken)"
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 55
+# File: src/ashyterm/data/command_manager_models.py, line: 236
 #: NEEDS WORK
-msgid "Shows which directory you are currently in."
-msgstr "Visar vilken katalog du för närvarande befinner dig i."
+msgid "Recursive Search"
+msgstr "Rekursiv sökning"
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 59
+# File: src/ashyterm/data/command_manager_models.py, line: 239
 #: NEEDS WORK
-msgid "Displays the full path of your current location."
-msgstr "Visar den fullständiga sökvägen till din nuvarande plats."
+msgid "Search in subdirectories"
+msgstr "Sök i undermappar"
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 66
+# File: src/ashyterm/data/command_manager_models.py, line: 245
 #: NEEDS WORK
-msgid "Creates new directories."
-msgstr "Skapar nya kataloger."
+msgid "File Type"
+msgstr "Filtyp"
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 434
+# File: src/ashyterm/data/command_manager_models.py, line: 249
 #: NEEDS WORK
-msgid "Creates a single directory."
-msgstr "Skapar en enda katalog."
+msgid "Any"
+msgstr "Valfri"
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 75
+# File: src/ashyterm/data/command_manager_models.py, line: 250
 #: NEEDS WORK
-msgid "Creates a full path of directories, even if the parent directories don't exist."
-msgstr "Skapar en fullständig sökväg av kataloger, även om föräldrakatalogerna inte finns."
+msgid "Files only"
+msgstr "Endast filer"
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 84
+# File: src/ashyterm/data/command_manager_models.py, line: 251
 #: NEEDS WORK
-msgid "Copies files or directories from one place to another."
-msgstr "Kopierar filer eller kataloger från en plats till en annan."
+msgid "Directories only"
+msgstr "Endast kataloger"
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 69
+# File: src/ashyterm/data/command_manager_models.py, line: 252
 #: NEEDS WORK
-msgid "Copies a single file."
-msgstr "Kopierar en enda fil."
+msgid "Symbolic links"
+msgstr "Symboliska länkar"
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 93
+# File: src/ashyterm/data/command_manager_models.py, line: 254
 #: NEEDS WORK
-msgid "Copies a directory and everything inside it."
-msgstr "Kopierar en katalog och allt som finns inuti."
+msgid "Filter by file type"
+msgstr "Filtrera efter filtyp"
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 86
+# File: src/ashyterm/data/command_manager_models.py, line: 259
 #: NEEDS WORK
-msgid "Moves or renames files and directories."
-msgstr "Flyttar eller byter namn på filer och kataloger."
+msgid "Size Filter"
+msgstr "Storleksfilter"
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 104
+# File: src/ashyterm/data/command_manager_models.py, line: 262
 #: NEEDS WORK
-msgid "Renames a file or directory."
-msgstr "Byter namn på en fil eller mapp."
+msgid "e.g., +100M or -1k"
+msgstr "+100M eller -1k"
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 96
+# File: src/ashyterm/data/command_manager_models.py, line: 263
 #: NEEDS WORK
-msgid "Moves a file to a new location."
-msgstr "Flyttar en fil till en ny plats."
+msgid "Filter by size (+100M = larger than 100MB, -1k = smaller than 1KB)"
+msgstr "Filtrera efter storlek (+100M = större än 100MB, -1k = mindre än 1KB)"
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 116
+# File: src/ashyterm/data/command_manager_models.py, line: 268
 #: NEEDS WORK
-msgid ""
-"Deletes files and directories. CAUTION: this is permanent! Tip: Before deleting, replace 'rm' with "
-"'ls' to preview what will be removed."
-msgstr ""
-"Tar bort filer och kataloger. VARNING: detta är permanent! Tips: Innan du tar bort, ersätt 'rm' med "
-"'ls' för att förhandsgranska vad som kommer att tas bort."
+msgid "Modified in Last N"
+msgstr "Ändrad under de senaste N"
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 119
+# File: src/ashyterm/data/command_manager_models.py, line: 271
 #: NEEDS WORK
-msgid "Deletes a single file."
-msgstr "Tar bort en enskild fil."
+msgid "e.g., 7"
+msgstr "nyckel"
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 122
+# File: src/ashyterm/data/command_manager_models.py, line: 272
 #: NEEDS WORK
-msgid "Deletes a directory and everything inside it."
-msgstr "Tar bort en katalog och allt inuti den."
+msgid "Find files modified in the last N time units (leave empty to skip)"
+msgstr "Hitta filer som ändrats under de senaste N tidsenheterna (lämna tomt för att hoppa över)"
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 126
+# File: src/ashyterm/data/command_manager_models.py, line: 278
 #: NEEDS WORK
-msgid "Asks for confirmation before deleting each file."
-msgstr "Frågar om bekräftelse innan varje fil raderas."
+msgid "Time Unit"
+msgstr "Tidsenhet"
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 131
+# File: src/ashyterm/data/command_manager_models.py, line: 282
 #: NEEDS WORK
-msgid "Forces deletion without asking (use with extreme caution)."
-msgstr "Tvingar borttagning utan att fråga (används med extrem försiktighet)."
+msgid "Minutes"
+msgstr "Minuter"
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 138
-# File: usr/share/ashyterm/data/command_data.py, line: 163
-# File: usr/share/ashyterm/data/command_data.py, line: 190
-# File: usr/share/ashyterm/data/command_data.py, line: 209
-# File: usr/share/ashyterm/data/command_data.py, line: 224
+# File: src/ashyterm/data/command_manager_models.py, line: 283
 #: NEEDS WORK
-msgid "Essentials: File I/O & Pipes"
-msgstr "Grunder: Fil I/O & Rör"
+msgid "Hours"
+msgstr "Timmar"
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 140
+# File: src/ashyterm/data/command_manager_models.py, line: 284
 #: NEEDS WORK
-msgid "Controls how data flows between commands and files."
-msgstr "Kontrollerar hur data flödar mellan kommandon och filer."
+msgid "Days"
+msgstr "Dagar"
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 145
+# File: src/ashyterm/data/command_manager_models.py, line: 286
 #: NEEDS WORK
-msgid "Redirect: Puts the output of a command into a file, overwriting it if it exists."
-msgstr "Omdirigera: Sätter utdata från ett kommando i en fil och skriver över den om den redan finns."
+msgid "Time unit for the modified filter"
+msgstr "Tidsenhet för den modifierade filtret"
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 151
+# File: src/ashyterm/data/command_manager_models.py, line: 291
 #: NEEDS WORK
-msgid "Append: Adds the output of a command to the end of a file."
-msgstr "Lägg till: Lägger till utdata från ett kommando i slutet av en fil."
+msgid "Search in File Content"
+msgstr "Sök i filinnehåll"
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 157
+# File: src/ashyterm/data/command_manager_models.py, line: 294
 #: NEEDS WORK
-msgid "Pipe: Connects the output of command1 to the input of command2, creating a workflow."
-msgstr "Rör: Ansluter utdata från kommando1 till indatan för kommando2, vilket skapar ett arbetsflöde."
+msgid "Text to search for inside files"
+msgstr "Text att söka efter i filer"
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 165
+# File: src/ashyterm/data/command_manager_models.py, line: 295
 #: NEEDS WORK
-msgid "Displays the content of a text file on the screen."
-msgstr "Visar innehållet i en textfil på skärmen."
+msgid "Use grep to search within file contents"
+msgstr "Använd grep för att söka inom filinnehåll"
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 170
+# File: src/ashyterm/data/command_manager_models.py, line: 303
 #: NEEDS WORK
-msgid "A modern and efficient way to display a file's content."
-msgstr "Ett modernt och effektivt sätt att visa innehållet i en fil."
+msgid "List Files"
+msgstr "Lista filer"
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 175
+# File: src/ashyterm/data/command_manager_models.py, line: 304
 #: NEEDS WORK
-msgid "Displays the content of a single file."
-msgstr "Visar innehållet i en enda fil."
+msgid "List directory contents with details"
+msgstr "Lista kataloginnehåll med detaljer"
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 180
+# File: src/ashyterm/data/command_manager_models.py, line: 317
 #: NEEDS WORK
-msgid "Displays the content of multiple files, one after the other."
-msgstr "Visar innehållet i flera filer, en efter en."
+msgid "Compress"
+msgstr "Komprimera"
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 185
+# File: src/ashyterm/data/command_manager_models.py, line: 318
 #: NEEDS WORK
-msgid "Displays the content with line numbers."
-msgstr "Visar innehållet med radnummer."
+msgid "Create compressed archives from files and folders"
+msgstr "Skapa komprimerade arkiv från filer och mappar"
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 193
+# File: src/ashyterm/data/command_manager_models.py, line: 333
 #: NEEDS WORK
-msgid "Creates multiple empty files at once or updates a file's modification timestamp."
-msgstr "Skapar flera tomma filer på en gång eller uppdaterar en fils ändringsdatum."
+msgid "tar.xz (xz)"
+msgstr "tar.xz (xz)"
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 198
+# File: src/ashyterm/data/command_manager_models.py, line: 334
 #: NEEDS WORK
-msgid "Creates several empty files at once."
-msgstr "Skapar flera tomma filer på en gång."
+msgid "tar.gz (gzip)"
+msgstr "tar.gz (gzip)"
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 203
+# File: src/ashyterm/data/command_manager_models.py, line: 335
 #: NEEDS WORK
-msgid "Updates the modification date and time of a file to the current time."
-msgstr "Uppdaterar ändringsdatum och tid för en fil till den aktuella tiden."
+msgid "tar.bz2 (bzip2)"
+msgstr "tar.bz2 (bzip2)"
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 211
+# File: src/ashyterm/data/command_manager_models.py, line: 336
 #: NEEDS WORK
-msgid "Displays the beginning of a text file."
-msgstr "Visar början av en textfil."
+msgid "tar.zst (zstd)"
+msgstr "tar.zst (zstd)"
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 215
+# File: src/ashyterm/data/command_manager_models.py, line: 337
 #: NEEDS WORK
-msgid "Shows the first 10 lines of a file."
-msgstr "Visar de första 10 raderna av en fil."
+msgid "tar.lzma (lzma)"
+msgstr "tar.lzma (lzma)"
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 219
+# File: src/ashyterm/data/command_manager_models.py, line: 338
 #: NEEDS WORK
-msgid "Shows the first 20 lines of a file."
-msgstr "Visar de första 20 raderna av en fil."
+msgid "tar (no compression)"
+msgstr "tar (ingen komprimering)"
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 226
+# File: src/ashyterm/data/command_manager_models.py, line: 339
 #: NEEDS WORK
-msgid "Displays the end of a text file."
-msgstr "Visar slutet av en textfil."
+msgid "zip"
+msgstr "zip"
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 230
+# File: src/ashyterm/data/command_manager_models.py, line: 341
 #: NEEDS WORK
-msgid "Shows the last 10 lines of a file."
-msgstr "Visar de senaste 10 raderna av en fil."
+msgid "Archive format to use"
+msgstr "Arkivformat att använda"
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 235
+# File: src/ashyterm/data/command_manager_models.py, line: 346
 #: NEEDS WORK
-msgid "Follows a file in real-time, showing new lines as they are added."
-msgstr "Följer en fil i realtid och visar nya rader när de läggs till."
+msgid "Files/Folders"
+msgstr "Filer/Mappar"
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 242
-# File: usr/share/ashyterm/data/command_data.py, line: 265
-# File: usr/share/ashyterm/data/command_data.py, line: 296
-# File: usr/share/ashyterm/data/command_data.py, line: 307
-# File: usr/share/ashyterm/data/command_data.py, line: 319
-# File: usr/share/ashyterm/data/command_data.py, line: 332
-# File: usr/share/ashyterm/data/command_data.py, line: 345
-# File: usr/share/ashyterm/data/command_data.py, line: 366
+# File: src/ashyterm/data/command_manager_models.py, line: 349
 #: NEEDS WORK
-msgid "Essentials: Search & System Information"
-msgstr "Viktigt: Sök och systeminformation"
+msgid "file1 file2 folder/"
+msgstr "fil1 fil2 mapp/"
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 244
+# File: src/ashyterm/data/command_manager_models.py, line: 350
 #: NEEDS WORK
-msgid "Searches for a word or text pattern within files."
-msgstr "Söker efter ett ord eller textmönster inom filer."
+msgid "Files and folders to compress"
+msgstr "Filer och mappar att komprimera"
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 136
+# File: src/ashyterm/data/command_manager_models.py, line: 356
 #: NEEDS WORK
-msgid "Finds and displays all lines containing 'word' in the file."
-msgstr "Hittar och visar alla rader som innehåller 'word' i filen."
+msgid "Archive Name"
+msgstr "Arkivnamn"
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 254
+# File: src/ashyterm/data/command_manager_models.py, line: 359
+# File: src/ashyterm/data/command_manager_models.py, line: 383
 #: NEEDS WORK
-msgid "Searches for the word, ignoring case differences."
-msgstr "Söker efter ordet, utan att ta hänsyn till skillnader i versaler och gemener."
+msgid "archive.tar.xz"
+msgstr "arkiv.tar.xz"
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 259
+# File: src/ashyterm/data/command_manager_models.py, line: 360
 #: NEEDS WORK
-msgid "Searches for 'word' in all files in the current directory and its subdirectories."
-msgstr "Söker efter 'ord' i alla filer i den aktuella katalogen och dess undermappar."
+msgid "Name of the archive file to create"
+msgstr "Namn på arkivfilen som ska skapas"
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 267
+# File: src/ashyterm/data/command_manager_models.py, line: 368
 #: NEEDS WORK
-msgid "A powerful tool for finding files and directories."
-msgstr "Ett kraftfullt verktyg för att hitta filer och kataloger."
+msgid "Extract"
+msgstr "Extrahera"
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 272
+# File: src/ashyterm/data/command_manager_models.py, line: 369
 #: NEEDS WORK
-msgid "Finds all files ending with .txt in the current directory and subdirectories."
-msgstr "Hittar alla filer som slutar med .txt i den aktuella katalogen och underkataloger."
+msgid "Extract files from compressed archives"
+msgstr "Extrahera filer från komprimerade arkiv"
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 278
+# File: src/ashyterm/data/command_manager_models.py, line: 380
 #: NEEDS WORK
-msgid "Finds only directories whose names start with 'backup'."
-msgstr "Hittar endast kataloger vars namn börjar med 'backup'."
+msgid "Archive File"
+msgstr "Arkivfil"
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 283
+# File: src/ashyterm/data/command_manager_models.py, line: 384
 #: NEEDS WORK
-msgid "Finds files that were modified in the last 7 days."
-msgstr "Hittar filer som har ändrats under de senaste 7 dagarna."
+msgid "Archive file to extract"
+msgstr "Arkivfil att extrahera"
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 287
+# File: src/ashyterm/data/command_manager_models.py, line: 390
 #: NEEDS WORK
-msgid "Finds files larger than 100MB."
-msgstr "Hittar filer som är större än 100MB."
+msgid "Destination"
+msgstr "Destination"
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 291
+# File: src/ashyterm/data/command_manager_models.py, line: 393
 #: NEEDS WORK
-msgid "Finds empty files and directories."
-msgstr "Hittar tomma filer och kataloger."
+msgid "Leave empty for current directory"
+msgstr "Lämna tomt för nuvarande katalog"
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 298
+# File: src/ashyterm/data/command_manager_models.py, line: 394
 #: NEEDS WORK
-msgid "Shows the username of the currently logged-in user."
-msgstr "Visar användarnamnet för den för närvarande inloggade användaren."
+msgid "Destination directory (optional)"
+msgstr "Målmapp (valfritt)"
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 302
+# File: src/ashyterm/data/command_manager_models.py, line: 402
 #: NEEDS WORK
-msgid "Displays your current username."
-msgstr "Visar ditt nuvarande användarnamn."
+msgid "Systemctl"
+msgstr "Systemctl"
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 309
+# File: src/ashyterm/data/command_manager_models.py, line: 403
 #: NEEDS WORK
-msgid "Displays the current system date and time."
-msgstr "Visar det aktuella systemdatumet och -tiden."
+msgid "Manage system services with systemctl"
+msgstr "Hantera systemtjänster med systemctl"
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 311
+# File: src/ashyterm/data/command_manager_models.py, line: 409
+# File: src/ashyterm/data/command_manager_models.py, line: 463
+# File: src/ashyterm/data/command_manager_models.py, line: 543
 #: NEEDS WORK
-msgid "Shows the current date and time."
-msgstr "Visar det aktuella datumet och tiden."
+msgid "System"
+msgstr "System"
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 314
+# File: src/ashyterm/data/command_manager_models.py, line: 414
+# File: src/ashyterm/data/command_manager_models.py, line: 548
 #: NEEDS WORK
-msgid "Shows the date and time in a custom format."
-msgstr "Visar datum och tid i ett anpassat format."
+msgid "Action"
+msgstr "Åtgärd"
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 321
+# File: src/ashyterm/data/command_manager_models.py, line: 418
 #: NEEDS WORK
-msgid "Shows the free and used space on storage disks."
-msgstr "Visar det fria och använda utrymmet på lagringsdiskar."
+msgid "Status"
+msgstr "Status"
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 326
+# File: src/ashyterm/data/command_manager_models.py, line: 419
 #: NEEDS WORK
-msgid "Shows disk usage in a human-readable format (KB, MB, GB)."
-msgstr "Visar diskutrymme i ett läsbart format (KB, MB, GB)."
+msgid "Start"
+msgstr "Starta"
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 334
+# File: src/ashyterm/data/command_manager_models.py, line: 420
 #: NEEDS WORK
-msgid "Shows the amount of used and free RAM."
-msgstr "Visar mängden använd RAM och ledigt RAM."
+msgid "Stop"
+msgstr "Stopp"
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 339
+# File: src/ashyterm/data/command_manager_models.py, line: 421
 #: NEEDS WORK
-msgid "Shows memory usage in a human-readable format (KB, MB, GB)."
-msgstr "Visar minnesanvändning i ett läsbart format (KB, MB, GB)."
+msgid "Restart"
+msgstr "Starta om"
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 348
+# File: src/ashyterm/data/command_manager_models.py, line: 422
 #: NEEDS WORK
-msgid "Shows the disk space that files and directories are using."
-msgstr "Visar det diskutrymme som filer och mappar använder."
+msgid "Enable"
+msgstr "Aktivera"
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 354
+# File: src/ashyterm/data/command_manager_models.py, line: 423
 #: NEEDS WORK
-msgid "Shows the total size of each item in the current directory in a summary format."
-msgstr "Visar den totala storleken av varje objekt i den aktuella mappen i ett sammanfattande format."
+msgid "Disable"
+msgstr "Inaktivera"
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 360
+# File: src/ashyterm/data/command_manager_models.py, line: 424
 #: NEEDS WORK
-msgid "Shows the size of each directory and subdirectory in a human-readable format."
-msgstr "Visar storleken på varje katalog och underkatalog i ett läsbart format."
+msgid "Is Active"
+msgstr "Är aktiv"
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 369
+# File: src/ashyterm/data/command_manager_models.py, line: 425
 #: NEEDS WORK
-msgid "Shows how long the computer has been running without a restart."
-msgstr "Visar hur länge datorn har varit igång utan omstart."
+msgid "Is Enabled"
+msgstr "Är aktiverad"
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 375
+# File: src/ashyterm/data/command_manager_models.py, line: 426
 #: NEEDS WORK
-msgid "Displays the uptime, how many users are logged in, and the system load."
-msgstr "Visar drifttiden, hur många användare som är inloggade och systembelastningen."
+msgid "List Services"
+msgstr "Lista Tjänster"
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 382
-# File: usr/share/ashyterm/data/command_data.py, line: 435
-# File: usr/share/ashyterm/data/command_data.py, line: 466
+# File: src/ashyterm/data/command_manager_models.py, line: 427
 #: NEEDS WORK
-msgid "Software Management"
-msgstr "Programvaruhantering"
+msgid "List Running"
+msgstr "Lista över körande"
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 385
+# File: src/ashyterm/data/command_manager_models.py, line: 428
 #: NEEDS WORK
-msgid "The primary tool for installing, updating, and removing software on Arch-based Linux systems."
-msgstr ""
-"Det primära verktyget för att installera, uppdatera och ta bort programvara på Arch-baserade "
-"Linux-system."
+msgid "List Failed"
+msgstr "Listan misslyckades"
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 391
+# File: src/ashyterm/data/command_manager_models.py, line: 430
 #: NEEDS WORK
-msgid "Synchronizes with repositories and upgrades all installed packages."
-msgstr "Synkroniserar med förråd och uppgraderar alla installerade paket."
+msgid "Action to perform on the service"
+msgstr "Åtgärd att utföra på tjänsten"
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 396
+# File: src/ashyterm/data/command_manager_models.py, line: 435
 #: NEEDS WORK
-msgid "Installs a new software package."
-msgstr "Installer ett nytt programpaket."
+msgid "Service Name"
+msgstr "Tjänstnamn"
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 400
+# File: src/ashyterm/data/command_manager_models.py, line: 438
 #: NEEDS WORK
-msgid "Searches for a package in the repositories."
-msgstr "Söker efter ett paket i arkiven."
+msgid "e.g., nginx, sshd, docker"
+msgstr "nyckel"
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 404
+# File: src/ashyterm/data/command_manager_models.py, line: 439
 #: NEEDS WORK
-msgid "Searches for an already installed package."
-msgstr "Söker efter ett redan installerat paket."
+msgid "Name of the service (leave empty for list actions)"
+msgstr "Namn på tjänsten (lämna tomt för lista åtgärder)"
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 409
+# File: src/ashyterm/data/command_manager_models.py, line: 444
 #: NEEDS WORK
-msgid "Shows detailed information about a package from the repository."
-msgstr "Visar detaljerad information om ett paket från arkivet."
+msgid "User Scope"
+msgstr "Användaromfång"
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 415
+# File: src/ashyterm/data/command_manager_models.py, line: 447
 #: NEEDS WORK
-msgid "Shows detailed information about an installed package."
-msgstr "Visar detaljerad information om ett installerat paket."
+msgid "Operate on user services (--user flag)"
+msgstr "Arbeta med användartjänster (--user flag)"
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 420
+# File: src/ashyterm/data/command_manager_models.py, line: 456
 #: NEEDS WORK
-msgid "Removes a package and its unneeded dependencies."
-msgstr "Tar bort ett paket och dess onödiga beroenden."
+msgid "Journalctl"
+msgstr "Journalctl"
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 425
+# File: src/ashyterm/data/command_manager_models.py, line: 457
 #: NEEDS WORK
-msgid "Updates the database of which package owns which file."
-msgstr "Uppdaterar databasen för vilket paket som äger vilken fil."
+msgid "View system logs with journalctl"
+msgstr "Visa systemloggar med journalctl"
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 430
+# File: src/ashyterm/data/command_manager_models.py, line: 468
 #: NEEDS WORK
-msgid "Finds which package a specific file belongs to."
-msgstr "Hittar vilket paket en specifik fil tillhör."
+msgid "Unit/Service"
+msgstr "Enhet/Tjänst"
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 438
+# File: src/ashyterm/data/command_manager_models.py, line: 471
 #: NEEDS WORK
-msgid ""
-"An AUR helper for Arch-based systems that wraps pacman and adds support for the Arch User "
-"Repository."
-msgstr ""
-"En AUR-hjälpare för Arch-baserade system som omsluter pacman och lägger till stöd för Arch User "
-"Repository."
+msgid "e.g., nginx, sshd (optional)"
+msgstr "Nyckel"
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 444
+# File: src/ashyterm/data/command_manager_models.py, line: 472
 #: NEEDS WORK
-msgid "Upgrades all packages from official repositories and the AUR."
-msgstr "Uppgraderar alla paket från officiella arkiv och AUR."
+msgid "Filter logs by service unit name"
+msgstr "Filtrera loggar efter tjänsteenhetsnamn"
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 450
+# File: src/ashyterm/data/command_manager_models.py, line: 477
 #: NEEDS WORK
-msgid "Installs a package from the official repositories or the AUR."
-msgstr "Installer ett paket från de officiella arkiven eller AUR."
+msgid "Follow (live)"
+msgstr "Följ (live)"
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 456
+# File: src/ashyterm/data/command_manager_models.py, line: 480
 #: NEEDS WORK
-msgid "Searches for a package in both official repositories and the AUR."
-msgstr "Söker efter ett paket i både officiella arkiv och AUR."
+msgid "Follow new log entries in real-time"
+msgstr "Följ nya loggposter i realtid"
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 461
+# File: src/ashyterm/data/command_manager_models.py, line: 486
 #: NEEDS WORK
-msgid "Removes a package and its dependencies."
-msgstr "Tar bort ett paket och dess beroenden."
+msgid "Number of Lines"
+msgstr "Antal rader"
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 469
+# File: src/ashyterm/data/command_manager_models.py, line: 489
 #: NEEDS WORK
-msgid ""
-"A universal system for installing and running applications that works across different Linux "
-"distributions."
-msgstr ""
-"Ett universellt system för att installera och köra applikationer som fungerar över olika "
-"Linux-distributioner."
+msgid "e.g., 100 (empty for all)"
+msgstr "nyckel (tom för alla)"
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 475
+# File: src/ashyterm/data/command_manager_models.py, line: 490
 #: NEEDS WORK
-msgid "Installs an application from a remote repository like Flathub."
-msgstr "Installerar en applikation från ett fjärrförråd som Flathub."
+msgid "Show last N lines (leave empty for all)"
+msgstr "Visa de senaste N raderna (lämna tomt för alla)"
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 480
+# File: src/ashyterm/data/command_manager_models.py, line: 496
 #: NEEDS WORK
-msgid "Runs an installed Flatpak application."
-msgstr "Kör en installerad Flatpak-applikation."
+msgid "Priority"
+msgstr "Prioritet"
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 484
+# File: src/ashyterm/data/command_manager_models.py, line: 500
 #: NEEDS WORK
-msgid "Updates all installed Flatpak applications."
-msgstr "Uppdaterar alla installerade Flatpak-appar."
+msgid "All"
+msgstr "Alla"
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 489
+# File: src/ashyterm/data/command_manager_models.py, line: 501
 #: NEEDS WORK
-msgid "Searches for applications in the configured remotes."
-msgstr "Söker efter applikationer i de konfigurerade fjärranslutningarna."
+msgid "Emergency (0)"
+msgstr "Nödsituation (0)"
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 494
+# File: src/ashyterm/data/command_manager_models.py, line: 502
 #: NEEDS WORK
-msgid "Lists all installed Flatpak applications."
-msgstr "Visar alla installerade Flatpak-appar."
+msgid "Alert (1)"
+msgstr "Varning (1)"
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 498
+# File: src/ashyterm/data/command_manager_models.py, line: 503
 #: NEEDS WORK
-msgid "Removes an installed Flatpak application."
-msgstr "Tar bort en installerad Flatpak-applikation."
+msgid "Critical (2)"
+msgstr "Kritisk (2)"
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 504
-# File: usr/share/ashyterm/data/command_data.py, line: 519
-# File: usr/share/ashyterm/data/command_data.py, line: 540
+# File: src/ashyterm/data/command_manager_models.py, line: 504
 #: NEEDS WORK
-msgid "Permissions & Ownership"
-msgstr "Behörigheter och ägande"
+msgid "Error (3)"
+msgstr "Fel (3)"
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 507
+# File: src/ashyterm/data/command_manager_models.py, line: 505
 #: NEEDS WORK
-msgid "Executes a single command with administrative (root) privileges. Use with care."
-msgstr "Kör ett enda kommando med administrativa (root) rättigheter. Använd med försiktighet."
+msgid "Warning (4)"
+msgstr "Varning (4)"
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 513
+# File: src/ashyterm/data/command_manager_models.py, line: 506
 #: NEEDS WORK
-msgid "Runs the 'pacman -Syu' command as the administrator, which is required for system updates."
-msgstr "Kör kommandot 'pacman -Syu' som administratör, vilket krävs för systemuppdateringar."
+msgid "Notice (5)"
+msgstr "Meddelande (5)"
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 522
+# File: src/ashyterm/data/command_manager_models.py, line: 507
 #: NEEDS WORK
-msgid "Changes the permissions of files and directories (who can read, write, or execute them)."
-msgstr "Ändrar behörigheterna för filer och kataloger (vem som kan läsa, skriva eller köra dem)."
+msgid "Info (6)"
+msgstr "Info (6)"
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 528
+# File: src/ashyterm/data/command_manager_models.py, line: 508
 #: NEEDS WORK
-msgid "Adds execute (x) permission, allowing the file to be run as a program."
-msgstr "Lägger till körbehörighet (x), vilket gör att filen kan köras som ett program."
+msgid "Debug (7)"
+msgstr "Felsökning (7)"
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 534
+# File: src/ashyterm/data/command_manager_models.py, line: 510
 #: NEEDS WORK
-msgid ""
-"Sets permissions using numbers: owner can read/write/execute (7), group and others can read/execute "
-"(5)."
-msgstr ""
-"Ställer in behörigheter med hjälp av siffror: ägaren kan läsa/skriva/utföra (7), gruppen och andra "
-"kan läsa/utföra (5)."
+msgid "Filter by log priority level"
+msgstr "Filtrera efter loggprioritetsnivå"
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 542
+# File: src/ashyterm/data/command_manager_models.py, line: 515
 #: NEEDS WORK
-msgid "Changes the owner and group of a file or directory."
-msgstr "Ändrar ägaren och gruppen för en fil eller katalog."
+msgid "Since"
+msgstr "Eftersom"
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 547
+# File: src/ashyterm/data/command_manager_models.py, line: 519
 #: NEEDS WORK
-msgid "Makes 'user' the owner and 'group' the group for the file."
-msgstr "Gör 'användare' till ägare och 'grupp' till grupp för filen."
+msgid "All time"
+msgstr "All tid"
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 554
-# File: usr/share/ashyterm/data/command_data.py, line: 567
-# File: usr/share/ashyterm/data/command_data.py, line: 586
-# File: usr/share/ashyterm/data/command_data.py, line: 607
+# File: src/ashyterm/data/command_manager_models.py, line: 521
 #: NEEDS WORK
-msgid "Process & Network Management"
-msgstr "Process- och nätverkshantering"
+msgid "Since Yesterday"
+msgstr "Sedan igår"
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 557
+# File: src/ashyterm/data/command_manager_models.py, line: 522
 #: NEEDS WORK
-msgid "Shows the programs (processes) currently running on the system."
-msgstr "Visar de program (processer) som för närvarande körs på systemet."
+msgid "Last Hour"
+msgstr "Senaste timmen"
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 562
+# File: src/ashyterm/data/command_manager_models.py, line: 523
 #: NEEDS WORK
-msgid "Shows a detailed list of all running programs."
-msgstr "Visar en detaljerad lista över alla körande program."
+msgid "Last 24 Hours"
+msgstr "Senaste 24 timmarna"
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 570
+# File: src/ashyterm/data/command_manager_models.py, line: 525
 #: NEEDS WORK
-msgid "Terminates a program (process) that is frozen or unresponsive."
-msgstr "Avslutar ett program (process) som är fryst eller svarar inte."
+msgid "Current Boot"
+msgstr "Aktuell start"
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 575
+# File: src/ashyterm/data/command_manager_models.py, line: 526
 #: NEEDS WORK
-msgid "Politely tries to close the program with ID 1234."
-msgstr "Försöker artigt stänga programmet med ID 1234."
+msgid "Previous Boot"
+msgstr "Tidigare start"
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 580
+# File: src/ashyterm/data/command_manager_models.py, line: 528
 #: NEEDS WORK
-msgid "Forcibly terminates the program with ID 1234 (use as a last resort)."
-msgstr "Tvingar programmet med ID 1234 att avslutas (använd som en sista utväg)."
+msgid "Filter logs by time period"
+msgstr "Filtrera loggar efter tidsperiod."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 589
+# File: src/ashyterm/data/command_manager_models.py, line: 536
 #: NEEDS WORK
-msgid "Terminates all processes with a specific name, like closing all windows of an app."
-msgstr "Avslutar alla processer med ett specifikt namn, som att stänga alla fönster i en app."
+msgid "Pacman"
+msgstr "Pacman"
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 595
+# File: src/ashyterm/data/command_manager_models.py, line: 537
 #: NEEDS WORK
-msgid "Closes all running instances of the 'firefox' program."
-msgstr "Stänger alla aktiva instanser av programmet 'firefox'."
+msgid "Arch Linux package manager operations"
+msgstr "Arch Linux paketförvaltningsoperationer"
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 601
+# File: src/ashyterm/data/command_manager_models.py, line: 552
 #: NEEDS WORK
-msgid "Asks for confirmation before terminating each 'chrome' process."
-msgstr "Frågar om bekräftelse innan varje 'chrome'-process avslutas."
+msgid "Install"
+msgstr "Installera"
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 610
+# File: src/ashyterm/data/command_manager_models.py, line: 554
 #: NEEDS WORK
-msgid "Tests if there is a connection to another computer or website."
-msgstr "Testar om det finns en anslutning till en annan dator eller webbplats."
+msgid "Remove with Dependencies"
+msgstr "Ta bort med beroenden"
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 615
+# File: src/ashyterm/data/command_manager_models.py, line: 555
 #: NEEDS WORK
-msgid "Checks if you can communicate with google.com."
-msgstr "Kontrollerar om du kan kommunicera med google.com."
+msgid "Remove All (configs too)"
+msgstr "Ta bort allt (inklusive konfigurationer)"
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 620
+# File: src/ashyterm/data/command_manager_models.py, line: 556
 #: NEEDS WORK
-msgid "Sends only 4 test packets instead of running continuously."
-msgstr "Skickar endast 4 testpaket istället för att köra kontinuerligt."
+msgid "Search"
+msgstr "Sök"
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 627
-# File: usr/share/ashyterm/data/command_data.py, line: 644
-# File: usr/share/ashyterm/data/command_data.py, line: 655
+# File: src/ashyterm/data/command_manager_models.py, line: 557
 #: NEEDS WORK
-msgid "System & User Control"
-msgstr "System- och användarkontroll"
+msgid "Package Info"
+msgstr "Paketinformation"
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 630
+# File: src/ashyterm/data/command_manager_models.py, line: 558
 #: NEEDS WORK
-msgid "Safely turns off or schedules a shutdown for the computer."
-msgstr "Stänger av datorn säkert eller schemalägger en nedstängning."
+msgid "Local Package Info"
+msgstr "Lokal paketinformation"
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 635
+# File: src/ashyterm/data/command_manager_models.py, line: 559
 #: NEEDS WORK
-msgid "Shuts down the system immediately."
-msgstr "Stänger av systemet omedelbart."
+msgid "List Package Files"
+msgstr "Lista paketfiler"
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 639
+# File: src/ashyterm/data/command_manager_models.py, line: 560
 #: NEEDS WORK
-msgid "Schedules a shutdown for 15 minutes from now."
-msgstr "Schemalägger en nedstängning om 15 minuter."
+msgid "System Update"
+msgstr "Systemuppdatering"
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 646
+# File: src/ashyterm/data/command_manager_models.py, line: 561
 #: NEEDS WORK
-msgid "Restarts the computer."
-msgstr "Startar om datorn."
+msgid "Force Refresh & Update"
+msgstr "Tvinga uppdatering och uppfräschning"
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 650
+# File: src/ashyterm/data/command_manager_models.py, line: 562
 #: NEEDS WORK
-msgid "Restarts the system immediately."
-msgstr "Startar systemet omedelbart."
+msgid "Clean Cache"
+msgstr "Rensa cache"
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 658
+# File: src/ashyterm/data/command_manager_models.py, line: 563
 #: NEEDS WORK
-msgid "Switches to another user account in the current terminal session."
-msgstr "Byter till ett annat användarkonto i den aktuella terminalsessionen."
+msgid "Clean All Cache"
+msgstr "Rensa all cache"
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 664
+# File: src/ashyterm/data/command_manager_models.py, line: 564
 #: NEEDS WORK
-msgid "Switches to the specified user's account (requires their password)."
-msgstr "Byter till den angivna användarens konto (kräver deras lösenord)."
+msgid "List Installed"
+msgstr "Lista installerade"
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 671
+# File: src/ashyterm/data/command_manager_models.py, line: 565
 #: NEEDS WORK
-msgid "Version Control with Git"
-msgstr "Versionshantering med Git"
+msgid "List Explicitly Installed"
+msgstr "Lista över uttryckligen installerade"
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 674
+# File: src/ashyterm/data/command_manager_models.py, line: 566
 #: NEEDS WORK
-msgid "A tool for saving the history of changes in code projects, like a 'save point' in a game."
-msgstr "Ett verktyg för att spara historiken av ändringar i kodprojekt, som en 'sparpunkt' i ett spel."
+msgid "List Orphans"
+msgstr "Lista föräldralösa"
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 680
+# File: src/ashyterm/data/command_manager_models.py, line: 568
 #: NEEDS WORK
-msgid "Initializes a new 'history album' (repository) in a directory."
-msgstr "Initierar ett nytt 'historikalbum' (förråd) i en katalog."
+msgid "Package manager action to perform"
+msgstr "Åtgärd för paketförvaltare att utföra"
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 686
+# File: src/ashyterm/data/command_manager_models.py, line: 573
 #: NEEDS WORK
-msgid "Downloads a copy of a project that already exists elsewhere."
-msgstr "Laddar ner en kopia av ett projekt som redan finns någon annanstans."
+msgid "Package Name"
+msgstr "Paketnamn"
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 692
+# File: src/ashyterm/data/command_manager_models.py, line: 576
 #: NEEDS WORK
-msgid "Shows which files have been modified, added, or deleted."
-msgstr "Visar vilka filer som har ändrats, lagts till eller tagits bort."
+msgid "e.g., firefox, vim (optional for updates)"
+msgstr "nyckel"
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 698
+# File: src/ashyterm/data/command_manager_models.py, line: 577
 #: NEEDS WORK
-msgid "Prepares a modified file to be saved in the history ('stages' the change)."
-msgstr "Förbereder en modifierad fil för att sparas i historiken ('stagar' ändringen)."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 704
-#: NEEDS WORK
-msgid "Saves the staged changes to the history with a description of what was done."
-msgstr "Sparar de staging-ändringar till historiken med en beskrivning av vad som gjordes."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 709
-#: NEEDS WORK
-msgid "Downloads the latest updates from a remote project."
-msgstr "Laddar ner de senaste uppdateringarna från ett fjärrprojekt."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 714
-#: NEEDS WORK
-msgid "Uploads your saved changes (commits) to the remote project."
-msgstr "Laddar upp dina sparade ändringar (commits) till det fjärranslutna projektet."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 719
-#: NEEDS WORK
-msgid "Shows the history of all commits (saves) made."
-msgstr "Visar historiken för alla commits (sparningar) som gjorts."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 724
-#: NEEDS WORK
-msgid "Lists all the 'timelines' (branches) of the project."
-msgstr "Visar alla 'tidslinjer' (grenar) av projektet."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 730
-#: NEEDS WORK
-msgid "Switches to another 'timeline' (branch) to work on something new."
-msgstr "Byter till en annan 'tidslinje' (gren) för att arbeta med något nytt."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 737
-# File: usr/share/ashyterm/data/command_data.py, line: 758
-# File: usr/share/ashyterm/data/command_data.py, line: 779
-#: NEEDS WORK
-msgid "Archives & Compression"
-msgstr "Arkiv och komprimering"
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 740
-#: NEEDS WORK
-msgid "Groups multiple files and directories into a single package (.tar file) or extracts them."
-msgstr "Grupperar flera filer och kataloger i ett enda paket (.tar-fil) eller extraherar dem."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 745
-#: NEEDS WORK
-msgid "Creates a compressed package from a directory."
-msgstr "Skapar ett komprimerat paket från en katalog."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 749
-#: NEEDS WORK
-msgid "Extracts files from a compressed package."
-msgstr "Extraherar filer från ett komprimerat paket."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 753
-#: NEEDS WORK
-msgid "Creates a package without compression."
-msgstr "Skapar ett paket utan komprimering."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 761
-#: NEEDS WORK
-msgid "Creates compressed .zip files, a format widely used on all operating systems."
-msgstr "Skapar komprimerade .zip-filer, ett format som är allmänt använt på alla operativsystem."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 767
-#: NEEDS WORK
-msgid "Creates a zip file containing one or more specified files."
-msgstr "Skapar en zip-fil som innehåller en eller flera angivna filer."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 773
-#: NEEDS WORK
-msgid "Creates a zip file containing a directory and everything inside it."
-msgstr "Skapar en zip-fil som innehåller en katalog och allt inuti den."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 781
-#: NEEDS WORK
-msgid "Extracts files from a .zip archive."
-msgstr "Extraherar filer från ett .zip-arkiv."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 786
-#: NEEDS WORK
-msgid "Extracts all files from the archive into the current directory."
-msgstr "Extraherar alla filer från arkivet till den aktuella mappen."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 791
-#: NEEDS WORK
-msgid "Extracts files to a specific destination directory."
-msgstr "Extraherar filer till en specifik destinationsmapp."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 797
-# File: usr/share/ashyterm/data/command_data.py, line: 812
-# File: usr/share/ashyterm/data/command_data.py, line: 827
-# File: usr/share/ashyterm/data/command_data.py, line: 840
-# File: usr/share/ashyterm/data/command_data.py, line: 851
-# File: usr/share/ashyterm/data/command_data.py, line: 866
-# File: usr/share/ashyterm/data/command_data.py, line: 879
-#: NEEDS WORK
-msgid "Useful Commands (Optional)"
-msgstr "Användbara kommandon (valfritt)"
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 800
-#: NEEDS WORK
-msgid "A visual 'Task Manager' for the terminal. (May require installation)"
-msgstr "En visuell 'Aktivitetshanterare' för terminalen. (Kan kräva installation)"
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 806
-#: NEEDS WORK
-msgid "Interactively shows running programs, CPU, and memory usage."
-msgstr "Visar interaktivt körande program, CPU och minnesanvändning."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 815
-#: NEEDS WORK
-msgid "Monitors the usage of video cards (GPUs), especially NVIDIA. (May require installation)"
-msgstr "Övervakar användningen av grafikkort (GPU:er), särskilt NVIDIA. (Kan kräva installation)"
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 821
-#: NEEDS WORK
-msgid "Shows GPU usage, video memory, and temperature in real-time."
-msgstr "Visar GPU-användning, videominne och temperatur i realtid."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 830
-#: NEEDS WORK
-msgid "Lists all devices connected to the computer's PCI slots (graphics card, network, etc.)."
-msgstr "Visar alla enheter som är anslutna till datorns PCI-portar (grafikkort, nätverk, etc.)."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 835
-#: NEEDS WORK
-msgid "Shows a list of all PCI devices."
-msgstr "Visar en lista över alla PCI-enheter."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 842
-#: NEEDS WORK
-msgid "Lists all devices connected to the USB ports."
-msgstr "Visar alla enheter som är anslutna till USB-portarna."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 846
-#: NEEDS WORK
-msgid "Shows a list of all connected USB devices."
-msgstr "Visar en lista över alla anslutna USB-enheter."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 854
-#: NEEDS WORK
-msgid "A modern and super-fast version of 'grep' for searching text. (May require installation: ripgrep)"
-msgstr "En modern och super snabb version av 'grep' för att söka text. (Kan kräva installation: ripgrep)"
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 860
-#: NEEDS WORK
-msgid "Recursively searches for 'word' in the current directory very quickly."
-msgstr "Söker rekursivt efter 'word' i den aktuella katalogen mycket snabbt."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 869
-#: NEEDS WORK
-msgid "A modern and more intuitive version of 'find' for finding files. (May require installation: fd-find)"
-msgstr "En modern och mer intuitiv version av 'find' för att hitta filer. (Kan kräva installation: fd-find)"
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 874
-#: NEEDS WORK
-msgid "Finds all files containing '.txt' in their name."
-msgstr "Hittar alla filer som innehåller '.txt' i sitt namn."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 882
-#: NEEDS WORK
-msgid "A tool for processing and viewing data in JSON format. (May require installation)"
-msgstr "Ett verktyg för att bearbeta och visa data i JSON-format. (Kan kräva installation)"
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 888
-#: NEEDS WORK
-msgid "Displays a JSON file with colors and formatting for easy reading."
-msgstr "Visar en JSON-fil med färger och formatering för enkel läsning."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 895
-# File: usr/share/ashyterm/data/command_data.py, line: 914
-# File: usr/share/ashyterm/data/command_data.py, line: 929
-# File: usr/share/ashyterm/data/command_data.py, line: 944
-# File: usr/share/ashyterm/data/command_data.py, line: 957
-# File: usr/share/ashyterm/data/command_data.py, line: 968
-# File: usr/share/ashyterm/data/command_data.py, line: 979
-# File: usr/share/ashyterm/data/command_data.py, line: 990
-# File: usr/share/ashyterm/data/command_data.py, line: 1003
-# File: usr/share/ashyterm/data/command_data.py, line: 1015
-#: NEEDS WORK
-msgid "Text Processing (Intermediate)"
-msgstr "Textbehandling (Medelnivå)"
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 897
-#: NEEDS WORK
-msgid "Sorts the lines of a file."
-msgstr "Sorterar raderna i en fil."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 519
-#: NEEDS WORK
-msgid "Sorts lines in alphabetical order."
-msgstr "Sorterar rader i alfabetisk ordning."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 905
-#: NEEDS WORK
-msgid "Sorts lines in numerical order."
-msgstr "Sorterar rader i numerisk ordning."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 527
-#: NEEDS WORK
-msgid "Sorts lines in reverse order."
-msgstr "Sorterar rader i omvänd ordning."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 916
-#: NEEDS WORK
-msgid "Removes adjacent duplicate lines."
-msgstr "Tar bort intilliggande dubbletter av rader."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 920
-#: NEEDS WORK
-msgid "First sorts the file, then removes duplicate lines."
-msgstr "Först sorterar den filen, sedan tar den bort dubbletter."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 924
-#: NEEDS WORK
-msgid "Counts how many times each line appears."
-msgstr "Räknar hur många gånger varje rad förekommer."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 931
-#: NEEDS WORK
-msgid "Counts lines, words, and characters in a file."
-msgstr "Räknar rader, ord och tecken i en fil."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 935
-#: NEEDS WORK
-msgid "Counts only the number of lines."
-msgstr "Räknar endast antalet rader."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 939
-#: NEEDS WORK
-msgid "Counts only the number of words."
-msgstr "Räknar endast antalet ord."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 946
-#: NEEDS WORK
-msgid "Cuts and extracts columns of text from a file."
-msgstr "Klipper och extraherar kolumner av text från en fil."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 951
-#: NEEDS WORK
-msgid "Extracts the first column of text, using ':' as the separator."
-msgstr "Extraherar den första kolumnen av text, med ':' som avgränsare."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 959
-#: NEEDS WORK
-msgid "Merges the lines of multiple files side-by-side."
-msgstr "Slår samman raderna från flera filer sida vid sida."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 963
-#: NEEDS WORK
-msgid "Combines the lines of two files into columns."
-msgstr "Kombinerar raderna från två filer till kolumner."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 970
-#: NEEDS WORK
-msgid "Translates or deletes characters from text."
-msgstr "Översätter eller tar bort tecken från text."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 974
-#: NEEDS WORK
-msgid "Converts text from lowercase to uppercase."
-msgstr "Konverterar text från gemener till versaler."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 981
-#: NEEDS WORK
-msgid "Reverses the order of characters in each line."
-msgstr "Vänder ordningen på tecken i varje rad."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 985
-#: NEEDS WORK
-msgid "Reverses a string (result: 'stressed')."
-msgstr "Vänder en sträng (resultat: 'stressed')."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 993
-#: NEEDS WORK
-msgid "Displays the content of a file backwards (last line first)."
-msgstr "Visar innehållet i en fil baklänges (sista raden först)."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 998
-#: NEEDS WORK
-msgid "Displays the lines of a file in reverse order."
-msgstr "Visar raderna i en fil i omvänd ordning."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 667
-#: NEEDS WORK
-msgid "Prints a sequence of numbers."
-msgstr "Skriver ut en sekvens av nummer."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 671
-#: NEEDS WORK
-msgid "Prints numbers from 1 to 10."
-msgstr "Skriver ut siffror från 1 till 10."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 1010
-#: NEEDS WORK
-msgid "Prints numbers from 0 to 10, incrementing by 2."
-msgstr "Skriver ut siffror från 0 till 10, med en ökning med 2."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 1017
-#: NEEDS WORK
-msgid "A calculator for the terminal."
-msgstr "En kalkylator för terminalen."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 1021
-#: NEEDS WORK
-msgid "Performs a basic mathematical calculation."
-msgstr "Utför en grundläggande matematisk beräkning."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 1025
-#: NEEDS WORK
-msgid "Performs division with 2 decimal places."
-msgstr "Utför division med 2 decimaler."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 1031
-# File: usr/share/ashyterm/data/command_data.py, line: 1048
-# File: usr/share/ashyterm/data/command_data.py, line: 1069
-# File: usr/share/ashyterm/data/command_data.py, line: 1084
-# File: usr/share/ashyterm/data/command_data.py, line: 1099
-# File: usr/share/ashyterm/data/command_data.py, line: 1112
-# File: usr/share/ashyterm/data/command_data.py, line: 1223
-# File: usr/share/ashyterm/data/command_data.py, line: 1252
-# File: usr/share/ashyterm/data/command_data.py, line: 1271
-# File: usr/share/ashyterm/data/command_data.py, line: 1372
-# File: usr/share/ashyterm/data/command_data.py, line: 1469
-# File: usr/share/ashyterm/data/command_data.py, line: 1494
-#: NEEDS WORK
-msgid "Advanced: Scripting & Shell"
-msgstr "Avancerat: Skripting och Shell"
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 1034
-#: NEEDS WORK
-msgid "Executes command blocks only if a condition is true."
-msgstr "Utför kommandoblock endast om en villkor är sant."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 1039
-#: NEEDS WORK
-msgid "Tests if a file exists."
-msgstr "Kontrollerar om en fil finns."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 174
-#: NEEDS WORK
-msgid "Tests if a numeric variable is equal to 5."
-msgstr "Testar om en numerisk variabel är lika med 5."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 1051
-#: NEEDS WORK
-msgid "Creates a loop that repeats an action for each item in a list."
-msgstr "Skapar en loop som upprepar en åtgärd för varje objekt i en lista."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 1057
-#: NEEDS WORK
-msgid "Repeats the 'echo' command for the numbers 1, 2, and 3."
-msgstr "Upprepar 'echo'-kommandot för siffrorna 1, 2 och 3."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 1063
-#: NEEDS WORK
-msgid "Performs an action for every file that ends with .txt."
-msgstr "Utför en åtgärd för varje fil som slutar med .txt."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 1072
-#: NEEDS WORK
-msgid "Creates a loop that continues to execute as long as a condition is true."
-msgstr "Skapar en loop som fortsätter att köras så länge en villkor är sant."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 1078
-#: NEEDS WORK
-msgid "Executes the code block as long as the COUNT variable is less than 5."
-msgstr "Kör kodblocket så länge COUNT-variabeln är mindre än 5."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 1087
-#: NEEDS WORK
-msgid "Creates a loop that continues to execute until a condition becomes true."
-msgstr "Skapar en loop som fortsätter att köras tills ett villkor blir sant."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 1093
-#: NEEDS WORK
-msgid "Executes the code block until the COUNT variable is equal to 0."
-msgstr "Kör kodblocket tills COUNT-variabeln är lika med 0."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 1101
-#: NEEDS WORK
-msgid "Reads user input and stores it in a variable."
-msgstr "Läser användarinmatning och lagrar den i en variabel."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 1106
-#: NEEDS WORK
-msgid "Displays a prompt and waits for the user to type something."
-msgstr "Visar en uppmaning och väntar på att användaren ska skriva något."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 1115
-#: NEEDS WORK
-msgid "Checks if a condition is true or false, used for making decisions in scripts."
-msgstr "Kontrollerar om ett villkor är sant eller falskt, används för att fatta beslut i skript."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 1120
-#: NEEDS WORK
-msgid "Checks if a variable is empty."
-msgstr "Kontrollerar om en variabel är tom."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 1124
-#: NEEDS WORK
-msgid "Checks if a variable is not empty."
-msgstr "Kontrollerar om en variabel inte är tom."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 1128
-#: NEEDS WORK
-msgid "Checks if two pieces of text are exactly the same."
-msgstr "Kontrollerar om två texter är exakt likadana."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 1132
-#: NEEDS WORK
-msgid "Checks if two pieces of text are different."
-msgstr "Kontrollerar om två texter är olika."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 1136
-#: NEEDS WORK
-msgid "Checks if two numbers are equal."
-msgstr "Kontrollerar om två tal är lika."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 1140
-#: NEEDS WORK
-msgid "Checks if two numbers are not equal."
-msgstr "Kontrollerar om två tal inte är lika."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 1144
-#: NEEDS WORK
-msgid "Checks if the first number is less than the second."
-msgstr "Kontrollerar om det första numret är mindre än det andra."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 1149
-#: NEEDS WORK
-msgid "Checks if the first number is less than or equal to the second."
-msgstr "Kontrollerar om det första numret är mindre än eller lika med det andra."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 1155
-#: NEEDS WORK
-msgid "Checks if the first number is greater than the second."
-msgstr "Kontrollerar om det första numret är större än det andra."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 1161
-#: NEEDS WORK
-msgid "Checks if the first number is greater than or equal to the second."
-msgstr "Kontrollerar om det första numret är större än eller lika med det andra."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 1167
-#: NEEDS WORK
-msgid "Checks if text matches a pattern (e.g., is a valid email)."
-msgstr "Kontrollerar om texten matchar ett mönster (t.ex. är en giltig e-postadress)."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 1172
-#: NEEDS WORK
-msgid "NOT: Reverses the result of a check."
-msgstr "INTE: Återvänder resultatet av en kontroll."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 1176
-#: NEEDS WORK
-msgid "AND: Checks if both conditions are true."
-msgstr "OCH: Kontrollerar om båda villkoren är sanna."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 1180
-#: NEEDS WORK
-msgid "OR: Checks if at least one condition is true."
-msgstr "ELLER: Kontrollerar om minst ett villkor är sant."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 1184
-#: NEEDS WORK
-msgid "Checks if a file or directory exists."
-msgstr "Kontrollerar om en fil eller katalog finns."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 1188
-#: NEEDS WORK
-msgid "Checks if you have permission to read a file."
-msgstr "Kontrollerar om du har behörighet att läsa en fil."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 1192
-#: NEEDS WORK
-msgid "Checks if the path is a directory."
-msgstr "Kontrollerar om sökvägen är en katalog."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 1196
-#: NEEDS WORK
-msgid "Checks if you have permission to write to a file."
-msgstr "Kontrollerar om du har behörighet att skriva till en fil."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 1200
-#: NEEDS WORK
-msgid "Checks if a file is not empty."
-msgstr "Kontrollerar om en fil inte är tom."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 1205
-#: NEEDS WORK
-msgid "Checks if the path is a regular file (not a directory)."
-msgstr "Kontrollerar om sökvägen är en vanlig fil (inte en mapp)."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 1210
-#: NEEDS WORK
-msgid "Checks if you have permission to run a file."
-msgstr "Kontrollerar om du har behörighet att köra en fil."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 1214
-#: NEEDS WORK
-msgid "Checks if the first file is newer than the second."
-msgstr "Kontrollerar om den första filen är nyare än den andra."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 1218
-#: NEEDS WORK
-msgid "Checks if the first file is older than the second."
-msgstr "Kontrollerar om den första filen är äldre än den andra."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 1226
-#: NEEDS WORK
-msgid "Array operations for storing multiple values in a single variable."
-msgstr "Arrayoperationer för att lagra flera värden i en enda variabel."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 1231
-#: NEEDS WORK
-msgid "Creates a list with several items."
-msgstr "Skapar en lista med flera objekt."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 1235
-#: NEEDS WORK
-msgid "Accesses the first item in the list."
-msgstr "Åtkomst till det första objektet i listan."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 1239
-#: NEEDS WORK
-msgid "Accesses the last item in the list."
-msgstr "Åtkomst till det sista objektet i listan."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 1243
-#: NEEDS WORK
-msgid "Displays all items in the list."
-msgstr "Visar alla objekt i listan."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 1247
-#: NEEDS WORK
-msgid "Shows how many items are in the list."
-msgstr "Visar hur många objekt som finns i listan."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 1254
-#: NEEDS WORK
-msgid "Brace expansion to quickly generate text sequences."
-msgstr "Klammerexpansion för att snabbt generera textsekvenser."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 1258
-#: NEEDS WORK
-msgid "Generates: a.txt b.txt c.txt"
-msgstr "Genererar: a.txt b.txt c.txt"
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 1262
-#: NEEDS WORK
-msgid "Generates a sequence of numbers: 1 2 3 4 5."
-msgstr "Genererar en sekvens av nummer: 1 2 3 4 5."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 1266
-#: NEEDS WORK
-msgid "Creates multiple directories at once."
-msgstr "Skapar flera kataloger på en gång."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 1274
-#: NEEDS WORK
-msgid "Advanced ways to modify or get information from variables."
-msgstr "Avancerade sätt att modifiera eller hämta information från variabler."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 1279
-#: NEEDS WORK
-msgid "Gets the length of the text in a variable."
-msgstr "Hämtar längden på texten i en variabel."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 1283
-#: NEEDS WORK
-msgid "Uses 'default' if the variable is empty or not set."
-msgstr "Använder 'standard' om variabeln är tom eller inte inställd."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 1288
-#: NEEDS WORK
-msgid "Uses 'default' if empty, and also sets the variable to 'default'."
-msgstr "Använder 'standard' om tomt, och sätter också variabeln till 'standard'."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 1294
-#: NEEDS WORK
-msgid "Shows an error and stops the script if the variable is empty."
-msgstr "Visar ett fel och stoppar skriptet om variabeln är tom."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 1300
-#: NEEDS WORK
-msgid "Uses 'value_if_set' only if the variable has content."
-msgstr "Använder 'value_if_set' endast om variabeln har innehåll."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 1305
-#: NEEDS WORK
-msgid "Gets text starting from the 4th character."
-msgstr "Hämtar text som börjar från den 4:e tecknet."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 1310
-#: NEEDS WORK
-msgid "Gets 5 characters of text, starting from the 4th character."
-msgstr "Hämtar 5 tecken av text, med början från det 4:e tecknet."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 1316
-#: NEEDS WORK
-msgid "Removes the shortest matching 'prefix' from the beginning."
-msgstr "Tar bort det kortaste matchande 'prefixet' från början."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 1322
-#: NEEDS WORK
-msgid "Removes the longest matching 'prefix' from the beginning."
-msgstr "Tar bort det längsta matchande 'prefixet' från början."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 1328
-#: NEEDS WORK
-msgid "Removes the shortest matching 'suffix' from the end."
-msgstr "Tar bort den kortaste matchande 'suffixen' från slutet."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 1333
-#: NEEDS WORK
-msgid "Removes the longest matching 'suffix' from the end."
-msgstr "Tar bort den längsta matchande 'suffixen' från slutet."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 1337
-#: NEEDS WORK
-msgid "Replaces the first match of 'old' with 'new'."
-msgstr "Ersätter den första matchningen av 'gammal' med 'ny'."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 1341
-#: NEEDS WORK
-msgid "Replaces all matches of 'old' with 'new'."
-msgstr "Ersätter alla träffar av 'gammal' med 'ny'."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 1346
-#: NEEDS WORK
-msgid "Replaces 'old' with 'new' only if it's at the beginning."
-msgstr "Ersätter 'gammal' med 'ny' endast om det är i början."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 1351
-#: NEEDS WORK
-msgid "Replaces 'old' with 'new' only if it's at the end."
-msgstr "Ersätter 'gammal' med 'ny' endast om det är i slutet."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 1355
-#: NEEDS WORK
-msgid "Changes the first letter to uppercase."
-msgstr "Ändrar den första bokstaven till versal."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 1359
-#: NEEDS WORK
-msgid "Changes all letters to uppercase."
-msgstr "Ändrar alla bokstäver till versaler."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 1363
-#: NEEDS WORK
-msgid "Changes the first letter to lowercase."
-msgstr "Ändrar den första bokstaven till gemen."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 1367
-#: NEEDS WORK
-msgid "Changes all letters to lowercase."
-msgstr "Ändrar alla bokstäver till gemener."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 1375
-#: NEEDS WORK
-msgid ""
-"A 'mini-language' for finding text patterns. These are building blocks for tools like grep, sed, "
-"and awk."
-msgstr "En \"mini-språk\" för att hitta textmönster. Dessa är byggstenar för verktyg som grep, sed och awk."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 1381
-#: NEEDS WORK
-msgid "Dot: Matches any single character. 'h.t' finds 'hot', 'hat', and 'h t'."
-msgstr "Punkt: Matchar vilket enskilt tecken som helst. 'h.t' hittar 'hot', 'hat' och 'h t'."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 1387
-#: NEEDS WORK
-msgid "Asterisk: Matches zero or more repetitions of the preceding item. 'a*' finds '', 'a', 'aa'."
-msgstr ""
-"Asterisk: Matchar noll eller fler upprepningar av det föregående objektet. 'a*' hittar '', 'a', "
-"'aa'."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 1393
-#: NEEDS WORK
-msgid "Plus: Matches one or more repetitions of the preceding item. 'a+' finds 'a', 'aa', but not ''."
-msgstr ""
-"Plus: Matchar en eller flera upprepningar av det föregående objektet. 'a+' hittar 'a', 'aa', men "
-"inte ''."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 1399
-#: NEEDS WORK
-msgid ""
-"Question Mark: Matches the preceding item zero or one time (makes it optional). 'colou?r' matches "
-"'color' and 'colour'."
-msgstr ""
-"Frågetecken: Matchar det föregående objektet noll eller en gång (gör det valfritt). 'colou?r' "
-"matchar 'color' och 'colour'."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 1405
-#: NEEDS WORK
-msgid "Caret: Matches the beginning of a line. '^Hello' only finds lines that start with 'Hello'."
-msgstr "Caret: Matchar början av en rad. '^Hello' hittar endast rader som börjar med 'Hello'."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 1411
-#: NEEDS WORK
-msgid "Dollar Sign: Matches the end of a line. 'end$' only finds lines that end with 'end'."
-msgstr "Dollar Sign: Matchar slutet av en rad. 'end$' hittar endast rader som slutar med 'end'."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 1417
-#: NEEDS WORK
-msgid "Brackets: Matches any of the characters inside. '[abc]' finds 'a', 'b', or 'c'."
-msgstr "Klamrar: Matchar vilket som helst av tecknen inuti. '[abc]' hittar 'a', 'b' eller 'c'."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 1423
-#: NEEDS WORK
-msgid "Negated Brackets: Matches any character NOT inside. '[^abc]' finds 'd', 'e', 'f', etc."
-msgstr "Negerade parenteser: Matchar alla tecken SOM INTE är inuti. '[^abc]' hittar 'd', 'e', 'f', etc."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 1429
-#: NEEDS WORK
-msgid "Parentheses: Groups expressions. '(ab)+' finds 'ab', 'abab', 'ababab'."
-msgstr "Parenteser: Grupperar uttryck. '(ab)+' hittar 'ab', 'abab', 'ababab'."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 1435
-#: NEEDS WORK
-msgid "Pipe: Acts as an 'OR'. 'cat|dog' finds 'cat' or 'dog'."
-msgstr "Rör: Fungerar som en 'ELLER'. 'cat|dog' hittar 'cat' eller 'dog'."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 1441
-#: NEEDS WORK
-msgid "Curly Braces: Matches a specific number of repetitions. e.g., 'a{2,4}' finds 'aa', 'aaa', 'aaaa'."
-msgstr ""
-"Kråkiga parenteser: Matchar ett specifikt antal upprepningar. t.ex. 'a{2,4}' hittar 'aa', 'aaa', "
-"'aaaa'."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 1446
-#: NEEDS WORK
-msgid "Digit: Matches any single number from 0 to 9."
-msgstr "Siffra: Matchar vilket enskilt nummer som helst från 0 till 9."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 1451
-#: NEEDS WORK
-msgid "Word Character: Matches any letter, number, or underscore."
-msgstr "Ordtecken: Matchar vilken bokstav, siffra eller understreck som helst."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 1457
-#: NEEDS WORK
-msgid "Whitespace: Matches any space, tab, or newline character."
-msgstr "Whitespace: Matchar vilket utrymme, tabb eller radbrytningstecken som helst."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 1463
-#: NEEDS WORK
-msgid "Backslash: Escapes a special character, treating it literally. '\\.' matches a literal dot."
-msgstr "Backslash: Escaparar ett specialtecken, behandla det bokstavligt. '\\.' matchar en bokstavlig punkt."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 1472
-#: NEEDS WORK
-msgid "A command-line text editor, great for replacing words in files."
-msgstr "En kommandorads textredigerare, utmärkt för att ersätta ord i filer."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 1478
-#: NEEDS WORK
-msgid "Replaces all occurrences of 'old' with 'new' in the file."
-msgstr "Ersätter alla förekomster av 'gammal' med 'ny' i filen."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 1483
-#: NEEDS WORK
-msgid "Deletes all lines that start with # (comments)."
-msgstr "Tar bort alla rader som börjar med # (kommentarer)."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 1488
-#: NEEDS WORK
-msgid "Saves the modification directly in the original file."
-msgstr "Sparar ändringen direkt i den ursprungliga filen."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 1497
-#: NEEDS WORK
-msgid "An advanced tool for processing text, especially column-based data."
-msgstr "Ett avancerat verktyg för att bearbeta text, särskilt kolumnbaserad data."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 1502
-#: NEEDS WORK
-msgid "Displays only the first column (word) of each line."
-msgstr "Visar endast den första kolumnen (ordet) av varje rad."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 1506
-#: NEEDS WORK
-msgid "Displays only the last column of each line."
-msgstr "Visar endast den sista kolumnen av varje rad."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 1511
-#: NEEDS WORK
-msgid "Displays the value of column 1 only if the value of column 3 is greater than 100."
-msgstr "Visar värdet av kolumn 1 endast om värdet av kolumn 3 är större än 100."
+msgid "Package name for install/remove/search actions"
+msgstr "Paketnamn för installera/ta bort/söka åtgärder"
 # 
 # File: usr/share/ashyterm/sessions/storage.py, line: 125
 #: NEEDS WORK
@@ -6972,11 +6846,6 @@ msgstr "Söker..."
 msgid "Showing first {count} results. Refine your search to narrow the list."
 msgstr "Visar de första {count} resultaten. Förfina din sökning för att smalna av listan."
 # 
-# File: usr/share/ashyterm/filemanager/manager.py, line: 366
-#: NEEDS WORK
-msgid "Name"
-msgstr "Namn"
-# 
 # File: usr/share/ashyterm/filemanager/manager.py, line: 375
 #: NEEDS WORK
 msgid "Size"
@@ -7193,13 +7062,6 @@ msgstr "Läsa"
 #: NEEDS WORK
 msgid "Write"
 msgstr "Skriv"
-# 
-# File: usr/share/ashyterm/filemanager/manager.py, line: 714
-# File: usr/share/ashyterm/filemanager/manager.py, line: 728
-# File: usr/share/ashyterm/filemanager/manager.py, line: 742
-#: NEEDS WORK
-msgid "Execute"
-msgstr "Kör"
 # 
 # File: usr/share/ashyterm/filemanager/manager.py, line: 737
 #: NEEDS WORK
@@ -7546,36 +7408,10 @@ msgstr "Kan inte lossa den sista fliken."
 msgid "Terminal {id}"
 msgstr "Terminal {id}"
 # 
-# File: usr/share/ashyterm/window.py, line: 705
-#: NEEDS WORK
-msgid "No open terminals found."
-msgstr "Inga öppna terminaler hittades."
-# 
-# File: usr/share/ashyterm/window.py, line: 711
-#: NEEDS WORK
-msgid "Confirm sending of command"
-msgstr "Bekräfta sändning av kommando"
-# 
-# File: usr/share/ashyterm/window.py, line: 734
-#: NEEDS WORK
-#, python-brace-format
-msgid "Select which of the <b>{count}</b> open terminals should receive the command below."
-msgstr "Välj vilken av de <b>{count}</b> öppna terminalerna som ska ta emot kommandot nedan."
-# 
-# File: usr/share/ashyterm/window.py, line: 749
-#: NEEDS WORK
-msgid "Choose the tabs that should run this command:"
-msgstr "Välj de flikar som ska köra det här kommandot:"
-# 
 # File: usr/share/ashyterm/window.py, line: 809
 #: NEEDS WORK
 msgid "Remember my choice"
 msgstr "Kom ihåg mitt val"
-# 
-# File: usr/share/ashyterm/window.py, line: 731
-#: NEEDS WORK
-msgid "Send Command"
-msgstr "Skicka kommando"
 # 
 # File: usr/share/ashyterm/window.py, line: 823
 #: NEEDS WORK

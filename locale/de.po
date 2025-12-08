@@ -561,20 +561,21 @@ msgstr "Sitzungen-Panel"
 msgid "File Manager"
 msgstr "Dateimanager"
 # 
-# File: usr/share/ashyterm/ui/dialogs/command_guide_dialog.py, line: 143
+# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
+# 
+# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
+# 
+# File: src/ashyterm/ui/window_ui.py, line: 319
+# File: src/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 58
+# File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 2455
 #: NEEDS WORK
-msgid "Command Guide"
-msgstr "Befehlsanleitung"
+msgid "Command Manager"
+msgstr "Befehlsmanager"
 # 
 # File: usr/share/ashyterm/ui/window_ui.py, line: 350
 #: NEEDS WORK
 msgid "Search in Terminal"
 msgstr "Im Terminal suchen"
-# 
-# File: usr/share/ashyterm/ui/window_ui.py, line: 339
-#: NEEDS WORK
-msgid "Send Command to All Tabs"
-msgstr "Befehl an alle Tabs senden"
 # 
 # File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 39
 #: NEEDS WORK
@@ -604,6 +605,46 @@ msgstr "Neuer Tab"
 #: NEEDS WORK
 msgid "Ashy Terminal"
 msgstr "Aschy Terminal"
+# 
+# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
+# 
+# File: src/ashyterm/ui/window_ui.py, line: 564
+# File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 1075
+# File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 1166
+#: NEEDS WORK
+msgid "Icon Only"
+msgstr "Nur Symbol"
+# 
+# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
+# 
+# File: src/ashyterm/ui/window_ui.py, line: 565
+# File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 1075
+# File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 1166
+#: NEEDS WORK
+msgid "Text Only"
+msgstr "Nur Text"
+# 
+# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
+# 
+# File: src/ashyterm/ui/window_ui.py, line: 566
+# File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 1075
+# File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 1166
+#: NEEDS WORK
+msgid "Icon and Text"
+msgstr "Symbol und Text"
+# 
+# File: src/ashyterm/ui/window_ui.py, line: 567
+#: NEEDS WORK
+msgid "Display"
+msgstr "Anzeige"
+# 
+# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
+# 
+# File: src/ashyterm/ui/window_ui.py, line: 570
+# File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 700
+#: NEEDS WORK
+msgid "Unpin from Toolbar"
+msgstr "Von der Symbolleiste lösen"
 # 
 # #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
 # 
@@ -717,6 +758,15 @@ msgstr "Allgemeine Farben"
 msgid "16-Color Palette"
 msgstr "16-Farben-Palette"
 # 
+# File: src/ashyterm/ui/color_scheme_dialog.py, line: 214
+#: NEEDS WORK
+msgid ""
+"user@host:~$ ls -l\n"
+"<span weight='bold'>Bold Text</span>"
+msgstr ""
+"user@host:~$ ls -l  \n"
+"<span weight='bold'>Fetter Text</span>"
+# 
 # #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 136
@@ -781,6 +831,11 @@ msgstr "Benutzerdefiniert"
 msgid "Built-in"
 msgstr "Eingebaut"
 # 
+# File: src/ashyterm/ui/color_scheme_dialog.py, line: 375
+#: NEEDS WORK
+msgid "Bold Text"
+msgstr "Fetter Text"
+# 
 # File: usr/share/ashyterm/ui/color_scheme_dialog.py, line: 282
 #: NEEDS WORK
 msgid "Color Schemes"
@@ -843,6 +898,121 @@ msgid "Are you sure you want to delete the scheme '{name}'? This cannot be undon
 msgstr ""
 "Sind Sie sicher, dass Sie das Schema '{name}' löschen möchten? Dies kann nicht rückgängig gemacht "
 "werden."
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 32
+#: NEEDS WORK
+msgid "Black"
+msgstr "Schwarz"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 33
+#: NEEDS WORK
+msgid "Red"
+msgstr "Rot"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 34
+#: NEEDS WORK
+msgid "Green"
+msgstr "Grün"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 35
+#: NEEDS WORK
+msgid "Yellow"
+msgstr "Gelb"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 36
+#: NEEDS WORK
+msgid "Blue"
+msgstr "Blau"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 37
+#: NEEDS WORK
+msgid "Magenta"
+msgstr "Magenta"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 38
+#: NEEDS WORK
+msgid "Cyan"
+msgstr "Cyan"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 39
+#: NEEDS WORK
+msgid "White"
+msgstr "Weiß"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 41
+#: NEEDS WORK
+msgid "Bright Black"
+msgstr "Helles Schwarz"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 42
+#: NEEDS WORK
+msgid "Bright Red"
+msgstr "Helles Rot"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 43
+#: NEEDS WORK
+msgid "Bright Green"
+msgstr "Helles Grün"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 44
+#: NEEDS WORK
+msgid "Bright Yellow"
+msgstr "Helles Gelb"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 45
+#: NEEDS WORK
+msgid "Bright Blue"
+msgstr "Helles Blau"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 46
+#: NEEDS WORK
+msgid "Bright Magenta"
+msgstr "Helles Magenta"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 47
+#: NEEDS WORK
+msgid "Bright Cyan"
+msgstr "Helles Cyan"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 48
+#: NEEDS WORK
+msgid "Bright White"
+msgstr "Helles Weiß"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 68
+#: NEEDS WORK
+msgid "Default"
+msgstr "Standardmäßig"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 58
+#: NEEDS WORK
+msgid "Bold"
+msgstr "Fett"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 59
+#: NEEDS WORK
+msgid "Italic"
+msgstr "Kursiv"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1141
+#: NEEDS WORK
+msgid "Underline"
+msgstr "Unterstreichen"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 61
+#: NEEDS WORK
+msgid "Strikethrough"
+msgstr "Durchgestrichen"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 62
+#: NEEDS WORK
+msgid "Dim/Faint"
+msgstr "Dunkel/Schwach"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 63
+#: NEEDS WORK
+msgid "Blink"
+msgstr "Blink"
 # 
 # File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 220
 #: NEEDS WORK
@@ -1959,6 +2129,35 @@ msgstr "Standardeinstellungen verwenden"
 msgid "Clear custom prompts and use random defaults"
 msgstr "Benutzerdefinierte Eingabeaufforderungen löschen und zufällige Standardwerte verwenden"
 # 
+# File: src/ashyterm/ui/widgets/form_widget_builder.py, line: 160
+#: NEEDS WORK
+msgid "Enter password..."
+msgstr "Passwort eingeben..."
+# 
+# File: src/ashyterm/ui/widgets/form_widget_builder.py, line: 327
+# File: src/ashyterm/ui/widgets/form_widget_builder.py, line: 382
+# File: src/ashyterm/ui/widgets/form_widget_builder.py, line: 419
+#: NEEDS WORK
+msgid "No options defined"
+msgstr "Keine Optionen definiert"
+# 
+# File: src/ashyterm/ui/widgets/form_widget_builder.py, line: 435
+#: NEEDS WORK
+msgid "Select file..."
+msgstr "Datei auswählen..."
+# 
+# File: src/ashyterm/ui/widgets/form_widget_builder.py, line: 471
+#: NEEDS WORK
+msgid "Select folder..."
+msgstr "Ordner auswählen..."
+# 
+# File: src/ashyterm/ui/widgets/form_widget_builder.py, line: 507
+# File: src/ashyterm/ui/widgets/form_widget_builder.py, line: 532
+#: NEEDS WORK
+#, python-brace-format
+msgid "Format: {}"
+msgstr "Format: {}"
+# 
 # File: src/ashyterm/ui/widgets/conversation_history.py, line: 46
 #: NEEDS WORK
 msgid "Just now"
@@ -2192,13 +2391,10 @@ msgstr "Neues Fenster"
 msgid "Preferences"
 msgstr "Einstellungen"
 # 
-# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
-# 
-# File: src/ashyterm/ui/menus.py, line: 166
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1082
+# File: src/ashyterm/ui/menus.py, line: 171
 #: NEEDS WORK
-msgid "Highlight Colors"
-msgstr "Hervorhebungsfarben"
+msgid "Colors"
+msgstr "Farben"
 # 
 # #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
 # 
@@ -2558,121 +2754,6 @@ msgstr "Zeige {shown} von {total} Modellen"
 msgid "Showing first 100 results. Refine your search to see more."
 msgstr "Zeige die ersten 100 Ergebnisse. Verfeinere deine Suche, um mehr zu sehen."
 # 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 32
-#: NEEDS WORK
-msgid "Black"
-msgstr "Schwarz"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 33
-#: NEEDS WORK
-msgid "Red"
-msgstr "Rot"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 34
-#: NEEDS WORK
-msgid "Green"
-msgstr "Grün"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 35
-#: NEEDS WORK
-msgid "Yellow"
-msgstr "Gelb"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 36
-#: NEEDS WORK
-msgid "Blue"
-msgstr "Blau"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 37
-#: NEEDS WORK
-msgid "Magenta"
-msgstr "Magenta"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 38
-#: NEEDS WORK
-msgid "Cyan"
-msgstr "Cyan"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 39
-#: NEEDS WORK
-msgid "White"
-msgstr "Weiß"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 41
-#: NEEDS WORK
-msgid "Bright Black"
-msgstr "Helles Schwarz"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 42
-#: NEEDS WORK
-msgid "Bright Red"
-msgstr "Helles Rot"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 43
-#: NEEDS WORK
-msgid "Bright Green"
-msgstr "Helles Grün"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 44
-#: NEEDS WORK
-msgid "Bright Yellow"
-msgstr "Helles Gelb"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 45
-#: NEEDS WORK
-msgid "Bright Blue"
-msgstr "Helles Blau"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 46
-#: NEEDS WORK
-msgid "Bright Magenta"
-msgstr "Helles Magenta"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 47
-#: NEEDS WORK
-msgid "Bright Cyan"
-msgstr "Helles Cyan"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 48
-#: NEEDS WORK
-msgid "Bright White"
-msgstr "Helles Weiß"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 58
-#: NEEDS WORK
-msgid "Bold"
-msgstr "Fett"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 59
-#: NEEDS WORK
-msgid "Italic"
-msgstr "Kursiv"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1141
-#: NEEDS WORK
-msgid "Underline"
-msgstr "Unterstreichen"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 61
-#: NEEDS WORK
-msgid "Strikethrough"
-msgstr "Durchgestrichen"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 62
-#: NEEDS WORK
-msgid "Dim/Faint"
-msgstr "Dunkel/Schwach"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 63
-#: NEEDS WORK
-msgid "Blink"
-msgstr "Blink"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 68
-#: NEEDS WORK
-msgid "Default"
-msgstr "Standardmäßig"
-# 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 85
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 375
 #: NEEDS WORK
@@ -2726,6 +2807,11 @@ msgstr "Python Regex-Syntax. Erfassungsgruppen () können individuelle Farben ha
 #: NEEDS WORK
 msgid "Regex Pattern"
 msgstr "Regex-Muster"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 487
+#: NEEDS WORK
+msgid "Syntax highlighted"
+msgstr "Syntax hervorgehoben"
 # 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 276
 #: NEEDS WORK
@@ -3066,16 +3152,74 @@ msgstr "Regel löschen?"
 msgid "Are you sure you want to delete \"{}\"?"
 msgstr "Sind Sie sicher, dass Sie \"{}\" löschen möchten?"
 # 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1106
-#: NEEDS WORK
-msgid "Global Rules"
-msgstr "Globale Regeln"
+# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
 # 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1475
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1776
+# File: src/ashyterm/ui/menus.py, line: 166
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1082
 #: NEEDS WORK
-msgid "Command Rules"
-msgstr "Befehlsregeln"
+msgid "Highlight Colors"
+msgstr "Hervorhebungsfarben"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1457
+#: NEEDS WORK
+msgid "Terminal Colors"
+msgstr "Terminalfarben"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1467
+#: NEEDS WORK
+msgid "Output Highlighting"
+msgstr "Ausgabe-Hervorhebung"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1492
+#: NEEDS WORK
+msgid "Command-Specific"
+msgstr "Befehlspezifisch"
+# 
+# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 56
+#: NEEDS WORK
+msgid "Color Scheme"
+msgstr "Farbschema"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1529
+#: NEEDS WORK
+msgid "Create New Scheme"
+msgstr "Neues Schema erstellen"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1530
+#: NEEDS WORK
+msgid "Create a custom color scheme based on existing"
+msgstr "Erstellen Sie ein benutzerdefiniertes Farbschema basierend auf vorhandenen"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1626
+#: NEEDS WORK
+msgid "Edit scheme"
+msgstr "Schema bearbeiten"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1628
+#: NEEDS WORK
+msgid "Customize (creates a copy)"
+msgstr "Anpassen (erstellt eine Kopie)"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1637
+#: NEEDS WORK
+msgid "Delete scheme"
+msgstr "Löschen Schema"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1773
+#: NEEDS WORK
+#, python-brace-format
+msgid "Are you sure you want to delete '{}'?"
+msgstr "Sind Sie sicher, dass Sie '{}' löschen möchten?"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1806
+#: NEEDS WORK
+msgid "Scheme deleted"
+msgstr "Schema gelöscht"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1870
+#: NEEDS WORK
+msgid "Scheme saved"
+msgstr "Schema gespeichert"
 # 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1490
 #: NEEDS WORK
@@ -3091,15 +3235,35 @@ msgstr ""
 msgid "Activation"
 msgstr "Aktivierung"
 # 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1887
+#: NEEDS WORK
+msgid ""
+"⚠️ On slower computers, enabling output highlighting may slightly reduce terminal responsiveness, "
+"as all displayed content is processed for color patterns."
+msgstr ""
+"⚠️ Auf langsameren Computern kann das Aktivieren der Ausgabe-Hervorhebung die Reaktionsfähigkeit "
+"des Terminals leicht verringern, da alle angezeigten Inhalte zur Verarbeitung von Farbmuster "
+"bearbeitet werden."
+# 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1160
 #: NEEDS WORK
 msgid "Local Terminals"
 msgstr "Lokale Terminals"
 # 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1896
+#: NEEDS WORK
+msgid "Apply output highlighting to local terminal sessions"
+msgstr "Wenden Sie die Hervorhebung der Ausgabe auf lokale Terminalsitzungen an"
+# 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1169
 #: NEEDS WORK
 msgid "SSH Sessions"
 msgstr "SSH-Sitzungen"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1905
+#: NEEDS WORK
+msgid "Apply output highlighting to SSH connections"
+msgstr "Wenden Sie die Hervorhebung der Ausgabe auf SSH-Verbindungen an"
 # 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1567
 #: NEEDS WORK
@@ -3126,15 +3290,66 @@ msgstr "Aktiviere \"Katze\" Farbgebung"
 msgid "Apply syntax highlighting to \"cat\" command output"
 msgstr "Syntaxhervorhebung auf die Ausgabe des \"cat\"-Befehls anwenden"
 # 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1584
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1951
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2178
 #: NEEDS WORK
-msgid "Color Theme"
-msgstr "Farbschema"
+msgid "Theme Mode"
+msgstr "Themenmodus"
 # 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1594
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1952
 #: NEEDS WORK
-msgid "Pygments theme for \"cat\" output highlighting"
-msgstr "Pygments-Thema für die Hervorhebung der \"cat\"-Ausgabe"
+msgid "Auto: adapts to background color. Manual: single theme."
+msgstr "Auto: passt sich der Hintergrundfarbe an. Manuell: einzelnes Thema."
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1955
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2182
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 3592
+#: NEEDS WORK
+msgid "Auto"
+msgstr "Auto"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1956
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2183
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 3592
+#: NEEDS WORK
+msgid "Manual"
+msgstr "Handbuch"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2039
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2272
+#: NEEDS WORK
+msgid "Dark Background Theme"
+msgstr "Dunkles Hintergrundthema"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2040
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2273
+#: NEEDS WORK
+msgid "Theme used when background is dark"
+msgstr "Thema, das verwendet wird, wenn der Hintergrund dunkel ist"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2068
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2303
+#: NEEDS WORK
+msgid "Light Background Theme"
+msgstr "Helles Hintergrundthema"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2069
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2304
+#: NEEDS WORK
+msgid "Theme used when background is light"
+msgstr "Thema, das verwendet wird, wenn der Hintergrund hell ist"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2097
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2334
+#: NEEDS WORK
+msgid "Manual Theme"
+msgstr "Manuelles Thema"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2098
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2335
+#: NEEDS WORK
+msgid "Single theme to use in manual mode"
+msgstr "Einzelnes Thema zur Verwendung im manuellen Modus"
 # 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1636
 #: NEEDS WORK
@@ -3175,10 +3390,10 @@ msgstr ""
 "Färbe Shell-Befehle, während du sie eingibst. Nützlich für SSH-Sitzungen und Docker-Container, bei "
 "denen die Shell-Konfiguration nicht geändert werden kann."
 # 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1690
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2179
 #: NEEDS WORK
-msgid "Pygments theme for shell input highlighting"
-msgstr "Pygments-Thema für die Hervorhebung von Shell-Eingaben"
+msgid "Auto detects background, Manual uses selected theme"
+msgstr "Automatische Erkennung des Hintergrunds, Manuell verwendet ausgewähltes Thema"
 # 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1680
 #: NEEDS WORK
@@ -3309,6 +3524,12 @@ msgstr "Alle Befehle zurücksetzen"
 #: NEEDS WORK
 msgid "Available Commands"
 msgstr "Verfügbare Befehle"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1475
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1776
+#: NEEDS WORK
+msgid "Command Rules"
+msgstr "Befehlsregeln"
 # 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1438
 #: NEEDS WORK
@@ -3532,6 +3753,24 @@ msgstr "deaktiviert"
 #, python-brace-format
 msgid "\"cat\" colorization {}"
 msgstr "\"Katze\" Farbgebung {}"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 3593
+#: NEEDS WORK
+#, python-brace-format
+msgid "Cat theme mode: {}"
+msgstr "Katzen-Themenmodus: {}"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 3603
+#: NEEDS WORK
+#, python-brace-format
+msgid "Dark theme: {}"
+msgstr "Dunkles Thema: {}"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 3613
+#: NEEDS WORK
+#, python-brace-format
+msgid "Light theme: {}"
+msgstr "Helles Thema: {}"
 # 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2462
 #: NEEDS WORK
@@ -3887,15 +4126,10 @@ msgstr "SSH-Optionen"
 msgid "Run Command After Login"
 msgstr "Befehl nach Anmeldung ausführen"
 # 
-# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 459
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 497
 #: NEEDS WORK
-msgid "Execute a command automatically after SSH connects"
-msgstr "Führen Sie einen Befehl automatisch aus, nachdem die SSH-Verbindung hergestellt wurde."
-# 
-# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 318
-#: NEEDS WORK
-msgid "Post-Login Command"
-msgstr "Post-Login-Befehl"
+msgid "Execute commands automatically after SSH connects"
+msgstr "Befehle automatisch ausführen, nachdem die SSH-Verbindung hergestellt wurde"
 # 
 # File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 356
 #: NEEDS WORK
@@ -4248,78 +4482,6 @@ msgstr ""
 "SSH-Konfigurationsfehler:\n"
 "{}"
 # 
-# File: usr/share/ashyterm/ui/dialogs/command_guide_dialog.py, line: 32
-#: NEEDS WORK
-msgid "Add Custom Command"
-msgstr "Benutzerdefinierten Befehl hinzufügen"
-# 
-# File: usr/share/ashyterm/ui/dialogs/command_guide_dialog.py, line: 32
-#: NEEDS WORK
-msgid "Edit Custom Command"
-msgstr "Benutzerdefinierten Befehl bearbeiten"
-# 
-# File: usr/share/ashyterm/ui/dialogs/command_guide_dialog.py, line: 34
-#: NEEDS WORK
-msgid "Command"
-msgstr "Befehl"
-# 
-# File: usr/share/ashyterm/ui/dialogs/command_guide_dialog.py, line: 35
-#: NEEDS WORK
-msgid "Category"
-msgstr "Kategorie"
-# 
-# File: usr/share/ashyterm/ui/dialogs/command_guide_dialog.py, line: 104
-#: NEEDS WORK
-msgid "Select an existing category or type a new one"
-msgstr "Wählen Sie eine vorhandene Kategorie aus oder geben Sie eine neue ein."
-# 
-# File: usr/share/ashyterm/ui/dialogs/command_guide_dialog.py, line: 59
-#: NEEDS WORK
-msgid "Description"
-msgstr "Beschreibung"
-# 
-# File: usr/share/ashyterm/ui/dialogs/command_guide_dialog.py, line: 171
-#: NEEDS WORK
-msgid "Please fill in all required fields."
-msgstr "Bitte füllen Sie alle erforderlichen Felder aus."
-# 
-# File: usr/share/ashyterm/ui/dialogs/command_guide_dialog.py, line: 236
-#: NEEDS WORK
-msgid "Delete this custom command"
-msgstr "Löschen Sie diesen benutzerdefinierten Befehl"
-# 
-# File: usr/share/ashyterm/ui/dialogs/command_guide_dialog.py, line: 164
-#: NEEDS WORK
-msgid "Search commands..."
-msgstr "Suchbefehle..."
-# 
-# File: usr/share/ashyterm/ui/dialogs/command_guide_dialog.py, line: 202
-#: NEEDS WORK
-msgid "Show Only Custom Commands"
-msgstr "Nur benutzerdefinierte Befehle anzeigen"
-# 
-# File: usr/share/ashyterm/ui/dialogs/command_guide_dialog.py, line: 495
-#: NEEDS WORK
-msgid "Add New Command"
-msgstr "Neuen Befehl hinzufügen"
-# 
-# File: usr/share/ashyterm/ui/dialogs/command_guide_dialog.py, line: 714
-#: NEEDS WORK
-msgid "Delete Custom Command?"
-msgstr "Benutzerdefinierten Befehl löschen?"
-# 
-# File: usr/share/ashyterm/ui/dialogs/command_guide_dialog.py, line: 716
-#: NEEDS WORK
-#, python-brace-format
-msgid ""
-"Are you sure you want to permanently delete the command:\n"
-"\n"
-"<b>{name}</b>"
-msgstr ""
-"Sind Sie sicher, dass Sie den Befehl dauerhaft löschen möchten:\n"
-"\n"
-"<b>{name}</b>"
-# 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1056
 #: NEEDS WORK
 msgid "Edit Folder"
@@ -4424,6 +4586,11 @@ msgstr "Aktives Fenster schließen"
 #: NEEDS WORK
 msgid "Terminal Interaction"
 msgstr "Terminalinteraktion"
+# 
+# File: usr/share/ashyterm/ui/window_ui.py, line: 339
+#: NEEDS WORK
+msgid "Send Command to All Tabs"
+msgstr "Befehl an alle Tabs senden"
 # 
 # File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 42
 #: NEEDS WORK
@@ -4549,20 +4716,562 @@ msgstr "Alle Tastenkombinationen zurücksetzen"
 msgid "This will reset all keyboard shortcuts to their default values. Continue?"
 msgstr "Dies setzt alle Tastenkombinationen auf ihre Standardwerte zurück. Fortfahren?"
 # 
+# File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 166
+#: NEEDS WORK
+msgid "Insert"
+msgstr "Einfügen"
+# 
+# File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 167
+#: NEEDS WORK
+msgid "Insert command into terminal without executing"
+msgstr "Befehl in das Terminal einfügen, ohne ihn auszuführen"
+# 
+# File: usr/share/ashyterm/filemanager/manager.py, line: 714
+# File: usr/share/ashyterm/filemanager/manager.py, line: 728
+# File: usr/share/ashyterm/filemanager/manager.py, line: 742
+#: NEEDS WORK
+msgid "Execute"
+msgstr "Ausführen"
+# 
+# File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 172
+#: NEEDS WORK
+msgid "Insert and execute command (Ctrl+Enter)"
+msgstr "Befehl einfügen und ausführen (Strg+Eingabe)"
+# 
+# File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 195
+# File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 1275
+#: NEEDS WORK
+msgid "Command Preview"
+msgstr "Befehlsvorschau"
+# 
+# File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 295
+#: NEEDS WORK
+msgid "Select Path"
+msgstr "Pfad auswählen"
+# 
+# File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 298
+# File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 1392
+#: NEEDS WORK
+msgid "Select"
+msgstr "Auswählen"
+# 
+# File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 687
+#: NEEDS WORK
+msgid "Execute in All Terminals"
+msgstr "In allen Terminals ausführen"
+# 
+# File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 702
+#: NEEDS WORK
+msgid "Pin to Toolbar"
+msgstr "In die Symbolleiste einfügen"
+# 
+# File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 707
+# File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 2977
+#: NEEDS WORK
+msgid "Restore Default"
+msgstr "Standard wiederherstellen"
+# 
+# File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 708
+# File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 3013
+#: NEEDS WORK
+msgid "Hide"
+msgstr "Ausblenden"
+# 
+# File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 799
+#: NEEDS WORK
+msgid "Edit Command"
+msgstr "Befehl bearbeiten"
+# 
+# File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 932
+#: NEEDS WORK
+msgid "What type of command do you want to create?"
+msgstr "Welchen Befehl möchten Sie erstellen?"
+# 
+# File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 956
+#: NEEDS WORK
+msgid "Simple Command"
+msgstr "Einfache Befehle"
+# 
+# File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 959
+#: NEEDS WORK
+msgid "A button that runs a command directly"
+msgstr "Eine Schaltfläche, die einen Befehl direkt ausführt"
+# 
+# File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 981
+#: NEEDS WORK
+msgid "Command with Form"
+msgstr "Befehl mit Formular"
+# 
+# File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 984
+#: NEEDS WORK
+msgid "A button that shows a form to configure the command"
+msgstr "Eine Schaltfläche, die ein Formular zur Konfiguration des Befehls anzeigt."
+# 
+# File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 1039
+# File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 1130
+#: NEEDS WORK
+msgid "Basic Information"
+msgstr "Grundlegende Informationen"
+# 
+# File: usr/share/ashyterm/filemanager/manager.py, line: 366
+#: NEEDS WORK
+msgid "Name"
+msgstr "Name"
+# 
+# File: usr/share/ashyterm/ui/dialogs/command_guide_dialog.py, line: 59
+#: NEEDS WORK
+msgid "Description"
+msgstr "Beschreibung"
+# 
+# File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 1048
+# File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 1139
+#: NEEDS WORK
+msgid "Icon"
+msgstr "Symbol"
+# 
+# File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 1058
+# File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 1149
+#: NEEDS WORK
+msgid "Choose icon"
+msgstr "Wählen Sie ein Symbol"
+# 
+# File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 1073
+# File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 1164
+#: NEEDS WORK
+msgid "Display Mode"
+msgstr "Anzeige-Modus"
+# 
+# File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 1081
+#: NEEDS WORK
+msgid "Execution Mode"
+msgstr "Ausführungsmodus"
+# 
+# File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 1083
+#: NEEDS WORK
+msgid "Insert Only"
+msgstr "Nur Einfügen"
+# 
+# File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 1083
+#: NEEDS WORK
+msgid "Insert and Execute"
+msgstr "Einfügen und Ausführen"
+# 
+# File: usr/share/ashyterm/ui/dialogs/command_guide_dialog.py, line: 34
+#: NEEDS WORK
+msgid "Command"
+msgstr "Befehl"
+# 
+# File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 1095
+#: NEEDS WORK
+msgid "Enter the bash command to execute:"
+msgstr "Geben Sie den Bash-Befehl ein, der ausgeführt werden soll:"
+# 
+# File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 1197
+#: NEEDS WORK
+msgid "Add command parts"
+msgstr "Befehlsbestandteile hinzufügen"
+# 
+# File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 1207
+#: NEEDS WORK
+msgid "Add part"
+msgstr "Teil hinzufügen"
+# 
+# File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 1212
+#: NEEDS WORK
+msgid "📝 Command Text"
+msgstr "📝 Befehlstext"
+# 
+# File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 1213
+#: NEEDS WORK
+msgid "⌨️ Text Input"
+msgstr "⌨️ Texteingabe"
+# 
+# File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 1214
+#: NEEDS WORK
+msgid "📝 Text Area"
+msgstr "📝 Textbereich"
+# 
+# File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 1215
+#: NEEDS WORK
+msgid "🔑 Password"
+msgstr "🔑 Passwort"
+# 
+# File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 1216
+#: NEEDS WORK
+msgid "Text"
+msgstr "Text"
+# 
+# File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 1220
+#: NEEDS WORK
+msgid "🔢 Number"
+msgstr "🔢 Nummer"
+# 
+# File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 1221
+#: NEEDS WORK
+msgid "📊 Slider"
+msgstr "📊 Schieberegler"
+# 
+# File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 1222
+#: NEEDS WORK
+msgid "Numbers"
+msgstr "Zahlen"
+# 
+# File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 1226
+#: NEEDS WORK
+msgid "🔘 Switch"
+msgstr "🔘 Schalter"
+# 
+# File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 1227
+#: NEEDS WORK
+msgid "📋 Dropdown"
+msgstr "📋 Dropdown"
+# 
+# File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 1228
+#: NEEDS WORK
+msgid "⚪ Radio Buttons"
+msgstr "⚪ Optionschaltflächen"
+# 
+# File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 1229
+#: NEEDS WORK
+msgid "☑️ Multi-Select"
+msgstr "☑️ Mehrfachauswahl"
+# 
+# File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 1230
+#: NEEDS WORK
+msgid "Selection"
+msgstr "Auswahl"
+# 
+# File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 1234
+#: NEEDS WORK
+msgid "📄 File Path"
+msgstr "📄 Dateipfad"
+# 
+# File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 1235
+#: NEEDS WORK
+msgid "📁 Directory Path"
+msgstr "📁 Verzeichnispfad"
+# 
+# File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 1236
+#: NEEDS WORK
+msgid "Files"
+msgstr "Dateien"
+# 
+# File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 1240
+#: NEEDS WORK
+msgid "📅 Date/Time"
+msgstr "📅 Datum/Uhrzeit"
+# 
+# File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 1241
+#: NEEDS WORK
+msgid "🎨 Color"
+msgstr "🎨 Farbe"
+# 
+# File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 1242
+#: NEEDS WORK
+msgid "Special"
+msgstr "Sonder"
+# 
+# File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 1286
+# File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 1454
+# File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 1585
+# File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 1636
+#: NEEDS WORK
+msgid "(empty)"
+msgstr "(Leere)"
+# 
+# File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 1292
+#: NEEDS WORK
+msgid "Form Preview"
+msgstr "Formvorschau"
+# 
+# File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 1343
+#: NEEDS WORK
+msgid "Choose Icon"
+msgstr "Wählen Sie ein Symbol"
+# 
+# File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 1344
+#: NEEDS WORK
+msgid "Enter icon name or select from common icons:"
+msgstr "Geben Sie den Symbolnamen ein oder wählen Sie aus den gängigen Symbolen:"
+# 
+# File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 1563
+#: NEEDS WORK
+msgid "Command Text"
+msgstr "Befehlstext"
+# 
+# File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 1564
+#: NEEDS WORK
+msgid "Text Input"
+msgstr "Textfeld"
+# 
+# File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 1565
+#: NEEDS WORK
+msgid "Text Area"
+msgstr "Textbereich"
+# 
+# File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 1567
+#: NEEDS WORK
+msgid "Switch"
+msgstr "Schalter"
+# 
+# File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 1568
+#: NEEDS WORK
+msgid "Dropdown"
+msgstr "Dropdown"
+# 
+# File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 1569
+#: NEEDS WORK
+msgid "Radio Buttons"
+msgstr "Optionschalter"
+# 
+# File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 1570
+#: NEEDS WORK
+msgid "Multi-Select"
+msgstr "Mehrfachauswahl"
+# 
+# File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 1571
+#: NEEDS WORK
+msgid "Number"
+msgstr "Nummer"
+# 
+# File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 1572
+#: NEEDS WORK
+msgid "Slider"
+msgstr "Schieberegler"
+# 
+# File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 1573
+#: NEEDS WORK
+msgid "File"
+msgstr "Datei"
+# 
+# File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 1574
+#: NEEDS WORK
+msgid "Directory"
+msgstr "Verzeichnis"
+# 
+# File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 1575
+#: NEEDS WORK
+msgid "Date/Time"
+msgstr "Datum/Uhrzeit"
+# 
+# File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 1576
+#: NEEDS WORK
+msgid "Color"
+msgstr "Farbe"
+# 
+# File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 1591
+#: NEEDS WORK
+msgid "Field"
+msgstr "Feld"
+# 
+# File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 1630
+#: NEEDS WORK
+msgid "Command text"
+msgstr "Befehlszeilentext"
+# 
+# File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 1643
+#: NEEDS WORK
+msgid "ID"
+msgstr "ID"
+# 
+# File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 1655
+# File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 1763
+# File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 2005
+#: NEEDS WORK
+msgid "Label"
+msgstr "Beschriftung"
+# 
+# File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 1668
+# File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 1877
+# File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 1886
+#: NEEDS WORK
+msgid "Placeholder"
+msgstr "Platzhalter"
+# 
+# File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 1696
+#: NEEDS WORK
+msgid "On value"
+msgstr "Aktivwert"
+# 
+# File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 1704
+#: NEEDS WORK
+msgid "Off value"
+msgstr "Ausgeschalteter Wert"
+# 
+# File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 1712
+#: NEEDS WORK
+msgid "Default on"
+msgstr "Standardmäßig aktiviert"
+# 
+# File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 1722
+# File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 1966
+#: NEEDS WORK
+msgid "Options"
+msgstr "Optionen"
+# 
+# File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 1729
+# File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 1973
+#: NEEDS WORK
+msgid "Add option"
+msgstr "Option hinzufügen"
+# 
+# File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 1755
+# File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 1997
+#: NEEDS WORK
+msgid "Value"
+msgstr "Wert"
+# 
+# File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 1904
+#: NEEDS WORK
+msgid "Rows"
+msgstr "Zeilen"
+# 
+# File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 1913
+#: NEEDS WORK
+msgid "Minimum"
+msgstr "Mindestwert"
+# 
+# File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 1926
+#: NEEDS WORK
+msgid "Maximum"
+msgstr "Maximal"
+# 
+# File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 1939
+#: NEEDS WORK
+msgid "Step"
+msgstr "Schritt"
+# 
+# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
+# 
+# File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 2105
+# File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 2124
+# File: src/ashyterm/data/command_manager_models.py, line: 329
+#: NEEDS WORK
+msgid "Format"
+msgstr "Format"
+# 
+# File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 2115
+#: NEEDS WORK
+msgid "Common: %Y-%m-%d %H:%M:%S, %d/%m/%Y, %H:%M"
+msgstr "Allgemein: %Y-%m-%d %H:%M:%S, %d/%m/%Y, %H:%M"
+# 
+# File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 2126
+#: NEEDS WORK
+msgid "Hex (#RRGGBB)"
+msgstr "Hex (#RRGGBB)"
+# 
+# File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 2126
+#: NEEDS WORK
+msgid "RGB (r,g,b)"
+msgstr "RGB (r,g,b)"
+# 
+# File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 2511
+#: NEEDS WORK
+msgid "Search..."
+msgstr "Suchen..."
+# 
+# File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 2521
+#: NEEDS WORK
+msgid "Restore hidden commands"
+msgstr "Verborgene Befehle wiederherstellen"
+# 
+# File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 2541
+#: NEEDS WORK
+msgid "Send to all terminals"
+msgstr "An alle Terminals senden"
+# 
+# File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 2634
+#: NEEDS WORK
+msgid "Add Command"
+msgstr "Befehl hinzufügen"
+# 
+# File: usr/share/ashyterm/window.py, line: 705
+#: NEEDS WORK
+msgid "No open terminals found."
+msgstr "Keine offenen Terminals gefunden."
+# 
+# File: usr/share/ashyterm/window.py, line: 711
+#: NEEDS WORK
+msgid "Confirm sending of command"
+msgstr "Befehl senden bestätigen"
+# 
+# File: usr/share/ashyterm/window.py, line: 734
+#: NEEDS WORK
+#, python-brace-format
+msgid "Select which of the <b>{count}</b> open terminals should receive the command below."
+msgstr "Wählen Sie aus, welche der <b>{count}</b> offenen Terminals den folgenden Befehl erhalten sollen."
+# 
+# File: usr/share/ashyterm/window.py, line: 749
+#: NEEDS WORK
+msgid "Choose the tabs that should run this command:"
+msgstr "Wählen Sie die Registerkarten aus, die diesen Befehl ausführen sollen:"
+# 
+# File: usr/share/ashyterm/window.py, line: 731
+#: NEEDS WORK
+msgid "Send Command"
+msgstr "Befehl senden"
+# 
+# File: usr/share/ashyterm/window.py, line: 857
+#: NEEDS WORK
+msgid "Terminal"
+msgstr "Terminal"
+# 
+# File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 2952
+#: NEEDS WORK
+#, python-brace-format
+msgid "Are you sure you want to delete '{name}'?"
+msgstr "Sind Sie sicher, dass Sie '{name}' löschen möchten?"
+# 
+# File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 2971
+#: NEEDS WORK
+msgid "Restore Default?"
+msgstr "Standardwerte wiederherstellen?"
+# 
+# File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 2972
+#: NEEDS WORK
+#, python-brace-format
+msgid "This will restore '{name}' to its original default configuration. Your customizations will be lost."
+msgstr ""
+"Dies stellt '{name}' auf die ursprüngliche Standardkonfiguration zurück. Ihre Anpassungen gehen "
+"verloren."
+# 
+# File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 3007
+#: NEEDS WORK
+msgid "Hide Command?"
+msgstr "Befehl ausblenden?"
+# 
+# File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 3008
+#: NEEDS WORK
+#, python-brace-format
+msgid "Hide '{name}' from the command list? You can restore it later from settings."
+msgstr ""
+"'{name}' aus der Befehlsliste ausblenden? Sie können es später in den Einstellungen "
+"wiederherstellen."
+# 
+# File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 3040
+#: NEEDS WORK
+msgid "Restore Hidden Commands"
+msgstr "Verborgene Befehle wiederherstellen"
+# 
+# File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 3063
+#: NEEDS WORK
+msgid "Click on a command to restore it:"
+msgstr "Klicken Sie auf einen Befehl, um ihn wiederherzustellen:"
+# 
+# File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 3102
+#: NEEDS WORK
+msgid "Restore All"
+msgstr "Alle wiederherstellen"
+# 
+# File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 3141
+#: NEEDS WORK
+msgid "(Copy)"
+msgstr "(Kopieren)"
+# 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1421
 #: NEEDS WORK
 msgid "Appearance"
 msgstr "Erscheinungsbild"
-# 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 56
-#: NEEDS WORK
-msgid "Color Scheme"
-msgstr "Farbschema"
-# 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 62
-#: NEEDS WORK
-msgid "Manage Schemes..."
-msgstr "Schemen verwalten..."
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1465
 #: NEEDS WORK
@@ -4643,11 +5352,6 @@ msgstr "Asche Icons (Bundled)"
 #: NEEDS WORK
 msgid "System Icons"
 msgstr "Systemsymbole"
-# 
-# File: usr/share/ashyterm/window.py, line: 857
-#: NEEDS WORK
-msgid "Terminal"
-msgstr "Terminal"
 # 
 # File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 225
 #: NEEDS WORK
@@ -5026,1501 +5730,644 @@ msgstr "Bewegen"
 msgid "Move Failed"
 msgstr "Verschieben fehlgeschlagen"
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 9
-# File: usr/share/ashyterm/data/command_data.py, line: 30
-# File: usr/share/ashyterm/data/command_data.py, line: 53
-# File: usr/share/ashyterm/data/command_data.py, line: 64
-# File: usr/share/ashyterm/data/command_data.py, line: 81
-# File: usr/share/ashyterm/data/command_data.py, line: 98
-# File: usr/share/ashyterm/data/command_data.py, line: 113
+# File: src/ashyterm/data/command_manager_models.py, line: 205
 #: NEEDS WORK
-msgid "Essentials: File & Directory Navigation"
-msgstr "Wesentliches: Datei- und Verzeichnisnavigation"
+msgid "Find Files"
+msgstr "Dateien suchen"
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 12
+# File: src/ashyterm/data/command_manager_models.py, line: 206
 #: NEEDS WORK
-msgid "Lists the contents of a directory, like opening a folder to see what's inside."
-msgstr "Listet den Inhalt eines Verzeichnisses, wie das Öffnen eines Ordners, um zu sehen, was darin ist."
+msgid "Search for files and directories with various filters"
+msgstr "Dateien und Verzeichnisse mit verschiedenen Filtern suchen"
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 18
+# File: src/ashyterm/data/command_manager_models.py, line: 212
+# File: src/ashyterm/data/command_manager_models.py, line: 311
+# File: src/ashyterm/data/command_manager_models.py, line: 324
+# File: src/ashyterm/data/command_manager_models.py, line: 375
 #: NEEDS WORK
-msgid "Shows files and directories in the current location."
-msgstr "Zeigt Dateien und Verzeichnisse am aktuellen Standort an."
+msgid "File Operations"
+msgstr "Dateioperationen"
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 24
+# File: src/ashyterm/data/command_manager_models.py, line: 217
 #: NEEDS WORK
-msgid "Shows a detailed list, including hidden files and human-readable sizes."
-msgstr "Zeigt eine detaillierte Liste an, einschließlich versteckter Dateien und menschenlesbarer Größen."
+msgid "Search Path"
+msgstr "Suchpfad"
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 32
+# File: src/ashyterm/data/command_manager_models.py, line: 220
 #: NEEDS WORK
-msgid "Changes the current directory."
-msgstr "Ändert das aktuelle Verzeichnis."
+msgid "Directory to search in"
+msgstr "Verzeichnis zum Suchen"
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 36
+# File: src/ashyterm/data/command_manager_models.py, line: 221
 #: NEEDS WORK
-msgid "Navigates to a specific directory."
-msgstr "Navigiert zu einem bestimmten Verzeichnis."
+msgid "Starting directory for the search"
+msgstr "Startverzeichnis für die Suche"
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 40
+# File: src/ashyterm/data/command_manager_models.py, line: 227
 #: NEEDS WORK
-msgid "Goes up one level to the parent directory."
-msgstr "Geht ein Level nach oben zum übergeordneten Verzeichnis."
+msgid "File Name Pattern"
+msgstr "Dateinamensmuster"
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 44
+# File: src/ashyterm/data/command_manager_models.py, line: 230
 #: NEEDS WORK
-msgid "Goes directly to your user's home directory."
-msgstr "Geht direkt zum Home-Verzeichnis des Benutzers."
+msgid "e.g., *.txt or report*"
+msgstr "z.B. *.txt oder Bericht*"
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 58
+# File: src/ashyterm/data/command_manager_models.py, line: 231
 #: NEEDS WORK
-msgid "Returns to the last directory you were in."
-msgstr "Kehrt zum letzten Verzeichnis zurück, in dem Sie sich befanden."
+msgid "Pattern to match file names (supports wildcards)"
+msgstr "Muster zum Abgleichen von Dateinamen (unterstützt Platzhalter)"
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 55
+# File: src/ashyterm/data/command_manager_models.py, line: 236
 #: NEEDS WORK
-msgid "Shows which directory you are currently in."
-msgstr "Zeigt an, in welchem Verzeichnis Sie sich gerade befinden."
+msgid "Recursive Search"
+msgstr "Rekursive Suche"
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 59
+# File: src/ashyterm/data/command_manager_models.py, line: 239
 #: NEEDS WORK
-msgid "Displays the full path of your current location."
-msgstr "Zeigt den vollständigen Pfad Ihres aktuellen Standorts an."
+msgid "Search in subdirectories"
+msgstr "In Unterverzeichnissen suchen"
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 66
+# File: src/ashyterm/data/command_manager_models.py, line: 245
 #: NEEDS WORK
-msgid "Creates new directories."
-msgstr "Erstellt neue Verzeichnisse."
+msgid "File Type"
+msgstr "Dateityp"
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 434
+# File: src/ashyterm/data/command_manager_models.py, line: 249
 #: NEEDS WORK
-msgid "Creates a single directory."
-msgstr "Erstellt ein einzelnes Verzeichnis."
+msgid "Any"
+msgstr "Beliebig"
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 75
+# File: src/ashyterm/data/command_manager_models.py, line: 250
 #: NEEDS WORK
-msgid "Creates a full path of directories, even if the parent directories don't exist."
+msgid "Files only"
+msgstr "Nur Dateien"
+# 
+# File: src/ashyterm/data/command_manager_models.py, line: 251
+#: NEEDS WORK
+msgid "Directories only"
+msgstr "Nur Verzeichnisse"
+# 
+# File: src/ashyterm/data/command_manager_models.py, line: 252
+#: NEEDS WORK
+msgid "Symbolic links"
+msgstr "Symbolische Links"
+# 
+# File: src/ashyterm/data/command_manager_models.py, line: 254
+#: NEEDS WORK
+msgid "Filter by file type"
+msgstr "Nach Dateityp filtern"
+# 
+# File: src/ashyterm/data/command_manager_models.py, line: 259
+#: NEEDS WORK
+msgid "Size Filter"
+msgstr "Größenfilter"
+# 
+# File: src/ashyterm/data/command_manager_models.py, line: 262
+#: NEEDS WORK
+msgid "e.g., +100M or -1k"
+msgstr "z.B. +100M oder -1k"
+# 
+# File: src/ashyterm/data/command_manager_models.py, line: 263
+#: NEEDS WORK
+msgid "Filter by size (+100M = larger than 100MB, -1k = smaller than 1KB)"
+msgstr "Nach Größe filtern (+100M = größer als 100MB, -1k = kleiner als 1KB)"
+# 
+# File: src/ashyterm/data/command_manager_models.py, line: 268
+#: NEEDS WORK
+msgid "Modified in Last N"
+msgstr "In den letzten N geändert"
+# 
+# File: src/ashyterm/data/command_manager_models.py, line: 271
+#: NEEDS WORK
+msgid "e.g., 7"
+msgstr "z.B. 7"
+# 
+# File: src/ashyterm/data/command_manager_models.py, line: 272
+#: NEEDS WORK
+msgid "Find files modified in the last N time units (leave empty to skip)"
 msgstr ""
-"Erstellt einen vollständigen Pfad von Verzeichnissen, auch wenn die übergeordneten Verzeichnisse "
-"nicht existieren."
+"Finden Sie Dateien, die in den letzten N Zeiteinheiten geändert wurden (leer lassen, um zu "
+"überspringen)"
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 84
+# File: src/ashyterm/data/command_manager_models.py, line: 278
 #: NEEDS WORK
-msgid "Copies files or directories from one place to another."
-msgstr "Kopiert Dateien oder Verzeichnisse von einem Ort an einen anderen."
+msgid "Time Unit"
+msgstr "Zeiteinheit"
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 69
+# File: src/ashyterm/data/command_manager_models.py, line: 282
 #: NEEDS WORK
-msgid "Copies a single file."
-msgstr "Kopiert eine einzelne Datei."
+msgid "Minutes"
+msgstr "Minuten"
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 93
+# File: src/ashyterm/data/command_manager_models.py, line: 283
 #: NEEDS WORK
-msgid "Copies a directory and everything inside it."
-msgstr "Kopiert ein Verzeichnis und alles darin."
+msgid "Hours"
+msgstr "Stunden"
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 86
+# File: src/ashyterm/data/command_manager_models.py, line: 284
 #: NEEDS WORK
-msgid "Moves or renames files and directories."
-msgstr "Verschiebt oder benennt Dateien und Verzeichnisse um."
+msgid "Days"
+msgstr "Tage"
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 104
+# File: src/ashyterm/data/command_manager_models.py, line: 286
 #: NEEDS WORK
-msgid "Renames a file or directory."
-msgstr "Benennt eine Datei oder ein Verzeichnis um."
+msgid "Time unit for the modified filter"
+msgstr "Zeiteinheit für den modifizierten Filter"
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 96
+# File: src/ashyterm/data/command_manager_models.py, line: 291
 #: NEEDS WORK
-msgid "Moves a file to a new location."
-msgstr "Verschiebt eine Datei an einen neuen Speicherort."
+msgid "Search in File Content"
+msgstr "Inhalt der Datei durchsuchen"
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 116
+# File: src/ashyterm/data/command_manager_models.py, line: 294
 #: NEEDS WORK
-msgid ""
-"Deletes files and directories. CAUTION: this is permanent! Tip: Before deleting, replace 'rm' with "
-"'ls' to preview what will be removed."
-msgstr ""
-"Löscht Dateien und Verzeichnisse. VORSICHT: dies ist dauerhaft! Tipp: Ersetzen Sie vor dem Löschen "
-"'rm' durch 'ls', um eine Vorschau darauf zu erhalten, was entfernt wird."
+msgid "Text to search for inside files"
+msgstr "Text, nach dem in Dateien gesucht werden soll"
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 119
+# File: src/ashyterm/data/command_manager_models.py, line: 295
 #: NEEDS WORK
-msgid "Deletes a single file."
-msgstr "Löscht eine einzelne Datei."
+msgid "Use grep to search within file contents"
+msgstr "Verwenden Sie grep, um innerhalb des Dateiinhalts zu suchen."
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 122
+# File: src/ashyterm/data/command_manager_models.py, line: 303
 #: NEEDS WORK
-msgid "Deletes a directory and everything inside it."
-msgstr "Löscht ein Verzeichnis und alles darin."
+msgid "List Files"
+msgstr "Dateien auflisten"
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 126
+# File: src/ashyterm/data/command_manager_models.py, line: 304
 #: NEEDS WORK
-msgid "Asks for confirmation before deleting each file."
-msgstr "Fragt vor dem Löschen jeder Datei nach Bestätigung."
+msgid "List directory contents with details"
+msgstr "Verzeichnisinhalt mit Details auflisten"
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 131
+# File: src/ashyterm/data/command_manager_models.py, line: 317
 #: NEEDS WORK
-msgid "Forces deletion without asking (use with extreme caution)."
-msgstr "Zwingt die Löschung ohne Nachfrage (mit äußerster Vorsicht verwenden)."
+msgid "Compress"
+msgstr "Komprimieren"
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 138
-# File: usr/share/ashyterm/data/command_data.py, line: 163
-# File: usr/share/ashyterm/data/command_data.py, line: 190
-# File: usr/share/ashyterm/data/command_data.py, line: 209
-# File: usr/share/ashyterm/data/command_data.py, line: 224
+# File: src/ashyterm/data/command_manager_models.py, line: 318
 #: NEEDS WORK
-msgid "Essentials: File I/O & Pipes"
-msgstr "Essentials: Datei-I/O & Pipes"
+msgid "Create compressed archives from files and folders"
+msgstr "Erstellen Sie komprimierte Archive aus Dateien und Ordnern"
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 140
+# File: src/ashyterm/data/command_manager_models.py, line: 333
 #: NEEDS WORK
-msgid "Controls how data flows between commands and files."
-msgstr "Steuert, wie Daten zwischen Befehlen und Dateien fließen."
+msgid "tar.xz (xz)"
+msgstr "tar.xz (xz)"
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 145
+# File: src/ashyterm/data/command_manager_models.py, line: 334
 #: NEEDS WORK
-msgid "Redirect: Puts the output of a command into a file, overwriting it if it exists."
-msgstr ""
-"Umleiten: Leitet die Ausgabe eines Befehls in eine Datei um und überschreibt sie, wenn sie "
-"existiert."
+msgid "tar.gz (gzip)"
+msgstr "tar.gz (gzip)"
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 151
+# File: src/ashyterm/data/command_manager_models.py, line: 335
 #: NEEDS WORK
-msgid "Append: Adds the output of a command to the end of a file."
-msgstr "Anhängen: Fügt die Ausgabe eines Befehls an das Ende einer Datei an."
+msgid "tar.bz2 (bzip2)"
+msgstr "tar.bz2 (bzip2)"
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 157
+# File: src/ashyterm/data/command_manager_models.py, line: 336
 #: NEEDS WORK
-msgid "Pipe: Connects the output of command1 to the input of command2, creating a workflow."
-msgstr ""
-"Pipe: Verbindet die Ausgabe von Befehl1 mit der Eingabe von Befehl2 und erstellt einen "
-"Arbeitsablauf."
+msgid "tar.zst (zstd)"
+msgstr "tar.zst (zstd)"
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 165
+# File: src/ashyterm/data/command_manager_models.py, line: 337
 #: NEEDS WORK
-msgid "Displays the content of a text file on the screen."
-msgstr "Zeigt den Inhalt einer Textdatei auf dem Bildschirm an."
+msgid "tar.lzma (lzma)"
+msgstr "tar.lzma (lzma)"
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 170
+# File: src/ashyterm/data/command_manager_models.py, line: 338
 #: NEEDS WORK
-msgid "A modern and efficient way to display a file's content."
-msgstr "Eine moderne und effiziente Möglichkeit, den Inhalt einer Datei anzuzeigen."
+msgid "tar (no compression)"
+msgstr "tar (keine Kompression)"
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 175
+# File: src/ashyterm/data/command_manager_models.py, line: 339
 #: NEEDS WORK
-msgid "Displays the content of a single file."
-msgstr "Zeigt den Inhalt einer einzelnen Datei an."
+msgid "zip"
+msgstr "zip"
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 180
+# File: src/ashyterm/data/command_manager_models.py, line: 341
 #: NEEDS WORK
-msgid "Displays the content of multiple files, one after the other."
-msgstr "Zeigt den Inhalt mehrerer Dateien nacheinander an."
+msgid "Archive format to use"
+msgstr "Zu verwendendes Archivformat"
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 185
+# File: src/ashyterm/data/command_manager_models.py, line: 346
 #: NEEDS WORK
-msgid "Displays the content with line numbers."
-msgstr "Zeigt den Inhalt mit Zeilennummern an."
+msgid "Files/Folders"
+msgstr "Dateien/Ordner"
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 193
+# File: src/ashyterm/data/command_manager_models.py, line: 349
 #: NEEDS WORK
-msgid "Creates multiple empty files at once or updates a file's modification timestamp."
-msgstr "Erstellt mehrere leere Dateien auf einmal oder aktualisiert den Zeitstempel einer Datei."
+msgid "file1 file2 folder/"
+msgstr "datei1 datei2 ordner/"
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 198
+# File: src/ashyterm/data/command_manager_models.py, line: 350
 #: NEEDS WORK
-msgid "Creates several empty files at once."
-msgstr "Erstellt mehrere leere Dateien auf einmal."
+msgid "Files and folders to compress"
+msgstr "Dateien und Ordner zum Komprimieren"
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 203
+# File: src/ashyterm/data/command_manager_models.py, line: 356
 #: NEEDS WORK
-msgid "Updates the modification date and time of a file to the current time."
-msgstr "Aktualisiert das Änderungsdatum und die Uhrzeit einer Datei auf die aktuelle Uhrzeit."
+msgid "Archive Name"
+msgstr "Archivname"
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 211
+# File: src/ashyterm/data/command_manager_models.py, line: 359
+# File: src/ashyterm/data/command_manager_models.py, line: 383
 #: NEEDS WORK
-msgid "Displays the beginning of a text file."
-msgstr "Zeigt den Anfang einer Textdatei an."
+msgid "archive.tar.xz"
+msgstr "archive.tar.xz"
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 215
+# File: src/ashyterm/data/command_manager_models.py, line: 360
 #: NEEDS WORK
-msgid "Shows the first 10 lines of a file."
-msgstr "Zeigt die ersten 10 Zeilen einer Datei an."
+msgid "Name of the archive file to create"
+msgstr "Name der zu erstellenden Archivdatei"
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 219
+# File: src/ashyterm/data/command_manager_models.py, line: 368
 #: NEEDS WORK
-msgid "Shows the first 20 lines of a file."
-msgstr "Zeigt die ersten 20 Zeilen einer Datei an."
+msgid "Extract"
+msgstr "Extrahieren"
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 226
+# File: src/ashyterm/data/command_manager_models.py, line: 369
 #: NEEDS WORK
-msgid "Displays the end of a text file."
-msgstr "Zeigt das Ende einer Textdatei an."
+msgid "Extract files from compressed archives"
+msgstr "Dateien aus komprimierten Archiven extrahieren"
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 230
+# File: src/ashyterm/data/command_manager_models.py, line: 380
 #: NEEDS WORK
-msgid "Shows the last 10 lines of a file."
-msgstr "Zeigt die letzten 10 Zeilen einer Datei an."
+msgid "Archive File"
+msgstr "Archivdatei"
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 235
+# File: src/ashyterm/data/command_manager_models.py, line: 384
 #: NEEDS WORK
-msgid "Follows a file in real-time, showing new lines as they are added."
-msgstr "Verfolgt eine Datei in Echtzeit und zeigt neue Zeilen an, während sie hinzugefügt werden."
+msgid "Archive file to extract"
+msgstr "Archivdatei zum Entpacken"
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 242
-# File: usr/share/ashyterm/data/command_data.py, line: 265
-# File: usr/share/ashyterm/data/command_data.py, line: 296
-# File: usr/share/ashyterm/data/command_data.py, line: 307
-# File: usr/share/ashyterm/data/command_data.py, line: 319
-# File: usr/share/ashyterm/data/command_data.py, line: 332
-# File: usr/share/ashyterm/data/command_data.py, line: 345
-# File: usr/share/ashyterm/data/command_data.py, line: 366
+# File: src/ashyterm/data/command_manager_models.py, line: 390
 #: NEEDS WORK
-msgid "Essentials: Search & System Information"
-msgstr "Essentials: Suche & Systeminformationen"
+msgid "Destination"
+msgstr "Ziel"
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 244
+# File: src/ashyterm/data/command_manager_models.py, line: 393
 #: NEEDS WORK
-msgid "Searches for a word or text pattern within files."
-msgstr "Durchsucht Dateien nach einem Wort oder Textmuster."
+msgid "Leave empty for current directory"
+msgstr "Für das aktuelle Verzeichnis leer lassen"
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 136
+# File: src/ashyterm/data/command_manager_models.py, line: 394
 #: NEEDS WORK
-msgid "Finds and displays all lines containing 'word' in the file."
-msgstr "Findet und zeigt alle Zeilen an, die 'word' in der Datei enthalten."
+msgid "Destination directory (optional)"
+msgstr "Zielverzeichnis (optional)"
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 254
+# File: src/ashyterm/data/command_manager_models.py, line: 402
 #: NEEDS WORK
-msgid "Searches for the word, ignoring case differences."
-msgstr "Sucht nach dem Wort, ohne Groß- und Kleinschreibung zu beachten."
+msgid "Systemctl"
+msgstr "Systemctl"
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 259
+# File: src/ashyterm/data/command_manager_models.py, line: 403
 #: NEEDS WORK
-msgid "Searches for 'word' in all files in the current directory and its subdirectories."
-msgstr "Durchsucht alle Dateien im aktuellen Verzeichnis und dessen Unterverzeichnissen nach 'word'."
+msgid "Manage system services with systemctl"
+msgstr "Verwalten Sie Systemdienste mit systemctl"
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 267
+# File: src/ashyterm/data/command_manager_models.py, line: 409
+# File: src/ashyterm/data/command_manager_models.py, line: 463
+# File: src/ashyterm/data/command_manager_models.py, line: 543
 #: NEEDS WORK
-msgid "A powerful tool for finding files and directories."
-msgstr "Ein leistungsstarkes Werkzeug zum Finden von Dateien und Verzeichnissen."
+msgid "System"
+msgstr "System"
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 272
+# File: src/ashyterm/data/command_manager_models.py, line: 414
+# File: src/ashyterm/data/command_manager_models.py, line: 548
 #: NEEDS WORK
-msgid "Finds all files ending with .txt in the current directory and subdirectories."
-msgstr "Findet alle Dateien, die mit .txt im aktuellen Verzeichnis und in Unterverzeichnissen enden."
+msgid "Action"
+msgstr "Aktion"
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 278
+# File: src/ashyterm/data/command_manager_models.py, line: 418
 #: NEEDS WORK
-msgid "Finds only directories whose names start with 'backup'."
-msgstr "Findet nur Verzeichnisse, deren Namen mit 'backup' beginnen."
+msgid "Status"
+msgstr "Status"
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 283
+# File: src/ashyterm/data/command_manager_models.py, line: 419
 #: NEEDS WORK
-msgid "Finds files that were modified in the last 7 days."
-msgstr "Findet Dateien, die in den letzten 7 Tagen geändert wurden."
+msgid "Start"
+msgstr "Start"
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 287
+# File: src/ashyterm/data/command_manager_models.py, line: 420
 #: NEEDS WORK
-msgid "Finds files larger than 100MB."
-msgstr "Findet Dateien, die größer als 100 MB sind."
+msgid "Stop"
+msgstr "Stopp"
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 291
+# File: src/ashyterm/data/command_manager_models.py, line: 421
 #: NEEDS WORK
-msgid "Finds empty files and directories."
-msgstr "Findet leere Dateien und Verzeichnisse."
+msgid "Restart"
+msgstr "Neustart"
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 298
+# File: src/ashyterm/data/command_manager_models.py, line: 422
 #: NEEDS WORK
-msgid "Shows the username of the currently logged-in user."
-msgstr "Zeigt den Benutzernamen des aktuell angemeldeten Benutzers an."
+msgid "Enable"
+msgstr "Aktivieren"
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 302
+# File: src/ashyterm/data/command_manager_models.py, line: 423
 #: NEEDS WORK
-msgid "Displays your current username."
-msgstr "Zeigt Ihren aktuellen Benutzernamen an."
+msgid "Disable"
+msgstr "Deaktivieren"
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 309
+# File: src/ashyterm/data/command_manager_models.py, line: 424
 #: NEEDS WORK
-msgid "Displays the current system date and time."
-msgstr "Zeigt das aktuelle Systemdatum und die Uhrzeit an."
+msgid "Is Active"
+msgstr "Ist Aktiv"
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 311
+# File: src/ashyterm/data/command_manager_models.py, line: 425
 #: NEEDS WORK
-msgid "Shows the current date and time."
-msgstr "Zeigt das aktuelle Datum und die Uhrzeit an."
+msgid "Is Enabled"
+msgstr "Ist aktiviert"
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 314
+# File: src/ashyterm/data/command_manager_models.py, line: 426
 #: NEEDS WORK
-msgid "Shows the date and time in a custom format."
-msgstr "Zeigt das Datum und die Uhrzeit in einem benutzerdefinierten Format an."
+msgid "List Services"
+msgstr "Dienste auflisten"
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 321
+# File: src/ashyterm/data/command_manager_models.py, line: 427
 #: NEEDS WORK
-msgid "Shows the free and used space on storage disks."
-msgstr "Zeigt den freien und den verwendeten Speicherplatz auf Speichermedien an."
+msgid "List Running"
+msgstr "Liste der laufenden"
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 326
+# File: src/ashyterm/data/command_manager_models.py, line: 428
 #: NEEDS WORK
-msgid "Shows disk usage in a human-readable format (KB, MB, GB)."
-msgstr "Zeigt die Festplattennutzung in einem menschenlesbaren Format an (KB, MB, GB)."
+msgid "List Failed"
+msgstr "Liste fehlgeschlagen"
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 334
+# File: src/ashyterm/data/command_manager_models.py, line: 430
 #: NEEDS WORK
-msgid "Shows the amount of used and free RAM."
-msgstr "Zeigt die Menge an verwendetem und freiem RAM an."
+msgid "Action to perform on the service"
+msgstr "Aktion, die für den Dienst ausgeführt werden soll"
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 339
+# File: src/ashyterm/data/command_manager_models.py, line: 435
 #: NEEDS WORK
-msgid "Shows memory usage in a human-readable format (KB, MB, GB)."
-msgstr "Zeigt den Speicherverbrauch in einem menschenlesbaren Format an (KB, MB, GB)."
+msgid "Service Name"
+msgstr "Dienstname"
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 348
+# File: src/ashyterm/data/command_manager_models.py, line: 438
 #: NEEDS WORK
-msgid "Shows the disk space that files and directories are using."
-msgstr "Zeigt den Speicherplatz an, den Dateien und Verzeichnisse verwenden."
+msgid "e.g., nginx, sshd, docker"
+msgstr "nginx, sshd, docker"
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 354
+# File: src/ashyterm/data/command_manager_models.py, line: 439
 #: NEEDS WORK
-msgid "Shows the total size of each item in the current directory in a summary format."
-msgstr "Zeigt die Gesamtgröße jedes Elements im aktuellen Verzeichnis in einem zusammenfassenden Format an."
+msgid "Name of the service (leave empty for list actions)"
+msgstr "Name des Dienstes (für Listenaktionen leer lassen)"
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 360
+# File: src/ashyterm/data/command_manager_models.py, line: 444
 #: NEEDS WORK
-msgid "Shows the size of each directory and subdirectory in a human-readable format."
-msgstr "Zeigt die Größe jedes Verzeichnisses und Unterverzeichnisses in einem menschenlesbaren Format an."
+msgid "User Scope"
+msgstr "Benutzerscope"
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 369
+# File: src/ashyterm/data/command_manager_models.py, line: 447
 #: NEEDS WORK
-msgid "Shows how long the computer has been running without a restart."
-msgstr "Zeigt an, wie lange der Computer ohne Neustart läuft."
+msgid "Operate on user services (--user flag)"
+msgstr "Benutzerdienste verwalten (--user-Flag)"
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 375
+# File: src/ashyterm/data/command_manager_models.py, line: 456
 #: NEEDS WORK
-msgid "Displays the uptime, how many users are logged in, and the system load."
-msgstr "Zeigt die Betriebszeit, die Anzahl der angemeldeten Benutzer und die Systemauslastung an."
+msgid "Journalctl"
+msgstr "Journalctl"
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 382
-# File: usr/share/ashyterm/data/command_data.py, line: 435
-# File: usr/share/ashyterm/data/command_data.py, line: 466
+# File: src/ashyterm/data/command_manager_models.py, line: 457
 #: NEEDS WORK
-msgid "Software Management"
-msgstr "Softwareverwaltung"
+msgid "View system logs with journalctl"
+msgstr "Systemprotokolle mit journalctl anzeigen"
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 385
+# File: src/ashyterm/data/command_manager_models.py, line: 468
 #: NEEDS WORK
-msgid "The primary tool for installing, updating, and removing software on Arch-based Linux systems."
-msgstr ""
-"Das primäre Werkzeug zum Installieren, Aktualisieren und Entfernen von Software auf Arch-basierten "
-"Linux-Systemen."
+msgid "Unit/Service"
+msgstr "Einheit/Dienst"
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 391
+# File: src/ashyterm/data/command_manager_models.py, line: 471
 #: NEEDS WORK
-msgid "Synchronizes with repositories and upgrades all installed packages."
-msgstr "Synchronisiert mit Repositories und aktualisiert alle installierten Pakete."
+msgid "e.g., nginx, sshd (optional)"
+msgstr "Schlüssel"
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 396
+# File: src/ashyterm/data/command_manager_models.py, line: 472
 #: NEEDS WORK
-msgid "Installs a new software package."
-msgstr "Installiert ein neues Softwarepaket."
+msgid "Filter logs by service unit name"
+msgstr "Protokolle nach Diensteinheitsnamen filtern"
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 400
+# File: src/ashyterm/data/command_manager_models.py, line: 477
 #: NEEDS WORK
-msgid "Searches for a package in the repositories."
-msgstr "Durchsucht die Repositories nach einem Paket."
+msgid "Follow (live)"
+msgstr "Folgen (live)"
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 404
+# File: src/ashyterm/data/command_manager_models.py, line: 480
 #: NEEDS WORK
-msgid "Searches for an already installed package."
-msgstr "Sucht nach einem bereits installierten Paket."
+msgid "Follow new log entries in real-time"
+msgstr "Verfolgen Sie neue Protokolleinträge in Echtzeit"
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 409
+# File: src/ashyterm/data/command_manager_models.py, line: 486
 #: NEEDS WORK
-msgid "Shows detailed information about a package from the repository."
-msgstr "Zeigt detaillierte Informationen über ein Paket aus dem Repository an."
+msgid "Number of Lines"
+msgstr "Anzahl der Zeilen"
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 415
+# File: src/ashyterm/data/command_manager_models.py, line: 489
 #: NEEDS WORK
-msgid "Shows detailed information about an installed package."
-msgstr "Zeigt detaillierte Informationen über ein installiertes Paket an."
+msgid "e.g., 100 (empty for all)"
+msgstr "e.g., 100 (leer für alle)"
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 420
+# File: src/ashyterm/data/command_manager_models.py, line: 490
 #: NEEDS WORK
-msgid "Removes a package and its unneeded dependencies."
-msgstr "Entfernt ein Paket und dessen nicht benötigte Abhängigkeiten."
+msgid "Show last N lines (leave empty for all)"
+msgstr "Letzte N Zeilen anzeigen (leer lassen für alle)"
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 425
+# File: src/ashyterm/data/command_manager_models.py, line: 496
 #: NEEDS WORK
-msgid "Updates the database of which package owns which file."
-msgstr "Aktualisiert die Datenbank, welcher Paket welche Datei gehört."
+msgid "Priority"
+msgstr "Priorität"
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 430
+# File: src/ashyterm/data/command_manager_models.py, line: 500
 #: NEEDS WORK
-msgid "Finds which package a specific file belongs to."
-msgstr "Findet heraus, zu welchem Paket eine bestimmte Datei gehört."
+msgid "All"
+msgstr "Alle"
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 438
+# File: src/ashyterm/data/command_manager_models.py, line: 501
 #: NEEDS WORK
-msgid ""
-"An AUR helper for Arch-based systems that wraps pacman and adds support for the Arch User "
-"Repository."
-msgstr ""
-"Ein AUR-Helfer für Arch-basierte Systeme, der pacman umschließt und Unterstützung für das Arch User "
-"Repository hinzufügt."
+msgid "Emergency (0)"
+msgstr "Notfall (0)"
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 444
+# File: src/ashyterm/data/command_manager_models.py, line: 502
 #: NEEDS WORK
-msgid "Upgrades all packages from official repositories and the AUR."
-msgstr "Aktualisiert alle Pakete aus offiziellen Repositories und dem AUR."
+msgid "Alert (1)"
+msgstr "Warnung (1)"
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 450
+# File: src/ashyterm/data/command_manager_models.py, line: 503
 #: NEEDS WORK
-msgid "Installs a package from the official repositories or the AUR."
-msgstr "Installiert ein Paket aus den offiziellen Repositories oder dem AUR."
+msgid "Critical (2)"
+msgstr "Kritisch (2)"
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 456
+# File: src/ashyterm/data/command_manager_models.py, line: 504
 #: NEEDS WORK
-msgid "Searches for a package in both official repositories and the AUR."
-msgstr "Durchsucht sowohl offizielle Repositories als auch das AUR nach einem Paket."
+msgid "Error (3)"
+msgstr "Fehler (3)"
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 461
+# File: src/ashyterm/data/command_manager_models.py, line: 505
 #: NEEDS WORK
-msgid "Removes a package and its dependencies."
-msgstr "Entfernt ein Paket und seine Abhängigkeiten."
+msgid "Warning (4)"
+msgstr "Warnung (4)"
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 469
+# File: src/ashyterm/data/command_manager_models.py, line: 506
 #: NEEDS WORK
-msgid ""
-"A universal system for installing and running applications that works across different Linux "
-"distributions."
-msgstr ""
-"Ein universelles System zum Installieren und Ausführen von Anwendungen, das über verschiedene "
-"Linux-Distributionen hinweg funktioniert."
+msgid "Notice (5)"
+msgstr "Hinweis (5)"
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 475
+# File: src/ashyterm/data/command_manager_models.py, line: 507
 #: NEEDS WORK
-msgid "Installs an application from a remote repository like Flathub."
-msgstr "Installiert eine Anwendung aus einem Remote-Repository wie Flathub."
+msgid "Info (6)"
+msgstr "Info (6)"
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 480
+# File: src/ashyterm/data/command_manager_models.py, line: 508
 #: NEEDS WORK
-msgid "Runs an installed Flatpak application."
-msgstr "Führt eine installierte Flatpak-Anwendung aus."
+msgid "Debug (7)"
+msgstr "Debuggen (7)"
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 484
+# File: src/ashyterm/data/command_manager_models.py, line: 510
 #: NEEDS WORK
-msgid "Updates all installed Flatpak applications."
-msgstr "Aktualisiert alle installierten Flatpak-Anwendungen."
+msgid "Filter by log priority level"
+msgstr "Filter nach Protokollprioritätsstufe"
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 489
+# File: src/ashyterm/data/command_manager_models.py, line: 515
 #: NEEDS WORK
-msgid "Searches for applications in the configured remotes."
-msgstr "Durchsucht die konfigurierten Remotes nach Anwendungen."
+msgid "Since"
+msgstr "Seit"
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 494
+# File: src/ashyterm/data/command_manager_models.py, line: 519
 #: NEEDS WORK
-msgid "Lists all installed Flatpak applications."
-msgstr "Listet alle installierten Flatpak-Anwendungen."
+msgid "All time"
+msgstr "Alle Zeit"
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 498
+# File: src/ashyterm/data/command_manager_models.py, line: 521
 #: NEEDS WORK
-msgid "Removes an installed Flatpak application."
-msgstr "Entfernt eine installierte Flatpak-Anwendung."
+msgid "Since Yesterday"
+msgstr "Seit gestern"
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 504
-# File: usr/share/ashyterm/data/command_data.py, line: 519
-# File: usr/share/ashyterm/data/command_data.py, line: 540
+# File: src/ashyterm/data/command_manager_models.py, line: 522
 #: NEEDS WORK
-msgid "Permissions & Ownership"
-msgstr "Berechtigungen und Eigentum"
+msgid "Last Hour"
+msgstr "Letzte Stunde"
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 507
+# File: src/ashyterm/data/command_manager_models.py, line: 523
 #: NEEDS WORK
-msgid "Executes a single command with administrative (root) privileges. Use with care."
-msgstr "Führt einen einzelnen Befehl mit administrativen (Root-)Rechten aus. Vorsicht verwenden."
+msgid "Last 24 Hours"
+msgstr "Letzte 24 Stunden"
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 513
+# File: src/ashyterm/data/command_manager_models.py, line: 525
 #: NEEDS WORK
-msgid "Runs the 'pacman -Syu' command as the administrator, which is required for system updates."
-msgstr ""
-"Führt den Befehl 'pacman -Syu' als Administrator aus, der für Systemaktualisierungen erforderlich "
-"ist."
+msgid "Current Boot"
+msgstr "Aktueller Boot"
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 522
+# File: src/ashyterm/data/command_manager_models.py, line: 526
 #: NEEDS WORK
-msgid "Changes the permissions of files and directories (who can read, write, or execute them)."
-msgstr ""
-"Ändert die Berechtigungen von Dateien und Verzeichnissen (wer sie lesen, schreiben oder ausführen "
-"kann)."
+msgid "Previous Boot"
+msgstr "Vorheriger Start"
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 528
+# File: src/ashyterm/data/command_manager_models.py, line: 528
 #: NEEDS WORK
-msgid "Adds execute (x) permission, allowing the file to be run as a program."
-msgstr "Fügt die Ausführungsberechtigung (x) hinzu, sodass die Datei als Programm ausgeführt werden kann."
+msgid "Filter logs by time period"
+msgstr "Protokolle nach Zeitraum filtern"
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 534
+# File: src/ashyterm/data/command_manager_models.py, line: 536
 #: NEEDS WORK
-msgid ""
-"Sets permissions using numbers: owner can read/write/execute (7), group and others can read/execute "
-"(5)."
-msgstr ""
-"Setzt Berechtigungen mit Zahlen: Der Eigentümer kann lesen/schreiben/ausführen (7), Gruppe und "
-"andere können lesen/ausführen (5)."
+msgid "Pacman"
+msgstr "Pacman"
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 542
+# File: src/ashyterm/data/command_manager_models.py, line: 537
 #: NEEDS WORK
-msgid "Changes the owner and group of a file or directory."
-msgstr "Ändert den Eigentümer und die Gruppe einer Datei oder eines Verzeichnisses."
+msgid "Arch Linux package manager operations"
+msgstr "Arch Linux Paketmanager-Operationen"
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 547
+# File: src/ashyterm/data/command_manager_models.py, line: 552
 #: NEEDS WORK
-msgid "Makes 'user' the owner and 'group' the group for the file."
-msgstr "Macht 'user' zum Eigentümer und 'group' zur Gruppe für die Datei."
+msgid "Install"
+msgstr "Installieren"
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 554
-# File: usr/share/ashyterm/data/command_data.py, line: 567
-# File: usr/share/ashyterm/data/command_data.py, line: 586
-# File: usr/share/ashyterm/data/command_data.py, line: 607
+# File: src/ashyterm/data/command_manager_models.py, line: 554
 #: NEEDS WORK
-msgid "Process & Network Management"
-msgstr "Prozess- und Netzwerkmanagement"
+msgid "Remove with Dependencies"
+msgstr "Mit Abhängigkeiten entfernen"
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 557
+# File: src/ashyterm/data/command_manager_models.py, line: 555
 #: NEEDS WORK
-msgid "Shows the programs (processes) currently running on the system."
-msgstr "Zeigt die derzeit auf dem System laufenden Programme (Prozesse) an."
+msgid "Remove All (configs too)"
+msgstr "Alle entfernen (auch Konfigurationen)"
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 562
+# File: src/ashyterm/data/command_manager_models.py, line: 556
 #: NEEDS WORK
-msgid "Shows a detailed list of all running programs."
-msgstr "Zeigt eine detaillierte Liste aller laufenden Programme an."
+msgid "Search"
+msgstr "Suche"
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 570
+# File: src/ashyterm/data/command_manager_models.py, line: 557
 #: NEEDS WORK
-msgid "Terminates a program (process) that is frozen or unresponsive."
-msgstr "Beendet ein Programm (Prozess), das eingefroren oder nicht mehr reagiert."
+msgid "Package Info"
+msgstr "Paketinformationen"
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 575
+# File: src/ashyterm/data/command_manager_models.py, line: 558
 #: NEEDS WORK
-msgid "Politely tries to close the program with ID 1234."
-msgstr "Versucht höflich, das Programm mit der ID 1234 zu schließen."
+msgid "Local Package Info"
+msgstr "Lokale Paketinformationen"
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 580
+# File: src/ashyterm/data/command_manager_models.py, line: 559
 #: NEEDS WORK
-msgid "Forcibly terminates the program with ID 1234 (use as a last resort)."
-msgstr "Zwingt das Programm mit der ID 1234 zur Beendigung (nur als letzte Möglichkeit verwenden)."
+msgid "List Package Files"
+msgstr "Paketdateien auflisten"
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 589
+# File: src/ashyterm/data/command_manager_models.py, line: 560
 #: NEEDS WORK
-msgid "Terminates all processes with a specific name, like closing all windows of an app."
-msgstr "Beendet alle Prozesse mit einem bestimmten Namen, wie das Schließen aller Fenster einer App."
+msgid "System Update"
+msgstr "Systemaktualisierung"
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 595
+# File: src/ashyterm/data/command_manager_models.py, line: 561
 #: NEEDS WORK
-msgid "Closes all running instances of the 'firefox' program."
-msgstr "Schließt alle laufenden Instanzen des 'firefox'-Programms."
+msgid "Force Refresh & Update"
+msgstr "Erzwingen Sie die Aktualisierung & Aktualisierung"
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 601
+# File: src/ashyterm/data/command_manager_models.py, line: 562
 #: NEEDS WORK
-msgid "Asks for confirmation before terminating each 'chrome' process."
-msgstr "Fragt nach Bestätigung, bevor jeder 'chrome'-Prozess beendet wird."
+msgid "Clean Cache"
+msgstr "Cache leeren"
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 610
+# File: src/ashyterm/data/command_manager_models.py, line: 563
 #: NEEDS WORK
-msgid "Tests if there is a connection to another computer or website."
-msgstr "Überprüft, ob eine Verbindung zu einem anderen Computer oder einer Website besteht."
+msgid "Clean All Cache"
+msgstr "Alle Cache löschen"
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 615
+# File: src/ashyterm/data/command_manager_models.py, line: 564
 #: NEEDS WORK
-msgid "Checks if you can communicate with google.com."
-msgstr "Überprüft, ob Sie mit google.com kommunizieren können."
+msgid "List Installed"
+msgstr "Installierte Liste"
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 620
+# File: src/ashyterm/data/command_manager_models.py, line: 565
 #: NEEDS WORK
-msgid "Sends only 4 test packets instead of running continuously."
-msgstr "Sendet nur 4 Testpakete, anstatt kontinuierlich zu laufen."
+msgid "List Explicitly Installed"
+msgstr "Liste der explizit installierten"
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 627
-# File: usr/share/ashyterm/data/command_data.py, line: 644
-# File: usr/share/ashyterm/data/command_data.py, line: 655
+# File: src/ashyterm/data/command_manager_models.py, line: 566
 #: NEEDS WORK
-msgid "System & User Control"
-msgstr "System- und Benutzersteuerung"
+msgid "List Orphans"
+msgstr "Liste von Waisen"
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 630
+# File: src/ashyterm/data/command_manager_models.py, line: 568
 #: NEEDS WORK
-msgid "Safely turns off or schedules a shutdown for the computer."
-msgstr "Fährt den Computer sicher herunter oder plant einen Shutdown."
+msgid "Package manager action to perform"
+msgstr "Aktion des Paketmanagers ausführen"
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 635
+# File: src/ashyterm/data/command_manager_models.py, line: 573
 #: NEEDS WORK
-msgid "Shuts down the system immediately."
-msgstr "Fährt das System sofort herunter."
+msgid "Package Name"
+msgstr "Paketname"
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 639
+# File: src/ashyterm/data/command_manager_models.py, line: 576
 #: NEEDS WORK
-msgid "Schedules a shutdown for 15 minutes from now."
-msgstr "Plant eine Abschaltung in 15 Minuten."
+msgid "e.g., firefox, vim (optional for updates)"
+msgstr "Schlüssel (verwendet für Kontext): z.B. Firefox, Vim (optional für Updates)"
 # 
-# File: usr/share/ashyterm/data/command_data.py, line: 646
+# File: src/ashyterm/data/command_manager_models.py, line: 577
 #: NEEDS WORK
-msgid "Restarts the computer."
-msgstr "Startet den Computer neu."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 650
-#: NEEDS WORK
-msgid "Restarts the system immediately."
-msgstr "Startet das System sofort neu."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 658
-#: NEEDS WORK
-msgid "Switches to another user account in the current terminal session."
-msgstr "Wechselt zu einem anderen Benutzerkonto in der aktuellen Terminalsitzung."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 664
-#: NEEDS WORK
-msgid "Switches to the specified user's account (requires their password)."
-msgstr "Wechselt zum angegebenen Benutzerkonto (erfordert deren Passwort)."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 671
-#: NEEDS WORK
-msgid "Version Control with Git"
-msgstr "Versionskontrolle mit Git"
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 674
-#: NEEDS WORK
-msgid "A tool for saving the history of changes in code projects, like a 'save point' in a game."
-msgstr ""
-"Ein Werkzeug zum Speichern der Historie von Änderungen in Codeprojekten, ähnlich einem "
-"'Speicherpunkt' in einem Spiel."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 680
-#: NEEDS WORK
-msgid "Initializes a new 'history album' (repository) in a directory."
-msgstr "Initialisiert ein neues 'Historienalbum' (Repository) in einem Verzeichnis."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 686
-#: NEEDS WORK
-msgid "Downloads a copy of a project that already exists elsewhere."
-msgstr "Lädt eine Kopie eines Projekts herunter, das bereits an anderer Stelle existiert."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 692
-#: NEEDS WORK
-msgid "Shows which files have been modified, added, or deleted."
-msgstr "Zeigt an, welche Dateien geändert, hinzugefügt oder gelöscht wurden."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 698
-#: NEEDS WORK
-msgid "Prepares a modified file to be saved in the history ('stages' the change)."
-msgstr "Bereitet eine modifizierte Datei vor, um im Verlauf gespeichert zu werden ('staged' die Änderung)."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 704
-#: NEEDS WORK
-msgid "Saves the staged changes to the history with a description of what was done."
-msgstr "Speichert die gestagten Änderungen mit einer Beschreibung dessen, was getan wurde, in der Historie."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 709
-#: NEEDS WORK
-msgid "Downloads the latest updates from a remote project."
-msgstr "Lädt die neuesten Updates von einem entfernten Projekt herunter."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 714
-#: NEEDS WORK
-msgid "Uploads your saved changes (commits) to the remote project."
-msgstr "Lädt Ihre gespeicherten Änderungen (Commits) in das Remote-Projekt hoch."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 719
-#: NEEDS WORK
-msgid "Shows the history of all commits (saves) made."
-msgstr "Zeigt die Historie aller Commits (Speicherungen) an."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 724
-#: NEEDS WORK
-msgid "Lists all the 'timelines' (branches) of the project."
-msgstr "Listet alle 'Zeitleisten' (Zweige) des Projekts."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 730
-#: NEEDS WORK
-msgid "Switches to another 'timeline' (branch) to work on something new."
-msgstr "Wechselt zu einem anderen 'Zeitstrahl' (Branch), um an etwas Neuem zu arbeiten."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 737
-# File: usr/share/ashyterm/data/command_data.py, line: 758
-# File: usr/share/ashyterm/data/command_data.py, line: 779
-#: NEEDS WORK
-msgid "Archives & Compression"
-msgstr "Archive und Kompression"
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 740
-#: NEEDS WORK
-msgid "Groups multiple files and directories into a single package (.tar file) or extracts them."
-msgstr ""
-"Fasst mehrere Dateien und Verzeichnisse in einem einzigen Paket (.tar-Datei) zusammen oder "
-"extrahiert sie."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 745
-#: NEEDS WORK
-msgid "Creates a compressed package from a directory."
-msgstr "Erstellt ein komprimiertes Paket aus einem Verzeichnis."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 749
-#: NEEDS WORK
-msgid "Extracts files from a compressed package."
-msgstr "Extrahiert Dateien aus einem komprimierten Paket."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 753
-#: NEEDS WORK
-msgid "Creates a package without compression."
-msgstr "Erstellt ein Paket ohne Kompression."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 761
-#: NEEDS WORK
-msgid "Creates compressed .zip files, a format widely used on all operating systems."
-msgstr "Erstellt komprimierte .zip-Dateien, ein Format, das auf allen Betriebssystemen weit verbreitet ist."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 767
-#: NEEDS WORK
-msgid "Creates a zip file containing one or more specified files."
-msgstr "Erstellt eine ZIP-Datei, die eine oder mehrere angegebene Dateien enthält."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 773
-#: NEEDS WORK
-msgid "Creates a zip file containing a directory and everything inside it."
-msgstr "Erstellt eine ZIP-Datei, die ein Verzeichnis und alles darin enthält."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 781
-#: NEEDS WORK
-msgid "Extracts files from a .zip archive."
-msgstr "Extrahiert Dateien aus einem .zip-Archiv."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 786
-#: NEEDS WORK
-msgid "Extracts all files from the archive into the current directory."
-msgstr "Extrahiert alle Dateien aus dem Archiv in das aktuelle Verzeichnis."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 791
-#: NEEDS WORK
-msgid "Extracts files to a specific destination directory."
-msgstr "Extrahiert Dateien in ein bestimmtes Zielverzeichnis."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 797
-# File: usr/share/ashyterm/data/command_data.py, line: 812
-# File: usr/share/ashyterm/data/command_data.py, line: 827
-# File: usr/share/ashyterm/data/command_data.py, line: 840
-# File: usr/share/ashyterm/data/command_data.py, line: 851
-# File: usr/share/ashyterm/data/command_data.py, line: 866
-# File: usr/share/ashyterm/data/command_data.py, line: 879
-#: NEEDS WORK
-msgid "Useful Commands (Optional)"
-msgstr "Nützliche Befehle (Optional)"
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 800
-#: NEEDS WORK
-msgid "A visual 'Task Manager' for the terminal. (May require installation)"
-msgstr "Ein visueller 'Task-Manager' für das Terminal. (Kann eine Installation erfordern)"
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 806
-#: NEEDS WORK
-msgid "Interactively shows running programs, CPU, and memory usage."
-msgstr "Interaktiv zeigt laufende Programme, CPU- und Speicherauslastung an."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 815
-#: NEEDS WORK
-msgid "Monitors the usage of video cards (GPUs), especially NVIDIA. (May require installation)"
-msgstr ""
-"Überwacht die Nutzung von Grafikkarten (GPUs), insbesondere NVIDIA. (Kann eine Installation "
-"erfordern)"
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 821
-#: NEEDS WORK
-msgid "Shows GPU usage, video memory, and temperature in real-time."
-msgstr "Zeigt die GPU-Auslastung, den Videospeicher und die Temperatur in Echtzeit an."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 830
-#: NEEDS WORK
-msgid "Lists all devices connected to the computer's PCI slots (graphics card, network, etc.)."
-msgstr ""
-"Listet alle Geräte auf, die an die PCI-Steckplätze des Computers angeschlossen sind (Grafikkarte, "
-"Netzwerk usw.)."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 835
-#: NEEDS WORK
-msgid "Shows a list of all PCI devices."
-msgstr "Zeigt eine Liste aller PCI-Geräte an."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 842
-#: NEEDS WORK
-msgid "Lists all devices connected to the USB ports."
-msgstr "Listet alle Geräte, die an die USB-Ports angeschlossen sind."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 846
-#: NEEDS WORK
-msgid "Shows a list of all connected USB devices."
-msgstr "Zeigt eine Liste aller angeschlossenen USB-Geräte an."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 854
-#: NEEDS WORK
-msgid "A modern and super-fast version of 'grep' for searching text. (May require installation: ripgrep)"
-msgstr ""
-"Eine moderne und superschnelle Version von 'grep' zum Durchsuchen von Text. (Möglicherweise ist "
-"eine Installation erforderlich: ripgrep)"
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 860
-#: NEEDS WORK
-msgid "Recursively searches for 'word' in the current directory very quickly."
-msgstr "Durchsucht rekursiv das aktuelle Verzeichnis sehr schnell nach 'word'."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 869
-#: NEEDS WORK
-msgid "A modern and more intuitive version of 'find' for finding files. (May require installation: fd-find)"
-msgstr ""
-"Eine moderne und intuitivere Version von 'find' zum Auffinden von Dateien. (Möglicherweise ist eine "
-"Installation erforderlich: fd-find)"
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 874
-#: NEEDS WORK
-msgid "Finds all files containing '.txt' in their name."
-msgstr "Findet alle Dateien, die '.txt' in ihrem Namen enthalten."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 882
-#: NEEDS WORK
-msgid "A tool for processing and viewing data in JSON format. (May require installation)"
-msgstr ""
-"Ein Werkzeug zum Verarbeiten und Anzeigen von Daten im JSON-Format. (Kann eine Installation "
-"erfordern)"
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 888
-#: NEEDS WORK
-msgid "Displays a JSON file with colors and formatting for easy reading."
-msgstr "Zeigt eine JSON-Datei mit Farben und Formatierungen für eine einfache Lesbarkeit an."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 895
-# File: usr/share/ashyterm/data/command_data.py, line: 914
-# File: usr/share/ashyterm/data/command_data.py, line: 929
-# File: usr/share/ashyterm/data/command_data.py, line: 944
-# File: usr/share/ashyterm/data/command_data.py, line: 957
-# File: usr/share/ashyterm/data/command_data.py, line: 968
-# File: usr/share/ashyterm/data/command_data.py, line: 979
-# File: usr/share/ashyterm/data/command_data.py, line: 990
-# File: usr/share/ashyterm/data/command_data.py, line: 1003
-# File: usr/share/ashyterm/data/command_data.py, line: 1015
-#: NEEDS WORK
-msgid "Text Processing (Intermediate)"
-msgstr "Textverarbeitung (Mittelstufe)"
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 897
-#: NEEDS WORK
-msgid "Sorts the lines of a file."
-msgstr "Sortiert die Zeilen einer Datei."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 519
-#: NEEDS WORK
-msgid "Sorts lines in alphabetical order."
-msgstr "Sortiert Zeilen in alphabetischer Reihenfolge."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 905
-#: NEEDS WORK
-msgid "Sorts lines in numerical order."
-msgstr "Sortiert Zeilen in numerischer Reihenfolge."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 527
-#: NEEDS WORK
-msgid "Sorts lines in reverse order."
-msgstr "Sortiert Zeilen in umgekehrter Reihenfolge."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 916
-#: NEEDS WORK
-msgid "Removes adjacent duplicate lines."
-msgstr "Entfernt benachbarte doppelte Zeilen."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 920
-#: NEEDS WORK
-msgid "First sorts the file, then removes duplicate lines."
-msgstr "Zuerst wird die Datei sortiert, dann werden doppelte Zeilen entfernt."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 924
-#: NEEDS WORK
-msgid "Counts how many times each line appears."
-msgstr "Zählt, wie oft jede Zeile erscheint."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 931
-#: NEEDS WORK
-msgid "Counts lines, words, and characters in a file."
-msgstr "Zählt Zeilen, Wörter und Zeichen in einer Datei."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 935
-#: NEEDS WORK
-msgid "Counts only the number of lines."
-msgstr "Zählt nur die Anzahl der Zeilen."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 939
-#: NEEDS WORK
-msgid "Counts only the number of words."
-msgstr "Zählt nur die Anzahl der Wörter."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 946
-#: NEEDS WORK
-msgid "Cuts and extracts columns of text from a file."
-msgstr "Schneidet und extrahiert Textspalten aus einer Datei."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 951
-#: NEEDS WORK
-msgid "Extracts the first column of text, using ':' as the separator."
-msgstr "Extrahiert die erste Textspalte unter Verwendung von ':' als Trennzeichen."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 959
-#: NEEDS WORK
-msgid "Merges the lines of multiple files side-by-side."
-msgstr "Fügt die Zeilen mehrerer Dateien nebeneinander zusammen."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 963
-#: NEEDS WORK
-msgid "Combines the lines of two files into columns."
-msgstr "Kombiniert die Zeilen von zwei Dateien in Spalten."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 970
-#: NEEDS WORK
-msgid "Translates or deletes characters from text."
-msgstr "Übersetzt oder löscht Zeichen aus dem Text."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 974
-#: NEEDS WORK
-msgid "Converts text from lowercase to uppercase."
-msgstr "Konvertiert Text von Kleinbuchstaben in Großbuchstaben."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 981
-#: NEEDS WORK
-msgid "Reverses the order of characters in each line."
-msgstr "Kehrt die Reihenfolge der Zeichen in jeder Zeile um."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 985
-#: NEEDS WORK
-msgid "Reverses a string (result: 'stressed')."
-msgstr "Kehrt einen String um (Ergebnis: 'stressed')."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 993
-#: NEEDS WORK
-msgid "Displays the content of a file backwards (last line first)."
-msgstr "Zeigt den Inhalt einer Datei rückwärts an (letzte Zeile zuerst)."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 998
-#: NEEDS WORK
-msgid "Displays the lines of a file in reverse order."
-msgstr "Zeigt die Zeilen einer Datei in umgekehrter Reihenfolge an."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 667
-#: NEEDS WORK
-msgid "Prints a sequence of numbers."
-msgstr "Druckt eine Folge von Zahlen."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 671
-#: NEEDS WORK
-msgid "Prints numbers from 1 to 10."
-msgstr "Druckt Zahlen von 1 bis 10."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 1010
-#: NEEDS WORK
-msgid "Prints numbers from 0 to 10, incrementing by 2."
-msgstr "Druckt Zahlen von 0 bis 10, inkrementierend um 2."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 1017
-#: NEEDS WORK
-msgid "A calculator for the terminal."
-msgstr "Ein Rechner für das Terminal."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 1021
-#: NEEDS WORK
-msgid "Performs a basic mathematical calculation."
-msgstr "Führt eine grundlegende mathematische Berechnung durch."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 1025
-#: NEEDS WORK
-msgid "Performs division with 2 decimal places."
-msgstr "Führt eine Division mit 2 Dezimalstellen durch."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 1031
-# File: usr/share/ashyterm/data/command_data.py, line: 1048
-# File: usr/share/ashyterm/data/command_data.py, line: 1069
-# File: usr/share/ashyterm/data/command_data.py, line: 1084
-# File: usr/share/ashyterm/data/command_data.py, line: 1099
-# File: usr/share/ashyterm/data/command_data.py, line: 1112
-# File: usr/share/ashyterm/data/command_data.py, line: 1223
-# File: usr/share/ashyterm/data/command_data.py, line: 1252
-# File: usr/share/ashyterm/data/command_data.py, line: 1271
-# File: usr/share/ashyterm/data/command_data.py, line: 1372
-# File: usr/share/ashyterm/data/command_data.py, line: 1469
-# File: usr/share/ashyterm/data/command_data.py, line: 1494
-#: NEEDS WORK
-msgid "Advanced: Scripting & Shell"
-msgstr "Erweitert: Skripting & Shell"
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 1034
-#: NEEDS WORK
-msgid "Executes command blocks only if a condition is true."
-msgstr "Führt Befehlsblöcke nur aus, wenn eine Bedingung wahr ist."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 1039
-#: NEEDS WORK
-msgid "Tests if a file exists."
-msgstr "Überprüft, ob eine Datei vorhanden ist."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 174
-#: NEEDS WORK
-msgid "Tests if a numeric variable is equal to 5."
-msgstr "Überprüft, ob eine numerische Variable gleich 5 ist."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 1051
-#: NEEDS WORK
-msgid "Creates a loop that repeats an action for each item in a list."
-msgstr "Erstellt eine Schleife, die eine Aktion für jedes Element in einer Liste wiederholt."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 1057
-#: NEEDS WORK
-msgid "Repeats the 'echo' command for the numbers 1, 2, and 3."
-msgstr "Wiederholt den 'echo'-Befehl für die Zahlen 1, 2 und 3."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 1063
-#: NEEDS WORK
-msgid "Performs an action for every file that ends with .txt."
-msgstr "Führt eine Aktion für jede Datei aus, die mit .txt endet."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 1072
-#: NEEDS WORK
-msgid "Creates a loop that continues to execute as long as a condition is true."
-msgstr "Erstellt eine Schleife, die weiterhin ausgeführt wird, solange eine Bedingung wahr ist."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 1078
-#: NEEDS WORK
-msgid "Executes the code block as long as the COUNT variable is less than 5."
-msgstr "Führt den Codeblock aus, solange die COUNT-Variable kleiner als 5 ist."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 1087
-#: NEEDS WORK
-msgid "Creates a loop that continues to execute until a condition becomes true."
-msgstr "Erstellt eine Schleife, die weiterhin ausgeführt wird, bis eine Bedingung wahr wird."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 1093
-#: NEEDS WORK
-msgid "Executes the code block until the COUNT variable is equal to 0."
-msgstr "Führt den Codeblock aus, bis die COUNT-Variable gleich 0 ist."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 1101
-#: NEEDS WORK
-msgid "Reads user input and stores it in a variable."
-msgstr "Liest Benutzereingaben und speichert sie in einer Variablen."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 1106
-#: NEEDS WORK
-msgid "Displays a prompt and waits for the user to type something."
-msgstr "Zeigt eine Eingabeaufforderung an und wartet darauf, dass der Benutzer etwas eingibt."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 1115
-#: NEEDS WORK
-msgid "Checks if a condition is true or false, used for making decisions in scripts."
-msgstr ""
-"Überprüft, ob eine Bedingung wahr oder falsch ist, wird zur Entscheidungsfindung in Skripten "
-"verwendet."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 1120
-#: NEEDS WORK
-msgid "Checks if a variable is empty."
-msgstr "Überprüft, ob eine Variable leer ist."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 1124
-#: NEEDS WORK
-msgid "Checks if a variable is not empty."
-msgstr "Überprüft, ob eine Variable nicht leer ist."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 1128
-#: NEEDS WORK
-msgid "Checks if two pieces of text are exactly the same."
-msgstr "Überprüft, ob zwei Textstücke genau identisch sind."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 1132
-#: NEEDS WORK
-msgid "Checks if two pieces of text are different."
-msgstr "Überprüft, ob zwei Textstücke unterschiedlich sind."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 1136
-#: NEEDS WORK
-msgid "Checks if two numbers are equal."
-msgstr "Überprüft, ob zwei Zahlen gleich sind."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 1140
-#: NEEDS WORK
-msgid "Checks if two numbers are not equal."
-msgstr "Überprüft, ob zwei Zahlen ungleich sind."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 1144
-#: NEEDS WORK
-msgid "Checks if the first number is less than the second."
-msgstr "Überprüft, ob die erste Zahl kleiner als die zweite ist."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 1149
-#: NEEDS WORK
-msgid "Checks if the first number is less than or equal to the second."
-msgstr "Überprüft, ob die erste Zahl kleiner oder gleich der zweiten ist."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 1155
-#: NEEDS WORK
-msgid "Checks if the first number is greater than the second."
-msgstr "Überprüft, ob die erste Zahl größer ist als die zweite."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 1161
-#: NEEDS WORK
-msgid "Checks if the first number is greater than or equal to the second."
-msgstr "Überprüft, ob die erste Zahl größer oder gleich der zweiten ist."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 1167
-#: NEEDS WORK
-msgid "Checks if text matches a pattern (e.g., is a valid email)."
-msgstr ""
-"Überprüft, ob der Text mit einem Muster übereinstimmt (z. B. ob es sich um eine gültige E-Mail "
-"handelt)."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 1172
-#: NEEDS WORK
-msgid "NOT: Reverses the result of a check."
-msgstr "NICHT: Kehrt das Ergebnis einer Überprüfung um."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 1176
-#: NEEDS WORK
-msgid "AND: Checks if both conditions are true."
-msgstr "UND: Überprüft, ob beide Bedingungen wahr sind."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 1180
-#: NEEDS WORK
-msgid "OR: Checks if at least one condition is true."
-msgstr "ODER: Überprüft, ob mindestens eine Bedingung wahr ist."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 1184
-#: NEEDS WORK
-msgid "Checks if a file or directory exists."
-msgstr "Überprüft, ob eine Datei oder ein Verzeichnis vorhanden ist."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 1188
-#: NEEDS WORK
-msgid "Checks if you have permission to read a file."
-msgstr "Überprüft, ob Sie die Berechtigung haben, eine Datei zu lesen."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 1192
-#: NEEDS WORK
-msgid "Checks if the path is a directory."
-msgstr "Überprüft, ob der Pfad ein Verzeichnis ist."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 1196
-#: NEEDS WORK
-msgid "Checks if you have permission to write to a file."
-msgstr "Überprüft, ob Sie die Berechtigung haben, in eine Datei zu schreiben."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 1200
-#: NEEDS WORK
-msgid "Checks if a file is not empty."
-msgstr "Überprüft, ob eine Datei nicht leer ist."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 1205
-#: NEEDS WORK
-msgid "Checks if the path is a regular file (not a directory)."
-msgstr "Überprüft, ob der Pfad eine reguläre Datei ist (kein Verzeichnis)."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 1210
-#: NEEDS WORK
-msgid "Checks if you have permission to run a file."
-msgstr "Überprüft, ob Sie die Berechtigung haben, eine Datei auszuführen."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 1214
-#: NEEDS WORK
-msgid "Checks if the first file is newer than the second."
-msgstr "Überprüft, ob die erste Datei neuer ist als die zweite."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 1218
-#: NEEDS WORK
-msgid "Checks if the first file is older than the second."
-msgstr "Überprüft, ob die erste Datei älter ist als die zweite."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 1226
-#: NEEDS WORK
-msgid "Array operations for storing multiple values in a single variable."
-msgstr "Array-Operationen zum Speichern mehrerer Werte in einer einzelnen Variablen."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 1231
-#: NEEDS WORK
-msgid "Creates a list with several items."
-msgstr "Erstellt eine Liste mit mehreren Elementen."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 1235
-#: NEEDS WORK
-msgid "Accesses the first item in the list."
-msgstr "Greift auf das erste Element in der Liste zu."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 1239
-#: NEEDS WORK
-msgid "Accesses the last item in the list."
-msgstr "Greift auf das letzte Element in der Liste zu."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 1243
-#: NEEDS WORK
-msgid "Displays all items in the list."
-msgstr "Zeigt alle Elemente in der Liste an."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 1247
-#: NEEDS WORK
-msgid "Shows how many items are in the list."
-msgstr "Zeigt, wie viele Elemente in der Liste enthalten sind."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 1254
-#: NEEDS WORK
-msgid "Brace expansion to quickly generate text sequences."
-msgstr "Klammererweiterung zur schnellen Generierung von Textsequenzen."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 1258
-#: NEEDS WORK
-msgid "Generates: a.txt b.txt c.txt"
-msgstr "Generiert: a.txt b.txt c.txt"
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 1262
-#: NEEDS WORK
-msgid "Generates a sequence of numbers: 1 2 3 4 5."
-msgstr "Generiert eine Folge von Zahlen: 1 2 3 4 5."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 1266
-#: NEEDS WORK
-msgid "Creates multiple directories at once."
-msgstr "Erstellt mehrere Verzeichnisse auf einmal."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 1274
-#: NEEDS WORK
-msgid "Advanced ways to modify or get information from variables."
-msgstr "Erweiterte Möglichkeiten zur Modifikation oder zum Abrufen von Informationen aus Variablen."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 1279
-#: NEEDS WORK
-msgid "Gets the length of the text in a variable."
-msgstr "Ermittelt die Länge des Textes in einer Variablen."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 1283
-#: NEEDS WORK
-msgid "Uses 'default' if the variable is empty or not set."
-msgstr "Verwendet 'Standard', wenn die Variable leer oder nicht gesetzt ist."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 1288
-#: NEEDS WORK
-msgid "Uses 'default' if empty, and also sets the variable to 'default'."
-msgstr "Verwendet 'Standard', wenn leer, und setzt auch die Variable auf 'Standard'."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 1294
-#: NEEDS WORK
-msgid "Shows an error and stops the script if the variable is empty."
-msgstr "Zeigt einen Fehler an und stoppt das Skript, wenn die Variable leer ist."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 1300
-#: NEEDS WORK
-msgid "Uses 'value_if_set' only if the variable has content."
-msgstr "Verwendet 'value_if_set' nur, wenn die Variable Inhalt hat."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 1305
-#: NEEDS WORK
-msgid "Gets text starting from the 4th character."
-msgstr "Erhält den Text ab dem 4. Zeichen."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 1310
-#: NEEDS WORK
-msgid "Gets 5 characters of text, starting from the 4th character."
-msgstr "Erhält 5 Zeichen des Textes, beginnend ab dem 4. Zeichen."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 1316
-#: NEEDS WORK
-msgid "Removes the shortest matching 'prefix' from the beginning."
-msgstr "Entfernt das kürzeste übereinstimmende 'Präfix' vom Anfang."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 1322
-#: NEEDS WORK
-msgid "Removes the longest matching 'prefix' from the beginning."
-msgstr "Entfernt das längste übereinstimmende 'Präfix' vom Anfang."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 1328
-#: NEEDS WORK
-msgid "Removes the shortest matching 'suffix' from the end."
-msgstr "Entfernt das kürzeste übereinstimmende 'Suffix' vom Ende."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 1333
-#: NEEDS WORK
-msgid "Removes the longest matching 'suffix' from the end."
-msgstr "Entfernt das längste übereinstimmende 'Suffix' vom Ende."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 1337
-#: NEEDS WORK
-msgid "Replaces the first match of 'old' with 'new'."
-msgstr "Ersetzt die erste Übereinstimmung von 'old' mit 'new'."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 1341
-#: NEEDS WORK
-msgid "Replaces all matches of 'old' with 'new'."
-msgstr "Ersetzt alle Übereinstimmungen von 'alt' mit 'neu'."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 1346
-#: NEEDS WORK
-msgid "Replaces 'old' with 'new' only if it's at the beginning."
-msgstr "Ersetzt 'alt' durch 'neu', nur wenn es am Anfang steht."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 1351
-#: NEEDS WORK
-msgid "Replaces 'old' with 'new' only if it's at the end."
-msgstr "Ersetzt 'alt' durch 'neu', nur wenn es am Ende steht."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 1355
-#: NEEDS WORK
-msgid "Changes the first letter to uppercase."
-msgstr "Ändert den ersten Buchstaben in Großbuchstaben."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 1359
-#: NEEDS WORK
-msgid "Changes all letters to uppercase."
-msgstr "Ändert alle Buchstaben in Großbuchstaben."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 1363
-#: NEEDS WORK
-msgid "Changes the first letter to lowercase."
-msgstr "Ändert den ersten Buchstaben in Kleinbuchstaben."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 1367
-#: NEEDS WORK
-msgid "Changes all letters to lowercase."
-msgstr "Ändert alle Buchstaben in Kleinbuchstaben."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 1375
-#: NEEDS WORK
-msgid ""
-"A 'mini-language' for finding text patterns. These are building blocks for tools like grep, sed, "
-"and awk."
-msgstr ""
-"Eine 'Mini-Sprache' zum Finden von Textmustern. Dies sind Bausteine für Werkzeuge wie grep, sed und "
-"awk."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 1381
-#: NEEDS WORK
-msgid "Dot: Matches any single character. 'h.t' finds 'hot', 'hat', and 'h t'."
-msgstr "Punkt: Entspricht jedem einzelnen Zeichen. 'h.t' findet 'hot', 'hat' und 'h t'."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 1387
-#: NEEDS WORK
-msgid "Asterisk: Matches zero or more repetitions of the preceding item. 'a*' finds '', 'a', 'aa'."
-msgstr ""
-"Sternchen: Entspricht null oder mehr Wiederholungen des vorhergehenden Elements. 'a*' findet '', "
-"'a', 'aa'."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 1393
-#: NEEDS WORK
-msgid "Plus: Matches one or more repetitions of the preceding item. 'a+' finds 'a', 'aa', but not ''."
-msgstr ""
-"Plus: Entspricht einer oder mehreren Wiederholungen des vorhergehenden Elements. 'a+' findet 'a', "
-"'aa', aber nicht ''."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 1399
-#: NEEDS WORK
-msgid ""
-"Question Mark: Matches the preceding item zero or one time (makes it optional). 'colou?r' matches "
-"'color' and 'colour'."
-msgstr ""
-"Fragezeichen: Entspricht dem vorhergehenden Element null oder einmal (macht es optional). 'colou?r' "
-"entspricht 'color' und 'colour'."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 1405
-#: NEEDS WORK
-msgid "Caret: Matches the beginning of a line. '^Hello' only finds lines that start with 'Hello'."
-msgstr "Caret: Entspricht dem Anfang einer Zeile. '^Hello' findet nur Zeilen, die mit 'Hello' beginnen."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 1411
-#: NEEDS WORK
-msgid "Dollar Sign: Matches the end of a line. 'end$' only finds lines that end with 'end'."
-msgstr "Dollarzeichen: Entspricht dem Ende einer Zeile. 'end$' findet nur Zeilen, die mit 'end' enden."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 1417
-#: NEEDS WORK
-msgid "Brackets: Matches any of the characters inside. '[abc]' finds 'a', 'b', or 'c'."
-msgstr "Klammern: Entspricht einem der Zeichen innerhalb. '[abc]' findet 'a', 'b' oder 'c'."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 1423
-#: NEEDS WORK
-msgid "Negated Brackets: Matches any character NOT inside. '[^abc]' finds 'd', 'e', 'f', etc."
-msgstr "Negierte Klammern: Entspricht jedem Zeichen, das NICHT innen ist. '[^abc]' findet 'd', 'e', 'f' usw."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 1429
-#: NEEDS WORK
-msgid "Parentheses: Groups expressions. '(ab)+' finds 'ab', 'abab', 'ababab'."
-msgstr "Klammern: Gruppiert Ausdrücke. '(ab)+' findet 'ab', 'abab', 'ababab'."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 1435
-#: NEEDS WORK
-msgid "Pipe: Acts as an 'OR'. 'cat|dog' finds 'cat' or 'dog'."
-msgstr "Pipe: Fungiert als 'ODER'. 'cat|dog' findet 'cat' oder 'dog'."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 1441
-#: NEEDS WORK
-msgid "Curly Braces: Matches a specific number of repetitions. e.g., 'a{2,4}' finds 'aa', 'aaa', 'aaaa'."
-msgstr ""
-"Geschweifte Klammern: Entspricht einer bestimmten Anzahl von Wiederholungen. z.B. 'a{2,4}' findet "
-"'aa', 'aaa', 'aaaa'."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 1446
-#: NEEDS WORK
-msgid "Digit: Matches any single number from 0 to 9."
-msgstr "Ziffer: Entspricht einer einzelnen Zahl von 0 bis 9."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 1451
-#: NEEDS WORK
-msgid "Word Character: Matches any letter, number, or underscore."
-msgstr "Wortzeichen: Entspricht jedem Buchstaben, jeder Zahl oder Unterstrich."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 1457
-#: NEEDS WORK
-msgid "Whitespace: Matches any space, tab, or newline character."
-msgstr "Whitespace: Entspricht jedem Leerzeichen, Tabulator oder Zeilenumbruchzeichen."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 1463
-#: NEEDS WORK
-msgid "Backslash: Escapes a special character, treating it literally. '\\.' matches a literal dot."
-msgstr ""
-"Backslash: Entwertet ein Sonderzeichen und behandelt es wörtlich. '\\.' entspricht einem wörtlichen "
-"Punkt."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 1472
-#: NEEDS WORK
-msgid "A command-line text editor, great for replacing words in files."
-msgstr "Ein Befehlszeilen-Texteditor, der sich hervorragend zum Ersetzen von Wörtern in Dateien eignet."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 1478
-#: NEEDS WORK
-msgid "Replaces all occurrences of 'old' with 'new' in the file."
-msgstr "Ersetzt alle Vorkommen von 'alt' durch 'neu' in der Datei."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 1483
-#: NEEDS WORK
-msgid "Deletes all lines that start with # (comments)."
-msgstr "Löscht alle Zeilen, die mit # (Kommentare) beginnen."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 1488
-#: NEEDS WORK
-msgid "Saves the modification directly in the original file."
-msgstr "Speichert die Änderung direkt in der Originaldatei."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 1497
-#: NEEDS WORK
-msgid "An advanced tool for processing text, especially column-based data."
-msgstr "Ein fortschrittliches Werkzeug zur Verarbeitung von Text, insbesondere von spaltenbasierten Daten."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 1502
-#: NEEDS WORK
-msgid "Displays only the first column (word) of each line."
-msgstr "Zeigt nur die erste Spalte (Wort) jeder Zeile an."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 1506
-#: NEEDS WORK
-msgid "Displays only the last column of each line."
-msgstr "Zeigt nur die letzte Spalte jeder Zeile an."
-# 
-# File: usr/share/ashyterm/data/command_data.py, line: 1511
-#: NEEDS WORK
-msgid "Displays the value of column 1 only if the value of column 3 is greater than 100."
-msgstr "Zeigt den Wert von Spalte 1 nur an, wenn der Wert von Spalte 3 größer als 100 ist."
+msgid "Package name for install/remove/search actions"
+msgstr "Paketname für Installations-/Entfernungs-/Suchaktionen"
 # 
 # File: usr/share/ashyterm/sessions/storage.py, line: 125
 #: NEEDS WORK
@@ -7017,11 +6864,6 @@ msgstr "Suche..."
 msgid "Showing first {count} results. Refine your search to narrow the list."
 msgstr "Zeige die ersten {count} Ergebnisse an. Verfeinere deine Suche, um die Liste einzugrenzen."
 # 
-# File: usr/share/ashyterm/filemanager/manager.py, line: 366
-#: NEEDS WORK
-msgid "Name"
-msgstr "Name"
-# 
 # File: usr/share/ashyterm/filemanager/manager.py, line: 375
 #: NEEDS WORK
 msgid "Size"
@@ -7238,13 +7080,6 @@ msgstr "Lesen"
 #: NEEDS WORK
 msgid "Write"
 msgstr "Schreiben"
-# 
-# File: usr/share/ashyterm/filemanager/manager.py, line: 714
-# File: usr/share/ashyterm/filemanager/manager.py, line: 728
-# File: usr/share/ashyterm/filemanager/manager.py, line: 742
-#: NEEDS WORK
-msgid "Execute"
-msgstr "Ausführen"
 # 
 # File: usr/share/ashyterm/filemanager/manager.py, line: 737
 #: NEEDS WORK
@@ -7594,36 +7429,10 @@ msgstr "Kann den letzten Tab nicht abtrennen."
 msgid "Terminal {id}"
 msgstr "Terminal {id}"
 # 
-# File: usr/share/ashyterm/window.py, line: 705
-#: NEEDS WORK
-msgid "No open terminals found."
-msgstr "Keine offenen Terminals gefunden."
-# 
-# File: usr/share/ashyterm/window.py, line: 711
-#: NEEDS WORK
-msgid "Confirm sending of command"
-msgstr "Befehl senden bestätigen"
-# 
-# File: usr/share/ashyterm/window.py, line: 734
-#: NEEDS WORK
-#, python-brace-format
-msgid "Select which of the <b>{count}</b> open terminals should receive the command below."
-msgstr "Wählen Sie aus, welche der <b>{count}</b> offenen Terminals den folgenden Befehl erhalten sollen."
-# 
-# File: usr/share/ashyterm/window.py, line: 749
-#: NEEDS WORK
-msgid "Choose the tabs that should run this command:"
-msgstr "Wählen Sie die Registerkarten aus, die diesen Befehl ausführen sollen:"
-# 
 # File: usr/share/ashyterm/window.py, line: 809
 #: NEEDS WORK
 msgid "Remember my choice"
 msgstr "Merke meine Wahl"
-# 
-# File: usr/share/ashyterm/window.py, line: 731
-#: NEEDS WORK
-msgid "Send Command"
-msgstr "Befehl senden"
 # 
 # File: usr/share/ashyterm/window.py, line: 823
 #: NEEDS WORK

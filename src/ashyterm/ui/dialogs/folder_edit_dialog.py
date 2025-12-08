@@ -173,7 +173,7 @@ class FolderEditDialog(BaseDialog):
                 self.logger.info(
                     f"Folder {'created' if self.is_new_item else 'updated'}: {updated_folder.name}"
                 )
-                self.parent_window.refresh_tree()
+                # Tree refresh is handled automatically via AppSignals
                 self.close()
             elif result:
                 self._show_error_dialog(_("Save Error"), result.message)

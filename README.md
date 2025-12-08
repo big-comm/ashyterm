@@ -8,7 +8,7 @@
   <a href="https://github.com/big-comm/ashyterm/blob/main/LICENSE"><img src="https://img.shields.io/badge/License-MIT-green.svg" alt="License"/></a>
 </p>
 
-**Ashy Terminal** is a modern, intuitive, and innovative terminal built with GTK4 and Adwaita. While it offers advanced features appreciated by developers and system administrators, it also stands out for making the command-line environment more accessible, helping those who are just beginning to learn how to use the terminal. Its simplified session management, built-in file manager, automatic color highlighting for improved readability, command guide, and a variety of other features bring convenience to users of all skill levels on Linux distributions such as BigLinux.
+**Ashy Terminal** is a modern, intuitive, and innovative terminal built with GTK4 and Adwaita. While it offers advanced features appreciated by developers and system administrators, it also stands out for making the command-line environment more accessible, helping those who are just beginning to learn how to use the terminal. Its simplified session management, built-in file manager, automatic color highlighting for improved readability, and a variety of other features bring convenience to users of all skill levels on Linux distributions such as BigLinux.
 
 ## Screenshots
 
@@ -69,7 +69,6 @@ This gives you a clearer, more readable view of command output—especially in e
 ### ⚡ Productivity Tools
 <img width="458" height="422" alt="image" src="https://github.com/user-attachments/assets/eb16295b-00ea-4ab7-b6d4-a5fef3d40f6a" />
 -   **Input Broadcasting**: Type commands in one terminal and execute them simultaneously across multiple selected tabs/panes.
--   **Command Guide**: Built-in, searchable cheat sheet for common Linux commands (fully customizable).
 -   **Quick Prompts**: One-click AI prompts for common tasks (e.g., "Explain this error", "Optimize this command").
 
 
@@ -175,7 +174,6 @@ Configuration files are stored in `~/.config/ashyterm/`:
 | `settings.json` | General preferences, appearance, terminal behavior, shortcuts, and AI configuration |
 | `sessions.json` | Saved SSH/SFTP connections and session folders |
 | `session_state.json` | Window state and session restore data |
-| `custom_commands.json` | User-defined entries for the Command Guide |
 | `layouts/` | Saved window layouts (split panes configuration) |
 | `logs/` | Application logs (when logging to file is enabled) |
 | `backups/` | Manual encrypted backup archives |

@@ -66,7 +66,7 @@ class WindowActions:
             "toggle-file-manager": self.toggle_file_manager,
             "toggle-search": self.toggle_search,
             "toggle-broadcast": self.toggle_broadcast,
-            "show-command-guide": self.show_command_guide,
+            "show-command-manager": self.show_command_manager,
             "preferences": self.preferences,
             "shortcuts": self.shortcuts,
             "new-window": self.new_window,
@@ -297,7 +297,7 @@ class WindowActions:
             item := self.window.session_tree.get_selected_item(), SessionItem
         ):
             self.window.session_operations.duplicate_session(item)
-            self.window.refresh_tree()
+            # Tree refresh is handled automatically via AppSignals
 
     def rename_session(self, *_args):
         self._close_sidebar_popover_if_active()
@@ -396,9 +396,9 @@ class WindowActions:
             not self.window.broadcast_button.get_active()
         )
 
-    def show_command_guide(self, *_args):
+    def show_command_manager(self, *_args):
         self._hide_tooltip()
-        self.window._show_command_guide_dialog()
+        self.window._show_command_manager_dialog()
 
     def preferences(self, *_args):
         self._hide_tooltip()
@@ -468,6 +468,7 @@ class WindowActions:
             self.window.session_store,
             position,
             self.window.folder_store,
+            settings_manager=self.window.settings_manager,
         ).present()
 
     def _show_folder_edit_dialog(
@@ -506,6 +507,10 @@ class WindowActions:
                     if is_session:
                         self.window.session_operations._save_changes()
                         log_session_event("renamed", f"{old_name} -> {new_name}")
+                        # Emit signal for tree refresh
+                        from ..core.signals import AppSignals
+
+                        AppSignals.get().emit("session-updated", item.name)
                     else:
                         if isinstance(item, SessionFolder):
                             old_path = item.path
@@ -518,7 +523,10 @@ class WindowActions:
                                 old_path, item.path
                             )
                         self.window.session_operations._save_changes()
-                    self.window.refresh_tree()
+                        # Emit signal for tree refresh
+                        from ..core.signals import AppSignals
+
+                        AppSignals.get().emit("folder-updated", item.name)
             dlg.close()
 
         dialog.connect("response", on_response)
@@ -587,7 +595,10 @@ class WindowActions:
                         self.window.state_manager.delete_saved_layout(
                             item_to_delete.name, confirm=False
                         )
-                self.window.refresh_tree()
+                        # Layouts need explicit tree refresh until they use signals
+                        from ..core.signals import AppSignals
+
+                        AppSignals.get().emit("request-tree-refresh")
             dlg.close()
 
         dialog.connect("response", on_response)

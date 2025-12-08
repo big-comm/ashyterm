@@ -24,57 +24,9 @@ from .manager import TerminalManager
 if TYPE_CHECKING:
     from ..filemanager.manager import FileManager
 
-# CSS for tab moving visual feedback
-_TAB_MOVING_CSS = b"""
-.tab-moving {
-    background-image: none;
-    background-color: @accent_bg_color;
-    border-radius: 6px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
-    border: 2px dashed @theme_fg_color;
-    opacity: 0.85;
-}
-
-.tab-bar-move-mode {
-    background-color: alpha(@accent_bg_color, 0.15);
-    border-radius: 8px;
-    padding: 2px;
-}
-
-.tab-drop-target {
-    background-color: alpha(@theme_fg_color, 0.2);
-    border-radius: 6px;
-    box-shadow: inset 0 0 0 2px @accent_bg_color;
-}
-
-.tab-drop-left {
-    background-color: alpha(@theme_fg_color, 0.2);
-    border-radius: 6px;
-    box-shadow: inset 4px 0 0 0 @accent_bg_color;
-}
-
-.tab-drop-right {
-    background-color: alpha(@theme_fg_color, 0.2);
-    border-radius: 6px;
-    box-shadow: inset -4px 0 0 0 @accent_bg_color;
-}
-"""
-
-
-# Initialize the CSS provider for tab-moving class on module load
-def _init_tab_moving_css():
-    """Initialize the tab-moving CSS provider globally."""
-    css_provider = Gtk.CssProvider()
-    css_provider.load_from_data(_TAB_MOVING_CSS)
-    Gtk.StyleContext.add_provider_for_display(
-        Gdk.Display.get_default(),
-        css_provider,
-        Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION,
-    )
-
-
-# Defer CSS initialization until GTK display is available
-GLib.idle_add(_init_tab_moving_css)
+# CSS for tab moving visual feedback is now loaded from:
+# data/styles/components.css (loaded by window_ui.py at startup)
+# Classes: .tab-moving, .tab-bar-move-mode, .tab-drop-target, .tab-drop-left, .tab-drop-right
 
 
 def _create_terminal_pane(

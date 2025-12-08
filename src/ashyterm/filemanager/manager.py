@@ -9,13 +9,13 @@ import subprocess
 import tempfile
 import threading
 import weakref
-from concurrent.futures import ThreadPoolExecutor
 from functools import partial
 from pathlib import Path, PurePosixPath
 from typing import Any, Dict, List, Optional, Set
 
 from gi.repository import Adw, Gdk, Gio, GLib, GObject, Graphene, Gtk, Vte
 
+from ..core.tasks import AsyncTaskManager
 from ..helpers import create_themed_popover_menu
 from ..sessions.models import SessionItem
 from ..terminal.manager import TerminalManager as TerminalManagerType
@@ -29,29 +29,9 @@ from .operations import FileOperations
 from .transfer_dialog import TransferManagerDialog
 from .transfer_manager import TransferManager, TransferType
 
-CSS_DATA = b"""
-.transfer-progress-bar progressbar > trough {
-    background-color: @borders;
-    border-radius: 4px;
-    border-style: solid;
-    border-width: 1px;
-    border-color: alpha(@theme_fg_color, 0.1);
-}
-
-.transfer-progress-bar progressbar > progress {
-    background-image: none;
-    background-color: @accent_bg_color;
-    border-radius: 4px;
-}
-
-.search-entry-no-icon > image:first-child {
-    -gtk-icon-size: 1px;
-    min-width: 0px;
-    min-height: 0px;
-    margin: -1px;
-    padding: 0px;
-}
-"""
+# CSS for file manager styles is now loaded from:
+# data/styles/components.css (loaded by window_ui.py at startup)
+# Classes: .transfer-progress-bar, .search-entry-no-icon
 
 MAX_RECURSIVE_RESULTS = 1000
 
@@ -82,19 +62,12 @@ class FileManager(GObject.Object):
         self._parent_window_ref = weakref.ref(parent_window)
         self._terminal_manager_ref = weakref.ref(terminal_manager)
         self.settings_manager = settings_manager
-        # Task 5: Thread pool for efficient background operations
-        self._executor = ThreadPoolExecutor(max_workers=1)
+        # Use global AsyncTaskManager instead of local executor
         self.transfer_history_window = None
         self.tooltip_helper = get_tooltip_helper()
         self._is_destroyed = False  # Flag to prevent callbacks after destroy
 
-        css_provider = Gtk.CssProvider()
-        css_provider.load_from_data(CSS_DATA)
-        Gtk.StyleContext.add_provider_for_display(
-            Gdk.Display.get_default(),
-            css_provider,
-            Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION,
-        )
+        # CSS styles are now loaded globally from components.css by window_ui.py
 
         self.session_item: Optional[SessionItem] = None
         self.operations: Optional[FileOperations] = None
@@ -435,14 +408,7 @@ class FileManager(GObject.Object):
         self.logger.info("Destroying FileManager instance to prevent memory leaks.")
         self.shutdown(None)
 
-        # Task 5: Shutdown the thread pool executor with proper cancellation
-        if hasattr(self, "_executor") and self._executor:
-            try:
-                self._executor.shutdown(wait=False, cancel_futures=True)
-            except TypeError:
-                # Python < 3.9 doesn't support cancel_futures
-                self._executor.shutdown(wait=False)
-            self._executor = None
+        # Note: Executor management now handled by global AsyncTaskManager
 
         # Cancel and clear all file monitors
         if hasattr(self, "file_monitors") and self.file_monitors:
@@ -1683,18 +1649,10 @@ class FileManager(GObject.Object):
             self.search_entry.set_sensitive(False)
             self.search_entry.set_placeholder_text(_("Loading..."))
 
-        # Task 5: Use ThreadPoolExecutor instead of creating new threads
-        if hasattr(self, "_executor") and self._executor:
-            self._executor.submit(self._list_files_thread, self.current_path, source)
-        else:
-            # Fallback if executor not available
-            thread = threading.Thread(
-                target=self._list_files_thread,
-                args=(self.current_path, source),
-                daemon=True,
-                name="FileListingThread",
-            )
-            thread.start()
+        # Use global AsyncTaskManager for I/O-bound file listing
+        AsyncTaskManager.get().submit_io(
+            self._list_files_thread, self.current_path, source
+        )
 
     def _list_files_thread(self, requested_path: str, source: str = "filemanager"):
         """Task 1: UI Batching - Process files in batches to avoid UI freezing."""
@@ -1867,9 +1825,8 @@ class FileManager(GObject.Object):
         self.logger.info(f"Switching file manager to accessible path: {fallback_path}")
         self.current_path = fallback_path
         self._update_breadcrumb()
-        # Re-list the fallback directory
-        if hasattr(self, "_executor") and self._executor:
-            self._executor.submit(self._list_files_thread, fallback_path, source)
+        # Re-list the fallback directory using global AsyncTaskManager
+        AsyncTaskManager.get().submit_io(self._list_files_thread, fallback_path, source)
         return False
 
     def _update_search_placeholder(self, override: Optional[str] = None) -> None:

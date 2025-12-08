@@ -55,7 +55,7 @@ SHORTCUT_DATA = [
         "shortcuts": [
             ("toggle-sidebar", _("Sessions Panel")),
             ("toggle-file-manager", _("File Manager")),
-            ("show-command-guide", _("Command Guide")),
+            ("show-command-manager", _("Command Manager")),
             ("new-window", _("New Window")),
             ("preferences", _("Preferences")),
             ("quit", _("Quit Application")),

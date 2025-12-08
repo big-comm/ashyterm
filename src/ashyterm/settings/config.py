@@ -36,7 +36,7 @@ class AppConstants:
 
     APP_ID = "org.communitybig.ashyterm"
     APP_TITLE = "Ashy Terminal"
-    APP_VERSION = "1.8.2"
+    APP_VERSION = "1.8.3"
     DEVELOPER_NAME = "BigCommunity"
     DEVELOPER_TEAM = ["BigCommunity Team"]
     COPYRIGHT = "© 2025 BigCommunity"
@@ -271,10 +271,27 @@ class DefaultSettings:
                 "yq",
                 "grc",
             ],
+            # Cat Output Colorization Settings
+            # When enabled, applies Pygments syntax highlighting to cat command output
+            "cat_colorization_enabled": True,
+            # Theme mode: "auto" (detects background), or "manual" (uses selected theme)
+            "cat_theme_mode": "auto",
+            # Pygments theme for dark backgrounds (used when mode is "auto" and bg is dark)
+            "cat_dark_theme": "blinds-dark",
+            # Pygments theme for light backgrounds (used when mode is "auto" and bg is light)
+            "cat_light_theme": "blinds-light",
+            # Legacy setting - now only used if mode is "manual"
+            "pygments_theme": "monokai",
             # Shell Input Syntax Highlighting (experimental)
             # When enabled, applies Pygments syntax highlighting to shell commands as you type
             "shell_input_highlighting_enabled": False,
-            # Pygments theme for shell input highlighting (separate from cat colorization)
+            # Theme mode: "auto" (detects background), or "manual" (uses selected theme)
+            "shell_input_theme_mode": "auto",
+            # Pygments theme for dark backgrounds (used when mode is "auto" and bg is dark)
+            "shell_input_dark_theme": "blinds-dark",
+            # Pygments theme for light backgrounds (used when mode is "auto" and bg is light)
+            "shell_input_light_theme": "blinds-light",
+            # Legacy setting kept for backwards compatibility - now only used if mode is "manual"
             "shell_input_pygments_theme": "monokai",
             # Icon Theme Strategy: "ashy" (bundled) or "system"
             # Using Ashy Icons by default speeds up GTK4 startup
@@ -291,7 +308,7 @@ class DefaultSettings:
                 "quit": "<Control><Shift>q",
                 "new-window": "<Control><Shift>n",
                 "toggle-sidebar": "<Control><Shift>h",
-                "show-command-guide": "<Control><Shift>p",
+                "show-command-manager": "<Control><Shift>m",
                 "zoom-in": "<Control>plus",
                 "zoom-out": "<Control>minus",
                 "zoom-reset": "<Control>0",

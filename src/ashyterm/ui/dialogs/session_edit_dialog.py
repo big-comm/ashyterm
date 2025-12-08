@@ -21,6 +21,7 @@ from ...utils.security import (
 )
 from ...utils.tooltip_helper import get_tooltip_helper
 from ...utils.translation_utils import _
+from ..widgets.bash_text_view import BashTextView
 from .base_dialog import BaseDialog
 
 
@@ -32,6 +33,7 @@ class SessionEditDialog(BaseDialog):
         session_store,
         position: int,
         folder_store=None,
+        settings_manager=None,
     ):
         self.is_new_item = position == -1
         title = _("Add Session") if self.is_new_item else _("Edit Session")
@@ -40,6 +42,7 @@ class SessionEditDialog(BaseDialog):
         self.session_store = session_store
         self.folder_store = folder_store
         self.position = position
+        self._settings_manager = settings_manager
         # The editing_session is a data holder, not the live store object
         self.editing_session = (
             SessionItem.from_dict(session_item.to_dict())
@@ -48,8 +51,10 @@ class SessionEditDialog(BaseDialog):
         )
         self.original_session = session_item if not self.is_new_item else None
         self.folder_paths_map: dict[str, str] = {}
-        self.post_login_switch: Optional[Adw.SwitchRow] = None
-        self.post_login_entry: Optional[Adw.EntryRow] = None
+        self.post_login_expander: Optional[Adw.ExpanderRow] = None
+        self.post_login_switch = None  # Alias to expander for compatibility
+        self.post_login_entry: Optional[BashTextView] = None
+        self.post_login_text_view: Optional[BashTextView] = None
         self.sftp_group: Optional[Adw.PreferencesGroup] = None
         self.sftp_switch: Optional[Adw.SwitchRow] = None
         self.sftp_local_entry: Optional[Adw.EntryRow] = None
@@ -63,6 +68,7 @@ class SessionEditDialog(BaseDialog):
         self.x11_switch: Optional[Adw.SwitchRow] = None
         # Local terminal options
         self.local_terminal_group: Optional[Adw.PreferencesGroup] = None
+        self.startup_commands_group: Optional[Adw.PreferencesGroup] = None
         self._setup_ui()
         self.connect("map", self._on_map)
         self.logger.info(
@@ -75,6 +81,9 @@ class SessionEditDialog(BaseDialog):
 
     def _setup_ui(self) -> None:
         try:
+            # Apply custom CSS for modern styling
+            self._apply_custom_css()
+
             # Use Adw.ToolbarView for proper header bar integration
             toolbar_view = Adw.ToolbarView()
             self.set_content(toolbar_view)
@@ -129,16 +138,43 @@ class SessionEditDialog(BaseDialog):
             )
             self.close()
 
+    def _apply_custom_css(self) -> None:
+        """Custom CSS for startup commands section is now loaded globally.
+
+        The styles are defined in data/styles/components.css:
+        - .startup-commands-container: Modern rounded container
+        - .startup-commands-text: Monospace text view styling
+
+        These styles are loaded at app startup by window_ui.py.
+        """
+        pass  # CSS is loaded globally from components.css
+
+    def _apply_bash_colors(self, text_view: BashTextView) -> None:
+        """Apply terminal color scheme to BashTextView if settings_manager is available."""
+        if not self._settings_manager:
+            return
+
+        gtk_theme = self._settings_manager.get("gtk_theme", "system")
+        if gtk_theme == "terminal":
+            scheme_data = self._settings_manager.get_color_scheme_data()
+            if scheme_data:
+                palette = scheme_data.get("palette", [])
+                foreground = scheme_data.get("foreground", "#ffffff")
+                if palette:
+                    text_view.update_colors_from_scheme(palette, foreground)
+
+    # NOTE: _create_entry_row and _create_spin_row are inherited from BaseDialog
+
     def _create_name_section(self, parent: Adw.PreferencesPage) -> None:
         """Create the session information section with proper Adw widgets."""
         name_group = Adw.PreferencesGroup()
 
-        # Session Name - using Adw.EntryRow
-        self.name_row = Adw.EntryRow(
+        # Session Name - using helper
+        self.name_row = self._create_entry_row(
             title=_("Session Name"),
+            text=self.editing_session.name,
+            on_changed=self._on_name_changed,
         )
-        self.name_row.set_text(self.editing_session.name)
-        self.name_row.connect("changed", self._on_name_changed)
         name_group.add(self.name_row)
 
         # Session Type - using Adw.ComboRow properly
@@ -272,61 +308,59 @@ class SessionEditDialog(BaseDialog):
         working_dir_row.add_suffix(working_dir_box)
         local_group.add(working_dir_row)
 
-        # Startup Commands - using multi-line TextView for script-like input
-        # Create a container box for the title and help text
-        commands_header_box = Gtk.Box(
-            orientation=Gtk.Orientation.VERTICAL,
-            spacing=4,
-            margin_top=12,
-            margin_bottom=4,
-            margin_start=12,
-        )
-        commands_title = Gtk.Label(
-            label=_("Startup Commands"),
-            xalign=0,
-            css_classes=["title-4"],
-        )
-        commands_header_box.append(commands_title)
+        parent.add(local_group)
 
-        commands_subtitle = Gtk.Label(
-            label=_(
-                "Commands executed when the terminal starts (one per line). You can write multiple commands like a small script."
+        # Startup Commands - separate group for better visual organization
+        startup_commands_group = Adw.PreferencesGroup(
+            title=_("Startup Commands"),
+            description=_(
+                "Commands executed when the terminal starts (one per line). "
+                "You can write multiple commands like a small script."
             ),
-            xalign=0,
-            wrap=True,
-            css_classes=["dim-label"],
         )
-        commands_header_box.append(commands_subtitle)
-        local_group.add(commands_header_box)
 
-        # Create a scrolled window with TextView for multi-line input
+        # Create a scrolled window with BashTextView for syntax-highlighted multi-line input
         scrolled = Gtk.ScrolledWindow()
-        scrolled.set_min_content_height(100)
-        scrolled.set_max_content_height(180)
+        scrolled.set_min_content_height(130)
+        scrolled.set_max_content_height(220)
         scrolled.set_margin_start(12)
         scrolled.set_margin_end(12)
-        scrolled.set_margin_bottom(8)
+        scrolled.set_margin_top(6)
+        scrolled.set_margin_bottom(12)
         scrolled.set_policy(Gtk.PolicyType.NEVER, Gtk.PolicyType.AUTOMATIC)
-        scrolled.add_css_class("card")
+        scrolled.add_css_class("startup-commands-container")
 
-        self.local_startup_command_view = Gtk.TextView()
-        self.local_startup_command_view.set_wrap_mode(Gtk.WrapMode.WORD_CHAR)
-        self.local_startup_command_view.set_pixels_above_lines(6)
-        self.local_startup_command_view.set_pixels_below_lines(6)
-        self.local_startup_command_view.set_left_margin(10)
-        self.local_startup_command_view.set_right_margin(10)
-        self.local_startup_command_view.add_css_class("monospace")
+        # Use BashTextView for syntax highlighting (no auto-resize since we have scrolled window)
+        self.local_startup_command_view = BashTextView(
+            auto_resize=False, min_lines=3, max_lines=10
+        )
+        # Use default BashTextView spacing - no need to override pixels_above/below_lines
+        self.local_startup_command_view.set_top_margin(10)
+        self.local_startup_command_view.set_bottom_margin(10)
+        self.local_startup_command_view.set_left_margin(12)
+        self.local_startup_command_view.set_right_margin(12)
+        self.local_startup_command_view.add_css_class("startup-commands-text")
 
         # Set initial text
-        buffer = self.local_startup_command_view.get_buffer()
-        buffer.set_text(self.editing_session.local_startup_command or "")
-        buffer.connect("changed", self._on_local_startup_command_changed)
+        self.local_startup_command_view.set_text(
+            self.editing_session.local_startup_command or ""
+        )
+        self.local_startup_command_view.get_buffer().connect(
+            "changed", self._on_local_startup_command_changed
+        )
+
+        # Apply color scheme if available
+        self._apply_bash_colors(self.local_startup_command_view)
 
         scrolled.set_child(self.local_startup_command_view)
-        local_group.add(scrolled)
+        startup_commands_group.add(scrolled)
 
+        # Store reference to the startup commands group for visibility control
+        self.startup_commands_group = startup_commands_group
+        parent.add(startup_commands_group)
+
+        # Store reference to the local terminal group for visibility control
         self.local_terminal_group = local_group
-        parent.add(local_group)
 
     def _create_ssh_section(self, parent: Adw.PreferencesPage) -> None:
         """Create the SSH configuration section with proper Adw widgets."""
@@ -334,31 +368,34 @@ class SessionEditDialog(BaseDialog):
             title=_("SSH Configuration"),
         )
 
-        # Host - using Adw.EntryRow
-        self.host_row = Adw.EntryRow(
+        # Host - using helper
+        self.host_row = self._create_entry_row(
             title=_("Host"),
+            text=self.editing_session.host or "",
+            on_changed=self._on_host_changed,
         )
-        self.host_row.set_text(self.editing_session.host or "")
-        self.host_row.connect("changed", self._on_host_changed)
         ssh_group.add(self.host_row)
         # Keep reference with old name for compatibility
         self.host_entry = self.host_row
 
-        # Username - using Adw.EntryRow
-        self.user_row = Adw.EntryRow(
+        # Username - using helper
+        self.user_row = self._create_entry_row(
             title=_("Username"),
+            text=self.editing_session.user or "",
+            on_changed=self._on_user_changed,
         )
-        self.user_row.set_text(self.editing_session.user or "")
-        self.user_row.connect("changed", self._on_user_changed)
         ssh_group.add(self.user_row)
         # Keep reference with old name for compatibility
         self.user_entry = self.user_row
 
-        # Port - using Adw.SpinRow
-        self.port_row = Adw.SpinRow.new_with_range(1, 65535, 1)
-        self.port_row.set_title(_("Port"))
-        self.port_row.set_value(self.editing_session.port or 22)
-        self.port_row.connect("notify::value", self._on_port_changed)
+        # Port - using helper
+        self.port_row = self._create_spin_row(
+            title=_("Port"),
+            value=self.editing_session.port or 22,
+            min_val=1,
+            max_val=65535,
+            on_changed=self._on_port_changed,
+        )
         ssh_group.add(self.port_row)
         # Keep reference with old name for compatibility
         self.port_entry = self.port_row
@@ -449,29 +486,72 @@ class SessionEditDialog(BaseDialog):
 
     def _create_ssh_options_group(self, parent: Adw.PreferencesPage) -> None:
         """Create additional SSH options like post-login command, X11, SFTP."""
-        options_group = Adw.PreferencesGroup(
+        # Post-login command section - dedicated group with switch and command input
+        post_login_group = Adw.PreferencesGroup(
             title=_("SSH Options"),
         )
 
-        # Post-login command toggle
+        # Post-login command toggle using SwitchRow
         self.post_login_switch = Adw.SwitchRow(
             title=_("Run Command After Login"),
-            subtitle=_("Execute a command automatically after SSH connects"),
+            subtitle=_("Execute commands automatically after SSH connects"),
         )
-        self.post_login_switch.set_active(
-            self.editing_session.post_login_command_enabled
-        )
+        is_post_login_enabled = self.editing_session.post_login_command_enabled
+        self.post_login_switch.set_active(is_post_login_enabled)
         self.post_login_switch.connect("notify::active", self._on_post_login_toggle)
-        options_group.add(self.post_login_switch)
+        post_login_group.add(self.post_login_switch)
 
-        # Post-login command entry
-        self.post_login_entry = Adw.EntryRow(
-            title=_("Post-Login Command"),
+        # Command input container - shown/hidden based on switch
+        self.post_login_command_container = Gtk.Box(
+            orientation=Gtk.Orientation.VERTICAL,
+            spacing=0,
         )
-        self.post_login_entry.set_text(self.editing_session.post_login_command or "")
-        self.post_login_entry.connect("changed", self._on_post_login_command_changed)
-        options_group.add(self.post_login_entry)
-        self.post_login_command_row = self.post_login_entry
+        self.post_login_command_container.set_visible(is_post_login_enabled)
+
+        # Create a scrolled window with BashTextView for syntax-highlighted input
+        post_login_scrolled = Gtk.ScrolledWindow()
+        post_login_scrolled.set_min_content_height(100)
+        post_login_scrolled.set_max_content_height(160)
+        post_login_scrolled.set_policy(Gtk.PolicyType.NEVER, Gtk.PolicyType.AUTOMATIC)
+        post_login_scrolled.set_margin_start(12)
+        post_login_scrolled.set_margin_end(12)
+        post_login_scrolled.set_margin_top(4)
+        post_login_scrolled.set_margin_bottom(8)
+        post_login_scrolled.add_css_class("startup-commands-container")
+
+        # Use BashTextView for syntax highlighting
+        self.post_login_text_view = BashTextView(
+            auto_resize=False, min_lines=2, max_lines=6
+        )
+        self.post_login_text_view.set_top_margin(10)
+        self.post_login_text_view.set_bottom_margin(10)
+        self.post_login_text_view.set_left_margin(12)
+        self.post_login_text_view.set_right_margin(12)
+        self.post_login_text_view.add_css_class("startup-commands-text")
+        self.post_login_text_view.set_text(
+            self.editing_session.post_login_command or ""
+        )
+        self.post_login_text_view.get_buffer().connect(
+            "changed", self._on_post_login_command_changed
+        )
+
+        # Apply color scheme if available
+        self._apply_bash_colors(self.post_login_text_view)
+
+        post_login_scrolled.set_child(self.post_login_text_view)
+        self.post_login_command_container.append(post_login_scrolled)
+        post_login_group.add(self.post_login_command_container)
+
+        # Keep legacy references
+        self.post_login_entry = self.post_login_text_view
+        self.post_login_expander = None
+        self.post_login_command_row = self.post_login_switch
+        self.post_login_command_group = post_login_group
+
+        parent.add(post_login_group)
+
+        # Other SSH options in a separate group
+        options_group = Adw.PreferencesGroup()
 
         # X11 Forwarding toggle
         self.x11_switch = Adw.SwitchRow(
@@ -491,23 +571,21 @@ class SessionEditDialog(BaseDialog):
         self.sftp_switch.connect("notify::active", self._on_sftp_toggle)
         options_group.add(self.sftp_switch)
 
-        # SFTP Local Directory
-        self.sftp_local_entry = Adw.EntryRow(
+        # SFTP Local Directory - using helper
+        self.sftp_local_entry = self._create_entry_row(
             title=_("SFTP Local Directory"),
+            text=self.editing_session.sftp_local_directory or "",
+            on_changed=self._on_sftp_local_changed,
         )
-        self.sftp_local_entry.set_text(self.editing_session.sftp_local_directory or "")
-        self.sftp_local_entry.connect("changed", self._on_sftp_local_changed)
         options_group.add(self.sftp_local_entry)
         self.sftp_local_row = self.sftp_local_entry
 
-        # SFTP Remote Directory
-        self.sftp_remote_entry = Adw.EntryRow(
+        # SFTP Remote Directory - using helper
+        self.sftp_remote_entry = self._create_entry_row(
             title=_("SFTP Remote Directory"),
+            text=self.editing_session.sftp_remote_directory or "",
+            on_changed=self._on_sftp_remote_changed,
         )
-        self.sftp_remote_entry.set_text(
-            self.editing_session.sftp_remote_directory or ""
-        )
-        self.sftp_remote_entry.connect("changed", self._on_sftp_remote_changed)
         options_group.add(self.sftp_remote_entry)
         self.sftp_remote_row = self.sftp_remote_entry
 
@@ -888,12 +966,20 @@ class SessionEditDialog(BaseDialog):
 
     def _on_post_login_toggle(self, switch_row: Adw.SwitchRow, _param) -> None:
         self._mark_changed()
+        # Show/hide the command container based on switch state
+        is_enabled = switch_row.get_active()
+        if (
+            hasattr(self, "post_login_command_container")
+            and self.post_login_command_container
+        ):
+            self.post_login_command_container.set_visible(is_enabled)
         self._update_post_login_command_state()
-        if self.post_login_entry and not switch_row.get_active():
+        if self.post_login_entry and not is_enabled:
             self.post_login_entry.remove_css_class("error")
 
-    def _on_post_login_command_changed(self, entry: Gtk.Entry) -> None:
-        entry.remove_css_class("error")
+    def _on_post_login_command_changed(self, buffer: Gtk.TextBuffer) -> None:
+        if self.post_login_entry:
+            self.post_login_entry.remove_css_class("error")
         self._mark_changed()
 
     def _on_x11_toggled(self, switch_row: Adw.SwitchRow, _param) -> None:
@@ -923,6 +1009,11 @@ class SessionEditDialog(BaseDialog):
             self.ssh_box.set_visible(is_ssh)
             if hasattr(self, "ssh_options_group") and self.ssh_options_group:
                 self.ssh_options_group.set_visible(is_ssh)
+            if (
+                hasattr(self, "post_login_command_group")
+                and self.post_login_command_group
+            ):
+                self.post_login_command_group.set_visible(is_ssh)
             if hasattr(self, "test_button"):
                 self.test_button.set_visible(is_ssh)
             if self.x11_switch:
@@ -939,9 +1030,14 @@ class SessionEditDialog(BaseDialog):
 
     def _update_local_visibility(self) -> None:
         """Update visibility of local terminal options based on session type."""
+        is_local = self.type_combo.get_selected() == 0 if self.type_combo else False
+
         if hasattr(self, "local_terminal_group") and self.local_terminal_group:
-            is_local = self.type_combo.get_selected() == 0 if self.type_combo else False
             self.local_terminal_group.set_visible(is_local)
+
+        # Also update the startup commands group visibility
+        if hasattr(self, "startup_commands_group") and self.startup_commands_group:
+            self.startup_commands_group.set_visible(is_local)
 
     def _update_auth_visibility(self) -> None:
         if self.key_box and self.password_box and self.auth_combo:
@@ -969,18 +1065,19 @@ class SessionEditDialog(BaseDialog):
     def _update_post_login_command_state(self) -> None:
         if not self.post_login_switch or not self.post_login_entry:
             return
-        if not hasattr(self, "post_login_command_row"):
-            return
         is_ssh_session = (
             self.type_combo.get_selected() == 1 if self.type_combo else False
         )
+        # Control visibility of switch and container based on session type
         self.post_login_switch.set_sensitive(is_ssh_session)
-        is_enabled = (
-            self.post_login_switch.get_active() and is_ssh_session
-        )
-        # Control visibility instead of just sensitivity
-        self.post_login_command_row.set_visible(is_enabled)
-        if not is_enabled:
+        if (
+            hasattr(self, "post_login_command_container")
+            and self.post_login_command_container
+        ):
+            # Show container only if SSH session AND switch is active
+            is_enabled = self.post_login_switch.get_active() and is_ssh_session
+            self.post_login_command_container.set_visible(is_enabled)
+        if not is_ssh_session:
             self.post_login_entry.remove_css_class("error")
 
     def _update_sftp_state(self) -> None:
@@ -1206,7 +1303,7 @@ class SessionEditDialog(BaseDialog):
                 self.logger.info(
                     f"Session operation successful: {updated_session.name}"
                 )
-                self.parent_window.refresh_tree()
+                # Tree refresh is handled automatically via AppSignals
                 self.close()
             elif result:
                 self._show_error_dialog(_("Save Error"), result.message)
@@ -1327,13 +1424,10 @@ class SessionEditDialog(BaseDialog):
                 if hasattr(self, "local_working_dir_entry")
                 else ""
             )
-            # Get startup commands from TextView buffer
+            # Get startup commands from BashTextView
             startup_commands = ""
             if hasattr(self, "local_startup_command_view"):
-                buffer = self.local_startup_command_view.get_buffer()
-                startup_commands = buffer.get_text(
-                    buffer.get_start_iter(), buffer.get_end_iter(), True
-                ).strip()
+                startup_commands = self.local_startup_command_view.get_text().strip()
             session_data["local_startup_command"] = startup_commands
 
         updated_session = SessionItem.from_dict(session_data)

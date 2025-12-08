@@ -14,7 +14,6 @@ Usage:
 """
 
 import os
-from functools import lru_cache
 from pathlib import Path
 from typing import Optional
 
@@ -23,7 +22,7 @@ import gi
 from .tooltip_helper import get_tooltip_helper
 
 gi.require_version("Gtk", "4.0")
-from gi.repository import Gtk, Gio, GdkPixbuf
+from gi.repository import Gtk, Gio
 
 
 # Icon directory paths (in order of priority)
@@ -84,19 +83,6 @@ def has_bundled_icon(icon_name: str) -> bool:
         True if the icon exists in the bundled icons directory
     """
     return get_icon_path(icon_name) is not None
-
-
-@lru_cache(maxsize=128)
-def _load_pixbuf(icon_path: str, size: int) -> Optional[GdkPixbuf.Pixbuf]:
-    """Load and cache a pixbuf from SVG file.
-
-    Note: This creates a static bitmap. For symbolic icons that need
-    theme color adaptation, use _create_symbolic_image instead.
-    """
-    try:
-        return GdkPixbuf.Pixbuf.new_from_file_at_scale(icon_path, size, size, True)
-    except Exception:
-        return None
 
 
 def _create_image_from_file(icon_path: str, size: int) -> Gtk.Image:
