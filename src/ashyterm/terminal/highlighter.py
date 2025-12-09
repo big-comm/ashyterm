@@ -1892,12 +1892,23 @@ class HighlightedTerminalProxy:
             skip_first = self._highlighter.should_skip_first_output(self._proxy_id)
 
             for i, line in enumerate(lines):
-                # Skip echoed command
-                if skip_first and i == 0:
-                    self._cat_queue.append(line.encode("utf-8", errors="replace"))
-                    continue
-
                 content, ending = self._split_line_ending(line)
+
+                # Skip echoed command line (and any empty first line that belongs to it)
+                if skip_first and i == 0:
+                    full_cmd = (
+                        self._highlighter.get_full_command(self._proxy_id).strip()
+                    )
+                    content_clean = content.strip()
+                    # Drop if it's empty or matches the executed command (with or without leading backslash)
+                    if not content_clean or (
+                        full_cmd
+                        and (
+                            content_clean == full_cmd
+                            or content_clean == full_cmd.lstrip("\\")
+                        )
+                    ):
+                        continue
 
                 # Check for shell prompt (command finished)
                 # Do this BEFORE checking for ANSI sequences, as prompt may contain control codes
@@ -1911,8 +1922,9 @@ class HighlightedTerminalProxy:
                     self.logger.debug(
                         f"CAT: Shell prompt detected after {lines_done} lines: {content[:50]!r}"
                     )
-                    self._cat_queue.append(line.encode("utf-8", errors="replace"))
+                    # Marker FIRST, then the prompt line, so prompt is fed last
                     self._cat_queue.append(b"__PROMPT_DETECTED__")  # Marker
+                    self._cat_queue.append(line.encode("utf-8", errors="replace"))
                     continue
 
                 # Skip pure ANSI control sequences (not prompts or file content)
