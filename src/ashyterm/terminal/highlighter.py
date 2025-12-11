@@ -1370,17 +1370,9 @@ class HighlightedTerminalProxy:
     ):
         """
         Initialize a highlighted terminal proxy.
-
-        Args:
-            terminal: The VTE terminal widget to proxy output to.
-            terminal_type: Type of terminal ("local" or "ssh").
-            proxy_id: The ID to use for this proxy. Should match the terminal_id
-                     from TerminalRegistry to ensure context detection works correctly.
-                     If not provided, a unique ID is auto-generated (not recommended).
         """
         self.logger = get_logger("ashyterm.terminal.proxy")
 
-        # Use provided proxy_id or generate one (for backward compatibility)
         if proxy_id is not None:
             self._proxy_id = proxy_id
         else:
@@ -1397,13 +1389,8 @@ class HighlightedTerminalProxy:
         self._highlighter = get_output_highlighter()
         self._shell_input_highlighter = get_shell_input_highlighter()
 
-        # Register this proxy with the highlighters
         self._highlighter.register_proxy(self._proxy_id)
         self._shell_input_highlighter.register_proxy(self._proxy_id)
-
-        # NOTE: Command detection is now handled by VTE screen scraping
-        # in terminal/manager.py via Enter key interception.
-        # The highlighter context is set directly by the manager.
 
         self._master_fd: Optional[int] = None
         self._slave_fd: Optional[int] = None
@@ -1420,28 +1407,30 @@ class HighlightedTerminalProxy:
         self._is_alt_screen = False
         self._child_pid: Optional[int] = None
 
-        # Sequence counter for ordered output delivery
         self._sequence_counter = 0
         self._pending_outputs: Dict[int, bytes] = {}
         self._next_sequence_to_feed = 0
         self._output_lock = threading.Lock()
 
-        # Line queue for true streaming (single queue, single consumer)
-        # Using deque for O(1) popleft performance
         self._line_queue: deque = deque()
-        self._queue_processing = False  # Flag to track if consumer is active
+        self._queue_processing = False
+
+        # Buffer for partial lines
+        self._partial_line_buffer: bytes = b""
+
+        # Burst detection counter
+        # Tracks consecutive large chunks to detect file dumps vs commands
+        self._burst_counter = 0
 
         # Pygments state for cat command highlighting
         self._cat_filename: Optional[str] = None
+        self._cat_bytes_processed: int = 0
+        self._cat_limit_reached: bool = False
 
-        # Shell input highlighting state
-        self._input_highlight_buffer = ""  # Current command being typed
-        # Start with True since terminal starts at shell prompt
-        # Will be set to False when command is executed (Enter pressed)
-        # Will be set to True again when OSC7 prompt is detected
+        self._cat_filename: Optional[str] = None
+
+        self._input_highlight_buffer = ""
         self._at_shell_prompt = True
-        # Flag to reset terminal colors when starting new input after output
-        # This prevents color leakage from prompt/output into input highlighting
         self._need_color_reset = False
 
         if terminal:
@@ -1621,29 +1610,22 @@ class HighlightedTerminalProxy:
         """
         self._running = False
 
-        # 1. Stop reading immediately.
         self._cleanup_io_watch()
 
-        # 2. Clear pending outputs and line queue
         with self._output_lock:
             self._pending_outputs.clear()
         self._line_queue.clear()
         self._queue_processing = False
+        self._partial_line_buffer = b""
+        self._burst_counter = 0
 
-        # Clear cat state
         self._cat_filename = None
-
-        # Clear shell input state
         self._input_highlight_buffer = ""
         self._at_shell_prompt = False
 
-        # Unregister this proxy from the highlighters
-        # NOTE: Command detection is now handled by manager.py via VTE screen scraping
         self._highlighter.unregister_proxy(self._proxy_id)
         self._shell_input_highlighter.unregister_proxy(self._proxy_id)
 
-        # If triggered by widget destruction, we are done.
-        # Touching the widget, signals, or FDs is unsafe now.
         if from_destroy or self._widget_destroyed:
             self._terminal_ref = None
             return
@@ -1651,7 +1633,6 @@ class HighlightedTerminalProxy:
         with self._lock:
             term = self._terminal_ref()
 
-            # 2. Disconnect signals from the terminal widget
             if term:
                 if self._columns_handler_id:
                     try:
@@ -1669,12 +1650,6 @@ class HighlightedTerminalProxy:
                         pass
                     self._rows_handler_id = None
 
-            # 3. IMPORTANT: We do NOT call set_pty(None).
-            # Since we used new_foreign_sync, VTE owns the PTY object.
-            # We simply abandon our reference to the FD and let VTE/GTK cleanup naturally.
-            # Trying to force unref here causes the race condition with local shells.
-
-            # 4. Clear FD references (do NOT close them, VTE owns them)
             self._master_fd = None
             if self._slave_fd is not None:
                 try:
@@ -1685,16 +1660,33 @@ class HighlightedTerminalProxy:
 
             self._terminal_ref = None
 
-    def _update_alt_screen_state(self, data: bytes) -> None:
-        for pattern in ALT_SCREEN_ENABLE_PATTERNS:
-            if pattern in data:
-                self._is_alt_screen = True
-                return
+    def _update_alt_screen_state(self, data: bytes) -> bool:
+        """
+        Check for Alternate Screen buffer switches.
+        Returns True if state changed.
+        """
+        # Common sequences for entering/exiting alt screen (vim, fzf, htop, etc)
+        # \x1b[?1049h : Enable Alt Screen
+        # \x1b[?1049l : Disable Alt Screen
+        # \x1b[?47h   : Enable Alt Screen (Legacy)
+        # \x1b[?47l   : Disable Alt Screen (Legacy)
 
-        for pattern in ALT_SCREEN_DISABLE_PATTERNS:
-            if pattern in data:
+        changed = False
+
+        # Check for enable patterns
+        if b"\x1b[?1049h" in data or b"\x1b[?47h" in data or b"\x1b[?1047h" in data:
+            if not self._is_alt_screen:
+                self._is_alt_screen = True
+                changed = True
+
+        # Check for disable patterns
+        # Note: We check disable AFTER enable in case both are in the same chunk (rare but possible)
+        if b"\x1b[?1049l" in data or b"\x1b[?47l" in data or b"\x1b[?1047l" in data:
+            if self._is_alt_screen:
                 self._is_alt_screen = False
-                return
+                changed = True
+
+        return changed
 
     def _on_pty_readable(self, fd: int, condition: GLib.IOCondition) -> bool:
         # 1. Fail fast if stopped or destroyed
@@ -1708,8 +1700,8 @@ class HighlightedTerminalProxy:
             return False
 
         try:
-            # 3. Try read - use 2KB buffer for very responsive streaming
-            # Smaller chunks = more frequent visual updates
+            # 3. Try read - use 4KB buffer (standard page size usually)
+            # If we get a full buffer, it's likely bulk output.
             data = os.read(fd, 4096)
             if not data:
                 return True  # Empty read, keep waiting
@@ -1720,22 +1712,19 @@ class HighlightedTerminalProxy:
                 self._io_watch_id = None
                 return False
 
-            # Try to detect if C++ object is valid
             try:
                 if not term.get_realized():
-                    # Widget isn't realized, likely closing or hidden. Safe to bail.
                     return False
             except Exception:
-                # Access failed, object likely dead
                 self._widget_destroyed = True
                 return False
 
             # 5. Processing logic
-            self._update_alt_screen_state(data)
-
-            # NOTE: Command detection is now handled by VTE screen scraping
-            # in terminal/manager.py via Enter key interception.
-            # This approach works reliably for SSH sessions and Docker containers.
+            data_len = len(data)
+            
+            # Optimization: Skip alt screen check on small packets to save CPU
+            if data_len > 10:
+                self._update_alt_screen_state(data)
 
             try:
                 if self._is_alt_screen:
@@ -1744,11 +1733,7 @@ class HighlightedTerminalProxy:
                     self._highlighter.is_enabled_for_type(self._terminal_type)
                     or self._shell_input_highlighter.enabled
                 ):
-                    # Process through highlighting pipeline if either:
-                    # - Output highlighting is enabled for this terminal type
-                    # - Shell input highlighting is enabled (for live command typing)
-
-                    # Get context with lock, then release before processing to avoid deadlock
+                    # Get context with lock
                     with self._highlighter._lock:
                         context = self._highlighter._proxy_contexts.get(
                             self._proxy_id, ""
@@ -1758,51 +1743,49 @@ class HighlightedTerminalProxy:
                             and context.lower() in self._highlighter._ignored_commands
                         )
 
-                    # Check for cat syntax highlighting (always use Pygments for cat)
+                    # Check for cat syntax highlighting
                     is_cat_context = context and context.lower() == "cat"
 
                     if is_cat_context:
-                        # Process cat output through Pygments for syntax highlighting
-                        self._process_cat_output(data, term)
+                        # Check if cat colorization is enabled
+                        from ..settings.manager import get_settings_manager
+                        settings = get_settings_manager()
+                        if settings.get("cat_colorization_enabled", True):
+                            self._process_cat_output(data, term)
+                        else:
+                            # Cat colorization disabled, feed data directly
+                            term.feed(data)
                     elif is_ignored:
-                        # Ignored command - pass raw data without highlighting
-                        # BUT still check for prompt detection and shell input highlighting
-                        if self._shell_input_highlighter.enabled:
+                        # PERFORMANCE FIX FOR IGNORED COMMANDS
+                        # Only attempt prompt detection on small chunks.
+                        # If we receive a large chunk (>1024 bytes), it is definitely output,
+                        # not a prompt, and not user input. Skip decoding entirely.
+                        if self._shell_input_highlighter.enabled and data_len < 1024:
                             text = data.decode("utf-8", errors="replace")
-                            # Log data for debugging (same as _process_data_streaming)
-                            text_preview = (
-                                repr(text[:100]) if len(text) > 100 else repr(text)
-                            )
-                            has_osc7 = "\x1b]7;" in text or "\033]7;" in text
-                            self.logger.debug(
-                                f"Proxy {self._proxy_id}: Data received [IGNORED ctx='{context}'] (len={len(text)}, has_osc7={has_osc7}): {text_preview}"
-                            )
+                            
+                            # Only log if it looks like actual interaction
+                            if self._at_shell_prompt:
+                                has_osc7 = "\x1b]7;" in text or "\033]7;" in text
+                                self.logger.debug(
+                                    f"Proxy {self._proxy_id}: Data [IGNORED ctx] (len={data_len}, osc7={has_osc7})"
+                                )
 
                             prompt_detected = self._check_and_update_prompt_state(text)
-                            if prompt_detected:
-                                self.logger.debug(
-                                    f"Proxy {self._proxy_id}: Prompt detected in ignored context '{context}', at_shell_prompt is now {self._at_shell_prompt}"
-                                )
-
-                            # If at shell prompt, try shell input highlighting even in ignored context
-                            # This handles the case where user is typing a NEW command after an ignored command finished
+                            
                             if self._at_shell_prompt:
-                                self.logger.debug(
-                                    f"Proxy {self._proxy_id}: At prompt in ignored context, trying shell input highlighting"
-                                )
                                 highlighted = self._apply_shell_input_highlighting(
                                     text, term
                                 )
                                 if highlighted is not None:
-                                    return True  # Shell input highlighting handled the data
+                                    return True
+
                         term.feed(data)
                     else:
-                        # Stream data line-by-line for responsive highlighting
+                        # Stream data line-by-line
                         self._process_data_streaming(data, term)
                 else:
                     term.feed(data)
             except Exception:
-                # Feed failed? Stop everything.
                 self._widget_destroyed = True
                 self._io_watch_id = None
                 return False
@@ -1810,7 +1793,6 @@ class HighlightedTerminalProxy:
             return True
 
         except OSError:
-            # EIO (Input/output error) happens frequently when closing local shell
             self._io_watch_id = None
             return False
         except Exception as e:
@@ -1820,41 +1802,69 @@ class HighlightedTerminalProxy:
     def _process_cat_output(self, data: bytes, term: Vte.Terminal) -> None:
         """
         Process cat output through Pygments for syntax highlighting.
-
-        Uses queue-based streaming with immediate first batch processing.
-        Lines are queued and processed in batches, yielding to GTK between batches.
-
-        Args:
-            data: Raw bytes from PTY
-            term: VTE terminal to feed highlighted output to
+        Includes a safety limit to prevent freezing on large files.
         """
+        # Constante de limite: 1MB (1024 * 1024 bytes)
+        CAT_HIGHLIGHT_LIMIT = 1048576
+
         try:
+            data_len = len(data)
+
+            # --- SAFETY LIMIT CHECK ---
+            # Se já passamos do limite ou se este chunk vai estourar o limite
+            if self._cat_limit_reached or (
+                self._cat_bytes_processed + data_len > CAT_HIGHLIGHT_LIMIT
+            ):
+                if not self._cat_limit_reached:
+                    self.logger.debug(
+                        f"CAT: Limit of {CAT_HIGHLIGHT_LIMIT} bytes reached. Disabling highlighting for this stream."
+                    )
+                    self._cat_limit_reached = True
+
+                # Feed raw data
+                term.feed(data)
+
+                # CRITICAL: Even in raw mode, we MUST detect when the command finishes.
+                # Check for OSC7 (directory tracking) which signals prompt return.
+                if b"\x1b]7;" in data or b"\033]7;" in data:
+                    self.logger.debug(
+                        "CAT (Raw Mode): OSC7 detected, resetting context."
+                    )
+                    self._highlighter.clear_context(self._proxy_id)
+                    self._reset_cat_state()
+
+                    # Reset input buffer as we are back at prompt
+                    if self._input_highlight_buffer:
+                        self._input_highlight_buffer = ""
+                        self._prev_shell_input_token_type = None
+                        self._prev_shell_input_token_len = 0
+                return
+
+            # Increment counter
+            self._cat_bytes_processed += data_len
+
+            # --- NORMAL PROCESSING ---
             text = data.decode("utf-8", errors="replace")
-            self.logger.debug(
-                f"CAT: _process_cat_output called, data len={len(data)}, text[:100]={text[:100]!r}"
-            )
+
+            # FIX: Aggressively remove NULL bytes
+            text = text.replace("\x00", "")
+
             if not text:
                 term.feed(data)
                 return
 
-            # Check if this looks like shell input control sequences rather than file content
-            # Backspace sequences (\x08\x1b[K or \x08 \x08) indicate user is editing at shell prompt
-            # This means cat has finished and user is typing a new command
-            stripped_text = text.replace("\x00", "")
-            if stripped_text in ("\x08\x1b[K", "\x08 \x08") or (
-                stripped_text.startswith("\x08") and len(stripped_text) <= 5
+            # Check for shell input control sequences (backspace/edits)
+            if text in ("\x08\x1b[K", "\x08 \x08") or (
+                text.startswith("\x08") and len(text) <= 5
             ):
                 self.logger.debug(
-                    f"CAT: Detected shell input control sequence (backspace), exiting cat mode"
+                    f"CAT: Detected shell input control sequence, exiting cat mode"
                 )
-                # Clear cat context - we're now at shell prompt
                 self._highlighter.clear_context(self._proxy_id)
                 self._reset_cat_state()
-                # Clear input buffer for clean start
                 self._input_highlight_buffer = ""
                 self._prev_shell_input_token_type = None
                 self._prev_shell_input_token_len = 0
-                # Feed the backspace directly to terminal
                 term.feed(data)
                 return
 
@@ -1864,17 +1874,13 @@ class HighlightedTerminalProxy:
 
             # Reset state if filename changed
             if new_filename != self._cat_filename:
-                self.logger.debug(
-                    f"CAT: Filename changed from {self._cat_filename!r} to {new_filename!r}"
-                )
                 self._cat_filename = new_filename
                 self._pygments_lexer = None
                 self._content_buffer = []
                 self._cat_lines_processed = 0
                 self._pending_lines = []
-                self._php_in_multiline_comment = False  # Reset PHP comment tracking
+                self._php_in_multiline_comment = False
 
-                # Check if we need content-based detection
                 import os.path
 
                 _, ext = os.path.splitext(new_filename)
@@ -1887,67 +1893,73 @@ class HighlightedTerminalProxy:
                 self._cat_queue = deque()
                 self._cat_queue_processing = False
 
-            # Process each line and add to queue
+            # Process lines
             lines = text.splitlines(keepends=True)
             skip_first = self._highlighter.should_skip_first_output(self._proxy_id)
 
+            import re
+
+            ansi_color_pattern = re.compile(r"\x1b\[[0-9;]*m")
+
             for i, line in enumerate(lines):
+                # Check for embedded prompt (OSC7/OSC0)
+                prompt_split_idx = -1
+                if "\x1b]7;" in line:
+                    prompt_split_idx = line.find("\x1b]7;")
+                elif "\x1b]0;" in line:
+                    prompt_split_idx = line.find("\x1b]0;")
+
+                if prompt_split_idx > 0:
+                    content_part = line[:prompt_split_idx]
+                    prompt_part = line[prompt_split_idx:]
+
+                    highlighted = self._highlight_line_with_pygments(
+                        content_part, self._cat_filename
+                    )
+                    self._cat_queue.append(
+                        highlighted.encode("utf-8", errors="replace")
+                    )
+                    self._cat_queue.append(b"__PROMPT_DETECTED__")
+                    self._cat_queue.append(
+                        prompt_part.encode("utf-8", errors="replace")
+                    )
+                    continue
+
                 content, ending = self._split_line_ending(line)
 
-                # Skip echoed command line (and any empty first line that belongs to it)
                 if skip_first and i == 0:
-                    full_cmd = (
-                        self._highlighter.get_full_command(self._proxy_id).strip()
-                    )
-                    content_clean = content.strip()
-                    # Drop if it's empty or matches the executed command (with or without leading backslash)
-                    if not content_clean or (
-                        full_cmd
-                        and (
-                            content_clean == full_cmd
-                            or content_clean == full_cmd.lstrip("\\")
-                        )
-                    ):
-                        continue
-
-                # Check for shell prompt (command finished)
-                # Do this BEFORE checking for ANSI sequences, as prompt may contain control codes
-                lines_done = getattr(self, "_cat_lines_processed", 0)
-                # Check for prompt if we've processed lines OR if this looks like a standalone prompt
-                # (short line with prompt pattern, not file content)
-                is_potential_prompt = lines_done > 0 or (
-                    len(content) < 30 and "$" in content
-                )
-                if is_potential_prompt and self._is_shell_prompt(content):
-                    self.logger.debug(
-                        f"CAT: Shell prompt detected after {lines_done} lines: {content[:50]!r}"
-                    )
-                    # Marker FIRST, then the prompt line, so prompt is fed last
-                    self._cat_queue.append(b"__PROMPT_DETECTED__")  # Marker
                     self._cat_queue.append(line.encode("utf-8", errors="replace"))
                     continue
 
-                # Skip pure ANSI control sequences (not prompts or file content)
-                # Only skip if content is ONLY escape sequences with no text after cleaning
-                import re
+                # Check for shell prompt
+                lines_done = getattr(self, "_cat_lines_processed", 0)
+                is_potential_prompt = lines_done > 0 or (
+                    len(content) < 30 and "$" in content
+                )
 
-                clean_content = re.sub(r"\x1b\[\??[0-9;]*[a-zA-Z]", "", content)
-                clean_content = clean_content.replace("\x00", "").strip()
-                if not clean_content and content.startswith("\x1b"):
+                if is_potential_prompt and self._is_shell_prompt(content):
+                    self._cat_queue.append(b"__PROMPT_DETECTED__")
+                    self._cat_queue.append(line.encode("utf-8", errors="replace"))
+                    continue
+
+                # Skip pure ANSI control sequences
+                clean_content = re.sub(r"\x1b\[\??[0-9;]*[a-zA-Z]", "", content).strip()
+                if not clean_content and (not content or content.startswith("\x1b")):
                     self._cat_queue.append(line.encode("utf-8", errors="replace"))
                     continue
 
                 # Highlight content
-                if content.strip():
+                has_ansi_colors = bool(ansi_color_pattern.search(content))
+                is_content = bool(content.strip())
+
+                if is_content and not has_ansi_colors:
                     highlighted = self._highlight_line_with_pygments(
                         content, self._cat_filename
                     )
 
-                    # Check if we have a lexer
                     current_lexer = getattr(self, "_pygments_lexer", None)
-
                     if current_lexer is not None:
-                        # Flush pending lines first
+                        # Flush pending
                         pending = getattr(self, "_pending_lines", [])
                         if pending:
                             for pending_content, pending_ending in pending:
@@ -1967,7 +1979,7 @@ class HighlightedTerminalProxy:
                             (highlighted + ending).encode("utf-8", errors="replace")
                         )
                     else:
-                        # No lexer yet - buffer
+                        # Buffer
                         pending = getattr(self, "_pending_lines", [])
                         pending.append((content, ending))
                         self._pending_lines = pending
@@ -1975,13 +1987,12 @@ class HighlightedTerminalProxy:
                     self._cat_lines_processed = lines_done + 1
                 else:
                     self._cat_queue.append(line.encode("utf-8", errors="replace"))
+                    if is_content:
+                        self._cat_lines_processed = lines_done + 1
 
-            # Process first batch IMMEDIATELY for responsive display
-            # Then schedule idle callback for remaining batches
+            # Process batch
             if self._cat_queue and not self._cat_queue_processing:
                 self._process_cat_queue_batch(term, immediate=True)
-
-                # Schedule next batches if queue still has content
                 if self._cat_queue:
                     self._cat_queue_processing = True
                     GLib.idle_add(self._process_cat_queue, term)
@@ -2115,7 +2126,7 @@ class HighlightedTerminalProxy:
                 self.logger.debug(
                     f"_is_shell_prompt: Traditional prompt with @ detected: {clean_line_stripped[:60]!r}"
                 )
-                return True
+            return True
 
         # For # without space, be VERY strict - require user@host pattern
         # to avoid matching shell comments
@@ -2563,6 +2574,8 @@ class HighlightedTerminalProxy:
     def _reset_cat_state(self) -> None:
         """Reset cat/pygments state."""
         self._cat_filename = None
+        self._cat_bytes_processed = 0  # Resetar contador
+        self._cat_limit_reached = False  # Resetar flag
         self._pygments_lexer = None
         self._pygments_needs_content_detection = False
         self._content_buffer = []
@@ -2603,182 +2616,165 @@ class HighlightedTerminalProxy:
 
     def _process_data_streaming(self, data: bytes, term: Vte.Terminal) -> None:
         """
-        Apply highlighting with TRUE line-by-line streaming.
-
-        Uses a single queue + single consumer pattern to ensure lines
-        are always processed in order, even when multiple data chunks arrive.
-
-        Producer: This method adds highlighted lines to the queue
-        Consumer: _process_line_queue processes one line, yields to GTK, repeats
-
-        Input vs Output Detection via \\x00\\ marker:
-        When the repr of data shows patterns like '\\x00\\r', '\\x00\\n', etc.,
-        this indicates interactive mode (user at shell prompt).
-        The backslash after \\x00 indicates an escape sequence follows.
-
-        State machine:
-        - \\x00\\ detected → interactive mode (at_shell_prompt = True)
-        - Enter pressed (manager.py) → at_shell_prompt = False
-        - \\x00\\ detected again → reactivate interactive mode
+        Apply highlighting with Adaptive Burst Detection and Alt-Screen Bypass.
         """
         try:
-            # Decode to text
-            text = data.decode("utf-8", errors="replace")
+            # --- 0. ALT SCREEN DETECTION (CRITICAL FOR FZF/VIM) ---
+            # Check if this chunk contains a switch to/from Alt Screen.
+            # If we are entering Alt Screen (fzf, vim), we must flush buffers
+            # and feed raw immediately. TUI apps do not use newlines for rendering.
+            state_changed = self._update_alt_screen_state(data)
 
-            if not text:
+            if self._is_alt_screen:
+                # If we have leftover partial data from before entering alt screen, flush it now
+                if self._partial_line_buffer:
+                    term.feed(self._partial_line_buffer)
+                    self._partial_line_buffer = b""
+
+                # Feed the current data raw (contains the UI draw commands)
+                term.feed(data)
                 return
 
-            # ===== CHECK FOR INTERACTIVE MARKER =====
-            # Input from user keyboard comes as small chunks: \x00 + single char (2 bytes)
-            # Output from commands comes as larger chunks
-            #
-            # Detection strategy:
-            # - Small chunks (2-3 bytes) starting with \x00 = user typing
-            # - Chunks with \x00 followed by \r or \n = Enter pressed
-            # - Chunks with \x00 + backspace (0x08 or 0x7F) = user deleting
+            # Combine with any partial data from previous read
+            if self._partial_line_buffer:
+                data = self._partial_line_buffer + data
+                self._partial_line_buffer = b""
 
-            has_interactive_marker = False
-            is_likely_user_input = False
-            has_newline_marker = False
+            data_len = len(data)
 
-            # Check for small chunk starting with NULL (user typing)
-            if len(data) >= 2 and data[0] == 0x00:
-                next_byte = data[1]
+            # --- 1. HARD LIMIT (Safety Valve) ---
+            if data_len > 65536:
+                self._burst_counter = 100
+                term.feed(data)
+                return
 
-                # Check for newline/carriage return (Enter key)
-                if len(data) <= 15 and (b"\r" in data or b"\n" in data):
-                    has_interactive_marker = True
-                    has_newline_marker = True
-                # Check for backspace (may come with \x1b[K erase sequence)
-                elif next_byte == 0x08 or next_byte == 0x7F:  # BS or DEL
-                    has_interactive_marker = True
-                    is_likely_user_input = True
-                # Check for small single-char input (2-3 bytes)
-                elif len(data) <= 3:
-                    # Verify second byte is printable or space
-                    if next_byte >= 0x20 and next_byte <= 0x7E:  # Printable ASCII
-                        has_interactive_marker = True
-                        is_likely_user_input = True
+            # --- 2. ADAPTIVE BURST DETECTION ---
+            if data_len > 1024:
+                self._burst_counter += 1
+            else:
+                self._burst_counter = 0
 
-            # Debug: log incoming data with marker detection
-            if self._shell_input_highlighter.enabled:
-                text_preview = repr(text[:100]) if len(text) > 100 else repr(text)
-                has_osc7 = "\x1b]7;" in text or "\033]7;" in text
-                self.logger.debug(
-                    f"Proxy {self._proxy_id}: Data received (len={len(text)}, marker={has_interactive_marker}, user_input={is_likely_user_input}, newline={has_newline_marker}, osc7={has_osc7}): {text_preview}"
-                )
-
-            # ===== INTERACTIVE MODE HANDLING =====
-            if has_interactive_marker:
-                if has_newline_marker:
-                    # Enter pressed - deactivate interactive mode (output will follow)
-                    if self._at_shell_prompt:
-                        self._at_shell_prompt = False
-                        self._shell_input_highlighter.set_at_prompt(
-                            self._proxy_id, False
-                        )
-                        self.logger.debug(
-                            f"Proxy {self._proxy_id}: Interactive mode DEACTIVATED (Enter pressed)"
-                        )
-                elif is_likely_user_input:
-                    # Single char input from user - activate interactive mode
-                    if not self._at_shell_prompt:
-                        self._at_shell_prompt = True
-                        self._shell_input_highlighter.set_at_prompt(
-                            self._proxy_id, True
-                        )
-                        # Clear buffer for new input
+            if self._burst_counter > 15:
+                # Fast check for OSC7 to keep state synchronized
+                if b"\x1b]7;" in data or b"\033]7;" in data:
+                    if self._input_highlight_buffer:
                         self._input_highlight_buffer = ""
                         self._prev_shell_input_token_type = None
                         self._prev_shell_input_token_len = 0
-                        self._need_color_reset = True
-                        self.logger.debug(
-                            f"Proxy {self._proxy_id}: Interactive mode ACTIVATED (user input detected)"
-                        )
 
-            # Get rules with single lock acquisition
+                term.feed(data)
+                return
+
+            # --- 3. PARTIAL LINE HANDLING ---
+            # Only apply buffering if NOT in alt screen (already checked above)
+            last_newline_pos = data.rfind(b"\n")
+
+            if last_newline_pos != -1 and last_newline_pos < data_len - 1:
+                remainder = data[last_newline_pos + 1 :]
+
+                # Heuristic: If remainder looks like a prompt or interactive element,
+                # process it immediately.
+                is_interactive = False
+                if len(remainder) < 100:
+                    rem_str = remainder.decode("utf-8", errors="ignore").strip()
+                    # Check for prompts OR cursor movement sequences often used in TUI-like CLI tools
+                    if (
+                        rem_str.endswith(("$", "#", "%", ">", ":"))
+                        or "\x1b[" in rem_str
+                    ):
+                        is_interactive = True
+
+                if not is_interactive:
+                    self._partial_line_buffer = remainder
+                    data = data[: last_newline_pos + 1]
+
+            # Special case: No newline at all, but small chunk?
+            # Likely interactive typing or a progress bar update. Feed immediately.
+            elif last_newline_pos == -1 and data_len < 4096:
+                pass  # Do not buffer, let it flow to highlighting
+
+            # --- 4. NORMAL PROCESSING ---
+
+            # Decode to text
+            text = data.decode("utf-8", errors="replace")
+            if not text:
+                return
+
+            # Interactive marker check (only on small chunks)
+            if data_len < 1024:
+                has_interactive_marker = False
+                is_likely_user_input = False
+                has_newline_marker = False
+
+                if data_len >= 2 and data[0] == 0x00:
+                    next_byte = data[1]
+                    if data_len <= 15 and (b"\r" in data or b"\n" in data):
+                        has_interactive_marker = True
+                        has_newline_marker = True
+                    elif next_byte == 0x08 or next_byte == 0x7F:
+                        has_interactive_marker = True
+                        is_likely_user_input = True
+                    elif data_len <= 3:
+                        if next_byte >= 0x20 and next_byte <= 0x7E:
+                            has_interactive_marker = True
+                            is_likely_user_input = True
+
+                if has_interactive_marker:
+                    if has_newline_marker:
+                        if self._at_shell_prompt:
+                            self._at_shell_prompt = False
+                            self._shell_input_highlighter.set_at_prompt(
+                                self._proxy_id, False
+                            )
+                    elif is_likely_user_input:
+                        if not self._at_shell_prompt:
+                            self._at_shell_prompt = True
+                            self._shell_input_highlighter.set_at_prompt(
+                                self._proxy_id, True
+                            )
+                            self._input_highlight_buffer = ""
+                            self._prev_shell_input_token_type = None
+                            self._prev_shell_input_token_len = 0
+                            self._need_color_reset = True
+
+            # Get rules
             rules = None
-            context = ""
             with self._highlighter._lock:
                 context = self._highlighter._proxy_contexts.get(self._proxy_id, "")
                 rules = self._highlighter._get_active_rules(context)
 
-            # Check for shell prompt detection (OSC7 or traditional prompt)
+            # Check for shell prompt detection
             prompt_detected = self._check_and_update_prompt_state(text)
-            if prompt_detected:
-                self.logger.debug(
-                    f"Proxy {self._proxy_id}: Prompt detected, at_shell_prompt is now {self._at_shell_prompt}"
-                )
 
-            # If no rules and shell input highlighting is disabled, feed raw data directly
-            if not rules and not self._shell_input_highlighter.enabled:
-                term.feed(data)
-                return
-
-            # If at shell prompt and shell input highlighting is enabled, try it first
-            # This happens when typing characters before Enter is pressed
+            # Shell input highlighting (only if at prompt)
             if self._at_shell_prompt and self._shell_input_highlighter.enabled:
-                self.logger.debug(
-                    f"Proxy {self._proxy_id}: Attempting shell input highlighting, at_prompt={self._at_shell_prompt}, text_repr={repr(text[:50])}"
-                )
                 highlighted_data = self._apply_shell_input_highlighting(text, term)
                 if highlighted_data is not None:
-                    return  # Shell input highlighting handled the data
-            elif self._shell_input_highlighter.enabled and not self._at_shell_prompt:
-                # Only log if we have single printable char (user typing)
-                clean = text.lstrip("\x00")
-                if len(clean) == 1 and clean.isprintable():
-                    self.logger.debug(
-                        f"Proxy {self._proxy_id}: Not at prompt, skipping shell input highlighting for: {repr(clean)}"
-                    )
+                    return
 
-            # If no rules but shell input highlighting didn't apply, feed raw
+            # If no rules, feed raw
             if not rules:
-                # Debug: log if text contains OSC7 to see if we're missing prompt detection
-                if "\x1b]7;" in text or "\033]7;" in text:
-                    self.logger.debug(
-                        f"Proxy {self._proxy_id}: OSC7 present in raw feed (rules=None): {repr(text[:80])}"
-                    )
                 term.feed(data)
                 return
 
-            # Split into lines preserving endings
+            # Highlighting Logic
             lines = text.splitlines(keepends=True)
             highlight_line = self._highlighter._apply_highlighting_to_line
-
-            # Check if we should skip the first line (echoed command after Enter)
             skip_first = self._highlighter.should_skip_first_output(self._proxy_id)
 
-            # Process all lines and add to queue
             for i, line in enumerate(lines):
-                # Skip highlighting for the first complete line (echoed command)
-                # The first line is the command that was typed, not output to highlight
                 if skip_first and i == 0:
-                    # Feed the first line without highlighting
                     self._line_queue.append(line.encode("utf-8", errors="replace"))
                     continue
 
-                # Fast path for empty lines
                 if not line or line in ("\n", "\r", "\r\n"):
                     self._line_queue.append(line.encode("utf-8"))
                     continue
 
-                # Skip highlighting for lines containing:
-                # - OSC7 sequences (directory tracking)
-                # - Prompt-like patterns ($ # %)
-                # - ANSI color reset followed by prompt chars
-                # These are shell prompt lines, not command output
                 if "\x1b]7;" in line or "\033]7;" in line:
                     self._line_queue.append(line.encode("utf-8", errors="replace"))
                     continue
 
-                # Skip lines that look like shell prompts (contain colors + $ or # at end)
-                # This prevents highlighting from interfering with prompt colors
-                if "\x1b[" in line and ("$ " in line or "# " in line or "% " in line):
-                    self._line_queue.append(line.encode("utf-8", errors="replace"))
-                    continue
-
-                # Extract content and ending
                 if line[-1] == "\n":
                     if len(line) > 1 and line[-2] == "\r":
                         content, ending = line[:-2], "\r\n"
@@ -2789,7 +2785,6 @@ class HighlightedTerminalProxy:
                 else:
                     content, ending = line, ""
 
-                # Highlight
                 if content:
                     highlighted = highlight_line(content, rules) + ending
                 else:
@@ -2797,13 +2792,11 @@ class HighlightedTerminalProxy:
 
                 self._line_queue.append(highlighted.encode("utf-8", errors="replace"))
 
-            # Start consumer if not already running
             if not self._queue_processing:
                 self._queue_processing = True
                 self._process_line_queue(term)
 
         except Exception:
-            # Fallback: feed raw data on any error
             term.feed(data)
 
     def _check_and_update_prompt_state(self, text: str) -> bool:
