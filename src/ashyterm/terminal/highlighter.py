@@ -1422,6 +1422,9 @@ class HighlightedTerminalProxy:
         # Tracks consecutive large chunks to detect file dumps vs commands
         self._burst_counter = 0
 
+        # Bracketed Paste State
+        self._in_bracketed_paste = False
+
         # Pygments state for cat command highlighting
         self._cat_filename: Optional[str] = None
         self._cat_bytes_processed: int = 0
@@ -1618,6 +1621,7 @@ class HighlightedTerminalProxy:
         self._queue_processing = False
         self._partial_line_buffer = b""
         self._burst_counter = 0
+        self._in_bracketed_paste = False
 
         self._cat_filename = None
         self._input_highlight_buffer = ""
@@ -2632,20 +2636,46 @@ class HighlightedTerminalProxy:
     def _process_data_streaming(self, data: bytes, term: Vte.Terminal) -> None:
         """
         Apply highlighting with Adaptive Burst Detection, Alt-Screen Bypass,
-        and Strict Ordering.
+        Bracketed Paste Bypass, and Strict Ordering.
         """
         try:
-            # --- 0. ALT SCREEN DETECTION ---
-            state_changed = self._update_alt_screen_state(data)
+            # --- 0. BRACKETED PASTE DETECTION (CRITICAL FOR COPY/PASTE) ---
+            # Shells wrap pasted text in \x1b[200~ (start) and \x1b[201~ (end).
+            # During paste, we must NOT touch the data, as it contains complex
+            # cursor movements and raw text that shouldn't be highlighted/buffered.
 
-            if self._is_alt_screen:
-                # CRITICAL: Flush pending highlighted lines before entering raw mode
+            # Check for Start Paste sequence
+            if b"\x1b[200~" in data:
+                self._in_bracketed_paste = True
+                # Flush any pending highlighted lines to ensure order
                 self._flush_queue(term)
-
+                # Flush partial buffer
                 if self._partial_line_buffer:
                     term.feed(self._partial_line_buffer)
                     self._partial_line_buffer = b""
 
+            # If we are in paste mode, feed raw and check for end
+            if self._in_bracketed_paste:
+                term.feed(data)
+
+                # Check for End Paste sequence
+                if b"\x1b[201~" in data:
+                    self._in_bracketed_paste = False
+                    # Reset input buffer to avoid highlighting the pasted command
+                    # as if it were manually typed characters
+                    self._input_highlight_buffer = ""
+                    self._prev_shell_input_token_type = None
+                    self._prev_shell_input_token_len = 0
+                return
+
+            # --- 1. ALT SCREEN DETECTION ---
+            state_changed = self._update_alt_screen_state(data)
+
+            if self._is_alt_screen:
+                self._flush_queue(term)
+                if self._partial_line_buffer:
+                    term.feed(self._partial_line_buffer)
+                    self._partial_line_buffer = b""
                 term.feed(data)
                 return
 
@@ -2656,41 +2686,38 @@ class HighlightedTerminalProxy:
 
             data_len = len(data)
 
-            # --- 1. HARD LIMIT (Safety Valve) ---
+            # --- 2. HARD LIMIT (Safety Valve) ---
             if data_len > 65536:
                 self._burst_counter = 100
-                self._flush_queue(term)  # Flush before raw feed
+                self._flush_queue(term)
                 term.feed(data)
                 return
 
-            # --- 2. ADAPTIVE BURST DETECTION ---
+            # --- 3. ADAPTIVE BURST DETECTION ---
             if data_len > 1024:
                 self._burst_counter += 1
             else:
                 self._burst_counter = 0
 
             if self._burst_counter > 15:
-                # Fast check for OSC7
                 if b"\x1b]7;" in data or b"\033]7;" in data:
                     if self._input_highlight_buffer:
                         self._input_highlight_buffer = ""
                         self._prev_shell_input_token_type = None
                         self._prev_shell_input_token_len = 0
 
-                self._flush_queue(term)  # Flush before raw feed
+                self._flush_queue(term)
                 term.feed(data)
                 return
 
-            # --- 3. PARTIAL LINE HANDLING ---
+            # --- 4. PARTIAL LINE HANDLING ---
             last_newline_pos = data.rfind(b"\n")
 
             if last_newline_pos != -1 and last_newline_pos < data_len - 1:
                 remainder = data[last_newline_pos + 1 :]
 
-                # Heuristic: Process immediately if it looks like a prompt OR contains OSC7
-                # OSC7 sequences often come at the start of the prompt line
                 is_interactive = False
-                if len(remainder) < 200:  # Increased check size for OSC7
+                if len(remainder) < 200:
                     rem_str = remainder.decode("utf-8", errors="ignore").strip()
                     if (
                         rem_str.endswith(("$", "#", "%", ">", ":"))
@@ -2705,10 +2732,9 @@ class HighlightedTerminalProxy:
                     data = data[: last_newline_pos + 1]
 
             elif last_newline_pos == -1 and data_len < 4096:
-                pass  # Pass through small chunks without newlines
+                pass
 
-            # --- 4. NORMAL PROCESSING ---
-
+            # --- 5. NORMAL PROCESSING ---
             text = data.decode("utf-8", errors="replace")
             if not text:
                 return
@@ -2767,7 +2793,7 @@ class HighlightedTerminalProxy:
 
             # If no rules, feed raw
             if not rules:
-                self._flush_queue(term)  # Ensure order
+                self._flush_queue(term)
                 term.feed(data)
                 return
 
