@@ -2614,28 +2614,42 @@ class HighlightedTerminalProxy:
 
         return None
 
+    def _flush_queue(self, term: Vte.Terminal) -> None:
+        """
+        Force flush any pending lines in the highlighting queue to the terminal.
+        This ensures strict ordering before switching to raw feed.
+        """
+        if self._line_queue:
+            # Drain the entire queue immediately
+            while self._line_queue:
+                try:
+                    chunk = self._line_queue.popleft()
+                    term.feed(chunk)
+                except IndexError:
+                    break
+            self._queue_processing = False
+
     def _process_data_streaming(self, data: bytes, term: Vte.Terminal) -> None:
         """
-        Apply highlighting with Adaptive Burst Detection and Alt-Screen Bypass.
+        Apply highlighting with Adaptive Burst Detection, Alt-Screen Bypass,
+        and Strict Ordering.
         """
         try:
-            # --- 0. ALT SCREEN DETECTION (CRITICAL FOR FZF/VIM) ---
-            # Check if this chunk contains a switch to/from Alt Screen.
-            # If we are entering Alt Screen (fzf, vim), we must flush buffers
-            # and feed raw immediately. TUI apps do not use newlines for rendering.
+            # --- 0. ALT SCREEN DETECTION ---
             state_changed = self._update_alt_screen_state(data)
 
             if self._is_alt_screen:
-                # If we have leftover partial data from before entering alt screen, flush it now
+                # CRITICAL: Flush pending highlighted lines before entering raw mode
+                self._flush_queue(term)
+
                 if self._partial_line_buffer:
                     term.feed(self._partial_line_buffer)
                     self._partial_line_buffer = b""
 
-                # Feed the current data raw (contains the UI draw commands)
                 term.feed(data)
                 return
 
-            # Combine with any partial data from previous read
+            # Combine with partial data
             if self._partial_line_buffer:
                 data = self._partial_line_buffer + data
                 self._partial_line_buffer = b""
@@ -2645,6 +2659,7 @@ class HighlightedTerminalProxy:
             # --- 1. HARD LIMIT (Safety Valve) ---
             if data_len > 65536:
                 self._burst_counter = 100
+                self._flush_queue(term)  # Flush before raw feed
                 term.feed(data)
                 return
 
@@ -2655,32 +2670,33 @@ class HighlightedTerminalProxy:
                 self._burst_counter = 0
 
             if self._burst_counter > 15:
-                # Fast check for OSC7 to keep state synchronized
+                # Fast check for OSC7
                 if b"\x1b]7;" in data or b"\033]7;" in data:
                     if self._input_highlight_buffer:
                         self._input_highlight_buffer = ""
                         self._prev_shell_input_token_type = None
                         self._prev_shell_input_token_len = 0
 
+                self._flush_queue(term)  # Flush before raw feed
                 term.feed(data)
                 return
 
             # --- 3. PARTIAL LINE HANDLING ---
-            # Only apply buffering if NOT in alt screen (already checked above)
             last_newline_pos = data.rfind(b"\n")
 
             if last_newline_pos != -1 and last_newline_pos < data_len - 1:
                 remainder = data[last_newline_pos + 1 :]
 
-                # Heuristic: If remainder looks like a prompt or interactive element,
-                # process it immediately.
+                # Heuristic: Process immediately if it looks like a prompt OR contains OSC7
+                # OSC7 sequences often come at the start of the prompt line
                 is_interactive = False
-                if len(remainder) < 100:
+                if len(remainder) < 200:  # Increased check size for OSC7
                     rem_str = remainder.decode("utf-8", errors="ignore").strip()
-                    # Check for prompts OR cursor movement sequences often used in TUI-like CLI tools
                     if (
                         rem_str.endswith(("$", "#", "%", ">", ":"))
                         or "\x1b[" in rem_str
+                        or "\x1b]7;" in rem_str
+                        or "\033]7;" in rem_str
                     ):
                         is_interactive = True
 
@@ -2688,19 +2704,16 @@ class HighlightedTerminalProxy:
                     self._partial_line_buffer = remainder
                     data = data[: last_newline_pos + 1]
 
-            # Special case: No newline at all, but small chunk?
-            # Likely interactive typing or a progress bar update. Feed immediately.
             elif last_newline_pos == -1 and data_len < 4096:
-                pass  # Do not buffer, let it flow to highlighting
+                pass  # Pass through small chunks without newlines
 
             # --- 4. NORMAL PROCESSING ---
 
-            # Decode to text
             text = data.decode("utf-8", errors="replace")
             if not text:
                 return
 
-            # Interactive marker check (only on small chunks)
+            # Interactive marker check
             if data_len < 1024:
                 has_interactive_marker = False
                 is_likely_user_input = False
@@ -2746,7 +2759,7 @@ class HighlightedTerminalProxy:
             # Check for shell prompt detection
             prompt_detected = self._check_and_update_prompt_state(text)
 
-            # Shell input highlighting (only if at prompt)
+            # Shell input highlighting
             if self._at_shell_prompt and self._shell_input_highlighter.enabled:
                 highlighted_data = self._apply_shell_input_highlighting(text, term)
                 if highlighted_data is not None:
@@ -2754,6 +2767,7 @@ class HighlightedTerminalProxy:
 
             # If no rules, feed raw
             if not rules:
+                self._flush_queue(term)  # Ensure order
                 term.feed(data)
                 return
 
@@ -2797,6 +2811,7 @@ class HighlightedTerminalProxy:
                 self._process_line_queue(term)
 
         except Exception:
+            self._flush_queue(term)
             term.feed(data)
 
     def _check_and_update_prompt_state(self, text: str) -> bool:
