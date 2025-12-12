@@ -410,6 +410,7 @@ class ProcessSpawner:
     def spawn_highlighted_local_terminal(
         self,
         terminal: Vte.Terminal,
+        session: Optional["SessionItem"] = None,
         callback: Optional[Callable] = None,
         user_data: Any = None,
         working_directory: Optional[str] = None,
@@ -442,7 +443,11 @@ class ProcessSpawner:
             # Use centralized shell environment preparation
             cmd, env, temp_dir_path = self._prepare_shell_environment(working_directory)
 
-            proxy = HighlightedTerminalProxy(terminal, "local", proxy_id=terminal_id)
+            proxy = HighlightedTerminalProxy(
+                terminal,
+                "local",
+                proxy_id=terminal_id,
+            )
 
             try:
                 master_fd, slave_fd = proxy.create_pty()
@@ -565,7 +570,11 @@ class ProcessSpawner:
                 working_dir = str(self.platform_info.home_dir)
                 env = self.environment_manager.get_terminal_environment()
 
-                proxy = HighlightedTerminalProxy(terminal, "ssh", proxy_id=terminal_id)
+                proxy = HighlightedTerminalProxy(
+                    terminal,
+                    "ssh",
+                    proxy_id=terminal_id,
+                )
                 master_fd, slave_fd = proxy.create_pty()
 
                 rows = terminal.get_row_count() or 24

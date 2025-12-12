@@ -2,6 +2,7 @@
 
 import os
 import pathlib
+import re
 import signal
 import subprocess
 import threading
@@ -46,6 +47,12 @@ from ..utils.logger import get_logger, log_terminal_event
 from ..utils.osc7_tracker import OSC7Info, get_osc7_tracker
 from ..utils.platform import get_environment_manager, get_platform_info
 from ..utils.security import validate_session_data
+
+# Pre-compiled pattern for ANSI escape sequences used in command detection
+# Matches: Standard CSI, OSC sequences, and malformed CSI sequences
+_ANSI_ESCAPE_PATTERN = re.compile(
+    r"\x1b\[\??[0-9;]*[A-Za-z]|\x1b\].*?\x07|\[+\??(?:\d*[;]?)*[ABCDEFGHJKPSTfmnsuhl]"
+)
 
 # Lazy import for spawner - loaded on first use
 _spawner = None
@@ -580,12 +587,42 @@ class TerminalManager:
             )
 
             highlight_manager = self._get_highlight_manager()
-            if highlight_manager.enabled_for_local:
+
+            # Decide whether to spawn a highlighted proxy.
+            # Highlighted terminals are required for:
+            # - output highlighting
+            # - cat colorization
+            # - shell input highlighting
+            # Each can be overridden per-session (tri-state: None/True/False).
+            cat_colorization_enabled = self.settings_manager.get(
+                "cat_colorization_enabled", True
+            )
+            shell_input_enabled = self.settings_manager.get(
+                "shell_input_highlighting_enabled", False
+            )
+
+            output_highlighting_enabled = highlight_manager.enabled_for_local
+            if session and session.output_highlighting is not None:
+                output_highlighting_enabled = session.output_highlighting
+            if session and session.cat_colorization is not None:
+                cat_colorization_enabled = session.cat_colorization
+            if session and session.shell_input_highlighting is not None:
+                shell_input_enabled = session.shell_input_highlighting
+
+            should_spawn_highlighted = (
+                output_highlighting_enabled
+                or cat_colorization_enabled
+                or shell_input_enabled
+            )
+
+            if should_spawn_highlighted:
                 proxy = self.spawner.spawn_highlighted_local_terminal(
                     terminal,
+                    session=session,
                     callback=self._on_spawn_callback,
                     user_data=user_data_for_spawn,
                     working_directory=resolved_working_dir,
+                    terminal_id=terminal_id,
                 )
                 if proxy:
                     self._highlight_proxies[terminal_id] = proxy
@@ -654,13 +691,37 @@ class TerminalManager:
             try:
                 if terminal_type == "ssh":
                     highlight_manager = self._get_highlight_manager()
-                    if highlight_manager.enabled_for_ssh:
+
+                    # Decide whether to spawn a highlighted proxy.
+                    cat_colorization_enabled = self.settings_manager.get(
+                        "cat_colorization_enabled", True
+                    )
+                    shell_input_enabled = self.settings_manager.get(
+                        "shell_input_highlighting_enabled", False
+                    )
+
+                    output_highlighting_enabled = highlight_manager.enabled_for_ssh
+                    if session.output_highlighting is not None:
+                        output_highlighting_enabled = session.output_highlighting
+                    if session.cat_colorization is not None:
+                        cat_colorization_enabled = session.cat_colorization
+                    if session.shell_input_highlighting is not None:
+                        shell_input_enabled = session.shell_input_highlighting
+
+                    should_spawn_highlighted = (
+                        output_highlighting_enabled
+                        or cat_colorization_enabled
+                        or shell_input_enabled
+                    )
+
+                    if should_spawn_highlighted:
                         proxy = self.spawner.spawn_highlighted_ssh_session(
                             terminal,
                             session,
                             callback=self._on_spawn_callback,
                             user_data=user_data_for_spawn,
                             initial_command=initial_command,
+                            terminal_id=terminal_id,
                         )
                         if proxy:
                             self._highlight_proxies[terminal_id] = proxy
@@ -1453,18 +1514,7 @@ class TerminalManager:
 
             # Strip ANSI escape sequences and terminal control codes from the line
             # This handles cases where cursor movement codes get mixed in (e.g., [K, [[[ )
-            import re
-
-            # Pattern to match ANSI escape sequences:
-            # 1. Standard CSI: ESC [ params letter
-            # 2. OSC sequences: ESC ] ... BEL
-            # 3. Malformed CSI (ESC lost): one or more [ followed by CSI command letter
-            #    Common CSI commands: A-H (cursor), J-K (erase), P (delete), S-T (scroll)
-            #    f,m,n,s,u (other control sequences)
-            ansi_escape = re.compile(
-                r"\x1b\[[0-9;]*[A-Za-z]|\x1b\].*?\x07|\[+(?:\d*[;]?)*[ABCDEFGHJKPSTfmnsu]"
-            )
-            clean_line = ansi_escape.sub("", line)
+            clean_line = _ANSI_ESCAPE_PATTERN.sub("", line)
 
             # Find the last occurrence of a prompt separator
             # The pattern matches: $ # % > ➜ followed by a space

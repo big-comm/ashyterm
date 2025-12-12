@@ -12,6 +12,7 @@ import weakref
 from functools import partial
 from pathlib import Path, PurePosixPath
 from typing import Any, Dict, List, Optional, Set
+from urllib.parse import unquote, urlparse
 
 from gi.repository import Adw, Gdk, Gio, GLib, GObject, Graphene, Gtk, Vte
 
@@ -477,8 +478,6 @@ class FileManager(GObject.Object):
         try:
             uri = self.bound_terminal.get_current_directory_uri()
             if uri:
-                from urllib.parse import unquote, urlparse
-
                 parsed_uri = urlparse(uri)
                 if parsed_uri.scheme == "file":
                     return unquote(parsed_uri.path)
@@ -517,8 +516,6 @@ class FileManager(GObject.Object):
             uri = self.bound_terminal.get_current_directory_uri()
             if not uri:
                 return
-
-            from urllib.parse import unquote, urlparse
 
             parsed_uri = urlparse(uri)
             if parsed_uri.scheme != "file":

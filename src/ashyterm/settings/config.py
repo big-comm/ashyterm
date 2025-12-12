@@ -64,7 +64,6 @@ class ConfigPaths:
             self.SETTINGS_FILE = self.CONFIG_DIR / "settings.json"
             self.STATE_FILE = self.CONFIG_DIR / "session_state.json"
             self.LAYOUT_DIR = self.CONFIG_DIR / "layouts"
-            self.CUSTOM_COMMANDS_FILE = self.CONFIG_DIR / "custom_commands.json"
             self.CACHE_DIR = self._get_cache_directory()
             self.LOG_DIR = self.CONFIG_DIR / "logs"
             self.BACKUP_DIR = (
@@ -106,7 +105,6 @@ class ConfigPaths:
         self.SETTINGS_FILE = self.CONFIG_DIR / "settings.json"
         self.STATE_FILE = self.CONFIG_DIR / "session_state.json"
         self.LAYOUT_DIR = self.CONFIG_DIR / "layouts"
-        self.CUSTOM_COMMANDS_FILE = self.CONFIG_DIR / "custom_commands.json"
         self.CACHE_DIR = home / ".cache" / "ashyterm"
         self.LOG_DIR = self.CONFIG_DIR / "logs"
         self.BACKUP_DIR = self.CONFIG_DIR / "backups"
@@ -177,6 +175,7 @@ class DefaultSettings:
             return "Monospace 10"
 
     @staticmethod
+    @lru_cache(maxsize=1)
     def get_defaults() -> Dict[str, Any]:
         return {
             # General Appearance
@@ -329,6 +328,7 @@ class ColorSchemes:
     """Terminal color schemes."""
 
     @staticmethod
+    @lru_cache(maxsize=1)
     def get_schemes() -> Dict[str, Dict[str, Any]]:
         return {
             "system_default": {
@@ -737,7 +737,6 @@ try:
     SETTINGS_FILE = str(_paths.SETTINGS_FILE)
     STATE_FILE = str(_paths.STATE_FILE)
     LAYOUT_DIR = str(_paths.LAYOUT_DIR)
-    CUSTOM_COMMANDS_FILE = str(_paths.CUSTOM_COMMANDS_FILE)
     BACKUP_DIR = str(_paths.BACKUP_DIR)
 except Exception:
     CONFIG_DIR = os.path.expanduser("~/.config/ashyterm")
@@ -745,7 +744,6 @@ except Exception:
     SETTINGS_FILE = os.path.join(CONFIG_DIR, "settings.json")
     STATE_FILE = os.path.join(CONFIG_DIR, "session_state.json")
     LAYOUT_DIR = os.path.join(CONFIG_DIR, "layouts")
-    CUSTOM_COMMANDS_FILE = os.path.join(CONFIG_DIR, "custom_commands.json")
     BACKUP_DIR = os.path.join(CONFIG_DIR, "backups")
     os.makedirs(CONFIG_DIR, exist_ok=True)
     os.makedirs(LAYOUT_DIR, exist_ok=True)

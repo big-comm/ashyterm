@@ -14,6 +14,25 @@ import gi
 gi.require_version("Gtk", "4.0")
 from gi.repository import GLib
 
+# Pre-compiled regex patterns for syntax highlighting (compiled once at module load)
+_PATTERN_URL = re.compile(r"(https?://[^\s]+)")
+_PATTERN_SINGLE_QUOTE = re.compile(r"('(?:[^'\\]|\\.)*')")
+_PATTERN_DOUBLE_QUOTE = re.compile(r'("(?:[^"\\]|\\.)*")')
+_PATTERN_VARIABLE = re.compile(r"(\$\{?[A-Za-z_][A-Za-z0-9_]*\}?)")
+_PATTERN_SPECIAL_VAR = re.compile(r"(\$[\?\!\$@\*#0-9])")
+_PATTERN_FLAG_SPACE = re.compile(r"(\s)(--?[a-zA-Z][a-zA-Z0-9-]*)")
+_PATTERN_FLAG_START = re.compile(r"^(--?[a-zA-Z][a-zA-Z0-9-]*)")
+_PATTERN_NUMBER_NEG = re.compile(r"(\s)(-\d+)(\s|$)")
+_PATTERN_NUMBER = re.compile(r"(\s)(\d+[KMGTkmgt]?)(\s|$)")
+_PATTERN_PATH_SPACE = re.compile(r"(\s)(/[^\s'\"]+)")
+_PATTERN_PATH_START = re.compile(r"^(/[^\s'\"]+)")
+_PATTERN_COMMAND = re.compile(
+    r"^(find|grep|ls|cat|echo|cd|rm|mkdir|touch|cp|mv|chmod|chown|tar|curl|wget)\b"
+)
+_PATTERN_OPERATOR = re.compile(r"(\||&gt;|&lt;|&amp;&amp;|&gt;&gt;|\|\|)")
+_PATTERN_BACKTICK = re.compile(r"(`[^`]*`)")
+_PATTERN_SUBSHELL = re.compile(r"(\$\([^\)]*\))")
+
 
 def get_bash_pango_markup(
     command: str,
@@ -35,87 +54,71 @@ def get_bash_pango_markup(
         A Pango markup string with syntax highlighting applied
     """
     colors = _build_color_map(palette)
-    escaped = GLib.markup_escape_text(command)
+    result = GLib.markup_escape_text(command)
 
-    # Pattern replacements (order matters - most specific first)
-    patterns = [
-        # URLs (before paths)
-        (
-            r"(https?://[^\s]+)",
-            f'<span foreground="{colors["path"]}">' + r"\1</span>",
-        ),
-        # Single-quoted strings
-        (
-            r"('(?:[^'\\]|\\.)*')",
-            f'<span foreground="{colors["string"]}">' + r"\1</span>",
-        ),
-        # Double-quoted strings
-        (
-            r'("(?:[^"\\]|\\.)*")',
-            f'<span foreground="{colors["string"]}">' + r"\1</span>",
-        ),
-        # Variables $VAR or ${VAR}
-        (
-            r"(\$\{?[A-Za-z_][A-Za-z0-9_]*\}?)",
-            f'<span foreground="{colors["variable"]}">' + r"\1</span>",
-        ),
-        # Special variables $?, $!, $$, $@, $*, $#, $0-9
-        (
-            r"(\$[\?\!\$@\*#0-9])",
-            f'<span foreground="{colors["special_var"]}">' + r"\1</span>",
-        ),
-        # Flags/options (e.g., -name, --help, -R, -10)
-        (
-            r"(\s)(--?[a-zA-Z][a-zA-Z0-9-]*)",
-            r"\1" + f'<span foreground="{colors["flag"]}">' + r"\2</span>",
-        ),
-        (
-            r"^(--?[a-zA-Z][a-zA-Z0-9-]*)",
-            f'<span foreground="{colors["flag"]}">' + r"\1</span>",
-        ),
-        # Numbers that follow flags (like -10 in -mtime -10)
-        (
-            r"(\s)(-\d+)(\s|$)",
-            r"\1" + f'<span foreground="{colors["number"]}">' + r"\2</span>" + r"\3",
-        ),
-        # Standalone numbers
-        (
-            r"(\s)(\d+[KMGTkmgt]?)(\s|$)",
-            r"\1" + f'<span foreground="{colors["number"]}">' + r"\2</span>" + r"\3",
-        ),
-        # Paths (absolute paths starting with /)
-        (
-            r"(\s)(/[^\s'\"]+)",
-            r"\1" + f'<span foreground="{colors["path"]}">' + r"\2</span>",
-        ),
-        (
-            r"^(/[^\s'\"]+)",
-            f'<span foreground="{colors["path"]}">' + r"\1</span>",
-        ),
-        # Common commands at start
-        (
-            r"^(find|grep|ls|cat|echo|cd|rm|mkdir|touch|cp|mv|chmod|chown|tar|curl|wget)\b",
-            f'<span foreground="{colors["command"]}">' + r"\1</span>",
-        ),
-        # Redirections and pipes
-        (
-            r"(\||&gt;|&lt;|&amp;&amp;|&gt;&gt;|\|\|)",
-            f'<span foreground="{colors["operator"]}">' + r"\1</span>",
-        ),
-        # Backticks/subshell
-        (
-            r"(`[^`]*`)",
-            f'<span foreground="{colors["substitution"]}">' + r"\1</span>",
-        ),
-        (
-            r"(\$\([^\)]*\))",
-            f'<span foreground="{colors["substitution"]}">' + r"\1</span>",
-        ),
-    ]
+    # Apply pattern replacements using pre-compiled patterns
+    # Order matters - most specific patterns first
 
-    result = escaped
-    for pattern, replacement in patterns:
-        result = re.sub(pattern, replacement, result)
+    # URLs (before paths)
+    result = _PATTERN_URL.sub(
+        f'<span foreground="{colors["path"]}">' + r"\1</span>", result
+    )
+    # Single-quoted strings
+    result = _PATTERN_SINGLE_QUOTE.sub(
+        f'<span foreground="{colors["string"]}">' + r"\1</span>", result
+    )
+    # Double-quoted strings
+    result = _PATTERN_DOUBLE_QUOTE.sub(
+        f'<span foreground="{colors["string"]}">' + r"\1</span>", result
+    )
+    # Variables $VAR or ${VAR}
+    result = _PATTERN_VARIABLE.sub(
+        f'<span foreground="{colors["variable"]}">' + r"\1</span>", result
+    )
+    # Special variables $?, $!, $$, $@, $*, $#, $0-9
+    result = _PATTERN_SPECIAL_VAR.sub(
+        f'<span foreground="{colors["special_var"]}">' + r"\1</span>", result
+    )
+    # Flags/options after space
+    result = _PATTERN_FLAG_SPACE.sub(
+        r"\1" + f'<span foreground="{colors["flag"]}">' + r"\2</span>", result
+    )
+    # Flags/options at start
+    result = _PATTERN_FLAG_START.sub(
+        f'<span foreground="{colors["flag"]}">' + r"\1</span>", result
+    )
+    # Negative numbers (like -10 in -mtime -10)
+    result = _PATTERN_NUMBER_NEG.sub(
+        r"\1" + f'<span foreground="{colors["number"]}">' + r"\2</span>" + r"\3", result
+    )
+    # Standalone numbers
+    result = _PATTERN_NUMBER.sub(
+        r"\1" + f'<span foreground="{colors["number"]}">' + r"\2</span>" + r"\3", result
+    )
+    # Paths after space
+    result = _PATTERN_PATH_SPACE.sub(
+        r"\1" + f'<span foreground="{colors["path"]}">' + r"\2</span>", result
+    )
+    # Paths at start
+    result = _PATTERN_PATH_START.sub(
+        f'<span foreground="{colors["path"]}">' + r"\1</span>", result
+    )
+    # Common commands at start
+    result = _PATTERN_COMMAND.sub(
+        f'<span foreground="{colors["command"]}">' + r"\1</span>", result
+    )
+    # Redirections and pipes
+    result = _PATTERN_OPERATOR.sub(
+        f'<span foreground="{colors["operator"]}">' + r"\1</span>", result
+    )
+    # Backticks
+    result = _PATTERN_BACKTICK.sub(
+        f'<span foreground="{colors["substitution"]}">' + r"\1</span>", result
+    )
+    # Subshell
+    result = _PATTERN_SUBSHELL.sub(
+        f'<span foreground="{colors["substitution"]}">' + r"\1</span>", result
+    )
 
     return result
 

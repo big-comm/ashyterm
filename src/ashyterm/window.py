@@ -1,5 +1,6 @@
 # ashyterm/window.py
 
+import re
 import weakref
 from typing import Dict, List, Optional
 
@@ -1290,8 +1291,6 @@ class CommTerminalWindow(Adw.ApplicationWindow):
 
             if not use_regex:
                 # For literal search, escape regex special characters
-                import re
-
                 search_text = re.escape(text)
 
             # Always use new_for_search, but with escaped pattern for literal mode

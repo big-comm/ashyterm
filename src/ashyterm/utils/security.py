@@ -17,6 +17,10 @@ from .exceptions import (
 from .logger import get_logger
 from .translation_utils import _
 
+# Pre-compiled patterns for hostname validation/sanitization
+_HOSTNAME_SANITIZE_PATTERN = re.compile(r"[^a-z0-9.-]")
+_HOSTNAME_VALID_PATTERN = re.compile(r"^[a-zA-Z0-9.-]+$")
+
 
 class SecurityConfig:
     """Security configuration and limits."""
@@ -56,7 +60,7 @@ class InputSanitizer:
         if not hostname:
             return ""
         sanitized = hostname.strip().lower()
-        sanitized = re.sub(r"[^a-z0-9.-]", "", sanitized)
+        sanitized = _HOSTNAME_SANITIZE_PATTERN.sub("", sanitized)
         if len(sanitized) > SecurityConfig.MAX_HOSTNAME_LENGTH:
             sanitized = sanitized[: SecurityConfig.MAX_HOSTNAME_LENGTH]
         return sanitized
@@ -69,7 +73,7 @@ class HostnameValidator:
     def is_valid_hostname(hostname: str) -> bool:
         if not hostname or len(hostname) > SecurityConfig.MAX_HOSTNAME_LENGTH:
             return False
-        if not re.match(r"^[a-zA-Z0-9.-]+$", hostname):
+        if not _HOSTNAME_VALID_PATTERN.match(hostname):
             return False
         labels = hostname.split(".")
         for label in labels:

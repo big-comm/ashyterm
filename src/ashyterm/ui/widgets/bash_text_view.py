@@ -22,6 +22,11 @@ try:
 except ImportError:
     PYGMENTS_AVAILABLE = False
 
+# Pre-compiled patterns for extra highlighting
+_PATH_PATTERN = re.compile(r'(?:^|\s)((?:/[\w.\-]+)+|(?:\.{1,2}/[\w.\-/]+)|(?:~/[\w.\-/]*))')
+_FLAG_PATTERN = re.compile(r'(?:^|\s)(--?[\w\-]+=?)')
+_SPECIAL_VAR_PATTERN = re.compile(r'(\$[?!@*#$0-9-])')
+
 # Bash-specific token types
 BASH_TOKEN_TYPES = (
     "keyword", "builtin", "command", "string", "string_single", "backtick",
@@ -240,8 +245,7 @@ class BashTextView(BaseSyntaxTextView):
     def _apply_extra_highlighting(self, text: str):
         """Apply additional highlighting for paths, flags, and special constructs."""
         # Highlight file paths (absolute and relative)
-        path_pattern = re.compile(r'(?:^|\s)((?:/[\w.\-]+)+|(?:\.{1,2}/[\w.\-/]+)|(?:~/[\w.\-/]*))')
-        for match in path_pattern.finditer(text):
+        for match in _PATH_PATTERN.finditer(text):
             start_offset = match.start(1)
             end_offset = match.end(1)
             start_iter = self.buffer.get_iter_at_offset(start_offset)
@@ -249,8 +253,7 @@ class BashTextView(BaseSyntaxTextView):
             self.buffer.apply_tag_by_name("path", start_iter, end_iter)
         
         # Highlight command flags (-x, --option, including with =value)
-        flag_pattern = re.compile(r'(?:^|\s)(--?[\w\-]+=?)')
-        for match in flag_pattern.finditer(text):
+        for match in _FLAG_PATTERN.finditer(text):
             start_offset = match.start(1)
             end_offset = match.end(1)
             start_iter = self.buffer.get_iter_at_offset(start_offset)
@@ -258,8 +261,7 @@ class BashTextView(BaseSyntaxTextView):
             self.buffer.apply_tag_by_name("flag", start_iter, end_iter)
         
         # Highlight special variables ($?, $!, etc.)
-        special_var_pattern = re.compile(r'(\$[?!@*#$0-9-])')
-        for match in special_var_pattern.finditer(text):
+        for match in _SPECIAL_VAR_PATTERN.finditer(text):
             start_offset = match.start(1)
             end_offset = match.end(1)
             start_iter = self.buffer.get_iter_at_offset(start_offset)

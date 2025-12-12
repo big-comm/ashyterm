@@ -11,6 +11,8 @@ Supports:
 - Context-aware highlighting with command-specific rule sets
 """
 
+import re
+
 import gi
 
 gi.require_version("Gtk", "4.0")
@@ -622,8 +624,6 @@ class RuleEditDialog(Adw.Window):
         if pattern:
             is_valid, _ = self._manager.validate_pattern(pattern)
             if is_valid:
-                import re
-
                 try:
                     compiled = re.compile(pattern)
                     num_groups = compiled.groups
@@ -1927,6 +1927,18 @@ class HighlightDialog(Adw.PreferencesWindow):
 
         settings = get_settings_manager()
 
+        # Experimental notice (keep at the top of the group)
+        if pygments_available:
+            note_row = Adw.ActionRow(
+                title=_("⚠️ Experimental Feature"),
+                subtitle=_(
+                    "This feature colorizes output for the 'cat' command. "
+                    "It may not work perfectly with every shell/prompt or when output is fragmented."
+                ),
+            )
+            note_row.add_css_class("dim-label")
+            cat_group.add(note_row)
+
         # Enable cat colorization toggle (first item)
         self._cat_colorization_toggle = Adw.SwitchRow(
             title=_('Enable "cat" Colorization'),
@@ -2155,6 +2167,18 @@ class HighlightDialog(Adw.PreferencesWindow):
 
         settings = get_settings_manager()
 
+        # Experimental notice (keep at the top of the group)
+        if pygments_available:
+            note_row = Adw.ActionRow(
+                title=_("⚠️ Experimental Feature"),
+                subtitle=_(
+                    "This feature applies highlighting to echoed shell input. "
+                    "It may not work perfectly with all prompts or shells."
+                ),
+            )
+            note_row.add_css_class("dim-label")
+            shell_input_group.add(note_row)
+
         # Enable shell input highlighting toggle
         self._shell_input_toggle = Adw.SwitchRow(
             title=_("Enable Shell Input Highlighting"),
@@ -2367,17 +2391,7 @@ class HighlightDialog(Adw.PreferencesWindow):
             self._dark_theme_row = None
             self._light_theme_row = None
 
-        # Add a note about experimental feature
-        if pygments_available:
-            note_row = Adw.ActionRow(
-                title=_("⚠️ Experimental Feature"),
-                subtitle=_(
-                    "This feature applies highlighting to echoed shell input. "
-                    "It may not work perfectly with all prompts or shells."
-                ),
-            )
-            note_row.add_css_class("dim-label")
-            shell_input_group.add(note_row)
+        # (Experimental notice is intentionally placed at the top of the group.)
 
     def _on_shell_input_highlighting_toggled(
         self, switch: Adw.SwitchRow, _pspec

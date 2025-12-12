@@ -70,7 +70,7 @@ ANSI_MODIFIERS = {
 }
 
 
-@dataclass
+@dataclass(slots=True)
 class HighlightRule:
     """
     Represents a single syntax highlighting rule with multi-group support.
@@ -165,7 +165,7 @@ class HighlightRule:
             return False
 
 
-@dataclass
+@dataclass(slots=True)
 class HighlightContext:
     """
     Represents a command-specific highlighting context.
@@ -215,12 +215,12 @@ class HighlightContext:
         )
 
 
-@dataclass
+@dataclass(slots=True)
 class HighlightConfig:
     """Configuration for the highlighting system."""
 
-    enabled_for_local: bool = True
-    enabled_for_ssh: bool = True
+    enabled_for_local: bool = False
+    enabled_for_ssh: bool = False
     context_aware_enabled: bool = True
     global_rules: List[HighlightRule] = field(default_factory=list)
     contexts: Dict[str, HighlightContext] = field(default_factory=dict)
@@ -249,8 +249,8 @@ class HighlightConfig:
             for name, ctx_data in data.get("contexts", {}).items()
         }
         return cls(
-            enabled_for_local=data.get("enabled_for_local", True),
-            enabled_for_ssh=data.get("enabled_for_ssh", True),
+            enabled_for_local=data.get("enabled_for_local", False),
+            enabled_for_ssh=data.get("enabled_for_ssh", False),
             context_aware_enabled=data.get("context_aware_enabled", True),
             global_rules=rules,
             contexts=contexts,
@@ -387,8 +387,8 @@ class HighlightManager(GObject.GObject):
             if self._user_config_file.exists():
                 with open(self._user_config_file, "r", encoding="utf-8") as f:
                     data = json.load(f)
-                self._config.enabled_for_local = data.get("enabled_for_local", True)
-                self._config.enabled_for_ssh = data.get("enabled_for_ssh", True)
+                self._config.enabled_for_local = data.get("enabled_for_local", False)
+                self._config.enabled_for_ssh = data.get("enabled_for_ssh", False)
                 self._config.context_aware_enabled = data.get("context_aware_enabled", True)
                 # Store disabled global rule names for later application
                 self._disabled_global_rules = set(data.get("disabled_global_rules", []))
@@ -464,8 +464,8 @@ class HighlightManager(GObject.GObject):
     def _create_default_config(self) -> None:
         """Create minimal default configuration if all loading fails."""
         self._config = HighlightConfig(
-            enabled_for_local=True,
-            enabled_for_ssh=True,
+            enabled_for_local=False,
+            enabled_for_ssh=False,
             context_aware_enabled=True,
             global_rules=[],
             contexts={},
@@ -631,6 +631,7 @@ class HighlightManager(GObject.GObject):
     def get_current_theme_palette(self) -> Dict[str, str]:
         """Get the current theme's color palette."""
         if not self._settings_manager:
+            self._current_theme_name = "default"
             return self._get_default_palette()
 
         try:
@@ -642,6 +643,9 @@ class HighlightManager(GObject.GObject):
                 scheme_name = scheme_order[scheme_index]
             else:
                 scheme_name = "dracula"
+
+            # Update current theme name for cache invalidation
+            self._current_theme_name = scheme_name
 
             schemes = ColorSchemes.get_schemes()
             if scheme_name in schemes:
@@ -655,6 +659,7 @@ class HighlightManager(GObject.GObject):
         except Exception as e:
             self.logger.warning(f"Failed to get theme palette: {e}")
 
+        self._current_theme_name = "default"
         return self._get_default_palette()
 
     def _get_default_palette(self) -> Dict[str, str]:
@@ -684,9 +689,9 @@ class HighlightManager(GObject.GObject):
         if not color_name:
             return "#ffffff"
 
-        # Check cache
+        # Check cache using theme name (fast lookup)
         palette = self.get_current_theme_palette()
-        cache_key = str(palette.get("palette", []))[:50]  # Simple cache key
+        cache_key = self._current_theme_name or "default"
 
         if cache_key not in self._color_cache:
             self._color_cache[cache_key] = {}

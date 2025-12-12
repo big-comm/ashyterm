@@ -10,7 +10,7 @@ from typing import Dict, Iterable, List, Optional, Set
 from .logger import get_logger
 
 
-@dataclass
+@dataclass(slots=True)
 class SSHConfigHost:
     """Lightweight representation of a host entry inside ssh_config."""
 

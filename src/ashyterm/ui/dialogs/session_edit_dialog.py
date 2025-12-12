@@ -69,6 +69,7 @@ class SessionEditDialog(BaseDialog):
         # Local terminal options
         self.local_terminal_group: Optional[Adw.PreferencesGroup] = None
         self.startup_commands_group: Optional[Adw.PreferencesGroup] = None
+        self._updating_highlighting_ui = False
         self._setup_ui()
         self.connect("map", self._on_map)
         self.logger.info(
@@ -125,6 +126,7 @@ class SessionEditDialog(BaseDialog):
             self._create_name_section(prefs_page)
             if self.folder_store:
                 self._create_folder_section(prefs_page)
+            self._create_highlighting_section(prefs_page)
             self._create_local_terminal_section(prefs_page)
             self._create_ssh_section(prefs_page)
 
@@ -266,6 +268,186 @@ class SessionEditDialog(BaseDialog):
 
         folder_group.add(folder_row)
         parent.add(folder_group)
+
+    # ---------------------------------------------------------------------
+    # Highlighting overrides
+    # ---------------------------------------------------------------------
+
+    @staticmethod
+    def _tri_state_to_selected(value: Optional[bool]) -> int:
+        """Map tri-state (None/True/False) to ComboRow selection index."""
+        if value is None:
+            return 0
+        return 1 if value else 2
+
+    @staticmethod
+    def _selected_to_tri_state(selected: int) -> Optional[bool]:
+        """Map ComboRow selection index to tri-state (None/True/False)."""
+        if selected == 0:
+            return None
+        if selected == 1:
+            return True
+        return False
+
+    def _create_tristate_combo_row(
+        self,
+        *,
+        title: str,
+        subtitle: str,
+        initial_value: Optional[bool],
+        on_changed,
+    ) -> Adw.ComboRow:
+        row = Adw.ComboRow(title=title, subtitle=subtitle)
+        row.set_model(Gtk.StringList.new([_("Automatic"), _("Enabled"), _("Disabled")]))
+        row.set_selected(self._tri_state_to_selected(initial_value))
+        row.connect("notify::selected", on_changed)
+        return row
+
+    def _on_highlighting_override_changed(self, *_args) -> None:
+        if self._updating_highlighting_ui:
+            return
+
+        self._mark_changed()
+
+        # Keep the in-memory editing_session synced so other parts of the dialog
+        # (and future logic) can rely on the values.
+        try:
+            # If the user isn't customizing, treat everything as Automatic.
+            if not self.highlighting_customize_switch.get_active():
+                self.editing_session.output_highlighting = None
+                self.editing_session.command_specific_highlighting = None
+                self.editing_session.cat_colorization = None
+                self.editing_session.shell_input_highlighting = None
+                return
+
+            self.editing_session.output_highlighting = self._selected_to_tri_state(
+                self.output_highlighting_row.get_selected()
+            )
+            self.editing_session.command_specific_highlighting = (
+                self._selected_to_tri_state(
+                    self.command_specific_highlighting_row.get_selected()
+                )
+            )
+            self.editing_session.cat_colorization = self._selected_to_tri_state(
+                self.cat_colorization_row.get_selected()
+            )
+            self.editing_session.shell_input_highlighting = self._selected_to_tri_state(
+                self.shell_input_highlighting_row.get_selected()
+            )
+        except Exception:
+            # Keep the dialog responsive even if validation raises.
+            pass
+
+    def _set_highlighting_overrides_visible(self, visible: bool) -> None:
+        for row in (
+            self.output_highlighting_row,
+            self.command_specific_highlighting_row,
+            self.cat_colorization_row,
+            self.shell_input_highlighting_row,
+        ):
+            row.set_visible(visible)
+            row.set_sensitive(visible)
+
+    def _on_highlighting_customize_switch_changed(self, *_args) -> None:
+        if self._updating_highlighting_ui:
+            return
+
+        self._mark_changed()
+        active = self.highlighting_customize_switch.get_active()
+
+        self._updating_highlighting_ui = True
+        try:
+            if not active:
+                # Equivalent to "Automatic" for all overrides.
+                self.output_highlighting_row.set_selected(0)
+                self.command_specific_highlighting_row.set_selected(0)
+                self.cat_colorization_row.set_selected(0)
+                self.shell_input_highlighting_row.set_selected(0)
+
+            self._set_highlighting_overrides_visible(active)
+        finally:
+            self._updating_highlighting_ui = False
+
+        # Sync editing_session state.
+        self._on_highlighting_override_changed()
+
+    def _create_highlighting_section(self, parent: Adw.PreferencesPage) -> None:
+        group = Adw.PreferencesGroup(
+            title=_("Highlighting"),
+            description=_(
+                "Highlighting adds colors to make terminal text easier to read. You can override global preferences per session."
+            ),
+        )
+
+        warning_row = Adw.ActionRow(
+            title=_("Experimental Feature"),
+            subtitle=_(
+                "Per-session highlighting overrides are experimental and may change."
+            ),
+        )
+        warning_row.add_prefix(Gtk.Image.new_from_icon_name("dialog-warning-symbolic"))
+        group.add(warning_row)
+
+        has_custom_overrides = any(
+            getattr(self.editing_session, key, None) is not None
+            for key in (
+                "output_highlighting",
+                "command_specific_highlighting",
+                "cat_colorization",
+                "shell_input_highlighting",
+            )
+        )
+
+        self.highlighting_customize_switch = Adw.SwitchRow(
+            title=_("Customize highlighting for this session"),
+            subtitle=_("When off, this session uses the global highlighting settings"),
+        )
+        self.highlighting_customize_switch.set_active(has_custom_overrides)
+        self.highlighting_customize_switch.connect(
+            "notify::active", self._on_highlighting_customize_switch_changed
+        )
+        group.add(self.highlighting_customize_switch)
+
+        self.output_highlighting_row = self._create_tristate_combo_row(
+            title=_("Output Highlighting"),
+            subtitle=_("Enable/disable output highlighting for this session"),
+            initial_value=getattr(self.editing_session, "output_highlighting", None),
+            on_changed=self._on_highlighting_override_changed,
+        )
+        group.add(self.output_highlighting_row)
+
+        self.command_specific_highlighting_row = self._create_tristate_combo_row(
+            title=_("Command-Specific Highlighting"),
+            subtitle=_("Use context-aware rules for specific commands"),
+            initial_value=getattr(
+                self.editing_session, "command_specific_highlighting", None
+            ),
+            on_changed=self._on_highlighting_override_changed,
+        )
+        group.add(self.command_specific_highlighting_row)
+
+        self.cat_colorization_row = self._create_tristate_combo_row(
+            title=_("Cat Colorization"),
+            subtitle=_("Colorize 'cat' output using syntax highlighting"),
+            initial_value=getattr(self.editing_session, "cat_colorization", None),
+            on_changed=self._on_highlighting_override_changed,
+        )
+        group.add(self.cat_colorization_row)
+
+        self.shell_input_highlighting_row = self._create_tristate_combo_row(
+            title=_("Shell Input Highlighting"),
+            subtitle=_("Highlight commands as you type at the shell prompt"),
+            initial_value=getattr(
+                self.editing_session, "shell_input_highlighting", None
+            ),
+            on_changed=self._on_highlighting_override_changed,
+        )
+        group.add(self.shell_input_highlighting_row)
+
+        # Only show the per-setting overrides when customization is enabled.
+        self._set_highlighting_overrides_visible(has_custom_overrides)
+
+        parent.add(group)
 
     def _create_local_terminal_section(self, parent: Adw.PreferencesPage) -> None:
         """Create the Local Terminal configuration section."""
@@ -1330,6 +1512,31 @@ class SessionEditDialog(BaseDialog):
             "name": self.name_row.get_text().strip(),
             "session_type": "local" if self.type_combo.get_selected() == 0 else "ssh",
         })
+
+        # Per-session highlighting overrides (tri-state)
+        if hasattr(self, "highlighting_customize_switch") and not self.highlighting_customize_switch.get_active():
+            # Customization is off => equivalent to "Automatic" for all.
+            session_data["output_highlighting"] = None
+            session_data["command_specific_highlighting"] = None
+            session_data["cat_colorization"] = None
+            session_data["shell_input_highlighting"] = None
+        else:
+            if hasattr(self, "output_highlighting_row"):
+                session_data["output_highlighting"] = self._selected_to_tri_state(
+                    self.output_highlighting_row.get_selected()
+                )
+            if hasattr(self, "command_specific_highlighting_row"):
+                session_data["command_specific_highlighting"] = self._selected_to_tri_state(
+                    self.command_specific_highlighting_row.get_selected()
+                )
+            if hasattr(self, "cat_colorization_row"):
+                session_data["cat_colorization"] = self._selected_to_tri_state(
+                    self.cat_colorization_row.get_selected()
+                )
+            if hasattr(self, "shell_input_highlighting_row"):
+                session_data["shell_input_highlighting"] = self._selected_to_tri_state(
+                    self.shell_input_highlighting_row.get_selected()
+                )
 
         rgba = self.color_button.get_rgba()
         if rgba.alpha > 0:  # Check if a color is set

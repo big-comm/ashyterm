@@ -20,7 +20,7 @@ from ...utils.translation_utils import _
 from ...utils.tooltip_helper import get_tooltip_helper
 
 
-@dataclass
+@dataclass(slots=True)
 class FieldConfig:
     """Configuration for a form field widget."""
     field_type: str

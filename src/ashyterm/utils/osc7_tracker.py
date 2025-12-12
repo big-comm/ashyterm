@@ -2,6 +2,7 @@
 
 import threading
 from typing import Any, Callable, Dict, Optional
+from urllib.parse import unquote, urlparse
 from weakref import WeakKeyDictionary
 
 import gi
@@ -57,8 +58,6 @@ class OSC7TerminalTracker:
     ) -> None:
         """Handle directory change detected from VTE's current directory URI."""
         try:
-            from urllib.parse import unquote, urlparse
-
             parsed_uri = urlparse(directory_uri)
             if parsed_uri.scheme != "file":
                 return

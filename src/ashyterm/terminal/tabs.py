@@ -24,6 +24,9 @@ from .manager import TerminalManager
 if TYPE_CHECKING:
     from ..filemanager.manager import FileManager
 
+# Pre-compiled pattern for parsing RGBA color strings
+_RGBA_COLOR_PATTERN = re.compile(r"rgba?\((\d+),\s*(\d+),\s*(\d+),?.*\)")
+
 # CSS for tab moving visual feedback is now loaded from:
 # data/styles/components.css (loaded by window_ui.py at startup)
 # Classes: .tab-moving, .tab-bar-move-mode, .tab-drop-target, .tab-drop-left, .tab-drop-right
@@ -543,7 +546,7 @@ class TabManager:
             return "#000000"  # Default to black
 
         try:
-            match = re.match(r"rgba?\((\d+),\s*(\d+),\s*(\d+),?.*\)", bg_color_str)
+            match = _RGBA_COLOR_PATTERN.match(bg_color_str)
             if not match:
                 return "#000000"
 
@@ -1384,8 +1387,12 @@ class TabManager:
                 survivor_terminal.grab_focus()
             return False
 
-        GLib.idle_add(_restore_focus)
-        GLib.idle_add(self.update_all_tab_titles)
+        def _restore_focus_and_update_titles():
+            _restore_focus()
+            self.update_all_tab_titles()
+            return False
+
+        GLib.idle_add(_restore_focus_and_update_titles)
 
     def close_pane(self, terminal: Vte.Terminal) -> None:
         """Close a single pane within a tab."""

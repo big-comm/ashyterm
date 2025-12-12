@@ -29,7 +29,7 @@ from .config import (
 )
 
 
-@dataclass
+@dataclass(slots=True)
 class SettingsMetadata:
     """Metadata for settings file."""
 
@@ -157,6 +157,10 @@ class SettingsManager:
                 self._validate_and_repair()
                 self._merge_with_defaults()
                 self._apply_log_settings()
+                # If we loaded a legacy settings file or performed repairs/default merges,
+                # persist the canonical wrapper format proactively.
+                if self._dirty:
+                    self.save_settings()
         except Exception as e:
             self.logger.error(f"Settings initialization failed: {e}")
             self._settings = self._defaults.copy()
@@ -213,18 +217,36 @@ class SettingsManager:
             validate_file_path(str(self.settings_file))
             with open(self.settings_file, "r", encoding="utf-8") as f:
                 data = json.load(f)
+
+            if not isinstance(data, dict):
+                raise ValueError("Settings file must contain a JSON object at the root")
+
             if "settings" in data and "metadata" in data:
-                settings = data["settings"]
-                self._metadata = SettingsMetadata(**data["metadata"])
-                if self._metadata.checksum:
-                    self._verify_settings_integrity(settings)
+                settings = data.get("settings", {})
+                metadata = data.get("metadata", {})
+                if isinstance(metadata, dict):
+                    self._metadata = SettingsMetadata(**metadata)
+                    if self._metadata.checksum and isinstance(settings, dict):
+                        self._verify_settings_integrity(settings)
+                else:
+                    self._metadata = None
             else:
                 settings = data
                 self._metadata = None
                 self.logger.info("Loaded legacy settings format")
+                # Stage 1 migration: legacy format is supported for reading,
+                # but we should write back the canonical wrapper format.
+                self._dirty = True
+
+            if not isinstance(settings, dict):
+                raise ValueError("Settings file has invalid structure")
+
             return settings
         except json.JSONDecodeError as e:
             self.logger.error(f"Settings file is corrupted: {e}")
+            return self._defaults.copy()
+        except ValueError as e:
+            self.logger.error(f"Settings file has invalid structure: {e}")
             return self._defaults.copy()
         except Exception as e:
             self.logger.error(f"Failed to load settings: {e}")
