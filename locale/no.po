@@ -3275,6 +3275,20 @@ msgstr "Syntaxutheving for \"cat\" kommando utdata (ved bruk av Pygments)"
 msgid "Pygments is not installed - \"cat\" output will not be colorized"
 msgstr "Pygments er ikke installert - \"cat\" utdata vil ikke bli farget"
 # 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1680
+#: NEEDS WORK
+msgid "⚠️ Experimental Feature"
+msgstr "⚠️ Eksperimentell funksjon"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1935
+#: NEEDS WORK
+msgid ""
+"This feature colorizes output for the 'cat' command. It may not work perfectly with every "
+"shell/prompt or when output is fragmented."
+msgstr ""
+"Denne funksjonen fargelegger utdata for 'cat'-kommandoen. Den fungerer kanskje ikke perfekt med "
+"hver shell/prompt eller når utdata er fragmentert."
+# 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1580
 #: NEEDS WORK
 msgid "Enable \"cat\" Colorization"
@@ -3371,6 +3385,15 @@ msgstr "Sanntidssyntaksutheving mens du skriver kommandoer (eksperimentell)"
 msgid "Pygments is not installed - shell input highlighting unavailable"
 msgstr "Pygments er ikke installert - utheving av skallinnhold er utilgjengelig"
 # 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1748
+#: NEEDS WORK
+msgid ""
+"This feature applies highlighting to echoed shell input. It may not work perfectly with all prompts "
+"or shells."
+msgstr ""
+"Denne funksjonen bruker utheving på ekkoet av skallinnputt. Den fungerer kanskje ikke perfekt med "
+"alle ledetekster eller skall."
+# 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1663
 #: NEEDS WORK
 msgid "Enable Shell Input Highlighting"
@@ -3389,20 +3412,6 @@ msgstr ""
 #: NEEDS WORK
 msgid "Auto detects background, Manual uses selected theme"
 msgstr "Automatisk oppdager bakgrunn, Manuell bruker valgt tema"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1680
-#: NEEDS WORK
-msgid "⚠️ Experimental Feature"
-msgstr "⚠️ Eksperimentell funksjon"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1748
-#: NEEDS WORK
-msgid ""
-"This feature applies highlighting to echoed shell input. It may not work perfectly with all prompts "
-"or shells."
-msgstr ""
-"Denne funksjonen bruker utheving på ekkoet av skallinnputt. Den fungerer kanskje ikke perfekt med "
-"alle ledetekster eller skall."
 # 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1179
 #: NEEDS WORK
@@ -3998,6 +4007,76 @@ msgstr "Velg en mappe for å organisere denne økten"
 #: NEEDS WORK
 msgid "Root"
 msgstr "Rot"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1182
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1197
+#: NEEDS WORK
+msgid "Automatic"
+msgstr "Automatisk"
+# 
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 376
+#: NEEDS WORK
+msgid "Highlighting"
+msgstr "Utheving"
+# 
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 378
+#: NEEDS WORK
+msgid ""
+"Highlighting adds colors to make terminal text easier to read. You can override global preferences "
+"per session."
+msgstr ""
+"Utheving legger til farger for å gjøre terminaltekst lettere å lese. Du kan overstyre globale "
+"innstillinger per økt."
+# 
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 383
+#: NEEDS WORK
+msgid "Experimental Feature"
+msgstr "Eksperimentell funksjon"
+# 
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 385
+#: NEEDS WORK
+msgid "Per-session highlighting overrides are experimental and may change."
+msgstr "Per-økt uthevingsoverstyringer er eksperimentelle og kan endre seg."
+# 
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 402
+#: NEEDS WORK
+msgid "Customize highlighting for this session"
+msgstr "Tilpass utheving for denne økten"
+# 
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 403
+#: NEEDS WORK
+msgid "When off, this session uses the global highlighting settings"
+msgstr "Når av, bruker denne økten de globale uthevingsinnstillingene"
+# 
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 413
+#: NEEDS WORK
+msgid "Enable/disable output highlighting for this session"
+msgstr "Aktiver/deaktiver utdatautheving for denne økten"
+# 
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 420
+#: NEEDS WORK
+msgid "Command-Specific Highlighting"
+msgstr "Kommando-spesifikk utheving"
+# 
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 421
+#: NEEDS WORK
+msgid "Use context-aware rules for specific commands"
+msgstr "Bruk kontekstbevisste regler for spesifikke kommandoer"
+# 
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 430
+#: NEEDS WORK
+msgid "Cat Colorization"
+msgstr "Katt Fargelegging"
+# 
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 431
+#: NEEDS WORK
+msgid "Colorize 'cat' output using syntax highlighting"
+msgstr "Fargelegg 'cat'-utdata ved hjelp av syntaksutheving"
+# 
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 439
+#: NEEDS WORK
+msgid "Highlight commands as you type at the shell prompt"
+msgstr "Uthev kommandoer mens du skriver i kommandolinjen"
 # 
 # File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 237
 #: NEEDS WORK
@@ -5556,12 +5635,6 @@ msgstr "Vis visning av SIXEL-bilder (eksperimentell)"
 #: NEEDS WORK
 msgid "Backspace Key"
 msgstr "Tilbake-tast"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1182
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1197
-#: NEEDS WORK
-msgid "Automatic"
-msgstr "Automatisk"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1183
 #: NEEDS WORK

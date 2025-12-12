@@ -3280,6 +3280,20 @@ msgstr "Resaltado de sintaxis para la salida del comando \"cat\" (usando Pygment
 msgid "Pygments is not installed - \"cat\" output will not be colorized"
 msgstr "Pygments no está instalado - la salida de \"cat\" no se coloreará"
 # 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1680
+#: NEEDS WORK
+msgid "⚠️ Experimental Feature"
+msgstr "⚠️ Función Experimental"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1935
+#: NEEDS WORK
+msgid ""
+"This feature colorizes output for the 'cat' command. It may not work perfectly with every "
+"shell/prompt or when output is fragmented."
+msgstr ""
+"Esta función colorea la salida del comando 'cat'. Puede que no funcione perfectamente con todos los "
+"shells/prompts o cuando la salida está fragmentada."
+# 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1580
 #: NEEDS WORK
 msgid "Enable \"cat\" Colorization"
@@ -3376,6 +3390,15 @@ msgstr "Resaltado de sintaxis en vivo mientras escribes comandos (experimental)"
 msgid "Pygments is not installed - shell input highlighting unavailable"
 msgstr "Pygments no está instalado - resaltado de entrada de shell no disponible"
 # 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1748
+#: NEEDS WORK
+msgid ""
+"This feature applies highlighting to echoed shell input. It may not work perfectly with all prompts "
+"or shells."
+msgstr ""
+"Esta función aplica resaltado a la entrada de shell eco. Puede que no funcione perfectamente con "
+"todos los mensajes o shells."
+# 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1663
 #: NEEDS WORK
 msgid "Enable Shell Input Highlighting"
@@ -3394,20 +3417,6 @@ msgstr ""
 #: NEEDS WORK
 msgid "Auto detects background, Manual uses selected theme"
 msgstr "Detecta automáticamente el fondo, Manual utiliza el tema seleccionado"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1680
-#: NEEDS WORK
-msgid "⚠️ Experimental Feature"
-msgstr "⚠️ Función Experimental"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1748
-#: NEEDS WORK
-msgid ""
-"This feature applies highlighting to echoed shell input. It may not work perfectly with all prompts "
-"or shells."
-msgstr ""
-"Esta función aplica resaltado a la entrada de shell eco. Puede que no funcione perfectamente con "
-"todos los mensajes o shells."
 # 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1179
 #: NEEDS WORK
@@ -4007,6 +4016,76 @@ msgstr "Selecciona una carpeta para organizar esta sesión"
 #: NEEDS WORK
 msgid "Root"
 msgstr "Raíz"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1182
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1197
+#: NEEDS WORK
+msgid "Automatic"
+msgstr "Automático"
+# 
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 376
+#: NEEDS WORK
+msgid "Highlighting"
+msgstr "Resaltado"
+# 
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 378
+#: NEEDS WORK
+msgid ""
+"Highlighting adds colors to make terminal text easier to read. You can override global preferences "
+"per session."
+msgstr ""
+"El resaltado añade colores para facilitar la lectura del texto en la terminal. Puedes anular las "
+"preferencias globales por sesión."
+# 
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 383
+#: NEEDS WORK
+msgid "Experimental Feature"
+msgstr "Función Experimental"
+# 
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 385
+#: NEEDS WORK
+msgid "Per-session highlighting overrides are experimental and may change."
+msgstr "Las sobreescrituras de resaltado por sesión son experimentales y pueden cambiar."
+# 
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 402
+#: NEEDS WORK
+msgid "Customize highlighting for this session"
+msgstr "Personalizar el resaltado para esta sesión"
+# 
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 403
+#: NEEDS WORK
+msgid "When off, this session uses the global highlighting settings"
+msgstr "Cuando está desactivado, esta sesión utiliza la configuración global de resaltado."
+# 
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 413
+#: NEEDS WORK
+msgid "Enable/disable output highlighting for this session"
+msgstr "Habilitar/deshabilitar el resaltado de salida para esta sesión"
+# 
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 420
+#: NEEDS WORK
+msgid "Command-Specific Highlighting"
+msgstr "Resaltado Específico de Comando"
+# 
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 421
+#: NEEDS WORK
+msgid "Use context-aware rules for specific commands"
+msgstr "Utiliza reglas contextuales para comandos específicos"
+# 
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 430
+#: NEEDS WORK
+msgid "Cat Colorization"
+msgstr "Colorización de Gatos"
+# 
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 431
+#: NEEDS WORK
+msgid "Colorize 'cat' output using syntax highlighting"
+msgstr "Colorea la salida de 'cat' utilizando resaltado de sintaxis"
+# 
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 439
+#: NEEDS WORK
+msgid "Highlight commands as you type at the shell prompt"
+msgstr "Resaltar comandos a medida que los escribes en el símbolo del sistema"
 # 
 # File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 237
 #: NEEDS WORK
@@ -5567,12 +5646,6 @@ msgstr "Mostrar imágenes SIXEL (experimental)"
 #: NEEDS WORK
 msgid "Backspace Key"
 msgstr "Tecla Retroceso"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1182
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1197
-#: NEEDS WORK
-msgid "Automatic"
-msgstr "Automático"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1183
 #: NEEDS WORK

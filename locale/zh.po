@@ -3264,6 +3264,18 @@ msgstr "“cat”命令输出的语法高亮（使用Pygments）"
 msgid "Pygments is not installed - \"cat\" output will not be colorized"
 msgstr "未安装 Pygments - \"cat\" 输出将不会被着色"
 # 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1680
+#: NEEDS WORK
+msgid "⚠️ Experimental Feature"
+msgstr "⚠️ 实验性功能"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1935
+#: NEEDS WORK
+msgid ""
+"This feature colorizes output for the 'cat' command. It may not work perfectly with every "
+"shell/prompt or when output is fragmented."
+msgstr "此功能为'cat'命令的输出着色。它可能在每个shell/提示符或输出碎片化时无法完美工作。"
+# 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1580
 #: NEEDS WORK
 msgid "Enable \"cat\" Colorization"
@@ -3360,6 +3372,13 @@ msgstr "实时语法高亮显示，输入命令时（实验性）"
 msgid "Pygments is not installed - shell input highlighting unavailable"
 msgstr "Pygments未安装 - shell输入高亮不可用"
 # 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1748
+#: NEEDS WORK
+msgid ""
+"This feature applies highlighting to echoed shell input. It may not work perfectly with all prompts "
+"or shells."
+msgstr "此功能对回显的 shell 输入应用高亮显示。它可能无法在所有提示或 shell 中完美工作。"
+# 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1663
 #: NEEDS WORK
 msgid "Enable Shell Input Highlighting"
@@ -3376,18 +3395,6 @@ msgstr "在输入时为 shell 命令着色。对于无法更改 shell 配置的 
 #: NEEDS WORK
 msgid "Auto detects background, Manual uses selected theme"
 msgstr "自动检测背景，手动使用选定主题"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1680
-#: NEEDS WORK
-msgid "⚠️ Experimental Feature"
-msgstr "⚠️ 实验性功能"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1748
-#: NEEDS WORK
-msgid ""
-"This feature applies highlighting to echoed shell input. It may not work perfectly with all prompts "
-"or shells."
-msgstr "此功能对回显的 shell 输入应用高亮显示。它可能无法在所有提示或 shell 中完美工作。"
 # 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1179
 #: NEEDS WORK
@@ -3977,6 +3984,74 @@ msgstr "选择一个文件夹以组织此会话"
 #: NEEDS WORK
 msgid "Root"
 msgstr "根"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1182
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1197
+#: NEEDS WORK
+msgid "Automatic"
+msgstr "自动"
+# 
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 376
+#: NEEDS WORK
+msgid "Highlighting"
+msgstr "高亮显示"
+# 
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 378
+#: NEEDS WORK
+msgid ""
+"Highlighting adds colors to make terminal text easier to read. You can override global preferences "
+"per session."
+msgstr "高亮显示为终端文本添加颜色，以便更容易阅读。您可以在每个会话中覆盖全局偏好设置。"
+# 
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 383
+#: NEEDS WORK
+msgid "Experimental Feature"
+msgstr "实验特性"
+# 
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 385
+#: NEEDS WORK
+msgid "Per-session highlighting overrides are experimental and may change."
+msgstr "每个会话的高亮覆盖是实验性的，可能会发生变化。"
+# 
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 402
+#: NEEDS WORK
+msgid "Customize highlighting for this session"
+msgstr "自定义此会话的高亮显示"
+# 
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 403
+#: NEEDS WORK
+msgid "When off, this session uses the global highlighting settings"
+msgstr "关闭时，此会话使用全局高亮设置"
+# 
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 413
+#: NEEDS WORK
+msgid "Enable/disable output highlighting for this session"
+msgstr "启用/禁用此会话的输出高亮显示"
+# 
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 420
+#: NEEDS WORK
+msgid "Command-Specific Highlighting"
+msgstr "命令特定高亮显示"
+# 
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 421
+#: NEEDS WORK
+msgid "Use context-aware rules for specific commands"
+msgstr "使用上下文感知规则处理特定命令"
+# 
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 430
+#: NEEDS WORK
+msgid "Cat Colorization"
+msgstr "猫着色"
+# 
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 431
+#: NEEDS WORK
+msgid "Colorize 'cat' output using syntax highlighting"
+msgstr "使用语法高亮为'cat'输出着色"
+# 
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 439
+#: NEEDS WORK
+msgid "Highlight commands as you type at the shell prompt"
+msgstr "在命令行提示符下输入时高亮显示命令"
 # 
 # File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 237
 #: NEEDS WORK
@@ -5531,12 +5606,6 @@ msgstr "显示SIXEL图像（实验性）"
 #: NEEDS WORK
 msgid "Backspace Key"
 msgstr "退格键"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1182
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1197
-#: NEEDS WORK
-msgid "Automatic"
-msgstr "自动"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1183
 #: NEEDS WORK

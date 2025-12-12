@@ -3271,6 +3271,20 @@ msgstr "הדגשת תחביר לפלט הפקודה \"cat\" (באמצעות Pygm
 msgid "Pygments is not installed - \"cat\" output will not be colorized"
 msgstr "פיגמנטס לא מותקן - פלט \"cat\" לא יהיה ממוסגר בצבע"
 # 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1680
+#: NEEDS WORK
+msgid "⚠️ Experimental Feature"
+msgstr "⚠️ תכונה ניסיונית"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1935
+#: NEEDS WORK
+msgid ""
+"This feature colorizes output for the 'cat' command. It may not work perfectly with every "
+"shell/prompt or when output is fragmented."
+msgstr ""
+"תכונה זו צבעונית את הפלט עבור הפקודה 'cat'. ייתכן שהיא לא תעבוד בצורה מושלמת עם כל ש shell/שורת "
+"פקודה או כאשר הפלט מפוצל."
+# 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1580
 #: NEEDS WORK
 msgid "Enable \"cat\" Colorization"
@@ -3367,6 +3381,15 @@ msgstr "הדגשת תחביר חיה בזמן הקלדת פקודות (ניסי)
 msgid "Pygments is not installed - shell input highlighting unavailable"
 msgstr "פיגמנטס לא מותקן - הדגשת קלט של שורת פקודה אינה זמינה"
 # 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1748
+#: NEEDS WORK
+msgid ""
+"This feature applies highlighting to echoed shell input. It may not work perfectly with all prompts "
+"or shells."
+msgstr ""
+"תכונה זו חלה על הדגשה של קלט שורת פקודה שהודפס. ייתכן שהיא לא תעבוד בצורה מושלמת עם כל ההנחיות או "
+"השורות."
+# 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1663
 #: NEEDS WORK
 msgid "Enable Shell Input Highlighting"
@@ -3385,20 +3408,6 @@ msgstr ""
 #: NEEDS WORK
 msgid "Auto detects background, Manual uses selected theme"
 msgstr "מזהה אוטומטית רקע, ידני משתמש בנושא שנבחר"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1680
-#: NEEDS WORK
-msgid "⚠️ Experimental Feature"
-msgstr "⚠️ תכונה ניסיונית"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1748
-#: NEEDS WORK
-msgid ""
-"This feature applies highlighting to echoed shell input. It may not work perfectly with all prompts "
-"or shells."
-msgstr ""
-"תכונה זו חלה על הדגשה של קלט שורת פקודה שהודפס. ייתכן שהיא לא תעבוד בצורה מושלמת עם כל ההנחיות או "
-"השורות."
 # 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1179
 #: NEEDS WORK
@@ -3990,6 +3999,74 @@ msgstr "בחר תיקיה כדי לארגן את המפגש הזה"
 #: NEEDS WORK
 msgid "Root"
 msgstr "שורש"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1182
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1197
+#: NEEDS WORK
+msgid "Automatic"
+msgstr "אוטומטי"
+# 
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 376
+#: NEEDS WORK
+msgid "Highlighting"
+msgstr "הדגשה"
+# 
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 378
+#: NEEDS WORK
+msgid ""
+"Highlighting adds colors to make terminal text easier to read. You can override global preferences "
+"per session."
+msgstr "הדגשה מוסיפה צבעים כדי להקל על קריאת טקסט במסוף. אתה יכול לדרוס העדפות גלובליות לכל מושב."
+# 
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 383
+#: NEEDS WORK
+msgid "Experimental Feature"
+msgstr "תכונה ניסיונית"
+# 
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 385
+#: NEEDS WORK
+msgid "Per-session highlighting overrides are experimental and may change."
+msgstr "הגדרות הדגשה לפי מושב הן ניסיוניות ועשויות להשתנות."
+# 
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 402
+#: NEEDS WORK
+msgid "Customize highlighting for this session"
+msgstr "התאם אישית הדגשה עבור הפגישה הזו"
+# 
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 403
+#: NEEDS WORK
+msgid "When off, this session uses the global highlighting settings"
+msgstr "כאשר כבוי, הפגישה הזו משתמשת בהגדרות ההדגשה הגלובליות."
+# 
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 413
+#: NEEDS WORK
+msgid "Enable/disable output highlighting for this session"
+msgstr "אפשר/לכבות הדגשת פלט עבור מושב זה"
+# 
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 420
+#: NEEDS WORK
+msgid "Command-Specific Highlighting"
+msgstr "הדגשה ספציפית לפקודה"
+# 
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 421
+#: NEEDS WORK
+msgid "Use context-aware rules for specific commands"
+msgstr "השתמש בכללים המודעים להקשר עבור פקודות ספציפיות"
+# 
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 430
+#: NEEDS WORK
+msgid "Cat Colorization"
+msgstr "צבעון חתולים"
+# 
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 431
+#: NEEDS WORK
+msgid "Colorize 'cat' output using syntax highlighting"
+msgstr "צבע את פלט 'cat' באמצעות הדגשת תחביר"
+# 
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 439
+#: NEEDS WORK
+msgid "Highlight commands as you type at the shell prompt"
+msgstr "הדגש פקודות בזמן שאתה מקליד בשורת הפקודה"
 # 
 # File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 237
 #: NEEDS WORK
@@ -5544,12 +5621,6 @@ msgstr "הצג תמונות SIXEL (ניסי)"
 #: NEEDS WORK
 msgid "Backspace Key"
 msgstr "מקש מחיקה"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1182
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1197
-#: NEEDS WORK
-msgid "Automatic"
-msgstr "אוטומטי"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1183
 #: NEEDS WORK

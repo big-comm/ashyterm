@@ -3267,6 +3267,18 @@ msgstr "\"cat\" 명령 출력에 대한 구문 강조(파이그먼트 사용)"
 msgid "Pygments is not installed - \"cat\" output will not be colorized"
 msgstr "Pygments가 설치되어 있지 않습니다 - \"cat\" 출력은 색상이 입혀지지 않습니다"
 # 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1680
+#: NEEDS WORK
+msgid "⚠️ Experimental Feature"
+msgstr "⚠️ 실험적 기능"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1935
+#: NEEDS WORK
+msgid ""
+"This feature colorizes output for the 'cat' command. It may not work perfectly with every "
+"shell/prompt or when output is fragmented."
+msgstr "이 기능은 'cat' 명령의 출력을 색상으로 표시합니다. 모든 셸/프롬프트에서 또는 출력이 조각나 있을 때 완벽하게 작동하지 않을 수 있습니다."
+# 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1580
 #: NEEDS WORK
 msgid "Enable \"cat\" Colorization"
@@ -3363,6 +3375,13 @@ msgstr "명령어를 입력할 때 실시간 구문 강조 표시(실험적)"
 msgid "Pygments is not installed - shell input highlighting unavailable"
 msgstr "Pygments가 설치되어 있지 않습니다 - 셸 입력 하이라이팅을 사용할 수 없습니다"
 # 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1748
+#: NEEDS WORK
+msgid ""
+"This feature applies highlighting to echoed shell input. It may not work perfectly with all prompts "
+"or shells."
+msgstr "이 기능은 에코된 셸 입력에 하이라이트를 적용합니다. 모든 프롬프트나 셸에서 완벽하게 작동하지 않을 수 있습니다."
+# 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1663
 #: NEEDS WORK
 msgid "Enable Shell Input Highlighting"
@@ -3379,18 +3398,6 @@ msgstr "입력하는 대로 셸 명령어에 색상을 입힙니다. 셸 구성�
 #: NEEDS WORK
 msgid "Auto detects background, Manual uses selected theme"
 msgstr "자동 배경 감지, 수동은 선택한 테마 사용"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1680
-#: NEEDS WORK
-msgid "⚠️ Experimental Feature"
-msgstr "⚠️ 실험적 기능"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1748
-#: NEEDS WORK
-msgid ""
-"This feature applies highlighting to echoed shell input. It may not work perfectly with all prompts "
-"or shells."
-msgstr "이 기능은 에코된 셸 입력에 하이라이트를 적용합니다. 모든 프롬프트나 셸에서 완벽하게 작동하지 않을 수 있습니다."
 # 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1179
 #: NEEDS WORK
@@ -3980,6 +3987,74 @@ msgstr "이 세션을 정리할 폴더를 선택하세요."
 #: NEEDS WORK
 msgid "Root"
 msgstr "루트"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1182
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1197
+#: NEEDS WORK
+msgid "Automatic"
+msgstr "자동"
+# 
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 376
+#: NEEDS WORK
+msgid "Highlighting"
+msgstr "하이라이팅"
+# 
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 378
+#: NEEDS WORK
+msgid ""
+"Highlighting adds colors to make terminal text easier to read. You can override global preferences "
+"per session."
+msgstr "하이라이팅은 터미널 텍스트를 더 쉽게 읽을 수 있도록 색상을 추가합니다. 세션별로 전역 기본 설정을 재정의할 수 있습니다."
+# 
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 383
+#: NEEDS WORK
+msgid "Experimental Feature"
+msgstr "실험적 기능"
+# 
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 385
+#: NEEDS WORK
+msgid "Per-session highlighting overrides are experimental and may change."
+msgstr "세션별 하이라이트 오버라이드는 실험적이며 변경될 수 있습니다."
+# 
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 402
+#: NEEDS WORK
+msgid "Customize highlighting for this session"
+msgstr "이 세션에 대한 강조 표시 사용자 정의"
+# 
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 403
+#: NEEDS WORK
+msgid "When off, this session uses the global highlighting settings"
+msgstr "꺼져 있을 때, 이 세션은 전역 강조 설정을 사용합니다."
+# 
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 413
+#: NEEDS WORK
+msgid "Enable/disable output highlighting for this session"
+msgstr "이 세션에 대한 출력 강조 표시 활성화/비활성화"
+# 
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 420
+#: NEEDS WORK
+msgid "Command-Specific Highlighting"
+msgstr "명령어별 강조 표시"
+# 
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 421
+#: NEEDS WORK
+msgid "Use context-aware rules for specific commands"
+msgstr "특정 명령에 대한 상황 인식 규칙 사용"
+# 
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 430
+#: NEEDS WORK
+msgid "Cat Colorization"
+msgstr "고양이 색상화"
+# 
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 431
+#: NEEDS WORK
+msgid "Colorize 'cat' output using syntax highlighting"
+msgstr "'cat' 출력에 구문 강조를 사용하여 색상화"
+# 
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 439
+#: NEEDS WORK
+msgid "Highlight commands as you type at the shell prompt"
+msgstr "쉘 프롬프트에서 입력할 때 명령어 강조 표시"
 # 
 # File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 237
 #: NEEDS WORK
@@ -5534,12 +5609,6 @@ msgstr "SIXEL 이미지 표시 (실험적)"
 #: NEEDS WORK
 msgid "Backspace Key"
 msgstr "백스페이스 키"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1182
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1197
-#: NEEDS WORK
-msgid "Automatic"
-msgstr "자동"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1183
 #: NEEDS WORK

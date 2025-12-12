@@ -3275,6 +3275,20 @@ msgstr "Szintaxis kiemelés a \"cat\" parancs kimenetéhez (Pygments használat�
 msgid "Pygments is not installed - \"cat\" output will not be colorized"
 msgstr "A Pygments nincs telepítve - a \"cat\" kimenet nem lesz színezve"
 # 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1680
+#: NEEDS WORK
+msgid "⚠️ Experimental Feature"
+msgstr "⚠️ Kísérleti funkció"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1935
+#: NEEDS WORK
+msgid ""
+"This feature colorizes output for the 'cat' command. It may not work perfectly with every "
+"shell/prompt or when output is fragmented."
+msgstr ""
+"Ez a funkció színesíti a 'cat' parancs kimenetét. Lehet, hogy nem működik tökéletesen minden "
+"shell/prompt esetén, vagy ha a kimenet töredezett."
+# 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1580
 #: NEEDS WORK
 msgid "Enable \"cat\" Colorization"
@@ -3371,6 +3385,15 @@ msgstr "Élő szintaxis kiemelés, miközben parancsokat írsz (kísérleti)"
 msgid "Pygments is not installed - shell input highlighting unavailable"
 msgstr "A Pygments nincs telepítve - a shell bemeneti kiemelés nem elérhető"
 # 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1748
+#: NEEDS WORK
+msgid ""
+"This feature applies highlighting to echoed shell input. It may not work perfectly with all prompts "
+"or shells."
+msgstr ""
+"Ez a funkció kiemelést alkalmaz az echozott shell bemenetre. Lehet, hogy nem működik tökéletesen "
+"minden prompttal vagy shell-lel."
+# 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1663
 #: NEEDS WORK
 msgid "Enable Shell Input Highlighting"
@@ -3389,20 +3412,6 @@ msgstr ""
 #: NEEDS WORK
 msgid "Auto detects background, Manual uses selected theme"
 msgstr "Automatikusan észleli a háttérképet, Kézi a kiválasztott témát használja"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1680
-#: NEEDS WORK
-msgid "⚠️ Experimental Feature"
-msgstr "⚠️ Kísérleti funkció"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1748
-#: NEEDS WORK
-msgid ""
-"This feature applies highlighting to echoed shell input. It may not work perfectly with all prompts "
-"or shells."
-msgstr ""
-"Ez a funkció kiemelést alkalmaz az echozott shell bemenetre. Lehet, hogy nem működik tökéletesen "
-"minden prompttal vagy shell-lel."
 # 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1179
 #: NEEDS WORK
@@ -4002,6 +4011,76 @@ msgstr "Válasszon ki egy mappát az aktuális munkamenet rendezéséhez"
 #: NEEDS WORK
 msgid "Root"
 msgstr "Gyökér"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1182
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1197
+#: NEEDS WORK
+msgid "Automatic"
+msgstr "Automatikus"
+# 
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 376
+#: NEEDS WORK
+msgid "Highlighting"
+msgstr "Kiemelés"
+# 
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 378
+#: NEEDS WORK
+msgid ""
+"Highlighting adds colors to make terminal text easier to read. You can override global preferences "
+"per session."
+msgstr ""
+"A kiemelés színeket ad a terminál szövegének, hogy könnyebben olvasható legyen. A globális "
+"beállításokat felülbírálhatja munkamenetenként."
+# 
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 383
+#: NEEDS WORK
+msgid "Experimental Feature"
+msgstr "Kísérleti funkció"
+# 
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 385
+#: NEEDS WORK
+msgid "Per-session highlighting overrides are experimental and may change."
+msgstr "A munkamenetenkénti kiemelési felülírások kísérleti jellegűek és változhatnak."
+# 
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 402
+#: NEEDS WORK
+msgid "Customize highlighting for this session"
+msgstr "Testreszabás kiemelés ehhez az üléshez"
+# 
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 403
+#: NEEDS WORK
+msgid "When off, this session uses the global highlighting settings"
+msgstr "Ha ki van kapcsolva, ez az ülés a globális kiemelési beállításokat használja."
+# 
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 413
+#: NEEDS WORK
+msgid "Enable/disable output highlighting for this session"
+msgstr "A kimeneti kiemelés engedélyezése/letiltása ehhez a munkamenethez"
+# 
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 420
+#: NEEDS WORK
+msgid "Command-Specific Highlighting"
+msgstr "Parancs-specifikus kiemelés"
+# 
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 421
+#: NEEDS WORK
+msgid "Use context-aware rules for specific commands"
+msgstr "Használj kontextus-érzékeny szabályokat a konkrét parancsokhoz"
+# 
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 430
+#: NEEDS WORK
+msgid "Cat Colorization"
+msgstr "Macska Színezés"
+# 
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 431
+#: NEEDS WORK
+msgid "Colorize 'cat' output using syntax highlighting"
+msgstr "Szintaxis kiemelés használatával színezze a 'cat' kimenetet"
+# 
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 439
+#: NEEDS WORK
+msgid "Highlight commands as you type at the shell prompt"
+msgstr "Emelje ki a parancsokat, ahogy gépel a parancssorban."
 # 
 # File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 237
 #: NEEDS WORK
@@ -5562,12 +5641,6 @@ msgstr "SIXEL képek megjelenítése (kísérleti)"
 #: NEEDS WORK
 msgid "Backspace Key"
 msgstr "Visszavonás billentyű"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1182
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1197
-#: NEEDS WORK
-msgid "Automatic"
-msgstr "Automatikus"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1183
 #: NEEDS WORK

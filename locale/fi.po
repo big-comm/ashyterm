@@ -3277,6 +3277,20 @@ msgstr "Synnin korostus \"cat\" komennon tulosteelle (käyttäen Pygmentsia)"
 msgid "Pygments is not installed - \"cat\" output will not be colorized"
 msgstr "Pygmentsia ei ole asennettu - \"cat\"-tulostetta ei väritetä"
 # 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1680
+#: NEEDS WORK
+msgid "⚠️ Experimental Feature"
+msgstr "⚠️ Kokeellinen ominaisuus"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1935
+#: NEEDS WORK
+msgid ""
+"This feature colorizes output for the 'cat' command. It may not work perfectly with every "
+"shell/prompt or when output is fragmented."
+msgstr ""
+"Tämä ominaisuus värittää 'cat'-komennon tulosteen. Se ei välttämättä toimi täydellisesti jokaisen "
+"shellin/kehotteen kanssa tai kun tuloste on fragmentoitunut."
+# 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1580
 #: NEEDS WORK
 msgid "Enable \"cat\" Colorization"
@@ -3373,6 +3387,15 @@ msgstr "Reaaliaikainen syntaksin korostus komentoja kirjoitettaessa (kokeellinen
 msgid "Pygments is not installed - shell input highlighting unavailable"
 msgstr "Pygmentsia ei ole asennettu - komentorivin syötteen korostus ei ole käytettävissä"
 # 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1748
+#: NEEDS WORK
+msgid ""
+"This feature applies highlighting to echoed shell input. It may not work perfectly with all prompts "
+"or shells."
+msgstr ""
+"Tämä ominaisuus soveltaa korostusta kaapattuun shell-syötteeseen. Se ei välttämättä toimi "
+"täydellisesti kaikkien kehotteiden tai shellien kanssa."
+# 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1663
 #: NEEDS WORK
 msgid "Enable Shell Input Highlighting"
@@ -3391,20 +3414,6 @@ msgstr ""
 #: NEEDS WORK
 msgid "Auto detects background, Manual uses selected theme"
 msgstr "Automaattisesti havaitsee taustan, Manuaalinen käyttää valittua teemaa"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1680
-#: NEEDS WORK
-msgid "⚠️ Experimental Feature"
-msgstr "⚠️ Kokeellinen ominaisuus"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1748
-#: NEEDS WORK
-msgid ""
-"This feature applies highlighting to echoed shell input. It may not work perfectly with all prompts "
-"or shells."
-msgstr ""
-"Tämä ominaisuus soveltaa korostusta kaapattuun shell-syötteeseen. Se ei välttämättä toimi "
-"täydellisesti kaikkien kehotteiden tai shellien kanssa."
 # 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1179
 #: NEEDS WORK
@@ -3998,6 +4007,76 @@ msgstr "Valitse kansio tämän istunnon järjestämiseksi"
 #: NEEDS WORK
 msgid "Root"
 msgstr "Juuri"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1182
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1197
+#: NEEDS WORK
+msgid "Automatic"
+msgstr "Automaattinen"
+# 
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 376
+#: NEEDS WORK
+msgid "Highlighting"
+msgstr "Korostus"
+# 
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 378
+#: NEEDS WORK
+msgid ""
+"Highlighting adds colors to make terminal text easier to read. You can override global preferences "
+"per session."
+msgstr ""
+"Korostus lisää värejä, jotta terminaaliteksti olisi helpompi lukea. Voit ohittaa globaalit "
+"asetukset istunnon mukaan."
+# 
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 383
+#: NEEDS WORK
+msgid "Experimental Feature"
+msgstr "Kokeellinen ominaisuus"
+# 
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 385
+#: NEEDS WORK
+msgid "Per-session highlighting overrides are experimental and may change."
+msgstr "Istuntokohtaiset korostusylitykset ovat kokeellisia ja voivat muuttua."
+# 
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 402
+#: NEEDS WORK
+msgid "Customize highlighting for this session"
+msgstr "Mukauta korostusta tälle istunnolle"
+# 
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 403
+#: NEEDS WORK
+msgid "When off, this session uses the global highlighting settings"
+msgstr "Kun pois päältä, tämä istunto käyttää globaaleja korostusasetuksia."
+# 
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 413
+#: NEEDS WORK
+msgid "Enable/disable output highlighting for this session"
+msgstr "Ota käyttöön/poista käytöstä tulostuksen korostus tälle istunnolle"
+# 
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 420
+#: NEEDS WORK
+msgid "Command-Specific Highlighting"
+msgstr "Komentooni Spesifinen Korostus"
+# 
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 421
+#: NEEDS WORK
+msgid "Use context-aware rules for specific commands"
+msgstr "Käytä kontekstiin perustuvia sääntöjä erityisiä komentoja varten"
+# 
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 430
+#: NEEDS WORK
+msgid "Cat Colorization"
+msgstr "Kissan värittäminen"
+# 
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 431
+#: NEEDS WORK
+msgid "Colorize 'cat' output using syntax highlighting"
+msgstr "Väritä 'cat' -tulostus syntaksin korostuksella"
+# 
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 439
+#: NEEDS WORK
+msgid "Highlight commands as you type at the shell prompt"
+msgstr "Korosta komennot kirjoittaessasi komentokehotteeseen"
 # 
 # File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 237
 #: NEEDS WORK
@@ -5556,12 +5635,6 @@ msgstr "Näytä SIXEL-kuvia (kokeellinen)"
 #: NEEDS WORK
 msgid "Backspace Key"
 msgstr "Poista-näppäin"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1182
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1197
-#: NEEDS WORK
-msgid "Automatic"
-msgstr "Automaattinen"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1183
 #: NEEDS WORK

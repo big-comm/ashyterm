@@ -3277,6 +3277,20 @@ msgstr "Σύνταξη χρωματισμού για την έξοδο της ε
 msgid "Pygments is not installed - \"cat\" output will not be colorized"
 msgstr "Η Pygments δεν είναι εγκατεστημένη - η έξοδος του \"cat\" δεν θα χρωματιστεί"
 # 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1680
+#: NEEDS WORK
+msgid "⚠️ Experimental Feature"
+msgstr "⚠️ Πειραματική Λειτουργία"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1935
+#: NEEDS WORK
+msgid ""
+"This feature colorizes output for the 'cat' command. It may not work perfectly with every "
+"shell/prompt or when output is fragmented."
+msgstr ""
+"Αυτή η δυνατότητα χρωματίζει την έξοδο για την εντολή 'cat'. Μπορεί να μην λειτουργεί τέλεια με "
+"κάθε κέλυφος/προτροπή ή όταν η έξοδος είναι κατακερματισμένη."
+# 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1580
 #: NEEDS WORK
 msgid "Enable \"cat\" Colorization"
@@ -3373,6 +3387,15 @@ msgstr "Ζωντανή επισήμανση σύνταξης καθώς πληκ
 msgid "Pygments is not installed - shell input highlighting unavailable"
 msgstr "Η Pygments δεν είναι εγκατεστημένη - η επισήμανση εισόδου κελύφους δεν είναι διαθέσιμη"
 # 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1748
+#: NEEDS WORK
+msgid ""
+"This feature applies highlighting to echoed shell input. It may not work perfectly with all prompts "
+"or shells."
+msgstr ""
+"Αυτή η δυνατότητα εφαρμόζει επισήμανση στην ανακλώμενη είσοδο του κελύφους. Μπορεί να μην "
+"λειτουργεί τέλεια με όλες τις προτροπές ή τα κέλυφα."
+# 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1663
 #: NEEDS WORK
 msgid "Enable Shell Input Highlighting"
@@ -3391,20 +3414,6 @@ msgstr ""
 #: NEEDS WORK
 msgid "Auto detects background, Manual uses selected theme"
 msgstr "Αυτόματη ανίχνευση φόντου, Χειροκίνητη χρήση επιλεγμένου θέματος"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1680
-#: NEEDS WORK
-msgid "⚠️ Experimental Feature"
-msgstr "⚠️ Πειραματική Λειτουργία"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1748
-#: NEEDS WORK
-msgid ""
-"This feature applies highlighting to echoed shell input. It may not work perfectly with all prompts "
-"or shells."
-msgstr ""
-"Αυτή η δυνατότητα εφαρμόζει επισήμανση στην ανακλώμενη είσοδο του κελύφους. Μπορεί να μην "
-"λειτουργεί τέλεια με όλες τις προτροπές ή τα κέλυφα."
 # 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1179
 #: NEEDS WORK
@@ -4006,6 +4015,76 @@ msgstr "Επιλέξτε έναν φάκελο για να οργανώσετε 
 #: NEEDS WORK
 msgid "Root"
 msgstr "Ρίζα"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1182
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1197
+#: NEEDS WORK
+msgid "Automatic"
+msgstr "Αυτόματος"
+# 
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 376
+#: NEEDS WORK
+msgid "Highlighting"
+msgstr "Επισήμανση"
+# 
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 378
+#: NEEDS WORK
+msgid ""
+"Highlighting adds colors to make terminal text easier to read. You can override global preferences "
+"per session."
+msgstr ""
+"Η επισήμανση προσθέτει χρώματα για να διευκολύνει την ανάγνωση του κειμένου του τερματικού. "
+"Μπορείτε να παρακάμψετε τις παγκόσμιες προτιμήσεις ανά συνεδρία."
+# 
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 383
+#: NEEDS WORK
+msgid "Experimental Feature"
+msgstr "Πειραματική Λειτουργία"
+# 
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 385
+#: NEEDS WORK
+msgid "Per-session highlighting overrides are experimental and may change."
+msgstr "Οι υπερκαλύψεις επισήμανσης ανά συνεδρία είναι πειραματικές και ενδέχεται να αλλάξουν."
+# 
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 402
+#: NEEDS WORK
+msgid "Customize highlighting for this session"
+msgstr "Προσαρμόστε την επισήμανση για αυτή τη συνεδρία"
+# 
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 403
+#: NEEDS WORK
+msgid "When off, this session uses the global highlighting settings"
+msgstr "Όταν είναι απενεργοποιημένο, αυτή η συνεδρία χρησιμοποιεί τις παγκόσμιες ρυθμίσεις επισήμανσης."
+# 
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 413
+#: NEEDS WORK
+msgid "Enable/disable output highlighting for this session"
+msgstr "Ενεργοποίηση/απενεργοποίηση επισήμανσης εξόδου για αυτή τη συνεδρία"
+# 
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 420
+#: NEEDS WORK
+msgid "Command-Specific Highlighting"
+msgstr "Επισήμανση που σχετίζεται με την εντολή"
+# 
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 421
+#: NEEDS WORK
+msgid "Use context-aware rules for specific commands"
+msgstr "Χρησιμοποιήστε κανόνες που λαμβάνουν υπόψη το περιβάλλον για συγκεκριμένες εντολές"
+# 
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 430
+#: NEEDS WORK
+msgid "Cat Colorization"
+msgstr "Χρωματισμός Γατών"
+# 
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 431
+#: NEEDS WORK
+msgid "Colorize 'cat' output using syntax highlighting"
+msgstr "Χρωματισμός της εξόδου 'cat' χρησιμοποιώντας σύνταξη επισήμανσης"
+# 
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 439
+#: NEEDS WORK
+msgid "Highlight commands as you type at the shell prompt"
+msgstr "Επισημάνετε τις εντολές καθώς τις πληκτρολογείτε στην προτροπή του κελύφους"
 # 
 # File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 237
 #: NEEDS WORK
@@ -5564,12 +5643,6 @@ msgstr "Εμφάνιση εικόνων SIXEL (πειραματικό)"
 #: NEEDS WORK
 msgid "Backspace Key"
 msgstr "Πλήκτρο Διαγραφής"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1182
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1197
-#: NEEDS WORK
-msgid "Automatic"
-msgstr "Αυτόματος"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1183
 #: NEEDS WORK

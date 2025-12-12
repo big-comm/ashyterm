@@ -3275,6 +3275,20 @@ msgstr "Syntaxové zvýraznenie výstupu príkazu \"cat\" (používajúce Pygmen
 msgid "Pygments is not installed - \"cat\" output will not be colorized"
 msgstr "Pygments nie je nainštalovaný - výstup \"cat\" nebude farebne zvýraznený"
 # 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1680
+#: NEEDS WORK
+msgid "⚠️ Experimental Feature"
+msgstr "⚠️ Experimentálna funkcia"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1935
+#: NEEDS WORK
+msgid ""
+"This feature colorizes output for the 'cat' command. It may not work perfectly with every "
+"shell/prompt or when output is fragmented."
+msgstr ""
+"Táto funkcia farebne zvýrazňuje výstup príkazu 'cat'. Nemusí fungovať dokonale so všetkými "
+"shellmi/promptami alebo keď je výstup fragmentovaný."
+# 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1580
 #: NEEDS WORK
 msgid "Enable \"cat\" Colorization"
@@ -3371,6 +3385,15 @@ msgstr "Živé zvýraznenie syntaxe pri písaní príkazov (experimentálne)"
 msgid "Pygments is not installed - shell input highlighting unavailable"
 msgstr "Pygments nie je nainštalovaný - zvýraznenie vstupu shellu nie je k dispozícii"
 # 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1748
+#: NEEDS WORK
+msgid ""
+"This feature applies highlighting to echoed shell input. It may not work perfectly with all prompts "
+"or shells."
+msgstr ""
+"Táto funkcia aplikuje zvýraznenie na echoovaný shellový vstup. Nemusí fungovať dokonale so všetkými "
+"výzvami alebo shellmi."
+# 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1663
 #: NEEDS WORK
 msgid "Enable Shell Input Highlighting"
@@ -3389,20 +3412,6 @@ msgstr ""
 #: NEEDS WORK
 msgid "Auto detects background, Manual uses selected theme"
 msgstr "Automaticky detekuje pozadie, Manuálne používa vybranú tému"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1680
-#: NEEDS WORK
-msgid "⚠️ Experimental Feature"
-msgstr "⚠️ Experimentálna funkcia"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1748
-#: NEEDS WORK
-msgid ""
-"This feature applies highlighting to echoed shell input. It may not work perfectly with all prompts "
-"or shells."
-msgstr ""
-"Táto funkcia aplikuje zvýraznenie na echoovaný shellový vstup. Nemusí fungovať dokonale so všetkými "
-"výzvami alebo shellmi."
 # 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1179
 #: NEEDS WORK
@@ -3998,6 +4007,76 @@ msgstr "Vyberte priečinok na usporiadanie tejto relácie"
 #: NEEDS WORK
 msgid "Root"
 msgstr "Koreň"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1182
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1197
+#: NEEDS WORK
+msgid "Automatic"
+msgstr "Automatický"
+# 
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 376
+#: NEEDS WORK
+msgid "Highlighting"
+msgstr "Zvýraznenie"
+# 
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 378
+#: NEEDS WORK
+msgid ""
+"Highlighting adds colors to make terminal text easier to read. You can override global preferences "
+"per session."
+msgstr ""
+"Zvýraznenie pridáva farby, aby bol text v termináli ľahšie čitateľný. Môžete prepisovať globálne "
+"nastavenia pre každú reláciu."
+# 
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 383
+#: NEEDS WORK
+msgid "Experimental Feature"
+msgstr "Experimentálna funkcia"
+# 
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 385
+#: NEEDS WORK
+msgid "Per-session highlighting overrides are experimental and may change."
+msgstr "Pre-sessionové zvýraznenia sú experimentálne a môžu sa zmeniť."
+# 
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 402
+#: NEEDS WORK
+msgid "Customize highlighting for this session"
+msgstr "Prispôsobiť zvýraznenie pre túto reláciu"
+# 
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 403
+#: NEEDS WORK
+msgid "When off, this session uses the global highlighting settings"
+msgstr "Keď je vypnuté, táto relácia používa globálne nastavenia zvýraznenia."
+# 
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 413
+#: NEEDS WORK
+msgid "Enable/disable output highlighting for this session"
+msgstr "Povoliť/zakázať zvýraznenie výstupu pre túto reláciu"
+# 
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 420
+#: NEEDS WORK
+msgid "Command-Specific Highlighting"
+msgstr "Zvýraznenie špecifické pre príkaz"
+# 
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 421
+#: NEEDS WORK
+msgid "Use context-aware rules for specific commands"
+msgstr "Použite pravidlá citlivé na kontext pre konkrétne príkazy"
+# 
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 430
+#: NEEDS WORK
+msgid "Cat Colorization"
+msgstr "Farba mačky"
+# 
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 431
+#: NEEDS WORK
+msgid "Colorize 'cat' output using syntax highlighting"
+msgstr "Zafarbiť výstup 'cat' pomocou zvýraznenia syntaxe"
+# 
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 439
+#: NEEDS WORK
+msgid "Highlight commands as you type at the shell prompt"
+msgstr "Zvýraznite príkazy, keď ich píšete na príkazovom riadku."
 # 
 # File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 237
 #: NEEDS WORK
@@ -5554,12 +5633,6 @@ msgstr "Zobraziť obrázky SIXEL (experimentálne)"
 #: NEEDS WORK
 msgid "Backspace Key"
 msgstr "Klávesa Backspace"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1182
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1197
-#: NEEDS WORK
-msgid "Automatic"
-msgstr "Automatický"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1183
 #: NEEDS WORK
