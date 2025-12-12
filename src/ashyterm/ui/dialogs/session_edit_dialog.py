@@ -426,9 +426,11 @@ class SessionEditDialog(BaseDialog):
         )
         group.add(self.command_specific_highlighting_row)
 
+        # NOTE: 'cat' is a terminal command, so we don't translate it
+        # Use format string to keep 'cat' untranslated while translating the rest
         self.cat_colorization_row = self._create_tristate_combo_row(
-            title=_("Cat Colorization"),
-            subtitle=_("Colorize 'cat' output using syntax highlighting"),
+            title=_("{} Command Colorization").format("cat"),
+            subtitle=_("Colorize file content output using syntax highlighting"),
             initial_value=getattr(self.editing_session, "cat_colorization", None),
             on_changed=self._on_highlighting_override_changed,
         )

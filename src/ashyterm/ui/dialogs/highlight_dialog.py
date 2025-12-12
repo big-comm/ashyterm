@@ -1486,6 +1486,9 @@ class HighlightDialog(Adw.PreferencesWindow):
 
         # Global rules group (last, as it can be a longer list)
         self._setup_rules_group(self._global_page)
+        
+        # Apply initial sensitivity state for dependent groups
+        self._update_dependent_groups_sensitivity()
 
         # Create third page for Command-Specific Rules
         self._context_page = Adw.PreferencesPage(
@@ -1915,15 +1918,16 @@ class HighlightDialog(Adw.PreferencesWindow):
 
         pygments_available = importlib.util.find_spec("pygments") is not None
 
-        cat_group = Adw.PreferencesGroup(
-            title=_('"cat" Command Colorization'),
+        # NOTE: 'cat' is a terminal command, so we don't translate it
+        self._cat_group = Adw.PreferencesGroup(
+            title=_("{} Command Colorization").format("cat"),
             description=_(
-                'Syntax highlighting for "cat" command output (using Pygments)'
-            )
+                "Syntax highlighting for '{}' command output (using Pygments)"
+            ).format("cat")
             if pygments_available
-            else _('Pygments is not installed - "cat" output will not be colorized'),
+            else _("Pygments is not installed - '{}' output will not be colorized").format("cat"),
         )
-        page.add(cat_group)
+        page.add(self._cat_group)
 
         settings = get_settings_manager()
 
@@ -1932,24 +1936,24 @@ class HighlightDialog(Adw.PreferencesWindow):
             note_row = Adw.ActionRow(
                 title=_("⚠️ Experimental Feature"),
                 subtitle=_(
-                    "This feature colorizes output for the 'cat' command. "
+                    "This feature colorizes output for the '{}' command. "
                     "It may not work perfectly with every shell/prompt or when output is fragmented."
-                ),
+                ).format("cat"),
             )
             note_row.add_css_class("dim-label")
-            cat_group.add(note_row)
+            self._cat_group.add(note_row)
 
         # Enable cat colorization toggle (first item)
         self._cat_colorization_toggle = Adw.SwitchRow(
-            title=_('Enable "cat" Colorization'),
-            subtitle=_('Apply syntax highlighting to "cat" command output'),
+            title=_("Enable '{}' Colorization").format("cat"),
+            subtitle=_("Apply syntax highlighting to '{}' command output").format("cat"),
         )
         current_enabled = settings.get("cat_colorization_enabled", True)
         self._cat_colorization_toggle.set_active(current_enabled)
         self._cat_colorization_toggle.connect(
             "notify::active", self._on_cat_colorization_toggled
         )
-        cat_group.add(self._cat_colorization_toggle)
+        self._cat_group.add(self._cat_colorization_toggle)
 
         # Color theme dropdown (only if Pygments is available)
         if pygments_available:
@@ -1972,7 +1976,7 @@ class HighlightDialog(Adw.PreferencesWindow):
             self._cat_theme_mode_row.connect(
                 "notify::selected", self._on_cat_theme_mode_changed
             )
-            cat_group.add(self._cat_theme_mode_row)
+            self._cat_group.add(self._cat_theme_mode_row)
 
             # Dark themes (background luminance <= 0.5) - based on actual Pygments style analysis
             dark_only_themes = [
@@ -2073,7 +2077,7 @@ class HighlightDialog(Adw.PreferencesWindow):
             self._cat_dark_theme_row.connect(
                 "notify::selected", self._on_cat_dark_theme_changed
             )
-            cat_group.add(self._cat_dark_theme_row)
+            self._cat_group.add(self._cat_dark_theme_row)
 
             # Light theme selector - show only light themes
             self._cat_light_theme_row = Adw.ComboRow(
@@ -2102,7 +2106,7 @@ class HighlightDialog(Adw.PreferencesWindow):
             self._cat_light_theme_row.connect(
                 "notify::selected", self._on_cat_light_theme_changed
             )
-            cat_group.add(self._cat_light_theme_row)
+            self._cat_group.add(self._cat_light_theme_row)
 
             # Manual theme selector (legacy, shown when mode is Manual)
             self._cat_theme_row = Adw.ComboRow(
@@ -2123,7 +2127,7 @@ class HighlightDialog(Adw.PreferencesWindow):
                 self._cat_theme_row.set_selected(0)
 
             self._cat_theme_row.connect("notify::selected", self._on_cat_theme_changed)
-            cat_group.add(self._cat_theme_row)
+            self._cat_group.add(self._cat_theme_row)
 
             # Update visibility based on current mode and enabled state
             is_auto_mode = current_mode == "auto"
@@ -2146,7 +2150,7 @@ class HighlightDialog(Adw.PreferencesWindow):
                 subtitle=_("pip install pygments"),
             )
             install_row.add_css_class("dim-label")
-            cat_group.add(install_row)
+            self._cat_group.add(install_row)
 
     def _setup_shell_input_highlighting_group(self, page: Adw.PreferencesPage) -> None:
         """Setup the shell input highlighting settings group (experimental)."""
@@ -2155,7 +2159,7 @@ class HighlightDialog(Adw.PreferencesWindow):
 
         pygments_available = importlib.util.find_spec("pygments") is not None
 
-        shell_input_group = Adw.PreferencesGroup(
+        self._shell_input_group = Adw.PreferencesGroup(
             title=_("Shell Input Highlighting"),
             description=_(
                 "Live syntax highlighting as you type commands (experimental)"
@@ -2163,7 +2167,7 @@ class HighlightDialog(Adw.PreferencesWindow):
             if pygments_available
             else _("Pygments is not installed - shell input highlighting unavailable"),
         )
-        page.add(shell_input_group)
+        page.add(self._shell_input_group)
 
         settings = get_settings_manager()
 
@@ -2177,7 +2181,7 @@ class HighlightDialog(Adw.PreferencesWindow):
                 ),
             )
             note_row.add_css_class("dim-label")
-            shell_input_group.add(note_row)
+            self._shell_input_group.add(note_row)
 
         # Enable shell input highlighting toggle
         self._shell_input_toggle = Adw.SwitchRow(
@@ -2193,7 +2197,7 @@ class HighlightDialog(Adw.PreferencesWindow):
         self._shell_input_toggle.connect(
             "notify::active", self._on_shell_input_highlighting_toggled
         )
-        shell_input_group.add(self._shell_input_toggle)
+        self._shell_input_group.add(self._shell_input_toggle)
 
         # Color theme dropdown (only if Pygments is available)
         if pygments_available:
@@ -2212,7 +2216,7 @@ class HighlightDialog(Adw.PreferencesWindow):
             self._theme_mode_row.connect(
                 "notify::selected", self._on_shell_input_mode_changed
             )
-            shell_input_group.add(self._theme_mode_row)
+            self._shell_input_group.add(self._theme_mode_row)
 
             # Get available Pygments styles
             from pygments.styles import get_all_styles
@@ -2320,7 +2324,7 @@ class HighlightDialog(Adw.PreferencesWindow):
             self._dark_theme_row.connect(
                 "notify::selected", self._on_dark_theme_changed
             )
-            shell_input_group.add(self._dark_theme_row)
+            self._shell_input_group.add(self._dark_theme_row)
 
             # Light theme selector - show only light themes
             self._light_theme_row = Adw.ComboRow(
@@ -2351,7 +2355,7 @@ class HighlightDialog(Adw.PreferencesWindow):
             self._light_theme_row.connect(
                 "notify::selected", self._on_light_theme_changed
             )
-            shell_input_group.add(self._light_theme_row)
+            self._shell_input_group.add(self._light_theme_row)
 
             # Manual theme selector (legacy, shown when mode is Manual)
             self._shell_input_theme_row = Adw.ComboRow(
@@ -2376,7 +2380,7 @@ class HighlightDialog(Adw.PreferencesWindow):
             self._shell_input_theme_row.connect(
                 "notify::selected", self._on_shell_input_theme_changed
             )
-            shell_input_group.add(self._shell_input_theme_row)
+            self._shell_input_group.add(self._shell_input_theme_row)
 
             # Update visibility based on current settings
             is_auto = current_mode == "auto"
@@ -3531,15 +3535,47 @@ class HighlightDialog(Adw.PreferencesWindow):
             self.emit("settings-changed")
             self.add_toast(Adw.Toast(title=_("Rule deleted: {}").format(rule_name)))
 
+    def _update_dependent_groups_sensitivity(self) -> None:
+        """Update sensitivity of highlighting groups based on activation state.
+        
+        When BOTH local and SSH highlighting are disabled, all output-related
+        highlighting features should be disabled as well since there's no output to process.
+        This includes:
+        - Cat colorization group
+        - Shell input highlighting group  
+        - Ignored commands group
+        - Global highlight rules group
+        - Command-Specific page (entire page)
+        """
+        any_output_enabled = self._manager.enabled_for_local or self._manager.enabled_for_ssh
+        
+        # Update cat group sensitivity
+        if hasattr(self, "_cat_group") and self._cat_group is not None:
+            self._cat_group.set_sensitive(any_output_enabled)
+        
+        # Update shell input group sensitivity
+        if hasattr(self, "_shell_input_group") and self._shell_input_group is not None:
+            self._shell_input_group.set_sensitive(any_output_enabled)
+        
+        # Update ignored commands group sensitivity
+        if hasattr(self, "_ignored_commands_group") and self._ignored_commands_group is not None:
+            self._ignored_commands_group.set_sensitive(any_output_enabled)
+        
+        # Update global rules group sensitivity
+        if hasattr(self, "_rules_group") and self._rules_group is not None:
+            self._rules_group.set_sensitive(any_output_enabled)
+        
+        # Update Command-Specific page sensitivity (entire page)
+        if hasattr(self, "_context_page") and self._context_page is not None:
+            self._context_page.set_sensitive(any_output_enabled)
+
     def _on_local_toggled(self, switch: Adw.SwitchRow, _pspec) -> None:
         """Handle local terminals toggle."""
         is_active = switch.get_active()
         self._manager.enabled_for_local = is_active
         self._manager.save_config()
         self.emit("settings-changed")
-        # Only show restart dialog when activating, not when deactivating
-        if is_active:
-            self._show_restart_required_dialog()
+        self._update_dependent_groups_sensitivity()
 
     def _on_ssh_toggled(self, switch: Adw.SwitchRow, _pspec) -> None:
         """Handle SSH terminals toggle."""
@@ -3547,9 +3583,7 @@ class HighlightDialog(Adw.PreferencesWindow):
         self._manager.enabled_for_ssh = is_active
         self._manager.save_config()
         self.emit("settings-changed")
-        # Only show restart dialog when activating, not when deactivating
-        if is_active:
-            self._show_restart_required_dialog()
+        self._update_dependent_groups_sensitivity()
 
     def _on_cat_theme_changed(self, combo: Adw.ComboRow, _pspec) -> None:
         """Handle Pygments theme selection change."""
@@ -3583,7 +3617,7 @@ class HighlightDialog(Adw.PreferencesWindow):
         self.emit("settings-changed")
 
         status = _("enabled") if is_active else _("disabled")
-        self.add_toast(Adw.Toast(title=_('"cat" colorization {}').format(status)))
+        self.add_toast(Adw.Toast(title=_("'{}' colorization {}").format("cat", status)))
 
     def _on_cat_theme_mode_changed(self, combo: Adw.ComboRow, _pspec) -> None:
         """Handle cat theme mode change (auto/manual)."""

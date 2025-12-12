@@ -1531,6 +1531,21 @@ class TerminalManager:
 
             if not command_part:
                 return
+            
+            # Handle cases where shell keywords might be glued to the start of command_part
+            # This can happen when readline merges lines (e.g., "thenecho" from continuation prompt)
+            GLUED_KEYWORDS = {
+                "then", "else", "elif", "fi", "do", "done", "esac", "in",
+            }
+            command_part_lower = command_part.lower()
+            for kw in GLUED_KEYWORDS:
+                if command_part_lower.startswith(kw) and len(command_part_lower) > len(kw):
+                    # Check if the character after the keyword is alphanumeric (glued)
+                    char_after = command_part_lower[len(kw)]
+                    if char_after.isalpha():
+                        # Remove the keyword prefix to get the actual command
+                        command_part = command_part[len(kw):]
+                        break
 
             # Get settings and highlight manager
             from ..settings.manager import get_settings_manager
@@ -1589,6 +1604,20 @@ class TerminalManager:
                 "builtin",
                 "exec",
             }
+            
+            # Shell keywords that should be skipped (not actual commands)
+            # These are control flow constructs that appear in multi-line scripts
+            SHELL_KEYWORDS = {
+                "if", "then", "else", "elif", "fi",
+                "for", "do", "done",
+                "while", "until",
+                "case", "esac",
+                "select", "in",
+                "function",
+                "{", "}",
+                "[[", "]]",
+                "(", ")",
+            }
 
             for token in tokens:
                 # Skip flags (start with -)
@@ -1612,6 +1641,29 @@ class TerminalManager:
 
                 # Skip prefix commands (sudo, time, env, etc.) to find the real command
                 if clean_token_lower in PREFIX_COMMANDS:
+                    continue
+
+                # Skip shell keywords (if, then, else, for, do, etc.)
+                # These are control flow constructs, not actual commands
+                if clean_token_lower in SHELL_KEYWORDS:
+                    continue
+                
+                # Check for shell keywords concatenated at the start of token
+                # This handles cases like "thenecho" where readline may have merged text
+                keyword_found = False
+                for kw in SHELL_KEYWORDS:
+                    if clean_token_lower.startswith(kw) and len(clean_token_lower) > len(kw):
+                        # Extract the part after the keyword
+                        remainder = clean_token[len(kw):]
+                        if remainder and remainder[0].isalpha():
+                            # This looks like a concatenated keyword + command
+                            clean_token = remainder
+                            clean_token_lower = remainder.lower()
+                            keyword_found = True
+                            break
+                
+                # After extracting from concatenated token, re-check if it's still a keyword
+                if clean_token_lower in SHELL_KEYWORDS:
                     continue
 
                 # Priority 1: Check if it's an ignored command (native coloring)
