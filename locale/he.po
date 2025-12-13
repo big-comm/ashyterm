@@ -3256,44 +3256,53 @@ msgstr "שיחות SSH"
 msgid "Apply output highlighting to SSH connections"
 msgstr "החל הדגשת פלט על חיבורי SSH"
 # 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1567
-#: NEEDS WORK
-msgid "\"cat\" Command Colorization"
-msgstr "צבעון פקודת \"cat\""
+# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
 # 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1569
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1923
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 432
 #: NEEDS WORK
-msgid "Syntax highlighting for \"cat\" command output (using Pygments)"
-msgstr "הדגשת תחביר לפלט הפקודה \"cat\" (באמצעות Pygments)"
+#, python-brace-format
+msgid "{} Command Colorization"
+msgstr "צביעת פקודות"
 # 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1572
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1925
 #: NEEDS WORK
-msgid "Pygments is not installed - \"cat\" output will not be colorized"
-msgstr "פיגמנטס לא מותקן - פלט \"cat\" לא יהיה ממוסגר בצבע"
+#, python-brace-format
+msgid "Syntax highlighting for '{}' command output (using Pygments)"
+msgstr "הדגשת תחביר עבור פלט הפקודה '{}' (באמצעות Pygments)"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1928
+#: NEEDS WORK
+#, python-brace-format
+msgid "Pygments is not installed - '{}' output will not be colorized"
+msgstr "פיגמנטס לא מותקן - הפלט '{}' לא יהיה ממוסגר בצבעים"
 # 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1680
 #: NEEDS WORK
 msgid "⚠️ Experimental Feature"
 msgstr "⚠️ תכונה ניסיונית"
 # 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1935
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1939
 #: NEEDS WORK
+#, python-brace-format
 msgid ""
-"This feature colorizes output for the 'cat' command. It may not work perfectly with every "
+"This feature colorizes output for the '{}' command. It may not work perfectly with every "
 "shell/prompt or when output is fragmented."
 msgstr ""
-"תכונה זו צבעונית את הפלט עבור הפקודה 'cat'. ייתכן שהיא לא תעבוד בצורה מושלמת עם כל ש shell/שורת "
+"תכונה זו צבעונית את הפלט עבור הפקודה '{}'. ייתכן שהיא לא תעבוד בצורה מושלמת עם כל ש shell/שורת "
 "פקודה או כאשר הפלט מפוצל."
 # 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1580
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1948
 #: NEEDS WORK
-msgid "Enable \"cat\" Colorization"
-msgstr "אפשר \"צבעון\" של \"חתול\""
+#, python-brace-format
+msgid "Enable '{}' Colorization"
+msgstr "אפשר צבעוניות '{}'"
 # 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1581
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1949
 #: NEEDS WORK
-msgid "Apply syntax highlighting to \"cat\" command output"
-msgstr "החל הדגשת תחביר על פלט הפקודה \"cat\""
+#, python-brace-format
+msgid "Apply syntax highlighting to '{}' command output"
+msgstr "החל הדגשת תחביר על פלט הפקודה '{}'"
 # 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1951
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2178
@@ -3742,11 +3751,11 @@ msgstr "מופעל"
 msgid "disabled"
 msgstr "מושבת"
 # 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2820
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 3620
 #: NEEDS WORK
 #, python-brace-format
-msgid "\"cat\" colorization {}"
-msgstr "\"חתול\" צבעוניות {}"
+msgid "'{}' colorization {}"
+msgstr "'{}' צבעוניות {}"
 # 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 3593
 #: NEEDS WORK
@@ -4053,15 +4062,10 @@ msgstr "הדגשה ספציפית לפקודה"
 msgid "Use context-aware rules for specific commands"
 msgstr "השתמש בכללים המודעים להקשר עבור פקודות ספציפיות"
 # 
-# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 430
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 433
 #: NEEDS WORK
-msgid "Cat Colorization"
-msgstr "צבעון חתולים"
-# 
-# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 431
-#: NEEDS WORK
-msgid "Colorize 'cat' output using syntax highlighting"
-msgstr "צבע את פלט 'cat' באמצעות הדגשת תחביר"
+msgid "Colorize file content output using syntax highlighting"
+msgstr "צבע את תוכן הקובץ המוצג באמצעות הדגשת תחביר"
 # 
 # File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 439
 #: NEEDS WORK

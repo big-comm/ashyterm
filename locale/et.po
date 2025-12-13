@@ -3257,44 +3257,53 @@ msgstr "SSH seansid"
 msgid "Apply output highlighting to SSH connections"
 msgstr "Rakenda väljundi esiletõstmine SSH-ühendustele"
 # 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1567
-#: NEEDS WORK
-msgid "\"cat\" Command Colorization"
-msgstr "\"cat\" käsu värvustamine"
+# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
 # 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1569
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1923
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 432
 #: NEEDS WORK
-msgid "Syntax highlighting for \"cat\" command output (using Pygments)"
-msgstr "Süntaksihighlighting \"cat\" käsu väljundi jaoks (kasutades Pygments'i)"
+#, python-brace-format
+msgid "{} Command Colorization"
+msgstr "{} Käskluse värvumine"
 # 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1572
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1925
 #: NEEDS WORK
-msgid "Pygments is not installed - \"cat\" output will not be colorized"
-msgstr "Pygments ei ole installitud - \"cat\" väljundit ei värviliseks muudetud"
+#, python-brace-format
+msgid "Syntax highlighting for '{}' command output (using Pygments)"
+msgstr "Süntaksi esiletõstmine '{}' käsu väljundi jaoks (kasutades Pygments'i)"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1928
+#: NEEDS WORK
+#, python-brace-format
+msgid "Pygments is not installed - '{}' output will not be colorized"
+msgstr "Pygments ei ole installitud - '{}' väljundit ei värviliseks muudetud"
 # 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1680
 #: NEEDS WORK
 msgid "⚠️ Experimental Feature"
 msgstr "⚠️ Eksperimentaalne funktsioon"
 # 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1935
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1939
 #: NEEDS WORK
+#, python-brace-format
 msgid ""
-"This feature colorizes output for the 'cat' command. It may not work perfectly with every "
+"This feature colorizes output for the '{}' command. It may not work perfectly with every "
 "shell/prompt or when output is fragmented."
 msgstr ""
-"See funktsioon värvib 'cat' käsu väljundi. See ei pruugi iga shelli/komplekti või kui väljund on "
-"killustatud, ideaalselt töötada."
+"See funktsioon värvib väljundi '{}' käsu jaoks. See ei pruugi iga shelli/komplekti või siis, kui "
+"väljund on killustatud, ideaalselt töötada."
 # 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1580
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1948
 #: NEEDS WORK
-msgid "Enable \"cat\" Colorization"
-msgstr "Luba \"kassi\" värviliseks tegemine"
+#, python-brace-format
+msgid "Enable '{}' Colorization"
+msgstr "Luba '{}' värvustamine"
 # 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1581
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1949
 #: NEEDS WORK
-msgid "Apply syntax highlighting to \"cat\" command output"
-msgstr "Rakenda süntaksi esiletõstmine \"cat\" käsu väljundile"
+#, python-brace-format
+msgid "Apply syntax highlighting to '{}' command output"
+msgstr "Kohanda süntaksihighlighting '{}' käsu väljundile"
 # 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1951
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2178
@@ -3743,11 +3752,11 @@ msgstr "lubatud"
 msgid "disabled"
 msgstr "keelatud"
 # 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2820
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 3620
 #: NEEDS WORK
 #, python-brace-format
-msgid "\"cat\" colorization {}"
-msgstr "\"kas\" värvustamine {}"
+msgid "'{}' colorization {}"
+msgstr "'{}' värvumine {}"
 # 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 3593
 #: NEEDS WORK
@@ -4056,15 +4065,10 @@ msgstr "Käsk-spetsiifiline esiletõstmine"
 msgid "Use context-aware rules for specific commands"
 msgstr "Kasutage konteksti teadlikke reegleid spetsiifiliste käskude jaoks"
 # 
-# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 430
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 433
 #: NEEDS WORK
-msgid "Cat Colorization"
-msgstr "Kassi värvumine"
-# 
-# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 431
-#: NEEDS WORK
-msgid "Colorize 'cat' output using syntax highlighting"
-msgstr "Värvige 'cat' väljundit süntaksihighlighting'uga"
+msgid "Colorize file content output using syntax highlighting"
+msgstr "Värvi faili sisu väljundit süntaksihighlighting'uga"
 # 
 # File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 439
 #: NEEDS WORK

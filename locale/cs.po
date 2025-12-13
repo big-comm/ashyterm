@@ -3260,44 +3260,53 @@ msgstr "SSH relace"
 msgid "Apply output highlighting to SSH connections"
 msgstr "Použijte zvýraznění výstupu pro připojení SSH"
 # 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1567
-#: NEEDS WORK
-msgid "\"cat\" Command Colorization"
-msgstr "\"cat\" příkaz barevné zvýraznění"
+# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
 # 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1569
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1923
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 432
 #: NEEDS WORK
-msgid "Syntax highlighting for \"cat\" command output (using Pygments)"
-msgstr "Syntaxe zvýraznění pro výstup příkazu \"cat\" (použití Pygments)"
+#, python-brace-format
+msgid "{} Command Colorization"
+msgstr "{} Barva příkazů"
 # 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1572
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1925
 #: NEEDS WORK
-msgid "Pygments is not installed - \"cat\" output will not be colorized"
-msgstr "Pygments není nainstalován - výstup \"cat\" nebude barevně zvýrazněn"
+#, python-brace-format
+msgid "Syntax highlighting for '{}' command output (using Pygments)"
+msgstr "Syntaxe zvýraznění pro výstup příkazu '{}' (používající Pygments)"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1928
+#: NEEDS WORK
+#, python-brace-format
+msgid "Pygments is not installed - '{}' output will not be colorized"
+msgstr "Pygments není nainstalován - výstup '{}' nebude barevně zvýrazněn"
 # 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1680
 #: NEEDS WORK
 msgid "⚠️ Experimental Feature"
 msgstr "⚠️ Experimentální funkce"
 # 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1935
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1939
 #: NEEDS WORK
+#, python-brace-format
 msgid ""
-"This feature colorizes output for the 'cat' command. It may not work perfectly with every "
+"This feature colorizes output for the '{}' command. It may not work perfectly with every "
 "shell/prompt or when output is fragmented."
 msgstr ""
-"Tato funkce barevně zvýrazňuje výstup příkazu 'cat'. Nemusí fungovat dokonale se všemi "
-"shelly/promptami nebo když je výstup fragmentován."
+"Tato funkce barevně zvýrazňuje výstup pro příkaz '{}'. Nemusí fungovat dokonale se všemi "
+"shelly/promptami nebo když je výstup fragmentovaný."
 # 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1580
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1948
 #: NEEDS WORK
-msgid "Enable \"cat\" Colorization"
-msgstr "Povolit zbarvení \"kočky\""
+#, python-brace-format
+msgid "Enable '{}' Colorization"
+msgstr "Povolit '{}' barevné zvýraznění"
 # 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1581
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1949
 #: NEEDS WORK
-msgid "Apply syntax highlighting to \"cat\" command output"
-msgstr "Použijte zvýraznění syntaxe pro výstup příkazu \"cat\""
+#, python-brace-format
+msgid "Apply syntax highlighting to '{}' command output"
+msgstr "Použijte zvýraznění syntaxe pro výstup příkazu '{}'"
 # 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1951
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2178
@@ -3746,11 +3755,11 @@ msgstr "povoleno"
 msgid "disabled"
 msgstr "zakázáno"
 # 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2820
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 3620
 #: NEEDS WORK
 #, python-brace-format
-msgid "\"cat\" colorization {}"
-msgstr "\"kočka\" kolorování {}"
+msgid "'{}' colorization {}"
+msgstr "'{}' barevné zvýraznění {}"
 # 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 3593
 #: NEEDS WORK
@@ -4061,15 +4070,10 @@ msgstr "Zvýraznění specifické pro příkaz"
 msgid "Use context-aware rules for specific commands"
 msgstr "Použijte pravidla citlivá na kontext pro konkrétní příkazy"
 # 
-# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 430
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 433
 #: NEEDS WORK
-msgid "Cat Colorization"
-msgstr "Zbarvení koček"
-# 
-# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 431
-#: NEEDS WORK
-msgid "Colorize 'cat' output using syntax highlighting"
-msgstr "Zbarvit výstup 'cat' pomocí zvýraznění syntaxe"
+msgid "Colorize file content output using syntax highlighting"
+msgstr "Zvýraznit obsah souboru pomocí syntaxe."
 # 
 # File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 439
 #: NEEDS WORK
