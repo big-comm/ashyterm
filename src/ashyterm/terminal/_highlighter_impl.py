@@ -160,7 +160,8 @@ class HighlightedTerminalProxy:
         self._cat_waiting_for_newline: bool = False
 
         self._input_highlight_buffer = ""
-        self._at_shell_prompt = True
+        # Start as False; will be set True when shell prompt is detected via termprop
+        self._at_shell_prompt = False
         self._need_color_reset = False
         # When True, do not apply per-character shell input highlighting.
         # This is used to avoid interfering with readline redisplay/cursor movement
@@ -680,29 +681,54 @@ class HighlightedTerminalProxy:
             try:
                 if self._is_alt_screen:
                     term.feed(data)
-                elif (
-                    self._highlighter.is_enabled_for_type(self._terminal_type)
-                    or self._shell_input_highlighter.enabled
-                ):
-                    # Get context with lock
-                    with self._highlighter._lock:
-                        context = self._highlighter._proxy_contexts.get(
-                            self._proxy_id, ""
-                        )
-                        is_ignored = (
-                            context
-                            and context.lower() in self._highlighter._ignored_commands
-                        )
+                else:
+                    # Check if any highlighting feature is enabled
+                    from ..settings.manager import get_settings_manager
 
-                    # Check for cat syntax highlighting
-                    is_cat_context = context and context.lower() == "cat"
+                    settings = get_settings_manager()
 
-                    if is_cat_context:
-                        # Check if cat colorization is enabled
-                        from ..settings.manager import get_settings_manager
+                    # First check if output highlighting is enabled at all
+                    # (Local Terminals or SSH Sessions must be enabled)
+                    output_highlighting_enabled = self._highlighter.is_enabled_for_type(
+                        self._terminal_type
+                    )
 
-                        settings = get_settings_manager()
-                        if settings.get("cat_colorization_enabled", True):
+                    # Cat colorization and shell input highlighting only work
+                    # when output highlighting is enabled (as shown in UI)
+                    cat_colorization_enabled = (
+                        output_highlighting_enabled
+                        and settings.get("cat_colorization_enabled", True)
+                    )
+                    shell_input_enabled = (
+                        output_highlighting_enabled
+                        and self._shell_input_highlighter.enabled
+                    )
+
+                    any_highlighting_enabled = (
+                        output_highlighting_enabled
+                        or cat_colorization_enabled
+                        or shell_input_enabled
+                    )
+
+                    if not any_highlighting_enabled:
+                        # No highlighting features enabled - feed raw data
+                        term.feed(data)
+                    else:
+                        # Get context with lock
+                        with self._highlighter._lock:
+                            context = self._highlighter._proxy_contexts.get(
+                                self._proxy_id, ""
+                            )
+                            is_ignored = (
+                                context
+                                and context.lower()
+                                in self._highlighter._ignored_commands
+                            )
+
+                        # Check for cat syntax highlighting
+                        is_cat_context = context and context.lower() == "cat"
+
+                        if is_cat_context and cat_colorization_enabled:
                             # Skip cat processing for small single-character interactive input
                             # This happens when cat is waiting for stdin and user types
                             is_interactive_input = (
@@ -715,45 +741,47 @@ class HighlightedTerminalProxy:
                                 term.feed(data)
                             else:
                                 self._process_cat_output(data, term)
-                        else:
+                        elif is_ignored:
+                            # PERFORMANCE FIX FOR IGNORED COMMANDS
+                            # Only apply shell input highlighting if enabled
+                            if shell_input_enabled and data_len < 1024:
+                                text = data.decode("utf-8", errors="replace")
+                                self._check_and_update_prompt_state(text)
+
+                                if self._at_shell_prompt:
+                                    highlighted = self._apply_shell_input_highlighting(
+                                        text, term
+                                    )
+                                    if highlighted is not None:
+                                        return True
+
                             term.feed(data)
-                    elif is_ignored:
-                        # PERFORMANCE FIX FOR IGNORED COMMANDS
-                        if self._shell_input_highlighter.enabled and data_len < 1024:
-                            text = data.decode("utf-8", errors="replace")
-                            self._check_and_update_prompt_state(text)
+                        elif (
+                            not context
+                            and self._at_shell_prompt
+                            and shell_input_enabled
+                        ):
+                            # NO CONTEXT (at shell prompt before first command)
+                            # Only when shell input highlighting is enabled
+                            if data_len < 1024:
+                                text = data.decode("utf-8", errors="replace")
+                                self._check_and_update_prompt_state(text)
 
-                            if self._at_shell_prompt:
-                                highlighted = self._apply_shell_input_highlighting(
-                                    text, term
-                                )
-                                if highlighted is not None:
-                                    return True
+                                if self._at_shell_prompt:
+                                    highlighted = self._apply_shell_input_highlighting(
+                                        text, term
+                                    )
+                                    if highlighted is not None:
+                                        return True
 
-                        term.feed(data)
-                    elif not context and self._at_shell_prompt and self._shell_input_highlighter.enabled:
-                        # NO CONTEXT (at shell prompt before first command)
-                        # This handles SSH sessions and other cases where there's no
-                        # foreground process context but we're at a shell prompt.
-                        # Without this, shell input highlighting wouldn't work in SSH
-                        # because there are no interactive markers (NUL prefix).
-                        if data_len < 1024:
-                            text = data.decode("utf-8", errors="replace")
-                            self._check_and_update_prompt_state(text)
-
-                            if self._at_shell_prompt:
-                                highlighted = self._apply_shell_input_highlighting(
-                                    text, term
-                                )
-                                if highlighted is not None:
-                                    return True
-
-                        term.feed(data)
-                    else:
-                        # Stream data line-by-line
-                        self._process_data_streaming(data, term)
-                else:
-                    term.feed(data)
+                            term.feed(data)
+                        elif output_highlighting_enabled:
+                            # Output highlighting is enabled - stream data with highlighting
+                            self._process_data_streaming(data, term)
+                        else:
+                            # No applicable highlighting feature is enabled
+                            # Feed raw data directly
+                            term.feed(data)
             except Exception:
                 self._widget_destroyed = True
                 self._io_watch_id = None
@@ -774,6 +802,21 @@ class HighlightedTerminalProxy:
         Includes safety limit, Strict Queue Ordering, Partial Buffer Flushing,
         and Robust Echo Skipping.
         """
+        # Early check: if cat colorization is disabled, bypass processing
+        # Cat colorization also depends on output highlighting being enabled
+        from ..settings.manager import get_settings_manager
+
+        settings = get_settings_manager()
+        output_highlighting_enabled = self._highlighter.is_enabled_for_type(
+            self._terminal_type
+        )
+        cat_colorization_enabled = output_highlighting_enabled and settings.get(
+            "cat_colorization_enabled", True
+        )
+        if not cat_colorization_enabled:
+            term.feed(data)
+            return
+
         # 1. Flush standard line queue to ensure command echo order
         self._flush_queue(term)
 
@@ -1501,6 +1544,20 @@ class HighlightedTerminalProxy:
         Bracketed Paste Bypass, Strict Ordering, and Robust Split-Escape Safety.
         """
         try:
+            # --- EARLY EXIT: Output highlighting disabled ---
+            # Check if output highlighting is disabled for this terminal type.
+            # This ensures that when the user disables output highlighting,
+            # all subsequent data is fed raw to the terminal immediately.
+            if not self._highlighter.is_enabled_for_type(self._terminal_type):
+                # Clear any stale highlighted data from the queue
+                self._line_queue.clear()
+                # Feed any partial buffer and the current data raw
+                if self._partial_line_buffer:
+                    term.feed(self._partial_line_buffer)
+                    self._partial_line_buffer = b""
+                term.feed(data)
+                return
+
             # --- 0. BRACKETED PASTE DETECTION ---
             if b"\x1b[200~" in data:
                 self._in_bracketed_paste = True

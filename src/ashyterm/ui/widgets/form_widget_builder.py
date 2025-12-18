@@ -7,7 +7,7 @@ used in command dialogs. It eliminates code duplication between
 CommandFormDialog and CommandEditorDialog.
 """
 
-from typing import Any, Callable, Dict, List, Optional, Tuple, Union
+from typing import Any, Callable, Dict, List, Optional, Tuple
 from dataclasses import dataclass
 
 import gi

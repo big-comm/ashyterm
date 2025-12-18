@@ -379,6 +379,94 @@ class TerminalManager:
         )
         self.logger.info("Terminal manager initialized")
 
+    def prepare_initial_terminal(self) -> None:
+        """
+        Pre-create the base terminal widget and prepare shell environment in background.
+        This allows the terminal to be ready faster when the first tab is created.
+        Call this early during window initialization for best results.
+        """
+        self._precreated_terminal = None
+        self._precreated_env_ready = threading.Event()
+        self._precreated_env_data = None
+        self._highlights_ready = threading.Event()
+
+        # Create base terminal widget immediately (must be on main thread)
+        # Note: Don't apply settings yet since window UI may not be fully ready
+        try:
+            self._precreated_terminal = self._create_base_terminal(apply_settings=False)
+            if self._precreated_terminal:
+                self.logger.info("Pre-created base terminal widget for faster startup")
+        except Exception as e:
+            self.logger.warning(f"Failed to pre-create terminal: {e}")
+            self._precreated_terminal = None
+
+        # Prepare shell environment and highlights in background thread
+        def prepare_background():
+            try:
+                # Prepare shell environment
+                cmd, env, temp_dir_path = self.spawner._prepare_shell_environment(None)
+                self._precreated_env_data = (cmd, env, temp_dir_path)
+                self.logger.debug("Pre-prepared shell environment in background")
+            except Exception as e:
+                self.logger.warning(f"Failed to pre-prepare shell environment: {e}")
+                self._precreated_env_data = None
+            finally:
+                self._precreated_env_ready.set()
+
+            # Pre-load the HighlightManager (loads 50+ JSON files)
+            try:
+                from ..settings.highlights import get_highlight_manager
+
+                self._highlight_manager = get_highlight_manager()
+                self.logger.debug(
+                    "Pre-loaded HighlightManager (JSON rules) in background"
+                )
+            except Exception as e:
+                self.logger.warning(f"Failed to pre-load HighlightManager: {e}")
+
+            # Pre-load highlight modules (output, shell_input, and proxy implementation)
+            try:
+                from .highlighter.output import get_output_highlighter
+                from .highlighter.shell_input import get_shell_input_highlighter
+
+                get_output_highlighter()
+                get_shell_input_highlighter()
+                # Also pre-import the proxy implementation (imports GTK stack)
+                from ._highlighter_impl import HighlightedTerminalProxy
+
+                self.logger.debug("Pre-loaded highlighting modules in background")
+            except Exception as e:
+                self.logger.warning(f"Failed to pre-load highlights: {e}")
+            finally:
+                self._highlights_ready.set()
+
+        bg_thread = threading.Thread(target=prepare_background, daemon=True)
+        bg_thread.start()
+
+    def get_precreated_terminal(self) -> "Optional[Vte.Terminal]":
+        """
+        Get the pre-created terminal if available.
+        Returns None if no terminal was pre-created or it was already consumed.
+        """
+        terminal = getattr(self, "_precreated_terminal", None)
+        self._precreated_terminal = None
+        return terminal
+
+    def get_precreated_env_data(self, timeout: float = 0.1) -> "Optional[tuple]":
+        """
+        Get the pre-prepared shell environment data if ready.
+        Args:
+            timeout: Max time to wait for env preparation (default 100ms)
+        Returns:
+            Tuple of (cmd, env, temp_dir_path) or None if not ready/failed
+        """
+        ready_event = getattr(self, "_precreated_env_ready", None)
+        if ready_event and ready_event.wait(timeout):
+            data = getattr(self, "_precreated_env_data", None)
+            self._precreated_env_data = None
+            return data
+        return None
+
     def _get_highlight_manager(self):
         if self._highlight_manager is None:
             self._highlight_manager = _get_highlight_manager()
@@ -563,7 +651,15 @@ class TerminalManager:
         execute_command: Optional[str] = None,
         close_after_execute: bool = False,
     ):
-        terminal = self._create_base_terminal()
+        # Try to use pre-created terminal for faster initial startup
+        terminal = self.get_precreated_terminal()
+        if terminal:
+            self.logger.debug("Using pre-created terminal for faster startup")
+            # Apply settings now that window UI is ready
+            self.settings_manager.apply_terminal_settings(terminal, self.parent_window)
+            self.logger.debug("Applied terminal settings to pre-created terminal")
+        else:
+            terminal = self._create_base_terminal()
         if not terminal:
             raise TerminalCreationError("base terminal creation failed", "local")
 
@@ -577,6 +673,11 @@ class TerminalManager:
                 self.logger.warning(
                     f"Invalid working directory '{working_directory}', using default"
                 )
+
+            # Try to get pre-prepared environment for faster spawn (only if no custom working dir)
+            precreated_env = None
+            if not working_directory:
+                precreated_env = self.get_precreated_env_data(timeout=0.05)
 
             user_data_for_spawn = (
                 terminal_id,
@@ -594,20 +695,32 @@ class TerminalManager:
             # - cat colorization
             # - shell input highlighting
             # Each can be overridden per-session (tri-state: None/True/False).
-            cat_colorization_enabled = self.settings_manager.get(
-                "cat_colorization_enabled", True
-            )
-            shell_input_enabled = self.settings_manager.get(
-                "shell_input_highlighting_enabled", False
-            )
+            # Note: cat colorization and shell input highlighting only work
+            # when output highlighting is enabled (Local/SSH activation).
 
             output_highlighting_enabled = highlight_manager.enabled_for_local
             if session and session.output_highlighting is not None:
                 output_highlighting_enabled = session.output_highlighting
+
+            # Cat and shell input highlighting depend on output highlighting being enabled
+            cat_colorization_enabled = (
+                output_highlighting_enabled
+                and self.settings_manager.get("cat_colorization_enabled", True)
+            )
+            shell_input_enabled = (
+                output_highlighting_enabled
+                and self.settings_manager.get("shell_input_highlighting_enabled", False)
+            )
+
+            # Per-session overrides can further enable/disable these features
             if session and session.cat_colorization is not None:
-                cat_colorization_enabled = session.cat_colorization
+                cat_colorization_enabled = (
+                    output_highlighting_enabled and session.cat_colorization
+                )
             if session and session.shell_input_highlighting is not None:
-                shell_input_enabled = session.shell_input_highlighting
+                shell_input_enabled = (
+                    output_highlighting_enabled and session.shell_input_highlighting
+                )
 
             should_spawn_highlighted = (
                 output_highlighting_enabled
@@ -616,6 +729,14 @@ class TerminalManager:
             )
 
             if should_spawn_highlighted:
+                # Check if highlight modules are ready (non-blocking)
+                # If not ready yet, spawn_highlighted_local_terminal will
+                # import them synchronously (slightly slower first time only)
+                highlights_ready = getattr(self, "_highlights_ready", None)
+                if highlights_ready is not None:
+                    # Only wait a very short time - if not ready, import will happen sync
+                    highlights_ready.wait(timeout=0.05)  # Max 50ms wait
+
                 proxy = self.spawner.spawn_highlighted_local_terminal(
                     terminal,
                     session=session,
@@ -638,6 +759,7 @@ class TerminalManager:
                         callback=self._on_spawn_callback,
                         user_data=user_data_for_spawn,
                         working_directory=resolved_working_dir,
+                        precreated_env=precreated_env,
                     )
             else:
                 self.spawner.spawn_local_terminal(
@@ -645,6 +767,7 @@ class TerminalManager:
                     callback=self._on_spawn_callback,
                     user_data=user_data_for_spawn,
                     working_directory=resolved_working_dir,
+                    precreated_env=precreated_env,
                 )
 
             log_title = session.name if session else title
@@ -693,20 +816,34 @@ class TerminalManager:
                     highlight_manager = self._get_highlight_manager()
 
                     # Decide whether to spawn a highlighted proxy.
-                    cat_colorization_enabled = self.settings_manager.get(
-                        "cat_colorization_enabled", True
-                    )
-                    shell_input_enabled = self.settings_manager.get(
-                        "shell_input_highlighting_enabled", False
-                    )
-
+                    # Note: cat colorization and shell input highlighting only work
+                    # when output highlighting is enabled (Local/SSH activation).
                     output_highlighting_enabled = highlight_manager.enabled_for_ssh
                     if session.output_highlighting is not None:
                         output_highlighting_enabled = session.output_highlighting
+
+                    # Cat and shell input highlighting depend on output highlighting being enabled
+                    cat_colorization_enabled = (
+                        output_highlighting_enabled
+                        and self.settings_manager.get("cat_colorization_enabled", True)
+                    )
+                    shell_input_enabled = (
+                        output_highlighting_enabled
+                        and self.settings_manager.get(
+                            "shell_input_highlighting_enabled", False
+                        )
+                    )
+
+                    # Per-session overrides can further enable/disable these features
                     if session.cat_colorization is not None:
-                        cat_colorization_enabled = session.cat_colorization
+                        cat_colorization_enabled = (
+                            output_highlighting_enabled and session.cat_colorization
+                        )
                     if session.shell_input_highlighting is not None:
-                        shell_input_enabled = session.shell_input_highlighting
+                        shell_input_enabled = (
+                            output_highlighting_enabled
+                            and session.shell_input_highlighting
+                        )
 
                     should_spawn_highlighted = (
                         output_highlighting_enabled
@@ -802,7 +939,9 @@ class TerminalManager:
             sftp_local_directory=local_directory,
         )
 
-    def _create_base_terminal(self) -> Optional[Vte.Terminal]:
+    def _create_base_terminal(
+        self, apply_settings: bool = True
+    ) -> Optional[Vte.Terminal]:
         try:
             terminal = Vte.Terminal()
             terminal.set_vexpand(True)
@@ -814,7 +953,10 @@ class TerminalManager:
             terminal.set_scroll_unit_is_pixels(True)
             if hasattr(terminal, "set_search_highlight_enabled"):
                 terminal.set_search_highlight_enabled(True)
-            self.settings_manager.apply_terminal_settings(terminal, self.parent_window)
+            if apply_settings:
+                self.settings_manager.apply_terminal_settings(
+                    terminal, self.parent_window
+                )
             self._setup_context_menu(terminal)
             self._setup_url_patterns(terminal)
             return terminal

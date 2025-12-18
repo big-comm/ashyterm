@@ -146,6 +146,10 @@ class SettingsManager:
         self._lock = threading.RLock()
         self._change_listeners: List[Callable[[str, Any, Any], None]] = []
         self.custom_schemes: Dict[str, Any] = {}
+        # Performance optimization: Cache for compiled CSS themes
+        # Key: (bg_color, fg_color, header_bg_color, transparency, luminance)
+        # Value: (css_string, provider)
+        self._theme_css_cache: Dict[tuple, tuple] = {}
         self._initialize()
         self.logger.info("Settings manager initialized")
 
@@ -732,6 +736,8 @@ class SettingsManager:
         """
         Apply terminal colors to GTK elements when gtk_theme is 'terminal'.
         This includes headerbar, tabs, sidebar, popovers, file manager, and dialogs.
+
+        Performance: Uses CSS caching to avoid rebuilding CSS when theme params unchanged.
         """
         try:
             scheme = self.get_color_scheme_data()
@@ -746,6 +752,35 @@ class SettingsManager:
             b = int(bg_color[5:7], 16) / 255
             luminance = 0.299 * r + 0.587 * g + 0.114 * b
             is_dark_theme = luminance < 0.5
+
+            # Create cache key from all parameters that affect CSS output
+            cache_key = (
+                bg_color,
+                fg_color,
+                header_bg_color,
+                user_transparency,
+                is_dark_theme,
+            )
+
+            # Check cache for pre-built CSS
+            if cache_key in self._theme_css_cache:
+                css, cached_provider = self._theme_css_cache[cache_key]
+                # Remove existing provider if any
+                if hasattr(window, "_terminal_theme_provider"):
+                    Gtk.StyleContext.remove_provider_for_display(
+                        Gdk.Display.get_default(), window._terminal_theme_provider
+                    )
+                # Apply cached CSS
+                provider = Gtk.CssProvider()
+                provider.load_from_data(css.encode("utf-8"))
+                Gtk.StyleContext.add_provider_for_display(
+                    Gdk.Display.get_default(),
+                    provider,
+                    Gtk.STYLE_PROVIDER_PRIORITY_USER,
+                )
+                window._terminal_theme_provider = provider
+                self.apply_headerbar_transparency(window.header_bar)
+                return
 
             # Hover/selected alpha values based on theme
             hover_alpha = "10%" if is_dark_theme else "8%"
@@ -1466,6 +1501,10 @@ class SettingsManager:
 
             # Combine and apply
             css = "".join(css_parts)
+
+            # Cache the CSS for future use with same parameters
+            self._theme_css_cache[cache_key] = (css, None)
+
             provider = Gtk.CssProvider()
             provider.load_from_data(css.encode("utf-8"))
             Gtk.StyleContext.add_provider_for_display(

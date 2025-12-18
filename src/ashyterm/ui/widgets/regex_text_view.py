@@ -5,14 +5,14 @@ Supports terminal color scheme integration for consistent theming.
 """
 
 import re
-from typing import Dict, List
+from typing import List
 
 import gi
 
 gi.require_version("Gtk", "4.0")
-from gi.repository import Gdk, GLib, Gtk
+from gi.repository import Gdk, Gtk
 
-from ..colors import SYNTAX_DARK_COLORS, SYNTAX_LIGHT_COLORS, map_palette_to_syntax
+from ..colors import SYNTAX_DARK_COLORS, SYNTAX_LIGHT_COLORS
 from .base_syntax_text_view import BaseSyntaxTextView
 
 

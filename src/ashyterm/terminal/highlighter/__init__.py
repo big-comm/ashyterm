@@ -12,29 +12,31 @@ Usage:
         OutputHighlighter,
         ShellInputHighlighter,
         HighlightedTerminalProxy,
-        get_highlighter,
+        get_output_highlighter,
+        get_shell_input_highlighter,
     )
+
+Note: This module uses lazy loading to improve startup performance.
+Heavy modules are only imported when their symbols are first accessed.
 """
 
-# Import constants
+from typing import TYPE_CHECKING
+
+# Lightweight constants are imported eagerly (no heavy dependencies)
 from .constants import (
     ALT_SCREEN_DISABLE_PATTERNS,
     ALT_SCREEN_ENABLE_PATTERNS,
     ANSI_RESET,
 )
 
-# Import rules (standalone, no dependencies on main highlighter)
+# Rules are also lightweight
 from .rules import CompiledRule, LiteralKeywordRule
 
-# Import main classes from implementation module
-# These will be moved to separate files in future refactoring
-from .._highlighter_impl import HighlightedTerminalProxy
-
-# ShellInputHighlighter is now in its own module
-from .shell_input import ShellInputHighlighter, get_shell_input_highlighter
-
-# OutputHighlighter is now in its own module
-from .output import OutputHighlighter, get_output_highlighter
+# Type checking imports don't affect runtime
+if TYPE_CHECKING:
+    from .output import OutputHighlighter
+    from .shell_input import ShellInputHighlighter
+    from .._highlighter_impl import HighlightedTerminalProxy
 
 __all__ = [
     # Constants
@@ -51,3 +53,51 @@ __all__ = [
     "get_output_highlighter",
     "get_shell_input_highlighter",
 ]
+
+
+# Lazy loading for heavy modules
+_output_highlighter_module = None
+_shell_input_module = None
+_highlighter_impl_module = None
+
+
+def get_output_highlighter():
+    """Get the singleton OutputHighlighter instance (lazy import)."""
+    global _output_highlighter_module
+    if _output_highlighter_module is None:
+        from .output import get_output_highlighter as _get_output_highlighter
+
+        _output_highlighter_module = _get_output_highlighter
+    return _output_highlighter_module()
+
+
+def get_shell_input_highlighter():
+    """Get the singleton ShellInputHighlighter instance (lazy import)."""
+    global _shell_input_module
+    if _shell_input_module is None:
+        from .shell_input import (
+            get_shell_input_highlighter as _get_shell_input_highlighter,
+        )
+
+        _shell_input_module = _get_shell_input_highlighter
+    return _shell_input_module()
+
+
+def __getattr__(name: str):
+    """Lazy loading for heavy classes."""
+    global _output_highlighter_module, _shell_input_module, _highlighter_impl_module
+
+    if name == "OutputHighlighter":
+        from .output import OutputHighlighter
+
+        return OutputHighlighter
+    elif name == "ShellInputHighlighter":
+        from .shell_input import ShellInputHighlighter
+
+        return ShellInputHighlighter
+    elif name == "HighlightedTerminalProxy":
+        from .._highlighter_impl import HighlightedTerminalProxy
+
+        return HighlightedTerminalProxy
+
+    raise AttributeError(f"module {__name__!r} has no attribute {name!r}")

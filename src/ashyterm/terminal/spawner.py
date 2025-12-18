@@ -245,8 +245,17 @@ class ProcessSpawner:
         callback: Optional[Callable] = None,
         user_data: Any = None,
         working_directory: Optional[str] = None,
+        precreated_env: Optional[tuple] = None,
     ) -> None:
-        """Spawn a local terminal session. Raises TerminalCreationError on setup failure."""
+        """Spawn a local terminal session. Raises TerminalCreationError on setup failure.
+
+        Args:
+            terminal: The VTE terminal widget
+            callback: Spawn callback function
+            user_data: User data to pass to callback
+            working_directory: Optional working directory
+            precreated_env: Optional pre-prepared (cmd, env, temp_dir_path) tuple for faster spawn
+        """
         with self._spawn_lock:
             working_dir = self._resolve_and_validate_working_directory(
                 working_directory
@@ -256,8 +265,14 @@ class ProcessSpawner:
                     f"Invalid working directory '{working_directory}', using home directory."
                 )
 
-            # Use centralized shell environment preparation
-            cmd, env, temp_dir_path = self._prepare_shell_environment(working_directory)
+            # Use pre-prepared environment if available, otherwise prepare now
+            if precreated_env and not working_directory:
+                cmd, env, temp_dir_path = precreated_env
+                self.logger.debug("Using pre-prepared shell environment")
+            else:
+                cmd, env, temp_dir_path = self._prepare_shell_environment(
+                    working_directory
+                )
             env_list = [f"{k}={v}" for k, v in env.items()]
 
             # Wrap user_data to include the temp dir path for zsh cleanup

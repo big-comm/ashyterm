@@ -6,12 +6,8 @@ from functools import lru_cache
 from pathlib import Path
 from typing import Any, Dict, List
 
-import gi
-
-gi.require_version("Gtk", "4.0")
-gi.require_version("Adw", "1")
-gi.require_version("Pango", "1.0")
-from gi.repository import Pango
+# Note: GTK/Pango imports are done lazily in functions that need them
+# to avoid slow startup when only ConfigPaths is needed
 
 try:
     from ..utils.exceptions import ConfigError, ErrorSeverity
@@ -137,6 +133,12 @@ class DefaultSettings:
         ]
 
         try:
+            # Lazy import GTK/Pango only when actually needed
+            import gi
+
+            gi.require_version("Pango", "1.0")
+            from gi.repository import Pango
+
             # Get list of all available font families on the system
             import cairo
             from gi.repository import PangoCairo

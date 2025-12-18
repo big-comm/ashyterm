@@ -18,16 +18,29 @@ if __package__ is None:
         sys.path.insert(0, str(parent_dir))
     __package__ = "ashyterm"
 
-from .utils.logger import (
-    enable_debug_mode,
-    get_logger,
-    set_console_log_level,
-)
-from .utils.translation_utils import _
+_logger_module = None
+_translation_module = None
+
+
+def _get_logger_funcs():
+    """Lazy load logger functions."""
+    global _logger_module
+    if _logger_module is None:
+        from .utils import logger as _logger_module
+    return _logger_module
+
+
+def _get_translation():
+    """Lazy load translation function."""
+    global _translation_module
+    if _translation_module is None:
+        from .utils import translation_utils as _translation_module
+    return _translation_module._
 
 
 def setup_signal_handlers():
     """Set up signal handlers for graceful shutdown on Linux."""
+    _ = _get_translation()
 
     def signal_handler(sig, frame):
         print("\n" + _("Received signal {}, shutting down gracefully...").format(sig))
@@ -54,6 +67,9 @@ def setup_signal_handlers():
 
 def main() -> int:
     """Main entry point for the application."""
+    logger_mod = _get_logger_funcs()
+    _ = _get_translation()
+
     # Use a separate parser to handle debug/log flags before the main app starts
     pre_parser = argparse.ArgumentParser(add_help=False)
     pre_parser.add_argument("--debug", "-d", action="store_true")
@@ -62,14 +78,14 @@ def main() -> int:
 
     # Apply pre-launch log settings if provided
     if pre_args.debug:
-        enable_debug_mode()
+        logger_mod.enable_debug_mode()
     elif pre_args.log_level:
         try:
-            set_console_log_level(pre_args.log_level)
+            logger_mod.set_console_log_level(pre_args.log_level)
         except KeyError:
             print(f"Warning: Invalid log level '{pre_args.log_level}' provided.")
 
-    logger = get_logger("ashyterm.main")
+    logger = logger_mod.get_logger("ashyterm.main")
 
     # Tries to set the process title and logs failures
     try:

@@ -152,13 +152,18 @@ class CommTerminalWindow(Adw.ApplicationWindow):
                             f"Reconnected UI controls for terminal {terminal_id}"
                         )
 
+        # Create initial tab immediately for faster perceived startup
         if not self._is_for_detached_tab:
-            # MODIFIED: Load data and create initial tab asynchronously.
-            GLib.idle_add(self._load_initial_data_and_tab)
+            self._create_initial_tab_safe()
 
-        # NEW: Apply all visual settings after the window is fully constructed,
-        # especially important for detached windows.
-        GLib.idle_add(self._apply_initial_visual_settings)
+        # Deferred initialization for visual settings and data loading
+        def _deferred_init():
+            if not self._is_for_detached_tab:
+                self._load_initial_data()
+            self._apply_initial_visual_settings()
+            return GLib.SOURCE_REMOVE
+
+        GLib.idle_add(_deferred_init)
 
         self.logger.info("Main window initialization completed")
 
@@ -197,6 +202,9 @@ class CommTerminalWindow(Adw.ApplicationWindow):
 
         # UI/View-Model Layer
         self.terminal_manager = TerminalManager(self, self.settings_manager)
+        # Start terminal pre-creation in background for faster first tab
+        if not self._is_for_detached_tab:
+            self.terminal_manager.prepare_initial_terminal()
         self.ai_assistant = TerminalAiAssistant(
             self, self.settings_manager, self.terminal_manager
         )
@@ -259,12 +267,8 @@ class CommTerminalWindow(Adw.ApplicationWindow):
         self.command_toolbar = self.ui_builder.command_toolbar
         self.tab_manager.scrolled_tab_bar = self.scrolled_tab_bar
 
-        # Apply initial headerbar transparency
-        self.settings_manager.apply_headerbar_transparency(self.header_bar)
-
-        # Apply initial GTK terminal theme if set
-        if self.settings_manager.get("gtk_theme") == "terminal":
-            self.settings_manager.apply_gtk_terminal_theme(self)
+        # NOTE: Headerbar and theme styling is now handled in _apply_initial_visual_settings
+        # to avoid redundant CSS applications during initialization
 
     def _connect_component_signals(self) -> None:
         """
@@ -401,14 +405,15 @@ class CommTerminalWindow(Adw.ApplicationWindow):
         maximized = self.is_maximized()
         self.settings_manager.set("window_maximized", maximized)
 
-    def _load_initial_data_and_tab(self) -> bool:
+    def _load_initial_data_and_tab(self) -> None:
         """
-        Asynchronously loads initial data and then creates the initial tab.
-        This allows the UI to show up immediately.
+        Loads initial data and then creates the initial tab.
+        Called from deferred initialization to allow the UI to show up immediately.
         """
-        self._load_initial_data()
+        # Create the tab first (faster perceived startup)
         self._create_initial_tab_safe()
-        return GLib.SOURCE_REMOVE  # Run only once
+        # Then load session data (can happen while user sees the terminal)
+        self._load_initial_data()
 
     def _load_initial_data(self) -> None:
         """Load initial sessions, folders, and layouts data."""

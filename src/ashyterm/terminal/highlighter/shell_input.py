@@ -169,8 +169,18 @@ class ShellInputHighlighter:
 
     @property
     def enabled(self) -> bool:
-        """Check if shell input highlighting is enabled."""
-        return self._enabled and self._lexer is not None
+        """Check if shell input highlighting is enabled.
+        
+        Always reads from settings manager to ensure changes take effect immediately.
+        """
+        try:
+            from ...settings.manager import get_settings_manager
+            settings = get_settings_manager()
+            is_enabled = settings.get("shell_input_highlighting_enabled", False)
+            # Also require lexer to be initialized
+            return is_enabled and self._lexer is not None
+        except Exception:
+            return False
 
     def register_proxy(self, proxy_id: int) -> None:
         """Register a proxy for input tracking."""
