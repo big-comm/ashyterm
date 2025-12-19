@@ -176,10 +176,14 @@ class ProcessSpawner:
         )
         env["VTE_VERSION"] = str(vte_version)
 
-        # OSC7 integration for CWD tracking
+        # OSC7 integration for CWD tracking.
+        # Wrapped in a function to avoid escape sequence interpretation issues
+        # with bash extensions like ble.sh that can cause
+        # `$'\E]7': command not found` errors.
         osc7_command = (
-            f"{OSC7_HOST_DETECTION_SNIPPET} "
-            'printf "\\033]7;file://%s%s\\007" "$ASHYTERM_OSC7_HOST" "$PWD"'
+            f"__ashyterm_osc7() {{ {OSC7_HOST_DETECTION_SNIPPET} "
+            'printf "\\033]7;file://%s%s\\007" "$ASHYTERM_OSC7_HOST" "$PWD"; }; '
+            "__ashyterm_osc7"
         )
 
         if shell_basename == "zsh":
@@ -470,13 +474,6 @@ class ProcessSpawner:
                 cols = terminal.get_column_count() or 80
                 proxy.set_window_size(rows, cols)
 
-                # Use subprocess.Popen instead of os.fork() to avoid
-                # DeprecationWarning about fork() in multi-threaded process.
-                # Popen uses safer mechanisms (vfork/clone) internally.
-                # Note: We must NOT use start_new_session=True because we need
-                # to call setsid() BEFORE ioctl(TIOCSCTTY) in the preexec_fn.
-                # Also, we don't pass stdin/stdout/stderr to Popen because we
-                # handle dup2 manually in preexec_fn for proper PTY setup.
                 def preexec_fn():
                     """Setup PTY in child process before exec."""
                     os.setsid()
