@@ -470,63 +470,68 @@ class ProcessSpawner:
                 cols = terminal.get_column_count() or 80
                 proxy.set_window_size(rows, cols)
 
-                pid = os.fork()
+                # Use subprocess.Popen instead of os.fork() to avoid
+                # DeprecationWarning about fork() in multi-threaded process.
+                # Popen uses safer mechanisms (vfork/clone) internally.
+                # Note: We must NOT use start_new_session=True because we need
+                # to call setsid() BEFORE ioctl(TIOCSCTTY) in the preexec_fn.
+                # Also, we don't pass stdin/stdout/stderr to Popen because we
+                # handle dup2 manually in preexec_fn for proper PTY setup.
+                def preexec_fn():
+                    """Setup PTY in child process before exec."""
+                    os.setsid()
+                    fcntl.ioctl(slave_fd, termios.TIOCSCTTY, 0)
+                    os.dup2(slave_fd, 0)
+                    os.dup2(slave_fd, 1)
+                    os.dup2(slave_fd, 2)
+                    if slave_fd > 2:
+                        os.close(slave_fd)
+                    os.close(master_fd)
 
-                if pid == 0:
-                    # Child process
-                    try:
-                        os.setsid()
-                        fcntl.ioctl(slave_fd, termios.TIOCSCTTY, 0)
+                proc = subprocess.Popen(
+                    cmd,
+                    cwd=working_dir,
+                    env=env,
+                    preexec_fn=preexec_fn,
+                    close_fds=False,  # Keep slave_fd open for preexec_fn
+                )
+                pid = proc.pid
 
-                        os.dup2(slave_fd, 0)
-                        os.dup2(slave_fd, 1)
-                        os.dup2(slave_fd, 2)
+                # Close slave_fd in parent - child has its own copy
+                os.close(slave_fd)
 
-                        if slave_fd > 2:
-                            os.close(slave_fd)
-                        os.close(master_fd)
+                if not proxy.start(pid):
+                    self.logger.error("Failed to start highlight proxy")
+                    os.close(master_fd)
+                    return None
 
-                        os.chdir(working_dir)
-                        for key, value in env.items():
-                            os.environ[key] = value
+                # Register process
+                process_info = {
+                    "name": str(user_data) if user_data else "Terminal",
+                    "type": "local",
+                    "terminal": terminal,
+                    "temp_dir_path": temp_dir_path,
+                    "highlight_proxy": proxy,
+                }
+                self.process_tracker.register_process(pid, process_info)
 
-                        os.execvp(cmd[0], cmd)
-                    except Exception:
-                        os._exit(1)
-                else:
-                    # Parent process
-                    if not proxy.start(pid):
-                        self.logger.error("Failed to start highlight proxy")
-                        os.close(master_fd)
-                        return None
-
-                    # Register process
-                    process_info = {
-                        "name": str(user_data) if user_data else "Terminal",
-                        "type": "local",
-                        "terminal": terminal,
+                if callback:
+                    final_user_data = {
+                        "original_user_data": user_data,
                         "temp_dir_path": temp_dir_path,
-                        "highlight_proxy": proxy,
                     }
-                    self.process_tracker.register_process(pid, process_info)
+                    GLib.idle_add(callback, terminal, pid, None, (final_user_data,))
 
-                    if callback:
-                        final_user_data = {
-                            "original_user_data": user_data,
-                            "temp_dir_path": temp_dir_path,
-                        }
-                        GLib.idle_add(callback, terminal, pid, None, (final_user_data,))
+                self.logger.info(
+                    f"Highlighted local terminal spawned with PID {pid}"
+                )
+                log_terminal_event(
+                    "spawn_initiated",
+                    str(user_data),
+                    f"highlighted shell: {' '.join(cmd)}",
+                )
 
-                    self.logger.info(
-                        f"Highlighted local terminal spawned with PID {pid}"
-                    )
-                    log_terminal_event(
-                        "spawn_initiated",
-                        str(user_data),
-                        f"highlighted shell: {' '.join(cmd)}",
-                    )
-
-                    return proxy
+                return proxy
 
             except Exception as e:
                 self.logger.error(f"Highlighted spawn failed: {e}")
@@ -596,62 +601,64 @@ class ProcessSpawner:
                 cols = terminal.get_column_count() or 80
                 proxy.set_window_size(rows, cols)
 
-                pid = os.fork()
+                # Use subprocess.Popen instead of os.fork() to avoid
+                # DeprecationWarning about fork() in multi-threaded process.
+                # Note: We must NOT use start_new_session=True because we need
+                # to call setsid() BEFORE ioctl(TIOCSCTTY) in the preexec_fn.
+                def preexec_fn():
+                    """Setup PTY in child process before exec."""
+                    os.setsid()
+                    fcntl.ioctl(slave_fd, termios.TIOCSCTTY, 0)
+                    os.dup2(slave_fd, 0)
+                    os.dup2(slave_fd, 1)
+                    os.dup2(slave_fd, 2)
+                    if slave_fd > 2:
+                        os.close(slave_fd)
+                    os.close(master_fd)
 
-                if pid == 0:
-                    # Child process
-                    try:
-                        os.setsid()
-                        fcntl.ioctl(slave_fd, termios.TIOCSCTTY, 0)
+                proc = subprocess.Popen(
+                    remote_cmd,
+                    cwd=working_dir,
+                    env=env,
+                    preexec_fn=preexec_fn,
+                    close_fds=False,  # Keep slave_fd open for preexec_fn
+                )
+                pid = proc.pid
 
-                        os.dup2(slave_fd, 0)
-                        os.dup2(slave_fd, 1)
-                        os.dup2(slave_fd, 2)
+                # Close slave_fd in parent - child has its own copy
+                os.close(slave_fd)
 
-                        if slave_fd > 2:
-                            os.close(slave_fd)
-                        os.close(master_fd)
+                if not proxy.start(pid):
+                    self.logger.error("Failed to start highlight proxy for SSH")
+                    os.close(master_fd)
+                    return None
 
-                        os.chdir(working_dir)
-                        for key, value in env.items():
-                            os.environ[key] = value
+                process_info = {
+                    "name": session.name,
+                    "type": "ssh",
+                    "terminal": terminal,
+                    "session": session,
+                    "highlight_proxy": proxy,
+                }
+                self.process_tracker.register_process(pid, process_info)
 
-                        os.execvp(remote_cmd[0], remote_cmd)
-                    except Exception:
-                        os._exit(1)
-                else:
-                    # Parent process
-                    if not proxy.start(pid):
-                        self.logger.error("Failed to start highlight proxy for SSH")
-                        os.close(master_fd)
-                        return None
-
-                    process_info = {
-                        "name": session.name,
-                        "type": "ssh",
-                        "terminal": terminal,
-                        "session": session,
-                        "highlight_proxy": proxy,
+                if callback:
+                    final_user_data = {
+                        "original_user_data": user_data,
+                        "temp_dir_path": None,
                     }
-                    self.process_tracker.register_process(pid, process_info)
+                    GLib.idle_add(callback, terminal, pid, None, (final_user_data,))
 
-                    if callback:
-                        final_user_data = {
-                            "original_user_data": user_data,
-                            "temp_dir_path": None,
-                        }
-                        GLib.idle_add(callback, terminal, pid, None, (final_user_data,))
+                self.logger.info(
+                    f"Highlighted SSH session spawned with PID {pid} for {session.name}"
+                )
+                log_terminal_event(
+                    "spawn_initiated",
+                    session.name,
+                    f"highlighted SSH to {session.get_connection_string()}",
+                )
 
-                    self.logger.info(
-                        f"Highlighted SSH session spawned with PID {pid} for {session.name}"
-                    )
-                    log_terminal_event(
-                        "spawn_initiated",
-                        session.name,
-                        f"highlighted SSH to {session.get_connection_string()}",
-                    )
-
-                    return proxy
+                return proxy
 
             except Exception as e:
                 self.logger.error(f"Highlighted SSH spawn failed: {e}")

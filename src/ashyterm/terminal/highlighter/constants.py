@@ -37,8 +37,15 @@ ANSI_SEQ_PATTERN = re.compile(r"\x1b\[[0-9;]*[a-zA-Z]")
 # Pre-compiled pattern to detect ANSI color codes (SGR sequences)
 # Matches: standard colors (30-37, 40-47, 90-97, 100-107), 256-color (38;5;N, 48;5;N),
 # and RGB colors (38;2;R;G;B, 48;2;R;G;B)
+# Also handles leading attributes like "1;" (bold), "0;" (reset) which precede colors.
+# Requires the 'm' terminator to ensure we match actual SGR color sequences.
 ANSI_COLOR_PATTERN = re.compile(
-    r'\x1b\[(?:3[0-7]|4[0-7]|9[0-7]|10[0-7]|38;5;\d+|48;5;\d+|38;2;\d+;\d+;\d+|48;2;\d+;\d+;\d+)'
+    r'\x1b\[(?:[0-9;]*;)?'  # Optional leading attributes (0;, 1;, 00;, etc)
+    r'(?:'
+    r'3[0-7]|4[0-7]|9[0-7]|10[0-7]|'  # Standard and bright colors
+    r'38;5;\d+|48;5;\d+|'              # 256-color mode
+    r'38;2;\d+;\d+;\d+|48;2;\d+;\d+;\d+'  # True color (RGB)
+    r')[;0-9]*m'  # Optional trailing params + SGR terminator
 )
 
 # Pre-compiled pattern for ANSI color codes with 'm' terminator
