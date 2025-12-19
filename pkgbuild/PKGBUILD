@@ -1,26 +1,16 @@
-#Maintainer: Leonardo Berbert <leo4berbert@gmail.com>
-#Maintainer: Tales A. Mendonça <talesam@gmail.com>
+# Maintainer: BigLinux Team <dev@biglinux.com.br>
 
-pkgname=ashyterm
-pkgdesc="A modern GTK4/Adwaita terminal emulator with advanced session management, SSH integration, and security features."
+pkgname=big-hardware-info
+pkgdesc="A modern GTK4/Adwaita application for viewing and sharing hardware information."
 
 depends=(
     'gtk4'
     'libadwaita'
-    'libsecret'
     'python'
-    'python-py7zr'
     'python-gobject'
-    'python-setproctitle'
-    'python-requests'
-    'python-psutil'
-    'sshpass'
-    'rsync'
-    'vte4'
-    'libchildenv' # Optional, but recommended to improve GTK memory management.
-    'mimalloc' # Optional, but recommended to improve GTK memory management.
-    'python-regex' # Optional, Improved syntax highlighting performance'
-    'python-pygments' # Optional, Enhanced syntax highlighting in AI chat'
+    'inxi'
+    'pciutils'
+    'usbutils'
 )
 makedepends=(
     'python-build'
@@ -29,16 +19,12 @@ makedepends=(
     'python-wheel'
 )
 
-conflicts=('comm-ashyterm')
-provides=('comm-ashyterm')
-replaces=('comm-ashyterm')
-
 pkgver=$(date +%y.%m.%d)
 pkgrel=$(date +%H%M)
 
 arch=('any')
-license=('MIT')
-url="https://github.com/big-comm/${pkgname}"
+license=('GPL-3.0-or-later')
+url="https://github.com/biglinux/${pkgname}"
 source=("git+${url}.git")
 md5sums=('SKIP')
 
@@ -51,11 +37,8 @@ package() {
     cd "${srcdir}/${pkgname}"
 
     python -m installer --destdir="$pkgdir" dist/*.whl
-
-    # Install files
-    cp -a usr/share "${pkgdir}/usr/share"
     
-    cp -f usr/bin/ashyterm "${pkgdir}/usr/bin/ashyterm"
+    cp -f usr/bin/big-hardware-info "${pkgdir}/usr/bin/big-hardware-info"
 
     # Install license file if present
     if [ -f "LICENSE" ]; then
