@@ -518,6 +518,50 @@ msgstr "タブを切り離す"
 msgid "This is the only pane in the tab."
 msgstr "これはタブ内の唯一のペインです。"
 # 
+# File: src/ashyterm/terminal/manager.py, line: 1557
+#: NEEDS WORK
+msgid "Cancelled by user."
+msgstr "ユーザーによってキャンセルされました。"
+# 
+# File: src/ashyterm/terminal/manager.py, line: 1563
+#: NEEDS WORK
+msgid "Time limit reached. Giving up."
+msgstr "時間制限に達しました。あきらめます。"
+# 
+# File: src/ashyterm/terminal/manager.py, line: 1564
+# File: src/ashyterm/terminal/manager.py, line: 1613
+#: NEEDS WORK
+msgid "Showing connection options..."
+msgstr "接続オプションを表示しています..."
+# 
+# File: src/ashyterm/terminal/manager.py, line: 1574
+#: NEEDS WORK
+#, python-brace-format
+msgid "Attempt {n}/{max} - Time remaining: {mins}m {secs}s"
+msgstr "試行 {n}/{max} - 残り時間: {mins}分 {secs}秒"
+# 
+# File: src/ashyterm/terminal/manager.py, line: 1604
+#: NEEDS WORK
+#, python-brace-format
+msgid "Spawn error: {error}"
+msgstr "生成エラー: {error}"
+# 
+# File: src/ashyterm/terminal/manager.py, line: 1612
+#: NEEDS WORK
+msgid "Maximum attempts reached."
+msgstr "最大試行回数に達しました。"
+# 
+# File: src/ashyterm/terminal/manager.py, line: 1621
+#: NEEDS WORK
+#, python-brace-format
+msgid "Starting auto-reconnect: {attempts} attempts over {mins} minute(s), every {secs}s"
+msgstr "自動再接続を開始中: {attempts} 回の試行を {mins} 分間にわたって行い、{secs} 秒ごとに実施します"
+# 
+# File: src/ashyterm/terminal/manager.py, line: 1628
+#: NEEDS WORK
+msgid "Close this tab to cancel."
+msgstr "このタブを閉じてキャンセルします。"
+# 
 # File: usr/share/ashyterm/ui/window_ui.py, line: 339
 #: NEEDS WORK
 msgid "Type your command here and press ENTER..."
@@ -2125,6 +2169,108 @@ msgstr "デフォルトを使用"
 msgid "Clear custom prompts and use random defaults"
 msgstr "カスタムプロンプトをクリアし、ランダムなデフォルトを使用する"
 # 
+# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
+# 
+# File: src/ashyterm/ui/widgets/ssh_error_banner.py, line: 167
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 20
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 25
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 48
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 53
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 58
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 63
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 68
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 73
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 79
+#: NEEDS WORK
+msgid "Authentication Failed"
+msgstr "認証に失敗しました"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 906
+#: NEEDS WORK
+msgid "Connection Failed"
+msgstr "接続に失敗しました"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 223
+#: NEEDS WORK
+msgid "Edit Session"
+msgstr "セッションを編集"
+# 
+# File: src/ashyterm/ui/widgets/ssh_error_banner.py, line: 204
+#: NEEDS WORK
+msgid "Edit session credentials"
+msgstr "セッション資格情報を編集"
+# 
+# File: src/ashyterm/ui/widgets/ssh_error_banner.py, line: 208
+#: NEEDS WORK
+msgid "Fix Host Key"
+msgstr "ホストキーを修正"
+# 
+# File: src/ashyterm/ui/widgets/ssh_error_banner.py, line: 212
+#: NEEDS WORK
+msgid "Remove old host key from known_hosts"
+msgstr "known_hosts から古いホストキーを削除"
+# 
+# File: src/ashyterm/ui/widgets/ssh_error_banner.py, line: 220
+#: NEEDS WORK
+msgid "Retry connection with extended timeout"
+msgstr "接続を再試行する（拡張タイムアウト付き）"
+# 
+# File: src/ashyterm/ui/widgets/ssh_error_banner.py, line: 226
+#: NEEDS WORK
+msgid "Auto Reconnect"
+msgstr "自動再接続"
+# 
+# File: src/ashyterm/ui/widgets/ssh_error_banner.py, line: 229
+#: NEEDS WORK
+msgid "Start automatic reconnection attempts"
+msgstr "自動再接続試行を開始"
+# 
+# File: src/ashyterm/ui/widgets/ssh_error_banner.py, line: 238
+#: NEEDS WORK
+msgid "Configure auto-reconnect options"
+msgstr "自動再接続オプションを設定する"
+# 
+# File: src/ashyterm/ui/widgets/ssh_error_banner.py, line: 281
+#: NEEDS WORK
+msgid "Auto-reconnect settings:"
+msgstr "自動再接続設定："
+# 
+# File: src/ashyterm/ui/widgets/ssh_error_banner.py, line: 287
+#: NEEDS WORK
+msgid "Duration"
+msgstr "期間"
+# 
+# File: src/ashyterm/ui/widgets/ssh_error_banner.py, line: 297
+#: NEEDS WORK
+msgid "min"
+msgstr "最小"
+# 
+# File: src/ashyterm/ui/widgets/ssh_error_banner.py, line: 305
+#: NEEDS WORK
+msgid "Interval"
+msgstr "インターバル"
+# 
+# File: src/ashyterm/ui/widgets/ssh_error_banner.py, line: 315
+# File: src/ashyterm/ui/widgets/ssh_error_banner.py, line: 333
+#: NEEDS WORK
+msgid "sec"
+msgstr "秒"
+# 
+# File: src/ashyterm/ui/widgets/ssh_error_banner.py, line: 323
+#: NEEDS WORK
+msgid "Timeout"
+msgstr "タイムアウト"
+# 
+# File: src/ashyterm/data/command_manager_models.py, line: 419
+#: NEEDS WORK
+msgid "Start"
+msgstr "開始"
+# 
+# File: src/ashyterm/ui/widgets/ssh_error_banner.py, line: 344
+#: NEEDS WORK
+msgid "Start auto-reconnect with these settings"
+msgstr "これらの設定で自動再接続を開始"
+# 
 # File: src/ashyterm/ui/widgets/form_widget_builder.py, line: 160
 #: NEEDS WORK
 msgid "Enter password..."
@@ -2588,16 +2734,406 @@ msgstr "これらの {count} アイテムを永久に削除してもよろしい
 msgid "This will also delete all contents of any selected folders."
 msgstr "これにより、選択したフォルダーのすべての内容も削除されます。"
 # 
-# File: usr/share/ashyterm/ui/ssh_dialogs.py, line: 206
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 14
 #: NEEDS WORK
-msgid "SSH Connection Failed"
-msgstr "SSH接続に失敗しました"
+msgid "General SSH Error"
+msgstr "一般的なSSHエラー"
 # 
-# File: usr/share/ashyterm/ui/ssh_dialogs.py, line: 207
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 15
+#: NEEDS WORK
+msgid "The SSH command failed with a general error."
+msgstr "SSHコマンドが一般的なエラーで失敗しました。"
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 17
+#: NEEDS WORK
+msgid "Command Misuse"
+msgstr "コマンドの誤用"
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 17
+#: NEEDS WORK
+msgid "SSH command was used incorrectly."
+msgstr "SSHコマンドが不正に使用されました。"
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 21
+#: NEEDS WORK
+msgid "Username or password is incorrect, or the user is not allowed to connect."
+msgstr "ユーザー名またはパスワードが正しくありません、またはユーザーは接続を許可されていません。"
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 26
+#: NEEDS WORK
+msgid "Authentication failed. Check username, password, or SSH key."
+msgstr "認証に失敗しました。ユーザー名、パスワード、またはSSHキーを確認してください。"
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 30
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 113
+#: NEEDS WORK
+msgid "Host Key Verification Failed"
+msgstr "ホストキーの検証に失敗しました"
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 31
+#: NEEDS WORK
+msgid "The server's host key is not recognized or has changed."
+msgstr "サーバーのホストキーが認識されていないか、変更されています。"
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 37
+#: NEEDS WORK
+msgid ""
+"Could not establish connection to the server. Check if the host is reachable and the port is "
+"correct."
+msgstr "サーバーへの接続を確立できませんでした。ホストにアクセスできるか、ポートが正しいか確認してください。"
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 49
+#: NEEDS WORK
+msgid "Username or password is incorrect. Please verify your credentials."
+msgstr "ユーザー名またはパスワードが正しくありません。資格情報を確認してください。"
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 54
+#: NEEDS WORK
+msgid "Authentication failed. Check your username and password."
+msgstr "認証に失敗しました。ユーザー名とパスワードを確認してください。"
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 59
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 69
+#: NEEDS WORK
+msgid "Password authentication failed. The password may be incorrect."
+msgstr "パスワード認証に失敗しました。パスワードが間違っている可能性があります。"
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 64
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 74
+#: NEEDS WORK
+msgid "The password entered is incorrect."
+msgstr "入力されたパスワードが間違っています。"
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 80
+#: NEEDS WORK
+msgid "The password is invalid or incorrect."
+msgstr "パスワードが無効または不正です。"
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 85
+#: NEEDS WORK
+msgid "Multiple Auth Methods Failed"
+msgstr "複数の認証方法が失敗しました"
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 87
+#: NEEDS WORK
+msgid "Both public key and password authentication failed. Check your credentials."
+msgstr "公開鍵とパスワード認証の両方が失敗しました。資格情報を確認してください。"
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 92
+#: NEEDS WORK
+msgid "SSH Key Rejected"
+msgstr "SSHキーが拒否されました"
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 94
+#: NEEDS WORK
+msgid "The server rejected your SSH key. The key may not be authorized on the server."
+msgstr "サーバーはあなたのSSHキーを拒否しました。キーはサーバーで承認されていない可能性があります。"
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 100
+#: NEEDS WORK
+msgid "SSH Agent Error"
+msgstr "SSHエージェントエラー"
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 101
+#: NEEDS WORK
+msgid "SSH agent refused the operation. Check if your key is loaded with ssh-add."
+msgstr "SSHエージェントが操作を拒否しました。ssh-addでキーが読み込まれているか確認してください。"
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 105
+#: NEEDS WORK
+msgid "SSH Agent Not Running"
+msgstr "SSHエージェントが実行されていません"
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 107
+#: NEEDS WORK
+msgid "SSH agent is not running. Start it with eval $(ssh-agent) and add your key."
+msgstr "SSHエージェントが実行されていません。eval $(ssh-agent)を使用して開始し、キーを追加してください。"
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 115
+#: NEEDS WORK
+msgid "The server's host key has changed or is not trusted. This could indicate a security issue."
+msgstr "サーバーのホストキーが変更されたか、信頼されていません。これはセキュリティの問題を示している可能性があります。"
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 120
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 127
+#: NEEDS WORK
+msgid "Host Key Changed"
+msgstr "ホストキーが変更されました"
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 122
+#: NEEDS WORK
+msgid "The server's host key has changed. Remove the old key from known_hosts if this is expected."
+msgstr "サーバーのホストキーが変更されました。予期される場合は、古いキーをknown_hostsから削除してください。"
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 129
+#: NEEDS WORK
+msgid "The server's identification has changed. This could indicate a security issue or server reinstall."
+msgstr "サーバーの識別情報が変更されました。これはセキュリティの問題やサーバーの再インストールを示す可能性があります。"
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 135
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 140
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 145
+#: NEEDS WORK
+msgid "DNS Resolution Failed"
+msgstr "DNS解決に失敗しました"
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 136
+#: NEEDS WORK
+msgid "Could not resolve the hostname. Check if the address is correct."
+msgstr "ホスト名を解決できませんでした。アドレスが正しいか確認してください。"
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 141
+#: NEEDS WORK
+msgid "The hostname could not be resolved. Check the server address."
+msgstr "ホスト名を解決できませんでした。サーバーアドレスを確認してください。"
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 146
+#: NEEDS WORK
+msgid "No address found for the hostname."
+msgstr "ホスト名に対するアドレスが見つかりません。"
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 150
+#: NEEDS WORK
+msgid "DNS Temporary Failure"
+msgstr "DNS一時的な障害"
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 151
+#: NEEDS WORK
+msgid "DNS resolution temporarily failed. Check your network connection."
+msgstr "DNS解決に一時的に失敗しました。ネットワーク接続を確認してください。"
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 156
+#: NEEDS WORK
+msgid "Connection Refused"
+msgstr "接続が拒否されました"
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 157
+#: NEEDS WORK
+msgid "The server refused the connection. Check if SSH is running on the server."
+msgstr "サーバーが接続を拒否しました。サーバーでSSHが実行されているか確認してください。"
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 161
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 168
+#: NEEDS WORK
+msgid "Connection Timeout"
+msgstr "接続タイムアウト"
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 163
+#: NEEDS WORK
+msgid "Connection attempt timed out. The server may be unreachable or behind a firewall."
+msgstr "接続の試行がタイムアウトしました。サーバーに到達できないか、ファイアウォールの背後にある可能性があります。"
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 169
+#: NEEDS WORK
+msgid "The operation timed out. Server may be slow or unreachable."
+msgstr "操作がタイムアウトしました。サーバーが遅いか、到達できない可能性があります。"
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 173
+#: NEEDS WORK
+msgid "No Route to Host"
+msgstr "ホストへのルートがありません"
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 175
+#: NEEDS WORK
+msgid "Network path to the server could not be found. Check your network connection."
+msgstr "サーバーへのネットワークパスが見つかりませんでした。ネットワーク接続を確認してください。"
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 180
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 185
+#: NEEDS WORK
+msgid "Network Unreachable"
+msgstr "ネットワークに到達できません"
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 181
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 186
+#: NEEDS WORK
+msgid "The network is not reachable. Check your internet connection."
+msgstr "ネットワークに接続できません。インターネット接続を確認してください。"
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 191
+#: NEEDS WORK
+msgid "Connection Reset"
+msgstr "接続リセット"
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 192
+#: NEEDS WORK
+msgid "The connection was reset by the remote server."
+msgstr "リモートサーバーによって接続がリセットされました。"
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 196
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 206
+#: NEEDS WORK
+msgid "Connection Closed"
+msgstr "接続が切断されました"
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 197
+#: NEEDS WORK
+msgid "The remote server closed the connection unexpectedly."
+msgstr "リモートサーバーが予期せず接続を閉じました。"
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 201
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 211
+#: NEEDS WORK
+msgid "Connection Lost"
+msgstr "接続が失われました"
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 202
+#: NEEDS WORK
+msgid "The connection to the server was lost."
+msgstr "サーバーへの接続が失われました。"
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 207
+#: NEEDS WORK
+msgid "The server closed the connection."
+msgstr "サーバーが接続を閉じました。"
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 212
+#: NEEDS WORK
+msgid "Failed to read from the connection. The server may have closed it."
+msgstr "接続から読み取れませんでした。サーバーが接続を閉じた可能性があります。"
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 217
+#: NEEDS WORK
+msgid "Too Many Authentication Failures"
+msgstr "認証失敗が多すぎます"
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 218
+#: NEEDS WORK
+msgid "Too many failed login attempts. Wait before trying again."
+msgstr "ログイン試行が多すぎます。再試行する前に待ってください。"
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 222
+#: NEEDS WORK
+msgid "Server Disconnected"
+msgstr "サーバーが切断されました"
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 223
+#: NEEDS WORK
+msgid "The server disconnected. Check server logs for details."
+msgstr "サーバーが切断されました。詳細についてはサーバーログを確認してください。"
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 228
+#: NEEDS WORK
+msgid "SSH Service Not Running"
+msgstr "SSHサービスが実行されていません"
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 229
+#: NEEDS WORK
+msgid "SSH service doesn't appear to be running on the server."
+msgstr "サーバーでSSHサービスが実行されていないようです。"
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 234
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 239
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 244
+#: NEEDS WORK
+msgid "Key Authentication Failed"
+msgstr "キー認証に失敗しました"
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 235
+#: NEEDS WORK
+msgid "The specified SSH key file was not found."
+msgstr "指定されたSSHキーファイルが見つかりませんでした。"
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 240
+#: NEEDS WORK
+msgid "The SSH key is invalid or corrupted."
+msgstr "SSHキーが無効または破損しています。"
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 245
+#: NEEDS WORK
+msgid "Failed to load the SSH key file."
+msgstr "SSHキーファイルの読み込みに失敗しました。"
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 249
+#: NEEDS WORK
+msgid "Key File Permissions Error"
+msgstr "キー ファイルのアクセス許可エラー"
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 250
+#: NEEDS WORK
+msgid "SSH key file has incorrect permissions. Use chmod 600 on the key file."
+msgstr "SSHキーファイルの権限が不正です。キーファイルにchmod 600を使用してください。"
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 254
+#: NEEDS WORK
+msgid "SSH Key Format Error"
+msgstr "SSHキー形式エラー"
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 255
+#: NEEDS WORK
+msgid "The SSH key file has an invalid format."
+msgstr "SSHキーファイルの形式が無効です。"
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 260
+#: NEEDS WORK
+msgid "Certificate Invalid"
+msgstr "証明書無効"
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 261
+#: NEEDS WORK
+msgid "The SSH certificate signature verification failed."
+msgstr "SSH証明書の署名検証に失敗しました。"
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 265
+#: NEEDS WORK
+msgid "Certificate Expired"
+msgstr "証明書の期限切れ"
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 266
+#: NEEDS WORK
+msgid "The SSH certificate has expired and needs renewal."
+msgstr "SSH証明書の有効期限が切れており、更新が必要です。"
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 271
+#: NEEDS WORK
+msgid "Connection Denied by Server"
+msgstr "サーバーによって接続が拒否されました"
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 272
+#: NEEDS WORK
+msgid "The server administrator has blocked this connection."
+msgstr "サーバー管理者がこの接続をブロックしました。"
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 276
+#: NEEDS WORK
+msgid "SFTP Not Available"
+msgstr "SFTPは利用できません"
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 278
+#: NEEDS WORK
+msgid "SFTP subsystem is not available on the server. Contact the server administrator."
+msgstr "サーバーでSFTPサブシステムが利用できません。サーバー管理者に連絡してください。"
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 283
+#: NEEDS WORK
+msgid "SSH Channel Failed"
+msgstr "SSHチャネルの失敗"
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 284
+#: NEEDS WORK
+msgid "Failed to open SSH channel. The server may be overloaded or misconfigured."
+msgstr "SSHチャネルを開くことに失敗しました。サーバーが過負荷または誤設定されている可能性があります。"
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 289
+#: NEEDS WORK
+msgid "Password Authentication Denied"
+msgstr "パスワード認証が拒否されました"
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 291
+#: NEEDS WORK
+msgid "Password authentication was denied. The server may not allow password login."
+msgstr "パスワード認証が拒否されました。サーバーはパスワードログインを許可していない可能性があります。"
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 318
+#: NEEDS WORK
+msgid "SSH Connection Error"
+msgstr "SSH接続エラー"
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 319
 #: NEEDS WORK
 #, python-brace-format
-msgid "Could not connect to session '{session_name}'."
-msgstr "セッション '{session_name}' に接続できませんでした。"
+msgid "An unexpected error occurred while connecting. Exit code: {code}"
+msgstr "接続中に予期しないエラーが発生しました。終了コード: {code}"
 # 
 # File: src/ashyterm/ui/dialogs/ai_config_dialog.py, line: 43
 #: NEEDS WORK
@@ -3906,11 +4442,6 @@ msgstr "リストにコマンドが既に存在します"
 msgid "✓ Valid command name"
 msgstr "✓ 有効なコマンド名"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 223
-#: NEEDS WORK
-msgid "Edit Session"
-msgstr "セッションを編集"
-# 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 581
 #: NEEDS WORK
 msgid "Test Connection"
@@ -4437,11 +4968,6 @@ msgstr "接続成功"
 #: NEEDS WORK
 msgid "Successfully connected to the SSH server."
 msgstr "SSHサーバーに正常に接続されました。"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 906
-#: NEEDS WORK
-msgid "Connection Failed"
-msgstr "接続に失敗しました"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 907
 #: NEEDS WORK
@@ -6073,11 +6599,6 @@ msgstr "アクション"
 #: NEEDS WORK
 msgid "Status"
 msgstr "ステータス"
-# 
-# File: src/ashyterm/data/command_manager_models.py, line: 419
-#: NEEDS WORK
-msgid "Start"
-msgstr "開始"
 # 
 # File: src/ashyterm/data/command_manager_models.py, line: 420
 #: NEEDS WORK

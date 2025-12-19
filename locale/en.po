@@ -516,9 +516,57 @@ msgid "Detach Tab"
 msgstr "Detach Tab"
 
 #
-# File: src/ashyterm/terminal/tabs.py, line: 1409
+# File: src/ashyterm/terminal/tabs.py, line: 1891
 msgid "This is the only pane in the tab."
 msgstr "This is the only pane in the tab."
+
+#
+# File: src/ashyterm/terminal/manager.py, line: 1557
+msgid "Cancelled by user."
+msgstr "Cancelled by user."
+
+#
+# File: src/ashyterm/terminal/manager.py, line: 1563
+msgid "Time limit reached. Giving up."
+msgstr "Time limit reached. Giving up."
+
+#
+# File: src/ashyterm/terminal/manager.py, line: 1564
+# File: src/ashyterm/terminal/manager.py, line: 1613
+msgid "Showing connection options..."
+msgstr "Showing connection options..."
+
+#
+# File: src/ashyterm/terminal/manager.py, line: 1574
+#, python-brace-format
+msgid "Attempt {n}/{max} - Time remaining: {mins}m {secs}s"
+msgstr "Attempt {n}/{max} - Time remaining: {mins}m {secs}s"
+
+#
+# File: src/ashyterm/terminal/manager.py, line: 1604
+#, python-brace-format
+msgid "Spawn error: {error}"
+msgstr "Spawn error: {error}"
+
+#
+# File: src/ashyterm/terminal/manager.py, line: 1612
+msgid "Maximum attempts reached."
+msgstr "Maximum attempts reached."
+
+#
+# File: src/ashyterm/terminal/manager.py, line: 1621
+#, python-brace-format
+msgid ""
+"Starting auto-reconnect: {attempts} attempts over {mins} minute(s), every "
+"{secs}s"
+msgstr ""
+"Starting auto-reconnect: {attempts} attempts over {mins} minute(s), every "
+"{secs}s"
+
+#
+# File: src/ashyterm/terminal/manager.py, line: 1628
+msgid "Close this tab to cancel."
+msgstr "Close this tab to cancel."
 
 #
 # File: src/ashyterm/ui/window_ui.py, line: 178
@@ -2328,7 +2376,10 @@ msgid "Send message"
 msgstr "Send message"
 
 #
+# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
+#
 # File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 1910
+# File: src/ashyterm/ui/widgets/ssh_error_banner.py, line: 216
 msgid "Retry"
 msgstr "Retry"
 
@@ -2371,6 +2422,120 @@ msgstr "Use Defaults"
 # File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 2082
 msgid "Clear custom prompts and use random defaults"
 msgstr "Clear custom prompts and use random defaults"
+
+#
+# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
+#
+# File: src/ashyterm/ui/widgets/ssh_error_banner.py, line: 167
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 20
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 25
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 48
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 53
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 58
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 63
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 68
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 73
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 79
+msgid "Authentication Failed"
+msgstr "Authentication Failed"
+
+#
+# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
+#
+# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
+#
+# File: src/ashyterm/ui/widgets/ssh_error_banner.py, line: 169
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 35
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 1453
+msgid "Connection Failed"
+msgstr "Connection Failed"
+
+#
+# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
+#
+# File: src/ashyterm/ui/widgets/ssh_error_banner.py, line: 200
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 39
+msgid "Edit Session"
+msgstr "Edit Session"
+
+#
+# File: src/ashyterm/ui/widgets/ssh_error_banner.py, line: 204
+msgid "Edit session credentials"
+msgstr "Edit session credentials"
+
+#
+# File: src/ashyterm/ui/widgets/ssh_error_banner.py, line: 208
+msgid "Fix Host Key"
+msgstr "Fix Host Key"
+
+#
+# File: src/ashyterm/ui/widgets/ssh_error_banner.py, line: 212
+msgid "Remove old host key from known_hosts"
+msgstr "Remove old host key from known_hosts"
+
+#
+# File: src/ashyterm/ui/widgets/ssh_error_banner.py, line: 220
+msgid "Retry connection with extended timeout"
+msgstr "Retry connection with extended timeout"
+
+#
+# File: src/ashyterm/ui/widgets/ssh_error_banner.py, line: 226
+msgid "Auto Reconnect"
+msgstr "Auto Reconnect"
+
+#
+# File: src/ashyterm/ui/widgets/ssh_error_banner.py, line: 229
+msgid "Start automatic reconnection attempts"
+msgstr "Start automatic reconnection attempts"
+
+#
+# File: src/ashyterm/ui/widgets/ssh_error_banner.py, line: 238
+msgid "Configure auto-reconnect options"
+msgstr "Configure auto-reconnect options"
+
+#
+# File: src/ashyterm/ui/widgets/ssh_error_banner.py, line: 281
+msgid "Auto-reconnect settings:"
+msgstr "Auto-reconnect settings:"
+
+#
+# File: src/ashyterm/ui/widgets/ssh_error_banner.py, line: 287
+msgid "Duration"
+msgstr "Duration"
+
+#
+# File: src/ashyterm/ui/widgets/ssh_error_banner.py, line: 297
+msgid "min"
+msgstr "min"
+
+#
+# File: src/ashyterm/ui/widgets/ssh_error_banner.py, line: 305
+msgid "Interval"
+msgstr "Interval"
+
+#
+# File: src/ashyterm/ui/widgets/ssh_error_banner.py, line: 315
+# File: src/ashyterm/ui/widgets/ssh_error_banner.py, line: 333
+msgid "sec"
+msgstr "sec"
+
+#
+# File: src/ashyterm/ui/widgets/ssh_error_banner.py, line: 323
+msgid "Timeout"
+msgstr "Timeout"
+
+#
+# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
+#
+# File: src/ashyterm/ui/widgets/ssh_error_banner.py, line: 340
+# File: src/ashyterm/data/command_manager_models.py, line: 419
+msgid "Start"
+msgstr "Start"
+
+#
+# File: src/ashyterm/ui/widgets/ssh_error_banner.py, line: 344
+msgid "Start auto-reconnect with these settings"
+msgstr "Start auto-reconnect with these settings"
 
 #
 # File: src/ashyterm/ui/widgets/form_widget_builder.py, line: 160
@@ -2468,10 +2633,7 @@ msgstr "Conversation History"
 #
 # #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
 #
-# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
-#
 # File: src/ashyterm/ui/widgets/conversation_history.py, line: 137
-# File: src/ashyterm/ui/ssh_dialogs.py, line: 43
 # File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 3049
 # File: src/ashyterm/window.py, line: 601
 msgid "Close"
@@ -2902,15 +3064,447 @@ msgid "This will also delete all contents of any selected folders."
 msgstr "This will also delete all contents of any selected folders."
 
 #
-# File: src/ashyterm/ui/ssh_dialogs.py, line: 20
-msgid "SSH Connection Failed"
-msgstr "SSH Connection Failed"
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 14
+msgid "General SSH Error"
+msgstr "General SSH Error"
+
+#
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 15
+msgid "The SSH command failed with a general error."
+msgstr "The SSH command failed with a general error."
+
+#
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 17
+msgid "Command Misuse"
+msgstr "Command Misuse"
+
+#
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 17
+msgid "SSH command was used incorrectly."
+msgstr "SSH command was used incorrectly."
 
 #
 # File: src/ashyterm/ui/ssh_dialogs.py, line: 21
+msgid ""
+"Username or password is incorrect, or the user is not allowed to connect."
+msgstr ""
+"Username or password is incorrect, or the user is not allowed to connect."
+
+#
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 26
+msgid "Authentication failed. Check username, password, or SSH key."
+msgstr "Authentication failed. Check username, password, or SSH key."
+
+#
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 30
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 113
+msgid "Host Key Verification Failed"
+msgstr "Host Key Verification Failed"
+
+#
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 31
+msgid "The server's host key is not recognized or has changed."
+msgstr "The server's host key is not recognized or has changed."
+
+#
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 37
+msgid ""
+"Could not establish connection to the server. Check if the host is reachable "
+"and the port is correct."
+msgstr ""
+"Could not establish connection to the server. Check if the host is reachable "
+"and the port is correct."
+
+#
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 49
+msgid "Username or password is incorrect. Please verify your credentials."
+msgstr "Username or password is incorrect. Please verify your credentials."
+
+#
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 54
+msgid "Authentication failed. Check your username and password."
+msgstr "Authentication failed. Check your username and password."
+
+#
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 59
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 69
+msgid "Password authentication failed. The password may be incorrect."
+msgstr "Password authentication failed. The password may be incorrect."
+
+#
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 64
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 74
+msgid "The password entered is incorrect."
+msgstr "The password entered is incorrect."
+
+#
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 80
+msgid "The password is invalid or incorrect."
+msgstr "The password is invalid or incorrect."
+
+#
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 85
+msgid "Multiple Auth Methods Failed"
+msgstr "Multiple Auth Methods Failed"
+
+#
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 87
+msgid ""
+"Both public key and password authentication failed. Check your credentials."
+msgstr ""
+"Both public key and password authentication failed. Check your credentials."
+
+#
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 92
+msgid "SSH Key Rejected"
+msgstr "SSH Key Rejected"
+
+#
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 94
+msgid ""
+"The server rejected your SSH key. The key may not be authorized on the "
+"server."
+msgstr ""
+"The server rejected your SSH key. The key may not be authorized on the "
+"server."
+
+#
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 100
+msgid "SSH Agent Error"
+msgstr "SSH Agent Error"
+
+#
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 101
+msgid ""
+"SSH agent refused the operation. Check if your key is loaded with ssh-add."
+msgstr ""
+"SSH agent refused the operation. Check if your key is loaded with ssh-add."
+
+#
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 105
+msgid "SSH Agent Not Running"
+msgstr "SSH Agent Not Running"
+
+#
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 107
+msgid ""
+"SSH agent is not running. Start it with eval $(ssh-agent) and add your key."
+msgstr ""
+"SSH agent is not running. Start it with eval $(ssh-agent) and add your key."
+
+#
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 115
+msgid ""
+"The server's host key has changed or is not trusted. This could indicate a "
+"security issue."
+msgstr ""
+"The server's host key has changed or is not trusted. This could indicate a "
+"security issue."
+
+#
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 120
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 127
+msgid "Host Key Changed"
+msgstr "Host Key Changed"
+
+#
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 122
+msgid ""
+"The server's host key has changed. Remove the old key from known_hosts if "
+"this is expected."
+msgstr ""
+"The server's host key has changed. Remove the old key from known_hosts if "
+"this is expected."
+
+#
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 129
+msgid ""
+"The server's identification has changed. This could indicate a security "
+"issue or server reinstall."
+msgstr ""
+"The server's identification has changed. This could indicate a security "
+"issue or server reinstall."
+
+#
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 135
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 140
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 145
+msgid "DNS Resolution Failed"
+msgstr "DNS Resolution Failed"
+
+#
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 136
+msgid "Could not resolve the hostname. Check if the address is correct."
+msgstr "Could not resolve the hostname. Check if the address is correct."
+
+#
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 141
+msgid "The hostname could not be resolved. Check the server address."
+msgstr "The hostname could not be resolved. Check the server address."
+
+#
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 146
+msgid "No address found for the hostname."
+msgstr "No address found for the hostname."
+
+#
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 150
+msgid "DNS Temporary Failure"
+msgstr "DNS Temporary Failure"
+
+#
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 151
+msgid "DNS resolution temporarily failed. Check your network connection."
+msgstr "DNS resolution temporarily failed. Check your network connection."
+
+#
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 156
+msgid "Connection Refused"
+msgstr "Connection Refused"
+
+#
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 157
+msgid ""
+"The server refused the connection. Check if SSH is running on the server."
+msgstr ""
+"The server refused the connection. Check if SSH is running on the server."
+
+#
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 161
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 168
+msgid "Connection Timeout"
+msgstr "Connection Timeout"
+
+#
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 163
+msgid ""
+"Connection attempt timed out. The server may be unreachable or behind a "
+"firewall."
+msgstr ""
+"Connection attempt timed out. The server may be unreachable or behind a "
+"firewall."
+
+#
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 169
+msgid "The operation timed out. Server may be slow or unreachable."
+msgstr "The operation timed out. Server may be slow or unreachable."
+
+#
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 173
+msgid "No Route to Host"
+msgstr "No Route to Host"
+
+#
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 175
+msgid ""
+"Network path to the server could not be found. Check your network connection."
+msgstr ""
+"Network path to the server could not be found. Check your network connection."
+
+#
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 180
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 185
+msgid "Network Unreachable"
+msgstr "Network Unreachable"
+
+#
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 181
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 186
+msgid "The network is not reachable. Check your internet connection."
+msgstr "The network is not reachable. Check your internet connection."
+
+#
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 191
+msgid "Connection Reset"
+msgstr "Connection Reset"
+
+#
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 192
+msgid "The connection was reset by the remote server."
+msgstr "The connection was reset by the remote server."
+
+#
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 196
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 206
+msgid "Connection Closed"
+msgstr "Connection Closed"
+
+#
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 197
+msgid "The remote server closed the connection unexpectedly."
+msgstr "The remote server closed the connection unexpectedly."
+
+#
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 201
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 211
+msgid "Connection Lost"
+msgstr "Connection Lost"
+
+#
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 202
+msgid "The connection to the server was lost."
+msgstr "The connection to the server was lost."
+
+#
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 207
+msgid "The server closed the connection."
+msgstr "The server closed the connection."
+
+#
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 212
+msgid "Failed to read from the connection. The server may have closed it."
+msgstr "Failed to read from the connection. The server may have closed it."
+
+#
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 217
+msgid "Too Many Authentication Failures"
+msgstr "Too Many Authentication Failures"
+
+#
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 218
+msgid "Too many failed login attempts. Wait before trying again."
+msgstr "Too many failed login attempts. Wait before trying again."
+
+#
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 222
+msgid "Server Disconnected"
+msgstr "Server Disconnected"
+
+#
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 223
+msgid "The server disconnected. Check server logs for details."
+msgstr "The server disconnected. Check server logs for details."
+
+#
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 228
+msgid "SSH Service Not Running"
+msgstr "SSH Service Not Running"
+
+#
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 229
+msgid "SSH service doesn't appear to be running on the server."
+msgstr "SSH service doesn't appear to be running on the server."
+
+#
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 234
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 239
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 244
+msgid "Key Authentication Failed"
+msgstr "Key Authentication Failed"
+
+#
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 235
+msgid "The specified SSH key file was not found."
+msgstr "The specified SSH key file was not found."
+
+#
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 240
+msgid "The SSH key is invalid or corrupted."
+msgstr "The SSH key is invalid or corrupted."
+
+#
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 245
+msgid "Failed to load the SSH key file."
+msgstr "Failed to load the SSH key file."
+
+#
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 249
+msgid "Key File Permissions Error"
+msgstr "Key File Permissions Error"
+
+#
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 250
+msgid "SSH key file has incorrect permissions. Use chmod 600 on the key file."
+msgstr "SSH key file has incorrect permissions. Use chmod 600 on the key file."
+
+#
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 254
+msgid "SSH Key Format Error"
+msgstr "SSH Key Format Error"
+
+#
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 255
+msgid "The SSH key file has an invalid format."
+msgstr "The SSH key file has an invalid format."
+
+#
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 260
+msgid "Certificate Invalid"
+msgstr "Certificate Invalid"
+
+#
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 261
+msgid "The SSH certificate signature verification failed."
+msgstr "The SSH certificate signature verification failed."
+
+#
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 265
+msgid "Certificate Expired"
+msgstr "Certificate Expired"
+
+#
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 266
+msgid "The SSH certificate has expired and needs renewal."
+msgstr "The SSH certificate has expired and needs renewal."
+
+#
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 271
+msgid "Connection Denied by Server"
+msgstr "Connection Denied by Server"
+
+#
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 272
+msgid "The server administrator has blocked this connection."
+msgstr "The server administrator has blocked this connection."
+
+#
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 276
+msgid "SFTP Not Available"
+msgstr "SFTP Not Available"
+
+#
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 278
+msgid ""
+"SFTP subsystem is not available on the server. Contact the server "
+"administrator."
+msgstr ""
+"SFTP subsystem is not available on the server. Contact the server "
+"administrator."
+
+#
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 283
+msgid "SSH Channel Failed"
+msgstr "SSH Channel Failed"
+
+#
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 284
+msgid ""
+"Failed to open SSH channel. The server may be overloaded or misconfigured."
+msgstr ""
+"Failed to open SSH channel. The server may be overloaded or misconfigured."
+
+#
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 289
+msgid "Password Authentication Denied"
+msgstr "Password Authentication Denied"
+
+#
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 291
+msgid ""
+"Password authentication was denied. The server may not allow password login."
+msgstr ""
+"Password authentication was denied. The server may not allow password login."
+
+#
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 318
+msgid "SSH Connection Error"
+msgstr "SSH Connection Error"
+
+#
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 319
 #, python-brace-format
-msgid "Could not connect to session '{session_name}'."
-msgstr "Could not connect to session '{session_name}'."
+msgid "An unexpected error occurred while connecting. Exit code: {code}"
+msgstr "An unexpected error occurred while connecting. Exit code: {code}"
 
 #
 # File: src/ashyterm/ui/dialogs/ai_config_dialog.py, line: 43
@@ -4301,11 +4895,6 @@ msgid "✓ Valid command name"
 msgstr "✓ Valid command name"
 
 #
-# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 39
-msgid "Edit Session"
-msgstr "Edit Session"
-
-#
 # File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 109
 msgid "Test Connection"
 msgstr "Test Connection"
@@ -4863,11 +5452,6 @@ msgstr "Connection Successful"
 # File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 1447
 msgid "Successfully connected to the SSH server."
 msgstr "Successfully connected to the SSH server."
-
-#
-# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 1453
-msgid "Connection Failed"
-msgstr "Connection Failed"
 
 #
 # File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 1454
@@ -6559,11 +7143,6 @@ msgstr "Action"
 # File: src/ashyterm/data/command_manager_models.py, line: 418
 msgid "Status"
 msgstr "Status"
-
-#
-# File: src/ashyterm/data/command_manager_models.py, line: 419
-msgid "Start"
-msgstr "Start"
 
 #
 # File: src/ashyterm/data/command_manager_models.py, line: 420
