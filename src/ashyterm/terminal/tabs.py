@@ -961,25 +961,49 @@ class TabManager:
             fm.rebind_terminal(active_terminal)
             paned.set_end_child(fm.get_main_widget())
 
-            # Use saved file manager height from settings if available, otherwise use page-specific or default
-            window_height = self.terminal_manager.parent_window.get_height()
+            # Use paned's actual available height instead of window height
+            # This correctly handles cases where AI panel reduces available space
+            paned_allocation = paned.get_allocation()
+            available_height = paned_allocation.height
+            
+            # If allocation is not available yet (widget not realized), fall back to window height
+            if available_height <= 1:
+                available_height = self.terminal_manager.parent_window.get_height()
+                # Account for approximate headerbar/toolbar overhead
+                available_height = max(400, available_height - 100)
+            
             saved_fm_height = self.terminal_manager.settings_manager.get(
                 "file_manager_height", 250
             )
-            # Enforce minimum height constraint (100px)
+            # Enforce minimum height constraint
             min_fm_height = 240
-            saved_fm_height = max(min_fm_height, saved_fm_height)
+            min_terminal_height = 120  # Minimum space for terminal
+            max_fm_height = max(min_fm_height, available_height - min_terminal_height)
+            
+            # Clamp file manager height to valid range
+            saved_fm_height = max(min_fm_height, min(saved_fm_height, max_fm_height))
+            
             self.logger.debug(
-                f"File manager: window_height={window_height}, saved_fm_height={saved_fm_height}"
+                f"File manager: available_height={available_height}, "
+                f"saved_fm_height={saved_fm_height}, max_fm_height={max_fm_height}"
             )
+            
             # Calculate target position from saved height
-            target_pos = window_height - saved_fm_height
-            last_pos = getattr(page, "_fm_paned_pos", target_pos)
-            # Ensure the position respects minimum file manager height
-            max_pos = window_height - min_fm_height
-            target_pos = min(last_pos, max_pos)
+            target_pos = available_height - saved_fm_height
+            
+            # Use page-specific position if available and valid
+            if hasattr(page, "_fm_paned_pos"):
+                last_pos = page._fm_paned_pos
+                # Validate that last_pos gives a reasonable file manager size
+                last_fm_height = available_height - last_pos
+                if min_fm_height <= last_fm_height <= max_fm_height:
+                    target_pos = last_pos
+            
+            # Final validation: ensure position is sensible (not negative or too small for terminal)
+            target_pos = max(min_terminal_height, min(target_pos, available_height - min_fm_height))
+            
             self.logger.debug(
-                f"File manager: target_pos={target_pos}, last_pos={last_pos}, "
+                f"File manager: target_pos={target_pos}, "
                 f"has_page_pos={hasattr(page, '_fm_paned_pos')}"
             )
 
@@ -997,13 +1021,21 @@ class TabManager:
         elif fm:
             page._fm_paned_pos = paned.get_position()
             # Save file manager height to settings for new tabs/windows
-            window_height = self.terminal_manager.parent_window.get_height()
-            fm_height = window_height - paned.get_position()
-            # Enforce minimum height constraint (100px)
+            # Use paned's actual height for accurate calculation
+            paned_allocation = paned.get_allocation()
+            available_height = paned_allocation.height
+            if available_height > 1:
+                fm_height = available_height - paned.get_position()
+            else:
+                # Fallback to window height if paned not properly allocated
+                window_height = self.terminal_manager.parent_window.get_height()
+                fm_height = window_height - paned.get_position()
+            
+            # Enforce minimum height constraint
             min_fm_height = 240
             fm_height = max(min_fm_height, fm_height)
             self.logger.debug(
-                f"File manager closing: window_height={window_height}, "
+                f"File manager closing: available_height={available_height}, "
                 f"paned_pos={paned.get_position()}, fm_height={fm_height}"
             )
             # Save immediately to ensure persistence across sessions
@@ -1020,8 +1052,14 @@ class TabManager:
         if not fm or not fm.revealer.get_reveal_child():
             return
 
-        window_height = self.terminal_manager.parent_window.get_height()
-        fm_height = window_height - paned.get_position()
+        # Use paned's actual height for accurate calculation
+        paned_allocation = paned.get_allocation()
+        available_height = paned_allocation.height
+        if available_height <= 1:
+            # Widget not properly allocated yet, skip this update
+            return
+        
+        fm_height = available_height - paned.get_position()
 
         # Enforce minimum height constraint
         min_fm_height = 240
