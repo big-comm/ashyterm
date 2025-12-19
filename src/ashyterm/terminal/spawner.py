@@ -36,20 +36,7 @@ from ..utils.security import (
     validate_ssh_key_file,
 )
 from ..utils.translation_utils import _
-
-OSC7_HOST_DETECTION_SNIPPET = (
-    'if [ -z "$ASHYTERM_OSC7_HOST" ]; then '
-    "if command -v hostname >/dev/null 2>&1; then "
-    'ASHYTERM_OSC7_HOST="$(hostname)"; '
-    'elif [ -n "$HOSTNAME" ]; then '
-    'ASHYTERM_OSC7_HOST="$HOSTNAME"; '
-    "elif command -v uname >/dev/null 2>&1; then "
-    'ASHYTERM_OSC7_HOST="$(uname -n)"; '
-    "else "
-    'ASHYTERM_OSC7_HOST="unknown"; '
-    "fi; "
-    "fi;"
-)
+from ..utils.osc7 import OSC7_HOST_DETECTION_SNIPPET
 
 
 class ProcessTracker:
@@ -145,6 +132,50 @@ class ProcessSpawner:
         self._spawn_lock = threading.Lock()
         self.logger.info("Process spawner initialized on Linux")
 
+    def _get_expected_terminal_size(
+        self, terminal: Vte.Terminal
+    ) -> Tuple[int, int]:
+        """
+        Get the expected terminal size (rows, cols) based on saved window dimensions.
+        
+        This helps avoid initial resize SIGWINCH by starting the PTY with
+        the correct size that matches the window we will restore to.
+        Falls back to terminal's current size or defaults if calculation fails.
+        """
+        try:
+            # Get saved window dimensions
+            window_width = self.settings_manager.get("window_width", 1200)
+            window_height = self.settings_manager.get("window_height", 700)
+            
+            # Account for UI elements (headerbar ~47px, tabbar ~36px, padding ~20px)
+            # These are approximate but help avoid the initial resize
+            ui_overhead_height = 103  # headerbar + tabbar + margins
+            ui_overhead_width = 20   # sidebar margin if visible
+            
+            available_width = max(400, window_width - ui_overhead_width)
+            available_height = max(200, window_height - ui_overhead_height)
+            
+            # Get character dimensions from terminal's font
+            char_width = terminal.get_char_width()
+            char_height = terminal.get_char_height()
+            
+            if char_width > 0 and char_height > 0:
+                cols = max(40, available_width // char_width)
+                rows = max(10, available_height // char_height)
+                self.logger.debug(
+                    f"Calculated expected terminal size: {rows}x{cols} "
+                    f"(window: {window_width}x{window_height}, "
+                    f"char: {char_width}x{char_height})"
+                )
+                return (rows, cols)
+        except Exception as e:
+            self.logger.debug(f"Could not calculate expected terminal size: {e}")
+        
+        # Fallback to terminal's current size or defaults
+        rows = terminal.get_row_count() or 24
+        cols = terminal.get_column_count() or 80
+        return (rows, cols)
+
     def _prepare_shell_environment(
         self, working_directory: Optional[str] = None
     ) -> Tuple[List[str], Dict[str, str], Optional[str]]:
@@ -169,21 +200,13 @@ class ProcessSpawner:
         temp_dir_path: Optional[str] = None
 
         env = self.environment_manager.get_terminal_environment()
-        vte_version = (
-            Vte.get_major_version() * 10000
-            + Vte.get_minor_version() * 100
-            + Vte.get_micro_version()
-        )
-        env["VTE_VERSION"] = str(vte_version)
-
         # OSC7 integration for CWD tracking.
         # Wrapped in a function to avoid escape sequence interpretation issues
         # with bash extensions like ble.sh that can cause
         # `$'\E]7': command not found` errors.
         osc7_command = (
             f"__ashyterm_osc7() {{ {OSC7_HOST_DETECTION_SNIPPET} "
-            'printf "\\033]7;file://%s%s\\007" "$ASHYTERM_OSC7_HOST" "$PWD"; }; '
-            "__ashyterm_osc7"
+            'printf "\\033]7;file://%s%s\\007" "$ASHYTERM_OSC7_HOST" "$PWD"; }; __ashyterm_osc7'
         )
 
         if shell_basename == "zsh":
@@ -216,14 +239,12 @@ class ProcessSpawner:
                     shutil.rmtree(temp_dir_path, ignore_errors=True)
                 temp_dir_path = None
         else:  # Bash and other compatible shells
-            existing_prompt_command = env.get("PROMPT_COMMAND", "")
-            if existing_prompt_command:
-                # Prepend our command to ensure it runs, then the user's
-                env["PROMPT_COMMAND"] = f"{osc7_command};{existing_prompt_command}"
-            else:
-                env["PROMPT_COMMAND"] = osc7_command
+            # Don't inject PROMPT_COMMAND for bash to avoid conflicts with
+            # bash extensions like ble.sh. The VTE terminal already detects
+            # OSC7 sequences natively via the current-directory-uri signal.
+            # Users with ble.sh or similar already have OSC7 configured.
             self.logger.info(
-                "Injected PROMPT_COMMAND for bash/compatible shell OSC7 integration."
+                "Bash detected - using native shell behavior for OSC7."
             )
 
         # Build command based on login shell preference
@@ -232,6 +253,7 @@ class ProcessSpawner:
             self.logger.info(f"Spawning '{shell} -l' as a login shell.")
         else:
             cmd = [shell]
+
 
         return cmd, env, temp_dir_path
 
@@ -470,8 +492,8 @@ class ProcessSpawner:
 
             try:
                 master_fd, slave_fd = proxy.create_pty()
-                rows = terminal.get_row_count() or 24
-                cols = terminal.get_column_count() or 80
+                # Use expected size based on saved window dimensions to avoid initial resize
+                rows, cols = self._get_expected_terminal_size(terminal)
                 proxy.set_window_size(rows, cols)
 
                 def preexec_fn():
@@ -594,8 +616,8 @@ class ProcessSpawner:
                 )
                 master_fd, slave_fd = proxy.create_pty()
 
-                rows = terminal.get_row_count() or 24
-                cols = terminal.get_column_count() or 80
+                # Use expected size based on saved window dimensions to avoid initial resize
+                rows, cols = self._get_expected_terminal_size(terminal)
                 proxy.set_window_size(rows, cols)
 
                 # Use subprocess.Popen instead of os.fork() to avoid

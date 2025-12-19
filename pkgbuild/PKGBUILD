@@ -53,7 +53,7 @@ package() {
     python -m installer --destdir="$pkgdir" dist/*.whl
 
     # Install files
-    cp -a usr/share "${pkgdir}/usr/share"
+    cp -a usr "${pkgdir}/usr"
 
     # Install license file if present
     if [ -f "LICENSE" ]; then

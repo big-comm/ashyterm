@@ -124,8 +124,6 @@ class HighlightedTerminalProxy:
         self._slave_fd: Optional[int] = None
         self._io_watch_id: Optional[int] = None
 
-        self._columns_handler_id: Optional[int] = None
-        self._rows_handler_id: Optional[int] = None
         self._destroy_handler_id: Optional[int] = None
 
         self._running = False
@@ -493,7 +491,6 @@ class HighlightedTerminalProxy:
             self._pending_outputs = {}
             self._next_sequence_to_feed = 0
 
-            # Setup IO Watch
             self._io_watch_id = GLib.io_add_watch(
                 self._master_fd,
                 GLib.PRIORITY_DEFAULT,
@@ -501,15 +498,11 @@ class HighlightedTerminalProxy:
                 self._on_pty_readable,
             )
 
-            self._columns_handler_id = term.connect(
-                "notify::columns", self._on_terminal_resize
-            )
-            self._rows_handler_id = term.connect(
-                "notify::rows", self._on_terminal_resize
-            )
-
-            # Initial sync
-            self._on_terminal_resize(term, None)
+            # Note: We deliberately do NOT connect to notify::columns/rows
+            # or manually send SIGWINCH. The VTE automatically propagates
+            # terminal size changes to the PTY when using new_foreign_sync.
+            # Adding our own resize handling would cause duplicate SIGWINCH
+            # signals, leading to prompt duplication with ble.sh.
 
             self._running = True
             return True
@@ -574,23 +567,6 @@ class HighlightedTerminalProxy:
 
         with self._lock:
             term = self._terminal_ref()
-
-            if term:
-                if self._columns_handler_id:
-                    try:
-                        if term.handler_is_connected(self._columns_handler_id):
-                            term.disconnect(self._columns_handler_id)
-                    except Exception:
-                        pass
-                    self._columns_handler_id = None
-
-                if self._rows_handler_id:
-                    try:
-                        if term.handler_is_connected(self._rows_handler_id):
-                            term.disconnect(self._rows_handler_id)
-                    except Exception:
-                        pass
-                    self._rows_handler_id = None
 
             self._master_fd = None
             if self._slave_fd is not None:
@@ -2366,16 +2342,3 @@ class HighlightedTerminalProxy:
             self._queue_processing = False
 
         return False  # Remove this callback
-
-    def _on_terminal_resize(self, terminal: Vte.Terminal, _pspec) -> None:
-        if not self._running or self._widget_destroyed:
-            return
-
-        try:
-            rows = terminal.get_row_count()
-            cols = terminal.get_column_count()
-            if rows > 0 and cols > 0:
-                self.set_window_size(rows, cols)
-        except Exception:
-            pass
-
