@@ -14,9 +14,18 @@ from .form_widget_builder import (
 )
 from .inline_context_menu import InlineContextMenu
 from .regex_text_view import RegexTextView
+from .ssh_error_banner import (
+    BannerAction,
+    BannerConfig,
+    SSHErrorBanner,
+    SSHErrorBannerManager,
+    get_ssh_error_banner_manager,
+)
 
 __all__ = [
     "AIChatPanel",
+    "BannerAction",
+    "BannerConfig",
     "BaseSyntaxTextView",
     "BashTextView",
     "ConversationHistoryPanel",
@@ -24,6 +33,9 @@ __all__ = [
     "FormWidgetBuilder",
     "InlineContextMenu",
     "RegexTextView",
+    "SSHErrorBanner",
+    "SSHErrorBannerManager",
     "create_field_from_dict",
     "create_field_from_form_field",
+    "get_ssh_error_banner_manager",
 ]

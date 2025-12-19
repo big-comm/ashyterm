@@ -185,7 +185,7 @@ class BaseSyntaxTextView(Gtk.TextView):
         Returns:
             Signal handler ID that can be used to disconnect.
         """
-        return self.buffer.connect("changed", lambda buf: callback(self))
+        return self.buffer.connect("changed", lambda _: callback(self))
     
     def update_colors_from_scheme(self, palette: List[str], foreground: str = "#ffffff"):
         """

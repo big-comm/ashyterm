@@ -1303,10 +1303,82 @@ class SettingsManager:
                 }}
                 """)
 
+
             # === DIALOGS ===
             # Get accent color from palette for command guide styling
             palette = scheme.get("palette", [])
             accent_color = palette[4] if len(palette) > 4 else "#3584e4"
+            
+            # === SSH ERROR BANNER ===
+            # Always apply - uses bg_color which is always defined
+            # header_bg_color fallback to bg_color when not available
+            banner_bg = header_bg_color if luminance >= 0.05 else bg_color
+            error_color = palette[1] if len(palette) > 1 else "#e01b24"
+            warning_color = palette[3] if len(palette) > 3 else "#f5c211"
+            css_parts.append(f"""
+            .ssh-error-banner-container {{
+                background-color: {bg_color};
+                color: {fg_color};
+            }}
+            .ssh-error-banner {{
+                background-color: {banner_bg};
+                color: {fg_color};
+                border-radius: 6px;
+                border: 1px solid alpha({error_color}, 0.4);
+                padding: 6px 10px;
+                margin: 2px 4px;
+            }}
+            .ssh-error-banner label {{
+                color: {fg_color};
+            }}
+            .ssh-error-banner .heading {{
+                font-weight: 600;
+                font-size: 1em;
+                color: {error_color};
+            }}
+            .ssh-error-banner .warning-icon {{
+                color: {warning_color};
+                min-width: 24px;
+                min-height: 24px;
+            }}
+            .ssh-error-banner .dim-label {{
+                font-size: 0.9em;
+                color: {fg_color};
+            }}
+            .ssh-error-banner button:not(.suggested-action):not(.destructive-action) {{
+                color: {fg_color};
+            }}
+            .ssh-error-banner .compact-button {{
+                padding: 6px 14px;
+                min-height: 28px;
+                border-radius: 6px;
+            }}
+            .options-panel {{
+                background-color: {banner_bg};
+                color: {fg_color};
+                border-radius: 6px;
+                border: 1px solid alpha({fg_color}, 0.2);
+                padding: 6px 12px;
+                margin: 0 4px 4px 4px;
+            }}
+            .options-panel label {{
+                color: {fg_color};
+            }}
+            .options-panel button:not(.suggested-action):not(.destructive-action) {{
+                color: {fg_color};
+            }}
+            .options-panel spinbutton {{
+                min-width: 65px;
+                background-color: {bg_color};
+                color: {fg_color};
+            }}
+            .options-panel spinbutton text {{
+                color: {fg_color};
+            }}
+            .options-panel spinbutton button {{
+                color: {fg_color};
+            }}
+            """)
 
             # Only apply dialog background colors if luminance >= 5%
             # Very dark themes (< 5% luminance) can cause readability issues
@@ -1476,6 +1548,8 @@ class SettingsManager:
                     f"Skipping dialog background styling - luminance {luminance:.2%} is below 5% threshold"
                 )
 
+
+
             # === PANED SEPARATORS ===
             # Use a subtle color based on the theme colors
             separator_color = f"color-mix(in srgb, {fg_color} 20%, {bg_color})"
@@ -1519,9 +1593,7 @@ class SettingsManager:
         except Exception as e:
             self.logger.warning(f"Failed to apply GTK terminal theme: {e}")
 
-    def generate_dynamic_theme_css(
-        self, css_class: str, transparency: int = 0, headerbar_transparency: int = 0
-    ) -> str:
+    def generate_dynamic_theme_css(self, css_class: str, transparency: int = 0) -> str:
         """
         Generate dynamic theme CSS for dialogs and panels.
 
@@ -1531,7 +1603,6 @@ class SettingsManager:
         Args:
             css_class: The CSS class name to scope styles (e.g., 'command-form-dialog')
             transparency: Background transparency percentage (0-100)
-            headerbar_transparency: Headerbar transparency percentage (0-100)
 
         Returns:
             CSS string ready to be loaded into a CssProvider

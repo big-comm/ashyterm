@@ -833,8 +833,10 @@ class ProcessSpawner:
         persist_duration = self.settings_manager.get(
             "ssh_control_persist_duration", 600
         )
+        # Get connect timeout from settings (can be temporarily increased for retries)
+        connect_timeout = self.settings_manager.get("ssh_connect_timeout", 30)
         ssh_options = {
-            "ConnectTimeout": "30",
+            "ConnectTimeout": str(connect_timeout),
             "ServerAliveInterval": "30",
             "ServerAliveCountMax": "3",
             "StrictHostKeyChecking": "accept-new",
@@ -1125,8 +1127,202 @@ class ProcessSpawner:
             return str(self.platform_info.home_dir)
 
 
+class SSHConnectionChecker:
+    """
+    Utility to check and manage existing SSH ControlMaster connections.
+
+    This class provides methods to:
+    - Check if a ControlMaster connection is active for a session
+    - Get connection information
+    - Terminate existing connections gracefully
+
+    Uses the existing ControlPath sockets created by ProcessSpawner.
+    """
+
+    def __init__(self, spawner: Optional[ProcessSpawner] = None):
+        """
+        Initialize the SSH connection checker.
+
+        Args:
+            spawner: ProcessSpawner instance to use for control path generation.
+                    If None, will use the global spawner instance.
+        """
+        self.logger = get_logger("ashyterm.ssh_checker")
+        self._spawner = spawner
+
+    @property
+    def spawner(self) -> ProcessSpawner:
+        """Get the spawner instance, using global if none provided."""
+        if self._spawner is None:
+            self._spawner = get_spawner()
+        return self._spawner
+
+    def is_master_active(self, session: "SessionItem") -> bool:
+        """
+        Check if a ControlMaster connection is already active for this session.
+
+        Args:
+            session: The SSH session to check.
+
+        Returns:
+            True if an active ControlMaster connection exists, False otherwise.
+        """
+        control_path = self.spawner._get_ssh_control_path(session)
+
+        # First check if socket file exists
+        if not Path(control_path).exists():
+            return False
+
+        # Use ssh -O check to verify the connection is actually active
+        user = session.user or os.getlogin()
+        cmd = ["ssh", "-O", "check", "-S", control_path, f"{user}@{session.host}"]
+
+        try:
+            result = subprocess.run(cmd, capture_output=True, timeout=5, text=True)
+            is_active = result.returncode == 0
+            self.logger.debug(
+                f"ControlMaster check for {session.name}: "
+                f"{'active' if is_active else 'inactive'}"
+            )
+            return is_active
+        except subprocess.TimeoutExpired:
+            self.logger.warning(f"Timeout checking ControlMaster for {session.name}")
+            return False
+        except Exception as e:
+            self.logger.debug(f"Error checking ControlMaster for {session.name}: {e}")
+            return False
+
+    def get_master_info(self, session: "SessionItem") -> Optional[Dict[str, Any]]:
+        """
+        Get information about an active ControlMaster connection.
+
+        Args:
+            session: The SSH session to get info for.
+
+        Returns:
+            Dictionary with connection info if active, None otherwise.
+        """
+        if not self.is_master_active(session):
+            return None
+
+        control_path = self.spawner._get_ssh_control_path(session)
+        socket_stat = Path(control_path).stat()
+
+        return {
+            "host": session.host,
+            "user": session.user or os.getlogin(),
+            "port": session.port or 22,
+            "control_path": control_path,
+            "active": True,
+            "socket_created": socket_stat.st_ctime,
+            "can_quick_reconnect": True,
+        }
+
+    def terminate_master(self, session: "SessionItem") -> bool:
+        """
+        Gracefully terminate a ControlMaster connection.
+
+        Args:
+            session: The SSH session whose master connection to terminate.
+
+        Returns:
+            True if successfully terminated (or wasn't active), False on error.
+        """
+        control_path = self.spawner._get_ssh_control_path(session)
+
+        if not Path(control_path).exists():
+            return True  # No socket means nothing to terminate
+
+        user = session.user or os.getlogin()
+        cmd = ["ssh", "-O", "exit", "-S", control_path, f"{user}@{session.host}"]
+
+        try:
+            result = subprocess.run(cmd, capture_output=True, timeout=10, text=True)
+
+            if result.returncode == 0:
+                self.logger.info(
+                    f"Successfully terminated ControlMaster for {session.name}"
+                )
+                return True
+            else:
+                self.logger.warning(
+                    f"Failed to terminate ControlMaster for {session.name}: "
+                    f"{result.stderr}"
+                )
+                return False
+
+        except subprocess.TimeoutExpired:
+            self.logger.warning(f"Timeout terminating ControlMaster for {session.name}")
+            return False
+        except Exception as e:
+            self.logger.error(
+                f"Error terminating ControlMaster for {session.name}: {e}"
+            )
+            return False
+
+    def terminate_all_masters(self, sessions: List["SessionItem"]) -> int:
+        """
+        Terminate all ControlMaster connections for the given sessions.
+
+        Args:
+            sessions: List of sessions to terminate connections for.
+
+        Returns:
+            Number of connections successfully terminated.
+        """
+        terminated = 0
+        for session in sessions:
+            if session.is_ssh() and self.is_master_active(session):
+                if self.terminate_master(session):
+                    terminated += 1
+        return terminated
+
+    def cleanup_stale_sockets(self) -> int:
+        """
+        Remove stale control socket files that don't have active connections.
+
+        Returns:
+            Number of stale sockets cleaned up.
+        """
+        cache_dir = self.spawner.platform_info.cache_dir
+        cleaned = 0
+
+        if not cache_dir.exists():
+            return 0
+
+        for socket_file in cache_dir.glob("ssh_control_*"):
+            if socket_file.is_socket():
+                # Try to check if it's still active by connecting
+                try:
+                    # If we can't connect, it's stale
+                    # Use a very short timeout
+                    result = subprocess.run(
+                        ["ssh", "-O", "check", "-S", str(socket_file), "dummy"],
+                        capture_output=True,
+                        timeout=2,
+                    )
+                    if result.returncode != 0:
+                        socket_file.unlink(missing_ok=True)
+                        cleaned += 1
+                        self.logger.debug(f"Cleaned stale socket: {socket_file}")
+                except subprocess.TimeoutExpired:
+                    # Timeout means it's probably stale
+                    socket_file.unlink(missing_ok=True)
+                    cleaned += 1
+                except Exception:
+                    pass
+
+        if cleaned > 0:
+            self.logger.info(f"Cleaned up {cleaned} stale SSH control sockets")
+
+        return cleaned
+
+
+# Module-level singleton instances
 _spawner_instance: Optional[ProcessSpawner] = None
 _spawner_lock = threading.Lock()
+_checker_instance: Optional[SSHConnectionChecker] = None
+_checker_lock = threading.Lock()
 
 
 def get_spawner() -> ProcessSpawner:
@@ -1138,10 +1334,33 @@ def get_spawner() -> ProcessSpawner:
     return _spawner_instance
 
 
+def get_ssh_connection_checker() -> SSHConnectionChecker:
+    """Get the singleton SSH connection checker instance."""
+    global _checker_instance
+    if _checker_instance is None:
+        with _checker_lock:
+            if _checker_instance is None:
+                _checker_instance = SSHConnectionChecker()
+    return _checker_instance
+
+
 def cleanup_spawner() -> None:
-    global _spawner_instance
+    """Clean up spawner resources and terminate tracked processes."""
+    global _spawner_instance, _checker_instance
+
+    # First, try to clean up stale sockets
+    if _checker_instance is not None:
+        try:
+            _checker_instance.cleanup_stale_sockets()
+        except Exception:
+            pass
+
     if _spawner_instance is not None:
         with _spawner_lock:
             if _spawner_instance is not None:
                 _spawner_instance.process_tracker.terminate_all()
                 _spawner_instance = None
+
+    # Reset checker instance
+    with _checker_lock:
+        _checker_instance = None

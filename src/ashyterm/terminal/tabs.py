@@ -1090,8 +1090,30 @@ class TabManager:
             f"Close request for tab '{page.get_title()}' with {len(terminals_in_page)} terminals."
         )
 
+        # Track if any terminal has a truly active process that will emit child-exited
+        # Auto-reconnecting terminals may have short-lived processes that we should not wait for
+        should_wait_for_exit = False
+
         for terminal in terminals_in_page:
+            terminal_id = getattr(terminal, "terminal_id", None)
+            is_auto_reconnecting = self.terminal_manager.is_auto_reconnect_active(
+                terminal
+            )
+
+            if terminal_id and not is_auto_reconnecting:
+                info = self.terminal_manager.registry.get_terminal_info(terminal_id)
+                pid = info.get("process_id") if info else None
+                status = info.get("status") if info else None
+                # Only wait if there's a stable running process (not auto-reconnecting)
+                if pid and pid != -1 and status == "running":
+                    should_wait_for_exit = True
+
             self.terminal_manager.remove_terminal(terminal, force_kill_group=True)
+
+        # If no terminal has a stable active process, close the tab immediately
+        # Auto-reconnecting terminals are handled by cancel_auto_reconnect
+        if not should_wait_for_exit:
+            self._close_tab_by_page(page)
 
     def _on_terminal_process_exited(
         self, terminal: Vte.Terminal, child_status: int, identifier
@@ -1100,9 +1122,29 @@ class TabManager:
             page = self.get_page_for_terminal(terminal)
             terminal_id = getattr(terminal, "terminal_id", "N/A")
 
+            self.logger.info(f"[PROCESS_EXITED] Terminal {terminal_id} process exited")
+            self.logger.info(
+                f"[PROCESS_EXITED] Auto-reconnect active: {self.terminal_manager.is_auto_reconnect_active(terminal)}"
+            )
+
+            # IMPORTANT: If auto-reconnect is active, don't do any cleanup
+            # The terminal should stay open for reconnection attempts
+            if self.terminal_manager.is_auto_reconnect_active(terminal):
+                self.logger.info(
+                    f"[PROCESS_EXITED] Skipping cleanup for terminal {terminal_id} - auto-reconnect is active"
+                )
+                return
+
             pane_to_remove, parent_container = self._find_pane_and_parent(terminal)
+            self.logger.info(
+                f"[PROCESS_EXITED] Found pane: {pane_to_remove}, parent: {type(parent_container)}"
+            )
+
             # MODIFIED: Only manipulate panes if the parent is a Gtk.Paned (i.e., it's a split)
             if isinstance(parent_container, Gtk.Paned):
+                self.logger.info(
+                    f"[PROCESS_EXITED] Removing pane from split for terminal {terminal_id}"
+                )
                 self._remove_pane_ui(pane_to_remove, parent_container)
 
             self.terminal_manager._cleanup_terminal(terminal, terminal_id)
@@ -1166,6 +1208,12 @@ class TabManager:
         for term in all_terminals_in_page:
             term_id = getattr(term, "terminal_id", None)
             if term_id:
+                # If auto-reconnect is active, consider the terminal as active
+                # even if it's in a failed/exited state
+                if self.terminal_manager.is_auto_reconnect_active(term):
+                    active_terminals.append(term)
+                    continue
+
                 info = self.terminal_manager.registry.get_terminal_info(term_id)
                 if info and info.get("status") not in ["exited", "spawn_failed"]:
                     active_terminals.append(term)
@@ -1331,6 +1379,402 @@ class TabManager:
             return None
 
         return find_recursive(page.get_child())
+
+    def show_error_banner_for_terminal(
+        self,
+        terminal: Vte.Terminal,
+        session_name: str,
+        error_message: str = "",
+        session: Optional[SessionItem] = None,
+        is_auth_error: bool = False,
+        is_host_key_error: bool = False,
+    ) -> bool:
+        """
+        Show a non-blocking error banner above the terminal.
+
+        The banner is inserted between the terminal container and the scrolled window,
+        allowing it to appear above the terminal without blocking the UI.
+
+        Args:
+            terminal: The terminal that failed.
+            session_name: Name of the session.
+            error_message: Error description.
+            session: Session object for retry/reconnect.
+            is_auth_error: Whether this is an authentication error.
+            is_host_key_error: Whether this is a host key verification error.
+
+        Returns:
+            True if banner was shown, False otherwise.
+        """
+        from ..ui.widgets.ssh_error_banner import SSHErrorBanner, BannerAction
+
+        page = self.get_page_for_terminal(terminal)
+        if not page:
+            self.logger.warning("Cannot show banner - terminal has no page")
+            return False
+
+        terminal_id = getattr(terminal, "terminal_id", None)
+
+        # Check if we already have a valid banner
+        existing_banner = getattr(terminal, "_error_banner", None)
+        if existing_banner is not None:
+            # Verify banner widget is still valid (not destroyed)
+            try:
+                if existing_banner.get_parent() is not None:
+                    self.logger.debug(
+                        f"Banner already exists and is valid for terminal {terminal_id}"
+                    )
+                    return True
+                else:
+                    # Banner widget was orphaned, clear references
+                    self.logger.debug(
+                        f"Banner was orphaned, creating new one for terminal {terminal_id}"
+                    )
+                    terminal._error_banner = None
+                    terminal._banner_box = None
+            except Exception:
+                # Banner widget may have been destroyed
+                terminal._error_banner = None
+                terminal._banner_box = None
+
+        # Find the scrolled window containing the terminal
+        scrolled_window = terminal.get_parent()
+        if not isinstance(scrolled_window, Gtk.ScrolledWindow):
+            self.logger.warning(
+                f"Cannot show banner - terminal parent is not ScrolledWindow: {type(scrolled_window)}"
+            )
+            return False
+
+        # Find the container holding the scrolled window
+        container = scrolled_window.get_parent()
+        if not container:
+            self.logger.warning("Cannot show banner - scrolled window has no parent")
+            return False
+
+        # Create new banner (colors are now handled by global theme system)
+        banner = SSHErrorBanner(
+            session_name=session_name,
+            error_message=error_message,
+            session=session,
+            terminal_id=terminal_id,
+            is_auth_error=is_auth_error,
+            is_host_key_error=is_host_key_error,
+        )
+
+        # Set action callback
+        def on_banner_action(action: BannerAction, tid: int, config: dict):
+            self._handle_banner_action(action, terminal, session, tid, config)
+
+        banner.set_action_callback(on_banner_action)
+
+        # Connect dismissed signal
+        banner.connect(
+            "dismissed", lambda b: self.hide_error_banner_for_terminal(terminal)
+        )
+
+        # Create a vertical box to hold banner + scrolled window
+        banner_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=0)
+        banner_box.set_vexpand(True)
+        banner_box.set_hexpand(True)
+        # Apply CSS class for solid background
+        banner_box.add_css_class("ssh-error-banner-container")
+
+        # Add banner at top
+        banner_box.append(banner)
+
+        # Remove scrolled window from current parent and add to banner_box
+        if isinstance(container, Adw.Bin):
+            container.set_child(None)
+            banner_box.append(scrolled_window)
+            container.set_child(banner_box)
+        elif isinstance(container, Adw.ToolbarView):
+            container.set_content(None)
+            banner_box.append(scrolled_window)
+            container.set_content(banner_box)
+        elif isinstance(container, Gtk.Box):
+            # Container is already a Gtk.Box - check if it's our banner_box
+            existing_box = getattr(terminal, "_banner_box", None)
+            if existing_box is container:
+                # This is our existing banner_box, just prepend new banner
+                container.prepend(banner)
+                terminal._error_banner = banner
+                self.logger.info(
+                    f"Showed error banner (reusing box) for terminal {terminal_id}: {session_name}"
+                )
+                return True
+            else:
+                # Different box, create new structure
+                container.remove(scrolled_window)
+                banner_box.append(scrolled_window)
+                container.append(banner_box)
+        else:
+            self.logger.warning(
+                f"Cannot show banner - unsupported container type: {type(container)}"
+            )
+            return False
+
+        # Store references
+        terminal._error_banner = banner
+        terminal._banner_box = banner_box
+
+        self.logger.info(
+            f"Showed error banner for terminal {terminal_id}: {session_name}"
+        )
+
+        return True
+
+    def hide_error_banner_for_terminal(self, terminal: Vte.Terminal) -> bool:
+        """
+        Hide and remove error banner from a terminal.
+
+        Removes the banner and restores the original widget hierarchy.
+
+        Args:
+            terminal: The terminal to remove banner from.
+
+        Returns:
+            True if banner was removed, False if no banner existed.
+        """
+        terminal_id = getattr(terminal, "terminal_id", None)
+
+        # Check if terminal has a banner
+        if not hasattr(terminal, "_error_banner") or not terminal._error_banner:
+            return False
+
+        banner = terminal._error_banner
+        banner_box = getattr(terminal, "_banner_box", None)
+
+        # Find the scrolled window
+        scrolled_window = terminal.get_parent()
+        if not isinstance(scrolled_window, Gtk.ScrolledWindow):
+            # Banner may have been removed already
+            terminal._error_banner = None
+            terminal._banner_box = None
+            return False
+
+        if banner_box:
+            # Get the container holding the banner_box
+            container = banner_box.get_parent()
+
+            # Remove banner from banner_box
+            banner_box.remove(banner)
+
+            # Remove scrolled window from banner_box and restore to container
+            banner_box.remove(scrolled_window)
+
+            if isinstance(container, Adw.Bin):
+                container.set_child(None)
+                container.set_child(scrolled_window)
+            elif isinstance(container, Adw.ToolbarView):
+                container.set_content(None)
+                container.set_content(scrolled_window)
+        else:
+            # Simple case - just remove the banner from its parent
+            parent = banner.get_parent()
+            if parent:
+                parent.remove(banner)
+
+        # Clear references
+        terminal._error_banner = None
+        terminal._banner_box = None
+
+        self.logger.info(f"Removed error banner for terminal {terminal_id}")
+
+        return True
+
+    def has_error_banner(self, terminal: Vte.Terminal) -> bool:
+        """Check if terminal has an active error banner."""
+        return hasattr(terminal, "_error_banner") and terminal._error_banner is not None
+
+    def _handle_banner_action(
+        self,
+        action,
+        terminal: Vte.Terminal,
+        session: Optional[SessionItem],
+        terminal_id: int,
+        config: dict,
+    ) -> None:
+        """Handle action from error banner."""
+        from ..ui.widgets.ssh_error_banner import BannerAction
+
+        self.logger.info(f"Banner action: {action} for terminal {terminal_id}")
+
+        if action == BannerAction.RETRY:
+            if session:
+                # Hide banner while attempting
+                self.hide_error_banner_for_terminal(terminal)
+
+                timeout = config.get("timeout", 30)
+                GLib.idle_add(
+                    self.terminal_manager._retry_ssh_in_same_terminal,
+                    terminal,
+                    terminal_id,
+                    session,
+                    timeout,
+                )
+
+        elif action == BannerAction.AUTO_RECONNECT:
+            if session:
+                # Hide banner while attempting
+                self.hide_error_banner_for_terminal(terminal)
+
+                duration = config.get("duration_mins", 5)
+                interval = config.get("interval_secs", 10)
+                timeout = config.get("timeout_secs", 30)
+
+                # Unmark terminal as closing
+                self.terminal_manager.lifecycle_manager.unmark_terminal_closing(
+                    terminal_id
+                )
+
+                # Start auto-reconnect
+                self.terminal_manager.start_auto_reconnect(
+                    terminal, terminal_id, session, duration, interval, timeout
+                )
+
+        elif action == BannerAction.CLOSE:
+            # Hide banner and cleanup terminal
+            self.hide_error_banner_for_terminal(terminal)
+
+            # Get identifier for cleanup
+            info = self.terminal_manager.registry.get_terminal_info(terminal_id)
+            identifier = info.get("identifier") if info else session
+
+            # Cleanup the terminal UI
+            self.terminal_manager._cleanup_terminal_ui(
+                terminal, terminal_id, 1, identifier
+            )
+
+        elif action == BannerAction.EDIT_SESSION:
+            if session:
+                # Hide banner before opening dialog
+                self.hide_error_banner_for_terminal(terminal)
+
+                # Open session edit dialog
+                self._open_session_edit_dialog(session, terminal, terminal_id)
+
+        elif action == BannerAction.FIX_HOST_KEY:
+            if session:
+                # Hide banner while fixing
+                self.hide_error_banner_for_terminal(terminal)
+
+                # Fix host key and retry
+                self._fix_host_key_and_retry(session, terminal, terminal_id)
+
+    def _open_session_edit_dialog(
+        self,
+        session: SessionItem,
+        terminal: Vte.Terminal,
+        terminal_id: int,
+    ) -> None:
+        """
+        Open the session edit dialog for fixing credentials.
+
+        After the user saves changes, the connection will be retried automatically.
+        """
+        from ..ui.dialogs import SessionEditDialog
+
+        parent_window = self.terminal_manager.parent_window
+        if not parent_window:
+            self.logger.warning("Cannot open session edit dialog - no parent window")
+            return
+
+        # Find session position in store
+        session_store = parent_window.session_store
+        position = -1
+        for i, s in enumerate(session_store):
+            if s.name == session.name:
+                position = i
+                break
+
+        def on_dialog_closed(dialog):
+            """Called when the edit dialog is closed."""
+            # Always retry connection after edit dialog is closed
+            # The user opened the dialog to fix credentials, so we should try again
+            self.logger.info(f"Session edit dialog closed, retrying connection for {session.name}")
+            GLib.idle_add(
+                self.terminal_manager._retry_ssh_in_same_terminal,
+                terminal,
+                terminal_id,
+                session,
+                30,  # Default timeout
+            )
+
+        dialog = SessionEditDialog(
+            parent_window,
+            session,
+            session_store,
+            position,
+            parent_window.folder_store,
+            settings_manager=parent_window.settings_manager,
+        )
+        dialog.connect("close-request", lambda d: on_dialog_closed(d) or False)
+        dialog.present()
+
+    def _fix_host_key_and_retry(
+        self,
+        session: SessionItem,
+        terminal: Vte.Terminal,
+        terminal_id: int,
+    ) -> None:
+        """
+        Fix SSH host key verification error by removing old key and retrying.
+
+        This removes the offending key from ~/.ssh/known_hosts and
+        attempts to reconnect the session.
+        """
+        import subprocess
+        import os
+        
+        host = session.host
+        port = session.port or 22
+        
+        # Remove old host key using ssh-keygen
+        try:
+            # Remove by hostname
+            subprocess.run(
+                ["ssh-keygen", "-R", host],
+                capture_output=True,
+                timeout=5,
+            )
+            
+            # Also remove by hostname:port if non-standard port
+            if port != 22:
+                subprocess.run(
+                    ["ssh-keygen", "-R", f"[{host}]:{port}"],
+                    capture_output=True,
+                    timeout=5,
+                )
+            
+            # Display success message in terminal
+            terminal.feed(
+                f"\r\n\x1b[32m[Host Key] Removed old key for {host}\x1b[0m\r\n".encode("utf-8")
+            )
+            terminal.feed(
+                f"\x1b[33m[Host Key] Reconnecting...\x1b[0m\r\n".encode("utf-8")
+            )
+            
+            self.logger.info(f"Removed host key for {host} and retrying connection")
+            
+            # Retry connection
+            GLib.idle_add(
+                self.terminal_manager._retry_ssh_in_same_terminal,
+                terminal,
+                terminal_id,
+                session,
+                30,  # Default timeout
+            )
+            
+        except subprocess.TimeoutExpired:
+            self.logger.error(f"Timeout removing host key for {host}")
+            terminal.feed(
+                f"\r\n\x1b[31m[Host Key] Timeout removing key\x1b[0m\r\n".encode("utf-8")
+            )
+        except Exception as e:
+            self.logger.error(f"Failed to remove host key for {host}: {e}")
+            terminal.feed(
+                f"\r\n\x1b[31m[Host Key] Failed: {e}\x1b[0m\r\n".encode("utf-8")
+            )
 
     def _find_pane_and_parent(self, terminal: Vte.Terminal) -> tuple:
         """

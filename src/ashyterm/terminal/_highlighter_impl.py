@@ -49,19 +49,14 @@ from .highlighter.constants import (
     ALT_SCREEN_DISABLE_PATTERNS,
     ANSI_SEQ_PATTERN as _ANSI_SEQ_PATTERN,
     ANSI_COLOR_PATTERN as _ANSI_COLOR_PATTERN,
-    ANSI_COLOR_M_PATTERN as _ANSI_COLOR_M_PATTERN,
     CSI_CONTROL_PATTERN as _CSI_CONTROL_PATTERN,
     SGR_RESET_LINE_PATTERN as _SGR_RESET_LINE_PATTERN,
-    OSC_SEQ_PATTERN as _OSC_SEQ_PATTERN,
     ALL_ESCAPE_SEQ_PATTERN as _ALL_ESCAPE_SEQ_PATTERN,
     SHELL_NAME_PROMPT_PATTERN as _SHELL_NAME_PROMPT_PATTERN,
-    ROOT_PROMPT_PATTERN as _ROOT_PROMPT_PATTERN,
 )
 from .highlighter.rules import (
     CompiledRule,
     LiteralKeywordRule,
-    extract_literal_keywords as _extract_literal_keywords,
-    extract_prefilter as _extract_prefilter,
 )
 
 if TYPE_CHECKING:
@@ -483,6 +478,11 @@ class HighlightedTerminalProxy:
 
             if vte_pty:
                 term.set_pty(vte_pty)
+                # CRITICAL: Call watch_child() to make VTE track the child process.
+                # This ensures the 'child-exited' signal is emitted when the process
+                # terminates (e.g., SSH connection failure, timeout, or normal exit).
+                # Without this, VTE won't know about the process and won't emit signals.
+                term.watch_child(child_pid)
             else:
                 return False
 

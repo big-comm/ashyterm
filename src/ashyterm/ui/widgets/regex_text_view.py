@@ -74,8 +74,8 @@ class RegexTextView(BaseSyntaxTextView):
             key_controller = Gtk.EventControllerKey()
             key_controller.connect("key-pressed", self._on_key_pressed)
             self.add_controller(key_controller)
-    
-    def _on_key_pressed(self, controller, keyval, keycode, state) -> bool:
+
+    def _on_key_pressed(self, controller, keyval, _keycode, state) -> bool:
         """Block Enter/Return key in single-line mode."""
         if keyval in (Gdk.KEY_Return, Gdk.KEY_KP_Enter):
             return True  # Block the event

@@ -142,8 +142,8 @@ class CommandFormDialog(Adw.Window):
         # Clamp between reasonable bounds
         total = base_height + fields_height
         return max(350, min(total, 800))
-    
-    def _on_key_pressed(self, controller, keyval, keycode, state):
+
+    def _on_key_pressed(self, controller, keyval, _keycode, state):
         if keyval == Gdk.KEY_Escape:
             self.close()
             return Gdk.EVENT_STOP
@@ -830,8 +830,8 @@ class CommandEditorDialog(Adw.Window):
                 self.simple_command_textview.update_colors_from_scheme(palette, fg_color)
             if hasattr(self, 'command_textview') and self.command_textview:
                 self.command_textview.update_colors_from_scheme(palette, fg_color)
-    
-    def _on_key_pressed(self, controller, keyval, keycode, state):
+
+    def _on_key_pressed(self, controller, keyval, _keycode, state):
         if keyval == Gdk.KEY_Escape:
             self.close()
             return Gdk.EVENT_STOP
@@ -3165,14 +3165,14 @@ class CommandManagerDialog(Adw.Window):
         """Save an edited command (custom or customized builtin)."""
         self.command_manager.update_command(command)
         self._populate_commands()
-    
-    def _on_key_pressed(self, controller, keyval, keycode, state):
+
+    def _on_key_pressed(self, controller, keyval, _keycode, state):
         if keyval == Gdk.KEY_Escape:
             self.close()
             return Gdk.EVENT_STOP
         return Gdk.EVENT_PROPAGATE
-    
-    def _on_active_changed(self, widget, pspec):
+
+    def _on_active_changed(self, widget, _pspec):
         if not self._presenting and not self.is_active() and self.get_visible():
             GLib.timeout_add(200, self._delayed_close)
     
