@@ -36,20 +36,7 @@ from ..utils.security import (
     validate_ssh_key_file,
 )
 from ..utils.translation_utils import _
-
-OSC7_HOST_DETECTION_SNIPPET = (
-    'if [ -z "$ASHYTERM_OSC7_HOST" ]; then '
-    "if command -v hostname >/dev/null 2>&1; then "
-    'ASHYTERM_OSC7_HOST="$(hostname)"; '
-    'elif [ -n "$HOSTNAME" ]; then '
-    'ASHYTERM_OSC7_HOST="$HOSTNAME"; '
-    "elif command -v uname >/dev/null 2>&1; then "
-    'ASHYTERM_OSC7_HOST="$(uname -n)"; '
-    "else "
-    'ASHYTERM_OSC7_HOST="unknown"; '
-    "fi; "
-    "fi;"
-)
+from ..utils.osc7 import OSC7_HOST_DETECTION_SNIPPET
 
 
 class ProcessTracker:
@@ -145,6 +132,50 @@ class ProcessSpawner:
         self._spawn_lock = threading.Lock()
         self.logger.info("Process spawner initialized on Linux")
 
+    def _get_expected_terminal_size(
+        self, terminal: Vte.Terminal
+    ) -> Tuple[int, int]:
+        """
+        Get the expected terminal size (rows, cols) based on saved window dimensions.
+        
+        This helps avoid initial resize SIGWINCH by starting the PTY with
+        the correct size that matches the window we will restore to.
+        Falls back to terminal's current size or defaults if calculation fails.
+        """
+        try:
+            # Get saved window dimensions
+            window_width = self.settings_manager.get("window_width", 1200)
+            window_height = self.settings_manager.get("window_height", 700)
+            
+            # Account for UI elements (headerbar ~47px, tabbar ~36px, padding ~20px)
+            # These are approximate but help avoid the initial resize
+            ui_overhead_height = 103  # headerbar + tabbar + margins
+            ui_overhead_width = 20   # sidebar margin if visible
+            
+            available_width = max(400, window_width - ui_overhead_width)
+            available_height = max(200, window_height - ui_overhead_height)
+            
+            # Get character dimensions from terminal's font
+            char_width = terminal.get_char_width()
+            char_height = terminal.get_char_height()
+            
+            if char_width > 0 and char_height > 0:
+                cols = max(40, available_width // char_width)
+                rows = max(10, available_height // char_height)
+                self.logger.debug(
+                    f"Calculated expected terminal size: {rows}x{cols} "
+                    f"(window: {window_width}x{window_height}, "
+                    f"char: {char_width}x{char_height})"
+                )
+                return (rows, cols)
+        except Exception as e:
+            self.logger.debug(f"Could not calculate expected terminal size: {e}")
+        
+        # Fallback to terminal's current size or defaults
+        rows = terminal.get_row_count() or 24
+        cols = terminal.get_column_count() or 80
+        return (rows, cols)
+
     def _prepare_shell_environment(
         self, working_directory: Optional[str] = None
     ) -> Tuple[List[str], Dict[str, str], Optional[str]]:
@@ -169,17 +200,13 @@ class ProcessSpawner:
         temp_dir_path: Optional[str] = None
 
         env = self.environment_manager.get_terminal_environment()
-        vte_version = (
-            Vte.get_major_version() * 10000
-            + Vte.get_minor_version() * 100
-            + Vte.get_micro_version()
-        )
-        env["VTE_VERSION"] = str(vte_version)
-
-        # OSC7 integration for CWD tracking
+        # OSC7 integration for CWD tracking.
+        # Wrapped in a function to avoid escape sequence interpretation issues
+        # with bash extensions like ble.sh that can cause
+        # `$'\E]7': command not found` errors.
         osc7_command = (
-            f"{OSC7_HOST_DETECTION_SNIPPET} "
-            'printf "\\033]7;file://%s%s\\007" "$ASHYTERM_OSC7_HOST" "$PWD"'
+            f"__ashyterm_osc7() {{ {OSC7_HOST_DETECTION_SNIPPET} "
+            'printf "\\033]7;file://%s%s\\007" "$ASHYTERM_OSC7_HOST" "$PWD"; }; __ashyterm_osc7'
         )
 
         if shell_basename == "zsh":
@@ -212,14 +239,12 @@ class ProcessSpawner:
                     shutil.rmtree(temp_dir_path, ignore_errors=True)
                 temp_dir_path = None
         else:  # Bash and other compatible shells
-            existing_prompt_command = env.get("PROMPT_COMMAND", "")
-            if existing_prompt_command:
-                # Prepend our command to ensure it runs, then the user's
-                env["PROMPT_COMMAND"] = f"{osc7_command};{existing_prompt_command}"
-            else:
-                env["PROMPT_COMMAND"] = osc7_command
+            # Don't inject PROMPT_COMMAND for bash to avoid conflicts with
+            # bash extensions like ble.sh. The VTE terminal already detects
+            # OSC7 sequences natively via the current-directory-uri signal.
+            # Users with ble.sh or similar already have OSC7 configured.
             self.logger.info(
-                "Injected PROMPT_COMMAND for bash/compatible shell OSC7 integration."
+                "Bash detected - using native shell behavior for OSC7."
             )
 
         # Build command based on login shell preference
@@ -228,6 +253,7 @@ class ProcessSpawner:
             self.logger.info(f"Spawning '{shell} -l' as a login shell.")
         else:
             cmd = [shell]
+
 
         return cmd, env, temp_dir_path
 
@@ -245,8 +271,17 @@ class ProcessSpawner:
         callback: Optional[Callable] = None,
         user_data: Any = None,
         working_directory: Optional[str] = None,
+        precreated_env: Optional[tuple] = None,
     ) -> None:
-        """Spawn a local terminal session. Raises TerminalCreationError on setup failure."""
+        """Spawn a local terminal session. Raises TerminalCreationError on setup failure.
+
+        Args:
+            terminal: The VTE terminal widget
+            callback: Spawn callback function
+            user_data: User data to pass to callback
+            working_directory: Optional working directory
+            precreated_env: Optional pre-prepared (cmd, env, temp_dir_path) tuple for faster spawn
+        """
         with self._spawn_lock:
             working_dir = self._resolve_and_validate_working_directory(
                 working_directory
@@ -256,8 +291,14 @@ class ProcessSpawner:
                     f"Invalid working directory '{working_directory}', using home directory."
                 )
 
-            # Use centralized shell environment preparation
-            cmd, env, temp_dir_path = self._prepare_shell_environment(working_directory)
+            # Use pre-prepared environment if available, otherwise prepare now
+            if precreated_env and not working_directory:
+                cmd, env, temp_dir_path = precreated_env
+                self.logger.debug("Using pre-prepared shell environment")
+            else:
+                cmd, env, temp_dir_path = self._prepare_shell_environment(
+                    working_directory
+                )
             env_list = [f"{k}={v}" for k, v in env.items()]
 
             # Wrap user_data to include the temp dir path for zsh cleanup
@@ -410,6 +451,7 @@ class ProcessSpawner:
     def spawn_highlighted_local_terminal(
         self,
         terminal: Vte.Terminal,
+        session: Optional["SessionItem"] = None,
         callback: Optional[Callable] = None,
         user_data: Any = None,
         working_directory: Optional[str] = None,
@@ -442,71 +484,73 @@ class ProcessSpawner:
             # Use centralized shell environment preparation
             cmd, env, temp_dir_path = self._prepare_shell_environment(working_directory)
 
-            proxy = HighlightedTerminalProxy(terminal, "local", proxy_id=terminal_id)
+            proxy = HighlightedTerminalProxy(
+                terminal,
+                "local",
+                proxy_id=terminal_id,
+            )
 
             try:
                 master_fd, slave_fd = proxy.create_pty()
-                rows = terminal.get_row_count() or 24
-                cols = terminal.get_column_count() or 80
+                # Use expected size based on saved window dimensions to avoid initial resize
+                rows, cols = self._get_expected_terminal_size(terminal)
                 proxy.set_window_size(rows, cols)
 
-                pid = os.fork()
+                def preexec_fn():
+                    """Setup PTY in child process before exec."""
+                    os.setsid()
+                    fcntl.ioctl(slave_fd, termios.TIOCSCTTY, 0)
+                    os.dup2(slave_fd, 0)
+                    os.dup2(slave_fd, 1)
+                    os.dup2(slave_fd, 2)
+                    if slave_fd > 2:
+                        os.close(slave_fd)
+                    os.close(master_fd)
 
-                if pid == 0:
-                    # Child process
-                    try:
-                        os.setsid()
-                        fcntl.ioctl(slave_fd, termios.TIOCSCTTY, 0)
+                proc = subprocess.Popen(
+                    cmd,
+                    cwd=working_dir,
+                    env=env,
+                    preexec_fn=preexec_fn,
+                    close_fds=False,  # Keep slave_fd open for preexec_fn
+                )
+                pid = proc.pid
 
-                        os.dup2(slave_fd, 0)
-                        os.dup2(slave_fd, 1)
-                        os.dup2(slave_fd, 2)
+                # Close slave_fd in parent - child has its own copy
+                os.close(slave_fd)
 
-                        if slave_fd > 2:
-                            os.close(slave_fd)
-                        os.close(master_fd)
+                if not proxy.start(pid):
+                    self.logger.error("Failed to start highlight proxy")
+                    os.close(master_fd)
+                    return None
 
-                        os.chdir(working_dir)
-                        for key, value in env.items():
-                            os.environ[key] = value
+                # Register process
+                process_info = {
+                    "name": str(user_data) if user_data else "Terminal",
+                    "type": "local",
+                    "terminal": terminal,
+                    "temp_dir_path": temp_dir_path,
+                    "highlight_proxy": proxy,
+                }
+                self.process_tracker.register_process(pid, process_info)
 
-                        os.execvp(cmd[0], cmd)
-                    except Exception:
-                        os._exit(1)
-                else:
-                    # Parent process
-                    if not proxy.start(pid):
-                        self.logger.error("Failed to start highlight proxy")
-                        os.close(master_fd)
-                        return None
-
-                    # Register process
-                    process_info = {
-                        "name": str(user_data) if user_data else "Terminal",
-                        "type": "local",
-                        "terminal": terminal,
+                if callback:
+                    final_user_data = {
+                        "original_user_data": user_data,
                         "temp_dir_path": temp_dir_path,
-                        "highlight_proxy": proxy,
                     }
-                    self.process_tracker.register_process(pid, process_info)
+                    GLib.idle_add(callback, terminal, pid, None, (final_user_data,))
 
-                    if callback:
-                        final_user_data = {
-                            "original_user_data": user_data,
-                            "temp_dir_path": temp_dir_path,
-                        }
-                        GLib.idle_add(callback, terminal, pid, None, (final_user_data,))
+                self.logger.info(
+                    f"Highlighted local terminal spawned with PID {pid}"
+                )
+                log_terminal_event(
+                    "spawn_initiated",
+                    str(user_data),
+                    f"highlighted shell: {' '.join(cmd)}",
+                )
 
-                    self.logger.info(
-                        f"Highlighted local terminal spawned with PID {pid}"
-                    )
-                    log_terminal_event(
-                        "spawn_initiated",
-                        str(user_data),
-                        f"highlighted shell: {' '.join(cmd)}",
-                    )
-
-                    return proxy
+                return proxy
 
             except Exception as e:
                 self.logger.error(f"Highlighted spawn failed: {e}")
@@ -565,69 +609,75 @@ class ProcessSpawner:
                 working_dir = str(self.platform_info.home_dir)
                 env = self.environment_manager.get_terminal_environment()
 
-                proxy = HighlightedTerminalProxy(terminal, "ssh", proxy_id=terminal_id)
+                proxy = HighlightedTerminalProxy(
+                    terminal,
+                    "ssh",
+                    proxy_id=terminal_id,
+                )
                 master_fd, slave_fd = proxy.create_pty()
 
-                rows = terminal.get_row_count() or 24
-                cols = terminal.get_column_count() or 80
+                # Use expected size based on saved window dimensions to avoid initial resize
+                rows, cols = self._get_expected_terminal_size(terminal)
                 proxy.set_window_size(rows, cols)
 
-                pid = os.fork()
+                # Use subprocess.Popen instead of os.fork() to avoid
+                # DeprecationWarning about fork() in multi-threaded process.
+                # Note: We must NOT use start_new_session=True because we need
+                # to call setsid() BEFORE ioctl(TIOCSCTTY) in the preexec_fn.
+                def preexec_fn():
+                    """Setup PTY in child process before exec."""
+                    os.setsid()
+                    fcntl.ioctl(slave_fd, termios.TIOCSCTTY, 0)
+                    os.dup2(slave_fd, 0)
+                    os.dup2(slave_fd, 1)
+                    os.dup2(slave_fd, 2)
+                    if slave_fd > 2:
+                        os.close(slave_fd)
+                    os.close(master_fd)
 
-                if pid == 0:
-                    # Child process
-                    try:
-                        os.setsid()
-                        fcntl.ioctl(slave_fd, termios.TIOCSCTTY, 0)
+                proc = subprocess.Popen(
+                    remote_cmd,
+                    cwd=working_dir,
+                    env=env,
+                    preexec_fn=preexec_fn,
+                    close_fds=False,  # Keep slave_fd open for preexec_fn
+                )
+                pid = proc.pid
 
-                        os.dup2(slave_fd, 0)
-                        os.dup2(slave_fd, 1)
-                        os.dup2(slave_fd, 2)
+                # Close slave_fd in parent - child has its own copy
+                os.close(slave_fd)
 
-                        if slave_fd > 2:
-                            os.close(slave_fd)
-                        os.close(master_fd)
+                if not proxy.start(pid):
+                    self.logger.error("Failed to start highlight proxy for SSH")
+                    os.close(master_fd)
+                    return None
 
-                        os.chdir(working_dir)
-                        for key, value in env.items():
-                            os.environ[key] = value
+                process_info = {
+                    "name": session.name,
+                    "type": "ssh",
+                    "terminal": terminal,
+                    "session": session,
+                    "highlight_proxy": proxy,
+                }
+                self.process_tracker.register_process(pid, process_info)
 
-                        os.execvp(remote_cmd[0], remote_cmd)
-                    except Exception:
-                        os._exit(1)
-                else:
-                    # Parent process
-                    if not proxy.start(pid):
-                        self.logger.error("Failed to start highlight proxy for SSH")
-                        os.close(master_fd)
-                        return None
-
-                    process_info = {
-                        "name": session.name,
-                        "type": "ssh",
-                        "terminal": terminal,
-                        "session": session,
-                        "highlight_proxy": proxy,
+                if callback:
+                    final_user_data = {
+                        "original_user_data": user_data,
+                        "temp_dir_path": None,
                     }
-                    self.process_tracker.register_process(pid, process_info)
+                    GLib.idle_add(callback, terminal, pid, None, (final_user_data,))
 
-                    if callback:
-                        final_user_data = {
-                            "original_user_data": user_data,
-                            "temp_dir_path": None,
-                        }
-                        GLib.idle_add(callback, terminal, pid, None, (final_user_data,))
+                self.logger.info(
+                    f"Highlighted SSH session spawned with PID {pid} for {session.name}"
+                )
+                log_terminal_event(
+                    "spawn_initiated",
+                    session.name,
+                    f"highlighted SSH to {session.get_connection_string()}",
+                )
 
-                    self.logger.info(
-                        f"Highlighted SSH session spawned with PID {pid} for {session.name}"
-                    )
-                    log_terminal_event(
-                        "spawn_initiated",
-                        session.name,
-                        f"highlighted SSH to {session.get_connection_string()}",
-                    )
-
-                    return proxy
+                return proxy
 
             except Exception as e:
                 self.logger.error(f"Highlighted SSH spawn failed: {e}")
@@ -783,8 +833,10 @@ class ProcessSpawner:
         persist_duration = self.settings_manager.get(
             "ssh_control_persist_duration", 600
         )
+        # Get connect timeout from settings (can be temporarily increased for retries)
+        connect_timeout = self.settings_manager.get("ssh_connect_timeout", 30)
         ssh_options = {
-            "ConnectTimeout": "30",
+            "ConnectTimeout": str(connect_timeout),
             "ServerAliveInterval": "30",
             "ServerAliveCountMax": "3",
             "StrictHostKeyChecking": "accept-new",
@@ -1075,8 +1127,202 @@ class ProcessSpawner:
             return str(self.platform_info.home_dir)
 
 
+class SSHConnectionChecker:
+    """
+    Utility to check and manage existing SSH ControlMaster connections.
+
+    This class provides methods to:
+    - Check if a ControlMaster connection is active for a session
+    - Get connection information
+    - Terminate existing connections gracefully
+
+    Uses the existing ControlPath sockets created by ProcessSpawner.
+    """
+
+    def __init__(self, spawner: Optional[ProcessSpawner] = None):
+        """
+        Initialize the SSH connection checker.
+
+        Args:
+            spawner: ProcessSpawner instance to use for control path generation.
+                    If None, will use the global spawner instance.
+        """
+        self.logger = get_logger("ashyterm.ssh_checker")
+        self._spawner = spawner
+
+    @property
+    def spawner(self) -> ProcessSpawner:
+        """Get the spawner instance, using global if none provided."""
+        if self._spawner is None:
+            self._spawner = get_spawner()
+        return self._spawner
+
+    def is_master_active(self, session: "SessionItem") -> bool:
+        """
+        Check if a ControlMaster connection is already active for this session.
+
+        Args:
+            session: The SSH session to check.
+
+        Returns:
+            True if an active ControlMaster connection exists, False otherwise.
+        """
+        control_path = self.spawner._get_ssh_control_path(session)
+
+        # First check if socket file exists
+        if not Path(control_path).exists():
+            return False
+
+        # Use ssh -O check to verify the connection is actually active
+        user = session.user or os.getlogin()
+        cmd = ["ssh", "-O", "check", "-S", control_path, f"{user}@{session.host}"]
+
+        try:
+            result = subprocess.run(cmd, capture_output=True, timeout=5, text=True)
+            is_active = result.returncode == 0
+            self.logger.debug(
+                f"ControlMaster check for {session.name}: "
+                f"{'active' if is_active else 'inactive'}"
+            )
+            return is_active
+        except subprocess.TimeoutExpired:
+            self.logger.warning(f"Timeout checking ControlMaster for {session.name}")
+            return False
+        except Exception as e:
+            self.logger.debug(f"Error checking ControlMaster for {session.name}: {e}")
+            return False
+
+    def get_master_info(self, session: "SessionItem") -> Optional[Dict[str, Any]]:
+        """
+        Get information about an active ControlMaster connection.
+
+        Args:
+            session: The SSH session to get info for.
+
+        Returns:
+            Dictionary with connection info if active, None otherwise.
+        """
+        if not self.is_master_active(session):
+            return None
+
+        control_path = self.spawner._get_ssh_control_path(session)
+        socket_stat = Path(control_path).stat()
+
+        return {
+            "host": session.host,
+            "user": session.user or os.getlogin(),
+            "port": session.port or 22,
+            "control_path": control_path,
+            "active": True,
+            "socket_created": socket_stat.st_ctime,
+            "can_quick_reconnect": True,
+        }
+
+    def terminate_master(self, session: "SessionItem") -> bool:
+        """
+        Gracefully terminate a ControlMaster connection.
+
+        Args:
+            session: The SSH session whose master connection to terminate.
+
+        Returns:
+            True if successfully terminated (or wasn't active), False on error.
+        """
+        control_path = self.spawner._get_ssh_control_path(session)
+
+        if not Path(control_path).exists():
+            return True  # No socket means nothing to terminate
+
+        user = session.user or os.getlogin()
+        cmd = ["ssh", "-O", "exit", "-S", control_path, f"{user}@{session.host}"]
+
+        try:
+            result = subprocess.run(cmd, capture_output=True, timeout=10, text=True)
+
+            if result.returncode == 0:
+                self.logger.info(
+                    f"Successfully terminated ControlMaster for {session.name}"
+                )
+                return True
+            else:
+                self.logger.warning(
+                    f"Failed to terminate ControlMaster for {session.name}: "
+                    f"{result.stderr}"
+                )
+                return False
+
+        except subprocess.TimeoutExpired:
+            self.logger.warning(f"Timeout terminating ControlMaster for {session.name}")
+            return False
+        except Exception as e:
+            self.logger.error(
+                f"Error terminating ControlMaster for {session.name}: {e}"
+            )
+            return False
+
+    def terminate_all_masters(self, sessions: List["SessionItem"]) -> int:
+        """
+        Terminate all ControlMaster connections for the given sessions.
+
+        Args:
+            sessions: List of sessions to terminate connections for.
+
+        Returns:
+            Number of connections successfully terminated.
+        """
+        terminated = 0
+        for session in sessions:
+            if session.is_ssh() and self.is_master_active(session):
+                if self.terminate_master(session):
+                    terminated += 1
+        return terminated
+
+    def cleanup_stale_sockets(self) -> int:
+        """
+        Remove stale control socket files that don't have active connections.
+
+        Returns:
+            Number of stale sockets cleaned up.
+        """
+        cache_dir = self.spawner.platform_info.cache_dir
+        cleaned = 0
+
+        if not cache_dir.exists():
+            return 0
+
+        for socket_file in cache_dir.glob("ssh_control_*"):
+            if socket_file.is_socket():
+                # Try to check if it's still active by connecting
+                try:
+                    # If we can't connect, it's stale
+                    # Use a very short timeout
+                    result = subprocess.run(
+                        ["ssh", "-O", "check", "-S", str(socket_file), "dummy"],
+                        capture_output=True,
+                        timeout=2,
+                    )
+                    if result.returncode != 0:
+                        socket_file.unlink(missing_ok=True)
+                        cleaned += 1
+                        self.logger.debug(f"Cleaned stale socket: {socket_file}")
+                except subprocess.TimeoutExpired:
+                    # Timeout means it's probably stale
+                    socket_file.unlink(missing_ok=True)
+                    cleaned += 1
+                except Exception:
+                    pass
+
+        if cleaned > 0:
+            self.logger.info(f"Cleaned up {cleaned} stale SSH control sockets")
+
+        return cleaned
+
+
+# Module-level singleton instances
 _spawner_instance: Optional[ProcessSpawner] = None
 _spawner_lock = threading.Lock()
+_checker_instance: Optional[SSHConnectionChecker] = None
+_checker_lock = threading.Lock()
 
 
 def get_spawner() -> ProcessSpawner:
@@ -1088,10 +1334,33 @@ def get_spawner() -> ProcessSpawner:
     return _spawner_instance
 
 
+def get_ssh_connection_checker() -> SSHConnectionChecker:
+    """Get the singleton SSH connection checker instance."""
+    global _checker_instance
+    if _checker_instance is None:
+        with _checker_lock:
+            if _checker_instance is None:
+                _checker_instance = SSHConnectionChecker()
+    return _checker_instance
+
+
 def cleanup_spawner() -> None:
-    global _spawner_instance
+    """Clean up spawner resources and terminate tracked processes."""
+    global _spawner_instance, _checker_instance
+
+    # First, try to clean up stale sockets
+    if _checker_instance is not None:
+        try:
+            _checker_instance.cleanup_stale_sockets()
+        except Exception:
+            pass
+
     if _spawner_instance is not None:
         with _spawner_lock:
             if _spawner_instance is not None:
                 _spawner_instance.process_tracker.terminate_all()
                 _spawner_instance = None
+
+    # Reset checker instance
+    with _checker_lock:
+        _checker_instance = None

@@ -9,7 +9,7 @@ import os
 import re
 import threading
 import weakref
-from typing import Any, Callable, Dict, List, Optional, Tuple
+from typing import Any, Callable, Dict, List, Optional, Tuple, TYPE_CHECKING
 
 import gi
 
@@ -20,6 +20,32 @@ from gi.repository import Adw, GLib, GObject
 from ..data.ai_history_manager import get_ai_history_manager
 from ..utils.logger import get_logger
 from ..utils.translation_utils import _
+
+# Lazy-loaded requests module (avoid import overhead on startup)
+_requests_module = None
+
+
+def _get_requests():
+    """Get the requests module, importing lazily on first use."""
+    global _requests_module
+    if _requests_module is None:
+        import requests
+        _requests_module = requests
+    return _requests_module
+
+
+# Pre-compiled regex patterns for text formatting
+_INLINE_CODE_PATTERN = re.compile(r"`([^`]+)`")
+_PLUS_WHITESPACE_PATTERN = re.compile(r"\s*\+\s*")
+_SEMICOLON_NEWLINE_PATTERN = re.compile(r";\s*\n")
+_SEMICOLON_SENTENCE_PATTERN = re.compile(r";\s*(?=[A-ZÁÀÃÂÉÊÍÓÔÕÚÜÇ0-9])")
+_BOLD_ASTERISK_PATTERN = re.compile(r"\*\*([^*]+)\*\*")
+_BOLD_UNDERSCORE_PATTERN = re.compile(r"__([^_]+)__")
+_NUMBERED_LIST_START_PATTERN = re.compile(r"(?<!\n)(\d+\.)")
+_NUMBERED_LIST_FIX_PATTERN = re.compile(r"\n\s*(\d+)\s*(?=\n\d)\n")
+_DASH_LIST_PATTERN = re.compile(r"\n\s*-\s+")
+_ASTERISK_LIST_PATTERN = re.compile(r"\n\s*\*\s+")
+_MULTIPLE_NEWLINES_PATTERN = re.compile(r"\n{3,}")
 
 
 class TerminalAiAssistant(GObject.Object):
@@ -436,7 +462,7 @@ class TerminalAiAssistant(GObject.Object):
         self, config: Dict[str, str], messages: List[Dict[str, str]]
     ) -> str:
         """Perform request to local OpenAI-compatible API (Ollama, LM Studio, etc.)."""
-        import requests
+        requests = _get_requests()
 
         base_url = config.get("local_base_url", "http://localhost:11434/v1").rstrip("/")
         model = config.get("model", "").strip() or self.DEFAULT_LOCAL_MODEL
@@ -489,7 +515,7 @@ class TerminalAiAssistant(GObject.Object):
         self, config: Dict[str, str], messages: List[Dict[str, str]]
     ) -> str:
         """Perform streaming request to local OpenAI-compatible API."""
-        import requests
+        requests = _get_requests()
 
         base_url = config.get("local_base_url", "http://localhost:11434/v1").rstrip("/")
         model = config.get("model", "").strip() or self.DEFAULT_LOCAL_MODEL
@@ -550,7 +576,7 @@ class TerminalAiAssistant(GObject.Object):
         self, config: Dict[str, str], messages: List[Dict[str, str]]
     ) -> str:
         """Perform streaming request to Groq API."""
-        import requests
+        requests = _get_requests()
 
         api_key = config.get("api_key", "").strip()
         if not api_key:
@@ -612,7 +638,7 @@ class TerminalAiAssistant(GObject.Object):
         self, config: Dict[str, str], messages: List[Dict[str, str]]
     ) -> str:
         """Perform streaming request to OpenRouter API."""
-        import requests
+        requests = _get_requests()
 
         api_key = config.get("api_key", "").strip()
         if not api_key:
@@ -682,7 +708,7 @@ class TerminalAiAssistant(GObject.Object):
     def _perform_gemini_request(
         self, config: Dict[str, str], messages: List[Dict[str, str]]
     ) -> str:
-        import requests
+        requests = _get_requests()
 
         api_key = config.get("api_key", "").strip()
         if not api_key:
@@ -736,7 +762,7 @@ class TerminalAiAssistant(GObject.Object):
     def _perform_groq_request(
         self, config: Dict[str, str], messages: List[Dict[str, str]]
     ) -> str:
-        import requests
+        requests = _get_requests()
 
         api_key = config.get("api_key", "").strip()
         if not api_key:
@@ -785,7 +811,7 @@ class TerminalAiAssistant(GObject.Object):
     def _perform_openrouter_request(
         self, config: Dict[str, str], messages: List[Dict[str, str]]
     ) -> str:
-        import requests
+        requests = _get_requests()
 
         api_key = config.get("api_key", "").strip()
         if not api_key:
@@ -1135,17 +1161,17 @@ class TerminalAiAssistant(GObject.Object):
         cleaned = text
         cleaned = cleaned.replace("\r\n", "\n")
         cleaned = cleaned.replace("\\n", "\n").replace("\\t", "\t")
-        cleaned = re.sub(r"`([^`]+)`", r"\1", cleaned)
-        cleaned = re.sub(r"\s*\+\s*", " ", cleaned)
-        cleaned = re.sub(r";\s*\n", "\n", cleaned)
-        cleaned = re.sub(r";\s*(?=[A-ZÁÀÃÂÉÊÍÓÔÕÚÜÇ0-9])", ".\n", cleaned)
-        cleaned = re.sub(r"\*\*([^*]+)\*\*", r"\1", cleaned)
-        cleaned = re.sub(r"__([^_]+)__", r"\1", cleaned)
-        cleaned = re.sub(r"(?<!\n)(\d+\.)", r"\n\1", cleaned)
-        cleaned = re.sub(r"\n\s*(\d+)\s*(?=\n\d)\n", r"\n\1", cleaned)
-        cleaned = re.sub(r"\n\s*-\s+", "\n• ", cleaned)
-        cleaned = re.sub(r"\n\s*\*\s+", "\n• ", cleaned)
-        cleaned = re.sub(r"\n{3,}", "\n\n", cleaned)
+        cleaned = _INLINE_CODE_PATTERN.sub(r"\1", cleaned)
+        cleaned = _PLUS_WHITESPACE_PATTERN.sub(" ", cleaned)
+        cleaned = _SEMICOLON_NEWLINE_PATTERN.sub("\n", cleaned)
+        cleaned = _SEMICOLON_SENTENCE_PATTERN.sub(".\n", cleaned)
+        cleaned = _BOLD_ASTERISK_PATTERN.sub(r"\1", cleaned)
+        cleaned = _BOLD_UNDERSCORE_PATTERN.sub(r"\1", cleaned)
+        cleaned = _NUMBERED_LIST_START_PATTERN.sub(r"\n\1", cleaned)
+        cleaned = _NUMBERED_LIST_FIX_PATTERN.sub(r"\n\1", cleaned)
+        cleaned = _DASH_LIST_PATTERN.sub("\n• ", cleaned)
+        cleaned = _ASTERISK_LIST_PATTERN.sub("\n• ", cleaned)
+        cleaned = _MULTIPLE_NEWLINES_PATTERN.sub("\n\n", cleaned)
 
         lines = []
         previous_blank = False

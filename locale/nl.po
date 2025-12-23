@@ -518,6 +518,50 @@ msgstr "Tab loskoppelen"
 msgid "This is the only pane in the tab."
 msgstr "Dit is het enige paneel in het tabblad."
 # 
+# File: src/ashyterm/terminal/manager.py, line: 1557
+#: NEEDS WORK
+msgid "Cancelled by user."
+msgstr "Geannuleerd door gebruiker."
+# 
+# File: src/ashyterm/terminal/manager.py, line: 1563
+#: NEEDS WORK
+msgid "Time limit reached. Giving up."
+msgstr "Tijdslimiet bereikt. Opgeven."
+# 
+# File: src/ashyterm/terminal/manager.py, line: 1564
+# File: src/ashyterm/terminal/manager.py, line: 1613
+#: NEEDS WORK
+msgid "Showing connection options..."
+msgstr "Verbinding opties weergeven..."
+# 
+# File: src/ashyterm/terminal/manager.py, line: 1574
+#: NEEDS WORK
+#, python-brace-format
+msgid "Attempt {n}/{max} - Time remaining: {mins}m {secs}s"
+msgstr "Poging {n}/{max} - Tijd over: {mins}m {secs}s"
+# 
+# File: src/ashyterm/terminal/manager.py, line: 1604
+#: NEEDS WORK
+#, python-brace-format
+msgid "Spawn error: {error}"
+msgstr "Spawnfout: {error}"
+# 
+# File: src/ashyterm/terminal/manager.py, line: 1612
+#: NEEDS WORK
+msgid "Maximum attempts reached."
+msgstr "Maximale pogingen bereikt."
+# 
+# File: src/ashyterm/terminal/manager.py, line: 1621
+#: NEEDS WORK
+#, python-brace-format
+msgid "Starting auto-reconnect: {attempts} attempts over {mins} minute(s), every {secs}s"
+msgstr "Automatisch opnieuw verbinden starten: {attempts} pogingen over {mins} minuut(en), elke {secs}s"
+# 
+# File: src/ashyterm/terminal/manager.py, line: 1628
+#: NEEDS WORK
+msgid "Close this tab to cancel."
+msgstr "Sluit dit tabblad om te annuleren."
+# 
 # File: usr/share/ashyterm/ui/window_ui.py, line: 339
 #: NEEDS WORK
 msgid "Type your command here and press ENTER..."
@@ -2127,6 +2171,108 @@ msgstr "Standaardinstellingen gebruiken"
 msgid "Clear custom prompts and use random defaults"
 msgstr "Wis aangepaste prompts en gebruik willekeurige standaardinstellingen"
 # 
+# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
+# 
+# File: src/ashyterm/ui/widgets/ssh_error_banner.py, line: 167
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 20
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 25
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 48
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 53
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 58
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 63
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 68
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 73
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 79
+#: NEEDS WORK
+msgid "Authentication Failed"
+msgstr "Authenticatie mislukt"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 906
+#: NEEDS WORK
+msgid "Connection Failed"
+msgstr "Verbinding mislukt"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 223
+#: NEEDS WORK
+msgid "Edit Session"
+msgstr "Bewerk Sessie"
+# 
+# File: src/ashyterm/ui/widgets/ssh_error_banner.py, line: 204
+#: NEEDS WORK
+msgid "Edit session credentials"
+msgstr "Bewerk sessie-inloggegevens"
+# 
+# File: src/ashyterm/ui/widgets/ssh_error_banner.py, line: 208
+#: NEEDS WORK
+msgid "Fix Host Key"
+msgstr "Herstel Host-sleutel"
+# 
+# File: src/ashyterm/ui/widgets/ssh_error_banner.py, line: 212
+#: NEEDS WORK
+msgid "Remove old host key from known_hosts"
+msgstr "Verwijder oude hostsleutel uit known_hosts"
+# 
+# File: src/ashyterm/ui/widgets/ssh_error_banner.py, line: 220
+#: NEEDS WORK
+msgid "Retry connection with extended timeout"
+msgstr "Herstel verbinding met verlengde time-out"
+# 
+# File: src/ashyterm/ui/widgets/ssh_error_banner.py, line: 226
+#: NEEDS WORK
+msgid "Auto Reconnect"
+msgstr "Automatisch Herverbinden"
+# 
+# File: src/ashyterm/ui/widgets/ssh_error_banner.py, line: 229
+#: NEEDS WORK
+msgid "Start automatic reconnection attempts"
+msgstr "Start automatische herverbinding pogingen"
+# 
+# File: src/ashyterm/ui/widgets/ssh_error_banner.py, line: 238
+#: NEEDS WORK
+msgid "Configure auto-reconnect options"
+msgstr "Configureer automatisch opnieuw verbinden opties"
+# 
+# File: src/ashyterm/ui/widgets/ssh_error_banner.py, line: 281
+#: NEEDS WORK
+msgid "Auto-reconnect settings:"
+msgstr "Automatische herverbinding instellingen:"
+# 
+# File: src/ashyterm/ui/widgets/ssh_error_banner.py, line: 287
+#: NEEDS WORK
+msgid "Duration"
+msgstr "Duurzaamheid"
+# 
+# File: src/ashyterm/ui/widgets/ssh_error_banner.py, line: 297
+#: NEEDS WORK
+msgid "min"
+msgstr "min"
+# 
+# File: src/ashyterm/ui/widgets/ssh_error_banner.py, line: 305
+#: NEEDS WORK
+msgid "Interval"
+msgstr "Interval"
+# 
+# File: src/ashyterm/ui/widgets/ssh_error_banner.py, line: 315
+# File: src/ashyterm/ui/widgets/ssh_error_banner.py, line: 333
+#: NEEDS WORK
+msgid "sec"
+msgstr "sec"
+# 
+# File: src/ashyterm/ui/widgets/ssh_error_banner.py, line: 323
+#: NEEDS WORK
+msgid "Timeout"
+msgstr "Time-out"
+# 
+# File: src/ashyterm/data/command_manager_models.py, line: 419
+#: NEEDS WORK
+msgid "Start"
+msgstr "Start"
+# 
+# File: src/ashyterm/ui/widgets/ssh_error_banner.py, line: 344
+#: NEEDS WORK
+msgid "Start auto-reconnect with these settings"
+msgstr "Start automatisch opnieuw verbinden met deze instellingen"
+# 
 # File: src/ashyterm/ui/widgets/form_widget_builder.py, line: 160
 #: NEEDS WORK
 msgid "Enter password..."
@@ -2592,16 +2738,416 @@ msgstr "Weet u zeker dat u deze {count} items permanent wilt verwijderen?"
 msgid "This will also delete all contents of any selected folders."
 msgstr "Dit zal ook alle inhoud van geselecteerde mappen verwijderen."
 # 
-# File: usr/share/ashyterm/ui/ssh_dialogs.py, line: 206
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 14
 #: NEEDS WORK
-msgid "SSH Connection Failed"
-msgstr "SSH-verbinding mislukt"
+msgid "General SSH Error"
+msgstr "Algemene SSH-fout"
 # 
-# File: usr/share/ashyterm/ui/ssh_dialogs.py, line: 207
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 15
+#: NEEDS WORK
+msgid "The SSH command failed with a general error."
+msgstr "De SSH-opdracht is mislukt met een algemene fout."
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 17
+#: NEEDS WORK
+msgid "Command Misuse"
+msgstr "Opdrachtmisbruik"
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 17
+#: NEEDS WORK
+msgid "SSH command was used incorrectly."
+msgstr "SSH-opdracht werd onjuist gebruikt."
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 21
+#: NEEDS WORK
+msgid "Username or password is incorrect, or the user is not allowed to connect."
+msgstr ""
+"De gebruikersnaam of het wachtwoord is onjuist, of de gebruiker is niet toegestaan om verbinding te "
+"maken."
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 26
+#: NEEDS WORK
+msgid "Authentication failed. Check username, password, or SSH key."
+msgstr "Authenticatie mislukt. Controleer gebruikersnaam, wachtwoord of SSH-sleutel."
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 30
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 113
+#: NEEDS WORK
+msgid "Host Key Verification Failed"
+msgstr "Host sleutelverificatie mislukt"
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 31
+#: NEEDS WORK
+msgid "The server's host key is not recognized or has changed."
+msgstr "De hostsleutel van de server wordt niet herkend of is gewijzigd."
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 37
+#: NEEDS WORK
+msgid ""
+"Could not establish connection to the server. Check if the host is reachable and the port is "
+"correct."
+msgstr ""
+"Kon geen verbinding met de server tot stand brengen. Controleer of de host bereikbaar is en of de "
+"poort correct is."
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 49
+#: NEEDS WORK
+msgid "Username or password is incorrect. Please verify your credentials."
+msgstr "De gebruikersnaam of het wachtwoord is onjuist. Controleer uw inloggegevens."
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 54
+#: NEEDS WORK
+msgid "Authentication failed. Check your username and password."
+msgstr "Authenticatie mislukt. Controleer uw gebruikersnaam en wachtwoord."
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 59
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 69
+#: NEEDS WORK
+msgid "Password authentication failed. The password may be incorrect."
+msgstr "Wachtwoordauthenticatie is mislukt. Het wachtwoord is mogelijk onjuist."
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 64
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 74
+#: NEEDS WORK
+msgid "The password entered is incorrect."
+msgstr "Het ingevoerde wachtwoord is onjuist."
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 80
+#: NEEDS WORK
+msgid "The password is invalid or incorrect."
+msgstr "Het wachtwoord is ongeldig of onjuist."
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 85
+#: NEEDS WORK
+msgid "Multiple Auth Methods Failed"
+msgstr "Meerdere authenticatiemethoden mislukt"
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 87
+#: NEEDS WORK
+msgid "Both public key and password authentication failed. Check your credentials."
+msgstr "Zowel openbare sleutel- als wachtwoordauthenticatie zijn mislukt. Controleer uw inloggegevens."
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 92
+#: NEEDS WORK
+msgid "SSH Key Rejected"
+msgstr "SSH-sleutel afgewezen"
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 94
+#: NEEDS WORK
+msgid "The server rejected your SSH key. The key may not be authorized on the server."
+msgstr "De server heeft uw SSH-sleutel afgewezen. De sleutel is mogelijk niet geautoriseerd op de server."
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 100
+#: NEEDS WORK
+msgid "SSH Agent Error"
+msgstr "SSH-agentfout"
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 101
+#: NEEDS WORK
+msgid "SSH agent refused the operation. Check if your key is loaded with ssh-add."
+msgstr "SSH-agent heeft de bewerking geweigerd. Controleer of je sleutel is geladen met ssh-add."
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 105
+#: NEEDS WORK
+msgid "SSH Agent Not Running"
+msgstr "SSH-agent draait niet"
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 107
+#: NEEDS WORK
+msgid "SSH agent is not running. Start it with eval $(ssh-agent) and add your key."
+msgstr "SSH-agent is niet actief. Start het met eval $(ssh-agent) en voeg je sleutel toe."
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 115
+#: NEEDS WORK
+msgid "The server's host key has changed or is not trusted. This could indicate a security issue."
+msgstr ""
+"De hostsleutel van de server is gewijzigd of wordt niet vertrouwd. Dit kan wijzen op een "
+"beveiligingsprobleem."
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 120
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 127
+#: NEEDS WORK
+msgid "Host Key Changed"
+msgstr "Host-sleutel gewijzigd"
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 122
+#: NEEDS WORK
+msgid "The server's host key has changed. Remove the old key from known_hosts if this is expected."
+msgstr ""
+"De hostsleutel van de server is gewijzigd. Verwijder de oude sleutel uit known_hosts als dit "
+"verwacht wordt."
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 129
+#: NEEDS WORK
+msgid "The server's identification has changed. This could indicate a security issue or server reinstall."
+msgstr ""
+"De identificatie van de server is gewijzigd. Dit kan wijzen op een beveiligingsprobleem of een "
+"herinstallatie van de server."
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 135
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 140
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 145
+#: NEEDS WORK
+msgid "DNS Resolution Failed"
+msgstr "DNS-resolutie mislukt"
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 136
+#: NEEDS WORK
+msgid "Could not resolve the hostname. Check if the address is correct."
+msgstr "Kon de hostnaam niet oplossen. Controleer of het adres correct is."
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 141
+#: NEEDS WORK
+msgid "The hostname could not be resolved. Check the server address."
+msgstr "De hostnaam kon niet worden opgelost. Controleer het serveradres."
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 146
+#: NEEDS WORK
+msgid "No address found for the hostname."
+msgstr "Geen adres gevonden voor de hostnaam."
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 150
+#: NEEDS WORK
+msgid "DNS Temporary Failure"
+msgstr "DNS Tijdelijke Fout"
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 151
+#: NEEDS WORK
+msgid "DNS resolution temporarily failed. Check your network connection."
+msgstr "DNS-resolutie is tijdelijk mislukt. Controleer uw netwerkverbinding."
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 156
+#: NEEDS WORK
+msgid "Connection Refused"
+msgstr "Verbinding Geweigerd"
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 157
+#: NEEDS WORK
+msgid "The server refused the connection. Check if SSH is running on the server."
+msgstr "De server heeft de verbinding geweigerd. Controleer of SSH op de server draait."
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 161
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 168
+#: NEEDS WORK
+msgid "Connection Timeout"
+msgstr "Verbindingstime-out"
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 163
+#: NEEDS WORK
+msgid "Connection attempt timed out. The server may be unreachable or behind a firewall."
+msgstr "Verbindingspoging is verlopen. De server is mogelijk onbereikbaar of achter een firewall."
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 169
+#: NEEDS WORK
+msgid "The operation timed out. Server may be slow or unreachable."
+msgstr "De bewerking is verlopen. De server is mogelijk traag of onbereikbaar."
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 173
+#: NEEDS WORK
+msgid "No Route to Host"
+msgstr "Geen route naar host"
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 175
+#: NEEDS WORK
+msgid "Network path to the server could not be found. Check your network connection."
+msgstr "Netwerkpad naar de server kon niet worden gevonden. Controleer uw netwerkverbinding."
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 180
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 185
+#: NEEDS WORK
+msgid "Network Unreachable"
+msgstr "Netwerk Onbereikbaar"
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 181
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 186
+#: NEEDS WORK
+msgid "The network is not reachable. Check your internet connection."
+msgstr "Het netwerk is niet bereikbaar. Controleer uw internetverbinding."
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 191
+#: NEEDS WORK
+msgid "Connection Reset"
+msgstr "Verbinding Gereset"
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 192
+#: NEEDS WORK
+msgid "The connection was reset by the remote server."
+msgstr "De verbinding is opnieuw ingesteld door de externe server."
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 196
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 206
+#: NEEDS WORK
+msgid "Connection Closed"
+msgstr "Verbinding Gesloten"
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 197
+#: NEEDS WORK
+msgid "The remote server closed the connection unexpectedly."
+msgstr "De externe server heeft de verbinding onverwacht gesloten."
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 201
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 211
+#: NEEDS WORK
+msgid "Connection Lost"
+msgstr "Verbinding Verloren"
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 202
+#: NEEDS WORK
+msgid "The connection to the server was lost."
+msgstr "De verbinding met de server is verbroken."
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 207
+#: NEEDS WORK
+msgid "The server closed the connection."
+msgstr "De server heeft de verbinding gesloten."
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 212
+#: NEEDS WORK
+msgid "Failed to read from the connection. The server may have closed it."
+msgstr "Kon niet lezen van de verbinding. De server heeft deze mogelijk gesloten."
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 217
+#: NEEDS WORK
+msgid "Too Many Authentication Failures"
+msgstr "Te veel authenticatiefouten"
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 218
+#: NEEDS WORK
+msgid "Too many failed login attempts. Wait before trying again."
+msgstr "Te veel mislukte inlogpogingen. Wacht voordat u het opnieuw probeert."
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 222
+#: NEEDS WORK
+msgid "Server Disconnected"
+msgstr "Server Verbonden Verbroken"
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 223
+#: NEEDS WORK
+msgid "The server disconnected. Check server logs for details."
+msgstr "De server is verbroken. Controleer de serverlogs voor details."
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 228
+#: NEEDS WORK
+msgid "SSH Service Not Running"
+msgstr "SSH-service draait niet"
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 229
+#: NEEDS WORK
+msgid "SSH service doesn't appear to be running on the server."
+msgstr "SSH-service lijkt niet te draaien op de server."
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 234
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 239
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 244
+#: NEEDS WORK
+msgid "Key Authentication Failed"
+msgstr "Sleutelverificatie mislukt"
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 235
+#: NEEDS WORK
+msgid "The specified SSH key file was not found."
+msgstr "Het opgegeven SSH-sleutelbestand kon niet worden gevonden."
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 240
+#: NEEDS WORK
+msgid "The SSH key is invalid or corrupted."
+msgstr "De SSH-sleutel is ongeldig of beschadigd."
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 245
+#: NEEDS WORK
+msgid "Failed to load the SSH key file."
+msgstr "Kon het SSH-sleuteldocument niet laden."
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 249
+#: NEEDS WORK
+msgid "Key File Permissions Error"
+msgstr "Sleutelbestand Machtigingsfout"
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 250
+#: NEEDS WORK
+msgid "SSH key file has incorrect permissions. Use chmod 600 on the key file."
+msgstr "SSH-sleuteldocument heeft onjuiste machtigingen. Gebruik chmod 600 op het sleuteldocument."
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 254
+#: NEEDS WORK
+msgid "SSH Key Format Error"
+msgstr "SSH-sleutelindelingsfout"
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 255
+#: NEEDS WORK
+msgid "The SSH key file has an invalid format."
+msgstr "Het SSH-sleuteldocument heeft een ongeldig formaat."
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 260
+#: NEEDS WORK
+msgid "Certificate Invalid"
+msgstr "Certificaat Ongeldig"
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 261
+#: NEEDS WORK
+msgid "The SSH certificate signature verification failed."
+msgstr "De verificatie van de handtekening van het SSH-certificaat is mislukt."
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 265
+#: NEEDS WORK
+msgid "Certificate Expired"
+msgstr "Certificaat Verlopen"
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 266
+#: NEEDS WORK
+msgid "The SSH certificate has expired and needs renewal."
+msgstr "Het SSH-certificaat is verlopen en moet worden vernieuwd."
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 271
+#: NEEDS WORK
+msgid "Connection Denied by Server"
+msgstr "Verbinding geweigerd door server"
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 272
+#: NEEDS WORK
+msgid "The server administrator has blocked this connection."
+msgstr "De serveradministrator heeft deze verbinding geblokkeerd."
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 276
+#: NEEDS WORK
+msgid "SFTP Not Available"
+msgstr "SFTP Niet Beschikbaar"
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 278
+#: NEEDS WORK
+msgid "SFTP subsystem is not available on the server. Contact the server administrator."
+msgstr "SFTP-subsyteem is niet beschikbaar op de server. Neem contact op met de serverbeheerder."
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 283
+#: NEEDS WORK
+msgid "SSH Channel Failed"
+msgstr "SSH-kanaal mislukt"
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 284
+#: NEEDS WORK
+msgid "Failed to open SSH channel. The server may be overloaded or misconfigured."
+msgstr "Kon niet SSH-kanaal openen. De server is mogelijk overbelast of verkeerd geconfigureerd."
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 289
+#: NEEDS WORK
+msgid "Password Authentication Denied"
+msgstr "Wachtwoordauthenticatie geweigerd"
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 291
+#: NEEDS WORK
+msgid "Password authentication was denied. The server may not allow password login."
+msgstr "Wachtwoordauthenticatie werd geweigerd. De server staat mogelijk geen wachtwoordlogin toe."
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 318
+#: NEEDS WORK
+msgid "SSH Connection Error"
+msgstr "SSH-verbinding fout"
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 319
 #: NEEDS WORK
 #, python-brace-format
-msgid "Could not connect to session '{session_name}'."
-msgstr "Kon niet verbinden met sessie '{session_name}'."
+msgid "An unexpected error occurred while connecting. Exit code: {code}"
+msgstr "Er is een onverwachte fout opgetreden tijdens het verbinden. Exitcode: {code}"
 # 
 # File: src/ashyterm/ui/dialogs/ai_config_dialog.py, line: 43
 #: NEEDS WORK
@@ -3262,30 +3808,53 @@ msgstr "SSH-sessies"
 msgid "Apply output highlighting to SSH connections"
 msgstr "Pas uitvoeraccentuering toe op SSH-verbindingen"
 # 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1567
-#: NEEDS WORK
-msgid "\"cat\" Command Colorization"
-msgstr "\"cat\" Opdracht Kleurcodering"
+# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
 # 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1569
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1923
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 432
 #: NEEDS WORK
-msgid "Syntax highlighting for \"cat\" command output (using Pygments)"
-msgstr "Syntaxhighlighting voor de uitvoer van de \"cat\" opdracht (met Pygments)"
+#, python-brace-format
+msgid "{} Command Colorization"
+msgstr "{} Opdracht Kleuring"
 # 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1572
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1925
 #: NEEDS WORK
-msgid "Pygments is not installed - \"cat\" output will not be colorized"
-msgstr "Pygments is niet geïnstalleerd - \"cat\" uitvoer zal niet gekleurd zijn"
+#, python-brace-format
+msgid "Syntax highlighting for '{}' command output (using Pygments)"
+msgstr "Syntaxhighlighting voor de uitvoer van het '{}' commando (met Pygments)"
 # 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1580
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1928
 #: NEEDS WORK
-msgid "Enable \"cat\" Colorization"
-msgstr "Schakel \"kat\" Kleurcodering in"
+#, python-brace-format
+msgid "Pygments is not installed - '{}' output will not be colorized"
+msgstr "Pygments is niet geïnstalleerd - '{}' uitvoer zal niet gekleurd zijn"
 # 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1581
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1680
 #: NEEDS WORK
-msgid "Apply syntax highlighting to \"cat\" command output"
-msgstr "Pas syntaxisaccentuering toe op de uitvoer van de \"cat\" opdracht"
+msgid "⚠️ Experimental Feature"
+msgstr "⚠️ Experimentele functie"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1939
+#: NEEDS WORK
+#, python-brace-format
+msgid ""
+"This feature colorizes output for the '{}' command. It may not work perfectly with every "
+"shell/prompt or when output is fragmented."
+msgstr ""
+"Deze functie kleurt de uitvoer voor de '{}' opdracht. Het werkt mogelijk niet perfect met elke "
+"shell/prompt of wanneer de uitvoer gefragmenteerd is."
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1948
+#: NEEDS WORK
+#, python-brace-format
+msgid "Enable '{}' Colorization"
+msgstr "Schakel '{}' Kleurcodering in"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1949
+#: NEEDS WORK
+#, python-brace-format
+msgid "Apply syntax highlighting to '{}' command output"
+msgstr "Pas syntaxisaccentuering toe op de uitvoer van het '{}' commando"
 # 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1951
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2178
@@ -3373,6 +3942,15 @@ msgstr "Live syntaxismarkering terwijl je commando's typt (experimenteel)"
 msgid "Pygments is not installed - shell input highlighting unavailable"
 msgstr "Pygments is niet geïnstalleerd - shellinvoerhighlighting niet beschikbaar"
 # 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1748
+#: NEEDS WORK
+msgid ""
+"This feature applies highlighting to echoed shell input. It may not work perfectly with all prompts "
+"or shells."
+msgstr ""
+"Deze functie past markering toe op weergegeven shellinvoer. Het werkt mogelijk niet perfect met "
+"alle prompts of shells."
+# 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1663
 #: NEEDS WORK
 msgid "Enable Shell Input Highlighting"
@@ -3391,20 +3969,6 @@ msgstr ""
 #: NEEDS WORK
 msgid "Auto detects background, Manual uses selected theme"
 msgstr "Automatisch detecteert achtergrond, Handmatig gebruikt geselecteerd thema"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1680
-#: NEEDS WORK
-msgid "⚠️ Experimental Feature"
-msgstr "⚠️ Experimentele functie"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1748
-#: NEEDS WORK
-msgid ""
-"This feature applies highlighting to echoed shell input. It may not work perfectly with all prompts "
-"or shells."
-msgstr ""
-"Deze functie past markering toe op weergegeven shellinvoer. Het werkt mogelijk niet perfect met "
-"alle prompts of shells."
 # 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1179
 #: NEEDS WORK
@@ -3743,11 +4307,11 @@ msgstr "ingeschakeld"
 msgid "disabled"
 msgstr "uitgeschakeld"
 # 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2820
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 3620
 #: NEEDS WORK
 #, python-brace-format
-msgid "\"cat\" colorization {}"
-msgstr "\"kat\" kleurverandering {}"
+msgid "'{}' colorization {}"
+msgstr "'{}' kleurverandering {}"
 # 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 3593
 #: NEEDS WORK
@@ -3908,11 +4472,6 @@ msgstr "Opdracht al in lijst"
 msgid "✓ Valid command name"
 msgstr "✓ Geldige opdrachtnaam"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 223
-#: NEEDS WORK
-msgid "Edit Session"
-msgstr "Bewerk Sessie"
-# 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 581
 #: NEEDS WORK
 msgid "Test Connection"
@@ -4000,6 +4559,71 @@ msgstr "Selecteer een map om deze sessie te organiseren"
 #: NEEDS WORK
 msgid "Root"
 msgstr "Root"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1182
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1197
+#: NEEDS WORK
+msgid "Automatic"
+msgstr "Automatisch"
+# 
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 376
+#: NEEDS WORK
+msgid "Highlighting"
+msgstr "Markering"
+# 
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 378
+#: NEEDS WORK
+msgid ""
+"Highlighting adds colors to make terminal text easier to read. You can override global preferences "
+"per session."
+msgstr ""
+"Markering voegt kleuren toe om terminaltekst gemakkelijker leesbaar te maken. U kunt globale "
+"voorkeuren per sessie overschrijven."
+# 
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 383
+#: NEEDS WORK
+msgid "Experimental Feature"
+msgstr "Experimentele functie"
+# 
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 385
+#: NEEDS WORK
+msgid "Per-session highlighting overrides are experimental and may change."
+msgstr "Per-sessie markering overrides zijn experimenteel en kunnen veranderen."
+# 
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 402
+#: NEEDS WORK
+msgid "Customize highlighting for this session"
+msgstr "Pas de markering voor deze sessie aan"
+# 
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 403
+#: NEEDS WORK
+msgid "When off, this session uses the global highlighting settings"
+msgstr "Wanneer uit, gebruikt deze sessie de globale markeerinstellingen."
+# 
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 413
+#: NEEDS WORK
+msgid "Enable/disable output highlighting for this session"
+msgstr "Schakel outputmarkering in/uit voor deze sessie"
+# 
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 420
+#: NEEDS WORK
+msgid "Command-Specific Highlighting"
+msgstr "Opdracht-specifieke markering"
+# 
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 421
+#: NEEDS WORK
+msgid "Use context-aware rules for specific commands"
+msgstr "Gebruik contextbewuste regels voor specifieke opdrachten"
+# 
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 433
+#: NEEDS WORK
+msgid "Colorize file content output using syntax highlighting"
+msgstr "Kleur de bestandsinhoud uitvoer met syntaxisaccentuering"
+# 
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 439
+#: NEEDS WORK
+msgid "Highlight commands as you type at the shell prompt"
+msgstr "Markeer opdrachten terwijl je typt op de shellprompt"
 # 
 # File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 237
 #: NEEDS WORK
@@ -4378,11 +5002,6 @@ msgstr "Verbinding Succesvol"
 #: NEEDS WORK
 msgid "Successfully connected to the SSH server."
 msgstr "Succesvol verbonden met de SSH-server."
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 906
-#: NEEDS WORK
-msgid "Connection Failed"
-msgstr "Verbinding mislukt"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 907
 #: NEEDS WORK
@@ -5557,12 +6176,6 @@ msgstr "Toon SIXEL-afbeeldingen (experimenteel)"
 msgid "Backspace Key"
 msgstr "Backspace-toets"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1182
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1197
-#: NEEDS WORK
-msgid "Automatic"
-msgstr "Automatisch"
-# 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1183
 #: NEEDS WORK
 msgid "ASCII BACKSPACE (^H)"
@@ -6026,11 +6639,6 @@ msgstr "Actie"
 #: NEEDS WORK
 msgid "Status"
 msgstr "Status"
-# 
-# File: src/ashyterm/data/command_manager_models.py, line: 419
-#: NEEDS WORK
-msgid "Start"
-msgstr "Start"
 # 
 # File: src/ashyterm/data/command_manager_models.py, line: 420
 #: NEEDS WORK

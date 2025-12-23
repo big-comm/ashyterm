@@ -129,6 +129,16 @@ class SessionOperations:
                 updated_session.local_startup_command
             )
 
+            # Per-session highlighting overrides (tri-state)
+            original_session.output_highlighting = updated_session.output_highlighting
+            original_session.command_specific_highlighting = (
+                updated_session.command_specific_highlighting
+            )
+            original_session.cat_colorization = updated_session.cat_colorization
+            original_session.shell_input_highlighting = (
+                updated_session.shell_input_highlighting
+            )
+
             if not self._save_changes():
                 # Rollback changes on failure by recreating the item from original data
                 rolled_back_session = SessionItem.from_dict(original_data)

@@ -518,6 +518,50 @@ msgstr "Függőleges lap leválasztása"
 msgid "This is the only pane in the tab."
 msgstr "Ez az egyetlen panel a fülben."
 # 
+# File: src/ashyterm/terminal/manager.py, line: 1557
+#: NEEDS WORK
+msgid "Cancelled by user."
+msgstr "A felhasználó által törölve."
+# 
+# File: src/ashyterm/terminal/manager.py, line: 1563
+#: NEEDS WORK
+msgid "Time limit reached. Giving up."
+msgstr "Időkorlát elérve. Feladom."
+# 
+# File: src/ashyterm/terminal/manager.py, line: 1564
+# File: src/ashyterm/terminal/manager.py, line: 1613
+#: NEEDS WORK
+msgid "Showing connection options..."
+msgstr "Kapcsolati lehetőségek megjelenítése..."
+# 
+# File: src/ashyterm/terminal/manager.py, line: 1574
+#: NEEDS WORK
+#, python-brace-format
+msgid "Attempt {n}/{max} - Time remaining: {mins}m {secs}s"
+msgstr "Kísérlet {n}/{max} - Hátralévő idő: {mins}p {secs}m"
+# 
+# File: src/ashyterm/terminal/manager.py, line: 1604
+#: NEEDS WORK
+#, python-brace-format
+msgid "Spawn error: {error}"
+msgstr "Spawn hiba: {error}"
+# 
+# File: src/ashyterm/terminal/manager.py, line: 1612
+#: NEEDS WORK
+msgid "Maximum attempts reached."
+msgstr "Elérte a maximális próbálkozások számát."
+# 
+# File: src/ashyterm/terminal/manager.py, line: 1621
+#: NEEDS WORK
+#, python-brace-format
+msgid "Starting auto-reconnect: {attempts} attempts over {mins} minute(s), every {secs}s"
+msgstr "Automatikus újracsatlakozás indítása: {attempts} kísérlet {mins} perc(en), minden {secs}s-ban."
+# 
+# File: src/ashyterm/terminal/manager.py, line: 1628
+#: NEEDS WORK
+msgid "Close this tab to cancel."
+msgstr "Zárja be ezt a lapot a törléshez."
+# 
 # File: usr/share/ashyterm/ui/window_ui.py, line: 339
 #: NEEDS WORK
 msgid "Type your command here and press ENTER..."
@@ -2127,6 +2171,108 @@ msgstr "Alapértelmezett értékek használata"
 msgid "Clear custom prompts and use random defaults"
 msgstr "Törölje a testreszabott kéréseket, és használjon véletlenszerű alapértelmezetteket"
 # 
+# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
+# 
+# File: src/ashyterm/ui/widgets/ssh_error_banner.py, line: 167
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 20
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 25
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 48
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 53
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 58
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 63
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 68
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 73
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 79
+#: NEEDS WORK
+msgid "Authentication Failed"
+msgstr "Hitelesítés sikertelen"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 906
+#: NEEDS WORK
+msgid "Connection Failed"
+msgstr "Kapcsolódás sikertelen"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 223
+#: NEEDS WORK
+msgid "Edit Session"
+msgstr "Szerkesztési munkamenet"
+# 
+# File: src/ashyterm/ui/widgets/ssh_error_banner.py, line: 204
+#: NEEDS WORK
+msgid "Edit session credentials"
+msgstr "Szerkesztés munkamenet hitelesítő adatok"
+# 
+# File: src/ashyterm/ui/widgets/ssh_error_banner.py, line: 208
+#: NEEDS WORK
+msgid "Fix Host Key"
+msgstr "Gazda kulcs javítása"
+# 
+# File: src/ashyterm/ui/widgets/ssh_error_banner.py, line: 212
+#: NEEDS WORK
+msgid "Remove old host key from known_hosts"
+msgstr "Távolítsa el a régi hosztkulcsot a known_hosts fájlból"
+# 
+# File: src/ashyterm/ui/widgets/ssh_error_banner.py, line: 220
+#: NEEDS WORK
+msgid "Retry connection with extended timeout"
+msgstr "Kapcsolat újrapróbálása meghosszabbított időkorláttal"
+# 
+# File: src/ashyterm/ui/widgets/ssh_error_banner.py, line: 226
+#: NEEDS WORK
+msgid "Auto Reconnect"
+msgstr "Automatikus újracsatlakozás"
+# 
+# File: src/ashyterm/ui/widgets/ssh_error_banner.py, line: 229
+#: NEEDS WORK
+msgid "Start automatic reconnection attempts"
+msgstr "Automatikus újracsatlakozási kísérletek indítása"
+# 
+# File: src/ashyterm/ui/widgets/ssh_error_banner.py, line: 238
+#: NEEDS WORK
+msgid "Configure auto-reconnect options"
+msgstr "Automatikus újracsatlakozási lehetőségek konfigurálása"
+# 
+# File: src/ashyterm/ui/widgets/ssh_error_banner.py, line: 281
+#: NEEDS WORK
+msgid "Auto-reconnect settings:"
+msgstr "Automatikus újracsatlakozási beállítások:"
+# 
+# File: src/ashyterm/ui/widgets/ssh_error_banner.py, line: 287
+#: NEEDS WORK
+msgid "Duration"
+msgstr "Időtartam"
+# 
+# File: src/ashyterm/ui/widgets/ssh_error_banner.py, line: 297
+#: NEEDS WORK
+msgid "min"
+msgstr "min"
+# 
+# File: src/ashyterm/ui/widgets/ssh_error_banner.py, line: 305
+#: NEEDS WORK
+msgid "Interval"
+msgstr "Intervallum"
+# 
+# File: src/ashyterm/ui/widgets/ssh_error_banner.py, line: 315
+# File: src/ashyterm/ui/widgets/ssh_error_banner.py, line: 333
+#: NEEDS WORK
+msgid "sec"
+msgstr "másodperc"
+# 
+# File: src/ashyterm/ui/widgets/ssh_error_banner.py, line: 323
+#: NEEDS WORK
+msgid "Timeout"
+msgstr "Időtúllépés"
+# 
+# File: src/ashyterm/data/command_manager_models.py, line: 419
+#: NEEDS WORK
+msgid "Start"
+msgstr "Kezdés"
+# 
+# File: src/ashyterm/ui/widgets/ssh_error_banner.py, line: 344
+#: NEEDS WORK
+msgid "Start auto-reconnect with these settings"
+msgstr "Indítsa el az automatikus újracsatlakozást ezekkel a beállításokkal"
+# 
 # File: src/ashyterm/ui/widgets/form_widget_builder.py, line: 160
 #: NEEDS WORK
 msgid "Enter password..."
@@ -2590,16 +2736,416 @@ msgstr "Biztos benne, hogy véglegesen törölni szeretné ezeket a {count} elem
 msgid "This will also delete all contents of any selected folders."
 msgstr "Ez a kiválasztott mappák összes tartalmát is törli."
 # 
-# File: usr/share/ashyterm/ui/ssh_dialogs.py, line: 206
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 14
 #: NEEDS WORK
-msgid "SSH Connection Failed"
-msgstr "SSH kapcsolat sikertelen"
+msgid "General SSH Error"
+msgstr "Általános SSH hiba"
 # 
-# File: usr/share/ashyterm/ui/ssh_dialogs.py, line: 207
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 15
+#: NEEDS WORK
+msgid "The SSH command failed with a general error."
+msgstr "Az SSH parancs általános hibával végződött."
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 17
+#: NEEDS WORK
+msgid "Command Misuse"
+msgstr "Parancs Helytelen Használata"
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 17
+#: NEEDS WORK
+msgid "SSH command was used incorrectly."
+msgstr "Az SSH parancsot helytelenül használták."
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 21
+#: NEEDS WORK
+msgid "Username or password is incorrect, or the user is not allowed to connect."
+msgstr "A felhasználónév vagy a jelszó helytelen, vagy a felhasználó nem jogosult a csatlakozásra."
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 26
+#: NEEDS WORK
+msgid "Authentication failed. Check username, password, or SSH key."
+msgstr "Hitelesítés sikertelen. Ellenőrizze a felhasználónevet, a jelszót vagy az SSH kulcsot."
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 30
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 113
+#: NEEDS WORK
+msgid "Host Key Verification Failed"
+msgstr "A gazda kulcs ellenőrzése meghiúsult"
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 31
+#: NEEDS WORK
+msgid "The server's host key is not recognized or has changed."
+msgstr "A szerver gazda kulcsa nem ismert vagy megváltozott."
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 37
+#: NEEDS WORK
+msgid ""
+"Could not establish connection to the server. Check if the host is reachable and the port is "
+"correct."
+msgstr ""
+"Nem sikerült kapcsolatot létesíteni a szerverrel. Ellenőrizze, hogy a gazdagép elérhető-e, és hogy "
+"a port helyes-e."
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 49
+#: NEEDS WORK
+msgid "Username or password is incorrect. Please verify your credentials."
+msgstr "A felhasználónév vagy a jelszó helytelen. Kérjük, ellenőrizze a hitelesítő adatait."
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 54
+#: NEEDS WORK
+msgid "Authentication failed. Check your username and password."
+msgstr "A hitelesítés meghiúsult. Ellenőrizze a felhasználónevét és a jelszavát."
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 59
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 69
+#: NEEDS WORK
+msgid "Password authentication failed. The password may be incorrect."
+msgstr "A jelszó hitelesítése meghiúsult. A jelszó helytelen lehet."
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 64
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 74
+#: NEEDS WORK
+msgid "The password entered is incorrect."
+msgstr "A megadott jelszó helytelen."
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 80
+#: NEEDS WORK
+msgid "The password is invalid or incorrect."
+msgstr "A jelszó érvénytelen vagy helytelen."
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 85
+#: NEEDS WORK
+msgid "Multiple Auth Methods Failed"
+msgstr "Több hitelesítési módszer sikertelen"
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 87
+#: NEEDS WORK
+msgid "Both public key and password authentication failed. Check your credentials."
+msgstr "A nyilvános kulcs és a jelszó hitelesítése is meghiúsult. Ellenőrizze a hitelesítő adatait."
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 92
+#: NEEDS WORK
+msgid "SSH Key Rejected"
+msgstr "SSH kulcs elutasítva"
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 94
+#: NEEDS WORK
+msgid "The server rejected your SSH key. The key may not be authorized on the server."
+msgstr "A szerver elutasította az SSH kulcsát. A kulcs lehet, hogy nincs engedélyezve a szerveren."
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 100
+#: NEEDS WORK
+msgid "SSH Agent Error"
+msgstr "SSH ügynök hiba"
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 101
+#: NEEDS WORK
+msgid "SSH agent refused the operation. Check if your key is loaded with ssh-add."
+msgstr ""
+"Az SSH ügynök megtagadta a műveletet. Ellenőrizze, hogy a kulcsa betöltve van-e az ssh-add "
+"segítségével."
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 105
+#: NEEDS WORK
+msgid "SSH Agent Not Running"
+msgstr "SSH ügynök nem fut"
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 107
+#: NEEDS WORK
+msgid "SSH agent is not running. Start it with eval $(ssh-agent) and add your key."
+msgstr "Az SSH ügynök nem fut. Indítsa el az eval $(ssh-agent) paranccsal, és adja hozzá a kulcsát."
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 115
+#: NEEDS WORK
+msgid "The server's host key has changed or is not trusted. This could indicate a security issue."
+msgstr "A szerver gazda kulcsa megváltozott vagy nem megbízható. Ez biztonsági problémára utalhat."
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 120
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 127
+#: NEEDS WORK
+msgid "Host Key Changed"
+msgstr "A gazda kulcs megváltozott"
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 122
+#: NEEDS WORK
+msgid "The server's host key has changed. Remove the old key from known_hosts if this is expected."
+msgstr ""
+"A szerver hosztkulcsa megváltozott. Távolítsa el a régi kulcsot a known_hosts fájlból, ha ez "
+"várható."
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 129
+#: NEEDS WORK
+msgid "The server's identification has changed. This could indicate a security issue or server reinstall."
+msgstr ""
+"A szerver azonosítója megváltozott. Ez biztonsági problémára vagy a szerver újratelepítésére "
+"utalhat."
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 135
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 140
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 145
+#: NEEDS WORK
+msgid "DNS Resolution Failed"
+msgstr "DNS feloldás sikertelen"
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 136
+#: NEEDS WORK
+msgid "Could not resolve the hostname. Check if the address is correct."
+msgstr "Nem sikerült feloldani a hosztnevet. Ellenőrizze, hogy a cím helyes-e."
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 141
+#: NEEDS WORK
+msgid "The hostname could not be resolved. Check the server address."
+msgstr "A hosztnevet nem sikerült feloldani. Ellenőrizze a szerver címet."
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 146
+#: NEEDS WORK
+msgid "No address found for the hostname."
+msgstr "Nincs cím a hosztnévhez."
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 150
+#: NEEDS WORK
+msgid "DNS Temporary Failure"
+msgstr "DNS ideiglenes hiba"
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 151
+#: NEEDS WORK
+msgid "DNS resolution temporarily failed. Check your network connection."
+msgstr "A DNS feloldás ideiglenesen meghiúsult. Ellenőrizze a hálózati kapcsolatát."
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 156
+#: NEEDS WORK
+msgid "Connection Refused"
+msgstr "Kapcsolat megtagadva"
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 157
+#: NEEDS WORK
+msgid "The server refused the connection. Check if SSH is running on the server."
+msgstr "A szerver megtagadta a kapcsolatot. Ellenőrizze, hogy az SSH fut-e a szerveren."
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 161
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 168
+#: NEEDS WORK
+msgid "Connection Timeout"
+msgstr "Kapcsolati időtúllépés"
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 163
+#: NEEDS WORK
+msgid "Connection attempt timed out. The server may be unreachable or behind a firewall."
+msgstr ""
+"A kapcsolatfelvételi kísérlet időtúllépést szenvedett. A szerver elérhetetlen lehet, vagy tűzfal "
+"mögött van."
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 169
+#: NEEDS WORK
+msgid "The operation timed out. Server may be slow or unreachable."
+msgstr "A művelet időtúllépett. A szerver lassú vagy elérhetetlen lehet."
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 173
+#: NEEDS WORK
+msgid "No Route to Host"
+msgstr "Nincs út a gazdagéphez"
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 175
+#: NEEDS WORK
+msgid "Network path to the server could not be found. Check your network connection."
+msgstr "A szerver hálózati elérési útja nem található. Ellenőrizze a hálózati kapcsolatát."
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 180
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 185
+#: NEEDS WORK
+msgid "Network Unreachable"
+msgstr "Hálózat elérhetetlen"
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 181
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 186
+#: NEEDS WORK
+msgid "The network is not reachable. Check your internet connection."
+msgstr "A hálózat nem elérhető. Ellenőrizze az internetkapcsolatát."
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 191
+#: NEEDS WORK
+msgid "Connection Reset"
+msgstr "Kapcsolat visszaállítva"
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 192
+#: NEEDS WORK
+msgid "The connection was reset by the remote server."
+msgstr "A kapcsolatot a távoli szerver visszaállította."
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 196
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 206
+#: NEEDS WORK
+msgid "Connection Closed"
+msgstr "Kapcsolat lezárva"
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 197
+#: NEEDS WORK
+msgid "The remote server closed the connection unexpectedly."
+msgstr "A távoli szerver váratlanul lezárta a kapcsolatot."
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 201
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 211
+#: NEEDS WORK
+msgid "Connection Lost"
+msgstr "Kapcsolat megszakadt"
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 202
+#: NEEDS WORK
+msgid "The connection to the server was lost."
+msgstr "A kapcsolat a szerverhez megszakadt."
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 207
+#: NEEDS WORK
+msgid "The server closed the connection."
+msgstr "A szerver lezárta a kapcsolatot."
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 212
+#: NEEDS WORK
+msgid "Failed to read from the connection. The server may have closed it."
+msgstr "Nem sikerült olvasni a kapcsolatról. Lehet, hogy a szerver bezárta."
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 217
+#: NEEDS WORK
+msgid "Too Many Authentication Failures"
+msgstr "Túl sok hitelesítési hiba"
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 218
+#: NEEDS WORK
+msgid "Too many failed login attempts. Wait before trying again."
+msgstr "Túl sok sikertelen bejelentkezési kísérlet. Várjon, mielőtt újra megpróbálja."
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 222
+#: NEEDS WORK
+msgid "Server Disconnected"
+msgstr "Szerver leválasztva"
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 223
+#: NEEDS WORK
+msgid "The server disconnected. Check server logs for details."
+msgstr "A szerver megszakadt a kapcsolatot. Ellenőrizze a szerver naplóit a részletekért."
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 228
+#: NEEDS WORK
+msgid "SSH Service Not Running"
+msgstr "SSH szolgáltatás nem fut"
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 229
+#: NEEDS WORK
+msgid "SSH service doesn't appear to be running on the server."
+msgstr "Az SSH szolgáltatás nem tűnik úgy, hogy futna a szerveren."
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 234
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 239
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 244
+#: NEEDS WORK
+msgid "Key Authentication Failed"
+msgstr "Kulcs hitelesítése sikertelen"
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 235
+#: NEEDS WORK
+msgid "The specified SSH key file was not found."
+msgstr "A megadott SSH kulcsfájl nem található."
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 240
+#: NEEDS WORK
+msgid "The SSH key is invalid or corrupted."
+msgstr "Az SSH kulcs érvénytelen vagy sérült."
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 245
+#: NEEDS WORK
+msgid "Failed to load the SSH key file."
+msgstr "Sikertelen az SSH kulcsfájl betöltése."
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 249
+#: NEEDS WORK
+msgid "Key File Permissions Error"
+msgstr "Kulcsfájl jogosultsági hiba"
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 250
+#: NEEDS WORK
+msgid "SSH key file has incorrect permissions. Use chmod 600 on the key file."
+msgstr "Az SSH kulcsfájl jogosultságai helytelenek. Használja a chmod 600 parancsot a kulcsfájlhoz."
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 254
+#: NEEDS WORK
+msgid "SSH Key Format Error"
+msgstr "SSH kulcsformátum hiba"
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 255
+#: NEEDS WORK
+msgid "The SSH key file has an invalid format."
+msgstr "Az SSH kulcsfájl érvénytelen formátumú."
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 260
+#: NEEDS WORK
+msgid "Certificate Invalid"
+msgstr "Tanúsítvány érvénytelen"
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 261
+#: NEEDS WORK
+msgid "The SSH certificate signature verification failed."
+msgstr "Az SSH tanúsítvány aláírásának ellenőrzése meghiúsult."
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 265
+#: NEEDS WORK
+msgid "Certificate Expired"
+msgstr "Tanúsítvány lejárt"
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 266
+#: NEEDS WORK
+msgid "The SSH certificate has expired and needs renewal."
+msgstr "Az SSH tanúsítvány lejárt, és megújításra van szükség."
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 271
+#: NEEDS WORK
+msgid "Connection Denied by Server"
+msgstr "A kapcsolatot a szerver megtagadta"
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 272
+#: NEEDS WORK
+msgid "The server administrator has blocked this connection."
+msgstr "A szerveradminisztrátor blokkolta ezt a kapcsolatot."
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 276
+#: NEEDS WORK
+msgid "SFTP Not Available"
+msgstr "SFTP nem elérhető"
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 278
+#: NEEDS WORK
+msgid "SFTP subsystem is not available on the server. Contact the server administrator."
+msgstr "Az SFTP alrendszer nem érhető el a szerveren. Lépjen kapcsolatba a szerver rendszergazdájával."
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 283
+#: NEEDS WORK
+msgid "SSH Channel Failed"
+msgstr "SSH csatorna sikertelen"
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 284
+#: NEEDS WORK
+msgid "Failed to open SSH channel. The server may be overloaded or misconfigured."
+msgstr "Sikertelen az SSH csatorna megnyitása. A szerver túlterhelt vagy hibásan van konfigurálva."
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 289
+#: NEEDS WORK
+msgid "Password Authentication Denied"
+msgstr "Jelszó-azonosítás megtagadva"
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 291
+#: NEEDS WORK
+msgid "Password authentication was denied. The server may not allow password login."
+msgstr "A jelszóhitelesítés megtagadva. A szerver lehet, hogy nem engedélyezi a jelszavas bejelentkezést."
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 318
+#: NEEDS WORK
+msgid "SSH Connection Error"
+msgstr "SSH Kapcsolati Hiba"
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 319
 #: NEEDS WORK
 #, python-brace-format
-msgid "Could not connect to session '{session_name}'."
-msgstr "Nem sikerült csatlakozni a '{session_name}' munkamenethez."
+msgid "An unexpected error occurred while connecting. Exit code: {code}"
+msgstr "Váratlan hiba történt a csatlakozás során. Kilépési kód: {code}"
 # 
 # File: src/ashyterm/ui/dialogs/ai_config_dialog.py, line: 43
 #: NEEDS WORK
@@ -3260,30 +3806,53 @@ msgstr "SSH munkamenetek"
 msgid "Apply output highlighting to SSH connections"
 msgstr "Alkalmazza a kimeneti kiemelést az SSH kapcsolatokra"
 # 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1567
-#: NEEDS WORK
-msgid "\"cat\" Command Colorization"
-msgstr "\"cat\" parancs színezése"
+# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
 # 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1569
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1923
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 432
 #: NEEDS WORK
-msgid "Syntax highlighting for \"cat\" command output (using Pygments)"
-msgstr "Szintaxis kiemelés a \"cat\" parancs kimenetéhez (Pygments használatával)"
+#, python-brace-format
+msgid "{} Command Colorization"
+msgstr "{} Parancs Színezés"
 # 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1572
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1925
 #: NEEDS WORK
-msgid "Pygments is not installed - \"cat\" output will not be colorized"
-msgstr "A Pygments nincs telepítve - a \"cat\" kimenet nem lesz színezve"
+#, python-brace-format
+msgid "Syntax highlighting for '{}' command output (using Pygments)"
+msgstr "Szintaxis kiemelés a '{}' parancs kimenetéhez (Pygments használatával)"
 # 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1580
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1928
 #: NEEDS WORK
-msgid "Enable \"cat\" Colorization"
-msgstr "Engedélyezze a \"macska\" színezést"
+#, python-brace-format
+msgid "Pygments is not installed - '{}' output will not be colorized"
+msgstr "A Pygments nincs telepítve - a '{}' kimenet nem lesz színezve"
 # 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1581
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1680
 #: NEEDS WORK
-msgid "Apply syntax highlighting to \"cat\" command output"
-msgstr "Alkalmazza a szintaxis kiemelést a \"cat\" parancs kimenetére"
+msgid "⚠️ Experimental Feature"
+msgstr "⚠️ Kísérleti funkció"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1939
+#: NEEDS WORK
+#, python-brace-format
+msgid ""
+"This feature colorizes output for the '{}' command. It may not work perfectly with every "
+"shell/prompt or when output is fragmented."
+msgstr ""
+"Ez a funkció színesíti a kimenetet a '{}' parancs számára. Lehet, hogy nem működik tökéletesen "
+"minden shell/prompt esetén, vagy ha a kimenet töredezett."
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1948
+#: NEEDS WORK
+#, python-brace-format
+msgid "Enable '{}' Colorization"
+msgstr "Engedélyezze a '{}' színezést"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1949
+#: NEEDS WORK
+#, python-brace-format
+msgid "Apply syntax highlighting to '{}' command output"
+msgstr "Alkalmazza a szintaxis kiemelést a '{}' parancs kimenetére"
 # 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1951
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2178
@@ -3371,6 +3940,15 @@ msgstr "Élő szintaxis kiemelés, miközben parancsokat írsz (kísérleti)"
 msgid "Pygments is not installed - shell input highlighting unavailable"
 msgstr "A Pygments nincs telepítve - a shell bemeneti kiemelés nem elérhető"
 # 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1748
+#: NEEDS WORK
+msgid ""
+"This feature applies highlighting to echoed shell input. It may not work perfectly with all prompts "
+"or shells."
+msgstr ""
+"Ez a funkció kiemelést alkalmaz az echozott shell bemenetre. Lehet, hogy nem működik tökéletesen "
+"minden prompttal vagy shell-lel."
+# 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1663
 #: NEEDS WORK
 msgid "Enable Shell Input Highlighting"
@@ -3389,20 +3967,6 @@ msgstr ""
 #: NEEDS WORK
 msgid "Auto detects background, Manual uses selected theme"
 msgstr "Automatikusan észleli a háttérképet, Kézi a kiválasztott témát használja"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1680
-#: NEEDS WORK
-msgid "⚠️ Experimental Feature"
-msgstr "⚠️ Kísérleti funkció"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1748
-#: NEEDS WORK
-msgid ""
-"This feature applies highlighting to echoed shell input. It may not work perfectly with all prompts "
-"or shells."
-msgstr ""
-"Ez a funkció kiemelést alkalmaz az echozott shell bemenetre. Lehet, hogy nem működik tökéletesen "
-"minden prompttal vagy shell-lel."
 # 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1179
 #: NEEDS WORK
@@ -3741,11 +4305,11 @@ msgstr "engedélyezve"
 msgid "disabled"
 msgstr "letiltva"
 # 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2820
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 3620
 #: NEEDS WORK
 #, python-brace-format
-msgid "\"cat\" colorization {}"
-msgstr "\"macska\" színezés {}"
+msgid "'{}' colorization {}"
+msgstr "'{}' színezés {}"
 # 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 3593
 #: NEEDS WORK
@@ -3910,11 +4474,6 @@ msgstr "A parancs már a listában van"
 msgid "✓ Valid command name"
 msgstr "✓ Érvényes parancsnév"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 223
-#: NEEDS WORK
-msgid "Edit Session"
-msgstr "Szerkesztési munkamenet"
-# 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 581
 #: NEEDS WORK
 msgid "Test Connection"
@@ -4002,6 +4561,71 @@ msgstr "Válasszon ki egy mappát az aktuális munkamenet rendezéséhez"
 #: NEEDS WORK
 msgid "Root"
 msgstr "Gyökér"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1182
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1197
+#: NEEDS WORK
+msgid "Automatic"
+msgstr "Automatikus"
+# 
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 376
+#: NEEDS WORK
+msgid "Highlighting"
+msgstr "Kiemelés"
+# 
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 378
+#: NEEDS WORK
+msgid ""
+"Highlighting adds colors to make terminal text easier to read. You can override global preferences "
+"per session."
+msgstr ""
+"A kiemelés színeket ad a terminál szövegének, hogy könnyebben olvasható legyen. A globális "
+"beállításokat felülbírálhatja munkamenetenként."
+# 
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 383
+#: NEEDS WORK
+msgid "Experimental Feature"
+msgstr "Kísérleti funkció"
+# 
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 385
+#: NEEDS WORK
+msgid "Per-session highlighting overrides are experimental and may change."
+msgstr "A munkamenetenkénti kiemelési felülírások kísérleti jellegűek és változhatnak."
+# 
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 402
+#: NEEDS WORK
+msgid "Customize highlighting for this session"
+msgstr "Testreszabás kiemelés ehhez az üléshez"
+# 
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 403
+#: NEEDS WORK
+msgid "When off, this session uses the global highlighting settings"
+msgstr "Ha ki van kapcsolva, ez az ülés a globális kiemelési beállításokat használja."
+# 
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 413
+#: NEEDS WORK
+msgid "Enable/disable output highlighting for this session"
+msgstr "A kimeneti kiemelés engedélyezése/letiltása ehhez a munkamenethez"
+# 
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 420
+#: NEEDS WORK
+msgid "Command-Specific Highlighting"
+msgstr "Parancs-specifikus kiemelés"
+# 
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 421
+#: NEEDS WORK
+msgid "Use context-aware rules for specific commands"
+msgstr "Használj kontextus-érzékeny szabályokat a konkrét parancsokhoz"
+# 
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 433
+#: NEEDS WORK
+msgid "Colorize file content output using syntax highlighting"
+msgstr "A fájl tartalmának kimenetét szintaxis kiemeléssel színezze."
+# 
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 439
+#: NEEDS WORK
+msgid "Highlight commands as you type at the shell prompt"
+msgstr "Emelje ki a parancsokat, ahogy gépel a parancssorban."
 # 
 # File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 237
 #: NEEDS WORK
@@ -4382,11 +5006,6 @@ msgstr "Kapcsolat sikeres"
 #: NEEDS WORK
 msgid "Successfully connected to the SSH server."
 msgstr "Sikeresen csatlakozott az SSH szerverhez."
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 906
-#: NEEDS WORK
-msgid "Connection Failed"
-msgstr "Kapcsolódás sikertelen"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 907
 #: NEEDS WORK
@@ -5563,12 +6182,6 @@ msgstr "SIXEL képek megjelenítése (kísérleti)"
 msgid "Backspace Key"
 msgstr "Visszavonás billentyű"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1182
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1197
-#: NEEDS WORK
-msgid "Automatic"
-msgstr "Automatikus"
-# 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1183
 #: NEEDS WORK
 msgid "ASCII BACKSPACE (^H)"
@@ -6033,11 +6646,6 @@ msgstr "Művelet"
 #: NEEDS WORK
 msgid "Status"
 msgstr "Állapot"
-# 
-# File: src/ashyterm/data/command_manager_models.py, line: 419
-#: NEEDS WORK
-msgid "Start"
-msgstr "Kezdés"
 # 
 # File: src/ashyterm/data/command_manager_models.py, line: 420
 #: NEEDS WORK

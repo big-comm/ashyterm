@@ -48,7 +48,7 @@ class FieldType(Enum):
     COLOR = "color"  # Color picker
 
 
-@dataclass
+@dataclass(slots=True)
 class CommandFormField:
     """
     Represents a form field in a command's dialog.
@@ -92,7 +92,7 @@ class CommandFormField:
         return cls(**data)
 
 
-@dataclass
+@dataclass(slots=True)
 class CommandButton:
     """
     Represents a command button in the Command Manager.

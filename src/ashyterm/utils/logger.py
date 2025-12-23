@@ -1,18 +1,58 @@
 # ashyterm/utils/logger.py
+"""
+Logging utilities for Ashy Terminal.
+
+Performance-optimized: Heavy imports and directory creation are deferred
+until actually needed to minimize startup time.
+"""
 
 import logging
-import logging.handlers
 import os
 import sys
 import threading
-from datetime import datetime
-from enum import Enum
-from pathlib import Path
-from typing import Dict, Optional
+from typing import TYPE_CHECKING, Dict, Optional
+
+if TYPE_CHECKING:
+    from pathlib import Path
+
+# Lazy-loaded module references
+_logging_handlers = None
+_pathlib = None
+_datetime = None
 
 
-class LogLevel(Enum):
-    """Log levels for the application."""
+def _get_logging_handlers():
+    """Lazy import of logging.handlers."""
+    global _logging_handlers
+    if _logging_handlers is None:
+        import logging.handlers as lh
+
+        _logging_handlers = lh
+    return _logging_handlers
+
+
+def _get_pathlib():
+    """Lazy import of pathlib."""
+    global _pathlib
+    if _pathlib is None:
+        import pathlib
+
+        _pathlib = pathlib
+    return _pathlib
+
+
+def _get_datetime():
+    """Lazy import of datetime."""
+    global _datetime
+    if _datetime is None:
+        from datetime import datetime as dt
+
+        _datetime = dt
+    return _datetime
+
+
+class LogLevel:
+    """Log levels for the application (lightweight enum alternative)."""
 
     DEBUG = logging.DEBUG
     INFO = logging.INFO
@@ -22,19 +62,39 @@ class LogLevel(Enum):
 
 
 class LoggerConfig:
-    """Configuration for the logging system."""
+    """
+    Configuration for the logging system.
+
+    Directory creation is deferred until file logging is actually enabled.
+    """
 
     def __init__(self):
-        self.log_dir = Path.home() / ".config" / "ashyterm" / "logs"
-        self.log_dir.mkdir(parents=True, exist_ok=True)
-        self.main_log_file = self.log_dir / "ashyterm.log"
-        self.error_log_file = self.log_dir / "ashyterm_errors.log"
+        self._log_dir = None  # Lazy initialization
         self.max_file_size = 10 * 1024 * 1024  # 10MB
         self.backup_count = 5
         self.log_to_file = False
         self.console_level = LogLevel.ERROR
         self.file_level = LogLevel.DEBUG
         self.error_file_level = LogLevel.ERROR
+
+    @property
+    def log_dir(self) -> "Path":
+        """Get log directory, creating it if necessary."""
+        if self._log_dir is None:
+            Path = _get_pathlib().Path
+            self._log_dir = Path.home() / ".config" / "ashyterm" / "logs"
+            self._log_dir.mkdir(parents=True, exist_ok=True)
+        return self._log_dir
+
+    @property
+    def main_log_file(self) -> "Path":
+        """Get main log file path."""
+        return self.log_dir / "ashyterm.log"
+
+    @property
+    def error_log_file(self) -> "Path":
+        """Get error log file path."""
+        return self.log_dir / "ashyterm_errors.log"
 
 
 class ColoredFormatter(logging.Formatter):
@@ -102,7 +162,7 @@ class ThreadSafeLogger:
             self._logger.setLevel(logging.DEBUG)
 
             console_handler = logging.StreamHandler(sys.stdout)
-            console_handler.setLevel(self.config.console_level.value)
+            console_handler.setLevel(self.config.console_level)
             # The format string now uses the pre-formatted `levelname`.
             console_formatter = ColoredFormatter(
                 fmt="%(asctime)s | %(name)s | %(levelname)s | %(message)s",
@@ -112,28 +172,29 @@ class ThreadSafeLogger:
             self._logger.addHandler(console_handler)
 
             if self.config.log_to_file:
+                handlers_module = _get_logging_handlers()
                 file_formatter = logging.Formatter(
                     fmt="%(asctime)s | %(name)s | %(levelname)-8s | %(funcName)s:%(lineno)d | %(message)s",
                     datefmt="%Y-%m-%d %H:%M:%S",
                 )
 
-                main_file_handler = logging.handlers.RotatingFileHandler(
+                main_file_handler = handlers_module.RotatingFileHandler(
                     self.config.main_log_file,
                     maxBytes=self.config.max_file_size,
                     backupCount=self.config.backup_count,
                     encoding="utf-8",
                 )
-                main_file_handler.setLevel(self.config.file_level.value)
+                main_file_handler.setLevel(self.config.file_level)
                 main_file_handler.setFormatter(file_formatter)
                 self._logger.addHandler(main_file_handler)
 
-                error_file_handler = logging.handlers.RotatingFileHandler(
+                error_file_handler = handlers_module.RotatingFileHandler(
                     self.config.error_log_file,
                     maxBytes=self.config.max_file_size,
                     backupCount=self.config.backup_count,
                     encoding="utf-8",
                 )
-                error_file_handler.setLevel(self.config.error_file_level.value)
+                error_file_handler.setLevel(self.config.error_file_level)
                 error_file_handler.setFormatter(file_formatter)
                 self._logger.addHandler(error_file_handler)
 
@@ -216,7 +277,8 @@ class LoggerManager:
 
     def cleanup_old_logs(self, days_to_keep: int = 30):
         try:
-            cutoff_time = datetime.now().timestamp() - (days_to_keep * 24 * 60 * 60)
+            datetime_cls = _get_datetime()
+            cutoff_time = datetime_cls.now().timestamp() - (days_to_keep * 24 * 60 * 60)
             for log_file in self.config.log_dir.glob("*.log*"):
                 if log_file.stat().st_mtime < cutoff_time:
                     log_file.unlink()
@@ -242,10 +304,17 @@ def get_logger(name: str = None) -> ThreadSafeLogger:
 
 def set_console_log_level(level_str: str):
     """Set console logging level globally from a string."""
-    try:
-        level = LogLevel[level_str.upper()]
+    level_map = {
+        "DEBUG": LogLevel.DEBUG,
+        "INFO": LogLevel.INFO,
+        "WARNING": LogLevel.WARNING,
+        "ERROR": LogLevel.ERROR,
+        "CRITICAL": LogLevel.CRITICAL,
+    }
+    level = level_map.get(level_str.upper())
+    if level is not None:
         _logger_manager.set_console_level(level)
-    except KeyError:
+    else:
         get_logger().error(f"Invalid log level string: {level_str}")
 
 

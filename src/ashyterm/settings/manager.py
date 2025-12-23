@@ -29,7 +29,7 @@ from .config import (
 )
 
 
-@dataclass
+@dataclass(slots=True)
 class SettingsMetadata:
     """Metadata for settings file."""
 
@@ -146,6 +146,10 @@ class SettingsManager:
         self._lock = threading.RLock()
         self._change_listeners: List[Callable[[str, Any, Any], None]] = []
         self.custom_schemes: Dict[str, Any] = {}
+        # Performance optimization: Cache for compiled CSS themes
+        # Key: (bg_color, fg_color, header_bg_color, transparency, luminance)
+        # Value: (css_string, provider)
+        self._theme_css_cache: Dict[tuple, tuple] = {}
         self._initialize()
         self.logger.info("Settings manager initialized")
 
@@ -157,6 +161,10 @@ class SettingsManager:
                 self._validate_and_repair()
                 self._merge_with_defaults()
                 self._apply_log_settings()
+                # If we loaded a legacy settings file or performed repairs/default merges,
+                # persist the canonical wrapper format proactively.
+                if self._dirty:
+                    self.save_settings()
         except Exception as e:
             self.logger.error(f"Settings initialization failed: {e}")
             self._settings = self._defaults.copy()
@@ -213,18 +221,36 @@ class SettingsManager:
             validate_file_path(str(self.settings_file))
             with open(self.settings_file, "r", encoding="utf-8") as f:
                 data = json.load(f)
+
+            if not isinstance(data, dict):
+                raise ValueError("Settings file must contain a JSON object at the root")
+
             if "settings" in data and "metadata" in data:
-                settings = data["settings"]
-                self._metadata = SettingsMetadata(**data["metadata"])
-                if self._metadata.checksum:
-                    self._verify_settings_integrity(settings)
+                settings = data.get("settings", {})
+                metadata = data.get("metadata", {})
+                if isinstance(metadata, dict):
+                    self._metadata = SettingsMetadata(**metadata)
+                    if self._metadata.checksum and isinstance(settings, dict):
+                        self._verify_settings_integrity(settings)
+                else:
+                    self._metadata = None
             else:
                 settings = data
                 self._metadata = None
                 self.logger.info("Loaded legacy settings format")
+                # Stage 1 migration: legacy format is supported for reading,
+                # but we should write back the canonical wrapper format.
+                self._dirty = True
+
+            if not isinstance(settings, dict):
+                raise ValueError("Settings file has invalid structure")
+
             return settings
         except json.JSONDecodeError as e:
             self.logger.error(f"Settings file is corrupted: {e}")
+            return self._defaults.copy()
+        except ValueError as e:
+            self.logger.error(f"Settings file has invalid structure: {e}")
             return self._defaults.copy()
         except Exception as e:
             self.logger.error(f"Failed to load settings: {e}")
@@ -710,6 +736,8 @@ class SettingsManager:
         """
         Apply terminal colors to GTK elements when gtk_theme is 'terminal'.
         This includes headerbar, tabs, sidebar, popovers, file manager, and dialogs.
+
+        Performance: Uses CSS caching to avoid rebuilding CSS when theme params unchanged.
         """
         try:
             scheme = self.get_color_scheme_data()
@@ -724,6 +752,35 @@ class SettingsManager:
             b = int(bg_color[5:7], 16) / 255
             luminance = 0.299 * r + 0.587 * g + 0.114 * b
             is_dark_theme = luminance < 0.5
+
+            # Create cache key from all parameters that affect CSS output
+            cache_key = (
+                bg_color,
+                fg_color,
+                header_bg_color,
+                user_transparency,
+                is_dark_theme,
+            )
+
+            # Check cache for pre-built CSS
+            if cache_key in self._theme_css_cache:
+                css, cached_provider = self._theme_css_cache[cache_key]
+                # Remove existing provider if any
+                if hasattr(window, "_terminal_theme_provider"):
+                    Gtk.StyleContext.remove_provider_for_display(
+                        Gdk.Display.get_default(), window._terminal_theme_provider
+                    )
+                # Apply cached CSS
+                provider = Gtk.CssProvider()
+                provider.load_from_data(css.encode("utf-8"))
+                Gtk.StyleContext.add_provider_for_display(
+                    Gdk.Display.get_default(),
+                    provider,
+                    Gtk.STYLE_PROVIDER_PRIORITY_USER,
+                )
+                window._terminal_theme_provider = provider
+                self.apply_headerbar_transparency(window.header_bar)
+                return
 
             # Hover/selected alpha values based on theme
             hover_alpha = "10%" if is_dark_theme else "8%"
@@ -1246,10 +1303,82 @@ class SettingsManager:
                 }}
                 """)
 
+
             # === DIALOGS ===
             # Get accent color from palette for command guide styling
             palette = scheme.get("palette", [])
             accent_color = palette[4] if len(palette) > 4 else "#3584e4"
+            
+            # === SSH ERROR BANNER ===
+            # Always apply - uses bg_color which is always defined
+            # header_bg_color fallback to bg_color when not available
+            banner_bg = header_bg_color if luminance >= 0.05 else bg_color
+            error_color = palette[1] if len(palette) > 1 else "#e01b24"
+            warning_color = palette[3] if len(palette) > 3 else "#f5c211"
+            css_parts.append(f"""
+            .ssh-error-banner-container {{
+                background-color: {bg_color};
+                color: {fg_color};
+            }}
+            .ssh-error-banner {{
+                background-color: {banner_bg};
+                color: {fg_color};
+                border-radius: 6px;
+                border: 1px solid alpha({error_color}, 0.4);
+                padding: 6px 10px;
+                margin: 2px 4px;
+            }}
+            .ssh-error-banner label {{
+                color: {fg_color};
+            }}
+            .ssh-error-banner .heading {{
+                font-weight: 600;
+                font-size: 1em;
+                color: {error_color};
+            }}
+            .ssh-error-banner .warning-icon {{
+                color: {warning_color};
+                min-width: 24px;
+                min-height: 24px;
+            }}
+            .ssh-error-banner .dim-label {{
+                font-size: 0.9em;
+                color: {fg_color};
+            }}
+            .ssh-error-banner button:not(.suggested-action):not(.destructive-action) {{
+                color: {fg_color};
+            }}
+            .ssh-error-banner .compact-button {{
+                padding: 6px 14px;
+                min-height: 28px;
+                border-radius: 6px;
+            }}
+            .options-panel {{
+                background-color: {banner_bg};
+                color: {fg_color};
+                border-radius: 6px;
+                border: 1px solid alpha({fg_color}, 0.2);
+                padding: 6px 12px;
+                margin: 0 4px 4px 4px;
+            }}
+            .options-panel label {{
+                color: {fg_color};
+            }}
+            .options-panel button:not(.suggested-action):not(.destructive-action) {{
+                color: {fg_color};
+            }}
+            .options-panel spinbutton {{
+                min-width: 65px;
+                background-color: {bg_color};
+                color: {fg_color};
+            }}
+            .options-panel spinbutton text {{
+                color: {fg_color};
+            }}
+            .options-panel spinbutton button {{
+                color: {fg_color};
+            }}
+            """)
 
             # Only apply dialog background colors if luminance >= 5%
             # Very dark themes (< 5% luminance) can cause readability issues
@@ -1419,6 +1548,8 @@ class SettingsManager:
                     f"Skipping dialog background styling - luminance {luminance:.2%} is below 5% threshold"
                 )
 
+
+
             # === PANED SEPARATORS ===
             # Use a subtle color based on the theme colors
             separator_color = f"color-mix(in srgb, {fg_color} 20%, {bg_color})"
@@ -1444,6 +1575,10 @@ class SettingsManager:
 
             # Combine and apply
             css = "".join(css_parts)
+
+            # Cache the CSS for future use with same parameters
+            self._theme_css_cache[cache_key] = (css, None)
+
             provider = Gtk.CssProvider()
             provider.load_from_data(css.encode("utf-8"))
             Gtk.StyleContext.add_provider_for_display(
@@ -1458,9 +1593,7 @@ class SettingsManager:
         except Exception as e:
             self.logger.warning(f"Failed to apply GTK terminal theme: {e}")
 
-    def generate_dynamic_theme_css(
-        self, css_class: str, transparency: int = 0, headerbar_transparency: int = 0
-    ) -> str:
+    def generate_dynamic_theme_css(self, css_class: str, transparency: int = 0) -> str:
         """
         Generate dynamic theme CSS for dialogs and panels.
 
@@ -1470,7 +1603,6 @@ class SettingsManager:
         Args:
             css_class: The CSS class name to scope styles (e.g., 'command-form-dialog')
             transparency: Background transparency percentage (0-100)
-            headerbar_transparency: Headerbar transparency percentage (0-100)
 
         Returns:
             CSS string ready to be loaded into a CssProvider

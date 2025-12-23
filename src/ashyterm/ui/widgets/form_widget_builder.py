@@ -7,7 +7,7 @@ used in command dialogs. It eliminates code duplication between
 CommandFormDialog and CommandEditorDialog.
 """
 
-from typing import Any, Callable, Dict, List, Optional, Tuple, Union
+from typing import Any, Callable, Dict, List, Optional, Tuple
 from dataclasses import dataclass
 
 import gi
@@ -20,7 +20,7 @@ from ...utils.translation_utils import _
 from ...utils.tooltip_helper import get_tooltip_helper
 
 
-@dataclass
+@dataclass(slots=True)
 class FieldConfig:
     """Configuration for a form field widget."""
     field_type: str

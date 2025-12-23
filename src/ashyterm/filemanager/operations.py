@@ -15,6 +15,9 @@ from ..sessions.models import SessionItem
 from ..utils.logger import get_logger
 from ..utils.translation_utils import _
 
+# Pre-compiled pattern for rsync progress parsing
+_PROGRESS_PERCENT_PATTERN = re.compile(r"(\d+)%")
+
 # --- NEW: Kernel-level process lifecycle management ---
 # Use ctypes to access the prctl system call for robust cleanup.
 # PR_SET_PDEATHSIG: Asks the kernel to send a signal to this process
@@ -248,14 +251,13 @@ class FileOperations:
                     process = self._start_process(transfer_id, transfer_cmd)
 
                     full_output = ""
-                    progress_pattern = re.compile(r"(\d+)%")
                     for line in iter(process.stdout.readline, ""):
                         if cancellation_event and cancellation_event.is_set():
                             os.killpg(os.getpgid(process.pid), signal.SIGTERM)
                             raise OperationCancelledError("Download cancelled by user.")
 
                         full_output += line
-                        match = progress_pattern.search(line)
+                        match = _PROGRESS_PERCENT_PATTERN.search(line)
                         if match and progress_callback:
                             progress = float(match.group(1))
                             GLib.idle_add(progress_callback, transfer_id, progress)
@@ -374,14 +376,13 @@ class FileOperations:
                     process = self._start_process(transfer_id, transfer_cmd)
 
                     full_output = ""
-                    progress_pattern = re.compile(r"(\d+)%")
                     for line in iter(process.stdout.readline, ""):
                         if cancellation_event and cancellation_event.is_set():
                             os.killpg(os.getpgid(process.pid), signal.SIGTERM)
                             raise OperationCancelledError("Upload cancelled by user.")
 
                         full_output += line
-                        match = progress_pattern.search(line)
+                        match = _PROGRESS_PERCENT_PATTERN.search(line)
                         if match and progress_callback:
                             progress = float(match.group(1))
                             GLib.idle_add(progress_callback, transfer_id, progress)

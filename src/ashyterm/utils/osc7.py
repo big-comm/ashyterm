@@ -14,6 +14,22 @@ class OSC7Info(NamedTuple):
     display_path: str
 
 
+# Shell snippet for detecting hostname (used by spawner for OSC7 emission)
+OSC7_HOST_DETECTION_SNIPPET = (
+    'if [ -z "$ASHYTERM_OSC7_HOST" ]; then '
+    "if command -v hostname >/dev/null 2>&1; then "
+    'ASHYTERM_OSC7_HOST="$(hostname)"; '
+    'elif [ -n "$HOSTNAME" ]; then '
+    'ASHYTERM_OSC7_HOST="$HOSTNAME"; '
+    "elif command -v uname >/dev/null 2>&1; then "
+    'ASHYTERM_OSC7_HOST="$(uname -n)"; '
+    "else "
+    'ASHYTERM_OSC7_HOST="unknown"; '
+    "fi; "
+    "fi;"
+)
+
+
 class OSC7Parser:
     """Parser for OSC7 escape sequences."""
 

@@ -18,7 +18,6 @@ from .settings.config import (
     APP_TITLE,
     APP_VERSION,
     COPYRIGHT,
-    CUSTOM_COMMANDS_FILE,
     DEVELOPER_NAME,
     DEVELOPER_TEAM,
     ISSUE_URL,
@@ -148,16 +147,17 @@ class CommTerminalApp(Adw.Application):
     def _on_startup(self, app) -> None:
         """Handle application startup."""
         try:
-            # EARLY icon path configuration for performance
-            # Must happen before any UI is built
-            self._configure_icon_theme()
-
             self.logger.info("Application startup initiated")
             log_app_start()
             if not self._initialize_subsystems():
                 self.logger.critical("Failed to initialize application subsystems")
                 self.quit()
                 return
+
+            # Configure icon strategy after settings are available, but still
+            # before any UI is built.
+            self._configure_icon_theme()
+
             self._setup_actions()
             self._setup_keyboard_shortcuts()
             self.logger.info("Application startup completed successfully")
@@ -177,24 +177,11 @@ class CommTerminalApp(Adw.Application):
         of this setting (see filemanager/manager.py).
         """
         try:
-            # Read setting directly from file since SettingsManager not yet initialized
-            import json
-            from pathlib import Path
-
-            settings_file = Path.home() / ".config" / "ashyterm" / "settings.json"
-            icon_strategy = "ashy"  # Default value
-
-            if settings_file.exists():
-                try:
-                    with open(settings_file, "r") as f:
-                        settings_data = json.load(f)
-                        # Settings are nested under "settings" key (with "metadata" at root)
-                        actual_settings = settings_data.get("settings", settings_data)
-                        icon_strategy = actual_settings.get(
-                            "icon_theme_strategy", "ashy"
-                        )
-                except Exception:
-                    pass  # Use default on any error
+            icon_strategy = "ashy"
+            if self.settings_manager:
+                icon_strategy = self.settings_manager.get(
+                    "icon_theme_strategy", "ashy"
+                )
 
             # Configure icons module based on strategy
             from .utils import icons
@@ -536,7 +523,6 @@ class CommTerminalApp(Adw.Application):
                 source_files = [
                     Path(SESSIONS_FILE),
                     Path(SETTINGS_FILE),
-                    Path(CUSTOM_COMMANDS_FILE),
                 ]
                 layouts_dir = Path(LAYOUT_DIR)
                 self.backup_manager.create_encrypted_backup(

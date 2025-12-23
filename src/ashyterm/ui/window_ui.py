@@ -10,8 +10,6 @@ from gi.repository import Adw, Gdk, Gio, Gtk, Pango
 
 from ..data.command_manager_models import (
     get_command_button_manager,
-    ExecutionMode,
-    DisplayMode,
 )
 from ..utils.icons import icon_button, icon_image
 from ..utils.logger import get_logger
@@ -549,12 +547,6 @@ class WindowUIBuilder:
 
     def _on_toolbar_command_right_click(self, gesture, n_press, x, y, command):
         """Handle right-click on toolbar command to show options."""
-        command_manager = get_command_button_manager()
-
-        # Get current toolbar display mode (separate from command's display_mode)
-        current_mode = command_manager.get_command_pref(
-            command.id, "toolbar_display_mode", "icon_and_text"
-        )
 
         # Create menu with display mode options
         menu = Gio.Menu()

@@ -334,10 +334,14 @@ class TransferManagerDialog(Adw.Window):
         transfer = manager.get_transfer(transfer_id) or next(
             (t for t in manager.history if t.id == transfer_id), None
         )
-        if transfer:
-            GLib.idle_add(self._add_or_update_row, transfer)
-        GLib.idle_add(self._update_cancel_all_button)
-        GLib.idle_add(self._update_view)
+
+        def _update_ui():
+            if transfer:
+                self._add_or_update_row(transfer)
+            self._update_cancel_all_button()
+            self._update_view()
+
+        GLib.idle_add(_update_ui)
 
     def _on_transfer_progress(self, manager, transfer_id, progress):
         if transfer_id in self.transfer_rows:

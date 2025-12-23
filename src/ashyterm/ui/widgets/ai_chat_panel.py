@@ -18,6 +18,7 @@ from gi.repository import Adw, Gdk, GLib, GObject, Gtk, Pango
 from ...utils.icons import icon_image
 from ...utils.logger import get_logger
 from ...utils.tooltip_helper import get_tooltip_helper
+from ...utils.translation_utils import _
 from .conversation_history import ConversationHistoryPanel
 
 if TYPE_CHECKING:
@@ -27,6 +28,15 @@ logger = get_logger(__name__)
 
 # Path to CSS styles directory
 _STYLES_DIR = Path(__file__).parent.parent.parent / "data" / "styles"
+
+# Pre-compiled regex patterns for markdown formatting (performance optimization)
+_CODE_BLOCK_PATTERN = re.compile(r'```(\w*)\n?(.*?)```', re.DOTALL)
+_INLINE_CODE_PATTERN = re.compile(r'`([^`]+)`')
+_BOLD_PATTERN = re.compile(r'\*\*([^*]+)\*\*')
+_ITALIC_PATTERN = re.compile(r'\*([^*]+)\*')
+_HEADER3_PATTERN = re.compile(r'^### (.+)$', re.MULTILINE)
+_HEADER2_PATTERN = re.compile(r'^## (.+)$', re.MULTILINE)
+_HEADER1_PATTERN = re.compile(r'^# (.+)$', re.MULTILINE)
 
 # Lazy-loaded pygments module (optional dependency)
 _pygments_module = None
@@ -57,11 +67,6 @@ def _get_pygments():
             logger.debug("Pygments not available, using fallback highlighting")
 
     return _pygments_module
-
-
-def _(text: str) -> str:
-    """Placeholder for translation function."""
-    return text
 
 
 def _extract_reply_from_json(text: str) -> str:
@@ -620,26 +625,26 @@ class MessageBubble(Gtk.Box):
             inline_codes.append(f'<span background="{inline_bg}" foreground="{inline_fg}"><tt>{escaped_code}</tt></span>')
             return f'\ue000INLINE{idx}\ue001'
 
-        # Replace code blocks with placeholders
-        text = re.sub(r'```(\w*)\n?(.*?)```', store_code_block, text, flags=re.DOTALL)
+        # Replace code blocks with placeholders (using pre-compiled patterns)
+        text = _CODE_BLOCK_PATTERN.sub(store_code_block, text)
 
         # Replace inline code with placeholders
-        text = re.sub(r'`([^`]+)`', store_inline_code, text)
+        text = _INLINE_CODE_PATTERN.sub(store_inline_code, text)
 
         # Step 2: Escape remaining text for Pango markup
         text = GLib.markup_escape_text(text)
 
         # Step 3: Apply markdown transformations (safe now - no code content)
         # Bold (**...**)
-        text = re.sub(r'\*\*([^*]+)\*\*', r'<b>\1</b>', text)
+        text = _BOLD_PATTERN.sub(r'<b>\1</b>', text)
 
         # Italic (*...*)
-        text = re.sub(r'\*([^*]+)\*', r'<i>\1</i>', text)
+        text = _ITALIC_PATTERN.sub(r'<i>\1</i>', text)
 
         # Headers (# ...)
-        text = re.sub(r'^### (.+)$', r'<b>\1</b>', text, flags=re.MULTILINE)
-        text = re.sub(r'^## (.+)$', r'<b><big>\1</big></b>', text, flags=re.MULTILINE)
-        text = re.sub(r'^# (.+)$', r'<b><big><big>\1</big></big></b>', text, flags=re.MULTILINE)
+        text = _HEADER3_PATTERN.sub(r'<b>\1</b>', text)
+        text = _HEADER2_PATTERN.sub(r'<b><big>\1</big></b>', text)
+        text = _HEADER1_PATTERN.sub(r'<b><big><big>\1</big></big></b>', text)
 
         # Step 4: Restore code blocks and inline codes
         for i, block in enumerate(code_blocks):
