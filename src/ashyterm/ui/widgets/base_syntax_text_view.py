@@ -26,11 +26,11 @@ class BaseSyntaxTextView(Gtk.TextView):
     - Color scheme integration
     - get_text() and set_text() methods
     """
-    
+
     # Subclasses should override this with their specific colors
     _DEFAULT_DARK_COLORS: Dict[str, str] = {}
     _DEFAULT_LIGHT_COLORS: Dict[str, str] = {}
-    
+
     def __init__(
         self,
         css_class: str = "syntax-textview",
@@ -54,30 +54,30 @@ class BaseSyntaxTextView(Gtk.TextView):
             accepts_tab: Whether Tab key inserts tabs
         """
         super().__init__()
-        
+
         # Common configuration
         self.set_wrap_mode(wrap_mode)
         self.set_accepts_tab(accepts_tab)
         self.set_monospace(True)
-        
+
         if css_class:
             self.add_css_class(css_class)
-        
+
         # Margins
         self.set_top_margin(top_margin)
         self.set_bottom_margin(bottom_margin)
         self.set_left_margin(left_margin)
         self.set_right_margin(right_margin)
-        
+
         # Buffer reference
         self.buffer = self.get_buffer()
-        
+
         # Highlighting timeout ID for debouncing
         self._highlight_timeout_id: Optional[int] = None
-        
+
         # Current color scheme
         self._syntax_colors: Dict[str, str] = {}
-    
+
     def _is_dark_mode(self) -> bool:
         """Detect if the system is in dark mode."""
         try:
@@ -85,7 +85,7 @@ class BaseSyntaxTextView(Gtk.TextView):
             return style_manager.get_dark()
         except Exception:
             return True  # Default to dark mode if detection fails
-    
+
     def _get_default_colors(self) -> Dict[str, str]:
         """
         Get default syntax colors based on dark/light mode.
@@ -96,7 +96,7 @@ class BaseSyntaxTextView(Gtk.TextView):
         if self._is_dark_mode():
             return self._DEFAULT_DARK_COLORS.copy()
         return self._DEFAULT_LIGHT_COLORS.copy()
-    
+
     def _setup_tags(self):
         """
         Setup text tags for syntax highlighting.
@@ -104,7 +104,7 @@ class BaseSyntaxTextView(Gtk.TextView):
         Should be called by subclass __init__ after setting up colors.
         """
         tag_table = self.buffer.get_tag_table()
-        
+
         for name, color in self._syntax_colors.items():
             tag = Gtk.TextTag.new(name)
             if isinstance(color, dict):
@@ -117,11 +117,11 @@ class BaseSyntaxTextView(Gtk.TextView):
                 # Color is a simple string
                 tag.set_property("foreground", color)
             tag_table.add(tag)
-    
+
     def _update_tag_colors(self):
         """Update the colors of existing text tags."""
         tag_table = self.buffer.get_tag_table()
-        
+
         for name, color in self._syntax_colors.items():
             tag = tag_table.lookup(name)
             if tag:
@@ -130,7 +130,7 @@ class BaseSyntaxTextView(Gtk.TextView):
                         tag.set_property("foreground", color["fg"])
                 else:
                     tag.set_property("foreground", color)
-    
+
     def _schedule_highlighting(self, delay_ms: int = 150):
         """
         Schedule syntax highlighting with debounce.
@@ -143,7 +143,7 @@ class BaseSyntaxTextView(Gtk.TextView):
         self._highlight_timeout_id = GLib.timeout_add(
             delay_ms, self._apply_highlighting
         )
-    
+
     def _apply_highlighting(self) -> bool:
         """
         Apply syntax highlighting to the buffer.
@@ -156,23 +156,23 @@ class BaseSyntaxTextView(Gtk.TextView):
         """
         self._highlight_timeout_id = None
         return False
-    
+
     def _clear_highlighting(self):
         """Remove all highlighting tags from the buffer."""
         start = self.buffer.get_start_iter()
         end = self.buffer.get_end_iter()
         self.buffer.remove_all_tags(start, end)
-    
+
     def get_text(self) -> str:
         """Get the text content of the buffer."""
         start = self.buffer.get_start_iter()
         end = self.buffer.get_end_iter()
         return self.buffer.get_text(start, end, True)
-    
+
     def set_text(self, text: str):
         """Set the text content of the buffer."""
         self.buffer.set_text(text)
-    
+
     def connect_changed(self, callback):
         """Connect a callback to the buffer's 'changed' signal.
         
@@ -186,7 +186,7 @@ class BaseSyntaxTextView(Gtk.TextView):
             Signal handler ID that can be used to disconnect.
         """
         return self.buffer.connect("changed", lambda _: callback(self))
-    
+
     def update_colors_from_scheme(self, palette: List[str], foreground: str = "#ffffff"):
         """
         Update syntax highlighting colors from a terminal color scheme palette.
@@ -204,7 +204,7 @@ class BaseSyntaxTextView(Gtk.TextView):
         """
         if len(palette) < 8:
             return  # Not enough colors to work with
-        
+
         # Subclasses should implement the actual color mapping
         # This base implementation just stores the palette for reference
         self._palette = palette

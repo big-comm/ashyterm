@@ -288,15 +288,23 @@ class PathValidationError(ValidationError):
         super().__init__(message, **kwargs)
 
 
-class PermissionError(AshyTerminalError):
-    """Base class for permission-related errors."""
+class AshyPermissionError(AshyTerminalError):
+    """Base class for permission-related errors.
+
+    Note: Named AshyPermissionError to avoid shadowing Python's built-in
+    PermissionError exception.
+    """
 
     def __init__(self, message: str, **kwargs):
         kwargs.setdefault("category", ErrorCategory.PERMISSION)
         super().__init__(message, **kwargs)
 
 
-class FilePermissionError(PermissionError):
+# Alias for backwards compatibility - use AshyPermissionError in new code
+PermissionError = AshyPermissionError
+
+
+class FilePermissionError(AshyPermissionError):
     """Raised when file permission is denied."""
 
     def __init__(self, file_path: str, operation: str, **kwargs):
@@ -311,7 +319,7 @@ class FilePermissionError(PermissionError):
         super().__init__(message, **kwargs)
 
 
-class DirectoryPermissionError(PermissionError):
+class DirectoryPermissionError(AshyPermissionError):
     """Raised when directory permission is denied."""
 
     def __init__(self, directory_path: str, operation: str, **kwargs):

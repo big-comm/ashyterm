@@ -27,37 +27,37 @@ class AppSignals(GObject.Object):
     All signals use GObject signal infrastructure for thread-safety and
     seamless GTK integration. Components should emit/connect via AppSignals.get().
     """
-    
+
     __gsignals__ = {
         # Session signals
         "session-created": (GObject.SignalFlags.RUN_FIRST, None, (object,)),
         "session-updated": (GObject.SignalFlags.RUN_FIRST, None, (str,)),
         "session-deleted": (GObject.SignalFlags.RUN_FIRST, None, (str,)),
-        
+
         # Folder signals
         "folder-created": (GObject.SignalFlags.RUN_FIRST, None, (object,)),
         "folder-updated": (GObject.SignalFlags.RUN_FIRST, None, (str,)),
         "folder-deleted": (GObject.SignalFlags.RUN_FIRST, None, (str,)),
-        
+
         # UI update requests
         "request-tree-refresh": (GObject.SignalFlags.RUN_FIRST, None, ()),
         "request-session-select": (GObject.SignalFlags.RUN_FIRST, None, (str,)),
-        
+
         # Settings signals
         "settings-changed": (GObject.SignalFlags.RUN_FIRST, None, (str, object)),
         "color-scheme-changed": (GObject.SignalFlags.RUN_FIRST, None, (int,)),
-        
+
         # Terminal signals
         "terminal-created": (GObject.SignalFlags.RUN_FIRST, None, (str,)),
         "terminal-closed": (GObject.SignalFlags.RUN_FIRST, None, (str,)),
         "terminal-title-changed": (GObject.SignalFlags.RUN_FIRST, None, (str, str)),
     }
-    
+
     _instance = None
-    
+
     def __init__(self):
         super().__init__()
-    
+
     @classmethod
     def get(cls) -> "AppSignals":
         """
@@ -69,7 +69,7 @@ class AppSignals(GObject.Object):
         if cls._instance is None:
             cls._instance = cls()
         return cls._instance
-    
+
     @classmethod
     def reset(cls) -> None:
         """

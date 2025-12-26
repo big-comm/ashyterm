@@ -1,6 +1,7 @@
 # ashyterm/sessions/storage.py
 
 import json
+import os
 import threading
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple
@@ -77,7 +78,7 @@ class SessionStorageManager:
                     raise StorageReadError(
                         str(self.sessions_file),
                         _("File path validation failed: {}").format(e),
-                    )
+                    ) from e
 
                 if self.sessions_file.stat().st_size == 0:
                     self.logger.info("Sessions file is empty, returning empty data")
@@ -94,11 +95,11 @@ class SessionStorageManager:
                     self.logger.error(f"JSON parsing failed: {e}")
                     raise StorageCorruptedError(
                         str(self.sessions_file), _("Invalid JSON: {}").format(e)
-                    )
+                    ) from e
                 except UnicodeDecodeError as e:
                     raise StorageReadError(
                         str(self.sessions_file), _("Encoding error: {}").format(e)
-                    )
+                    ) from e
 
                 if not isinstance(data, dict):
                     raise StorageCorruptedError(
@@ -247,12 +248,17 @@ class SessionStorageManager:
                 try:
                     with open(temp_file, "w", encoding="utf-8") as f:
                         json.dump(data_to_save, f, indent=4, ensure_ascii=False)
+                        # Ensure data is flushed to the OS buffer
+                        f.flush()
+                        # Ensure data is written to disk before rename (atomic write)
+                        os.fsync(f.fileno())
                     if not temp_file.exists() or temp_file.stat().st_size == 0:
                         raise StorageWriteError(
                             str(temp_file),
                             _("Temporary file was not written correctly"),
                         )
-                    temp_file.rename(self.sessions_file)
+                    # os.replace is atomic on POSIX systems
+                    os.replace(temp_file, self.sessions_file)
                     ensure_secure_file_permissions(str(self.sessions_file))
                 except Exception as e:
                     if temp_file.exists():

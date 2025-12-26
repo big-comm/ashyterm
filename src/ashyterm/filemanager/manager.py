@@ -5,6 +5,7 @@ gi.require_version("Gtk", "4.0")
 gi.require_version("Adw", "1")
 gi.require_version("Vte", "3.91")
 import os
+import shlex
 import subprocess
 import tempfile
 import threading
@@ -1173,10 +1174,16 @@ class FileManager(GObject.Object):
         #
         # We use a shell to pipe fd output through xargs ls for consistent format
         hidden_flag = "-H" if show_hidden else ""
+
+        # SECURITY: Use shlex.quote to prevent shell injection
+        # User input (search_term) and path (base_path) must be properly escaped
+        safe_search_term = shlex.quote(search_term)
+        safe_base_path = shlex.quote(base_path)
+
         return [
             "sh",
             "-c",
-            f'{fd_cmd} -i {hidden_flag} -0 --color=never "{search_term}" "{base_path}" | xargs -0 ls -ld --full-time --classify 2>/dev/null',
+            f"{fd_cmd} -i {hidden_flag} -0 --color=never {safe_search_term} {safe_base_path} | xargs -0 ls -ld --full-time --classify 2>/dev/null",
         ]
 
     def _build_find_command(
@@ -1652,7 +1659,10 @@ class FileManager(GObject.Object):
         )
 
     def _list_files_thread(self, requested_path: str, source: str = "filemanager"):
-        """Task 1: UI Batching - Process files in batches to avoid UI freezing."""
+        """Task 1: UI Batching - Process files in batches to avoid UI freezing.
+
+        Uses a short timeout to prevent UI freeze when SSH connection is lost.
+        """
         try:
             # Check for destruction/invalid state before any operations
             if self._is_destroyed:
@@ -1676,15 +1686,38 @@ class FileManager(GObject.Object):
                 path_for_ls += "/"
 
             command = ["ls", "-la", "--classify", "--full-time", path_for_ls]
-            success, output = operations.execute_command_on_session(command)
+            # Use shorter timeout (8s) for file listing to avoid long UI freezes
+            success, output = operations.execute_command_on_session(command, timeout=8)
 
             if not success:
-                # ls command failed - revert to last successful path
-                self.logger.warning(
-                    f"Failed to list '{requested_path}': {output}. Reverting to last successful path."
+                # Check if this is a connection timeout
+                is_timeout = (
+                    "timed out" in output.lower() or "timeout" in output.lower()
                 )
+                is_connection_error = (
+                    is_timeout
+                    or "connection" in output.lower()
+                    or "network" in output.lower()
+                    or "unreachable" in output.lower()
+                )
+
+                if is_connection_error:
+                    self.logger.warning(
+                        f"Connection issue while listing '{requested_path}': {output}"
+                    )
+                    error_msg = _(
+                        "Connection lost. Please check your network connection."
+                    )
+                else:
+                    self.logger.warning(
+                        f"Failed to list '{requested_path}': {output}. Reverting to last successful path."
+                    )
+                    error_msg = output
+
+                # Try to fallback to last successful path (only for non-connection errors)
                 if (
-                    self._last_successful_path
+                    not is_connection_error
+                    and self._last_successful_path
                     and self._last_successful_path != requested_path
                 ):
                     self.logger.info(
@@ -1696,12 +1729,13 @@ class FileManager(GObject.Object):
                         source,
                     )
                     return
-                # If no fallback available, show empty list with error
+
+                # Show empty list with error message
                 GLib.idle_add(
                     self._update_store_with_files,
                     requested_path,
                     [],
-                    output,
+                    error_msg,
                     source,
                 )
                 return

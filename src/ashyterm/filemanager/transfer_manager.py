@@ -3,6 +3,7 @@ import json
 import os
 import threading
 import time
+import uuid
 from dataclasses import dataclass, field
 from enum import Enum
 from typing import Dict, List, Optional
@@ -75,6 +76,13 @@ class TransferManager(GObject.Object):
         self.active_transfers: Dict[str, TransferItem] = {}
         self.history: List[TransferItem] = []
 
+        # Thread safety for active_transfers access
+        self._transfer_lock = threading.Lock()
+
+        # Throttle progress updates to avoid UI flooding
+        self._last_progress_update = 0.0
+        self._progress_update_interval = 0.1  # 100ms minimum between UI updates
+
         self.progress_revealer: Optional[Gtk.Revealer] = None
         self.progress_row: Optional[Adw.ActionRow] = None  # Reference to the ActionRow
         self.progress_bar: Optional[Gtk.ProgressBar] = None
@@ -87,7 +95,7 @@ class TransferManager(GObject.Object):
     def _load_history(self):
         try:
             if os.path.exists(self.history_file):
-                with open(self.history_file, "r") as f:
+                with open(self.history_file, "r", encoding="utf-8") as f:
                     data = json.load(f)
                     for item_data in data:
                         # Re-hydrate enums
@@ -130,7 +138,7 @@ class TransferManager(GObject.Object):
                 }
                 data_to_save.append(serializable_item)
 
-            with open(self.history_file, "w") as f:
+            with open(self.history_file, "w", encoding="utf-8") as f:
                 json.dump(data_to_save, f, indent=2)
         except Exception as e:
             self.logger.error(f"Failed to save transfer history: {e}")
@@ -145,7 +153,7 @@ class TransferManager(GObject.Object):
         is_cancellable: bool = False,
         is_directory: bool = False,
     ) -> str:
-        transfer_id = f"{int(time.time() * 1000)}_{len(self.active_transfers)}"
+        transfer_id = str(uuid.uuid4())
         transfer_item = TransferItem(
             id=transfer_id,
             filename=filename,
@@ -157,78 +165,106 @@ class TransferManager(GObject.Object):
             is_cancellable=is_cancellable,
             is_directory=is_directory,
         )
-        self.active_transfers[transfer_id] = transfer_item
+        with self._transfer_lock:
+            self.active_transfers[transfer_id] = transfer_item
         return transfer_id
 
     def start_transfer(self, transfer_id: str):
-        if transfer_id in self.active_transfers:
-            transfer = self.active_transfers[transfer_id]
-            transfer.status = TransferStatus.IN_PROGRESS
-            transfer.start_time = time.time()
-            self.emit("transfer-started", transfer_id)
-            self._update_progress_display()
+        with self._transfer_lock:
+            if transfer_id in self.active_transfers:
+                transfer = self.active_transfers[transfer_id]
+                transfer.status = TransferStatus.IN_PROGRESS
+                transfer.start_time = time.time()
+        self.emit("transfer-started", transfer_id)
+        self._update_progress_display()
 
     def update_progress(self, transfer_id: str, progress: float):
-        if transfer_id in self.active_transfers:
-            self.active_transfers[transfer_id].progress = progress
+        with self._transfer_lock:
+            if transfer_id in self.active_transfers:
+                self.active_transfers[transfer_id].progress = progress
+
+        # Throttle progress updates to prevent UI flooding
+        current_time = time.time()
+        if current_time - self._last_progress_update >= self._progress_update_interval:
+            self._last_progress_update = current_time
             self.emit("transfer-progress", transfer_id, progress)
             self._update_progress_display()
 
     def complete_transfer(self, transfer_id: str):
-        if transfer_id in self.active_transfers:
-            transfer = self.active_transfers.pop(transfer_id)
-            transfer.status = TransferStatus.COMPLETED
-            transfer.end_time = time.time()
-            transfer.progress = 100.0
-            self.history.insert(0, transfer)
+        transfer = None
+        with self._transfer_lock:
+            if transfer_id in self.active_transfers:
+                transfer = self.active_transfers.pop(transfer_id)
+                transfer.status = TransferStatus.COMPLETED
+                transfer.end_time = time.time()
+                transfer.progress = 100.0
+                self.history.insert(0, transfer)
+
+        if transfer:
             self.emit("transfer-completed", transfer_id)
             self._save_history()
             self._update_progress_display()
 
     def fail_transfer(self, transfer_id: str, error_message: str):
-        if transfer_id in self.active_transfers:
-            transfer = self.active_transfers.pop(transfer_id)
-            if "cancel" in error_message.lower():
-                transfer.status = TransferStatus.CANCELLED
+        transfer = None
+        with self._transfer_lock:
+            if transfer_id in self.active_transfers:
+                transfer = self.active_transfers.pop(transfer_id)
+                if "cancel" in error_message.lower():
+                    transfer.status = TransferStatus.CANCELLED
+                else:
+                    transfer.status = TransferStatus.FAILED
+                transfer.end_time = time.time()
+                transfer.error_message = error_message
+                self.history.insert(0, transfer)
+
+        if transfer:
+            if transfer.status == TransferStatus.CANCELLED:
                 self.emit("transfer-cancelled", transfer_id)
             else:
-                transfer.status = TransferStatus.FAILED
                 self.emit("transfer-failed", transfer_id, error_message)
-
-            transfer.end_time = time.time()
-            transfer.error_message = error_message
-            self.history.insert(0, transfer)
             self._save_history()
             self._update_progress_display()
 
     def cancel_transfer(self, transfer_id: str):
-        if transfer_id in self.active_transfers:
-            transfer = self.active_transfers[transfer_id]
-            if transfer.is_cancellable:
-                transfer.cancellation_event.set()
-                self.logger.info(f"Cancellation requested for transfer {transfer_id}")
+        with self._transfer_lock:
+            if transfer_id in self.active_transfers:
+                transfer = self.active_transfers[transfer_id]
+                if transfer.is_cancellable:
+                    transfer.cancellation_event.set()
+                    self.logger.info(
+                        f"Cancellation requested for transfer {transfer_id}"
+                    )
 
     def get_cancellation_event(self, transfer_id: str) -> Optional[threading.Event]:
-        if transfer_id in self.active_transfers:
-            return self.active_transfers[transfer_id].cancellation_event
+        with self._transfer_lock:
+            if transfer_id in self.active_transfers:
+                return self.active_transfers[transfer_id].cancellation_event
         return None
 
     def get_transfer(self, transfer_id: str) -> Optional[TransferItem]:
-        return self.active_transfers.get(transfer_id)
+        with self._transfer_lock:
+            return self.active_transfers.get(transfer_id)
 
     def _update_progress_display(self):
         if self.progress_revealer:
             GLib.idle_add(self._do_update_progress_display)
 
     def _do_update_progress_display(self):
-        has_active = len(self.active_transfers) > 0
-        self.progress_revealer.set_reveal_child(has_active)
+        # Take a snapshot of active transfers with lock
+        with self._transfer_lock:
+            active_count = len(self.active_transfers)
+            if active_count == 0:
+                self.progress_revealer.set_reveal_child(False)
+                return False
 
-        if not has_active:
-            return False
+            # Copy data needed for display to avoid holding lock during UI updates
+            transfers_snapshot = list(self.active_transfers.values())
 
-        if len(self.active_transfers) == 1:
-            transfer = next(iter(self.active_transfers.values()))
+        self.progress_revealer.set_reveal_child(True)
+
+        if active_count == 1:
+            transfer = transfers_snapshot[0]
             self.progress_row.set_title(f"Transferring {transfer.filename}")
 
             elapsed = time.time() - (transfer.start_time or time.time())
@@ -247,18 +283,18 @@ class TransferManager(GObject.Object):
             self.progress_row.set_subtitle(" • ".join(subtitle_parts))
             self.progress_bar.set_fraction(transfer.progress / 100.0)
         else:
-            total_progress = sum(t.progress for t in self.active_transfers.values())
-            overall_progress = total_progress / len(self.active_transfers)
-            self.progress_row.set_title(
-                f"Transferring {len(self.active_transfers)} files"
-            )
+            total_progress = sum(t.progress for t in transfers_snapshot)
+            overall_progress = total_progress / active_count
+            self.progress_row.set_title(f"Transferring {active_count} files")
             self.progress_row.set_subtitle(f"Overall progress: {overall_progress:.1f}%")
             self.progress_bar.set_fraction(overall_progress / 100.0)
 
         return False
 
     def _on_cancel_all_clicked(self, button):
-        for transfer_id in list(self.active_transfers.keys()):
+        with self._transfer_lock:
+            transfer_ids = list(self.active_transfers.keys())
+        for transfer_id in transfer_ids:
             self.cancel_transfer(transfer_id)
 
     def create_progress_widget(self) -> Gtk.Widget:

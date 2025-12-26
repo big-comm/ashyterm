@@ -282,10 +282,10 @@ class SessionItem(BaseModel):
                 raise ValueError("Port out of range")
             self._port = port_val
             self._mark_modified()
-        except (ValueError, TypeError):
+        except (ValueError, TypeError) as e:
             raise SessionValidationError(
                 self.name, [_("Port must be a valid number between 1 and 65535")]
-            )
+            ) from e
 
     @property
     def tab_color(self) -> Optional[str]:

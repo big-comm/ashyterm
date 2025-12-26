@@ -241,7 +241,7 @@ def map_palette_to_syntax(palette: List[str]) -> Dict[str, str]:
     if not palette or len(palette) < 8:
         # Fall back to dark mode defaults if palette is invalid
         return SYNTAX_DARK_COLORS.copy()
-    
+
     # Map palette indices to syntax tokens
     # Uses semantic relationships: blue=keywords, green=strings/commands, etc.
     return {
@@ -299,27 +299,27 @@ def resolve_color_to_hex(
     """
     if not color_name:
         return "#ffffff"
-    
+
     # Parse modifiers (e.g., "bold red" -> base = "red")
     parts = color_name.lower().split()
     base_color = parts[-1] if parts else "white"
-    
+
     # Special theme colors
     if base_color == "foreground":
         return foreground
     if base_color == "background":
         return background
-    
+
     # ANSI color mapping
     if base_color in ANSI_COLOR_MAP:
         idx = ANSI_COLOR_MAP[base_color]
         if idx < len(palette):
             return palette[idx]
-    
+
     # Already a hex color?
     if base_color.startswith("#"):
         return base_color
-    
+
     # Fallback
     return "#ffffff"
 
@@ -341,13 +341,13 @@ def resolve_color_to_ansi_code(color_name: str) -> str:
     """
     if not color_name:
         return ""
-    
+
     parts = color_name.lower().split()
     modifiers: List[str] = []
     fg_code: str = ""
     bg_code: str = ""
     base_color: str = "white"
-    
+
     for part in parts:
         if part in ANSI_MODIFIERS:
             modifiers.append(ANSI_MODIFIERS[part])
@@ -358,22 +358,22 @@ def resolve_color_to_ansi_code(color_name: str) -> str:
                 bg_code = str(40 + idx) if idx < 8 else str(100 + idx - 8)
         else:
             base_color = part
-    
+
     # Map foreground color
     if base_color in ANSI_COLOR_MAP:
         idx = ANSI_COLOR_MAP[base_color]
         fg_code = str(30 + idx) if idx < 8 else str(90 + idx - 8)
     elif base_color not in ("foreground", "background", "cursor", "none", "default"):
         fg_code = "37"  # Default white
-    
+
     # Build ANSI sequence
     codes = modifiers.copy()
     if fg_code:
         codes.append(fg_code)
     if bg_code:
         codes.append(bg_code)
-    
+
     if not codes:
         return ""
-    
+
     return f"\033[{';'.join(codes)}m"

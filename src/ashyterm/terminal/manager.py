@@ -1007,6 +1007,8 @@ class TerminalManager:
                             user_data=user_data_for_spawn,
                             initial_command=initial_command,
                         )
+                    # Setup drag-and-drop for SSH terminal uploads
+                    self._setup_ssh_drag_and_drop(terminal, terminal_id)
                 elif terminal_type == "sftp":
                     self._setup_sftp_drag_and_drop(terminal)
                     self.spawner.spawn_sftp_session(
@@ -1092,6 +1094,12 @@ class TerminalManager:
         drop_target.connect("drop", self._on_file_drop, terminal)
         terminal.add_controller(drop_target)
 
+    def _setup_ssh_drag_and_drop(self, terminal: Vte.Terminal, terminal_id: int):
+        """Setup drag-and-drop for SSH terminals to upload files."""
+        drop_target = Gtk.DropTarget.new(Gdk.FileList, Gdk.DragAction.COPY)
+        drop_target.connect("drop", self._on_ssh_file_drop, terminal, terminal_id)
+        terminal.add_controller(drop_target)
+
     def _on_file_drop(self, drop_target, value, x, y, terminal: Vte.Terminal) -> bool:
         try:
             files = value.get_files()
@@ -1107,6 +1115,82 @@ class TerminalManager:
         except Exception as e:
             self.logger.error(f"Error handling file drop for SFTP: {e}")
             return False
+
+    def _on_ssh_file_drop(
+        self, drop_target, value, x, y, terminal: Vte.Terminal, terminal_id: int
+    ) -> bool:
+        """Handle file drop on SSH terminal to initiate upload via file manager."""
+        try:
+            files = value.get_files()
+            if not files:
+                return False
+
+            # Get session info for this terminal
+            info = self.registry.get_terminal_info(terminal_id)
+            if not info:
+                self.logger.warning(f"No terminal info for ID {terminal_id}")
+                return False
+
+            session = info.get("identifier")
+
+            # Check if terminal is in SSH session (either session-based or manual SSH)
+            ssh_target = self.manual_ssh_tracker.get_ssh_target(terminal_id)
+            if not ssh_target and not (
+                isinstance(session, SessionItem) and session.is_ssh()
+            ):
+                self.logger.info("Drop target is not an SSH session, ignoring")
+                return False
+
+            # Get file paths
+            local_paths = []
+            for file in files:
+                path = file.get_path()
+                if path:
+                    local_paths.append(path)
+
+            if not local_paths:
+                return False
+
+            # Signal to show upload confirmation dialog
+            # This will be handled by the window to show the file manager dialog
+            self.logger.info(
+                f"Files dropped on SSH terminal. Requesting upload dialog for {len(local_paths)} files."
+            )
+
+            # Emit signal to notify the window about the file drop
+            GLib.idle_add(
+                self._emit_ssh_file_drop_signal,
+                terminal_id,
+                local_paths,
+                session,
+                ssh_target,
+            )
+            return True
+
+        except Exception as e:
+            self.logger.error(f"Error handling file drop for SSH: {e}")
+            return False
+
+    def _emit_ssh_file_drop_signal(
+        self, terminal_id: int, local_paths: list, session, ssh_target: str
+    ):
+        """Emit signal to notify about SSH file drop (runs on main thread)."""
+        # Store the dropped files info for the window to pick up
+        self._pending_ssh_upload = {
+            "terminal_id": terminal_id,
+            "local_paths": local_paths,
+            "session": session,
+            "ssh_target": ssh_target,
+        }
+        # Notify via the terminal-focus-changed signal mechanism
+        # The window can check for pending uploads when handling focus
+        if hasattr(self, "_ssh_file_drop_callback") and self._ssh_file_drop_callback:
+            self._ssh_file_drop_callback(terminal_id, local_paths, session, ssh_target)
+        return False
+
+    def set_ssh_file_drop_callback(self, callback):
+        """Set callback for SSH file drop events."""
+        self._ssh_file_drop_callback = callback
 
     def _setup_terminal_events(
         self,
@@ -1346,6 +1430,27 @@ class TerminalManager:
         allowing users to continue using other tabs while deciding how to handle
         the connection failure.
         """
+        # Safety check: Verify terminal widget is still valid
+        # This is especially important on XFCE where widget destruction timing
+        # can differ from Wayland compositors
+        try:
+            if terminal is None or not terminal.get_realized():
+                self.logger.debug(
+                    f"Skipping error dialog - terminal not realized for '{session_name}'"
+                )
+                self.lifecycle_manager.unmark_terminal_closing(terminal_id)
+                return False
+            if terminal.get_parent() is None:
+                self.logger.debug(
+                    f"Skipping error dialog - terminal orphaned for '{session_name}'"
+                )
+                self.lifecycle_manager.unmark_terminal_closing(terminal_id)
+                return False
+        except Exception as e:
+            self.logger.debug(f"Terminal widget check failed: {e}")
+            self.lifecycle_manager.unmark_terminal_closing(terminal_id)
+            return False
+
         # Skip if a retry is in progress - avoid showing banner during retry
         if getattr(terminal, "_retry_in_progress", False):
             self.logger.debug(
@@ -2620,20 +2725,29 @@ class TerminalManager:
 
             if not command_part:
                 return
-            
+
             # Handle cases where shell keywords might be glued to the start of command_part
             # This can happen when readline merges lines (e.g., "thenecho" from continuation prompt)
             GLUED_KEYWORDS = {
-                "then", "else", "elif", "fi", "do", "done", "esac", "in",
+                "then",
+                "else",
+                "elif",
+                "fi",
+                "do",
+                "done",
+                "esac",
+                "in",
             }
             command_part_lower = command_part.lower()
             for kw in GLUED_KEYWORDS:
-                if command_part_lower.startswith(kw) and len(command_part_lower) > len(kw):
+                if command_part_lower.startswith(kw) and len(command_part_lower) > len(
+                    kw
+                ):
                     # Check if the character after the keyword is alphanumeric (glued)
                     char_after = command_part_lower[len(kw)]
                     if char_after.isalpha():
                         # Remove the keyword prefix to get the actual command
-                        command_part = command_part[len(kw):]
+                        command_part = command_part[len(kw) :]
                         break
 
             # Get settings and highlight manager
@@ -2693,7 +2807,7 @@ class TerminalManager:
                 "builtin",
                 "exec",
             }
-            
+
             # Shell keywords that should be skipped (not actual commands)
             # These are control flow constructs that appear in multi-line scripts
             SHELL_KEYWORDS = {
@@ -2736,19 +2850,21 @@ class TerminalManager:
                 # These are control flow constructs, not actual commands
                 if clean_token_lower in SHELL_KEYWORDS:
                     continue
-                
+
                 # Check for shell keywords concatenated at the start of token
                 # This handles cases like "thenecho" where readline may have merged text
                 for kw in SHELL_KEYWORDS:
-                    if clean_token_lower.startswith(kw) and len(clean_token_lower) > len(kw):
+                    if clean_token_lower.startswith(kw) and len(
+                        clean_token_lower
+                    ) > len(kw):
                         # Extract the part after the keyword
-                        remainder = clean_token[len(kw):]
+                        remainder = clean_token[len(kw) :]
                         if remainder and remainder[0].isalpha():
                             # This looks like a concatenated keyword + command
                             clean_token = remainder
                             clean_token_lower = remainder.lower()
                             break
-                
+
                 # After extracting from concatenated token, re-check if it's still a keyword
                 if clean_token_lower in SHELL_KEYWORDS:
                     continue

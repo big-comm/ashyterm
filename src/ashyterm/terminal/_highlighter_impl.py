@@ -27,7 +27,7 @@ import termios
 import threading
 import weakref
 from collections import deque
-from typing import TYPE_CHECKING, Dict, List, Optional, Tuple, Union
+from typing import TYPE_CHECKING, Dict, Optional, Tuple
 
 import gi
 
@@ -38,15 +38,11 @@ from gi.repository import GLib, Vte
 # Use regex module (PCRE2 backend) for ~50% faster matching
 import regex as re_engine
 
-from ..settings.highlights import HighlightRule, get_highlight_manager
 from ..utils.logger import get_logger
 from ..utils.shell_echo import is_echo_terminator
 
 # Import constants and rules from highlighter package
 from .highlighter.constants import (
-    ANSI_RESET,
-    ALT_SCREEN_ENABLE_PATTERNS,
-    ALT_SCREEN_DISABLE_PATTERNS,
     ANSI_SEQ_PATTERN as _ANSI_SEQ_PATTERN,
     ANSI_COLOR_PATTERN as _ANSI_COLOR_PATTERN,
     CSI_CONTROL_PATTERN as _CSI_CONTROL_PATTERN,
@@ -54,13 +50,9 @@ from .highlighter.constants import (
     ALL_ESCAPE_SEQ_PATTERN as _ALL_ESCAPE_SEQ_PATTERN,
     SHELL_NAME_PROMPT_PATTERN as _SHELL_NAME_PROMPT_PATTERN,
 )
-from .highlighter.rules import (
-    CompiledRule,
-    LiteralKeywordRule,
-)
 
 if TYPE_CHECKING:
-    from ..settings.highlights import HighlightManager
+    pass
 
 # Import OutputHighlighter from its own module
 from .highlighter.output import OutputHighlighter, get_output_highlighter
@@ -215,12 +207,12 @@ class HighlightedTerminalProxy:
         last_esc = data.rfind(b"\x1b")
         if last_esc == -1:
             return False
-        
+
         data_len = len(data)
         pos = last_esc + 1
         if pos >= data_len:
             return True  # ESC at end with nothing after
-        
+
         second = data[pos]
         if second == 0x5B:  # '[' - CSI
             for i in range(pos + 1, data_len):
@@ -229,7 +221,9 @@ class HighlightedTerminalProxy:
             return True  # No terminator found
         elif second == 0x5D:  # ']' - OSC
             for i in range(pos + 1, data_len):
-                if data[i] == 0x07 or (data[i] == 0x1B and i + 1 < data_len and data[i + 1] == 0x5C):
+                if data[i] == 0x07 or (
+                    data[i] == 0x1B and i + 1 < data_len and data[i + 1] == 0x5C
+                ):
                     return False  # Found BEL or ST
             return True
         elif second in (0x28, 0x29):  # G0/G1 charset
@@ -239,7 +233,7 @@ class HighlightedTerminalProxy:
     def _is_in_unclosed_multiline_block(self, buffer: str) -> bool:
         """
         Check if the buffer contains an unclosed multi-line block.
-        
+
         Returns True if we detect:
         - if/then without fi
         - for/do without done
@@ -249,30 +243,38 @@ class HighlightedTerminalProxy:
         """
         if not buffer:
             return False
-        
+
         buffer_stripped = buffer.strip()
         if not buffer_stripped:
             return False
-        
+
         # Check for unclosed if/then block
-        has_then = " then" in buffer_stripped or buffer_stripped.startswith("then") or "\nthen" in buffer_stripped
-        has_fi = " fi" in buffer_stripped or buffer_stripped.endswith("fi") or "\nfi" in buffer_stripped
-        
+        has_then = (
+            " then" in buffer_stripped
+            or buffer_stripped.startswith("then")
+            or "\nthen" in buffer_stripped
+        )
+        has_fi = (
+            " fi" in buffer_stripped
+            or buffer_stripped.endswith("fi")
+            or "\nfi" in buffer_stripped
+        )
+
         # Check for unclosed for/while do block
         has_do = " do" in buffer_stripped or buffer_stripped.startswith("do") or "\ndo" in buffer_stripped
         has_done = " done" in buffer_stripped or buffer_stripped.endswith("done") or "\ndone" in buffer_stripped
-        
+
         # Check structural completeness of blocks
         then_block_open = has_then and not has_fi
         do_block_open = has_do and not has_done
-        
+
         if then_block_open or do_block_open:
             return True
-        
+
         # Check for unclosed braces
         if buffer_stripped.count("{") > buffer_stripped.count("}"):
             return True
-        
+
         # Check if LAST line ends with a continuation indicator
         # Only check operators that always indicate continuation, not 'then'/'do'
         # because those could be part of a closed block checked above
@@ -291,19 +293,19 @@ class HighlightedTerminalProxy:
             if last_line.endswith("else"):
                 # 'else' always needs more content
                 return True
-        
+
         return False
 
     def _detect_interactive_marker(self, data: bytes) -> tuple[bool, bool, bool]:
         """
         Detect interactive marker in data (NUL prefix from PTY).
-        
+
         Returns: (has_marker, is_user_input, is_newline)
         """
         data_len = len(data)
         if data_len < 2 or data[0] != 0x00:
             return (False, False, False)
-        
+
         next_byte = data[1]
         # Check for newline - can be longer due to escape sequences like bracketed paste mode
         # The data often contains sequences like \x00\r\n\x1b[?2004l\r\x1b[?2004h>
@@ -345,19 +347,19 @@ class HighlightedTerminalProxy:
         """
         if not self._input_highlight_buffer:
             return 0
-            
+
         # Count backspaces - handle \x08 \x08 patterns (sh/dash style)
         temp_data = data
         backspace_count = 0
-        
+
         # Count \x08 \x08 patterns first (count as 1 each)
         while b"\x08 \x08" in temp_data:
             backspace_count += 1
             temp_data = temp_data.replace(b"\x08 \x08", b"", 1)
-        
+
         # Count remaining individual backspaces
         backspace_count += temp_data.count(b"\x7f") + temp_data.count(b"\x08")
-        
+
         if backspace_count > 0:
             chars_to_remove = min(backspace_count, len(self._input_highlight_buffer))
             if chars_to_remove > 0:
@@ -366,7 +368,7 @@ class HighlightedTerminalProxy:
             self._prev_shell_input_token_type = None
             self._prev_shell_input_token_len = 0
             return chars_to_remove
-        
+
         return 0
 
     @property
@@ -566,7 +568,8 @@ class HighlightedTerminalProxy:
             return
 
         with self._lock:
-            term = self._terminal_ref()
+            # Reference terminal to ensure it's not garbage collected during cleanup
+            _ = self._terminal_ref()
 
             self._master_fd = None
             if self._slave_fd is not None:
@@ -622,7 +625,6 @@ class HighlightedTerminalProxy:
             data = os.read(fd, 4096)
             if not data:
                 return True  # Empty read, keep waiting
-            
 
             # 4. Verify widget is alive before feeding
             term = self._terminal
@@ -630,11 +632,25 @@ class HighlightedTerminalProxy:
                 self._io_watch_id = None
                 return False
 
+            # Safety check: Verify widget is still valid and realized
+            # This is especially important on XFCE/X11 where widget destruction
+            # timing can differ from Wayland compositors
             try:
+                # Double-check the widget is not being destroyed
+                if self._widget_destroyed:
+                    self._io_watch_id = None
+                    return False
+                # Check if widget is realized (mapped to screen)
                 if not term.get_realized():
+                    return False
+                # Also verify the widget has a parent (not orphaned)
+                if term.get_parent() is None:
+                    self._widget_destroyed = True
+                    self._io_watch_id = None
                     return False
             except Exception:
                 self._widget_destroyed = True
+                self._io_watch_id = None
                 return False
 
             # --- GLOBAL SPLIT ESCAPE FIX ---
@@ -708,8 +724,8 @@ class HighlightedTerminalProxy:
                             # Skip cat processing for small single-character interactive input
                             # This happens when cat is waiting for stdin and user types
                             is_interactive_input = (
-                                data_len <= 3 
-                                and b"\n" not in data 
+                                data_len <= 3
+                                and b"\n" not in data
                                 and b"\r" not in data
                                 and not data.startswith(b"\x1b")
                             )
@@ -847,12 +863,16 @@ class HighlightedTerminalProxy:
             # Get filename from full command or try TERMPROP_CURRENT_FILE_URI
             full_command = self._highlighter.get_full_command(self._proxy_id)
             new_filename = self._extract_filename_from_cat_command(full_command) or ""
-            
+
             # Debug log for cat filename detection
             if not new_filename and full_command:
-                self.logger.debug(f"Cat: full_command='{full_command}' but no filename extracted")
+                self.logger.debug(
+                    f"Cat: full_command='{full_command}' but no filename extracted"
+                )
             elif new_filename:
-                self.logger.debug(f"Cat: filename='{new_filename}' from command='{full_command}'")
+                self.logger.debug(
+                    f"Cat: filename='{new_filename}' from command='{full_command}'"
+                )
 
             if new_filename != self._cat_filename:
                 self._cat_filename = new_filename
@@ -903,7 +923,9 @@ class HighlightedTerminalProxy:
 
                 if prompt_split_idx >= 0:
                     if prompt_split_idx > 0:
-                        self._handle_prompt_split(line[:prompt_split_idx], line[prompt_split_idx:])
+                        self._handle_prompt_split(
+                            line[:prompt_split_idx], line[prompt_split_idx:]
+                        )
                     else:
                         self._cat_queue.append(_PROMPT_MARKER)
                         self._cat_queue.append(line.encode("utf-8", errors="replace"))
@@ -923,21 +945,20 @@ class HighlightedTerminalProxy:
 
                 # Check for embedded prompt pattern when file doesn't end with newline
                 prompt_patterns = [
-                    r'([a-zA-Z_][a-zA-Z0-9_-]*@[^\s:]+:[^\$]+\$\s)',  # user@host:path$ 
-                    r'(sh-\d+\.\d+\$\s)',                              # sh-x.x$ 
-                    r'(bash-\d+\.\d+\$\s)',                            # bash-x.x$
+                    r"([a-zA-Z_][a-zA-Z0-9_-]*@[^\s:]+:[^\$]+\$\s)",  # user@host:path$
+                    r"(sh-\d+\.\d+\$\s)",  # sh-x.x$
+                    r"(bash-\d+\.\d+\$\s)",  # bash-x.x$
                 ]
                 embedded_found = False
                 for pattern in prompt_patterns:
                     match = re_engine.search(pattern, content)
                     if match and match.start() > 0:
                         self._handle_prompt_split(
-                            content[:match.start()], 
-                            content[match.start():] + ending
+                            content[: match.start()], content[match.start() :] + ending
                         )
                         embedded_found = True
                         break
-                
+
                 if embedded_found:
                     continue
 
@@ -945,7 +966,7 @@ class HighlightedTerminalProxy:
                 # NOTE: Do NOT use _at_shell_prompt alone here because TERMPROP_SHELL_PRECMD
                 # fires before all cat content arrives. We must use actual prompt detection.
                 # The cat context should have already been cleared by prompt detection in the queue.
-                
+
                 # Fallback: check for shell prompt patterns (for shells without termprops)
                 lines_done = getattr(self, "_cat_lines_processed", 0)
                 is_potential_prompt = lines_done > 0 or (
@@ -1040,15 +1061,15 @@ class HighlightedTerminalProxy:
 
         # Traditional prompt patterns
         clean = _ANSI_SEQ_PATTERN.sub("", line).replace("\x00", "").strip()
-        
+
         # user@host:path$ pattern with space
         if clean.endswith(("$ ", "# ", "% ")) and "@" in clean:
             return True
-        
+
         # Shell name prompts: sh-5.3$, bash$
         if _SHELL_NAME_PROMPT_PATTERN.match(clean.rstrip("$#% ")):
             return True
-        
+
         # Powerline prompts
         if clean and clean[-1] in ("➜", "❯", "»"):
             return True
@@ -1558,28 +1579,75 @@ class HighlightedTerminalProxy:
             # and can introduce visual-only artifacts here (e.g., duplicated
             # last character under the cursor).
             #
-            # When we're at an interactive prompt, keep these sequences raw and
-            # never buffer them.
-            if self._at_shell_prompt and len(data) < 4096:
+            # When we're at an interactive prompt, keep these sequences raw
+            # and never buffer them.
+            #
+            # NOTE: The size limit is set very high (1MB) to handle very long command
+            # lines from history (CTRL+R, arrow up) which would otherwise not be
+            # displayed correctly until the user interacts with them.
+            if self._at_shell_prompt and len(data) < 1048576:
                 # Check if this is an Enter key press (newline from user)
                 # The newline may be bundled with escape sequences like bracketed paste mode
                 is_enter_marker = (
                     data[0] == 0x00 if len(data) >= 1 else False
                 ) and (b"\r\n" in data or b"\n" in data)
 
-                if (not is_enter_marker) and (
+                # Check for readline redraw sequences:
+                # - \r (carriage return) - line redraw start
+                # - \x1b[D / \x1b[C - cursor left/right
+                # - \x1b[1D / \x1b[1C - cursor left/right by 1
+                # - \x1b[K / \x1b[0K - clear to end of line
+                # - \x1b[J / \x1b[0J - clear to end of screen
+                # - \x1b[A / \x1b[B - cursor up/down (history navigation)
+                # - \x1b[H - cursor home
+                # - \x1b[?25l / \x1b[?25h - hide/show cursor
+                # - \x1b[ followed by digits and G - cursor column move
+                # - \x1b[<n>P - delete characters
+                # - \x1b[<n>@ - insert characters
+                # - (reverse-i-search) etc. - readline search prompts
+                search_prompt_patterns = (
+                    b"(reverse-i-search)",
+                    b"(i-search)",
+                    b"(bck-i-search)",
+                    b"(fwd-i-search)",
+                    b"(failed ",  # "(failed reverse-i-search)" etc.
+                )
+                is_readline_redraw = (
                     b"\r" in data
                     or b"\x1b[D" in data
                     or b"\x1b[C" in data
                     or b"\x1b[K" in data
+                    or b"\x1b[0K" in data
                     or b"\x1b[1D" in data
                     or b"\x1b[1C" in data
+                    or b"\x1b[A" in data
+                    or b"\x1b[B" in data
+                    or b"\x1b[J" in data
+                    or b"\x1b[0J" in data
+                    or b"\x1b[H" in data
+                    or b"\x1b[?25l" in data
+                    or b"\x1b[?25h" in data
+                    # Additional patterns for CTRL+R and history search
+                    or b"\x1b[P" in data  # Delete character
+                    or b"\x1b[@" in data  # Insert character
+                    or any(pattern in data for pattern in search_prompt_patterns)
+                )
+
+                # Also check for large line data without escape sequences
+                # When readline selects a long history entry, it may send just the
+                # text with minimal escape sequences
+                is_large_line_at_prompt = (
+                    len(data) > 200 and not is_enter_marker and b"\n" not in data
+                )
+
+                if (not is_enter_marker) and (
+                    is_readline_redraw or is_large_line_at_prompt
                 ):
                     self._flush_queue(term)
                     # Any buffered remainder at the prompt is stale and can
                     # cause visible duplication when readline redraws.
                     self._partial_line_buffer = b""
-                    
+
                     # Handle backspace - update the input buffer before returning
                     if b"\x08" in data or b"\x7f" in data:
                         self._handle_backspace_in_buffer(data)
@@ -1606,7 +1674,9 @@ class HighlightedTerminalProxy:
             data_len = len(data)
 
             # --- 2. HARD LIMIT (Safety Valve) ---
-            if data_len > 65536:
+            # Use 1MB limit to handle extremely long command lines while
+            # still providing protection against streaming binary data
+            if data_len > 1048576:
                 self._burst_counter = 100
                 self._flush_queue(term)
                 term.feed(data)
@@ -1645,7 +1715,11 @@ class HighlightedTerminalProxy:
                         is_interactive = True
                     elif any(t in rem_str for t in ("$ ", "# ", "% ", "> ")):
                         is_interactive = True
-                    elif "\x1b[" in rem_str or "\x1b]7;" in rem_str or "\033]7;" in rem_str:
+                    elif (
+                        "\x1b[" in rem_str
+                        or "\x1b]7;" in rem_str
+                        or "\033]7;" in rem_str
+                    ):
                         is_interactive = True
 
                 # Do not buffer remainders while at a shell prompt. Readline may
@@ -1668,9 +1742,13 @@ class HighlightedTerminalProxy:
             # a new primary prompt. We must detect this and reset the buffer.
             # This is especially important for shells without termprop support (sh, dash).
             if self._input_highlight_buffer and self._at_shell_prompt:
-                stripped_for_prompt = _ALL_ESCAPE_SEQ_PATTERN.sub("", text).replace("\x00", "").strip()
+                stripped_for_prompt = (
+                    _ALL_ESCAPE_SEQ_PATTERN.sub("", text).replace("\x00", "").strip()
+                )
                 # Check if text ENDS with a primary prompt (not continuation)
-                if stripped_for_prompt.endswith("$") or stripped_for_prompt.endswith("#"):
+                if stripped_for_prompt.endswith("$") or stripped_for_prompt.endswith(
+                    "#"
+                ):
                     # Extract the part before $ or #
                     prompt_candidate = stripped_for_prompt[:-1].rstrip()
                     # Get just the last line (the actual prompt)
@@ -1678,11 +1756,11 @@ class HighlightedTerminalProxy:
                         prompt_candidate = prompt_candidate.split("\n")[-1].strip()
                     # Check if it looks like a shell prompt
                     if prompt_candidate and (
-                        _SHELL_NAME_PROMPT_PATTERN.match(prompt_candidate) or
-                        "@" in prompt_candidate or
-                        ":" in prompt_candidate or
-                        prompt_candidate.endswith("~") or
-                        prompt_candidate.endswith("/")
+                        _SHELL_NAME_PROMPT_PATTERN.match(prompt_candidate)
+                        or "@" in prompt_candidate
+                        or ":" in prompt_candidate
+                        or prompt_candidate.endswith("~")
+                        or prompt_candidate.endswith("/")
                     ):
                         self._reset_input_buffer()
                         self._need_color_reset = True
@@ -1692,8 +1770,10 @@ class HighlightedTerminalProxy:
 
             # Interactive marker check using helper function
             if data_len < 1024:
-                has_marker, is_user_input, is_newline = self._detect_interactive_marker(data)
-                
+                has_marker, is_user_input, is_newline = self._detect_interactive_marker(
+                    data
+                )
+
                 # Handle backspace early return
                 if has_marker and is_user_input and (data[1] in (0x08, 0x7F)):
                     if self._at_shell_prompt:
@@ -1708,11 +1788,11 @@ class HighlightedTerminalProxy:
                         if self._at_shell_prompt:
                             # Check if we're in a multi-line command before resetting
                             is_in_unclosed_block = self._is_in_unclosed_multiline_block(self._input_highlight_buffer)
-                            
+
                             # Also check continuation prompt in the data
                             stripped_text = _ALL_ESCAPE_SEQ_PATTERN.sub("", text)
                             has_continuation_prompt = ">" in stripped_text.strip()
-                            
+
                             if is_in_unclosed_block or has_continuation_prompt:
                                 # Multi-line command - add newline to buffer instead of resetting
                                 if not self._input_highlight_buffer.endswith("\n"):
@@ -1735,14 +1815,16 @@ class HighlightedTerminalProxy:
             if self._at_shell_prompt and (b"\x1b" in data or b"\r" in data):
                 # Check if this is a backspace sequence
                 is_backspace = b"\x08" in data or b"\x7f" in data
-                
+
                 if is_backspace and self._input_highlight_buffer:
                     self._handle_backspace_in_buffer(data)
                 elif self._input_highlight_buffer:
                     # Only suppress/reset if this is a cursor movement, not a newline from user input
                     # and NOT when we're in a multi-line command
-                    is_possible_newline = b"\r\n" in data or (b"\r" in data and b"\n" in data)
-                    
+                    is_possible_newline = b"\r\n" in data or (
+                        b"\r" in data and b"\n" in data
+                    )
+
                     # Check if data contains a primary prompt (sh-5.3$, bash$, etc.)
                     # If so, we should reset even if we're in a multiline block (command was aborted/errored)
                     stripped_for_prompt = _ALL_ESCAPE_SEQ_PATTERN.sub("", text).strip()
@@ -1751,10 +1833,12 @@ class HighlightedTerminalProxy:
                         prompt_part = stripped_for_prompt[:-1].strip()
                         if _SHELL_NAME_PROMPT_PATTERN.match(prompt_part) or "@" in prompt_part or ":" in prompt_part:
                             has_primary_prompt = True
-                    
+
                     # Check if we're in a multi-line command (unclosed block)
-                    is_in_multiline = self._is_in_unclosed_multiline_block(self._input_highlight_buffer)
-                    
+                    is_in_multiline = self._is_in_unclosed_multiline_block(
+                        self._input_highlight_buffer
+                    )
+
                     if has_primary_prompt:
                         # Primary prompt detected - command finished, reset buffer
                         self._reset_input_buffer()
@@ -1811,7 +1895,7 @@ class HighlightedTerminalProxy:
             # stream (e.g., by applying output highlighting) can cause visible
             # artifacts such as duplicated characters when moving the cursor
             # after pasting. Keep prompt interactions raw.
-            # 
+            #
             # HOWEVER: If we detect a newline from command submission (not continuation),
             # we should NOT skip output highlighting for command output that follows.
             if self._at_shell_prompt:
@@ -1822,12 +1906,13 @@ class HighlightedTerminalProxy:
                     if self._input_highlight_buffer.strip():
                         # Check for unclosed blocks (if/then without fi, for/do without done, etc.)
                         is_in_unclosed_block = self._is_in_unclosed_multiline_block(self._input_highlight_buffer)
-                        
+
                         stripped_text = _ALL_ESCAPE_SEQ_PATTERN.sub("", text)
                         has_continuation_prompt = (
-                            stripped_text.strip() == ">" or stripped_text.strip().endswith(">")
+                            stripped_text.strip() == ">"
+                            or stripped_text.strip().endswith(">")
                         )
-                        
+
                         if is_in_unclosed_block or has_continuation_prompt:
                             if not self._input_highlight_buffer.endswith("\n"):
                                 self._input_highlight_buffer += "\n"
@@ -1849,7 +1934,7 @@ class HighlightedTerminalProxy:
                             context = self._highlighter._proxy_contexts.get(self._proxy_id, "")
                             if context:
                                 rules = self._highlighter._get_active_rules(context)
-                        
+
                         if context and rules:
                             # We have a context and rules - command likely from history
                             # Proceed to output highlighting
@@ -1931,21 +2016,24 @@ class HighlightedTerminalProxy:
         Check if text contains a shell prompt (primary or continuation).
         Primary prompt detection is handled by termprop-changed signal,
         but we also detect prompts directly for shells without termprop support.
-        
+
         Returns True if a prompt was detected.
         """
         # Early exit: if no potential prompt characters, skip expensive processing
         if not any(c in text for c in "$#%>"):
             return False
-        
+
         stripped_text = _ALL_ESCAPE_SEQ_PATTERN.sub("", text).replace("\x00", "")
-        
+
         # Check for continuation prompt ("> ")
         stripped_clean = stripped_text.strip()
         if stripped_clean == ">":
             self._at_shell_prompt = True
             self._shell_input_highlighter.set_at_prompt(self._proxy_id, True)
-            if self._input_highlight_buffer and not self._input_highlight_buffer.endswith("\n"):
+            if (
+                self._input_highlight_buffer
+                and not self._input_highlight_buffer.endswith("\n")
+            ):
                 self._input_highlight_buffer += "\n"
             self._prev_shell_input_token_type = None
             self._prev_shell_input_token_len = 0
@@ -1954,19 +2042,19 @@ class HighlightedTerminalProxy:
         # Check for primary prompt (e.g., "sh-5.3$ ", "bash-5.2$ ", "user@host:~$ ")
         # IMPORTANT: Only check the LAST LINE of the text to avoid false positives
         # when command output ends with a prompt on the same data packet.
-        
+
         # Get the last line only - prompts are single lines
         last_line = stripped_clean.rsplit('\n', 1)[-1].strip()
         last_line = last_line.rsplit('\r', 1)[-1].strip()
-        
+
         # Sanity check: prompts are short (typically < 100 chars)
         if len(last_line) > 100:
             return False
-        
+
         if last_line.endswith("$") or last_line.endswith("#") or last_line.endswith("%"):
             # Check if this looks like a shell prompt (ends with $ or # after shell name or path)
             prompt_part = last_line[:-1].strip()  # Remove $ or # at the end
-            
+
             # Match shell name patterns: sh-5.3, bash, etc.
             if _SHELL_NAME_PROMPT_PATTERN.match(prompt_part):
                 self._at_shell_prompt = True
@@ -1974,7 +2062,7 @@ class HighlightedTerminalProxy:
                 self._reset_input_buffer()
                 self._need_color_reset = True
                 return True
-            
+
             # Match paths like ~ or /home/user or user@host:~
             if prompt_part.endswith("~") or prompt_part.endswith("/") or "@" in prompt_part or ":" in prompt_part:
                 self._at_shell_prompt = True
@@ -2050,7 +2138,7 @@ class HighlightedTerminalProxy:
                     self._at_shell_prompt = False
                     self._reset_input_buffer()
             return None
-        
+
         # Now check for escape sequences AFTER handling newlines
         if "\x1b" in text or "\033" in text:
             return None
