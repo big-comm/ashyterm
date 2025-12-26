@@ -9,7 +9,7 @@ import os
 import re
 import threading
 import weakref
-from typing import Any, Callable, Dict, List, Optional, Tuple, TYPE_CHECKING
+from typing import Any, Callable, Dict, List, Optional, Tuple
 
 import gi
 

@@ -100,15 +100,15 @@ class SSHErrorBanner(Gtk.Box):
     - Smooth animations for show/hide
     - Non-blocking - user can switch tabs freely
     """
-    
+
     __gtype_name__ = "SSHErrorBanner"
-    
+
     # Signals
     __gsignals__ = {
         "action-requested": (GObject.SignalFlags.RUN_FIRST, None, (str, object)),
         "dismissed": (GObject.SignalFlags.RUN_FIRST, None, ()),
     }
-    
+
     def __init__(
         self,
         session_name: str,
@@ -119,12 +119,12 @@ class SSHErrorBanner(Gtk.Box):
         is_host_key_error: bool = False,
     ):
         super().__init__(orientation=Gtk.Orientation.VERTICAL, spacing=0)
-        
+
         # Ensure default CSS is applied for fallback styling
         _ensure_default_css()
-        
+
         self.logger = get_logger("ashyterm.ui.ssh_error_banner")
-        
+
         self._session_name = session_name
         self._error_message = error_message
         self._session = session
@@ -134,9 +134,9 @@ class SSHErrorBanner(Gtk.Box):
         self._on_action_callback: Optional[Callable] = None
         self._is_auth_error = is_auth_error
         self._is_host_key_error = is_host_key_error
-        
+
         self._setup_ui()
-    
+
     def _setup_ui(self) -> None:
         """Build the banner UI."""
         # Main banner container - HORIZONTAL layout (compact)
@@ -150,18 +150,18 @@ class SSHErrorBanner(Gtk.Box):
         self._main_box.set_margin_end(4)
         self._main_box.set_margin_top(2)
         self._main_box.set_margin_bottom(2)
-        
+
         # Warning icon
         warning_icon = Gtk.Image.new_from_icon_name("dialog-warning-symbolic")
         warning_icon.add_css_class("warning-icon")
         warning_icon.set_valign(Gtk.Align.CENTER)
         self._main_box.append(warning_icon)
-        
+
         # Message area - vertical box with title and detail
         message_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=0)
         message_box.set_hexpand(True)
         message_box.set_valign(Gtk.Align.CENTER)
-        
+
         # Title - different for auth errors
         if self._is_auth_error:
             title_label = Gtk.Label(label=_("Authentication Failed"))
@@ -170,13 +170,13 @@ class SSHErrorBanner(Gtk.Box):
         title_label.add_css_class("heading")
         title_label.set_halign(Gtk.Align.START)
         message_box.append(title_label)
-        
+
         # Session name and error - use Gtk.Inscription for proper wrapping
         if self._error_message:
             detail_text = f"{self._session_name}: {self._error_message}"
         else:
             detail_text = self._session_name
-        
+
         # Gtk.Inscription is designed for text that needs to wrap in complex layouts
         detail_inscription = Gtk.Inscription()
         detail_inscription.set_text(detail_text)
@@ -188,13 +188,13 @@ class SSHErrorBanner(Gtk.Box):
         detail_inscription.set_hexpand(True)
         detail_inscription.add_css_class("dim-label")
         message_box.append(detail_inscription)
-        
+
         self._main_box.append(message_box)
-        
+
         # Action buttons - on the right side of the banner
         button_box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=6)
         button_box.set_valign(Gtk.Align.CENTER)
-        
+
         if self._is_auth_error:
             # For authentication errors, show Edit Session button
             edit_btn = Gtk.Button(label=_("Edit Session"))
@@ -219,16 +219,16 @@ class SSHErrorBanner(Gtk.Box):
             retry_btn.connect("clicked", self._on_retry_clicked)
             retry_btn.set_tooltip_text(_("Retry connection with extended timeout"))
             button_box.append(retry_btn)
-            
+
             # Auto-Reconnect button with dropdown
             auto_btn_box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=0)
-            
+
             auto_btn = Gtk.Button(label=_("Auto Reconnect"))
             auto_btn.add_css_class("compact-button")
             auto_btn.connect("clicked", self._on_auto_reconnect_clicked)
             auto_btn.set_tooltip_text(_("Start automatic reconnection attempts"))
             auto_btn_box.append(auto_btn)
-            
+
             # Options dropdown toggle
             options_btn = Gtk.Button()
             options_btn.set_icon_name("pan-down-symbolic")
@@ -238,23 +238,23 @@ class SSHErrorBanner(Gtk.Box):
             options_btn.set_tooltip_text(_("Configure auto-reconnect options"))
             self._options_toggle_btn = options_btn
             auto_btn_box.append(options_btn)
-            
+
             button_box.append(auto_btn_box)
-        
+
         self._main_box.append(button_box)
-        
+
         self.append(self._main_box)
-        
+
         # Options panel (initially hidden) - only for network errors
         self._options_revealer = Gtk.Revealer()
         self._options_revealer.set_transition_type(Gtk.RevealerTransitionType.SLIDE_DOWN)
         self._options_revealer.set_transition_duration(200)
-        
+
         if not self._is_auth_error:
             self._create_options_panel()
-        
+
         self.append(self._options_revealer)
-    
+
     def _create_options_panel(self) -> None:
         """Create the expandable options panel for auto-reconnect configuration."""
         # Main container - vertical to allow wrapping of the flowbox
@@ -266,7 +266,7 @@ class SSHErrorBanner(Gtk.Box):
         options_container.set_margin_start(8)
         options_container.set_margin_end(8)
         options_container.set_margin_bottom(6)
-        
+
         # Use FlowBox for wrapping when space is limited
         options_flow = Gtk.FlowBox()
         options_flow.set_selection_mode(Gtk.SelectionMode.NONE)
@@ -276,66 +276,66 @@ class SSHErrorBanner(Gtk.Box):
         options_flow.set_row_spacing(6)
         options_flow.set_column_spacing(12)
         options_flow.set_valign(Gtk.Align.CENTER)
-        
+
         # Info label
         info_label = Gtk.Label(label=_("Auto-reconnect settings:"))
         info_label.add_css_class("dim-label")
         options_flow.append(info_label)
-        
+
         # Duration setting
         duration_box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=4)
         duration_label = Gtk.Label(label=_("Duration"))
         duration_label.add_css_class("dim-label")
         duration_box.append(duration_label)
-        
+
         self._duration_spin = Gtk.SpinButton.new_with_range(1, 60, 1)
         self._duration_spin.set_value(self._config.duration_mins)
         self._duration_spin.set_width_chars(2)
         self._duration_spin.connect("value-changed", self._on_duration_changed)
         duration_box.append(self._duration_spin)
-        
+
         duration_unit = Gtk.Label(label=_("min"))
         duration_unit.add_css_class("dim-label")
         duration_box.append(duration_unit)
-        
+
         options_flow.append(duration_box)
-        
+
         # Interval setting
         interval_box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=4)
         interval_label = Gtk.Label(label=_("Interval"))
         interval_label.add_css_class("dim-label")
         interval_box.append(interval_label)
-        
+
         self._interval_spin = Gtk.SpinButton.new_with_range(5, 120, 5)
         self._interval_spin.set_value(self._config.interval_secs)
         self._interval_spin.set_width_chars(2)
         self._interval_spin.connect("value-changed", self._on_interval_changed)
         interval_box.append(self._interval_spin)
-        
+
         interval_unit = Gtk.Label(label=_("sec"))
         interval_unit.add_css_class("dim-label")
         interval_box.append(interval_unit)
-        
+
         options_flow.append(interval_box)
-        
+
         # Timeout setting
         timeout_box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=4)
         timeout_label = Gtk.Label(label=_("Timeout"))
         timeout_label.add_css_class("dim-label")
         timeout_box.append(timeout_label)
-        
+
         self._timeout_spin = Gtk.SpinButton.new_with_range(10, 300, 10)
         self._timeout_spin.set_value(self._config.timeout_secs)
         self._timeout_spin.set_width_chars(2)
         self._timeout_spin.connect("value-changed", self._on_timeout_changed)
         timeout_box.append(self._timeout_spin)
-        
+
         timeout_unit = Gtk.Label(label=_("sec"))
         timeout_unit.add_css_class("dim-label")
         timeout_box.append(timeout_unit)
-        
+
         options_flow.append(timeout_box)
-        
+
         # Quick start button
         start_btn = Gtk.Button(label=_("Start"))
         start_btn.add_css_class("suggested-action")
@@ -343,19 +343,19 @@ class SSHErrorBanner(Gtk.Box):
         start_btn.connect("clicked", self._on_auto_reconnect_with_config)
         start_btn.set_tooltip_text(_("Start auto-reconnect with these settings"))
         options_flow.append(start_btn)
-        
+
         options_container.append(options_flow)
         self._options_revealer.set_child(options_container)
-    
+
     def _toggle_options(self, _button: Gtk.Button) -> None:
         """Toggle the options panel visibility."""
         self._expanded = not self._expanded
         self._options_revealer.set_reveal_child(self._expanded)
-        
+
         # Update icon direction
         icon_name = "pan-up-symbolic" if self._expanded else "pan-down-symbolic"
         self._options_toggle_btn.set_icon_name(icon_name)
-    
+
     def _on_retry_clicked(self, _button: Gtk.Button) -> None:
         """Handle retry button click."""
         self.emit("action-requested", "retry", {
@@ -367,11 +367,11 @@ class SSHErrorBanner(Gtk.Box):
             self._on_action_callback(BannerAction.RETRY, self._terminal_id, {
                 "timeout": self._config.timeout_secs,
             })
-    
+
     def _on_auto_reconnect_clicked(self, _button: Gtk.Button) -> None:
         """Handle auto-reconnect button click with default config."""
         self._do_auto_reconnect()
-    
+
     def _on_auto_reconnect_with_config(self, _button: Gtk.Button) -> None:
         """Handle auto-reconnect with custom config from options panel."""
         self._do_auto_reconnect()
@@ -379,7 +379,7 @@ class SSHErrorBanner(Gtk.Box):
         self._expanded = False
         self._options_revealer.set_reveal_child(False)
         self._options_toggle_btn.set_icon_name("pan-down-symbolic")
-    
+
     def _do_auto_reconnect(self) -> None:
         """Execute auto-reconnect action."""
         self.emit("action-requested", "auto_reconnect", {
@@ -395,7 +395,7 @@ class SSHErrorBanner(Gtk.Box):
                 "interval_secs": self._config.interval_secs,
                 "timeout_secs": self._config.timeout_secs,
             })
-    
+
     def _on_close_clicked(self, _button: Gtk.Button) -> None:
         """Handle close button click."""
         self.emit("action-requested", "close", {
@@ -404,7 +404,7 @@ class SSHErrorBanner(Gtk.Box):
         })
         if self._on_action_callback:
             self._on_action_callback(BannerAction.CLOSE, self._terminal_id, {})
-    
+
     def _on_edit_session_clicked(self, _button: Gtk.Button) -> None:
         """Handle edit session button click for authentication errors."""
         self.emit("action-requested", "edit_session", {
@@ -413,7 +413,7 @@ class SSHErrorBanner(Gtk.Box):
         })
         if self._on_action_callback:
             self._on_action_callback(BannerAction.EDIT_SESSION, self._terminal_id, {})
-    
+
     def _on_fix_host_key_clicked(self, _button: Gtk.Button) -> None:
         """Handle fix host key button click for host key verification errors."""
         self.emit("action-requested", "fix_host_key", {
@@ -422,31 +422,31 @@ class SSHErrorBanner(Gtk.Box):
         })
         if self._on_action_callback:
             self._on_action_callback(BannerAction.FIX_HOST_KEY, self._terminal_id, {})
-    
+
     def _on_duration_changed(self, spin: Gtk.SpinButton) -> None:
         """Update duration config."""
         self._config.duration_mins = int(spin.get_value())
-    
+
     def _on_interval_changed(self, spin: Gtk.SpinButton) -> None:
         """Update interval config."""
         self._config.interval_secs = int(spin.get_value())
-    
+
     def _on_timeout_changed(self, spin: Gtk.SpinButton) -> None:
         """Update timeout config."""
         self._config.timeout_secs = int(spin.get_value())
-    
+
     def set_action_callback(self, callback: Callable) -> None:
         """Set callback for banner actions."""
         self._on_action_callback = callback
-    
+
     def get_terminal_id(self) -> Optional[int]:
         """Get the terminal ID associated with this banner."""
         return self._terminal_id
-    
+
     def get_session(self) -> Optional["SessionItem"]:
         """Get the session associated with this banner."""
         return self._session
-    
+
     def update_error_message(self, message: str) -> None:
         """Update the error message displayed."""
         self._error_message = message
@@ -461,21 +461,21 @@ class SSHErrorBannerManager:
     This manager keeps track of banners and provides a centralized way
     to create, show, hide, and remove them.
     """
-    
+
     _instance: Optional["SSHErrorBannerManager"] = None
-    
+
     @classmethod
     def get_instance(cls) -> "SSHErrorBannerManager":
         """Get the singleton instance."""
         if cls._instance is None:
             cls._instance = cls()
         return cls._instance
-    
+
     def __init__(self):
         self.logger = get_logger("ashyterm.ui.ssh_error_banner_manager")
         self._banners: dict[int, SSHErrorBanner] = {}  # terminal_id -> banner
         self._on_action_callback: Optional[Callable] = None
-    
+
     def set_action_callback(self, callback: Callable) -> None:
         """
         Set global callback for all banner actions.
@@ -483,7 +483,7 @@ class SSHErrorBannerManager:
         Callback signature: callback(action: BannerAction, terminal_id: int, config: dict)
         """
         self._on_action_callback = callback
-    
+
     def create_banner(
         self,
         session_name: str,
@@ -496,7 +496,7 @@ class SSHErrorBannerManager:
         # Remove existing banner for this terminal if any
         if terminal_id in self._banners:
             self.remove_banner(terminal_id)
-        
+
         banner = SSHErrorBanner(
             session_name=session_name,
             error_message=error_message,
@@ -504,20 +504,20 @@ class SSHErrorBannerManager:
             terminal_id=terminal_id,
             is_auth_error=is_auth_error,
         )
-        
+
         if self._on_action_callback:
             banner.set_action_callback(self._on_action_callback)
-        
+
         self._banners[terminal_id] = banner
-        
+
         self.logger.info(f"Created banner for terminal {terminal_id}: {session_name}")
-        
+
         return banner
-    
+
     def get_banner(self, terminal_id: int) -> Optional[SSHErrorBanner]:
         """Get banner for a specific terminal."""
         return self._banners.get(terminal_id)
-    
+
     def remove_banner(self, terminal_id: int) -> bool:
         """Remove and destroy a banner."""
         if terminal_id in self._banners:
@@ -528,19 +528,19 @@ class SSHErrorBannerManager:
             self.logger.info(f"Removed banner for terminal {terminal_id}")
             return True
         return False
-    
+
     def has_banner(self, terminal_id: int) -> bool:
         """Check if a banner exists for a terminal."""
         return terminal_id in self._banners
-    
+
     def get_all_banners(self) -> list[SSHErrorBanner]:
         """Get all active banners."""
         return list(self._banners.values())
-    
+
     def get_banner_count(self) -> int:
         """Get count of active banners."""
         return len(self._banners)
-    
+
     def clear_all(self) -> None:
         """Remove all banners."""
         for terminal_id in list(self._banners.keys()):

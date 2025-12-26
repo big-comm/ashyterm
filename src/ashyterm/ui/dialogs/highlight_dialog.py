@@ -1486,7 +1486,7 @@ class HighlightDialog(Adw.PreferencesWindow):
 
         # Global rules group (last, as it can be a longer list)
         self._setup_rules_group(self._global_page)
-        
+
         # Apply initial sensitivity state for dependent groups
         self._update_dependent_groups_sensitivity()
 
@@ -3548,23 +3548,23 @@ class HighlightDialog(Adw.PreferencesWindow):
         - Command-Specific page (entire page)
         """
         any_output_enabled = self._manager.enabled_for_local or self._manager.enabled_for_ssh
-        
+
         # Update cat group sensitivity
         if hasattr(self, "_cat_group") and self._cat_group is not None:
             self._cat_group.set_sensitive(any_output_enabled)
-        
+
         # Update shell input group sensitivity
         if hasattr(self, "_shell_input_group") and self._shell_input_group is not None:
             self._shell_input_group.set_sensitive(any_output_enabled)
-        
+
         # Update ignored commands group sensitivity
         if hasattr(self, "_ignored_commands_group") and self._ignored_commands_group is not None:
             self._ignored_commands_group.set_sensitive(any_output_enabled)
-        
+
         # Update global rules group sensitivity
         if hasattr(self, "_rules_group") and self._rules_group is not None:
             self._rules_group.set_sensitive(any_output_enabled)
-        
+
         # Update Command-Specific page sensitivity (entire page)
         if hasattr(self, "_context_page") and self._context_page is not None:
             self._context_page.set_sensitive(any_output_enabled)

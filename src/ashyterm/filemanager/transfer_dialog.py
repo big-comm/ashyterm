@@ -77,9 +77,9 @@ class TransferRow(Adw.ActionRow):
         status = self.transfer.status
         size_str = self._format_file_size(self.transfer.file_size)
         type_str = (
-            _("Recebido")
+            _("Received")
             if self.transfer.transfer_type == TransferType.DOWNLOAD
-            else _("Enviado")
+            else _("Sent")
         )
 
         self.set_title(self.transfer.filename)
@@ -248,7 +248,7 @@ class TransferManagerDialog(Adw.Window):
 
         self.clear_history_button.connect("clicked", self._on_clear_all_clicked)
 
-        self.cancel_all_button = Gtk.Button(label=_("Cancelar Tudo"))
+        self.cancel_all_button = Gtk.Button(label=_("Cancel All"))
         self.cancel_all_button.connect("clicked", self._on_cancel_all_clicked)
         self.header_bar.pack_end(self.cancel_all_button)
 
@@ -282,10 +282,9 @@ class TransferManagerDialog(Adw.Window):
         toolbar_view.set_content(self.scrolled)
 
     def _update_view(self):
-        has_transfers = (
-            len(self.transfer_manager.active_transfers)
-            + len(self.transfer_manager.history)
-        ) > 0
+        with self.transfer_manager._transfer_lock:
+            active_count = len(self.transfer_manager.active_transfers)
+        has_transfers = (active_count + len(self.transfer_manager.history)) > 0
         self.transfer_listbox.set_visible(has_transfers)
         self.status_page.set_visible(not has_transfers)
         self._update_clear_history_button_sensitivity()
@@ -308,10 +307,12 @@ class TransferManagerDialog(Adw.Window):
         self.handler_ids.append(handler_id)
 
     def _populate_transfers(self):
-        all_transfers = (
-            list(self.transfer_manager.active_transfers.values())
-            + self.transfer_manager.history
-        )
+        # Access active_transfers with lock to prevent race conditions
+        with self.transfer_manager._transfer_lock:
+            all_transfers = (
+                list(self.transfer_manager.active_transfers.values())
+                + self.transfer_manager.history
+            )
         all_transfers.sort(key=lambda t: t.start_time or time.time(), reverse=True)
         for transfer in reversed(all_transfers):
             self._add_or_update_row(transfer)
@@ -352,15 +353,17 @@ class TransferManagerDialog(Adw.Window):
                 GLib.idle_add(row.update_progress)
 
     def _update_cancel_all_button(self):
-        self.cancel_all_button.set_visible(
-            len(self.transfer_manager.active_transfers) > 0
-        )
+        with self.transfer_manager._transfer_lock:
+            has_active = len(self.transfer_manager.active_transfers) > 0
+        self.cancel_all_button.set_visible(has_active)
 
     def _update_clear_history_button_sensitivity(self):
         self.clear_history_button.set_sensitive(len(self.transfer_manager.history) > 0)
 
     def _on_cancel_all_clicked(self, button):
-        for transfer_id in list(self.transfer_manager.active_transfers.keys()):
+        with self.transfer_manager._transfer_lock:
+            transfer_ids = list(self.transfer_manager.active_transfers.keys())
+        for transfer_id in transfer_ids:
             self.transfer_manager.cancel_transfer(transfer_id)
 
     def _on_clear_all_clicked(self, button):

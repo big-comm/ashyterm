@@ -146,19 +146,19 @@ class ProcessSpawner:
             # Get saved window dimensions
             window_width = self.settings_manager.get("window_width", 1200)
             window_height = self.settings_manager.get("window_height", 700)
-            
+
             # Account for UI elements (headerbar ~47px, tabbar ~36px, padding ~20px)
             # These are approximate but help avoid the initial resize
             ui_overhead_height = 103  # headerbar + tabbar + margins
-            ui_overhead_width = 20   # sidebar margin if visible
-            
+            ui_overhead_width = 20  # sidebar margin if visible
+
             available_width = max(400, window_width - ui_overhead_width)
             available_height = max(200, window_height - ui_overhead_height)
-            
+
             # Get character dimensions from terminal's font
             char_width = terminal.get_char_width()
             char_height = terminal.get_char_height()
-            
+
             if char_width > 0 and char_height > 0:
                 cols = max(40, available_width // char_width)
                 rows = max(10, available_height // char_height)
@@ -170,7 +170,7 @@ class ProcessSpawner:
                 return (rows, cols)
         except Exception as e:
             self.logger.debug(f"Could not calculate expected terminal size: {e}")
-        
+
         # Fallback to terminal's current size or defaults
         rows = terminal.get_row_count() or 24
         cols = terminal.get_column_count() or 80
@@ -345,16 +345,18 @@ class ProcessSpawner:
                 )
             try:
                 self._validate_ssh_session(session)
-                remote_cmd = self._build_remote_command_secure(
+                result = self._build_remote_command_secure(
                     command_type,
                     session,
                     initial_command,
                     sftp_remote_path,
                 )
-                if not remote_cmd:
+                if not result:
                     raise TerminalCreationError(
                         f"Failed to build {command_type.upper()} command", command_type
                     )
+
+                remote_cmd, sshpass_env = result
 
                 working_dir = str(self.platform_info.home_dir)
                 if command_type == "sftp" and sftp_local_dir:
@@ -371,6 +373,12 @@ class ProcessSpawner:
                             f"Failed to use SFTP local directory '{sftp_local_dir}': {e}"
                         )
                 env = self.environment_manager.get_terminal_environment()
+
+                # Add SSHPASS to environment if using password authentication
+                # This prevents the password from being visible in process list
+                if sshpass_env:
+                    env.update(sshpass_env)
+
                 env_list = [f"{k}={v}" for k, v in env.items()]
 
                 final_user_data = {
@@ -490,6 +498,9 @@ class ProcessSpawner:
                 proxy_id=terminal_id,
             )
 
+            master_fd = None
+            slave_fd = None
+            slave_fd_closed = False
             try:
                 master_fd, slave_fd = proxy.create_pty()
                 # Use expected size based on saved window dimensions to avoid initial resize
@@ -518,10 +529,12 @@ class ProcessSpawner:
 
                 # Close slave_fd in parent - child has its own copy
                 os.close(slave_fd)
+                slave_fd_closed = True
 
                 if not proxy.start(pid):
                     self.logger.error("Failed to start highlight proxy")
                     os.close(master_fd)
+                    master_fd = None  # Mark as closed to prevent double-close
                     return None
 
                 # Register process
@@ -554,6 +567,17 @@ class ProcessSpawner:
 
             except Exception as e:
                 self.logger.error(f"Highlighted spawn failed: {e}")
+                # Clean up file descriptors on error
+                if slave_fd is not None and not slave_fd_closed:
+                    try:
+                        os.close(slave_fd)
+                    except OSError:
+                        pass
+                if master_fd is not None:
+                    try:
+                        os.close(master_fd)
+                    except OSError:
+                        pass
                 proxy.stop()
                 if callback:
                     error = GLib.Error.new_literal(
@@ -597,87 +621,116 @@ class ProcessSpawner:
 
             try:
                 self._validate_ssh_session(session)
-                remote_cmd = self._build_remote_command_secure(
+                result = self._build_remote_command_secure(
                     "ssh",
                     session,
                     initial_command,
                     None,
                 )
-                if not remote_cmd:
+                if not result:
                     raise TerminalCreationError("Failed to build SSH command", "ssh")
+
+                remote_cmd, sshpass_env = result
 
                 working_dir = str(self.platform_info.home_dir)
                 env = self.environment_manager.get_terminal_environment()
+
+                # Add SSHPASS to environment if using password authentication
+                # This prevents the password from being visible in process list
+                if sshpass_env:
+                    env.update(sshpass_env)
 
                 proxy = HighlightedTerminalProxy(
                     terminal,
                     "ssh",
                     proxy_id=terminal_id,
                 )
-                master_fd, slave_fd = proxy.create_pty()
 
-                # Use expected size based on saved window dimensions to avoid initial resize
-                rows, cols = self._get_expected_terminal_size(terminal)
-                proxy.set_window_size(rows, cols)
+                master_fd = None
+                slave_fd = None
+                slave_fd_closed = False
 
-                # Use subprocess.Popen instead of os.fork() to avoid
-                # DeprecationWarning about fork() in multi-threaded process.
-                # Note: We must NOT use start_new_session=True because we need
-                # to call setsid() BEFORE ioctl(TIOCSCTTY) in the preexec_fn.
-                def preexec_fn():
-                    """Setup PTY in child process before exec."""
-                    os.setsid()
-                    fcntl.ioctl(slave_fd, termios.TIOCSCTTY, 0)
-                    os.dup2(slave_fd, 0)
-                    os.dup2(slave_fd, 1)
-                    os.dup2(slave_fd, 2)
-                    if slave_fd > 2:
-                        os.close(slave_fd)
-                    os.close(master_fd)
+                try:
+                    master_fd, slave_fd = proxy.create_pty()
 
-                proc = subprocess.Popen(
-                    remote_cmd,
-                    cwd=working_dir,
-                    env=env,
-                    preexec_fn=preexec_fn,
-                    close_fds=False,  # Keep slave_fd open for preexec_fn
-                )
-                pid = proc.pid
+                    # Use expected size based on saved window dimensions to avoid initial resize
+                    rows, cols = self._get_expected_terminal_size(terminal)
+                    proxy.set_window_size(rows, cols)
 
-                # Close slave_fd in parent - child has its own copy
-                os.close(slave_fd)
+                    # Use subprocess.Popen instead of os.fork() to avoid
+                    # DeprecationWarning about fork() in multi-threaded process.
+                    # Note: We must NOT use start_new_session=True because we need
+                    # to call setsid() BEFORE ioctl(TIOCSCTTY) in the preexec_fn.
+                    def preexec_fn():
+                        """Setup PTY in child process before exec."""
+                        os.setsid()
+                        fcntl.ioctl(slave_fd, termios.TIOCSCTTY, 0)
+                        os.dup2(slave_fd, 0)
+                        os.dup2(slave_fd, 1)
+                        os.dup2(slave_fd, 2)
+                        if slave_fd > 2:
+                            os.close(slave_fd)
+                        os.close(master_fd)
 
-                if not proxy.start(pid):
-                    self.logger.error("Failed to start highlight proxy for SSH")
-                    os.close(master_fd)
-                    return None
+                    proc = subprocess.Popen(
+                        remote_cmd,
+                        cwd=working_dir,
+                        env=env,
+                        preexec_fn=preexec_fn,
+                        close_fds=False,  # Keep slave_fd open for preexec_fn
+                    )
+                    pid = proc.pid
 
-                process_info = {
-                    "name": session.name,
-                    "type": "ssh",
-                    "terminal": terminal,
-                    "session": session,
-                    "highlight_proxy": proxy,
-                }
-                self.process_tracker.register_process(pid, process_info)
+                    # Close slave_fd in parent - child has its own copy
+                    os.close(slave_fd)
+                    slave_fd_closed = True
 
-                if callback:
-                    final_user_data = {
-                        "original_user_data": user_data,
-                        "temp_dir_path": None,
+                    if not proxy.start(pid):
+                        self.logger.error("Failed to start highlight proxy for SSH")
+                        os.close(master_fd)
+                        master_fd = None  # Mark as closed to prevent double-close
+                        return None
+
+                    process_info = {
+                        "name": session.name,
+                        "type": "ssh",
+                        "terminal": terminal,
+                        "session": session,
+                        "highlight_proxy": proxy,
                     }
-                    GLib.idle_add(callback, terminal, pid, None, (final_user_data,))
+                    self.process_tracker.register_process(pid, process_info)
 
-                self.logger.info(
-                    f"Highlighted SSH session spawned with PID {pid} for {session.name}"
-                )
-                log_terminal_event(
-                    "spawn_initiated",
-                    session.name,
-                    f"highlighted SSH to {session.get_connection_string()}",
-                )
+                    if callback:
+                        final_user_data = {
+                            "original_user_data": user_data,
+                            "temp_dir_path": None,
+                        }
+                        GLib.idle_add(callback, terminal, pid, None, (final_user_data,))
 
-                return proxy
+                    self.logger.info(
+                        f"Highlighted SSH session spawned with PID {pid} for {session.name}"
+                    )
+                    log_terminal_event(
+                        "spawn_initiated",
+                        session.name,
+                        f"highlighted SSH to {session.get_connection_string()}",
+                    )
+
+                    return proxy
+
+                except Exception as inner_e:
+                    # Clean up file descriptors on error
+                    if slave_fd is not None and not slave_fd_closed:
+                        try:
+                            os.close(slave_fd)
+                        except OSError:
+                            pass
+                    if master_fd is not None:
+                        try:
+                            os.close(master_fd)
+                        except OSError:
+                            pass
+                    raise inner_e
 
             except Exception as e:
                 self.logger.error(f"Highlighted SSH spawn failed: {e}")
@@ -697,42 +750,85 @@ class ProcessSpawner:
                 return None
 
     def execute_remote_command_sync(
-        self, session: "SessionItem", command: List[str], timeout: int = 15
+        self, session: "SessionItem", command: List[str], timeout: int = 10
     ) -> Tuple[bool, str]:
         """
         Executes a non-interactive command on a remote session synchronously.
-        Returns a tuple of (success, output).
+
+        Uses aggressive timeout settings to prevent UI freezing when connection
+        is lost. The SSH connection uses ServerAliveInterval and ServerAliveCountMax
+        to detect dead connections quickly.
+
+        Args:
+            session: The SSH session to execute the command on.
+            command: The command to execute as a list of strings.
+            timeout: Maximum time to wait in seconds (default 10).
+
+        Returns:
+            Tuple of (success: bool, output: str)
         """
         if not session.is_ssh():
             return False, _("Not an SSH session.")
 
         try:
             self._validate_ssh_session(session)
-            full_cmd = self._build_non_interactive_ssh_command(session, command)
-            if not full_cmd:
+            # Use shorter connect timeout based on overall timeout
+            connect_timeout = min(timeout - 2, 8) if timeout > 4 else timeout
+            result = self._build_non_interactive_ssh_command(
+                session, command, connect_timeout=connect_timeout
+            )
+            if not result:
                 raise TerminalCreationError(
                     "Failed to build non-interactive SSH command", "ssh"
                 )
 
-            self.logger.debug(f"Executing remote command: {' '.join(full_cmd)}")
+            full_cmd, sshpass_env = result
 
-            result = subprocess.run(
-                full_cmd, capture_output=True, text=True, timeout=timeout
+            self.logger.debug(
+                f"Executing remote command (timeout={timeout}s): {' '.join(full_cmd)}"
             )
 
-            if result.returncode == 0:
-                return True, result.stdout
+            # Merge sshpass_env with current environment if needed
+            run_env = None
+            if sshpass_env:
+                run_env = os.environ.copy()
+                run_env.update(sshpass_env)
+
+            proc_result = subprocess.run(
+                full_cmd, capture_output=True, text=True, timeout=timeout, env=run_env
+            )
+
+            if proc_result.returncode == 0:
+                return True, proc_result.stdout
             else:
                 error_output = (
-                    result.stdout.strip() + "\n" + result.stderr.strip()
+                    proc_result.stdout.strip() + "\n" + proc_result.stderr.strip()
                 ).strip()
+                # Check for connection-related errors
+                if any(
+                    err in error_output.lower()
+                    for err in [
+                        "connection",
+                        "timed out",
+                        "unreachable",
+                        "refused",
+                        "reset",
+                    ]
+                ):
+                    self.logger.warning(
+                        f"Connection issue for {session.name}: {error_output}"
+                    )
+                    return False, _("Connection lost or unreachable.")
+
                 self.logger.warning(
-                    f"Remote command failed for {session.name} with code {result.returncode}: {error_output}"
+                    f"Remote command failed for {session.name} with code {proc_result.returncode}: {error_output}"
                 )
                 return False, error_output
         except subprocess.TimeoutExpired:
-            self.logger.error(f"Remote command timed out for session {session.name}")
-            return False, _("Command timed out.")
+            self.logger.error(
+                f"Remote command timed out after {timeout}s for session {session.name}"
+            )
+            return False, _("Command timed out. Connection may be lost.")
         except Exception as e:
             self.logger.error(
                 f"Failed to execute remote command for {session.name}: {e}"
@@ -775,9 +871,14 @@ class ProcessSpawner:
                 cmd.insert(1, "-Y")
             cmd.append("exit")
 
+            # Store password for environment variable (won't appear in process list)
+            sshpass_env = None
             if session.uses_password_auth() and session.auth_value:
                 if has_command("sshpass"):
-                    cmd = ["sshpass", "-p", session.auth_value] + cmd
+                    # Use -e flag to read password from SSHPASS environment variable
+                    # This prevents the password from appearing in the process list
+                    cmd = ["sshpass", "-e"] + cmd
+                    sshpass_env = {"SSHPASS": session.auth_value}
                 else:
                     return (
                         False,
@@ -786,7 +887,15 @@ class ProcessSpawner:
 
             self.logger.info(f"Testing SSH connection with command: {' '.join(cmd)}")
 
-            result = subprocess.run(cmd, capture_output=True, text=True, timeout=15)
+            # Merge sshpass_env with current environment if needed
+            run_env = None
+            if sshpass_env:
+                run_env = os.environ.copy()
+                run_env.update(sshpass_env)
+
+            result = subprocess.run(
+                cmd, capture_output=True, text=True, timeout=15, env=run_env
+            )
 
             if result.returncode == 0:
                 self.logger.info(f"SSH connection test successful for {session.name}")
@@ -823,8 +932,14 @@ class ProcessSpawner:
         session: "SessionItem",
         initial_command: Optional[str] = None,
         sftp_remote_path: Optional[str] = None,
-    ) -> Optional[List[str]]:
-        """Builds an SSH/SFTP command for an INTERACTIVE session."""
+    ) -> Optional[Tuple[List[str], Optional[Dict[str, str]]]]:
+        """Builds an SSH/SFTP command for an INTERACTIVE session.
+
+        Returns:
+            A tuple of (command_list, sshpass_env) where sshpass_env is None
+            if not using password auth, or {"SSHPASS": password} if using
+            password auth with sshpass -e flag (password not visible in process list).
+        """
         if not has_command(command_type):
             raise SSHConnectionError(
                 session.host, f"{command_type.upper()} command not found on system"
@@ -915,17 +1030,33 @@ class ProcessSpawner:
                 cmd.insert(1, "-t")
             cmd.append(full_remote_command)
 
+        # Handle password authentication securely
+        # Use SSHPASS environment variable instead of -p flag to avoid
+        # password being visible in process list (ps aux)
+        sshpass_env: Optional[Dict[str, str]] = None
         if session.uses_password_auth() and session.auth_value:
             if has_command("sshpass"):
-                cmd = ["sshpass", "-p", session.auth_value] + cmd
+                cmd = ["sshpass", "-e"] + cmd
+                sshpass_env = {"SSHPASS": session.auth_value}
             else:
                 self.logger.warning("sshpass not available for password authentication")
-        return cmd
+        return (cmd, sshpass_env)
 
     def _build_non_interactive_ssh_command(
-        self, session: "SessionItem", command: List[str]
-    ) -> Optional[List[str]]:
-        """Builds an SSH command for a NON-INTERACTIVE session."""
+        self, session: "SessionItem", command: List[str], connect_timeout: int = 10
+    ) -> Optional[Tuple[List[str], Optional[Dict[str, str]]]]:
+        """Builds an SSH command for a NON-INTERACTIVE session.
+
+        Args:
+            session: The SSH session to connect to.
+            command: The command to execute remotely.
+            connect_timeout: SSH connection timeout in seconds (default 10).
+
+        Returns:
+            A tuple of (command_list, sshpass_env) where sshpass_env is None
+            if not using password auth, or {"SSHPASS": password} if using
+            password auth with sshpass -e flag (password not visible in process list).
+        """
         if not has_command("ssh"):
             raise SSHConnectionError(session.host, "SSH command not found on system")
 
@@ -933,10 +1064,12 @@ class ProcessSpawner:
             "ssh_control_persist_duration", 600
         )
         ssh_options = {
-            "ConnectTimeout": "15",
+            "ConnectTimeout": str(connect_timeout),
             "ControlMaster": "auto",
             "ControlPath": self._get_ssh_control_path(session),
             "BatchMode": "yes",
+            "ServerAliveInterval": "5",
+            "ServerAliveCountMax": "2",
         }
         if persist_duration > 0:
             ssh_options["ControlPersist"] = str(persist_duration)
@@ -963,12 +1096,17 @@ class ProcessSpawner:
         remote_command_str = " ".join(shlex.quote(part) for part in command)
         cmd.append(remote_command_str)
 
+        # Handle password authentication securely
+        # Use SSHPASS environment variable instead of -p flag to avoid
+        # password being visible in process list (ps aux)
+        sshpass_env: Optional[Dict[str, str]] = None
         if session.uses_password_auth() and session.auth_value:
             if has_command("sshpass"):
-                cmd = ["sshpass", "-p", session.auth_value] + cmd
+                cmd = ["sshpass", "-e"] + cmd
+                sshpass_env = {"SSHPASS": session.auth_value}
             else:
                 self.logger.warning("sshpass not available for password authentication")
-        return cmd
+        return (cmd, sshpass_env)
 
     def _generic_spawn_callback(
         self,

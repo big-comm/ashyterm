@@ -1027,7 +1027,7 @@ class MessageBubble(Gtk.Box):
             # Find which group matched and get its token type
             matched_text = match.group(0)
             token_type = None
-            for i, (_, ttype) in enumerate(patterns):
+            for i, (_pattern, ttype) in enumerate(patterns):
                 if match.group(f't{i}') is not None:
                     token_type = ttype
                     break
@@ -2083,7 +2083,7 @@ class AIChatPanel(Gtk.Box):
 
         def on_clear(btn):
             # Remove all rows
-            for row, _, _ in list(prompt_rows):
+            for row, _entry, _label in list(prompt_rows):
                 list_box.remove(row)
             prompt_rows.clear()
 

@@ -38,11 +38,11 @@ class RegexTextView(BaseSyntaxTextView):
     Designed for entering regular expressions with visual feedback.
     Blocks Enter/Return to prevent multi-line input.
     """
-    
+
     # Use centralized color definitions filtered for regex tokens
     _DEFAULT_DARK_COLORS = {k: v for k, v in SYNTAX_DARK_COLORS.items() if k in REGEX_TOKEN_TYPES}
     _DEFAULT_LIGHT_COLORS = {k: v for k, v in SYNTAX_LIGHT_COLORS.items() if k in REGEX_TOKEN_TYPES}
-    
+
     def __init__(self, single_line: bool = True):
         """
         Initialize the RegexTextView.
@@ -59,16 +59,16 @@ class RegexTextView(BaseSyntaxTextView):
             right_margin=8,
             accepts_tab=False,
         )
-        
+
         self._single_line = single_line
-        
+
         # Initialize colors and tags
         self._syntax_colors = self._get_default_colors()
         self._setup_tags()
-        
+
         # Connect to text changes for highlighting
         self.buffer.connect("changed", self._on_buffer_changed)
-        
+
         # Block newlines in single-line mode
         if single_line:
             key_controller = Gtk.EventControllerKey()
@@ -80,7 +80,7 @@ class RegexTextView(BaseSyntaxTextView):
         if keyval in (Gdk.KEY_Return, Gdk.KEY_KP_Enter):
             return True  # Block the event
         return False
-    
+
     def update_colors_from_scheme(self, palette: List[str], foreground: str = "#ffffff"):
         """
         Update syntax highlighting colors from a terminal color scheme palette.
@@ -91,7 +91,7 @@ class RegexTextView(BaseSyntaxTextView):
         """
         if len(palette) < 8:
             return
-        
+
         # Map palette colors to syntax elements
         self._syntax_colors = {
             "bracket": palette[4] if len(palette) > 4 else "#729fcf",      # Blue
@@ -103,35 +103,35 @@ class RegexTextView(BaseSyntaxTextView):
             "operator": palette[3] if len(palette) > 3 else "#f4d03f",     # Yellow
             "range": palette[6] if len(palette) > 6 else "#87ceeb",        # Cyan
         }
-        
+
         self._update_tag_colors()
         self._apply_highlighting()
-    
+
     def _on_buffer_changed(self, buffer):
         """Handle buffer changes for syntax highlighting."""
         self._schedule_highlighting(delay_ms=100)
-    
+
     def _apply_highlighting(self) -> bool:
         """Apply regex syntax highlighting."""
         self._highlight_timeout_id = None
-        
+
         text = self.get_text()
-        
+
         if not text:
             return False
-        
+
         # Remove existing tags
         self._clear_highlighting()
-        
+
         # Apply highlighting based on regex patterns
         # Order matters: more specific patterns should come first
         highlight_order = ["escape", "anchor", "quantifier", "bracket", "group", "special", "operator", "range"]
-        
+
         for tag_name in highlight_order:
             pattern_str = _REGEX_PATTERNS.get(tag_name)
             if not pattern_str:
                 continue
-            
+
             try:
                 pattern = re.compile(pattern_str)
                 for match in pattern.finditer(text):
@@ -142,5 +142,5 @@ class RegexTextView(BaseSyntaxTextView):
                     self.buffer.apply_tag_by_name(tag_name, start_iter, end_iter)
             except re.error:
                 pass  # Skip invalid patterns
-        
+
         return False

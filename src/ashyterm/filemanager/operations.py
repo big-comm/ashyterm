@@ -41,6 +41,29 @@ def set_pdeathsig_kill():
         libc.prctl(PR_SET_PDEATHSIG, signal.SIGKILL)
 
 
+def _drain_stderr_to_list(stderr_stream, output_list: list):
+    """Helper function to drain stderr in a separate thread.
+
+    This prevents deadlocks when reading stdout and stderr from a subprocess.
+    If only stdout is read in a loop while stderr is ignored, the stderr
+    buffer can fill up and cause the process to block indefinitely.
+
+    Args:
+        stderr_stream: The stderr pipe from the subprocess
+        output_list: A list to append stderr lines to (thread-safe with append)
+    """
+    try:
+        for line in iter(stderr_stream.readline, ""):
+            output_list.append(line)
+    except Exception:
+        pass  # Ignore errors during stderr reading
+    finally:
+        try:
+            stderr_stream.close()
+        except Exception:
+            pass
+
+
 # --- End of process management setup ---
 
 
@@ -127,10 +150,21 @@ class FileOperations:
         return self._is_command_available(session, command, use_cache=use_cache)
 
     def execute_command_on_session(
-        self, command: List[str], session_override: Optional[SessionItem] = None
+        self,
+        command: List[str],
+        session_override: Optional[SessionItem] = None,
+        timeout: int = 10,
     ) -> Tuple[bool, str]:
         """
         Executes a command either locally or remotely via the centralized spawner.
+
+        Args:
+            command: The command to execute as a list of strings.
+            session_override: Optional session to use instead of the default.
+            timeout: Maximum time to wait for command completion (default 10s for file manager ops).
+
+        Returns:
+            Tuple of (success: bool, output: str)
         """
         session_to_use = session_override if session_override else self.session_item
         if not session_to_use:
@@ -143,7 +177,7 @@ class FileOperations:
                     shell=False,
                     capture_output=True,
                     text=True,
-                    timeout=15,
+                    timeout=timeout,
                 )
                 return (
                     (True, result.stdout)
@@ -154,10 +188,15 @@ class FileOperations:
                 from ..terminal.spawner import get_spawner
 
                 spawner = get_spawner()
-                return spawner.execute_remote_command_sync(session_to_use, command)
+                # Use shorter timeout for file manager operations to avoid UI freeze
+                return spawner.execute_remote_command_sync(
+                    session_to_use, command, timeout=timeout
+                )
         except subprocess.TimeoutExpired:
-            self.logger.error(f"Command timed out: {' '.join(command)}")
-            return False, _("Command timed out.")
+            self.logger.error(
+                f"Command timed out after {timeout}s: {' '.join(command)}"
+            )
+            return False, _("Command timed out. Connection may be lost.")
         except Exception as e:
             self.logger.error(f"Command execution failed: {e}")
             return False, str(e)
@@ -224,6 +263,8 @@ class FileOperations:
     ):
         def download_thread():
             process = None
+            stderr_thread = None
+            stderr_lines: list = []
             try:
                 from ..terminal.spawner import get_spawner
 
@@ -250,6 +291,15 @@ class FileOperations:
                     ]
                     process = self._start_process(transfer_id, transfer_cmd)
 
+                    # Start stderr draining thread to prevent deadlock
+                    # Deadlock can occur if stderr buffer fills while we read stdout
+                    stderr_thread = threading.Thread(
+                        target=_drain_stderr_to_list,
+                        args=(process.stderr, stderr_lines),
+                        daemon=True,
+                    )
+                    stderr_thread.start()
+
                     full_output = ""
                     for line in iter(process.stdout.readline, ""):
                         if cancellation_event and cancellation_event.is_set():
@@ -262,7 +312,11 @@ class FileOperations:
                             progress = float(match.group(1))
                             GLib.idle_add(progress_callback, transfer_id, progress)
 
-                    stderr_output = process.stderr.read()
+                    # Wait for stderr thread to complete
+                    if stderr_thread and stderr_thread.is_alive():
+                        stderr_thread.join(timeout=2.0)
+
+                    stderr_output = "".join(stderr_lines)
                     process.wait()
                     exit_code = process.returncode
 
@@ -349,6 +403,8 @@ class FileOperations:
     ):
         def upload_thread():
             process = None
+            stderr_thread = None
+            stderr_lines: list = []
             try:
                 from ..terminal.spawner import get_spawner
 
@@ -375,6 +431,15 @@ class FileOperations:
                     ]
                     process = self._start_process(transfer_id, transfer_cmd)
 
+                    # Start stderr draining thread to prevent deadlock
+                    # Deadlock can occur if stderr buffer fills while we read stdout
+                    stderr_thread = threading.Thread(
+                        target=_drain_stderr_to_list,
+                        args=(process.stderr, stderr_lines),
+                        daemon=True,
+                    )
+                    stderr_thread.start()
+
                     full_output = ""
                     for line in iter(process.stdout.readline, ""):
                         if cancellation_event and cancellation_event.is_set():
@@ -387,7 +452,11 @@ class FileOperations:
                             progress = float(match.group(1))
                             GLib.idle_add(progress_callback, transfer_id, progress)
 
-                    stderr_output = process.stderr.read()
+                    # Wait for stderr thread to complete
+                    if stderr_thread and stderr_thread.is_alive():
+                        stderr_thread.join(timeout=2.0)
+
+                    stderr_output = "".join(stderr_lines)
                     process.wait()
                     exit_code = process.returncode
 

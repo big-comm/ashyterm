@@ -152,9 +152,9 @@ class CommTerminalWindow(Adw.ApplicationWindow):
                             f"Reconnected UI controls for terminal {terminal_id}"
                         )
 
-        # Create initial tab immediately for faster perceived startup
-        if not self._is_for_detached_tab:
-            self._create_initial_tab_safe()
+        # NOTE: Initial tab creation is deferred to _on_window_mapped()
+        # This prevents the duplicate prompt issue caused by resize SIGWINCH
+        # when the terminal is created before the window has its final dimensions.
 
         # Deferred initialization for visual settings and data loading
         def _deferred_init():
@@ -288,6 +288,7 @@ class CommTerminalWindow(Adw.ApplicationWindow):
             self._on_terminal_focus_changed
         )
         self.terminal_manager.set_terminal_exit_handler(self._on_terminal_exit)
+        self.terminal_manager.set_ssh_file_drop_callback(self._on_ssh_file_dropped)
         self.tab_manager.get_view_stack().connect(
             "notify::visible-child", self._on_tab_changed
         )
@@ -368,6 +369,12 @@ class CommTerminalWindow(Adw.ApplicationWindow):
         self.connect("notify::default-height", self._on_window_size_changed)
         self.connect("notify::maximized", self._on_window_maximized_changed)
 
+        # Defer terminal creation until window is mapped (has final dimensions)
+        # This prevents the duplicate prompt issue caused by resize SIGWINCH
+        if not self._is_for_detached_tab:
+            self._initial_tab_created = False
+            self.connect("map", self._on_window_mapped)
+
     def _setup_initial_window_size(self) -> None:
         """Set up initial window size and state from settings."""
         if self.settings_manager.get("remember_window_state", True):
@@ -404,6 +411,33 @@ class CommTerminalWindow(Adw.ApplicationWindow):
 
         maximized = self.is_maximized()
         self.settings_manager.set("window_maximized", maximized)
+
+    def _on_window_mapped(self, window) -> None:
+        """
+        Handle window map signal - create initial tab after window has final dimensions.
+
+        This is crucial to prevent the duplicate prompt issue: when the terminal
+        is spawned before the window is mapped, the shell receives a SIGWINCH
+        (window change) signal during resize which causes it to redraw the prompt.
+
+        By waiting until the window is mapped, we ensure:
+        1. The window has its final dimensions
+        2. The terminal PTY is created with the correct size
+        3. No resize SIGWINCH is sent to the shell during initialization
+        """
+        if self._initial_tab_created:
+            return
+
+        self._initial_tab_created = True
+        self.logger.debug("Window mapped - creating initial tab with final dimensions")
+
+        # Small delay to ensure window size is fully settled
+        # This is especially important when the window is maximized
+        def create_tab_deferred():
+            self._create_initial_tab_safe()
+            return GLib.SOURCE_REMOVE
+
+        GLib.idle_add(create_tab_deferred)
 
     def _load_initial_data_and_tab(self) -> None:
         """
@@ -1548,6 +1582,9 @@ class CommTerminalWindow(Adw.ApplicationWindow):
         for fm in self.tab_manager.file_managers.values():
             fm.shutdown(None)
 
+        # Clean up CSS providers to prevent memory leaks
+        self.settings_manager.cleanup_css_providers(self)
+
     def destroy(self) -> None:
         self._perform_cleanup()
         super().destroy()
@@ -1667,6 +1704,88 @@ class CommTerminalWindow(Adw.ApplicationWindow):
     def _on_terminal_exit(self, terminal, child_status, identifier):
         if getattr(self, "ai_assistant", None):
             self.ai_assistant.clear_conversation_for_terminal(terminal)
+
+    def _on_ssh_file_dropped(self, terminal_id, local_paths, session, ssh_target):
+        """Handle files dropped on SSH terminal - open file manager and let it handle upload."""
+        from pathlib import Path
+        from urllib.parse import unquote, urlparse
+
+        self.logger.info(
+            f"SSH file drop: {len(local_paths)} files for terminal {terminal_id}"
+        )
+
+        # Get the file manager for the current tab/terminal
+        current_page = self.tab_manager.get_view_stack().get_visible_child()
+        fm = self.tab_manager.file_managers.get(current_page)
+
+        # Try to get the current remote directory from the terminal
+        terminal = self.terminal_manager.registry.get_terminal(terminal_id)
+        remote_dir = None
+
+        if terminal:
+            try:
+                uri = terminal.get_current_directory_uri()
+                if uri:
+                    parsed_uri = urlparse(uri)
+                    if parsed_uri.scheme == "file":
+                        remote_dir = unquote(parsed_uri.path)
+                        self.logger.info(
+                            f"Got remote directory from OSC7: {remote_dir}"
+                        )
+            except Exception as e:
+                self.logger.debug(f"Could not get terminal directory URI: {e}")
+
+        if fm and fm._is_remote_session():
+            # File manager is available and connected to remote session
+            if remote_dir:
+                # Set the file manager to the current directory and initiate direct upload
+                fm.current_path = remote_dir
+            paths = [Path(p) for p in local_paths]
+            fm._show_upload_confirmation_dialog(paths)
+            self.logger.info(
+                f"Upload initiated for {len(paths)} files via file manager"
+            )
+        else:
+            # No file manager available - open it and queue the upload
+            self._pending_drop_files = local_paths
+            self._pending_drop_remote_dir = remote_dir
+
+            # Open file manager panel
+            if not self.file_manager_button.get_active():
+                self.file_manager_button.set_active(True)
+                # Schedule upload check after file manager is ready
+                GLib.timeout_add(500, self._check_pending_drop_upload)
+            else:
+                # File manager button is active but FM not ready yet - wait
+                GLib.timeout_add(500, self._check_pending_drop_upload)
+
+    def _check_pending_drop_upload(self):
+        """Check if file manager is ready and process pending drop upload."""
+        from pathlib import Path
+
+        if not hasattr(self, "_pending_drop_files") or not self._pending_drop_files:
+            return False  # Stop timeout
+
+        current_page = self.tab_manager.get_view_stack().get_visible_child()
+        fm = self.tab_manager.file_managers.get(current_page)
+
+        if fm and fm._is_remote_session():
+            # File manager is ready
+            if self._pending_drop_remote_dir:
+                fm.current_path = self._pending_drop_remote_dir
+            paths = [Path(p) for p in self._pending_drop_files]
+            fm._show_upload_confirmation_dialog(paths)
+            self.logger.info(
+                f"Pending upload initiated for {len(paths)} files via file manager"
+            )
+
+            # Clear pending data
+            self._pending_drop_files = None
+            self._pending_drop_remote_dir = None
+            return False  # Stop timeout
+        else:
+            # Not ready yet, try again
+            return True  # Continue timeout
 
     def _on_quit_application_requested(self) -> None:
         """Handle quit request from tab manager."""

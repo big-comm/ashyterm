@@ -36,14 +36,14 @@ class AsyncTaskManager:
     
     Thread-safe for concurrent access from multiple parts of the application.
     """
-    
+
     _instance: Optional["AsyncTaskManager"] = None
     _lock = threading.Lock()
-    
+
     # Pool sizes
     IO_POOL_SIZE = 20
     CPU_POOL_SIZE = max(1, multiprocessing.cpu_count())
-    
+
     def __init__(self):
         self.logger = get_logger("ashyterm.core.tasks")
         self._io_executor: Optional[ThreadPoolExecutor] = None
@@ -51,13 +51,13 @@ class AsyncTaskManager:
         self._active_futures: Set[Future] = set()
         self._futures_lock = threading.Lock()
         self._is_shutdown = False
-        
+
         self._initialize_pools()
         self.logger.info(
             f"AsyncTaskManager initialized (IO workers: {self.IO_POOL_SIZE}, "
             f"CPU workers: {self.CPU_POOL_SIZE})"
         )
-    
+
     @classmethod
     def get(cls) -> "AsyncTaskManager":
         """
@@ -73,7 +73,7 @@ class AsyncTaskManager:
                 if cls._instance is None:
                     cls._instance = cls()
         return cls._instance
-    
+
     @classmethod
     def reset(cls) -> None:
         """
@@ -85,7 +85,7 @@ class AsyncTaskManager:
             if cls._instance is not None:
                 cls._instance.shutdown(wait=False)
                 cls._instance = None
-    
+
     def _initialize_pools(self) -> None:
         """Initialize the thread pool executors."""
         self._io_executor = ThreadPoolExecutor(
@@ -96,18 +96,18 @@ class AsyncTaskManager:
             max_workers=self.CPU_POOL_SIZE,
             thread_name_prefix="ashy-cpu"
         )
-    
+
     def _track_future(self, future: Future) -> None:
         """Add a future to the tracking set."""
         with self._futures_lock:
             self._active_futures.add(future)
             future.add_done_callback(self._remove_future)
-    
+
     def _remove_future(self, future: Future) -> None:
         """Remove a completed future from the tracking set."""
         with self._futures_lock:
             self._active_futures.discard(future)
-    
+
     def submit_io(self, fn: Callable, *args, **kwargs) -> Optional[Future]:
         """
         Submit an I/O-bound task to the IO thread pool.
@@ -126,7 +126,7 @@ class AsyncTaskManager:
         if self._is_shutdown or self._io_executor is None:
             self.logger.warning("IO task submitted after shutdown, ignoring")
             return None
-        
+
         try:
             future = self._io_executor.submit(fn, *args, **kwargs)
             self._track_future(future)
@@ -134,7 +134,7 @@ class AsyncTaskManager:
         except RuntimeError as e:
             self.logger.error(f"Failed to submit IO task: {e}")
             return None
-    
+
     def submit_cpu(self, fn: Callable, *args, **kwargs) -> Optional[Future]:
         """
         Submit a CPU-bound task to the CPU thread pool.
@@ -153,7 +153,7 @@ class AsyncTaskManager:
         if self._is_shutdown or self._cpu_executor is None:
             self.logger.warning("CPU task submitted after shutdown, ignoring")
             return None
-        
+
         try:
             future = self._cpu_executor.submit(fn, *args, **kwargs)
             self._track_future(future)
@@ -161,7 +161,7 @@ class AsyncTaskManager:
         except RuntimeError as e:
             self.logger.error(f"Failed to submit CPU task: {e}")
             return None
-    
+
     def shutdown(self, wait: bool = False) -> None:
         """
         Shutdown the task manager and all thread pools.
@@ -172,10 +172,10 @@ class AsyncTaskManager:
         """
         if self._is_shutdown:
             return
-        
+
         self._is_shutdown = True
         self.logger.info(f"Shutting down AsyncTaskManager (wait={wait})")
-        
+
         # Cancel all pending futures if not waiting
         if not wait:
             with self._futures_lock:
@@ -185,35 +185,35 @@ class AsyncTaskManager:
                         cancelled_count += 1
                 if cancelled_count > 0:
                     self.logger.info(f"Cancelled {cancelled_count} pending tasks")
-        
+
         # Shutdown executors
         if self._io_executor is not None:
             self._io_executor.shutdown(wait=wait, cancel_futures=not wait)
             self._io_executor = None
-        
+
         if self._cpu_executor is not None:
             self._cpu_executor.shutdown(wait=wait, cancel_futures=not wait)
             self._cpu_executor = None
-        
+
         self.logger.info("AsyncTaskManager shutdown complete")
-    
+
     @property
     def is_shutdown(self) -> bool:
         """Check if the task manager has been shut down."""
         return self._is_shutdown
-    
+
     @property
     def pending_io_tasks(self) -> int:
         """Get approximate count of pending IO tasks."""
         with self._futures_lock:
-            return sum(1 for f in self._active_futures 
+            return sum(1 for f in self._active_futures
                       if not f.done() and "io" in str(getattr(f, '_thread_name_prefix', '')))
-    
+
     @property
     def pending_cpu_tasks(self) -> int:
         """Get approximate count of pending CPU tasks."""
         with self._futures_lock:
-            return sum(1 for f in self._active_futures 
+            return sum(1 for f in self._active_futures
                       if not f.done() and "cpu" in str(getattr(f, '_thread_name_prefix', '')))
 
 

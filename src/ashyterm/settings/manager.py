@@ -1308,7 +1308,7 @@ class SettingsManager:
             # Get accent color from palette for command guide styling
             palette = scheme.get("palette", [])
             accent_color = palette[4] if len(palette) > 4 else "#3584e4"
-            
+
             # === SSH ERROR BANNER ===
             # Always apply - uses bg_color which is always defined
             # header_bg_color fallback to bg_color when not available
@@ -1916,6 +1916,59 @@ class SettingsManager:
 
     def set_sidebar_visible(self, visible: bool) -> None:
         self.set("sidebar_visible", visible)
+
+    def cleanup_css_providers(self, window) -> None:
+        """
+        Remove all CSS providers associated with a window to prevent memory leaks.
+
+        This should be called when the window is being destroyed.
+        """
+        try:
+            display = Gdk.Display.get_default()
+            if display is None:
+                return
+
+            # List of provider attribute names to clean up
+            provider_attrs = [
+                "_terminal_theme_provider",
+                "_transparency_provider",
+                "_transparency_css_provider",
+            ]
+
+            # Clean up window-level providers
+            for attr in provider_attrs:
+                if hasattr(window, attr):
+                    provider = getattr(window, attr)
+                    try:
+                        Gtk.StyleContext.remove_provider_for_display(display, provider)
+                        self.logger.debug(f"Removed CSS provider: {attr}")
+                    except Exception as e:
+                        self.logger.debug(f"Could not remove provider {attr}: {e}")
+                    delattr(window, attr)
+
+            # Clean up headerbar providers
+            if hasattr(window, "header_bar"):
+                headerbar = window.header_bar
+                for attr in provider_attrs:
+                    if hasattr(headerbar, attr):
+                        provider = getattr(headerbar, attr)
+                        try:
+                            Gtk.StyleContext.remove_provider_for_display(
+                                display, provider
+                            )
+                            self.logger.debug(f"Removed headerbar CSS provider: {attr}")
+                        except Exception as e:
+                            self.logger.debug(
+                                f"Could not remove headerbar provider {attr}: {e}"
+                            )
+                        delattr(headerbar, attr)
+
+            # Clear the theme CSS cache
+            self._theme_css_cache.clear()
+            self.logger.info("CSS providers cleaned up successfully")
+
+        except Exception as e:
+            self.logger.warning(f"Error during CSS provider cleanup: {e}")
 
 
 _settings_manager: Optional[SettingsManager] = None
