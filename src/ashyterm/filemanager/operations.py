@@ -216,6 +216,98 @@ class FileOperations:
         )
         return None
 
+    def get_directory_size(
+        self,
+        path: str,
+        is_remote: bool = False,
+        session_override: Optional[SessionItem] = None,
+    ) -> int:
+        """
+        Get the total size of a file or directory in bytes.
+
+        Args:
+            path: Path to the file or directory
+            is_remote: Whether this is a remote path
+            session_override: Optional session for remote operations
+
+        Returns:
+            Size in bytes, or 0 if unable to determine
+        """
+        try:
+            # Use 'du -sb' for total size in bytes (summary, bytes)
+            command = ["du", "-sb", path]
+
+            if is_remote:
+                success, output = self.execute_command_on_session(
+                    command, session_override, timeout=30
+                )
+            else:
+                result = subprocess.run(
+                    command,
+                    capture_output=True,
+                    text=True,
+                    timeout=30,
+                )
+                success = result.returncode == 0
+                output = result.stdout if success else result.stderr
+
+            if success and output.strip():
+                # Output format: "SIZE\tPATH"
+                parts = output.strip().split()
+                if parts and parts[0].isdigit():
+                    return int(parts[0])
+        except Exception as e:
+            self.logger.warning(f"Failed to get directory size for {path}: {e}")
+
+        return 0
+
+    def get_free_space(
+        self,
+        path: str,
+        is_remote: bool = False,
+        session_override: Optional[SessionItem] = None,
+    ) -> int:
+        """
+        Get available free space at the given path in bytes.
+
+        Args:
+            path: Path to check for free space
+            is_remote: Whether this is a remote path
+            session_override: Optional session for remote operations
+
+        Returns:
+            Available space in bytes, or -1 if unable to determine
+        """
+        try:
+            # Use 'df -B1' for size in bytes, get available space
+            command = ["df", "-B1", "--output=avail", path]
+
+            if is_remote:
+                success, output = self.execute_command_on_session(
+                    command, session_override, timeout=10
+                )
+            else:
+                result = subprocess.run(
+                    command,
+                    capture_output=True,
+                    text=True,
+                    timeout=10,
+                )
+                success = result.returncode == 0
+                output = result.stdout if success else result.stderr
+
+            if success and output.strip():
+                # Output format: "Avail\n12345678" (header + value)
+                lines = output.strip().split("\n")
+                if len(lines) >= 2:
+                    avail_str = lines[1].strip()
+                    if avail_str.isdigit():
+                        return int(avail_str)
+        except Exception as e:
+            self.logger.warning(f"Failed to get free space for {path}: {e}")
+
+        return -1
+
     def _start_process(self, transfer_id, command):
         """Helper to start a subprocess with robust lifecycle management."""
         # MODIFIED: Use preexec_fn for robust cleanup

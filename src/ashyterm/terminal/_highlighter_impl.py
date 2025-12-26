@@ -33,21 +33,30 @@ import gi
 
 gi.require_version("Vte", "3.91")
 gi.require_version("GLib", "2.0")
-from gi.repository import GLib, Vte
-
 # Use regex module (PCRE2 backend) for ~50% faster matching
 import regex as re_engine
+from gi.repository import GLib, Vte
 
 from ..utils.logger import get_logger
 from ..utils.shell_echo import is_echo_terminator
+from .highlighter.constants import (
+    ALL_ESCAPE_SEQ_PATTERN as _ALL_ESCAPE_SEQ_PATTERN,
+)
+from .highlighter.constants import (
+    ANSI_COLOR_PATTERN as _ANSI_COLOR_PATTERN,
+)
 
 # Import constants and rules from highlighter package
 from .highlighter.constants import (
     ANSI_SEQ_PATTERN as _ANSI_SEQ_PATTERN,
-    ANSI_COLOR_PATTERN as _ANSI_COLOR_PATTERN,
+)
+from .highlighter.constants import (
     CSI_CONTROL_PATTERN as _CSI_CONTROL_PATTERN,
+)
+from .highlighter.constants import (
     SGR_RESET_LINE_PATTERN as _SGR_RESET_LINE_PATTERN,
-    ALL_ESCAPE_SEQ_PATTERN as _ALL_ESCAPE_SEQ_PATTERN,
+)
+from .highlighter.constants import (
     SHELL_NAME_PROMPT_PATTERN as _SHELL_NAME_PROMPT_PATTERN,
 )
 
@@ -1145,7 +1154,7 @@ class HighlightedTerminalProxy:
             return None
 
         try:
-            from pygments.lexers import guess_lexer, TextLexer
+            from pygments.lexers import TextLexer, guess_lexer
             from pygments.util import ClassNotFound
 
             try:
@@ -1176,15 +1185,15 @@ class HighlightedTerminalProxy:
         """
         try:
             from pygments import highlight
+            from pygments.formatters import Terminal256Formatter
             from pygments.lexers import (
                 TextLexer,
-                guess_lexer,
                 get_lexer_by_name,
                 get_lexer_for_filename,
+                guess_lexer,
             )
-            from pygments.formatters import Terminal256Formatter
-            from pygments.util import ClassNotFound
             from pygments.styles import get_style_by_name
+            from pygments.util import ClassNotFound
 
             # Get or create lexer
             current_lexer = getattr(self, "_pygments_lexer", None)
@@ -2191,8 +2200,8 @@ class HighlightedTerminalProxy:
 
         # Get highlighted version of the current buffer
         try:
-            from pygments.lexers import BashLexer
             from pygments import lex
+            from pygments.lexers import BashLexer
 
             # Always use lexer/formatter from the global singleton
             # This ensures theme changes are applied immediately

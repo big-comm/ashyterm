@@ -555,7 +555,9 @@ class TerminalManager:
                 get_output_highlighter()
                 get_shell_input_highlighter()
                 # Pre-import the proxy implementation to warm up GTK stack
-                from ._highlighter_impl import HighlightedTerminalProxy as _  # noqa: F401
+                from ._highlighter_impl import (
+                    HighlightedTerminalProxy as _,  # noqa: F401
+                )
 
                 self.logger.debug("Pre-loaded highlighting modules in background")
             except Exception as e:
@@ -1468,10 +1470,10 @@ class TerminalManager:
             return False
 
         try:
-            from ..ui.ssh_dialogs import get_error_info
-
             # Decode the wait status to get the actual exit code
             import os as os_module
+
+            from ..ui.ssh_dialogs import get_error_info
 
             if os_module.WIFEXITED(child_status):
                 exit_code = os_module.WEXITSTATUS(child_status)
