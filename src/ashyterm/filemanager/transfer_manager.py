@@ -51,11 +51,30 @@ class TransferItem:
     cancellation_event: threading.Event = field(
         default_factory=threading.Event, repr=False
     )
+    # Warmup tracking to avoid initial spurious progress from rsync
+    first_stable_progress: float = -1.0  # First monotonically increasing progress value
+    warmup_end_time: Optional[float] = None  # When warmup period ends
 
     def get_duration(self) -> Optional[float]:
         if self.start_time and self.end_time:
             return self.end_time - self.start_time
         return None
+
+    def is_warmed_up(self) -> bool:
+        """Returns True if the transfer has passed the warmup period."""
+        if self.warmup_end_time is None:
+            return False
+        return time.time() >= self.warmup_end_time
+
+    def get_stable_progress(self) -> float:
+        """Returns progress adjusted for initial warmup period."""
+        if not self.is_warmed_up():
+            return 0.0
+        if self.first_stable_progress < 0:
+            return 0.0
+        # Return actual progress minus the baseline
+        adjusted = self.progress - self.first_stable_progress
+        return max(0.0, min(100.0, adjusted))
 
 
 class TransferManager(GObject.Object):
@@ -176,16 +195,31 @@ class TransferManager(GObject.Object):
                 transfer.status = TransferStatus.IN_PROGRESS
                 transfer.start_time = time.time()
         self.emit("transfer-started", transfer_id)
+        # Force immediate UI update when transfer starts
+        self._last_progress_update = 0  # Reset throttle
         self._update_progress_display()
 
     def update_progress(self, transfer_id: str, progress: float):
         with self._transfer_lock:
             if transfer_id in self.active_transfers:
-                self.active_transfers[transfer_id].progress = progress
+                transfer = self.active_transfers[transfer_id]
+                current_time = time.time()
+
+                # Warmup logic: wait 3 seconds before showing real progress
+                # This avoids initial spurious values from rsync per-file progress
+                if transfer.warmup_end_time is None:
+                    transfer.warmup_end_time = current_time + 3.0
+
+                # Track the first stable progress value after warmup
+                if transfer.is_warmed_up() and transfer.first_stable_progress < 0:
+                    transfer.first_stable_progress = progress
+
+                transfer.progress = progress
 
         # Throttle progress updates to prevent UI flooding
         current_time = time.time()
-        if current_time - self._last_progress_update >= self._progress_update_interval:
+        # Allow more frequent updates (50ms) for responsive UI
+        if current_time - self._last_progress_update >= 0.05:
             self._last_progress_update = current_time
             self.emit("transfer-progress", transfer_id, progress)
             self._update_progress_display()
@@ -265,28 +299,125 @@ class TransferManager(GObject.Object):
 
         if active_count == 1:
             transfer = transfers_snapshot[0]
-            self.progress_row.set_title(f"Transferring {transfer.filename}")
+            self.progress_row.set_title(
+                _("Transferring {filename}").format(filename=transfer.filename)
+            )
 
-            elapsed = time.time() - (transfer.start_time or time.time())
-            subtitle_parts = [f"{transfer.progress:.1f}%"]
+            # Use stable progress to avoid initial spurious values
+            display_progress = transfer.get_stable_progress()
+            is_warmed = transfer.is_warmed_up()
 
-            if elapsed > 0.5 and transfer.file_size > 0:
-                bytes_transferred = (transfer.progress / 100.0) * transfer.file_size
-                speed = bytes_transferred / elapsed
-                subtitle_parts.append(f"{self._format_speed(speed)}")
+            if not is_warmed:
+                # Still in warmup period - show preparing message
+                subtitle_parts = [_("Starting...")]
+            else:
+                subtitle_parts = [f"{display_progress:.1f}%"]
 
-                if speed > 0:
-                    remaining_bytes = transfer.file_size - bytes_transferred
-                    eta = remaining_bytes / speed
-                    subtitle_parts.append(f"{self._format_duration(eta)} left")
+                # Calculate speed and ETA only after warmup
+                if transfer.start_time and transfer.file_size > 0:
+                    # Use time since warmup ended for more accurate speed
+                    elapsed_since_warmup = time.time() - (
+                        transfer.warmup_end_time or transfer.start_time
+                    )
+                    if elapsed_since_warmup > 0.5:
+                        bytes_transferred = (
+                            display_progress / 100.0
+                        ) * transfer.file_size
+                        speed = (
+                            bytes_transferred / elapsed_since_warmup
+                            if elapsed_since_warmup > 0
+                            else 0
+                        )
+                        if speed > 0:
+                            subtitle_parts.append(self._format_speed(speed))
+                            remaining_bytes = transfer.file_size - bytes_transferred
+                            if remaining_bytes > 0:
+                                eta = remaining_bytes / speed
+                                subtitle_parts.append(
+                                    _("{time} left").format(
+                                        time=self._format_duration(eta)
+                                    )
+                                )
+                elif transfer.start_time and transfer.is_directory:
+                    # For directories without known size, just show elapsed time
+                    elapsed = time.time() - transfer.start_time
+                    if elapsed > 1:
+                        subtitle_parts.append(
+                            _("{time} elapsed").format(
+                                time=self._format_duration(elapsed)
+                            )
+                        )
 
             self.progress_row.set_subtitle(" • ".join(subtitle_parts))
-            self.progress_bar.set_fraction(transfer.progress / 100.0)
+            self.progress_bar.set_fraction(display_progress / 100.0)
         else:
-            total_progress = sum(t.progress for t in transfers_snapshot)
-            overall_progress = total_progress / active_count
-            self.progress_row.set_title(f"Transferring {active_count} files")
-            self.progress_row.set_subtitle(f"Overall progress: {overall_progress:.1f}%")
+            # Calculate aggregated statistics for multiple transfers
+            total_bytes = 0
+            total_bytes_transferred = 0
+            total_stable_progress = 0.0
+            earliest_warmup_end = None
+            all_warmed = True
+
+            for transfer in transfers_snapshot:
+                display_progress = transfer.get_stable_progress()
+                total_bytes += transfer.file_size
+                bytes_done = (display_progress / 100.0) * transfer.file_size
+                total_bytes_transferred += bytes_done
+                total_stable_progress += display_progress
+
+                if not transfer.is_warmed_up():
+                    all_warmed = False
+
+                if transfer.warmup_end_time:
+                    if (
+                        earliest_warmup_end is None
+                        or transfer.warmup_end_time < earliest_warmup_end
+                    ):
+                        earliest_warmup_end = transfer.warmup_end_time
+
+            # Calculate overall progress - use average if we don't have sizes
+            if total_bytes > 0:
+                overall_progress = total_bytes_transferred / total_bytes * 100.0
+            else:
+                # Fallback: average progress across all transfers
+                overall_progress = (
+                    total_stable_progress / active_count if active_count > 0 else 0
+                )
+
+            self.progress_row.set_title(
+                _("Transferring {count} files").format(count=active_count)
+            )
+
+            if not all_warmed:
+                # Still in warmup period
+                subtitle_parts = [_("Starting...")]
+            else:
+                subtitle_parts = [f"{overall_progress:.1f}%"]
+
+                # Calculate aggregate speed and ETA only after warmup
+                if earliest_warmup_end is not None and total_bytes > 0:
+                    elapsed_since_warmup = time.time() - earliest_warmup_end
+                    if elapsed_since_warmup > 0.5 and total_bytes_transferred > 0:
+                        speed = total_bytes_transferred / elapsed_since_warmup
+                        subtitle_parts.append(self._format_speed(speed))
+
+                        remaining_bytes = total_bytes - total_bytes_transferred
+                        if remaining_bytes > 0 and speed > 0:
+                            eta = remaining_bytes / speed
+                            subtitle_parts.append(
+                                _("{time} left").format(time=self._format_duration(eta))
+                            )
+                elif earliest_warmup_end is not None:
+                    # When we don't have file sizes, show elapsed time
+                    elapsed_since_warmup = time.time() - earliest_warmup_end
+                    if elapsed_since_warmup > 1:
+                        subtitle_parts.append(
+                            _("{time} elapsed").format(
+                                time=self._format_duration(elapsed_since_warmup)
+                            )
+                        )
+
+            self.progress_row.set_subtitle(" • ".join(subtitle_parts))
             self.progress_bar.set_fraction(overall_progress / 100.0)
 
         return False

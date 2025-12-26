@@ -815,8 +815,9 @@ class CommTerminalWindow(Adw.ApplicationWindow):
             # Always re-apply headerbar transparency as the base theme might have changed
             self.settings_manager.apply_headerbar_transparency(self.header_bar)
 
-            # Update tooltip colors for terminal theme
-            self._update_tooltip_colors()
+            # Update tooltip colors after GTK theme is fully applied
+            # Use idle_add to ensure theme change has propagated
+            GLib.idle_add(self._update_tooltip_colors)
 
         elif key == "auto_hide_sidebar":
             self.sidebar_manager.handle_auto_hide_change(new_value)
@@ -846,7 +847,7 @@ class CommTerminalWindow(Adw.ApplicationWindow):
             ):
                 self.settings_manager.apply_gtk_terminal_theme(self)
                 # Update tooltip colors when color scheme changes with terminal theme
-                self._update_tooltip_colors()
+                GLib.idle_add(self._update_tooltip_colors)
             if key in ["transparency", "headerbar_transparency"]:
                 self._update_file_manager_transparency()
             if self.font_sizer_widget and key == "font":
@@ -1714,31 +1715,43 @@ class CommTerminalWindow(Adw.ApplicationWindow):
             f"SSH file drop: {len(local_paths)} files for terminal {terminal_id}"
         )
 
-        # Get the file manager for the current tab/terminal
-        current_page = self.tab_manager.get_view_stack().get_visible_child()
-        fm = self.tab_manager.file_managers.get(current_page)
+        # Get the terminal and its page
+        terminal = self.terminal_manager.registry.get_terminal(terminal_id)
+        if not terminal:
+            self.logger.warning(f"Terminal {terminal_id} not found for file drop")
+            return
+
+        # Get the page for this specific terminal
+        page = self.tab_manager.get_page_for_terminal(terminal)
+        if not page:
+            self.logger.warning(f"Page not found for terminal {terminal_id}")
+            return
+
+        # Get file manager for this specific page
+        fm = self.tab_manager.file_managers.get(page)
 
         # Try to get the current remote directory from the terminal
-        terminal = self.terminal_manager.registry.get_terminal(terminal_id)
         remote_dir = None
+        try:
+            uri = terminal.get_current_directory_uri()
+            if uri:
+                parsed_uri = urlparse(uri)
+                if parsed_uri.scheme == "file":
+                    remote_dir = unquote(parsed_uri.path)
+                    self.logger.info(f"Got remote directory from OSC7: {remote_dir}")
+        except Exception as e:
+            self.logger.debug(f"Could not get terminal directory URI: {e}")
 
-        if terminal:
-            try:
-                uri = terminal.get_current_directory_uri()
-                if uri:
-                    parsed_uri = urlparse(uri)
-                    if parsed_uri.scheme == "file":
-                        remote_dir = unquote(parsed_uri.path)
-                        self.logger.info(
-                            f"Got remote directory from OSC7: {remote_dir}"
-                        )
-            except Exception as e:
-                self.logger.debug(f"Could not get terminal directory URI: {e}")
+        # Debug logging
+        self.logger.debug(
+            f"File drop check: fm={fm is not None}, "
+            f"is_remote={fm._is_remote_session() if fm else 'N/A'}, "
+            f"session_item={fm.session_item if fm else 'N/A'}"
+        )
 
-        if fm and fm._is_remote_session():
+        if fm and fm._is_remote_session() and not getattr(fm, "_is_rebinding", False):
             # File manager is available and connected to remote session
             if remote_dir:
-                # Set the file manager to the current directory and initiate direct upload
                 fm.current_path = remote_dir
             paths = [Path(p) for p in local_paths]
             fm._show_upload_confirmation_dialog(paths)
@@ -1746,18 +1759,31 @@ class CommTerminalWindow(Adw.ApplicationWindow):
                 f"Upload initiated for {len(paths)} files via file manager"
             )
         else:
-            # No file manager available - open it and queue the upload
+            # File manager not ready - store pending drop info first
             self._pending_drop_files = local_paths
             self._pending_drop_remote_dir = remote_dir
+            self._pending_drop_session = session
+            self._pending_drop_ssh_target = ssh_target
+            self._pending_drop_terminal_id = terminal_id
+            self._pending_drop_page = page
+            self._pending_drop_attempts = 0
+            self._pending_drop_terminal = terminal  # Store terminal reference
 
-            # Open file manager panel
+            # Ensure file manager panel is visible
             if not self.file_manager_button.get_active():
                 self.file_manager_button.set_active(True)
-                # Schedule upload check after file manager is ready
-                GLib.timeout_add(500, self._check_pending_drop_upload)
-            else:
-                # File manager button is active but FM not ready yet - wait
-                GLib.timeout_add(500, self._check_pending_drop_upload)
+
+            # After activation, force rebind to the correct terminal
+            # The FM might have been bound to a different terminal by toggle
+            fm = self.tab_manager.file_managers.get(page)
+            if fm:
+                self.logger.info(
+                    f"Force rebinding FM to drop target terminal {terminal_id}"
+                )
+                fm.rebind_terminal(terminal)
+
+            # Schedule upload check after file manager is ready
+            GLib.timeout_add(300, self._check_pending_drop_upload)
 
     def _check_pending_drop_upload(self):
         """Check if file manager is ready and process pending drop upload."""
@@ -1766,26 +1792,93 @@ class CommTerminalWindow(Adw.ApplicationWindow):
         if not hasattr(self, "_pending_drop_files") or not self._pending_drop_files:
             return False  # Stop timeout
 
-        current_page = self.tab_manager.get_view_stack().get_visible_child()
-        fm = self.tab_manager.file_managers.get(current_page)
-
-        if fm and fm._is_remote_session():
-            # File manager is ready
-            if self._pending_drop_remote_dir:
-                fm.current_path = self._pending_drop_remote_dir
-            paths = [Path(p) for p in self._pending_drop_files]
-            fm._show_upload_confirmation_dialog(paths)
-            self.logger.info(
-                f"Pending upload initiated for {len(paths)} files via file manager"
+        # Limit retries to prevent infinite loops
+        self._pending_drop_attempts = getattr(self, "_pending_drop_attempts", 0) + 1
+        if self._pending_drop_attempts > 30:  # 9 seconds max wait
+            self.logger.warning(
+                "Timed out waiting for file manager to be ready for upload"
             )
+            self._clear_pending_drop()
+            return False
 
-            # Clear pending data
-            self._pending_drop_files = None
-            self._pending_drop_remote_dir = None
-            return False  # Stop timeout
-        else:
-            # Not ready yet, try again
-            return True  # Continue timeout
+        # Get file manager for the specific page where drop occurred
+        page = getattr(self, "_pending_drop_page", None)
+        if not page:
+            self.logger.warning("No page stored for pending drop")
+            self._clear_pending_drop()
+            return False
+
+        fm = self.tab_manager.file_managers.get(page)
+
+        # Check if file manager exists
+        if not fm:
+            self.logger.debug(
+                f"Attempt {self._pending_drop_attempts}: File manager not yet created"
+            )
+            return True  # Continue waiting
+
+        # Check if rebinding is still in progress
+        if getattr(fm, "_is_rebinding", False):
+            self.logger.debug(
+                f"Attempt {self._pending_drop_attempts}: File manager still rebinding"
+            )
+            return True  # Continue waiting
+
+        # Check if session is properly set
+        if not fm.session_item:
+            self.logger.debug(
+                f"Attempt {self._pending_drop_attempts}: Session item not set"
+            )
+            return True  # Continue waiting
+
+        # Check if it's a remote session
+        if not fm._is_remote_session():
+            session_type = fm.session_item.session_type if fm.session_item else "None"
+            self.logger.debug(
+                f"Attempt {self._pending_drop_attempts}: Not remote session, "
+                f"session_type={session_type}"
+            )
+            # Only attempt rebind once every 5 attempts to allow previous rebind to complete
+            if self._pending_drop_attempts % 5 == 1:
+                terminal = getattr(self, "_pending_drop_terminal", None)
+                if not terminal:
+                    terminal = self.terminal_manager.registry.get_terminal(
+                        getattr(self, "_pending_drop_terminal_id", None)
+                    )
+                if terminal:
+                    self.logger.info(
+                        f"Rebinding FM to terminal (attempt {self._pending_drop_attempts})"
+                    )
+                    fm.rebind_terminal(terminal)
+            return True  # Continue waiting
+
+        # File manager is ready - proceed with upload
+        self.logger.info(
+            f"File manager ready after {self._pending_drop_attempts} attempts"
+        )
+
+        if self._pending_drop_remote_dir:
+            fm.current_path = self._pending_drop_remote_dir
+
+        paths = [Path(p) for p in self._pending_drop_files]
+        fm._show_upload_confirmation_dialog(paths)
+        self.logger.info(
+            f"Pending upload initiated for {len(paths)} files via file manager"
+        )
+
+        self._clear_pending_drop()
+        return False  # Stop timeout
+
+    def _clear_pending_drop(self):
+        """Clear all pending drop state."""
+        self._pending_drop_files = None
+        self._pending_drop_remote_dir = None
+        self._pending_drop_session = None
+        self._pending_drop_ssh_target = None
+        self._pending_drop_terminal_id = None
+        self._pending_drop_page = None
+        self._pending_drop_terminal = None
+        self._pending_drop_attempts = 0
 
     def _on_quit_application_requested(self) -> None:
         """Handle quit request from tab manager."""

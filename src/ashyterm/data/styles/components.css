@@ -168,19 +168,24 @@
 }
 
 /* ==========================================================================
-   Tooltip Animation
-   Moved from: tooltip_helper.py inline CSS
+   Tooltip Design - GTK4 compatible
    ========================================================================== */
 
+/* Tooltip fade animation */
 .tooltip-popover {
     opacity: 0;
-    transition: opacity 200ms ease-in-out;
+    transition: opacity 180ms ease-out;
 }
 
 .tooltip-popover.visible {
     opacity: 1;
 }
 
+/* Tooltip container styling - high contrast for readability */
+.tooltip-popover>contents {
+    border-radius: 8px;
+    padding: 2px;
+}
 /* ==========================================================================
    Dialog Components
    Shared styles for command dialogs, form dialogs, etc.

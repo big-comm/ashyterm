@@ -2534,22 +2534,86 @@ class FileManager(GObject.Object):
                             )
                             self.refresh(source="filemanager")
 
-                for item in items:
-                    transfer_id = self.transfer_manager.add_transfer(
-                        filename=item.name,
-                        local_path=str(dest_path / item.name),
-                        remote_path=f"{self.current_path.rstrip('/')}/{item.name}",
-                        file_size=item.size,
-                        transfer_type=TransferType.DOWNLOAD,
-                        is_cancellable=True,
-                        is_directory=item.is_directory_like,
-                    )
-                    self._start_cancellable_transfer(
-                        transfer_id,
-                        "Downloading",
-                        self._background_download_worker,
-                        on_success_callback=on_download_success,
-                    )
+                # Prepare download in background to get sizes and check space
+                def prepare_downloads():
+                    try:
+                        # Calculate total size needed
+                        total_size_needed = 0
+                        item_sizes = {}
+
+                        for item in items:
+                            remote_path = f"{self.current_path.rstrip('/')}/{item.name}"
+
+                            # For directories or when item.size is 0, calculate actual size
+                            if item.is_directory_like or item.size == 0:
+                                calculated_size = self.operations.get_directory_size(
+                                    remote_path,
+                                    is_remote=True,
+                                    session_override=self.session_item,
+                                )
+                                item_sizes[item.name] = (
+                                    calculated_size
+                                    if calculated_size > 0
+                                    else item.size
+                                )
+                            else:
+                                item_sizes[item.name] = item.size
+
+                            total_size_needed += item_sizes[item.name]
+
+                        # Check available space at destination
+                        free_space = self.operations.get_free_space(
+                            str(dest_path), is_remote=False
+                        )
+
+                        if free_space > 0 and total_size_needed > free_space:
+                            # Not enough space - show error on main thread
+                            def show_space_error():
+                                self._show_insufficient_space_dialog(
+                                    total_size_needed, free_space, dest_path
+                                )
+                                return False
+
+                            GLib.idle_add(show_space_error)
+                            return
+
+                        # Start downloads on main thread
+                        def start_downloads():
+                            for item in items:
+                                file_size = item_sizes.get(item.name, item.size)
+                                transfer_id = self.transfer_manager.add_transfer(
+                                    filename=item.name,
+                                    local_path=str(dest_path / item.name),
+                                    remote_path=f"{self.current_path.rstrip('/')}/{item.name}",
+                                    file_size=file_size,
+                                    transfer_type=TransferType.DOWNLOAD,
+                                    is_cancellable=True,
+                                    is_directory=item.is_directory_like,
+                                )
+                                self._start_cancellable_transfer(
+                                    transfer_id,
+                                    "Downloading",
+                                    self._background_download_worker,
+                                    on_success_callback=on_download_success,
+                                )
+                            return False
+
+                        GLib.idle_add(start_downloads)
+
+                    except Exception as e:
+                        self.logger.error(f"Error preparing downloads: {e}")
+
+                        def show_error():
+                            self.parent_window._show_error_dialog(
+                                _("Download Error"), str(e)
+                            )
+                            return False
+
+                        GLib.idle_add(show_error)
+
+                # Run preparation in background
+                threading.Thread(target=prepare_downloads, daemon=True).start()
+
         except GLib.Error as e:
             if not e.matches(Gio.io_error_quark(), Gio.IOErrorEnum.CANCELLED):
                 self.parent_window._show_error_dialog(_("Error"), e.message)
@@ -2566,16 +2630,92 @@ class FileManager(GObject.Object):
         try:
             files = source.open_multiple_finish(result)
             if files:
-                for gio_file in files:
-                    self._initiate_upload(Path(gio_file.get_path()))
+                local_paths = [Path(gio_file.get_path()) for gio_file in files]
+
+                # Prepare uploads in background to check space
+                def prepare_uploads():
+                    try:
+                        # Calculate total size needed
+                        total_size_needed = 0
+                        path_sizes = {}
+
+                        for local_path in local_paths:
+                            if local_path.is_dir():
+                                # For directories, calculate full size
+                                size = self.operations.get_directory_size(
+                                    str(local_path), is_remote=False
+                                )
+                            else:
+                                size = (
+                                    local_path.stat().st_size
+                                    if local_path.exists()
+                                    else 0
+                                )
+
+                            path_sizes[str(local_path)] = size
+                            total_size_needed += size
+
+                        # Check available space at remote destination
+                        free_space = self.operations.get_free_space(
+                            self.current_path,
+                            is_remote=True,
+                            session_override=self.session_item,
+                        )
+
+                        if free_space > 0 and total_size_needed > free_space:
+                            # Not enough space - show error on main thread
+                            def show_space_error():
+                                self._show_insufficient_space_dialog(
+                                    total_size_needed,
+                                    free_space,
+                                    Path(self.current_path),
+                                )
+                                return False
+
+                            GLib.idle_add(show_space_error)
+                            return
+
+                        # Start uploads on main thread
+                        def start_uploads():
+                            for local_path in local_paths:
+                                file_size = path_sizes.get(str(local_path), 0)
+                                self._initiate_upload_with_size(local_path, file_size)
+                            return False
+
+                        GLib.idle_add(start_uploads)
+
+                    except Exception as e:
+                        self.logger.error(f"Error preparing uploads: {e}")
+
+                        def show_error():
+                            self.parent_window._show_error_dialog(
+                                _("Upload Error"), str(e)
+                            )
+                            return False
+
+                        GLib.idle_add(show_error)
+
+                # Run preparation in background
+                threading.Thread(target=prepare_uploads, daemon=True).start()
+
         except GLib.Error as e:
             if not e.matches(Gio.io_error_quark(), Gio.IOErrorEnum.CANCELLED):
                 self.parent_window._show_error_dialog(_("Error"), e.message)
 
     def _initiate_upload(self, local_path: Path):
         """Helper to start the upload process for a single local path."""
+        # For backward compatibility, calculate size here
+        if local_path.is_dir():
+            file_size = self.operations.get_directory_size(
+                str(local_path), is_remote=False
+            )
+        else:
+            file_size = local_path.stat().st_size if local_path.exists() else 0
+        self._initiate_upload_with_size(local_path, file_size)
+
+    def _initiate_upload_with_size(self, local_path: Path, file_size: int):
+        """Helper to start the upload process with pre-calculated size."""
         remote_path = f"{self.current_path.rstrip('/')}/{local_path.name}"
-        file_size = local_path.stat().st_size if local_path.exists() else 0
         transfer_id = self.transfer_manager.add_transfer(
             filename=local_path.name,
             local_path=str(local_path),
@@ -2670,8 +2810,57 @@ class FileManager(GObject.Object):
 
     def _on_upload_confirmation_response(self, dialog, response_id, local_paths):
         if response_id == "upload":
-            for path in local_paths:
-                self._initiate_upload(path)
+            # Prepare uploads in background to check space
+            def prepare_uploads():
+                try:
+                    # Calculate total size needed
+                    total_size_needed = 0
+                    path_sizes = {}
+
+                    for local_path in local_paths:
+                        if local_path.is_dir():
+                            size = self.operations.get_directory_size(
+                                str(local_path), is_remote=False
+                            )
+                        else:
+                            size = (
+                                local_path.stat().st_size if local_path.exists() else 0
+                            )
+
+                        path_sizes[str(local_path)] = size
+                        total_size_needed += size
+
+                    # Check available space at remote destination
+                    free_space = self.operations.get_free_space(
+                        self.current_path,
+                        is_remote=True,
+                        session_override=self.session_item,
+                    )
+
+                    if free_space > 0 and total_size_needed > free_space:
+
+                        def show_space_error():
+                            self._show_insufficient_space_dialog(
+                                total_size_needed, free_space, Path(self.current_path)
+                            )
+                            return False
+
+                        GLib.idle_add(show_space_error)
+                        return
+
+                    # Start uploads on main thread
+                    def start_uploads():
+                        for local_path in local_paths:
+                            file_size = path_sizes.get(str(local_path), 0)
+                            self._initiate_upload_with_size(local_path, file_size)
+                        return False
+
+                    GLib.idle_add(start_uploads)
+
+                except Exception as e:
+                    self.logger.error(f"Error preparing uploads: {e}")
+
+            threading.Thread(target=prepare_uploads, daemon=True).start()
 
     def _get_local_path_for_remote_file(
         self, session: SessionItem, remote_path: str
@@ -2878,6 +3067,45 @@ class FileManager(GObject.Object):
                 self.parent_window.toast_overlay.add_toast(
                     Adw.Toast(title=_("Transfer cancelled."))
                 )
+
+    def _show_insufficient_space_dialog(
+        self, required_bytes: int, available_bytes: int, dest_path: Path
+    ):
+        """Shows a dialog when there's not enough space for the transfer."""
+
+        def format_size(size_bytes: int) -> str:
+            if size_bytes < 1024:
+                return f"{size_bytes} B"
+            elif size_bytes < 1024 * 1024:
+                return f"{size_bytes / 1024:.1f} KB"
+            elif size_bytes < 1024 * 1024 * 1024:
+                return f"{size_bytes / (1024 * 1024):.1f} MB"
+            else:
+                return f"{size_bytes / (1024 * 1024 * 1024):.2f} GB"
+
+        dialog = Adw.MessageDialog(
+            transient_for=self.parent_window,
+            heading=_("Insufficient Disk Space"),
+            body=_(
+                "There is not enough free space at the destination to complete this transfer."
+            ),
+            close_response="ok",
+        )
+
+        details = _(
+            "Required space: <b>{required}</b>\n"
+            "Available space: <b>{available}</b>\n"
+            "Destination: <b>{path}</b>"
+        ).format(
+            required=format_size(required_bytes),
+            available=format_size(available_bytes),
+            path=str(dest_path),
+        )
+        dialog.set_extra_child(
+            Gtk.Label(label=details, use_markup=True, wrap=True, xalign=0)
+        )
+        dialog.add_response("ok", _("OK"))
+        dialog.present()
 
     def _show_permission_error_dialog(self, transfer_id: str, message: str):
         """Shows a specific dialog for permission errors."""
