@@ -2029,7 +2029,7 @@ class HighlightedTerminalProxy:
         Returns True if a prompt was detected.
         """
         # Early exit: if no potential prompt characters, skip expensive processing
-        if not any(c in text for c in "$#%>"):
+        if not any(c in text for c in "$#%>❯"):
             return False
 
         stripped_text = _ALL_ESCAPE_SEQ_PATTERN.sub("", text).replace("\x00", "")
@@ -2048,10 +2048,6 @@ class HighlightedTerminalProxy:
             self._prev_shell_input_token_len = 0
             return True
 
-        # Check for primary prompt (e.g., "sh-5.3$ ", "bash-5.2$ ", "user@host:~$ ")
-        # IMPORTANT: Only check the LAST LINE of the text to avoid false positives
-        # when command output ends with a prompt on the same data packet.
-
         # Get the last line only - prompts are single lines
         last_line = stripped_clean.rsplit('\n', 1)[-1].strip()
         last_line = last_line.rsplit('\r', 1)[-1].strip()
@@ -2060,25 +2056,53 @@ class HighlightedTerminalProxy:
         if len(last_line) > 100:
             return False
 
-        if last_line.endswith("$") or last_line.endswith("#") or last_line.endswith("%"):
-            # Check if this looks like a shell prompt (ends with $ or # after shell name or path)
-            prompt_part = last_line[:-1].strip()  # Remove $ or # at the end
+        # Check for modern prompts (Starship, Oh-My-Zsh, Powerlevel10k, etc.)
+        # These typically end with ❯, ➜, λ, or other symbols
+        prompt_end_chars = ("#", "%", "❯", "➜", "λ", "›")
 
-            # Match shell name patterns: sh-5.3, bash, etc.
-            if _SHELL_NAME_PROMPT_PATTERN.match(prompt_part):
-                self._at_shell_prompt = True
-                self._shell_input_highlighter.set_at_prompt(self._proxy_id, True)
-                self._reset_input_buffer()
-                self._need_color_reset = True
-                return True
+        for char in prompt_end_chars:
+            if last_line.endswith(char):
+                # For fancy prompts like ❯, ➜, λ - just check it's at the end
+                # These are distinctive enough that we can trust them as prompt indicators
+                if char in ("❯", "➜", "λ", "›"):
+                    self._at_shell_prompt = True
+                    self._shell_input_highlighter.set_at_prompt(self._proxy_id, True)
+                    self._reset_input_buffer()
+                    self._need_color_reset = True
+                    # Clear highlighting context when returning to prompt
+                    self._highlighter.clear_context(self._proxy_id)
+                    self._reset_cat_state()
+                    return True
 
-            # Match paths like ~ or /home/user or user@host:~
-            if prompt_part.endswith("~") or prompt_part.endswith("/") or "@" in prompt_part or ":" in prompt_part:
-                self._at_shell_prompt = True
-                self._shell_input_highlighter.set_at_prompt(self._proxy_id, True)
-                self._reset_input_buffer()
-                self._need_color_reset = True
-                return True
+                # For traditional prompts ($, #, %), verify it looks like a shell prompt
+                prompt_part = last_line[:-1].strip()  # Remove prompt char at the end
+
+                # Match shell name patterns: sh-5.3, bash, etc.
+                if _SHELL_NAME_PROMPT_PATTERN.match(prompt_part):
+                    self._at_shell_prompt = True
+                    self._shell_input_highlighter.set_at_prompt(self._proxy_id, True)
+                    self._reset_input_buffer()
+                    self._need_color_reset = True
+                    # Clear highlighting context when returning to prompt
+                    self._highlighter.clear_context(self._proxy_id)
+                    self._reset_cat_state()
+                    return True
+
+                # Match paths like ~ or /home/user or user@host:~
+                if (
+                    prompt_part.endswith("~")
+                    or prompt_part.endswith("/")
+                    or "@" in prompt_part
+                    or ":" in prompt_part
+                ):
+                    self._at_shell_prompt = True
+                    self._shell_input_highlighter.set_at_prompt(self._proxy_id, True)
+                    self._reset_input_buffer()
+                    self._need_color_reset = True
+                    # Clear highlighting context when returning to prompt
+                    self._highlighter.clear_context(self._proxy_id)
+                    self._reset_cat_state()
+                    return True
 
         return False
 

@@ -8,7 +8,6 @@ On X11 with compositor, the popover-based approach can cause segfaults, so we
 fall back to native GTK tooltips on X11 backends.
 """
 
-import os
 from typing import TYPE_CHECKING
 
 import gi
