@@ -608,6 +608,7 @@ class HighlightedTerminalProxy:
             if not self._is_alt_screen:
                 self._is_alt_screen = True
                 changed = True
+                self.logger.debug(f"Proxy {self._proxy_id}: Entered alt screen")
 
         # Check for disable patterns
         # Note: We check disable AFTER enable in case both are in the same chunk (rare but possible)
@@ -615,6 +616,19 @@ class HighlightedTerminalProxy:
             if self._is_alt_screen:
                 self._is_alt_screen = False
                 changed = True
+                self.logger.debug(f"Proxy {self._proxy_id}: Exited alt screen - resetting state")
+                # FIX: When exiting alternate screen (e.g., fzf CTRL+R with ble.sh),
+                # we're returning to shell prompt. Set _at_shell_prompt = True to
+                # ensure the readline redraw bypass in _process_data_streaming works.
+                # This fixes an issue where commands longer than terminal width are
+                # not displayed until user interaction when selected via fzf.
+                if not self._at_shell_prompt:
+                    self._at_shell_prompt = True
+                    self._shell_input_highlighter.set_at_prompt(self._proxy_id, True)
+                # Also clear any stale highlighting context since we're back at prompt
+                self._highlighter.clear_context(self._proxy_id)
+                self._reset_cat_state()
+                self._reset_input_buffer()
 
         return changed
 
@@ -675,9 +689,10 @@ class HighlightedTerminalProxy:
                 self._partial_line_buffer = data
                 return True  # Wait for next chunk
 
-            # Processing logic - skip alt screen check on small packets
-            if data_len > 10:
-                self._update_alt_screen_state(data)
+            # Always check for alt screen state changes regardless of packet size.
+            # The alt screen exit sequence (\x1b[?1049l) is only 8 bytes and may
+            # arrive in a small packet when TUI apps like fzf exit.
+            self._update_alt_screen_state(data)
 
             try:
                 if self._is_alt_screen:
@@ -2029,7 +2044,8 @@ class HighlightedTerminalProxy:
         Returns True if a prompt was detected.
         """
         # Early exit: if no potential prompt characters, skip expensive processing
-        if not any(c in text for c in "$#%>❯"):
+        # Include common prompt characters: $ # % > ❯ ➜ λ 
+        if not any(c in text for c in "$#%>❯➜λ"):
             return False
 
         stripped_text = _ALL_ESCAPE_SEQ_PATTERN.sub("", text).replace("\x00", "")
@@ -2048,6 +2064,11 @@ class HighlightedTerminalProxy:
             self._prev_shell_input_token_len = 0
             return True
 
+        # Check for primary prompt (e.g., "sh-5.3$ ", "bash-5.2$ ", "user@host:~$ ")
+        # Also check for fancy prompts like Starship (❯), Oh-My-Zsh (➜), etc.
+        # IMPORTANT: Only check the LAST LINE of the text to avoid false positives
+        # when command output ends with a prompt on the same data packet.
+
         # Get the last line only - prompts are single lines
         last_line = stripped_clean.rsplit('\n', 1)[-1].strip()
         last_line = last_line.rsplit('\r', 1)[-1].strip()
@@ -2058,8 +2079,8 @@ class HighlightedTerminalProxy:
 
         # Check for modern prompts (Starship, Oh-My-Zsh, Powerlevel10k, etc.)
         # These typically end with ❯, ➜, λ, or other symbols
-        prompt_end_chars = ("#", "%", "❯", "➜", "λ", "›")
-
+        prompt_end_chars = ("$", "#", "%", "❯", "➜", "λ", "›")
+        
         for char in prompt_end_chars:
             if last_line.endswith(char):
                 # For fancy prompts like ❯, ➜, λ - just check it's at the end
@@ -2073,7 +2094,7 @@ class HighlightedTerminalProxy:
                     self._highlighter.clear_context(self._proxy_id)
                     self._reset_cat_state()
                     return True
-
+                
                 # For traditional prompts ($, #, %), verify it looks like a shell prompt
                 prompt_part = last_line[:-1].strip()  # Remove prompt char at the end
 
@@ -2089,12 +2110,7 @@ class HighlightedTerminalProxy:
                     return True
 
                 # Match paths like ~ or /home/user or user@host:~
-                if (
-                    prompt_part.endswith("~")
-                    or prompt_part.endswith("/")
-                    or "@" in prompt_part
-                    or ":" in prompt_part
-                ):
+                if prompt_part.endswith("~") or prompt_part.endswith("/") or "@" in prompt_part or ":" in prompt_part:
                     self._at_shell_prompt = True
                     self._shell_input_highlighter.set_at_prompt(self._proxy_id, True)
                     self._reset_input_buffer()
