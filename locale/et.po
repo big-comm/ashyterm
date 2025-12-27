@@ -483,10 +483,18 @@ msgstr "OpenRouter vastas HTTP {status}: {message}{detail}"
 msgid "Not an SSH session."
 msgstr "Ei ole SSH seanss."
 # 
-# File: usr/share/ashyterm/filemanager/operations.py, line: 146
+# File: src/ashyterm/terminal/spawner.py, line: 821
 #: NEEDS WORK
-msgid "Command timed out."
-msgstr "Käsk aegus."
+msgid "Connection lost or unreachable."
+msgstr "Ühendus katkenud või kättesaamatu."
+# 
+# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
+# 
+# File: src/ashyterm/terminal/spawner.py, line: 831
+# File: src/ashyterm/filemanager/operations.py, line: 199
+#: NEEDS WORK
+msgid "Command timed out. Connection may be lost."
+msgstr "Käsk aegus. Ühendus võib olla kadunud."
 # 
 # File: usr/share/ashyterm/terminal/tabs.py, line: 43
 #: NEEDS WORK
@@ -7260,85 +7268,64 @@ msgstr "Kausta tee ei ühti oma vanema teega."
 msgid "Unnamed Folder"
 msgstr "Nimetu kaust"
 # 
-# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 69
+# File: usr/share/ashyterm/filemanager/manager.py, line: 638
 #: NEEDS WORK
-msgid "Cancel transfer"
-msgstr "Tühista ülekande"
+msgid "Download"
+msgstr "Laadi alla"
 # 
-# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 63
+# File: usr/share/ashyterm/filemanager/manager.py, line: 861
 #: NEEDS WORK
-msgid "Remove from history"
-msgstr "Eemalda ajaloost"
+msgid "Upload"
+msgstr "Laadi üles"
 # 
-# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 78
+# File: src/ashyterm/filemanager/transfer_dialog.py, line: 195
 #: NEEDS WORK
-msgid "Recebido"
-msgstr "Saadud"
+msgid "Queued"
+msgstr "Ootelda"
 # 
-# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 80
+# File: src/ashyterm/filemanager/transfer_dialog.py, line: 207
 #: NEEDS WORK
-msgid "Enviado"
-msgstr "Saadetud"
-# 
-# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 107
-#: NEEDS WORK
-msgid "Waiting..."
-msgstr "Ootab..."
-# 
-# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 116
-#: NEEDS WORK
-msgid "in"
-msgstr "sisse"
-# 
-# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 121
-#: NEEDS WORK
-msgid "Completed"
-msgstr "Lõpetatud"
-# 
-# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 126
-#: NEEDS WORK
-msgid "Unknown error"
-msgstr "Tundmatu viga"
+msgid "Done"
+msgstr "Tehtud"
 # 
 # File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 127
 #: NEEDS WORK
 msgid "Failed"
 msgstr "Ebaõnnestus"
 # 
+# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 126
+#: NEEDS WORK
+msgid "Unknown error"
+msgstr "Tundmatu viga"
+# 
 # File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 131
 #: NEEDS WORK
 msgid "Cancelled"
 msgstr "Tühistatud"
 # 
-# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 147
+# File: src/ashyterm/filemanager/transfer_dialog.py, line: 266
 #: NEEDS WORK
-msgid "Recebendo"
-msgstr "Saabumine"
+msgid "Downloading"
+msgstr "Laadimine"
 # 
-# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 149
+# File: src/ashyterm/filemanager/transfer_dialog.py, line: 268
 #: NEEDS WORK
-msgid "Enviando"
-msgstr "Saatmine"
+msgid "Uploading"
+msgstr "Laadimine"
 # 
-# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 165
+# File: src/ashyterm/filemanager/transfer_dialog.py, line: 332
 #: NEEDS WORK
-msgid "remaining"
-msgstr "jäänud"
+msgid "Transfers"
+msgstr "Ülekanded"
 # 
-# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 216
+# File: src/ashyterm/filemanager/transfer_dialog.py, line: 411
 #: NEEDS WORK
-msgid "Transfer Manager"
-msgstr "Ülekandehaldur"
-# 
-# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 239
-# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 348
-#: NEEDS WORK
-msgid "Clear History"
+msgid "Clear history"
 msgstr "Kustuta ajalugu"
 # 
-# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 231
+# File: src/ashyterm/filemanager/transfer_dialog.py, line: 420
 #: NEEDS WORK
-msgid "Cancelar Tudo"
+msgid "Cancel all"
 msgstr "Tühista kõik"
 # 
 # File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 257
@@ -7346,24 +7333,20 @@ msgstr "Tühista kõik"
 msgid "No Transfers"
 msgstr "Ei ülekandeid"
 # 
-# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 258
+# File: src/ashyterm/filemanager/transfer_dialog.py, line: 458
 #: NEEDS WORK
-msgid "Active and past transfers will appear here."
-msgstr "Siin kuvatakse aktiivsed ja varasemad ülekanded."
+msgid "Upload or download files to see them here"
+msgstr "Lae või allalae faile, et neid siin näha."
 # 
 # File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 340
 #: NEEDS WORK
 msgid "Clear Transfer History?"
 msgstr "Kustuta ülekande ajalugu?"
 # 
-# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 342
+# File: src/ashyterm/filemanager/transfer_dialog.py, line: 579
 #: NEEDS WORK
-msgid ""
-"This action cannot be undone and will remove all completed, failed, and cancelled transfers from "
-"the list."
-msgstr ""
-"Seda toimingut ei saa tagasi võtta ja see eemaldab loendist kõik lõpetatud, ebaõnnestunud ja "
-"tühistatud ülekanded."
+msgid "This will remove all completed, failed, and cancelled transfers."
+msgstr "See eemaldatakse kõik lõpetatud, ebaõnnestunud ja tühistatud ülekanded."
 # 
 # File: usr/share/ashyterm/filemanager/manager.py, line: 274
 #: NEEDS WORK
@@ -7472,6 +7455,11 @@ msgstr "Rühm"
 msgid "Loading..."
 msgstr "Laadimine..."
 # 
+# File: src/ashyterm/filemanager/manager.py, line: 1709
+#: NEEDS WORK
+msgid "Connection lost. Please check your network connection."
+msgstr "Ühendus katkes. Palun kontrollige oma võrguühendust."
+# 
 # File: src/ashyterm/filemanager/manager.py, line: 1848
 #: NEEDS WORK
 msgid "Type and press Enter..."
@@ -7504,11 +7492,6 @@ msgstr "Ava valik..."
 #: NEEDS WORK
 msgid "Cut"
 msgstr "Lõika"
-# 
-# File: usr/share/ashyterm/filemanager/manager.py, line: 638
-#: NEEDS WORK
-msgid "Download"
-msgstr "Laadi alla"
 # 
 # File: usr/share/ashyterm/filemanager/manager.py, line: 1737
 #: NEEDS WORK
@@ -7680,6 +7663,11 @@ msgstr "Vali sihtkaust"
 msgid "Download Here"
 msgstr "Laadi alla"
 # 
+# File: src/ashyterm/filemanager/manager.py, line: 2608
+#: NEEDS WORK
+msgid "Download Error"
+msgstr "Allalaadimise viga"
+# 
 # File: usr/share/ashyterm/filemanager/manager.py, line: 855
 # File: usr/share/ashyterm/filemanager/manager.py, line: 889
 #: NEEDS WORK
@@ -7691,10 +7679,10 @@ msgstr "Viga"
 msgid "Upload File(s) to This Folder"
 msgstr "Lae fail(id) selle kausta"
 # 
-# File: usr/share/ashyterm/filemanager/manager.py, line: 861
+# File: src/ashyterm/filemanager/manager.py, line: 2692
 #: NEEDS WORK
-msgid "Upload"
-msgstr "Laadi üles"
+msgid "Upload Error"
+msgstr "Üleslaadimise viga"
 # 
 # File: usr/share/ashyterm/filemanager/manager.py, line: 1430
 #: NEEDS WORK
@@ -7757,6 +7745,75 @@ msgstr "Luba keelatud"
 #: NEEDS WORK
 msgid "Transfer cancelled."
 msgstr "Ülekanne tühistatud."
+# 
+# File: src/ashyterm/filemanager/manager.py, line: 3088
+#: NEEDS WORK
+msgid "Insufficient Disk Space"
+msgstr "Ebapiisav kettaruum"
+# 
+# File: src/ashyterm/filemanager/manager.py, line: 3090
+#: NEEDS WORK
+msgid "There is not enough free space at the destination to complete this transfer."
+msgstr ""
+"Sihtsiht on sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht "
+"sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht "
+"sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht "
+"sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht "
+"sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht "
+"sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht "
+"sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht "
+"sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht "
+"sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht "
+"sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht "
+"sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht "
+"sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht "
+"sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht "
+"sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht "
+"sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht "
+"sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht "
+"sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht "
+"sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht "
+"sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht "
+"sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht "
+"sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht "
+"sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht "
+"sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht "
+"sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht "
+"sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht "
+"sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht "
+"sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht "
+"sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht "
+"sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht "
+"sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht "
+"sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht "
+"sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht "
+"sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht "
+"sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht "
+"sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht "
+"sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht "
+"sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht "
+"sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht "
+"sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht "
+"sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht "
+"sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht "
+"sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht "
+"sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht "
+"sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht "
+"sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht "
+"sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht "
+"sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsi"
+# 
+# File: src/ashyterm/filemanager/manager.py, line: 3096
+#: NEEDS WORK
+#, python-brace-format
+msgid ""
+"Required space: <b>{required}</b>\n"
+"Available space: <b>{available}</b>\n"
+"Destination: <b>{path}</b>"
+msgstr ""
+"Nõutav ruum: <b>{required}</b>  \n"
+"Saadaval ruum: <b>{available}</b>  \n"
+"Sihtkoht: <b>{path}</b>"
 # 
 # File: usr/share/ashyterm/filemanager/manager.py, line: 1783
 #: NEEDS WORK
@@ -7909,6 +7966,38 @@ msgstr "Luba keelatud: Kontrollige kirjutamisõigusi sihtkohas."
 #: NEEDS WORK
 msgid "An unknown transfer error occurred."
 msgstr "Tekkis tundmatu edastamise viga."
+# 
+# File: src/ashyterm/filemanager/transfer_manager.py, line: 303
+#: NEEDS WORK
+#, python-brace-format
+msgid "Transferring {filename}"
+msgstr "Ülekandmine {filename}"
+# 
+# File: src/ashyterm/filemanager/transfer_manager.py, line: 312
+# File: src/ashyterm/filemanager/transfer_manager.py, line: 393
+#: NEEDS WORK
+msgid "Starting..."
+msgstr "Käivitamine..."
+# 
+# File: src/ashyterm/filemanager/transfer_manager.py, line: 337
+# File: src/ashyterm/filemanager/transfer_manager.py, line: 408
+#: NEEDS WORK
+#, python-brace-format
+msgid "{time} left"
+msgstr "{time} jäänud"
+# 
+# File: src/ashyterm/filemanager/transfer_manager.py, line: 346
+# File: src/ashyterm/filemanager/transfer_manager.py, line: 415
+#: NEEDS WORK
+#, python-brace-format
+msgid "{time} elapsed"
+msgstr "{time} möödunud"
+# 
+# File: src/ashyterm/filemanager/transfer_manager.py, line: 388
+#: NEEDS WORK
+#, python-brace-format
+msgid "Transferring {count} files"
+msgstr "Üksuste {count} edastamine"
 # 
 # File: usr/share/ashyterm/filemanager/transfer_manager.py, line: 273
 #: NEEDS WORK

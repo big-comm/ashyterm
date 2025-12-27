@@ -483,10 +483,18 @@ msgstr "OpenRouter가 HTTP {status}: {message}{detail}로 응답했습니다."
 msgid "Not an SSH session."
 msgstr "SSH 세션이 아닙니다."
 # 
-# File: usr/share/ashyterm/filemanager/operations.py, line: 146
+# File: src/ashyterm/terminal/spawner.py, line: 821
 #: NEEDS WORK
-msgid "Command timed out."
-msgstr "명령이 시간 초과되었습니다."
+msgid "Connection lost or unreachable."
+msgstr "연결이 끊어졌거나 도달할 수 없습니다."
+# 
+# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
+# 
+# File: src/ashyterm/terminal/spawner.py, line: 831
+# File: src/ashyterm/filemanager/operations.py, line: 199
+#: NEEDS WORK
+msgid "Command timed out. Connection may be lost."
+msgstr "명령이 시간 초과되었습니다. 연결이 끊어질 수 있습니다."
 # 
 # File: usr/share/ashyterm/terminal/tabs.py, line: 43
 #: NEEDS WORK
@@ -7233,85 +7241,64 @@ msgstr "폴더 경로가 상위 경로와 일치하지 않습니다."
 msgid "Unnamed Folder"
 msgstr "이름 없는 폴더"
 # 
-# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 69
+# File: usr/share/ashyterm/filemanager/manager.py, line: 638
 #: NEEDS WORK
-msgid "Cancel transfer"
-msgstr "전송 취소"
+msgid "Download"
+msgstr "다운로드"
 # 
-# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 63
+# File: usr/share/ashyterm/filemanager/manager.py, line: 861
 #: NEEDS WORK
-msgid "Remove from history"
-msgstr "기록에서 제거"
+msgid "Upload"
+msgstr "업로드"
 # 
-# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 78
+# File: src/ashyterm/filemanager/transfer_dialog.py, line: 195
 #: NEEDS WORK
-msgid "Recebido"
-msgstr "수신됨"
+msgid "Queued"
+msgstr "대기 중"
 # 
-# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 80
+# File: src/ashyterm/filemanager/transfer_dialog.py, line: 207
 #: NEEDS WORK
-msgid "Enviado"
-msgstr "전송됨"
-# 
-# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 107
-#: NEEDS WORK
-msgid "Waiting..."
-msgstr "대기 중..."
-# 
-# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 116
-#: NEEDS WORK
-msgid "in"
-msgstr "안에"
-# 
-# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 121
-#: NEEDS WORK
-msgid "Completed"
-msgstr "완료됨"
-# 
-# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 126
-#: NEEDS WORK
-msgid "Unknown error"
-msgstr "알 수 없는 오류"
+msgid "Done"
+msgstr "완료"
 # 
 # File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 127
 #: NEEDS WORK
 msgid "Failed"
 msgstr "실패"
 # 
+# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 126
+#: NEEDS WORK
+msgid "Unknown error"
+msgstr "알 수 없는 오류"
+# 
 # File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 131
 #: NEEDS WORK
 msgid "Cancelled"
 msgstr "취소됨"
 # 
-# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 147
+# File: src/ashyterm/filemanager/transfer_dialog.py, line: 266
 #: NEEDS WORK
-msgid "Recebendo"
-msgstr "수신 중"
+msgid "Downloading"
+msgstr "다운로드 중"
 # 
-# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 149
+# File: src/ashyterm/filemanager/transfer_dialog.py, line: 268
 #: NEEDS WORK
-msgid "Enviando"
-msgstr "전송 중"
+msgid "Uploading"
+msgstr "업로드 중"
 # 
-# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 165
+# File: src/ashyterm/filemanager/transfer_dialog.py, line: 332
 #: NEEDS WORK
-msgid "remaining"
-msgstr "남은"
+msgid "Transfers"
+msgstr "전송"
 # 
-# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 216
+# File: src/ashyterm/filemanager/transfer_dialog.py, line: 411
 #: NEEDS WORK
-msgid "Transfer Manager"
-msgstr "전송 관리자"
-# 
-# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 239
-# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 348
-#: NEEDS WORK
-msgid "Clear History"
+msgid "Clear history"
 msgstr "기록 지우기"
 # 
-# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 231
+# File: src/ashyterm/filemanager/transfer_dialog.py, line: 420
 #: NEEDS WORK
-msgid "Cancelar Tudo"
+msgid "Cancel all"
 msgstr "모두 취소"
 # 
 # File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 257
@@ -7319,22 +7306,20 @@ msgstr "모두 취소"
 msgid "No Transfers"
 msgstr "전송 없음"
 # 
-# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 258
+# File: src/ashyterm/filemanager/transfer_dialog.py, line: 458
 #: NEEDS WORK
-msgid "Active and past transfers will appear here."
-msgstr "활성 및 과거 전송이 여기에 표시됩니다."
+msgid "Upload or download files to see them here"
+msgstr "여기에서 파일을 업로드하거나 다운로드하여 확인하세요."
 # 
 # File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 340
 #: NEEDS WORK
 msgid "Clear Transfer History?"
 msgstr "전송 기록 지우기?"
 # 
-# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 342
+# File: src/ashyterm/filemanager/transfer_dialog.py, line: 579
 #: NEEDS WORK
-msgid ""
-"This action cannot be undone and will remove all completed, failed, and cancelled transfers from "
-"the list."
-msgstr "이 작업은 실행 취소할 수 없으며 목록에서 모든 완료된, 실패한 및 취소된 전송을 제거합니다."
+msgid "This will remove all completed, failed, and cancelled transfers."
+msgstr "이 작업은 완료된, 실패한 및 취소된 모든 전송을 제거합니다."
 # 
 # File: usr/share/ashyterm/filemanager/manager.py, line: 274
 #: NEEDS WORK
@@ -7443,6 +7428,11 @@ msgstr "그룹"
 msgid "Loading..."
 msgstr "로딩 중..."
 # 
+# File: src/ashyterm/filemanager/manager.py, line: 1709
+#: NEEDS WORK
+msgid "Connection lost. Please check your network connection."
+msgstr "연결이 끊어졌습니다. 네트워크 연결을 확인하십시오."
+# 
 # File: src/ashyterm/filemanager/manager.py, line: 1848
 #: NEEDS WORK
 msgid "Type and press Enter..."
@@ -7475,11 +7465,6 @@ msgstr "열기..."
 #: NEEDS WORK
 msgid "Cut"
 msgstr "자르기"
-# 
-# File: usr/share/ashyterm/filemanager/manager.py, line: 638
-#: NEEDS WORK
-msgid "Download"
-msgstr "다운로드"
 # 
 # File: usr/share/ashyterm/filemanager/manager.py, line: 1737
 #: NEEDS WORK
@@ -7651,6 +7636,11 @@ msgstr "대상 폴더 선택"
 msgid "Download Here"
 msgstr "여기에서 다운로드"
 # 
+# File: src/ashyterm/filemanager/manager.py, line: 2608
+#: NEEDS WORK
+msgid "Download Error"
+msgstr "다운로드 오류"
+# 
 # File: usr/share/ashyterm/filemanager/manager.py, line: 855
 # File: usr/share/ashyterm/filemanager/manager.py, line: 889
 #: NEEDS WORK
@@ -7662,10 +7652,10 @@ msgstr "오류"
 msgid "Upload File(s) to This Folder"
 msgstr "이 폴더에 파일 업로드"
 # 
-# File: usr/share/ashyterm/filemanager/manager.py, line: 861
+# File: src/ashyterm/filemanager/manager.py, line: 2692
 #: NEEDS WORK
-msgid "Upload"
-msgstr "업로드"
+msgid "Upload Error"
+msgstr "업로드 오류"
 # 
 # File: usr/share/ashyterm/filemanager/manager.py, line: 1430
 #: NEEDS WORK
@@ -7725,6 +7715,28 @@ msgstr "권한 거부"
 #: NEEDS WORK
 msgid "Transfer cancelled."
 msgstr "전송이 취소되었습니다."
+# 
+# File: src/ashyterm/filemanager/manager.py, line: 3088
+#: NEEDS WORK
+msgid "Insufficient Disk Space"
+msgstr "디스크 공간 부족"
+# 
+# File: src/ashyterm/filemanager/manager.py, line: 3090
+#: NEEDS WORK
+msgid "There is not enough free space at the destination to complete this transfer."
+msgstr "대상에 이 전송을 완료할 수 있는 충분한 여유 공간이 없습니다."
+# 
+# File: src/ashyterm/filemanager/manager.py, line: 3096
+#: NEEDS WORK
+#, python-brace-format
+msgid ""
+"Required space: <b>{required}</b>\n"
+"Available space: <b>{available}</b>\n"
+"Destination: <b>{path}</b>"
+msgstr ""
+"필요한 공간: <b>{required}</b>  \n"
+"사용 가능한 공간: <b>{available}</b>  \n"
+"대상: <b>{path}</b>"
 # 
 # File: usr/share/ashyterm/filemanager/manager.py, line: 1783
 #: NEEDS WORK
@@ -7875,6 +7887,38 @@ msgstr "권한 거부: 대상에 대한 쓰기 권한을 확인하십시오."
 #: NEEDS WORK
 msgid "An unknown transfer error occurred."
 msgstr "알 수 없는 전송 오류가 발생했습니다."
+# 
+# File: src/ashyterm/filemanager/transfer_manager.py, line: 303
+#: NEEDS WORK
+#, python-brace-format
+msgid "Transferring {filename}"
+msgstr "전송 중 {filename}"
+# 
+# File: src/ashyterm/filemanager/transfer_manager.py, line: 312
+# File: src/ashyterm/filemanager/transfer_manager.py, line: 393
+#: NEEDS WORK
+msgid "Starting..."
+msgstr "시작 중..."
+# 
+# File: src/ashyterm/filemanager/transfer_manager.py, line: 337
+# File: src/ashyterm/filemanager/transfer_manager.py, line: 408
+#: NEEDS WORK
+#, python-brace-format
+msgid "{time} left"
+msgstr "{time} 남음"
+# 
+# File: src/ashyterm/filemanager/transfer_manager.py, line: 346
+# File: src/ashyterm/filemanager/transfer_manager.py, line: 415
+#: NEEDS WORK
+#, python-brace-format
+msgid "{time} elapsed"
+msgstr "{time} 경과"
+# 
+# File: src/ashyterm/filemanager/transfer_manager.py, line: 388
+#: NEEDS WORK
+#, python-brace-format
+msgid "Transferring {count} files"
+msgstr "{count}개의 파일 전송 중"
 # 
 # File: usr/share/ashyterm/filemanager/transfer_manager.py, line: 273
 #: NEEDS WORK

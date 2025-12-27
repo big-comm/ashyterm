@@ -483,10 +483,18 @@ msgstr "OpenRouter svaraði með HTTP {status}: {message}{detail}"
 msgid "Not an SSH session."
 msgstr "Ekki SSH sesía."
 # 
-# File: usr/share/ashyterm/filemanager/operations.py, line: 146
+# File: src/ashyterm/terminal/spawner.py, line: 821
 #: NEEDS WORK
-msgid "Command timed out."
-msgstr "Skipun tímabund."
+msgid "Connection lost or unreachable."
+msgstr "Tengdur tapaðist eða ófáanleg."
+# 
+# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
+# 
+# File: src/ashyterm/terminal/spawner.py, line: 831
+# File: src/ashyterm/filemanager/operations.py, line: 199
+#: NEEDS WORK
+msgid "Command timed out. Connection may be lost."
+msgstr "Skipun tímabund. Tengingin gæti tapast."
 # 
 # File: usr/share/ashyterm/terminal/tabs.py, line: 43
 #: NEEDS WORK
@@ -7265,85 +7273,64 @@ msgstr "Skráarstig er ekki í samræmi við foreldrastrig."
 msgid "Unnamed Folder"
 msgstr "Ónefnd möppur"
 # 
-# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 69
+# File: usr/share/ashyterm/filemanager/manager.py, line: 638
 #: NEEDS WORK
-msgid "Cancel transfer"
-msgstr "Hætta við flutning"
+msgid "Download"
+msgstr "Sækja"
 # 
-# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 63
+# File: usr/share/ashyterm/filemanager/manager.py, line: 861
 #: NEEDS WORK
-msgid "Remove from history"
-msgstr "Fjarlægja úr sögu"
+msgid "Upload"
+msgstr "Hlaða upp"
 # 
-# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 78
+# File: src/ashyterm/filemanager/transfer_dialog.py, line: 195
 #: NEEDS WORK
-msgid "Recebido"
-msgstr "Móttaka"
+msgid "Queued"
+msgstr "Í röð"
 # 
-# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 80
+# File: src/ashyterm/filemanager/transfer_dialog.py, line: 207
 #: NEEDS WORK
-msgid "Enviado"
-msgstr "Sentur"
-# 
-# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 107
-#: NEEDS WORK
-msgid "Waiting..."
-msgstr "Bíðandi..."
-# 
-# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 116
-#: NEEDS WORK
-msgid "in"
-msgstr "í"
-# 
-# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 121
-#: NEEDS WORK
-msgid "Completed"
-msgstr "Lokið"
-# 
-# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 126
-#: NEEDS WORK
-msgid "Unknown error"
-msgstr "Ókunnug villa"
+msgid "Done"
+msgstr "Farið að vinna"
 # 
 # File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 127
 #: NEEDS WORK
 msgid "Failed"
 msgstr "Misheppnað"
 # 
+# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 126
+#: NEEDS WORK
+msgid "Unknown error"
+msgstr "Ókunnug villa"
+# 
 # File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 131
 #: NEEDS WORK
 msgid "Cancelled"
 msgstr "Fellt"
 # 
-# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 147
+# File: src/ashyterm/filemanager/transfer_dialog.py, line: 266
 #: NEEDS WORK
-msgid "Recebendo"
-msgstr "Móttaka"
+msgid "Downloading"
+msgstr "Sæki niður"
 # 
-# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 149
+# File: src/ashyterm/filemanager/transfer_dialog.py, line: 268
 #: NEEDS WORK
-msgid "Enviando"
-msgstr "Sending"
+msgid "Uploading"
+msgstr "Hlaða upp"
 # 
-# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 165
+# File: src/ashyterm/filemanager/transfer_dialog.py, line: 332
 #: NEEDS WORK
-msgid "remaining"
-msgstr "afgangur"
+msgid "Transfers"
+msgstr "Færslur"
 # 
-# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 216
+# File: src/ashyterm/filemanager/transfer_dialog.py, line: 411
 #: NEEDS WORK
-msgid "Transfer Manager"
-msgstr "Flutningsstjóri"
-# 
-# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 239
-# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 348
-#: NEEDS WORK
-msgid "Clear History"
+msgid "Clear history"
 msgstr "Tæma sögu"
 # 
-# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 231
+# File: src/ashyterm/filemanager/transfer_dialog.py, line: 420
 #: NEEDS WORK
-msgid "Cancelar Tudo"
+msgid "Cancel all"
 msgstr "Hætta við allt"
 # 
 # File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 257
@@ -7351,24 +7338,20 @@ msgstr "Hætta við allt"
 msgid "No Transfers"
 msgstr "Engin ekki flutningar"
 # 
-# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 258
+# File: src/ashyterm/filemanager/transfer_dialog.py, line: 458
 #: NEEDS WORK
-msgid "Active and past transfers will appear here."
-msgstr "Virkar og fyrri flutningar munu birtast hér."
+msgid "Upload or download files to see them here"
+msgstr "Hladdu eða hlaða niður skrám til að sjá þær hér"
 # 
 # File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 340
 #: NEEDS WORK
 msgid "Clear Transfer History?"
 msgstr "Hreinsa flutningssögu?"
 # 
-# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 342
+# File: src/ashyterm/filemanager/transfer_dialog.py, line: 579
 #: NEEDS WORK
-msgid ""
-"This action cannot be undone and will remove all completed, failed, and cancelled transfers from "
-"the list."
-msgstr ""
-"Þetta aðgerð er ekki hægt að afturkalla og mun fjarlægja allar lokið, misheppnaðar og aflýstar "
-"flutninga úr listanum."
+msgid "This will remove all completed, failed, and cancelled transfers."
+msgstr "Þetta mun fjarlægja allar lokið, misheppnaðar og aflýstar flutninga."
 # 
 # File: usr/share/ashyterm/filemanager/manager.py, line: 274
 #: NEEDS WORK
@@ -7477,6 +7460,11 @@ msgstr "Hópur"
 msgid "Loading..."
 msgstr "Hlaða..."
 # 
+# File: src/ashyterm/filemanager/manager.py, line: 1709
+#: NEEDS WORK
+msgid "Connection lost. Please check your network connection."
+msgstr "Tengist tapast. Vinsamlegast athugaðu net tenginguna þína."
+# 
 # File: src/ashyterm/filemanager/manager.py, line: 1848
 #: NEEDS WORK
 msgid "Type and press Enter..."
@@ -7509,11 +7497,6 @@ msgstr "Opna með..."
 #: NEEDS WORK
 msgid "Cut"
 msgstr "Klippa"
-# 
-# File: usr/share/ashyterm/filemanager/manager.py, line: 638
-#: NEEDS WORK
-msgid "Download"
-msgstr "Sækja"
 # 
 # File: usr/share/ashyterm/filemanager/manager.py, line: 1737
 #: NEEDS WORK
@@ -7685,6 +7668,11 @@ msgstr "Veldu áfangastaðaskrá."
 msgid "Download Here"
 msgstr "Sæktu hér"
 # 
+# File: src/ashyterm/filemanager/manager.py, line: 2608
+#: NEEDS WORK
+msgid "Download Error"
+msgstr "Niðurhal Villa"
+# 
 # File: usr/share/ashyterm/filemanager/manager.py, line: 855
 # File: usr/share/ashyterm/filemanager/manager.py, line: 889
 #: NEEDS WORK
@@ -7696,10 +7684,10 @@ msgstr "Villa"
 msgid "Upload File(s) to This Folder"
 msgstr "Hlaða upp skrá(um) í þessa möppu"
 # 
-# File: usr/share/ashyterm/filemanager/manager.py, line: 861
+# File: src/ashyterm/filemanager/manager.py, line: 2692
 #: NEEDS WORK
-msgid "Upload"
-msgstr "Hlaða upp"
+msgid "Upload Error"
+msgstr "Hlaða upp villa"
 # 
 # File: usr/share/ashyterm/filemanager/manager.py, line: 1430
 #: NEEDS WORK
@@ -7762,6 +7750,28 @@ msgstr "Aðgangur hafnað"
 #: NEEDS WORK
 msgid "Transfer cancelled."
 msgstr "Flutningur aflýstur."
+# 
+# File: src/ashyterm/filemanager/manager.py, line: 3088
+#: NEEDS WORK
+msgid "Insufficient Disk Space"
+msgstr "Ók diksrými"
+# 
+# File: src/ashyterm/filemanager/manager.py, line: 3090
+#: NEEDS WORK
+msgid "There is not enough free space at the destination to complete this transfer."
+msgstr "Ekki er nægilegt frítt pláss á áfangastaðnum til að ljúka þessari flutningi."
+# 
+# File: src/ashyterm/filemanager/manager.py, line: 3096
+#: NEEDS WORK
+#, python-brace-format
+msgid ""
+"Required space: <b>{required}</b>\n"
+"Available space: <b>{available}</b>\n"
+"Destination: <b>{path}</b>"
+msgstr ""
+"Pláss sem kraf: <b>{required}</b>  \n"
+"Til staðar pláss: <b>{available}</b>  \n"
+"Áfangastaður: <b>{path}</b>"
 # 
 # File: usr/share/ashyterm/filemanager/manager.py, line: 1783
 #: NEEDS WORK
@@ -7914,6 +7924,38 @@ msgstr "aðgangur hafnað: Athugaðu skrifheimildir á áfangastaðnum."
 #: NEEDS WORK
 msgid "An unknown transfer error occurred."
 msgstr "Ókunnugur flutningsvilla kom upp."
+# 
+# File: src/ashyterm/filemanager/transfer_manager.py, line: 303
+#: NEEDS WORK
+#, python-brace-format
+msgid "Transferring {filename}"
+msgstr "Færir {filename}"
+# 
+# File: src/ashyterm/filemanager/transfer_manager.py, line: 312
+# File: src/ashyterm/filemanager/transfer_manager.py, line: 393
+#: NEEDS WORK
+msgid "Starting..."
+msgstr "Byrjar..."
+# 
+# File: src/ashyterm/filemanager/transfer_manager.py, line: 337
+# File: src/ashyterm/filemanager/transfer_manager.py, line: 408
+#: NEEDS WORK
+#, python-brace-format
+msgid "{time} left"
+msgstr "{time} eftir"
+# 
+# File: src/ashyterm/filemanager/transfer_manager.py, line: 346
+# File: src/ashyterm/filemanager/transfer_manager.py, line: 415
+#: NEEDS WORK
+#, python-brace-format
+msgid "{time} elapsed"
+msgstr "{time} liðinn"
+# 
+# File: src/ashyterm/filemanager/transfer_manager.py, line: 388
+#: NEEDS WORK
+#, python-brace-format
+msgid "Transferring {count} files"
+msgstr "Færir {count} skrár"
 # 
 # File: usr/share/ashyterm/filemanager/transfer_manager.py, line: 273
 #: NEEDS WORK

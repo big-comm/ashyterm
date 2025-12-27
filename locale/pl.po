@@ -483,10 +483,18 @@ msgstr "OpenRouter odpowiedział z HTTP {status}: {message}{detail}"
 msgid "Not an SSH session."
 msgstr "Nie jest to sesja SSH."
 # 
-# File: usr/share/ashyterm/filemanager/operations.py, line: 146
+# File: src/ashyterm/terminal/spawner.py, line: 821
 #: NEEDS WORK
-msgid "Command timed out."
-msgstr "Przekroczenie limitu czasu polecenia."
+msgid "Connection lost or unreachable."
+msgstr "Połączenie utracone lub niedostępne."
+# 
+# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
+# 
+# File: src/ashyterm/terminal/spawner.py, line: 831
+# File: src/ashyterm/filemanager/operations.py, line: 199
+#: NEEDS WORK
+msgid "Command timed out. Connection may be lost."
+msgstr "Przekroczenie limitu czasu polecenia. Połączenie może zostać utracone."
 # 
 # File: usr/share/ashyterm/terminal/tabs.py, line: 43
 #: NEEDS WORK
@@ -7277,85 +7285,64 @@ msgstr "Ścieżka folderu nie jest zgodna ze ścieżką folderu nadrzędnego."
 msgid "Unnamed Folder"
 msgstr "Niepodpisany folder"
 # 
-# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 69
+# File: usr/share/ashyterm/filemanager/manager.py, line: 638
 #: NEEDS WORK
-msgid "Cancel transfer"
-msgstr "Anuluj transfer"
+msgid "Download"
+msgstr "Pobierz"
 # 
-# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 63
+# File: usr/share/ashyterm/filemanager/manager.py, line: 861
 #: NEEDS WORK
-msgid "Remove from history"
-msgstr "Usuń z historii"
+msgid "Upload"
+msgstr "Prześlij"
 # 
-# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 78
+# File: src/ashyterm/filemanager/transfer_dialog.py, line: 195
 #: NEEDS WORK
-msgid "Recebido"
-msgstr "Odebrano"
+msgid "Queued"
+msgstr "W kolejce"
 # 
-# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 80
+# File: src/ashyterm/filemanager/transfer_dialog.py, line: 207
 #: NEEDS WORK
-msgid "Enviado"
-msgstr "Wysłano"
-# 
-# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 107
-#: NEEDS WORK
-msgid "Waiting..."
-msgstr "Oczekiwanie..."
-# 
-# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 116
-#: NEEDS WORK
-msgid "in"
-msgstr "w środku"
-# 
-# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 121
-#: NEEDS WORK
-msgid "Completed"
-msgstr "Zakończono"
-# 
-# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 126
-#: NEEDS WORK
-msgid "Unknown error"
-msgstr "Nieznany błąd"
+msgid "Done"
+msgstr "Zrobione"
 # 
 # File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 127
 #: NEEDS WORK
 msgid "Failed"
 msgstr "Niepowodzenie"
 # 
+# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 126
+#: NEEDS WORK
+msgid "Unknown error"
+msgstr "Nieznany błąd"
+# 
 # File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 131
 #: NEEDS WORK
 msgid "Cancelled"
 msgstr "Anulowane"
 # 
-# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 147
+# File: src/ashyterm/filemanager/transfer_dialog.py, line: 266
 #: NEEDS WORK
-msgid "Recebendo"
-msgstr "Odbieranie"
+msgid "Downloading"
+msgstr "Pobieranie"
 # 
-# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 149
+# File: src/ashyterm/filemanager/transfer_dialog.py, line: 268
 #: NEEDS WORK
-msgid "Enviando"
-msgstr "Wysyłanie"
+msgid "Uploading"
+msgstr "Przesyłanie"
 # 
-# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 165
+# File: src/ashyterm/filemanager/transfer_dialog.py, line: 332
 #: NEEDS WORK
-msgid "remaining"
-msgstr "pozostały"
+msgid "Transfers"
+msgstr "Transfery"
 # 
-# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 216
+# File: src/ashyterm/filemanager/transfer_dialog.py, line: 411
 #: NEEDS WORK
-msgid "Transfer Manager"
-msgstr "Menedżer transferu"
-# 
-# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 239
-# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 348
-#: NEEDS WORK
-msgid "Clear History"
+msgid "Clear history"
 msgstr "Wyczyść historię"
 # 
-# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 231
+# File: src/ashyterm/filemanager/transfer_dialog.py, line: 420
 #: NEEDS WORK
-msgid "Cancelar Tudo"
+msgid "Cancel all"
 msgstr "Anuluj wszystko"
 # 
 # File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 257
@@ -7363,24 +7350,20 @@ msgstr "Anuluj wszystko"
 msgid "No Transfers"
 msgstr "Brak transferów"
 # 
-# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 258
+# File: src/ashyterm/filemanager/transfer_dialog.py, line: 458
 #: NEEDS WORK
-msgid "Active and past transfers will appear here."
-msgstr "Aktywne i przeszłe transfery będą się tutaj wyświetlać."
+msgid "Upload or download files to see them here"
+msgstr "Prześlij lub pobierz pliki, aby je tutaj zobaczyć"
 # 
 # File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 340
 #: NEEDS WORK
 msgid "Clear Transfer History?"
 msgstr "Czy wyczyścić historię transferów?"
 # 
-# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 342
+# File: src/ashyterm/filemanager/transfer_dialog.py, line: 579
 #: NEEDS WORK
-msgid ""
-"This action cannot be undone and will remove all completed, failed, and cancelled transfers from "
-"the list."
-msgstr ""
-"Ta akcja nie może być cofnięta i usunie wszystkie zakończone, nieudane i anulowane transfery z "
-"listy."
+msgid "This will remove all completed, failed, and cancelled transfers."
+msgstr "To usunięte zostaną wszystkie zakończone, nieudane i anulowane transfery."
 # 
 # File: usr/share/ashyterm/filemanager/manager.py, line: 274
 #: NEEDS WORK
@@ -7489,6 +7472,11 @@ msgstr "Grupa"
 msgid "Loading..."
 msgstr "Ładowanie..."
 # 
+# File: src/ashyterm/filemanager/manager.py, line: 1709
+#: NEEDS WORK
+msgid "Connection lost. Please check your network connection."
+msgstr "Połączenie utracone. Proszę sprawdzić połączenie sieciowe."
+# 
 # File: src/ashyterm/filemanager/manager.py, line: 1848
 #: NEEDS WORK
 msgid "Type and press Enter..."
@@ -7521,11 +7509,6 @@ msgstr "Otwórz za pomocą..."
 #: NEEDS WORK
 msgid "Cut"
 msgstr "Wytnij"
-# 
-# File: usr/share/ashyterm/filemanager/manager.py, line: 638
-#: NEEDS WORK
-msgid "Download"
-msgstr "Pobierz"
 # 
 # File: usr/share/ashyterm/filemanager/manager.py, line: 1737
 #: NEEDS WORK
@@ -7697,6 +7680,11 @@ msgstr "Wybierz folder docelowy"
 msgid "Download Here"
 msgstr "Pobierz tutaj"
 # 
+# File: src/ashyterm/filemanager/manager.py, line: 2608
+#: NEEDS WORK
+msgid "Download Error"
+msgstr "Błąd pobierania"
+# 
 # File: usr/share/ashyterm/filemanager/manager.py, line: 855
 # File: usr/share/ashyterm/filemanager/manager.py, line: 889
 #: NEEDS WORK
@@ -7708,10 +7696,10 @@ msgstr "Błąd"
 msgid "Upload File(s) to This Folder"
 msgstr "Prześlij plik(i) do tego folderu"
 # 
-# File: usr/share/ashyterm/filemanager/manager.py, line: 861
+# File: src/ashyterm/filemanager/manager.py, line: 2692
 #: NEEDS WORK
-msgid "Upload"
-msgstr "Prześlij"
+msgid "Upload Error"
+msgstr "Błąd przesyłania"
 # 
 # File: usr/share/ashyterm/filemanager/manager.py, line: 1430
 #: NEEDS WORK
@@ -7774,6 +7762,28 @@ msgstr "Odmowa dostępu"
 #: NEEDS WORK
 msgid "Transfer cancelled."
 msgstr "Transfer anulowany."
+# 
+# File: src/ashyterm/filemanager/manager.py, line: 3088
+#: NEEDS WORK
+msgid "Insufficient Disk Space"
+msgstr "Niewystarczająca ilość miejsca na dysku"
+# 
+# File: src/ashyterm/filemanager/manager.py, line: 3090
+#: NEEDS WORK
+msgid "There is not enough free space at the destination to complete this transfer."
+msgstr "Nie ma wystarczającej ilości wolnego miejsca w docelowej lokalizacji, aby zakończyć tę operację."
+# 
+# File: src/ashyterm/filemanager/manager.py, line: 3096
+#: NEEDS WORK
+#, python-brace-format
+msgid ""
+"Required space: <b>{required}</b>\n"
+"Available space: <b>{available}</b>\n"
+"Destination: <b>{path}</b>"
+msgstr ""
+"Wymagana przestrzeń: <b>{required}</b>  \n"
+"Dostępna przestrzeń: <b>{available}</b>  \n"
+"Miejsce docelowe: <b>{path}</b>"
 # 
 # File: usr/share/ashyterm/filemanager/manager.py, line: 1783
 #: NEEDS WORK
@@ -7926,6 +7936,38 @@ msgstr "Odmowa dostępu: Sprawdź uprawnienia do zapisu w docelowej lokalizacji.
 #: NEEDS WORK
 msgid "An unknown transfer error occurred."
 msgstr "Wystąpił nieznany błąd transferu."
+# 
+# File: src/ashyterm/filemanager/transfer_manager.py, line: 303
+#: NEEDS WORK
+#, python-brace-format
+msgid "Transferring {filename}"
+msgstr "Przesyłanie {filename}"
+# 
+# File: src/ashyterm/filemanager/transfer_manager.py, line: 312
+# File: src/ashyterm/filemanager/transfer_manager.py, line: 393
+#: NEEDS WORK
+msgid "Starting..."
+msgstr "Rozpoczynanie..."
+# 
+# File: src/ashyterm/filemanager/transfer_manager.py, line: 337
+# File: src/ashyterm/filemanager/transfer_manager.py, line: 408
+#: NEEDS WORK
+#, python-brace-format
+msgid "{time} left"
+msgstr "{time} pozostało"
+# 
+# File: src/ashyterm/filemanager/transfer_manager.py, line: 346
+# File: src/ashyterm/filemanager/transfer_manager.py, line: 415
+#: NEEDS WORK
+#, python-brace-format
+msgid "{time} elapsed"
+msgstr "{time} upłynęło"
+# 
+# File: src/ashyterm/filemanager/transfer_manager.py, line: 388
+#: NEEDS WORK
+#, python-brace-format
+msgid "Transferring {count} files"
+msgstr "Przesyłanie {count} plików"
 # 
 # File: usr/share/ashyterm/filemanager/transfer_manager.py, line: 273
 #: NEEDS WORK

@@ -483,10 +483,18 @@ msgstr "OpenRouter svarade med HTTP {status}: {message}{detail}"
 msgid "Not an SSH session."
 msgstr "Inte en SSH-session."
 # 
-# File: usr/share/ashyterm/filemanager/operations.py, line: 146
+# File: src/ashyterm/terminal/spawner.py, line: 821
 #: NEEDS WORK
-msgid "Command timed out."
-msgstr "Kommandot tidsgräns överskriden."
+msgid "Connection lost or unreachable."
+msgstr "Anslutning förlorad eller otillgänglig."
+# 
+# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
+# 
+# File: src/ashyterm/terminal/spawner.py, line: 831
+# File: src/ashyterm/filemanager/operations.py, line: 199
+#: NEEDS WORK
+msgid "Command timed out. Connection may be lost."
+msgstr "Kommandot tog för lång tid. Anslutningen kan ha förlorats."
 # 
 # File: usr/share/ashyterm/terminal/tabs.py, line: 43
 #: NEEDS WORK
@@ -7268,110 +7276,85 @@ msgstr "Mappens sökväg är inte konsekvent med dess överordnade sökväg."
 msgid "Unnamed Folder"
 msgstr "Obenämnd mapp"
 # 
-# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 69
+# File: usr/share/ashyterm/filemanager/manager.py, line: 638
 #: NEEDS WORK
-msgid "Cancel transfer"
-msgstr "Avbryt överföring"
+msgid "Download"
+msgstr "Ladda ner"
 # 
-# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 63
+# File: usr/share/ashyterm/filemanager/manager.py, line: 861
 #: NEEDS WORK
-msgid "Remove from history"
-msgstr "Ta bort från historik"
+msgid "Upload"
+msgstr "Ladda upp"
 # 
-# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 78
+# File: src/ashyterm/filemanager/transfer_dialog.py, line: 195
 #: NEEDS WORK
-msgid "Recebido"
-msgstr "Mottaget"
+msgid "Queued"
+msgstr "Köad"
 # 
-# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 80
+# File: src/ashyterm/filemanager/transfer_dialog.py, line: 207
 #: NEEDS WORK
-msgid "Enviado"
-msgstr "Skickat"
-# 
-# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 107
-#: NEEDS WORK
-msgid "Waiting..."
-msgstr "Väntar..."
-# 
-# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 116
-#: NEEDS WORK
-msgid "in"
-msgstr "i"
-# 
-# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 121
-#: NEEDS WORK
-msgid "Completed"
-msgstr "Slutförd"
-# 
-# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 126
-#: NEEDS WORK
-msgid "Unknown error"
-msgstr "Okänt fel"
+msgid "Done"
+msgstr "Utfört"
 # 
 # File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 127
 #: NEEDS WORK
 msgid "Failed"
 msgstr "Misslyckades"
 # 
+# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 126
+#: NEEDS WORK
+msgid "Unknown error"
+msgstr "Okänt fel"
+# 
 # File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 131
 #: NEEDS WORK
 msgid "Cancelled"
 msgstr "Avbruten"
 # 
-# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 147
+# File: src/ashyterm/filemanager/transfer_dialog.py, line: 266
 #: NEEDS WORK
-msgid "Recebendo"
-msgstr "Mottar"
+msgid "Downloading"
+msgstr "Laddar ner"
 # 
-# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 149
+# File: src/ashyterm/filemanager/transfer_dialog.py, line: 268
 #: NEEDS WORK
-msgid "Enviando"
-msgstr "Skickar"
+msgid "Uploading"
+msgstr "Laddar upp"
 # 
-# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 165
+# File: src/ashyterm/filemanager/transfer_dialog.py, line: 332
 #: NEEDS WORK
-msgid "remaining"
-msgstr "återstående"
+msgid "Transfers"
+msgstr "Överföringar"
 # 
-# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 216
+# File: src/ashyterm/filemanager/transfer_dialog.py, line: 411
 #: NEEDS WORK
-msgid "Transfer Manager"
-msgstr "Överföringshanterare"
-# 
-# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 239
-# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 348
-#: NEEDS WORK
-msgid "Clear History"
+msgid "Clear history"
 msgstr "Rensa historik"
 # 
-# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 231
+# File: src/ashyterm/filemanager/transfer_dialog.py, line: 420
 #: NEEDS WORK
-msgid "Cancelar Tudo"
-msgstr "Avbryt allt"
+msgid "Cancel all"
+msgstr "Avbryt alla"
 # 
 # File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 257
 #: NEEDS WORK
 msgid "No Transfers"
 msgstr "Inga överföringar"
 # 
-# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 258
+# File: src/ashyterm/filemanager/transfer_dialog.py, line: 458
 #: NEEDS WORK
-msgid "Active and past transfers will appear here."
-msgstr "Aktiva och tidigare överföringar kommer att visas här."
+msgid "Upload or download files to see them here"
+msgstr "Ladda upp eller ladda ner filer för att se dem här"
 # 
 # File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 340
 #: NEEDS WORK
 msgid "Clear Transfer History?"
 msgstr "Rensa överföringshistorik?"
 # 
-# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 342
+# File: src/ashyterm/filemanager/transfer_dialog.py, line: 579
 #: NEEDS WORK
-msgid ""
-"This action cannot be undone and will remove all completed, failed, and cancelled transfers from "
-"the list."
-msgstr ""
-"Denna åtgärd kan inte ångras och kommer att ta bort alla slutförda, misslyckade och avbrutna "
-"överföringar från listan."
+msgid "This will remove all completed, failed, and cancelled transfers."
+msgstr "Detta kommer att ta bort alla slutförda, misslyckade och avbrutna överföringar."
 # 
 # File: usr/share/ashyterm/filemanager/manager.py, line: 274
 #: NEEDS WORK
@@ -7482,6 +7465,11 @@ msgstr "Grupp"
 msgid "Loading..."
 msgstr "Laddar..."
 # 
+# File: src/ashyterm/filemanager/manager.py, line: 1709
+#: NEEDS WORK
+msgid "Connection lost. Please check your network connection."
+msgstr "Anslutning förlorad. Kontrollera din nätverksanslutning."
+# 
 # File: src/ashyterm/filemanager/manager.py, line: 1879
 #: NEEDS WORK
 msgid "Type and press Enter..."
@@ -7514,11 +7502,6 @@ msgstr "Öppna med..."
 #: NEEDS WORK
 msgid "Cut"
 msgstr "Klipp"
-# 
-# File: usr/share/ashyterm/filemanager/manager.py, line: 638
-#: NEEDS WORK
-msgid "Download"
-msgstr "Ladda ner"
 # 
 # File: usr/share/ashyterm/filemanager/manager.py, line: 1737
 #: NEEDS WORK
@@ -7690,6 +7673,11 @@ msgstr "Välj destinationsmapp"
 msgid "Download Here"
 msgstr "Ladda ner här"
 # 
+# File: src/ashyterm/filemanager/manager.py, line: 2608
+#: NEEDS WORK
+msgid "Download Error"
+msgstr "Nedladdningsfel"
+# 
 # File: usr/share/ashyterm/filemanager/manager.py, line: 855
 # File: usr/share/ashyterm/filemanager/manager.py, line: 889
 #: NEEDS WORK
@@ -7701,10 +7689,10 @@ msgstr "Fel"
 msgid "Upload File(s) to This Folder"
 msgstr "Ladda upp fil(er) till den här mappen"
 # 
-# File: usr/share/ashyterm/filemanager/manager.py, line: 861
+# File: src/ashyterm/filemanager/manager.py, line: 2692
 #: NEEDS WORK
-msgid "Upload"
-msgstr "Ladda upp"
+msgid "Upload Error"
+msgstr "Uppladdningsfel"
 # 
 # File: usr/share/ashyterm/filemanager/manager.py, line: 1430
 #: NEEDS WORK
@@ -7767,6 +7755,28 @@ msgstr "Åtkomst nekad"
 #: NEEDS WORK
 msgid "Transfer cancelled."
 msgstr "Överföring avbruten."
+# 
+# File: src/ashyterm/filemanager/manager.py, line: 3088
+#: NEEDS WORK
+msgid "Insufficient Disk Space"
+msgstr "Otillräckligt diskutrymme"
+# 
+# File: src/ashyterm/filemanager/manager.py, line: 3090
+#: NEEDS WORK
+msgid "There is not enough free space at the destination to complete this transfer."
+msgstr "Det finns inte tillräckligt med ledigt utrymme på destinationen för att slutföra denna överföring."
+# 
+# File: src/ashyterm/filemanager/manager.py, line: 3096
+#: NEEDS WORK
+#, python-brace-format
+msgid ""
+"Required space: <b>{required}</b>\n"
+"Available space: <b>{available}</b>\n"
+"Destination: <b>{path}</b>"
+msgstr ""
+"Krävd utrymme: <b>{required}</b>  \n"
+"Tillgängligt utrymme: <b>{available}</b>  \n"
+"Destination: <b>{path}</b>"
 # 
 # File: usr/share/ashyterm/filemanager/manager.py, line: 1783
 #: NEEDS WORK
@@ -7917,6 +7927,38 @@ msgstr "Åtkomst nekad: Kontrollera skrivbehörigheter på destinationen."
 #: NEEDS WORK
 msgid "An unknown transfer error occurred."
 msgstr "Ett okänt överföringsfel inträffade."
+# 
+# File: src/ashyterm/filemanager/transfer_manager.py, line: 303
+#: NEEDS WORK
+#, python-brace-format
+msgid "Transferring {filename}"
+msgstr "Överför {filename}"
+# 
+# File: src/ashyterm/filemanager/transfer_manager.py, line: 312
+# File: src/ashyterm/filemanager/transfer_manager.py, line: 393
+#: NEEDS WORK
+msgid "Starting..."
+msgstr "Startar..."
+# 
+# File: src/ashyterm/filemanager/transfer_manager.py, line: 337
+# File: src/ashyterm/filemanager/transfer_manager.py, line: 408
+#: NEEDS WORK
+#, python-brace-format
+msgid "{time} left"
+msgstr "{time} kvar"
+# 
+# File: src/ashyterm/filemanager/transfer_manager.py, line: 346
+# File: src/ashyterm/filemanager/transfer_manager.py, line: 415
+#: NEEDS WORK
+#, python-brace-format
+msgid "{time} elapsed"
+msgstr "{time} förflutet"
+# 
+# File: src/ashyterm/filemanager/transfer_manager.py, line: 388
+#: NEEDS WORK
+#, python-brace-format
+msgid "Transferring {count} files"
+msgstr "Överför {count} filer"
 # 
 # File: usr/share/ashyterm/filemanager/transfer_manager.py, line: 273
 #: NEEDS WORK

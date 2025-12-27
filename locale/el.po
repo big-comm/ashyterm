@@ -483,10 +483,18 @@ msgstr "OpenRouter απάντησε με HTTP {status}: {message}{detail}"
 msgid "Not an SSH session."
 msgstr "Όχι μια συνεδρία SSH."
 # 
-# File: usr/share/ashyterm/filemanager/operations.py, line: 146
+# File: src/ashyterm/terminal/spawner.py, line: 821
 #: NEEDS WORK
-msgid "Command timed out."
-msgstr "Η εντολή έληξε."
+msgid "Connection lost or unreachable."
+msgstr "Η σύνδεση χάθηκε ή είναι μη προσβάσιμη."
+# 
+# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
+# 
+# File: src/ashyterm/terminal/spawner.py, line: 831
+# File: src/ashyterm/filemanager/operations.py, line: 199
+#: NEEDS WORK
+msgid "Command timed out. Connection may be lost."
+msgstr "Η εντολή εξέπνευσε. Η σύνδεση μπορεί να έχει χαθεί."
 # 
 # File: usr/share/ashyterm/terminal/tabs.py, line: 43
 #: NEEDS WORK
@@ -7291,110 +7299,85 @@ msgstr "Η διαδρομή του φακέλου δεν είναι συνεπή
 msgid "Unnamed Folder"
 msgstr "Ανώνυμος Φάκελος"
 # 
-# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 69
+# File: usr/share/ashyterm/filemanager/manager.py, line: 638
 #: NEEDS WORK
-msgid "Cancel transfer"
-msgstr "Ακύρωση μεταφοράς"
+msgid "Download"
+msgstr "Λήψη"
 # 
-# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 63
+# File: usr/share/ashyterm/filemanager/manager.py, line: 861
 #: NEEDS WORK
-msgid "Remove from history"
-msgstr "Αφαίρεση από την ιστορία"
+msgid "Upload"
+msgstr "Ανέβασμα"
 # 
-# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 78
+# File: src/ashyterm/filemanager/transfer_dialog.py, line: 195
 #: NEEDS WORK
-msgid "Recebido"
-msgstr "Ληφθέν"
+msgid "Queued"
+msgstr "Σε αναμονή"
 # 
-# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 80
+# File: src/ashyterm/filemanager/transfer_dialog.py, line: 207
 #: NEEDS WORK
-msgid "Enviado"
-msgstr "Αποσταλείς"
-# 
-# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 107
-#: NEEDS WORK
-msgid "Waiting..."
-msgstr "Αναμονή..."
-# 
-# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 116
-#: NEEDS WORK
-msgid "in"
-msgstr "μέσα"
-# 
-# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 121
-#: NEEDS WORK
-msgid "Completed"
+msgid "Done"
 msgstr "Ολοκληρώθηκε"
-# 
-# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 126
-#: NEEDS WORK
-msgid "Unknown error"
-msgstr "Άγνωστο σφάλμα"
 # 
 # File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 127
 #: NEEDS WORK
 msgid "Failed"
 msgstr "Απέτυχε"
 # 
+# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 126
+#: NEEDS WORK
+msgid "Unknown error"
+msgstr "Άγνωστο σφάλμα"
+# 
 # File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 131
 #: NEEDS WORK
 msgid "Cancelled"
 msgstr "Ακυρώθηκε"
 # 
-# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 147
+# File: src/ashyterm/filemanager/transfer_dialog.py, line: 266
 #: NEEDS WORK
-msgid "Recebendo"
-msgstr "Λήψη"
+msgid "Downloading"
+msgstr "Κατέβασμα"
 # 
-# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 149
+# File: src/ashyterm/filemanager/transfer_dialog.py, line: 268
 #: NEEDS WORK
-msgid "Enviando"
-msgstr "Αποστολή"
+msgid "Uploading"
+msgstr "Ανέβασμα"
 # 
-# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 165
+# File: src/ashyterm/filemanager/transfer_dialog.py, line: 332
 #: NEEDS WORK
-msgid "remaining"
-msgstr "υπόλοιπο"
+msgid "Transfers"
+msgstr "Μεταφορές"
 # 
-# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 216
+# File: src/ashyterm/filemanager/transfer_dialog.py, line: 411
 #: NEEDS WORK
-msgid "Transfer Manager"
-msgstr "Διαχειριστής Μεταφοράς"
+msgid "Clear history"
+msgstr "Καθαρισμός ιστορικού"
 # 
-# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 239
-# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 348
+# File: src/ashyterm/filemanager/transfer_dialog.py, line: 420
 #: NEEDS WORK
-msgid "Clear History"
-msgstr "Καθαρισμός Ιστορικού"
-# 
-# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 231
-#: NEEDS WORK
-msgid "Cancelar Tudo"
-msgstr "Ακύρωση Όλων"
+msgid "Cancel all"
+msgstr "Ακύρωση όλων"
 # 
 # File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 257
 #: NEEDS WORK
 msgid "No Transfers"
 msgstr "Καμία Μεταφορά"
 # 
-# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 258
+# File: src/ashyterm/filemanager/transfer_dialog.py, line: 458
 #: NEEDS WORK
-msgid "Active and past transfers will appear here."
-msgstr "Οι ενεργές και παρελθούσες μεταφορές θα εμφανιστούν εδώ."
+msgid "Upload or download files to see them here"
+msgstr "Ανεβάστε ή κατεβάστε αρχεία για να τα δείτε εδώ"
 # 
 # File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 340
 #: NEEDS WORK
 msgid "Clear Transfer History?"
 msgstr "Καθαρισμός Ιστορικού Μεταφοράς;"
 # 
-# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 342
+# File: src/ashyterm/filemanager/transfer_dialog.py, line: 579
 #: NEEDS WORK
-msgid ""
-"This action cannot be undone and will remove all completed, failed, and cancelled transfers from "
-"the list."
-msgstr ""
-"Αυτή η ενέργεια δεν μπορεί να αναιρεθεί και θα αφαιρέσει όλες τις ολοκληρωμένες, αποτυχημένες και "
-"ακυρωμένες μεταφορές από τη λίστα."
+msgid "This will remove all completed, failed, and cancelled transfers."
+msgstr "Αυτό θα αφαιρέσει όλες τις ολοκληρωμένες, αποτυχημένες και ακυρωμένες μεταφορές."
 # 
 # File: usr/share/ashyterm/filemanager/manager.py, line: 274
 #: NEEDS WORK
@@ -7507,6 +7490,11 @@ msgstr "Ομάδα"
 msgid "Loading..."
 msgstr "Φόρτωση..."
 # 
+# File: src/ashyterm/filemanager/manager.py, line: 1709
+#: NEEDS WORK
+msgid "Connection lost. Please check your network connection."
+msgstr "Η σύνδεση χάθηκε. Παρακαλώ ελέγξτε τη σύνδεση δικτύου σας."
+# 
 # File: src/ashyterm/filemanager/manager.py, line: 1848
 #: NEEDS WORK
 msgid "Type and press Enter..."
@@ -7539,11 +7527,6 @@ msgstr "Άνοιγμα με..."
 #: NEEDS WORK
 msgid "Cut"
 msgstr "Αποκοπή"
-# 
-# File: usr/share/ashyterm/filemanager/manager.py, line: 638
-#: NEEDS WORK
-msgid "Download"
-msgstr "Λήψη"
 # 
 # File: usr/share/ashyterm/filemanager/manager.py, line: 1737
 #: NEEDS WORK
@@ -7715,6 +7698,11 @@ msgstr "Επιλέξτε Φάκελο Προορισμού"
 msgid "Download Here"
 msgstr "Κατεβάστε εδώ"
 # 
+# File: src/ashyterm/filemanager/manager.py, line: 2608
+#: NEEDS WORK
+msgid "Download Error"
+msgstr "Σφάλμα Λήψης"
+# 
 # File: usr/share/ashyterm/filemanager/manager.py, line: 855
 # File: usr/share/ashyterm/filemanager/manager.py, line: 889
 #: NEEDS WORK
@@ -7726,10 +7714,10 @@ msgstr "Σφάλμα"
 msgid "Upload File(s) to This Folder"
 msgstr "Ανέβασμα Αρχείου(ων) σε Αυτόν τον Φάκελο"
 # 
-# File: usr/share/ashyterm/filemanager/manager.py, line: 861
+# File: src/ashyterm/filemanager/manager.py, line: 2692
 #: NEEDS WORK
-msgid "Upload"
-msgstr "Ανέβασμα"
+msgid "Upload Error"
+msgstr "Σφάλμα Μεταφόρτωσης"
 # 
 # File: usr/share/ashyterm/filemanager/manager.py, line: 1430
 #: NEEDS WORK
@@ -7792,6 +7780,28 @@ msgstr "Άρνηση Άδειας"
 #: NEEDS WORK
 msgid "Transfer cancelled."
 msgstr "Η μεταφορά ακυρώθηκε."
+# 
+# File: src/ashyterm/filemanager/manager.py, line: 3088
+#: NEEDS WORK
+msgid "Insufficient Disk Space"
+msgstr "Ανεπαρκής Χώρος Δίσκου"
+# 
+# File: src/ashyterm/filemanager/manager.py, line: 3090
+#: NEEDS WORK
+msgid "There is not enough free space at the destination to complete this transfer."
+msgstr "Δεν υπάρχει αρκετός ελεύθερος χώρος στον προορισμό για να ολοκληρωθεί αυτή η μεταφορά."
+# 
+# File: src/ashyterm/filemanager/manager.py, line: 3096
+#: NEEDS WORK
+#, python-brace-format
+msgid ""
+"Required space: <b>{required}</b>\n"
+"Available space: <b>{available}</b>\n"
+"Destination: <b>{path}</b>"
+msgstr ""
+"Απαιτούμενος χώρος: <b>{required}</b>  \n"
+"Διαθέσιμος χώρος: <b>{available}</b>  \n"
+"Προορισμός: <b>{path}</b>"
 # 
 # File: usr/share/ashyterm/filemanager/manager.py, line: 1783
 #: NEEDS WORK
@@ -7944,6 +7954,38 @@ msgstr "Άρνηση Άδειας: Ελέγξτε τις άδειες εγγρα
 #: NEEDS WORK
 msgid "An unknown transfer error occurred."
 msgstr "Παρουσιάστηκε ένα άγνωστο σφάλμα μεταφοράς."
+# 
+# File: src/ashyterm/filemanager/transfer_manager.py, line: 303
+#: NEEDS WORK
+#, python-brace-format
+msgid "Transferring {filename}"
+msgstr "Μεταφορά {filename}"
+# 
+# File: src/ashyterm/filemanager/transfer_manager.py, line: 312
+# File: src/ashyterm/filemanager/transfer_manager.py, line: 393
+#: NEEDS WORK
+msgid "Starting..."
+msgstr "Ξεκινάει..."
+# 
+# File: src/ashyterm/filemanager/transfer_manager.py, line: 337
+# File: src/ashyterm/filemanager/transfer_manager.py, line: 408
+#: NEEDS WORK
+#, python-brace-format
+msgid "{time} left"
+msgstr "{time} απομένει"
+# 
+# File: src/ashyterm/filemanager/transfer_manager.py, line: 346
+# File: src/ashyterm/filemanager/transfer_manager.py, line: 415
+#: NEEDS WORK
+#, python-brace-format
+msgid "{time} elapsed"
+msgstr "{time} παρελθόν"
+# 
+# File: src/ashyterm/filemanager/transfer_manager.py, line: 388
+#: NEEDS WORK
+#, python-brace-format
+msgid "Transferring {count} files"
+msgstr "Μεταφορά {count} αρχείων"
 # 
 # File: usr/share/ashyterm/filemanager/transfer_manager.py, line: 273
 #: NEEDS WORK
