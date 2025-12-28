@@ -194,6 +194,11 @@ class DefaultSettings:
             "window_height": 700,
             "window_maximized": False,
             "remember_window_state": True,
+            # Controls visibility of window control buttons when maximized
+            # "auto" - detect from button-layout (hide if empty/only colon)
+            # "always" - always hide buttons when maximized (for KDE Plasma Active Window Control)
+            # "never" - never hide buttons (default GNOME-like behavior)
+            "hide_headerbar_buttons_when_maximized": "auto",
             # Behavior
             "sidebar_visible": False,
             "auto_hide_sidebar": True,

@@ -853,6 +853,10 @@ class CommTerminalWindow(Adw.ApplicationWindow):
             if self.font_sizer_widget and key == "font":
                 self.font_sizer_widget.update_display()
 
+        # Update headerbar buttons visibility when this setting changes
+        if key == "hide_headerbar_buttons_when_maximized":
+            self.ui_builder._update_headerbar_buttons_visibility()
+
     def _update_tooltip_colors(self):
         """Update tooltip colors based on current theme settings."""
         from .utils.tooltip_helper import get_tooltip_helper

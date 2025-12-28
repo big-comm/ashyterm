@@ -196,6 +196,29 @@ class PreferencesDialog(Adw.PreferencesWindow):
         icon_theme_row.connect("notify::selected", self._on_icon_theme_changed)
         misc_group.add(icon_theme_row)
 
+        # Headerbar buttons behavior when maximized
+        # (for KDE Plasma Active Window Control / Borderless Maximized Windows)
+        headerbar_buttons_row = Adw.ComboRow(
+            title=_("Window Buttons When Maximized"),
+            subtitle=_("For KDE Plasma panel integration"),
+        )
+        headerbar_buttons_row.set_model(
+            Gtk.StringList.new([
+                _("Auto-detect"),
+                _("Always hide"),
+                _("Never hide"),
+            ])
+        )
+        current_btn_setting = self.settings_manager.get(
+            "hide_headerbar_buttons_when_maximized", "auto"
+        )
+        btn_setting_map = {"auto": 0, "always": 1, "never": 2}
+        headerbar_buttons_row.set_selected(btn_setting_map.get(current_btn_setting, 0))
+        headerbar_buttons_row.connect(
+            "notify::selected", self._on_headerbar_buttons_mode_changed
+        )
+        misc_group.add(headerbar_buttons_row)
+
     def _setup_terminal_page(self) -> None:
         page = Adw.PreferencesPage(
             title=_("Terminal"), icon_name="utilities-terminal-symbolic"
@@ -639,6 +662,13 @@ class PreferencesDialog(Adw.PreferencesWindow):
                 "The icon theme change will take effect after restarting the application."
             ),
         )
+
+    def _on_headerbar_buttons_mode_changed(self, combo_row, _param) -> None:
+        """Handle window buttons visibility mode change for maximized windows."""
+        index = combo_row.get_selected()
+        mode_map = {0: "auto", 1: "always", 2: "never"}
+        mode = mode_map.get(index, "auto")
+        self._on_setting_changed("hide_headerbar_buttons_when_maximized", mode)
 
     def _show_restart_required_dialog(self, title: str, message: str) -> None:
         """Show a dialog informing the user that a restart is required."""
