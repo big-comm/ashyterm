@@ -1322,7 +1322,26 @@ class TerminalManager:
 
             # Handle SSH/SFTP failure
             is_ssh = terminal_info.get("type") in ["ssh", "sftp"]
-            ssh_failed = is_ssh and child_status != 0 and not closed_by_user
+
+            # Decode exit code to check for user-initiated termination signals
+            # Exit codes 128+N indicate termination by signal N
+            # 130 = SIGINT (Ctrl+C), 143 = SIGTERM, 137 = SIGKILL
+            import os as os_module
+
+            if os_module.WIFEXITED(child_status):
+                decoded_exit_code = os_module.WEXITSTATUS(child_status)
+            elif os_module.WIFSIGNALED(child_status):
+                decoded_exit_code = 128 + os_module.WTERMSIG(child_status)
+            else:
+                decoded_exit_code = child_status
+
+            # These exit codes indicate user-initiated termination, not connection errors
+            user_terminated_codes = {130, 137, 143}  # SIGINT, SIGKILL, SIGTERM
+            is_user_terminated = decoded_exit_code in user_terminated_codes
+
+            ssh_failed = (
+                is_ssh and child_status != 0 and not closed_by_user and not is_user_terminated
+            )
 
             if ssh_failed:
                 self.lifecycle_manager.transition_state(
@@ -1353,10 +1372,16 @@ class TerminalManager:
                         child_status,
                     )
             else:
-                # Normal/successful exit
+                # Normal/successful exit or user-initiated termination (Ctrl+C, etc)
                 # Hide banner if exists (connection was successful and user closed it)
-                if is_ssh and child_status == 0 and self.tab_manager:
+                if is_ssh and self.tab_manager:
                     self.tab_manager.hide_error_banner_for_terminal(terminal)
+
+                # Log user-initiated termination differently
+                if is_user_terminated:
+                    self.logger.info(
+                        f"Terminal '{terminal_name}' terminated by user signal (exit code: {decoded_exit_code})"
+                    )
 
                 if not self.lifecycle_manager.transition_state(
                     terminal_id, TerminalState.EXITED

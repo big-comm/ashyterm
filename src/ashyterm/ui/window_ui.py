@@ -1,5 +1,6 @@
 # ashyterm/ui/window_ui.py
 
+import os
 from pathlib import Path
 from typing import TYPE_CHECKING, Optional
 
@@ -47,11 +48,35 @@ class WindowUIBuilder:
         # Initialize tooltip helper for custom tooltips (global singleton)
         self.tooltip_helper = init_tooltip_helper(self.settings_manager, app)
 
-        # WM settings for dynamic button layout
-        self.wm_settings = Gio.Settings.new("org.gnome.desktop.wm.preferences")
-        self.wm_settings.connect(
-            "changed::button-layout", self._on_button_layout_changed
-        )
+        # WM settings for dynamic button layout (may not exist on all DEs like KDE)
+        self.wm_settings = None
+        self._wm_button_layout = ":"  # Default: colon only = no buttons
+        self._kde_borderless_maximized = False  # KDE-specific setting
+        self._is_kde = os.environ.get("XDG_CURRENT_DESKTOP", "").upper() in ("KDE", "PLASMA")
+
+        # Try to read GNOME WM settings (works on GNOME and some GTK-based DEs)
+        try:
+            self.wm_settings = Gio.Settings.new("org.gnome.desktop.wm.preferences")
+            self._wm_button_layout = self.wm_settings.get_string("button-layout")
+            self.wm_settings.connect(
+                "changed::button-layout", self._on_button_layout_changed
+            )
+        except Exception:
+            # Schema not available (e.g., on KDE without GNOME settings)
+            self.logger.debug(
+                "org.gnome.desktop.wm.preferences not available, "
+                "using default button behavior"
+            )
+
+        # On KDE, check kwinrc for BorderlessMaximizedWindows setting
+        if self._is_kde:
+            self._kde_borderless_maximized = self._check_kde_borderless_maximized()
+            self.logger.debug(
+                f"KDE detected, BorderlessMaximizedWindows={self._kde_borderless_maximized}"
+            )
+
+        # Track headerbar buttons visibility state
+        self._headerbar_buttons_hidden = False
 
         # Connect to window maximized state changes
         self.window.connect("notify::maximized", self._on_maximized_changed)
@@ -396,6 +421,9 @@ class WindowUIBuilder:
 
     def _on_button_layout_changed(self, settings, key):
         """Handle dynamic changes to window button layout."""
+        # Update cached button layout
+        self._wm_button_layout = settings.get_string("button-layout")
+
         if self.header_bar is None:
             return
 
@@ -869,6 +897,99 @@ class WindowUIBuilder:
             """
         self.border_provider.load_from_data(css.encode("utf-8"))
 
+    def _check_kde_borderless_maximized(self) -> bool:
+        """Check KDE's kwinrc for BorderlessMaximizedWindows setting.
+
+        Returns:
+            True if KDE is configured to remove borders from maximized windows.
+        """
+        try:
+            # KDE stores window manager settings in ~/.config/kwinrc
+            kwinrc_path = Path.home() / ".config" / "kwinrc"
+            if not kwinrc_path.exists():
+                return False
+
+            content = kwinrc_path.read_text()
+            # Look for the [Windows] section and BorderlessMaximizedWindows setting
+            in_windows_section = False
+            for line in content.splitlines():
+                line = line.strip()
+                if line.startswith("["):
+                    in_windows_section = line.lower() == "[windows]"
+                elif in_windows_section and line.lower().startswith(
+                    "borderlessmaximizedwindows"
+                ):
+                    # Parse the value (format: BorderlessMaximizedWindows=true)
+                    if "=" in line:
+                        value = line.split("=", 1)[1].strip().lower()
+                        return value in ("true", "1", "yes")
+            return False
+        except Exception as e:
+            self.logger.debug(f"Could not read KDE kwinrc: {e}")
+            return False
+
+    def _should_hide_headerbar_buttons(self) -> bool:
+        """Determine if headerbar buttons should be hidden when maximized.
+
+        This supports desktop environments like KDE Plasma with
+        "Active Window Control" or "Borderless Maximized Windows"
+        where window control buttons are shown in the panel instead.
+
+        Returns:
+            True if headerbar buttons should be hidden, False otherwise.
+        """
+        setting = self.settings_manager.get(
+            "hide_headerbar_buttons_when_maximized", "auto"
+        )
+
+        if setting == "never":
+            return False
+        elif setting == "always":
+            return True
+        else:  # "auto" - detect from environment
+            # On KDE, check if BorderlessMaximizedWindows is enabled
+            if self._is_kde and self._kde_borderless_maximized:
+                return True
+
+            # On GNOME and other DEs, check if button-layout is empty
+            # Format: "buttons-on-left:buttons-on-right"
+            # Examples:
+            #   "close,minimize,maximize:" - buttons on left
+            #   ":close,minimize,maximize" - buttons on right
+            #   ":" or "" - no buttons (DE manages them externally)
+            layout = self._wm_button_layout.strip()
+            if not layout or layout == ":":
+                return True
+            # Check if both sides are empty
+            parts = layout.split(":")
+            left_buttons = parts[0].strip() if len(parts) > 0 else ""
+            right_buttons = parts[1].strip() if len(parts) > 1 else ""
+            # If no actual button names on either side, hide them
+            return not (left_buttons or right_buttons)
+
+    def _update_headerbar_buttons_visibility(self):
+        """Update headerbar title buttons visibility based on maximized state."""
+        if self.header_bar is None:
+            return
+
+        is_maximized = self.window.is_maximized()
+        should_hide = is_maximized and self._should_hide_headerbar_buttons()
+
+        # Only update if state changed to avoid unnecessary redraws
+        if should_hide != self._headerbar_buttons_hidden:
+            self._headerbar_buttons_hidden = should_hide
+            # Use Adw.HeaderBar methods to show/hide window control buttons
+            self.header_bar.set_show_start_title_buttons(not should_hide)
+            self.header_bar.set_show_end_title_buttons(not should_hide)
+
+            if should_hide:
+                self.logger.debug(
+                    "Hiding headerbar title buttons (maximized with external controls)"
+                )
+            else:
+                self.logger.debug("Showing headerbar title buttons")
+
     def _on_maximized_changed(self, window, param):
         """Handle window maximized state changes."""
         self._update_border_css()
+        self._update_headerbar_buttons_visibility()
