@@ -1509,24 +1509,64 @@ class SessionEditDialog(BaseDialog):
         self._clear_validation_errors()
         if not self._validate_basic_fields():
             return None
+
         is_local = self.type_combo.get_selected() == 0
         if is_local and not self._validate_local_fields():
             return None
         if not is_local and not self._validate_ssh_fields():
             return None
 
-        # Create a new SessionItem instance with the data from the form
-        session_data = self.editing_session.to_dict()
-        session_data.update(
-            {
-                "name": self.name_row.get_text().strip(),
-                "session_type": "local"
-                if self.type_combo.get_selected() == 0
-                else "ssh",
-            }
-        )
+        # Build session data from form fields
+        session_data = self._collect_session_data(is_local)
 
-        # Per-session highlighting overrides (tri-state)
+        # Get raw password before creating session (for keyring storage)
+        raw_password = self._get_raw_password(session_data)
+
+        updated_session = SessionItem.from_dict(session_data)
+        if updated_session.uses_password_auth() and raw_password:
+            updated_session.auth_value = raw_password
+
+        if not updated_session.validate():
+            errors = updated_session.get_validation_errors()
+            self._show_error_dialog(
+                _("Validation Error"),
+                _("Session validation failed:\n{}").format("\n".join(errors)),
+            )
+            return None
+
+        return updated_session
+
+    def _collect_session_data(self, is_local: bool) -> dict:
+        """Collect all session data from form fields.
+
+        Args:
+            is_local: True if this is a local session, False for SSH.
+
+        Returns:
+            Dictionary with all session data.
+        """
+        session_data = self.editing_session.to_dict()
+        session_data.update({
+            "name": self.name_row.get_text().strip(),
+            "session_type": "local" if is_local else "ssh",
+        })
+
+        self._apply_highlighting_settings(session_data)
+        self._apply_tab_color(session_data)
+        self._apply_folder_settings(session_data)
+        self._apply_post_login_settings(session_data, is_local)
+        self._apply_sftp_settings(session_data, is_local)
+        self._apply_port_forwarding_settings(session_data, is_local)
+
+        if is_local:
+            self._apply_local_session_fields(session_data)
+        else:
+            self._apply_ssh_session_fields(session_data)
+
+        return session_data
+
+    def _apply_highlighting_settings(self, session_data: dict) -> None:
+        """Apply highlighting customization settings to session data."""
         if (
             hasattr(self, "highlighting_customize_switch")
             and not self.highlighting_customize_switch.get_active()
@@ -1556,12 +1596,13 @@ class SessionEditDialog(BaseDialog):
                     self.shell_input_highlighting_row.get_selected()
                 )
 
+    def _apply_tab_color(self, session_data: dict) -> None:
+        """Apply tab color setting to session data."""
         rgba = self.color_button.get_rgba()
-        if rgba.alpha > 0:  # Check if a color is set
-            session_data["tab_color"] = rgba.to_string()
-        else:
-            session_data["tab_color"] = None
+        session_data["tab_color"] = rgba.to_string() if rgba.alpha > 0 else None
 
+    def _apply_folder_settings(self, session_data: dict) -> None:
+        """Apply folder assignment to session data."""
         if (
             hasattr(self, "folder_combo")
             and self.folder_combo
@@ -1571,9 +1612,11 @@ class SessionEditDialog(BaseDialog):
                 selected_item.get_string(), ""
             )
 
+    def _apply_post_login_settings(self, session_data: dict, is_local: bool) -> None:
+        """Apply post-login command settings to session data."""
         post_login_enabled = (
             self.post_login_switch.get_active()
-            if self.post_login_switch and self.type_combo.get_selected() == 1
+            if self.post_login_switch and not is_local
             else False
         )
         post_login_command = (
@@ -1584,9 +1627,11 @@ class SessionEditDialog(BaseDialog):
             post_login_command if post_login_enabled else ""
         )
 
+    def _apply_sftp_settings(self, session_data: dict, is_local: bool) -> None:
+        """Apply SFTP settings to session data."""
         sftp_enabled = (
             self.sftp_switch.get_active()
-            if self.sftp_switch and self.type_combo.get_selected() == 1
+            if self.sftp_switch and not is_local
             else False
         )
         local_dir = (
@@ -1598,74 +1643,74 @@ class SessionEditDialog(BaseDialog):
         session_data["sftp_session_enabled"] = sftp_enabled
         session_data["sftp_local_directory"] = local_dir
         session_data["sftp_remote_directory"] = remote_dir
+
+    def _apply_port_forwarding_settings(
+        self, session_data: dict, is_local: bool
+    ) -> None:
+        """Apply port forwarding and X11 settings to session data."""
         session_data["port_forwardings"] = (
-            copy.deepcopy(self.port_forwardings)
-            if session_data["session_type"] == "ssh"
-            else []
+            copy.deepcopy(self.port_forwardings) if not is_local else []
         )
         session_data["x11_forwarding"] = (
             self.x11_switch.get_active()
-            if self.x11_switch and session_data["session_type"] == "ssh"
+            if self.x11_switch and not is_local
             else False
         )
 
-        raw_password = ""
-        if session_data["session_type"] == "ssh":
-            session_data.update(
-                {
-                    "host": self.host_entry.get_text().strip(),
-                    "user": self.user_entry.get_text().strip(),
-                    "port": int(self.port_entry.get_value()),
-                    "auth_type": "key"
-                    if self.auth_combo.get_selected() == 0
-                    else "password",
-                }
-            )
-            if session_data["auth_type"] == "key":
-                session_data["auth_value"] = self.key_path_entry.get_text().strip()
-            else:
-                raw_password = self.password_entry.get_text()
-                session_data["auth_value"] = ""  # Will be stored in keyring
-            # Clear local terminal fields for SSH sessions
-            session_data["local_working_directory"] = ""
-            session_data["local_startup_command"] = ""
+    def _apply_ssh_session_fields(self, session_data: dict) -> None:
+        """Apply SSH-specific fields to session data."""
+        session_data.update({
+            "host": self.host_entry.get_text().strip(),
+            "user": self.user_entry.get_text().strip(),
+            "port": int(self.port_entry.get_value()),
+            "auth_type": "key" if self.auth_combo.get_selected() == 0 else "password",
+        })
+        if session_data["auth_type"] == "key":
+            session_data["auth_value"] = self.key_path_entry.get_text().strip()
         else:
-            session_data.update(
-                {
-                    "host": "",
-                    "user": "",
-                    "auth_type": "",
-                    "auth_value": "",
-                }
-            )
-            session_data["sftp_session_enabled"] = False
-            session_data["port_forwardings"] = []
-            session_data["x11_forwarding"] = False
-            # Set local terminal fields
-            session_data["local_working_directory"] = (
-                self.local_working_dir_entry.get_text().strip()
-                if hasattr(self, "local_working_dir_entry")
-                else ""
-            )
-            # Get startup commands from BashTextView
-            startup_commands = ""
-            if hasattr(self, "local_startup_command_view"):
-                startup_commands = self.local_startup_command_view.get_text().strip()
-            session_data["local_startup_command"] = startup_commands
+            session_data["auth_value"] = ""  # Will be stored in keyring
+        # Clear local terminal fields for SSH sessions
+        session_data["local_working_directory"] = ""
+        session_data["local_startup_command"] = ""
 
-        updated_session = SessionItem.from_dict(session_data)
-        if updated_session.uses_password_auth() and raw_password:
-            updated_session.auth_value = raw_password
+    def _apply_local_session_fields(self, session_data: dict) -> None:
+        """Apply local terminal-specific fields to session data."""
+        session_data.update({
+            "host": "",
+            "user": "",
+            "auth_type": "",
+            "auth_value": "",
+        })
+        session_data["sftp_session_enabled"] = False
+        session_data["port_forwardings"] = []
+        session_data["x11_forwarding"] = False
+        # Set local terminal fields
+        session_data["local_working_directory"] = (
+            self.local_working_dir_entry.get_text().strip()
+            if hasattr(self, "local_working_dir_entry")
+            else ""
+        )
+        # Get startup commands from BashTextView
+        startup_commands = ""
+        if hasattr(self, "local_startup_command_view"):
+            startup_commands = self.local_startup_command_view.get_text().strip()
+        session_data["local_startup_command"] = startup_commands
 
-        if not updated_session.validate():
-            errors = updated_session.get_validation_errors()
-            self._show_error_dialog(
-                _("Validation Error"),
-                _("Session validation failed:\n{}").format("\n".join(errors)),
-            )
-            return None
+    def _get_raw_password(self, session_data: dict) -> str:
+        """Get raw password for SSH password authentication.
 
-        return updated_session
+        Args:
+            session_data: The session data dictionary.
+
+        Returns:
+            Raw password string, or empty string if not applicable.
+        """
+        if (
+            session_data.get("session_type") == "ssh"
+            and session_data.get("auth_type") == "password"
+        ):
+            return self.password_entry.get_text()
+        return ""
 
     def _validate_basic_fields(self) -> bool:
         return self._validate_required_field(self.name_row, _("Session name"))

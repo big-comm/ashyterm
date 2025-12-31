@@ -10,7 +10,7 @@ This module contains:
 
 import re
 from dataclasses import dataclass
-from typing import Any, Callable, List, Optional, Tuple
+from typing import Any, Callable, Dict, List, Optional, Tuple
 
 from .constants import KEYWORD_PATTERN, is_word_boundary
 
@@ -122,6 +122,82 @@ def extract_literal_keywords(pattern: str) -> Optional[Tuple[str, ...]]:
     return tuple(keywords)
 
 
+# Pre-filter mapping: rule keywords -> (required_chars, check_function_or_None)
+# If check_function is None, use a simple lambda line: char in line
+_PREFILTER_RULES: Dict[str, Tuple[str, Optional[Callable[[str], bool]]]] = {
+    "ipv4": (".", None),
+    "ip": (".", None),  # Matches "ip" without "v6"
+    "ipv6": (":", None),
+    "mac": (":", lambda line: ":" in line or "-" in line),
+    "uuid": ("-", None),
+    "guid": ("-", None),
+    "url": ("http", lambda line: "http" in line),
+    "http": ("http", lambda line: "http" in line),
+    "email": ("@", None),
+    "date": ("-", None),
+    "quote": ('"', lambda line: '"' in line or "'" in line),
+    "string": ('"', lambda line: '"' in line or "'" in line),
+}
+
+
+def _extract_keyword_prefilter(pattern: str) -> Optional[Callable[[str], bool]]:
+    """Extract pre-filter from word-boundary alternation patterns.
+
+    Handles patterns like \\b(word1|word2)\\b.
+
+    Args:
+        pattern: The regex pattern string.
+
+    Returns:
+        A pre-filter function if keywords found, None otherwise.
+    """
+    match = KEYWORD_PATTERN.match(pattern)
+    if not match:
+        return None
+
+    inner = match.group(1)
+    # Extract base words, removing optional suffixes like (?:ed)?
+    words = set()
+    for part in inner.split("|"):
+        # Remove (?:...) non-capturing groups
+        clean = re.sub(r"\(\?:[^)]+\)\??", "", part)
+        if clean and clean.isalpha():
+            words.add(clean.lower())
+
+    if words:
+        # Frozen tuple for slightly faster iteration
+        keywords = tuple(words)
+        return lambda line: any(kw in line for kw in keywords)
+
+    return None
+
+
+def _get_rule_based_prefilter(rule_name: str) -> Optional[Callable[[str], bool]]:
+    """Get pre-filter based on rule name heuristics.
+
+    Args:
+        rule_name: The name of the rule.
+
+    Returns:
+        A pre-filter function if applicable, None otherwise.
+    """
+    rule_lower = rule_name.lower()
+
+    # Check for IPv4 (but not IPv6)
+    if "ipv4" in rule_lower or ("ip" in rule_lower and "v6" not in rule_lower):
+        return lambda line: "." in line
+
+    # Check each rule in the mapping
+    for key, (char, func) in _PREFILTER_RULES.items():
+        if key in rule_lower:
+            # Special case: mac address needs both keywords
+            if key == "mac" and "address" not in rule_lower:
+                continue
+            return func if func else (lambda c: lambda line: c in line)(char)
+
+    return None
+
+
 def extract_prefilter(pattern: str, rule_name: str) -> Optional[Callable[[str], bool]]:
     """
     Create a fast pre-filter function for a rule pattern.
@@ -137,58 +213,13 @@ def extract_prefilter(pattern: str, rule_name: str) -> Optional[Callable[[str], 
     Returns:
         A pre-filter function, or None if no efficient pre-filter can be created.
     """
-    # Extract keywords from word-boundary alternation patterns like \b(word1|word2)\b
-    match = KEYWORD_PATTERN.match(pattern)
-    if match:
-        inner = match.group(1)
-        # Extract base words, removing optional suffixes like (?:ed)?
-        words = set()
-        for part in inner.split("|"):
-            # Remove (?:...) non-capturing groups
-            clean = re.sub(r"\(\?:[^)]+\)\??", "", part)
-            if clean and clean.isalpha():
-                words.add(clean.lower())
-        if words:
-            # Frozen tuple for slightly faster iteration
-            keywords = tuple(words)
-            return lambda line: any(kw in line for kw in keywords)
+    # Try keyword-based pre-filter first
+    keyword_filter = _extract_keyword_prefilter(pattern)
+    if keyword_filter:
+        return keyword_filter
 
-    # Pattern-specific pre-filters based on required characters
-    rule_lower = rule_name.lower()
-
-    # IPv4: requires dots and digits
-    if "ipv4" in rule_lower or ("ip" in rule_lower and "v6" not in rule_lower):
-        return lambda line: "." in line
-
-    # IPv6: requires colons
-    if "ipv6" in rule_lower:
-        return lambda line: ":" in line
-
-    # MAC address: requires colons or hyphens
-    if "mac" in rule_lower and "address" in rule_lower:
-        return lambda line: ":" in line or "-" in line
-
-    # UUID/GUID: requires hyphens
-    if "uuid" in rule_lower or "guid" in rule_lower:
-        return lambda line: "-" in line
-
-    # URLs: requires http
-    if "url" in rule_lower or "http" in rule_lower:
-        return lambda line: "http" in line
-
-    # Email: requires @
-    if "email" in rule_lower:
-        return lambda line: "@" in line
-
-    # Date (ISO): requires hyphens and digits
-    if "date" in rule_lower:
-        return lambda line: "-" in line
-
-    # Quoted strings: requires quotes
-    if "quote" in rule_lower or "string" in rule_lower:
-        return lambda line: '"' in line or "'" in line
-
-    return None
+    # Fall back to rule-name-based pre-filter
+    return _get_rule_based_prefilter(rule_name)
 
 
 @dataclass(slots=True)

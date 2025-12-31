@@ -226,6 +226,38 @@ def get_syntax_colors(is_dark: bool) -> Dict[str, str]:
     return SYNTAX_DARK_COLORS.copy() if is_dark else SYNTAX_LIGHT_COLORS.copy()
 
 
+# Mapping of syntax tokens to (palette_index, fallback_color)
+_SYNTAX_TOKEN_MAPPING: Dict[str, Tuple[int, str]] = {
+    # Primary mappings (standard ANSI indices)
+    "keyword": (4, "#729fcf"),  # Blue
+    "builtin": (2, "#8ae234"),  # Green
+    "command": (2, "#8ae234"),  # Green
+    "string": (3, "#e9b96e"),  # Yellow
+    "string_single": (3, "#e9b96e"),
+    "comment": (8, "#888a85"),  # Bright black
+    "variable": (5, "#ad7fa8"),  # Magenta
+    "special_var": (13, "#ff69b4"),  # Bright magenta
+    "operator": (11, "#fcaf3e"),  # Bright yellow
+    "number": (11, "#f4d03f"),  # Bright yellow
+    "path": (12, "#87ceeb"),  # Bright blue
+    "function": (5, "#dda0dd"),  # Magenta
+    "redirect": (3, "#fcaf3e"),  # Yellow
+    "pipe": (3, "#fcaf3e"),  # Yellow
+    "flag": (6, "#98d8c8"),  # Cyan
+    "escape": (11, "#deb887"),  # Bright yellow
+    "substitution": (11, "#daa520"),
+    "brace": (6, "#20b2aa"),  # Cyan
+    "backtick": (11, "#daa520"),  # Bright yellow
+    # Regex-specific tokens
+    "bracket": (4, "#729fcf"),  # Blue
+    "group": (5, "#ad7fa8"),  # Magenta
+    "quantifier": (2, "#8ae234"),  # Green
+    "anchor": (3, "#fcaf3e"),  # Yellow
+    "special": (1, "#ff69b4"),  # Red
+    "range": (12, "#87ceeb"),  # Bright blue
+}
+
+
 def map_palette_to_syntax(palette: List[str]) -> Dict[str, str]:
     """
     Map a terminal color palette (16 colors) to syntax token types.
@@ -243,38 +275,10 @@ def map_palette_to_syntax(palette: List[str]) -> Dict[str, str]:
         # Fall back to dark mode defaults if palette is invalid
         return SYNTAX_DARK_COLORS.copy()
 
-    # Map palette indices to syntax tokens
-    # Uses semantic relationships: blue=keywords, green=strings/commands, etc.
+    palette_len = len(palette)
     return {
-        # Primary mappings (standard ANSI indices)
-        "keyword": palette[4] if len(palette) > 4 else "#729fcf",  # Blue
-        "builtin": palette[2] if len(palette) > 2 else "#8ae234",  # Green
-        "command": palette[2] if len(palette) > 2 else "#8ae234",  # Green
-        "string": palette[3] if len(palette) > 3 else "#e9b96e",  # Yellow
-        "string_single": palette[3] if len(palette) > 3 else "#e9b96e",
-        "comment": palette[8] if len(palette) > 8 else "#888a85",  # Bright black
-        "variable": palette[5] if len(palette) > 5 else "#ad7fa8",  # Magenta
-        "special_var": palette[13]
-        if len(palette) > 13
-        else "#ff69b4",  # Bright magenta
-        "operator": palette[11] if len(palette) > 11 else "#fcaf3e",  # Bright yellow
-        "number": palette[11] if len(palette) > 11 else "#f4d03f",  # Bright yellow
-        "path": palette[12] if len(palette) > 12 else "#87ceeb",  # Bright blue
-        "function": palette[5] if len(palette) > 5 else "#dda0dd",  # Magenta
-        "redirect": palette[3] if len(palette) > 3 else "#fcaf3e",  # Yellow
-        "pipe": palette[3] if len(palette) > 3 else "#fcaf3e",  # Yellow
-        "flag": palette[6] if len(palette) > 6 else "#98d8c8",  # Cyan
-        "escape": palette[11] if len(palette) > 11 else "#deb887",  # Bright yellow
-        "substitution": palette[11] if len(palette) > 11 else "#daa520",
-        "brace": palette[6] if len(palette) > 6 else "#20b2aa",  # Cyan
-        "backtick": palette[11] if len(palette) > 11 else "#daa520",  # Bright yellow
-        # Regex-specific tokens
-        "bracket": palette[4] if len(palette) > 4 else "#729fcf",  # Blue
-        "group": palette[5] if len(palette) > 5 else "#ad7fa8",  # Magenta
-        "quantifier": palette[2] if len(palette) > 2 else "#8ae234",  # Green
-        "anchor": palette[3] if len(palette) > 3 else "#fcaf3e",  # Yellow
-        "special": palette[1] if len(palette) > 1 else "#ff69b4",  # Red
-        "range": palette[12] if len(palette) > 12 else "#87ceeb",  # Bright blue
+        token: palette[idx] if idx < palette_len else fallback
+        for token, (idx, fallback) in _SYNTAX_TOKEN_MAPPING.items()
     }
 
 

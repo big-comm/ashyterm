@@ -5,7 +5,7 @@ Supports terminal color scheme integration for consistent theming.
 """
 
 import re
-from typing import List
+from typing import List, Optional
 
 import gi
 
@@ -30,6 +30,36 @@ _PATH_PATTERN = re.compile(
 _FLAG_PATTERN = re.compile(r"(?:^|\s)(--?[\w\-]+=?)")
 _SPECIAL_VAR_PATTERN = re.compile(r"(\$[?!@*#$0-9-])")
 
+# Special shell variables that need distinct highlighting
+_SPECIAL_VARS = frozenset(("$?", "$!", "$$", "$@", "$*", "$#", "$0", "$-"))
+
+# Redirect operators
+_REDIRECT_OPS = frozenset(
+    (">", ">>", "<", "<<", ">&", "2>", "2>>", "<&", "&>")
+)
+
+# Separator/control operators
+_CONTROL_OPS = frozenset((";", "&", "&&", "||"))
+
+# Token string patterns mapped to tag names (order matters - more specific first)
+_TOKEN_PATTERNS = (
+    ("Keyword", "keyword"),
+    ("Reserved", "keyword"),
+    ("Name.Builtin", "builtin"),
+    ("Name.Function", "function"),
+    ("Name.Variable", "variable"),
+    ("Name.Attribute", "variable"),
+    ("String.Escape", "escape"),
+    ("String.Backtick", "backtick"),
+    ("String.Single", "string_single"),
+    ("String.Interpol", "substitution"),
+    ("String", "string"),
+    ("Comment", "comment"),
+    ("Operator", "operator"),
+    ("Number", "number"),
+    ("Punctuation", "punctuation"),
+)
+
 # Bash-specific token types
 BASH_TOKEN_TYPES = (
     "keyword",
@@ -52,6 +82,30 @@ BASH_TOKEN_TYPES = (
     "substitution",
     "brace",
 )
+
+# Palette index to token mapping: token -> (palette_index, fallback_color)
+# Special value -1 indicates the "comment" token which needs dynamic foreground
+_BASH_PALETTE_MAPPING: dict[str, tuple[int, str]] = {
+    "keyword": (4, "#729fcf"),  # Blue
+    "builtin": (2, "#8ae234"),  # Green
+    "command": (2, "#8ae234"),  # Green
+    "string": (3, "#e9b96e"),  # Yellow
+    "string_single": (3, "#e9b96e"),  # Yellow
+    "backtick": (11, "#b8860b"),  # Bright yellow
+    "comment": (-1, "#888a85"),  # Special: uses dimmed foreground
+    "variable": (5, "#ad7fa8"),  # Magenta
+    "special_var": (13, "#ff69b4"),  # Bright magenta
+    "operator": (3, "#fcaf3e"),  # Yellow
+    "number": (11, "#f4d03f"),  # Bright yellow
+    "path": (6, "#87ceeb"),  # Cyan
+    "function": (13, "#dda0dd"),  # Bright magenta
+    "redirect": (1, "#fcaf3e"),  # Red
+    "pipe": (6, "#fcaf3e"),  # Cyan
+    "flag": (14, "#98d8c8"),  # Bright cyan
+    "escape": (3, "#deb887"),  # Yellow
+    "substitution": (12, "#b8860b"),  # Bright blue
+    "brace": (6, "#20b2aa"),  # Cyan
+}
 
 
 class BashTextView(BaseSyntaxTextView):
@@ -128,42 +182,7 @@ class BashTextView(BaseSyntaxTextView):
         if len(palette) < 8:
             return  # Not enough colors
 
-        # Map palette colors to syntax elements
-        # Using standard terminal color positions:
-        # 0=black, 1=red, 2=green, 3=yellow, 4=blue, 5=magenta, 6=cyan, 7=white
-        # 8-15 are bright variants
-
-        self._syntax_colors = {
-            "keyword": palette[4] if len(palette) > 4 else "#729fcf",  # Blue
-            "builtin": palette[2] if len(palette) > 2 else "#8ae234",  # Green
-            "command": palette[2] if len(palette) > 2 else "#8ae234",  # Green
-            "string": palette[3] if len(palette) > 3 else "#e9b96e",  # Yellow
-            "string_single": palette[3] if len(palette) > 3 else "#e9b96e",  # Yellow
-            "backtick": palette[11]
-            if len(palette) > 11
-            else "#b8860b",  # Bright yellow
-            "comment": foreground + "80"
-            if len(foreground) == 7
-            else "#888a85",  # Dimmed foreground
-            "variable": palette[5] if len(palette) > 5 else "#ad7fa8",  # Magenta
-            "special_var": palette[13]
-            if len(palette) > 13
-            else "#ff69b4",  # Bright magenta
-            "operator": palette[3] if len(palette) > 3 else "#fcaf3e",  # Yellow
-            "number": palette[11] if len(palette) > 11 else "#f4d03f",  # Bright yellow
-            "path": palette[6] if len(palette) > 6 else "#87ceeb",  # Cyan
-            "function": palette[13]
-            if len(palette) > 13
-            else "#dda0dd",  # Bright magenta
-            "redirect": palette[1] if len(palette) > 1 else "#fcaf3e",  # Red
-            "pipe": palette[6] if len(palette) > 6 else "#fcaf3e",  # Cyan
-            "flag": palette[14] if len(palette) > 14 else "#98d8c8",  # Bright cyan
-            "escape": palette[3] if len(palette) > 3 else "#deb887",  # Yellow
-            "substitution": palette[12]
-            if len(palette) > 12
-            else "#b8860b",  # Bright blue
-            "brace": palette[6] if len(palette) > 6 else "#20b2aa",  # Cyan
-        }
+        self._syntax_colors = self._build_colors_from_palette(palette, foreground)
 
         # Update existing tags
         self._update_tag_colors()
@@ -171,6 +190,32 @@ class BashTextView(BaseSyntaxTextView):
         # Re-apply highlighting
         if PYGMENTS_AVAILABLE:
             self._apply_highlighting()
+
+    def _build_colors_from_palette(
+        self, palette: List[str], foreground: str
+    ) -> dict[str, str]:
+        """Build syntax color mapping from terminal palette.
+
+        Args:
+            palette: List of hex color strings from terminal color scheme.
+            foreground: Foreground color for text.
+
+        Returns:
+            Dictionary mapping token types to hex colors.
+        """
+        palette_len = len(palette)
+        colors = {}
+
+        for token, (idx, fallback) in _BASH_PALETTE_MAPPING.items():
+            if idx == -1:
+                # Special case: comment uses dimmed foreground
+                colors[token] = (
+                    foreground + "80" if len(foreground) == 7 else fallback
+                )
+            else:
+                colors[token] = palette[idx] if idx < palette_len else fallback
+
+        return colors
 
     def _on_map(self, widget):
         """Apply highlighting when widget becomes visible."""
@@ -232,63 +277,64 @@ class BashTextView(BaseSyntaxTextView):
 
         return False
 
-    def _map_token_to_tag(self, token_type, token_value: str) -> str | None:
+    def _map_token_to_tag(self, token_type, token_value: str) -> Optional[str]:
         """Map Pygments token type to our tag name."""
         token_str = str(token_type)
+        base_tag = self._find_base_tag(token_str)
 
-        # More comprehensive token mapping
-        if "Keyword" in token_str or "Reserved" in token_str:
-            return "keyword"
-        elif "Name.Builtin" in token_str:
-            return "builtin"
-        elif "Name.Function" in token_str:
-            return "function"
-        elif "Name.Variable" in token_str or "Name.Attribute" in token_str:
-            # Check for special variables
-            if token_value in ("$?", "$!", "$$", "$@", "$*", "$#", "$0", "$-"):
-                return "special_var"
-            return "variable"
-        elif "String.Escape" in token_str:
-            return "escape"
-        elif "String.Backtick" in token_str:
-            return "backtick"
-        elif "String.Single" in token_str:
-            return "string_single"
-        elif "String.Interpol" in token_str:
-            return "substitution"
-        elif "String" in token_str:
-            return "string"
-        elif "Comment" in token_str:
-            return "comment"
-        elif "Operator" in token_str:
-            # Check for specific operators
+        if base_tag is None:
+            return None
+
+        # Apply value-based refinements
+        return self._refine_tag_by_value(base_tag, token_value)
+
+    def _find_base_tag(self, token_str: str) -> Optional[str]:
+        """Find the base tag for a token string.
+
+        Args:
+            token_str: String representation of the token type.
+
+        Returns:
+            Base tag name or None if not found.
+        """
+        for pattern, tag in _TOKEN_PATTERNS:
+            if pattern in token_str:
+                return tag
+        return None
+
+    def _refine_tag_by_value(self, base_tag: str, token_value: str) -> str:
+        """Refine tag based on the actual token value.
+
+        Args:
+            base_tag: The base tag from token type matching.
+            token_value: The actual text value of the token.
+
+        Returns:
+            Refined tag name.
+        """
+        # Variable refinement for special variables
+        if base_tag == "variable" and token_value in _SPECIAL_VARS:
+            return "special_var"
+
+        # Operator refinement
+        if base_tag == "operator":
             if token_value == "|":
                 return "pipe"
-            elif token_value in (
-                ">",
-                ">>",
-                "<",
-                "<<",
-                ">&",
-                "2>",
-                "2>>",
-                "<&",
-                ">&",
-                "&>",
-            ):
+            if token_value in _REDIRECT_OPS:
                 return "redirect"
             return "operator"
-        elif "Number" in token_str:
-            return "number"
-        elif "Punctuation" in token_str:
+
+        # Punctuation refinement
+        if base_tag == "punctuation":
             if token_value == "|":
                 return "pipe"
-            elif token_value in (";", "&", "&&", "||"):
+            if token_value in _CONTROL_OPS:
                 return "operator"
-            elif token_value in ("{", "}"):
+            if token_value in ("{", "}"):
                 return "brace"
+            return None  # Unrecognized punctuation
 
-        return None
+        return base_tag
 
     def _apply_extra_highlighting(self, text: str):
         """Apply additional highlighting for paths, flags, and special constructs."""

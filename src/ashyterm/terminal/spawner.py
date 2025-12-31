@@ -919,6 +919,172 @@ class ProcessSpawner:
                 except Exception as e:
                     raise SSHKeyError(session.auth_value, str(e)) from e
 
+    def _get_base_ssh_options(
+        self, session: "SessionItem", command_type: str
+    ) -> Dict[str, str]:
+        """Build base SSH options dictionary.
+
+        Args:
+            session: The SSH session.
+            command_type: Either 'ssh' or 'sftp'.
+
+        Returns:
+            Dictionary of SSH options.
+        """
+        persist_duration = self.settings_manager.get(
+            "ssh_control_persist_duration", 600
+        )
+        connect_timeout = self.settings_manager.get("ssh_connect_timeout", 30)
+
+        ssh_options = {
+            "ConnectTimeout": str(connect_timeout),
+            "ServerAliveInterval": "30",
+            "ServerAliveCountMax": "3",
+            "StrictHostKeyChecking": "accept-new",
+            "UpdateHostKeys": "yes",
+            "ControlMaster": "auto",
+            "ControlPath": self._get_ssh_control_path(session),
+        }
+
+        if persist_duration > 0:
+            ssh_options["ControlPersist"] = str(persist_duration)
+
+        return ssh_options
+
+    def _apply_x11_and_tunnel_options(
+        self,
+        ssh_options: Dict[str, str],
+        session: "SessionItem",
+        command_type: str,
+    ) -> None:
+        """Apply X11 forwarding and port forwarding options in-place.
+
+        Args:
+            ssh_options: SSH options dict to modify in-place.
+            session: The SSH session.
+            command_type: Either 'ssh' or 'sftp'.
+        """
+        has_x11 = command_type == "ssh" and getattr(session, "x11_forwarding", False)
+        has_tunnels = command_type == "ssh" and getattr(
+            session, "port_forwardings", None
+        )
+
+        # X11 and port forwarding require disabling ControlMaster
+        if has_x11 or has_tunnels:
+            ssh_options.pop("ControlPersist", None)
+            ssh_options.pop("ControlMaster", None)
+            ssh_options.pop("ControlPath", None)
+
+        if has_tunnels:
+            ssh_options["ExitOnForwardFailure"] = "yes"
+
+        if has_x11:
+            ssh_options["ForwardX11"] = "yes"
+            ssh_options["ForwardX11Trusted"] = "yes"
+
+    def _add_x11_flag_to_command(
+        self, cmd: List[str], session: "SessionItem", command_type: str
+    ) -> None:
+        """Add -Y flag for X11 forwarding if needed.
+
+        Args:
+            cmd: Command list to modify in-place.
+            session: The SSH session.
+            command_type: Either 'ssh' or 'sftp'.
+        """
+        if command_type != "ssh":
+            return
+        if not getattr(session, "x11_forwarding", False):
+            return
+        if "-Y" not in cmd:
+            insertion_index = 1 if len(cmd) > 1 else len(cmd)
+            cmd.insert(insertion_index, "-Y")
+
+    def _add_port_forwarding_args(
+        self, cmd: List[str], session: "SessionItem", command_type: str
+    ) -> None:
+        """Add port forwarding arguments to command.
+
+        Args:
+            cmd: Command list to modify in-place.
+            session: The SSH session.
+            command_type: Either 'ssh' or 'sftp'.
+        """
+        if command_type != "ssh":
+            return
+        if not getattr(session, "port_forwardings", None):
+            return
+
+        for tunnel in session.port_forwardings:
+            try:
+                local_host = tunnel.get("local_host", "localhost") or "localhost"
+                local_port = int(tunnel.get("local_port", 0))
+                remote_host = tunnel.get("remote_host") or session.host
+                remote_port = int(tunnel.get("remote_port", 0))
+            except (TypeError, ValueError):
+                continue
+
+            if (
+                not remote_host
+                or not (1 <= local_port <= 65535)
+                or not (1 <= remote_port <= 65535)
+            ):
+                continue
+
+            forward_spec = f"{local_host}:{local_port}:{remote_host}:{remote_port}"
+            insertion_index = max(len(cmd) - 1, 1)
+            cmd[insertion_index:insertion_index] = ["-L", forward_spec]
+
+    def _add_remote_shell_command(
+        self, cmd: List[str], initial_command: Optional[str]
+    ) -> None:
+        """Add the remote shell command suffix for SSH sessions.
+
+        Args:
+            cmd: Command list to modify in-place.
+            initial_command: Optional initial command to run.
+        """
+        osc7_setup = (
+            f"{OSC7_HOST_DETECTION_SNIPPET} "
+            'export PROMPT_COMMAND=\'printf "\\033]7;file://%s%s\\007" "$ASHYTERM_OSC7_HOST" "$PWD"\''
+        )
+        shell_exec = 'exec "$SHELL" -l'
+
+        remote_parts = []
+        if initial_command:
+            remote_parts.append(initial_command)
+        remote_parts.append(osc7_setup)
+        remote_parts.append(shell_exec)
+
+        full_remote_command = "; ".join(remote_parts)
+
+        if "-t" not in cmd:
+            cmd.insert(1, "-t")
+        cmd.append(full_remote_command)
+
+    def _wrap_with_sshpass(
+        self, cmd: List[str], session: "SessionItem"
+    ) -> Tuple[List[str], Optional[Dict[str, str]]]:
+        """Wrap command with sshpass for password authentication.
+
+        Args:
+            cmd: The command list.
+            session: The SSH session.
+
+        Returns:
+            Tuple of (modified_command, sshpass_env).
+        """
+        sshpass_env: Optional[Dict[str, str]] = None
+
+        if session.uses_password_auth() and session.auth_value:
+            if has_command("sshpass"):
+                cmd = ["sshpass", "-e"] + cmd
+                sshpass_env = {"SSHPASS": session.auth_value}
+            else:
+                self.logger.warning("sshpass not available for password authentication")
+
+        return (cmd, sshpass_env)
+
     def _build_remote_command_secure(
         self,
         command_type: str,
@@ -938,36 +1104,11 @@ class ProcessSpawner:
                 session.host, f"{command_type.upper()} command not found on system"
             )
 
-        persist_duration = self.settings_manager.get(
-            "ssh_control_persist_duration", 600
-        )
-        # Get connect timeout from settings (can be temporarily increased for retries)
-        connect_timeout = self.settings_manager.get("ssh_connect_timeout", 30)
-        ssh_options = {
-            "ConnectTimeout": str(connect_timeout),
-            "ServerAliveInterval": "30",
-            "ServerAliveCountMax": "3",
-            "StrictHostKeyChecking": "accept-new",
-            "UpdateHostKeys": "yes",
-            "ControlMaster": "auto",
-            "ControlPath": self._get_ssh_control_path(session),
-        }
-        if persist_duration > 0:
-            ssh_options["ControlPersist"] = str(persist_duration)
-        if command_type == "ssh" and getattr(session, "x11_forwarding", False):
-            ssh_options.pop("ControlPersist", None)
-            ssh_options.pop("ControlMaster", None)
-            ssh_options.pop("ControlPath", None)
-        if command_type == "ssh" and getattr(session, "port_forwardings", None):
-            # Port forwarding sessions should tear down immediately when the terminal exits.
-            ssh_options.pop("ControlPersist", None)
-            ssh_options.pop("ControlMaster", None)
-            ssh_options.pop("ControlPath", None)
-            ssh_options["ExitOnForwardFailure"] = "yes"
-        if command_type == "ssh" and getattr(session, "x11_forwarding", False):
-            ssh_options["ForwardX11"] = "yes"
-            ssh_options["ForwardX11Trusted"] = "yes"
+        # Build SSH options
+        ssh_options = self._get_base_ssh_options(session, command_type)
+        self._apply_x11_and_tunnel_options(ssh_options, session, command_type)
 
+        # Build base command
         cmd = self.command_builder.build_remote_command(
             command_type,
             hostname=session.host,
@@ -978,62 +1119,16 @@ class ProcessSpawner:
             remote_path=sftp_remote_path if command_type == "sftp" else None,
         )
 
-        if command_type == "ssh" and getattr(session, "x11_forwarding", False):
-            if "-Y" not in cmd:
-                insertion_index = 1 if len(cmd) > 1 else len(cmd)
-                cmd.insert(insertion_index, "-Y")
+        # Add X11 and port forwarding flags
+        self._add_x11_flag_to_command(cmd, session, command_type)
+        self._add_port_forwarding_args(cmd, session, command_type)
 
-        if command_type == "ssh" and getattr(session, "port_forwardings", None):
-            for tunnel in session.port_forwardings:
-                try:
-                    local_host = tunnel.get("local_host", "localhost") or "localhost"
-                    local_port = int(tunnel.get("local_port", 0))
-                    remote_host = tunnel.get("remote_host") or session.host
-                    remote_port = int(tunnel.get("remote_port", 0))
-                except (TypeError, ValueError):
-                    continue
-
-                if (
-                    not remote_host
-                    or not (1 <= local_port <= 65535)
-                    or not (1 <= remote_port <= 65535)
-                ):
-                    continue
-
-                forward_spec = f"{local_host}:{local_port}:{remote_host}:{remote_port}"
-                insertion_index = max(len(cmd) - 1, 1)
-                cmd[insertion_index:insertion_index] = ["-L", forward_spec]
-
+        # Add remote shell command for SSH
         if command_type == "ssh":
-            osc7_setup = (
-                f"{OSC7_HOST_DETECTION_SNIPPET} "
-                'export PROMPT_COMMAND=\'printf "\\033]7;file://%s%s\\007" "$ASHYTERM_OSC7_HOST" "$PWD"\''
-            )
-            shell_exec = 'exec "$SHELL" -l'
+            self._add_remote_shell_command(cmd, initial_command)
 
-            remote_parts = []
-            if initial_command:
-                remote_parts.append(initial_command)
-            remote_parts.append(osc7_setup)
-            remote_parts.append(shell_exec)
-
-            full_remote_command = "; ".join(remote_parts)
-
-            if "-t" not in cmd:
-                cmd.insert(1, "-t")
-            cmd.append(full_remote_command)
-
-        # Handle password authentication securely
-        # Use SSHPASS environment variable instead of -p flag to avoid
-        # password being visible in process list (ps aux)
-        sshpass_env: Optional[Dict[str, str]] = None
-        if session.uses_password_auth() and session.auth_value:
-            if has_command("sshpass"):
-                cmd = ["sshpass", "-e"] + cmd
-                sshpass_env = {"SSHPASS": session.auth_value}
-            else:
-                self.logger.warning("sshpass not available for password authentication")
-        return (cmd, sshpass_env)
+        # Wrap with sshpass if needed
+        return self._wrap_with_sshpass(cmd, session)
 
     def _build_non_interactive_ssh_command(
         self, session: "SessionItem", command: List[str], connect_timeout: int = 10
@@ -1101,6 +1196,117 @@ class ProcessSpawner:
                 self.logger.warning("sshpass not available for password authentication")
         return (cmd, sshpass_env)
 
+    def _extract_spawn_callback_data(
+        self, user_data: Any, spawn_type: str
+    ) -> Tuple[Any, Optional[str], str, Any]:
+        """Extract and parse spawn callback data.
+
+        Args:
+            user_data: Raw user data from callback.
+            spawn_type: Type of spawn - "local" or "ssh".
+
+        Returns:
+            Tuple of (final_user_data, temp_dir_path, name, actual_data).
+        """
+        final_user_data = user_data[0] if isinstance(user_data, tuple) else user_data
+        original_user_data = final_user_data.get("original_user_data")
+        temp_dir_path = final_user_data.get("temp_dir_path")
+
+        if spawn_type == "ssh":
+            actual_data = (
+                original_user_data[0]
+                if isinstance(original_user_data, tuple) and original_user_data
+                else original_user_data
+            )
+            name = getattr(actual_data, "name", "SSH Session")
+        else:
+            actual_data = None
+            name = (
+                str(original_user_data[0])
+                if isinstance(original_user_data, tuple) and original_user_data
+                else "Terminal"
+            )
+
+        return final_user_data, temp_dir_path, name, actual_data
+
+    def _handle_spawn_error(
+        self,
+        terminal: Vte.Terminal,
+        error: GLib.Error,
+        name: str,
+        spawn_type: str,
+        actual_data: Any,
+    ) -> None:
+        """Handle spawn error by logging and showing error in terminal.
+
+        Args:
+            terminal: The VTE terminal widget.
+            error: The GLib error.
+            name: Name of the terminal/session.
+            spawn_type: Type of spawn.
+            actual_data: Session data for SSH.
+        """
+        event_type = (
+            f"{spawn_type}_spawn_failed" if spawn_type == "ssh" else "spawn_failed"
+        )
+        self.logger.error(f"Process spawn failed for {name}: {error.message}")
+        log_terminal_event(event_type, name, f"error: {error.message}")
+
+        if spawn_type == "ssh" and actual_data:
+            error_guidance = self._get_ssh_error_guidance(error.message)
+            connection_str = getattr(
+                actual_data, "get_connection_string", lambda: "unknown"
+            )()
+            error_msg = (
+                f"\nSSH Connection Failed:\nSession: {name}\n"
+                f"Host: {connection_str}\nError: {error.message}\n"
+            )
+            if error_guidance:
+                error_msg += f"Suggestion: {error_guidance}\n"
+            error_msg += "\n"
+        else:
+            error_msg = (
+                f"\nFailed to start {name}:\nError: {error.message}\n"
+                "Please check your system configuration.\n\n"
+            )
+
+        if terminal.get_realized():
+            terminal.feed(error_msg.encode("utf-8"))
+
+    def _handle_spawn_success(
+        self,
+        pid: int,
+        name: str,
+        spawn_type: str,
+        terminal: Vte.Terminal,
+        temp_dir_path: Optional[str],
+        actual_data: Any,
+    ) -> None:
+        """Handle successful spawn by registering process.
+
+        Args:
+            pid: Process ID.
+            name: Name of the terminal/session.
+            spawn_type: Type of spawn.
+            terminal: The VTE terminal widget.
+            temp_dir_path: Temporary directory path if any.
+            actual_data: Session data for SSH.
+        """
+        self.logger.info(f"Process spawned successfully for {name} with PID {pid}")
+        log_terminal_event("spawned", name, f"PID {pid}")
+
+        if pid > 0:
+            process_info = {
+                "name": name,
+                "type": spawn_type,
+                "terminal": terminal,
+            }
+            if temp_dir_path:
+                process_info["temp_dir_path"] = temp_dir_path
+            if spawn_type == "ssh" and actual_data:
+                process_info["session"] = actual_data
+            self.process_tracker.register_process(pid, process_info)
+
     def _generic_spawn_callback(
         self,
         terminal: Vte.Terminal,
@@ -1120,69 +1326,18 @@ class ProcessSpawner:
             spawn_type: Type of spawn - "local" or "ssh"
         """
         try:
-            final_user_data = (
-                user_data[0] if isinstance(user_data, tuple) else user_data
+            _, temp_dir_path, name, actual_data = self._extract_spawn_callback_data(
+                user_data, spawn_type
             )
-            original_user_data = final_user_data.get("original_user_data")
-            temp_dir_path = final_user_data.get("temp_dir_path")
-
-            # Extract name based on spawn type
-            if spawn_type == "ssh":
-                actual_data = (
-                    original_user_data[0]
-                    if isinstance(original_user_data, tuple) and original_user_data
-                    else original_user_data
-                )
-                name = getattr(actual_data, "name", "SSH Session")
-            else:
-                actual_data = None
-                name = (
-                    str(original_user_data[0])
-                    if isinstance(original_user_data, tuple) and original_user_data
-                    else "Terminal"
-                )
 
             if error:
-                event_type = (
-                    f"{spawn_type}_spawn_failed"
-                    if spawn_type == "ssh"
-                    else "spawn_failed"
+                self._handle_spawn_error(
+                    terminal, error, name, spawn_type, actual_data
                 )
-                self.logger.error(f"Process spawn failed for {name}: {error.message}")
-                log_terminal_event(event_type, name, f"error: {error.message}")
-
-                # Build error message based on spawn type
-                if spawn_type == "ssh" and actual_data:
-                    error_guidance = self._get_ssh_error_guidance(error.message)
-                    connection_str = getattr(
-                        actual_data, "get_connection_string", lambda: "unknown"
-                    )()
-                    error_msg = f"\nSSH Connection Failed:\nSession: {name}\nHost: {connection_str}\nError: {error.message}\n"
-                    if error_guidance:
-                        error_msg += f"Suggestion: {error_guidance}\n"
-                    error_msg += "\n"
-                else:
-                    error_msg = f"\nFailed to start {name}:\nError: {error.message}\nPlease check your system configuration.\n\n"
-
-                if terminal.get_realized():
-                    terminal.feed(error_msg.encode("utf-8"))
             else:
-                self.logger.info(
-                    f"Process spawned successfully for {name} with PID {pid}"
+                self._handle_spawn_success(
+                    pid, name, spawn_type, terminal, temp_dir_path, actual_data
                 )
-                log_terminal_event("spawned", name, f"PID {pid}")
-
-                if pid > 0:
-                    process_info = {
-                        "name": name,
-                        "type": spawn_type,
-                        "terminal": terminal,
-                    }
-                    if temp_dir_path:
-                        process_info["temp_dir_path"] = temp_dir_path
-                    if spawn_type == "ssh" and actual_data:
-                        process_info["session"] = actual_data
-                    self.process_tracker.register_process(pid, process_info)
 
         except Exception as e:
             self.logger.error(f"Spawn callback handling failed: {e}")
