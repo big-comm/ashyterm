@@ -262,7 +262,9 @@ class SettingsManager:
             import hashlib
 
             settings_json = json.dumps(settings, sort_keys=True, separators=(",", ":"))
-            current_checksum = hashlib.md5(settings_json.encode("utf-8")).hexdigest()
+            current_checksum = hashlib.md5(
+                settings_json.encode("utf-8"), usedforsecurity=False
+            ).hexdigest()
             if current_checksum != self._metadata.checksum:
                 self.logger.warning(
                     "Settings checksum mismatch - file may be corrupted"
@@ -366,7 +368,7 @@ class SettingsManager:
                         settings_to_save, sort_keys=True, separators=(",", ":")
                     )
                     self._metadata.checksum = hashlib.md5(
-                        settings_json.encode("utf-8")
+                        settings_json.encode("utf-8"), usedforsecurity=False
                     ).hexdigest()
                     save_data = {
                         "metadata": asdict(self._metadata),
@@ -622,7 +624,7 @@ class SettingsManager:
         terminal.set_allow_hyperlink(True)  # OSC8 hyperlinks always enabled
         terminal.set_word_char_exceptions(self.get("word_char_exceptions", "-_.:/~"))
         # VTE 0.76+ removed set_enable_a11y (accessibility is always enabled)
-        if hasattr(terminal, 'set_enable_a11y'):
+        if hasattr(terminal, "set_enable_a11y"):
             terminal.set_enable_a11y(self.get("accessibility_enabled", True))
         terminal.set_cell_height_scale(self.get("line_spacing", 1.0))
         terminal.set_bold_is_bright(self.get("bold_is_bright", True))
@@ -1247,7 +1249,6 @@ class SettingsManager:
                 }}
                 """)
 
-
                 # === TOOLTIPS ===
                 css_parts.append(f"""
                 .tooltip-popover > contents {{
@@ -1302,7 +1303,6 @@ class SettingsManager:
                     color: {fg_color};
                 }}
                 """)
-
 
             # === DIALOGS ===
             # Get accent color from palette for command guide styling
@@ -1547,8 +1547,6 @@ class SettingsManager:
                 self.logger.info(
                     f"Skipping dialog background styling - luminance {luminance:.2%} is below 5% threshold"
                 )
-
-
 
             # === PANED SEPARATORS ===
             # Use a subtle color based on the theme colors

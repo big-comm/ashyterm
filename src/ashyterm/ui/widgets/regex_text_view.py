@@ -18,18 +18,27 @@ from .base_syntax_text_view import BaseSyntaxTextView
 
 # Regex patterns for syntax elements
 _REGEX_PATTERNS = {
-    "bracket": r"[\[\]]",           # Character class brackets
-    "group": r"[()]",               # Grouping parentheses
+    "bracket": r"[\[\]]",  # Character class brackets
+    "group": r"[()]",  # Grouping parentheses
     "quantifier": r"[*+?]|\{\d+(?:,\d*)?\}",  # Quantifiers: *, +, ?, {n}, {n,}, {n,m}
     "anchor": r"\\[bBAZzGsSwWdD]|[\^$]",  # Anchors and special escapes
     "escape": r"\\[nrtfvae0-9]|\\x[0-9a-fA-F]{2}|\\u[0-9a-fA-F]{4}",  # Escape sequences
     "special": r"\\.|\\[\\^?|:alpha:|:digit:|:alnum:|:space:|:word:",  # Special chars & POSIX classes
-    "operator": r"[|&]",            # Alternation, conjunction
-    "range": r"-(?=[^\[\]])",       # Range operator inside character class (simplified)
+    "operator": r"[|&]",  # Alternation, conjunction
+    "range": r"-(?=[^\[\]])",  # Range operator inside character class (simplified)
 }
 
 # Regex-specific token types
-REGEX_TOKEN_TYPES = ("bracket", "group", "quantifier", "anchor", "escape", "special", "operator", "range")
+REGEX_TOKEN_TYPES = (
+    "bracket",
+    "group",
+    "quantifier",
+    "anchor",
+    "escape",
+    "special",
+    "operator",
+    "range",
+)
 
 
 class RegexTextView(BaseSyntaxTextView):
@@ -40,13 +49,17 @@ class RegexTextView(BaseSyntaxTextView):
     """
 
     # Use centralized color definitions filtered for regex tokens
-    _DEFAULT_DARK_COLORS = {k: v for k, v in SYNTAX_DARK_COLORS.items() if k in REGEX_TOKEN_TYPES}
-    _DEFAULT_LIGHT_COLORS = {k: v for k, v in SYNTAX_LIGHT_COLORS.items() if k in REGEX_TOKEN_TYPES}
+    _DEFAULT_DARK_COLORS = {
+        k: v for k, v in SYNTAX_DARK_COLORS.items() if k in REGEX_TOKEN_TYPES
+    }
+    _DEFAULT_LIGHT_COLORS = {
+        k: v for k, v in SYNTAX_LIGHT_COLORS.items() if k in REGEX_TOKEN_TYPES
+    }
 
     def __init__(self, single_line: bool = True):
         """
         Initialize the RegexTextView.
-        
+
         Args:
             single_line: Whether to block Enter/Return for single-line mode
         """
@@ -81,10 +94,12 @@ class RegexTextView(BaseSyntaxTextView):
             return True  # Block the event
         return False
 
-    def update_colors_from_scheme(self, palette: List[str], foreground: str = "#ffffff"):
+    def update_colors_from_scheme(
+        self, palette: List[str], foreground: str = "#ffffff"
+    ):
         """
         Update syntax highlighting colors from a terminal color scheme palette.
-        
+
         Args:
             palette: List of hex color strings from the terminal color scheme
             foreground: Foreground color (not used for regex, kept for API consistency)
@@ -94,14 +109,16 @@ class RegexTextView(BaseSyntaxTextView):
 
         # Map palette colors to syntax elements
         self._syntax_colors = {
-            "bracket": palette[4] if len(palette) > 4 else "#729fcf",      # Blue
-            "group": palette[5] if len(palette) > 5 else "#ad7fa8",        # Magenta
-            "quantifier": palette[2] if len(palette) > 2 else "#8ae234",   # Green
-            "anchor": palette[3] if len(palette) > 3 else "#fcaf3e",       # Yellow
-            "escape": palette[11] if len(palette) > 11 else "#e9b96e",     # Bright yellow
-            "special": palette[13] if len(palette) > 13 else "#ff69b4",    # Bright magenta
-            "operator": palette[3] if len(palette) > 3 else "#f4d03f",     # Yellow
-            "range": palette[6] if len(palette) > 6 else "#87ceeb",        # Cyan
+            "bracket": palette[4] if len(palette) > 4 else "#729fcf",  # Blue
+            "group": palette[5] if len(palette) > 5 else "#ad7fa8",  # Magenta
+            "quantifier": palette[2] if len(palette) > 2 else "#8ae234",  # Green
+            "anchor": palette[3] if len(palette) > 3 else "#fcaf3e",  # Yellow
+            "escape": palette[11] if len(palette) > 11 else "#e9b96e",  # Bright yellow
+            "special": palette[13]
+            if len(palette) > 13
+            else "#ff69b4",  # Bright magenta
+            "operator": palette[3] if len(palette) > 3 else "#f4d03f",  # Yellow
+            "range": palette[6] if len(palette) > 6 else "#87ceeb",  # Cyan
         }
 
         self._update_tag_colors()
@@ -125,7 +142,16 @@ class RegexTextView(BaseSyntaxTextView):
 
         # Apply highlighting based on regex patterns
         # Order matters: more specific patterns should come first
-        highlight_order = ["escape", "anchor", "quantifier", "bracket", "group", "special", "operator", "range"]
+        highlight_order = [
+            "escape",
+            "anchor",
+            "quantifier",
+            "bracket",
+            "group",
+            "special",
+            "operator",
+            "range",
+        ]
 
         for tag_name in highlight_order:
             pattern_str = _REGEX_PATTERNS.get(tag_name)

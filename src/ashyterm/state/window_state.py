@@ -351,4 +351,3 @@ class WindowStateManager:
                     "working_dir": working_dir,
                 }
         return None
-

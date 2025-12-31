@@ -30,6 +30,7 @@ def _get_requests():
     global _requests_module
     if _requests_module is None:
         import requests
+
         _requests_module = requests
     return _requests_module
 
@@ -915,10 +916,12 @@ class TerminalAiAssistant(GObject.Object):
                 system_instruction = text
                 continue
             mapped_role = "model" if role == "assistant" else "user"
-            contents.append({
-                "role": mapped_role,
-                "parts": [{"text": text}],
-            })
+            contents.append(
+                {
+                    "role": mapped_role,
+                    "parts": [{"text": text}],
+                }
+            )
         if not contents:
             contents.append({"role": "user", "parts": [{"text": ""}]})
         return system_instruction, contents
@@ -976,10 +979,12 @@ class TerminalAiAssistant(GObject.Object):
                 cmd_str = match.strip()
                 # Evita adicionar scripts longos como botões de comando único
                 if cmd_str and len(cmd_str.splitlines()) == 1:
-                    commands.append({
-                        "command": cmd_str,
-                        "description": "Suggested command",
-                    })
+                    commands.append(
+                        {
+                            "command": cmd_str,
+                            "description": "Suggested command",
+                        }
+                    )
 
         return reply_text, commands, code_snippets
 
@@ -1030,12 +1035,14 @@ class TerminalAiAssistant(GObject.Object):
                     candidate = item.get("command") or item.get("cmd")
                     description = item.get("description") or ""
                     if isinstance(candidate, str) and candidate.strip():
-                        commands.append({
-                            "command": candidate.strip(),
-                            "description": description.strip()
-                            if isinstance(description, str)
-                            else "",
-                        })
+                        commands.append(
+                            {
+                                "command": candidate.strip(),
+                                "description": description.strip()
+                                if isinstance(description, str)
+                                else "",
+                            }
+                        )
         elif isinstance(value, str) and value.strip():
             commands.append({"command": value.strip(), "description": ""})
         return commands

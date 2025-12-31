@@ -878,7 +878,9 @@ class SessionEditDialog(BaseDialog):
                 xalign=0,
             )
             remote_host_display = tunnel.get("remote_host") or _("SSH Host")
-            subtitle_text = _("{local_host}:{local_port} → {remote_host}:{remote_port}").format(
+            subtitle_text = _(
+                "{local_host}:{local_port} → {remote_host}:{remote_port}"
+            ).format(
                 local_host=tunnel.get("local_host", "localhost"),
                 local_port=tunnel.get("local_port", 0),
                 remote_host=remote_host_display,
@@ -898,7 +900,9 @@ class SessionEditDialog(BaseDialog):
             delete_button = Gtk.Button(
                 icon_name="user-trash-symbolic", css_classes=["flat"]
             )
-            delete_button.connect("clicked", self._on_delete_port_forward_clicked, index)
+            delete_button.connect(
+                "clicked", self._on_delete_port_forward_clicked, index
+            )
             button_box.append(edit_button)
             button_box.append(delete_button)
             row_box.append(button_box)
@@ -928,7 +932,9 @@ class SessionEditDialog(BaseDialog):
             self._refresh_port_forward_list()
             self._mark_changed()
 
-    def _show_port_forward_dialog(self, existing: Optional[dict] = None) -> Optional[dict]:
+    def _show_port_forward_dialog(
+        self, existing: Optional[dict] = None
+    ) -> Optional[dict]:
         is_edit = existing is not None
 
         # Use Adw.Window with ToolbarView for consistency
@@ -1433,6 +1439,7 @@ class SessionEditDialog(BaseDialog):
     def _run_test_in_thread(self, test_session: SessionItem):
         # Lazy import to defer loading until actually testing connection
         from ...terminal.spawner import get_spawner
+
         spawner = get_spawner()
         success, message = spawner.test_ssh_connection(test_session)
         GLib.idle_add(self._on_test_finished, success, message)
@@ -1510,13 +1517,20 @@ class SessionEditDialog(BaseDialog):
 
         # Create a new SessionItem instance with the data from the form
         session_data = self.editing_session.to_dict()
-        session_data.update({
-            "name": self.name_row.get_text().strip(),
-            "session_type": "local" if self.type_combo.get_selected() == 0 else "ssh",
-        })
+        session_data.update(
+            {
+                "name": self.name_row.get_text().strip(),
+                "session_type": "local"
+                if self.type_combo.get_selected() == 0
+                else "ssh",
+            }
+        )
 
         # Per-session highlighting overrides (tri-state)
-        if hasattr(self, "highlighting_customize_switch") and not self.highlighting_customize_switch.get_active():
+        if (
+            hasattr(self, "highlighting_customize_switch")
+            and not self.highlighting_customize_switch.get_active()
+        ):
             # Customization is off => equivalent to "Automatic" for all.
             session_data["output_highlighting"] = None
             session_data["command_specific_highlighting"] = None
@@ -1528,8 +1542,10 @@ class SessionEditDialog(BaseDialog):
                     self.output_highlighting_row.get_selected()
                 )
             if hasattr(self, "command_specific_highlighting_row"):
-                session_data["command_specific_highlighting"] = self._selected_to_tri_state(
-                    self.command_specific_highlighting_row.get_selected()
+                session_data["command_specific_highlighting"] = (
+                    self._selected_to_tri_state(
+                        self.command_specific_highlighting_row.get_selected()
+                    )
                 )
             if hasattr(self, "cat_colorization_row"):
                 session_data["cat_colorization"] = self._selected_to_tri_state(
@@ -1561,9 +1577,7 @@ class SessionEditDialog(BaseDialog):
             else False
         )
         post_login_command = (
-            self.post_login_entry.get_text().strip()
-            if self.post_login_entry
-            else ""
+            self.post_login_entry.get_text().strip() if self.post_login_entry else ""
         )
         session_data["post_login_command_enabled"] = post_login_enabled
         session_data["post_login_command"] = (
@@ -1576,14 +1590,10 @@ class SessionEditDialog(BaseDialog):
             else False
         )
         local_dir = (
-            self.sftp_local_entry.get_text().strip()
-            if self.sftp_local_entry
-            else ""
+            self.sftp_local_entry.get_text().strip() if self.sftp_local_entry else ""
         )
         remote_dir = (
-            self.sftp_remote_entry.get_text().strip()
-            if self.sftp_remote_entry
-            else ""
+            self.sftp_remote_entry.get_text().strip() if self.sftp_remote_entry else ""
         )
         session_data["sftp_session_enabled"] = sftp_enabled
         session_data["sftp_local_directory"] = local_dir
@@ -1601,14 +1611,16 @@ class SessionEditDialog(BaseDialog):
 
         raw_password = ""
         if session_data["session_type"] == "ssh":
-            session_data.update({
-                "host": self.host_entry.get_text().strip(),
-                "user": self.user_entry.get_text().strip(),
-                "port": int(self.port_entry.get_value()),
-                "auth_type": "key"
-                if self.auth_combo.get_selected() == 0
-                else "password",
-            })
+            session_data.update(
+                {
+                    "host": self.host_entry.get_text().strip(),
+                    "user": self.user_entry.get_text().strip(),
+                    "port": int(self.port_entry.get_value()),
+                    "auth_type": "key"
+                    if self.auth_combo.get_selected() == 0
+                    else "password",
+                }
+            )
             if session_data["auth_type"] == "key":
                 session_data["auth_value"] = self.key_path_entry.get_text().strip()
             else:
@@ -1618,12 +1630,14 @@ class SessionEditDialog(BaseDialog):
             session_data["local_working_directory"] = ""
             session_data["local_startup_command"] = ""
         else:
-            session_data.update({
-                "host": "",
-                "user": "",
-                "auth_type": "",
-                "auth_value": "",
-            })
+            session_data.update(
+                {
+                    "host": "",
+                    "user": "",
+                    "auth_type": "",
+                    "auth_value": "",
+                }
+            )
             session_data["sftp_session_enabled"] = False
             session_data["port_forwardings"] = []
             session_data["x11_forwarding"] = False

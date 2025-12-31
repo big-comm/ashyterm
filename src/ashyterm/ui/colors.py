@@ -68,10 +68,11 @@ ANSI_MODIFIERS: Dict[str, str] = {
 # UI Color Options (for dropdowns/selectors)
 # =============================================================================
 
+
 def get_foreground_color_options() -> List[Tuple[str, str]]:
     """
     Get foreground color options for UI dropdowns.
-    
+
     Returns:
         List of (color_id, localized_label) tuples.
     """
@@ -103,7 +104,7 @@ def get_background_color_options() -> List[Tuple[str, str]]:
     """
     Get background color options for UI dropdowns.
     Uses 'on_' prefix for ANSI mapping compatibility.
-    
+
     Returns:
         List of (color_id, localized_label) tuples.
     """
@@ -131,7 +132,7 @@ def get_background_color_options() -> List[Tuple[str, str]]:
 def get_text_effect_options() -> List[Tuple[str, str, str]]:
     """
     Get text effect options for toggle buttons.
-    
+
     Returns:
         List of (effect_id, localized_label, icon_name) tuples.
     """
@@ -152,73 +153,73 @@ def get_text_effect_options() -> List[Tuple[str, str, str]]:
 # Dark mode syntax colors (brighter for visibility on dark backgrounds)
 SYNTAX_DARK_COLORS: Dict[str, str] = {
     # Bash/shell tokens
-    "keyword": "#729fcf",        # Blue
-    "builtin": "#8ae234",        # Green
-    "command": "#8ae234",        # Green
-    "string": "#e9b96e",         # Orange
+    "keyword": "#729fcf",  # Blue
+    "builtin": "#8ae234",  # Green
+    "command": "#8ae234",  # Green
+    "string": "#e9b96e",  # Orange
     "string_single": "#e9b96e",  # Orange
-    "backtick": "#daa520",       # Goldenrod
-    "comment": "#888a85",        # Gray
-    "variable": "#ad7fa8",       # Purple
-    "special_var": "#ff69b4",    # Hot pink
-    "operator": "#fcaf3e",       # Yellow/Orange
-    "number": "#f4d03f",         # Yellow
-    "path": "#87ceeb",           # Sky blue
-    "function": "#dda0dd",       # Plum
-    "redirect": "#fcaf3e",       # Yellow/Orange
-    "pipe": "#fcaf3e",           # Yellow/Orange
-    "flag": "#98d8c8",           # Mint
-    "escape": "#deb887",         # Burlywood
-    "substitution": "#daa520",   # Goldenrod
-    "brace": "#20b2aa",          # Light sea green
+    "backtick": "#daa520",  # Goldenrod
+    "comment": "#888a85",  # Gray
+    "variable": "#ad7fa8",  # Purple
+    "special_var": "#ff69b4",  # Hot pink
+    "operator": "#fcaf3e",  # Yellow/Orange
+    "number": "#f4d03f",  # Yellow
+    "path": "#87ceeb",  # Sky blue
+    "function": "#dda0dd",  # Plum
+    "redirect": "#fcaf3e",  # Yellow/Orange
+    "pipe": "#fcaf3e",  # Yellow/Orange
+    "flag": "#98d8c8",  # Mint
+    "escape": "#deb887",  # Burlywood
+    "substitution": "#daa520",  # Goldenrod
+    "brace": "#20b2aa",  # Light sea green
     # Regex tokens
-    "bracket": "#729fcf",        # Blue - character class brackets []
-    "group": "#ad7fa8",          # Purple - grouping ()
-    "quantifier": "#8ae234",     # Green - quantifiers *, +, ?, {}
-    "anchor": "#fcaf3e",         # Orange - anchors ^, $, \b, etc.
-    "special": "#ff69b4",        # Pink - special characters \.
-    "range": "#87ceeb",          # Sky blue - range operator -
+    "bracket": "#729fcf",  # Blue - character class brackets []
+    "group": "#ad7fa8",  # Purple - grouping ()
+    "quantifier": "#8ae234",  # Green - quantifiers *, +, ?, {}
+    "anchor": "#fcaf3e",  # Orange - anchors ^, $, \b, etc.
+    "special": "#ff69b4",  # Pink - special characters \.
+    "range": "#87ceeb",  # Sky blue - range operator -
 }
 
 # Light mode syntax colors (darker for contrast on light backgrounds)
 SYNTAX_LIGHT_COLORS: Dict[str, str] = {
     # Bash/shell tokens
-    "keyword": "#1a5fb4",        # Dark blue
-    "builtin": "#26a269",        # Dark green
-    "command": "#26a269",        # Dark green
-    "string": "#9c6100",         # Dark orange
+    "keyword": "#1a5fb4",  # Dark blue
+    "builtin": "#26a269",  # Dark green
+    "command": "#26a269",  # Dark green
+    "string": "#9c6100",  # Dark orange
     "string_single": "#9c6100",  # Dark orange
-    "backtick": "#8b6914",       # Dark goldenrod
-    "comment": "#5c5c5c",        # Dark gray
-    "variable": "#813d9c",       # Dark purple
-    "special_var": "#c01c28",    # Dark red
-    "operator": "#9c5400",       # Dark orange
-    "number": "#8b6914",         # Dark yellow/brown
-    "path": "#1a5fb4",           # Dark blue
-    "function": "#813d9c",       # Dark purple
-    "redirect": "#9c5400",       # Dark orange
-    "pipe": "#9c5400",           # Dark orange
-    "flag": "#1a8171",           # Teal
-    "escape": "#8b6914",         # Dark brown
-    "substitution": "#8b6914",   # Dark goldenrod
-    "brace": "#1a8171",          # Teal
+    "backtick": "#8b6914",  # Dark goldenrod
+    "comment": "#5c5c5c",  # Dark gray
+    "variable": "#813d9c",  # Dark purple
+    "special_var": "#c01c28",  # Dark red
+    "operator": "#9c5400",  # Dark orange
+    "number": "#8b6914",  # Dark yellow/brown
+    "path": "#1a5fb4",  # Dark blue
+    "function": "#813d9c",  # Dark purple
+    "redirect": "#9c5400",  # Dark orange
+    "pipe": "#9c5400",  # Dark orange
+    "flag": "#1a8171",  # Teal
+    "escape": "#8b6914",  # Dark brown
+    "substitution": "#8b6914",  # Dark goldenrod
+    "brace": "#1a8171",  # Teal
     # Regex tokens
-    "bracket": "#1a5fb4",        # Dark blue
-    "group": "#813d9c",          # Dark purple
-    "quantifier": "#26a269",     # Dark green
-    "anchor": "#9c5400",         # Dark orange
-    "special": "#c01c28",        # Dark red
-    "range": "#1a5fb4",          # Dark blue
+    "bracket": "#1a5fb4",  # Dark blue
+    "group": "#813d9c",  # Dark purple
+    "quantifier": "#26a269",  # Dark green
+    "anchor": "#9c5400",  # Dark orange
+    "special": "#c01c28",  # Dark red
+    "range": "#1a5fb4",  # Dark blue
 }
 
 
 def get_syntax_colors(is_dark: bool) -> Dict[str, str]:
     """
     Get syntax highlighting colors for light or dark mode.
-    
+
     Args:
         is_dark: True for dark mode, False for light mode.
-        
+
     Returns:
         Dictionary mapping token types to hex colors.
     """
@@ -228,13 +229,13 @@ def get_syntax_colors(is_dark: bool) -> Dict[str, str]:
 def map_palette_to_syntax(palette: List[str]) -> Dict[str, str]:
     """
     Map a terminal color palette (16 colors) to syntax token types.
-    
+
     This creates theme-aware syntax colors by mapping palette indices
     to semantic token types based on common terminal color conventions.
-    
+
     Args:
         palette: List of 16 hex color strings (ANSI palette).
-        
+
     Returns:
         Dictionary mapping token types to hex colors from the palette.
     """
@@ -246,38 +247,41 @@ def map_palette_to_syntax(palette: List[str]) -> Dict[str, str]:
     # Uses semantic relationships: blue=keywords, green=strings/commands, etc.
     return {
         # Primary mappings (standard ANSI indices)
-        "keyword": palette[4] if len(palette) > 4 else "#729fcf",      # Blue
-        "builtin": palette[2] if len(palette) > 2 else "#8ae234",      # Green
-        "command": palette[2] if len(palette) > 2 else "#8ae234",      # Green
-        "string": palette[3] if len(palette) > 3 else "#e9b96e",       # Yellow
+        "keyword": palette[4] if len(palette) > 4 else "#729fcf",  # Blue
+        "builtin": palette[2] if len(palette) > 2 else "#8ae234",  # Green
+        "command": palette[2] if len(palette) > 2 else "#8ae234",  # Green
+        "string": palette[3] if len(palette) > 3 else "#e9b96e",  # Yellow
         "string_single": palette[3] if len(palette) > 3 else "#e9b96e",
-        "comment": palette[8] if len(palette) > 8 else "#888a85",      # Bright black
-        "variable": palette[5] if len(palette) > 5 else "#ad7fa8",     # Magenta
-        "special_var": palette[13] if len(palette) > 13 else "#ff69b4", # Bright magenta
-        "operator": palette[11] if len(palette) > 11 else "#fcaf3e",   # Bright yellow
-        "number": palette[11] if len(palette) > 11 else "#f4d03f",     # Bright yellow
-        "path": palette[12] if len(palette) > 12 else "#87ceeb",       # Bright blue
-        "function": palette[5] if len(palette) > 5 else "#dda0dd",     # Magenta
-        "redirect": palette[3] if len(palette) > 3 else "#fcaf3e",     # Yellow
-        "pipe": palette[3] if len(palette) > 3 else "#fcaf3e",         # Yellow
-        "flag": palette[6] if len(palette) > 6 else "#98d8c8",         # Cyan
-        "escape": palette[11] if len(palette) > 11 else "#deb887",     # Bright yellow
+        "comment": palette[8] if len(palette) > 8 else "#888a85",  # Bright black
+        "variable": palette[5] if len(palette) > 5 else "#ad7fa8",  # Magenta
+        "special_var": palette[13]
+        if len(palette) > 13
+        else "#ff69b4",  # Bright magenta
+        "operator": palette[11] if len(palette) > 11 else "#fcaf3e",  # Bright yellow
+        "number": palette[11] if len(palette) > 11 else "#f4d03f",  # Bright yellow
+        "path": palette[12] if len(palette) > 12 else "#87ceeb",  # Bright blue
+        "function": palette[5] if len(palette) > 5 else "#dda0dd",  # Magenta
+        "redirect": palette[3] if len(palette) > 3 else "#fcaf3e",  # Yellow
+        "pipe": palette[3] if len(palette) > 3 else "#fcaf3e",  # Yellow
+        "flag": palette[6] if len(palette) > 6 else "#98d8c8",  # Cyan
+        "escape": palette[11] if len(palette) > 11 else "#deb887",  # Bright yellow
         "substitution": palette[11] if len(palette) > 11 else "#daa520",
-        "brace": palette[6] if len(palette) > 6 else "#20b2aa",        # Cyan
-        "backtick": palette[11] if len(palette) > 11 else "#daa520",   # Bright yellow
+        "brace": palette[6] if len(palette) > 6 else "#20b2aa",  # Cyan
+        "backtick": palette[11] if len(palette) > 11 else "#daa520",  # Bright yellow
         # Regex-specific tokens
-        "bracket": palette[4] if len(palette) > 4 else "#729fcf",      # Blue
-        "group": palette[5] if len(palette) > 5 else "#ad7fa8",        # Magenta
-        "quantifier": palette[2] if len(palette) > 2 else "#8ae234",   # Green
-        "anchor": palette[3] if len(palette) > 3 else "#fcaf3e",       # Yellow
-        "special": palette[1] if len(palette) > 1 else "#ff69b4",      # Red
-        "range": palette[12] if len(palette) > 12 else "#87ceeb",      # Bright blue
+        "bracket": palette[4] if len(palette) > 4 else "#729fcf",  # Blue
+        "group": palette[5] if len(palette) > 5 else "#ad7fa8",  # Magenta
+        "quantifier": palette[2] if len(palette) > 2 else "#8ae234",  # Green
+        "anchor": palette[3] if len(palette) > 3 else "#fcaf3e",  # Yellow
+        "special": palette[1] if len(palette) > 1 else "#ff69b4",  # Red
+        "range": palette[12] if len(palette) > 12 else "#87ceeb",  # Bright blue
     }
 
 
 # =============================================================================
 # Color Resolution Utilities
 # =============================================================================
+
 
 def resolve_color_to_hex(
     color_name: str,
@@ -287,13 +291,13 @@ def resolve_color_to_hex(
 ) -> str:
     """
     Resolve a logical color name to a hex color string.
-    
+
     Args:
         color_name: Logical name like "red", "bright_cyan", "foreground"
         palette: Terminal color palette (16 hex colors)
         foreground: Theme foreground color
         background: Theme background color
-        
+
     Returns:
         Hex color string like "#ff5555"
     """
@@ -327,15 +331,15 @@ def resolve_color_to_hex(
 def resolve_color_to_ansi_code(color_name: str) -> str:
     """
     Resolve a logical color name to an ANSI escape sequence.
-    
+
     Supports modifiers and background colors:
     - "bold red" -> ESC[1;31m
     - "red on_green" -> ESC[31;42m
     - "bold underline cyan on_black" -> ESC[1;4;36;40m
-    
+
     Args:
         color_name: Logical color name with optional modifiers
-        
+
     Returns:
         ANSI escape sequence string
     """

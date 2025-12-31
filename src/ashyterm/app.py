@@ -26,6 +26,7 @@ from .settings.config import (
     SETTINGS_FILE,
 )
 from .settings.manager import SettingsManager, get_settings_manager
+
 # Lazy import: from .terminal.spawner import cleanup_spawner  # Only needed at shutdown
 from .utils.exceptions import handle_exception
 from .utils.logger import enable_debug_mode, get_logger, log_app_shutdown, log_app_start
@@ -78,6 +79,7 @@ class CommTerminalApp(Adw.Application):
         if self._backup_manager is None:
             try:
                 from .utils.backup import get_backup_manager
+
                 self._backup_manager = get_backup_manager()
             except Exception as e:
                 self.logger.error(f"Failed to initialize backup manager on-demand: {e}")
@@ -88,6 +90,7 @@ class CommTerminalApp(Adw.Application):
         if self._security_auditor is None:
             try:
                 from .utils.security import create_security_auditor
+
                 self._security_auditor = create_security_auditor()
             except Exception as e:
                 self.logger.warning(
@@ -179,9 +182,7 @@ class CommTerminalApp(Adw.Application):
         try:
             icon_strategy = "ashy"
             if self.settings_manager:
-                icon_strategy = self.settings_manager.get(
-                    "icon_theme_strategy", "ashy"
-                )
+                icon_strategy = self.settings_manager.get("icon_theme_strategy", "ashy")
 
             # Configure icons module based on strategy
             from .utils import icons
@@ -282,85 +283,127 @@ class CommTerminalApp(Adw.Application):
         self.activate()
         return 0
 
-    def _process_and_execute_args(self, arguments: list):
-        """Parse arguments and decide what action to take."""
-        working_directory, execute_command, ssh_target, close_after_execute = (
-            None,
-            None,
-            None,
-            False,
-        )
-        force_new_window = False
+    def _handle_working_directory_arg(
+        self, arg: str, arguments: list, i: int, result: dict
+    ) -> tuple:
+        """Handle working directory argument variants. Returns (consumed, new_index)."""
+        if arg in ["-w", "--working-directory"] and i + 1 < len(arguments):
+            result["working_directory"] = arguments[i + 1]
+            return True, i + 2
+        if arg.startswith("--working-directory="):
+            result["working_directory"] = arg.split("=", 1)[1]
+            return True, i + 1
+        return False, i
 
-        # First pass: find flags that don't consume remaining args
+    def _handle_ssh_arg(self, arg: str, arguments: list, i: int, result: dict) -> tuple:
+        """Handle SSH argument variants. Returns (consumed, new_index)."""
+        if arg == "--ssh" and i + 1 < len(arguments):
+            result["ssh_target"] = arguments[i + 1]
+            return True, i + 2
+        if arg.startswith("--ssh="):
+            result["ssh_target"] = arg.split("=", 1)[1]
+            return True, i + 1
+        return False, i
+
+    def _parse_command_line_args(self, arguments: list) -> dict:
+        """Parse command line arguments into a structured dictionary."""
+        result = {
+            "working_directory": None,
+            "execute_command": None,
+            "ssh_target": None,
+            "close_after_execute": False,
+            "force_new_window": False,
+        }
+
         i = 1
         execute_index = None
         while i < len(arguments):
             arg = arguments[i]
-            if arg in ["-w", "--working-directory"] and i + 1 < len(arguments):
-                working_directory = arguments[i + 1]
-                i += 2
+
+            # Try working directory handlers
+            consumed, i = self._handle_working_directory_arg(arg, arguments, i, result)
+            if consumed:
                 continue
-            elif arg.startswith("--working-directory="):
-                working_directory = arg.split("=", 1)[1]
-            elif arg in ["-e", "-x", "--execute"]:
-                # Mark where the execute command starts - capture all remaining args
+
+            # Try SSH handlers
+            consumed, i = self._handle_ssh_arg(arg, arguments, i, result)
+            if consumed:
+                continue
+
+            # Handle execute command (stops parsing)
+            if arg in ["-e", "-x", "--execute"]:
                 execute_index = i + 1
-                break  # Stop here, remaining args are the command
-            elif arg.startswith("--execute="):
-                execute_command = arg.split("=", 1)[1]
+                break
+            if arg.startswith("--execute="):
+                result["execute_command"] = arg.split("=", 1)[1]
             elif arg == "--close-after-execute":
-                close_after_execute = True
-            elif arg == "--ssh" and i + 1 < len(arguments):
-                ssh_target = arguments[i + 1]
-                i += 1
-            elif arg.startswith("--ssh="):
-                ssh_target = arg.split("=", 1)[1]
+                result["close_after_execute"] = True
             elif arg == "--new-window":
-                force_new_window = True
-            elif not arg.startswith("-") and working_directory is None:
-                working_directory = arg
+                result["force_new_window"] = True
+            elif not arg.startswith("-") and result["working_directory"] is None:
+                result["working_directory"] = arg
             i += 1
 
-        # If we found -e/-x/--execute, capture all remaining arguments as the command
+        # Capture remaining arguments as execute command
         if execute_index is not None and execute_index < len(arguments):
             remaining = arguments[execute_index:]
             if remaining:
-                execute_command = " ".join(remaining)
+                result["execute_command"] = " ".join(remaining)
+
+        return result
+
+    def _create_tab_in_window(
+        self,
+        window,
+        ssh_target,
+        execute_command,
+        working_directory,
+        close_after_execute,
+    ):
+        """Create appropriate tab type in existing window."""
+        if ssh_target:
+            window.create_ssh_tab(ssh_target)
+        elif execute_command:
+            window.create_execute_tab(
+                execute_command, working_directory, close_after_execute
+            )
+        else:
+            window.create_local_tab(working_directory)
+
+    def _process_and_execute_args(self, arguments: list):
+        """Parse arguments and decide what action to take."""
+        args = self._parse_command_line_args(arguments)
 
         behavior = self.settings_manager.get("new_instance_behavior", "new_tab")
-
         windows = self.get_windows()
         target_window = windows[0] if windows else None
 
-        # Check if there are explicit commands to run - these should always create tabs/windows
-        has_explicit_command = ssh_target or execute_command or working_directory
+        has_explicit_command = (
+            args["ssh_target"] or args["execute_command"] or args["working_directory"]
+        )
 
-        if force_new_window or behavior == "new_window" or not target_window:
+        if args["force_new_window"] or behavior == "new_window" or not target_window:
             self.logger.info("Creating a new window for command line arguments.")
             window = self.create_new_window(
-                initial_working_directory=working_directory,
-                initial_execute_command=execute_command,
-                close_after_execute=close_after_execute,
-                initial_ssh_target=ssh_target,
+                initial_working_directory=args["working_directory"],
+                initial_execute_command=args["execute_command"],
+                close_after_execute=args["close_after_execute"],
+                initial_ssh_target=args["ssh_target"],
             )
             self._present_window_and_request_focus(window)
         elif behavior == "focus_existing" and not has_explicit_command:
-            # Only focus existing window without creating new tabs
             self.logger.info("Focusing existing window without creating new tab.")
             self._present_window_and_request_focus(target_window)
         else:
-            # Default: new_tab behavior or explicit command with focus_existing
             self.logger.info("Reusing existing window for a new tab.")
             self._present_window_and_request_focus(target_window)
-            if ssh_target:
-                target_window.create_ssh_tab(ssh_target)
-            elif execute_command:
-                target_window.create_execute_tab(
-                    execute_command, working_directory, close_after_execute
-                )
-            else:
-                target_window.create_local_tab(working_directory)
+            self._create_tab_in_window(
+                target_window,
+                args["ssh_target"],
+                args["execute_command"],
+                args["working_directory"],
+                args["close_after_execute"],
+            )
 
     def _present_window_and_request_focus(self, window: Gtk.Window):
         """Present the window and use a modal dialog hack to request focus if needed.
@@ -448,6 +491,7 @@ class CommTerminalApp(Adw.Application):
     def _on_backup_now_action(self, _action, _param) -> None:
         """Handles the manual backup creation flow."""
         from datetime import datetime
+
         file_dialog = Gtk.FileDialog(title=_("Save Backup As..."), modal=True)
         timestamp = datetime.now().strftime("%Y-%m-%d")
         file_dialog.set_initial_name(f"ashyterm-backup-{timestamp}.7z")
@@ -709,8 +753,8 @@ class CommTerminalApp(Adw.Application):
         """Handle application shutdown."""
         self.logger.info("Application shutdown initiated")
         # Lazy import - only needed at shutdown
-        from .terminal.spawner import cleanup_spawner
         from .core.tasks import AsyncTaskManager
+        from .terminal.spawner import cleanup_spawner
 
         cleanup_spawner()
 

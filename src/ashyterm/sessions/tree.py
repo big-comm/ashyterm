@@ -11,6 +11,7 @@ from gi.repository import Gdk, Gio, GLib, GObject, Graphene, Gtk
 
 from ..core.signals import AppSignals
 from ..helpers import create_themed_popover_menu
+
 # Lazy imports for menus - only loaded when context menus are actually needed
 # from ..ui.menus import create_folder_menu, create_root_menu, create_session_menu
 from ..utils.logger import get_logger

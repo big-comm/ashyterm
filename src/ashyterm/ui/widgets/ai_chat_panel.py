@@ -30,13 +30,13 @@ logger = get_logger(__name__)
 _STYLES_DIR = Path(__file__).parent.parent.parent / "data" / "styles"
 
 # Pre-compiled regex patterns for markdown formatting (performance optimization)
-_CODE_BLOCK_PATTERN = re.compile(r'```(\w*)\n?(.*?)```', re.DOTALL)
-_INLINE_CODE_PATTERN = re.compile(r'`([^`]+)`')
-_BOLD_PATTERN = re.compile(r'\*\*([^*]+)\*\*')
-_ITALIC_PATTERN = re.compile(r'\*([^*]+)\*')
-_HEADER3_PATTERN = re.compile(r'^### (.+)$', re.MULTILINE)
-_HEADER2_PATTERN = re.compile(r'^## (.+)$', re.MULTILINE)
-_HEADER1_PATTERN = re.compile(r'^# (.+)$', re.MULTILINE)
+_CODE_BLOCK_PATTERN = re.compile(r"```(\w*)\n?(.*?)```", re.DOTALL)
+_INLINE_CODE_PATTERN = re.compile(r"`([^`]+)`")
+_BOLD_PATTERN = re.compile(r"\*\*([^*]+)\*\*")
+_ITALIC_PATTERN = re.compile(r"\*([^*]+)\*")
+_HEADER3_PATTERN = re.compile(r"^### (.+)$", re.MULTILINE)
+_HEADER2_PATTERN = re.compile(r"^## (.+)$", re.MULTILINE)
+_HEADER1_PATTERN = re.compile(r"^# (.+)$", re.MULTILINE)
 
 # Lazy-loaded pygments module (optional dependency)
 _pygments_module = None
@@ -104,11 +104,13 @@ def _extract_reply_from_json(text: str) -> str:
             potential_array = stripped[array_start:]
             try:
                 parsed = json.loads(potential_array)
-                if isinstance(parsed, list) and all(isinstance(item, str) for item in parsed):
+                if isinstance(parsed, list) and all(
+                    isinstance(item, str) for item in parsed
+                ):
                     # It's a list of strings, likely commands - remove it
                     text_without_array = stripped[:array_start].strip()
                     # Clean up trailing newlines and brackets
-                    text_without_array = text_without_array.rstrip('\n ]')
+                    text_without_array = text_without_array.rstrip("\n ]")
                     if text_without_array:
                         return text_without_array
             except json.JSONDecodeError:
@@ -138,7 +140,7 @@ def _extract_reply_from_json(text: str) -> str:
                 brace_level -= 1
                 if brace_level == 0:
                     try:
-                        data = json.loads(text[start:end + 1])
+                        data = json.loads(text[start : end + 1])
                         if isinstance(data, dict) and "reply" in data:
                             return data["reply"]
                         # Complete JSON but no reply field - might be streaming commands
@@ -615,15 +617,19 @@ class MessageBubble(Gtk.Box):
             code = match.group(2)
             highlighted = self._highlight_code_for_label(code, lang)
             idx = len(code_blocks)
-            code_blocks.append(f'<span background="{block_bg}" foreground="{block_fg}"><tt>{highlighted}</tt></span>')
-            return f'\ue000CODEBLOCK{idx}\ue001'
+            code_blocks.append(
+                f'<span background="{block_bg}" foreground="{block_fg}"><tt>{highlighted}</tt></span>'
+            )
+            return f"\ue000CODEBLOCK{idx}\ue001"
 
         def store_inline_code(match):
             code = match.group(1)
             escaped_code = GLib.markup_escape_text(code)
             idx = len(inline_codes)
-            inline_codes.append(f'<span background="{inline_bg}" foreground="{inline_fg}"><tt>{escaped_code}</tt></span>')
-            return f'\ue000INLINE{idx}\ue001'
+            inline_codes.append(
+                f'<span background="{inline_bg}" foreground="{inline_fg}"><tt>{escaped_code}</tt></span>'
+            )
+            return f"\ue000INLINE{idx}\ue001"
 
         # Replace code blocks with placeholders (using pre-compiled patterns)
         text = _CODE_BLOCK_PATTERN.sub(store_code_block, text)
@@ -636,22 +642,22 @@ class MessageBubble(Gtk.Box):
 
         # Step 3: Apply markdown transformations (safe now - no code content)
         # Bold (**...**)
-        text = _BOLD_PATTERN.sub(r'<b>\1</b>', text)
+        text = _BOLD_PATTERN.sub(r"<b>\1</b>", text)
 
         # Italic (*...*)
-        text = _ITALIC_PATTERN.sub(r'<i>\1</i>', text)
+        text = _ITALIC_PATTERN.sub(r"<i>\1</i>", text)
 
         # Headers (# ...)
-        text = _HEADER3_PATTERN.sub(r'<b>\1</b>', text)
-        text = _HEADER2_PATTERN.sub(r'<b><big>\1</big></b>', text)
-        text = _HEADER1_PATTERN.sub(r'<b><big><big>\1</big></big></b>', text)
+        text = _HEADER3_PATTERN.sub(r"<b>\1</b>", text)
+        text = _HEADER2_PATTERN.sub(r"<b><big>\1</big></b>", text)
+        text = _HEADER1_PATTERN.sub(r"<b><big><big>\1</big></big></b>", text)
 
         # Step 4: Restore code blocks and inline codes
         for i, block in enumerate(code_blocks):
-            text = text.replace(f'\ue000CODEBLOCK{i}\ue001', block)
+            text = text.replace(f"\ue000CODEBLOCK{i}\ue001", block)
 
         for i, inline in enumerate(inline_codes):
-            text = text.replace(f'\ue000INLINE{i}\ue001', inline)
+            text = text.replace(f"\ue000INLINE{i}\ue001", inline)
 
         return text
 
@@ -925,24 +931,24 @@ class MessageBubble(Gtk.Box):
         if is_dark:
             # Dracula-inspired colors for dark theme
             return {
-                "keyword": "#ff79c6",      # Pink for keywords
-                "string": "#f1fa8c",       # Yellow for strings
-                "comment": "#6272a4",      # Blue-gray for comments
-                "number": "#bd93f9",       # Purple for numbers
-                "function": "#50fa7b",     # Green for functions/commands
-                "variable": "#8be9fd",     # Cyan for variables
-                "flag": "#ffb86c",         # Orange for flags
+                "keyword": "#ff79c6",  # Pink for keywords
+                "string": "#f1fa8c",  # Yellow for strings
+                "comment": "#6272a4",  # Blue-gray for comments
+                "number": "#bd93f9",  # Purple for numbers
+                "function": "#50fa7b",  # Green for functions/commands
+                "variable": "#8be9fd",  # Cyan for variables
+                "flag": "#ffb86c",  # Orange for flags
             }
         else:
             # Light theme colors - darker, high contrast for light backgrounds
             return {
-                "keyword": "#ab296a",      # Darker magenta for keywords
-                "string": "#7c5e00",       # Dark amber/gold for strings
-                "comment": "#5c636a",      # Dark gray for comments
-                "number": "#5a32a3",       # Dark purple for numbers
-                "function": "#116d3d",     # Dark green for functions/commands
-                "variable": "#0a58ca",     # Dark blue for variables
-                "flag": "#ca6510",         # Dark orange for flags
+                "keyword": "#ab296a",  # Darker magenta for keywords
+                "string": "#7c5e00",  # Dark amber/gold for strings
+                "comment": "#5c636a",  # Dark gray for comments
+                "number": "#5a32a3",  # Dark purple for numbers
+                "function": "#116d3d",  # Dark green for functions/commands
+                "variable": "#0a58ca",  # Dark blue for variables
+                "flag": "#ca6510",  # Dark orange for flags
             }
 
     def _highlight_fallback(self, code: str, lang: str) -> str:
@@ -959,51 +965,63 @@ class MessageBubble(Gtk.Box):
         if lang in ("bash", "sh", "shell", "zsh", ""):
             patterns = [
                 # Comments - must be first
-                (r'#[^\n]*', 'comment'),
+                (r"#[^\n]*", "comment"),
                 # Double-quoted strings
-                (r'"(?:[^"\\]|\\.)*"', 'string'),
+                (r'"(?:[^"\\]|\\.)*"', "string"),
                 # Single-quoted strings
-                (r"'(?:[^'\\]|\\.)*'", 'string'),
+                (r"'(?:[^'\\]|\\.)*'", "string"),
                 # Variables $VAR and ${VAR}
-                (r'\$\{?[\w]+\}?', 'variable'),
+                (r"\$\{?[\w]+\}?", "variable"),
                 # Flags/options (--flag or -f)
-                (r'(?<!\w)--?[\w-]+', 'flag'),
+                (r"(?<!\w)--?[\w-]+", "flag"),
                 # Shell keywords
-                (r'\b(?:if|then|else|elif|fi|for|while|do|done|case|esac|in|function|return|exit|export|source|alias|unset|local|readonly)\b', 'keyword'),
+                (
+                    r"\b(?:if|then|else|elif|fi|for|while|do|done|case|esac|in|function|return|exit|export|source|alias|unset|local|readonly)\b",
+                    "keyword",
+                ),
                 # Common commands (expanded list)
-                (r'\b(?:sudo|cd|ls|cat|echo|grep|awk|sed|find|xargs|chmod|chown|cp|mv|rm|mkdir|touch|head|tail|sort|uniq|wc|cut|tr|tee|man|which|whereis|apt|apt-get|apt-cache|dpkg|pacman|yay|paru|pip|pip3|npm|npx|yarn|pnpm|git|docker|docker-compose|podman|kubectl|systemctl|journalctl|curl|wget|tar|gzip|gunzip|zip|unzip|ssh|scp|rsync|kill|killall|pkill|ps|top|htop|btop|df|du|free|mount|umount|ln|pwd|date|cal|whoami|hostname|uname|clear|history|alias|export|env|set|bash|zsh|sh|fish|python|python3|node|ruby|perl|make|cmake|gcc|g\+\+|clang|cargo|rustc|go|java|javac|nano|vim|nvim|vi|emacs|code|less|more|diff|patch|install|update|upgrade|remove|purge|autoremove|search|info|show|list|status|start|stop|restart|enable|disable|reload|reboot|shutdown|poweroff|suspend|hibernate|chroot|exec|nohup|screen|tmux|watch|time|timeout|sleep|true|false|test|read|printf|pushd|popd|dirs|fg|bg|jobs|disown|wait|trap|break|continue|shift|getopts|eval|source|type|command|builtin|hash|help|logout|exit|return|declare|typeset|let|readonly|local|global|unset|shopt|complete|compgen|compopt|mapfile|readarray|coproc|select|until|ulimit|umask|fc|bind|caller|enable|mapfile|readarray|times)\b', 'function'),
+                (
+                    r"\b(?:sudo|cd|ls|cat|echo|grep|awk|sed|find|xargs|chmod|chown|cp|mv|rm|mkdir|touch|head|tail|sort|uniq|wc|cut|tr|tee|man|which|whereis|apt|apt-get|apt-cache|dpkg|pacman|yay|paru|pip|pip3|npm|npx|yarn|pnpm|git|docker|docker-compose|podman|kubectl|systemctl|journalctl|curl|wget|tar|gzip|gunzip|zip|unzip|ssh|scp|rsync|kill|killall|pkill|ps|top|htop|btop|df|du|free|mount|umount|ln|pwd|date|cal|whoami|hostname|uname|clear|history|alias|export|env|set|bash|zsh|sh|fish|python|python3|node|ruby|perl|make|cmake|gcc|g\+\+|clang|cargo|rustc|go|java|javac|nano|vim|nvim|vi|emacs|code|less|more|diff|patch|install|update|upgrade|remove|purge|autoremove|search|info|show|list|status|start|stop|restart|enable|disable|reload|reboot|shutdown|poweroff|suspend|hibernate|chroot|exec|nohup|screen|tmux|watch|time|timeout|sleep|true|false|test|read|printf|pushd|popd|dirs|fg|bg|jobs|disown|wait|trap|break|continue|shift|getopts|eval|source|type|command|builtin|hash|help|logout|exit|return|declare|typeset|let|readonly|local|global|unset|shopt|complete|compgen|compopt|mapfile|readarray|coproc|select|until|ulimit|umask|fc|bind|caller|enable|mapfile|readarray|times)\b",
+                    "function",
+                ),
                 # Numbers
-                (r'\b\d+\b', 'number'),
+                (r"\b\d+\b", "number"),
             ]
         elif lang in ("python", "py"):
             patterns = [
                 # Comments
-                (r'#[^\n]*', 'comment'),
+                (r"#[^\n]*", "comment"),
                 # Triple-quoted strings
-                (r'"""[\s\S]*?"""|\'\'\'[\s\S]*?\'\'\'', 'string'),
+                (r'"""[\s\S]*?"""|\'\'\'[\s\S]*?\'\'\'', "string"),
                 # Double-quoted strings
-                (r'"(?:[^"\\]|\\.)*"', 'string'),
+                (r'"(?:[^"\\]|\\.)*"', "string"),
                 # Single-quoted strings
-                (r"'(?:[^'\\]|\\.)*'", 'string'),
+                (r"'(?:[^'\\]|\\.)*'", "string"),
                 # Decorators
-                (r'@[\w.]+', 'function'),
+                (r"@[\w.]+", "function"),
                 # Keywords
-                (r'\b(?:def|class|if|elif|else|for|while|try|except|finally|with|as|import|from|return|yield|raise|pass|break|continue|and|or|not|in|is|lambda|True|False|None|async|await|global|nonlocal)\b', 'keyword'),
+                (
+                    r"\b(?:def|class|if|elif|else|for|while|try|except|finally|with|as|import|from|return|yield|raise|pass|break|continue|and|or|not|in|is|lambda|True|False|None|async|await|global|nonlocal)\b",
+                    "keyword",
+                ),
                 # Built-in functions
-                (r'\b(?:print|len|range|str|int|float|list|dict|set|tuple|open|type|isinstance|hasattr|getattr|setattr|delattr|repr|abs|all|any|bin|bool|bytes|callable|chr|complex|dir|divmod|enumerate|eval|exec|filter|format|frozenset|globals|hash|hex|id|input|iter|locals|map|max|min|next|object|oct|ord|pow|property|reversed|round|slice|sorted|staticmethod|sum|super|vars|zip)\b', 'function'),
+                (
+                    r"\b(?:print|len|range|str|int|float|list|dict|set|tuple|open|type|isinstance|hasattr|getattr|setattr|delattr|repr|abs|all|any|bin|bool|bytes|callable|chr|complex|dir|divmod|enumerate|eval|exec|filter|format|frozenset|globals|hash|hex|id|input|iter|locals|map|max|min|next|object|oct|ord|pow|property|reversed|round|slice|sorted|staticmethod|sum|super|vars|zip)\b",
+                    "function",
+                ),
                 # Numbers
-                (r'\b\d+\.?\d*\b', 'number'),
+                (r"\b\d+\.?\d*\b", "number"),
             ]
         elif lang == "json":
             patterns = [
                 # Keys
-                (r'"[\w_-]+"(?=\s*:)', 'variable'),
+                (r'"[\w_-]+"(?=\s*:)', "variable"),
                 # String values
-                (r'(?<=:\s*)"(?:[^"\\]|\\.)*"', 'string'),
+                (r'(?<=:\s*)"(?:[^"\\]|\\.)*"', "string"),
                 # Booleans and null
-                (r'\b(?:true|false|null)\b', 'keyword'),
+                (r"\b(?:true|false|null)\b", "keyword"),
                 # Numbers
-                (r'\b\d+\.?\d*\b', 'number'),
+                (r"\b\d+\.?\d*\b", "number"),
             ]
         else:
             # No highlighting for unknown languages
@@ -1012,8 +1030,8 @@ class MessageBubble(Gtk.Box):
         # Build a combined pattern with named groups
         combined_parts = []
         for i, (pattern, token_type) in enumerate(patterns):
-            combined_parts.append(f'(?P<t{i}>{pattern})')
-        combined_pattern = '|'.join(combined_parts)
+            combined_parts.append(f"(?P<t{i}>{pattern})")
+        combined_pattern = "|".join(combined_parts)
 
         # Process the code and build highlighted output
         result = []
@@ -1022,20 +1040,22 @@ class MessageBubble(Gtk.Box):
         for match in re.finditer(combined_pattern, code):
             # Add non-matched text before this match (escaped)
             if match.start() > last_end:
-                result.append(GLib.markup_escape_text(code[last_end:match.start()]))
+                result.append(GLib.markup_escape_text(code[last_end : match.start()]))
 
             # Find which group matched and get its token type
             matched_text = match.group(0)
             token_type = None
             for i, (_pattern, ttype) in enumerate(patterns):
-                if match.group(f't{i}') is not None:
+                if match.group(f"t{i}") is not None:
                     token_type = ttype
                     break
 
             # Add highlighted text (escaped)
             escaped_text = GLib.markup_escape_text(matched_text)
             if token_type and token_type in colors:
-                result.append(f'<span foreground="{colors[token_type]}">{escaped_text}</span>')
+                result.append(
+                    f'<span foreground="{colors[token_type]}">{escaped_text}</span>'
+                )
             else:
                 result.append(escaped_text)
 
@@ -1045,7 +1065,7 @@ class MessageBubble(Gtk.Box):
         if last_end < len(code):
             result.append(GLib.markup_escape_text(code[last_end:]))
 
-        return ''.join(result)
+        return "".join(result)
 
     def _highlight_code_for_label(self, code: str, lang: str) -> str:
         """Highlight code for use in labels (handles escaping).
@@ -1194,7 +1214,7 @@ GObject.signal_new(
     MessageBubble,
     GObject.SignalFlags.RUN_LAST,
     GObject.TYPE_NONE,
-    (GObject.TYPE_STRING,)
+    (GObject.TYPE_STRING,),
 )
 
 GObject.signal_new(
@@ -1202,7 +1222,7 @@ GObject.signal_new(
     MessageBubble,
     GObject.SignalFlags.RUN_LAST,
     GObject.TYPE_NONE,
-    (GObject.TYPE_STRING,)
+    (GObject.TYPE_STRING,),
 )
 
 
@@ -1361,7 +1381,9 @@ class AIChatPanel(Gtk.Box):
         input_box.set_margin_start(8)
         input_box.set_margin_end(8)
         input_box.set_margin_bottom(8)
-        input_box.set_size_request(-1, 30)  # Minimum height to prevent negative allocation
+        input_box.set_size_request(
+            -1, 30
+        )  # Minimum height to prevent negative allocation
         input_box.add_css_class("ai-input-box")
 
         # Create a scrolled window for the text view
@@ -1487,9 +1509,7 @@ class AIChatPanel(Gtk.Box):
             logger.warning(f"AI chat panel CSS file not found: {css_file}")
 
         Gtk.StyleContext.add_provider_for_display(
-            self.get_display(),
-            css_provider,
-            Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION
+            self.get_display(), css_provider, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION
         )
 
     def _apply_transparency(self):
@@ -1514,7 +1534,9 @@ class AIChatPanel(Gtk.Box):
             gtk_theme = self._settings_manager.get("gtk_theme", "")
             if gtk_theme == "terminal":
                 scheme = self._settings_manager.get_color_scheme_data()
-                base_color_hex = scheme.get("background", "#000000" if is_dark else "#ffffff")
+                base_color_hex = scheme.get(
+                    "background", "#000000" if is_dark else "#ffffff"
+                )
                 fg_color_hex = scheme.get(
                     "foreground", "#ffffff" if is_dark else "#000000"
                 )
@@ -1574,7 +1596,9 @@ class AIChatPanel(Gtk.Box):
                 bubble_assistant_border = "rgba(255, 255, 255, 0.1)"
                 input_bg = "#2d2d2d"
                 input_border = "rgba(255, 255, 255, 0.1)"
-                scroll_bg = f"rgba({r}, {g}, {b}, 0.3)" if transparency > 0 else "transparent"
+                scroll_bg = (
+                    f"rgba({r}, {g}, {b}, 0.3)" if transparency > 0 else "transparent"
+                )
                 content_fg = "#ffffff"
             else:
                 # Light theme colors - Clean light palette
@@ -1584,7 +1608,9 @@ class AIChatPanel(Gtk.Box):
                 bubble_assistant_border = "rgba(0, 0, 0, 0.08)"
                 input_bg = "#ffffff"
                 input_border = "rgba(0, 0, 0, 0.12)"
-                scroll_bg = f"rgba({r}, {g}, {b}, 0.3)" if transparency > 0 else "transparent"
+                scroll_bg = (
+                    f"rgba({r}, {g}, {b}, 0.3)" if transparency > 0 else "transparent"
+                )
                 content_fg = "#000000"
 
             # Build comprehensive CSS for transparent panel with solid content
@@ -1696,7 +1722,9 @@ class AIChatPanel(Gtk.Box):
             )
             self._transparency_provider = provider
             theme_type = "dark" if is_dark else "light"
-            logger.info(f"AI chat panel styles applied: {theme_type} theme, transparency={transparency}%")
+            logger.info(
+                f"AI chat panel styles applied: {theme_type} theme, transparency={transparency}%"
+            )
         except Exception as e:
             logger.warning(f"Failed to apply transparency to AI chat panel: {e}")
 
@@ -1718,7 +1746,9 @@ class AIChatPanel(Gtk.Box):
                 commands = _normalize_commands(msg.get("commands"))
                 self._add_message_bubble(msg["role"], msg["content"], commands)
 
-    def _add_message_bubble(self, role: str, content: str, commands: list | None = None) -> MessageBubble:
+    def _add_message_bubble(
+        self, role: str, content: str, commands: list | None = None
+    ) -> MessageBubble:
         """Add a message bubble to the chat."""
         # Normalize commands to list of strings
         normalized_commands = _normalize_commands(commands)
@@ -1792,8 +1822,7 @@ class AIChatPanel(Gtk.Box):
 
         # Send to AI using request_assistance_simple for panel context
         self._ai_assistant.request_assistance_simple(
-            text,
-            streaming_callback=self._handle_streaming_chunk
+            text, streaming_callback=self._handle_streaming_chunk
         )
 
     def _on_quick_prompt_clicked(self, button: Gtk.Button, text: str):
@@ -1904,7 +1933,9 @@ class AIChatPanel(Gtk.Box):
             retry_box.set_margin_bottom(8)
 
             retry_btn = Gtk.Button()
-            retry_btn_content = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=6)
+            retry_btn_content = Gtk.Box(
+                orientation=Gtk.Orientation.HORIZONTAL, spacing=6
+            )
             retry_icon = icon_image("view-refresh-symbolic")
             retry_btn_content.append(retry_icon)
             retry_label = Gtk.Label(label=_("Retry"))
@@ -1951,8 +1982,7 @@ class AIChatPanel(Gtk.Box):
 
         # Resend the same message
         self._ai_assistant.request_assistance_simple(
-            self._last_request_message,
-            streaming_callback=self._handle_streaming_chunk
+            self._last_request_message, streaming_callback=self._handle_streaming_chunk
         )
 
     def _on_customize_prompts(self, button: Gtk.Button):
@@ -2099,10 +2129,9 @@ class AIChatPanel(Gtk.Box):
             for row, emoji_entry, text_entry in prompt_rows:
                 text = text_entry.get_text().strip()
                 if text:  # Only save non-empty prompts
-                    new_prompts.append({
-                        "emoji": emoji_entry.get_text().strip() or "💬",
-                        "text": text
-                    })
+                    new_prompts.append(
+                        {"emoji": emoji_entry.get_text().strip() or "💬", "text": text}
+                    )
 
             # Save to settings
             if self._settings_manager:
@@ -2138,9 +2167,13 @@ class AIChatPanel(Gtk.Box):
         """Show conversation history panel."""
         # Create a fresh history panel each time (widgets can't be reparented)
         history_panel = ConversationHistoryPanel(self._history_manager)
-        history_panel.connect("conversation-selected", self._on_history_conversation_selected)
+        history_panel.connect(
+            "conversation-selected", self._on_history_conversation_selected
+        )
         history_panel.connect("close-requested", self._on_history_close)
-        history_panel.connect("conversation-deleted", self._on_history_conversation_deleted)
+        history_panel.connect(
+            "conversation-deleted", self._on_history_conversation_deleted
+        )
 
         # Create a dialog window for the history panel
         dialog = Adw.Dialog()

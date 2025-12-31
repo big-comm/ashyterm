@@ -170,11 +170,12 @@ class ShellInputHighlighter:
     @property
     def enabled(self) -> bool:
         """Check if shell input highlighting is enabled.
-        
+
         Always reads from settings manager to ensure changes take effect immediately.
         """
         try:
             from ...settings.manager import get_settings_manager
+
             settings = get_settings_manager()
             is_enabled = settings.get("shell_input_highlighting_enabled", False)
             # Also require lexer to be initialized

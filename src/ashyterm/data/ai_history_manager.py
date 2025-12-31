@@ -36,17 +36,23 @@ class AIHistoryManager:
                     # Support both old and new format
                     if "conversations" in data:
                         self._conversations = data.get("conversations", [])
-                        self._current_conversation_id = data.get("current_conversation_id")
+                        self._current_conversation_id = data.get(
+                            "current_conversation_id"
+                        )
                     elif "history" in data:
                         # Migrate old format to new
                         old_history = data.get("history", [])
                         if old_history:
                             conv_id = str(uuid.uuid4())
-                            self._conversations = [{
-                                "id": conv_id,
-                                "created_at": old_history[0].get("timestamp", datetime.now().isoformat()),
-                                "messages": old_history
-                            }]
+                            self._conversations = [
+                                {
+                                    "id": conv_id,
+                                    "created_at": old_history[0].get(
+                                        "timestamp", datetime.now().isoformat()
+                                    ),
+                                    "messages": old_history,
+                                }
+                            ]
                             self._current_conversation_id = conv_id
                         else:
                             self._conversations = []
@@ -76,11 +82,11 @@ class AIHistoryManager:
 
             # Trim conversations if too many
             if len(self._conversations) > self._max_conversations:
-                self._conversations = self._conversations[-self._max_conversations:]
+                self._conversations = self._conversations[-self._max_conversations :]
 
             data = {
                 "conversations": self._conversations,
-                "current_conversation_id": self._current_conversation_id
+                "current_conversation_id": self._current_conversation_id,
             }
 
             # Write atomically using a temp file
@@ -94,7 +100,9 @@ class AIHistoryManager:
             # Set secure permissions
             os.chmod(self._history_file, 0o600)
 
-            self.logger.debug(f"Saved {len(self._conversations)} AI conversations to history")
+            self.logger.debug(
+                f"Saved {len(self._conversations)} AI conversations to history"
+            )
         except Exception as e:
             self.logger.error(f"Failed to save AI history: {e}")
 
@@ -117,11 +125,7 @@ class AIHistoryManager:
     def new_conversation(self) -> Dict[str, Any]:
         """Start a new conversation."""
         conv_id = str(uuid.uuid4())
-        conv = {
-            "id": conv_id,
-            "created_at": datetime.now().isoformat(),
-            "messages": []
-        }
+        conv = {"id": conv_id, "created_at": datetime.now().isoformat(), "messages": []}
         self._conversations.append(conv)
         self._current_conversation_id = conv_id
         self._save_history()

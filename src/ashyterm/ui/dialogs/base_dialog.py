@@ -211,14 +211,14 @@ class BaseDialog(Adw.Window):
         css_classes: Optional[List[str]] = None,
     ) -> Adw.EntryRow:
         """Create an Adw.EntryRow with common configuration.
-        
+
         Args:
             title: The row title/label.
             text: Initial text value.
             subtitle: Optional tooltip text (EntryRow doesn't support subtitle).
             on_changed: Optional callback for "changed" signal.
             css_classes: Optional list of CSS classes to add.
-            
+
         Returns:
             Configured Adw.EntryRow instance.
         """
@@ -242,13 +242,13 @@ class BaseDialog(Adw.Window):
         on_changed: Optional[Callable] = None,
     ) -> Adw.PasswordEntryRow:
         """Create an Adw.PasswordEntryRow with common configuration.
-        
+
         Args:
             title: The row title/label.
             text: Initial text value.
             subtitle: Optional tooltip text (PasswordEntryRow doesn't support subtitle).
             on_changed: Optional callback for "changed" signal.
-            
+
         Returns:
             Configured Adw.PasswordEntryRow instance.
         """
@@ -268,13 +268,13 @@ class BaseDialog(Adw.Window):
         on_changed: Optional[Callable[[bool], None]] = None,
     ) -> Adw.SwitchRow:
         """Create an Adw.SwitchRow with common configuration.
-        
+
         Args:
             title: The row title/label.
             subtitle: Optional subtitle text.
             active: Initial switch state.
             on_changed: Optional callback receiving the new boolean state.
-            
+
         Returns:
             Configured Adw.SwitchRow instance.
         """
@@ -297,7 +297,7 @@ class BaseDialog(Adw.Window):
         on_changed: Optional[Callable[[float], None]] = None,
     ) -> Adw.SpinRow:
         """Create an Adw.SpinRow with common configuration.
-        
+
         Args:
             title: The row title/label.
             value: Initial value.
@@ -306,7 +306,7 @@ class BaseDialog(Adw.Window):
             step: Step increment.
             subtitle: Optional subtitle text.
             on_changed: Optional callback receiving the new value.
-            
+
         Returns:
             Configured Adw.SpinRow instance.
         """
@@ -328,14 +328,14 @@ class BaseDialog(Adw.Window):
         on_changed: Optional[Callable[[int], None]] = None,
     ) -> Adw.ComboRow:
         """Create an Adw.ComboRow with common configuration.
-        
+
         Args:
             title: The row title/label.
             items: List of string items for the dropdown.
             selected_index: Initially selected index.
             subtitle: Optional subtitle text.
             on_changed: Optional callback receiving the new selected index.
-            
+
         Returns:
             Configured Adw.ComboRow instance.
         """
@@ -354,11 +354,11 @@ class BaseDialog(Adw.Window):
         description: str = "",
     ) -> Adw.PreferencesGroup:
         """Create an Adw.PreferencesGroup with common configuration.
-        
+
         Args:
             title: The group title.
             description: Optional group description.
-            
+
         Returns:
             Configured Adw.PreferencesGroup instance.
         """
@@ -368,4 +368,3 @@ class BaseDialog(Adw.Window):
         if description:
             group.set_description(description)
         return group
-

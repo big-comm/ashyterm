@@ -203,11 +203,13 @@ class PreferencesDialog(Adw.PreferencesWindow):
             subtitle=_("For KDE Plasma panel integration"),
         )
         headerbar_buttons_row.set_model(
-            Gtk.StringList.new([
-                _("Auto-detect"),
-                _("Always hide"),
-                _("Never hide"),
-            ])
+            Gtk.StringList.new(
+                [
+                    _("Auto-detect"),
+                    _("Always hide"),
+                    _("Never hide"),
+                ]
+            )
         )
         current_btn_setting = self.settings_manager.get(
             "hide_headerbar_buttons_when_maximized", "auto"
@@ -479,12 +481,14 @@ class PreferencesDialog(Adw.PreferencesWindow):
             title=_("Backspace Key"),
         )
         backspace_row.set_model(
-            Gtk.StringList.new([
-                _("Automatic"),
-                _("ASCII BACKSPACE (^H)"),
-                _("ASCII DELETE"),
-                _("Escape Sequence"),
-            ])
+            Gtk.StringList.new(
+                [
+                    _("Automatic"),
+                    _("ASCII BACKSPACE (^H)"),
+                    _("ASCII DELETE"),
+                    _("Escape Sequence"),
+                ]
+            )
         )
         backspace_row.set_selected(self.settings_manager.get("backspace_binding", 0))
         backspace_row.connect("notify::selected", self._on_backspace_binding_changed)
@@ -494,11 +498,13 @@ class PreferencesDialog(Adw.PreferencesWindow):
             title=_("Delete Key"),
         )
         delete_row.set_model(
-            Gtk.StringList.new([
-                _("Automatic"),
-                _("ASCII DELETE"),
-                _("Escape Sequence"),
-            ])
+            Gtk.StringList.new(
+                [
+                    _("Automatic"),
+                    _("ASCII DELETE"),
+                    _("Escape Sequence"),
+                ]
+            )
         )
         delete_row.set_selected(self.settings_manager.get("delete_binding", 0))
         delete_row.connect("notify::selected", self._on_delete_binding_changed)

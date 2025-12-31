@@ -30,6 +30,7 @@ def _get_psutil():
             PSUTIL_AVAILABLE = False
     return psutil
 
+
 import gi
 
 gi.require_version("Gtk", "4.0")
@@ -75,7 +76,6 @@ _output_highlighter = None
 _terminal_menu_creator = None
 
 
-
 def _get_highlight_manager():
     """Lazy import highlight manager."""
     global _highlight_manager
@@ -104,9 +104,6 @@ def _create_terminal_menu(*args, **kwargs):
 
         _terminal_menu_creator = create_terminal_menu
     return _terminal_menu_creator(*args, **kwargs)
-
-
-
 
 
 class TerminalState(Enum):
@@ -1340,7 +1337,10 @@ class TerminalManager:
             is_user_terminated = decoded_exit_code in user_terminated_codes
 
             ssh_failed = (
-                is_ssh and child_status != 0 and not closed_by_user and not is_user_terminated
+                is_ssh
+                and child_status != 0
+                and not closed_by_user
+                and not is_user_terminated
             )
 
             if ssh_failed:
@@ -2838,15 +2838,27 @@ class TerminalManager:
             # Shell keywords that should be skipped (not actual commands)
             # These are control flow constructs that appear in multi-line scripts
             SHELL_KEYWORDS = {
-                "if", "then", "else", "elif", "fi",
-                "for", "do", "done",
-                "while", "until",
-                "case", "esac",
-                "select", "in",
+                "if",
+                "then",
+                "else",
+                "elif",
+                "fi",
+                "for",
+                "do",
+                "done",
+                "while",
+                "until",
+                "case",
+                "esac",
+                "select",
+                "in",
                 "function",
-                "{", "}",
-                "[[", "]]",
-                "(", ")",
+                "{",
+                "}",
+                "[[",
+                "]]",
+                "(",
+                ")",
             }
 
             for token in tokens:
@@ -2998,12 +3010,14 @@ class TerminalManager:
 
             uri = uri.strip()
 
-            if "@" in uri and not uri.startswith((
-                "http://",
-                "https://",
-                "ftp://",
-                "mailto:",
-            )):
+            if "@" in uri and not uri.startswith(
+                (
+                    "http://",
+                    "https://",
+                    "ftp://",
+                    "mailto:",
+                )
+            ):
                 if "." in uri.split("@")[-1]:
                     uri = f"mailto:{uri}"
 

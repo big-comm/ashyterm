@@ -71,7 +71,6 @@ class OperationCancelledError(Exception):
     """Custom exception to indicate that an operation was cancelled by the user."""
 
 
-
 class FileOperations:
     def __init__(self, session_item: SessionItem):
         self.session_item = session_item
@@ -314,7 +313,7 @@ class FileOperations:
         process = subprocess.Popen(
             command,
             stdout=subprocess.PIPE,
-            stderr=subprocess.PIPE, # Capture stderr separately
+            stderr=subprocess.PIPE,  # Capture stderr separately
             text=True,
             bufsize=1,
             universal_newlines=True,
@@ -420,7 +419,9 @@ class FileOperations:
                             "Download completed successfully.",
                         )
                     else:
-                        error_message = self._parse_transfer_error(full_output + stderr_output)
+                        error_message = self._parse_transfer_error(
+                            full_output + stderr_output
+                        )
                         GLib.idle_add(
                             completion_callback,
                             transfer_id,
@@ -560,7 +561,9 @@ class FileOperations:
                             "Upload completed successfully.",
                         )
                     else:
-                        error_message = self._parse_transfer_error(full_output + stderr_output)
+                        error_message = self._parse_transfer_error(
+                            full_output + stderr_output
+                        )
                         GLib.idle_add(
                             completion_callback,
                             transfer_id,

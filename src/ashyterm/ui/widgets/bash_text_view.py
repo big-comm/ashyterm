@@ -18,20 +18,39 @@ from .base_syntax_text_view import BaseSyntaxTextView
 # Try to import Pygments for bash syntax highlighting
 try:
     from pygments.lexers import BashLexer
+
     PYGMENTS_AVAILABLE = True
 except ImportError:
     PYGMENTS_AVAILABLE = False
 
 # Pre-compiled patterns for extra highlighting
-_PATH_PATTERN = re.compile(r'(?:^|\s)((?:/[\w.\-]+)+|(?:\.{1,2}/[\w.\-/]+)|(?:~/[\w.\-/]*))')
-_FLAG_PATTERN = re.compile(r'(?:^|\s)(--?[\w\-]+=?)')
-_SPECIAL_VAR_PATTERN = re.compile(r'(\$[?!@*#$0-9-])')
+_PATH_PATTERN = re.compile(
+    r"(?:^|\s)((?:/[\w.\-]+)+|(?:\.{1,2}/[\w.\-/]+)|(?:~/[\w.\-/]*))"
+)
+_FLAG_PATTERN = re.compile(r"(?:^|\s)(--?[\w\-]+=?)")
+_SPECIAL_VAR_PATTERN = re.compile(r"(\$[?!@*#$0-9-])")
 
 # Bash-specific token types
 BASH_TOKEN_TYPES = (
-    "keyword", "builtin", "command", "string", "string_single", "backtick",
-    "comment", "variable", "special_var", "operator", "number", "path",
-    "function", "redirect", "pipe", "flag", "escape", "substitution", "brace",
+    "keyword",
+    "builtin",
+    "command",
+    "string",
+    "string_single",
+    "backtick",
+    "comment",
+    "variable",
+    "special_var",
+    "operator",
+    "number",
+    "path",
+    "function",
+    "redirect",
+    "pipe",
+    "flag",
+    "escape",
+    "substitution",
+    "brace",
 )
 
 
@@ -43,13 +62,19 @@ class BashTextView(BaseSyntaxTextView):
     """
 
     # Use centralized color definitions filtered for bash tokens
-    _DEFAULT_DARK_COLORS = {k: v for k, v in SYNTAX_DARK_COLORS.items() if k in BASH_TOKEN_TYPES}
-    _DEFAULT_LIGHT_COLORS = {k: v for k, v in SYNTAX_LIGHT_COLORS.items() if k in BASH_TOKEN_TYPES}
+    _DEFAULT_DARK_COLORS = {
+        k: v for k, v in SYNTAX_DARK_COLORS.items() if k in BASH_TOKEN_TYPES
+    }
+    _DEFAULT_LIGHT_COLORS = {
+        k: v for k, v in SYNTAX_LIGHT_COLORS.items() if k in BASH_TOKEN_TYPES
+    }
 
-    def __init__(self, auto_resize: bool = True, min_lines: int = 2, max_lines: int = 8):
+    def __init__(
+        self, auto_resize: bool = True, min_lines: int = 2, max_lines: int = 8
+    ):
         """
         Initialize the BashTextView.
-        
+
         Args:
             auto_resize: Whether to automatically resize based on content
             min_lines: Minimum number of visible lines
@@ -86,14 +111,16 @@ class BashTextView(BaseSyntaxTextView):
         # Apply highlighting when widget becomes visible
         self.connect("map", self._on_map)
 
-    def update_colors_from_scheme(self, palette: List[str], foreground: str = "#ffffff"):
+    def update_colors_from_scheme(
+        self, palette: List[str], foreground: str = "#ffffff"
+    ):
         """
         Update syntax highlighting colors from a terminal color scheme palette.
-        
+
         The palette is typically 16 colors:
         [0-7]: Normal colors (black, red, green, yellow, blue, magenta, cyan, white)
         [8-15]: Bright colors (bright versions of above)
-        
+
         Args:
             palette: List of hex color strings from the terminal color scheme
             foreground: Foreground color for normal text/comments
@@ -107,25 +134,35 @@ class BashTextView(BaseSyntaxTextView):
         # 8-15 are bright variants
 
         self._syntax_colors = {
-            "keyword": palette[4] if len(palette) > 4 else "#729fcf",      # Blue
-            "builtin": palette[2] if len(palette) > 2 else "#8ae234",      # Green
-            "command": palette[2] if len(palette) > 2 else "#8ae234",      # Green
-            "string": palette[3] if len(palette) > 3 else "#e9b96e",       # Yellow
-            "string_single": palette[3] if len(palette) > 3 else "#e9b96e",# Yellow
-            "backtick": palette[11] if len(palette) > 11 else "#b8860b",   # Bright yellow
-            "comment": foreground + "80" if len(foreground) == 7 else "#888a85",  # Dimmed foreground
-            "variable": palette[5] if len(palette) > 5 else "#ad7fa8",     # Magenta
-            "special_var": palette[13] if len(palette) > 13 else "#ff69b4",# Bright magenta
-            "operator": palette[3] if len(palette) > 3 else "#fcaf3e",     # Yellow
-            "number": palette[11] if len(palette) > 11 else "#f4d03f",     # Bright yellow
-            "path": palette[6] if len(palette) > 6 else "#87ceeb",         # Cyan
-            "function": palette[13] if len(palette) > 13 else "#dda0dd",   # Bright magenta
-            "redirect": palette[1] if len(palette) > 1 else "#fcaf3e",     # Red
-            "pipe": palette[6] if len(palette) > 6 else "#fcaf3e",         # Cyan
-            "flag": palette[14] if len(palette) > 14 else "#98d8c8",       # Bright cyan
-            "escape": palette[3] if len(palette) > 3 else "#deb887",       # Yellow
-            "substitution": palette[12] if len(palette) > 12 else "#b8860b",# Bright blue
-            "brace": palette[6] if len(palette) > 6 else "#20b2aa",        # Cyan
+            "keyword": palette[4] if len(palette) > 4 else "#729fcf",  # Blue
+            "builtin": palette[2] if len(palette) > 2 else "#8ae234",  # Green
+            "command": palette[2] if len(palette) > 2 else "#8ae234",  # Green
+            "string": palette[3] if len(palette) > 3 else "#e9b96e",  # Yellow
+            "string_single": palette[3] if len(palette) > 3 else "#e9b96e",  # Yellow
+            "backtick": palette[11]
+            if len(palette) > 11
+            else "#b8860b",  # Bright yellow
+            "comment": foreground + "80"
+            if len(foreground) == 7
+            else "#888a85",  # Dimmed foreground
+            "variable": palette[5] if len(palette) > 5 else "#ad7fa8",  # Magenta
+            "special_var": palette[13]
+            if len(palette) > 13
+            else "#ff69b4",  # Bright magenta
+            "operator": palette[3] if len(palette) > 3 else "#fcaf3e",  # Yellow
+            "number": palette[11] if len(palette) > 11 else "#f4d03f",  # Bright yellow
+            "path": palette[6] if len(palette) > 6 else "#87ceeb",  # Cyan
+            "function": palette[13]
+            if len(palette) > 13
+            else "#dda0dd",  # Bright magenta
+            "redirect": palette[1] if len(palette) > 1 else "#fcaf3e",  # Red
+            "pipe": palette[6] if len(palette) > 6 else "#fcaf3e",  # Cyan
+            "flag": palette[14] if len(palette) > 14 else "#98d8c8",  # Bright cyan
+            "escape": palette[3] if len(palette) > 3 else "#deb887",  # Yellow
+            "substitution": palette[12]
+            if len(palette) > 12
+            else "#b8860b",  # Bright blue
+            "brace": palette[6] if len(palette) > 6 else "#20b2aa",  # Cyan
         }
 
         # Update existing tags
@@ -153,7 +190,7 @@ class BashTextView(BaseSyntaxTextView):
     def _update_size(self):
         """Update the text view height based on content."""
         text = self.get_text()
-        line_count = max(self._min_lines, text.count('\n') + 1)
+        line_count = max(self._min_lines, text.count("\n") + 1)
         line_count = min(line_count, self._max_lines)
         height = line_count * self._line_height + 16  # Add padding
         self.set_size_request(-1, height)
@@ -227,7 +264,18 @@ class BashTextView(BaseSyntaxTextView):
             # Check for specific operators
             if token_value == "|":
                 return "pipe"
-            elif token_value in (">", ">>", "<", "<<", ">&", "2>", "2>>", "<&", ">&", "&>"):
+            elif token_value in (
+                ">",
+                ">>",
+                "<",
+                "<<",
+                ">&",
+                "2>",
+                "2>>",
+                "<&",
+                ">&",
+                "&>",
+            ):
                 return "redirect"
             return "operator"
         elif "Number" in token_str:

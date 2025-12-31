@@ -132,12 +132,10 @@ class ProcessSpawner:
         self._spawn_lock = threading.Lock()
         self.logger.info("Process spawner initialized on Linux")
 
-    def _get_expected_terminal_size(
-        self, terminal: Vte.Terminal
-    ) -> Tuple[int, int]:
+    def _get_expected_terminal_size(self, terminal: Vte.Terminal) -> Tuple[int, int]:
         """
         Get the expected terminal size (rows, cols) based on saved window dimensions.
-        
+
         This helps avoid initial resize SIGWINCH by starting the PTY with
         the correct size that matches the window we will restore to.
         Falls back to terminal's current size or defaults if calculation fails.
@@ -243,9 +241,7 @@ class ProcessSpawner:
             # bash extensions like ble.sh. The VTE terminal already detects
             # OSC7 sequences natively via the current-directory-uri signal.
             # Users with ble.sh or similar already have OSC7 configured.
-            self.logger.info(
-                "Bash detected - using native shell behavior for OSC7."
-            )
+            self.logger.info("Bash detected - using native shell behavior for OSC7.")
 
         # Build command based on login shell preference
         if self.settings_manager.get("use_login_shell", False):
@@ -253,7 +249,6 @@ class ProcessSpawner:
             self.logger.info(f"Spawning '{shell} -l' as a login shell.")
         else:
             cmd = [shell]
-
 
         return cmd, env, temp_dir_path
 
@@ -554,9 +549,7 @@ class ProcessSpawner:
                     }
                     GLib.idle_add(callback, terminal, pid, None, (final_user_data,))
 
-                self.logger.info(
-                    f"Highlighted local terminal spawned with PID {pid}"
-                )
+                self.logger.info(f"Highlighted local terminal spawned with PID {pid}")
                 log_terminal_event(
                     "spawn_initiated",
                     str(user_data),

@@ -141,12 +141,16 @@ def _build_color_map(palette: Optional[List[str]] = None) -> Dict[str, str]:
             "command": palette[2] if len(palette) > 2 else "#8ae234",  # Green
             "string": palette[3] if len(palette) > 3 else "#e9b96e",  # Yellow
             "variable": palette[5] if len(palette) > 5 else "#ad7fa8",  # Magenta
-            "special_var": palette[13] if len(palette) > 13 else "#ff69b4",  # Bright magenta
+            "special_var": palette[13]
+            if len(palette) > 13
+            else "#ff69b4",  # Bright magenta
             "flag": palette[14] if len(palette) > 14 else "#98d8c8",  # Bright cyan
             "number": palette[11] if len(palette) > 11 else "#f4d03f",  # Bright yellow
             "path": palette[6] if len(palette) > 6 else "#87ceeb",  # Cyan
             "operator": palette[3] if len(palette) > 3 else "#fcaf3e",  # Yellow
-            "substitution": palette[11] if len(palette) > 11 else "#b8860b",  # Bright yellow
+            "substitution": palette[11]
+            if len(palette) > 11
+            else "#b8860b",  # Bright yellow
         }
 
     # Default colors (no palette provided)

@@ -110,7 +110,6 @@ class SessionItem(BaseModel):
         source: str = "user",
         local_working_directory: str = "",
         local_startup_command: str = "",
-
         # Per-session highlighting overrides (tri-state)
         # None = Automatic (inherit global preferences)
         # True = Explicitly enabled for this session
@@ -139,9 +138,7 @@ class SessionItem(BaseModel):
         )
         self._sftp_session_enabled = bool(sftp_session_enabled)
         self._sftp_local_directory = (
-            str(normalize_path(sftp_local_directory))
-            if sftp_local_directory
-            else ""
+            str(normalize_path(sftp_local_directory)) if sftp_local_directory else ""
         )
         self._sftp_remote_directory = (
             sftp_remote_directory.strip() if sftp_remote_directory else ""
@@ -163,7 +160,9 @@ class SessionItem(BaseModel):
 
         # Highlighting preferences (per-session overrides)
         self._output_highlighting: Optional[bool] = output_highlighting
-        self._command_specific_highlighting: Optional[bool] = command_specific_highlighting
+        self._command_specific_highlighting: Optional[bool] = (
+            command_specific_highlighting
+        )
         self._cat_colorization: Optional[bool] = cat_colorization
         self._shell_input_highlighting: Optional[bool] = shell_input_highlighting
 
@@ -335,9 +334,7 @@ class SessionItem(BaseModel):
 
     @sftp_local_directory.setter
     def sftp_local_directory(self, value: str):
-        new_value = (
-            str(normalize_path(value)) if value and value.strip() else ""
-        )
+        new_value = str(normalize_path(value)) if value and value.strip() else ""
         if self._sftp_local_directory != new_value:
             self._sftp_local_directory = new_value
             self._mark_modified()
@@ -447,7 +444,9 @@ class SessionItem(BaseModel):
     @output_highlighting.setter
     def output_highlighting(self, value: Optional[bool]):
         if value is not None and not isinstance(value, bool):
-            raise SessionValidationError(self.name, ["Invalid output_highlighting value"])
+            raise SessionValidationError(
+                self.name, ["Invalid output_highlighting value"]
+            )
         if self._output_highlighting != value:
             self._output_highlighting = value
             self._mark_modified()
@@ -560,13 +559,11 @@ class SessionItem(BaseModel):
             "x11_forwarding": self.x11_forwarding,
             "local_working_directory": self.local_working_directory,
             "local_startup_command": self.local_startup_command,
-
             # Highlighting overrides (tri-state)
             "output_highlighting": self.output_highlighting,
             "command_specific_highlighting": self.command_specific_highlighting,
             "cat_colorization": self.cat_colorization,
             "shell_input_highlighting": self.shell_input_highlighting,
-
             "created_at": self._created_at,
             "modified_at": self._modified_at,
             "source": self._source,
@@ -593,7 +590,6 @@ class SessionItem(BaseModel):
             source=data.get("source", "user"),
             local_working_directory=data.get("local_working_directory", ""),
             local_startup_command=data.get("local_startup_command", ""),
-
             # Highlighting overrides (tri-state)
             output_highlighting=data.get("output_highlighting", None),
             command_specific_highlighting=data.get(

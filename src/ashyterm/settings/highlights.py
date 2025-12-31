@@ -177,7 +177,9 @@ class HighlightContext:
     """
 
     command_name: str
-    triggers: List[str] = field(default_factory=list)  # Commands that activate this context
+    triggers: List[str] = field(
+        default_factory=list
+    )  # Commands that activate this context
     rules: List[HighlightRule] = field(default_factory=list)
     enabled: bool = True
     description: str = ""
@@ -198,8 +200,7 @@ class HighlightContext:
     def from_dict(cls, data: Dict[str, Any]) -> "HighlightContext":
         """Create context from dictionary."""
         rules = [
-            HighlightRule.from_dict(rule_data)
-            for rule_data in data.get("rules", [])
+            HighlightRule.from_dict(rule_data) for rule_data in data.get("rules", [])
         ]
         # Support both "name" and "command_name" keys
         name = data.get("name") or data.get("command_name", "")
@@ -240,10 +241,7 @@ class HighlightConfig:
         """Create config from dictionary."""
         # Support both "global_rules" and legacy "rules"
         rules_data = data.get("global_rules", data.get("rules", []))
-        rules = [
-            HighlightRule.from_dict(rule_data)
-            for rule_data in rules_data
-        ]
+        rules = [HighlightRule.from_dict(rule_data) for rule_data in rules_data]
         contexts = {
             name: HighlightContext.from_dict(ctx_data)
             for name, ctx_data in data.get("contexts", {}).items()
@@ -291,8 +289,12 @@ class HighlightManager(GObject.GObject):
         self._settings_manager = settings_manager
 
         # User highlights directory
-        self._user_highlights_dir = config_path or (self._config_paths.CONFIG_DIR / "highlights")
-        self._user_config_file = self._config_paths.CONFIG_DIR / "highlights_settings.json"
+        self._user_highlights_dir = config_path or (
+            self._config_paths.CONFIG_DIR / "highlights"
+        )
+        self._user_config_file = (
+            self._config_paths.CONFIG_DIR / "highlights_settings.json"
+        )
 
         # Configuration state
         self._config: HighlightConfig = HighlightConfig()
@@ -315,10 +317,10 @@ class HighlightManager(GObject.GObject):
         """Get path to system highlight JSON files."""
         try:
             # Try to get path from package resources
-            if hasattr(resources, 'files'):
+            if hasattr(resources, "files"):
                 # Python 3.9+
-                pkg_path = resources.files('ashyterm.data.highlights')
-                if hasattr(pkg_path, '_path'):
+                pkg_path = resources.files("ashyterm.data.highlights")
+                if hasattr(pkg_path, "_path"):
                     return Path(pkg_path._path)
                 # Fallback: construct path relative to this module
                 return Path(__file__).parent.parent / "data" / "highlights"
@@ -354,7 +356,10 @@ class HighlightManager(GObject.GObject):
                     del self._config.contexts["global"]
 
                 # 6. Apply disabled states to global rules from user settings
-                if hasattr(self, '_disabled_global_rules') and self._disabled_global_rules:
+                if (
+                    hasattr(self, "_disabled_global_rules")
+                    and self._disabled_global_rules
+                ):
                     for rule in self._config.global_rules:
                         if rule.name in self._disabled_global_rules:
                             rule.enabled = False
@@ -376,7 +381,9 @@ class HighlightManager(GObject.GObject):
 
             except Exception as e:
                 self.logger.error(f"Failed to load layered config: {e}")
-                log_error_with_context(e, "loading layered config", "ashyterm.highlights")
+                log_error_with_context(
+                    e, "loading layered config", "ashyterm.highlights"
+                )
                 self._create_default_config()
 
     def _load_user_settings(self) -> None:
@@ -389,7 +396,9 @@ class HighlightManager(GObject.GObject):
                     data = json.load(f)
                 self._config.enabled_for_local = data.get("enabled_for_local", False)
                 self._config.enabled_for_ssh = data.get("enabled_for_ssh", False)
-                self._config.context_aware_enabled = data.get("context_aware_enabled", True)
+                self._config.context_aware_enabled = data.get(
+                    "context_aware_enabled", True
+                )
                 # Store disabled global rule names for later application
                 self._disabled_global_rules = set(data.get("disabled_global_rules", []))
                 # Store disabled context names for later application
@@ -414,7 +423,9 @@ class HighlightManager(GObject.GObject):
                         contexts[ctx.command_name] = ctx
                         self.logger.debug(f"Loaded system context: {ctx.command_name}")
                 except Exception as e:
-                    self.logger.warning(f"Failed to load system highlight {json_file}: {e}")
+                    self.logger.warning(
+                        f"Failed to load system highlight {json_file}: {e}"
+                    )
         except Exception as e:
             self.logger.error(f"Failed to scan system highlights: {e}")
 
@@ -435,7 +446,9 @@ class HighlightManager(GObject.GObject):
                         contexts[ctx.command_name] = ctx
                         self.logger.debug(f"Loaded user context: {ctx.command_name}")
                 except Exception as e:
-                    self.logger.warning(f"Failed to load user highlight {json_file}: {e}")
+                    self.logger.warning(
+                        f"Failed to load user highlight {json_file}: {e}"
+                    )
         except Exception as e:
             self.logger.error(f"Failed to scan user highlights: {e}")
 
@@ -482,7 +495,9 @@ class HighlightManager(GObject.GObject):
                 self.logger.info("Saved highlight configuration")
             except Exception as e:
                 self.logger.error(f"Failed to save highlight config: {e}")
-                log_error_with_context(e, "saving highlight config", "ashyterm.highlights")
+                log_error_with_context(
+                    e, "saving highlight config", "ashyterm.highlights"
+                )
 
     def _save_user_settings(self) -> None:
         """Save user settings (enabled flags, disabled global rules, and disabled contexts)."""
@@ -491,8 +506,7 @@ class HighlightManager(GObject.GObject):
 
             # Collect names of disabled global rules
             disabled_global_rules = [
-                rule.name for rule in self._config.global_rules
-                if not rule.enabled
+                rule.name for rule in self._config.global_rules if not rule.enabled
             ]
 
             # Collect names of disabled contexts
@@ -669,10 +683,22 @@ class HighlightManager(GObject.GObject):
             "background": "#282a36",
             "cursor": "#f8f8f2",
             "palette": [
-                "#000000", "#ff5555", "#50fa7b", "#f1fa8c",
-                "#bd93f9", "#ff79c6", "#8be9fd", "#bfbfbf",
-                "#4d4d4d", "#ff6e67", "#5af78e", "#f4f99d",
-                "#caa9fa", "#ff92d0", "#9aedfe", "#e6e6e6",
+                "#000000",
+                "#ff5555",
+                "#50fa7b",
+                "#f1fa8c",
+                "#bd93f9",
+                "#ff79c6",
+                "#8be9fd",
+                "#bfbfbf",
+                "#4d4d4d",
+                "#ff6e67",
+                "#5af78e",
+                "#f4f99d",
+                "#caa9fa",
+                "#ff92d0",
+                "#9aedfe",
+                "#e6e6e6",
             ],
         }
 
@@ -980,7 +1006,11 @@ class HighlightManager(GObject.GObject):
                     # Check if this context should include global rules
                     if ctx.use_global_rules:
                         # Global rules first, then context rules
-                        global_rules = [r for r in self._config.global_rules if r.enabled and r.is_valid()]
+                        global_rules = [
+                            r
+                            for r in self._config.global_rules
+                            if r.enabled and r.is_valid()
+                        ]
                         return global_rules + context_rules
                     else:
                         # Context rules only (new default behavior)
@@ -1047,7 +1077,9 @@ class HighlightManager(GObject.GObject):
                 return True
             return False
 
-    def update_context_rule(self, command_name: str, index: int, rule: HighlightRule) -> bool:
+    def update_context_rule(
+        self, command_name: str, index: int, rule: HighlightRule
+    ) -> bool:
         """Update a rule in a specific context."""
         with self._lock:
             if command_name in self._config.contexts:
@@ -1071,7 +1103,9 @@ class HighlightManager(GObject.GObject):
                     return True
             return False
 
-    def set_context_rule_enabled(self, command_name: str, index: int, enabled: bool) -> bool:
+    def set_context_rule_enabled(
+        self, command_name: str, index: int, enabled: bool
+    ) -> bool:
         """Enable or disable a rule in a specific context."""
         with self._lock:
             if command_name in self._config.contexts:
@@ -1083,14 +1117,18 @@ class HighlightManager(GObject.GObject):
                     return True
             return False
 
-    def move_context_rule(self, command_name: str, from_index: int, to_index: int) -> bool:
+    def move_context_rule(
+        self, command_name: str, from_index: int, to_index: int
+    ) -> bool:
         """Move a rule to a new position in a context's rule list."""
         with self._lock:
             if command_name not in self._config.contexts:
                 return False
 
             ctx = self._config.contexts[command_name]
-            if not (0 <= from_index < len(ctx.rules) and 0 <= to_index < len(ctx.rules)):
+            if not (
+                0 <= from_index < len(ctx.rules) and 0 <= to_index < len(ctx.rules)
+            ):
                 return False
 
             # Remove from old position and insert at new position

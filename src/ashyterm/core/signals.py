@@ -3,13 +3,13 @@
 Singleton Event Bus for application-wide signal propagation.
 
 This module provides a centralized, decoupled event system using GObject signals.
-Components can emit signals when state changes, and listeners can subscribe to 
+Components can emit signals when state changes, and listeners can subscribe to
 these signals without direct references to the emitters.
 
 Usage:
     # Emit a signal
     AppSignals.get().emit("session-created", session_item)
-    
+
     # Listen to a signal
     AppSignals.get().connect("session-created", self._on_session_created)
 """
@@ -23,7 +23,7 @@ from gi.repository import GObject
 class AppSignals(GObject.Object):
     """
     Singleton Event Bus for decoupled component communication.
-    
+
     All signals use GObject signal infrastructure for thread-safety and
     seamless GTK integration. Components should emit/connect via AppSignals.get().
     """
@@ -33,20 +33,16 @@ class AppSignals(GObject.Object):
         "session-created": (GObject.SignalFlags.RUN_FIRST, None, (object,)),
         "session-updated": (GObject.SignalFlags.RUN_FIRST, None, (str,)),
         "session-deleted": (GObject.SignalFlags.RUN_FIRST, None, (str,)),
-
         # Folder signals
         "folder-created": (GObject.SignalFlags.RUN_FIRST, None, (object,)),
         "folder-updated": (GObject.SignalFlags.RUN_FIRST, None, (str,)),
         "folder-deleted": (GObject.SignalFlags.RUN_FIRST, None, (str,)),
-
         # UI update requests
         "request-tree-refresh": (GObject.SignalFlags.RUN_FIRST, None, ()),
         "request-session-select": (GObject.SignalFlags.RUN_FIRST, None, (str,)),
-
         # Settings signals
         "settings-changed": (GObject.SignalFlags.RUN_FIRST, None, (str, object)),
         "color-scheme-changed": (GObject.SignalFlags.RUN_FIRST, None, (int,)),
-
         # Terminal signals
         "terminal-created": (GObject.SignalFlags.RUN_FIRST, None, (str,)),
         "terminal-closed": (GObject.SignalFlags.RUN_FIRST, None, (str,)),
@@ -62,7 +58,7 @@ class AppSignals(GObject.Object):
     def get(cls) -> "AppSignals":
         """
         Get the singleton AppSignals instance.
-        
+
         Returns:
             The global AppSignals instance.
         """
@@ -74,7 +70,7 @@ class AppSignals(GObject.Object):
     def reset(cls) -> None:
         """
         Reset the singleton instance (useful for testing).
-        
+
         Warning: This will disconnect all signal handlers.
         """
         cls._instance = None

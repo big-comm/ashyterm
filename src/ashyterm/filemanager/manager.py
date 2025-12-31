@@ -500,10 +500,12 @@ class FileManager(GObject.Object):
         else:
             # For SSH sessions, query the remote home directory
             if self.operations:
-                success, output = self.operations.execute_command_on_session([
-                    "echo",
-                    "$HOME",
-                ])
+                success, output = self.operations.execute_command_on_session(
+                    [
+                        "echo",
+                        "$HOME",
+                    ]
+                )
                 if success and output.strip():
                     return output.strip()
             # Fallback to root if we can't determine the home directory
@@ -1137,11 +1139,13 @@ class FileManager(GObject.Object):
             if self._is_remote_session():
                 # For remote sessions, use 'command -v' which works via SSH shell
                 if ops:
-                    success, _ = ops.execute_command_on_session([
-                        "command",
-                        "-v",
-                        cmd_name,
-                    ])
+                    success, _ = ops.execute_command_on_session(
+                        [
+                            "command",
+                            "-v",
+                            cmd_name,
+                        ]
+                    )
                     if success:
                         self._fd_command_name = cmd_name
                         return True
@@ -1274,9 +1278,7 @@ class FileManager(GObject.Object):
         ):
             self.selection_model.select_item(0, True)
             if hasattr(self, "column_view") and self.column_view:
-                self.column_view.scroll_to(
-                    0, None, Gtk.ListScrollFlags.NONE, None
-                )
+                self.column_view.scroll_to(0, None, Gtk.ListScrollFlags.NONE, None)
 
         return False
 
@@ -1979,9 +1981,7 @@ class FileManager(GObject.Object):
             tx, ty = x, y
             if widget:
                 try:
-                    translated = widget.translate_coordinates(
-                        self.column_view, x, y
-                    )
+                    translated = widget.translate_coordinates(self.column_view, x, y)
                     if translated:
                         tx, ty = translated
                 except Exception:
@@ -2127,9 +2127,7 @@ class FileManager(GObject.Object):
 
         elif keyval in (Gdk.KEY_Delete, Gdk.KEY_KP_Delete):
             selected_items = [
-                item
-                for item in self.get_selected_items()
-                if item.name != ".."
+                item for item in self.get_selected_items() if item.name != ".."
             ]
             if selected_items:
                 self._on_delete_action(None, None, selected_items)
@@ -2602,10 +2600,11 @@ class FileManager(GObject.Object):
 
                     except Exception as e:
                         self.logger.error(f"Error preparing downloads: {e}")
+                        error_msg = str(e)
 
-                        def show_error():
+                        def show_error(msg=error_msg):
                             self.parent_window._show_error_dialog(
-                                _("Download Error"), str(e)
+                                _("Download Error"), msg
                             )
                             return False
 
@@ -2686,10 +2685,11 @@ class FileManager(GObject.Object):
 
                     except Exception as e:
                         self.logger.error(f"Error preparing uploads: {e}")
+                        error_msg = str(e)
 
-                        def show_error():
+                        def show_error(msg=error_msg):
                             self.parent_window._show_error_dialog(
-                                _("Upload Error"), str(e)
+                                _("Upload Error"), msg
                             )
                             return False
 
@@ -3118,9 +3118,9 @@ class FileManager(GObject.Object):
         dialog = Adw.MessageDialog(
             transient_for=self.parent_window,
             heading=_("Transfer Failed: Permission Denied"),
-            body=_(
-                "Could not complete the transfer of '{filename}'."
-            ).format(filename=transfer.filename),
+            body=_("Could not complete the transfer of '{filename}'.").format(
+                filename=transfer.filename
+            ),
             close_response="ok",
         )
         details = _(

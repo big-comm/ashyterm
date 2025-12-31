@@ -12,6 +12,7 @@ Supports:
 """
 
 import re
+from typing import Optional
 
 import gi
 
@@ -360,7 +361,7 @@ class RuleEditDialog(Adw.Window):
     def __init__(
         self,
         parent: Gtk.Widget,
-        rule: HighlightRule = None,
+        rule: Optional[HighlightRule] = None,
         is_new: bool = True,
     ):
         """
@@ -1925,7 +1926,9 @@ class HighlightDialog(Adw.PreferencesWindow):
                 "Syntax highlighting for '{}' command output (using Pygments)"
             ).format("cat")
             if pygments_available
-            else _("Pygments is not installed - '{}' output will not be colorized").format("cat"),
+            else _(
+                "Pygments is not installed - '{}' output will not be colorized"
+            ).format("cat"),
         )
         page.add(self._cat_group)
 
@@ -1946,7 +1949,9 @@ class HighlightDialog(Adw.PreferencesWindow):
         # Enable cat colorization toggle (first item)
         self._cat_colorization_toggle = Adw.SwitchRow(
             title=_("Enable '{}' Colorization").format("cat"),
-            subtitle=_("Apply syntax highlighting to '{}' command output").format("cat"),
+            subtitle=_("Apply syntax highlighting to '{}' command output").format(
+                "cat"
+            ),
         )
         current_enabled = settings.get("cat_colorization_enabled", True)
         self._cat_colorization_toggle.set_active(current_enabled)
@@ -2675,7 +2680,9 @@ class HighlightDialog(Adw.PreferencesWindow):
 
                 self._populate_ignored_commands()
                 self.emit("settings-changed")
-                self.add_toast(Adw.Toast(title=_("Command removed: {}").format(command)))
+                self.add_toast(
+                    Adw.Toast(title=_("Command removed: {}").format(command))
+                )
 
     def _on_restore_ignored_defaults_clicked(self, button: Gtk.Button) -> None:
         """Handle restore defaults button click for ignored commands."""
@@ -2692,18 +2699,24 @@ class HighlightDialog(Adw.PreferencesWindow):
         dialog.connect("response", self._on_restore_ignored_defaults_confirmed)
         dialog.present()
 
-    def _on_restore_ignored_defaults_confirmed(self, dialog: Adw.MessageDialog, response: str) -> None:
+    def _on_restore_ignored_defaults_confirmed(
+        self, dialog: Adw.MessageDialog, response: str
+    ) -> None:
         """Handle restore defaults confirmation."""
         dialog.close()
         if response == "restore":
             from ...settings.config import DefaultSettings
-            default_ignored = DefaultSettings.get_defaults().get("ignored_highlight_commands", [])
+
+            default_ignored = DefaultSettings.get_defaults().get(
+                "ignored_highlight_commands", []
+            )
 
             settings = get_settings_manager()
             settings.set("ignored_highlight_commands", list(default_ignored))
 
             # Refresh highlighter's ignored commands cache
             from ...terminal.highlighter import get_output_highlighter
+
             get_output_highlighter().refresh_ignored_commands()
 
             self._populate_ignored_commands()
@@ -2820,7 +2833,9 @@ class HighlightDialog(Adw.PreferencesWindow):
             title=_("Include Global Rules"),
             subtitle=_("Also apply global rules alongside command-specific rules"),
         )
-        self._use_global_rules_row.connect("notify::active", self._on_use_global_rules_toggled)
+        self._use_global_rules_row.connect(
+            "notify::active", self._on_use_global_rules_toggled
+        )
         self._context_rules_group.add(self._use_global_rules_row)
 
         # Reset to default button
@@ -2841,7 +2856,9 @@ class HighlightDialog(Adw.PreferencesWindow):
         # Rules list group (separate for better organization)
         self._context_rules_list_group = Adw.PreferencesGroup(
             title=_("Rules (in execution order)"),
-            description=_("Use arrows to reorder rules. Rules are matched from top to bottom."),
+            description=_(
+                "Use arrows to reorder rules. Rules are matched from top to bottom."
+            ),
         )
         page.add(self._context_rules_list_group)
 
@@ -3059,7 +3076,9 @@ class HighlightDialog(Adw.PreferencesWindow):
         dialog.connect("response", self._on_delete_context_confirmed, context_name)
         dialog.present()
 
-    def _on_delete_context_confirmed(self, dialog: Adw.MessageDialog, response: str, context_name: str) -> None:
+    def _on_delete_context_confirmed(
+        self, dialog: Adw.MessageDialog, response: str, context_name: str
+    ) -> None:
         """Handle delete context confirmation."""
         dialog.close()
         if response == "delete":
@@ -3080,8 +3099,10 @@ class HighlightDialog(Adw.PreferencesWindow):
         # Update the description count
         context_names = self._manager.get_context_names()
         enabled_count = sum(
-            1 for name in context_names
-            if self._manager.get_context(name) and self._manager.get_context(name).enabled
+            1
+            for name in context_names
+            if self._manager.get_context(name)
+            and self._manager.get_context(name).enabled
         )
         self._context_selector_group.set_description(
             _("{total} command(s), {enabled} enabled").format(
@@ -3230,12 +3251,16 @@ class HighlightDialog(Adw.PreferencesWindow):
             return self._manager.resolve_color(rule.colors[0])
         return "#ffffff"
 
-    def _create_context_rule_row(self, rule: HighlightRule, index: int, total_rules: int = 0) -> Adw.ExpanderRow:
+    def _create_context_rule_row(
+        self, rule: HighlightRule, index: int, total_rules: int = 0
+    ) -> Adw.ExpanderRow:
         """Create an expander row for a context-specific rule with reorder buttons."""
         # Escape markup characters to prevent GTK parsing errors
         escaped_name = GLib.markup_escape_text(rule.name)
-        subtitle_text = rule.description if rule.description else (
-            rule.pattern[:40] + "..." if len(rule.pattern) > 40 else rule.pattern
+        subtitle_text = (
+            rule.description
+            if rule.description
+            else (rule.pattern[:40] + "..." if len(rule.pattern) > 40 else rule.pattern)
         )
         escaped_subtitle = GLib.markup_escape_text(subtitle_text)
 
@@ -3382,7 +3407,9 @@ class HighlightDialog(Adw.PreferencesWindow):
             self._manager.save_config()
             self.emit("settings-changed")
 
-    def _on_context_rule_switch_toggled(self, switch: Gtk.Switch, _pspec, index: int) -> None:
+    def _on_context_rule_switch_toggled(
+        self, switch: Gtk.Switch, _pspec, index: int
+    ) -> None:
         """Handle context rule enable/disable toggle."""
         if self._selected_context:
             self._manager.set_context_rule_enabled(
@@ -3424,9 +3451,9 @@ class HighlightDialog(Adw.PreferencesWindow):
         dialog = Adw.MessageDialog(
             transient_for=self,
             heading=_("Reset to System Default?"),
-            body=_('This will remove your customizations for "{}" and revert to system rules.').format(
-                self._selected_context
-            ),
+            body=_(
+                'This will remove your customizations for "{}" and revert to system rules.'
+            ).format(self._selected_context),
         )
         dialog.add_response("cancel", _("Cancel"))
         dialog.add_response("reset", _("Reset"))
@@ -3457,7 +3484,9 @@ class HighlightDialog(Adw.PreferencesWindow):
         dialog.connect("rule-saved", self._on_context_rule_saved)
         dialog.present(self)
 
-    def _on_context_rule_saved(self, dialog: RuleEditDialog, rule: HighlightRule) -> None:
+    def _on_context_rule_saved(
+        self, dialog: RuleEditDialog, rule: HighlightRule
+    ) -> None:
         """Handle saving a new context rule."""
         if self._selected_context:
             self._manager.add_rule_to_context(self._selected_context, rule)
@@ -3513,7 +3542,9 @@ class HighlightDialog(Adw.PreferencesWindow):
         dialog.add_response("cancel", _("Cancel"))
         dialog.add_response("delete", _("Delete"))
         dialog.set_response_appearance("delete", Adw.ResponseAppearance.DESTRUCTIVE)
-        dialog.connect("response", self._on_delete_context_rule_confirmed, index, rule.name)
+        dialog.connect(
+            "response", self._on_delete_context_rule_confirmed, index, rule.name
+        )
         dialog.present()
 
     def _on_delete_context_rule_confirmed(
@@ -3537,17 +3568,19 @@ class HighlightDialog(Adw.PreferencesWindow):
 
     def _update_dependent_groups_sensitivity(self) -> None:
         """Update sensitivity of highlighting groups based on activation state.
-        
+
         When BOTH local and SSH highlighting are disabled, all output-related
         highlighting features should be disabled as well since there's no output to process.
         This includes:
         - Cat colorization group
-        - Shell input highlighting group  
+        - Shell input highlighting group
         - Ignored commands group
         - Global highlight rules group
         - Command-Specific page (entire page)
         """
-        any_output_enabled = self._manager.enabled_for_local or self._manager.enabled_for_ssh
+        any_output_enabled = (
+            self._manager.enabled_for_local or self._manager.enabled_for_ssh
+        )
 
         # Update cat group sensitivity
         if hasattr(self, "_cat_group") and self._cat_group is not None:
@@ -3558,7 +3591,10 @@ class HighlightDialog(Adw.PreferencesWindow):
             self._shell_input_group.set_sensitive(any_output_enabled)
 
         # Update ignored commands group sensitivity
-        if hasattr(self, "_ignored_commands_group") and self._ignored_commands_group is not None:
+        if (
+            hasattr(self, "_ignored_commands_group")
+            and self._ignored_commands_group is not None
+        ):
             self._ignored_commands_group.set_sensitive(any_output_enabled)
 
         # Update global rules group sensitivity
@@ -3687,8 +3723,10 @@ class HighlightDialog(Adw.PreferencesWindow):
         """Create an action row for a highlight rule with inline edit/delete icons."""
         # Escape markup characters to prevent GTK parsing errors
         escaped_name = GLib.markup_escape_text(rule.name)
-        subtitle_text = rule.description if rule.description else (
-            rule.pattern[:40] + "..." if len(rule.pattern) > 40 else rule.pattern
+        subtitle_text = (
+            rule.description
+            if rule.description
+            else (rule.pattern[:40] + "..." if len(rule.pattern) > 40 else rule.pattern)
         )
         escaped_subtitle = GLib.markup_escape_text(subtitle_text)
 
@@ -4026,7 +4064,12 @@ class AddTriggerDialog(Adw.Dialog):
         "trigger-added": (GObject.SignalFlags.RUN_FIRST, None, (str,)),
     }
 
-    def __init__(self, parent: Gtk.Widget, context_name: str, existing_trigger: str = None):
+    def __init__(
+        self,
+        parent: Gtk.Widget,
+        context_name: str,
+        existing_trigger: Optional[str] = None,
+    ):
         """
         Initialize the add/edit trigger dialog.
 
@@ -4192,7 +4235,9 @@ class AddIgnoredCommandDialog(Adw.Dialog):
 
         # Command name entry
         name_group = Adw.PreferencesGroup(
-            description=_("Commands with native coloring (grep, ls, git, etc.) should be added here.")
+            description=_(
+                "Commands with native coloring (grep, ls, git, etc.) should be added here."
+            )
         )
         self._name_row = Adw.EntryRow(title=_("Command Name"))
         self._name_row.connect("changed", self._on_name_changed)

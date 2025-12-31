@@ -35,16 +35,27 @@ class CommandFormDialog(Adw.Window):
     """
 
     __gsignals__ = {
-        "command-ready": (GObject.SignalFlags.RUN_FIRST, None, (str, bool, bool)),  # (command, execute, send_to_all)
+        "command-ready": (
+            GObject.SignalFlags.RUN_FIRST,
+            None,
+            (str, bool, bool),
+        ),  # (command, execute, send_to_all)
     }
 
-    def __init__(self, parent, command: CommandButton, send_to_all: bool = False,
-                 settings_manager: Optional[SettingsManager] = None):
+    def __init__(
+        self,
+        parent,
+        command: CommandButton,
+        send_to_all: bool = False,
+        settings_manager: Optional[SettingsManager] = None,
+    ):
         self._command_manager = get_command_button_manager()
         self._settings_manager = settings_manager
         # Load saved size or calculate smart default
         saved_width = self._command_manager.get_command_pref(command.id, "dialog_width")
-        saved_height = self._command_manager.get_command_pref(command.id, "dialog_height")
+        saved_height = self._command_manager.get_command_pref(
+            command.id, "dialog_height"
+        )
 
         if saved_width and saved_height:
             dialog_width = saved_width
@@ -82,7 +93,7 @@ class CommandFormDialog(Adw.Window):
 
     def _apply_color_scheme(self):
         """Dialog theming is handled globally via the ashyterm-dialog class.
-        
+
         This method is kept for potential future customization needs but
         currently relies on global CSS from apply_gtk_terminal_theme.
         """
@@ -95,8 +106,12 @@ class CommandFormDialog(Adw.Window):
 
         # Only save if size is reasonable
         if width > 300 and height > 200:
-            self._command_manager.set_command_pref(self.command.id, "dialog_width", width)
-            self._command_manager.set_command_pref(self.command.id, "dialog_height", height)
+            self._command_manager.set_command_pref(
+                self.command.id, "dialog_width", width
+            )
+            self._command_manager.set_command_pref(
+                self.command.id, "dialog_height", height
+            )
 
         return False  # Allow close to proceed
 
@@ -164,12 +179,18 @@ class CommandFormDialog(Adw.Window):
         button_box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=6)
 
         insert_button = Gtk.Button(label=_("Insert"))
-        get_tooltip_helper().add_tooltip(insert_button, _("Insert command into terminal without executing"))
+        get_tooltip_helper().add_tooltip(
+            insert_button, _("Insert command into terminal without executing")
+        )
         insert_button.connect("clicked", self._on_insert_clicked)
         button_box.append(insert_button)
 
-        execute_button = Gtk.Button(label=_("Execute"), css_classes=["suggested-action"])
-        get_tooltip_helper().add_tooltip(execute_button, _("Insert and execute command (Ctrl+Enter)"))
+        execute_button = Gtk.Button(
+            label=_("Execute"), css_classes=["suggested-action"]
+        )
+        get_tooltip_helper().add_tooltip(
+            execute_button, _("Insert and execute command (Ctrl+Enter)")
+        )
         execute_button.connect("clicked", self._on_execute_clicked)
         button_box.append(execute_button)
 
@@ -264,7 +285,7 @@ class CommandFormDialog(Adw.Window):
 
     def _create_field_row(self, form_field: CommandFormField) -> Optional[Gtk.Widget]:
         """Create the appropriate row widget for a form field.
-        
+
         Delegates to FormWidgetBuilder for widget creation.
         """
         # Use the centralized form widget builder
@@ -277,9 +298,12 @@ class CommandFormDialog(Adw.Window):
 
         # Special handling for file/directory path browse buttons
         if form_field.field_type in (FieldType.FILE_PATH, FieldType.DIRECTORY_PATH):
-            if hasattr(value_widget, '_browse_button'):
+            if hasattr(value_widget, "_browse_button"):
                 value_widget._browse_button.connect(
-                    "clicked", self._on_browse_clicked, value_widget, form_field.field_type
+                    "clicked",
+                    self._on_browse_clicked,
+                    value_widget,
+                    form_field.field_type,
                 )
 
         return row
@@ -321,14 +345,14 @@ class CommandFormDialog(Adw.Window):
 
             elif form_field.field_type == FieldType.DROPDOWN:
                 selected_idx = widget.get_selected()
-                if selected_idx >= 0 and hasattr(widget, '_options'):
+                if selected_idx >= 0 and hasattr(widget, "_options"):
                     values[form_field.id] = widget._options[selected_idx][0]
                 else:
                     values[form_field.id] = ""
 
             elif form_field.field_type == FieldType.RADIO:
                 # Radio group - get selected value
-                if hasattr(widget, '_selected_value'):
+                if hasattr(widget, "_selected_value"):
                     values[form_field.id] = widget._selected_value
                 else:
                     values[form_field.id] = ""
@@ -336,9 +360,9 @@ class CommandFormDialog(Adw.Window):
             elif form_field.field_type == FieldType.MULTI_SELECT:
                 # Multi-select - get all selected values
                 selected = []
-                if hasattr(widget, '_checkboxes'):
+                if hasattr(widget, "_checkboxes"):
                     for check in widget._checkboxes:
-                        if check.get_active() and hasattr(check, '_value'):
+                        if check.get_active() and hasattr(check, "_value"):
                             selected.append(check._value)
                 values[form_field.id] = " ".join(selected)
 
@@ -346,9 +370,7 @@ class CommandFormDialog(Adw.Window):
                 # TextView - get buffer text
                 buffer = widget.get_buffer()
                 values[form_field.id] = buffer.get_text(
-                    buffer.get_start_iter(),
-                    buffer.get_end_iter(),
-                    False
+                    buffer.get_start_iter(), buffer.get_end_iter(), False
                 )
 
             elif form_field.field_type == FieldType.SLIDER:
@@ -356,25 +378,29 @@ class CommandFormDialog(Adw.Window):
 
             elif form_field.field_type == FieldType.COLOR:
                 rgba = widget.get_rgba()
-                color_format = getattr(widget, '_color_format', 'hex')
+                color_format = getattr(widget, "_color_format", "hex")
                 if color_format == "rgb":
                     values[form_field.id] = "{},{},{}".format(
-                        int(rgba.red * 255),
-                        int(rgba.green * 255),
-                        int(rgba.blue * 255)
+                        int(rgba.red * 255), int(rgba.green * 255), int(rgba.blue * 255)
                     )
                 else:
                     # Default to hex
                     values[form_field.id] = "#{:02x}{:02x}{:02x}".format(
-                        int(rgba.red * 255),
-                        int(rgba.green * 255),
-                        int(rgba.blue * 255)
+                        int(rgba.red * 255), int(rgba.green * 255), int(rgba.blue * 255)
                     )
 
-            elif form_field.field_type in (FieldType.TEXT, FieldType.NUMBER, FieldType.PASSWORD, FieldType.DATE_TIME):
+            elif form_field.field_type in (
+                FieldType.TEXT,
+                FieldType.NUMBER,
+                FieldType.PASSWORD,
+                FieldType.DATE_TIME,
+            ):
                 values[form_field.id] = widget.get_text()
 
-            elif form_field.field_type in (FieldType.FILE_PATH, FieldType.DIRECTORY_PATH):
+            elif form_field.field_type in (
+                FieldType.FILE_PATH,
+                FieldType.DIRECTORY_PATH,
+            ):
                 values[form_field.id] = widget.get_text()
 
         return values
@@ -388,7 +414,10 @@ class CommandFormDialog(Adw.Window):
         # Apply syntax highlighting with terminal color scheme
         palette = None
         fg_color = "#ffffff"
-        if self._settings_manager and self._settings_manager.get("gtk_theme", "") == "terminal":
+        if (
+            self._settings_manager
+            and self._settings_manager.get("gtk_theme", "") == "terminal"
+        ):
             scheme = self._settings_manager.get_color_scheme_data()
             palette = scheme.get("palette", [])
             fg_color = scheme.get("foreground", "#ffffff")
@@ -557,9 +586,11 @@ class CommandFormDialog(Adw.Window):
         service = values.get("service", "").strip()
 
         # Some actions don't need a service name
-        list_actions = ["list-units --type=service",
-                       "list-units --type=service --state=running",
-                       "list-units --type=service --state=failed"]
+        list_actions = [
+            "list-units --type=service",
+            "list-units --type=service --state=running",
+            "list-units --type=service --state=failed",
+        ]
 
         parts.append(action)
 
@@ -641,15 +672,51 @@ class CommandButtonWidget(Gtk.Button):
     """
 
     __gsignals__ = {
-        "command-activated": (GObject.SignalFlags.RUN_FIRST, None, (GObject.TYPE_PYOBJECT,)),
-        "command-activated-all": (GObject.SignalFlags.RUN_FIRST, None, (GObject.TYPE_PYOBJECT,)),  # Execute in all terminals
-        "edit-requested": (GObject.SignalFlags.RUN_FIRST, None, (GObject.TYPE_PYOBJECT,)),
-        "delete-requested": (GObject.SignalFlags.RUN_FIRST, None, (GObject.TYPE_PYOBJECT,)),
-        "restore-requested": (GObject.SignalFlags.RUN_FIRST, None, (GObject.TYPE_PYOBJECT,)),
-        "hide-requested": (GObject.SignalFlags.RUN_FIRST, None, (GObject.TYPE_PYOBJECT,)),
-        "duplicate-requested": (GObject.SignalFlags.RUN_FIRST, None, (GObject.TYPE_PYOBJECT,)),
-        "pin-requested": (GObject.SignalFlags.RUN_FIRST, None, (GObject.TYPE_PYOBJECT,)),
-        "unpin-requested": (GObject.SignalFlags.RUN_FIRST, None, (GObject.TYPE_PYOBJECT,)),
+        "command-activated": (
+            GObject.SignalFlags.RUN_FIRST,
+            None,
+            (GObject.TYPE_PYOBJECT,),
+        ),
+        "command-activated-all": (
+            GObject.SignalFlags.RUN_FIRST,
+            None,
+            (GObject.TYPE_PYOBJECT,),
+        ),  # Execute in all terminals
+        "edit-requested": (
+            GObject.SignalFlags.RUN_FIRST,
+            None,
+            (GObject.TYPE_PYOBJECT,),
+        ),
+        "delete-requested": (
+            GObject.SignalFlags.RUN_FIRST,
+            None,
+            (GObject.TYPE_PYOBJECT,),
+        ),
+        "restore-requested": (
+            GObject.SignalFlags.RUN_FIRST,
+            None,
+            (GObject.TYPE_PYOBJECT,),
+        ),
+        "hide-requested": (
+            GObject.SignalFlags.RUN_FIRST,
+            None,
+            (GObject.TYPE_PYOBJECT,),
+        ),
+        "duplicate-requested": (
+            GObject.SignalFlags.RUN_FIRST,
+            None,
+            (GObject.TYPE_PYOBJECT,),
+        ),
+        "pin-requested": (
+            GObject.SignalFlags.RUN_FIRST,
+            None,
+            (GObject.TYPE_PYOBJECT,),
+        ),
+        "unpin-requested": (
+            GObject.SignalFlags.RUN_FIRST,
+            None,
+            (GObject.TYPE_PYOBJECT,),
+        ),
     }
 
     def __init__(self, command: CommandButton):
@@ -666,12 +733,18 @@ class CommandButtonWidget(Gtk.Button):
         """Build the button content based on display mode."""
         content_box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=8)
 
-        if self.command.display_mode in (DisplayMode.ICON_ONLY, DisplayMode.ICON_AND_TEXT):
+        if self.command.display_mode in (
+            DisplayMode.ICON_ONLY,
+            DisplayMode.ICON_AND_TEXT,
+        ):
             icon = Gtk.Image.new_from_icon_name(self.command.icon_name)
             icon.set_icon_size(Gtk.IconSize.NORMAL)
             content_box.append(icon)
 
-        if self.command.display_mode in (DisplayMode.TEXT_ONLY, DisplayMode.ICON_AND_TEXT):
+        if self.command.display_mode in (
+            DisplayMode.TEXT_ONLY,
+            DisplayMode.ICON_AND_TEXT,
+        ):
             label = Gtk.Label(label=self.command.name)
             label.set_ellipsize(Pango.EllipsizeMode.END)
             content_box.append(label)
@@ -715,39 +788,55 @@ class CommandButtonWidget(Gtk.Button):
 
         # Execute in all terminals action
         execute_all_action = Gio.SimpleAction.new("execute_all", None)
-        execute_all_action.connect("activate", lambda *_: self.emit("command-activated-all", self.command))
+        execute_all_action.connect(
+            "activate", lambda *_: self.emit("command-activated-all", self.command)
+        )
         action_group.add_action(execute_all_action)
 
         edit_action = Gio.SimpleAction.new("edit", None)
-        edit_action.connect("activate", lambda *_: self.emit("edit-requested", self.command))
+        edit_action.connect(
+            "activate", lambda *_: self.emit("edit-requested", self.command)
+        )
         action_group.add_action(edit_action)
 
         duplicate_action = Gio.SimpleAction.new("duplicate", None)
-        duplicate_action.connect("activate", lambda *_: self.emit("duplicate-requested", self.command))
+        duplicate_action.connect(
+            "activate", lambda *_: self.emit("duplicate-requested", self.command)
+        )
         action_group.add_action(duplicate_action)
 
         # Pin/Unpin actions
         if command_manager.is_command_pinned(self.command.id):
             unpin_action = Gio.SimpleAction.new("unpin", None)
-            unpin_action.connect("activate", lambda *_: self.emit("unpin-requested", self.command))
+            unpin_action.connect(
+                "activate", lambda *_: self.emit("unpin-requested", self.command)
+            )
             action_group.add_action(unpin_action)
         else:
             pin_action = Gio.SimpleAction.new("pin", None)
-            pin_action.connect("activate", lambda *_: self.emit("pin-requested", self.command))
+            pin_action.connect(
+                "activate", lambda *_: self.emit("pin-requested", self.command)
+            )
             action_group.add_action(pin_action)
 
         if self.command.is_builtin:
             if command_manager.is_builtin_customized(self.command.id):
                 restore_action = Gio.SimpleAction.new("restore", None)
-                restore_action.connect("activate", lambda *_: self.emit("restore-requested", self.command))
+                restore_action.connect(
+                    "activate", lambda *_: self.emit("restore-requested", self.command)
+                )
                 action_group.add_action(restore_action)
 
             hide_action = Gio.SimpleAction.new("hide", None)
-            hide_action.connect("activate", lambda *_: self.emit("hide-requested", self.command))
+            hide_action.connect(
+                "activate", lambda *_: self.emit("hide-requested", self.command)
+            )
             action_group.add_action(hide_action)
         else:
             delete_action = Gio.SimpleAction.new("delete", None)
-            delete_action.connect("activate", lambda *_: self.emit("delete-requested", self.command))
+            delete_action.connect(
+                "activate", lambda *_: self.emit("delete-requested", self.command)
+            )
             action_group.add_action(delete_action)
 
         self.insert_action_group("button", action_group)
@@ -774,11 +863,19 @@ class CommandEditorDialog(Adw.Window):
     """
 
     __gsignals__ = {
-        "save-requested": (GObject.SignalFlags.RUN_FIRST, None, (GObject.TYPE_PYOBJECT,)),
+        "save-requested": (
+            GObject.SignalFlags.RUN_FIRST,
+            None,
+            (GObject.TYPE_PYOBJECT,),
+        ),
     }
 
-    def __init__(self, parent, command: Optional[CommandButton] = None,
-                 settings_manager: Optional[SettingsManager] = None):
+    def __init__(
+        self,
+        parent,
+        command: Optional[CommandButton] = None,
+        settings_manager: Optional[SettingsManager] = None,
+    ):
         # Match the Command Manager dialog size
         parent_width = parent.get_width() if parent else 800
         parent_height = parent.get_height() if parent else 600
@@ -810,7 +907,7 @@ class CommandEditorDialog(Adw.Window):
 
     def _apply_color_scheme(self):
         """Apply terminal color scheme to BashTextView when gtk_theme is 'terminal'.
-        
+
         Dialog theming is handled globally via the ashyterm-dialog class.
         This method only updates the syntax highlighting in the BashTextView.
         """
@@ -826,9 +923,14 @@ class CommandEditorDialog(Adw.Window):
         palette = scheme.get("palette", [])
         fg_color = scheme.get("foreground", "#ffffff")
         if palette:
-            if hasattr(self, 'simple_command_textview') and self.simple_command_textview:
-                self.simple_command_textview.update_colors_from_scheme(palette, fg_color)
-            if hasattr(self, 'command_textview') and self.command_textview:
+            if (
+                hasattr(self, "simple_command_textview")
+                and self.simple_command_textview
+            ):
+                self.simple_command_textview.update_colors_from_scheme(
+                    palette, fg_color
+                )
+            if hasattr(self, "command_textview") and self.command_textview:
                 self.command_textview.update_colors_from_scheme(palette, fg_color)
 
     def _on_key_pressed(self, controller, keyval, _keycode, state):
@@ -898,15 +1000,28 @@ class CommandEditorDialog(Adw.Window):
         # Setup actions for adding fields - all field types
         action_group = Gio.SimpleActionGroup()
         all_field_types = [
-            "command_text", "text", "text_area", "password",
-            "number", "slider",
-            "switch", "dropdown", "radio", "multi_select",
-            "file_path", "directory_path",
-            "date_time", "color"
+            "command_text",
+            "text",
+            "text_area",
+            "password",
+            "number",
+            "slider",
+            "switch",
+            "dropdown",
+            "radio",
+            "multi_select",
+            "file_path",
+            "directory_path",
+            "date_time",
+            "color",
         ]
         for field_type in all_field_types:
-            action = Gio.SimpleAction.new(f"add-{field_type.replace('_', '-')}-field", None)
-            action.connect("activate", lambda *_, ft=field_type: self._add_form_field(ft))
+            action = Gio.SimpleAction.new(
+                f"add-{field_type.replace('_', '-')}-field", None
+            )
+            action.connect(
+                "activate", lambda *_, ft=field_type: self._add_form_field(ft)
+            )
             action_group.add_action(action)
         self.insert_action_group("editor", action_group)
 
@@ -1046,7 +1161,9 @@ class CommandEditorDialog(Adw.Window):
 
         # Icon row
         icon_row = Adw.ActionRow(title=_("Icon"))
-        self.simple_icon_preview = Gtk.Image.new_from_icon_name("utilities-terminal-symbolic")
+        self.simple_icon_preview = Gtk.Image.new_from_icon_name(
+            "utilities-terminal-symbolic"
+        )
         self.simple_icon_preview.set_pixel_size(24)
         icon_row.add_prefix(self.simple_icon_preview)
 
@@ -1056,7 +1173,9 @@ class CommandEditorDialog(Adw.Window):
             valign=Gtk.Align.CENTER,
         )
         get_tooltip_helper().add_tooltip(icon_picker_btn, _("Choose icon"))
-        icon_picker_btn.connect("clicked", lambda _: self._on_pick_icon_clicked("simple"))
+        icon_picker_btn.connect(
+            "clicked", lambda _: self._on_pick_icon_clicked("simple")
+        )
         icon_row.add_suffix(icon_picker_btn)
 
         self.simple_icon_entry = Gtk.Entry(
@@ -1065,7 +1184,9 @@ class CommandEditorDialog(Adw.Window):
             valign=Gtk.Align.CENTER,
         )
         self.simple_icon_entry.set_text("utilities-terminal-symbolic")
-        self.simple_icon_entry.connect("changed", lambda e: self._on_icon_entry_changed(e, "simple"))
+        self.simple_icon_entry.connect(
+            "changed", lambda e: self._on_icon_entry_changed(e, "simple")
+        )
         icon_row.add_suffix(self.simple_icon_entry)
         basic_group.add(icon_row)
 
@@ -1137,7 +1258,9 @@ class CommandEditorDialog(Adw.Window):
 
         # Icon row
         icon_row = Adw.ActionRow(title=_("Icon"))
-        self.form_icon_preview = Gtk.Image.new_from_icon_name("utilities-terminal-symbolic")
+        self.form_icon_preview = Gtk.Image.new_from_icon_name(
+            "utilities-terminal-symbolic"
+        )
         self.form_icon_preview.set_pixel_size(24)
         icon_row.add_prefix(self.form_icon_preview)
 
@@ -1156,7 +1279,9 @@ class CommandEditorDialog(Adw.Window):
             valign=Gtk.Align.CENTER,
         )
         self.form_icon_entry.set_text("utilities-terminal-symbolic")
-        self.form_icon_entry.connect("changed", lambda e: self._on_icon_entry_changed(e, "form"))
+        self.form_icon_entry.connect(
+            "changed", lambda e: self._on_icon_entry_changed(e, "form")
+        )
         icon_row.add_suffix(self.form_icon_entry)
         basic_group.add(icon_row)
 
@@ -1193,12 +1318,14 @@ class CommandEditorDialog(Adw.Window):
 
         # Header with title and add button in one line
         parts_header = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=8)
-        parts_header.append(Gtk.Label(
-            label=_("Add command parts"),
-            xalign=0.0,
-            hexpand=True,
-            css_classes=["title-4"],
-        ))
+        parts_header.append(
+            Gtk.Label(
+                label=_("Add command parts"),
+                xalign=0.0,
+                hexpand=True,
+                css_classes=["title-4"],
+            )
+        )
 
         add_field_button = Gtk.MenuButton(
             icon_name="list-add-symbolic",
@@ -1383,7 +1510,12 @@ class CommandEditorDialog(Adw.Window):
             )
             get_tooltip_helper().add_tooltip(icon_btn, icon_name)
             icon_btn.set_child(Gtk.Image.new_from_icon_name(icon_name))
-            icon_btn.connect("clicked", lambda b, n=icon_name: self._select_icon(n, dialog, selected_icon_name, mode))
+            icon_btn.connect(
+                "clicked",
+                lambda b, n=icon_name: self._select_icon(
+                    n, dialog, selected_icon_name, mode
+                ),
+            )
             icons_grid.insert(icon_btn, -1)
 
         dialog.set_extra_child(icons_grid)
@@ -1392,7 +1524,10 @@ class CommandEditorDialog(Adw.Window):
         dialog.add_response("select", _("Select"))
         dialog.set_response_appearance("select", Adw.ResponseAppearance.SUGGESTED)
 
-        dialog.connect("response", lambda d, r: self._on_icon_dialog_response(d, r, selected_icon_name, mode))
+        dialog.connect(
+            "response",
+            lambda d, r: self._on_icon_dialog_response(d, r, selected_icon_name, mode),
+        )
         dialog.present()
 
     def _select_icon(self, icon_name, dialog, selected_ref, mode: str):
@@ -1455,7 +1590,7 @@ class CommandEditorDialog(Adw.Window):
 
     def _update_form_preview(self):
         """Update the form preview section with actual widget representations.
-        
+
         Uses FormWidgetBuilder for consistent widget creation across dialogs.
         """
         from ..widgets.form_widget_builder import create_field_from_dict
@@ -1476,7 +1611,9 @@ class CommandEditorDialog(Adw.Window):
                 continue
 
             # Use the centralized FormWidgetBuilder for preview (non-interactive)
-            row, _ = create_field_from_dict(field_data, on_change=None, interactive=False)
+            row, _ = create_field_from_dict(
+                field_data, on_change=None, interactive=False
+            )
 
             tooltip = field_data.get("tooltip", "")
             if tooltip and hasattr(row, "set_tooltip_text"):
@@ -1492,7 +1629,11 @@ class CommandEditorDialog(Adw.Window):
         """Add a new form field (command part)."""
         # Generate a unique ID for the field
         field_num = len(self.form_fields_data) + 1
-        field_id = f"part_{field_num}" if field_type == "command_text" else f"field_{field_num}"
+        field_id = (
+            f"part_{field_num}"
+            if field_type == "command_text"
+            else f"field_{field_num}"
+        )
 
         # Set appropriate defaults based on field type
         if field_type == "switch":
@@ -1582,7 +1723,11 @@ class CommandEditorDialog(Adw.Window):
         if field_type == "command_text":
             # For command text, show the value in title
             value = field_data.get("default", "")
-            title = f"{type_icons.get(field_type, '💬')} {value}" if value else f"{type_icons.get(field_type, '💬')} {_('(empty)')}"
+            title = (
+                f"{type_icons.get(field_type, '💬')} {value}"
+                if value
+                else f"{type_icons.get(field_type, '💬')} {_('(empty)')}"
+            )
         else:
             title = f"{type_icons.get(field_type, '📝')} {{{field_id}}}"
 
@@ -1611,7 +1756,9 @@ class CommandEditorDialog(Adw.Window):
             valign=Gtk.Align.CENTER,
         )
         get_tooltip_helper().add_tooltip(down_btn, _("Move down"))
-        down_btn.connect("clicked", lambda b: self._move_field_down(expander._field_index))
+        down_btn.connect(
+            "clicked", lambda b: self._move_field_down(expander._field_index)
+        )
         expander.add_suffix(down_btn)
 
         # Delete button
@@ -1621,7 +1768,10 @@ class CommandEditorDialog(Adw.Window):
             valign=Gtk.Align.CENTER,
         )
         get_tooltip_helper().add_tooltip(delete_btn, _("Remove"))
-        delete_btn.connect("clicked", lambda b: self._remove_form_field(expander._field_index, expander))
+        delete_btn.connect(
+            "clicked",
+            lambda b: self._remove_form_field(expander._field_index, expander),
+        )
         expander.add_suffix(delete_btn)
 
         # Type-specific content
@@ -1633,7 +1783,11 @@ class CommandEditorDialog(Adw.Window):
             def on_cmd_text_changed(r):
                 field_data["default"] = r.get_text()
                 value = r.get_text()
-                expander.set_title(f"{type_icons.get(field_type, '💬')} {value}" if value else f"{type_icons.get(field_type, '💬')} {_('(empty)')}")
+                expander.set_title(
+                    f"{type_icons.get(field_type, '💬')} {value}"
+                    if value
+                    else f"{type_icons.get(field_type, '💬')} {_('(empty)')}"
+                )
                 self._update_preview()
 
             text_row.connect("changed", on_cmd_text_changed)
@@ -1667,53 +1821,65 @@ class CommandEditorDialog(Adw.Window):
         if field_type == "text":
             placeholder_row = Adw.EntryRow(title=_("Placeholder"))
             placeholder_row.set_text(str(field_data.get("placeholder", "")))
+
             def on_text_placeholder_changed(r):
                 field_data["placeholder"] = r.get_text()
                 self._update_form_preview()
+
             placeholder_row.connect("changed", on_text_placeholder_changed)
             expander.add_row(placeholder_row)
 
             default_row = Adw.EntryRow(title=_("Default"))
             default_row.set_text(str(field_data.get("default", "")))
+
             def on_text_default_changed(r):
                 field_data["default"] = r.get_text()
                 self._update_preview()
                 self._update_form_preview()
+
             default_row.connect("changed", on_text_default_changed)
             expander.add_row(default_row)
 
         elif field_type == "number":
             default_row = Adw.EntryRow(title=_("Default"))
             default_row.set_text(str(field_data.get("default", "")))
+
             def on_num_default_changed(r):
                 field_data["default"] = r.get_text()
                 self._update_preview()
                 self._update_form_preview()
+
             default_row.connect("changed", on_num_default_changed)
             expander.add_row(default_row)
 
         elif field_type == "switch":
             on_row = Adw.EntryRow(title=_("On value"))
             on_row.set_text(field_data.get("command_flag", ""))
+
             def on_switch_on_changed(r):
                 field_data["command_flag"] = r.get_text()
                 self._update_preview()
+
             on_row.connect("changed", on_switch_on_changed)
             expander.add_row(on_row)
 
             off_row = Adw.EntryRow(title=_("Off value"))
             off_row.set_text(field_data.get("off_value", ""))
+
             def on_switch_off_changed(r):
                 field_data["off_value"] = r.get_text()
                 self._update_preview()
+
             off_row.connect("changed", on_switch_off_changed)
             expander.add_row(off_row)
 
             default_row = Adw.SwitchRow(title=_("Default on"))
             default_row.set_active(bool(field_data.get("default", False)))
+
             def on_switch_default_changed(r, p):
                 field_data["default"] = r.get_active()
                 self._update_form_preview()
+
             default_row.connect("notify::active", on_switch_default_changed)
             expander.add_row(default_row)
 
@@ -1836,7 +2002,7 @@ class CommandEditorDialog(Adw.Window):
                     if row is None:
                         break
                     # Adw.ActionRow is a ListBoxRow, so row IS our ActionRow
-                    if hasattr(row, '_val_entry') and hasattr(row, '_lbl_entry'):
+                    if hasattr(row, "_val_entry") and hasattr(row, "_lbl_entry"):
                         val = row._val_entry.get_text().strip()
                         lbl = row._lbl_entry.get_text().strip()
                         if val or lbl:
@@ -1865,10 +2031,12 @@ class CommandEditorDialog(Adw.Window):
         elif field_type in ("file_path", "directory_path"):
             default_row = Adw.EntryRow(title=_("Default"))
             default_row.set_text(str(field_data.get("default", "")))
+
             def on_path_default_changed(r):
                 field_data["default"] = r.get_text()
                 self._update_preview()
                 self._update_form_preview()
+
             default_row.connect("changed", on_path_default_changed)
             expander.add_row(default_row)
 
@@ -1876,35 +2044,43 @@ class CommandEditorDialog(Adw.Window):
             # Password has no default for security reasons
             placeholder_row = Adw.EntryRow(title=_("Placeholder"))
             placeholder_row.set_text(str(field_data.get("placeholder", "")))
+
             def on_pwd_placeholder_changed(r):
                 field_data["placeholder"] = r.get_text()
                 self._update_form_preview()
+
             placeholder_row.connect("changed", on_pwd_placeholder_changed)
             expander.add_row(placeholder_row)
 
         elif field_type == "text_area":
             placeholder_row = Adw.EntryRow(title=_("Placeholder"))
             placeholder_row.set_text(str(field_data.get("placeholder", "")))
+
             def on_textarea_placeholder_changed(r):
                 field_data["placeholder"] = r.get_text()
                 self._update_form_preview()
+
             placeholder_row.connect("changed", on_textarea_placeholder_changed)
             expander.add_row(placeholder_row)
 
             default_row = Adw.EntryRow(title=_("Default"))
             default_row.set_text(str(field_data.get("default", "")))
+
             def on_textarea_default_changed(r):
                 field_data["default"] = r.get_text()
                 self._update_preview()
                 self._update_form_preview()
+
             default_row.connect("changed", on_textarea_default_changed)
             expander.add_row(default_row)
 
             rows_row = Adw.SpinRow.new_with_range(2, 20, 1)
             rows_row.set_title(_("Rows"))
             rows_row.set_value(field_data.get("rows", 4))
+
             def on_textarea_rows_changed(r, p):
                 field_data["rows"] = int(r.get_value())
+
             rows_row.connect("notify::value", on_textarea_rows_changed)
             expander.add_row(rows_row)
 
@@ -1916,9 +2092,11 @@ class CommandEditorDialog(Adw.Window):
             except (ValueError, TypeError):
                 min_val = 0.0
             min_row.set_value(min_val)
+
             def on_slider_min_changed(r, p):
                 field_data["min_value"] = r.get_value()
                 self._update_form_preview()
+
             min_row.connect("notify::value", on_slider_min_changed)
             expander.add_row(min_row)
 
@@ -1929,9 +2107,11 @@ class CommandEditorDialog(Adw.Window):
             except (ValueError, TypeError):
                 max_val = 100.0
             max_row.set_value(max_val)
+
             def on_slider_max_changed(r, p):
                 field_data["max_value"] = r.get_value()
                 self._update_form_preview()
+
             max_row.connect("notify::value", on_slider_max_changed)
             expander.add_row(max_row)
 
@@ -1942,8 +2122,10 @@ class CommandEditorDialog(Adw.Window):
             except (ValueError, TypeError):
                 step_val = 1.0
             step_row.set_value(step_val)
+
             def on_slider_step_changed(r, p):
                 field_data["step"] = r.get_value()
+
             step_row.connect("notify::value", on_slider_step_changed)
             expander.add_row(step_row)
 
@@ -1954,10 +2136,12 @@ class CommandEditorDialog(Adw.Window):
             except (ValueError, TypeError):
                 default_val = 50.0
             default_row.set_value(default_val)
+
             def on_slider_default_changed(r, p):
                 field_data["default"] = r.get_value()
                 self._update_preview()
                 self._update_form_preview()
+
             default_row.connect("notify::value", on_slider_default_changed)
             expander.add_row(default_row)
 
@@ -2077,7 +2261,7 @@ class CommandEditorDialog(Adw.Window):
                     row = options_listbox.get_row_at_index(idx)
                     if row is None:
                         break
-                    if hasattr(row, '_val_entry') and hasattr(row, '_lbl_entry'):
+                    if hasattr(row, "_val_entry") and hasattr(row, "_lbl_entry"):
                         val = row._val_entry.get_text().strip()
                         lbl = row._lbl_entry.get_text().strip()
                         if val or lbl:
@@ -2104,9 +2288,11 @@ class CommandEditorDialog(Adw.Window):
         elif field_type == "date_time":
             format_row = Adw.EntryRow(title=_("Format"))
             format_row.set_text(field_data.get("format", "%Y-%m-%d %H:%M"))
+
             def on_datetime_format_changed(r):
                 field_data["format"] = r.get_text()
                 self._update_preview()
+
             format_row.connect("changed", on_datetime_format_changed)
             expander.add_row(format_row)
 
@@ -2127,18 +2313,26 @@ class CommandEditorDialog(Adw.Window):
                 formats.append(fmt)
             format_row.set_model(formats)
             color_format = field_data.get("color_format", "hex")
-            format_row.set_selected(["hex", "rgb"].index(color_format) if color_format in ["hex", "rgb"] else 0)
+            format_row.set_selected(
+                ["hex", "rgb"].index(color_format)
+                if color_format in ["hex", "rgb"]
+                else 0
+            )
+
             def on_color_format_changed(r, p):
                 field_data["color_format"] = ["hex", "rgb"][r.get_selected()]
+
             format_row.connect("notify::selected", on_color_format_changed)
             expander.add_row(format_row)
 
             default_row = Adw.EntryRow(title=_("Default"))
             default_row.set_text(str(field_data.get("default", "#000000")))
+
             def on_color_default_changed(r):
                 field_data["default"] = r.get_text()
                 self._update_preview()
                 self._update_form_preview()
+
             default_row.connect("changed", on_color_default_changed)
             expander.add_row(default_row)
 
@@ -2148,8 +2342,10 @@ class CommandEditorDialog(Adw.Window):
         """Move a field up in the list."""
         if index > 0 and index < len(self.form_fields_data):
             # Swap in data
-            self.form_fields_data[index], self.form_fields_data[index - 1] = \
-                self.form_fields_data[index - 1], self.form_fields_data[index]
+            self.form_fields_data[index], self.form_fields_data[index - 1] = (
+                self.form_fields_data[index - 1],
+                self.form_fields_data[index],
+            )
             # Rebuild UI
             self._rebuild_form_fields_list()
             self._update_preview()
@@ -2159,8 +2355,10 @@ class CommandEditorDialog(Adw.Window):
         """Move a field down in the list."""
         if index >= 0 and index < len(self.form_fields_data) - 1:
             # Swap in data
-            self.form_fields_data[index], self.form_fields_data[index + 1] = \
-                self.form_fields_data[index + 1], self.form_fields_data[index]
+            self.form_fields_data[index], self.form_fields_data[index + 1] = (
+                self.form_fields_data[index + 1],
+                self.form_fields_data[index],
+            )
             # Rebuild UI
             self._rebuild_form_fields_list()
             self._update_preview()
@@ -2273,7 +2471,11 @@ class CommandEditorDialog(Adw.Window):
             self.simple_display_mode_row.set_selected(mode_idx)
 
             # Execution mode (0 = Insert Only, 1 = Insert and Execute)
-            exec_mode_idx = 1 if self.command.execution_mode == ExecutionMode.INSERT_AND_EXECUTE else 0
+            exec_mode_idx = (
+                1
+                if self.command.execution_mode == ExecutionMode.INSERT_AND_EXECUTE
+                else 0
+            )
             self.simple_execution_mode_row.set_selected(exec_mode_idx)
 
             self.wizard_stack.set_visible_child_name("simple")
@@ -2308,17 +2510,26 @@ class CommandEditorDialog(Adw.Window):
         if self._command_type == "simple":
             name = self.simple_name_row.get_text().strip()
             description = self.simple_description_row.get_text().strip()
-            icon_name = self.simple_icon_entry.get_text().strip() or "utilities-terminal-symbolic"
+            icon_name = (
+                self.simple_icon_entry.get_text().strip()
+                or "utilities-terminal-symbolic"
+            )
             display_mode_idx = self.simple_display_mode_row.get_selected()
             command_template = self.simple_command_textview.get_text().strip()
             # Get execution mode from dropdown (0 = Insert Only, 1 = Insert and Execute)
             exec_mode_idx = self.simple_execution_mode_row.get_selected()
-            exec_mode = ExecutionMode.INSERT_ONLY if exec_mode_idx == 0 else ExecutionMode.INSERT_AND_EXECUTE
+            exec_mode = (
+                ExecutionMode.INSERT_ONLY
+                if exec_mode_idx == 0
+                else ExecutionMode.INSERT_AND_EXECUTE
+            )
             form_fields = []
         else:
             name = self.form_name_row.get_text().strip()
             description = self.form_description_row.get_text().strip()
-            icon_name = self.form_icon_entry.get_text().strip() or "utilities-terminal-symbolic"
+            icon_name = (
+                self.form_icon_entry.get_text().strip() or "utilities-terminal-symbolic"
+            )
             display_mode_idx = self.form_display_mode_row.get_selected()
             exec_mode = ExecutionMode.SHOW_DIALOG
 
@@ -2372,20 +2583,22 @@ class CommandEditorDialog(Adw.Window):
                 elif ft == "color":
                     extra_config["color_format"] = field_data.get("color_format", "hex")
 
-                form_fields.append(CommandFormField(
-                    id=field_data.get("id", f"field_{i}"),
-                    label=field_data.get("label", ""),
-                    field_type=field_type,
-                    default_value=str(field_data.get("default", "")),
-                    placeholder=field_data.get("placeholder", ""),
-                    tooltip=field_data.get("tooltip", ""),
-                    required=False,
-                    command_flag=field_data.get("command_flag", ""),
-                    off_value=field_data.get("off_value", ""),
-                    options=field_data.get("options", []),
-                    template_key=field_data.get("template_key", ""),
-                    extra_config=extra_config,
-                ))
+                form_fields.append(
+                    CommandFormField(
+                        id=field_data.get("id", f"field_{i}"),
+                        label=field_data.get("label", ""),
+                        field_type=field_type,
+                        default_value=str(field_data.get("default", "")),
+                        placeholder=field_data.get("placeholder", ""),
+                        tooltip=field_data.get("tooltip", ""),
+                        required=False,
+                        command_flag=field_data.get("command_flag", ""),
+                        off_value=field_data.get("off_value", ""),
+                        options=field_data.get("options", []),
+                        template_key=field_data.get("template_key", ""),
+                        extra_config=extra_config,
+                    )
+                )
 
         if not name:
             if self._command_type == "simple":
@@ -2398,7 +2611,11 @@ class CommandEditorDialog(Adw.Window):
             return
 
         # Get display mode
-        display_modes = [DisplayMode.ICON_AND_TEXT, DisplayMode.ICON_ONLY, DisplayMode.TEXT_ONLY]
+        display_modes = [
+            DisplayMode.ICON_AND_TEXT,
+            DisplayMode.ICON_ONLY,
+            DisplayMode.TEXT_ONLY,
+        ]
         display_mode = display_modes[display_mode_idx]
 
         # Preserve builtin status when editing existing commands
@@ -2429,10 +2646,16 @@ class CommandManagerDialog(Adw.Window):
     """
 
     __gsignals__ = {
-        "command-selected": (GObject.SignalFlags.RUN_FIRST, None, (str, bool)),  # (command, execute)
+        "command-selected": (
+            GObject.SignalFlags.RUN_FIRST,
+            None,
+            (str, bool),
+        ),  # (command, execute)
     }
 
-    def __init__(self, parent_window, settings_manager: Optional[SettingsManager] = None):
+    def __init__(
+        self, parent_window, settings_manager: Optional[SettingsManager] = None
+    ):
         super().__init__(
             transient_for=parent_window,
             modal=False,
@@ -2473,11 +2696,11 @@ class CommandManagerDialog(Adw.Window):
     def present(self):
         self._presenting = True
         super().present()
-        GLib.idle_add(lambda: setattr(self, '_presenting', False))
+        GLib.idle_add(lambda: setattr(self, "_presenting", False))
 
     def _apply_color_scheme(self):
         """Apply terminal color scheme to BashTextView when gtk_theme is 'terminal'.
-        
+
         Dialog theming is handled globally via the ashyterm-dialog class.
         This method only updates the syntax highlighting in the BashTextView.
         """
@@ -2492,7 +2715,7 @@ class CommandManagerDialog(Adw.Window):
         scheme = self._settings_manager.get_color_scheme_data()
         palette = scheme.get("palette", [])
         fg_color = scheme.get("foreground", "#ffffff")
-        if palette and hasattr(self, 'command_textview') and self.command_textview:
+        if palette and hasattr(self, "command_textview") and self.command_textview:
             self.command_textview.update_colors_from_scheme(palette, fg_color)
 
     def _build_ui(self):
@@ -2518,7 +2741,9 @@ class CommandManagerDialog(Adw.Window):
         self.restore_hidden_button = Gtk.Button(
             icon_name="view-reveal-symbolic",
         )
-        get_tooltip_helper().add_tooltip(self.restore_hidden_button, _("Restore hidden commands"))
+        get_tooltip_helper().add_tooltip(
+            self.restore_hidden_button, _("Restore hidden commands")
+        )
         self.restore_hidden_button.connect("clicked", self._on_restore_hidden_clicked)
         header.pack_end(self.restore_hidden_button)
         self._update_restore_hidden_visibility()
@@ -2587,7 +2812,11 @@ class CommandManagerDialog(Adw.Window):
         main_box.append(input_section)
 
         # Separator
-        main_box.append(Gtk.Separator(orientation=Gtk.Orientation.HORIZONTAL, margin_start=16, margin_end=16))
+        main_box.append(
+            Gtk.Separator(
+                orientation=Gtk.Orientation.HORIZONTAL, margin_start=16, margin_end=16
+            )
+        )
 
         # Scrolled area for commands (grid layout)
         scrolled = Gtk.ScrolledWindow(
@@ -2654,7 +2883,7 @@ class CommandManagerDialog(Adw.Window):
             return True
 
         # Check if command is hidden
-        if hasattr(button, 'command') and button.command:
+        if hasattr(button, "command") and button.command:
             if self.command_manager.is_command_hidden(button.command.id):
                 return False
 
@@ -2663,9 +2892,9 @@ class CommandManagerDialog(Adw.Window):
 
         # Search in name, description, and command template
         return (
-            search_lower in command.name.lower() or
-            search_lower in command.description.lower() or
-            search_lower in command.command_template.lower()
+            search_lower in command.name.lower()
+            or search_lower in command.description.lower()
+            or search_lower in command.command_template.lower()
         )
 
     def _on_search_changed(self, entry):
@@ -2684,7 +2913,8 @@ class CommandManagerDialog(Adw.Window):
         # Get all commands and sort by name
         commands = self.command_manager.get_all_commands()
         visible_commands = [
-            cmd for cmd in commands
+            cmd
+            for cmd in commands
             if not self.command_manager.is_command_hidden(cmd.id)
         ]
 
@@ -2708,8 +2938,10 @@ class CommandManagerDialog(Adw.Window):
         if command.execution_mode == ExecutionMode.SHOW_DIALOG:
             # Show form dialog first
             dialog = CommandFormDialog(
-                self.parent_window, command, send_to_all=False,
-                settings_manager=self._settings_manager
+                self.parent_window,
+                command,
+                send_to_all=False,
+                settings_manager=self._settings_manager,
             )
             dialog.connect("command-ready", self._on_form_command_ready)
             dialog.present()
@@ -2725,8 +2957,10 @@ class CommandManagerDialog(Adw.Window):
         if command.execution_mode == ExecutionMode.SHOW_DIALOG:
             # Show form dialog with send_to_all=True
             dialog = CommandFormDialog(
-                self.parent_window, command, send_to_all=True,
-                settings_manager=self._settings_manager
+                self.parent_window,
+                command,
+                send_to_all=True,
+                settings_manager=self._settings_manager,
             )
             dialog.connect("command-ready", self._on_form_command_ready)
             dialog.present()
@@ -2736,7 +2970,9 @@ class CommandManagerDialog(Adw.Window):
             execute = command.execution_mode == ExecutionMode.INSERT_AND_EXECUTE
             self._show_terminal_selection_dialog(cmd_text, execute, pre_select_all=True)
 
-    def _on_form_command_ready(self, dialog, command: str, execute: bool, send_to_all: bool):
+    def _on_form_command_ready(
+        self, dialog, command: str, execute: bool, send_to_all: bool
+    ):
         """Handle command ready from form dialog."""
         if send_to_all:
             # Show terminal selection dialog with all terminals pre-selected
@@ -2748,7 +2984,7 @@ class CommandManagerDialog(Adw.Window):
 
     def _send_to_all_terminals(self, command: str, execute: bool):
         """Send command to all terminals via parent window."""
-        if hasattr(self.parent_window, '_broadcast_command_to_all'):
+        if hasattr(self.parent_window, "_broadcast_command_to_all"):
             # Add newline if executing
             cmd = command + "\n" if execute else command
             self.parent_window._broadcast_command_to_all(cmd)
@@ -2756,9 +2992,11 @@ class CommandManagerDialog(Adw.Window):
             # Fallback to single terminal
             self.emit("command-selected", command, execute)
 
-    def _show_terminal_selection_dialog(self, command: str, execute: bool, pre_select_all: bool = False):
+    def _show_terminal_selection_dialog(
+        self, command: str, execute: bool, pre_select_all: bool = False
+    ):
         """Show dialog to select which terminals should receive the command."""
-        if not hasattr(self.parent_window, 'tab_manager'):
+        if not hasattr(self.parent_window, "tab_manager"):
             # Fallback - just send to all
             self._send_to_all_terminals(command, execute)
             self.close()
@@ -2766,7 +3004,7 @@ class CommandManagerDialog(Adw.Window):
 
         all_terminals = self.parent_window.tab_manager.get_all_terminals_across_tabs()
         if not all_terminals:
-            if hasattr(self.parent_window, 'toast_overlay'):
+            if hasattr(self.parent_window, "toast_overlay"):
                 self.parent_window.toast_overlay.add_toast(
                     Adw.Toast(title=_("No open terminals found."))
                 )
@@ -2787,7 +3025,10 @@ class CommandManagerDialog(Adw.Window):
         # Display the command for the user to review with syntax highlighting
         palette = None
         fg_color = "#ffffff"
-        if self._settings_manager and self._settings_manager.get("gtk_theme", "") == "terminal":
+        if (
+            self._settings_manager
+            and self._settings_manager.get("gtk_theme", "") == "terminal"
+        ):
             scheme = self._settings_manager.get_color_scheme_data()
             palette = scheme.get("palette", [])
             fg_color = scheme.get("foreground", "#ffffff")
@@ -2821,7 +3062,7 @@ class CommandManagerDialog(Adw.Window):
 
         # Get active/current terminal to determine default selection
         current_terminal = None
-        if hasattr(self.parent_window, 'tab_manager') and not pre_select_all:
+        if hasattr(self.parent_window, "tab_manager") and not pre_select_all:
             current_terminal = self.parent_window.tab_manager.get_selected_terminal()
 
         selection_controls = []
@@ -2874,16 +3115,22 @@ class CommandManagerDialog(Adw.Window):
 
     def _get_terminal_display_name(self, terminal) -> str:
         """Get display name for a terminal."""
-        if hasattr(self.parent_window, '_get_terminal_display_name'):
+        if hasattr(self.parent_window, "_get_terminal_display_name"):
             return self.parent_window._get_terminal_display_name(terminal)
 
-        if hasattr(self.parent_window, 'terminal_manager'):
-            terminal_id = self.parent_window.terminal_manager.registry.get_terminal_id(terminal)
+        if hasattr(self.parent_window, "terminal_manager"):
+            terminal_id = self.parent_window.terminal_manager.registry.get_terminal_id(
+                terminal
+            )
             if terminal_id:
-                terminal_info = self.parent_window.terminal_manager.registry.get_terminal_info(terminal_id)
+                terminal_info = (
+                    self.parent_window.terminal_manager.registry.get_terminal_info(
+                        terminal_id
+                    )
+                )
                 if terminal_info:
                     identifier = terminal_info.get("identifier")
-                    if hasattr(identifier, 'name'):
+                    if hasattr(identifier, "name"):
                         return identifier.name
                     if isinstance(identifier, str):
                         return identifier
@@ -2934,13 +3181,17 @@ class CommandManagerDialog(Adw.Window):
 
     def _on_add_clicked(self, button):
         """Open editor dialog for new command."""
-        dialog = CommandEditorDialog(self.parent_window, settings_manager=self._settings_manager)
+        dialog = CommandEditorDialog(
+            self.parent_window, settings_manager=self._settings_manager
+        )
         dialog.connect("save-requested", self._on_save_new_command)
         dialog.present()
 
     def _on_edit_requested(self, widget, command: CommandButton):
         """Open editor dialog for existing command (builtin or custom)."""
-        dialog = CommandEditorDialog(self.parent_window, command, settings_manager=self._settings_manager)
+        dialog = CommandEditorDialog(
+            self.parent_window, command, settings_manager=self._settings_manager
+        )
         dialog.connect("save-requested", self._on_save_edited_command)
         dialog.present()
 
@@ -2949,7 +3200,9 @@ class CommandManagerDialog(Adw.Window):
         dialog = Adw.MessageDialog(
             transient_for=self.parent_window,
             heading=_("Delete Command?"),
-            body=_("Are you sure you want to delete '{name}'?").format(name=command.name),
+            body=_("Are you sure you want to delete '{name}'?").format(
+                name=command.name
+            ),
             default_response="cancel",
             close_response="cancel",
         )
@@ -2969,7 +3222,9 @@ class CommandManagerDialog(Adw.Window):
         dialog = Adw.MessageDialog(
             transient_for=self.parent_window,
             heading=_("Restore Default?"),
-            body=_("This will restore '{name}' to its original default configuration. Your customizations will be lost.").format(name=command.name),
+            body=_(
+                "This will restore '{name}' to its original default configuration. Your customizations will be lost."
+            ).format(name=command.name),
             default_response="cancel",
             close_response="cancel",
         )
@@ -3005,7 +3260,9 @@ class CommandManagerDialog(Adw.Window):
         dialog = Adw.MessageDialog(
             transient_for=self.parent_window,
             heading=_("Hide Command?"),
-            body=_("Hide '{name}' from the command list? You can restore it later from settings.").format(name=command.name),
+            body=_(
+                "Hide '{name}' from the command list? You can restore it later from settings."
+            ).format(name=command.name),
             default_response="cancel",
             close_response="cancel",
         )
@@ -3076,6 +3333,7 @@ class CommandManagerDialog(Adw.Window):
         all_commands = self.command_manager.get_all_commands()
         # Also get original builtins to find hidden builtin names
         from ...data.command_manager_models import get_builtin_commands
+
         builtin_commands = get_builtin_commands()
 
         all_cmd_map = {cmd.id: cmd for cmd in all_commands}
@@ -3152,7 +3410,9 @@ class CommandManagerDialog(Adw.Window):
         )
 
         # Open editor with the copy
-        dialog = CommandEditorDialog(self.parent_window, new_command, settings_manager=self._settings_manager)
+        dialog = CommandEditorDialog(
+            self.parent_window, new_command, settings_manager=self._settings_manager
+        )
         dialog.connect("save-requested", self._on_save_new_command)
         dialog.present()
 
@@ -3189,7 +3449,7 @@ class CommandManagerDialog(Adw.Window):
         self.hide()
 
     def destroy(self):
-        if not hasattr(self, '_allow_destroy') or not self._allow_destroy:
+        if not hasattr(self, "_allow_destroy") or not self._allow_destroy:
             self.hide()
             return
         super().destroy()

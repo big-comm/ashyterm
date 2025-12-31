@@ -13,6 +13,7 @@ from gi.repository import Adw, Gdk, Gio, GLib, GObject, Gtk, Pango, Vte
 
 from .sessions.models import LayoutItem, SessionFolder, SessionItem
 from .sessions.operations import SessionOperations
+
 # Lazy import: from .sessions.storage import load_folders_to_store, load_sessions_and_folders, load_sessions_to_store
 from .sessions.tree import SessionTreeView
 from .settings.manager import SettingsManager
@@ -22,12 +23,12 @@ from .terminal.manager import TerminalManager
 from .terminal.tabs import TabManager
 from .ui.actions import WindowActions
 from .ui.sidebar_manager import SidebarManager
-from .utils.syntax_utils import get_bash_pango_markup
 from .ui.window_ui import WindowUIBuilder
 from .utils.exceptions import UIError
 from .utils.icons import icon_image
 from .utils.logger import get_logger
 from .utils.security import validate_session_data
+from .utils.syntax_utils import get_bash_pango_markup
 from .utils.translation_utils import _
 
 
@@ -470,9 +471,7 @@ class CommTerminalWindow(Adw.ApplicationWindow):
                 self.logger.info(import_result.message)
                 self.refresh_tree()
             elif import_result.message:
-                self.logger.debug(
-                    f"SSH config import skipped: {import_result.message}"
-                )
+                self.logger.debug(f"SSH config import skipped: {import_result.message}")
 
             self.logger.info(
                 f"Loaded {self.session_store.get_n_items()} sessions, "
@@ -490,79 +489,94 @@ class CommTerminalWindow(Adw.ApplicationWindow):
 
     # --- Event Handlers & Callbacks ---
 
-    def _on_key_pressed(self, _controller, keyval, _keycode, state):
-        """Handles key press events for tab navigation and search."""
-        # Handle Escape key to cancel tab move mode
+    def _handle_escape_key(self, keyval) -> bool:
+        """Handle Escape key to cancel tab move mode."""
         if keyval == Gdk.KEY_Escape:
             if self.tab_manager.cancel_tab_move_if_active():
-                return Gdk.EVENT_STOP
+                return True
+        return False
 
-        # Check for Ctrl+Shift+F for search - use uppercase F key
-        if (
+    def _handle_search_shortcut(self, keyval, state) -> bool:
+        """Handle Ctrl+Shift+F for search toggle."""
+        is_ctrl_shift = (
             state & Gdk.ModifierType.CONTROL_MASK
             and state & Gdk.ModifierType.SHIFT_MASK
-            and (keyval == Gdk.KEY_f or keyval == Gdk.KEY_F)
-        ):
-            # Toggle search bar
+        )
+        is_f_key = keyval == Gdk.KEY_f or keyval == Gdk.KEY_F
+        if is_ctrl_shift and is_f_key:
             current_mode = self.search_bar.get_search_mode()
             self.search_bar.set_search_mode(not current_mode)
-            if (
-                not current_mode
-            ):  # If we're showing the search bar, focus the search entry
+            if not current_mode:
                 self.terminal_search_entry.grab_focus()
-            return True  # Use True instead of Gdk.EVENT_STOP for better compatibility
+            return True
+        return False
 
-        # Convert the key press event into a GTK accelerator string.
+    def _handle_dynamic_shortcuts(self, accel_string: str) -> bool:
+        """Handle dynamically configured shortcuts."""
+        if not accel_string:
+            return False
+        shortcut_actions = {
+            self.settings_manager.get_shortcut(
+                "next-tab"
+            ): self.tab_manager.select_next_tab,
+            self.settings_manager.get_shortcut(
+                "previous-tab"
+            ): self.tab_manager.select_previous_tab,
+            self.settings_manager.get_shortcut(
+                "ai-assistant"
+            ): self._on_ai_assistant_requested,
+        }
+        if action := shortcut_actions.get(accel_string):
+            action()
+            return True
+        # Handle split shortcuts separately (require terminal check)
+        split_h = self.settings_manager.get_shortcut("split-horizontal")
+        split_v = self.settings_manager.get_shortcut("split-vertical")
+        if accel_string in (split_h, split_v):
+            if terminal := self.tab_manager.get_selected_terminal():
+                if accel_string == split_h:
+                    self.tab_manager.split_horizontal(terminal)
+                else:
+                    self.tab_manager.split_vertical(terminal)
+            return True
+        return False
+
+    def _handle_alt_number_shortcuts(self, keyval, state) -> bool:
+        """Handle Alt+Number for quick tab switching."""
+        if not (state & Gdk.ModifierType.ALT_MASK):
+            return False
+        key_to_index = {
+            Gdk.KEY_1: 0,
+            Gdk.KEY_2: 1,
+            Gdk.KEY_3: 2,
+            Gdk.KEY_4: 3,
+            Gdk.KEY_5: 4,
+            Gdk.KEY_6: 5,
+            Gdk.KEY_7: 6,
+            Gdk.KEY_8: 7,
+            Gdk.KEY_9: 8,
+            Gdk.KEY_0: 9,
+        }
+        if keyval in key_to_index:
+            index = key_to_index[keyval]
+            if index < self.tab_manager.get_tab_count():
+                self.tab_manager.set_active_tab(self.tab_manager.tabs[index])
+            return True
+        return False
+
+    def _on_key_pressed(self, _controller, keyval, _keycode, state):
+        """Handles key press events for tab navigation and search."""
+        if self._handle_escape_key(keyval):
+            return Gdk.EVENT_STOP
+        if self._handle_search_shortcut(keyval, state):
+            return Gdk.EVENT_STOP
         accel_string = Gtk.accelerator_name(
             keyval, state & Gtk.accelerator_get_default_mod_mask()
         )
-
-        # Get the currently configured shortcuts from the settings manager.
-        next_tab_shortcut = self.settings_manager.get_shortcut("next-tab")
-        prev_tab_shortcut = self.settings_manager.get_shortcut("previous-tab")
-        split_h_shortcut = self.settings_manager.get_shortcut("split-horizontal")
-        split_v_shortcut = self.settings_manager.get_shortcut("split-vertical")
-        ai_shortcut = self.settings_manager.get_shortcut("ai-assistant")
-
-        # Check if the pressed key combination matches one of our dynamic shortcuts.
-        if accel_string and accel_string == next_tab_shortcut:
-            self.tab_manager.select_next_tab()
-            return Gdk.EVENT_STOP  # Stop the event from reaching the terminal.
-        if accel_string and accel_string == prev_tab_shortcut:
-            self.tab_manager.select_previous_tab()
-            return Gdk.EVENT_STOP  # Stop the event from reaching the terminal.
-
-        if accel_string and accel_string == split_h_shortcut:
-            if terminal := self.tab_manager.get_selected_terminal():
-                self.tab_manager.split_horizontal(terminal)
+        if self._handle_dynamic_shortcuts(accel_string):
             return Gdk.EVENT_STOP
-        if accel_string and accel_string == split_v_shortcut:
-            if terminal := self.tab_manager.get_selected_terminal():
-                self.tab_manager.split_vertical(terminal)
+        if self._handle_alt_number_shortcuts(keyval, state):
             return Gdk.EVENT_STOP
-        if accel_string and accel_string == ai_shortcut:
-            self._on_ai_assistant_requested()
-            return Gdk.EVENT_STOP
-
-        # Keep the existing Alt+Number logic for quick tab switching.
-        if state & Gdk.ModifierType.ALT_MASK:
-            key_to_index = {
-                Gdk.KEY_1: 0,
-                Gdk.KEY_2: 1,
-                Gdk.KEY_3: 2,
-                Gdk.KEY_4: 3,
-                Gdk.KEY_5: 4,
-                Gdk.KEY_6: 5,
-                Gdk.KEY_7: 6,
-                Gdk.KEY_8: 7,
-                Gdk.KEY_9: 8,
-                Gdk.KEY_0: 9,
-            }
-            if keyval in key_to_index:
-                index = key_to_index[keyval]
-                if index < self.tab_manager.get_tab_count():
-                    self.tab_manager.set_active_tab(self.tab_manager.tabs[index])
-                return Gdk.EVENT_STOP
         return Gdk.EVENT_PROPAGATE
 
     def _on_ai_assistant_requested(self, *_args) -> None:
@@ -694,7 +708,9 @@ class CommTerminalWindow(Adw.ApplicationWindow):
                     command_text = command_info
 
                 command_text = command_text.strip()
-                description = description.strip() if isinstance(description, str) else ""
+                description = (
+                    description.strip() if isinstance(description, str) else ""
+                )
 
                 if not command_text:
                     continue
@@ -1221,9 +1237,7 @@ class CommTerminalWindow(Adw.ApplicationWindow):
         for terminal in terminals:
             terminal.feed_child(command_bytes)
 
-        self.logger.info(
-            f"Broadcasted command to {len(terminals)} terminals."
-        )
+        self.logger.info(f"Broadcasted command to {len(terminals)} terminals.")
 
     def _make_broadcast_terminal_key(self, terminal: Vte.Terminal) -> str:
         page = self.tab_manager.get_page_for_terminal(terminal)

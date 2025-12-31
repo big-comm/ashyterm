@@ -312,59 +312,86 @@ def create_security_auditor() -> SecurityAuditor:
     return SecurityAuditor()
 
 
+def _validate_session_name(session_data: Dict[str, Any], errors: List[str]) -> None:
+    """Validate session name field."""
+    name = session_data.get("name", "")
+    if not name or not name.strip():
+        errors.append(_("Session name cannot be empty"))
+    elif len(name) > SecurityConfig.MAX_SESSION_NAME_LENGTH:
+        errors.append(
+            _("Session name too long (max {} characters)").format(
+                SecurityConfig.MAX_SESSION_NAME_LENGTH
+            )
+        )
+
+
+def _validate_hostname(session_data: Dict[str, Any], errors: List[str]) -> str:
+    """Validate hostname field. Returns the host value."""
+    host = session_data.get("host", "")
+    if host:
+        if not host.strip():
+            errors.append(_("Hostname cannot be empty for SSH sessions"))
+        elif not HostnameValidator.is_valid_hostname(host.strip()):
+            errors.append(_("Invalid hostname format: {}").format(host))
+    return host
+
+
+def _validate_username(
+    session_data: Dict[str, Any], host: str, errors: List[str]
+) -> None:
+    """Validate username field."""
+    username = session_data.get("user", "")
+    if host and not username:
+        errors.append(_("Username is required for SSH sessions"))
+    elif username and len(username) > SecurityConfig.MAX_USERNAME_LENGTH:
+        errors.append(
+            _("Username too long (max {} characters)").format(
+                SecurityConfig.MAX_USERNAME_LENGTH
+            )
+        )
+
+
+def _validate_port(session_data: Dict[str, Any], errors: List[str]) -> None:
+    """Validate port field."""
+    port = session_data.get("port", 22)
+    if port is not None:
+        try:
+            if not (1 <= int(port) <= 65535):
+                errors.append(_("Port must be between 1 and 65535"))
+        except (ValueError, TypeError):
+            errors.append(_("Port must be a valid number"))
+
+
+def _validate_auth(session_data: Dict[str, Any], host: str, errors: List[str]) -> None:
+    """Validate authentication configuration."""
+    auth_type = session_data.get("auth_type", "")
+    auth_value = session_data.get("auth_value", "")
+    if host:
+        if auth_type == "key" and auth_value:
+            is_key_valid, key_error = SSHKeyValidator.validate_ssh_key_path(auth_value)
+            if not is_key_valid:
+                errors.append(_("SSH key validation failed: {}").format(key_error))
+        elif auth_type not in ["key", "password", ""]:
+            errors.append(_("Invalid authentication type: {}").format(auth_type))
+
+
+def _validate_folder_path(session_data: Dict[str, Any], errors: List[str]) -> None:
+    """Validate folder path field."""
+    if folder_path := session_data.get("folder_path", ""):
+        if not PathValidator.is_safe_path(folder_path):
+            errors.append(_("Invalid or unsafe folder path"))
+
+
 def validate_session_data(session_data: Dict[str, Any]) -> Tuple[bool, List[str]]:
-    errors = []
+    """Validate session data structure and values."""
+    errors: List[str] = []
     try:
-        name = session_data.get("name", "")
-        if not name or not name.strip():
-            errors.append(_("Session name cannot be empty"))
-        elif len(name) > SecurityConfig.MAX_SESSION_NAME_LENGTH:
-            errors.append(
-                _("Session name too long (max {} characters)").format(
-                    SecurityConfig.MAX_SESSION_NAME_LENGTH
-                )
-            )
-        host = session_data.get("host", "")
-        if host:
-            if not host.strip():
-                errors.append(_("Hostname cannot be empty for SSH sessions"))
-            elif not HostnameValidator.is_valid_hostname(host.strip()):
-                errors.append(_("Invalid hostname format: {}").format(host))
-        username = session_data.get("user", "")
-        if host and not username:
-            errors.append(_("Username is required for SSH sessions"))
-        elif username and len(username) > SecurityConfig.MAX_USERNAME_LENGTH:
-            errors.append(
-                _("Username too long (max {} characters)").format(
-                    SecurityConfig.MAX_USERNAME_LENGTH
-                )
-            )
-        port = session_data.get("port", 22)
-        if port is not None:
-            try:
-                if not (1 <= int(port) <= 65535):
-                    errors.append(_("Port must be between 1 and 65535"))
-            except (ValueError, TypeError):
-                errors.append(_("Port must be a valid number"))
-        auth_type = session_data.get("auth_type", "")
-        auth_value = session_data.get("auth_value", "")
-        if host:
-            if auth_type == "key":
-                # CORRECTED LOGIC: Only validate the key path if one is provided.
-                # An empty path is valid for agent-based authentication.
-                if auth_value:
-                    is_key_valid, key_error = SSHKeyValidator.validate_ssh_key_path(
-                        auth_value
-                    )
-                    if not is_key_valid:
-                        errors.append(
-                            _("SSH key validation failed: {}").format(key_error)
-                        )
-            elif auth_type not in ["key", "password", ""]:
-                errors.append(_("Invalid authentication type: {}").format(auth_type))
-        if folder_path := session_data.get("folder_path", ""):
-            if not PathValidator.is_safe_path(folder_path):
-                errors.append(_("Invalid or unsafe folder path"))
+        _validate_session_name(session_data, errors)
+        host = _validate_hostname(session_data, errors)
+        _validate_username(session_data, host, errors)
+        _validate_port(session_data, errors)
+        _validate_auth(session_data, host, errors)
+        _validate_folder_path(session_data, errors)
         return len(errors) == 0, errors
     except Exception as e:
         logger = get_logger("ashyterm.security.validation")

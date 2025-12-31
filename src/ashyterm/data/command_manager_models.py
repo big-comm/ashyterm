@@ -8,9 +8,9 @@ and display customization.
 import json
 import threading
 import uuid
-from dataclasses import dataclass, field, asdict
+from dataclasses import asdict, dataclass, field
 from enum import Enum
-from typing import List, Optional, Dict, Any
+from typing import Any, Dict, List, Optional
 
 from ..settings.config import get_config_paths
 from ..utils.logger import get_logger
@@ -19,6 +19,7 @@ from ..utils.translation_utils import _
 
 class ExecutionMode(Enum):
     """How the command should be executed when clicked."""
+
     INSERT_ONLY = "insert_only"  # Just add to terminal, don't execute
     INSERT_AND_EXECUTE = "insert_and_execute"  # Add and press Enter
     SHOW_DIALOG = "show_dialog"  # Show a form dialog first
@@ -26,6 +27,7 @@ class ExecutionMode(Enum):
 
 class DisplayMode(Enum):
     """How the command button should be displayed."""
+
     ICON_ONLY = "icon_only"
     TEXT_ONLY = "text_only"
     ICON_AND_TEXT = "icon_and_text"
@@ -33,6 +35,7 @@ class DisplayMode(Enum):
 
 class FieldType(Enum):
     """Types of form fields available in command dialogs."""
+
     TEXT = "text"  # Simple text input
     SWITCH = "switch"  # Boolean toggle
     DROPDOWN = "dropdown"  # Select from options
@@ -54,6 +57,7 @@ class CommandFormField:
     Represents a form field in a command's dialog.
     Used to build dynamic command strings based on user input.
     """
+
     id: str  # Unique identifier for the field
     label: str  # Display label
     field_type: FieldType = FieldType.TEXT
@@ -98,6 +102,7 @@ class CommandButton:
     Represents a command button in the Command Manager.
     Enhanced from the old CommandItem with execution options and form support.
     """
+
     id: str  # Unique identifier
     name: str  # Display name
     description: str  # Help text / tooltip
@@ -138,19 +143,21 @@ class CommandButton:
         """Create from dictionary."""
         data = data.copy()
         data["display_mode"] = DisplayMode(data.get("display_mode", "icon_and_text"))
-        data["execution_mode"] = ExecutionMode(data.get("execution_mode", "insert_only"))
+        data["execution_mode"] = ExecutionMode(
+            data.get("execution_mode", "insert_only")
+        )
         data["form_fields"] = [
             CommandFormField.from_dict(f) for f in data.get("form_fields", [])
         ]
         return cls(**data)
 
-    def build_command(self, field_values: Dict[str, Any] = None) -> str:
+    def build_command(self, field_values: Optional[Dict[str, Any]] = None) -> str:
         """
         Build the final command string by substituting field values.
-        
+
         Args:
             field_values: Dictionary mapping field IDs to their values
-            
+
         Returns:
             The constructed command string
         """
@@ -168,19 +175,25 @@ class CommandButton:
                 if value:
                     # Replace placeholder with flag, or append if no placeholder
                     if f"{{{template_key}}}" in command:
-                        command = command.replace(f"{{{template_key}}}", form_field.command_flag)
+                        command = command.replace(
+                            f"{{{template_key}}}", form_field.command_flag
+                        )
                     else:
                         command = f"{command} {form_field.command_flag}"
                 else:
                     # Replace placeholder with off_value (can be empty)
                     if f"{{{template_key}}}" in command:
-                        command = command.replace(f"{{{template_key}}}", form_field.off_value)
+                        command = command.replace(
+                            f"{{{template_key}}}", form_field.off_value
+                        )
                     elif form_field.off_value:
                         command = f"{command} {form_field.off_value}"
             else:
                 # For other fields, substitute the value
                 if f"{{{template_key}}}" in command:
-                    command = command.replace(f"{{{template_key}}}", str(value) if value else "")
+                    command = command.replace(
+                        f"{{{template_key}}}", str(value) if value else ""
+                    )
 
         # Clean up multiple spaces
         command = " ".join(command.split())
@@ -260,7 +273,9 @@ def get_builtin_commands() -> List[CommandButton]:
                     field_type=FieldType.TEXT,
                     default_value="",
                     placeholder=_("e.g., +100M or -1k"),
-                    tooltip=_("Filter by size (+100M = larger than 100MB, -1k = smaller than 1KB)"),
+                    tooltip=_(
+                        "Filter by size (+100M = larger than 100MB, -1k = smaller than 1KB)"
+                    ),
                     template_key="size_flag",
                 ),
                 CommandFormField(
@@ -269,7 +284,9 @@ def get_builtin_commands() -> List[CommandButton]:
                     field_type=FieldType.NUMBER,
                     default_value="",
                     placeholder=_("e.g., 7"),
-                    tooltip=_("Find files modified in the last N time units (leave empty to skip)"),
+                    tooltip=_(
+                        "Find files modified in the last N time units (leave empty to skip)"
+                    ),
                     template_key="date_value",
                     min_value=1,
                 ),
@@ -424,7 +441,10 @@ def get_builtin_commands() -> List[CommandButton]:
                         ("is-active", _("Is Active")),
                         ("is-enabled", _("Is Enabled")),
                         ("list-units --type=service", _("List Services")),
-                        ("list-units --type=service --state=running", _("List Running")),
+                        (
+                            "list-units --type=service --state=running",
+                            _("List Running"),
+                        ),
                         ("list-units --type=service --state=failed", _("List Failed")),
                     ],
                     tooltip=_("Action to perform on the service"),
@@ -606,9 +626,15 @@ class CommandButtonManager:
 
         self.logger = get_logger("ashyterm.data.command_manager")
         self.config_paths = get_config_paths()
-        self.custom_commands_file = self.config_paths.CONFIG_DIR / "command_buttons.json"
-        self.customized_builtins_file = self.config_paths.CONFIG_DIR / "customized_builtins.json"
-        self.hidden_commands_file = self.config_paths.CONFIG_DIR / "hidden_commands.json"
+        self.custom_commands_file = (
+            self.config_paths.CONFIG_DIR / "command_buttons.json"
+        )
+        self.customized_builtins_file = (
+            self.config_paths.CONFIG_DIR / "customized_builtins.json"
+        )
+        self.hidden_commands_file = (
+            self.config_paths.CONFIG_DIR / "hidden_commands.json"
+        )
         self.command_prefs_file = self.config_paths.CONFIG_DIR / "command_prefs.json"
         self._data_lock = threading.RLock()
 
@@ -616,7 +642,9 @@ class CommandButtonManager:
         self._custom_commands: List[CommandButton] = []
         self._customized_builtins: Dict[str, dict] = {}  # id -> customized data
         self._hidden_command_ids: set = set()
-        self._command_prefs: Dict[str, dict] = {}  # command_id -> preferences (e.g., send_to_all)
+        self._command_prefs: Dict[
+            str, dict
+        ] = {}  # command_id -> preferences (e.g., send_to_all)
 
         self._load_builtin_commands()
         self._load_custom_commands()
@@ -645,7 +673,9 @@ class CommandButtonManager:
                     self._custom_commands = [
                         CommandButton.from_dict(cmd) for cmd in data
                     ]
-                self.logger.info(f"Loaded {len(self._custom_commands)} custom commands.")
+                self.logger.info(
+                    f"Loaded {len(self._custom_commands)} custom commands."
+                )
             except (json.JSONDecodeError, FileNotFoundError, KeyError) as e:
                 self.logger.error(f"Failed to load custom commands: {e}")
                 self._custom_commands = []
@@ -660,7 +690,9 @@ class CommandButtonManager:
             try:
                 with open(self.customized_builtins_file, "r", encoding="utf-8") as f:
                     self._customized_builtins = json.load(f)
-                self.logger.info(f"Loaded {len(self._customized_builtins)} customized builtins.")
+                self.logger.info(
+                    f"Loaded {len(self._customized_builtins)} customized builtins."
+                )
             except (json.JSONDecodeError, FileNotFoundError) as e:
                 self.logger.error(f"Failed to load customized builtins: {e}")
                 self._customized_builtins = {}
@@ -675,7 +707,9 @@ class CommandButtonManager:
             try:
                 with open(self.hidden_commands_file, "r", encoding="utf-8") as f:
                     self._hidden_command_ids = set(json.load(f))
-                self.logger.info(f"Loaded {len(self._hidden_command_ids)} hidden commands.")
+                self.logger.info(
+                    f"Loaded {len(self._hidden_command_ids)} hidden commands."
+                )
             except (json.JSONDecodeError, FileNotFoundError) as e:
                 self.logger.error(f"Failed to load hidden commands: {e}")
                 self._hidden_command_ids = set()
@@ -700,7 +734,9 @@ class CommandButtonManager:
             try:
                 self.customized_builtins_file.parent.mkdir(parents=True, exist_ok=True)
                 with open(self.customized_builtins_file, "w", encoding="utf-8") as f:
-                    json.dump(self._customized_builtins, f, indent=2, ensure_ascii=False)
+                    json.dump(
+                        self._customized_builtins, f, indent=2, ensure_ascii=False
+                    )
                 self.logger.info("Customized builtins saved successfully.")
             except Exception as e:
                 self.logger.error(f"Failed to save customized builtins: {e}")
@@ -726,7 +762,9 @@ class CommandButtonManager:
             try:
                 with open(self.command_prefs_file, "r", encoding="utf-8") as f:
                     self._command_prefs = json.load(f)
-                self.logger.info(f"Loaded command preferences for {len(self._command_prefs)} commands.")
+                self.logger.info(
+                    f"Loaded command preferences for {len(self._command_prefs)} commands."
+                )
             except (json.JSONDecodeError, FileNotFoundError) as e:
                 self.logger.error(f"Failed to load command prefs: {e}")
                 self._command_prefs = {}
@@ -764,7 +802,9 @@ class CommandButtonManager:
             for cmd in self._builtin_commands:
                 if cmd.id in self._customized_builtins:
                     # Apply customizations
-                    customized = CommandButton.from_dict(self._customized_builtins[cmd.id])
+                    customized = CommandButton.from_dict(
+                        self._customized_builtins[cmd.id]
+                    )
                     customized.is_builtin = True  # Keep it marked as builtin
                     result.append(customized)
                 else:
@@ -781,7 +821,9 @@ class CommandButtonManager:
             result = []
             for cmd in self._builtin_commands:
                 if cmd.id in self._customized_builtins:
-                    customized = CommandButton.from_dict(self._customized_builtins[cmd.id])
+                    customized = CommandButton.from_dict(
+                        self._customized_builtins[cmd.id]
+                    )
                     customized.is_builtin = True
                     result.append(customized)
                 else:
@@ -800,7 +842,9 @@ class CommandButtonManager:
             for cmd in self._builtin_commands:
                 if cmd.id == command_id:
                     if command_id in self._customized_builtins:
-                        customized = CommandButton.from_dict(self._customized_builtins[command_id])
+                        customized = CommandButton.from_dict(
+                            self._customized_builtins[command_id]
+                        )
                         customized.is_builtin = True
                         return customized
                     return cmd
@@ -870,7 +914,9 @@ class CommandButtonManager:
             pinned = []
             all_commands = self.get_all_commands()
             for cmd in all_commands:
-                if self.is_command_pinned(cmd.id) and not self.is_command_hidden(cmd.id):
+                if self.is_command_pinned(cmd.id) and not self.is_command_hidden(
+                    cmd.id
+                ):
                     pinned.append(cmd)
             return pinned
 
@@ -942,4 +988,3 @@ class CommandButtonManager:
 def get_command_button_manager() -> CommandButtonManager:
     """Get the singleton CommandButtonManager instance."""
     return CommandButtonManager()
-
