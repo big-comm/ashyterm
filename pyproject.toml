@@ -10,6 +10,7 @@ version = "0.1.0"
 authors = [
     { name = "Leonardo Berbert", email = "leo4berbert@gmail.com" },
     { name = "Tales A. Mendonça", email = "talesam@gmail.com" },
+    { name = "Bruno Gonçalves", email = "bigbruno@gmail.com" },
 ]
 license = "MIT"
 license-files = ["LICENSE"]
@@ -36,3 +37,18 @@ build-backend = "uv_build"
 
 [tool.setuptools.packages.find]
 include = ["ashyterm"]
+
+[tool.ruff.lint]
+# Enable Pyflakes (F), pycodestyle (E, W), isort (I)
+select = ["E", "F", "W", "I"]
+
+# E402: Module level import not at top of file
+# E501: Line too long
+# I001: [*] Import block is un-sorted or un-formatted
+# W291 Trailing whitespace
+# W293: Blank line contains whitespace
+ignore = ["E402", "E501", "I001", "W291", "W293"]
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
