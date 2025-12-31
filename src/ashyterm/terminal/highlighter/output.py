@@ -595,9 +595,7 @@ class OutputHighlighter:
                 self.logger.debug(f"Rule pattern matching failed: {e}")
             return False
 
-    def _extract_match_colors(
-        self, match, rule: CompiledRule, matches: list
-    ) -> None:
+    def _extract_match_colors(self, match, rule: CompiledRule, matches: list) -> None:
         """Extract color matches from a regex match object."""
         if rule.num_groups > 0:
             for group_idx in range(1, rule.num_groups + 1):

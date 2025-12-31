@@ -9,6 +9,7 @@ from gi.repository import Adw, GObject, Gtk
 from ...settings.manager import SettingsManager
 from ...utils.logger import get_logger
 from ...utils.translation_utils import _
+from .base_dialog import create_mapped_combo_row
 
 
 class PreferencesDialog(Adw.PreferencesWindow):
@@ -232,25 +233,19 @@ class PreferencesDialog(Adw.PreferencesWindow):
         page.add(behavior_group)
 
         # New instance behavior setting
-        instance_behavior_row = Adw.ComboRow(
+        instance_behavior_row = create_mapped_combo_row(
             title=_("When Already Running"),
+            value_map=["new_tab", "new_window", "focus_existing"],
+            display_strings=[
+                _("Open a new tab"),
+                _("Open a new window"),
+                _("Focus existing window"),
+            ],
+            current_value=self.settings_manager.get("new_instance_behavior", "new_tab"),
+            on_change=lambda val: self._on_setting_changed(
+                "new_instance_behavior", val
+            ),
             subtitle=_("Action when the application is launched while already open"),
-        )
-        behavior_map = ["new_tab", "new_window", "focus_existing"]
-        behavior_strings = [
-            _("Open a new tab"),
-            _("Open a new window"),
-            _("Focus existing window"),
-        ]
-        instance_behavior_row.set_model(Gtk.StringList.new(behavior_strings))
-        current_behavior = self.settings_manager.get("new_instance_behavior", "new_tab")
-        try:
-            behavior_index = behavior_map.index(current_behavior)
-        except ValueError:
-            behavior_index = 0
-        instance_behavior_row.set_selected(behavior_index)
-        instance_behavior_row.connect(
-            "notify::selected", self._on_instance_behavior_changed, behavior_map
         )
         behavior_group.add(instance_behavior_row)
 
@@ -360,24 +355,18 @@ class PreferencesDialog(Adw.PreferencesWindow):
         startup_group = Adw.PreferencesGroup()
         page.add(startup_group)
 
-        restore_policy_row = Adw.ComboRow(
+        restore_policy_row = create_mapped_combo_row(
             title=_("On Startup"),
-        )
-        policy_map = ["always", "ask", "never"]
-        policy_strings = [
-            _("Always restore previous session"),
-            _("Ask to restore previous session"),
-            _("Never restore previous session"),
-        ]
-        restore_policy_row.set_model(Gtk.StringList.new(policy_strings))
-        current_policy = self.settings_manager.get("session_restore_policy", "never")
-        try:
-            selected_index = policy_map.index(current_policy)
-        except ValueError:
-            selected_index = 2
-        restore_policy_row.set_selected(selected_index)
-        restore_policy_row.connect(
-            "notify::selected", self._on_restore_policy_changed, policy_map
+            value_map=["always", "ask", "never"],
+            display_strings=[
+                _("Always restore previous session"),
+                _("Ask to restore previous session"),
+                _("Never restore previous session"),
+            ],
+            current_value=self.settings_manager.get("session_restore_policy", "never"),
+            on_change=lambda val: self._on_setting_changed(
+                "session_restore_policy", val
+            ),
         )
         startup_group.add(restore_policy_row)
 
@@ -594,18 +583,6 @@ class PreferencesDialog(Adw.PreferencesWindow):
         value = scale.get_value()
         self.settings_manager.set("headerbar_transparency", value)
         self.emit("headerbar-transparency-changed", value)
-
-    def _on_restore_policy_changed(self, combo_row, _param, policy_map):
-        index = combo_row.get_selected()
-        if 0 <= index < len(policy_map):
-            policy = policy_map[index]
-            self._on_setting_changed("session_restore_policy", policy)
-
-    def _on_instance_behavior_changed(self, combo_row, _param, behavior_map):
-        index = combo_row.get_selected()
-        if 0 <= index < len(behavior_map):
-            behavior = behavior_map[index]
-            self._on_setting_changed("new_instance_behavior", behavior)
 
     def _on_backup_now_clicked(self, button):
         app = self.get_transient_for().get_application()

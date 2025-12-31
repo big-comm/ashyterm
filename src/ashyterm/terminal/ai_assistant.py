@@ -583,7 +583,9 @@ class TerminalAiAssistant(GObject.Object):
             "model": model,
             "messages": self._build_openai_messages(messages),
         }
-        return self._openai_compat_request(url, headers, payload, "Local AI", timeout=120)
+        return self._openai_compat_request(
+            url, headers, payload, "Local AI", timeout=120
+        )
 
     def _perform_local_streaming_request(
         self, config: Dict[str, str], messages: List[Dict[str, str]]
@@ -602,7 +604,9 @@ class TerminalAiAssistant(GObject.Object):
             "model": model,
             "messages": self._build_openai_messages(messages),
         }
-        return self._openai_compat_streaming(url, headers, payload, "Local AI", timeout=120)
+        return self._openai_compat_streaming(
+            url, headers, payload, "Local AI", timeout=120
+        )
 
     def _perform_groq_streaming_request(
         self, config: Dict[str, str], messages: List[Dict[str, str]]

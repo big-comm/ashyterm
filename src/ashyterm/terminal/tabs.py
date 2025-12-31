@@ -2222,7 +2222,11 @@ class TabManager:
         session_type = node.get("session_type", "local")
 
         terminal = self._create_terminal_from_session(
-            session_type, node.get("session_name", ""), title, working_dir, initial_command
+            session_type,
+            node.get("session_name", ""),
+            title,
+            working_dir,
+            initial_command,
         )
 
         if not terminal:

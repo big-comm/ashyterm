@@ -258,11 +258,13 @@ class ValidationError(AshyTerminalError):
             error_message = _("Validation failed for '{}': {}").format(field, message)
         else:
             error_message = message
-        kwargs.setdefault("details", {}).update({
-            "field": field,
-            "value": value,
-            "reason": reason,
-        })
+        kwargs.setdefault("details", {}).update(
+            {
+                "field": field,
+                "value": value,
+                "reason": reason,
+            }
+        )
         super().__init__(error_message, **kwargs)
 
 

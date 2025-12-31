@@ -5,13 +5,13 @@
 from __future__ import annotations
 
 import json
-import os
 import uuid
 from datetime import datetime
 from typing import Any, Dict, List, Optional
 
 from ..settings.config import get_config_paths
 from ..utils.logger import get_logger
+from ..utils.security import atomic_json_write
 
 
 class AIHistoryManager:
@@ -77,9 +77,6 @@ class AIHistoryManager:
     def _save_history(self) -> None:
         """Save chat history to JSON file."""
         try:
-            # Ensure config directory exists
-            self._config_paths.CONFIG_DIR.mkdir(parents=True, exist_ok=True)
-
             # Trim conversations if too many
             if len(self._conversations) > self._max_conversations:
                 self._conversations = self._conversations[-self._max_conversations :]
@@ -89,16 +86,7 @@ class AIHistoryManager:
                 "current_conversation_id": self._current_conversation_id,
             }
 
-            # Write atomically using a temp file
-            temp_file = self._history_file.with_suffix(".json.tmp")
-            with open(temp_file, "w", encoding="utf-8") as f:
-                json.dump(data, f, ensure_ascii=False, indent=2)
-
-            # Move temp file to final location
-            temp_file.replace(self._history_file)
-
-            # Set secure permissions
-            os.chmod(self._history_file, 0o600)
+            atomic_json_write(self._history_file, data)
 
             self.logger.debug(
                 f"Saved {len(self._conversations)} AI conversations to history"

@@ -22,7 +22,7 @@ from ...utils.security import (
 from ...utils.tooltip_helper import get_tooltip_helper
 from ...utils.translation_utils import _
 from ..widgets.bash_text_view import BashTextView
-from .base_dialog import BaseDialog
+from .base_dialog import BaseDialog, validate_directory_path
 
 
 class SessionEditDialog(BaseDialog):
@@ -1652,9 +1652,7 @@ class SessionEditDialog(BaseDialog):
             copy.deepcopy(self.port_forwardings) if not is_local else []
         )
         session_data["x11_forwarding"] = (
-            self.x11_switch.get_active()
-            if self.x11_switch and not is_local
-            else False
+            self.x11_switch.get_active() if self.x11_switch and not is_local else False
         )
 
     def _apply_ssh_session_fields(self, session_data: dict) -> None:
@@ -1719,22 +1717,13 @@ class SessionEditDialog(BaseDialog):
         """Validate local terminal specific fields."""
         valid = True
         if hasattr(self, "local_working_dir_entry"):
-            path_text = self.local_working_dir_entry.get_text().strip()
-            if path_text:
-                try:
-                    path = Path(path_text).expanduser()
-                    if not path.exists() or not path.is_dir():
-                        self.local_working_dir_entry.add_css_class("error")
-                        self._validation_errors.append(
-                            _("Working directory must exist and be a folder.")
-                        )
-                        valid = False
-                    else:
-                        self.local_working_dir_entry.remove_css_class("error")
-                except Exception:
-                    self.local_working_dir_entry.add_css_class("error")
-                    self._validation_errors.append(_("Invalid working directory path."))
-                    valid = False
+            if not validate_directory_path(
+                self.local_working_dir_entry,
+                self._validation_errors,
+                _("Working directory must exist and be a folder."),
+                allow_empty=True,
+            ):
+                valid = False
         if not valid and self._validation_errors:
             self._show_error_dialog(
                 _("Validation Error"),
@@ -1779,26 +1768,13 @@ class SessionEditDialog(BaseDialog):
                 self.post_login_entry.remove_css_class("error")
         if self.sftp_switch and self.sftp_switch.get_active():
             if self.sftp_local_entry:
-                local_dir = self.sftp_local_entry.get_text().strip()
-                if local_dir:
-                    try:
-                        local_path = Path(local_dir).expanduser()
-                        if not local_path.exists() or not local_path.is_dir():
-                            self.sftp_local_entry.add_css_class("error")
-                            self._validation_errors.append(
-                                _("SFTP local directory must exist and be a directory.")
-                            )
-                            valid = False
-                        else:
-                            self.sftp_local_entry.remove_css_class("error")
-                    except Exception:
-                        self.sftp_local_entry.add_css_class("error")
-                        self._validation_errors.append(
-                            _("SFTP local directory must exist and be a directory.")
-                        )
-                        valid = False
-                else:
-                    self.sftp_local_entry.remove_css_class("error")
+                if not validate_directory_path(
+                    self.sftp_local_entry,
+                    self._validation_errors,
+                    _("SFTP local directory must exist and be a directory."),
+                    allow_empty=True,
+                ):
+                    valid = False
         if not valid and self._validation_errors:
             self._show_error_dialog(
                 _("SSH Validation Error"),

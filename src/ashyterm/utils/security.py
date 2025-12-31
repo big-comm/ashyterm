@@ -298,6 +298,52 @@ def ensure_secure_file_permissions(file_path: str) -> None:
         )
 
 
+def atomic_json_write(
+    file_path: Path,
+    data: dict,
+    indent: int = 2,
+    ensure_ascii: bool = False,
+    secure_permissions: bool = True,
+) -> None:
+    """Write JSON data atomically using a temporary file and rename.
+
+    This ensures that the file is either fully written or not modified at all,
+    preventing data corruption from partial writes or crashes.
+
+    Args:
+        file_path: Path to the destination JSON file.
+        data: Dictionary to serialize as JSON.
+        indent: JSON indentation level.
+        ensure_ascii: If True, escape non-ASCII characters.
+        secure_permissions: If True, set secure file permissions (0o600).
+
+    Raises:
+        OSError: If file operations fail.
+    """
+    import json
+
+    # Ensure parent directory exists
+    file_path.parent.mkdir(parents=True, exist_ok=True)
+
+    temp_file = file_path.with_suffix(".tmp")
+    try:
+        with open(temp_file, "w", encoding="utf-8") as f:
+            json.dump(data, f, indent=indent, ensure_ascii=ensure_ascii)
+
+        temp_file.replace(file_path)
+
+        if secure_permissions:
+            try:
+                file_path.chmod(SecurityConfig.SECURE_FILE_PERMISSIONS)
+            except OSError:
+                pass  # Non-critical - log if logger available
+    except Exception:
+        # Clean up temp file on failure
+        if temp_file.exists():
+            temp_file.unlink()
+        raise
+
+
 def ensure_secure_directory_permissions(dir_path: str) -> None:
     try:
         Path(dir_path).chmod(SecurityConfig.SECURE_DIR_PERMISSIONS)

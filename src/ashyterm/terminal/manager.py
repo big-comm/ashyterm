@@ -45,7 +45,8 @@ from ..utils.exceptions import (
     TerminalCreationError,
 )
 from ..utils.logger import get_logger, log_terminal_event
-from ..utils.osc7_tracker import OSC7Info, get_osc7_tracker
+from ..utils.osc7 import OSC7Info, parse_directory_uri
+from ..utils.osc7_tracker import get_osc7_tracker
 from ..utils.platform import get_environment_manager, get_platform_info
 from ..utils.security import validate_session_data
 from ..utils.translation_utils import _
@@ -734,20 +735,9 @@ class TerminalManager:
     def _on_directory_uri_changed(self, terminal: Vte.Terminal, _param_spec):
         try:
             uri = terminal.get_current_directory_uri()
-            if not uri:
-                return
-            from urllib.parse import unquote, urlparse
-
-            parsed_uri = urlparse(uri)
-            if parsed_uri.scheme != "file":
-                return
-            path = unquote(parsed_uri.path)
-            hostname = parsed_uri.hostname or "localhost"
-            display_path = self.osc7_tracker.parser._create_display_path(path)
-            osc7_info = OSC7Info(
-                hostname=hostname, path=path, display_path=display_path
-            )
-            self._update_title(terminal, osc7_info)
+            osc7_info = parse_directory_uri(uri, self.osc7_tracker.parser)
+            if osc7_info:
+                self._update_title(terminal, osc7_info)
         except Exception as e:
             self.logger.error(f"Directory URI change handling failed: {e}")
 
@@ -764,16 +754,7 @@ class TerminalManager:
         if osc7_info is None:
             uri = terminal.get_current_directory_uri()
             if uri:
-                from urllib.parse import unquote, urlparse
-
-                parsed_uri = urlparse(uri)
-                if parsed_uri.scheme == "file":
-                    path = unquote(parsed_uri.path)
-                    hostname = parsed_uri.hostname or "localhost"
-                    display_path = self.osc7_tracker.parser._create_display_path(path)
-                    osc7_info = OSC7Info(
-                        hostname=hostname, path=path, display_path=display_path
-                    )
+                osc7_info = parse_directory_uri(uri, self.osc7_tracker.parser)
 
         new_title = "Terminal"
         if terminal_info.get("type") == "ssh":
@@ -856,8 +837,11 @@ class TerminalManager:
 
             if should_highlight:
                 self._spawn_highlighted_local(
-                    terminal, session, user_data_for_spawn, resolved_working_dir,
-                    terminal_id
+                    terminal,
+                    session,
+                    user_data_for_spawn,
+                    resolved_working_dir,
+                    terminal_id,
                 )
             else:
                 precreated_env = self._get_precreated_env(working_directory)
@@ -915,13 +899,11 @@ class TerminalManager:
             output_enabled = session.output_highlighting
 
         # Cat and shell input depend on output highlighting
-        cat_enabled = (
-            output_enabled
-            and self.settings_manager.get("cat_colorization_enabled", True)
+        cat_enabled = output_enabled and self.settings_manager.get(
+            "cat_colorization_enabled", True
         )
-        shell_input_enabled = (
-            output_enabled
-            and self.settings_manager.get("shell_input_highlighting_enabled", False)
+        shell_input_enabled = output_enabled and self.settings_manager.get(
+            "shell_input_highlighting_enabled", False
         )
 
         # Per-session overrides
@@ -929,7 +911,9 @@ class TerminalManager:
             if session.cat_colorization is not None:
                 cat_enabled = output_enabled and session.cat_colorization
             if session.shell_input_highlighting is not None:
-                shell_input_enabled = output_enabled and session.shell_input_highlighting
+                shell_input_enabled = (
+                    output_enabled and session.shell_input_highlighting
+                )
 
         should_highlight = output_enabled or cat_enabled or shell_input_enabled
 
@@ -977,7 +961,11 @@ class TerminalManager:
             )
 
     def _log_terminal_creation(
-        self, session: Optional[SessionItem], title: str, terminal_id: str, term_type: str
+        self,
+        session: Optional[SessionItem],
+        title: str,
+        terminal_id: str,
+        term_type: str,
     ) -> None:
         """Log terminal creation event."""
         log_title = session.name if session else title
@@ -2793,22 +2781,63 @@ class TerminalManager:
         return Gdk.EVENT_PROPAGATE
 
     # Shell keywords that should be skipped (not actual commands)
-    _SHELL_KEYWORDS = frozenset({
-        "if", "then", "else", "elif", "fi", "for", "do", "done",
-        "while", "until", "case", "esac", "select", "in", "function",
-        "{", "}", "[[", "]]", "(", ")",
-    })
+    _SHELL_KEYWORDS = frozenset(
+        {
+            "if",
+            "then",
+            "else",
+            "elif",
+            "fi",
+            "for",
+            "do",
+            "done",
+            "while",
+            "until",
+            "case",
+            "esac",
+            "select",
+            "in",
+            "function",
+            "{",
+            "}",
+            "[[",
+            "]]",
+            "(",
+            ")",
+        }
+    )
 
     # Prefix commands that should be skipped to find the real command
-    _PREFIX_COMMANDS = frozenset({
-        "sudo", "time", "env", "nice", "nohup", "strace", "ltrace",
-        "doas", "pkexec", "command", "builtin", "exec",
-    })
+    _PREFIX_COMMANDS = frozenset(
+        {
+            "sudo",
+            "time",
+            "env",
+            "nice",
+            "nohup",
+            "strace",
+            "ltrace",
+            "doas",
+            "pkexec",
+            "command",
+            "builtin",
+            "exec",
+        }
+    )
 
     # Glued keywords that can appear merged with commands
-    _GLUED_KEYWORDS = frozenset({
-        "then", "else", "elif", "fi", "do", "done", "esac", "in",
-    })
+    _GLUED_KEYWORDS = frozenset(
+        {
+            "then",
+            "else",
+            "elif",
+            "fi",
+            "do",
+            "done",
+            "esac",
+            "in",
+        }
+    )
 
     def _analyze_command_from_line(
         self, line: str, terminal: Vte.Terminal, terminal_id: int
@@ -2851,7 +2880,7 @@ class TerminalManager:
         matches = list(PROMPT_TERMINATOR_PATTERN.finditer(clean_line))
         if matches:
             last_match = matches[-1]
-            return clean_line[last_match.end():].strip()
+            return clean_line[last_match.end() :].strip()
         return clean_line.strip()
 
     def _strip_glued_keywords(self, command_part: str) -> str:
@@ -2860,7 +2889,7 @@ class TerminalManager:
         for kw in self._GLUED_KEYWORDS:
             if command_lower.startswith(kw) and len(command_lower) > len(kw):
                 if command_lower[len(kw)].isalpha():
-                    return command_part[len(kw):]
+                    return command_part[len(kw) :]
         return command_part
 
     def _detect_program_name(self, command_part: str) -> Optional[str]:
@@ -2869,6 +2898,7 @@ class TerminalManager:
         tokens = last_command_part.split() if last_command_part else []
 
         from ..settings.manager import get_settings_manager
+
         settings_manager = get_settings_manager()
         highlight_manager = _get_highlight_manager()
 
@@ -2948,7 +2978,7 @@ class TerminalManager:
         """Extract command from keyword-glued token."""
         for kw in self._SHELL_KEYWORDS:
             if token_lower.startswith(kw) and len(token_lower) > len(kw):
-                remainder = token[len(kw):]
+                remainder = token[len(kw) :]
                 if remainder and remainder[0].isalpha():
                     return remainder
         return token
@@ -2971,7 +3001,9 @@ class TerminalManager:
                 f"Terminal {terminal_id}: help context for: {clean_line[:50]}..."
             )
         else:
-            highlighter.set_context(program_name, terminal_id, full_command=command_part)
+            highlighter.set_context(
+                program_name, terminal_id, full_command=command_part
+            )
             self.logger.debug(
                 f"Terminal {terminal_id}: detected '{program_name}' from: {clean_line[:50]}..."
             )

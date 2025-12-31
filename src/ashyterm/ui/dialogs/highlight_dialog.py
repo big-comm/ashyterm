@@ -12,7 +12,7 @@ Supports:
 """
 
 import re
-from typing import Optional
+from typing import Callable, Optional
 
 import gi
 
@@ -20,6 +20,7 @@ gi.require_version("Gtk", "4.0")
 gi.require_version("Adw", "1")
 from gi.repository import Adw, GLib, GObject, Gtk
 
+from ...helpers import generate_unique_name
 from ...settings.highlights import (
     HighlightContext,
     HighlightRule,
@@ -36,6 +37,11 @@ from ..colors import (
     get_text_effect_options,
 )
 from ..widgets.regex_text_view import RegexTextView
+from .base_dialog import (
+    BaseDialog,
+    create_icon_button,
+    show_delete_confirmation_dialog,
+)
 
 # Get color options from centralized module
 LOGICAL_COLOR_OPTIONS = get_foreground_color_options()
@@ -187,11 +193,13 @@ class ColorEntryRow(Adw.ActionRow):
         self.add_suffix(main_box)
 
         # === Remove Button ===
-        remove_btn = Gtk.Button(icon_name="user-trash-symbolic")
-        remove_btn.set_valign(Gtk.Align.CENTER)
-        remove_btn.add_css_class("flat")
-        get_tooltip_helper().add_tooltip(remove_btn, _("Remove"))
-        remove_btn.connect("clicked", lambda b: self.emit("remove-requested"))
+        remove_btn = create_icon_button(
+            "user-trash-symbolic",
+            tooltip=_("Remove"),
+            on_clicked=lambda b: self.emit("remove-requested"),
+            flat=True,
+            valign=Gtk.Align.CENTER,
+        )
         self.add_suffix(remove_btn)
 
     def _load_color(self) -> None:
@@ -338,14 +346,14 @@ class ColorEntryRow(Adw.ActionRow):
         return self._group_index
 
 
-class RuleEditDialog(Adw.Window):
+class RuleEditDialog(BaseDialog):
     """
     Dialog for creating or editing a highlight rule.
 
     Provides form fields for rule name, regex pattern, and multi-group
     color selection with theme-aware logical color names.
 
-    Uses Adw.Window for full resize/maximize support with size persistence.
+    Inherits from BaseDialog for consistent UI and reduced boilerplate.
     """
 
     __gsignals__ = {
@@ -377,9 +385,24 @@ class RuleEditDialog(Adw.Window):
         saved_width = settings.get(self._SIZE_KEY_WIDTH, self._DEFAULT_WIDTH)
         saved_height = settings.get(self._SIZE_KEY_HEIGHT, self._DEFAULT_HEIGHT)
 
-        super().__init__()
-        self.add_css_class("ashyterm-dialog")
-        self.logger = get_logger("ashyterm.ui.dialogs.rule_edit")
+        # Determine parent window
+        parent_window = None
+        if isinstance(parent, Gtk.Window):
+            parent_window = parent
+        elif hasattr(parent, "get_root"):
+            root = parent.get_root()
+            if isinstance(root, Gtk.Window):
+                parent_window = root
+
+        title = _("New Rule") if is_new else _("Edit Rule")
+        super().__init__(
+            parent_window,
+            title,
+            auto_setup_toolbar=True,
+            default_width=saved_width,
+            default_height=saved_height,
+        )
+
         self._parent = parent
         self._rule = rule or HighlightRule(name="", pattern="", colors=["white"])
         self._is_new = is_new
@@ -387,19 +410,6 @@ class RuleEditDialog(Adw.Window):
 
         # Color entry rows
         self._color_rows: list[ColorEntryRow] = []
-
-        # Window configuration
-        self.set_title(_("New Rule") if is_new else _("Edit Rule"))
-        self.set_default_size(saved_width, saved_height)
-        self.set_modal(True)
-
-        # Get the actual parent window
-        if isinstance(parent, Gtk.Window):
-            self.set_transient_for(parent)
-        elif hasattr(parent, "get_root"):
-            root = parent.get_root()
-            if isinstance(root, Gtk.Window):
-                self.set_transient_for(root)
 
         # Connect close event for size persistence
         self.connect("close-request", self._on_close_request)
@@ -422,53 +432,21 @@ class RuleEditDialog(Adw.Window):
 
         return False  # Allow default close behavior
 
-    def present(self, parent=None):
-        """Present the dialog, optionally setting a parent window."""
-        if parent is not None:
-            if isinstance(parent, Gtk.Window):
-                self.set_transient_for(parent)
-            elif hasattr(parent, "get_root"):
-                root = parent.get_root()
-                if isinstance(root, Gtk.Window):
-                    self.set_transient_for(root)
-        super().present()
-
     def _setup_ui(self) -> None:
         """Setup the dialog UI components."""
-        # Main container with toolbar view
-        toolbar_view = Adw.ToolbarView()
-        self.set_content(toolbar_view)
-
-        # Header bar with window controls (minimize, maximize, close)
-        header = Adw.HeaderBar()
-        header.set_show_end_title_buttons(True)  # Show close/maximize buttons
-        header.set_show_start_title_buttons(False)
-
-        # Cancel button
-        cancel_btn = Gtk.Button(label=_("Cancel"))
-        cancel_btn.connect("clicked", lambda b: self.close())
-        header.pack_start(cancel_btn)
-
-        # Save button
+        # Save button in header bar (Cancel is already created by BaseDialog)
         self._save_btn = Gtk.Button(label=_("Save"))
         self._save_btn.add_css_class("suggested-action")
         self._save_btn.connect("clicked", self._on_save_clicked)
-        header.pack_end(self._save_btn)
+        self.add_header_button(self._save_btn, pack_start=False)
 
-        toolbar_view.add_top_bar(header)
-
-        # Scrolled content
-        scrolled = Gtk.ScrolledWindow()
-        scrolled.set_policy(Gtk.PolicyType.NEVER, Gtk.PolicyType.AUTOMATIC)
-        toolbar_view.set_content(scrolled)
-
-        # Content
+        # Content container
         content_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=24)
         content_box.set_margin_start(24)
         content_box.set_margin_end(24)
         content_box.set_margin_top(24)
         content_box.set_margin_bottom(24)
-        scrolled.set_child(content_box)
+        self.set_body_content(content_box)
 
         # Name entry
         name_group = Adw.PreferencesGroup()
@@ -509,11 +487,13 @@ class RuleEditDialog(Adw.Window):
         pattern_container.append(pattern_frame)
 
         # Regex help button
-        help_btn = Gtk.Button(icon_name="help-about-symbolic")
-        help_btn.add_css_class("flat")
-        help_btn.set_valign(Gtk.Align.CENTER)
-        get_tooltip_helper().add_tooltip(help_btn, _("Regex reference"))
-        help_btn.connect("clicked", self._on_regex_help_clicked)
+        help_btn = create_icon_button(
+            "help-about-symbolic",
+            tooltip=_("Regex reference"),
+            on_clicked=self._on_regex_help_clicked,
+            flat=True,
+            valign=Gtk.Align.CENTER,
+        )
         pattern_container.append(help_btn)
 
         pattern_action_row.add_suffix(pattern_container)
@@ -537,12 +517,14 @@ class RuleEditDialog(Adw.Window):
         # Add color button
         add_color_row = Adw.ActionRow(title=_("Add Color"))
         add_color_row.set_activatable(True)
-        add_btn = Gtk.Button(icon_name="list-add-symbolic")
-        add_btn.set_valign(Gtk.Align.CENTER)
-        add_btn.add_css_class("flat")
+        add_btn = create_icon_button(
+            "list-add-symbolic",
+            on_clicked=self._on_add_color_clicked,
+            flat=True,
+            valign=Gtk.Align.CENTER,
+        )
         add_color_row.add_suffix(add_btn)
         add_color_row.set_activatable_widget(add_btn)
-        add_btn.connect("clicked", self._on_add_color_clicked)
         self._colors_group.add(add_color_row)
         self._add_color_row = add_color_row
 
@@ -800,14 +782,14 @@ class RuleEditDialog(Adw.Window):
         self.close()
 
 
-class ContextRulesDialog(Adw.Window):
+class ContextRulesDialog(BaseDialog):
     """
     Dialog for editing rules of a specific command context.
 
     Opens when user clicks on a context row, providing a focused
     interface for managing context-specific highlighting rules.
 
-    Uses Adw.Window for full resize/maximize support with size persistence.
+    Inherits from BaseDialog for consistent UI and reduced boilerplate.
     """
 
     __gsignals__ = {
@@ -833,26 +815,27 @@ class ContextRulesDialog(Adw.Window):
         saved_width = settings.get(self._SIZE_KEY_WIDTH, self._DEFAULT_WIDTH)
         saved_height = settings.get(self._SIZE_KEY_HEIGHT, self._DEFAULT_HEIGHT)
 
-        super().__init__()
-        self.add_css_class("ashyterm-dialog")
-        self.logger = get_logger("ashyterm.ui.dialogs.context_rules")
+        # Determine parent window
+        parent_window = None
+        if isinstance(parent, Gtk.Window):
+            parent_window = parent
+        elif hasattr(parent, "get_root"):
+            root = parent.get_root()
+            if isinstance(root, Gtk.Window):
+                parent_window = root
+
+        super().__init__(
+            parent_window,
+            _("Command: {}").format(context_name),
+            auto_setup_toolbar=True,
+            default_width=saved_width,
+            default_height=saved_height,
+        )
+
         self._parent = parent
         self._context_name = context_name
         self._manager = get_highlight_manager()
         self._context_rule_rows: list[Adw.ActionRow] = []
-
-        # Window configuration
-        self.set_title(_("Command: {}").format(context_name))
-        self.set_default_size(saved_width, saved_height)
-        self.set_modal(True)
-
-        # Get the actual parent window
-        if isinstance(parent, Gtk.Window):
-            self.set_transient_for(parent)
-        elif hasattr(parent, "get_root"):
-            root = parent.get_root()
-            if isinstance(root, Gtk.Window):
-                self.set_transient_for(root)
 
         # Connect close event for size persistence
         self.connect("close-request", self._on_close_request)
@@ -875,38 +858,11 @@ class ContextRulesDialog(Adw.Window):
 
         return False  # Allow default close behavior
 
-    def present(self, parent=None):
-        """Present the dialog, optionally setting a parent window."""
-        if parent is not None:
-            if isinstance(parent, Gtk.Window):
-                self.set_transient_for(parent)
-            elif hasattr(parent, "get_root"):
-                root = parent.get_root()
-                if isinstance(root, Gtk.Window):
-                    self.set_transient_for(root)
-        super().present()
-
     def _setup_ui(self) -> None:
         """Setup the dialog UI components."""
-        # Main container with toolbar view
-        toolbar_view = Adw.ToolbarView()
-        self.set_content(toolbar_view)
-
-        # Header bar with window controls (close, maximize)
-        header = Adw.HeaderBar()
-        header.set_show_end_title_buttons(True)
-        header.set_show_start_title_buttons(False)
-
-        toolbar_view.add_top_bar(header)
-
-        # Scrolled content
-        scrolled = Gtk.ScrolledWindow()
-        scrolled.set_policy(Gtk.PolicyType.NEVER, Gtk.PolicyType.AUTOMATIC)
-        toolbar_view.set_content(scrolled)
-
         # Main content box
         content_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=0)
-        scrolled.set_child(content_box)
+        self.set_body_content(content_box)
 
         # Preferences page for consistent styling
         self._prefs_page = Adw.PreferencesPage()
@@ -935,12 +891,14 @@ class ContextRulesDialog(Adw.Window):
             title=_("Reset to System Default"),
         )
         reset_row.set_activatable(True)
-        reset_btn = Gtk.Button(icon_name="edit-undo-symbolic")
-        reset_btn.set_valign(Gtk.Align.CENTER)
-        reset_btn.add_css_class("flat")
+        reset_btn = create_icon_button(
+            "edit-undo-symbolic",
+            on_clicked=self._on_reset_clicked,
+            flat=True,
+            valign=Gtk.Align.CENTER,
+        )
         reset_row.add_suffix(reset_btn)
         reset_row.set_activatable_widget(reset_btn)
-        reset_btn.connect("clicked", self._on_reset_clicked)
         settings_group.add(reset_row)
 
         # Triggers group
@@ -958,12 +916,14 @@ class ContextRulesDialog(Adw.Window):
             title=_("➕ Add Trigger"),
         )
         add_trigger_row.set_activatable(True)
-        add_trigger_btn = Gtk.Button(icon_name="list-add-symbolic")
-        add_trigger_btn.set_valign(Gtk.Align.CENTER)
-        add_trigger_btn.add_css_class("suggested-action")
+        add_trigger_btn = create_icon_button(
+            "list-add-symbolic",
+            on_clicked=self._on_add_trigger_clicked,
+            valign=Gtk.Align.CENTER,
+            css_classes=["suggested-action"],
+        )
         add_trigger_row.add_suffix(add_trigger_btn)
         add_trigger_row.set_activatable_widget(add_trigger_btn)
-        add_trigger_btn.connect("clicked", self._on_add_trigger_clicked)
         self._triggers_group.add(add_trigger_row)
         self._add_trigger_row = add_trigger_row
 
@@ -981,12 +941,14 @@ class ContextRulesDialog(Adw.Window):
             title=_("➕ Add New Rule"),
         )
         add_row.set_activatable(True)
-        add_btn = Gtk.Button(icon_name="list-add-symbolic")
-        add_btn.set_valign(Gtk.Align.CENTER)
-        add_btn.add_css_class("suggested-action")
+        add_btn = create_icon_button(
+            "list-add-symbolic",
+            on_clicked=self._on_add_rule_clicked,
+            valign=Gtk.Align.CENTER,
+            css_classes=["suggested-action"],
+        )
         add_row.add_suffix(add_btn)
         add_row.set_activatable_widget(add_btn)
-        add_btn.connect("clicked", self._on_add_rule_clicked)
         self._rules_group.add(add_row)
 
     def _load_context_data(self) -> None:
@@ -1036,20 +998,26 @@ class ContextRulesDialog(Adw.Window):
         icon.set_opacity(0.6)
         row.add_prefix(icon)
 
-        # Edit button - always visible
-        edit_btn = Gtk.Button(icon_name="document-edit-symbolic")
-        edit_btn.add_css_class("flat")
-        edit_btn.set_valign(Gtk.Align.CENTER)
-        get_tooltip_helper().add_tooltip(edit_btn, _("Edit trigger"))
-        edit_btn.connect("clicked", self._on_edit_trigger_clicked, trigger)
+        # Edit button
+        edit_btn = create_icon_button(
+            "document-edit-symbolic",
+            tooltip=_("Edit trigger"),
+            on_clicked=self._on_edit_trigger_clicked,
+            callback_args=(trigger,),
+            flat=True,
+            valign=Gtk.Align.CENTER,
+        )
         row.add_suffix(edit_btn)
 
-        # Delete button - always visible but disabled if only one trigger
-        delete_btn = Gtk.Button(icon_name="user-trash-symbolic")
-        delete_btn.add_css_class("flat")
-        delete_btn.set_valign(Gtk.Align.CENTER)
-        get_tooltip_helper().add_tooltip(delete_btn, _("Remove trigger"))
-        delete_btn.connect("clicked", self._on_delete_trigger_clicked, trigger)
+        # Delete button
+        delete_btn = create_icon_button(
+            "user-trash-symbolic",
+            tooltip=_("Remove trigger"),
+            on_clicked=self._on_delete_trigger_clicked,
+            callback_args=(trigger,),
+            flat=True,
+            valign=Gtk.Align.CENTER,
+        )
 
         context = self._manager.get_context(self._context_name)
         if context and len(context.triggers) <= 1:
@@ -1101,27 +1069,21 @@ class ContextRulesDialog(Adw.Window):
         if not context or len(context.triggers) <= 1:
             return
 
-        dialog = Adw.AlertDialog(
-            heading=_("Remove Trigger?"),
-            body=_('Remove "{}" from the triggers list?').format(trigger),
-        )
-        dialog.add_response("cancel", _("Cancel"))
-        dialog.add_response("remove", _("Remove"))
-        dialog.set_response_appearance("remove", Adw.ResponseAppearance.DESTRUCTIVE)
-        dialog.connect("response", self._on_delete_trigger_confirmed, trigger)
-        dialog.present(self)
-
-    def _on_delete_trigger_confirmed(
-        self, dialog: Adw.AlertDialog, response: str, trigger: str
-    ) -> None:
-        """Handle delete trigger confirmation."""
-        if response == "remove":
-            context = self._manager.get_context(self._context_name)
-            if context and trigger in context.triggers:
-                context.triggers.remove(trigger)
-                self._manager.save_context_to_user(context)
+        def on_confirm() -> None:
+            ctx = self._manager.get_context(self._context_name)
+            if ctx and trigger in ctx.triggers:
+                ctx.triggers.remove(trigger)
+                self._manager.save_context_to_user(ctx)
                 self._populate_triggers()
                 self.emit("context-updated")
+
+        show_delete_confirmation_dialog(
+            parent=self,
+            heading=_("Remove Trigger?"),
+            body=_('Remove "{}" from the triggers list?').format(trigger),
+            on_confirm=on_confirm,
+            delete_label=_("Remove"),
+        )
 
     def _populate_rules(self) -> None:
         """Populate the rules list."""
@@ -1192,20 +1154,26 @@ class ContextRulesDialog(Adw.Window):
         color_box.set_valign(Gtk.Align.CENTER)
         row.add_prefix(color_box)
 
-        # Edit button (icon)
-        edit_btn = Gtk.Button(icon_name="document-edit-symbolic")
-        edit_btn.add_css_class("flat")
-        edit_btn.set_valign(Gtk.Align.CENTER)
-        get_tooltip_helper().add_tooltip(edit_btn, _("Edit rule"))
-        edit_btn.connect("clicked", self._on_edit_rule, index)
+        # Edit button
+        edit_btn = create_icon_button(
+            "document-edit-symbolic",
+            tooltip=_("Edit rule"),
+            on_clicked=self._on_edit_rule,
+            callback_args=(index,),
+            flat=True,
+            valign=Gtk.Align.CENTER,
+        )
         row.add_suffix(edit_btn)
 
-        # Delete button (icon)
-        delete_btn = Gtk.Button(icon_name="user-trash-symbolic")
-        delete_btn.add_css_class("flat")
-        delete_btn.set_valign(Gtk.Align.CENTER)
-        get_tooltip_helper().add_tooltip(delete_btn, _("Delete rule"))
-        delete_btn.connect("clicked", self._on_delete_rule, index)
+        # Delete button
+        delete_btn = create_icon_button(
+            "user-trash-symbolic",
+            tooltip=_("Delete rule"),
+            on_clicked=self._on_delete_rule,
+            callback_args=(index,),
+            flat=True,
+            valign=Gtk.Align.CENTER,
+        )
         row.add_suffix(delete_btn)
 
         # Enable switch (rightmost)
@@ -1253,24 +1221,21 @@ class ContextRulesDialog(Adw.Window):
 
     def _on_reset_clicked(self, button: Gtk.Button) -> None:
         """Handle reset button click."""
-        dialog = Adw.AlertDialog(
+
+        def on_confirm() -> None:
+            if self._manager.delete_user_context(self._context_name):
+                self._load_context_data()
+                self.emit("context-updated")
+
+        show_delete_confirmation_dialog(
+            parent=self,
             heading=_("Reset to System Default?"),
             body=_(
                 'This will remove your customizations for "{}" and revert to system rules.'
             ).format(self._context_name),
+            on_confirm=on_confirm,
+            delete_label=_("Reset"),
         )
-        dialog.add_response("cancel", _("Cancel"))
-        dialog.add_response("reset", _("Reset"))
-        dialog.set_response_appearance("reset", Adw.ResponseAppearance.DESTRUCTIVE)
-        dialog.connect("response", self._on_reset_confirmed)
-        dialog.present(self)
-
-    def _on_reset_confirmed(self, dialog: Adw.AlertDialog, response: str) -> None:
-        """Handle reset confirmation."""
-        if response == "reset":
-            if self._manager.delete_user_context(self._context_name):
-                self._load_context_data()
-                self.emit("context-updated")
 
     def _on_add_rule_clicked(self, button: Gtk.Button) -> None:
         """Handle add rule button click."""
@@ -1350,27 +1315,21 @@ class ContextRulesDialog(Adw.Window):
             return
 
         rule = context.rules[index]
-        dialog = Adw.AlertDialog(
-            heading=_("Delete Rule?"),
-            body=_('Are you sure you want to delete "{}"?').format(rule.name),
-        )
-        dialog.add_response("cancel", _("Cancel"))
-        dialog.add_response("delete", _("Delete"))
-        dialog.set_response_appearance("delete", Adw.ResponseAppearance.DESTRUCTIVE)
-        dialog.connect("response", self._on_delete_confirmed, index, rule.name)
-        dialog.present(self)
 
-    def _on_delete_confirmed(
-        self, dialog: Adw.AlertDialog, response: str, index: int, rule_name: str
-    ) -> None:
-        """Handle delete confirmation."""
-        if response == "delete":
+        def on_confirm() -> None:
             self._manager.remove_context_rule(self._context_name, index)
-            context = self._manager.get_context(self._context_name)
-            if context:
-                self._manager.save_context_to_user(context)
+            ctx = self._manager.get_context(self._context_name)
+            if ctx:
+                self._manager.save_context_to_user(ctx)
             self._populate_rules()
             self.emit("context-updated")
+
+        show_delete_confirmation_dialog(
+            parent=self,
+            heading=_("Delete Rule?"),
+            body=_('Are you sure you want to delete "{}"?').format(rule.name),
+            on_confirm=on_confirm,
+        )
 
 
 class HighlightDialog(Adw.PreferencesWindow):
@@ -1534,10 +1493,12 @@ class HighlightDialog(Adw.PreferencesWindow):
             subtitle=_("Create a custom color scheme based on existing"),
         )
         new_row.set_activatable(True)
-        new_btn = Gtk.Button(icon_name="list-add-symbolic")
-        new_btn.set_valign(Gtk.Align.CENTER)
-        new_btn.add_css_class("flat")
-        new_btn.connect("clicked", self._on_new_scheme_clicked)
+        new_btn = create_icon_button(
+            "list-add-symbolic",
+            on_clicked=self._on_new_scheme_clicked,
+            flat=True,
+            valign=Gtk.Align.CENTER,
+        )
         new_row.add_suffix(new_btn)
         new_row.set_activatable_widget(new_btn)
         actions_group.add(new_row)
@@ -1623,24 +1584,26 @@ class HighlightDialog(Adw.PreferencesWindow):
         row.add_prefix(preview)
 
         # Edit button - available for ALL schemes (built-in creates a copy)
-        edit_btn = Gtk.Button(icon_name="document-edit-symbolic")
-        edit_btn.set_valign(Gtk.Align.CENTER)
-        edit_btn.add_css_class("flat")
-        if is_custom:
-            edit_btn.set_tooltip_text(_("Edit scheme"))
-        else:
-            edit_btn.set_tooltip_text(_("Customize (creates a copy)"))
-        edit_btn.connect("clicked", lambda b, r=row: self._on_edit_scheme_clicked(r))
+        edit_tooltip = (
+            _("Edit scheme") if is_custom else _("Customize (creates a copy)")
+        )
+        edit_btn = create_icon_button(
+            "document-edit-symbolic",
+            tooltip=edit_tooltip,
+            on_clicked=lambda b, r=row: self._on_edit_scheme_clicked(r),
+            flat=True,
+            valign=Gtk.Align.CENTER,
+        )
         row.add_suffix(edit_btn)
 
         # Delete button only for custom schemes
         if is_custom:
-            delete_btn = Gtk.Button(icon_name="user-trash-symbolic")
-            delete_btn.set_valign(Gtk.Align.CENTER)
-            delete_btn.add_css_class("flat")
-            delete_btn.set_tooltip_text(_("Delete scheme"))
-            delete_btn.connect(
-                "clicked", lambda b, r=row: self._on_delete_scheme_clicked(r)
+            delete_btn = create_icon_button(
+                "user-trash-symbolic",
+                tooltip=_("Delete scheme"),
+                on_clicked=lambda b, r=row: self._on_delete_scheme_clicked(r),
+                flat=True,
+                valign=Gtk.Align.CENTER,
             )
             row.add_suffix(delete_btn)
 
@@ -1709,19 +1672,9 @@ class HighlightDialog(Adw.PreferencesWindow):
             else settings.get_all_schemes()["dark"]
         )
 
-        all_names = [s["name"] for s in settings.get_all_schemes().values()]
+        all_names = set(s["name"] for s in settings.get_all_schemes().values())
 
-        def generate_unique_name(base_name: str, existing: set) -> str:
-            if base_name not in existing:
-                return base_name
-            counter = 1
-            while f"{base_name} ({counter})" in existing:
-                counter += 1
-            return f"{base_name} ({counter})"
-
-        new_name = generate_unique_name(
-            f"Copy of {template_scheme['name']}", set(all_names)
-        )
+        new_name = generate_unique_name(f"Copy of {template_scheme['name']}", all_names)
 
         new_scheme_data = template_scheme.copy()
         new_scheme_data["name"] = new_name
@@ -1744,19 +1697,11 @@ class HighlightDialog(Adw.PreferencesWindow):
 
         if is_builtin:
             # Generate unique name for the copy
-            all_names = [s["name"] for s in settings.get_all_schemes().values()]
-
-            def generate_unique_name(base_name: str, existing: set) -> str:
-                if base_name not in existing:
-                    return base_name
-                counter = 1
-                while f"{base_name} ({counter})" in existing:
-                    counter += 1
-                return f"{base_name} ({counter})"
+            all_names = set(s["name"] for s in settings.get_all_schemes().values())
 
             new_name = generate_unique_name(
                 f"{row.scheme_data.get('name', row.scheme_key)} (Custom)",
-                set(all_names),
+                all_names,
             )
             scheme_data = row.scheme_data.copy()
             scheme_data["name"] = new_name
@@ -1772,42 +1717,32 @@ class HighlightDialog(Adw.PreferencesWindow):
 
     def _on_delete_scheme_clicked(self, row) -> None:
         """Delete a custom color scheme."""
-        dialog = Adw.AlertDialog(
+        scheme_key = row.scheme_key
+        scheme_name = row.scheme_data.get("name", scheme_key)
+
+        def on_confirm() -> None:
+            settings = get_settings_manager()
+            if scheme_key in settings.custom_schemes:
+                del settings.custom_schemes[scheme_key]
+                settings.save_custom_schemes()
+
+                # If deleted scheme was selected, switch to first scheme
+                if settings.get_color_scheme_name() == scheme_key:
+                    settings.set("color_scheme", 0)
+                    if self._parent_window and hasattr(
+                        self._parent_window, "terminal_manager"
+                    ):
+                        self._parent_window.terminal_manager.apply_settings_to_all_terminals()
+
+                self._populate_color_schemes()
+                self.add_toast(Adw.Toast(title=_("Scheme deleted")))
+
+        show_delete_confirmation_dialog(
+            parent=self,
             heading=_("Delete Scheme?"),
-            body=_("Are you sure you want to delete '{}'?").format(
-                row.scheme_data.get("name", row.scheme_key)
-            ),
+            body=_("Are you sure you want to delete '{}'?").format(scheme_name),
+            on_confirm=on_confirm,
         )
-        dialog.add_response("cancel", _("Cancel"))
-        dialog.add_response("delete", _("Delete"))
-        dialog.set_response_appearance("delete", Adw.ResponseAppearance.DESTRUCTIVE)
-        dialog.set_default_response("cancel")
-        dialog.connect(
-            "response",
-            lambda d, r: self._handle_delete_scheme_response(r, row.scheme_key),
-        )
-        dialog.present(self)
-
-    def _handle_delete_scheme_response(self, response: str, scheme_key: str) -> None:
-        """Handle delete scheme confirmation."""
-        if response != "delete":
-            return
-
-        settings = get_settings_manager()
-        if scheme_key in settings.custom_schemes:
-            del settings.custom_schemes[scheme_key]
-            settings.save_custom_schemes()
-
-            # If deleted scheme was selected, switch to first scheme
-            if settings.get_color_scheme_name() == scheme_key:
-                settings.set("color_scheme", 0)
-                if self._parent_window and hasattr(
-                    self._parent_window, "terminal_manager"
-                ):
-                    self._parent_window.terminal_manager.apply_settings_to_all_terminals()
-
-            self._populate_color_schemes()
-            self.add_toast(Adw.Toast(title=_("Scheme deleted")))
 
     def _on_editor_save(
         self, editor, original_key: str, new_key: str, scheme_data: dict
@@ -1992,8 +1927,8 @@ class HighlightDialog(Adw.PreferencesWindow):
         dark_only, light_only = self._get_theme_categories()
 
         # Dark and light theme selectors
-        dark_themes = self._add_cat_dark_theme_row(settings, all_themes, dark_only, light_only)
-        light_themes = self._add_cat_light_theme_row(settings, all_themes, dark_only, light_only)
+        self._add_cat_dark_theme_row(settings, all_themes, dark_only, light_only)
+        self._add_cat_light_theme_row(settings, all_themes, dark_only, light_only)
 
         # Manual theme selector
         self._add_cat_manual_theme_row(settings, all_themes)
@@ -2007,43 +1942,88 @@ class HighlightDialog(Adw.PreferencesWindow):
 
     def _add_cat_theme_mode_row(self, settings, current_mode: str) -> None:
         """Add the theme mode selector row."""
-        self._cat_theme_mode_row = Adw.ComboRow(
-            title=_("Theme Mode"),
+        self._cat_theme_mode_row = self._create_theme_mode_combo_row(
             subtitle=_("Auto: adapts to background color. Manual: single theme."),
-        )
-        mode_model = Gtk.StringList()
-        mode_model.append(_("Auto"))
-        mode_model.append(_("Manual"))
-        self._cat_theme_mode_row.set_model(mode_model)
-        self._cat_theme_mode_row.set_selected(0 if current_mode == "auto" else 1)
-        self._cat_theme_mode_row.connect(
-            "notify::selected", self._on_cat_theme_mode_changed
+            current_mode=current_mode,
+            on_changed_callback=self._on_cat_theme_mode_changed,
         )
         self._cat_group.add(self._cat_theme_mode_row)
 
     def _get_theme_categories(self) -> tuple:
         """Get lists of dark-only and light-only Pygments themes."""
         dark_only_themes = [
-            "a11y-dark", "a11y-high-contrast-dark", "blinds-dark", "coffee",
-            "dracula", "fruity", "github-dark", "github-dark-colorblind",
-            "github-dark-high-contrast", "gotthard-dark", "greative", "gruvbox-dark",
-            "inkpot", "lightbulb", "material", "monokai", "native", "nord",
-            "nord-darker", "one-dark", "paraiso-dark", "pitaya-smoothie", "rrt",
-            "solarized-dark", "stata-dark", "vim", "zenburn",
+            "a11y-dark",
+            "a11y-high-contrast-dark",
+            "blinds-dark",
+            "coffee",
+            "dracula",
+            "fruity",
+            "github-dark",
+            "github-dark-colorblind",
+            "github-dark-high-contrast",
+            "gotthard-dark",
+            "greative",
+            "gruvbox-dark",
+            "inkpot",
+            "lightbulb",
+            "material",
+            "monokai",
+            "native",
+            "nord",
+            "nord-darker",
+            "one-dark",
+            "paraiso-dark",
+            "pitaya-smoothie",
+            "rrt",
+            "solarized-dark",
+            "stata-dark",
+            "vim",
+            "zenburn",
         ]
         light_only_themes = [
-            "a11y-high-contrast-light", "a11y-light", "abap", "algol", "algol_nu",
-            "arduino", "autumn", "blinds-light", "borland", "bw", "colorful",
-            "default", "emacs", "friendly", "friendly_grayscale", "github-light",
-            "github-light-colorblind", "github-light-high-contrast", "gotthard-light",
-            "gruvbox-light", "igor", "lilypond", "lovelace", "manni", "murphy",
-            "paraiso-light", "pastie", "perldoc", "rainbow_dash", "sas",
-            "solarized-light", "staroffice", "stata-light", "tango", "trac",
-            "vs", "xcode",
+            "a11y-high-contrast-light",
+            "a11y-light",
+            "abap",
+            "algol",
+            "algol_nu",
+            "arduino",
+            "autumn",
+            "blinds-light",
+            "borland",
+            "bw",
+            "colorful",
+            "default",
+            "emacs",
+            "friendly",
+            "friendly_grayscale",
+            "github-light",
+            "github-light-colorblind",
+            "github-light-high-contrast",
+            "gotthard-light",
+            "gruvbox-light",
+            "igor",
+            "lilypond",
+            "lovelace",
+            "manni",
+            "murphy",
+            "paraiso-light",
+            "pastie",
+            "perldoc",
+            "rainbow_dash",
+            "sas",
+            "solarized-light",
+            "staroffice",
+            "stata-light",
+            "tango",
+            "trac",
+            "vs",
+            "xcode",
         ]
         return dark_only_themes, light_only_themes
 
-    def _add_cat_dark_theme_row(self, settings, all_themes, dark_only, light_only) -> list:
+    def _add_cat_dark_theme_row(
+        self, settings, all_themes, dark_only, light_only
+    ) -> list:
         """Add dark theme selector row."""
         self._cat_dark_theme_row = Adw.ComboRow(
             title=_("Dark Background Theme"),
@@ -2051,7 +2031,9 @@ class HighlightDialog(Adw.PreferencesWindow):
         )
         dark_themes_model = Gtk.StringList()
         dark_themes = [t for t in dark_only if t in all_themes]
-        dark_themes.extend(t for t in all_themes if t not in dark_themes and t not in light_only)
+        dark_themes.extend(
+            t for t in all_themes if t not in dark_themes and t not in light_only
+        )
         for theme in dark_themes:
             dark_themes_model.append(theme)
         self._cat_dark_theme_row.set_model(dark_themes_model)
@@ -2062,11 +2044,15 @@ class HighlightDialog(Adw.PreferencesWindow):
             self._cat_dark_theme_row.set_selected(dark_themes.index(current_dark))
         except ValueError:
             self._cat_dark_theme_row.set_selected(0)
-        self._cat_dark_theme_row.connect("notify::selected", self._on_cat_dark_theme_changed)
+        self._cat_dark_theme_row.connect(
+            "notify::selected", self._on_cat_dark_theme_changed
+        )
         self._cat_group.add(self._cat_dark_theme_row)
         return dark_themes
 
-    def _add_cat_light_theme_row(self, settings, all_themes, dark_only, light_only) -> list:
+    def _add_cat_light_theme_row(
+        self, settings, all_themes, dark_only, light_only
+    ) -> list:
         """Add light theme selector row."""
         self._cat_light_theme_row = Adw.ComboRow(
             title=_("Light Background Theme"),
@@ -2074,7 +2060,9 @@ class HighlightDialog(Adw.PreferencesWindow):
         )
         light_themes_model = Gtk.StringList()
         light_themes = [t for t in light_only if t in all_themes]
-        light_themes.extend(t for t in all_themes if t not in light_themes and t not in dark_only)
+        light_themes.extend(
+            t for t in all_themes if t not in light_themes and t not in dark_only
+        )
         for theme in light_themes:
             light_themes_model.append(theme)
         self._cat_light_theme_row.set_model(light_themes_model)
@@ -2085,7 +2073,9 @@ class HighlightDialog(Adw.PreferencesWindow):
             self._cat_light_theme_row.set_selected(light_themes.index(current_light))
         except ValueError:
             self._cat_light_theme_row.set_selected(0)
-        self._cat_light_theme_row.connect("notify::selected", self._on_cat_light_theme_changed)
+        self._cat_light_theme_row.connect(
+            "notify::selected", self._on_cat_light_theme_changed
+        )
         self._cat_group.add(self._cat_light_theme_row)
         return light_themes
 
@@ -2205,19 +2195,11 @@ class HighlightDialog(Adw.PreferencesWindow):
 
     def _add_shell_input_mode_row(self, settings) -> str:
         """Add the theme mode selector row (auto/manual)."""
-        self._theme_mode_row = Adw.ComboRow(
-            title=_("Theme Mode"),
-            subtitle=_("Auto detects background, Manual uses selected theme"),
-        )
-        mode_model = Gtk.StringList()
-        mode_model.append(_("Auto"))
-        mode_model.append(_("Manual"))
-        self._theme_mode_row.set_model(mode_model)
-
         current_mode = settings.get("shell_input_theme_mode", "auto")
-        self._theme_mode_row.set_selected(0 if current_mode == "auto" else 1)
-        self._theme_mode_row.connect(
-            "notify::selected", self._on_shell_input_mode_changed
+        self._theme_mode_row = self._create_theme_mode_combo_row(
+            subtitle=_("Auto detects background, Manual uses selected theme"),
+            current_mode=current_mode,
+            on_changed_callback=self._on_shell_input_mode_changed,
         )
         self._shell_input_group.add(self._theme_mode_row)
         return current_mode
@@ -2228,7 +2210,7 @@ class HighlightDialog(Adw.PreferencesWindow):
 
         all_themes = sorted(list(get_all_styles()))
 
-        dark_only, light_only = _get_theme_categories()
+        dark_only, light_only = self._get_theme_categories()
 
         # Build dark themes list
         dark_themes = [t for t in dark_only if t in all_themes]
@@ -2244,50 +2226,90 @@ class HighlightDialog(Adw.PreferencesWindow):
 
         return dark_themes, light_themes
 
-    def _add_shell_input_dark_theme_row(
-        self, settings, dark_themes: list[str]
-    ) -> None:
+    def _create_theme_mode_combo_row(
+        self,
+        subtitle: str,
+        current_mode: str,
+        on_changed_callback: Callable,
+    ) -> Adw.ComboRow:
+        """Create a theme mode (Auto/Manual) selector ComboRow.
+
+        Args:
+            subtitle: Row subtitle describing the mode behavior
+            current_mode: Current mode ("auto" or "manual")
+            on_changed_callback: Callback for selection changes
+
+        Returns:
+            Configured ComboRow for theme mode selection
+        """
+        row = Adw.ComboRow(title=_("Theme Mode"), subtitle=subtitle)
+        model = Gtk.StringList()
+        model.append(_("Auto"))
+        model.append(_("Manual"))
+        row.set_model(model)
+        row.set_selected(0 if current_mode == "auto" else 1)
+        row.connect("notify::selected", on_changed_callback)
+        return row
+
+    def _create_theme_combo_row(
+        self,
+        title: str,
+        subtitle: str,
+        themes: list[str],
+        current_theme: str,
+        on_changed_callback: Callable,
+    ) -> tuple[Adw.ComboRow, list[str]]:
+        """Create a theme selector ComboRow.
+
+        Args:
+            title: Row title
+            subtitle: Row subtitle
+            themes: List of theme names
+            current_theme: Currently selected theme name
+            on_changed_callback: Callback for selection changes
+
+        Returns:
+            Tuple of (ComboRow, theme_names_list)
+        """
+        row = Adw.ComboRow(title=title, subtitle=subtitle)
+        model = Gtk.StringList()
+        for theme in themes:
+            model.append(theme)
+        row.set_model(model)
+
+        try:
+            idx = themes.index(current_theme)
+            row.set_selected(idx)
+        except ValueError:
+            row.set_selected(0)
+
+        row.connect("notify::selected", on_changed_callback)
+        return row, themes
+
+    def _add_shell_input_dark_theme_row(self, settings, dark_themes: list[str]) -> None:
         """Add the dark background theme selector row."""
-        self._dark_theme_row = Adw.ComboRow(
+        current_dark = settings.get("shell_input_dark_theme", "monokai")
+        self._dark_theme_row, self._dark_theme_names = self._create_theme_combo_row(
             title=_("Dark Background Theme"),
             subtitle=_("Theme used when background is dark"),
+            themes=dark_themes,
+            current_theme=current_dark,
+            on_changed_callback=self._on_dark_theme_changed,
         )
-        model = Gtk.StringList()
-        for theme in dark_themes:
-            model.append(theme)
-        self._dark_theme_row.set_model(model)
-        self._dark_theme_names = dark_themes
-
-        current_dark = settings.get("shell_input_dark_theme", "monokai")
-        try:
-            dark_idx = dark_themes.index(current_dark)
-            self._dark_theme_row.set_selected(dark_idx)
-        except ValueError:
-            self._dark_theme_row.set_selected(0)
-        self._dark_theme_row.connect("notify::selected", self._on_dark_theme_changed)
         self._shell_input_group.add(self._dark_theme_row)
 
     def _add_shell_input_light_theme_row(
         self, settings, dark_themes: list[str], light_themes: list[str]
     ) -> None:
         """Add the light background theme selector row."""
-        self._light_theme_row = Adw.ComboRow(
+        current_light = settings.get("shell_input_light_theme", "solarized-light")
+        self._light_theme_row, self._light_theme_names = self._create_theme_combo_row(
             title=_("Light Background Theme"),
             subtitle=_("Theme used when background is light"),
+            themes=light_themes,
+            current_theme=current_light,
+            on_changed_callback=self._on_light_theme_changed,
         )
-        model = Gtk.StringList()
-        for theme in light_themes:
-            model.append(theme)
-        self._light_theme_row.set_model(model)
-        self._light_theme_names = light_themes
-
-        current_light = settings.get("shell_input_light_theme", "solarized-light")
-        try:
-            light_idx = light_themes.index(current_light)
-            self._light_theme_row.set_selected(light_idx)
-        except ValueError:
-            self._light_theme_row.set_selected(0)
-        self._light_theme_row.connect("notify::selected", self._on_light_theme_changed)
         self._shell_input_group.add(self._light_theme_row)
 
     def _add_shell_input_manual_theme_row(self, settings) -> None:
@@ -2295,26 +2317,16 @@ class HighlightDialog(Adw.PreferencesWindow):
         from pygments.styles import get_all_styles
 
         all_themes = sorted(list(get_all_styles()))
-
-        self._shell_input_theme_row = Adw.ComboRow(
-            title=_("Manual Theme"),
-            subtitle=_("Single theme to use in manual mode"),
-        )
-        model = Gtk.StringList()
-        for theme in all_themes:
-            model.append(theme)
-        self._shell_input_theme_row.set_model(model)
-        self._shell_input_theme_names = all_themes
-
         current_theme = settings.get("shell_input_pygments_theme", "monokai").lower()
-        try:
-            theme_index = all_themes.index(current_theme)
-            self._shell_input_theme_row.set_selected(theme_index)
-        except ValueError:
-            self._shell_input_theme_row.set_selected(0)
 
-        self._shell_input_theme_row.connect(
-            "notify::selected", self._on_shell_input_theme_changed
+        self._shell_input_theme_row, self._shell_input_theme_names = (
+            self._create_theme_combo_row(
+                title=_("Manual Theme"),
+                subtitle=_("Single theme to use in manual mode"),
+                themes=all_themes,
+                current_theme=current_theme,
+                on_changed_callback=self._on_shell_input_theme_changed,
+            )
         )
         self._shell_input_group.add(self._shell_input_theme_row)
 
@@ -2489,12 +2501,14 @@ class HighlightDialog(Adw.PreferencesWindow):
             title=_("Restore Defaults"),
         )
         restore_row.set_activatable(True)
-        restore_btn = Gtk.Button(icon_name="view-refresh-symbolic")
-        restore_btn.set_valign(Gtk.Align.CENTER)
-        restore_btn.add_css_class("flat")
+        restore_btn = create_icon_button(
+            "view-refresh-symbolic",
+            on_clicked=self._on_restore_ignored_defaults_clicked,
+            flat=True,
+            valign=Gtk.Align.CENTER,
+        )
         restore_row.add_suffix(restore_btn)
         restore_row.set_activatable_widget(restore_btn)
-        restore_btn.connect("clicked", self._on_restore_ignored_defaults_clicked)
         self._ignored_expander.add_row(restore_row)
 
         # Add command button (inside expander) - prominent style
@@ -2502,12 +2516,14 @@ class HighlightDialog(Adw.PreferencesWindow):
             title=_("➕ Add Ignored Command"),
         )
         add_cmd_row.set_activatable(True)
-        add_btn = Gtk.Button(icon_name="list-add-symbolic")
-        add_btn.set_valign(Gtk.Align.CENTER)
-        add_btn.add_css_class("suggested-action")
+        add_btn = create_icon_button(
+            "list-add-symbolic",
+            on_clicked=self._on_add_ignored_command_clicked,
+            valign=Gtk.Align.CENTER,
+            css_classes=["suggested-action"],
+        )
         add_cmd_row.add_suffix(add_btn)
         add_cmd_row.set_activatable_widget(add_btn)
-        add_btn.connect("clicked", self._on_add_ignored_command_clicked)
         self._add_ignored_cmd_row = add_cmd_row
         self._ignored_expander.add_row(add_cmd_row)
 
@@ -2543,15 +2559,15 @@ class HighlightDialog(Adw.PreferencesWindow):
     def _create_ignored_command_row(self, cmd: str) -> Adw.ActionRow:
         """Create a row for an ignored command with remove button."""
         row = Adw.ActionRow(title=cmd)
-
-        # Remove button
-        remove_btn = Gtk.Button(icon_name="user-trash-symbolic")
-        remove_btn.set_valign(Gtk.Align.CENTER)
-        remove_btn.add_css_class("flat")
-        get_tooltip_helper().add_tooltip(remove_btn, _("Remove from ignored list"))
-        remove_btn.connect("clicked", self._on_remove_ignored_command, cmd)
+        remove_btn = create_icon_button(
+            "user-trash-symbolic",
+            tooltip=_("Remove from ignored list"),
+            on_clicked=self._on_remove_ignored_command,
+            callback_args=(cmd,),
+            flat=True,
+            valign=Gtk.Align.CENTER,
+        )
         row.add_suffix(remove_btn)
-
         return row
 
     def _on_add_ignored_command_clicked(self, button: Gtk.Button) -> None:
@@ -2581,25 +2597,8 @@ class HighlightDialog(Adw.PreferencesWindow):
 
     def _on_remove_ignored_command(self, button: Gtk.Button, command: str) -> None:
         """Handle remove ignored command button click - show confirmation."""
-        dialog = Adw.MessageDialog(
-            transient_for=self,
-            heading=_("Remove Ignored Command?"),
-            body=_(
-                'Remove "{}" from the ignored commands list? Highlighting will be applied to this command\'s output.'
-            ).format(command),
-        )
-        dialog.add_response("cancel", _("Cancel"))
-        dialog.add_response("remove", _("Remove"))
-        dialog.set_response_appearance("remove", Adw.ResponseAppearance.DESTRUCTIVE)
-        dialog.connect("response", self._on_remove_ignored_confirmed, command)
-        dialog.present()
 
-    def _on_remove_ignored_confirmed(
-        self, dialog: Adw.MessageDialog, response: str, command: str
-    ) -> None:
-        """Handle remove ignored command confirmation."""
-        dialog.close()
-        if response == "remove":
+        def on_confirm() -> None:
             settings = get_settings_manager()
             ignored_commands = settings.get("ignored_highlight_commands", [])
 
@@ -2618,27 +2617,20 @@ class HighlightDialog(Adw.PreferencesWindow):
                     Adw.Toast(title=_("Command removed: {}").format(command))
                 )
 
+        show_delete_confirmation_dialog(
+            parent=self,
+            heading=_("Remove Ignored Command?"),
+            body=_(
+                'Remove "{}" from the ignored commands list? Highlighting will be applied to this command\'s output.'
+            ).format(command),
+            on_confirm=on_confirm,
+            delete_label=_("Remove"),
+        )
+
     def _on_restore_ignored_defaults_clicked(self, button: Gtk.Button) -> None:
         """Handle restore defaults button click for ignored commands."""
-        dialog = Adw.MessageDialog(
-            transient_for=self,
-            heading=_("Restore Default Ignored Commands?"),
-            body=_(
-                "This will replace your current ignored commands list with the system defaults. Custom additions will be lost."
-            ),
-        )
-        dialog.add_response("cancel", _("Cancel"))
-        dialog.add_response("restore", _("Restore Defaults"))
-        dialog.set_response_appearance("restore", Adw.ResponseAppearance.DESTRUCTIVE)
-        dialog.connect("response", self._on_restore_ignored_defaults_confirmed)
-        dialog.present()
 
-    def _on_restore_ignored_defaults_confirmed(
-        self, dialog: Adw.MessageDialog, response: str
-    ) -> None:
-        """Handle restore defaults confirmation."""
-        dialog.close()
-        if response == "restore":
+        def on_confirm() -> None:
             from ...settings.config import DefaultSettings
 
             default_ignored = DefaultSettings.get_defaults().get(
@@ -2656,6 +2648,16 @@ class HighlightDialog(Adw.PreferencesWindow):
             self._populate_ignored_commands()
             self.emit("settings-changed")
             self.add_toast(Adw.Toast(title=_("Restored default ignored commands")))
+
+        show_delete_confirmation_dialog(
+            parent=self,
+            heading=_("Restore Default Ignored Commands?"),
+            body=_(
+                "This will replace your current ignored commands list with the system defaults. Custom additions will be lost."
+            ),
+            on_confirm=on_confirm,
+            delete_label=_("Restore Defaults"),
+        )
 
     def _setup_context_settings_group(self, page: Adw.PreferencesPage) -> None:
         """Setup the context-aware settings group."""
@@ -2687,12 +2689,14 @@ class HighlightDialog(Adw.PreferencesWindow):
         )
         add_context_row.set_activatable(True)
         add_context_row.add_css_class("suggested-action")
-        add_btn = Gtk.Button(icon_name="list-add-symbolic")
-        add_btn.set_valign(Gtk.Align.CENTER)
-        add_btn.add_css_class("suggested-action")
+        add_btn = create_icon_button(
+            "list-add-symbolic",
+            on_clicked=self._on_add_context_clicked,
+            valign=Gtk.Align.CENTER,
+            css_classes=["suggested-action"],
+        )
         add_context_row.add_suffix(add_btn)
         add_context_row.set_activatable_widget(add_btn)
-        add_btn.connect("clicked", self._on_add_context_clicked)
         self._add_context_row = add_context_row
         self._context_selector_group.add(add_context_row)
 
@@ -2720,12 +2724,14 @@ class HighlightDialog(Adw.PreferencesWindow):
             title=_("Reset All Commands"),
         )
         reset_contexts_row.set_activatable(True)
-        reset_contexts_btn = Gtk.Button(icon_name="view-refresh-symbolic")
-        reset_contexts_btn.set_valign(Gtk.Align.CENTER)
-        reset_contexts_btn.add_css_class("flat")
+        reset_contexts_btn = create_icon_button(
+            "view-refresh-symbolic",
+            on_clicked=self._on_reset_all_contexts_clicked,
+            flat=True,
+            valign=Gtk.Align.CENTER,
+        )
         reset_contexts_row.add_suffix(reset_contexts_btn)
         reset_contexts_row.set_activatable_widget(reset_contexts_btn)
-        reset_contexts_btn.connect("clicked", self._on_reset_all_contexts_clicked)
         self._context_selector_group.add(reset_contexts_row)
 
         # Scrolled container for context list
@@ -2778,12 +2784,14 @@ class HighlightDialog(Adw.PreferencesWindow):
             subtitle=_("Remove user customization and revert to system rules"),
         )
         self._reset_context_row.set_activatable(True)
-        reset_btn = Gtk.Button(icon_name="edit-undo-symbolic")
-        reset_btn.set_valign(Gtk.Align.CENTER)
-        reset_btn.add_css_class("flat")
+        reset_btn = create_icon_button(
+            "edit-undo-symbolic",
+            on_clicked=self._on_reset_context_clicked,
+            flat=True,
+            valign=Gtk.Align.CENTER,
+        )
         self._reset_context_row.add_suffix(reset_btn)
         self._reset_context_row.set_activatable_widget(reset_btn)
-        reset_btn.connect("clicked", self._on_reset_context_clicked)
         self._reset_context_row.set_sensitive(False)
         self._context_rules_group.add(self._reset_context_row)
 
@@ -2802,12 +2810,14 @@ class HighlightDialog(Adw.PreferencesWindow):
             subtitle=_("Create a new highlighting pattern for the selected command"),
         )
         add_rule_row.set_activatable(True)
-        add_btn = Gtk.Button(icon_name="list-add-symbolic")
-        add_btn.set_valign(Gtk.Align.CENTER)
-        add_btn.add_css_class("suggested-action")
+        add_btn = create_icon_button(
+            "list-add-symbolic",
+            on_clicked=self._on_add_context_rule_clicked,
+            valign=Gtk.Align.CENTER,
+            css_classes=["suggested-action"],
+        )
         add_rule_row.add_suffix(add_btn)
         add_rule_row.set_activatable_widget(add_btn)
-        add_btn.connect("clicked", self._on_add_context_rule_clicked)
         self._add_context_rule_row = add_rule_row
         self._context_rules_list_group.add(add_rule_row)
 
@@ -2823,12 +2833,14 @@ class HighlightDialog(Adw.PreferencesWindow):
             title=_("➕ Add New Global Rule"),
         )
         add_row.set_activatable(True)
-        add_btn = Gtk.Button(icon_name="list-add-symbolic")
-        add_btn.set_valign(Gtk.Align.CENTER)
-        add_btn.add_css_class("suggested-action")
+        add_btn = create_icon_button(
+            "list-add-symbolic",
+            on_clicked=self._on_add_rule_clicked,
+            valign=Gtk.Align.CENTER,
+            css_classes=["suggested-action"],
+        )
         add_row.add_suffix(add_btn)
         add_row.set_activatable_widget(add_btn)
-        add_btn.connect("clicked", self._on_add_rule_clicked)
         self._rules_group.add(add_row)
 
         # Reset global rules button
@@ -2836,12 +2848,14 @@ class HighlightDialog(Adw.PreferencesWindow):
             title=_("Reset Global Rules"),
         )
         reset_row.set_activatable(True)
-        reset_btn = Gtk.Button(icon_name="view-refresh-symbolic")
-        reset_btn.set_valign(Gtk.Align.CENTER)
-        reset_btn.add_css_class("flat")
+        reset_btn = create_icon_button(
+            "view-refresh-symbolic",
+            on_clicked=self._on_reset_global_rules_clicked,
+            flat=True,
+            valign=Gtk.Align.CENTER,
+        )
         reset_row.add_suffix(reset_btn)
         reset_row.set_activatable_widget(reset_btn)
-        reset_btn.connect("clicked", self._on_reset_global_rules_clicked)
         self._rules_group.add(reset_row)
 
     def _load_settings(self) -> None:
@@ -2997,31 +3011,22 @@ class HighlightDialog(Adw.PreferencesWindow):
         if not ctx or not self._manager.has_user_context_override(context_name):
             return
 
-        dialog = Adw.MessageDialog(
-            transient_for=self,
-            heading=_("Delete Command?"),
-            body=_(
-                'Are you sure you want to delete "{}"? This will remove all custom rules for this command.'
-            ).format(context_name),
-        )
-        dialog.add_response("cancel", _("Cancel"))
-        dialog.add_response("delete", _("Delete"))
-        dialog.set_response_appearance("delete", Adw.ResponseAppearance.DESTRUCTIVE)
-        dialog.connect("response", self._on_delete_context_confirmed, context_name)
-        dialog.present()
-
-    def _on_delete_context_confirmed(
-        self, dialog: Adw.MessageDialog, response: str, context_name: str
-    ) -> None:
-        """Handle delete context confirmation."""
-        dialog.close()
-        if response == "delete":
+        def on_confirm() -> None:
             if self._manager.delete_user_context(context_name):
                 self._populate_contexts()
                 self.emit("settings-changed")
                 self.add_toast(
                     Adw.Toast(title=_("Command deleted: {}").format(context_name))
                 )
+
+        show_delete_confirmation_dialog(
+            parent=self,
+            heading=_("Delete Command?"),
+            body=_(
+                'Are you sure you want to delete "{}"? This will remove all custom rules for this command.'
+            ).format(context_name),
+            on_confirm=on_confirm,
+        )
 
     def _on_context_toggle(
         self, switch: Gtk.Switch, state: bool, context_name: str
@@ -3382,32 +3387,27 @@ class HighlightDialog(Adw.PreferencesWindow):
         if not self._selected_context:
             return
 
-        dialog = Adw.MessageDialog(
-            transient_for=self,
+        context_name = self._selected_context
+
+        def on_confirm() -> None:
+            if self._manager.delete_user_context(context_name):
+                self._populate_contexts()
+                self.emit("settings-changed")
+                self.add_toast(
+                    Adw.Toast(title=_("Command reset: {}").format(context_name))
+                )
+            else:
+                self.add_toast(Adw.Toast(title=_("No user customization to reset")))
+
+        show_delete_confirmation_dialog(
+            parent=self,
             heading=_("Reset to System Default?"),
             body=_(
                 'This will remove your customizations for "{}" and revert to system rules.'
-            ).format(self._selected_context),
+            ).format(context_name),
+            on_confirm=on_confirm,
+            delete_label=_("Reset"),
         )
-        dialog.add_response("cancel", _("Cancel"))
-        dialog.add_response("reset", _("Reset"))
-        dialog.set_response_appearance("reset", Adw.ResponseAppearance.DESTRUCTIVE)
-        dialog.connect("response", self._on_reset_context_confirmed)
-        dialog.present()
-
-    def _on_reset_context_confirmed(
-        self, dialog: Adw.MessageDialog, response: str
-    ) -> None:
-        """Handle reset context confirmation."""
-        dialog.close()
-        if response == "reset" and self._selected_context:
-            name = self._selected_context
-            if self._manager.delete_user_context(name):
-                self._populate_contexts()
-                self.emit("settings-changed")
-                self.add_toast(Adw.Toast(title=_("Command reset: {}").format(name)))
-            else:
-                self.add_toast(Adw.Toast(title=_("No user customization to reset")))
 
     def _on_add_context_rule_clicked(self, button: Gtk.Button) -> None:
         """Handle add rule to context button click."""
@@ -3468,37 +3468,25 @@ class HighlightDialog(Adw.PreferencesWindow):
             return
 
         rule = context.rules[index]
-        dialog = Adw.MessageDialog(
-            transient_for=self,
-            heading=_("Delete Rule?"),
-            body=_('Are you sure you want to delete "{}"?').format(rule.name),
-        )
-        dialog.add_response("cancel", _("Cancel"))
-        dialog.add_response("delete", _("Delete"))
-        dialog.set_response_appearance("delete", Adw.ResponseAppearance.DESTRUCTIVE)
-        dialog.connect(
-            "response", self._on_delete_context_rule_confirmed, index, rule.name
-        )
-        dialog.present()
+        rule_name = rule.name
+        selected_ctx = self._selected_context
 
-    def _on_delete_context_rule_confirmed(
-        self,
-        dialog: Adw.MessageDialog,
-        response: str,
-        index: int,
-        rule_name: str,
-    ) -> None:
-        """Handle delete context rule confirmation."""
-        dialog.close()
-        if response == "delete" and self._selected_context:
-            self._manager.remove_context_rule(self._selected_context, index)
+        def on_confirm() -> None:
+            self._manager.remove_context_rule(selected_ctx, index)
             # Save to user directory to create override
-            context = self._manager.get_context(self._selected_context)
-            if context:
-                self._manager.save_context_to_user(context)
+            ctx = self._manager.get_context(selected_ctx)
+            if ctx:
+                self._manager.save_context_to_user(ctx)
             self._populate_context_rules()
             self.emit("settings-changed")
             self.add_toast(Adw.Toast(title=_("Rule deleted: {}").format(rule_name)))
+
+        show_delete_confirmation_dialog(
+            parent=self,
+            heading=_("Delete Rule?"),
+            body=_('Are you sure you want to delete "{}"?').format(rule_name),
+            on_confirm=on_confirm,
+        )
 
     def _update_dependent_groups_sensitivity(self) -> None:
         """Update sensitivity of highlighting groups based on activation state.
@@ -3687,20 +3675,26 @@ class HighlightDialog(Adw.PreferencesWindow):
             )
             row.add_suffix(colors_badge)
 
-        # Edit button (icon)
-        edit_btn = Gtk.Button(icon_name="document-edit-symbolic")
-        edit_btn.add_css_class("flat")
-        edit_btn.set_valign(Gtk.Align.CENTER)
-        get_tooltip_helper().add_tooltip(edit_btn, _("Edit rule"))
-        edit_btn.connect("clicked", self._on_edit_rule_clicked, index)
+        # Edit button
+        edit_btn = create_icon_button(
+            "document-edit-symbolic",
+            tooltip=_("Edit rule"),
+            on_clicked=self._on_edit_rule_clicked,
+            callback_args=(index,),
+            flat=True,
+            valign=Gtk.Align.CENTER,
+        )
         row.add_suffix(edit_btn)
 
-        # Delete button (icon)
-        delete_btn = Gtk.Button(icon_name="user-trash-symbolic")
-        delete_btn.add_css_class("flat")
-        delete_btn.set_valign(Gtk.Align.CENTER)
-        get_tooltip_helper().add_tooltip(delete_btn, _("Delete rule"))
-        delete_btn.connect("clicked", self._on_delete_rule_clicked, index)
+        # Delete button
+        delete_btn = create_icon_button(
+            "user-trash-symbolic",
+            tooltip=_("Delete rule"),
+            on_clicked=self._on_delete_rule_clicked,
+            callback_args=(index,),
+            flat=True,
+            valign=Gtk.Align.CENTER,
+        )
         row.add_suffix(delete_btn)
 
         # Enable/disable switch suffix (rightmost)
@@ -3787,90 +3781,62 @@ class HighlightDialog(Adw.PreferencesWindow):
         if not rule:
             return
 
-        dialog = Adw.MessageDialog(
-            transient_for=self,
-            heading=_("Delete Rule?"),
-            body=_('Are you sure you want to delete "{}"?').format(rule.name),
-        )
-        dialog.add_response("cancel", _("Cancel"))
-        dialog.add_response("delete", _("Delete"))
-        dialog.set_response_appearance("delete", Adw.ResponseAppearance.DESTRUCTIVE)
-        dialog.connect("response", self._on_delete_confirmed, index, rule.name)
-        dialog.present()
+        rule_name = rule.name
 
-    def _on_delete_confirmed(
-        self,
-        dialog: Adw.MessageDialog,
-        response: str,
-        index: int,
-        rule_name: str,
-    ) -> None:
-        """Handle delete confirmation response."""
-        dialog.close()
-        if response == "delete":
+        def on_confirm() -> None:
             self._manager.remove_rule(index)
             self._manager.save_global_rules_to_user()  # Save full rules to user file
             self._manager.save_config()
             self._populate_rules()
             self.emit("settings-changed")
-
             self.add_toast(Adw.Toast(title=_("Rule deleted: {}").format(rule_name)))
+
+        show_delete_confirmation_dialog(
+            parent=self,
+            heading=_("Delete Rule?"),
+            body=_('Are you sure you want to delete "{}"?').format(rule_name),
+            on_confirm=on_confirm,
+        )
 
     def _on_reset_global_rules_clicked(self, button: Gtk.Button) -> None:
         """Handle reset global rules button click."""
-        dialog = Adw.MessageDialog(
-            transient_for=self,
-            heading=_("Reset Global Rules?"),
-            body=_(
-                "This will restore global rules to system defaults. Context customizations will be preserved."
-            ),
-        )
-        dialog.add_response("cancel", _("Cancel"))
-        dialog.add_response("reset", _("Reset"))
-        dialog.set_response_appearance("reset", Adw.ResponseAppearance.DESTRUCTIVE)
-        dialog.connect("response", self._on_reset_global_rules_confirmed)
-        dialog.present()
 
-    def _on_reset_global_rules_confirmed(
-        self, dialog: Adw.MessageDialog, response: str
-    ) -> None:
-        """Handle reset global rules confirmation response."""
-        dialog.close()
-        if response == "reset":
+        def on_confirm() -> None:
             self._manager.reset_global_rules()
             self._manager.save_config()
             self._populate_rules()
             self.emit("settings-changed")
-
             self.add_toast(Adw.Toast(title=_("Global rules reset to defaults")))
+
+        show_delete_confirmation_dialog(
+            parent=self,
+            heading=_("Reset Global Rules?"),
+            body=_(
+                "This will restore global rules to system defaults. Context customizations will be preserved."
+            ),
+            on_confirm=on_confirm,
+            delete_label=_("Reset"),
+        )
 
     def _on_reset_all_contexts_clicked(self, button: Gtk.Button) -> None:
         """Handle reset all contexts button click."""
-        dialog = Adw.MessageDialog(
-            transient_for=self,
-            heading=_("Reset All Commands?"),
-            body=_(
-                "This will restore all commands to system defaults. Global rules will be preserved."
-            ),
-        )
-        dialog.add_response("cancel", _("Cancel"))
-        dialog.add_response("reset", _("Reset"))
-        dialog.set_response_appearance("reset", Adw.ResponseAppearance.DESTRUCTIVE)
-        dialog.connect("response", self._on_reset_all_contexts_confirmed)
-        dialog.present()
 
-    def _on_reset_all_contexts_confirmed(
-        self, dialog: Adw.MessageDialog, response: str
-    ) -> None:
-        """Handle reset all contexts confirmation response."""
-        dialog.close()
-        if response == "reset":
+        def on_confirm() -> None:
             self._manager.reset_all_contexts()
             self._manager.save_config()
             self._populate_contexts()
             self.emit("settings-changed")
-
             self.add_toast(Adw.Toast(title=_("All commands reset to defaults")))
+
+        show_delete_confirmation_dialog(
+            parent=self,
+            heading=_("Reset All Commands?"),
+            body=_(
+                "This will restore all commands to system defaults. Global rules will be preserved."
+            ),
+            on_confirm=on_confirm,
+            delete_label=_("Reset"),
+        )
 
 
 class ContextNameDialog(Adw.Dialog):

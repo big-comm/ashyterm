@@ -34,9 +34,7 @@ _SPECIAL_VAR_PATTERN = re.compile(r"(\$[?!@*#$0-9-])")
 _SPECIAL_VARS = frozenset(("$?", "$!", "$$", "$@", "$*", "$#", "$0", "$-"))
 
 # Redirect operators
-_REDIRECT_OPS = frozenset(
-    (">", ">>", "<", "<<", ">&", "2>", "2>>", "<&", "&>")
-)
+_REDIRECT_OPS = frozenset((">", ">>", "<", "<<", ">&", "2>", "2>>", "<&", "&>"))
 
 # Separator/control operators
 _CONTROL_OPS = frozenset((";", "&", "&&", "||"))
@@ -209,9 +207,7 @@ class BashTextView(BaseSyntaxTextView):
         for token, (idx, fallback) in _BASH_PALETTE_MAPPING.items():
             if idx == -1:
                 # Special case: comment uses dimmed foreground
-                colors[token] = (
-                    foreground + "80" if len(foreground) == 7 else fallback
-                )
+                colors[token] = foreground + "80" if len(foreground) == 7 else fallback
             else:
                 colors[token] = palette[idx] if idx < palette_len else fallback
 

@@ -1008,7 +1008,9 @@ class FileManager(GObject.Object):
             return
 
         use_fd = self._check_fd_available(operations)
-        command = self._build_search_command(base_path, search_term, show_hidden, use_fd)
+        command = self._build_search_command(
+            base_path, search_term, show_hidden, use_fd
+        )
         base_posix = PurePosixPath(base_path)
 
         try:
@@ -1036,8 +1038,12 @@ class FileManager(GObject.Object):
         return self._build_find_command(base_path, search_term, show_hidden)
 
     def _search_remote(
-        self, generation: int, command: list[str], base_posix: PurePosixPath,
-        use_fd: bool, operations
+        self,
+        generation: int,
+        command: list[str],
+        base_posix: PurePosixPath,
+        use_fd: bool,
+        operations,
     ) -> tuple[list, str, bool]:
         """Execute remote search and process results."""
         results = []
@@ -1064,7 +1070,11 @@ class FileManager(GObject.Object):
         return results, error_message, truncated
 
     def _search_local(
-        self, generation: int, command: list[str], base_posix: PurePosixPath, use_fd: bool
+        self,
+        generation: int,
+        command: list[str],
+        base_posix: PurePosixPath,
+        use_fd: bool,
     ) -> tuple[list, str, bool]:
         """Execute local search with memory-efficient line-by-line reading."""
         results = []
@@ -1072,8 +1082,11 @@ class FileManager(GObject.Object):
         truncated = False
 
         with subprocess.Popen(
-            command, stdout=subprocess.PIPE, stderr=subprocess.PIPE,
-            text=True, bufsize=1
+            command,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            text=True,
+            bufsize=1,
         ) as proc:
             for line in proc.stdout:
                 if self._recursive_search_generation != generation:
@@ -1104,7 +1117,10 @@ class FileManager(GObject.Object):
         """Schedule completion callback on main thread."""
         GLib.idle_add(
             self._complete_recursive_search,
-            generation, results, error_message, truncated,
+            generation,
+            results,
+            error_message,
+            truncated,
         )
 
     def _process_search_result_line(
@@ -1703,15 +1719,11 @@ class FileManager(GObject.Object):
         """Ensure path ends with slash for ls command."""
         return path if path.endswith("/") else f"{path}/"
 
-    def _schedule_update_with_error(
-        self, path: str, error: str, source: str
-    ) -> None:
+    def _schedule_update_with_error(self, path: str, error: str, source: str) -> None:
         """Schedule an error update on the main thread."""
         GLib.idle_add(self._update_store_with_files, path, [], error, source)
 
-    def _handle_list_error(
-        self, requested_path: str, output: str, source: str
-    ) -> None:
+    def _handle_list_error(self, requested_path: str, output: str, source: str) -> None:
         """Handle errors from ls command."""
         is_connection_error = self._is_connection_error(output)
 
@@ -1729,7 +1741,8 @@ class FileManager(GObject.Object):
         if self._should_fallback(is_connection_error, requested_path):
             GLib.idle_add(
                 self._fallback_to_accessible_path,
-                self._last_successful_path, source,
+                self._last_successful_path,
+                source,
             )
         else:
             self._schedule_update_with_error(requested_path, error_msg, source)
@@ -1737,9 +1750,10 @@ class FileManager(GObject.Object):
     def _is_connection_error(self, output: str) -> bool:
         """Check if output indicates a connection error."""
         lower = output.lower()
-        return any(term in lower for term in [
-            "timed out", "timeout", "connection", "network", "unreachable"
-        ])
+        return any(
+            term in lower
+            for term in ["timed out", "timeout", "connection", "network", "unreachable"]
+        )
 
     def _should_fallback(self, is_connection_error: bool, requested_path: str) -> bool:
         """Determine if we should fallback to last successful path."""
@@ -1787,7 +1801,9 @@ class FileManager(GObject.Object):
         """Resolve relative symlink targets to absolute paths."""
         if file_item.is_link and file_item._link_target:
             if not file_item._link_target.startswith("/"):
-                file_item._link_target = f"{base_path.rstrip('/')}/{file_item._link_target}"
+                file_item._link_target = (
+                    f"{base_path.rstrip('/')}/{file_item._link_target}"
+                )
 
     def _set_store_items(self, items, requested_path, source):
         """Set all store items in a single operation for optimal performance.
@@ -2639,74 +2655,7 @@ class FileManager(GObject.Object):
             files = source.open_multiple_finish(result)
             if files:
                 local_paths = [Path(gio_file.get_path()) for gio_file in files]
-
-                # Prepare uploads in background to check space
-                def prepare_uploads():
-                    try:
-                        # Calculate total size needed
-                        total_size_needed = 0
-                        path_sizes = {}
-
-                        for local_path in local_paths:
-                            if local_path.is_dir():
-                                # For directories, calculate full size
-                                size = self.operations.get_directory_size(
-                                    str(local_path), is_remote=False
-                                )
-                            else:
-                                size = (
-                                    local_path.stat().st_size
-                                    if local_path.exists()
-                                    else 0
-                                )
-
-                            path_sizes[str(local_path)] = size
-                            total_size_needed += size
-
-                        # Check available space at remote destination
-                        free_space = self.operations.get_free_space(
-                            self.current_path,
-                            is_remote=True,
-                            session_override=self.session_item,
-                        )
-
-                        if free_space > 0 and total_size_needed > free_space:
-                            # Not enough space - show error on main thread
-                            def show_space_error():
-                                self._show_insufficient_space_dialog(
-                                    total_size_needed,
-                                    free_space,
-                                    Path(self.current_path),
-                                )
-                                return False
-
-                            GLib.idle_add(show_space_error)
-                            return
-
-                        # Start uploads on main thread
-                        def start_uploads():
-                            for local_path in local_paths:
-                                file_size = path_sizes.get(str(local_path), 0)
-                                self._initiate_upload_with_size(local_path, file_size)
-                            return False
-
-                        GLib.idle_add(start_uploads)
-
-                    except Exception as e:
-                        self.logger.error(f"Error preparing uploads: {e}")
-                        error_msg = str(e)
-
-                        def show_error(msg=error_msg):
-                            self.parent_window._show_error_dialog(
-                                _("Upload Error"), msg
-                            )
-                            return False
-
-                        GLib.idle_add(show_error)
-
-                # Run preparation in background
-                threading.Thread(target=prepare_uploads, daemon=True).start()
-
+                self._prepare_and_start_uploads(local_paths)
         except GLib.Error as e:
             if not e.matches(Gio.io_error_quark(), Gio.IOErrorEnum.CANCELLED):
                 self.parent_window._show_error_dialog(_("Error"), e.message)
@@ -2742,6 +2691,92 @@ class FileManager(GObject.Object):
                 lambda: self.refresh(source="filemanager")
             ),
         )
+
+    def _calculate_local_paths_size(
+        self, local_paths: list[Path]
+    ) -> tuple[int, dict[str, int]]:
+        """Calculate total size and individual sizes for local paths.
+
+        This helper function extracts the common logic for calculating
+        sizes of local files/directories before upload.
+
+        Args:
+            local_paths: List of Path objects to calculate sizes for.
+
+        Returns:
+            Tuple of (total_size_needed, path_sizes_dict)
+        """
+        total_size_needed = 0
+        path_sizes: dict[str, int] = {}
+
+        for local_path in local_paths:
+            if local_path.is_dir():
+                size = self.operations.get_directory_size(
+                    str(local_path), is_remote=False
+                )
+            else:
+                size = local_path.stat().st_size if local_path.exists() else 0
+
+            path_sizes[str(local_path)] = size
+            total_size_needed += size
+
+        return total_size_needed, path_sizes
+
+    def _prepare_and_start_uploads(self, local_paths: list[Path]) -> None:
+        """Prepare uploads by checking space and start the upload process.
+
+        This helper function extracts the common logic for preparing and
+        starting uploads that was duplicated in _on_upload_dialog_response
+        and _on_upload_confirmation_response.
+
+        Args:
+            local_paths: List of Path objects to upload.
+        """
+
+        def prepare_uploads():
+            try:
+                total_size_needed, path_sizes = self._calculate_local_paths_size(
+                    local_paths
+                )
+
+                # Check available space at remote destination
+                free_space = self.operations.get_free_space(
+                    self.current_path,
+                    is_remote=True,
+                    session_override=self.session_item,
+                )
+
+                if free_space > 0 and total_size_needed > free_space:
+
+                    def show_space_error():
+                        self._show_insufficient_space_dialog(
+                            total_size_needed, free_space, Path(self.current_path)
+                        )
+                        return False
+
+                    GLib.idle_add(show_space_error)
+                    return
+
+                # Start uploads on main thread
+                def start_uploads():
+                    for local_path in local_paths:
+                        file_size = path_sizes.get(str(local_path), 0)
+                        self._initiate_upload_with_size(local_path, file_size)
+                    return False
+
+                GLib.idle_add(start_uploads)
+
+            except Exception as e:
+                self.logger.error(f"Error preparing uploads: {e}")
+                error_msg = str(e)
+
+                def show_error(msg=error_msg):
+                    self.parent_window._show_error_dialog(_("Upload Error"), msg)
+                    return False
+
+                GLib.idle_add(show_error)
+
+        threading.Thread(target=prepare_uploads, daemon=True).start()
 
     def _on_upload_clicked(self, button):
         self._on_upload_action(None, None, None)
@@ -2819,57 +2854,7 @@ class FileManager(GObject.Object):
 
     def _on_upload_confirmation_response(self, dialog, response_id, local_paths):
         if response_id == "upload":
-            # Prepare uploads in background to check space
-            def prepare_uploads():
-                try:
-                    # Calculate total size needed
-                    total_size_needed = 0
-                    path_sizes = {}
-
-                    for local_path in local_paths:
-                        if local_path.is_dir():
-                            size = self.operations.get_directory_size(
-                                str(local_path), is_remote=False
-                            )
-                        else:
-                            size = (
-                                local_path.stat().st_size if local_path.exists() else 0
-                            )
-
-                        path_sizes[str(local_path)] = size
-                        total_size_needed += size
-
-                    # Check available space at remote destination
-                    free_space = self.operations.get_free_space(
-                        self.current_path,
-                        is_remote=True,
-                        session_override=self.session_item,
-                    )
-
-                    if free_space > 0 and total_size_needed > free_space:
-
-                        def show_space_error():
-                            self._show_insufficient_space_dialog(
-                                total_size_needed, free_space, Path(self.current_path)
-                            )
-                            return False
-
-                        GLib.idle_add(show_space_error)
-                        return
-
-                    # Start uploads on main thread
-                    def start_uploads():
-                        for local_path in local_paths:
-                            file_size = path_sizes.get(str(local_path), 0)
-                            self._initiate_upload_with_size(local_path, file_size)
-                        return False
-
-                    GLib.idle_add(start_uploads)
-
-                except Exception as e:
-                    self.logger.error(f"Error preparing uploads: {e}")
-
-            threading.Thread(target=prepare_uploads, daemon=True).start()
+            self._prepare_and_start_uploads(local_paths)
 
     def _get_local_path_for_remote_file(
         self, session: SessionItem, remote_path: str

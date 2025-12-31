@@ -252,6 +252,187 @@ class ProcessSpawner:
 
         return cmd, env, temp_dir_path
 
+    def _create_pty_preexec_fn(
+        self, slave_fd: int, master_fd: int
+    ) -> Callable[[], None]:
+        """
+        Create a preexec_fn for PTY setup in child process.
+
+        This function creates a closure that sets up the PTY in the child
+        process before exec. It handles setsid(), TIOCSCTTY, and file
+        descriptor duplication.
+
+        Args:
+            slave_fd: The slave file descriptor for the PTY.
+            master_fd: The master file descriptor for the PTY.
+
+        Returns:
+            A callable to be used as preexec_fn in subprocess.Popen.
+        """
+
+        def preexec_fn() -> None:
+            """Setup PTY in child process before exec."""
+            os.setsid()
+            fcntl.ioctl(slave_fd, termios.TIOCSCTTY, 0)
+            os.dup2(slave_fd, 0)
+            os.dup2(slave_fd, 1)
+            os.dup2(slave_fd, 2)
+            if slave_fd > 2:
+                os.close(slave_fd)
+            os.close(master_fd)
+
+        return preexec_fn
+
+    def _cleanup_pty_fds(
+        self,
+        slave_fd: Optional[int],
+        master_fd: Optional[int],
+        slave_fd_closed: bool,
+    ) -> None:
+        """
+        Clean up PTY file descriptors on error.
+
+        Args:
+            slave_fd: The slave file descriptor, or None if not opened.
+            master_fd: The master file descriptor, or None if not opened.
+            slave_fd_closed: Whether slave_fd was already closed.
+        """
+        if slave_fd is not None and not slave_fd_closed:
+            try:
+                os.close(slave_fd)
+            except OSError:
+                pass
+        if master_fd is not None:
+            try:
+                os.close(master_fd)
+            except OSError:
+                pass
+
+    def _invoke_spawn_error_callback(
+        self,
+        callback: Optional[Callable],
+        terminal: Vte.Terminal,
+        error: Exception,
+        user_data: Any,
+        temp_dir_path: Optional[str],
+    ) -> None:
+        """
+        Invoke callback with spawn error information.
+
+        Args:
+            callback: The callback function, or None if not provided.
+            terminal: The VTE terminal widget.
+            error: The exception that occurred.
+            user_data: Original user data.
+            temp_dir_path: Temporary directory path, if any.
+        """
+        if callback:
+            glib_error = GLib.Error.new_literal(
+                GLib.quark_from_string("spawn-error"),
+                str(error),
+                0,
+            )
+            final_user_data = {
+                "original_user_data": user_data,
+                "temp_dir_path": temp_dir_path,
+            }
+            GLib.idle_add(callback, terminal, -1, glib_error, (final_user_data,))
+
+    def _run_highlighted_spawn(
+        self,
+        proxy: "HighlightedTerminalProxy",
+        terminal: Vte.Terminal,
+        cmd: List[str],
+        working_dir: str,
+        env: Dict[str, str],
+        process_name: str,
+        spawn_type: str,
+        callback: Optional[Callable],
+        user_data: Any,
+        temp_dir_path: Optional[str],
+        session: Optional["SessionItem"] = None,
+    ) -> Optional["HighlightedTerminalProxy"]:
+        """
+        Execute the common highlighted spawn logic.
+
+        This method handles the PTY creation, process spawning, and cleanup
+        that is shared between local and SSH highlighted spawns.
+
+        Args:
+            proxy: The HighlightedTerminalProxy instance.
+            terminal: The VTE terminal widget.
+            cmd: Command to execute.
+            working_dir: Working directory for the process.
+            env: Environment variables.
+            process_name: Name for logging and process tracking.
+            spawn_type: Type of spawn ("local" or "ssh").
+            callback: Optional callback for spawn completion.
+            user_data: User data to pass to callback.
+            temp_dir_path: Temporary directory path (for zsh OSC7).
+            session: SSH session for process info (SSH only).
+
+        Returns:
+            The proxy on success, None on failure.
+        """
+        master_fd: Optional[int] = None
+        slave_fd: Optional[int] = None
+        slave_fd_closed = False
+
+        try:
+            master_fd, slave_fd = proxy.create_pty()
+            rows, cols = self._get_expected_terminal_size(terminal)
+            proxy.set_window_size(rows, cols)
+
+            preexec_fn = self._create_pty_preexec_fn(slave_fd, master_fd)
+
+            proc = subprocess.Popen(
+                cmd,
+                cwd=working_dir,
+                env=env,
+                preexec_fn=preexec_fn,
+                close_fds=False,
+            )
+            pid = proc.pid
+
+            os.close(slave_fd)
+            slave_fd_closed = True
+
+            if not proxy.start(pid):
+                self.logger.error(f"Failed to start highlight proxy for {spawn_type}")
+                os.close(master_fd)
+                return None
+
+            # Build process info
+            process_info: Dict[str, Any] = {
+                "name": process_name,
+                "type": spawn_type,
+                "terminal": terminal,
+                "highlight_proxy": proxy,
+            }
+            if temp_dir_path:
+                process_info["temp_dir_path"] = temp_dir_path
+            if session:
+                process_info["session"] = session
+
+            self.process_tracker.register_process(pid, process_info)
+
+            if callback:
+                final_user_data = {
+                    "original_user_data": user_data,
+                    "temp_dir_path": temp_dir_path,
+                }
+                GLib.idle_add(callback, terminal, pid, None, (final_user_data,))
+
+            self.logger.info(
+                f"Highlighted {spawn_type} terminal spawned with PID {pid}"
+            )
+
+            return proxy
+
+        except Exception as e:
+            self._cleanup_pty_fds(slave_fd, master_fd, slave_fd_closed)
+            raise e
+
     def _get_ssh_control_path(self, session: "SessionItem") -> str:
         user = session.user or os.getlogin()
         port = session.port or 22
@@ -465,6 +646,7 @@ class ProcessSpawner:
 
         Args:
             terminal: The VTE terminal widget.
+            session: Optional session (unused for local terminals).
             callback: Callback function for spawn completion.
             user_data: User data to pass to callback.
             working_directory: Directory to start the shell in.
@@ -484,7 +666,6 @@ class ProcessSpawner:
             if not working_dir:
                 working_dir = str(self.platform_info.home_dir)
 
-            # Use centralized shell environment preparation
             cmd, env, temp_dir_path = self._prepare_shell_environment(working_directory)
 
             proxy = HighlightedTerminalProxy(
@@ -493,96 +674,37 @@ class ProcessSpawner:
                 proxy_id=terminal_id,
             )
 
-            master_fd = None
-            slave_fd = None
-            slave_fd_closed = False
+            process_name = str(user_data) if user_data else "Terminal"
+
             try:
-                master_fd, slave_fd = proxy.create_pty()
-                # Use expected size based on saved window dimensions to avoid initial resize
-                rows, cols = self._get_expected_terminal_size(terminal)
-                proxy.set_window_size(rows, cols)
-
-                def preexec_fn():
-                    """Setup PTY in child process before exec."""
-                    os.setsid()
-                    fcntl.ioctl(slave_fd, termios.TIOCSCTTY, 0)
-                    os.dup2(slave_fd, 0)
-                    os.dup2(slave_fd, 1)
-                    os.dup2(slave_fd, 2)
-                    if slave_fd > 2:
-                        os.close(slave_fd)
-                    os.close(master_fd)
-
-                proc = subprocess.Popen(
-                    cmd,
-                    cwd=working_dir,
+                result = self._run_highlighted_spawn(
+                    proxy=proxy,
+                    terminal=terminal,
+                    cmd=cmd,
+                    working_dir=working_dir,
                     env=env,
-                    preexec_fn=preexec_fn,
-                    close_fds=False,  # Keep slave_fd open for preexec_fn
-                )
-                pid = proc.pid
-
-                # Close slave_fd in parent - child has its own copy
-                os.close(slave_fd)
-                slave_fd_closed = True
-
-                if not proxy.start(pid):
-                    self.logger.error("Failed to start highlight proxy")
-                    os.close(master_fd)
-                    master_fd = None  # Mark as closed to prevent double-close
-                    return None
-
-                # Register process
-                process_info = {
-                    "name": str(user_data) if user_data else "Terminal",
-                    "type": "local",
-                    "terminal": terminal,
-                    "temp_dir_path": temp_dir_path,
-                    "highlight_proxy": proxy,
-                }
-                self.process_tracker.register_process(pid, process_info)
-
-                if callback:
-                    final_user_data = {
-                        "original_user_data": user_data,
-                        "temp_dir_path": temp_dir_path,
-                    }
-                    GLib.idle_add(callback, terminal, pid, None, (final_user_data,))
-
-                self.logger.info(f"Highlighted local terminal spawned with PID {pid}")
-                log_terminal_event(
-                    "spawn_initiated",
-                    str(user_data),
-                    f"highlighted shell: {' '.join(cmd)}",
+                    process_name=process_name,
+                    spawn_type="local",
+                    callback=callback,
+                    user_data=user_data,
+                    temp_dir_path=temp_dir_path,
                 )
 
-                return proxy
+                if result:
+                    log_terminal_event(
+                        "spawn_initiated",
+                        process_name,
+                        f"highlighted shell: {' '.join(cmd)}",
+                    )
+
+                return result
 
             except Exception as e:
                 self.logger.error(f"Highlighted spawn failed: {e}")
-                # Clean up file descriptors on error
-                if slave_fd is not None and not slave_fd_closed:
-                    try:
-                        os.close(slave_fd)
-                    except OSError:
-                        pass
-                if master_fd is not None:
-                    try:
-                        os.close(master_fd)
-                    except OSError:
-                        pass
                 proxy.stop()
-                if callback:
-                    error = GLib.Error.new_literal(
-                        GLib.quark_from_string("spawn-error"),
-                        str(e),
-                        0,
-                    )
-                    final_user_data = {
-                        "original_user_data": user_data,
-                        "temp_dir_path": temp_dir_path,
-                    }
-                    GLib.idle_add(callback, terminal, -1, error, (final_user_data,))
+                self._invoke_spawn_error_callback(
+                    callback, terminal, e, user_data, temp_dir_path
+                )
                 return None
 
     def spawn_highlighted_ssh_session(
@@ -628,8 +750,6 @@ class ProcessSpawner:
                 working_dir = str(self.platform_info.home_dir)
                 env = self.environment_manager.get_terminal_environment()
 
-                # Add SSHPASS to environment if using password authentication
-                # This prevents the password from being visible in process list
                 if sshpass_env:
                     env.update(sshpass_env)
 
@@ -639,107 +759,36 @@ class ProcessSpawner:
                     proxy_id=terminal_id,
                 )
 
-                master_fd = None
-                slave_fd = None
-                slave_fd_closed = False
+                spawn_result = self._run_highlighted_spawn(
+                    proxy=proxy,
+                    terminal=terminal,
+                    cmd=remote_cmd,
+                    working_dir=working_dir,
+                    env=env,
+                    process_name=session.name,
+                    spawn_type="ssh",
+                    callback=callback,
+                    user_data=user_data,
+                    temp_dir_path=None,
+                    session=session,
+                )
 
-                try:
-                    master_fd, slave_fd = proxy.create_pty()
-
-                    # Use expected size based on saved window dimensions to avoid initial resize
-                    rows, cols = self._get_expected_terminal_size(terminal)
-                    proxy.set_window_size(rows, cols)
-
-                    # Use subprocess.Popen instead of os.fork() to avoid
-                    # DeprecationWarning about fork() in multi-threaded process.
-                    # Note: We must NOT use start_new_session=True because we need
-                    # to call setsid() BEFORE ioctl(TIOCSCTTY) in the preexec_fn.
-                    def preexec_fn():
-                        """Setup PTY in child process before exec."""
-                        os.setsid()
-                        fcntl.ioctl(slave_fd, termios.TIOCSCTTY, 0)
-                        os.dup2(slave_fd, 0)
-                        os.dup2(slave_fd, 1)
-                        os.dup2(slave_fd, 2)
-                        if slave_fd > 2:
-                            os.close(slave_fd)
-                        os.close(master_fd)
-
-                    proc = subprocess.Popen(
-                        remote_cmd,
-                        cwd=working_dir,
-                        env=env,
-                        preexec_fn=preexec_fn,
-                        close_fds=False,  # Keep slave_fd open for preexec_fn
-                    )
-                    pid = proc.pid
-
-                    # Close slave_fd in parent - child has its own copy
-                    os.close(slave_fd)
-                    slave_fd_closed = True
-
-                    if not proxy.start(pid):
-                        self.logger.error("Failed to start highlight proxy for SSH")
-                        os.close(master_fd)
-                        master_fd = None  # Mark as closed to prevent double-close
-                        return None
-
-                    process_info = {
-                        "name": session.name,
-                        "type": "ssh",
-                        "terminal": terminal,
-                        "session": session,
-                        "highlight_proxy": proxy,
-                    }
-                    self.process_tracker.register_process(pid, process_info)
-
-                    if callback:
-                        final_user_data = {
-                            "original_user_data": user_data,
-                            "temp_dir_path": None,
-                        }
-                        GLib.idle_add(callback, terminal, pid, None, (final_user_data,))
-
-                    self.logger.info(
-                        f"Highlighted SSH session spawned with PID {pid} for {session.name}"
-                    )
+                if spawn_result:
                     log_terminal_event(
                         "spawn_initiated",
                         session.name,
                         f"highlighted SSH to {session.get_connection_string()}",
                     )
 
-                    return proxy
-
-                except Exception as inner_e:
-                    # Clean up file descriptors on error
-                    if slave_fd is not None and not slave_fd_closed:
-                        try:
-                            os.close(slave_fd)
-                        except OSError:
-                            pass
-                    if master_fd is not None:
-                        try:
-                            os.close(master_fd)
-                        except OSError:
-                            pass
-                    raise inner_e
+                return spawn_result
 
             except Exception as e:
                 self.logger.error(f"Highlighted SSH spawn failed: {e}")
                 if "proxy" in locals():
                     proxy.stop()
-                if callback:
-                    error = GLib.Error.new_literal(
-                        GLib.quark_from_string("spawn-error"),
-                        str(e),
-                        0,
-                    )
-                    final_user_data = {
-                        "original_user_data": user_data,
-                        "temp_dir_path": None,
-                    }
-                    GLib.idle_add(callback, terminal, -1, error, (final_user_data,))
+                self._invoke_spawn_error_callback(
+                    callback, terminal, e, user_data, None
+                )
                 return None
 
     def execute_remote_command_sync(
@@ -1331,9 +1380,7 @@ class ProcessSpawner:
             )
 
             if error:
-                self._handle_spawn_error(
-                    terminal, error, name, spawn_type, actual_data
-                )
+                self._handle_spawn_error(terminal, error, name, spawn_type, actual_data)
             else:
                 self._handle_spawn_success(
                     pid, name, spawn_type, terminal, temp_dir_path, actual_data

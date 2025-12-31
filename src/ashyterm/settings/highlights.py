@@ -33,7 +33,7 @@ gi.require_version("GObject", "2.0")
 from gi.repository import GObject
 
 from ..utils.logger import get_logger, log_error_with_context
-from ..utils.security import ensure_secure_file_permissions
+from ..utils.security import atomic_json_write
 from .config import ColorSchemeMap, ColorSchemes, get_config_paths
 
 # Mapping of logical color names to ANSI color indices (0-15)
@@ -502,8 +502,6 @@ class HighlightManager(GObject.GObject):
     def _save_user_settings(self) -> None:
         """Save user settings (enabled flags, disabled global rules, and disabled contexts)."""
         try:
-            self._user_config_file.parent.mkdir(parents=True, exist_ok=True)
-
             # Collect names of disabled global rules
             disabled_global_rules = [
                 rule.name for rule in self._config.global_rules if not rule.enabled
@@ -524,16 +522,7 @@ class HighlightManager(GObject.GObject):
                 "disabled_contexts": disabled_contexts,
             }
 
-            temp_file = self._user_config_file.with_suffix(".tmp")
-            with open(temp_file, "w", encoding="utf-8") as f:
-                json.dump(settings, f, indent=2, ensure_ascii=False)
-
-            temp_file.replace(self._user_config_file)
-
-            try:
-                ensure_secure_file_permissions(str(self._user_config_file))
-            except Exception as e:
-                self.logger.warning(f"Failed to set secure permissions: {e}")
+            atomic_json_write(self._user_config_file, settings)
 
         except Exception as e:
             self.logger.error(f"Failed to save user settings: {e}")
@@ -542,20 +531,8 @@ class HighlightManager(GObject.GObject):
         """Save a context to user highlights directory (creates override)."""
         with self._lock:
             try:
-                self._user_highlights_dir.mkdir(parents=True, exist_ok=True)
-
                 file_path = self._user_highlights_dir / f"{context.command_name}.json"
-                temp_file = file_path.with_suffix(".tmp")
-
-                with open(temp_file, "w", encoding="utf-8") as f:
-                    json.dump(context.to_dict(), f, indent=2, ensure_ascii=False)
-
-                temp_file.replace(file_path)
-
-                try:
-                    ensure_secure_file_permissions(str(file_path))
-                except Exception as e:
-                    self.logger.warning(f"Failed to set secure permissions: {e}")
+                atomic_json_write(file_path, context.to_dict())
 
                 # Update in-memory config
                 self._config.contexts[context.command_name] = context
@@ -576,10 +553,7 @@ class HighlightManager(GObject.GObject):
         """
         with self._lock:
             try:
-                self._user_highlights_dir.mkdir(parents=True, exist_ok=True)
-
                 file_path = self._user_highlights_dir / "global.json"
-                temp_file = file_path.with_suffix(".tmp")
 
                 # Create a context-like structure for global rules
                 global_data = {
@@ -591,15 +565,7 @@ class HighlightManager(GObject.GObject):
                     "use_global_rules": False,
                 }
 
-                with open(temp_file, "w", encoding="utf-8") as f:
-                    json.dump(global_data, f, indent=2, ensure_ascii=False)
-
-                temp_file.replace(file_path)
-
-                try:
-                    ensure_secure_file_permissions(str(file_path))
-                except Exception as e:
-                    self.logger.warning(f"Failed to set secure permissions: {e}")
+                atomic_json_write(file_path, global_data)
 
                 self._pattern_dirty = True
                 self.logger.info(

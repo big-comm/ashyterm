@@ -27,6 +27,7 @@ from ...utils.tooltip_helper import get_tooltip_helper
 from ...utils.translation_utils import _
 from ..widgets.bash_text_view import BashTextView
 from ..widgets.form_widget_builder import create_field_from_form_field
+from .base_dialog import show_delete_confirmation_dialog
 
 # Extraction command builders: (extension_tuple, uses_dest_flag, command_template_with_output, command_template_without)
 # For templates: {input} = input file, {dest} = destination flag, {output} = output path
@@ -36,8 +37,18 @@ _EXTRACT_COMMANDS: List[Tuple[Tuple[str, ...], bool, str, str]] = [
     ((".tar.gz", ".tgz"), True, "tar -xzvf {input} {dest}", "tar -xzvf {input}"),
     ((".tar.bz2", ".tbz2"), True, "tar -xjvf {input} {dest}", "tar -xjvf {input}"),
     ((".tar.xz", ".txz"), True, "tar -xJvf {input} {dest}", "tar -xJvf {input}"),
-    ((".tar.zst", ".tzst"), False, "zstd -d {input} -c | tar -xvf - -C {output}", "zstd -d {input} -c | tar -xvf -"),
-    ((".tar.lzma", ".tlz"), False, "lzma -d -c {input} | tar -xvf - -C {output}", "lzma -d -c {input} | tar -xvf -"),
+    (
+        (".tar.zst", ".tzst"),
+        False,
+        "zstd -d {input} -c | tar -xvf - -C {output}",
+        "zstd -d {input} -c | tar -xvf -",
+    ),
+    (
+        (".tar.lzma", ".tlz"),
+        False,
+        "lzma -d -c {input} | tar -xvf - -C {output}",
+        "lzma -d -c {input} | tar -xvf -",
+    ),
     ((".gz",), False, "gunzip {input}", "gunzip {input}"),
     ((".bz2",), False, "bunzip2 {input}", "bunzip2 {input}"),
     ((".xz",), False, "unxz {input}", "unxz {input}"),
@@ -551,11 +562,19 @@ class CommandFormDialog(Adw.Window):
         input_display = input_path if input_path else "<archive>"
 
         # Find matching extraction command
-        for extensions, uses_dest_flag, template_with_output, template_without in _EXTRACT_COMMANDS:
+        for (
+            extensions,
+            uses_dest_flag,
+            template_with_output,
+            template_without,
+        ) in _EXTRACT_COMMANDS:
             if any(input_path.endswith(ext) for ext in extensions):
                 return self._format_extract_template(
-                    input_display, output_path, uses_dest_flag,
-                    template_with_output, template_without
+                    input_display,
+                    output_path,
+                    uses_dest_flag,
+                    template_with_output,
+                    template_without,
                 )
 
         # Default to tar with auto-detection
@@ -3212,47 +3231,36 @@ class CommandManagerDialog(Adw.Window):
 
     def _on_delete_requested(self, widget, command: CommandButton):
         """Show delete confirmation."""
-        dialog = Adw.MessageDialog(
-            transient_for=self.parent_window,
+
+        def on_confirm():
+            self.command_manager.remove_command(command.id)
+            self._populate_commands()
+
+        show_delete_confirmation_dialog(
+            parent=self.parent_window,
             heading=_("Delete Command?"),
             body=_("Are you sure you want to delete '{name}'?").format(
                 name=command.name
             ),
-            default_response="cancel",
-            close_response="cancel",
+            on_confirm=on_confirm,
         )
-        dialog.add_response("cancel", _("Cancel"))
-        dialog.add_response("delete", _("Delete"))
-        dialog.set_response_appearance("delete", Adw.ResponseAppearance.DESTRUCTIVE)
-        dialog.connect("response", self._on_delete_confirmed, command)
-        dialog.present()
-
-    def _on_delete_confirmed(self, dialog, response, command):
-        if response == "delete":
-            self.command_manager.remove_command(command.id)
-            self._populate_commands()
 
     def _on_restore_requested(self, widget, command: CommandButton):
         """Restore a builtin command to its default state."""
-        dialog = Adw.MessageDialog(
-            transient_for=self.parent_window,
+
+        def on_confirm():
+            self.command_manager.restore_builtin_default(command.id)
+            self._populate_commands()
+
+        show_delete_confirmation_dialog(
+            parent=self.parent_window,
             heading=_("Restore Default?"),
             body=_(
                 "This will restore '{name}' to its original default configuration. Your customizations will be lost."
             ).format(name=command.name),
-            default_response="cancel",
-            close_response="cancel",
+            on_confirm=on_confirm,
+            delete_label=_("Restore Default"),
         )
-        dialog.add_response("cancel", _("Cancel"))
-        dialog.add_response("restore", _("Restore Default"))
-        dialog.set_response_appearance("restore", Adw.ResponseAppearance.DESTRUCTIVE)
-        dialog.connect("response", self._on_restore_confirmed, command)
-        dialog.present()
-
-    def _on_restore_confirmed(self, dialog, response, command):
-        if response == "restore":
-            self.command_manager.restore_builtin_default(command.id)
-            self._populate_commands()
 
     def _on_pin_requested(self, widget, command: CommandButton):
         """Pin a command to the toolbar."""
@@ -3272,25 +3280,21 @@ class CommandManagerDialog(Adw.Window):
 
     def _on_hide_requested(self, widget, command: CommandButton):
         """Hide a command from the interface."""
-        dialog = Adw.MessageDialog(
-            transient_for=self.parent_window,
+
+        def on_confirm():
+            self.command_manager.hide_command(command.id)
+            self._populate_commands()
+            self._update_restore_hidden_visibility()
+
+        show_delete_confirmation_dialog(
+            parent=self.parent_window,
             heading=_("Hide Command?"),
             body=_(
                 "Hide '{name}' from the command list? You can restore it later from settings."
             ).format(name=command.name),
-            default_response="cancel",
-            close_response="cancel",
+            on_confirm=on_confirm,
+            delete_label=_("Hide"),
         )
-        dialog.add_response("cancel", _("Cancel"))
-        dialog.add_response("hide", _("Hide"))
-        dialog.connect("response", self._on_hide_confirmed, command)
-        dialog.present()
-
-    def _on_hide_confirmed(self, dialog, response, command):
-        if response == "hide":
-            self.command_manager.hide_command(command.id)
-            self._populate_commands()
-            self._update_restore_hidden_visibility()
 
     def _update_restore_hidden_visibility(self):
         """Update visibility of restore hidden button based on hidden commands."""

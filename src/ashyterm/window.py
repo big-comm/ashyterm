@@ -985,11 +985,13 @@ class CommTerminalWindow(Adw.ApplicationWindow):
                     )
                 )
                 if terminal_info:
-                    terminals_to_move.append({
-                        "id": terminal_id,
-                        "info": terminal_info,
-                        "widget": terminal,
-                    })
+                    terminals_to_move.append(
+                        {
+                            "id": terminal_id,
+                            "info": terminal_info,
+                            "widget": terminal,
+                        }
+                    )
 
         content = page_to_detach.get_child()
         title = tab_widget._base_title
