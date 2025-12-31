@@ -4,22 +4,22 @@ Command Manager Dialog - A redesigned command guide with button-based commands,
 form dialogs, and integrated "Send to All" functionality.
 """
 
-from typing import Callable, List, Optional, Dict, Any, Tuple
+from typing import Any, Dict, List, Optional, Tuple
 
 import gi
 
 gi.require_version("Gtk", "4.0")
 gi.require_version("Adw", "1")
-from gi.repository import Adw, Gdk, GLib, GObject, Gtk, Pango, Gio
+from gi.repository import Adw, Gdk, Gio, GLib, GObject, Gtk, Pango
 
 from ...data.command_manager_models import (
     CommandButton,
     CommandFormField,
-    ExecutionMode,
     DisplayMode,
+    ExecutionMode,
     FieldType,
-    get_command_button_manager,
     generate_id,
+    get_command_button_manager,
 )
 from ...settings.manager import SettingsManager
 from ...utils.syntax_utils import get_bash_pango_markup
@@ -27,7 +27,6 @@ from ...utils.tooltip_helper import get_tooltip_helper
 from ...utils.translation_utils import _
 from ..widgets.bash_text_view import BashTextView
 from ..widgets.form_widget_builder import create_field_from_form_field
-
 
 # Extraction command builders: (extension_tuple, uses_dest_flag, command_template_with_output, command_template_without)
 # For templates: {input} = input file, {dest} = destination flag, {output} = output path

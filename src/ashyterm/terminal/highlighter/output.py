@@ -14,8 +14,7 @@ import regex as re_engine
 
 from ...settings.highlights import HighlightRule, get_highlight_manager
 from ...utils.logger import get_logger
-
-from .constants import ANSI_RESET, ANSI_COLOR_PATTERN
+from .constants import ANSI_COLOR_PATTERN, ANSI_RESET
 from .rules import (
     CompiledRule,
     LiteralKeywordRule,
