@@ -25,7 +25,7 @@ import threading
 from dataclasses import dataclass, field
 from importlib import resources
 from pathlib import Path
-from typing import Any, Dict, List, Optional, Pattern, Set, Tuple
+from typing import Any, Callable, Dict, List, Optional, Pattern, Set, Tuple
 
 import gi
 
@@ -914,6 +914,79 @@ class HighlightManager(GObject.GObject):
         return self._config.global_rules.copy()
 
     # =========================================================================
+    # Private Helpers for Rule Manipulation (DRY pattern)
+    # =========================================================================
+
+    def _modify_global_rule(
+        self, index: int, action: Callable[[List[HighlightRule], int], None]
+    ) -> bool:
+        """
+        Execute an action on a global rule at the given index.
+
+        Args:
+            index: The index of the rule to modify.
+            action: A callable that takes (rules_list, index) and modifies it in place.
+
+        Returns:
+            True if the action was performed, False if index was invalid.
+        """
+        with self._lock:
+            if 0 <= index < len(self._config.global_rules):
+                action(self._config.global_rules, index)
+                self._pattern_dirty = True
+                self.emit("rules-changed")
+                return True
+            return False
+
+    def _modify_context_rule(
+        self,
+        command_name: str,
+        index: int,
+        action: Callable[[List[HighlightRule], int], None],
+    ) -> bool:
+        """
+        Execute an action on a context rule at the given index.
+
+        Args:
+            command_name: The context command name.
+            index: The index of the rule to modify.
+            action: A callable that takes (rules_list, index) and modifies it in place.
+
+        Returns:
+            True if the action was performed, False if context or index was invalid.
+        """
+        with self._lock:
+            if command_name in self._config.contexts:
+                ctx = self._config.contexts[command_name]
+                if 0 <= index < len(ctx.rules):
+                    action(ctx.rules, index)
+                    self._pattern_dirty = True
+                    self.emit("rules-changed")
+                    return True
+            return False
+
+    def _modify_context_attr(
+        self, command_name: str, action: Callable[[HighlightContext], None]
+    ) -> bool:
+        """
+        Execute an action on a context's attribute.
+
+        Args:
+            command_name: The context command name.
+            action: A callable that takes a HighlightContext and modifies it in place.
+
+        Returns:
+            True if the action was performed, False if context was not found.
+        """
+        with self._lock:
+            if command_name in self._config.contexts:
+                action(self._config.contexts[command_name])
+                self._pattern_dirty = True
+                self.emit("rules-changed")
+                return True
+            return False
+
+    # =========================================================================
     # Context Management
     # =========================================================================
 
@@ -948,23 +1021,15 @@ class HighlightManager(GObject.GObject):
 
     def set_context_enabled(self, command_name: str, enabled: bool) -> bool:
         """Enable or disable a context."""
-        with self._lock:
-            if command_name in self._config.contexts:
-                self._config.contexts[command_name].enabled = enabled
-                self._pattern_dirty = True
-                self.emit("rules-changed")
-                return True
-            return False
+        return self._modify_context_attr(
+            command_name, lambda ctx: setattr(ctx, "enabled", enabled)
+        )
 
     def set_context_use_global_rules(self, command_name: str, use_global: bool) -> bool:
         """Set whether a context should include global rules."""
-        with self._lock:
-            if command_name in self._config.contexts:
-                self._config.contexts[command_name].use_global_rules = use_global
-                self._pattern_dirty = True
-                self.emit("rules-changed")
-                return True
-            return False
+        return self._modify_context_attr(
+            command_name, lambda ctx: setattr(ctx, "use_global_rules", use_global)
+        )
 
     def get_context_use_global_rules(self, command_name: str) -> bool:
         """Get whether a context includes global rules."""
@@ -1035,33 +1100,19 @@ class HighlightManager(GObject.GObject):
 
     def update_rule(self, index: int, rule: HighlightRule) -> bool:
         """Update an existing global rule."""
-        with self._lock:
-            if 0 <= index < len(self._config.global_rules):
-                self._config.global_rules[index] = rule
-                self._pattern_dirty = True
-                self.emit("rules-changed")
-                return True
-            return False
+        return self._modify_global_rule(
+            index, lambda rules, i: rules.__setitem__(i, rule)
+        )
 
     def remove_rule(self, index: int) -> bool:
         """Remove a global rule."""
-        with self._lock:
-            if 0 <= index < len(self._config.global_rules):
-                del self._config.global_rules[index]
-                self._pattern_dirty = True
-                self.emit("rules-changed")
-                return True
-            return False
+        return self._modify_global_rule(index, lambda rules, i: rules.__delitem__(i))
 
     def set_rule_enabled(self, index: int, enabled: bool) -> bool:
         """Enable or disable a global rule."""
-        with self._lock:
-            if 0 <= index < len(self._config.global_rules):
-                self._config.global_rules[index].enabled = enabled
-                self._pattern_dirty = True
-                self.emit("rules-changed")
-                return True
-            return False
+        return self._modify_global_rule(
+            index, lambda rules, i: setattr(rules[i], "enabled", enabled)
+        )
 
     # =========================================================================
     # Context Rule Management
@@ -1069,53 +1120,31 @@ class HighlightManager(GObject.GObject):
 
     def add_rule_to_context(self, command_name: str, rule: HighlightRule) -> bool:
         """Add a rule to a specific context."""
-        with self._lock:
-            if command_name in self._config.contexts:
-                self._config.contexts[command_name].rules.append(rule)
-                self._pattern_dirty = True
-                self.emit("rules-changed")
-                return True
-            return False
+        return self._modify_context_attr(
+            command_name, lambda ctx: ctx.rules.append(rule)
+        )
 
     def update_context_rule(
         self, command_name: str, index: int, rule: HighlightRule
     ) -> bool:
         """Update a rule in a specific context."""
-        with self._lock:
-            if command_name in self._config.contexts:
-                ctx = self._config.contexts[command_name]
-                if 0 <= index < len(ctx.rules):
-                    ctx.rules[index] = rule
-                    self._pattern_dirty = True
-                    self.emit("rules-changed")
-                    return True
-            return False
+        return self._modify_context_rule(
+            command_name, index, lambda rules, i: rules.__setitem__(i, rule)
+        )
 
     def remove_context_rule(self, command_name: str, index: int) -> bool:
         """Remove a rule from a specific context."""
-        with self._lock:
-            if command_name in self._config.contexts:
-                ctx = self._config.contexts[command_name]
-                if 0 <= index < len(ctx.rules):
-                    del ctx.rules[index]
-                    self._pattern_dirty = True
-                    self.emit("rules-changed")
-                    return True
-            return False
+        return self._modify_context_rule(
+            command_name, index, lambda rules, i: rules.__delitem__(i)
+        )
 
     def set_context_rule_enabled(
         self, command_name: str, index: int, enabled: bool
     ) -> bool:
         """Enable or disable a rule in a specific context."""
-        with self._lock:
-            if command_name in self._config.contexts:
-                ctx = self._config.contexts[command_name]
-                if 0 <= index < len(ctx.rules):
-                    ctx.rules[index].enabled = enabled
-                    self._pattern_dirty = True
-                    self.emit("rules-changed")
-                    return True
-            return False
+        return self._modify_context_rule(
+            command_name, index, lambda rules, i: setattr(rules[i], "enabled", enabled)
+        )
 
     def move_context_rule(
         self, command_name: str, from_index: int, to_index: int

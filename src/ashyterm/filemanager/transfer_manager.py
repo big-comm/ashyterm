@@ -435,27 +435,38 @@ class TransferManager(GObject.Object):
         self.progress_revealer.set_child(self.progress_row)
         return self.progress_revealer
 
+    def _format_bytes_with_unit(
+        self, value: float, suffix: str = "B", zero_check_lte: bool = False
+    ) -> str:
+        """Generic helper to format byte values with appropriate units.
+
+        Args:
+            value: The byte value to format
+            suffix: Unit suffix (e.g., "B" for size, "B/s" for speed)
+            zero_check_lte: If True, check value <= 0; if False, check value < 0
+
+        Returns:
+            Formatted string with appropriate unit prefix (B, KB, MB, GB)
+        """
+        if not isinstance(value, (int, float)):
+            return f"0 {suffix}"
+        if (zero_check_lte and value <= 0) or (not zero_check_lte and value < 0):
+            return f"0 {suffix}"
+        if value < 1024:
+            return f"{value:.1f if isinstance(value, float) else value} {suffix}"
+        if value < 1024**2:
+            return f"{value / 1024:.1f} K{suffix}"
+        if value < 1024**3:
+            return f"{value / 1024**2:.1f} M{suffix}"
+        return f"{value / 1024**3:.1f} G{suffix}"
+
     def _format_file_size(self, size_bytes: int) -> str:
-        if not isinstance(size_bytes, (int, float)) or size_bytes < 0:
-            return "0 B"
-        if size_bytes < 1024:
-            return f"{size_bytes} B"
-        if size_bytes < 1024**2:
-            return f"{size_bytes / 1024:.1f} KB"
-        if size_bytes < 1024**3:
-            return f"{size_bytes / 1024**2:.1f} MB"
-        return f"{size_bytes / 1024**3:.1f} GB"
+        return self._format_bytes_with_unit(size_bytes, "B", zero_check_lte=False)
 
     def _format_speed(self, bytes_per_second: float) -> str:
-        if not isinstance(bytes_per_second, (int, float)) or bytes_per_second <= 0:
-            return "0 B/s"
-        if bytes_per_second < 1024:
-            return f"{bytes_per_second:.1f} B/s"
-        if bytes_per_second < 1024**2:
-            return f"{bytes_per_second / 1024:.1f} KB/s"
-        if bytes_per_second < 1024**3:
-            return f"{bytes_per_second / 1024**2:.1f} MB/s"
-        return f"{bytes_per_second / 1024**3:.1f} GB/s"
+        return self._format_bytes_with_unit(
+            bytes_per_second, "B/s", zero_check_lte=True
+        )
 
     def _format_duration(self, seconds: float) -> str:
         if not isinstance(seconds, (int, float)) or seconds < 0:

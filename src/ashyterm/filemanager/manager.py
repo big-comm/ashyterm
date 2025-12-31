@@ -2192,8 +2192,38 @@ class FileManager(GObject.Object):
 
         return menu
 
-    def _setup_context_actions(self, popover, items: List[FileItem]):
+    def _setup_action_group(
+        self,
+        popover,
+        actions: dict,
+        group_name: str = "context",
+        items: List[FileItem] = None,
+    ):
+        """Generic helper to setup action groups with callbacks.
+
+        Args:
+            popover: The popover to attach the action group to
+            actions: Dict mapping action names to callbacks
+            group_name: Name of the action group (default: "context")
+            items: Optional list of FileItem objects to pass to callbacks
+        """
         action_group = Gio.SimpleActionGroup()
+        for name, callback in actions.items():
+            action = Gio.SimpleAction.new(name, None)
+            if name == "paste":
+                action.set_enabled(self._can_paste())
+                action.connect("activate", lambda a, _, cb=callback: cb())
+            elif items is not None:
+                action.connect(
+                    "activate",
+                    lambda a, _, cb=callback, itms=list(items): cb(a, _, itms),
+                )
+            else:
+                action.connect("activate", lambda a, _, cb=callback: cb())
+            action_group.add_action(action)
+        popover.insert_action_group(group_name, action_group)
+
+    def _setup_context_actions(self, popover, items: List[FileItem]):
         actions = {
             "open_edit": self._on_open_edit_action,
             "open_with": self._on_open_with_action,
@@ -2205,18 +2235,7 @@ class FileManager(GObject.Object):
             "download": self._on_download_action,
             "delete": self._on_delete_action,
         }
-        for name, callback in actions.items():
-            action = Gio.SimpleAction.new(name, None)
-            if name == "paste":
-                action.set_enabled(self._can_paste())
-                action.connect("activate", lambda a, _, cb=callback: cb())
-            else:
-                action.connect(
-                    "activate",
-                    lambda a, _, cb=callback, itms=list(items): cb(a, _, itms),
-                )
-            action_group.add_action(action)
-        popover.insert_action_group("context", action_group)
+        self._setup_action_group(popover, actions, "context", items)
 
     def _on_create_folder_action(self, *_args):
         base_path = PurePosixPath(self.current_path or "/")
@@ -2252,10 +2271,21 @@ class FileManager(GObject.Object):
             callback=create_file,
         )
 
-    def _on_copy_action(self, _action, _param, items: List[FileItem]):
+    def _set_clipboard_operation(
+        self, items: List[FileItem], operation: str, toast_message: str
+    ):
+        """Generic helper to set clipboard items for copy/cut operations.
+
+        Args:
+            items: List of FileItem objects to add to clipboard
+            operation: Either "copy" or "cut"
+            toast_message: Message to display in toast notification
+        """
         selectable_items = [item for item in items if item.name != ".."]
         if not selectable_items:
-            self._show_toast(_("No items selected to copy."))
+            self._show_toast(
+                _("No items selected to {operation}.").format(operation=operation)
+            )
             return
 
         base_path = PurePosixPath(self.current_path or "/")
@@ -2267,28 +2297,15 @@ class FileManager(GObject.Object):
             }
             for item in selectable_items
         ]
-        self._clipboard_operation = "copy"
+        self._clipboard_operation = operation
         self._clipboard_session_key = self._get_current_session_key()
-        self._show_toast(_("Items copied to clipboard."))
+        self._show_toast(toast_message)
+
+    def _on_copy_action(self, _action, _param, items: List[FileItem]):
+        self._set_clipboard_operation(items, "copy", _("Items copied to clipboard."))
 
     def _on_cut_action(self, _action, _param, items: List[FileItem]):
-        selectable_items = [item for item in items if item.name != ".."]
-        if not selectable_items:
-            self._show_toast(_("No items selected to cut."))
-            return
-
-        base_path = PurePosixPath(self.current_path or "/")
-        self._clipboard_items = [
-            {
-                "name": item.name,
-                "path": str(base_path / item.name),
-                "is_directory": item.is_directory,
-            }
-            for item in selectable_items
-        ]
-        self._clipboard_operation = "cut"
-        self._clipboard_session_key = self._get_current_session_key()
-        self._show_toast(_("Items marked for move."))
+        self._set_clipboard_operation(items, "cut", _("Items marked for move."))
 
     def _on_paste_action(self):
         if not self._can_paste():
@@ -2318,21 +2335,12 @@ class FileManager(GObject.Object):
         self._show_toast(toast_message)
 
     def _setup_general_context_actions(self, popover):
-        action_group = Gio.SimpleActionGroup()
         actions = {
             "create_folder": self._on_create_folder_action,
             "create_file": self._on_create_file_action,
             "paste": self._on_paste_action,
         }
-        for name, callback in actions.items():
-            action = Gio.SimpleAction.new(name, None)
-            if name == "paste":
-                action.set_enabled(self._can_paste())
-                action.connect("activate", lambda a, _, cb=callback: cb())
-            else:
-                action.connect("activate", lambda a, _, cb=callback: cb())
-            action_group.add_action(action)
-        popover.insert_action_group("context", action_group)
+        self._setup_action_group(popover, actions, "context")
 
     def _on_delete_action(self, _action, _param, items: List[FileItem]):
         count = len(items)

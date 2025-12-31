@@ -10,6 +10,7 @@ import threading
 import uuid
 from dataclasses import asdict, dataclass, field
 from enum import Enum
+from pathlib import Path
 from typing import Any, Dict, List, Optional
 
 from ..settings.config import get_config_paths
@@ -660,125 +661,123 @@ class CommandButtonManager:
             self._builtin_commands = get_builtin_commands()
             self.logger.info(f"Loaded {len(self._builtin_commands)} built-in commands.")
 
+    # =========================================================================
+    # Private Helpers for JSON I/O (DRY pattern)
+    # =========================================================================
+
+    def _save_json_file(self, filepath: Path, data: Any, label: str) -> None:
+        """
+        Generic helper to save JSON data to a file.
+
+        Args:
+            filepath: Path to the JSON file.
+            data: Data to serialize (must be JSON-serializable).
+            label: Label for logging (e.g., "custom commands").
+        """
+        try:
+            filepath.parent.mkdir(parents=True, exist_ok=True)
+            with open(filepath, "w", encoding="utf-8") as f:
+                json.dump(data, f, indent=2, ensure_ascii=False)
+            self.logger.info(f"{label} saved successfully.")
+        except Exception as e:
+            self.logger.error(f"Failed to save {label}: {e}")
+
+    def _load_json_file(self, filepath: Path, default: Any, label: str) -> Any:
+        """
+        Generic helper to load JSON data from a file.
+
+        Args:
+            filepath: Path to the JSON file.
+            default: Default value if file doesn't exist or parsing fails.
+            label: Label for logging (e.g., "custom commands").
+
+        Returns:
+            Loaded data or the default value.
+        """
+        if not filepath.exists():
+            return default
+
+        try:
+            with open(filepath, "r", encoding="utf-8") as f:
+                data = json.load(f)
+            self.logger.info(f"Loaded {label}.")
+            return data
+        except (json.JSONDecodeError, FileNotFoundError) as e:
+            self.logger.error(f"Failed to load {label}: {e}")
+            return default
+
+    # =========================================================================
+    # Data Loading
+    # =========================================================================
+
     def _load_custom_commands(self):
         """Load user-defined commands from file."""
         with self._data_lock:
-            if not self.custom_commands_file.exists():
-                self._custom_commands = []
-                return
-
+            data = self._load_json_file(
+                self.custom_commands_file, [], "custom commands"
+            )
             try:
-                with open(self.custom_commands_file, "r", encoding="utf-8") as f:
-                    data = json.load(f)
-                    self._custom_commands = [
-                        CommandButton.from_dict(cmd) for cmd in data
-                    ]
-                self.logger.info(
-                    f"Loaded {len(self._custom_commands)} custom commands."
-                )
-            except (json.JSONDecodeError, FileNotFoundError, KeyError) as e:
-                self.logger.error(f"Failed to load custom commands: {e}")
+                self._custom_commands = [CommandButton.from_dict(cmd) for cmd in data]
+                if data:
+                    self.logger.info(
+                        f"Loaded {len(self._custom_commands)} custom commands."
+                    )
+            except (KeyError, TypeError) as e:
+                self.logger.error(f"Failed to parse custom commands: {e}")
                 self._custom_commands = []
 
     def _load_customized_builtins(self):
         """Load customizations for built-in commands."""
         with self._data_lock:
-            if not self.customized_builtins_file.exists():
-                self._customized_builtins = {}
-                return
-
-            try:
-                with open(self.customized_builtins_file, "r", encoding="utf-8") as f:
-                    self._customized_builtins = json.load(f)
-                self.logger.info(
-                    f"Loaded {len(self._customized_builtins)} customized builtins."
-                )
-            except (json.JSONDecodeError, FileNotFoundError) as e:
-                self.logger.error(f"Failed to load customized builtins: {e}")
-                self._customized_builtins = {}
+            self._customized_builtins = self._load_json_file(
+                self.customized_builtins_file, {}, "customized builtins"
+            )
 
     def _load_hidden_commands(self):
         """Load list of hidden command IDs."""
         with self._data_lock:
-            if not self.hidden_commands_file.exists():
-                self._hidden_command_ids = set()
-                return
-
-            try:
-                with open(self.hidden_commands_file, "r", encoding="utf-8") as f:
-                    self._hidden_command_ids = set(json.load(f))
-                self.logger.info(
-                    f"Loaded {len(self._hidden_command_ids)} hidden commands."
-                )
-            except (json.JSONDecodeError, FileNotFoundError) as e:
-                self.logger.error(f"Failed to load hidden commands: {e}")
-                self._hidden_command_ids = set()
+            data = self._load_json_file(
+                self.hidden_commands_file, [], "hidden commands"
+            )
+            self._hidden_command_ids = set(data)
 
     def save_custom_commands(self):
         """Save user-defined commands to file."""
         with self._data_lock:
-            try:
-                # Ensure directory exists
-                self.custom_commands_file.parent.mkdir(parents=True, exist_ok=True)
-
-                data_to_save = [cmd.to_dict() for cmd in self._custom_commands]
-                with open(self.custom_commands_file, "w", encoding="utf-8") as f:
-                    json.dump(data_to_save, f, indent=2, ensure_ascii=False)
-                self.logger.info("Custom commands saved successfully.")
-            except Exception as e:
-                self.logger.error(f"Failed to save custom commands: {e}")
+            data = [cmd.to_dict() for cmd in self._custom_commands]
+            self._save_json_file(self.custom_commands_file, data, "Custom commands")
 
     def _save_customized_builtins(self):
         """Save customized builtin commands."""
         with self._data_lock:
-            try:
-                self.customized_builtins_file.parent.mkdir(parents=True, exist_ok=True)
-                with open(self.customized_builtins_file, "w", encoding="utf-8") as f:
-                    json.dump(
-                        self._customized_builtins, f, indent=2, ensure_ascii=False
-                    )
-                self.logger.info("Customized builtins saved successfully.")
-            except Exception as e:
-                self.logger.error(f"Failed to save customized builtins: {e}")
+            self._save_json_file(
+                self.customized_builtins_file,
+                self._customized_builtins,
+                "Customized builtins",
+            )
 
     def _save_hidden_commands(self):
         """Save hidden commands list."""
         with self._data_lock:
-            try:
-                self.hidden_commands_file.parent.mkdir(parents=True, exist_ok=True)
-                with open(self.hidden_commands_file, "w", encoding="utf-8") as f:
-                    json.dump(list(self._hidden_command_ids), f, indent=2)
-                self.logger.info("Hidden commands saved successfully.")
-            except Exception as e:
-                self.logger.error(f"Failed to save hidden commands: {e}")
+            self._save_json_file(
+                self.hidden_commands_file,
+                list(self._hidden_command_ids),
+                "Hidden commands",
+            )
 
     def _load_command_prefs(self):
         """Load per-command preferences (e.g., send_to_all)."""
         with self._data_lock:
-            if not self.command_prefs_file.exists():
-                self._command_prefs = {}
-                return
-
-            try:
-                with open(self.command_prefs_file, "r", encoding="utf-8") as f:
-                    self._command_prefs = json.load(f)
-                self.logger.info(
-                    f"Loaded command preferences for {len(self._command_prefs)} commands."
-                )
-            except (json.JSONDecodeError, FileNotFoundError) as e:
-                self.logger.error(f"Failed to load command prefs: {e}")
-                self._command_prefs = {}
+            self._command_prefs = self._load_json_file(
+                self.command_prefs_file, {}, "command preferences"
+            )
 
     def _save_command_prefs(self):
         """Save per-command preferences."""
         with self._data_lock:
-            try:
-                self.command_prefs_file.parent.mkdir(parents=True, exist_ok=True)
-                with open(self.command_prefs_file, "w", encoding="utf-8") as f:
-                    json.dump(self._command_prefs, f, indent=2, ensure_ascii=False)
-                self.logger.info("Command preferences saved successfully.")
-            except Exception as e:
-                self.logger.error(f"Failed to save command prefs: {e}")
+            self._save_json_file(
+                self.command_prefs_file, self._command_prefs, "Command preferences"
+            )
 
     def get_command_pref(self, command_id: str, pref_key: str, default=None):
         """Get a preference value for a command."""
@@ -793,42 +792,38 @@ class CommandButtonManager:
             self._command_prefs[command_id][pref_key] = value
             self._save_command_prefs()
 
+    def _apply_customizations_to_builtin(self, cmd: CommandButton) -> CommandButton:
+        """Apply customizations to a builtin command if any exist.
+
+        Args:
+            cmd: The builtin CommandButton to potentially customize
+
+        Returns:
+            Either the customized command or the original command
+        """
+        if cmd.id in self._customized_builtins:
+            customized = CommandButton.from_dict(self._customized_builtins[cmd.id])
+            customized.is_builtin = True
+            return customized
+        return cmd
+
     def get_all_commands(self) -> List[CommandButton]:
         """Get all commands (built-in with customizations applied, and custom)."""
         with self._data_lock:
-            result = []
-
-            # Add built-in commands (with customizations applied)
-            for cmd in self._builtin_commands:
-                if cmd.id in self._customized_builtins:
-                    # Apply customizations
-                    customized = CommandButton.from_dict(
-                        self._customized_builtins[cmd.id]
-                    )
-                    customized.is_builtin = True  # Keep it marked as builtin
-                    result.append(customized)
-                else:
-                    result.append(cmd)
-
-            # Add custom commands
+            result = [
+                self._apply_customizations_to_builtin(cmd)
+                for cmd in self._builtin_commands
+            ]
             result.extend(self._custom_commands)
-
             return result
 
     def get_builtin_commands(self) -> List[CommandButton]:
         """Get only built-in commands (with customizations applied)."""
         with self._data_lock:
-            result = []
-            for cmd in self._builtin_commands:
-                if cmd.id in self._customized_builtins:
-                    customized = CommandButton.from_dict(
-                        self._customized_builtins[cmd.id]
-                    )
-                    customized.is_builtin = True
-                    result.append(customized)
-                else:
-                    result.append(cmd)
-            return result
+            return [
+                self._apply_customizations_to_builtin(cmd)
+                for cmd in self._builtin_commands
+            ]
 
     def get_custom_commands(self) -> List[CommandButton]:
         """Get only custom commands."""
@@ -841,13 +836,7 @@ class CommandButtonManager:
             # Check builtins first
             for cmd in self._builtin_commands:
                 if cmd.id == command_id:
-                    if command_id in self._customized_builtins:
-                        customized = CommandButton.from_dict(
-                            self._customized_builtins[command_id]
-                        )
-                        customized.is_builtin = True
-                        return customized
-                    return cmd
+                    return self._apply_customizations_to_builtin(cmd)
 
             # Check custom commands
             for cmd in self._custom_commands:
