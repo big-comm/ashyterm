@@ -193,23 +193,7 @@ class SidebarManager:
 
     def _transfer_focus_to_terminal(self):
         """Transfer focus to the active terminal after popup closes."""
-        try:
-            # Get the active terminal from the tab manager
-            if hasattr(self.window, "tab_manager") and self.window.tab_manager:
-                active_terminal = self.window.tab_manager.get_selected_terminal()
-                if active_terminal and active_terminal.get_realized():
-                    # Use idle_add to ensure the UI is ready
-                    def focus_terminal():
-                        if active_terminal.get_can_focus():
-                            active_terminal.grab_focus()
-                            self.logger.debug(
-                                "Focus transferred to terminal after popup close"
-                            )
-                        return False
-
-                    GLib.idle_add(focus_terminal)
-        except Exception as e:
-            self.logger.error(f"Failed to transfer focus to terminal: {e}")
+        pass
 
     def _on_sidebar_popover_key_pressed(self, _, keyval, _keycode, state) -> bool:
         # Always allow closing with the Escape key

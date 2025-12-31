@@ -1286,13 +1286,6 @@ class TerminalManager:
 
             self.manual_ssh_tracker.track(terminal_id, terminal)
 
-            focus_controller = Gtk.EventControllerFocus()
-            focus_controller.connect(
-                "enter", self._on_terminal_focus_in, terminal, terminal_id
-            )
-            terminal.add_controller(focus_controller)
-            terminal.ashy_controllers.append(focus_controller)
-
             click_controller = Gtk.GestureClick()
             click_controller.set_button(1)
             click_controller.connect(
@@ -1321,7 +1314,7 @@ class TerminalManager:
             )
             terminal.add_controller(key_controller)
             terminal.ashy_controllers.append(key_controller)
-
+            
             terminal.terminal_id = terminal_id
         except Exception as e:
             self.logger.error(
@@ -1329,24 +1322,13 @@ class TerminalManager:
             )
 
     def _setup_context_menu(self, terminal: Vte.Terminal) -> None:
-        try:
-            menu_model = _create_terminal_menu(
-                terminal, settings_manager=self.settings_manager
-            )
-            terminal.set_context_menu_model(menu_model)
-        except Exception as e:
-            self.logger.error(f"Context menu setup failed: {e}")
+        # We handle context menu manually in _on_terminal_right_clicked
+        pass
 
     def _update_context_menu_with_url(
         self, terminal: Vte.Terminal, x: float, y: float
     ) -> None:
-        try:
-            menu_model = _create_terminal_menu(
-                terminal, x, y, settings_manager=self.settings_manager
-            )
-            terminal.set_context_menu_model(menu_model)
-        except Exception as e:
-            self.logger.error(f"Context menu URL update failed: {e}")
+        pass
 
     def _on_terminal_focus_in(self, _controller, terminal, terminal_id):
         try:
@@ -2688,8 +2670,31 @@ class TerminalManager:
         self, gesture, _n_press, x, y, terminal, terminal_id
     ):
         try:
-            self._update_context_menu_with_url(terminal, x, y)
-            return Gdk.EVENT_PROPAGATE
+            # Manually handle context menu to avoid VTE/Wayland crashes
+            gesture.set_state(Gtk.EventSequenceState.CLAIMED)
+            
+            menu_model = _create_terminal_menu(
+                terminal,
+                terminal_id,
+                settings_manager=self.settings_manager,
+                click_x=x,
+                click_y=y
+            )
+            
+            popover = Gtk.PopoverMenu.new_from_model(menu_model)
+            popover.set_parent(terminal)
+            popover.set_has_arrow(False)
+            popover.set_position(Gtk.PositionType.BOTTOM)
+            
+            rect = Gdk.Rectangle()
+            rect.x = int(x)
+            rect.y = int(y)
+            rect.width = 1
+            rect.height = 1
+            popover.set_pointing_to(rect)
+            
+            GLib.idle_add(popover.popup)
+            return Gdk.EVENT_STOP
         except Exception as e:
             self.logger.error(
                 f"Terminal right-click handling failed for terminal {terminal_id}: {e}"

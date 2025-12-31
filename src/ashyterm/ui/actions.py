@@ -416,7 +416,7 @@ class WindowActions:
             "font-changed",
             lambda d, f: self.window.terminal_manager.apply_settings_to_all_terminals(),
         )
-        dialog.present()
+        GLib.idle_add(lambda: dialog.present())
 
     def shortcuts(self, *_args):
         self._hide_tooltip()
@@ -465,14 +465,15 @@ class WindowActions:
     def _show_session_edit_dialog(self, session: SessionItem, position: int) -> None:
         from .dialogs import SessionEditDialog
 
-        SessionEditDialog(
+        dialog = SessionEditDialog(
             self.window,
             session,
             self.window.session_store,
             position,
             self.window.folder_store,
             settings_manager=self.window.settings_manager,
-        ).present()
+        )
+        GLib.idle_add(lambda: dialog.present())
 
     def _show_folder_edit_dialog(
         self, folder: Optional[SessionFolder], position: Optional[int]

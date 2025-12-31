@@ -1,6 +1,7 @@
 # ashyterm/ui/menus.py
 
 import gi
+from typing import Optional
 
 gi.require_version("Gtk", "4.0")
 gi.require_version("Adw", "1")
@@ -270,10 +271,16 @@ def create_root_menu(clipboard_has_content=False) -> Gio.Menu:
 
 
 def create_terminal_menu(
-    terminal, click_x=None, click_y=None, settings_manager=None
+    terminal,
+    terminal_id: int,
+    settings_manager: Optional["SettingsManager"] = None,
+    click_x: Optional[float] = None,
+    click_y: Optional[float] = None,
 ) -> Gio.Menu:
     """Factory function to create a terminal context menu model."""
     menu = Gio.Menu()
+    
+    # URL detection
     url_at_click = None
     if click_x is not None and click_y is not None and hasattr(terminal, "match_check"):
         try:
@@ -298,35 +305,39 @@ def create_terminal_menu(
         menu.append_section(None, url_section)
 
     standard_section = Gio.Menu()
+    
+    # AI Assistant section - only show if enabled and text is selected
+    try:
+        if settings_manager and settings_manager.get("ai_assistant_enabled", False):
+            has_selection = (
+                terminal.get_has_selection()
+                if hasattr(terminal, "get_has_selection")
+                else False
+            )
+            if has_selection:
+                ai_section = Gio.Menu()
+                ai_item = Gio.MenuItem.new(_("Ask AI"), "win.ask-ai-selection")
+                # ai_item.set_icon(Gio.ThemedIcon.new("avatar-default-symbolic"))
+                ai_section.append_item(ai_item)
+                menu.append_section(None, ai_section)
+    except Exception as e:
+        print(f"Error checking AI section: {e}")
+
     standard_section.append(_("Copy"), "win.copy")
     standard_section.append(_("Paste"), "win.paste")
     standard_section.append(_("Select All"), "win.select-all")
     standard_section.append(_("Clear Session"), "win.clear-session")
     menu.append_section(None, standard_section)
 
-    # AI Assistant section - only show if enabled and text is selected
-    if settings_manager and settings_manager.get("ai_assistant_enabled", False):
-        # Check if there's selected text
-        has_selection = (
-            terminal.get_has_selection()
-            if hasattr(terminal, "get_has_selection")
-            else False
-        )
-        if has_selection:
-            ai_section = Gio.Menu()
-            ai_item = Gio.MenuItem.new(_("Ask AI"), "win.ask-ai-selection")
-            ai_item.set_icon(Gio.ThemedIcon.new("avatar-default-symbolic"))
-            ai_section.append_item(ai_item)
-            menu.append_section(None, ai_section)
-
     split_section = Gio.Menu()
     split_h_item = Gio.MenuItem.new(_("Split Left/Right"), "win.split-horizontal")
-    split_h_item.set_icon(Gio.ThemedIcon.new("view-split-horizontal-symbolic"))
+    # split_h_item.set_icon(Gio.ThemedIcon.new("view-split-horizontal-symbolic"))
     split_section.append_item(split_h_item)
+    
     split_v_item = Gio.MenuItem.new(_("Split Top/Bottom"), "win.split-vertical")
-    split_v_item.set_icon(Gio.ThemedIcon.new("view-split-vertical-symbolic"))
+    # split_v_item.set_icon(Gio.ThemedIcon.new("view-split-vertical-symbolic"))
     split_section.append_item(split_v_item)
-    split_section.append(_("Close Pane"), "win.close-pane")
-    menu.append_section(None, split_section)
 
+    menu.append_section(None, split_section)
     return menu
+
