@@ -4,7 +4,7 @@ Command Manager Dialog - A redesigned command guide with button-based commands,
 form dialogs, and integrated "Send to All" functionality.
 """
 
-from typing import List, Optional, Dict, Any
+from typing import Callable, List, Optional, Dict, Any, Tuple
 
 import gi
 
@@ -27,6 +27,24 @@ from ...utils.tooltip_helper import get_tooltip_helper
 from ...utils.translation_utils import _
 from ..widgets.bash_text_view import BashTextView
 from ..widgets.form_widget_builder import create_field_from_form_field
+
+
+# Extraction command builders: (extension_tuple, uses_dest_flag, command_template_with_output, command_template_without)
+# For templates: {input} = input file, {dest} = destination flag, {output} = output path
+_EXTRACT_COMMANDS: List[Tuple[Tuple[str, ...], bool, str, str]] = [
+    ((".zip",), False, "unzip {input} -d {output}", "unzip {input}"),
+    ((".tar",), True, "tar -xvf {input} {dest}", "tar -xvf {input}"),
+    ((".tar.gz", ".tgz"), True, "tar -xzvf {input} {dest}", "tar -xzvf {input}"),
+    ((".tar.bz2", ".tbz2"), True, "tar -xjvf {input} {dest}", "tar -xjvf {input}"),
+    ((".tar.xz", ".txz"), True, "tar -xJvf {input} {dest}", "tar -xJvf {input}"),
+    ((".tar.zst", ".tzst"), False, "zstd -d {input} -c | tar -xvf - -C {output}", "zstd -d {input} -c | tar -xvf -"),
+    ((".tar.lzma", ".tlz"), False, "lzma -d -c {input} | tar -xvf - -C {output}", "lzma -d -c {input} | tar -xvf -"),
+    ((".gz",), False, "gunzip {input}", "gunzip {input}"),
+    ((".bz2",), False, "bunzip2 {input}", "bunzip2 {input}"),
+    ((".xz",), False, "unxz {input}", "unxz {input}"),
+    ((".zst",), False, "zstd -d {input}", "zstd -d {input}"),
+    ((".lzma",), False, "lzma -d {input}", "lzma -d {input}"),
+]
 
 
 class CommandFormDialog(Adw.Window):
@@ -533,46 +551,44 @@ class CommandFormDialog(Adw.Window):
         # Use placeholder if no input
         input_display = input_path if input_path else "<archive>"
 
-        # Destination directory flag
-        if output_path:
-            dest_flag = f"-C {output_path}"
-        else:
-            dest_flag = ""
+        # Find matching extraction command
+        for extensions, uses_dest_flag, template_with_output, template_without in _EXTRACT_COMMANDS:
+            if any(input_path.endswith(ext) for ext in extensions):
+                return self._format_extract_template(
+                    input_display, output_path, uses_dest_flag,
+                    template_with_output, template_without
+                )
 
-        # Auto-detect format from filename
-        if input_path.endswith(".zip"):
-            if output_path:
-                return f"unzip {input_display} -d {output_path}"
-            return f"unzip {input_display}"
-        elif input_path.endswith(".tar"):
-            return f"tar -xvf {input_display} {dest_flag}".strip()
-        elif input_path.endswith(".tar.gz") or input_path.endswith(".tgz"):
-            return f"tar -xzvf {input_display} {dest_flag}".strip()
-        elif input_path.endswith(".tar.bz2") or input_path.endswith(".tbz2"):
-            return f"tar -xjvf {input_display} {dest_flag}".strip()
-        elif input_path.endswith(".tar.xz") or input_path.endswith(".txz"):
-            return f"tar -xJvf {input_display} {dest_flag}".strip()
-        elif input_path.endswith(".tar.zst") or input_path.endswith(".tzst"):
-            if output_path:
-                return f"zstd -d {input_display} -c | tar -xvf - -C {output_path}"
-            return f"zstd -d {input_display} -c | tar -xvf -"
-        elif input_path.endswith(".tar.lzma") or input_path.endswith(".tlz"):
-            if output_path:
-                return f"lzma -d -c {input_display} | tar -xvf - -C {output_path}"
-            return f"lzma -d -c {input_display} | tar -xvf -"
-        elif input_path.endswith(".gz"):
-            return f"gunzip {input_display}"
-        elif input_path.endswith(".bz2"):
-            return f"bunzip2 {input_display}"
-        elif input_path.endswith(".xz"):
-            return f"unxz {input_display}"
-        elif input_path.endswith(".zst"):
-            return f"zstd -d {input_display}"
-        elif input_path.endswith(".lzma"):
-            return f"lzma -d {input_display}"
-        else:
-            # Default to tar with auto-detection
-            return f"tar -xvf {input_display} {dest_flag}".strip()
+        # Default to tar with auto-detection
+        dest_flag = f"-C {output_path}" if output_path else ""
+        return f"tar -xvf {input_display} {dest_flag}".strip()
+
+    def _format_extract_template(
+        self,
+        input_display: str,
+        output_path: str,
+        uses_dest_flag: bool,
+        template_with_output: str,
+        template_without: str,
+    ) -> str:
+        """Format extraction command template with input/output values.
+
+        Args:
+            input_display: Input file path or placeholder.
+            output_path: Output directory path.
+            uses_dest_flag: Whether to use -C flag format.
+            template_with_output: Template when output path is provided.
+            template_without: Template when no output path.
+
+        Returns:
+            Formatted command string.
+        """
+        if output_path:
+            dest_flag = f"-C {output_path}" if uses_dest_flag else ""
+            return template_with_output.format(
+                input=input_display, dest=dest_flag, output=output_path
+            ).strip()
+        return template_without.format(input=input_display)
 
     def _build_systemctl_command(self, values: Dict[str, Any]) -> str:
         """Build systemctl command with proper handling of service name."""

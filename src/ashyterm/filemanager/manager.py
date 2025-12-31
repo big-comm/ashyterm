@@ -1002,101 +1002,109 @@ class FileManager(GObject.Object):
         the entire output into memory at once. This keeps RAM usage stable
         even for directories with many files.
         """
-        results: List[FileItem] = []
-        error_message = ""
-        truncated = False
-
-        # Capture operations reference locally to prevent race with destroy()
         operations = self.operations
         if self._is_destroyed or not operations:
-            GLib.idle_add(
-                self._complete_recursive_search,
-                generation,
-                [],
-                "Search cancelled - file manager closing",
-                False,
-            )
+            self._schedule_search_complete(generation, [], "Search cancelled", False)
             return
 
-        # Check if fd (or fdfind) is available for faster search
         use_fd = self._check_fd_available(operations)
-
-        if use_fd:
-            # fd command - faster and more user-friendly
-            command = self._build_fd_command(base_path, search_term, show_hidden)
-        else:
-            # Fallback to find command
-            command = self._build_find_command(base_path, search_term, show_hidden)
-
+        command = self._build_search_command(base_path, search_term, show_hidden, use_fd)
         base_posix = PurePosixPath(base_path)
 
         try:
             if self._is_remote_session():
-                # For remote sessions, we still need to use execute_command_on_session
-                # which returns full output, but this is unavoidable for SSH
-                success, output = operations.execute_command_on_session(command)
-                if not success:
-                    error_message = output.strip()
-                    output = ""
-
-                # Process lines from remote output
-                for line in output.splitlines():
-                    if self._recursive_search_generation != generation:
-                        return  # Abort if search cancelled
-
-                    if not line or (not use_fd and line.startswith("find:")):
-                        continue
-
-                    file_item = self._process_search_result_line(line, base_posix)
-                    if file_item:
-                        results.append(file_item)
-                        if len(results) >= MAX_RECURSIVE_RESULTS:
-                            truncated = True
-                            break
+                results, error_message, truncated = self._search_remote(
+                    generation, command, base_posix, use_fd, operations
+                )
             else:
-                # Task 6: For local sessions, use Popen for memory-efficient line-by-line reading
-                with subprocess.Popen(
-                    command,
-                    stdout=subprocess.PIPE,
-                    stderr=subprocess.PIPE,
-                    text=True,
-                    bufsize=1,  # Line buffered
-                ) as proc:
-                    for line in proc.stdout:
-                        # Check for cancellation on each line
-                        if self._recursive_search_generation != generation:
-                            proc.terminate()
-                            return  # Abort if search cancelled
-
-                        line = line.rstrip("\n")
-                        if not line or (not use_fd and line.startswith("find:")):
-                            continue
-
-                        file_item = self._process_search_result_line(line, base_posix)
-                        if file_item:
-                            results.append(file_item)
-                            if len(results) >= MAX_RECURSIVE_RESULTS:
-                                truncated = True
-                                proc.terminate()
-                                break
-
-                    # Check for errors if process didn't complete normally
-                    if proc.returncode and proc.returncode != 0:
-                        stderr_output = proc.stderr.read() if proc.stderr else ""
-                        if stderr_output:
-                            error_message = stderr_output.strip()
-
+                results, error_message, truncated = self._search_local(
+                    generation, command, base_posix, use_fd
+                )
         except subprocess.TimeoutExpired:
-            error_message = "Search timed out"
+            results, error_message, truncated = [], "Search timed out", False
         except Exception as exc:
-            error_message = str(exc)
+            results, error_message, truncated = [], str(exc), False
 
+        self._schedule_search_complete(generation, results, error_message, truncated)
+
+    def _build_search_command(
+        self, base_path: str, search_term: str, show_hidden: bool, use_fd: bool
+    ) -> list[str]:
+        """Build the appropriate search command based on available tools."""
+        if use_fd:
+            return self._build_fd_command(base_path, search_term, show_hidden)
+        return self._build_find_command(base_path, search_term, show_hidden)
+
+    def _search_remote(
+        self, generation: int, command: list[str], base_posix: PurePosixPath,
+        use_fd: bool, operations
+    ) -> tuple[list, str, bool]:
+        """Execute remote search and process results."""
+        results = []
+        error_message = ""
+        truncated = False
+
+        success, output = operations.execute_command_on_session(command)
+        if not success:
+            return results, output.strip(), False
+
+        for line in output.splitlines():
+            if self._recursive_search_generation != generation:
+                return [], "", False
+
+            if not line or (not use_fd and line.startswith("find:")):
+                continue
+
+            file_item = self._process_search_result_line(line, base_posix)
+            if file_item:
+                results.append(file_item)
+                if len(results) >= MAX_RECURSIVE_RESULTS:
+                    return results, "", True
+
+        return results, error_message, truncated
+
+    def _search_local(
+        self, generation: int, command: list[str], base_posix: PurePosixPath, use_fd: bool
+    ) -> tuple[list, str, bool]:
+        """Execute local search with memory-efficient line-by-line reading."""
+        results = []
+        error_message = ""
+        truncated = False
+
+        with subprocess.Popen(
+            command, stdout=subprocess.PIPE, stderr=subprocess.PIPE,
+            text=True, bufsize=1
+        ) as proc:
+            for line in proc.stdout:
+                if self._recursive_search_generation != generation:
+                    proc.terminate()
+                    return [], "", False
+
+                line = line.rstrip("\n")
+                if not line or (not use_fd and line.startswith("find:")):
+                    continue
+
+                file_item = self._process_search_result_line(line, base_posix)
+                if file_item:
+                    results.append(file_item)
+                    if len(results) >= MAX_RECURSIVE_RESULTS:
+                        proc.terminate()
+                        return results, "", True
+
+            if proc.returncode and proc.returncode != 0:
+                stderr = proc.stderr.read() if proc.stderr else ""
+                if stderr:
+                    error_message = stderr.strip()
+
+        return results, error_message, truncated
+
+    def _schedule_search_complete(
+        self, generation: int, results: list, error_message: str, truncated: bool
+    ) -> None:
+        """Schedule completion callback on main thread."""
         GLib.idle_add(
             self._complete_recursive_search,
-            generation,
-            results,
-            error_message,
-            truncated,
+            generation, results, error_message, truncated,
         )
 
     def _process_search_result_line(
@@ -1666,127 +1674,120 @@ class FileManager(GObject.Object):
         Uses a short timeout to prevent UI freeze when SSH connection is lost.
         """
         try:
-            # Check for destruction/invalid state before any operations
             if self._is_destroyed:
                 return
 
-            # Capture operations reference locally to prevent race with destroy()
             operations = self.operations
             if not operations:
-                self.logger.warning("File operations not available. Cannot list files.")
-                GLib.idle_add(
-                    self._update_store_with_files,
-                    requested_path,
-                    [],
-                    "Operations not initialized",
-                    source,
+                self._schedule_update_with_error(
+                    requested_path, "Operations not initialized", source
                 )
                 return
 
-            path_for_ls = requested_path
-            if not path_for_ls.endswith("/"):
-                path_for_ls += "/"
-
+            path_for_ls = self._normalize_path_for_ls(requested_path)
             command = ["ls", "-la", "--classify", "--full-time", path_for_ls]
-            # Use shorter timeout (8s) for file listing to avoid long UI freezes
             success, output = operations.execute_command_on_session(command, timeout=8)
 
             if not success:
-                # Check if this is a connection timeout
-                is_timeout = (
-                    "timed out" in output.lower() or "timeout" in output.lower()
-                )
-                is_connection_error = (
-                    is_timeout
-                    or "connection" in output.lower()
-                    or "network" in output.lower()
-                    or "unreachable" in output.lower()
-                )
-
-                if is_connection_error:
-                    self.logger.warning(
-                        f"Connection issue while listing '{requested_path}': {output}"
-                    )
-                    error_msg = _(
-                        "Connection lost. Please check your network connection."
-                    )
-                else:
-                    self.logger.warning(
-                        f"Failed to list '{requested_path}': {output}. Reverting to last successful path."
-                    )
-                    error_msg = output
-
-                # Try to fallback to last successful path (only for non-connection errors)
-                if (
-                    not is_connection_error
-                    and self._last_successful_path
-                    and self._last_successful_path != requested_path
-                ):
-                    self.logger.info(
-                        f"Reverting to last successful path: '{self._last_successful_path}'."
-                    )
-                    GLib.idle_add(
-                        self._fallback_to_accessible_path,
-                        self._last_successful_path,
-                        source,
-                    )
-                    return
-
-                # Show empty list with error message
-                GLib.idle_add(
-                    self._update_store_with_files,
-                    requested_path,
-                    [],
-                    error_msg,
-                    source,
-                )
+                self._handle_list_error(requested_path, output, source)
                 return
 
-            lines = output.strip().split("\n")[1:]  # Skip total line
-            directories = []
-            files = []
-            parent_item = None
-
-            # Parse all files in one pass, separating directories from files
-            for line in lines:
-                # Safety check to stop processing if user switched folders
-                if self._is_destroyed or requested_path != self.current_path:
-                    return
-
-                file_item = FileItem.from_ls_line(line)
-                if file_item:
-                    if file_item.name == "..":
-                        parent_item = file_item
-                    elif file_item.name not in [".", ".."]:
-                        if file_item.is_link and file_item._link_target:
-                            if not file_item._link_target.startswith("/"):
-                                file_item._link_target = f"{requested_path.rstrip('/')}/{file_item._link_target}"
-                        # Separate directories from files
-                        if file_item.is_directory_like:
-                            directories.append(file_item)
-                        else:
-                            files.append(file_item)
-
-            # Sort directories and files alphabetically (case-insensitive)
-            directories.sort(key=lambda x: x.name.lower())
-            files.sort(key=lambda x: x.name.lower())
-
-            # Build the complete sorted list: parent -> directories -> files
-            all_items = []
-            if requested_path != "/" and parent_item:
-                all_items.append(parent_item)
-            all_items.extend(directories)
-            all_items.extend(files)
-
-            # Add all items in a single operation for better performance
-            # GTK4's ColumnView uses virtual scrolling, so only visible items render
+            all_items = self._parse_ls_output(output, requested_path)
             GLib.idle_add(self._set_store_items, all_items, requested_path, source)
 
         except Exception as e:
             self.logger.error(f"Error in background file listing: {e}")
-            GLib.idle_add(
-                self._update_store_with_files, requested_path, [], str(e), source
+            self._schedule_update_with_error(requested_path, str(e), source)
+
+    def _normalize_path_for_ls(self, path: str) -> str:
+        """Ensure path ends with slash for ls command."""
+        return path if path.endswith("/") else f"{path}/"
+
+    def _schedule_update_with_error(
+        self, path: str, error: str, source: str
+    ) -> None:
+        """Schedule an error update on the main thread."""
+        GLib.idle_add(self._update_store_with_files, path, [], error, source)
+
+    def _handle_list_error(
+        self, requested_path: str, output: str, source: str
+    ) -> None:
+        """Handle errors from ls command."""
+        is_connection_error = self._is_connection_error(output)
+
+        if is_connection_error:
+            self.logger.warning(
+                f"Connection issue while listing '{requested_path}': {output}"
             )
+            error_msg = _("Connection lost. Please check your network connection.")
+        else:
+            self.logger.warning(
+                f"Failed to list '{requested_path}': {output}. Reverting to last successful path."
+            )
+            error_msg = output
+
+        if self._should_fallback(is_connection_error, requested_path):
+            GLib.idle_add(
+                self._fallback_to_accessible_path,
+                self._last_successful_path, source,
+            )
+        else:
+            self._schedule_update_with_error(requested_path, error_msg, source)
+
+    def _is_connection_error(self, output: str) -> bool:
+        """Check if output indicates a connection error."""
+        lower = output.lower()
+        return any(term in lower for term in [
+            "timed out", "timeout", "connection", "network", "unreachable"
+        ])
+
+    def _should_fallback(self, is_connection_error: bool, requested_path: str) -> bool:
+        """Determine if we should fallback to last successful path."""
+        return (
+            not is_connection_error
+            and self._last_successful_path
+            and self._last_successful_path != requested_path
+        )
+
+    def _parse_ls_output(self, output: str, requested_path: str) -> list:
+        """Parse ls output and return sorted file items."""
+        lines = output.strip().split("\n")[1:]  # Skip total line
+        directories = []
+        files = []
+        parent_item = None
+
+        for line in lines:
+            if self._is_destroyed or requested_path != self.current_path:
+                return []
+
+            file_item = FileItem.from_ls_line(line)
+            if not file_item:
+                continue
+
+            if file_item.name == "..":
+                parent_item = file_item
+            elif file_item.name not in [".", ".."]:
+                self._resolve_link_target(file_item, requested_path)
+                if file_item.is_directory_like:
+                    directories.append(file_item)
+                else:
+                    files.append(file_item)
+
+        directories.sort(key=lambda x: x.name.lower())
+        files.sort(key=lambda x: x.name.lower())
+
+        all_items = []
+        if requested_path != "/" and parent_item:
+            all_items.append(parent_item)
+        all_items.extend(directories)
+        all_items.extend(files)
+        return all_items
+
+    def _resolve_link_target(self, file_item: FileItem, base_path: str) -> None:
+        """Resolve relative symlink targets to absolute paths."""
+        if file_item.is_link and file_item._link_target:
+            if not file_item._link_target.startswith("/"):
+                file_item._link_target = f"{base_path.rstrip('/')}/{file_item._link_target}"
 
     def _set_store_items(self, items, requested_path, source):
         """Set all store items in a single operation for optimal performance.

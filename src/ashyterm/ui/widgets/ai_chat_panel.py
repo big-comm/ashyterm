@@ -79,127 +79,143 @@ def _extract_reply_from_json(text: str) -> str:
     if not text:
         return text
 
-    # If text doesn't contain JSON markers, return as-is
     if "{" not in text and "[" not in text:
         return text
 
-    # Check if text ends with a JSON array (likely commands being appended)
-    # Remove trailing JSON arrays that look like command lists
+    # Remove trailing command arrays
+    cleaned = _strip_trailing_command_array(text)
+    if cleaned != text:
+        return cleaned
+
+    # Try complete JSON first
+    result = _try_parse_complete_json(text)
+    if result is not None:
+        return result
+
+    # Try to find and extract JSON object
+    result = _try_extract_json_object(text)
+    if result is not None:
+        return result
+
+    # Try partial reply extraction
+    result = _try_extract_partial_reply(text)
+    if result is not None:
+        return result
+
+    # Check if it's incomplete streaming JSON
     stripped = text.strip()
-    if stripped.endswith("]"):
-        # Find the matching opening bracket
-        bracket_count = 0
-        array_start = -1
-        for i in range(len(stripped) - 1, -1, -1):
-            if stripped[i] == "]":
-                bracket_count += 1
-            elif stripped[i] == "[":
-                bracket_count -= 1
-                if bracket_count == 0:
-                    array_start = i
-                    break
+    if stripped.startswith("{") or stripped.startswith("["):
+        return ""
 
-        if array_start != -1:
-            # Check if the array looks like a command list
-            potential_array = stripped[array_start:]
-            try:
-                parsed = json.loads(potential_array)
-                if isinstance(parsed, list) and all(
-                    isinstance(item, str) for item in parsed
-                ):
-                    # It's a list of strings, likely commands - remove it
-                    text_without_array = stripped[:array_start].strip()
-                    # Clean up trailing newlines and brackets
-                    text_without_array = text_without_array.rstrip("\n ]")
-                    if text_without_array:
-                        return text_without_array
-            except json.JSONDecodeError:
-                pass
+    return text
 
-    # Try to parse as complete JSON first
+
+def _strip_trailing_command_array(text: str) -> str:
+    """Remove trailing JSON arrays that look like command lists."""
+    stripped = text.strip()
+    if not stripped.endswith("]"):
+        return text
+
+    array_start = _find_matching_bracket(stripped)
+    if array_start == -1:
+        return text
+
+    potential_array = stripped[array_start:]
+    try:
+        parsed = json.loads(potential_array)
+        if isinstance(parsed, list) and all(isinstance(item, str) for item in parsed):
+            result = stripped[:array_start].rstrip("\n ]")
+            return result if result else text
+    except json.JSONDecodeError:
+        pass
+    return text
+
+
+def _find_matching_bracket(text: str) -> int:
+    """Find the index of the opening bracket matching the closing bracket at end."""
+    bracket_count = 0
+    for i in range(len(text) - 1, -1, -1):
+        if text[i] == "]":
+            bracket_count += 1
+        elif text[i] == "[":
+            bracket_count -= 1
+            if bracket_count == 0:
+                return i
+    return -1
+
+
+def _try_parse_complete_json(text: str) -> str | None:
+    """Try to parse text as complete JSON and extract reply."""
     try:
         data = json.loads(text)
         if isinstance(data, dict):
             if "reply" in data:
                 return data["reply"]
-            # If it's a dict but no reply field, it's probably raw JSON - hide it
-            # This could be the commands object being streamed
             return ""
     except json.JSONDecodeError:
         pass
+    return None
 
-    # Try to find JSON object in text and extract reply
+
+def _try_extract_json_object(text: str) -> str | None:
+    """Try to find and parse embedded JSON object."""
     start = text.find("{")
-    if start != -1:
-        # First, try to find a complete JSON object
-        brace_level = 0
-        for end in range(start, len(text)):
-            if text[end] == "{":
-                brace_level += 1
-            elif text[end] == "}":
-                brace_level -= 1
-                if brace_level == 0:
-                    try:
-                        data = json.loads(text[start : end + 1])
-                        if isinstance(data, dict) and "reply" in data:
-                            return data["reply"]
-                        # Complete JSON but no reply field - might be streaming commands
-                        # Return any text before the JSON
-                        prefix = text[:start].strip()
-                        return prefix if prefix else ""
-                    except json.JSONDecodeError:
-                        pass
-                    break
+    if start == -1:
+        return None
 
-    # If JSON is incomplete, try to extract partial reply value
-    # Look for "reply": " or "reply":" pattern
-    reply_patterns = ['"reply": "', '"reply":"', "'reply': '", "'reply':'"]
-    for pattern in reply_patterns:
+    brace_level = 0
+    for end in range(start, len(text)):
+        if text[end] == "{":
+            brace_level += 1
+        elif text[end] == "}":
+            brace_level -= 1
+            if brace_level == 0:
+                try:
+                    data = json.loads(text[start : end + 1])
+                    if isinstance(data, dict) and "reply" in data:
+                        return data["reply"]
+                    prefix = text[:start].strip()
+                    return prefix if prefix else ""
+                except json.JSONDecodeError:
+                    pass
+                break
+    return None
+
+
+def _try_extract_partial_reply(text: str) -> str | None:
+    """Extract reply from incomplete/streaming JSON."""
+    patterns = ['"reply": "', '"reply":"', "'reply': '", "'reply':'"]
+    for pattern in patterns:
         reply_start = text.find(pattern)
         if reply_start != -1:
-            # Find the start of the reply value
             value_start = reply_start + len(pattern)
-            # Find the end - look for unescaped closing quote
-            quote_char = pattern[-1]  # Get the quote character (" or ')
-            i = value_start
-            partial_reply = []
-            while i < len(text):
-                char = text[i]
-                if char == "\\":
-                    # Escaped character, include next char
-                    if i + 1 < len(text):
-                        escape_char = text[i + 1]
-                        if escape_char == "n":
-                            partial_reply.append("\n")
-                        elif escape_char == "t":
-                            partial_reply.append("\t")
-                        elif escape_char == quote_char:
-                            partial_reply.append(quote_char)
-                        elif escape_char == "\\":
-                            partial_reply.append("\\")
-                        else:
-                            partial_reply.append(escape_char)
-                        i += 2
-                    else:
-                        i += 1
-                elif char == quote_char:
-                    # End of string
-                    return "".join(partial_reply)
-                else:
-                    partial_reply.append(char)
-                    i += 1
-            # If we got here, the JSON is incomplete - return what we have
-            if partial_reply:
-                return "".join(partial_reply)
+            quote_char = pattern[-1]
+            return _parse_quoted_string(text, value_start, quote_char)
+    return None
 
-    # Check if the text looks like it's starting with JSON object (streaming incomplete)
-    stripped = text.strip()
-    if stripped.startswith("{") or stripped.startswith("["):
-        # It's likely incomplete JSON being streamed, show nothing yet
-        return ""
 
-    # No JSON pattern found, return the original text
-    return text
+def _parse_quoted_string(text: str, start: int, quote: str) -> str:
+    """Parse a quoted string handling escape sequences."""
+    result = []
+    i = start
+    escape_map = {"n": "\n", "t": "\t", quote: quote, "\\": "\\"}
+
+    while i < len(text):
+        char = text[i]
+        if char == "\\":
+            if i + 1 < len(text):
+                esc = text[i + 1]
+                result.append(escape_map.get(esc, esc))
+                i += 2
+            else:
+                i += 1
+        elif char == quote:
+            return "".join(result)
+        else:
+            result.append(char)
+            i += 1
+
+    return "".join(result) if result else ""
 
 
 def _normalize_commands(commands: list | None) -> list[str]:

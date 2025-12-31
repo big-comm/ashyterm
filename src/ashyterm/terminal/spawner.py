@@ -25,6 +25,7 @@ if TYPE_CHECKING:
 from ..settings.manager import get_settings_manager
 from ..utils.exceptions import SSHConnectionError, SSHKeyError, TerminalCreationError
 from ..utils.logger import get_logger, log_error_with_context, log_terminal_event
+from ..utils.osc7 import OSC7_HOST_DETECTION_SNIPPET
 from ..utils.platform import (
     get_command_builder,
     get_environment_manager,
@@ -36,7 +37,6 @@ from ..utils.security import (
     validate_ssh_key_file,
 )
 from ..utils.translation_utils import _
-from ..utils.osc7 import OSC7_HOST_DETECTION_SNIPPET
 
 
 class ProcessTracker:

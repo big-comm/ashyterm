@@ -257,59 +257,62 @@ class HighlightedTerminalProxy:
         if not buffer_stripped:
             return False
 
-        # Check for unclosed if/then block
-        has_then = (
-            " then" in buffer_stripped
-            or buffer_stripped.startswith("then")
-            or "\nthen" in buffer_stripped
-        )
-        has_fi = (
-            " fi" in buffer_stripped
-            or buffer_stripped.endswith("fi")
-            or "\nfi" in buffer_stripped
-        )
+        then_open, do_open = self._check_block_openings(buffer_stripped)
+        if then_open or do_open:
+            return True
 
-        # Check for unclosed for/while do block
-        has_do = (
-            " do" in buffer_stripped
-            or buffer_stripped.startswith("do")
-            or "\ndo" in buffer_stripped
-        )
-        has_done = (
-            " done" in buffer_stripped
-            or buffer_stripped.endswith("done")
-            or "\ndone" in buffer_stripped
-        )
+        if self._has_unclosed_braces(buffer_stripped):
+            return True
 
-        # Check structural completeness of blocks
+        return self._ends_with_continuation(buffer_stripped, then_open, do_open)
+
+    def _check_block_openings(self, buffer_stripped: str) -> tuple[bool, bool]:
+        """Check for unclosed if/then and for/do blocks."""
+        has_then = self._has_keyword(buffer_stripped, "then")
+        has_fi = self._has_keyword(buffer_stripped, "fi")
+        has_do = self._has_keyword(buffer_stripped, "do")
+        has_done = self._has_keyword(buffer_stripped, "done")
+
         then_block_open = has_then and not has_fi
         do_block_open = has_do and not has_done
+        return then_block_open, do_block_open
 
-        if then_block_open or do_block_open:
-            return True
+    def _has_keyword(self, buffer_stripped: str, keyword: str) -> bool:
+        """Check if buffer contains a shell keyword."""
+        return (
+            f" {keyword}" in buffer_stripped
+            or buffer_stripped.startswith(keyword)
+            or f"\n{keyword}" in buffer_stripped
+            or buffer_stripped.endswith(keyword)
+        )
 
-        # Check for unclosed braces
-        if buffer_stripped.count("{") > buffer_stripped.count("}"):
-            return True
+    def _has_unclosed_braces(self, buffer_stripped: str) -> bool:
+        """Check if buffer has more opening braces than closing."""
+        return buffer_stripped.count("{") > buffer_stripped.count("}")
 
-        # Check if LAST line ends with a continuation indicator
-        # Only check operators that always indicate continuation, not 'then'/'do'
-        # because those could be part of a closed block checked above
+    def _ends_with_continuation(
+        self, buffer_stripped: str, then_open: bool, do_open: bool
+    ) -> bool:
+        """Check if the last line ends with a continuation indicator."""
         lines = buffer_stripped.split("\n")
-        if lines:
-            last_line = lines[-1].strip()
-            # These operators always indicate continuation to the next line
-            operator_continuations = ("|", "&&", "||", "\\", "{")
-            if last_line and last_line.endswith(operator_continuations):
-                return True
-            # Check 'then'/'do'/'else' only if the corresponding block is not closed
-            if last_line.endswith("then") and then_block_open:
-                return True
-            if last_line.endswith("do") and do_block_open:
-                return True
-            if last_line.endswith("else"):
-                # 'else' always needs more content
-                return True
+        if not lines:
+            return False
+
+        last_line = lines[-1].strip()
+        if not last_line:
+            return False
+
+        # Operators that always indicate continuation
+        if last_line.endswith(("|", "&&", "||", "\\", "{")):
+            return True
+
+        # Context-dependent continuations
+        if last_line.endswith("then") and then_open:
+            return True
+        if last_line.endswith("do") and do_open:
+            return True
+        if last_line.endswith("else"):
+            return True
 
         return False
 

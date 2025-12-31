@@ -1914,39 +1914,56 @@ class HighlightDialog(Adw.PreferencesWindow):
 
     def _setup_cat_colorization_group(self, page: Adw.PreferencesPage) -> None:
         """Setup the cat colorization settings group using Pygments."""
-        # Check if Pygments is available
         import importlib.util
 
         pygments_available = importlib.util.find_spec("pygments") is not None
 
-        # NOTE: 'cat' is a terminal command, so we don't translate it
-        self._cat_group = Adw.PreferencesGroup(
-            title=_("{} Command Colorization").format("cat"),
-            description=_(
+        self._create_cat_group(page, pygments_available)
+        settings = get_settings_manager()
+
+        if pygments_available:
+            self._add_cat_experimental_note()
+
+        self._add_cat_colorization_toggle(settings)
+
+        if pygments_available:
+            self._add_cat_theme_selectors(settings)
+        else:
+            self._add_pygments_install_hint()
+
+    def _create_cat_group(
+        self, page: Adw.PreferencesPage, pygments_available: bool
+    ) -> None:
+        """Create the cat colorization preferences group."""
+        if pygments_available:
+            description = _(
                 "Syntax highlighting for '{}' command output (using Pygments)"
             ).format("cat")
-            if pygments_available
-            else _(
+        else:
+            description = _(
                 "Pygments is not installed - '{}' output will not be colorized"
-            ).format("cat"),
+            ).format("cat")
+
+        self._cat_group = Adw.PreferencesGroup(
+            title=_("{} Command Colorization").format("cat"),
+            description=description,
         )
         page.add(self._cat_group)
 
-        settings = get_settings_manager()
+    def _add_cat_experimental_note(self) -> None:
+        """Add experimental feature notice to cat group."""
+        note_row = Adw.ActionRow(
+            title=_("⚠️ Experimental Feature"),
+            subtitle=_(
+                "This feature colorizes output for the '{}' command. "
+                "It may not work perfectly with every shell/prompt or when output is fragmented."
+            ).format("cat"),
+        )
+        note_row.add_css_class("dim-label")
+        self._cat_group.add(note_row)
 
-        # Experimental notice (keep at the top of the group)
-        if pygments_available:
-            note_row = Adw.ActionRow(
-                title=_("⚠️ Experimental Feature"),
-                subtitle=_(
-                    "This feature colorizes output for the '{}' command. "
-                    "It may not work perfectly with every shell/prompt or when output is fragmented."
-                ).format("cat"),
-            )
-            note_row.add_css_class("dim-label")
-            self._cat_group.add(note_row)
-
-        # Enable cat colorization toggle (first item)
+    def _add_cat_colorization_toggle(self, settings) -> None:
+        """Add the cat colorization enable/disable toggle."""
         self._cat_colorization_toggle = Adw.SwitchRow(
             title=_("Enable '{}' Colorization").format("cat"),
             subtitle=_("Apply syntax highlighting to '{}' command output").format(
@@ -1960,235 +1977,204 @@ class HighlightDialog(Adw.PreferencesWindow):
         )
         self._cat_group.add(self._cat_colorization_toggle)
 
-        # Color theme dropdown (only if Pygments is available)
-        if pygments_available:
-            # Get available Pygments styles
-            from pygments.styles import get_all_styles
+    def _add_cat_theme_selectors(self, settings) -> None:
+        """Add theme selection widgets for cat colorization."""
+        from pygments.styles import get_all_styles
 
-            all_themes = sorted(list(get_all_styles()))
+        all_themes = sorted(list(get_all_styles()))
+        current_mode = settings.get("cat_theme_mode", "auto")
+        current_enabled = settings.get("cat_colorization_enabled", True)
 
-            # Theme mode selector (Auto/Manual)
-            self._cat_theme_mode_row = Adw.ComboRow(
-                title=_("Theme Mode"),
-                subtitle=_("Auto: adapts to background color. Manual: single theme."),
-            )
-            mode_model = Gtk.StringList()
-            mode_model.append(_("Auto"))
-            mode_model.append(_("Manual"))
-            self._cat_theme_mode_row.set_model(mode_model)
-            current_mode = settings.get("cat_theme_mode", "auto")
-            self._cat_theme_mode_row.set_selected(0 if current_mode == "auto" else 1)
-            self._cat_theme_mode_row.connect(
-                "notify::selected", self._on_cat_theme_mode_changed
-            )
-            self._cat_group.add(self._cat_theme_mode_row)
+        # Theme mode selector
+        self._add_cat_theme_mode_row(settings, current_mode)
 
-            # Dark themes (background luminance <= 0.5) - based on actual Pygments style analysis
-            dark_only_themes = [
-                "a11y-dark",
-                "a11y-high-contrast-dark",
-                "blinds-dark",
-                "coffee",
-                "dracula",
-                "fruity",
-                "github-dark",
-                "github-dark-colorblind",
-                "github-dark-high-contrast",
-                "gotthard-dark",
-                "greative",
-                "gruvbox-dark",
-                "inkpot",
-                "lightbulb",
-                "material",
-                "monokai",
-                "native",
-                "nord",
-                "nord-darker",
-                "one-dark",
-                "paraiso-dark",
-                "pitaya-smoothie",
-                "rrt",
-                "solarized-dark",
-                "stata-dark",
-                "vim",
-                "zenburn",
-            ]
+        # Get theme lists
+        dark_only, light_only = self._get_theme_categories()
 
-            # Light themes (background luminance > 0.5) - based on actual Pygments style analysis
-            light_only_themes = [
-                "a11y-high-contrast-light",
-                "a11y-light",
-                "abap",
-                "algol",
-                "algol_nu",
-                "arduino",
-                "autumn",
-                "blinds-light",
-                "borland",
-                "bw",
-                "colorful",
-                "default",
-                "emacs",
-                "friendly",
-                "friendly_grayscale",
-                "github-light",
-                "github-light-colorblind",
-                "github-light-high-contrast",
-                "gotthard-light",
-                "gruvbox-light",
-                "igor",
-                "lilypond",
-                "lovelace",
-                "manni",
-                "murphy",
-                "paraiso-light",
-                "pastie",
-                "perldoc",
-                "rainbow_dash",
-                "sas",
-                "solarized-light",
-                "staroffice",
-                "stata-light",
-                "tango",
-                "trac",
-                "vs",
-                "xcode",
-            ]
+        # Dark and light theme selectors
+        dark_themes = self._add_cat_dark_theme_row(settings, all_themes, dark_only, light_only)
+        light_themes = self._add_cat_light_theme_row(settings, all_themes, dark_only, light_only)
 
-            # Dark theme selector - show only dark themes
-            self._cat_dark_theme_row = Adw.ComboRow(
-                title=_("Dark Background Theme"),
-                subtitle=_("Theme used when background is dark"),
-            )
-            dark_themes_model = Gtk.StringList()
-            dark_themes = []
-            for theme in dark_only_themes:
-                if theme in all_themes:
-                    dark_themes.append(theme)
-            for theme in all_themes:
-                if theme not in dark_themes and theme not in light_only_themes:
-                    dark_themes.append(theme)
-            for theme in dark_themes:
-                dark_themes_model.append(theme)
-            self._cat_dark_theme_row.set_model(dark_themes_model)
-            self._cat_dark_theme_names = dark_themes
+        # Manual theme selector
+        self._add_cat_manual_theme_row(settings, all_themes)
 
-            current_dark = settings.get("cat_dark_theme", "monokai")
-            try:
-                dark_idx = dark_themes.index(current_dark)
-                self._cat_dark_theme_row.set_selected(dark_idx)
-            except ValueError:
-                self._cat_dark_theme_row.set_selected(0)
-            self._cat_dark_theme_row.connect(
-                "notify::selected", self._on_cat_dark_theme_changed
-            )
-            self._cat_group.add(self._cat_dark_theme_row)
+        # Set visibility based on mode
+        is_auto_mode = current_mode == "auto"
+        self._cat_theme_mode_row.set_visible(current_enabled)
+        self._cat_dark_theme_row.set_visible(current_enabled and is_auto_mode)
+        self._cat_light_theme_row.set_visible(current_enabled and is_auto_mode)
+        self._cat_theme_row.set_visible(current_enabled and not is_auto_mode)
 
-            # Light theme selector - show only light themes
-            self._cat_light_theme_row = Adw.ComboRow(
-                title=_("Light Background Theme"),
-                subtitle=_("Theme used when background is light"),
-            )
-            light_themes_model = Gtk.StringList()
-            light_themes = []
-            for theme in light_only_themes:
-                if theme in all_themes:
-                    light_themes.append(theme)
-            for theme in all_themes:
-                if theme not in light_themes and theme not in dark_only_themes:
-                    light_themes.append(theme)
-            for theme in light_themes:
-                light_themes_model.append(theme)
-            self._cat_light_theme_row.set_model(light_themes_model)
-            self._cat_light_theme_names = light_themes
+    def _add_cat_theme_mode_row(self, settings, current_mode: str) -> None:
+        """Add the theme mode selector row."""
+        self._cat_theme_mode_row = Adw.ComboRow(
+            title=_("Theme Mode"),
+            subtitle=_("Auto: adapts to background color. Manual: single theme."),
+        )
+        mode_model = Gtk.StringList()
+        mode_model.append(_("Auto"))
+        mode_model.append(_("Manual"))
+        self._cat_theme_mode_row.set_model(mode_model)
+        self._cat_theme_mode_row.set_selected(0 if current_mode == "auto" else 1)
+        self._cat_theme_mode_row.connect(
+            "notify::selected", self._on_cat_theme_mode_changed
+        )
+        self._cat_group.add(self._cat_theme_mode_row)
 
-            current_light = settings.get("cat_light_theme", "solarized-light")
-            try:
-                light_idx = light_themes.index(current_light)
-                self._cat_light_theme_row.set_selected(light_idx)
-            except ValueError:
-                self._cat_light_theme_row.set_selected(0)
-            self._cat_light_theme_row.connect(
-                "notify::selected", self._on_cat_light_theme_changed
-            )
-            self._cat_group.add(self._cat_light_theme_row)
+    def _get_theme_categories(self) -> tuple:
+        """Get lists of dark-only and light-only Pygments themes."""
+        dark_only_themes = [
+            "a11y-dark", "a11y-high-contrast-dark", "blinds-dark", "coffee",
+            "dracula", "fruity", "github-dark", "github-dark-colorblind",
+            "github-dark-high-contrast", "gotthard-dark", "greative", "gruvbox-dark",
+            "inkpot", "lightbulb", "material", "monokai", "native", "nord",
+            "nord-darker", "one-dark", "paraiso-dark", "pitaya-smoothie", "rrt",
+            "solarized-dark", "stata-dark", "vim", "zenburn",
+        ]
+        light_only_themes = [
+            "a11y-high-contrast-light", "a11y-light", "abap", "algol", "algol_nu",
+            "arduino", "autumn", "blinds-light", "borland", "bw", "colorful",
+            "default", "emacs", "friendly", "friendly_grayscale", "github-light",
+            "github-light-colorblind", "github-light-high-contrast", "gotthard-light",
+            "gruvbox-light", "igor", "lilypond", "lovelace", "manni", "murphy",
+            "paraiso-light", "pastie", "perldoc", "rainbow_dash", "sas",
+            "solarized-light", "staroffice", "stata-light", "tango", "trac",
+            "vs", "xcode",
+        ]
+        return dark_only_themes, light_only_themes
 
-            # Manual theme selector (legacy, shown when mode is Manual)
-            self._cat_theme_row = Adw.ComboRow(
-                title=_("Manual Theme"),
-                subtitle=_("Single theme to use in manual mode"),
-            )
-            manual_themes_model = Gtk.StringList()
-            for theme in all_themes:
-                manual_themes_model.append(theme)
-            self._cat_theme_row.set_model(manual_themes_model)
-            self._cat_theme_names = all_themes
+    def _add_cat_dark_theme_row(self, settings, all_themes, dark_only, light_only) -> list:
+        """Add dark theme selector row."""
+        self._cat_dark_theme_row = Adw.ComboRow(
+            title=_("Dark Background Theme"),
+            subtitle=_("Theme used when background is dark"),
+        )
+        dark_themes_model = Gtk.StringList()
+        dark_themes = [t for t in dark_only if t in all_themes]
+        dark_themes.extend(t for t in all_themes if t not in dark_themes and t not in light_only)
+        for theme in dark_themes:
+            dark_themes_model.append(theme)
+        self._cat_dark_theme_row.set_model(dark_themes_model)
+        self._cat_dark_theme_names = dark_themes
 
-            current_theme = settings.get("pygments_theme", "monokai").lower()
-            try:
-                theme_index = all_themes.index(current_theme)
-                self._cat_theme_row.set_selected(theme_index)
-            except ValueError:
-                self._cat_theme_row.set_selected(0)
+        current_dark = settings.get("cat_dark_theme", "monokai")
+        try:
+            self._cat_dark_theme_row.set_selected(dark_themes.index(current_dark))
+        except ValueError:
+            self._cat_dark_theme_row.set_selected(0)
+        self._cat_dark_theme_row.connect("notify::selected", self._on_cat_dark_theme_changed)
+        self._cat_group.add(self._cat_dark_theme_row)
+        return dark_themes
 
-            self._cat_theme_row.connect("notify::selected", self._on_cat_theme_changed)
-            self._cat_group.add(self._cat_theme_row)
+    def _add_cat_light_theme_row(self, settings, all_themes, dark_only, light_only) -> list:
+        """Add light theme selector row."""
+        self._cat_light_theme_row = Adw.ComboRow(
+            title=_("Light Background Theme"),
+            subtitle=_("Theme used when background is light"),
+        )
+        light_themes_model = Gtk.StringList()
+        light_themes = [t for t in light_only if t in all_themes]
+        light_themes.extend(t for t in all_themes if t not in light_themes and t not in dark_only)
+        for theme in light_themes:
+            light_themes_model.append(theme)
+        self._cat_light_theme_row.set_model(light_themes_model)
+        self._cat_light_theme_names = light_themes
 
-            # Update visibility based on current mode and enabled state
-            is_auto_mode = current_mode == "auto"
-            self._cat_theme_mode_row.set_visible(current_enabled)
-            self._cat_dark_theme_row.set_visible(current_enabled and is_auto_mode)
-            self._cat_light_theme_row.set_visible(current_enabled and is_auto_mode)
-            self._cat_theme_row.set_visible(current_enabled and not is_auto_mode)
-        else:
-            self._cat_theme_row = None
-            self._cat_theme_names = []
-            self._cat_theme_mode_row = None
-            self._cat_dark_theme_row = None
-            self._cat_dark_theme_names = []
-            self._cat_light_theme_row = None
-            self._cat_light_theme_names = []
+        current_light = settings.get("cat_light_theme", "solarized-light")
+        try:
+            self._cat_light_theme_row.set_selected(light_themes.index(current_light))
+        except ValueError:
+            self._cat_light_theme_row.set_selected(0)
+        self._cat_light_theme_row.connect("notify::selected", self._on_cat_light_theme_changed)
+        self._cat_group.add(self._cat_light_theme_row)
+        return light_themes
 
-            # Show install hint
-            install_row = Adw.ActionRow(
-                title=_("Install Pygments"),
-                subtitle=_("pip install pygments"),
-            )
-            install_row.add_css_class("dim-label")
-            self._cat_group.add(install_row)
+    def _add_cat_manual_theme_row(self, settings, all_themes) -> None:
+        """Add manual theme selector row."""
+        self._cat_theme_row = Adw.ComboRow(
+            title=_("Manual Theme"),
+            subtitle=_("Single theme to use in manual mode"),
+        )
+        manual_themes_model = Gtk.StringList()
+        for theme in all_themes:
+            manual_themes_model.append(theme)
+        self._cat_theme_row.set_model(manual_themes_model)
+        self._cat_theme_names = all_themes
+
+        current_theme = settings.get("pygments_theme", "monokai").lower()
+        try:
+            self._cat_theme_row.set_selected(all_themes.index(current_theme))
+        except ValueError:
+            self._cat_theme_row.set_selected(0)
+        self._cat_theme_row.connect("notify::selected", self._on_cat_theme_changed)
+        self._cat_group.add(self._cat_theme_row)
+
+    def _add_pygments_install_hint(self) -> None:
+        """Add Pygments installation hint when not available."""
+        self._cat_theme_row = None
+        self._cat_theme_names = []
+        self._cat_theme_mode_row = None
+        self._cat_dark_theme_row = None
+        self._cat_dark_theme_names = []
+        self._cat_light_theme_row = None
+        self._cat_light_theme_names = []
+
+        install_row = Adw.ActionRow(
+            title=_("Install Pygments"),
+            subtitle=_("pip install pygments"),
+        )
+        install_row.add_css_class("dim-label")
+        self._cat_group.add(install_row)
 
     def _setup_shell_input_highlighting_group(self, page: Adw.PreferencesPage) -> None:
         """Setup the shell input highlighting settings group (experimental)."""
-        # Check if Pygments is available
+        pygments_available = self._create_shell_input_group(page)
+        self._add_shell_input_experimental_note(pygments_available)
+        current_enabled = self._add_shell_input_toggle(pygments_available)
+
+        if pygments_available:
+            self._add_shell_input_theme_selectors(current_enabled)
+        else:
+            self._init_shell_input_fallback_attrs()
+
+    def _create_shell_input_group(self, page: Adw.PreferencesPage) -> bool:
+        """Create the shell input preferences group and check Pygments availability."""
         import importlib.util
 
         pygments_available = importlib.util.find_spec("pygments") is not None
 
+        description = (
+            _("Live syntax highlighting as you type commands (experimental)")
+            if pygments_available
+            else _("Pygments is not installed - shell input highlighting unavailable")
+        )
+
         self._shell_input_group = Adw.PreferencesGroup(
             title=_("Shell Input Highlighting"),
-            description=_(
-                "Live syntax highlighting as you type commands (experimental)"
-            )
-            if pygments_available
-            else _("Pygments is not installed - shell input highlighting unavailable"),
+            description=description,
         )
         page.add(self._shell_input_group)
+        return pygments_available
 
+    def _add_shell_input_experimental_note(self, pygments_available: bool) -> None:
+        """Add experimental feature notice to shell input group."""
+        if not pygments_available:
+            return
+
+        note_row = Adw.ActionRow(
+            title=_("⚠️ Experimental Feature"),
+            subtitle=_(
+                "This feature applies highlighting to echoed shell input. "
+                "It may not work perfectly with all prompts or shells."
+            ),
+        )
+        note_row.add_css_class("dim-label")
+        self._shell_input_group.add(note_row)
+
+    def _add_shell_input_toggle(self, pygments_available: bool) -> bool:
+        """Add the shell input highlighting toggle switch."""
         settings = get_settings_manager()
 
-        # Experimental notice (keep at the top of the group)
-        if pygments_available:
-            note_row = Adw.ActionRow(
-                title=_("⚠️ Experimental Feature"),
-                subtitle=_(
-                    "This feature applies highlighting to echoed shell input. "
-                    "It may not work perfectly with all prompts or shells."
-                ),
-            )
-            note_row.add_css_class("dim-label")
-            self._shell_input_group.add(note_row)
-
-        # Enable shell input highlighting toggle
         self._shell_input_toggle = Adw.SwitchRow(
             title=_("Enable Shell Input Highlighting"),
             subtitle=_(
@@ -2203,204 +2189,152 @@ class HighlightDialog(Adw.PreferencesWindow):
             "notify::active", self._on_shell_input_highlighting_toggled
         )
         self._shell_input_group.add(self._shell_input_toggle)
+        return current_enabled
 
-        # Color theme dropdown (only if Pygments is available)
-        if pygments_available:
-            # Theme Mode selector (auto/manual)
-            self._theme_mode_row = Adw.ComboRow(
-                title=_("Theme Mode"),
-                subtitle=_("Auto detects background, Manual uses selected theme"),
-            )
-            mode_model = Gtk.StringList()
-            mode_model.append(_("Auto"))
-            mode_model.append(_("Manual"))
-            self._theme_mode_row.set_model(mode_model)
+    def _add_shell_input_theme_selectors(self, current_enabled: bool) -> None:
+        """Add all theme selector rows for shell input highlighting."""
+        settings = get_settings_manager()
+        current_mode = self._add_shell_input_mode_row(settings)
+        all_themes = self._get_shell_input_theme_categories()
+        dark_themes, light_themes = all_themes
 
-            current_mode = settings.get("shell_input_theme_mode", "auto")
-            self._theme_mode_row.set_selected(0 if current_mode == "auto" else 1)
-            self._theme_mode_row.connect(
-                "notify::selected", self._on_shell_input_mode_changed
-            )
-            self._shell_input_group.add(self._theme_mode_row)
+        self._add_shell_input_dark_theme_row(settings, dark_themes)
+        self._add_shell_input_light_theme_row(settings, dark_themes, light_themes)
+        self._add_shell_input_manual_theme_row(settings)
+        self._update_shell_input_theme_visibility(current_enabled, current_mode)
 
-            # Get available Pygments styles
-            from pygments.styles import get_all_styles
+    def _add_shell_input_mode_row(self, settings) -> str:
+        """Add the theme mode selector row (auto/manual)."""
+        self._theme_mode_row = Adw.ComboRow(
+            title=_("Theme Mode"),
+            subtitle=_("Auto detects background, Manual uses selected theme"),
+        )
+        mode_model = Gtk.StringList()
+        mode_model.append(_("Auto"))
+        mode_model.append(_("Manual"))
+        self._theme_mode_row.set_model(mode_model)
 
-            all_themes = sorted(list(get_all_styles()))
+        current_mode = settings.get("shell_input_theme_mode", "auto")
+        self._theme_mode_row.set_selected(0 if current_mode == "auto" else 1)
+        self._theme_mode_row.connect(
+            "notify::selected", self._on_shell_input_mode_changed
+        )
+        self._shell_input_group.add(self._theme_mode_row)
+        return current_mode
 
-            # Dark themes (background luminance <= 0.5) - based on actual Pygments style analysis
-            dark_only_themes = [
-                "a11y-dark",
-                "a11y-high-contrast-dark",
-                "blinds-dark",
-                "coffee",
-                "dracula",
-                "fruity",
-                "github-dark",
-                "github-dark-colorblind",
-                "github-dark-high-contrast",
-                "gotthard-dark",
-                "greative",
-                "gruvbox-dark",
-                "inkpot",
-                "lightbulb",
-                "material",
-                "monokai",
-                "native",
-                "nord",
-                "nord-darker",
-                "one-dark",
-                "paraiso-dark",
-                "pitaya-smoothie",
-                "rrt",
-                "solarized-dark",
-                "stata-dark",
-                "vim",
-                "zenburn",
-            ]
+    def _get_shell_input_theme_categories(self) -> tuple[list[str], list[str]]:
+        """Get categorized dark and light theme lists from Pygments."""
+        from pygments.styles import get_all_styles
 
-            # Light themes (background luminance > 0.5) - based on actual Pygments style analysis
-            light_only_themes = [
-                "a11y-high-contrast-light",
-                "a11y-light",
-                "abap",
-                "algol",
-                "algol_nu",
-                "arduino",
-                "autumn",
-                "blinds-light",
-                "borland",
-                "bw",
-                "colorful",
-                "default",
-                "emacs",
-                "friendly",
-                "friendly_grayscale",
-                "github-light",
-                "github-light-colorblind",
-                "github-light-high-contrast",
-                "gotthard-light",
-                "gruvbox-light",
-                "igor",
-                "lilypond",
-                "lovelace",
-                "manni",
-                "murphy",
-                "paraiso-light",
-                "pastie",
-                "perldoc",
-                "rainbow_dash",
-                "sas",
-                "solarized-light",
-                "staroffice",
-                "stata-light",
-                "tango",
-                "trac",
-                "vs",
-                "xcode",
-            ]
+        all_themes = sorted(list(get_all_styles()))
 
-            # Dark theme selector - show only dark themes
-            self._dark_theme_row = Adw.ComboRow(
-                title=_("Dark Background Theme"),
-                subtitle=_("Theme used when background is dark"),
-            )
-            dark_themes_model = Gtk.StringList()
-            dark_themes = []
-            # First add known dark themes
-            for theme in dark_only_themes:
-                if theme in all_themes:
-                    dark_themes.append(theme)
-            # Then add any remaining themes not in either list
-            for theme in all_themes:
-                if theme not in dark_themes and theme not in light_only_themes:
-                    dark_themes.append(theme)
-            for theme in dark_themes:
-                dark_themes_model.append(theme)
-            self._dark_theme_row.set_model(dark_themes_model)
-            self._dark_theme_names = dark_themes
+        dark_only, light_only = _get_theme_categories()
 
-            current_dark = settings.get("shell_input_dark_theme", "monokai")
-            try:
-                dark_idx = dark_themes.index(current_dark)
-                self._dark_theme_row.set_selected(dark_idx)
-            except ValueError:
-                self._dark_theme_row.set_selected(0)
-            self._dark_theme_row.connect(
-                "notify::selected", self._on_dark_theme_changed
-            )
-            self._shell_input_group.add(self._dark_theme_row)
+        # Build dark themes list
+        dark_themes = [t for t in dark_only if t in all_themes]
+        for theme in all_themes:
+            if theme not in dark_themes and theme not in light_only:
+                dark_themes.append(theme)
 
-            # Light theme selector - show only light themes
-            self._light_theme_row = Adw.ComboRow(
-                title=_("Light Background Theme"),
-                subtitle=_("Theme used when background is light"),
-            )
-            light_themes_model = Gtk.StringList()
-            light_themes = []
-            # First add known light themes
-            for theme in light_only_themes:
-                if theme in all_themes:
-                    light_themes.append(theme)
-            # Then add any remaining themes not in either list
-            for theme in all_themes:
-                if theme not in light_themes and theme not in dark_only_themes:
-                    light_themes.append(theme)
-            for theme in light_themes:
-                light_themes_model.append(theme)
-            self._light_theme_row.set_model(light_themes_model)
-            self._light_theme_names = light_themes
+        # Build light themes list
+        light_themes = [t for t in light_only if t in all_themes]
+        for theme in all_themes:
+            if theme not in light_themes and theme not in dark_only:
+                light_themes.append(theme)
 
-            current_light = settings.get("shell_input_light_theme", "solarized-light")
-            try:
-                light_idx = light_themes.index(current_light)
-                self._light_theme_row.set_selected(light_idx)
-            except ValueError:
-                self._light_theme_row.set_selected(0)
-            self._light_theme_row.connect(
-                "notify::selected", self._on_light_theme_changed
-            )
-            self._shell_input_group.add(self._light_theme_row)
+        return dark_themes, light_themes
 
-            # Manual theme selector (legacy, shown when mode is Manual)
-            self._shell_input_theme_row = Adw.ComboRow(
-                title=_("Manual Theme"),
-                subtitle=_("Single theme to use in manual mode"),
-            )
-            manual_themes_model = Gtk.StringList()
-            for theme in all_themes:
-                manual_themes_model.append(theme)
-            self._shell_input_theme_row.set_model(manual_themes_model)
-            self._shell_input_theme_names = all_themes
+    def _add_shell_input_dark_theme_row(
+        self, settings, dark_themes: list[str]
+    ) -> None:
+        """Add the dark background theme selector row."""
+        self._dark_theme_row = Adw.ComboRow(
+            title=_("Dark Background Theme"),
+            subtitle=_("Theme used when background is dark"),
+        )
+        model = Gtk.StringList()
+        for theme in dark_themes:
+            model.append(theme)
+        self._dark_theme_row.set_model(model)
+        self._dark_theme_names = dark_themes
 
-            current_theme = settings.get(
-                "shell_input_pygments_theme", "monokai"
-            ).lower()
-            try:
-                theme_index = all_themes.index(current_theme)
-                self._shell_input_theme_row.set_selected(theme_index)
-            except ValueError:
-                self._shell_input_theme_row.set_selected(0)
+        current_dark = settings.get("shell_input_dark_theme", "monokai")
+        try:
+            dark_idx = dark_themes.index(current_dark)
+            self._dark_theme_row.set_selected(dark_idx)
+        except ValueError:
+            self._dark_theme_row.set_selected(0)
+        self._dark_theme_row.connect("notify::selected", self._on_dark_theme_changed)
+        self._shell_input_group.add(self._dark_theme_row)
 
-            self._shell_input_theme_row.connect(
-                "notify::selected", self._on_shell_input_theme_changed
-            )
-            self._shell_input_group.add(self._shell_input_theme_row)
+    def _add_shell_input_light_theme_row(
+        self, settings, dark_themes: list[str], light_themes: list[str]
+    ) -> None:
+        """Add the light background theme selector row."""
+        self._light_theme_row = Adw.ComboRow(
+            title=_("Light Background Theme"),
+            subtitle=_("Theme used when background is light"),
+        )
+        model = Gtk.StringList()
+        for theme in light_themes:
+            model.append(theme)
+        self._light_theme_row.set_model(model)
+        self._light_theme_names = light_themes
 
-            # Update visibility based on current settings
-            is_auto = current_mode == "auto"
-            self._dark_theme_row.set_visible(current_enabled and is_auto)
-            self._light_theme_row.set_visible(current_enabled and is_auto)
-            self._shell_input_theme_row.set_visible(current_enabled and not is_auto)
-            self._theme_mode_row.set_visible(current_enabled)
-        else:
-            self._shell_input_theme_row = None
-            self._shell_input_theme_names = []
-            self._theme_mode_row = None
-            self._dark_theme_row = None
-            self._light_theme_row = None
+        current_light = settings.get("shell_input_light_theme", "solarized-light")
+        try:
+            light_idx = light_themes.index(current_light)
+            self._light_theme_row.set_selected(light_idx)
+        except ValueError:
+            self._light_theme_row.set_selected(0)
+        self._light_theme_row.connect("notify::selected", self._on_light_theme_changed)
+        self._shell_input_group.add(self._light_theme_row)
 
-        # (Experimental notice is intentionally placed at the top of the group.)
+    def _add_shell_input_manual_theme_row(self, settings) -> None:
+        """Add the manual theme selector row (legacy mode)."""
+        from pygments.styles import get_all_styles
+
+        all_themes = sorted(list(get_all_styles()))
+
+        self._shell_input_theme_row = Adw.ComboRow(
+            title=_("Manual Theme"),
+            subtitle=_("Single theme to use in manual mode"),
+        )
+        model = Gtk.StringList()
+        for theme in all_themes:
+            model.append(theme)
+        self._shell_input_theme_row.set_model(model)
+        self._shell_input_theme_names = all_themes
+
+        current_theme = settings.get("shell_input_pygments_theme", "monokai").lower()
+        try:
+            theme_index = all_themes.index(current_theme)
+            self._shell_input_theme_row.set_selected(theme_index)
+        except ValueError:
+            self._shell_input_theme_row.set_selected(0)
+
+        self._shell_input_theme_row.connect(
+            "notify::selected", self._on_shell_input_theme_changed
+        )
+        self._shell_input_group.add(self._shell_input_theme_row)
+
+    def _update_shell_input_theme_visibility(
+        self, current_enabled: bool, current_mode: str
+    ) -> None:
+        """Update visibility of theme selector rows based on settings."""
+        is_auto = current_mode == "auto"
+        self._dark_theme_row.set_visible(current_enabled and is_auto)
+        self._light_theme_row.set_visible(current_enabled and is_auto)
+        self._shell_input_theme_row.set_visible(current_enabled and not is_auto)
+        self._theme_mode_row.set_visible(current_enabled)
+
+    def _init_shell_input_fallback_attrs(self) -> None:
+        """Initialize fallback attributes when Pygments is not available."""
+        self._shell_input_theme_row = None
+        self._shell_input_theme_names = []
+        self._theme_mode_row = None
+        self._dark_theme_row = None
+        self._light_theme_row = None
 
     def _on_shell_input_highlighting_toggled(
         self, switch: Adw.SwitchRow, _pspec
