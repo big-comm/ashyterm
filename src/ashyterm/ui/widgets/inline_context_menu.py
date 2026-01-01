@@ -24,7 +24,7 @@ if TYPE_CHECKING:
 class InlineContextMenu(Gtk.Box):
     """
     A widget that displays context menu options inline within the sidebar.
-    
+
     Instead of showing a popup menu that closes the popover, this widget
     replaces the session list content with a list of action buttons and
     a "Go Back" button to return to the session list.
@@ -34,7 +34,9 @@ class InlineContextMenu(Gtk.Box):
         super().__init__(orientation=Gtk.Orientation.VERTICAL, spacing=0)
         self.logger = get_logger("ashyterm.ui.inline_context_menu")
         self.parent_window = parent_window
-        self._current_item: Optional[Union[SessionItem, SessionFolder, LayoutItem]] = None
+        self._current_item: Optional[Union[SessionItem, SessionFolder, LayoutItem]] = (
+            None
+        )
         self._on_go_back: Optional[Callable[[], None]] = None
 
         self.add_css_class("inline-context-menu")
@@ -46,7 +48,7 @@ class InlineContextMenu(Gtk.Box):
             margin_start=8,
             margin_end=8,
             margin_top=8,
-            margin_bottom=4
+            margin_bottom=4,
         )
 
         self._back_button = Gtk.Button()
@@ -69,13 +71,13 @@ class InlineContextMenu(Gtk.Box):
             margin_start=12,
             margin_end=12,
             margin_top=4,
-            margin_bottom=8
+            margin_bottom=8,
         )
 
         self._item_label = Gtk.Label(
             xalign=0.0,
             hexpand=True,
-            ellipsize=3  # Pango.EllipsizeMode.END
+            ellipsize=3,  # Pango.EllipsizeMode.END
         )
         self._item_label.add_css_class("title-3")
         title_row.append(self._item_label)
@@ -93,7 +95,7 @@ class InlineContextMenu(Gtk.Box):
             margin_start=8,
             margin_end=8,
             margin_top=8,
-            margin_bottom=8
+            margin_bottom=8,
         )
         self._scrolled_window.set_child(self._actions_box)
         self.append(self._scrolled_window)
@@ -116,7 +118,7 @@ class InlineContextMenu(Gtk.Box):
         self,
         session_item: SessionItem,
         folder_store: Gio.ListStore,
-        has_clipboard: bool
+        has_clipboard: bool,
     ) -> None:
         """Display context menu options for a session item."""
         self.logger.debug(f"show_for_session called for: {session_item.name}")
@@ -128,25 +130,25 @@ class InlineContextMenu(Gtk.Box):
         if session_item.is_ssh():
             self.logger.debug("Adding SFTP option (SSH session)")
             self._add_action_button(
-                _("Connect with SFTP"),
-                "folder-remote-symbolic",
-                "win.connect-sftp"
+                _("Connect with SFTP"), "folder-remote-symbolic", "win.connect-sftp"
             )
             self._add_separator()
 
         # Standard session actions
         self.logger.debug("Adding standard session actions")
         self._add_action_button(_("Edit"), "document-edit-symbolic", "win.edit-session")
-        self._add_action_button(_("Duplicate"), "edit-copy-symbolic", "win.duplicate-session")
-        self._add_action_button(_("Rename"), "text-editor-symbolic", "win.rename-session")
+        self._add_action_button(
+            _("Duplicate"), "edit-copy-symbolic", "win.duplicate-session"
+        )
+        self._add_action_button(
+            _("Rename"), "text-editor-symbolic", "win.rename-session"
+        )
 
         # Move to folder (if folders exist)
         if folder_store and folder_store.get_n_items() > 0:
             self._add_separator()
             self._add_action_button(
-                _("Move to Folder..."),
-                "folder-symbolic",
-                "win.move-session-to-folder"
+                _("Move to Folder..."), "folder-symbolic", "win.move-session-to-folder"
             )
 
         # Delete action
@@ -155,15 +157,11 @@ class InlineContextMenu(Gtk.Box):
             _("Delete"),
             "user-trash-symbolic",
             "win.delete-session",
-            is_destructive=True
+            is_destructive=True,
         )
         self.logger.debug("Finished adding actions for session")
 
-    def show_for_folder(
-        self,
-        folder_item: SessionFolder,
-        has_clipboard: bool
-    ) -> None:
+    def show_for_folder(self, folder_item: SessionFolder, has_clipboard: bool) -> None:
         """Display context menu options for a folder item."""
         self._current_item = folder_item
         self._item_label.set_label(folder_item.name)
@@ -172,11 +170,11 @@ class InlineContextMenu(Gtk.Box):
         # Standard folder actions
         self._add_action_button(_("Edit"), "document-edit-symbolic", "win.edit-folder")
         self._add_action_button(
-            _("Add Session Here"),
-            "list-add-symbolic",
-            "win.add-session-to-folder"
+            _("Add Session Here"), "list-add-symbolic", "win.add-session-to-folder"
         )
-        self._add_action_button(_("Rename"), "text-editor-symbolic", "win.rename-folder")
+        self._add_action_button(
+            _("Rename"), "text-editor-symbolic", "win.rename-folder"
+        )
 
         # Paste option (if clipboard has content)
         if has_clipboard:
@@ -186,10 +184,7 @@ class InlineContextMenu(Gtk.Box):
         # Delete action
         self._add_separator()
         self._add_action_button(
-            _("Delete"),
-            "user-trash-symbolic",
-            "win.delete-folder",
-            is_destructive=True
+            _("Delete"), "user-trash-symbolic", "win.delete-folder", is_destructive=True
         )
 
     def show_for_layout(self, layout_item: LayoutItem) -> None:
@@ -202,12 +197,12 @@ class InlineContextMenu(Gtk.Box):
         self._add_action_button(
             _("Restore Layout"),
             "view-restore-symbolic",
-            f"win.restore_layout('{layout_item.name}')"
+            f"win.restore_layout('{layout_item.name}')",
         )
         self._add_action_button(
             _("Move to Folder..."),
             "folder-symbolic",
-            f"win.move-layout-to-folder('{layout_item.name}')"
+            f"win.move-layout-to-folder('{layout_item.name}')",
         )
 
         # Delete action
@@ -216,7 +211,7 @@ class InlineContextMenu(Gtk.Box):
             _("Delete Layout"),
             "user-trash-symbolic",
             f"win.delete_layout('{layout_item.name}')",
-            is_destructive=True
+            is_destructive=True,
         )
 
     def show_for_root(self, has_clipboard: bool) -> None:
@@ -226,24 +221,22 @@ class InlineContextMenu(Gtk.Box):
         self._clear_actions()
 
         # Root actions
-        self._add_action_button(_("Add Session"), "list-add-symbolic", "win.add-session-root")
-        self._add_action_button(_("Add Folder"), "folder-new-symbolic", "win.add-folder-root")
+        self._add_action_button(
+            _("Add Session"), "list-add-symbolic", "win.add-session-root"
+        )
+        self._add_action_button(
+            _("Add Folder"), "folder-new-symbolic", "win.add-folder-root"
+        )
 
         # Paste option (if clipboard has content)
         if has_clipboard:
             self._add_separator()
             self._add_action_button(
-                _("Paste to Root"),
-                "edit-paste-symbolic",
-                "win.paste-item-root"
+                _("Paste to Root"), "edit-paste-symbolic", "win.paste-item-root"
             )
 
     def _add_action_button(
-        self,
-        label: str,
-        icon_name: str,
-        action_name: str,
-        is_destructive: bool = False
+        self, label: str, icon_name: str, action_name: str, is_destructive: bool = False
     ) -> None:
         """Add an action button to the menu."""
         button = Gtk.Button()
@@ -259,7 +252,7 @@ class InlineContextMenu(Gtk.Box):
             margin_start=4,
             margin_end=4,
             margin_top=6,
-            margin_bottom=6
+            margin_bottom=6,
         )
 
         icon = Gtk.Image.new_from_icon_name(icon_name)

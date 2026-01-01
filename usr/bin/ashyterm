@@ -68,7 +68,8 @@ convert_to_ssh() {
 }
 
 if [[ "$1" = "--convert-to-ssh" ]]; then
-    convert_to_ssh "$*"
+    shift  # Remove --convert-to-ssh from arguments
+    convert_to_ssh "$@"
 else
     execute_with_memory_verification "$@"
 fi

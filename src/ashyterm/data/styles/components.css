@@ -144,7 +144,7 @@
    Moved from: filemanager/manager.py inline CSS
    ========================================================================== */
 
-.transfer-progress-bar progressbar > trough {
+.transfer-progress-bar progressbar>trough {
     background-color: @borders;
     border-radius: 4px;
     border-style: solid;
@@ -152,14 +152,14 @@
     border-color: alpha(@theme_fg_color, 0.1);
 }
 
-.transfer-progress-bar progressbar > progress {
+.transfer-progress-bar progressbar>progress {
     background-image: none;
     background-color: @accent_bg_color;
     border-radius: 4px;
 }
 
 /* Hide search entry icon for compact layout */
-.search-entry-no-icon > image:first-child {
+.search-entry-no-icon>image:first-child {
     -gtk-icon-size: 1px;
     min-width: 0px;
     min-height: 0px;
@@ -186,6 +186,7 @@
     border-radius: 8px;
     padding: 2px;
 }
+
 /* ==========================================================================
    Dialog Components
    Shared styles for command dialogs, form dialogs, etc.

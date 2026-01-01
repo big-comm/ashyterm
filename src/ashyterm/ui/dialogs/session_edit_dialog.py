@@ -22,7 +22,7 @@ from ...utils.security import (
 from ...utils.tooltip_helper import get_tooltip_helper
 from ...utils.translation_utils import _
 from ..widgets.bash_text_view import BashTextView
-from .base_dialog import BaseDialog
+from .base_dialog import BaseDialog, validate_directory_path
 
 
 class SessionEditDialog(BaseDialog):
@@ -878,7 +878,9 @@ class SessionEditDialog(BaseDialog):
                 xalign=0,
             )
             remote_host_display = tunnel.get("remote_host") or _("SSH Host")
-            subtitle_text = _("{local_host}:{local_port} → {remote_host}:{remote_port}").format(
+            subtitle_text = _(
+                "{local_host}:{local_port} → {remote_host}:{remote_port}"
+            ).format(
                 local_host=tunnel.get("local_host", "localhost"),
                 local_port=tunnel.get("local_port", 0),
                 remote_host=remote_host_display,
@@ -898,7 +900,9 @@ class SessionEditDialog(BaseDialog):
             delete_button = Gtk.Button(
                 icon_name="user-trash-symbolic", css_classes=["flat"]
             )
-            delete_button.connect("clicked", self._on_delete_port_forward_clicked, index)
+            delete_button.connect(
+                "clicked", self._on_delete_port_forward_clicked, index
+            )
             button_box.append(edit_button)
             button_box.append(delete_button)
             row_box.append(button_box)
@@ -928,7 +932,9 @@ class SessionEditDialog(BaseDialog):
             self._refresh_port_forward_list()
             self._mark_changed()
 
-    def _show_port_forward_dialog(self, existing: Optional[dict] = None) -> Optional[dict]:
+    def _show_port_forward_dialog(
+        self, existing: Optional[dict] = None
+    ) -> Optional[dict]:
         is_edit = existing is not None
 
         # Use Adw.Window with ToolbarView for consistency
@@ -1433,6 +1439,7 @@ class SessionEditDialog(BaseDialog):
     def _run_test_in_thread(self, test_session: SessionItem):
         # Lazy import to defer loading until actually testing connection
         from ...terminal.spawner import get_spawner
+
         spawner = get_spawner()
         success, message = spawner.test_ssh_connection(test_session)
         GLib.idle_add(self._on_test_finished, success, message)
@@ -1502,142 +1509,18 @@ class SessionEditDialog(BaseDialog):
         self._clear_validation_errors()
         if not self._validate_basic_fields():
             return None
+
         is_local = self.type_combo.get_selected() == 0
         if is_local and not self._validate_local_fields():
             return None
         if not is_local and not self._validate_ssh_fields():
             return None
 
-        # Create a new SessionItem instance with the data from the form
-        session_data = self.editing_session.to_dict()
-        session_data.update({
-            "name": self.name_row.get_text().strip(),
-            "session_type": "local" if self.type_combo.get_selected() == 0 else "ssh",
-        })
+        # Build session data from form fields
+        session_data = self._collect_session_data(is_local)
 
-        # Per-session highlighting overrides (tri-state)
-        if hasattr(self, "highlighting_customize_switch") and not self.highlighting_customize_switch.get_active():
-            # Customization is off => equivalent to "Automatic" for all.
-            session_data["output_highlighting"] = None
-            session_data["command_specific_highlighting"] = None
-            session_data["cat_colorization"] = None
-            session_data["shell_input_highlighting"] = None
-        else:
-            if hasattr(self, "output_highlighting_row"):
-                session_data["output_highlighting"] = self._selected_to_tri_state(
-                    self.output_highlighting_row.get_selected()
-                )
-            if hasattr(self, "command_specific_highlighting_row"):
-                session_data["command_specific_highlighting"] = self._selected_to_tri_state(
-                    self.command_specific_highlighting_row.get_selected()
-                )
-            if hasattr(self, "cat_colorization_row"):
-                session_data["cat_colorization"] = self._selected_to_tri_state(
-                    self.cat_colorization_row.get_selected()
-                )
-            if hasattr(self, "shell_input_highlighting_row"):
-                session_data["shell_input_highlighting"] = self._selected_to_tri_state(
-                    self.shell_input_highlighting_row.get_selected()
-                )
-
-        rgba = self.color_button.get_rgba()
-        if rgba.alpha > 0:  # Check if a color is set
-            session_data["tab_color"] = rgba.to_string()
-        else:
-            session_data["tab_color"] = None
-
-        if (
-            hasattr(self, "folder_combo")
-            and self.folder_combo
-            and (selected_item := self.folder_combo.get_selected_item())
-        ):
-            session_data["folder_path"] = self.folder_paths_map.get(
-                selected_item.get_string(), ""
-            )
-
-        post_login_enabled = (
-            self.post_login_switch.get_active()
-            if self.post_login_switch and self.type_combo.get_selected() == 1
-            else False
-        )
-        post_login_command = (
-            self.post_login_entry.get_text().strip()
-            if self.post_login_entry
-            else ""
-        )
-        session_data["post_login_command_enabled"] = post_login_enabled
-        session_data["post_login_command"] = (
-            post_login_command if post_login_enabled else ""
-        )
-
-        sftp_enabled = (
-            self.sftp_switch.get_active()
-            if self.sftp_switch and self.type_combo.get_selected() == 1
-            else False
-        )
-        local_dir = (
-            self.sftp_local_entry.get_text().strip()
-            if self.sftp_local_entry
-            else ""
-        )
-        remote_dir = (
-            self.sftp_remote_entry.get_text().strip()
-            if self.sftp_remote_entry
-            else ""
-        )
-        session_data["sftp_session_enabled"] = sftp_enabled
-        session_data["sftp_local_directory"] = local_dir
-        session_data["sftp_remote_directory"] = remote_dir
-        session_data["port_forwardings"] = (
-            copy.deepcopy(self.port_forwardings)
-            if session_data["session_type"] == "ssh"
-            else []
-        )
-        session_data["x11_forwarding"] = (
-            self.x11_switch.get_active()
-            if self.x11_switch and session_data["session_type"] == "ssh"
-            else False
-        )
-
-        raw_password = ""
-        if session_data["session_type"] == "ssh":
-            session_data.update({
-                "host": self.host_entry.get_text().strip(),
-                "user": self.user_entry.get_text().strip(),
-                "port": int(self.port_entry.get_value()),
-                "auth_type": "key"
-                if self.auth_combo.get_selected() == 0
-                else "password",
-            })
-            if session_data["auth_type"] == "key":
-                session_data["auth_value"] = self.key_path_entry.get_text().strip()
-            else:
-                raw_password = self.password_entry.get_text()
-                session_data["auth_value"] = ""  # Will be stored in keyring
-            # Clear local terminal fields for SSH sessions
-            session_data["local_working_directory"] = ""
-            session_data["local_startup_command"] = ""
-        else:
-            session_data.update({
-                "host": "",
-                "user": "",
-                "auth_type": "",
-                "auth_value": "",
-            })
-            session_data["sftp_session_enabled"] = False
-            session_data["port_forwardings"] = []
-            session_data["x11_forwarding"] = False
-            # Set local terminal fields
-            session_data["local_working_directory"] = (
-                self.local_working_dir_entry.get_text().strip()
-                if hasattr(self, "local_working_dir_entry")
-                else ""
-            )
-            # Get startup commands from BashTextView
-            startup_commands = ""
-            if hasattr(self, "local_startup_command_view"):
-                startup_commands = self.local_startup_command_view.get_text().strip()
-            session_data["local_startup_command"] = startup_commands
+        # Get raw password before creating session (for keyring storage)
+        raw_password = self._get_raw_password(session_data)
 
         updated_session = SessionItem.from_dict(session_data)
         if updated_session.uses_password_auth() and raw_password:
@@ -1653,6 +1536,180 @@ class SessionEditDialog(BaseDialog):
 
         return updated_session
 
+    def _collect_session_data(self, is_local: bool) -> dict:
+        """Collect all session data from form fields.
+
+        Args:
+            is_local: True if this is a local session, False for SSH.
+
+        Returns:
+            Dictionary with all session data.
+        """
+        session_data = self.editing_session.to_dict()
+        session_data.update({
+            "name": self.name_row.get_text().strip(),
+            "session_type": "local" if is_local else "ssh",
+        })
+
+        self._apply_highlighting_settings(session_data)
+        self._apply_tab_color(session_data)
+        self._apply_folder_settings(session_data)
+        self._apply_post_login_settings(session_data, is_local)
+        self._apply_sftp_settings(session_data, is_local)
+        self._apply_port_forwarding_settings(session_data, is_local)
+
+        if is_local:
+            self._apply_local_session_fields(session_data)
+        else:
+            self._apply_ssh_session_fields(session_data)
+
+        return session_data
+
+    def _apply_highlighting_settings(self, session_data: dict) -> None:
+        """Apply highlighting customization settings to session data."""
+        if (
+            hasattr(self, "highlighting_customize_switch")
+            and not self.highlighting_customize_switch.get_active()
+        ):
+            # Customization is off => equivalent to "Automatic" for all.
+            session_data["output_highlighting"] = None
+            session_data["command_specific_highlighting"] = None
+            session_data["cat_colorization"] = None
+            session_data["shell_input_highlighting"] = None
+        else:
+            if hasattr(self, "output_highlighting_row"):
+                session_data["output_highlighting"] = self._selected_to_tri_state(
+                    self.output_highlighting_row.get_selected()
+                )
+            if hasattr(self, "command_specific_highlighting_row"):
+                session_data["command_specific_highlighting"] = (
+                    self._selected_to_tri_state(
+                        self.command_specific_highlighting_row.get_selected()
+                    )
+                )
+            if hasattr(self, "cat_colorization_row"):
+                session_data["cat_colorization"] = self._selected_to_tri_state(
+                    self.cat_colorization_row.get_selected()
+                )
+            if hasattr(self, "shell_input_highlighting_row"):
+                session_data["shell_input_highlighting"] = self._selected_to_tri_state(
+                    self.shell_input_highlighting_row.get_selected()
+                )
+
+    def _apply_tab_color(self, session_data: dict) -> None:
+        """Apply tab color setting to session data."""
+        rgba = self.color_button.get_rgba()
+        session_data["tab_color"] = rgba.to_string() if rgba.alpha > 0 else None
+
+    def _apply_folder_settings(self, session_data: dict) -> None:
+        """Apply folder assignment to session data."""
+        if (
+            hasattr(self, "folder_combo")
+            and self.folder_combo
+            and (selected_item := self.folder_combo.get_selected_item())
+        ):
+            session_data["folder_path"] = self.folder_paths_map.get(
+                selected_item.get_string(), ""
+            )
+
+    def _apply_post_login_settings(self, session_data: dict, is_local: bool) -> None:
+        """Apply post-login command settings to session data."""
+        post_login_enabled = (
+            self.post_login_switch.get_active()
+            if self.post_login_switch and not is_local
+            else False
+        )
+        post_login_command = (
+            self.post_login_entry.get_text().strip() if self.post_login_entry else ""
+        )
+        session_data["post_login_command_enabled"] = post_login_enabled
+        session_data["post_login_command"] = (
+            post_login_command if post_login_enabled else ""
+        )
+
+    def _apply_sftp_settings(self, session_data: dict, is_local: bool) -> None:
+        """Apply SFTP settings to session data."""
+        sftp_enabled = (
+            self.sftp_switch.get_active()
+            if self.sftp_switch and not is_local
+            else False
+        )
+        local_dir = (
+            self.sftp_local_entry.get_text().strip() if self.sftp_local_entry else ""
+        )
+        remote_dir = (
+            self.sftp_remote_entry.get_text().strip() if self.sftp_remote_entry else ""
+        )
+        session_data["sftp_session_enabled"] = sftp_enabled
+        session_data["sftp_local_directory"] = local_dir
+        session_data["sftp_remote_directory"] = remote_dir
+
+    def _apply_port_forwarding_settings(
+        self, session_data: dict, is_local: bool
+    ) -> None:
+        """Apply port forwarding and X11 settings to session data."""
+        session_data["port_forwardings"] = (
+            copy.deepcopy(self.port_forwardings) if not is_local else []
+        )
+        session_data["x11_forwarding"] = (
+            self.x11_switch.get_active() if self.x11_switch and not is_local else False
+        )
+
+    def _apply_ssh_session_fields(self, session_data: dict) -> None:
+        """Apply SSH-specific fields to session data."""
+        session_data.update({
+            "host": self.host_entry.get_text().strip(),
+            "user": self.user_entry.get_text().strip(),
+            "port": int(self.port_entry.get_value()),
+            "auth_type": "key" if self.auth_combo.get_selected() == 0 else "password",
+        })
+        if session_data["auth_type"] == "key":
+            session_data["auth_value"] = self.key_path_entry.get_text().strip()
+        else:
+            session_data["auth_value"] = ""  # Will be stored in keyring
+        # Clear local terminal fields for SSH sessions
+        session_data["local_working_directory"] = ""
+        session_data["local_startup_command"] = ""
+
+    def _apply_local_session_fields(self, session_data: dict) -> None:
+        """Apply local terminal-specific fields to session data."""
+        session_data.update({
+            "host": "",
+            "user": "",
+            "auth_type": "",
+            "auth_value": "",
+        })
+        session_data["sftp_session_enabled"] = False
+        session_data["port_forwardings"] = []
+        session_data["x11_forwarding"] = False
+        # Set local terminal fields
+        session_data["local_working_directory"] = (
+            self.local_working_dir_entry.get_text().strip()
+            if hasattr(self, "local_working_dir_entry")
+            else ""
+        )
+        # Get startup commands from BashTextView
+        startup_commands = ""
+        if hasattr(self, "local_startup_command_view"):
+            startup_commands = self.local_startup_command_view.get_text().strip()
+        session_data["local_startup_command"] = startup_commands
+
+    def _get_raw_password(self, session_data: dict) -> str:
+        """Get raw password for SSH password authentication.
+
+        Args:
+            session_data: The session data dictionary.
+
+        Returns:
+            Raw password string, or empty string if not applicable.
+        """
+        if (
+            session_data.get("session_type") == "ssh"
+            and session_data.get("auth_type") == "password"
+        ):
+            return self.password_entry.get_text()
+        return ""
+
     def _validate_basic_fields(self) -> bool:
         return self._validate_required_field(self.name_row, _("Session name"))
 
@@ -1660,22 +1717,13 @@ class SessionEditDialog(BaseDialog):
         """Validate local terminal specific fields."""
         valid = True
         if hasattr(self, "local_working_dir_entry"):
-            path_text = self.local_working_dir_entry.get_text().strip()
-            if path_text:
-                try:
-                    path = Path(path_text).expanduser()
-                    if not path.exists() or not path.is_dir():
-                        self.local_working_dir_entry.add_css_class("error")
-                        self._validation_errors.append(
-                            _("Working directory must exist and be a folder.")
-                        )
-                        valid = False
-                    else:
-                        self.local_working_dir_entry.remove_css_class("error")
-                except Exception:
-                    self.local_working_dir_entry.add_css_class("error")
-                    self._validation_errors.append(_("Invalid working directory path."))
-                    valid = False
+            if not validate_directory_path(
+                self.local_working_dir_entry,
+                self._validation_errors,
+                _("Working directory must exist and be a folder."),
+                allow_empty=True,
+            ):
+                valid = False
         if not valid and self._validation_errors:
             self._show_error_dialog(
                 _("Validation Error"),
@@ -1720,26 +1768,13 @@ class SessionEditDialog(BaseDialog):
                 self.post_login_entry.remove_css_class("error")
         if self.sftp_switch and self.sftp_switch.get_active():
             if self.sftp_local_entry:
-                local_dir = self.sftp_local_entry.get_text().strip()
-                if local_dir:
-                    try:
-                        local_path = Path(local_dir).expanduser()
-                        if not local_path.exists() or not local_path.is_dir():
-                            self.sftp_local_entry.add_css_class("error")
-                            self._validation_errors.append(
-                                _("SFTP local directory must exist and be a directory.")
-                            )
-                            valid = False
-                        else:
-                            self.sftp_local_entry.remove_css_class("error")
-                    except Exception:
-                        self.sftp_local_entry.add_css_class("error")
-                        self._validation_errors.append(
-                            _("SFTP local directory must exist and be a directory.")
-                        )
-                        valid = False
-                else:
-                    self.sftp_local_entry.remove_css_class("error")
+                if not validate_directory_path(
+                    self.sftp_local_entry,
+                    self._validation_errors,
+                    _("SFTP local directory must exist and be a directory."),
+                    allow_empty=True,
+                ):
+                    valid = False
         if not valid and self._validation_errors:
             self._show_error_dialog(
                 _("SSH Validation Error"),

@@ -30,6 +30,7 @@ def _get_requests():
     global _requests_module
     if _requests_module is None:
         import requests
+
         _requests_module = requests
     return _requests_module
 
@@ -430,6 +431,113 @@ class TerminalAiAssistant(GObject.Object):
             config["model"] = self.DEFAULT_LOCAL_MODEL
         return config
 
+    # -------------------------------------------------------------------------
+    # Generic OpenAI-compatible API helpers (eliminates duplicate code)
+    # -------------------------------------------------------------------------
+
+    def _openai_compat_request(
+        self,
+        url: str,
+        headers: Dict[str, str],
+        payload: Dict[str, Any],
+        provider_name: str,
+        timeout: int = 60,
+    ) -> str:
+        """Generic non-streaming request for OpenAI-compatible APIs."""
+        requests = _get_requests()
+
+        try:
+            response = requests.post(
+                url, headers=headers, json=payload, timeout=timeout
+            )
+        except requests.RequestException as exc:
+            raise RuntimeError(
+                f"Failed to query the {provider_name} service: {exc}"
+            ) from exc
+
+        if response.status_code >= 400:
+            raise RuntimeError(self._format_openrouter_error(response))
+
+        try:
+            response_data = response.json()
+        except ValueError as exc:
+            raise RuntimeError(
+                f"{provider_name} returned an invalid JSON response."
+            ) from exc
+
+        choices = response_data.get("choices") or []
+        if not choices:
+            raise RuntimeError("The server response did not contain any suggestions.")
+
+        message = choices[0].get("message") if isinstance(choices[0], dict) else None
+        content = message.get("content") if isinstance(message, dict) else None
+        if isinstance(content, list):
+            content = "\n".join(
+                part.get("text", "")
+                for part in content
+                if isinstance(part, dict) and part.get("text")
+            )
+        if not isinstance(content, str) or not content.strip():
+            raise RuntimeError(f"{provider_name} did not return any usable content.")
+        return content.strip()
+
+    def _openai_compat_streaming(
+        self,
+        url: str,
+        headers: Dict[str, str],
+        payload: Dict[str, Any],
+        provider_name: str,
+        timeout: int = 60,
+    ) -> str:
+        """Generic streaming request for OpenAI-compatible APIs (SSE protocol)."""
+        requests = _get_requests()
+
+        # Ensure streaming is enabled in payload
+        payload["stream"] = True
+
+        try:
+            response = requests.post(
+                url, headers=headers, json=payload, timeout=timeout, stream=True
+            )
+        except requests.RequestException as exc:
+            raise RuntimeError(
+                f"Failed to query the {provider_name} service: {exc}"
+            ) from exc
+
+        if response.status_code >= 400:
+            raise RuntimeError(self._format_openrouter_error(response))
+
+        full_content = ""
+        for line in response.iter_lines():
+            if not line:
+                continue
+            line_str = line.decode("utf-8").strip()
+            if line_str.startswith("data: "):
+                data_str = line_str[6:]
+                if data_str == "[DONE]":
+                    break
+                try:
+                    data = json.loads(data_str)
+                    choices = data.get("choices", [])
+                    if choices:
+                        delta = choices[0].get("delta", {})
+                        chunk = delta.get("content", "")
+                        if chunk:
+                            full_content += chunk
+                            if self._streaming_callback:
+                                GLib.idle_add(self._streaming_callback, chunk, False)
+                except json.JSONDecodeError:
+                    continue
+
+        if self._streaming_callback:
+            GLib.idle_add(self._streaming_callback, "", True)
+
+        return full_content
+
+    # -------------------------------------------------------------------------
+    # Provider-specific dispatchers
+    # -------------------------------------------------------------------------
+
     def _perform_request(
         self, config: Dict[str, str], messages: List[Dict[str, str]]
     ) -> str:
@@ -462,196 +570,75 @@ class TerminalAiAssistant(GObject.Object):
         self, config: Dict[str, str], messages: List[Dict[str, str]]
     ) -> str:
         """Perform request to local OpenAI-compatible API (Ollama, LM Studio, etc.)."""
-        requests = _get_requests()
-
         base_url = config.get("local_base_url", "http://localhost:11434/v1").rstrip("/")
         model = config.get("model", "").strip() or self.DEFAULT_LOCAL_MODEL
-
-        payload_messages = self._build_openai_messages(messages)
         url = f"{base_url}/chat/completions"
-        payload: Dict[str, Any] = {
-            "model": model,
-            "messages": payload_messages,
-            "stream": False,
-        }
 
         headers = {"Content-Type": "application/json"}
         api_key = config.get("api_key", "").strip()
         if api_key:
             headers["Authorization"] = f"Bearer {api_key}"
 
-        try:
-            response = requests.post(url, headers=headers, json=payload, timeout=120)
-        except requests.RequestException as exc:
-            raise RuntimeError(f"Failed to query the local AI service: {exc}") from exc
-
-        if response.status_code >= 400:
-            raise RuntimeError(
-                f"HTTP error {response.status_code}: {response.text.strip()}"
-            )
-
-        try:
-            response_data = response.json()
-        except ValueError as exc:
-            raise RuntimeError("Local AI returned an invalid JSON response.") from exc
-
-        choices = response_data.get("choices") or []
-        if not choices:
-            raise RuntimeError("The server response did not contain any suggestions.")
-
-        message = choices[0].get("message") if isinstance(choices[0], dict) else None
-        content = message.get("content") if isinstance(message, dict) else None
-        if isinstance(content, list):
-            content = "\n".join(
-                part.get("text", "")
-                for part in content
-                if isinstance(part, dict) and part.get("text")
-            )
-        if not isinstance(content, str) or not content.strip():
-            raise RuntimeError("Local AI did not return any usable content.")
-        return content.strip()
+        payload: Dict[str, Any] = {
+            "model": model,
+            "messages": self._build_openai_messages(messages),
+        }
+        return self._openai_compat_request(
+            url, headers, payload, "Local AI", timeout=120
+        )
 
     def _perform_local_streaming_request(
         self, config: Dict[str, str], messages: List[Dict[str, str]]
     ) -> str:
         """Perform streaming request to local OpenAI-compatible API."""
-        requests = _get_requests()
-
         base_url = config.get("local_base_url", "http://localhost:11434/v1").rstrip("/")
         model = config.get("model", "").strip() or self.DEFAULT_LOCAL_MODEL
-
-        payload_messages = self._build_openai_messages(messages)
         url = f"{base_url}/chat/completions"
-        payload: Dict[str, Any] = {
-            "model": model,
-            "messages": payload_messages,
-            "stream": True,
-        }
 
         headers = {"Content-Type": "application/json"}
         api_key = config.get("api_key", "").strip()
         if api_key:
             headers["Authorization"] = f"Bearer {api_key}"
 
-        try:
-            response = requests.post(
-                url, headers=headers, json=payload, timeout=120, stream=True
-            )
-        except requests.RequestException as exc:
-            raise RuntimeError(f"Failed to query the local AI service: {exc}") from exc
-
-        if response.status_code >= 400:
-            raise RuntimeError(
-                f"HTTP error {response.status_code}: {response.text.strip()}"
-            )
-
-        full_content = ""
-        for line in response.iter_lines():
-            if not line:
-                continue
-            line_str = line.decode("utf-8").strip()
-            if line_str.startswith("data: "):
-                data_str = line_str[6:]
-                if data_str == "[DONE]":
-                    break
-                try:
-                    data = json.loads(data_str)
-                    choices = data.get("choices", [])
-                    if choices:
-                        delta = choices[0].get("delta", {})
-                        chunk = delta.get("content", "")
-                        if chunk:
-                            full_content += chunk
-                            if self._streaming_callback:
-                                GLib.idle_add(self._streaming_callback, chunk, False)
-                except json.JSONDecodeError:
-                    continue
-
-        if self._streaming_callback:
-            GLib.idle_add(self._streaming_callback, "", True)
-
-        return full_content
+        payload: Dict[str, Any] = {
+            "model": model,
+            "messages": self._build_openai_messages(messages),
+        }
+        return self._openai_compat_streaming(
+            url, headers, payload, "Local AI", timeout=120
+        )
 
     def _perform_groq_streaming_request(
         self, config: Dict[str, str], messages: List[Dict[str, str]]
     ) -> str:
         """Perform streaming request to Groq API."""
-        requests = _get_requests()
-
         api_key = config.get("api_key", "").strip()
         if not api_key:
             raise RuntimeError("Configure the Groq API key in Preferences.")
 
         model = config.get("model", "").strip() or self.DEFAULT_GROQ_MODEL
-
-        payload_messages = self._build_openai_messages(messages)
         url = "https://api.groq.com/openai/v1/chat/completions"
-        payload: Dict[str, Any] = {
-            "model": model,
-            "messages": payload_messages,
-            "stream": True,
-        }
 
         headers = {
             "Content-Type": "application/json",
             "Authorization": f"Bearer {api_key}",
         }
-
-        try:
-            response = requests.post(
-                url, headers=headers, json=payload, timeout=60, stream=True
-            )
-        except requests.RequestException as exc:
-            raise RuntimeError(f"Failed to query the Groq service: {exc}") from exc
-
-        if response.status_code >= 400:
-            raise RuntimeError(self._format_openrouter_error(response))
-
-        full_content = ""
-        for line in response.iter_lines():
-            if not line:
-                continue
-            line_str = line.decode("utf-8").strip()
-            if line_str.startswith("data: "):
-                data_str = line_str[6:]
-                if data_str == "[DONE]":
-                    break
-                try:
-                    data = json.loads(data_str)
-                    choices = data.get("choices", [])
-                    if choices:
-                        delta = choices[0].get("delta", {})
-                        chunk = delta.get("content", "")
-                        if chunk:
-                            full_content += chunk
-                            if self._streaming_callback:
-                                GLib.idle_add(self._streaming_callback, chunk, False)
-                except json.JSONDecodeError:
-                    continue
-
-        if self._streaming_callback:
-            GLib.idle_add(self._streaming_callback, "", True)
-
-        return full_content
+        payload: Dict[str, Any] = {
+            "model": model,
+            "messages": self._build_openai_messages(messages),
+        }
+        return self._openai_compat_streaming(url, headers, payload, "Groq")
 
     def _perform_openrouter_streaming_request(
         self, config: Dict[str, str], messages: List[Dict[str, str]]
     ) -> str:
         """Perform streaming request to OpenRouter API."""
-        requests = _get_requests()
-
         api_key = config.get("api_key", "").strip()
         if not api_key:
             raise RuntimeError("Configure the OpenRouter API key in Preferences.")
 
         model = config.get("model", "").strip() or self.DEFAULT_OPENROUTER_MODEL
-        payload_messages = self._build_openai_messages(messages)
         url = "https://openrouter.ai/api/v1/chat/completions"
-        payload: Dict[str, Any] = {
-            "model": model,
-            "messages": payload_messages,
-            "stream": True,
-        }
 
         headers = {
             "Content-Type": "application/json",
@@ -664,46 +651,11 @@ class TerminalAiAssistant(GObject.Object):
         if site_name:
             headers["X-Title"] = site_name
 
-        try:
-            response = requests.post(
-                url, headers=headers, json=payload, timeout=60, stream=True
-            )
-        except requests.RequestException as exc:
-            raise RuntimeError(
-                f"Failed to query the OpenRouter service: {exc}"
-            ) from exc
-
-        if response.status_code >= 400:
-            raise RuntimeError(
-                f"HTTP error {response.status_code}: {response.text.strip()}"
-            )
-
-        full_content = ""
-        for line in response.iter_lines():
-            if not line:
-                continue
-            line_str = line.decode("utf-8").strip()
-            if line_str.startswith("data: "):
-                data_str = line_str[6:]
-                if data_str == "[DONE]":
-                    break
-                try:
-                    data = json.loads(data_str)
-                    choices = data.get("choices", [])
-                    if choices:
-                        delta = choices[0].get("delta", {})
-                        chunk = delta.get("content", "")
-                        if chunk:
-                            full_content += chunk
-                            if self._streaming_callback:
-                                GLib.idle_add(self._streaming_callback, chunk, False)
-                except json.JSONDecodeError:
-                    continue
-
-        if self._streaming_callback:
-            GLib.idle_add(self._streaming_callback, "", True)
-
-        return full_content
+        payload: Dict[str, Any] = {
+            "model": model,
+            "messages": self._build_openai_messages(messages),
+        }
+        return self._openai_compat_streaming(url, headers, payload, "OpenRouter")
 
     def _perform_gemini_request(
         self, config: Dict[str, str], messages: List[Dict[str, str]]
@@ -762,65 +714,34 @@ class TerminalAiAssistant(GObject.Object):
     def _perform_groq_request(
         self, config: Dict[str, str], messages: List[Dict[str, str]]
     ) -> str:
-        requests = _get_requests()
-
+        """Perform non-streaming request to Groq API."""
         api_key = config.get("api_key", "").strip()
         if not api_key:
             raise RuntimeError("Configure the Groq API key in Preferences.")
 
         model = config.get("model", "").strip() or self.DEFAULT_GROQ_MODEL
-
-        payload_messages = self._build_openai_messages(messages)
         url = "https://api.groq.com/openai/v1/chat/completions"
-        payload: Dict[str, Any] = {"model": model, "messages": payload_messages}
 
         headers = {
             "Content-Type": "application/json",
             "Authorization": f"Bearer {api_key}",
         }
-
-        try:
-            response = requests.post(url, headers=headers, json=payload, timeout=60)
-        except requests.RequestException as exc:
-            raise RuntimeError(f"Failed to query the Groq service: {exc}") from exc
-
-        if response.status_code >= 400:
-            raise RuntimeError(self._format_openrouter_error(response))
-
-        try:
-            response_data = response.json()
-        except ValueError as exc:
-            raise RuntimeError("Groq returned an invalid JSON response.") from exc
-
-        choices = response_data.get("choices") or []
-        if not choices:
-            raise RuntimeError("The server response did not contain any suggestions.")
-
-        message = choices[0].get("message") if isinstance(choices[0], dict) else None
-        content = message.get("content") if isinstance(message, dict) else None
-        if isinstance(content, list):
-            content = "\n".join(
-                part.get("text", "")
-                for part in content
-                if isinstance(part, dict) and part.get("text")
-            )
-        if not isinstance(content, str) or not content.strip():
-            raise RuntimeError("Groq did not return any usable content.")
-        return content.strip()
+        payload: Dict[str, Any] = {
+            "model": model,
+            "messages": self._build_openai_messages(messages),
+        }
+        return self._openai_compat_request(url, headers, payload, "Groq")
 
     def _perform_openrouter_request(
         self, config: Dict[str, str], messages: List[Dict[str, str]]
     ) -> str:
-        requests = _get_requests()
-
+        """Perform non-streaming request to OpenRouter API."""
         api_key = config.get("api_key", "").strip()
         if not api_key:
             raise RuntimeError("Configure the OpenRouter API key in Preferences.")
 
         model = config.get("model", "").strip() or self.DEFAULT_OPENROUTER_MODEL
-        payload_messages = self._build_openai_messages(messages)
         url = "https://openrouter.ai/api/v1/chat/completions"
-        payload: Dict[str, Any] = {"model": model, "messages": payload_messages}
 
         headers = {
             "Content-Type": "application/json",
@@ -833,38 +754,11 @@ class TerminalAiAssistant(GObject.Object):
         if site_name:
             headers["X-Title"] = site_name
 
-        try:
-            response = requests.post(url, headers=headers, json=payload, timeout=60)
-        except requests.RequestException as exc:
-            raise RuntimeError(
-                f"Failed to query the OpenRouter service: {exc}"
-            ) from exc
-
-        if response.status_code >= 400:
-            raise RuntimeError(
-                f"HTTP error {response.status_code}: {response.text.strip()}"
-            )
-
-        try:
-            response_data = response.json()
-        except ValueError as exc:
-            raise RuntimeError("OpenRouter returned an invalid JSON response.") from exc
-
-        choices = response_data.get("choices") or []
-        if not choices:
-            raise RuntimeError("The server response did not contain any suggestions.")
-
-        message = choices[0].get("message") if isinstance(choices[0], dict) else None
-        content = message.get("content") if isinstance(message, dict) else None
-        if isinstance(content, list):
-            content = "\n".join(
-                part.get("text", "")
-                for part in content
-                if isinstance(part, dict) and part.get("text")
-            )
-        if not isinstance(content, str) or not content.strip():
-            raise RuntimeError("OpenRouter did not return any usable content.")
-        return content.strip()
+        payload: Dict[str, Any] = {
+            "model": model,
+            "messages": self._build_openai_messages(messages),
+        }
+        return self._openai_compat_request(url, headers, payload, "OpenRouter")
 
     def _format_openrouter_error(self, response: Any) -> str:
         """Format error from HTTP response. Response type is requests.Response."""
@@ -915,10 +809,12 @@ class TerminalAiAssistant(GObject.Object):
                 system_instruction = text
                 continue
             mapped_role = "model" if role == "assistant" else "user"
-            contents.append({
-                "role": mapped_role,
-                "parts": [{"text": text}],
-            })
+            contents.append(
+                {
+                    "role": mapped_role,
+                    "parts": [{"text": text}],
+                }
+            )
         if not contents:
             contents.append({"role": "user", "parts": [{"text": ""}]})
         return system_instruction, contents
@@ -976,10 +872,12 @@ class TerminalAiAssistant(GObject.Object):
                 cmd_str = match.strip()
                 # Evita adicionar scripts longos como botões de comando único
                 if cmd_str and len(cmd_str.splitlines()) == 1:
-                    commands.append({
-                        "command": cmd_str,
-                        "description": "Suggested command",
-                    })
+                    commands.append(
+                        {
+                            "command": cmd_str,
+                            "description": "Suggested command",
+                        }
+                    )
 
         return reply_text, commands, code_snippets
 
@@ -1030,12 +928,14 @@ class TerminalAiAssistant(GObject.Object):
                     candidate = item.get("command") or item.get("cmd")
                     description = item.get("description") or ""
                     if isinstance(candidate, str) and candidate.strip():
-                        commands.append({
-                            "command": candidate.strip(),
-                            "description": description.strip()
-                            if isinstance(description, str)
-                            else "",
-                        })
+                        commands.append(
+                            {
+                                "command": candidate.strip(),
+                                "description": description.strip()
+                                if isinstance(description, str)
+                                else "",
+                            }
+                        )
         elif isinstance(value, str) and value.strip():
             commands.append({"command": value.strip(), "description": ""})
         return commands

@@ -52,7 +52,10 @@ class WindowUIBuilder:
         self.wm_settings = None
         self._wm_button_layout = ":"  # Default: colon only = no buttons
         self._kde_borderless_maximized = False  # KDE-specific setting
-        self._is_kde = os.environ.get("XDG_CURRENT_DESKTOP", "").upper() in ("KDE", "PLASMA")
+        self._is_kde = os.environ.get("XDG_CURRENT_DESKTOP", "").upper() in (
+            "KDE",
+            "PLASMA",
+        )
 
         # Try to read GNOME WM settings (works on GNOME and some GTK-based DEs)
         try:
@@ -203,7 +206,9 @@ class WindowUIBuilder:
             placeholder_text=_("Type your command here and press ENTER..."),
         )
         self.broadcast_entry.add_css_class("broadcast-entry")
-        self.broadcast_entry.set_icon_from_icon_name(Gtk.EntryIconPosition.PRIMARY, "utilities-terminal-symbolic")
+        self.broadcast_entry.set_icon_from_icon_name(
+            Gtk.EntryIconPosition.PRIMARY, "utilities-terminal-symbolic"
+        )
         broadcast_box.append(self.broadcast_entry)
         self.broadcast_bar.set_child(broadcast_box)
         main_box.append(self.broadcast_bar)

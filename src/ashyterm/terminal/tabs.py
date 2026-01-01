@@ -101,7 +101,7 @@ class TabManager:
         on_quit_callback: Callable[[], None],
         on_detach_tab_callback: Callable[[Adw.ViewStackPage], None],
         scrolled_tab_bar: Gtk.ScrolledWindow,
-        on_tab_count_changed: Callable[[], None] = None,
+        on_tab_count_changed: Optional[Callable[[], None]] = None,
     ):
         """
         Initializes the TabManager.
@@ -790,7 +790,9 @@ class TabManager:
         primary_terminal = terminals[0]
         terminal_id = getattr(primary_terminal, "terminal_id", None)
         if not terminal_id:
-            self.logger.warning("Primary terminal missing identifier; duplication aborted.")
+            self.logger.warning(
+                "Primary terminal missing identifier; duplication aborted."
+            )
             return
 
         terminal_info = self.terminal_manager.registry.get_terminal_info(terminal_id)
@@ -809,7 +811,9 @@ class TabManager:
 
         try:
             if term_type == "local":
-                working_directory = self._get_terminal_working_directory(primary_terminal)
+                working_directory = self._get_terminal_working_directory(
+                    primary_terminal
+                )
                 self.create_local_tab(
                     session=session_copy,
                     working_directory=working_directory,
@@ -818,23 +822,27 @@ class TabManager:
                 if session_copy:
                     self.create_ssh_tab(session_copy)
                 else:
-                    self.logger.warning("Cannot duplicate SSH tab without session data.")
+                    self.logger.warning(
+                        "Cannot duplicate SSH tab without session data."
+                    )
             elif term_type == "sftp":
                 if session_copy:
                     self.create_sftp_tab(session_copy)
                 else:
-                    self.logger.warning("Cannot duplicate SFTP tab without session data.")
+                    self.logger.warning(
+                        "Cannot duplicate SFTP tab without session data."
+                    )
             else:
-                self.logger.warning(f"Unsupported terminal type for duplication: {term_type}")
+                self.logger.warning(
+                    f"Unsupported terminal type for duplication: {term_type}"
+                )
         except Exception as exc:
             self.logger.error(
                 f"Failed to duplicate tab '{tab_widget.label_widget.get_text()}': {exc}"
             )
             return
 
-    def _get_terminal_working_directory(
-        self, terminal: Vte.Terminal
-    ) -> Optional[str]:
+    def _get_terminal_working_directory(self, terminal: Vte.Terminal) -> Optional[str]:
         """Returns the terminal's current working directory path, if available."""
         uri = terminal.get_current_directory_uri()
         if not uri:
@@ -844,7 +852,9 @@ class TabManager:
             path, _ = GLib.filename_from_uri(uri)
             return path
         except (TypeError, ValueError) as error:
-            self.logger.debug(f"Could not resolve working directory from '{uri}': {error}")
+            self.logger.debug(
+                f"Could not resolve working directory from '{uri}': {error}"
+            )
             return None
 
     def _is_widget_in_filemanager(self, widget: Gtk.Widget) -> bool:
@@ -946,6 +956,7 @@ class TabManager:
             if not fm:
                 # Lazy import FileManager only when needed
                 from ..filemanager.manager import FileManager
+
                 fm = FileManager(
                     self.terminal_manager.parent_window,
                     self.terminal_manager,
@@ -1408,7 +1419,7 @@ class TabManager:
         Returns:
             True if banner was shown, False otherwise.
         """
-        from ..ui.widgets.ssh_error_banner import SSHErrorBanner, BannerAction
+        from ..ui.widgets.ssh_error_banner import BannerAction, SSHErrorBanner
 
         page = self.get_page_for_terminal(terminal)
         if not page:
@@ -1693,7 +1704,9 @@ class TabManager:
             """Called when the edit dialog is closed."""
             # Always retry connection after edit dialog is closed
             # The user opened the dialog to fix credentials, so we should try again
-            self.logger.info(f"Session edit dialog closed, retrying connection for {session.name}")
+            self.logger.info(
+                f"Session edit dialog closed, retrying connection for {session.name}"
+            )
             GLib.idle_add(
                 self.terminal_manager._retry_ssh_in_same_terminal,
                 terminal,
@@ -1749,7 +1762,9 @@ class TabManager:
 
             # Display success message in terminal
             terminal.feed(
-                f"\r\n\x1b[32m[Host Key] Removed old key for {host}\x1b[0m\r\n".encode("utf-8")
+                f"\r\n\x1b[32m[Host Key] Removed old key for {host}\x1b[0m\r\n".encode(
+                    "utf-8"
+                )
             )
             terminal.feed(b"\x1b[33m[Host Key] Reconnecting...\x1b[0m\r\n")
 
@@ -2182,95 +2197,142 @@ class TabManager:
         node_type = node["type"]
 
         if node_type == "terminal":
-            terminal = None
-            working_dir = node.get("working_dir")
-            initial_command = (
-                f'cd "{working_dir}"'
-                if working_dir and node["session_type"] == "ssh"
-                else None
-            )
-            title = node.get("session_name", "Terminal")
-            session_type = node.get("session_type", "local")
-
-            if session_type == "ssh":
-                session = next(
-                    (
-                        s
-                        for s in self.terminal_manager.parent_window.session_store
-                        if s.name == node["session_name"]
-                    ),
-                    None,
-                )
-                if session and session.is_ssh():
-                    terminal = self.terminal_manager.create_ssh_terminal(
-                        session, initial_command=initial_command
-                    )
-                else:
-                    self.logger.warning(
-                        f"Could not find SSH session '{node['session_name']}' to restore, or type mismatch."
-                    )
-                    terminal = self.terminal_manager.create_local_terminal(
-                        title=f"Missing: {title}"
-                    )
-            else:  # session_type is local
-                session = next(
-                    (
-                        s
-                        for s in self.terminal_manager.parent_window.session_store
-                        if s.name == node["session_name"] and s.is_local()
-                    ),
-                    None,
-                )
-                terminal = self.terminal_manager.create_local_terminal(
-                    session=session, title=title, working_directory=working_dir
-                )
-
-            if not terminal:
-                return None
-
-            # For splits, we need the pane wrapper. For single terminals, we'll unwrap it later.
-            pane_widget = _create_terminal_pane(
-                terminal,
-                title,
-                self.close_pane,
-                self._on_move_to_tab_callback,
-                self.terminal_manager.settings_manager,
-            )
-
-            focus_controller = Gtk.EventControllerFocus()
-            focus_controller.connect("enter", self._on_pane_focus_in, terminal)
-            terminal.add_controller(focus_controller)
-
-            return pane_widget
-
+            return self._recreate_terminal_node(node)
         elif node_type == "paned":
-            orientation = (
-                Gtk.Orientation.HORIZONTAL
-                if node["orientation"] == "horizontal"
-                else Gtk.Orientation.VERTICAL
-            )
-            paned = Gtk.Paned(orientation=orientation)
-
-            child1 = self._recreate_widget_from_node(node["child1"])
-            child2 = self._recreate_widget_from_node(node["child2"])
-
-            if not child1 or not child2:
-                self.logger.error("Failed to recreate children for a split pane.")
-                if child1:
-                    self._find_and_remove_terminals(child1)
-                if child2:
-                    self._find_and_remove_terminals(child2)
-                return None
-
-            paned.set_start_child(child1)
-            paned.set_end_child(child2)
-
-            ratio = node.get("position_ratio", 0.5)
-            GLib.idle_add(self._set_paned_position_from_ratio, paned, ratio)
-
-            return paned
+            return self._recreate_paned_node(node)
 
         return None
+
+    def _recreate_terminal_node(self, node: dict) -> Optional[Gtk.Widget]:
+        """Recreate a terminal widget from a serialized node.
+
+        Args:
+            node: Serialized terminal node dictionary.
+
+        Returns:
+            Terminal pane widget or None if creation failed.
+        """
+        working_dir = node.get("working_dir")
+        initial_command = (
+            f'cd "{working_dir}"'
+            if working_dir and node["session_type"] == "ssh"
+            else None
+        )
+        title = node.get("session_name", "Terminal")
+        session_type = node.get("session_type", "local")
+
+        terminal = self._create_terminal_from_session(
+            session_type,
+            node.get("session_name", ""),
+            title,
+            working_dir,
+            initial_command,
+        )
+
+        if not terminal:
+            return None
+
+        pane_widget = _create_terminal_pane(
+            terminal,
+            title,
+            self.close_pane,
+            self._on_move_to_tab_callback,
+            self.terminal_manager.settings_manager,
+        )
+
+        focus_controller = Gtk.EventControllerFocus()
+        focus_controller.connect("enter", self._on_pane_focus_in, terminal)
+        terminal.add_controller(focus_controller)
+
+        return pane_widget
+
+    def _create_terminal_from_session(
+        self,
+        session_type: str,
+        session_name: str,
+        title: str,
+        working_dir: Optional[str],
+        initial_command: Optional[str],
+    ) -> Optional[Vte.Terminal]:
+        """Create a terminal based on session type.
+
+        Args:
+            session_type: "ssh" or "local".
+            session_name: Name of the session.
+            title: Terminal title.
+            working_dir: Working directory path.
+            initial_command: Initial command for SSH sessions.
+
+        Returns:
+            Terminal widget or None if creation failed.
+        """
+        if session_type == "ssh":
+            session = next(
+                (
+                    s
+                    for s in self.terminal_manager.parent_window.session_store
+                    if s.name == session_name
+                ),
+                None,
+            )
+            if session and session.is_ssh():
+                return self.terminal_manager.create_ssh_terminal(
+                    session, initial_command=initial_command
+                )
+            self.logger.warning(
+                f"Could not find SSH session '{session_name}' to restore, or type mismatch."
+            )
+            return self.terminal_manager.create_local_terminal(
+                title=f"Missing: {title}"
+            )
+
+        # Local session
+        session = next(
+            (
+                s
+                for s in self.terminal_manager.parent_window.session_store
+                if s.name == session_name and s.is_local()
+            ),
+            None,
+        )
+        return self.terminal_manager.create_local_terminal(
+            session=session, title=title, working_directory=working_dir
+        )
+
+    def _recreate_paned_node(self, node: dict) -> Optional[Gtk.Widget]:
+        """Recreate a paned widget from a serialized node.
+
+        Args:
+            node: Serialized paned node dictionary.
+
+        Returns:
+            Paned widget or None if creation failed.
+        """
+        orientation = (
+            Gtk.Orientation.HORIZONTAL
+            if node["orientation"] == "horizontal"
+            else Gtk.Orientation.VERTICAL
+        )
+        paned = Gtk.Paned(orientation=orientation)
+
+        child1 = self._recreate_widget_from_node(node["child1"])
+        child2 = self._recreate_widget_from_node(node["child2"])
+
+        if not child1 or not child2:
+            self.logger.error("Failed to recreate children for a split pane.")
+            if child1:
+                self._find_and_remove_terminals(child1)
+            if child2:
+                self._find_and_remove_terminals(child2)
+            return None
+
+        paned.set_start_child(child1)
+        paned.set_end_child(child2)
+
+        ratio = node.get("position_ratio", 0.5)
+        GLib.idle_add(self._set_paned_position_from_ratio, paned, ratio)
+
+        return paned
 
     def _find_and_remove_terminals(self, widget: Gtk.Widget):
         """Finds all terminals in a widget tree and removes them."""

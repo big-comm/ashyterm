@@ -95,9 +95,9 @@ class ShortcutsDialog(Adw.PreferencesWindow):
         header_bar = self.get_titlebar()
         if header_bar:
             # Try different methods to add the button
-            if hasattr(header_bar, 'pack_end'):
+            if hasattr(header_bar, "pack_end"):
                 header_bar.pack_end(reset_button)
-            elif hasattr(header_bar, 'add'):
+            elif hasattr(header_bar, "add"):
                 header_bar.add(reset_button)
             else:
                 # If we can't modify the header bar, add button as a group
@@ -118,9 +118,11 @@ class ShortcutsDialog(Adw.PreferencesWindow):
         self.add(page)
 
         # Add reset button as a group if it wasn't added to header bar
-        if hasattr(self, 'reset_button'):
+        if hasattr(self, "reset_button"):
             reset_group = Adw.PreferencesGroup()
-            reset_row = Adw.ActionRow(title=_("Reset all shortcuts to defaults"), activatable=False)
+            reset_row = Adw.ActionRow(
+                title=_("Reset all shortcuts to defaults"), activatable=False
+            )
             reset_row.add_suffix(self.reset_button)
             reset_group.add(reset_row)
             page.add(reset_group)
@@ -219,7 +221,9 @@ class ShortcutsDialog(Adw.PreferencesWindow):
             if conflict_action:
                 feedback_label.set_label(
                     _("Current: {}\nNew: {} (Conflicts with {})").format(
-                        current_label, label_text, conflict_action.split('.')[-1].replace('-', ' ').title()
+                        current_label,
+                        label_text,
+                        conflict_action.split(".")[-1].replace("-", " ").title(),
                     )
                 )
             else:
@@ -268,7 +272,9 @@ class ShortcutsDialog(Adw.PreferencesWindow):
         dialog = Adw.MessageDialog(
             transient_for=self,
             heading=_("Reset All Shortcuts"),
-            body=_("This will reset all keyboard shortcuts to their default values. Continue?"),
+            body=_(
+                "This will reset all keyboard shortcuts to their default values. Continue?"
+            ),
             close_response="cancel",
         )
         dialog.add_response("cancel", _("Cancel"))
@@ -295,7 +301,9 @@ class ShortcutsDialog(Adw.PreferencesWindow):
 
                     # Update the corresponding row in the UI directly
                     row = self.shortcut_rows[action_name]
-                    row.set_subtitle(accelerator_to_label(current_shortcut) or _("Not set"))
+                    row.set_subtitle(
+                        accelerator_to_label(current_shortcut) or _("Not set")
+                    )
             dlg.close()
 
         dialog.connect("response", on_reset_response)

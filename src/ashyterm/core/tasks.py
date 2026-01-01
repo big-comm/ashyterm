@@ -10,10 +10,10 @@ graceful shutdown.
 Usage:
     # Submit I/O-bound task (file operations, network, etc.)
     future = AsyncTaskManager.get().submit_io(fetch_data, url)
-    
+
     # Submit CPU-bound task (regex, parsing, etc.)
     future = AsyncTaskManager.get().submit_cpu(process_text, content)
-    
+
     # Shutdown (called by app.py on exit)
     AsyncTaskManager.get().shutdown()
 """
@@ -29,11 +29,11 @@ from ..utils.logger import get_logger
 class AsyncTaskManager:
     """
     Singleton Task Manager for centralized background task execution.
-    
+
     Manages two thread pools:
     - IO pool: For I/O-bound tasks (file system, network, SSH connections)
     - CPU pool: For CPU-bound tasks (regex highlighting, search, parsing)
-    
+
     Thread-safe for concurrent access from multiple parts of the application.
     """
 
@@ -62,9 +62,9 @@ class AsyncTaskManager:
     def get(cls) -> "AsyncTaskManager":
         """
         Get the singleton AsyncTaskManager instance.
-        
+
         Thread-safe lazy initialization.
-        
+
         Returns:
             The global AsyncTaskManager instance.
         """
@@ -78,7 +78,7 @@ class AsyncTaskManager:
     def reset(cls) -> None:
         """
         Reset the singleton instance (useful for testing).
-        
+
         Warning: This will shutdown existing pools and disconnect all futures.
         """
         with cls._lock:
@@ -89,12 +89,10 @@ class AsyncTaskManager:
     def _initialize_pools(self) -> None:
         """Initialize the thread pool executors."""
         self._io_executor = ThreadPoolExecutor(
-            max_workers=self.IO_POOL_SIZE,
-            thread_name_prefix="ashy-io"
+            max_workers=self.IO_POOL_SIZE, thread_name_prefix="ashy-io"
         )
         self._cpu_executor = ThreadPoolExecutor(
-            max_workers=self.CPU_POOL_SIZE,
-            thread_name_prefix="ashy-cpu"
+            max_workers=self.CPU_POOL_SIZE, thread_name_prefix="ashy-cpu"
         )
 
     def _track_future(self, future: Future) -> None:
@@ -111,15 +109,15 @@ class AsyncTaskManager:
     def submit_io(self, fn: Callable, *args, **kwargs) -> Optional[Future]:
         """
         Submit an I/O-bound task to the IO thread pool.
-        
+
         Use for: File operations, network requests, SSH connections,
                 database queries, subprocess calls.
-        
+
         Args:
             fn: The function to execute.
             *args: Positional arguments for the function.
             **kwargs: Keyword arguments for the function.
-            
+
         Returns:
             A Future object, or None if the manager is shut down.
         """
@@ -138,15 +136,15 @@ class AsyncTaskManager:
     def submit_cpu(self, fn: Callable, *args, **kwargs) -> Optional[Future]:
         """
         Submit a CPU-bound task to the CPU thread pool.
-        
+
         Use for: Regex processing, text parsing, search operations,
                 syntax highlighting, data transformation.
-        
+
         Args:
             fn: The function to execute.
             *args: Positional arguments for the function.
             **kwargs: Keyword arguments for the function.
-            
+
         Returns:
             A Future object, or None if the manager is shut down.
         """
@@ -165,7 +163,7 @@ class AsyncTaskManager:
     def shutdown(self, wait: bool = False) -> None:
         """
         Shutdown the task manager and all thread pools.
-        
+
         Args:
             wait: If True, wait for all pending tasks to complete.
                   If False, cancel pending tasks and return immediately.
@@ -206,15 +204,21 @@ class AsyncTaskManager:
     def pending_io_tasks(self) -> int:
         """Get approximate count of pending IO tasks."""
         with self._futures_lock:
-            return sum(1 for f in self._active_futures
-                      if not f.done() and "io" in str(getattr(f, '_thread_name_prefix', '')))
+            return sum(
+                1
+                for f in self._active_futures
+                if not f.done() and "io" in str(getattr(f, "_thread_name_prefix", ""))
+            )
 
     @property
     def pending_cpu_tasks(self) -> int:
         """Get approximate count of pending CPU tasks."""
         with self._futures_lock:
-            return sum(1 for f in self._active_futures
-                      if not f.done() and "cpu" in str(getattr(f, '_thread_name_prefix', '')))
+            return sum(
+                1
+                for f in self._active_futures
+                if not f.done() and "cpu" in str(getattr(f, "_thread_name_prefix", ""))
+            )
 
 
 # Convenience functions for quick access

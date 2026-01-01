@@ -257,51 +257,62 @@ class HighlightedTerminalProxy:
         if not buffer_stripped:
             return False
 
-        # Check for unclosed if/then block
-        has_then = (
-            " then" in buffer_stripped
-            or buffer_stripped.startswith("then")
-            or "\nthen" in buffer_stripped
-        )
-        has_fi = (
-            " fi" in buffer_stripped
-            or buffer_stripped.endswith("fi")
-            or "\nfi" in buffer_stripped
-        )
+        then_open, do_open = self._check_block_openings(buffer_stripped)
+        if then_open or do_open:
+            return True
 
-        # Check for unclosed for/while do block
-        has_do = " do" in buffer_stripped or buffer_stripped.startswith("do") or "\ndo" in buffer_stripped
-        has_done = " done" in buffer_stripped or buffer_stripped.endswith("done") or "\ndone" in buffer_stripped
+        if self._has_unclosed_braces(buffer_stripped):
+            return True
 
-        # Check structural completeness of blocks
+        return self._ends_with_continuation(buffer_stripped, then_open, do_open)
+
+    def _check_block_openings(self, buffer_stripped: str) -> tuple[bool, bool]:
+        """Check for unclosed if/then and for/do blocks."""
+        has_then = self._has_keyword(buffer_stripped, "then")
+        has_fi = self._has_keyword(buffer_stripped, "fi")
+        has_do = self._has_keyword(buffer_stripped, "do")
+        has_done = self._has_keyword(buffer_stripped, "done")
+
         then_block_open = has_then and not has_fi
         do_block_open = has_do and not has_done
+        return then_block_open, do_block_open
 
-        if then_block_open or do_block_open:
-            return True
+    def _has_keyword(self, buffer_stripped: str, keyword: str) -> bool:
+        """Check if buffer contains a shell keyword."""
+        return (
+            f" {keyword}" in buffer_stripped
+            or buffer_stripped.startswith(keyword)
+            or f"\n{keyword}" in buffer_stripped
+            or buffer_stripped.endswith(keyword)
+        )
 
-        # Check for unclosed braces
-        if buffer_stripped.count("{") > buffer_stripped.count("}"):
-            return True
+    def _has_unclosed_braces(self, buffer_stripped: str) -> bool:
+        """Check if buffer has more opening braces than closing."""
+        return buffer_stripped.count("{") > buffer_stripped.count("}")
 
-        # Check if LAST line ends with a continuation indicator
-        # Only check operators that always indicate continuation, not 'then'/'do'
-        # because those could be part of a closed block checked above
+    def _ends_with_continuation(
+        self, buffer_stripped: str, then_open: bool, do_open: bool
+    ) -> bool:
+        """Check if the last line ends with a continuation indicator."""
         lines = buffer_stripped.split("\n")
-        if lines:
-            last_line = lines[-1].strip()
-            # These operators always indicate continuation to the next line
-            operator_continuations = ("|", "&&", "||", "\\", "{")
-            if last_line and last_line.endswith(operator_continuations):
-                return True
-            # Check 'then'/'do'/'else' only if the corresponding block is not closed
-            if last_line.endswith("then") and then_block_open:
-                return True
-            if last_line.endswith("do") and do_block_open:
-                return True
-            if last_line.endswith("else"):
-                # 'else' always needs more content
-                return True
+        if not lines:
+            return False
+
+        last_line = lines[-1].strip()
+        if not last_line:
+            return False
+
+        # Operators that always indicate continuation
+        if last_line.endswith(("|", "&&", "||", "\\", "{")):
+            return True
+
+        # Context-dependent continuations
+        if last_line.endswith("then") and then_open:
+            return True
+        if last_line.endswith("do") and do_open:
+            return True
+        if last_line.endswith("else"):
+            return True
 
         return False
 
@@ -326,13 +337,15 @@ class HighlightedTerminalProxy:
             return (True, True, False)  # Printable char
         return (False, False, False)
 
-    def _handle_prompt_split(self, content: str, prompt: str, add_newline: bool = True) -> None:
+    def _handle_prompt_split(
+        self, content: str, prompt: str, add_newline: bool = True
+    ) -> None:
         """
         Handle splitting of content that contains an embedded prompt.
         Highlights content and queues prompt marker.
         """
-        clean = _CSI_CONTROL_PATTERN.sub('', content)
-        clean = _SGR_RESET_LINE_PATTERN.sub('', clean).strip()
+        clean = _CSI_CONTROL_PATTERN.sub("", content)
+        clean = _SGR_RESET_LINE_PATTERN.sub("", clean).strip()
         if clean:
             highlighted = self._highlight_line_with_pygments(clean, self._cat_filename)
             self._cat_queue.append(highlighted.encode("utf-8", errors="replace"))
@@ -344,13 +357,13 @@ class HighlightedTerminalProxy:
     def _handle_backspace_in_buffer(self, data: bytes) -> int:
         """
         Handle backspace characters in input data by updating the highlight buffer.
-        
+
         Counts backspace characters (\x08 and \x7f) and removes that many characters
         from the input highlight buffer. Also handles shell-style \x08 \x08 patterns.
-        
+
         Args:
             data: The byte data that may contain backspace characters.
-            
+
         Returns:
             The number of characters actually removed from the buffer.
         """
@@ -372,7 +385,9 @@ class HighlightedTerminalProxy:
         if backspace_count > 0:
             chars_to_remove = min(backspace_count, len(self._input_highlight_buffer))
             if chars_to_remove > 0:
-                self._input_highlight_buffer = self._input_highlight_buffer[:-chars_to_remove]
+                self._input_highlight_buffer = self._input_highlight_buffer[
+                    :-chars_to_remove
+                ]
             # Reset token tracking after backspace
             self._prev_shell_input_token_type = None
             self._prev_shell_input_token_len = 0
@@ -1204,7 +1219,9 @@ class HighlightedTerminalProxy:
 
             # Debug log for lexer state
             if current_lexer is None:
-                self.logger.debug(f"Pygments: no lexer yet for filename='{filename}', needs_content_detection={needs_content_detection}")
+                self.logger.debug(
+                    f"Pygments: no lexer yet for filename='{filename}', needs_content_detection={needs_content_detection}"
+                )
 
             # Detect lexer if we don't have one
             if current_lexer is None:
@@ -1215,7 +1232,9 @@ class HighlightedTerminalProxy:
                     try:
                         self._pygments_lexer = get_lexer_for_filename(filename)
                         lexer_found = True
-                        self.logger.debug(f"Pygments: found lexer {type(self._pygments_lexer).__name__} for filename '{filename}'")
+                        self.logger.debug(
+                            f"Pygments: found lexer {type(self._pygments_lexer).__name__} for filename '{filename}'"
+                        )
 
                         # For PHP, use startinline=True so code is recognized without <?php
                         if is_php:
@@ -1597,9 +1616,9 @@ class HighlightedTerminalProxy:
             if self._at_shell_prompt and len(data) < 1048576:
                 # Check if this is an Enter key press (newline from user)
                 # The newline may be bundled with escape sequences like bracketed paste mode
-                is_enter_marker = (
-                    data[0] == 0x00 if len(data) >= 1 else False
-                ) and (b"\r\n" in data or b"\n" in data)
+                is_enter_marker = (data[0] == 0x00 if len(data) >= 1 else False) and (
+                    b"\r\n" in data or b"\n" in data
+                )
 
                 # Check for readline redraw sequences:
                 # - \r (carriage return) - line redraw start
@@ -1796,7 +1815,9 @@ class HighlightedTerminalProxy:
                     if is_newline:
                         if self._at_shell_prompt:
                             # Check if we're in a multi-line command before resetting
-                            is_in_unclosed_block = self._is_in_unclosed_multiline_block(self._input_highlight_buffer)
+                            is_in_unclosed_block = self._is_in_unclosed_multiline_block(
+                                self._input_highlight_buffer
+                            )
 
                             # Also check continuation prompt in the data
                             stripped_text = _ALL_ESCAPE_SEQ_PATTERN.sub("", text)
@@ -1809,13 +1830,17 @@ class HighlightedTerminalProxy:
                             else:
                                 # Simple command submitted - reset
                                 self._at_shell_prompt = False
-                                self._shell_input_highlighter.set_at_prompt(self._proxy_id, False)
+                                self._shell_input_highlighter.set_at_prompt(
+                                    self._proxy_id, False
+                                )
                         self._suppress_shell_input_highlighting = False
                     elif is_user_input:
                         chunk_is_likely_user_input = True
                         if not self._at_shell_prompt:
                             self._at_shell_prompt = True
-                            self._shell_input_highlighter.set_at_prompt(self._proxy_id, True)
+                            self._shell_input_highlighter.set_at_prompt(
+                                self._proxy_id, True
+                            )
                             self._reset_input_buffer()
                             self._need_color_reset = True
                             self._suppress_shell_input_highlighting = False
@@ -1838,9 +1863,15 @@ class HighlightedTerminalProxy:
                     # If so, we should reset even if we're in a multiline block (command was aborted/errored)
                     stripped_for_prompt = _ALL_ESCAPE_SEQ_PATTERN.sub("", text).strip()
                     has_primary_prompt = False
-                    if stripped_for_prompt.endswith("$") or stripped_for_prompt.endswith("#"):
+                    if stripped_for_prompt.endswith(
+                        "$"
+                    ) or stripped_for_prompt.endswith("#"):
                         prompt_part = stripped_for_prompt[:-1].strip()
-                        if _SHELL_NAME_PROMPT_PATTERN.match(prompt_part) or "@" in prompt_part or ":" in prompt_part:
+                        if (
+                            _SHELL_NAME_PROMPT_PATTERN.match(prompt_part)
+                            or "@" in prompt_part
+                            or ":" in prompt_part
+                        ):
                             has_primary_prompt = True
 
                     # Check if we're in a multi-line command (unclosed block)
@@ -1914,7 +1945,9 @@ class HighlightedTerminalProxy:
                     # Check if we have content in the buffer (command was typed)
                     if self._input_highlight_buffer.strip():
                         # Check for unclosed blocks (if/then without fi, for/do without done, etc.)
-                        is_in_unclosed_block = self._is_in_unclosed_multiline_block(self._input_highlight_buffer)
+                        is_in_unclosed_block = self._is_in_unclosed_multiline_block(
+                            self._input_highlight_buffer
+                        )
 
                         stripped_text = _ALL_ESCAPE_SEQ_PATTERN.sub("", text)
                         has_continuation_prompt = (
@@ -1940,7 +1973,9 @@ class HighlightedTerminalProxy:
                         # Re-obtain context and rules as they may have been set since line 1753
                         # due to async GTK event processing
                         with self._highlighter._lock:
-                            context = self._highlighter._proxy_contexts.get(self._proxy_id, "")
+                            context = self._highlighter._proxy_contexts.get(
+                                self._proxy_id, ""
+                            )
                             if context:
                                 rules = self._highlighter._get_active_rules(context)
 
@@ -2049,8 +2084,8 @@ class HighlightedTerminalProxy:
             return True
 
         # Get the last line only - prompts are single lines
-        last_line = stripped_clean.rsplit('\n', 1)[-1].strip()
-        last_line = last_line.rsplit('\r', 1)[-1].strip()
+        last_line = stripped_clean.rsplit("\n", 1)[-1].strip()
+        last_line = last_line.rsplit("\r", 1)[-1].strip()
 
         # Sanity check: prompts are short (typically < 100 chars)
         if len(last_line) > 100:
@@ -2156,7 +2191,9 @@ class HighlightedTerminalProxy:
             # If buffer has content, the user submitted a command or is continuing multi-line
             if self._input_highlight_buffer.strip():
                 # Check if we're inside an unclosed block
-                is_in_unclosed_block = self._is_in_unclosed_multiline_block(self._input_highlight_buffer)
+                is_in_unclosed_block = self._is_in_unclosed_multiline_block(
+                    self._input_highlight_buffer
+                )
 
                 # Also check if this chunk contains a continuation prompt ("> ")
                 stripped_text = _ALL_ESCAPE_SEQ_PATTERN.sub("", text)
@@ -2318,15 +2355,17 @@ class HighlightedTerminalProxy:
                         0
                     ].rstrip()
                     # Check if nothing before, or ends with control character, or follows a prefix command
-                    is_command_position = not words_before or words_before.endswith((
-                        "|",
-                        ";",
-                        "&&",
-                        "||",
-                        "(",
-                        "`",
-                        "$(",
-                    ))
+                    is_command_position = not words_before or words_before.endswith(
+                        (
+                            "|",
+                            ";",
+                            "&&",
+                            "||",
+                            "(",
+                            "`",
+                            "$(",
+                        )
+                    )
 
                     # Also check if last word was a prefix command (sudo, time, env, etc.)
                     if not is_command_position and words_before:
@@ -2395,7 +2434,9 @@ class HighlightedTerminalProxy:
                         # now 'if' is Keyword) and we need to recolor the whole word
                         if should_retroactive_recolor and actual_token_value:
                             # DEBUG: Log retroactive recolor decision
-                            self.logger.debug(f"[RETROACTIVE] Recoloring: token={repr(actual_token_value)}, len={current_token_len}, prev_len={prev_token_len}, buffer={repr(self._input_highlight_buffer)}")
+                            self.logger.debug(
+                                f"[RETROACTIVE] Recoloring: token={repr(actual_token_value)}, len={current_token_len}, prev_len={prev_token_len}, buffer={repr(self._input_highlight_buffer)}"
+                            )
                             # Move cursor back by (token_len - 1) positions to recolor
                             # the previously typed characters of this word
                             chars_to_recolor = current_token_len - 1

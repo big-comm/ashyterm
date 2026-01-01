@@ -112,7 +112,9 @@ class ConversationHistoryPanel(Gtk.Box):
 
         self._history_manager = history_manager
         self._search_query = ""
-        self._current_conv_id = getattr(history_manager, "_current_conversation_id", None)
+        self._current_conv_id = getattr(
+            history_manager, "_current_conversation_id", None
+        )
         self._row_map = {}  # conv_id -> row widget
 
         self._setup_ui()
@@ -193,7 +195,9 @@ class ConversationHistoryPanel(Gtk.Box):
         empty_page = Adw.StatusPage()
         empty_page.set_icon_name("chat-symbolic")
         empty_page.set_title(_("No Conversations"))
-        empty_page.set_description(_("Start chatting to create your first conversation"))
+        empty_page.set_description(
+            _("Start chatting to create your first conversation")
+        )
         self._stack.add_named(empty_page, "empty")
 
         self.append(self._stack)
@@ -245,7 +249,8 @@ class ConversationHistoryPanel(Gtk.Box):
         if self._search_query:
             query_lower = self._search_query.lower()
             conversations = [
-                conv for conv in conversations
+                conv
+                for conv in conversations
                 if any(
                     query_lower in msg.get("content", "").lower()
                     for msg in conv.get("messages", [])
@@ -260,10 +265,7 @@ class ConversationHistoryPanel(Gtk.Box):
         self._stack.set_visible_child_name("list")
 
         # Sort by created_at descending (newest first)
-        conversations.sort(
-            key=lambda c: c.get("created_at", ""),
-            reverse=True
-        )
+        conversations.sort(key=lambda c: c.get("created_at", ""), reverse=True)
 
         # Add rows
         for conv in conversations:
@@ -291,7 +293,9 @@ class ConversationHistoryPanel(Gtk.Box):
             last_msg = messages[-1]
             content = last_msg.get("content", "").replace("\n", " ").strip()
             role_prefix = "You: " if last_msg.get("role") == "user" else "AI: "
-            subtitle = role_prefix + (content[:40] + "…" if len(content) > 40 else content)
+            subtitle = role_prefix + (
+                content[:40] + "…" if len(content) > 40 else content
+            )
 
         # Create row using Adw.ActionRow
         row = Adw.ActionRow()
@@ -380,7 +384,9 @@ class ConversationHistoryPanel(Gtk.Box):
         dialog = Adw.AlertDialog()
         dialog.set_heading(_("Delete All Conversations?"))
         dialog.set_body(
-            _("This will permanently delete all {} conversations. This action cannot be undone.").format(count)
+            _(
+                "This will permanently delete all {} conversations. This action cannot be undone."
+            ).format(count)
         )
         dialog.add_response("cancel", _("Cancel"))
         dialog.add_response("delete", _("Delete All"))
@@ -392,7 +398,9 @@ class ConversationHistoryPanel(Gtk.Box):
             if response == "delete":
                 self._history_manager.clear_all_history()
                 self._current_conv_id = None
-                self.emit("conversation-deleted", "")  # Empty string signals all deleted
+                self.emit(
+                    "conversation-deleted", ""
+                )  # Empty string signals all deleted
                 self.refresh()
 
         dialog.connect("response", on_response)
@@ -410,7 +418,9 @@ class ConversationHistoryPanel(Gtk.Box):
     def _on_new_conversation(self, button):
         """Handle new conversation button click."""
         self._history_manager.new_conversation()
-        self._current_conv_id = getattr(self._history_manager, "_current_conversation_id", None)
+        self._current_conv_id = getattr(
+            self._history_manager, "_current_conversation_id", None
+        )
         self.emit("conversation-selected", self._current_conv_id or "")
         # Close the dialog after creating new conversation
         self.emit("close-requested")

@@ -85,6 +85,7 @@ class BackupManager:
 
                     # 3. Export and save passwords (lazy import crypto)
                     from .crypto import export_all_passwords
+
                     passwords = export_all_passwords(sessions_store)
                     if passwords:
                         with open(temp_path / "passwords.json", "w") as f:
@@ -153,6 +154,7 @@ class BackupManager:
                             passwords = json.load(f)
 
                         from .crypto import store_password
+
                         imported_count = 0
                         for session_name, pwd in passwords.items():
                             try:

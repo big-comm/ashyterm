@@ -8,7 +8,7 @@ On X11 with compositor, the popover-based approach can cause segfaults, so we
 fall back to native GTK tooltips on X11 backends.
 """
 
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Optional
 
 import gi
 
@@ -54,7 +54,7 @@ def get_tooltip_helper() -> "TooltipHelper":
 
 
 def init_tooltip_helper(
-    settings_manager: "SettingsManager" = None, app=None
+    settings_manager: Optional["SettingsManager"] = None, app=None
 ) -> "TooltipHelper":
     """
     Initialize the global TooltipHelper with a settings manager.
@@ -146,8 +146,8 @@ class TooltipHelper:
 
     def update_colors(
         self,
-        bg_color: str = None,
-        fg_color: str = None,
+        bg_color: Optional[str] = None,
+        fg_color: Optional[str] = None,
         use_terminal_theme: bool = False,
     ):
         """

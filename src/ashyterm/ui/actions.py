@@ -312,6 +312,7 @@ class WindowActions:
             item := self.window.session_tree.get_selected_item(), SessionItem
         ):
             from .dialogs import MoveSessionDialog
+
             MoveSessionDialog(
                 self.window,
                 item,
@@ -387,9 +388,7 @@ class WindowActions:
         )
 
     def toggle_search(self, *_args):
-        self.window.search_button.set_active(
-            not self.window.search_button.get_active()
-        )
+        self.window.search_button.set_active(not self.window.search_button.get_active())
 
     def toggle_broadcast(self, *_args):
         self.window.broadcast_button.set_active(
@@ -403,6 +402,7 @@ class WindowActions:
     def preferences(self, *_args):
         self._hide_tooltip()
         from .dialogs import PreferencesDialog
+
         dialog = PreferencesDialog(self.window, self.window.settings_manager)
         dialog.connect(
             "transparency-changed",
@@ -416,11 +416,12 @@ class WindowActions:
             "font-changed",
             lambda d, f: self.window.terminal_manager.apply_settings_to_all_terminals(),
         )
-        dialog.present()
+        GLib.idle_add(lambda: dialog.present())
 
     def shortcuts(self, *_args):
         self._hide_tooltip()
         from .dialogs import ShortcutsDialog
+
         dialog = ShortcutsDialog(self.window)
         dialog.present()
 
@@ -456,25 +457,29 @@ class WindowActions:
         )
         if layout:
             from .dialogs import MoveLayoutDialog
+
             MoveLayoutDialog(self.window, layout, self.window.folder_store).present()
 
     # --- Helper Methods for Dialogs (Moved from CommTerminalWindow) ---
 
     def _show_session_edit_dialog(self, session: SessionItem, position: int) -> None:
         from .dialogs import SessionEditDialog
-        SessionEditDialog(
+
+        dialog = SessionEditDialog(
             self.window,
             session,
             self.window.session_store,
             position,
             self.window.folder_store,
             settings_manager=self.window.settings_manager,
-        ).present()
+        )
+        GLib.idle_add(lambda: dialog.present())
 
     def _show_folder_edit_dialog(
         self, folder: Optional[SessionFolder], position: Optional[int]
     ) -> None:
         from .dialogs import FolderEditDialog
+
         FolderEditDialog(
             self.window,
             self.window.folder_store,

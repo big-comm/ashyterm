@@ -148,61 +148,64 @@ class SessionStorageManager:
                     str(self.sessions_file), _("Load failed: {}").format(e)
                 )
 
+    def _validate_items_data(
+        self,
+        items: List[Dict[str, Any]],
+        item_class,
+        item_type_name: str,
+        required_fields: List[str],
+    ) -> List[Dict[str, Any]]:
+        """Generic helper to validate and sanitize items data.
+
+        Args:
+            items: List of item dictionaries to validate
+            item_class: The class to instantiate (SessionItem or SessionFolder)
+            item_type_name: Name for logging ("Session" or "Folder")
+            required_fields: List of required field names
+
+        Returns:
+            List of validated item dictionaries
+        """
+        validated_items = []
+        for i, item_data in enumerate(items):
+            try:
+                if not isinstance(item_data, dict):
+                    self.logger.warning(
+                        f"{item_type_name} {i} is not a dictionary, skipping"
+                    )
+                    continue
+                if not all(field in item_data for field in required_fields):
+                    self.logger.warning(
+                        f"{item_type_name} {i} missing required fields, skipping"
+                    )
+                    continue
+                try:
+                    item = item_class.from_dict(item_data)
+                    if item.validate():
+                        validated_items.append(item.to_dict())
+                    else:
+                        self.logger.warning(
+                            f"{item_type_name} '{item.name}' validation failed: {item.get_validation_errors()}"
+                        )
+                except Exception as e:
+                    self.logger.warning(f"{item_type_name} {i} creation failed: {e}")
+            except Exception as e:
+                self.logger.error(f"Error validating {item_type_name.lower()} {i}: {e}")
+        return validated_items
+
     def _validate_sessions_data(
         self, sessions: List[Dict[str, Any]]
     ) -> List[Dict[str, Any]]:
         """Validate and sanitize sessions data."""
-        validated_sessions = []
-        for i, session_data in enumerate(sessions):
-            try:
-                if not isinstance(session_data, dict):
-                    self.logger.warning(f"Session {i} is not a dictionary, skipping")
-                    continue
-                if "name" not in session_data or "session_type" not in session_data:
-                    self.logger.warning(
-                        f"Session {i} missing required fields, skipping"
-                    )
-                    continue
-                try:
-                    session_item = SessionItem.from_dict(session_data)
-                    if session_item.validate():
-                        validated_sessions.append(session_item.to_dict())
-                    else:
-                        self.logger.warning(
-                            f"Session '{session_item.name}' validation failed: {session_item.get_validation_errors()}"
-                        )
-                except Exception as e:
-                    self.logger.warning(f"Session {i} creation failed: {e}")
-            except Exception as e:
-                self.logger.error(f"Error validating session {i}: {e}")
-        return validated_sessions
+        return self._validate_items_data(
+            sessions, SessionItem, "Session", ["name", "session_type"]
+        )
 
     def _validate_folders_data(
         self, folders: List[Dict[str, Any]]
     ) -> List[Dict[str, Any]]:
         """Validate and sanitize folders data."""
-        validated_folders = []
-        for i, folder_data in enumerate(folders):
-            try:
-                if not isinstance(folder_data, dict):
-                    self.logger.warning(f"Folder {i} is not a dictionary, skipping")
-                    continue
-                if "name" not in folder_data:
-                    self.logger.warning(f"Folder {i} missing name field, skipping")
-                    continue
-                try:
-                    folder_item = SessionFolder.from_dict(folder_data)
-                    if folder_item.validate():
-                        validated_folders.append(folder_item.to_dict())
-                    else:
-                        self.logger.warning(
-                            f"Folder '{folder_item.name}' validation failed: {folder_item.get_validation_errors()}"
-                        )
-                except Exception as e:
-                    self.logger.warning(f"Folder {i} creation failed: {e}")
-            except Exception as e:
-                self.logger.error(f"Error validating folder {i}: {e}")
-        return validated_folders
+        return self._validate_items_data(folders, SessionFolder, "Folder", ["name"])
 
     def _audit_loaded_data(
         self, sessions: List[Dict[str, Any]], folders: List[Dict[str, Any]]

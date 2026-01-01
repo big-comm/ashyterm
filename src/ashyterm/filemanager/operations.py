@@ -71,7 +71,6 @@ class OperationCancelledError(Exception):
     """Custom exception to indicate that an operation was cancelled by the user."""
 
 
-
 class FileOperations:
     def __init__(self, session_item: SessionItem):
         self.session_item = session_item
@@ -314,7 +313,7 @@ class FileOperations:
         process = subprocess.Popen(
             command,
             stdout=subprocess.PIPE,
-            stderr=subprocess.PIPE, # Capture stderr separately
+            stderr=subprocess.PIPE,  # Capture stderr separately
             text=True,
             bufsize=1,
             universal_newlines=True,
@@ -342,18 +341,36 @@ class FileOperations:
 
         return output.strip()
 
-    def start_download_with_progress(
+    def _transfer_with_progress(
         self,
         transfer_id: str,
         session: SessionItem,
-        remote_path: str,
-        local_path: Path,
+        source_path: str,
+        dest_path: str,
         is_directory: bool,
+        direction: str,  # "download" or "upload"
         progress_callback=None,
         completion_callback=None,
         cancellation_event: Optional[threading.Event] = None,
     ):
-        def download_thread():
+        """
+        Generic transfer method for both download and upload operations.
+
+        Args:
+            transfer_id: Unique identifier for the transfer
+            session: SSH session information
+            source_path: Source path (remote for download, local for upload)
+            dest_path: Destination path (local for download, remote for upload)
+            is_directory: Whether transferring a directory
+            direction: "download" or "upload"
+            progress_callback: Optional callback for progress updates
+            completion_callback: Optional callback for completion
+            cancellation_event: Optional event for cancellation
+        """
+        is_download = direction == "download"
+        op_label = _("Download") if is_download else _("Upload")
+
+        def transfer_thread():
             process = None
             stderr_thread = None
             stderr_lines: list = []
@@ -367,10 +384,18 @@ class FileOperations:
                         f"ssh -o ControlPath={spawner._get_ssh_control_path(session)}"
                     )
 
-                    # FIX: Add trailing slash to source for rsync directory copy
-                    source_path_rsync = remote_path
+                    # Add trailing slash to source for rsync directory copy
+                    source_rsync = source_path
                     if is_directory:
-                        source_path_rsync = remote_path.rstrip("/") + "/"
+                        source_rsync = source_path.rstrip("/") + "/"
+
+                    # Build rsync command based on direction
+                    if is_download:
+                        rsync_source = f"{session.user}@{session.host}:{source_rsync}"
+                        rsync_dest = dest_path
+                    else:
+                        rsync_source = source_rsync
+                        rsync_dest = f"{session.user}@{session.host}:{dest_path}"
 
                     transfer_cmd = [
                         "rsync",
@@ -378,13 +403,12 @@ class FileOperations:
                         "--progress",
                         "-e",
                         ssh_cmd,
-                        f"{session.user}@{session.host}:{source_path_rsync}",
-                        str(local_path),
+                        rsync_source,
+                        rsync_dest,
                     ]
                     process = self._start_process(transfer_id, transfer_cmd)
 
                     # Start stderr draining thread to prevent deadlock
-                    # Deadlock can occur if stderr buffer fills while we read stdout
                     stderr_thread = threading.Thread(
                         target=_drain_stderr_to_list,
                         args=(process.stderr, stderr_lines),
@@ -396,7 +420,9 @@ class FileOperations:
                     for line in iter(process.stdout.readline, ""):
                         if cancellation_event and cancellation_event.is_set():
                             os.killpg(os.getpgid(process.pid), signal.SIGTERM)
-                            raise OperationCancelledError("Download cancelled by user.")
+                            raise OperationCancelledError(
+                                f"{op_label} cancelled by user."
+                            )
 
                         full_output += line
                         match = _PROGRESS_PERCENT_PATTERN.search(line)
@@ -417,33 +443,39 @@ class FileOperations:
                             completion_callback,
                             transfer_id,
                             True,
-                            "Download completed successfully.",
+                            f"{op_label} completed successfully.",
                         )
                     else:
-                        error_message = self._parse_transfer_error(full_output + stderr_output)
+                        error_message = self._parse_transfer_error(
+                            full_output + stderr_output
+                        )
                         GLib.idle_add(
                             completion_callback,
                             transfer_id,
                             False,
                             error_message,
                         )
-                else:  # Fallback for SFTP
-                    # ... (SFTP logic remains the same, as it doesn't provide detailed stderr during run)
+                else:  # SFTP fallback
                     sftp_cmd_base = spawner.command_builder.build_remote_command(
                         "sftp", session
                     )
 
-                    # FIX: For SFTP directory copy, destination must be the parent directory
-                    dest_path_sftp = str(local_path)
-                    if is_directory:
-                        dest_path_sftp = str(local_path.parent)
+                    # For SFTP directory copy, destination must be the parent directory
+                    if is_download:
+                        sftp_dest = (
+                            str(Path(dest_path).parent) if is_directory else dest_path
+                        )
+                        sftp_batch = f'get -r "{source_path}" "{sftp_dest}"\nquit\n'
+                    else:
+                        sftp_dest = (
+                            str(Path(dest_path).parent) if is_directory else dest_path
+                        )
+                        sftp_batch = f'put -r "{source_path}" "{sftp_dest}"\nquit\n'
 
                     with tempfile.NamedTemporaryFile(
                         mode="w", delete=False, suffix=".sftp"
                     ) as batch_file:
-                        batch_file.write(
-                            f'get -r "{remote_path}" "{dest_path_sftp}"\nquit\n'
-                        )
+                        batch_file.write(sftp_batch)
                         batch_file_path = batch_file.name
                     transfer_cmd = sftp_cmd_base + ["-b", batch_file_path]
 
@@ -459,7 +491,7 @@ class FileOperations:
                             completion_callback,
                             transfer_id,
                             True,
-                            "Download completed successfully.",
+                            f"{op_label} completed successfully.",
                         )
                     else:
                         error_msg = self._parse_transfer_error(stdout + stderr)
@@ -468,11 +500,11 @@ class FileOperations:
                         )
 
             except OperationCancelledError:
-                self.logger.warning(f"Download cancelled for {remote_path}")
+                self.logger.warning(f"{op_label} cancelled for {source_path}")
                 if completion_callback:
                     GLib.idle_add(completion_callback, transfer_id, False, "Cancelled")
             except Exception as e:
-                self.logger.error(f"Exception during download: {e}")
+                self.logger.error(f"Exception during {direction}: {e}")
                 if completion_callback:
                     GLib.idle_add(completion_callback, transfer_id, False, str(e))
             finally:
@@ -480,7 +512,31 @@ class FileOperations:
                     if transfer_id in self._active_processes:
                         del self._active_processes[transfer_id]
 
-        threading.Thread(target=download_thread, daemon=True).start()
+        threading.Thread(target=transfer_thread, daemon=True).start()
+
+    def start_download_with_progress(
+        self,
+        transfer_id: str,
+        session: SessionItem,
+        remote_path: str,
+        local_path: Path,
+        is_directory: bool,
+        progress_callback=None,
+        completion_callback=None,
+        cancellation_event: Optional[threading.Event] = None,
+    ):
+        """Start a download operation with progress tracking."""
+        self._transfer_with_progress(
+            transfer_id=transfer_id,
+            session=session,
+            source_path=remote_path,
+            dest_path=str(local_path),
+            is_directory=is_directory,
+            direction="download",
+            progress_callback=progress_callback,
+            completion_callback=completion_callback,
+            cancellation_event=cancellation_event,
+        )
 
     def start_upload_with_progress(
         self,
@@ -493,131 +549,15 @@ class FileOperations:
         completion_callback=None,
         cancellation_event: Optional[threading.Event] = None,
     ):
-        def upload_thread():
-            process = None
-            stderr_thread = None
-            stderr_lines: list = []
-            try:
-                from ..terminal.spawner import get_spawner
-
-                spawner = get_spawner()
-
-                if self._is_command_available(session, "rsync"):
-                    ssh_cmd = (
-                        f"ssh -o ControlPath={spawner._get_ssh_control_path(session)}"
-                    )
-
-                    # FIX: Add trailing slash to source for rsync directory copy
-                    source_path_rsync = str(local_path)
-                    if is_directory:
-                        source_path_rsync = str(local_path).rstrip("/") + "/"
-
-                    transfer_cmd = [
-                        "rsync",
-                        "-avz",
-                        "--progress",
-                        "-e",
-                        ssh_cmd,
-                        source_path_rsync,
-                        f"{session.user}@{session.host}:{remote_path}",
-                    ]
-                    process = self._start_process(transfer_id, transfer_cmd)
-
-                    # Start stderr draining thread to prevent deadlock
-                    # Deadlock can occur if stderr buffer fills while we read stdout
-                    stderr_thread = threading.Thread(
-                        target=_drain_stderr_to_list,
-                        args=(process.stderr, stderr_lines),
-                        daemon=True,
-                    )
-                    stderr_thread.start()
-
-                    full_output = ""
-                    for line in iter(process.stdout.readline, ""):
-                        if cancellation_event and cancellation_event.is_set():
-                            os.killpg(os.getpgid(process.pid), signal.SIGTERM)
-                            raise OperationCancelledError("Upload cancelled by user.")
-
-                        full_output += line
-                        match = _PROGRESS_PERCENT_PATTERN.search(line)
-                        if match and progress_callback:
-                            progress = float(match.group(1))
-                            GLib.idle_add(progress_callback, transfer_id, progress)
-
-                    # Wait for stderr thread to complete
-                    if stderr_thread and stderr_thread.is_alive():
-                        stderr_thread.join(timeout=2.0)
-
-                    stderr_output = "".join(stderr_lines)
-                    process.wait()
-                    exit_code = process.returncode
-
-                    if exit_code == 0:
-                        GLib.idle_add(
-                            completion_callback,
-                            transfer_id,
-                            True,
-                            "Upload completed successfully.",
-                        )
-                    else:
-                        error_message = self._parse_transfer_error(full_output + stderr_output)
-                        GLib.idle_add(
-                            completion_callback,
-                            transfer_id,
-                            False,
-                            error_message,
-                        )
-                else:  # SFTP fallback
-                    # ... (SFTP logic remains the same)
-                    sftp_cmd_base = spawner.command_builder.build_remote_command(
-                        "sftp", session
-                    )
-
-                    # FIX: For SFTP directory copy, destination must be the parent directory
-                    dest_path_sftp = remote_path
-                    if is_directory:
-                        dest_path_sftp = str(Path(remote_path).parent)
-
-                    with tempfile.NamedTemporaryFile(
-                        mode="w", delete=False, suffix=".sftp"
-                    ) as batch_file:
-                        batch_file.write(
-                            f'put -r "{str(local_path)}" "{dest_path_sftp}"\nquit\n'
-                        )
-                        batch_file_path = batch_file.name
-                    transfer_cmd = sftp_cmd_base + ["-b", batch_file_path]
-
-                    process = self._start_process(transfer_id, transfer_cmd)
-
-                    stdout, stderr = process.communicate()
-                    exit_code = process.returncode
-                    if "batch_file_path" in locals() and Path(batch_file_path).exists():
-                        Path(batch_file_path).unlink()
-
-                    if exit_code == 0:
-                        GLib.idle_add(
-                            completion_callback,
-                            transfer_id,
-                            True,
-                            "Upload completed successfully.",
-                        )
-                    else:
-                        error_msg = self._parse_transfer_error(stdout + stderr)
-                        GLib.idle_add(
-                            completion_callback, transfer_id, False, error_msg
-                        )
-
-            except OperationCancelledError:
-                self.logger.warning(f"Upload cancelled for {local_path}")
-                if completion_callback:
-                    GLib.idle_add(completion_callback, transfer_id, False, "Cancelled")
-            except Exception as e:
-                self.logger.error(f"Exception during upload: {e}")
-                if completion_callback:
-                    GLib.idle_add(completion_callback, transfer_id, False, str(e))
-            finally:
-                with self._lock:
-                    if transfer_id in self._active_processes:
-                        del self._active_processes[transfer_id]
-
-        threading.Thread(target=upload_thread, daemon=True).start()
+        """Start an upload operation with progress tracking."""
+        self._transfer_with_progress(
+            transfer_id=transfer_id,
+            session=session,
+            source_path=str(local_path),
+            dest_path=remote_path,
+            is_directory=is_directory,
+            direction="upload",
+            progress_callback=progress_callback,
+            completion_callback=completion_callback,
+            cancellation_event=cancellation_event,
+        )

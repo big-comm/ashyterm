@@ -22,8 +22,7 @@ import gi
 from .tooltip_helper import get_tooltip_helper
 
 gi.require_version("Gtk", "4.0")
-from gi.repository import Gtk, Gio
-
+from gi.repository import Gio, Gtk
 
 # Icon directory paths (in order of priority)
 _ICON_PATHS = [
@@ -148,6 +147,10 @@ def create_icon_button(
     use_bundled: Optional[bool] = None,
     tooltip: Optional[str] = None,
     css_classes: Optional[list] = None,
+    flat: bool = False,
+    on_clicked: Optional[callable] = None,
+    callback_args: tuple = (),
+    valign: Optional[Gtk.Align] = None,
 ) -> Gtk.Button:
     """Create a Gtk.Button with an icon.
 
@@ -160,6 +163,10 @@ def create_icon_button(
         use_bundled: Try bundled icons first (None = use global setting)
         tooltip: Optional tooltip text
         css_classes: Optional list of CSS classes to add
+        flat: If True, adds "flat" CSS class (default: False)
+        on_clicked: Optional callback for "clicked" signal
+        callback_args: Tuple of additional arguments for on_clicked
+        valign: Optional vertical alignment (e.g., Gtk.Align.CENTER)
 
     Returns:
         Gtk.Button with the icon
@@ -196,9 +203,18 @@ def create_icon_button(
         else:
             button.set_tooltip_text(tooltip)
 
+    if flat:
+        button.add_css_class("flat")
+
     if css_classes:
         for css_class in css_classes:
             button.add_css_class(css_class)
+
+    if valign is not None:
+        button.set_valign(valign)
+
+    if on_clicked:
+        button.connect("clicked", on_clicked, *callback_args)
 
     return button
 

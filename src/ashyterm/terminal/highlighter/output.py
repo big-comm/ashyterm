@@ -14,8 +14,7 @@ import regex as re_engine
 
 from ...settings.highlights import HighlightRule, get_highlight_manager
 from ...utils.logger import get_logger
-
-from .constants import ANSI_RESET, ANSI_COLOR_PATTERN
+from .constants import ANSI_COLOR_PATTERN, ANSI_RESET
 from .rules import (
     CompiledRule,
     LiteralKeywordRule,
@@ -520,99 +519,100 @@ class OutputHighlighter:
         if not line:
             return line
 
-        # Skip lines that already contain ANSI color codes to prevent double-highlighting
-        # This handles cases where the shell or another tool has already colorized the output
-        # Uses pre-compiled pattern for efficiency
-        if "\x1b[" in line and ANSI_COLOR_PATTERN.search(line):
+        if self._line_already_highlighted(line):
             return line
 
-        # Pre-compute lowercase line for matching (O(n) once)
         line_lower = line.lower()
-
-        # Reuse match buffer to avoid allocation per line
         matches = self._match_buffer
         matches.clear()
-        should_stop = False
 
-        for rule in rules:
-            if should_stop:
-                break
-
-            # Handle LiteralKeywordRule (optimized path - no regex!)
-            if isinstance(rule, LiteralKeywordRule):
-                # Quick check: any keyword might be in line?
-                # This is O(k) where k is number of keywords, but very fast
-                has_potential = False
-                for kw in rule.keyword_tuple:
-                    if kw in line_lower:
-                        has_potential = True
-                        break
-
-                if not has_potential:
-                    continue
-
-                # Find all keyword matches with word boundaries
-                rule_matches = rule.find_matches(line, line_lower)
-                rule_matched = bool(rule_matches)
-                matches.extend(rule_matches)
-
-                if rule_matched and rule.action == "stop":
-                    should_stop = True
-                continue
-
-            # Handle CompiledRule (regex path)
-            # Pre-filter: fast check if line might match
-            if rule.prefilter is not None:
-                if not rule.prefilter(line_lower):
-                    continue  # Skip this rule - pre-filter failed
-
-            try:
-                rule_matched = False
-                for match in rule.pattern.finditer(line):
-                    rule_matched = True
-
-                    if rule.num_groups > 0:
-                        # Multi-group pattern: color each group separately
-                        for group_idx in range(1, rule.num_groups + 1):
-                            group_start = match.start(group_idx)
-                            group_end = match.end(group_idx)
-
-                            # Skip if group didn't match
-                            if group_start == -1 or group_end == -1:
-                                continue
-
-                            # Get color for this group (fallback to first color)
-                            color_idx = group_idx - 1
-                            if color_idx < len(rule.ansi_colors):
-                                ansi_color = rule.ansi_colors[color_idx]
-                            else:
-                                ansi_color = rule.ansi_colors[0]
-
-                            # Skip if color is empty (intentionally no coloring)
-                            if not ansi_color:
-                                continue
-
-                            matches.append((group_start, group_end, ansi_color))
-                    else:
-                        # No capture groups: color entire match
-                        start, end = match.start(), match.end()
-                        if rule.ansi_colors and rule.ansi_colors[0]:
-                            matches.append((start, end, rule.ansi_colors[0]))
-
-                # Check if we should stop processing after this rule
-                if rule_matched and rule.action == "stop":
-                    should_stop = True
-
-            except Exception as e:
-                # Log at debug level to help diagnose pattern issues without flooding logs
-                if hasattr(self, "logger"):
-                    self.logger.debug(f"Rule pattern matching failed: {e}")
-                continue
+        self._collect_matches(line, line_lower, rules, matches)
 
         if not matches:
             return line
 
-        # Sort by start position, then by length (longer first)
+        return self._apply_matches_to_line(line, matches)
+
+    def _line_already_highlighted(self, line: str) -> bool:
+        """Check if line already contains ANSI color codes."""
+        return "\x1b[" in line and ANSI_COLOR_PATTERN.search(line)
+
+    def _collect_matches(
+        self,
+        line: str,
+        line_lower: str,
+        rules: Tuple[Union[CompiledRule, LiteralKeywordRule], ...],
+        matches: list,
+    ) -> None:
+        """Collect all rule matches from the line."""
+        for rule in rules:
+            if isinstance(rule, LiteralKeywordRule):
+                should_stop = self._process_literal_rule(
+                    rule, line, line_lower, matches
+                )
+            else:
+                should_stop = self._process_compiled_rule(
+                    rule, line, line_lower, matches
+                )
+            if should_stop:
+                break
+
+    def _process_literal_rule(
+        self,
+        rule: LiteralKeywordRule,
+        line: str,
+        line_lower: str,
+        matches: list,
+    ) -> bool:
+        """Process a LiteralKeywordRule and return True if should stop."""
+        if not any(kw in line_lower for kw in rule.keyword_tuple):
+            return False
+
+        rule_matches = rule.find_matches(line, line_lower)
+        matches.extend(rule_matches)
+        return bool(rule_matches) and rule.action == "stop"
+
+    def _process_compiled_rule(
+        self,
+        rule: CompiledRule,
+        line: str,
+        line_lower: str,
+        matches: list,
+    ) -> bool:
+        """Process a CompiledRule and return True if should stop."""
+        if rule.prefilter is not None and not rule.prefilter(line_lower):
+            return False
+
+        try:
+            rule_matched = False
+            for match in rule.pattern.finditer(line):
+                rule_matched = True
+                self._extract_match_colors(match, rule, matches)
+
+            return rule_matched and rule.action == "stop"
+        except Exception as e:
+            if hasattr(self, "logger"):
+                self.logger.debug(f"Rule pattern matching failed: {e}")
+            return False
+
+    def _extract_match_colors(self, match, rule: CompiledRule, matches: list) -> None:
+        """Extract color matches from a regex match object."""
+        if rule.num_groups > 0:
+            for group_idx in range(1, rule.num_groups + 1):
+                start, end = match.start(group_idx), match.end(group_idx)
+                if start == -1 or end == -1:
+                    continue
+                color_idx = min(group_idx - 1, len(rule.ansi_colors) - 1)
+                ansi_color = rule.ansi_colors[color_idx]
+                if ansi_color:
+                    matches.append((start, end, ansi_color))
+        else:
+            start, end = match.start(), match.end()
+            if rule.ansi_colors and rule.ansi_colors[0]:
+                matches.append((start, end, rule.ansi_colors[0]))
+
+    def _apply_matches_to_line(self, line: str, matches: list) -> str:
+        """Apply collected matches to build the highlighted line."""
         matches.sort(key=lambda m: (m[0], -(m[1] - m[0])))
 
         result = []
@@ -620,15 +620,12 @@ class OutputHighlighter:
         covered_until = 0
 
         for start, end, color in matches:
-            # Skip if already covered by previous match
             if start < covered_until:
                 continue
 
-            # Add text before this match
             if start > last_end:
                 result.append(line[last_end:start])
 
-            # Add colored match
             result.append(color)
             result.append(line[start:end])
             result.append(ANSI_RESET)
@@ -636,7 +633,6 @@ class OutputHighlighter:
             last_end = end
             covered_until = end
 
-        # Add remaining text
         if last_end < len(line):
             result.append(line[last_end:])
 

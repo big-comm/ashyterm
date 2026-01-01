@@ -218,7 +218,7 @@ class ConfigValidationError(ConfigError):
 class UIError(AshyTerminalError):
     """Base class for UI-related errors."""
 
-    def __init__(self, component: str, message: str = None, **kwargs):
+    def __init__(self, component: str, message: Optional[str] = None, **kwargs):
         error_message = (
             _("UI error in {}: {}").format(component, message)
             if message
@@ -237,9 +237,9 @@ class ValidationError(AshyTerminalError):
         message: str,
         category=None,
         severity=None,
-        field: str = None,
+        field: Optional[str] = None,
         value: Any = None,
-        reason: str = None,
+        reason: Optional[str] = None,
         **kwargs,
     ):
         if category is not None:
@@ -258,11 +258,13 @@ class ValidationError(AshyTerminalError):
             error_message = _("Validation failed for '{}': {}").format(field, message)
         else:
             error_message = message
-        kwargs.setdefault("details", {}).update({
-            "field": field,
-            "value": value,
-            "reason": reason,
-        })
+        kwargs.setdefault("details", {}).update(
+            {
+                "field": field,
+                "value": value,
+                "reason": reason,
+            }
+        )
         super().__init__(error_message, **kwargs)
 
 
@@ -340,7 +342,7 @@ class DirectoryPermissionError(AshyPermissionError):
 def handle_exception(
     exception: Exception,
     context: str = "",
-    logger_name: str = None,
+    logger_name: Optional[str] = None,
     reraise: bool = False,
 ) -> Optional[AshyTerminalError]:
     """Handle an exception by logging it and optionally converting to AshyTerminalError."""
