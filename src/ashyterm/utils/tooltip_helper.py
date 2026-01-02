@@ -29,20 +29,6 @@ if TYPE_CHECKING:
 logger = logging.getLogger(__name__)
 
 
-def _is_x11_backend() -> bool:
-    """Check if we're running on X11 backend (not Wayland)."""
-    try:
-        display = Gdk.Display.get_default()
-        if display is None:
-            return False
-        # Check display type name - X11 displays have "X11" in the type name
-        display_type = type(display).__name__
-        is_x11 = "X11" in display_type or "Gdk.X11Display" in str(type(display))
-        return is_x11
-    except Exception:
-        return False
-
-
 # Singleton instance
 _tooltip_helper_instance: "TooltipHelper | None" = None
 _app_instance = None
@@ -73,8 +59,6 @@ class TooltipHelper:
         self.settings_manager = settings_manager
         self.app = app
 
-        self._use_native_tooltips = _is_x11_backend()
-
         # We keep one popover per Root Window.
         # Since widgets usually share the same root in this app, we can cache it.
         # However, to be robust, we'll store it on the Root object itself or look it up.
@@ -94,9 +78,6 @@ class TooltipHelper:
         use_terminal_theme: bool = False,
     ):
         """Update tooltip colors to match the application theme."""
-        if self._use_native_tooltips:
-            return
-
         if use_terminal_theme and self.settings_manager:
             gtk_theme = self.settings_manager.get("gtk_theme", "")
             if gtk_theme == "terminal":
@@ -254,10 +235,6 @@ class TooltipHelper:
         shortcut = self._get_shortcut_label(action_name)
         full_text = f"{tooltip_text} ({shortcut})" if shortcut else tooltip_text
 
-        if self._use_native_tooltips:
-            widget.set_tooltip_text(full_text)
-            return
-
         widget._custom_tooltip_base_text = tooltip_text
         widget._custom_tooltip_action = action_name
         widget._custom_tooltip_text = full_text
@@ -267,10 +244,6 @@ class TooltipHelper:
 
     def add_tooltip(self, widget: Gtk.Widget, tooltip_text: str) -> None:
         if not tooltip_text:
-            return
-
-        if self._use_native_tooltips:
-            widget.set_tooltip_text(tooltip_text)
             return
 
         widget._custom_tooltip_text = tooltip_text
