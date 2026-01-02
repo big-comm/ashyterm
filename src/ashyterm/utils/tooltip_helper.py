@@ -84,6 +84,7 @@ class TooltipHelper:
 
         self.active_widget = None
         self.show_timer_id = None
+        self.hide_timer_id = None
         self._color_css_provider = None
 
     def update_colors(
@@ -136,8 +137,24 @@ class TooltipHelper:
         border_color = "#707070" if is_dark_theme else "#a0a0a0"
 
         # STYLE THE POPOVER DIRECTLY
-        # Selector 'popover.custom-tooltip-static'
-        css_parts = ["popover.custom-tooltip-static > contents {"]
+
+        # 1. Main Popover Node (Surface) - Handles Opacity
+        css_parts = [
+            "popover.custom-tooltip-static {",
+            "    background: transparent;",
+            "    box-shadow: none;",
+            "    opacity: 0;",
+            "    transition: opacity 200ms ease-in-out;",
+            "}",
+        ]
+
+        # 2. Visible State (Applied to Popover)
+        css_parts.append("popover.custom-tooltip-static.visible {")
+        css_parts.append("    opacity: 1;")
+        css_parts.append("}")
+
+        # 3. Contents Node (Visual Bubble) - Handles Shape/Color
+        css_parts.append("popover.custom-tooltip-static > contents {")
         if tooltip_bg:
             css_parts.append(f"    background-color: {tooltip_bg};")
         if fg_color:
@@ -205,6 +222,7 @@ class TooltipHelper:
             return bg_color
 
     def is_enabled(self) -> bool:
+        """Check if tooltips are enabled in settings."""
         if self.settings_manager is None:
             return True
         return self.settings_manager.get("show_tooltips", True)
@@ -271,6 +289,9 @@ class TooltipHelper:
         if self.show_timer_id:
             GLib.source_remove(self.show_timer_id)
             self.show_timer_id = None
+        if self.hide_timer_id:
+            GLib.source_remove(self.hide_timer_id)
+            self.hide_timer_id = None
 
     def _on_enter(self, controller, x, y, widget):
         if not self.is_enabled():
@@ -288,8 +309,8 @@ class TooltipHelper:
         self._clear_timer()
         self.active_widget = widget
 
-        # Instant show (10ms to verify hover intent slightly)
-        self.show_timer_id = GLib.timeout_add(10, self._show_tooltip_impl)
+        # 150ms delay for show effect
+        self.show_timer_id = GLib.timeout_add(150, self._show_tooltip_impl)
 
     def _on_leave(self, controller):
         self._clear_timer()
@@ -304,7 +325,8 @@ class TooltipHelper:
         # We can store the popover on the root object to persist it
         if not hasattr(root, "_ashyterm_tooltip_popover"):
             popover = Gtk.Popover()
-            popover.set_has_arrow(True)
+            # Disable arrow as requested
+            popover.set_has_arrow(False)
             popover.set_position(Gtk.PositionType.TOP)
 
             # CRITICAL: Disable input
@@ -354,8 +376,33 @@ class TooltipHelper:
                 rect.width = int(graphene_rect.size.width)
                 rect.height = int(graphene_rect.size.height)
 
+                # DYNAMIC POSITIONING & SPACING
+                # To ensure correct spacing "away" from the widget, we decide direction explicitly.
+                # If widget is in top half -> Force Tooltip BELOW.
+                # If widget is in bottom half -> Force Tooltip ABOVE.
+
+                win_height = root.get_height()
+                center_y = rect.y + (rect.height / 2)
+                padding = 12
+
+                if center_y < (win_height / 2):
+                    # Top Half: Show Below
+                    popover.set_position(Gtk.PositionType.BOTTOM)
+                    # Extend rect DOWN only
+                    rect.height += padding
+                else:
+                    # Bottom Half: Show Above
+                    popover.set_position(Gtk.PositionType.TOP)
+                    # Extend rect UP only
+                    rect.y -= padding
+                    rect.height += padding
+
                 popover.set_pointing_to(rect)
                 popover.popup()
+
+                # Trigger fade-in
+                popover.add_css_class("visible")
+
                 self.active_popover = popover
 
         except Exception:
@@ -366,12 +413,30 @@ class TooltipHelper:
         return GLib.SOURCE_REMOVE
 
     def hide(self):
-        """Hide the current tooltip."""
+        """Hide the current tooltip with fade out."""
         # We find the existing popover on the active_widget's root if possible
         # Or just use the last known active_popover
         if self.active_popover:
+            popover_to_hide = self.active_popover
+            self.active_popover = None
+
+            # Remove visible class to trigger fade-out
             try:
-                self.active_popover.popdown()
+                popover_to_hide.remove_css_class("visible")
             except Exception:
                 pass
-            self.active_popover = None
+
+            # Wait for animation then popdown
+            # Using 300ms to allow 200ms transition to complete comfortably
+            def do_popdown():
+                try:
+                    popover_to_hide.popdown()
+                except Exception:
+                    pass
+                self.hide_timer_id = None
+                return GLib.SOURCE_REMOVE
+
+            # Clear any previous hide timer to be safe
+            if self.hide_timer_id:
+                GLib.source_remove(self.hide_timer_id)
+            self.hide_timer_id = GLib.timeout_add(300, do_popdown)
