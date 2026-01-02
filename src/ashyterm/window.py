@@ -1498,44 +1498,55 @@ class CommTerminalWindow(Adw.ApplicationWindow):
         if self._force_closing:
             return Gdk.EVENT_PROPAGATE
 
-        if len(self.get_application().get_windows()) == 1:
-            policy = self.settings_manager.get("session_restore_policy", "never")
-            if policy == "ask":
-                self._show_save_session_dialog()
+        # Check for multiple tabs - apply close policy
+        tab_count = self.tab_manager.get_tab_count()
+        if tab_count > 1:
+            close_policy = self.settings_manager.get(
+                "close_multiple_tabs_policy", "ask"
+            )
+            if close_policy == "ask":
+                self._show_close_multiple_tabs_dialog()
                 return Gdk.EVENT_STOP
-            elif policy == "always":
+            elif close_policy == "save_and_close":
+                # Save tabs and close without asking
                 self.state_manager.save_session_state()
-            else:
-                self.state_manager.clear_session_state()
+                return self._continue_close_process()
+            # "just_close" - proceed without saving or asking
+            self.state_manager.clear_session_state()
 
         return self._continue_close_process()
 
-    def _show_save_session_dialog(self):
+    def _show_close_multiple_tabs_dialog(self) -> None:
+        """Show dialog when closing with multiple tabs open."""
+        tab_count = self.tab_manager.get_tab_count()
         dialog = Adw.MessageDialog(
             transient_for=self,
-            heading=_("Save Current Session?"),
+            heading=_("Close {} Tabs?").format(tab_count),
             body=_(
-                "Do you want to restore these tabs the next time you open Ashy Terminal?"
-            ),
+                "You have {} open tabs. Would you like to save them to restore next time?"
+            ).format(tab_count),
             close_response="cancel",
         )
-        dialog.add_response("dont-save", _("Don't Save"))
+        dialog.add_response("close", _("Close"))
         dialog.add_response("cancel", _("Cancel"))
         dialog.add_response("save", _("Save and Close"))
+        dialog.set_response_appearance("close", Adw.ResponseAppearance.DESTRUCTIVE)
         dialog.set_response_appearance("save", Adw.ResponseAppearance.SUGGESTED)
         dialog.set_default_response("save")
 
-        dialog.connect("response", self._on_save_session_dialog_response)
+        dialog.connect("response", self._on_close_multiple_tabs_dialog_response)
         dialog.present()
 
-    def _on_save_session_dialog_response(self, dialog, response_id):
+    def _on_close_multiple_tabs_dialog_response(self, dialog, response_id):
+        """Handle response from close multiple tabs dialog."""
         dialog.close()
         if response_id == "save":
             self.state_manager.save_session_state()
             self._continue_close_process(force_close=True)
-        elif response_id == "dont-save":
+        elif response_id == "close":
             self.state_manager.clear_session_state()
             self._continue_close_process(force_close=True)
+        # "cancel" - do nothing, window stays open
 
     def _continue_close_process(self, force_close=False) -> bool:
         if self.terminal_manager.has_active_ssh_sessions():

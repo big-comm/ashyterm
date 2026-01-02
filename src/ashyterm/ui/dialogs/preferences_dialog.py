@@ -355,20 +355,24 @@ class PreferencesDialog(Adw.PreferencesWindow):
         startup_group = Adw.PreferencesGroup()
         page.add(startup_group)
 
-        restore_policy_row = create_mapped_combo_row(
-            title=_("On Startup"),
-            value_map=["always", "ask", "never"],
+        # On Close behavior when multiple tabs are open
+        close_policy_row = create_mapped_combo_row(
+            title=_("On Close"),
+            value_map=["ask", "save_and_close", "just_close"],
             display_strings=[
-                _("Always restore previous session"),
-                _("Ask to restore previous session"),
-                _("Never restore previous session"),
+                _("Ask what to do"),
+                _("Save tabs and close"),
+                _("Just close without asking"),
             ],
-            current_value=self.settings_manager.get("session_restore_policy", "never"),
-            on_change=lambda val: self._on_setting_changed(
-                "session_restore_policy", val
+            current_value=self.settings_manager.get(
+                "close_multiple_tabs_policy", "ask"
             ),
+            on_change=lambda val: self._on_setting_changed(
+                "close_multiple_tabs_policy", val
+            ),
+            subtitle=_("Behavior when closing with multiple tabs open"),
         )
-        startup_group.add(restore_policy_row)
+        startup_group.add(close_policy_row)
 
         backup_group = Adw.PreferencesGroup()
         page.add(backup_group)

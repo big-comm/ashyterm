@@ -211,7 +211,7 @@ class DefaultSettings:
             "cursor_blink": 0,
             "new_instance_behavior": "new_tab",
             "use_login_shell": False,
-            "session_restore_policy": "never",
+            "close_multiple_tabs_policy": "ask",  # ask, save_and_close, just_close
             # VTE Features
             "scrollback_lines": 10000,
             "mouse_scroll_sensitivity": 30.0,
