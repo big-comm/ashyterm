@@ -1,20 +1,17 @@
-# ashyterm/utils/tooltip_helper.py
+# tooltip_helper.py
 """
 Tooltip helper for showing helpful explanations on UI elements.
 Provides a simple way to add custom tooltips with fade animation to any GTK widget.
 
-STRATEGY: Root-Anchored Singleton Popover
-To achieve instant speed (0ms), custom styling, AND stability:
-1. We allow mouse tracking via EventControllerMotion.
-2. We maintain a single Gtk.Popover attached to the top-level window (Root).
-3. We do NOT reparent the popover. We simply recalculate the target widget's
-   position relative to the Root and use `popover.set_pointing_to(rect)`.
-
-This avoids segmentation faults caused by reparenting while bypassing native GTK delays.
+PORTABLE VERSION:
+- Self-contained (no external app dependencies).
+- Widget-Anchored Popover for correct positioning (even inside other popovers).
+- Custom CSS styling with Fade-Out.
+- Auto-detects and updates colors from Adwaita StyleManager.
 """
 
 import logging
-from typing import TYPE_CHECKING, Optional
+from typing import Optional
 
 import gi
 
@@ -23,15 +20,9 @@ gi.require_version("Gdk", "4.0")
 gi.require_version("Adw", "1")
 from gi.repository import Adw, Gdk, GLib, Gtk
 
-if TYPE_CHECKING:
-    from ..settings.manager import SettingsManager
-
 logger = logging.getLogger(__name__)
 
-
-# Singleton instance
 _tooltip_helper_instance: "TooltipHelper | None" = None
-_app_instance = None
 
 
 def get_tooltip_helper() -> "TooltipHelper":
@@ -41,121 +32,82 @@ def get_tooltip_helper() -> "TooltipHelper":
     return _tooltip_helper_instance
 
 
-def init_tooltip_helper(
-    settings_manager: Optional["SettingsManager"] = None, app=None
-) -> "TooltipHelper":
-    global _tooltip_helper_instance, _app_instance
-    _app_instance = app
-    _tooltip_helper_instance = TooltipHelper(settings_manager, app)
-    return _tooltip_helper_instance
-
-
 class TooltipHelper:
     """
-    Manages custom tooltips using a Root-Anchored Gtk.Popover.
+    Manages custom tooltips using Widget-Anchored Gtk.Popover.
+    Portable version: Depends only on GTK4/Adwaita.
     """
 
-    def __init__(self, settings_manager=None, app=None):
-        self.settings_manager = settings_manager
-        self.app = app
-
-        # We keep one popover per Root Window.
-        # Since widgets usually share the same root in this app, we can cache it.
-        # However, to be robust, we'll store it on the Root object itself or look it up.
-        # For simplicity in this app structure, we track the current active popover.
+    def __init__(self):
         self.active_popover: Optional[Gtk.Popover] = None
-        self.active_label: Optional[Gtk.Label] = None
-
         self.active_widget = None
         self.show_timer_id = None
         self.hide_timer_id = None
         self._color_css_provider = None
+        self._colors_initialized = False
+        self._tracked_windows: set = set()  # Windows we're monitoring for focus
+        self._widgets_with_tooltips: set = set()  # All widgets with tooltips
 
-    def update_colors(
-        self,
-        bg_color: Optional[str] = None,
-        fg_color: Optional[str] = None,
-        use_terminal_theme: bool = False,
-    ):
-        """Update tooltip colors to match the application theme."""
-        if use_terminal_theme and self.settings_manager:
-            gtk_theme = self.settings_manager.get("gtk_theme", "")
-            if gtk_theme == "terminal":
-                scheme = self.settings_manager.get_color_scheme_data()
-                bg_color = scheme.get(
-                    "headerbar_background", scheme.get("background", "#1e1e1e")
-                )
-                fg_color = scheme.get("foreground", "#ffffff")
-            else:
-                try:
-                    style_manager = Adw.StyleManager.get_default()
-                    is_dark = style_manager.get_dark()
-                    bg_color = "#1a1a1a" if is_dark else "#fafafa"
-                    fg_color = "#ffffff" if is_dark else "#2e2e2e"
-                except Exception:
-                    bg_color = "#2a2a2a"
-                    fg_color = "#ffffff"
+        # Connect to Adwaita style manager for automatic theme updates
+        try:
+            style_manager = Adw.StyleManager.get_default()
+            style_manager.connect("notify::dark", self._on_theme_changed)
+            style_manager.connect("notify::color-scheme", self._on_theme_changed)
+        except Exception:
+            pass
 
-        if not bg_color and not fg_color:
-            return
+    def _on_theme_changed(self, style_manager, pspec):
+        """Auto-update colors when system theme changes."""
+        GLib.idle_add(self._apply_default_colors)
 
-        # Adjust background
-        tooltip_bg = bg_color
-        is_dark_theme = False
-        if bg_color:
-            tooltip_bg = self._adjust_tooltip_background(bg_color)
-            # Detect theme
-            try:
-                hex_val = bg_color.lstrip("#")
-                r = int(hex_val[0:2], 16)
-                g = int(hex_val[2:4], 16)
-                b = int(hex_val[4:6], 16)
-                luminance = (0.299 * r + 0.587 * g + 0.114 * b) / 255
-                is_dark_theme = luminance < 0.5
-            except Exception:
-                pass
+    def _apply_default_colors(self):
+        """Apply colors based on current Adwaita theme."""
+        try:
+            style_manager = Adw.StyleManager.get_default()
+            is_dark = style_manager.get_dark()
+            bg_color = "#1a1a1a" if is_dark else "#fafafa"
+            fg_color = "#ffffff" if is_dark else "#2e2e2e"
+        except Exception:
+            bg_color = "#2a2a2a"
+            fg_color = "#ffffff"
 
+        self._apply_css(bg_color, fg_color)
+        return GLib.SOURCE_REMOVE
+
+    def _ensure_colors_initialized(self):
+        """Ensure colors are set up before first tooltip display."""
+        if not self._colors_initialized:
+            self._apply_default_colors()
+            self._colors_initialized = True
+
+    def _apply_css(self, bg_color: str, fg_color: str):
+        """Generate and apply CSS for tooltip styling."""
+        tooltip_bg = self._adjust_tooltip_background(bg_color)
+        is_dark_theme = self._is_dark_color(bg_color)
         border_color = "#707070" if is_dark_theme else "#a0a0a0"
 
-        # STYLE THE POPOVER DIRECTLY
-
-        # 1. Main Popover Node (Surface) - Handles Opacity AND Spacing
-        # We add padding here to create an invisible buffer zone around the content.
-        # This guarantees spacing regardless of placement (Top/Bottom) or clipping.
-        css_parts = [
-            "popover.custom-tooltip-static {",
-            "    background: transparent;",
-            "    box-shadow: none;",
-            "    padding: 9px;",  # <--- THE FIX: Transparent Spacing
-            "    opacity: 0;",
-            "    transition: opacity 200ms ease-in-out;",
-            "}",
-        ]
-
-        # 2. Visible State (Applied to Popover)
-        css_parts.append("popover.custom-tooltip-static.visible {")
-        css_parts.append("    opacity: 1;")
-        css_parts.append("}")
-
-        # 3. Contents Node (Visual Bubble) - Handles Shape/Color
-        css_parts.append("popover.custom-tooltip-static > contents {")
-        if tooltip_bg:
-            css_parts.append(f"    background-color: {tooltip_bg};")
-        if fg_color:
-            css_parts.append(f"    color: {fg_color};")
-
-        css_parts.append("    padding: 6px 12px;")
-        css_parts.append("    border-radius: 6px;")
-        css_parts.append(f"    border: 1px solid {border_color};")
-        css_parts.append("}")
-
-        if fg_color:
-            css_parts.append(
-                f"popover.custom-tooltip-static label {{ color: {fg_color}; }}"
-            )
-
-        css = "\n".join(css_parts)
-
+        css = f"""
+popover.custom-tooltip-static {{
+    background: transparent;
+    box-shadow: none;
+    padding: 12px;
+    opacity: 0;
+    transition: opacity 200ms ease-in-out;
+}}
+popover.custom-tooltip-static.visible {{
+    opacity: 1;
+}}
+popover.custom-tooltip-static > contents {{
+    background-color: {tooltip_bg};
+    color: {fg_color};
+    padding: 6px 12px;
+    border-radius: 6px;
+    border: 1px solid {border_color};
+}}
+popover.custom-tooltip-static label {{
+    color: {fg_color};
+}}
+"""
         display = Gdk.Display.get_default()
         if not display:
             return
@@ -167,15 +119,12 @@ class TooltipHelper:
                 )
             except Exception:
                 pass
-            self._color_css_provider = None
 
         provider = Gtk.CssProvider()
         provider.load_from_data(css.encode("utf-8"))
         try:
             Gtk.StyleContext.add_provider_for_display(
-                display,
-                provider,
-                Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION + 100,
+                display, provider, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION + 100
             )
             self._color_css_provider = provider
         except Exception:
@@ -184,82 +133,101 @@ class TooltipHelper:
     def _adjust_tooltip_background(self, bg_color: str) -> str:
         try:
             hex_val = bg_color.lstrip("#")
-            r = int(hex_val[0:2], 16)
-            g = int(hex_val[2:4], 16)
-            b = int(hex_val[4:6], 16)
+            r, g, b = (
+                int(hex_val[0:2], 16),
+                int(hex_val[2:4], 16),
+                int(hex_val[4:6], 16),
+            )
             luminance = (0.299 * r + 0.587 * g + 0.114 * b) / 255
-
-            if luminance < 0.5:
-                # Dark theme - lighten
-                adjustment = 40
-                r = min(255, r + adjustment)
-                g = min(255, g + adjustment)
-                b = min(255, b + adjustment)
-            else:
-                # Light theme - darken
-                adjustment = 20
-                r = max(0, r - adjustment)
-                g = max(0, g - adjustment)
-                b = max(0, b - adjustment)
+            adj = 40 if luminance < 0.5 else -20
+            r, g, b = (
+                max(0, min(255, r + adj)),
+                max(0, min(255, g + adj)),
+                max(0, min(255, b + adj)),
+            )
             return f"#{r:02x}{g:02x}{b:02x}"
         except Exception:
             return bg_color
 
-    def is_enabled(self) -> bool:
-        """Check if tooltips are enabled in settings."""
-        if self.settings_manager is None:
+    def _is_dark_color(self, color: str) -> bool:
+        try:
+            hex_val = color.lstrip("#")
+            r, g, b = (
+                int(hex_val[0:2], 16),
+                int(hex_val[2:4], 16),
+                int(hex_val[4:6], 16),
+            )
+            return (0.299 * r + 0.587 * g + 0.114 * b) / 255 < 0.5
+        except Exception:
             return True
-        return self.settings_manager.get("show_tooltips", True)
-
-    def _get_shortcut_label(self, action_name: str) -> str | None:
-        if not self.app:
-            return None
-        from ..helpers import accelerator_to_label
-
-        for prefix in ("win", "app"):
-            full_action = f"{prefix}.{action_name}"
-            accels = self.app.get_accels_for_action(full_action)
-            if accels:
-                return accelerator_to_label(accels[0])
-        return None
-
-    def add_tooltip_with_shortcut(
-        self,
-        widget: Gtk.Widget,
-        tooltip_text: str,
-        action_name: str,
-    ) -> None:
-        if not tooltip_text:
-            return
-
-        shortcut = self._get_shortcut_label(action_name)
-        full_text = f"{tooltip_text} ({shortcut})" if shortcut else tooltip_text
-
-        widget._custom_tooltip_base_text = tooltip_text
-        widget._custom_tooltip_action = action_name
-        widget._custom_tooltip_text = full_text
-        widget.set_tooltip_text(None)
-
-        self._add_controller(widget)
 
     def add_tooltip(self, widget: Gtk.Widget, tooltip_text: str) -> None:
         if not tooltip_text:
             return
-
         widget._custom_tooltip_text = tooltip_text
         widget.set_tooltip_text(None)
         self._add_controller(widget)
 
+        # Track the widget for cleanup
+        self._widgets_with_tooltips.add(widget)
+
+        # Monitor the widget's window for focus changes
+        self._setup_window_focus_tracking(widget)
+
+    def _setup_window_focus_tracking(self, widget: Gtk.Widget) -> None:
+        """Setup focus tracking on the widget's root window."""
+
+        def on_realize(w):
+            root = w.get_root()
+            if root and isinstance(root, Gtk.Window):
+                if root not in self._tracked_windows:
+                    self._tracked_windows.add(root)
+                    root.connect("notify::is-active", self._on_window_active_changed)
+
+        if widget.get_realized():
+            on_realize(widget)
+        else:
+            widget.connect("realize", on_realize)
+
+    def _on_window_active_changed(self, window, pspec):
+        """Hide all tooltips when any tracked window loses focus."""
+        if not window.get_property("is-active"):
+            # Window lost focus - hide all tooltips immediately
+            self._clear_timer()
+            self.hide(immediate=True)
+            self.active_widget = None
+
+            # Also popdown any lingering popovers on widgets in this window
+            for widget in list(self._widgets_with_tooltips):
+                try:
+                    if hasattr(widget, "_custom_tooltip_popover"):
+                        popover, _ = widget._custom_tooltip_popover
+                        popover.popdown()
+                except Exception:
+                    pass
+
     def _add_controller(self, widget):
-        # Prevent duplicated controllers
         if getattr(widget, "_has_custom_tooltip_controller", False):
             return
 
+        # Motion controller for enter/leave
         controller = Gtk.EventControllerMotion.new()
         controller.connect("enter", self._on_enter, widget)
         controller.connect("leave", self._on_leave)
         widget.add_controller(controller)
+
+        # Click controller - hide tooltip when widget is clicked
+        click_controller = Gtk.GestureClick.new()
+        click_controller.connect("pressed", self._on_click)
+        widget.add_controller(click_controller)
+
         widget._has_custom_tooltip_controller = True
+
+    def _on_click(self, gesture, n_press, x, y):
+        """Hide tooltip immediately when widget is clicked."""
+        self._clear_timer()
+        self.hide(immediate=True)
+        self.active_widget = None
 
     def _clear_timer(self):
         if self.show_timer_id:
@@ -270,22 +238,8 @@ class TooltipHelper:
             self.hide_timer_id = None
 
     def _on_enter(self, controller, x, y, widget):
-        if not self.is_enabled():
-            return
-
-        # Shortcut update logic
-        base_text = getattr(widget, "_custom_tooltip_base_text", None)
-        action_name = getattr(widget, "_custom_tooltip_action", None)
-        if base_text and action_name:
-            shortcut = self._get_shortcut_label(action_name)
-            widget._custom_tooltip_text = (
-                f"{base_text} ({shortcut})" if shortcut else base_text
-            )
-
         self._clear_timer()
         self.active_widget = widget
-
-        # 150ms delay for show effect
         self.show_timer_id = GLib.timeout_add(150, self._show_tooltip_impl)
 
     def _on_leave(self, controller):
@@ -294,107 +248,121 @@ class TooltipHelper:
             self.hide()
             self.active_widget = None
 
-    def _get_root_popover(self, root: Gtk.Window) -> tuple[Gtk.Popover, Gtk.Label]:
-        """
-        Retrieves or creates the singleton popover attached to the given Root Window.
-        """
-        # We can store the popover on the root object to persist it
-        if not hasattr(root, "_ashyterm_tooltip_popover"):
+    def _get_widget_popover(self, widget: Gtk.Widget) -> tuple[Gtk.Popover, Gtk.Label]:
+        """Get or create a tooltip popover attached directly to the widget."""
+        if not hasattr(widget, "_custom_tooltip_popover"):
             popover = Gtk.Popover()
-            # Disable arrow as requested
             popover.set_has_arrow(False)
             popover.set_position(Gtk.PositionType.TOP)
-
-            # CRITICAL: Disable input
             popover.set_can_target(False)
             popover.set_focusable(False)
             popover.set_autohide(False)
-
             popover.add_css_class("custom-tooltip-static")
 
             label = Gtk.Label(wrap=True, max_width_chars=45)
             label.set_halign(Gtk.Align.CENTER)
             popover.set_child(label)
 
-            # Attach to root
-            popover.set_parent(root)
+            popover.set_parent(widget)
 
-            root._ashyterm_tooltip_popover = (popover, label)
-
-        return root._ashyterm_tooltip_popover
+            widget._custom_tooltip_popover = (popover, label)
+        return widget._custom_tooltip_popover
 
     def _show_tooltip_impl(self) -> bool:
         if not self.active_widget:
             return GLib.SOURCE_REMOVE
 
-        try:
-            root = self.active_widget.get_root()
-            if not root or not isinstance(root, Gtk.Window):
-                return GLib.SOURCE_REMOVE
+        # Ensure CSS is applied before showing
+        self._ensure_colors_initialized()
 
+        try:
             text = getattr(self.active_widget, "_custom_tooltip_text", None)
             if not text:
                 return GLib.SOURCE_REMOVE
 
-            popover, label = self._get_root_popover(root)
+            # Check if the widget is actually visible and mapped
+            if not self.active_widget.get_mapped():
+                self.show_timer_id = None
+                return GLib.SOURCE_REMOVE
 
-            # Update content
+            # Check if the widget's window is the active/focused window
+            # Don't show tooltip if another window (like a dialog) is on top
+            root = self.active_widget.get_root()
+            if root and isinstance(root, Gtk.Window):
+                if not root.is_active():
+                    # Window is not active, don't show tooltip
+                    self.show_timer_id = None
+                    return GLib.SOURCE_REMOVE
+
+            popover, label = self._get_widget_popover(self.active_widget)
             label.set_text(text)
 
-            # compute_bounds returns (bool, Graphene.Rect)
-            success, graphene_rect = self.active_widget.compute_bounds(root)
-            if success:
-                # Convert Graphene.Rect (floats) to Gdk.Rectangle (ints)
-                # Graphene.Rect has origin (Point) and size (Size)
-                rect = Gdk.Rectangle()
-                rect.x = int(graphene_rect.origin.x)
-                rect.y = int(graphene_rect.origin.y)
-                rect.width = int(graphene_rect.size.width)
-                rect.height = int(graphene_rect.size.height)
+            # Point to the entire widget (0,0 to width,height)
+            alloc = self.active_widget.get_allocation()
+            rect = Gdk.Rectangle()
+            rect.x = 0
+            rect.y = 0
+            rect.width = alloc.width
+            rect.height = alloc.height
 
-                # NO MANUAL PADDING here. We rely on CSS padding.
-                # This ensures the rect is valid (no negative coords) and prevents clamping.
+            popover.set_pointing_to(rect)
+            popover.popup()
+            popover.set_visible(True)
+            popover.add_css_class("visible")
 
-                popover.set_pointing_to(rect)
-                popover.popup()
-
-                # Trigger fade-in
-                popover.add_css_class("visible")
-
-                self.active_popover = popover
+            self.active_popover = popover
 
         except Exception:
-            logger.error("Error showing manual root-anchored tooltip", exc_info=True)
-            pass
+            logger.error("Error showing tooltip", exc_info=True)
 
         self.show_timer_id = None
         return GLib.SOURCE_REMOVE
 
-    def hide(self):
-        """Hide the current tooltip with fade out."""
-        # We find the existing popover on the active_widget's root if possible
-        # Or just use the last known active_popover
+    def hide(self, immediate: bool = False):
+        """Hide the current tooltip. If immediate=True, skip animation."""
         if self.active_popover:
             popover_to_hide = self.active_popover
             self.active_popover = None
 
-            # Remove visible class to trigger fade-out
             try:
                 popover_to_hide.remove_css_class("visible")
             except Exception:
                 pass
 
-            # Wait for animation then popdown
-            # Using 300ms to allow 200ms transition to complete comfortably
-            def do_popdown():
+            if immediate:
+                # Hide immediately (no animation wait)
                 try:
                     popover_to_hide.popdown()
                 except Exception:
                     pass
-                self.hide_timer_id = None
-                return GLib.SOURCE_REMOVE
+            else:
+                # Wait for animation then popdown
+                def do_popdown():
+                    try:
+                        popover_to_hide.popdown()
+                    except Exception:
+                        pass
+                    self.hide_timer_id = None
+                    return GLib.SOURCE_REMOVE
 
-            # Clear any previous hide timer to be safe
-            if self.hide_timer_id:
-                GLib.source_remove(self.hide_timer_id)
-            self.hide_timer_id = GLib.timeout_add(300, do_popdown)
+                if self.hide_timer_id:
+                    GLib.source_remove(self.hide_timer_id)
+                self.hide_timer_id = GLib.timeout_add(300, do_popdown)
+
+    def hide_all(self):
+        """Hide all tooltips from all tracked widgets immediately.
+
+        Useful to call when opening dialogs or switching focus.
+        """
+        self._clear_timer()
+        self.hide(immediate=True)
+        self.active_widget = None
+
+        # Popdown all tooltip popovers
+        for widget in list(self._widgets_with_tooltips):
+            try:
+                if hasattr(widget, "_custom_tooltip_popover"):
+                    popover, _ = widget._custom_tooltip_popover
+                    popover.popdown()
+            except Exception:
+                pass

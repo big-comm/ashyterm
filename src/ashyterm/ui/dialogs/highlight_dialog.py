@@ -1241,7 +1241,7 @@ class ContextRulesDialog(BaseDialog):
         """Handle add rule button click."""
         dialog = RuleEditDialog(self, is_new=True)
         dialog.connect("rule-saved", self._on_rule_saved)
-        dialog.present(self)
+        dialog.present()
 
     def _on_rule_saved(self, dialog: RuleEditDialog, rule: HighlightRule) -> None:
         """Handle new rule saved."""
@@ -1295,7 +1295,7 @@ class ContextRulesDialog(BaseDialog):
             rule = context.rules[index]
             dialog = RuleEditDialog(self, rule=rule, is_new=False)
             dialog.connect("rule-saved", self._on_rule_edited, index)
-            dialog.present(self)
+            dialog.present()
 
     def _on_rule_edited(
         self, dialog: RuleEditDialog, rule: HighlightRule, index: int
@@ -1523,7 +1523,7 @@ class HighlightDialog(Adw.PreferencesWindow):
                 continue
 
             scheme_data = all_schemes[scheme_key]
-            is_custom = scheme_key.startswith("custom_")
+            is_custom = scheme_key in settings.custom_schemes
 
             row = self._create_scheme_row(scheme_key, scheme_data, is_custom)
             self._scheme_listbox.append(row)
@@ -1754,7 +1754,7 @@ class HighlightDialog(Adw.PreferencesWindow):
         is_new = (
             original_key is None
             or original_key == ""
-            or not original_key.startswith("custom_")
+            or original_key not in settings.custom_schemes
         )
 
         if is_new:
@@ -3070,7 +3070,7 @@ class HighlightDialog(Adw.PreferencesWindow):
         """Open the context rules dialog for a specific context."""
         dialog = ContextRulesDialog(self, context_name)
         dialog.connect("context-updated", self._on_context_dialog_updated)
-        dialog.present(self)
+        dialog.present()
 
     def _on_context_dialog_updated(self, dialog) -> None:
         """Handle updates from the context rules dialog."""
@@ -3416,7 +3416,7 @@ class HighlightDialog(Adw.PreferencesWindow):
 
         dialog = RuleEditDialog(self, is_new=True)
         dialog.connect("rule-saved", self._on_context_rule_saved)
-        dialog.present(self)
+        dialog.present()
 
     def _on_context_rule_saved(
         self, dialog: RuleEditDialog, rule: HighlightRule
@@ -3442,7 +3442,7 @@ class HighlightDialog(Adw.PreferencesWindow):
             rule = context.rules[index]
             dialog = RuleEditDialog(self, rule=rule, is_new=False)
             dialog.connect("rule-saved", self._on_context_rule_edited, index)
-            dialog.present(self)
+            dialog.present()
 
     def _on_context_rule_edited(
         self, dialog: RuleEditDialog, rule: HighlightRule, index: int
@@ -3743,7 +3743,7 @@ class HighlightDialog(Adw.PreferencesWindow):
         """Handle add rule button click."""
         dialog = RuleEditDialog(self, is_new=True)
         dialog.connect("rule-saved", self._on_new_rule_saved)
-        dialog.present(self)
+        dialog.present()
 
     def _on_new_rule_saved(self, dialog: RuleEditDialog, rule: HighlightRule) -> None:
         """Handle saving a new rule."""
@@ -3761,7 +3761,7 @@ class HighlightDialog(Adw.PreferencesWindow):
         if rule:
             dialog = RuleEditDialog(self, rule=rule, is_new=False)
             dialog.connect("rule-saved", self._on_rule_edited, index)
-            dialog.present(self)
+            dialog.present()
 
     def _on_rule_edited(
         self, dialog: RuleEditDialog, rule: HighlightRule, index: int

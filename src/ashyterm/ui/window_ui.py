@@ -14,7 +14,7 @@ from ..data.command_manager_models import (
 )
 from ..utils.icons import icon_button, icon_image
 from ..utils.logger import get_logger
-from ..utils.tooltip_helper import init_tooltip_helper
+from ..utils.tooltip_helper import get_tooltip_helper
 from ..utils.translation_utils import _
 
 # Lazy import for menus - only loaded when main menu is first shown
@@ -46,7 +46,7 @@ class WindowUIBuilder:
         app = window.get_application()
 
         # Initialize tooltip helper for custom tooltips (global singleton)
-        self.tooltip_helper = init_tooltip_helper(self.settings_manager, app)
+        self.tooltip_helper = get_tooltip_helper()
 
         # WM settings for dynamic button layout (may not exist on all DEs like KDE)
         self.wm_settings = None
@@ -336,29 +336,19 @@ class WindowUIBuilder:
         self.new_tab_button.connect("clicked", self.window._on_new_tab_clicked)
         self.new_tab_button.add_css_class("flat")
 
-        # Add custom tooltips to header bar buttons (with dynamic shortcuts where applicable)
-        self.tooltip_helper.add_tooltip_with_shortcut(
-            self.toggle_sidebar_button, _("Sessions Panel"), "toggle-sidebar"
+        # Add custom tooltips to header bar buttons
+        self.tooltip_helper.add_tooltip(self.toggle_sidebar_button, _("Sessions Panel"))
+        self.tooltip_helper.add_tooltip(self.file_manager_button, _("File Manager"))
+        self.tooltip_helper.add_tooltip(
+            self.command_manager_button, _("Command Manager")
         )
-        self.tooltip_helper.add_tooltip_with_shortcut(
-            self.file_manager_button, _("File Manager"), "toggle-file-manager"
-        )
-        self.tooltip_helper.add_tooltip_with_shortcut(
-            self.command_manager_button, _("Command Manager"), "show-command-manager"
-        )
-        self.tooltip_helper.add_tooltip_with_shortcut(
-            self.search_button, _("Search in Terminal"), "toggle-search"
-        )
-        self.tooltip_helper.add_tooltip_with_shortcut(
-            self.ai_assistant_button, _("Ask AI Assistant"), "ai-assistant"
-        )
+        self.tooltip_helper.add_tooltip(self.search_button, _("Search in Terminal"))
+        self.tooltip_helper.add_tooltip(self.ai_assistant_button, _("Ask AI Assistant"))
         self.tooltip_helper.add_tooltip(
             self.cleanup_button, _("Manage Temporary Files")
         )
         self.tooltip_helper.add_tooltip(self.menu_button, _("Main Menu"))
-        self.tooltip_helper.add_tooltip_with_shortcut(
-            self.new_tab_button, _("New Tab"), "new-local-tab"
-        )
+        self.tooltip_helper.add_tooltip(self.new_tab_button, _("New Tab"))
 
         # Check if window controls are on the left
         button_layout = self.wm_settings.get_string("button-layout")

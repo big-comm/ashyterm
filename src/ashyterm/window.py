@@ -182,9 +182,6 @@ class CommTerminalWindow(Adw.ApplicationWindow):
         # Apply settings to all terminals, which handles terminal transparency.
         self.terminal_manager.apply_settings_to_all_terminals()
 
-        # Update tooltip colors based on current theme
-        self._update_tooltip_colors()
-
     def _create_managers_and_ui(self) -> None:
         """
         Centralize Component Creation and UI Building.
@@ -831,10 +828,6 @@ class CommTerminalWindow(Adw.ApplicationWindow):
             # Always re-apply headerbar transparency as the base theme might have changed
             self.settings_manager.apply_headerbar_transparency(self.header_bar)
 
-            # Update tooltip colors after GTK theme is fully applied
-            # Use idle_add to ensure theme change has propagated
-            GLib.idle_add(self._update_tooltip_colors)
-
         elif key == "auto_hide_sidebar":
             self.sidebar_manager.handle_auto_hide_change(new_value)
         elif key == "tab_alignment":
@@ -862,8 +855,6 @@ class CommTerminalWindow(Adw.ApplicationWindow):
                 and self.settings_manager.get("gtk_theme") == "terminal"
             ):
                 self.settings_manager.apply_gtk_terminal_theme(self)
-                # Update tooltip colors when color scheme changes with terminal theme
-                GLib.idle_add(self._update_tooltip_colors)
             if key in ["transparency", "headerbar_transparency"]:
                 self._update_file_manager_transparency()
             if self.font_sizer_widget and key == "font":
@@ -872,13 +863,6 @@ class CommTerminalWindow(Adw.ApplicationWindow):
         # Update headerbar buttons visibility when this setting changes
         if key == "hide_headerbar_buttons_when_maximized":
             self.ui_builder._update_headerbar_buttons_visibility()
-
-    def _update_tooltip_colors(self):
-        """Update tooltip colors based on current theme settings."""
-        from .utils.tooltip_helper import get_tooltip_helper
-
-        tooltip_helper = get_tooltip_helper()
-        tooltip_helper.update_colors(use_terminal_theme=True)
 
     def _on_color_scheme_changed(self, dialog, idx):
         """Handle color scheme changes from the dialog."""

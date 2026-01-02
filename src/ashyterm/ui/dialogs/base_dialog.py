@@ -143,6 +143,17 @@ class BaseDialog(Adw.Window):
     def _on_cancel_clicked(self, button):
         self.close()
 
+    def present(self):
+        """Present the dialog, hiding any tooltips first."""
+        # Hide all tooltips to prevent them from interfering with the dialog
+        from ...utils.tooltip_helper import get_tooltip_helper
+
+        try:
+            get_tooltip_helper().hide_all()
+        except Exception:
+            pass
+        super().present()
+
     def _mark_changed(self):
         self._has_changes = True
 
@@ -410,6 +421,15 @@ def show_delete_confirmation_dialog(
             on_confirm()
 
     dialog.connect("response", on_response)
+
+    # Hide any tooltips before showing the dialog
+    from ...utils.tooltip_helper import get_tooltip_helper
+
+    try:
+        get_tooltip_helper().hide_all()
+    except Exception:
+        pass
+
     dialog.present()
 
 
