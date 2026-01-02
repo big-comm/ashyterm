@@ -45,6 +45,11 @@ msgstr "Открыть локальную точку монтирования {}
 msgid "Open {} in Ashy Terminal"
 msgstr "Открыть {} в Ashy Terminal"
 # 
+# File: tests/test_qa.py, line: 164
+#: NEEDS WORK
+msgid "Test string"
+msgstr "Тестовая строка"
+# 
 # File: usr/share/ashyterm/utils/exceptions.py, line: 65
 #: NEEDS WORK
 msgid "A terminal error occurred"
@@ -743,13 +748,13 @@ msgstr "Поиск сессий..."
 # 
 # File: usr/share/ashyterm/ui/color_scheme_dialog.py, line: 42
 #: NEEDS WORK
-msgid "Edit Scheme"
-msgstr "Редактировать схему"
+msgid "New Scheme"
+msgstr "Новая схема"
 # 
 # File: usr/share/ashyterm/ui/color_scheme_dialog.py, line: 42
 #: NEEDS WORK
-msgid "New Scheme"
-msgstr "Новая схема"
+msgid "Edit Scheme"
+msgstr "Редактировать схему"
 # 
 # File: usr/share/ashyterm/ui/color_scheme_dialog.py, line: 44
 #: NEEDS WORK
@@ -775,19 +780,6 @@ msgstr "Фон заголовка"
 #: NEEDS WORK
 msgid "Cursor"
 msgstr "Курсор"
-# 
-# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 163
-# File: usr/share/ashyterm/ui/dialogs.py, line: 575
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1213
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1957
-# File: usr/share/ashyterm/ui/dialogs.py, line: 2006
-# File: usr/share/ashyterm/window.py, line: 953
-# File: usr/share/ashyterm/window.py, line: 1013
-#: NEEDS WORK
-msgid "Cancel"
-msgstr "Отмена"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 589
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1219
@@ -946,6 +938,19 @@ msgstr "Удалить схему?"
 #, python-brace-format
 msgid "Are you sure you want to delete the scheme '{name}'? This cannot be undone."
 msgstr "Вы уверены, что хотите удалить схему '{name}'? Это действие нельзя отменить."
+# 
+# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 163
+# File: usr/share/ashyterm/ui/dialogs.py, line: 575
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1213
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1957
+# File: usr/share/ashyterm/ui/dialogs.py, line: 2006
+# File: usr/share/ashyterm/window.py, line: 953
+# File: usr/share/ashyterm/window.py, line: 1013
+#: NEEDS WORK
+msgid "Cancel"
+msgstr "Отмена"
 # 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 32
 #: NEEDS WORK
@@ -2575,6 +2580,11 @@ msgstr "Открыть ссылку"
 msgid "Copy Link"
 msgstr "Скопировать ссылку"
 # 
+# File: src/ashyterm/ui/menus.py, line: 313
+#: NEEDS WORK
+msgid "Ask AI"
+msgstr "Спросить ИИ"
+# 
 # #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
 # 
 # File: usr/share/ashyterm/ui/menus.py, line: 30
@@ -2602,11 +2612,6 @@ msgstr "Выбрать все"
 #: NEEDS WORK
 msgid "Clear Session"
 msgstr "Очистить сеанс"
-# 
-# File: src/ashyterm/ui/menus.py, line: 313
-#: NEEDS WORK
-msgid "Ask AI"
-msgstr "Спросить ИИ"
 # 
 # #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
 # 
@@ -3746,16 +3751,16 @@ msgstr "Настроить (создает копию)"
 msgid "Delete scheme"
 msgstr "Удалить схему"
 # 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1806
+#: NEEDS WORK
+msgid "Scheme deleted"
+msgstr "Схема удалена"
+# 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1773
 #: NEEDS WORK
 #, python-brace-format
 msgid "Are you sure you want to delete '{}'?"
 msgstr "Вы уверены, что хотите удалить '{}' ?"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1806
-#: NEEDS WORK
-msgid "Scheme deleted"
-msgstr "Схема удалена"
 # 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1870
 #: NEEDS WORK
@@ -3805,15 +3810,6 @@ msgstr "SSH-сессии"
 msgid "Apply output highlighting to SSH connections"
 msgstr "Применить выделение вывода для SSH-соединений"
 # 
-# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1923
-# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 432
-#: NEEDS WORK
-#, python-brace-format
-msgid "{} Command Colorization"
-msgstr "Цветовая маркировка команд"
-# 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1925
 #: NEEDS WORK
 #, python-brace-format
@@ -3825,6 +3821,15 @@ msgstr "Синтаксическая подсветка для вывода ко
 #, python-brace-format
 msgid "Pygments is not installed - '{}' output will not be colorized"
 msgstr "Pygments не установлен - вывод '{}' не будет раскрашен"
+# 
+# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1923
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 432
+#: NEEDS WORK
+#, python-brace-format
+msgid "{} Command Colorization"
+msgstr "Цветовая маркировка команд"
 # 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1680
 #: NEEDS WORK
@@ -3853,30 +3858,10 @@ msgstr "Включить '{}' цветовую окраску"
 msgid "Apply syntax highlighting to '{}' command output"
 msgstr "Применить подсветку синтаксиса к выводу команды '{}'"
 # 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1951
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2178
-#: NEEDS WORK
-msgid "Theme Mode"
-msgstr "Режим темы"
-# 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1952
 #: NEEDS WORK
 msgid "Auto: adapts to background color. Manual: single theme."
 msgstr "Авто: адаптируется к цвету фона. Ручной: одна тема."
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1955
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2182
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 3592
-#: NEEDS WORK
-msgid "Auto"
-msgstr "Авто"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1956
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2183
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 3592
-#: NEEDS WORK
-msgid "Manual"
-msgstr "Руководство"
 # 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2039
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2272
@@ -3924,11 +3909,6 @@ msgstr "Установить Pygments"
 msgid "pip install pygments"
 msgstr "pip install pygments"
 # 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1650
-#: NEEDS WORK
-msgid "Shell Input Highlighting"
-msgstr "Подсветка ввода оболочки"
-# 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1652
 #: NEEDS WORK
 msgid "Live syntax highlighting as you type commands (experimental)"
@@ -3938,6 +3918,11 @@ msgstr "Живое подсвечивание синтаксиса по мере
 #: NEEDS WORK
 msgid "Pygments is not installed - shell input highlighting unavailable"
 msgstr "Pygments не установлен - подсветка ввода в оболочке недоступна"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1650
+#: NEEDS WORK
+msgid "Shell Input Highlighting"
+msgstr "Подсветка ввода оболочки"
 # 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1748
 #: NEEDS WORK
@@ -3966,6 +3951,26 @@ msgstr ""
 #: NEEDS WORK
 msgid "Auto detects background, Manual uses selected theme"
 msgstr "Автоопределение фона, Ручной режим использует выбранную тему"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1951
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2178
+#: NEEDS WORK
+msgid "Theme Mode"
+msgstr "Режим темы"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1955
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2182
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 3592
+#: NEEDS WORK
+msgid "Auto"
+msgstr "Авто"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1956
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2183
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 3592
+#: NEEDS WORK
+msgid "Manual"
+msgstr "Руководство"
 # 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1179
 #: NEEDS WORK
@@ -4000,6 +4005,12 @@ msgstr "Удалить из списка игнорируемых"
 msgid "Command added: {}"
 msgstr "Команда добавлена: {}"
 # 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1325
+#: NEEDS WORK
+#, python-brace-format
+msgid "Command removed: {}"
+msgstr "Команда удалена: {}"
+# 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1299
 #: NEEDS WORK
 msgid "Remove Ignored Command?"
@@ -4011,11 +4022,10 @@ msgstr "Удалить игнорируемую команду?"
 msgid "Remove \"{}\" from the ignored commands list? Highlighting will be applied to this command's output."
 msgstr "Удалить \"{}\" из списка игнорируемых команд? Подсветка будет применена к выводу этой команды."
 # 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1325
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1356
 #: NEEDS WORK
-#, python-brace-format
-msgid "Command removed: {}"
-msgstr "Команда удалена: {}"
+msgid "Restored default ignored commands"
+msgstr "Восстановлены игнорируемые команды по умолчанию"
 # 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1331
 #: NEEDS WORK
@@ -4030,11 +4040,6 @@ msgid ""
 msgstr ""
 "Это заменит ваш текущий список игнорируемых команд на системные настройки по умолчанию. "
 "Пользовательские добавления будут потеряны."
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1356
-#: NEEDS WORK
-msgid "Restored default ignored commands"
-msgstr "Восстановлены игнорируемые команды по умолчанию"
 # 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1698
 #: NEEDS WORK
@@ -4179,6 +4184,12 @@ msgstr "Правила редактирования команд"
 msgid "Delete command"
 msgstr "Удалить команду"
 # 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1991
+#: NEEDS WORK
+#, python-brace-format
+msgid "Command deleted: {}"
+msgstr "Команда удалена: {}"
+# 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1972
 #: NEEDS WORK
 msgid "Delete Command?"
@@ -4189,12 +4200,6 @@ msgstr "Удалить команду?"
 #, python-brace-format
 msgid "Are you sure you want to delete \"{}\"? This will remove all custom rules for this command."
 msgstr "Вы уверены, что хотите удалить \"{}\"? Это удалит все пользовательские правила для этой команды."
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1991
-#: NEEDS WORK
-#, python-brace-format
-msgid "Command deleted: {}"
-msgstr "Команда удалена: {}"
 # 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2086
 #: NEEDS WORK
@@ -4334,6 +4339,11 @@ msgstr "Требуется перезагрузка"
 msgid "Restart the program for the colors to be applied to the terminal."
 msgstr "Перезапустите программу, чтобы цвета были применены к терминалу."
 # 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2667
+#: NEEDS WORK
+msgid "Global rules reset to defaults"
+msgstr "Глобальные правила сброшены к значениям по умолчанию"
+# 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2645
 #: NEEDS WORK
 msgid "Reset Global Rules?"
@@ -4346,10 +4356,10 @@ msgstr ""
 "Это восстановит глобальные правила до системных значений по умолчанию. Настройки контекста будут "
 "сохранены."
 # 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2667
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2695
 #: NEEDS WORK
-msgid "Global rules reset to defaults"
-msgstr "Глобальные правила сброшены к значениям по умолчанию"
+msgid "All commands reset to defaults"
+msgstr "Все команды сброшены к настройкам по умолчанию"
 # 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2673
 #: NEEDS WORK
@@ -4360,11 +4370,6 @@ msgstr "Сбросить все команды?"
 #: NEEDS WORK
 msgid "This will restore all commands to system defaults. Global rules will be preserved."
 msgstr "Это восстановит все команды до системных значений по умолчанию. Глобальные правила будут сохранены."
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2695
-#: NEEDS WORK
-msgid "All commands reset to defaults"
-msgstr "Все команды сброшены к настройкам по умолчанию"
 # 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2721
 #: NEEDS WORK
@@ -5047,11 +5052,6 @@ msgstr "Имя сессии"
 msgid "Working directory must exist and be a folder."
 msgstr "Рабочий каталог должен существовать и быть папкой."
 # 
-# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 1374
-#: NEEDS WORK
-msgid "Invalid working directory path."
-msgstr "Неверный путь рабочей директории."
-# 
 # #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
 # 
 # File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 716
@@ -5141,6 +5141,11 @@ msgstr "Продолжить"
 #, python-brace-format
 msgid "{} is required"
 msgstr "{} требуется"
+# 
+# File: src/ashyterm/ui/dialogs/base_dialog.py, line: 601
+#: NEEDS WORK
+msgid "Invalid path format"
+msgstr "Неверный формат пути"
 # 
 # File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 17
 #: NEEDS WORK
@@ -5952,15 +5957,35 @@ msgstr "Плоские значки (в комплекте)"
 msgid "System Icons"
 msgstr "Системные значки"
 # 
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 203
+#: NEEDS WORK
+msgid "Window Buttons When Maximized"
+msgstr "Кнопки окна при максимизации"
+# 
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 204
+#: NEEDS WORK
+msgid "For KDE Plasma panel integration"
+msgstr "Для интеграции панели KDE Plasma"
+# 
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 209
+#: NEEDS WORK
+msgid "Auto-detect"
+msgstr "Автоопределение"
+# 
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 210
+#: NEEDS WORK
+msgid "Always hide"
+msgstr "Всегда скрывать"
+# 
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 211
+#: NEEDS WORK
+msgid "Never hide"
+msgstr "Никогда не скрывать"
+# 
 # File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 225
 #: NEEDS WORK
 msgid "When Already Running"
 msgstr "Когда уже запущено"
-# 
-# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 226
-#: NEEDS WORK
-msgid "Action when the application is launched while already open"
-msgstr "Действие при запуске приложения, когда оно уже открыто"
 # 
 # File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 230
 #: NEEDS WORK
@@ -5976,6 +6001,11 @@ msgstr "Открыть новое окно"
 #: NEEDS WORK
 msgid "Focus existing window"
 msgstr "Сфокусироваться на существующем окне"
+# 
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 226
+#: NEEDS WORK
+msgid "Action when the application is launched while already open"
+msgstr "Действие при запуске приложения, когда оно уже открыто"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1137
 #: NEEDS WORK
@@ -6058,25 +6088,30 @@ msgstr "Слышимый сигнал"
 msgid "Profiles & Data"
 msgstr "Профили и данные"
 # 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 258
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 360
 #: NEEDS WORK
-msgid "On Startup"
-msgstr "При запуске"
+msgid "On Close"
+msgstr "При закрытии"
 # 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 263
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 363
 #: NEEDS WORK
-msgid "Always restore previous session"
-msgstr "Всегда восстанавливать предыдущую сессию"
+msgid "Ask what to do"
+msgstr "Спросите, что делать"
 # 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 264
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 364
 #: NEEDS WORK
-msgid "Ask to restore previous session"
-msgstr "Запросить восстановление предыдущей сессии"
+msgid "Save tabs and close"
+msgstr "Сохранить вкладки и закрыть"
 # 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 265
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 365
 #: NEEDS WORK
-msgid "Never restore previous session"
-msgstr "Никогда не восстанавливать предыдущую сессию"
+msgid "Just close without asking"
+msgstr "Просто закройте без запроса"
+# 
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 373
+#: NEEDS WORK
+msgid "Behavior when closing with multiple tabs open"
+msgstr "Поведение при закрытии с открытыми несколькими вкладками"
 # 
 # #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
 # 
@@ -7520,20 +7555,16 @@ msgstr "Введите имя для нового файла:"
 msgid "New File"
 msgstr "Новый файл"
 # 
-# File: usr/share/ashyterm/filemanager/manager.py, line: 1767
+# File: src/ashyterm/filemanager/manager.py, line: 2303
 #: NEEDS WORK
-msgid "No items selected to copy."
-msgstr "Нет выбранных элементов для копирования."
+#, python-brace-format
+msgid "No items selected to {operation}."
+msgstr "Нет выбранных элементов для {operation}."
 # 
 # File: usr/share/ashyterm/filemanager/manager.py, line: 1781
 #: NEEDS WORK
 msgid "Items copied to clipboard."
 msgstr "Элементы скопированы в буфер обмена."
-# 
-# File: usr/share/ashyterm/filemanager/manager.py, line: 1786
-#: NEEDS WORK
-msgid "No items selected to cut."
-msgstr "Нет выбранных элементов для вырезания."
 # 
 # File: usr/share/ashyterm/filemanager/manager.py, line: 1800
 #: NEEDS WORK
@@ -8084,20 +8115,17 @@ msgstr "Ошибка инициализации"
 msgid "Failed to initialize terminal: {error}"
 msgstr "Не удалось инициализировать терминал: {error}"
 # 
-# File: usr/share/ashyterm/window.py, line: 1080
+# File: src/ashyterm/window.py, line: 1524
 #: NEEDS WORK
-msgid "Save Current Session?"
-msgstr "Сохранить текущую сессию?"
+#, python-brace-format
+msgid "Close {} Tabs?"
+msgstr "Закрыть {} вкладки?"
 # 
-# File: usr/share/ashyterm/window.py, line: 1082
+# File: src/ashyterm/window.py, line: 1526
 #: NEEDS WORK
-msgid "Do you want to restore these tabs the next time you open Ashy Terminal?"
-msgstr "Вы хотите восстановить эти вкладки в следующий раз, когда вы откроете Ashy Terminal?"
-# 
-# File: usr/share/ashyterm/window.py, line: 1086
-#: NEEDS WORK
-msgid "Don't Save"
-msgstr "Не сохранять"
+#, python-brace-format
+msgid "You have {} open tabs. Would you like to save them to restore next time?"
+msgstr "У вас открыто {} вкладок. Хотите сохранить их для восстановления в следующий раз?"
 # 
 # File: usr/share/ashyterm/window.py, line: 1088
 #: NEEDS WORK

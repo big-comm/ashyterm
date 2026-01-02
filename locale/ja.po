@@ -45,6 +45,11 @@ msgstr "ローカルマウントポイント {} を開く"
 msgid "Open {} in Ashy Terminal"
 msgstr "Ashy Terminalで{}を開く"
 # 
+# File: tests/test_qa.py, line: 164
+#: NEEDS WORK
+msgid "Test string"
+msgstr "テスト文字列"
+# 
 # File: usr/share/ashyterm/utils/exceptions.py, line: 65
 #: NEEDS WORK
 msgid "A terminal error occurred"
@@ -743,13 +748,13 @@ msgstr "検索セッション..."
 # 
 # File: usr/share/ashyterm/ui/color_scheme_dialog.py, line: 42
 #: NEEDS WORK
-msgid "Edit Scheme"
-msgstr "スキームを編集"
+msgid "New Scheme"
+msgstr "新しいスキーム"
 # 
 # File: usr/share/ashyterm/ui/color_scheme_dialog.py, line: 42
 #: NEEDS WORK
-msgid "New Scheme"
-msgstr "新しいスキーム"
+msgid "Edit Scheme"
+msgstr "スキームを編集"
 # 
 # File: usr/share/ashyterm/ui/color_scheme_dialog.py, line: 44
 #: NEEDS WORK
@@ -775,19 +780,6 @@ msgstr "ヘッダーバーの背景"
 #: NEEDS WORK
 msgid "Cursor"
 msgstr "カーソル"
-# 
-# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 163
-# File: usr/share/ashyterm/ui/dialogs.py, line: 575
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1213
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1957
-# File: usr/share/ashyterm/ui/dialogs.py, line: 2006
-# File: usr/share/ashyterm/window.py, line: 953
-# File: usr/share/ashyterm/window.py, line: 1013
-#: NEEDS WORK
-msgid "Cancel"
-msgstr "キャンセル"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 589
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1219
@@ -946,6 +938,19 @@ msgstr "スキームを削除しますか？"
 #, python-brace-format
 msgid "Are you sure you want to delete the scheme '{name}'? This cannot be undone."
 msgstr "'{name}'を削除してもよろしいですか？これは元に戻すことはできません。"
+# 
+# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 163
+# File: usr/share/ashyterm/ui/dialogs.py, line: 575
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1213
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1957
+# File: usr/share/ashyterm/ui/dialogs.py, line: 2006
+# File: usr/share/ashyterm/window.py, line: 953
+# File: usr/share/ashyterm/window.py, line: 1013
+#: NEEDS WORK
+msgid "Cancel"
+msgstr "キャンセル"
 # 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 32
 #: NEEDS WORK
@@ -2578,6 +2583,11 @@ msgstr "リンクを開く"
 msgid "Copy Link"
 msgstr "リンクをコピー"
 # 
+# File: src/ashyterm/ui/menus.py, line: 312
+#: NEEDS WORK
+msgid "Ask AI"
+msgstr "AIに尋ねる"
+# 
 # #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
 # 
 # File: usr/share/ashyterm/ui/menus.py, line: 30
@@ -2605,11 +2615,6 @@ msgstr "すべて選択"
 #: NEEDS WORK
 msgid "Clear Session"
 msgstr "セッションをクリア"
-# 
-# File: src/ashyterm/ui/menus.py, line: 312
-#: NEEDS WORK
-msgid "Ask AI"
-msgstr "AIに尋ねる"
 # 
 # #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
 # 
@@ -3743,16 +3748,16 @@ msgstr "カスタマイズ（コピーを作成）"
 msgid "Delete scheme"
 msgstr "スキームを削除"
 # 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1806
+#: NEEDS WORK
+msgid "Scheme deleted"
+msgstr "スキームが削除されました"
+# 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1773
 #: NEEDS WORK
 #, python-brace-format
 msgid "Are you sure you want to delete '{}'?"
 msgstr "'{}'を削除してもよろしいですか？"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1806
-#: NEEDS WORK
-msgid "Scheme deleted"
-msgstr "スキームが削除されました"
 # 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1870
 #: NEEDS WORK
@@ -3798,15 +3803,6 @@ msgstr "SSHセッション"
 msgid "Apply output highlighting to SSH connections"
 msgstr "SSH接続に出力ハイライトを適用する"
 # 
-# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1923
-# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 432
-#: NEEDS WORK
-#, python-brace-format
-msgid "{} Command Colorization"
-msgstr "{} コマンドの色付け"
-# 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1925
 #: NEEDS WORK
 #, python-brace-format
@@ -3818,6 +3814,15 @@ msgstr "'{}' コマンド出力の構文ハイライト（Pygmentsを使用）"
 #, python-brace-format
 msgid "Pygments is not installed - '{}' output will not be colorized"
 msgstr "Pygmentsがインストールされていません - '{}' の出力は色付けされません"
+# 
+# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1923
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 432
+#: NEEDS WORK
+#, python-brace-format
+msgid "{} Command Colorization"
+msgstr "{} コマンドの色付け"
 # 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1680
 #: NEEDS WORK
@@ -3844,30 +3849,10 @@ msgstr "'{}' カラー化を有効にする"
 msgid "Apply syntax highlighting to '{}' command output"
 msgstr "'{}' コマンドの出力に構文ハイライトを適用する"
 # 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1951
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2178
-#: NEEDS WORK
-msgid "Theme Mode"
-msgstr "テーマモード"
-# 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1952
 #: NEEDS WORK
 msgid "Auto: adapts to background color. Manual: single theme."
 msgstr "自動: 背景色に適応します。手動: 単一テーマ。"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1955
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2182
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 3592
-#: NEEDS WORK
-msgid "Auto"
-msgstr "自動"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1956
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2183
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 3592
-#: NEEDS WORK
-msgid "Manual"
-msgstr "マニュアル"
 # 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2039
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2272
@@ -3915,11 +3900,6 @@ msgstr "Pygmentsをインストール"
 msgid "pip install pygments"
 msgstr "pip install pygments"
 # 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1650
-#: NEEDS WORK
-msgid "Shell Input Highlighting"
-msgstr "シェル入力ハイライト"
-# 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1652
 #: NEEDS WORK
 msgid "Live syntax highlighting as you type commands (experimental)"
@@ -3929,6 +3909,11 @@ msgstr "コマンドを入力中にライブ構文ハイライト（実験的）
 #: NEEDS WORK
 msgid "Pygments is not installed - shell input highlighting unavailable"
 msgstr "Pygmentsがインストールされていません - シェル入力のハイライトは利用できません"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1650
+#: NEEDS WORK
+msgid "Shell Input Highlighting"
+msgstr "シェル入力ハイライト"
 # 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1748
 #: NEEDS WORK
@@ -3953,6 +3938,26 @@ msgstr "入力したコマンドに色を付けます。シェルの設定を変
 #: NEEDS WORK
 msgid "Auto detects background, Manual uses selected theme"
 msgstr "自動で背景を検出、手動で選択したテーマを使用"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1951
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2178
+#: NEEDS WORK
+msgid "Theme Mode"
+msgstr "テーマモード"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1955
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2182
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 3592
+#: NEEDS WORK
+msgid "Auto"
+msgstr "自動"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1956
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2183
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 3592
+#: NEEDS WORK
+msgid "Manual"
+msgstr "マニュアル"
 # 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1179
 #: NEEDS WORK
@@ -3987,6 +3992,12 @@ msgstr "無視リストから削除"
 msgid "Command added: {}"
 msgstr "コマンドが追加されました: {}"
 # 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1325
+#: NEEDS WORK
+#, python-brace-format
+msgid "Command removed: {}"
+msgstr "コマンドが削除されました: {}"
+# 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1299
 #: NEEDS WORK
 msgid "Remove Ignored Command?"
@@ -3998,11 +4009,10 @@ msgstr "無視されたコマンドを削除しますか？"
 msgid "Remove \"{}\" from the ignored commands list? Highlighting will be applied to this command's output."
 msgstr "\"{}\"を無視されたコマンドのリストから削除しますか？このコマンドの出力にハイライトが適用されます。"
 # 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1325
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1356
 #: NEEDS WORK
-#, python-brace-format
-msgid "Command removed: {}"
-msgstr "コマンドが削除されました: {}"
+msgid "Restored default ignored commands"
+msgstr "デフォルトの無視されたコマンドが復元されました"
 # 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1331
 #: NEEDS WORK
@@ -4015,11 +4025,6 @@ msgid ""
 "This will replace your current ignored commands list with the system defaults. Custom additions "
 "will be lost."
 msgstr "これにより、現在の無視されたコマンドリストがシステムのデフォルトに置き換えられます。カスタム追加は失われます。"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1356
-#: NEEDS WORK
-msgid "Restored default ignored commands"
-msgstr "デフォルトの無視されたコマンドが復元されました"
 # 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1698
 #: NEEDS WORK
@@ -4164,6 +4169,12 @@ msgstr "コマンドルールの編集"
 msgid "Delete command"
 msgstr "削除コマンド"
 # 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1991
+#: NEEDS WORK
+#, python-brace-format
+msgid "Command deleted: {}"
+msgstr "コマンドが削除されました: {}"
+# 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1972
 #: NEEDS WORK
 msgid "Delete Command?"
@@ -4174,12 +4185,6 @@ msgstr "削除コマンドですか？"
 #, python-brace-format
 msgid "Are you sure you want to delete \"{}\"? This will remove all custom rules for this command."
 msgstr "\"{}\"を削除してもよろしいですか？これにより、このコマンドのすべてのカスタムルールが削除されます。"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1991
-#: NEEDS WORK
-#, python-brace-format
-msgid "Command deleted: {}"
-msgstr "コマンドが削除されました: {}"
 # 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2086
 #: NEEDS WORK
@@ -4319,6 +4324,11 @@ msgstr "再起動が必要です"
 msgid "Restart the program for the colors to be applied to the terminal."
 msgstr "プログラムを再起動して、色をターミナルに適用します。"
 # 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2667
+#: NEEDS WORK
+msgid "Global rules reset to defaults"
+msgstr "グローバルルールがデフォルトにリセットされました"
+# 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2645
 #: NEEDS WORK
 msgid "Reset Global Rules?"
@@ -4329,10 +4339,10 @@ msgstr "グローバルルールをリセットしますか？"
 msgid "This will restore global rules to system defaults. Context customizations will be preserved."
 msgstr "これにより、グローバルルールがシステムのデフォルトに復元されます。コンテキストのカスタマイズは保持されます。"
 # 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2667
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2695
 #: NEEDS WORK
-msgid "Global rules reset to defaults"
-msgstr "グローバルルールがデフォルトにリセットされました"
+msgid "All commands reset to defaults"
+msgstr "すべてのコマンドがデフォルトにリセットされました"
 # 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2673
 #: NEEDS WORK
@@ -4343,11 +4353,6 @@ msgstr "すべてのコマンドをリセットしますか？"
 #: NEEDS WORK
 msgid "This will restore all commands to system defaults. Global rules will be preserved."
 msgstr "これにより、すべてのコマンドがシステムのデフォルトに復元されます。グローバルルールは保持されます。"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2695
-#: NEEDS WORK
-msgid "All commands reset to defaults"
-msgstr "すべてのコマンドがデフォルトにリセットされました"
 # 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2721
 #: NEEDS WORK
@@ -5026,11 +5031,6 @@ msgstr "セッション名"
 msgid "Working directory must exist and be a folder."
 msgstr "作業ディレクトリは存在し、フォルダーでなければなりません。"
 # 
-# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 1374
-#: NEEDS WORK
-msgid "Invalid working directory path."
-msgstr "無効な作業ディレクトリパス。"
-# 
 # #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
 # 
 # File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 716
@@ -5120,6 +5120,11 @@ msgstr "続行"
 #, python-brace-format
 msgid "{} is required"
 msgstr "{} は必須です"
+# 
+# File: src/ashyterm/ui/dialogs/base_dialog.py, line: 601
+#: NEEDS WORK
+msgid "Invalid path format"
+msgstr "無効なパス形式"
 # 
 # File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 17
 #: NEEDS WORK
@@ -5931,15 +5936,35 @@ msgstr "アシーアイコン（バンドル版）"
 msgid "System Icons"
 msgstr "システムアイコン"
 # 
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 203
+#: NEEDS WORK
+msgid "Window Buttons When Maximized"
+msgstr "ウィンドウボタン（最大化時）"
+# 
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 204
+#: NEEDS WORK
+msgid "For KDE Plasma panel integration"
+msgstr "KDE Plasma パネル統合用"
+# 
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 209
+#: NEEDS WORK
+msgid "Auto-detect"
+msgstr "自動検出"
+# 
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 210
+#: NEEDS WORK
+msgid "Always hide"
+msgstr "常に非表示"
+# 
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 211
+#: NEEDS WORK
+msgid "Never hide"
+msgstr "決して隠さない"
+# 
 # File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 225
 #: NEEDS WORK
 msgid "When Already Running"
 msgstr "実行中の場合"
-# 
-# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 226
-#: NEEDS WORK
-msgid "Action when the application is launched while already open"
-msgstr "アプリケーションが既に開いている状態で起動されたときのアクション"
 # 
 # File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 230
 #: NEEDS WORK
@@ -5955,6 +5980,11 @@ msgstr "新しいウィンドウを開く"
 #: NEEDS WORK
 msgid "Focus existing window"
 msgstr "既存のウィンドウにフォーカス"
+# 
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 226
+#: NEEDS WORK
+msgid "Action when the application is launched while already open"
+msgstr "アプリケーションが既に開いている状態で起動されたときのアクション"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1137
 #: NEEDS WORK
@@ -6037,25 +6067,30 @@ msgstr "音声ベル"
 msgid "Profiles & Data"
 msgstr "プロファイルとデータ"
 # 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 258
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 360
 #: NEEDS WORK
-msgid "On Startup"
-msgstr "起動時"
+msgid "On Close"
+msgstr "閉じる時"
 # 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 263
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 363
 #: NEEDS WORK
-msgid "Always restore previous session"
-msgstr "前のセッションを常に復元する"
+msgid "Ask what to do"
+msgstr "何をすればよいですか"
 # 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 264
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 364
 #: NEEDS WORK
-msgid "Ask to restore previous session"
-msgstr "前のセッションを復元するように求める"
+msgid "Save tabs and close"
+msgstr "タブを保存して閉じる"
 # 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 265
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 365
 #: NEEDS WORK
-msgid "Never restore previous session"
-msgstr "前のセッションを復元しない"
+msgid "Just close without asking"
+msgstr "ただ閉じるだけで、確認しません"
+# 
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 373
+#: NEEDS WORK
+msgid "Behavior when closing with multiple tabs open"
+msgstr "複数のタブを開いた状態で閉じるときの動作"
 # 
 # #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
 # 
@@ -7493,20 +7528,16 @@ msgstr "新しいファイルの名前を入力してください："
 msgid "New File"
 msgstr "新しいファイル"
 # 
-# File: usr/share/ashyterm/filemanager/manager.py, line: 1767
+# File: src/ashyterm/filemanager/manager.py, line: 2303
 #: NEEDS WORK
-msgid "No items selected to copy."
-msgstr "コピーするアイテムが選択されていません。"
+#, python-brace-format
+msgid "No items selected to {operation}."
+msgstr "{operation}するアイテムが選択されていません。"
 # 
 # File: usr/share/ashyterm/filemanager/manager.py, line: 1781
 #: NEEDS WORK
 msgid "Items copied to clipboard."
 msgstr "クリップボードにコピーされたアイテム。"
-# 
-# File: usr/share/ashyterm/filemanager/manager.py, line: 1786
-#: NEEDS WORK
-msgid "No items selected to cut."
-msgstr "カットするアイテムが選択されていません。"
 # 
 # File: usr/share/ashyterm/filemanager/manager.py, line: 1800
 #: NEEDS WORK
@@ -8053,20 +8084,17 @@ msgstr "初期化エラー"
 msgid "Failed to initialize terminal: {error}"
 msgstr "ターミナルの初期化に失敗しました: {error}"
 # 
-# File: usr/share/ashyterm/window.py, line: 1080
+# File: src/ashyterm/window.py, line: 1524
 #: NEEDS WORK
-msgid "Save Current Session?"
-msgstr "現在のセッションを保存しますか？"
+#, python-brace-format
+msgid "Close {} Tabs?"
+msgstr "{} タブを閉じますか？"
 # 
-# File: usr/share/ashyterm/window.py, line: 1082
+# File: src/ashyterm/window.py, line: 1526
 #: NEEDS WORK
-msgid "Do you want to restore these tabs the next time you open Ashy Terminal?"
-msgstr "次回Ashy Terminalを開いたときに、これらのタブを復元しますか？"
-# 
-# File: usr/share/ashyterm/window.py, line: 1086
-#: NEEDS WORK
-msgid "Don't Save"
-msgstr "保存しない"
+#, python-brace-format
+msgid "You have {} open tabs. Would you like to save them to restore next time?"
+msgstr "{}のタブが開いています。次回復元するために保存しますか？"
 # 
 # File: usr/share/ashyterm/window.py, line: 1088
 #: NEEDS WORK

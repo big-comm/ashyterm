@@ -45,6 +45,11 @@ msgstr "Yerel bağlama noktasını aç {}"
 msgid "Open {} in Ashy Terminal"
 msgstr "{}'yi Ashy Terminal'da aç"
 # 
+# File: tests/test_qa.py, line: 164
+#: NEEDS WORK
+msgid "Test string"
+msgstr "Test dizesi"
+# 
 # File: usr/share/ashyterm/utils/exceptions.py, line: 65
 #: NEEDS WORK
 msgid "A terminal error occurred"
@@ -743,13 +748,13 @@ msgstr "Arama oturumları..."
 # 
 # File: usr/share/ashyterm/ui/color_scheme_dialog.py, line: 42
 #: NEEDS WORK
-msgid "Edit Scheme"
-msgstr "Şemayı Düzenle"
+msgid "New Scheme"
+msgstr "Yeni Şema"
 # 
 # File: usr/share/ashyterm/ui/color_scheme_dialog.py, line: 42
 #: NEEDS WORK
-msgid "New Scheme"
-msgstr "Yeni Şema"
+msgid "Edit Scheme"
+msgstr "Şemayı Düzenle"
 # 
 # File: usr/share/ashyterm/ui/color_scheme_dialog.py, line: 44
 #: NEEDS WORK
@@ -775,19 +780,6 @@ msgstr "Başlık Çubuğu Arka Planı"
 #: NEEDS WORK
 msgid "Cursor"
 msgstr "İmleç"
-# 
-# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 163
-# File: usr/share/ashyterm/ui/dialogs.py, line: 575
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1213
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1957
-# File: usr/share/ashyterm/ui/dialogs.py, line: 2006
-# File: usr/share/ashyterm/window.py, line: 953
-# File: usr/share/ashyterm/window.py, line: 1013
-#: NEEDS WORK
-msgid "Cancel"
-msgstr "İptal"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 589
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1219
@@ -946,6 +938,19 @@ msgstr "Şemayı Sil?"
 #, python-brace-format
 msgid "Are you sure you want to delete the scheme '{name}'? This cannot be undone."
 msgstr "'{name}' şemasını silmek istediğinize emin misiniz? Bu işlem geri alınamaz."
+# 
+# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 163
+# File: usr/share/ashyterm/ui/dialogs.py, line: 575
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1213
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1957
+# File: usr/share/ashyterm/ui/dialogs.py, line: 2006
+# File: usr/share/ashyterm/window.py, line: 953
+# File: usr/share/ashyterm/window.py, line: 1013
+#: NEEDS WORK
+msgid "Cancel"
+msgstr "İptal"
 # 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 32
 #: NEEDS WORK
@@ -2575,6 +2580,11 @@ msgstr "Bağlantıyı Aç"
 msgid "Copy Link"
 msgstr "Bağlantıyı Kopyala"
 # 
+# File: src/ashyterm/ui/menus.py, line: 313
+#: NEEDS WORK
+msgid "Ask AI"
+msgstr "Yapay Zeka'ya Sor"
+# 
 # #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
 # 
 # File: usr/share/ashyterm/ui/menus.py, line: 30
@@ -2602,11 +2612,6 @@ msgstr "Tümünü Seç"
 #: NEEDS WORK
 msgid "Clear Session"
 msgstr "Oturumu Temizle"
-# 
-# File: src/ashyterm/ui/menus.py, line: 313
-#: NEEDS WORK
-msgid "Ask AI"
-msgstr "Yapay Zeka'ya Sor"
 # 
 # #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
 # 
@@ -3748,16 +3753,16 @@ msgstr "Özelleştir (bir kopya oluşturur)"
 msgid "Delete scheme"
 msgstr "Şemayı sil"
 # 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1806
+#: NEEDS WORK
+msgid "Scheme deleted"
+msgstr "Şema silindi"
+# 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1773
 #: NEEDS WORK
 #, python-brace-format
 msgid "Are you sure you want to delete '{}'?"
 msgstr "Silmek istediğinize emin misiniz '{}'?"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1806
-#: NEEDS WORK
-msgid "Scheme deleted"
-msgstr "Şema silindi"
 # 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1870
 #: NEEDS WORK
@@ -3807,15 +3812,6 @@ msgstr "SSH Oturumları"
 msgid "Apply output highlighting to SSH connections"
 msgstr "SSH bağlantılarına çıktı vurgulaması uygula"
 # 
-# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1923
-# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 432
-#: NEEDS WORK
-#, python-brace-format
-msgid "{} Command Colorization"
-msgstr "{} Komut Renkleme"
-# 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1925
 #: NEEDS WORK
 #, python-brace-format
@@ -3827,6 +3823,15 @@ msgstr "'{}' komut çıktısı için sözdizimi vurgulama (Pygments kullanarak)"
 #, python-brace-format
 msgid "Pygments is not installed - '{}' output will not be colorized"
 msgstr "Pygments yüklü değil - '{}' çıktısı renklendirilmeyecek"
+# 
+# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1923
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 432
+#: NEEDS WORK
+#, python-brace-format
+msgid "{} Command Colorization"
+msgstr "{} Komut Renkleme"
 # 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1680
 #: NEEDS WORK
@@ -3855,30 +3860,10 @@ msgstr "'{}' Renkleme'yi Etkinleştir"
 msgid "Apply syntax highlighting to '{}' command output"
 msgstr "'{}' komut çıktısına sözdizimi vurgulaması uygula"
 # 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1951
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2178
-#: NEEDS WORK
-msgid "Theme Mode"
-msgstr "Tema Modu"
-# 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1952
 #: NEEDS WORK
 msgid "Auto: adapts to background color. Manual: single theme."
 msgstr "Otomatik: arka plan rengine uyum sağlar. Manuel: tek tema."
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1955
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2182
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 3592
-#: NEEDS WORK
-msgid "Auto"
-msgstr "Otomatik"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1956
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2183
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 3592
-#: NEEDS WORK
-msgid "Manual"
-msgstr "Kılavuz"
 # 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2039
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2272
@@ -3926,11 +3911,6 @@ msgstr "Pygments'i Yükle"
 msgid "pip install pygments"
 msgstr "pip install pygments"
 # 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1650
-#: NEEDS WORK
-msgid "Shell Input Highlighting"
-msgstr "Kabuk Girdi Vurgulama"
-# 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1652
 #: NEEDS WORK
 msgid "Live syntax highlighting as you type commands (experimental)"
@@ -3940,6 +3920,11 @@ msgstr "Canlı sözdizimi vurgulama, komutları yazarken (deneysel)"
 #: NEEDS WORK
 msgid "Pygments is not installed - shell input highlighting unavailable"
 msgstr "Pygments yüklü değil - kabuk girişi vurgulaması kullanılamıyor"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1650
+#: NEEDS WORK
+msgid "Shell Input Highlighting"
+msgstr "Kabuk Girdi Vurgulama"
 # 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1748
 #: NEEDS WORK
@@ -3968,6 +3953,26 @@ msgstr ""
 #: NEEDS WORK
 msgid "Auto detects background, Manual uses selected theme"
 msgstr "Arka planı otomatik algılar, Manuel seçilen temayı kullanır."
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1951
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2178
+#: NEEDS WORK
+msgid "Theme Mode"
+msgstr "Tema Modu"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1955
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2182
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 3592
+#: NEEDS WORK
+msgid "Auto"
+msgstr "Otomatik"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1956
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2183
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 3592
+#: NEEDS WORK
+msgid "Manual"
+msgstr "Kılavuz"
 # 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1179
 #: NEEDS WORK
@@ -4002,6 +4007,12 @@ msgstr "Göz ardı edilen listeden kaldır"
 msgid "Command added: {}"
 msgstr "Komut eklendi: {}"
 # 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1325
+#: NEEDS WORK
+#, python-brace-format
+msgid "Command removed: {}"
+msgstr "Komut kaldırıldı: {}"
+# 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1299
 #: NEEDS WORK
 msgid "Remove Ignored Command?"
@@ -4015,11 +4026,10 @@ msgstr ""
 "\"{}\" komutları göz ardı edilen listeden kaldırmak ister misiniz? Vurgulama, bu komutun çıktısına "
 "uygulanacaktır."
 # 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1325
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1356
 #: NEEDS WORK
-#, python-brace-format
-msgid "Command removed: {}"
-msgstr "Komut kaldırıldı: {}"
+msgid "Restored default ignored commands"
+msgstr "Varsayılan göz ardı edilen komutlar geri yüklendi"
 # 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1331
 #: NEEDS WORK
@@ -4034,11 +4044,6 @@ msgid ""
 msgstr ""
 "Bu, mevcut göz ardı edilen komutlar listenizi sistem varsayılanlarıyla değiştirecektir. Özel "
 "eklemeler kaybolacaktır."
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1356
-#: NEEDS WORK
-msgid "Restored default ignored commands"
-msgstr "Varsayılan göz ardı edilen komutlar geri yüklendi"
 # 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1698
 #: NEEDS WORK
@@ -4183,6 +4188,12 @@ msgstr "Komut kuralını düzenle"
 msgid "Delete command"
 msgstr "Silme komutu"
 # 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1991
+#: NEEDS WORK
+#, python-brace-format
+msgid "Command deleted: {}"
+msgstr "Komut silindi: {}"
+# 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1972
 #: NEEDS WORK
 msgid "Delete Command?"
@@ -4193,12 +4204,6 @@ msgstr "Silme Komutu?"
 #, python-brace-format
 msgid "Are you sure you want to delete \"{}\"? This will remove all custom rules for this command."
 msgstr "\"{}'yi silmek istediğinizden emin misiniz? Bu, bu komut için tüm özel kuralları kaldıracaktır.\""
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1991
-#: NEEDS WORK
-#, python-brace-format
-msgid "Command deleted: {}"
-msgstr "Komut silindi: {}"
 # 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2086
 #: NEEDS WORK
@@ -4338,6 +4343,11 @@ msgstr "Yeniden Başlatma Gerekli"
 msgid "Restart the program for the colors to be applied to the terminal."
 msgstr "Programı yeniden başlatın, böylece renkler terminale uygulanır."
 # 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2667
+#: NEEDS WORK
+msgid "Global rules reset to defaults"
+msgstr "Küresel kurallar varsayılanlara sıfırlandı"
+# 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2645
 #: NEEDS WORK
 msgid "Reset Global Rules?"
@@ -4350,10 +4360,10 @@ msgstr ""
 "Bu, küresel kuralları sistem varsayılanlarına geri yükleyecektir. Bağlam özelleştirmeleri "
 "korunacaktır."
 # 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2667
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2695
 #: NEEDS WORK
-msgid "Global rules reset to defaults"
-msgstr "Küresel kurallar varsayılanlara sıfırlandı"
+msgid "All commands reset to defaults"
+msgstr "Tüm komutlar varsayılan ayarlara sıfırlandı"
 # 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2673
 #: NEEDS WORK
@@ -4364,11 +4374,6 @@ msgstr "Tüm Komutları Sıfırla?"
 #: NEEDS WORK
 msgid "This will restore all commands to system defaults. Global rules will be preserved."
 msgstr "Bu, tüm komutları sistem varsayılanlarına geri yükleyecektir. Küresel kurallar korunacaktır."
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2695
-#: NEEDS WORK
-msgid "All commands reset to defaults"
-msgstr "Tüm komutlar varsayılan ayarlara sıfırlandı"
 # 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2721
 #: NEEDS WORK
@@ -5053,11 +5058,6 @@ msgstr "Oturum adı"
 msgid "Working directory must exist and be a folder."
 msgstr "Çalışma dizini var olmalı ve bir klasör olmalıdır."
 # 
-# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 1374
-#: NEEDS WORK
-msgid "Invalid working directory path."
-msgstr "Geçersiz çalışma dizini yolu."
-# 
 # #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
 # 
 # File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 716
@@ -5147,6 +5147,11 @@ msgstr "Devam et"
 #, python-brace-format
 msgid "{} is required"
 msgstr "{} gereklidir"
+# 
+# File: src/ashyterm/ui/dialogs/base_dialog.py, line: 601
+#: NEEDS WORK
+msgid "Invalid path format"
+msgstr "Geçersiz yol formatı"
 # 
 # File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 17
 #: NEEDS WORK
@@ -5960,15 +5965,35 @@ msgstr "Ashy İkonlar (Paketlenmiş)"
 msgid "System Icons"
 msgstr "Sistem İkonları"
 # 
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 203
+#: NEEDS WORK
+msgid "Window Buttons When Maximized"
+msgstr "Pencere Düğmeleri Maksimize Edildiğinde"
+# 
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 204
+#: NEEDS WORK
+msgid "For KDE Plasma panel integration"
+msgstr "KDE Plasma panel entegrasyonu için"
+# 
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 209
+#: NEEDS WORK
+msgid "Auto-detect"
+msgstr "Otomatik algılama"
+# 
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 210
+#: NEEDS WORK
+msgid "Always hide"
+msgstr "Her zaman gizle"
+# 
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 211
+#: NEEDS WORK
+msgid "Never hide"
+msgstr "Asla gizleme"
+# 
 # File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 225
 #: NEEDS WORK
 msgid "When Already Running"
 msgstr "Zaten Çalışıyorken"
-# 
-# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 226
-#: NEEDS WORK
-msgid "Action when the application is launched while already open"
-msgstr "Uygulama zaten açıkken başlatıldığında yapılacak işlem"
 # 
 # File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 230
 #: NEEDS WORK
@@ -5984,6 +6009,11 @@ msgstr "Yeni bir pencere aç"
 #: NEEDS WORK
 msgid "Focus existing window"
 msgstr "Mevcut pencereyi odakla"
+# 
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 226
+#: NEEDS WORK
+msgid "Action when the application is launched while already open"
+msgstr "Uygulama zaten açıkken başlatıldığında yapılacak işlem"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1137
 #: NEEDS WORK
@@ -6066,25 +6096,30 @@ msgstr "Sesli Zil"
 msgid "Profiles & Data"
 msgstr "Profiller ve Veriler"
 # 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 295
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 360
 #: NEEDS WORK
-msgid "On Startup"
-msgstr "Başlangıçta"
+msgid "On Close"
+msgstr "Kapatıldığında"
 # 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 300
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 363
 #: NEEDS WORK
-msgid "Always restore previous session"
-msgstr "Her zaman önceki oturumu geri yükle"
+msgid "Ask what to do"
+msgstr "Ne yapmam gerektiğini sor."
 # 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 301
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 364
 #: NEEDS WORK
-msgid "Ask to restore previous session"
-msgstr "Önceki oturumu geri yüklemek için sor."
+msgid "Save tabs and close"
+msgstr "Sekmeleri kaydet ve kapat"
 # 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 302
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 365
 #: NEEDS WORK
-msgid "Never restore previous session"
-msgstr "Önceki oturumu asla geri yükleme"
+msgid "Just close without asking"
+msgstr "Sadece sormadan kapat"
+# 
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 373
+#: NEEDS WORK
+msgid "Behavior when closing with multiple tabs open"
+msgstr "Birden fazla sekme açıkken kapatma davranışı"
 # 
 # #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
 # 
@@ -7526,20 +7561,16 @@ msgstr "Yeni dosya için bir ad girin:"
 msgid "New File"
 msgstr "Yeni Dosya"
 # 
-# File: usr/share/ashyterm/filemanager/manager.py, line: 1767
+# File: src/ashyterm/filemanager/manager.py, line: 2303
 #: NEEDS WORK
-msgid "No items selected to copy."
-msgstr "Kopyalanacak öğe seçilmedi."
+#, python-brace-format
+msgid "No items selected to {operation}."
+msgstr "{operation} için seçilen hiçbir öğe yok."
 # 
 # File: usr/share/ashyterm/filemanager/manager.py, line: 1781
 #: NEEDS WORK
 msgid "Items copied to clipboard."
 msgstr "Panoya kopyalanan öğeler."
-# 
-# File: usr/share/ashyterm/filemanager/manager.py, line: 1786
-#: NEEDS WORK
-msgid "No items selected to cut."
-msgstr "Kesilecek hiçbir öğe seçilmedi."
 # 
 # File: usr/share/ashyterm/filemanager/manager.py, line: 1800
 #: NEEDS WORK
@@ -8090,20 +8121,17 @@ msgstr "Başlatma Hatası"
 msgid "Failed to initialize terminal: {error}"
 msgstr "Terminal başlatılamadı: {error}"
 # 
-# File: usr/share/ashyterm/window.py, line: 422
+# File: src/ashyterm/window.py, line: 1524
 #: NEEDS WORK
-msgid "Save Current Session?"
-msgstr "Mevcut Oturumu Kaydet?"
+#, python-brace-format
+msgid "Close {} Tabs?"
+msgstr "{} Sekmeleri Kapat?"
 # 
-# File: usr/share/ashyterm/window.py, line: 424
+# File: src/ashyterm/window.py, line: 1526
 #: NEEDS WORK
-msgid "Do you want to restore these tabs the next time you open Ashy Terminal?"
-msgstr "Ashy Terminal'ı bir sonraki açışınızda bu sekmeleri geri yüklemek istiyor musunuz?"
-# 
-# File: usr/share/ashyterm/window.py, line: 428
-#: NEEDS WORK
-msgid "Don't Save"
-msgstr "Kaydetme"
+#, python-brace-format
+msgid "You have {} open tabs. Would you like to save them to restore next time?"
+msgstr "{} açık sekmeniz var. Onları bir sonraki sefer geri yüklemek için kaydetmek ister misiniz?"
 # 
 # File: usr/share/ashyterm/window.py, line: 430
 #: NEEDS WORK

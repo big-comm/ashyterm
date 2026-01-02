@@ -45,6 +45,11 @@ msgstr "Otvorenie miestneho pripojovacieho bodu {}"
 msgid "Open {} in Ashy Terminal"
 msgstr "Otvor {} v Ashy Termináli"
 # 
+# File: tests/test_qa.py, line: 164
+#: NEEDS WORK
+msgid "Test string"
+msgstr "Testovací reťazec"
+# 
 # File: usr/share/ashyterm/utils/exceptions.py, line: 65
 #: NEEDS WORK
 msgid "A terminal error occurred"
@@ -745,13 +750,13 @@ msgstr "Hľadať relácie..."
 # 
 # File: usr/share/ashyterm/ui/color_scheme_dialog.py, line: 42
 #: NEEDS WORK
-msgid "Edit Scheme"
-msgstr "Upraviť schému"
+msgid "New Scheme"
+msgstr "Nový plán"
 # 
 # File: usr/share/ashyterm/ui/color_scheme_dialog.py, line: 42
 #: NEEDS WORK
-msgid "New Scheme"
-msgstr "Nový plán"
+msgid "Edit Scheme"
+msgstr "Upraviť schému"
 # 
 # File: usr/share/ashyterm/ui/color_scheme_dialog.py, line: 44
 #: NEEDS WORK
@@ -777,19 +782,6 @@ msgstr "Pozadie hlavičky"
 #: NEEDS WORK
 msgid "Cursor"
 msgstr "Kurzor"
-# 
-# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 163
-# File: usr/share/ashyterm/ui/dialogs.py, line: 575
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1213
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1957
-# File: usr/share/ashyterm/ui/dialogs.py, line: 2006
-# File: usr/share/ashyterm/window.py, line: 953
-# File: usr/share/ashyterm/window.py, line: 1013
-#: NEEDS WORK
-msgid "Cancel"
-msgstr "Zrušiť"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 589
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1219
@@ -948,6 +940,19 @@ msgstr "Zmazať schému?"
 #, python-brace-format
 msgid "Are you sure you want to delete the scheme '{name}'? This cannot be undone."
 msgstr "Ste si istí, že chcete odstrániť schému '{name}'? Toto nie je možné vrátiť späť."
+# 
+# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 163
+# File: usr/share/ashyterm/ui/dialogs.py, line: 575
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1213
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1957
+# File: usr/share/ashyterm/ui/dialogs.py, line: 2006
+# File: usr/share/ashyterm/window.py, line: 953
+# File: usr/share/ashyterm/window.py, line: 1013
+#: NEEDS WORK
+msgid "Cancel"
+msgstr "Zrušiť"
 # 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 32
 #: NEEDS WORK
@@ -2580,6 +2585,11 @@ msgstr "Otvoriť odkaz"
 msgid "Copy Link"
 msgstr "Kopírovať odkaz"
 # 
+# File: src/ashyterm/ui/menus.py, line: 313
+#: NEEDS WORK
+msgid "Ask AI"
+msgstr "Spýtaj sa AI"
+# 
 # #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
 # 
 # File: usr/share/ashyterm/ui/menus.py, line: 30
@@ -2607,11 +2617,6 @@ msgstr "Vybrať všetko"
 #: NEEDS WORK
 msgid "Clear Session"
 msgstr "Vymazať reláciu"
-# 
-# File: src/ashyterm/ui/menus.py, line: 313
-#: NEEDS WORK
-msgid "Ask AI"
-msgstr "Spýtaj sa AI"
 # 
 # #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
 # 
@@ -3751,16 +3756,16 @@ msgstr "Prispôsobiť (vytvorí kópiu)"
 msgid "Delete scheme"
 msgstr "Vymazať schému"
 # 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1806
+#: NEEDS WORK
+msgid "Scheme deleted"
+msgstr "Schéma odstránené"
+# 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1773
 #: NEEDS WORK
 #, python-brace-format
 msgid "Are you sure you want to delete '{}'?"
 msgstr "Ste si istí, že chcete odstrániť '{}' ?"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1806
-#: NEEDS WORK
-msgid "Scheme deleted"
-msgstr "Schéma odstránené"
 # 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1870
 #: NEEDS WORK
@@ -3810,15 +3815,6 @@ msgstr "SSH relácie"
 msgid "Apply output highlighting to SSH connections"
 msgstr "Použiť zvýraznenie výstupu pre pripojenia SSH"
 # 
-# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1923
-# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 432
-#: NEEDS WORK
-#, python-brace-format
-msgid "{} Command Colorization"
-msgstr "{} Farba príkazov"
-# 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1925
 #: NEEDS WORK
 #, python-brace-format
@@ -3830,6 +3826,15 @@ msgstr "Syntax zvýraznenia pre výstup príkazu '{}' (používajúci Pygments)"
 #, python-brace-format
 msgid "Pygments is not installed - '{}' output will not be colorized"
 msgstr "Pygments nie je nainštalovaný - '{}' výstup nebude farebne zvýraznený"
+# 
+# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1923
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 432
+#: NEEDS WORK
+#, python-brace-format
+msgid "{} Command Colorization"
+msgstr "{} Farba príkazov"
 # 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1680
 #: NEEDS WORK
@@ -3858,30 +3863,10 @@ msgstr "Povoliť '{}' farebné zvýraznenie"
 msgid "Apply syntax highlighting to '{}' command output"
 msgstr "Použiť zvýraznenie syntaxe pre výstup príkazu '{}'"
 # 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1951
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2178
-#: NEEDS WORK
-msgid "Theme Mode"
-msgstr "Režim témy"
-# 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1952
 #: NEEDS WORK
 msgid "Auto: adapts to background color. Manual: single theme."
 msgstr "Automaticky: prispôsobuje sa farbe pozadia. Manuálne: jediné téma."
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1955
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2182
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 3592
-#: NEEDS WORK
-msgid "Auto"
-msgstr "Automatický"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1956
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2183
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 3592
-#: NEEDS WORK
-msgid "Manual"
-msgstr "Príručka"
 # 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2039
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2272
@@ -3929,11 +3914,6 @@ msgstr "Nainštalovať Pygments"
 msgid "pip install pygments"
 msgstr "pip nainštalovať pygments"
 # 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1650
-#: NEEDS WORK
-msgid "Shell Input Highlighting"
-msgstr "Zvýraznenie vstupu shellu"
-# 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1652
 #: NEEDS WORK
 msgid "Live syntax highlighting as you type commands (experimental)"
@@ -3943,6 +3923,11 @@ msgstr "Živé zvýraznenie syntaxe pri písaní príkazov (experimentálne)"
 #: NEEDS WORK
 msgid "Pygments is not installed - shell input highlighting unavailable"
 msgstr "Pygments nie je nainštalovaný - zvýraznenie vstupu shellu nie je k dispozícii"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1650
+#: NEEDS WORK
+msgid "Shell Input Highlighting"
+msgstr "Zvýraznenie vstupu shellu"
 # 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1748
 #: NEEDS WORK
@@ -3971,6 +3956,26 @@ msgstr ""
 #: NEEDS WORK
 msgid "Auto detects background, Manual uses selected theme"
 msgstr "Automaticky detekuje pozadie, Manuálne používa vybranú tému"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1951
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2178
+#: NEEDS WORK
+msgid "Theme Mode"
+msgstr "Režim témy"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1955
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2182
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 3592
+#: NEEDS WORK
+msgid "Auto"
+msgstr "Automatický"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1956
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2183
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 3592
+#: NEEDS WORK
+msgid "Manual"
+msgstr "Príručka"
 # 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1179
 #: NEEDS WORK
@@ -4005,6 +4010,12 @@ msgstr "Odstrániť zo zoznamu ignorovaných"
 msgid "Command added: {}"
 msgstr "Príkaz pridaný: {}"
 # 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1325
+#: NEEDS WORK
+#, python-brace-format
+msgid "Command removed: {}"
+msgstr "Príkaz odstránený: {}"
+# 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1299
 #: NEEDS WORK
 msgid "Remove Ignored Command?"
@@ -4016,11 +4027,10 @@ msgstr "Odstrániť ignorovaný príkaz?"
 msgid "Remove \"{}\" from the ignored commands list? Highlighting will be applied to this command's output."
 msgstr "Odstrániť \"{}\" zo zoznamu ignorovaných príkazov? Zvýraznenie sa použije na výstup tohto príkazu."
 # 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1325
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1356
 #: NEEDS WORK
-#, python-brace-format
-msgid "Command removed: {}"
-msgstr "Príkaz odstránený: {}"
+msgid "Restored default ignored commands"
+msgstr "Obnovené predvolené ignorované príkazy"
 # 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1331
 #: NEEDS WORK
@@ -4035,11 +4045,6 @@ msgid ""
 msgstr ""
 "Toto nahradí váš aktuálny zoznam ignorovaných príkazov systémovými predvoľbami. Vlastné prídavky "
 "budú stratené."
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1356
-#: NEEDS WORK
-msgid "Restored default ignored commands"
-msgstr "Obnovené predvolené ignorované príkazy"
 # 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1698
 #: NEEDS WORK
@@ -4184,6 +4189,12 @@ msgstr "Upraviť pravidlá príkazov"
 msgid "Delete command"
 msgstr "Príkaz na odstránenie"
 # 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1991
+#: NEEDS WORK
+#, python-brace-format
+msgid "Command deleted: {}"
+msgstr "Príkaz bol odstránený: {}"
+# 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1972
 #: NEEDS WORK
 msgid "Delete Command?"
@@ -4196,12 +4207,6 @@ msgid "Are you sure you want to delete \"{}\"? This will remove all custom rules
 msgstr ""
 "Ste si istí, že chcete odstrániť \"{}\"? Týmto sa odstránia všetky vlastné pravidlá pre tento "
 "príkaz."
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1991
-#: NEEDS WORK
-#, python-brace-format
-msgid "Command deleted: {}"
-msgstr "Príkaz bol odstránený: {}"
 # 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2086
 #: NEEDS WORK
@@ -4341,6 +4346,11 @@ msgstr "Vyžaduje reštart"
 msgid "Restart the program for the colors to be applied to the terminal."
 msgstr "Reštartujte program, aby sa farby aplikovali na terminál."
 # 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2667
+#: NEEDS WORK
+msgid "Global rules reset to defaults"
+msgstr "Globálne pravidlá obnovené na predvolené hodnoty"
+# 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2645
 #: NEEDS WORK
 msgid "Reset Global Rules?"
@@ -4353,10 +4363,10 @@ msgstr ""
 "Toto obnoví globálne pravidlá na predvolené nastavenia systému. Kontextové prispôsobenia budú "
 "zachované."
 # 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2667
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2695
 #: NEEDS WORK
-msgid "Global rules reset to defaults"
-msgstr "Globálne pravidlá obnovené na predvolené hodnoty"
+msgid "All commands reset to defaults"
+msgstr "Všetky príkazy sa obnovia na predvolené hodnoty"
 # 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2673
 #: NEEDS WORK
@@ -4367,11 +4377,6 @@ msgstr "Obnoviť všetky príkazy?"
 #: NEEDS WORK
 msgid "This will restore all commands to system defaults. Global rules will be preserved."
 msgstr "Týmto sa obnovia všetky príkazy na predvolené nastavenia systému. Globálne pravidlá budú zachované."
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2695
-#: NEEDS WORK
-msgid "All commands reset to defaults"
-msgstr "Všetky príkazy sa obnovia na predvolené hodnoty"
 # 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2721
 #: NEEDS WORK
@@ -5054,11 +5059,6 @@ msgstr "Názov relácie"
 msgid "Working directory must exist and be a folder."
 msgstr "Pracovný adresár musí existovať a byť priečinok."
 # 
-# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 1374
-#: NEEDS WORK
-msgid "Invalid working directory path."
-msgstr "Neplatná cesta pracovného adresára."
-# 
 # #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
 # 
 # File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 716
@@ -5148,6 +5148,11 @@ msgstr "Pokračovať"
 #, python-brace-format
 msgid "{} is required"
 msgstr "{} je povinné"
+# 
+# File: src/ashyterm/ui/dialogs/base_dialog.py, line: 601
+#: NEEDS WORK
+msgid "Invalid path format"
+msgstr "Neplatný formát cesty"
 # 
 # File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 17
 #: NEEDS WORK
@@ -5959,15 +5964,35 @@ msgstr "Ashy Ikony (Zabalené)"
 msgid "System Icons"
 msgstr "Systémové ikony"
 # 
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 203
+#: NEEDS WORK
+msgid "Window Buttons When Maximized"
+msgstr "Tlačidlá okna pri maximalizácii"
+# 
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 204
+#: NEEDS WORK
+msgid "For KDE Plasma panel integration"
+msgstr "Pre integráciu panela KDE Plasma"
+# 
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 209
+#: NEEDS WORK
+msgid "Auto-detect"
+msgstr "Automatické zistenie"
+# 
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 210
+#: NEEDS WORK
+msgid "Always hide"
+msgstr "Vždy skryť"
+# 
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 211
+#: NEEDS WORK
+msgid "Never hide"
+msgstr "Nikdy nezakrývajte"
+# 
 # File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 225
 #: NEEDS WORK
 msgid "When Already Running"
 msgstr "Keď už beží"
-# 
-# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 226
-#: NEEDS WORK
-msgid "Action when the application is launched while already open"
-msgstr "Akcia, keď je aplikácia spustená, zatiaľ čo je už otvorená"
 # 
 # File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 230
 #: NEEDS WORK
@@ -5983,6 +6008,11 @@ msgstr "Otvor novú okno"
 #: NEEDS WORK
 msgid "Focus existing window"
 msgstr "Zamerať existujúce okno"
+# 
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 226
+#: NEEDS WORK
+msgid "Action when the application is launched while already open"
+msgstr "Akcia, keď je aplikácia spustená, zatiaľ čo je už otvorená"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1137
 #: NEEDS WORK
@@ -6065,25 +6095,30 @@ msgstr "Zvučná zvonček"
 msgid "Profiles & Data"
 msgstr "Profily a dáta"
 # 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 258
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 360
 #: NEEDS WORK
-msgid "On Startup"
-msgstr "Pri spustení"
+msgid "On Close"
+msgstr "Pri zatvorení"
 # 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 263
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 363
 #: NEEDS WORK
-msgid "Always restore previous session"
-msgstr "Vždy obnoviť predchádzajúcu reláciu"
+msgid "Ask what to do"
+msgstr "Spýtaj sa, čo robiť"
 # 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 264
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 364
 #: NEEDS WORK
-msgid "Ask to restore previous session"
-msgstr "Požiadajte o obnovenie predchádzajúcej relácie"
+msgid "Save tabs and close"
+msgstr "Uložiť karty a zavrieť"
 # 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 265
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 365
 #: NEEDS WORK
-msgid "Never restore previous session"
-msgstr "Nikdy neobnoviť predchádzajúcu reláciu"
+msgid "Just close without asking"
+msgstr "Proste zavrite bez pýtania"
+# 
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 373
+#: NEEDS WORK
+msgid "Behavior when closing with multiple tabs open"
+msgstr "Správanie pri zatváraní s otvorenými viacerými kartami"
 # 
 # #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
 # 
@@ -7529,20 +7564,16 @@ msgstr "Zadajte názov pre nový súbor:"
 msgid "New File"
 msgstr "Nový súbor"
 # 
-# File: usr/share/ashyterm/filemanager/manager.py, line: 1767
+# File: src/ashyterm/filemanager/manager.py, line: 2303
 #: NEEDS WORK
-msgid "No items selected to copy."
-msgstr "Žiadne položky neboli vybrané na kopírovanie."
+#, python-brace-format
+msgid "No items selected to {operation}."
+msgstr "Žiadne položky nie sú vybrané na {operation}."
 # 
 # File: usr/share/ashyterm/filemanager/manager.py, line: 1781
 #: NEEDS WORK
 msgid "Items copied to clipboard."
 msgstr "Položky skopírované do schránky."
-# 
-# File: usr/share/ashyterm/filemanager/manager.py, line: 1786
-#: NEEDS WORK
-msgid "No items selected to cut."
-msgstr "Nie sú vybrané žiadne položky na vystrihnutie."
 # 
 # File: usr/share/ashyterm/filemanager/manager.py, line: 1800
 #: NEEDS WORK
@@ -8093,20 +8124,17 @@ msgstr "Chyba inicializácie"
 msgid "Failed to initialize terminal: {error}"
 msgstr "Nepodarilo sa inicializovať terminál: {error}"
 # 
-# File: usr/share/ashyterm/window.py, line: 1080
+# File: src/ashyterm/window.py, line: 1524
 #: NEEDS WORK
-msgid "Save Current Session?"
-msgstr "Uložiť aktuálnu reláciu?"
+#, python-brace-format
+msgid "Close {} Tabs?"
+msgstr "Zavrieť {} karty?"
 # 
-# File: usr/share/ashyterm/window.py, line: 1082
+# File: src/ashyterm/window.py, line: 1526
 #: NEEDS WORK
-msgid "Do you want to restore these tabs the next time you open Ashy Terminal?"
-msgstr "Chcete obnoviť tieto karty pri ďalšom otvorení Ashy Terminal?"
-# 
-# File: usr/share/ashyterm/window.py, line: 1086
-#: NEEDS WORK
-msgid "Don't Save"
-msgstr "Nesúhlasím so zmenami"
+#, python-brace-format
+msgid "You have {} open tabs. Would you like to save them to restore next time?"
+msgstr "Máte {} otvorených kariet. Chcete ich uložiť na obnovenie nabudúce?"
 # 
 # File: usr/share/ashyterm/window.py, line: 1088
 #: NEEDS WORK

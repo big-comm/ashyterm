@@ -45,6 +45,11 @@ msgstr "Άνοιγμα του τοπικού σημείου προσάρτηση
 msgid "Open {} in Ashy Terminal"
 msgstr "Άνοιγμα {} στο Ashy Terminal"
 # 
+# File: tests/test_qa.py, line: 164
+#: NEEDS WORK
+msgid "Test string"
+msgstr "Δοκιμαστική συμβολοσειρά"
+# 
 # File: usr/share/ashyterm/utils/exceptions.py, line: 65
 #: NEEDS WORK
 msgid "A terminal error occurred"
@@ -743,13 +748,13 @@ msgstr "Αναζήτηση συνεδριών..."
 # 
 # File: usr/share/ashyterm/ui/color_scheme_dialog.py, line: 42
 #: NEEDS WORK
-msgid "Edit Scheme"
-msgstr "Επεξεργασία Σχεδίου"
+msgid "New Scheme"
+msgstr "Νέο Σχέδιο"
 # 
 # File: usr/share/ashyterm/ui/color_scheme_dialog.py, line: 42
 #: NEEDS WORK
-msgid "New Scheme"
-msgstr "Νέο Σχέδιο"
+msgid "Edit Scheme"
+msgstr "Επεξεργασία Σχεδίου"
 # 
 # File: usr/share/ashyterm/ui/color_scheme_dialog.py, line: 44
 #: NEEDS WORK
@@ -775,19 +780,6 @@ msgstr "Φόντο γραμμής κεφαλίδας"
 #: NEEDS WORK
 msgid "Cursor"
 msgstr "Κέρσορας"
-# 
-# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 163
-# File: usr/share/ashyterm/ui/dialogs.py, line: 575
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1213
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1957
-# File: usr/share/ashyterm/ui/dialogs.py, line: 2006
-# File: usr/share/ashyterm/window.py, line: 953
-# File: usr/share/ashyterm/window.py, line: 1013
-#: NEEDS WORK
-msgid "Cancel"
-msgstr "Ακύρωση"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 589
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1219
@@ -948,6 +940,19 @@ msgstr "Διαγραφή Σχεδίου;"
 #, python-brace-format
 msgid "Are you sure you want to delete the scheme '{name}'? This cannot be undone."
 msgstr "Είστε σίγουροι ότι θέλετε να διαγράψετε το σχέδιο '{name}'; Αυτό δεν μπορεί να αναιρεθεί."
+# 
+# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 163
+# File: usr/share/ashyterm/ui/dialogs.py, line: 575
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1213
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1957
+# File: usr/share/ashyterm/ui/dialogs.py, line: 2006
+# File: usr/share/ashyterm/window.py, line: 953
+# File: usr/share/ashyterm/window.py, line: 1013
+#: NEEDS WORK
+msgid "Cancel"
+msgstr "Ακύρωση"
 # 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 32
 #: NEEDS WORK
@@ -2580,6 +2585,11 @@ msgstr "Άνοιγμα Συνδέσμου"
 msgid "Copy Link"
 msgstr "Αντιγραφή Συνδέσμου"
 # 
+# File: src/ashyterm/ui/menus.py, line: 312
+#: NEEDS WORK
+msgid "Ask AI"
+msgstr "Ρώτησε την Τεχνητή Νοημοσύνη"
+# 
 # #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
 # 
 # File: usr/share/ashyterm/ui/menus.py, line: 30
@@ -2607,11 +2617,6 @@ msgstr "Επιλογή Όλων"
 #: NEEDS WORK
 msgid "Clear Session"
 msgstr "Καθαρισμός Συνεδρίας"
-# 
-# File: src/ashyterm/ui/menus.py, line: 312
-#: NEEDS WORK
-msgid "Ask AI"
-msgstr "Ρώτησε την Τεχνητή Νοημοσύνη"
 # 
 # #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
 # 
@@ -3765,16 +3770,16 @@ msgstr "Προσαρμογή (δημιουργεί ένα αντίγραφο)"
 msgid "Delete scheme"
 msgstr "Διαγραφή σχεδίου"
 # 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1806
+#: NEEDS WORK
+msgid "Scheme deleted"
+msgstr "Το σχέδιο διαγράφηκε"
+# 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1773
 #: NEEDS WORK
 #, python-brace-format
 msgid "Are you sure you want to delete '{}'?"
 msgstr "Είστε σίγουροι ότι θέλετε να διαγράψετε '{}';"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1806
-#: NEEDS WORK
-msgid "Scheme deleted"
-msgstr "Το σχέδιο διαγράφηκε"
 # 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1870
 #: NEEDS WORK
@@ -3824,15 +3829,6 @@ msgstr "Συνεδρίες SSH"
 msgid "Apply output highlighting to SSH connections"
 msgstr "Εφαρμόστε την επισήμανση εξόδου στις συνδέσεις SSH"
 # 
-# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1923
-# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 432
-#: NEEDS WORK
-#, python-brace-format
-msgid "{} Command Colorization"
-msgstr "{} Χρωματισμός Εντολών"
-# 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1925
 #: NEEDS WORK
 #, python-brace-format
@@ -3844,6 +3840,15 @@ msgstr "Σύνταξη χρωματισμού για την έξοδο της ε
 #, python-brace-format
 msgid "Pygments is not installed - '{}' output will not be colorized"
 msgstr "Ο Pygments δεν είναι εγκατεστημένος - η έξοδος '{}' δεν θα χρωματιστεί"
+# 
+# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1923
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 432
+#: NEEDS WORK
+#, python-brace-format
+msgid "{} Command Colorization"
+msgstr "{} Χρωματισμός Εντολών"
 # 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1680
 #: NEEDS WORK
@@ -3872,30 +3877,10 @@ msgstr "Ενεργοποίηση '{}' Χρωματισμού"
 msgid "Apply syntax highlighting to '{}' command output"
 msgstr "Εφαρμόστε σύνταξη χρωματισμού στην έξοδο της εντολής '{}'"
 # 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1951
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2178
-#: NEEDS WORK
-msgid "Theme Mode"
-msgstr "Θέμα Λειτουργίας"
-# 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1952
 #: NEEDS WORK
 msgid "Auto: adapts to background color. Manual: single theme."
 msgstr "Αυτόματη: προσαρμόζεται στο χρώμα φόντου. Χειροκίνητη: ενιαίο θέμα."
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1955
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2182
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 3592
-#: NEEDS WORK
-msgid "Auto"
-msgstr "Αυτόματο"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1956
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2183
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 3592
-#: NEEDS WORK
-msgid "Manual"
-msgstr "Εγχειρίδιο"
 # 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2039
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2272
@@ -3943,11 +3928,6 @@ msgstr "Εγκαταστήστε το Pygments"
 msgid "pip install pygments"
 msgstr "pip install pygments"
 # 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1650
-#: NEEDS WORK
-msgid "Shell Input Highlighting"
-msgstr "Επισήμανση Εισόδου Σκηνής"
-# 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1652
 #: NEEDS WORK
 msgid "Live syntax highlighting as you type commands (experimental)"
@@ -3957,6 +3937,11 @@ msgstr "Ζωντανή επισήμανση σύνταξης καθώς πληκ
 #: NEEDS WORK
 msgid "Pygments is not installed - shell input highlighting unavailable"
 msgstr "Η Pygments δεν είναι εγκατεστημένη - η επισήμανση εισόδου κελύφους δεν είναι διαθέσιμη"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1650
+#: NEEDS WORK
+msgid "Shell Input Highlighting"
+msgstr "Επισήμανση Εισόδου Σκηνής"
 # 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1748
 #: NEEDS WORK
@@ -3985,6 +3970,26 @@ msgstr ""
 #: NEEDS WORK
 msgid "Auto detects background, Manual uses selected theme"
 msgstr "Αυτόματη ανίχνευση φόντου, Χειροκίνητη χρήση επιλεγμένου θέματος"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1951
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2178
+#: NEEDS WORK
+msgid "Theme Mode"
+msgstr "Θέμα Λειτουργίας"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1955
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2182
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 3592
+#: NEEDS WORK
+msgid "Auto"
+msgstr "Αυτόματο"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1956
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2183
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 3592
+#: NEEDS WORK
+msgid "Manual"
+msgstr "Εγχειρίδιο"
 # 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1179
 #: NEEDS WORK
@@ -4019,6 +4024,12 @@ msgstr "Αφαίρεση από τη λίστα αγνοημένων"
 msgid "Command added: {}"
 msgstr "Εντολή προστέθηκε: {}"
 # 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1325
+#: NEEDS WORK
+#, python-brace-format
+msgid "Command removed: {}"
+msgstr "Η εντολή αφαιρέθηκε: {}"
+# 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1299
 #: NEEDS WORK
 msgid "Remove Ignored Command?"
@@ -4032,11 +4043,10 @@ msgstr ""
 "Αφαιρέστε \"{}\" από τη λίστα των αγνοημένων εντολών; Η επισήμανση θα εφαρμοστεί στην έξοδο αυτής "
 "της εντολής."
 # 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1325
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1356
 #: NEEDS WORK
-#, python-brace-format
-msgid "Command removed: {}"
-msgstr "Η εντολή αφαιρέθηκε: {}"
+msgid "Restored default ignored commands"
+msgstr "Αποκατεστημένες προεπιλεγμένες αγνοημένες εντολές"
 # 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1331
 #: NEEDS WORK
@@ -4051,11 +4061,6 @@ msgid ""
 msgstr ""
 "Αυτό θα αντικαταστήσει τη λίστα των αγνοημένων εντολών σας με τις προεπιλεγμένες ρυθμίσεις του "
 "συστήματος. Οι προσαρμοσμένες προσθήκες θα χαθούν."
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1356
-#: NEEDS WORK
-msgid "Restored default ignored commands"
-msgstr "Αποκατεστημένες προεπιλεγμένες αγνοημένες εντολές"
 # 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1698
 #: NEEDS WORK
@@ -4202,6 +4207,12 @@ msgstr "Επεξεργασία κανόνων εντολών"
 msgid "Delete command"
 msgstr "Διαγραφή εντολής"
 # 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1991
+#: NEEDS WORK
+#, python-brace-format
+msgid "Command deleted: {}"
+msgstr "Η εντολή διαγράφηκε: {}"
+# 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1972
 #: NEEDS WORK
 msgid "Delete Command?"
@@ -4214,12 +4225,6 @@ msgid "Are you sure you want to delete \"{}\"? This will remove all custom rules
 msgstr ""
 "Είστε σίγουροι ότι θέλετε να διαγράψετε \"{}\"; Αυτό θα αφαιρέσει όλους τους προσαρμοσμένους "
 "κανόνες για αυτήν την εντολή."
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1991
-#: NEEDS WORK
-#, python-brace-format
-msgid "Command deleted: {}"
-msgstr "Η εντολή διαγράφηκε: {}"
 # 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2086
 #: NEEDS WORK
@@ -4359,6 +4364,11 @@ msgstr "Απαιτείται Επανεκκίνηση"
 msgid "Restart the program for the colors to be applied to the terminal."
 msgstr "Επανεκκινήστε το πρόγραμμα για να εφαρμοστούν τα χρώματα στο τερματικό."
 # 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2667
+#: NEEDS WORK
+msgid "Global rules reset to defaults"
+msgstr "Παγκοσμίοι κανόνες επαναφέρονται στις προεπιλογές"
+# 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2645
 #: NEEDS WORK
 msgid "Reset Global Rules?"
@@ -4371,10 +4381,10 @@ msgstr ""
 "Αυτό θα επαναφέρει τους παγκόσμιους κανόνες στις προεπιλεγμένες ρυθμίσεις του συστήματος. Οι "
 "προσαρμογές του περιβάλλοντος θα διατηρηθούν."
 # 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2667
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2695
 #: NEEDS WORK
-msgid "Global rules reset to defaults"
-msgstr "Παγκοσμίοι κανόνες επαναφέρονται στις προεπιλογές"
+msgid "All commands reset to defaults"
+msgstr "Όλες οι εντολές επαναφέρονται στις προεπιλεγμένες ρυθμίσεις"
 # 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2673
 #: NEEDS WORK
@@ -4387,11 +4397,6 @@ msgid "This will restore all commands to system defaults. Global rules will be p
 msgstr ""
 "Αυτό θα επαναφέρει όλες τις εντολές στις προεπιλεγμένες ρυθμίσεις του συστήματος. Οι παγκόσμιοι "
 "κανόνες θα διατηρηθούν."
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2695
-#: NEEDS WORK
-msgid "All commands reset to defaults"
-msgstr "Όλες οι εντολές επαναφέρονται στις προεπιλεγμένες ρυθμίσεις"
 # 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2721
 #: NEEDS WORK
@@ -5076,11 +5081,6 @@ msgstr "Όνομα συνεδρίας"
 msgid "Working directory must exist and be a folder."
 msgstr "Ο κατάλογος εργασίας πρέπει να υπάρχει και να είναι φάκελος."
 # 
-# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 1374
-#: NEEDS WORK
-msgid "Invalid working directory path."
-msgstr "Μη έγκυρη διαδρομή καταλόγου εργασίας."
-# 
 # #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
 # 
 # File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 716
@@ -5170,6 +5170,11 @@ msgstr "Συνέχεια"
 #, python-brace-format
 msgid "{} is required"
 msgstr "{} είναι υποχρεωτικό"
+# 
+# File: src/ashyterm/ui/dialogs/base_dialog.py, line: 601
+#: NEEDS WORK
+msgid "Invalid path format"
+msgstr "Μη έγκυρη μορφή διαδρομής"
 # 
 # File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 17
 #: NEEDS WORK
@@ -5981,15 +5986,35 @@ msgstr "Αχνά Εικονίδια (Συσκευασμένα)"
 msgid "System Icons"
 msgstr "Εικονίδια Συστήματος"
 # 
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 203
+#: NEEDS WORK
+msgid "Window Buttons When Maximized"
+msgstr "Κουμπιά Παραθύρου Όταν Είναι Μεγιστοποιημένα"
+# 
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 204
+#: NEEDS WORK
+msgid "For KDE Plasma panel integration"
+msgstr "Για την ενσωμάτωση του πάνελ KDE Plasma"
+# 
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 209
+#: NEEDS WORK
+msgid "Auto-detect"
+msgstr "Αυτόματη ανίχνευση"
+# 
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 210
+#: NEEDS WORK
+msgid "Always hide"
+msgstr "Πάντα απόκρυψη"
+# 
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 211
+#: NEEDS WORK
+msgid "Never hide"
+msgstr "Ποτέ να μην κρύβεις"
+# 
 # File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 225
 #: NEEDS WORK
 msgid "When Already Running"
 msgstr "Όταν εκτελείται ήδη"
-# 
-# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 226
-#: NEEDS WORK
-msgid "Action when the application is launched while already open"
-msgstr "Ενέργεια όταν η εφαρμογή εκκινείται ενώ είναι ήδη ανοιχτή"
 # 
 # File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 230
 #: NEEDS WORK
@@ -6005,6 +6030,11 @@ msgstr "Άνοιγμα νέου παραθύρου"
 #: NEEDS WORK
 msgid "Focus existing window"
 msgstr "Εστίαση σε υπάρχον παράθυρο"
+# 
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 226
+#: NEEDS WORK
+msgid "Action when the application is launched while already open"
+msgstr "Ενέργεια όταν η εφαρμογή εκκινείται ενώ είναι ήδη ανοιχτή"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1137
 #: NEEDS WORK
@@ -6087,25 +6117,30 @@ msgstr "Ακουστικό Κουδούνι"
 msgid "Profiles & Data"
 msgstr "Προφίλ & Δεδομένα"
 # 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 258
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 360
 #: NEEDS WORK
-msgid "On Startup"
-msgstr "Κατά την εκκίνηση"
+msgid "On Close"
+msgstr "Κατά Κλείσιμο"
 # 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 263
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 363
 #: NEEDS WORK
-msgid "Always restore previous session"
-msgstr "Πάντα επαναφορά προηγούμενης συνεδρίας"
+msgid "Ask what to do"
+msgstr "Ρώτησε τι να κάνεις"
 # 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 264
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 364
 #: NEEDS WORK
-msgid "Ask to restore previous session"
-msgstr "Ζητήστε να επαναφέρετε την προηγούμενη συνεδρία"
+msgid "Save tabs and close"
+msgstr "Αποθήκευση καρτελών και κλείσιμο"
 # 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 265
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 365
 #: NEEDS WORK
-msgid "Never restore previous session"
-msgstr "Ποτέ μην επαναφέρετε την προηγούμενη συνεδρία"
+msgid "Just close without asking"
+msgstr "Απλώς κλείστε χωρίς να ρωτήσετε"
+# 
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 373
+#: NEEDS WORK
+msgid "Behavior when closing with multiple tabs open"
+msgstr "Συμπεριφορά κατά το κλείσιμο με ανοιχτές πολλές καρτέλες"
 # 
 # #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
 # 
@@ -7553,20 +7588,16 @@ msgstr "Εισάγετε ένα όνομα για το νέο αρχείο:"
 msgid "New File"
 msgstr "Νέο Αρχείο"
 # 
-# File: usr/share/ashyterm/filemanager/manager.py, line: 1767
+# File: src/ashyterm/filemanager/manager.py, line: 2303
 #: NEEDS WORK
-msgid "No items selected to copy."
-msgstr "Δεν έχουν επιλεγεί στοιχεία προς αντιγραφή."
+#, python-brace-format
+msgid "No items selected to {operation}."
+msgstr "Δεν έχουν επιλεγεί στοιχεία για {operation}."
 # 
 # File: usr/share/ashyterm/filemanager/manager.py, line: 1781
 #: NEEDS WORK
 msgid "Items copied to clipboard."
 msgstr "Αντικείμενα που αντιγράφηκαν στο πρόχειρο."
-# 
-# File: usr/share/ashyterm/filemanager/manager.py, line: 1786
-#: NEEDS WORK
-msgid "No items selected to cut."
-msgstr "Δεν έχουν επιλεγεί στοιχεία προς κοπή."
 # 
 # File: usr/share/ashyterm/filemanager/manager.py, line: 1800
 #: NEEDS WORK
@@ -8117,20 +8148,17 @@ msgstr "Σφάλμα Αρχικοποίησης"
 msgid "Failed to initialize terminal: {error}"
 msgstr "Αποτυχία στην αρχικοποίηση του τερματικού: {error}"
 # 
-# File: usr/share/ashyterm/window.py, line: 1080
+# File: src/ashyterm/window.py, line: 1524
 #: NEEDS WORK
-msgid "Save Current Session?"
-msgstr "Αποθήκευση Τρέχουσας Συνεδρίας;"
+#, python-brace-format
+msgid "Close {} Tabs?"
+msgstr "Κλείσιμο {} καρτελών;"
 # 
-# File: usr/share/ashyterm/window.py, line: 1082
+# File: src/ashyterm/window.py, line: 1526
 #: NEEDS WORK
-msgid "Do you want to restore these tabs the next time you open Ashy Terminal?"
-msgstr "Θέλετε να επαναφέρετε αυτές τις καρτέλες την επόμενη φορά που θα ανοίξετε το Ashy Terminal;"
-# 
-# File: usr/share/ashyterm/window.py, line: 1086
-#: NEEDS WORK
-msgid "Don't Save"
-msgstr "Μην Αποθηκεύσετε"
+#, python-brace-format
+msgid "You have {} open tabs. Would you like to save them to restore next time?"
+msgstr "Έχετε {} ανοιχτές καρτέλες. Θα θέλατε να τις αποθηκεύσετε για να τις επαναφέρετε την επόμενη φορά;"
 # 
 # File: usr/share/ashyterm/window.py, line: 1088
 #: NEEDS WORK

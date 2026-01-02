@@ -45,6 +45,11 @@ msgstr "Avaa paikallinen liitospiste {}"
 msgid "Open {} in Ashy Terminal"
 msgstr "Avaa {} Ashy Terminalissa"
 # 
+# File: tests/test_qa.py, line: 164
+#: NEEDS WORK
+msgid "Test string"
+msgstr "Testimerkkijono"
+# 
 # File: usr/share/ashyterm/utils/exceptions.py, line: 65
 #: NEEDS WORK
 msgid "A terminal error occurred"
@@ -745,13 +750,13 @@ msgstr "Hae istuntoja..."
 # 
 # File: usr/share/ashyterm/ui/color_scheme_dialog.py, line: 42
 #: NEEDS WORK
-msgid "Edit Scheme"
-msgstr "Muokkaa kaaviota"
+msgid "New Scheme"
+msgstr "Uusi kaavio"
 # 
 # File: usr/share/ashyterm/ui/color_scheme_dialog.py, line: 42
 #: NEEDS WORK
-msgid "New Scheme"
-msgstr "Uusi kaavio"
+msgid "Edit Scheme"
+msgstr "Muokkaa kaaviota"
 # 
 # File: usr/share/ashyterm/ui/color_scheme_dialog.py, line: 44
 #: NEEDS WORK
@@ -777,19 +782,6 @@ msgstr "Otsikkopalkin tausta"
 #: NEEDS WORK
 msgid "Cursor"
 msgstr "Kursori"
-# 
-# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 163
-# File: usr/share/ashyterm/ui/dialogs.py, line: 575
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1213
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1957
-# File: usr/share/ashyterm/ui/dialogs.py, line: 2006
-# File: usr/share/ashyterm/window.py, line: 953
-# File: usr/share/ashyterm/window.py, line: 1013
-#: NEEDS WORK
-msgid "Cancel"
-msgstr "Peruuta"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 589
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1219
@@ -950,6 +942,19 @@ msgstr "Poista kaavio?"
 #, python-brace-format
 msgid "Are you sure you want to delete the scheme '{name}'? This cannot be undone."
 msgstr "Oletko varma, että haluat poistaa kaavan '{name}'? Tätä toimintoa ei voi peruuttaa."
+# 
+# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 163
+# File: usr/share/ashyterm/ui/dialogs.py, line: 575
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1213
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1957
+# File: usr/share/ashyterm/ui/dialogs.py, line: 2006
+# File: usr/share/ashyterm/window.py, line: 953
+# File: usr/share/ashyterm/window.py, line: 1013
+#: NEEDS WORK
+msgid "Cancel"
+msgstr "Peruuta"
 # 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 32
 #: NEEDS WORK
@@ -2582,6 +2587,11 @@ msgstr "Avaa linkki"
 msgid "Copy Link"
 msgstr "Kopioi linkki"
 # 
+# File: src/ashyterm/ui/menus.py, line: 312
+#: NEEDS WORK
+msgid "Ask AI"
+msgstr "Kysy AI:ta"
+# 
 # #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
 # 
 # File: usr/share/ashyterm/ui/menus.py, line: 30
@@ -2609,11 +2619,6 @@ msgstr "Valitse kaikki"
 #: NEEDS WORK
 msgid "Clear Session"
 msgstr "Tyhjennä istunto"
-# 
-# File: src/ashyterm/ui/menus.py, line: 312
-#: NEEDS WORK
-msgid "Ask AI"
-msgstr "Kysy AI:ta"
 # 
 # #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
 # 
@@ -3753,16 +3758,16 @@ msgstr "Mukauta (luo kopio)"
 msgid "Delete scheme"
 msgstr "Poista kaavio"
 # 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1806
+#: NEEDS WORK
+msgid "Scheme deleted"
+msgstr "Suunnitelma poistettu"
+# 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1773
 #: NEEDS WORK
 #, python-brace-format
 msgid "Are you sure you want to delete '{}'?"
 msgstr "Oletko varma, että haluat poistaa '{}' ?"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1806
-#: NEEDS WORK
-msgid "Scheme deleted"
-msgstr "Suunnitelma poistettu"
 # 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1870
 #: NEEDS WORK
@@ -3812,15 +3817,6 @@ msgstr "SSH-istunnot"
 msgid "Apply output highlighting to SSH connections"
 msgstr "Käytä tulostuksen korostusta SSH-yhteyksille"
 # 
-# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1923
-# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 432
-#: NEEDS WORK
-#, python-brace-format
-msgid "{} Command Colorization"
-msgstr "{} Komentoväritys"
-# 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1925
 #: NEEDS WORK
 #, python-brace-format
@@ -3832,6 +3828,15 @@ msgstr "Synnin korostus '{}' komennon tulosteelle (käyttäen Pygmentsia)"
 #, python-brace-format
 msgid "Pygments is not installed - '{}' output will not be colorized"
 msgstr "Pygmentsia ei ole asennettu - '{}' tulostetta ei väritetä"
+# 
+# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1923
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 432
+#: NEEDS WORK
+#, python-brace-format
+msgid "{} Command Colorization"
+msgstr "{} Komentoväritys"
 # 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1680
 #: NEEDS WORK
@@ -3860,30 +3865,10 @@ msgstr "Ota käyttöön '{}' värittäminen"
 msgid "Apply syntax highlighting to '{}' command output"
 msgstr "Käytä syntaksin korostusta '{}' komennon tulosteeseen"
 # 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1951
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2178
-#: NEEDS WORK
-msgid "Theme Mode"
-msgstr "Teemimuoto"
-# 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1952
 #: NEEDS WORK
 msgid "Auto: adapts to background color. Manual: single theme."
 msgstr "Automaattinen: mukautuu taustaväriin. Manuaalinen: yksittäinen teema."
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1955
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2182
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 3592
-#: NEEDS WORK
-msgid "Auto"
-msgstr "Auto"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1956
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2183
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 3592
-#: NEEDS WORK
-msgid "Manual"
-msgstr "Käyttöopas"
 # 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2039
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2272
@@ -3931,11 +3916,6 @@ msgstr "Asenna Pygments"
 msgid "pip install pygments"
 msgstr "pip asenna pygments"
 # 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1650
-#: NEEDS WORK
-msgid "Shell Input Highlighting"
-msgstr "Shellin syötteen korostus"
-# 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1652
 #: NEEDS WORK
 msgid "Live syntax highlighting as you type commands (experimental)"
@@ -3945,6 +3925,11 @@ msgstr "Reaaliaikainen syntaksin korostus komentoja kirjoitettaessa (kokeellinen
 #: NEEDS WORK
 msgid "Pygments is not installed - shell input highlighting unavailable"
 msgstr "Pygmentsia ei ole asennettu - komentorivin syötteen korostus ei ole käytettävissä"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1650
+#: NEEDS WORK
+msgid "Shell Input Highlighting"
+msgstr "Shellin syötteen korostus"
 # 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1748
 #: NEEDS WORK
@@ -3973,6 +3958,26 @@ msgstr ""
 #: NEEDS WORK
 msgid "Auto detects background, Manual uses selected theme"
 msgstr "Automaattisesti havaitsee taustan, Manuaalinen käyttää valittua teemaa"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1951
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2178
+#: NEEDS WORK
+msgid "Theme Mode"
+msgstr "Teemimuoto"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1955
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2182
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 3592
+#: NEEDS WORK
+msgid "Auto"
+msgstr "Auto"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1956
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2183
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 3592
+#: NEEDS WORK
+msgid "Manual"
+msgstr "Käyttöopas"
 # 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1179
 #: NEEDS WORK
@@ -4007,6 +4012,12 @@ msgstr "Poista sivuutetusta luettelosta"
 msgid "Command added: {}"
 msgstr "Komento lisätty: {}"
 # 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1325
+#: NEEDS WORK
+#, python-brace-format
+msgid "Command removed: {}"
+msgstr "Komento poistettu: {}"
+# 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1299
 #: NEEDS WORK
 msgid "Remove Ignored Command?"
@@ -4018,11 +4029,10 @@ msgstr "Poista ohitettu komento?"
 msgid "Remove \"{}\" from the ignored commands list? Highlighting will be applied to this command's output."
 msgstr "Poista \"{}\" ohitettujen komentojen luettelosta? Korostus sovelletaan tämän komennon tulokseen."
 # 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1325
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1356
 #: NEEDS WORK
-#, python-brace-format
-msgid "Command removed: {}"
-msgstr "Komento poistettu: {}"
+msgid "Restored default ignored commands"
+msgstr "Palautetut oletusarvoiset ohitetut komennot"
 # 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1331
 #: NEEDS WORK
@@ -4037,11 +4047,6 @@ msgid ""
 msgstr ""
 "Tämä korvataan nykyinen ohitettujen komentojen luettelo järjestelmän oletusasetuksilla. Mukautetut "
 "lisäykset menetetään."
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1356
-#: NEEDS WORK
-msgid "Restored default ignored commands"
-msgstr "Palautetut oletusarvoiset ohitetut komennot"
 # 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1698
 #: NEEDS WORK
@@ -4186,6 +4191,12 @@ msgstr "Muokkaa komento sääntöjä"
 msgid "Delete command"
 msgstr "Poista komento"
 # 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1991
+#: NEEDS WORK
+#, python-brace-format
+msgid "Command deleted: {}"
+msgstr "Komento poistettu: {}"
+# 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1972
 #: NEEDS WORK
 msgid "Delete Command?"
@@ -4196,12 +4207,6 @@ msgstr "Poista komento?"
 #, python-brace-format
 msgid "Are you sure you want to delete \"{}\"? This will remove all custom rules for this command."
 msgstr "Oletko varma, että haluat poistaa \"{}\"? Tämä poistaa kaikki mukautetut säännöt tälle komennolle."
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1991
-#: NEEDS WORK
-#, python-brace-format
-msgid "Command deleted: {}"
-msgstr "Komento poistettu: {}"
 # 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2086
 #: NEEDS WORK
@@ -4341,6 +4346,11 @@ msgstr "Uudelleenkäynnistys vaaditaan"
 msgid "Restart the program for the colors to be applied to the terminal."
 msgstr "Käynnistä ohjelma uudelleen, jotta värit voidaan soveltaa terminaaliin."
 # 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2667
+#: NEEDS WORK
+msgid "Global rules reset to defaults"
+msgstr "Globaalit säännöt palautettu oletusasetuksiin"
+# 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2645
 #: NEEDS WORK
 msgid "Reset Global Rules?"
@@ -4353,10 +4363,10 @@ msgstr ""
 "Tämä palauttaa globaalit säännöt järjestelmän oletusasetuksiin. Kontekstikohtaiset mukautukset "
 "säilytetään."
 # 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2667
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2695
 #: NEEDS WORK
-msgid "Global rules reset to defaults"
-msgstr "Globaalit säännöt palautettu oletusasetuksiin"
+msgid "All commands reset to defaults"
+msgstr "Kaikki komennot palautettu oletusasetuksiin"
 # 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2673
 #: NEEDS WORK
@@ -4367,11 +4377,6 @@ msgstr "Nollaa kaikki komennot?"
 #: NEEDS WORK
 msgid "This will restore all commands to system defaults. Global rules will be preserved."
 msgstr "Tämä palauttaa kaikki komennot järjestelmän oletusasetuksiin. Globaalit säännöt säilytetään."
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2695
-#: NEEDS WORK
-msgid "All commands reset to defaults"
-msgstr "Kaikki komennot palautettu oletusasetuksiin"
 # 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2721
 #: NEEDS WORK
@@ -5056,11 +5061,6 @@ msgstr "Istunnon nimi"
 msgid "Working directory must exist and be a folder."
 msgstr "Työhakemiston on oltava olemassa ja sen on oltava kansio."
 # 
-# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 1374
-#: NEEDS WORK
-msgid "Invalid working directory path."
-msgstr "Virheellinen työskentelyhakemiston polku."
-# 
 # #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
 # 
 # File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 716
@@ -5150,6 +5150,11 @@ msgstr "Jatka"
 #, python-brace-format
 msgid "{} is required"
 msgstr "{} on pakollinen"
+# 
+# File: src/ashyterm/ui/dialogs/base_dialog.py, line: 601
+#: NEEDS WORK
+msgid "Invalid path format"
+msgstr "Virheellinen polkuformaatti"
 # 
 # File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 17
 #: NEEDS WORK
@@ -5961,15 +5966,35 @@ msgstr "Harmaat kuvakkeet (paketoitu)"
 msgid "System Icons"
 msgstr "Järjestelmäkuvakkeet"
 # 
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 203
+#: NEEDS WORK
+msgid "Window Buttons When Maximized"
+msgstr "Ikkunan painikkeet suurennettuna"
+# 
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 204
+#: NEEDS WORK
+msgid "For KDE Plasma panel integration"
+msgstr "KDE Plasma -paneelin integrointi"
+# 
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 209
+#: NEEDS WORK
+msgid "Auto-detect"
+msgstr "Automaattinen havaitseminen"
+# 
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 210
+#: NEEDS WORK
+msgid "Always hide"
+msgstr "Aina piilota"
+# 
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 211
+#: NEEDS WORK
+msgid "Never hide"
+msgstr "Älä koskaan piilota"
+# 
 # File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 225
 #: NEEDS WORK
 msgid "When Already Running"
 msgstr "Kun jo käynnissä"
-# 
-# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 226
-#: NEEDS WORK
-msgid "Action when the application is launched while already open"
-msgstr "Toiminto, kun sovellus käynnistetään, kun se on jo avoinna"
 # 
 # File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 230
 #: NEEDS WORK
@@ -5985,6 +6010,11 @@ msgstr "Avaa uusi ikkuna"
 #: NEEDS WORK
 msgid "Focus existing window"
 msgstr "Keskity olemassa olevaan ikkunaan"
+# 
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 226
+#: NEEDS WORK
+msgid "Action when the application is launched while already open"
+msgstr "Toiminto, kun sovellus käynnistetään, kun se on jo avoinna"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1137
 #: NEEDS WORK
@@ -6067,25 +6097,30 @@ msgstr "Kuultava kello"
 msgid "Profiles & Data"
 msgstr "Profiilit ja tiedot"
 # 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 258
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 360
 #: NEEDS WORK
-msgid "On Startup"
-msgstr "Käynnistyksen yhteydessä"
+msgid "On Close"
+msgstr "Sulje"
 # 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 263
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 363
 #: NEEDS WORK
-msgid "Always restore previous session"
-msgstr "Aina palauttaa edellinen istunto"
+msgid "Ask what to do"
+msgstr "Kysy, mitä tehdä."
 # 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 264
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 364
 #: NEEDS WORK
-msgid "Ask to restore previous session"
-msgstr "Kysy edellisen istunnon palauttamista"
+msgid "Save tabs and close"
+msgstr "Tallenna välilehdet ja sulje"
 # 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 265
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 365
 #: NEEDS WORK
-msgid "Never restore previous session"
-msgstr "Älä koskaan palauta edellistä istuntoa"
+msgid "Just close without asking"
+msgstr "Sulje vain kysymättä."
+# 
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 373
+#: NEEDS WORK
+msgid "Behavior when closing with multiple tabs open"
+msgstr "Käyttäytyminen useita välilehtiä suljettaessa"
 # 
 # #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
 # 
@@ -7531,20 +7566,16 @@ msgstr "Anna nimi uudelle tiedostolle:"
 msgid "New File"
 msgstr "Uusi tiedosto"
 # 
-# File: usr/share/ashyterm/filemanager/manager.py, line: 1767
+# File: src/ashyterm/filemanager/manager.py, line: 2303
 #: NEEDS WORK
-msgid "No items selected to copy."
-msgstr "Ei kohteita valittu kopioitavaksi."
+#, python-brace-format
+msgid "No items selected to {operation}."
+msgstr "Ei kohteita valittuna {operation}."
 # 
 # File: usr/share/ashyterm/filemanager/manager.py, line: 1781
 #: NEEDS WORK
 msgid "Items copied to clipboard."
 msgstr "Kohteet kopioitu leikepöydälle."
-# 
-# File: usr/share/ashyterm/filemanager/manager.py, line: 1786
-#: NEEDS WORK
-msgid "No items selected to cut."
-msgstr "Ei leikattavia kohteita valittuna."
 # 
 # File: usr/share/ashyterm/filemanager/manager.py, line: 1800
 #: NEEDS WORK
@@ -8095,20 +8126,17 @@ msgstr "Alustamisvirhe"
 msgid "Failed to initialize terminal: {error}"
 msgstr "Terminalin alustaminen epäonnistui: {error}"
 # 
-# File: usr/share/ashyterm/window.py, line: 1080
+# File: src/ashyterm/window.py, line: 1524
 #: NEEDS WORK
-msgid "Save Current Session?"
-msgstr "Tallenna nykyinen istunto?"
+#, python-brace-format
+msgid "Close {} Tabs?"
+msgstr "Sulje {} välilehteä?"
 # 
-# File: usr/share/ashyterm/window.py, line: 1082
+# File: src/ashyterm/window.py, line: 1526
 #: NEEDS WORK
-msgid "Do you want to restore these tabs the next time you open Ashy Terminal?"
-msgstr "Haluatko palauttaa nämä välilehdet seuraavan kerran, kun avaat Ashy Terminalin?"
-# 
-# File: usr/share/ashyterm/window.py, line: 1086
-#: NEEDS WORK
-msgid "Don't Save"
-msgstr "Älä tallenna"
+#, python-brace-format
+msgid "You have {} open tabs. Would you like to save them to restore next time?"
+msgstr "Sinulla on {} avointa välilehteä. Haluatko tallentaa ne palautettavaksi seuraavalla kerralla?"
 # 
 # File: usr/share/ashyterm/window.py, line: 1088
 #: NEEDS WORK
