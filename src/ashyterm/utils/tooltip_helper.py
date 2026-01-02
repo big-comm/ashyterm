@@ -138,11 +138,14 @@ class TooltipHelper:
 
         # STYLE THE POPOVER DIRECTLY
 
-        # 1. Main Popover Node (Surface) - Handles Opacity
+        # 1. Main Popover Node (Surface) - Handles Opacity AND Spacing
+        # We add padding here to create an invisible buffer zone around the content.
+        # This guarantees spacing regardless of placement (Top/Bottom) or clipping.
         css_parts = [
             "popover.custom-tooltip-static {",
             "    background: transparent;",
             "    box-shadow: none;",
+            "    padding: 9px;",  # <--- THE FIX: Transparent Spacing
             "    opacity: 0;",
             "    transition: opacity 200ms ease-in-out;",
             "}",
@@ -376,26 +379,8 @@ class TooltipHelper:
                 rect.width = int(graphene_rect.size.width)
                 rect.height = int(graphene_rect.size.height)
 
-                # DYNAMIC POSITIONING & SPACING
-                # To ensure correct spacing "away" from the widget, we decide direction explicitly.
-                # If widget is in top half -> Force Tooltip BELOW.
-                # If widget is in bottom half -> Force Tooltip ABOVE.
-
-                win_height = root.get_height()
-                center_y = rect.y + (rect.height / 2)
-                padding = 12
-
-                if center_y < (win_height / 2):
-                    # Top Half: Show Below
-                    popover.set_position(Gtk.PositionType.BOTTOM)
-                    # Extend rect DOWN only
-                    rect.height += padding
-                else:
-                    # Bottom Half: Show Above
-                    popover.set_position(Gtk.PositionType.TOP)
-                    # Extend rect UP only
-                    rect.y -= padding
-                    rect.height += padding
+                # NO MANUAL PADDING here. We rely on CSS padding.
+                # This ensures the rect is valid (no negative coords) and prevents clamping.
 
                 popover.set_pointing_to(rect)
                 popover.popup()
