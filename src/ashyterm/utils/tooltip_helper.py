@@ -183,11 +183,34 @@ popover.custom-tooltip-static label {{
                 if root not in self._tracked_windows:
                     self._tracked_windows.add(root)
                     root.connect("notify::is-active", self._on_window_active_changed)
+                    # Also track window state changes (maximize/fullscreen)
+                    # to hide tooltips immediately when window state changes
+                    root.connect("notify::maximized", self._on_window_state_changed)
+                    root.connect("notify::fullscreened", self._on_window_state_changed)
 
         if widget.get_realized():
             on_realize(widget)
         else:
             widget.connect("realize", on_realize)
+
+    def _on_window_state_changed(self, window, pspec):
+        """Hide all tooltips immediately when window state changes (maximize/fullscreen).
+
+        This prevents the tooltip popover from interfering with input events
+        during window state transitions.
+        """
+        self._clear_timer()
+        self.hide(immediate=True)
+        self.active_widget = None
+
+        # Force popdown all popovers to ensure they don't capture events
+        for widget in list(self._widgets_with_tooltips):
+            try:
+                if hasattr(widget, "_custom_tooltip_popover"):
+                    popover, _ = widget._custom_tooltip_popover
+                    popover.popdown()
+            except Exception:
+                pass
 
     def _on_window_active_changed(self, window, pspec):
         """Hide all tooltips when any tracked window loses focus."""
