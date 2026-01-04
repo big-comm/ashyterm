@@ -719,12 +719,15 @@ class SessionTreeView:
         if not (tree_list_row := self.filter_model.get_item(position)):
             return
         item = tree_list_row.get_item()
+        should_transfer_focus = False
         if isinstance(item, SessionItem):
             if self.on_session_activated:
                 self.on_session_activated(item)
+                should_transfer_focus = True
         elif isinstance(item, LayoutItem):
             if self.on_layout_activated:
                 self.on_layout_activated(item.name)
+                should_transfer_focus = True
         elif isinstance(item, SessionFolder):
             # For folders, just toggle expansion without triggering auto-hide
             tree_list_row.set_expanded(not tree_list_row.get_expanded())
@@ -741,6 +744,7 @@ class SessionTreeView:
                     and self.parent_window.sidebar_popover.get_visible()
                 ):
                     # We're in popup mode, close the popover
+                    # The popover's closed signal will handle focus transfer
                     self.parent_window.sidebar_popover.popdown()
                     self.parent_window.toggle_sidebar_button.set_active(False)
                 else:
@@ -748,10 +752,24 @@ class SessionTreeView:
                     self.parent_window.flap.set_reveal_flap(False)
                     self.parent_window.settings_manager.set_sidebar_visible(False)
                     self.parent_window.toggle_sidebar_button.set_active(False)
+                    # Transfer focus to terminal in flap mode
+                    self._transfer_focus_to_active_terminal()
                 return GLib.SOURCE_REMOVE
 
             # Use a longer timeout to ensure activation is fully processed
             GLib.timeout_add(100, delayed_auto_hide)
+        elif should_transfer_focus:
+            # Even without auto-hide, transfer focus to terminal after activation
+            # Use a small delay to ensure the terminal is ready
+            GLib.timeout_add(50, self._transfer_focus_to_active_terminal)
+
+    def _transfer_focus_to_active_terminal(self) -> bool:
+        """Transfer focus to the active terminal."""
+        if hasattr(self.parent_window, "tab_manager") and self.parent_window.tab_manager:
+            terminal = self.parent_window.tab_manager.get_selected_terminal()
+            if terminal:
+                self.parent_window.tab_manager._schedule_terminal_focus(terminal)
+        return GLib.SOURCE_REMOVE
 
     def _on_key_pressed(
         self,

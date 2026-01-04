@@ -2094,21 +2094,22 @@ class TerminalManager:
             if has_banner or is_auto_reconnect or is_retry:
                 self._monitor_connection_status(terminal, terminal_id, pid)
 
-            # Handle execute command
+            # Handle execute command - use a flag to ensure single execution
             if (
                 isinstance(user_data, dict)
                 and user_data.get("execute_command")
                 and pid > 0
+                and not getattr(terminal, "_startup_command_executed", False)
             ):
-                GLib.timeout_add(
-                    100,
-                    lambda: self._execute_command_in_terminal(
-                        terminal,
-                        user_data["execute_command"],
-                        user_data.get("close_after_execute", False),
-                    )
-                    or False,
-                )
+                terminal._startup_command_executed = True
+                command_to_exec = user_data["execute_command"]
+                close_after = user_data.get("close_after_execute", False)
+
+                def exec_startup_command(term=terminal, cmd=command_to_exec, close=close_after):
+                    self._execute_command_in_terminal(term, cmd, close)
+                    return False  # Remove from timeout queue
+
+                GLib.timeout_add(100, exec_startup_command)
 
         except Exception as e:
             self.logger.error(f"Spawn callback failed: {e}")
@@ -2256,23 +2257,12 @@ class TerminalManager:
     def _execute_command_in_terminal(
         self, terminal: Vte.Terminal, command: str, close_after_execute: bool = False
     ) -> bool:
+        """Execute a command in the terminal."""
         try:
             if not terminal or not command:
                 return False
-
-            # Handle multi-line commands - split and execute each line
-            lines = command.strip().split("\n")
-            lines = [line for line in lines if line.strip()]  # Remove empty lines
-
-            if close_after_execute:
-                # Execute all commands and then exit
-                for line in lines:
-                    terminal.feed_child(f"{line}\n".encode("utf-8"))
-                terminal.feed_child(b"exit\n")
-            else:
-                # Execute each command line
-                for line in lines:
-                    terminal.feed_child(f"{line}\n".encode("utf-8"))
+            command_to_run = f"({command}); exit" if close_after_execute else command
+            terminal.feed_child(f"{command_to_run}\n".encode("utf-8"))
             return True
         except Exception as e:
             self.logger.error(f"Failed to execute command '{command}': {e}")

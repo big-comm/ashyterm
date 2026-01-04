@@ -498,18 +498,6 @@ class TabManager:
         focus_controller.connect("enter", self._on_pane_focus_in, terminal)
         terminal.add_controller(focus_controller)
 
-        # Connect to the 'realize' signal to grab focus when the widget is ready.
-        # This is a one-shot connection; it disconnects itself after running.
-        handler_id_ref = [None]
-
-        def on_terminal_realize_once(widget, *args):
-            widget.grab_focus()
-            if handler_id_ref[0] and widget.handler_is_connected(handler_id_ref[0]):
-                widget.disconnect(handler_id_ref[0])
-
-        handler_id = terminal.connect_after("realize", on_terminal_realize_once)
-        handler_id_ref[0] = handler_id
-
         terminal_area = Adw.Bin()
         terminal_area.set_child(scrolled_window)
 
@@ -1346,8 +1334,10 @@ class TabManager:
 
     def _schedule_terminal_focus(self, terminal: Vte.Terminal) -> None:
         """Schedules a deferred focus call for the terminal, ensuring the UI is ready."""
+        max_retries = 10
+        retry_interval_ms = 50
 
-        def focus_task():
+        def focus_task(retries_left: int) -> bool:
             if (
                 terminal
                 and terminal.get_realized()
@@ -1358,13 +1348,19 @@ class TabManager:
                 self.logger.debug(
                     f"Focus set on terminal {getattr(terminal, 'terminal_id', 'N/A')}"
                 )
+                return GLib.SOURCE_REMOVE
+
+            if retries_left > 0:
+                GLib.timeout_add(
+                    retry_interval_ms, focus_task, retries_left - 1
+                )
             else:
                 self.logger.warning(
-                    f"Could not set focus on terminal {getattr(terminal, 'terminal_id', 'N/A')}: not ready or invalid."
+                    f"Could not set focus on terminal {getattr(terminal, 'terminal_id', 'N/A')}: not ready after retries."
                 )
             return GLib.SOURCE_REMOVE
 
-        GLib.idle_add(focus_task)
+        GLib.idle_add(focus_task, max_retries)
 
     def _find_pane_for_terminal(
         self, page: Adw.ViewStackPage, terminal_to_find: Vte.Terminal
