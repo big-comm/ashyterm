@@ -52,6 +52,11 @@ class FieldType(Enum):
     COLOR = "color"  # Color picker
 
 
+# Category constants for builtin commands
+CATEGORY_FILE_OPERATIONS = "File Operations"
+CATEGORY_ARCHIVE_COMMON_NAME = "archive.tar.xz"
+
+
 @dataclass(slots=True)
 class CommandFormField:
     """
@@ -223,7 +228,7 @@ def get_builtin_commands() -> List[CommandButton]:
             display_mode=DisplayMode.ICON_AND_TEXT,
             execution_mode=ExecutionMode.SHOW_DIALOG,
             is_builtin=True,
-            category=_("File Operations"),
+            category=_(CATEGORY_FILE_OPERATIONS),
             sort_order=1,
             form_fields=[
                 CommandFormField(
@@ -326,7 +331,7 @@ def get_builtin_commands() -> List[CommandButton]:
             execution_mode=ExecutionMode.INSERT_AND_EXECUTE,
             cursor_position=0,  # Cursor at end so user can add path
             is_builtin=True,
-            category=_("File Operations"),
+            category=_(CATEGORY_FILE_OPERATIONS),
             sort_order=2,
         ),
         # Compress - create archives
@@ -339,7 +344,7 @@ def get_builtin_commands() -> List[CommandButton]:
             display_mode=DisplayMode.ICON_AND_TEXT,
             execution_mode=ExecutionMode.SHOW_DIALOG,
             is_builtin=True,
-            category=_("File Operations"),
+            category=_(CATEGORY_FILE_OPERATIONS),
             sort_order=3,
             form_fields=[
                 CommandFormField(
@@ -373,8 +378,8 @@ def get_builtin_commands() -> List[CommandButton]:
                     id="output",
                     label=_("Archive Name"),
                     field_type=FieldType.TEXT,
-                    default_value="archive.tar.xz",
-                    placeholder=_("archive.tar.xz"),
+                    default_value=CATEGORY_ARCHIVE_COMMON_NAME,
+                    placeholder=_(CATEGORY_ARCHIVE_COMMON_NAME),
                     tooltip=_("Name of the archive file to create"),
                     template_key="output",
                 ),
@@ -390,7 +395,7 @@ def get_builtin_commands() -> List[CommandButton]:
             display_mode=DisplayMode.ICON_AND_TEXT,
             execution_mode=ExecutionMode.SHOW_DIALOG,
             is_builtin=True,
-            category=_("File Operations"),
+            category=_(CATEGORY_FILE_OPERATIONS),
             sort_order=4,
             form_fields=[
                 CommandFormField(
@@ -398,7 +403,7 @@ def get_builtin_commands() -> List[CommandButton]:
                     label=_("Archive File"),
                     field_type=FieldType.FILE_PATH,
                     default_value="",
-                    placeholder=_("archive.tar.xz"),
+                    placeholder=_(CATEGORY_ARCHIVE_COMMON_NAME),
                     tooltip=_("Archive file to extract"),
                     required=True,
                     template_key="input",

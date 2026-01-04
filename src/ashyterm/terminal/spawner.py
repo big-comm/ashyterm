@@ -38,6 +38,9 @@ from ..utils.security import (
 )
 from ..utils.translation_utils import _
 
+# Logger name constant
+LOGGER_NAME_SPAWNER = "ashyterm.spawner"
+
 
 class ProcessTracker:
     """Track spawned processes for proper cleanup."""
@@ -82,7 +85,7 @@ class ProcessTracker:
                 try:
                     # Try graceful termination first
                     os.kill(pid, signal.SIGTERM)
-                except (OSError, ProcessLookupError):
+                except OSError:
                     pass
                 finally:
                     # Ensure cleanup happens immediately
@@ -101,7 +104,7 @@ class ProcessTracker:
             for pid in pids_to_terminate:
                 try:
                     os.kill(pid, signal.SIGTERM)
-                except (OSError, ProcessLookupError):
+                except OSError:
                     self.unregister_process(pid)
 
             time.sleep(0.2)
@@ -113,7 +116,7 @@ class ProcessTracker:
                     self.logger.warning(
                         f"Process {pid} did not respond to SIGTERM, sent SIGKILL."
                     )
-                except (OSError, ProcessLookupError):
+                except OSError:
                     pass
                 finally:
                     self.unregister_process(pid)
@@ -123,7 +126,7 @@ class ProcessSpawner:
     """Enhanced process spawner with comprehensive security and error handling."""
 
     def __init__(self):
-        self.logger = get_logger("ashyterm.spawner")
+        self.logger = get_logger(LOGGER_NAME_SPAWNER)
         self.platform_info = get_platform_info()
         self.command_builder = get_command_builder()
         self.environment_manager = get_environment_manager()
@@ -175,7 +178,7 @@ class ProcessSpawner:
         return (rows, cols)
 
     def _prepare_shell_environment(
-        self, working_directory: Optional[str] = None
+        self,
     ) -> Tuple[List[str], Dict[str, str], Optional[str]]:
         """
         Prepare the shell environment for local terminal spawning.
@@ -472,9 +475,7 @@ class ProcessSpawner:
                 cmd, env, temp_dir_path = precreated_env
                 self.logger.debug("Using pre-prepared shell environment")
             else:
-                cmd, env, temp_dir_path = self._prepare_shell_environment(
-                    working_directory
-                )
+                cmd, env, temp_dir_path = self._prepare_shell_environment()
             env_list = [f"{k}={v}" for k, v in env.items()]
 
             # Wrap user_data to include the temp dir path for zsh cleanup
@@ -590,7 +591,7 @@ class ProcessSpawner:
                 log_error_with_context(
                     e,
                     f"{command_type.upper()} spawn for {session.name}",
-                    "ashyterm.spawner",
+                    LOGGER_NAME_SPAWNER,
                 )
                 raise TerminalCreationError(str(e), command_type) from e
 
@@ -666,7 +667,7 @@ class ProcessSpawner:
             if not working_dir:
                 working_dir = str(self.platform_info.home_dir)
 
-            cmd, env, temp_dir_path = self._prepare_shell_environment(working_directory)
+            cmd, env, temp_dir_path = self._prepare_shell_environment()
 
             proxy = HighlightedTerminalProxy(
                 terminal,
@@ -876,7 +877,7 @@ class ProcessSpawner:
                 f"Failed to execute remote command for {session.name}: {e}"
             )
             log_error_with_context(
-                e, f"Remote command execution for {session.name}", "ashyterm.spawner"
+                e, f"Remote command execution for {session.name}", LOGGER_NAME_SPAWNER
             )
             return False, str(e)
 
@@ -890,70 +891,78 @@ class ProcessSpawner:
 
         try:
             self._validate_ssh_session(session)
-
-            ssh_options = {
-                "BatchMode": "yes",
-                "ConnectTimeout": "10",
-                "StrictHostKeyChecking": "no",
-                "PasswordAuthentication": "no" if session.uses_key_auth() else "yes",
-            }
-            if getattr(session, "x11_forwarding", False):
-                ssh_options["ForwardX11"] = "yes"
-                ssh_options["ForwardX11Trusted"] = "yes"
-
-            cmd = self.command_builder.build_remote_command(
-                "ssh",
-                hostname=session.host,
-                port=session.port if session.port != 22 else None,
-                username=session.user if session.user else None,
-                key_file=session.auth_value if session.uses_key_auth() else None,
-                options=ssh_options,
-            )
-            if getattr(session, "x11_forwarding", False) and "-Y" not in cmd:
-                cmd.insert(1, "-Y")
-            cmd.append("exit")
-
-            # Store password for environment variable (won't appear in process list)
-            sshpass_env = None
-            if session.uses_password_auth() and session.auth_value:
-                if has_command("sshpass"):
-                    # Use -e flag to read password from SSHPASS environment variable
-                    # This prevents the password from appearing in the process list
-                    cmd = ["sshpass", "-e"] + cmd
-                    sshpass_env = {"SSHPASS": session.auth_value}
-                else:
-                    return (
-                        False,
-                        "sshpass is not installed, cannot test password authentication.",
-                    )
+            cmd, run_env = self._build_ssh_test_command(session)
+            if cmd is None:
+                return False, run_env  # run_env contains error message in this case
 
             self.logger.info(f"Testing SSH connection with command: {' '.join(cmd)}")
-
-            # Merge sshpass_env with current environment if needed
-            run_env = None
-            if sshpass_env:
-                run_env = os.environ.copy()
-                run_env.update(sshpass_env)
-
-            result = subprocess.run(
-                cmd, capture_output=True, text=True, timeout=15, env=run_env
-            )
-
-            if result.returncode == 0:
-                self.logger.info(f"SSH connection test successful for {session.name}")
-                return True, "Connection successful."
-            else:
-                error_message = result.stderr.strip()
-                self.logger.warning(
-                    f"SSH connection test failed for {session.name}: {error_message}"
-                )
-                return False, error_message
+            return self._execute_ssh_test(cmd, run_env, session.name)
 
         except Exception as e:
             self.logger.error(
                 f"Exception during SSH connection test for {session.name}: {e}"
             )
             return False, str(e)
+
+    def _build_ssh_test_command(
+        self, session: "SessionItem"
+    ) -> Tuple[Optional[List[str]], Optional[dict]]:
+        """
+        Builds the SSH test command and environment.
+        Returns (command, environment) or (None, error_message) on failure.
+        """
+        ssh_options = {
+            "BatchMode": "yes",
+            "ConnectTimeout": "10",
+            "StrictHostKeyChecking": "no",
+            "PasswordAuthentication": "no" if session.uses_key_auth() else "yes",
+        }
+        if getattr(session, "x11_forwarding", False):
+            ssh_options["ForwardX11"] = "yes"
+            ssh_options["ForwardX11Trusted"] = "yes"
+
+        cmd = self.command_builder.build_remote_command(
+            "ssh",
+            hostname=session.host,
+            port=session.port if session.port != 22 else None,
+            username=session.user if session.user else None,
+            key_file=session.auth_value if session.uses_key_auth() else None,
+            options=ssh_options,
+        )
+        if getattr(session, "x11_forwarding", False) and "-Y" not in cmd:
+            cmd.insert(1, "-Y")
+        cmd.append("exit")
+
+        run_env = None
+        if session.uses_password_auth() and session.auth_value:
+            if not has_command("sshpass"):
+                return (
+                    None,
+                    "sshpass is not installed, cannot test password authentication.",
+                )
+            cmd = ["sshpass", "-e"] + cmd
+            run_env = os.environ.copy()
+            run_env["SSHPASS"] = session.auth_value
+
+        return cmd, run_env
+
+    def _execute_ssh_test(
+        self, cmd: List[str], run_env: Optional[dict], session_name: str
+    ) -> Tuple[bool, str]:
+        """Executes the SSH test command and returns result."""
+        result = subprocess.run(
+            cmd, capture_output=True, text=True, timeout=15, env=run_env
+        )
+
+        if result.returncode == 0:
+            self.logger.info(f"SSH connection test successful for {session_name}")
+            return True, "Connection successful."
+
+        error_message = result.stderr.strip()
+        self.logger.warning(
+            f"SSH connection test failed for {session_name}: {error_message}"
+        )
+        return False, error_message
 
     def _validate_ssh_session(self, session: "SessionItem") -> None:
         try:
@@ -968,14 +977,11 @@ class ProcessSpawner:
                 except Exception as e:
                     raise SSHKeyError(session.auth_value, str(e)) from e
 
-    def _get_base_ssh_options(
-        self, session: "SessionItem", command_type: str
-    ) -> Dict[str, str]:
+    def _get_base_ssh_options(self, session: "SessionItem") -> Dict[str, str]:
         """Build base SSH options dictionary.
 
         Args:
             session: The SSH session.
-            command_type: Either 'ssh' or 'sftp'.
 
         Returns:
             Dictionary of SSH options.
@@ -1154,7 +1160,7 @@ class ProcessSpawner:
             )
 
         # Build SSH options
-        ssh_options = self._get_base_ssh_options(session, command_type)
+        ssh_options = self._get_base_ssh_options(session)
         self._apply_x11_and_tunnel_options(ssh_options, session, command_type)
 
         # Build base command

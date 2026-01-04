@@ -386,15 +386,15 @@ class TabManager:
                 return candidate
             suffix += 1
 
-    def _scroll_to_widget(self, widget: Gtk.Widget) -> bool:
+    def _scroll_to_widget(self, widget: Gtk.Widget) -> None:
         """Scrolls the tab bar to make the given widget visible."""
         hadjustment = self.scrolled_tab_bar.get_hadjustment()
         if not hadjustment:
-            return False
+            return
 
         coords = widget.translate_coordinates(self.scrolled_tab_bar, 0, 0)
         if coords is None:
-            return False
+            return
 
         widget_x, _ = coords
         widget_width = widget.get_width()
@@ -408,8 +408,6 @@ class TabManager:
             hadjustment.set_value(
                 current_scroll_value + (widget_x + widget_width - viewport_width)
             )
-
-        return False
 
     def _on_terminal_scroll(self, controller, dx, dy):
         """Handles terminal scroll events to apply custom sensitivity."""
@@ -568,7 +566,7 @@ class TabManager:
             widget._color_provider = provider
 
     def _create_tab_widget(
-        self, page: Adw.ViewStackPage, session: SessionItem
+        self, _page: Adw.ViewStackPage, session: SessionItem
     ) -> Gtk.Box:
         tab_widget = Gtk.Box(spacing=6)
         tab_widget.add_css_class("custom-tab-button")
@@ -796,7 +794,18 @@ class TabManager:
         )
 
         term_type = terminal_info.get("type")
+        self._create_duplicate_tab_by_type(
+            term_type, session_copy, primary_terminal, tab_widget
+        )
 
+    def _create_duplicate_tab_by_type(
+        self,
+        term_type: str,
+        session_copy: Optional[SessionItem],
+        primary_terminal: Vte.Terminal,
+        tab_widget: Gtk.Box,
+    ) -> None:
+        """Create a duplicate tab based on terminal type."""
         try:
             if term_type == "local":
                 working_directory = self._get_terminal_working_directory(
@@ -806,20 +815,18 @@ class TabManager:
                     session=session_copy,
                     working_directory=working_directory,
                 )
-            elif term_type == "ssh":
-                if session_copy:
-                    self.create_ssh_tab(session_copy)
-                else:
-                    self.logger.warning(
-                        "Cannot duplicate SSH tab without session data."
-                    )
+                return
+
+            if not session_copy:
+                self.logger.warning(
+                    f"Cannot duplicate {term_type} tab without session data."
+                )
+                return
+
+            if term_type == "ssh":
+                self.create_ssh_tab(session_copy)
             elif term_type == "sftp":
-                if session_copy:
-                    self.create_sftp_tab(session_copy)
-                else:
-                    self.logger.warning(
-                        "Cannot duplicate SFTP tab without session data."
-                    )
+                self.create_sftp_tab(session_copy)
             else:
                 self.logger.warning(
                     f"Unsupported terminal type for duplication: {term_type}"
@@ -828,7 +835,6 @@ class TabManager:
             self.logger.error(
                 f"Failed to duplicate tab '{tab_widget.label_widget.get_text()}': {exc}"
             )
-            return
 
     def _get_terminal_working_directory(self, terminal: Vte.Terminal) -> Optional[str]:
         """Returns the terminal's current working directory path, if available."""
@@ -870,11 +876,7 @@ class TabManager:
         if self.active_tab == tab_to_activate:
             return
 
-        if self.active_tab:
-            main_window = self.terminal_manager.parent_window
-            focus_widget = main_window.get_focus()
-            if focus_widget and self._is_widget_in_filemanager(focus_widget):
-                self.view_stack.grab_focus()
+        self._handle_previous_tab_focus()
 
         if self.active_tab:
             self.active_tab.remove_css_class("active")
@@ -883,168 +885,183 @@ class TabManager:
         self.active_tab.add_css_class("active")
 
         page = self.pages.get(self.active_tab)
-        if page:
-            self.view_stack.set_visible_child(page.get_child())
+        if not page:
+            return
 
-            terminal_to_focus = None
-            # Check if the page has a remembered focused terminal
-            if hasattr(page, "_last_focused_in_page") and page._last_focused_in_page:
-                terminal_to_focus = (
-                    page._last_focused_in_page()
-                )  # This might be None if the ref is dead
+        self.view_stack.set_visible_child(page.get_child())
+        terminal_to_focus = self._get_terminal_to_focus(page)
+        if terminal_to_focus:
+            self._schedule_terminal_focus(terminal_to_focus)
 
-            # If no valid remembered terminal, fall back to the first one
-            if not terminal_to_focus:
-                terminals_in_page = self.get_all_terminals_in_page(page)
-                if terminals_in_page:
-                    terminal_to_focus = terminals_in_page[0]
+    def _handle_previous_tab_focus(self):
+        """Handle focus when switching away from current tab."""
+        if not self.active_tab:
+            return
+        main_window = self.terminal_manager.parent_window
+        focus_widget = main_window.get_focus()
+        if focus_widget and self._is_widget_in_filemanager(focus_widget):
+            self.view_stack.grab_focus()
 
-            # If we have a terminal, schedule the focus. The schedule function will check if it's realized.
-            if terminal_to_focus:
-                self._schedule_terminal_focus(terminal_to_focus)
+    def _get_terminal_to_focus(self, page: Adw.ViewStackPage) -> Optional[Vte.Terminal]:
+        """Get the terminal to focus when activating a tab."""
+        # Check if the page has a remembered focused terminal
+        if hasattr(page, "_last_focused_in_page") and page._last_focused_in_page:
+            terminal = page._last_focused_in_page()
+            if terminal:
+                return terminal
+
+        # Fall back to the first terminal
+        terminals_in_page = self.get_all_terminals_in_page(page)
+        return terminals_in_page[0] if terminals_in_page else None
+
+    def _get_active_tab_page(self):
+        """Returns the page for the active tab, or None if not available."""
+        if not self.active_tab:
+            return None
+        return self.pages.get(self.active_tab)
+
+    def _reset_file_manager_button(self):
+        """Resets the file manager button to inactive state."""
+        if hasattr(self.terminal_manager.parent_window, "file_manager_button"):
+            self.terminal_manager.parent_window.file_manager_button.set_active(False)
+
+    def _activate_file_manager(self, page, paned, fm):
+        """Activates and shows the file manager for the given page."""
+        active_terminal = self.get_selected_terminal()
+        if not active_terminal:
+            self._reset_file_manager_button()
+            return
+
+        if not fm:
+            fm = self._create_file_manager(page)
+
+        fm.rebind_terminal(active_terminal)
+        paned.set_end_child(fm.get_main_widget())
+
+        target_pos = self._calculate_file_manager_position(page, paned)
+        paned.set_position(target_pos)
+        fm.set_visibility(True, source="filemanager")
+
+        self._connect_paned_position_handler(paned, page)
+
+    def _create_file_manager(self, page):
+        """Creates a new FileManager instance for the page."""
+        from ..filemanager.manager import FileManager
+
+        fm = FileManager(
+            self.terminal_manager.parent_window,
+            self.terminal_manager,
+            self.terminal_manager.settings_manager,
+        )
+        fm.temp_files_changed_handler_id = fm.connect(
+            "temp-files-changed",
+            self.terminal_manager.parent_window._on_temp_files_changed,
+            page,
+        )
+        self.file_managers[page] = fm
+        return fm
+
+    def _calculate_file_manager_position(self, page, paned) -> int:
+        """Calculates the optimal paned position for the file manager."""
+        available_height = self._get_available_paned_height(paned)
+        saved_fm_height = self.terminal_manager.settings_manager.get(
+            "file_manager_height", 250
+        )
+
+        min_fm_height = 240
+        min_terminal_height = 120
+        max_fm_height = max(min_fm_height, available_height - min_terminal_height)
+
+        saved_fm_height = max(min_fm_height, min(saved_fm_height, max_fm_height))
+
+        self.logger.debug(
+            f"File manager: available_height={available_height}, "
+            f"saved_fm_height={saved_fm_height}, max_fm_height={max_fm_height}"
+        )
+
+        target_pos = available_height - saved_fm_height
+
+        if hasattr(page, "_fm_paned_pos"):
+            last_pos = page._fm_paned_pos
+            last_fm_height = available_height - last_pos
+            if min_fm_height <= last_fm_height <= max_fm_height:
+                target_pos = last_pos
+
+        target_pos = max(
+            min_terminal_height, min(target_pos, available_height - min_fm_height)
+        )
+
+        self.logger.debug(
+            f"File manager: target_pos={target_pos}, "
+            f"has_page_pos={hasattr(page, '_fm_paned_pos')}"
+        )
+
+        return target_pos
+
+    def _get_available_paned_height(self, paned) -> int:
+        """Returns the available height for the paned widget."""
+        paned_allocation = paned.get_allocation()
+        available_height = paned_allocation.height
+
+        if available_height <= 1:
+            available_height = self.terminal_manager.parent_window.get_height()
+            available_height = max(400, available_height - 100)
+
+        return available_height
+
+    def _connect_paned_position_handler(self, paned, page):
+        """Connects the position change handler for the paned widget."""
+        if not hasattr(paned, "_fm_position_handler_id"):
+            paned._fm_position_handler_id = paned.connect(
+                "notify::position",
+                self._on_file_manager_paned_position_changed,
+                page,
+            )
+
+    def _deactivate_file_manager(self, page, paned, fm):
+        """Deactivates and hides the file manager for the given page."""
+        page._fm_paned_pos = paned.get_position()
+
+        available_height = self._get_available_paned_height(paned)
+        if available_height > 1:
+            fm_height = available_height - paned.get_position()
+        else:
+            window_height = self.terminal_manager.parent_window.get_height()
+            fm_height = window_height - paned.get_position()
+
+        min_fm_height = 240
+        fm_height = max(min_fm_height, fm_height)
+        self.logger.debug(
+            f"File manager closing: available_height={available_height}, "
+            f"paned_pos={paned.get_position()}, fm_height={fm_height}"
+        )
+        self.terminal_manager.settings_manager.set(
+            "file_manager_height", fm_height, save_immediately=True
+        )
+        fm.set_visibility(False, source="filemanager")
+        paned.set_end_child(None)
 
     def toggle_file_manager_for_active_tab(self, is_active: bool):
         """Toggles the file manager's visibility for the currently active tab."""
-        if not self.active_tab:
-            if hasattr(self.terminal_manager.parent_window, "file_manager_button"):
-                self.terminal_manager.parent_window.file_manager_button.set_active(
-                    False
-                )
-            return
-
-        page = self.pages.get(self.active_tab)
+        page = self._get_active_tab_page()
         if not page:
-            if hasattr(self.terminal_manager.parent_window, "file_manager_button"):
-                self.terminal_manager.parent_window.file_manager_button.set_active(
-                    False
-                )
+            self._reset_file_manager_button()
             return
 
         if not hasattr(page, "content_paned"):
             self.logger.warning(
                 "Attempted to toggle file manager on a page without a content_paned (likely a detached tab)."
             )
-            if hasattr(self.terminal_manager.parent_window, "file_manager_button"):
-                self.terminal_manager.parent_window.file_manager_button.set_active(
-                    False
-                )
+            self._reset_file_manager_button()
             return
 
         paned = page.content_paned
         fm = self.file_managers.get(page)
 
         if is_active:
-            active_terminal = self.get_selected_terminal()
-            if not active_terminal:
-                if hasattr(self.terminal_manager.parent_window, "file_manager_button"):
-                    self.terminal_manager.parent_window.file_manager_button.set_active(
-                        False
-                    )
-
-            if not fm:
-                # Lazy import FileManager only when needed
-                from ..filemanager.manager import FileManager
-
-                fm = FileManager(
-                    self.terminal_manager.parent_window,
-                    self.terminal_manager,
-                    self.terminal_manager.settings_manager,
-                )
-                fm.temp_files_changed_handler_id = fm.connect(
-                    "temp-files-changed",
-                    self.terminal_manager.parent_window._on_temp_files_changed,
-                    page,
-                )
-                self.file_managers[page] = fm
-
-            fm.rebind_terminal(active_terminal)
-            paned.set_end_child(fm.get_main_widget())
-
-            # Use paned's actual available height instead of window height
-            # This correctly handles cases where AI panel reduces available space
-            paned_allocation = paned.get_allocation()
-            available_height = paned_allocation.height
-
-            # If allocation is not available yet (widget not realized), fall back to window height
-            if available_height <= 1:
-                available_height = self.terminal_manager.parent_window.get_height()
-                # Account for approximate headerbar/toolbar overhead
-                available_height = max(400, available_height - 100)
-
-            saved_fm_height = self.terminal_manager.settings_manager.get(
-                "file_manager_height", 250
-            )
-            # Enforce minimum height constraint
-            min_fm_height = 240
-            min_terminal_height = 120  # Minimum space for terminal
-            max_fm_height = max(min_fm_height, available_height - min_terminal_height)
-
-            # Clamp file manager height to valid range
-            saved_fm_height = max(min_fm_height, min(saved_fm_height, max_fm_height))
-
-            self.logger.debug(
-                f"File manager: available_height={available_height}, "
-                f"saved_fm_height={saved_fm_height}, max_fm_height={max_fm_height}"
-            )
-
-            # Calculate target position from saved height
-            target_pos = available_height - saved_fm_height
-
-            # Use page-specific position if available and valid
-            if hasattr(page, "_fm_paned_pos"):
-                last_pos = page._fm_paned_pos
-                # Validate that last_pos gives a reasonable file manager size
-                last_fm_height = available_height - last_pos
-                if min_fm_height <= last_fm_height <= max_fm_height:
-                    target_pos = last_pos
-
-            # Final validation: ensure position is sensible (not negative or too small for terminal)
-            target_pos = max(
-                min_terminal_height, min(target_pos, available_height - min_fm_height)
-            )
-
-            self.logger.debug(
-                f"File manager: target_pos={target_pos}, "
-                f"has_page_pos={hasattr(page, '_fm_paned_pos')}"
-            )
-
-            paned.set_position(target_pos)
-            fm.set_visibility(True, source="filemanager")
-
-            # Connect handler to save file manager height on resize (if not already connected)
-            if not hasattr(paned, "_fm_position_handler_id"):
-                paned._fm_position_handler_id = paned.connect(
-                    "notify::position",
-                    self._on_file_manager_paned_position_changed,
-                    page,
-                )
-
+            self._activate_file_manager(page, paned, fm)
         elif fm:
-            page._fm_paned_pos = paned.get_position()
-            # Save file manager height to settings for new tabs/windows
-            # Use paned's actual height for accurate calculation
-            paned_allocation = paned.get_allocation()
-            available_height = paned_allocation.height
-            if available_height > 1:
-                fm_height = available_height - paned.get_position()
-            else:
-                # Fallback to window height if paned not properly allocated
-                window_height = self.terminal_manager.parent_window.get_height()
-                fm_height = window_height - paned.get_position()
-
-            # Enforce minimum height constraint
-            min_fm_height = 240
-            fm_height = max(min_fm_height, fm_height)
-            self.logger.debug(
-                f"File manager closing: available_height={available_height}, "
-                f"paned_pos={paned.get_position()}, fm_height={fm_height}"
-            )
-            # Save immediately to ensure persistence across sessions
-            self.terminal_manager.settings_manager.set(
-                "file_manager_height", fm_height, save_immediately=True
-            )
-            fm.set_visibility(False, source="filemanager")
-            paned.set_end_child(None)
+            self._deactivate_file_manager(page, paned, fm)
 
     def _on_file_manager_paned_position_changed(self, paned, _param_spec, page):
         """Save file manager height when the pane is resized by the user."""
@@ -1091,11 +1108,17 @@ class TabManager:
             f"Close request for tab '{page.get_title()}' with {len(terminals_in_page)} terminals."
         )
 
-        # Track if any terminal has a truly active process that will emit child-exited
-        # Auto-reconnecting terminals may have short-lived processes that we should not wait for
-        should_wait_for_exit = False
+        should_wait_for_exit = self._process_terminals_for_close(terminals_in_page)
 
-        for terminal in terminals_in_page:
+        # If no terminal has a stable active process, close the tab immediately
+        if not should_wait_for_exit:
+            self._close_tab_by_page(page)
+
+    def _process_terminals_for_close(self, terminals: list) -> bool:
+        """Process terminals during tab close and return if should wait for exit."""
+        should_wait = False
+
+        for terminal in terminals:
             terminal_id = getattr(terminal, "terminal_id", None)
             is_auto_reconnecting = self.terminal_manager.is_auto_reconnect_active(
                 terminal
@@ -1103,18 +1126,20 @@ class TabManager:
 
             if terminal_id and not is_auto_reconnecting:
                 info = self.terminal_manager.registry.get_terminal_info(terminal_id)
-                pid = info.get("process_id") if info else None
-                status = info.get("status") if info else None
-                # Only wait if there's a stable running process (not auto-reconnecting)
-                if pid and pid != -1 and status == "running":
-                    should_wait_for_exit = True
+                if self._has_stable_running_process(info):
+                    should_wait = True
 
             self.terminal_manager.remove_terminal(terminal, force_kill_group=True)
 
-        # If no terminal has a stable active process, close the tab immediately
-        # Auto-reconnecting terminals are handled by cancel_auto_reconnect
-        if not should_wait_for_exit:
-            self._close_tab_by_page(page)
+        return should_wait
+
+    def _has_stable_running_process(self, info: Optional[dict]) -> bool:
+        """Check if terminal info indicates a stable running process."""
+        if not info:
+            return False
+        pid = info.get("process_id")
+        status = info.get("status")
+        return pid and pid != -1 and status == "running"
 
     def _on_terminal_process_exited(
         self, terminal: Vte.Terminal, child_status: int, identifier
@@ -1168,38 +1193,49 @@ class TabManager:
                 GLib.idle_add(self._quit_application)
 
     def _close_tab_by_page(self, page: Adw.ViewStackPage):
-        tab_to_remove = None
-        for tab in self.tabs:
-            if self.pages.get(tab) == page:
-                tab_to_remove = tab
-                break
+        tab_to_remove = self._find_tab_for_page(page)
+        if not tab_to_remove:
+            self.update_all_tab_titles()
+            return
 
-        if tab_to_remove:
-            was_active = self.active_tab == tab_to_remove
+        was_active = self.active_tab == tab_to_remove
+        self._remove_tab_from_tracking(tab_to_remove)
+        self._cleanup_file_manager_for_page(page)
 
-            self.tab_bar_box.remove(tab_to_remove)
-            self.tabs.remove(tab_to_remove)
-            if tab_to_remove in self.pages:
-                del self.pages[tab_to_remove]
+        self.view_stack.remove(page.get_child())
 
-            # Explicitly destroy the FileManager instance
-            if page in self.file_managers:
-                fm = self.file_managers.pop(page)
-                # Detach the file manager widget from the paned before destroying
-                if hasattr(page, "content_paned") and page.content_paned:
-                    page.content_paned.set_end_child(None)
-                fm.destroy()
-
-            self.view_stack.remove(page.get_child())
-
-            if was_active and self.tabs:
-                self.set_active_tab(self.tabs[-1])
-            elif not self.tabs:
-                self.active_tab = None
+        if was_active and self.tabs:
+            self.set_active_tab(self.tabs[-1])
+        elif not self.tabs:
+            self.active_tab = None
 
         self.update_all_tab_titles()
         if self.on_tab_count_changed:
             self.on_tab_count_changed()
+
+    def _find_tab_for_page(self, page: Adw.ViewStackPage) -> Optional[Gtk.Box]:
+        """Find the tab widget associated with a page."""
+        for tab in self.tabs:
+            if self.pages.get(tab) == page:
+                return tab
+        return None
+
+    def _remove_tab_from_tracking(self, tab: Gtk.Box):
+        """Remove tab from all tracking collections."""
+        self.tab_bar_box.remove(tab)
+        self.tabs.remove(tab)
+        if tab in self.pages:
+            del self.pages[tab]
+
+    def _cleanup_file_manager_for_page(self, page: Adw.ViewStackPage):
+        """Cleanup file manager instance for a page."""
+        if page not in self.file_managers:
+            return
+        fm = self.file_managers.pop(page)
+        # Detach the file manager widget from the paned before destroying
+        if hasattr(page, "content_paned") and page.content_paned:
+            page.content_paned.set_end_child(None)
+        fm.destroy()
 
     def get_all_active_terminals_in_page(
         self, page: Adw.ViewStackPage
@@ -1251,7 +1287,7 @@ class TabManager:
     ) -> Optional[Adw.ViewStackPage]:
         return getattr(terminal, "ashy_parent_page", None)
 
-    def update_titles_for_terminal(self, terminal, new_title: str, osc7_info):
+    def update_titles_for_terminal(self, terminal, new_title: str, _osc7_info=None):
         """Updates the tab title and the specific pane title for a terminal."""
         page = self.get_page_for_terminal(terminal)
         if not page:
@@ -1265,41 +1301,51 @@ class TabManager:
         if pane and hasattr(pane, "title_label"):
             pane.title_label.set_label(new_title)
 
+    def _find_tab_button_for_page(self, page):
+        """Finds the tab button associated with the given page."""
+        for tab in self.tabs:
+            if self.pages.get(tab) == page:
+                return tab
+        return None
+
+    def _build_display_title(self, tab_button, new_title: str) -> str:
+        """Builds the display title based on tab type and new title."""
+        base_title = tab_button._base_title
+
+        if tab_button._is_local:
+            return new_title
+
+        if new_title.startswith(base_title + ":"):
+            return new_title
+
+        if new_title == base_title:
+            return base_title
+
+        return f"{base_title}: {new_title}"
+
+    def _append_terminal_count(self, page, display_title: str) -> str:
+        """Appends terminal count to title if multiple terminals in page."""
+        terminal_count = len(self.get_all_terminals_in_page(page))
+        if terminal_count > 1:
+            return f"{display_title} ({terminal_count})"
+        return display_title
+
     def set_tab_title(self, page: Adw.ViewStackPage, new_title: str) -> None:
         if not (page and new_title):
             return
 
-        tab_button = None
-        for tab in self.tabs:
-            if self.pages.get(tab) == page:
-                tab_button = tab
-                break
+        tab_button = self._find_tab_button_for_page(page)
+        if not tab_button:
+            return
 
-        if tab_button:
-            base_title = tab_button._base_title
+        display_title = self._build_display_title(tab_button, new_title)
+        display_title = self._append_terminal_count(page, display_title)
 
-            if tab_button._is_local:
-                display_title = new_title
-            else:
-                if new_title.startswith(base_title + ":"):
-                    display_title = new_title
-                else:
-                    display_title = (
-                        base_title
-                        if new_title == base_title
-                        else f"{base_title}: {new_title}"
-                    )
+        tab_button.label_widget.set_text(display_title)
+        page.set_title(display_title)
 
-            terminal_count = len(self.get_all_terminals_in_page(page))
-            if terminal_count > 1:
-                display_title = f"{display_title} ({terminal_count})"
-
-            tab_button.label_widget.set_text(display_title)
-            page.set_title(display_title)
-
-            # NOVO: Forçar a atualização da UI da janela principal
-            if hasattr(self.terminal_manager.parent_window, "_update_tab_layout"):
-                self.terminal_manager.parent_window._update_tab_layout()
+        if hasattr(self.terminal_manager.parent_window, "_update_tab_layout"):
+            self.terminal_manager.parent_window._update_tab_layout()
 
     def update_all_tab_titles(self) -> None:
         """Updates all tab titles based on the current state of the terminal."""
@@ -1362,32 +1408,130 @@ class TabManager:
 
         GLib.idle_add(focus_task, max_retries)
 
+    def _find_terminal_pane_recursive(
+        self, widget, terminal_to_find: Vte.Terminal
+    ) -> Optional[Adw.ToolbarView]:
+        """Recursively searches for the ToolbarView containing the terminal."""
+        if widget is None:
+            return None
+
+        # Check if this widget is the target ToolbarView
+        if isinstance(widget, Adw.ToolbarView):
+            if getattr(widget, "terminal", None) == terminal_to_find:
+                return widget
+
+        # Search in Paned children
+        found = self._search_paned_children(widget, terminal_to_find)
+        if found:
+            return found
+
+        # Search in single-child containers
+        return self._search_single_child(widget, terminal_to_find)
+
+    def _search_paned_children(
+        self, widget, terminal_to_find: Vte.Terminal
+    ) -> Optional[Adw.ToolbarView]:
+        """Searches for terminal in Paned widget children."""
+        if not isinstance(widget, Gtk.Paned):
+            return None
+
+        for child_getter in [widget.get_start_child, widget.get_end_child]:
+            child = child_getter()
+            if child:
+                found = self._find_terminal_pane_recursive(child, terminal_to_find)
+                if found:
+                    return found
+        return None
+
+    def _search_single_child(
+        self, widget, terminal_to_find: Vte.Terminal
+    ) -> Optional[Adw.ToolbarView]:
+        """Searches for terminal in single-child container."""
+        if not hasattr(widget, "get_child"):
+            return None
+        child = widget.get_child()
+        if child:
+            return self._find_terminal_pane_recursive(child, terminal_to_find)
+        return None
+
     def _find_pane_for_terminal(
         self, page: Adw.ViewStackPage, terminal_to_find: Vte.Terminal
     ) -> Optional[Adw.ToolbarView]:
         """Recursively finds the Adw.ToolbarView pane that contains a specific terminal."""
+        return self._find_terminal_pane_recursive(page.get_child(), terminal_to_find)
 
-        def find_recursive(widget):
-            if (
-                isinstance(widget, Adw.ToolbarView)
-                and getattr(widget, "terminal", None) == terminal_to_find
-            ):
-                return widget
+    def _check_existing_banner(
+        self, terminal: Vte.Terminal, terminal_id
+    ) -> Optional[bool]:
+        """Check if terminal already has a valid banner.
 
-            if isinstance(widget, Gtk.Paned):
-                if start_child := widget.get_start_child():
-                    if found := find_recursive(start_child):
-                        return found
-                if end_child := widget.get_end_child():
-                    if found := find_recursive(end_child):
-                        return found
-
-            if hasattr(widget, "get_child") and (child := widget.get_child()):
-                return find_recursive(child)
-
+        Returns:
+            True if valid banner exists, None if should create new one.
+        """
+        existing_banner = getattr(terminal, "_error_banner", None)
+        if existing_banner is None:
             return None
 
-        return find_recursive(page.get_child())
+        try:
+            if existing_banner.get_parent() is not None:
+                self.logger.debug(
+                    f"Banner already exists and is valid for terminal {terminal_id}"
+                )
+                return True
+            # Banner widget was orphaned, clear references
+            self.logger.debug(
+                f"Banner was orphaned, creating new one for terminal {terminal_id}"
+            )
+        except Exception:
+            pass  # Banner widget may have been destroyed
+
+        terminal._error_banner = None
+        terminal._banner_box = None
+        return None
+
+    def _insert_banner_in_container(
+        self,
+        container,
+        scrolled_window: Gtk.ScrolledWindow,
+        banner_box: Gtk.Box,
+        banner,
+        terminal: Vte.Terminal,
+    ) -> bool:
+        """Insert the banner box into the appropriate container type.
+
+        Returns:
+            True if successful, False otherwise.
+        """
+        if isinstance(container, Adw.Bin):
+            container.set_child(None)
+            banner_box.append(scrolled_window)
+            container.set_child(banner_box)
+            return True
+
+        if isinstance(container, Adw.ToolbarView):
+            container.set_content(None)
+            banner_box.append(scrolled_window)
+            container.set_content(banner_box)
+            return True
+
+        if isinstance(container, Gtk.Box):
+            # Container is already a Gtk.Box - check if it's our banner_box
+            existing_box = getattr(terminal, "_banner_box", None)
+            if existing_box is container:
+                # This is our existing banner_box, just prepend new banner
+                container.prepend(banner)
+                terminal._error_banner = banner
+                return True
+            # Different box, create new structure
+            container.remove(scrolled_window)
+            banner_box.append(scrolled_window)
+            container.append(banner_box)
+            return True
+
+        self.logger.warning(
+            f"Cannot show banner - unsupported container type: {type(container)}"
+        )
+        return False
 
     def show_error_banner_for_terminal(
         self,
@@ -1403,17 +1547,6 @@ class TabManager:
 
         The banner is inserted between the terminal container and the scrolled window,
         allowing it to appear above the terminal without blocking the UI.
-
-        Args:
-            terminal: The terminal that failed.
-            session_name: Name of the session.
-            error_message: Error description.
-            session: Session object for retry/reconnect.
-            is_auth_error: Whether this is an authentication error.
-            is_host_key_error: Whether this is a host key verification error.
-
-        Returns:
-            True if banner was shown, False otherwise.
         """
         from ..ui.widgets.ssh_error_banner import BannerAction, SSHErrorBanner
 
@@ -1425,26 +1558,9 @@ class TabManager:
         terminal_id = getattr(terminal, "terminal_id", None)
 
         # Check if we already have a valid banner
-        existing_banner = getattr(terminal, "_error_banner", None)
-        if existing_banner is not None:
-            # Verify banner widget is still valid (not destroyed)
-            try:
-                if existing_banner.get_parent() is not None:
-                    self.logger.debug(
-                        f"Banner already exists and is valid for terminal {terminal_id}"
-                    )
-                    return True
-                else:
-                    # Banner widget was orphaned, clear references
-                    self.logger.debug(
-                        f"Banner was orphaned, creating new one for terminal {terminal_id}"
-                    )
-                    terminal._error_banner = None
-                    terminal._banner_box = None
-            except Exception:
-                # Banner widget may have been destroyed
-                terminal._error_banner = None
-                terminal._banner_box = None
+        existing_result = self._check_existing_banner(terminal, terminal_id)
+        if existing_result is not None:
+            return existing_result
 
         # Find the scrolled window containing the terminal
         scrolled_window = terminal.get_parent()
@@ -1460,7 +1576,7 @@ class TabManager:
             self.logger.warning("Cannot show banner - scrolled window has no parent")
             return False
 
-        # Create new banner (colors are now handled by global theme system)
+        # Create new banner
         banner = SSHErrorBanner(
             session_name=session_name,
             error_message=error_message,
@@ -1475,8 +1591,6 @@ class TabManager:
             self._handle_banner_action(action, terminal, session, tid, config)
 
         banner.set_action_callback(on_banner_action)
-
-        # Connect dismissed signal
         banner.connect(
             "dismissed", lambda b: self.hide_error_banner_for_terminal(terminal)
         )
@@ -1485,41 +1599,13 @@ class TabManager:
         banner_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=0)
         banner_box.set_vexpand(True)
         banner_box.set_hexpand(True)
-        # Apply CSS class for solid background
         banner_box.add_css_class("ssh-error-banner-container")
-
-        # Add banner at top
         banner_box.append(banner)
 
-        # Remove scrolled window from current parent and add to banner_box
-        if isinstance(container, Adw.Bin):
-            container.set_child(None)
-            banner_box.append(scrolled_window)
-            container.set_child(banner_box)
-        elif isinstance(container, Adw.ToolbarView):
-            container.set_content(None)
-            banner_box.append(scrolled_window)
-            container.set_content(banner_box)
-        elif isinstance(container, Gtk.Box):
-            # Container is already a Gtk.Box - check if it's our banner_box
-            existing_box = getattr(terminal, "_banner_box", None)
-            if existing_box is container:
-                # This is our existing banner_box, just prepend new banner
-                container.prepend(banner)
-                terminal._error_banner = banner
-                self.logger.info(
-                    f"Showed error banner (reusing box) for terminal {terminal_id}: {session_name}"
-                )
-                return True
-            else:
-                # Different box, create new structure
-                container.remove(scrolled_window)
-                banner_box.append(scrolled_window)
-                container.append(banner_box)
-        else:
-            self.logger.warning(
-                f"Cannot show banner - unsupported container type: {type(container)}"
-            )
+        # Insert banner in container
+        if not self._insert_banner_in_container(
+            container, scrolled_window, banner_box, banner, terminal
+        ):
             return False
 
         # Store references
@@ -1662,13 +1748,12 @@ class TabManager:
                 # Open session edit dialog
                 self._open_session_edit_dialog(session, terminal, terminal_id)
 
-        elif action == BannerAction.FIX_HOST_KEY:
-            if session:
-                # Hide banner while fixing
-                self.hide_error_banner_for_terminal(terminal)
+        elif action == BannerAction.FIX_HOST_KEY and session:
+            # Hide banner while fixing
+            self.hide_error_banner_for_terminal(terminal)
 
-                # Fix host key and retry
-                self._fix_host_key_and_retry(session, terminal, terminal_id)
+            # Fix host key and retry
+            self._fix_host_key_and_retry(session, terminal, terminal_id)
 
     def _open_session_edit_dialog(
         self,
@@ -1835,12 +1920,7 @@ class TabManager:
             )
             return
 
-        is_start_child = parent_paned.get_start_child() == pane_to_remove
-        survivor_pane = (
-            parent_paned.get_end_child()
-            if is_start_child
-            else parent_paned.get_start_child()
-        )
+        survivor_pane = self._get_survivor_pane(pane_to_remove, parent_paned)
         if not survivor_pane:
             return
 
@@ -1848,14 +1928,34 @@ class TabManager:
         if not grandparent:
             return
 
-        survivor_terminals = []
-        self._find_terminals_recursive(survivor_pane, survivor_terminals)
-        survivor_terminal = survivor_terminals[0] if survivor_terminals else None
+        survivor_terminal = self._get_first_terminal_in_widget(survivor_pane)
+        self._clear_paned_children(parent_paned)
+        self._reparent_survivor(survivor_pane, parent_paned, grandparent)
+        self._schedule_focus_restore(survivor_terminal)
 
-        parent_paned.set_focus_child(None)
-        parent_paned.set_start_child(None)
-        parent_paned.set_end_child(None)
+    def _get_survivor_pane(self, pane_to_remove, parent_paned: Gtk.Paned):
+        """Get the pane that survives after removing another pane."""
+        is_start_child = parent_paned.get_start_child() == pane_to_remove
+        return (
+            parent_paned.get_end_child()
+            if is_start_child
+            else parent_paned.get_start_child()
+        )
 
+    def _get_first_terminal_in_widget(self, widget) -> Optional[Vte.Terminal]:
+        """Find the first terminal in a widget hierarchy."""
+        terminals = []
+        self._find_terminals_recursive(widget, terminals)
+        return terminals[0] if terminals else None
+
+    def _clear_paned_children(self, paned: Gtk.Paned):
+        """Clear all children from a paned widget."""
+        paned.set_focus_child(None)
+        paned.set_start_child(None)
+        paned.set_end_child(None)
+
+    def _reparent_survivor(self, survivor_pane, parent_paned, grandparent):
+        """Reparent the surviving pane to the grandparent container."""
         if isinstance(grandparent, Gtk.Paned):
             is_grandparent_start = grandparent.get_start_child() == parent_paned
             if is_grandparent_start:
@@ -1865,6 +1965,7 @@ class TabManager:
         elif hasattr(grandparent, "set_child"):
             grandparent.set_child(survivor_pane)
 
+        # Handle last split case
         is_last_split = not isinstance(grandparent, Gtk.Paned)
         if is_last_split and isinstance(survivor_pane, Adw.ToolbarView):
             scrolled_win_child = survivor_pane.get_content()
@@ -1872,13 +1973,11 @@ class TabManager:
                 survivor_pane.set_content(None)
                 grandparent.set_child(scrolled_win_child)
 
-        def _restore_focus():
-            if survivor_terminal and survivor_terminal.get_realized():
-                survivor_terminal.grab_focus()
-            return False
-
+    def _schedule_focus_restore(self, terminal: Optional[Vte.Terminal]):
+        """Schedule focus restoration and title update."""
         def _restore_focus_and_update_titles():
-            _restore_focus()
+            if terminal and terminal.get_realized():
+                terminal.grab_focus()
             self.update_all_tab_titles()
             return False
 
@@ -1935,6 +2034,113 @@ class TabManager:
             paned.set_position(int(total_size * ratio))
         return False
 
+    def _get_terminal_identifier_and_title(self, terminal: Vte.Terminal):
+        """Returns the identifier and title for a terminal being split."""
+        terminal_id = getattr(terminal, "terminal_id", None)
+        info = self.terminal_manager.registry.get_terminal_info(terminal_id)
+        identifier = info.get("identifier") if info else "Local"
+        pane_title = identifier.name if isinstance(identifier, SessionItem) else "Local"
+        return identifier, pane_title
+
+    def _create_split_terminal(self, identifier, pane_title: str):
+        """Creates a new terminal for splitting based on the identifier type."""
+        if isinstance(identifier, SessionItem):
+            if identifier.is_ssh():
+                return self.terminal_manager.create_ssh_terminal(identifier)
+            else:
+                effective_working_dir = (
+                    getattr(identifier, "local_working_directory", None) or None
+                )
+                effective_command = (
+                    getattr(identifier, "local_startup_command", None) or None
+                )
+                return self.terminal_manager.create_local_terminal(
+                    session=identifier,
+                    working_directory=effective_working_dir,
+                    execute_command=effective_command,
+                )
+        return self.terminal_manager.create_local_terminal(title=pane_title)
+
+    def _create_pane_for_split(self, terminal: Vte.Terminal, title: str):
+        """Creates a new pane for a split terminal."""
+        new_pane = _create_terminal_pane(
+            terminal,
+            title,
+            self.close_pane,
+            self._on_move_to_tab_callback,
+            self.terminal_manager.settings_manager,
+        )
+        focus_controller = Gtk.EventControllerFocus()
+        focus_controller.connect("enter", self._on_pane_focus_in, terminal)
+        terminal.add_controller(focus_controller)
+        return new_pane
+
+    def _prepare_pane_for_split(self, pane_to_replace, focused_terminal):
+        """Prepares the existing pane for splitting, wrapping if necessary."""
+        if isinstance(pane_to_replace, Gtk.ScrolledWindow):
+            uri = focused_terminal.get_current_directory_uri()
+            title = "Terminal"
+            if uri:
+                from urllib.parse import unquote, urlparse
+
+                path = unquote(urlparse(uri).path)
+                title = self.terminal_manager.osc7_tracker.parser._create_display_path(
+                    path
+                )
+            pane_to_replace.set_child(None)
+            return _create_terminal_pane(
+                focused_terminal,
+                title,
+                self.close_pane,
+                self._on_move_to_tab_callback,
+                self.terminal_manager.settings_manager,
+            )
+        return pane_to_replace
+
+    def _insert_split_paned(
+        self,
+        container,
+        pane_to_replace,
+        pane_being_split,
+        new_pane,
+        orientation,
+        new_terminal,
+    ) -> bool:
+        """Inserts the new split paned into the container. Returns True on success."""
+        is_start_child = False
+
+        if isinstance(container, Gtk.Paned):
+            is_start_child = container.get_start_child() == pane_to_replace
+            container.set_focus_child(None)
+            if is_start_child:
+                container.set_start_child(None)
+            else:
+                container.set_end_child(None)
+        elif isinstance(container, Adw.Bin):
+            container.set_child(None)
+
+        new_split_paned = Gtk.Paned(orientation=orientation)
+        new_split_paned.set_start_child(pane_being_split)
+        new_split_paned.set_end_child(new_pane)
+
+        if isinstance(container, Gtk.Paned):
+            if is_start_child:
+                container.set_start_child(new_split_paned)
+            else:
+                container.set_end_child(new_split_paned)
+        elif isinstance(container, Adw.Bin):
+            container.set_child(new_split_paned)
+        else:
+            self.logger.error(
+                f"Cannot re-parent split: unknown container type {type(container)}"
+            )
+            self.terminal_manager.remove_terminal(new_terminal)
+            return False
+
+        GLib.idle_add(self._set_paned_position_from_ratio, new_split_paned, 0.5)
+        self._schedule_terminal_focus(new_terminal)
+        return True
+
     def _split_terminal(
         self, focused_terminal: Vte.Terminal, orientation: Gtk.Orientation
     ) -> None:
@@ -1944,50 +2150,16 @@ class TabManager:
                 self.logger.error("Cannot split: could not find parent page.")
                 return
 
-            terminal_id = getattr(focused_terminal, "terminal_id", None)
-            info = self.terminal_manager.registry.get_terminal_info(terminal_id)
-            identifier = info.get("identifier") if info else "Local"
-
-            new_terminal = None
-            new_pane_title = "Terminal"
-            if isinstance(identifier, SessionItem):
-                new_pane_title = identifier.name
-                if identifier.is_ssh():
-                    new_terminal = self.terminal_manager.create_ssh_terminal(identifier)
-                else:
-                    # Use session's local settings when splitting
-                    effective_working_dir = (
-                        getattr(identifier, "local_working_directory", None) or None
-                    )
-                    effective_command = (
-                        getattr(identifier, "local_startup_command", None) or None
-                    )
-                    new_terminal = self.terminal_manager.create_local_terminal(
-                        session=identifier,
-                        working_directory=effective_working_dir,
-                        execute_command=effective_command,
-                    )
-            else:
-                new_pane_title = "Local"
-                new_terminal = self.terminal_manager.create_local_terminal(
-                    title=new_pane_title
-                )
-
+            identifier, pane_title = self._get_terminal_identifier_and_title(
+                focused_terminal
+            )
+            new_terminal = self._create_split_terminal(identifier, pane_title)
             if not new_terminal:
                 self.logger.error("Failed to create new terminal for split.")
                 return
 
             new_terminal.ashy_parent_page = page
-            new_pane = _create_terminal_pane(
-                new_terminal,
-                new_pane_title,
-                self.close_pane,
-                self._on_move_to_tab_callback,
-                self.terminal_manager.settings_manager,
-            )
-            focus_controller = Gtk.EventControllerFocus()
-            focus_controller.connect("enter", self._on_pane_focus_in, new_terminal)
-            new_terminal.add_controller(focus_controller)
+            new_pane = self._create_pane_for_split(new_terminal, pane_title)
 
             pane_to_replace, container = self._find_pane_and_parent(focused_terminal)
             if not pane_to_replace:
@@ -1995,61 +2167,21 @@ class TabManager:
                 self.terminal_manager.remove_terminal(new_terminal)
                 return
 
-            if isinstance(pane_to_replace, Gtk.ScrolledWindow):
-                uri = focused_terminal.get_current_directory_uri()
-                title = "Terminal"
-                if uri:
-                    from urllib.parse import unquote, urlparse
+            pane_being_split = self._prepare_pane_for_split(
+                pane_to_replace, focused_terminal
+            )
 
-                    path = unquote(urlparse(uri).path)
-                    title = (
-                        self.terminal_manager.osc7_tracker.parser._create_display_path(
-                            path
-                        )
-                    )
-
-                pane_to_replace.set_child(None)
-                pane_being_split = _create_terminal_pane(
-                    focused_terminal,
-                    title,
-                    self.close_pane,
-                    self._on_move_to_tab_callback,
-                    self.terminal_manager.settings_manager,
-                )
-            else:
-                pane_being_split = pane_to_replace
-
-            is_start_child = False
-            if isinstance(container, Gtk.Paned):
-                is_start_child = container.get_start_child() == pane_to_replace
-                container.set_focus_child(None)
-                if is_start_child:
-                    container.set_start_child(None)
-                else:
-                    container.set_end_child(None)
-            elif isinstance(container, Adw.Bin):
-                container.set_child(None)
-
-            new_split_paned = Gtk.Paned(orientation=orientation)
-            new_split_paned.set_start_child(pane_being_split)
-            new_split_paned.set_end_child(new_pane)
-
-            if isinstance(container, Gtk.Paned):
-                if is_start_child:
-                    container.set_start_child(new_split_paned)
-                else:
-                    container.set_end_child(new_split_paned)
-            elif isinstance(container, Adw.Bin):
-                container.set_child(new_split_paned)
-            else:
-                self.logger.error(
-                    f"Cannot re-parent split: unknown container type {type(container)}"
-                )
-                self.terminal_manager.remove_terminal(new_terminal)
+            success = self._insert_split_paned(
+                container,
+                pane_to_replace,
+                pane_being_split,
+                new_pane,
+                orientation,
+                new_terminal,
+            )
+            if not success:
                 return
 
-            GLib.idle_add(self._set_paned_position_from_ratio, new_split_paned, 0.5)
-            self._schedule_terminal_focus(new_terminal)
             self.update_all_tab_titles()
 
     def re_attach_detached_page(

@@ -148,16 +148,19 @@ class FileManager(GObject.Object):
         its context (local vs. remote) based on the terminal's current state.
         """
         self._is_rebinding = True  # Set flag to prevent race conditions
-        if self.bound_terminal and self.directory_change_handler_id > 0:
-            if GObject.signal_handler_is_connected(
+        if (
+            self.bound_terminal
+            and self.directory_change_handler_id > 0
+            and GObject.signal_handler_is_connected(
                 self.bound_terminal, self.directory_change_handler_id
-            ):
-                try:
-                    self.bound_terminal.disconnect(self.directory_change_handler_id)
-                except TypeError:
-                    self.logger.warning(
-                        f"Could not disconnect handler {self.directory_change_handler_id} from old terminal."
-                    )
+            )
+        ):
+            try:
+                self.bound_terminal.disconnect(self.directory_change_handler_id)
+            except TypeError:
+                self.logger.warning(
+                    f"Could not disconnect handler {self.directory_change_handler_id} from old terminal."
+                )
 
         self.bound_terminal = new_terminal
         self.logger.info(
@@ -315,44 +318,57 @@ class FileManager(GObject.Object):
         self._rsync_checks_in_progress.add(session_key)
 
         def worker(session_ref: SessionItem, ops_ref: FileOperations, key: str):
-            rsync_available = True
-            try:
-                rsync_available = ops_ref.check_command_available(
-                    "rsync", use_cache=False, session_override=session_ref
-                )
-            except Exception as exc:
-                self.logger.error(
-                    f"Failed to verify rsync availability for {key}: {exc}"
-                )
-
-            def finalize():
-                self._rsync_checks_in_progress.discard(key)
-                current_session = self.session_item
-                if (
-                    not current_session
-                    or not current_session.is_ssh()
-                    or self._get_session_identifier(current_session) != key
-                ):
-                    return GLib.SOURCE_REMOVE
-
-                self._rsync_status[key] = rsync_available
-                if not rsync_available:
-                    if key not in self._rsync_notified_sessions:
-                        self.logger.info(
-                            f"rsync not detected on remote session {key}. Prompting user."
-                        )
-                        self._show_rsync_missing_notification()
-                        self._rsync_notified_sessions.add(key)
-                else:
-                    self._rsync_notified_sessions.discard(key)
-
-                return GLib.SOURCE_REMOVE
-
-            GLib.idle_add(finalize)
+            rsync_available = self._check_rsync_on_remote(ops_ref, session_ref, key)
+            GLib.idle_add(lambda: self._finalize_rsync_check(key, rsync_available))
 
         threading.Thread(
             target=worker, args=(session, operations, session_key), daemon=True
         ).start()
+
+    def _check_rsync_on_remote(
+        self, ops_ref: FileOperations, session_ref: SessionItem, key: str
+    ) -> bool:
+        """Check if rsync is available on the remote host."""
+        try:
+            return ops_ref.check_command_available(
+                "rsync", use_cache=False, session_override=session_ref
+            )
+        except Exception as exc:
+            self.logger.error(f"Failed to verify rsync availability for {key}: {exc}")
+            return True  # Assume available on error to avoid blocking
+
+    def _finalize_rsync_check(self, key: str, rsync_available: bool) -> bool:
+        """Finalize rsync check and notify user if needed."""
+        self._rsync_checks_in_progress.discard(key)
+        current_session = self.session_item
+
+        if not self._is_current_session_for_key(current_session, key):
+            return GLib.SOURCE_REMOVE
+
+        self._rsync_status[key] = rsync_available
+        if not rsync_available:
+            self._notify_rsync_missing_if_needed(key)
+        else:
+            self._rsync_notified_sessions.discard(key)
+
+        return GLib.SOURCE_REMOVE
+
+    def _is_current_session_for_key(
+        self, current_session: Optional[SessionItem], key: str
+    ) -> bool:
+        """Check if the current session matches the given key."""
+        if not current_session or not current_session.is_ssh():
+            return False
+        return self._get_session_identifier(current_session) == key
+
+    def _notify_rsync_missing_if_needed(self, key: str) -> None:
+        """Show notification if rsync is missing and not already notified."""
+        if key not in self._rsync_notified_sessions:
+            self.logger.info(
+                f"rsync not detected on remote session {key}. Prompting user."
+            )
+            self._show_rsync_missing_notification()
+            self._rsync_notified_sessions.add(key)
 
     def _finish_rebinding(self) -> bool:
         self._is_rebinding = False
@@ -360,11 +376,14 @@ class FileManager(GObject.Object):
 
     def unbind(self):
         """Unbinds from the current terminal, effectively pausing updates."""
-        if self.bound_terminal and self.directory_change_handler_id > 0:
-            if GObject.signal_handler_is_connected(
+        if (
+            self.bound_terminal
+            and self.directory_change_handler_id > 0
+            and GObject.signal_handler_is_connected(
                 self.bound_terminal, self.directory_change_handler_id
-            ):
-                self.bound_terminal.disconnect(self.directory_change_handler_id)
+            )
+        ):
+            self.bound_terminal.disconnect(self.directory_change_handler_id)
         self.bound_terminal = None
         self.directory_change_handler_id = 0
         self.logger.info("File manager unbound from terminal.")
@@ -380,15 +399,16 @@ class FileManager(GObject.Object):
             )
             self.cleanup_all_temp_files()
 
-        if hasattr(self, "temp_files_changed_handler_id"):
-            if GObject.signal_handler_is_connected(
-                self, self.temp_files_changed_handler_id
-            ):
-                self.disconnect(self.temp_files_changed_handler_id)
+        if hasattr(
+            self, "temp_files_changed_handler_id"
+        ) and GObject.signal_handler_is_connected(
+            self, self.temp_files_changed_handler_id
+        ):
+            self.disconnect(self.temp_files_changed_handler_id)
             del self.temp_files_changed_handler_id
 
         if self.transfer_manager:
-            for transfer_id in list(self.transfer_manager.active_transfers.keys()):
+            for transfer_id in self.transfer_manager.active_transfers.copy():
                 self.transfer_manager.cancel_transfer(transfer_id)
 
         if self.transfer_history_window:
@@ -410,24 +430,32 @@ class FileManager(GObject.Object):
         self.logger.info("Destroying FileManager instance to prevent memory leaks.")
         self.shutdown(None)
 
-        # Note: Executor management now handled by global AsyncTaskManager
+        self._cleanup_file_monitors()
+        self._cleanup_edited_metadata()
+        self._cleanup_model_references()
+        self._cleanup_data_stores()
+        self._nullify_references()
+        self.logger.info("FileManager destroyed.")
 
-        # Cancel and clear all file monitors
-        if hasattr(self, "file_monitors") and self.file_monitors:
-            for monitor in self.file_monitors.values():
-                if monitor:
-                    monitor.cancel()
-            self.file_monitors.clear()
+    def _cleanup_file_monitors(self) -> None:
+        """Cancel and clear all file monitors."""
+        if not hasattr(self, "file_monitors") or not self.file_monitors:
+            return
+        for monitor in self.file_monitors.values():
+            if monitor:
+                monitor.cancel()
+        self.file_monitors.clear()
 
-        # Clear edited file metadata
+    def _cleanup_edited_metadata(self) -> None:
+        """Clear edited file metadata."""
         if hasattr(self, "edited_file_metadata"):
             self.edited_file_metadata.clear()
 
-        # Task 2: CRITICAL - Detach model from View BEFORE clearing to release GTK references
+    def _cleanup_model_references(self) -> None:
+        """Detach model from view and clear model wrappers."""
         if hasattr(self, "column_view") and self.column_view:
             self.column_view.set_model(None)
 
-        # Task 2: Clear model wrappers in correct order
         if hasattr(self, "selection_model"):
             self.selection_model = None
         if hasattr(self, "sorted_store"):
@@ -435,17 +463,17 @@ class FileManager(GObject.Object):
         if hasattr(self, "filtered_store"):
             self.filtered_store = None
 
-        # Task 2: Clear data store last
+    def _cleanup_data_stores(self) -> None:
+        """Clear data store and scrolled window."""
         if hasattr(self, "store") and self.store:
             self.store.remove_all()
             self.store = None
 
-        # Clear scrolled window
         if hasattr(self, "scrolled_window") and self.scrolled_window:
             self.scrolled_window = None
 
-        # Nullify references to break Python-side cycles
-        # Note: parent_window and terminal_manager are now weakref properties
+    def _nullify_references(self) -> None:
+        """Nullify references to break Python-side cycles."""
         self._parent_window_ref = None
         self._terminal_manager_ref = None
         self.settings_manager = None
@@ -456,7 +484,6 @@ class FileManager(GObject.Object):
         self.revealer = None
         self.bound_terminal = None
         self.session_item = None
-        self.logger.info("FileManager destroyed.")
 
     def get_temp_files_info(self) -> List[Dict]:
         """Returns information about currently edited temporary files."""
@@ -470,7 +497,7 @@ class FileManager(GObject.Object):
         if key_to_clear:
             self._cleanup_edited_file(key_to_clear)
         else:
-            for key in list(self.edited_file_metadata.keys()):
+            for key in self.edited_file_metadata.copy():
                 self._cleanup_edited_file(key)
 
     def _get_terminal_current_directory(self):
@@ -786,29 +813,34 @@ class FileManager(GObject.Object):
     def _filter_files(self, file_item):
         search_text = getattr(self, "search_entry", None)
         search_term = search_text.get_text().lower().strip() if search_text else ""
-
-        if search_term:
-            if file_item.name == "..":
-                return False
-            show_hidden = self.hidden_files_toggle.get_active()
-            if self.recursive_search_enabled and self._showing_recursive_results:
-                name_to_check = file_item.name.split("/")[-1]
-                if not show_hidden and name_to_check.startswith("."):
-                    return False
-                return True
-            # For non-recursive search, check both hidden status and search term
-            if not show_hidden and file_item.name.startswith("."):
-                return False
-            return search_term in file_item.name.lower()
-
-        if file_item.name == "..":
-            return True
-
         show_hidden = self.hidden_files_toggle.get_active()
-        if not show_hidden and file_item.name.startswith("."):
+
+        # Handle parent directory navigation
+        if file_item.name == "..":
+            return not search_term  # Show ".." only when not searching
+
+        # Apply hidden file filter first
+        if not show_hidden and self._is_hidden_file(file_item):
             return False
 
-        return True
+        # If not searching, show all (non-hidden handled above)
+        if not search_term:
+            return True
+
+        # For recursive search results, always show (filtering already done)
+        if self.recursive_search_enabled and self._showing_recursive_results:
+            return True
+
+        # Standard search: match against filename
+        return search_term in file_item.name.lower()
+
+    def _is_hidden_file(self, file_item) -> bool:
+        """Check if a file should be considered hidden."""
+        if self.recursive_search_enabled and self._showing_recursive_results:
+            # For recursive results, check the last component of the path
+            name_to_check = file_item.name.split("/")[-1]
+            return name_to_check.startswith(".")
+        return file_item.name.startswith(".")
 
     def _dolphin_sort_priority(
         self, file_item_a, file_item_b, secondary_sort_func=None
@@ -943,20 +975,23 @@ class FileManager(GObject.Object):
         if self.recursive_search_enabled:
             # In recursive mode, don't auto-start search on typing
             # User must press Enter or click the search button
-            if not search_term:
-                if self._showing_recursive_results:
-                    self._showing_recursive_results = False
-                    self.refresh(source="filemanager", clear_search=False)
+            if not search_term and self._showing_recursive_results:
+                self._showing_recursive_results = False
+                self.refresh(source="filemanager", clear_search=False)
             return
         else:
             if self._showing_recursive_results:
                 self._showing_recursive_results = False
                 self.refresh(source="filemanager", clear_search=False)
         self.combined_filter.changed(Gtk.FilterChange.DIFFERENT)
-        if hasattr(self, "column_view") and self.column_view:
-            if self.selection_model and self.selection_model.get_n_items() > 0:
-                self.selection_model.select_item(0, True)
-                self.column_view.scroll_to(0, None, Gtk.ListScrollFlags.NONE, None)
+        if (
+            hasattr(self, "column_view")
+            and self.column_view
+            and self.selection_model
+            and self.selection_model.get_n_items() > 0
+        ):
+            self.selection_model.select_item(0, True)
+            self.column_view.scroll_to(0, None, Gtk.ListScrollFlags.NONE, None)
 
     def _start_recursive_search(self, search_term: str) -> None:
         if not self.operations:
@@ -1079,7 +1114,6 @@ class FileManager(GObject.Object):
         """Execute local search with memory-efficient line-by-line reading."""
         results = []
         error_message = ""
-        truncated = False
 
         with subprocess.Popen(
             command,
@@ -1088,28 +1122,46 @@ class FileManager(GObject.Object):
             text=True,
             bufsize=1,
         ) as proc:
-            for line in proc.stdout:
-                if self._recursive_search_generation != generation:
-                    proc.terminate()
-                    return [], "", False
-
-                line = line.rstrip("\n")
-                if not line or (not use_fd and line.startswith("find:")):
-                    continue
-
-                file_item = self._process_search_result_line(line, base_posix)
-                if file_item:
-                    results.append(file_item)
-                    if len(results) >= MAX_RECURSIVE_RESULTS:
-                        proc.terminate()
-                        return results, "", True
-
-            if proc.returncode and proc.returncode != 0:
-                stderr = proc.stderr.read() if proc.stderr else ""
-                if stderr:
-                    error_message = stderr.strip()
+            truncated = self._process_search_output(
+                proc, generation, base_posix, use_fd, results
+            )
+            error_message = self._get_process_error(proc)
 
         return results, error_message, truncated
+
+    def _process_search_output(
+        self,
+        proc,
+        generation: int,
+        base_posix: PurePosixPath,
+        use_fd: bool,
+        results: list,
+    ) -> bool:
+        """Process search output line by line. Returns True if truncated."""
+        for line in proc.stdout:
+            if self._recursive_search_generation != generation:
+                proc.terminate()
+                return False
+
+            line = line.rstrip("\n")
+            if not line or (not use_fd and line.startswith("find:")):
+                continue
+
+            file_item = self._process_search_result_line(line, base_posix)
+            if file_item:
+                results.append(file_item)
+                if len(results) >= MAX_RECURSIVE_RESULTS:
+                    proc.terminate()
+                    return True
+        return False
+
+    def _get_process_error(self, proc) -> str:
+        """Get error message from process if any."""
+        if proc.returncode and proc.returncode != 0:
+            stderr = proc.stderr.read() if proc.stderr else ""
+            if stderr:
+                return stderr.strip()
+        return ""
 
     def _schedule_search_complete(
         self, generation: int, results: list, error_message: str, truncated: bool
@@ -1261,13 +1313,17 @@ class FileManager(GObject.Object):
                 "+",
             ]
 
-    def _complete_recursive_search(
+    def _complete_recursive_search(  # noqa: S3516
         self,
         generation: int,
         file_items: List[FileItem],
         error_message: str,
         truncated: bool,
     ):
+        """Complete the recursive search and update UI.
+
+        Returns False for GLib.idle_add callback compatibility.
+        """
         if generation != self._recursive_search_generation:
             return False
 
@@ -1340,8 +1396,11 @@ class FileManager(GObject.Object):
         if start_pos == 0 and end_pos == len(current_text):
             GLib.idle_add(self._navigate_up_directory)
 
-    def _navigate_up_directory(self):
-        """Navigate up one directory level, preserving user input."""
+    def _navigate_up_directory(self):  # noqa: S3516
+        """Navigate up one directory level, preserving user input.
+
+        Returns False for GLib.idle_add callback compatibility.
+        """
         if self._is_destroyed:
             return False
         if self.current_path == "/":
@@ -1358,8 +1417,11 @@ class FileManager(GObject.Object):
                 self.refresh(parent_path, source="filemanager")
         return False
 
-    def _deferred_activate_row(self, col_view, position):
-        """Deferred row activation to allow focus events to be processed properly."""
+    def _deferred_activate_row(self, col_view, position):  # noqa: S3516
+        """Deferred row activation to allow focus events to be processed properly.
+
+        Returns False for GLib.idle_add callback compatibility.
+        """
         if self._is_destroyed:
             return False
         self._on_row_activated(col_view, position)
@@ -1626,33 +1688,39 @@ class FileManager(GObject.Object):
             return
 
         if item.is_directory_like:
-            new_path = ""
-            if item.name == "..":
-                if self.current_path != "/":
-                    new_path = str(Path(self.current_path).parent)
-            else:
-                base_path = self.current_path.rstrip("/")
-                new_path = f"{base_path}/{item.name}"
-
-            if not new_path:
-                return
-
-            if self.bound_terminal:
-                self._fm_initiated_cd = True
-                self._execute_verified_command(
-                    ["cd", new_path], command_type="cd", expected_path=new_path
-                )
-                # Optimistically refresh the UI. The directory change handler will confirm.
-                self.refresh(new_path, source="filemanager")
-            else:
-                self.refresh(new_path, source="filemanager")
-
+            self._navigate_to_directory(item)
         else:
-            if self._is_remote_session():
-                self._on_open_edit_action(None, None, [item])
-            else:
-                full_path = Path(self.current_path).joinpath(item.name)
-                self._open_local_file(full_path)
+            self._open_file(item)
+
+    def _navigate_to_directory(self, item: FileItem):
+        """Handle navigation to a directory."""
+        new_path = self._compute_navigation_path(item)
+        if not new_path:
+            return
+
+        if self.bound_terminal:
+            self._fm_initiated_cd = True
+            self._execute_verified_command(
+                ["cd", new_path], command_type="cd", expected_path=new_path
+            )
+        self.refresh(new_path, source="filemanager")
+
+    def _compute_navigation_path(self, item: FileItem) -> str:
+        """Compute the new path for directory navigation."""
+        if item.name == "..":
+            if self.current_path == "/":
+                return ""
+            return str(Path(self.current_path).parent)
+        base_path = self.current_path.rstrip("/")
+        return f"{base_path}/{item.name}"
+
+    def _open_file(self, item: FileItem):
+        """Handle opening a file."""
+        if self._is_remote_session():
+            self._on_open_edit_action(None, None, [item])
+        else:
+            full_path = Path(self.current_path).joinpath(item.name)
+            self._open_local_file(full_path)
 
     def set_visibility(self, visible: bool, source: str = "filemanager"):
         self.revealer.set_reveal_child(visible)
@@ -1805,11 +1873,13 @@ class FileManager(GObject.Object):
                     f"{base_path.rstrip('/')}/{file_item._link_target}"
                 )
 
-    def _set_store_items(self, items, requested_path, source):
+    def _set_store_items(self, items, requested_path, source):  # noqa: S3516
         """Set all store items in a single operation for optimal performance.
 
         GTK4's ColumnView uses virtual scrolling (only visible rows are rendered),
         so adding all items at once is more efficient than batching.
+
+        Returns False for GLib.idle_add callback compatibility.
         """
         if self._is_destroyed:
             return False
@@ -1833,13 +1903,17 @@ class FileManager(GObject.Object):
         self._restore_search_entry(source)
         return False
 
-    def _update_store_with_files(
+    def _update_store_with_files(  # noqa: S3516
         self,
         requested_path: str,
         file_items,
         error_message,
         source: str = "filemanager",
     ):
+        """Update store with file items after listing.
+
+        Returns False for GLib.idle_add callback compatibility.
+        """
         # Skip if destroyed
         if self._is_destroyed:
             return False
@@ -1868,8 +1942,11 @@ class FileManager(GObject.Object):
         self._restore_search_entry(source)
         return False
 
-    def _fallback_to_accessible_path(self, fallback_path: str, source: str):
-        """Navigate to an accessible fallback path when permission denied on current path."""
+    def _fallback_to_accessible_path(self, fallback_path: str, source: str):  # noqa: S3516
+        """Navigate to an accessible fallback path when permission denied on current path.
+
+        Returns False for GLib.idle_add callback compatibility.
+        """
         if self._is_destroyed:
             return False
         self.logger.info(f"Switching file manager to accessible path: {fallback_path}")
@@ -2077,44 +2154,55 @@ class FileManager(GObject.Object):
         if not self.selection_model:
             return Gdk.EVENT_PROPAGATE
 
-        current_pos = (
-            self.selection_model.get_selection().get_nth(0)
-            if self.selection_model.get_selection().get_size() > 0
-            else Gtk.INVALID_LIST_POSITION
-        )
+        current_pos = self._get_current_selection_position()
 
         if keyval in (Gdk.KEY_Up, Gdk.KEY_Down):
-            if current_pos == Gtk.INVALID_LIST_POSITION:
-                new_pos = 0
-            else:
-                delta = -1 if keyval == Gdk.KEY_Up else 1
-                new_pos = current_pos + delta
+            return self._handle_arrow_key_navigation(keyval, current_pos)
 
-            if 0 <= new_pos < self.sorted_store.get_n_items():
-                self.selection_model.select_item(new_pos, True)
-                self.column_view.scroll_to(
-                    new_pos, None, Gtk.ListScrollFlags.NONE, None
-                )
+        if keyval in (Gdk.KEY_Return, Gdk.KEY_KP_Enter):
+            return self._handle_enter_key_in_search(current_pos)
 
+        if keyval == Gdk.KEY_BackSpace:
+            return self._handle_backspace_in_search(controller)
+
+        return Gdk.EVENT_PROPAGATE
+
+    def _get_current_selection_position(self):
+        """Get the current selection position in the list."""
+        selection = self.selection_model.get_selection()
+        if selection.get_size() > 0:
+            return selection.get_nth(0)
+        return Gtk.INVALID_LIST_POSITION
+
+    def _handle_arrow_key_navigation(self, keyval, current_pos):
+        """Handle Up/Down arrow key navigation."""
+        if current_pos == Gtk.INVALID_LIST_POSITION:
+            new_pos = 0
+        else:
+            delta = -1 if keyval == Gdk.KEY_Up else 1
+            new_pos = current_pos + delta
+
+        if 0 <= new_pos < self.sorted_store.get_n_items():
+            self.selection_model.select_item(new_pos, True)
+            self.column_view.scroll_to(new_pos, None, Gtk.ListScrollFlags.NONE, None)
+
+        return Gdk.EVENT_STOP
+
+    def _handle_enter_key_in_search(self, current_pos):
+        """Handle Enter key in search entry."""
+        if self.recursive_search_enabled and not self._showing_recursive_results:
+            return Gdk.EVENT_PROPAGATE
+
+        if current_pos != Gtk.INVALID_LIST_POSITION:
+            self._on_row_activated(self.column_view, current_pos)
+        return Gdk.EVENT_STOP
+
+    def _handle_backspace_in_search(self, controller):
+        """Handle Backspace key in search entry."""
+        if not self.search_entry.get_text().strip():
+            controller.stop_emission("key-pressed")
+            self._navigate_up_directory()
             return Gdk.EVENT_STOP
-
-        elif keyval in (Gdk.KEY_Return, Gdk.KEY_KP_Enter):
-            # In recursive mode: Enter should start the search (let activate handler deal with it)
-            if self.recursive_search_enabled and not self._showing_recursive_results:
-                # Let the event propagate to trigger _on_search_activate
-                return Gdk.EVENT_PROPAGATE
-
-            # In normal mode or when showing recursive results: activate the selected item
-            if current_pos != Gtk.INVALID_LIST_POSITION:
-                self._on_row_activated(self.column_view, current_pos)
-            return Gdk.EVENT_STOP
-
-        elif keyval == Gdk.KEY_BackSpace:
-            if not self.search_entry.get_text().strip():
-                controller.stop_emission("key-pressed")
-                self._navigate_up_directory()
-                return Gdk.EVENT_STOP
-
         return Gdk.EVENT_PROPAGATE
 
     def _on_column_view_key_pressed(self, controller, keyval, _keycode, state):
@@ -2541,108 +2629,102 @@ class FileManager(GObject.Object):
     def _on_download_dialog_response(self, source, result, items: List[FileItem]):
         try:
             dest_folder = source.select_folder_finish(result)
-            if dest_folder:
-                dest_path = Path(dest_folder.get_path())
+            if not dest_folder:
+                return
 
-                def on_download_success(local_path, remote_path):
-                    """Refreshes view if download was to the current local directory."""
-                    if not self._is_remote_session():
-                        # Check if the download destination is the current view
-                        if (
-                            Path(self.current_path).resolve()
-                            == Path(local_path).parent.resolve()
-                        ):
-                            self.logger.info(
-                                "Download to current local directory completed. Refreshing view."
-                            )
-                            self.refresh(source="filemanager")
-
-                # Prepare download in background to get sizes and check space
-                def prepare_downloads():
-                    try:
-                        # Calculate total size needed
-                        total_size_needed = 0
-                        item_sizes = {}
-
-                        for item in items:
-                            remote_path = f"{self.current_path.rstrip('/')}/{item.name}"
-
-                            # For directories or when item.size is 0, calculate actual size
-                            if item.is_directory_like or item.size == 0:
-                                calculated_size = self.operations.get_directory_size(
-                                    remote_path,
-                                    is_remote=True,
-                                    session_override=self.session_item,
-                                )
-                                item_sizes[item.name] = (
-                                    calculated_size
-                                    if calculated_size > 0
-                                    else item.size
-                                )
-                            else:
-                                item_sizes[item.name] = item.size
-
-                            total_size_needed += item_sizes[item.name]
-
-                        # Check available space at destination
-                        free_space = self.operations.get_free_space(
-                            str(dest_path), is_remote=False
-                        )
-
-                        if free_space > 0 and total_size_needed > free_space:
-                            # Not enough space - show error on main thread
-                            def show_space_error():
-                                self._show_insufficient_space_dialog(
-                                    total_size_needed, free_space, dest_path
-                                )
-                                return False
-
-                            GLib.idle_add(show_space_error)
-                            return
-
-                        # Start downloads on main thread
-                        def start_downloads():
-                            for item in items:
-                                file_size = item_sizes.get(item.name, item.size)
-                                transfer_id = self.transfer_manager.add_transfer(
-                                    filename=item.name,
-                                    local_path=str(dest_path / item.name),
-                                    remote_path=f"{self.current_path.rstrip('/')}/{item.name}",
-                                    file_size=file_size,
-                                    transfer_type=TransferType.DOWNLOAD,
-                                    is_cancellable=True,
-                                    is_directory=item.is_directory_like,
-                                )
-                                self._start_cancellable_transfer(
-                                    transfer_id,
-                                    "Downloading",
-                                    self._background_download_worker,
-                                    on_success_callback=on_download_success,
-                                )
-                            return False
-
-                        GLib.idle_add(start_downloads)
-
-                    except Exception as e:
-                        self.logger.error(f"Error preparing downloads: {e}")
-                        error_msg = str(e)
-
-                        def show_error(msg=error_msg):
-                            self.parent_window._show_error_dialog(
-                                _("Download Error"), msg
-                            )
-                            return False
-
-                        GLib.idle_add(show_error)
-
-                # Run preparation in background
-                threading.Thread(target=prepare_downloads, daemon=True).start()
+            dest_path = Path(dest_folder.get_path())
+            threading.Thread(
+                target=self._prepare_and_start_downloads,
+                args=(items, dest_path),
+                daemon=True,
+            ).start()
 
         except GLib.Error as e:
             if not e.matches(Gio.io_error_quark(), Gio.IOErrorEnum.CANCELLED):
                 self.parent_window._show_error_dialog(_("Error"), e.message)
 
-    def _on_upload_action(self, _action, _param, _file_item: FileItem):
+    def _prepare_and_start_downloads(
+        self, items: List[FileItem], dest_path: Path
+    ) -> None:
+        """Prepare downloads in background and start them if space permits."""
+        try:
+            item_sizes = self._calculate_item_sizes(items)
+            total_size_needed = sum(item_sizes.values())
+            free_space = self.operations.get_free_space(str(dest_path), is_remote=False)
+
+            if free_space > 0 and total_size_needed > free_space:
+                GLib.idle_add(
+                    self._show_insufficient_space_dialog,
+                    total_size_needed,
+                    free_space,
+                    dest_path,
+                )
+                return
+
+            GLib.idle_add(self._execute_downloads, items, item_sizes, dest_path)
+
+        except Exception as e:
+            self.logger.error(f"Error preparing downloads: {e}")
+            GLib.idle_add(
+                self.parent_window._show_error_dialog, _("Download Error"), str(e)
+            )
+
+    def _calculate_item_sizes(self, items: List[FileItem]) -> dict:
+        """Calculate the actual size of each item for download."""
+        item_sizes = {}
+        for item in items:
+            remote_path = f"{self.current_path.rstrip('/')}/{item.name}"
+
+            if item.is_directory_like or item.size == 0:
+                calculated_size = self.operations.get_directory_size(
+                    remote_path, is_remote=True, session_override=self.session_item
+                )
+                item_sizes[item.name] = (
+                    calculated_size if calculated_size > 0 else item.size
+                )
+            else:
+                item_sizes[item.name] = item.size
+
+        return item_sizes
+
+    def _execute_downloads(
+        self, items: List[FileItem], item_sizes: dict, dest_path: Path
+    ) -> bool:
+        """Start the actual download transfers."""
+        for item in items:
+            file_size = item_sizes.get(item.name, item.size)
+            transfer_id = self.transfer_manager.add_transfer(
+                filename=item.name,
+                local_path=str(dest_path / item.name),
+                remote_path=f"{self.current_path.rstrip('/')}/{item.name}",
+                file_size=file_size,
+                transfer_type=TransferType.DOWNLOAD,
+                is_cancellable=True,
+                is_directory=item.is_directory_like,
+            )
+            self._start_cancellable_transfer(
+                transfer_id,
+                "Downloading",
+                self._background_download_worker,
+                on_success_callback=self._on_download_success,
+            )
+        return False
+
+    def _on_download_success(self, local_path, remote_path) -> None:
+        """Refresh view if download was to the current local directory."""
+        if self._is_remote_session():
+            return
+
+        current_resolved = Path(self.current_path).resolve()
+        download_parent = Path(local_path).parent.resolve()
+
+        if current_resolved == download_parent:
+            self.logger.info(
+                "Download to current local directory completed. Refreshing view."
+            )
+            self.refresh(source="filemanager")
+
+    def _on_upload_action(self, _action, _param, _file_item: Optional[FileItem]):
         dialog = Gtk.FileDialog(
             title=_("Upload File(s) to This Folder"),
             modal=True,
@@ -3433,8 +3515,11 @@ class FileManager(GObject.Object):
                     Adw.Toast(title=_("Rename command sent to terminal"))
                 )
 
-    def _cleanup_edited_file(self, edit_key: tuple):
-        """Cleans up all resources associated with a closed temporary file."""
+    def _cleanup_edited_file(self, edit_key: tuple):  # noqa: S3516
+        """Cleans up all resources associated with a closed temporary file.
+
+        Returns False for GLib.idle_add callback compatibility.
+        """
         metadata = self.edited_file_metadata.pop(edit_key, None)
         if not metadata:
             return False
