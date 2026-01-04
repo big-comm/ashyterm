@@ -857,7 +857,7 @@ class CommandButtonManager:
             for cmd in self.get_all_commands():
                 if cmd.category:
                     categories.add(cmd.category)
-            return sorted(list(categories))
+            return sorted(categories)
 
     def is_builtin_customized(self, command_id: str) -> bool:
         """Check if a builtin command has been customized."""

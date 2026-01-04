@@ -36,6 +36,11 @@ from ..utils.logger import get_logger, log_error_with_context
 from ..utils.security import atomic_json_write
 from .config import ColorSchemeMap, ColorSchemes, get_config_paths
 
+# Module constants for file handling
+_LOGGER_NAME = "ashyterm.highlights"
+_JSON_GLOB_PATTERN = "*.json"
+_GLOBAL_CONFIG_FILENAME = "global.json"
+
 # Mapping of logical color names to ANSI color indices (0-15)
 # Standard ANSI: 0-7, Bright: 8-15
 # NOTE: Also defined in ui/colors.py for UI components
@@ -382,7 +387,7 @@ class HighlightManager(GObject.GObject):
             except Exception as e:
                 self.logger.error(f"Failed to load layered config: {e}")
                 log_error_with_context(
-                    e, "loading layered config", "ashyterm.highlights"
+                    e, "loading layered config", _LOGGER_NAME
                 )
                 self._create_default_config()
 
@@ -416,7 +421,7 @@ class HighlightManager(GObject.GObject):
             return contexts
 
         try:
-            for json_file in system_path.glob("*.json"):
+            for json_file in system_path.glob(_JSON_GLOB_PATTERN):
                 try:
                     ctx = self._load_context_from_file(json_file)
                     if ctx:
@@ -439,7 +444,7 @@ class HighlightManager(GObject.GObject):
             return contexts
 
         try:
-            for json_file in self._user_highlights_dir.glob("*.json"):
+            for json_file in self._user_highlights_dir.glob(_JSON_GLOB_PATTERN):
                 try:
                     ctx = self._load_context_from_file(json_file)
                     if ctx:
@@ -496,7 +501,7 @@ class HighlightManager(GObject.GObject):
             except Exception as e:
                 self.logger.error(f"Failed to save highlight config: {e}")
                 log_error_with_context(
-                    e, "saving highlight config", "ashyterm.highlights"
+                    e, "saving highlight config", _LOGGER_NAME
                 )
 
     def _save_user_settings(self) -> None:
@@ -553,7 +558,7 @@ class HighlightManager(GObject.GObject):
         """
         with self._lock:
             try:
-                file_path = self._user_highlights_dir / "global.json"
+                file_path = self._user_highlights_dir / _GLOBAL_CONFIG_FILENAME
 
                 # Create a context-like structure for global rules
                 global_data = {
@@ -574,7 +579,7 @@ class HighlightManager(GObject.GObject):
 
             except Exception as e:
                 self.logger.error(f"Failed to save global rules: {e}")
-                log_error_with_context(e, "saving global rules", "ashyterm.highlights")
+                log_error_with_context(e, "saving global rules", _LOGGER_NAME)
 
     def delete_user_context(self, command_name: str) -> bool:
         """Delete a user context override (reverts to system version if exists)."""
@@ -1143,7 +1148,7 @@ class HighlightManager(GObject.GObject):
         with self._lock:
             # Delete all user highlight files
             if self._user_highlights_dir.exists():
-                for json_file in self._user_highlights_dir.glob("*.json"):
+                for json_file in self._user_highlights_dir.glob(_JSON_GLOB_PATTERN):
                     try:
                         json_file.unlink()
                     except Exception as e:
@@ -1159,13 +1164,13 @@ class HighlightManager(GObject.GObject):
         with self._lock:
             # Only delete global.json from user directory
             if self._user_highlights_dir.exists():
-                global_file = self._user_highlights_dir / "global.json"
+                global_file = self._user_highlights_dir / _GLOBAL_CONFIG_FILENAME
                 if global_file.exists():
                     try:
                         global_file.unlink()
-                        self.logger.info("Deleted user global.json")
+                        self.logger.info(f"Deleted user {_GLOBAL_CONFIG_FILENAME}")
                     except Exception as e:
-                        self.logger.warning(f"Failed to delete global.json: {e}")
+                        self.logger.warning(f"Failed to delete {_GLOBAL_CONFIG_FILENAME}: {e}")
 
             # Reload from system
             self._load_layered_config()
@@ -1177,8 +1182,8 @@ class HighlightManager(GObject.GObject):
         with self._lock:
             # Delete all user context files except global.json
             if self._user_highlights_dir.exists():
-                for json_file in self._user_highlights_dir.glob("*.json"):
-                    if json_file.name != "global.json":
+                for json_file in self._user_highlights_dir.glob(_JSON_GLOB_PATTERN):
+                    if json_file.name != _GLOBAL_CONFIG_FILENAME:
                         try:
                             json_file.unlink()
                             self.logger.info(f"Deleted user context: {json_file.name}")

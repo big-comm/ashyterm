@@ -26,6 +26,14 @@ except ImportError:
 # These cover bash, zsh, fish, Oh My Zsh, Starship, Powerlevel10k, etc.
 PROMPT_TERMINATOR_PATTERN = re.compile(r"[\$#%>➜❯ᐅ❮›»▶λ∴⟩⟫⮞→➤➔⇒]\s?")
 
+# Configuration file names
+_SESSIONS_FILENAME = "sessions.json"
+_SETTINGS_FILENAME = "settings.json"
+_STATE_FILENAME = "session_state.json"
+
+# Font fallback constant
+_FALLBACK_FONT = "Monospace 10"
+
 
 class AppConstants:
     """Application metadata and identification constants."""
@@ -56,9 +64,9 @@ class ConfigPaths:
 
             self.CONFIG_DIR.mkdir(parents=True, exist_ok=True)
 
-            self.SESSIONS_FILE = self.CONFIG_DIR / "sessions.json"
-            self.SETTINGS_FILE = self.CONFIG_DIR / "settings.json"
-            self.STATE_FILE = self.CONFIG_DIR / "session_state.json"
+            self.SESSIONS_FILE = self.CONFIG_DIR / _SESSIONS_FILENAME
+            self.SETTINGS_FILE = self.CONFIG_DIR / _SETTINGS_FILENAME
+            self.STATE_FILE = self.CONFIG_DIR / _STATE_FILENAME
             self.LAYOUT_DIR = self.CONFIG_DIR / "layouts"
             self.CACHE_DIR = self._get_cache_directory()
             self.LOG_DIR = self.CONFIG_DIR / "logs"
@@ -97,9 +105,9 @@ class ConfigPaths:
     def _use_fallback_paths(self):
         home = Path.home()
         self.CONFIG_DIR = home / ".config" / "ashyterm"
-        self.SESSIONS_FILE = self.CONFIG_DIR / "sessions.json"
-        self.SETTINGS_FILE = self.CONFIG_DIR / "settings.json"
-        self.STATE_FILE = self.CONFIG_DIR / "session_state.json"
+        self.SESSIONS_FILE = self.CONFIG_DIR / _SESSIONS_FILENAME
+        self.SETTINGS_FILE = self.CONFIG_DIR / _SETTINGS_FILENAME
+        self.STATE_FILE = self.CONFIG_DIR / _STATE_FILENAME
         self.LAYOUT_DIR = self.CONFIG_DIR / "layouts"
         self.CACHE_DIR = home / ".cache" / "ashyterm"
         self.LOG_DIR = self.CONFIG_DIR / "logs"
@@ -129,7 +137,7 @@ class DefaultSettings:
             "DejaVu Sans Mono 12",
             "Liberation Mono 12",
             "Source Code Pro 12",
-            "Monospace 10",  # Generic fallback - always available
+            _FALLBACK_FONT,  # Generic fallback - always available
         ]
 
         try:
@@ -170,11 +178,11 @@ class DefaultSettings:
                     continue
 
             # Ultimate fallback if all checks fail
-            return "Monospace 10"
+            return _FALLBACK_FONT
 
         except Exception:
             # If any import/context creation fails, return safe default
-            return "Monospace 10"
+            return _FALLBACK_FONT
 
     @staticmethod
     @lru_cache(maxsize=1)
@@ -747,9 +755,9 @@ try:
     BACKUP_DIR = str(_paths.BACKUP_DIR)
 except Exception:
     CONFIG_DIR = os.path.expanduser("~/.config/ashyterm")
-    SESSIONS_FILE = os.path.join(CONFIG_DIR, "sessions.json")
-    SETTINGS_FILE = os.path.join(CONFIG_DIR, "settings.json")
-    STATE_FILE = os.path.join(CONFIG_DIR, "session_state.json")
+    SESSIONS_FILE = os.path.join(CONFIG_DIR, _SESSIONS_FILENAME)
+    SETTINGS_FILE = os.path.join(CONFIG_DIR, _SETTINGS_FILENAME)
+    STATE_FILE = os.path.join(CONFIG_DIR, _STATE_FILENAME)
     LAYOUT_DIR = os.path.join(CONFIG_DIR, "layouts")
     BACKUP_DIR = os.path.join(CONFIG_DIR, "backups")
     os.makedirs(CONFIG_DIR, exist_ok=True)
