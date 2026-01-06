@@ -6390,14 +6390,6 @@ msgstr "Trova file"
 msgid "Search for files and directories with various filters"
 msgstr "Cerca file e directory con vari filtri"
 # 
-# File: src/ashyterm/data/command_manager_models.py, line: 212
-# File: src/ashyterm/data/command_manager_models.py, line: 311
-# File: src/ashyterm/data/command_manager_models.py, line: 324
-# File: src/ashyterm/data/command_manager_models.py, line: 375
-#: NEEDS WORK
-msgid "File Operations"
-msgstr "Operazioni sui file"
-# 
 # File: src/ashyterm/data/command_manager_models.py, line: 217
 #: NEEDS WORK
 msgid "Search Path"
@@ -6617,12 +6609,6 @@ msgstr "File e cartelle da comprimere"
 #: NEEDS WORK
 msgid "Archive Name"
 msgstr "Nome dell'archivio"
-# 
-# File: src/ashyterm/data/command_manager_models.py, line: 359
-# File: src/ashyterm/data/command_manager_models.py, line: 383
-#: NEEDS WORK
-msgid "archive.tar.xz"
-msgstr "archive.tar.xz"
 # 
 # File: src/ashyterm/data/command_manager_models.py, line: 360
 #: NEEDS WORK
@@ -7046,11 +7032,6 @@ msgstr "I dati radice non sono un dizionario"
 msgid "Load failed: {}"
 msgstr "Caricamento non riuscito: {}"
 # 
-# File: usr/share/ashyterm/sessions/storage.py, line: 395
-#: NEEDS WORK
-msgid "Data validation failed"
-msgstr "La convalida dei dati è fallita"
-# 
 # File: usr/share/ashyterm/sessions/storage.py, line: 410
 #: NEEDS WORK
 msgid "Temporary file was not written correctly"
@@ -7061,6 +7042,11 @@ msgstr "Il file temporaneo non è stato scritto correttamente"
 #, python-brace-format
 msgid "File write failed: {}"
 msgstr "Scrittura del file non riuscita: {}"
+# 
+# File: usr/share/ashyterm/sessions/storage.py, line: 395
+#: NEEDS WORK
+msgid "Data validation failed"
+msgstr "La convalida dei dati è fallita"
 # 
 # File: usr/share/ashyterm/sessions/storage.py, line: 439
 #: NEEDS WORK
@@ -7217,11 +7203,10 @@ msgstr "Session spostata con successo."
 msgid "Cannot move a folder into itself."
 msgstr "Impossibile spostare una cartella all'interno di se stessa."
 # 
-# File: usr/share/ashyterm/sessions/operations.py, line: 285
+# File: usr/share/ashyterm/sessions/operations.py, line: 300
 #: NEEDS WORK
-#, python-brace-format
-msgid "SSH config file not found at {path}"
-msgstr "File di configurazione SSH non trovata in {path}"
+msgid "No host entries found in SSH config."
+msgstr "Nessuna voce host trovata nella configurazione SSH."
 # 
 # File: usr/share/ashyterm/sessions/operations.py, line: 295
 #: NEEDS WORK
@@ -7229,16 +7214,17 @@ msgstr "File di configurazione SSH non trovata in {path}"
 msgid "Failed to parse SSH config: {error}"
 msgstr "Impossibile analizzare la configurazione SSH: {error}"
 # 
-# File: usr/share/ashyterm/sessions/operations.py, line: 300
-#: NEEDS WORK
-msgid "No host entries found in SSH config."
-msgstr "Nessuna voce host trovata nella configurazione SSH."
-# 
 # File: usr/share/ashyterm/sessions/operations.py, line: 312
 #: NEEDS WORK
 #, python-brace-format
 msgid "Skipped host '{alias}': missing hostname."
 msgstr "Host '{alias}' saltato: nome host mancante."
+# 
+# File: usr/share/ashyterm/sessions/operations.py, line: 285
+#: NEEDS WORK
+#, python-brace-format
+msgid "SSH config file not found at {path}"
+msgstr "File di configurazione SSH non trovata in {path}"
 # 
 # File: usr/share/ashyterm/sessions/operations.py, line: 360
 #: NEEDS WORK
@@ -7447,11 +7433,6 @@ msgstr "Annulla ricerca"
 #: NEEDS WORK
 msgid "Search in subfolders"
 msgstr "Cerca nelle sottocartelle"
-# 
-# File: src/ashyterm/filemanager/manager.py, line: 695
-#: NEEDS WORK
-msgid "Recursive"
-msgstr "Ricorsivo"
 # 
 # File: usr/share/ashyterm/filemanager/manager.py, line: 203
 #: NEEDS WORK
@@ -7718,16 +7699,16 @@ msgstr "Seleziona la cartella di destinazione"
 msgid "Download Here"
 msgstr "Scarica qui"
 # 
-# File: src/ashyterm/filemanager/manager.py, line: 2608
-#: NEEDS WORK
-msgid "Download Error"
-msgstr "Errore di download"
-# 
 # File: usr/share/ashyterm/filemanager/manager.py, line: 855
 # File: usr/share/ashyterm/filemanager/manager.py, line: 889
 #: NEEDS WORK
 msgid "Error"
 msgstr "Errore"
+# 
+# File: src/ashyterm/filemanager/manager.py, line: 2608
+#: NEEDS WORK
+msgid "Download Error"
+msgstr "Errore di download"
 # 
 # File: usr/share/ashyterm/filemanager/manager.py, line: 859
 #: NEEDS WORK
@@ -8013,6 +7994,11 @@ msgstr "Trasferimento di {count} file"
 msgid "Cancel All Transfers"
 msgstr "Annulla tutte le trasferimenti"
 # 
+# File: usr/share/ashyterm/window.py, line: 1193
+#: NEEDS WORK
+msgid "No active terminal to send command to."
+msgstr "Nessun terminale attivo a cui inviare il comando."
+# 
 # File: usr/share/ashyterm/window.py, line: 424
 #: NEEDS WORK
 msgid "Data Loading Error"
@@ -8209,11 +8195,6 @@ msgstr ""
 #: NEEDS WORK
 msgid "Clear All"
 msgstr "Cancella tutto"
-# 
-# File: usr/share/ashyterm/window.py, line: 1193
-#: NEEDS WORK
-msgid "No active terminal to send command to."
-msgstr "Nessun terminale attivo a cui inviare il comando."
 # 
 # File: usr/share/ashyterm/app.py, line: 333
 #: NEEDS WORK

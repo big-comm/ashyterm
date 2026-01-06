@@ -6388,14 +6388,6 @@ msgstr "Fájlok keresése"
 msgid "Search for files and directories with various filters"
 msgstr "Fájlok és könyvtárak keresése különböző szűrőkkel"
 # 
-# File: src/ashyterm/data/command_manager_models.py, line: 212
-# File: src/ashyterm/data/command_manager_models.py, line: 311
-# File: src/ashyterm/data/command_manager_models.py, line: 324
-# File: src/ashyterm/data/command_manager_models.py, line: 375
-#: NEEDS WORK
-msgid "File Operations"
-msgstr "Fájlműveletek"
-# 
 # File: src/ashyterm/data/command_manager_models.py, line: 217
 #: NEEDS WORK
 msgid "Search Path"
@@ -6615,12 +6607,6 @@ msgstr "Tömörítendő fájlok és mappák"
 #: NEEDS WORK
 msgid "Archive Name"
 msgstr "Archívum neve"
-# 
-# File: src/ashyterm/data/command_manager_models.py, line: 359
-# File: src/ashyterm/data/command_manager_models.py, line: 383
-#: NEEDS WORK
-msgid "archive.tar.xz"
-msgstr "archívum.tar.xz"
 # 
 # File: src/ashyterm/data/command_manager_models.py, line: 360
 #: NEEDS WORK
@@ -7044,11 +7030,6 @@ msgstr "A gyökéradat nem egy szótár."
 msgid "Load failed: {}"
 msgstr "Betöltés nem sikerült: {}"
 # 
-# File: usr/share/ashyterm/sessions/storage.py, line: 395
-#: NEEDS WORK
-msgid "Data validation failed"
-msgstr "Az adatok érvényesítése meghiúsult"
-# 
 # File: usr/share/ashyterm/sessions/storage.py, line: 410
 #: NEEDS WORK
 msgid "Temporary file was not written correctly"
@@ -7059,6 +7040,11 @@ msgstr "A ideiglenes fájl nem lett helyesen megírva."
 #, python-brace-format
 msgid "File write failed: {}"
 msgstr "Fájl írása nem sikerült: {}"
+# 
+# File: usr/share/ashyterm/sessions/storage.py, line: 395
+#: NEEDS WORK
+msgid "Data validation failed"
+msgstr "Az adatok érvényesítése meghiúsult"
 # 
 # File: usr/share/ashyterm/sessions/storage.py, line: 439
 #: NEEDS WORK
@@ -7215,11 +7201,10 @@ msgstr "A munkamenet sikeresen áthelyezve."
 msgid "Cannot move a folder into itself."
 msgstr "Nem lehet egy mappát önmagába áthelyezni."
 # 
-# File: usr/share/ashyterm/sessions/operations.py, line: 285
+# File: usr/share/ashyterm/sessions/operations.py, line: 300
 #: NEEDS WORK
-#, python-brace-format
-msgid "SSH config file not found at {path}"
-msgstr "SSH konfigurációs fájl nem található a(z) {path} helyen"
+msgid "No host entries found in SSH config."
+msgstr "Nincsenek gazda bejegyzések az SSH konfigurációban."
 # 
 # File: usr/share/ashyterm/sessions/operations.py, line: 295
 #: NEEDS WORK
@@ -7227,16 +7212,17 @@ msgstr "SSH konfigurációs fájl nem található a(z) {path} helyen"
 msgid "Failed to parse SSH config: {error}"
 msgstr "SSH konfiguráció elemzése nem sikerült: {error}"
 # 
-# File: usr/share/ashyterm/sessions/operations.py, line: 300
-#: NEEDS WORK
-msgid "No host entries found in SSH config."
-msgstr "Nincsenek gazda bejegyzések az SSH konfigurációban."
-# 
 # File: usr/share/ashyterm/sessions/operations.py, line: 312
 #: NEEDS WORK
 #, python-brace-format
 msgid "Skipped host '{alias}': missing hostname."
 msgstr "Kihagyott gazda '{alias}': hiányzik a hosztnév."
+# 
+# File: usr/share/ashyterm/sessions/operations.py, line: 285
+#: NEEDS WORK
+#, python-brace-format
+msgid "SSH config file not found at {path}"
+msgstr "SSH konfigurációs fájl nem található a(z) {path} helyen"
 # 
 # File: usr/share/ashyterm/sessions/operations.py, line: 360
 #: NEEDS WORK
@@ -7447,11 +7433,6 @@ msgstr "Keresés megszakítása"
 #: NEEDS WORK
 msgid "Search in subfolders"
 msgstr "Keresés a mappákban"
-# 
-# File: src/ashyterm/filemanager/manager.py, line: 695
-#: NEEDS WORK
-msgid "Recursive"
-msgstr "Rekurzív"
 # 
 # File: usr/share/ashyterm/filemanager/manager.py, line: 203
 #: NEEDS WORK
@@ -7718,16 +7699,16 @@ msgstr "Válassza ki a célmappát"
 msgid "Download Here"
 msgstr "Letöltés itt"
 # 
-# File: src/ashyterm/filemanager/manager.py, line: 2608
-#: NEEDS WORK
-msgid "Download Error"
-msgstr "Letöltési hiba"
-# 
 # File: usr/share/ashyterm/filemanager/manager.py, line: 855
 # File: usr/share/ashyterm/filemanager/manager.py, line: 889
 #: NEEDS WORK
 msgid "Error"
 msgstr "Hiba"
+# 
+# File: src/ashyterm/filemanager/manager.py, line: 2608
+#: NEEDS WORK
+msgid "Download Error"
+msgstr "Letöltési hiba"
 # 
 # File: usr/share/ashyterm/filemanager/manager.py, line: 859
 #: NEEDS WORK
@@ -8012,6 +7993,11 @@ msgstr "Átviteli {count} fájl"
 msgid "Cancel All Transfers"
 msgstr "Minden Átutalás Megszakítása"
 # 
+# File: usr/share/ashyterm/window.py, line: 1193
+#: NEEDS WORK
+msgid "No active terminal to send command to."
+msgstr "Nincs aktív terminál, ahová parancsot küldhetnénk."
+# 
 # File: usr/share/ashyterm/window.py, line: 424
 #: NEEDS WORK
 msgid "Data Loading Error"
@@ -8208,11 +8194,6 @@ msgstr ""
 #: NEEDS WORK
 msgid "Clear All"
 msgstr "Összes törlése"
-# 
-# File: usr/share/ashyterm/window.py, line: 1193
-#: NEEDS WORK
-msgid "No active terminal to send command to."
-msgstr "Nincs aktív terminál, ahová parancsot küldhetnénk."
 # 
 # File: usr/share/ashyterm/app.py, line: 333
 #: NEEDS WORK

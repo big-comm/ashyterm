@@ -6336,14 +6336,6 @@ msgstr "查找文件"
 msgid "Search for files and directories with various filters"
 msgstr "使用各种过滤器搜索文件和目录"
 # 
-# File: src/ashyterm/data/command_manager_models.py, line: 212
-# File: src/ashyterm/data/command_manager_models.py, line: 311
-# File: src/ashyterm/data/command_manager_models.py, line: 324
-# File: src/ashyterm/data/command_manager_models.py, line: 375
-#: NEEDS WORK
-msgid "File Operations"
-msgstr "文件操作"
-# 
 # File: src/ashyterm/data/command_manager_models.py, line: 217
 #: NEEDS WORK
 msgid "Search Path"
@@ -6563,12 +6555,6 @@ msgstr "要压缩的文件和文件夹"
 #: NEEDS WORK
 msgid "Archive Name"
 msgstr "归档名称"
-# 
-# File: src/ashyterm/data/command_manager_models.py, line: 359
-# File: src/ashyterm/data/command_manager_models.py, line: 383
-#: NEEDS WORK
-msgid "archive.tar.xz"
-msgstr "archive.tar.xz"
 # 
 # File: src/ashyterm/data/command_manager_models.py, line: 360
 #: NEEDS WORK
@@ -6992,11 +6978,6 @@ msgstr "根数据不是字典"
 msgid "Load failed: {}"
 msgstr "加载失败：{}"
 # 
-# File: usr/share/ashyterm/sessions/storage.py, line: 395
-#: NEEDS WORK
-msgid "Data validation failed"
-msgstr "数据验证失败"
-# 
 # File: usr/share/ashyterm/sessions/storage.py, line: 410
 #: NEEDS WORK
 msgid "Temporary file was not written correctly"
@@ -7007,6 +6988,11 @@ msgstr "临时文件未正确写入"
 #, python-brace-format
 msgid "File write failed: {}"
 msgstr "文件写入失败：{}"
+# 
+# File: usr/share/ashyterm/sessions/storage.py, line: 395
+#: NEEDS WORK
+msgid "Data validation failed"
+msgstr "数据验证失败"
 # 
 # File: usr/share/ashyterm/sessions/storage.py, line: 439
 #: NEEDS WORK
@@ -7163,11 +7149,10 @@ msgstr "会话移动成功。"
 msgid "Cannot move a folder into itself."
 msgstr "无法将文件夹移动到其自身。"
 # 
-# File: usr/share/ashyterm/sessions/operations.py, line: 285
+# File: usr/share/ashyterm/sessions/operations.py, line: 300
 #: NEEDS WORK
-#, python-brace-format
-msgid "SSH config file not found at {path}"
-msgstr "在 {path} 找不到 SSH 配置文件"
+msgid "No host entries found in SSH config."
+msgstr "在SSH配置中未找到主机条目。"
 # 
 # File: usr/share/ashyterm/sessions/operations.py, line: 295
 #: NEEDS WORK
@@ -7175,16 +7160,17 @@ msgstr "在 {path} 找不到 SSH 配置文件"
 msgid "Failed to parse SSH config: {error}"
 msgstr "无法解析 SSH 配置：{error}"
 # 
-# File: usr/share/ashyterm/sessions/operations.py, line: 300
-#: NEEDS WORK
-msgid "No host entries found in SSH config."
-msgstr "在SSH配置中未找到主机条目。"
-# 
 # File: usr/share/ashyterm/sessions/operations.py, line: 312
 #: NEEDS WORK
 #, python-brace-format
 msgid "Skipped host '{alias}': missing hostname."
 msgstr "跳过主机 '{alias}'：缺少主机名。"
+# 
+# File: usr/share/ashyterm/sessions/operations.py, line: 285
+#: NEEDS WORK
+#, python-brace-format
+msgid "SSH config file not found at {path}"
+msgstr "在 {path} 找不到 SSH 配置文件"
 # 
 # File: usr/share/ashyterm/sessions/operations.py, line: 360
 #: NEEDS WORK
@@ -7393,11 +7379,6 @@ msgstr "取消搜索"
 #: NEEDS WORK
 msgid "Search in subfolders"
 msgstr "在子文件夹中搜索"
-# 
-# File: src/ashyterm/filemanager/manager.py, line: 698
-#: NEEDS WORK
-msgid "Recursive"
-msgstr "递归"
 # 
 # File: usr/share/ashyterm/filemanager/manager.py, line: 203
 #: NEEDS WORK
@@ -7664,16 +7645,16 @@ msgstr "选择目标文件夹"
 msgid "Download Here"
 msgstr "在这里下载"
 # 
-# File: src/ashyterm/filemanager/manager.py, line: 2608
-#: NEEDS WORK
-msgid "Download Error"
-msgstr "下载错误"
-# 
 # File: usr/share/ashyterm/filemanager/manager.py, line: 855
 # File: usr/share/ashyterm/filemanager/manager.py, line: 889
 #: NEEDS WORK
 msgid "Error"
 msgstr "错误"
+# 
+# File: src/ashyterm/filemanager/manager.py, line: 2608
+#: NEEDS WORK
+msgid "Download Error"
+msgstr "下载错误"
 # 
 # File: usr/share/ashyterm/filemanager/manager.py, line: 859
 #: NEEDS WORK
@@ -7954,6 +7935,11 @@ msgstr "正在传输 {count} 个文件"
 msgid "Cancel All Transfers"
 msgstr "取消所有传输"
 # 
+# File: usr/share/ashyterm/window.py, line: 1193
+#: NEEDS WORK
+msgid "No active terminal to send command to."
+msgstr "没有活动终端可以发送命令。"
+# 
 # File: usr/share/ashyterm/window.py, line: 424
 #: NEEDS WORK
 msgid "Data Loading Error"
@@ -8148,11 +8134,6 @@ msgstr "这将删除所有本地下载的文件以进行远程编辑。您在编
 #: NEEDS WORK
 msgid "Clear All"
 msgstr "清除所有"
-# 
-# File: usr/share/ashyterm/window.py, line: 1193
-#: NEEDS WORK
-msgid "No active terminal to send command to."
-msgstr "没有活动终端可以发送命令。"
 # 
 # File: usr/share/ashyterm/app.py, line: 333
 #: NEEDS WORK

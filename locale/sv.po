@@ -6374,14 +6374,6 @@ msgstr "Hitta filer"
 msgid "Search for files and directories with various filters"
 msgstr "Sök efter filer och kataloger med olika filter"
 # 
-# File: src/ashyterm/data/command_manager_models.py, line: 212
-# File: src/ashyterm/data/command_manager_models.py, line: 311
-# File: src/ashyterm/data/command_manager_models.py, line: 324
-# File: src/ashyterm/data/command_manager_models.py, line: 375
-#: NEEDS WORK
-msgid "File Operations"
-msgstr "Filoperationer"
-# 
 # File: src/ashyterm/data/command_manager_models.py, line: 217
 #: NEEDS WORK
 msgid "Search Path"
@@ -6601,12 +6593,6 @@ msgstr "Filer och mappar att komprimera"
 #: NEEDS WORK
 msgid "Archive Name"
 msgstr "Arkivnamn"
-# 
-# File: src/ashyterm/data/command_manager_models.py, line: 359
-# File: src/ashyterm/data/command_manager_models.py, line: 383
-#: NEEDS WORK
-msgid "archive.tar.xz"
-msgstr "arkiv.tar.xz"
 # 
 # File: src/ashyterm/data/command_manager_models.py, line: 360
 #: NEEDS WORK
@@ -7030,11 +7016,6 @@ msgstr "Rotdata är inte en ordbok"
 msgid "Load failed: {}"
 msgstr "Laddning misslyckades: {}"
 # 
-# File: usr/share/ashyterm/sessions/storage.py, line: 395
-#: NEEDS WORK
-msgid "Data validation failed"
-msgstr "Datavalidering misslyckades"
-# 
 # File: usr/share/ashyterm/sessions/storage.py, line: 410
 #: NEEDS WORK
 msgid "Temporary file was not written correctly"
@@ -7045,6 +7026,11 @@ msgstr "Tillfällig fil skrevs inte korrekt."
 #, python-brace-format
 msgid "File write failed: {}"
 msgstr "Filskrivning misslyckades: {}"
+# 
+# File: usr/share/ashyterm/sessions/storage.py, line: 395
+#: NEEDS WORK
+msgid "Data validation failed"
+msgstr "Datavalidering misslyckades"
 # 
 # File: usr/share/ashyterm/sessions/storage.py, line: 439
 #: NEEDS WORK
@@ -7201,11 +7187,10 @@ msgstr "Sessionen flyttades framgångsrikt."
 msgid "Cannot move a folder into itself."
 msgstr "Kan inte flytta en mapp in i sig själv."
 # 
-# File: usr/share/ashyterm/sessions/operations.py, line: 285
+# File: usr/share/ashyterm/sessions/operations.py, line: 300
 #: NEEDS WORK
-#, python-brace-format
-msgid "SSH config file not found at {path}"
-msgstr "SSH-konfigurationsfilen hittades inte på {path}"
+msgid "No host entries found in SSH config."
+msgstr "Inga värdposter hittades i SSH-konfigurationen."
 # 
 # File: usr/share/ashyterm/sessions/operations.py, line: 295
 #: NEEDS WORK
@@ -7213,16 +7198,17 @@ msgstr "SSH-konfigurationsfilen hittades inte på {path}"
 msgid "Failed to parse SSH config: {error}"
 msgstr "Misslyckades med att analysera SSH-konfiguration: {error}"
 # 
-# File: usr/share/ashyterm/sessions/operations.py, line: 300
-#: NEEDS WORK
-msgid "No host entries found in SSH config."
-msgstr "Inga värdposter hittades i SSH-konfigurationen."
-# 
 # File: usr/share/ashyterm/sessions/operations.py, line: 312
 #: NEEDS WORK
 #, python-brace-format
 msgid "Skipped host '{alias}': missing hostname."
 msgstr "Hoppa över värd '{alias}': saknar värdnamn."
+# 
+# File: usr/share/ashyterm/sessions/operations.py, line: 285
+#: NEEDS WORK
+#, python-brace-format
+msgid "SSH config file not found at {path}"
+msgstr "SSH-konfigurationsfilen hittades inte på {path}"
 # 
 # File: usr/share/ashyterm/sessions/operations.py, line: 360
 #: NEEDS WORK
@@ -7433,11 +7419,6 @@ msgstr "Avbryt sökning"
 #: NEEDS WORK
 msgid "Search in subfolders"
 msgstr "Sök i undermappar"
-# 
-# File: src/ashyterm/filemanager/manager.py, line: 698
-#: NEEDS WORK
-msgid "Recursive"
-msgstr "Rekursiv"
 # 
 # File: usr/share/ashyterm/filemanager/manager.py, line: 203
 #: NEEDS WORK
@@ -7704,16 +7685,16 @@ msgstr "Välj destinationsmapp"
 msgid "Download Here"
 msgstr "Ladda ner här"
 # 
-# File: src/ashyterm/filemanager/manager.py, line: 2608
-#: NEEDS WORK
-msgid "Download Error"
-msgstr "Nedladdningsfel"
-# 
 # File: usr/share/ashyterm/filemanager/manager.py, line: 855
 # File: usr/share/ashyterm/filemanager/manager.py, line: 889
 #: NEEDS WORK
 msgid "Error"
 msgstr "Fel"
+# 
+# File: src/ashyterm/filemanager/manager.py, line: 2608
+#: NEEDS WORK
+msgid "Download Error"
+msgstr "Nedladdningsfel"
 # 
 # File: usr/share/ashyterm/filemanager/manager.py, line: 859
 #: NEEDS WORK
@@ -7996,6 +7977,11 @@ msgstr "Överför {count} filer"
 msgid "Cancel All Transfers"
 msgstr "Avbryt alla överföringar"
 # 
+# File: usr/share/ashyterm/window.py, line: 1193
+#: NEEDS WORK
+msgid "No active terminal to send command to."
+msgstr "Ingen aktiv terminal för att skicka kommando till."
+# 
 # File: usr/share/ashyterm/window.py, line: 424
 #: NEEDS WORK
 msgid "Data Loading Error"
@@ -8192,11 +8178,6 @@ msgstr ""
 #: NEEDS WORK
 msgid "Clear All"
 msgstr "Rensa allt"
-# 
-# File: usr/share/ashyterm/window.py, line: 1193
-#: NEEDS WORK
-msgid "No active terminal to send command to."
-msgstr "Ingen aktiv terminal för att skicka kommando till."
 # 
 # File: usr/share/ashyterm/app.py, line: 333
 #: NEEDS WORK
