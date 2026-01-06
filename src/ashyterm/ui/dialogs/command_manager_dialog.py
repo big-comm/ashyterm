@@ -471,55 +471,54 @@ class CommandFormDialog(Adw.Window):
         # Generic handling for other commands
         return self.command.build_command(values)
 
+
+    def _build_find_date_filter(self, values: Dict[str, Any]) -> Optional[str]:
+        """Build date filter part for find command."""
+        date_value = values.get("date_value", "").strip()
+        if not date_value:
+            return None
+        try:
+            value = int(date_value)
+            if value <= 0:
+                return None
+            date_unit = values.get("date_unit", "days")
+            if date_unit == "minutes":
+                return f"-mmin -{value}"
+            elif date_unit == "hours":
+                return f"-mmin -{value * 60}"
+            return f"-mtime -{value}"
+        except (ValueError, TypeError):
+            return None
+
     def _build_find_command(self, values: Dict[str, Any]) -> str:
         """Build the find command with proper flag handling."""
         parts = ["find"]
 
-        # Path
         path = values.get("path", ".").strip() or "."
         parts.append(path)
 
-        # Name pattern
         name_pattern = values.get("name_pattern", "").strip()
         if name_pattern:
             parts.append(f"-name '{name_pattern}'")
 
-        # Recursive (actually, non-recursive = maxdepth 1)
         if not values.get("recursive", True):
             parts.append("-maxdepth 1")
 
-        # File type
         file_type = values.get("file_type", "").strip()
         if file_type:
             parts.append(file_type)
 
-        # Size filter
         size_filter = values.get("size_filter", "").strip()
         if size_filter:
             parts.append(f"-size {size_filter}")
 
-        # Date filter with time unit support
-        # Only add date filter if value is a positive integer > 0
-        date_value = values.get("date_value", "").strip()
-        date_unit = values.get("date_unit", "days")
-        if date_value:
-            try:
-                value = int(date_value)
-                if value > 0:  # Only apply filter for positive values
-                    if date_unit == "minutes":
-                        parts.append(f"-mmin -{value}")
-                    elif date_unit == "hours":
-                        # Convert hours to minutes for find command
-                        parts.append(f"-mmin -{value * 60}")
-                    else:  # days
-                        parts.append(f"-mtime -{value}")
-            except (ValueError, TypeError):
-                pass
+        date_filter = self._build_find_date_filter(values)
+        if date_filter:
+            parts.append(date_filter)
 
-        # Grep pattern (search in content)
         grep_pattern = values.get("grep_pattern", "").strip()
         if grep_pattern:
-            parts.append(f"-exec grep -l '{grep_pattern}' {{}} \\;")
+            parts.append(f"-exec grep -l '{grep_pattern}' {{}} \\\\;")
 
         return " ".join(parts)
 
@@ -2538,101 +2537,119 @@ class CommandEditorDialog(Adw.Window):
             FieldType.COLOR: "color",
         }.get(field_type, "text")
 
+
+    def _get_simple_command_data(self) -> tuple[str, str, str, int, str, "ExecutionMode", list]:
+        """Extract data from simple command form."""
+        name = self.simple_name_row.get_text().strip()
+        description = self.simple_description_row.get_text().strip()
+        icon_name = (
+            self.simple_icon_entry.get_text().strip()
+            or "utilities-terminal-symbolic"
+        )
+        display_mode_idx = self.simple_display_mode_row.get_selected()
+        command_template = self.simple_command_textview.get_text().strip()
+        exec_mode_idx = self.simple_execution_mode_row.get_selected()
+        exec_mode = (
+            ExecutionMode.INSERT_ONLY
+            if exec_mode_idx == 0
+            else ExecutionMode.INSERT_AND_EXECUTE
+        )
+        return name, description, icon_name, display_mode_idx, command_template, exec_mode, []
+
+    def _build_form_command_template(self) -> str:
+        """Build command template from form fields data."""
+        parts = []
+        for field_data in self.form_fields_data:
+            field_type = field_data.get("type", "text")
+            if field_type == "command_text":
+                value = field_data.get("default", "")
+                if value:
+                    parts.append(value)
+            else:
+                parts.append(f"{{{field_data.get('id', '')}}}")
+        return " ".join(parts)
+
+    def _get_field_extra_config(self, field_data: dict) -> dict:
+        """Get extra configuration for special field types."""
+        extra_config = {}
+        ft = field_data.get("type", "text")
+        if ft == "text_area":
+            extra_config["rows"] = field_data.get("rows", 4)
+        elif ft == "slider":
+            extra_config["min_value"] = field_data.get("min_value", 0)
+            extra_config["max_value"] = field_data.get("max_value", 100)
+            extra_config["step"] = field_data.get("step", 1)
+        elif ft == "date_time":
+            extra_config["format"] = field_data.get("format", "%Y-%m-%d %H:%M")
+        elif ft == "color":
+            extra_config["color_format"] = field_data.get("color_format", "hex")
+        return extra_config
+
+    def _build_form_fields_list(self) -> list:
+        """Build form fields list from form_fields_data."""
+        field_type_map = {
+            "text": FieldType.TEXT,
+            "password": FieldType.PASSWORD,
+            "text_area": FieldType.TEXT_AREA,
+            "switch": FieldType.SWITCH,
+            "dropdown": FieldType.DROPDOWN,
+            "radio": FieldType.RADIO,
+            "multi_select": FieldType.MULTI_SELECT,
+            "number": FieldType.NUMBER,
+            "slider": FieldType.SLIDER,
+            "file_path": FieldType.FILE_PATH,
+            "directory_path": FieldType.DIRECTORY_PATH,
+            "date_time": FieldType.DATE_TIME,
+            "color": FieldType.COLOR,
+        }
+        form_fields = []
+        for i, field_data in enumerate(self.form_fields_data):
+            if field_data.get("type") == "command_text":
+                continue
+            field_type = field_type_map.get(
+                field_data.get("type", "text"), FieldType.TEXT
+            )
+            form_fields.append(
+                CommandFormField(
+                    id=field_data.get("id", f"field_{i}"),
+                    label=field_data.get("label", ""),
+                    field_type=field_type,
+                    default_value=str(field_data.get("default", "")),
+                    placeholder=field_data.get("placeholder", ""),
+                    tooltip=field_data.get("tooltip", ""),
+                    required=False,
+                    command_flag=field_data.get("command_flag", ""),
+                    off_value=field_data.get("off_value", ""),
+                    options=field_data.get("options", []),
+                    template_key=field_data.get("template_key", ""),
+                    extra_config=self._get_field_extra_config(field_data),
+                )
+            )
+        return form_fields
+
+    def _get_form_command_data(self) -> tuple[str, str, str, int, str, "ExecutionMode", list]:
+        """Extract data from form command form."""
+        name = self.form_name_row.get_text().strip()
+        description = self.form_description_row.get_text().strip()
+        icon_name = (
+            self.form_icon_entry.get_text().strip() or "utilities-terminal-symbolic"
+        )
+        display_mode_idx = self.form_display_mode_row.get_selected()
+        exec_mode = ExecutionMode.SHOW_DIALOG
+        command_template = self._build_form_command_template()
+        form_fields = self._build_form_fields_list()
+        return name, description, icon_name, display_mode_idx, command_template, exec_mode, form_fields
+
     def _save_command(self, *args):
         """Save the command."""
-        # Get data based on command type
         if self._command_type == "simple":
-            name = self.simple_name_row.get_text().strip()
-            description = self.simple_description_row.get_text().strip()
-            icon_name = (
-                self.simple_icon_entry.get_text().strip()
-                or "utilities-terminal-symbolic"
+            name, description, icon_name, display_mode_idx, command_template, exec_mode, form_fields = (
+                self._get_simple_command_data()
             )
-            display_mode_idx = self.simple_display_mode_row.get_selected()
-            command_template = self.simple_command_textview.get_text().strip()
-            # Get execution mode from dropdown (0 = Insert Only, 1 = Insert and Execute)
-            exec_mode_idx = self.simple_execution_mode_row.get_selected()
-            exec_mode = (
-                ExecutionMode.INSERT_ONLY
-                if exec_mode_idx == 0
-                else ExecutionMode.INSERT_AND_EXECUTE
-            )
-            form_fields = []
         else:
-            name = self.form_name_row.get_text().strip()
-            description = self.form_description_row.get_text().strip()
-            icon_name = (
-                self.form_icon_entry.get_text().strip() or "utilities-terminal-symbolic"
+            name, description, icon_name, display_mode_idx, command_template, exec_mode, form_fields = (
+                self._get_form_command_data()
             )
-            display_mode_idx = self.form_display_mode_row.get_selected()
-            exec_mode = ExecutionMode.SHOW_DIALOG
-
-            # Build from form_fields_data
-            parts = []
-            for field_data in self.form_fields_data:
-                field_type = field_data.get("type", "text")
-                if field_type == "command_text":
-                    # Static text
-                    value = field_data.get("default", "")
-                    if value:
-                        parts.append(value)
-                else:
-                    # Field placeholder
-                    parts.append(f"{{{field_data.get('id', '')}}}")
-            command_template = " ".join(parts)
-
-            # Build form fields list (skip command_text - it's not a real form field)
-            form_fields = []
-            for i, field_data in enumerate(self.form_fields_data):
-                if field_data.get("type") == "command_text":
-                    continue  # Skip static text
-
-                field_type = {
-                    "text": FieldType.TEXT,
-                    "password": FieldType.PASSWORD,
-                    "text_area": FieldType.TEXT_AREA,
-                    "switch": FieldType.SWITCH,
-                    "dropdown": FieldType.DROPDOWN,
-                    "radio": FieldType.RADIO,
-                    "multi_select": FieldType.MULTI_SELECT,
-                    "number": FieldType.NUMBER,
-                    "slider": FieldType.SLIDER,
-                    "file_path": FieldType.FILE_PATH,
-                    "directory_path": FieldType.DIRECTORY_PATH,
-                    "date_time": FieldType.DATE_TIME,
-                    "color": FieldType.COLOR,
-                }.get(field_data.get("type", "text"), FieldType.TEXT)
-
-                # Build extra config dict for special field types
-                extra_config = {}
-                ft = field_data.get("type", "text")
-                if ft == "text_area":
-                    extra_config["rows"] = field_data.get("rows", 4)
-                elif ft == "slider":
-                    extra_config["min_value"] = field_data.get("min_value", 0)
-                    extra_config["max_value"] = field_data.get("max_value", 100)
-                    extra_config["step"] = field_data.get("step", 1)
-                elif ft == "date_time":
-                    extra_config["format"] = field_data.get("format", "%Y-%m-%d %H:%M")
-                elif ft == "color":
-                    extra_config["color_format"] = field_data.get("color_format", "hex")
-
-                form_fields.append(
-                    CommandFormField(
-                        id=field_data.get("id", f"field_{i}"),
-                        label=field_data.get("label", ""),
-                        field_type=field_type,
-                        default_value=str(field_data.get("default", "")),
-                        placeholder=field_data.get("placeholder", ""),
-                        tooltip=field_data.get("tooltip", ""),
-                        required=False,
-                        command_flag=field_data.get("command_flag", ""),
-                        off_value=field_data.get("off_value", ""),
-                        options=field_data.get("options", []),
-                        template_key=field_data.get("template_key", ""),
-                        extra_config=extra_config,
-                    )
-                )
 
         if not name:
             if self._command_type == "simple":
@@ -2644,7 +2661,6 @@ class CommandEditorDialog(Adw.Window):
         if not command_template:
             return
 
-        # Get display mode
         display_modes = [
             DisplayMode.ICON_AND_TEXT,
             DisplayMode.ICON_ONLY,
@@ -2652,7 +2668,6 @@ class CommandEditorDialog(Adw.Window):
         ]
         display_mode = display_modes[display_mode_idx]
 
-        # Preserve builtin status when editing existing commands
         is_builtin = self.command.is_builtin if self.command else False
 
         new_command = CommandButton(

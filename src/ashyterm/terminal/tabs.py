@@ -2246,26 +2246,19 @@ class TabManager:
             if self.tabs:
                 self.set_active_tab(self.tabs[0])
 
-    def recreate_tab_from_structure(self, structure: dict):
-        """Recreates a complete tab, including splits, from a saved structure."""
-        if not structure:
-            return
-
-        root_widget = self._recreate_widget_from_node(structure)
-        if not root_widget:
-            self.logger.error("Failed to create root widget for tab restoration.")
-            return
-
-        # If the restored root is a single pane (ToolbarView), we need to unwrap it
-        # to match the structure of a newly created single-terminal tab.
-        terminal_area_content = root_widget
+    def _unwrap_toolbar_view(self, root_widget: Gtk.Widget) -> Gtk.Widget:
+        """Unwrap a ToolbarView to get the inner scrolled window."""
         if isinstance(root_widget, Adw.ToolbarView):
             scrolled_win = root_widget.get_content()
             if scrolled_win:
                 root_widget.set_content(None)
-                terminal_area_content = scrolled_win
+                return scrolled_win
+        return root_widget
 
-        # Now, build the standard tab structure with the restored content
+    def _build_tab_content_paned(
+        self, terminal_area_content: Gtk.Widget
+    ) -> tuple[Adw.Bin, Gtk.Paned]:
+        """Build the standard tab structure with terminal area and content paned."""
         terminal_area = Adw.Bin()
         terminal_area.set_child(terminal_area_content)
 
@@ -2278,26 +2271,40 @@ class TabManager:
         content_paned.set_resize_end_child(False)
         content_paned.set_shrink_end_child(True)
 
-        first_terminal = None
-        terminals = []
-        self._find_terminals_recursive(root_widget, terminals)
-        if terminals:
-            first_terminal = terminals[0]
+        return terminal_area, content_paned
 
-        if not first_terminal:
-            self.logger.error("Restored tab contains no terminals.")
-            for term in terminals:
-                self.terminal_manager.remove_terminal(term)
-            return
-
-        terminal_id = getattr(first_terminal, "terminal_id", None)
+    def _get_session_from_terminal(self, terminal: Vte.Terminal) -> "SessionItem":
+        """Get or create a SessionItem from a terminal."""
+        terminal_id = getattr(terminal, "terminal_id", None)
         info = self.terminal_manager.registry.get_terminal_info(terminal_id)
         identifier = info.get("identifier") if info else "Local"
 
         if isinstance(identifier, SessionItem):
-            session = identifier
-        else:
-            session = SessionItem(name=str(identifier), session_type="local")
+            return identifier
+        return SessionItem(name=str(identifier), session_type="local")
+
+    def recreate_tab_from_structure(self, structure: dict):
+        """Recreates a complete tab, including splits, from a saved structure."""
+        if not structure:
+            return
+
+        root_widget = self._recreate_widget_from_node(structure)
+        if not root_widget:
+            self.logger.error("Failed to create root widget for tab restoration.")
+            return
+
+        terminal_area_content = self._unwrap_toolbar_view(root_widget)
+        _, content_paned = self._build_tab_content_paned(terminal_area_content)
+
+        terminals = []
+        self._find_terminals_recursive(root_widget, terminals)
+
+        if not terminals:
+            self.logger.error("Restored tab contains no terminals.")
+            return
+
+        first_terminal = terminals[0]
+        session = self._get_session_from_terminal(first_terminal)
 
         page_name = f"page_restored_{GLib.random_int()}"
         page = self.view_stack.add_titled(content_paned, page_name, session.name)

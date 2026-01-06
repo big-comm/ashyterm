@@ -570,6 +570,9 @@ class CommTerminalWindow(Adw.ApplicationWindow):
 
     def _on_key_pressed(self, _controller, keyval, _keycode, state):
         """Handles key press events for tab navigation and search."""
+        # Emergency escape: Ctrl+Shift+Escape closes any ghost dialogs
+        if self._handle_emergency_dialog_close(keyval, state):
+            return Gdk.EVENT_STOP
         if self._handle_escape_key(keyval):
             return Gdk.EVENT_STOP
         if self._handle_search_shortcut(keyval, state):
@@ -582,6 +585,33 @@ class CommTerminalWindow(Adw.ApplicationWindow):
         if self._handle_alt_number_shortcuts(keyval, state):
             return Gdk.EVENT_STOP
         return Gdk.EVENT_PROPAGATE
+
+    def _handle_emergency_dialog_close(self, keyval, state) -> bool:
+        """Handle Ctrl+Shift+Escape to close any blocking dialogs.
+
+        This is an emergency escape hatch when a dialog fails to appear
+        but blocks the UI.
+        """
+        ctrl_shift = Gdk.ModifierType.CONTROL_MASK | Gdk.ModifierType.SHIFT_MASK
+        if keyval == Gdk.KEY_Escape and (state & ctrl_shift) == ctrl_shift:
+            self.logger.warning("Emergency dialog close triggered (Ctrl+Shift+Escape)")
+            # Try to close any visible dialogs for this window
+            if hasattr(self, "get_dialogs"):
+                dialogs = self.get_dialogs()
+                for i in range(dialogs.get_n_items()):
+                    dialog = dialogs.get_item(i)
+                    if dialog:
+                        self.logger.info(f"Force closing dialog: {dialog}")
+                        dialog.force_close()
+            # Also try to find any transient windows
+            for window in Gtk.Window.list_toplevels():
+                if window.get_transient_for() == self and window != self:
+                    if window.get_modal():
+                        self.logger.info(f"Force closing transient: {window}")
+                        window.set_modal(False)
+                        window.close()
+            return True
+        return False
 
     def _on_ai_assistant_requested(self, *_args) -> None:
         if not getattr(self, "ai_assistant", None):

@@ -502,6 +502,36 @@ class ProcessSpawner:
                 "spawn_initiated", str(user_data), f"shell command: {' '.join(cmd)}"
             )
 
+    def _resolve_sftp_working_dir(
+        self, command_type: str, sftp_local_dir: Optional[str]
+    ) -> str:
+        """Resolve the working directory for SFTP sessions."""
+        working_dir = str(self.platform_info.home_dir)
+        if command_type != "sftp" or not sftp_local_dir:
+            return working_dir
+        try:
+            local_path = Path(sftp_local_dir).expanduser()
+            if local_path.exists() and local_path.is_dir():
+                return str(local_path)
+            self.logger.warning(
+                f"SFTP local directory '{sftp_local_dir}' is invalid; "
+                "falling back to home directory."
+            )
+        except Exception as e:
+            self.logger.warning(
+                f"Failed to use SFTP local directory '{sftp_local_dir}': {e}"
+            )
+        return working_dir
+
+    def _prepare_spawn_environment(
+        self, sshpass_env: Optional[dict[str, str]]
+    ) -> list[str]:
+        """Prepare environment variables for terminal spawn."""
+        env = self.environment_manager.get_terminal_environment()
+        if sshpass_env:
+            env.update(sshpass_env)
+        return [f"{k}={v}" for k, v in env.items()]
+
     def _spawn_remote_session(
         self,
         terminal: Vte.Terminal,
@@ -534,29 +564,10 @@ class ProcessSpawner:
                     )
 
                 remote_cmd, sshpass_env = result
-
-                working_dir = str(self.platform_info.home_dir)
-                if command_type == "sftp" and sftp_local_dir:
-                    try:
-                        local_path = Path(sftp_local_dir).expanduser()
-                        if local_path.exists() and local_path.is_dir():
-                            working_dir = str(local_path)
-                        else:
-                            self.logger.warning(
-                                f"SFTP local directory '{sftp_local_dir}' is invalid; falling back to home directory."
-                            )
-                    except Exception as e:
-                        self.logger.warning(
-                            f"Failed to use SFTP local directory '{sftp_local_dir}': {e}"
-                        )
-                env = self.environment_manager.get_terminal_environment()
-
-                # Add SSHPASS to environment if using password authentication
-                # This prevents the password from being visible in process list
-                if sshpass_env:
-                    env.update(sshpass_env)
-
-                env_list = [f"{k}={v}" for k, v in env.items()]
+                working_dir = self._resolve_sftp_working_dir(
+                    command_type, sftp_local_dir
+                )
+                env_list = self._prepare_spawn_environment(sshpass_env)
 
                 final_user_data = {
                     "original_user_data": user_data,

@@ -1731,7 +1731,7 @@ class TerminalManager:
 
         self.lifecycle_manager.unmark_terminal_closing(terminal_id)
 
-    def _show_ssh_connection_error_dialog(  # noqa: S3516
+    def _show_ssh_connection_error_dialog(
         self, session_name, identifier, terminal, terminal_id, child_status
     ):
         """
@@ -1869,7 +1869,7 @@ class TerminalManager:
                 1,  # Non-zero status to indicate failure
             )
 
-        def attempt_reconnect() -> bool:  # noqa: S3516
+        def attempt_reconnect() -> bool:
             """Attempt a single reconnection.
 
             Returns False to stop GLib.timeout_add repetition (required by GTK).
@@ -2112,7 +2112,7 @@ class TerminalManager:
     ) -> None:
         self._on_child_exited(terminal, 0, identifier, terminal_id)
 
-    def _cleanup_terminal_ui(  # noqa: S3516
+    def _cleanup_terminal_ui(
         self, terminal: Vte.Terminal, terminal_id: int, child_status: int, identifier
     ) -> bool:
         """Cleanup terminal UI after process exit.

@@ -353,27 +353,11 @@ class HighlightManager(GObject.GObject):
                 merged_contexts = {**system_contexts, **user_contexts}
                 self._config.contexts = merged_contexts
 
-                # 5. Load global rules from system "global.json"
-                global_ctx = merged_contexts.get("global")
-                if global_ctx:
-                    self._config.global_rules = global_ctx.rules
-                    # Remove global from contexts as it's stored separately
-                    del self._config.contexts["global"]
+                # 5. Extract and process global rules
+                self._extract_global_rules(merged_contexts)
 
-                # 6. Apply disabled states to global rules from user settings
-                if (
-                    hasattr(self, "_disabled_global_rules")
-                    and self._disabled_global_rules
-                ):
-                    for rule in self._config.global_rules:
-                        if rule.name in self._disabled_global_rules:
-                            rule.enabled = False
-
-                # 6b. Apply disabled states to contexts from user settings
-                if hasattr(self, "_disabled_contexts") and self._disabled_contexts:
-                    for ctx_name in self._disabled_contexts:
-                        if ctx_name in self._config.contexts:
-                            self._config.contexts[ctx_name].enabled = False
+                # 6. Apply disabled states from user settings
+                self._apply_disabled_states()
 
                 # 7. Build trigger map
                 self._build_trigger_map()
@@ -390,6 +374,28 @@ class HighlightManager(GObject.GObject):
                     e, "loading layered config", _LOGGER_NAME
                 )
                 self._create_default_config()
+
+    def _extract_global_rules(self, merged_contexts: Dict[str, Any]) -> None:
+        """Extract global rules from merged contexts."""
+        global_ctx = merged_contexts.get("global")
+        if global_ctx:
+            self._config.global_rules = global_ctx.rules
+            # Remove global from contexts as it's stored separately
+            del self._config.contexts["global"]
+
+    def _apply_disabled_states(self) -> None:
+        """Apply disabled states to global rules and contexts from user settings."""
+        # Apply to global rules
+        if hasattr(self, "_disabled_global_rules") and self._disabled_global_rules:
+            for rule in self._config.global_rules:
+                if rule.name in self._disabled_global_rules:
+                    rule.enabled = False
+
+        # Apply to contexts
+        if hasattr(self, "_disabled_contexts") and self._disabled_contexts:
+            for ctx_name in self._disabled_contexts:
+                if ctx_name in self._config.contexts:
+                    self._config.contexts[ctx_name].enabled = False
 
     def _load_user_settings(self) -> None:
         """Load user settings (enabled flags, disabled global rules, and disabled contexts)."""
@@ -751,53 +757,12 @@ class HighlightManager(GObject.GObject):
         if not color_name:
             return ""
 
-        # Parse modifiers, foreground color, and background color
-        parts = color_name.lower().split()
-        modifiers = []
-        base_color = "white"
-        bg_color = None
+        # Parse color specification
+        modifiers, base_color, bg_color = self._parse_color_spec(color_name)
 
-        for part in parts:
-            if part in ANSI_MODIFIERS:
-                modifiers.append(ANSI_MODIFIERS[part])
-            elif part.startswith("on_"):
-                # Background color (e.g., "on_red", "on_bright_blue")
-                bg_color = part[3:]  # Strip "on_" prefix
-            else:
-                base_color = part
-
-        # Map foreground color name to ANSI color code
-        # Standard colors: 30-37, Bright colors: 90-97
-        fg_code = None
-        if base_color in ANSI_COLOR_MAP:
-            color_index = ANSI_COLOR_MAP[base_color]
-            if color_index < 8:
-                # Standard colors: 30-37
-                fg_code = str(30 + color_index)
-            else:
-                # Bright colors: 90-97
-                fg_code = str(90 + (color_index - 8))
-        elif base_color not in (
-            "foreground",
-            "background",
-            "cursor",
-            "none",
-            "default",
-        ):
-            # Unknown color - use default white
-            fg_code = "37"
-
-        # Map background color name to ANSI color code
-        # Standard colors: 40-47, Bright colors: 100-107
-        bg_code = None
-        if bg_color and bg_color in ANSI_COLOR_MAP:
-            color_index = ANSI_COLOR_MAP[bg_color]
-            if color_index < 8:
-                # Standard background colors: 40-47
-                bg_code = str(40 + color_index)
-            else:
-                # Bright background colors: 100-107
-                bg_code = str(100 + (color_index - 8))
+        # Map colors to ANSI codes
+        fg_code = self._get_foreground_ansi_code(base_color)
+        bg_code = self._get_background_ansi_code(bg_color)
 
         # Build ANSI sequence: modifiers + foreground + background
         ansi_parts = modifiers.copy()
@@ -809,6 +774,45 @@ class HighlightManager(GObject.GObject):
         if ansi_parts:
             return f"\033[{';'.join(ansi_parts)}m"
         return ""
+
+    def _parse_color_spec(self, color_name: str) -> tuple[list[str], str, str | None]:
+        """Parse color specification into modifiers, foreground, and background."""
+        parts = color_name.lower().split()
+        modifiers = []
+        base_color = "white"
+        bg_color = None
+
+        for part in parts:
+            if part in ANSI_MODIFIERS:
+                modifiers.append(ANSI_MODIFIERS[part])
+            elif part.startswith("on_"):
+                bg_color = part[3:]  # Strip "on_" prefix
+            else:
+                base_color = part
+
+        return modifiers, base_color, bg_color
+
+    def _get_foreground_ansi_code(self, base_color: str) -> str | None:
+        """Map foreground color name to ANSI code (30-37 or 90-97)."""
+        if base_color in ANSI_COLOR_MAP:
+            color_index = ANSI_COLOR_MAP[base_color]
+            return (
+                str(30 + color_index) if color_index < 8 else str(90 + color_index - 8)
+            )
+
+        skip_colors = ("foreground", "background", "cursor", "none", "default")
+        if base_color not in skip_colors:
+            return "37"  # Unknown color - use default white
+        return None
+
+    def _get_background_ansi_code(self, bg_color: str | None) -> str | None:
+        """Map background color name to ANSI code (40-47 or 100-107)."""
+        if bg_color and bg_color in ANSI_COLOR_MAP:
+            color_index = ANSI_COLOR_MAP[bg_color]
+            return (
+                str(40 + color_index) if color_index < 8 else str(100 + color_index - 8)
+            )
+        return None
 
     # =========================================================================
     # Trigger / Context Methods

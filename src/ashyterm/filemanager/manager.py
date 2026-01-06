@@ -683,14 +683,11 @@ class FileManager(GObject.Object):
         self.recursive_search_switch = Gtk.Switch()
         self.recursive_search_switch.set_active(False)
         self.recursive_search_switch.set_valign(Gtk.Align.CENTER)
-        self.tooltip_helper.add_tooltip(
-            self.recursive_search_switch, _("Search in subfolders")
-        )
         self.recursive_search_switch.connect(
             "notify::active", self._on_recursive_switch_toggled
         )
 
-        recursive_label = Gtk.Label(label=_("Recursive"))
+        recursive_label = Gtk.Label(label=_("Search in subfolders"))
         recursive_label.set_valign(Gtk.Align.CENTER)
         recursive_label.add_css_class("dim-label")
 
@@ -1313,7 +1310,7 @@ class FileManager(GObject.Object):
                 "+",
             ]
 
-    def _complete_recursive_search(  # noqa: S3516
+    def _complete_recursive_search(
         self,
         generation: int,
         file_items: List[FileItem],
@@ -1396,7 +1393,7 @@ class FileManager(GObject.Object):
         if start_pos == 0 and end_pos == len(current_text):
             GLib.idle_add(self._navigate_up_directory)
 
-    def _navigate_up_directory(self):  # noqa: S3516
+    def _navigate_up_directory(self):
         """Navigate up one directory level, preserving user input.
 
         Returns False for GLib.idle_add callback compatibility.
@@ -1417,7 +1414,7 @@ class FileManager(GObject.Object):
                 self.refresh(parent_path, source="filemanager")
         return False
 
-    def _deferred_activate_row(self, col_view, position):  # noqa: S3516
+    def _deferred_activate_row(self, col_view, position):
         """Deferred row activation to allow focus events to be processed properly.
 
         Returns False for GLib.idle_add callback compatibility.
@@ -1873,7 +1870,7 @@ class FileManager(GObject.Object):
                     f"{base_path.rstrip('/')}/{file_item._link_target}"
                 )
 
-    def _set_store_items(self, items, requested_path, source):  # noqa: S3516
+    def _set_store_items(self, items, requested_path, source):
         """Set all store items in a single operation for optimal performance.
 
         GTK4's ColumnView uses virtual scrolling (only visible rows are rendered),
@@ -1903,7 +1900,7 @@ class FileManager(GObject.Object):
         self._restore_search_entry(source)
         return False
 
-    def _update_store_with_files(  # noqa: S3516
+    def _update_store_with_files(
         self,
         requested_path: str,
         file_items,
@@ -1942,7 +1939,7 @@ class FileManager(GObject.Object):
         self._restore_search_entry(source)
         return False
 
-    def _fallback_to_accessible_path(self, fallback_path: str, source: str):  # noqa: S3516
+    def _fallback_to_accessible_path(self, fallback_path: str, source: str):
         """Navigate to an accessible fallback path when permission denied on current path.
 
         Returns False for GLib.idle_add callback compatibility.
@@ -1991,6 +1988,28 @@ class FileManager(GObject.Object):
     def _is_remote_session(self) -> bool:
         return self.session_item and not self.session_item.is_local()
 
+    def _should_show_general_menu(self, list_item: Any, position: int) -> bool:
+        """Check if general context menu should be shown instead of item menu."""
+        if not isinstance(list_item, Gtk.ListItem):
+            return True
+        if position == Gtk.INVALID_LIST_POSITION:
+            return True
+        if self.selection_model is None:
+            return True
+        if position >= self.selection_model.get_n_items():
+            return True
+        return False
+
+    def _handle_item_selection(self, position: int) -> list:
+        """Handle item selection and return actionable items."""
+        if not self.selection_model.is_selected(position):
+            self.selection_model.unselect_all()
+            self.selection_model.select_item(position, True)
+        selected_items = self.get_selected_items()
+        if not selected_items:
+            return []
+        return [item for item in selected_items if item.name != ".."]
+
     def _on_item_right_click(self, gesture, n_press, x, y, list_item):
         try:
             row = gesture.get_widget()
@@ -2005,36 +2024,19 @@ class FileManager(GObject.Object):
             except TypeError:
                 translated_x, translated_y = x, y
 
-            if not isinstance(list_item, Gtk.ListItem):
+            position = (
+                list_item.get_position()
+                if isinstance(list_item, Gtk.ListItem)
+                else Gtk.INVALID_LIST_POSITION
+            )
+
+            if self._should_show_general_menu(list_item, position):
                 self._show_general_context_menu(translated_x, translated_y)
                 return
 
-            position = list_item.get_position()
-            if position == Gtk.INVALID_LIST_POSITION:
-                self._show_general_context_menu(translated_x, translated_y)
-                return
-
-            if self.selection_model is None:
-                self._show_general_context_menu(translated_x, translated_y)
-                return
-
-            if position >= self.selection_model.get_n_items():
-                self._show_general_context_menu(translated_x, translated_y)
-                return
-
-            if not self.selection_model.is_selected(position):
-                self.selection_model.unselect_all()
-                self.selection_model.select_item(position, True)
-
-            selected_items = self.get_selected_items()
-            if selected_items:
-                actionable_items = [
-                    item for item in selected_items if item.name != ".."
-                ]
-                if actionable_items:
-                    self._show_context_menu(
-                        actionable_items, translated_x, translated_y
-                    )
+            actionable_items = self._handle_item_selection(position)
+            if actionable_items:
+                self._show_context_menu(actionable_items, translated_x, translated_y)
             else:
                 self._show_general_context_menu(translated_x, translated_y)
         except Exception as e:
@@ -3515,7 +3517,7 @@ class FileManager(GObject.Object):
                     Adw.Toast(title=_("Rename command sent to terminal"))
                 )
 
-    def _cleanup_edited_file(self, edit_key: tuple):  # noqa: S3516
+    def _cleanup_edited_file(self, edit_key: tuple):
         """Cleans up all resources associated with a closed temporary file.
 
         Returns False for GLib.idle_add callback compatibility.

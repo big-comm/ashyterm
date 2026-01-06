@@ -20,7 +20,7 @@ Usage:
     )
 """
 
-from typing import Dict, List, Tuple
+from typing import Dict, List, Optional, Tuple
 
 from ..utils.translation_utils import _
 
@@ -332,6 +332,34 @@ def resolve_color_to_hex(
     return "#ffffff"
 
 
+def _parse_color_part(
+    part: str,
+    modifiers: List[str],
+    bg_code_holder: List[str],
+) -> Optional[str]:
+    """Parse a single color part and update modifiers/bg_code. Return base_color if found."""
+    if part in ANSI_MODIFIERS:
+        modifiers.append(ANSI_MODIFIERS[part])
+        return None
+    elif part.startswith("on_"):
+        bg_color = part[3:]
+        if bg_color in ANSI_COLOR_MAP:
+            idx = ANSI_COLOR_MAP[bg_color]
+            bg_code_holder.append(str(40 + idx) if idx < 8 else str(100 + idx - 8))
+        return None
+    return part
+
+
+def _get_fg_code(base_color: str) -> str:
+    """Get foreground ANSI code for a base color."""
+    if base_color in ANSI_COLOR_MAP:
+        idx = ANSI_COLOR_MAP[base_color]
+        return str(30 + idx) if idx < 8 else str(90 + idx - 8)
+    elif base_color not in ("foreground", "background", "cursor", "none", "default"):
+        return "37"  # Default white
+    return ""
+
+
 def resolve_color_to_ansi_code(color_name: str) -> str:
     """
     Resolve a logical color name to an ANSI escape sequence.
@@ -352,29 +380,17 @@ def resolve_color_to_ansi_code(color_name: str) -> str:
 
     parts = color_name.lower().split()
     modifiers: List[str] = []
-    fg_code: str = ""
-    bg_code: str = ""
+    bg_code_holder: List[str] = []
     base_color: str = "white"
 
     for part in parts:
-        if part in ANSI_MODIFIERS:
-            modifiers.append(ANSI_MODIFIERS[part])
-        elif part.startswith("on_"):
-            bg_color = part[3:]  # Strip "on_" prefix
-            if bg_color in ANSI_COLOR_MAP:
-                idx = ANSI_COLOR_MAP[bg_color]
-                bg_code = str(40 + idx) if idx < 8 else str(100 + idx - 8)
-        else:
-            base_color = part
+        result = _parse_color_part(part, modifiers, bg_code_holder)
+        if result is not None:
+            base_color = result
 
-    # Map foreground color
-    if base_color in ANSI_COLOR_MAP:
-        idx = ANSI_COLOR_MAP[base_color]
-        fg_code = str(30 + idx) if idx < 8 else str(90 + idx - 8)
-    elif base_color not in ("foreground", "background", "cursor", "none", "default"):
-        fg_code = "37"  # Default white
+    fg_code = _get_fg_code(base_color)
+    bg_code = bg_code_holder[0] if bg_code_holder else ""
 
-    # Build ANSI sequence
     codes = modifiers.copy()
     if fg_code:
         codes.append(fg_code)

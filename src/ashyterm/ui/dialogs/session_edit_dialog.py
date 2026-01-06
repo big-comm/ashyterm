@@ -1731,50 +1731,77 @@ class SessionEditDialog(BaseDialog):
             )
         return valid
 
+
+    def _validate_hostname_field(self) -> bool:
+        """Validate the SSH hostname field."""
+        if not self._validate_required_field(self.host_entry, _("Host")):
+            return False
+        hostname = self.host_entry.get_text().strip()
+        try:
+            validate_ssh_hostname(hostname)
+            self.host_entry.remove_css_class("error")
+            return True
+        except HostnameValidationError as e:
+            self.host_entry.add_css_class("error")
+            self._validation_errors.append(e.user_message)
+            return False
+
+    def _validate_ssh_key_field(self) -> bool:
+        """Validate the SSH key file field if key auth is selected."""
+        if self.auth_combo.get_selected() != 0:
+            return True
+        key_path = self.key_path_entry.get_text().strip()
+        if not key_path:
+            return True
+        try:
+            validate_ssh_key_file(key_path)
+            self.key_path_entry.remove_css_class("error")
+            return True
+        except SSHKeyError as e:
+            self.key_path_entry.add_css_class("error")
+            self._validation_errors.append(e.user_message)
+            return False
+
+    def _validate_post_login_field(self) -> bool:
+        """Validate the post-login command field."""
+        if not self.post_login_switch or not self.post_login_entry:
+            return True
+        if (
+            self.post_login_switch.get_active()
+            and not self.post_login_entry.get_text().strip()
+        ):
+            self.post_login_entry.add_css_class("error")
+            self._validation_errors.append(
+                _("Post-login command cannot be empty when enabled.")
+            )
+            return False
+        self.post_login_entry.remove_css_class("error")
+        return True
+
+    def _validate_sftp_directory_field(self) -> bool:
+        """Validate the SFTP local directory field."""
+        if not self.sftp_switch or not self.sftp_switch.get_active():
+            return True
+        if not self.sftp_local_entry:
+            return True
+        return validate_directory_path(
+            self.sftp_local_entry,
+            self._validation_errors,
+            _("SFTP local directory must exist and be a directory."),
+            allow_empty=True,
+        )
+
     def _validate_ssh_fields(self) -> bool:
         valid = True
-        if not self._validate_required_field(self.host_entry, _("Host")):
+        if not self._validate_hostname_field():
             valid = False
-        else:
-            hostname = self.host_entry.get_text().strip()
-            try:
-                validate_ssh_hostname(hostname)
-                self.host_entry.remove_css_class("error")
-            except HostnameValidationError as e:
-                self.host_entry.add_css_class("error")
-                self._validation_errors.append(e.user_message)
-                valid = False
-        if self.auth_combo.get_selected() == 0:
-            key_path = self.key_path_entry.get_text().strip()
-            if key_path:
-                try:
-                    validate_ssh_key_file(key_path)
-                    self.key_path_entry.remove_css_class("error")
-                except SSHKeyError as e:
-                    self.key_path_entry.add_css_class("error")
-                    self._validation_errors.append(e.user_message)
-                    valid = False
-        if self.post_login_switch and self.post_login_entry:
-            if (
-                self.post_login_switch.get_active()
-                and not self.post_login_entry.get_text().strip()
-            ):
-                self.post_login_entry.add_css_class("error")
-                self._validation_errors.append(
-                    _("Post-login command cannot be empty when enabled.")
-                )
-                valid = False
-            else:
-                self.post_login_entry.remove_css_class("error")
-        if self.sftp_switch and self.sftp_switch.get_active():
-            if self.sftp_local_entry:
-                if not validate_directory_path(
-                    self.sftp_local_entry,
-                    self._validation_errors,
-                    _("SFTP local directory must exist and be a directory."),
-                    allow_empty=True,
-                ):
-                    valid = False
+        if not self._validate_ssh_key_field():
+            valid = False
+        if not self._validate_post_login_field():
+            valid = False
+        if not self._validate_sftp_directory_field():
+            valid = False
+
         if not valid and self._validation_errors:
             self._show_error_dialog(
                 _("SSH Validation Error"),

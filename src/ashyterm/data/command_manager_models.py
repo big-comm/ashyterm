@@ -175,34 +175,55 @@ class CommandButton:
         for form_field in self.form_fields:
             value = field_values.get(form_field.id, form_field.default_value)
             template_key = form_field.template_key or form_field.id
-
-            if form_field.field_type == FieldType.SWITCH:
-                # For switches, add the flag when ON, or off_value when OFF
-                if value:
-                    # Replace placeholder with flag, or append if no placeholder
-                    if f"{{{template_key}}}" in command:
-                        command = command.replace(
-                            f"{{{template_key}}}", form_field.command_flag
-                        )
-                    else:
-                        command = f"{command} {form_field.command_flag}"
-                else:
-                    # Replace placeholder with off_value (can be empty)
-                    if f"{{{template_key}}}" in command:
-                        command = command.replace(
-                            f"{{{template_key}}}", form_field.off_value
-                        )
-                    elif form_field.off_value:
-                        command = f"{command} {form_field.off_value}"
-            else:
-                # For other fields, substitute the value
-                if f"{{{template_key}}}" in command:
-                    command = command.replace(
-                        f"{{{template_key}}}", str(value) if value else ""
-                    )
+            command = self._substitute_field(command, form_field, value, template_key)
 
         # Clean up multiple spaces
-        command = " ".join(command.split())
+        return " ".join(command.split())
+
+    def _substitute_field(
+        self,
+        command: str,
+        form_field: "CommandFormField",
+        value: Any,
+        template_key: str,
+    ) -> str:
+        """Substitute a single field value in the command template."""
+        placeholder = f"{{{template_key}}}"
+
+        if form_field.field_type == FieldType.SWITCH:
+            return self._substitute_switch_field(
+                command, form_field, value, placeholder
+            )
+
+        # For other fields, substitute the value
+        if placeholder in command:
+            return command.replace(placeholder, str(value) if value else "")
+        return command
+
+    def _substitute_switch_field(
+        self, command: str, form_field: "CommandFormField", value: Any, placeholder: str
+    ) -> str:
+        """Handle switch field substitution."""
+        if value:
+            return self._apply_switch_on_value(command, form_field, placeholder)
+        return self._apply_switch_off_value(command, form_field, placeholder)
+
+    def _apply_switch_on_value(
+        self, command: str, form_field: "CommandFormField", placeholder: str
+    ) -> str:
+        """Apply switch ON value to command."""
+        if placeholder in command:
+            return command.replace(placeholder, form_field.command_flag)
+        return f"{command} {form_field.command_flag}"
+
+    def _apply_switch_off_value(
+        self, command: str, form_field: "CommandFormField", placeholder: str
+    ) -> str:
+        """Apply switch OFF value to command."""
+        if placeholder in command:
+            return command.replace(placeholder, form_field.off_value)
+        if form_field.off_value:
+            return f"{command} {form_field.off_value}"
         return command
 
 

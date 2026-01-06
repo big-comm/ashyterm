@@ -145,11 +145,9 @@ class DefaultSettings:
             import gi
 
             gi.require_version("Pango", "1.0")
-            from gi.repository import Pango
-
             # Get list of all available font families on the system
             import cairo
-            from gi.repository import PangoCairo
+            from gi.repository import Pango, PangoCairo
 
             # Create a temporary surface to get font map
             surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, 1, 1)
