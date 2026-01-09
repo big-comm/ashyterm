@@ -949,8 +949,10 @@ class CommTerminalWindow(Adw.ApplicationWindow):
         """Handle terminal appearance setting changes."""
         self.terminal_manager.apply_settings_to_all_terminals()
 
+        # Re-apply terminal theme if color scheme changes OR if headerbar transparency changes
+        # (because the terminal theme CSS depends on transparency state)
         if (
-            key == "color_scheme"
+            (key == "color_scheme" or key == "headerbar_transparency")
             and self.settings_manager.get("gtk_theme") == "terminal"
         ):
             self.settings_manager.apply_gtk_terminal_theme(self)
