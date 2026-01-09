@@ -660,13 +660,33 @@ class SettingsManager:
         )
         terminal.set_cjk_ambiguous_width(self.get("cjk_ambiguous_width", 1))
 
-    def apply_headerbar_transparency(self, headerbar) -> None:
+    def apply_headerbar_transparency(self, headerbar, window=None) -> None:
         """Apply headerbar transparency to a headerbar widget."""
         try:
             user_transparency = self.get("headerbar_transparency", 0)
             self.logger.info(
                 f"Applying headerbar transparency with user_transparency: {user_transparency}"
             )
+            
+            # Clean up old providers first
+            if window and hasattr(window, "_headerbar_transparency_provider"):
+                try:
+                    window.get_style_context().remove_provider(window._headerbar_transparency_provider)
+                except Exception:
+                    pass
+                del window._headerbar_transparency_provider
+                self.logger.info("Removed existing window transparency provider")
+            
+            if hasattr(headerbar, "_transparency_provider"):
+                try:
+                    Gtk.StyleContext.remove_provider_for_display(
+                        Gdk.Display.get_default(), headerbar._transparency_provider
+                    )
+                except Exception:
+                    pass
+                del headerbar._transparency_provider
+                self.logger.info("Removed existing display transparency provider")
+
             if user_transparency > 0:
                 # Determine base color based on theme
                 if self.get("gtk_theme") == "terminal":
@@ -709,33 +729,30 @@ class SettingsManager:
                     background-color: transparent;
                 }}
                 """
-                # Remove existing provider if any
-                if hasattr(headerbar, "_transparency_provider"):
-                    Gtk.StyleContext.remove_provider_for_display(
-                        Gdk.Display.get_default(), headerbar._transparency_provider
-                    )
-                    self.logger.info("Removed existing transparency provider")
+                
                 provider = Gtk.CssProvider()
                 provider.load_from_data(css.encode("utf-8"))
-                Gtk.StyleContext.add_provider_for_display(
-                    Gdk.Display.get_default(),
-                    provider,
-                    Gtk.STYLE_PROVIDER_PRIORITY_USER,
-                )
-                headerbar._transparency_provider = provider
-                self.logger.info(
-                    f"Headerbar transparency applied with color {color_mix_css}"
-                )
-            else:
-                # Reset to full opacity when transparency is 0
-                if hasattr(headerbar, "_transparency_provider"):
-                    Gtk.StyleContext.remove_provider_for_display(
-                        Gdk.Display.get_default(), headerbar._transparency_provider
+                
+                if window:
+                    window.get_style_context().add_provider(
+                        provider,
+                        Gtk.STYLE_PROVIDER_PRIORITY_USER,
                     )
-                    del headerbar._transparency_provider
+                    window._headerbar_transparency_provider = provider
                     self.logger.info(
-                        "Removed transparency provider (transparency set to 0)"
+                        f"Headerbar transparency applied to window with color {color_mix_css}"
                     )
+                else:
+                    Gtk.StyleContext.add_provider_for_display(
+                        Gdk.Display.get_default(),
+                        provider,
+                        Gtk.STYLE_PROVIDER_PRIORITY_USER,
+                    )
+                    headerbar._transparency_provider = provider
+                    self.logger.info(
+                        f"Headerbar transparency applied to display with color {color_mix_css}"
+                    )
+            else:
                 self.logger.info("Headerbar transparency is 0, no provider applied")
         except Exception as e:
             self.logger.warning(f"Failed to apply headerbar transparency: {e}")
@@ -1793,7 +1810,7 @@ class SettingsManager:
 
             # Re-apply headerbar transparency to restore default appearance
             if hasattr(window, "header_bar"):
-                self.apply_headerbar_transparency(window.header_bar)
+                self.apply_headerbar_transparency(window.header_bar, window)
         except Exception as e:
             self.logger.warning(f"Failed to remove GTK terminal theme: {e}")
 
@@ -1843,8 +1860,17 @@ class SettingsManager:
                 "_transparency_provider",
                 "_transparency_css_provider",
             ]
+            
+            # Clean up window-level providers from window context
+            if hasattr(window, "_headerbar_transparency_provider"):
+                try:
+                    window.get_style_context().remove_provider(window._headerbar_transparency_provider)
+                    self.logger.debug("Removed window headerbar transparency provider")
+                except Exception as e:
+                    self.logger.debug(f"Could not remove window headerbar transparency provider: {e}")
+                del window._headerbar_transparency_provider
 
-            # Clean up window-level providers
+            # Clean up display-level providers attached to window
             for attr in provider_attrs:
                 if hasattr(window, attr):
                     provider = getattr(window, attr)

@@ -186,7 +186,7 @@ class CommTerminalWindow(Adw.ApplicationWindow):
             self.settings_manager.apply_gtk_terminal_theme(self)
         else:
             # Ensure headerbar transparency is correct for non-terminal themes.
-            self.settings_manager.apply_headerbar_transparency(self.header_bar)
+            self.settings_manager.apply_headerbar_transparency(self.header_bar, self)
 
         # Apply settings to all terminals, which handles terminal transparency.
         self.terminal_manager.apply_settings_to_all_terminals()
@@ -918,7 +918,7 @@ class CommTerminalWindow(Adw.ApplicationWindow):
         else:
             self.settings_manager.remove_gtk_terminal_theme(self)
 
-        self.settings_manager.apply_headerbar_transparency(self.header_bar)
+        self.settings_manager.apply_headerbar_transparency(self.header_bar, self)
 
     def _is_terminal_appearance_key(self, key: str) -> bool:
         """Check if the key is a terminal appearance setting."""
@@ -2021,7 +2021,7 @@ class CommTerminalWindow(Adw.ApplicationWindow):
         """Update transparency for all file managers and AI panel when settings change."""
         # Apply headerbar transparency to main window
         if hasattr(self, "header_bar"):
-            self.settings_manager.apply_headerbar_transparency(self.header_bar)
+            self.settings_manager.apply_headerbar_transparency(self.header_bar, self)
 
         for file_manager in self.tab_manager.file_managers.values():
             try:
@@ -2032,7 +2032,8 @@ class CommTerminalWindow(Adw.ApplicationWindow):
                     and file_manager.transfer_history_window
                 ):
                     self.settings_manager.apply_headerbar_transparency(
-                        file_manager.transfer_history_window.header_bar
+                        file_manager.transfer_history_window.header_bar,
+                        file_manager.transfer_history_window
                     )
             except Exception as e:
                 self.logger.warning(f"Failed to update file manager transparency: {e}")
