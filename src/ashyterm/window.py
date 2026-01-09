@@ -164,11 +164,13 @@ class CommTerminalWindow(Adw.ApplicationWindow):
         # This prevents the duplicate prompt issue caused by resize SIGWINCH
         # when the terminal is created before the window has its final dimensions.
 
-        # Deferred initialization for visual settings and data loading
+        # Apply visual settings immediately to ensure correct appearance on startup
+        self._apply_initial_visual_settings()
+
+        # Deferred initialization for data loading
         def _deferred_init():
             if not self._is_for_detached_tab:
                 self._load_initial_data()
-            self._apply_initial_visual_settings()
             return GLib.SOURCE_REMOVE
 
         GLib.idle_add(_deferred_init)
