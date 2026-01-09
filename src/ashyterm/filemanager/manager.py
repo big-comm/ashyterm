@@ -2104,6 +2104,10 @@ class FileManager(GObject.Object):
             menu.append_section(None, clipboard_section)
 
         popover = create_themed_popover_menu(menu, self.main_box)
+        
+        # Keep reference to prevent GC
+        self._active_popover = popover
+        popover.connect("closed", lambda *_: setattr(self, "_active_popover", None))
 
         self._setup_general_context_actions(popover)
 
@@ -2129,6 +2133,10 @@ class FileManager(GObject.Object):
     def _show_context_menu(self, items: List[FileItem], x, y):
         menu_model = self._create_context_menu_model(items)
         popover = create_themed_popover_menu(menu_model, self.main_box)
+        
+        # Keep reference to prevent GC
+        self._active_popover = popover
+        popover.connect("closed", lambda *_: setattr(self, "_active_popover", None))
 
         self._setup_context_actions(popover, items)
 

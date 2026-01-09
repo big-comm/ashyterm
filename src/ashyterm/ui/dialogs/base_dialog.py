@@ -157,19 +157,44 @@ class BaseDialog(Adw.Window):
         except Exception:
             pass
 
+        # Ensure the dialog has a reasonable default size if not set
+        # This prevents 0x0 windows which can sometimes be invisible but modal
+        w, h = self.get_default_size()
+        if w <= 1 or h <= 1:
+            self.set_default_size(500, 400)
+
+        # Force realization to ensure window system resources are allocated
+        self.realize()
+
+        # Hold a strong reference to self to prevent premature Garbage Collection
+        # This is critical for dialogs created in local scopes
+        self._self_ref = self
+
         # Track if we successfully mapped
         self._dialog_mapped = False
 
         def on_map(_widget):
             self._dialog_mapped = True
 
-        # Connect to map signal to track successful display
-        map_handler = self.connect("map", on_map)
+        def on_close_request(_widget):
+            # Release the strong reference when closed
+            self._self_ref = None
+            return False
 
-        super().present()
+        # Connect signals
+        map_handler = self.connect("map", on_map)
+        self.connect("close-request", on_close_request)
+
+        # Defer presentation to the next main loop iteration
+        # This allows the parent window to finish any pending layout updates
+        GLib.idle_add(super().present)
 
         # Check visibility after a delay and recover if needed
         def _check_and_recover():
+            if self._dialog_mapped:
+                self.disconnect(map_handler)
+                return GLib.SOURCE_REMOVE
+            
             self.disconnect(map_handler)
             if not self._dialog_mapped:
                 self.logger.warning(
