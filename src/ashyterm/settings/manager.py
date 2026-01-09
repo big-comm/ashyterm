@@ -668,19 +668,23 @@ class SettingsManager:
                 f"Applying headerbar transparency with user_transparency: {user_transparency}"
             )
             
-            # Clean up old providers first
-            if window and hasattr(window, "_headerbar_transparency_provider"):
-                try:
-                    window.get_style_context().remove_provider(window._headerbar_transparency_provider)
-                except Exception:
-                    pass
-                del window._headerbar_transparency_provider
-                self.logger.info("Removed existing window transparency provider")
+            # Use window display if available, otherwise default
+            display = None
+            if window and hasattr(window, "get_display"):
+                display = window.get_display()
             
+            if display is None:
+                display = Gdk.Display.get_default()
+
+            if display is None:
+                self.logger.warning("No display available to apply headerbar transparency")
+                return
+
+            # Remove existing provider if any
             if hasattr(headerbar, "_transparency_provider"):
                 try:
                     Gtk.StyleContext.remove_provider_for_display(
-                        Gdk.Display.get_default(), headerbar._transparency_provider
+                        display, headerbar._transparency_provider
                     )
                 except Exception:
                     pass
@@ -733,25 +737,15 @@ class SettingsManager:
                 provider = Gtk.CssProvider()
                 provider.load_from_data(css.encode("utf-8"))
                 
-                if window:
-                    window.get_style_context().add_provider(
-                        provider,
-                        Gtk.STYLE_PROVIDER_PRIORITY_USER,
-                    )
-                    window._headerbar_transparency_provider = provider
-                    self.logger.info(
-                        f"Headerbar transparency applied to window with color {color_mix_css}"
-                    )
-                else:
-                    Gtk.StyleContext.add_provider_for_display(
-                        Gdk.Display.get_default(),
-                        provider,
-                        Gtk.STYLE_PROVIDER_PRIORITY_USER,
-                    )
-                    headerbar._transparency_provider = provider
-                    self.logger.info(
-                        f"Headerbar transparency applied to display with color {color_mix_css}"
-                    )
+                Gtk.StyleContext.add_provider_for_display(
+                    display,
+                    provider,
+                    Gtk.STYLE_PROVIDER_PRIORITY_USER,
+                )
+                headerbar._transparency_provider = provider
+                self.logger.info(
+                    f"Headerbar transparency applied to display with color {color_mix_css}"
+                )
             else:
                 self.logger.info("Headerbar transparency is 0, no provider applied")
         except Exception as e:
@@ -1860,17 +1854,8 @@ class SettingsManager:
                 "_transparency_provider",
                 "_transparency_css_provider",
             ]
-            
-            # Clean up window-level providers from window context
-            if hasattr(window, "_headerbar_transparency_provider"):
-                try:
-                    window.get_style_context().remove_provider(window._headerbar_transparency_provider)
-                    self.logger.debug("Removed window headerbar transparency provider")
-                except Exception as e:
-                    self.logger.debug(f"Could not remove window headerbar transparency provider: {e}")
-                del window._headerbar_transparency_provider
 
-            # Clean up display-level providers attached to window
+            # Clean up window-level providers
             for attr in provider_attrs:
                 if hasattr(window, attr):
                     provider = getattr(window, attr)

@@ -432,6 +432,10 @@ class CommTerminalWindow(Adw.ApplicationWindow):
         2. The terminal PTY is created with the correct size
         3. No resize SIGWINCH is sent to the shell during initialization
         """
+        # Re-apply headerbar transparency on map to ensure it takes effect
+        if hasattr(self, "header_bar"):
+            self.settings_manager.apply_headerbar_transparency(self.header_bar, self)
+
         if self._initial_tab_created:
             return
 
