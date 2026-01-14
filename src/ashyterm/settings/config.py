@@ -6,12 +6,8 @@ from functools import lru_cache
 from pathlib import Path
 from typing import Any, Dict, List
 
-import gi
-
-gi.require_version("Gtk", "4.0")
-gi.require_version("Adw", "1")
-gi.require_version("Pango", "1.0")
-from gi.repository import Pango
+# Note: GTK/Pango imports are done lazily in functions that need them
+# to avoid slow startup when only ConfigPaths is needed
 
 try:
     from ..utils.exceptions import ConfigError, ErrorSeverity
@@ -36,7 +32,7 @@ class AppConstants:
 
     APP_ID = "org.communitybig.ashyterm"
     APP_TITLE = "Ashy Terminal"
-    APP_VERSION = "1.8.4"
+    APP_VERSION = "1.8.5"
     DEVELOPER_NAME = "BigCommunity"
     DEVELOPER_TEAM = ["BigCommunity Team"]
     COPYRIGHT = "© 2025 BigCommunity"
@@ -64,7 +60,6 @@ class ConfigPaths:
             self.SETTINGS_FILE = self.CONFIG_DIR / "settings.json"
             self.STATE_FILE = self.CONFIG_DIR / "session_state.json"
             self.LAYOUT_DIR = self.CONFIG_DIR / "layouts"
-            self.CUSTOM_COMMANDS_FILE = self.CONFIG_DIR / "custom_commands.json"
             self.CACHE_DIR = self._get_cache_directory()
             self.LOG_DIR = self.CONFIG_DIR / "logs"
             self.BACKUP_DIR = (
@@ -106,7 +101,6 @@ class ConfigPaths:
         self.SETTINGS_FILE = self.CONFIG_DIR / "settings.json"
         self.STATE_FILE = self.CONFIG_DIR / "session_state.json"
         self.LAYOUT_DIR = self.CONFIG_DIR / "layouts"
-        self.CUSTOM_COMMANDS_FILE = self.CONFIG_DIR / "custom_commands.json"
         self.CACHE_DIR = home / ".cache" / "ashyterm"
         self.LOG_DIR = self.CONFIG_DIR / "logs"
         self.BACKUP_DIR = self.CONFIG_DIR / "backups"
@@ -139,6 +133,12 @@ class DefaultSettings:
         ]
 
         try:
+            # Lazy import GTK/Pango only when actually needed
+            import gi
+
+            gi.require_version("Pango", "1.0")
+            from gi.repository import Pango
+
             # Get list of all available font families on the system
             import cairo
             from gi.repository import PangoCairo
@@ -177,6 +177,7 @@ class DefaultSettings:
             return "Monospace 10"
 
     @staticmethod
+    @lru_cache(maxsize=1)
     def get_defaults() -> Dict[str, Any]:
         return {
             # General Appearance
@@ -193,6 +194,11 @@ class DefaultSettings:
             "window_height": 700,
             "window_maximized": False,
             "remember_window_state": True,
+            # Controls visibility of window control buttons when maximized
+            # "auto" - detect from button-layout (hide if empty/only colon)
+            # "always" - always hide buttons when maximized (for KDE Plasma Active Window Control)
+            # "never" - never hide buttons (default GNOME-like behavior)
+            "hide_headerbar_buttons_when_maximized": "auto",
             # Behavior
             "sidebar_visible": False,
             "auto_hide_sidebar": True,
@@ -205,7 +211,7 @@ class DefaultSettings:
             "cursor_blink": 0,
             "new_instance_behavior": "new_tab",
             "use_login_shell": False,
-            "session_restore_policy": "never",
+            "close_multiple_tabs_policy": "ask",  # ask, save_and_close, just_close
             # VTE Features
             "scrollback_lines": 10000,
             "mouse_scroll_sensitivity": 30.0,
@@ -329,6 +335,7 @@ class ColorSchemes:
     """Terminal color schemes."""
 
     @staticmethod
+    @lru_cache(maxsize=1)
     def get_schemes() -> Dict[str, Dict[str, Any]]:
         return {
             "system_default": {
@@ -737,7 +744,6 @@ try:
     SETTINGS_FILE = str(_paths.SETTINGS_FILE)
     STATE_FILE = str(_paths.STATE_FILE)
     LAYOUT_DIR = str(_paths.LAYOUT_DIR)
-    CUSTOM_COMMANDS_FILE = str(_paths.CUSTOM_COMMANDS_FILE)
     BACKUP_DIR = str(_paths.BACKUP_DIR)
 except Exception:
     CONFIG_DIR = os.path.expanduser("~/.config/ashyterm")
@@ -745,7 +751,6 @@ except Exception:
     SETTINGS_FILE = os.path.join(CONFIG_DIR, "settings.json")
     STATE_FILE = os.path.join(CONFIG_DIR, "session_state.json")
     LAYOUT_DIR = os.path.join(CONFIG_DIR, "layouts")
-    CUSTOM_COMMANDS_FILE = os.path.join(CONFIG_DIR, "custom_commands.json")
     BACKUP_DIR = os.path.join(CONFIG_DIR, "backups")
     os.makedirs(CONFIG_DIR, exist_ok=True)
     os.makedirs(LAYOUT_DIR, exist_ok=True)

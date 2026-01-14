@@ -197,9 +197,11 @@ class FolderEditDialog(BaseDialog):
             f"{parent_path}/{name}" if parent_path else f"/{name}"
         )
         updated_data = self.editing_folder.to_dict()
-        updated_data.update({
-            "name": name,
-            "parent_path": parent_path,
-            "path": str(new_path),
-        })
+        updated_data.update(
+            {
+                "name": name,
+                "parent_path": parent_path,
+                "path": str(new_path),
+            }
+        )
         return SessionFolder.from_dict(updated_data)

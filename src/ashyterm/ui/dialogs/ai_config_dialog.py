@@ -110,9 +110,7 @@ class AIConfigDialog(Adw.PreferencesWindow):
         self.api_key_row = Adw.PasswordEntryRow(
             title=_("API Key"),
         )
-        self.api_key_row.set_text(
-            self.settings_manager.get("ai_assistant_api_key", "")
-        )
+        self.api_key_row.set_text(self.settings_manager.get("ai_assistant_api_key", ""))
         self.api_key_row.connect("changed", self._on_api_key_changed)
         api_group.add(self.api_key_row)
 
@@ -124,9 +122,7 @@ class AIConfigDialog(Adw.PreferencesWindow):
         self.model_row = Adw.EntryRow(
             title=_("Model Identifier"),
         )
-        self.model_row.set_text(
-            self.settings_manager.get("ai_assistant_model", "")
-        )
+        self.model_row.set_text(self.settings_manager.get("ai_assistant_model", ""))
         self.model_row.connect("changed", self._on_model_changed)
         model_group.add(self.model_row)
 
@@ -195,7 +191,9 @@ class AIConfigDialog(Adw.PreferencesWindow):
         self.base_url_row.set_visible(is_local)
 
         # Show/hide API key (local may not need it)
-        self.api_key_row.set_sensitive(not is_local or False)  # Local may or may not need API key
+        self.api_key_row.set_sensitive(
+            not is_local or False
+        )  # Local may or may not need API key
 
         # Show/hide browse models button (only for OpenRouter)
         self.browse_models_row.set_visible(is_openrouter)

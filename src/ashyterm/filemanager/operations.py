@@ -15,6 +15,9 @@ from ..sessions.models import SessionItem
 from ..utils.logger import get_logger
 from ..utils.translation_utils import _
 
+# Pre-compiled pattern for rsync progress parsing
+_PROGRESS_PERCENT_PATTERN = re.compile(r"(\d+)%")
+
 # --- NEW: Kernel-level process lifecycle management ---
 # Use ctypes to access the prctl system call for robust cleanup.
 # PR_SET_PDEATHSIG: Asks the kernel to send a signal to this process
@@ -38,12 +41,34 @@ def set_pdeathsig_kill():
         libc.prctl(PR_SET_PDEATHSIG, signal.SIGKILL)
 
 
+def _drain_stderr_to_list(stderr_stream, output_list: list):
+    """Helper function to drain stderr in a separate thread.
+
+    This prevents deadlocks when reading stdout and stderr from a subprocess.
+    If only stdout is read in a loop while stderr is ignored, the stderr
+    buffer can fill up and cause the process to block indefinitely.
+
+    Args:
+        stderr_stream: The stderr pipe from the subprocess
+        output_list: A list to append stderr lines to (thread-safe with append)
+    """
+    try:
+        for line in iter(stderr_stream.readline, ""):
+            output_list.append(line)
+    except Exception:
+        pass  # Ignore errors during stderr reading
+    finally:
+        try:
+            stderr_stream.close()
+        except Exception:
+            pass
+
+
 # --- End of process management setup ---
 
 
 class OperationCancelledError(Exception):
     """Custom exception to indicate that an operation was cancelled by the user."""
-
 
 
 class FileOperations:
@@ -124,10 +149,21 @@ class FileOperations:
         return self._is_command_available(session, command, use_cache=use_cache)
 
     def execute_command_on_session(
-        self, command: List[str], session_override: Optional[SessionItem] = None
+        self,
+        command: List[str],
+        session_override: Optional[SessionItem] = None,
+        timeout: int = 10,
     ) -> Tuple[bool, str]:
         """
         Executes a command either locally or remotely via the centralized spawner.
+
+        Args:
+            command: The command to execute as a list of strings.
+            session_override: Optional session to use instead of the default.
+            timeout: Maximum time to wait for command completion (default 10s for file manager ops).
+
+        Returns:
+            Tuple of (success: bool, output: str)
         """
         session_to_use = session_override if session_override else self.session_item
         if not session_to_use:
@@ -140,7 +176,7 @@ class FileOperations:
                     shell=False,
                     capture_output=True,
                     text=True,
-                    timeout=15,
+                    timeout=timeout,
                 )
                 return (
                     (True, result.stdout)
@@ -151,10 +187,15 @@ class FileOperations:
                 from ..terminal.spawner import get_spawner
 
                 spawner = get_spawner()
-                return spawner.execute_remote_command_sync(session_to_use, command)
+                # Use shorter timeout for file manager operations to avoid UI freeze
+                return spawner.execute_remote_command_sync(
+                    session_to_use, command, timeout=timeout
+                )
         except subprocess.TimeoutExpired:
-            self.logger.error(f"Command timed out: {' '.join(command)}")
-            return False, _("Command timed out.")
+            self.logger.error(
+                f"Command timed out after {timeout}s: {' '.join(command)}"
+            )
+            return False, _("Command timed out. Connection may be lost.")
         except Exception as e:
             self.logger.error(f"Command execution failed: {e}")
             return False, str(e)
@@ -174,13 +215,105 @@ class FileOperations:
         )
         return None
 
+    def get_directory_size(
+        self,
+        path: str,
+        is_remote: bool = False,
+        session_override: Optional[SessionItem] = None,
+    ) -> int:
+        """
+        Get the total size of a file or directory in bytes.
+
+        Args:
+            path: Path to the file or directory
+            is_remote: Whether this is a remote path
+            session_override: Optional session for remote operations
+
+        Returns:
+            Size in bytes, or 0 if unable to determine
+        """
+        try:
+            # Use 'du -sb' for total size in bytes (summary, bytes)
+            command = ["du", "-sb", path]
+
+            if is_remote:
+                success, output = self.execute_command_on_session(
+                    command, session_override, timeout=30
+                )
+            else:
+                result = subprocess.run(
+                    command,
+                    capture_output=True,
+                    text=True,
+                    timeout=30,
+                )
+                success = result.returncode == 0
+                output = result.stdout if success else result.stderr
+
+            if success and output.strip():
+                # Output format: "SIZE\tPATH"
+                parts = output.strip().split()
+                if parts and parts[0].isdigit():
+                    return int(parts[0])
+        except Exception as e:
+            self.logger.warning(f"Failed to get directory size for {path}: {e}")
+
+        return 0
+
+    def get_free_space(
+        self,
+        path: str,
+        is_remote: bool = False,
+        session_override: Optional[SessionItem] = None,
+    ) -> int:
+        """
+        Get available free space at the given path in bytes.
+
+        Args:
+            path: Path to check for free space
+            is_remote: Whether this is a remote path
+            session_override: Optional session for remote operations
+
+        Returns:
+            Available space in bytes, or -1 if unable to determine
+        """
+        try:
+            # Use 'df -B1' for size in bytes, get available space
+            command = ["df", "-B1", "--output=avail", path]
+
+            if is_remote:
+                success, output = self.execute_command_on_session(
+                    command, session_override, timeout=10
+                )
+            else:
+                result = subprocess.run(
+                    command,
+                    capture_output=True,
+                    text=True,
+                    timeout=10,
+                )
+                success = result.returncode == 0
+                output = result.stdout if success else result.stderr
+
+            if success and output.strip():
+                # Output format: "Avail\n12345678" (header + value)
+                lines = output.strip().split("\n")
+                if len(lines) >= 2:
+                    avail_str = lines[1].strip()
+                    if avail_str.isdigit():
+                        return int(avail_str)
+        except Exception as e:
+            self.logger.warning(f"Failed to get free space for {path}: {e}")
+
+        return -1
+
     def _start_process(self, transfer_id, command):
         """Helper to start a subprocess with robust lifecycle management."""
         # MODIFIED: Use preexec_fn for robust cleanup
         process = subprocess.Popen(
             command,
             stdout=subprocess.PIPE,
-            stderr=subprocess.PIPE, # Capture stderr separately
+            stderr=subprocess.PIPE,  # Capture stderr separately
             text=True,
             bufsize=1,
             universal_newlines=True,
@@ -208,19 +341,39 @@ class FileOperations:
 
         return output.strip()
 
-    def start_download_with_progress(
+    def _transfer_with_progress(
         self,
         transfer_id: str,
         session: SessionItem,
-        remote_path: str,
-        local_path: Path,
+        source_path: str,
+        dest_path: str,
         is_directory: bool,
+        direction: str,  # "download" or "upload"
         progress_callback=None,
         completion_callback=None,
         cancellation_event: Optional[threading.Event] = None,
     ):
-        def download_thread():
+        """
+        Generic transfer method for both download and upload operations.
+
+        Args:
+            transfer_id: Unique identifier for the transfer
+            session: SSH session information
+            source_path: Source path (remote for download, local for upload)
+            dest_path: Destination path (local for download, remote for upload)
+            is_directory: Whether transferring a directory
+            direction: "download" or "upload"
+            progress_callback: Optional callback for progress updates
+            completion_callback: Optional callback for completion
+            cancellation_event: Optional event for cancellation
+        """
+        is_download = direction == "download"
+        op_label = _("Download") if is_download else _("Upload")
+
+        def transfer_thread():
             process = None
+            stderr_thread = None
+            stderr_lines: list = []
             try:
                 from ..terminal.spawner import get_spawner
 
@@ -231,10 +384,18 @@ class FileOperations:
                         f"ssh -o ControlPath={spawner._get_ssh_control_path(session)}"
                     )
 
-                    # FIX: Add trailing slash to source for rsync directory copy
-                    source_path_rsync = remote_path
+                    # Add trailing slash to source for rsync directory copy
+                    source_rsync = source_path
                     if is_directory:
-                        source_path_rsync = remote_path.rstrip("/") + "/"
+                        source_rsync = source_path.rstrip("/") + "/"
+
+                    # Build rsync command based on direction
+                    if is_download:
+                        rsync_source = f"{session.user}@{session.host}:{source_rsync}"
+                        rsync_dest = dest_path
+                    else:
+                        rsync_source = source_rsync
+                        rsync_dest = f"{session.user}@{session.host}:{dest_path}"
 
                     transfer_cmd = [
                         "rsync",
@@ -242,25 +403,38 @@ class FileOperations:
                         "--progress",
                         "-e",
                         ssh_cmd,
-                        f"{session.user}@{session.host}:{source_path_rsync}",
-                        str(local_path),
+                        rsync_source,
+                        rsync_dest,
                     ]
                     process = self._start_process(transfer_id, transfer_cmd)
 
+                    # Start stderr draining thread to prevent deadlock
+                    stderr_thread = threading.Thread(
+                        target=_drain_stderr_to_list,
+                        args=(process.stderr, stderr_lines),
+                        daemon=True,
+                    )
+                    stderr_thread.start()
+
                     full_output = ""
-                    progress_pattern = re.compile(r"(\d+)%")
                     for line in iter(process.stdout.readline, ""):
                         if cancellation_event and cancellation_event.is_set():
                             os.killpg(os.getpgid(process.pid), signal.SIGTERM)
-                            raise OperationCancelledError("Download cancelled by user.")
+                            raise OperationCancelledError(
+                                f"{op_label} cancelled by user."
+                            )
 
                         full_output += line
-                        match = progress_pattern.search(line)
+                        match = _PROGRESS_PERCENT_PATTERN.search(line)
                         if match and progress_callback:
                             progress = float(match.group(1))
                             GLib.idle_add(progress_callback, transfer_id, progress)
 
-                    stderr_output = process.stderr.read()
+                    # Wait for stderr thread to complete
+                    if stderr_thread and stderr_thread.is_alive():
+                        stderr_thread.join(timeout=2.0)
+
+                    stderr_output = "".join(stderr_lines)
                     process.wait()
                     exit_code = process.returncode
 
@@ -269,33 +443,39 @@ class FileOperations:
                             completion_callback,
                             transfer_id,
                             True,
-                            "Download completed successfully.",
+                            f"{op_label} completed successfully.",
                         )
                     else:
-                        error_message = self._parse_transfer_error(full_output + stderr_output)
+                        error_message = self._parse_transfer_error(
+                            full_output + stderr_output
+                        )
                         GLib.idle_add(
                             completion_callback,
                             transfer_id,
                             False,
                             error_message,
                         )
-                else:  # Fallback for SFTP
-                    # ... (SFTP logic remains the same, as it doesn't provide detailed stderr during run)
+                else:  # SFTP fallback
                     sftp_cmd_base = spawner.command_builder.build_remote_command(
                         "sftp", session
                     )
 
-                    # FIX: For SFTP directory copy, destination must be the parent directory
-                    dest_path_sftp = str(local_path)
-                    if is_directory:
-                        dest_path_sftp = str(local_path.parent)
+                    # For SFTP directory copy, destination must be the parent directory
+                    if is_download:
+                        sftp_dest = (
+                            str(Path(dest_path).parent) if is_directory else dest_path
+                        )
+                        sftp_batch = f'get -r "{source_path}" "{sftp_dest}"\nquit\n'
+                    else:
+                        sftp_dest = (
+                            str(Path(dest_path).parent) if is_directory else dest_path
+                        )
+                        sftp_batch = f'put -r "{source_path}" "{sftp_dest}"\nquit\n'
 
                     with tempfile.NamedTemporaryFile(
                         mode="w", delete=False, suffix=".sftp"
                     ) as batch_file:
-                        batch_file.write(
-                            f'get -r "{remote_path}" "{dest_path_sftp}"\nquit\n'
-                        )
+                        batch_file.write(sftp_batch)
                         batch_file_path = batch_file.name
                     transfer_cmd = sftp_cmd_base + ["-b", batch_file_path]
 
@@ -311,7 +491,7 @@ class FileOperations:
                             completion_callback,
                             transfer_id,
                             True,
-                            "Download completed successfully.",
+                            f"{op_label} completed successfully.",
                         )
                     else:
                         error_msg = self._parse_transfer_error(stdout + stderr)
@@ -320,11 +500,11 @@ class FileOperations:
                         )
 
             except OperationCancelledError:
-                self.logger.warning(f"Download cancelled for {remote_path}")
+                self.logger.warning(f"{op_label} cancelled for {source_path}")
                 if completion_callback:
                     GLib.idle_add(completion_callback, transfer_id, False, "Cancelled")
             except Exception as e:
-                self.logger.error(f"Exception during download: {e}")
+                self.logger.error(f"Exception during {direction}: {e}")
                 if completion_callback:
                     GLib.idle_add(completion_callback, transfer_id, False, str(e))
             finally:
@@ -332,7 +512,31 @@ class FileOperations:
                     if transfer_id in self._active_processes:
                         del self._active_processes[transfer_id]
 
-        threading.Thread(target=download_thread, daemon=True).start()
+        threading.Thread(target=transfer_thread, daemon=True).start()
+
+    def start_download_with_progress(
+        self,
+        transfer_id: str,
+        session: SessionItem,
+        remote_path: str,
+        local_path: Path,
+        is_directory: bool,
+        progress_callback=None,
+        completion_callback=None,
+        cancellation_event: Optional[threading.Event] = None,
+    ):
+        """Start a download operation with progress tracking."""
+        self._transfer_with_progress(
+            transfer_id=transfer_id,
+            session=session,
+            source_path=remote_path,
+            dest_path=str(local_path),
+            is_directory=is_directory,
+            direction="download",
+            progress_callback=progress_callback,
+            completion_callback=completion_callback,
+            cancellation_event=cancellation_event,
+        )
 
     def start_upload_with_progress(
         self,
@@ -345,117 +549,15 @@ class FileOperations:
         completion_callback=None,
         cancellation_event: Optional[threading.Event] = None,
     ):
-        def upload_thread():
-            process = None
-            try:
-                from ..terminal.spawner import get_spawner
-
-                spawner = get_spawner()
-
-                if self._is_command_available(session, "rsync"):
-                    ssh_cmd = (
-                        f"ssh -o ControlPath={spawner._get_ssh_control_path(session)}"
-                    )
-
-                    # FIX: Add trailing slash to source for rsync directory copy
-                    source_path_rsync = str(local_path)
-                    if is_directory:
-                        source_path_rsync = str(local_path).rstrip("/") + "/"
-
-                    transfer_cmd = [
-                        "rsync",
-                        "-avz",
-                        "--progress",
-                        "-e",
-                        ssh_cmd,
-                        source_path_rsync,
-                        f"{session.user}@{session.host}:{remote_path}",
-                    ]
-                    process = self._start_process(transfer_id, transfer_cmd)
-
-                    full_output = ""
-                    progress_pattern = re.compile(r"(\d+)%")
-                    for line in iter(process.stdout.readline, ""):
-                        if cancellation_event and cancellation_event.is_set():
-                            os.killpg(os.getpgid(process.pid), signal.SIGTERM)
-                            raise OperationCancelledError("Upload cancelled by user.")
-
-                        full_output += line
-                        match = progress_pattern.search(line)
-                        if match and progress_callback:
-                            progress = float(match.group(1))
-                            GLib.idle_add(progress_callback, transfer_id, progress)
-
-                    stderr_output = process.stderr.read()
-                    process.wait()
-                    exit_code = process.returncode
-
-                    if exit_code == 0:
-                        GLib.idle_add(
-                            completion_callback,
-                            transfer_id,
-                            True,
-                            "Upload completed successfully.",
-                        )
-                    else:
-                        error_message = self._parse_transfer_error(full_output + stderr_output)
-                        GLib.idle_add(
-                            completion_callback,
-                            transfer_id,
-                            False,
-                            error_message,
-                        )
-                else:  # SFTP fallback
-                    # ... (SFTP logic remains the same)
-                    sftp_cmd_base = spawner.command_builder.build_remote_command(
-                        "sftp", session
-                    )
-
-                    # FIX: For SFTP directory copy, destination must be the parent directory
-                    dest_path_sftp = remote_path
-                    if is_directory:
-                        dest_path_sftp = str(Path(remote_path).parent)
-
-                    with tempfile.NamedTemporaryFile(
-                        mode="w", delete=False, suffix=".sftp"
-                    ) as batch_file:
-                        batch_file.write(
-                            f'put -r "{str(local_path)}" "{dest_path_sftp}"\nquit\n'
-                        )
-                        batch_file_path = batch_file.name
-                    transfer_cmd = sftp_cmd_base + ["-b", batch_file_path]
-
-                    process = self._start_process(transfer_id, transfer_cmd)
-
-                    stdout, stderr = process.communicate()
-                    exit_code = process.returncode
-                    if "batch_file_path" in locals() and Path(batch_file_path).exists():
-                        Path(batch_file_path).unlink()
-
-                    if exit_code == 0:
-                        GLib.idle_add(
-                            completion_callback,
-                            transfer_id,
-                            True,
-                            "Upload completed successfully.",
-                        )
-                    else:
-                        error_msg = self._parse_transfer_error(stdout + stderr)
-                        GLib.idle_add(
-                            completion_callback, transfer_id, False, error_msg
-                        )
-
-            except OperationCancelledError:
-                self.logger.warning(f"Upload cancelled for {local_path}")
-                if completion_callback:
-                    GLib.idle_add(completion_callback, transfer_id, False, "Cancelled")
-            except Exception as e:
-                self.logger.error(f"Exception during upload: {e}")
-                if completion_callback:
-                    GLib.idle_add(completion_callback, transfer_id, False, str(e))
-            finally:
-                with self._lock:
-                    if transfer_id in self._active_processes:
-                        del self._active_processes[transfer_id]
-
-        threading.Thread(target=upload_thread, daemon=True).start()
+        """Start an upload operation with progress tracking."""
+        self._transfer_with_progress(
+            transfer_id=transfer_id,
+            session=session,
+            source_path=str(local_path),
+            dest_path=remote_path,
+            is_directory=is_directory,
+            direction="upload",
+            progress_callback=progress_callback,
+            completion_callback=completion_callback,
+            cancellation_event=cancellation_event,
+        )

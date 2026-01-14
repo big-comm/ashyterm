@@ -1,5 +1,6 @@
 # ashyterm/ui/window_ui.py
 
+import os
 from pathlib import Path
 from typing import TYPE_CHECKING, Optional
 
@@ -10,12 +11,10 @@ from gi.repository import Adw, Gdk, Gio, Gtk, Pango
 
 from ..data.command_manager_models import (
     get_command_button_manager,
-    ExecutionMode,
-    DisplayMode,
 )
 from ..utils.icons import icon_button, icon_image
 from ..utils.logger import get_logger
-from ..utils.tooltip_helper import init_tooltip_helper
+from ..utils.tooltip_helper import get_tooltip_helper
 from ..utils.translation_utils import _
 
 # Lazy import for menus - only loaded when main menu is first shown
@@ -47,13 +46,40 @@ class WindowUIBuilder:
         app = window.get_application()
 
         # Initialize tooltip helper for custom tooltips (global singleton)
-        self.tooltip_helper = init_tooltip_helper(self.settings_manager, app)
+        self.tooltip_helper = get_tooltip_helper()
 
-        # WM settings for dynamic button layout
-        self.wm_settings = Gio.Settings.new("org.gnome.desktop.wm.preferences")
-        self.wm_settings.connect(
-            "changed::button-layout", self._on_button_layout_changed
+        # WM settings for dynamic button layout (may not exist on all DEs like KDE)
+        self.wm_settings = None
+        self._wm_button_layout = ":"  # Default: colon only = no buttons
+        self._kde_borderless_maximized = False  # KDE-specific setting
+        self._is_kde = os.environ.get("XDG_CURRENT_DESKTOP", "").upper() in (
+            "KDE",
+            "PLASMA",
         )
+
+        # Try to read GNOME WM settings (works on GNOME and some GTK-based DEs)
+        try:
+            self.wm_settings = Gio.Settings.new("org.gnome.desktop.wm.preferences")
+            self._wm_button_layout = self.wm_settings.get_string("button-layout")
+            self.wm_settings.connect(
+                "changed::button-layout", self._on_button_layout_changed
+            )
+        except Exception:
+            # Schema not available (e.g., on KDE without GNOME settings)
+            self.logger.debug(
+                "org.gnome.desktop.wm.preferences not available, "
+                "using default button behavior"
+            )
+
+        # On KDE, check kwinrc for BorderlessMaximizedWindows setting
+        if self._is_kde:
+            self._kde_borderless_maximized = self._check_kde_borderless_maximized()
+            self.logger.debug(
+                f"KDE detected, BorderlessMaximizedWindows={self._kde_borderless_maximized}"
+            )
+
+        # Track headerbar buttons visibility state
+        self._headerbar_buttons_hidden = False
 
         # Connect to window maximized state changes
         self.window.connect("notify::maximized", self._on_maximized_changed)
@@ -180,7 +206,9 @@ class WindowUIBuilder:
             placeholder_text=_("Type your command here and press ENTER..."),
         )
         self.broadcast_entry.add_css_class("broadcast-entry")
-        self.broadcast_entry.set_icon_from_icon_name(Gtk.EntryIconPosition.PRIMARY, "utilities-terminal-symbolic")
+        self.broadcast_entry.set_icon_from_icon_name(
+            Gtk.EntryIconPosition.PRIMARY, "utilities-terminal-symbolic"
+        )
         broadcast_box.append(self.broadcast_entry)
         self.broadcast_bar.set_child(broadcast_box)
         main_box.append(self.broadcast_bar)
@@ -308,29 +336,19 @@ class WindowUIBuilder:
         self.new_tab_button.connect("clicked", self.window._on_new_tab_clicked)
         self.new_tab_button.add_css_class("flat")
 
-        # Add custom tooltips to header bar buttons (with dynamic shortcuts where applicable)
-        self.tooltip_helper.add_tooltip_with_shortcut(
-            self.toggle_sidebar_button, _("Sessions Panel"), "toggle-sidebar"
+        # Add custom tooltips to header bar buttons
+        self.tooltip_helper.add_tooltip(self.toggle_sidebar_button, _("Sessions Panel"))
+        self.tooltip_helper.add_tooltip(self.file_manager_button, _("File Manager"))
+        self.tooltip_helper.add_tooltip(
+            self.command_manager_button, _("Command Manager")
         )
-        self.tooltip_helper.add_tooltip_with_shortcut(
-            self.file_manager_button, _("File Manager"), "toggle-file-manager"
-        )
-        self.tooltip_helper.add_tooltip_with_shortcut(
-            self.command_manager_button, _("Command Manager"), "show-command-manager"
-        )
-        self.tooltip_helper.add_tooltip_with_shortcut(
-            self.search_button, _("Search in Terminal"), "toggle-search"
-        )
-        self.tooltip_helper.add_tooltip_with_shortcut(
-            self.ai_assistant_button, _("Ask AI Assistant"), "ai-assistant"
-        )
+        self.tooltip_helper.add_tooltip(self.search_button, _("Search in Terminal"))
+        self.tooltip_helper.add_tooltip(self.ai_assistant_button, _("Ask AI Assistant"))
         self.tooltip_helper.add_tooltip(
             self.cleanup_button, _("Manage Temporary Files")
         )
         self.tooltip_helper.add_tooltip(self.menu_button, _("Main Menu"))
-        self.tooltip_helper.add_tooltip_with_shortcut(
-            self.new_tab_button, _("New Tab"), "new-local-tab"
-        )
+        self.tooltip_helper.add_tooltip(self.new_tab_button, _("New Tab"))
 
         # Check if window controls are on the left
         button_layout = self.wm_settings.get_string("button-layout")
@@ -398,6 +416,9 @@ class WindowUIBuilder:
 
     def _on_button_layout_changed(self, settings, key):
         """Handle dynamic changes to window button layout."""
+        # Update cached button layout
+        self._wm_button_layout = settings.get_string("button-layout")
+
         if self.header_bar is None:
             return
 
@@ -549,12 +570,6 @@ class WindowUIBuilder:
 
     def _on_toolbar_command_right_click(self, gesture, n_press, x, y, command):
         """Handle right-click on toolbar command to show options."""
-        command_manager = get_command_button_manager()
-
-        # Get current toolbar display mode (separate from command's display_mode)
-        current_mode = command_manager.get_command_pref(
-            command.id, "toolbar_display_mode", "icon_and_text"
-        )
 
         # Create menu with display mode options
         menu = Gio.Menu()
@@ -877,6 +892,99 @@ class WindowUIBuilder:
             """
         self.border_provider.load_from_data(css.encode("utf-8"))
 
+    def _check_kde_borderless_maximized(self) -> bool:
+        """Check KDE's kwinrc for BorderlessMaximizedWindows setting.
+
+        Returns:
+            True if KDE is configured to remove borders from maximized windows.
+        """
+        try:
+            # KDE stores window manager settings in ~/.config/kwinrc
+            kwinrc_path = Path.home() / ".config" / "kwinrc"
+            if not kwinrc_path.exists():
+                return False
+
+            content = kwinrc_path.read_text()
+            # Look for the [Windows] section and BorderlessMaximizedWindows setting
+            in_windows_section = False
+            for line in content.splitlines():
+                line = line.strip()
+                if line.startswith("["):
+                    in_windows_section = line.lower() == "[windows]"
+                elif in_windows_section and line.lower().startswith(
+                    "borderlessmaximizedwindows"
+                ):
+                    # Parse the value (format: BorderlessMaximizedWindows=true)
+                    if "=" in line:
+                        value = line.split("=", 1)[1].strip().lower()
+                        return value in ("true", "1", "yes")
+            return False
+        except Exception as e:
+            self.logger.debug(f"Could not read KDE kwinrc: {e}")
+            return False
+
+    def _should_hide_headerbar_buttons(self) -> bool:
+        """Determine if headerbar buttons should be hidden when maximized.
+
+        This supports desktop environments like KDE Plasma with
+        "Active Window Control" or "Borderless Maximized Windows"
+        where window control buttons are shown in the panel instead.
+
+        Returns:
+            True if headerbar buttons should be hidden, False otherwise.
+        """
+        setting = self.settings_manager.get(
+            "hide_headerbar_buttons_when_maximized", "auto"
+        )
+
+        if setting == "never":
+            return False
+        elif setting == "always":
+            return True
+        else:  # "auto" - detect from environment
+            # On KDE, check if BorderlessMaximizedWindows is enabled
+            if self._is_kde and self._kde_borderless_maximized:
+                return True
+
+            # On GNOME and other DEs, check if button-layout is empty
+            # Format: "buttons-on-left:buttons-on-right"
+            # Examples:
+            #   "close,minimize,maximize:" - buttons on left
+            #   ":close,minimize,maximize" - buttons on right
+            #   ":" or "" - no buttons (DE manages them externally)
+            layout = self._wm_button_layout.strip()
+            if not layout or layout == ":":
+                return True
+            # Check if both sides are empty
+            parts = layout.split(":")
+            left_buttons = parts[0].strip() if len(parts) > 0 else ""
+            right_buttons = parts[1].strip() if len(parts) > 1 else ""
+            # If no actual button names on either side, hide them
+            return not (left_buttons or right_buttons)
+
+    def _update_headerbar_buttons_visibility(self):
+        """Update headerbar title buttons visibility based on maximized state."""
+        if self.header_bar is None:
+            return
+
+        is_maximized = self.window.is_maximized()
+        should_hide = is_maximized and self._should_hide_headerbar_buttons()
+
+        # Only update if state changed to avoid unnecessary redraws
+        if should_hide != self._headerbar_buttons_hidden:
+            self._headerbar_buttons_hidden = should_hide
+            # Use Adw.HeaderBar methods to show/hide window control buttons
+            self.header_bar.set_show_start_title_buttons(not should_hide)
+            self.header_bar.set_show_end_title_buttons(not should_hide)
+
+            if should_hide:
+                self.logger.debug(
+                    "Hiding headerbar title buttons (maximized with external controls)"
+                )
+            else:
+                self.logger.debug("Showing headerbar title buttons")
+
     def _on_maximized_changed(self, window, param):
         """Handle window maximized state changes."""
         self._update_border_css()
+        self._update_headerbar_buttons_visibility()

@@ -10,7 +10,7 @@ gi.require_version("Vte", "3.91")
 from gi.repository import GLib, Vte
 
 from .logger import get_logger
-from .osc7 import OSC7Info, OSC7Parser
+from .osc7 import OSC7Info, OSC7Parser, parse_directory_uri
 
 
 class OSC7TerminalTracker:
@@ -57,18 +57,9 @@ class OSC7TerminalTracker:
     ) -> None:
         """Handle directory change detected from VTE's current directory URI."""
         try:
-            from urllib.parse import unquote, urlparse
-
-            parsed_uri = urlparse(directory_uri)
-            if parsed_uri.scheme != "file":
+            osc7_info = parse_directory_uri(directory_uri, self.parser)
+            if not osc7_info:
                 return
-
-            path = unquote(parsed_uri.path)
-            hostname = parsed_uri.hostname or "localhost"
-            display_path = self.parser._create_display_path(path)
-            osc7_info = OSC7Info(
-                hostname=hostname, path=path, display_path=display_path
-            )
 
             last_osc7 = terminal_data.get("last_osc7")
             if last_osc7 and last_osc7.path == osc7_info.path:

@@ -143,6 +143,17 @@ class BaseDialog(Adw.Window):
     def _on_cancel_clicked(self, button):
         self.close()
 
+    def present(self):
+        """Present the dialog, hiding any tooltips first."""
+        # Hide all tooltips to prevent them from interfering with the dialog
+        from ...utils.tooltip_helper import get_tooltip_helper
+
+        try:
+            get_tooltip_helper().hide_all()
+        except Exception:
+            pass
+        super().present()
+
     def _mark_changed(self):
         self._has_changes = True
 
@@ -211,14 +222,14 @@ class BaseDialog(Adw.Window):
         css_classes: Optional[List[str]] = None,
     ) -> Adw.EntryRow:
         """Create an Adw.EntryRow with common configuration.
-        
+
         Args:
             title: The row title/label.
             text: Initial text value.
             subtitle: Optional tooltip text (EntryRow doesn't support subtitle).
             on_changed: Optional callback for "changed" signal.
             css_classes: Optional list of CSS classes to add.
-            
+
         Returns:
             Configured Adw.EntryRow instance.
         """
@@ -242,13 +253,13 @@ class BaseDialog(Adw.Window):
         on_changed: Optional[Callable] = None,
     ) -> Adw.PasswordEntryRow:
         """Create an Adw.PasswordEntryRow with common configuration.
-        
+
         Args:
             title: The row title/label.
             text: Initial text value.
             subtitle: Optional tooltip text (PasswordEntryRow doesn't support subtitle).
             on_changed: Optional callback for "changed" signal.
-            
+
         Returns:
             Configured Adw.PasswordEntryRow instance.
         """
@@ -268,13 +279,13 @@ class BaseDialog(Adw.Window):
         on_changed: Optional[Callable[[bool], None]] = None,
     ) -> Adw.SwitchRow:
         """Create an Adw.SwitchRow with common configuration.
-        
+
         Args:
             title: The row title/label.
             subtitle: Optional subtitle text.
             active: Initial switch state.
             on_changed: Optional callback receiving the new boolean state.
-            
+
         Returns:
             Configured Adw.SwitchRow instance.
         """
@@ -297,7 +308,7 @@ class BaseDialog(Adw.Window):
         on_changed: Optional[Callable[[float], None]] = None,
     ) -> Adw.SpinRow:
         """Create an Adw.SpinRow with common configuration.
-        
+
         Args:
             title: The row title/label.
             value: Initial value.
@@ -306,7 +317,7 @@ class BaseDialog(Adw.Window):
             step: Step increment.
             subtitle: Optional subtitle text.
             on_changed: Optional callback receiving the new value.
-            
+
         Returns:
             Configured Adw.SpinRow instance.
         """
@@ -328,14 +339,14 @@ class BaseDialog(Adw.Window):
         on_changed: Optional[Callable[[int], None]] = None,
     ) -> Adw.ComboRow:
         """Create an Adw.ComboRow with common configuration.
-        
+
         Args:
             title: The row title/label.
             items: List of string items for the dropdown.
             selected_index: Initially selected index.
             subtitle: Optional subtitle text.
             on_changed: Optional callback receiving the new selected index.
-            
+
         Returns:
             Configured Adw.ComboRow instance.
         """
@@ -354,11 +365,11 @@ class BaseDialog(Adw.Window):
         description: str = "",
     ) -> Adw.PreferencesGroup:
         """Create an Adw.PreferencesGroup with common configuration.
-        
+
         Args:
             title: The group title.
             description: Optional group description.
-            
+
         Returns:
             Configured Adw.PreferencesGroup instance.
         """
@@ -369,3 +380,223 @@ class BaseDialog(Adw.Window):
             group.set_description(description)
         return group
 
+
+# Re-export create_icon_button from utils.icons for convenience
+from ...utils.icons import create_icon_button  # noqa: E402, F401
+
+
+def show_delete_confirmation_dialog(
+    parent: Gtk.Window,
+    heading: str,
+    body: str,
+    on_confirm: Callable[[], None],
+    delete_label: str = _("Delete"),
+    cancel_label: str = _("Cancel"),
+) -> None:
+    """Show a standard delete confirmation dialog.
+
+    This is a common utility function to reduce code duplication for
+    delete confirmation dialogs throughout the application.
+
+    Args:
+        parent: Parent window for the dialog.
+        heading: Dialog heading/title.
+        body: Dialog body message.
+        on_confirm: Callback to execute when delete is confirmed.
+        delete_label: Label for the delete button.
+        cancel_label: Label for the cancel button.
+    """
+    dialog = Adw.MessageDialog(
+        transient_for=parent,
+        heading=heading,
+        body=body,
+    )
+    dialog.add_response("cancel", cancel_label)
+    dialog.add_response("delete", delete_label)
+    dialog.set_response_appearance("delete", Adw.ResponseAppearance.DESTRUCTIVE)
+
+    def on_response(dlg: Adw.MessageDialog, response: str) -> None:
+        dlg.close()
+        if response == "delete":
+            on_confirm()
+
+    dialog.connect("response", on_response)
+
+    # Hide any tooltips before showing the dialog
+    from ...utils.tooltip_helper import get_tooltip_helper
+
+    try:
+        get_tooltip_helper().hide_all()
+    except Exception:
+        pass
+
+    dialog.present()
+
+
+def create_mapped_combo_row(
+    title: str,
+    value_map: List[str],
+    display_strings: List[str],
+    current_value: str,
+    on_change: Callable[[str], None],
+    subtitle: Optional[str] = None,
+) -> Adw.ComboRow:
+    """Create a ComboRow with value mapping.
+
+    This is a utility function to reduce code duplication when creating
+    ComboRows that map between internal values and display strings.
+
+    Args:
+        title: The row title.
+        value_map: List of internal values (e.g., ["new_tab", "new_window"]).
+        display_strings: List of display strings (e.g., [_("Open new tab"), _("Open new window")]).
+        current_value: The current internal value to select.
+        on_change: Callback receiving the new internal value when selection changes.
+        subtitle: Optional subtitle for the row.
+
+    Returns:
+        A configured Adw.ComboRow.
+    """
+    row = Adw.ComboRow(title=title)
+    if subtitle:
+        row.set_subtitle(subtitle)
+
+    row.set_model(Gtk.StringList.new(display_strings))
+
+    try:
+        selected_index = value_map.index(current_value)
+    except ValueError:
+        selected_index = 0
+
+    row.set_selected(selected_index)
+
+    def _on_notify_selected(combo_row: Adw.ComboRow, _pspec) -> None:
+        idx = combo_row.get_selected()
+        if 0 <= idx < len(value_map):
+            on_change(value_map[idx])
+
+    row.connect("notify::selected", _on_notify_selected)
+
+    return row
+
+
+def create_action_row_with_buttons(
+    title: str,
+    subtitle: Optional[str] = None,
+    icon_name: Optional[str] = None,
+    edit_callback: Optional[Callable] = None,
+    delete_callback: Optional[Callable] = None,
+    toggle_callback: Optional[Callable[[bool], None]] = None,
+    toggle_active: bool = True,
+    delete_sensitive: bool = True,
+    delete_tooltip: Optional[str] = None,
+) -> Adw.ActionRow:
+    """Create an ActionRow with common action buttons.
+
+    This utility creates a standardized ActionRow with optional edit, delete,
+    and toggle buttons, reducing boilerplate in dialog implementations.
+
+    Args:
+        title: The row title.
+        subtitle: Optional subtitle text.
+        icon_name: Optional icon to show as prefix.
+        edit_callback: Callback for edit button click. If None, no edit button.
+        delete_callback: Callback for delete button click. If None, no delete button.
+        toggle_callback: Callback for switch toggle. If None, no switch.
+        toggle_active: Initial state of the switch if toggle_callback is provided.
+        delete_sensitive: Whether the delete button should be sensitive.
+        delete_tooltip: Custom tooltip for delete button.
+
+    Returns:
+        Configured Adw.ActionRow with the specified buttons.
+    """
+    from ...utils.tooltip_helper import get_tooltip_helper
+
+    row = Adw.ActionRow(title=title)
+    if subtitle:
+        row.set_subtitle(subtitle)
+
+    # Add icon prefix if specified
+    if icon_name:
+        from ...utils.icons import icon_image
+
+        icon = icon_image(icon_name)
+        icon.set_opacity(0.6)
+        row.add_prefix(icon)
+
+    # Add edit button
+    if edit_callback:
+        edit_btn = Gtk.Button(icon_name="document-edit-symbolic")
+        edit_btn.add_css_class("flat")
+        edit_btn.set_valign(Gtk.Align.CENTER)
+        get_tooltip_helper().add_tooltip(edit_btn, _("Edit"))
+        edit_btn.connect("clicked", edit_callback)
+        row.add_suffix(edit_btn)
+
+    # Add delete button
+    if delete_callback:
+        delete_btn = Gtk.Button(icon_name="user-trash-symbolic")
+        delete_btn.add_css_class("flat")
+        delete_btn.set_valign(Gtk.Align.CENTER)
+        delete_btn.set_sensitive(delete_sensitive)
+        tooltip = delete_tooltip or _("Delete")
+        get_tooltip_helper().add_tooltip(delete_btn, tooltip)
+        delete_btn.connect("clicked", delete_callback)
+        row.add_suffix(delete_btn)
+
+    # Add toggle switch
+    if toggle_callback:
+        switch = Gtk.Switch()
+        switch.set_valign(Gtk.Align.CENTER)
+        switch.set_active(toggle_active)
+        switch.connect("state-set", lambda s, state: toggle_callback(state))
+        row.add_suffix(switch)
+
+    return row
+
+
+def validate_directory_path(
+    entry: Gtk.Entry,
+    validation_errors: List[str],
+    error_message: str,
+    allow_empty: bool = True,
+) -> bool:
+    """Validate a directory path from an entry widget.
+
+    Common validation logic for directory path fields, reducing
+    duplication across dialog validation methods.
+
+    Args:
+        entry: The entry widget containing the path.
+        validation_errors: List to append error messages to.
+        error_message: Error message to show if validation fails.
+        allow_empty: If True, empty paths are valid.
+
+    Returns:
+        True if valid, False otherwise.
+    """
+    from pathlib import Path
+
+    path_text = entry.get_text().strip()
+
+    if not path_text:
+        if allow_empty:
+            entry.remove_css_class("error")
+            return True
+        else:
+            entry.add_css_class("error")
+            validation_errors.append(error_message)
+            return False
+
+    try:
+        path = Path(path_text).expanduser()
+        if not path.exists() or not path.is_dir():
+            entry.add_css_class("error")
+            validation_errors.append(error_message)
+            return False
+        entry.remove_css_class("error")
+        return True
+    except Exception:
+        entry.add_css_class("error")
+        validation_errors.append(_("Invalid path format"))
+        return False

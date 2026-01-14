@@ -5,6 +5,7 @@ gi.require_version("Gtk", "4.0")
 gi.require_version("Adw", "1")
 gi.require_version("Vte", "3.91")
 import os
+import shlex
 import subprocess
 import tempfile
 import threading
@@ -12,6 +13,7 @@ import weakref
 from functools import partial
 from pathlib import Path, PurePosixPath
 from typing import Any, Dict, List, Optional, Set
+from urllib.parse import unquote, urlparse
 
 from gi.repository import Adw, Gdk, Gio, GLib, GObject, Graphene, Gtk, Vte
 
@@ -477,8 +479,6 @@ class FileManager(GObject.Object):
         try:
             uri = self.bound_terminal.get_current_directory_uri()
             if uri:
-                from urllib.parse import unquote, urlparse
-
                 parsed_uri = urlparse(uri)
                 if parsed_uri.scheme == "file":
                     return unquote(parsed_uri.path)
@@ -500,10 +500,12 @@ class FileManager(GObject.Object):
         else:
             # For SSH sessions, query the remote home directory
             if self.operations:
-                success, output = self.operations.execute_command_on_session([
-                    "echo",
-                    "$HOME",
-                ])
+                success, output = self.operations.execute_command_on_session(
+                    [
+                        "echo",
+                        "$HOME",
+                    ]
+                )
                 if success and output.strip():
                     return output.strip()
             # Fallback to root if we can't determine the home directory
@@ -517,8 +519,6 @@ class FileManager(GObject.Object):
             uri = self.bound_terminal.get_current_directory_uri()
             if not uri:
                 return
-
-            from urllib.parse import unquote, urlparse
 
             parsed_uri = urlparse(uri)
             if parsed_uri.scheme != "file":
@@ -1002,95 +1002,119 @@ class FileManager(GObject.Object):
         the entire output into memory at once. This keeps RAM usage stable
         even for directories with many files.
         """
-        results: List[FileItem] = []
-        error_message = ""
-        truncated = False
-
-        # Capture operations reference locally to prevent race with destroy()
         operations = self.operations
         if self._is_destroyed or not operations:
-            GLib.idle_add(
-                self._complete_recursive_search,
-                generation,
-                [],
-                "Search cancelled - file manager closing",
-                False,
-            )
+            self._schedule_search_complete(generation, [], "Search cancelled", False)
             return
 
-        # Check if fd (or fdfind) is available for faster search
         use_fd = self._check_fd_available(operations)
-
-        if use_fd:
-            # fd command - faster and more user-friendly
-            command = self._build_fd_command(base_path, search_term, show_hidden)
-        else:
-            # Fallback to find command
-            command = self._build_find_command(base_path, search_term, show_hidden)
-
+        command = self._build_search_command(
+            base_path, search_term, show_hidden, use_fd
+        )
         base_posix = PurePosixPath(base_path)
 
         try:
             if self._is_remote_session():
-                # For remote sessions, we still need to use execute_command_on_session
-                # which returns full output, but this is unavoidable for SSH
-                success, output = operations.execute_command_on_session(command)
-                if not success:
-                    error_message = output.strip()
-                    output = ""
-
-                # Process lines from remote output
-                for line in output.splitlines():
-                    if self._recursive_search_generation != generation:
-                        return  # Abort if search cancelled
-
-                    if not line or (not use_fd and line.startswith("find:")):
-                        continue
-
-                    file_item = self._process_search_result_line(line, base_posix)
-                    if file_item:
-                        results.append(file_item)
-                        if len(results) >= MAX_RECURSIVE_RESULTS:
-                            truncated = True
-                            break
+                results, error_message, truncated = self._search_remote(
+                    generation, command, base_posix, use_fd, operations
+                )
             else:
-                # Task 6: For local sessions, use Popen for memory-efficient line-by-line reading
-                with subprocess.Popen(
-                    command,
-                    stdout=subprocess.PIPE,
-                    stderr=subprocess.PIPE,
-                    text=True,
-                    bufsize=1,  # Line buffered
-                ) as proc:
-                    for line in proc.stdout:
-                        # Check for cancellation on each line
-                        if self._recursive_search_generation != generation:
-                            proc.terminate()
-                            return  # Abort if search cancelled
-
-                        line = line.rstrip("\n")
-                        if not line or (not use_fd and line.startswith("find:")):
-                            continue
-
-                        file_item = self._process_search_result_line(line, base_posix)
-                        if file_item:
-                            results.append(file_item)
-                            if len(results) >= MAX_RECURSIVE_RESULTS:
-                                truncated = True
-                                proc.terminate()
-                                break
-
-                    # Check for errors if process didn't complete normally
-                    if proc.returncode and proc.returncode != 0:
-                        stderr_output = proc.stderr.read() if proc.stderr else ""
-                        if stderr_output:
-                            error_message = stderr_output.strip()
-
+                results, error_message, truncated = self._search_local(
+                    generation, command, base_posix, use_fd
+                )
         except subprocess.TimeoutExpired:
-            error_message = "Search timed out"
+            results, error_message, truncated = [], "Search timed out", False
         except Exception as exc:
-            error_message = str(exc)
+            results, error_message, truncated = [], str(exc), False
 
+        self._schedule_search_complete(generation, results, error_message, truncated)
+
+    def _build_search_command(
+        self, base_path: str, search_term: str, show_hidden: bool, use_fd: bool
+    ) -> list[str]:
+        """Build the appropriate search command based on available tools."""
+        if use_fd:
+            return self._build_fd_command(base_path, search_term, show_hidden)
+        return self._build_find_command(base_path, search_term, show_hidden)
+
+    def _search_remote(
+        self,
+        generation: int,
+        command: list[str],
+        base_posix: PurePosixPath,
+        use_fd: bool,
+        operations,
+    ) -> tuple[list, str, bool]:
+        """Execute remote search and process results."""
+        results = []
+        error_message = ""
+        truncated = False
+
+        success, output = operations.execute_command_on_session(command)
+        if not success:
+            return results, output.strip(), False
+
+        for line in output.splitlines():
+            if self._recursive_search_generation != generation:
+                return [], "", False
+
+            if not line or (not use_fd and line.startswith("find:")):
+                continue
+
+            file_item = self._process_search_result_line(line, base_posix)
+            if file_item:
+                results.append(file_item)
+                if len(results) >= MAX_RECURSIVE_RESULTS:
+                    return results, "", True
+
+        return results, error_message, truncated
+
+    def _search_local(
+        self,
+        generation: int,
+        command: list[str],
+        base_posix: PurePosixPath,
+        use_fd: bool,
+    ) -> tuple[list, str, bool]:
+        """Execute local search with memory-efficient line-by-line reading."""
+        results = []
+        error_message = ""
+        truncated = False
+
+        with subprocess.Popen(
+            command,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            text=True,
+            bufsize=1,
+        ) as proc:
+            for line in proc.stdout:
+                if self._recursive_search_generation != generation:
+                    proc.terminate()
+                    return [], "", False
+
+                line = line.rstrip("\n")
+                if not line or (not use_fd and line.startswith("find:")):
+                    continue
+
+                file_item = self._process_search_result_line(line, base_posix)
+                if file_item:
+                    results.append(file_item)
+                    if len(results) >= MAX_RECURSIVE_RESULTS:
+                        proc.terminate()
+                        return results, "", True
+
+            if proc.returncode and proc.returncode != 0:
+                stderr = proc.stderr.read() if proc.stderr else ""
+                if stderr:
+                    error_message = stderr.strip()
+
+        return results, error_message, truncated
+
+    def _schedule_search_complete(
+        self, generation: int, results: list, error_message: str, truncated: bool
+    ) -> None:
+        """Schedule completion callback on main thread."""
         GLib.idle_add(
             self._complete_recursive_search,
             generation,
@@ -1139,11 +1163,13 @@ class FileManager(GObject.Object):
             if self._is_remote_session():
                 # For remote sessions, use 'command -v' which works via SSH shell
                 if ops:
-                    success, _ = ops.execute_command_on_session([
-                        "command",
-                        "-v",
-                        cmd_name,
-                    ])
+                    success, _ = ops.execute_command_on_session(
+                        [
+                            "command",
+                            "-v",
+                            cmd_name,
+                        ]
+                    )
                     if success:
                         self._fd_command_name = cmd_name
                         return True
@@ -1176,10 +1202,16 @@ class FileManager(GObject.Object):
         #
         # We use a shell to pipe fd output through xargs ls for consistent format
         hidden_flag = "-H" if show_hidden else ""
+
+        # SECURITY: Use shlex.quote to prevent shell injection
+        # User input (search_term) and path (base_path) must be properly escaped
+        safe_search_term = shlex.quote(search_term)
+        safe_base_path = shlex.quote(base_path)
+
         return [
             "sh",
             "-c",
-            f'{fd_cmd} -i {hidden_flag} -0 --color=never "{search_term}" "{base_path}" | xargs -0 ls -ld --full-time --classify 2>/dev/null',
+            f"{fd_cmd} -i {hidden_flag} -0 --color=never {safe_search_term} {safe_base_path} | xargs -0 ls -ld --full-time --classify 2>/dev/null",
         ]
 
     def _build_find_command(
@@ -1270,9 +1302,7 @@ class FileManager(GObject.Object):
         ):
             self.selection_model.select_item(0, True)
             if hasattr(self, "column_view") and self.column_view:
-                self.column_view.scroll_to(
-                    0, None, Gtk.ListScrollFlags.NONE, None
-                )
+                self.column_view.scroll_to(0, None, Gtk.ListScrollFlags.NONE, None)
 
         return False
 
@@ -1655,105 +1685,125 @@ class FileManager(GObject.Object):
         )
 
     def _list_files_thread(self, requested_path: str, source: str = "filemanager"):
-        """Task 1: UI Batching - Process files in batches to avoid UI freezing."""
+        """Task 1: UI Batching - Process files in batches to avoid UI freezing.
+
+        Uses a short timeout to prevent UI freeze when SSH connection is lost.
+        """
         try:
-            # Check for destruction/invalid state before any operations
             if self._is_destroyed:
                 return
 
-            # Capture operations reference locally to prevent race with destroy()
             operations = self.operations
             if not operations:
-                self.logger.warning("File operations not available. Cannot list files.")
-                GLib.idle_add(
-                    self._update_store_with_files,
-                    requested_path,
-                    [],
-                    "Operations not initialized",
-                    source,
+                self._schedule_update_with_error(
+                    requested_path, "Operations not initialized", source
                 )
                 return
 
-            path_for_ls = requested_path
-            if not path_for_ls.endswith("/"):
-                path_for_ls += "/"
-
+            path_for_ls = self._normalize_path_for_ls(requested_path)
             command = ["ls", "-la", "--classify", "--full-time", path_for_ls]
-            success, output = operations.execute_command_on_session(command)
+            success, output = operations.execute_command_on_session(command, timeout=8)
 
             if not success:
-                # ls command failed - revert to last successful path
-                self.logger.warning(
-                    f"Failed to list '{requested_path}': {output}. Reverting to last successful path."
-                )
-                if (
-                    self._last_successful_path
-                    and self._last_successful_path != requested_path
-                ):
-                    self.logger.info(
-                        f"Reverting to last successful path: '{self._last_successful_path}'."
-                    )
-                    GLib.idle_add(
-                        self._fallback_to_accessible_path,
-                        self._last_successful_path,
-                        source,
-                    )
-                    return
-                # If no fallback available, show empty list with error
-                GLib.idle_add(
-                    self._update_store_with_files,
-                    requested_path,
-                    [],
-                    output,
-                    source,
-                )
+                self._handle_list_error(requested_path, output, source)
                 return
 
-            lines = output.strip().split("\n")[1:]  # Skip total line
-            directories = []
-            files = []
-            parent_item = None
-
-            # Parse all files in one pass, separating directories from files
-            for line in lines:
-                # Safety check to stop processing if user switched folders
-                if self._is_destroyed or requested_path != self.current_path:
-                    return
-
-                file_item = FileItem.from_ls_line(line)
-                if file_item:
-                    if file_item.name == "..":
-                        parent_item = file_item
-                    elif file_item.name not in [".", ".."]:
-                        if file_item.is_link and file_item._link_target:
-                            if not file_item._link_target.startswith("/"):
-                                file_item._link_target = f"{requested_path.rstrip('/')}/{file_item._link_target}"
-                        # Separate directories from files
-                        if file_item.is_directory_like:
-                            directories.append(file_item)
-                        else:
-                            files.append(file_item)
-
-            # Sort directories and files alphabetically (case-insensitive)
-            directories.sort(key=lambda x: x.name.lower())
-            files.sort(key=lambda x: x.name.lower())
-
-            # Build the complete sorted list: parent -> directories -> files
-            all_items = []
-            if requested_path != "/" and parent_item:
-                all_items.append(parent_item)
-            all_items.extend(directories)
-            all_items.extend(files)
-
-            # Add all items in a single operation for better performance
-            # GTK4's ColumnView uses virtual scrolling, so only visible items render
+            all_items = self._parse_ls_output(output, requested_path)
             GLib.idle_add(self._set_store_items, all_items, requested_path, source)
 
         except Exception as e:
             self.logger.error(f"Error in background file listing: {e}")
-            GLib.idle_add(
-                self._update_store_with_files, requested_path, [], str(e), source
+            self._schedule_update_with_error(requested_path, str(e), source)
+
+    def _normalize_path_for_ls(self, path: str) -> str:
+        """Ensure path ends with slash for ls command."""
+        return path if path.endswith("/") else f"{path}/"
+
+    def _schedule_update_with_error(self, path: str, error: str, source: str) -> None:
+        """Schedule an error update on the main thread."""
+        GLib.idle_add(self._update_store_with_files, path, [], error, source)
+
+    def _handle_list_error(self, requested_path: str, output: str, source: str) -> None:
+        """Handle errors from ls command."""
+        is_connection_error = self._is_connection_error(output)
+
+        if is_connection_error:
+            self.logger.warning(
+                f"Connection issue while listing '{requested_path}': {output}"
             )
+            error_msg = _("Connection lost. Please check your network connection.")
+        else:
+            self.logger.warning(
+                f"Failed to list '{requested_path}': {output}. Reverting to last successful path."
+            )
+            error_msg = output
+
+        if self._should_fallback(is_connection_error, requested_path):
+            GLib.idle_add(
+                self._fallback_to_accessible_path,
+                self._last_successful_path,
+                source,
+            )
+        else:
+            self._schedule_update_with_error(requested_path, error_msg, source)
+
+    def _is_connection_error(self, output: str) -> bool:
+        """Check if output indicates a connection error."""
+        lower = output.lower()
+        return any(
+            term in lower
+            for term in ["timed out", "timeout", "connection", "network", "unreachable"]
+        )
+
+    def _should_fallback(self, is_connection_error: bool, requested_path: str) -> bool:
+        """Determine if we should fallback to last successful path."""
+        return (
+            not is_connection_error
+            and self._last_successful_path
+            and self._last_successful_path != requested_path
+        )
+
+    def _parse_ls_output(self, output: str, requested_path: str) -> list:
+        """Parse ls output and return sorted file items."""
+        lines = output.strip().split("\n")[1:]  # Skip total line
+        directories = []
+        files = []
+        parent_item = None
+
+        for line in lines:
+            if self._is_destroyed or requested_path != self.current_path:
+                return []
+
+            file_item = FileItem.from_ls_line(line)
+            if not file_item:
+                continue
+
+            if file_item.name == "..":
+                parent_item = file_item
+            elif file_item.name not in [".", ".."]:
+                self._resolve_link_target(file_item, requested_path)
+                if file_item.is_directory_like:
+                    directories.append(file_item)
+                else:
+                    files.append(file_item)
+
+        directories.sort(key=lambda x: x.name.lower())
+        files.sort(key=lambda x: x.name.lower())
+
+        all_items = []
+        if requested_path != "/" and parent_item:
+            all_items.append(parent_item)
+        all_items.extend(directories)
+        all_items.extend(files)
+        return all_items
+
+    def _resolve_link_target(self, file_item: FileItem, base_path: str) -> None:
+        """Resolve relative symlink targets to absolute paths."""
+        if file_item.is_link and file_item._link_target:
+            if not file_item._link_target.startswith("/"):
+                file_item._link_target = (
+                    f"{base_path.rstrip('/')}/{file_item._link_target}"
+                )
 
     def _set_store_items(self, items, requested_path, source):
         """Set all store items in a single operation for optimal performance.
@@ -1948,9 +1998,7 @@ class FileManager(GObject.Object):
             tx, ty = x, y
             if widget:
                 try:
-                    translated = widget.translate_coordinates(
-                        self.column_view, x, y
-                    )
+                    translated = widget.translate_coordinates(self.column_view, x, y)
                     if translated:
                         tx, ty = translated
                 except Exception:
@@ -2096,9 +2144,7 @@ class FileManager(GObject.Object):
 
         elif keyval in (Gdk.KEY_Delete, Gdk.KEY_KP_Delete):
             selected_items = [
-                item
-                for item in self.get_selected_items()
-                if item.name != ".."
+                item for item in self.get_selected_items() if item.name != ".."
             ]
             if selected_items:
                 self._on_delete_action(None, None, selected_items)
@@ -2162,8 +2208,38 @@ class FileManager(GObject.Object):
 
         return menu
 
-    def _setup_context_actions(self, popover, items: List[FileItem]):
+    def _setup_action_group(
+        self,
+        popover,
+        actions: dict,
+        group_name: str = "context",
+        items: List[FileItem] = None,
+    ):
+        """Generic helper to setup action groups with callbacks.
+
+        Args:
+            popover: The popover to attach the action group to
+            actions: Dict mapping action names to callbacks
+            group_name: Name of the action group (default: "context")
+            items: Optional list of FileItem objects to pass to callbacks
+        """
         action_group = Gio.SimpleActionGroup()
+        for name, callback in actions.items():
+            action = Gio.SimpleAction.new(name, None)
+            if name == "paste":
+                action.set_enabled(self._can_paste())
+                action.connect("activate", lambda a, _, cb=callback: cb())
+            elif items is not None:
+                action.connect(
+                    "activate",
+                    lambda a, _, cb=callback, itms=list(items): cb(a, _, itms),
+                )
+            else:
+                action.connect("activate", lambda a, _, cb=callback: cb())
+            action_group.add_action(action)
+        popover.insert_action_group(group_name, action_group)
+
+    def _setup_context_actions(self, popover, items: List[FileItem]):
         actions = {
             "open_edit": self._on_open_edit_action,
             "open_with": self._on_open_with_action,
@@ -2175,18 +2251,7 @@ class FileManager(GObject.Object):
             "download": self._on_download_action,
             "delete": self._on_delete_action,
         }
-        for name, callback in actions.items():
-            action = Gio.SimpleAction.new(name, None)
-            if name == "paste":
-                action.set_enabled(self._can_paste())
-                action.connect("activate", lambda a, _, cb=callback: cb())
-            else:
-                action.connect(
-                    "activate",
-                    lambda a, _, cb=callback, itms=list(items): cb(a, _, itms),
-                )
-            action_group.add_action(action)
-        popover.insert_action_group("context", action_group)
+        self._setup_action_group(popover, actions, "context", items)
 
     def _on_create_folder_action(self, *_args):
         base_path = PurePosixPath(self.current_path or "/")
@@ -2222,10 +2287,21 @@ class FileManager(GObject.Object):
             callback=create_file,
         )
 
-    def _on_copy_action(self, _action, _param, items: List[FileItem]):
+    def _set_clipboard_operation(
+        self, items: List[FileItem], operation: str, toast_message: str
+    ):
+        """Generic helper to set clipboard items for copy/cut operations.
+
+        Args:
+            items: List of FileItem objects to add to clipboard
+            operation: Either "copy" or "cut"
+            toast_message: Message to display in toast notification
+        """
         selectable_items = [item for item in items if item.name != ".."]
         if not selectable_items:
-            self._show_toast(_("No items selected to copy."))
+            self._show_toast(
+                _("No items selected to {operation}.").format(operation=operation)
+            )
             return
 
         base_path = PurePosixPath(self.current_path or "/")
@@ -2237,28 +2313,15 @@ class FileManager(GObject.Object):
             }
             for item in selectable_items
         ]
-        self._clipboard_operation = "copy"
+        self._clipboard_operation = operation
         self._clipboard_session_key = self._get_current_session_key()
-        self._show_toast(_("Items copied to clipboard."))
+        self._show_toast(toast_message)
+
+    def _on_copy_action(self, _action, _param, items: List[FileItem]):
+        self._set_clipboard_operation(items, "copy", _("Items copied to clipboard."))
 
     def _on_cut_action(self, _action, _param, items: List[FileItem]):
-        selectable_items = [item for item in items if item.name != ".."]
-        if not selectable_items:
-            self._show_toast(_("No items selected to cut."))
-            return
-
-        base_path = PurePosixPath(self.current_path or "/")
-        self._clipboard_items = [
-            {
-                "name": item.name,
-                "path": str(base_path / item.name),
-                "is_directory": item.is_directory,
-            }
-            for item in selectable_items
-        ]
-        self._clipboard_operation = "cut"
-        self._clipboard_session_key = self._get_current_session_key()
-        self._show_toast(_("Items marked for move."))
+        self._set_clipboard_operation(items, "cut", _("Items marked for move."))
 
     def _on_paste_action(self):
         if not self._can_paste():
@@ -2288,21 +2351,12 @@ class FileManager(GObject.Object):
         self._show_toast(toast_message)
 
     def _setup_general_context_actions(self, popover):
-        action_group = Gio.SimpleActionGroup()
         actions = {
             "create_folder": self._on_create_folder_action,
             "create_file": self._on_create_file_action,
             "paste": self._on_paste_action,
         }
-        for name, callback in actions.items():
-            action = Gio.SimpleAction.new(name, None)
-            if name == "paste":
-                action.set_enabled(self._can_paste())
-                action.connect("activate", lambda a, _, cb=callback: cb())
-            else:
-                action.connect("activate", lambda a, _, cb=callback: cb())
-            action_group.add_action(action)
-        popover.insert_action_group("context", action_group)
+        self._setup_action_group(popover, actions, "context")
 
     def _on_delete_action(self, _action, _param, items: List[FileItem]):
         count = len(items)
@@ -2503,22 +2557,87 @@ class FileManager(GObject.Object):
                             )
                             self.refresh(source="filemanager")
 
-                for item in items:
-                    transfer_id = self.transfer_manager.add_transfer(
-                        filename=item.name,
-                        local_path=str(dest_path / item.name),
-                        remote_path=f"{self.current_path.rstrip('/')}/{item.name}",
-                        file_size=item.size,
-                        transfer_type=TransferType.DOWNLOAD,
-                        is_cancellable=True,
-                        is_directory=item.is_directory_like,
-                    )
-                    self._start_cancellable_transfer(
-                        transfer_id,
-                        "Downloading",
-                        self._background_download_worker,
-                        on_success_callback=on_download_success,
-                    )
+                # Prepare download in background to get sizes and check space
+                def prepare_downloads():
+                    try:
+                        # Calculate total size needed
+                        total_size_needed = 0
+                        item_sizes = {}
+
+                        for item in items:
+                            remote_path = f"{self.current_path.rstrip('/')}/{item.name}"
+
+                            # For directories or when item.size is 0, calculate actual size
+                            if item.is_directory_like or item.size == 0:
+                                calculated_size = self.operations.get_directory_size(
+                                    remote_path,
+                                    is_remote=True,
+                                    session_override=self.session_item,
+                                )
+                                item_sizes[item.name] = (
+                                    calculated_size
+                                    if calculated_size > 0
+                                    else item.size
+                                )
+                            else:
+                                item_sizes[item.name] = item.size
+
+                            total_size_needed += item_sizes[item.name]
+
+                        # Check available space at destination
+                        free_space = self.operations.get_free_space(
+                            str(dest_path), is_remote=False
+                        )
+
+                        if free_space > 0 and total_size_needed > free_space:
+                            # Not enough space - show error on main thread
+                            def show_space_error():
+                                self._show_insufficient_space_dialog(
+                                    total_size_needed, free_space, dest_path
+                                )
+                                return False
+
+                            GLib.idle_add(show_space_error)
+                            return
+
+                        # Start downloads on main thread
+                        def start_downloads():
+                            for item in items:
+                                file_size = item_sizes.get(item.name, item.size)
+                                transfer_id = self.transfer_manager.add_transfer(
+                                    filename=item.name,
+                                    local_path=str(dest_path / item.name),
+                                    remote_path=f"{self.current_path.rstrip('/')}/{item.name}",
+                                    file_size=file_size,
+                                    transfer_type=TransferType.DOWNLOAD,
+                                    is_cancellable=True,
+                                    is_directory=item.is_directory_like,
+                                )
+                                self._start_cancellable_transfer(
+                                    transfer_id,
+                                    "Downloading",
+                                    self._background_download_worker,
+                                    on_success_callback=on_download_success,
+                                )
+                            return False
+
+                        GLib.idle_add(start_downloads)
+
+                    except Exception as e:
+                        self.logger.error(f"Error preparing downloads: {e}")
+                        error_msg = str(e)
+
+                        def show_error(msg=error_msg):
+                            self.parent_window._show_error_dialog(
+                                _("Download Error"), msg
+                            )
+                            return False
+
+                        GLib.idle_add(show_error)
+
+                # Run preparation in background
+                threading.Thread(target=prepare_downloads, daemon=True).start()
+
         except GLib.Error as e:
             if not e.matches(Gio.io_error_quark(), Gio.IOErrorEnum.CANCELLED):
                 self.parent_window._show_error_dialog(_("Error"), e.message)
@@ -2535,16 +2654,26 @@ class FileManager(GObject.Object):
         try:
             files = source.open_multiple_finish(result)
             if files:
-                for gio_file in files:
-                    self._initiate_upload(Path(gio_file.get_path()))
+                local_paths = [Path(gio_file.get_path()) for gio_file in files]
+                self._prepare_and_start_uploads(local_paths)
         except GLib.Error as e:
             if not e.matches(Gio.io_error_quark(), Gio.IOErrorEnum.CANCELLED):
                 self.parent_window._show_error_dialog(_("Error"), e.message)
 
     def _initiate_upload(self, local_path: Path):
         """Helper to start the upload process for a single local path."""
+        # For backward compatibility, calculate size here
+        if local_path.is_dir():
+            file_size = self.operations.get_directory_size(
+                str(local_path), is_remote=False
+            )
+        else:
+            file_size = local_path.stat().st_size if local_path.exists() else 0
+        self._initiate_upload_with_size(local_path, file_size)
+
+    def _initiate_upload_with_size(self, local_path: Path, file_size: int):
+        """Helper to start the upload process with pre-calculated size."""
         remote_path = f"{self.current_path.rstrip('/')}/{local_path.name}"
-        file_size = local_path.stat().st_size if local_path.exists() else 0
         transfer_id = self.transfer_manager.add_transfer(
             filename=local_path.name,
             local_path=str(local_path),
@@ -2562,6 +2691,92 @@ class FileManager(GObject.Object):
                 lambda: self.refresh(source="filemanager")
             ),
         )
+
+    def _calculate_local_paths_size(
+        self, local_paths: list[Path]
+    ) -> tuple[int, dict[str, int]]:
+        """Calculate total size and individual sizes for local paths.
+
+        This helper function extracts the common logic for calculating
+        sizes of local files/directories before upload.
+
+        Args:
+            local_paths: List of Path objects to calculate sizes for.
+
+        Returns:
+            Tuple of (total_size_needed, path_sizes_dict)
+        """
+        total_size_needed = 0
+        path_sizes: dict[str, int] = {}
+
+        for local_path in local_paths:
+            if local_path.is_dir():
+                size = self.operations.get_directory_size(
+                    str(local_path), is_remote=False
+                )
+            else:
+                size = local_path.stat().st_size if local_path.exists() else 0
+
+            path_sizes[str(local_path)] = size
+            total_size_needed += size
+
+        return total_size_needed, path_sizes
+
+    def _prepare_and_start_uploads(self, local_paths: list[Path]) -> None:
+        """Prepare uploads by checking space and start the upload process.
+
+        This helper function extracts the common logic for preparing and
+        starting uploads that was duplicated in _on_upload_dialog_response
+        and _on_upload_confirmation_response.
+
+        Args:
+            local_paths: List of Path objects to upload.
+        """
+
+        def prepare_uploads():
+            try:
+                total_size_needed, path_sizes = self._calculate_local_paths_size(
+                    local_paths
+                )
+
+                # Check available space at remote destination
+                free_space = self.operations.get_free_space(
+                    self.current_path,
+                    is_remote=True,
+                    session_override=self.session_item,
+                )
+
+                if free_space > 0 and total_size_needed > free_space:
+
+                    def show_space_error():
+                        self._show_insufficient_space_dialog(
+                            total_size_needed, free_space, Path(self.current_path)
+                        )
+                        return False
+
+                    GLib.idle_add(show_space_error)
+                    return
+
+                # Start uploads on main thread
+                def start_uploads():
+                    for local_path in local_paths:
+                        file_size = path_sizes.get(str(local_path), 0)
+                        self._initiate_upload_with_size(local_path, file_size)
+                    return False
+
+                GLib.idle_add(start_uploads)
+
+            except Exception as e:
+                self.logger.error(f"Error preparing uploads: {e}")
+                error_msg = str(e)
+
+                def show_error(msg=error_msg):
+                    self.parent_window._show_error_dialog(_("Upload Error"), msg)
+                    return False
+
+                GLib.idle_add(show_error)
+
+        threading.Thread(target=prepare_uploads, daemon=True).start()
 
     def _on_upload_clicked(self, button):
         self._on_upload_action(None, None, None)
@@ -2639,8 +2854,7 @@ class FileManager(GObject.Object):
 
     def _on_upload_confirmation_response(self, dialog, response_id, local_paths):
         if response_id == "upload":
-            for path in local_paths:
-                self._initiate_upload(path)
+            self._prepare_and_start_uploads(local_paths)
 
     def _get_local_path_for_remote_file(
         self, session: SessionItem, remote_path: str
@@ -2848,6 +3062,45 @@ class FileManager(GObject.Object):
                     Adw.Toast(title=_("Transfer cancelled."))
                 )
 
+    def _show_insufficient_space_dialog(
+        self, required_bytes: int, available_bytes: int, dest_path: Path
+    ):
+        """Shows a dialog when there's not enough space for the transfer."""
+
+        def format_size(size_bytes: int) -> str:
+            if size_bytes < 1024:
+                return f"{size_bytes} B"
+            elif size_bytes < 1024 * 1024:
+                return f"{size_bytes / 1024:.1f} KB"
+            elif size_bytes < 1024 * 1024 * 1024:
+                return f"{size_bytes / (1024 * 1024):.1f} MB"
+            else:
+                return f"{size_bytes / (1024 * 1024 * 1024):.2f} GB"
+
+        dialog = Adw.MessageDialog(
+            transient_for=self.parent_window,
+            heading=_("Insufficient Disk Space"),
+            body=_(
+                "There is not enough free space at the destination to complete this transfer."
+            ),
+            close_response="ok",
+        )
+
+        details = _(
+            "Required space: <b>{required}</b>\n"
+            "Available space: <b>{available}</b>\n"
+            "Destination: <b>{path}</b>"
+        ).format(
+            required=format_size(required_bytes),
+            available=format_size(available_bytes),
+            path=str(dest_path),
+        )
+        dialog.set_extra_child(
+            Gtk.Label(label=details, use_markup=True, wrap=True, xalign=0)
+        )
+        dialog.add_response("ok", _("OK"))
+        dialog.present()
+
     def _show_permission_error_dialog(self, transfer_id: str, message: str):
         """Shows a specific dialog for permission errors."""
         transfer = self.transfer_manager.get_transfer(transfer_id) or next(
@@ -2859,9 +3112,9 @@ class FileManager(GObject.Object):
         dialog = Adw.MessageDialog(
             transient_for=self.parent_window,
             heading=_("Transfer Failed: Permission Denied"),
-            body=_(
-                "Could not complete the transfer of '{filename}'."
-            ).format(filename=transfer.filename),
+            body=_("Could not complete the transfer of '{filename}'.").format(
+                filename=transfer.filename
+            ),
             close_response="ok",
         )
         details = _(

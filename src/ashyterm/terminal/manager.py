@@ -2,6 +2,7 @@
 
 import os
 import pathlib
+import re
 import signal
 import subprocess
 import threading
@@ -29,6 +30,7 @@ def _get_psutil():
             PSUTIL_AVAILABLE = False
     return psutil
 
+
 import gi
 
 gi.require_version("Gtk", "4.0")
@@ -43,9 +45,17 @@ from ..utils.exceptions import (
     TerminalCreationError,
 )
 from ..utils.logger import get_logger, log_terminal_event
-from ..utils.osc7_tracker import OSC7Info, get_osc7_tracker
+from ..utils.osc7 import OSC7Info, parse_directory_uri
+from ..utils.osc7_tracker import get_osc7_tracker
 from ..utils.platform import get_environment_manager, get_platform_info
 from ..utils.security import validate_session_data
+from ..utils.translation_utils import _
+
+# Pre-compiled pattern for ANSI escape sequences used in command detection
+# Matches: Standard CSI, OSC sequences, and malformed CSI sequences
+_ANSI_ESCAPE_PATTERN = re.compile(
+    r"\x1b\[\??[0-9;]*[A-Za-z]|\x1b\].*?\x07|\[+\??(?:\d*[;]?)*[ABCDEFGHJKPSTfmnsuhl]"
+)
 
 # Lazy import for spawner - loaded on first use
 _spawner = None
@@ -65,7 +75,6 @@ def _get_spawner():
 _highlight_manager = None
 _output_highlighter = None
 _terminal_menu_creator = None
-_ssh_error_dialog_creator = None
 
 
 def _get_highlight_manager():
@@ -96,16 +105,6 @@ def _create_terminal_menu(*args, **kwargs):
 
         _terminal_menu_creator = create_terminal_menu
     return _terminal_menu_creator(*args, **kwargs)
-
-
-def _create_ssh_error_dialog(*args, **kwargs):
-    """Lazy import SSH error dialog creator."""
-    global _ssh_error_dialog_creator
-    if _ssh_error_dialog_creator is None:
-        from ..ui.ssh_dialogs import create_generic_ssh_error_dialog
-
-        _ssh_error_dialog_creator = create_generic_ssh_error_dialog
-    return _ssh_error_dialog_creator(*args, **kwargs)
 
 
 class TerminalState(Enum):
@@ -179,61 +178,115 @@ class ManualSSHTracker:
         psutil_mod = _get_psutil()
         if not psutil_mod:
             return
+
         with self._lock:
             if terminal_id not in self._tracked_terminals:
                 return
+
             state = self._tracked_terminals[terminal_id]
-            terminal_info = self.registry.get_terminal_info(terminal_id)
-            if not terminal_info or terminal_info.get("type") != "local":
-                return
-            pid = terminal_info.get("process_id")
+            pid = self._get_terminal_pid(terminal_id)
             if not pid:
                 return
+
             try:
-                parent_proc = psutil_mod.Process(pid)
-                current_children_count = len(parent_proc.children())
-
-                if self._last_child_count.get(terminal_id) == current_children_count:
-                    if not state["in_ssh"]:
-                        return
-
-                self._last_child_count[terminal_id] = current_children_count
-
-                children = parent_proc.children(recursive=True)
-                ssh_proc = next(
-                    (p for p in children if p.name().lower() == "ssh"), None
-                )
-                currently_in_ssh = ssh_proc is not None
-                if currently_in_ssh != state["in_ssh"]:
-                    if currently_in_ssh:
-                        state["in_ssh"] = True
-                        cmdline = ssh_proc.cmdline()
-                        state["ssh_target"] = next(
-                            (arg for arg in cmdline if "@" in arg), ssh_proc.name()
-                        )
-                        self.logger.info(
-                            f"Detected manual SSH session in terminal {terminal_id}: {state['ssh_target']}"
-                        )
-                    else:
-                        self.logger.info(
-                            f"Manual SSH session ended in terminal {terminal_id}"
-                        )
-                        state["in_ssh"] = False
-                        state["ssh_target"] = None
-                    terminal = state["terminal_ref"]()
-                    if terminal and self.on_state_changed:
-                        GLib.idle_add(self.on_state_changed, terminal)
+                self._check_ssh_state(terminal_id, state, pid, psutil_mod)
             except psutil_mod.NoSuchProcess:
-                if state["in_ssh"]:
-                    state["in_ssh"] = False
-                    state["ssh_target"] = None
-                    terminal = state["terminal_ref"]()
-                    if terminal and self.on_state_changed:
-                        GLib.idle_add(self.on_state_changed, terminal)
+                self._handle_process_gone(terminal_id, state)
             except Exception as e:
                 self.logger.debug(
                     f"Error checking process tree for terminal {terminal_id}: {e}"
                 )
+
+    def _get_terminal_pid(self, terminal_id: int) -> Optional[int]:
+        """Get the process ID for a local terminal.
+
+        Args:
+            terminal_id: The terminal identifier.
+
+        Returns:
+            Process ID or None if not a local terminal.
+        """
+        terminal_info = self.registry.get_terminal_info(terminal_id)
+        if not terminal_info or terminal_info.get("type") != "local":
+            return None
+        return terminal_info.get("process_id")
+
+    def _check_ssh_state(
+        self, terminal_id: int, state: dict, pid: int, psutil_mod
+    ) -> None:
+        """Check if SSH state has changed for a terminal.
+
+        Args:
+            terminal_id: The terminal identifier.
+            state: Current tracking state dict.
+            pid: Parent process ID.
+            psutil_mod: The psutil module.
+        """
+        parent_proc = psutil_mod.Process(pid)
+        current_children_count = len(parent_proc.children())
+
+        # Optimization: skip if child count unchanged and not in SSH
+        if self._last_child_count.get(terminal_id) == current_children_count:
+            if not state["in_ssh"]:
+                return
+
+        self._last_child_count[terminal_id] = current_children_count
+
+        children = parent_proc.children(recursive=True)
+        ssh_proc = next((p for p in children if p.name().lower() == "ssh"), None)
+        currently_in_ssh = ssh_proc is not None
+
+        if currently_in_ssh != state["in_ssh"]:
+            self._update_ssh_state(terminal_id, state, ssh_proc, currently_in_ssh)
+
+    def _update_ssh_state(
+        self, terminal_id: int, state: dict, ssh_proc, currently_in_ssh: bool
+    ) -> None:
+        """Update SSH state and notify callback.
+
+        Args:
+            terminal_id: The terminal identifier.
+            state: Current tracking state dict.
+            ssh_proc: The SSH process if found.
+            currently_in_ssh: Whether currently in SSH session.
+        """
+        if currently_in_ssh:
+            state["in_ssh"] = True
+            cmdline = ssh_proc.cmdline()
+            state["ssh_target"] = next(
+                (arg for arg in cmdline if "@" in arg), ssh_proc.name()
+            )
+            self.logger.info(
+                f"Detected manual SSH session in terminal {terminal_id}: {state['ssh_target']}"
+            )
+        else:
+            self.logger.info(f"Manual SSH session ended in terminal {terminal_id}")
+            state["in_ssh"] = False
+            state["ssh_target"] = None
+
+        self._notify_state_changed(state)
+
+    def _handle_process_gone(self, terminal_id: int, state: dict) -> None:
+        """Handle when the process no longer exists.
+
+        Args:
+            terminal_id: The terminal identifier.
+            state: Current tracking state dict.
+        """
+        if state["in_ssh"]:
+            state["in_ssh"] = False
+            state["ssh_target"] = None
+            self._notify_state_changed(state)
+
+    def _notify_state_changed(self, state: dict) -> None:
+        """Notify callback that SSH state changed.
+
+        Args:
+            state: Tracking state dict with terminal reference.
+        """
+        terminal = state["terminal_ref"]()
+        if terminal and self.on_state_changed:
+            GLib.idle_add(self.on_state_changed, terminal)
 
 
 class TerminalRegistry:
@@ -336,6 +389,135 @@ class TerminalRegistry:
         with self._lock:
             return list(self._terminals.keys())
 
+    def get_terminals_for_session(self, session_name: str) -> List[int]:
+        """
+        Get all terminal IDs for a given session name.
+
+        Args:
+            session_name: Name of the session to find terminals for.
+
+        Returns:
+            List of terminal IDs associated with the session.
+        """
+        with self._lock:
+            result = []
+            for tid, info in self._terminals.items():
+                identifier = info.get("identifier")
+                if (
+                    isinstance(identifier, SessionItem)
+                    and identifier.name == session_name
+                ):
+                    result.append(tid)
+            return result
+
+    def get_active_ssh_sessions(self) -> Dict[str, List[int]]:
+        """
+        Get all active SSH/SFTP sessions grouped by session name.
+
+        Returns:
+            Dictionary mapping session names to lists of terminal IDs.
+        """
+        with self._lock:
+            sessions: Dict[str, List[int]] = {}
+            for tid, info in self._terminals.items():
+                if info.get("type") in ["ssh", "sftp"]:
+                    identifier = info.get("identifier")
+                    if isinstance(identifier, SessionItem):
+                        name = identifier.name
+                        if name not in sessions:
+                            sessions[name] = []
+                        sessions[name].append(tid)
+            return sessions
+
+    def get_terminals_by_status(self, status: str) -> List[int]:
+        """
+        Get all terminal IDs with a specific status.
+
+        Args:
+            status: The status to filter by (e.g., "running", "disconnected").
+
+        Returns:
+            List of terminal IDs with the given status.
+        """
+        with self._lock:
+            return [
+                tid
+                for tid, info in self._terminals.items()
+                if info.get("status") == status
+            ]
+
+    def get_terminals_by_type(self, terminal_type: str) -> List[int]:
+        """
+        Get all terminal IDs of a specific type.
+
+        Args:
+            terminal_type: The type to filter by (e.g., "ssh", "sftp", "local").
+
+        Returns:
+            List of terminal IDs of the given type.
+        """
+        with self._lock:
+            return [
+                tid
+                for tid, info in self._terminals.items()
+                if info.get("type") == terminal_type
+            ]
+
+    def get_session_terminal_count(self, session_name: str) -> int:
+        """
+        Get the count of terminals for a session.
+
+        Args:
+            session_name: Name of the session.
+
+        Returns:
+            Number of terminals associated with the session.
+        """
+        return len(self.get_terminals_for_session(session_name))
+
+    def update_terminal_connection_status(
+        self, terminal_id: int, connected: bool, error_message: Optional[str] = None
+    ) -> None:
+        """
+        Update the connection status of an SSH/SFTP terminal.
+
+        Args:
+            terminal_id: The terminal to update.
+            connected: Whether the terminal is connected.
+            error_message: Optional error message if disconnected.
+        """
+        with self._lock:
+            if terminal_id in self._terminals:
+                info = self._terminals[terminal_id]
+                if connected:
+                    info["status"] = "connected"
+                    info["connected_at"] = time.time()
+                    info.pop("last_error", None)
+                    info["reconnect_attempts"] = 0
+                else:
+                    info["status"] = "disconnected"
+                    info["disconnected_at"] = time.time()
+                    if error_message:
+                        info["last_error"] = error_message
+
+    def increment_reconnect_attempts(self, terminal_id: int) -> int:
+        """
+        Increment and return the reconnect attempt count for a terminal.
+
+        Args:
+            terminal_id: The terminal to update.
+
+        Returns:
+            The new reconnect attempt count.
+        """
+        with self._lock:
+            if terminal_id in self._terminals:
+                info = self._terminals[terminal_id]
+                attempts = info.get("reconnect_attempts", 0) + 1
+                info["reconnect_attempts"] = attempts
+                return attempts
+            return 0
+
 
 class TerminalManager:
     def __init__(self, parent_window, settings_manager: SettingsManager):
@@ -371,6 +553,96 @@ class TerminalManager:
             1, self._periodic_process_check
         )
         self.logger.info("Terminal manager initialized")
+
+    def prepare_initial_terminal(self) -> None:
+        """
+        Pre-create the base terminal widget and prepare shell environment in background.
+        This allows the terminal to be ready faster when the first tab is created.
+        Call this early during window initialization for best results.
+        """
+        self._precreated_terminal = None
+        self._precreated_env_ready = threading.Event()
+        self._precreated_env_data = None
+        self._highlights_ready = threading.Event()
+
+        # Create base terminal widget immediately (must be on main thread)
+        # Note: Don't apply settings yet since window UI may not be fully ready
+        try:
+            self._precreated_terminal = self._create_base_terminal(apply_settings=False)
+            if self._precreated_terminal:
+                self.logger.info("Pre-created base terminal widget for faster startup")
+        except Exception as e:
+            self.logger.warning(f"Failed to pre-create terminal: {e}")
+            self._precreated_terminal = None
+
+        # Prepare shell environment and highlights in background thread
+        def prepare_background():
+            try:
+                # Prepare shell environment
+                cmd, env, temp_dir_path = self.spawner._prepare_shell_environment(None)
+                self._precreated_env_data = (cmd, env, temp_dir_path)
+                self.logger.debug("Pre-prepared shell environment in background")
+            except Exception as e:
+                self.logger.warning(f"Failed to pre-prepare shell environment: {e}")
+                self._precreated_env_data = None
+            finally:
+                self._precreated_env_ready.set()
+
+            # Pre-load the HighlightManager (loads 50+ JSON files)
+            try:
+                from ..settings.highlights import get_highlight_manager
+
+                self._highlight_manager = get_highlight_manager()
+                self.logger.debug(
+                    "Pre-loaded HighlightManager (JSON rules) in background"
+                )
+            except Exception as e:
+                self.logger.warning(f"Failed to pre-load HighlightManager: {e}")
+
+            # Pre-load highlight modules (output, shell_input, and proxy implementation)
+            try:
+                from .highlighter.output import get_output_highlighter
+                from .highlighter.shell_input import get_shell_input_highlighter
+
+                get_output_highlighter()
+                get_shell_input_highlighter()
+                # Pre-import the proxy implementation to warm up GTK stack
+                from ._highlighter_impl import (
+                    HighlightedTerminalProxy as _,  # noqa: F401
+                )
+
+                self.logger.debug("Pre-loaded highlighting modules in background")
+            except Exception as e:
+                self.logger.warning(f"Failed to pre-load highlights: {e}")
+            finally:
+                self._highlights_ready.set()
+
+        bg_thread = threading.Thread(target=prepare_background, daemon=True)
+        bg_thread.start()
+
+    def get_precreated_terminal(self) -> "Optional[Vte.Terminal]":
+        """
+        Get the pre-created terminal if available.
+        Returns None if no terminal was pre-created or it was already consumed.
+        """
+        terminal = getattr(self, "_precreated_terminal", None)
+        self._precreated_terminal = None
+        return terminal
+
+    def get_precreated_env_data(self, timeout: float = 0.1) -> "Optional[tuple]":
+        """
+        Get the pre-prepared shell environment data if ready.
+        Args:
+            timeout: Max time to wait for env preparation (default 100ms)
+        Returns:
+            Tuple of (cmd, env, temp_dir_path) or None if not ready/failed
+        """
+        ready_event = getattr(self, "_precreated_env_ready", None)
+        if ready_event and ready_event.wait(timeout):
+            data = getattr(self, "_precreated_env_data", None)
+            self._precreated_env_data = None
+            return data
+        return None
 
     def _get_highlight_manager(self):
         if self._highlight_manager is None:
@@ -463,20 +735,10 @@ class TerminalManager:
     def _on_directory_uri_changed(self, terminal: Vte.Terminal, _param_spec):
         try:
             uri = terminal.get_current_directory_uri()
-            if not uri:
-                return
-            from urllib.parse import unquote, urlparse
-
-            parsed_uri = urlparse(uri)
-            if parsed_uri.scheme != "file":
-                return
-            path = unquote(parsed_uri.path)
-            hostname = parsed_uri.hostname or "localhost"
-            display_path = self.osc7_tracker.parser._create_display_path(path)
-            osc7_info = OSC7Info(
-                hostname=hostname, path=path, display_path=display_path
-            )
-            self._update_title(terminal, osc7_info)
+            osc7_info = parse_directory_uri(uri, self.osc7_tracker.parser)
+            if osc7_info:
+                self._update_title(terminal, osc7_info)
+            self._run_pending_execute_command(terminal)
         except Exception as e:
             self.logger.error(f"Directory URI change handling failed: {e}")
 
@@ -493,16 +755,7 @@ class TerminalManager:
         if osc7_info is None:
             uri = terminal.get_current_directory_uri()
             if uri:
-                from urllib.parse import unquote, urlparse
-
-                parsed_uri = urlparse(uri)
-                if parsed_uri.scheme == "file":
-                    path = unquote(parsed_uri.path)
-                    hostname = parsed_uri.hostname or "localhost"
-                    display_path = self.osc7_tracker.parser._create_display_path(path)
-                    osc7_info = OSC7Info(
-                        hostname=hostname, path=path, display_path=display_path
-                    )
+                osc7_info = parse_directory_uri(uri, self.osc7_tracker.parser)
 
         new_title = "Terminal"
         if terminal_info.get("type") == "ssh":
@@ -556,7 +809,7 @@ class TerminalManager:
         execute_command: Optional[str] = None,
         close_after_execute: bool = False,
     ):
-        terminal = self._create_base_terminal()
+        terminal = self._get_or_create_terminal()
         if not terminal:
             raise TerminalCreationError("base terminal creation failed", "local")
 
@@ -579,49 +832,149 @@ class TerminalManager:
                 },
             )
 
-            highlight_manager = self._get_highlight_manager()
-            if highlight_manager.enabled_for_local:
-                proxy = self.spawner.spawn_highlighted_local_terminal(
+            should_highlight, highlight_config = self._compute_highlighting_config(
+                session, is_local=True
+            )
+
+            if should_highlight:
+                self._spawn_highlighted_local(
                     terminal,
-                    callback=self._on_spawn_callback,
-                    user_data=user_data_for_spawn,
-                    working_directory=resolved_working_dir,
+                    session,
+                    user_data_for_spawn,
+                    resolved_working_dir,
+                    terminal_id,
                 )
-                if proxy:
-                    self._highlight_proxies[terminal_id] = proxy
-                    self.logger.info(
-                        f"Highlighted local terminal spawned (ID: {terminal_id})"
-                    )
-                else:
-                    self.logger.warning(
-                        "Highlighted spawn failed, falling back to standard spawning"
-                    )
-                    self.spawner.spawn_local_terminal(
-                        terminal,
-                        callback=self._on_spawn_callback,
-                        user_data=user_data_for_spawn,
-                        working_directory=resolved_working_dir,
-                    )
             else:
+                precreated_env = self._get_precreated_env(working_directory)
                 self.spawner.spawn_local_terminal(
                     terminal,
                     callback=self._on_spawn_callback,
                     user_data=user_data_for_spawn,
                     working_directory=resolved_working_dir,
+                    precreated_env=precreated_env,
                 )
 
-            log_title = session.name if session else title
-            self.logger.info(
-                f"Local terminal created successfully: '{log_title}' (ID: {terminal_id})"
-            )
-            log_terminal_event("created", log_title, "local terminal")
-            self._stats["terminals_created"] += 1
+            self._log_terminal_creation(session, title, terminal_id, "local")
             return terminal
         except TerminalCreationError:
             self.registry.unregister_terminal(terminal_id)
             self._cleanup_highlight_proxy(terminal_id)
             self._stats["terminals_failed"] += 1
             raise
+
+    def _get_or_create_terminal(self) -> Optional[Vte.Terminal]:
+        """Get a pre-created terminal or create a new one."""
+        terminal = self.get_precreated_terminal()
+        if terminal:
+            self.logger.debug("Using pre-created terminal for faster startup")
+            self.settings_manager.apply_terminal_settings(terminal, self.parent_window)
+            self.logger.debug("Applied terminal settings to pre-created terminal")
+        else:
+            terminal = self._create_base_terminal()
+        return terminal
+
+    def _get_precreated_env(self, working_directory: Optional[str]):
+        """Get pre-prepared environment if no custom working directory."""
+        if not working_directory:
+            return self.get_precreated_env_data(timeout=0.05)
+        return None
+
+    def _compute_highlighting_config(
+        self, session: Optional[SessionItem], is_local: bool
+    ) -> tuple[bool, dict]:
+        """Compute whether highlighting should be enabled and return config.
+
+        Returns:
+            Tuple of (should_spawn_highlighted, config_dict)
+        """
+        highlight_manager = self._get_highlight_manager()
+
+        # Get base setting for local or SSH
+        if is_local:
+            output_enabled = highlight_manager.enabled_for_local
+        else:
+            output_enabled = highlight_manager.enabled_for_ssh
+
+        # Per-session override
+        if session and session.output_highlighting is not None:
+            output_enabled = session.output_highlighting
+
+        # Cat and shell input depend on output highlighting
+        cat_enabled = output_enabled and self.settings_manager.get(
+            "cat_colorization_enabled", True
+        )
+        shell_input_enabled = output_enabled and self.settings_manager.get(
+            "shell_input_highlighting_enabled", False
+        )
+
+        # Per-session overrides
+        if session:
+            if session.cat_colorization is not None:
+                cat_enabled = output_enabled and session.cat_colorization
+            if session.shell_input_highlighting is not None:
+                shell_input_enabled = (
+                    output_enabled and session.shell_input_highlighting
+                )
+
+        should_highlight = output_enabled or cat_enabled or shell_input_enabled
+
+        config = {
+            "output_highlighting": output_enabled,
+            "cat_colorization": cat_enabled,
+            "shell_input_highlighting": shell_input_enabled,
+        }
+        return should_highlight, config
+
+    def _spawn_highlighted_local(
+        self,
+        terminal,
+        session: Optional[SessionItem],
+        user_data_for_spawn,
+        resolved_working_dir: Optional[str],
+        terminal_id: str,
+    ) -> None:
+        """Spawn a highlighted local terminal."""
+        # Wait briefly for highlight modules if preparing
+        highlights_ready = getattr(self, "_highlights_ready", None)
+        if highlights_ready is not None:
+            highlights_ready.wait(timeout=0.05)
+
+        proxy = self.spawner.spawn_highlighted_local_terminal(
+            terminal,
+            session=session,
+            callback=self._on_spawn_callback,
+            user_data=user_data_for_spawn,
+            working_directory=resolved_working_dir,
+            terminal_id=terminal_id,
+        )
+        if proxy:
+            self._highlight_proxies[terminal_id] = proxy
+            self.logger.info(f"Highlighted local terminal spawned (ID: {terminal_id})")
+        else:
+            self.logger.warning(
+                "Highlighted spawn failed, falling back to standard spawning"
+            )
+            self.spawner.spawn_local_terminal(
+                terminal,
+                callback=self._on_spawn_callback,
+                user_data=user_data_for_spawn,
+                working_directory=resolved_working_dir,
+            )
+
+    def _log_terminal_creation(
+        self,
+        session: Optional[SessionItem],
+        title: str,
+        terminal_id: str,
+        term_type: str,
+    ) -> None:
+        """Log terminal creation event."""
+        log_title = session.name if session else title
+        self.logger.info(
+            f"{term_type.capitalize()} terminal created successfully: '{log_title}' (ID: {terminal_id})"
+        )
+        log_terminal_event("created", log_title, f"{term_type} terminal")
+        self._stats["terminals_created"] += 1
 
     def _create_remote_terminal(
         self,
@@ -654,13 +1007,51 @@ class TerminalManager:
             try:
                 if terminal_type == "ssh":
                     highlight_manager = self._get_highlight_manager()
-                    if highlight_manager.enabled_for_ssh:
+
+                    # Decide whether to spawn a highlighted proxy.
+                    # Note: cat colorization and shell input highlighting only work
+                    # when output highlighting is enabled (Local/SSH activation).
+                    output_highlighting_enabled = highlight_manager.enabled_for_ssh
+                    if session.output_highlighting is not None:
+                        output_highlighting_enabled = session.output_highlighting
+
+                    # Cat and shell input highlighting depend on output highlighting being enabled
+                    cat_colorization_enabled = (
+                        output_highlighting_enabled
+                        and self.settings_manager.get("cat_colorization_enabled", True)
+                    )
+                    shell_input_enabled = (
+                        output_highlighting_enabled
+                        and self.settings_manager.get(
+                            "shell_input_highlighting_enabled", False
+                        )
+                    )
+
+                    # Per-session overrides can further enable/disable these features
+                    if session.cat_colorization is not None:
+                        cat_colorization_enabled = (
+                            output_highlighting_enabled and session.cat_colorization
+                        )
+                    if session.shell_input_highlighting is not None:
+                        shell_input_enabled = (
+                            output_highlighting_enabled
+                            and session.shell_input_highlighting
+                        )
+
+                    should_spawn_highlighted = (
+                        output_highlighting_enabled
+                        or cat_colorization_enabled
+                        or shell_input_enabled
+                    )
+
+                    if should_spawn_highlighted:
                         proxy = self.spawner.spawn_highlighted_ssh_session(
                             terminal,
                             session,
                             callback=self._on_spawn_callback,
                             user_data=user_data_for_spawn,
                             initial_command=initial_command,
+                            terminal_id=terminal_id,
                         )
                         if proxy:
                             self._highlight_proxies[terminal_id] = proxy
@@ -686,6 +1077,8 @@ class TerminalManager:
                             user_data=user_data_for_spawn,
                             initial_command=initial_command,
                         )
+                    # Setup drag-and-drop for SSH terminal uploads
+                    self._setup_ssh_drag_and_drop(terminal, terminal_id)
                 elif terminal_type == "sftp":
                     self._setup_sftp_drag_and_drop(terminal)
                     self.spawner.spawn_sftp_session(
@@ -741,7 +1134,9 @@ class TerminalManager:
             sftp_local_directory=local_directory,
         )
 
-    def _create_base_terminal(self) -> Optional[Vte.Terminal]:
+    def _create_base_terminal(
+        self, apply_settings: bool = True
+    ) -> Optional[Vte.Terminal]:
         try:
             terminal = Vte.Terminal()
             terminal.set_vexpand(True)
@@ -753,7 +1148,10 @@ class TerminalManager:
             terminal.set_scroll_unit_is_pixels(True)
             if hasattr(terminal, "set_search_highlight_enabled"):
                 terminal.set_search_highlight_enabled(True)
-            self.settings_manager.apply_terminal_settings(terminal, self.parent_window)
+            if apply_settings:
+                self.settings_manager.apply_terminal_settings(
+                    terminal, self.parent_window
+                )
             self._setup_context_menu(terminal)
             self._setup_url_patterns(terminal)
             return terminal
@@ -764,6 +1162,12 @@ class TerminalManager:
     def _setup_sftp_drag_and_drop(self, terminal: Vte.Terminal):
         drop_target = Gtk.DropTarget.new(Gdk.FileList, Gdk.DragAction.COPY)
         drop_target.connect("drop", self._on_file_drop, terminal)
+        terminal.add_controller(drop_target)
+
+    def _setup_ssh_drag_and_drop(self, terminal: Vte.Terminal, terminal_id: int):
+        """Setup drag-and-drop for SSH terminals to upload files."""
+        drop_target = Gtk.DropTarget.new(Gdk.FileList, Gdk.DragAction.COPY)
+        drop_target.connect("drop", self._on_ssh_file_drop, terminal, terminal_id)
         terminal.add_controller(drop_target)
 
     def _on_file_drop(self, drop_target, value, x, y, terminal: Vte.Terminal) -> bool:
@@ -781,6 +1185,82 @@ class TerminalManager:
         except Exception as e:
             self.logger.error(f"Error handling file drop for SFTP: {e}")
             return False
+
+    def _on_ssh_file_drop(
+        self, drop_target, value, x, y, terminal: Vte.Terminal, terminal_id: int
+    ) -> bool:
+        """Handle file drop on SSH terminal to initiate upload via file manager."""
+        try:
+            files = value.get_files()
+            if not files:
+                return False
+
+            # Get session info for this terminal
+            info = self.registry.get_terminal_info(terminal_id)
+            if not info:
+                self.logger.warning(f"No terminal info for ID {terminal_id}")
+                return False
+
+            session = info.get("identifier")
+
+            # Check if terminal is in SSH session (either session-based or manual SSH)
+            ssh_target = self.manual_ssh_tracker.get_ssh_target(terminal_id)
+            if not ssh_target and not (
+                isinstance(session, SessionItem) and session.is_ssh()
+            ):
+                self.logger.info("Drop target is not an SSH session, ignoring")
+                return False
+
+            # Get file paths
+            local_paths = []
+            for file in files:
+                path = file.get_path()
+                if path:
+                    local_paths.append(path)
+
+            if not local_paths:
+                return False
+
+            # Signal to show upload confirmation dialog
+            # This will be handled by the window to show the file manager dialog
+            self.logger.info(
+                f"Files dropped on SSH terminal. Requesting upload dialog for {len(local_paths)} files."
+            )
+
+            # Emit signal to notify the window about the file drop
+            GLib.idle_add(
+                self._emit_ssh_file_drop_signal,
+                terminal_id,
+                local_paths,
+                session,
+                ssh_target,
+            )
+            return True
+
+        except Exception as e:
+            self.logger.error(f"Error handling file drop for SSH: {e}")
+            return False
+
+    def _emit_ssh_file_drop_signal(
+        self, terminal_id: int, local_paths: list, session, ssh_target: str
+    ):
+        """Emit signal to notify about SSH file drop (runs on main thread)."""
+        # Store the dropped files info for the window to pick up
+        self._pending_ssh_upload = {
+            "terminal_id": terminal_id,
+            "local_paths": local_paths,
+            "session": session,
+            "ssh_target": ssh_target,
+        }
+        # Notify via the terminal-focus-changed signal mechanism
+        # The window can check for pending uploads when handling focus
+        if hasattr(self, "_ssh_file_drop_callback") and self._ssh_file_drop_callback:
+            self._ssh_file_drop_callback(terminal_id, local_paths, session, ssh_target)
+        return False
+
+    def set_ssh_file_drop_callback(self, callback):
+        """Set callback for SSH file drop events."""
+        self._ssh_file_drop_callback = callback
 
     def _setup_terminal_events(
         self,
@@ -806,13 +1286,6 @@ class TerminalManager:
             terminal.ashy_handler_ids.append(handler_id)
 
             self.manual_ssh_tracker.track(terminal_id, terminal)
-
-            focus_controller = Gtk.EventControllerFocus()
-            focus_controller.connect(
-                "enter", self._on_terminal_focus_in, terminal, terminal_id
-            )
-            terminal.add_controller(focus_controller)
-            terminal.ashy_controllers.append(focus_controller)
 
             click_controller = Gtk.GestureClick()
             click_controller.set_button(1)
@@ -842,7 +1315,7 @@ class TerminalManager:
             )
             terminal.add_controller(key_controller)
             terminal.ashy_controllers.append(key_controller)
-
+            
             terminal.terminal_id = terminal_id
         except Exception as e:
             self.logger.error(
@@ -850,24 +1323,13 @@ class TerminalManager:
             )
 
     def _setup_context_menu(self, terminal: Vte.Terminal) -> None:
-        try:
-            menu_model = _create_terminal_menu(
-                terminal, settings_manager=self.settings_manager
-            )
-            terminal.set_context_menu_model(menu_model)
-        except Exception as e:
-            self.logger.error(f"Context menu setup failed: {e}")
+        # We handle context menu manually in _on_terminal_right_clicked
+        pass
 
     def _update_context_menu_with_url(
         self, terminal: Vte.Terminal, x: float, y: float
     ) -> None:
-        try:
-            menu_model = _create_terminal_menu(
-                terminal, x, y, settings_manager=self.settings_manager
-            )
-            terminal.set_context_menu_model(menu_model)
-        except Exception as e:
-            self.logger.error(f"Context menu URL update failed: {e}")
+        pass
 
     def _on_terminal_focus_in(self, _controller, terminal, terminal_id):
         try:
@@ -884,46 +1346,103 @@ class TerminalManager:
         identifier: Union[str, SessionItem],
         terminal_id: int,
     ) -> None:
+        """Handle terminal child process exit."""
         if not self.lifecycle_manager.mark_terminal_closing(terminal_id):
             return
+
         try:
+            # Clean up connection monitor and retry flag
+            self._cleanup_connection_monitor(terminal)
+            terminal._retry_in_progress = False
+
             terminal_info = self.registry.get_terminal_info(terminal_id)
             if not terminal_info:
                 self.lifecycle_manager.unmark_terminal_closing(terminal_id)
                 return
+
             terminal_name = (
                 identifier.name if isinstance(identifier, SessionItem) else identifier
             )
+
             if terminal_id in self._pending_kill_timers:
                 GLib.source_remove(self._pending_kill_timers.pop(terminal_id))
+
             closed_by_user = getattr(terminal, "_closed_by_user", False)
-            if (
-                terminal_info.get("type") in ["ssh", "sftp"]
+            auto_reconnect_active = getattr(terminal, "_auto_reconnect_active", False)
+
+            # Handle SSH/SFTP failure
+            is_ssh = terminal_info.get("type") in ["ssh", "sftp"]
+
+            # Decode exit code to check for user-initiated termination signals
+            # Exit codes 128+N indicate termination by signal N
+            # 130 = SIGINT (Ctrl+C), 143 = SIGTERM, 137 = SIGKILL
+            import os as os_module
+
+            if os_module.WIFEXITED(child_status):
+                decoded_exit_code = os_module.WEXITSTATUS(child_status)
+            elif os_module.WIFSIGNALED(child_status):
+                decoded_exit_code = 128 + os_module.WTERMSIG(child_status)
+            else:
+                decoded_exit_code = child_status
+
+            # These exit codes indicate user-initiated termination, not connection errors
+            user_terminated_codes = {130, 137, 143}  # SIGINT, SIGKILL, SIGTERM
+            is_user_terminated = decoded_exit_code in user_terminated_codes
+
+            ssh_failed = (
+                is_ssh
                 and child_status != 0
                 and not closed_by_user
-            ):
+                and not is_user_terminated
+            )
+
+            if ssh_failed:
                 self.lifecycle_manager.transition_state(
                     terminal_id, TerminalState.SPAWN_FAILED
                 )
                 self.logger.warning(
-                    f"SSH/SFTP connection for '{terminal_name}' failed with status: {child_status}"
+                    f"SSH failed for '{terminal_name}' (status: {child_status})"
                 )
-                GLib.idle_add(
-                    self._show_ssh_connection_error_dialog,
-                    terminal_name,
-                    identifier,
-                    terminal,
-                    terminal_id,
-                    child_status,
-                )
+
+                # Stop auto-reconnect on auth errors
+                is_auth_error = self._check_ssh_auth_error(terminal, child_status)
+                if is_auth_error and auto_reconnect_active:
+                    self.cancel_auto_reconnect(terminal)
+                    terminal.feed(
+                        b"\r\n\x1b[31m[Auth error - auto-reconnect stopped]\x1b[0m\r\n"
+                    )
+
+                # Show banner unless auto-reconnect handles it
+                if auto_reconnect_active and not is_auth_error:
+                    self.lifecycle_manager.unmark_terminal_closing(terminal_id)
+                else:
+                    GLib.idle_add(
+                        self._show_ssh_connection_error_dialog,
+                        terminal_name,
+                        identifier,
+                        terminal,
+                        terminal_id,
+                        child_status,
+                    )
             else:
+                # Normal/successful exit or user-initiated termination (Ctrl+C, etc)
+                # Hide banner if exists (connection was successful and user closed it)
+                if is_ssh and self.tab_manager:
+                    self.tab_manager.hide_error_banner_for_terminal(terminal)
+
+                # Log user-initiated termination differently
+                if is_user_terminated:
+                    self.logger.info(
+                        f"Terminal '{terminal_name}' terminated by user signal (exit code: {decoded_exit_code})"
+                    )
+
                 if not self.lifecycle_manager.transition_state(
                     terminal_id, TerminalState.EXITED
                 ):
                     self.lifecycle_manager.unmark_terminal_closing(terminal_id)
                     return
                 self.logger.info(
-                    f"Terminal '{terminal_name}' process exited with status: {child_status}"
+                    f"Terminal '{terminal_name}' exited (status: {child_status})"
                 )
                 log_terminal_event("exited", terminal_name, f"status {child_status}")
                 GLib.idle_add(
@@ -933,35 +1452,514 @@ class TerminalManager:
                     child_status,
                     identifier,
                 )
+
         except Exception as e:
-            self.logger.error(f"Terminal child exit handling failed: {e}")
+            self.logger.error(f"Child exit handling failed: {e}")
             self.lifecycle_manager.unmark_terminal_closing(terminal_id)
+
+    def _check_ssh_auth_error(self, terminal: Vte.Terminal, child_status: int) -> bool:
+        """Check if SSH failure is due to authentication error."""
+        import os as os_module
+
+        # Decode exit code
+        if os_module.WIFEXITED(child_status):
+            exit_code = os_module.WEXITSTATUS(child_status)
+        else:
+            exit_code = child_status
+
+        # Exit codes 5, 6 are common SSH auth failure codes
+        if exit_code in (5, 6):
+            return True
+
+        # Check terminal text for auth patterns
+        try:
+            col_count = terminal.get_column_count()
+            row_count = terminal.get_row_count()
+            start_row = max(0, row_count - 20)
+            result = terminal.get_text_range_format(
+                0,
+                start_row,
+                0,
+                row_count - 1,
+                col_count - 1,
+            )
+            if result and len(result) > 0 and result[0]:
+                text_lower = result[0].lower()
+                auth_patterns = [
+                    "permission denied",
+                    "authentication failed",
+                    "incorrect password",
+                    "invalid password",
+                    "too many authentication failures",
+                ]
+                for pattern in auth_patterns:
+                    if pattern in text_lower:
+                        return True
+        except Exception:
+            pass
+
+        return False
 
     def _show_ssh_connection_error_dialog(
         self, session_name, identifier, terminal, terminal_id, child_status
     ):
+        """
+        Show SSH connection error using non-blocking inline banner.
+
+        Uses an inline banner above the terminal instead of a modal dialog,
+        allowing users to continue using other tabs while deciding how to handle
+        the connection failure.
+        """
+        # Safety check: Verify terminal widget is still valid
+        # This is especially important on XFCE where widget destruction timing
+        # can differ from Wayland compositors
         try:
-            connection_string = (
-                identifier.get_connection_string()
-                if isinstance(identifier, SessionItem)
-                else ""
-            )
-            dialog = _create_ssh_error_dialog(
-                self.parent_window, session_name, connection_string
-            )
-
-            def on_dialog_response(dlg, response_id):
-                self._cleanup_terminal_ui(
-                    terminal, terminal_id, child_status, identifier
+            if terminal is None or not terminal.get_realized():
+                self.logger.debug(
+                    f"Skipping error dialog - terminal not realized for '{session_name}'"
                 )
-                dlg.destroy()
-
-            dialog.connect("response", on_dialog_response)
-            dialog.present()
+                self.lifecycle_manager.unmark_terminal_closing(terminal_id)
+                return False
+            if terminal.get_parent() is None:
+                self.logger.debug(
+                    f"Skipping error dialog - terminal orphaned for '{session_name}'"
+                )
+                self.lifecycle_manager.unmark_terminal_closing(terminal_id)
+                return False
         except Exception as e:
-            self.logger.error(f"Failed to show SSH error dialog: {e}")
-            self._cleanup_terminal_ui(terminal, terminal_id, child_status, identifier)
+            self.logger.debug(f"Terminal widget check failed: {e}")
+            self.lifecycle_manager.unmark_terminal_closing(terminal_id)
+            return False
+
+        # Skip if a retry is in progress - avoid showing banner during retry
+        if getattr(terminal, "_retry_in_progress", False):
+            self.logger.debug(
+                f"Skipping error banner - retry in progress for '{session_name}'"
+            )
+            self.lifecycle_manager.unmark_terminal_closing(terminal_id)
+            return False
+
+        # Skip if banner is already showing
+        if self.tab_manager and self.tab_manager.has_error_banner(terminal):
+            self.logger.debug(
+                f"Skipping error banner - banner already showing for '{session_name}'"
+            )
+            self.lifecycle_manager.unmark_terminal_closing(terminal_id)
+            return False
+
+        try:
+            # Decode the wait status to get the actual exit code
+            import os as os_module
+
+            from ..ui.ssh_dialogs import get_error_info
+
+            if os_module.WIFEXITED(child_status):
+                exit_code = os_module.WEXITSTATUS(child_status)
+            elif os_module.WIFSIGNALED(child_status):
+                exit_code = 128 + os_module.WTERMSIG(child_status)
+            else:
+                exit_code = child_status
+
+            self.logger.debug(
+                f"SSH error: raw status={child_status}, decoded exit_code={exit_code}"
+            )
+
+            # Extract terminal text for error analysis
+            terminal_text = None
+            try:
+                col_count = terminal.get_column_count()
+                row_count = terminal.get_row_count()
+                start_row = max(0, row_count - 50)
+                # Use Vte.Format.TEXT constant
+                from gi.repository import Vte as VteLib
+
+                result = terminal.get_text_range_format(
+                    VteLib.Format.TEXT,
+                    start_row,
+                    0,
+                    row_count - 1,
+                    col_count - 1,
+                )
+                if result and len(result) > 0 and result[0]:
+                    terminal_text = result[0]
+            except Exception as text_err:
+                self.logger.debug(f"Could not extract terminal text: {text_err}")
+
+            # Get error description and type
+            error_type, _, error_description = get_error_info(exit_code, terminal_text)
+
+            # Check if this is an authentication error
+            is_auth_error = error_type in (
+                "auth_failed",
+                "auth_multi_failed",
+                "key_rejected",
+                "key_format_error",
+                "key_permissions",
+            )
+
+            # Check if this is a host key error
+            is_host_key_error = error_type in (
+                "host_key_failed",
+                "host_key_changed",
+            )
+
+            # Get session for retry functionality
+            session = identifier if isinstance(identifier, SessionItem) else None
+
+            # Show inline banner (non-blocking)
+            if self.tab_manager:
+                banner_shown = self.tab_manager.show_error_banner_for_terminal(
+                    terminal=terminal,
+                    session_name=session_name,
+                    error_message=error_description,
+                    session=session,
+                    is_auth_error=is_auth_error,
+                    is_host_key_error=is_host_key_error,
+                )
+
+                if banner_shown:
+                    self.logger.info(
+                        f"Showed inline error banner for '{session_name}' (auth_error={is_auth_error})"
+                    )
+                else:
+                    self.logger.warning(
+                        f"Could not show inline banner for '{session_name}'"
+                    )
+
+            # Unmark terminal as closing - the banner will handle cleanup
+            self.lifecycle_manager.unmark_terminal_closing(terminal_id)
+
+        except Exception as e:
+            self.logger.error(f"Failed to show SSH error: {e}")
+            import traceback
+
+            self.logger.debug(traceback.format_exc())
+            # In case of error, still unmark so the terminal stays open
+            self.lifecycle_manager.unmark_terminal_closing(terminal_id)
         return False
+
+    def _retry_ssh_connection_with_timeout(
+        self, session: SessionItem, timeout: int
+    ) -> bool:
+        """
+        Retry SSH connection with extended timeout.
+        Creates a new tab (single retry mode).
+        """
+        try:
+            original_timeout = self.settings_manager.get("ssh_connect_timeout", 30)
+            self.settings_manager.set(
+                "ssh_connect_timeout", timeout, save_immediately=False
+            )
+
+            if self.tab_manager:
+                self.tab_manager.create_ssh_tab(session)
+
+            def restore_timeout():
+                self.settings_manager.set(
+                    "ssh_connect_timeout", original_timeout, save_immediately=False
+                )
+                return False
+
+            GLib.timeout_add(1000, restore_timeout)
+
+            self.logger.info(
+                f"Retried SSH connection to '{session.name}' with {timeout}s timeout"
+            )
+        except Exception as e:
+            self.logger.error(f"Failed to retry SSH connection: {e}")
+
+        return False
+
+    def start_auto_reconnect(
+        self,
+        terminal: Vte.Terminal,
+        terminal_id: int,
+        session: SessionItem,
+        duration_mins: int,
+        interval_secs: int,
+        timeout_secs: int,
+    ) -> None:
+        """
+        Start automatic reconnection attempts for a failed SSH terminal.
+
+        This keeps the same terminal tab and re-spawns SSH sessions in it.
+        Progress is displayed inline in the terminal itself.
+        """
+        import time
+        from datetime import datetime
+
+        # Store auto-reconnect state on the terminal
+        terminal._auto_reconnect_active = True
+        terminal._auto_reconnect_cancelled = False
+        terminal._auto_reconnect_timer_id = None
+
+        end_time = time.time() + (duration_mins * 60)
+        max_attempts = (duration_mins * 60) // interval_secs
+
+        state = {
+            "attempt": 0,
+        }
+
+        def get_timestamp() -> str:
+            """Get current timestamp string."""
+            return datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+
+        def display_status(message: str, is_error: bool = False) -> None:
+            """Display status message in the terminal with timestamp."""
+            if not terminal.get_realized():
+                return
+            color = "\x1b[33m" if not is_error else "\x1b[31m"  # Yellow or Red
+            reset = "\x1b[0m"
+            dim = "\x1b[2m"
+            timestamp = get_timestamp()
+            terminal.feed(
+                f"\r\n{dim}[{timestamp}]{reset} {color}[Auto-Reconnect] {message}{reset}\r\n".encode(
+                    "utf-8"
+                )
+            )
+
+        def show_connection_options() -> None:
+            """Show connection error dialog with options when auto-reconnect exhausted."""
+            terminal._auto_reconnect_active = False
+            terminal._auto_reconnect_timer_id = None
+
+            # Show the connection error dialog to give user options
+            GLib.idle_add(
+                self._show_ssh_connection_error_dialog,
+                session.name,
+                session,
+                terminal,
+                terminal_id,
+                1,  # Non-zero status to indicate failure
+            )
+
+        def attempt_reconnect() -> bool:
+            """Attempt a single reconnection."""
+            # Clear timer reference since we're executing
+            terminal._auto_reconnect_timer_id = None
+
+            if getattr(terminal, "_auto_reconnect_cancelled", False):
+                display_status(_("Cancelled by user."))
+                terminal._auto_reconnect_active = False
+                return False
+
+            now = time.time()
+            if now >= end_time:
+                display_status(_("Time limit reached. Giving up."), is_error=True)
+                display_status(_("Showing connection options..."))
+                show_connection_options()
+                return False
+
+            state["attempt"] += 1
+            remaining = int(end_time - now)
+            remaining_mins = remaining // 60
+            remaining_secs = remaining % 60
+
+            display_status(
+                _("Attempt {n}/{max} - Time remaining: {mins}m {secs}s").format(
+                    n=state["attempt"],
+                    max=max_attempts,
+                    mins=remaining_mins,
+                    secs=remaining_secs,
+                )
+            )
+
+            # Re-spawn SSH in the same terminal
+            try:
+                original_timeout = self.settings_manager.get("ssh_connect_timeout", 30)
+                self.settings_manager.set(
+                    "ssh_connect_timeout", timeout_secs, save_immediately=False
+                )
+
+                # Re-spawn the SSH session in the existing terminal
+                self._respawn_ssh_in_terminal(terminal, terminal_id, session)
+
+                # Restore timeout
+                GLib.timeout_add(
+                    1000,
+                    lambda: self.settings_manager.set(
+                        "ssh_connect_timeout", original_timeout, save_immediately=False
+                    )
+                    or False,
+                )
+
+            except Exception as e:
+                self.logger.error(f"Auto-reconnect spawn error: {e}")
+                display_status(
+                    _("Spawn error: {error}").format(error=str(e)), is_error=True
+                )
+
+            # Schedule next attempt (the child-exited handler will check auto_reconnect state)
+            if now + interval_secs < end_time:
+                timer_id = GLib.timeout_add_seconds(interval_secs, attempt_reconnect)
+                terminal._auto_reconnect_timer_id = timer_id
+            else:
+                display_status(_("Maximum attempts reached."), is_error=True)
+                display_status(_("Showing connection options..."))
+                show_connection_options()
+
+            return False  # Don't repeat this call
+
+        # Display initial message
+        display_status(
+            _(
+                "Starting auto-reconnect: {attempts} attempts over {mins} minute(s), every {secs}s"
+            ).format(
+                attempts=max_attempts,
+                mins=duration_mins,
+                secs=interval_secs,
+            )
+        )
+        display_status(_("Close this tab to cancel."))
+
+        # Start first attempt after a short delay
+        timer_id = GLib.timeout_add(500, attempt_reconnect)
+        terminal._auto_reconnect_timer_id = timer_id
+
+    def _respawn_ssh_in_terminal(
+        self,
+        terminal: Vte.Terminal,
+        terminal_id: int,
+        session: SessionItem,
+    ) -> None:
+        """
+        Re-spawn an SSH session in an existing terminal.
+        This is used for auto-reconnect to avoid creating new tabs.
+        """
+        try:
+            # Update registry to show we're spawning
+            self.registry.update_terminal_status(terminal_id, "spawning")
+
+            # Check if we should use highlighted SSH
+            highlight_manager = self._get_highlight_manager()
+            output_highlighting_enabled = highlight_manager.enabled_for_ssh
+            if session.output_highlighting is not None:
+                output_highlighting_enabled = session.output_highlighting
+
+            should_spawn_highlighted = output_highlighting_enabled
+
+            user_data_for_spawn = (terminal_id, session)
+
+            if should_spawn_highlighted:
+                proxy = self.spawner.spawn_highlighted_ssh_session(
+                    terminal,
+                    session,
+                    callback=self._on_spawn_callback,
+                    user_data=user_data_for_spawn,
+                    terminal_id=terminal_id,
+                )
+                if proxy:
+                    self._highlight_proxies[terminal_id] = proxy
+                else:
+                    # Fallback to standard
+                    self.spawner.spawn_ssh_session(
+                        terminal,
+                        session,
+                        callback=self._on_spawn_callback,
+                        user_data=user_data_for_spawn,
+                    )
+            else:
+                self.spawner.spawn_ssh_session(
+                    terminal,
+                    session,
+                    callback=self._on_spawn_callback,
+                    user_data=user_data_for_spawn,
+                )
+
+            self.logger.info(f"Re-spawned SSH session in terminal {terminal_id}")
+
+        except Exception as e:
+            self.logger.error(f"Failed to re-spawn SSH: {e}")
+            raise
+
+    def _retry_ssh_in_same_terminal(
+        self,
+        terminal: Vte.Terminal,
+        terminal_id: int,
+        session: SessionItem,
+        timeout: int = 30,
+    ) -> bool:
+        """
+        Retry SSH connection in the same terminal (single retry mode).
+
+        Unlike auto-reconnect, this does a single retry with extended timeout
+        and shows the connection attempt in the same terminal.
+
+        Args:
+            terminal: The terminal to retry in.
+            terminal_id: Terminal ID.
+            session: Session to connect.
+            timeout: Connection timeout in seconds.
+
+        Returns:
+            True if retry was initiated, False otherwise.
+        """
+        # Prevent multiple simultaneous retries
+        if getattr(terminal, "_retry_in_progress", False):
+            self.logger.warning(f"Retry already in progress for terminal {terminal_id}")
+            return False
+
+        try:
+            # Mark retry in progress - will be cleared by _on_child_exited or _on_connection_success
+            terminal._retry_in_progress = True
+
+            # Display retry message
+            terminal.feed(
+                f"\r\n\x1b[33m[Retry] Attempting reconnection with {timeout}s timeout...\x1b[0m\r\n".encode(
+                    "utf-8"
+                )
+            )
+
+            # Set temporary timeout
+            original_timeout = self.settings_manager.get("ssh_connect_timeout", 30)
+            self.settings_manager.set(
+                "ssh_connect_timeout", timeout, save_immediately=False
+            )
+
+            # Re-spawn in the same terminal
+            self._respawn_ssh_in_terminal(terminal, terminal_id, session)
+
+            # Restore original timeout after a delay
+            def restore_timeout():
+                self.settings_manager.set(
+                    "ssh_connect_timeout", original_timeout, save_immediately=False
+                )
+                return False
+
+            GLib.timeout_add(1000, restore_timeout)
+
+            self.logger.info(
+                f"Retrying SSH connection to '{session.name}' with {timeout}s timeout in same terminal"
+            )
+            return True
+
+        except Exception as e:
+            terminal._retry_in_progress = False
+            self.logger.error(f"Failed to retry SSH in same terminal: {e}")
+            terminal.feed(f"\r\n\x1b[31m[Retry] Failed: {e}\x1b[0m\r\n".encode("utf-8"))
+            return False
+
+    def cancel_auto_reconnect(self, terminal: Vte.Terminal) -> None:
+        """Cancel auto-reconnect for a terminal, including any pending timers."""
+        terminal._auto_reconnect_cancelled = True
+        terminal._auto_reconnect_active = False
+
+        # Cancel pending timer if exists
+        timer_id = getattr(terminal, "_auto_reconnect_timer_id", None)
+        if timer_id is not None:
+            try:
+                GLib.source_remove(timer_id)
+            except Exception:
+                pass
+            terminal._auto_reconnect_timer_id = None
+
+        self.logger.info(
+            f"Auto-reconnect cancelled for terminal {getattr(terminal, 'terminal_id', 'N/A')}"
+        )
+
+    def is_auto_reconnect_active(self, terminal: Vte.Terminal) -> bool:
+        """Check if auto-reconnect is active for a terminal."""
+        return getattr(terminal, "_auto_reconnect_active", False)
 
     def _on_eof(
         self,
@@ -974,6 +1972,13 @@ class TerminalManager:
     def _cleanup_terminal_ui(
         self, terminal: Vte.Terminal, terminal_id: int, child_status: int, identifier
     ) -> bool:
+        # Safety check: Don't cleanup if auto-reconnect is active
+        if self.is_auto_reconnect_active(terminal):
+            self.logger.warning(
+                f"[CLEANUP_UI] Blocked cleanup for terminal {terminal_id} - auto-reconnect is active"
+            )
+            return False
+
         try:
             if self.terminal_exit_handler:
                 self.terminal_exit_handler(terminal, child_status, identifier)
@@ -990,6 +1995,13 @@ class TerminalManager:
         return False
 
     def _cleanup_terminal(self, terminal: Vte.Terminal, terminal_id: int) -> None:
+        # Safety check: Don't cleanup terminal if auto-reconnect is active
+        if self.is_auto_reconnect_active(terminal):
+            self.logger.warning(
+                f"[CLEANUP] Blocked cleanup for terminal {terminal_id} - auto-reconnect is active"
+            )
+            return
+
         with self._cleanup_lock:
             if not self.registry.get_terminal_info(terminal_id):
                 return
@@ -1050,34 +2062,243 @@ class TerminalManager:
         error: Optional[GLib.Error],
         user_data: Any,
     ) -> None:
+        """
+        Called when terminal spawn completes.
+
+        For SSH: spawn success just means process started.
+        We monitor process status to detect actual connection success.
+        """
         try:
             final_user_data = (
                 user_data[0] if isinstance(user_data, tuple) else user_data
             )
             user_data_tuple = final_user_data.get("original_user_data")
             terminal_id, user_data = user_data_tuple
+
             if error:
                 self.logger.error(
-                    f"Terminal spawn failed for ID {terminal_id}: {error.message}"
+                    f"Spawn failed for terminal {terminal_id}: {error.message}"
                 )
                 self.registry.update_terminal_status(terminal_id, "spawn_failed")
-            else:
-                self.registry.update_terminal_process(terminal_id, pid)
-                if isinstance(user_data, dict):
-                    execute_command = user_data.get("execute_command")
-                    if execute_command and pid > 0:
+                return
 
-                        def execute_once():
-                            self._execute_command_in_terminal(
-                                terminal,
-                                execute_command,
-                                user_data.get("close_after_execute", False),
-                            )
-                            return False
+            self.registry.update_terminal_process(terminal_id, pid)
 
-                        GLib.timeout_add(100, execute_once)
+            # For retry/auto-reconnect: wait for process exit to determine success/failure
+            # If process exits quickly (< 3s), it failed. If still running, it's connected.
+            has_banner = self.tab_manager and self.tab_manager.has_error_banner(
+                terminal
+            )
+            is_auto_reconnect = getattr(terminal, "_auto_reconnect_active", False)
+            is_retry = getattr(terminal, "_retry_in_progress", False)
+
+            if has_banner or is_auto_reconnect or is_retry:
+                self._monitor_connection_status(terminal, terminal_id, pid)
+
+            # Handle execute command
+            if (
+                isinstance(user_data, dict)
+                and user_data.get("execute_command")
+                and pid > 0
+            ):
+                self._schedule_execute_command(
+                    terminal,
+                    user_data["execute_command"],
+                    user_data.get("close_after_execute", False),
+                )
+
         except Exception as e:
-            self.logger.error(f"Spawn callback handling failed: {e}")
+            self.logger.error(f"Spawn callback failed: {e}")
+
+    def _schedule_execute_command(
+        self, terminal: Vte.Terminal, command: str, close_after_execute: bool
+    ) -> None:
+        if not terminal or not command:
+            return
+        if getattr(terminal, "_execute_command_ran", False):
+            return
+
+        terminal._pending_execute_command = (command, close_after_execute)
+
+        if terminal.get_current_directory_uri():
+            GLib.idle_add(self._run_pending_execute_command, terminal)
+            return
+
+        if getattr(terminal, "_execute_command_timer_id", None):
+            return
+
+        terminal._execute_command_timer_id = GLib.timeout_add(
+            500, lambda: self._run_pending_execute_command(terminal)
+        )
+
+    def _run_pending_execute_command(self, terminal: Vte.Terminal) -> bool:
+        if getattr(terminal, "_execute_command_ran", False):
+            return False
+
+        pending = getattr(terminal, "_pending_execute_command", None)
+        if not pending:
+            return False
+
+        command, close_after_execute = pending
+        self._execute_command_in_terminal(
+            terminal,
+            command,
+            close_after_execute,
+        )
+        terminal._execute_command_ran = True
+        try:
+            delattr(terminal, "_pending_execute_command")
+        except Exception:
+            pass
+
+        timer_id = getattr(terminal, "_execute_command_timer_id", None)
+        if timer_id:
+            try:
+                GLib.source_remove(timer_id)
+            except Exception:
+                pass
+            terminal._execute_command_timer_id = None
+        return False
+
+    def _monitor_connection_status(
+        self, terminal: Vte.Terminal, terminal_id: int, pid: int
+    ) -> None:
+        """
+        Monitor SSH connection status after spawn.
+
+        SSH connection is considered successful when:
+        1. Process is still running after initial connect phase
+        2. Terminal shows shell prompt in recent lines (not error messages)
+        """
+        import os as os_module
+
+        terminal._monitoring_pid = pid
+        terminal._connect_check_count = 0
+        terminal._last_line_count = 0
+
+        def check_connection():
+            """Periodically check if SSH is truly connected."""
+            # Verify we're still monitoring this process
+            if getattr(terminal, "_monitoring_pid", None) != pid:
+                return False
+
+            terminal._connect_check_count = (
+                getattr(terminal, "_connect_check_count", 0) + 1
+            )
+
+            # Check if process is alive
+            try:
+                os_module.kill(pid, 0)
+                alive = True
+            except OSError:
+                alive = False
+
+            if not alive:
+                # Process died - child-exited handler will deal with it
+                self._cleanup_connection_monitor(terminal)
+                return False
+
+            # Check ONLY the last few lines for connection indicators
+            # This avoids false negatives from old error messages in the buffer
+            try:
+                col_count = terminal.get_column_count()
+                row_count = terminal.get_row_count()
+
+                # Only check the last 5 lines for recent activity
+                start_row = max(0, row_count - 5)
+                result = terminal.get_text_range_format(
+                    0,
+                    start_row,
+                    0,
+                    row_count - 1,
+                    col_count - 1,
+                )
+                if result and result[0]:
+                    recent_text = result[0].lower().strip()
+
+                    # Skip if it's just our auto-reconnect messages
+                    if "[auto-reconnect]" in recent_text:
+                        if terminal._connect_check_count < 10:
+                            return True
+
+                    # Error patterns that indicate connection is still failing
+                    error_patterns = [
+                        "no route to host",
+                        "connection refused",
+                        "connection timed out",
+                        "permission denied",
+                        "authentication failed",
+                        "host key verification failed",
+                        "broken pipe",
+                    ]
+
+                    # Check if recent lines contain fresh errors
+                    has_recent_error = any(p in recent_text for p in error_patterns)
+
+                    # Success patterns - shell prompt indicators
+                    # These are common prompt terminators that indicate a shell is ready
+                    success_patterns = [
+                        "$",  # bash/sh prompt
+                        "#",  # root prompt
+                        "❯",  # starship/modern prompts
+                        "➜",  # oh-my-zsh
+                        "›",  # fish
+                        "last login:",  # SSH MOTD
+                        "welcome to",  # MOTD
+                    ]
+
+                    has_prompt = any(p in recent_text for p in success_patterns)
+
+                    # If we see a prompt in recent lines and NO recent error, we're connected
+                    if has_prompt and not has_recent_error:
+                        self.logger.info(f"SSH connected for terminal {terminal_id}")
+                        self._on_connection_success(terminal)
+                        return False
+
+            except Exception:
+                pass
+
+            # Keep checking for up to 10 seconds
+            if terminal._connect_check_count < 10:
+                return True  # Continue checking
+
+            # After 10 seconds, assume connected if process is still alive
+            self.logger.info(
+                f"SSH appears connected for terminal {terminal_id} (timeout)"
+            )
+            self._on_connection_success(terminal)
+            return False
+
+        # Check every second
+        GLib.timeout_add(1000, check_connection)
+
+    def _cleanup_connection_monitor(self, terminal: Vte.Terminal) -> None:
+        """Clean up connection monitoring state."""
+        for attr in ["_monitoring_pid", "_connect_check_count", "_last_line_count"]:
+            if hasattr(terminal, attr):
+                delattr(terminal, attr)
+
+    def _on_connection_success(self, terminal: Vte.Terminal) -> None:
+        """Handle successful SSH connection."""
+        self._cleanup_connection_monitor(terminal)
+
+        # Hide error banner
+        if self.tab_manager:
+            self.tab_manager.hide_error_banner_for_terminal(terminal)
+
+        # Stop auto-reconnect
+        if getattr(terminal, "_auto_reconnect_active", False):
+            terminal._auto_reconnect_active = False
+            timer_id = getattr(terminal, "_auto_reconnect_timer_id", None)
+            if timer_id:
+                try:
+                    GLib.source_remove(timer_id)
+                except Exception:
+                    pass
+                terminal._auto_reconnect_timer_id = None
+
+        # Clear retry flag
+        terminal._retry_in_progress = False
 
     def _execute_command_in_terminal(
         self, terminal: Vte.Terminal, command: str, close_after_execute: bool = False
@@ -1123,30 +2344,59 @@ class TerminalManager:
     def remove_terminal(
         self, terminal: Vte.Terminal, force_kill_group: bool = False
     ) -> bool:
+        # Cancel auto-reconnect FIRST before any other cleanup
+        # This ensures we stop reconnection attempts immediately when closing
+        if self.is_auto_reconnect_active(terminal):
+            self.cancel_auto_reconnect(terminal)
+
         with self._cleanup_lock:
             terminal_id = getattr(terminal, "terminal_id", None)
             if terminal_id is None:
                 return False
             info = self.registry.get_terminal_info(terminal_id)
-            if not info or info.get("status") in [
-                TerminalState.EXITED.value,
-                TerminalState.SPAWN_FAILED.value,
-            ]:
-                return False
-            pid = info.get("process_id")
-            if not pid or pid == -1:
-                GLib.idle_add(self._cleanup_terminal, terminal, terminal_id)
+            if not info:
                 return False
 
-            terminal_name = (
-                info["identifier"].name
-                if isinstance(info["identifier"], SessionItem)
-                else str(info["identifier"])
-            )
+            identifier = info.get("identifier", "Unknown")
+
+            # Mark terminal as closed by user
             try:
                 setattr(terminal, "_closed_by_user", True)
             except Exception:
                 pass
+
+            # If terminal already exited or spawn failed, just do UI cleanup
+            if info.get("status") in [
+                TerminalState.EXITED.value,
+                TerminalState.SPAWN_FAILED.value,
+            ]:
+                # Need full UI cleanup to close the tab
+                GLib.idle_add(
+                    self._cleanup_terminal_ui,
+                    terminal,
+                    terminal_id,
+                    0,  # exit status
+                    identifier,
+                )
+                return True
+
+            pid = info.get("process_id")
+            if not pid or pid == -1:
+                # No process to kill, just do UI cleanup
+                GLib.idle_add(
+                    self._cleanup_terminal_ui,
+                    terminal,
+                    terminal_id,
+                    0,  # exit status
+                    identifier,
+                )
+                return True
+
+            terminal_name = (
+                identifier.name
+                if isinstance(identifier, SessionItem)
+                else str(identifier)
+            )
 
             try:
                 target_id = os.getpgid(pid) if force_kill_group else pid
@@ -1154,6 +2404,14 @@ class TerminalManager:
             except (ProcessLookupError, PermissionError) as e:
                 self.logger.warning(
                     f"Could not send signal to PID {pid}, likely already exited: {e}"
+                )
+                # Process already exited, do UI cleanup
+                GLib.idle_add(
+                    self._cleanup_terminal_ui,
+                    terminal,
+                    terminal_id,
+                    0,  # exit status
+                    identifier,
                 )
                 return True
 
@@ -1168,6 +2426,129 @@ class TerminalManager:
             if info.get("type") == "ssh" and info.get("status") == "running":
                 return True
         return False
+
+    def reconnect_all_for_session(self, session_name: str) -> int:
+        """
+        Reconnect all disconnected terminals for a given session.
+
+        Args:
+            session_name: Name of the session to reconnect terminals for.
+
+        Returns:
+            Number of terminals where reconnection was initiated.
+        """
+        terminal_ids = self.registry.get_terminals_for_session(session_name)
+        reconnected = 0
+
+        for terminal_id in terminal_ids:
+            info = self.registry.get_terminal_info(terminal_id)
+            if info and info.get("status") == "disconnected":
+                session = info.get("identifier")
+                if isinstance(session, SessionItem):
+                    terminal = self.registry.get_terminal(terminal_id)
+                    if terminal:
+                        try:
+                            self._respawn_ssh_in_terminal(
+                                terminal, terminal_id, session
+                            )
+                            reconnected += 1
+                            self.logger.info(
+                                f"Initiated reconnection for terminal {terminal_id} "
+                                f"(session: {session_name})"
+                            )
+                        except Exception as e:
+                            self.logger.error(
+                                f"Failed to reconnect terminal {terminal_id}: {e}"
+                            )
+
+        return reconnected
+
+    def disconnect_all_for_session(self, session_name: str) -> int:
+        """
+        Gracefully disconnect all terminals for a session.
+
+        This cancels any auto-reconnect and sends exit command to SSH.
+
+        Args:
+            session_name: Name of the session to disconnect.
+
+        Returns:
+            Number of terminals disconnected.
+        """
+        terminal_ids = self.registry.get_terminals_for_session(session_name)
+        disconnected = 0
+
+        for terminal_id in terminal_ids:
+            terminal = self.registry.get_terminal(terminal_id)
+            if terminal:
+                # Cancel any active auto-reconnect
+                self.cancel_auto_reconnect(terminal)
+
+                # Send exit command to terminate SSH session gracefully
+                try:
+                    terminal.feed_child(b"exit\n")
+                    disconnected += 1
+                    self.logger.info(
+                        f"Sent disconnect to terminal {terminal_id} "
+                        f"(session: {session_name})"
+                    )
+                except Exception as e:
+                    self.logger.error(
+                        f"Failed to disconnect terminal {terminal_id}: {e}"
+                    )
+
+        return disconnected
+
+    def get_session_connection_status(self, session_name: str) -> Dict[str, Any]:
+        """
+        Get aggregated connection status for all terminals of a session.
+
+        Args:
+            session_name: Name of the session.
+
+        Returns:
+            Dictionary with connection status summary.
+        """
+        terminal_ids = self.registry.get_terminals_for_session(session_name)
+
+        status_counts = {
+            "connected": 0,
+            "disconnected": 0,
+            "connecting": 0,
+            "reconnecting": 0,
+            "other": 0,
+        }
+
+        for terminal_id in terminal_ids:
+            info = self.registry.get_terminal_info(terminal_id)
+            if info:
+                status = info.get("status", "unknown")
+                if status in status_counts:
+                    status_counts[status] += 1
+                else:
+                    status_counts["other"] += 1
+
+        total = len(terminal_ids)
+
+        # Determine overall status
+        if total == 0:
+            overall = "no_terminals"
+        elif status_counts["connected"] == total:
+            overall = "all_connected"
+        elif status_counts["disconnected"] == total:
+            overall = "all_disconnected"
+        elif status_counts["connected"] > 0:
+            overall = "partial"
+        elif status_counts["connecting"] > 0 or status_counts["reconnecting"] > 0:
+            overall = "connecting"
+        else:
+            overall = "unknown"
+
+        return {
+            "total_terminals": total,
+            "status_counts": status_counts,
+            "overall_status": overall,
+        }
 
     def copy_selection(self, terminal: Vte.Terminal):
         if terminal.get_has_selection():
@@ -1336,8 +2717,31 @@ class TerminalManager:
         self, gesture, _n_press, x, y, terminal, terminal_id
     ):
         try:
-            self._update_context_menu_with_url(terminal, x, y)
-            return Gdk.EVENT_PROPAGATE
+            # Manually handle context menu to avoid VTE/Wayland crashes
+            gesture.set_state(Gtk.EventSequenceState.CLAIMED)
+            
+            menu_model = _create_terminal_menu(
+                terminal,
+                terminal_id,
+                settings_manager=self.settings_manager,
+                click_x=x,
+                click_y=y
+            )
+            
+            popover = Gtk.PopoverMenu.new_from_model(menu_model)
+            popover.set_parent(terminal)
+            popover.set_has_arrow(False)
+            popover.set_position(Gtk.PositionType.BOTTOM)
+            
+            rect = Gdk.Rectangle()
+            rect.x = int(x)
+            rect.y = int(y)
+            rect.width = 1
+            rect.height = 1
+            popover.set_pointing_to(rect)
+            
+            GLib.idle_add(popover.popup)
+            return Gdk.EVENT_STOP
         except Exception as e:
             self.logger.error(
                 f"Terminal right-click handling failed for terminal {terminal_id}: {e}"
@@ -1428,6 +2832,65 @@ class TerminalManager:
         # CRUCIAL: Always propagate the event so VTE processes the newline
         return Gdk.EVENT_PROPAGATE
 
+    # Shell keywords that should be skipped (not actual commands)
+    _SHELL_KEYWORDS = frozenset(
+        {
+            "if",
+            "then",
+            "else",
+            "elif",
+            "fi",
+            "for",
+            "do",
+            "done",
+            "while",
+            "until",
+            "case",
+            "esac",
+            "select",
+            "in",
+            "function",
+            "{",
+            "}",
+            "[[",
+            "]]",
+            "(",
+            ")",
+        }
+    )
+
+    # Prefix commands that should be skipped to find the real command
+    _PREFIX_COMMANDS = frozenset(
+        {
+            "sudo",
+            "time",
+            "env",
+            "nice",
+            "nohup",
+            "strace",
+            "ltrace",
+            "doas",
+            "pkexec",
+            "command",
+            "builtin",
+            "exec",
+        }
+    )
+
+    # Glued keywords that can appear merged with commands
+    _GLUED_KEYWORDS = frozenset(
+        {
+            "then",
+            "else",
+            "elif",
+            "fi",
+            "do",
+            "done",
+            "esac",
+            "in",
+        }
+    )
+
     def _analyze_command_from_line(
         self, line: str, terminal: Vte.Terminal, terminal_id: int
     ) -> None:
@@ -1438,186 +2901,170 @@ class TerminalManager:
         1. Ignored commands (tools with native coloring): set context and disable highlighting
         2. Known triggers (from HighlightManager): set context for command-specific rules
         3. Fallback: use first valid non-flag token
-
-        This parses the raw line to separate the shell prompt from the user's
-        command using common prompt terminators ($, #, %, >, ➜).
-
-        Args:
-            line: The raw line text from the terminal.
-            terminal: The VTE terminal widget.
-            terminal_id: The terminal's registry ID.
         """
         try:
             if not line:
                 return
 
-            # Strip ANSI escape sequences and terminal control codes from the line
-            # This handles cases where cursor movement codes get mixed in (e.g., [K, [[[ )
-            import re
-
-            # Pattern to match ANSI escape sequences:
-            # 1. Standard CSI: ESC [ params letter
-            # 2. OSC sequences: ESC ] ... BEL
-            # 3. Malformed CSI (ESC lost): one or more [ followed by CSI command letter
-            #    Common CSI commands: A-H (cursor), J-K (erase), P (delete), S-T (scroll)
-            #    f,m,n,s,u (other control sequences)
-            ansi_escape = re.compile(
-                r"\x1b\[[0-9;]*[A-Za-z]|\x1b\].*?\x07|\[+(?:\d*[;]?)*[ABCDEFGHJKPSTfmnsu]"
-            )
-            clean_line = ansi_escape.sub("", line)
-
-            # Find the last occurrence of a prompt separator
-            # The pattern matches: $ # % > ➜ followed by a space
-            matches = list(PROMPT_TERMINATOR_PATTERN.finditer(clean_line))
-
-            if matches:
-                # Get the last match - everything after it is the command
-                last_match = matches[-1]
-                command_part = clean_line[last_match.end() :].strip()
-            else:
-                # No prompt found - the whole line might be the command
-                # (e.g., if prompt was on a previous line or uses unusual format)
-                command_part = clean_line.strip()
+            clean_line = _ANSI_ESCAPE_PATTERN.sub("", line)
+            command_part = self._extract_command_from_line(clean_line)
 
             if not command_part:
                 return
 
-            # Get settings and highlight manager
-            from ..settings.manager import get_settings_manager
-
-            settings_manager = get_settings_manager()
-            highlight_manager = _get_highlight_manager()
-
-            ignored_commands = set(
-                settings_manager.get("ignored_highlight_commands", [])
-            )
-            known_triggers = highlight_manager.get_all_triggers()
-
-            # For pipelines, analyze the LAST command in the chain since
-            # that's what produces the visible output
-            # Split by | and ; and && and || to find pipeline segments
-            pipeline_parts = []
-            current_part = []
-            for char in command_part:
-                if char in "|;&":
-                    if current_part:
-                        pipeline_parts.append("".join(current_part).strip())
-                        current_part = []
-                else:
-                    current_part.append(char)
-            if current_part:
-                pipeline_parts.append("".join(current_part).strip())
-
-            # Get the last non-empty part of the pipeline
-            last_command_part = ""
-            for part in reversed(pipeline_parts):
-                if part:
-                    last_command_part = part
-                    break
-
-            if not last_command_part:
-                last_command_part = command_part
-
-            # Parse tokens from the last pipeline segment
-            tokens = last_command_part.split()
-            detected_command = None
-            fallback_command = None
-
-            # Prefix commands that should be skipped to find the real command
-            # These take another command as their argument
-            PREFIX_COMMANDS = {
-                "sudo",
-                "time",
-                "env",
-                "nice",
-                "nohup",
-                "strace",
-                "ltrace",
-                "doas",
-                "pkexec",
-                "command",
-                "builtin",
-                "exec",
-            }
-
-            for token in tokens:
-                # Skip flags (start with -)
-                if token.startswith("-"):
-                    continue
-
-                # Skip variable assignments (contain = without being a path)
-                if "=" in token and "/" not in token:
-                    continue
-
-                # Clean the token: remove path prefixes and leading dots
-                clean_token = token
-                if "/" in clean_token:
-                    clean_token = clean_token.split("/")[-1]
-                clean_token = clean_token.lstrip(".")
-
-                if not clean_token:
-                    continue
-
-                clean_token_lower = clean_token.lower()
-
-                # Skip prefix commands (sudo, time, env, etc.) to find the real command
-                if clean_token_lower in PREFIX_COMMANDS:
-                    continue
-
-                # Priority 1: Check if it's an ignored command (native coloring)
-                if clean_token_lower in ignored_commands:
-                    detected_command = clean_token
-                    break
-
-                # Priority 2: Check if it's a known trigger
-                if clean_token_lower in known_triggers:
-                    detected_command = clean_token
-                    break
-
-                # Save first valid token as fallback
-                if fallback_command is None:
-                    fallback_command = clean_token
-
-            # Use detected command or fallback
-            program_name = detected_command or fallback_command
+            command_part = self._strip_glued_keywords(command_part)
+            program_name = self._detect_program_name(command_part)
 
             if not program_name:
                 return
 
-            # Check if this is a help command (--help, -h, help builtin, man)
-            # If so, set context to "help" for help output highlighting
-            command_tokens = command_part.lower().split()
-            is_help_command = False
-
-            # Check for --help or -h flags anywhere in the command
-            if "--help" in command_tokens or "-h" in command_tokens:
-                is_help_command = True
-            # Check if first token is "help" (bash builtin) or "man"
-            elif command_tokens and command_tokens[0] in ("help", "man"):
-                is_help_command = True
-
-            # Update the syntax highlighting context
-            # Pass the full command (command_part) so cat can extract the filename
-            highlighter = _get_output_highlighter()
-
-            if is_help_command:
-                # For help output, use the "help" context for highlighting
-                highlighter.set_context("help", terminal_id, full_command=command_part)
-                self.logger.debug(
-                    f"Terminal {terminal_id}: help command detected, using 'help' context for: {clean_line[:50]}..."
-                )
-            else:
-                highlighter.set_context(
-                    program_name, terminal_id, full_command=command_part
-                )
-                self.logger.debug(
-                    f"Terminal {terminal_id}: detected command '{program_name}' from line: {clean_line[:50]}..."
-                )
+            self._set_terminal_context(
+                terminal_id, program_name, command_part, clean_line
+            )
 
         except Exception as e:
             self.logger.error(
                 f"Command analysis failed for terminal {terminal_id}: {e}"
             )
+
+    def _extract_command_from_line(self, clean_line: str) -> str:
+        """Extract command portion after the shell prompt."""
+        matches = list(PROMPT_TERMINATOR_PATTERN.finditer(clean_line))
+        if matches:
+            last_match = matches[-1]
+            return clean_line[last_match.end() :].strip()
+        return clean_line.strip()
+
+    def _strip_glued_keywords(self, command_part: str) -> str:
+        """Remove glued shell keywords from command start."""
+        command_lower = command_part.lower()
+        for kw in self._GLUED_KEYWORDS:
+            if command_lower.startswith(kw) and len(command_lower) > len(kw):
+                if command_lower[len(kw)].isalpha():
+                    return command_part[len(kw) :]
+        return command_part
+
+    def _detect_program_name(self, command_part: str) -> Optional[str]:
+        """Detect the program name from command part."""
+        last_command_part = self._get_last_pipeline_segment(command_part)
+        tokens = last_command_part.split() if last_command_part else []
+
+        from ..settings.manager import get_settings_manager
+
+        settings_manager = get_settings_manager()
+        highlight_manager = _get_highlight_manager()
+
+        ignored_commands = set(settings_manager.get("ignored_highlight_commands", []))
+        known_triggers = highlight_manager.get_all_triggers()
+
+        return self._find_program_in_tokens(tokens, ignored_commands, known_triggers)
+
+    def _get_last_pipeline_segment(self, command_part: str) -> str:
+        """Get the last segment of a pipeline command."""
+        parts = []
+        current = []
+        for char in command_part:
+            if char in "|;&":
+                if current:
+                    parts.append("".join(current).strip())
+                    current = []
+            else:
+                current.append(char)
+        if current:
+            parts.append("".join(current).strip())
+
+        for part in reversed(parts):
+            if part:
+                return part
+        return command_part
+
+    def _find_program_in_tokens(
+        self,
+        tokens: list[str],
+        ignored_commands: set[str],
+        known_triggers: set[str],
+    ) -> Optional[str]:
+        """Find the program name from command tokens."""
+        fallback = None
+
+        for token in tokens:
+            clean_token = self._clean_command_token(token)
+            if not clean_token:
+                continue
+
+            clean_lower = clean_token.lower()
+
+            if clean_lower in self._PREFIX_COMMANDS:
+                continue
+            if clean_lower in self._SHELL_KEYWORDS:
+                continue
+
+            # Handle concatenated keywords
+            clean_token = self._extract_from_glued_keyword(clean_token, clean_lower)
+            clean_lower = clean_token.lower()
+
+            if clean_lower in self._SHELL_KEYWORDS:
+                continue
+
+            if clean_lower in ignored_commands or clean_lower in known_triggers:
+                return clean_token
+
+            if fallback is None:
+                fallback = clean_token
+
+        return fallback
+
+    def _clean_command_token(self, token: str) -> str:
+        """Clean a token by removing flags, paths, and dots."""
+        if token.startswith("-"):
+            return ""
+        if "=" in token and "/" not in token:
+            return ""
+
+        clean = token
+        if "/" in clean:
+            clean = clean.split("/")[-1]
+        return clean.lstrip(".")
+
+    def _extract_from_glued_keyword(self, token: str, token_lower: str) -> str:
+        """Extract command from keyword-glued token."""
+        for kw in self._SHELL_KEYWORDS:
+            if token_lower.startswith(kw) and len(token_lower) > len(kw):
+                remainder = token[len(kw) :]
+                if remainder and remainder[0].isalpha():
+                    return remainder
+        return token
+
+    def _set_terminal_context(
+        self,
+        terminal_id: int,
+        program_name: str,
+        command_part: str,
+        clean_line: str,
+    ) -> None:
+        """Set the syntax highlighting context for the terminal."""
+        tokens = command_part.lower().split()
+        is_help = self._is_help_command(tokens)
+
+        highlighter = _get_output_highlighter()
+        if is_help:
+            highlighter.set_context("help", terminal_id, full_command=command_part)
+            self.logger.debug(
+                f"Terminal {terminal_id}: help context for: {clean_line[:50]}..."
+            )
+        else:
+            highlighter.set_context(
+                program_name, terminal_id, full_command=command_part
+            )
+            self.logger.debug(
+                f"Terminal {terminal_id}: detected '{program_name}' from: {clean_line[:50]}..."
+            )
+
+    def _is_help_command(self, tokens: list[str]) -> bool:
+        """Check if command is a help command."""
+        if "--help" in tokens or "-h" in tokens:
+            return True
+        return bool(tokens and tokens[0] in ("help", "man"))
 
     def _get_url_at_position(
         self, terminal: Vte.Terminal, x: float, y: float
@@ -1666,12 +3113,14 @@ class TerminalManager:
 
             uri = uri.strip()
 
-            if "@" in uri and not uri.startswith((
-                "http://",
-                "https://",
-                "ftp://",
-                "mailto:",
-            )):
+            if "@" in uri and not uri.startswith(
+                (
+                    "http://",
+                    "https://",
+                    "ftp://",
+                    "mailto:",
+                )
+            ):
                 if "." in uri.split("@")[-1]:
                     uri = f"mailto:{uri}"
 

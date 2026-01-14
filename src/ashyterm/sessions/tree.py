@@ -11,6 +11,7 @@ from gi.repository import Gdk, Gio, GLib, GObject, Graphene, Gtk
 
 from ..core.signals import AppSignals
 from ..helpers import create_themed_popover_menu
+
 # Lazy imports for menus - only loaded when context menus are actually needed
 # from ..ui.menus import create_folder_menu, create_root_menu, create_session_menu
 from ..utils.logger import get_logger
@@ -55,6 +56,52 @@ def _get_children_model(
 ) -> Optional[Gio.ListStore]:
     """Callback for Gtk.TreeListModel to get children of an item."""
     return getattr(item, "children", None)
+
+
+def iterate_tree_model(
+    model,
+    callback: Callable[[GObject.GObject, GObject.GObject, bool], bool],
+    recurse_condition: Optional[
+        Callable[[GObject.GObject, GObject.GObject], bool]
+    ] = None,
+) -> None:
+    """Recursively iterate over a Gtk.TreeListModel calling callback for each item.
+
+    This is a generic tree iteration utility to reduce code duplication in
+    tree operations like collecting/restoring expansion states.
+
+    Args:
+        model: The Gtk.TreeListModel or child model to iterate.
+        callback: Function(row, item, is_expanded) -> should_recurse.
+                  Called for each row. Return True to recurse into children.
+        recurse_condition: Optional function(row, item) -> bool.
+                          If provided, only recurse when this returns True.
+                          If None, recurse based on callback return value.
+    """
+    for i in range(model.get_n_items()):
+        row = model.get_item(i)
+        if not row:
+            continue
+
+        item = row.get_item()
+        if not item:
+            continue
+
+        is_expanded = row.get_expanded()
+        should_recurse = callback(row, item, is_expanded)
+
+        # Determine if we should recurse into children
+        do_recurse = should_recurse
+        if recurse_condition is not None:
+            do_recurse = recurse_condition(row, item)
+
+        if do_recurse:
+            try:
+                child_model = row.get_model()
+                if child_model:
+                    iterate_tree_model(child_model, callback, recurse_condition)
+            except AttributeError:
+                pass
 
 
 class SessionTreeView:
@@ -221,28 +268,13 @@ class SessionTreeView:
         """Saves the current expansion state of all folders before search begins."""
         self._saved_expansion_state = set()
 
-        def collect_expanded_folders(model):
-            """Recursively collect all expanded folder paths."""
-            for i in range(model.get_n_items()):
-                row = model.get_item(i)
-                if not row:
-                    continue
+        def collect_callback(row, item, is_expanded):
+            """Collect expanded folder paths."""
+            if isinstance(item, SessionFolder) and is_expanded:
+                self._saved_expansion_state.add(item.path)
+            return is_expanded  # Only recurse into expanded folders
 
-                item = row.get_item()
-                if isinstance(item, SessionFolder):
-                    if row.get_expanded():
-                        self._saved_expansion_state.add(item.path)
-
-                    # If expanded, check children too
-                    if row.get_expanded():
-                        try:
-                            child_model = row.get_model()
-                            if child_model:
-                                collect_expanded_folders(child_model)
-                        except AttributeError:
-                            pass
-
-        collect_expanded_folders(self.tree_model)
+        iterate_tree_model(self.tree_model, collect_callback)
         self.logger.debug(f"Saved expansion state: {self._saved_expansion_state}")
 
     def _restore_saved_expansion_state(self) -> None:
@@ -256,36 +288,21 @@ class SessionTreeView:
             f"Restoring saved expansion state: {self._saved_expansion_state}"
         )
 
-        def restore_expansion_state(model):
-            """Recursively restore expansion state for all folders."""
-            for i in range(model.get_n_items()):
-                row = model.get_item(i)
-                if not row:
-                    continue
-
-                item = row.get_item()
-                if isinstance(item, SessionFolder):
-                    should_be_expanded = item.path in self._saved_expansion_state
-                    current_expanded = row.get_expanded()
-
-                    if should_be_expanded and not current_expanded:
-                        row.set_expanded(True)
-                    elif not should_be_expanded and current_expanded:
-                        row.set_expanded(False)
-
-                    # If this folder should be expanded, check its children
-                    if should_be_expanded:
-                        try:
-                            child_model = row.get_model()
-                            if child_model:
-                                restore_expansion_state(child_model)
-                        except AttributeError:
-                            pass
+        def restore_callback(row, item, is_expanded):
+            """Restore expansion state for folders."""
+            if isinstance(item, SessionFolder):
+                should_be_expanded = item.path in self._saved_expansion_state
+                if should_be_expanded and not is_expanded:
+                    row.set_expanded(True)
+                elif not should_be_expanded and is_expanded:
+                    row.set_expanded(False)
+                return should_be_expanded  # Only recurse into folders that should be expanded
+            return False
 
         # Set restoring state flag to prevent saving during restoration
         self._is_restoring_state = True
         try:
-            restore_expansion_state(self.tree_model)
+            iterate_tree_model(self.tree_model, restore_callback)
         finally:
             self._is_restoring_state = False
 

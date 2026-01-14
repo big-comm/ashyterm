@@ -1,5 +1,6 @@
 # ashyterm/window.py
 
+import re
 import weakref
 from typing import Dict, List, Optional
 
@@ -12,6 +13,7 @@ from gi.repository import Adw, Gdk, Gio, GLib, GObject, Gtk, Pango, Vte
 
 from .sessions.models import LayoutItem, SessionFolder, SessionItem
 from .sessions.operations import SessionOperations
+
 # Lazy import: from .sessions.storage import load_folders_to_store, load_sessions_and_folders, load_sessions_to_store
 from .sessions.tree import SessionTreeView
 from .settings.manager import SettingsManager
@@ -21,12 +23,12 @@ from .terminal.manager import TerminalManager
 from .terminal.tabs import TabManager
 from .ui.actions import WindowActions
 from .ui.sidebar_manager import SidebarManager
-from .utils.syntax_utils import get_bash_pango_markup
 from .ui.window_ui import WindowUIBuilder
 from .utils.exceptions import UIError
 from .utils.icons import icon_image
 from .utils.logger import get_logger
 from .utils.security import validate_session_data
+from .utils.syntax_utils import get_bash_pango_markup
 from .utils.translation_utils import _
 
 
@@ -151,13 +153,18 @@ class CommTerminalWindow(Adw.ApplicationWindow):
                             f"Reconnected UI controls for terminal {terminal_id}"
                         )
 
-        if not self._is_for_detached_tab:
-            # MODIFIED: Load data and create initial tab asynchronously.
-            GLib.idle_add(self._load_initial_data_and_tab)
+        # NOTE: Initial tab creation is deferred to _on_window_mapped()
+        # This prevents the duplicate prompt issue caused by resize SIGWINCH
+        # when the terminal is created before the window has its final dimensions.
 
-        # NEW: Apply all visual settings after the window is fully constructed,
-        # especially important for detached windows.
-        GLib.idle_add(self._apply_initial_visual_settings)
+        # Deferred initialization for visual settings and data loading
+        def _deferred_init():
+            if not self._is_for_detached_tab:
+                self._load_initial_data()
+            self._apply_initial_visual_settings()
+            return GLib.SOURCE_REMOVE
+
+        GLib.idle_add(_deferred_init)
 
         self.logger.info("Main window initialization completed")
 
@@ -174,9 +181,6 @@ class CommTerminalWindow(Adw.ApplicationWindow):
 
         # Apply settings to all terminals, which handles terminal transparency.
         self.terminal_manager.apply_settings_to_all_terminals()
-
-        # Update tooltip colors based on current theme
-        self._update_tooltip_colors()
 
     def _create_managers_and_ui(self) -> None:
         """
@@ -196,6 +200,9 @@ class CommTerminalWindow(Adw.ApplicationWindow):
 
         # UI/View-Model Layer
         self.terminal_manager = TerminalManager(self, self.settings_manager)
+        # Start terminal pre-creation in background for faster first tab
+        if not self._is_for_detached_tab:
+            self.terminal_manager.prepare_initial_terminal()
         self.ai_assistant = TerminalAiAssistant(
             self, self.settings_manager, self.terminal_manager
         )
@@ -258,12 +265,8 @@ class CommTerminalWindow(Adw.ApplicationWindow):
         self.command_toolbar = self.ui_builder.command_toolbar
         self.tab_manager.scrolled_tab_bar = self.scrolled_tab_bar
 
-        # Apply initial headerbar transparency
-        self.settings_manager.apply_headerbar_transparency(self.header_bar)
-
-        # Apply initial GTK terminal theme if set
-        if self.settings_manager.get("gtk_theme") == "terminal":
-            self.settings_manager.apply_gtk_terminal_theme(self)
+        # NOTE: Headerbar and theme styling is now handled in _apply_initial_visual_settings
+        # to avoid redundant CSS applications during initialization
 
     def _connect_component_signals(self) -> None:
         """
@@ -283,6 +286,7 @@ class CommTerminalWindow(Adw.ApplicationWindow):
             self._on_terminal_focus_changed
         )
         self.terminal_manager.set_terminal_exit_handler(self._on_terminal_exit)
+        self.terminal_manager.set_ssh_file_drop_callback(self._on_ssh_file_dropped)
         self.tab_manager.get_view_stack().connect(
             "notify::visible-child", self._on_tab_changed
         )
@@ -363,6 +367,12 @@ class CommTerminalWindow(Adw.ApplicationWindow):
         self.connect("notify::default-height", self._on_window_size_changed)
         self.connect("notify::maximized", self._on_window_maximized_changed)
 
+        # Defer terminal creation until window is mapped (has final dimensions)
+        # This prevents the duplicate prompt issue caused by resize SIGWINCH
+        if not self._is_for_detached_tab:
+            self._initial_tab_created = False
+            self.connect("map", self._on_window_mapped)
+
     def _setup_initial_window_size(self) -> None:
         """Set up initial window size and state from settings."""
         if self.settings_manager.get("remember_window_state", True):
@@ -400,14 +410,42 @@ class CommTerminalWindow(Adw.ApplicationWindow):
         maximized = self.is_maximized()
         self.settings_manager.set("window_maximized", maximized)
 
-    def _load_initial_data_and_tab(self) -> bool:
+    def _on_window_mapped(self, window) -> None:
         """
-        Asynchronously loads initial data and then creates the initial tab.
-        This allows the UI to show up immediately.
+        Handle window map signal - create initial tab after window has final dimensions.
+
+        This is crucial to prevent the duplicate prompt issue: when the terminal
+        is spawned before the window is mapped, the shell receives a SIGWINCH
+        (window change) signal during resize which causes it to redraw the prompt.
+
+        By waiting until the window is mapped, we ensure:
+        1. The window has its final dimensions
+        2. The terminal PTY is created with the correct size
+        3. No resize SIGWINCH is sent to the shell during initialization
         """
-        self._load_initial_data()
+        if self._initial_tab_created:
+            return
+
+        self._initial_tab_created = True
+        self.logger.debug("Window mapped - creating initial tab with final dimensions")
+
+        # Small delay to ensure window size is fully settled
+        # This is especially important when the window is maximized
+        def create_tab_deferred():
+            self._create_initial_tab_safe()
+            return GLib.SOURCE_REMOVE
+
+        GLib.idle_add(create_tab_deferred)
+
+    def _load_initial_data_and_tab(self) -> None:
+        """
+        Loads initial data and then creates the initial tab.
+        Called from deferred initialization to allow the UI to show up immediately.
+        """
+        # Create the tab first (faster perceived startup)
         self._create_initial_tab_safe()
-        return GLib.SOURCE_REMOVE  # Run only once
+        # Then load session data (can happen while user sees the terminal)
+        self._load_initial_data()
 
     def _load_initial_data(self) -> None:
         """Load initial sessions, folders, and layouts data."""
@@ -430,9 +468,7 @@ class CommTerminalWindow(Adw.ApplicationWindow):
                 self.logger.info(import_result.message)
                 self.refresh_tree()
             elif import_result.message:
-                self.logger.debug(
-                    f"SSH config import skipped: {import_result.message}"
-                )
+                self.logger.debug(f"SSH config import skipped: {import_result.message}")
 
             self.logger.info(
                 f"Loaded {self.session_store.get_n_items()} sessions, "
@@ -450,79 +486,94 @@ class CommTerminalWindow(Adw.ApplicationWindow):
 
     # --- Event Handlers & Callbacks ---
 
-    def _on_key_pressed(self, _controller, keyval, _keycode, state):
-        """Handles key press events for tab navigation and search."""
-        # Handle Escape key to cancel tab move mode
+    def _handle_escape_key(self, keyval) -> bool:
+        """Handle Escape key to cancel tab move mode."""
         if keyval == Gdk.KEY_Escape:
             if self.tab_manager.cancel_tab_move_if_active():
-                return Gdk.EVENT_STOP
+                return True
+        return False
 
-        # Check for Ctrl+Shift+F for search - use uppercase F key
-        if (
+    def _handle_search_shortcut(self, keyval, state) -> bool:
+        """Handle Ctrl+Shift+F for search toggle."""
+        is_ctrl_shift = (
             state & Gdk.ModifierType.CONTROL_MASK
             and state & Gdk.ModifierType.SHIFT_MASK
-            and (keyval == Gdk.KEY_f or keyval == Gdk.KEY_F)
-        ):
-            # Toggle search bar
+        )
+        is_f_key = keyval == Gdk.KEY_f or keyval == Gdk.KEY_F
+        if is_ctrl_shift and is_f_key:
             current_mode = self.search_bar.get_search_mode()
             self.search_bar.set_search_mode(not current_mode)
-            if (
-                not current_mode
-            ):  # If we're showing the search bar, focus the search entry
+            if not current_mode:
                 self.terminal_search_entry.grab_focus()
-            return True  # Use True instead of Gdk.EVENT_STOP for better compatibility
+            return True
+        return False
 
-        # Convert the key press event into a GTK accelerator string.
+    def _handle_dynamic_shortcuts(self, accel_string: str) -> bool:
+        """Handle dynamically configured shortcuts."""
+        if not accel_string:
+            return False
+        shortcut_actions = {
+            self.settings_manager.get_shortcut(
+                "next-tab"
+            ): self.tab_manager.select_next_tab,
+            self.settings_manager.get_shortcut(
+                "previous-tab"
+            ): self.tab_manager.select_previous_tab,
+            self.settings_manager.get_shortcut(
+                "ai-assistant"
+            ): self._on_ai_assistant_requested,
+        }
+        if action := shortcut_actions.get(accel_string):
+            action()
+            return True
+        # Handle split shortcuts separately (require terminal check)
+        split_h = self.settings_manager.get_shortcut("split-horizontal")
+        split_v = self.settings_manager.get_shortcut("split-vertical")
+        if accel_string in (split_h, split_v):
+            if terminal := self.tab_manager.get_selected_terminal():
+                if accel_string == split_h:
+                    self.tab_manager.split_horizontal(terminal)
+                else:
+                    self.tab_manager.split_vertical(terminal)
+            return True
+        return False
+
+    def _handle_alt_number_shortcuts(self, keyval, state) -> bool:
+        """Handle Alt+Number for quick tab switching."""
+        if not (state & Gdk.ModifierType.ALT_MASK):
+            return False
+        key_to_index = {
+            Gdk.KEY_1: 0,
+            Gdk.KEY_2: 1,
+            Gdk.KEY_3: 2,
+            Gdk.KEY_4: 3,
+            Gdk.KEY_5: 4,
+            Gdk.KEY_6: 5,
+            Gdk.KEY_7: 6,
+            Gdk.KEY_8: 7,
+            Gdk.KEY_9: 8,
+            Gdk.KEY_0: 9,
+        }
+        if keyval in key_to_index:
+            index = key_to_index[keyval]
+            if index < self.tab_manager.get_tab_count():
+                self.tab_manager.set_active_tab(self.tab_manager.tabs[index])
+            return True
+        return False
+
+    def _on_key_pressed(self, _controller, keyval, _keycode, state):
+        """Handles key press events for tab navigation and search."""
+        if self._handle_escape_key(keyval):
+            return Gdk.EVENT_STOP
+        if self._handle_search_shortcut(keyval, state):
+            return Gdk.EVENT_STOP
         accel_string = Gtk.accelerator_name(
             keyval, state & Gtk.accelerator_get_default_mod_mask()
         )
-
-        # Get the currently configured shortcuts from the settings manager.
-        next_tab_shortcut = self.settings_manager.get_shortcut("next-tab")
-        prev_tab_shortcut = self.settings_manager.get_shortcut("previous-tab")
-        split_h_shortcut = self.settings_manager.get_shortcut("split-horizontal")
-        split_v_shortcut = self.settings_manager.get_shortcut("split-vertical")
-        ai_shortcut = self.settings_manager.get_shortcut("ai-assistant")
-
-        # Check if the pressed key combination matches one of our dynamic shortcuts.
-        if accel_string and accel_string == next_tab_shortcut:
-            self.tab_manager.select_next_tab()
-            return Gdk.EVENT_STOP  # Stop the event from reaching the terminal.
-        if accel_string and accel_string == prev_tab_shortcut:
-            self.tab_manager.select_previous_tab()
-            return Gdk.EVENT_STOP  # Stop the event from reaching the terminal.
-
-        if accel_string and accel_string == split_h_shortcut:
-            if terminal := self.tab_manager.get_selected_terminal():
-                self.tab_manager.split_horizontal(terminal)
+        if self._handle_dynamic_shortcuts(accel_string):
             return Gdk.EVENT_STOP
-        if accel_string and accel_string == split_v_shortcut:
-            if terminal := self.tab_manager.get_selected_terminal():
-                self.tab_manager.split_vertical(terminal)
+        if self._handle_alt_number_shortcuts(keyval, state):
             return Gdk.EVENT_STOP
-        if accel_string and accel_string == ai_shortcut:
-            self._on_ai_assistant_requested()
-            return Gdk.EVENT_STOP
-
-        # Keep the existing Alt+Number logic for quick tab switching.
-        if state & Gdk.ModifierType.ALT_MASK:
-            key_to_index = {
-                Gdk.KEY_1: 0,
-                Gdk.KEY_2: 1,
-                Gdk.KEY_3: 2,
-                Gdk.KEY_4: 3,
-                Gdk.KEY_5: 4,
-                Gdk.KEY_6: 5,
-                Gdk.KEY_7: 6,
-                Gdk.KEY_8: 7,
-                Gdk.KEY_9: 8,
-                Gdk.KEY_0: 9,
-            }
-            if keyval in key_to_index:
-                index = key_to_index[keyval]
-                if index < self.tab_manager.get_tab_count():
-                    self.tab_manager.set_active_tab(self.tab_manager.tabs[index])
-                return Gdk.EVENT_STOP
         return Gdk.EVENT_PROPAGATE
 
     def _on_ai_assistant_requested(self, *_args) -> None:
@@ -654,7 +705,9 @@ class CommTerminalWindow(Adw.ApplicationWindow):
                     command_text = command_info
 
                 command_text = command_text.strip()
-                description = description.strip() if isinstance(description, str) else ""
+                description = (
+                    description.strip() if isinstance(description, str) else ""
+                )
 
                 if not command_text:
                     continue
@@ -775,9 +828,6 @@ class CommTerminalWindow(Adw.ApplicationWindow):
             # Always re-apply headerbar transparency as the base theme might have changed
             self.settings_manager.apply_headerbar_transparency(self.header_bar)
 
-            # Update tooltip colors for terminal theme
-            self._update_tooltip_colors()
-
         elif key == "auto_hide_sidebar":
             self.sidebar_manager.handle_auto_hide_change(new_value)
         elif key == "tab_alignment":
@@ -805,19 +855,14 @@ class CommTerminalWindow(Adw.ApplicationWindow):
                 and self.settings_manager.get("gtk_theme") == "terminal"
             ):
                 self.settings_manager.apply_gtk_terminal_theme(self)
-                # Update tooltip colors when color scheme changes with terminal theme
-                self._update_tooltip_colors()
             if key in ["transparency", "headerbar_transparency"]:
                 self._update_file_manager_transparency()
             if self.font_sizer_widget and key == "font":
                 self.font_sizer_widget.update_display()
 
-    def _update_tooltip_colors(self):
-        """Update tooltip colors based on current theme settings."""
-        from .utils.tooltip_helper import get_tooltip_helper
-
-        tooltip_helper = get_tooltip_helper()
-        tooltip_helper.update_colors(use_terminal_theme=True)
+        # Update headerbar buttons visibility when this setting changes
+        if key == "hide_headerbar_buttons_when_maximized":
+            self.ui_builder._update_headerbar_buttons_visibility()
 
     def _on_color_scheme_changed(self, dialog, idx):
         """Handle color scheme changes from the dialog."""
@@ -924,11 +969,13 @@ class CommTerminalWindow(Adw.ApplicationWindow):
                     )
                 )
                 if terminal_info:
-                    terminals_to_move.append({
-                        "id": terminal_id,
-                        "info": terminal_info,
-                        "widget": terminal,
-                    })
+                    terminals_to_move.append(
+                        {
+                            "id": terminal_id,
+                            "info": terminal_info,
+                            "widget": terminal,
+                        }
+                    )
 
         content = page_to_detach.get_child()
         title = tab_widget._base_title
@@ -1176,9 +1223,7 @@ class CommTerminalWindow(Adw.ApplicationWindow):
         for terminal in terminals:
             terminal.feed_child(command_bytes)
 
-        self.logger.info(
-            f"Broadcasted command to {len(terminals)} terminals."
-        )
+        self.logger.info(f"Broadcasted command to {len(terminals)} terminals.")
 
     def _make_broadcast_terminal_key(self, terminal: Vte.Terminal) -> str:
         page = self.tab_manager.get_page_for_terminal(terminal)
@@ -1290,8 +1335,6 @@ class CommTerminalWindow(Adw.ApplicationWindow):
 
             if not use_regex:
                 # For literal search, escape regex special characters
-                import re
-
                 search_text = re.escape(text)
 
             # Always use new_for_search, but with escaped pattern for literal mode
@@ -1455,44 +1498,55 @@ class CommTerminalWindow(Adw.ApplicationWindow):
         if self._force_closing:
             return Gdk.EVENT_PROPAGATE
 
-        if len(self.get_application().get_windows()) == 1:
-            policy = self.settings_manager.get("session_restore_policy", "never")
-            if policy == "ask":
-                self._show_save_session_dialog()
+        # Check for multiple tabs - apply close policy
+        tab_count = self.tab_manager.get_tab_count()
+        if tab_count > 1:
+            close_policy = self.settings_manager.get(
+                "close_multiple_tabs_policy", "ask"
+            )
+            if close_policy == "ask":
+                self._show_close_multiple_tabs_dialog()
                 return Gdk.EVENT_STOP
-            elif policy == "always":
+            elif close_policy == "save_and_close":
+                # Save tabs and close without asking
                 self.state_manager.save_session_state()
-            else:
-                self.state_manager.clear_session_state()
+                return self._continue_close_process()
+            # "just_close" - proceed without saving or asking
+            self.state_manager.clear_session_state()
 
         return self._continue_close_process()
 
-    def _show_save_session_dialog(self):
+    def _show_close_multiple_tabs_dialog(self) -> None:
+        """Show dialog when closing with multiple tabs open."""
+        tab_count = self.tab_manager.get_tab_count()
         dialog = Adw.MessageDialog(
             transient_for=self,
-            heading=_("Save Current Session?"),
+            heading=_("Close {} Tabs?").format(tab_count),
             body=_(
-                "Do you want to restore these tabs the next time you open Ashy Terminal?"
-            ),
+                "You have {} open tabs. Would you like to save them to restore next time?"
+            ).format(tab_count),
             close_response="cancel",
         )
-        dialog.add_response("dont-save", _("Don't Save"))
+        dialog.add_response("close", _("Close"))
         dialog.add_response("cancel", _("Cancel"))
         dialog.add_response("save", _("Save and Close"))
+        dialog.set_response_appearance("close", Adw.ResponseAppearance.DESTRUCTIVE)
         dialog.set_response_appearance("save", Adw.ResponseAppearance.SUGGESTED)
         dialog.set_default_response("save")
 
-        dialog.connect("response", self._on_save_session_dialog_response)
+        dialog.connect("response", self._on_close_multiple_tabs_dialog_response)
         dialog.present()
 
-    def _on_save_session_dialog_response(self, dialog, response_id):
+    def _on_close_multiple_tabs_dialog_response(self, dialog, response_id):
+        """Handle response from close multiple tabs dialog."""
         dialog.close()
         if response_id == "save":
             self.state_manager.save_session_state()
             self._continue_close_process(force_close=True)
-        elif response_id == "dont-save":
+        elif response_id == "close":
             self.state_manager.clear_session_state()
             self._continue_close_process(force_close=True)
+        # "cancel" - do nothing, window stays open
 
     def _continue_close_process(self, force_close=False) -> bool:
         if self.terminal_manager.has_active_ssh_sessions():
@@ -1543,6 +1597,9 @@ class CommTerminalWindow(Adw.ApplicationWindow):
 
         for fm in self.tab_manager.file_managers.values():
             fm.shutdown(None)
+
+        # Clean up CSS providers to prevent memory leaks
+        self.settings_manager.cleanup_css_providers(self)
 
     def destroy(self) -> None:
         self._perform_cleanup()
@@ -1663,6 +1720,180 @@ class CommTerminalWindow(Adw.ApplicationWindow):
     def _on_terminal_exit(self, terminal, child_status, identifier):
         if getattr(self, "ai_assistant", None):
             self.ai_assistant.clear_conversation_for_terminal(terminal)
+
+    def _on_ssh_file_dropped(self, terminal_id, local_paths, session, ssh_target):
+        """Handle files dropped on SSH terminal - open file manager and let it handle upload."""
+        from pathlib import Path
+        from urllib.parse import unquote, urlparse
+
+        self.logger.info(
+            f"SSH file drop: {len(local_paths)} files for terminal {terminal_id}"
+        )
+
+        # Get the terminal and its page
+        terminal = self.terminal_manager.registry.get_terminal(terminal_id)
+        if not terminal:
+            self.logger.warning(f"Terminal {terminal_id} not found for file drop")
+            return
+
+        # Get the page for this specific terminal
+        page = self.tab_manager.get_page_for_terminal(terminal)
+        if not page:
+            self.logger.warning(f"Page not found for terminal {terminal_id}")
+            return
+
+        # Get file manager for this specific page
+        fm = self.tab_manager.file_managers.get(page)
+
+        # Try to get the current remote directory from the terminal
+        remote_dir = None
+        try:
+            uri = terminal.get_current_directory_uri()
+            if uri:
+                parsed_uri = urlparse(uri)
+                if parsed_uri.scheme == "file":
+                    remote_dir = unquote(parsed_uri.path)
+                    self.logger.info(f"Got remote directory from OSC7: {remote_dir}")
+        except Exception as e:
+            self.logger.debug(f"Could not get terminal directory URI: {e}")
+
+        # Debug logging
+        self.logger.debug(
+            f"File drop check: fm={fm is not None}, "
+            f"is_remote={fm._is_remote_session() if fm else 'N/A'}, "
+            f"session_item={fm.session_item if fm else 'N/A'}"
+        )
+
+        if fm and fm._is_remote_session() and not getattr(fm, "_is_rebinding", False):
+            # File manager is available and connected to remote session
+            if remote_dir:
+                fm.current_path = remote_dir
+            paths = [Path(p) for p in local_paths]
+            fm._show_upload_confirmation_dialog(paths)
+            self.logger.info(
+                f"Upload initiated for {len(paths)} files via file manager"
+            )
+        else:
+            # File manager not ready - store pending drop info first
+            self._pending_drop_files = local_paths
+            self._pending_drop_remote_dir = remote_dir
+            self._pending_drop_session = session
+            self._pending_drop_ssh_target = ssh_target
+            self._pending_drop_terminal_id = terminal_id
+            self._pending_drop_page = page
+            self._pending_drop_attempts = 0
+            self._pending_drop_terminal = terminal  # Store terminal reference
+
+            # Ensure file manager panel is visible
+            if not self.file_manager_button.get_active():
+                self.file_manager_button.set_active(True)
+
+            # After activation, force rebind to the correct terminal
+            # The FM might have been bound to a different terminal by toggle
+            fm = self.tab_manager.file_managers.get(page)
+            if fm:
+                self.logger.info(
+                    f"Force rebinding FM to drop target terminal {terminal_id}"
+                )
+                fm.rebind_terminal(terminal)
+
+            # Schedule upload check after file manager is ready
+            GLib.timeout_add(300, self._check_pending_drop_upload)
+
+    def _check_pending_drop_upload(self):
+        """Check if file manager is ready and process pending drop upload."""
+        from pathlib import Path
+
+        if not hasattr(self, "_pending_drop_files") or not self._pending_drop_files:
+            return False  # Stop timeout
+
+        # Limit retries to prevent infinite loops
+        self._pending_drop_attempts = getattr(self, "_pending_drop_attempts", 0) + 1
+        if self._pending_drop_attempts > 30:  # 9 seconds max wait
+            self.logger.warning(
+                "Timed out waiting for file manager to be ready for upload"
+            )
+            self._clear_pending_drop()
+            return False
+
+        # Get file manager for the specific page where drop occurred
+        page = getattr(self, "_pending_drop_page", None)
+        if not page:
+            self.logger.warning("No page stored for pending drop")
+            self._clear_pending_drop()
+            return False
+
+        fm = self.tab_manager.file_managers.get(page)
+
+        # Check if file manager exists
+        if not fm:
+            self.logger.debug(
+                f"Attempt {self._pending_drop_attempts}: File manager not yet created"
+            )
+            return True  # Continue waiting
+
+        # Check if rebinding is still in progress
+        if getattr(fm, "_is_rebinding", False):
+            self.logger.debug(
+                f"Attempt {self._pending_drop_attempts}: File manager still rebinding"
+            )
+            return True  # Continue waiting
+
+        # Check if session is properly set
+        if not fm.session_item:
+            self.logger.debug(
+                f"Attempt {self._pending_drop_attempts}: Session item not set"
+            )
+            return True  # Continue waiting
+
+        # Check if it's a remote session
+        if not fm._is_remote_session():
+            session_type = fm.session_item.session_type if fm.session_item else "None"
+            self.logger.debug(
+                f"Attempt {self._pending_drop_attempts}: Not remote session, "
+                f"session_type={session_type}"
+            )
+            # Only attempt rebind once every 5 attempts to allow previous rebind to complete
+            if self._pending_drop_attempts % 5 == 1:
+                terminal = getattr(self, "_pending_drop_terminal", None)
+                if not terminal:
+                    terminal = self.terminal_manager.registry.get_terminal(
+                        getattr(self, "_pending_drop_terminal_id", None)
+                    )
+                if terminal:
+                    self.logger.info(
+                        f"Rebinding FM to terminal (attempt {self._pending_drop_attempts})"
+                    )
+                    fm.rebind_terminal(terminal)
+            return True  # Continue waiting
+
+        # File manager is ready - proceed with upload
+        self.logger.info(
+            f"File manager ready after {self._pending_drop_attempts} attempts"
+        )
+
+        if self._pending_drop_remote_dir:
+            fm.current_path = self._pending_drop_remote_dir
+
+        paths = [Path(p) for p in self._pending_drop_files]
+        fm._show_upload_confirmation_dialog(paths)
+        self.logger.info(
+            f"Pending upload initiated for {len(paths)} files via file manager"
+        )
+
+        self._clear_pending_drop()
+        return False  # Stop timeout
+
+    def _clear_pending_drop(self):
+        """Clear all pending drop state."""
+        self._pending_drop_files = None
+        self._pending_drop_remote_dir = None
+        self._pending_drop_session = None
+        self._pending_drop_ssh_target = None
+        self._pending_drop_terminal_id = None
+        self._pending_drop_page = None
+        self._pending_drop_terminal = None
+        self._pending_drop_attempts = 0
 
     def _on_quit_application_requested(self) -> None:
         """Handle quit request from tab manager."""

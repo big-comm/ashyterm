@@ -107,15 +107,9 @@ class SessionOperations:
             original_session.post_login_command_enabled = (
                 updated_session.post_login_command_enabled
             )
-            original_session.post_login_command = (
-                updated_session.post_login_command
-            )
-            original_session.sftp_session_enabled = (
-                updated_session.sftp_session_enabled
-            )
-            original_session.sftp_local_directory = (
-                updated_session.sftp_local_directory
-            )
+            original_session.post_login_command = updated_session.post_login_command
+            original_session.sftp_session_enabled = updated_session.sftp_session_enabled
+            original_session.sftp_local_directory = updated_session.sftp_local_directory
             original_session.sftp_remote_directory = (
                 updated_session.sftp_remote_directory
             )
@@ -127,6 +121,16 @@ class SessionOperations:
             )
             original_session.local_startup_command = (
                 updated_session.local_startup_command
+            )
+
+            # Per-session highlighting overrides (tri-state)
+            original_session.output_highlighting = updated_session.output_highlighting
+            original_session.command_specific_highlighting = (
+                updated_session.command_specific_highlighting
+            )
+            original_session.cat_colorization = updated_session.cat_colorization
+            original_session.shell_input_highlighting = (
+                updated_session.shell_input_highlighting
             )
 
             if not self._save_changes():
@@ -163,7 +167,9 @@ class SessionOperations:
                 )
 
             if getattr(session, "source", "user") == "ssh_config":
-                key = self._make_ssh_config_key(session.user, session.host, session.port)
+                key = self._make_ssh_config_key(
+                    session.user, session.host, session.port
+                )
                 if key not in self._ignored_ssh_config_hosts:
                     self._ignored_ssh_config_hosts.add(key)
                     self._persist_ignored_hosts()
@@ -305,7 +311,9 @@ class SessionOperations:
         """Imports SSH sessions from an OpenSSH-style config file."""
         with self._operation_lock:
             default_path = Path.home() / ".ssh" / "config"
-            target_path = Path(config_path).expanduser() if config_path else default_path
+            target_path = (
+                Path(config_path).expanduser() if config_path else default_path
+            )
 
             if not target_path.exists():
                 message = _("SSH config file not found at {path}").format(
@@ -346,9 +354,7 @@ class SessionOperations:
                 entry_key = self._make_ssh_config_key(user, hostname, port)
 
                 if entry_key in self._ignored_ssh_config_hosts:
-                    self.logger.debug(
-                        f"Skipping ignored SSH config host: {entry_key}"
-                    )
+                    self.logger.debug(f"Skipping ignored SSH config host: {entry_key}")
                     continue
 
                 existing_session = self._find_existing_ssh_session(hostname, user, port)

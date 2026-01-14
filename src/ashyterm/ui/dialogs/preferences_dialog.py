@@ -9,6 +9,7 @@ from gi.repository import Adw, GObject, Gtk
 from ...settings.manager import SettingsManager
 from ...utils.logger import get_logger
 from ...utils.translation_utils import _
+from .base_dialog import create_mapped_combo_row
 
 
 class PreferencesDialog(Adw.PreferencesWindow):
@@ -196,6 +197,31 @@ class PreferencesDialog(Adw.PreferencesWindow):
         icon_theme_row.connect("notify::selected", self._on_icon_theme_changed)
         misc_group.add(icon_theme_row)
 
+        # Headerbar buttons behavior when maximized
+        # (for KDE Plasma Active Window Control / Borderless Maximized Windows)
+        headerbar_buttons_row = Adw.ComboRow(
+            title=_("Window Buttons When Maximized"),
+            subtitle=_("For KDE Plasma panel integration"),
+        )
+        headerbar_buttons_row.set_model(
+            Gtk.StringList.new(
+                [
+                    _("Auto-detect"),
+                    _("Always hide"),
+                    _("Never hide"),
+                ]
+            )
+        )
+        current_btn_setting = self.settings_manager.get(
+            "hide_headerbar_buttons_when_maximized", "auto"
+        )
+        btn_setting_map = {"auto": 0, "always": 1, "never": 2}
+        headerbar_buttons_row.set_selected(btn_setting_map.get(current_btn_setting, 0))
+        headerbar_buttons_row.connect(
+            "notify::selected", self._on_headerbar_buttons_mode_changed
+        )
+        misc_group.add(headerbar_buttons_row)
+
     def _setup_terminal_page(self) -> None:
         page = Adw.PreferencesPage(
             title=_("Terminal"), icon_name="utilities-terminal-symbolic"
@@ -207,25 +233,19 @@ class PreferencesDialog(Adw.PreferencesWindow):
         page.add(behavior_group)
 
         # New instance behavior setting
-        instance_behavior_row = Adw.ComboRow(
+        instance_behavior_row = create_mapped_combo_row(
             title=_("When Already Running"),
+            value_map=["new_tab", "new_window", "focus_existing"],
+            display_strings=[
+                _("Open a new tab"),
+                _("Open a new window"),
+                _("Focus existing window"),
+            ],
+            current_value=self.settings_manager.get("new_instance_behavior", "new_tab"),
+            on_change=lambda val: self._on_setting_changed(
+                "new_instance_behavior", val
+            ),
             subtitle=_("Action when the application is launched while already open"),
-        )
-        behavior_map = ["new_tab", "new_window", "focus_existing"]
-        behavior_strings = [
-            _("Open a new tab"),
-            _("Open a new window"),
-            _("Focus existing window"),
-        ]
-        instance_behavior_row.set_model(Gtk.StringList.new(behavior_strings))
-        current_behavior = self.settings_manager.get("new_instance_behavior", "new_tab")
-        try:
-            behavior_index = behavior_map.index(current_behavior)
-        except ValueError:
-            behavior_index = 0
-        instance_behavior_row.set_selected(behavior_index)
-        instance_behavior_row.connect(
-            "notify::selected", self._on_instance_behavior_changed, behavior_map
         )
         behavior_group.add(instance_behavior_row)
 
@@ -335,26 +355,24 @@ class PreferencesDialog(Adw.PreferencesWindow):
         startup_group = Adw.PreferencesGroup()
         page.add(startup_group)
 
-        restore_policy_row = Adw.ComboRow(
-            title=_("On Startup"),
+        # On Close behavior when multiple tabs are open
+        close_policy_row = create_mapped_combo_row(
+            title=_("On Close"),
+            value_map=["ask", "save_and_close", "just_close"],
+            display_strings=[
+                _("Ask what to do"),
+                _("Save tabs and close"),
+                _("Just close without asking"),
+            ],
+            current_value=self.settings_manager.get(
+                "close_multiple_tabs_policy", "ask"
+            ),
+            on_change=lambda val: self._on_setting_changed(
+                "close_multiple_tabs_policy", val
+            ),
+            subtitle=_("Behavior when closing with multiple tabs open"),
         )
-        policy_map = ["always", "ask", "never"]
-        policy_strings = [
-            _("Always restore previous session"),
-            _("Ask to restore previous session"),
-            _("Never restore previous session"),
-        ]
-        restore_policy_row.set_model(Gtk.StringList.new(policy_strings))
-        current_policy = self.settings_manager.get("session_restore_policy", "never")
-        try:
-            selected_index = policy_map.index(current_policy)
-        except ValueError:
-            selected_index = 2
-        restore_policy_row.set_selected(selected_index)
-        restore_policy_row.connect(
-            "notify::selected", self._on_restore_policy_changed, policy_map
-        )
-        startup_group.add(restore_policy_row)
+        startup_group.add(close_policy_row)
 
         backup_group = Adw.PreferencesGroup()
         page.add(backup_group)
@@ -456,12 +474,14 @@ class PreferencesDialog(Adw.PreferencesWindow):
             title=_("Backspace Key"),
         )
         backspace_row.set_model(
-            Gtk.StringList.new([
-                _("Automatic"),
-                _("ASCII BACKSPACE (^H)"),
-                _("ASCII DELETE"),
-                _("Escape Sequence"),
-            ])
+            Gtk.StringList.new(
+                [
+                    _("Automatic"),
+                    _("ASCII BACKSPACE (^H)"),
+                    _("ASCII DELETE"),
+                    _("Escape Sequence"),
+                ]
+            )
         )
         backspace_row.set_selected(self.settings_manager.get("backspace_binding", 0))
         backspace_row.connect("notify::selected", self._on_backspace_binding_changed)
@@ -471,11 +491,13 @@ class PreferencesDialog(Adw.PreferencesWindow):
             title=_("Delete Key"),
         )
         delete_row.set_model(
-            Gtk.StringList.new([
-                _("Automatic"),
-                _("ASCII DELETE"),
-                _("Escape Sequence"),
-            ])
+            Gtk.StringList.new(
+                [
+                    _("Automatic"),
+                    _("ASCII DELETE"),
+                    _("Escape Sequence"),
+                ]
+            )
         )
         delete_row.set_selected(self.settings_manager.get("delete_binding", 0))
         delete_row.connect("notify::selected", self._on_delete_binding_changed)
@@ -566,18 +588,6 @@ class PreferencesDialog(Adw.PreferencesWindow):
         self.settings_manager.set("headerbar_transparency", value)
         self.emit("headerbar-transparency-changed", value)
 
-    def _on_restore_policy_changed(self, combo_row, _param, policy_map):
-        index = combo_row.get_selected()
-        if 0 <= index < len(policy_map):
-            policy = policy_map[index]
-            self._on_setting_changed("session_restore_policy", policy)
-
-    def _on_instance_behavior_changed(self, combo_row, _param, behavior_map):
-        index = combo_row.get_selected()
-        if 0 <= index < len(behavior_map):
-            behavior = behavior_map[index]
-            self._on_setting_changed("new_instance_behavior", behavior)
-
     def _on_backup_now_clicked(self, button):
         app = self.get_transient_for().get_application()
         if app:
@@ -639,6 +649,13 @@ class PreferencesDialog(Adw.PreferencesWindow):
                 "The icon theme change will take effect after restarting the application."
             ),
         )
+
+    def _on_headerbar_buttons_mode_changed(self, combo_row, _param) -> None:
+        """Handle window buttons visibility mode change for maximized windows."""
+        index = combo_row.get_selected()
+        mode_map = {0: "auto", 1: "always", 2: "never"}
+        mode = mode_map.get(index, "auto")
+        self._on_setting_changed("hide_headerbar_buttons_when_maximized", mode)
 
     def _show_restart_required_dialog(self, title: str, message: str) -> None:
         """Show a dialog informing the user that a restart is required."""

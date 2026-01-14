@@ -110,6 +110,14 @@ class SessionItem(BaseModel):
         source: str = "user",
         local_working_directory: str = "",
         local_startup_command: str = "",
+        # Per-session highlighting overrides (tri-state)
+        # None = Automatic (inherit global preferences)
+        # True = Explicitly enabled for this session
+        # False = Explicitly disabled for this session
+        output_highlighting: Optional[bool] = None,
+        command_specific_highlighting: Optional[bool] = None,
+        cat_colorization: Optional[bool] = None,
+        shell_input_highlighting: Optional[bool] = None,
     ):
         super().__init__()
         self.logger = get_logger("ashyterm.sessions.model")
@@ -130,9 +138,7 @@ class SessionItem(BaseModel):
         )
         self._sftp_session_enabled = bool(sftp_session_enabled)
         self._sftp_local_directory = (
-            str(normalize_path(sftp_local_directory))
-            if sftp_local_directory
-            else ""
+            str(normalize_path(sftp_local_directory)) if sftp_local_directory else ""
         )
         self._sftp_remote_directory = (
             sftp_remote_directory.strip() if sftp_remote_directory else ""
@@ -151,6 +157,14 @@ class SessionItem(BaseModel):
         self._local_startup_command = (
             local_startup_command.strip() if local_startup_command else ""
         )
+
+        # Highlighting preferences (per-session overrides)
+        self._output_highlighting: Optional[bool] = output_highlighting
+        self._command_specific_highlighting: Optional[bool] = (
+            command_specific_highlighting
+        )
+        self._cat_colorization: Optional[bool] = cat_colorization
+        self._shell_input_highlighting: Optional[bool] = shell_input_highlighting
 
     @property
     def children(self) -> Optional[Gio.ListStore]:
@@ -267,10 +281,10 @@ class SessionItem(BaseModel):
                 raise ValueError("Port out of range")
             self._port = port_val
             self._mark_modified()
-        except (ValueError, TypeError):
+        except (ValueError, TypeError) as e:
             raise SessionValidationError(
                 self.name, [_("Port must be a valid number between 1 and 65535")]
-            )
+            ) from e
 
     @property
     def tab_color(self) -> Optional[str]:
@@ -320,9 +334,7 @@ class SessionItem(BaseModel):
 
     @sftp_local_directory.setter
     def sftp_local_directory(self, value: str):
-        new_value = (
-            str(normalize_path(value)) if value and value.strip() else ""
-        )
+        new_value = str(normalize_path(value)) if value and value.strip() else ""
         if self._sftp_local_directory != new_value:
             self._sftp_local_directory = new_value
             self._mark_modified()
@@ -420,6 +432,71 @@ class SessionItem(BaseModel):
             self._local_startup_command = new_value
             self._mark_modified()
 
+    @property
+    def output_highlighting(self) -> Optional[bool]:
+        """Per-session override for output highlighting.
+
+        None means automatic (inherit global local/ssh output-highlighting preference).
+        """
+
+        return self._output_highlighting
+
+    @output_highlighting.setter
+    def output_highlighting(self, value: Optional[bool]):
+        if value is not None and not isinstance(value, bool):
+            raise SessionValidationError(
+                self.name, ["Invalid output_highlighting value"]
+            )
+        if self._output_highlighting != value:
+            self._output_highlighting = value
+            self._mark_modified()
+
+    @property
+    def command_specific_highlighting(self) -> Optional[bool]:
+        """Per-session override for command-specific/context-aware output highlighting."""
+
+        return self._command_specific_highlighting
+
+    @command_specific_highlighting.setter
+    def command_specific_highlighting(self, value: Optional[bool]):
+        if value is not None and not isinstance(value, bool):
+            raise SessionValidationError(
+                self.name, ["Invalid command_specific_highlighting value"]
+            )
+        if self._command_specific_highlighting != value:
+            self._command_specific_highlighting = value
+            self._mark_modified()
+
+    @property
+    def cat_colorization(self) -> Optional[bool]:
+        """Per-session override for Pygments-based cat output colorization."""
+
+        return self._cat_colorization
+
+    @cat_colorization.setter
+    def cat_colorization(self, value: Optional[bool]):
+        if value is not None and not isinstance(value, bool):
+            raise SessionValidationError(self.name, ["Invalid cat_colorization value"])
+        if self._cat_colorization != value:
+            self._cat_colorization = value
+            self._mark_modified()
+
+    @property
+    def shell_input_highlighting(self) -> Optional[bool]:
+        """Per-session override for shell input highlighting."""
+
+        return self._shell_input_highlighting
+
+    @shell_input_highlighting.setter
+    def shell_input_highlighting(self, value: Optional[bool]):
+        if value is not None and not isinstance(value, bool):
+            raise SessionValidationError(
+                self.name, ["Invalid shell_input_highlighting value"]
+            )
+        if self._shell_input_highlighting != value:
+            self._shell_input_highlighting = value
+            self._mark_modified()
+
     def get_validation_errors(self) -> List[str]:
         """Returns a list of validation error messages."""
         errors = []
@@ -482,6 +559,11 @@ class SessionItem(BaseModel):
             "x11_forwarding": self.x11_forwarding,
             "local_working_directory": self.local_working_directory,
             "local_startup_command": self.local_startup_command,
+            # Highlighting overrides (tri-state)
+            "output_highlighting": self.output_highlighting,
+            "command_specific_highlighting": self.command_specific_highlighting,
+            "cat_colorization": self.cat_colorization,
+            "shell_input_highlighting": self.shell_input_highlighting,
             "created_at": self._created_at,
             "modified_at": self._modified_at,
             "source": self._source,
@@ -508,6 +590,13 @@ class SessionItem(BaseModel):
             source=data.get("source", "user"),
             local_working_directory=data.get("local_working_directory", ""),
             local_startup_command=data.get("local_startup_command", ""),
+            # Highlighting overrides (tri-state)
+            output_highlighting=data.get("output_highlighting", None),
+            command_specific_highlighting=data.get(
+                "command_specific_highlighting", None
+            ),
+            cat_colorization=data.get("cat_colorization", None),
+            shell_input_highlighting=data.get("shell_input_highlighting", None),
         )
         # __init__ sets default metadata; overwrite with loaded data
         session._auth_value = data.get("auth_value", "")

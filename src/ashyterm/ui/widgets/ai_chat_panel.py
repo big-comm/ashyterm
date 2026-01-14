@@ -18,6 +18,7 @@ from gi.repository import Adw, Gdk, GLib, GObject, Gtk, Pango
 from ...utils.icons import icon_image
 from ...utils.logger import get_logger
 from ...utils.tooltip_helper import get_tooltip_helper
+from ...utils.translation_utils import _
 from .conversation_history import ConversationHistoryPanel
 
 if TYPE_CHECKING:
@@ -27,6 +28,15 @@ logger = get_logger(__name__)
 
 # Path to CSS styles directory
 _STYLES_DIR = Path(__file__).parent.parent.parent / "data" / "styles"
+
+# Pre-compiled regex patterns for markdown formatting (performance optimization)
+_CODE_BLOCK_PATTERN = re.compile(r"```(\w*)\n?(.*?)```", re.DOTALL)
+_INLINE_CODE_PATTERN = re.compile(r"`([^`]+)`")
+_BOLD_PATTERN = re.compile(r"\*\*([^*]+)\*\*")
+_ITALIC_PATTERN = re.compile(r"\*([^*]+)\*")
+_HEADER3_PATTERN = re.compile(r"^### (.+)$", re.MULTILINE)
+_HEADER2_PATTERN = re.compile(r"^## (.+)$", re.MULTILINE)
+_HEADER1_PATTERN = re.compile(r"^# (.+)$", re.MULTILINE)
 
 # Lazy-loaded pygments module (optional dependency)
 _pygments_module = None
@@ -59,11 +69,6 @@ def _get_pygments():
     return _pygments_module
 
 
-def _(text: str) -> str:
-    """Placeholder for translation function."""
-    return text
-
-
 def _extract_reply_from_json(text: str) -> str:
     """Try to extract 'reply' field from JSON response text.
 
@@ -74,125 +79,143 @@ def _extract_reply_from_json(text: str) -> str:
     if not text:
         return text
 
-    # If text doesn't contain JSON markers, return as-is
     if "{" not in text and "[" not in text:
         return text
 
-    # Check if text ends with a JSON array (likely commands being appended)
-    # Remove trailing JSON arrays that look like command lists
+    # Remove trailing command arrays
+    cleaned = _strip_trailing_command_array(text)
+    if cleaned != text:
+        return cleaned
+
+    # Try complete JSON first
+    result = _try_parse_complete_json(text)
+    if result is not None:
+        return result
+
+    # Try to find and extract JSON object
+    result = _try_extract_json_object(text)
+    if result is not None:
+        return result
+
+    # Try partial reply extraction
+    result = _try_extract_partial_reply(text)
+    if result is not None:
+        return result
+
+    # Check if it's incomplete streaming JSON
     stripped = text.strip()
-    if stripped.endswith("]"):
-        # Find the matching opening bracket
-        bracket_count = 0
-        array_start = -1
-        for i in range(len(stripped) - 1, -1, -1):
-            if stripped[i] == "]":
-                bracket_count += 1
-            elif stripped[i] == "[":
-                bracket_count -= 1
-                if bracket_count == 0:
-                    array_start = i
-                    break
+    if stripped.startswith("{") or stripped.startswith("["):
+        return ""
 
-        if array_start != -1:
-            # Check if the array looks like a command list
-            potential_array = stripped[array_start:]
-            try:
-                parsed = json.loads(potential_array)
-                if isinstance(parsed, list) and all(isinstance(item, str) for item in parsed):
-                    # It's a list of strings, likely commands - remove it
-                    text_without_array = stripped[:array_start].strip()
-                    # Clean up trailing newlines and brackets
-                    text_without_array = text_without_array.rstrip('\n ]')
-                    if text_without_array:
-                        return text_without_array
-            except json.JSONDecodeError:
-                pass
+    return text
 
-    # Try to parse as complete JSON first
+
+def _strip_trailing_command_array(text: str) -> str:
+    """Remove trailing JSON arrays that look like command lists."""
+    stripped = text.strip()
+    if not stripped.endswith("]"):
+        return text
+
+    array_start = _find_matching_bracket(stripped)
+    if array_start == -1:
+        return text
+
+    potential_array = stripped[array_start:]
+    try:
+        parsed = json.loads(potential_array)
+        if isinstance(parsed, list) and all(isinstance(item, str) for item in parsed):
+            result = stripped[:array_start].rstrip("\n ]")
+            return result if result else text
+    except json.JSONDecodeError:
+        pass
+    return text
+
+
+def _find_matching_bracket(text: str) -> int:
+    """Find the index of the opening bracket matching the closing bracket at end."""
+    bracket_count = 0
+    for i in range(len(text) - 1, -1, -1):
+        if text[i] == "]":
+            bracket_count += 1
+        elif text[i] == "[":
+            bracket_count -= 1
+            if bracket_count == 0:
+                return i
+    return -1
+
+
+def _try_parse_complete_json(text: str) -> str | None:
+    """Try to parse text as complete JSON and extract reply."""
     try:
         data = json.loads(text)
         if isinstance(data, dict):
             if "reply" in data:
                 return data["reply"]
-            # If it's a dict but no reply field, it's probably raw JSON - hide it
-            # This could be the commands object being streamed
             return ""
     except json.JSONDecodeError:
         pass
+    return None
 
-    # Try to find JSON object in text and extract reply
+
+def _try_extract_json_object(text: str) -> str | None:
+    """Try to find and parse embedded JSON object."""
     start = text.find("{")
-    if start != -1:
-        # First, try to find a complete JSON object
-        brace_level = 0
-        for end in range(start, len(text)):
-            if text[end] == "{":
-                brace_level += 1
-            elif text[end] == "}":
-                brace_level -= 1
-                if brace_level == 0:
-                    try:
-                        data = json.loads(text[start:end + 1])
-                        if isinstance(data, dict) and "reply" in data:
-                            return data["reply"]
-                        # Complete JSON but no reply field - might be streaming commands
-                        # Return any text before the JSON
-                        prefix = text[:start].strip()
-                        return prefix if prefix else ""
-                    except json.JSONDecodeError:
-                        pass
-                    break
+    if start == -1:
+        return None
 
-    # If JSON is incomplete, try to extract partial reply value
-    # Look for "reply": " or "reply":" pattern
-    reply_patterns = ['"reply": "', '"reply":"', "'reply': '", "'reply':'"]
-    for pattern in reply_patterns:
+    brace_level = 0
+    for end in range(start, len(text)):
+        if text[end] == "{":
+            brace_level += 1
+        elif text[end] == "}":
+            brace_level -= 1
+            if brace_level == 0:
+                try:
+                    data = json.loads(text[start : end + 1])
+                    if isinstance(data, dict) and "reply" in data:
+                        return data["reply"]
+                    prefix = text[:start].strip()
+                    return prefix if prefix else ""
+                except json.JSONDecodeError:
+                    pass
+                break
+    return None
+
+
+def _try_extract_partial_reply(text: str) -> str | None:
+    """Extract reply from incomplete/streaming JSON."""
+    patterns = ['"reply": "', '"reply":"', "'reply': '", "'reply':'"]
+    for pattern in patterns:
         reply_start = text.find(pattern)
         if reply_start != -1:
-            # Find the start of the reply value
             value_start = reply_start + len(pattern)
-            # Find the end - look for unescaped closing quote
-            quote_char = pattern[-1]  # Get the quote character (" or ')
-            i = value_start
-            partial_reply = []
-            while i < len(text):
-                char = text[i]
-                if char == "\\":
-                    # Escaped character, include next char
-                    if i + 1 < len(text):
-                        escape_char = text[i + 1]
-                        if escape_char == "n":
-                            partial_reply.append("\n")
-                        elif escape_char == "t":
-                            partial_reply.append("\t")
-                        elif escape_char == quote_char:
-                            partial_reply.append(quote_char)
-                        elif escape_char == "\\":
-                            partial_reply.append("\\")
-                        else:
-                            partial_reply.append(escape_char)
-                        i += 2
-                    else:
-                        i += 1
-                elif char == quote_char:
-                    # End of string
-                    return "".join(partial_reply)
-                else:
-                    partial_reply.append(char)
-                    i += 1
-            # If we got here, the JSON is incomplete - return what we have
-            if partial_reply:
-                return "".join(partial_reply)
+            quote_char = pattern[-1]
+            return _parse_quoted_string(text, value_start, quote_char)
+    return None
 
-    # Check if the text looks like it's starting with JSON object (streaming incomplete)
-    stripped = text.strip()
-    if stripped.startswith("{") or stripped.startswith("["):
-        # It's likely incomplete JSON being streamed, show nothing yet
-        return ""
 
-    # No JSON pattern found, return the original text
-    return text
+def _parse_quoted_string(text: str, start: int, quote: str) -> str:
+    """Parse a quoted string handling escape sequences."""
+    result = []
+    i = start
+    escape_map = {"n": "\n", "t": "\t", quote: quote, "\\": "\\"}
+
+    while i < len(text):
+        char = text[i]
+        if char == "\\":
+            if i + 1 < len(text):
+                esc = text[i + 1]
+                result.append(escape_map.get(esc, esc))
+                i += 2
+            else:
+                i += 1
+        elif char == quote:
+            return "".join(result)
+        else:
+            result.append(char)
+            i += 1
+
+    return "".join(result) if result else ""
 
 
 def _normalize_commands(commands: list | None) -> list[str]:
@@ -610,43 +633,47 @@ class MessageBubble(Gtk.Box):
             code = match.group(2)
             highlighted = self._highlight_code_for_label(code, lang)
             idx = len(code_blocks)
-            code_blocks.append(f'<span background="{block_bg}" foreground="{block_fg}"><tt>{highlighted}</tt></span>')
-            return f'\ue000CODEBLOCK{idx}\ue001'
+            code_blocks.append(
+                f'<span background="{block_bg}" foreground="{block_fg}"><tt>{highlighted}</tt></span>'
+            )
+            return f"\ue000CODEBLOCK{idx}\ue001"
 
         def store_inline_code(match):
             code = match.group(1)
             escaped_code = GLib.markup_escape_text(code)
             idx = len(inline_codes)
-            inline_codes.append(f'<span background="{inline_bg}" foreground="{inline_fg}"><tt>{escaped_code}</tt></span>')
-            return f'\ue000INLINE{idx}\ue001'
+            inline_codes.append(
+                f'<span background="{inline_bg}" foreground="{inline_fg}"><tt>{escaped_code}</tt></span>'
+            )
+            return f"\ue000INLINE{idx}\ue001"
 
-        # Replace code blocks with placeholders
-        text = re.sub(r'```(\w*)\n?(.*?)```', store_code_block, text, flags=re.DOTALL)
+        # Replace code blocks with placeholders (using pre-compiled patterns)
+        text = _CODE_BLOCK_PATTERN.sub(store_code_block, text)
 
         # Replace inline code with placeholders
-        text = re.sub(r'`([^`]+)`', store_inline_code, text)
+        text = _INLINE_CODE_PATTERN.sub(store_inline_code, text)
 
         # Step 2: Escape remaining text for Pango markup
         text = GLib.markup_escape_text(text)
 
         # Step 3: Apply markdown transformations (safe now - no code content)
         # Bold (**...**)
-        text = re.sub(r'\*\*([^*]+)\*\*', r'<b>\1</b>', text)
+        text = _BOLD_PATTERN.sub(r"<b>\1</b>", text)
 
         # Italic (*...*)
-        text = re.sub(r'\*([^*]+)\*', r'<i>\1</i>', text)
+        text = _ITALIC_PATTERN.sub(r"<i>\1</i>", text)
 
         # Headers (# ...)
-        text = re.sub(r'^### (.+)$', r'<b>\1</b>', text, flags=re.MULTILINE)
-        text = re.sub(r'^## (.+)$', r'<b><big>\1</big></b>', text, flags=re.MULTILINE)
-        text = re.sub(r'^# (.+)$', r'<b><big><big>\1</big></big></b>', text, flags=re.MULTILINE)
+        text = _HEADER3_PATTERN.sub(r"<b>\1</b>", text)
+        text = _HEADER2_PATTERN.sub(r"<b><big>\1</big></b>", text)
+        text = _HEADER1_PATTERN.sub(r"<b><big><big>\1</big></big></b>", text)
 
         # Step 4: Restore code blocks and inline codes
         for i, block in enumerate(code_blocks):
-            text = text.replace(f'\ue000CODEBLOCK{i}\ue001', block)
+            text = text.replace(f"\ue000CODEBLOCK{i}\ue001", block)
 
         for i, inline in enumerate(inline_codes):
-            text = text.replace(f'\ue000INLINE{i}\ue001', inline)
+            text = text.replace(f"\ue000INLINE{i}\ue001", inline)
 
         return text
 
@@ -920,24 +947,24 @@ class MessageBubble(Gtk.Box):
         if is_dark:
             # Dracula-inspired colors for dark theme
             return {
-                "keyword": "#ff79c6",      # Pink for keywords
-                "string": "#f1fa8c",       # Yellow for strings
-                "comment": "#6272a4",      # Blue-gray for comments
-                "number": "#bd93f9",       # Purple for numbers
-                "function": "#50fa7b",     # Green for functions/commands
-                "variable": "#8be9fd",     # Cyan for variables
-                "flag": "#ffb86c",         # Orange for flags
+                "keyword": "#ff79c6",  # Pink for keywords
+                "string": "#f1fa8c",  # Yellow for strings
+                "comment": "#6272a4",  # Blue-gray for comments
+                "number": "#bd93f9",  # Purple for numbers
+                "function": "#50fa7b",  # Green for functions/commands
+                "variable": "#8be9fd",  # Cyan for variables
+                "flag": "#ffb86c",  # Orange for flags
             }
         else:
             # Light theme colors - darker, high contrast for light backgrounds
             return {
-                "keyword": "#ab296a",      # Darker magenta for keywords
-                "string": "#7c5e00",       # Dark amber/gold for strings
-                "comment": "#5c636a",      # Dark gray for comments
-                "number": "#5a32a3",       # Dark purple for numbers
-                "function": "#116d3d",     # Dark green for functions/commands
-                "variable": "#0a58ca",     # Dark blue for variables
-                "flag": "#ca6510",         # Dark orange for flags
+                "keyword": "#ab296a",  # Darker magenta for keywords
+                "string": "#7c5e00",  # Dark amber/gold for strings
+                "comment": "#5c636a",  # Dark gray for comments
+                "number": "#5a32a3",  # Dark purple for numbers
+                "function": "#116d3d",  # Dark green for functions/commands
+                "variable": "#0a58ca",  # Dark blue for variables
+                "flag": "#ca6510",  # Dark orange for flags
             }
 
     def _highlight_fallback(self, code: str, lang: str) -> str:
@@ -954,51 +981,63 @@ class MessageBubble(Gtk.Box):
         if lang in ("bash", "sh", "shell", "zsh", ""):
             patterns = [
                 # Comments - must be first
-                (r'#[^\n]*', 'comment'),
+                (r"#[^\n]*", "comment"),
                 # Double-quoted strings
-                (r'"(?:[^"\\]|\\.)*"', 'string'),
+                (r'"(?:[^"\\]|\\.)*"', "string"),
                 # Single-quoted strings
-                (r"'(?:[^'\\]|\\.)*'", 'string'),
+                (r"'(?:[^'\\]|\\.)*'", "string"),
                 # Variables $VAR and ${VAR}
-                (r'\$\{?[\w]+\}?', 'variable'),
+                (r"\$\{?[\w]+\}?", "variable"),
                 # Flags/options (--flag or -f)
-                (r'(?<!\w)--?[\w-]+', 'flag'),
+                (r"(?<!\w)--?[\w-]+", "flag"),
                 # Shell keywords
-                (r'\b(?:if|then|else|elif|fi|for|while|do|done|case|esac|in|function|return|exit|export|source|alias|unset|local|readonly)\b', 'keyword'),
+                (
+                    r"\b(?:if|then|else|elif|fi|for|while|do|done|case|esac|in|function|return|exit|export|source|alias|unset|local|readonly)\b",
+                    "keyword",
+                ),
                 # Common commands (expanded list)
-                (r'\b(?:sudo|cd|ls|cat|echo|grep|awk|sed|find|xargs|chmod|chown|cp|mv|rm|mkdir|touch|head|tail|sort|uniq|wc|cut|tr|tee|man|which|whereis|apt|apt-get|apt-cache|dpkg|pacman|yay|paru|pip|pip3|npm|npx|yarn|pnpm|git|docker|docker-compose|podman|kubectl|systemctl|journalctl|curl|wget|tar|gzip|gunzip|zip|unzip|ssh|scp|rsync|kill|killall|pkill|ps|top|htop|btop|df|du|free|mount|umount|ln|pwd|date|cal|whoami|hostname|uname|clear|history|alias|export|env|set|bash|zsh|sh|fish|python|python3|node|ruby|perl|make|cmake|gcc|g\+\+|clang|cargo|rustc|go|java|javac|nano|vim|nvim|vi|emacs|code|less|more|diff|patch|install|update|upgrade|remove|purge|autoremove|search|info|show|list|status|start|stop|restart|enable|disable|reload|reboot|shutdown|poweroff|suspend|hibernate|chroot|exec|nohup|screen|tmux|watch|time|timeout|sleep|true|false|test|read|printf|pushd|popd|dirs|fg|bg|jobs|disown|wait|trap|break|continue|shift|getopts|eval|source|type|command|builtin|hash|help|logout|exit|return|declare|typeset|let|readonly|local|global|unset|shopt|complete|compgen|compopt|mapfile|readarray|coproc|select|until|ulimit|umask|fc|bind|caller|enable|mapfile|readarray|times)\b', 'function'),
+                (
+                    r"\b(?:sudo|cd|ls|cat|echo|grep|awk|sed|find|xargs|chmod|chown|cp|mv|rm|mkdir|touch|head|tail|sort|uniq|wc|cut|tr|tee|man|which|whereis|apt|apt-get|apt-cache|dpkg|pacman|yay|paru|pip|pip3|npm|npx|yarn|pnpm|git|docker|docker-compose|podman|kubectl|systemctl|journalctl|curl|wget|tar|gzip|gunzip|zip|unzip|ssh|scp|rsync|kill|killall|pkill|ps|top|htop|btop|df|du|free|mount|umount|ln|pwd|date|cal|whoami|hostname|uname|clear|history|alias|export|env|set|bash|zsh|sh|fish|python|python3|node|ruby|perl|make|cmake|gcc|g\+\+|clang|cargo|rustc|go|java|javac|nano|vim|nvim|vi|emacs|code|less|more|diff|patch|install|update|upgrade|remove|purge|autoremove|search|info|show|list|status|start|stop|restart|enable|disable|reload|reboot|shutdown|poweroff|suspend|hibernate|chroot|exec|nohup|screen|tmux|watch|time|timeout|sleep|true|false|test|read|printf|pushd|popd|dirs|fg|bg|jobs|disown|wait|trap|break|continue|shift|getopts|eval|source|type|command|builtin|hash|help|logout|exit|return|declare|typeset|let|readonly|local|global|unset|shopt|complete|compgen|compopt|mapfile|readarray|coproc|select|until|ulimit|umask|fc|bind|caller|enable|mapfile|readarray|times)\b",
+                    "function",
+                ),
                 # Numbers
-                (r'\b\d+\b', 'number'),
+                (r"\b\d+\b", "number"),
             ]
         elif lang in ("python", "py"):
             patterns = [
                 # Comments
-                (r'#[^\n]*', 'comment'),
+                (r"#[^\n]*", "comment"),
                 # Triple-quoted strings
-                (r'"""[\s\S]*?"""|\'\'\'[\s\S]*?\'\'\'', 'string'),
+                (r'"""[\s\S]*?"""|\'\'\'[\s\S]*?\'\'\'', "string"),
                 # Double-quoted strings
-                (r'"(?:[^"\\]|\\.)*"', 'string'),
+                (r'"(?:[^"\\]|\\.)*"', "string"),
                 # Single-quoted strings
-                (r"'(?:[^'\\]|\\.)*'", 'string'),
+                (r"'(?:[^'\\]|\\.)*'", "string"),
                 # Decorators
-                (r'@[\w.]+', 'function'),
+                (r"@[\w.]+", "function"),
                 # Keywords
-                (r'\b(?:def|class|if|elif|else|for|while|try|except|finally|with|as|import|from|return|yield|raise|pass|break|continue|and|or|not|in|is|lambda|True|False|None|async|await|global|nonlocal)\b', 'keyword'),
+                (
+                    r"\b(?:def|class|if|elif|else|for|while|try|except|finally|with|as|import|from|return|yield|raise|pass|break|continue|and|or|not|in|is|lambda|True|False|None|async|await|global|nonlocal)\b",
+                    "keyword",
+                ),
                 # Built-in functions
-                (r'\b(?:print|len|range|str|int|float|list|dict|set|tuple|open|type|isinstance|hasattr|getattr|setattr|delattr|repr|abs|all|any|bin|bool|bytes|callable|chr|complex|dir|divmod|enumerate|eval|exec|filter|format|frozenset|globals|hash|hex|id|input|iter|locals|map|max|min|next|object|oct|ord|pow|property|reversed|round|slice|sorted|staticmethod|sum|super|vars|zip)\b', 'function'),
+                (
+                    r"\b(?:print|len|range|str|int|float|list|dict|set|tuple|open|type|isinstance|hasattr|getattr|setattr|delattr|repr|abs|all|any|bin|bool|bytes|callable|chr|complex|dir|divmod|enumerate|eval|exec|filter|format|frozenset|globals|hash|hex|id|input|iter|locals|map|max|min|next|object|oct|ord|pow|property|reversed|round|slice|sorted|staticmethod|sum|super|vars|zip)\b",
+                    "function",
+                ),
                 # Numbers
-                (r'\b\d+\.?\d*\b', 'number'),
+                (r"\b\d+\.?\d*\b", "number"),
             ]
         elif lang == "json":
             patterns = [
                 # Keys
-                (r'"[\w_-]+"(?=\s*:)', 'variable'),
+                (r'"[\w_-]+"(?=\s*:)', "variable"),
                 # String values
-                (r'(?<=:\s*)"(?:[^"\\]|\\.)*"', 'string'),
+                (r'(?<=:\s*)"(?:[^"\\]|\\.)*"', "string"),
                 # Booleans and null
-                (r'\b(?:true|false|null)\b', 'keyword'),
+                (r"\b(?:true|false|null)\b", "keyword"),
                 # Numbers
-                (r'\b\d+\.?\d*\b', 'number'),
+                (r"\b\d+\.?\d*\b", "number"),
             ]
         else:
             # No highlighting for unknown languages
@@ -1007,8 +1046,8 @@ class MessageBubble(Gtk.Box):
         # Build a combined pattern with named groups
         combined_parts = []
         for i, (pattern, token_type) in enumerate(patterns):
-            combined_parts.append(f'(?P<t{i}>{pattern})')
-        combined_pattern = '|'.join(combined_parts)
+            combined_parts.append(f"(?P<t{i}>{pattern})")
+        combined_pattern = "|".join(combined_parts)
 
         # Process the code and build highlighted output
         result = []
@@ -1017,20 +1056,22 @@ class MessageBubble(Gtk.Box):
         for match in re.finditer(combined_pattern, code):
             # Add non-matched text before this match (escaped)
             if match.start() > last_end:
-                result.append(GLib.markup_escape_text(code[last_end:match.start()]))
+                result.append(GLib.markup_escape_text(code[last_end : match.start()]))
 
             # Find which group matched and get its token type
             matched_text = match.group(0)
             token_type = None
-            for i, (_, ttype) in enumerate(patterns):
-                if match.group(f't{i}') is not None:
+            for i, (_pattern, ttype) in enumerate(patterns):
+                if match.group(f"t{i}") is not None:
                     token_type = ttype
                     break
 
             # Add highlighted text (escaped)
             escaped_text = GLib.markup_escape_text(matched_text)
             if token_type and token_type in colors:
-                result.append(f'<span foreground="{colors[token_type]}">{escaped_text}</span>')
+                result.append(
+                    f'<span foreground="{colors[token_type]}">{escaped_text}</span>'
+                )
             else:
                 result.append(escaped_text)
 
@@ -1040,7 +1081,7 @@ class MessageBubble(Gtk.Box):
         if last_end < len(code):
             result.append(GLib.markup_escape_text(code[last_end:]))
 
-        return ''.join(result)
+        return "".join(result)
 
     def _highlight_code_for_label(self, code: str, lang: str) -> str:
         """Highlight code for use in labels (handles escaping).
@@ -1189,7 +1230,7 @@ GObject.signal_new(
     MessageBubble,
     GObject.SignalFlags.RUN_LAST,
     GObject.TYPE_NONE,
-    (GObject.TYPE_STRING,)
+    (GObject.TYPE_STRING,),
 )
 
 GObject.signal_new(
@@ -1197,7 +1238,7 @@ GObject.signal_new(
     MessageBubble,
     GObject.SignalFlags.RUN_LAST,
     GObject.TYPE_NONE,
-    (GObject.TYPE_STRING,)
+    (GObject.TYPE_STRING,),
 )
 
 
@@ -1356,7 +1397,9 @@ class AIChatPanel(Gtk.Box):
         input_box.set_margin_start(8)
         input_box.set_margin_end(8)
         input_box.set_margin_bottom(8)
-        input_box.set_size_request(-1, 30)  # Minimum height to prevent negative allocation
+        input_box.set_size_request(
+            -1, 30
+        )  # Minimum height to prevent negative allocation
         input_box.add_css_class("ai-input-box")
 
         # Create a scrolled window for the text view
@@ -1482,9 +1525,7 @@ class AIChatPanel(Gtk.Box):
             logger.warning(f"AI chat panel CSS file not found: {css_file}")
 
         Gtk.StyleContext.add_provider_for_display(
-            self.get_display(),
-            css_provider,
-            Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION
+            self.get_display(), css_provider, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION
         )
 
     def _apply_transparency(self):
@@ -1509,7 +1550,9 @@ class AIChatPanel(Gtk.Box):
             gtk_theme = self._settings_manager.get("gtk_theme", "")
             if gtk_theme == "terminal":
                 scheme = self._settings_manager.get_color_scheme_data()
-                base_color_hex = scheme.get("background", "#000000" if is_dark else "#ffffff")
+                base_color_hex = scheme.get(
+                    "background", "#000000" if is_dark else "#ffffff"
+                )
                 fg_color_hex = scheme.get(
                     "foreground", "#ffffff" if is_dark else "#000000"
                 )
@@ -1569,7 +1612,9 @@ class AIChatPanel(Gtk.Box):
                 bubble_assistant_border = "rgba(255, 255, 255, 0.1)"
                 input_bg = "#2d2d2d"
                 input_border = "rgba(255, 255, 255, 0.1)"
-                scroll_bg = f"rgba({r}, {g}, {b}, 0.3)" if transparency > 0 else "transparent"
+                scroll_bg = (
+                    f"rgba({r}, {g}, {b}, 0.3)" if transparency > 0 else "transparent"
+                )
                 content_fg = "#ffffff"
             else:
                 # Light theme colors - Clean light palette
@@ -1579,7 +1624,9 @@ class AIChatPanel(Gtk.Box):
                 bubble_assistant_border = "rgba(0, 0, 0, 0.08)"
                 input_bg = "#ffffff"
                 input_border = "rgba(0, 0, 0, 0.12)"
-                scroll_bg = f"rgba({r}, {g}, {b}, 0.3)" if transparency > 0 else "transparent"
+                scroll_bg = (
+                    f"rgba({r}, {g}, {b}, 0.3)" if transparency > 0 else "transparent"
+                )
                 content_fg = "#000000"
 
             # Build comprehensive CSS for transparent panel with solid content
@@ -1691,7 +1738,9 @@ class AIChatPanel(Gtk.Box):
             )
             self._transparency_provider = provider
             theme_type = "dark" if is_dark else "light"
-            logger.info(f"AI chat panel styles applied: {theme_type} theme, transparency={transparency}%")
+            logger.info(
+                f"AI chat panel styles applied: {theme_type} theme, transparency={transparency}%"
+            )
         except Exception as e:
             logger.warning(f"Failed to apply transparency to AI chat panel: {e}")
 
@@ -1713,7 +1762,9 @@ class AIChatPanel(Gtk.Box):
                 commands = _normalize_commands(msg.get("commands"))
                 self._add_message_bubble(msg["role"], msg["content"], commands)
 
-    def _add_message_bubble(self, role: str, content: str, commands: list | None = None) -> MessageBubble:
+    def _add_message_bubble(
+        self, role: str, content: str, commands: list | None = None
+    ) -> MessageBubble:
         """Add a message bubble to the chat."""
         # Normalize commands to list of strings
         normalized_commands = _normalize_commands(commands)
@@ -1787,8 +1838,7 @@ class AIChatPanel(Gtk.Box):
 
         # Send to AI using request_assistance_simple for panel context
         self._ai_assistant.request_assistance_simple(
-            text,
-            streaming_callback=self._handle_streaming_chunk
+            text, streaming_callback=self._handle_streaming_chunk
         )
 
     def _on_quick_prompt_clicked(self, button: Gtk.Button, text: str):
@@ -1899,7 +1949,9 @@ class AIChatPanel(Gtk.Box):
             retry_box.set_margin_bottom(8)
 
             retry_btn = Gtk.Button()
-            retry_btn_content = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=6)
+            retry_btn_content = Gtk.Box(
+                orientation=Gtk.Orientation.HORIZONTAL, spacing=6
+            )
             retry_icon = icon_image("view-refresh-symbolic")
             retry_btn_content.append(retry_icon)
             retry_label = Gtk.Label(label=_("Retry"))
@@ -1946,8 +1998,7 @@ class AIChatPanel(Gtk.Box):
 
         # Resend the same message
         self._ai_assistant.request_assistance_simple(
-            self._last_request_message,
-            streaming_callback=self._handle_streaming_chunk
+            self._last_request_message, streaming_callback=self._handle_streaming_chunk
         )
 
     def _on_customize_prompts(self, button: Gtk.Button):
@@ -2078,7 +2129,7 @@ class AIChatPanel(Gtk.Box):
 
         def on_clear(btn):
             # Remove all rows
-            for row, _, _ in list(prompt_rows):
+            for row, _entry, _label in list(prompt_rows):
                 list_box.remove(row)
             prompt_rows.clear()
 
@@ -2094,10 +2145,9 @@ class AIChatPanel(Gtk.Box):
             for row, emoji_entry, text_entry in prompt_rows:
                 text = text_entry.get_text().strip()
                 if text:  # Only save non-empty prompts
-                    new_prompts.append({
-                        "emoji": emoji_entry.get_text().strip() or "💬",
-                        "text": text
-                    })
+                    new_prompts.append(
+                        {"emoji": emoji_entry.get_text().strip() or "💬", "text": text}
+                    )
 
             # Save to settings
             if self._settings_manager:
@@ -2133,9 +2183,13 @@ class AIChatPanel(Gtk.Box):
         """Show conversation history panel."""
         # Create a fresh history panel each time (widgets can't be reparented)
         history_panel = ConversationHistoryPanel(self._history_manager)
-        history_panel.connect("conversation-selected", self._on_history_conversation_selected)
+        history_panel.connect(
+            "conversation-selected", self._on_history_conversation_selected
+        )
         history_panel.connect("close-requested", self._on_history_close)
-        history_panel.connect("conversation-deleted", self._on_history_conversation_deleted)
+        history_panel.connect(
+            "conversation-deleted", self._on_history_conversation_deleted
+        )
 
         # Create a dialog window for the history panel
         dialog = Adw.Dialog()

@@ -3,6 +3,7 @@ import json
 import os
 import threading
 import time
+import uuid
 from dataclasses import dataclass, field
 from enum import Enum
 from typing import Dict, List, Optional
@@ -50,11 +51,30 @@ class TransferItem:
     cancellation_event: threading.Event = field(
         default_factory=threading.Event, repr=False
     )
+    # Warmup tracking to avoid initial spurious progress from rsync
+    first_stable_progress: float = -1.0  # First monotonically increasing progress value
+    warmup_end_time: Optional[float] = None  # When warmup period ends
 
     def get_duration(self) -> Optional[float]:
         if self.start_time and self.end_time:
             return self.end_time - self.start_time
         return None
+
+    def is_warmed_up(self) -> bool:
+        """Returns True if the transfer has passed the warmup period."""
+        if self.warmup_end_time is None:
+            return False
+        return time.time() >= self.warmup_end_time
+
+    def get_stable_progress(self) -> float:
+        """Returns progress adjusted for initial warmup period."""
+        if not self.is_warmed_up():
+            return 0.0
+        if self.first_stable_progress < 0:
+            return 0.0
+        # Return actual progress minus the baseline
+        adjusted = self.progress - self.first_stable_progress
+        return max(0.0, min(100.0, adjusted))
 
 
 class TransferManager(GObject.Object):
@@ -75,6 +95,13 @@ class TransferManager(GObject.Object):
         self.active_transfers: Dict[str, TransferItem] = {}
         self.history: List[TransferItem] = []
 
+        # Thread safety for active_transfers access
+        self._transfer_lock = threading.Lock()
+
+        # Throttle progress updates to avoid UI flooding
+        self._last_progress_update = 0.0
+        self._progress_update_interval = 0.1  # 100ms minimum between UI updates
+
         self.progress_revealer: Optional[Gtk.Revealer] = None
         self.progress_row: Optional[Adw.ActionRow] = None  # Reference to the ActionRow
         self.progress_bar: Optional[Gtk.ProgressBar] = None
@@ -87,7 +114,7 @@ class TransferManager(GObject.Object):
     def _load_history(self):
         try:
             if os.path.exists(self.history_file):
-                with open(self.history_file, "r") as f:
+                with open(self.history_file, "r", encoding="utf-8") as f:
                     data = json.load(f)
                     for item_data in data:
                         # Re-hydrate enums
@@ -130,7 +157,7 @@ class TransferManager(GObject.Object):
                 }
                 data_to_save.append(serializable_item)
 
-            with open(self.history_file, "w") as f:
+            with open(self.history_file, "w", encoding="utf-8") as f:
                 json.dump(data_to_save, f, indent=2)
         except Exception as e:
             self.logger.error(f"Failed to save transfer history: {e}")
@@ -145,7 +172,7 @@ class TransferManager(GObject.Object):
         is_cancellable: bool = False,
         is_directory: bool = False,
     ) -> str:
-        transfer_id = f"{int(time.time() * 1000)}_{len(self.active_transfers)}"
+        transfer_id = str(uuid.uuid4())
         transfer_item = TransferItem(
             id=transfer_id,
             filename=filename,
@@ -157,108 +184,232 @@ class TransferManager(GObject.Object):
             is_cancellable=is_cancellable,
             is_directory=is_directory,
         )
-        self.active_transfers[transfer_id] = transfer_item
+        with self._transfer_lock:
+            self.active_transfers[transfer_id] = transfer_item
         return transfer_id
 
     def start_transfer(self, transfer_id: str):
-        if transfer_id in self.active_transfers:
-            transfer = self.active_transfers[transfer_id]
-            transfer.status = TransferStatus.IN_PROGRESS
-            transfer.start_time = time.time()
-            self.emit("transfer-started", transfer_id)
-            self._update_progress_display()
+        with self._transfer_lock:
+            if transfer_id in self.active_transfers:
+                transfer = self.active_transfers[transfer_id]
+                transfer.status = TransferStatus.IN_PROGRESS
+                transfer.start_time = time.time()
+        self.emit("transfer-started", transfer_id)
+        # Force immediate UI update when transfer starts
+        self._last_progress_update = 0  # Reset throttle
+        self._update_progress_display()
 
     def update_progress(self, transfer_id: str, progress: float):
-        if transfer_id in self.active_transfers:
-            self.active_transfers[transfer_id].progress = progress
+        with self._transfer_lock:
+            if transfer_id in self.active_transfers:
+                transfer = self.active_transfers[transfer_id]
+                current_time = time.time()
+
+                # Warmup logic: wait 3 seconds before showing real progress
+                # This avoids initial spurious values from rsync per-file progress
+                if transfer.warmup_end_time is None:
+                    transfer.warmup_end_time = current_time + 3.0
+
+                # Track the first stable progress value after warmup
+                if transfer.is_warmed_up() and transfer.first_stable_progress < 0:
+                    transfer.first_stable_progress = progress
+
+                transfer.progress = progress
+
+        # Throttle progress updates to prevent UI flooding
+        current_time = time.time()
+        # Allow more frequent updates (50ms) for responsive UI
+        if current_time - self._last_progress_update >= 0.05:
+            self._last_progress_update = current_time
             self.emit("transfer-progress", transfer_id, progress)
             self._update_progress_display()
 
     def complete_transfer(self, transfer_id: str):
-        if transfer_id in self.active_transfers:
-            transfer = self.active_transfers.pop(transfer_id)
-            transfer.status = TransferStatus.COMPLETED
-            transfer.end_time = time.time()
-            transfer.progress = 100.0
-            self.history.insert(0, transfer)
+        transfer = None
+        with self._transfer_lock:
+            if transfer_id in self.active_transfers:
+                transfer = self.active_transfers.pop(transfer_id)
+                transfer.status = TransferStatus.COMPLETED
+                transfer.end_time = time.time()
+                transfer.progress = 100.0
+                self.history.insert(0, transfer)
+
+        if transfer:
             self.emit("transfer-completed", transfer_id)
             self._save_history()
             self._update_progress_display()
 
     def fail_transfer(self, transfer_id: str, error_message: str):
-        if transfer_id in self.active_transfers:
-            transfer = self.active_transfers.pop(transfer_id)
-            if "cancel" in error_message.lower():
-                transfer.status = TransferStatus.CANCELLED
+        transfer = None
+        with self._transfer_lock:
+            if transfer_id in self.active_transfers:
+                transfer = self.active_transfers.pop(transfer_id)
+                if "cancel" in error_message.lower():
+                    transfer.status = TransferStatus.CANCELLED
+                else:
+                    transfer.status = TransferStatus.FAILED
+                transfer.end_time = time.time()
+                transfer.error_message = error_message
+                self.history.insert(0, transfer)
+
+        if transfer:
+            if transfer.status == TransferStatus.CANCELLED:
                 self.emit("transfer-cancelled", transfer_id)
             else:
-                transfer.status = TransferStatus.FAILED
                 self.emit("transfer-failed", transfer_id, error_message)
-
-            transfer.end_time = time.time()
-            transfer.error_message = error_message
-            self.history.insert(0, transfer)
             self._save_history()
             self._update_progress_display()
 
     def cancel_transfer(self, transfer_id: str):
-        if transfer_id in self.active_transfers:
-            transfer = self.active_transfers[transfer_id]
-            if transfer.is_cancellable:
-                transfer.cancellation_event.set()
-                self.logger.info(f"Cancellation requested for transfer {transfer_id}")
+        with self._transfer_lock:
+            if transfer_id in self.active_transfers:
+                transfer = self.active_transfers[transfer_id]
+                if transfer.is_cancellable:
+                    transfer.cancellation_event.set()
+                    self.logger.info(
+                        f"Cancellation requested for transfer {transfer_id}"
+                    )
 
     def get_cancellation_event(self, transfer_id: str) -> Optional[threading.Event]:
-        if transfer_id in self.active_transfers:
-            return self.active_transfers[transfer_id].cancellation_event
+        with self._transfer_lock:
+            if transfer_id in self.active_transfers:
+                return self.active_transfers[transfer_id].cancellation_event
         return None
 
     def get_transfer(self, transfer_id: str) -> Optional[TransferItem]:
-        return self.active_transfers.get(transfer_id)
+        with self._transfer_lock:
+            return self.active_transfers.get(transfer_id)
 
     def _update_progress_display(self):
         if self.progress_revealer:
             GLib.idle_add(self._do_update_progress_display)
 
     def _do_update_progress_display(self):
-        has_active = len(self.active_transfers) > 0
-        self.progress_revealer.set_reveal_child(has_active)
+        """Update the progress display UI."""
+        with self._transfer_lock:
+            active_count = len(self.active_transfers)
+            if active_count == 0:
+                self.progress_revealer.set_reveal_child(False)
+                return False
+            transfers_snapshot = list(self.active_transfers.values())
 
-        if not has_active:
-            return False
+        self.progress_revealer.set_reveal_child(True)
 
-        if len(self.active_transfers) == 1:
-            transfer = next(iter(self.active_transfers.values()))
-            self.progress_row.set_title(f"Transferring {transfer.filename}")
-
-            elapsed = time.time() - (transfer.start_time or time.time())
-            subtitle_parts = [f"{transfer.progress:.1f}%"]
-
-            if elapsed > 0.5 and transfer.file_size > 0:
-                bytes_transferred = (transfer.progress / 100.0) * transfer.file_size
-                speed = bytes_transferred / elapsed
-                subtitle_parts.append(f"{self._format_speed(speed)}")
-
-                if speed > 0:
-                    remaining_bytes = transfer.file_size - bytes_transferred
-                    eta = remaining_bytes / speed
-                    subtitle_parts.append(f"{self._format_duration(eta)} left")
-
-            self.progress_row.set_subtitle(" • ".join(subtitle_parts))
-            self.progress_bar.set_fraction(transfer.progress / 100.0)
+        if active_count == 1:
+            self._update_single_transfer_display(transfers_snapshot[0])
         else:
-            total_progress = sum(t.progress for t in self.active_transfers.values())
-            overall_progress = total_progress / len(self.active_transfers)
-            self.progress_row.set_title(
-                f"Transferring {len(self.active_transfers)} files"
-            )
-            self.progress_row.set_subtitle(f"Overall progress: {overall_progress:.1f}%")
-            self.progress_bar.set_fraction(overall_progress / 100.0)
-
+            self._update_multiple_transfers_display(transfers_snapshot, active_count)
         return False
 
+    def _update_single_transfer_display(self, transfer) -> None:
+        """Update display for a single active transfer."""
+        self.progress_row.set_title(
+            _("Transferring {filename}").format(filename=transfer.filename)
+        )
+        display_progress = transfer.get_stable_progress()
+        subtitle_parts = self._build_transfer_subtitle(transfer, display_progress)
+        self.progress_row.set_subtitle(" • ".join(subtitle_parts))
+        self.progress_bar.set_fraction(display_progress / 100.0)
+
+    def _build_transfer_subtitle(self, transfer, display_progress: float) -> List[str]:
+        """Build subtitle parts for transfer progress display."""
+        if not transfer.is_warmed_up():
+            return [_("Starting...")]
+
+        subtitle_parts = [f"{display_progress:.1f}%"]
+        if transfer.start_time and transfer.file_size > 0:
+            elapsed = time.time() - (transfer.warmup_end_time or transfer.start_time)
+            if elapsed > 0.5:
+                bytes_transferred = (display_progress / 100.0) * transfer.file_size
+                speed = bytes_transferred / elapsed if elapsed > 0 else 0
+                if speed > 0:
+                    subtitle_parts.append(self._format_speed(speed))
+                    remaining = transfer.file_size - bytes_transferred
+                    if remaining > 0:
+                        subtitle_parts.append(
+                            _("{time} left").format(
+                                time=self._format_duration(remaining / speed)
+                            )
+                        )
+        elif transfer.start_time and transfer.is_directory:
+            elapsed = time.time() - transfer.start_time
+            if elapsed > 1:
+                subtitle_parts.append(
+                    _("{time} elapsed").format(time=self._format_duration(elapsed))
+                )
+        return subtitle_parts
+
+    def _update_multiple_transfers_display(self, transfers: List, count: int) -> None:
+        """Update display for multiple active transfers."""
+        stats = self._calculate_aggregate_stats(transfers)
+        self.progress_row.set_title(_("Transferring {count} files").format(count=count))
+        subtitle_parts = self._build_aggregate_subtitle(stats)
+        self.progress_row.set_subtitle(" • ".join(subtitle_parts))
+        self.progress_bar.set_fraction(stats["overall_progress"] / 100.0)
+
+    def _calculate_aggregate_stats(self, transfers: List) -> Dict:
+        """Calculate aggregate statistics for multiple transfers."""
+        total_bytes = 0
+        total_transferred = 0.0
+        total_progress = 0.0
+        earliest_warmup = None
+        all_warmed = True
+
+        for t in transfers:
+            progress = t.get_stable_progress()
+            total_bytes += t.file_size
+            total_transferred += (progress / 100.0) * t.file_size
+            total_progress += progress
+            if not t.is_warmed_up():
+                all_warmed = False
+            if t.warmup_end_time and (
+                earliest_warmup is None or t.warmup_end_time < earliest_warmup
+            ):
+                earliest_warmup = t.warmup_end_time
+
+        overall = (
+            (total_transferred / total_bytes * 100.0)
+            if total_bytes > 0
+            else (total_progress / len(transfers) if transfers else 0)
+        )
+        return {
+            "overall_progress": overall,
+            "total_bytes": total_bytes,
+            "total_transferred": total_transferred,
+            "earliest_warmup": earliest_warmup,
+            "all_warmed": all_warmed,
+        }
+
+    def _build_aggregate_subtitle(self, stats: Dict) -> List[str]:
+        """Build subtitle for aggregate transfer display."""
+        if not stats["all_warmed"]:
+            return [_("Starting...")]
+
+        subtitle_parts = [f"{stats['overall_progress']:.1f}%"]
+        if stats["earliest_warmup"] and stats["total_bytes"] > 0:
+            elapsed = time.time() - stats["earliest_warmup"]
+            if elapsed > 0.5 and stats["total_transferred"] > 0:
+                speed = stats["total_transferred"] / elapsed
+                subtitle_parts.append(self._format_speed(speed))
+                remaining = stats["total_bytes"] - stats["total_transferred"]
+                if remaining > 0 and speed > 0:
+                    subtitle_parts.append(
+                        _("{time} left").format(
+                            time=self._format_duration(remaining / speed)
+                        )
+                    )
+        elif stats["earliest_warmup"]:
+            elapsed = time.time() - stats["earliest_warmup"]
+            if elapsed > 1:
+                subtitle_parts.append(
+                    _("{time} elapsed").format(time=self._format_duration(elapsed))
+                )
+        return subtitle_parts
+
     def _on_cancel_all_clicked(self, button):
-        for transfer_id in list(self.active_transfers.keys()):
+        with self._transfer_lock:
+            transfer_ids = list(self.active_transfers.keys())
+        for transfer_id in transfer_ids:
             self.cancel_transfer(transfer_id)
 
     def create_progress_widget(self) -> Gtk.Widget:
@@ -284,27 +435,38 @@ class TransferManager(GObject.Object):
         self.progress_revealer.set_child(self.progress_row)
         return self.progress_revealer
 
+    def _format_bytes_with_unit(
+        self, value: float, suffix: str = "B", zero_check_lte: bool = False
+    ) -> str:
+        """Generic helper to format byte values with appropriate units.
+
+        Args:
+            value: The byte value to format
+            suffix: Unit suffix (e.g., "B" for size, "B/s" for speed)
+            zero_check_lte: If True, check value <= 0; if False, check value < 0
+
+        Returns:
+            Formatted string with appropriate unit prefix (B, KB, MB, GB)
+        """
+        if not isinstance(value, (int, float)):
+            return f"0 {suffix}"
+        if (zero_check_lte and value <= 0) or (not zero_check_lte and value < 0):
+            return f"0 {suffix}"
+        if value < 1024:
+            return f"{value:.1f if isinstance(value, float) else value} {suffix}"
+        if value < 1024**2:
+            return f"{value / 1024:.1f} K{suffix}"
+        if value < 1024**3:
+            return f"{value / 1024**2:.1f} M{suffix}"
+        return f"{value / 1024**3:.1f} G{suffix}"
+
     def _format_file_size(self, size_bytes: int) -> str:
-        if not isinstance(size_bytes, (int, float)) or size_bytes < 0:
-            return "0 B"
-        if size_bytes < 1024:
-            return f"{size_bytes} B"
-        if size_bytes < 1024**2:
-            return f"{size_bytes / 1024:.1f} KB"
-        if size_bytes < 1024**3:
-            return f"{size_bytes / 1024**2:.1f} MB"
-        return f"{size_bytes / 1024**3:.1f} GB"
+        return self._format_bytes_with_unit(size_bytes, "B", zero_check_lte=False)
 
     def _format_speed(self, bytes_per_second: float) -> str:
-        if not isinstance(bytes_per_second, (int, float)) or bytes_per_second <= 0:
-            return "0 B/s"
-        if bytes_per_second < 1024:
-            return f"{bytes_per_second:.1f} B/s"
-        if bytes_per_second < 1024**2:
-            return f"{bytes_per_second / 1024:.1f} KB/s"
-        if bytes_per_second < 1024**3:
-            return f"{bytes_per_second / 1024**2:.1f} MB/s"
-        return f"{bytes_per_second / 1024**3:.1f} GB/s"
+        return self._format_bytes_with_unit(
+            bytes_per_second, "B/s", zero_check_lte=True
+        )
 
     def _format_duration(self, seconds: float) -> str:
         if not isinstance(seconds, (int, float)) or seconds < 0:
@@ -317,4 +479,3 @@ class TransferManager(GObject.Object):
             return f"{minutes}m {seconds}s"
         hours, minutes = divmod(minutes, 60)
         return f"{hours}h {minutes}m"
-

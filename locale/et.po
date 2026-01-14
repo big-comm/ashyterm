@@ -45,6 +45,11 @@ msgstr "Ava kohaliku mount-punkti {}"
 msgid "Open {} in Ashy Terminal"
 msgstr "Ava {} Ashy Terminalis"
 # 
+# File: tests/test_qa.py, line: 164
+#: NEEDS WORK
+msgid "Test string"
+msgstr "Testi string"
+# 
 # File: usr/share/ashyterm/utils/exceptions.py, line: 65
 #: NEEDS WORK
 msgid "A terminal error occurred"
@@ -483,10 +488,18 @@ msgstr "OpenRouter vastas HTTP {status}: {message}{detail}"
 msgid "Not an SSH session."
 msgstr "Ei ole SSH seanss."
 # 
-# File: usr/share/ashyterm/filemanager/operations.py, line: 146
+# File: src/ashyterm/terminal/spawner.py, line: 821
 #: NEEDS WORK
-msgid "Command timed out."
-msgstr "Käsk aegus."
+msgid "Connection lost or unreachable."
+msgstr "Ühendus katkenud või kättesaamatu."
+# 
+# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
+# 
+# File: src/ashyterm/terminal/spawner.py, line: 831
+# File: src/ashyterm/filemanager/operations.py, line: 199
+#: NEEDS WORK
+msgid "Command timed out. Connection may be lost."
+msgstr "Käsk aegus. Ühendus võib olla kadunud."
 # 
 # File: usr/share/ashyterm/terminal/tabs.py, line: 43
 #: NEEDS WORK
@@ -517,6 +530,52 @@ msgstr "Eemalda vahekaart"
 #: NEEDS WORK
 msgid "This is the only pane in the tab."
 msgstr "See on ainus paneel vahekaardil."
+# 
+# File: src/ashyterm/terminal/manager.py, line: 1557
+#: NEEDS WORK
+msgid "Cancelled by user."
+msgstr "Kasutaja tühistas."
+# 
+# File: src/ashyterm/terminal/manager.py, line: 1563
+#: NEEDS WORK
+msgid "Time limit reached. Giving up."
+msgstr "Aja tähtaeg on möödas. Loobun."
+# 
+# File: src/ashyterm/terminal/manager.py, line: 1564
+# File: src/ashyterm/terminal/manager.py, line: 1613
+#: NEEDS WORK
+msgid "Showing connection options..."
+msgstr "Ühenduse valikute kuvamine..."
+# 
+# File: src/ashyterm/terminal/manager.py, line: 1574
+#: NEEDS WORK
+#, python-brace-format
+msgid "Attempt {n}/{max} - Time remaining: {mins}m {secs}s"
+msgstr "Katse {n}/{max} - Jäänud aeg: {mins}m {secs}s"
+# 
+# File: src/ashyterm/terminal/manager.py, line: 1604
+#: NEEDS WORK
+#, python-brace-format
+msgid "Spawn error: {error}"
+msgstr "Käivitamise viga: {error}"
+# 
+# File: src/ashyterm/terminal/manager.py, line: 1612
+#: NEEDS WORK
+msgid "Maximum attempts reached."
+msgstr "Maksimaalsed katsed on saavutatud."
+# 
+# File: src/ashyterm/terminal/manager.py, line: 1621
+#: NEEDS WORK
+#, python-brace-format
+msgid "Starting auto-reconnect: {attempts} attempts over {mins} minute(s), every {secs}s"
+msgstr ""
+"Alustamine automaatset taaskoondamist: {attempts} katset {mins} minuti jooksul, iga {secs} sekundi "
+"järel"
+# 
+# File: src/ashyterm/terminal/manager.py, line: 1628
+#: NEEDS WORK
+msgid "Close this tab to cancel."
+msgstr "Sulge see vahekaart, et tühistada."
 # 
 # File: usr/share/ashyterm/ui/window_ui.py, line: 339
 #: NEEDS WORK
@@ -691,13 +750,13 @@ msgstr "Otsingu seansid..."
 # 
 # File: usr/share/ashyterm/ui/color_scheme_dialog.py, line: 42
 #: NEEDS WORK
-msgid "Edit Scheme"
-msgstr "Muuda skeemi"
+msgid "New Scheme"
+msgstr "Uus skeem"
 # 
 # File: usr/share/ashyterm/ui/color_scheme_dialog.py, line: 42
 #: NEEDS WORK
-msgid "New Scheme"
-msgstr "Uus skeem"
+msgid "Edit Scheme"
+msgstr "Muuda skeemi"
 # 
 # File: usr/share/ashyterm/ui/color_scheme_dialog.py, line: 44
 #: NEEDS WORK
@@ -723,19 +782,6 @@ msgstr "Pealkirja riba taust"
 #: NEEDS WORK
 msgid "Cursor"
 msgstr "Kursor"
-# 
-# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 163
-# File: usr/share/ashyterm/ui/dialogs.py, line: 575
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1213
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1957
-# File: usr/share/ashyterm/ui/dialogs.py, line: 2006
-# File: usr/share/ashyterm/window.py, line: 953
-# File: usr/share/ashyterm/window.py, line: 1013
-#: NEEDS WORK
-msgid "Cancel"
-msgstr "Tühista"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 589
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1219
@@ -894,6 +940,19 @@ msgstr "Kustuta skeem?"
 #, python-brace-format
 msgid "Are you sure you want to delete the scheme '{name}'? This cannot be undone."
 msgstr "Kas olete kindel, et soovite skeemi '{name}' kustutada? Seda ei saa tagasi võtta."
+# 
+# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 163
+# File: usr/share/ashyterm/ui/dialogs.py, line: 575
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1213
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1957
+# File: usr/share/ashyterm/ui/dialogs.py, line: 2006
+# File: usr/share/ashyterm/window.py, line: 953
+# File: usr/share/ashyterm/window.py, line: 1013
+#: NEEDS WORK
+msgid "Cancel"
+msgstr "Tühista"
 # 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 32
 #: NEEDS WORK
@@ -2125,6 +2184,108 @@ msgstr "Kasuta vaikeväärtusi"
 msgid "Clear custom prompts and use random defaults"
 msgstr "Kustuta kohandatud käsud ja kasuta juhuslikke vaikeväärtusi"
 # 
+# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
+# 
+# File: src/ashyterm/ui/widgets/ssh_error_banner.py, line: 167
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 20
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 25
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 48
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 53
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 58
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 63
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 68
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 73
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 79
+#: NEEDS WORK
+msgid "Authentication Failed"
+msgstr "Autentimine ebaõnnestus"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 906
+#: NEEDS WORK
+msgid "Connection Failed"
+msgstr "Ühendus ebaõnnestus"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 223
+#: NEEDS WORK
+msgid "Edit Session"
+msgstr "Redigeeri seanss"
+# 
+# File: src/ashyterm/ui/widgets/ssh_error_banner.py, line: 204
+#: NEEDS WORK
+msgid "Edit session credentials"
+msgstr "Muuda seansi mandaate"
+# 
+# File: src/ashyterm/ui/widgets/ssh_error_banner.py, line: 208
+#: NEEDS WORK
+msgid "Fix Host Key"
+msgstr "Paranda hosti võti"
+# 
+# File: src/ashyterm/ui/widgets/ssh_error_banner.py, line: 212
+#: NEEDS WORK
+msgid "Remove old host key from known_hosts"
+msgstr "Eemalda vana hosti võti known_hosts failist"
+# 
+# File: src/ashyterm/ui/widgets/ssh_error_banner.py, line: 220
+#: NEEDS WORK
+msgid "Retry connection with extended timeout"
+msgstr "Ühenda uuesti pikendatud ooteajaga"
+# 
+# File: src/ashyterm/ui/widgets/ssh_error_banner.py, line: 226
+#: NEEDS WORK
+msgid "Auto Reconnect"
+msgstr "Automaatne Ühendamine"
+# 
+# File: src/ashyterm/ui/widgets/ssh_error_banner.py, line: 229
+#: NEEDS WORK
+msgid "Start automatic reconnection attempts"
+msgstr "Alusta automaatseid uuesti ühendamise katseid"
+# 
+# File: src/ashyterm/ui/widgets/ssh_error_banner.py, line: 238
+#: NEEDS WORK
+msgid "Configure auto-reconnect options"
+msgstr "Konfigureeri automaatse ühenduse taastamise valikud"
+# 
+# File: src/ashyterm/ui/widgets/ssh_error_banner.py, line: 281
+#: NEEDS WORK
+msgid "Auto-reconnect settings:"
+msgstr "Automaatne taaskoondamise seaded:"
+# 
+# File: src/ashyterm/ui/widgets/ssh_error_banner.py, line: 287
+#: NEEDS WORK
+msgid "Duration"
+msgstr "Kestus"
+# 
+# File: src/ashyterm/ui/widgets/ssh_error_banner.py, line: 297
+#: NEEDS WORK
+msgid "min"
+msgstr "min"
+# 
+# File: src/ashyterm/ui/widgets/ssh_error_banner.py, line: 305
+#: NEEDS WORK
+msgid "Interval"
+msgstr "Intervall"
+# 
+# File: src/ashyterm/ui/widgets/ssh_error_banner.py, line: 315
+# File: src/ashyterm/ui/widgets/ssh_error_banner.py, line: 333
+#: NEEDS WORK
+msgid "sec"
+msgstr "sek"
+# 
+# File: src/ashyterm/ui/widgets/ssh_error_banner.py, line: 323
+#: NEEDS WORK
+msgid "Timeout"
+msgstr "Aegumine"
+# 
+# File: src/ashyterm/data/command_manager_models.py, line: 419
+#: NEEDS WORK
+msgid "Start"
+msgstr "Alusta"
+# 
+# File: src/ashyterm/ui/widgets/ssh_error_banner.py, line: 344
+#: NEEDS WORK
+msgid "Start auto-reconnect with these settings"
+msgstr "Alusta automaatne ühenduse taastamine nende seadistustega"
+# 
 # File: src/ashyterm/ui/widgets/form_widget_builder.py, line: 160
 #: NEEDS WORK
 msgid "Enter password..."
@@ -2421,6 +2582,11 @@ msgstr "Ava link"
 msgid "Copy Link"
 msgstr "Kopeeri link"
 # 
+# File: src/ashyterm/ui/menus.py, line: 312
+#: NEEDS WORK
+msgid "Ask AI"
+msgstr "Küsi AI-lt"
+# 
 # #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
 # 
 # File: usr/share/ashyterm/ui/menus.py, line: 30
@@ -2448,11 +2614,6 @@ msgstr "Vali kõik"
 #: NEEDS WORK
 msgid "Clear Session"
 msgstr "Selge seans"
-# 
-# File: src/ashyterm/ui/menus.py, line: 312
-#: NEEDS WORK
-msgid "Ask AI"
-msgstr "Küsi AI-lt"
 # 
 # #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
 # 
@@ -2587,16 +2748,406 @@ msgstr "Kas olete kindel, et soovite need {count} elementi püsivalt kustutada?"
 msgid "This will also delete all contents of any selected folders."
 msgstr "See kustutab ka kõik valitud kaustade sisu."
 # 
-# File: usr/share/ashyterm/ui/ssh_dialogs.py, line: 206
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 14
 #: NEEDS WORK
-msgid "SSH Connection Failed"
-msgstr "SSH ühenduse loomine ebaõnnestus"
+msgid "General SSH Error"
+msgstr "Üldine SSH viga"
 # 
-# File: usr/share/ashyterm/ui/ssh_dialogs.py, line: 207
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 15
+#: NEEDS WORK
+msgid "The SSH command failed with a general error."
+msgstr "SSH käsk ebaõnnestus üldise vea tõttu."
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 17
+#: NEEDS WORK
+msgid "Command Misuse"
+msgstr "Käskude vale kasutamine"
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 17
+#: NEEDS WORK
+msgid "SSH command was used incorrectly."
+msgstr "SSH käsku kasutati valesti."
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 21
+#: NEEDS WORK
+msgid "Username or password is incorrect, or the user is not allowed to connect."
+msgstr "Kasutajanimi või parool on vale või kasutajal ei ole lubatud ühenduda."
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 26
+#: NEEDS WORK
+msgid "Authentication failed. Check username, password, or SSH key."
+msgstr "Autentimine ebaõnnestus. Kontrollige kasutajanime, parooli või SSH-võtit."
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 30
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 113
+#: NEEDS WORK
+msgid "Host Key Verification Failed"
+msgstr "Hosti võtme kontrollimine ebaõnnestus"
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 31
+#: NEEDS WORK
+msgid "The server's host key is not recognized or has changed."
+msgstr "Serveri hosti võti ei ole tunnustatud või on muutunud."
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 37
+#: NEEDS WORK
+msgid ""
+"Could not establish connection to the server. Check if the host is reachable and the port is "
+"correct."
+msgstr "Ei õnnestunud serveriga ühendust luua. Kontrollige, kas host on kättesaadav ja port on õige."
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 49
+#: NEEDS WORK
+msgid "Username or password is incorrect. Please verify your credentials."
+msgstr "Kasutajanimi või parool on vale. Palun kontrollige oma mandaate."
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 54
+#: NEEDS WORK
+msgid "Authentication failed. Check your username and password."
+msgstr "Autentimine ebaõnnestus. Kontrollige oma kasutajanime ja parooli."
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 59
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 69
+#: NEEDS WORK
+msgid "Password authentication failed. The password may be incorrect."
+msgstr "Parooli autentimine ebaõnnestus. Parool võib olla vale."
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 64
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 74
+#: NEEDS WORK
+msgid "The password entered is incorrect."
+msgstr "Sisestatud parool on vale."
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 80
+#: NEEDS WORK
+msgid "The password is invalid or incorrect."
+msgstr "Parool on vale või vale."
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 85
+#: NEEDS WORK
+msgid "Multiple Auth Methods Failed"
+msgstr "Mitme autentimisviisi ebaõnnestumine"
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 87
+#: NEEDS WORK
+msgid "Both public key and password authentication failed. Check your credentials."
+msgstr "Nii avaliku võtme kui ka parooli autentimine ebaõnnestus. Kontrollige oma mandaate."
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 92
+#: NEEDS WORK
+msgid "SSH Key Rejected"
+msgstr "SSH võti tagasi lükatud"
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 94
+#: NEEDS WORK
+msgid "The server rejected your SSH key. The key may not be authorized on the server."
+msgstr "Server keeldus teie SSH võtme kasutamisest. Võti ei pruugi serveris olla volitatud."
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 100
+#: NEEDS WORK
+msgid "SSH Agent Error"
+msgstr "SSH agendi viga"
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 101
+#: NEEDS WORK
+msgid "SSH agent refused the operation. Check if your key is loaded with ssh-add."
+msgstr "SSH agent keeldus toimingust. Kontrollige, kas teie võti on laaditud ssh-addiga."
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 105
+#: NEEDS WORK
+msgid "SSH Agent Not Running"
+msgstr "SSH agent ei tööta"
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 107
+#: NEEDS WORK
+msgid "SSH agent is not running. Start it with eval $(ssh-agent) and add your key."
+msgstr "SSH agent ei tööta. Käivita see käsuga eval $(ssh-agent) ja lisa oma võti."
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 115
+#: NEEDS WORK
+msgid "The server's host key has changed or is not trusted. This could indicate a security issue."
+msgstr "Serveri hosti võti on muutunud või ei ole usaldusväärne. See võib viidata turvaprobleemile."
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 120
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 127
+#: NEEDS WORK
+msgid "Host Key Changed"
+msgstr "Hosti võti muutus"
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 122
+#: NEEDS WORK
+msgid "The server's host key has changed. Remove the old key from known_hosts if this is expected."
+msgstr "Serveri hosti võti on muutunud. Eemaldage vana võti known_hosts failist, kui see on oodatud."
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 129
+#: NEEDS WORK
+msgid "The server's identification has changed. This could indicate a security issue or server reinstall."
+msgstr "Serveri identiteet on muutunud. See võib viidata turvaprobleemile või serveri uuesti installimisele."
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 135
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 140
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 145
+#: NEEDS WORK
+msgid "DNS Resolution Failed"
+msgstr "DNS-i lahendamine ebaõnnestus"
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 136
+#: NEEDS WORK
+msgid "Could not resolve the hostname. Check if the address is correct."
+msgstr "Ei õnnestunud hostinime lahendada. Kontrollige, kas aadress on õige."
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 141
+#: NEEDS WORK
+msgid "The hostname could not be resolved. Check the server address."
+msgstr "Hostinime ei saanud lahendada. Kontrollige serveri aadressi."
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 146
+#: NEEDS WORK
+msgid "No address found for the hostname."
+msgstr "Hostinime ei leitud aadressi."
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 150
+#: NEEDS WORK
+msgid "DNS Temporary Failure"
+msgstr "DNS ajutine tõrge"
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 151
+#: NEEDS WORK
+msgid "DNS resolution temporarily failed. Check your network connection."
+msgstr "DNS-i lahendamine ebaõnnestus ajutiselt. Kontrollige oma võrguühendust."
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 156
+#: NEEDS WORK
+msgid "Connection Refused"
+msgstr "Ühendus keeldus"
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 157
+#: NEEDS WORK
+msgid "The server refused the connection. Check if SSH is running on the server."
+msgstr "Server keeldus ühendusest. Kontrollige, kas SSH töötab serveris."
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 161
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 168
+#: NEEDS WORK
+msgid "Connection Timeout"
+msgstr "Ühenduse aegumine"
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 163
+#: NEEDS WORK
+msgid "Connection attempt timed out. The server may be unreachable or behind a firewall."
+msgstr "Ühenduse katse aegus. Server võib olla kättesaamatu või tulemüüri taga."
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 169
+#: NEEDS WORK
+msgid "The operation timed out. Server may be slow or unreachable."
+msgstr "Tegevus aegus. Server võib olla aeglane või kättesaamatu."
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 173
+#: NEEDS WORK
+msgid "No Route to Host"
+msgstr "Ei marsruuti hostini."
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 175
+#: NEEDS WORK
+msgid "Network path to the server could not be found. Check your network connection."
+msgstr "Serveri võrgu teed ei leitud. Kontrollige oma võrguühendust."
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 180
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 185
+#: NEEDS WORK
+msgid "Network Unreachable"
+msgstr "Võrk on kättesaamatu"
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 181
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 186
+#: NEEDS WORK
+msgid "The network is not reachable. Check your internet connection."
+msgstr "Võrk ei ole kättesaadav. Kontrollige oma internetiühendust."
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 191
+#: NEEDS WORK
+msgid "Connection Reset"
+msgstr "Ühenduse lähtestamine"
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 192
+#: NEEDS WORK
+msgid "The connection was reset by the remote server."
+msgstr "Ühendus taastati kaugserveri poolt."
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 196
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 206
+#: NEEDS WORK
+msgid "Connection Closed"
+msgstr "Ühendus suletud"
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 197
+#: NEEDS WORK
+msgid "The remote server closed the connection unexpectedly."
+msgstr "Kaugserver sulges ühenduse ootamatult."
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 201
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 211
+#: NEEDS WORK
+msgid "Connection Lost"
+msgstr "Ühendus katkenud"
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 202
+#: NEEDS WORK
+msgid "The connection to the server was lost."
+msgstr "Ühendus serveriga katkes."
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 207
+#: NEEDS WORK
+msgid "The server closed the connection."
+msgstr "Server sulges ühenduse."
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 212
+#: NEEDS WORK
+msgid "Failed to read from the connection. The server may have closed it."
+msgstr "Ühendusest lugemine ebaõnnestus. Server võib selle sulgeda."
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 217
+#: NEEDS WORK
+msgid "Too Many Authentication Failures"
+msgstr "Liigne autentimise ebaõnnestumisi"
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 218
+#: NEEDS WORK
+msgid "Too many failed login attempts. Wait before trying again."
+msgstr "Liialt ebaõnnestunud sisselogimise katseid. Oodake enne uuesti proovimist."
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 222
+#: NEEDS WORK
+msgid "Server Disconnected"
+msgstr "Serveri katkestatud"
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 223
+#: NEEDS WORK
+msgid "The server disconnected. Check server logs for details."
+msgstr "Server katkestas. Kontrollige serveri logisid üksikasjade jaoks."
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 228
+#: NEEDS WORK
+msgid "SSH Service Not Running"
+msgstr "SSH teenus ei tööta"
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 229
+#: NEEDS WORK
+msgid "SSH service doesn't appear to be running on the server."
+msgstr "SSH teenus ei tundu serveris töötavat."
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 234
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 239
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 244
+#: NEEDS WORK
+msgid "Key Authentication Failed"
+msgstr "Võtme autentimine ebaõnnestus"
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 235
+#: NEEDS WORK
+msgid "The specified SSH key file was not found."
+msgstr "Määratud SSH võtmefaili ei leitud."
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 240
+#: NEEDS WORK
+msgid "The SSH key is invalid or corrupted."
+msgstr "SSH võti on kehtetu või rikutud."
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 245
+#: NEEDS WORK
+msgid "Failed to load the SSH key file."
+msgstr "SSH võtme faili laadimine ebaõnnestus."
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 249
+#: NEEDS WORK
+msgid "Key File Permissions Error"
+msgstr "Võtmefaili õiguste viga"
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 250
+#: NEEDS WORK
+msgid "SSH key file has incorrect permissions. Use chmod 600 on the key file."
+msgstr "SSH võtmefailil on vale õigused. Kasutage chmod 600 võtmefaili jaoks."
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 254
+#: NEEDS WORK
+msgid "SSH Key Format Error"
+msgstr "SSH võtme formaadi viga"
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 255
+#: NEEDS WORK
+msgid "The SSH key file has an invalid format."
+msgstr "SSH võtmefailil on vale formaat."
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 260
+#: NEEDS WORK
+msgid "Certificate Invalid"
+msgstr "Sertifika kehtetu"
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 261
+#: NEEDS WORK
+msgid "The SSH certificate signature verification failed."
+msgstr "SSH sertifika allkirja kontrollimine ebaõnnestus."
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 265
+#: NEEDS WORK
+msgid "Certificate Expired"
+msgstr "Sertifika aegunud"
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 266
+#: NEEDS WORK
+msgid "The SSH certificate has expired and needs renewal."
+msgstr "SSH sertifika on aegunud ja vajab uuendamist."
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 271
+#: NEEDS WORK
+msgid "Connection Denied by Server"
+msgstr "Ühendus keeldus serveri poolt"
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 272
+#: NEEDS WORK
+msgid "The server administrator has blocked this connection."
+msgstr "Serveri administraator on selle ühenduse blokeerinud."
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 276
+#: NEEDS WORK
+msgid "SFTP Not Available"
+msgstr "SFTP ei ole saadaval"
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 278
+#: NEEDS WORK
+msgid "SFTP subsystem is not available on the server. Contact the server administrator."
+msgstr "SFTP alamsüsteem ei ole serveris saadaval. Võtke ühendust serveri administraatoriga."
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 283
+#: NEEDS WORK
+msgid "SSH Channel Failed"
+msgstr "SSH kanal ebaõnnestus"
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 284
+#: NEEDS WORK
+msgid "Failed to open SSH channel. The server may be overloaded or misconfigured."
+msgstr "SSH kanali avamine ebaõnnestus. Server võib olla ülekoormatud või vale seadistusega."
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 289
+#: NEEDS WORK
+msgid "Password Authentication Denied"
+msgstr "Parooli autentimine keelatud"
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 291
+#: NEEDS WORK
+msgid "Password authentication was denied. The server may not allow password login."
+msgstr "Parooli autentimine keelati. Server ei pruugi lubada parooliga sisselogimist."
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 318
+#: NEEDS WORK
+msgid "SSH Connection Error"
+msgstr "SSH ühenduse viga"
+# 
+# File: src/ashyterm/ui/ssh_dialogs.py, line: 319
 #: NEEDS WORK
 #, python-brace-format
-msgid "Could not connect to session '{session_name}'."
-msgstr "Ei saanud seansiga '{session_name}' ühendust luua."
+msgid "An unexpected error occurred while connecting. Exit code: {code}"
+msgstr "Ühendamisel tekkis ootamatu viga. Väljumiskood: {code}"
 # 
 # File: src/ashyterm/ui/dialogs/ai_config_dialog.py, line: 43
 #: NEEDS WORK
@@ -3198,16 +3749,16 @@ msgstr "Kohanda (loobib koopia)"
 msgid "Delete scheme"
 msgstr "Kustuta skeem"
 # 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1806
+#: NEEDS WORK
+msgid "Scheme deleted"
+msgstr "Skeem kustutatud"
+# 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1773
 #: NEEDS WORK
 #, python-brace-format
 msgid "Are you sure you want to delete '{}'?"
 msgstr "Kas olete kindel, et soovite '{}' kustutada?"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1806
-#: NEEDS WORK
-msgid "Scheme deleted"
-msgstr "Skeem kustutatud"
 # 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1870
 #: NEEDS WORK
@@ -3257,55 +3808,58 @@ msgstr "SSH seansid"
 msgid "Apply output highlighting to SSH connections"
 msgstr "Rakenda väljundi esiletõstmine SSH-ühendustele"
 # 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1567
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1925
 #: NEEDS WORK
-msgid "\"cat\" Command Colorization"
-msgstr "\"cat\" käsu värvustamine"
+#, python-brace-format
+msgid "Syntax highlighting for '{}' command output (using Pygments)"
+msgstr "Süntaksi esiletõstmine '{}' käsu väljundi jaoks (kasutades Pygments'i)"
 # 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1569
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1928
 #: NEEDS WORK
-msgid "Syntax highlighting for \"cat\" command output (using Pygments)"
-msgstr "Süntaksihighlighting \"cat\" käsu väljundi jaoks (kasutades Pygments'i)"
+#, python-brace-format
+msgid "Pygments is not installed - '{}' output will not be colorized"
+msgstr "Pygments ei ole installitud - '{}' väljundit ei värviliseks muudetud"
 # 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1572
-#: NEEDS WORK
-msgid "Pygments is not installed - \"cat\" output will not be colorized"
-msgstr "Pygments ei ole installitud - \"cat\" väljundit ei värviliseks muudetud"
+# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
 # 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1580
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1923
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 432
 #: NEEDS WORK
-msgid "Enable \"cat\" Colorization"
-msgstr "Luba \"kassi\" värviliseks tegemine"
+#, python-brace-format
+msgid "{} Command Colorization"
+msgstr "{} Käskluse värvumine"
 # 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1581
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1680
 #: NEEDS WORK
-msgid "Apply syntax highlighting to \"cat\" command output"
-msgstr "Rakenda süntaksi esiletõstmine \"cat\" käsu väljundile"
+msgid "⚠️ Experimental Feature"
+msgstr "⚠️ Eksperimentaalne funktsioon"
 # 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1951
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2178
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1939
 #: NEEDS WORK
-msgid "Theme Mode"
-msgstr "Teema režiim"
+#, python-brace-format
+msgid ""
+"This feature colorizes output for the '{}' command. It may not work perfectly with every "
+"shell/prompt or when output is fragmented."
+msgstr ""
+"See funktsioon värvib väljundi '{}' käsu jaoks. See ei pruugi iga shelli/komplekti või siis, kui "
+"väljund on killustatud, ideaalselt töötada."
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1948
+#: NEEDS WORK
+#, python-brace-format
+msgid "Enable '{}' Colorization"
+msgstr "Luba '{}' värvustamine"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1949
+#: NEEDS WORK
+#, python-brace-format
+msgid "Apply syntax highlighting to '{}' command output"
+msgstr "Kohanda süntaksihighlighting '{}' käsu väljundile"
 # 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1952
 #: NEEDS WORK
 msgid "Auto: adapts to background color. Manual: single theme."
 msgstr "Automaatne: kohandub taustavärviga. Käsitsi: ühekordne teema."
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1955
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2182
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 3592
-#: NEEDS WORK
-msgid "Auto"
-msgstr "Automaatne"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1956
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2183
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 3592
-#: NEEDS WORK
-msgid "Manual"
-msgstr "Käsiotsik"
 # 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2039
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2272
@@ -3353,11 +3907,6 @@ msgstr "Installeeri Pygments"
 msgid "pip install pygments"
 msgstr "pip install pygments"
 # 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1650
-#: NEEDS WORK
-msgid "Shell Input Highlighting"
-msgstr "Käskluse sisendi esiletõstmine"
-# 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1652
 #: NEEDS WORK
 msgid "Live syntax highlighting as you type commands (experimental)"
@@ -3367,6 +3916,20 @@ msgstr "Reaalajas süntaksi esiletõstmine käske tippides (eksperimentaalne)"
 #: NEEDS WORK
 msgid "Pygments is not installed - shell input highlighting unavailable"
 msgstr "Pygments ei ole installitud - shell sisendi esiletõstmine pole saadaval"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1650
+#: NEEDS WORK
+msgid "Shell Input Highlighting"
+msgstr "Käskluse sisendi esiletõstmine"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1748
+#: NEEDS WORK
+msgid ""
+"This feature applies highlighting to echoed shell input. It may not work perfectly with all prompts "
+"or shells."
+msgstr ""
+"See funktsioon rakendab esiletoomist kajastatud shelli sisendile. See ei pruugi töötada ideaalselt "
+"kõigi käsuviipade või shellide puhul."
 # 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1663
 #: NEEDS WORK
@@ -3387,19 +3950,25 @@ msgstr ""
 msgid "Auto detects background, Manual uses selected theme"
 msgstr "Automaatne tuvastamine taust, Käsitsi kasutab valitud teemat"
 # 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1680
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1951
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2178
 #: NEEDS WORK
-msgid "⚠️ Experimental Feature"
-msgstr "⚠️ Eksperimentaalne funktsioon"
+msgid "Theme Mode"
+msgstr "Teema režiim"
 # 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1748
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1955
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2182
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 3592
 #: NEEDS WORK
-msgid ""
-"This feature applies highlighting to echoed shell input. It may not work perfectly with all prompts "
-"or shells."
-msgstr ""
-"See funktsioon rakendab esiletoomist kajastatud shelli sisendile. See ei pruugi töötada ideaalselt "
-"kõigi käsuviipade või shellide puhul."
+msgid "Auto"
+msgstr "Automaatne"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1956
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2183
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 3592
+#: NEEDS WORK
+msgid "Manual"
+msgstr "Käsiotsik"
 # 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1179
 #: NEEDS WORK
@@ -3434,6 +4003,12 @@ msgstr "Eemalda ignoreeritud loendist"
 msgid "Command added: {}"
 msgstr "Käsk lisatud: {}"
 # 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1325
+#: NEEDS WORK
+#, python-brace-format
+msgid "Command removed: {}"
+msgstr "Käsk eemaldatud: {}"
+# 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1299
 #: NEEDS WORK
 msgid "Remove Ignored Command?"
@@ -3445,11 +4020,10 @@ msgstr "Eemalda ignoreeritud käsk?"
 msgid "Remove \"{}\" from the ignored commands list? Highlighting will be applied to this command's output."
 msgstr "Eemalda \"{}\" ignoreeritud käskude loendist? Esiletõstmine rakendatakse selle käsu väljundile."
 # 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1325
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1356
 #: NEEDS WORK
-#, python-brace-format
-msgid "Command removed: {}"
-msgstr "Käsk eemaldatud: {}"
+msgid "Restored default ignored commands"
+msgstr "Taastatud vaikeseaded, millele ei pöörata tähelepanu"
 # 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1331
 #: NEEDS WORK
@@ -3464,11 +4038,6 @@ msgid ""
 msgstr ""
 "See asendab teie praeguse ignoreeritud käskude loendi süsteemi vaikeväärtustega. Kohandatud "
 "lisandid kaovad."
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1356
-#: NEEDS WORK
-msgid "Restored default ignored commands"
-msgstr "Taastatud vaikeseaded, millele ei pöörata tähelepanu"
 # 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1698
 #: NEEDS WORK
@@ -3613,6 +4182,12 @@ msgstr "Muuda käsu reegleid"
 msgid "Delete command"
 msgstr "Kustuta käsk"
 # 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1991
+#: NEEDS WORK
+#, python-brace-format
+msgid "Command deleted: {}"
+msgstr "Käsk kustutatud: {}"
+# 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1972
 #: NEEDS WORK
 msgid "Delete Command?"
@@ -3623,12 +4198,6 @@ msgstr "Kustuta käsk?"
 #, python-brace-format
 msgid "Are you sure you want to delete \"{}\"? This will remove all custom rules for this command."
 msgstr "Kas olete kindel, et soovite \"{}\" kustutada? See eemaldab kõik selle käsu kohandatud reeglid."
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1991
-#: NEEDS WORK
-#, python-brace-format
-msgid "Command deleted: {}"
-msgstr "Käsk kustutatud: {}"
 # 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2086
 #: NEEDS WORK
@@ -3734,11 +4303,11 @@ msgstr "lubatud"
 msgid "disabled"
 msgstr "keelatud"
 # 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2820
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 3620
 #: NEEDS WORK
 #, python-brace-format
-msgid "\"cat\" colorization {}"
-msgstr "\"kas\" värvustamine {}"
+msgid "'{}' colorization {}"
+msgstr "'{}' värvumine {}"
 # 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 3593
 #: NEEDS WORK
@@ -3768,6 +4337,11 @@ msgstr "Taaskäivitamine vajalik"
 msgid "Restart the program for the colors to be applied to the terminal."
 msgstr "Taaskäivita programm, et värvid saaksid terminalile rakenduda."
 # 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2667
+#: NEEDS WORK
+msgid "Global rules reset to defaults"
+msgstr "Globaalreeglid lähteseadetele taastatud"
+# 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2645
 #: NEEDS WORK
 msgid "Reset Global Rules?"
@@ -3778,10 +4352,10 @@ msgstr "Lähtesta globaalreegleid?"
 msgid "This will restore global rules to system defaults. Context customizations will be preserved."
 msgstr "See taastab globaalreeglid süsteemi vaikeväärtustele. Konteksti kohandused säilitatakse."
 # 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2667
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2695
 #: NEEDS WORK
-msgid "Global rules reset to defaults"
-msgstr "Globaalreeglid lähteseadetele taastatud"
+msgid "All commands reset to defaults"
+msgstr "Kõik käsud lähtestatakse vaikeseadetele."
 # 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2673
 #: NEEDS WORK
@@ -3792,11 +4366,6 @@ msgstr "Kustuta kõik käsud?"
 #: NEEDS WORK
 msgid "This will restore all commands to system defaults. Global rules will be preserved."
 msgstr "See taastab kõik käsud süsteemi vaikeväärtustele. Globaalreeglid säilitatakse."
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2695
-#: NEEDS WORK
-msgid "All commands reset to defaults"
-msgstr "Kõik käsud lähtestatakse vaikeseadetele."
 # 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2721
 #: NEEDS WORK
@@ -3899,11 +4468,6 @@ msgstr "Käsk on juba loendis olemas"
 msgid "✓ Valid command name"
 msgstr "✓ Kehtiv käsu nimi"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 223
-#: NEEDS WORK
-msgid "Edit Session"
-msgstr "Redigeeri seanss"
-# 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 581
 #: NEEDS WORK
 msgid "Test Connection"
@@ -3991,6 +4555,71 @@ msgstr "Vali kaust, et korraldada seda seanssi"
 #: NEEDS WORK
 msgid "Root"
 msgstr "Juurt"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1182
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1197
+#: NEEDS WORK
+msgid "Automatic"
+msgstr "Automaatne"
+# 
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 376
+#: NEEDS WORK
+msgid "Highlighting"
+msgstr "Esiletõstmine"
+# 
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 378
+#: NEEDS WORK
+msgid ""
+"Highlighting adds colors to make terminal text easier to read. You can override global preferences "
+"per session."
+msgstr ""
+"Rõhutamine lisab värve, et muuta terminali tekst kergemini loetavaks. Saate seansi kaupa "
+"globaalsetest eelistustest üle kirjutada."
+# 
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 383
+#: NEEDS WORK
+msgid "Experimental Feature"
+msgstr "Eksperimentaalne funktsioon"
+# 
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 385
+#: NEEDS WORK
+msgid "Per-session highlighting overrides are experimental and may change."
+msgstr "Seansipõhised esiletõstmise ülekirjutused on katsetamisfaasis ja võivad muutuda."
+# 
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 402
+#: NEEDS WORK
+msgid "Customize highlighting for this session"
+msgstr "Kohanda esiletõstmist selle seansi jaoks"
+# 
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 403
+#: NEEDS WORK
+msgid "When off, this session uses the global highlighting settings"
+msgstr "Kui välja lülitatud, kasutab see seanss globaalset esiletõstmise seadistust."
+# 
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 413
+#: NEEDS WORK
+msgid "Enable/disable output highlighting for this session"
+msgstr "Luba/võta välja väljundi esiletõstmine selle seansi jaoks"
+# 
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 420
+#: NEEDS WORK
+msgid "Command-Specific Highlighting"
+msgstr "Käsk-spetsiifiline esiletõstmine"
+# 
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 421
+#: NEEDS WORK
+msgid "Use context-aware rules for specific commands"
+msgstr "Kasutage konteksti teadlikke reegleid spetsiifiliste käskude jaoks"
+# 
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 433
+#: NEEDS WORK
+msgid "Colorize file content output using syntax highlighting"
+msgstr "Värvi faili sisu väljundit süntaksihighlighting'uga"
+# 
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 439
+#: NEEDS WORK
+msgid "Highlight commands as you type at the shell prompt"
+msgstr "Tõsta käsud esile, kui kirjutad shelli käsuviibas."
 # 
 # File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 237
 #: NEEDS WORK
@@ -4372,11 +5001,6 @@ msgstr "Ühendus edukalt loodud"
 msgid "Successfully connected to the SSH server."
 msgstr "SSH-serveriga edukalt ühendatud."
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 906
-#: NEEDS WORK
-msgid "Connection Failed"
-msgstr "Ühendus ebaõnnestus"
-# 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 907
 #: NEEDS WORK
 msgid "Could not connect to the SSH server."
@@ -4425,11 +5049,6 @@ msgstr "Seansi nimi"
 #: NEEDS WORK
 msgid "Working directory must exist and be a folder."
 msgstr "Töökataloog peab eksisteerima ja olema kaust."
-# 
-# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 1374
-#: NEEDS WORK
-msgid "Invalid working directory path."
-msgstr "Kehtetu töökausta tee."
 # 
 # #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
 # 
@@ -4520,6 +5139,11 @@ msgstr "Jätka"
 #, python-brace-format
 msgid "{} is required"
 msgstr "{} on vajalik"
+# 
+# File: src/ashyterm/ui/dialogs/base_dialog.py, line: 601
+#: NEEDS WORK
+msgid "Invalid path format"
+msgstr "Kehtetu tee formaat"
 # 
 # File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 17
 #: NEEDS WORK
@@ -5331,15 +5955,35 @@ msgstr "Ashy ikoonid (komplekt)"
 msgid "System Icons"
 msgstr "Süsteemi ikoonid"
 # 
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 203
+#: NEEDS WORK
+msgid "Window Buttons When Maximized"
+msgstr "Akna nupud maksimeerituna"
+# 
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 204
+#: NEEDS WORK
+msgid "For KDE Plasma panel integration"
+msgstr "KDE Plasma paneeli integreerimine"
+# 
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 209
+#: NEEDS WORK
+msgid "Auto-detect"
+msgstr "Automaatne tuvastamine"
+# 
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 210
+#: NEEDS WORK
+msgid "Always hide"
+msgstr "Alati peida"
+# 
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 211
+#: NEEDS WORK
+msgid "Never hide"
+msgstr "Ära peida kunagi"
+# 
 # File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 225
 #: NEEDS WORK
 msgid "When Already Running"
 msgstr "Kui juba käib"
-# 
-# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 226
-#: NEEDS WORK
-msgid "Action when the application is launched while already open"
-msgstr "Toiming, kui rakendus käivitatakse, kui see on juba avatud"
 # 
 # File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 230
 #: NEEDS WORK
@@ -5355,6 +5999,11 @@ msgstr "Ava uus aken"
 #: NEEDS WORK
 msgid "Focus existing window"
 msgstr "Fookuse olemasolevat akent"
+# 
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 226
+#: NEEDS WORK
+msgid "Action when the application is launched while already open"
+msgstr "Toiming, kui rakendus käivitatakse, kui see on juba avatud"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1137
 #: NEEDS WORK
@@ -5437,25 +6086,30 @@ msgstr "Kuuldav kell"
 msgid "Profiles & Data"
 msgstr "Profiilid ja andmed"
 # 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 258
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 360
 #: NEEDS WORK
-msgid "On Startup"
-msgstr "Käivitamisel"
+msgid "On Close"
+msgstr "Sulgemisel"
 # 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 263
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 363
 #: NEEDS WORK
-msgid "Always restore previous session"
-msgstr "Alati taastada eelmine seanss"
+msgid "Ask what to do"
+msgstr "Küsi, mida teha"
 # 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 264
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 364
 #: NEEDS WORK
-msgid "Ask to restore previous session"
-msgstr "Küsi eelmise seansi taastamist"
+msgid "Save tabs and close"
+msgstr "Salvesta vahekaartide ja sulge"
 # 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 265
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 365
 #: NEEDS WORK
-msgid "Never restore previous session"
-msgstr "Ära taasta eelmist seanssi"
+msgid "Just close without asking"
+msgstr "Lihtsalt sulge ilma küsimata"
+# 
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 373
+#: NEEDS WORK
+msgid "Behavior when closing with multiple tabs open"
+msgstr "Käitumine mitme vahekaartiga sulgemisel"
 # 
 # #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
 # 
@@ -5549,12 +6203,6 @@ msgstr "Kuva SIXEL pilte (eksperimentaalne)"
 #: NEEDS WORK
 msgid "Backspace Key"
 msgstr "Tagasi ruumi klahv"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1182
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1197
-#: NEEDS WORK
-msgid "Automatic"
-msgstr "Automaatne"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1183
 #: NEEDS WORK
@@ -6019,11 +6667,6 @@ msgstr "Tegevus"
 #: NEEDS WORK
 msgid "Status"
 msgstr "Olekord"
-# 
-# File: src/ashyterm/data/command_manager_models.py, line: 419
-#: NEEDS WORK
-msgid "Start"
-msgstr "Alusta"
 # 
 # File: src/ashyterm/data/command_manager_models.py, line: 420
 #: NEEDS WORK
@@ -6660,85 +7303,64 @@ msgstr "Kausta tee ei ühti oma vanema teega."
 msgid "Unnamed Folder"
 msgstr "Nimetu kaust"
 # 
-# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 69
+# File: usr/share/ashyterm/filemanager/manager.py, line: 638
 #: NEEDS WORK
-msgid "Cancel transfer"
-msgstr "Tühista ülekande"
+msgid "Download"
+msgstr "Laadi alla"
 # 
-# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 63
+# File: usr/share/ashyterm/filemanager/manager.py, line: 861
 #: NEEDS WORK
-msgid "Remove from history"
-msgstr "Eemalda ajaloost"
+msgid "Upload"
+msgstr "Laadi üles"
 # 
-# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 78
+# File: src/ashyterm/filemanager/transfer_dialog.py, line: 195
 #: NEEDS WORK
-msgid "Recebido"
-msgstr "Saadud"
+msgid "Queued"
+msgstr "Ootelda"
 # 
-# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 80
+# File: src/ashyterm/filemanager/transfer_dialog.py, line: 207
 #: NEEDS WORK
-msgid "Enviado"
-msgstr "Saadetud"
-# 
-# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 107
-#: NEEDS WORK
-msgid "Waiting..."
-msgstr "Ootab..."
-# 
-# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 116
-#: NEEDS WORK
-msgid "in"
-msgstr "sisse"
-# 
-# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 121
-#: NEEDS WORK
-msgid "Completed"
-msgstr "Lõpetatud"
-# 
-# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 126
-#: NEEDS WORK
-msgid "Unknown error"
-msgstr "Tundmatu viga"
+msgid "Done"
+msgstr "Tehtud"
 # 
 # File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 127
 #: NEEDS WORK
 msgid "Failed"
 msgstr "Ebaõnnestus"
 # 
+# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 126
+#: NEEDS WORK
+msgid "Unknown error"
+msgstr "Tundmatu viga"
+# 
 # File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 131
 #: NEEDS WORK
 msgid "Cancelled"
 msgstr "Tühistatud"
 # 
-# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 147
+# File: src/ashyterm/filemanager/transfer_dialog.py, line: 266
 #: NEEDS WORK
-msgid "Recebendo"
-msgstr "Saabumine"
+msgid "Downloading"
+msgstr "Laadimine"
 # 
-# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 149
+# File: src/ashyterm/filemanager/transfer_dialog.py, line: 268
 #: NEEDS WORK
-msgid "Enviando"
-msgstr "Saatmine"
+msgid "Uploading"
+msgstr "Laadimine"
 # 
-# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 165
+# File: src/ashyterm/filemanager/transfer_dialog.py, line: 332
 #: NEEDS WORK
-msgid "remaining"
-msgstr "jäänud"
+msgid "Transfers"
+msgstr "Ülekanded"
 # 
-# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 216
+# File: src/ashyterm/filemanager/transfer_dialog.py, line: 411
 #: NEEDS WORK
-msgid "Transfer Manager"
-msgstr "Ülekandehaldur"
-# 
-# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 239
-# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 348
-#: NEEDS WORK
-msgid "Clear History"
+msgid "Clear history"
 msgstr "Kustuta ajalugu"
 # 
-# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 231
+# File: src/ashyterm/filemanager/transfer_dialog.py, line: 420
 #: NEEDS WORK
-msgid "Cancelar Tudo"
+msgid "Cancel all"
 msgstr "Tühista kõik"
 # 
 # File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 257
@@ -6746,24 +7368,20 @@ msgstr "Tühista kõik"
 msgid "No Transfers"
 msgstr "Ei ülekandeid"
 # 
-# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 258
+# File: src/ashyterm/filemanager/transfer_dialog.py, line: 458
 #: NEEDS WORK
-msgid "Active and past transfers will appear here."
-msgstr "Siin kuvatakse aktiivsed ja varasemad ülekanded."
+msgid "Upload or download files to see them here"
+msgstr "Lae või allalae faile, et neid siin näha."
 # 
 # File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 340
 #: NEEDS WORK
 msgid "Clear Transfer History?"
 msgstr "Kustuta ülekande ajalugu?"
 # 
-# File: usr/share/ashyterm/filemanager/transfer_dialog.py, line: 342
+# File: src/ashyterm/filemanager/transfer_dialog.py, line: 579
 #: NEEDS WORK
-msgid ""
-"This action cannot be undone and will remove all completed, failed, and cancelled transfers from "
-"the list."
-msgstr ""
-"Seda toimingut ei saa tagasi võtta ja see eemaldab loendist kõik lõpetatud, ebaõnnestunud ja "
-"tühistatud ülekanded."
+msgid "This will remove all completed, failed, and cancelled transfers."
+msgstr "See eemaldatakse kõik lõpetatud, ebaõnnestunud ja tühistatud ülekanded."
 # 
 # File: usr/share/ashyterm/filemanager/manager.py, line: 274
 #: NEEDS WORK
@@ -6872,6 +7490,11 @@ msgstr "Rühm"
 msgid "Loading..."
 msgstr "Laadimine..."
 # 
+# File: src/ashyterm/filemanager/manager.py, line: 1709
+#: NEEDS WORK
+msgid "Connection lost. Please check your network connection."
+msgstr "Ühendus katkes. Palun kontrollige oma võrguühendust."
+# 
 # File: src/ashyterm/filemanager/manager.py, line: 1848
 #: NEEDS WORK
 msgid "Type and press Enter..."
@@ -6905,11 +7528,6 @@ msgstr "Ava valik..."
 msgid "Cut"
 msgstr "Lõika"
 # 
-# File: usr/share/ashyterm/filemanager/manager.py, line: 638
-#: NEEDS WORK
-msgid "Download"
-msgstr "Laadi alla"
-# 
 # File: usr/share/ashyterm/filemanager/manager.py, line: 1737
 #: NEEDS WORK
 msgid "Create folder command sent to terminal"
@@ -6935,20 +7553,16 @@ msgstr "Sisestage uue faili nimi:"
 msgid "New File"
 msgstr "Uus fail"
 # 
-# File: usr/share/ashyterm/filemanager/manager.py, line: 1767
+# File: src/ashyterm/filemanager/manager.py, line: 2303
 #: NEEDS WORK
-msgid "No items selected to copy."
-msgstr "Ühtegi elementi ei ole valitud kopeerimiseks."
+#, python-brace-format
+msgid "No items selected to {operation}."
+msgstr "Ühtegi elementi ei ole valitud {operation} jaoks."
 # 
 # File: usr/share/ashyterm/filemanager/manager.py, line: 1781
 #: NEEDS WORK
 msgid "Items copied to clipboard."
 msgstr "Objektid on kopeeritud lõikelauale."
-# 
-# File: usr/share/ashyterm/filemanager/manager.py, line: 1786
-#: NEEDS WORK
-msgid "No items selected to cut."
-msgstr "Ühtegi elementi ei ole lõikamiseks valitud."
 # 
 # File: usr/share/ashyterm/filemanager/manager.py, line: 1800
 #: NEEDS WORK
@@ -7080,6 +7694,11 @@ msgstr "Vali sihtkaust"
 msgid "Download Here"
 msgstr "Laadi alla"
 # 
+# File: src/ashyterm/filemanager/manager.py, line: 2608
+#: NEEDS WORK
+msgid "Download Error"
+msgstr "Allalaadimise viga"
+# 
 # File: usr/share/ashyterm/filemanager/manager.py, line: 855
 # File: usr/share/ashyterm/filemanager/manager.py, line: 889
 #: NEEDS WORK
@@ -7091,10 +7710,10 @@ msgstr "Viga"
 msgid "Upload File(s) to This Folder"
 msgstr "Lae fail(id) selle kausta"
 # 
-# File: usr/share/ashyterm/filemanager/manager.py, line: 861
+# File: src/ashyterm/filemanager/manager.py, line: 2692
 #: NEEDS WORK
-msgid "Upload"
-msgstr "Laadi üles"
+msgid "Upload Error"
+msgstr "Üleslaadimise viga"
 # 
 # File: usr/share/ashyterm/filemanager/manager.py, line: 1430
 #: NEEDS WORK
@@ -7157,6 +7776,75 @@ msgstr "Luba keelatud"
 #: NEEDS WORK
 msgid "Transfer cancelled."
 msgstr "Ülekanne tühistatud."
+# 
+# File: src/ashyterm/filemanager/manager.py, line: 3088
+#: NEEDS WORK
+msgid "Insufficient Disk Space"
+msgstr "Ebapiisav kettaruum"
+# 
+# File: src/ashyterm/filemanager/manager.py, line: 3090
+#: NEEDS WORK
+msgid "There is not enough free space at the destination to complete this transfer."
+msgstr ""
+"Sihtsiht on sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht "
+"sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht "
+"sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht "
+"sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht "
+"sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht "
+"sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht "
+"sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht "
+"sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht "
+"sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht "
+"sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht "
+"sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht "
+"sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht "
+"sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht "
+"sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht "
+"sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht "
+"sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht "
+"sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht "
+"sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht "
+"sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht "
+"sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht "
+"sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht "
+"sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht "
+"sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht "
+"sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht "
+"sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht "
+"sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht "
+"sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht "
+"sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht "
+"sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht "
+"sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht "
+"sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht "
+"sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht "
+"sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht "
+"sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht "
+"sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht "
+"sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht "
+"sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht "
+"sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht "
+"sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht "
+"sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht "
+"sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht "
+"sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht "
+"sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht "
+"sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht "
+"sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht "
+"sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht "
+"sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsiht sihtsi"
+# 
+# File: src/ashyterm/filemanager/manager.py, line: 3096
+#: NEEDS WORK
+#, python-brace-format
+msgid ""
+"Required space: <b>{required}</b>\n"
+"Available space: <b>{available}</b>\n"
+"Destination: <b>{path}</b>"
+msgstr ""
+"Nõutav ruum: <b>{required}</b>  \n"
+"Saadaval ruum: <b>{available}</b>  \n"
+"Sihtkoht: <b>{path}</b>"
 # 
 # File: usr/share/ashyterm/filemanager/manager.py, line: 1783
 #: NEEDS WORK
@@ -7310,6 +7998,38 @@ msgstr "Luba keelatud: Kontrollige kirjutamisõigusi sihtkohas."
 msgid "An unknown transfer error occurred."
 msgstr "Tekkis tundmatu edastamise viga."
 # 
+# File: src/ashyterm/filemanager/transfer_manager.py, line: 303
+#: NEEDS WORK
+#, python-brace-format
+msgid "Transferring {filename}"
+msgstr "Ülekandmine {filename}"
+# 
+# File: src/ashyterm/filemanager/transfer_manager.py, line: 312
+# File: src/ashyterm/filemanager/transfer_manager.py, line: 393
+#: NEEDS WORK
+msgid "Starting..."
+msgstr "Käivitamine..."
+# 
+# File: src/ashyterm/filemanager/transfer_manager.py, line: 337
+# File: src/ashyterm/filemanager/transfer_manager.py, line: 408
+#: NEEDS WORK
+#, python-brace-format
+msgid "{time} left"
+msgstr "{time} jäänud"
+# 
+# File: src/ashyterm/filemanager/transfer_manager.py, line: 346
+# File: src/ashyterm/filemanager/transfer_manager.py, line: 415
+#: NEEDS WORK
+#, python-brace-format
+msgid "{time} elapsed"
+msgstr "{time} möödunud"
+# 
+# File: src/ashyterm/filemanager/transfer_manager.py, line: 388
+#: NEEDS WORK
+#, python-brace-format
+msgid "Transferring {count} files"
+msgstr "Üksuste {count} edastamine"
+# 
 # File: usr/share/ashyterm/filemanager/transfer_manager.py, line: 273
 #: NEEDS WORK
 msgid "Cancel All Transfers"
@@ -7440,20 +8160,17 @@ msgstr "Algatuse viga"
 msgid "Failed to initialize terminal: {error}"
 msgstr "Terminali initsialiseerimine ebaõnnestus: {error}"
 # 
-# File: usr/share/ashyterm/window.py, line: 1080
+# File: src/ashyterm/window.py, line: 1524
 #: NEEDS WORK
-msgid "Save Current Session?"
-msgstr "Salvesta praegune seanss?"
+#, python-brace-format
+msgid "Close {} Tabs?"
+msgstr "Sulge {} vahekaardid?"
 # 
-# File: usr/share/ashyterm/window.py, line: 1082
+# File: src/ashyterm/window.py, line: 1526
 #: NEEDS WORK
-msgid "Do you want to restore these tabs the next time you open Ashy Terminal?"
-msgstr "Kas soovite need vahekaardid taastada järgmine kord, kui avate Ashy Terminali?"
-# 
-# File: usr/share/ashyterm/window.py, line: 1086
-#: NEEDS WORK
-msgid "Don't Save"
-msgstr "Ära salvesta"
+#, python-brace-format
+msgid "You have {} open tabs. Would you like to save them to restore next time?"
+msgstr "Sul on {} avatud vahekaarti. Kas soovid need salvestada, et järgmisel korral taastada?"
 # 
 # File: usr/share/ashyterm/window.py, line: 1088
 #: NEEDS WORK
