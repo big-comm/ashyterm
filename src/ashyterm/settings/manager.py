@@ -12,7 +12,7 @@ import gi
 gi.require_version("Gtk", "4.0")
 gi.require_version("Adw", "1")
 gi.require_version("Vte", "3.91")
-from gi.repository import Adw, Gdk, Gtk, Pango, Vte
+from gi.repository import Adw, Gdk, GLib, Gtk, Pango, Vte
 
 from ..utils.exceptions import ConfigValidationError
 from ..utils.logger import get_logger, log_error_with_context
@@ -147,10 +147,8 @@ class SettingsManager:
         self._lock = threading.RLock()
         self._change_listeners: List[Callable[[str, Any, Any], None]] = []
         self.custom_schemes: Dict[str, Any] = {}
-        # Performance optimization: Cache for compiled CSS themes
-        # Key: (bg_color, fg_color, header_bg_color, transparency, luminance)
-        # Value: (css_string, provider)
-        self._theme_css_cache: Dict[tuple, tuple] = {}
+        # Unified CSS provider for the entire application
+        self._app_css_provider = Gtk.CssProvider()
         # Store window-specific transparency providers to manage lifecycle
         self._window_providers = weakref.WeakKeyDictionary()
         self._initialize()
@@ -173,6 +171,13 @@ class SettingsManager:
             self._settings = self._defaults.copy()
             self.custom_schemes = {}
             self._dirty = True
+            self._dirty = True
+
+        # Initial theme application
+        try:
+            GLib.idle_add(self._update_app_theme_css)
+        except Exception as e:
+            self.logger.error(f"Failed to apply initial theme: {e}")
 
     def _load_custom_schemes(self) -> Dict[str, Any]:
         if not self.custom_schemes_file.exists():
@@ -426,11 +431,31 @@ class SettingsManager:
                     logger.set_log_to_file_enabled(value)
 
                 self._notify_change_listeners(key, old_value, value)
+                self._notify_change_listeners(key, old_value, value)
+
+                # Update theme CSS if relevant settings change
+                if self._is_theme_setting(key):
+                    # We need to update the theme on the main thread
+                    GLib.idle_add(self._update_app_theme_css)
+
                 if save_immediately:
                     self.save_settings()
             except Exception as e:
                 self.logger.error(f"Failed to set setting '{key}': {e}")
                 raise ConfigValidationError(key, value, str(e))
+
+    def _is_theme_setting(self, key: str) -> bool:
+        """Check if a setting key affects the application theme."""
+        theme_keys = {
+            "gtk_theme",
+            "color_scheme",
+            "transparency",
+            "headerbar_transparency",
+            "font",  # Font might affect some sizing/layout
+            "cursor_shape",  # Terminal appearance
+            # Add other appearance keys as needed
+        }
+        return key in theme_keys or key.startswith("custom_schemes")
 
     def get(self, key: str, default: Any = None) -> Any:
         with self._lock:
@@ -663,98 +688,49 @@ class SettingsManager:
         )
         terminal.set_cjk_ambiguous_width(self.get("cjk_ambiguous_width", 1))
 
-    def apply_headerbar_transparency(self, headerbar, window=None) -> None:
-        """Apply headerbar transparency to a headerbar widget."""
+    def _update_app_theme_css(self, window=None) -> None:
+        """
+        Generates and applies the unified application CSS.
+
+        This method replaces individual update methods to ensure consistent
+        styling across the entire application. It updates the global
+        _app_css_provider which is attached to the default display.
+        """
         try:
-            user_transparency = self.get("headerbar_transparency", 0)
-            
-            # Determine display
-            display = None
-            if window and hasattr(window, "get_display"):
-                display = window.get_display()
-            if display is None:
-                display = Gdk.Display.get_default()
-            
-            if display is None:
+            display = Gdk.Display.get_default()
+            if not display:
                 return
 
-            # Cleanup legacy provider on headerbar if it exists
-            if hasattr(headerbar, "_transparency_provider"):
-                try:
-                    Gtk.StyleContext.remove_provider_for_display(
-                        display, headerbar._transparency_provider
-                    )
-                except Exception:
-                    pass
-                del headerbar._transparency_provider
-
-            # Cleanup provider associated with this window
-            if window and window in self._window_providers:
-                old_provider = self._window_providers[window]
-                try:
-                    Gtk.StyleContext.remove_provider_for_display(display, old_provider)
-                except Exception:
-                    pass
-                del self._window_providers[window]
-
-            if user_transparency > 0:
-                # Determine base color based on theme
-                if self.get("gtk_theme") == "terminal":
-                    scheme = self.get_color_scheme_data()
-                    base_color_hex = scheme.get(
-                        "headerbar_background", scheme.get("background", "#000000")
-                    )
-                else:
-                    style_manager = Adw.StyleManager.get_default()
-                    is_dark = style_manager.get_dark()
-                    base_color_hex = "#303030" if is_dark else "#f0f0f0"
-
-                # Calculate color mix
-                opacity_percent = 100 - user_transparency
-                color_mix_css = f"color-mix(in srgb, {base_color_hex} {opacity_percent}%, transparent)"
-
-                css = f"""
-                .header-bar, .header-bar:backdrop,
-                .main-header-bar, .main-header-bar:backdrop,
-                .terminal-pane .header-bar, .terminal-pane .header-bar, .terminal-pane .top-bar:backdrop,
-                searchbar, searchbar > box,
-                searchbar.broadcast-bar, searchbar.broadcast-bar > box,
-                .command-toolbar {{
-                    background-color: {color_mix_css};
-                }}
-                searchbar > revealer,
-                searchbar > revealer > box,
-                searchbar.broadcast-bar > revealer,
-                searchbar.broadcast-bar > revealer > box {{
-                    background-color: transparent;
-                }}
-                """
-                
-                provider = Gtk.CssProvider()
-                provider.load_from_data(css.encode("utf-8"))
-                
+            # Ensure provider is attached to display
+            if not getattr(self, "_provider_attached", False):
                 Gtk.StyleContext.add_provider_for_display(
                     display,
-                    provider,
+                    self._app_css_provider,
                     Gtk.STYLE_PROVIDER_PRIORITY_USER,
                 )
-                
-                if window:
-                    self._window_providers[window] = provider
-                else:
-                    # Fallback for calls without window (should not happen with updated code)
-                    headerbar._transparency_provider = provider
-                    
-        except Exception as e:
-            self.logger.warning(f"Failed to apply headerbar transparency: {e}")
+                self._provider_attached = True
 
-    def _get_theme_cache_key(self, scheme: dict) -> tuple:
-        """Generate a cache key for the theme based on scheme colors and transparency."""
-        bg_color = scheme.get("background", "#000000")
-        fg_color = scheme.get("foreground", "#ffffff")
-        header_bg = scheme.get("headerbar_background", bg_color)
-        transparency = self.get("headerbar_transparency", 0)
-        return (bg_color, fg_color, header_bg, transparency)
+            scheme = self.get_color_scheme_data()
+            params = self._get_theme_params(scheme)
+
+            # Simplified CSS generation using mainly Adwaita variables
+            css_parts = [
+                self._get_root_vars_css(params),
+                self._get_headerbar_css(params),
+                self._get_tabs_css(params),  # Keep for specific internal structure
+                # Removed others that are now handled by root vars
+            ]
+
+            full_css = "".join(css_parts)
+            self._app_css_provider.load_from_data(full_css.encode("utf-8"))
+
+            # Force redraw if window provided
+            if window:
+                window.queue_draw()
+
+        except Exception as e:
+            self.logger.error(f"Failed to update application theme CSS: {e}")
+            log_error_with_context(e, "theme update", "ashyterm.settings")
 
     def _get_theme_params(self, scheme: dict) -> dict:
         """Extract and compute theme parameters from color scheme."""
@@ -770,9 +746,6 @@ class SettingsManager:
         luminance = 0.299 * r + 0.587 * g + 0.114 * b
         is_dark_theme = luminance < 0.5
 
-        hover_alpha = "10%" if is_dark_theme else "8%"
-        selected_alpha = "15%" if is_dark_theme else "12%"
-
         return {
             "bg_color": bg_color,
             "fg_color": fg_color,
@@ -780,1001 +753,148 @@ class SettingsManager:
             "user_transparency": user_transparency,
             "luminance": luminance,
             "is_dark_theme": is_dark_theme,
-            "hover_alpha": hover_alpha,
-            "selected_alpha": selected_alpha,
         }
 
     def _apply_cached_css(self, window, css: str) -> None:
-        """Apply cached CSS to window."""
-        if hasattr(window, "_terminal_theme_provider"):
-            Gtk.StyleContext.remove_provider_for_display(
-                Gdk.Display.get_default(), window._terminal_theme_provider
-            )
-        provider = Gtk.CssProvider()
-        provider.load_from_data(css.encode("utf-8"))
-        Gtk.StyleContext.add_provider_for_display(
-            Gdk.Display.get_default(),
-            provider,
-            Gtk.STYLE_PROVIDER_PRIORITY_USER,
-        )
-        window._terminal_theme_provider = provider
+        # Deprecated: Unified provider handles this now
+        pass
 
-    def _get_headerbar_css(self, params: dict) -> str:
-        """Generate CSS for headerbar styling."""
+    def _get_root_vars_css(self, params: dict) -> str:
+        """Generate CSS root variables for Adwaita/GTK4 theming.
+
+        Libadwaita uses CSS custom properties for theming. By setting these
+        at the :root level, we ensure consistent theming across all widgets.
+        """
+        # If we are NOT in 'terminal' theme, we return empty string to let
+        # Adwaita/GTK 'Light' or 'Dark' themes work natively.
+        if self.get("gtk_theme") != "terminal":
+            return ""
+
         fg = params["fg_color"]
+        bg = params["bg_color"]
         header_bg = params["header_bg_color"]
-        if params["user_transparency"] > 0:
-            return f"""
-            .main-header-bar, .main-header-bar:backdrop,
-            .terminal-pane .header-bar, .terminal-pane .header-bar:backdrop,
-            .top-bar, .top-bar:backdrop {{
-                color: {fg};
-            }}
-            headerbar.main-header-bar button,
-            headerbar.main-header-bar button:hover,
-            headerbar.main-header-bar button:active,
-            headerbar.main-header-bar button:checked,
-            headerbar.main-header-bar togglebutton,
-            headerbar.main-header-bar togglebutton:hover,
-            headerbar.main-header-bar togglebutton:active,
-            headerbar.main-header-bar togglebutton:checked,
-            .terminal-pane headerbar button {{
-                color: {fg};
-            }}
-            headerbar.main-header-bar button image,
-            headerbar.main-header-bar togglebutton image,
-            headerbar.main-header-bar image.icon-symbolic,
-            .terminal-pane headerbar button image {{
-                color: {fg};
-                -gtk-icon-style: symbolic;
-            }}
-            """
+
+        # We can calculate some derivative colors if needed, but for now
+        # simple mappings should cover 90% of cases.
+
         return f"""
-        .main-header-bar, .main-header-bar:backdrop,
-        .terminal-pane .header-bar, .terminal-pane .header-bar:backdrop,
-        .top-bar, .top-bar:backdrop {{
-            background-color: {header_bg};
-            color: {fg};
+        :root {{
+            /* Window and View Colors */
+            --window-bg-color: {bg};
+            --window-fg-color: {fg};
+            --view-bg-color: {bg};
+            --view-fg-color: {fg};
+            
+            /* Headerbar Colors */
+            --headerbar-bg-color: {header_bg};
+            --headerbar-fg-color: {fg};
+            --headerbar-backdrop-color: {header_bg};
+            --headerbar-shade-color: color-mix(in srgb, {header_bg}, black 7%);
+            
+            /* Popover and Dialog Colors */
+            --popover-bg-color: {bg};
+            --popover-fg-color: {fg};
+            --dialog-bg-color: {bg};
+            --dialog-fg-color: {fg};
+            
+            /* Card and Thumbnail Colors (Common in lists) */
+            --card-bg-color: color-mix(in srgb, {bg}, white 5%);
+            --card-fg-color: {fg};
+            
+            /* Sidebar (if using split view naming) */
+            --sidebar-bg-color: {header_bg};
+            --sidebar-fg-color: {fg};
         }}
-        headerbar.main-header-bar button,
-        headerbar.main-header-bar button:hover,
-        headerbar.main-header-bar button:active,
-        headerbar.main-header-bar button:checked,
-        headerbar.main-header-bar togglebutton,
-        headerbar.main-header-bar togglebutton:hover,
-        headerbar.main-header-bar togglebutton:active,
-        headerbar.main-header-bar togglebutton:checked,
-        .terminal-pane headerbar button {{
-            color: {fg};
+
+        /* Force popover to use the variables when in Terminal theme */
+        /* Force popover to use the variables when in Terminal theme */
+        popover.ashyterm-popover,
+        popover.sidebar-popover {{
+            background-color: transparent; 
+            color: var(--popover-fg-color);
         }}
-        headerbar.main-header-bar button image,
-        headerbar.main-header-bar togglebutton image,
-        headerbar.main-header-bar image.icon-symbolic,
-        .terminal-pane headerbar button image {{
-            color: {fg};
-            -gtk-icon-style: symbolic;
+
+        popover.ashyterm-popover > contents,
+        popover.sidebar-popover > contents,
+        popover.ashyterm-popover > arrow,
+        popover.sidebar-popover > arrow {{
+            background-color: var(--popover-bg-color);
+            color: inherit;
+        }}
+        
+        /* Ensure list views and scrolls inside popover don't override the background */
+        popover.ashyterm-popover listview,
+        popover.sidebar-popover listview,
+        popover.ashyterm-popover scrolledwindow,
+        popover.sidebar-popover scrolledwindow {{
+            background-color: transparent;
         }}
         """
 
-    def _get_tabs_css(self, params: dict) -> str:
-        """Generate CSS for tab bar styling."""
+    def _get_headerbar_css(self, params: dict) -> str:
+        """Generate CSS purely for headerbar transparency, if enabled."""
         fg = params["fg_color"]
-        header_bg = params["header_bg_color"]
-        if params["user_transparency"] > 0:
+        user_transparency = params["user_transparency"]
+        gtk_theme = self.get("gtk_theme", "adwaita")
+
+        # If no transparency and using system themes, we don't need overrides
+        # Adwaita vars handle the "Terminal" theme case mostly.
+        # But we still want to support the 'Headerbar Transparency' feature.
+
+        if user_transparency == 0:
+            return ""
+
+        # Calculate base color for transparency
+        if gtk_theme == "terminal":
+            base_bg = params["header_bg_color"]
+        else:
+            style_manager = Adw.StyleManager.get_default()
+            is_dark = style_manager.get_dark()
+            base_bg = "#303030" if is_dark else "#f0f0f0"
+
+        opacity_percent = 100 - user_transparency
+        bg_css_value = f"color-mix(in srgb, {base_bg} {opacity_percent}%, transparent)"
+
+        # Apply to headerbar and similar top elements
+        selectors = """
+        window headerbar.main-header-bar,
+        headerbar.main-header-bar,
+        .main-header-bar,
+        .terminal-pane .header-bar,
+        .top-bar,
+        searchbar,
+        searchbar > box,
+        .command-toolbar
+        """
+
+        return f"""
+        {selectors} {{
+            background-color: {bg_css_value};
+            background-image: none;
+        }}
+        {selectors.replace(",", ":backdrop,")}:backdrop {{
+            background-color: {bg_css_value};
+            background-image: none;
+        }}
+        /* Ensure text visibility if transparency makes it hard to see? 
+           Usually user handles this by Picking right theme contrast. */
+        """
+
+    def _get_tabs_css(self, params: dict) -> str:
+        """Generate CSS for tab bar internal structure."""
+        # This might still be needed if the tab bar uses custom styling
+        # that doesn't fully inherit from standard vars.
+        fg = params["fg_color"]
+        # Use CSS variables if available, else fallback to params
+
+        if self.get("gtk_theme") == "terminal":
             return f"""
-            .scrolled-tab-bar viewport {{ color: {fg}; }}
             .scrolled-tab-bar viewport box .horizontal.active {{ 
                 background-color: color-mix(in srgb, {fg}, transparent 78%); 
             }}
             """
-        return f"""
-        .scrolled-tab-bar viewport {{ 
-            background-color: {header_bg}; 
-            color: {fg}; 
-        }}
-        .scrolled-tab-bar viewport box .horizontal.active {{ 
-            background-color: color-mix(in srgb, {fg}, transparent 78%); 
-        }}
-        """
-
-    def _get_searchbar_css(self, params: dict) -> str:
-        """Generate CSS for searchbar and broadcast bar."""
-        fg = params["fg_color"]
-        bg = params["bg_color"]
-        header_bg = params["header_bg_color"]
-        base_css = f"""
-        searchbar > revealer,
-        searchbar > revealer > box,
-        searchbar.broadcast-bar > revealer,
-        searchbar.broadcast-bar > revealer > box {{
-            background-color: transparent;
-        }}
-        searchbar entry,
-        searchbar.broadcast-bar entry {{
-            background-color: {bg};
-            color: {fg};
-        }}
-        searchbar button,
-        searchbar.broadcast-bar button,
-        searchbar label,
-        searchbar.broadcast-bar label,
-        searchbar switch {{
-            color: {fg};
-        }}
-        searchbar button image,
-        searchbar.broadcast-bar button image {{
-            color: {fg};
-            -gtk-icon-style: symbolic;
-        }}
-        """
-        if params["user_transparency"] > 0:
-            return (
-                f"""
-            searchbar,
-            searchbar > box,
-            searchbar.broadcast-bar,
-            searchbar.broadcast-bar > box {{
-                color: {fg};
-            }}
-            """
-                + base_css
-            )
-        return (
-            f"""
-        searchbar,
-        searchbar > box,
-        searchbar.broadcast-bar,
-        searchbar.broadcast-bar > box {{
-            background-color: {header_bg};
-            color: {fg};
-        }}
-        """
-            + base_css
-        )
-
-    def _get_sidebar_css(self, params: dict) -> str:
-        """Generate CSS for sidebar styling."""
-        bg = params["bg_color"]
-        fg = params["fg_color"]
-        apply_bg = params["luminance"] >= 0.05
-        hover_alpha = params["hover_alpha"]
-        selected_alpha = params["selected_alpha"]
-        
-        if not apply_bg:
-            return ""
-
-        return f"""
-        .sidebar-container {{
-            background: {bg};
-            background-color: {bg};
-            color: {fg};
-        }}
-        .sidebar-toolbar {{
-            background: {bg};
-            background-color: {bg};
-            color: {fg};
-            padding-top: 2px;
-        }}
-        .sidebar-session-tree,
-        .sidebar-session-tree viewport {{
-            background-color: {bg};
-            color: {fg};
-        }}
-        .sidebar-search {{
-            background-color: {bg};
-            color: {fg};
-            padding: 8px 12px 12px 12px;
-        }}
-        .sidebar-session-tree list,
-        .sidebar-session-tree listview {{
-            background: {bg};
-            background-color: {bg};
-        }}
-        .sidebar-session-tree list > row,
-        .sidebar-session-tree listview > row {{
-            background: {bg};
-            background-color: {bg};
-            color: {fg};
-        }}
-        .sidebar-session-tree list > row:hover,
-        .sidebar-session-tree listview > row:hover {{
-            background-color: color-mix(in srgb, {fg} {hover_alpha}, {bg});
-        }}
-        .sidebar-session-tree list > row:selected,
-        .sidebar-session-tree listview > row:selected {{
-            background-color: color-mix(in srgb, {fg} {selected_alpha}, {bg});
-        }}
-        .sidebar-session-tree list > row:selected:hover,
-        .sidebar-session-tree listview > row:selected:hover {{
-            background-color: color-mix(in srgb, {fg} 18%, {bg});
-        }}
-        .inline-context-menu {{
-            background: {bg};
-            background-color: {bg};
-            color: {fg};
-        }}
-        .inline-context-menu label {{
-            color: {fg};
-        }}
-        .inline-context-menu button {{
-            color: {fg};
-            background: transparent;
-        }}
-        .inline-context-menu button:hover {{
-            background-color: color-mix(in srgb, {fg} {hover_alpha}, {bg});
-        }}
-        .inline-context-menu button:active {{
-            background-color: color-mix(in srgb, {fg} {selected_alpha}, {bg});
-        }}
-        .inline-context-menu button.destructive-action {{
-            color: @destructive_color;
-        }}
-        .inline-context-menu button.destructive-action:hover {{
-            background-color: alpha(@destructive_color, 0.1);
-        }}
-        """
-
-    def _get_popover_css(self, params: dict) -> str:
-        """Generate CSS for popovers."""
-        bg = params["bg_color"]
-        fg = params["fg_color"]
-        header_bg = params["header_bg_color"]
-        apply_bg = params["luminance"] >= 0.05
-        hover_alpha = params["hover_alpha"]
-        selected_alpha = params["selected_alpha"]
-        
-        if not apply_bg:
-            return ""
-
-        return f"""
-        /* Global popover styling - fixes right-click context menus everywhere */
-        popover > contents {{
-            background-color: {header_bg};
-            color: {fg};
-        }}
-        popover > arrow {{
-            background: {header_bg};
-        }}
-        popover > contents > box {{
-            background-color: {header_bg};
-            color: {fg};
-        }}
-        popover label {{
-            color: {fg};
-        }}
-        popover button:not(.suggested-action):not(.destructive-action) {{
-            color: {fg};
-            background: transparent;
-        }}
-        popover button:not(.suggested-action):not(.destructive-action):hover {{
-            background-color: color-mix(in srgb, {fg} {hover_alpha}, {header_bg});
-        }}
-        popover entry,
-        popover entry text {{
-            color: {fg};
-            background-color: color-mix(in srgb, {fg} 8%, {header_bg});
-        }}
-        
-        /* Menu and menuitem styling - GtkMenu used in context menus */
-        popover menu,
-        popover menubox {{
-            background-color: {header_bg};
-            color: {fg};
-        }}
-        popover menuitem,
-        popover modelbutton {{
-            color: {fg};
-            background: transparent;
-        }}
-        popover menuitem label,
-        popover modelbutton label,
-        popover menuitem > box > label {{
-            color: {fg};
-        }}
-        popover menuitem:hover,
-        popover modelbutton:hover {{
-            background-color: color-mix(in srgb, {fg} {hover_alpha}, {header_bg});
-        }}
-        popover menuitem:active,
-        popover modelbutton:active {{
-            background-color: color-mix(in srgb, {fg} {selected_alpha}, {header_bg});
-        }}
-        
-        /* Dropdown popover styling - fixes dropdowns in dialogs */
-        dropdown > popover {{
-            background-color: {header_bg};
-        }}
-        dropdown > popover > contents {{
-            background-color: {header_bg};
-            color: {fg};
-        }}
-        dropdown > popover listview {{
-            background-color: {header_bg};
-            color: {fg};
-        }}
-        dropdown > popover row {{
-            color: {fg};
-        }}
-        dropdown > popover row label,
-        dropdown > popover cell label {{
-            color: {fg};
-        }}
-        dropdown > popover row:selected {{
-            background-color: color-mix(in srgb, {fg} {selected_alpha}, {header_bg});
-        }}
-        dropdown > popover row:hover {{
-            background-color: color-mix(in srgb, {fg} {hover_alpha}, {header_bg});
-        }}
-        
-        /* Sidebar Popover specific styling */
-        popover.sidebar-popover.ashyterm-popover > contents,
-        popover.sidebar-popover > contents {{
-            background-color: {bg};
-            padding: 0;
-        }}
-        popover.sidebar-popover.ashyterm-popover > arrow,
-        popover.sidebar-popover > arrow {{
-            background-color: {bg};
-        }}
-        popover.sidebar-popover .sidebar-container {{
-            background: {bg};
-            background-color: {bg};
-            color: {fg};
-        }}
-        popover.sidebar-popover .sidebar-toolbar {{
-            background: {bg};
-            background-color: {bg};
-            color: {fg};
-            padding-top: 2px;
-        }}
-        popover.sidebar-popover .sidebar-session-tree,
-        popover.sidebar-popover .sidebar-session-tree viewport {{
-            background-color: {bg};
-            color: {fg};
-        }}
-        popover.sidebar-popover .sidebar-search {{
-            background-color: {bg};
-            color: {fg};
-            padding: 8px 12px 12px 12px;
-        }}
-        popover.sidebar-popover .sidebar-session-tree list,
-        popover.sidebar-popover .sidebar-session-tree listview {{
-            background: {bg};
-            background-color: {bg};
-        }}
-        popover.sidebar-popover .sidebar-session-tree list > row,
-        popover.sidebar-popover .sidebar-session-tree listview > row {{
-            background: {bg};
-            background-color: {bg};
-        }}
-        popover.sidebar-popover .sidebar-session-tree list > row:hover,
-        popover.sidebar-popover .sidebar-session-tree listview > row:hover {{
-            background-color: color-mix(in srgb, {fg} {hover_alpha}, {bg});
-        }}
-        popover.sidebar-popover .sidebar-session-tree list > row:selected,
-        popover.sidebar-popover .sidebar-session-tree listview > row:selected {{
-            background-color: color-mix(in srgb, {fg} {selected_alpha}, {bg});
-        }}
-        popover.sidebar-popover label,
-        popover.sidebar-popover button {{
-            color: {fg};
-        }}
-        popover.sidebar-popover button {{
-            background: transparent;
-        }}
-        popover.sidebar-popover button:hover {{
-            background-color: alpha({fg}, 0.1);
-        }}
-        popover.sidebar-popover .sidebar-search entry {{
-            background-color: alpha({fg}, 0.1);
-            color: {fg};
-        }}
-        """
-
-    def _get_tooltip_css(self, params: dict) -> str:
-        """Generate CSS for tooltips."""
-        return f"""
-        tooltip {{
-            background-color: {params["bg_color"]};
-            color: {params["fg_color"]};
-        }}
-        tooltip.background {{
-            background-color: {params["bg_color"]};
-            color: {params["fg_color"]};
-        }}
-        tooltip > box,
-        tooltip > box > label {{
-            color: {params["fg_color"]};
-        }}
-        """
-
-    def _get_filemanager_css(self, params: dict) -> str:
-        """Generate CSS for file manager component."""
-        bg = params["bg_color"]
-        fg = params["fg_color"]
-        header_bg = params["header_bg_color"]
-        hover_alpha = params["hover_alpha"]
-        selected_alpha = params["selected_alpha"]
-        return f"""
-        .file-manager-main-box {{
-            background-color: {bg};
-            color: {fg};
-        }}
-        .file-manager-main-box > actionbar,
-        .file-manager-main-box > actionbar > revealer > box {{
-            background-color: {header_bg};
-            color: {fg};
-        }}
-        .file-manager-main-box scrolledwindow,
-        .file-manager-main-box columnview,
-        .file-manager-main-box columnview row {{
-            background-color: {bg};
-            color: {fg};
-        }}
-        .file-manager-main-box columnview row:hover {{
-            background-color: color-mix(in srgb, {fg} {hover_alpha}, {bg});
-        }}
-        .file-manager-main-box columnview row:selected {{
-            background-color: color-mix(in srgb, {fg} {selected_alpha}, {bg});
-        }}
-        .file-manager-main-box columnview row:selected:hover {{
-            background-color: color-mix(in srgb, {fg} 18%, {bg});
-        }}
-        .file-manager-main-box label,
-        .file-manager-main-box button:not(.suggested-action):not(.destructive-action),
-        .file-manager-main-box .breadcrumb-trail button {{
-            color: {fg};
-        }}
-        .file-manager-main-box entry {{
-            color: {fg};
-            background-color: {header_bg};
-        }}
-        .file-manager-filter {{
-            background-color: {bg};
-            color: {fg};
-        }}
-        /* File manager internal separators and borders */
-        .file-manager-main-box separator {{
-            background-color: color-mix(in srgb, {fg} 20%, {bg});
-        }}
-        .file-manager-main-box actionbar {{
-            border-top: 1px solid color-mix(in srgb, {fg} 20%, {bg});
-            border-color: color-mix(in srgb, {fg} 20%, {bg});
-        }}
-        /* ActionBar internal structure */
-        .file-manager-main-box actionbar > revealer > box {{
-            border-color: color-mix(in srgb, {fg} 20%, {bg});
-        }}
-        """
-
-    def _get_dialog_css(self, params: dict) -> str:
-        """Generate CSS for dialogs."""
-        bg = params["bg_color"]
-        fg = params["fg_color"]
-        header_bg = params["header_bg_color"]
-        # Accent color not available in params dict yet, using a safe default or re-deriving if needed
-        # But _get_theme_params doesn't provide palette.
-        # However, we can approximate accent or just use fg for now, or update _get_theme_params.
-        # For safety and speed, I will use a generic accent or just rely on color-mix.
-        # Actually, let's just stick to the text/bg colors which are the main issue.
-        
-        apply_bg = params["luminance"] >= 0.05
-        
-        if not apply_bg:
-             return ""
-
-        return f"""
-        .ashyterm-dialog,
-        messagedialog {{
-            background-color: {bg};
-            color: {fg};
-        }}
-        .ashyterm-dialog > toolbarview {{
-            background-color: {bg};
-        }}
-        .ashyterm-dialog > toolbarview > contents {{
-            background-color: {bg};
-        }}
-        .ashyterm-dialog scrolledwindow {{
-            background-color: {bg};
-        }}
-        .ashyterm-dialog scrolledwindow > viewport {{
-            background-color: {bg};
-        }}
-        .ashyterm-dialog .navigation-view,
-        .ashyterm-dialog .preferences-page {{
-            background-color: {bg};
-            color: {fg};
-        }}
-        .ashyterm-dialog .preferences-group {{
-            background-color: {header_bg};
-            color: {fg};
-        }}
-        .ashyterm-dialog > toolbarview label,
-        .ashyterm-dialog .preferences-page label,
-        .ashyterm-dialog row label,
-        .ashyterm-dialog .title,
-        .ashyterm-dialog .subtitle,
-        .ashyterm-dialog button:not(.suggested-action):not(.destructive-action),
-        .ashyterm-dialog entry,
-        .ashyterm-dialog row,
-        .ashyterm-dialog switch,
-        .ashyterm-dialog spinbutton,
-        .ashyterm-dialog dropdown,
-        .ashyterm-dialog checkbutton,
-        messagedialog > box label,
-        messagedialog .title,
-        messagedialog .subtitle,
-        messagedialog button:not(.suggested-action):not(.destructive-action),
-        messagedialog entry,
-        messagedialog row {{
-            color: {fg};
-        }}
-        messagedialog > contents {{
-            background-color: {bg};
-            color: {fg};
-        }}
-        /* Adw.AlertDialog styling */
-        dialog.alert,
-        dialog.alert .dialog-contents,
-        dialog.alert .heading,
-        dialog.alert .body,
-        dialog.alert label,
-        dialog.alert label.heading,
-        dialog.alert label.body {{
-            color: {fg};
-        }}
-        dialog.alert,
-        dialog.alert .dialog-contents,
-        dialog.alert box.dialog-contents {{
-            background-color: {bg};
-        }}
-        dialog.alert .response-area {{
-            background-color: {header_bg};
-        }}
-        dialog.alert button:not(.suggested-action):not(.destructive-action) {{
-            color: {fg};
-        }}
-        .ashyterm-dialog actionbar,
-        .ashyterm-dialog actionbar > revealer,
-        .ashyterm-dialog actionbar > revealer > box {{
-            background: {header_bg};
-            background-color: {header_bg};
-            color: {fg};
-        }}
-        /* Command Manager specific styling */
-        .command-manager-dialog entry,
-        .command-manager-dialog entry text {{
-            background-color: color-mix(in srgb, {fg} 8%, {bg});
-            color: {fg};
-            caret-color: {fg};
-        }}
-        .command-manager-dialog flowboxchild,
-        .command-manager-dialog .command-button {{
-            background-color: {header_bg};
-            color: {fg};
-        }}
-        .command-manager-dialog .command-button label {{
-            color: {fg};
-        }}
-        .command-manager-dialog .search-entry {{
-            background-color: color-mix(in srgb, {fg} 8%, {bg});
-            color: {fg};
-        }}
-        
-        /* Highlight dialog button styling - destructive action */
-        .ashyterm-dialog button.destructive-action {{
-            background-color: #c01c28;
-            background-image: none;
-            color: #ffffff;
-            border: none;
-        }}
-        .ashyterm-dialog button.destructive-action:hover {{
-            background-color: #a51d2d;
-        }}
-        .ashyterm-dialog button.destructive-action label {{
-            color: #ffffff;
-        }}
-        
-        /* Flat button styling */
-        .ashyterm-dialog button.flat {{
-            color: {fg};
-        }}
-        /* Command Form Dialog - form fields and preview contrast */
-        .command-form-dialog entry,
-        .command-form-dialog entry text {{
-            background-color: color-mix(in srgb, {fg} 8%, {bg});
-            color: {fg};
-            caret-color: {fg};
-        }}
-        .command-form-dialog spinbutton,
-        .command-form-dialog spinbutton text,
-        .command-form-dialog spinbutton entry {{
-            background-color: color-mix(in srgb, {fg} 8%, {bg});
-            color: {fg};
-        }}
-        .command-form-dialog .command-preview {{
-            background-color: color-mix(in srgb, {fg} 5%, {bg}) !important;
-            color: {fg} !important;
-        }}
-        .command-form-dialog .command-preview label {{
-            color: {fg};
-        }}
-        .command-form-dialog textview,
-        .command-form-dialog textview text {{
-            background-color: color-mix(in srgb, {fg} 5%, {bg});
-            color: {fg};
-        }}
-        .command-form-dialog row label {{
-            color: {fg};
-        }}
-        """
-
-    def _get_misc_css(self, params: dict) -> str:
-        """Generate CSS for SSH error banner and paned separators."""
-        fg = params["fg_color"]
-        return f"""
-        .ssh-error-banner {{
-            background-color: rgba(192, 28, 40, 0.9);
-            color: white;
-            padding: 8px 12px;
-            border-radius: 4px;
-            font-weight: bold;
-        }}
-        .ssh-error-banner label {{
-            color: white;
-            font-weight: bold;
-        }}
-        .ssh-error-banner button {{
-            color: white;
-            margin-left: 12px;
-        }}
-        separator.horizontal.paned-separator {{
-            background-color: {fg};
-            opacity: 0.3;
-            min-height: 1px;
-        }}
-        separator.vertical.paned-separator {{
-            background-color: {fg};
-            opacity: 0.3;
-            min-width: 1px;
-        }}
-        """
-
-    def _get_command_toolbar_css(self, params: dict) -> str:
-        """Generate CSS for command toolbar."""
-        fg = params["fg_color"]
-        header_bg = params["header_bg_color"]
-        if params["user_transparency"] > 0:
-            return f"""
-            .command-toolbar {{
-                color: {fg};
-            }}
-            .command-toolbar button,
-            .command-toolbar button label,
-            .command-toolbar button image {{
-                color: {fg};
-            }}
-            .command-toolbar button image {{
-                -gtk-icon-style: symbolic;
-            }}
-            """
-        return f"""
-        .command-toolbar {{
-            background-color: {header_bg};
-            color: {fg};
-        }}
-        .command-toolbar button,
-        .command-toolbar button label,
-        .command-toolbar button image {{
-            color: {fg};
-        }}
-        .command-toolbar button image {{
-            -gtk-icon-style: symbolic;
-        }}
-        """
-
-    def apply_gtk_terminal_theme(self, window, scheme: Optional[dict] = None) -> None:
-        """Apply CSS theme to the terminal window based on color scheme.
-
-        This method generates and applies CSS styling to make UI elements
-        match the terminal's color scheme for visual consistency.
-
-        Args:
-            window: The GTK window to apply the theme to.
-            scheme: Color scheme dictionary with at least 'background' and
-                'foreground' keys. If None, uses current color scheme.
-        """
-        if scheme is None:
-            scheme = self.get_color_scheme_data()
-
-        cache_key = self._get_theme_cache_key(scheme)
-        if cache_key in self._theme_css_cache:
-            self._apply_cached_css(window, self._theme_css_cache[cache_key])
-            return
-
-        params = self._get_theme_params(scheme)
-        css_parts = [
-            self._get_headerbar_css(params),
-            self._get_tabs_css(params),
-            self._get_searchbar_css(params),
-            self._get_command_toolbar_css(params),
-            self._get_sidebar_css(params),
-            self._get_popover_css(params),
-            self._get_tooltip_css(params),
-            self._get_filemanager_css(params),
-            self._get_dialog_css(params),
-            self._get_misc_css(params),
-        ]
-        css = "".join(css_parts)
-        self._theme_css_cache[cache_key] = css
-        self._apply_cached_css(window, css)
-
-    def generate_dynamic_theme_css(self, css_class: str, transparency: int = 0) -> str:
-        """
-        Generate dynamic theme CSS for dialogs and panels.
-
-        This centralizes the CSS generation logic that was previously duplicated
-        across CommandFormDialog, CommandEditorDialog, and other components.
-
-        Args:
-            css_class: The CSS class name to scope styles (e.g., 'command-form-dialog')
-            transparency: Background transparency percentage (0-100)
-
-        Returns:
-            CSS string ready to be loaded into a CssProvider
-        """
-        scheme = self.get_color_scheme_data()
-        bg_color = scheme.get("background", "#000000")
-        fg_color = scheme.get("foreground", "#ffffff")
-        header_bg = scheme.get("headerbar_background", bg_color)
-        palette = scheme.get("palette", [])
-        accent_color = palette[4] if len(palette) > 4 else "#3584e4"
-
-        # Parse RGB values
-        r = int(bg_color[1:3], 16)
-        g = int(bg_color[3:5], 16)
-        b = int(bg_color[5:7], 16)
-
-        # Calculate background with transparency
-        if transparency > 0:
-            alpha = max(0.0, min(1.0, 1.0 - (transparency / 100.0) ** 1.6))
-            rgba_bg = f"rgba({r}, {g}, {b}, {alpha})"
-        else:
-            rgba_bg = f"rgb({r}, {g}, {b})"
-
-        # Calculate luminance to detect if theme is dark or light
-        bg_luminance = 0.299 * r / 255 + 0.587 * g / 255 + 0.114 * b / 255
-        is_dark_theme = bg_luminance < 0.5
-
-        # Derived colors
-        input_bg = f"color-mix(in srgb, {fg_color} 10%, transparent)"
-        border_color = f"color-mix(in srgb, {fg_color} 15%, transparent)"
-
-        # Dim/subtitle colors based on theme
-        if is_dark_theme:
-            dim_fg = f"color-mix(in srgb, {fg_color} 70%, transparent)"
-            subtitle_fg = f"color-mix(in srgb, {fg_color} 65%, transparent)"
-        else:
-            dim_fg = f"color-mix(in srgb, {fg_color} 90%, transparent)"
-            subtitle_fg = f"color-mix(in srgb, {fg_color} 85%, transparent)"
-
-        # Build CSS
-        css = f"""
-        /* Main dialog background */
-        .{css_class} {{
-            background-color: {rgba_bg};
-            color: {fg_color};
-        }}
-        
-        /* Headerbar */
-        .{css_class} headerbar {{
-            background-color: {header_bg};
-            color: {fg_color};
-        }}
-        
-        /* All labels in dialog */
-        .{css_class} label {{
-            color: {fg_color};
-        }}
-        
-        /* Subtitle/description labels - need to be visible */
-        .{css_class} .subtitle,
-        .{css_class} label.subtitle {{
-            color: {subtitle_fg};
-        }}
-        
-        /* Dim labels and caption */
-        .{css_class} .dim-label,
-        .{css_class} .caption {{
-            color: {dim_fg};
-        }}
-        
-        /* Adw preferences group titles */
-        .{css_class} .preferences-group > header > box > label {{
-            color: {fg_color};
-        }}
-        
-        /* Adw entry row, switch row, combo row specific selectors */
-        .{css_class} .entry-row > box > box > label.title,
-        .{css_class} .switch-row > box > box > label.title,
-        .{css_class} .combo-row > box > box > label.title,
-        .{css_class} .action-row > box > box > label.title,
-        .{css_class} .expander-row > box > box > label.title {{
-            color: {fg_color};
-        }}
-        .{css_class} .entry-row > box > box > label.subtitle,
-        .{css_class} .switch-row > box > box > label.subtitle,
-        .{css_class} .combo-row > box > box > label.subtitle,
-        .{css_class} .action-row > box > box > label.subtitle,
-        .{css_class} .expander-row > box > box > label.subtitle,
-        .{css_class} .password-entry-row > box > box > label.subtitle {{
-            color: {subtitle_fg};
-        }}
-        
-        /* PreferencesGroup descriptions */
-        .{css_class} .preferences-group > header > box > label.description,
-        .{css_class} .preferences-group description,
-        .{css_class} .preferences-group > header > .body {{
-            color: {subtitle_fg};
-        }}
-        
-        /* Adw.PreferencesGroup set_description text */
-        .{css_class} .preferences-group > header > box > box > label {{
-            color: {subtitle_fg};
-        }}
-        
-        /* Row titles and subtitles (generic) */
-        .{css_class} row label.title,
-        .{css_class} row .title {{
-            color: {fg_color};
-        }}
-        .{css_class} row label.subtitle,
-        .{css_class} row .subtitle,
-        .{css_class} row .body {{
-            color: {subtitle_fg};
-        }}
-        
-        /* Entry fields - match border to row border */
-        .{css_class} entry,
-        .{css_class} entry text,
-        .{css_class} spinbutton,
-        .{css_class} spinbutton text {{
-            background: {input_bg};
-            color: {fg_color};
-            border-color: {border_color};
-            outline-color: {border_color};
-        }}
-        .{css_class} entry:focus,
-        .{css_class} entry:focus-within {{
-            border-color: {accent_color};
-            outline-color: {accent_color};
-        }}
-        
-        /* Text views */
-        .{css_class} textview,
-        .{css_class} textview text {{
-            background: {input_bg};
-            color: {fg_color};
-        }}
-        
-        /* Dropdown/combo box */
-        .{css_class} dropdown > button,
-        .{css_class} dropdown > button label {{
-            color: {fg_color};
-        }}
-        .{css_class} dropdown > popover contents {{
-            background: {bg_color};
-            color: {fg_color};
-        }}
-        .{css_class} dropdown > popover contents row label {{
-            color: {fg_color};
-        }}
-        
-        /* Radio and check buttons - comprehensive selectors */
-        .{css_class} checkbutton,
-        .{css_class} checkbutton label,
-        .{css_class} check,
-        .{css_class} check label,
-        .{css_class} radiobutton,
-        .{css_class} radiobutton label,
-        .{css_class} radio,
-        .{css_class} radio label,
-        .{css_class} .radiobutton-list label,
-        .{css_class} box.vertical > checkbutton label,
-        .{css_class} box.vertical > radiobutton label {{
-            color: {fg_color};
-        }}
-        
-        /* Row borders - unified style */
-        .{css_class} row,
-        .{css_class} .entry-row,
-        .{css_class} .action-row,
-        .{css_class} .switch-row,
-        .{css_class} .combo-row,
-        .{css_class} .expander-row {{
-            border-color: {border_color};
-        }}
-        
-        /* Card elements */
-        .{css_class} .card {{
-            background: {input_bg};
-            color: {fg_color};
-            border-color: {border_color};
-        }}
-        
-        /* Command preview */
-        .{css_class} .command-preview {{
-            background: {input_bg};
-            color: {fg_color};
-        }}
-        
-        /* Monospace text */
-        .{css_class} .monospace {{
-            color: {fg_color};
-        }}
-        
-        /* Action row and similar */
-        .{css_class} .action-row .title,
-        .{css_class} .action-row .subtitle {{
-            color: {fg_color};
-        }}
-        
-        /* Listbox and row backgrounds */
-        .{css_class} list,
-        .{css_class} listbox,
-        .{css_class} row {{
-            background: transparent;
-        }}
-        
-        /* Suggested action button */
-        .{css_class} .suggested-action {{
-            background: {accent_color};
-            color: #ffffff;
-        }}
-        
-        /* Execute button - accent styling */
-        .{css_class} .execute-button {{
-            background: {accent_color};
-            color: #ffffff;
-        }}
-        .{css_class} .execute-button label {{
-            color: #ffffff;
-        }}
-        
-        /* Command buttons with proper foreground */
-        .{css_class} .command-button {{
-            color: {fg_color};
-        }}
-        .{css_class} .command-button label {{
-            color: {fg_color};
-        }}
-        
-        /* Command input area */
-        .{css_class} .command-input-frame {{
-            background: {input_bg};
-            border-color: {border_color};
-        }}
-        .{css_class} .command-input-frame:focus-within {{
-            border-color: {accent_color};
-        }}
-        
-        /* Bash text view */
-        .{css_class} .bash-textview {{
-            color: {fg_color};
-        }}
-        .{css_class} .bash-textview text {{
-            background: transparent;
-            color: {fg_color};
-        }}
-        
-        /* Images/icons in dialog */
-        .{css_class} image {{
-            color: {fg_color};
-        }}
-        """
-
-        return css
+        return ""
+        # If not terminal theme, let it be native.
 
     def remove_gtk_terminal_theme(self, window) -> None:
         """Removes the custom CSS provider for the terminal theme."""
@@ -1786,22 +906,25 @@ class SettingsManager:
                 delattr(window, "_terminal_theme_provider")
                 self.logger.info("Removed terminal theme provider.")
 
-            # Also clean up old-style providers if they exist
-            if hasattr(window, "_terminal_theme_header_provider"):
-                Gtk.StyleContext.remove_provider_for_display(
-                    Gdk.Display.get_default(), window._terminal_theme_header_provider
-                )
-                delattr(window, "_terminal_theme_header_provider")
+            # Clean up other legacy providers if present
+            for attr in [
+                "_terminal_theme_header_provider",
+                "_terminal_theme_tabs_provider",
+            ]:
+                if hasattr(window, attr):
+                    try:
+                        Gtk.StyleContext.remove_provider_for_display(
+                            Gdk.Display.get_default(), getattr(window, attr)
+                        )
+                    except Exception:
+                        pass
+                    delattr(window, attr)
 
-            if hasattr(window, "_terminal_theme_tabs_provider"):
-                Gtk.StyleContext.remove_provider_for_display(
-                    Gdk.Display.get_default(), window._terminal_theme_tabs_provider
-                )
-                delattr(window, "_terminal_theme_tabs_provider")
-
-            # Re-apply headerbar transparency to restore default appearance
+            # Re-apply headerbar transparency to restore default appearance if needed
             if hasattr(window, "header_bar"):
-                self.apply_headerbar_transparency(window.header_bar, window)
+                # In new system, transparency is part of unified CSS, so we just trigger update
+                GLib.idle_add(self._update_app_theme_css, window)
+
         except Exception as e:
             self.logger.warning(f"Failed to remove GTK terminal theme: {e}")
 
@@ -1881,20 +1004,6 @@ class SettingsManager:
                     except Exception:
                         pass
                     del headerbar._transparency_provider
-                
-                # Also check legacy attribute names
-                for attr in ["_terminal_theme_header_provider", "_terminal_theme_tabs_provider"]:
-                    if hasattr(headerbar, attr):
-                        provider = getattr(headerbar, attr)
-                        try:
-                            Gtk.StyleContext.remove_provider_for_display(display, provider)
-                        except Exception:
-                            pass
-                        delattr(headerbar, attr)
-
-            # Clear the theme CSS cache
-            self._theme_css_cache.clear()
-            self.logger.info("CSS providers cleaned up successfully")
 
         except Exception as e:
             self.logger.warning(f"Error during CSS provider cleanup: {e}")

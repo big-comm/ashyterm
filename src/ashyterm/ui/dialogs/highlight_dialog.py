@@ -1648,8 +1648,8 @@ class HighlightDialog(Adw.PreferencesWindow):
             self._parent_window.terminal_manager.apply_settings_to_all_terminals()
 
         # Apply to GTK theme if using terminal theme
-        if settings.get("gtk_theme") == "terminal" and self._parent_window:
-            settings.apply_gtk_terminal_theme(self._parent_window)
+        # Note: Theme update is handled automatically by settings listener
+        pass
 
         # Refresh shell input highlighter
         try:
@@ -1744,7 +1744,6 @@ class HighlightDialog(Adw.PreferencesWindow):
             on_confirm=on_confirm,
         )
 
-
     def _save_scheme_data(
         self, original_key: str, new_key: str, scheme_data: dict
     ) -> tuple[bool, str]:
@@ -1758,6 +1757,7 @@ class HighlightDialog(Adw.PreferencesWindow):
 
         if is_new:
             import time
+
             unique_key = f"custom_{int(time.time() * 1000)}"
             settings.custom_schemes[unique_key] = scheme_data
             return True, unique_key
@@ -1790,11 +1790,13 @@ class HighlightDialog(Adw.PreferencesWindow):
         if self._parent_window and hasattr(self._parent_window, "terminal_manager"):
             self._parent_window.terminal_manager.apply_settings_to_all_terminals()
 
-        if settings.get("gtk_theme") == "terminal" and self._parent_window:
-            settings.apply_gtk_terminal_theme(self._parent_window)
+        # Apply to GTK theme if using terminal theme
+        # Note: Theme update is handled automatically by settings listener
+        pass
 
         try:
             from ...terminal.highlighter import get_shell_input_highlighter
+
             highlighter = get_shell_input_highlighter()
             highlighter.refresh_settings()
         except Exception:
