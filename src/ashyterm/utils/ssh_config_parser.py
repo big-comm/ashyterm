@@ -41,17 +41,49 @@ class SSHConfigParser:
 
     # --- Internal helpers -------------------------------------------------
 
-    def _parse_file(self, path: Path) -> None:
+
+    def _resolve_config_path(self, path: Path) -> Optional[Path]:
+        """Resolve and validate SSH config file path."""
         try:
             resolved = path.resolve()
         except FileNotFoundError:
             self.logger.warning(f"SSH config path does not exist: {path}")
-            return
+            return None
 
         if resolved in self._visited:
-            return
+            return None
         if not resolved.is_file():
             self.logger.warning(f"SSH config path is not a file: {path}")
+            return None
+        return resolved
+
+    def _process_config_line(
+        self,
+        keyword: str,
+        values: List[str],
+        current_patterns: List[str],
+        current_options: Dict[str, str],
+        directory: Path,
+    ) -> tuple[List[str], Dict[str, str], bool]:
+        """Process a single config line and return updated state."""
+        if keyword == "match":
+            self._flush_hosts(current_patterns, current_options)
+            return [], {}, True  # stop_processing = True
+        elif keyword == "host":
+            self._flush_hosts(current_patterns, current_options)
+            return values, {}, False
+        elif keyword == "include":
+            self._flush_hosts(current_patterns, current_options)
+            self._handle_include(values, directory)
+            return [], {}, False
+        else:
+            if current_patterns and values:
+                current_options[keyword] = " ".join(values)
+            return current_patterns, current_options, False
+
+    def _parse_file(self, path: Path) -> None:
+        resolved = self._resolve_config_path(path)
+        if resolved is None:
             return
 
         self._visited.add(resolved)
@@ -73,29 +105,12 @@ class SSHConfigParser:
                 keyword = tokens[0].lower()
                 values = tokens[1:]
 
-                if keyword == "match":
-                    # We do not support Match blocks; stop processing further.
-                    self._flush_hosts(current_patterns, current_options)
-                    current_patterns = []
-                    current_options = {}
+                current_patterns, current_options, stop = self._process_config_line(
+                    keyword, values, current_patterns, current_options, directory
+                )
+                if stop:
                     break
-                elif keyword == "host":
-                    self._flush_hosts(current_patterns, current_options)
-                    current_patterns = values
-                    current_options = {}
-                elif keyword == "include":
-                    self._flush_hosts(current_patterns, current_options)
-                    current_patterns = []
-                    current_options = {}
-                    self._handle_include(values, directory)
-                else:
-                    if not current_patterns:
-                        # Apply to the implicit global host; skip as we only care about concrete hosts.
-                        continue
-                    if values:
-                        current_options[keyword] = " ".join(values)
 
-        # Flush last host
         self._flush_hosts(current_patterns, current_options)
 
     def _handle_include(self, patterns: Iterable[str], base_dir: Path) -> None:

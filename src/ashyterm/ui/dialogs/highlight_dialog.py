@@ -1744,13 +1744,12 @@ class HighlightDialog(Adw.PreferencesWindow):
             on_confirm=on_confirm,
         )
 
-    def _on_editor_save(
-        self, editor, original_key: str, new_key: str, scheme_data: dict
-    ) -> None:
-        """Handle save from scheme editor."""
-        settings = get_settings_manager()
 
-        # Determine if this is a new scheme or edit of existing
+    def _save_scheme_data(
+        self, original_key: str, new_key: str, scheme_data: dict
+    ) -> tuple[bool, str]:
+        """Save scheme data and return (is_new, final_key)."""
+        settings = get_settings_manager()
         is_new = (
             original_key is None
             or original_key == ""
@@ -1758,54 +1757,63 @@ class HighlightDialog(Adw.PreferencesWindow):
         )
 
         if is_new:
-            # Generate unique key for new scheme
             import time
-
             unique_key = f"custom_{int(time.time() * 1000)}"
             settings.custom_schemes[unique_key] = scheme_data
-        else:
-            # Update existing custom scheme
-            if original_key in settings.custom_schemes:
-                del settings.custom_schemes[original_key]
-            settings.custom_schemes[new_key if new_key else original_key] = scheme_data
+            return True, unique_key
 
-        settings.save_custom_schemes()
-        self._populate_color_schemes()
+        if original_key in settings.custom_schemes:
+            del settings.custom_schemes[original_key]
+        final_key = new_key if new_key else original_key
+        settings.custom_schemes[final_key] = scheme_data
+        return False, final_key
 
-        # If this is a new scheme, automatically select it
-        if is_new:
-            scheme_order = settings.get_scheme_order()
-            try:
-                new_scheme_index = scheme_order.index(unique_key)
-                settings.set("color_scheme", new_scheme_index)
-                # Update visual selection
-                for scheme_row in self._scheme_rows.values():
-                    if scheme_row.scheme_key == unique_key:
-                        self._scheme_listbox.select_row(scheme_row)
-                        # Update checkmarks
-                        for other_row in self._scheme_rows.values():
-                            other_row.check_icon.set_visible(other_row == scheme_row)
-                        break
-            except ValueError:
-                pass  # Should not happen, but just in case
+    def _select_scheme_by_key(self, scheme_key: str) -> None:
+        """Select a scheme in the listbox by its key."""
+        settings = get_settings_manager()
+        scheme_order = settings.get_scheme_order()
+        try:
+            new_scheme_index = scheme_order.index(scheme_key)
+            settings.set("color_scheme", new_scheme_index)
+            for scheme_row in self._scheme_rows.values():
+                if scheme_row.scheme_key == scheme_key:
+                    self._scheme_listbox.select_row(scheme_row)
+                    for other_row in self._scheme_rows.values():
+                        other_row.check_icon.set_visible(other_row == scheme_row)
+                    break
+        except ValueError:
+            pass
 
-        # Reapply settings to terminals
+    def _apply_scheme_changes(self) -> None:
+        """Apply scheme changes to terminals and GTK theme."""
+        settings = get_settings_manager()
         if self._parent_window and hasattr(self._parent_window, "terminal_manager"):
             self._parent_window.terminal_manager.apply_settings_to_all_terminals()
 
-        # Apply to GTK theme if using terminal theme
         if settings.get("gtk_theme") == "terminal" and self._parent_window:
             settings.apply_gtk_terminal_theme(self._parent_window)
 
-        # Refresh shell input highlighter
         try:
             from ...terminal.highlighter import get_shell_input_highlighter
-
             highlighter = get_shell_input_highlighter()
             highlighter.refresh_settings()
         except Exception:
             pass
 
+    def _on_editor_save(
+        self, editor, original_key: str, new_key: str, scheme_data: dict
+    ) -> None:
+        """Handle save from scheme editor."""
+        settings = get_settings_manager()
+
+        is_new, unique_key = self._save_scheme_data(original_key, new_key, scheme_data)
+        settings.save_custom_schemes()
+        self._populate_color_schemes()
+
+        if is_new:
+            self._select_scheme_by_key(unique_key)
+
+        self._apply_scheme_changes()
         self.add_toast(Adw.Toast(title=_("Scheme saved")))
 
     def _setup_welcome_banner(self, page: Adw.PreferencesPage) -> None:

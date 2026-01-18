@@ -64,6 +64,26 @@ def should_prepend_newline_before_prompt(
     return True
 
 
+def _is_csi_sequence_complete(data: bytes, start_idx: int) -> bool:
+    """Check if CSI sequence (ESC [ ...) is complete."""
+    for i in range(start_idx + 2, len(data)):
+        c = data[i]
+        if 0x40 <= c <= 0x7E:
+            return True
+    return False
+
+
+def _is_osc_sequence_complete(data: bytes, start_idx: int) -> bool:
+    """Check if OSC sequence (ESC ] ...) is complete (ends with BEL or ST)."""
+    for i in range(start_idx + 2, len(data)):
+        c = data[i]
+        if c == 0x07:  # BEL
+            return True
+        if c == 0x1B and i + 1 < len(data) and data[i + 1] == 0x5C:  # ST (ESC \)
+            return True
+    return False
+
+
 def split_incomplete_escape_suffix(data: bytes) -> tuple[bytes, bytes]:
     """Split `data` into (prefix, incomplete_escape_suffix).
 
@@ -97,20 +117,14 @@ def split_incomplete_escape_suffix(data: bytes) -> tuple[bytes, bytes]:
 
     # CSI: ESC [ ... <final byte 0x40..0x7E>
     if second == 0x5B:  # '['
-        for i in range(last_esc + 2, len(data)):
-            c = data[i]
-            if 0x40 <= c <= 0x7E:
-                return data, b""  # complete
+        if _is_csi_sequence_complete(data, last_esc):
+            return data, b""
         return data[:last_esc], data[last_esc:]
 
     # OSC: ESC ] ... BEL or ST (ESC \)
     if second == 0x5D:  # ']'
-        for i in range(last_esc + 2, len(data)):
-            c = data[i]
-            if c == 0x07:  # BEL
-                return data, b""
-            if c == 0x1B and i + 1 < len(data) and data[i + 1] == 0x5C:  # ST
-                return data, b""
+        if _is_osc_sequence_complete(data, last_esc):
+            return data, b""
         return data[:last_esc], data[last_esc:]
 
     # Charset designators: ESC ( X or ESC ) X

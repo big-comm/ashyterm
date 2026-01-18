@@ -42,9 +42,6 @@ class WindowUIBuilder:
         self.tab_manager = window.tab_manager
         self.session_tree = window.session_tree
 
-        # Get the application for shortcut lookups
-        app = window.get_application()
-
         # Initialize tooltip helper for custom tooltips (global singleton)
         self.tooltip_helper = get_tooltip_helper()
 

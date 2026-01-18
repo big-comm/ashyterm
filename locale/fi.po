@@ -6377,14 +6377,6 @@ msgstr "Etsi tiedostoja"
 msgid "Search for files and directories with various filters"
 msgstr "Etsi tiedostoja ja hakemistoja eri suodattimilla"
 # 
-# File: src/ashyterm/data/command_manager_models.py, line: 212
-# File: src/ashyterm/data/command_manager_models.py, line: 311
-# File: src/ashyterm/data/command_manager_models.py, line: 324
-# File: src/ashyterm/data/command_manager_models.py, line: 375
-#: NEEDS WORK
-msgid "File Operations"
-msgstr "Tiedosto-operaatiot"
-# 
 # File: src/ashyterm/data/command_manager_models.py, line: 217
 #: NEEDS WORK
 msgid "Search Path"
@@ -6604,12 +6596,6 @@ msgstr "Pakattavat tiedostot ja kansiot"
 #: NEEDS WORK
 msgid "Archive Name"
 msgstr "Arkiston nimi"
-# 
-# File: src/ashyterm/data/command_manager_models.py, line: 359
-# File: src/ashyterm/data/command_manager_models.py, line: 383
-#: NEEDS WORK
-msgid "archive.tar.xz"
-msgstr "arkisto.tar.xz"
 # 
 # File: src/ashyterm/data/command_manager_models.py, line: 360
 #: NEEDS WORK
@@ -7033,11 +7019,6 @@ msgstr "Juuri data ei ole sanakirja."
 msgid "Load failed: {}"
 msgstr "Lataus epäonnistui: {}"
 # 
-# File: usr/share/ashyterm/sessions/storage.py, line: 395
-#: NEEDS WORK
-msgid "Data validation failed"
-msgstr "Tietojen validoiminen epäonnistui"
-# 
 # File: usr/share/ashyterm/sessions/storage.py, line: 410
 #: NEEDS WORK
 msgid "Temporary file was not written correctly"
@@ -7048,6 +7029,11 @@ msgstr "Väliaikaistiedostoa ei kirjoitettu oikein"
 #, python-brace-format
 msgid "File write failed: {}"
 msgstr "Tiedoston kirjoittaminen epäonnistui: {}"
+# 
+# File: usr/share/ashyterm/sessions/storage.py, line: 395
+#: NEEDS WORK
+msgid "Data validation failed"
+msgstr "Tietojen validoiminen epäonnistui"
 # 
 # File: usr/share/ashyterm/sessions/storage.py, line: 439
 #: NEEDS WORK
@@ -7204,11 +7190,10 @@ msgstr "Istunto siirretty onnistuneesti."
 msgid "Cannot move a folder into itself."
 msgstr "Ei voi siirtää kansiota itseensä."
 # 
-# File: usr/share/ashyterm/sessions/operations.py, line: 285
+# File: usr/share/ashyterm/sessions/operations.py, line: 300
 #: NEEDS WORK
-#, python-brace-format
-msgid "SSH config file not found at {path}"
-msgstr "SSH-asetustiedostoa ei löytynyt kohdasta {path}"
+msgid "No host entries found in SSH config."
+msgstr "Ei isäntämerkintöjä löytynyt SSH-konfiguraatiosta."
 # 
 # File: usr/share/ashyterm/sessions/operations.py, line: 295
 #: NEEDS WORK
@@ -7216,16 +7201,17 @@ msgstr "SSH-asetustiedostoa ei löytynyt kohdasta {path}"
 msgid "Failed to parse SSH config: {error}"
 msgstr "SSH-konfiguraation jäsentäminen epäonnistui: {error}"
 # 
-# File: usr/share/ashyterm/sessions/operations.py, line: 300
-#: NEEDS WORK
-msgid "No host entries found in SSH config."
-msgstr "Ei isäntämerkintöjä löytynyt SSH-konfiguraatiosta."
-# 
 # File: usr/share/ashyterm/sessions/operations.py, line: 312
 #: NEEDS WORK
 #, python-brace-format
 msgid "Skipped host '{alias}': missing hostname."
 msgstr "Ohitettu isäntä '{alias}': puuttuva isäntänimi."
+# 
+# File: usr/share/ashyterm/sessions/operations.py, line: 285
+#: NEEDS WORK
+#, python-brace-format
+msgid "SSH config file not found at {path}"
+msgstr "SSH-asetustiedostoa ei löytynyt kohdasta {path}"
 # 
 # File: usr/share/ashyterm/sessions/operations.py, line: 360
 #: NEEDS WORK
@@ -7436,11 +7422,6 @@ msgstr "Peruuta haku"
 #: NEEDS WORK
 msgid "Search in subfolders"
 msgstr "Etsi alikansioista"
-# 
-# File: src/ashyterm/filemanager/manager.py, line: 695
-#: NEEDS WORK
-msgid "Recursive"
-msgstr "rekursiivinen"
 # 
 # File: usr/share/ashyterm/filemanager/manager.py, line: 203
 #: NEEDS WORK
@@ -7707,16 +7688,16 @@ msgstr "Valitse kohdekansio"
 msgid "Download Here"
 msgstr "Lataa täältä"
 # 
-# File: src/ashyterm/filemanager/manager.py, line: 2608
-#: NEEDS WORK
-msgid "Download Error"
-msgstr "Latausvirhe"
-# 
 # File: usr/share/ashyterm/filemanager/manager.py, line: 855
 # File: usr/share/ashyterm/filemanager/manager.py, line: 889
 #: NEEDS WORK
 msgid "Error"
 msgstr "Virhe"
+# 
+# File: src/ashyterm/filemanager/manager.py, line: 2608
+#: NEEDS WORK
+msgid "Download Error"
+msgstr "Latausvirhe"
 # 
 # File: usr/share/ashyterm/filemanager/manager.py, line: 859
 #: NEEDS WORK
@@ -8001,6 +7982,11 @@ msgstr "Siirretään {count} tiedostoa"
 msgid "Cancel All Transfers"
 msgstr "Peruuta kaikki siirrot"
 # 
+# File: usr/share/ashyterm/window.py, line: 1193
+#: NEEDS WORK
+msgid "No active terminal to send command to."
+msgstr "Ei aktiivista terminaalia komennon lähettämistä varten."
+# 
 # File: usr/share/ashyterm/window.py, line: 424
 #: NEEDS WORK
 msgid "Data Loading Error"
@@ -8197,11 +8183,6 @@ msgstr ""
 #: NEEDS WORK
 msgid "Clear All"
 msgstr "Tyhjennä kaikki"
-# 
-# File: usr/share/ashyterm/window.py, line: 1193
-#: NEEDS WORK
-msgid "No active terminal to send command to."
-msgstr "Ei aktiivista terminaalia komennon lähettämistä varten."
 # 
 # File: usr/share/ashyterm/app.py, line: 333
 #: NEEDS WORK

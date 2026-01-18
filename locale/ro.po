@@ -6389,14 +6389,6 @@ msgstr "Găsește fișierele"
 msgid "Search for files and directories with various filters"
 msgstr "Căutare de fișiere și directoare cu diverse filtre"
 # 
-# File: src/ashyterm/data/command_manager_models.py, line: 212
-# File: src/ashyterm/data/command_manager_models.py, line: 311
-# File: src/ashyterm/data/command_manager_models.py, line: 324
-# File: src/ashyterm/data/command_manager_models.py, line: 375
-#: NEEDS WORK
-msgid "File Operations"
-msgstr "Operațiuni fișier"
-# 
 # File: src/ashyterm/data/command_manager_models.py, line: 217
 #: NEEDS WORK
 msgid "Search Path"
@@ -6616,12 +6608,6 @@ msgstr "Fișiere și foldere de comprimat"
 #: NEEDS WORK
 msgid "Archive Name"
 msgstr "Nume Arhivă"
-# 
-# File: src/ashyterm/data/command_manager_models.py, line: 359
-# File: src/ashyterm/data/command_manager_models.py, line: 383
-#: NEEDS WORK
-msgid "archive.tar.xz"
-msgstr "archive.tar.xz"
 # 
 # File: src/ashyterm/data/command_manager_models.py, line: 360
 #: NEEDS WORK
@@ -7045,11 +7031,6 @@ msgstr "Datele rădăcină nu sunt un dicționar"
 msgid "Load failed: {}"
 msgstr "Încărcare eșuată: {}"
 # 
-# File: usr/share/ashyterm/sessions/storage.py, line: 395
-#: NEEDS WORK
-msgid "Data validation failed"
-msgstr "Validarea datelor a eșuat"
-# 
 # File: usr/share/ashyterm/sessions/storage.py, line: 410
 #: NEEDS WORK
 msgid "Temporary file was not written correctly"
@@ -7060,6 +7041,11 @@ msgstr "Fișierul temporar nu a fost scris corect."
 #, python-brace-format
 msgid "File write failed: {}"
 msgstr "Scrierea fișierului a eșuat: {}"
+# 
+# File: usr/share/ashyterm/sessions/storage.py, line: 395
+#: NEEDS WORK
+msgid "Data validation failed"
+msgstr "Validarea datelor a eșuat"
 # 
 # File: usr/share/ashyterm/sessions/storage.py, line: 439
 #: NEEDS WORK
@@ -7216,11 +7202,10 @@ msgstr "Sesiune mutată cu succes."
 msgid "Cannot move a folder into itself."
 msgstr "Nu se poate muta un folder în sine."
 # 
-# File: usr/share/ashyterm/sessions/operations.py, line: 285
+# File: usr/share/ashyterm/sessions/operations.py, line: 300
 #: NEEDS WORK
-#, python-brace-format
-msgid "SSH config file not found at {path}"
-msgstr "Fișierul de configurare SSH nu a fost găsit la {path}"
+msgid "No host entries found in SSH config."
+msgstr "Nu au fost găsite intrări de gazdă în configurația SSH."
 # 
 # File: usr/share/ashyterm/sessions/operations.py, line: 295
 #: NEEDS WORK
@@ -7228,16 +7213,17 @@ msgstr "Fișierul de configurare SSH nu a fost găsit la {path}"
 msgid "Failed to parse SSH config: {error}"
 msgstr "Nu s-a reușit analizarea configurației SSH: {error}"
 # 
-# File: usr/share/ashyterm/sessions/operations.py, line: 300
-#: NEEDS WORK
-msgid "No host entries found in SSH config."
-msgstr "Nu au fost găsite intrări de gazdă în configurația SSH."
-# 
 # File: usr/share/ashyterm/sessions/operations.py, line: 312
 #: NEEDS WORK
 #, python-brace-format
 msgid "Skipped host '{alias}': missing hostname."
 msgstr "Gazda omisă '{alias}': nume gazdă lipsă."
+# 
+# File: usr/share/ashyterm/sessions/operations.py, line: 285
+#: NEEDS WORK
+#, python-brace-format
+msgid "SSH config file not found at {path}"
+msgstr "Fișierul de configurare SSH nu a fost găsit la {path}"
 # 
 # File: usr/share/ashyterm/sessions/operations.py, line: 360
 #: NEEDS WORK
@@ -7448,11 +7434,6 @@ msgstr "Anulează căutarea"
 #: NEEDS WORK
 msgid "Search in subfolders"
 msgstr "Caută în subfoldere"
-# 
-# File: src/ashyterm/filemanager/manager.py, line: 695
-#: NEEDS WORK
-msgid "Recursive"
-msgstr "Recursiv"
 # 
 # File: usr/share/ashyterm/filemanager/manager.py, line: 203
 #: NEEDS WORK
@@ -7719,16 +7700,16 @@ msgstr "Selectați folderul de destinație"
 msgid "Download Here"
 msgstr "Descarcă aici"
 # 
-# File: src/ashyterm/filemanager/manager.py, line: 2608
-#: NEEDS WORK
-msgid "Download Error"
-msgstr "Eroare la descărcare"
-# 
 # File: usr/share/ashyterm/filemanager/manager.py, line: 855
 # File: usr/share/ashyterm/filemanager/manager.py, line: 889
 #: NEEDS WORK
 msgid "Error"
 msgstr "Eroare"
+# 
+# File: src/ashyterm/filemanager/manager.py, line: 2608
+#: NEEDS WORK
+msgid "Download Error"
+msgstr "Eroare la descărcare"
 # 
 # File: usr/share/ashyterm/filemanager/manager.py, line: 859
 #: NEEDS WORK
@@ -8013,6 +7994,11 @@ msgstr "Transferarea a {count} fișiere"
 msgid "Cancel All Transfers"
 msgstr "Anulează toate transferurile"
 # 
+# File: usr/share/ashyterm/window.py, line: 1193
+#: NEEDS WORK
+msgid "No active terminal to send command to."
+msgstr "Nu există un terminal activ pentru a trimite comanda."
+# 
 # File: usr/share/ashyterm/window.py, line: 424
 #: NEEDS WORK
 msgid "Data Loading Error"
@@ -8209,11 +8195,6 @@ msgstr ""
 #: NEEDS WORK
 msgid "Clear All"
 msgstr "Șterge tot"
-# 
-# File: usr/share/ashyterm/window.py, line: 1193
-#: NEEDS WORK
-msgid "No active terminal to send command to."
-msgstr "Nu există un terminal activ pentru a trimite comanda."
 # 
 # File: usr/share/ashyterm/app.py, line: 333
 #: NEEDS WORK

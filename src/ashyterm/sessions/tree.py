@@ -230,32 +230,31 @@ class SessionTreeView:
         if not self._filter_text:
             return
 
-        def expand_matching_folders_recursively(model, parent_path=""):
-            """Recursively expand folders that contain matching items."""
-            for i in range(model.get_n_items()):
-                row = model.get_item(i)
-                if not row:
-                    continue
+        self._expand_matching_folders_recursive(self.tree_model)
 
-                item = row.get_item()
-                if isinstance(item, SessionFolder):
-                    # Check if this folder contains matching items
-                    if self._folder_contains_matching_items(item):
-                        # Expand this folder to show matching children
-                        if not row.get_expanded():
-                            row.set_expanded(True)
+    def _expand_matching_folders_recursive(self, model) -> None:
+        """Recursively expand folders that contain matching items."""
+        for i in range(model.get_n_items()):
+            row = model.get_item(i)
+            if not row:
+                continue
 
-                        # Also expand any child folders that contain matches
-                        if item.path not in self._populated_folders:
-                            self._populate_folder_children(item)
+            item = row.get_item()
+            if not isinstance(item, SessionFolder):
+                continue
 
-                        # Since TreeListModel creates child models automatically when rows are expanded,
-                        # and we've already populated the children, we don't need to manually recurse
-                        # into child models. The TreeListModel will handle creating the child rows
-                        # from the folder's children list.
+            if not self._folder_contains_matching_items(item):
+                continue
 
-        # Start expansion from root
-        expand_matching_folders_recursively(self.tree_model)
+            self._expand_folder_if_needed(row, item)
+
+    def _expand_folder_if_needed(self, row, item: "SessionFolder") -> None:
+        """Expands a folder row if it's not already expanded."""
+        if not row.get_expanded():
+            row.set_expanded(True)
+
+        if item.path not in self._populated_folders:
+            self._populate_folder_children(item)
 
     def clear_search(self) -> None:
         """Clears the search filter and restores original expansion state."""
@@ -392,7 +391,6 @@ class SessionTreeView:
     ) -> None:
         """Binds data from a model item to a row widget."""
         box = list_item.get_child()
-        # MODIFIED: Find widgets by their position/type
         spacer = box.get_first_child()
         icon = spacer.get_next_sibling()
         label = icon.get_next_sibling()
@@ -401,51 +399,70 @@ class SessionTreeView:
         item = tree_list_row.get_item()
         label.set_label(item.name)
 
-        # MODIFIED: Dynamic indentation using the spacer widget
         depth = tree_list_row.get_depth()
-        indent_width = depth * 20  # 20 pixels per indentation level
+        indent_width = depth * 20
         spacer.set_size_request(indent_width, -1)
 
+        self._bind_item_icon(item, icon, tree_list_row, list_item)
+
+    def _bind_item_icon(
+        self, item, icon: Gtk.Image, tree_list_row, list_item: Gtk.ListItem
+    ) -> None:
+        """Binds the appropriate icon for the item type."""
         if isinstance(item, SessionItem):
-            icon.set_from_icon_name(
+            icon_name = (
                 "computer-symbolic" if item.is_local() else "network-server-symbolic"
             )
+            icon.set_from_icon_name(icon_name)
         elif isinstance(item, LayoutItem):
             icon.set_from_icon_name("view-restore-symbolic")
         elif isinstance(item, SessionFolder):
+            self._bind_folder_icon(item, icon, tree_list_row, list_item)
 
-            def update_folder_icon(row: Gtk.TreeListRow, _=None) -> None:
-                if (
-                    row.get_expanded()
-                    and row.get_item().path not in self._populated_folders
-                ):
-                    self._populate_folder_children(row.get_item())
+    def _bind_folder_icon(
+        self,
+        item: "SessionFolder",
+        icon: Gtk.Image,
+        tree_list_row,
+        list_item: Gtk.ListItem,
+    ) -> None:
+        """Binds folder icon with expansion handling."""
 
-                has_children = (
-                    any(s.folder_path == item.path for s in self.session_store)
-                    or any(f.parent_path == item.path for f in self.folder_store)
-                    or any(
-                        isinstance(layout, LayoutItem)
-                        and layout.folder_path == item.path
-                        for layout in self.parent_window.layouts
-                    )
-                )
+        def update_folder_icon(row, _=None):
+            self._handle_folder_expansion(row)
+            icon_name = self._get_folder_icon_name(row, item)
+            icon.set_from_icon_name(icon_name)
 
-                icon_name = (
-                    "folder-open-symbolic"
-                    if row.get_expanded()
-                    else ("folder-new-symbolic" if has_children else "folder-symbolic")
-                )
-                icon.set_from_icon_name(icon_name)
+        update_folder_icon(tree_list_row)
+        icon_handler_id = tree_list_row.connect("notify::expanded", update_folder_icon)
+        expansion_handler_id = tree_list_row.connect(
+            "notify::expanded", self._on_folder_expansion_changed
+        )
+        list_item.handler_ids = [icon_handler_id, expansion_handler_id]
 
-            update_folder_icon(tree_list_row)
-            icon_handler_id = tree_list_row.connect(
-                "notify::expanded", update_folder_icon
-            )
-            expansion_handler_id = tree_list_row.connect(
-                "notify::expanded", self._on_folder_expansion_changed
-            )
-            list_item.handler_ids = [icon_handler_id, expansion_handler_id]
+    def _handle_folder_expansion(self, row) -> None:
+        """Handles folder expansion by populating children if needed."""
+        if row.get_expanded() and row.get_item().path not in self._populated_folders:
+            self._populate_folder_children(row.get_item())
+
+    def _get_folder_icon_name(self, row, item: "SessionFolder") -> str:
+        """Returns the appropriate icon name for a folder based on its state."""
+        if row.get_expanded():
+            return "folder-open-symbolic"
+
+        has_children = self._folder_has_children(item)
+        return "folder-new-symbolic" if has_children else "folder-symbolic"
+
+    def _folder_has_children(self, item: "SessionFolder") -> bool:
+        """Checks if a folder has any children."""
+        if any(s.folder_path == item.path for s in self.session_store):
+            return True
+        if any(f.parent_path == item.path for f in self.folder_store):
+            return True
+        return any(
+            isinstance(layout, LayoutItem) and layout.folder_path == item.path
+            for layout in self.parent_window.layouts
+        )
 
     def _on_factory_unbind(
         self, factory: Gtk.SignalListItemFactory, list_item: Gtk.ListItem
@@ -574,11 +591,8 @@ class SessionTreeView:
 
             if result and result.success:
                 self.refresh_tree()
-            elif result:
-                if hasattr(self.parent_window, "_show_error_dialog"):
-                    self.parent_window._show_error_dialog(
-                        _("Move Error"), result.message
-                    )
+            elif result and hasattr(self.parent_window, "_show_error_dialog"):
+                self.parent_window._show_error_dialog(_("Move Error"), result.message)
         except Exception as e:
             self.logger.error(f"Drag-and-drop move error: {e}")
             if hasattr(self.parent_window, "_show_error_dialog"):
@@ -688,43 +702,58 @@ class SessionTreeView:
             row = model.get_item(i)
             if not row:
                 continue
+
             item = row.get_item()
-            if isinstance(item, SessionFolder):
-                if item.path == path_to_find:
-                    return row
-                if path_to_find.startswith(item.path + "/"):
-                    if item.path not in self._populated_folders:
-                        self._populate_folder_children(item)
+            if not isinstance(item, SessionFolder):
+                continue
 
-                    # Since TreeListModel creates child models automatically when rows are expanded,
-                    # we need to expand the row first to access its children
-                    if not row.get_expanded():
-                        row.set_expanded(True)
+            if item.path == path_to_find:
+                return row
 
-                    # Try to get the child model
-                    try:
-                        child_model = row.get_model()
-                        if child_model:
-                            if found_in_child := self._find_row_recursively(
-                                child_model, path_to_find
-                            ):
-                                return found_in_child
-                    except AttributeError:
-                        # If get_model doesn't exist or fails, continue without recursing
-                        pass
+            found = self._search_in_child_folder(row, item, path_to_find)
+            if found:
+                return found
+
         return None
+
+    def _search_in_child_folder(self, row, item: "SessionFolder", path_to_find):
+        """Searches for a path within a child folder."""
+        if not path_to_find.startswith(item.path + "/"):
+            return None
+
+        self._ensure_folder_populated_and_expanded(row, item)
+
+        try:
+            child_model = row.get_model()
+            if child_model:
+                return self._find_row_recursively(child_model, path_to_find)
+        except AttributeError:
+            pass
+
+        return None
+
+    def _ensure_folder_populated_and_expanded(self, row, item: "SessionFolder") -> None:
+        """Ensures folder children are populated and row is expanded."""
+        if item.path not in self._populated_folders:
+            self._populate_folder_children(item)
+
+        if not row.get_expanded():
+            row.set_expanded(True)
 
     def _on_row_activated(self, _list_view: Gtk.ListView, position: int) -> None:
         """Handles item activation (e.g., double-click or Enter key)."""
         if not (tree_list_row := self.filter_model.get_item(position)):
             return
         item = tree_list_row.get_item()
+        should_transfer_focus = False
         if isinstance(item, SessionItem):
             if self.on_session_activated:
                 self.on_session_activated(item)
+                should_transfer_focus = True
         elif isinstance(item, LayoutItem):
             if self.on_layout_activated:
                 self.on_layout_activated(item.name)
+                should_transfer_focus = True
         elif isinstance(item, SessionFolder):
             # For folders, just toggle expansion without triggering auto-hide
             tree_list_row.set_expanded(not tree_list_row.get_expanded())
@@ -741,6 +770,7 @@ class SessionTreeView:
                     and self.parent_window.sidebar_popover.get_visible()
                 ):
                     # We're in popup mode, close the popover
+                    # The popover's closed signal will handle focus transfer
                     self.parent_window.sidebar_popover.popdown()
                     self.parent_window.toggle_sidebar_button.set_active(False)
                 else:
@@ -748,10 +778,24 @@ class SessionTreeView:
                     self.parent_window.flap.set_reveal_flap(False)
                     self.parent_window.settings_manager.set_sidebar_visible(False)
                     self.parent_window.toggle_sidebar_button.set_active(False)
+                    # Transfer focus to terminal in flap mode
+                    self._transfer_focus_to_active_terminal()
                 return GLib.SOURCE_REMOVE
 
             # Use a longer timeout to ensure activation is fully processed
             GLib.timeout_add(100, delayed_auto_hide)
+        elif should_transfer_focus:
+            # Even without auto-hide, transfer focus to terminal after activation
+            # Use a small delay to ensure the terminal is ready
+            GLib.timeout_add(50, self._transfer_focus_to_active_terminal)
+
+    def _transfer_focus_to_active_terminal(self) -> bool:
+        """Transfer focus to the active terminal."""
+        if hasattr(self.parent_window, "tab_manager") and self.parent_window.tab_manager:
+            terminal = self.parent_window.tab_manager.get_selected_terminal()
+            if terminal:
+                self.parent_window.tab_manager._schedule_terminal_focus(terminal)
+        return GLib.SOURCE_REMOVE
 
     def _on_key_pressed(
         self,
@@ -761,60 +805,93 @@ class SessionTreeView:
         state: Gdk.ModifierType,
     ) -> bool:
         """Handles key presses for shortcuts."""
-        # Check for alphanumeric keys to start search
-        if not state & (
+        if self._handle_search_initiation(keyval, state):
+            return Gdk.EVENT_STOP
+
+        if self._handle_ctrl_shortcuts(keyval, state):
+            return Gdk.EVENT_STOP
+
+        if self._handle_special_keys(keyval):
+            return Gdk.EVENT_STOP
+
+        return Gdk.EVENT_PROPAGATE
+
+    def _handle_search_initiation(self, keyval: int, state: Gdk.ModifierType) -> bool:
+        """Handles alphanumeric key press to initiate search."""
+        if state & (
             Gdk.ModifierType.CONTROL_MASK
             | Gdk.ModifierType.ALT_MASK
             | Gdk.ModifierType.SHIFT_MASK
         ):
-            # Get the Unicode character for the key
-            unicode_val = Gdk.keyval_to_unicode(keyval)
-            if unicode_val != 0:  # Valid Unicode character
-                unicode_char = chr(unicode_val)
-                if unicode_char.isalnum() or unicode_char in " -_":
-                    # Move focus to search entry and start typing
-                    if hasattr(self.parent_window, "search_entry"):
-                        self.parent_window.search_entry.grab_focus()
-                        self.parent_window.search_entry.set_text(unicode_char)
-                        self.parent_window.search_entry.set_position(
-                            -1
-                        )  # Move cursor to end
-                    return Gdk.EVENT_STOP
+            return False
 
-        if state & Gdk.ModifierType.CONTROL_MASK:
-            if keyval in (Gdk.KEY_a, Gdk.KEY_A):
-                self.selection_model.select_all()
-                return Gdk.EVENT_STOP
-            if keyval in (Gdk.KEY_c, Gdk.KEY_C):
-                self._copy_selected_item()
-                return Gdk.EVENT_STOP
-            if keyval in (Gdk.KEY_x, Gdk.KEY_X):
-                self._cut_selected_item()
-                return Gdk.EVENT_STOP
-            if keyval in (Gdk.KEY_v, Gdk.KEY_V):
-                target_path = ""
-                if selected_item := self.get_selected_item():
-                    target_path = (
-                        selected_item.path
-                        if isinstance(selected_item, SessionFolder)
-                        else selected_item.folder_path
-                    )
-                self._paste_item(target_path)
-                return Gdk.EVENT_STOP
+        unicode_val = Gdk.keyval_to_unicode(keyval)
+        if unicode_val == 0:
+            return False
+
+        unicode_char = chr(unicode_val)
+        if not (unicode_char.isalnum() or unicode_char in " -_"):
+            return False
+
+        if hasattr(self.parent_window, "search_entry"):
+            self.parent_window.search_entry.grab_focus()
+            self.parent_window.search_entry.set_text(unicode_char)
+            self.parent_window.search_entry.set_position(-1)
+            return True
+
+        return False
+
+    def _handle_ctrl_shortcuts(self, keyval: int, state: Gdk.ModifierType) -> bool:
+        """Handles Ctrl+ keyboard shortcuts."""
+        if not (state & Gdk.ModifierType.CONTROL_MASK):
+            return False
+
+        if keyval in (Gdk.KEY_a, Gdk.KEY_A):
+            self.selection_model.select_all()
+            return True
+
+        if keyval in (Gdk.KEY_c, Gdk.KEY_C):
+            self._copy_selected_item()
+            return True
+
+        if keyval in (Gdk.KEY_x, Gdk.KEY_X):
+            self._cut_selected_item()
+            return True
+
+        if keyval in (Gdk.KEY_v, Gdk.KEY_V):
+            self._handle_paste_shortcut()
+            return True
+
+        return False
+
+    def _handle_paste_shortcut(self) -> None:
+        """Handles Ctrl+V paste shortcut."""
+        target_path = ""
+        if selected_item := self.get_selected_item():
+            target_path = (
+                selected_item.path
+                if isinstance(selected_item, SessionFolder)
+                else selected_item.folder_path
+            )
+        self._paste_item(target_path)
+
+    def _handle_special_keys(self, keyval: int) -> bool:
+        """Handles Delete and BackSpace keys."""
         if keyval == Gdk.KEY_Delete:
             if hasattr(self.parent_window, "action_handler"):
                 self.parent_window.action_handler.delete_selected_items()
-            return Gdk.EVENT_STOP
+            return True
+
         if keyval == Gdk.KEY_BackSpace:
-            # Remove last character from search entry
             if hasattr(self.parent_window, "search_entry"):
                 current_text = self.parent_window.search_entry.get_text()
                 if current_text:
                     new_text = current_text[:-1]
                     self.parent_window.search_entry.set_text(new_text)
                     self.parent_window.search_entry.set_position(-1)
-            return Gdk.EVENT_STOP
-        return Gdk.EVENT_PROPAGATE
+            return True
+
+        return False
 
     def get_selected_item(
         self,
@@ -909,8 +986,8 @@ class SessionTreeView:
             inline_menu_box.remove(child)
 
         # Create inline context menu widget
-        InlineContextMenu = _get_inline_context_menu()
-        inline_menu = InlineContextMenu(self.parent_window)
+        inline_context_menu_cls = _get_inline_context_menu()
+        inline_menu = inline_context_menu_cls(self.parent_window)
 
         # Set up go back callback
         def go_back():
@@ -1041,8 +1118,8 @@ class SessionTreeView:
             inline_menu_box.remove(child)
 
         # Create inline context menu widget
-        InlineContextMenu = _get_inline_context_menu()
-        inline_menu = InlineContextMenu(self.parent_window)
+        inline_context_menu_cls = _get_inline_context_menu()
+        inline_menu = inline_context_menu_cls(self.parent_window)
 
         # Set up go back callback
         def go_back():
@@ -1118,11 +1195,8 @@ class SessionTreeView:
             )
             if result and result.success:
                 self.refresh_tree()
-            elif result:
-                if hasattr(self.parent_window, "_show_error_dialog"):
-                    self.parent_window._show_error_dialog(
-                        _("Paste Error"), result.message
-                    )
+            elif result and hasattr(self.parent_window, "_show_error_dialog"):
+                self.parent_window._show_error_dialog(_("Paste Error"), result.message)
         except Exception as e:
             self.logger.error(f"Paste operation failed: {e}")
             if hasattr(self.parent_window, "_show_error_dialog"):

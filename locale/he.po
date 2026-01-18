@@ -6353,14 +6353,6 @@ msgstr "מצא קבצים"
 msgid "Search for files and directories with various filters"
 msgstr "חפש קבצים ודירקטוריות עם מסננים שונים"
 # 
-# File: src/ashyterm/data/command_manager_models.py, line: 212
-# File: src/ashyterm/data/command_manager_models.py, line: 311
-# File: src/ashyterm/data/command_manager_models.py, line: 324
-# File: src/ashyterm/data/command_manager_models.py, line: 375
-#: NEEDS WORK
-msgid "File Operations"
-msgstr "פעולות קובץ"
-# 
 # File: src/ashyterm/data/command_manager_models.py, line: 217
 #: NEEDS WORK
 msgid "Search Path"
@@ -6580,12 +6572,6 @@ msgstr "קבצים ותיקיות לדחיסה"
 #: NEEDS WORK
 msgid "Archive Name"
 msgstr "שם הארכיון"
-# 
-# File: src/ashyterm/data/command_manager_models.py, line: 359
-# File: src/ashyterm/data/command_manager_models.py, line: 383
-#: NEEDS WORK
-msgid "archive.tar.xz"
-msgstr "archive.tar.xz"
 # 
 # File: src/ashyterm/data/command_manager_models.py, line: 360
 #: NEEDS WORK
@@ -7009,11 +6995,6 @@ msgstr "נתוני שורש אינם מילון"
 msgid "Load failed: {}"
 msgstr "טעינה נכשלה: {}"
 # 
-# File: usr/share/ashyterm/sessions/storage.py, line: 395
-#: NEEDS WORK
-msgid "Data validation failed"
-msgstr "אימות נתונים נכשל"
-# 
 # File: usr/share/ashyterm/sessions/storage.py, line: 410
 #: NEEDS WORK
 msgid "Temporary file was not written correctly"
@@ -7024,6 +7005,11 @@ msgstr "הקובץ הזמני לא נכתב כראוי"
 #, python-brace-format
 msgid "File write failed: {}"
 msgstr "כתיבת קובץ נכשלה: {}"
+# 
+# File: usr/share/ashyterm/sessions/storage.py, line: 395
+#: NEEDS WORK
+msgid "Data validation failed"
+msgstr "אימות נתונים נכשל"
 # 
 # File: usr/share/ashyterm/sessions/storage.py, line: 439
 #: NEEDS WORK
@@ -7180,11 +7166,10 @@ msgstr "הישיבה הועברה בהצלחה."
 msgid "Cannot move a folder into itself."
 msgstr "לא ניתן להעביר תיקיה לתוך עצמה."
 # 
-# File: usr/share/ashyterm/sessions/operations.py, line: 285
+# File: usr/share/ashyterm/sessions/operations.py, line: 300
 #: NEEDS WORK
-#, python-brace-format
-msgid "SSH config file not found at {path}"
-msgstr "קובץ הקונפיגורציה של SSH לא נמצא ב-{path}"
+msgid "No host entries found in SSH config."
+msgstr "לא נמצאו רשומות מארח בקובץ ההגדרות של SSH."
 # 
 # File: usr/share/ashyterm/sessions/operations.py, line: 295
 #: NEEDS WORK
@@ -7192,16 +7177,17 @@ msgstr "קובץ הקונפיגורציה של SSH לא נמצא ב-{path}"
 msgid "Failed to parse SSH config: {error}"
 msgstr "נכשל בפירוש קובץ ההגדרות של SSH: {error}"
 # 
-# File: usr/share/ashyterm/sessions/operations.py, line: 300
-#: NEEDS WORK
-msgid "No host entries found in SSH config."
-msgstr "לא נמצאו רשומות מארח בקובץ ההגדרות של SSH."
-# 
 # File: usr/share/ashyterm/sessions/operations.py, line: 312
 #: NEEDS WORK
 #, python-brace-format
 msgid "Skipped host '{alias}': missing hostname."
 msgstr "הוחלף מארח '{alias}': חסר שם מארח."
+# 
+# File: usr/share/ashyterm/sessions/operations.py, line: 285
+#: NEEDS WORK
+#, python-brace-format
+msgid "SSH config file not found at {path}"
+msgstr "קובץ הקונפיגורציה של SSH לא נמצא ב-{path}"
 # 
 # File: usr/share/ashyterm/sessions/operations.py, line: 360
 #: NEEDS WORK
@@ -7410,11 +7396,6 @@ msgstr "ביטול חיפוש"
 #: NEEDS WORK
 msgid "Search in subfolders"
 msgstr "חפש בתתי-תיקיות"
-# 
-# File: src/ashyterm/filemanager/manager.py, line: 695
-#: NEEDS WORK
-msgid "Recursive"
-msgstr "רקורסיבי"
 # 
 # File: usr/share/ashyterm/filemanager/manager.py, line: 203
 #: NEEDS WORK
@@ -7681,16 +7662,16 @@ msgstr "בחר תיקיית יעד"
 msgid "Download Here"
 msgstr "הורד כאן"
 # 
-# File: src/ashyterm/filemanager/manager.py, line: 2608
-#: NEEDS WORK
-msgid "Download Error"
-msgstr "שגיאת הורדה"
-# 
 # File: usr/share/ashyterm/filemanager/manager.py, line: 855
 # File: usr/share/ashyterm/filemanager/manager.py, line: 889
 #: NEEDS WORK
 msgid "Error"
 msgstr "שגיאה"
+# 
+# File: src/ashyterm/filemanager/manager.py, line: 2608
+#: NEEDS WORK
+msgid "Download Error"
+msgstr "שגיאת הורדה"
 # 
 # File: usr/share/ashyterm/filemanager/manager.py, line: 859
 #: NEEDS WORK
@@ -7973,6 +7954,11 @@ msgstr "מעביר {count} קבצים"
 msgid "Cancel All Transfers"
 msgstr "בטל את כל ההעברות"
 # 
+# File: usr/share/ashyterm/window.py, line: 1193
+#: NEEDS WORK
+msgid "No active terminal to send command to."
+msgstr "אין טרמינל פעיל לשליחת פקודה."
+# 
 # File: usr/share/ashyterm/window.py, line: 424
 #: NEEDS WORK
 msgid "Data Loading Error"
@@ -8169,11 +8155,6 @@ msgstr ""
 #: NEEDS WORK
 msgid "Clear All"
 msgstr "נקה הכל"
-# 
-# File: usr/share/ashyterm/window.py, line: 1193
-#: NEEDS WORK
-msgid "No active terminal to send command to."
-msgstr "אין טרמינל פעיל לשליחת פקודה."
 # 
 # File: usr/share/ashyterm/app.py, line: 333
 #: NEEDS WORK

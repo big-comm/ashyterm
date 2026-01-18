@@ -497,44 +497,65 @@ class SessionItem(BaseModel):
             self._shell_input_highlighting = value
             self._mark_modified()
 
-    def get_validation_errors(self) -> List[str]:
-        """Returns a list of validation error messages."""
+
+    def _validate_basic_fields(self) -> List[str]:
+        """Validate basic session fields."""
         errors = []
         if not self.name:
             errors.append(_("Session name is required."))
+        return errors
+
+    def _validate_ssh_fields(self) -> List[str]:
+        """Validate SSH-specific fields."""
+        errors = []
+        if not self.host:
+            errors.append(_("Host is required for SSH sessions."))
+        if not (1 <= self.port <= 65535):
+            errors.append(_("Port must be between 1 and 65535."))
+        if self.post_login_command_enabled and not self.post_login_command:
+            errors.append(_("Post-login command cannot be empty when enabled."))
+        return errors
+
+    def _validate_sftp_directory(self) -> List[str]:
+        """Validate SFTP local directory configuration."""
+        if not self.sftp_session_enabled or not self.sftp_local_directory:
+            return []
+        try:
+            local_path = Path(self.sftp_local_directory).expanduser()
+            if not local_path.exists() or not local_path.is_dir():
+                return [_("SFTP local directory must exist and be a directory.")]
+        except Exception:
+            return [_("SFTP local directory must exist and be a directory.")]
+        return []
+
+    def _validate_port_forwardings(self) -> List[str]:
+        """Validate port forwarding configurations."""
+        errors = []
+        for tunnel in self._port_forwardings:
+            local_port = tunnel.get("local_port", 0)
+            remote_port = tunnel.get("remote_port", 0)
+            if not (1024 < int(local_port) <= 65535):
+                errors.append(
+                    _(
+                        "Port forward '{name}' has an invalid local port "
+                        "(must be between 1025 and 65535)."
+                    ).format(name=tunnel.get("name", ""))
+                )
+            if not (1 <= int(remote_port) <= 65535):
+                errors.append(
+                    _("Port forward '{name}' has an invalid remote port.").format(
+                        name=tunnel.get("name", "")
+                    )
+                )
+        return errors
+
+    def get_validation_errors(self) -> List[str]:
+        """Returns a list of validation error messages."""
+        errors = self._validate_basic_fields()
         if self.is_ssh():
-            if not self.host:
-                errors.append(_("Host is required for SSH sessions."))
-            if not (1 <= self.port <= 65535):
-                errors.append(_("Port must be between 1 and 65535."))
-            if self.post_login_command_enabled and not self.post_login_command:
-                errors.append(_("Post-login command cannot be empty when enabled."))
-            if self.sftp_session_enabled and self.sftp_local_directory:
-                try:
-                    local_path = Path(self.sftp_local_directory).expanduser()
-                    if not local_path.exists() or not local_path.is_dir():
-                        errors.append(
-                            _("SFTP local directory must exist and be a directory.")
-                        )
-                except Exception:
-                    errors.append(
-                        _("SFTP local directory must exist and be a directory.")
-                    )
-            for tunnel in self._port_forwardings:
-                local_port = tunnel.get("local_port", 0)
-                remote_port = tunnel.get("remote_port", 0)
-                if not (1024 < int(local_port) <= 65535):
-                    errors.append(
-                        _(
-                            "Port forward '{name}' has an invalid local port (must be between 1025 and 65535)."
-                        ).format(name=tunnel.get("name", ""))
-                    )
-                if not (1 <= int(remote_port) <= 65535):
-                    errors.append(
-                        _("Port forward '{name}' has an invalid remote port.").format(
-                            name=tunnel.get("name", "")
-                        )
-                    )
+            errors.extend(self._validate_ssh_fields())
+            errors.extend(self._validate_sftp_directory())
+            errors.extend(self._validate_port_forwardings())
         return errors
 
     def to_dict(self) -> Dict[str, Any]:

@@ -6339,14 +6339,6 @@ msgstr "파일 찾기"
 msgid "Search for files and directories with various filters"
 msgstr "다양한 필터로 파일 및 디렉토리 검색"
 # 
-# File: src/ashyterm/data/command_manager_models.py, line: 212
-# File: src/ashyterm/data/command_manager_models.py, line: 311
-# File: src/ashyterm/data/command_manager_models.py, line: 324
-# File: src/ashyterm/data/command_manager_models.py, line: 375
-#: NEEDS WORK
-msgid "File Operations"
-msgstr "파일 작업"
-# 
 # File: src/ashyterm/data/command_manager_models.py, line: 217
 #: NEEDS WORK
 msgid "Search Path"
@@ -6566,12 +6558,6 @@ msgstr "압축할 파일 및 폴더"
 #: NEEDS WORK
 msgid "Archive Name"
 msgstr "아카이브 이름"
-# 
-# File: src/ashyterm/data/command_manager_models.py, line: 359
-# File: src/ashyterm/data/command_manager_models.py, line: 383
-#: NEEDS WORK
-msgid "archive.tar.xz"
-msgstr "archive.tar.xz"
 # 
 # File: src/ashyterm/data/command_manager_models.py, line: 360
 #: NEEDS WORK
@@ -6995,11 +6981,6 @@ msgstr "루트 데이터는 사전이 아닙니다."
 msgid "Load failed: {}"
 msgstr "로드 실패: {}"
 # 
-# File: usr/share/ashyterm/sessions/storage.py, line: 395
-#: NEEDS WORK
-msgid "Data validation failed"
-msgstr "데이터 유효성 검사 실패"
-# 
 # File: usr/share/ashyterm/sessions/storage.py, line: 410
 #: NEEDS WORK
 msgid "Temporary file was not written correctly"
@@ -7010,6 +6991,11 @@ msgstr "임시 파일이 올바르게 작성되지 않았습니다."
 #, python-brace-format
 msgid "File write failed: {}"
 msgstr "파일 쓰기 실패: {}"
+# 
+# File: usr/share/ashyterm/sessions/storage.py, line: 395
+#: NEEDS WORK
+msgid "Data validation failed"
+msgstr "데이터 유효성 검사 실패"
 # 
 # File: usr/share/ashyterm/sessions/storage.py, line: 439
 #: NEEDS WORK
@@ -7166,11 +7152,10 @@ msgstr "세션이 성공적으로 이동되었습니다."
 msgid "Cannot move a folder into itself."
 msgstr "폴더를 자기 자신으로 이동할 수 없습니다."
 # 
-# File: usr/share/ashyterm/sessions/operations.py, line: 285
+# File: usr/share/ashyterm/sessions/operations.py, line: 300
 #: NEEDS WORK
-#, python-brace-format
-msgid "SSH config file not found at {path}"
-msgstr "{path}에 SSH 구성 파일이 없습니다."
+msgid "No host entries found in SSH config."
+msgstr "SSH 구성에서 호스트 항목을 찾을 수 없습니다."
 # 
 # File: usr/share/ashyterm/sessions/operations.py, line: 295
 #: NEEDS WORK
@@ -7178,16 +7163,17 @@ msgstr "{path}에 SSH 구성 파일이 없습니다."
 msgid "Failed to parse SSH config: {error}"
 msgstr "SSH 구성 구문 분석 실패: {error}"
 # 
-# File: usr/share/ashyterm/sessions/operations.py, line: 300
-#: NEEDS WORK
-msgid "No host entries found in SSH config."
-msgstr "SSH 구성에서 호스트 항목을 찾을 수 없습니다."
-# 
 # File: usr/share/ashyterm/sessions/operations.py, line: 312
 #: NEEDS WORK
 #, python-brace-format
 msgid "Skipped host '{alias}': missing hostname."
 msgstr "호스트 '{alias}'를 건너뛰었습니다: 호스트 이름이 없습니다."
+# 
+# File: usr/share/ashyterm/sessions/operations.py, line: 285
+#: NEEDS WORK
+#, python-brace-format
+msgid "SSH config file not found at {path}"
+msgstr "{path}에 SSH 구성 파일이 없습니다."
 # 
 # File: usr/share/ashyterm/sessions/operations.py, line: 360
 #: NEEDS WORK
@@ -7396,11 +7382,6 @@ msgstr "검색 취소"
 #: NEEDS WORK
 msgid "Search in subfolders"
 msgstr "하위 폴더에서 검색"
-# 
-# File: src/ashyterm/filemanager/manager.py, line: 695
-#: NEEDS WORK
-msgid "Recursive"
-msgstr "재귀적"
 # 
 # File: usr/share/ashyterm/filemanager/manager.py, line: 203
 #: NEEDS WORK
@@ -7667,16 +7648,16 @@ msgstr "대상 폴더 선택"
 msgid "Download Here"
 msgstr "여기에서 다운로드"
 # 
-# File: src/ashyterm/filemanager/manager.py, line: 2608
-#: NEEDS WORK
-msgid "Download Error"
-msgstr "다운로드 오류"
-# 
 # File: usr/share/ashyterm/filemanager/manager.py, line: 855
 # File: usr/share/ashyterm/filemanager/manager.py, line: 889
 #: NEEDS WORK
 msgid "Error"
 msgstr "오류"
+# 
+# File: src/ashyterm/filemanager/manager.py, line: 2608
+#: NEEDS WORK
+msgid "Download Error"
+msgstr "다운로드 오류"
 # 
 # File: usr/share/ashyterm/filemanager/manager.py, line: 859
 #: NEEDS WORK
@@ -7956,6 +7937,11 @@ msgstr "{count}개의 파일 전송 중"
 msgid "Cancel All Transfers"
 msgstr "모든 전송 취소"
 # 
+# File: usr/share/ashyterm/window.py, line: 1193
+#: NEEDS WORK
+msgid "No active terminal to send command to."
+msgstr "활성 터미널이 없어 명령을 보낼 수 없습니다."
+# 
 # File: usr/share/ashyterm/window.py, line: 424
 #: NEEDS WORK
 msgid "Data Loading Error"
@@ -8150,11 +8136,6 @@ msgstr "이 작업은 원격 편집을 위해 로컬에서 다운로드한 모�
 #: NEEDS WORK
 msgid "Clear All"
 msgstr "모두 지우기"
-# 
-# File: usr/share/ashyterm/window.py, line: 1193
-#: NEEDS WORK
-msgid "No active terminal to send command to."
-msgstr "활성 터미널이 없어 명령을 보낼 수 없습니다."
 # 
 # File: usr/share/ashyterm/app.py, line: 333
 #: NEEDS WORK

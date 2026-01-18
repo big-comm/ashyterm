@@ -6374,14 +6374,6 @@ msgstr "Dosyaları Bul"
 msgid "Search for files and directories with various filters"
 msgstr "Farklı filtrelerle dosyaları ve dizinleri arayın"
 # 
-# File: src/ashyterm/data/command_manager_models.py, line: 212
-# File: src/ashyterm/data/command_manager_models.py, line: 311
-# File: src/ashyterm/data/command_manager_models.py, line: 324
-# File: src/ashyterm/data/command_manager_models.py, line: 375
-#: NEEDS WORK
-msgid "File Operations"
-msgstr "Dosya İşlemleri"
-# 
 # File: src/ashyterm/data/command_manager_models.py, line: 217
 #: NEEDS WORK
 msgid "Search Path"
@@ -6601,12 +6593,6 @@ msgstr "Sıkıştırılacak dosyalar ve klasörler"
 #: NEEDS WORK
 msgid "Archive Name"
 msgstr "Arşiv Adı"
-# 
-# File: src/ashyterm/data/command_manager_models.py, line: 359
-# File: src/ashyterm/data/command_manager_models.py, line: 383
-#: NEEDS WORK
-msgid "archive.tar.xz"
-msgstr "arşiv.tar.xz"
 # 
 # File: src/ashyterm/data/command_manager_models.py, line: 360
 #: NEEDS WORK
@@ -7030,11 +7016,6 @@ msgstr "Kök verisi bir sözlük değildir."
 msgid "Load failed: {}"
 msgstr "Yükleme başarısız: {}"
 # 
-# File: usr/share/ashyterm/sessions/storage.py, line: 395
-#: NEEDS WORK
-msgid "Data validation failed"
-msgstr "Veri doğrulama başarısız oldu"
-# 
 # File: usr/share/ashyterm/sessions/storage.py, line: 410
 #: NEEDS WORK
 msgid "Temporary file was not written correctly"
@@ -7045,6 +7026,11 @@ msgstr "Geçici dosya doğru bir şekilde yazılmadı."
 #, python-brace-format
 msgid "File write failed: {}"
 msgstr "Dosya yazma hatası: {}"
+# 
+# File: usr/share/ashyterm/sessions/storage.py, line: 395
+#: NEEDS WORK
+msgid "Data validation failed"
+msgstr "Veri doğrulama başarısız oldu"
 # 
 # File: usr/share/ashyterm/sessions/storage.py, line: 439
 #: NEEDS WORK
@@ -7201,11 +7187,10 @@ msgstr "Oturum başarıyla taşındı."
 msgid "Cannot move a folder into itself."
 msgstr "Bir klasörü kendisine taşıyamazsınız."
 # 
-# File: usr/share/ashyterm/sessions/operations.py, line: 285
+# File: usr/share/ashyterm/sessions/operations.py, line: 300
 #: NEEDS WORK
-#, python-brace-format
-msgid "SSH config file not found at {path}"
-msgstr "{path} konumunda SSH yapılandırma dosyası bulunamadı"
+msgid "No host entries found in SSH config."
+msgstr "SSH yapılandırmasında hiçbir ana bilgisayar girişi bulunamadı."
 # 
 # File: usr/share/ashyterm/sessions/operations.py, line: 295
 #: NEEDS WORK
@@ -7213,16 +7198,17 @@ msgstr "{path} konumunda SSH yapılandırma dosyası bulunamadı"
 msgid "Failed to parse SSH config: {error}"
 msgstr "SSH yapılandırması ayrıştırılamadı: {error}"
 # 
-# File: usr/share/ashyterm/sessions/operations.py, line: 300
-#: NEEDS WORK
-msgid "No host entries found in SSH config."
-msgstr "SSH yapılandırmasında hiçbir ana bilgisayar girişi bulunamadı."
-# 
 # File: usr/share/ashyterm/sessions/operations.py, line: 312
 #: NEEDS WORK
 #, python-brace-format
 msgid "Skipped host '{alias}': missing hostname."
 msgstr "Atlanan ana bilgisayar '{alias}': ana bilgisayar adı eksik."
+# 
+# File: usr/share/ashyterm/sessions/operations.py, line: 285
+#: NEEDS WORK
+#, python-brace-format
+msgid "SSH config file not found at {path}"
+msgstr "{path} konumunda SSH yapılandırma dosyası bulunamadı"
 # 
 # File: usr/share/ashyterm/sessions/operations.py, line: 360
 #: NEEDS WORK
@@ -7431,11 +7417,6 @@ msgstr "Aramayı İptal Et"
 #: NEEDS WORK
 msgid "Search in subfolders"
 msgstr "Alt klasörlerde ara"
-# 
-# File: src/ashyterm/filemanager/manager.py, line: 698
-#: NEEDS WORK
-msgid "Recursive"
-msgstr "Özyinelemeli"
 # 
 # File: usr/share/ashyterm/filemanager/manager.py, line: 203
 #: NEEDS WORK
@@ -7702,16 +7683,16 @@ msgstr "Hedef Klasörü Seçin"
 msgid "Download Here"
 msgstr "Buradan İndir"
 # 
-# File: src/ashyterm/filemanager/manager.py, line: 2608
-#: NEEDS WORK
-msgid "Download Error"
-msgstr "İndirme Hatası"
-# 
 # File: usr/share/ashyterm/filemanager/manager.py, line: 855
 # File: usr/share/ashyterm/filemanager/manager.py, line: 889
 #: NEEDS WORK
 msgid "Error"
 msgstr "Hata"
+# 
+# File: src/ashyterm/filemanager/manager.py, line: 2608
+#: NEEDS WORK
+msgid "Download Error"
+msgstr "İndirme Hatası"
 # 
 # File: usr/share/ashyterm/filemanager/manager.py, line: 859
 #: NEEDS WORK
@@ -7996,6 +7977,11 @@ msgstr "{count} dosya aktarılıyor"
 msgid "Cancel All Transfers"
 msgstr "Tüm Aktarımları İptal Et"
 # 
+# File: usr/share/ashyterm/window.py, line: 1193
+#: NEEDS WORK
+msgid "No active terminal to send command to."
+msgstr "Gönderilecek komut için aktif bir terminal yok."
+# 
 # File: usr/share/ashyterm/window.py, line: 424
 #: NEEDS WORK
 msgid "Data Loading Error"
@@ -8192,11 +8178,6 @@ msgstr ""
 #: NEEDS WORK
 msgid "Clear All"
 msgstr "Tümünü Temizle"
-# 
-# File: usr/share/ashyterm/window.py, line: 1193
-#: NEEDS WORK
-msgid "No active terminal to send command to."
-msgstr "Gönderilecek komut için aktif bir terminal yok."
 # 
 # File: usr/share/ashyterm/app.py, line: 333
 #: NEEDS WORK

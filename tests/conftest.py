@@ -10,8 +10,10 @@ import os
 import sys
 from unittest.mock import MagicMock
 
-# Add src directory to Python path
-src_path = os.path.join(os.path.dirname(__file__), "..", "src")
+# Add src directory to Python path - MUST be first to override system packages
+src_path = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "src"))
+if src_path in sys.path:
+    sys.path.remove(src_path)
 sys.path.insert(0, src_path)
 
 # Mock GTK/GObject imports before any ashyterm imports

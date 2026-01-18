@@ -52,6 +52,11 @@ class FieldType(Enum):
     COLOR = "color"  # Color picker
 
 
+# Category constants for builtin commands
+CATEGORY_FILE_OPERATIONS = "File Operations"
+CATEGORY_ARCHIVE_COMMON_NAME = "archive.tar.xz"
+
+
 @dataclass(slots=True)
 class CommandFormField:
     """
@@ -170,34 +175,55 @@ class CommandButton:
         for form_field in self.form_fields:
             value = field_values.get(form_field.id, form_field.default_value)
             template_key = form_field.template_key or form_field.id
-
-            if form_field.field_type == FieldType.SWITCH:
-                # For switches, add the flag when ON, or off_value when OFF
-                if value:
-                    # Replace placeholder with flag, or append if no placeholder
-                    if f"{{{template_key}}}" in command:
-                        command = command.replace(
-                            f"{{{template_key}}}", form_field.command_flag
-                        )
-                    else:
-                        command = f"{command} {form_field.command_flag}"
-                else:
-                    # Replace placeholder with off_value (can be empty)
-                    if f"{{{template_key}}}" in command:
-                        command = command.replace(
-                            f"{{{template_key}}}", form_field.off_value
-                        )
-                    elif form_field.off_value:
-                        command = f"{command} {form_field.off_value}"
-            else:
-                # For other fields, substitute the value
-                if f"{{{template_key}}}" in command:
-                    command = command.replace(
-                        f"{{{template_key}}}", str(value) if value else ""
-                    )
+            command = self._substitute_field(command, form_field, value, template_key)
 
         # Clean up multiple spaces
-        command = " ".join(command.split())
+        return " ".join(command.split())
+
+    def _substitute_field(
+        self,
+        command: str,
+        form_field: "CommandFormField",
+        value: Any,
+        template_key: str,
+    ) -> str:
+        """Substitute a single field value in the command template."""
+        placeholder = f"{{{template_key}}}"
+
+        if form_field.field_type == FieldType.SWITCH:
+            return self._substitute_switch_field(
+                command, form_field, value, placeholder
+            )
+
+        # For other fields, substitute the value
+        if placeholder in command:
+            return command.replace(placeholder, str(value) if value else "")
+        return command
+
+    def _substitute_switch_field(
+        self, command: str, form_field: "CommandFormField", value: Any, placeholder: str
+    ) -> str:
+        """Handle switch field substitution."""
+        if value:
+            return self._apply_switch_on_value(command, form_field, placeholder)
+        return self._apply_switch_off_value(command, form_field, placeholder)
+
+    def _apply_switch_on_value(
+        self, command: str, form_field: "CommandFormField", placeholder: str
+    ) -> str:
+        """Apply switch ON value to command."""
+        if placeholder in command:
+            return command.replace(placeholder, form_field.command_flag)
+        return f"{command} {form_field.command_flag}"
+
+    def _apply_switch_off_value(
+        self, command: str, form_field: "CommandFormField", placeholder: str
+    ) -> str:
+        """Apply switch OFF value to command."""
+        if placeholder in command:
+            return command.replace(placeholder, form_field.off_value)
+        if form_field.off_value:
+            return f"{command} {form_field.off_value}"
         return command
 
 
@@ -223,7 +249,7 @@ def get_builtin_commands() -> List[CommandButton]:
             display_mode=DisplayMode.ICON_AND_TEXT,
             execution_mode=ExecutionMode.SHOW_DIALOG,
             is_builtin=True,
-            category=_("File Operations"),
+            category=_(CATEGORY_FILE_OPERATIONS),
             sort_order=1,
             form_fields=[
                 CommandFormField(
@@ -326,7 +352,7 @@ def get_builtin_commands() -> List[CommandButton]:
             execution_mode=ExecutionMode.INSERT_AND_EXECUTE,
             cursor_position=0,  # Cursor at end so user can add path
             is_builtin=True,
-            category=_("File Operations"),
+            category=_(CATEGORY_FILE_OPERATIONS),
             sort_order=2,
         ),
         # Compress - create archives
@@ -339,7 +365,7 @@ def get_builtin_commands() -> List[CommandButton]:
             display_mode=DisplayMode.ICON_AND_TEXT,
             execution_mode=ExecutionMode.SHOW_DIALOG,
             is_builtin=True,
-            category=_("File Operations"),
+            category=_(CATEGORY_FILE_OPERATIONS),
             sort_order=3,
             form_fields=[
                 CommandFormField(
@@ -373,8 +399,8 @@ def get_builtin_commands() -> List[CommandButton]:
                     id="output",
                     label=_("Archive Name"),
                     field_type=FieldType.TEXT,
-                    default_value="archive.tar.xz",
-                    placeholder=_("archive.tar.xz"),
+                    default_value=CATEGORY_ARCHIVE_COMMON_NAME,
+                    placeholder=_(CATEGORY_ARCHIVE_COMMON_NAME),
                     tooltip=_("Name of the archive file to create"),
                     template_key="output",
                 ),
@@ -390,7 +416,7 @@ def get_builtin_commands() -> List[CommandButton]:
             display_mode=DisplayMode.ICON_AND_TEXT,
             execution_mode=ExecutionMode.SHOW_DIALOG,
             is_builtin=True,
-            category=_("File Operations"),
+            category=_(CATEGORY_FILE_OPERATIONS),
             sort_order=4,
             form_fields=[
                 CommandFormField(
@@ -398,7 +424,7 @@ def get_builtin_commands() -> List[CommandButton]:
                     label=_("Archive File"),
                     field_type=FieldType.FILE_PATH,
                     default_value="",
-                    placeholder=_("archive.tar.xz"),
+                    placeholder=_(CATEGORY_ARCHIVE_COMMON_NAME),
                     tooltip=_("Archive file to extract"),
                     required=True,
                     template_key="input",
@@ -852,7 +878,7 @@ class CommandButtonManager:
             for cmd in self.get_all_commands():
                 if cmd.category:
                     categories.add(cmd.category)
-            return sorted(list(categories))
+            return sorted(categories)
 
     def is_builtin_customized(self, command_id: str) -> bool:
         """Check if a builtin command has been customized."""

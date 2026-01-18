@@ -193,7 +193,10 @@ class SidebarManager:
 
     def _transfer_focus_to_terminal(self):
         """Transfer focus to the active terminal after popup closes."""
-        pass
+        if hasattr(self.window, "tab_manager") and self.window.tab_manager:
+            terminal = self.window.tab_manager.get_selected_terminal()
+            if terminal:
+                self.window.tab_manager._schedule_terminal_focus(terminal)
 
     def _on_sidebar_popover_key_pressed(self, _, keyval, _keycode, state) -> bool:
         # Always allow closing with the Escape key

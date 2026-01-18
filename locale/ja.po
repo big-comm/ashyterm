@@ -6341,14 +6341,6 @@ msgstr "ファイルを検索"
 msgid "Search for files and directories with various filters"
 msgstr "さまざまなフィルターを使用してファイルとディレクトリを検索"
 # 
-# File: src/ashyterm/data/command_manager_models.py, line: 212
-# File: src/ashyterm/data/command_manager_models.py, line: 311
-# File: src/ashyterm/data/command_manager_models.py, line: 324
-# File: src/ashyterm/data/command_manager_models.py, line: 375
-#: NEEDS WORK
-msgid "File Operations"
-msgstr "ファイル操作"
-# 
 # File: src/ashyterm/data/command_manager_models.py, line: 217
 #: NEEDS WORK
 msgid "Search Path"
@@ -6568,12 +6560,6 @@ msgstr "圧縮するファイルとフォルダー"
 #: NEEDS WORK
 msgid "Archive Name"
 msgstr "アーカイブ名"
-# 
-# File: src/ashyterm/data/command_manager_models.py, line: 359
-# File: src/ashyterm/data/command_manager_models.py, line: 383
-#: NEEDS WORK
-msgid "archive.tar.xz"
-msgstr "アーカイブ.tar.xz"
 # 
 # File: src/ashyterm/data/command_manager_models.py, line: 360
 #: NEEDS WORK
@@ -6997,11 +6983,6 @@ msgstr "ルートデータは辞書ではありません"
 msgid "Load failed: {}"
 msgstr "読み込みに失敗しました: {}"
 # 
-# File: usr/share/ashyterm/sessions/storage.py, line: 395
-#: NEEDS WORK
-msgid "Data validation failed"
-msgstr "データ検証に失敗しました"
-# 
 # File: usr/share/ashyterm/sessions/storage.py, line: 410
 #: NEEDS WORK
 msgid "Temporary file was not written correctly"
@@ -7012,6 +6993,11 @@ msgstr "一時ファイルが正しく書き込まれませんでした"
 #, python-brace-format
 msgid "File write failed: {}"
 msgstr "ファイルの書き込みに失敗しました: {}"
+# 
+# File: usr/share/ashyterm/sessions/storage.py, line: 395
+#: NEEDS WORK
+msgid "Data validation failed"
+msgstr "データ検証に失敗しました"
 # 
 # File: usr/share/ashyterm/sessions/storage.py, line: 439
 #: NEEDS WORK
@@ -7168,11 +7154,10 @@ msgstr "セッションが正常に移動しました。"
 msgid "Cannot move a folder into itself."
 msgstr "フォルダーを自分自身に移動することはできません。"
 # 
-# File: usr/share/ashyterm/sessions/operations.py, line: 285
+# File: usr/share/ashyterm/sessions/operations.py, line: 300
 #: NEEDS WORK
-#, python-brace-format
-msgid "SSH config file not found at {path}"
-msgstr "{path} に SSH 設定ファイルが見つかりませんでした。"
+msgid "No host entries found in SSH config."
+msgstr "SSH設定にホストエントリが見つかりません。"
 # 
 # File: usr/share/ashyterm/sessions/operations.py, line: 295
 #: NEEDS WORK
@@ -7180,16 +7165,17 @@ msgstr "{path} に SSH 設定ファイルが見つかりませんでした。"
 msgid "Failed to parse SSH config: {error}"
 msgstr "SSH設定の解析に失敗しました: {error}"
 # 
-# File: usr/share/ashyterm/sessions/operations.py, line: 300
-#: NEEDS WORK
-msgid "No host entries found in SSH config."
-msgstr "SSH設定にホストエントリが見つかりません。"
-# 
 # File: usr/share/ashyterm/sessions/operations.py, line: 312
 #: NEEDS WORK
 #, python-brace-format
 msgid "Skipped host '{alias}': missing hostname."
 msgstr "ホスト '{alias}' をスキップしました: ホスト名がありません。"
+# 
+# File: usr/share/ashyterm/sessions/operations.py, line: 285
+#: NEEDS WORK
+#, python-brace-format
+msgid "SSH config file not found at {path}"
+msgstr "{path} に SSH 設定ファイルが見つかりませんでした。"
 # 
 # File: usr/share/ashyterm/sessions/operations.py, line: 360
 #: NEEDS WORK
@@ -7398,11 +7384,6 @@ msgstr "検索をキャンセル"
 #: NEEDS WORK
 msgid "Search in subfolders"
 msgstr "サブフォルダー内を検索"
-# 
-# File: src/ashyterm/filemanager/manager.py, line: 695
-#: NEEDS WORK
-msgid "Recursive"
-msgstr "再帰的"
 # 
 # File: usr/share/ashyterm/filemanager/manager.py, line: 203
 #: NEEDS WORK
@@ -7669,16 +7650,16 @@ msgstr "宛先フォルダーを選択"
 msgid "Download Here"
 msgstr "ここからダウンロード"
 # 
-# File: src/ashyterm/filemanager/manager.py, line: 2608
-#: NEEDS WORK
-msgid "Download Error"
-msgstr "ダウンロードエラー"
-# 
 # File: usr/share/ashyterm/filemanager/manager.py, line: 855
 # File: usr/share/ashyterm/filemanager/manager.py, line: 889
 #: NEEDS WORK
 msgid "Error"
 msgstr "エラー"
+# 
+# File: src/ashyterm/filemanager/manager.py, line: 2608
+#: NEEDS WORK
+msgid "Download Error"
+msgstr "ダウンロードエラー"
 # 
 # File: usr/share/ashyterm/filemanager/manager.py, line: 859
 #: NEEDS WORK
@@ -7959,6 +7940,11 @@ msgstr "{count} ファイルを転送中"
 msgid "Cancel All Transfers"
 msgstr "すべての転送をキャンセル"
 # 
+# File: usr/share/ashyterm/window.py, line: 1193
+#: NEEDS WORK
+msgid "No active terminal to send command to."
+msgstr "コマンドを送信するアクティブなターミナルがありません。"
+# 
 # File: usr/share/ashyterm/window.py, line: 424
 #: NEEDS WORK
 msgid "Data Loading Error"
@@ -8153,11 +8139,6 @@ msgstr "これにより、リモート編集のためにローカルにダウン
 #: NEEDS WORK
 msgid "Clear All"
 msgstr "すべてクリア"
-# 
-# File: usr/share/ashyterm/window.py, line: 1193
-#: NEEDS WORK
-msgid "No active terminal to send command to."
-msgstr "コマンドを送信するアクティブなターミナルがありません。"
 # 
 # File: usr/share/ashyterm/app.py, line: 333
 #: NEEDS WORK

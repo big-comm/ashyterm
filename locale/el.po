@@ -6397,14 +6397,6 @@ msgstr "Βρείτε Αρχεία"
 msgid "Search for files and directories with various filters"
 msgstr "Αναζήτηση αρχείων και καταλόγων με διάφορα φίλτρα"
 # 
-# File: src/ashyterm/data/command_manager_models.py, line: 212
-# File: src/ashyterm/data/command_manager_models.py, line: 311
-# File: src/ashyterm/data/command_manager_models.py, line: 324
-# File: src/ashyterm/data/command_manager_models.py, line: 375
-#: NEEDS WORK
-msgid "File Operations"
-msgstr "Λειτουργίες Αρχείων"
-# 
 # File: src/ashyterm/data/command_manager_models.py, line: 217
 #: NEEDS WORK
 msgid "Search Path"
@@ -6624,12 +6616,6 @@ msgstr "Αρχεία και φάκελοι προς συμπίεση"
 #: NEEDS WORK
 msgid "Archive Name"
 msgstr "Όνομα Αρχείου"
-# 
-# File: src/ashyterm/data/command_manager_models.py, line: 359
-# File: src/ashyterm/data/command_manager_models.py, line: 383
-#: NEEDS WORK
-msgid "archive.tar.xz"
-msgstr "archive.tar.xz"
 # 
 # File: src/ashyterm/data/command_manager_models.py, line: 360
 #: NEEDS WORK
@@ -7053,11 +7039,6 @@ msgstr "Τα δεδομένα ρίζας δεν είναι λεξικό."
 msgid "Load failed: {}"
 msgstr "Η φόρτωση απέτυχε: {}"
 # 
-# File: usr/share/ashyterm/sessions/storage.py, line: 395
-#: NEEDS WORK
-msgid "Data validation failed"
-msgstr "Η επικύρωση δεδομένων απέτυχε"
-# 
 # File: usr/share/ashyterm/sessions/storage.py, line: 410
 #: NEEDS WORK
 msgid "Temporary file was not written correctly"
@@ -7068,6 +7049,11 @@ msgstr "Το προσωρινό αρχείο δεν γράφτηκε σωστά"
 #, python-brace-format
 msgid "File write failed: {}"
 msgstr "Η εγγραφή αρχείου απέτυχε: {}"
+# 
+# File: usr/share/ashyterm/sessions/storage.py, line: 395
+#: NEEDS WORK
+msgid "Data validation failed"
+msgstr "Η επικύρωση δεδομένων απέτυχε"
 # 
 # File: usr/share/ashyterm/sessions/storage.py, line: 439
 #: NEEDS WORK
@@ -7224,11 +7210,10 @@ msgstr "Η συνεδρία μεταφέρθηκε με επιτυχία."
 msgid "Cannot move a folder into itself."
 msgstr "Δεν μπορείτε να μετακινήσετε έναν φάκελο μέσα στον εαυτό του."
 # 
-# File: usr/share/ashyterm/sessions/operations.py, line: 285
+# File: usr/share/ashyterm/sessions/operations.py, line: 300
 #: NEEDS WORK
-#, python-brace-format
-msgid "SSH config file not found at {path}"
-msgstr "Δεν βρέθηκε το αρχείο ρυθμίσεων SSH στη διαδρομή {path}"
+msgid "No host entries found in SSH config."
+msgstr "Δεν βρέθηκαν καταχωρίσεις κεντρικού υπολογιστή στη ρύθμιση SSH."
 # 
 # File: usr/share/ashyterm/sessions/operations.py, line: 295
 #: NEEDS WORK
@@ -7236,16 +7221,17 @@ msgstr "Δεν βρέθηκε το αρχείο ρυθμίσεων SSH στη δ
 msgid "Failed to parse SSH config: {error}"
 msgstr "Αποτυχία ανάλυσης της ρύθμισης SSH: {error}"
 # 
-# File: usr/share/ashyterm/sessions/operations.py, line: 300
-#: NEEDS WORK
-msgid "No host entries found in SSH config."
-msgstr "Δεν βρέθηκαν καταχωρίσεις κεντρικού υπολογιστή στη ρύθμιση SSH."
-# 
 # File: usr/share/ashyterm/sessions/operations.py, line: 312
 #: NEEDS WORK
 #, python-brace-format
 msgid "Skipped host '{alias}': missing hostname."
 msgstr "Παραλείφθηκε ο κόμβος '{alias}': λείπει το όνομα κεντρικού υπολογιστή."
+# 
+# File: usr/share/ashyterm/sessions/operations.py, line: 285
+#: NEEDS WORK
+#, python-brace-format
+msgid "SSH config file not found at {path}"
+msgstr "Δεν βρέθηκε το αρχείο ρυθμίσεων SSH στη διαδρομή {path}"
 # 
 # File: usr/share/ashyterm/sessions/operations.py, line: 360
 #: NEEDS WORK
@@ -7456,11 +7442,6 @@ msgstr "Ακύρωση Αναζήτησης"
 #: NEEDS WORK
 msgid "Search in subfolders"
 msgstr "Αναζήτηση σε υποφακέλους"
-# 
-# File: src/ashyterm/filemanager/manager.py, line: 695
-#: NEEDS WORK
-msgid "Recursive"
-msgstr "Αναδρομικός"
 # 
 # File: usr/share/ashyterm/filemanager/manager.py, line: 203
 #: NEEDS WORK
@@ -7729,16 +7710,16 @@ msgstr "Επιλέξτε Φάκελο Προορισμού"
 msgid "Download Here"
 msgstr "Κατεβάστε εδώ"
 # 
-# File: src/ashyterm/filemanager/manager.py, line: 2608
-#: NEEDS WORK
-msgid "Download Error"
-msgstr "Σφάλμα Λήψης"
-# 
 # File: usr/share/ashyterm/filemanager/manager.py, line: 855
 # File: usr/share/ashyterm/filemanager/manager.py, line: 889
 #: NEEDS WORK
 msgid "Error"
 msgstr "Σφάλμα"
+# 
+# File: src/ashyterm/filemanager/manager.py, line: 2608
+#: NEEDS WORK
+msgid "Download Error"
+msgstr "Σφάλμα Λήψης"
 # 
 # File: usr/share/ashyterm/filemanager/manager.py, line: 859
 #: NEEDS WORK
@@ -8023,6 +8004,11 @@ msgstr "Μεταφορά {count} αρχείων"
 msgid "Cancel All Transfers"
 msgstr "Ακύρωση Όλων των Μεταφορών"
 # 
+# File: usr/share/ashyterm/window.py, line: 1193
+#: NEEDS WORK
+msgid "No active terminal to send command to."
+msgstr "Δεν υπάρχει ενεργό τερματικό για να στείλετε εντολή."
+# 
 # File: usr/share/ashyterm/window.py, line: 424
 #: NEEDS WORK
 msgid "Data Loading Error"
@@ -8219,11 +8205,6 @@ msgstr ""
 #: NEEDS WORK
 msgid "Clear All"
 msgstr "Καθαρισμός όλων"
-# 
-# File: usr/share/ashyterm/window.py, line: 1193
-#: NEEDS WORK
-msgid "No active terminal to send command to."
-msgstr "Δεν υπάρχει ενεργό τερματικό για να στείλετε εντολή."
 # 
 # File: usr/share/ashyterm/app.py, line: 333
 #: NEEDS WORK

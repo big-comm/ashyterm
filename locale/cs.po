@@ -6369,14 +6369,6 @@ msgstr "Najít soubory"
 msgid "Search for files and directories with various filters"
 msgstr "Hledat soubory a adresáře s různými filtry"
 # 
-# File: src/ashyterm/data/command_manager_models.py, line: 212
-# File: src/ashyterm/data/command_manager_models.py, line: 311
-# File: src/ashyterm/data/command_manager_models.py, line: 324
-# File: src/ashyterm/data/command_manager_models.py, line: 375
-#: NEEDS WORK
-msgid "File Operations"
-msgstr "Operace se soubory"
-# 
 # File: src/ashyterm/data/command_manager_models.py, line: 217
 #: NEEDS WORK
 msgid "Search Path"
@@ -6596,12 +6588,6 @@ msgstr "Soubory a složky k zkomprimování"
 #: NEEDS WORK
 msgid "Archive Name"
 msgstr "Název archivu"
-# 
-# File: src/ashyterm/data/command_manager_models.py, line: 359
-# File: src/ashyterm/data/command_manager_models.py, line: 383
-#: NEEDS WORK
-msgid "archive.tar.xz"
-msgstr "archiv.tar.xz"
 # 
 # File: src/ashyterm/data/command_manager_models.py, line: 360
 #: NEEDS WORK
@@ -7025,11 +7011,6 @@ msgstr "Kořenová data nejsou slovník."
 msgid "Load failed: {}"
 msgstr "Načtení se nezdařilo: {}"
 # 
-# File: usr/share/ashyterm/sessions/storage.py, line: 395
-#: NEEDS WORK
-msgid "Data validation failed"
-msgstr "Ověření dat selhalo"
-# 
 # File: usr/share/ashyterm/sessions/storage.py, line: 410
 #: NEEDS WORK
 msgid "Temporary file was not written correctly"
@@ -7040,6 +7021,11 @@ msgstr "Dočasný soubor nebyl správně zapsán."
 #, python-brace-format
 msgid "File write failed: {}"
 msgstr "Chyba při zápisu souboru: {}"
+# 
+# File: usr/share/ashyterm/sessions/storage.py, line: 395
+#: NEEDS WORK
+msgid "Data validation failed"
+msgstr "Ověření dat selhalo"
 # 
 # File: usr/share/ashyterm/sessions/storage.py, line: 439
 #: NEEDS WORK
@@ -7196,11 +7182,10 @@ msgstr "Relace byla úspěšně přesunuta."
 msgid "Cannot move a folder into itself."
 msgstr "Nelze přesunout složku do sebe."
 # 
-# File: usr/share/ashyterm/sessions/operations.py, line: 285
+# File: usr/share/ashyterm/sessions/operations.py, line: 300
 #: NEEDS WORK
-#, python-brace-format
-msgid "SSH config file not found at {path}"
-msgstr "Konfigurační soubor SSH nebyl nalezen na {path}"
+msgid "No host entries found in SSH config."
+msgstr "Nebyly nalezeny žádné záznamy hostitelů v konfiguraci SSH."
 # 
 # File: usr/share/ashyterm/sessions/operations.py, line: 295
 #: NEEDS WORK
@@ -7208,16 +7193,17 @@ msgstr "Konfigurační soubor SSH nebyl nalezen na {path}"
 msgid "Failed to parse SSH config: {error}"
 msgstr "Nepodařilo se analyzovat SSH konfiguraci: {error}"
 # 
-# File: usr/share/ashyterm/sessions/operations.py, line: 300
-#: NEEDS WORK
-msgid "No host entries found in SSH config."
-msgstr "Nebyly nalezeny žádné záznamy hostitelů v konfiguraci SSH."
-# 
 # File: usr/share/ashyterm/sessions/operations.py, line: 312
 #: NEEDS WORK
 #, python-brace-format
 msgid "Skipped host '{alias}': missing hostname."
 msgstr "Přeskočen host '{alias}': chybějící název hostitele."
+# 
+# File: usr/share/ashyterm/sessions/operations.py, line: 285
+#: NEEDS WORK
+#, python-brace-format
+msgid "SSH config file not found at {path}"
+msgstr "Konfigurační soubor SSH nebyl nalezen na {path}"
 # 
 # File: usr/share/ashyterm/sessions/operations.py, line: 360
 #: NEEDS WORK
@@ -7428,11 +7414,6 @@ msgstr "Zrušit hledání"
 #: NEEDS WORK
 msgid "Search in subfolders"
 msgstr "Hledat v podsložkách"
-# 
-# File: src/ashyterm/filemanager/manager.py, line: 695
-#: NEEDS WORK
-msgid "Recursive"
-msgstr "Rekurzivní"
 # 
 # File: usr/share/ashyterm/filemanager/manager.py, line: 203
 #: NEEDS WORK
@@ -7699,16 +7680,16 @@ msgstr "Vyberte cílovou složku"
 msgid "Download Here"
 msgstr "Stáhnout zde"
 # 
-# File: src/ashyterm/filemanager/manager.py, line: 2608
-#: NEEDS WORK
-msgid "Download Error"
-msgstr "Chyba stahování"
-# 
 # File: usr/share/ashyterm/filemanager/manager.py, line: 855
 # File: usr/share/ashyterm/filemanager/manager.py, line: 889
 #: NEEDS WORK
 msgid "Error"
 msgstr "Chyba"
+# 
+# File: src/ashyterm/filemanager/manager.py, line: 2608
+#: NEEDS WORK
+msgid "Download Error"
+msgstr "Chyba stahování"
 # 
 # File: usr/share/ashyterm/filemanager/manager.py, line: 859
 #: NEEDS WORK
@@ -7993,6 +7974,11 @@ msgstr "Přenášení {count} souborů"
 msgid "Cancel All Transfers"
 msgstr "Zrušit všechny převody"
 # 
+# File: usr/share/ashyterm/window.py, line: 1193
+#: NEEDS WORK
+msgid "No active terminal to send command to."
+msgstr "Žádný aktivní terminál pro odeslání příkazu."
+# 
 # File: usr/share/ashyterm/window.py, line: 424
 #: NEEDS WORK
 msgid "Data Loading Error"
@@ -8189,11 +8175,6 @@ msgstr ""
 #: NEEDS WORK
 msgid "Clear All"
 msgstr "Vymazat vše"
-# 
-# File: usr/share/ashyterm/window.py, line: 1193
-#: NEEDS WORK
-msgid "No active terminal to send command to."
-msgstr "Žádný aktivní terminál pro odeslání příkazu."
 # 
 # File: usr/share/ashyterm/app.py, line: 333
 #: NEEDS WORK

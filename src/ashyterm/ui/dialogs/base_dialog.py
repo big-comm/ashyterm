@@ -144,7 +144,11 @@ class BaseDialog(Adw.Window):
         self.close()
 
     def present(self):
-        """Present the dialog, hiding any tooltips first."""
+        """Present the dialog, hiding any tooltips first.
+
+        Implements a fallback mechanism to recover UI responsiveness if the
+        dialog fails to appear due to GTK4 window mapping issues.
+        """
         # Hide all tooltips to prevent them from interfering with the dialog
         from ...utils.tooltip_helper import get_tooltip_helper
 
@@ -152,7 +156,38 @@ class BaseDialog(Adw.Window):
             get_tooltip_helper().hide_all()
         except Exception:
             pass
+
+        # Track if we successfully mapped
+        self._dialog_mapped = False
+
+        def on_map(_widget):
+            self._dialog_mapped = True
+
+        # Connect to map signal to track successful display
+        map_handler = self.connect("map", on_map)
+
         super().present()
+
+        # Check visibility after a delay and recover if needed
+        def _check_and_recover():
+            self.disconnect(map_handler)
+            if not self._dialog_mapped:
+                self.logger.warning(
+                    f"Dialog {self.__class__.__name__} failed to map within timeout. "
+                    "Disabling modal to recover UI."
+                )
+                # Disable modal to unlock the parent window
+                self.set_modal(False)
+                # Force show
+                self.set_visible(True)
+                # Try to raise to top
+                if hasattr(self, "get_surface"):
+                    surface = self.get_surface()
+                    if surface:
+                        surface.raise_()
+            return GLib.SOURCE_REMOVE
+
+        GLib.timeout_add(500, _check_and_recover)
 
     def _mark_changed(self):
         self._has_changes = True

@@ -6371,14 +6371,6 @@ msgstr "Pronađi datoteke"
 msgid "Search for files and directories with various filters"
 msgstr "Pretraži datoteke i direktorije s raznim filtrima"
 # 
-# File: src/ashyterm/data/command_manager_models.py, line: 212
-# File: src/ashyterm/data/command_manager_models.py, line: 311
-# File: src/ashyterm/data/command_manager_models.py, line: 324
-# File: src/ashyterm/data/command_manager_models.py, line: 375
-#: NEEDS WORK
-msgid "File Operations"
-msgstr "Operacije datoteka"
-# 
 # File: src/ashyterm/data/command_manager_models.py, line: 217
 #: NEEDS WORK
 msgid "Search Path"
@@ -6598,12 +6590,6 @@ msgstr "Datoteke i mape za komprimiranje"
 #: NEEDS WORK
 msgid "Archive Name"
 msgstr "Ime arhive"
-# 
-# File: src/ashyterm/data/command_manager_models.py, line: 359
-# File: src/ashyterm/data/command_manager_models.py, line: 383
-#: NEEDS WORK
-msgid "archive.tar.xz"
-msgstr "arhiva.tar.xz"
 # 
 # File: src/ashyterm/data/command_manager_models.py, line: 360
 #: NEEDS WORK
@@ -7027,11 +7013,6 @@ msgstr "Korijenski podaci nisu rječnik"
 msgid "Load failed: {}"
 msgstr "Učitavanje nije uspjelo: {}"
 # 
-# File: usr/share/ashyterm/sessions/storage.py, line: 395
-#: NEEDS WORK
-msgid "Data validation failed"
-msgstr "Validacija podataka nije uspjela"
-# 
 # File: usr/share/ashyterm/sessions/storage.py, line: 410
 #: NEEDS WORK
 msgid "Temporary file was not written correctly"
@@ -7042,6 +7023,11 @@ msgstr "Privremena datoteka nije ispravno zapisana"
 #, python-brace-format
 msgid "File write failed: {}"
 msgstr "Pisanje datoteke nije uspjelo: {}"
+# 
+# File: usr/share/ashyterm/sessions/storage.py, line: 395
+#: NEEDS WORK
+msgid "Data validation failed"
+msgstr "Validacija podataka nije uspjela"
 # 
 # File: usr/share/ashyterm/sessions/storage.py, line: 439
 #: NEEDS WORK
@@ -7198,11 +7184,10 @@ msgstr "Sesija je uspješno premještena."
 msgid "Cannot move a folder into itself."
 msgstr "Ne možete premjestiti mapu unutar nje same."
 # 
-# File: usr/share/ashyterm/sessions/operations.py, line: 285
+# File: usr/share/ashyterm/sessions/operations.py, line: 300
 #: NEEDS WORK
-#, python-brace-format
-msgid "SSH config file not found at {path}"
-msgstr "SSH konfiguracijska datoteka nije pronađena na {path}"
+msgid "No host entries found in SSH config."
+msgstr "Nema unosa hostova u SSH konfiguraciji."
 # 
 # File: usr/share/ashyterm/sessions/operations.py, line: 295
 #: NEEDS WORK
@@ -7210,16 +7195,17 @@ msgstr "SSH konfiguracijska datoteka nije pronađena na {path}"
 msgid "Failed to parse SSH config: {error}"
 msgstr "Nije moguće analizirati SSH konfiguraciju: {error}"
 # 
-# File: usr/share/ashyterm/sessions/operations.py, line: 300
-#: NEEDS WORK
-msgid "No host entries found in SSH config."
-msgstr "Nema unosa hostova u SSH konfiguraciji."
-# 
 # File: usr/share/ashyterm/sessions/operations.py, line: 312
 #: NEEDS WORK
 #, python-brace-format
 msgid "Skipped host '{alias}': missing hostname."
 msgstr "Preskočen domaćin '{alias}': nedostaje ime domaćina."
+# 
+# File: usr/share/ashyterm/sessions/operations.py, line: 285
+#: NEEDS WORK
+#, python-brace-format
+msgid "SSH config file not found at {path}"
+msgstr "SSH konfiguracijska datoteka nije pronađena na {path}"
 # 
 # File: usr/share/ashyterm/sessions/operations.py, line: 360
 #: NEEDS WORK
@@ -7428,11 +7414,6 @@ msgstr "Otkaži pretraživanje"
 #: NEEDS WORK
 msgid "Search in subfolders"
 msgstr "Pretraži u podmapama"
-# 
-# File: src/ashyterm/filemanager/manager.py, line: 695
-#: NEEDS WORK
-msgid "Recursive"
-msgstr "Rekurzivni"
 # 
 # File: usr/share/ashyterm/filemanager/manager.py, line: 203
 #: NEEDS WORK
@@ -7699,16 +7680,16 @@ msgstr "Odaberite odredišnu mapu"
 msgid "Download Here"
 msgstr "Preuzmi ovdje"
 # 
-# File: src/ashyterm/filemanager/manager.py, line: 2608
-#: NEEDS WORK
-msgid "Download Error"
-msgstr "Greška pri preuzimanju"
-# 
 # File: usr/share/ashyterm/filemanager/manager.py, line: 855
 # File: usr/share/ashyterm/filemanager/manager.py, line: 889
 #: NEEDS WORK
 msgid "Error"
 msgstr "Greška"
+# 
+# File: src/ashyterm/filemanager/manager.py, line: 2608
+#: NEEDS WORK
+msgid "Download Error"
+msgstr "Greška pri preuzimanju"
 # 
 # File: usr/share/ashyterm/filemanager/manager.py, line: 859
 #: NEEDS WORK
@@ -7993,6 +7974,11 @@ msgstr "Prebacivanje {count} datoteka"
 msgid "Cancel All Transfers"
 msgstr "Otkaži sve prijenose"
 # 
+# File: usr/share/ashyterm/window.py, line: 1193
+#: NEEDS WORK
+msgid "No active terminal to send command to."
+msgstr "Nema aktivnog terminala za slanje naredbe."
+# 
 # File: usr/share/ashyterm/window.py, line: 424
 #: NEEDS WORK
 msgid "Data Loading Error"
@@ -8189,11 +8175,6 @@ msgstr ""
 #: NEEDS WORK
 msgid "Clear All"
 msgstr "Izbriši sve"
-# 
-# File: usr/share/ashyterm/window.py, line: 1193
-#: NEEDS WORK
-msgid "No active terminal to send command to."
-msgstr "Nema aktivnog terminala za slanje naredbe."
 # 
 # File: usr/share/ashyterm/app.py, line: 333
 #: NEEDS WORK
