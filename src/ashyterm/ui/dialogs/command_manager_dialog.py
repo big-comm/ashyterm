@@ -28,7 +28,7 @@ from ...utils.translation_utils import _
 from ..widgets.bash_text_view import BashTextView
 from ..widgets.form_widget_builder import create_field_from_form_field
 from ..widgets.action_rows import ManagedListRow, ManagedExpanderRow
-from .base_dialog import show_delete_confirmation_dialog
+from .base_dialog import BaseDialog, show_delete_confirmation_dialog
 
 # Extraction command builders: (extension_tuple, uses_dest_flag, command_template_with_output, command_template_without)
 # For templates: {input} = input file, {dest} = destination flag, {output} = output path
@@ -59,17 +59,16 @@ _EXTRACT_COMMANDS: List[Tuple[Tuple[str, ...], bool, str, str]] = [
 
 
 class CommandFormDialog(Adw.Window):
-    """
-    Dialog that displays form fields for a command and builds the final command string.
-    """
-
     __gsignals__ = {
         "command-ready": (
             GObject.SignalFlags.RUN_FIRST,
             None,
-            (str, bool, bool),
+            (GObject.TYPE_STRING, GObject.TYPE_BOOLEAN, GObject.TYPE_BOOLEAN),
         ),  # (command, execute, send_to_all)
     }
+
+    DIALOG_HEIGHT_MIN = 350
+    DIALOG_HEIGHT_MAX = 800
 
     def __init__(
         self,
@@ -80,7 +79,6 @@ class CommandFormDialog(Adw.Window):
     ):
         self._command_manager = get_command_button_manager()
         self._settings_manager = settings_manager
-        # Load saved size or calculate smart default
         saved_width = self._command_manager.get_command_pref(command.id, "dialog_width")
         saved_height = self._command_manager.get_command_pref(
             command.id, "dialog_height"
@@ -144,8 +142,8 @@ class CommandFormDialog(Adw.Window):
 
         return False  # Allow close to proceed
 
-    @staticmethod
-    def _calculate_dialog_height(command: CommandButton) -> int:
+    @classmethod
+    def _calculate_dialog_height(cls, command: CommandButton) -> int:
         """Calculate optimal dialog height based on field types and count."""
         base_height = 180  # Header + preview + margins
 
@@ -169,11 +167,7 @@ class CommandFormDialog(Adw.Window):
 
         fields_height = 50  # Group title
         for field in command.form_fields:
-            if field.field_type == FieldType.RADIO:
-                # Radio buttons: base + per-option
-                num_options = len(field.options) if field.options else 2
-                fields_height += 50 + (num_options * 36)
-            elif field.field_type == FieldType.MULTI_SELECT:
+            if field.field_type in [FieldType.RADIO, FieldType.MULTI_SELECT]:
                 num_options = len(field.options) if field.options else 2
                 fields_height += 50 + (num_options * 36)
             else:
@@ -215,7 +209,7 @@ class CommandFormDialog(Adw.Window):
         button_box.append(insert_button)
 
         execute_button = Gtk.Button(
-            label=_("Execute"), css_classes=["suggested-action"]
+            label=_("Execute"), css_classes=[BaseDialog.CSS_CLASS_SUGGESTED]
         )
         get_tooltip_helper().add_tooltip(
             execute_button, _("Insert and execute command (Ctrl+Enter)")
@@ -244,7 +238,7 @@ class CommandFormDialog(Adw.Window):
         preview_title = Gtk.Label(
             label=_("Command Preview"),
             xalign=0.0,
-            css_classes=["dim-label", "caption"],
+            css_classes=[BaseDialog.CSS_CLASS_DIM_LABEL, "caption"],
         )
         preview_container.append(preview_title)
 
@@ -280,7 +274,7 @@ class CommandFormDialog(Adw.Window):
                 wrap=True,
                 wrap_mode=Pango.WrapMode.WORD_CHAR,
                 xalign=0.0,
-                css_classes=["dim-label"],
+                css_classes=[BaseDialog.CSS_CLASS_DIM_LABEL],
             )
             content_box.append(desc_label)
 
@@ -365,74 +359,61 @@ class CommandFormDialog(Adw.Window):
         values = {}
 
         for form_field in self.command.form_fields:
-            widget = self.field_widgets.get(form_field.id)
-            if not widget:
-                continue
-
-            if form_field.field_type == FieldType.SWITCH:
-                values[form_field.id] = widget.get_active()
-
-            elif form_field.field_type == FieldType.DROPDOWN:
-                selected_idx = widget.get_selected()
-                if selected_idx >= 0 and hasattr(widget, "_options"):
-                    values[form_field.id] = widget._options[selected_idx][0]
-                else:
-                    values[form_field.id] = ""
-
-            elif form_field.field_type == FieldType.RADIO:
-                # Radio group - get selected value
-                if hasattr(widget, "_selected_value"):
-                    values[form_field.id] = widget._selected_value
-                else:
-                    values[form_field.id] = ""
-
-            elif form_field.field_type == FieldType.MULTI_SELECT:
-                # Multi-select - get all selected values
-                selected = []
-                if hasattr(widget, "_checkboxes"):
-                    for check in widget._checkboxes:
-                        if check.get_active() and hasattr(check, "_value"):
-                            selected.append(check._value)
-                values[form_field.id] = " ".join(selected)
-
-            elif form_field.field_type == FieldType.TEXT_AREA:
-                # TextView - get buffer text
-                buffer = widget.get_buffer()
-                values[form_field.id] = buffer.get_text(
-                    buffer.get_start_iter(), buffer.get_end_iter(), False
-                )
-
-            elif form_field.field_type == FieldType.SLIDER:
-                values[form_field.id] = str(int(widget.get_value()))
-
-            elif form_field.field_type == FieldType.COLOR:
-                rgba = widget.get_rgba()
-                color_format = getattr(widget, "_color_format", "hex")
-                if color_format == "rgb":
-                    values[form_field.id] = "{},{},{}".format(
-                        int(rgba.red * 255), int(rgba.green * 255), int(rgba.blue * 255)
-                    )
-                else:
-                    # Default to hex
-                    values[form_field.id] = "#{:02x}{:02x}{:02x}".format(
-                        int(rgba.red * 255), int(rgba.green * 255), int(rgba.blue * 255)
-                    )
-
-            elif form_field.field_type in (
-                FieldType.TEXT,
-                FieldType.NUMBER,
-                FieldType.PASSWORD,
-                FieldType.DATE_TIME,
-            ):
-                values[form_field.id] = widget.get_text()
-
-            elif form_field.field_type in (
-                FieldType.FILE_PATH,
-                FieldType.DIRECTORY_PATH,
-            ):
-                values[form_field.id] = widget.get_text()
+            if widget := self.field_widgets.get(form_field.id):
+                values[form_field.id] = self._extract_field_value(form_field, widget)
 
         return values
+
+    def _extract_field_value(self, form_field, widget) -> Any:
+        """Extract value from a specific field widget based on its type."""
+        ft = form_field.field_type
+
+        # Use a mapping for extraction methods to reduce if/elif chains
+        extractors = {
+            FieldType.SWITCH: lambda w: w.get_active(),
+            FieldType.DROPDOWN: self._extract_dropdown_value,
+            FieldType.RADIO: lambda w: getattr(w, "_selected_value", ""),
+            FieldType.MULTI_SELECT: self._extract_multi_select_value,
+            FieldType.TEXT_AREA: self._extract_textarea_value,
+            FieldType.SLIDER: lambda w: str(int(w.get_value())),
+            FieldType.COLOR: self._extract_color_value,
+        }
+
+        if ft in extractors:
+            return extractors[ft](widget)
+
+        # Common text-based fields (TEXT, NUMBER, PASSWORD, FILE_PATH, etc.)
+        if hasattr(widget, "get_text"):
+            return widget.get_text()
+
+        return ""
+
+    def _extract_dropdown_value(self, widget) -> str:
+        idx = widget.get_selected()
+        if idx >= 0 and hasattr(widget, "_options"):
+            return widget._options[idx][0]
+        return ""
+
+    def _extract_multi_select_value(self, widget) -> str:
+        selected = []
+        if hasattr(widget, "_checkboxes"):
+            for check in widget._checkboxes:
+                if check.get_active() and hasattr(check, "_value"):
+                    selected.append(check._value)
+        return " ".join(selected)
+
+    def _extract_textarea_value(self, widget) -> str:
+        buffer = widget.get_buffer()
+        return buffer.get_text(buffer.get_start_iter(), buffer.get_end_iter(), False)
+
+    def _extract_color_value(self, widget) -> str:
+        rgba = widget.get_rgba()
+        color_format = getattr(widget, "_color_format", "hex")
+        r, g, b = (int(rgba.red * 255), int(rgba.green * 255), int(rgba.blue * 255))
+
+        if color_format == "rgb":
+            return f"{r},{g},{b}"
+        return f"#{r:02x}{g:02x}{b:02x}"
 
     def _update_preview(self):
         """Update the command preview based on current field values."""
@@ -995,7 +976,9 @@ class CommandEditorDialog(Adw.Window):
         header.pack_start(cancel_button)
 
         # Save button
-        self.save_button = Gtk.Button(label=_("Save"), css_classes=["suggested-action"])
+        self.save_button = Gtk.Button(
+            label=_("Save"), css_classes=[BaseDialog.CSS_CLASS_SUGGESTED]
+        )
         self.save_button.connect("clicked", self._save_command)
         self.save_button.set_visible(False)
         header.pack_end(self.save_button)
@@ -1105,7 +1088,7 @@ class CommandEditorDialog(Adw.Window):
         simple_box.append(simple_title)
         simple_desc = Gtk.Label(
             label=_("A button that runs a command directly"),
-            css_classes=["dim-label"],
+            css_classes=[BaseDialog.CSS_CLASS_DIM_LABEL],
             wrap=True,
         )
         simple_box.append(simple_desc)
@@ -1130,7 +1113,7 @@ class CommandEditorDialog(Adw.Window):
         form_box.append(form_title)
         form_desc = Gtk.Label(
             label=_("A button that shows a form to configure the command"),
-            css_classes=["dim-label"],
+            css_classes=[BaseDialog.CSS_CLASS_DIM_LABEL],
             wrap=True,
         )
         form_box.append(form_desc)
@@ -1161,9 +1144,9 @@ class CommandEditorDialog(Adw.Window):
         # Validate basic info
         name = self.form_name_row.get_text().strip()
         if not name:
-            self.form_name_row.add_css_class("error")
+            self.form_name_row.add_css_class(BaseDialog.CSS_CLASS_ERROR)
             return
-        self.form_name_row.remove_css_class("error")
+        self.form_name_row.remove_css_class(BaseDialog.CSS_CLASS_ERROR)
 
         # Go to form builder
         self.continue_button.set_visible(False)
@@ -1202,7 +1185,7 @@ class CommandEditorDialog(Adw.Window):
 
         icon_picker_btn = Gtk.Button(
             icon_name="view-grid-symbolic",
-            css_classes=["flat"],
+            css_classes=[BaseDialog.CSS_CLASS_FLAT],
             valign=Gtk.Align.CENTER,
         )
         get_tooltip_helper().add_tooltip(icon_picker_btn, _("Choose icon"))
@@ -1248,7 +1231,7 @@ class CommandEditorDialog(Adw.Window):
         help_label = Gtk.Label(
             label=_("Enter the bash command to execute:"),
             xalign=0.0,
-            css_classes=["dim-label", "caption"],
+            css_classes=[BaseDialog.CSS_CLASS_DIM_LABEL, "caption"],
             margin_start=4,
         )
         command_group.add(help_label)
@@ -1299,7 +1282,7 @@ class CommandEditorDialog(Adw.Window):
 
         icon_picker_btn = Gtk.Button(
             icon_name="view-grid-symbolic",
-            css_classes=["flat"],
+            css_classes=[BaseDialog.CSS_CLASS_FLAT],
             valign=Gtk.Align.CENTER,
         )
         get_tooltip_helper().add_tooltip(icon_picker_btn, _("Choose icon"))
@@ -1362,7 +1345,7 @@ class CommandEditorDialog(Adw.Window):
 
         add_field_button = Gtk.MenuButton(
             icon_name="list-add-symbolic",
-            css_classes=["flat"],
+            css_classes=[BaseDialog.CSS_CLASS_FLAT],
         )
         get_tooltip_helper().add_tooltip(add_field_button, _("Add part"))
         add_menu = Gio.Menu()
@@ -1413,7 +1396,7 @@ class CommandEditorDialog(Adw.Window):
         )
         self.form_fields_list = Gtk.ListBox(
             selection_mode=Gtk.SelectionMode.NONE,
-            css_classes=["boxed-list"],
+            css_classes=[BaseDialog.CSS_CLASS_BOXED_LIST],
         )
         fields_scroll.set_child(self.form_fields_list)
         left_box.append(fields_scroll)
@@ -1459,7 +1442,7 @@ class CommandEditorDialog(Adw.Window):
         )
         self.form_preview_list = Gtk.ListBox(
             selection_mode=Gtk.SelectionMode.NONE,
-            css_classes=["boxed-list"],
+            css_classes=[BaseDialog.CSS_CLASS_BOXED_LIST],
         )
         preview_scroll.set_child(self.form_preview_list)
         form_preview_group.add(preview_scroll)
@@ -1539,7 +1522,7 @@ class CommandEditorDialog(Adw.Window):
 
         for icon_name in common_icons:
             icon_btn = Gtk.Button(
-                css_classes=["flat"],
+                css_classes=[BaseDialog.CSS_CLASS_FLAT],
             )
             get_tooltip_helper().add_tooltip(icon_btn, icon_name)
             icon_btn.set_child(Gtk.Image.new_from_icon_name(icon_name))
@@ -1580,43 +1563,46 @@ class CommandEditorDialog(Adw.Window):
             else:
                 self.form_icon_entry.set_text(selected_ref[0])
 
+    def _get_field_preview(self, field_data: Dict) -> str:
+        """Get a string representation of a field for the command preview."""
+        field_type = field_data.get("type", "text")
+        field_id = field_data.get("id", "")
+
+        if field_type == "command_text":
+            return field_data.get("default", "")
+
+        if field_type == "switch":
+            on_val = field_data.get("command_flag", "")
+            off_val = field_data.get("off_value", "")
+            if on_val:
+                return f"[{on_val}]"
+            if off_val:
+                return f"[{off_val}]"
+            return f"{{{field_id}}}"
+
+        # Regular field types
+        default = field_data.get("default", "")
+        if default:
+            return str(default)
+
+        # Fallback to label or ID
+        placeholder = field_data.get("placeholder", "")
+        if placeholder:
+            return f"<{placeholder}>"
+
+        label = field_data.get("label", "").strip()
+        if label:
+            return f"<{label}>"
+
+        return f"{{{field_id}}}"
+
     def _update_preview(self):
         """Update the resulting command preview from form fields order."""
-        # Build the command from form_fields_data in order
         parts = []
         for field_data in self.form_fields_data:
-            field_type = field_data.get("type", "text")
-            field_id = field_data.get("id", "")
-
-            if field_type == "command_text":
-                # Static command text - just use the value directly
-                value = field_data.get("default", "")
-                if value:
-                    parts.append(value)
-            elif field_type == "switch":
-                # Show on/off indicator
-                on_val = field_data.get("command_flag", "")
-                off_val = field_data.get("off_value", "")
-                if on_val:
-                    parts.append(f"[{on_val}]")
-                elif off_val:
-                    parts.append(f"[{off_val}]")
-                else:
-                    parts.append(f"{{{field_id}}}")
-            else:
-                # Show meaningful preview
-                label = field_data.get("label", "").strip()
-                default = field_data.get("default", "")
-                placeholder = field_data.get("placeholder", "")
-
-                if default:
-                    parts.append(str(default))
-                elif placeholder:
-                    parts.append(f"<{placeholder}>")
-                elif label:
-                    parts.append(f"<{label}>")
-                else:
-                    parts.append(f"{{{field_id}}}")
+            preview = self._get_field_preview(field_data)
+            if preview:
+                parts.append(preview)
 
         template = " ".join(parts)
         self.result_preview.set_text(template if template else _("(empty)"))
@@ -1790,565 +1776,29 @@ class CommandEditorDialog(Adw.Window):
 
         # Type-specific content
         if field_type == "command_text":
-            # Simple text entry for static command text
-            text_row = Adw.EntryRow(title=_("Command text"))
-            text_row.set_text(str(field_data.get("default", "")))
-
-            def on_cmd_text_changed(r):
-                field_data["default"] = r.get_text()
-                value = r.get_text()
-                expander.set_title(
-                    f"{type_icons.get(field_type, '💬')} {value}"
-                    if value
-                    else f"{type_icons.get(field_type, '💬')} {_('(empty)')}"
-                )
-                self._update_preview()
-
-            text_row.connect("changed", on_cmd_text_changed)
-            expander.add_row(text_row)
+            self._add_cmd_text_rows(expander, field_data, type_icons, field_type)
         else:
-            # Regular form fields need ID and Label
-            id_row = Adw.EntryRow(title=_("ID"))
-            id_row.set_text(field_data.get("id", ""))
-
-            def on_id_changed(row):
-                new_id = row.get_text()
-                field_data["id"] = new_id
-                expander.set_title(f"{type_icons.get(field_type, '📝')} {{{new_id}}}")
-                self._update_preview()
-
-            id_row.connect("changed", on_id_changed)
-            expander.add_row(id_row)
-
-            label_row = Adw.EntryRow(title=_("Label"))
-            label_row.set_text(field_data.get("label", ""))
-
-            def on_label_changed(r):
-                field_data["label"] = r.get_text()
-                self._update_preview()
-                self._update_form_preview()
-
-            label_row.connect("changed", on_label_changed)
-            expander.add_row(label_row)
-
-        # Type-specific fields
-        if field_type == "text":
-            placeholder_row = Adw.EntryRow(title=_("Placeholder"))
-            placeholder_row.set_text(str(field_data.get("placeholder", "")))
-
-            def on_text_placeholder_changed(r):
-                field_data["placeholder"] = r.get_text()
-                self._update_form_preview()
-
-            placeholder_row.connect("changed", on_text_placeholder_changed)
-            expander.add_row(placeholder_row)
-
-            default_row = Adw.EntryRow(title=_("Default"))
-            default_row.set_text(str(field_data.get("default", "")))
-
-            def on_text_default_changed(r):
-                field_data["default"] = r.get_text()
-                self._update_preview()
-                self._update_form_preview()
-
-            default_row.connect("changed", on_text_default_changed)
-            expander.add_row(default_row)
-
-        elif field_type == "number":
-            default_row = Adw.EntryRow(title=_("Default"))
-            default_row.set_text(str(field_data.get("default", "")))
-
-            def on_num_default_changed(r):
-                field_data["default"] = r.get_text()
-                self._update_preview()
-                self._update_form_preview()
-
-            default_row.connect("changed", on_num_default_changed)
-            expander.add_row(default_row)
-
-        elif field_type == "switch":
-            on_row = Adw.EntryRow(title=_("On value"))
-            on_row.set_text(field_data.get("command_flag", ""))
-
-            def on_switch_on_changed(r):
-                field_data["command_flag"] = r.get_text()
-                self._update_preview()
-
-            on_row.connect("changed", on_switch_on_changed)
-            expander.add_row(on_row)
-
-            off_row = Adw.EntryRow(title=_("Off value"))
-            off_row.set_text(field_data.get("off_value", ""))
-
-            def on_switch_off_changed(r):
-                field_data["off_value"] = r.get_text()
-                self._update_preview()
-
-            off_row.connect("changed", on_switch_off_changed)
-            expander.add_row(off_row)
-
-            default_row = Adw.SwitchRow(title=_("Default on"))
-            default_row.set_active(bool(field_data.get("default", False)))
-
-            def on_switch_default_changed(r, p):
-                field_data["default"] = r.get_active()
-                self._update_form_preview()
-
-            default_row.connect("notify::active", on_switch_default_changed)
-            expander.add_row(default_row)
-
-        elif field_type == "dropdown":
-            # Options management with listbox inside expander
-            options_header = Adw.ActionRow(title=_("Options"))
-
-            add_option_btn = Gtk.Button(
-                icon_name="list-add-symbolic",
-                css_classes=["flat", "circular"],
-                valign=Gtk.Align.CENTER,
-            )
-            get_tooltip_helper().add_tooltip(add_option_btn, _("Add option"))
-            options_header.add_suffix(add_option_btn)
-
-            # Create a mini listbox for options inside the expander
-            options_listbox = Gtk.ListBox(
-                selection_mode=Gtk.SelectionMode.NONE,
-                css_classes=["boxed-list"],
-            )
-            options_header.set_activatable(False)
-            expander.add_row(options_header)
-
-            # Box to wrap the listbox
-            options_box = Gtk.Box(
-                orientation=Gtk.Orientation.VERTICAL,
-                margin_start=12,
-                margin_end=12,
-                margin_bottom=8,
-            )
-            options_box.append(options_listbox)
-            expander.add_row(options_box)
-
-            def add_option_row(value: str = "", label: str = ""):
-                """Add an option row to the listbox."""
-                opt_row = Adw.ActionRow()
-
-                val_entry = Gtk.Entry(
-                    placeholder_text=_("Value"),
-                    width_chars=10,
-                    valign=Gtk.Align.CENTER,
-                )
-                val_entry.set_text(value)
-                opt_row.add_prefix(val_entry)
-
-                lbl_entry = Gtk.Entry(
-                    placeholder_text=_("Label"),
-                    width_chars=15,
-                    valign=Gtk.Align.CENTER,
-                    hexpand=True,
-                )
-                lbl_entry.set_text(label)
-                opt_row.add_suffix(lbl_entry)
-
-                # Reorder buttons
-                move_up_btn = Gtk.Button(
-                    icon_name="go-up-symbolic",
-                    css_classes=["flat", "circular"],
-                    valign=Gtk.Align.CENTER,
-                )
-                get_tooltip_helper().add_tooltip(move_up_btn, _("Move up"))
-                opt_row.add_suffix(move_up_btn)
-
-                move_down_btn = Gtk.Button(
-                    icon_name="go-down-symbolic",
-                    css_classes=["flat", "circular"],
-                    valign=Gtk.Align.CENTER,
-                )
-                get_tooltip_helper().add_tooltip(move_down_btn, _("Move down"))
-                opt_row.add_suffix(move_down_btn)
-
-                remove_btn = Gtk.Button(
-                    icon_name="user-trash-symbolic",
-                    css_classes=["flat", "circular", "error"],
-                    valign=Gtk.Align.CENTER,
-                )
-                get_tooltip_helper().add_tooltip(remove_btn, _("Remove"))
-                opt_row.add_suffix(remove_btn)
-
-                def on_remove(_):
-                    options_listbox.remove(opt_row)
-                    sync_options()
-
-                def on_change(*_):
-                    sync_options()
-
-                def on_move_up(_):
-                    current_idx = opt_row.get_index()
-                    if current_idx > 0:
-                        options_listbox.remove(opt_row)
-                        options_listbox.insert(opt_row, current_idx - 1)
-                        sync_options()
-
-                def on_move_down(_):
-                    current_idx = opt_row.get_index()
-                    row_count = 0
-                    while options_listbox.get_row_at_index(row_count) is not None:
-                        row_count += 1
-                    if current_idx < row_count - 1:
-                        options_listbox.remove(opt_row)
-                        options_listbox.insert(opt_row, current_idx + 1)
-                        sync_options()
-
-                remove_btn.connect("clicked", on_remove)
-                move_up_btn.connect("clicked", on_move_up)
-                move_down_btn.connect("clicked", on_move_down)
-                val_entry.connect("changed", on_change)
-                lbl_entry.connect("changed", on_change)
-
-                opt_row._val_entry = val_entry
-                opt_row._lbl_entry = lbl_entry
-                options_listbox.append(opt_row)
-
-            def sync_options():
-                """Sync listbox state to field_data."""
-                opts = []
-                idx = 0
-                while True:
-                    row = options_listbox.get_row_at_index(idx)
-                    if row is None:
-                        break
-                    # Adw.ActionRow is a ListBoxRow, so row IS our ActionRow
-                    if hasattr(row, "_val_entry") and hasattr(row, "_lbl_entry"):
-                        val = row._val_entry.get_text().strip()
-                        lbl = row._lbl_entry.get_text().strip()
-                        if val or lbl:
-                            opts.append((val or lbl, lbl or val))
-                    idx += 1
-                field_data["options"] = opts
-                self._update_form_preview()
-
-            def on_add_option(_):
-                add_option_row()
-                sync_options()
-
-            add_option_btn.connect("clicked", on_add_option)
-
-            # Populate existing options
-            existing = field_data.get("options", [])
-            for opt in existing:
-                # Options can be tuples (value, label) or strings
-                if isinstance(opt, (tuple, list)) and len(opt) >= 2:
-                    add_option_row(str(opt[0]), str(opt[1]))
-                elif isinstance(opt, (tuple, list)) and len(opt) == 1:
-                    add_option_row(str(opt[0]), str(opt[0]))
-                else:
-                    add_option_row(str(opt), str(opt))
-
-        elif field_type in ("file_path", "directory_path"):
-            default_row = Adw.EntryRow(title=_("Default"))
-            default_row.set_text(str(field_data.get("default", "")))
-
-            def on_path_default_changed(r):
-                field_data["default"] = r.get_text()
-                self._update_preview()
-                self._update_form_preview()
-
-            default_row.connect("changed", on_path_default_changed)
-            expander.add_row(default_row)
-
-        elif field_type == "password":
-            # Password has no default for security reasons
-            placeholder_row = Adw.EntryRow(title=_("Placeholder"))
-            placeholder_row.set_text(str(field_data.get("placeholder", "")))
-
-            def on_pwd_placeholder_changed(r):
-                field_data["placeholder"] = r.get_text()
-                self._update_form_preview()
-
-            placeholder_row.connect("changed", on_pwd_placeholder_changed)
-            expander.add_row(placeholder_row)
-
-        elif field_type == "text_area":
-            placeholder_row = Adw.EntryRow(title=_("Placeholder"))
-            placeholder_row.set_text(str(field_data.get("placeholder", "")))
-
-            def on_textarea_placeholder_changed(r):
-                field_data["placeholder"] = r.get_text()
-                self._update_form_preview()
-
-            placeholder_row.connect("changed", on_textarea_placeholder_changed)
-            expander.add_row(placeholder_row)
-
-            default_row = Adw.EntryRow(title=_("Default"))
-            default_row.set_text(str(field_data.get("default", "")))
-
-            def on_textarea_default_changed(r):
-                field_data["default"] = r.get_text()
-                self._update_preview()
-                self._update_form_preview()
-
-            default_row.connect("changed", on_textarea_default_changed)
-            expander.add_row(default_row)
-
-            rows_row = Adw.SpinRow.new_with_range(2, 20, 1)
-            rows_row.set_title(_("Rows"))
-            rows_row.set_value(field_data.get("rows", 4))
-
-            def on_textarea_rows_changed(r, p):
-                field_data["rows"] = int(r.get_value())
-
-            rows_row.connect("notify::value", on_textarea_rows_changed)
-            expander.add_row(rows_row)
-
-        elif field_type == "slider":
-            min_row = Adw.SpinRow.new_with_range(-9999, 9999, 1)
-            min_row.set_title(_("Minimum"))
-            try:
-                min_val = float(field_data.get("min_value", 0))
-            except (ValueError, TypeError):
-                min_val = 0.0
-            min_row.set_value(min_val)
-
-            def on_slider_min_changed(r, p):
-                field_data["min_value"] = r.get_value()
-                self._update_form_preview()
-
-            min_row.connect("notify::value", on_slider_min_changed)
-            expander.add_row(min_row)
-
-            max_row = Adw.SpinRow.new_with_range(-9999, 9999, 1)
-            max_row.set_title(_("Maximum"))
-            try:
-                max_val = float(field_data.get("max_value", 100))
-            except (ValueError, TypeError):
-                max_val = 100.0
-            max_row.set_value(max_val)
-
-            def on_slider_max_changed(r, p):
-                field_data["max_value"] = r.get_value()
-                self._update_form_preview()
-
-            max_row.connect("notify::value", on_slider_max_changed)
-            expander.add_row(max_row)
-
-            step_row = Adw.SpinRow.new_with_range(0.1, 100, 0.1)
-            step_row.set_title(_("Step"))
-            try:
-                step_val = float(field_data.get("step", 1))
-            except (ValueError, TypeError):
-                step_val = 1.0
-            step_row.set_value(step_val)
-
-            def on_slider_step_changed(r, p):
-                field_data["step"] = r.get_value()
-
-            step_row.connect("notify::value", on_slider_step_changed)
-            expander.add_row(step_row)
-
-            default_row = Adw.SpinRow.new_with_range(-9999, 9999, 1)
-            default_row.set_title(_("Default"))
-            try:
-                default_val = float(field_data.get("default", 50))
-            except (ValueError, TypeError):
-                default_val = 50.0
-            default_row.set_value(default_val)
-
-            def on_slider_default_changed(r, p):
-                field_data["default"] = r.get_value()
-                self._update_preview()
-                self._update_form_preview()
-
-            default_row.connect("notify::value", on_slider_default_changed)
-            expander.add_row(default_row)
-
-        elif field_type in ("radio", "multi_select"):
-            # Similar to dropdown - options management
-            options_header = Adw.ActionRow(title=_("Options"))
-
-            add_option_btn = Gtk.Button(
-                icon_name="list-add-symbolic",
-                css_classes=["flat", "circular"],
-                valign=Gtk.Align.CENTER,
-            )
-            get_tooltip_helper().add_tooltip(add_option_btn, _("Add option"))
-            options_header.add_suffix(add_option_btn)
-
-            options_listbox = Gtk.ListBox(
-                selection_mode=Gtk.SelectionMode.NONE,
-                css_classes=["boxed-list"],
-            )
-            options_header.set_activatable(False)
-            expander.add_row(options_header)
-
-            options_box = Gtk.Box(
-                orientation=Gtk.Orientation.VERTICAL,
-                margin_start=12,
-                margin_end=12,
-                margin_bottom=8,
-            )
-            options_box.append(options_listbox)
-            expander.add_row(options_box)
-
-            def add_option_row_rm(value: str = "", label: str = ""):
-                """Add an option row to the listbox."""
-                opt_row = Adw.ActionRow()
-
-                val_entry = Gtk.Entry(
-                    placeholder_text=_("Value"),
-                    width_chars=10,
-                    valign=Gtk.Align.CENTER,
-                )
-                val_entry.set_text(value)
-                opt_row.add_prefix(val_entry)
-
-                lbl_entry = Gtk.Entry(
-                    placeholder_text=_("Label"),
-                    width_chars=15,
-                    valign=Gtk.Align.CENTER,
-                    hexpand=True,
-                )
-                lbl_entry.set_text(label)
-                opt_row.add_suffix(lbl_entry)
-
-                # Reorder buttons
-                move_up_btn = Gtk.Button(
-                    icon_name="go-up-symbolic",
-                    css_classes=["flat", "circular"],
-                    valign=Gtk.Align.CENTER,
-                )
-                get_tooltip_helper().add_tooltip(move_up_btn, _("Move up"))
-                opt_row.add_suffix(move_up_btn)
-
-                move_down_btn = Gtk.Button(
-                    icon_name="go-down-symbolic",
-                    css_classes=["flat", "circular"],
-                    valign=Gtk.Align.CENTER,
-                )
-                get_tooltip_helper().add_tooltip(move_down_btn, _("Move down"))
-                opt_row.add_suffix(move_down_btn)
-
-                remove_btn = Gtk.Button(
-                    icon_name="user-trash-symbolic",
-                    css_classes=["flat", "circular", "error"],
-                    valign=Gtk.Align.CENTER,
-                )
-                get_tooltip_helper().add_tooltip(remove_btn, _("Remove"))
-                opt_row.add_suffix(remove_btn)
-
-                def on_remove(_):
-                    options_listbox.remove(opt_row)
-                    sync_options_rm()
-
-                def on_change(*_):
-                    sync_options_rm()
-
-                def on_move_up_rm(_):
-                    current_idx = opt_row.get_index()
-                    if current_idx > 0:
-                        options_listbox.remove(opt_row)
-                        options_listbox.insert(opt_row, current_idx - 1)
-                        sync_options_rm()
-
-                def on_move_down_rm(_):
-                    current_idx = opt_row.get_index()
-                    row_count = 0
-                    while options_listbox.get_row_at_index(row_count) is not None:
-                        row_count += 1
-                    if current_idx < row_count - 1:
-                        options_listbox.remove(opt_row)
-                        options_listbox.insert(opt_row, current_idx + 1)
-                        sync_options_rm()
-
-                remove_btn.connect("clicked", on_remove)
-                move_up_btn.connect("clicked", on_move_up_rm)
-                move_down_btn.connect("clicked", on_move_down_rm)
-                val_entry.connect("changed", on_change)
-                lbl_entry.connect("changed", on_change)
-
-                opt_row._val_entry = val_entry
-                opt_row._lbl_entry = lbl_entry
-                options_listbox.append(opt_row)
-
-            def sync_options_rm():
-                """Sync listbox state to field_data."""
-                opts = []
-                idx = 0
-                while True:
-                    row = options_listbox.get_row_at_index(idx)
-                    if row is None:
-                        break
-                    if hasattr(row, "_val_entry") and hasattr(row, "_lbl_entry"):
-                        val = row._val_entry.get_text().strip()
-                        lbl = row._lbl_entry.get_text().strip()
-                        if val or lbl:
-                            opts.append((val or lbl, lbl or val))
-                    idx += 1
-                field_data["options"] = opts
-                self._update_form_preview()
-
-            def on_add_option_rm(_):
-                add_option_row_rm()
-                sync_options_rm()
-
-            add_option_btn.connect("clicked", on_add_option_rm)
-
-            existing = field_data.get("options", [])
-            for opt in existing:
-                if isinstance(opt, (tuple, list)) and len(opt) >= 2:
-                    add_option_row_rm(str(opt[0]), str(opt[1]))
-                elif isinstance(opt, (tuple, list)) and len(opt) == 1:
-                    add_option_row_rm(str(opt[0]), str(opt[0]))
-                else:
-                    add_option_row_rm(str(opt), str(opt))
-
-        elif field_type == "date_time":
-            format_row = Adw.EntryRow(title=_("Format"))
-            format_row.set_text(field_data.get("format", "%Y-%m-%d %H:%M"))
-
-            def on_datetime_format_changed(r):
-                field_data["format"] = r.get_text()
-                self._update_preview()
-
-            format_row.connect("changed", on_datetime_format_changed)
-            expander.add_row(format_row)
-
-            # Help text
-            help_label = Gtk.Label(
-                label=_("Common: %Y-%m-%d %H:%M:%S, %d/%m/%Y, %H:%M"),
-                xalign=0.0,
-                css_classes=["dim-label", "caption"],
-                margin_start=16,
-                margin_bottom=8,
-            )
-            expander.add_row(help_label)
-
-        elif field_type == "color":
-            format_row = Adw.ComboRow(title=_("Format"))
-            formats = Gtk.StringList()
-            for fmt in [_("Hex (#RRGGBB)"), _("RGB (r,g,b)")]:
-                formats.append(fmt)
-            format_row.set_model(formats)
-            color_format = field_data.get("color_format", "hex")
-            format_row.set_selected(
-                ["hex", "rgb"].index(color_format)
-                if color_format in ["hex", "rgb"]
-                else 0
-            )
-
-            def on_color_format_changed(r, p):
-                field_data["color_format"] = ["hex", "rgb"][r.get_selected()]
-
-            format_row.connect("notify::selected", on_color_format_changed)
-            expander.add_row(format_row)
-
-            default_row = Adw.EntryRow(title=_("Default"))
-            default_row.set_text(str(field_data.get("default", "#000000")))
-
-            def on_color_default_changed(r):
-                field_data["default"] = r.get_text()
-                self._update_preview()
-                self._update_form_preview()
-
-            default_row.connect("changed", on_color_default_changed)
-            expander.add_row(default_row)
+            self._add_field_base_rows(expander, field_data, type_icons, field_type)
+
+        # Specialized config rows delegate based on type
+        config_methods = {
+            "text": self._add_text_rows,
+            "number": self._add_number_rows,
+            "switch": self._add_switch_rows,
+            "dropdown": self._add_dropdown_rows,
+            "file_path": self._add_path_rows,
+            "directory_path": self._add_path_rows,
+            "password": self._add_password_rows,
+            "text_area": self._add_textarea_rows,
+            "slider": self._add_slider_rows,
+            "date_time": self._add_datetime_rows,
+            "color": self._add_color_rows,
+            "radio": self._add_dropdown_rows,  # Shares logic
+            "multi_select": self._add_dropdown_rows,  # Shares logic
+        }
+
+        if method := config_methods.get(field_type):
+            method(expander, field_data)
 
         return expander
 
@@ -2414,85 +1864,85 @@ class CommandEditorDialog(Adw.Window):
         self.continue_button.set_visible(False)
 
         if is_form_command:
-            # Form command - populate form steps
-            self.form_name_row.set_text(self.command.name)
-            self.form_description_row.set_text(self.command.description)
-            self.form_icon_entry.set_text(self.command.icon_name)
-            self._selected_icon = self.command.icon_name
-            self.form_icon_preview.set_from_icon_name(self.command.icon_name)
-
-            # Display mode
-            mode_idx = {
-                DisplayMode.ICON_AND_TEXT: 0,
-                DisplayMode.ICON_ONLY: 1,
-                DisplayMode.TEXT_ONLY: 2,
-            }.get(self.command.display_mode, 0)
-            self.form_display_mode_row.set_selected(mode_idx)
-
-            # Populate form fields
-            for field in self.command.form_fields:
-                # Convert CommandFormField to dict for the UI
-                field_data = {
-                    "type": self._field_type_to_string(field.field_type),
-                    "id": field.id,
-                    "template_key": field.template_key or field.id,
-                    "label": field.label,
-                    "default": field.default_value,
-                    "placeholder": field.placeholder,
-                    "tooltip": field.tooltip or "",
-                    "command_flag": field.command_flag or "",
-                    "off_value": field.off_value or "",
-                    "options": list(field.options) if field.options else [],
-                }
-                # Load extra_config fields
-                extra = field.extra_config or {}
-                if "rows" in extra:
-                    field_data["rows"] = extra["rows"]
-                if "min_value" in extra:
-                    field_data["min_value"] = extra["min_value"]
-                if "max_value" in extra:
-                    field_data["max_value"] = extra["max_value"]
-                if "step" in extra:
-                    field_data["step"] = extra["step"]
-                if "format" in extra:
-                    field_data["format"] = extra["format"]
-                if "color_format" in extra:
-                    field_data["color_format"] = extra["color_format"]
-                self.form_fields_data.append(field_data)
-
-            # Rebuild UI
-            self._rebuild_form_fields_list()
-            self._update_preview()
-            self._update_form_preview()
-
-            # Go directly to form builder when editing
-            self.wizard_stack.set_visible_child_name("form_builder")
+            self._populate_form_command_ui()
         else:
-            # Simple command - populate simple step
-            self.simple_name_row.set_text(self.command.name)
-            self.simple_description_row.set_text(self.command.description)
-            self.simple_command_textview.set_text(self.command.command_template)
-            self.simple_icon_entry.set_text(self.command.icon_name)
-            self._selected_icon = self.command.icon_name
-            self.simple_icon_preview.set_from_icon_name(self.command.icon_name)
+            self._populate_simple_command_ui()
 
-            # Display mode
-            mode_idx = {
-                DisplayMode.ICON_AND_TEXT: 0,
-                DisplayMode.ICON_ONLY: 1,
-                DisplayMode.TEXT_ONLY: 2,
-            }.get(self.command.display_mode, 0)
-            self.simple_display_mode_row.set_selected(mode_idx)
+    def _populate_form_command_ui(self):
+        """Populate UI for form-based commands."""
+        self.form_name_row.set_text(self.command.name)
+        self.form_description_row.set_text(self.command.description)
+        self.form_icon_entry.set_text(self.command.icon_name)
+        self._selected_icon = self.command.icon_name
+        self.form_icon_preview.set_from_icon_name(self.command.icon_name)
 
-            # Execution mode (0 = Insert Only, 1 = Insert and Execute)
-            exec_mode_idx = (
-                1
-                if self.command.execution_mode == ExecutionMode.INSERT_AND_EXECUTE
-                else 0
-            )
-            self.simple_execution_mode_row.set_selected(exec_mode_idx)
+        # Display mode
+        mode_idx = {
+            DisplayMode.ICON_AND_TEXT: 0,
+            DisplayMode.ICON_ONLY: 1,
+            DisplayMode.TEXT_ONLY: 2,
+        }.get(self.command.display_mode, 0)
+        self.form_display_mode_row.set_selected(mode_idx)
 
-            self.wizard_stack.set_visible_child_name("simple")
+        # Populate form fields
+        for field in self.command.form_fields:
+            field_data = self._convert_field_to_dict(field)
+            self.form_fields_data.append(field_data)
+
+        # Rebuild UI
+        self._rebuild_form_fields_list()
+        self._update_preview()
+        self._update_form_preview()
+
+        # Go directly to form builder when editing
+        self.wizard_stack.set_visible_child_name("form_builder")
+
+    def _convert_field_to_dict(self, field: CommandFormField) -> Dict:
+        """Convert a CommandFormField instance to a dictionary for UI representation."""
+        field_data = {
+            "type": self._field_type_to_string(field.field_type),
+            "id": field.id,
+            "template_key": field.template_key or field.id,
+            "label": field.label,
+            "default": field.default_value,
+            "placeholder": field.placeholder,
+            "tooltip": field.tooltip or "",
+            "command_flag": field.command_flag or "",
+            "off_value": field.off_value or "",
+            "options": list(field.options) if field.options else [],
+        }
+        # Load extra_config fields
+        extra = field.extra_config or {}
+        keys = ["rows", "min_value", "max_value", "step", "format", "color_format"]
+        for key in keys:
+            if key in extra:
+                field_data[key] = extra[key]
+        return field_data
+
+    def _populate_simple_command_ui(self):
+        """Populate UI for simple commands."""
+        self.simple_name_row.set_text(self.command.name)
+        self.simple_description_row.set_text(self.command.description)
+        self.simple_command_textview.set_text(self.command.command_template)
+        self.simple_icon_entry.set_text(self.command.icon_name)
+        self._selected_icon = self.command.icon_name
+        self.simple_icon_preview.set_from_icon_name(self.command.icon_name)
+
+        # Display mode
+        mode_idx = {
+            DisplayMode.ICON_AND_TEXT: 0,
+            DisplayMode.ICON_ONLY: 1,
+            DisplayMode.TEXT_ONLY: 2,
+        }.get(self.command.display_mode, 0)
+        self.simple_display_mode_row.set_selected(mode_idx)
+
+        # Execution mode (0 = Insert Only, 1 = Insert and Execute)
+        exec_mode_idx = (
+            1 if self.command.execution_mode == ExecutionMode.INSERT_AND_EXECUTE else 0
+        )
+        self.simple_execution_mode_row.set_selected(exec_mode_idx)
+
+        self.wizard_stack.set_visible_child_name("simple")
 
     def _parse_template_to_fields(self, template: str):
         """Parse a command template string into form fields data."""
@@ -2664,9 +2114,9 @@ class CommandEditorDialog(Adw.Window):
 
         if not name:
             if self._command_type == "simple":
-                self.simple_name_row.add_css_class("error")
+                self.simple_name_row.add_css_class(BaseDialog.CSS_CLASS_ERROR)
             else:
-                self.form_name_row.add_css_class("error")
+                self.form_name_row.add_css_class(BaseDialog.CSS_CLASS_ERROR)
             return
 
         if not command_template:
@@ -2697,6 +2147,333 @@ class CommandEditorDialog(Adw.Window):
 
         self.emit("save-requested", new_command)
         self.close()
+
+    def _add_cmd_text_rows(self, expander, field_data, type_icons, field_type):
+        """Add rows for static command text."""
+        text_row = Adw.EntryRow(title=_("Command text"))
+        text_row.set_text(str(field_data.get("default", "")))
+
+        def on_cmd_text_changed(r):
+            val = r.get_text()
+            field_data["default"] = val
+            expander.set_title(
+                f"{type_icons.get(field_type, '💬')} {val}"
+                if val
+                else f"{type_icons.get(field_type, '💬')} {_('(empty)')}"
+            )
+            self._update_preview()
+
+        text_row.connect("changed", on_cmd_text_changed)
+        expander.add_row(text_row)
+
+    def _add_field_base_rows(self, expander, field_data, type_icons, field_type):
+        """Add ID and Label rows to regular form fields."""
+        id_row = Adw.EntryRow(title=_("ID"))
+        id_row.set_text(field_data.get("id", ""))
+
+        def on_id_changed(row):
+            new_id = row.get_text()
+            field_data["id"] = new_id
+            expander.set_title(f"{type_icons.get(field_type, '📝')} {{{new_id}}}")
+            self._update_preview()
+
+        id_row.connect("changed", on_id_changed)
+        expander.add_row(id_row)
+
+        label_row = Adw.EntryRow(title=_("Label"))
+        label_row.set_text(field_data.get("label", ""))
+
+        def on_label_changed(r):
+            field_data["label"] = r.get_text()
+            self._update_preview()
+            self._update_form_preview()
+
+        label_row.connect("changed", on_label_changed)
+        expander.add_row(label_row)
+
+    def _add_text_rows(self, expander, field_data):
+        placeholder_row = Adw.EntryRow(title=_("Placeholder"))
+        placeholder_row.set_text(str(field_data.get("placeholder", "")))
+        placeholder_row.connect(
+            "changed",
+            lambda r: (
+                field_data.update({"placeholder": r.get_text()}),
+                self._update_form_preview(),
+            ),
+        )
+        expander.add_row(placeholder_row)
+
+        default_row = Adw.EntryRow(title=_("Default"))
+        default_row.set_text(str(field_data.get("default", "")))
+        default_row.connect(
+            "changed",
+            lambda r: (
+                field_data.update({"default": r.get_text()}),
+                self._update_preview(),
+                self._update_form_preview(),
+            ),
+        )
+        expander.add_row(default_row)
+
+    def _add_number_rows(self, expander, field_data):
+        default_row = Adw.EntryRow(title=_("Default"))
+        default_row.set_text(str(field_data.get("default", "")))
+        default_row.connect(
+            "changed",
+            lambda r: (
+                field_data.update({"default": r.get_text()}),
+                self._update_preview(),
+                self._update_form_preview(),
+            ),
+        )
+        expander.add_row(default_row)
+
+    def _add_switch_rows(self, expander, field_data):
+        on_row = Adw.EntryRow(title=_("On value"))
+        on_row.set_text(field_data.get("command_flag", ""))
+        on_row.connect(
+            "changed",
+            lambda r: (
+                field_data.update({"command_flag": r.get_text()}),
+                self._update_preview(),
+            ),
+        )
+        expander.add_row(on_row)
+
+        off_row = Adw.EntryRow(title=_("Off value"))
+        off_row.set_text(field_data.get("off_value", ""))
+        off_row.connect(
+            "changed",
+            lambda r: (
+                field_data.update({"off_value": r.get_text()}),
+                self._update_preview(),
+            ),
+        )
+        expander.add_row(off_row)
+
+        default_row = Adw.SwitchRow(title=_("Default on"))
+        default_row.set_active(bool(field_data.get("default", False)))
+        default_row.connect(
+            "notify::active",
+            lambda r, _: (
+                field_data.update({"default": r.get_active()}),
+                self._update_form_preview(),
+            ),
+        )
+        expander.add_row(default_row)
+
+    def _add_dropdown_rows(self, expander, field_data):
+        options_header = Adw.ActionRow(title=_("Options"))
+        add_btn = Gtk.Button(
+            icon_name="list-add-symbolic",
+            css_classes=[BaseDialog.CSS_CLASS_FLAT, BaseDialog.CSS_CLASS_CIRCULAR],
+            valign=Gtk.Align.CENTER,
+        )
+        options_header.add_suffix(add_btn)
+        expander.add_row(options_header)
+
+        listbox = Gtk.ListBox(
+            selection_mode=Gtk.SelectionMode.NONE,
+            css_classes=[BaseDialog.CSS_CLASS_BOXED_LIST],
+        )
+        box = Gtk.Box(
+            orientation=Gtk.Orientation.VERTICAL,
+            margin_start=12,
+            margin_end=12,
+            margin_bottom=8,
+        )
+        box.append(listbox)
+        expander.add_row(box)
+
+        def sync_cb():
+            self._sync_dropdown_options(listbox, field_data)
+
+        def add_opt(val="", label=""):
+            listbox.append(self._create_option_row(val, label, sync_cb, listbox))
+
+        add_btn.connect("clicked", lambda _: (add_opt(), sync_cb()))
+
+        for opt in field_data.get("options", []):
+            if isinstance(opt, (tuple, list)) and len(opt) >= 2:
+                add_opt(str(opt[0]), str(opt[1]))
+            else:
+                add_opt(str(opt), str(opt))
+
+    def _sync_dropdown_options(self, listbox, field_data):
+        """Sync dropdown options from UI to field data."""
+        opts = []
+        idx = 0
+        while row := listbox.get_row_at_index(idx):
+            if hasattr(row, "_val_entry") and hasattr(row, "_lbl_entry"):
+                val, label = (
+                    row._val_entry.get_text().strip(),
+                    row._lbl_entry.get_text().strip(),
+                )
+                if val or label:
+                    opts.append((val or label, label or val))
+            idx += 1
+        field_data["options"] = opts
+        self._update_form_preview()
+
+    def _create_option_row(self, value, label, sync_cb, listbox):
+        row = Adw.ActionRow()
+        ve = Gtk.Entry(
+            placeholder_text=_("Value"), width_chars=10, valign=Gtk.Align.CENTER
+        )
+        ve.set_text(value)
+        le = Gtk.Entry(
+            placeholder_text=_("Label"),
+            width_chars=15,
+            valign=Gtk.Align.CENTER,
+            hexpand=True,
+        )
+        le.set_text(label)
+
+        def move(delta):
+            idx = row.get_index()
+            new_idx = idx + delta
+            if new_idx >= 0:
+                listbox.remove(row)
+                listbox.insert(row, new_idx)
+                sync_cb()
+
+        u = Gtk.Button(
+            icon_name="go-up-symbolic",
+            css_classes=[BaseDialog.CSS_CLASS_FLAT, BaseDialog.CSS_CLASS_CIRCULAR],
+        )
+        d = Gtk.Button(
+            icon_name="go-down-symbolic",
+            css_classes=[BaseDialog.CSS_CLASS_FLAT, BaseDialog.CSS_CLASS_CIRCULAR],
+        )
+        r = Gtk.Button(
+            icon_name="user-trash-symbolic",
+            css_classes=[
+                BaseDialog.CSS_CLASS_FLAT,
+                BaseDialog.CSS_CLASS_CIRCULAR,
+                BaseDialog.CSS_CLASS_ERROR,
+            ],
+        )
+
+        u.connect("clicked", lambda _: move(-1))
+        d.connect("clicked", lambda _: move(1))
+        r.connect("clicked", lambda _: (listbox.remove(row), sync_cb()))
+        ve.connect("changed", lambda _: sync_cb())
+        le.connect("changed", lambda _: sync_cb())
+
+        row.add_prefix(ve)
+        row.add_suffix(le)
+        row.add_suffix(u)
+        row.add_suffix(d)
+        row.add_suffix(r)
+        row._val_entry, row._lbl_entry = ve, le
+        return row
+
+    def _add_path_rows(self, expander, field_data):
+        row = Adw.EntryRow(title=_("Default"))
+        row.set_text(str(field_data.get("default", "")))
+        row.connect(
+            "changed",
+            lambda r: (
+                field_data.update({"default": r.get_text()}),
+                self._update_preview(),
+                self._update_form_preview(),
+            ),
+        )
+        expander.add_row(row)
+
+    def _add_password_rows(self, expander, field_data):
+        row = Adw.EntryRow(title=_("Placeholder"))
+        row.set_text(str(field_data.get("placeholder", "")))
+        row.connect(
+            "changed",
+            lambda r: (
+                field_data.update({"placeholder": r.get_text()}),
+                self._update_form_preview(),
+            ),
+        )
+        expander.add_row(row)
+
+    def _add_textarea_rows(self, expander, field_data):
+        self._add_text_rows(expander, field_data)
+        row = Adw.SpinRow.new_with_range(2, 20, 1)
+        row.set_title(_("Rows"))
+        row.set_value(field_data.get("rows", 4))
+        row.connect(
+            BaseDialog.SIGNAL_NOTIFY_VALUE,
+            lambda r, _: field_data.update({"rows": int(r.get_value())}),
+        )
+        expander.add_row(row)
+
+    def _add_slider_rows(self, expander, field_data):
+        def add_s(t, k, d):
+            r = Adw.SpinRow.new_with_range(-9999, 9999, 1)
+            r.set_title(t)
+            r.set_value(float(field_data.get(k, d)))
+            r.connect(
+                BaseDialog.SIGNAL_NOTIFY_VALUE,
+                lambda r, _: (
+                    field_data.update({k: r.get_value()}),
+                    self._update_form_preview(),
+                ),
+            )
+            expander.add_row(r)
+
+        add_s(_("Minimum"), "min_value", 0)
+        add_s(_("Maximum"), "max_value", 100)
+        add_s(_("Step"), "step", 1)
+        dr = Adw.EntryRow(title=_("Default"))
+        dr.set_text(str(field_data.get("default", "50")))
+        dr.connect(
+            "changed",
+            lambda r: (
+                field_data.update({"default": r.get_text()}),
+                self._update_preview(),
+                self._update_form_preview(),
+            ),
+        )
+        expander.add_row(dr)
+
+    def _add_datetime_rows(self, expander, field_data):
+        r = Adw.EntryRow(title=_("Format"))
+        r.set_text(str(field_data.get("format", "%Y-%m-%d %H:%M")))
+        r.connect(
+            "changed",
+            lambda r: (
+                field_data.update({"format": r.get_text()}),
+                self._update_form_preview(),
+            ),
+        )
+        expander.add_row(r)
+
+    def _add_color_rows(self, expander, field_data):
+        r = Adw.ComboRow(title=_("Format"))
+        r.set_model(
+            Gtk.StringList.new([_("Hex (#RRGGBB)"), _("RGB (R,G,B)"), _("None")])
+        )
+        r.set_selected(
+            {"hex": 0, "rgb": 1}.get(field_data.get("color_format", "hex"), 2)
+        )
+        r.connect(
+            "notify::selected",
+            lambda r, _: (
+                field_data.update(
+                    {"color_format": ["hex", "rgb", "none"][r.get_selected()]}
+                ),
+                self._update_preview(),
+            ),
+        )
+        expander.add_row(r)
+        dr = Adw.EntryRow(title=_("Default Hex"))
+        dr.set_text(str(field_data.get("default", "#ffffff")))
+        dr.connect(
+            "changed",
+            lambda r: (
+                field_data.update({"default": r.get_text()}),
+                self._update_preview(),
+                self._update_form_preview(),
+            ),
+        )
+        expander.add_row(dr)
 
 
 class CommandManagerDialog(Adw.Window):
@@ -2824,7 +2601,7 @@ class CommandManagerDialog(Adw.Window):
         # Subtle hint label
         hint_label = Gtk.Label(
             label=_("Send to all terminals"),
-            css_classes=["dim-label", "caption"],
+            css_classes=[BaseDialog.CSS_CLASS_DIM_LABEL, "caption"],
             halign=Gtk.Align.START,
         )
         input_section.append(hint_label)
@@ -2860,7 +2637,7 @@ class CommandManagerDialog(Adw.Window):
         # Execute button overlaid on the right side, vertically centered
         self.execute_button = Gtk.Button(
             label=_("Execute"),
-            css_classes=["suggested-action"],
+            css_classes=[BaseDialog.CSS_CLASS_SUGGESTED],
             halign=Gtk.Align.END,
             valign=Gtk.Align.CENTER,
             margin_end=8,
@@ -3364,14 +3141,14 @@ class CommandManagerDialog(Adw.Window):
         info_label = Gtk.Label(
             label=_("Click on a command to restore it:"),
             xalign=0.0,
-            css_classes=["dim-label"],
+            css_classes=[BaseDialog.CSS_CLASS_DIM_LABEL],
         )
         content_box.append(info_label)
 
         scrolled = Gtk.ScrolledWindow(vexpand=True)
         list_box = Gtk.ListBox(
             selection_mode=Gtk.SelectionMode.NONE,
-            css_classes=["boxed-list"],
+            css_classes=[BaseDialog.CSS_CLASS_BOXED_LIST],
         )
 
         # Get all commands to find names for hidden IDs
@@ -3406,7 +3183,7 @@ class CommandManagerDialog(Adw.Window):
         # Restore all button
         restore_all_btn = Gtk.Button(
             label=_("Restore All"),
-            css_classes=["suggested-action"],
+            css_classes=[BaseDialog.CSS_CLASS_SUGGESTED],
             halign=Gtk.Align.CENTER,
             margin_top=8,
         )
@@ -3433,7 +3210,7 @@ class CommandManagerDialog(Adw.Window):
 
     def _on_restore_all_hidden(self, button, dialog):
         """Restore all hidden commands."""
-        for cmd_id in list(self.command_manager.get_hidden_command_ids()):
+        for cmd_id in self.command_manager.get_hidden_command_ids():
             self.command_manager.unhide_command(cmd_id)
         self._populate_commands()
         self._update_restore_hidden_visibility()

@@ -50,6 +50,13 @@ TEXT_EFFECT_OPTIONS = get_text_effect_options()
 BACKGROUND_COLOR_OPTIONS = get_background_color_options()
 
 
+def get_rule_subtitle(rule: HighlightRule) -> str:
+    """Get formatted subtitle for a rule."""
+    if rule.description:
+        return rule.description
+    return rule.pattern[:40] + "..." if len(rule.pattern) > 40 else rule.pattern
+
+
 class ColorEntryRow(Adw.ActionRow):
     """
     A row for editing a single color in the colors list.
@@ -79,6 +86,7 @@ class ColorEntryRow(Adw.ActionRow):
         """
         super().__init__()
         self._group_index = group_index
+        self._css_provider = None
 
         # Parse initial color string into components
         self._fg_color, self._bg_color, self._effects = self._parse_color_string(
@@ -145,7 +153,9 @@ class ColorEntryRow(Adw.ActionRow):
         for color_id, color_label in LOGICAL_COLOR_OPTIONS:
             self._fg_model.append(color_label)
         self._fg_dropdown.set_model(self._fg_model)
-        self._fg_dropdown.connect("notify::selected", self._on_fg_color_selected)
+        self._fg_dropdown.connect(
+            BaseDialog.SIGNAL_NOTIFY_SELECTED, self._on_fg_color_selected
+        )
         fg_box.append(self._fg_dropdown)
         main_box.append(fg_box)
 
@@ -187,7 +197,9 @@ class ColorEntryRow(Adw.ActionRow):
         for color_id, color_label in BACKGROUND_COLOR_OPTIONS:
             self._bg_model.append(color_label)
         self._bg_dropdown.set_model(self._bg_model)
-        self._bg_dropdown.connect("notify::selected", self._on_bg_color_selected)
+        self._bg_dropdown.connect(
+            BaseDialog.SIGNAL_NOTIFY_SELECTED, self._on_bg_color_selected
+        )
         bg_box.append(self._bg_dropdown)
         main_box.append(bg_box)
 
@@ -284,20 +296,18 @@ class ColorEntryRow(Adw.ActionRow):
         # - Border (around) = background color (or transparent outline if no bg)
         fill_style = f"background-color: {fg_hex};"
 
-        if bg_hex:
-            border_style_value = f"4px solid {bg_hex}"
-        else:
-            # Subtle border when no background is set
-            border_style_value = "2px solid alpha(currentColor, 0.3)"
-
         # Adjust border based on text effects for visual feedback
-        border_width = 5 if "bold" in self._effects else 4 if bg_hex else 2
+        if bg_hex:
+            base_width = 4
+            border_args = f"{bg_hex}"
+        else:
+            base_width = 2
+            border_args = "alpha(currentColor, 0.3)"
+
+        border_width = 5 if "bold" in self._effects else base_width
         line_style = "dashed" if "italic" in self._effects else "solid"
 
-        if bg_hex:
-            border_style_value = f"{border_width}px {line_style} {bg_hex}"
-        else:
-            border_style_value = f"2px {line_style} alpha(currentColor, 0.3)"
+        border_style_value = f"{border_width}px {line_style} {border_args}"
 
         css_provider = Gtk.CssProvider()
         css = f"""
@@ -310,7 +320,7 @@ class ColorEntryRow(Adw.ActionRow):
         css_provider.load_from_data(css.encode("utf-8"))
 
         context = self._color_box.get_style_context()
-        if hasattr(self, "_css_provider"):
+        if self._css_provider:
             context.remove_provider(self._css_provider)
 
         context.add_provider(css_provider, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION)
@@ -437,7 +447,7 @@ class RuleEditDialog(BaseDialog):
         """Setup the dialog UI components."""
         # Save button in header bar (Cancel is already created by BaseDialog)
         self._save_btn = Gtk.Button(label=_("Save"))
-        self._save_btn.add_css_class("suggested-action")
+        self._save_btn.add_css_class(self.CSS_CLASS_SUGGESTED)
         self._save_btn.connect("clicked", self._on_save_clicked)
         self.add_header_button(self._save_btn, pack_start=False)
 
@@ -587,9 +597,9 @@ class RuleEditDialog(BaseDialog):
         self._color_rows.remove(target_row)
 
         # Renumber remaining rows
-        for idx, row in enumerate(self._color_rows):
-            row.set_title(_("Group {}").format(idx + 1))
-            row._group_index = idx + 1
+        for idx, current_row in enumerate(self._color_rows):
+            current_row.set_title(_("Group {}").format(idx + 1))
+            current_row._group_index = idx + 1
 
     def _on_color_changed(self, row: ColorEntryRow) -> None:
         """Handle color selection change."""
@@ -636,13 +646,13 @@ class RuleEditDialog(BaseDialog):
         # Check for required fields
         if not name:
             self._validation_label.set_text(_("Rule name is required"))
-            self._validation_label.add_css_class("error")
+            self._validation_label.add_css_class(self.CSS_CLASS_ERROR)
             self._save_btn.set_sensitive(False)
             return
 
         if not pattern:
             self._validation_label.set_text(_("Pattern is required"))
-            self._validation_label.add_css_class("error")
+            self._validation_label.add_css_class(self.CSS_CLASS_ERROR)
             self._save_btn.set_sensitive(False)
             return
 
@@ -651,13 +661,13 @@ class RuleEditDialog(BaseDialog):
 
         if not is_valid:
             self._validation_label.set_text(_("Invalid regex: {}").format(error_msg))
-            self._validation_label.add_css_class("error")
-            self._validation_label.remove_css_class("success")
+            self._validation_label.add_css_class(self.CSS_CLASS_ERROR)
+            self._validation_label.remove_css_class(self.CSS_CLASS_SUCCESS)
             self._save_btn.set_sensitive(False)
         else:
             self._validation_label.set_text(_("✓ Valid pattern"))
-            self._validation_label.remove_css_class("error")
-            self._validation_label.add_css_class("success")
+            self._validation_label.remove_css_class(self.CSS_CLASS_ERROR)
+            self._validation_label.add_css_class(self.CSS_CLASS_SUCCESS)
             self._save_btn.set_sensitive(True)
 
     def _on_regex_help_clicked(self, button: Gtk.Button) -> None:
@@ -685,78 +695,69 @@ class RuleEditDialog(BaseDialog):
         content.set_margin_bottom(24)
         scrolled.set_child(content)
 
+        def add_group(title, items, subtitle_lines=1):
+            group = Adw.PreferencesGroup(title=title)
+            for pattern, desc in items:
+                row = Adw.ActionRow(
+                    title=f"<tt>{GLib.markup_escape_text(pattern)}</tt>", subtitle=desc
+                )
+                row.set_title_lines(1)
+                row.set_subtitle_lines(subtitle_lines)
+                group.add(row)
+            content.append(group)
+
         # Basic patterns
-        basic_group = Adw.PreferencesGroup(title=_("Basic Patterns"))
-        basic_items = [
-            (".", _("Any character except newline")),
-            ("\\d", _("Any digit [0-9]")),
-            ("\\w", _("Word character [a-zA-Z0-9_]")),
-            ("\\s", _("Whitespace character")),
-            ("\\D, \\W, \\S", _("Negations of above")),
-            ("^", _("Start of line")),
-            ("$", _("End of line")),
-            ("\\b", _("Word boundary")),
-        ]
-        for pattern, desc in basic_items:
-            row = Adw.ActionRow(
-                title=f"<tt>{GLib.markup_escape_text(pattern)}</tt>", subtitle=desc
-            )
-            row.set_title_lines(1)
-            basic_group.add(row)
-        content.append(basic_group)
+        add_group(
+            _("Basic Patterns"),
+            [
+                (".", _("Any character except newline")),
+                ("\\d", _("Any digit [0-9]")),
+                ("\\w", _("Word character [a-zA-Z0-9_]")),
+                ("\\s", _("Whitespace character")),
+                ("\\D, \\W, \\S", _("Negations of above")),
+                ("^", _("Start of line")),
+                ("$", _("End of line")),
+                ("\\b", _("Word boundary")),
+            ],
+        )
 
         # Quantifiers
-        quant_group = Adw.PreferencesGroup(title=_("Quantifiers"))
-        quant_items = [
-            ("*", _("0 or more times")),
-            ("+", _("1 or more times")),
-            ("?", _("0 or 1 time")),
-            ("{n}", _("Exactly n times")),
-            ("{n,m}", _("Between n and m times")),
-            ("*?, +?, ??", _("Non-greedy versions")),
-        ]
-        for pattern, desc in quant_items:
-            row = Adw.ActionRow(
-                title=f"<tt>{GLib.markup_escape_text(pattern)}</tt>", subtitle=desc
-            )
-            row.set_title_lines(1)
-            quant_group.add(row)
-        content.append(quant_group)
+        add_group(
+            _("Quantifiers"),
+            [
+                ("*", _("0 or more times")),
+                ("+", _("1 or more times")),
+                ("?", _("0 or 1 time")),
+                ("{n}", _("Exactly n times")),
+                ("{n,m}", _("Between n and m times")),
+                ("*?, +?, ??", _("Non-greedy versions")),
+            ],
+        )
 
         # Groups and alternatives
-        groups_group = Adw.PreferencesGroup(title=_("Groups & Alternatives"))
-        groups_items = [
-            ("(abc)", _("Capture group (gets a color)")),
-            ("(?:abc)", _("Non-capturing group")),
-            ("a|b", _("Alternation (a or b)")),
-            ("[abc]", _("Character class (a, b, or c)")),
-            ("[^abc]", _("Negated class (not a, b, c)")),
-            ("[a-z]", _("Character range")),
-        ]
-        for pattern, desc in groups_items:
-            row = Adw.ActionRow(
-                title=f"<tt>{GLib.markup_escape_text(pattern)}</tt>", subtitle=desc
-            )
-            row.set_title_lines(1)
-            groups_group.add(row)
-        content.append(groups_group)
+        add_group(
+            _("Groups & Alternatives"),
+            [
+                ("(abc)", _("Capture group (gets a color)")),
+                ("(?:abc)", _("Non-capturing group")),
+                ("a|b", _("Alternation (a or b)")),
+                ("[abc]", _("Character class (a, b, or c)")),
+                ("[^abc]", _("Negated class (not a, b, c)")),
+                ("[a-z]", _("Character range")),
+            ],
+        )
 
         # Examples
-        examples_group = Adw.PreferencesGroup(title=_("Examples"))
-        examples_items = [
-            ("\\b\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\b", _("IPv4 address")),
-            ("error|fail|fatal", _("Match error keywords")),
-            ("(\\w+)=(\\w+)", _("Key=value pairs (2 groups)")),
-            ("^\\s*#.*$", _("Comment lines")),
-        ]
-        for pattern, desc in examples_items:
-            row = Adw.ActionRow(
-                title=f"<tt>{GLib.markup_escape_text(pattern)}</tt>", subtitle=desc
-            )
-            row.set_title_lines(1)
-            row.set_subtitle_lines(1)
-            examples_group.add(row)
-        content.append(examples_group)
+        add_group(
+            _("Examples"),
+            [
+                ("\\b\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\b", _("IPv4 address")),
+                ("error|fail|fatal", _("Match error keywords")),
+                ("(\\w+)=(\\w+)", _("Key=value pairs (2 groups)")),
+                ("^\\s*#.*$", _("Comment lines")),
+            ],
+            subtitle_lines=1,
+        )
 
         dialog.present(self)
 
@@ -877,14 +878,18 @@ class ContextRulesDialog(BaseDialog):
         self._enable_row = Adw.SwitchRow(
             title=_("Enable Command Rules"),
         )
-        self._enable_row.connect("notify::active", self._on_enable_toggled)
+        self._enable_row.connect(
+            BaseDialog.SIGNAL_NOTIFY_ACTIVE, self._on_enable_toggled
+        )
         settings_group.add(self._enable_row)
 
         # Use global rules toggle
         self._use_global_row = Adw.SwitchRow(
             title=_("Include Global Rules"),
         )
-        self._use_global_row.connect("notify::active", self._on_use_global_toggled)
+        self._use_global_row.connect(
+            BaseDialog.SIGNAL_NOTIFY_ACTIVE, self._on_use_global_toggled
+        )
         settings_group.add(self._use_global_row)
 
         # Reset button
@@ -921,7 +926,7 @@ class ContextRulesDialog(BaseDialog):
             "list-add-symbolic",
             on_clicked=self._on_add_trigger_clicked,
             valign=Gtk.Align.CENTER,
-            css_classes=["suggested-action"],
+            css_classes=[self.CSS_CLASS_SUGGESTED],
         )
         add_trigger_row.add_suffix(add_trigger_btn)
         add_trigger_row.set_activatable_widget(add_trigger_btn)
@@ -946,7 +951,7 @@ class ContextRulesDialog(BaseDialog):
             "list-add-symbolic",
             on_clicked=self._on_add_rule_clicked,
             valign=Gtk.Align.CENTER,
-            css_classes=["suggested-action"],
+            css_classes=[self.CSS_CLASS_SUGGESTED],
         )
         add_row.add_suffix(add_btn)
         add_row.set_activatable_widget(add_btn)
@@ -1091,16 +1096,10 @@ class ContextRulesDialog(BaseDialog):
     ) -> Adw.ActionRow:
         """Create an action row for a rule with inline reorder, edit, delete, switch."""
         escaped_name = GLib.markup_escape_text(rule.name)
-        subtitle_text = (
-            rule.description
-            if rule.description
-            else (rule.pattern[:40] + "..." if len(rule.pattern) > 40 else rule.pattern)
-        )
-        escaped_subtitle = GLib.markup_escape_text(subtitle_text)
 
         row = ManagedListRow(
             title=f"#{index + 1} {escaped_name}",
-            subtitle=escaped_subtitle,
+            subtitle=GLib.markup_escape_text(get_rule_subtitle(rule)),
             show_reorder=True,
             show_actions=True,
             show_toggle=True,
@@ -1280,8 +1279,8 @@ class ContextRulesDialog(BaseDialog):
 
         show_delete_confirmation_dialog(
             parent=self,
-            heading=_("Delete Rule?"),
-            body=_('Are you sure you want to delete "{}"?').format(rule.name),
+            heading=BaseDialog.MSG_DELETE_RULE_HEADING,
+            body=BaseDialog.MSG_DELETE_CONFIRMATION.format(rule.name),
             on_confirm=on_confirm,
         )
 
@@ -1323,7 +1322,7 @@ class HighlightDialog(Adw.PreferencesWindow):
             title=_("Highlight Colors"),
             transient_for=parent_window,
             modal=False,
-            hide_on_close=True,
+            hide_on_close=False,
             default_width=saved_width,
             default_height=saved_height,
             search_enabled=True,
@@ -1335,12 +1334,27 @@ class HighlightDialog(Adw.PreferencesWindow):
         self._rule_rows: list[Adw.ExpanderRow] = []
         self._context_rule_rows: list[Adw.ExpanderRow] = []
         self._selected_context: str = ""
+        # UI groups for visibility control
+        self._cat_group: Optional[Adw.PreferencesGroup] = None
+        self._shell_input_group: Optional[Adw.PreferencesGroup] = None
+        self._ignored_commands_group: Optional[Adw.PreferencesGroup] = None
+        self._rules_group: Optional[Adw.PreferencesGroup] = None
+        self._context_page: Optional[Adw.PreferencesPage] = None
+        self._css_provider = None
+        self._dark_theme_names = None
+        self._light_theme_names = None
+
+        # Flag to block signals during initialization
+        self._initializing = True
 
         # Connect to window state events for size persistence
         self.connect("close-request", self._on_close_request)
 
         self._setup_ui()
         self._load_settings()
+
+        # Mark initialization complete
+        self._initializing = False
 
         self.logger.info("HighlightDialog initialized")
 
@@ -1585,6 +1599,10 @@ class HighlightDialog(Adw.PreferencesWindow):
         if row is None:
             return
 
+        # Skip if this is during initialization
+        if self._initializing:
+            return
+
         # Update visual selection (checkmarks)
         for scheme_row in self._scheme_rows.values():
             scheme_row.check_icon.set_visible(scheme_row == row)
@@ -1601,9 +1619,14 @@ class HighlightDialog(Adw.PreferencesWindow):
         if self._parent_window and hasattr(self._parent_window, "terminal_manager"):
             self._parent_window.terminal_manager.apply_settings_to_all_terminals()
 
-        # Apply to GTK theme if using terminal theme
-        # Note: Theme update is handled automatically by settings listener
-        pass
+        # Refresh shell input highlighter
+        try:
+            from ...terminal.highlighter import get_shell_input_highlighter
+
+            highlighter = get_shell_input_highlighter()
+            highlighter.refresh_settings()
+        except Exception:
+            pass
 
         # Refresh shell input highlighter
         try:
@@ -1626,7 +1649,7 @@ class HighlightDialog(Adw.PreferencesWindow):
             else settings.get_all_schemes()["dark"]
         )
 
-        all_names = set(s["name"] for s in settings.get_all_schemes().values())
+        all_names = {s["name"] for s in settings.get_all_schemes().values()}
 
         new_name = generate_unique_name(f"Copy of {template_scheme['name']}", all_names)
 
@@ -1651,7 +1674,7 @@ class HighlightDialog(Adw.PreferencesWindow):
 
         if is_builtin:
             # Generate unique name for the copy
-            all_names = set(s["name"] for s in settings.get_all_schemes().values())
+            all_names = {s["name"] for s in settings.get_all_schemes().values()}
 
             new_name = generate_unique_name(
                 f"{row.scheme_data.get('name', row.scheme_key)} (Custom)",
@@ -1694,7 +1717,7 @@ class HighlightDialog(Adw.PreferencesWindow):
         show_delete_confirmation_dialog(
             parent=self,
             heading=_("Delete Scheme?"),
-            body=_("Are you sure you want to delete '{}'?").format(scheme_name),
+            body=BaseDialog.MSG_DELETE_CONFIRMATION.format(scheme_name),
             on_confirm=on_confirm,
         )
 
@@ -1740,13 +1763,8 @@ class HighlightDialog(Adw.PreferencesWindow):
 
     def _apply_scheme_changes(self) -> None:
         """Apply scheme changes to terminals and GTK theme."""
-        settings = get_settings_manager()
-        if self._parent_window and hasattr(self._parent_window, "terminal_manager"):
-            self._parent_window.terminal_manager.apply_settings_to_all_terminals()
-
         # Apply to GTK theme if using terminal theme
         # Note: Theme update is handled automatically by settings listener
-        pass
 
         try:
             from ...terminal.highlighter import get_shell_input_highlighter
@@ -1799,7 +1817,9 @@ class HighlightDialog(Adw.PreferencesWindow):
             subtitle=_("Apply output highlighting to local terminal sessions"),
         )
         self._local_toggle.set_active(self._manager.enabled_for_local)
-        self._local_toggle.connect("notify::active", self._on_local_toggled)
+        self._local_toggle.connect(
+            BaseDialog.SIGNAL_NOTIFY_ACTIVE, self._on_local_toggled
+        )
         activation_group.add(self._local_toggle)
 
         # Enable for SSH terminals toggle
@@ -1808,7 +1828,7 @@ class HighlightDialog(Adw.PreferencesWindow):
             subtitle=_("Apply output highlighting to SSH connections"),
         )
         self._ssh_toggle.set_active(self._manager.enabled_for_ssh)
-        self._ssh_toggle.connect("notify::active", self._on_ssh_toggled)
+        self._ssh_toggle.connect(BaseDialog.SIGNAL_NOTIFY_ACTIVE, self._on_ssh_toggled)
         activation_group.add(self._ssh_toggle)
 
     def _setup_cat_colorization_group(self, page: Adw.PreferencesPage) -> None:
@@ -1872,7 +1892,7 @@ class HighlightDialog(Adw.PreferencesWindow):
         current_enabled = settings.get("cat_colorization_enabled", True)
         self._cat_colorization_toggle.set_active(current_enabled)
         self._cat_colorization_toggle.connect(
-            "notify::active", self._on_cat_colorization_toggled
+            BaseDialog.SIGNAL_NOTIFY_ACTIVE, self._on_cat_colorization_toggled
         )
         self._cat_group.add(self._cat_colorization_toggle)
 
@@ -1880,7 +1900,7 @@ class HighlightDialog(Adw.PreferencesWindow):
         """Add theme selection widgets for cat colorization."""
         from pygments.styles import get_all_styles
 
-        all_themes = sorted(list(get_all_styles()))
+        all_themes = sorted(get_all_styles())
         current_mode = settings.get("cat_theme_mode", "auto")
         current_enabled = settings.get("cat_colorization_enabled", True)
 
@@ -2009,7 +2029,7 @@ class HighlightDialog(Adw.PreferencesWindow):
         except ValueError:
             self._cat_dark_theme_row.set_selected(0)
         self._cat_dark_theme_row.connect(
-            "notify::selected", self._on_cat_dark_theme_changed
+            BaseDialog.SIGNAL_NOTIFY_SELECTED, self._on_cat_dark_theme_changed
         )
         self._cat_group.add(self._cat_dark_theme_row)
         return dark_themes
@@ -2038,7 +2058,7 @@ class HighlightDialog(Adw.PreferencesWindow):
         except ValueError:
             self._cat_light_theme_row.set_selected(0)
         self._cat_light_theme_row.connect(
-            "notify::selected", self._on_cat_light_theme_changed
+            BaseDialog.SIGNAL_NOTIFY_SELECTED, self._on_cat_light_theme_changed
         )
         self._cat_group.add(self._cat_light_theme_row)
         return light_themes
@@ -2060,7 +2080,9 @@ class HighlightDialog(Adw.PreferencesWindow):
             self._cat_theme_row.set_selected(all_themes.index(current_theme))
         except ValueError:
             self._cat_theme_row.set_selected(0)
-        self._cat_theme_row.connect("notify::selected", self._on_cat_theme_changed)
+        self._cat_theme_row.connect(
+            BaseDialog.SIGNAL_NOTIFY_SELECTED, self._on_cat_theme_changed
+        )
         self._cat_group.add(self._cat_theme_row)
 
     def _add_pygments_install_hint(self) -> None:
@@ -2140,7 +2162,7 @@ class HighlightDialog(Adw.PreferencesWindow):
         self._shell_input_toggle.set_active(current_enabled)
         self._shell_input_toggle.set_sensitive(pygments_available)
         self._shell_input_toggle.connect(
-            "notify::active", self._on_shell_input_highlighting_toggled
+            BaseDialog.SIGNAL_NOTIFY_ACTIVE, self._on_shell_input_highlighting_toggled
         )
         self._shell_input_group.add(self._shell_input_toggle)
         return current_enabled
@@ -2172,7 +2194,7 @@ class HighlightDialog(Adw.PreferencesWindow):
         """Get categorized dark and light theme lists from Pygments."""
         from pygments.styles import get_all_styles
 
-        all_themes = sorted(list(get_all_styles()))
+        all_themes = sorted(get_all_styles())
 
         dark_only, light_only = self._get_theme_categories()
 
@@ -2212,7 +2234,7 @@ class HighlightDialog(Adw.PreferencesWindow):
         model.append(_("Manual"))
         row.set_model(model)
         row.set_selected(0 if current_mode == "auto" else 1)
-        row.connect("notify::selected", on_changed_callback)
+        row.connect(BaseDialog.SIGNAL_NOTIFY_SELECTED, on_changed_callback)
         return row
 
     def _create_theme_combo_row(
@@ -2247,7 +2269,7 @@ class HighlightDialog(Adw.PreferencesWindow):
         except ValueError:
             row.set_selected(0)
 
-        row.connect("notify::selected", on_changed_callback)
+        row.connect(BaseDialog.SIGNAL_NOTIFY_SELECTED, on_changed_callback)
         return row, themes
 
     def _add_shell_input_dark_theme_row(self, settings, dark_themes: list[str]) -> None:
@@ -2280,7 +2302,7 @@ class HighlightDialog(Adw.PreferencesWindow):
         """Add the manual theme selector row (legacy mode)."""
         from pygments.styles import get_all_styles
 
-        all_themes = sorted(list(get_all_styles()))
+        all_themes = sorted(get_all_styles())
         current_theme = settings.get("shell_input_pygments_theme", "monokai").lower()
 
         self._shell_input_theme_row, self._shell_input_theme_names = (
@@ -2375,7 +2397,7 @@ class HighlightDialog(Adw.PreferencesWindow):
     def _on_dark_theme_changed(self, combo_row: Adw.ComboRow, _pspec) -> None:
         """Handle dark theme selection changes."""
         idx = combo_row.get_selected()
-        if idx != Gtk.INVALID_LIST_POSITION and hasattr(self, "_dark_theme_names"):
+        if idx != Gtk.INVALID_LIST_POSITION and self._dark_theme_names:
             if idx < len(self._dark_theme_names):
                 theme = self._dark_theme_names[idx]
                 settings = get_settings_manager()
@@ -2397,7 +2419,7 @@ class HighlightDialog(Adw.PreferencesWindow):
     def _on_light_theme_changed(self, combo_row: Adw.ComboRow, _pspec) -> None:
         """Handle light theme selection changes."""
         idx = combo_row.get_selected()
-        if idx != Gtk.INVALID_LIST_POSITION and hasattr(self, "_light_theme_names"):
+        if idx != Gtk.INVALID_LIST_POSITION and self._light_theme_names:
             if idx < len(self._light_theme_names):
                 theme = self._light_theme_names[idx]
                 settings = get_settings_manager()
@@ -2484,7 +2506,7 @@ class HighlightDialog(Adw.PreferencesWindow):
             "list-add-symbolic",
             on_clicked=self._on_add_ignored_command_clicked,
             valign=Gtk.Align.CENTER,
-            css_classes=["suggested-action"],
+            css_classes=[BaseDialog.CSS_CLASS_SUGGESTED],
         )
         add_cmd_row.add_suffix(add_btn)
         add_cmd_row.set_activatable_widget(add_btn)
@@ -2500,7 +2522,7 @@ class HighlightDialog(Adw.PreferencesWindow):
     def _populate_ignored_commands(self) -> None:
         """Populate the ignored commands list from settings."""
         # Clear existing rows from expander (but keep the add button)
-        for row in list(self._ignored_command_rows.values()):
+        for row in self._ignored_command_rows.values():
             self._ignored_expander.remove(row)
         self._ignored_command_rows.clear()
 
@@ -2636,7 +2658,7 @@ class HighlightDialog(Adw.PreferencesWindow):
         )
         self._context_aware_toggle.set_active(self._manager.context_aware_enabled)
         self._context_aware_toggle.connect(
-            "notify::active", self._on_context_aware_toggled
+            BaseDialog.SIGNAL_NOTIFY_ACTIVE, self._on_context_aware_toggled
         )
         context_settings_group.add(self._context_aware_toggle)
 
@@ -2652,12 +2674,12 @@ class HighlightDialog(Adw.PreferencesWindow):
             title=_("➕ Add Command"),
         )
         add_context_row.set_activatable(True)
-        add_context_row.add_css_class("suggested-action")
+        add_context_row.add_css_class(BaseDialog.CSS_CLASS_SUGGESTED)
         add_btn = create_icon_button(
             "list-add-symbolic",
             on_clicked=self._on_add_context_clicked,
             valign=Gtk.Align.CENTER,
-            css_classes=["suggested-action"],
+            css_classes=[BaseDialog.CSS_CLASS_SUGGESTED],
         )
         add_context_row.add_suffix(add_btn)
         add_context_row.set_activatable_widget(add_btn)
@@ -2671,7 +2693,7 @@ class HighlightDialog(Adw.PreferencesWindow):
 
         enable_all_btn = Gtk.Button(label=_("Enable All"))
         enable_all_btn.set_valign(Gtk.Align.CENTER)
-        enable_all_btn.add_css_class("suggested-action")
+        enable_all_btn.add_css_class(BaseDialog.CSS_CLASS_SUGGESTED)
         enable_all_btn.connect("clicked", self._on_enable_all_contexts)
         bulk_actions_row.add_suffix(enable_all_btn)
 
@@ -2728,7 +2750,7 @@ class HighlightDialog(Adw.PreferencesWindow):
             subtitle=_("Apply rules when this command is detected"),
         )
         self._context_enable_row.connect(
-            "notify::active", self._on_context_enable_toggled
+            BaseDialog.SIGNAL_NOTIFY_ACTIVE, self._on_context_enable_toggled
         )
         self._context_rules_group.add(self._context_enable_row)
 
@@ -2738,7 +2760,7 @@ class HighlightDialog(Adw.PreferencesWindow):
             subtitle=_("Also apply global rules alongside command-specific rules"),
         )
         self._use_global_rules_row.connect(
-            "notify::active", self._on_use_global_rules_toggled
+            BaseDialog.SIGNAL_NOTIFY_ACTIVE, self._on_use_global_rules_toggled
         )
         self._context_rules_group.add(self._use_global_rules_row)
 
@@ -2778,7 +2800,7 @@ class HighlightDialog(Adw.PreferencesWindow):
             "list-add-symbolic",
             on_clicked=self._on_add_context_rule_clicked,
             valign=Gtk.Align.CENTER,
-            css_classes=["suggested-action"],
+            css_classes=[BaseDialog.CSS_CLASS_SUGGESTED],
         )
         add_rule_row.add_suffix(add_btn)
         add_rule_row.set_activatable_widget(add_btn)
@@ -2801,7 +2823,7 @@ class HighlightDialog(Adw.PreferencesWindow):
             "list-add-symbolic",
             on_clicked=self._on_add_rule_clicked,
             valign=Gtk.Align.CENTER,
-            css_classes=["suggested-action"],
+            css_classes=[BaseDialog.CSS_CLASS_SUGGESTED],
         )
         add_row.add_suffix(add_btn)
         add_row.set_activatable_widget(add_btn)
@@ -2835,60 +2857,58 @@ class HighlightDialog(Adw.PreferencesWindow):
         cat_enabled = settings.get("cat_colorization_enabled", True)
         self._cat_colorization_toggle.set_active(cat_enabled)
 
-        # Load cat theme mode
-        if self._cat_theme_mode_row is not None:
-            current_mode = settings.get("cat_theme_mode", "auto")
-            self._cat_theme_mode_row.set_selected(0 if current_mode == "auto" else 1)
-            is_auto_mode = current_mode == "auto"
+        # Load cat theme settings
+        self._load_cat_theme_settings(settings, cat_enabled)
 
-            # Update dark theme selection
-            if self._cat_dark_theme_row is not None:
-                current_dark = settings.get("cat_dark_theme", "monokai")
-                try:
-                    dark_idx = self._cat_dark_theme_names.index(current_dark)
-                    self._cat_dark_theme_row.set_selected(dark_idx)
-                except ValueError:
-                    self._cat_dark_theme_row.set_selected(0)
-                self._cat_dark_theme_row.set_visible(cat_enabled and is_auto_mode)
+        self._populate_rules()
+        self._populate_contexts()
 
-            # Update light theme selection
-            if self._cat_light_theme_row is not None:
-                current_light = settings.get("cat_light_theme", "solarized-light")
-                try:
-                    light_idx = self._cat_light_theme_names.index(current_light)
-                    self._cat_light_theme_row.set_selected(light_idx)
-                except ValueError:
-                    self._cat_light_theme_row.set_selected(0)
-                self._cat_light_theme_row.set_visible(cat_enabled and is_auto_mode)
+    def _load_cat_theme_settings(self, settings, cat_enabled: bool) -> None:
+        """Load cat theme-related settings."""
+        if self._cat_theme_mode_row is None:
+            return
 
-            # Update manual theme selection
-            if self._cat_theme_row is not None:
-                current_theme = settings.get("pygments_theme", "monokai").lower()
-                try:
-                    theme_index = self._cat_theme_names.index(current_theme)
-                    self._cat_theme_row.set_selected(theme_index)
-                except ValueError:
-                    self._cat_theme_row.set_selected(0)
-                self._cat_theme_row.set_visible(cat_enabled and not is_auto_mode)
+        current_mode = settings.get("cat_theme_mode", "auto")
+        self._cat_theme_mode_row.set_selected(0 if current_mode == "auto" else 1)
+        is_auto_mode = current_mode == "auto"
 
-            self._cat_theme_mode_row.set_visible(cat_enabled)
-        elif self._cat_theme_row is not None:
+        # Update dark theme selection
+        if self._cat_dark_theme_row is not None:
+            current_dark = settings.get("cat_dark_theme", "monokai")
+            try:
+                dark_idx = self._cat_dark_theme_names.index(current_dark)
+                self._cat_dark_theme_row.set_selected(dark_idx)
+            except ValueError:
+                self._cat_dark_theme_row.set_selected(0)
+            self._cat_dark_theme_row.set_visible(cat_enabled and is_auto_mode)
+
+        # Update light theme selection
+        if self._cat_light_theme_row is not None:
+            current_light = settings.get("cat_light_theme", "solarized-light")
+            try:
+                light_idx = self._cat_light_theme_names.index(current_light)
+                self._cat_light_theme_row.set_selected(light_idx)
+            except ValueError:
+                self._cat_light_theme_row.set_selected(0)
+            self._cat_light_theme_row.set_visible(cat_enabled and is_auto_mode)
+
+        # Update manual theme selection
+        if self._cat_theme_row is not None:
             current_theme = settings.get("pygments_theme", "monokai").lower()
             try:
                 theme_index = self._cat_theme_names.index(current_theme)
                 self._cat_theme_row.set_selected(theme_index)
             except ValueError:
                 self._cat_theme_row.set_selected(0)
-            # Update sensitivity based on toggle state
+            self._cat_theme_row.set_visible(cat_enabled and not is_auto_mode)
             self._cat_theme_row.set_sensitive(cat_enabled)
 
-        self._populate_rules()
-        self._populate_contexts()
+        self._cat_theme_mode_row.set_visible(cat_enabled)
 
     def _populate_contexts(self) -> None:
         """Populate the context list with toggle rows for each context."""
         # Clear existing context rows
-        for row in list(self._context_rows.values()):
+        for row in self._context_rows.values():
             self._context_list_group.remove(row)
         self._context_rows.clear()
 
@@ -3160,16 +3180,9 @@ class HighlightDialog(Adw.PreferencesWindow):
         """Create an expander row for a context-specific rule with reorder buttons."""
         # Escape markup characters to prevent GTK parsing errors
         escaped_name = GLib.markup_escape_text(rule.name)
-        subtitle_text = (
-            rule.description
-            if rule.description
-            else (rule.pattern[:40] + "..." if len(rule.pattern) > 40 else rule.pattern)
-        )
-        escaped_subtitle = GLib.markup_escape_text(subtitle_text)
-
         row = Adw.ExpanderRow()
         row.set_title(f"#{index + 1} {escaped_name}")
-        row.set_subtitle(escaped_subtitle)
+        row.set_subtitle(GLib.markup_escape_text(get_rule_subtitle(rule)))
 
         # Reorder buttons prefix (box with up/down arrows)
         reorder_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=0)
@@ -3219,7 +3232,9 @@ class HighlightDialog(Adw.PreferencesWindow):
         switch = Gtk.Switch()
         switch.set_active(rule.enabled)
         switch.set_valign(Gtk.Align.CENTER)
-        switch.connect("notify::active", self._on_context_rule_switch_toggled, index)
+        switch.connect(
+            BaseDialog.SIGNAL_NOTIFY_ACTIVE, self._on_context_rule_switch_toggled, index
+        )
         row.add_suffix(switch)
 
         # Expanded content - action buttons
@@ -3447,8 +3462,8 @@ class HighlightDialog(Adw.PreferencesWindow):
 
         show_delete_confirmation_dialog(
             parent=self,
-            heading=_("Delete Rule?"),
-            body=_('Are you sure you want to delete "{}"?').format(rule_name),
+            heading=BaseDialog.MSG_DELETE_RULE_HEADING,
+            body=BaseDialog.MSG_DELETE_CONFIRMATION.format(rule_name),
             on_confirm=on_confirm,
         )
 
@@ -3469,26 +3484,23 @@ class HighlightDialog(Adw.PreferencesWindow):
         )
 
         # Update cat group sensitivity
-        if hasattr(self, "_cat_group") and self._cat_group is not None:
+        if self._cat_group is not None:
             self._cat_group.set_sensitive(any_output_enabled)
 
         # Update shell input group sensitivity
-        if hasattr(self, "_shell_input_group") and self._shell_input_group is not None:
+        if self._shell_input_group is not None:
             self._shell_input_group.set_sensitive(any_output_enabled)
 
         # Update ignored commands group sensitivity
-        if (
-            hasattr(self, "_ignored_commands_group")
-            and self._ignored_commands_group is not None
-        ):
+        if self._ignored_commands_group is not None:
             self._ignored_commands_group.set_sensitive(any_output_enabled)
 
         # Update global rules group sensitivity
-        if hasattr(self, "_rules_group") and self._rules_group is not None:
+        if self._rules_group is not None:
             self._rules_group.set_sensitive(any_output_enabled)
 
         # Update Command-Specific page sensitivity (entire page)
-        if hasattr(self, "_context_page") and self._context_page is not None:
+        if self._context_page is not None:
             self._context_page.set_sensitive(any_output_enabled)
 
     def _on_local_toggled(self, switch: Adw.SwitchRow, _pspec) -> None:
@@ -3609,16 +3621,9 @@ class HighlightDialog(Adw.PreferencesWindow):
         """Create an action row for a highlight rule with inline edit/delete icons."""
         # Escape markup characters to prevent GTK parsing errors
         escaped_name = GLib.markup_escape_text(rule.name)
-        subtitle_text = (
-            rule.description
-            if rule.description
-            else (rule.pattern[:40] + "..." if len(rule.pattern) > 40 else rule.pattern)
-        )
-        escaped_subtitle = GLib.markup_escape_text(subtitle_text)
-
         row = Adw.ActionRow()
         row.set_title(escaped_name)
-        row.set_subtitle(escaped_subtitle)
+        row.set_subtitle(GLib.markup_escape_text(get_rule_subtitle(rule)))
 
         # Color indicator prefix (shows first color)
         color_box = Gtk.Box()
@@ -3665,7 +3670,9 @@ class HighlightDialog(Adw.PreferencesWindow):
         switch = Gtk.Switch()
         switch.set_active(rule.enabled)
         switch.set_valign(Gtk.Align.CENTER)
-        switch.connect("notify::active", self._on_rule_switch_toggled, index)
+        switch.connect(
+            BaseDialog.SIGNAL_NOTIFY_ACTIVE, self._on_rule_switch_toggled, index
+        )
         row.add_suffix(switch)
 
         # Store index for reference
@@ -3739,6 +3746,17 @@ class HighlightDialog(Adw.PreferencesWindow):
 
         self.add_toast(Adw.Toast(title=_("Rule updated: {}").format(rule.name)))
 
+    def _confirm_delete_rule(
+        self, rule_name: str, on_confirm: Callable[[], None]
+    ) -> None:
+        """Show a confirmation dialog for deleting a rule."""
+        show_delete_confirmation_dialog(
+            parent=self,
+            heading=BaseDialog.MSG_DELETE_RULE_HEADING,
+            body=BaseDialog.MSG_DELETE_CONFIRMATION.format(rule_name),
+            on_confirm=on_confirm,
+        )
+
     def _on_delete_rule_clicked(self, button: Gtk.Button, index: int) -> None:
         """Handle delete rule button click."""
         rule = self._manager.get_rule(index)
@@ -3757,8 +3775,8 @@ class HighlightDialog(Adw.PreferencesWindow):
 
         show_delete_confirmation_dialog(
             parent=self,
-            heading=_("Delete Rule?"),
-            body=_('Are you sure you want to delete "{}"?').format(rule_name),
+            heading=BaseDialog.MSG_DELETE_RULE_HEADING,
+            body=BaseDialog.MSG_DELETE_CONFIRMATION.format(rule_name),
             on_confirm=on_confirm,
         )
 
@@ -3851,7 +3869,7 @@ class ContextNameDialog(Adw.Dialog):
 
         # Create button
         self._create_btn = Gtk.Button(label=_("Create"))
-        self._create_btn.add_css_class("suggested-action")
+        self._create_btn.add_css_class(BaseDialog.CSS_CLASS_SUGGESTED)
         self._create_btn.set_sensitive(False)
         self._create_btn.connect("clicked", self._on_create_clicked)
         header.pack_end(self._create_btn)
@@ -3886,7 +3904,7 @@ class ContextNameDialog(Adw.Dialog):
         name = entry.get_text().strip().lower()
 
         if not name:
-            self._validation_label.set_text(_("Enter a command name"))
+            self._validation_label.set_text(BaseDialog.MSG_ENTER_COMMAND_NAME)
             self._validation_label.remove_css_class("error")
             self._create_btn.set_sensitive(False)
             return
@@ -3975,7 +3993,7 @@ class AddTriggerDialog(Adw.Dialog):
 
         btn_label = _("Save") if self._existing_trigger else _("Add")
         self._save_btn = Gtk.Button(label=btn_label)
-        self._save_btn.add_css_class("suggested-action")
+        self._save_btn.add_css_class(BaseDialog.CSS_CLASS_SUGGESTED)
         self._save_btn.set_sensitive(False)
         self._save_btn.connect("clicked", self._on_save_clicked)
         header.pack_end(self._save_btn)
@@ -4009,7 +4027,7 @@ class AddTriggerDialog(Adw.Dialog):
         name = entry.get_text().strip().lower()
 
         if not name:
-            self._validation_label.set_text(_("Enter a command name"))
+            self._validation_label.set_text(BaseDialog.MSG_ENTER_COMMAND_NAME)
             self._validation_label.remove_css_class("error")
             self._save_btn.set_sensitive(False)
             return
@@ -4082,7 +4100,7 @@ class AddIgnoredCommandDialog(Adw.Dialog):
 
         # Add button
         self._add_btn = Gtk.Button(label=_("Add"))
-        self._add_btn.add_css_class("suggested-action")
+        self._add_btn.add_css_class(BaseDialog.CSS_CLASS_SUGGESTED)
         self._add_btn.set_sensitive(False)
         self._add_btn.connect("clicked", self._on_add_clicked)
         header.pack_end(self._add_btn)
@@ -4119,7 +4137,7 @@ class AddIgnoredCommandDialog(Adw.Dialog):
         name = entry.get_text().strip().lower()
 
         if not name:
-            self._validation_label.set_text(_("Enter a command name"))
+            self._validation_label.set_text(BaseDialog.MSG_ENTER_COMMAND_NAME)
             self._validation_label.remove_css_class("error")
             self._add_btn.set_sensitive(False)
             return

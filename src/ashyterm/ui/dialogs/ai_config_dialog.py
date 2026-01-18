@@ -42,7 +42,7 @@ class AIConfigDialog(Adw.PreferencesWindow):
         super().__init__(
             title=_("Configure AI Assistant"),
             transient_for=parent_window,
-            modal=True,
+            modal=False,  # Use non-modal like other dialogs to prevent freeze on mapping failure
             default_width=750,
             default_height=600,
             search_enabled=False,
@@ -50,6 +50,14 @@ class AIConfigDialog(Adw.PreferencesWindow):
         self.add_css_class("ashyterm-dialog")
         self.logger = get_logger("ashyterm.ui.dialogs.ai_config")
         self.settings_manager = settings_manager
+
+        # Debug: track if dialog maps successfully
+        self.connect(
+            "map",
+            lambda w: self.logger.info(
+                "[MAP_DEBUG] AIConfigDialog mapped successfully"
+            ),
+        )
 
         self._setup_ui()
         self.logger.info("AI config dialog initialized")

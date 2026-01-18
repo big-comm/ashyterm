@@ -50,8 +50,17 @@ class ThemeEngine:
 
     @staticmethod
     def _get_root_vars_css(params: Dict[str, Any], gtk_theme_name: str) -> str:
-        """Generate CSS root variables for Adwaita/GTK4 theming."""
+        """Generate CSS root variables for Adwaita/GTK4 theming.
+
+        When the background color is too dark (luminance < 0.05), skip applying
+        custom colors to prevent readability issues with nearly-black backgrounds.
+        """
         if gtk_theme_name != "terminal":
+            return ""
+
+        # Skip custom theming for very dark backgrounds (nearly black)
+        # This prevents readability issues when background luminance is too low
+        if params["luminance"] < 0.05:
             return ""
 
         fg = params["fg_color"]

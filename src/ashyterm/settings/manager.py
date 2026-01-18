@@ -133,6 +133,8 @@ class SettingsValidator:
 class SettingsManager:
     """Enhanced settings manager with comprehensive functionality."""
 
+    _LOG_AREA = "ashyterm.settings"
+
     def __init__(self, settings_file: Optional[Path] = None):
         self.logger = get_logger("ashyterm.settings.manager")
         self.platform_info = get_platform_info()
@@ -268,7 +270,7 @@ class SettingsManager:
             return self._defaults.copy()
         except Exception as e:
             self.logger.error(f"Failed to load settings: {e}")
-            log_error_with_context(e, "settings loading", "ashyterm.settings")
+            log_error_with_context(e, "settings loading", self._LOG_AREA)
             return self._defaults.copy()
 
     def _verify_settings_integrity(self, settings: Dict[str, Any]):
@@ -411,9 +413,7 @@ class SettingsManager:
                         self.logger.warning(f"Failed to set secure permissions: {e}")
                 except Exception as e:
                     self.logger.error(f"Async settings save task failed: {e}")
-                    log_error_with_context(
-                        e, "async settings saving", "ashyterm.settings"
-                    )
+                    log_error_with_context(e, "async settings saving", self._LOG_AREA)
                     self._dirty = True
 
         threading.Thread(target=save_task, daemon=True).start()
@@ -736,7 +736,7 @@ class SettingsManager:
 
         except Exception as e:
             self.logger.error(f"Failed to update application theme CSS: {e}")
-            log_error_with_context(e, "theme update", "ashyterm.settings")
+            log_error_with_context(e, "theme update", self._LOG_AREA)
 
     def remove_gtk_terminal_theme(self, window) -> None:
         """Removes the custom CSS provider for the terminal theme."""

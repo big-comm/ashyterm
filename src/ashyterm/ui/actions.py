@@ -177,9 +177,47 @@ class WindowActions:
         self._hide_tooltip()
         from .dialogs.ai_config_dialog import AIConfigDialog
 
+        # DEBUG: Log all modal windows before opening dialog
+        self._log_modal_windows("Before AIConfigDialog")
+
         dialog = AIConfigDialog(self.window, self.window.settings_manager)
         dialog.connect("setting-changed", self._on_ai_setting_changed)
+
+        self.logger.info("[DIALOG_DEBUG] About to present AIConfigDialog")
         dialog.present()
+        self.logger.info("[DIALOG_DEBUG] AIConfigDialog.present() returned")
+
+    def _log_modal_windows(self, context: str) -> None:
+        """Log all modal/transient windows for debugging."""
+        modal_windows = []
+        for window in Gtk.Window.list_toplevels():
+            if window == self.window:
+                continue
+            try:
+                is_modal = hasattr(window, "get_modal") and window.get_modal()
+                is_visible = (
+                    window.is_visible() if hasattr(window, "is_visible") else False
+                )
+                transient = window.get_transient_for()
+
+                if is_modal or transient == self.window:
+                    modal_windows.append(
+                        {
+                            "class": window.__class__.__name__,
+                            "title": window.get_title()
+                            if hasattr(window, "get_title")
+                            else "N/A",
+                            "modal": is_modal,
+                            "visible": is_visible,
+                        }
+                    )
+            except Exception:
+                pass
+
+        if modal_windows:
+            self.logger.warning(f"[MODAL_DEBUG] {context}: {modal_windows}")
+        else:
+            self.logger.info(f"[MODAL_DEBUG] {context}: No modal windows found")
 
     def _on_ai_setting_changed(self, dialog, key, value):
         """Handle AI setting changes from the config dialog."""

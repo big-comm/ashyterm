@@ -328,6 +328,53 @@ class CommTerminalWindow(Adw.ApplicationWindow):
             self._initial_tab_created = False
             self.connect("map", self._on_window_mapped)
 
+        # DEBUG: Start periodic modal window monitor
+        if self.settings_manager.get("debug_mode", False):
+            self._start_modal_window_monitor()
+
+    def _start_modal_window_monitor(self) -> None:
+        """Start periodic logging of all modal windows for debugging."""
+
+        def log_modal_windows():
+            modal_windows = []
+            for window in Gtk.Window.list_toplevels():
+                if window == self:
+                    continue
+                try:
+                    is_modal = hasattr(window, "get_modal") and window.get_modal()
+                    is_visible = (
+                        window.is_visible() if hasattr(window, "is_visible") else False
+                    )
+                    transient = window.get_transient_for()
+
+                    if is_modal or transient == self:
+                        modal_windows.append(
+                            {
+                                "class": window.__class__.__name__,
+                                "title": window.get_title()
+                                if hasattr(window, "get_title")
+                                else "N/A",
+                                "modal": is_modal,
+                                "visible": is_visible,
+                                "transient_for": transient.__class__.__name__
+                                if transient
+                                else None,
+                            }
+                        )
+                except Exception as e:
+                    self.logger.debug(f"Error inspecting window: {e}")
+
+            if modal_windows:
+                self.logger.warning(
+                    f"[MODAL_DEBUG] Active modal/transient windows: {modal_windows}"
+                )
+
+            return True  # Continue polling
+
+        # Poll every 2 seconds
+        GLib.timeout_add_seconds(2, log_modal_windows)
+        self.logger.info("[MODAL_DEBUG] Modal window monitor started (debug_mode=True)")
+
     def _setup_initial_window_size(self) -> None:
         """Set up initial window size and state from settings."""
         if self.settings_manager.get("remember_window_state", True):
