@@ -1,6 +1,5 @@
 # ashyterm/window.py
 
-import re
 import weakref
 from typing import Dict, List, Optional
 
@@ -9,7 +8,7 @@ import gi
 gi.require_version("Gtk", "4.0")
 gi.require_version("Adw", "1")
 gi.require_version("Vte", "3.91")
-from gi.repository import Adw, Gdk, Gio, GLib, GObject, Gtk, Pango, Vte
+from gi.repository import Adw, Gdk, Gio, GLib, Gtk, Pango, Vte
 
 from .sessions.models import LayoutItem, SessionFolder, SessionItem
 from .sessions.operations import SessionOperations
@@ -24,6 +23,8 @@ from .terminal.tabs import TabManager
 from .ui.actions import WindowActions
 from .ui.sidebar_manager import SidebarManager
 from .ui.window_ui import WindowUIBuilder
+from .ui.search_manager import SearchManager
+from .ui.broadcast_manager import BroadcastManager
 from .utils.exceptions import UIError
 from .utils.icons import icon_image
 from .utils.logger import get_logger
@@ -232,6 +233,10 @@ class CommTerminalWindow(Adw.ApplicationWindow):
         self.ui_builder.build_ui()
         self._assign_ui_components()
 
+        # Search and Broadcast Managers
+        self.search_manager = SearchManager(self)
+        self.broadcast_manager = BroadcastManager(self)
+
         # State and Action Handlers
         self.state_manager = WindowStateManager(self)
         self.action_handler = WindowActions(self)
@@ -257,8 +262,6 @@ class CommTerminalWindow(Adw.ApplicationWindow):
         self.broadcast_bar = self.ui_builder.broadcast_bar
         self.broadcast_button = self.ui_builder.broadcast_button
         self.broadcast_entry = self.ui_builder.broadcast_entry
-        self._broadcast_remember_choice = False
-        self._broadcast_last_selection: List[str] = []
         # Assign the correctly named widgets
         self.terminal_search_entry = self.ui_builder.terminal_search_entry
         self.search_entry = self.ui_builder.sidebar_search_entry
@@ -279,8 +282,6 @@ class CommTerminalWindow(Adw.ApplicationWindow):
         """
         self._setup_actions()
         self._setup_keyboard_shortcuts()
-        self._setup_search()
-        self._setup_broadcast()
 
         self.session_tree.on_session_activated = self._on_session_activated
         self.session_tree.on_layout_activated = self.state_manager.restore_saved_layout
@@ -312,57 +313,6 @@ class CommTerminalWindow(Adw.ApplicationWindow):
         controller.set_propagation_phase(Gtk.PropagationPhase.CAPTURE)
         controller.connect("key-pressed", self._on_key_pressed)
         self.add_controller(controller)
-
-    def _setup_search(self) -> None:
-        """Connects signals for the terminal search UI."""
-        self.search_button.bind_property(
-            "active",
-            self.search_bar,
-            "search-mode-enabled",
-            GObject.BindingFlags.BIDIRECTIONAL,
-        )
-        # Connect the correct search entry to the correct handler
-        self.terminal_search_entry.connect(
-            "search-changed", self._on_search_text_changed
-        )
-        self.terminal_search_entry.connect("stop-search", self._on_search_stop)
-        self.terminal_search_entry.connect("activate", self._on_search_next)
-        self.search_prev_button.connect("clicked", self._on_search_previous)
-        self.search_next_button.connect("clicked", self._on_search_next)
-        self.search_bar.connect(
-            "notify::search-mode-enabled", self._on_search_mode_changed
-        )
-        # Connect case sensitive switch
-        self.case_sensitive_switch.connect(
-            "notify::active", self._on_case_sensitive_changed
-        )
-        # Initialize switch state from settings
-        self.case_sensitive_switch.set_active(
-            self.settings_manager.get("search_case_sensitive", False)
-        )
-
-        # Connect regex switch
-        self.regex_switch.connect("notify::active", self._on_regex_changed)
-        # Initialize switch state from settings
-        self.regex_switch.set_active(
-            self.settings_manager.get("search_use_regex", False)
-        )
-
-    def _setup_broadcast(self) -> None:
-        """Connects signals for the command broadcast UI."""
-        self.broadcast_button.bind_property(
-            "active",
-            self.broadcast_bar,
-            "search-mode-enabled",
-            GObject.BindingFlags.BIDIRECTIONAL,
-        )
-        self.broadcast_entry.connect("activate", self._on_broadcast_activate)
-        self.broadcast_bar.connect(
-            "notify::search-mode-enabled", self._on_broadcast_mode_changed
-        )
-        key_controller = Gtk.EventControllerKey.new()
-        key_controller.connect("key-pressed", self._on_broadcast_key_pressed)
-        self.broadcast_entry.add_controller(key_controller)
 
     def _setup_window_events(self) -> None:
         """Set up window-level event handlers."""
@@ -589,31 +539,35 @@ class CommTerminalWindow(Adw.ApplicationWindow):
         return Gdk.EVENT_PROPAGATE
 
     def _handle_emergency_dialog_close(self, keyval, state) -> bool:
-        """Handle Ctrl+Shift+Escape to close any blocking dialogs.
-
-        This is an emergency escape hatch when a dialog fails to appear
-        but blocks the UI.
-        """
+        """Handle Ctrl+Shift+Escape to close any blocking dialogs."""
         ctrl_shift = Gdk.ModifierType.CONTROL_MASK | Gdk.ModifierType.SHIFT_MASK
         if keyval == Gdk.KEY_Escape and (state & ctrl_shift) == ctrl_shift:
             self.logger.warning("Emergency dialog close triggered (Ctrl+Shift+Escape)")
-            # Try to close any visible dialogs for this window
-            if hasattr(self, "get_dialogs"):
-                dialogs = self.get_dialogs()
-                for i in range(dialogs.get_n_items()):
-                    dialog = dialogs.get_item(i)
-                    if dialog:
-                        self.logger.info(f"Force closing dialog: {dialog}")
-                        dialog.force_close()
-            # Also try to find any transient windows
-            for window in Gtk.Window.list_toplevels():
-                if window.get_transient_for() == self and window != self:
-                    if window.get_modal():
-                        self.logger.info(f"Force closing transient: {window}")
-                        window.set_modal(False)
-                        window.close()
+            self._force_close_all_dialogs()
             return True
         return False
+
+    def _force_close_all_dialogs(self):
+        """Force close all dialogs and transient windows."""
+        # 1. Force close Adw.Dialogs if available
+        if hasattr(self, "get_dialogs"):
+            dialogs = self.get_dialogs()
+            for i in range(dialogs.get_n_items()):
+                if dialog := dialogs.get_item(i):
+                    self.logger.info(f"Force closing dialog: {dialog}")
+                    dialog.force_close()
+
+        # 2. Force close any other transient modal windows
+        for window in Gtk.Window.list_toplevels():
+            if (
+                window.get_transient_for() == self
+                and window != self
+                and hasattr(window, "get_modal")
+                and window.get_modal()
+            ):
+                self.logger.info(f"Force closing transient: {window}")
+                window.set_modal(False)
+                window.close()
 
     def _on_ai_assistant_requested(self, *_args) -> None:
         if not getattr(self, "ai_assistant", None):
@@ -990,7 +944,7 @@ class CommTerminalWindow(Adw.ApplicationWindow):
                 fm.rebind_terminal(terminal)
 
         # Hide search if focus changes to a different terminal
-        self._hide_search_if_terminal_changed()
+        self.search_manager.hide_if_terminal_changed()
 
         # Trigger a title update to reflect the newly focused pane
         self.terminal_manager._update_title(terminal)
@@ -1001,7 +955,7 @@ class CommTerminalWindow(Adw.ApplicationWindow):
             return
 
         # Hide search when switching tabs
-        self._hide_search_if_terminal_changed()
+        self.search_manager.hide_if_terminal_changed()
 
         self._sync_toggle_button_state()
         self._update_font_sizer_widget()
@@ -1092,466 +1046,7 @@ class CommTerminalWindow(Adw.ApplicationWindow):
         new_window._update_tab_layout()
         new_window.present()
 
-    # --- Search Handlers ---
-
-    def _on_search_mode_changed(self, search_bar, param):
-        if search_bar.get_search_mode():
-            self.terminal_search_entry.grab_focus()
-            # Set current terminal when search mode is enabled
-            current_terminal = self.tab_manager.get_selected_terminal()
-            if current_terminal:
-                self.current_search_terminal = current_terminal
-                self.search_active = True
-        else:
-            self._on_search_stop(self.terminal_search_entry)
-
-    def _on_broadcast_mode_changed(self, broadcast_bar, param):
-        if broadcast_bar.get_search_mode():
-            self.broadcast_entry.grab_focus()
-        else:
-            if terminal := self.tab_manager.get_selected_terminal():
-                terminal.grab_focus()
-
-    def _on_broadcast_key_pressed(self, _controller, keyval, _keycode, _state):
-        if keyval == Gdk.KEY_Escape:
-            self.broadcast_bar.set_search_mode(False)
-            return True
-        return False
-
-    def _get_terminal_display_name(self, terminal: Vte.Terminal) -> str:
-        page = self.tab_manager.get_page_for_terminal(terminal)
-        if page and page.get_title():
-            return page.get_title()
-
-        terminal_id = getattr(terminal, "terminal_id", None)
-        if terminal_id is not None:
-            terminal_info = self.terminal_manager.registry.get_terminal_info(
-                terminal_id
-            )
-            if terminal_info:
-                identifier = terminal_info.get("identifier")
-                if isinstance(identifier, SessionItem):
-                    return identifier.name
-                if isinstance(identifier, str):
-                    return identifier
-
-        return _("Terminal {id}").format(
-            id=terminal_id if terminal_id is not None else "?"
-        )
-
-    def _on_broadcast_activate(self, entry: Gtk.Entry):
-        """
-        Shows a confirmation dialog before broadcasting the command to all terminals.
-        """
-        command = entry.get_text().strip()
-        if not command:
-            return
-
-        all_terminals = self.tab_manager.get_all_terminals_across_tabs()
-        if not all_terminals:
-            self.toast_overlay.add_toast(Adw.Toast(title=_("No open terminals found.")))
-            return
-
-        remember_choice = self._broadcast_remember_choice
-        last_selection_keys = self._broadcast_last_selection
-
-        if remember_choice and last_selection_keys:
-            selected_terminals = []
-            for terminal in all_terminals:
-                key = self._make_broadcast_terminal_key(terminal)
-                if key in last_selection_keys:
-                    selected_terminals.append(terminal)
-
-            if not selected_terminals:
-                selected_terminals = all_terminals
-
-            self._execute_broadcast(command, selected_terminals)
-            entry.set_text("")
-            self.broadcast_bar.set_search_mode(False)
-            return
-
-        count = len(all_terminals)
-        dialog = Adw.MessageDialog(
-            transient_for=self,
-            heading=_("Confirm sending of command"),
-            body=_(
-                "Select which of the <b>{count}</b> open terminals should receive the command below."
-            ).format(count=count),
-            body_use_markup=True,
-            close_response="cancel",
-        )
-
-        # Display the command for the user to review with syntax highlighting
-        highlighted_cmd = get_bash_pango_markup(command)
-        command_label = Gtk.Label(
-            label=f"<tt>{highlighted_cmd}</tt>",
-            use_markup=True,
-            css_classes=["card"],
-            halign=Gtk.Align.CENTER,
-            margin_start=8,
-            margin_end=8,
-            margin_top=6,
-            margin_bottom=6,
-        )
-
-        instructions_label = Gtk.Label(
-            label=_("Choose the tabs that should run this command:"),
-            halign=Gtk.Align.START,
-            margin_top=6,
-        )
-        instructions_label.set_wrap(True)
-
-        flow_box = Gtk.FlowBox()
-        flow_box.set_selection_mode(Gtk.SelectionMode.NONE)
-        flow_box.set_row_spacing(6)
-        flow_box.set_column_spacing(12)
-        max_columns = 3
-        columns = max(1, min(max_columns, len(all_terminals)))
-        flow_box.set_min_children_per_line(columns)
-        flow_box.set_max_children_per_line(max_columns)
-
-        selection_controls = []
-        for terminal in all_terminals:
-            display_title = self._get_terminal_display_name(terminal)
-            check_button = Gtk.CheckButton(label=display_title)
-            check_button.set_active(True)
-            check_button.set_halign(Gtk.Align.START)
-            flow_box.insert(check_button, -1)
-            selection_controls.append((terminal, check_button))
-
-        if len(selection_controls) > 6:
-            scrolled = Gtk.ScrolledWindow(vexpand=True, hexpand=True)
-            scrolled.set_min_content_height(200)
-            scrolled.set_child(flow_box)
-            selection_container = scrolled
-        else:
-            selection_container = flow_box
-
-        remember_check = Gtk.CheckButton(label=_("Remember my choice"))
-        remember_check.set_active(remember_choice)
-        remember_check.set_halign(Gtk.Align.START)
-
-        content_box = Gtk.Box(
-            orientation=Gtk.Orientation.VERTICAL,
-            spacing=12,
-            margin_top=12,
-            margin_bottom=12,
-            margin_start=12,
-            margin_end=12,
-        )
-        content_box.append(command_label)
-        content_box.append(instructions_label)
-        content_box.append(selection_container)
-        content_box.append(remember_check)
-        dialog.set_extra_child(content_box)
-
-        dialog.add_response("cancel", _("Cancel"))
-        dialog.add_response("send", _("Send Command"))
-        dialog.set_default_response("send")
-        dialog.set_response_appearance("send", Adw.ResponseAppearance.SUGGESTED)
-
-        dialog.connect(
-            "response",
-            self._on_broadcast_confirm,
-            command,
-            selection_controls,
-            remember_check,
-        )
-        dialog.present()
-
-    def _on_broadcast_confirm(
-        self,
-        dialog,
-        response_id: str,
-        command: str,
-        selection_controls: list,
-        remember_check: Gtk.CheckButton,
-    ):
-        """
-        Callback that executes the broadcast if the user confirms.
-        """
-        if response_id == "send":
-            selected_terminals = [
-                terminal
-                for terminal, control in selection_controls
-                if control.get_active()
-            ]
-
-            remember = remember_check.get_active()
-            self._broadcast_remember_choice = remember
-            if remember:
-                self._broadcast_last_selection = [
-                    self._make_broadcast_terminal_key(t) for t in selected_terminals
-                ]
-            else:
-                self._broadcast_last_selection = []
-
-            if not selected_terminals:
-                self.toast_overlay.add_toast(
-                    Adw.Toast(title=_("No tabs were selected to receive the command."))
-                )
-                dialog.close()
-                self.broadcast_entry.set_text("")
-                self.broadcast_bar.set_search_mode(False)
-                return
-
-            self._execute_broadcast(command, selected_terminals)
-
-        dialog.close()
-
-        # Clear and hide the bar regardless of the response
-        self.broadcast_entry.set_text("")
-        self.broadcast_bar.set_search_mode(False)
-
-    def _execute_broadcast(self, command: str, terminals: List[Vte.Terminal]) -> None:
-        command_bytes = command.encode("utf-8") + b"\n"
-        for terminal in terminals:
-            terminal.feed_child(command_bytes)
-
-        self.logger.info(f"Broadcasted command to {len(terminals)} terminals.")
-
-    def _make_broadcast_terminal_key(self, terminal: Vte.Terminal) -> str:
-        page = self.tab_manager.get_page_for_terminal(terminal)
-        page_title = page.get_title() if page else ""
-        terminal_id = getattr(terminal, "terminal_id", "")
-
-        session = getattr(terminal, "ashy_session_item", None)
-        if isinstance(session, SessionItem):
-            base = f"{session.session_type}:{session.name}:{session.host}:{session.user}:{session.port}"
-        else:
-            base = page_title or str(terminal_id)
-        return base
-
-    def _on_case_sensitive_changed(self, switch, param):
-        """Handle case sensitive switch changes."""
-        case_sensitive = switch.get_active()
-        self.settings_manager.set("search_case_sensitive", case_sensitive)
-        # Re-trigger search if there's text in the search entry
-        if self.terminal_search_entry.get_text():
-            self._on_search_text_changed(self.terminal_search_entry)
-
-    def _on_regex_changed(self, switch, param):
-        """Handle regex switch changes."""
-        use_regex = switch.get_active()
-        self.settings_manager.set("search_use_regex", use_regex)
-        # Re-trigger search if there's text in the search entry
-        if self.terminal_search_entry.get_text():
-            self._on_search_text_changed(self.terminal_search_entry)
-
-    def _update_search_occurrence_display(self):
-        """Update the search occurrence counter display."""
-        if self.search_active and self.search_current_occurrence > 0:
-            text = f"{self.search_current_occurrence}"
-        else:
-            text = ""
-        self.search_occurrence_label.set_text(text)
-
-    def _hide_search_if_terminal_changed(self):
-        """Hide search if the current terminal is different from when search was started."""
-        current_terminal = self.tab_manager.get_selected_terminal()
-        if self.search_active and current_terminal != self.current_search_terminal:
-            self.search_bar.set_search_mode(False)
-            self.search_active = False
-            self.current_search_terminal = None
-            self._update_search_occurrence_display()
-
-    def _on_search_text_changed(self, search_entry):
-        """Handle search text changes immediately."""
-        text = search_entry.get_text()
-
-        # If text is empty, clear search immediately
-        if not text:
-            terminal = self.tab_manager.get_selected_terminal()
-            if terminal:
-                terminal.search_set_regex(None, 0)
-            self.search_active = False
-            self.current_search_terminal = None
-            self.search_current_occurrence = 0
-            self._update_search_occurrence_display()
-            return
-
-        # Perform the search immediately
-        self._perform_search(text)
-
-    def _search_from_beginning(self, terminal, regex):
-        """Search from the beginning of the terminal content."""
-        try:
-            # Try to find the first match from the beginning
-            found = terminal.search_find_next()
-            if found:
-                # Scroll to show the first match
-                v_adjustment = terminal.get_vadjustment()
-                if v_adjustment:
-                    # Get the position of the match and scroll to it
-                    _unused_col, match_row = terminal.get_cursor_position()
-                    # Scroll to show the match
-                    v_adjustment.set_value(max(0, match_row - 5))  # Show some context
-            return found
-        except Exception as e:
-            self.logger.debug(f"Error searching from beginning: {e}")
-            return False
-
-    def _perform_search(self, text):
-        """Perform search immediately for the given text."""
-        terminal = self.tab_manager.get_selected_terminal()
-        if not terminal:
-            self.logger.warning("Search triggered but no active terminal found.")
-            self.toast_overlay.add_toast(
-                Adw.Toast(title=_("No active terminal to search in."))
-            )
-            return
-
-        # Update search state
-        self.current_search_terminal = terminal
-        self.search_active = True
-
-        # First, clear any existing search to reset the state completely
-        terminal.search_set_regex(None, 0)
-
-        try:
-            # Use Vte.Regex for search operations
-            # PCRE2_MULTILINE (0x00000400) and optionally PCRE2_CASELESS (0x00000008)
-            pcre2_flags = 0x00000400  # PCRE2_MULTILINE always enabled
-            if not self.settings_manager.get("search_case_sensitive", False):
-                pcre2_flags |= 0x00000008  # PCRE2_CASELESS for case insensitive
-
-            use_regex = self.settings_manager.get("search_use_regex", False)
-            search_text = text
-
-            if not use_regex:
-                # For literal search, escape regex special characters
-                search_text = re.escape(text)
-
-            # Always use new_for_search, but with escaped pattern for literal mode
-            regex = Vte.Regex.new_for_search(search_text, -1, pcre2_flags)
-
-            if not regex:
-                self.logger.warning(
-                    f"Failed to compile search regex for pattern: {text}"
-                )
-                self.toast_overlay.add_toast(
-                    Adw.Toast(title=_("Invalid search pattern."))
-                )
-                return
-
-            # Completely clear search state before setting new regex
-            terminal.search_set_regex(None, 0)
-
-            # Set the regex for search FIRST - establish working search
-            terminal.search_set_regex(regex, 0)
-
-            # More robust search: try multiple approaches to ensure consistency
-            found = False
-
-            # Method 1: Try from current position first
-            _unused_col, _unused_row = terminal.get_cursor_position()
-            found = terminal.search_find_next()
-
-            # Method 2: If not found from current position, search from beginning of scrollback
-            if not found:
-                try:
-                    # Save current scroll position
-                    v_adjustment = terminal.get_vadjustment()
-                    if v_adjustment:
-                        # Scroll to the very beginning (including scrollback)
-                        v_adjustment.set_value(0.0)
-
-                        # Try searching from beginning immediately
-                        found = self._search_from_beginning(terminal, regex)
-
-                except Exception as e:
-                    self.logger.debug(f"Error during scroll-based search: {e}")
-                    # Fallback to just trying again from current position
-                    found = terminal.search_find_next()
-
-            # Count occurrences using the EXACT same regex object
-            if found:
-                # Just set current occurrence to 1 since we found at least one match
-                self.search_current_occurrence = 1
-                self._update_search_occurrence_display()
-            else:
-                self.search_current_occurrence = 0
-                self._update_search_occurrence_display()
-
-        except GLib.Error as e:
-            self.logger.error(
-                f"Invalid regex for search pattern '{text}': {e.message}", exc_info=True
-            )
-            self.toast_overlay.add_toast(Adw.Toast(title=_("Invalid search pattern.")))
-            terminal.search_set_regex(None, 0)
-
-    def _on_search_next(self, button=None):
-        terminal = self.tab_manager.get_selected_terminal()
-        if not terminal or not self.search_active:
-            return
-
-        found = terminal.search_find_next()
-        if not found:
-            found = self._wrap_search_to_beginning(terminal)
-            if found:
-                self.search_current_occurrence = 1
-        elif found:
-            self.search_current_occurrence += 1
-
-        self._show_search_result(found)
-
-    def _on_search_previous(self, button=None):
-        terminal = self.tab_manager.get_selected_terminal()
-        if not terminal or not self.search_active:
-            return
-
-        found = terminal.search_find_previous()
-        if not found:
-            found = self._wrap_search_to_end(terminal)
-            if found:
-                self.search_current_occurrence = 1
-        elif found and self.search_current_occurrence > 1:
-            self.search_current_occurrence -= 1
-
-        self._show_search_result(found)
-
-    def _wrap_search_to_beginning(self, terminal) -> bool:
-        """Wrap search to beginning of terminal output."""
-        try:
-            v_adjustment = terminal.get_vadjustment()
-            if v_adjustment:
-                v_adjustment.set_value(0.0)
-                return terminal.search_find_next()
-        except Exception as e:
-            self.logger.debug(f"Error during next search: {e}")
-        return False
-
-    def _wrap_search_to_end(self, terminal) -> bool:
-        """Wrap search to end of terminal output."""
-        try:
-            v_adjustment = terminal.get_vadjustment()
-            if v_adjustment:
-                v_adjustment.set_value(
-                    v_adjustment.get_upper() - v_adjustment.get_page_size()
-                )
-                return terminal.search_find_previous()
-        except Exception as e:
-            self.logger.debug(f"Error during previous search: {e}")
-        return False
-
-    def _show_search_result(self, found: bool) -> None:
-        """Show search result notification and update display."""
-        if not found:
-            self.toast_overlay.add_toast(Adw.Toast(title=_("No more matches found.")))
-        else:
-            self._update_search_occurrence_display()
-
-    def _on_search_stop(self, search_entry):
-        terminal = self.tab_manager.get_selected_terminal()
-        if terminal:
-            terminal.search_set_regex(None, 0)
-            terminal.grab_focus()
-
-        # Reset search state
-        self.search_active = False
-        self.current_search_terminal = None
-        self.search_current_occurrence = 0
-        self._update_search_occurrence_display()
+    # --- Broadcast Handlers ---
 
     # --- Window Lifecycle and State ---
 
@@ -2011,9 +1506,7 @@ class CommTerminalWindow(Adw.ApplicationWindow):
 
     def _update_file_manager_transparency(self):
         """Update transparency for all file managers and AI panel when settings change."""
-        # Apply headerbar transparency to main window
-        if hasattr(self, "header_bar"):
-            self.settings_manager.apply_headerbar_transparency(self.header_bar, self)
+        # Transparency is handled by .main-header-bar CSS class globally
 
         for file_manager in self.tab_manager.file_managers.values():
             try:
@@ -2023,10 +1516,8 @@ class CommTerminalWindow(Adw.ApplicationWindow):
                     hasattr(file_manager, "transfer_history_window")
                     and file_manager.transfer_history_window
                 ):
-                    self.settings_manager.apply_headerbar_transparency(
-                        file_manager.transfer_history_window.header_bar,
-                        file_manager.transfer_history_window,
-                    )
+                    # Transparency is handled by CSS classes globally
+                    pass
             except Exception as e:
                 self.logger.warning(f"Failed to update file manager transparency: {e}")
 
@@ -2209,24 +1700,7 @@ class CommTerminalWindow(Adw.ApplicationWindow):
 
     def _broadcast_command_to_all(self, command_text: str):
         """Send a command to all open terminals."""
-        all_terminals = self.tab_manager.get_all_terminals_across_tabs()
-        if not all_terminals:
-            self.toast_overlay.add_toast(Adw.Toast(title=_("No open terminals found.")))
-            return
-
-        command_bytes = command_text.encode("utf-8")
-        # If command doesn't end with newline and doesn't contain one, just insert it
-        if not command_text.endswith("\n"):
-            # Use bracketed paste for insertion without execution
-            for terminal in all_terminals:
-                paste_data = PASTE_START + command_bytes + PASTE_END
-                terminal.feed_child(paste_data)
-        else:
-            # Execute on all terminals
-            for terminal in all_terminals:
-                terminal.feed_child(command_bytes)
-
-        self.logger.info(f"Broadcasted command to {len(all_terminals)} terminals.")
+        self.broadcast_manager.broadcast_to_all(command_text)
 
     def move_layout(self, layout_name: str, old_folder: str, new_folder: str) -> None:
         """Delegate layout move operation to state manager.

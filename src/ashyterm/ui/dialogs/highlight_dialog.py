@@ -42,6 +42,7 @@ from .base_dialog import (
     create_icon_button,
     show_delete_confirmation_dialog,
 )
+from ..widgets.action_rows import ManagedListRow
 
 # Get color options from centralized module
 LOGICAL_COLOR_OPTIONS = get_foreground_color_options()
@@ -991,42 +992,25 @@ class ContextRulesDialog(BaseDialog):
 
     def _create_trigger_row(self, trigger: str) -> Adw.ActionRow:
         """Create an action row for a trigger with edit and delete buttons."""
-        row = Adw.ActionRow(title=trigger)
+        row = ManagedListRow(
+            title=trigger,
+            show_reorder=False,
+            show_actions=True,
+            show_toggle=False,
+        )
 
         # Terminal icon prefix (uses bundled icon)
         icon = icon_image("utilities-terminal-symbolic")
         icon.set_opacity(0.6)
         row.add_prefix(icon)
 
-        # Edit button
-        edit_btn = create_icon_button(
-            "document-edit-symbolic",
-            tooltip=_("Edit trigger"),
-            on_clicked=self._on_edit_trigger_clicked,
-            callback_args=(trigger,),
-            flat=True,
-            valign=Gtk.Align.CENTER,
-        )
-        row.add_suffix(edit_btn)
-
-        # Delete button
-        delete_btn = create_icon_button(
-            "user-trash-symbolic",
-            tooltip=_("Remove trigger"),
-            on_clicked=self._on_delete_trigger_clicked,
-            callback_args=(trigger,),
-            flat=True,
-            valign=Gtk.Align.CENTER,
-        )
+        row.connect("edit-clicked", self._on_edit_trigger_clicked, trigger)
+        row.connect("delete-clicked", self._on_delete_trigger_clicked, trigger)
 
         context = self._manager.get_context(self._context_name)
         if context and len(context.triggers) <= 1:
-            delete_btn.set_sensitive(False)
-            get_tooltip_helper().add_tooltip(
-                delete_btn, _("Cannot remove the last trigger")
-            )
-
-        row.add_suffix(delete_btn)
+            row.set_actions_sensitive(delete=False)
+            row.set_delete_tooltip(_("Cannot remove the last trigger"))
 
         return row
 
@@ -1114,36 +1098,17 @@ class ContextRulesDialog(BaseDialog):
         )
         escaped_subtitle = GLib.markup_escape_text(subtitle_text)
 
-        row = Adw.ActionRow()
-        row.set_title(f"#{index + 1} {escaped_name}")
-        row.set_subtitle(escaped_subtitle)
+        row = ManagedListRow(
+            title=f"#{index + 1} {escaped_name}",
+            subtitle=escaped_subtitle,
+            show_reorder=True,
+            show_actions=True,
+            show_toggle=True,
+            is_first=(index == 0),
+            is_last=(index == total - 1),
+        )
 
-        # Reorder buttons prefix
-        reorder_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=0)
-        reorder_box.set_valign(Gtk.Align.CENTER)
-        reorder_box.set_margin_end(4)
-
-        up_btn = Gtk.Button(icon_name="go-up-symbolic")
-        up_btn.add_css_class("flat")
-        up_btn.add_css_class("circular")
-        up_btn.set_size_request(24, 24)
-        up_btn.set_sensitive(index > 0)
-        up_btn.connect("clicked", self._on_move_rule_up, index)
-        get_tooltip_helper().add_tooltip(up_btn, _("Move up"))
-        reorder_box.append(up_btn)
-
-        down_btn = Gtk.Button(icon_name="go-down-symbolic")
-        down_btn.add_css_class("flat")
-        down_btn.add_css_class("circular")
-        down_btn.set_size_request(24, 24)
-        down_btn.set_sensitive(index < total - 1)
-        down_btn.connect("clicked", self._on_move_rule_down, index)
-        get_tooltip_helper().add_tooltip(down_btn, _("Move down"))
-        reorder_box.append(down_btn)
-
-        row.add_prefix(reorder_box)
-
-        # Color indicator
+        # Color indicator (Prefix)
         color_box = Gtk.Box()
         color_box.set_size_request(16, 16)
         color_box.add_css_class("circular")
@@ -1154,34 +1119,14 @@ class ContextRulesDialog(BaseDialog):
         color_box.set_valign(Gtk.Align.CENTER)
         row.add_prefix(color_box)
 
-        # Edit button
-        edit_btn = create_icon_button(
-            "document-edit-symbolic",
-            tooltip=_("Edit rule"),
-            on_clicked=self._on_edit_rule,
-            callback_args=(index,),
-            flat=True,
-            valign=Gtk.Align.CENTER,
-        )
-        row.add_suffix(edit_btn)
+        row.set_active(rule.enabled)
 
-        # Delete button
-        delete_btn = create_icon_button(
-            "user-trash-symbolic",
-            tooltip=_("Delete rule"),
-            on_clicked=self._on_delete_rule,
-            callback_args=(index,),
-            flat=True,
-            valign=Gtk.Align.CENTER,
-        )
-        row.add_suffix(delete_btn)
-
-        # Enable switch (rightmost)
-        switch = Gtk.Switch()
-        switch.set_active(rule.enabled)
-        switch.set_valign(Gtk.Align.CENTER)
-        switch.connect("notify::active", self._on_rule_toggle, index)
-        row.add_suffix(switch)
+        # Connect signals
+        row.connect("move-up-clicked", self._on_move_rule_up, index)
+        row.connect("move-down-clicked", self._on_move_rule_down, index)
+        row.connect("edit-clicked", self._on_edit_rule, index)
+        row.connect("delete-clicked", self._on_delete_rule, index)
+        row.connect("toggled", self._on_rule_toggle_managed, index)
 
         return row
 
@@ -1250,6 +1195,15 @@ class ContextRulesDialog(BaseDialog):
         if context:
             self._manager.save_context_to_user(context)
         self._populate_rules()
+        self.emit("context-updated")
+
+    def _on_rule_toggle_managed(self, row, active: bool, index: int) -> None:
+        """Handle rule enable/disable toggle from ManagedListRow."""
+        self._manager.set_context_rule_enabled(self._context_name, index, active)
+        # Save context to user directory to persist rule enabled state
+        context = self._manager.get_context(self._context_name)
+        if context:
+            self._manager.save_context_to_user(context)
         self.emit("context-updated")
 
     def _on_rule_toggle(self, switch: Gtk.Switch, _pspec, index: int) -> None:

@@ -12,7 +12,7 @@ import gi
 gi.require_version("Gtk", "4.0")
 gi.require_version("Adw", "1")
 gi.require_version("Vte", "3.91")
-from gi.repository import Adw, Gdk, GLib, Gtk, Pango, Vte
+from gi.repository import Gdk, GLib, Gtk, Pango, Vte
 
 from ..utils.exceptions import ConfigValidationError
 from ..utils.logger import get_logger, log_error_with_context
@@ -305,28 +305,40 @@ class SettingsManager:
     def _repair_settings(self, errors: List[str]) -> bool:
         repairs_made = 0
         for error in errors:
-            if "Missing required setting:" in error:
-                key = error.split(": ")[1]
-                if key in self._defaults:
-                    self._settings[key] = self._defaults[key]
-                    repairs_made += 1
-            elif "Invalid value for setting" in error:
-                try:
-                    key = error.split("'")[1]
-                    if key in self._defaults:
-                        self._settings[key] = self._defaults[key]
-                        repairs_made += 1
-                except (IndexError, KeyError):
-                    continue
-            elif "must be boolean" in error:
-                try:
-                    key = error.split("'")[1]
-                    if key in self._defaults and isinstance(self._defaults[key], bool):
-                        self._settings[key] = self._defaults[key]
-                        repairs_made += 1
-                except (IndexError, KeyError):
-                    continue
+            if self._try_repair_setting(error):
+                repairs_made += 1
         return repairs_made > 0
+
+    def _try_repair_setting(self, error: str) -> bool:
+        """Attempt to repair a single validation error."""
+        # Split error into type and key/detail
+        if "Missing required setting:" in error:
+            key = error.split(": ")[1]
+            return self._restore_default(key)
+
+        if "Invalid value for setting" in error:
+            try:
+                key = error.split("'")[1]
+                return self._restore_default(key)
+            except (IndexError, KeyError):
+                pass
+
+        if "must be boolean" in error:
+            try:
+                key = error.split("'")[1]
+                if isinstance(self._defaults.get(key), bool):
+                    return self._restore_default(key)
+            except (IndexError, KeyError):
+                pass
+
+        return False
+
+    def _restore_default(self, key: str) -> bool:
+        """Restore a setting to its default value if available."""
+        if key in self._defaults:
+            self._settings[key] = self._defaults[key]
+            return True
+        return False
 
     def _merge_with_defaults(self):
         try:
@@ -690,11 +702,7 @@ class SettingsManager:
 
     def _update_app_theme_css(self, window=None) -> None:
         """
-        Generates and applies the unified application CSS.
-
-        This method replaces individual update methods to ensure consistent
-        styling across the entire application. It updates the global
-        _app_css_provider which is attached to the default display.
+        Generates and applies the unified application CSS using ThemeEngine.
         """
         try:
             display = Gdk.Display.get_default()
@@ -710,18 +718,16 @@ class SettingsManager:
                 )
                 self._provider_attached = True
 
+            # Lazy-load ThemeEngine
+            from ..utils.theme_engine import ThemeEngine
+
             scheme = self.get_color_scheme_data()
-            params = self._get_theme_params(scheme)
+            gtk_theme = self.get("gtk_theme")
+            transparency = self.get("headerbar_transparency", 0)
 
-            # Simplified CSS generation using mainly Adwaita variables
-            css_parts = [
-                self._get_root_vars_css(params),
-                self._get_headerbar_css(params),
-                self._get_tabs_css(params),  # Keep for specific internal structure
-                # Removed others that are now handled by root vars
-            ]
+            params = ThemeEngine.get_theme_params(scheme, transparency)
+            full_css = ThemeEngine.generate_app_css(params, gtk_theme)
 
-            full_css = "".join(css_parts)
             self._app_css_provider.load_from_data(full_css.encode("utf-8"))
 
             # Force redraw if window provided
@@ -731,170 +737,6 @@ class SettingsManager:
         except Exception as e:
             self.logger.error(f"Failed to update application theme CSS: {e}")
             log_error_with_context(e, "theme update", "ashyterm.settings")
-
-    def _get_theme_params(self, scheme: dict) -> dict:
-        """Extract and compute theme parameters from color scheme."""
-        bg_color = scheme.get("background", "#000000")
-        fg_color = scheme.get("foreground", "#ffffff")
-        header_bg_color = scheme.get("headerbar_background", bg_color)
-        user_transparency = self.get("headerbar_transparency", 0)
-
-        # Calculate luminance for theme detection
-        r = int(bg_color[1:3], 16) / 255
-        g = int(bg_color[3:5], 16) / 255
-        b = int(bg_color[5:7], 16) / 255
-        luminance = 0.299 * r + 0.587 * g + 0.114 * b
-        is_dark_theme = luminance < 0.5
-
-        return {
-            "bg_color": bg_color,
-            "fg_color": fg_color,
-            "header_bg_color": header_bg_color,
-            "user_transparency": user_transparency,
-            "luminance": luminance,
-            "is_dark_theme": is_dark_theme,
-        }
-
-    def _apply_cached_css(self, window, css: str) -> None:
-        # Deprecated: Unified provider handles this now
-        pass
-
-    def _get_root_vars_css(self, params: dict) -> str:
-        """Generate CSS root variables for Adwaita/GTK4 theming.
-
-        Libadwaita uses CSS custom properties for theming. By setting these
-        at the :root level, we ensure consistent theming across all widgets.
-        """
-        # If we are NOT in 'terminal' theme, we return empty string to let
-        # Adwaita/GTK 'Light' or 'Dark' themes work natively.
-        if self.get("gtk_theme") != "terminal":
-            return ""
-
-        fg = params["fg_color"]
-        bg = params["bg_color"]
-        header_bg = params["header_bg_color"]
-
-        # We can calculate some derivative colors if needed, but for now
-        # simple mappings should cover 90% of cases.
-
-        return f"""
-        :root {{
-            /* Window and View Colors */
-            --window-bg-color: {bg};
-            --window-fg-color: {fg};
-            --view-bg-color: {bg};
-            --view-fg-color: {fg};
-            
-            /* Headerbar Colors */
-            --headerbar-bg-color: {header_bg};
-            --headerbar-fg-color: {fg};
-            --headerbar-backdrop-color: {header_bg};
-            --headerbar-shade-color: color-mix(in srgb, {header_bg}, black 7%);
-            
-            /* Popover and Dialog Colors */
-            --popover-bg-color: {bg};
-            --popover-fg-color: {fg};
-            --dialog-bg-color: {bg};
-            --dialog-fg-color: {fg};
-            
-            /* Card and Thumbnail Colors (Common in lists) */
-            --card-bg-color: color-mix(in srgb, {bg}, white 5%);
-            --card-fg-color: {fg};
-            
-            /* Sidebar (if using split view naming) */
-            --sidebar-bg-color: {header_bg};
-            --sidebar-fg-color: {fg};
-        }}
-
-        /* Force popover to use the variables when in Terminal theme */
-        /* Force popover to use the variables when in Terminal theme */
-        popover.ashyterm-popover,
-        popover.sidebar-popover {{
-            background-color: transparent; 
-            color: var(--popover-fg-color);
-        }}
-
-        popover.ashyterm-popover > contents,
-        popover.sidebar-popover > contents,
-        popover.ashyterm-popover > arrow,
-        popover.sidebar-popover > arrow {{
-            background-color: var(--popover-bg-color);
-            color: inherit;
-        }}
-        
-        /* Ensure list views and scrolls inside popover don't override the background */
-        popover.ashyterm-popover listview,
-        popover.sidebar-popover listview,
-        popover.ashyterm-popover scrolledwindow,
-        popover.sidebar-popover scrolledwindow {{
-            background-color: transparent;
-        }}
-        """
-
-    def _get_headerbar_css(self, params: dict) -> str:
-        """Generate CSS purely for headerbar transparency, if enabled."""
-        fg = params["fg_color"]
-        user_transparency = params["user_transparency"]
-        gtk_theme = self.get("gtk_theme", "adwaita")
-
-        # If no transparency and using system themes, we don't need overrides
-        # Adwaita vars handle the "Terminal" theme case mostly.
-        # But we still want to support the 'Headerbar Transparency' feature.
-
-        if user_transparency == 0:
-            return ""
-
-        # Calculate base color for transparency
-        if gtk_theme == "terminal":
-            base_bg = params["header_bg_color"]
-        else:
-            style_manager = Adw.StyleManager.get_default()
-            is_dark = style_manager.get_dark()
-            base_bg = "#303030" if is_dark else "#f0f0f0"
-
-        opacity_percent = 100 - user_transparency
-        bg_css_value = f"color-mix(in srgb, {base_bg} {opacity_percent}%, transparent)"
-
-        # Apply to headerbar and similar top elements
-        selectors = """
-        window headerbar.main-header-bar,
-        headerbar.main-header-bar,
-        .main-header-bar,
-        .terminal-pane .header-bar,
-        .top-bar,
-        searchbar,
-        searchbar > box,
-        .command-toolbar
-        """
-
-        return f"""
-        {selectors} {{
-            background-color: {bg_css_value};
-            background-image: none;
-        }}
-        {selectors.replace(",", ":backdrop,")}:backdrop {{
-            background-color: {bg_css_value};
-            background-image: none;
-        }}
-        /* Ensure text visibility if transparency makes it hard to see? 
-           Usually user handles this by Picking right theme contrast. */
-        """
-
-    def _get_tabs_css(self, params: dict) -> str:
-        """Generate CSS for tab bar internal structure."""
-        # This might still be needed if the tab bar uses custom styling
-        # that doesn't fully inherit from standard vars.
-        fg = params["fg_color"]
-        # Use CSS variables if available, else fallback to params
-
-        if self.get("gtk_theme") == "terminal":
-            return f"""
-            .scrolled-tab-bar viewport box .horizontal.active {{ 
-                background-color: color-mix(in srgb, {fg}, transparent 78%); 
-            }}
-            """
-        return ""
-        # If not terminal theme, let it be native.
 
     def remove_gtk_terminal_theme(self, window) -> None:
         """Removes the custom CSS provider for the terminal theme."""
@@ -958,55 +800,46 @@ class SettingsManager:
         self.set("sidebar_visible", visible)
 
     def cleanup_css_providers(self, window) -> None:
-        """
-        Remove all CSS providers associated with a window to prevent memory leaks.
-
-        This should be called when the window is being destroyed.
-        """
+        """Remove all CSS providers associated with a window to prevent memory leaks."""
         try:
             display = Gdk.Display.get_default()
             if display is None:
                 return
 
-            # List of provider attribute names to clean up
-            provider_attrs = [
-                "_terminal_theme_provider",
-                "_transparency_css_provider",
-            ]
-
-            # Clean up window-level providers
-            for attr in provider_attrs:
-                if hasattr(window, attr):
-                    provider = getattr(window, attr)
-                    try:
-                        Gtk.StyleContext.remove_provider_for_display(display, provider)
-                    except Exception:
-                        pass
-                    delattr(window, attr)
-
-            # Clean up transparency provider from WeakKeyDictionary
-            if window in self._window_providers:
-                provider = self._window_providers[window]
-                try:
-                    Gtk.StyleContext.remove_provider_for_display(display, provider)
-                except Exception:
-                    pass
-                del self._window_providers[window]
-
-            # Clean up headerbar providers (legacy cleanup)
-            if hasattr(window, "header_bar"):
-                headerbar = window.header_bar
-                if hasattr(headerbar, "_transparency_provider"):
-                    try:
-                        Gtk.StyleContext.remove_provider_for_display(
-                            display, headerbar._transparency_provider
-                        )
-                    except Exception:
-                        pass
-                    del headerbar._transparency_provider
+            self._cleanup_window_level_providers(window, display)
+            self._cleanup_transparency_provider(window, display)
+            self._cleanup_headerbar_providers(window, display)
 
         except Exception as e:
             self.logger.warning(f"Error during CSS provider cleanup: {e}")
+
+    def _cleanup_window_level_providers(self, window, display):
+        """Clean up providers stored as window attributes."""
+        provider_attrs = ["_terminal_theme_provider", "_transparency_css_provider"]
+        for attr in provider_attrs:
+            if hasattr(window, attr):
+                self._remove_provider(display, getattr(window, attr))
+                delattr(window, attr)
+
+    def _cleanup_transparency_provider(self, window, display):
+        """Clean up transparency provider from WeakKeyDictionary."""
+        if window in self._window_providers:
+            self._remove_provider(display, self._window_providers[window])
+            del self._window_providers[window]
+
+    def _cleanup_headerbar_providers(self, window, display):
+        """Clean up headerbar providers (legacy cleanup)."""
+        if hasattr(window, "header_bar") and (headerbar := window.header_bar):
+            if hasattr(headerbar, "_transparency_provider"):
+                self._remove_provider(display, headerbar._transparency_provider)
+                delattr(headerbar, "_transparency_provider")
+
+    def _remove_provider(self, display, provider):
+        """Safely remove a provider from a display."""
+        try:
+            Gtk.StyleContext.remove_provider_for_display(display, provider)
+        except Exception:
+            pass
 
 
 _settings_manager: Optional[SettingsManager] = None

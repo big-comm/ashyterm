@@ -340,17 +340,7 @@ class TransferManagerDialog(Adw.Window):
         self._populate_transfers()
         self.connect("destroy", self._on_destroy)
         self.connect("show", self._on_show)
-        self._apply_headerbar_transparency()
-
-    def _apply_headerbar_transparency(self):
-        """Apply headerbar transparency consistent with app settings."""
-        try:
-            if self.parent_window:
-                settings_manager = getattr(self.parent_window, "settings_manager", None)
-                if settings_manager:
-                    settings_manager.apply_headerbar_transparency(self.header_bar)
-        except Exception as e:
-            self.logger.warning(f"Failed to apply headerbar transparency: {e}")
+        # Transparency is handled by CSS classes globally
 
     def _on_show(self, window):
         """Refresh the transfer list when window is shown again after being hidden."""
