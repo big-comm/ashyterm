@@ -27,6 +27,7 @@ from ...utils.tooltip_helper import get_tooltip_helper
 from ...utils.translation_utils import _
 from ..widgets.bash_text_view import BashTextView
 from ..widgets.form_widget_builder import create_field_from_form_field
+from ..widgets.action_rows import ManagedListRow, ManagedExpanderRow
 from .base_dialog import show_delete_confirmation_dialog
 
 # Extraction command builders: (extension_tuple, uses_dest_flag, command_template_with_output, command_template_without)
@@ -470,7 +471,6 @@ class CommandFormDialog(Adw.Window):
 
         # Generic handling for other commands
         return self.command.build_command(values)
-
 
     def _build_find_date_filter(self, values: Dict[str, Any]) -> Optional[str]:
         """Build date filter part for find command."""
@@ -1764,48 +1764,29 @@ class CommandEditorDialog(Adw.Window):
         else:
             title = f"{type_icons.get(field_type, '📝')} {{{field_id}}}"
 
-        expander = Adw.ExpanderRow(
+        expander = ManagedExpanderRow(
             title=title,
             subtitle=type_names.get(field_type, _("Field")),
+            show_reorder=True,
+            show_delete=True,
+            is_first=(index == 0),
+            is_last=(index == len(self.form_fields_data) - 1),
         )
 
         # Store index for move operations (will be updated when rebuilding)
         expander._field_index = index
 
-        # Move up button
-        up_btn = Gtk.Button(
-            icon_name="go-up-symbolic",
-            css_classes=["flat", "circular"],
-            valign=Gtk.Align.CENTER,
+        # Connect signals
+        expander.connect(
+            "move-up-clicked", lambda _: self._move_field_up(expander._field_index)
         )
-        get_tooltip_helper().add_tooltip(up_btn, _("Move up"))
-        up_btn.connect("clicked", lambda b: self._move_field_up(expander._field_index))
-        expander.add_suffix(up_btn)
-
-        # Move down button
-        down_btn = Gtk.Button(
-            icon_name="go-down-symbolic",
-            css_classes=["flat", "circular"],
-            valign=Gtk.Align.CENTER,
+        expander.connect(
+            "move-down-clicked", lambda _: self._move_field_down(expander._field_index)
         )
-        get_tooltip_helper().add_tooltip(down_btn, _("Move down"))
-        down_btn.connect(
-            "clicked", lambda b: self._move_field_down(expander._field_index)
+        expander.connect(
+            "delete-clicked",
+            lambda _: self._remove_form_field(expander._field_index, expander),
         )
-        expander.add_suffix(down_btn)
-
-        # Delete button
-        delete_btn = Gtk.Button(
-            icon_name="user-trash-symbolic",
-            css_classes=["flat", "circular", "error"],
-            valign=Gtk.Align.CENTER,
-        )
-        get_tooltip_helper().add_tooltip(delete_btn, _("Remove"))
-        delete_btn.connect(
-            "clicked",
-            lambda b: self._remove_form_field(expander._field_index, expander),
-        )
-        expander.add_suffix(delete_btn)
 
         # Type-specific content
         if field_type == "command_text":
@@ -2537,14 +2518,14 @@ class CommandEditorDialog(Adw.Window):
             FieldType.COLOR: "color",
         }.get(field_type, "text")
 
-
-    def _get_simple_command_data(self) -> tuple[str, str, str, int, str, "ExecutionMode", list]:
+    def _get_simple_command_data(
+        self,
+    ) -> tuple[str, str, str, int, str, "ExecutionMode", list]:
         """Extract data from simple command form."""
         name = self.simple_name_row.get_text().strip()
         description = self.simple_description_row.get_text().strip()
         icon_name = (
-            self.simple_icon_entry.get_text().strip()
-            or "utilities-terminal-symbolic"
+            self.simple_icon_entry.get_text().strip() or "utilities-terminal-symbolic"
         )
         display_mode_idx = self.simple_display_mode_row.get_selected()
         command_template = self.simple_command_textview.get_text().strip()
@@ -2554,7 +2535,15 @@ class CommandEditorDialog(Adw.Window):
             if exec_mode_idx == 0
             else ExecutionMode.INSERT_AND_EXECUTE
         )
-        return name, description, icon_name, display_mode_idx, command_template, exec_mode, []
+        return (
+            name,
+            description,
+            icon_name,
+            display_mode_idx,
+            command_template,
+            exec_mode,
+            [],
+        )
 
     def _build_form_command_template(self) -> str:
         """Build command template from form fields data."""
@@ -2627,7 +2616,9 @@ class CommandEditorDialog(Adw.Window):
             )
         return form_fields
 
-    def _get_form_command_data(self) -> tuple[str, str, str, int, str, "ExecutionMode", list]:
+    def _get_form_command_data(
+        self,
+    ) -> tuple[str, str, str, int, str, "ExecutionMode", list]:
         """Extract data from form command form."""
         name = self.form_name_row.get_text().strip()
         description = self.form_description_row.get_text().strip()
@@ -2638,18 +2629,38 @@ class CommandEditorDialog(Adw.Window):
         exec_mode = ExecutionMode.SHOW_DIALOG
         command_template = self._build_form_command_template()
         form_fields = self._build_form_fields_list()
-        return name, description, icon_name, display_mode_idx, command_template, exec_mode, form_fields
+        return (
+            name,
+            description,
+            icon_name,
+            display_mode_idx,
+            command_template,
+            exec_mode,
+            form_fields,
+        )
 
     def _save_command(self, *args):
         """Save the command."""
         if self._command_type == "simple":
-            name, description, icon_name, display_mode_idx, command_template, exec_mode, form_fields = (
-                self._get_simple_command_data()
-            )
+            (
+                name,
+                description,
+                icon_name,
+                display_mode_idx,
+                command_template,
+                exec_mode,
+                form_fields,
+            ) = self._get_simple_command_data()
         else:
-            name, description, icon_name, display_mode_idx, command_template, exec_mode, form_fields = (
-                self._get_form_command_data()
-            )
+            (
+                name,
+                description,
+                icon_name,
+                display_mode_idx,
+                command_template,
+                exec_mode,
+                form_fields,
+            ) = self._get_form_command_data()
 
         if not name:
             if self._command_type == "simple":
@@ -3378,10 +3389,13 @@ class CommandManagerDialog(Adw.Window):
             cmd = all_cmd_map.get(cmd_id) or builtin_map.get(cmd_id)
             cmd_name = cmd.name if cmd else cmd_id
 
-            row = Adw.ActionRow(
+            row = ManagedListRow(
                 title=cmd_name,
-                activatable=True,
+                show_reorder=False,
+                show_actions=False,
+                show_toggle=False,
             )
+            row.set_activatable(True)
             row.add_suffix(Gtk.Image.new_from_icon_name("view-reveal-symbolic"))
             row.connect("activated", self._on_unhide_command, cmd_id, dialog)
             list_box.append(row)

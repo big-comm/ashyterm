@@ -51,8 +51,7 @@ def _create_terminal_pane(
     header_box.set_hexpand(True)
     header_box.set_valign(Gtk.Align.START)
 
-    # MODIFIED: Apply headerbar transparency settings on creation
-    settings_manager.apply_headerbar_transparency(header_box)
+    # header_box has .header-bar class, which is targeted by ThemeEngine CSS for transparency
 
     # Title label
     title_label = Gtk.Label(label=title, ellipsize=Pango.EllipsizeMode.END, xalign=0.0)
@@ -164,10 +163,8 @@ class TabManager:
             panes = []
             self._find_panes_recursive(page.get_child(), panes)
             for pane in panes:
-                if hasattr(pane, "header_box"):
-                    self.terminal_manager.settings_manager.apply_headerbar_transparency(
-                        pane.header_box
-                    )
+                # Transparency is handled by .header-bar CSS class globally
+                pass
 
     def _find_panes_recursive(self, widget, panes_list: List[Adw.ToolbarView]):
         """Recursively find all Adw.ToolbarView panes within a container."""
@@ -1397,9 +1394,7 @@ class TabManager:
                 return GLib.SOURCE_REMOVE
 
             if retries_left > 0:
-                GLib.timeout_add(
-                    retry_interval_ms, focus_task, retries_left - 1
-                )
+                GLib.timeout_add(retry_interval_ms, focus_task, retries_left - 1)
             else:
                 self.logger.warning(
                     f"Could not set focus on terminal {getattr(terminal, 'terminal_id', 'N/A')}: not ready after retries."
@@ -1975,6 +1970,7 @@ class TabManager:
 
     def _schedule_focus_restore(self, terminal: Optional[Vte.Terminal]):
         """Schedule focus restoration and title update."""
+
         def _restore_focus_and_update_titles():
             if terminal and terminal.get_realized():
                 terminal.grab_focus()

@@ -23,6 +23,7 @@ from ...utils.tooltip_helper import get_tooltip_helper
 from ...utils.translation_utils import _
 from ..widgets.bash_text_view import BashTextView
 from .base_dialog import BaseDialog, validate_directory_path
+from ..widgets.action_rows import ManagedListRow
 
 
 class SessionEditDialog(BaseDialog):
@@ -856,27 +857,6 @@ class SessionEditDialog(BaseDialog):
             return
 
         for index, tunnel in enumerate(self.port_forwardings):
-            row = Gtk.ListBoxRow()
-            row.set_selectable(False)
-            row.set_activatable(False)
-            row_box = Gtk.Box(
-                orientation=Gtk.Orientation.HORIZONTAL,
-                spacing=12,
-                margin_top=6,
-                margin_bottom=6,
-                margin_start=12,
-                margin_end=12,
-            )
-
-            labels_box = Gtk.Box(
-                orientation=Gtk.Orientation.VERTICAL,
-                spacing=2,
-                hexpand=True,
-            )
-            title = Gtk.Label(
-                label=tunnel.get("name", _("Tunnel")),
-                xalign=0,
-            )
             remote_host_display = tunnel.get("remote_host") or _("SSH Host")
             subtitle_text = _(
                 "{local_host}:{local_port} → {remote_host}:{remote_port}"
@@ -886,28 +866,18 @@ class SessionEditDialog(BaseDialog):
                 remote_host=remote_host_display,
                 remote_port=tunnel.get("remote_port", 0),
             )
-            subtitle = Gtk.Label(label=subtitle_text, xalign=0)
-            subtitle.add_css_class("dim-label")
-            labels_box.append(title)
-            labels_box.append(subtitle)
-            row_box.append(labels_box)
 
-            button_box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=6)
-            edit_button = Gtk.Button(
-                icon_name="document-edit-symbolic", css_classes=["flat"]
+            row = ManagedListRow(
+                title=tunnel.get("name", _("Tunnel")),
+                subtitle=subtitle_text,
+                show_reorder=False,
+                show_actions=True,
+                show_toggle=False,
             )
-            edit_button.connect("clicked", self._on_edit_port_forward_clicked, index)
-            delete_button = Gtk.Button(
-                icon_name="user-trash-symbolic", css_classes=["flat"]
-            )
-            delete_button.connect(
-                "clicked", self._on_delete_port_forward_clicked, index
-            )
-            button_box.append(edit_button)
-            button_box.append(delete_button)
-            row_box.append(button_box)
 
-            row.set_child(row_box)
+            row.connect("edit-clicked", self._on_edit_port_forward_clicked, index)
+            row.connect("delete-clicked", self._on_delete_port_forward_clicked, index)
+
             self.port_forward_list.append(row)
 
     def _on_add_port_forward_clicked(self, _button) -> None:
@@ -1546,10 +1516,12 @@ class SessionEditDialog(BaseDialog):
             Dictionary with all session data.
         """
         session_data = self.editing_session.to_dict()
-        session_data.update({
-            "name": self.name_row.get_text().strip(),
-            "session_type": "local" if is_local else "ssh",
-        })
+        session_data.update(
+            {
+                "name": self.name_row.get_text().strip(),
+                "session_type": "local" if is_local else "ssh",
+            }
+        )
 
         self._apply_highlighting_settings(session_data)
         self._apply_tab_color(session_data)
@@ -1657,12 +1629,16 @@ class SessionEditDialog(BaseDialog):
 
     def _apply_ssh_session_fields(self, session_data: dict) -> None:
         """Apply SSH-specific fields to session data."""
-        session_data.update({
-            "host": self.host_entry.get_text().strip(),
-            "user": self.user_entry.get_text().strip(),
-            "port": int(self.port_entry.get_value()),
-            "auth_type": "key" if self.auth_combo.get_selected() == 0 else "password",
-        })
+        session_data.update(
+            {
+                "host": self.host_entry.get_text().strip(),
+                "user": self.user_entry.get_text().strip(),
+                "port": int(self.port_entry.get_value()),
+                "auth_type": "key"
+                if self.auth_combo.get_selected() == 0
+                else "password",
+            }
+        )
         if session_data["auth_type"] == "key":
             session_data["auth_value"] = self.key_path_entry.get_text().strip()
         else:
@@ -1673,12 +1649,14 @@ class SessionEditDialog(BaseDialog):
 
     def _apply_local_session_fields(self, session_data: dict) -> None:
         """Apply local terminal-specific fields to session data."""
-        session_data.update({
-            "host": "",
-            "user": "",
-            "auth_type": "",
-            "auth_value": "",
-        })
+        session_data.update(
+            {
+                "host": "",
+                "user": "",
+                "auth_type": "",
+                "auth_value": "",
+            }
+        )
         session_data["sftp_session_enabled"] = False
         session_data["port_forwardings"] = []
         session_data["x11_forwarding"] = False
@@ -1730,7 +1708,6 @@ class SessionEditDialog(BaseDialog):
                 "\n".join(self._validation_errors),
             )
         return valid
-
 
     def _validate_hostname_field(self) -> bool:
         """Validate the SSH hostname field."""
